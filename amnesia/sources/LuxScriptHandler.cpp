@@ -439,7 +439,7 @@ void cLuxScriptHandler::InitScriptFunctions()
     AddFunc("void StartRandomInsanityEvent()", (void *)StartRandomInsanityEvent);
     AddFunc("void StartInsanityEvent(string &in asEventName)", (void *)StartInsanityEvent);
     AddFunc("void StopCurrentInsanityEvent()", (void *)StopCurrentInsanityEvent);
-    AddFunc("void InsanityEventIsActive()", (void *)InsanityEventIsActive);
+    AddFunc("bool InsanityEventIsActive()", (void *)InsanityEventIsActive);
 
     AddFunc("void StartPlayerSpawnPS(string &in asSPSFile)", (void *)StartPlayerSpawnPS);
     AddFunc("void StopPlayerSpawnPS()", (void *)StartPlayerSpawnPS);
