@@ -85,7 +85,6 @@ static cLuxAction gvLuxActions[] =
     cLuxAction("Interact",eLuxAction_Interact,    true, eLuxActionCategory_Action),
     cLuxAction("Ignite",eLuxAction_Ignite,        false, eLuxActionCategory_Action),
     cLuxAction("Rotate",eLuxAction_Rotate,        true, eLuxActionCategory_Action),
-    cLuxAction("Holster",eLuxAction_Holster,    false, eLuxActionCategory_Action),
     cLuxAction("Lantern",eLuxAction_Lantern,    true, eLuxActionCategory_Action),
 
     cLuxAction("Run",eLuxAction_Run,            true, eLuxActionCategory_Movement),
@@ -190,7 +189,6 @@ static cLuxInput gvLuxInputs[] =
     cLuxInput("MouseButton", eMouseButton_Left, eLuxAction_Interact),
     cLuxInput("Keyboard", eKey_C, eLuxAction_Ignite),
     cLuxInput("Keyboard", eKey_R, eLuxAction_Rotate),
-    cLuxInput("Keyboard", eKey_H, eLuxAction_Holster),
     cLuxInput("Keyboard", eKey_F, eLuxAction_Lantern),
     
     cLuxInput("Keyboard", eKey_LeftShift, eLuxAction_Run),
@@ -1063,8 +1061,6 @@ void cLuxInputHandler::UpdateGamePlayerInput()
             mpPlayer->GiveDamage(10, 10, eLuxDamageType_BloodSplat, true, true);
         }    
     }
-        //mpPlayer->DoAction(eLuxPlayerAction_Holster ,true);
-    //if(mpInput->WasTriggerd(eLuxAction_Holster))    mpPlayer->DoAction(eLuxPlayerAction_Holster, false);
     
     //Lantern
     if(mpInput->BecameTriggerd(eLuxAction_Lantern))    mpPlayer->DoAction(eLuxPlayerAction_Lantern ,true);

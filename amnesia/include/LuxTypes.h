@@ -396,7 +396,6 @@ enum eLuxAction
     eLuxAction_Interact,
     eLuxAction_Ignite,
     eLuxAction_Rotate,
-    eLuxAction_Holster,
     eLuxAction_Lantern,
     
     eLuxAction_Run,
