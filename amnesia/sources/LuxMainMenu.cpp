@@ -28,7 +28,6 @@ static const bool gbDebug_SkipBGScene = false;
 static const bool gbDebug_FastLoadOptions = false;
 const int glHardMode_SaveCost = 4;
 
-// #if MAC_OS || LINUX
 std::wstring LongToWString(const long long &l)
 {
     std::string s;
@@ -41,9 +40,6 @@ std::wstring LongToWString(const long long &l)
 }
 
 const tWString gsHardMode_SaveCostString = tWString(LongToWString((static_cast<long long>(glHardMode_SaveCost))));
-/* #else
-const tWString gsHardMode_SaveCostString = tWString(to_wstring(static_cast<long long>(glHardMode_SaveCost)));
-#endif */
 //--------------------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
@@ -1115,11 +1111,7 @@ void cLuxMainMenu::CreateTopMenuGui()
 
         if (lNumIndex != std::wstring::npos)
         {
-// #if MAC_OS || LINUX
             tWString sNumTinderboxes = tWString(LongToWString(static_cast<long long>(gpBase->mpPlayer->GetTinderboxes())));
-/* #else
-            tWString sNumTinderboxes = tWString(std::to_wstring(static_cast<long long>(gpBase->mpPlayer->GetTinderboxes())));
-#endif */
             
             tWString sSubString = sText.substr(lNumIndex + 1, sText.size() - lNumIndex);
             sText = sText.substr(0, lNumIndex);
@@ -1815,12 +1807,7 @@ bool cLuxMainMenu::ClickedSaveGamePopup(iWidget* apWidget, const cGuiMessageData
 
     if (lNumIndex != std::wstring::npos)
     {
-// #if MAC_OS || LINUX
         tWString sNumTinderboxes = tWString(LongToWString(static_cast<long long>(gpBase->mpPlayer->GetTinderboxes())));
-
-/* #else
-        tWString sNumTinderboxes = tWString(std::to_wstring(static_cast<long long>(gpBase->mpPlayer->GetTinderboxes())));
-#endif */
         tWString sSubString = sText.substr(lNumIndex + 1, sText.size() - lNumIndex);
         sText = sText.substr(0, lNumIndex);
         sText.replace(lNumIndex, sNumTinderboxes.size(), sNumTinderboxes);

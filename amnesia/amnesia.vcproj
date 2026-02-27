@@ -157,7 +157,7 @@
 				AdditionalDependencies="AngelScript.lib DevIL.lib freealut.lib GLEW.lib Imm32.lib jpeg.lib Newton.lib ogg.lib OpenAL32.lib png.lib SDL.lib setupapi.lib theora.lib Version.lib vorbis.lib winmm.lib zlib.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(PlatformName)-$(ConfigurationName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(SolutionDir)\dependencies\lib\$(PlatformName)-$(ConfigurationName)\"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\dependencies\lib\$(PlatformName)-$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
