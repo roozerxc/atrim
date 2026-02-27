@@ -1201,7 +1201,7 @@ void __stdcall cLuxScriptHandler::StartPlayerSpawnPS(string& asSPSFile)
 
 void __stdcall cLuxScriptHandler::StopPlayerSpawnPS()
 {
-    gpBase->mpPlayer->GetHelperSpawnPS()->Stop();
+    gpBase->mpPlayer->GetHelperSpawnPS()->Reset();
 }
 
 //-----------------------------------------------------------------------
