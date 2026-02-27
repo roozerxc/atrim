@@ -1227,7 +1227,7 @@ void cLuxPlayer::UpdateCamera(float afTimeStep)
         float fSpeed = (mfFOVMulGoal - mfFOVMul) * mfFOVMulSpeed;
         mfFOVMul += afTimeStep * fSpeed;
         
-        if(cMath::Abs(mfFOVMulGoal - mfFOVMul) < 0.004f) 
+        if(cMath::Abs(mfFOVMulGoal - mfFOVMul) < 0.0f) 
             mfFOVMul = mfFOVMulGoal;
 
         mpCamera->SetFOV(mfFOV*mfFOVMul);
@@ -1240,7 +1240,7 @@ void cLuxPlayer::UpdateCamera(float afTimeStep)
         float fSpeed = (mfAspectMulGoal - mfAspectMul) * mfAspectMulSpeed;
         mfAspectMul += afTimeStep * fSpeed;
         
-        if(cMath::Abs(mfAspectMulGoal - mfAspectMul) < 0.004f) mfAspectMul = mfAspectMulGoal;
+        if(cMath::Abs(mfAspectMulGoal - mfAspectMul) < 0.0f) mfAspectMul = mfAspectMulGoal;
 
         mpCamera->SetAspect(mfAspect*mfAspectMul);
     }
@@ -1256,7 +1256,7 @@ void cLuxPlayer::UpdateCamera(float afTimeStep)
         
         mfRoll += afTimeStep * fSpeed;
 
-        if(cMath::Abs(mfRollGoal - mfRoll) < 0.004f) mfRoll = mfRollGoal;
+        if(cMath::Abs(mfRollGoal - mfRoll) < 0.0f) mfRoll = mfRollGoal;
 
         bUpdatedRoll = true;
     }
@@ -1271,7 +1271,7 @@ void cLuxPlayer::UpdateCamera(float afTimeStep)
 
         mfLeanRoll += afTimeStep * fSpeed;
 
-        if(cMath::Abs(mfLeanRollGoal - mfLeanRoll) < 0.004f) mfLeanRoll = mfLeanRollGoal;
+        if(cMath::Abs(mfLeanRollGoal - mfLeanRoll) < 0.0f) mfLeanRoll = mfLeanRollGoal;
 
         bUpdatedRoll = true;
     }
