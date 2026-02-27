@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HPL2", "HPL2\HPL2.vcproj", "{DC0D8838-1E2E-4F84-905A-B432BA46B15C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "amnesia", "amnesia\amnesia.vcproj", "{2D02B325-2B26-4EB7-8C15-4E1AEE03F0C1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DC0D8838-1E2E-4F84-905A-B432BA46B15C} = {DC0D8838-1E2E-4F84-905A-B432BA46B15C}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC0D8838-1E2E-4F84-905A-B432BA46B15C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DC0D8838-1E2E-4F84-905A-B432BA46B15C}.Debug|Win32.Build.0 = Debug|Win32
+		{DC0D8838-1E2E-4F84-905A-B432BA46B15C}.Release|Win32.ActiveCfg = Release|Win32
+		{DC0D8838-1E2E-4F84-905A-B432BA46B15C}.Release|Win32.Build.0 = Release|Win32
+		{2D02B325-2B26-4EB7-8C15-4E1AEE03F0C1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2D02B325-2B26-4EB7-8C15-4E1AEE03F0C1}.Debug|Win32.Build.0 = Debug|Win32
+		{2D02B325-2B26-4EB7-8C15-4E1AEE03F0C1}.Release|Win32.ActiveCfg = Release|Win32
+		{2D02B325-2B26-4EB7-8C15-4E1AEE03F0C1}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,60 @@
+# Amnesia 2000: The Dark Descent
+
+**WARNING: THIS IS UNFINISHED**
+
+Also known as Amnesia2K or `atrim`. This is a backport of Frictional Games' Amnesia: The Dark Descent (and A Machine for Pigs coming soon), and a fork of Amnesia64 for the Microsoft Windows 2000 operating system
+
+## Key changes
+- **Downgraded SDL 2.0.12 to SDL 1.2.15**
+- **New icons for `Debug` and `Release` configurations**
+- **Completely removed all references to haptics and HaptX**
+- **Fixed buggy screenshots that used an incorrect pixel format (`RGBA`)**
+- **Game now sets up profiles and configs in new `settings` folder**
+- **Screenshots are now taken in the game `screenshots` folder**
+- **Customizable 24-bit bitmap icon (`amnesia.bmp`)**
+    NOTE: This only appears on the window title bar
+
+## Todos
+- **Implement FLAC, the Free Lossless Audio Codec support for sounds and music streams**
+- **Bring over a majority of new features and updates from Amnesia: A Machine for Pigs**
+- **Break free from msvc to MinGW/LLVM and use the Cmake system**
+
+## Installation
+
+Go to Releases on the right-hand side of the repository page and click on the latest version that appears. You should see a zip file which contains the precompiled binaries for Amnesia2K. Then download and extract its contents to your Amnesia game folder (where Amnesia.exe typically is found)
+
+The binaries are compiled through the msvc compiler, so you will need to install the Visual C++ Redistributables:
+
+https://www.techpowerup.com/download/visual-c-redistributable-runtime-package-all-in-one/
+
+## Building
+
+You need Visual Studio 2005 with Service Pack 1 and some updates. For legal reasons I cannot provide an iso or crack for it (you can look elsewhere), but you can find most of the updates required to build the dependencies and solutions from this archive repository:
+
+https://archive.org/download/vs80sp1-all-langs/SP1/
+
+https://archive.org/download/vs80sp1-all-langs/sp1-updates/
+
+Once you have installed all of the necessary updates, you can now start to compile the required dependencies for `HPL2` first (via `dependencies.sln`), then `HPL2` and the `amnesia` project itself (via `atrim.sln`). You have two configurations to pick:
+
+- **Release**
+
+This is the configuration that should be used when you set up the project for the first time. This is optimal if you want to quickly test new additions to your source code
+
+- **Debug**
+
+This is the slowest and least stable, without any code optimization. This is useful ONLY for diagnosing bugs and crashes, and using some sort of hardware breakpoint should be next to essential. Due to its slow performance it is not ideal to play the game using a Debug build; please use the Release build instead
+
+## How to debug after compilation?
+
+If you want to use the built-in debugger against the `amnesia` project regardless of configuration, right-click on the project and set it as a startup project
+
+To make the debugger work with your game, go to the project's properties and click `Debugging`. Then change the Working Directory to the path of your Amnesia: The Dark Descent install
+
+For example this path is `C:\Games\AmnesiaTDD_Work\` and you MUST have a backslash at the end of the path when you are specifying your own.
+
+## NOTE about gamepad support
+
+Gamepads are still supported, but you need to plug in your controller before you open the game. DirectInput and XInput controllers do work and are fully functional with this port. To use XInput-supported or compatible controllers, you will need to install the DirectX End-User Runtimes:
+
+https://www.techpowerup.com/download/directx-redistributable-runtime/
