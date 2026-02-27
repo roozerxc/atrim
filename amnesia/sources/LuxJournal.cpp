@@ -464,7 +464,9 @@ void cLuxJournal::Update(float afTimeStep)
 
     ////////////////////////
     //Update extra effects
-    gpBase->mpEffectHandler->GetSanityGainFlash()->Update(afTimeStep);
+    cLuxEffect_SanityGainFlash *pSanityGainFlash = gpBase->mpEffectHandler->GetSanityGainFlash();
+    if(pSanityGainFlash->IsActive())
+        pSanityGainFlash->Update(afTimeStep);
 }
 
 //-----------------------------------------------------------------------
@@ -581,7 +583,7 @@ void cLuxJournal::OnDraw(float afFrameTime)
             mvStateData[i]->OnDraw(afFrameTime);
     }
 
-    //////////////////////////////////7
+    //////////////////////////////////
     //Fade
     if(mbOpenedFromInventory)
     {
@@ -590,7 +592,9 @@ void cLuxJournal::OnDraw(float afFrameTime)
 
     ////////////////////////
     //Draw extra effects
-    gpBase->mpEffectHandler->GetSanityGainFlash()->DrawFlash(mpGuiSet, afFrameTime);
+    cLuxEffect_SanityGainFlash *pSanityGainFlash = gpBase->mpEffectHandler->GetSanityGainFlash();
+    if(pSanityGainFlash->IsActive())
+        pSanityGainFlash->DrawFlash(mpGuiSet, afFrameTime);
 }
 
 //-----------------------------------------------------------------------

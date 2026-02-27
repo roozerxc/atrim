@@ -727,7 +727,9 @@ void cLuxInventory::Update(float afTimeStep)
     ////////////////////////
     //Update hints and effects
     gpBase->mpHintHandler->UpdateHintText(afTimeStep);
-    gpBase->mpEffectHandler->GetSanityGainFlash()->Update(afTimeStep);
+    cLuxEffect_SanityGainFlash *pSanityGainFlash = gpBase->mpEffectHandler->GetSanityGainFlash();
+    if(pSanityGainFlash->IsActive())
+        pSanityGainFlash->Update(afTimeStep);
 }
 
 
@@ -959,7 +961,9 @@ void cLuxInventory::OnDraw(float afFrameTime)
     ////////////////////////
     //Draw extra effects and hints
     gpBase->mpHintHandler->DrawHintText(afFrameTime, mpGuiSet);
-    gpBase->mpEffectHandler->GetSanityGainFlash()->DrawFlash(mpGuiSet, afFrameTime);
+    cLuxEffect_SanityGainFlash *pSanityGainFlash = gpBase->mpEffectHandler->GetSanityGainFlash();
+    if(pSanityGainFlash->IsActive())
+        pSanityGainFlash->DrawFlash(mpGuiSet, afFrameTime);
 }
 
 //-----------------------------------------------------------------------
