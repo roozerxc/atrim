@@ -1272,7 +1272,7 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
 
     kCopyToVar(apPlayer, mbJumpDisabled);
     kCopyToVar(apPlayer, mbCrouchDisabled);
-    kCopyFromVar(apPlayer, mbSanityDrainDisabled);
+    kCopyToVar(apPlayer, mbSanityDrainDisabled);
 
     kCopyToVar(apPlayer, mfInteractionMoveSpeedMul);
     kCopyToVar(apPlayer, mfEventMoveSpeedMul);
