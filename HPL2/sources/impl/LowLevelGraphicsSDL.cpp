@@ -33,11 +33,7 @@
 #include <OpenGL/OpenGL.h>
 #endif
 
-#if USE_SDL2
-#include "SDL2/SDL_syswm.h"
-#else
 #include "SDL/SDL_syswm.h"
-#endif
 
 #ifdef _WIN32
 #include "impl/TaskKeyHook.h"

@@ -14,11 +14,7 @@
 //#pragma comment(lib, "libvorbisfile.lib")
 //#pragma comment(lib, "alut.lib")
 #pragma comment(lib, "openal32.lib")
-//#ifdef USE_SDL2
-//#pragma comment(lib, "SDL2.lib")
-//#else
 //#pragma comment(lib, "SDL.lib")
-//#endif
 #endif
 
 #include "OAL_Types.h"
@@ -26,7 +22,6 @@
 //#include "OAL_WAVSample.h"
 //#include "OAL_OggSample.h"
 //#include "OAL_OggStream.h"
-
 
 ////////////////////////////////////////////
 // Init / Shutdown funcs

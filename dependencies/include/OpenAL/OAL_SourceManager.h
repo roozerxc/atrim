@@ -5,11 +5,7 @@
 #include "OAL_Helper.h"
 #include "OAL_LoggerObject.h"
 
-#ifdef USE_SDL2
-#include <SDL2/SDL.h>
-#else
 #include <SDL/SDL.h>
-#endif
 
 class cOAL_SourceManager : public iOAL_LoggerObject
 {

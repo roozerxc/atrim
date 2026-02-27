@@ -40,23 +40,6 @@ namespace hpl
     {
         switch(aButton)
         {
-#if USE_SDL2
-        case eGamepadButton_A: return "Button A";
-        case eGamepadButton_B: return "Button B";
-        case eGamepadButton_X: return "Button X";
-        case eGamepadButton_Y: return "Button Y";
-        case eGamepadButton_Back: return "Button Back";
-        case eGamepadButton_Guide: return "Button Guide";
-        case eGamepadButton_Start: return "Button Start";
-        case eGamepadButton_LeftStick: return "Button LeftStick";
-        case eGamepadButton_RightStick: return "Button RightStick";
-        case eGamepadButton_LeftShoulder: return "Button LeftShoulder";
-        case eGamepadButton_RightShoulder: return "Button RightShoulder";
-        case eGamepadButton_DpadUp: return "Button DpadUp";
-        case eGamepadButton_DpadDown: return "Button DpadDown";
-        case eGamepadButton_DpadLeft: return "Button DpadLeft";
-        case eGamepadButton_DpadRight: return "Button DpadRight";
-#else
         case eGamepadButton_0: return "Button 0";
         case eGamepadButton_1: return "Button 1";
         case eGamepadButton_2: return "Button 2";
@@ -87,7 +70,6 @@ namespace hpl
         case eGamepadButton_27: return "Button 27";
         case eGamepadButton_28: return "Button 28";
         case eGamepadButton_29: return "Button 29";
-#endif
         }
         
         return "Unknown";
@@ -97,23 +79,6 @@ namespace hpl
 
     eGamepadButton iGamepad::StringToButton(const tString& asButton)
     {
-#if USE_SDL2
-        if(asButton=="Button A") return eGamepadButton_A;
-        if(asButton=="Button B") return eGamepadButton_B;
-        if(asButton=="Button X") return eGamepadButton_X;
-        if(asButton=="Button Y") return eGamepadButton_Y;
-        if(asButton=="Button Back") return eGamepadButton_Back;
-        if(asButton=="Button Guide") return eGamepadButton_Guide;
-        if(asButton=="Button Start") return eGamepadButton_Start;
-        if(asButton=="Button LeftStick") return eGamepadButton_LeftStick;
-        if(asButton=="Button RightStick") return eGamepadButton_RightStick;
-        if(asButton=="Button LeftShoulder") return eGamepadButton_LeftShoulder;
-        if(asButton=="Button RightShoulder") return eGamepadButton_RightShoulder;
-        if(asButton=="Button DpadUp") return eGamepadButton_DpadUp;
-        if(asButton=="Button DpadDown") return eGamepadButton_DpadDown;
-        if(asButton=="Button DpadLeft") return eGamepadButton_DpadLeft;
-        if(asButton=="Button DpadRight") return eGamepadButton_DpadRight;
-#else
         if(asButton=="Button 0") return eGamepadButton_0;
         if(asButton=="Button 1") return eGamepadButton_1;
         if(asButton=="Button 2") return eGamepadButton_2;
@@ -144,7 +109,6 @@ namespace hpl
         if(asButton=="Button 27") return eGamepadButton_27;
         if(asButton=="Button 28") return eGamepadButton_28;
         if(asButton=="Button 29") return eGamepadButton_29;
-#endif
         
         return eGamepadButton_LastEnum;
     }
@@ -155,14 +119,6 @@ namespace hpl
     {
         switch(aAxis)
         {
-#if USE_SDL2
-        case eGamepadAxis_LeftX: return "Axis LeftX";
-        case eGamepadAxis_LeftY: return "Axis LeftY";
-        case eGamepadAxis_RightX: return "Axis RightX";
-        case eGamepadAxis_RightY: return "Axis RightY";
-        case eGamepadAxis_LeftTrigger: return "Axis LeftTrigger";
-        case eGamepadAxis_RightTrigger: return "Axis RightTrigger";
-#else
         case eGamepadAxis_0: return "Axis 0";
         case eGamepadAxis_1: return "Axis 1";
         case eGamepadAxis_2: return "Axis 2";
@@ -172,7 +128,6 @@ namespace hpl
         case eGamepadAxis_7: return "Axis 7";
         case eGamepadAxis_8: return "Axis 8";
         case eGamepadAxis_9: return "Axis 9";
-#endif
         }
         return "None";
     }
@@ -181,14 +136,6 @@ namespace hpl
 
     eGamepadAxis iGamepad::StringToAxis(const tString& asAxis)
     {
-#if USE_SDL2
-        if(asAxis=="Axis LeftX") return eGamepadAxis_LeftX;
-        if(asAxis=="Axis LeftY") return eGamepadAxis_LeftY;
-        if(asAxis=="Axis RightX") return eGamepadAxis_RightX;
-        if(asAxis=="Axis RightY") return eGamepadAxis_RightY;
-        if(asAxis=="Axis LeftTrigger") return eGamepadAxis_LeftTrigger;
-        if(asAxis=="Axis RightTrigger") return eGamepadAxis_RightTrigger;
-#else
         if(asAxis=="Axis 0") return eGamepadAxis_0;
         if(asAxis=="Axis 1") return eGamepadAxis_1;
         if(asAxis=="Axis 2") return eGamepadAxis_2;
@@ -199,7 +146,6 @@ namespace hpl
         if(asAxis=="Axis 7") return eGamepadAxis_7;
         if(asAxis=="Axis 8") return eGamepadAxis_8;
         if(asAxis=="Axis 9") return eGamepadAxis_9;
-#endif
         return eGamepadAxis_LastEnum;
     }
 

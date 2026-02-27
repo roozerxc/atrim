@@ -2,24 +2,15 @@
 
 #include "impl/MouseSDL.h"
 #include "impl/KeyboardSDL.h"
-#if USE_SDL2
-#include "impl/GamepadSDL2.h"
-#else
 #include "impl/GamepadSDL.h"
-#endif
 
 #include "system/LowLevelSystem.h"
 #include "graphics/LowLevelGraphics.h"
 
 #include "engine/Engine.h"
 
-#if USE_SDL2
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_syswm.h"
-#else
 #include "SDL/SDL.h"
 #include "SDL/SDL_syswm.h"
-#endif
 
 #if defined _WIN32 && !SDL_VERSION_ATLEAST(2,0,0)
 #include <Windows.h>
@@ -186,11 +177,7 @@ namespace hpl {
 
     iGamepad* cLowLevelInputSDL::CreateGamepad(int alIndex)
     {
-#if USE_SDL2
-        return hplNew( cGamepadSDL2, (this, alIndex) );
-#else
         return hplNew( cGamepadSDL, (this, alIndex) );
-#endif
     }
     
     //-----------------------------------------------------------------------

@@ -1,8 +1,6 @@
 #ifndef HPL_GAMEPAD_SDL_H
 #define HPL_GAMEPAD_SDL_H
 
-#if !USE_SDL2
-
 #include <vector>
 #include <list>
 #include "system/SystemTypes.h"
@@ -91,7 +89,5 @@ namespace hpl {
     };
 
 };
-
-#endif // USE_SDL2
 
 #endif // HPL_GAMEPAD_SDL_H

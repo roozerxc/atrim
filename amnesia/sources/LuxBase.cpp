@@ -671,61 +671,8 @@ bool cLuxBase::InitApp()
     
     //Get the config file paths
     msDefaultUserConfigPath = pInitCfg->GetStringW("ConfigFiles", "DefaultUserSettings",_W(""));
-#if USE_SDL2
-    
-    msDefaultUserKeyConfigPath = pInitCfg->GetStringW("ConfigFiles", "DefaultUserKeysSDL2", _W(""));
-    msDefaultMainConfigPath = pInitCfg->GetStringW("ConfigFiles", "DefaultMainSettingsSDL2",_W(""));
-
-    if(msDefaultUserKeyConfigPath.empty() || msDefaultMainConfigPath.empty())
-    {
-        if(msInitConfigFile!=msDefaultInitConfigFile)
-        {
-            cConfigFile *pInitCfgDefaults = hplNew(cConfigFile, (msDefaultInitConfigFile));
-            if(pInitCfgDefaults->Load()==false){
-                msErrorMessage =_W("Could not load default main init file: ")+msDefaultInitConfigFile;
-                return false;
-            }
-
-            tWString sSDL2CfgWarning = _W("The following 'ConfigFiles' path entries were not defined in ") + msInitConfigFile;
-
-            if(msDefaultMainConfigPath.empty())
-            {
-                sSDL2CfgWarning += _W("\n - DefaultMainSettingsSDL2");
-
-                msDefaultMainConfigPath = pInitCfgDefaults->GetStringW("ConfigFiles", "DefaultMainSettingsSDL2",_W(""));
-            }
-
-            if(msDefaultUserKeyConfigPath.empty())
-            {
-                sSDL2CfgWarning += _W("\n - DefaultUserKeysSDL2");
-            
-                msDefaultUserKeyConfigPath = pInitCfgDefaults->GetStringW("ConfigFiles", "DefaultUserKeysSDL2",_W(""));
-            }
-
-            sSDL2CfgWarning += _W("\nGame defaults will be used");
-            
-            hplDelete(pInitCfgDefaults);
-
-            if(msDefaultMainConfigPath.empty()==false && msDefaultUserKeyConfigPath.empty()==false)
-                cPlatform::CreateMessageBox(eMsgBoxType_Warning, _W("Warning"), sSDL2CfgWarning.c_str());
-        }
-        
-        if(msDefaultMainConfigPath.empty() || msDefaultUserKeyConfigPath.empty())
-        {
-            msErrorMessage = _W("Could not load default settings files:");
-            if(msDefaultMainConfigPath.empty())
-                msErrorMessage += _W("\n - DefaultMainSettingsSDL2");
-
-            if(msDefaultUserKeyConfigPath.empty())
-                msErrorMessage += _W("\n - DefaultUserKeysSDL2");
-
-            return false;
-        }
-    }
-#else
     msDefaultUserKeyConfigPath = pInitCfg->GetStringW("ConfigFiles", "DefaultUserKeys", _W(""));
     msDefaultMainConfigPath = pInitCfg->GetStringW("ConfigFiles", "DefaultMainSettings",_W(""));
-#endif
 
     msGameConfigPath = pInitCfg->GetStringW("ConfigFiles", "Game",_W(""));
     msMenuConfigPath = pInitCfg->GetStringW("ConfigFiles", "Menu",_W(""));

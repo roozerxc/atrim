@@ -4,11 +4,7 @@
 
 #include "system/LowLevelSystem.h"
 
-#if USE_SDL2
-#include "SDL2/SDL_stdinc.h"
-#else
 #include "SDL/SDL_stdinc.h"
-#endif
 
 #if defined _WIN32
 #define SIZEOF_WCHAR 2

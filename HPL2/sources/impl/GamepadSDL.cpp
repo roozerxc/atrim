@@ -1,5 +1,3 @@
-#if !USE_SDL2
-
 #include "impl/GamepadSDL.h"
 
 #include "impl/LowLevelInputSDL.h"
@@ -389,4 +387,3 @@ namespace hpl {
     //-----------------------------------------------------------------------
 
 }
-#endif // !USE_SDL2

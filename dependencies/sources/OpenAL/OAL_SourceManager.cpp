@@ -83,11 +83,7 @@ bool cOAL_SourceManager::Initialize ( bool abManageVoices, int alNumSourcesHint,
 		// This converts the desired frequency in aInput to amount of milliseconds to wait.
 		// Note that this is an int value, so any freq above 1000 will turn mlThreadWaitTime to 0;
 		mlThreadWaitTime = 1000/alUpdateFreq;
-#ifdef USE_SDL2
-		mpUpdaterThread = SDL_CreateThread(UpdaterThread, "SourceUpdater", NULL);
-#else
 		mpUpdaterThread = SDL_CreateThread(UpdaterThread, NULL);
-#endif
 		mpStreamListMutex = SDL_CreateMutex ();
 
 		LogMsg("", eOAL_LogVerbose_Medium, eOAL_LogMsg_Info, "Done\n" );

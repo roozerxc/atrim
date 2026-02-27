@@ -11,11 +11,7 @@
 #include <Cg/cgGL.h>
 #endif
 
-#if USE_SDL2
-#include "SDL2/SDL.h"
-#else
 #include "SDL/SDL.h"
-#endif
 
 // Include these AFTER SDL
 #ifdef __linux__

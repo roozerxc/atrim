@@ -1,10 +1,6 @@
 #include "impl/KeyboardSDL.h"
 
-#if USE_SDL2
-#include "SDL2/SDL.h"
-#else
 #include "SDL/SDL.h"
-#endif
 
 #include "impl/LowLevelInputSDL.h"
 #include "system/String.h"
@@ -26,20 +22,10 @@ namespace hpl {
         mpLowLevelInputSDL = apLowLevelInputSDL;
 
         mvKeyArray.resize(eKey_LastEnum);
-#if !USE_SDL2 && defined __APPLE__
-        // world keys 0 to 95
-        mvWorldKeyMap.resize(96);
-        // Initialize to None
-        for (int k=0; k<=95; ++k) {
-            mvWorldKeyMap[k] = eKey_None;
-        }
-#endif
         ClearKeyList();
 
-#if !SDL_VERSION_ATLEAST(2, 0, 0)
         SDL_EnableUNICODE(1);
         SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
-#endif
     }
     
     //-----------------------------------------------------------------------

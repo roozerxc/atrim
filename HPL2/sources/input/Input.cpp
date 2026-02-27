@@ -217,11 +217,6 @@ namespace hpl
             cGamepadXInput::SetWasConnected(i, bConnected);
         }
 #else
-#ifndef USE_SDL2
-        // SDL2 supports hot plugging so no need to re-init
-        mpLowLevelInput->DropGamepadSupport();
-        mpLowLevelInput->InitGamepadSupport();
-#endif
         for(int i=0; i<mpLowLevelInput->GetPluggedGamepadNum(); ++i)
         {
             iGamepad* pGamepad = mpLowLevelInput->CreateGamepad(i);
