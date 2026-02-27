@@ -1396,7 +1396,7 @@ void iLuxEnemy::UpdateCanSeePlayer(float afTimeStep)
     // Check range
     float fMaxRange = mfSightRange;
 
-    if(bLanternOn) mfSightRange *= 1.5f;
+    if(bLanternOn) fMaxRange *= 1.5f;
     
     if(bLanternOn==false && pPlayer->GetHelperLightLevel()->GetNormalLightLevel() < mfPlayerInDarknessLightLevel && pPlayer->GetAvgSpeed() < 0.05f && 
         mbSkipVisibilityRangeHandicaps==false)
