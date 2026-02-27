@@ -1050,17 +1050,6 @@ void cLuxInputHandler::UpdateGamePlayerInput()
     //Ignite
     if(mpInput->BecameTriggerd(eLuxAction_Ignite))    mpPlayer->DoAction(eLuxPlayerAction_Ignite ,true);
     if(mpInput->WasTriggerd(eLuxAction_Ignite))        mpPlayer->DoAction(eLuxPlayerAction_Ignite, false);
-
-    //Holster
-    if(mpInput->BecameTriggerd(eLuxAction_Holster))    
-    {
-        if(gpBase->mpConfigHandler->mbLoadDebugMenu)
-        {
-            mpPlayer->GiveSanityDamage(10);
-            mpPlayer->LowerSanity(3, true);//1.0f / 60.0f);
-            mpPlayer->GiveDamage(10, 10, eLuxDamageType_BloodSplat, true, true);
-        }    
-    }
     
     //Lantern
     if(mpInput->BecameTriggerd(eLuxAction_Lantern))    mpPlayer->DoAction(eLuxPlayerAction_Lantern ,true);
