@@ -949,13 +949,6 @@ bool cLuxBase::InitUserConfig()
     mpUserKeyConfig = LoadConfigFile(msDefaultUserKeyConfigPath, msMainProfileSavePath +_W("user_keys.cfg") , false, &bDidLoadDefault);
     if(mpUserKeyConfig==NULL) return false;
 
-#ifdef __APPLE__
-    // Heinous kludge to get a default Mac keyboard shortcut without relying on different config files.
-    if (bDidLoadDefault) {
-        mpUserKeyConfig->SetString("Attack", "Secondary", "Keyboard::LeftMeta");
-    }
-#endif
-
     /////////////////////////
     //Load the profile language --- REMOVED - Language is now loaded only at startup
     //LoadLanguage(mpUserConfig->GetString("Game", "Language", msDefaultGameLanguage));

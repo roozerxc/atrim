@@ -86,16 +86,6 @@ namespace hpl {
             }
             else
 #endif //WIN32
-#if defined (__APPLE__)
-            if (sdlEvent.type==SDL_KEYDOWN)
-            {
-                if (sdlEvent.key.keysym.sym == SDLK_q && sdlEvent.key.keysym.mod & KMOD_GUI) {
-                    mbQuitMessagePosted = true;
-                } else {
-                    mlstEvents.push_back(sdlEvent);
-                }
-            } else
-#endif
             if (sdlEvent.type==SDL_QUIT)
             {
                 mbQuitMessagePosted = true;

@@ -28,12 +28,6 @@
 
 #include "system/String.h"
 
-#ifndef _WIN32
-#include <clocale>
-#include <langinfo.h>
-#include <unistd.h>
-#endif
-
 
 // Include for using the versioning header
 //#include "BuildID_HPL2_0.h"
@@ -52,47 +46,6 @@ int WINAPI WinMain(
         int nCmdShow)
 {
     return hplMain(lpCmdLine);
-}
-#else
-int main(int argc, char *argv[])
-{
-#ifdef __linux__
-    if(!std::setlocale(LC_CTYPE, "")) {
-        fprintf(stderr, "Can't set the specified locale! Check LANG, LC_CTYPE, LC_ALL.\n");
-        return 1;
-    }
-    char *charset = nl_langinfo(CODESET);
-    bool utf8_mode = (strcasecmp(charset, "UTF-8") == 0);
-    if (!utf8_mode) {
-        fprintf(stderr, "UTF-8 Charset %s available.\nCurrent LANG is %s\nCharset: %s\n",
-            utf8_mode ? "is" : "not",
-            getenv("LANG"), charset);
-    }
-#endif
-
-    bool cwd = false;
-    hpl::tString cmdline = "";
-    for (int i=1; i < argc; i++) {
-        if (strcmp(argv[i], "-cwd") == 0) {
-            cwd = true;
-        } else if (strncmp(argv[i], "-psn", 4) == 0) {
-            // skip "finder" process number
-        } else {
-            if (cmdline.length()>0) {
-                cmdline.append(" ").append(argv[i]);
-            } else {
-                cmdline.append(argv[i]);
-            }
-        }
-    }
-
-    if (!cwd) {
-        hpl::tString dataDir = hpl::cPlatform::GetDataDir();
-
-        chdir(dataDir.c_str());
-    }
-
-    return hplMain(cmdline);
 }
 #endif
 #endif

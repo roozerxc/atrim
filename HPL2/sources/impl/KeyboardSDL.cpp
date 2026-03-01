@@ -46,19 +46,6 @@ namespace hpl {
             if(pEvent->type == SDL_KEYDOWN || pEvent->type == SDL_KEYUP)
             {
                 eKey key = SDLToKey(pEvent->key.keysym.sym);
-#   ifdef __APPLE__
-                if (key >= eKey_World_0 && key <= eKey_World_95) {
-                    if (pEvent->type == SDL_KEYDOWN) {
-                        eKey test = SDLToKey(pEvent->key.keysym.unicode);
-                        mvWorldKeyMap[key - eKey_World_0] = test;
-                        if (test != eKey_None) key = test;
-                    } else {
-                        if (mvWorldKeyMap[key - eKey_World_0] != eKey_None) {
-                            key = mvWorldKeyMap[key - eKey_World_0];
-                        }
-                    }
-                }
-#   endif
                 mvKeyArray[key] = pEvent->type == SDL_KEYDOWN?true:false;
 
                 int lUnicode = pEvent->key.keysym.unicode;

@@ -108,14 +108,6 @@ void cLuxInputMenuEntry::RetrieveDefaultValue()
         //mvSubActions[i].mType = GetInputDeviceTypeFromString(pInput->msInputType);
         //mvSubActions[i].mlInputId = pInput->mlValue;
     }
-#ifdef __APPLE__
-    // Heinous Kludge to get a default Mac keyboard shortcut without relying on different config files.
-    if (i < eInputMenuEntryPos_LastEnum && mlActionId == eLuxAction_Attack) {
-        mvSubActions[i].mType = eInputDeviceType_Keyboard;
-        mvSubActions[i].mlInputId = eKey_LeftMeta;
-        ++i;
-    }
-#endif
     for(;i<eInputMenuEntryPos_LastEnum;++i)
     {
         mvSubActions[i].mType = eInputDeviceType_LastEnum;

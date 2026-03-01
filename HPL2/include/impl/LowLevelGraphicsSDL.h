@@ -6,27 +6,14 @@
 #include <GL/wglew.h>
 #endif
 
-#ifdef WITH_CG
-#include <Cg/cg.h>
-#include <Cg/cgGL.h>
-#endif
-
 #include "SDL/SDL.h"
 
 // Include these AFTER SDL
-#ifdef __linux__
-#include <GL/glx.h>
-#endif
-
 #include "graphics/LowLevelGraphics.h"
 #include "math/MathTypes.h"
 
 
 namespace hpl {
-
-#ifdef __linux__
-    typedef int (*GLXSWAPINTERVALPROC)(int interval);
-#endif
     //-------------------------------------------------
 
     //////////////////////////////////////////

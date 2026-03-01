@@ -44,12 +44,9 @@ bool cOAL_WAVSample::CreateFromFile(const wstring &asFilename)
 	// This worked indeed, but didnt return a freeable pointer. 
 	// Will be used when some fix is found
 	//pPCMBuffer = alutLoadMemoryFromFile ( asFilename.c_str(), &eFormat, &lDataSize, &fFrequency );
-	
-	#if defined(__APPLE__)
-	alutLoadWAVFile ( (ALbyte*) sFilename.c_str(), &mFormat, &pPCMBuffer, &lSize, &mlFrequency);
-	#else
+
 	alutLoadWAVFile ( (ALbyte*) sFilename.c_str(), &mFormat, &pPCMBuffer, &lSize, &mlFrequency, AL_FALSE);
-	#endif
+
 	status = alutGetError ();
 	switch (status)
 	{

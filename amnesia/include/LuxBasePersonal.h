@@ -13,14 +13,6 @@
 #define PERSONAL_RELATIVEROOT _W("")
 #define PERSONAL_RELATIVEPIECES
 #define PERSONAL_RELATIVEPIECES_COUNT 0
-#elif defined(__linux__)
-#define PERSONAL_RELATIVEROOT _W(".frictionalgames/")
-#define PERSONAL_RELATIVEPIECES _W(".frictionalgames"),
-#define PERSONAL_RELATIVEPIECES_COUNT 1
-#else
-#define PERSONAL_RELATIVEROOT _W("Library/Application Support/Frictional Games/")
-#define PERSONAL_RELATIVEPIECES _W("Library"), _W("Library/Application Support"), _W("Library/Application Support/Frictional Games"),
-#define PERSONAL_RELATIVEPIECES_COUNT 3
 #endif
 // roozy: Account for portable backport effort
 #define PERSONAL_RELATIVEGAME_PARENT _W("settings/")

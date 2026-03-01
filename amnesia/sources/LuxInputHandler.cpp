@@ -343,13 +343,6 @@ void cLuxInputHandler::LoadUserConfig()
                 tStringVec vInputParts;
                 cString::GetStringVec(pDefaultInput->msInputType, vInputParts, &sSep);
                 CreateSubAction(pAction, vInputParts, pDefaultInput->mlValue);
-
-#if 0 && defined(__APPLE__)
-                // Heinous Kludge to get a default Mac keyboard shortcut without relying on different config files.
-                if (pDefaultInput->mlActionId == eLuxAction_Attack) {
-                    CreateSubAction(pAction, "Keyboard", eKey_LeftMeta);
-                }
-#endif
             }
         }
     }

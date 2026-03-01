@@ -111,11 +111,8 @@ bool cOAL_Device::Init( cOAL_Init_Params& acParams )
 	ALCint lAttrList[] = 
 	{
 		ALC_FREQUENCY,		acParams.mlOutputFreq,
-		#ifdef __APPLE__
-		#else
 		ALC_MONO_SOURCES,	acParams.mbVoiceManagement ? 256 : acParams.mlMinMonoSourcesHint,
 		ALC_STEREO_SOURCES,	acParams.mbVoiceManagement ? 0 : acParams.mlMinStereoSourcesHint,
-		#endif
 		ALC_MAX_AUXILIARY_SENDS, acParams.mlNumSendsHint,
 		0,
 	};

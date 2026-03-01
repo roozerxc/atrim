@@ -22,10 +22,6 @@
 
 #include "graphics/Bitmap.h"
 
-#ifdef __APPLE__
-#include <OpenGL/OpenGL.h>
-#endif
-
 #include "SDL/SDL_syswm.h"
 
 #ifndef _WIN32
@@ -497,10 +493,6 @@ namespace hpl {
         case eGraphicCaps_PolygonOffset:        return 1;    //OpenGL always support it!
 
         case eGraphicCaps_ShaderModel_2:        return (GLEW_ARB_fragment_program || GLEW_ARB_fragment_shader) ? 1 : 0;    //Mac always support this, so not a good test.
-#ifdef __APPLE__
-        case eGraphicCaps_ShaderModel_3:        return 0; // Force return false for OS X as dynamic branching doesn't work well (it's slow)
-        case eGraphicCaps_ShaderModel_4:        return 0;
-#else
         case eGraphicCaps_ShaderModel_3:
             {
                 if(mbForceShaderModel3And4Off)
@@ -515,7 +507,6 @@ namespace hpl {
                 else
                     return  GLEW_EXT_gpu_shader4 ? 1 : 0;
             }
-#endif
         
         case eGraphicCaps_OGL_ATIFragmentShader: return  GLEW_ATI_fragment_shader ? 1 : 0;
 
@@ -607,21 +598,6 @@ namespace hpl {
         {
             wglSwapIntervalEXT(abX ? (abAdaptive ? -1 : 1) : 0);
         }
-#elif defined(__linux__)
-        if (GLX_SGI_swap_control)
-        {
-            GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalSGI");
-            glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
-        }
-        else if (GLX_MESA_swap_control)
-        {
-            GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalMESA");
-            glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
-        }
-#elif defined(__APPLE__)
-        CGLContextObj ctx = CGLGetCurrentContext();
-        GLint swap = abX ? 1 : 0;
-        CGLSetParameter(ctx, kCGLCPSwapInterval, &swap);
 #endif
     }
 

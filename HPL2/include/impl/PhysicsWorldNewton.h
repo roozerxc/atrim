@@ -3,9 +3,6 @@
 
 #include "physics/PhysicsWorld.h"
 
-#if defined(__linux__) || defined(__APPLE__)
-#include <unistd.h>
-#endif
 #include <Newton.h>
 
 namespace hpl {

@@ -1,9 +1,6 @@
 #ifndef HPL_PHYSICS_BODY_NEWTON_H
 #define HPL_PHYSICS_BODY_NEWTON_H
 
-#if defined(__linux__) || defined(__APPLE__)
-#include <unistd.h>
-#endif
 #include <Newton.h>
 
 #include "physics/PhysicsBody.h"

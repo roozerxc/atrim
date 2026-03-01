@@ -64,7 +64,6 @@ namespace hpl {
         //Set end of attributes vectors
         mvAttribFormat.push_back(0);
         mvAttribBuffer.push_back(0);
-        #elif defined(__linux__)
         #endif
     }
 
@@ -75,7 +74,6 @@ namespace hpl {
         wglDeleteContext(mGLContext);                
         wglReleasePbufferDCARB(mPBuffer, mDeviceContext);
         wglDestroyPbufferARB(mPBuffer);
-        #elif defined(__linux__)
         #endif
     }
 
@@ -139,10 +137,9 @@ namespace hpl {
         wglQueryPbufferARB(mPBuffer, WGL_PBUFFER_HEIGHT_ARB, &mlHeight);
             
         //Init some GL stuff with the Buffer.
-        #ifdef _WIN32
         HDC OldHDC = wglGetCurrentDC();
         HGLRC OldGLRC = wglGetCurrentContext();
-        #endif
+
         MakeCurrentContext();
                 
         if(mbShareObjects)
@@ -155,8 +152,6 @@ namespace hpl {
         mpLowLevelGraphics->ClearFrameBuffer(eClearFrameBufferFlag_Color);
 
         wglMakeCurrent(OldHDC,OldGLRC);
-        #elif defined(__linux__)
-        return false;
         #endif
     
         return true;
@@ -183,7 +178,6 @@ namespace hpl {
         {
             Error("Error Binding pbuffer...\n");
         }
-        #elif defined(__linux__)
         #endif        
     }
     
@@ -196,7 +190,6 @@ namespace hpl {
         {
             Error("Error UnBinding pbuffer...\n");
         }
-        #elif defined(__linux__)
         #endif
     }
 

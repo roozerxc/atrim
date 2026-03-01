@@ -35,10 +35,6 @@ namespace hpl {
 
         #ifdef _WIN32
             mpPreprocessParser->GetEnvVarContainer()->Add("OS_Windows");
-        #elif defined(__APPLE__)
-            mpPreprocessParser->GetEnvVarContainer()->Add("OS_OSX");
-        #elif defined(__linux__)
-            mpPreprocessParser->GetEnvVarContainer()->Add("OS_Linux");
         #endif
     }
 
