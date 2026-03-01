@@ -130,6 +130,7 @@
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..\dependencies\include;..\HPL2\include;.\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USE_GAMEPAD;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H"
+				MinimalRebuild="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
