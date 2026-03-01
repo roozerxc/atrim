@@ -864,7 +864,7 @@ bool cLuxBase::InitMainConfig()
     mbShowPreMenu = mpMainConfig->GetBool("Main", "ShowPreMenu", true);
     mbShowMenu = mpMainConfig->GetBool("Main", "ShowMenu",true);
 
-    SetUpdateLogActive(mpMainConfig->GetBool("Main","UpdateLogActive", true));
+    SetUpdateLogActive(mpMainConfig->GetBool("Main","UpdateLogActive", false));
     
     ////////////////////////////////////
     // Load the game config file
