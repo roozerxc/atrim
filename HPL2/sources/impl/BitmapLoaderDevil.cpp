@@ -82,7 +82,7 @@ namespace hpl {
         }
 
         //Save the image to file
-        int    lRet = ilSaveF(lType, pFile);
+        int lRet = ilSaveF(lType, pFile);
         if(lRet ==0) Error("Error when saving image '%s' to file!\n",cString::To8Char(asFile).c_str());
         
         //Close file pointer
@@ -119,11 +119,11 @@ namespace hpl {
             return false;
         }
         
-        int lRet = ilLoadF(lType, pFile);
+        ILboolean lRet = ilLoadF(lType, pFile);
 
         fclose(pFile);
 
-        return lRet;
+        return lRet != 0;
     }
 
     //-----------------------------------------------------------------------
