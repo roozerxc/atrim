@@ -50,6 +50,7 @@
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="26495;26812"
 				UseFullPaths="true"
 			/>
 			<Tool
@@ -139,7 +140,8 @@
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				CompileAs="0"
+				CompileAs="2"
+				DisableSpecificWarnings="26495;26812"
 				UseFullPaths="true"
 			/>
 			<Tool
