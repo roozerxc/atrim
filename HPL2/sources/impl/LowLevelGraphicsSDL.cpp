@@ -1,11 +1,6 @@
 #ifdef _WIN32
 #pragma comment(lib, "OpenGL32.lib")
 #pragma comment(lib, "GLu32.lib")
-//#pragma comment(lib, "GLaux.lib")
-//#pragma comment(lib, "Cg.lib")
-//#pragma comment(lib, "CgGL.lib")
-//#pragma comment(lib, "SDL_ttf.lib")
-//#pragma comment(lib, "TaskKeyHook.lib")
 #endif
 
 #include <assert.h>
@@ -18,8 +13,6 @@
 #include "impl/LowLevelGraphicsSDL.h"
 #include "impl/SDLFontData.h"
 #include "impl/SDLTexture.h"
-//#include "impl/CGShader.h"
-//#include "impl/CGProgram.h"
 #include "impl/GLSLShader.h"
 #include "impl/GLSLProgram.h"
 #include "impl/VertexBufferOGL_Array.h"
@@ -34,10 +27,6 @@
 #endif
 
 #include "SDL/SDL_syswm.h"
-
-#ifdef _WIN32
-#include "impl/TaskKeyHook.h"
-#endif
 
 #ifndef _WIN32
     #if defined __ppc__ || defined(__LP64__)
@@ -2509,7 +2498,7 @@ namespace hpl {
         case eTextureType_1D:        return GL_TEXTURE_1D;    
         case eTextureType_2D:        return GL_TEXTURE_2D;
         case eTextureType_Rect:        return GL_TEXTURE_RECTANGLE;
-        case eTextureType_CubeMap:    return GL_TEXTURE_CUBE_MAP_ARB;
+        case eTextureType_CubeMap:    return GL_TEXTURE_CUBE_MAP;
         case eTextureType_3D:        return GL_TEXTURE_3D;
         }
         return 0;
@@ -2611,7 +2600,7 @@ namespace hpl {
             {
                 return GL_TEXTURE_RECTANGLE;
             }
-        case eTextureType_CubeMap:    return GL_TEXTURE_CUBE_MAP_ARB;
+        case eTextureType_CubeMap:    return GL_TEXTURE_CUBE_MAP;
         case eTextureType_3D:        return GL_TEXTURE_3D;
         }
         return 0;
