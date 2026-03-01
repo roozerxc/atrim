@@ -342,37 +342,34 @@ namespace hpl {
 
                 if(mbUseMipMaps && mType != eTextureType_Rect)
                 {
-                    switch(mFilter)
+                    if(mFilter == eTextureFilter_Nearest)
                     {
-                    case eTextureFilter_Nearest:
                         glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
                         glTexParameteri(GLTarget, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                        break;
-                    case eTextureFilter_Bilinear:
+                    }
+                    if(mFilter == eTextureFilter_Bilinear)
+                    {
                         glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
                         glTexParameteri(GLTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                        break;
-                    case eTextureFilter_Trilinear:
+                    }
+                    if(mFilter == eTextureFilter_Trilinear)
+                    {
                         glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
                         glTexParameteri(GLTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                        break;
                     }
                 }
                 else
                 {
-                    switch(mFilter)
+                    if(mFilter == eTextureFilter_Nearest)
                     {
-                    case eTextureFilter_Nearest:
                         glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
                         glTexParameteri(GLTarget, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                        break;
-                    case eTextureFilter_Bilinear:
-                    case eTextureFilter_Trilinear:
+                    }
+                    if(mFilter == eTextureFilter_Bilinear && mFilter == eTextureFilter_Trilinear)
+                    {
                         glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
                         glTexParameteri(GLTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                        break;
                     }
-                    
                 }
             }
 
@@ -565,7 +562,7 @@ namespace hpl {
 
         ;
 
-        if(GLEW_EXT_framebuffer_object)
+        if(mbUseMipMaps == true && GLEW_SGIS_generate_mipmap)
         {
             GLenum GLTarget = GetGLTextureTargetEnum(mType);
 
@@ -573,7 +570,7 @@ namespace hpl {
             for(size_t i=0; i < mvTextureHandles.size(); ++i)
             {
                 glBindTexture(GLTarget, mvTextureHandles[i]);
-                glGenerateMipmapEXT(GLTarget);
+                glTexParameteri(GLTarget, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
             }
 
             glDisable(GLTarget);
@@ -835,9 +832,9 @@ namespace hpl {
         // Generate mipmaps if the format is not compressed.
         if(mUsage == eTextureUsage_RenderTarget)
         {
-            if(GLEW_EXT_framebuffer_object)
+            if(mbUseMipMaps == true && GLEW_SGIS_generate_mipmap)
             {
-                glGenerateMipmapEXT(aGLTarget);
+                glTexParameteri(aGLTarget, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
             }
             else
             {
@@ -983,7 +980,8 @@ namespace hpl {
             else
                 glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         }
-        else{
+        else
+        {
             glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         }
 
