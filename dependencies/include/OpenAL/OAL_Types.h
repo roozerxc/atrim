@@ -16,7 +16,6 @@
 
 #define NUM_EXTENSIONS 13
 #define NUM_ALC_EXTENSIONS 4
-//#define NUM_AL_EXTENSIONS 9
 
 #define OAL_ALC_EXT_CAPTURE 0
 #define OAL_ALC_EXT_EFX 1
@@ -34,7 +33,6 @@
 // Specifies the size of the memory unit in streaming ( currently 4 KB ) 
 // (buffer sizes are set using multiples of this unit)
 #define STREAMING_BLOCK_SIZE 4096
-//#define BUFFERCOUNT 8
 
 #if defined(__ppc__)
 	#define SYS_ENDIANNESS 1
@@ -52,7 +50,6 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/alut.h>
-//#include <AL/alext.h>
 #include <AL/efx.h>
 #include <AL/efx-creative.h>
 
@@ -65,9 +62,6 @@ class cOAL_Buffer;
 
 typedef vector<cOAL_Source*>			tSourceVec;
 typedef tSourceVec::iterator			tSourceVecIt;
-
-//typedef set<cOAL_Source*>				tSourceSet;
-//typedef set<cOAL_Source*>::iterator		tSourceSetIt;
 
 typedef list<cOAL_Source*>				tSourceList;
 typedef tSourceList::iterator			tSourceListIt;

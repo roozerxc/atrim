@@ -5,7 +5,6 @@
 
 class cOAL_Effect_Reverb;
 
-
 namespace hpl 
 {
 

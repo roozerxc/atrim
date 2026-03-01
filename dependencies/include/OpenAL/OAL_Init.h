@@ -11,7 +11,6 @@
 #include "OAL_Types.h"
 #include "OAL_LoggerObject.h"
 
-
 /////////////////////////////////////////
 // Initialization Parameters
 
@@ -48,20 +47,12 @@ public:
 
 /////////////////////////////////////////
 
-/*bool	OAL_Init (	const char* asDeviceName = NULL, int alOutputFreq = 44100, 
-					bool abUseThread = true, int alUpdateFreq = 100, 
-					int alReqMajorVersion = 1, int alReqMinorVersion = 1,
-					int alNumSourcesHint = 32, bool mbVoiceManagement = true,
-					int alMinMonoSourceHint = 0, int alMinStereoSourceHint = 0,
-					int alStreamingBufferSize = 1, int alStreamingBufferCount = 4);
-*/
 bool	OAL_Init ( cOAL_Init_Params& acParams );
 void	OAL_Close ( void );
 
 void	OAL_Update ( void );
 void	OAL_SetRollOffFactor ( const float afFactor );
 void	OAL_SetDistanceModel ( eOAL_DistanceModel aeModel );
-
 
 const char*	OAL_Info_GetDeviceName();
 const char*	OAL_Info_GetVendorName();
@@ -75,8 +66,8 @@ int OAL_Info_GetStreamBufferSize();
 string		OAL_Info_GetDefaultOutputDevice();
 vector<string> OAL_Info_GetOutputDevices();
 
-
 void OAL_LogSourcePoolStatus();
 void OAL_SetupLogging ( bool abLogSounds, eOAL_LogOutput aeOutput = eOAL_LogOutput_File, eOAL_LogVerbose aVerbose = eOAL_LogVerbose_Low,  string asLogFilename = "OAL.Log" );
 void OAL_Log(eOAL_LogVerbose aVerboseLevelReq, eOAL_LogMsg aMsg,  const char* asMessage, ... );
+
 #endif	// _OAL_INIT_H

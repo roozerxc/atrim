@@ -11,18 +11,9 @@
 
 #include "OAL_Types.h"
 
-//
-
-//#include "OAL_Sample.h"
-//#include "OAL_Stream.h"
-
 #include <string>
 
-//class cOAL_Sample;
-//class cOAL_Stream;
-
 using namespace std;
-
 
 void		OAL_Test_Sample_Play ( cOAL_Sample* apSample );
 void		OAL_Test_Stream_Play ( cOAL_Stream* apStream );
@@ -46,19 +37,13 @@ float OAL_Source_GetGain(const int alSource);
 const bool	OAL_Source_IsPlaying ( const int alSource );
 const bool	OAL_Source_IsBufferUnderrun ( const int alSource );
 
-
-
 void		OAL_Listener_SetAttributes ( const float* apPos, const float* apVel, const float* apForward, const float* apUpward ); 
 void		OAL_Listener_SetMasterVolume ( const float afVolume );
-
 
 void	OAL_Source_SetElapsedTime( const int alSource, double afTime );
 double	OAL_Source_GetElapsedTime( const int alSource );
 double	OAL_Source_GetTotalTime( const int alSource );
 
 void OAL_Source_Log ( int alSourceId, int alMessageType, const char* asMessage, ... );
-
-
-
 
 #endif	// _OAL_PLAYBACK_H

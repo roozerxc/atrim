@@ -24,9 +24,6 @@ public:
 	inline bool	NeedsUpdate () { return mbNeedsUpdate; }
 	inline void SetUpdated() { mbNeedsUpdate = false; }
 
-//	virtual void SetParams( cOAL_Effect_Params& aParams ){}
-//	virtual cOAL_Effect_Params GetParams(){};
-
 	void Lock();
 	void Unlock();
     

@@ -4,11 +4,7 @@
 #include "sound/SoundChannel.h"
 #include "sound/SoundData.h"
 
-#ifdef USE_OALWRAPPER
-# include "OALWrapper/OAL_Funcs.h"
-#else
-# include "OpenAL/OAL_Funcs.h"
-#endif
+#include "OpenAL/OAL_Funcs.h"
 
 namespace hpl {
 

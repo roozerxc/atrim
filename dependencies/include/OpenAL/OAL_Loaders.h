@@ -14,7 +14,6 @@
 cOAL_Sample*	OAL_Sample_Load		( const wstring &asFilename );
 void			OAL_Sample_Unload	( cOAL_Sample* apSample );
 
-
 cOAL_Stream*	OAL_Stream_Load		( const wstring &asFilename );
 void			OAL_Stream_Unload	( cOAL_Stream* apStream );
 
@@ -23,6 +22,5 @@ void OAL_Stream_SetLoop ( cOAL_Stream* apStream, bool abLoop );
 
 int OAL_Sample_GetChannels (cOAL_Sample* apSample);
 int OAL_Stream_GetChannels (cOAL_Stream* apStream);
-
 
 #endif	// _OAL_PLAYBACK_H
