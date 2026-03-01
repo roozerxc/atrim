@@ -43,13 +43,13 @@
 				Optimization="0"
 				AdditionalIncludeDirectories=".\include\;..\dependencies\include\;..\dependencies\include\AL\;..\dependencies\sources\zlib\;..\dependencies\sources\AngelScript\include\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_WINDOWS;_USRDLL;HPL_EXPORTS;_CRT_SECURE_NO_WARNINGS;USE_GAMEPAD;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H"
-				MinimalRebuild="false"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="0"
+				DebugInformationFormat="4"
 				UseFullPaths="true"
 			/>
 			<Tool
