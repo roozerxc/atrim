@@ -8,13 +8,8 @@
 
 #include "system/LowLevelSystem.h"
 
-#ifdef USE_OALWRAPPER
-# include "OALWrapper/OAL_Funcs.h"
-# include "OALWrapper/OAL_Effect_Reverb.h"
-#else
-# include "OpenAL/OAL_Funcs.h"
-# include "OpenAL/OAL_Effect_Reverb.h"
-#endif
+#include "OpenAL/OAL_Funcs.h"
+#include "OpenAL/OAL_Effect_Reverb.h"
 
 namespace hpl {
 
