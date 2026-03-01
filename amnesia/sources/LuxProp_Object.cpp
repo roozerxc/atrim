@@ -456,10 +456,12 @@ void cLuxProp_Object::BeforePropDestruction()
 {
     //////////////////////////////
     // Check if break should happen and init stuff
-    if(mbBroken == false || mBreakData.mbActive==false || mvBodies.empty() || mbDisableBreakable)
-    {
-        return;
-    }
+    #ifndef LUXPROP_OBJECT_BREAKABLE_WORKAROUND
+        if(mbBroken == false || mBreakData.mbActive==false || mvBodies.empty() || mbDisableBreakable)
+        {
+            return;
+        }
+    #endif /* LUXPROP_OBJECT_BREAKABLE_WORKAROUND */
 
     cWorld *pWorld = mpMap->GetWorld();
     cMatrixf mtxCenterTransform = cMatrixf::Identity;
@@ -516,10 +518,8 @@ void cLuxProp_Object::BeforePropDestruction()
     }
     ///////////////////////
     // Create Entity
-    else 
+    else
     {
-        
-
         ////////////////////////////
         // Create the entity
         if(mBreakData.msEntity != "")
