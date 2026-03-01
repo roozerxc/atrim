@@ -62,10 +62,6 @@ namespace hpl {
 
         mbDoubleSidedStencilIsSet = false;
 
-#if defined(_WIN32) && !SDL_VERSION_ATLEAST(2,0,0)
-        mhKeyTrapper = NULL;
-#endif
-
         mpFrameBuffer = NULL;
 
         for(int i=0;i<kMaxTextureUnits;i++)
@@ -115,13 +111,7 @@ namespace hpl {
         for(int i=0;i<kMaxTextureUnits;i++)    hplFree(mpTexCoordArray[i]);
 
         //Exit extra stuff
-#ifdef WITH_CG
-        ExitCG();
-#endif
         //TTF_Quit();
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        SDL_DestroyWindow(mpScreen);
-#endif
     }
 
     //-----------------------------------------------------------------------
@@ -180,49 +170,6 @@ namespace hpl {
                 }
             }
         }
-
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        unsigned int mlFlags = SDL_WINDOW_OPENGL;
-        if (alWidth == 0 && alHeight == 0) {
-            mvScreenSize = cVector2l(800,600);
-            mlFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-        } else if (abFullscreen) {
-            mlFlags |= SDL_WINDOW_FULLSCREEN;
-        }
-
-
-        Log(" Setting video mode: %d x %d - %d bpp\n",alWidth, alHeight, alBpp);
-        mpScreen = SDL_CreateWindow(asWindowCaption.c_str(),
-                                    SDL_WINDOWPOS_CENTERED_DISPLAY(mlDisplay), SDL_WINDOWPOS_CENTERED_DISPLAY(mlDisplay),
-                                    mvScreenSize.x, mvScreenSize.y, mlFlags);
-        if(mpScreen==NULL)
-        {
-            // try disabling FSAA
-            Error("Could not set display mode setting a lower one! %s\n", SDL_GetError());
-            mvScreenSize = cVector2l(640,480);
-            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
-            SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
-            mpScreen = SDL_CreateWindow(asWindowCaption.c_str(),
-                                        SDL_WINDOWPOS_CENTERED_DISPLAY(mlDisplay), SDL_WINDOWPOS_CENTERED_DISPLAY(mlDisplay),
-                                        mvScreenSize.x, mvScreenSize.y, mlFlags);
-            if(mpScreen==NULL)
-            {
-                FatalError("Unable to initialize display! %s\n", SDL_GetError());
-                return false;
-            }
-            else
-            {
-                cPlatform::CreateMessageBox(_W("Warning!"),_W("Could not set displaymode and 640x480 is used instead!\n"));
-            }
-        }
-        {
-            // update with the screen size ACTUALLY obtained
-            int w,h;
-            SDL_GetWindowSize(mpScreen, &w, &h);
-            mvScreenSize = cVector2l(w, h);
-        }
-        mGLContext = SDL_GL_CreateContext(mpScreen);
-#else
         unsigned int mlFlags = SDL_OPENGL;
 
         if(abFullscreen) mlFlags |= SDL_FULLSCREEN;
@@ -282,19 +229,9 @@ namespace hpl {
             }
         }
 #   endif
-#endif
         if (mbGrab) {
             SetWindowGrab(true);
         }
-
-        //Trap Alt tab if in fullscreen
-#if defined(_WIN32) && !SDL_VERSION_ATLEAST(2,0,0)
-        if(abFullscreen)
-        {
-            //mhKeyTrapper = LoadLibrary( "keyhook.dll" );
-            //::DisableTaskKeys(true,false);
-        }
-#endif //WIN32
 
         Log(" Init Glew...");
         if(glewInit() == GLEW_OK)
@@ -307,7 +244,7 @@ namespace hpl {
         }
 
         ///Setup up windows specifc context:
-#if defined(_WIN32) && !SDL_VERSION_ATLEAST(2,0,0)
+#if defined(_WIN32)
         mGLContext = wglGetCurrentContext();
         mDeviceContext = wglGetCurrentDC();
 #endif
@@ -320,24 +257,16 @@ namespace hpl {
 
         //Gamma
         mfGammaCorrection = 1.0f;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        SDL_SetWindowBrightness(mpScreen, mfGammaCorrection);
-#else
         SDL_GetGammaRamp(mvStartGammaArray[0],mvStartGammaArray[1],mvStartGammaArray[2]);
 
         SDL_SetGamma(mfGammaCorrection,mfGammaCorrection,mfGammaCorrection);
-#endif
 
         //GL
         Log(" Setting up OpenGL\n");
         SetupGL();
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        SDL_GL_SwapWindow(mpScreen);
-#else
         //Set the clear color
         SDL_GL_SwapBuffers();
-#endif
 
         mbInitHasBeenRun = true;
 
@@ -617,20 +546,11 @@ namespace hpl {
     void cLowLevelGraphicsSDL::SetWindowGrab(bool abX)
     {
         mbGrab = abX;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        if (mpScreen) {
-            SDL_SetWindowGrab(mpScreen, abX ? SDL_TRUE : SDL_FALSE);
-        }
-#else
         SDL_WM_GrabInput(abX ? SDL_GRAB_ON : SDL_GRAB_OFF);
-#endif
     }
 
     void cLowLevelGraphicsSDL::SetRelativeMouse(bool abX)
     {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        SDL_SetRelativeMouseMode(abX ? SDL_TRUE : SDL_FALSE);
-#endif
     }
 
     /////////////////////////////////////////////////////////////
@@ -659,38 +579,22 @@ namespace hpl {
 
     void cLowLevelGraphicsSDL::SetWindowCaption(const tString &asName)
     {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        SDL_SetWindowTitle(mpScreen, asName.c_str());
-#else
         SDL_WM_SetCaption(asName.c_str(), "");
-#endif
     }
 
     bool cLowLevelGraphicsSDL::GetWindowMouseFocus()
     {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        return (SDL_GetWindowFlags(mpScreen) & SDL_WINDOW_MOUSE_FOCUS) != 0;
-#else
         return (SDL_GetAppState() & SDL_APPMOUSEFOCUS) !=0;
-#endif
     }
 
     bool cLowLevelGraphicsSDL::GetWindowInputFocus()
     {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        return (SDL_GetWindowFlags(mpScreen) & SDL_WINDOW_INPUT_FOCUS) != 0;
-#else
         return (SDL_GetAppState() & SDL_APPINPUTFOCUS) !=0;
-#endif
     }
 
     bool cLowLevelGraphicsSDL::GetWindowIsVisible()
     {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        return (SDL_GetWindowFlags(mpScreen) & SDL_WINDOW_SHOWN) != 0;
-#else
         return (SDL_GetAppState() & SDL_APPACTIVE) !=0;
-#endif
     }
 
     //-----------------------------------------------------------------------
@@ -698,9 +602,7 @@ namespace hpl {
     void cLowLevelGraphicsSDL::SetVsyncActive(bool abX, bool abAdaptive)
     {
         ;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        SDL_GL_SetSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
-#elif defined(_WIN32)
+#if defined(_WIN32)
         if(WGLEW_EXT_swap_control)
         {
             wglSwapIntervalEXT(abX ? (abAdaptive ? -1 : 1) : 0);
@@ -744,11 +646,7 @@ namespace hpl {
         ;
 
         mfGammaCorrection = afX;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        SDL_SetWindowBrightness(mpScreen, mfGammaCorrection);
-#else
         SDL_SetGamma(mfGammaCorrection,mfGammaCorrection,mfGammaCorrection);
-#endif
     }
 
     float cLowLevelGraphicsSDL::GetGammaCorrection()
@@ -1080,11 +978,7 @@ namespace hpl {
     void cLowLevelGraphicsSDL::SwapBuffers()
     {
         ;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        SDL_GL_SwapWindow(mpScreen);
-#else
         SDL_GL_SwapBuffers();
-#endif
     }
 
     //-----------------------------------------------------------------------

@@ -69,9 +69,6 @@ namespace hpl {
 
             if(    pEvent->type != SDL_MOUSEMOTION && 
                 pEvent->type != SDL_MOUSEBUTTONDOWN &&
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-                pEvent->type != SDL_MOUSEWHEEL &&
-#endif
                 pEvent->type != SDL_MOUSEBUTTONUP)
             {
                 continue;
@@ -79,17 +76,7 @@ namespace hpl {
 
             if(pEvent->type == SDL_MOUSEMOTION)
             {
-#if SDL_VERSION_ATLEAST(2, 0, 0) && _WIN32
-                /*if(pLowLevelGfx->GetFullscreenModeActive() == false)
-                {
-                    /////////////
-                    // Only use abs position if not in fullscreen mode
-                    mvMouseAbsPos = cVector2l(pEvent->motion.x,pEvent->motion.y);
-                }*/
                 mvMouseAbsPos = cVector2l(pEvent->motion.x,pEvent->motion.y);
-#else
-                mvMouseAbsPos = cVector2l(pEvent->motion.x,pEvent->motion.y);
-#endif
                 
                 Uint8 buttonState = pEvent->motion.state;
 
@@ -98,19 +85,6 @@ namespace hpl {
                 if(buttonState & SDL_BUTTON(2)) mvMButtonArray[eMouseButton_Middle] = true;
                 if(buttonState & SDL_BUTTON(3)) mvMButtonArray[eMouseButton_Right] = true;*/
             }
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-            else if(pEvent->type == SDL_MOUSEWHEEL)
-            {
-                if (pEvent->wheel.y > 0) {
-                    mvMButtonArray[eMouseButton_WheelUp] = true;
-                    mbWheelUpMoved = true;
-                } else {
-                    mvMButtonArray[eMouseButton_WheelDown] = true;
-                    mbWheelDownMoved = true;
-                }
-                break;
-            }
-#endif
             else
             {
                 bool bButtonIsDown = pEvent->type==SDL_MOUSEBUTTONDOWN;

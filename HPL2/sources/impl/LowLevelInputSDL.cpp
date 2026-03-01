@@ -12,7 +12,7 @@
 #include "SDL/SDL.h"
 #include "SDL/SDL_syswm.h"
 
-#if defined _WIN32 && !SDL_VERSION_ATLEAST(2,0,0)
+#if defined _WIN32
 #include <Windows.h>
 #include <Dbt.h>
 #endif
@@ -30,15 +30,7 @@ namespace hpl {
     {
         LockInput(true);
         RelativeMouse(false);
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER);
-#else
-//        mlConnectedDevices = 0;
-//        mlCheckDeviceChange = 0;
-//        mbDirtyGamepads = true;
-//
         SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
-#endif
     }
 
     //-----------------------------------------------------------------------
@@ -74,7 +66,7 @@ namespace hpl {
         mlstEvents.clear();
         while(SDL_PollEvent(&sdlEvent)!=0)
         {
-#if defined _WIN32 && !SDL_VERSION_ATLEAST(2,0,0)
+#if defined _WIN32
             if(sdlEvent.type==SDL_SYSWMEVENT)
             {
                 SDL_SysWMmsg* pMsg = sdlEvent.syswm.msg;
@@ -94,21 +86,6 @@ namespace hpl {
             }
             else
 #endif //WIN32
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-            // built-in SDL2 gamepad hotplug code
-            // this whole contract should be rewritten to allow clean adding/removing
-            // of controllers, instead of brute force rescanning
-            if (sdlEvent.type==SDL_CONTROLLERDEVICEADDED)
-            {
-                // sdlEvent.cdevice.which is the device #
-                cEngine::SetDeviceWasPlugged();
-            } else if (sdlEvent.type==SDL_CONTROLLERDEVICEREMOVED)
-            {
-                // sdlEvent.cdevice.which is the instance # (not device #).
-                // instance # increases as devices are plugged and unplugged.
-                cEngine::SetDeviceWasRemoved();
-            }
-#endif
 #if defined (__APPLE__)
             if (sdlEvent.type==SDL_KEYDOWN)
             {

@@ -44,30 +44,6 @@ namespace hpl {
             SDL_Event *pEvent = &(*it);
 
             if(pEvent->type == SDL_KEYDOWN || pEvent->type == SDL_KEYUP)
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-            {
-                eKey key = SDLToKey(pEvent->key.keysym.sym);
-
-                mvKeyArray[key] = pEvent->key.state == SDL_PRESSED?true:false;
-                int sdl_mod = pEvent->key.keysym.mod;
-
-                if(pEvent->key.state == SDL_PRESSED)
-                {
-                    AddKeyToList(sdl_mod, key, 0, mlstKeysPressed);
-                }
-                else
-                {
-                    AddKeyToList(sdl_mod, key, 0, mlstKeysReleased);
-                }
-            }
-            else if(pEvent->type == SDL_TEXTINPUT)
-            {
-                tWString tstr = cString::UTF8ToWChar(pEvent->text.text);
-                for (size_t i=0,l=tstr.size(); i<l; ++i) {
-                    AddKeyToList(SDL_GetModState(), eKey_None, (int)tstr[i], mlstKeysPressed);
-                }
-            }
-#else
             {
                 eKey key = SDLToKey(pEvent->key.keysym.sym);
 #   ifdef __APPLE__
@@ -95,7 +71,6 @@ namespace hpl {
                 else
                     AddKeyToList(sdl_mod, key, lUnicode, mlstKeysReleased);
             }
-#endif
         }
     }
 
@@ -231,18 +206,6 @@ namespace hpl {
             case     SDLK_y: return eKey_Y;
             case     SDLK_z: return eKey_Z;
             case     SDLK_DELETE: return eKey_Delete;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-            case     SDLK_KP_0: return eKey_KP_0;
-            case     SDLK_KP_1: return eKey_KP_1;
-            case     SDLK_KP_2: return eKey_KP_2;
-            case     SDLK_KP_3: return eKey_KP_3;
-            case     SDLK_KP_4: return eKey_KP_4;
-            case     SDLK_KP_5: return eKey_KP_5;
-            case     SDLK_KP_6: return eKey_KP_6;
-            case     SDLK_KP_7: return eKey_KP_7;
-            case     SDLK_KP_8: return eKey_KP_8;
-            case     SDLK_KP_9: return eKey_KP_9;
-#else
             case     SDLK_KP0: return eKey_KP_0;
             case     SDLK_KP1: return eKey_KP_1;
             case     SDLK_KP2: return eKey_KP_2;
@@ -253,7 +216,6 @@ namespace hpl {
             case     SDLK_KP7: return eKey_KP_7;
             case     SDLK_KP8: return eKey_KP_8;
             case     SDLK_KP9: return eKey_KP_9;
-#endif
             case     SDLK_KP_PERIOD: return eKey_KP_Period;
             case     SDLK_KP_DIVIDE: return eKey_KP_Divide;
             case     SDLK_KP_MULTIPLY: return eKey_KP_Multiply;
@@ -285,13 +247,6 @@ namespace hpl {
             case     SDLK_F13: return eKey_F13;
             case     SDLK_F14: return eKey_F14;
             case     SDLK_F15: return eKey_F15;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-            case    SDLK_NUMLOCKCLEAR: return eKey_NumLock;
-            case     SDLK_SCROLLLOCK: return eKey_ScrollLock;
-            case     SDLK_LGUI: return eKey_LeftSuper;
-            case     SDLK_RGUI: return eKey_RightSuper;
-            case    SDLK_PRINTSCREEN: return eKey_Print;
-#else
             case     SDLK_NUMLOCK: return eKey_NumLock;
             case     SDLK_SCROLLOCK: return eKey_ScrollLock;
             case     SDLK_LSUPER: return eKey_LeftSuper;
@@ -300,7 +255,6 @@ namespace hpl {
             case     SDLK_LMETA: return eKey_LeftMeta;
             case     SDLK_PRINT: return eKey_Print;
             case     SDLK_BREAK: return eKey_Break;
-#endif
             case     SDLK_CAPSLOCK: return eKey_CapsLock;
             case     SDLK_RSHIFT: return eKey_RightShift;
             case     SDLK_LSHIFT: return eKey_LeftShift;

@@ -304,10 +304,10 @@ namespace hpl {
 
         //////////////////////////////////////
         //Windows stuff
-        #if defined(_WIN32) && !SDL_VERSION_ATLEAST(2,0,0)
+        #if defined(_WIN32)
             HGLRC mGLContext;
             HDC   mDeviceContext;
-            HINSTANCE mhKeyTrapper;
+            HINSTANCE hInstance;
         #endif
 
         bool mbInitHasBeenRun;
@@ -351,12 +351,7 @@ namespace hpl {
 
         //////////////////////////////////////
         //SDL Variables
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-        SDL_Window *mpScreen;
-        SDL_GLContext mGLContext;
-#else
         SDL_Surface *mpScreen;
-#endif
         bool mbGrab;
         
         //////////////////////////////////////
