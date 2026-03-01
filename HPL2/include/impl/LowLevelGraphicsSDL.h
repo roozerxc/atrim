@@ -69,7 +69,7 @@ namespace hpl {
         /////////////// GENERAL SETUP ///////////////////////
         /////////////////////////////////////////////////////
 
-        bool Init(    int alWidth, int alHeight, int alDisplay, int alBpp, int abFullscreen, int alMultisampling,
+        bool Init(    int alWidth, int alHeight, int alDisplay, int alBpp, bool abFullscreen, int alMultisampling,
                     eGpuProgramFormat aGpuProgramFormat,const tString& asWindowCaption,
                     const cVector2l &avWindowPos);
 

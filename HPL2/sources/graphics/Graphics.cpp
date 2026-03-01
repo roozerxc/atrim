@@ -104,7 +104,7 @@ namespace hpl {
 
     //-----------------------------------------------------------------------
     
-    bool cGraphics::Init(    int alWidth, int alHeight, int alDisplay, int alBpp, int abFullscreen, 
+    bool cGraphics::Init(    int alWidth, int alHeight, int alDisplay, int alBpp, bool abFullscreen, 
                             int alMultisampling,eGpuProgramFormat aGpuProgramFormat,
                             const tString &asWindowCaption, const cVector2l &avWindowPos,
                             cResources* apResources,

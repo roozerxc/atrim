@@ -66,7 +66,7 @@ namespace hpl {
         cGraphics(iLowLevelGraphics *apLowLevelGraphics,iLowLevelResources *apLowLevelResources);
         ~cGraphics();
 
-        bool Init(int alWidth, int alHeight, int alDisplay, int alBpp, int abFullscreen, int alMultisampling,
+        bool Init(int alWidth, int alHeight, int alDisplay, int alBpp, bool abFullscreen, int alMultisampling,
                     eGpuProgramFormat aGpuProgramFormat,const tString &asWindowCaption, const cVector2l &avWindowPos,
                     cResources* apResources, tFlag alHplSetupFlags);
 
