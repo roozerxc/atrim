@@ -107,9 +107,7 @@ namespace hpl {
 
         if(mbInitHasBeenRun)
         {
-#if !SDL_VERSION_ATLEAST(2, 0, 0)
             SDL_SetGammaRamp(mvStartGammaArray[0],mvStartGammaArray[1],mvStartGammaArray[2]);
-#endif
         }
 
         hplFree(mpVertexArray);

@@ -313,7 +313,6 @@ namespace hpl {
             case     SDLK_SYSREQ: return eKey_SysReq;
             case     SDLK_MENU: return eKey_Menu;
             case     SDLK_POWER: return eKey_Power;
-#if !SDL_VERSION_ATLEAST(2, 0, 0)
             case     SDLK_EURO: return eKey_Euro;
             case     SDLK_WORLD_0: return eKey_World_0;
             case     SDLK_WORLD_1: return eKey_World_1;
@@ -411,7 +410,6 @@ namespace hpl {
             case     SDLK_WORLD_93: return eKey_World_93;
             case     SDLK_WORLD_94: return eKey_World_94;
             case     SDLK_WORLD_95: return eKey_World_95;
-#endif
         }
 
         return eKey_None;

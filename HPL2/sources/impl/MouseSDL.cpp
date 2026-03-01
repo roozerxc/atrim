@@ -124,7 +124,6 @@ namespace hpl {
                     case SDL_BUTTON_RIGHT: mvMButtonArray[eMouseButton_Right] = bButtonIsDown;break;
                     case SDL_BUTTON_X1: mvMButtonArray[eMouseButton_Button6] = bButtonIsDown;break;
                     case SDL_BUTTON_X2: mvMButtonArray[eMouseButton_Button7] = bButtonIsDown;break;
-#if !SDL_VERSION_ATLEAST(2, 0, 0)
                     case SDL_BUTTON_WHEELUP: 
                         mvMButtonArray[eMouseButton_WheelUp] = bButtonIsDown;
                         if(bButtonIsDown) mbWheelUpMoved = true;
@@ -133,7 +132,6 @@ namespace hpl {
                         mvMButtonArray[eMouseButton_WheelDown] = bButtonIsDown;
                         if(bButtonIsDown) mbWheelDownMoved = true;
                         break;
-#endif
                 }
             }
         }

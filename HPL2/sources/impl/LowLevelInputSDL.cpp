@@ -138,16 +138,12 @@ namespace hpl {
 
     void cLowLevelInputSDL::InitGamepadSupport()
     {
-#if !SDL_VERSION_ATLEAST(2, 0, 0)
         SDL_InitSubSystem(SDL_INIT_JOYSTICK);
-#endif
     }
 
     void cLowLevelInputSDL::DropGamepadSupport()
     {
-#if !SDL_VERSION_ATLEAST(2, 0, 0)
         SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
-#endif
     }
 
     int cLowLevelInputSDL::GetPluggedGamepadNum()
