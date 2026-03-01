@@ -20,7 +20,7 @@
 			OutputDirectory="$(SolutionDir)\compiled\$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -161,7 +161,7 @@
 				OutputFile="$(OutDir)\$(ProjectName)-$(PlatformName)-$(ConfigurationName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)\dependencies\lib\$(PlatformName)-$(ConfigurationName)&quot;"
-				GenerateDebugInformation="false"
+				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
