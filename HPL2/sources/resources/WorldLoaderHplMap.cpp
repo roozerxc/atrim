@@ -515,7 +515,7 @@ namespace hpl {
             int lColliderNum = binBuff.GetInt32();
             shapeBody.mvColliders.resize(lColliderNum);
 
-            for(int i=0; i<shapeBody.mvColliders.size(); ++i)
+            for(size_t i=0; i<shapeBody.mvColliders.size(); ++i)
             {
                 cHplMapShape *pShape = hplNew(cHplMapShape, ());
                 shapeBody.mvColliders[i] = pShape;
@@ -733,7 +733,7 @@ namespace hpl {
 
             binBuff.AddInt32((int)pShapeBody->mvColliders.size());
 
-            for(int i=0; i<pShapeBody->mvColliders.size(); ++i)
+            for(size_t i=0; i<pShapeBody->mvColliders.size(); ++i)
             {
                 cHplMapShape *pShape = pShapeBody->mvColliders[i];
 

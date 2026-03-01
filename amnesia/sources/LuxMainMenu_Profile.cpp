@@ -173,7 +173,7 @@ void cLuxMainMenu_Profile::CreateMainGui()
         pWidget->SetFocusNavigation(eUIArrow_Up, mpListProfiles);
         if(lPrev>=0)
             pWidget->SetFocusNavigation(eUIArrow_Left, vButtons[lPrev]);
-        if(lNext<vButtons.size())
+        if(lNext<static_cast<int>(vButtons.size()))
             pWidget->SetFocusNavigation(eUIArrow_Right, vButtons[lNext]);
     }
 }

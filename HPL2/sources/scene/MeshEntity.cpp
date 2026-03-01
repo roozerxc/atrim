@@ -835,7 +835,7 @@ namespace hpl {
 
     cBoneState* cMeshEntity::GetBoneState(int alIndex)
     {
-        if ( alIndex < 0 || alIndex >= mvBoneStates.size() )
+        if ( alIndex < 0 || alIndex >= static_cast<int>(mvBoneStates.size()) )
         {
             return NULL;
         }

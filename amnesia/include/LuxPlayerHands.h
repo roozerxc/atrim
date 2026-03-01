@@ -119,7 +119,7 @@ private:
 
     float mfPosAddMul;
 
-    int mlMaxCamRotations;
+    size_t mlMaxCamRotations;
     tVector3fList mlstCamRotations;
 
     eLuxHandsState mHandState;

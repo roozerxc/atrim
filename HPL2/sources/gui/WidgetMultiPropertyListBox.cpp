@@ -146,9 +146,9 @@ namespace hpl {
         /////////////////////////////
         // Draws items
         vPosition = GetItemStartPos();
-        for(size_t i=mlFirstItem; i<mvItems.size(); ++i)
+        for(size_t i=static_cast<size_t>(mlFirstItem);i<mvItems.size(); ++i)
         {
-            if(i-mlFirstItem > mlMaxItems) break;
+            if(i-mlFirstItem > static_cast<size_t>(mlMaxItems)) break;
 
             cWidgetItem* pItem = mvItems[i];
 
