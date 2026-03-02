@@ -339,11 +339,16 @@ void cLuxMainMenu_CustomStoryList::CreateGui()
     float fButtonWidth = 80;
     float fButtonSepp = 3;
 
-    vPos.x = mpWindow->GetSize().x - fButtonWidth*2-fButtonSepp-5;
+    vPos.x = mpWindow->GetSize().x - fButtonWidth*7.36f-fButtonSepp-5;
     vPos.y = mpWindow->GetSize().y - 25 - 10;
 
+    //Reset List
+    cWidgetButton* pButton  = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),_W("Reset List"),mpWindow);
+    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(RepopulateStoryList));
+
     //Start
-    cWidgetButton* pButton  = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),kTranslate("Global","OK"),mpWindow);
+    vPos.x += fButtonWidth*5.36f + fButtonSepp;
+    pButton  = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),kTranslate("Global","OK"),mpWindow);
     pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressOK));
 
     //Cancel
@@ -461,6 +466,15 @@ bool cLuxMainMenu_CustomStoryList::SelectStory(iWidget* apWidget, const cGuiMess
     return true; 
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, SelectStory);
+
+//-----------------------------------------------------------------------
+
+bool cLuxMainMenu_CustomStoryList::RepopulateStoryList(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    PopulateStoryList();
+    return true; 
+}
+kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, RepopulateStoryList);
 
 //-----------------------------------------------------------------------
 
