@@ -7,11 +7,6 @@ Also known as Amnesia2K or `atrim`. This is a backport of Frictional Games' Amne
 
 For a list of key changes please see `CHANGELOG.md`
 
-## Todos
-- **Implement FLAC, the Free Lossless Audio Codec support for sounds and music streams**
-- **Bring over a majority of new features and updates from Amnesia: A Machine for Pigs**
-- **Break free from msvc to MinGW/LLVM and use the Cmake system**
-
 ## Installation
 
 Go to Releases on the right-hand side of the repository page and click on the latest version that appears. You should see a zip file which contains the precompiled binaries for Amnesia2K. Then download and extract its contents to your Amnesia game folder (where Amnesia.exe typically is found)
