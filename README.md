@@ -7,14 +7,6 @@ Also known as Amnesia2K or `atrim`. This is a backport of Frictional Games' Amne
 
 For a list of key changes please see `CHANGELOG.md`
 
-## Installation
-
-Go to Releases on the right-hand side of the repository page and click on the latest version that appears. You should see a zip file which contains the precompiled binaries for Amnesia2K. Then download and extract its contents to your Amnesia game folder (where Amnesia.exe typically is found)
-
-The binaries are compiled through the msvc compiler, so you will need to install the Visual C++ Redistributables:
-
-https://www.techpowerup.com/download/visual-c-redistributable-runtime-package-all-in-one/
-
 ## Building
 
 You need Visual Studio 2005 with Service Pack 1 and some updates. For legal reasons I cannot provide an iso or crack for it (you can look elsewhere), but you can find most of the updates required to build the dependencies and solutions from this archive repository:
@@ -27,22 +19,30 @@ Once you have installed all of the necessary updates, you can now start to compi
 
 - **Release**
 
-This is the configuration that should be used when you set up the project for the first time. This is optimal if you want to quickly test new additions to your source code
+This is the configuration that should be used when you set up the project for the first time. This has full code optimization and typically is the most stable especially for playing the base game and its Justine DLC, custom stories, total and full conversion mods.
+
+Due to its optimization, debugging may be slightly more difficult; you should use the Debug configuration for that instead.
 
 - **Debug**
 
-This is the slowest and least stable, without any code optimization. This is useful ONLY for diagnosing bugs and crashes, and using some sort of hardware breakpoint should be next to essential. Due to its slow performance it is not ideal to play the game using a Debug build; please use the Release build instead
+This is the least stable configuration, without any code optimization. While it can be used to play Amnesia and its mods, performance is quite slow; more specifically, crashes can happen and are imminent. This configuration is only useful for diagnosing bugs and crashes, and setting a hardware breakpoint should be necessary if you are looking to fix them.
+
+If you just want to play some mods and enjoy the game, the Debug configuration is not designed for this purpose at all; you should use the Release configuration.
 
 ## How to debug after compilation?
 
-If you want to use the built-in debugger against the `amnesia` project regardless of configuration, right-click on the project and set it as a startup project
+1. Right-click on the `amnesia` project and set it as a startup project.
+2. Go to the `amnesia` project properties and click on `Debugging`
+3. Change the `Working Directory` to the path of your Amnesia: The Dark Descent install.
 
-To make the debugger work with your game, go to the project's properties and click `Debugging`. Then change the Working Directory to the path of your Amnesia: The Dark Descent install
+For example this path is `C:\Games\AmnesiaTDD_Work\`
 
-For example this path is `C:\Games\AmnesiaTDD_Work\` and you MUST have a backslash at the end of the path when you are specifying your own.
+**You MUST add a backslash at the end of the path when you are specifying your own.**
 
 ## NOTE about gamepad support
 
-Gamepads are still supported, but you need to plug in your controller before you open the game. DirectInput and XInput controllers do work and are fully functional with this port. To use XInput-supported or compatible controllers, you will need to install the DirectX End-User Runtimes:
+Gamepads are still supported, but you need to plug in your controller before you open the game. DirectInput and XInput controllers do work and are fully functional with this port.
+
+To use XInput-supported or compatible controllers, you will need to install the DirectX End-User Runtimes:
 
 https://www.techpowerup.com/download/directx-redistributable-runtime/
