@@ -3,17 +3,9 @@
 
 ### WARNING: THIS IS UNFINISHED
 
-Also known as Amnesia2K or `atrim`. This is a backport of Frictional Games' Amnesia: The Dark Descent (and A Machine for Pigs coming soon), and a fork of Amnesia64 for the Microsoft Windows 2000 operating system
+Also known as Amnesia2K or `atrim`. This is a backport of Frictional Games' Amnesia: The Dark Descent (and A Machine for Pigs coming soon), and a fork of Amnesia64 for the Microsoft Windows 2000 operating system.
 
-## Key changes
-- **Downgraded SDL 2.0.12 to SDL 1.2.15**
-- **New icons for `Debug` and `Release` configurations**
-- **Completely removed all references to haptics and HaptX**
-- **Fixed buggy screenshots that used an incorrect pixel format (`RGBA`)**
-- **Game now sets up profiles and configs in new `settings` folder**
-- **Screenshots are now taken in the game `screenshots` folder**
-- **Customizable 24-bit bitmap icon (`amnesia.bmp`)**
-    NOTE: This only appears on the window title bar
+For a list of key changes please see `CHANGELOG.md`
 
 ## Todos
 - **Implement FLAC, the Free Lossless Audio Codec support for sounds and music streams**
