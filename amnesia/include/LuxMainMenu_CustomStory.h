@@ -68,9 +68,6 @@ private:
     void OnSetActive(bool abX);
 
     void PopulateStoryList();
-#ifdef USERDIR_RESOURCES
-    void PopulateUserDirStoryList();
-#endif
     void ClearStoryList();
 
     ////////////////////////

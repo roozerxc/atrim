@@ -717,12 +717,6 @@ void cLuxPreMenu::LoadPreMenuSections()
     // Check file pointed by config file and retrieve image files from there
     iXmlDocument* pDoc = pRes->GetLowLevel()->CreateXmlDocument();
     tWString sConfigPath = gpBase->msPreMenuConfigPath;
-#ifdef USERDIR_RESOURCES
-    if (gpBase->msUserResourceDir.length()
-        && cPlatform::FileExists(gpBase->msUserResourceDir + sConfigPath)) {
-        sConfigPath = gpBase->msUserResourceDir + sConfigPath;
-    }
-#endif
     if(pDoc->CreateFromFile(sConfigPath))
     {
         /////////////////////////////////////////////////////
@@ -747,4 +741,3 @@ void cLuxPreMenu::LoadPreMenuSections()
 }
 
 //-----------------------------------------------------------------------
-

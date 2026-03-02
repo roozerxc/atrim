@@ -647,18 +647,11 @@ bool cLuxBase::InitApp()
     // We load this HERE so the "userdir" magic can work
     // roozy: Account for portable backport effort
     tWString sPersonalDir = cString::AddSlashAtEndW(cPlatform::GetWorkingDir());
-#ifdef USERDIR_RESOURCES
-    //Set the user resource directory (used for mac and linux builds to not require saving files in game dir)
-    msUserResourceDir = sPersonalDir+PERSONAL_RELATIVEROOT PERSONAL_RELATIVEGAME_PARENT PERSONAL_RESOURCES;
-#endif
 
     /////////////////////////
     // Load the Init file
-#ifdef USERDIR_RESOURCES
-    cConfigFile *pInitCfg = hplNew(cConfigFile, (msInitConfigFile, msUserResourceDir));
-#else
     cConfigFile *pInitCfg = hplNew(cConfigFile, (msInitConfigFile ));
-#endif
+
     if(pInitCfg->Load()==false){
         msErrorMessage =_W("Could not load main init file: ")+msInitConfigFile;
         return false;
@@ -742,12 +735,7 @@ bool cLuxBase::InitApp()
     //////////////////////////////
     //Set up the directories to be created
     tWStringVec vDirs;
-#ifdef USERDIR_RESOURCES
-    hpl::SetupBaseDirs(vDirs, PERSONAL_RELATIVEGAME_PARENT, msMainSaveFolder,
-                    true, hpl::cString::To16Char(msCustomStoryPath));
-#else
     hpl::SetupBaseDirs(vDirs, PERSONAL_RELATIVEGAME_PARENT, msMainSaveFolder);
-#endif
 
     //Create directories    
     hpl::CreateBaseDirs(vDirs, sPersonalDir);
@@ -814,11 +802,7 @@ cConfigFile* cLuxBase::LoadConfigFile(const tWString& asDefaultPath, const tWStr
     }
     else
     {
-#ifdef USERDIR_RESOURCES
-        pConfig = hplNew( cConfigFile, (asDefaultPath, msUserResourceDir) );
-#else
         pConfig = hplNew( cConfigFile, (asDefaultPath) );
-#endif
     }
 
     ////////////////////////////////////
@@ -868,11 +852,8 @@ bool cLuxBase::InitMainConfig()
     
     ////////////////////////////////////
     // Load the game config file
-#ifdef USERDIR_RESOURCES
-    mpGameCfg = hplNew( cConfigFile, (msGameConfigPath, msUserResourceDir) );
-#else
     mpGameCfg = hplNew( cConfigFile, (msGameConfigPath) );
-#endif
+
     if(mpGameCfg->Load()==false)
     {
         msErrorMessage = _W("Failed to load game config file!");
@@ -881,11 +862,7 @@ bool cLuxBase::InitMainConfig()
 
     ////////////////////////////////////
     // Load the menu config file
-#ifdef USERDIR_RESOURCES
-    mpMenuCfg = hplNew( cConfigFile, (msMenuConfigPath, msUserResourceDir) );
-#else
     mpMenuCfg = hplNew( cConfigFile, (msMenuConfigPath) );
-#endif
 
     if(mpMenuCfg->Load()==false)
     {
@@ -1086,11 +1063,7 @@ bool cLuxBase::InitEngine()
 
     /////////////////////////
     //Load configurations
-#ifdef USERDIR_RESOURCES
-    mpEngine->GetResources()->LoadResourceDirsFile(msResourceConfigPath, msUserResourceDir);
-#else
     mpEngine->GetResources()->LoadResourceDirsFile(msResourceConfigPath);
-#endif
 
     mpEngine->GetPhysics()->LoadSurfaceData(msMaterialConfigPath);
 
@@ -1468,19 +1441,9 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
     }
     
     // Main game lang
-#ifdef USERDIR_RESOURCES
-    pResources->AddLanguageFile(msGameLanguageFolder + sGameFileName, true, msUserResourceDir);
-#else
     pResources->AddLanguageFile(msGameLanguageFolder + sGameFileName, true);
-#endif
-
-#ifdef USERDIR_RESOURCES
-    pResources->AddLanguageFile(msBaseLanguageFolder + sBaseFileName, true, msUserResourceDir);
-#else
     pResources->AddLanguageFile(msBaseLanguageFolder + sBaseFileName, true);
-#endif
 
-    
     ////////////////////////////////////////////
     //If not default language, add default to so only missing entries are filled in
     if(mpCustomStory && sGameFileName != mpCustomStory->msDefaultExtraLanguage)
@@ -1489,18 +1452,10 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
                                         mpCustomStory->msDefaultExtraLanguage, false);
 
     if(sGameFileName != msDefaultGameLanguage)
-#ifdef USERDIR_RESOURCES
-        pResources->AddLanguageFile(msGameLanguageFolder + msDefaultGameLanguage, false, msUserResourceDir);
-#else
         pResources->AddLanguageFile(msGameLanguageFolder + msDefaultGameLanguage, false);
-#endif
 
-    if(sBaseFileName != msDefaultBaseLanguage)    
-#ifdef USERDIR_RESOURCES
-        pResources->AddLanguageFile(msBaseLanguageFolder + msDefaultBaseLanguage, false, msUserResourceDir);
-#else
+    if(sBaseFileName != msDefaultBaseLanguage)
         pResources->AddLanguageFile(msBaseLanguageFolder + msDefaultBaseLanguage, false);
-#endif
 
     // Refresh all modules with new translation
     //RunModuleMessage(eLuxUpdateableMessage_LoadFonts, NULL);

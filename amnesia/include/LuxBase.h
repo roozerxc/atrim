@@ -239,9 +239,6 @@ public:
     tWString msProfileSavePath;
     tWString msMainProfileSavePath;
     tWString msProfileName;
-#ifdef USERDIR_RESOURCES
-    tWString msUserResourceDir;
-#endif
 
     bool mbExitMenuDirectly;
 
