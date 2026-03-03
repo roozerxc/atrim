@@ -93,9 +93,6 @@ namespace hpl {
 
     cLowLevelGraphicsSDL::~cLowLevelGraphicsSDL()
     {
-        //#ifdef _WIN32
-        //    if(mhKeyTrapper) FreeLibrary(mhKeyTrapper);
-        //#endif
 
         if(mbInitHasBeenRun)
         {
