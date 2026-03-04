@@ -532,7 +532,7 @@ void cLuxPlayerHands::UpdatePlayerHandsPos(float afTimeStep)
     vHandPosAdd -= mpPlayer->GetHeadPosAdd(eLuxHeadPosAdd_Bob);
     vHandPosAdd -= mpPlayer->GetHeadPosAdd(eLuxHeadPosAdd_ScreenShake);
     vHandPosAdd -= mpPlayer->GetHeadPosAdd(eLuxHeadPosAdd_Hurt);
-    ///vHandPosAdd -= mpPlayer->GetHeadPosAdd(eLuxHeadPosAdd_Lean);
+    vHandPosAdd -= mpPlayer->GetHeadPosAdd(eLuxHeadPosAdd_Lean);
 
     cVector3f vRight = pCam->GetRight();
     cVector3f vUp = pCam->GetUp();
