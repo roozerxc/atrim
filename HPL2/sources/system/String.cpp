@@ -182,7 +182,6 @@ namespace hpl {
 
     tWString cString::Get16BitFromArray(const tString &asArray)
     {
-        // TODOD: needs to be rewritten to be more portal as wchar_t is not ALWAYS 2 bytes. (it's 4 on linux and os x)
         tIntVec vVals;
         GetIntVec(asArray,vVals,NULL);
 

@@ -24,6 +24,23 @@
 
 //--------------------------------------------------------------------------------
 
+const
+class nullptr_t {
+    public:
+        template<class T>
+            operator T*() const
+                { return 0; }
+        
+        template<class C, class T>
+            operator T C::*() const
+                { return 0; }
+
+    private:
+        void operator&() const;
+}
+ 
+nullptr = {};
+
 static const bool gbDebug_SkipBGScene = false;
 static const bool gbDebug_FastLoadOptions = false;
 const int glHardMode_SaveCost = 4;
@@ -40,6 +57,7 @@ std::wstring LongToWString(const long long &l)
 }
 
 const tWString gsHardMode_SaveCostString = tWString(LongToWString((static_cast<long long>(glHardMode_SaveCost))));
+
 //--------------------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
@@ -1824,12 +1842,7 @@ bool cLuxMainMenu::ClickedSaveGamePopup(iWidget* apWidget, const cGuiMessageData
 
     ///////////////////////////
     // Get save label
-#if MAC_OS || LINUX
-    cWidgetLabel* pSaveLabel = 0;
-#else
-    //cWidgetLabel* pSaveLabel = nullptr;
-    cWidgetLabel* pSaveLabel = NULL;
-#endif
+    cWidgetLabel* pSaveLabel = nullptr;
     for (size_t i = 0; i < mvTopMenuLabels.size(); ++i)
     {
         if (mvTopMenuLabels[i]->GetName() == "Save")

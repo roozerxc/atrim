@@ -601,16 +601,10 @@ namespace hpl {
     
     //-----------------------------------------------------------------------
 
-/*
     void cBinaryBuffer::AddStringW(const tWString& asStr)
     {
-#ifdef BIGENDIAN
-        AddInt32Array(asStr[i], asStr.size()+1);
-#else
         AddData(asStr.c_str(), sizeof(wchar_t) * (asStr.size()+1) ); //+1 for the zero!
-#endif
     }
-*/
 
     //-----------------------------------------------------------------------
 

@@ -44,8 +44,6 @@ namespace hpl {
     enum ePlatform
     {
         ePlatform_Win32,
-        ePlatform_Linux,
-        ePlatform_Mac,
 
         ePlatform_LastEnum
     };

@@ -489,7 +489,7 @@ namespace hpl {
 
         case eGraphicCaps_PolygonOffset:        return 1;    //OpenGL always support it!
 
-        case eGraphicCaps_ShaderModel_2:        return (GLEW_ARB_fragment_program || GLEW_ARB_fragment_shader) ? 1 : 0;    //Mac always support this, so not a good test.
+        case eGraphicCaps_ShaderModel_2:        return (GLEW_ARB_fragment_program || GLEW_ARB_fragment_shader) ? 1 : 0;
         case eGraphicCaps_ShaderModel_3:
             {
                 if(mbForceShaderModel3And4Off)

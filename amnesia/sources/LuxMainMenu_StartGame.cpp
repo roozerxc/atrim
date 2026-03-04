@@ -5,6 +5,25 @@
 
 //-----------------------------------------------------------------------
 
+const
+class nullptr_t {
+    public:
+        template<class T>
+            operator T*() const
+                { return 0; }
+        
+        template<class C, class T>
+            operator T C::*() const
+                { return 0; }
+
+    private:
+        void operator&() const;
+}
+ 
+nullptr = {};
+
+//-----------------------------------------------------------------------
+
 //////////////////////////////////////////////////////////////////////////
 // CONSTRUCTORS
 //////////////////////////////////////////////////////////////////////////
@@ -14,12 +33,7 @@
 cLuxMainMenu_StartGame::cLuxMainMenu_StartGame(cGuiSet *apGuiSet, cGuiSkin *apGuiSkin) : iLuxMainMenuWindow(apGuiSet, apGuiSkin)
 {
     mvWindowSize = cVector2f(400, 220);
-#if MAC_OS || LINUX
-    mpStartButton = 0;
-#else
-    //mpStartButton = nullptr;
-    mpStartButton = NULL;
-#endif
+    mpStartButton = nullptr;
 }
 
 //-----------------------------------------------------------------------
