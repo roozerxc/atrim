@@ -318,8 +318,8 @@ namespace hpl {
         ////////////////////////////////////
         //Create Shadow Textures
         cVector3l vShadowSize[] = {
+                                    cVector3l(64, 64,1),
                                     cVector3l(128, 128,1),
-                                    cVector3l(256, 256,1),
                                     cVector3l(256, 256,1),
                                     cVector3l(512, 512,1),
                                     cVector3l(1024, 1024,1)
