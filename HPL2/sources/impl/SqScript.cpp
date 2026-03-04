@@ -182,6 +182,42 @@ namespace hpl {
 
     //-----------------------------------------------------------------------
 
+    bool cSqScript::RunFuncString(const tString& asFuncName, tString& asStringArg0)
+    {
+        int alHandle = mpModule->GetFunctionIdByName(asFuncName.c_str());
+
+        if (alHandle == asNO_FUNCTION)
+        {
+            return false;
+        }
+        
+        mpContext->Prepare(alHandle);
+        mpContext->SetArgObject(0, &asStringArg0);
+        mpContext->Execute();
+
+        return true;
+    }
+
+    //-----------------------------------------------------------------------
+
+    bool cSqScript::RunFuncFloat(const tString& asFuncName, float asFloatArg0)
+    {
+        int alHandle = mpModule->GetFunctionIdByName(asFuncName.c_str());
+
+        if (alHandle == asNO_FUNCTION)
+        {
+            return false;
+        }
+        
+        mpContext->Prepare(alHandle);
+        mpContext->SetArgFloat(0, asFloatArg0);
+        mpContext->Execute();
+
+        return true;
+    }
+
+    //-----------------------------------------------------------------------
+
     bool cSqScript::Run(int alHandle)
     {
         mpContext->Prepare(alHandle);

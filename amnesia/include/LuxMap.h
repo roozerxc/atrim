@@ -70,6 +70,8 @@ public:
     void Update(float afTimeStep);
 
     void RunScript(const tString& asCommand);
+    void RunTimer(const tString& asTimerFunc, tString& asTimerName);
+    void RunUpdateCallback(float afTimeStep);
     bool RecompileScript(tString *apOutput);
 
     void OnRenderSolid(cRendererCallbackFunctions* apFunctions);
@@ -235,6 +237,8 @@ private:
     tLuxDissolveEntityList mlstDissolveEntities;
 
     tLuxLampLightConnectionList mlstLampLightConnections;
+    
+    bool mbRunUpdateScript;
 };
 
 //----------------------------------------------

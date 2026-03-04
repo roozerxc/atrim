@@ -21,7 +21,8 @@ namespace hpl {
 
         bool Run(const tString& asFuncLine);
         bool Run(int alHandle);
-
+        bool RunFuncString(const tString& asFuncName, tString& asStringArg0);
+        bool RunFuncFloat(const tString& asFuncName, float asFloatArg0);
     private:
         asIScriptEngine *mpScriptEngine;
         cScriptOutput *mpScriptOutput;

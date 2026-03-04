@@ -35,8 +35,9 @@ namespace hpl {
          * \return true if everything was ok, else false
          */
         virtual bool Run(const tString& asFuncLine)=0;
-        
         virtual bool Run(int alHandle)=0;
+        virtual bool RunFuncString(const tString& asFuncName, tString& asStringArg0)=0;
+        virtual bool RunFuncFloat(const tString& asFuncName, float asFloatArg0)=0;
     };
 };
 #endif // HPL_SCRIPT_H
