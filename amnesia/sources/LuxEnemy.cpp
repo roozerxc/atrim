@@ -174,6 +174,8 @@ void iLuxEnemyLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTr
     pCharBody->SetMaxStepSize(            GetVarFloat("Body_MaxStepSize",0) );
     pCharBody->SetMaxStepSizeInAir(        GetVarFloat("Body_MaxStepSize",0) );
     pCharBody->SetStepClimbSpeed(        GetVarFloat("Body_StepClimbSpeed",0) );
+    
+    pCharBody->SetCollideCharacter(true);
 
     pEnemy->m_mtxCharMeshOffset = cMath::MatrixRotate(  cMath::Vector3ToRad(GetVarVector3f("Body_OffsetRot", 0)), eEulerRotationOrder_XYZ);
     pEnemy->m_mtxCharMeshOffset.SetTranslation( GetVarVector3f("Body_OffsetTrans", 0)- cVector3f(0,pCharBody->GetSize().y/2,0) );
