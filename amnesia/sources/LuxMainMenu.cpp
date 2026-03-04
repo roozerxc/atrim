@@ -164,7 +164,7 @@ cLuxMainMenu::cLuxMainMenu() : iLuxUpdateable("LuxDebugHandler")
     mvTopMenuFontSize = gpBase->mpMenuCfg->GetVector2f("Main","TopMenuFontRelativeSize", 0) * mvScreenSize;
 
     mpTopMenuFontColor = gpBase->mpMenuCfg->GetColor("Main","TopMenuFontColor", cColor(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f));
-    mpTopMenuFontHighlightColor = gpBase->mpMenuCfg->GetColor("Main","TopMenuFontColor", cColor(232.0f / 255.0f, 201.0f / 255.0f, 28.0f / 255.0f));
+    mpTopMenuFontHighlightColor = gpBase->mpMenuCfg->GetColor("Main","TopMenuFontHighlightColor", cColor(232.0f / 255.0f, 201.0f / 255.0f, 28.0f / 255.0f));
 
     mvTopMenuStartPosInGame = gpBase->mpMenuCfg->GetVector2f("Main", "TopMenuStartRelativePosInGame", 0) * mvScreenSize;
     mvTopMenuStartPosInGame.z = 2;
