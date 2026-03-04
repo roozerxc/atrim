@@ -222,10 +222,14 @@ private:
 
     float mfTopMenuFadeInTime;
     float mfTopMenuFadeOutTime;
+
     float mfTopMenuFontSizeMul;
     cVector2f mvTopMenuFontSize;
     cVector3f mvTopMenuStartPos;
     cVector3f mvTopMenuStartPosInGame;
+
+    cColor mpTopMenuFontColor;
+    cColor mpTopMenuFontHighlightColor;
 
     tString msMusic;
     tString msZoomSound;

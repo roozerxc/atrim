@@ -145,6 +145,9 @@ cLuxMainMenu::cLuxMainMenu() : iLuxUpdateable("LuxDebugHandler")
     mvTopMenuStartPos.z = 2;
     mvTopMenuFontSize = gpBase->mpMenuCfg->GetVector2f("Main","TopMenuFontRelativeSize", 0) * mvScreenSize;
 
+    mpTopMenuFontColor = gpBase->mpMenuCfg->GetColor("Main","TopMenuFontColor", cColor(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f));
+    mpTopMenuFontHighlightColor = gpBase->mpMenuCfg->GetColor("Main","TopMenuFontColor", cColor(232.0f / 255.0f, 201.0f / 255.0f, 28.0f / 255.0f));
+
     mvTopMenuStartPosInGame = gpBase->mpMenuCfg->GetVector2f("Main", "TopMenuStartRelativePosInGame", 0) * mvScreenSize;
     mvTopMenuStartPosInGame.z = 2;
     
@@ -909,7 +912,7 @@ void cLuxMainMenu::CreateGui()
 void cLuxMainMenu::SetupTopMenuLabel(cWidgetLabel *apLabel)
 {
     apLabel->SetTextAlign(eFontAlign_Center);
-    apLabel->SetDefaultFontColor(cColor(1,1));
+    apLabel->SetDefaultFontColor(mpTopMenuFontColor);
     apLabel->SetDefaultFontSize(mvTopMenuFontSize*mfTopMenuFontSizeMul);
     apLabel->SetDefaultFontType(mpFont);
     apLabel->AddCallback(eGuiMessage_MouseEnter,this, kGuiCallback(TopMenuTextMouseEnter));
@@ -1457,9 +1460,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, TopMenuTextPress);
 bool cLuxMainMenu::TopMenuTextDraw(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(apWidget->HasFocus())
-        apWidget->SetDefaultFontColor(cColor(232.0f/255.0f, 201.0f/255.0f, 28.0f/255.0f, mfTopMenuAlpha));
+        apWidget->SetDefaultFontColor(cColor(mpTopMenuFontHighlightColor.r, mpTopMenuFontHighlightColor.g, mpTopMenuFontHighlightColor.b, mfTopMenuAlpha));
     else
-        apWidget->SetDefaultFontColor(cColor(1.0f, mfTopMenuAlpha));
+        apWidget->SetDefaultFontColor(cColor(mpTopMenuFontColor.r, mpTopMenuFontColor.g, mpTopMenuFontColor.b, mfTopMenuAlpha));
 
     return true;
 }
