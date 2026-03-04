@@ -162,9 +162,7 @@ namespace hpl {
         void AddQuaternion(const cQuaternion& aqX);
         void AddColor(const cColor& avX);
         void AddString(const tString& asStr);
-//      Must rethink how to store, as Mac/Linux is UTF-32 and Windows is UTF-16.  Better to store as UTF-8 on all platforms.
-//      Also, must take care of Endianess for PPC
-//        void AddStringW(const tWString& asStr);
+        void AddStringW(const tWString& asStr);
 
         void AddCharArray(const char* apData, size_t alSize);
         void AddShort16Array(const short* apData, size_t alSize);
