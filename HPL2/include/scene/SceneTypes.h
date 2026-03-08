@@ -13,7 +13,7 @@ namespace hpl
     {
         eWorldContainerType_Static,
         eWorldContainerType_Dynamic,
-        eWorldContainerType_LastEnum,
+        eWorldContainerType_LastEnum
     };
 
     //-----------------------------------------

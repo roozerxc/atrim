@@ -10,7 +10,7 @@ namespace hpl {
         eThreadPrio_Normal,
         eThreadPrio_High,
 
-        eThreadPrio_LastEnum,
+        eThreadPrio_LastEnum
     };
 
     class iThreadClass

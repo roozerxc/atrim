@@ -21,7 +21,7 @@ namespace hpl {
     {
         ePEType_Normal,
         ePEType_Beam,
-        ePEType_LastEnum,
+        ePEType_LastEnum
     };
 
 
@@ -33,14 +33,14 @@ namespace hpl {
         eParticleEmitterType_DynamicPoint,
         eParticleEmitterType_Line,
         eParticleEmitterType_Axis,
-        eParticleEmitterType_LastEnum,
+        eParticleEmitterType_LastEnum
     };
 
     enum eParticleEmitterCoordSystem
     {
         eParticleEmitterCoordSystem_World,
         eParticleEmitterCoordSystem_Local,
-        eParticleEmitterCoordSystem_LastEnum,
+        eParticleEmitterCoordSystem_LastEnum
     };
 
     //------------------------------------------
@@ -59,7 +59,7 @@ namespace hpl {
         ePENoiseType_HighFreq,
         ePENoiseType_Both,
         ePENoiseType_None,
-        ePENoiseType_LastEnum,
+        ePENoiseType_LastEnum
     };
 
     

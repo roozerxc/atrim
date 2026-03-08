@@ -36,7 +36,7 @@ namespace hpl {
         eParserSymbol_Keyword,
         eParserSymbol_Operator,
         eParserSymbol_Variable,
-        eParserSymbol_LastEnum,
+        eParserSymbol_LastEnum
     };
 
     enum eParserKeyword
@@ -47,7 +47,7 @@ namespace hpl {
         eParserKeyword_Elseif,
         eParserKeyword_Endif,
         eParserKeyword_Include,
-        eParserKeyword_LastEnum,
+        eParserKeyword_LastEnum
     };
 
     enum eParserOperator
@@ -128,7 +128,7 @@ namespace hpl {
         eSymbolProcess_PureText,
         eSymbolProcess_Line,
         eSymbolProcess_Variable,
-        eSymbolProcess_LastEnum,
+        eSymbolProcess_LastEnum
     };
     
     //---------------------------------------

@@ -60,7 +60,7 @@ enum eLuxCritterState
     eLuxCritterState_Hit,
     eLuxCritterState_Attack_1,
     eLuxCritterState_Attack_2,
-    eLuxCritterState_LastEnum,
+    eLuxCritterState_LastEnum
 };
 
 //----------------------------------------------

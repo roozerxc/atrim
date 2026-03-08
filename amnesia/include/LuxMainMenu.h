@@ -19,7 +19,7 @@ enum eLuxMainMenuWindow
     // HARDMODE
     eLuxMainMenuWindow_StartGame,
 
-    eLuxMainMenuWindow_LastEnum,
+    eLuxMainMenuWindow_LastEnum
 };
 
 //----------------------------------------------
@@ -34,7 +34,7 @@ enum eLuxMainMenuExit
     eLuxMainMenuExit_QuitAndSave,
     eLuxMainMenuExit_LoadGame,
     
-    eLuxMainMenuExit_LastEnum,
+    eLuxMainMenuExit_LastEnum
 };
 
 //----------------------------------------------

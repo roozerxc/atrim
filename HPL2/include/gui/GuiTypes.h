@@ -17,7 +17,7 @@ namespace hpl {
         eGuiWindowZDest_MessageBox,
         eGuiWindowZDest_FilePicker,
         eGuiWindowZDest_ContextMenu,
-        eGuiWindowZDest_LastEnum,
+        eGuiWindowZDest_LastEnum
     };
     
     //--------------------------------
@@ -78,7 +78,7 @@ namespace hpl {
         eGuiMaterial_Additive,
         eGuiMaterial_Modulative,
         eGuiMaterial_PremulAlpha,
-        eGuiMaterial_LastEnum,
+        eGuiMaterial_LastEnum
     };
     
     //--------------------------------
@@ -105,7 +105,7 @@ namespace hpl {
         eWidgetType_Group,
 
         eWidgetType_User,
-        eWidgetType_LastEnum,
+        eWidgetType_LastEnum
     };
 
     //--------------------------------
@@ -374,7 +374,7 @@ namespace hpl {
         eGuiSkinGfx_FilePickerIconFolder,
 
 
-        eGuiSkinGfx_LastEnum,
+        eGuiSkinGfx_LastEnum
     };
 
     //---------------------------------------------
@@ -447,7 +447,7 @@ namespace hpl {
 
         eGuiMessage_WindowClose,        //nothing
 
-        eGuiMessage_LastEnum,
+        eGuiMessage_LastEnum
     };
 
 

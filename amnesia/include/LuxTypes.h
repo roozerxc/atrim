@@ -25,7 +25,7 @@ enum eLuxAxis
     eLuxAxis_X,
     eLuxAxis_Y,
     eLuxAxis_Z,
-    eLuxAxis_LastEnum,
+    eLuxAxis_LastEnum
 };
 
 //----------------------------------------------
@@ -245,7 +245,7 @@ enum eLuxHandObjectType
 
     eLuxHandObjectType_LightSource,
 
-    eLuxHandObjectType_LastEnum,
+    eLuxHandObjectType_LastEnum
 };
 
 //----------------------------------------------
@@ -257,7 +257,7 @@ enum eLuxWeaponHitType
     eLuxWeaponHitType_Bullet,
     eLuxWeaponHitType_Dud,
 
-    eLuxWeaponHitType_LastEnum,
+    eLuxWeaponHitType_LastEnum
 };
 
 //----------------------------------------------
@@ -482,7 +482,7 @@ enum eLuxProgressLogLevel
     eLuxProgressLogLevel_Medium,
     eLuxProgressLogLevel_High,
 
-    eLuxProgressLogLevel_LastEnum,
+    eLuxProgressLogLevel_LastEnum
 };
 
 //----------------------------------------------

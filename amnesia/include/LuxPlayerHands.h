@@ -35,7 +35,7 @@ enum eLuxHandsState
     eLuxHandsState_Holster,
     eLuxHandsState_Draw,
     eLuxHandsState_Idle,
-    eLuxHandsState_HandObject,
+    eLuxHandsState_HandObject
 };
 
 //----------------------------------------------

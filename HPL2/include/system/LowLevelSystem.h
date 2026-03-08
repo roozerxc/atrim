@@ -57,7 +57,7 @@ namespace hpl {
         eLogOutputType_Error,
         eLogOutputType_FatalError,
         eLogOutputType_Update,
-        eLogOutputType_LastEnum,
+        eLogOutputType_LastEnum
     };
     
     typedef void(*tLogMessageCallbackFunc)(eLogOutputType aType, const char* asMessage); 

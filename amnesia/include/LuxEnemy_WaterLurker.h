@@ -23,7 +23,7 @@ enum eWaterLurkerSplash
     eWaterLurkerSplash_Walk,
     eWaterLurkerSplash_Run,
     eWaterLurkerSplash_Eat,
-    eWaterLurkerSplash_Attack,
+    eWaterLurkerSplash_Attack
 };
 
 //----------------------------------------------

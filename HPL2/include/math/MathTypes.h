@@ -33,7 +33,7 @@ namespace hpl {
         eEulerRotationOrder_YZX,
         eEulerRotationOrder_ZXY,
         eEulerRotationOrder_ZYX,
-        eEulerRotationOrder_LastEnum,
+        eEulerRotationOrder_LastEnum
     };
 
     //-------------------------------------------
@@ -53,7 +53,7 @@ namespace hpl {
         eFrustumPlane_Top,
         eFrustumPlane_Near,
         eFrustumPlane_Far,
-        eFrustumPlane_LastEnum,
+        eFrustumPlane_LastEnum
     };
 
     //-----------------------------------------------

@@ -17,7 +17,7 @@ enum eLuxJournalState
     eLuxJournalState_OpenDiary,
     eLuxJournalState_OpenNarratedDiary,
 
-    eLuxJournalState_LastEnum,
+    eLuxJournalState_LastEnum
 };
 
 //----------------------------------------

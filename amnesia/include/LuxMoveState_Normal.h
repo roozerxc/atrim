@@ -27,7 +27,7 @@ private:
 enum eLuxFootSound
 {
     eLuxFootSound_Step,    
-    eLuxFootSound_Landing,
+    eLuxFootSound_Landing
 };
 
 //----------------------------------------------

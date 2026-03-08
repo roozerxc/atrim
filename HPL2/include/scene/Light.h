@@ -40,7 +40,7 @@ namespace hpl {
         eShadowVolumeType_None,
         eShadowVolumeType_ZPass,
         eShadowVolumeType_ZFail,
-        eShadowVolumeType_LastEnum,
+        eShadowVolumeType_LastEnum
     };
 
     //------------------------------------------

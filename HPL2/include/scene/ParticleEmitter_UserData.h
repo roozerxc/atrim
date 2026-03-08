@@ -14,14 +14,14 @@ namespace hpl {
     {
         ePEStartPosType_Box,
         ePEStartPosType_Sphere,
-        ePEStartPosType_LastEnum,
+        ePEStartPosType_LastEnum
     };
     
     enum ePEDeathType
     {
         ePEDeathType_Age,
         ePEDeathType_Color,
-        ePEDeathType_LastEnum,
+        ePEDeathType_LastEnum
     };
 
     enum ePEGravityType
@@ -29,21 +29,21 @@ namespace hpl {
         ePEGravityType_None,        //No gravity added
         ePEGravityType_Vector,        //Vector is used.
         ePEGravityType_Center,        //Y axis used. heading equals center.
-        ePEGravityType_LastEnum,
+        ePEGravityType_LastEnum
     };
 
     enum ePESubDivType
     {
         ePESubDivType_Random,
         ePESubDivType_Animation,
-        ePESubDivType_LastEnum,
+        ePESubDivType_LastEnum
     };
 
     enum ePEPartSpinType
     {
         ePEPartSpinType_Constant,
         ePEPartSpinType_Movement,
-        ePEPartSpinType_LastEnum,
+        ePEPartSpinType_LastEnum
     };
 
     

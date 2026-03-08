@@ -12,7 +12,7 @@ enum eOAL_AudioDataType
 {
 	eOAL_AudioDataType_None,
 	eOAL_AudioDataType_Sample,
-	eOAL_AudioDataType_Stream,
+	eOAL_AudioDataType_Stream
 };
 
 //-------------------------------------------------------------------------------

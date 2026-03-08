@@ -14,7 +14,7 @@ enum eLuxPreMenuState
     eLuxPreMenuState_ShowPremenuSection,
     eLuxPreMenuState_Final,
 
-    eLuxPreMenuState_LastEnum,
+    eLuxPreMenuState_LastEnum
 };
 
 //----------------------------------------------

@@ -46,7 +46,7 @@ namespace hpl {
         eDeferredShapeQuality_Low,
         eDeferredShapeQuality_Medium,
         eDeferredShapeQuality_High,
-        eDeferredShapeQuality_LastEnum,
+        eDeferredShapeQuality_LastEnum
     };
 
     //---------------------------------------------
@@ -55,7 +55,7 @@ namespace hpl {
     {
         eDeferredGBuffer_32Bit,
         eDeferredGBuffer_64Bit,
-        eDeferredGBuffer_LastEnum,
+        eDeferredGBuffer_LastEnum
     };
 
     //---------------------------------------------
@@ -64,7 +64,7 @@ namespace hpl {
     {
         eDeferredSSAO_InBoxLight,
         eDeferredSSAO_OnColorBuffer,
-        eDeferredSSAO_LastEnum,
+        eDeferredSSAO_LastEnum
     };
 
     //---------------------------------------------
@@ -77,7 +77,7 @@ namespace hpl {
         eGBufferComponents_Depth,
         eGBufferComponents_Normals,
         eGBufferComponents_LinearDepth,
-        eGBufferComponents_LastEnum,
+        eGBufferComponents_LastEnum
     };
     
     //---------------------------------------------

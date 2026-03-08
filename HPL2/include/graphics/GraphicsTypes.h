@@ -48,7 +48,7 @@ namespace hpl {
         eRenderer_Main,
         eRenderer_WireFrame,
         eRenderer_Simple,
-        eRenderer_LastEnum,
+        eRenderer_LastEnum
     };
     
     //-----------------------------------------
@@ -176,7 +176,7 @@ namespace hpl {
     {
         eStencilFace_Front,
         eStencilFace_Back,
-        eStencilFace_LastEnum,
+        eStencilFace_LastEnum
     };
 
     enum eStencilOp
@@ -295,7 +295,7 @@ namespace hpl {
     {
         eVertexBufferType_Software,
         eVertexBufferType_Hardware,
-        eVertexBufferType_LastEnum,
+        eVertexBufferType_LastEnum
     };
 
     enum eVertexBufferDrawType
@@ -335,7 +335,7 @@ namespace hpl {
         eVertexBufferElement_User1,
         eVertexBufferElement_User2,
         eVertexBufferElement_User3,
-        eVertexBufferElement_LastEnum,
+        eVertexBufferElement_LastEnum
     };
 
     enum eVertexBufferElementFormat
@@ -502,7 +502,7 @@ namespace hpl {
             ePixelFormat_LuminanceAlpha32,
             ePixelFormat_RGB32,
             ePixelFormat_RGBA32,
-            ePixelFormat_LastEnum,
+            ePixelFormat_LastEnum
     };
 
     //-----------------------------------------
@@ -547,7 +547,7 @@ namespace hpl {
         eMaterialChannelMode_RGB,
         eMaterialChannelMode_A,
         eMaterialChannelMode_None,
-        eMaterialChannelMode_LastEnum,
+        eMaterialChannelMode_LastEnum
     };
 
     enum eMaterialBlendMode
@@ -565,7 +565,7 @@ namespace hpl {
     {
         eMaterialAlphaMode_Solid,
         eMaterialAlphaMode_Trans,
-        eMaterialAlphaMode_LastEnum,
+        eMaterialAlphaMode_LastEnum
     };
 
 
@@ -578,7 +578,7 @@ namespace hpl {
         eMaterialRenderMode_Light,            //Not used by deferred shader.
         eMaterialRenderMode_Illumination,    //Illumination textures.
         eMaterialRenderMode_IlluminationFog,//Illumination with fog (used by transperant textures)
-        eMaterialRenderMode_LastEnum,
+        eMaterialRenderMode_LastEnum
     };
 
     //---------------------------------------
@@ -606,7 +606,7 @@ namespace hpl {
         eShadowMapResolution_Low,
         eShadowMapResolution_Medium,
         eShadowMapResolution_High,
-        eShadowMapResolution_LastEnum,
+        eShadowMapResolution_LastEnum
     };
 
     //---------------------------------------
@@ -616,7 +616,7 @@ namespace hpl {
         eShadowMapQuality_Low,
         eShadowMapQuality_Medium,
         eShadowMapQuality_High,
-        eShadowMapQuality_LastEnum,
+        eShadowMapQuality_LastEnum
     };
     
     //---------------------------------------
@@ -626,7 +626,7 @@ namespace hpl {
         eParallaxQuality_Low,
         eParallaxQuality_Medium,
         eParallaxQuality_High,
-        eParallaxQuality_LastEnum,
+        eParallaxQuality_LastEnum
     };
 
     //---------------------------------------

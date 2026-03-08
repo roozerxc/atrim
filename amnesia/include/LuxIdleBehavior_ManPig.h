@@ -5,7 +5,7 @@ enum eLuxIdleBehavior
 {
     eLuxIdleBehavior_None,
     eLuxIdleBehavior_Stalk,
-    eLuxIdleBehavior_Track,
+    eLuxIdleBehavior_Track
 };
 
 #endif

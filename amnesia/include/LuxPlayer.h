@@ -34,7 +34,7 @@ enum eLuxFocusIconStyle
     eLuxFocusIconStyle_Default,
     eLuxFocusIconStyle_Simple,
 
-    eFocusIconStyle_LastEnum,
+    eFocusIconStyle_LastEnum
 };
 
 //----------------------------------------------
