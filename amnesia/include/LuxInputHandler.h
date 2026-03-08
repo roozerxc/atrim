@@ -118,6 +118,7 @@ private:
     void UpdateMainMenuInput();
     void UpdateInventoryInput();
     void UpdateJournalInput();
+    void UpdateConsoleInput();
     void UpdateDebugInput();
     void UpdateCreditsInput();
     void UpdateDemoEndInput();

@@ -321,6 +321,15 @@ void cLuxPreMenu::OnEnterContainer(const tString& asOldContainer)
 void cLuxPreMenu::OnLeaveContainer(const tString& asNewContainer)
 {
     //Unlock input if not in window
+    if (gpBase->mpDebugHandler->GetConsoleWindowActive()==false)
+    {
+        if(    gpBase->mpConfigHandler->mbFullscreen==false)
+        {
+            gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(true);
+        }
+        gpBase->mpEngine->GetInput()->GetLowLevel()->RelativeMouse(true);
+    }
+    
     if (gpBase->mpDebugHandler->GetDebugWindowActive()==false)
     {
         if(    gpBase->mpConfigHandler->mbFullscreen==false)

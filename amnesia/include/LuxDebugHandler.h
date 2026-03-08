@@ -36,8 +36,11 @@ public:
     void OnMapLeave(cLuxMap *apMap);
 
 
-    void SetDebugWindowActive(bool abActive);
-    bool GetDebugWindowActive(){ return mbWindowActive;}
+    void SetConsoleWindowActive(bool abConsoleWindowActive);
+    bool GetConsoleWindowActive(){ return mbConsoleWindowActive;}
+
+    void SetDebugWindowActive(bool abDebugWindowActive);
+    bool GetDebugWindowActive(){ return mbDebugWindowActive;}
         
     void OnDraw(float afFrameTime);
     void RenderSolid(cRendererCallbackFunctions* apFunctions);
@@ -61,11 +64,13 @@ private:
     void IterateRenderableNode(iRenderableContainerNode *apNode, const cVector3f& avStart, const cVector3f& avEnd, cBoundingVolume *apBV);
     void UpdateInspectionMeshEntity(float afTimeStep);
 
+    void CreateConsoleWindow();
     void CreateGuiWindow();
     void CreateScriptOutputWindow();
     void CreateScriptOutputWindowText(const tWString& asOutput);
     void UpdateMessages(float afTimeStep);
 
+    void ShowConsoleWindow();
     void ShowScriptOutputWindow(const tWString& asName, const tString& asText);
     bool RecompileScript();
     void ReloadTranslations();
@@ -116,6 +121,9 @@ private:
     bool PressRecompileScript(iWidget* apWidget,const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressRecompileScript);
 
+    bool PressCloseConsoleWindow(iWidget* apWidget,const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(PressCloseConsoleWindow);
+
     bool PressCloseScriptOutput(iWidget* apWidget,const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressCloseScriptOutput);
 
@@ -134,6 +142,9 @@ private:
 
     cWidgetComboBox *mpCBInsanityEvents;
     cWidgetComboBox *mpCBPlayerStarts;
+
+    cWidgetWindow *mpConsoleWindow;
+    cWidgetFrame *mpConsoleFrame;
 
     cWidgetWindow *mpDebugWindow;
 
@@ -155,7 +166,8 @@ private:
 
     bool mbAllowQuickSave;
     
-    bool mbWindowActive;
+    bool mbConsoleWindowActive;
+    bool mbDebugWindowActive;
 
     bool mbReloadFromCurrentPosition;
     bool mbDisableFlashBacks;

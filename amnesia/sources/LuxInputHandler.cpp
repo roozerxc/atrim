@@ -55,6 +55,7 @@ static cLuxAction gvLuxActions[] =
     cLuxAction("UIDelete", eLuxAction_UIDelete,        false, eLuxActionCategory_System),
     cLuxAction("UIClear", eLuxAction_UIClear,        false, eLuxActionCategory_System),
 
+    cLuxAction("OpenConsole",eLuxAction_OpenConsole,    false, eLuxActionCategory_System),
     cLuxAction("OpenDebug",eLuxAction_OpenDebug,    false, eLuxActionCategory_System),
     cLuxAction("ReloadMap",eLuxAction_ReloadMap,    false, eLuxActionCategory_System),
     cLuxAction("QuickSave",eLuxAction_QuickSave,    false, eLuxActionCategory_System),
@@ -141,6 +142,7 @@ static cLuxInput gvLuxInputs[] =
     
     cLuxInput("Keyboard", eKey_Return, eLuxAction_UIPrimary),
 
+    cLuxInput("Keyboard", eKey_BackQuote, eLuxAction_OpenConsole),
     cLuxInput("Keyboard", eKey_F1, eLuxAction_OpenDebug),
     cLuxInput("Keyboard", eKey_F2, eLuxAction_ReloadMap),
     cLuxInput("Keyboard", eKey_F4, eLuxAction_QuickSave),
@@ -424,6 +426,8 @@ void cLuxInputHandler::Update(float afTimeStep)
     case eLuxInputState_Inventory: UpdateInventoryInput(); break;
     //Journal
     case eLuxInputState_Journal: UpdateJournalInput(); break;
+    //Console
+    case eLuxInputState_Console: UpdateConsoleInput(); break;
     //Debug
     case eLuxInputState_Debug: UpdateDebugInput(); break;
     //Credits
@@ -835,6 +839,10 @@ void cLuxInputHandler::UpdateGameInput()
 {
     /////////////////
     // Debug
+    if(mpInput->BecameTriggerd(eLuxAction_OpenConsole))
+    {
+        gpBase->mpDebugHandler->SetConsoleWindowActive(true);
+    }
     if(mpInput->BecameTriggerd(eLuxAction_OpenDebug))
     {
         gpBase->mpDebugHandler->SetDebugWindowActive(true);
@@ -1275,6 +1283,17 @@ void cLuxInputHandler::UpdateJournalInput()
     }
 }
 
+
+//-----------------------------------------------------------------------
+
+void cLuxInputHandler::UpdateConsoleInput()
+{
+    if(mpInput->BecameTriggerd(eLuxAction_OpenConsole))
+    {
+        gpBase->mpDebugHandler->SetConsoleWindowActive(false);
+    }
+}
+
 //-----------------------------------------------------------------------
 
 void cLuxInputHandler::UpdateDebugInput()
@@ -1338,6 +1357,7 @@ bool cLuxInputHandler::CurrentStateSendsInputToGui()
             //When message is active, do not send anything to GUI.
             if(gpBase->mpInventory->GetMessageActive()) return false;
         }
+    case eLuxInputState_Console: 
     case eLuxInputState_Debug: 
     case eLuxInputState_Journal:
     case eLuxInputState_MainMenu: 

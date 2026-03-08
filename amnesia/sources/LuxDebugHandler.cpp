@@ -64,7 +64,8 @@ cLuxDebugHandler::cLuxDebugHandler() : iLuxUpdateable("LuxDebugHandler")
 
     msCurrentFilePath = _W("");
 
-    mbWindowActive = false;
+    mbConsoleWindowActive = false;
+    mbDebugWindowActive = false;
     
     mbFastForward = false;
     mpCBFastForward = NULL;
@@ -127,6 +128,10 @@ void cLuxDebugHandler::LoadUserConfig()
     /////////////////////////////////////////
     // Set callback for message
     SetLogMessageCallback(LogMessageCallback);
+
+    //////////////////////
+    //Create the console window
+    CreateConsoleWindow();
 
     //////////////////////
     //Create the debug window
@@ -291,13 +296,13 @@ void cLuxDebugHandler::OnMapLeave(cLuxMap *apMap)
 
 //-----------------------------------------------------------------------
 
-void cLuxDebugHandler::SetDebugWindowActive(bool abActive)
+void cLuxDebugHandler::SetDebugWindowActive(bool abDebugWindowActive)
 {
     if(gpBase->mpConfigHandler->mbLoadDebugMenu==false) return;
 
     //////////////////
     // Active
-    if(abActive)
+    if(abDebugWindowActive)
     {
         Log("-------- Debug window open!\n");
         mpGui->SetFocus(mpGuiSet);
@@ -308,6 +313,9 @@ void cLuxDebugHandler::SetDebugWindowActive(bool abActive)
             gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(false);
             gpBase->mpEngine->GetInput()->GetLowLevel()->RelativeMouse(false);
         }
+        
+        mbConsoleWindowActive = false;
+        mbDebugWindowActive = true;
     }
     //////////////////
     // Disabled
@@ -322,6 +330,51 @@ void cLuxDebugHandler::SetDebugWindowActive(bool abActive)
             gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(true);
             gpBase->mpEngine->GetInput()->GetLowLevel()->RelativeMouse(true);
         }
+        
+        mbConsoleWindowActive = false;
+        mbDebugWindowActive = false;
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxDebugHandler::SetConsoleWindowActive(bool abConsoleWindowActive)
+{
+    if(gpBase->mpConfigHandler->mbLoadDebugMenu==false) return;
+
+    //////////////////
+    // Active
+    if(abConsoleWindowActive)
+    {
+        Log("-------- Console window open!\n");
+        mpGui->SetFocus(mpGuiSet);
+        mpGuiSet->SetActive(true);
+        gpBase->mpInputHandler->ChangeState(eLuxInputState_Console);
+
+        if(gpBase->mpConfigHandler->mbFullscreen==false) {
+            gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(false);
+            gpBase->mpEngine->GetInput()->GetLowLevel()->RelativeMouse(false);
+        }
+        
+        mbConsoleWindowActive = true;
+        mbDebugWindowActive = false;
+    }
+    //////////////////
+    // Disabled
+    else
+    {
+        Log("-------- Console window closed!\n");
+        mpGui->SetFocus(NULL);
+        mpGuiSet->SetActive(false);
+        gpBase->mpInputHandler->ChangeState(eLuxInputState_Game);
+
+        if(gpBase->mpConfigHandler->mbFullscreen==false) {
+            gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(true);
+            gpBase->mpEngine->GetInput()->GetLowLevel()->RelativeMouse(true);
+        }
+        
+        mbConsoleWindowActive = false;
+        mbDebugWindowActive = false;
     }
 }
 
@@ -838,6 +891,45 @@ void cLuxDebugHandler::UpdateMessages(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
+void cLuxDebugHandler::CreateConsoleWindow()
+{
+    if(gpBase->mpConfigHandler->mbLoadDebugMenu==false) return;
+
+    //////////////////////////
+    //Set up variables
+    cWidgetCheckBox *pCheckBox=NULL;
+    cWidgetButton *pButton = NULL;
+    cWidgetComboBox *pComboBox = NULL;
+    cWidgetLabel *pLabel = NULL;
+    cWidgetGroup *pGroup = NULL;
+    cWidgetSlider *pSlider = NULL;
+
+    cVector3f vGroupPos =0;
+    cVector2f vGroupSize =0;
+
+    ///////////////////////////
+    //Window
+    cVector2f vSize = cVector2f(700, 550);
+    cVector3f vPos = cVector3f(mpGuiSet->GetVirtualSize().x/2 - vSize.x/2, 50, 10);
+    mpConsoleWindow = mpGuiSet->CreateWidgetWindow(0,vPos,vSize,_W("Console") );
+
+    ///////////////////////////
+    // Frame
+    mpConsoleFrame = mpGuiSet->CreateWidgetFrame(cVector3f(10, 30, 1), vSize-cVector2f(20, 80), true, mpConsoleWindow, true, true);
+
+    ///////////////////////////
+    // Button
+    vGroupSize = cVector2f(110, 30);
+    vGroupPos = cVector3f(vSize.x/2 - vGroupSize.x/2, vSize.y - vGroupSize.y - 10,1);
+    pButton = mpGuiSet->CreateWidgetButton(vGroupPos, vGroupSize,_W("Close Window"), mpConsoleWindow); 
+    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressCloseConsoleWindow));
+
+    mpConsoleWindow->SetVisible(false);
+    mpConsoleWindow->SetEnabled(false);
+}
+
+//-----------------------------------------------------------------------
+
 void cLuxDebugHandler::CreateScriptOutputWindow()
 {
     if(gpBase->mpConfigHandler->mbLoadDebugMenu==false) return;
@@ -1164,6 +1256,14 @@ void cLuxDebugHandler::CreateGuiWindow()
     //////////////////////////
     // Script output window
     CreateScriptOutputWindow();
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxDebugHandler::ShowConsoleWindow()
+{
+    mpConsoleWindow->SetEnabled(true);
+    mpConsoleWindow->SetVisible(true);
 }
 
 //-----------------------------------------------------------------------
@@ -1703,6 +1803,17 @@ bool cLuxDebugHandler::PressStartInsanityEffect(iWidget* apWidget,const cGuiMess
     return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressStartInsanityEffect); 
+
+//-----------------------------------------------------------------------
+
+bool cLuxDebugHandler::PressCloseConsoleWindow(iWidget* apWidget,const cGuiMessageData& aData)
+{
+    mpConsoleWindow->SetVisible(false);
+    mpConsoleWindow->SetEnabled(false);
+
+    return true;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressCloseConsoleWindow); 
 
 //-----------------------------------------------------------------------
 
