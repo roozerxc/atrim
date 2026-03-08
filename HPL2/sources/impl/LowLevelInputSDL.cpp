@@ -3,6 +3,9 @@
 #include "impl/MouseSDL.h"
 #include "impl/KeyboardSDL.h"
 #include "impl/GamepadSDL.h"
+#if USE_XINPUT
+#include "impl/GamepadXInput.h"
+#endif
 
 #include "system/LowLevelSystem.h"
 #include "graphics/LowLevelGraphics.h"

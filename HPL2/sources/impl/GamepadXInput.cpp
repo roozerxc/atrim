@@ -312,6 +312,23 @@ namespace hpl {
         return mvBallRelPosArray[aBall];
     }
 
+    //------------------------------------------------------------------------
+
+    int cGamepadXInput::GetNumConnected()
+    {
+        int lConnected = 0;
+
+        for(int i = 0; i < 4; ++i)
+        {
+            if(IsConnected(i))
+            {
+                lConnected = i + 1;
+            }
+        }
+
+        return lConnected;
+    }
+
     bool cGamepadXInput::IsConnected(int alIndex)
     {
         XINPUT_STATE state;
@@ -322,6 +339,7 @@ namespace hpl {
     }
     
     //-----------------------------------------------------------------------
+
 
     /////////////////////////////////////////////////////////////////////////
     // PRIVATE METHODS

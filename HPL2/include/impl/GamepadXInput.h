@@ -1,8 +1,6 @@
 #ifndef HPL_GAMEPAD_XINPUT_H
 #define HPL_GAMEPAD_XINPUT_H
 
-#define USE_XINPUT 0
-
 #if USE_XINPUT
 
 #include <windows.h>
@@ -54,6 +52,7 @@ namespace hpl {
         cVector2l GetBallAbsPos(eGamepadBall aBall);
         cVector2l GetBallRelPos(eGamepadBall aBall);
 
+        static int GetNumConnected();
         static bool IsConnected(int alIndex);
 
         static bool GetWasConnected(int alIndex) { return mbDeviceConnected[alIndex]; }
