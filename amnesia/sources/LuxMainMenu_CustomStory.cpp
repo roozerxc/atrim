@@ -343,7 +343,13 @@ void cLuxMainMenu_CustomStoryList::CreateGui()
     vPos.y = mpWindow->GetSize().y - 25 - 10;
 
     //Reset List
-    cWidgetButton* pButton  = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),_W("Reset List"),mpWindow);
+    tWString mpResetLabel = kTranslate("CustomStory", "ResetList");
+    if(mpResetLabel.empty())
+    {
+        mpResetLabel = _W("Reset List");
+    }
+
+    cWidgetButton* pButton  = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),mpResetLabel,mpWindow);
     pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(RepopulateStoryList));
 
     //Start
