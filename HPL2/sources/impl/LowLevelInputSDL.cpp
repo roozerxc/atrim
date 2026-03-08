@@ -4,6 +4,7 @@
 #include "impl/KeyboardSDL.h"
 #include "impl/GamepadSDL.h"
 #if USE_XINPUT
+#pragma comment(lib, "XInput.lib")
 #include "impl/GamepadXInput.h"
 #endif
 
