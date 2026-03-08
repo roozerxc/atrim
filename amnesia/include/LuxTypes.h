@@ -425,7 +425,6 @@ enum eLuxPlayerAction
     eLuxPlayerAction_Interact,
     eLuxPlayerAction_Attack,
     eLuxPlayerAction_Ignite,
-    eLuxPlayerAction_Holster,
     eLuxPlayerAction_Lantern,
 
     eLuxPlayerAction_LastEnum

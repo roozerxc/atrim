@@ -35,14 +35,6 @@ cLuxPlayerState_Normal::~cLuxPlayerState_Normal()
 
 bool cLuxPlayerState_Normal::ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed)
 {
-    ////////////////////
-    // Holster (draw hand object)
-    if(aAction == eLuxPlayerAction_Holster && abPressed)
-    {
-        mpPlayer->ChangeState(eLuxPlayerState_HandObject);
-        return false;
-    }
-
     return true;
 }
 

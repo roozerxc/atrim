@@ -36,13 +36,6 @@ cLuxPlayerState_HandObject::~cLuxPlayerState_HandObject()
 bool cLuxPlayerState_HandObject::ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed)
 {
     ////////////////////
-    // Holster
-    if(aAction == eLuxPlayerAction_Holster && abPressed)
-    {
-        mpPlayer->ChangeState(eLuxPlayerState_Normal);
-        return false;
-    }
-    ////////////////////
     // Attack
     if(aAction == eLuxPlayerAction_Attack)
     {

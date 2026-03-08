@@ -49,13 +49,6 @@ void cLuxPlayerState_UseItem::ImplementedOnEnterState(eLuxPlayerState aPrevState
 
 bool cLuxPlayerState_UseItem::ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed)
 {
-    ////////////////////
-    // Holster (draw hand object)
-    if(aAction == eLuxPlayerAction_Holster && abPressed)
-    {
-        mpPlayer->ChangeState(eLuxPlayerState_HandObject);
-        return false;
-    }
     ////////////////////////////
     // Interact
     if(aAction == eLuxPlayerAction_Interact || aAction == eLuxPlayerAction_Attack)
