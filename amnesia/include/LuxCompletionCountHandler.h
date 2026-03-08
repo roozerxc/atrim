@@ -9,11 +9,11 @@
 
 class cLuxCompletionCountHandler : public iLuxUpdateable
 {
-friend class cLuxMusicHandler_SaveData;
-public:    
+    friend class cLuxMusicHandler_SaveData;
+public:
     cLuxCompletionCountHandler();
     ~cLuxCompletionCountHandler();
-    
+
     void LoadFonts();
     void OnStart();
     void Update(float afTimeStep);
@@ -36,7 +36,7 @@ private:
     //////////////////
     // Data
     iFontData *mpFont;
-    
+
     //////////////////
     // Variables
     bool mbActive;

@@ -5,93 +5,113 @@
 #include "system/BinTree.h"
 #include "math/MathTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cFrameTexture;
-    class cFrameSubImage;
-    class cBitmap;
-    
-    //The frames bitmap + rect class
-    class cFBitmapRect
+class cFrameTexture;
+class cFrameSubImage;
+class cBitmap;
+
+//The frames bitmap + rect class
+class cFBitmapRect
+{
+public:
+    cFBitmapRect()
     {
-    public:
-        cFBitmapRect(){mlHandle=-1;}
-        cFBitmapRect(int x,int y,int w,int h, int alHandle){
-            mRect = cRect2l(x,y,w,h);
-            mlHandle = alHandle;
-        }
-                
-        cRect2l mRect;
-        int mlHandle;
-    };
-
-    //----------------------------------------
-
-    class cFBitmapImage
+        mlHandle=-1;
+    }
+    cFBitmapRect(int x,int y,int w,int h, int alHandle)
     {
-    public:
-        ~cFBitmapImage();
+        mRect = cRect2l(x,y,w,h);
+        mlHandle = alHandle;
+    }
 
-        cRect2l mRect;
-        cFrameSubImage *mpSubImage;
-    };
+    cRect2l mRect;
+    int mlHandle;
+};
 
-    //----------------------------------------
-    
-    typedef BinTree<cFBitmapRect> tRectTree;
-    typedef BinTreeNode<cFBitmapRect> tRectTreeNode;
-    typedef std::vector<tRectTreeNode*> tRectTreeNodeVec;
-    typedef tRectTreeNodeVec::iterator tRectTreeNodeVecIt;
-    typedef tRectTreeNodeVec::const_iterator tRectTreeNodeVecConstIt;
+//----------------------------------------
 
-    typedef std::list<cFBitmapImage*> cFBitmapImageList;
-    typedef cFBitmapImageList::iterator cFBitmapImageListIt;
-        
-    class cFrameBitmap : public iFrameBase
+class cFBitmapImage
+{
+public:
+    ~cFBitmapImage();
+
+    cRect2l mRect;
+    cFrameSubImage *mpSubImage;
+};
+
+//----------------------------------------
+
+typedef BinTree<cFBitmapRect> tRectTree;
+typedef BinTreeNode<cFBitmapRect> tRectTreeNode;
+typedef std::vector<tRectTreeNode*> tRectTreeNodeVec;
+typedef tRectTreeNodeVec::iterator tRectTreeNodeVecIt;
+typedef tRectTreeNodeVec::const_iterator tRectTreeNodeVecConstIt;
+
+typedef std::list<cFBitmapImage*> cFBitmapImageList;
+typedef cFBitmapImageList::iterator cFBitmapImageListIt;
+
+class cFrameBitmap : public iFrameBase
+{
+public:
+    cFrameBitmap(cBitmap *apBitmap, cFrameTexture *apFrmTex, int alHandle);
+    ~cFrameBitmap();
+
+    cFrameSubImage * AddBitmap(cBitmap *apSrc, const tWString& asFullPath, cFrameSubImage *apSubImageCreated, bool *apFoundNode=NULL);
+    bool MinimumFit(cRect2l aSrc,cRect2l aDest);
+    bool IsFull();
+    bool IsUpdated();
+
+    bool IsLocked()const
     {
-    public:
-        cFrameBitmap(cBitmap *apBitmap, cFrameTexture *apFrmTex, int alHandle);
-        ~cFrameBitmap();
+        return mbIsLocked;
+    }
+    void SetLocked(bool abX)
+    {
+        mbIsLocked = abX;
+    }
 
-        cFrameSubImage * AddBitmap(cBitmap *apSrc, const tWString& asFullPath, cFrameSubImage *apSubImageCreated, bool *apFoundNode=NULL);
-        bool MinimumFit(cRect2l aSrc,cRect2l aDest);
-        bool IsFull();
-        bool IsUpdated();
+    void SetNeedReorganisation();
 
-        bool IsLocked()const { return mbIsLocked;}
-        void SetLocked(bool abX){ mbIsLocked = abX; }
+    void UpdateBeforeDraw();
 
-        void SetNeedReorganisation();
+    void Reorganize();
+    bool FlushToTexture();
 
-        void UpdateBeforeDraw();
-        
-        void Reorganize();
-        bool FlushToTexture();
+    cFrameTexture* GetFrameTexture()
+    {
+        return mpFrameTexture;
+    }
 
-        cFrameTexture* GetFrameTexture(){ return mpFrameTexture;}
+    int GetHandle()const
+    {
+        return mlHandle;
+    }
 
-        int GetHandle()const{ return mlHandle; }
+    int GetAdditionsSinceReorganization()
+    {
+        return mlAdditionsSinceReorganization;
+    }
+private:
+    void ClearAddedImages();
 
-        int GetAdditionsSinceReorganization(){ return mlAdditionsSinceReorganization;}
-    private:
-        void ClearAddedImages();
+    cBitmap* mpBitmap;
+    cFrameTexture* mpFrameTexture;
 
-        cBitmap* mpBitmap;
-        cFrameTexture* mpFrameTexture;
-        
-        tRectTree mRects;
+    tRectTree mRects;
 
-        cFBitmapImageList mlstImages;
-        
-        int mlMinHole;
-        int mlHandle;
-        bool mbIsFull;
-        bool mbIsUpdated;
-        bool mbIsLocked;
-        bool mbNeedNeedReorganisation;
+    cFBitmapImageList mlstImages;
 
-        int mlAdditionsSinceReorganization;
-    };
+    int mlMinHole;
+    int mlHandle;
+    bool mbIsFull;
+    bool mbIsUpdated;
+    bool mbIsLocked;
+    bool mbNeedNeedReorganisation;
+
+    int mlAdditionsSinceReorganization;
+};
 
 };
 #endif // HPL_FRAMEBITMAP_H

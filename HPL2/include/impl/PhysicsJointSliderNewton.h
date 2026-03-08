@@ -4,31 +4,32 @@
 #include "physics/PhysicsJointSlider.h"
 #include "impl/PhysicsJointNewton.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cPhysicsJointSliderNewton : public iPhysicsJointNewton<iPhysicsJointSlider>
-    {
-    public:
-        cPhysicsJointSliderNewton(const tString &asName, iPhysicsBody *apParentBody, iPhysicsBody *apChildBody, 
-                            iPhysicsWorld *apWorld,const cVector3f &avPivotPoint, const cVector3f& avPinDir) ;
-        ~cPhysicsJointSliderNewton();
-        
-        void SetMaxDistance(float afX);
-        void SetMinDistance(float afX);
-        float GetMaxDistance();
-        float GetMinDistance();
+class cPhysicsJointSliderNewton : public iPhysicsJointNewton<iPhysicsJointSlider>
+{
+public:
+    cPhysicsJointSliderNewton(const tString &asName, iPhysicsBody *apParentBody, iPhysicsBody *apChildBody,
+                              iPhysicsWorld *apWorld,const cVector3f &avPivotPoint, const cVector3f& avPinDir) ;
+    ~cPhysicsJointSliderNewton();
 
-        cVector3f GetVelocity();
-        cVector3f GetAngularVelocity();
-        float GetForceSize();
+    void SetMaxDistance(float afX);
+    void SetMinDistance(float afX);
+    float GetMaxDistance();
+    float GetMinDistance();
 
-        float GetDistance();
-        float GetAngle();
+    cVector3f GetVelocity();
+    cVector3f GetAngularVelocity();
+    float GetForceSize();
 
-    private:
-        static unsigned LimitCallback(const NewtonJoint* pSlider, NewtonHingeSliderUpdateDesc* pDesc);
+    float GetDistance();
+    float GetAngle();
 
-        float mfPreviousDist;
-    };
+private:
+    static unsigned LimitCallback(const NewtonJoint* pSlider, NewtonHingeSliderUpdateDesc* pDesc);
+
+    float mfPreviousDist;
+};
 };
 #endif // HPL_PHYSICS_JOINT_SLIDER_NEWTON_H

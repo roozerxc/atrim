@@ -26,9 +26,9 @@ public:
 
 class cLuxProp_Lever : public iLuxProp
 {
-typedef iLuxProp super_class;
-friend class cLuxPropLoader_Lever;
-public:    
+    typedef iLuxProp super_class;
+    friend class cLuxPropLoader_Lever;
+public:
     cLuxProp_Lever(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxProp_Lever();
 
@@ -36,33 +36,48 @@ public:
     //General
     bool CanInteract(iPhysicsBody *apBody);
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
-    
+
     void OnSetupAfterLoad(cWorld *apWorld);
 
     void OnResetProperties();
 
     void UpdatePropSpecific(float afTimeStep);
-    
+
     void BeforePropDestruction();
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
 
     //////////////////////
     //Properties
-    iLuxInteractData_RotateBase* GetMoveBaseData(){ return &mLeverData;}
-    
-    int GetLeverState(){ return mlCurrentState; }
+    iLuxInteractData_RotateBase* GetMoveBaseData()
+    {
+        return &mLeverData;
+    }
+
+    int GetLeverState()
+    {
+        return mlCurrentState;
+    }
 
     void SetStuckState(int alState, bool abEffects);
-    int  GetStuckState(){ return mlStuckState; }
+    int  GetStuckState()
+    {
+        return mlStuckState;
+    }
 
-    void SetInteractionDisablesStuck(bool abX){ mbInteractionDisablesStuck = abX;}
-    bool GetInteractionDisablesStuck(bool abX){ return mbInteractionDisablesStuck;}
+    void SetInteractionDisablesStuck(bool abX)
+    {
+        mbInteractionDisablesStuck = abX;
+    }
+    bool GetInteractionDisablesStuck(bool abX)
+    {
+        return mbInteractionDisablesStuck;
+    }
 
     //////////////////////
     //Connection callbacks
     void OnConnectionStateChange(iLuxEntity *apEntity, int alState);
-    
+
     //////////////////////
     //Save data stuff
     iLuxEntity_SaveData* CreateSaveData();
@@ -87,7 +102,7 @@ private:
     float mfDefaultMaxAngle;
     iPhysicsJointHinge *mpHingeJoint;
     iPhysicsBody *mpLeverBody;
-    
+
     bool mbCanInteractWithStaticBody;
     float mfMinLimitRange;
     float mfMaxLimitRange;
@@ -120,7 +135,7 @@ class cLuxPropLoader_Lever : public iLuxPropLoader
 {
 public:
     cLuxPropLoader_Lever(const tString& asName);
-    virtual ~cLuxPropLoader_Lever(){}
+    virtual ~cLuxPropLoader_Lever() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);

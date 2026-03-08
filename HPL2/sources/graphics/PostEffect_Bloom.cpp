@@ -11,168 +11,169 @@
 
 #include "system/PreprocessParser.h"
 
-namespace hpl {
-    
-    //////////////////////////////////////////////////////////////////////////
-    // PROGRAM VARS
-    //////////////////////////////////////////////////////////////////////////
+namespace hpl
+{
 
-    #define kVar_avRgbToIntensity    0
+//////////////////////////////////////////////////////////////////////////
+// PROGRAM VARS
+//////////////////////////////////////////////////////////////////////////
 
-    #define kVar_afBlurSize            2
-    
+#define kVar_avRgbToIntensity    0
+
+#define kVar_afBlurSize            2
 
 
-    //////////////////////////////////////////////////////////////////////////
-    // POST EFFECT BASE
-    //////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
-    
-    cPostEffectType_Bloom::cPostEffectType_Bloom(cGraphics *apGraphics, cResources *apResources) : iPostEffectType("Bloom",apGraphics,apResources)
+//////////////////////////////////////////////////////////////////////////
+// POST EFFECT BASE
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+cPostEffectType_Bloom::cPostEffectType_Bloom(cGraphics *apGraphics, cResources *apResources) : iPostEffectType("Bloom",apGraphics,apResources)
+{
+    ///////////////////////////
+    // Load programs
+    for(int i=0; i<2; ++i)
     {
-        ///////////////////////////
-        // Load programs
-        for(int i=0; i<2; ++i)
-        {
-            cParserVarContainer vars;
-            if(i==1) vars.Add("BlurHorisontal");
-            mpBlurProgram[i] = mpGraphics->CreateGpuProgramFromShaders("BloomBlur",    "posteffect_bloom_blur_vtx.glsl",
-                                                                                    "posteffect_bloom_blur_frag.glsl", &vars);
-
-            if(mpBlurProgram[i])
-            {
-                mpBlurProgram[i]->GetVariableAsId("afBlurSize",kVar_afBlurSize);
-            }
-        }
-
         cParserVarContainer vars;
-        vars.Add("UseUv");
-        vars.Add("UseUvCoord1");
-        mpBloomProgram = mpGraphics->CreateGpuProgramFromShaders(    "BloomBlur",    "deferred_base_vtx.glsl",
-                                                                                    "posteffect_bloom_add_frag.glsl", &vars);
-        if(mpBloomProgram)
+        if(i==1) vars.Add("BlurHorisontal");
+        mpBlurProgram[i] = mpGraphics->CreateGpuProgramFromShaders("BloomBlur",    "posteffect_bloom_blur_vtx.glsl",
+                           "posteffect_bloom_blur_frag.glsl", &vars);
+
+        if(mpBlurProgram[i])
         {
-            mpBloomProgram->GetVariableAsId("avRgbToIntensity",kVar_avRgbToIntensity);
+            mpBlurProgram[i]->GetVariableAsId("afBlurSize",kVar_afBlurSize);
         }
     }
-    
-    //-----------------------------------------------------------------------
 
-    cPostEffectType_Bloom::~cPostEffectType_Bloom()
+    cParserVarContainer vars;
+    vars.Add("UseUv");
+    vars.Add("UseUvCoord1");
+    mpBloomProgram = mpGraphics->CreateGpuProgramFromShaders(    "BloomBlur",    "deferred_base_vtx.glsl",
+                     "posteffect_bloom_add_frag.glsl", &vars);
+    if(mpBloomProgram)
     {
+        mpBloomProgram->GetVariableAsId("avRgbToIntensity",kVar_avRgbToIntensity);
+    }
+}
 
+//-----------------------------------------------------------------------
+
+cPostEffectType_Bloom::~cPostEffectType_Bloom()
+{
+
+}
+
+//-----------------------------------------------------------------------
+
+iPostEffect * cPostEffectType_Bloom::CreatePostEffect(iPostEffectParams *apParams)
+{
+    cPostEffect_Bloom *pEffect = hplNew(cPostEffect_Bloom, (mpGraphics,mpResources,this));
+    cPostEffectParams_Bloom *pBloomParams = static_cast<cPostEffectParams_Bloom*>(apParams);
+
+    return pEffect;
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// POST EFFECT
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+cPostEffect_Bloom::cPostEffect_Bloom(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType) : iPostEffect(apGraphics,apResources,apType)
+{
+    cVector2l vSize = mpLowLevelGraphics->GetScreenSizeInt();
+
+    for(int i=0; i<2; ++i)
+    {
+        mpBlurBuffer[i] = mpGraphics->GetTempFrameBuffer(vSize/4,ePixelFormat_RGBA,i);
+        if(mpBlurBuffer[i])
+            mpBlurTexture[i] = mpBlurBuffer[i]->GetColorBuffer(0)->ToTexture();
     }
 
-    //-----------------------------------------------------------------------
+    mpBloomType = static_cast<cPostEffectType_Bloom*>(mpType);
+}
 
-    iPostEffect * cPostEffectType_Bloom::CreatePostEffect(iPostEffectParams *apParams)
+//-----------------------------------------------------------------------
+
+cPostEffect_Bloom::~cPostEffect_Bloom()
+{
+
+}
+
+//-----------------------------------------------------------------------
+
+void cPostEffect_Bloom::OnSetParams()
+{
+
+}
+
+//-----------------------------------------------------------------------
+
+
+iTexture* cPostEffect_Bloom::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
+{
+    /////////////////////////
+    // Init render states
+    mpCurrentComposite->SetFlatProjection();
+    mpCurrentComposite->SetBlendMode(eMaterialBlendMode_None);
+    mpCurrentComposite->SetChannelMode(eMaterialChannelMode_RGBA);
+
+    for(int i=0; i<2; ++i)
     {
-        cPostEffect_Bloom *pEffect = hplNew(cPostEffect_Bloom, (mpGraphics,mpResources,this));
-        cPostEffectParams_Bloom *pBloomParams = static_cast<cPostEffectParams_Bloom*>(apParams);
-
-        return pEffect;
-    }
-    
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // POST EFFECT
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-
-    cPostEffect_Bloom::cPostEffect_Bloom(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType) : iPostEffect(apGraphics,apResources,apType)
-    {
-        cVector2l vSize = mpLowLevelGraphics->GetScreenSizeInt();
-        
-        for(int i=0;i<2; ++i)
+        //Reverse order so blur program is not set unneeded times
+        if(mpBloomType->mpBlurProgram[1-i])
         {
-            mpBlurBuffer[i] = mpGraphics->GetTempFrameBuffer(vSize/4,ePixelFormat_RGBA,i);
-            if(mpBlurBuffer[i])
-                mpBlurTexture[i] = mpBlurBuffer[i]->GetColorBuffer(0)->ToTexture();
+            mpBloomType->mpBlurProgram[1-i]->SetFloat(kVar_afBlurSize, mParams.mfBlurSize);
         }
-
-        mpBloomType = static_cast<cPostEffectType_Bloom*>(mpType);
     }
 
-    //-----------------------------------------------------------------------
-
-    cPostEffect_Bloom::~cPostEffect_Bloom()
+    /////////////////////////
+    // Render blur
+    RenderBlur(apInputTexture);
+    for(int i=1; i<mParams.mlBlurIterations; ++i)
     {
-
+        RenderBlur(mpBlurTexture[1]);
     }
 
-    //-----------------------------------------------------------------------
 
-    void cPostEffect_Bloom::OnSetParams()
+    /////////////////////////
+    // Render the input and blur as bloom onto the final buffer.
+    // This function sets to frame buffer is post effect is last!
+    SetFinalFrameBuffer(apFinalTempBuffer);
+
+    mpCurrentComposite->SetTexture(0, mpBlurTexture[1]);
+    mpCurrentComposite->SetTexture(1, apInputTexture);
+
+    mpCurrentComposite->SetProgram(mpBloomType->mpBloomProgram);
+    if(mpBloomType->mpBloomProgram)
     {
-        
+        mpBloomType->mpBloomProgram->SetVec3f(kVar_avRgbToIntensity, mParams.mvRgbToIntensity);
     }
 
-    //-----------------------------------------------------------------------
+    DrawQuad(0,1,mpBlurTexture[1], apInputTexture, true, true);
 
+    return apFinalTempBuffer->GetColorBuffer(0)->ToTexture();
+}
 
-    iTexture* cPostEffect_Bloom::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
-    {
-        /////////////////////////
-        // Init render states
-        mpCurrentComposite->SetFlatProjection();
-        mpCurrentComposite->SetBlendMode(eMaterialBlendMode_None);
-        mpCurrentComposite->SetChannelMode(eMaterialChannelMode_RGBA);
+//-----------------------------------------------------------------------
 
-        for(int i=0; i<2; ++i)
-        {
-            //Reverse order so blur program is not set unneeded times
-            if(mpBloomType->mpBlurProgram[1-i])
-            {
-                mpBloomType->mpBlurProgram[1-i]->SetFloat(kVar_afBlurSize, mParams.mfBlurSize);    
-            }
-        }
-        
-        /////////////////////////
-        // Render blur
-        RenderBlur(apInputTexture);
-        for(int i=1; i<mParams.mlBlurIterations;++i)
-        {
-            RenderBlur(mpBlurTexture[1]);
-        }
-        
+void cPostEffect_Bloom::RenderBlur(iTexture *apInputTex)
+{
+    SetFrameBuffer(mpBlurBuffer[0]);
+    mpCurrentComposite->SetProgram(mpBloomType->mpBlurProgram[0]);
+    mpCurrentComposite->SetTexture(0, apInputTex);
+    DrawQuad(0,1,apInputTex,true);
 
-        /////////////////////////
-        // Render the input and blur as bloom onto the final buffer.
-        // This function sets to frame buffer is post effect is last!
-        SetFinalFrameBuffer(apFinalTempBuffer);
+    SetFrameBuffer(mpBlurBuffer[1]);
+    mpCurrentComposite->SetProgram(mpBloomType->mpBlurProgram[1]);
+    mpCurrentComposite->SetTexture(0, mpBlurTexture[0]);
+    DrawQuad(0,1,mpBlurTexture[0],true);
+}
 
-        mpCurrentComposite->SetTexture(0, mpBlurTexture[1]);
-        mpCurrentComposite->SetTexture(1, apInputTexture);
-        
-        mpCurrentComposite->SetProgram(mpBloomType->mpBloomProgram);
-        if(mpBloomType->mpBloomProgram)
-        {
-            mpBloomType->mpBloomProgram->SetVec3f(kVar_avRgbToIntensity, mParams.mvRgbToIntensity);
-        }
-        
-        DrawQuad(0,1,mpBlurTexture[1], apInputTexture, true, true);
-        
-        return apFinalTempBuffer->GetColorBuffer(0)->ToTexture();
-    }
-
-    //-----------------------------------------------------------------------
-
-    void cPostEffect_Bloom::RenderBlur(iTexture *apInputTex)
-    {
-        SetFrameBuffer(mpBlurBuffer[0]);
-        mpCurrentComposite->SetProgram(mpBloomType->mpBlurProgram[0]);
-        mpCurrentComposite->SetTexture(0, apInputTex);
-        DrawQuad(0,1,apInputTex,true);
-
-        SetFrameBuffer(mpBlurBuffer[1]);
-        mpCurrentComposite->SetProgram(mpBloomType->mpBlurProgram[1]);
-        mpCurrentComposite->SetTexture(0, mpBlurTexture[0]);
-        DrawQuad(0,1,mpBlurTexture[0],true);
-    }
-
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
 }

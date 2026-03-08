@@ -27,145 +27,147 @@
 #include "Dbt.h"
 #endif
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cSDLEngineSetup::cSDLEngineSetup(tFlag alHplSetupFlags)
+cSDLEngineSetup::cSDLEngineSetup(tFlag alHplSetupFlags)
+{
+    if(SDL_Init( SDL_INIT_VIDEO | SDL_INIT_TIMER ) < 0)
     {
-        if(SDL_Init( SDL_INIT_VIDEO | SDL_INIT_TIMER ) < 0) {
-            FatalError("Error Initializing Display: %s",SDL_GetError()); 
-            exit(1);
-        }
-
-        //////////////////////////
-        // System
-        mpLowLevelSystem = hplNew( cLowLevelSystemSDL, () );
-        
-        //////////////////////////
-        // Graphics
-        mpLowLevelGraphics = hplNew( cLowLevelGraphicsSDL,() );
-        
-        //////////////////////////
-        // Input
-        mpLowLevelInput = hplNew( cLowLevelInputSDL,(mpLowLevelGraphics) );
-        
-        //////////////////////////
-        // Resources
-        mpLowLevelResources = hplNew( cLowLevelResourcesSDL,(mpLowLevelGraphics) );
-        
-        //////////////////////////
-        // Sound
-        mpLowLevelSound    = hplNew( cLowLevelSoundOpenAL,() );
-        
-        //////////////////////////
-        // Physics
-        mpLowLevelPhysics = hplNew( cLowLevelPhysicsNewton,() );
-        
+        FatalError("Error Initializing Display: %s",SDL_GetError());
+        exit(1);
     }
 
-    //-----------------------------------------------------------------------
+    //////////////////////////
+    // System
+    mpLowLevelSystem = hplNew( cLowLevelSystemSDL, () );
 
-    cSDLEngineSetup::~cSDLEngineSetup()
-    {
-        Log("- Deleting lowlevel stuff.\n");
-        
-        Log("  Physics\n");
-        hplDelete(mpLowLevelPhysics);
-        Log("  Sound\n");
-        hplDelete(mpLowLevelSound);
-        Log("  Input\n");
-        hplDelete(mpLowLevelInput);
-        Log("  Resources\n");
-        hplDelete(mpLowLevelResources);
-        Log("  System\n");
-        hplDelete(mpLowLevelSystem);
-        Log("  Graphics\n");
-        hplDelete(mpLowLevelGraphics);
+    //////////////////////////
+    // Graphics
+    mpLowLevelGraphics = hplNew( cLowLevelGraphicsSDL,() );
 
-        SDL_Quit();
-    }
+    //////////////////////////
+    // Input
+    mpLowLevelInput = hplNew( cLowLevelInputSDL,(mpLowLevelGraphics) );
 
-    //-----------------------------------------------------------------------
+    //////////////////////////
+    // Resources
+    mpLowLevelResources = hplNew( cLowLevelResourcesSDL,(mpLowLevelGraphics) );
 
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
+    //////////////////////////
+    // Sound
+    mpLowLevelSound    = hplNew( cLowLevelSoundOpenAL,() );
 
-    //-----------------------------------------------------------------------
-    
-    cScene* cSDLEngineSetup::CreateScene(cGraphics* apGraphics, cResources *apResources, cSound* apSound,
-                                        cPhysics *apPhysics, cSystem *apSystem,cAI *apAI,cGui *apGui)
-    {
-        cScene *pScene = hplNew( cScene, (apGraphics,apResources, apSound,apPhysics, apSystem,apAI,apGui) );
-        return pScene;
-    }
+    //////////////////////////
+    // Physics
+    mpLowLevelPhysics = hplNew( cLowLevelPhysicsNewton,() );
 
-    //-----------------------------------------------------------------------
+}
 
-    
-    /**
-     * \todo Lowlevelresource and resource both use lowlevel graphics. Can this be fixed??
-     * \param apGraphics 
-     * \return 
-     */
-    cResources* cSDLEngineSetup::CreateResources(cGraphics* apGraphics)
-    {
-        cResources *pResources = hplNew( cResources, (mpLowLevelResources,mpLowLevelGraphics) );
-        return pResources;
-    }
-    
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cInput* cSDLEngineSetup::CreateInput(cGraphics* apGraphics)
-    {
-        cInput *pInput = hplNew( cInput, (mpLowLevelInput) );
-        return pInput;
-    }
-    
-    //-----------------------------------------------------------------------
+cSDLEngineSetup::~cSDLEngineSetup()
+{
+    Log("- Deleting lowlevel stuff.\n");
 
-    cSystem* cSDLEngineSetup::CreateSystem()
-    {
-        cSystem *pSystem = hplNew( cSystem, (mpLowLevelSystem) );
-        return pSystem;
-    }
-    
-    //-----------------------------------------------------------------------
+    Log("  Physics\n");
+    hplDelete(mpLowLevelPhysics);
+    Log("  Sound\n");
+    hplDelete(mpLowLevelSound);
+    Log("  Input\n");
+    hplDelete(mpLowLevelInput);
+    Log("  Resources\n");
+    hplDelete(mpLowLevelResources);
+    Log("  System\n");
+    hplDelete(mpLowLevelSystem);
+    Log("  Graphics\n");
+    hplDelete(mpLowLevelGraphics);
 
-    cGraphics* cSDLEngineSetup::CreateGraphics()
-    {
-        cGraphics *pGraphics = hplNew( cGraphics, (mpLowLevelGraphics,mpLowLevelResources) );
-        return pGraphics;
-    }
-    //-----------------------------------------------------------------------
-    
-    cSound* cSDLEngineSetup::CreateSound()
-    {
-        cSound *pSound = hplNew( cSound, (mpLowLevelSound) );
-        return pSound;
-    }
-    
-    //-----------------------------------------------------------------------
-    
-    cPhysics* cSDLEngineSetup::CreatePhysics()
-    {
-        cPhysics *pPhysics = hplNew( cPhysics, (mpLowLevelPhysics) );
-        return pPhysics;
-    }
+    SDL_Quit();
+}
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cAI* cSDLEngineSetup::CreateAI()
-    {
-        cAI *pAI = hplNew( cAI,() );
-        return pAI;
-    }
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+
+cScene* cSDLEngineSetup::CreateScene(cGraphics* apGraphics, cResources *apResources, cSound* apSound,
+                                     cPhysics *apPhysics, cSystem *apSystem,cAI *apAI,cGui *apGui)
+{
+    cScene *pScene = hplNew( cScene, (apGraphics,apResources, apSound,apPhysics, apSystem,apAI,apGui) );
+    return pScene;
+}
+
+//-----------------------------------------------------------------------
+
+
+/**
+ * \todo Lowlevelresource and resource both use lowlevel graphics. Can this be fixed??
+ * \param apGraphics
+ * \return
+ */
+cResources* cSDLEngineSetup::CreateResources(cGraphics* apGraphics)
+{
+    cResources *pResources = hplNew( cResources, (mpLowLevelResources,mpLowLevelGraphics) );
+    return pResources;
+}
+
+//-----------------------------------------------------------------------
+
+cInput* cSDLEngineSetup::CreateInput(cGraphics* apGraphics)
+{
+    cInput *pInput = hplNew( cInput, (mpLowLevelInput) );
+    return pInput;
+}
+
+//-----------------------------------------------------------------------
+
+cSystem* cSDLEngineSetup::CreateSystem()
+{
+    cSystem *pSystem = hplNew( cSystem, (mpLowLevelSystem) );
+    return pSystem;
+}
+
+//-----------------------------------------------------------------------
+
+cGraphics* cSDLEngineSetup::CreateGraphics()
+{
+    cGraphics *pGraphics = hplNew( cGraphics, (mpLowLevelGraphics,mpLowLevelResources) );
+    return pGraphics;
+}
+//-----------------------------------------------------------------------
+
+cSound* cSDLEngineSetup::CreateSound()
+{
+    cSound *pSound = hplNew( cSound, (mpLowLevelSound) );
+    return pSound;
+}
+
+//-----------------------------------------------------------------------
+
+cPhysics* cSDLEngineSetup::CreatePhysics()
+{
+    cPhysics *pPhysics = hplNew( cPhysics, (mpLowLevelPhysics) );
+    return pPhysics;
+}
+
+//-----------------------------------------------------------------------
+
+cAI* cSDLEngineSetup::CreateAI()
+{
+    cAI *pAI = hplNew( cAI,() );
+    return pAI;
+}
+
+//-----------------------------------------------------------------------
 
 }

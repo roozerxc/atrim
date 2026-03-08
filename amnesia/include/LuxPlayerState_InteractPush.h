@@ -22,8 +22,8 @@ public:
 
 class cLuxPlayerState_InteractPush : public iLuxPlayerState_Interact
 {
-typedef iLuxPlayerState_Interact super_class;
-public:    
+    typedef iLuxPlayerState_Interact super_class;
+public:
     cLuxPlayerState_InteractPush(cLuxPlayer *apPlayer);
     virtual ~cLuxPlayerState_InteractPush();
 
@@ -42,18 +42,27 @@ public:
     bool OnAddYaw(float afAmount);
     bool OnAddPitch(float afAmount);
 
-    bool OnRun(bool abPressed){ return true;}
-    bool OnJump(bool abPressed){ return false;}
+    bool OnRun(bool abPressed)
+    {
+        return true;
+    }
+    bool OnJump(bool abPressed)
+    {
+        return false;
+    }
 
     cGuiGfxElement* GetCrosshair();
 
-    void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter){}
+    void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter) {}
 
     float DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY);
 
     /////////////////////////////////
     //Save data stuff
-    virtual bool IsSaved(){ return false; }
+    virtual bool IsSaved()
+    {
+        return false;
+    }
     iLuxPlayerState_SaveData* CreateSaveData();
 
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);
@@ -72,7 +81,7 @@ protected:
 
     cPidController<cVector3f> mVelocityPid;
     cPidController<cVector3f> mStopVelocityPid;
-    
+
     cVector3f mvLocalAttachPos;
 
     cVector3f mvPushDir;

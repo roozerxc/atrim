@@ -22,7 +22,7 @@ void cLuxMoveState_Normal_Callback::OnGravityCollide(iCharacterBody *apCharBody,
 {
     //Check if there is enough speed for a bounce!
     if(    apCollideData->mvContactPoints[0].mvNormal.y > 0.001f &&
-        apCharBody->GetForceVelocity().y < -mpMoveState->mfMinHitGroundBounceSpeed)
+            apCharBody->GetForceVelocity().y < -mpMoveState->mfMinHitGroundBounceSpeed)
     {
         if(mpMoveState->mbHeadGroundBounceActive == false)
         {
@@ -49,7 +49,7 @@ cLuxMoveState_Normal::cLuxMoveState_Normal(cLuxPlayer *apPlayer) : iLuxMoveState
     ////////////////////////////
     // Create data
     mpCallback = hplNew( cLuxMoveState_Normal_Callback, (this));
-    
+
     mbRunning = false;
     mbCrouching = false;
     mbJumping = false;
@@ -59,13 +59,13 @@ cLuxMoveState_Normal::cLuxMoveState_Normal(cLuxPlayer *apPlayer) : iLuxMoveState
     msJumpSound = gpBase->mpGameCfg->GetString("Player_Movement_Normal","JumpSound","player_jump");
     msCrouchSound = gpBase->mpGameCfg->GetString("Player_Movement_Normal","CrouchSound","player_crouch");
     msStandSound = gpBase->mpGameCfg->GetString("Player_Movement_Normal","StandSound","player_stand");
-    
+
     ////////////////////////////
     // Set up speeds
     mfMaxForwardSpeed = gpBase->mpGameCfg->GetFloat("Player_Movement_Normal","MaxForwardSpeed",0);
     mfMaxBackwardSpeed = gpBase->mpGameCfg->GetFloat("Player_Movement_Normal","MaxBackwardSpeed",0);
     mfMaxSidwaySpeed = gpBase->mpGameCfg->GetFloat("Player_Movement_Normal","MaxSidwaySpeed",0);
-    
+
     ////////////////////////////
     // Set movement multipliers
     mfRunForwardMul = gpBase->mpGameCfg->GetFloat("Player_Movement_Normal","RunForwardMul",0);
@@ -95,10 +95,10 @@ cLuxMoveState_Normal::cLuxMoveState_Normal(cLuxPlayer *apPlayer) : iLuxMoveState
 
     mfCrouchMinBobSpeed = gpBase->mpGameCfg->GetFloat("Player_Movement_Normal","CrouchMinBobSpeed",0);
     mfCrouchMaxBobSpeed = gpBase->mpGameCfg->GetFloat("Player_Movement_Normal","CrouchMaxBobSpeed",0);
-    
+
     mfWalkMinBobSpeed = gpBase->mpGameCfg->GetFloat("Player_Movement_Normal","WalkMinBobSpeed",0);
     mfWalkMaxBobSpeed = gpBase->mpGameCfg->GetFloat("Player_Movement_Normal","WalkMaxBobSpeed",0);
-    
+
     mfRunMinBobSpeed = gpBase->mpGameCfg->GetFloat("Player_Movement_Normal","RunMinBobSpeed",0);
     mfRunMaxBobSpeed = gpBase->mpGameCfg->GetFloat("Player_Movement_Normal","RunMaxBobSpeed",0);
 
@@ -155,13 +155,13 @@ void cLuxMoveState_Normal::OnMapEnter()
 {
     ////////////////////////////
     // Set up variables
-    
+
     //Perhaps have this in player and call the movestes from the callback?
     mpPlayer->GetCharacterBody()->SetCallback(mpCallback);
 
     if(mpPlayer->GetCurrentMoveState()==eLuxMoveState_Normal)
     {
-        if(mbCrouching)        
+        if(mbCrouching)
             mpPlayer->GetCharacterBody()->SetActiveSize(1);
     }
 }
@@ -173,7 +173,7 @@ void cLuxMoveState_Normal::OnEnterState(eLuxMoveState aPrevState)
     ////////////////////////////
     // Set up variables
     mbRunning = false;
-    
+
     mbWasMoving = false;
     mbWasOnGround = false;
 
@@ -181,10 +181,10 @@ void cLuxMoveState_Normal::OnEnterState(eLuxMoveState aPrevState)
 
     mbHeadGroundBounceActive = false;
     mfHeadGroundBounce = 0;
-    
+
     mfBounceSizeMul = 1.0f;
     mfBounceSpeedMul = 1.0f;
-    
+
     mvHeadBob =0;
     mfPrevHeadBobCount =0;
     mfHeadBobCount = 0;
@@ -219,7 +219,7 @@ void cLuxMoveState_Normal::OnUpdate(float afTimeStep)
     // Update movement related stuff
     UpdateMovement(afTimeStep);
 
-    
+
     ////////////////////////////
     // Update multipliers
     UpdateSpeedMultipliers(afTimeStep);
@@ -231,7 +231,7 @@ void cLuxMoveState_Normal::OnUpdate(float afTimeStep)
     ////////////////////////////
     // Update head bob
     UpdateHeadBob(afTimeStep);
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -281,7 +281,7 @@ void cLuxMoveState_Normal::OnCrouch(bool abActive)
     //Do nothing on button release
     if(abActive==false) return;
 
-    SetCrouch(!mbCrouching);    
+    SetCrouch(!mbCrouching);
 }
 
 //-----------------------------------------------------------------------
@@ -297,7 +297,7 @@ void cLuxMoveState_Normal::OnJump(bool abActive)
 
         Jump();
     }
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -313,7 +313,7 @@ void cLuxMoveState_Normal::Jump()
     float fStartForce = mbCrouching ? mfJumpCrouchStartForce : mfJumpStartForce;
     fStartForce *= mpPlayer->GetScriptJumpForceMul();
 
-    pCharBody->AddForce(cVector3f(0, fStartForce * mpPlayer->GetDefaultMass(),0));        
+    pCharBody->AddForce(cVector3f(0, fStartForce * mpPlayer->GetDefaultMass(),0));
     mbJumping = true;
     mfJumpCount = 0;
 }
@@ -325,11 +325,11 @@ void cLuxMoveState_Normal::OnDraw(float afFrameTime)
     return;//Skip for now! Have some special thingy for this!
     float fY = 70;
     gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,70,0),12,cColor(1,1),
-                                _W("Crouch: %d Running: %d JumpCount: %f\n"),mbCrouching,mbRunning,mfJumpCount);
+                                     _W("Crouch: %d Running: %d JumpCount: %f\n"),mbCrouching,mbRunning,mfJumpCount);
     fY+=13;
     gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,0),12,cColor(1,1),
-                                _W("Bob: %ls (%f). Bounce: %f\n"),cString::To16Char(mvHeadBob.ToString()).c_str(), cMath::ToDeg(cMath::Wrap(mfHeadBobCount,0, k2Pif)),
-                                            mfHeadGroundBounce);
+                                     _W("Bob: %ls (%f). Bounce: %f\n"),cString::To16Char(mvHeadBob.ToString()).c_str(), cMath::ToDeg(cMath::Wrap(mfHeadBobCount,0, k2Pif)),
+                                     mfHeadGroundBounce);
 }
 
 //-----------------------------------------------------------------------
@@ -357,10 +357,10 @@ void cLuxMoveState_Normal::SetCrouch(bool abActive)
     //Stand up
     else
     {
-        cVector3f vPosTestAdd[5] = {cVector3f(0,0.001f,0), 
+        cVector3f vPosTestAdd[5] = {cVector3f(0,0.001f,0),
                                     cVector3f(0.01f,0.001f,0), cVector3f(-0.01f,0.001f,0),
                                     cVector3f(0,0.001f,0.01f), cVector3f(0,0.001f,-0.01f)
-                                };
+                                   };
 
         ////////////////////////////////////////
         // Iterate through some positions to see if player will fit there
@@ -405,13 +405,13 @@ void cLuxMoveState_Normal::ResetJumping()
 
 float cLuxMoveState_Normal::GetMoveSpeedMul()
 {
-    float fMoveMul =    mpPlayer->GetInteractionMoveSpeedMul() * 
-                        mpPlayer->GetScriptMoveSpeedMul() * 
-                        mpPlayer->GetEventMoveSpeedMul() * 
+    float fMoveMul =    mpPlayer->GetInteractionMoveSpeedMul() *
+                        mpPlayer->GetScriptMoveSpeedMul() *
+                        mpPlayer->GetEventMoveSpeedMul() *
                         mpPlayer->GetHurtMoveSpeedMul() *
                         mpPlayer->GetInsanityCollapseSpeedMul();
     if(mpPlayer->IsInWater()) fMoveMul *= mpPlayer->GetWaterSpeedMul();
-    
+
     return fMoveMul;
 }
 
@@ -499,7 +499,7 @@ void cLuxMoveState_Normal::UpdateSpeedMultipliers(float afTimeStep)
             mfMaxSidwaySpeedMul *= 1 + (mfRunSidewayMul-1) * fRunSpeedMul;
 
             mfDefaultForwardMul *= mfRunForwardMul;
-        }    
+        }
     }
     ////////////////////////
     //Not on ground
@@ -543,12 +543,12 @@ void cLuxMoveState_Normal::UpdateJumpAndGroundCheck(float afTimeStep)
         }
 
         iPhysicsWorld *pPhysicsWorld = gpBase->mpMapHandler->GetCurrentMap()->GetPhysicsWorld();
-        cVector3f vGravity = pCharBody->GetCustomGravityActive() ?    pCharBody->GetCustomGravity() : 
-        pPhysicsWorld->GetGravity();
+        cVector3f vGravity = pCharBody->GetCustomGravityActive() ?    pCharBody->GetCustomGravity() :
+                             pPhysicsWorld->GetGravity();
 
         //Remove some gravity and make jump last longer.
         float fMul = 0.4f + 0.5f * (1 - mfJumpCount / mfMaxJumpCount);
-        pCharBody->AddForce(cVector3f(0,-vGravity.y * pCharBody->GetMass() * fMul,0));        
+        pCharBody->AddForce(cVector3f(0,-vGravity.y * pCharBody->GetMass() * fMul,0));
     }
 }
 
@@ -579,7 +579,7 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
     float fPlayerSpeed = pCharBody->GetVelocity(afTimeStep).Length();
     float fMaxPlayerSpeed = mfMaxForwardSpeed * mfDefaultForwardMul;
     float fBobSpeed = fMinBobSpeed + (fPlayerSpeed/fMaxPlayerSpeed) * (fMaxBobSpeed - fMinBobSpeed);
-    
+
     /////////////////////
     // Check if moving
     bool bMoving = pCharBody->IsOnGround() && pCharBody->GetMovedLastUpdate();
@@ -589,11 +589,11 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
     {
         mvBobMaxGoal =0;
     }
-    
+
     //Fade into the new max
     float fAdd = 0.1f;
     mvCurrentBobMax = cMath::Vector2IncreaseTo(mvCurrentBobMax, fAdd * afTimeStep, mvBobMaxGoal);
-    
+
 
     /////////////////////////
     //Player is not moving
@@ -612,7 +612,7 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
 
             mfPrevHeadBobCount = mfHeadBobCount;
             mfHeadBobCount += afTimeStep * k2Pif * fAdd * 3.1f;
-            
+
             float fCos = cos(mfHeadBobCount);
             float fSin = cos(mfHeadBobCount);
 
@@ -638,14 +638,14 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
         float fPrevCos = cos(mfPrevHeadBobCount);
         float fCos = cos(mfHeadBobCount);
         float fSin = sin(mfHeadBobCount);
-        
+
         //Check if in lowest position
         if(fSin < 0 && ((fCos <=0 && fPrevCos >= 0) || (fCos >=0 && fPrevCos <= 0)))
         {
             FootSound(eLuxFootSound_Step);
         }
     }
-    
+
     if(mbBobbing)
     {
         mvHeadBob.y = sin(mfHeadBobCount) * mvCurrentBobMax.y - mvCurrentBobMax.y;
@@ -662,7 +662,7 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
     if(mbHeadGroundBounceActive)
     {
         mfHeadGroundBounce += afTimeStep * mfGroundBounceSpeed * mfBounceSpeedMul;
-        
+
         //Slow down on way down, and back up go slow, speed up and then slow.
         if(mfHeadGroundBounce < 0.5f)
             mvHeadBob.y += sin(kPif + mfHeadGroundBounce * kPif) * mfGroundBounceSize * mfBounceSizeMul;
@@ -675,8 +675,8 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
             mfHeadGroundBounce = 0;
         }
     }
-    
-    
+
+
     mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_Bob,mvHeadBob);
 }
 
@@ -703,16 +703,16 @@ bool cLuxMoveState_Normal::UpdateLedgeCheck(float afTimeStep)
     //Check so counter is right
     mfClimbLedgeCount -= afTimeStep;
     if(mfClimbLedgeCount > 0) return false;
-    
+
     mfClimbLedgeCount = mfMaxClimbLedgeCount;
-    
+
     ///////////////////////////////
     //Get the position for the ray
     //TODO: Should start a little bit above center, (var is specified in config!)
-    cVector3f vStartPos =     pCharBody->GetFeetPosition() + 
-                            cVector3f(0,pCharBody->GetSize().y - mfClimbLedgeCheckDistFromTop,0) + 
-                            pCharBody->GetForward()* (pCharBody->GetSize().x*0.5f + mfClimbLedgeCheckDistForward);
-        
+    cVector3f vStartPos =     pCharBody->GetFeetPosition() +
+                              cVector3f(0,pCharBody->GetSize().y - mfClimbLedgeCheckDistFromTop,0) +
+                              pCharBody->GetForward()* (pCharBody->GetSize().x*0.5f + mfClimbLedgeCheckDistForward);
+
     cVector3f vStartPosAdd = cVector3f(0, -mfClimbLedgeCheckDistTopToEnd, 0);
 
     //////////////////////////////
@@ -722,7 +722,7 @@ bool cLuxMoveState_Normal::UpdateLedgeCheck(float afTimeStep)
     vRayStart[0] = vStartPos;
     vRayStart[1] = vStartPos + pCharBody->GetRight() * pCharBody->GetSize().x/4;
     vRayStart[2] = vStartPos - pCharBody->GetRight() * pCharBody->GetSize().x/4;
-    
+
     bool bIntersection = false;
     for(int i=0; i<3; ++i)
     {
@@ -733,16 +733,16 @@ bool cLuxMoveState_Normal::UpdateLedgeCheck(float afTimeStep)
             if(fDistance < fMinDistance) fMinDistance = fDistance;
         }
     }
-    
+
     if(bIntersection== false) return false;
 
     //////////////////////////////
     // Check if the new position works
-    
+
     //Set up variables
     cVector3f vFeetPos = vStartPos - cVector3f(0,fMinDistance-0.01f,0);
     cVector3f vPushBack=0;
-    
+
     //Check if fit
     bool bFitting = pCharBody->CheckCharacterFits(vFeetPos, true,-1, &vPushBack);
 
@@ -759,9 +759,9 @@ bool cLuxMoveState_Normal::UpdateLedgeCheck(float afTimeStep)
         bFitting = pCharBody->CheckCharacterFits(vFeetPos, true,1);
         if(bFitting) SetCrouch(true);
     }
-    
-    if(bFitting == false) return false;    
-    
+
+    if(bFitting == false) return false;
+
     //////////////////////////////////////
     // Player fits! Set up stuff
 
@@ -774,10 +774,10 @@ bool cLuxMoveState_Normal::UpdateLedgeCheck(float afTimeStep)
     vDiff.z = cMath::Vector3Dot(pCharBody->GetForward(),vPosDifference);
     vDiff.x = cMath::Vector3Dot(pCharBody->GetRight(),vPosDifference);
     mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_ClimbLedge, vDiff);
-    
+
     //Set the new position
     pCharBody->SetFeetPosition(vFeetPos);
-    
+
     //Change the move state
     mpPlayer->ChangeMoveState(eLuxMoveState_ClimbLedge);
 
@@ -792,9 +792,9 @@ void cLuxMoveState_Normal::FootSound(eLuxFootSound aType)
     //Get Material
     iCharacterBody *pCharBody = mpPlayer->GetCharacterBody();
     iPhysicsMaterial *pGravityMat = pCharBody->GetGravityCollideMaterial();
-    
+
     tString sMaterialStep;
-    
+
     if(mpPlayer->IsInWater())
     {
         sMaterialStep = mpPlayer->GetWaterStepSound();
@@ -803,7 +803,7 @@ void cLuxMoveState_Normal::FootSound(eLuxFootSound aType)
     {
         sMaterialStep = pGravityMat ? pGravityMat->GetSurfaceData()->GetStepType() : "rock";
     }
-    
+
     ///////////////////////
     //Get Sound data name
     tString sSoundDataName="";
@@ -838,9 +838,9 @@ void cLuxMoveState_Normal::FootSound(eLuxFootSound aType)
             fDistanceMul = 1.25f;
         }
     }
-    
+
     pMap->BroadcastEnemySoundMessage(    mpPlayer->GetCharacterBody()->GetFeetPosition() + cVector3f(0,0.1f,0),extraData.mfVolume * fVolumeMul,
-                                        extraData.mfMinDistance, extraData.mfMaxDistance * fDistanceMul);
+                                         extraData.mfMinDistance, extraData.mfMaxDistance * fDistanceMul);
 }
 
 //-----------------------------------------------------------------------

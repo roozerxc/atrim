@@ -9,202 +9,203 @@
 #include "input/ActionGamepadHat.h"
 
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // SUB ACTION
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// SUB ACTION
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    void iSubAction::Update(float afTimeStep)
-    {
-        UpdateLogic(afTimeStep);
-    }
+void iSubAction::Update(float afTimeStep)
+{
+    UpdateLogic(afTimeStep);
+}
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cAction::cAction(const tString& asName,int alId, cInput *apInput)
-    {
-        msName = asName;
-        mlId = alId;
-        mpInput = apInput;
+cAction::cAction(const tString& asName,int alId, cInput *apInput)
+{
+    msName = asName;
+    mlId = alId;
+    mpInput = apInput;
 
-        mbBecameTriggerd= false;
-        mbIsTriggerd = false;
+    mbBecameTriggerd= false;
+    mbIsTriggerd = false;
 
-        mfTimeCount = -1.0;
+    mfTimeCount = -1.0;
 
-        mbDoubleTrigger_Down = false;
-        mbDoubleTrigger_Triggered = false;
+    mbDoubleTrigger_Down = false;
+    mbDoubleTrigger_Triggered = false;
 
-        mbIsDown = false;
-    }
+    mbIsDown = false;
+}
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cAction::~cAction()
-    {
-        STLDeleteAll(mvSubActions);
-    }
-    
-    //-----------------------------------------------------------------------
-    
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
+cAction::~cAction()
+{
+    STLDeleteAll(mvSubActions);
+}
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    void cAction::AddKey(eKey aKey)
-    {
-        AddSubAction( hplNew(cActionKeyboard, (mpInput,aKey) ));
-    }
-    
-    void cAction::AddMouseButton(eMouseButton aButton)
-    {
-        AddSubAction( hplNew(cActionMouseButton, (mpInput,aButton) ));
-    }
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+void cAction::AddKey(eKey aKey)
+{
+    AddSubAction( hplNew(cActionKeyboard, (mpInput,aKey) ));
+}
+
+void cAction::AddMouseButton(eMouseButton aButton)
+{
+    AddSubAction( hplNew(cActionMouseButton, (mpInput,aButton) ));
+}
 #ifdef USE_GAMEPAD
-    void cAction::AddGamepadButton(int alPadIndex, eGamepadButton aButton)
-    {
-        AddSubAction( hplNew(cActionGamepadButton, (mpInput, alPadIndex, aButton)));
-    }
-    
-    void cAction::AddGamepadAxis(int alPadIndex, eGamepadAxis aAxis, eGamepadAxisRange aRange, float afMinThreshold, float afMaxThreshold)
-    {
-        AddSubAction( hplNew(cActionGamepadAxis, (mpInput, alPadIndex, aAxis, aRange, afMinThreshold, afMaxThreshold)));
-    }
+void cAction::AddGamepadButton(int alPadIndex, eGamepadButton aButton)
+{
+    AddSubAction( hplNew(cActionGamepadButton, (mpInput, alPadIndex, aButton)));
+}
 
-    void cAction::AddGamepadHat(int alPadIndex, eGamepadHat aHat, eGamepadHatState aHatState)
-    {
-        AddSubAction( hplNew(cActionGamepadHat, (mpInput, alPadIndex, aHat, aHatState)));
-    }
+void cAction::AddGamepadAxis(int alPadIndex, eGamepadAxis aAxis, eGamepadAxisRange aRange, float afMinThreshold, float afMaxThreshold)
+{
+    AddSubAction( hplNew(cActionGamepadAxis, (mpInput, alPadIndex, aAxis, aRange, afMinThreshold, afMaxThreshold)));
+}
+
+void cAction::AddGamepadHat(int alPadIndex, eGamepadHat aHat, eGamepadHatState aHatState)
+{
+    AddSubAction( hplNew(cActionGamepadHat, (mpInput, alPadIndex, aHat, aHatState)));
+}
 #endif
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    void cAction::AddSubAction(iSubAction *apSubAction)
+void cAction::AddSubAction(iSubAction *apSubAction)
+{
+    mvSubActions.push_back(apSubAction);
+}
+
+//-----------------------------------------------------------------------
+
+void cAction::ClearSubActions()
+{
+    STLDeleteAll(mvSubActions);
+}
+
+//-----------------------------------------------------------------------
+
+bool cAction::IsTriggerd()
+{
+    return mbIsDown;
+}
+
+//-----------------------------------------------------------------------
+
+bool cAction::WasTriggerd()
+{
+    if(mbBecameTriggerd && mbIsDown==false)
     {
-        mvSubActions.push_back(apSubAction);
+        mbBecameTriggerd=false;
+        return true;
     }
 
-    //-----------------------------------------------------------------------
+    return false;
+}
 
-    void cAction::ClearSubActions()
+//-----------------------------------------------------------------------
+
+bool cAction::BecameTriggerd()
+{
+    if(mbIsTriggerd==false && mbIsDown)
     {
-        STLDeleteAll(mvSubActions);
+        mbIsTriggerd=true;
+        return true;
     }
 
-    //-----------------------------------------------------------------------
+    return false;
+}
 
-    bool cAction::IsTriggerd()
+//-----------------------------------------------------------------------
+
+bool cAction::DoubleTriggerd(float afLimit)
+{
+    if(!mbDoubleTrigger_Down && mbIsDown)
     {
-        return mbIsDown;
-    }
+        mbDoubleTrigger_Down=true;
 
-    //-----------------------------------------------------------------------
-
-    bool cAction::WasTriggerd()
-    {
-        if(mbBecameTriggerd && mbIsDown==false)
-        {
-            mbBecameTriggerd=false;
-            return true;
-        }
-
-        return false;
-    }
-
-    //-----------------------------------------------------------------------
-    
-    bool cAction::BecameTriggerd()
-    {
-        if(mbIsTriggerd==false && mbIsDown)
-        {
-            mbIsTriggerd=true;
-            return true;
-        }
-
-        return false;
-    }
-
-    //-----------------------------------------------------------------------
-
-    bool cAction::DoubleTriggerd(float afLimit)
-    {
-        if(!mbDoubleTrigger_Down && mbIsDown)
-        {
-            mbDoubleTrigger_Down=true;
-
-            if(mbDoubleTrigger_Triggered ||
+        if(mbDoubleTrigger_Triggered ||
                 mfTimeCount <0 || mfTimeCount > afLimit)
-            {
-                mbDoubleTrigger_Triggered=false;
-                mfTimeCount =0;
-                return false;
-            }
-            else
-            {
-                mfTimeCount =0;
-                mbIsTriggerd=true;
-                mbDoubleTrigger_Triggered=true;
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    //-----------------------------------------------------------------------
-
-    void cAction::ResetToCurrentState()
-    {
-        Update(0.01f);
-
-        if(mbIsDown)
         {
-            mbIsTriggerd = true;
-            mbDoubleTrigger_Down = true;
+            mbDoubleTrigger_Triggered=false;
+            mfTimeCount =0;
+            return false;
         }
         else
         {
-            mbBecameTriggerd=false;
+            mfTimeCount =0;
+            mbIsTriggerd=true;
+            mbDoubleTrigger_Triggered=true;
+            return true;
         }
     }
 
-    //-----------------------------------------------------------------------
+    return false;
+}
 
-    void cAction::Update(float afTimeStep)
+//-----------------------------------------------------------------------
+
+void cAction::ResetToCurrentState()
+{
+    Update(0.01f);
+
+    if(mbIsDown)
     {
-        mbIsDown = false;
-        
-        for(size_t i=0; i< mvSubActions.size(); ++i)
-        {
-            iSubAction *pSubAction = mvSubActions[i];
-            if(pSubAction->IsTriggerd()) mbIsDown = true;
-        }
+        mbIsTriggerd = true;
+        mbDoubleTrigger_Down = true;
+    }
+    else
+    {
+        mbBecameTriggerd=false;
+    }
+}
 
-        if(mbIsDown)
-        {
-            mbBecameTriggerd=true;
-        }
-        else
-        {
-            mbIsTriggerd=false;
-            mbDoubleTrigger_Down = false;
+//-----------------------------------------------------------------------
 
-            if(mfTimeCount >= 0) mfTimeCount += afTimeStep;
-        }
-        
-        
+void cAction::Update(float afTimeStep)
+{
+    mbIsDown = false;
+
+    for(size_t i=0; i< mvSubActions.size(); ++i)
+    {
+        iSubAction *pSubAction = mvSubActions[i];
+        if(pSubAction->IsTriggerd()) mbIsDown = true;
     }
 
-    //-----------------------------------------------------------------------
+    if(mbIsDown)
+    {
+        mbBecameTriggerd=true;
+    }
+    else
+    {
+        mbIsTriggerd=false;
+        mbDoubleTrigger_Down = false;
+
+        if(mfTimeCount >= 0) mfTimeCount += afTimeStep;
+    }
+
+
+}
+
+//-----------------------------------------------------------------------
 
 }

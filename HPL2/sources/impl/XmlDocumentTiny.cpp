@@ -7,183 +7,184 @@
 #include "impl/tinyXML/tinyxml.h"
 #include <stdio.h>
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    void cXmlDocumentTiny::SaveToString(tString *apDestData)
+void cXmlDocumentTiny::SaveToString(tString *apDestData)
+{
+    TiXmlDocument *pXmlDoc = hplNew( TiXmlDocument, () );
+
+    pXmlDoc->InsertEndChild(TiXmlElement(""));
+    SaveToTinyXMLData(pXmlDoc->FirstChildElement(), this);
+
+    *apDestData = "";
+    *apDestData << *pXmlDoc;
+
+    hplDelete( pXmlDoc );
+}
+
+//-----------------------------------------------------------------------
+
+bool cXmlDocumentTiny::CreateFromString(const tString& asData)
+{
+    TiXmlDocument *pXmlDoc = hplNew( TiXmlDocument, () );
+
+    pXmlDoc->Parse(asData.c_str());
+    if(pXmlDoc->Error())
     {
-        TiXmlDocument *pXmlDoc = hplNew( TiXmlDocument, () );
+        tString sErrorDesc = tString(pXmlDoc->ErrorDesc());
+        int lErrorRow = pXmlDoc->ErrorRow();
+        int lErrorCol = pXmlDoc->ErrorCol();
 
-        pXmlDoc->InsertEndChild(TiXmlElement(""));
-        SaveToTinyXMLData(pXmlDoc->FirstChildElement(), this);
-
-        *apDestData = "";
-        *apDestData << *pXmlDoc;
-        
-        hplDelete( pXmlDoc );
-    }
-    
-    //-----------------------------------------------------------------------
-
-    bool cXmlDocumentTiny::CreateFromString(const tString& asData)
-    {
-        TiXmlDocument *pXmlDoc = hplNew( TiXmlDocument, () );
-        
-        pXmlDoc->Parse(asData.c_str());
-        if(pXmlDoc->Error())
-        {
-            tString sErrorDesc = tString(pXmlDoc->ErrorDesc());
-            int lErrorRow = pXmlDoc->ErrorRow();
-            int lErrorCol = pXmlDoc->ErrorCol();
-
-            SaveErrorInfo(sErrorDesc, lErrorRow, lErrorCol);
-
-            hplDelete( pXmlDoc );
-            return false;
-        }
-
-        DestroyChildren();
-        LoadFromTinyXMLData(pXmlDoc->FirstChildElement(), this);
+        SaveErrorInfo(sErrorDesc, lErrorRow, lErrorCol);
 
         hplDelete( pXmlDoc );
-        return true;
+        return false;
     }
-    
-    //-----------------------------------------------------------------------
 
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
+    DestroyChildren();
+    LoadFromTinyXMLData(pXmlDoc->FirstChildElement(), this);
 
-    //-----------------------------------------------------------------------
+    hplDelete( pXmlDoc );
+    return true;
+}
 
-    bool cXmlDocumentTiny::LoadDataFromFile(const tWString& asPath)
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+bool cXmlDocumentTiny::LoadDataFromFile(const tWString& asPath)
+{
+    TiXmlDocument *pXmlDoc = hplNew( TiXmlDocument, () );
+    if(CreateTinyXMLFromFile(pXmlDoc,asPath)==false)
     {
-        TiXmlDocument *pXmlDoc = hplNew( TiXmlDocument, () );
-        if(CreateTinyXMLFromFile(pXmlDoc,asPath)==false)
-        {
-            tString sErrorDesc = tString(pXmlDoc->ErrorDesc());
-            int lErrorRow = pXmlDoc->ErrorRow();
-            int lErrorCol = pXmlDoc->ErrorCol();
+        tString sErrorDesc = tString(pXmlDoc->ErrorDesc());
+        int lErrorRow = pXmlDoc->ErrorRow();
+        int lErrorCol = pXmlDoc->ErrorCol();
 
-            SaveErrorInfo(sErrorDesc, lErrorRow, lErrorCol);
-    
-            hplDelete( pXmlDoc );
-            return false;
-        }
-        
-        DestroyChildren();
-        LoadFromTinyXMLData(pXmlDoc->FirstChildElement(), this);
+        SaveErrorInfo(sErrorDesc, lErrorRow, lErrorCol);
 
         hplDelete( pXmlDoc );
-        return true;
+        return false;
     }
 
-    //-----------------------------------------------------------------------
-    
-    bool cXmlDocumentTiny::SaveDataToFile(const tWString& asPath)
+    DestroyChildren();
+    LoadFromTinyXMLData(pXmlDoc->FirstChildElement(), this);
+
+    hplDelete( pXmlDoc );
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
+bool cXmlDocumentTiny::SaveDataToFile(const tWString& asPath)
+{
+    TiXmlDocument *pXmlDoc = hplNew( TiXmlDocument, () );
+
+
+    pXmlDoc->InsertEndChild(TiXmlElement(""));
+    SaveToTinyXMLData(pXmlDoc->FirstChildElement(), this);
+
+    bool bRet = SaveTinyXMLToFile(pXmlDoc,asPath);
+    hplDelete( pXmlDoc );
+
+    return bRet;
+}
+
+//-----------------------------------------------------------------------
+
+void cXmlDocumentTiny::LoadFromTinyXMLData(TiXmlElement* apTinyElem, cXmlElement *apDestElem)
+{
+    /////////////////////////////
+    //Load the attributes
+    apDestElem->SetValue(apTinyElem->Value());
+
+    TiXmlAttribute *pAttrib = apTinyElem->FirstAttribute();
+    for(; pAttrib != NULL; pAttrib = pAttrib->Next())
     {
-        TiXmlDocument *pXmlDoc = hplNew( TiXmlDocument, () );
-
-
-        pXmlDoc->InsertEndChild(TiXmlElement(""));
-        SaveToTinyXMLData(pXmlDoc->FirstChildElement(), this);
-
-        bool bRet = SaveTinyXMLToFile(pXmlDoc,asPath);
-        hplDelete( pXmlDoc );
-
-        return bRet;
-    }    
-
-    //-----------------------------------------------------------------------
-
-    void cXmlDocumentTiny::LoadFromTinyXMLData(TiXmlElement* apTinyElem, cXmlElement *apDestElem)
-    {
-        /////////////////////////////
-        //Load the attributes
-        apDestElem->SetValue(apTinyElem->Value());
-
-        TiXmlAttribute *pAttrib = apTinyElem->FirstAttribute();
-        for(; pAttrib != NULL; pAttrib = pAttrib->Next())
-        {
-            apDestElem->SetAttribute(pAttrib->Name(), pAttrib->Value());
-        }
-
-        /////////////////////////////
-        //Load the elements
-        TiXmlElement *pChildElem = apTinyElem->FirstChildElement();
-        for(; pChildElem != NULL; pChildElem = pChildElem->NextSiblingElement())
-        {
-            cXmlElement *pDestChild = apDestElem->CreateChildElement();
-            
-            LoadFromTinyXMLData(pChildElem, pDestChild);
-        }
+        apDestElem->SetAttribute(pAttrib->Name(), pAttrib->Value());
     }
 
-    //-----------------------------------------------------------------------
-
-    void cXmlDocumentTiny::SaveToTinyXMLData(TiXmlElement* apTinyElem, cXmlElement *apSrcElem)
+    /////////////////////////////
+    //Load the elements
+    TiXmlElement *pChildElem = apTinyElem->FirstChildElement();
+    for(; pChildElem != NULL; pChildElem = pChildElem->NextSiblingElement())
     {
-        /////////////////////////////
-        //Save the attributes
-        apTinyElem->SetValue(apSrcElem->GetValue().c_str());
+        cXmlElement *pDestChild = apDestElem->CreateChildElement();
 
-        tAttributeMap *pAttributeMap = apSrcElem->GetAttributeMap();
-        tAttributeMapIt attrIt = pAttributeMap->begin();
-        for(; attrIt != pAttributeMap->end(); ++attrIt)
-        {
-            apTinyElem->SetAttribute(attrIt->first.c_str(), attrIt->second.c_str());
-        }
+        LoadFromTinyXMLData(pChildElem, pDestChild);
+    }
+}
 
-        /////////////////////////////
-        //Save the elements
-        cXmlNodeListIterator it = apSrcElem->GetChildIterator();
-        while(it.HasNext())
-        {
-            cXmlElement *pChild = it.Next()->ToElement();
-            
-            TiXmlElement tempElem(pChild->GetValue().c_str());
-            TiXmlElement* pTinyChild = static_cast<TiXmlElement*>(apTinyElem->InsertEndChild(tempElem));
-            
-            SaveToTinyXMLData(pTinyChild, pChild);
-        }
+//-----------------------------------------------------------------------
 
+void cXmlDocumentTiny::SaveToTinyXMLData(TiXmlElement* apTinyElem, cXmlElement *apSrcElem)
+{
+    /////////////////////////////
+    //Save the attributes
+    apTinyElem->SetValue(apSrcElem->GetValue().c_str());
+
+    tAttributeMap *pAttributeMap = apSrcElem->GetAttributeMap();
+    tAttributeMapIt attrIt = pAttributeMap->begin();
+    for(; attrIt != pAttributeMap->end(); ++attrIt)
+    {
+        apTinyElem->SetAttribute(attrIt->first.c_str(), attrIt->second.c_str());
     }
 
-    //-----------------------------------------------------------------------
-
-    bool cXmlDocumentTiny::CreateTinyXMLFromFile(TiXmlDocument* pDoc,const tWString& asPath)
+    /////////////////////////////
+    //Save the elements
+    cXmlNodeListIterator it = apSrcElem->GetChildIterator();
+    while(it.HasNext())
     {
-        FILE *pFile = cPlatform::OpenFile(asPath, _W("rb"));
-        if(pFile==NULL) return false;
-        
-        bool bRet = pDoc->LoadFile(pFile);
+        cXmlElement *pChild = it.Next()->ToElement();
 
-        if(pFile) fclose(pFile);
+        TiXmlElement tempElem(pChild->GetValue().c_str());
+        TiXmlElement* pTinyChild = static_cast<TiXmlElement*>(apTinyElem->InsertEndChild(tempElem));
 
-        return bRet;
+        SaveToTinyXMLData(pTinyChild, pChild);
     }
 
-    //-----------------------------------------------------------------------
+}
 
-    bool cXmlDocumentTiny::SaveTinyXMLToFile(TiXmlDocument* pDoc,const tWString& asPath)
-    {
-        if(asPath == _W("")) return false;
-        
-        FILE *pFile = cPlatform::OpenFile(asPath, _W("w+"));
-        if (!pFile) return false;
+//-----------------------------------------------------------------------
 
-        bool bRet = pDoc->SaveFile(pFile);
+bool cXmlDocumentTiny::CreateTinyXMLFromFile(TiXmlDocument* pDoc,const tWString& asPath)
+{
+    FILE *pFile = cPlatform::OpenFile(asPath, _W("rb"));
+    if(pFile==NULL) return false;
 
-        if(pFile) fclose(pFile);
+    bool bRet = pDoc->LoadFile(pFile);
 
-        return bRet;
-    }
+    if(pFile) fclose(pFile);
 
-    //-----------------------------------------------------------------------
+    return bRet;
+}
+
+//-----------------------------------------------------------------------
+
+bool cXmlDocumentTiny::SaveTinyXMLToFile(TiXmlDocument* pDoc,const tWString& asPath)
+{
+    if(asPath == _W("")) return false;
+
+    FILE *pFile = cPlatform::OpenFile(asPath, _W("w+"));
+    if (!pFile) return false;
+
+    bool bRet = pDoc->SaveFile(pFile);
+
+    if(pFile) fclose(pFile);
+
+    return bRet;
+}
+
+//-----------------------------------------------------------------------
 }

@@ -3,64 +3,65 @@
 #include "graphics/FrameSubImage.h"
 #include "resources/ImageManager.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cFrameTexture::cFrameTexture(iTexture *apTex, int alHandle,cImageManager *apImageManager, bool abIsCustom) : iFrameBase()
-    {
-        mpTexture = apTex;
-        mlHandle =alHandle;
+cFrameTexture::cFrameTexture(iTexture *apTex, int alHandle,cImageManager *apImageManager, bool abIsCustom) : iFrameBase()
+{
+    mpTexture = apTex;
+    mlHandle =alHandle;
 
-        mbIsCustom = abIsCustom;
+    mbIsCustom = abIsCustom;
 
-        mpImageManager = apImageManager;
-    }
+    mpImageManager = apImageManager;
+}
 
-    cFrameTexture::~cFrameTexture()
-    {
-        if(mpTexture) hplDelete(mpTexture);
-        mpTexture = NULL;
-    }
+cFrameTexture::~cFrameTexture()
+{
+    if(mpTexture) hplDelete(mpTexture);
+    mpTexture = NULL;
+}
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
-    
-    iTexture* cFrameTexture::GetTexture()
-    {
-        return mpTexture;
-    }
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
-    
-    cFrameSubImage* cFrameTexture::CreateCustomImage(const cVector2l& avPixelPos,const cVector2l& avPixelSize)
-    {
-        if(mbIsCustom==false) return NULL;
+iTexture* cFrameTexture::GetTexture()
+{
+    return mpTexture;
+}
 
-        mlPicCount++;
+//-----------------------------------------------------------------------
 
-        const cVector3l& vSourceSize = mpTexture->GetSize();
-        cVector2f vDestPos = cVector2f((float)avPixelPos.x / (float)vSourceSize.x,(float)avPixelPos.y / (float)vSourceSize.y );
-        cVector2f vDestSize = cVector2f((float)avPixelSize.x / (float)vSourceSize.x,(float)avPixelSize.y / (float)vSourceSize.y );
+cFrameSubImage* cFrameTexture::CreateCustomImage(const cVector2l& avPixelPos,const cVector2l& avPixelSize)
+{
+    if(mbIsCustom==false) return NULL;
 
-        cFrameSubImage* pImage = hplNew(cFrameSubImage, ("",_W(""),this,NULL,
-                                                        cRect2l(avPixelPos,avPixelSize),
-                                                        cVector2l(vSourceSize.x,vSourceSize.y),
-                                                        mlHandle, NULL) );
+    mlPicCount++;
 
-        pImage->IncUserCount();
+    const cVector3l& vSourceSize = mpTexture->GetSize();
+    cVector2f vDestPos = cVector2f((float)avPixelPos.x / (float)vSourceSize.x,(float)avPixelPos.y / (float)vSourceSize.y );
+    cVector2f vDestSize = cVector2f((float)avPixelSize.x / (float)vSourceSize.x,(float)avPixelSize.y / (float)vSourceSize.y );
 
-        return pImage;
-    }
+    cFrameSubImage* pImage = hplNew(cFrameSubImage, ("",_W(""),this,NULL,
+                                    cRect2l(avPixelPos,avPixelSize),
+                                    cVector2l(vSourceSize.x,vSourceSize.y),
+                                    mlHandle, NULL) );
 
-    //-----------------------------------------------------------------------
+    pImage->IncUserCount();
+
+    return pImage;
+}
+
+//-----------------------------------------------------------------------
 }

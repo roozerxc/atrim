@@ -3,57 +3,65 @@
 
 #include "gui/GuiTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cGuiSet;
-    class cGuiSkin;
+class cGuiSet;
+class cGuiSkin;
 
-    class cWidgetWindow;
+class cWidgetWindow;
 
-    class iGuiPopUp 
+class iGuiPopUp
+{
+public:
+    iGuiPopUp(cGuiSet *apSet, bool abAddCloseButton, const cVector2f& avPopUpSize);
+    virtual ~iGuiPopUp();
+
+    void AddOnDestroyCallback(void *apCallbackObject, tGuiCallbackFunc apCallback);
+
+    void SetKillOnEscapeKey(bool abX);
+    bool GetKillOnEscapeKey();
+
+    void SetNextFocusWidget(iWidget *apNewFocused)
     {
-    public:
-        iGuiPopUp(cGuiSet *apSet, bool abAddCloseButton, const cVector2f& avPopUpSize);
-        virtual ~iGuiPopUp();
+        mpNewFocused = apNewFocused;
+        mbFocusChanged = apNewFocused != NULL;
+    }
+    cGuiSet* GetGuiSet()
+    {
+        return mpSet;
+    }
 
-        void AddOnDestroyCallback(void *apCallbackObject, tGuiCallbackFunc apCallback);
+protected:
+    bool Window_OnClose(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(Window_OnClose);
 
-        void SetKillOnEscapeKey(bool abX);
-        bool GetKillOnEscapeKey();
+    virtual void OnCloseSpecific() {}
 
-        void SetNextFocusWidget(iWidget *apNewFocused)  { mpNewFocused = apNewFocused; mbFocusChanged = apNewFocused != NULL; }
-        cGuiSet* GetGuiSet() { return mpSet; }
+    void SelfDestruct();
 
-    protected:
-        bool Window_OnClose(iWidget* apWidget, const cGuiMessageData& aData);
-        kGuiCallbackDeclarationEnd(Window_OnClose);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Use this func to safely execute callbacks (makes sure right attention and focus widgets are set after destroying popup)
+    bool RunCallback(void* apObj, tGuiCallbackFunc apCallback,
+                     iWidget* apWidget, const cGuiMessageData& aData, bool abRunFocusChangeChecks);
 
-        virtual void OnCloseSpecific() {}
+    void SetUpDefaultFocus(iWidget* apWidget);
 
-        void SelfDestruct();
+    cGuiSet *mpSet;
+    cGuiSkin *mpSkin;
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Use this func to safely execute callbacks (makes sure right attention and focus widgets are set after destroying popup)
-        bool RunCallback(void* apObj, tGuiCallbackFunc apCallback, 
-                            iWidget* apWidget, const cGuiMessageData& aData, bool abRunFocusChangeChecks);
+    cWidgetWindow* mpWindow;
 
-        void SetUpDefaultFocus(iWidget* apWidget);
+    void* mpDestroyCallbackObject;
+    tGuiCallbackFunc mpDestroyCallback;
 
-        cGuiSet *mpSet;
-        cGuiSkin *mpSkin;
-
-        cWidgetWindow* mpWindow;
-
-        void* mpDestroyCallbackObject;
-        tGuiCallbackFunc mpDestroyCallback;
-
-        bool mbAttChanged;
-        iWidget* mpNewAttention;
-        bool mbFocusChanged;
-        iWidget* mpNewFocused;
-        bool mbDefaultUIFocusChanged;
-        iWidget* mpNewDefaultUIFocus;
-    };
+    bool mbAttChanged;
+    iWidget* mpNewAttention;
+    bool mbFocusChanged;
+    iWidget* mpNewFocused;
+    bool mbDefaultUIFocusChanged;
+    iWidget* mpNewDefaultUIFocus;
+};
 
 };
 #endif // HPL_GUI_POP_UP_H

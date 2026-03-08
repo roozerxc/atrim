@@ -5,107 +5,108 @@
 #include "system/String.h"
 #include "graphics/LowLevelGraphics.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cBitmapLoaderDevilDDS::cBitmapLoaderDevilDDS() : iBitmapLoaderDevil()
+cBitmapLoaderDevilDDS::cBitmapLoaderDevilDDS() : iBitmapLoaderDevil()
+{
+    AddSupportedExtension("dds");
+}
+
+cBitmapLoaderDevilDDS::~cBitmapLoaderDevilDDS()
+{
+
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+cBitmap* cBitmapLoaderDevilDDS::LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags)
+{
+    Initialize();
+
+    //create image id
+    unsigned int lImageId;
+    ilGenImages(1,&lImageId);
+
+    //Bind image
+    ilBindImage(lImageId);
+
+    //Make sure compressed data is kept
+    ilSetInteger(IL_KEEP_DXTC_DATA, IL_TRUE);
+
+    //Try and load the file.
+    if(LoadDevilImageW(asFile)==false)
     {
-        AddSupportedExtension("dds");
+        ilDeleteImages(1,&lImageId);
+        return NULL;
     }
-    
-    cBitmapLoaderDevilDDS::~cBitmapLoaderDevilDDS()
+
+    cBitmap *pBitmap = hplNew(cBitmap, () );
+
+    ////////////////////////////////////////
+    //Get main image properties
+    int lNumOfImages = ilGetInteger(IL_NUM_IMAGES) + 1; //Returns number of images - 1, so need to add 1
+    int lNumOfMipMaps = ilGetInteger(IL_NUM_MIPMAPS) + 1; //We count first image as mimap too, so add 1
+    int lCubeFlags = ilGetInteger(IL_IMAGE_CUBEFLAGS);
+    bool useFacesInsteadOfImages = false;
+
+    if (lCubeFlags != 0 && lNumOfImages != 6)
     {
-        
+        lNumOfImages = ilGetInteger(IL_NUM_FACES) + 1;
+        if (lNumOfImages > 1)
+            useFacesInsteadOfImages = true;
+        else
+            lNumOfImages = 6;
     }
 
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-    
-    cBitmap* cBitmapLoaderDevilDDS::LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags)
+    //No need to setup if only one image and mipmap, data is already setup for that.
+    if(lNumOfImages > 1 || lNumOfMipMaps > 1)
     {
-        Initialize();
+        pBitmap->SetUpData(lNumOfImages, lNumOfMipMaps);
+    }
 
-        //create image id
-        unsigned int lImageId;
-        ilGenImages(1,&lImageId);
+    //Fet the size of image,
+    cVector3l vSize;
+    vSize.x = ilGetInteger(IL_IMAGE_WIDTH);
+    vSize.y = ilGetInteger(IL_IMAGE_HEIGHT);
+    vSize.z = ilGetInteger(IL_IMAGE_DEPTH);
+    pBitmap->SetSize(vSize);
 
-        //Bind image
-        ilBindImage(lImageId);
+    //Det properties on the pixel data
+    int lBytesPerPixel = ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
+    ePixelFormat pixelFormat = DevilPixelFormatToHPL(ilGetInteger(IL_IMAGE_FORMAT));
 
-        //Make sure compressed data is kept
-        ilSetInteger(IL_KEEP_DXTC_DATA, IL_TRUE);
+    //Get the compression format used (if any)
+    int lDXTFormat = ilGetInteger( IL_DXTC_DATA_FORMAT );
 
-        //Try and load the file.
-        if(LoadDevilImageW(asFile)==false)
-        {
-            ilDeleteImages(1,&lImageId);
-            return NULL;
-        }
+    /*Log("Image: %s\n",cString::To8Char(asFile).c_str());
+    Log(" Number of mipmaps: %d\n",lNumOfMipMaps);
+    Log(" Number of image: %d\n",lNumOfImages);
+    Log(" Compression: %d\n",lDXTFormat != IL_DXT_NO_COMP);*/
 
-        cBitmap *pBitmap = hplNew(cBitmap, () );
-
-        ////////////////////////////////////////
-        //Get main image properties
-        int lNumOfImages = ilGetInteger(IL_NUM_IMAGES) + 1; //Returns number of images - 1, so need to add 1
-        int lNumOfMipMaps = ilGetInteger(IL_NUM_MIPMAPS) + 1; //We count first image as mimap too, so add 1
-        int lCubeFlags = ilGetInteger(IL_IMAGE_CUBEFLAGS);
-        bool useFacesInsteadOfImages = false;
-
-        if (lCubeFlags != 0 && lNumOfImages != 6)
-        {
-            lNumOfImages = ilGetInteger(IL_NUM_FACES) + 1;
-            if (lNumOfImages > 1)
-                useFacesInsteadOfImages = true;
-            else
-                lNumOfImages = 6;
-        }
-
-        //No need to setup if only one image and mipmap, data is already setup for that.
-        if(lNumOfImages > 1 || lNumOfMipMaps > 1)
-        {
-            pBitmap->SetUpData(lNumOfImages, lNumOfMipMaps);
-        }
-
-        //Fet the size of image,
-        cVector3l vSize;
-        vSize.x = ilGetInteger(IL_IMAGE_WIDTH);
-        vSize.y = ilGetInteger(IL_IMAGE_HEIGHT);
-        vSize.z = ilGetInteger(IL_IMAGE_DEPTH);
-        pBitmap->SetSize(vSize);
-
-        //Det properties on the pixel data
-        int lBytesPerPixel = ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
-        ePixelFormat pixelFormat = DevilPixelFormatToHPL(ilGetInteger(IL_IMAGE_FORMAT));
-
-        //Get the compression format used (if any)
-        int lDXTFormat = ilGetInteger( IL_DXTC_DATA_FORMAT );
-
-        /*Log("Image: %s\n",cString::To8Char(asFile).c_str());
-        Log(" Number of mipmaps: %d\n",lNumOfMipMaps);
-        Log(" Number of image: %d\n",lNumOfImages);
-        Log(" Compression: %d\n",lDXTFormat != IL_DXT_NO_COMP);*/
-
-        //////////////////////////////////////////////////
-        // Load compressed image
-        if(    lDXTFormat != IL_DXT_NO_COMP && //mpLowLevelGraphics->GetCaps(eGraphicCaps_TextureCompression_DXTC) &&
+    //////////////////////////////////////////////////
+    // Load compressed image
+    if(    lDXTFormat != IL_DXT_NO_COMP && //mpLowLevelGraphics->GetCaps(eGraphicCaps_TextureCompression_DXTC) &&
             (aFlags & eBitmapLoadFlag_ForceNoCompression)==0 )
-        {
-            ePixelFormat compressedPixelFormat = GetPixelFormatFromILDXT(lDXTFormat);
-            pBitmap->SetBytesPerPixel(lBytesPerPixel);
-            pBitmap->SetIsCompressed(true);
-            pBitmap->SetPixelFormat(compressedPixelFormat);
+    {
+        ePixelFormat compressedPixelFormat = GetPixelFormatFromILDXT(lDXTFormat);
+        pBitmap->SetBytesPerPixel(lBytesPerPixel);
+        pBitmap->SetIsCompressed(true);
+        pBitmap->SetPixelFormat(compressedPixelFormat);
 
-            for(int image=0; image< lNumOfImages; ++image)
+        for(int image=0; image< lNumOfImages; ++image)
             for(int mip=0; mip< lNumOfMipMaps; ++mip)
             {
                 if(lNumOfImages > 1 || lNumOfMipMaps > 1)
@@ -134,16 +135,16 @@ namespace hpl {
                 //Log("  %d bounds: %dx%d size: %d\n",mip,ilGetInteger(IL_IMAGE_WIDTH),ilGetInteger(IL_IMAGE_HEIGHT),lSize);
 
             }
-        }
-        //////////////////////////////////////////////////
-        // Load uncompressed image
-        else
-        {
-            pBitmap->SetBytesPerPixel(lBytesPerPixel);
-            pBitmap->SetIsCompressed(false);
-            pBitmap->SetPixelFormat(pixelFormat);
+    }
+    //////////////////////////////////////////////////
+    // Load uncompressed image
+    else
+    {
+        pBitmap->SetBytesPerPixel(lBytesPerPixel);
+        pBitmap->SetIsCompressed(false);
+        pBitmap->SetPixelFormat(pixelFormat);
 
-            for(int image=0; image< lNumOfImages; ++image)
+        for(int image=0; image< lNumOfImages; ++image)
             for(int mip=0; mip< lNumOfMipMaps; ++mip)
             {
                 if(lNumOfImages > 1 || lNumOfMipMaps > 1)
@@ -164,34 +165,37 @@ namespace hpl {
                 int lSize = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
                 pImage->SetData(ilGetData(), lSize);
             }
-        }
-    
-
-        ilDeleteImages(1,&lImageId);
-
-        return pBitmap;
     }
 
-    //-----------------------------------------------------------------------
+
+    ilDeleteImages(1,&lImageId);
+
+    return pBitmap;
+}
+
+//-----------------------------------------------------------------------
 
 
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    ePixelFormat cBitmapLoaderDevilDDS::GetPixelFormatFromILDXT(int alDxtFormat)
+ePixelFormat cBitmapLoaderDevilDDS::GetPixelFormatFromILDXT(int alDxtFormat)
+{
+    switch(alDxtFormat)
     {
-        switch(alDxtFormat)
-        {
-        case IL_DXT1:    return ePixelFormat_DXT1;
-        case IL_DXT3:    return ePixelFormat_DXT3;
-        case IL_DXT5:    return ePixelFormat_DXT5;
-        }
-
-        return ePixelFormat_Unknown;
+    case IL_DXT1:
+        return ePixelFormat_DXT1;
+    case IL_DXT3:
+        return ePixelFormat_DXT3;
+    case IL_DXT5:
+        return ePixelFormat_DXT5;
     }
 
-    //-----------------------------------------------------------------------
+    return ePixelFormat_Unknown;
+}
+
+//-----------------------------------------------------------------------
 }

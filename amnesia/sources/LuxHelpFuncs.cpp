@@ -74,7 +74,7 @@ void cLuxModelCache::Destroy()
     {
         gpBase->mpEngine->GetResources()->GetMeshManager()->Destroy(*it);
     }
-    
+
     for(std::list<cAnimation*>::iterator it = mlstAnimationCache.begin(); it != mlstAnimationCache.end(); ++it)
     {
         gpBase->mpEngine->GetResources()->GetAnimationManager()->Destroy(*it);
@@ -137,16 +137,16 @@ void cLuxHelpFuncs::LoadFonts()
 //-----------------------------------------------------------------------
 
 bool cLuxHelpFuncs::PlayGuiSoundData(const tString& asName,eSoundEntryType aDestType, float afVolMul, eSoundEntityType aSoundType, bool abSkipPreviousRandom,
-                                    cLuxSoundExtraData *apOutputData)
+                                     cLuxSoundExtraData *apOutputData)
 {
     if(asName=="") return false;
 
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
     cResources *pResources = gpBase->mpEngine->GetResources();
-    
+
     cSoundEntityData *pSoundData = pResources->GetSoundEntityManager()->CreateSoundEntity(asName);
     if(pSoundData == NULL) return false;
-    
+
     tString sSoundName = pSoundData->GetRandomSoundName(aSoundType, abSkipPreviousRandom);
     cSoundEntry *pSound = pSoundHandler->PlayGui(sSoundName, false, pSoundData->GetVolume()*afVolMul,cVector3f(0,0,1),aDestType);
 
@@ -170,7 +170,7 @@ void cLuxHelpFuncs::DrawSetToScreen(bool abClearScreen, const cColor& aCol, cGui
     if(abClearScreen)
     {
         mpLowLevelGfx->SetClearColor(aCol);
-        mpLowLevelGfx->ClearFrameBuffer(eClearFrameBufferFlag_Color);        
+        mpLowLevelGfx->ClearFrameBuffer(eClearFrameBufferFlag_Color);
     }
 
     ///////////////////////////
@@ -178,10 +178,10 @@ void cLuxHelpFuncs::DrawSetToScreen(bool abClearScreen, const cColor& aCol, cGui
     cGuiSet* pSet = mpSet;
     if(apSet!=NULL)
         pSet = apSet;
-        
+
     pSet->Render(NULL);
     pSet->ClearRenderObjects();
-    
+
     mpLowLevelGfx->FlushRendering();
     mpLowLevelGfx->SwapBuffers();
 }
@@ -207,7 +207,7 @@ tWString cLuxHelpFuncs::ParseString(const tWString& asInput)
     for(size_t i=0; i<asInput.size(); ++i)
     {
         wchar_t lChar = asInput[i];
-        
+
         ////////////////////////
         // Parse variable
         if(bParseVar)
@@ -270,12 +270,12 @@ void cLuxHelpFuncs::RenderBackgroundScreen(bool abDrawFullHUD)
         gpBase->mpPlayer->OnDraw(0.01f);
         gpBase->mpEffectHandler->OnDraw(0.01f);
     }
-    
+
     tFlag lFlags = tSceneRenderFlag_World | tSceneRenderFlag_PostEffects;
     if(abDrawFullHUD) lFlags |= tSceneRenderFlag_Gui;
-    
+
     gpBase->mpEngine->GetScene()->Render(0.0001f, lFlags);
-    
+
     if(abDrawFullHUD==false)
         gpBase->mpGameHudSet->Render(NULL);
 
@@ -296,7 +296,7 @@ void cLuxHelpFuncs::RenderBackgroundScreen(bool abDrawFullHUD)
 tWString cLuxHelpFuncs::ParseStringCommand(const tWString& asCommand)
 {
     tWString sPrefix = cString::SubW(asCommand, 0, 3);
-    
+
     ////////////////////////////////
     // Button
     if(sPrefix == _W("But") )
@@ -309,7 +309,7 @@ tWString cLuxHelpFuncs::ParseStringCommand(const tWString& asCommand)
         if(pAction==NULL || pAction->GetSubActionNum()==0)
         {
             Error("String parser could not find action '%s' invalid!\n", sAction.c_str());
-            return _W("BADACTION");            
+            return _W("BADACTION");
         }
 
         ///////////////////////////
@@ -323,10 +323,10 @@ tWString cLuxHelpFuncs::ParseStringCommand(const tWString& asCommand)
 #ifdef USE_GAMEPAD
             tString sType = pSubAction->GetInputType();
             ////////////
-            // 
+            //
             if(sType == "GamepadButton"
-            || sType == "GamepadAxis"
-            || sType == "GamepadHat")
+                    || sType == "GamepadAxis"
+                    || sType == "GamepadHat")
             {
                 tWString sConverted;
 
@@ -351,7 +351,7 @@ tWString cLuxHelpFuncs::ParseStringCommand(const tWString& asCommand)
                 std::copy(sName.begin(), sName.end(), sConverted.begin());
 
                 sOutput += cString::SubW(sConverted, 0, (int)lSize-1);
-                
+
                 //////
                 // Enclose it with a $, since "." and " " is used in the names
                 sOutput += _W("$");

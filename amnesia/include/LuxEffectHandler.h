@@ -12,20 +12,26 @@ class iLuxEffect
 {
 public:
     iLuxEffect() : mbActive(false) {}
-    ~iLuxEffect(){}
+    ~iLuxEffect() {}
 
     virtual void Update(float afTimeStep)=0;
     virtual void OnDraw(float afFrameTime)=0;
     virtual void Reset()=0;
 
-    virtual void DoAction(eLuxPlayerAction aAction, bool abPressed){}
+    virtual void DoAction(eLuxPlayerAction aAction, bool abPressed) {}
 
 
-    bool IsActive(){ return mbActive;}
-    void SetActive(bool abX){ mbActive = abX;}
+    bool IsActive()
+    {
+        return mbActive;
+    }
+    void SetActive(bool abX)
+    {
+        mbActive = abX;
+    }
 
 protected:
-    bool mbActive;    
+    bool mbActive;
 };
 
 
@@ -39,7 +45,7 @@ public:
 
     void Start(const tString &asTalker,const tString &asTopic, const tString &asFile, int alIconId);
     void Stop();
-    
+
     void Update(float afTimeStep);
     void OnDraw(float afFrameTime);
     void Reset();
@@ -49,7 +55,7 @@ private:
     //Data
     cSoundHandler *mpSoundHandler;
     cMusicHandler *mpMusicHandler;
-    
+
     //////////////////////
     //Variables
     cSoundEntry *mpSoundEntry;
@@ -73,10 +79,10 @@ public:
 
     void Start(const tString &asTextCat, const tString &asTextEntry, const tString &asSound);
     void Reset();
-    
+
     void Update(float afTimeStep);
     void OnDraw(float afFrameTime);
-    
+
     void DoAction(eLuxPlayerAction aAction, bool abPressed);
 
 private:
@@ -88,7 +94,7 @@ private:
 
     int mlStep;
     float mfCount;
-    
+
     float mfTextAlpha;
     float mfTextTime;
     tWStringVec mvTextRows;
@@ -105,10 +111,13 @@ public:
     void SetBlurStartDist(float afDist);
     void FadeTo(float afSize, float afSpeed);
 
-    float GetCurrentSize(){ return mfSize;}
+    float GetCurrentSize()
+    {
+        return mfSize;
+    }
 
     void Update(float afTimeStep);
-    void OnDraw(float afFrameTime){}
+    void OnDraw(float afFrameTime) {}
     void Reset();
 
 private:
@@ -129,7 +138,7 @@ public:
     void FadeTo(float afAmount, float afSpeed);
 
     void Update(float afTimeStep);
-    void OnDraw(float afFrameTime){}
+    void OnDraw(float afFrameTime) {}
     void Reset();
 
 private:
@@ -161,7 +170,7 @@ public:
     void Start(float afAmount, float afTime, float afFadeInTime,float afFadeOutTime);
 
     void Update(float afTimeStep);
-    void OnDraw(float afFrameTime){}
+    void OnDraw(float afFrameTime) {}
     void Reset();
 
 private:
@@ -173,14 +182,14 @@ private:
 
 class cLuxEffect_ImageTrail : public iLuxEffect
 {
-friend class cLuxEffectHandler_SaveData;
+    friend class cLuxEffectHandler_SaveData;
 public:
     cLuxEffect_ImageTrail();
 
     void FadeTo(float afAmount, float afSpeed);
 
     void Update(float afTimeStep);
-    void OnDraw(float afFrameTime){}
+    void OnDraw(float afFrameTime) {}
     void Reset();
 
 private:
@@ -193,7 +202,7 @@ private:
 
 class cLuxEffect_Fade : public iLuxEffect
 {
-friend class cLuxEffectHandler_SaveData;
+    friend class cLuxEffectHandler_SaveData;
 public:
     cLuxEffect_Fade();
     ~cLuxEffect_Fade();
@@ -232,7 +241,7 @@ public:
     void OnDraw(float afFrameTime);
     void Reset();
 
-    void DrawFlash(cGuiSet *apSet ,float afTimeStep);
+    void DrawFlash(cGuiSet *apSet,float afTimeStep);
 
 private:
     cGuiGfxElement *mpWhiteGfx;
@@ -259,7 +268,7 @@ class cLuxEffect_Flash : public iLuxEffect
 public:
     cLuxEffect_Flash();
     ~cLuxEffect_Flash();
-    
+
     void Start(float afFadeIn, float afWhite, float afFadeOut);
     void Reset();
 
@@ -286,27 +295,33 @@ typedef tLuxVoiceDataList::iterator tLuxVoiceDataListIt;
 
 class cLuxEffect_PlayVoice : public iLuxEffect
 {
-friend class cLuxEffectHandler_SaveData;
+    friend class cLuxEffectHandler_SaveData;
 public:
     cLuxEffect_PlayVoice();
     ~cLuxEffect_PlayVoice();
 
     void StopVoices(float afFadeOutSpeed);
     void AddVoice(    const tString& asVoiceFile, const tString& asEffectFile,
-                    const tString& asTextCat, const tString& asTextEntry, bool abUsePostion, 
-                    const cVector3f& avPosition, float afMinDistance, float afMaxDistance);
+                      const tString& asTextCat, const tString& asTextEntry, bool abUsePostion,
+                      const cVector3f& avPosition, float afMinDistance, float afMaxDistance);
 
     void PauseCurrentVoices();
     void UnpauseCurrentVoices();
 
-    void SetOverCallback(const tString& asFunc){ msOverCallback = asFunc;}
+    void SetOverCallback(const tString& asFunc)
+    {
+        msOverCallback = asFunc;
+    }
 
     void Update(float afTimeStep);
     void OnDraw(float afFrameTime);
     void Reset();
 
     void SetVolumeMul(float afMul);
-    float GetVolumeMul(float afMul){ return mfVolumeMul;}
+    float GetVolumeMul(float afMul)
+    {
+        return mfVolumeMul;
+    }
 
     /**
      * Returns true if all voices (not effect files) are done playing
@@ -338,7 +353,7 @@ private:
 
 class cLuxEffectHandler : public iLuxUpdateable
 {
-public:    
+public:
     cLuxEffectHandler();
     ~cLuxEffectHandler();
 
@@ -356,24 +371,57 @@ public:
     void OnDraw(float afFrameTime);
 
     void DoAction(eLuxPlayerAction aAction, bool abPressed);
-    
+
     ///////////////////////////
     // Properties
-    bool GetPlayerIsPaused(){ return mbPlayerIsPaused;}
+    bool GetPlayerIsPaused()
+    {
+        return mbPlayerIsPaused;
+    }
     void SetPlayerIsPaused(bool abX);
 
     ///////////////////////////
     // Effects
-    cLuxEffect_Fade *GetFade(){ return mpFade;}
-    cLuxEffect_Flash *GetFlash(){ return mpFlash;}
-    cLuxEffect_SanityGainFlash *GetSanityGainFlash(){ return mpSanityGainFlash;}
-    cLuxEffect_PlayVoice *GetPlayVoice(){ return mpPlayVoice;}
-    cLuxEffect_ImageTrail *GetImageTrail(){ return mpImageTrail;}
-    cLuxEffect_ShakeScreen *GetScreenShake(){ return mpScreenShake;}
-    cLuxEffect_SepiaColor *GetSepiaColor(){ return mpSepiaColor;}
-    cLuxEffect_RadialBlur *GetRadialBlur(){ return mpRadialBlur;}
-    cLuxEffect_EmotionFlash *GetEmotionFlash(){ return mpEmotionFlash;}
-    cLuxEffect_PlayCommentary *GetPlayCommentary(){ return  mpPlayCommentary;}
+    cLuxEffect_Fade *GetFade()
+    {
+        return mpFade;
+    }
+    cLuxEffect_Flash *GetFlash()
+    {
+        return mpFlash;
+    }
+    cLuxEffect_SanityGainFlash *GetSanityGainFlash()
+    {
+        return mpSanityGainFlash;
+    }
+    cLuxEffect_PlayVoice *GetPlayVoice()
+    {
+        return mpPlayVoice;
+    }
+    cLuxEffect_ImageTrail *GetImageTrail()
+    {
+        return mpImageTrail;
+    }
+    cLuxEffect_ShakeScreen *GetScreenShake()
+    {
+        return mpScreenShake;
+    }
+    cLuxEffect_SepiaColor *GetSepiaColor()
+    {
+        return mpSepiaColor;
+    }
+    cLuxEffect_RadialBlur *GetRadialBlur()
+    {
+        return mpRadialBlur;
+    }
+    cLuxEffect_EmotionFlash *GetEmotionFlash()
+    {
+        return mpEmotionFlash;
+    }
+    cLuxEffect_PlayCommentary *GetPlayCommentary()
+    {
+        return  mpPlayCommentary;
+    }
 
 private:
     cLuxEffect_Fade *mpFade;
@@ -387,7 +435,7 @@ private:
     cLuxEffect_EmotionFlash *mpEmotionFlash;
     cLuxEffect_PlayCommentary *mpPlayCommentary;
 
-    std::vector<iLuxEffect*> mvEffects;    
+    std::vector<iLuxEffect*> mvEffects;
 
     bool mbPlayerIsPaused;
 };

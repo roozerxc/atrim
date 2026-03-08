@@ -15,8 +15,8 @@ public:
 
     /////////////////
     // General
-    virtual void Update(float afTimeStep){}
-    virtual void OnDraw(float afFrameTime){}
+    virtual void Update(float afTimeStep) {}
+    virtual void OnDraw(float afFrameTime) {}
 
     void LoadData(cXmlElement * apVarElem);
     virtual void OnLoadData(cXmlElement * apVarElem)=0;
@@ -27,17 +27,38 @@ public:
 
     /////////////////
     // Properties
-    const tString& GetName(){ return msName;}
-    const tString& GetSet(){ return msSet;}
-    float GetMaxSanity(){ return mfMaxSanity;}
-    
-    void SetUsed(bool abX){ mbUsed = abX; }
-    bool IsUsed(){ return mbUsed; }
+    const tString& GetName()
+    {
+        return msName;
+    }
+    const tString& GetSet()
+    {
+        return msSet;
+    }
+    float GetMaxSanity()
+    {
+        return mfMaxSanity;
+    }
 
-    bool IsOver(){ return mbOver; }
+    void SetUsed(bool abX)
+    {
+        mbUsed = abX;
+    }
+    bool IsUsed()
+    {
+        return mbUsed;
+    }
+
+    bool IsOver()
+    {
+        return mbOver;
+    }
 
 protected:
-    void EventIsDone(){ mbOver = true;}
+    void EventIsDone()
+    {
+        mbOver = true;
+    }
 
 private:
     tString msName;
@@ -45,7 +66,7 @@ private:
     bool mbUsed;
     bool mbOver;
     float mfMaxSanity;
-        
+
 };
 
 //----------------------------------------------
@@ -97,7 +118,7 @@ private:
 
     //////////////////
     //Vars
-    std::vector<cLuxInstanityEvent_Bugs_Bug> mvBugs; 
+    std::vector<cLuxInstanityEvent_Bugs_Bug> mvBugs;
 
     cSoundEntry *mpSoundEntry;
     int mlSoundEntryID;
@@ -133,14 +154,14 @@ private:
     tString msParticleSystem;
 
     float mfDuration;
-    
+
     //////////////////
     //Vars
     float mfTimeCount;
 
     cSoundEntry *mpSoundEntry;
     int mlSoundEntryID;
-    
+
     cParticleSystem *mpPS;
 };
 
@@ -151,7 +172,7 @@ class cLuxInstanityEvent_SoundStream : public iLuxInstanityEvent
 public:
     cLuxInstanityEvent_SoundStream();
     ~cLuxInstanityEvent_SoundStream();
-    
+
     void OnLoadData(cXmlElement * apVarElem);
 
     void OnStart();
@@ -159,7 +180,7 @@ public:
 
     void Update(float afTimeStep);
     void OnDraw(float afFrameTime);
-    
+
 private:
     tString msFile;
     float mfVolume;
@@ -206,11 +227,11 @@ private:
     float mfStepTime;
     int mlStepNum;
     float mfDistance;
-    
+
     float mfTimeMulPerStep;
     float mfDistanceMulPerStep;
 
-       float mfSoundCountMax;
+    float mfSoundCountMax;
     float mfSoundCount;
     int mlCount;
     cVector3f mvPosition;
@@ -222,11 +243,11 @@ private:
 
 class cLuxInsanityHandler : public iLuxUpdateable
 {
-friend class cLuxInsanityHandler_SaveData;
-public:    
+    friend class cLuxInsanityHandler_SaveData;
+public:
     cLuxInsanityHandler();
     ~cLuxInsanityHandler();
-    
+
     void OnStart();
     void Reset();
     void Update(float afTimeStep);
@@ -237,8 +258,14 @@ public:
     void StartEvent(const tString &asName);
     void StopCurrentEvent();
 
-    int GetEventNum(){ return (int)mvEvents.size();}
-    iLuxInstanityEvent *GetEvent(int alIdx){ return mvEvents[alIdx]; };
+    int GetEventNum()
+    {
+        return (int)mvEvents.size();
+    }
+    iLuxInstanityEvent *GetEvent(int alIdx)
+    {
+        return mvEvents[alIdx];
+    };
 
     void ReloadEvents();
 
@@ -248,10 +275,16 @@ public:
     /////////////////
     // Properties
     bool NewEventIsPossible();
-    float GetNewEventCount(){ return mfNewEventCount;}
-    int GetCurrentEvent(){ return mlCurrentEvent; }
+    float GetNewEventCount()
+    {
+        return mfNewEventCount;
+    }
+    int GetCurrentEvent()
+    {
+        return mlCurrentEvent;
+    }
 
- 
+
 private:
     iLuxInstanityEvent* EventTypeToData(const tString& asType);
     void LoadEvents(const tString& asFile);
@@ -269,9 +302,9 @@ private:
     float mfTimeBetween_ShortWait;
 
 
-    
+
     std::vector<iLuxInstanityEvent*> mvEvents;
-    
+
     //////////////////
     // Variables
     float mfNewEventCount;

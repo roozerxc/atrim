@@ -18,7 +18,10 @@ class cLuxHandObjectLoader : public cEntityLoader_Object
 public:
     cLuxHandObjectLoader(const tString& asName);
 
-    void SetHandObject(iLuxHandObject *apHandObject){ mpHandObject = apHandObject; }
+    void SetHandObject(iLuxHandObject *apHandObject)
+    {
+        mpHandObject = apHandObject;
+    }
 
     void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
     void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
@@ -31,8 +34,8 @@ private:
 
 class iLuxHandObject
 {
-friend class cLuxHandObjectLoader;
-public:    
+    friend class cLuxHandObjectLoader;
+public:
     iLuxHandObject(const tString& asName, cLuxPlayerHands *apHands);
     ~iLuxHandObject();
 
@@ -46,8 +49,8 @@ public:
     void CreateEntity(cLuxMap *apMap);
     void DestroyEntity(cLuxMap *apMap);
 
-    virtual void RenderSolid(cRendererCallbackFunctions* apFunctions){}
-    virtual void RenderTrans(cRendererCallbackFunctions* apFunctions){}
+    virtual void RenderSolid(cRendererCallbackFunctions* apFunctions) {}
+    virtual void RenderTrans(cRendererCallbackFunctions* apFunctions) {}
 
     void Reset();
     void ResetEntityContainers();
@@ -59,22 +62,40 @@ public:
 
     //Returning true, means go to hand mode
     virtual bool DoAction(eLuxPlayerAction aAction, bool abPressed)=0;
-    
+
     //Returning true, means go to idle mode
     virtual bool AnimationIsOver()=0;
 
     ////////////////////////
     //Properties
-    const tString& GetName(){ return msName;}
-    
-    cMeshEntity *GetMeshEntity(){ return mpMeshEntity; }
-    
-    const tString& GetAttachBoneName(){ return msAttachBoneName; }
+    const tString& GetName()
+    {
+        return msName;
+    }
 
-    const tString& GetAnimIdle(){ return msHandsAnim_Idle; }
-    const tString& GetAnimDraw(){ return msHandsAnim_Draw; }
-    const tString& GetAnimHolster(){ return msHandsAnim_Holster;}
-    
+    cMeshEntity *GetMeshEntity()
+    {
+        return mpMeshEntity;
+    }
+
+    const tString& GetAttachBoneName()
+    {
+        return msAttachBoneName;
+    }
+
+    const tString& GetAnimIdle()
+    {
+        return msHandsAnim_Idle;
+    }
+    const tString& GetAnimDraw()
+    {
+        return msHandsAnim_Draw;
+    }
+    const tString& GetAnimHolster()
+    {
+        return msHandsAnim_Holster;
+    }
+
 protected:
     virtual void LoadImplementedVars(cXmlElement *apVarsElem)=0;
 
@@ -87,7 +108,7 @@ protected:
     // Data
     cLuxPlayerHands *mpHands;
     tString msName;
-    
+
     tString msModelFile;
     cMatrixf m_mtxOffset;
 

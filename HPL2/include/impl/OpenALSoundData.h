@@ -5,28 +5,38 @@
 
 #include "OpenAL/OAL_Funcs.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cOpenALSoundData : public iSoundData
+class cOpenALSoundData : public iSoundData
+{
+public:
+    cOpenALSoundData(const tString& asName, bool abStream);
+    ~cOpenALSoundData();
+
+    bool CreateFromFile(const tWString &asFile);
+
+    iSoundChannel* CreateChannel(int alPriority);
+
+    bool IsStream()
     {
-    public:
-        cOpenALSoundData(const tString& asName, bool abStream);
-        ~cOpenALSoundData();
+        return mbStream;
+    }
 
-        bool CreateFromFile(const tWString &asFile);
+    bool IsStereo();
 
-        iSoundChannel* CreateChannel(int alPriority);
+    cOAL_Sample*    GetSample()
+    {
+        return ( mpSample );
+    }
+    cOAL_Stream*    GetStream()
+    {
+        return ( mpStream );
+    }
 
-        bool IsStream(){ return mbStream;}
-
-        bool IsStereo();
-
-        cOAL_Sample*    GetSample(){ return ( mpSample ); }
-        cOAL_Stream*    GetStream(){ return ( mpStream ); }
-    
-    private:
-        cOAL_Sample*    mpSample;
-        cOAL_Stream*    mpStream;
-    };
+private:
+    cOAL_Sample*    mpSample;
+    cOAL_Stream*    mpStream;
+};
 };
 #endif // HPL_OPENAL_SOUND_DATA_H

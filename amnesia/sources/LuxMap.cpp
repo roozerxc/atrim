@@ -37,7 +37,7 @@ cLuxDissolveEntity::cLuxDissolveEntity(cLuxMap *apMap)
 
 cLuxDissolveEntity::~cLuxDissolveEntity()
 {
-    mpMap->mpWorld->DestroyMeshEntity(mpEntity);    
+    mpMap->mpWorld->DestroyMeshEntity(mpEntity);
 }
 
 //-----------------------------------------------------------------------
@@ -77,21 +77,21 @@ cLuxMap::cLuxMap(const tString& asName)
 cLuxMap::~cLuxMap()
 {
     STLDeleteAll(mlstTimers);
-    
+
     STLDeleteAll(mlstLampLightConnections);
 
 
     mbDeletingAllWorldEntities = true;
     STLDeleteAll(mlstEntities);
     mbDeletingAllWorldEntities = false;
-    
+
 
     STLMapDeleteAll(m_mapPlayerStartNodes);
     STLMapDeleteAll(m_mapPosNodes);
     STLDeleteAll(mlstUseItemCallbacks);
     STLDeleteAll(mlstDissolveEntities);
 
-    mpEngine->GetScene()->DestroyWorld(mpWorld);    
+    mpEngine->GetScene()->DestroyWorld(mpWorld);
 
     if(mpScript)
         mpEngine->GetResources()->GetScriptManager()->Destroy(mpScript);
@@ -109,17 +109,17 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
 {
     msFileName = asFile;
 
-    gpBase->mpCurrentMapLoading = this;    
+    gpBase->mpCurrentMapLoading = this;
 
     //////////////////////////////
     //Extra demo check!
-    #ifdef LUX_DEMO_VERSION
-        if(cString::GetFirstStringPos(asFile, "demo")<0)
-        {
-            FatalError("Do not use demo exe to run full game!\n");
-        }
-        static int lDemoCount;
-    #endif
+#ifdef LUX_DEMO_VERSION
+    if(cString::GetFirstStringPos(asFile, "demo")<0)
+    {
+        FatalError("Do not use demo exe to run full game!\n");
+    }
+    static int lDemoCount;
+#endif
 
     tWorldLoadFlag lFlags =0;
     //if(abLoadEntities==false) lFlags |= eWorldLoadFlag_NoGameEntities;
@@ -131,19 +131,19 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
     //Script file
     bool bScriptExists = false;
     tString sScriptFile = cString::SetFileExt(asFile,"hps");
-    if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sScriptFile)!=_W("")) 
+    if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sScriptFile)!=_W(""))
     {
         bScriptExists = true;
     }
     else if(cResources::GetCreateAndLoadCompressedMaps())
     {
         sScriptFile = cString::SetFileExt(asFile,"chps");
-        if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sScriptFile)!=_W("")) 
+        if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sScriptFile)!=_W(""))
         {
             bScriptExists = true;
         }
     }
-    
+
     if(bScriptExists)
     {
         tString sCompileMessages = "";
@@ -154,7 +154,7 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
             tStringVec sMessRows;
             tString sSepp = "\n";
             cString::GetStringVec(sCompileMessages, sMessRows, &sSepp);
-            
+
             tString sErrorMess="";
             for(size_t i=0; i<sMessRows.size(); ++i)
             {
@@ -174,7 +174,7 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
 
     //Load the world
     mpWorld = mpEngine->GetScene()->LoadWorld(asFile,lFlags);
-    if(mpWorld==NULL) 
+    if(mpWorld==NULL)
         FatalError("Could not load world file '%s'\n", asFile.c_str());
 
     mpPhysicsWorld = mpWorld->GetPhysicsWorld();
@@ -182,17 +182,17 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
     if(abLoadEntities) AfterWorldLoadEntitySetup();
 
     gpBase->mpCurrentMapLoading = NULL;
-    
+
 
     //////////////////
     // HARDMODE
     if (gpBase->mbHardMode)
     {
         std::vector<iLuxEntity*> vEntitiesToDestroy;
-            
+
         int lNumTotalTinderboxes = 0;
         int lNumRemovedTinderboxes = 0;
-        
+
 
         float fMin = 7.0f / 10.0f;
         float fMax = 9.5f / 10.0f;
@@ -212,7 +212,7 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
 
         float fLampOilCounter = 0.0f;
         float fLampOilRemoveEvery = 6.5f / 10.0f;
-        
+
         /////////////////////
         // Go through all entities
         for (tLuxEntityListIt entityIt = mlstEntities.begin(); entityIt != mlstEntities.end(); ++entityIt)
@@ -233,13 +233,13 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
                 {
                     cLuxProp_Item *pItem = static_cast<cLuxProp_Item*>(pProp);
                     eLuxItemType itemType = pItem->GetItemType();
-                    
+
                     /////////////////////
                     // Tinderbox
                     if (itemType == eLuxItemType_Tinderbox)
                     {
                         lNumTotalTinderboxes++;
-                        fTinderBoxCounter += fTinderBoxRemoveEvery; 
+                        fTinderBoxCounter += fTinderBoxRemoveEvery;
 
                         if (fTinderBoxCounter >= 1.0f)
                         {
@@ -314,7 +314,7 @@ void cLuxMap::AfterWorldLoadEntitySetup()
 void cLuxMap::OnEnter(bool abRunScript, bool abFirstTime)
 {
     mbRunUpdateScript = abRunScript;
-    
+
     ///////////////
     //On world load for all entities
     tLuxEntityListIt entityIt = mlstEntities.begin();
@@ -329,7 +329,7 @@ void cLuxMap::OnEnter(bool abRunScript, bool abFirstTime)
     {
         ///////////////
         //Run script
-        if(mpScript) 
+        if(mpScript)
         {
             if(abFirstTime)
             {
@@ -340,7 +340,7 @@ void cLuxMap::OnEnter(bool abRunScript, bool abFirstTime)
             mpScript->Run("OnEnter()");
         }
     }
-    
+
 }
 
 
@@ -361,8 +361,8 @@ void cLuxMap::Update(float afTimeStep)
     UpdateCheckCommentaryIconActive(afTimeStep);
     UpdateDissolveEntities(afTimeStep);
     UpdateTimers(afTimeStep);
-    
-    UpdateToBeDesotroyedEntities(true);    
+
+    UpdateToBeDesotroyedEntities(true);
 
     ////////////////////////////////////
     // Iterate entities
@@ -371,14 +371,14 @@ void cLuxMap::Update(float afTimeStep)
     {
         iLuxEntity *pEntity = *entityIt;
 
-        if(pEntity->IsActive()) 
+        if(pEntity->IsActive())
             pEntity->UpdateLogic(afTimeStep);
     }
 
     UpdateToBeDesotroyedEntities(true);
 
     UpdateLampLightConnections(afTimeStep);
-    
+
     if(mbRunUpdateScript)
     {
         RunUpdateCallback(afTimeStep);
@@ -422,7 +422,7 @@ bool cLuxMap::RecompileScript(tString *apOutput)
     if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sScriptFile)!=_W(""))
     {
         mpScript = mpEngine->GetResources()->GetScriptManager()->CreateScript(sScriptFile, apOutput);
-        
+
         return mpScript != NULL;
     }
     else
@@ -443,7 +443,7 @@ void cLuxMap::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
     {
         iLuxEntity *pEntity = *entityIt;
 
-        if(pEntity->IsActive()) 
+        if(pEntity->IsActive())
             pEntity->OnRenderSolid(apFunctions);
     }
 }
@@ -479,7 +479,7 @@ void cLuxMap::SetCheckPoint(const tString& asName, const tString& asStartPos, co
     ////////////////////////////////////
     // Get the highest prio looping music playing
     msCheckPointMusic = "";
-    for(int i= gpBase->mpMusicHandler->GetMaxPrio();i>=0; --i)
+    for(int i= gpBase->mpMusicHandler->GetMaxPrio(); i>=0; --i)
     {
         cLuxMusic *pMusic = gpBase->mpMusicHandler->GetMusic(i);
         if(pMusic->msFile != "" && pMusic->mbLoop && pMusic->mbSpecialEffect==false)
@@ -489,7 +489,7 @@ void cLuxMap::SetCheckPoint(const tString& asName, const tString& asStartPos, co
             mbCheckPointMusicResume = pMusic->mbResume;
 
             mfCheckPointMusicVolume = pMusic->mfVolume;
-            
+
             //When music handler plays music, it multiplies it to get a new volume. Need to change that back when storing.
             float fMusicVolumeMul =gpBase->mpMusicHandler->GetVolumeMul();
             if(fMusicVolumeMul>0) mfCheckPointMusicVolume /= fMusicVolumeMul;
@@ -497,10 +497,10 @@ void cLuxMap::SetCheckPoint(const tString& asName, const tString& asStartPos, co
             break;
         }
     }
-    
+
     gpBase->mpDebugHandler->AddMessage(    _W("Setting check point ") + cString::To16Char(msCheckPointName) +
-                                        _W(" Music: '") + cString::To16Char(msCheckPointMusic)+_W("'"), 
-                                        false);
+                                           _W(" Music: '") + cString::To16Char(msCheckPointMusic)+_W("'"),
+                                           false);
 
 }
 
@@ -518,7 +518,7 @@ void cLuxMap::LoadCheckPoint()
 
     //////////////////////////////
     // Enemies
-    tLuxEnemyListIt it = mlstEnemies.begin(); 
+    tLuxEnemyListIt it = mlstEnemies.begin();
     for(; it != mlstEnemies.end(); ++it)
     {
         iLuxEnemy *pEnemy = *it;
@@ -533,7 +533,7 @@ void cLuxMap::LoadCheckPoint()
     //////////////////////////////
     // Effects
     gpBase->mpEffectHandler->GetFade()->FadeIn(0.2f);
-    
+
     //////////////////////////////
     // Music
     gpBase->mpMusicHandler->Reset();
@@ -544,7 +544,7 @@ void cLuxMap::LoadCheckPoint()
     //////////////////////////////
     // Run script (last thing done!)
     RunScript(msCheckPointCallback + "(\""+ msCheckPointName + "\", "+cString::ToString(mlCheckPointCount)+")"  );
-    
+
     mlCheckPointCount++;
 }
 
@@ -554,10 +554,10 @@ void cLuxMap::CreateEntity(const tString& asName, const tString& asFile, const c
 {
     //Only set var if not already set!
     bool bSetCurrentMapLoading = gpBase->mpCurrentMapLoading==NULL;
-    
+
     if(bSetCurrentMapLoading)    gpBase->mpCurrentMapLoading = this;
 
-    mpWorld->CreateEntity(asName, a_mtxTransform, asFile,GetFreeEntityID() , true, avScale);
+    mpWorld->CreateEntity(asName, a_mtxTransform, asFile,GetFreeEntityID(), true, avScale);
 
     if(bSetCurrentMapLoading)    gpBase->mpCurrentMapLoading = NULL;
 }
@@ -572,7 +572,7 @@ void cLuxMap::DestroyAllEntities()
     mbDeletingAllWorldEntities = true;
     STLDeleteAll(mlstEntities);
     mbDeletingAllWorldEntities = false;
-    
+
     m_mapEntitiesByID.clear();
     m_mapEntitiesByName.clear();
     mlstToBeDestroyedEntities.clear();
@@ -651,7 +651,7 @@ bool cLuxMap::EntityExists(iLuxEntity *apEntity)
     for(; entityIt != mlstEntities.end(); ++entityIt)
     {
         iLuxEntity *pEntity = *entityIt;
-        if(pEntity == apEntity) return true; 
+        if(pEntity == apEntity) return true;
     }
 
     return false;
@@ -701,7 +701,7 @@ void cLuxMap::BroadcastEnemyMessage(eLuxEnemyMessage aType, bool abHasPosition, 
 
 //-----------------------------------------------------------------------
 
-void cLuxMap::BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume ,float afMinDist, float afMaxDist)
+void cLuxMap::BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume,float afMinDist, float afMaxDist)
 {
     cLuxEnemyIterator it =GetEnemyIterator();
     while(it.HasNext())
@@ -722,7 +722,7 @@ void cLuxMap::BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume 
         float fDistance = cMath::Vector3Dist(pBv->GetWorldCenter(), avPos);
         if(fDistance < 2.0f) continue; //Skip sounds that are too close!
 
-        float fHearVolume = 1.0f - cMath::Clamp( (fDistance - afMinDist)/(afMaxDist - afMinDist), 0.0f ,1.0f);
+        float fHearVolume = 1.0f - cMath::Clamp( (fDistance - afMinDist)/(afMaxDist - afMinDist), 0.0f,1.0f);
         fHearVolume *= afVolume;
 
         /////////////////////////
@@ -743,7 +743,7 @@ int cLuxMap::GetInRangeEnemyNum()
         iLuxEnemy *pEnemy = it.Next();
         if(pEnemy->IsActive()==false) continue;
         if(pEnemy->GetPlayerInRange()==false) continue;
-        
+
         ++lNum;
     }
 
@@ -792,7 +792,7 @@ bool cLuxMap::DoorIsClosed(int alID)
     if(pProp->GetPropType() != eLuxPropType_SwingDoor) return false;
 
     cLuxProp_SwingDoor *pDoor = static_cast<cLuxProp_SwingDoor*>(pProp);
-    return pDoor->GetClosed();    
+    return pDoor->GetClosed();
 }
 
 int cLuxMap::GetDoorState(int alID)
@@ -853,7 +853,7 @@ void cLuxMap::DestroyAllRopes()
 {
     /////////////////////////////
     //Put all ropes in temporary list
-    tRopeEntityList lstRopes; 
+    tRopeEntityList lstRopes;
     cRopeEntityIterator ropeIt = mpWorld->GetRopeEntityIterator();
     while(ropeIt.HasNext())
     {
@@ -879,10 +879,10 @@ iPhysicsBody* cLuxMap::GetBodyFromEntityBodyIdPair(const cLuxIdPair &aIdPair)
     if(pEntity==NULL) return NULL;
 
     if(pEntity->GetEntityType() == eLuxEntityType_Prop)
-    {    
+    {
         iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
 
-        return pProp->GetBodyFromID(aIdPair.mlChildId);    
+        return pProp->GetBodyFromID(aIdPair.mlChildId);
     }
     else
     {
@@ -898,23 +898,23 @@ bool cLuxMap::CheckCollision(iLuxCollideCallbackContainer *apCollider1, iLuxColl
     collideData.SetMaxSize(1);
 
     for(int body1=0; body1<apCollider1->GetBodyNum(); ++body1)
-    for(int body2=0; body2<apCollider2->GetBodyNum(); ++body2)
-    {
-        iPhysicsBody *pBody1 = apCollider1->GetBody(body1);
-        iPhysicsBody *pBody2 = apCollider2->GetBody(body2);
-
-        if(cMath::CheckBVIntersection(*pBody1->GetBoundingVolume(), *pBody2->GetBoundingVolume())==false)
+        for(int body2=0; body2<apCollider2->GetBodyNum(); ++body2)
         {
-            continue;
-        }
+            iPhysicsBody *pBody1 = apCollider1->GetBody(body1);
+            iPhysicsBody *pBody2 = apCollider2->GetBody(body2);
 
-        if(mpPhysicsWorld->CheckShapeCollision(pBody1->GetShape(), pBody1->GetLocalMatrix(), 
-                                            pBody2->GetShape(), pBody2->GetLocalMatrix(),
-                                            collideData,1,false))
-        {
-            return true;
+            if(cMath::CheckBVIntersection(*pBody1->GetBoundingVolume(), *pBody2->GetBoundingVolume())==false)
+            {
+                continue;
+            }
+
+            if(mpPhysicsWorld->CheckShapeCollision(pBody1->GetShape(), pBody1->GetLocalMatrix(),
+                                                   pBody2->GetShape(), pBody2->GetLocalMatrix(),
+                                                   collideData,1,false))
+            {
+                return true;
+            }
         }
-    }
 
     return false;
 }
@@ -929,7 +929,8 @@ void cLuxMap::AddPlayerStart(cLuxNode_PlayerStart *apNode)
 cLuxNode_PlayerStart * cLuxMap::GetPlayerStart(const tString & asName)
 {
     tLuxPlayerStartMapIt it = m_mapPlayerStartNodes.find(asName);
-    if(it == m_mapPlayerStartNodes.end()){
+    if(it == m_mapPlayerStartNodes.end())
+    {
         Warning("Could not find player start node '%s'\n", asName.c_str());
         return NULL;
     }
@@ -957,7 +958,8 @@ void cLuxMap::AddPosNode(cLuxNode_Pos *apNode)
 cLuxNode_Pos *cLuxMap::GetPosNode(const tString & asName)
 {
     tLuxPosNodeMapIt it = m_mapPosNodes.find(asName);
-    if(it == m_mapPosNodes.end()){
+    if(it == m_mapPosNodes.end())
+    {
         Warning("Could not find pos node '%s'\n", asName.c_str());
         return NULL;
     }
@@ -968,7 +970,7 @@ cLuxNode_Pos *cLuxMap::GetPosNode(const tString & asName)
 //-----------------------------------------------------------------------
 
 void cLuxMap::AddUseItemCallback(    const tString& asName, const tString& asItem, const tString& asEntity,
-                                    const tString& asFunction, bool abAutoCallback)
+                                     const tString& asFunction, bool abAutoCallback)
 {
     cLuxUseItemCallback *pCallback = hplNew(cLuxUseItemCallback, ());
 
@@ -977,7 +979,7 @@ void cLuxMap::AddUseItemCallback(    const tString& asName, const tString& asIte
     pCallback->msEntity = asEntity;
     pCallback->msFunction = asFunction;
     pCallback->mbAutoDestroy = abAutoCallback;
-    
+
     mlstUseItemCallbacks.push_back(pCallback);
 }
 
@@ -1005,13 +1007,13 @@ void cLuxMap::RemoveUseItemCallback(cLuxUseItemCallback * apCallback, const tStr
     for(; it != mlstUseItemCallbacks.end(); ++it)
     {
         cLuxUseItemCallback *pCallback = *it;
-        
+
         if(pCallback == apCallback)
         {
             //Safety check that the callback really is the same!
             if(asName != "" && pCallback->msName != asName)
             {
-                break;    
+                break;
             }
 
             hplDelete(apCallback);
@@ -1027,8 +1029,8 @@ cLuxUseItemCallback* cLuxMap::GetUseItemCallback(const tString& asItem, const tS
     for(; it != mlstUseItemCallbacks.end(); ++it)
     {
         cLuxUseItemCallback *pCallback = *it;
-        //Log("Checking '%s' n '%s' vs callback: '%s' '%s' '%s' '%s'\n", 
-        //    asItem.c_str(), asEntity.c_str(), 
+        //Log("Checking '%s' n '%s' vs callback: '%s' '%s' '%s' '%s'\n",
+        //    asItem.c_str(), asEntity.c_str(),
         //    pCallback->msName.c_str(), pCallback->msEntity.c_str(), pCallback->msItem.c_str(), pCallback->msFunction.c_str());
 
 
@@ -1072,9 +1074,9 @@ void cLuxMap::RemoveTimer(const tString& asName)
             {
                 it = mlstTimers.erase(it);
                 hplDelete(pTimer);
-                
+
             }
-            
+
         }
         else
         {
@@ -1087,7 +1089,7 @@ void cLuxMap::RemoveTimer(const tString& asName)
 
 cLuxEventTimer* cLuxMap::GetTimer(const tString& asName)
 {
-    for(tLuxEventTimerListIt it= mlstTimers.begin(); it != mlstTimers.end();++it)
+    for(tLuxEventTimerListIt it= mlstTimers.begin(); it != mlstTimers.end(); ++it)
     {
         cLuxEventTimer *pTimer = *it;
         if(pTimer->msName == asName)
@@ -1158,7 +1160,7 @@ void cLuxMap::AddDissolveEntity(cMeshEntity *apMeshEntity, float afTime)
         }
     }
 
-    
+
     mlstDissolveEntities.push_back(pDissolveEnt);
 }
 
@@ -1172,7 +1174,7 @@ cLuxLampLightConnection* cLuxMap::AddLampLightConnection(cLuxProp_Lamp *apLamp, 
         pConnection = hplNew(cLuxLampLightConnection, (apLight));
         mlstLampLightConnections.push_back(pConnection);
     }
-    
+
     pConnection->AddLamp(apLamp, afAmount, abUseOnColor, abUseSpec);
     pConnection->Update(0.001f);
     return pConnection;
@@ -1223,9 +1225,9 @@ void cLuxMap::CalculateTotalCompletionAmount()
     for(tLuxEntityListIt entityIt = mlstEntities.begin(); entityIt != mlstEntities.end(); ++entityIt)
     {
         iLuxEntity *pEntity = *entityIt;
-        
+
         eLuxEntityType entityType = pEntity->GetEntityType();
-        
+
         /////////////////////////
         // Prop
         if(entityType == eLuxEntityType_Prop)
@@ -1239,7 +1241,7 @@ void cLuxMap::CalculateTotalCompletionAmount()
             {
                 cLuxProp_Item *pItem = static_cast<cLuxProp_Item*>(pProp);
                 eLuxItemType itemType = pItem->GetItemType();
-                
+
                 if(itemType == eLuxItemType_Puzzle) mlTotalCompletionAmount += gpBase->mpCompletionCountHandler->mlItemCompletionValue;
                 if(itemType == eLuxItemType_Note) mlTotalCompletionAmount += gpBase->mpCompletionCountHandler->mlNoteCompletionValue;
                 if(itemType == eLuxItemType_Diary) mlTotalCompletionAmount += gpBase->mpCompletionCountHandler->mlDiaryCompletionValue;
@@ -1276,11 +1278,11 @@ int cLuxMap::GetFreeEntityID()
     for(; it != m_mapEntitiesByID.end(); ++it)
     {
         int lId = it->first;
-        
+
         if(lId != lEntId) return lEntId;
         ++lEntId;
     }
-    
+
     return lEntId;
 }
 
@@ -1298,7 +1300,7 @@ void cLuxMap::UpdateToBeDesotroyedEntities(bool abUseCallbacks)
             gpBase->mpPlayer->GetCurrentStateData()->OnDestroyEntity(pEntity);
             pEntity->BeforeEntityDestruction();
         }
-        
+
         STLFindAndRemove(mlstEntities, pEntity);
         STLMapFindAndRemove(m_mapEntitiesByName, pEntity);
         STLMapFindAndRemove(m_mapEntitiesByID, pEntity);
@@ -1355,7 +1357,7 @@ void cLuxMap::UpdateTimers(float afTimeStep)
             ++it;
         }
     }
-    
+
     for(tLuxEventTimerListIt it= mlstTimers.begin(); it != mlstTimers.end(); )
     {
         cLuxEventTimer *pTimer = *it;
@@ -1363,7 +1365,7 @@ void cLuxMap::UpdateTimers(float afTimeStep)
         {
             it = mlstTimers.erase(it);
             hplDelete(pTimer);
-            
+
         }
         else
         {
@@ -1405,7 +1407,7 @@ void cLuxMap::UpdateLampLightConnections(float afTimeStep)
     for(; it != mlstLampLightConnections.end(); ++it)
     {
         cLuxLampLightConnection* pConnection = *it;
-        
+
         pConnection->Update(afTimeStep);
     }
 }

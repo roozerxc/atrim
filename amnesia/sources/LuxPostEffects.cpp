@@ -44,7 +44,7 @@ cLuxPostEffect_Insanity::cLuxPostEffect_Insanity(cGraphics *apGraphics, cResourc
     //////////////////////////////
     // Textures
     mvAmpMaps.resize(3);
-    
+
     for(size_t i=0; i<mvAmpMaps.size(); ++i)
         mvAmpMaps[i] = mpResources->GetTextureManager()->Create2D("posteffect_insanity_ampmap"+cString::ToString((int)i), false);
 
@@ -71,7 +71,7 @@ cLuxPostEffect_Insanity::~cLuxPostEffect_Insanity()
 void cLuxPostEffect_Insanity::Update(float afTimeStep)
 {
     mfT += afTimeStep * mfWaveSpeed;
-    
+
     mfAnimCount += afTimeStep * 0.15f;
 
     float fMaxAnim = (float)mvAmpMaps.size();
@@ -95,7 +95,7 @@ iTexture* cLuxPostEffect_Insanity::RenderEffect(iTexture *apInputTexture, iFrame
     SetFinalFrameBuffer(apFinalTempBuffer);
 
     mpCurrentComposite->SetTexture(0, apInputTexture);
-    
+
     int lAmp0 = (int)mfAnimCount;
     int lAmp1 = (int)(mfAnimCount+1);
     if(lAmp1 >= (int) mvAmpMaps.size()) lAmp1 = 0;
@@ -106,7 +106,7 @@ iTexture* cLuxPostEffect_Insanity::RenderEffect(iTexture *apInputTexture, iFrame
     mpCurrentComposite->SetTexture(1, mvAmpMaps[lAmp0]);
     mpCurrentComposite->SetTexture(2, mvAmpMaps[lAmp1]);
     mpCurrentComposite->SetTexture(3, mpZoomMap);
-    
+
     mpCurrentComposite->SetProgram(mpProgram);
     if(mpProgram)
     {
@@ -117,12 +117,12 @@ iTexture* cLuxPostEffect_Insanity::RenderEffect(iTexture *apInputTexture, iFrame
         mpProgram->SetFloat(kVar_afWaveAlpha, mfWaveAlpha);
         mpProgram->SetFloat(kVar_afZoomAlpha, mfZoomAlpha);
     }
-    
+
 
     DrawQuad(0,1,apInputTexture, true);
 
     mpCurrentComposite->SetTextureRange(NULL, 1);
-    
+
     return apFinalTempBuffer->GetColorBuffer(0)->ToTexture();
 }
 

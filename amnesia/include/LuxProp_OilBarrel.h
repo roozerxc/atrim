@@ -20,9 +20,9 @@ public:
 
 class cLuxProp_OilBarrel : public iLuxProp
 {
-typedef iLuxProp super_class;
-friend class cLuxPropLoader_OilBarrel;
-public:    
+    typedef iLuxProp super_class;
+    friend class cLuxPropLoader_OilBarrel;
+public:
     cLuxProp_OilBarrel(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxProp_OilBarrel();
 
@@ -30,13 +30,13 @@ public:
     //General
     bool CanInteract(iPhysicsBody *apBody);
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
-    
+
     void OnSetupAfterLoad(cWorld *apWorld);
 
     void OnResetProperties();
 
     void UpdatePropSpecific(float afTimeStep);
-    
+
     void BeforePropDestruction();
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
@@ -44,7 +44,7 @@ public:
 
     //////////////////////
     //Properties
-    
+
     //////////////////////
     //Connection callbacks
     void OnConnectionStateChange(iLuxEntity *apEntity, int alState);
@@ -64,7 +64,7 @@ private:
     // Data
     tString msFillSound;
     tString msEmptySound;
-        
+
     //////////////////////
     // Variables
     bool mbAmountCalculated;
@@ -77,7 +77,7 @@ class cLuxPropLoader_OilBarrel : public iLuxPropLoader
 {
 public:
     cLuxPropLoader_OilBarrel(const tString& asName);
-    virtual ~cLuxPropLoader_OilBarrel(){}
+    virtual ~cLuxPropLoader_OilBarrel() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);

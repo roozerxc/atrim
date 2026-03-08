@@ -46,7 +46,7 @@ void cLuxMainMenu_CustomStory::CreateGui()
 
     mpIPicture = mpGuiSet->CreateWidgetImage("", cVector3f(6,75,0.05f), cVector2f(588,360), eGuiMaterial_Alpha, false, mpWindow);
     mpIPicture->SetColorMul(cColor(1,0.65f));
-    
+
     mpLAuthor = mpGuiSet->CreateWidgetLabel(vPos+cVector3f(50,-50,0), 0, _W(" "), mpWindow);
     cWidgetFrame* pFDescription = mpGuiSet->CreateWidgetFrame(vPos + cVector3f(0,10,0), cVector2f(420,345), false, mpWindow, false, true);
     mpLDesc = mpGuiSet->CreateWidgetLabel(0, pFDescription->GetSize()-cVector2f(20,10), _W(""), pFDescription);
@@ -65,16 +65,16 @@ void cLuxMainMenu_CustomStory::CreateGui()
 
     //////////////////////////////////////////////////////////////
     // Get longest label string and set button width accordingly
-    for(int i=0;i<(int)vLabels.size();++i)
+    for(int i=0; i<(int)vLabels.size(); ++i)
     {
         const tWString& sLabel = vLabels[i];
-        float fLabelLength = pButton->GetDefaultFontType()->GetLength(pButton->GetDefaultFontSize(), 
-                                                                        sLabel.c_str());
+        float fLabelLength = pButton->GetDefaultFontType()->GetLength(pButton->GetDefaultFontSize(),
+                             sLabel.c_str());
 
         if(fButtonWidth < fLabelLength)
             fButtonWidth = fLabelLength;
     }
-    
+
     //////////////////////////
     //Buttons
     fButtonWidth += 20.0f;
@@ -93,7 +93,7 @@ void cLuxMainMenu_CustomStory::CreateGui()
     pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressContinue));
 
     mvButtons.push_back(pButton);
-    
+
     vPos.y += fButtonHeight + fButtonSepp*2;
 
     //Start
@@ -137,7 +137,7 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
 
     tWString sBy = kTranslate("CustomStory", "By");
     tWString sName, sAuthor, sDescription;
-        
+
     // Retrieve story name
     sName = mpStory->msName;
     if(sName==_W(""))
@@ -169,7 +169,7 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
 
         mpIPicture->SetImage(pGfx);
     }
-        
+
 
     mpWindow->SetText(sName);
     mpLAuthor->SetText(sBy + _W(" ") + sAuthor);
@@ -194,7 +194,7 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
 
 
     cVector3f vButtonPos = mvButtons[0]->GetLocalPosition();
-    for(int i=0;i<(int)mvButtons.size();++i)
+    for(int i=0; i<(int)mvButtons.size(); ++i)
     {
         cWidgetButton* pButton = mvButtons[i];
 
@@ -244,7 +244,7 @@ bool cLuxMainMenu_CustomStory::PressContinue(iWidget* apWidget, const cGuiMessag
 
     gpBase->mpSaveHandler->AutoLoad(true);
 
-    return true; 
+    return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStory, PressContinue);
 
@@ -274,7 +274,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStory, PressStart);
 bool cLuxMainMenu_CustomStory::PressLoadGame(iWidget* apWidget, const cGuiMessageData& aData)
 {
     gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_LoadGame);
-    return true; 
+    return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStory, PressLoadGame);
 
@@ -285,7 +285,7 @@ bool cLuxMainMenu_CustomStory::PressBack(iWidget* apWidget, const cGuiMessageDat
     SetCurrentStory(NULL);
     gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_CustomStoryList);
 
-    return true; 
+    return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStory, PressBack);
 
@@ -406,7 +406,7 @@ void cLuxMainMenu_CustomStoryList::PopulateStoryList()
     // Try to create a story using every dir under the custom story dir
     // the CreateFromPath method will take care of checking it is a valid entry
     tWStringListIt it = lstStoryDirs.begin();
-    for(;it!=lstStoryDirs.end();++it)
+    for(; it!=lstStoryDirs.end(); ++it)
     {
         const tWString& sStoryPath = sPath + *it;
         cLuxCustomStorySettings* pStory = hplNew(cLuxCustomStorySettings,());
@@ -425,7 +425,7 @@ void cLuxMainMenu_CustomStoryList::PopulateStoryList()
 
 void cLuxMainMenu_CustomStoryList::ClearStoryList()
 {
-    for(int i=0;i<mpLBStories->GetItemNum();++i)
+    for(int i=0; i<mpLBStories->GetItemNum(); ++i)
     {
         cWidgetItem* pItem = mpLBStories->GetItem(i);
 
@@ -461,7 +461,7 @@ void cLuxMainMenu_CustomStoryList::LoadStory(int alIdx)
 
 bool cLuxMainMenu_CustomStoryList::WindowOnUpdate(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    return true; 
+    return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, WindowOnUpdate);
 
@@ -469,7 +469,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, WindowOnUpdate);
 
 bool cLuxMainMenu_CustomStoryList::SelectStory(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    return true; 
+    return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, SelectStory);
 
@@ -478,7 +478,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, SelectStory);
 bool cLuxMainMenu_CustomStoryList::RepopulateStoryList(iWidget* apWidget, const cGuiMessageData& aData)
 {
     PopulateStoryList();
-    return true; 
+    return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, RepopulateStoryList);
 
@@ -489,14 +489,14 @@ bool cLuxMainMenu_CustomStoryList::PressOK(iWidget* apWidget, const cGuiMessageD
     /////////////////////////////////////////////////////////////
     // Check if the list has a valid selection, and warn if not
     if(mpLBStories->GetSelectedItem()<0)
-        mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"), 
-                                        kTranslate("CustomStory", "NoValidStory"), 
-                                        kTranslate("Global","OK"), _W(""), 
+        mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"),
+                                        kTranslate("CustomStory", "NoValidStory"),
+                                        kTranslate("Global","OK"), _W(""),
                                         NULL, NULL);
     else
-        /*mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"), 
-                                        kTranslate("CustomStory", "StartCustomQuestion"), 
-                                        kTranslate("Global","OK"), kTranslate("Global","Cancel"), 
+        /*mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"),
+                                        kTranslate("CustomStory", "StartCustomQuestion"),
+                                        kTranslate("Global","OK"), kTranslate("Global","Cancel"),
                                         this, kGuiCallback(LoadStoryCallback));
                                         */
 
@@ -508,7 +508,7 @@ bool cLuxMainMenu_CustomStoryList::PressOK(iWidget* apWidget, const cGuiMessageD
         gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_CustomStory);
     }
 
-    return true; 
+    return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, PressOK);
 
@@ -517,7 +517,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, PressOK);
 bool cLuxMainMenu_CustomStoryList::PressCancel(iWidget* apWidget, const cGuiMessageData& aData)
 {
     ExitCallback(NULL, cGuiMessageData(0));
-    return true; 
+    return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, PressCancel);
 
@@ -531,7 +531,7 @@ bool cLuxMainMenu_CustomStoryList::LoadStoryCallback(iWidget* apWidget, const cG
 
     LoadStory(mpLBStories->GetSelectedItem());
 
-    return true; 
+    return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, LoadStoryCallback);
 
@@ -548,7 +548,7 @@ bool cLuxMainMenu_CustomStoryList::ExitCallback(iWidget* apWidget, const cGuiMes
 
     gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_LastEnum);
 
-    return true; 
+    return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, ExitCallback);
 

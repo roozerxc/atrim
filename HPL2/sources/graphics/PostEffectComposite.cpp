@@ -10,197 +10,198 @@
 #include "graphics/PostEffect.h"
 #include "graphics/VertexBuffer.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cPostEffectComposite::cPostEffectComposite(cGraphics *apGraphics)
+cPostEffectComposite::cPostEffectComposite(cGraphics *apGraphics)
+{
+    mpGraphics = apGraphics;
+    SetupRenderFunctions(mpGraphics->GetLowLevel());
+
+    cVector2l vSize = mpLowLevelGraphics->GetScreenSizeInt();
+    for(int i=0; i<2; ++i)
     {
-        mpGraphics = apGraphics;
-        SetupRenderFunctions(mpGraphics->GetLowLevel());
+        mpFinalTempBuffer[i] = mpGraphics->GetTempFrameBuffer(vSize,ePixelFormat_RGBA,i);
+    }
+}
 
-        cVector2l vSize = mpLowLevelGraphics->GetScreenSizeInt();
-        for(int i=0; i<2; ++i)
+//-----------------------------------------------------------------------
+
+cPostEffectComposite::~cPostEffectComposite()
+{
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+void cPostEffectComposite::Render(float afFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget)
+{
+    ////////////////////////////////
+    //Set up stuff needed for rendering
+    BeginRendering(afFrameTime, apFrustum, apInputTexture, apRenderTarget);
+
+    ////////////////////////////////
+    //Iterate post effects and find the last one.
+    iPostEffect *pLastEffect = NULL;
+    tPostEffectMapIt it = m_mapPostEffects.begin();
+    for(; it!= m_mapPostEffects.end(); ++it)
+    {
+        iPostEffect *pPostEffect = it->second;
+        if(pPostEffect->IsActive()==false) continue;
+
+        pLastEffect = pPostEffect;
+    }
+
+    ////////////////////////////////
+    //Iterate post effects and render them
+    int lCurrentTempBuffer =0;
+    iTexture *pInputTex = apInputTexture;
+    it = m_mapPostEffects.begin();
+    for(; it!= m_mapPostEffects.end(); ++it)
+    {
+        iPostEffect *pPostEffect =it->second;
+        if(pPostEffect->IsActive()==false) continue;
+
+        bool bLastEffect = pPostEffect == pLastEffect;
+
+        pInputTex = pPostEffect->Render(this,pInputTex,mpFinalTempBuffer[lCurrentTempBuffer],bLastEffect);
+
+        lCurrentTempBuffer = lCurrentTempBuffer==0 ? 1 : 0;
+    }
+
+    ///////////////////////////////
+    // Reset rendering stuff
+    EndRendering();
+}
+
+//-----------------------------------------------------------------------
+
+void cPostEffectComposite::AddPostEffect(iPostEffect *apPostEffect, int alPrio)
+{
+    if(apPostEffect==NULL) return;
+
+    m_mapPostEffects.insert(tPostEffectMap::value_type(alPrio, apPostEffect));
+    mvPostEffects.push_back(apPostEffect);
+}
+
+//-----------------------------------------------------------------------
+
+bool  cPostEffectComposite::HasActiveEffects()
+{
+    if(mvPostEffects.empty()) return false;
+
+    bool bActiveEffect = false;
+    for(size_t i=0; i<mvPostEffects.size(); ++i)
+    {
+        if(mvPostEffects[i]->IsActive())
         {
-            mpFinalTempBuffer[i] = mpGraphics->GetTempFrameBuffer(vSize,ePixelFormat_RGBA,i);
+            bActiveEffect = true;
+            break;
         }
     }
 
-    //-----------------------------------------------------------------------
+    return bActiveEffect;
+}
 
-    cPostEffectComposite::~cPostEffectComposite()
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+void cPostEffectComposite::BeginRendering(float afFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget)
+{
+    ///////////////////////////////
+    //Init the render functions
+    mfCurrentFrameTime = afFrameTime;
+
+    InitAndResetRenderFunctions(apFrustum, apRenderTarget, false);
+
+
+    ///////////////////////////////
+    //Init the render states
+    mpLowLevelGraphics->SetColorWriteActive(true, true, true, true);
+
+    mpLowLevelGraphics->SetCullActive(true);
+    mpLowLevelGraphics->SetCullMode(eCullMode_CounterClockwise);
+
+    SetDepthTest(false);
+    SetDepthWrite(false);
+    mpLowLevelGraphics->SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
+
+    mpLowLevelGraphics->SetColor(cColor(1,1,1,1));
+
+    for(int i=0; i<kMaxTextureUnits; ++i)
+        mpLowLevelGraphics->SetTexture(i, NULL);
+
+}
+
+//-----------------------------------------------------------------------
+
+void cPostEffectComposite::EndRendering()
+{
+    /////////////////////////////////////////////
+    // Reset all rendering states
+    SetBlendMode(eMaterialBlendMode_None);
+    SetChannelMode(eMaterialChannelMode_RGBA);
+
+    /////////////////////////////////////////////
+    // Unbind all rendering data
+    for(int i=0; i<kMaxTextureUnits; ++i)
     {
+        if(mvCurrentTexture[i]) mpLowLevelGraphics->SetTexture(i, NULL);
     }
 
-    //-----------------------------------------------------------------------
+    if(mpCurrentProgram)    mpCurrentProgram->UnBind();
+    if(mpCurrentVtxBuffer)    mpCurrentVtxBuffer->UnBind();
 
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////
+    // Clean up render functions
+    ExitAndCleanUpRenderFunctions();
+}
 
-    //-----------------------------------------------------------------------
-    
-    void cPostEffectComposite::Render(float afFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget)
-    {
-        ////////////////////////////////
-        //Set up stuff needed for rendering
-        BeginRendering(afFrameTime, apFrustum, apInputTexture, apRenderTarget);
+//-----------------------------------------------------------------------
 
-        ////////////////////////////////
-        //Iterate post effects and find the last one.
-        iPostEffect *pLastEffect = NULL;
-        tPostEffectMapIt it = m_mapPostEffects.begin();
-        for(; it!= m_mapPostEffects.end(); ++it)
-        {
-            iPostEffect *pPostEffect = it->second;
-            if(pPostEffect->IsActive()==false) continue;
-            
-            pLastEffect = pPostEffect;
-        }
+/*void cPostEffectComposite::CopyToFrameBuffer(iTexture *apOutputTexture)
+{
+    SetDepthTest(false);
+    SetDepthWrite(false);
+    SetBlendMode(eMaterialBlendMode_None);
+    SetAlphaMode(eMaterialAlphaMode_Solid);
+    SetChannelMode(eMaterialChannelMode_RGBA);
 
-        ////////////////////////////////
-        //Iterate post effects and render them
-        int lCurrentTempBuffer =0;
-        iTexture *pInputTex = apInputTexture;
-        it = m_mapPostEffects.begin();
-        for(; it!= m_mapPostEffects.end(); ++it)
-        {
-            iPostEffect *pPostEffect =it->second;
-            if(pPostEffect->IsActive()==false) continue;
-        
-            bool bLastEffect = pPostEffect == pLastEffect;
+    SetFrameBuffer(mpCurrentRenderTarget->mpFrameBuffer,true);
 
-            pInputTex = pPostEffect->Render(this,pInputTex,mpFinalTempBuffer[lCurrentTempBuffer] ,bLastEffect);
+    SetFlatProjection();
 
-            lCurrentTempBuffer = lCurrentTempBuffer==0 ? 1 : 0;
-        }
+    SetProgram(NULL);
+    SetTexture(0,apOutputTexture);
+    SetTextureRange(NULL, 1);
 
-        ///////////////////////////////
-        // Reset rendering stuff
-        EndRendering();
-    }
+    ////////////////////////////////////
+    //Draw the accumulation buffer to the current frame buffer
+    //Since the texture v coordinate is reversed, need to do some math.
+    cVector2f vViewportPos((float)mpCurrentRenderTarget->mvPos.x, (float)mpCurrentRenderTarget->mvPos.y);
+    cVector2f vViewportSize((float)mvRenderTargetSize.x, (float)mvRenderTargetSize.y);
+    DrawQuad(    cVector2f(0,0),1,
+                cVector2f(vViewportPos.x, (mvScreenSizeFloat.y - vViewportSize.y)-vViewportPos.y ),
+                cVector2f(vViewportPos.x + vViewportSize.x,mvScreenSizeFloat.y - vViewportPos.y),
+                true);
+}*/
 
-    //-----------------------------------------------------------------------
-
-    void cPostEffectComposite::AddPostEffect(iPostEffect *apPostEffect, int alPrio)
-    {
-        if(apPostEffect==NULL) return;
-
-        m_mapPostEffects.insert(tPostEffectMap::value_type(alPrio, apPostEffect));
-        mvPostEffects.push_back(apPostEffect);
-    }
-
-    //-----------------------------------------------------------------------
-
-    bool  cPostEffectComposite::HasActiveEffects()
-    {
-        if(mvPostEffects.empty()) return false;
-
-        bool bActiveEffect = false;
-        for(size_t i=0; i<mvPostEffects.size(); ++i)
-        {
-            if(mvPostEffects[i]->IsActive())
-            {
-                bActiveEffect = true;
-                break;
-            }
-        }
-
-        return bActiveEffect;
-    }
-    
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-    
-    void cPostEffectComposite::BeginRendering(float afFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget)
-    {
-        ///////////////////////////////
-        //Init the render functions
-        mfCurrentFrameTime = afFrameTime;
-
-        InitAndResetRenderFunctions(apFrustum, apRenderTarget, false);
-
-
-        ///////////////////////////////
-        //Init the render states
-        mpLowLevelGraphics->SetColorWriteActive(true, true, true, true);
-
-        mpLowLevelGraphics->SetCullActive(true);
-        mpLowLevelGraphics->SetCullMode(eCullMode_CounterClockwise);
-
-        SetDepthTest(false);
-        SetDepthWrite(false);
-        mpLowLevelGraphics->SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
-
-        mpLowLevelGraphics->SetColor(cColor(1,1,1,1));
-
-        for(int i=0; i<kMaxTextureUnits; ++i)
-            mpLowLevelGraphics->SetTexture(i, NULL);
-
-    }
-    
-    //-----------------------------------------------------------------------
-
-    void cPostEffectComposite::EndRendering()
-    {
-        /////////////////////////////////////////////
-        // Reset all rendering states
-        SetBlendMode(eMaterialBlendMode_None);
-        SetChannelMode(eMaterialChannelMode_RGBA);
-
-        /////////////////////////////////////////////
-        // Unbind all rendering data
-        for(int i=0; i<kMaxTextureUnits; ++i)
-        {
-            if(mvCurrentTexture[i]) mpLowLevelGraphics->SetTexture(i, NULL);
-        }
-
-        if(mpCurrentProgram)    mpCurrentProgram->UnBind();
-        if(mpCurrentVtxBuffer)    mpCurrentVtxBuffer->UnBind();
-
-        /////////////////////////////////////////////
-        // Clean up render functions
-        ExitAndCleanUpRenderFunctions();
-    }
-
-    //-----------------------------------------------------------------------
-
-    /*void cPostEffectComposite::CopyToFrameBuffer(iTexture *apOutputTexture)
-    {
-        SetDepthTest(false);
-        SetDepthWrite(false);
-        SetBlendMode(eMaterialBlendMode_None);
-        SetAlphaMode(eMaterialAlphaMode_Solid);
-        SetChannelMode(eMaterialChannelMode_RGBA);
-
-        SetFrameBuffer(mpCurrentRenderTarget->mpFrameBuffer,true);
-
-        SetFlatProjection();
-
-        SetProgram(NULL);
-        SetTexture(0,apOutputTexture);
-        SetTextureRange(NULL, 1);
-
-        ////////////////////////////////////
-        //Draw the accumulation buffer to the current frame buffer
-        //Since the texture v coordinate is reversed, need to do some math.
-        cVector2f vViewportPos((float)mpCurrentRenderTarget->mvPos.x, (float)mpCurrentRenderTarget->mvPos.y);
-        cVector2f vViewportSize((float)mvRenderTargetSize.x, (float)mvRenderTargetSize.y);
-        DrawQuad(    cVector2f(0,0),1,
-                    cVector2f(vViewportPos.x, (mvScreenSizeFloat.y - vViewportSize.y)-vViewportPos.y ), 
-                    cVector2f(vViewportPos.x + vViewportSize.x,mvScreenSizeFloat.y - vViewportPos.y),
-                    true);
-    }*/
-
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
 }

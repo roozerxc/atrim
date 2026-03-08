@@ -8,41 +8,51 @@
 #include "math/MathTypes.h"
 #include "graphics/GPUShader.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //----------------------------------------------
+//----------------------------------------------
 
-    class iLowLevelGraphics;
+class iLowLevelGraphics;
 
-    //----------------------------------------------
-    class cGLSLShader : public iGpuShader
+//----------------------------------------------
+class cGLSLShader : public iGpuShader
+{
+public:
+    cGLSLShader(const tString& asName, eGpuShaderType aType, iLowLevelGraphics *apLowLevelGraphics);
+    ~cGLSLShader();
+
+    bool Reload();
+    void Unload();
+    void Destroy();
+
+    bool SamplerNeedsTextureUnitSetup()
     {
-    public:
-        cGLSLShader(const tString& asName, eGpuShaderType aType, iLowLevelGraphics *apLowLevelGraphics);
-        ~cGLSLShader();
+        return true;
+    }
 
-        bool Reload();
-        void Unload();
-        void Destroy();
+    tString GetProgramName()
+    {
+        return msName;
+    }
 
-        bool SamplerNeedsTextureUnitSetup(){ return true;}
+    bool CreateFromFile(const tWString& asFile, const tString& asEntry="main", bool abPrintInfoIfFail=true);
+    bool CreateFromString(const char *apStringData, const tString& asEntry="main", bool abPrintInfoIfFail=true);
 
-        tString GetProgramName(){ return msName; }
+    //GLSL Specific
+    GLuint GetHandle()
+    {
+        return mlHandle;
+    }
 
-        bool CreateFromFile(const tWString& asFile, const tString& asEntry="main", bool abPrintInfoIfFail=true);
-        bool CreateFromString(const char *apStringData, const tString& asEntry="main", bool abPrintInfoIfFail=true);
+protected:
+    void LogShaderInfoLog();
+    void LogShaderCode(const char *apStringData);
+    GLenum GetGLShaderType(eGpuShaderType aType);
 
-        //GLSL Specific
-        GLuint GetHandle(){ return mlHandle;}
-    
-    protected:
-        void LogShaderInfoLog();
-        void LogShaderCode(const char *apStringData);
-        GLenum GetGLShaderType(eGpuShaderType aType);
+    iLowLevelGraphics *mpLowLevelGraphics;
 
-        iLowLevelGraphics *mpLowLevelGraphics;
-        
-        GLuint mlHandle;
-    };
+    GLuint mlHandle;
+};
 };
 #endif // HPL_GLSL_SHADER_H

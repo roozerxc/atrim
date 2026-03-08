@@ -5,219 +5,225 @@
 #include <stdio.h>
 #include "system/SystemTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    template <class T>     class cVector2 {
-        public:
-            union{
-                struct {
-                    T x,y;
-                };
-                T v[2];
-            };
-
-            //////////////////////////////////////////
-            // Constructors
-            /////////////////////////////////////////
-            cVector2() : x(0),y(0)
-            {}
-            cVector2(T afVal) : x(afVal),y(afVal)
-            {}
-            cVector2(T afX, T afY) : x(afX),y(afY)
-            {}
-            cVector2(cVector2<T> const &avVec) : x(avVec.x), y(avVec.y)
-            {}
-
-            //////////////////////////////////////////
-            // Copy
-            /////////////////////////////////////////
-
-            inline cVector2<T>& operator=(const cVector2<T> &aVec)
-            {
-                x = aVec.x;
-                y = aVec.y;
-                return *this;
-            }
-
-            inline cVector2<T>& operator=(const T aVal)
-            {
-                x = aVal;
-                y = aVal;
-                return *this;
-            }
-            
-            //////////////////////////////////////////
-            // Boolean
-            /////////////////////////////////////////
-
-            inline bool operator==(const cVector2<T> &aVec) const
-            {
-                if(x == aVec.x && y==aVec.y)return true;
-                else return false;
-            }
-
-            inline bool operator!=(const cVector2<T> &aVec) const
-            {
-                if(x == aVec.x && y==aVec.y)return false;
-                else return true;
-            }
-            
-            //////////////////////////////////////////
-            // Vector Arithmetic
-            /////////////////////////////////////////
-
-            inline cVector2<T> operator+(const cVector2<T> &aVec) const
-            {
-                cVector2<T> vec;
-                vec.x = x + aVec.x;
-                vec.y = y + aVec.y;
-                return vec;
-            }
-
-            inline cVector2<T> operator-(const cVector2<T> &aVec) const
-            {
-                cVector2<T> vec;
-                vec.x = x - aVec.x;
-                vec.y = y - aVec.y;
-                return vec;
-            }
-
-            inline cVector2<T> operator*(const cVector2<T> &aVec) const
-            {
-                cVector2<T> vec;
-                vec.x = x * aVec.x;
-                vec.y = y * aVec.y;
-                return vec;
-            }
-
-            inline cVector2<T> operator/(const cVector2<T> &aVec) const
-            {
-                cVector2<T> vec;
-                vec.x = x / aVec.x;
-                vec.y = y / aVec.y;
-                return vec;
-            }
-
-            inline cVector2<T>& operator-=(const cVector2<T>  &aVec)
-            {
-                x-=aVec.x;
-                y-=aVec.y;
-                return *this;
-            }
-
-            inline cVector2<T>& operator+=(const cVector2<T> &aVec)
-            {
-                x+=aVec.x;
-                y+=aVec.y;
-                return *this;
-            }
-
-            inline cVector2<T>& operator*=(const cVector2<T>  &aVec)
-            {
-                x*=aVec.x;
-                y*=aVec.y;
-                return *this;
-            }
-
-            inline cVector2<T>& operator/=(const cVector2<T> &aVec)
-            {
-                x/=aVec.x;
-                y/=aVec.y;
-                return *this;
-            }
-
-            //////////////////////////////////////////
-            // Real Arithmetic
-            /////////////////////////////////////////
-
-            inline cVector2<T> operator/(const T &aVal) const
-            {
-                cVector2<T> vec;
-                vec.x = x / aVal;
-                vec.y = y / aVal;
-                return vec;
-            }
-
-            inline cVector2<T> operator*(const T &aVal) const
-            {
-                cVector2<T> vec;
-                vec.x = x * aVal;
-                vec.y = y * aVal;
-                return vec;
-            }
-
-            inline cVector2<T> operator+(const T &aVal) const
-            {
-                cVector2<T> vec;
-                vec.x = x + aVal;
-                vec.y = y + aVal;
-                return vec;
-            }
-
-            cVector2<T> operator-(const T &aVal) const
-            {
-                cVector2<T> vec;
-                vec.x = x - aVal;
-                vec.y = y - aVal;
-                return vec;
-            }
-
-            //////////////////////////////////////////
-            // Methods 
-            /////////////////////////////////////////
-            
-            inline void FromVec(const T *apVec)
-            {
-                x = apVec[0];
-                y = apVec[1];
-            }
-
-            inline T Length() const
-            {
-                return sqrt( x * x + y * y);
-            }
-
-            inline T SqrLength() const
-            {
-                return x * x + y * y;
-            }
-
-            /**
-             * Only use this on double or float vectors
-             * \return Length of Vector
-             */
-            T Normalize()
-            {
-                T length  = std::sqrt( x * x + y * y);
-
-                if ( length > 1e-08 )
-                {
-                    T InvLength = 1.0f / length;
-                    x *= InvLength;
-                    y *= InvLength;
-                }
-
-                return length;
-            }
-
-            //////////////////////////////////////////
-            // Printing
-            /////////////////////////////////////////
-
-            tString ToString() const{
-                char buf[512];
-                sprintf(buf,"%f : %f",x,y);
-                tString str = buf;
-                return str;
-            }
-
-            tString ToFileString() const{
-                char buf[512];
-                sprintf(buf,"%g %g",x,y);
-                tString str = buf;
-                return str;
-            }
+template <class T>     class cVector2
+{
+public:
+    union
+    {
+        struct
+        {
+            T x,y;
+        };
+        T v[2];
     };
-    
+
+    //////////////////////////////////////////
+    // Constructors
+    /////////////////////////////////////////
+    cVector2() : x(0),y(0)
+    {}
+    cVector2(T afVal) : x(afVal),y(afVal)
+    {}
+    cVector2(T afX, T afY) : x(afX),y(afY)
+    {}
+    cVector2(cVector2<T> const &avVec) : x(avVec.x), y(avVec.y)
+    {}
+
+    //////////////////////////////////////////
+    // Copy
+    /////////////////////////////////////////
+
+    inline cVector2<T>& operator=(const cVector2<T> &aVec)
+    {
+        x = aVec.x;
+        y = aVec.y;
+        return *this;
+    }
+
+    inline cVector2<T>& operator=(const T aVal)
+    {
+        x = aVal;
+        y = aVal;
+        return *this;
+    }
+
+    //////////////////////////////////////////
+    // Boolean
+    /////////////////////////////////////////
+
+    inline bool operator==(const cVector2<T> &aVec) const
+    {
+        if(x == aVec.x && y==aVec.y)return true;
+        else return false;
+    }
+
+    inline bool operator!=(const cVector2<T> &aVec) const
+    {
+        if(x == aVec.x && y==aVec.y)return false;
+        else return true;
+    }
+
+    //////////////////////////////////////////
+    // Vector Arithmetic
+    /////////////////////////////////////////
+
+    inline cVector2<T> operator+(const cVector2<T> &aVec) const
+    {
+        cVector2<T> vec;
+        vec.x = x + aVec.x;
+        vec.y = y + aVec.y;
+        return vec;
+    }
+
+    inline cVector2<T> operator-(const cVector2<T> &aVec) const
+    {
+        cVector2<T> vec;
+        vec.x = x - aVec.x;
+        vec.y = y - aVec.y;
+        return vec;
+    }
+
+    inline cVector2<T> operator*(const cVector2<T> &aVec) const
+    {
+        cVector2<T> vec;
+        vec.x = x * aVec.x;
+        vec.y = y * aVec.y;
+        return vec;
+    }
+
+    inline cVector2<T> operator/(const cVector2<T> &aVec) const
+    {
+        cVector2<T> vec;
+        vec.x = x / aVec.x;
+        vec.y = y / aVec.y;
+        return vec;
+    }
+
+    inline cVector2<T>& operator-=(const cVector2<T>  &aVec)
+    {
+        x-=aVec.x;
+        y-=aVec.y;
+        return *this;
+    }
+
+    inline cVector2<T>& operator+=(const cVector2<T> &aVec)
+    {
+        x+=aVec.x;
+        y+=aVec.y;
+        return *this;
+    }
+
+    inline cVector2<T>& operator*=(const cVector2<T>  &aVec)
+    {
+        x*=aVec.x;
+        y*=aVec.y;
+        return *this;
+    }
+
+    inline cVector2<T>& operator/=(const cVector2<T> &aVec)
+    {
+        x/=aVec.x;
+        y/=aVec.y;
+        return *this;
+    }
+
+    //////////////////////////////////////////
+    // Real Arithmetic
+    /////////////////////////////////////////
+
+    inline cVector2<T> operator/(const T &aVal) const
+    {
+        cVector2<T> vec;
+        vec.x = x / aVal;
+        vec.y = y / aVal;
+        return vec;
+    }
+
+    inline cVector2<T> operator*(const T &aVal) const
+    {
+        cVector2<T> vec;
+        vec.x = x * aVal;
+        vec.y = y * aVal;
+        return vec;
+    }
+
+    inline cVector2<T> operator+(const T &aVal) const
+    {
+        cVector2<T> vec;
+        vec.x = x + aVal;
+        vec.y = y + aVal;
+        return vec;
+    }
+
+    cVector2<T> operator-(const T &aVal) const
+    {
+        cVector2<T> vec;
+        vec.x = x - aVal;
+        vec.y = y - aVal;
+        return vec;
+    }
+
+    //////////////////////////////////////////
+    // Methods
+    /////////////////////////////////////////
+
+    inline void FromVec(const T *apVec)
+    {
+        x = apVec[0];
+        y = apVec[1];
+    }
+
+    inline T Length() const
+    {
+        return sqrt( x * x + y * y);
+    }
+
+    inline T SqrLength() const
+    {
+        return x * x + y * y;
+    }
+
+    /**
+     * Only use this on double or float vectors
+     * \return Length of Vector
+     */
+    T Normalize()
+    {
+        T length  = std::sqrt( x * x + y * y);
+
+        if ( length > 1e-08 )
+        {
+            T InvLength = 1.0f / length;
+            x *= InvLength;
+            y *= InvLength;
+        }
+
+        return length;
+    }
+
+    //////////////////////////////////////////
+    // Printing
+    /////////////////////////////////////////
+
+    tString ToString() const
+    {
+        char buf[512];
+        sprintf(buf,"%f : %f",x,y);
+        tString str = buf;
+        return str;
+    }
+
+    tString ToFileString() const
+    {
+        char buf[512];
+        sprintf(buf,"%g %g",x,y);
+        tString str = buf;
+        return str;
+    }
+};
+
 };
 #endif // HPL_VECTOR2_H

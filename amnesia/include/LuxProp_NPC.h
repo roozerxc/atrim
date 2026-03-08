@@ -33,9 +33,9 @@ public:
 
 class cLuxProp_NPC : public iLuxProp
 {
-typedef iLuxProp super_class;
-friend class cLuxPropLoader_NPC;
-public:    
+    typedef iLuxProp super_class;
+    friend class cLuxPropLoader_NPC;
+public:
     cLuxProp_NPC(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxProp_NPC();
 
@@ -45,13 +45,13 @@ public:
 
     bool CanInteract(iPhysicsBody *apBody);
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
-    
+
     void OnSetupAfterLoad(cWorld *apWorld);
 
     void OnResetProperties();
 
     void UpdatePropSpecific(float afTimeStep);
-    
+
     void BeforePropDestruction();
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
@@ -59,13 +59,16 @@ public:
     //////////////////////
     //Settings
     void SetAwake(bool abX, bool abEffects);
-    void SetFollowPlayer(bool abX){ mbFollowPlayer = abX; }
-    
+    void SetFollowPlayer(bool abX)
+    {
+        mbFollowPlayer = abX;
+    }
+
     //////////////////////
     //Debug
     float DrawDebug(cGuiSet *apSet,iFontData *apFont,float afStartY);
 
-    
+
     //////////////////////
     //Connection callbacks
     void OnConnectionStateChange(iLuxEntity *apEntity, int alState);
@@ -82,7 +85,7 @@ private:
     void UpdateWakeState(float afTimeStep);
     void UpdateCheckPlayerIsInArea(float afTimeStep);
     void UpdateHeadMovement(float afTimeStep);
-    
+
     //////////////////////
     // Data
     std::vector<cLuxProp_NPC_HeadMoveBone> mvHeadMoveBones;
@@ -90,7 +93,7 @@ private:
     float mfHeadMoveSpeedMul;
     float mfHeadMoveMaxSpeed;
     float mfMaxHeadAngle;
-        
+
     //////////////////////
     // Variables
     tString msFollowPlayerArea;
@@ -112,7 +115,7 @@ class cLuxPropLoader_NPC : public iLuxPropLoader
 {
 public:
     cLuxPropLoader_NPC(const tString& asName);
-    virtual ~cLuxPropLoader_NPC(){}
+    virtual ~cLuxPropLoader_NPC() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);

@@ -5,74 +5,78 @@
 
 #include "physics/PhysicsMaterial.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class iPhysicsBody;
-    
-    //------------------------------------------
+class iPhysicsBody;
 
-    class cNewtonLockBodyUntilReturn
+//------------------------------------------
+
+class cNewtonLockBodyUntilReturn
+{
+public:
+    cNewtonLockBodyUntilReturn(const NewtonBody* apNewtonBody);
+    ~cNewtonLockBodyUntilReturn();
+private:
+    const NewtonBody* mpNewtonBody;
+};
+
+
+//------------------------------------------
+
+class cPhysicsMaterialNewton : public iPhysicsMaterial
+{
+public:
+    cPhysicsMaterialNewton(const tString &asName, iPhysicsWorld *apWorld, int alMatId=-1);
+    ~cPhysicsMaterialNewton();
+
+    void SetElasticity(float afElasticity);
+    float GetElasticity() const;
+    void SetStaticFriction(float afElasticity);
+    float GetStaticFriction() const;
+    void SetKineticFriction(float afElasticity);
+    float GetKineticFriction() const;
+
+    void SetFrictionCombMode(ePhysicsMaterialCombMode aMode);
+    ePhysicsMaterialCombMode GetFrictionCombMode() const;
+    void SetElasticityCombMode(ePhysicsMaterialCombMode aMode);
+    ePhysicsMaterialCombMode GetElasticityCombMode() const;
+
+    void UpdateMaterials();
+
+    int GetId()
     {
-    public:
-        cNewtonLockBodyUntilReturn(const NewtonBody* apNewtonBody);
-        ~cNewtonLockBodyUntilReturn();
-    private: 
-        const NewtonBody* mpNewtonBody;
-    };
+        return mlMaterialId;
+    }
+private:
+    float Combine(ePhysicsMaterialCombMode aMode, float afX, float afY);
 
+    static int OnAABBOverlapCallback(const NewtonMaterial* apMaterial,
+                                     const NewtonBody* apBody0, const NewtonBody* apBody1, int alThreadIndex);
 
-    //------------------------------------------
+    static void ContactsProcessCallback(const NewtonJoint* apContactJoint, dFloat afTimestep, int alThreadIndex);
 
-    class cPhysicsMaterialNewton : public iPhysicsMaterial
-    {
-    public:
-        cPhysicsMaterialNewton(const tString &asName, iPhysicsWorld *apWorld, int alMatId=-1);
-        ~cPhysicsMaterialNewton();
+    /*static int BeginContactCallback(const NewtonMaterial* apMaterial,
+                                    const NewtonBody* apBody0, const NewtonBody* apBody1, int alThreadIndex);
 
-        void SetElasticity(float afElasticity);
-        float GetElasticity() const;
-        void SetStaticFriction(float afElasticity);
-        float GetStaticFriction() const;
-        void SetKineticFriction(float afElasticity);
-        float GetKineticFriction() const;
+    static int ProcessContactCallback(    const NewtonMaterial* apMaterial,
+                                        const NewtonBody* apBody0, const NewtonBody* apBody1,
+                                        dFloat afTimestep, int alThreadIndex);
 
-        void SetFrictionCombMode(ePhysicsMaterialCombMode aMode);
-        ePhysicsMaterialCombMode GetFrictionCombMode() const;
-        void SetElasticityCombMode(ePhysicsMaterialCombMode aMode);
-        ePhysicsMaterialCombMode GetElasticityCombMode() const;
+    static void EndContactCallback(        const NewtonMaterial* apMaterial, const NewtonBody* apBody0, const NewtonBody* apBody1,
+                                        int alThreadIndex);*/
 
-        void UpdateMaterials();
+    NewtonWorld *mpNewtonWorld;
 
-        int GetId(){ return mlMaterialId;}
-    private:
-        float Combine(ePhysicsMaterialCombMode aMode, float afX, float afY);
+    int mlMaterialId;
 
-        static int OnAABBOverlapCallback(const NewtonMaterial* apMaterial,
-                                        const NewtonBody* apBody0, const NewtonBody* apBody1, int alThreadIndex);
+    ePhysicsMaterialCombMode mFrictionMode;
+    ePhysicsMaterialCombMode mElasticityMode;
 
-        static void ContactsProcessCallback(const NewtonJoint* apContactJoint, dFloat afTimestep, int alThreadIndex);
+    float mfElasticity;
+    float mfStaticFriction;
+    float mfKineticFriction;
 
-        /*static int BeginContactCallback(const NewtonMaterial* apMaterial,
-                                        const NewtonBody* apBody0, const NewtonBody* apBody1, int alThreadIndex);
-        
-        static int ProcessContactCallback(    const NewtonMaterial* apMaterial,
-                                            const NewtonBody* apBody0, const NewtonBody* apBody1, 
-                                            dFloat afTimestep, int alThreadIndex);
-        
-        static void EndContactCallback(        const NewtonMaterial* apMaterial, const NewtonBody* apBody0, const NewtonBody* apBody1, 
-                                            int alThreadIndex);*/
-
-           NewtonWorld *mpNewtonWorld;
-
-        int mlMaterialId;
-
-        ePhysicsMaterialCombMode mFrictionMode;
-        ePhysicsMaterialCombMode mElasticityMode;
-
-        float mfElasticity;
-        float mfStaticFriction;
-        float mfKineticFriction;
-
-    };
+};
 };
 #endif // HPL_PHYSICS_MATERIAL_NEWTON_H

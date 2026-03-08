@@ -16,7 +16,7 @@ class cLuxMap;
 class cLuxSavedMap : public iSerializable
 {
     kSerializableClassInit(cLuxSavedMap)
-public:    
+public:
     cLuxSavedMap();
     ~cLuxSavedMap();
 
@@ -52,7 +52,7 @@ public:
     int mlCheckPointMusicPrio;
     bool mbCheckPointMusicResume;
     float mfCheckPointMusicVolume;
-    
+
     cContainerList<cEngineRope_SaveData> mlstRopes;
     cContainerList<cEngineLight_SaveData> mlstLights;
     cContainerList<cEngineSound_SaveData> mlstSounds;

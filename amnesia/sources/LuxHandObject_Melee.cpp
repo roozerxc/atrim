@@ -36,10 +36,10 @@ void cLuxHandObject_Melee::RenderSolid(cRendererCallbackFunctions* apFunctions)
     cVector3f vRotation(pCam->GetPitch(), pCam->GetYaw(), pCam->GetRoll());
     cMatrixf mtxHands = cMath::MatrixRotate(vRotation, eEulerRotationOrder_XYZ);
     mtxHands.SetTranslation(pCam->GetPosition());
-    
+
     cBoundingVolume shapeBV =  mpCollideShape->GetBoundingVolume();
     shapeBV.SetTransform(cMath::MatrixMul(mtxHands, shapeBV.GetTransform()));
-    
+
     apFunctions->GetLowLevelGfx()->DrawBoxMinMax(shapeBV.GetMin(), shapeBV.GetMax(), cColor(1,1));*/
 }
 
@@ -174,7 +174,7 @@ bool cLuxHandObject_Melee::AnimationIsOver()
     //Charging
     else if(mpHands->mlHandObjectState == 1)
     {
-        return false;    
+        return false;
     }
     ///////////////////////
     //Swing
@@ -182,7 +182,7 @@ bool cLuxHandObject_Melee::AnimationIsOver()
     {
         mpHands->mlHandObjectState =0;
         return true;
-        
+
     }
     return false;
 }
@@ -227,11 +227,11 @@ void cLuxHandObject_Melee::UpdateCheckDamageEvent(float afTimeStep)
         float fDamageMul = mpHands->mfHandObjectChargeCount>=1 ? 2.0f : 1.0f;
 
         bool bHit = gpBase->mpMapHelper->ShapeDamage(    mpCollideShape, mtxHands, pCam->GetPosition(),
-                                            mfAttackMinDamage*fDamageMul, mfAttackMaxDamage*fDamageMul,
-                                            mfAttackForce, mfMaxAttackForce,
-                                            mlAttackStrength, mfAttackHitSpeed,
-                                            eLuxDamageType_BloodSplat, eLuxWeaponHitType_Sword,
-                                            true,false, true, false);
+                    mfAttackMinDamage*fDamageMul, mfAttackMaxDamage*fDamageMul,
+                    mfAttackForce, mfMaxAttackForce,
+                    mlAttackStrength, mfAttackHitSpeed,
+                    eLuxDamageType_BloodSplat, eLuxWeaponHitType_Sword,
+                    true,false, true, false);
 
         if(bHit)
         {
@@ -260,7 +260,7 @@ void cLuxHandObject_Melee::Swing()
         mpHands->PlayAnim(msHandsAnim_Swing, false);
         gpBase->mpHelpFuncs->PlayGuiSoundData(msSwingSound,eSoundEntryType_World);
     }
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -270,7 +270,7 @@ void cLuxHandObject_Melee::Charge()
     mpHands->mbHandObjectAttackDown = true;
     mpHands->mfHandObjectChargeCount =0;
     mpHands->mlHandObjectState =0;
-    
+
     mpHands->PlayAnim(msHandsAnim_Charge, false);
     gpBase->mpHelpFuncs->PlayGuiSoundData(msChargeSound,eSoundEntryType_World);
 }

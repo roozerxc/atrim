@@ -4,37 +4,38 @@
 #include "physics/PhysicsJointHinge.h"
 #include "impl/PhysicsJointNewton.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cPhysicsJointHingeNewton : public iPhysicsJointNewton<iPhysicsJointHinge>
-    {
-    public:
-        cPhysicsJointHingeNewton(const tString &asName, iPhysicsBody *apParentBody, iPhysicsBody *apChildBody, 
-            iPhysicsWorld *apWorld,const cVector3f &avPivotPoint, const cVector3f &avPinDir);
-        ~cPhysicsJointHingeNewton();
-        
-        void SetMaxAngle(float afAngle);
-        void SetMinAngle(float afAngle);
-        float GetMaxAngle();
-        float GetMinAngle();
+class cPhysicsJointHingeNewton : public iPhysicsJointNewton<iPhysicsJointHinge>
+{
+public:
+    cPhysicsJointHingeNewton(const tString &asName, iPhysicsBody *apParentBody, iPhysicsBody *apChildBody,
+                             iPhysicsWorld *apWorld,const cVector3f &avPivotPoint, const cVector3f &avPinDir);
+    ~cPhysicsJointHingeNewton();
 
-        cVector3f GetVelocity();
-        cVector3f GetAngularVelocity();
-        float GetForceSize();
+    void SetMaxAngle(float afAngle);
+    void SetMinAngle(float afAngle);
+    float GetMaxAngle();
+    float GetMinAngle();
 
-        float GetDistance();
-        float GetAngle();
-    
-    private:
-        cMatrixf m_mtxLocalPinPivot0;
-        cMatrixf m_mtxLocalPinPivot1;
-        
-        float mfPreviousAngle;
-        
-        void SubmitConstraints (dFloat afTimestep, int alThreadIndex);
-        void GetInfo (NewtonJointRecord* apInfo);
+    cVector3f GetVelocity();
+    cVector3f GetAngularVelocity();
+    float GetForceSize();
 
-        //static unsigned LimitCallback(const NewtonJoint* pHinge, NewtonHingeSliderUpdateDesc* pDesc);
-    };
+    float GetDistance();
+    float GetAngle();
+
+private:
+    cMatrixf m_mtxLocalPinPivot0;
+    cMatrixf m_mtxLocalPinPivot1;
+
+    float mfPreviousAngle;
+
+    void SubmitConstraints (dFloat afTimestep, int alThreadIndex);
+    void GetInfo (NewtonJointRecord* apInfo);
+
+    //static unsigned LimitCallback(const NewtonJoint* pHinge, NewtonHingeSliderUpdateDesc* pDesc);
+};
 };
 #endif // HPL_PHYSICS_JOINT_HINGE_NEWTON_H

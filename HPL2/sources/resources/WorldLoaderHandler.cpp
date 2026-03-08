@@ -7,68 +7,69 @@
 
 #include "scene/Scene.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
-    
-    cWorldLoaderHandler::cWorldLoaderHandler(cResources* apResources,cGraphics *apGraphics, cScene *apScene, cPhysics *apPhysics)
+//-----------------------------------------------------------------------
+
+cWorldLoaderHandler::cWorldLoaderHandler(cResources* apResources,cGraphics *apGraphics, cScene *apScene, cPhysics *apPhysics)
+{
+    mpResources = apResources;
+    mpScene = apScene;
+    mpGraphics = apGraphics;
+    mpPhysics = apPhysics;
+}
+
+//-----------------------------------------------------------------------
+
+cWorldLoaderHandler::~cWorldLoaderHandler()
+{
+
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+cWorld* cWorldLoaderHandler::LoadWorld(const tWString& asFile,tWorldLoadFlag aFlags)
+{
+    iWorldLoader *pWorldLoader = static_cast<iWorldLoader*>(GetLoaderForFile(asFile));
+
+    if(pWorldLoader)
     {
-        mpResources = apResources;
-        mpScene = apScene;
-        mpGraphics = apGraphics;
-        mpPhysics = apPhysics;
-    }
-    
-    //-----------------------------------------------------------------------
-
-    cWorldLoaderHandler::~cWorldLoaderHandler()
-    {
-        
-    }
-
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-    
-    cWorld* cWorldLoaderHandler::LoadWorld(const tWString& asFile,tWorldLoadFlag aFlags)
-    {
-        iWorldLoader *pWorldLoader = static_cast<iWorldLoader*>(GetLoaderForFile(asFile));
-
-        if(pWorldLoader)
-        {
-                return pWorldLoader->LoadWorld(asFile,aFlags);
-        }
-        
-        return NULL;
+        return pWorldLoader->LoadWorld(asFile,aFlags);
     }
 
-    //-----------------------------------------------------------------------
+    return NULL;
+}
 
-    
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
 
-    
-    void cWorldLoaderHandler::SetupLoader(iResourceLoader *apLoader)
-    {
-        iWorldLoader *pWorldLoader = static_cast<iWorldLoader*>(apLoader);
-        
-        pWorldLoader->mpResources = mpResources;
-        pWorldLoader->mpGraphics = mpGraphics;
-        pWorldLoader->mpScene = mpScene;
-        pWorldLoader->mpPhysics = mpPhysics;
-    }
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+
+
+void cWorldLoaderHandler::SetupLoader(iResourceLoader *apLoader)
+{
+    iWorldLoader *pWorldLoader = static_cast<iWorldLoader*>(apLoader);
+
+    pWorldLoader->mpResources = mpResources;
+    pWorldLoader->mpGraphics = mpGraphics;
+    pWorldLoader->mpScene = mpScene;
+    pWorldLoader->mpPhysics = mpPhysics;
+}
+
+//-----------------------------------------------------------------------
 }

@@ -44,24 +44,27 @@ public:
     ~cLuxLampLightConnection();
 
     void Update(float afTimeStep);
-    
-    iLight* GetLight(){ return mpLight;}
+
+    iLight* GetLight()
+    {
+        return mpLight;
+    }
     void AddLamp(cLuxProp_Lamp *apLamp, float afAmount, bool abUseOnColor, bool abUseSpec);
     void RemoveLamp(cLuxProp_Lamp *apLamp);
 
 private:
-    iLight *mpLight;   
-    tLuxLampLightConnection_LampList mlstLamps; 
+    iLight *mpLight;
+    tLuxLampLightConnection_LampList mlstLamps;
 };
 
 //----------------------------------------------
 
 class cLuxProp_Lamp : public iLuxProp
 {
-typedef iLuxProp super_class;
-friend class cLuxPropLoader_Lamp;
-friend class cLuxLampLightConnection;
-public:    
+    typedef iLuxProp super_class;
+    friend class cLuxPropLoader_Lamp;
+    friend class cLuxLampLightConnection;
+public:
     cLuxProp_Lamp(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxProp_Lamp();
 
@@ -75,19 +78,25 @@ public:
     void OnResetProperties();
 
     void UpdatePropSpecific(float afTimeStep);
-    
+
     void BeforePropDestruction();
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
     tWString GetFocusText();
-    
+
 
     //////////////////////
     //Properties
-    cLuxInteractData_Grab* GetGrabData(){ return &mGrabData;}
-    
+    cLuxInteractData_Grab* GetGrabData()
+    {
+        return &mGrabData;
+    }
+
     void SetLit(bool abX, bool abUseEffects);
-    bool GetLit(){ return mbLit; }
+    bool GetLit()
+    {
+        return mbLit;
+    }
 
     bool CanBeIgnitByPlayer();
 
@@ -117,12 +126,12 @@ private:
     bool mbConnectionLightUseOnColor;
     bool mbConnectionLightUseSpec;
 
-    
+
     //Data
     bool mbCanBeLitByPlayer;
     bool mbCanBeGrabbed;
 
-    
+
     cLuxInteractData_Grab mGrabData;
 };
 
@@ -132,7 +141,7 @@ class cLuxPropLoader_Lamp : public iLuxPropLoader
 {
 public:
     cLuxPropLoader_Lamp(const tString& asName);
-    virtual ~cLuxPropLoader_Lamp(){}
+    virtual ~cLuxPropLoader_Lamp() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);

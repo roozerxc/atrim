@@ -9,10 +9,10 @@
 
 class cLuxMoveState_ClimbLedge : public iLuxMoveState
 {
-public:    
+public:
     cLuxMoveState_ClimbLedge(cLuxPlayer *apPlayer);
     ~cLuxMoveState_ClimbLedge();
-    
+
     void OnMapEnter();
 
     void OnEnterState(eLuxMoveState aPrevState);
@@ -31,7 +31,7 @@ public:
     void OnJump(bool abActive);
 
     void OnDraw(float afFrameTime);
-    
+
 private:
     float mfHeadMoveSpeed;
     float mfHeadMoveSlowdownDist;

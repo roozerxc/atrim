@@ -4,173 +4,258 @@
 #include "math/MathTypes.h"
 #include "physics/PhysicsMaterial.h"
 
-namespace hpl {
-    
-    #define eRollAxisFlag_X        1
-    #define eRollAxisFlag_Y        2
-    #define eRollAxisFlag_Z        4
-    
-    class cPhysics;
-    class iPhysicsWorld;
-    class iPhysicsBody;
-    class cResources;
+namespace hpl
+{
 
-    //----------------------------------------
+#define eRollAxisFlag_X        1
+#define eRollAxisFlag_Y        2
+#define eRollAxisFlag_Z        4
 
-    class cSurfaceImpactData
-    {
+class cPhysics;
+class iPhysicsWorld;
+class iPhysicsBody;
+class cResources;
+
+//----------------------------------------
+
+class cSurfaceImpactData
+{
     friend class cSurfaceData;
-    public:
-        
-        float GetMinSpeed(){ return mfMinSpeed;}
+public:
 
-        const tString& GetSoundName(){ return msSoundName;}
-        void SetSoundName(const tString& asName){ msSoundName =asName;}
-
-        const tString& GetPSName(){ return msPSName;}
-        void SetPSName(const tString& asName){ msPSName =asName;}
-        
-        int GetPSPrio(){ return mlPSPrio;}
-        void SetPSPrio(int alPrio){ mlPSPrio = alPrio;}
-
-    private:
-        float mfMinSpeed;
-        tString msSoundName;
-        tString msPSName;
-        int mlPSPrio;
-    };
-
-    typedef std::vector<cSurfaceImpactData*> tSurfaceImpactDataVec;
-    typedef tSurfaceImpactDataVec::iterator tSurfaceImpactDataVecIt;
-
-    //----------------------------------------
-
-    class cSurfaceData
+    float GetMinSpeed()
     {
-    public:
-        cSurfaceData(const tString &asName, cPhysics *apPhysics,cResources *apResources);
-        ~cSurfaceData();
+        return mfMinSpeed;
+    }
 
-        const tString& GetName() const{ return msName;}
+    const tString& GetSoundName()
+    {
+        return msSoundName;
+    }
+    void SetSoundName(const tString& asName)
+    {
+        msSoundName =asName;
+    }
 
-        void OnImpact(float afSpeed,const cVector3f &avPos,int alContacts,  iPhysicsBody *apBody);
-        void OnSlide(float afSpeed,const cVector3f &avPos,int alContacts, iPhysicsBody *apBody,
-                        iPhysicsBody *apSlideAgainstBody);
-        void CreateImpactEffect(float afSpeed,const cVector3f &avPos,int alContacts, 
-                                cSurfaceData *apSecondSurface, iPhysicsWorld *apPhysicsWorld);
+    const tString& GetPSName()
+    {
+        return msPSName;
+    }
+    void SetPSName(const tString& asName)
+    {
+        msPSName =asName;
+    }
 
-        void UpdateRollEffect(iPhysicsBody *apBody);
+    int GetPSPrio()
+    {
+        return mlPSPrio;
+    }
+    void SetPSPrio(int alPrio)
+    {
+        mlPSPrio = alPrio;
+    }
 
-        void SetElasticity(float afElasticity);
-        float GetElasticity() const;
-        void SetStaticFriction(float afElasticity);
-        float GetStaticFriction() const;
-        void SetKineticFriction(float afElasticity);
-        float GetKineticFriction() const;
+private:
+    float mfMinSpeed;
+    tString msSoundName;
+    tString msPSName;
+    int mlPSPrio;
+};
 
-        void SetPriority(int alPriority);
-        int GetPriority() const;
+typedef std::vector<cSurfaceImpactData*> tSurfaceImpactDataVec;
+typedef tSurfaceImpactDataVec::iterator tSurfaceImpactDataVecIt;
 
-        void SetFrictionCombMode(ePhysicsMaterialCombMode aMode);
-        ePhysicsMaterialCombMode GetFrictionCombMode() const;
-        void SetElasticityCombMode(ePhysicsMaterialCombMode aMode);
-        ePhysicsMaterialCombMode GetElasticityCombMode() const;
+//----------------------------------------
 
-        const tString& GetStepType(){ return msStepType;}
-        void GetStepType(const tString& asX){ msStepType = asX;}
+class cSurfaceData
+{
+public:
+    cSurfaceData(const tString &asName, cPhysics *apPhysics,cResources *apResources);
+    ~cSurfaceData();
 
-        void SetMinScrapeSpeed(float afX){mfMinScrapeSpeed = afX;}
-        void SetMinScrapeFreq(float afX){mfMinScrapeFreq = afX;}
-        void SetMinScrapeFreqSpeed(float afX){mfMinScrapeFreqSpeed = afX;}
-        void SetMaxScrapeFreq(float afX){mfMaxScrapeFreq = afX;}
-        void SetMaxScrapeFreqSpeed(float afX){mfMaxScrapeFreqSpeed = afX;}
-        void SetMiddleScrapeSpeed(float afX){mfMiddleScrapeSpeed = afX;}
-        void SetMinScrapeContacts(int alX){mlMinScrapeContacts = alX;}
-        void SetScrapeSoundName(const tString &asName){msScrapeSoundName = asName;}
+    const tString& GetName() const
+    {
+        return msName;
+    }
 
-        void SetMinRollSpeed(float afX){mfMinRollSpeed = afX;}
-        void SetMinRollFreq(float afX){mfMinRollFreq = afX;}
-        void SetMinRollVolume(float afX){mfMinRollVolume = afX;}
-        void SetMinRollFreqSpeed(float afX){mfMinRollFreqSpeed = afX;}
-        void SetMaxRollFreq(float afX){mfMaxRollFreq = afX;}
-        void SetMaxRollVolume(float afX){mfMaxRollVolume = afX;}
-        void SetMaxRollFreqSpeed(float afX){mfMaxRollFreqSpeed = afX;}
-        void SetMiddleRollSpeed(float afX){mfMiddleRollSpeed = afX;}
-        void SetRollSoundName(const tString &asName){msRollSoundName = asName;}
-        void SetRollAxisFlags(tFlag aAxisFlags){mRollAxisFlags = aAxisFlags;}
+    void OnImpact(float afSpeed,const cVector3f &avPos,int alContacts,  iPhysicsBody *apBody);
+    void OnSlide(float afSpeed,const cVector3f &avPos,int alContacts, iPhysicsBody *apBody,
+                 iPhysicsBody *apSlideAgainstBody);
+    void CreateImpactEffect(float afSpeed,const cVector3f &avPos,int alContacts,
+                            cSurfaceData *apSecondSurface, iPhysicsWorld *apPhysicsWorld);
 
-        void PreloadData();
+    void UpdateRollEffect(iPhysicsBody *apBody);
 
-        iPhysicsMaterial *ToMaterial(iPhysicsWorld *apWorld);
+    void SetElasticity(float afElasticity);
+    float GetElasticity() const;
+    void SetStaticFriction(float afElasticity);
+    float GetStaticFriction() const;
+    void SetKineticFriction(float afElasticity);
+    float GetKineticFriction() const;
 
-        /**
-         * This must be added with the largest speed first.    
-        **/
-        cSurfaceImpactData* CreateImpactData(float afMinSpeed);
-        cSurfaceImpactData* GetImpactData(int alIdx);
-        int GetImpactDataNum();
-        /**
-        * Gets the the appropriate impact data depending on speed. It gets the data with highest speed not higher than afSpeed
-        * \param afSpeed The speed value.
-        * \return 
-        */
-        cSurfaceImpactData* GetImpactDataFromSpeed(float afSpeed);
-        
+    void SetPriority(int alPriority);
+    int GetPriority() const;
 
-        /**
-        * This must be added with the largest speed first.    
-        **/
-        cSurfaceImpactData* CreateHitData(float afMinSpeed);
-        cSurfaceImpactData* GetHitData(int alIdx);
-        int GetHitDataNum();
-        /**
-         * Gets the the appropriate hit data depending on speed. It gets the data with highest speed not higher than afSpeed
-         * \param afSpeed The speed value.
-         * \return 
-         */
-        cSurfaceImpactData* GetHitDataFromSpeed(float afSpeed);
-        
-    protected:
-        cResources *mpResources;
-        cPhysics *mpPhysics;
-        tString msName;
-        
-        //Properties
-        ePhysicsMaterialCombMode mFrictionMode;
-        ePhysicsMaterialCombMode mElasticityMode;
+    void SetFrictionCombMode(ePhysicsMaterialCombMode aMode);
+    ePhysicsMaterialCombMode GetFrictionCombMode() const;
+    void SetElasticityCombMode(ePhysicsMaterialCombMode aMode);
+    ePhysicsMaterialCombMode GetElasticityCombMode() const;
 
-        float mfElasticity;
-        float mfStaticFriction;
-        float mfKineticFriction;
+    const tString& GetStepType()
+    {
+        return msStepType;
+    }
+    void GetStepType(const tString& asX)
+    {
+        msStepType = asX;
+    }
 
-        int mlPriority;
+    void SetMinScrapeSpeed(float afX)
+    {
+        mfMinScrapeSpeed = afX;
+    }
+    void SetMinScrapeFreq(float afX)
+    {
+        mfMinScrapeFreq = afX;
+    }
+    void SetMinScrapeFreqSpeed(float afX)
+    {
+        mfMinScrapeFreqSpeed = afX;
+    }
+    void SetMaxScrapeFreq(float afX)
+    {
+        mfMaxScrapeFreq = afX;
+    }
+    void SetMaxScrapeFreqSpeed(float afX)
+    {
+        mfMaxScrapeFreqSpeed = afX;
+    }
+    void SetMiddleScrapeSpeed(float afX)
+    {
+        mfMiddleScrapeSpeed = afX;
+    }
+    void SetMinScrapeContacts(int alX)
+    {
+        mlMinScrapeContacts = alX;
+    }
+    void SetScrapeSoundName(const tString &asName)
+    {
+        msScrapeSoundName = asName;
+    }
 
-        float mfMinScrapeSpeed;
-        float mfMinScrapeFreq;
-        float mfMinScrapeFreqSpeed;
-        float mfMaxScrapeFreq;
-        float mfMaxScrapeFreqSpeed;
-        float mfMiddleScrapeSpeed;
-        int mlMinScrapeContacts;
-        tString msScrapeSoundName;
+    void SetMinRollSpeed(float afX)
+    {
+        mfMinRollSpeed = afX;
+    }
+    void SetMinRollFreq(float afX)
+    {
+        mfMinRollFreq = afX;
+    }
+    void SetMinRollVolume(float afX)
+    {
+        mfMinRollVolume = afX;
+    }
+    void SetMinRollFreqSpeed(float afX)
+    {
+        mfMinRollFreqSpeed = afX;
+    }
+    void SetMaxRollFreq(float afX)
+    {
+        mfMaxRollFreq = afX;
+    }
+    void SetMaxRollVolume(float afX)
+    {
+        mfMaxRollVolume = afX;
+    }
+    void SetMaxRollFreqSpeed(float afX)
+    {
+        mfMaxRollFreqSpeed = afX;
+    }
+    void SetMiddleRollSpeed(float afX)
+    {
+        mfMiddleRollSpeed = afX;
+    }
+    void SetRollSoundName(const tString &asName)
+    {
+        msRollSoundName = asName;
+    }
+    void SetRollAxisFlags(tFlag aAxisFlags)
+    {
+        mRollAxisFlags = aAxisFlags;
+    }
 
-        float mfMinRollSpeed;
-        float mfMinRollFreq;
-        float mfMinRollVolume;
-        float mfMinRollFreqSpeed;
-        float mfMaxRollFreq;
-        float mfMaxRollVolume;
-        float mfMaxRollFreqSpeed;
-        float mfMiddleRollSpeed;
-        int mlMinRollContacts;
-        tString msRollSoundName;
-        tFlag mRollAxisFlags;
+    void PreloadData();
 
-        tString msStepType;
+    iPhysicsMaterial *ToMaterial(iPhysicsWorld *apWorld);
 
-        tSurfaceImpactDataVec mvImpactData;
+    /**
+     * This must be added with the largest speed first.
+    **/
+    cSurfaceImpactData* CreateImpactData(float afMinSpeed);
+    cSurfaceImpactData* GetImpactData(int alIdx);
+    int GetImpactDataNum();
+    /**
+    * Gets the the appropriate impact data depending on speed. It gets the data with highest speed not higher than afSpeed
+    * \param afSpeed The speed value.
+    * \return
+    */
+    cSurfaceImpactData* GetImpactDataFromSpeed(float afSpeed);
 
-        tSurfaceImpactDataVec mvHitData;
-    };
+
+    /**
+    * This must be added with the largest speed first.
+    **/
+    cSurfaceImpactData* CreateHitData(float afMinSpeed);
+    cSurfaceImpactData* GetHitData(int alIdx);
+    int GetHitDataNum();
+    /**
+     * Gets the the appropriate hit data depending on speed. It gets the data with highest speed not higher than afSpeed
+     * \param afSpeed The speed value.
+     * \return
+     */
+    cSurfaceImpactData* GetHitDataFromSpeed(float afSpeed);
+
+protected:
+    cResources *mpResources;
+    cPhysics *mpPhysics;
+    tString msName;
+
+    //Properties
+    ePhysicsMaterialCombMode mFrictionMode;
+    ePhysicsMaterialCombMode mElasticityMode;
+
+    float mfElasticity;
+    float mfStaticFriction;
+    float mfKineticFriction;
+
+    int mlPriority;
+
+    float mfMinScrapeSpeed;
+    float mfMinScrapeFreq;
+    float mfMinScrapeFreqSpeed;
+    float mfMaxScrapeFreq;
+    float mfMaxScrapeFreqSpeed;
+    float mfMiddleScrapeSpeed;
+    int mlMinScrapeContacts;
+    tString msScrapeSoundName;
+
+    float mfMinRollSpeed;
+    float mfMinRollFreq;
+    float mfMinRollVolume;
+    float mfMinRollFreqSpeed;
+    float mfMaxRollFreq;
+    float mfMaxRollVolume;
+    float mfMaxRollFreqSpeed;
+    float mfMiddleRollSpeed;
+    int mlMinRollContacts;
+    tString msRollSoundName;
+    tFlag mRollAxisFlags;
+
+    tString msStepType;
+
+    tSurfaceImpactDataVec mvImpactData;
+
+    tSurfaceImpactDataVec mvHitData;
+};
 };
 #endif // HPL_SURFACE_DATA_H

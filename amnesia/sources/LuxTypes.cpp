@@ -56,7 +56,7 @@ cLuxIdPair LuxGetIdPairFromBody(iPhysicsBody *apBody)
 
         return idPair;
     }
-    
+
     idPair.mlChildId = apBody->GetUniqueID();
     if(apBody->GetUserData())
     {
@@ -80,7 +80,7 @@ cLuxIdPair LuxGetIdPairFromBody(iPhysicsBody *apBody)
 void iLuxUpdateable::ClearFonts()
 {
     cFontManager* pFontManager = gpBase->mpEngine->GetResources()->GetFontManager();
-    for(int i=0;i<(int)mvFonts.size();++i)
+    for(int i=0; i<(int)mvFonts.size(); ++i)
         pFontManager->Destroy(mvFonts[i]);
 
     mvFonts.clear();
@@ -134,7 +134,7 @@ void iLuxCollideCallbackContainer::DestroyCollideCallbacks()
 void iLuxCollideCallbackContainer::CheckCollisionCallback(const tString& asName, cLuxMap *apMap)
 {
     mbUpdatingCollideCallbacks = true;
-    
+
     /////////////////////
     //Iterate the collide callbacks
     for(tLuxCollideCallbackListIt it = mlstCollideCallbacks.begin(); it != mlstCollideCallbacks.end(); ++it)
@@ -158,7 +158,7 @@ void iLuxCollideCallbackContainer::CheckCollisionCallback(const tString& asName,
             {
                 tString sCommand = pCallback->msCallbackFunc+"(\"" + asName + "\", \""+ pEntity->GetName()+"\", "+cString::ToString(lState)+")" ;
                 apMap->RunScript(sCommand);
-            
+
                 ///////////////////////
                 // Auto remove
                 if(pCallback->mbDeleteWhenColliding)
@@ -168,13 +168,13 @@ void iLuxCollideCallbackContainer::CheckCollisionCallback(const tString& asName,
                     for(tLuxCollideCallbackListIt it = mlstDeleteCallbacks.begin(); it != mlstDeleteCallbacks.end(); ++it)
                     {
                         cLuxCollideCallback *pTestCallback = *it;
-                        if(pTestCallback == pCallback) 
+                        if(pTestCallback == pCallback)
                         {
                             bCallbackExistInDeleteList = true;
                             break;
                         }
                     }
-                    
+
                     // Add to delete list (if not already there)
                     if(bCallbackExistInDeleteList==false)
                     {
@@ -192,9 +192,9 @@ void iLuxCollideCallbackContainer::CheckCollisionCallback(const tString& asName,
     for(tLuxCollideCallbackListIt it = mlstDeleteCallbacks.begin(); it != mlstDeleteCallbacks.end(); ++it)
     {
         cLuxCollideCallback *pCallback = *it;
-        
+
         pCallback->mpCollideEntity->RemoveCollideCallbackParent(this);
-        
+
         STLFindAndDelete(mlstCollideCallbacks, pCallback);
     }
     mlstDeleteCallbacks.clear();
@@ -220,9 +220,9 @@ bool iLuxCollideCallbackContainer::CheckEntityCollision(iLuxEntity*apEntity, cLu
 
             if(cMath::CheckBVIntersection(*pBodyA->GetBoundingVolume(), *pBodyB->GetBoundingVolume()))
             {
-                bool bCollide = pPhysicsWorld->CheckShapeCollision(    pBodyA->GetShape(), pBodyA->GetLocalMatrix(), 
-                                                                    pBodyB->GetShape(), pBodyB->GetLocalMatrix(),
-                                                                    collideData,1,false);
+                bool bCollide = pPhysicsWorld->CheckShapeCollision(    pBodyA->GetShape(), pBodyA->GetLocalMatrix(),
+                                pBodyB->GetShape(), pBodyB->GetLocalMatrix(),
+                                collideData,1,false);
                 if(bCollide) return true;
             }
         }
@@ -242,7 +242,7 @@ void iLuxCollideCallbackContainer::AddCollideCallback(iLuxEntity *apEntity, cons
         cLuxCollideCallback *pCallback = *it;
         if(pCallback->mpCollideEntity == apEntity)
         {
-            Warning("A callback with entity '%s' already exists!\n", apEntity->GetName().c_str());    
+            Warning("A callback with entity '%s' already exists!\n", apEntity->GetName().c_str());
             return;
         }
     }
@@ -250,7 +250,7 @@ void iLuxCollideCallbackContainer::AddCollideCallback(iLuxEntity *apEntity, cons
     ////////////////////////////////
     // Create and add callback
     cLuxCollideCallback *pCallback = hplNew(cLuxCollideCallback, ());
-    
+
     pCallback->mpCollideEntity = apEntity;
     pCallback->msCallbackFunc = asCallbackFunc;
     pCallback->mbDeleteWhenColliding = abRemoveAtCollide;
@@ -268,12 +268,12 @@ void iLuxCollideCallbackContainer::RemoveCollideCallback(cLuxCollideCallback *ap
 {
     if(mbUpdatingCollideCallbacks)
     {
-        mlstDeleteCallbacks.push_back(apCallback);    
+        mlstDeleteCallbacks.push_back(apCallback);
     }
     else
     {
         apCallback->mpCollideEntity->RemoveCollideCallbackParent(this);
-        
+
         STLFindAndDelete(mlstCollideCallbacks, apCallback);
     }
 }
@@ -287,7 +287,7 @@ void iLuxCollideCallbackContainer::RemoveCollideCallback(const tString& asEntity
         cLuxCollideCallback *pCallback = *it;
         if(pCallback->mpCollideEntity->GetName() == asEntityName)
         {
-            RemoveCollideCallback(pCallback);    
+            RemoveCollideCallback(pCallback);
             break;
         }
     }

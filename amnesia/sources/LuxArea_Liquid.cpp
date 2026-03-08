@@ -108,7 +108,7 @@ void cLuxArea_Liquid::OnUpdate(float afTimeStep)
     // Get data
     iPhysicsWorld *pPhysicsWorld = mpMap->GetPhysicsWorld();
     iPhysicsBody *pAreaBody = mpBody;
-    
+
     float fSurfaceY =    mpBody->GetWorldPosition().y + mpBody->GetShape()->GetSize().y /2;
 
     cCollideData collideData;
@@ -118,12 +118,12 @@ void cLuxArea_Liquid::OnUpdate(float afTimeStep)
     // Update count
     mfTimeCount += afTimeStep;
 
-    
+
     ///////////////////////////
     // Iterate bodies
     std::vector<iPhysicsBody*> vBodies;
     pPhysicsWorld->GetBodiesInBV(mpBody->GetBoundingVolume(),&vBodies);
-    
+
     for(size_t i=0; i<vBodies.size(); ++i)
     {
         iPhysicsBody *pBody = vBodies[i];
@@ -145,12 +145,12 @@ void cLuxArea_Liquid::OnUpdate(float afTimeStep)
         if(bInsideWater)
         {
             if(pPhysicsWorld->CheckShapeCollision(    pBody->GetShape(),pBody->GetLocalMatrix(), pAreaBody->GetShape(), pAreaBody->GetLocalMatrix(),
-                                                    collideData,1, false)==false)
+                    collideData,1, false)==false)
             {
                 bInsideWater = false;
             }
         }
-        
+
         /////////////////////////
         //Character specific
         if(pBody->IsCharacter())
@@ -164,7 +164,7 @@ void cLuxArea_Liquid::OnUpdate(float afTimeStep)
             DoBuoyancyOnBody(pBody, fSurfaceY, bInsideWater);
         }
     }
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -315,7 +315,7 @@ void cLuxArea_Liquid::SplashEffect(iPhysicsBody *apBody, float afSurfaceY)
     if(pImpact->GetSoundName() != "")
     {
         cSoundEntity *pSound = pWorld->CreateSoundEntity("Splash",pImpact->GetSoundName(),true);
-        
+
         if(pSound) pSound->SetPosition(vEffectPos);
     }
 }

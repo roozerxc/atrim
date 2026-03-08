@@ -7,68 +7,78 @@
 
 class TiXmlDocument;
 
-namespace hpl {
-    class cFileSearcher;
+namespace hpl
+{
+class cFileSearcher;
 
-    class cConfigFile
+class cConfigFile
+{
+public:
+    cConfigFile(const tWString& asFile,  const tWString& asAltPath = _W(""));
+    ~cConfigFile();
+
+    /**
+     * Loads data from file
+     * \return true if loading ws ok, else false
+     */
+    bool Load();
+    /**
+     * Saves the data to file
+     * \return true if loading ws ok, else false
+     */
+    bool Save();
+
+    void SetUseCRC(bool abX)
     {
-    public:
-        cConfigFile(const tWString& asFile,  const tWString& asAltPath = _W(""));
-        ~cConfigFile();
-        
-        /**
-         * Loads data from file
-         * \return true if loading ws ok, else false
-         */
-        bool Load();
-        /**
-         * Saves the data to file
-         * \return true if loading ws ok, else false
-         */
-        bool Save();
+        mbUseCRC = abX;
+    }
 
-        void SetUseCRC(bool abX){ mbUseCRC = abX;}
+    void SetFileLocation(const tWString& asFile)
+    {
+        msFile = asFile;
+    }
+    const tWString& GetFileLocation()
+    {
+        return msFile;
+    }
 
-        void SetFileLocation(const tWString& asFile){ msFile = asFile;}
-        const tWString& GetFileLocation(){ return msFile;}
-        
-        void SetString(const tString& asLevel, const tString& asName, const tString& asVal);
-        void SetInt(const tString& asLevel, const tString& asName, int alVal);
-        void SetFloat(const tString& asLevel, const tString& asName, float afVal);
-        void SetBool(const tString& asLevel, const tString& asName, bool abVal);
-        
-        void SetVector2f(const tString& asLevel, const tString& asName, const cVector2f& avVal);
-        void SetVector3f(const tString& asLevel, const tString& asName, const cVector3f& avVal);
-        void SetVector2l(const tString& asLevel, const tString& asName, const cVector2l& avVal);
-        void SetVector3l(const tString& asLevel, const tString& asName, const cVector3l& avVal);
+    void SetString(const tString& asLevel, const tString& asName, const tString& asVal);
+    void SetInt(const tString& asLevel, const tString& asName, int alVal);
+    void SetFloat(const tString& asLevel, const tString& asName, float afVal);
+    void SetBool(const tString& asLevel, const tString& asName, bool abVal);
+
+    void SetVector2f(const tString& asLevel, const tString& asName, const cVector2f& avVal);
+    void SetVector3f(const tString& asLevel, const tString& asName, const cVector3f& avVal);
+    void SetVector2l(const tString& asLevel, const tString& asName, const cVector2l& avVal);
+    void SetVector3l(const tString& asLevel, const tString& asName, const cVector3l& avVal);
 
 
-        tString GetString(const tString& asLevel, const tString& asName, const tString& asDefault);
-        tWString GetStringW(const tString& asLevel, const tString& asName, const tWString& asDefault);
+    tString GetString(const tString& asLevel, const tString& asName, const tString& asDefault);
+    tWString GetStringW(const tString& asLevel, const tString& asName, const tWString& asDefault);
 
-        int GetInt(const tString& asLevel, const tString& asName, int alDefault);
-        float GetFloat(const tString& asLevel, const tString& asName, float afDefault);
-        bool GetBool(const tString& asLevel, const tString& asName, bool abDefault);
-        
-        cVector2f GetVector2f(const tString& asLevel, const tString& asName, const cVector2f& avDefault);
-        cVector3f GetVector3f(const tString& asLevel, const tString& asName, const cVector3f& avDefault);
+    int GetInt(const tString& asLevel, const tString& asName, int alDefault);
+    float GetFloat(const tString& asLevel, const tString& asName, float afDefault);
+    bool GetBool(const tString& asLevel, const tString& asName, bool abDefault);
 
-        cVector2l GetVector2l(const tString& asLevel, const tString& asName, const cVector2l& avDefault);
-        cVector3l GetVector3l(const tString& asLevel, const tString& asName, const cVector3l& avDefault);
+    cVector2f GetVector2f(const tString& asLevel, const tString& asName, const cVector2f& avDefault);
+    cVector3f GetVector3f(const tString& asLevel, const tString& asName, const cVector3f& avDefault);
 
-        
-        cColor GetColor(const tString& asLevel, const tString& asName, const cColor& aDefault);
+    cVector2l GetVector2l(const tString& asLevel, const tString& asName, const cVector2l& avDefault);
+    cVector3l GetVector3l(const tString& asLevel, const tString& asName, const cVector3l& avDefault);
 
-    private:
-        tWString msFile;
-        cFileSearcher *mpFileSearcher;
 
-        TiXmlDocument *mpXmlDoc;
+    cColor GetColor(const tString& asLevel, const tString& asName, const cColor& aDefault);
 
-        bool mbUseCRC;
+private:
+    tWString msFile;
+    cFileSearcher *mpFileSearcher;
 
-        const char* GetCharArray(tString asLevel, tString asName);
-    };
+    TiXmlDocument *mpXmlDoc;
+
+    bool mbUseCRC;
+
+    const char* GetCharArray(tString asLevel, tString asName);
+};
 
 };
 #endif // HPL_CONFIGFILE_H

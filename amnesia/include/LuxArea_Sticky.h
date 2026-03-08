@@ -12,7 +12,7 @@ class cLuxArea_Sticky_SaveData : public iLuxArea_SaveData
     kSerializableClassInit(cLuxArea_Sticky_SaveData)
 public:
     iLuxArea* CreateArea(cLuxMap *apMap);
-    
+
     tString msAttachFunction;
     tString msDetachFunction;
 
@@ -32,7 +32,7 @@ public:
 
     int mlAttachedEntityID;
     int mlAttachedBodyID;
-    
+
     float mfAttachedBodyMass;
     bool mbAttachedBodyGravity;
     bool mbAttachedEntityFullGameSaved;
@@ -44,9 +44,9 @@ public:
 
 class cLuxArea_Sticky : public iLuxArea
 {
-typedef iLuxArea super_class;
-friend class cLuxAreaLoader_Sticky;
-public:    
+    typedef iLuxArea super_class;
+    friend class cLuxAreaLoader_Sticky;
+public:
     cLuxArea_Sticky(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxArea_Sticky();
 
@@ -62,14 +62,23 @@ public:
 
     //////////////////////
     //Properties
-    static void SetAllowAttachment(bool abX){ mbAllowAttachment = abX;}
+    static void SetAllowAttachment(bool abX)
+    {
+        mbAllowAttachment = abX;
+    }
 
-    iPhysicsBody *GetAttachedBody(){ return mpAttachedBody;}
-    bool CanDetach(){ return mbCanDetach && mfSetMtxTime>=1;}
+    iPhysicsBody *GetAttachedBody()
+    {
+        return mpAttachedBody;
+    }
+    bool CanDetach()
+    {
+        return mbCanDetach && mfSetMtxTime>=1;
+    }
 
     //////////////////////
     //Connection callbacks
-    void OnConnectionStateChange(iLuxEntity *apEntity, int alState){}
+    void OnConnectionStateChange(iLuxEntity *apEntity, int alState) {}
 
     //////////////////////
     //Save data stuff
@@ -82,9 +91,9 @@ private:
     void UpdateAttachBody(float afTimeStep);
     void UpdateCollision(float afTimeStep);
 
-    
+
     tString GetCallbackFunc(const tString &asFunc,iPhysicsBody *apBody);
-    
+
     /////////////////////////
     // Data
     tString msAttachFunction;
@@ -132,10 +141,10 @@ public:
     ~cLuxAreaLoader_Sticky();
 
     iLuxArea *CreateArea(const tString& asName, int alID, cLuxMap *apMap);
-    
+
     void LoadVariables(iLuxArea *apArea, cWorld *apWorld);
     void SetupArea(iLuxArea *apArea, cWorld *apWorld);
-    
+
 };
 
 //----------------------------------------------

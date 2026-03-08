@@ -21,9 +21,9 @@ public:
 
 class cLuxProp_Button : public iLuxProp
 {
-typedef iLuxProp super_class;
-friend class cLuxPropLoader_Button;
-public:    
+    typedef iLuxProp super_class;
+    friend class cLuxPropLoader_Button;
+public:
     cLuxProp_Button(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxProp_Button();
 
@@ -31,13 +31,13 @@ public:
     //General
     bool CanInteract(iPhysicsBody *apBody);
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
-    
+
     void OnSetupAfterLoad(cWorld *apWorld);
 
     void OnResetProperties();
 
     void UpdatePropSpecific(float afTimeStep);
-    
+
     void BeforePropDestruction();
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
@@ -71,7 +71,7 @@ class cLuxPropLoader_Button : public iLuxPropLoader
 {
 public:
     cLuxPropLoader_Button(const tString& asName);
-    virtual ~cLuxPropLoader_Button(){}
+    virtual ~cLuxPropLoader_Button() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);

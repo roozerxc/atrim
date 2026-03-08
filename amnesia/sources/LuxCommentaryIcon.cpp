@@ -96,7 +96,7 @@ cLuxCommentaryIcon::~cLuxCommentaryIcon()
 {
     cWorld *pWorld = mpMap->GetWorld();
     iPhysicsWorld *pPhysicsWorld = pWorld->GetPhysicsWorld();
-    
+
     ////////////////////
     // Destroy physics
     {
@@ -104,7 +104,7 @@ cLuxCommentaryIcon::~cLuxCommentaryIcon()
         for(size_t i=0; i<mvBodies.size(); ++i)
         {
             iPhysicsBody *pBody = mvBodies[i];
-                
+
             pWorld->GetPhysicsWorld()->DestroyBody(pBody);
         }
     }
@@ -117,9 +117,9 @@ cLuxCommentaryIcon::~cLuxCommentaryIcon()
 
         //Lights
         for(size_t i=0; i<mvLights.size(); ++i) pWorld->DestroyLight(mvLights[i]);
-        
+
         //Particle systems
-        for(size_t i=0; i<mvParticleSystems.size(); ++i) 
+        for(size_t i=0; i<mvParticleSystems.size(); ++i)
         {
             cParticleSystem *pPS = mvParticleSystems[i];
             if(pPS && pWorld->ParticleSystemExists(pPS)) pPS->Kill();
@@ -172,7 +172,7 @@ void cLuxCommentaryIcon::OnUpdate(float afTimeStep)
         cSubMeshEntity *pSubEnt = mpMeshEntity->GetSubMeshEntity(i);
         cSubMesh *pSubMesh = pSubEnt->GetSubMesh();
         if(pSubMesh->GetName() != msRotateSubMesh) continue;
-        
+
         cMatrixf mtxTrans = cMath::MatrixMul(mvSubMeshMatrix[i], cMath::MatrixRotate(mvRotAngle, eEulerRotationOrder_XYZ));
         pSubEnt->SetMatrix(mtxTrans);
     }
@@ -191,7 +191,7 @@ bool cLuxCommentaryIcon::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
         gpBase->mpEffectHandler->GetPlayCommentary()->Start(msTalker, msTopic, msSoundFile, mlID);
     }
     SetPlayingSound(!mbPlayingSound);
-    
+
     return true;
 }
 
@@ -239,7 +239,7 @@ void cLuxCommentaryIcon::SetPlayingSound(bool abX)
 //-----------------------------------------------------------------------
 
 void cLuxCommentaryIcon::OnSetActive(bool abX)
-{    
+{
     ///////////////
     //Bodies
     for(size_t i=0; i<mvBodies.size(); ++i)
@@ -265,7 +265,7 @@ void cLuxCommentaryIcon::OnSetActive(bool abX)
 
     ///////////////////
     //Particle systems
-    for(size_t i=0; i<mvParticleSystems.size(); ++i) 
+    for(size_t i=0; i<mvParticleSystems.size(); ++i)
     {
         cParticleSystem *pPS = mvParticleSystems[i];
         if(pPS)
@@ -302,7 +302,7 @@ void cLuxCommentaryIcon::LoadCommentaryFile(const tString& asFile)
     msTalker = pXmlDoc->GetAttributeString("Talker","");
     msTopic = pXmlDoc->GetAttributeString("Topic","");
     msSoundFile = pXmlDoc->GetAttributeString("SoundFile","");
-    
+
     pResources->DestroyXmlDocument(pXmlDoc);
 }
 
@@ -368,7 +368,7 @@ void cLuxCommentaryIcon::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     kCopyToVar(pData, msTalker);
     kCopyToVar(pData, msTopic);
     kCopyToVar(pData, msSoundFile);
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -380,14 +380,14 @@ void cLuxCommentaryIcon::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     super_class::LoadFromSaveData(apSaveData);
     cLuxCommentaryIcon_SaveData *pData = static_cast<cLuxCommentaryIcon_SaveData*>(apSaveData);
 
-        ///////////////////////
+    ///////////////////////
     //CommentaryIconerties
     kCopyFromVar(pData, m_mtxOnLoadTransform);
     kCopyFromVar(pData, mvOnLoadScale);
     kCopyFromVar(pData, msTalker);
     kCopyFromVar(pData, msTopic);
     kCopyFromVar(pData, msSoundFile);
-    
+
 }
 
 //-----------------------------------------------------------------------

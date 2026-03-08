@@ -8,180 +8,295 @@
 
 #include "physics/VerletParticle.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class iLowLevelGraphics;
+class iLowLevelGraphics;
 
-    class iPhysicsWorld;
-    class iPhysicsBody;
-    class iCollideShape;
-    class cVerletParticle;
-        
-    class iPhysicsRope;
+class iPhysicsWorld;
+class iPhysicsBody;
+class iCollideShape;
+class cVerletParticle;
 
-    class cSoundEntity;
-    
-    //------------------------------------------
-    
-    class cPhysicsRopeAttachment
+class iPhysicsRope;
+
+class cSoundEntity;
+
+//------------------------------------------
+
+class cPhysicsRopeAttachment
+{
+public:
+    iPhysicsBody *mpBody;
+    cVerletParticle *mpParticle;
+    cVector3f mvBodyLocalPos;
+};
+
+//------------------------------------------
+
+class iPhysicsRope : public iVerletParticleContainer
+{
+public:
+    iPhysicsRope(const tString &asName, iPhysicsWorld *apWorld, const cVector3f &avStartPos, const cVector3f &avEndPos);
+    virtual ~iPhysicsRope();
+
+    /////////////////////////////
+    // General
+    void UpdateBeforeSimulate(float afTimeStep);
+    void UpdateAfterSimulate(float afTimeStep);
+
+    void RemoveAttachedBody(iPhysicsBody *apBody, bool abRemoveContainerFromBody=true);
+
+
+    /////////////////////////////
+    // Motor
+    void SetMotorActive(bool abX);
+    bool GetMotorActive()
     {
-    public:
-        iPhysicsBody *mpBody;
-        cVerletParticle *mpParticle;
-        cVector3f mvBodyLocalPos;
-    };
+        return mbMotorActive;
+    }
 
-    //------------------------------------------
-
-    class iPhysicsRope : public iVerletParticleContainer
+    void SetMotorWantedLength(float afX)
     {
-    public:
-        iPhysicsRope(const tString &asName, iPhysicsWorld *apWorld, const cVector3f &avStartPos, const cVector3f &avEndPos);
-        virtual ~iPhysicsRope();
+        mfMotorWantedLength = afX;
+    }
+    void SetMotorSpeedMul(float afX)
+    {
+        mfMotorSpeedMul = afX;
+    }
+    void SetMotorMaxSpeed(float afX)
+    {
+        mfMotorMaxSpeed = afX;
+    }
+    void SetMotorMinSpeed(float afX)
+    {
+        mfMotorMinSpeed = afX;
+    }
 
-        /////////////////////////////
-        // General
-        void UpdateBeforeSimulate(float afTimeStep);
-        void UpdateAfterSimulate(float afTimeStep);
+    float GetMotorWantedLength()
+    {
+        return mfMotorWantedLength;
+    }
+    float GetMotorSpeedMul()
+    {
+        return mfMotorSpeedMul;
+    }
+    float GetMotorMaxSpeed()
+    {
+        return mfMotorMaxSpeed;
+    }
+    float GetMotorMinSpeed()
+    {
+        return mfMotorMinSpeed;
+    }
 
-        void RemoveAttachedBody(iPhysicsBody *apBody, bool abRemoveContainerFromBody=true);
+    void SetMotorSound(const tString& asSound)
+    {
+        msMotorSound = asSound;
+    }
+    void SetMotorSoundStartSpeed(float afX)
+    {
+        mfMotorSoundStartSpeed = afX;
+    }
+    void SetMotorSoundStopSpeed(float afX)
+    {
+        mfMotorSoundStopSpeed = afX;
+    }
 
-        
-        /////////////////////////////
-        // Motor
-        void SetMotorActive(bool abX);
-        bool GetMotorActive(){ return mbMotorActive; }
-
-        void SetMotorWantedLength(float afX){ mfMotorWantedLength = afX; }
-        void SetMotorSpeedMul(float afX){ mfMotorSpeedMul = afX; }
-        void SetMotorMaxSpeed(float afX){ mfMotorMaxSpeed = afX; }
-        void SetMotorMinSpeed(float afX){ mfMotorMinSpeed = afX; }
-
-        float GetMotorWantedLength(){ return mfMotorWantedLength;}
-        float GetMotorSpeedMul(){ return mfMotorSpeedMul;}
-        float GetMotorMaxSpeed(){ return mfMotorMaxSpeed;}
-        float GetMotorMinSpeed(){ return mfMotorMinSpeed;}
-
-        void SetMotorSound(const tString& asSound) { msMotorSound = asSound; }
-        void SetMotorSoundStartSpeed(float afX) { mfMotorSoundStartSpeed = afX; }
-        void SetMotorSoundStopSpeed(float afX) { mfMotorSoundStopSpeed = afX; }
-
-        const tString& GetMotorSound() { return msMotorSound;}
-        float GetMotorSoundStartSpeed() { return mfMotorSoundStartSpeed;}
-        float GetMotorSoundStopSpeed() { return mfMotorSoundStopSpeed;}
+    const tString& GetMotorSound()
+    {
+        return msMotorSound;
+    }
+    float GetMotorSoundStartSpeed()
+    {
+        return mfMotorSoundStartSpeed;
+    }
+    float GetMotorSoundStopSpeed()
+    {
+        return mfMotorSoundStopSpeed;
+    }
 
 
-        /////////////////////////////
-        // Auto Move
-        void SetAutoMoveActive(bool abX);
-        void SetAutoMoveAcc(float afX){ mfAutoMoveAcc = afX;}
-        void SetAutoMoveMaxSpeed(float afX){ mfAutoMoveMaxSpeed = afX;}
-        void SetAutoMoveSpeed(float afX){ mfAutoMoveSpeed = afX;}
+    /////////////////////////////
+    // Auto Move
+    void SetAutoMoveActive(bool abX);
+    void SetAutoMoveAcc(float afX)
+    {
+        mfAutoMoveAcc = afX;
+    }
+    void SetAutoMoveMaxSpeed(float afX)
+    {
+        mfAutoMoveMaxSpeed = afX;
+    }
+    void SetAutoMoveSpeed(float afX)
+    {
+        mfAutoMoveSpeed = afX;
+    }
 
-        bool GetAutoMoveActive();
-        float GetAutoMoveAcc(){ return mfAutoMoveAcc;}
-        float GetAutoMoveMaxSpeed(){ return mfAutoMoveMaxSpeed;}
-        float GetAutoMoveSpeed(){ return mfAutoMoveSpeed;}
-        
-        /////////////////////////////
-        // Properties
-        cVerletParticle* GetStartParticle(){ return mlstParticles.front();}
-        cVerletParticle* GetEndParticle(){ return mlstParticles.back();}
+    bool GetAutoMoveActive();
+    float GetAutoMoveAcc()
+    {
+        return mfAutoMoveAcc;
+    }
+    float GetAutoMoveMaxSpeed()
+    {
+        return mfAutoMoveMaxSpeed;
+    }
+    float GetAutoMoveSpeed()
+    {
+        return mfAutoMoveSpeed;
+    }
 
-        void SetAttachedStartBody(iPhysicsBody *apBody);
-        void SetAttachedEndBody(iPhysicsBody *apBody);
+    /////////////////////////////
+    // Properties
+    cVerletParticle* GetStartParticle()
+    {
+        return mlstParticles.front();
+    }
+    cVerletParticle* GetEndParticle()
+    {
+        return mlstParticles.back();
+    }
 
-        iPhysicsBody* GetAttachedStartBody(){ return mvAttachedBody[0].mpBody;}
-        iPhysicsBody* GetAttachedEndBody(){ return mvAttachedBody[1].mpBody;}
+    void SetAttachedStartBody(iPhysicsBody *apBody);
+    void SetAttachedEndBody(iPhysicsBody *apBody);
 
-        cPhysicsRopeAttachment* GetAttachment(int alIdx){ return &mvAttachedBody[alIdx]; }
-        
-        void SetTotalLength(float afX);
-        float GetTotalLength(){ return mfTotalLength;}
+    iPhysicsBody* GetAttachedStartBody()
+    {
+        return mvAttachedBody[0].mpBody;
+    }
+    iPhysicsBody* GetAttachedEndBody()
+    {
+        return mvAttachedBody[1].mpBody;
+    }
 
-        void SetMinTotalLength(float afX);
-        void SetMaxTotalLength(float afX);
-        float GetMinTotalLength(){ return mfMinTotalLength;}
-        float GetMaxTotalLength(){ return mfMaxTotalLength;}
+    cPhysicsRopeAttachment* GetAttachment(int alIdx)
+    {
+        return &mvAttachedBody[alIdx];
+    }
 
-        void SetSegmentLength(float afX);
-        float GetSegmentLength(){ return mfSegmentLength;}
+    void SetTotalLength(float afX);
+    float GetTotalLength()
+    {
+        return mfTotalLength;
+    }
 
-        void SetMaxIterations(int alX){ mlMaxIterations = alX;}
-        int GetMaxIterations(){ return mlMaxIterations;}
+    void SetMinTotalLength(float afX);
+    void SetMaxTotalLength(float afX);
+    float GetMinTotalLength()
+    {
+        return mfMinTotalLength;
+    }
+    float GetMaxTotalLength()
+    {
+        return mfMaxTotalLength;
+    }
 
-        void SetStrength(float afX){ mfStrength  = afX;}
-        float GetStrength(){ return mfStrength;}
+    void SetSegmentLength(float afX);
+    float GetSegmentLength()
+    {
+        return mfSegmentLength;
+    }
 
-        void SetStiffness(float afX){ mfStiffness  = afX;}
-        float GetStiffness(){ return mfStiffness;}
+    void SetMaxIterations(int alX)
+    {
+        mlMaxIterations = alX;
+    }
+    int GetMaxIterations()
+    {
+        return mlMaxIterations;
+    }
 
-        void SetCollideAttachments(bool abX){ mbCollideAttachments  = abX;}
-        bool GetCollideAttachments(){ return mbCollideAttachments;}
+    void SetStrength(float afX)
+    {
+        mfStrength  = afX;
+    }
+    float GetStrength()
+    {
+        return mfStrength;
+    }
 
-        /////////////////////////////
-        // Debug
-        void RenderDebug(iLowLevelGraphics *apLowLevel);
+    void SetStiffness(float afX)
+    {
+        mfStiffness  = afX;
+    }
+    float GetStiffness()
+    {
+        return mfStiffness;
+    }
 
-    protected:
-        bool CheckParticleBodyCollision(iPhysicsBody *apBody);
-        bool CheckSpecificDataSleeping();
-        bool CheckSpecificDataAwake();
-        void SetSpecificDataSleeping(bool abSleeping);
-        
-        void UpdateMovement(float afTimeStep);
-        void UpdateMotor(float afTimeStep);
-        void UpdateMotorAndAutoMove(float afTimeStep);
-        
-        void UpdateAttachedParticlePositions(float afTimeStep);
-        void UpdateAttachedBodies(float afTimeStep);
-        void UpdateConstraints(float afTimeStep);
-        void CalculateSmoothPositions(float afTimeStep);
-        
-        void BuildRopeParticles();
+    void SetCollideAttachments(bool abX)
+    {
+        mbCollideAttachments  = abX;
+    }
+    bool GetCollideAttachments()
+    {
+        return mbCollideAttachments;
+    }
 
-        void SetAttachedBody(int alIdx, cVerletParticle *apParticle, iPhysicsBody *apBody);
-        
-        cVector3f GetStartDirection();
+    /////////////////////////////
+    // Debug
+    void RenderDebug(iLowLevelGraphics *apLowLevel);
 
-        cPidControllerVec3 mForcePid[2];
+protected:
+    bool CheckParticleBodyCollision(iPhysicsBody *apBody);
+    bool CheckSpecificDataSleeping();
+    bool CheckSpecificDataAwake();
+    void SetSpecificDataSleeping(bool abSleeping);
 
-        cPhysicsRopeAttachment mvAttachedBody[2];
+    void UpdateMovement(float afTimeStep);
+    void UpdateMotor(float afTimeStep);
+    void UpdateMotorAndAutoMove(float afTimeStep);
 
-        bool mbCollideAttachments;
+    void UpdateAttachedParticlePositions(float afTimeStep);
+    void UpdateAttachedBodies(float afTimeStep);
+    void UpdateConstraints(float afTimeStep);
+    void CalculateSmoothPositions(float afTimeStep);
 
-        int mlUniqueID;
+    void BuildRopeParticles();
 
-        bool mbMotorActive;
-        float mfMotorWantedLength;
-        float mfMotorSpeedMul;
-        float mfMotorMinSpeed;
-        float mfMotorMaxSpeed;
+    void SetAttachedBody(int alIdx, cVerletParticle *apParticle, iPhysicsBody *apBody);
 
-        tString msMotorSound;
-        float mfMotorSoundStartSpeed;
-        float mfMotorSoundStopSpeed;
-        cSoundEntity *mpMotorSoundEntity;
-        int mlMotorSoundEntityID;
+    cVector3f GetStartDirection();
 
-        bool mbAutoMoveActive;
-        float mfAutoMoveAcc;
-        float mfAutoMoveMaxSpeed;
-        float mfAutoMoveSpeed;
+    cPidControllerVec3 mForcePid[2];
 
-        float mfTotalLength;
-        float mfMinTotalLength;
-        float mfMaxTotalLength;
-        float mfSegmentLength;
+    cPhysicsRopeAttachment mvAttachedBody[2];
 
-        float mfFirstSegmentLength;
+    bool mbCollideAttachments;
 
-        int mlMaxIterations;
+    int mlUniqueID;
 
-        float mfStrength;
-        float mfStiffness;
-        
-        bool mbHasUpdated;
-    };
+    bool mbMotorActive;
+    float mfMotorWantedLength;
+    float mfMotorSpeedMul;
+    float mfMotorMinSpeed;
+    float mfMotorMaxSpeed;
+
+    tString msMotorSound;
+    float mfMotorSoundStartSpeed;
+    float mfMotorSoundStopSpeed;
+    cSoundEntity *mpMotorSoundEntity;
+    int mlMotorSoundEntityID;
+
+    bool mbAutoMoveActive;
+    float mfAutoMoveAcc;
+    float mfAutoMoveMaxSpeed;
+    float mfAutoMoveSpeed;
+
+    float mfTotalLength;
+    float mfMinTotalLength;
+    float mfMaxTotalLength;
+    float mfSegmentLength;
+
+    float mfFirstSegmentLength;
+
+    int mlMaxIterations;
+
+    float mfStrength;
+    float mfStiffness;
+
+    bool mbHasUpdated;
+};
 };
 #endif // HPL_PHYSICS_ROPE_H

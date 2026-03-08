@@ -4,52 +4,56 @@
 #include "graphics/MaterialType.h"
 #include "graphics/Material.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //---------------------------------------------------
-    // Decal
-    //---------------------------------------------------
+//---------------------------------------------------
+// Decal
+//---------------------------------------------------
 
-    class cMaterialType_Decal_Vars : public iMaterialVars
+class cMaterialType_Decal_Vars : public iMaterialVars
+{
+public:
+    cMaterialType_Decal_Vars() {}
+    ~cMaterialType_Decal_Vars() {}
+};
+
+//-----------------------------------------------------
+
+class cMaterialType_Decal : public iMaterialType
+{
+public:
+    cMaterialType_Decal(cGraphics *apGraphics, cResources *apResources);
+    ~cMaterialType_Decal();
+
+    void DestroyProgram(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, char alSkeleton);
+
+    bool SupportsHWSkinning()
     {
-    public:
-        cMaterialType_Decal_Vars(){}
-        ~cMaterialType_Decal_Vars(){}
-       };
+        return false;
+    }
 
-    //-----------------------------------------------------
+    iTexture* GetTextureForUnit(cMaterial *apMaterial,eMaterialRenderMode aRenderMode, int alUnit);
+    iTexture* GetSpecialTexture(cMaterial *apMaterial, eMaterialRenderMode aRenderMode,iRenderer *apRenderer, int alUnit);
 
-    class cMaterialType_Decal : public iMaterialType
-    {
-    public:
-        cMaterialType_Decal(cGraphics *apGraphics, cResources *apResources);
-        ~cMaterialType_Decal();
+    iGpuProgram* GetGpuProgram(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, char alSkeleton);
 
-        void DestroyProgram(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, char alSkeleton);
+    void SetupTypeSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram,iRenderer *apRenderer);
+    void SetupMaterialSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, cMaterial *apMaterial,iRenderer *apRenderer);
+    void SetupObjectSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, iRenderable *apObject,iRenderer *apRenderer);
 
-        bool SupportsHWSkinning(){ return false; }
+    iMaterialVars* CreateSpecificVariables();
+    void LoadVariables(cMaterial *apMaterial, cResourceVarsObject *apVars);
+    void GetVariableValues(cMaterial* apMaterial, cResourceVarsObject* apVars);
 
-        iTexture* GetTextureForUnit(cMaterial *apMaterial,eMaterialRenderMode aRenderMode, int alUnit);
-        iTexture* GetSpecialTexture(cMaterial *apMaterial, eMaterialRenderMode aRenderMode,iRenderer *apRenderer, int alUnit);
-        
-        iGpuProgram* GetGpuProgram(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, char alSkeleton);
+    void CompileMaterialSpecifics(cMaterial *apMaterial);
 
-        void SetupTypeSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram,iRenderer *apRenderer);
-        void SetupMaterialSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, cMaterial *apMaterial,iRenderer *apRenderer);
-        void SetupObjectSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, iRenderable *apObject,iRenderer *apRenderer);
+private:
+    void LoadData();
+    void DestroyData();
+};
 
-        iMaterialVars* CreateSpecificVariables();
-        void LoadVariables(cMaterial *apMaterial, cResourceVarsObject *apVars);
-        void GetVariableValues(cMaterial* apMaterial, cResourceVarsObject* apVars);
-
-        void CompileMaterialSpecifics(cMaterial *apMaterial);
-    
-    private:
-        void LoadData();
-        void DestroyData();
-    };
-
-    //---------------------------------------------------
+//---------------------------------------------------
 
 };
 #endif // HPL_MATERIAL_DECAL_H

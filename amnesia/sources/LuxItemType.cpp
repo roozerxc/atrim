@@ -31,7 +31,7 @@ iLuxItemType::iLuxItemType(const tString& asName, eLuxItemType aType)
 
 iLuxItemType::~iLuxItemType()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -54,7 +54,7 @@ void iLuxItemType::AddCompletionAmount(int alAmount)
 
 cLuxItemType_Puzzle::cLuxItemType_Puzzle() : iLuxItemType("Puzzle", eLuxItemType_Puzzle)
 {
-    
+
 }
 
 
@@ -190,7 +190,7 @@ bool cLuxItemType_Diary::BeforeAddItem(cLuxInventory_Item *apItem)
     if(sCallbackFunc != "")
     {
         cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    
+
         pMap->RunScript(sCallbackFunc+"(\""+apItem->GetName()+ "\","+ cString::ToString(lDiaryIdx)+")" );
     }
 

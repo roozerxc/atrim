@@ -10,69 +10,87 @@
 #include "math/MathTypes.h"
 #include "graphics/GPUShader.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cCGShader : public iGpuShader
+class cCGShader : public iGpuShader
+{
+public:
+    cCGShader(tString asName, CGcontext aContext,eGpuShaderType aType);
+    ~cCGShader();
+
+    bool Reload();
+    void Unload();
+    void Destroy();
+
+    tString GetProgramName()
     {
-    public:
-        cCGShader(tString asName, CGcontext aContext,eGpuShaderType aType);
-        ~cCGShader();
+        return msName;
+    }
 
-        bool Reload();
-        void Unload();
-        void Destroy();
+    bool CreateFromFile(const tString& asFile, const tString& asEntry="main");
 
-        tString GetProgramName(){ return msName; }
+    void Bind();
+    void UnBind();
 
-        bool CreateFromFile(const tString& asFile, const tString& asEntry="main");
+    int GetVariableId(const tString& asName);
 
-        void Bind();
-        void UnBind();
+    bool SetFloat(int alVarId, float afX);
+    bool SetVec2f(int alVarId, float afX,float afY);
+    bool SetVec3f(int alVarId, float afX,float afY,float afZ);
+    bool SetVec4f(int alVarId, float afX,float afY,float afZ, float afW);
 
-        int GetVariableId(const tString& asName);
+    bool SetMatrixf(int alVarId, const cMatrixf& mMtx);
+    bool SetMatrixf(int alVarId, eGpuShaderMatrix mType, eGpuShaderMatrixOp mOp);
 
-        bool SetFloat(int alVarId, float afX);
-        bool SetVec2f(int alVarId, float afX,float afY);
-        bool SetVec3f(int alVarId, float afX,float afY,float afZ);
-        bool SetVec4f(int alVarId, float afX,float afY,float afZ, float afW);
+    bool SetTexture(int alVarId,iTexture* apTexture, bool abAutoDisable=true);
+    bool SetTextureToUnit(int alUnit, iTexture* apTexture);
 
-        bool SetMatrixf(int alVarId, const cMatrixf& mMtx);
-        bool SetMatrixf(int alVarId, eGpuShaderMatrix mType, eGpuShaderMatrixOp mOp);
 
-        bool SetTexture(int alVarId,iTexture* apTexture, bool abAutoDisable=true);
-        bool SetTextureToUnit(int alUnit, iTexture* apTexture);
+    /// CG SPECIFIC //////////////////////
 
-        
-        /// CG SPECIFIC //////////////////////
+    CGprogram GetProgram()
+    {
+        return mProgram;
+    }
+    CGprofile GetProfile()
+    {
+        return mProfile;
+    }
 
-        CGprogram GetProgram(){ return mProgram;}
-        CGprofile GetProfile(){ return mProfile;}
+    static void SetVProfile(tString asProfile)
+    {
+        msForceVP = asProfile;
+    }
+    static void SetFProfile(tString asProfile)
+    {
+        msForceFP = asProfile;
+    }
+    static tString &GetVProfile()
+    {
+        return msForceVP;
+    }
+    static tString &GetFProfile()
+    {
+        return msForceFP;
+    }
 
-        static void SetVProfile(tString asProfile) {
-            msForceVP = asProfile;
-        }
-        static void SetFProfile(tString asProfile) {
-            msForceFP = asProfile;
-        }
-        static tString &GetVProfile(){ return msForceVP; }
-        static tString &GetFProfile(){ return msForceFP; }
+protected:
+    CGcontext mContext;
 
-    protected:
-        CGcontext mContext;
+    tString msName;
+    tString msFile;
+    tString msEntry;
+    CGprogram mProgram;
+    CGprofile mProfile;
 
-        tString msName;
-        tString msFile;
-        tString msEntry;
-        CGprogram mProgram;
-        CGprofile mProfile;
+    std::vector<CGparameter> mvParameters;
 
-        std::vector<CGparameter> mvParameters;
+    CGparameter mvTexUnitParam[kMaxTextureUnits];
 
-        CGparameter mvTexUnitParam[kMaxTextureUnits];
-    
 
-        static tString msForceFP;
-        static tString msForceVP;
-    };
+    static tString msForceFP;
+    static tString msForceVP;
+};
 };
 #endif // HPL_CGSHADER_H

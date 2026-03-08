@@ -45,7 +45,7 @@ void cLuxAreaLoader_SlimeDamage::LoadVariables(iLuxArea *apArea, cWorld *apWorld
     pFlashArea->msCallback = GetVarString("Callback","");
 
     pFlashArea->mfCheckCollisionCount = cMath::RandRectf(pFlashArea->mfMinCheckAttackTime, pFlashArea->mfMaxCheckAttackTime);
-    
+
     //Load from config file.
     tString sPrefix = "SlimeType" + cString::ToString(pFlashArea->mlSlimeType);
 
@@ -120,7 +120,7 @@ void cLuxArea_SlimeDamage::OnUpdate(float afTimeStep)
                 pPS->SetPosition(mpBody->GetLocalPosition());
             }
         }
-        
+
         /////////////////////////
         //ScreenShake
         gpBase->mpEffectHandler->GetScreenShake()->Start(mfScreenShakeAmount, 0.5f, 0.1f,0.3f);
@@ -197,7 +197,7 @@ void cLuxArea_SlimeDamage::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 {
     super_class::SaveToSaveData(apSaveData);
     cLuxArea_SlimeDamage_SaveData *pData = static_cast<cLuxArea_SlimeDamage_SaveData*>(apSaveData);
-    
+
     kCopyToVar(pData, mlSlimeType);
 
     kCopyToVar(pData, mfMinCheckAttackTime);

@@ -16,7 +16,7 @@ void cLuxAreaRopeLoader::Load(const tString &asName, int alID, bool abActive, co
 {
     cLuxMap *pMap = gpBase->mpCurrentMapLoading;
     if(pMap==NULL) return;
-    
+
     cLuxRope *pRope = hplNew(cLuxRope, (asName, alID,pMap));
 
 
@@ -24,16 +24,16 @@ void cLuxAreaRopeLoader::Load(const tString &asName, int alID, bool abActive, co
     //Set Properties
     pRope->mvStartPos = a_mtxTransform.GetTranslation();
 
-    pRope->msEndPosNode = GetVarString("EndPosNode",""); 
-    pRope->msStartBody = GetVarString("StartBody",""); 
+    pRope->msEndPosNode = GetVarString("EndPosNode","");
+    pRope->msStartBody = GetVarString("StartBody","");
     pRope->msEndBody = GetVarString("EndBody","");
 
-    pRope->mbAutoMove = GetVarBool("AutoMove",false); 
-    pRope->mfAutoMoveAcc = GetVarFloat("AutoMoveAcc",0); 
-    pRope->mfAutoMoveMaxSpeed = GetVarFloat("AutoMoveMaxSpeed",0); 
+    pRope->mbAutoMove = GetVarBool("AutoMove",false);
+    pRope->mfAutoMoveAcc = GetVarFloat("AutoMoveAcc",0);
+    pRope->mfAutoMoveMaxSpeed = GetVarFloat("AutoMoveMaxSpeed",0);
 
-    pRope->mfMinTotalLength = GetVarFloat("MinTotalLength",0); 
-    pRope->mfMaxTotalLength = GetVarFloat("MaxTotalLength",0); 
+    pRope->mfMinTotalLength = GetVarFloat("MinTotalLength",0);
+    pRope->mfMaxTotalLength = GetVarFloat("MaxTotalLength",0);
 
     //Load settings file
     tString sFile = GetVarString("RopeFile", "");
@@ -45,39 +45,39 @@ void cLuxAreaRopeLoader::Load(const tString &asName, int alID, bool abActive, co
             Error("Could not load '%s' for rope '%s'. Using set variables instead!\n", sFile.c_str(), asName.c_str());
     }
 
-    // From XML 
+    // From XML
     if(pDoc)
     {
-        pRope->mfSegmentLength = pDoc->GetAttributeFloat("SegmentLength",0); 
-        pRope->mfDamping = pDoc->GetAttributeFloat("Damping",0); 
-        pRope->mfStrength = pDoc->GetAttributeFloat("Strength",0); 
-        pRope->mfStiffness = pDoc->GetAttributeFloat("Stiffness",0); 
-        pRope->msMaterial = pDoc->GetAttributeString("Material",""); 
-        pRope->mfRadius = pDoc->GetAttributeFloat("Radius",0); 
-        pRope->mfLengthTileAmount = pDoc->GetAttributeFloat("LengthTileAmount",0); 
-        pRope->mfLengthTileSize = pDoc->GetAttributeFloat("LengthTileSize",0); 
-        pRope->msSound = pDoc->GetAttributeString("Sound",""); 
-        pRope->mfSoundStartSpeed = pDoc->GetAttributeFloat("SoundStartSpeed",0); 
-        pRope->mfSoundStopSpeed = pDoc->GetAttributeFloat("SoundStopSpeed",0); 
+        pRope->mfSegmentLength = pDoc->GetAttributeFloat("SegmentLength",0);
+        pRope->mfDamping = pDoc->GetAttributeFloat("Damping",0);
+        pRope->mfStrength = pDoc->GetAttributeFloat("Strength",0);
+        pRope->mfStiffness = pDoc->GetAttributeFloat("Stiffness",0);
+        pRope->msMaterial = pDoc->GetAttributeString("Material","");
+        pRope->mfRadius = pDoc->GetAttributeFloat("Radius",0);
+        pRope->mfLengthTileAmount = pDoc->GetAttributeFloat("LengthTileAmount",0);
+        pRope->mfLengthTileSize = pDoc->GetAttributeFloat("LengthTileSize",0);
+        pRope->msSound = pDoc->GetAttributeString("Sound","");
+        pRope->mfSoundStartSpeed = pDoc->GetAttributeFloat("SoundStartSpeed",0);
+        pRope->mfSoundStopSpeed = pDoc->GetAttributeFloat("SoundStopSpeed",0);
 
         gpBase->mpEngine->GetResources()->DestroyXmlDocument(pDoc);
     }
     //From Area variables
     else
     {
-        pRope->mfSegmentLength = GetVarFloat("SegmentLength",0); 
-        pRope->mfDamping = GetVarFloat("Damping",0); 
-        pRope->mfStrength = GetVarFloat("Strength",0); 
-        pRope->mfStiffness = GetVarFloat("Stiffness",0); 
-        pRope->msMaterial = GetVarString("Material",""); 
-        pRope->mfRadius = GetVarFloat("Radius",0); 
-        pRope->mfLengthTileAmount = GetVarFloat("LengthTileAmount",0); 
-        pRope->mfLengthTileSize = GetVarFloat("LengthTileSize",0); 
-        pRope->msSound = GetVarString("Sound",""); 
-        pRope->mfSoundStartSpeed = GetVarFloat("SoundStartSpeed",0); 
-        pRope->mfSoundStopSpeed = GetVarFloat("SoundStopSpeed",0); 
+        pRope->mfSegmentLength = GetVarFloat("SegmentLength",0);
+        pRope->mfDamping = GetVarFloat("Damping",0);
+        pRope->mfStrength = GetVarFloat("Strength",0);
+        pRope->mfStiffness = GetVarFloat("Stiffness",0);
+        pRope->msMaterial = GetVarString("Material","");
+        pRope->mfRadius = GetVarFloat("Radius",0);
+        pRope->mfLengthTileAmount = GetVarFloat("LengthTileAmount",0);
+        pRope->mfLengthTileSize = GetVarFloat("LengthTileSize",0);
+        pRope->msSound = GetVarString("Sound","");
+        pRope->mfSoundStartSpeed = GetVarFloat("SoundStartSpeed",0);
+        pRope->mfSoundStopSpeed = GetVarFloat("SoundStopSpeed",0);
     }
-        
+
 
     //////////////////////////
     //Add to map
@@ -137,7 +137,7 @@ void cLuxRope::AfterWorldLoad()
             if(mpRopeGfx==NULL) Error("Cannot find rope gfx entity with ID %d for lux rope '%s'\n", mlID, msName.c_str());
         }
 
-        return; 
+        return;
     }
 
     mbRopeCreated = true;
@@ -150,14 +150,14 @@ void cLuxRope::AfterWorldLoad()
         Error("Could not find end pos '%s' for rope '%s'\n", msEndPosNode.c_str(), msName.c_str());
         return;
     }
-    
+
     mvEndPos = pPosNode->GetPosition();
 
     /////////////////////////
     // Get Bodies
     iPhysicsBody *pStartBody = NULL;
     if(msStartBody != "") pStartBody = GetBody(msStartBody);
-    
+
     iPhysicsBody *pEndBody = NULL;
     if(msEndBody != "") pEndBody = GetBody(msEndBody);
 
@@ -187,13 +187,13 @@ void cLuxRope::AfterWorldLoad()
         if(pStartBody->GetMass() != 0)
             mpRope->GetStartParticle()->SetInvMass(1.0f);
     }
-    
+
     //End body
     if(pEndBody!=NULL)
     {
         mpRope->SetAttachedEndBody(pEndBody);
     }
-    
+
     /////////////////////////
     // Create Graphical Rope
     cResources *pResources = gpBase->mpEngine->GetResources();
@@ -326,7 +326,7 @@ void cLuxRope::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     kCopyToVar(pData, mvStartPos);
     kCopyToVar(pData, mvEndPos);
 
-    kCopyToVar(pData, msEndPosNode); 
+    kCopyToVar(pData, msEndPosNode);
     kCopyToVar(pData, msStartBody);
     kCopyToVar(pData, msEndBody);
 
@@ -365,7 +365,7 @@ void cLuxRope::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     kCopyFromVar(pData, mvStartPos);
     kCopyFromVar(pData, mvEndPos);
 
-    kCopyFromVar(pData, msEndPosNode); 
+    kCopyFromVar(pData, msEndPosNode);
     kCopyFromVar(pData, msStartBody);
     kCopyFromVar(pData, msEndBody);
 

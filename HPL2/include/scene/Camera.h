@@ -5,228 +5,310 @@
 #include "math/Frustum.h"
 #include "scene/Node3D.h"
 
-namespace hpl {
-    
-    //--------------------------------------------
+namespace hpl
+{
 
-    enum eCameraMoveMode
+//--------------------------------------------
+
+enum eCameraMoveMode
+{
+    eCameraMoveMode_Walk,
+    eCameraMoveMode_Fly,
+    eCameraMoveMode_LastEnum
+};
+
+enum eCameraRotateMode
+{
+    eCameraRotateMode_EulerAngles,
+    eCameraRotateMode_Matrix,
+    eCameraRotateMode_LastEnum
+};
+
+//--------------------------------------------
+
+class iLowLevelGraphics;
+class iEntity3D;
+
+class cCamera
+{
+public:
+    cCamera();
+    ~cCamera();
+
+    const cVector3f& GetPosition()const
     {
-        eCameraMoveMode_Walk,
-        eCameraMoveMode_Fly,
-        eCameraMoveMode_LastEnum
-    };
-    
-    enum eCameraRotateMode
+        return mvPosition;
+    }
+    void SetPosition(const cVector3f& avPos);
+
+    /**
+     * Move forward (or back) according to the move mode.
+     * \param afDist
+     */
+    void MoveForward(float afDist);
+    /**
+    * Move right (or left) according to the move mode.
+    * \param afDist
+    */
+    void MoveRight(float afDist);
+    /**
+    * Move up (or down) according to the move mode.
+    * \param afDist
+    */
+    void MoveUp(float afDist);
+
+    void SetFOV(float afAngle);
+    float GetFOV()
     {
-        eCameraRotateMode_EulerAngles,
-        eCameraRotateMode_Matrix,
-        eCameraRotateMode_LastEnum
-    };
+        return mfFOV;
+    }
 
-    //--------------------------------------------
-
-    class iLowLevelGraphics;
-    class iEntity3D;
-    
-    class cCamera
+    void SetAspect(float afSpect);
+    float GetAspect()
     {
-    public:
-        cCamera();
-        ~cCamera();
+        return mfAspect;
+    }
 
-        const cVector3f& GetPosition()const{return mvPosition;}
-        void SetPosition(const cVector3f& avPos);
+    void SetFarClipPlane(float afX);
+    float GetFarClipPlane()
+    {
+        return mfFarClipPlane;
+    }
 
-        /**
-         * Move forward (or back) according to the move mode.
-         * \param afDist 
-         */
-        void MoveForward(float afDist);
-        /**
-        * Move right (or left) according to the move mode.
-        * \param afDist 
-        */
-        void MoveRight(float afDist);
-        /**
-        * Move up (or down) according to the move mode.
-        * \param afDist 
-        */
-        void MoveUp(float afDist);
+    void SetNearClipPlane(float afX);
+    float GetNearClipPlane()
+    {
+        return mfNearClipPlane;
+    }
 
-        void SetFOV(float afAngle);
-        float GetFOV() { return mfFOV;}
+    void SetProjectionType(eProjectionType aType);
+    eProjectionType GetProjectionType()
+    {
+        return mProjectionType;
+    }
 
-        void SetAspect(float afSpect);
-        float GetAspect() { return mfAspect;}
+    void SetOrthoViewSize(const cVector2f &avSize);
+    const cVector2f& GetOrthoViewSize()
+    {
+        return mvViewSize;
+    }
 
-        void SetFarClipPlane(float afX);
-        float GetFarClipPlane() { return mfFarClipPlane;}
-        
-        void SetNearClipPlane(float afX);
-        float GetNearClipPlane() { return mfNearClipPlane;}
+    /**
+     * This sets the far plane so that no far clipping is made.
+     * The FarClipPlane is still used for creating bounding box and frustum and
+     * should be set to some value.
+     */
+    void SetInifintiveFarPlane(bool abX)
+    {
+        mbInfFarPlane = abX;
+        mbProjectionUpdated = true;
+    }
+    bool GetInifintiveFarPlane()
+    {
+        return mbInfFarPlane;
+    }
 
-        void SetProjectionType(eProjectionType aType);
-        eProjectionType GetProjectionType() { return mProjectionType; }
+    cFrustum* GetFrustum();
 
-        void SetOrthoViewSize(const cVector2f &avSize);
-        const cVector2f& GetOrthoViewSize(){ return mvViewSize;}
-        
-        /**
-         * This sets the far plane so that no far clipping is made.
-         * The FarClipPlane is still used for creating bounding box and frustum and 
-         * should be set to some value.
-         */
-        void SetInifintiveFarPlane(bool abX){ mbInfFarPlane = abX; mbProjectionUpdated = true;}
-        bool GetInifintiveFarPlane(){ return mbInfFarPlane;}
+    eCameraRotateMode GetRotateMode()
+    {
+        return mRotateMode;
+    }
 
-        cFrustum* GetFrustum();
+    eCameraMoveMode GetMoveMode()
+    {
+        return mMoveMode;
+    }
+    /**
+    * Set the mode to calculate the rotation angles.
+    * EulerAngles: Yaw, Pitch and Roll are used.
+    * Matrix: The matrix is changed directly.
+    */
+    void SetRotateMode(eCameraRotateMode aMode);
+    /**
+    * Set the mode to calculate movement.
+    * Walk: only moving in the XZ plane
+    * Fly: moving in the dir the camera is facing.
+    */
+    void SetMoveMode(eCameraMoveMode aMode);
 
-        eCameraRotateMode GetRotateMode(){return mRotateMode;}
-        
-        eCameraMoveMode GetMoveMode(){return mMoveMode;}
-        /**
-        * Set the mode to calculate the rotation angles.
-        * EulerAngles: Yaw, Pitch and Roll are used.
-        * Matrix: The matrix is changed directly.
-        */
-        void SetRotateMode(eCameraRotateMode aMode);
-        /**
-        * Set the mode to calculate movement.
-        * Walk: only moving in the XZ plane
-        * Fly: moving in the dir the camera is facing.
-        */
-        void SetMoveMode(eCameraMoveMode aMode);
+    /**
+     * Resets all rotation
+     */
+    void ResetRotation();
 
-        /**
-         * Resets all rotation
-         */
-        void ResetRotation();
-        
-        /**
-         * Unproject the screen coordinate to a world space position and direction
-        */
-        void UnProject(cVector3f *apPosition, cVector3f *apDirection, const cVector2f& avScreenPos, const cVector2f& avVirtualScreenSize=1);
-        void UnProjectHelper(cVector3f* apPosition, cVector3f* apDirection, const cVector2f& avScreenPos, const cVector2f& avVirtualScreenSize,
-                             const cMatrixf& amtxCameraRotation,
-                             const cVector3f& avCameraPos, const cVector3f& avCameraFwd, const cVector3f& avCameraUp, const cVector3f& avCameraRgt);
+    /**
+     * Unproject the screen coordinate to a world space position and direction
+    */
+    void UnProject(cVector3f *apPosition, cVector3f *apDirection, const cVector2f& avScreenPos, const cVector2f& avVirtualScreenSize=1);
+    void UnProjectHelper(cVector3f* apPosition, cVector3f* apDirection, const cVector2f& avScreenPos, const cVector2f& avVirtualScreenSize,
+                         const cMatrixf& amtxCameraRotation,
+                         const cVector3f& avCameraPos, const cVector3f& avCameraFwd, const cVector3f& avCameraUp, const cVector3f& avCameraRgt);
 
-        void AttachEntity(iEntity3D *apEntity);
-        void RemoveEntity(iEntity3D *apEntity);
-        cNode3D* GetAttachmentNode(){ return &mNode;}
-        void ClearAttachedEntities();
+    void AttachEntity(iEntity3D *apEntity);
+    void RemoveEntity(iEntity3D *apEntity);
+    cNode3D* GetAttachmentNode()
+    {
+        return &mNode;
+    }
+    void ClearAttachedEntities();
 
-        //////////////////////////////////////////////////
-        ////////// EULER ANGLES ROTATION /////////////////
-        //////////////////////////////////////////////////
-        
-        void SetPitch(float afAngle);
-        void SetYaw(float afAngle);
-        void SetRoll(float afAngle);
-        
-        void AddPitch(float afAngle);
-        void AddYaw(float afAngle);
-        void AddRoll(float afAngle);
+    //////////////////////////////////////////////////
+    ////////// EULER ANGLES ROTATION /////////////////
+    //////////////////////////////////////////////////
 
-        float GetPitch() const{ return mfPitch;}
-        float GetYaw() const{ return mfYaw;}
-        float GetRoll() const{ return mfRoll;}
+    void SetPitch(float afAngle);
+    void SetYaw(float afAngle);
+    void SetRoll(float afAngle);
 
-        /**
-         * Set the limits within the pitch can move. 0 and 0 equals no limits.
-         */
-        void SetPitchLimits(float afMin, float afMax){ mfPitchLimitMin = afMin; mfPitchLimitMax = afMax; }
-        float GetPitchMinLimit(){return mfPitchLimitMin;}
-        float GetPitchMaxLimit(){return mfPitchLimitMax;}
+    void AddPitch(float afAngle);
+    void AddYaw(float afAngle);
+    void AddRoll(float afAngle);
 
-        void SetYawLimits(float afMin, float afMax){ mfYawLimitMin = afMin; mfYawLimitMax = afMax; }
-        float GetYawMinLimit(){return mfYawLimitMin;}
-        float GetYawMaxLimit(){return mfYawLimitMax;}
+    float GetPitch() const
+    {
+        return mfPitch;
+    }
+    float GetYaw() const
+    {
+        return mfYaw;
+    }
+    float GetRoll() const
+    {
+        return mfRoll;
+    }
 
-        //////////////////////////////////////////////////
-        ////////// MATRIX ROTATION ///////////////////////
-        //////////////////////////////////////////////////
+    /**
+     * Set the limits within the pitch can move. 0 and 0 equals no limits.
+     */
+    void SetPitchLimits(float afMin, float afMax)
+    {
+        mfPitchLimitMin = afMin;
+        mfPitchLimitMax = afMax;
+    }
+    float GetPitchMinLimit()
+    {
+        return mfPitchLimitMin;
+    }
+    float GetPitchMaxLimit()
+    {
+        return mfPitchLimitMax;
+    }
 
-        void SetForward(const cVector3f& avX);
-        void SetRight(const cVector3f& avX);
-        void SetUp(const cVector3f& avX);
+    void SetYawLimits(float afMin, float afMax)
+    {
+        mfYawLimitMin = afMin;
+        mfYawLimitMax = afMax;
+    }
+    float GetYawMinLimit()
+    {
+        return mfYawLimitMin;
+    }
+    float GetYawMaxLimit()
+    {
+        return mfYawLimitMax;
+    }
 
-        void SetRotationMatrix(const cMatrixf& a_mtxRot);
+    //////////////////////////////////////////////////
+    ////////// MATRIX ROTATION ///////////////////////
+    //////////////////////////////////////////////////
 
-        cVector3f GetForward();
-        cVector3f GetRight();
-        cVector3f GetUp();
+    void SetForward(const cVector3f& avX);
+    void SetRight(const cVector3f& avX);
+    void SetUp(const cVector3f& avX);
 
-        const cMatrixf& GetRotationMatrix() { return m_mtxMatrixRotation; }
+    void SetRotationMatrix(const cMatrixf& a_mtxRot);
 
-        //////////////////////////////////////////////////
-        ////////// PROPERTIES /////////////////
-        //////////////////////////////////////////////////
-        
-        const cMatrixf& GetViewMatrix();
-        const cMatrixf& GetProjectionMatrix();
-        
-        const cMatrixf& GetMoveMatrix();
+    cVector3f GetForward();
+    cVector3f GetRight();
+    cVector3f GetUp();
 
-        //iCamera stuff:
-        void SetModelViewMatrix(iLowLevelGraphics* apLowLevel);
-        void SetProjectionMatrix(iLowLevelGraphics* apLowLevel);
-        cVector3f GetEyePosition(); 
+    const cMatrixf& GetRotationMatrix()
+    {
+        return m_mtxMatrixRotation;
+    }
 
-        //////////////////////////////////////////////////
-        ////////// RENDER SPECIFIC ///////////////////////
-        //////////////////////////////////////////////////
-        
-        void SetPrevView(const cMatrixf &a_mtxA){ m_mtxPrevView = a_mtxA;}
-        void SetPrevProjection(const cMatrixf &a_mtxA){m_mtxPrevProjection = a_mtxA;}
-        
-        cMatrixf& GetPrevView(){ return m_mtxPrevView;}
-        cMatrixf& GetPrevProjection(){ return m_mtxPrevProjection;}
+    //////////////////////////////////////////////////
+    ////////// PROPERTIES /////////////////
+    //////////////////////////////////////////////////
 
-    private:
-        void UpdateMoveMatrix();
+    const cMatrixf& GetViewMatrix();
+    const cMatrixf& GetProjectionMatrix();
 
-        cVector3f mvPosition;
+    const cMatrixf& GetMoveMatrix();
 
-        float mfFOV;
-        float mfAspect;
-        float mfFarClipPlane;
-        float mfNearClipPlane;
+    //iCamera stuff:
+    void SetModelViewMatrix(iLowLevelGraphics* apLowLevel);
+    void SetProjectionMatrix(iLowLevelGraphics* apLowLevel);
+    cVector3f GetEyePosition();
 
-        cVector2f mvViewSize;
+    //////////////////////////////////////////////////
+    ////////// RENDER SPECIFIC ///////////////////////
+    //////////////////////////////////////////////////
 
-        eProjectionType mProjectionType;
+    void SetPrevView(const cMatrixf &a_mtxA)
+    {
+        m_mtxPrevView = a_mtxA;
+    }
+    void SetPrevProjection(const cMatrixf &a_mtxA)
+    {
+        m_mtxPrevProjection = a_mtxA;
+    }
 
-        float mfPitch;
-        float mfYaw;
-        float mfRoll;
-        float mfPitchLimitMin;
-        float mfPitchLimitMax;
-        float mfYawLimitMin;
-        float mfYawLimitMax;
-        
-        eCameraRotateMode mRotateMode;
-        eCameraMoveMode mMoveMode;
+    cMatrixf& GetPrevView()
+    {
+        return m_mtxPrevView;
+    }
+    cMatrixf& GetPrevProjection()
+    {
+        return m_mtxPrevProjection;
+    }
 
-        cMatrixf m_mtxView;
-        cMatrixf m_mtxProjection;
-        cMatrixf m_mtxMove;
+private:
+    void UpdateMoveMatrix();
 
-        cMatrixf m_mtxPrevView;
-        cMatrixf m_mtxPrevProjection;
+    cVector3f mvPosition;
 
-        cMatrixf m_mtxMatrixRotation;
+    float mfFOV;
+    float mfAspect;
+    float mfFarClipPlane;
+    float mfNearClipPlane;
 
-        cNode3D mNode;
+    cVector2f mvViewSize;
 
-        cFrustum mFrustum;
+    eProjectionType mProjectionType;
 
-        bool mbInfFarPlane;
+    float mfPitch;
+    float mfYaw;
+    float mfRoll;
+    float mfPitchLimitMin;
+    float mfPitchLimitMax;
+    float mfYawLimitMin;
+    float mfYawLimitMax;
 
-        bool mbViewUpdated;
-        bool mbProjectionUpdated;
-        bool mbMoveUpdated;
-        bool mbFrustumUpdated;
-    };
+    eCameraRotateMode mRotateMode;
+    eCameraMoveMode mMoveMode;
+
+    cMatrixf m_mtxView;
+    cMatrixf m_mtxProjection;
+    cMatrixf m_mtxMove;
+
+    cMatrixf m_mtxPrevView;
+    cMatrixf m_mtxPrevProjection;
+
+    cMatrixf m_mtxMatrixRotation;
+
+    cNode3D mNode;
+
+    cFrustum mFrustum;
+
+    bool mbInfFarPlane;
+
+    bool mbViewUpdated;
+    bool mbProjectionUpdated;
+    bool mbMoveUpdated;
+    bool mbFrustumUpdated;
+};
 
 };
 #endif // HPL_CAMERA_H

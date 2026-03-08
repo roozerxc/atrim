@@ -11,7 +11,7 @@
 class cLuxEnemyPathfinder;
 class cLuxEnemyMover;
 class cLuxProp_Object;
-      
+
 //----------------------------------------------
 
 class cLuxEnemyPatrolNode
@@ -70,10 +70,10 @@ public:
     void FromPathfinder(cLuxEnemyPathfinder *apPathfinder);
     void ToPathfinder(cLuxEnemyPathfinder *apPathfinder);
     void SetupPathfinder(cLuxEnemyPathfinder *apPathfinder);
-    
+
     bool mbMoving;
     cVector3f mvMoveGoalPos;
-    
+
     cContainerVec<int> mvPathNodeIds;
 };
 
@@ -113,7 +113,7 @@ public:
 
     bool mbHallucination;
     float mfHallucinationEndDist;
-    
+
     int mlCurrentState;
     int mlNextState;
     int mlPreviousState;
@@ -139,9 +139,9 @@ public:
     float mfDarknessGlowAlphaGoal;
 
     int mlAttackHitCounter;
-    
+
     float mfFOVMul;
-    
+
     tString msCurrentAnimName;
     bool mbAnimationIsSpeedDependant;
     float mfAnimationSpeedMul;
@@ -175,7 +175,7 @@ public:
     cLuxEnemyPathfinder_SaveData mPathfinder;
 
     cEngineCharacterBody_SaveData mCharBody;
-    
+
     cEnginePS_SaveData* GetParticleSystem(cParticleSystem* apPS);
 
     iLuxEntity* CreateEntity(cLuxMap *apMap);
@@ -197,7 +197,7 @@ enum eLuxEnemyState
     eLuxEnemyState_Eat,
 
     eLuxEnemyState_Hurt,
-    
+
     eLuxEnemyState_Hunt,
     eLuxEnemyState_HuntPause,
     eLuxEnemyState_HuntWander,
@@ -267,7 +267,7 @@ enum eLuxEnemySoundState
     eLuxEnemySoundState_Idle,
     eLuxEnemySoundState_Alert,
     eLuxEnemySoundState_Hunt,
-    
+
     eLuxEnemySoundState_LastEnum
 };
 
@@ -277,15 +277,15 @@ enum eLuxEnemySoundState
 class cLuxStateMessage
 {
 public:
-      eLuxEnemyMessage mType;
-      float mfTime;
-      float mfCount;
+    eLuxEnemyMessage mType;
+    float mfTime;
+    float mfCount;
 
-      cVector3f mvCustomValue;
-      float mfCustomValue;
-      int mlCustomValue;
+    cVector3f mvCustomValue;
+    float mfCustomValue;
+    int mlCustomValue;
 
-      eLuxEnemyState mState;
+    eLuxEnemyState mState;
 };
 
 typedef std::list<cLuxStateMessage>        tLuxStateMessageList;
@@ -309,10 +309,10 @@ typedef tLuxStateMessageList::iterator    tLuxStateMessageListIt;
 class cEnemyAttackDamageData
 {
 public:
-    cEnemyAttackDamageData() :    mfMinDamage(0),mfMaxDamage(0), mfForce(0),mfMaxImpulse(0),mlStrength(0), mfHitSpeed(3), 
-                                mDamageType(eLuxDamageType_BloodSplat),mWeaponHitType(eLuxWeaponHitType_Sword),
-                                mbCheckPlayer(true), mbCheckProps(true), msHitSound("") {}
-    
+    cEnemyAttackDamageData() :    mfMinDamage(0),mfMaxDamage(0), mfForce(0),mfMaxImpulse(0),mlStrength(0), mfHitSpeed(3),
+        mDamageType(eLuxDamageType_BloodSplat),mWeaponHitType(eLuxWeaponHitType_Sword),
+        mbCheckPlayer(true), mbCheckProps(true), msHitSound("") {}
+
     float mfMinDamage;
     float mfMaxDamage;
     float mfForce;
@@ -332,7 +332,7 @@ class cEnemyAttackSizeData
 {
 public:
     cEnemyAttackSizeData() : mlShapeIdx(-1), mvOffset(0) {}
-    
+
     int mlShapeIdx;
     cVector3f mvOffset;
 };
@@ -341,12 +341,12 @@ public:
 
 class iLuxEnemy : public iLuxEntity
 {
-typedef iLuxEntity super_class;
-friend class iLuxEnemyLoader;
-friend class cLuxEnemy_WorldCollisionCallback;
-friend class cLuxEnemyMover;
-friend class cLuxEnemyPathfinder;
-public:    
+    typedef iLuxEntity super_class;
+    friend class iLuxEnemyLoader;
+    friend class cLuxEnemy_WorldCollisionCallback;
+    friend class cLuxEnemyMover;
+    friend class cLuxEnemyPathfinder;
+public:
     iLuxEnemy(const tString &asName, int alID, cLuxMap *apMap, eLuxEnemyType aEnemyType);
     virtual ~iLuxEnemy();
 
@@ -355,14 +355,14 @@ public:
     void SetupAfterLoad(cWorld *apWorld);
     void AfterWorldLoad();
     void OnMapEnter();
-    
+
     void OnUpdate(float afTimeStep);
 
     void OnRenderSolid(cRendererCallbackFunctions* apFunctions);
 
     bool CanInteract(iPhysicsBody *apBody);
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
-    
+
     void OnConnectionStateChange(iLuxEntity *apEntity, int alState);
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
@@ -379,14 +379,14 @@ public:
 
     void SendMessage(eLuxEnemyMessage aType, float afTime=0, bool abLocalScope=false, const cVector3f& avX=0,float afX=0, int alX=0);
 
-    void PlayAnim(    const tString &asName, bool abLoop, float afFadeTime, 
-                    bool abDependsOnSpeed=false, float afSpeedMul=1.0f,
-                    bool abSyncWithPrevFrame=false,
-                    bool abOverideMoveState=true,
-                    bool abUseMoveAnimWhenCurrentIsOver=true);
+    void PlayAnim(    const tString &asName, bool abLoop, float afFadeTime,
+                      bool abDependsOnSpeed=false, float afSpeedMul=1.0f,
+                      bool abSyncWithPrevFrame=false,
+                      bool abOverideMoveState=true,
+                      bool abUseMoveAnimWhenCurrentIsOver=true);
     void FadeOutCurrentAnim(float afFadeTime);
     float ConvertAnimToAbsoluteTime(float afRelativeTimePostion);
-    
+
     cSoundEntity* PlaySound(const tString &asName);
 
     void SetPositionAtStartPos();
@@ -398,10 +398,22 @@ public:
     //////////////////////
     // Movement animation names
 
-    virtual const tString & GetBackwardAnimationName() { return msBackwardAnimationName[eLuxEnemyMoveType_Normal][mCurrentPose]; }
-    virtual const tString & GetIdleAnimationName() { return msIdleAnimationName[eLuxEnemyMoveType_Normal][mCurrentPose]; }
-    virtual const tString & GetWalkAnimationName() { return msWalkAnimationName[eLuxEnemyMoveType_Normal][mCurrentPose]; }
-    virtual const tString & GetRunAnimationName() { return msRunAnimationName[eLuxEnemyMoveType_Normal][mCurrentPose]; }
+    virtual const tString & GetBackwardAnimationName()
+    {
+        return msBackwardAnimationName[eLuxEnemyMoveType_Normal][mCurrentPose];
+    }
+    virtual const tString & GetIdleAnimationName()
+    {
+        return msIdleAnimationName[eLuxEnemyMoveType_Normal][mCurrentPose];
+    }
+    virtual const tString & GetWalkAnimationName()
+    {
+        return msWalkAnimationName[eLuxEnemyMoveType_Normal][mCurrentPose];
+    }
+    virtual const tString & GetRunAnimationName()
+    {
+        return msRunAnimationName[eLuxEnemyMoveType_Normal][mCurrentPose];
+    }
 
     //////////////////////
     //Patrol nodes
@@ -412,79 +424,193 @@ public:
     bool IsAtLastPatrolNode();
     void IncCurrentPatrolNode(bool abLoopIfAtEnd);
 
-    cLuxEnemyPatrolNode* GetPatrolNode(size_t alIdx){ return &mvPatrolNodes[alIdx];}
-    size_t GetPatrolNodeNum(){ return mvPatrolNodes.size();}
+    cLuxEnemyPatrolNode* GetPatrolNode(size_t alIdx)
+    {
+        return &mvPatrolNodes[alIdx];
+    }
+    size_t GetPatrolNodeNum()
+    {
+        return mvPatrolNodes.size();
+    }
 
     //////////////////////
     //Water
-    bool IsInWater(){ return mbInWater;}
-    float GetWaterSurfaceY(){ return mfWaterSurfaceY;}
-    cSurfaceData* GetWaterSurfaceData(){ return mpWaterSurfaceData;}
-    
-    void SetInWater(bool abX){ mbInWater = abX;}
-    void SetWaterSurfaceY(float afX){ mfWaterSurfaceY = afX;}
-    void SetWaterSurfaceData(cSurfaceData* apData){ mpWaterSurfaceData = apData;}
+    bool IsInWater()
+    {
+        return mbInWater;
+    }
+    float GetWaterSurfaceY()
+    {
+        return mfWaterSurfaceY;
+    }
+    cSurfaceData* GetWaterSurfaceData()
+    {
+        return mpWaterSurfaceData;
+    }
+
+    void SetInWater(bool abX)
+    {
+        mbInWater = abX;
+    }
+    void SetWaterSurfaceY(float afX)
+    {
+        mfWaterSurfaceY = afX;
+    }
+    void SetWaterSurfaceData(cSurfaceData* apData)
+    {
+        mpWaterSurfaceData = apData;
+    }
 
     //////////////////////
     //Properties
-    eLuxEnemyType GetEnemyType(){ return mEnemyType;}
+    eLuxEnemyType GetEnemyType()
+    {
+        return mEnemyType;
+    }
 
     void SetDisabled(bool abX);
-    bool IsDisabled(){ return mbDisabled;}
+    bool IsDisabled()
+    {
+        return mbDisabled;
+    }
 
     void SetDisableTriggers(bool abX);
-    bool GetDisableTriggers(){ return mbDisableTriggers;}
+    bool GetDisableTriggers()
+    {
+        return mbDisableTriggers;
+    }
 
-    eLuxEnemyState GetCurrentEnemyState(){ return mCurrentState;}
+    eLuxEnemyState GetCurrentEnemyState()
+    {
+        return mCurrentState;
+    }
     string& GetCurrentEnemyStateName();
 
-    bool CanSeePlayer(){ return mbCanSeePlayer;}
-    bool GetPlayerDetected(){ return mbPlayerDetected;}
-    bool GetPlayerInRange(){ return mbPlayerInRange;}
+    bool CanSeePlayer()
+    {
+        return mbCanSeePlayer;
+    }
+    bool GetPlayerDetected()
+    {
+        return mbPlayerDetected;
+    }
+    bool GetPlayerInRange()
+    {
+        return mbPlayerInRange;
+    }
 
-    float GetHealth(){ return mfHealth; }
+    float GetHealth()
+    {
+        return mfHealth;
+    }
 
-    cAnimationState* GetCurrentAnimation(){ return mpCurrentAnimation;}
+    cAnimationState* GetCurrentAnimation()
+    {
+        return mpCurrentAnimation;
+    }
 
-    const tString& GetDangerMusic() { return msDangerMusic; }
-    int GetDangerMusicPrio() { return mlDangerMusicPrio; }
+    const tString& GetDangerMusic()
+    {
+        return msDangerMusic;
+    }
+    int GetDangerMusicPrio()
+    {
+        return mlDangerMusicPrio;
+    }
 
-    const tString& GetMusic(eLuxEnemyMusic aType) { return msMusic[aType]; }
-    int GetMusicPrio(eLuxEnemyMusic aType) { return mlMusicPrio[aType]; }
+    const tString& GetMusic(eLuxEnemyMusic aType)
+    {
+        return msMusic[aType];
+    }
+    int GetMusicPrio(eLuxEnemyMusic aType)
+    {
+        return mlMusicPrio[aType];
+    }
 
-    float GetActivationDistance() { return mfActivationDistance;}
+    float GetActivationDistance()
+    {
+        return mfActivationDistance;
+    }
 
-    const tString& GetHitSound(eLuxWeaponHitType aType){ return msHitSound[aType];}    
-    const tString& GetHitPS(eLuxWeaponHitType aType){ return msHitPS[aType];}
+    const tString& GetHitSound(eLuxWeaponHitType aType)
+    {
+        return msHitSound[aType];
+    }
+    const tString& GetHitPS(eLuxWeaponHitType aType)
+    {
+        return msHitPS[aType];
+    }
 
-    int GetBodyNum(){ return 1; }
-    iPhysicsBody* GetBody(int alIdx){ return mpCharBody->GetCurrentBody();}
+    int GetBodyNum()
+    {
+        return 1;
+    }
+    iPhysicsBody* GetBody(int alIdx)
+    {
+        return mpCharBody->GetCurrentBody();
+    }
 
-    void SetIsSeenByPlayer(bool abX){ mbIsSeenByPlayer = abX;}
-    bool GetIsSeenByPlayer(){ return mbIsSeenByPlayer;}
+    void SetIsSeenByPlayer(bool abX)
+    {
+        mbIsSeenByPlayer = abX;
+    }
+    bool GetIsSeenByPlayer()
+    {
+        return mbIsSeenByPlayer;
+    }
 
-    bool CausesSanityDecrease(){ return mbCausesSanityDecrease;}
-    void SetSanityDecreaseActive(bool abX){ mbCausesSanityDecrease = abX;}
+    bool CausesSanityDecrease()
+    {
+        return mbCausesSanityDecrease;
+    }
+    void SetSanityDecreaseActive(bool abX)
+    {
+        mbCausesSanityDecrease = abX;
+    }
 
-    void SetHallucination(bool abX){ mbHallucination = abX;}
-    void SetHallucinationEndDist(float afX){ mfHallucinationEndDist = afX;}
+    void SetHallucination(bool abX)
+    {
+        mbHallucination = abX;
+    }
+    void SetHallucinationEndDist(float afX)
+    {
+        mfHallucinationEndDist = afX;
+    }
 
-    float GetInLanternLightCount(){ return mfInLanternLightCount;}
+    float GetInLanternLightCount()
+    {
+        return mfInLanternLightCount;
+    }
 
     //////////////////////
     //Callbacks
     virtual bool InRangeOfFood(iPhysicsBody *apFoodBody);
-    
+
     //////////////////////
     //Data
-    cMeshEntity * GetMeshEntity(){ return mpMeshEntity;}
-    iCharacterBody * GetCharacterBody() { return mpCharBody; }
+    cMeshEntity * GetMeshEntity()
+    {
+        return mpMeshEntity;
+    }
+    iCharacterBody * GetCharacterBody()
+    {
+        return mpCharBody;
+    }
 
-    iCollideShape* GetAttackShape(int alIdx){ return mvAttackShapes[alIdx];}
+    iCollideShape* GetAttackShape(int alIdx)
+    {
+        return mvAttackShapes[alIdx];
+    }
 
-    cLuxEnemyPathfinder* GetPathFinder(){ return mpPathfinder;}
-    cLuxEnemyMover* GetMover(){ return mpMover;}
-    
+    cLuxEnemyPathfinder* GetPathFinder()
+    {
+        return mpPathfinder;
+    }
+    cLuxEnemyMover* GetMover()
+    {
+        return mpMover;
+    }
+
     //////////////////////
     // Debug
     float DrawDebug(cGuiSet *apSet,iFontData *apFont,float afStartY);
@@ -525,9 +651,9 @@ protected:
     //////////////////////////////
     // Callbacks
     virtual bool PlayerIsDetected()=0;
-    virtual void OnSetActiveEnemySpecific(bool abX){}
-    virtual void OnResetProperties(){}
-    virtual void OnDisableTriggers(){}
+    virtual void OnSetActiveEnemySpecific(bool abX) {}
+    virtual void OnResetProperties() {}
+    virtual void OnDisableTriggers() {}
 
     /////////////////////////////////////
     // Helpers
@@ -552,7 +678,7 @@ protected:
     bool IsSeenByPlayer();
     bool IsInPlayerFovAtFeetPos(const cVector3f& avFeetPos);
     bool IsVisibleToPlayerAtFeetPos(const cVector3f& avFeetPos);
-    
+
     cVector3f GetPlayerFeetPos();
 
     float Dist2D(const cVector3f &avPos);
@@ -560,25 +686,25 @@ protected:
     float DistToChar2D(iCharacterBody *apBody);
     float AbsHeightDistToChar(iCharacterBody *apBody);
     cVector3f GetDirection2D(const cVector3f &avPos);
-    
+
     float DistToPlayer();
     float DistToPlayer2D();
     float DistToPlayer2D(const cVector3f& avPos);
     float AbsHeightDistToPlayer();
     cVector3f GetDirection2DToPlayer();
-    
+
     //gets the cos of angle between player->enemy and player move dir. 1=directly towards, -1=directly away
     float GetPlayerMovementTowardEnemyAmount();
-    
+
     bool OutsideStartRadius();
     bool InFOV(const cVector3f &avPos);
     bool PlayerInFOV();
 
     void OnSetActive(bool abX);
-    
-    
+
+
     virtual float GetDamageMul(float afAmount, int alStrength)=0;
-    virtual void OnDamage(float afAmount, int alStrength){}
+    virtual void OnDamage(float afAmount, int alStrength) {}
     virtual void OnSetupAfterLoad(cWorld *apWorld)=0;
     virtual void OnAfterWorldLoad()=0;
     virtual void UpdateEnemySpecific(float afTimeStep)=0;
@@ -665,7 +791,7 @@ protected:
     cSurfaceData* mpWaterSurfaceData;
 
     eLuxEnemyPoseType mCurrentPose;
-    
+
     //////////////
     //Data
     cWorld *mpWorld;
@@ -741,7 +867,7 @@ protected:
     cEnemyAttackDamageData mNormalAttackDamage;
     cEnemyAttackDamageData mBreakDoorAttackDamage;
     cEnemyAttackSizeData mNormalAttackSize;
-    
+
     iCharacterBody *mpCharBody;
 
     cMeshEntity *mpMeshEntity;
@@ -750,7 +876,7 @@ protected:
     std::vector<cParticleSystem*> mvParticleSystems;
     std::vector<cBillboard*> mvBillboards;
     std::vector<cBeam*> mvBeams;
-    
+
     cLuxEnemyPathfinder *mpPathfinder;
     cLuxEnemyMover *mpMover;
 
@@ -770,7 +896,7 @@ protected:
     tString msFileName;
     cMatrixf m_mtxOnLoadTransform;
     cVector3f mvOnLoadScale;
-    
+
 private:
     eLuxEnemyType mEnemyType;
 };
@@ -781,11 +907,11 @@ class iLuxEnemyLoader : public cEntityLoader_Object
 {
 public:
     iLuxEnemyLoader(const tString& asName);
-    virtual ~iLuxEnemyLoader(){}
+    virtual ~iLuxEnemyLoader() {}
 
     void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
     void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
-    
+
     virtual iLuxEnemy *CreateEnemy(const tString& asName, int alID, cLuxMap *apMap)=0;
     virtual void LoadVariables(iLuxEnemy *apEnemy, cXmlElement *apRootElem)=0;
     virtual void LoadInstanceVariables(iLuxEnemy *apEnemy, cResourceVarsObject *apInstanceVars)=0;

@@ -20,7 +20,7 @@ public:
     cVector3f mvStartPos;
     cVector3f mvEndPos;
 
-    tString msEndPosNode; 
+    tString msEndPosNode;
     tString msStartBody;
     tString msEndBody;
 
@@ -40,7 +40,7 @@ public:
     bool mbAutoMove;
     float mfAutoMoveAcc;
     float mfAutoMoveMaxSpeed;
-    
+
     ////////////////
     //Methods
     iLuxEntity* CreateEntity(cLuxMap *apMap);
@@ -50,8 +50,8 @@ public:
 
 class cLuxRope : public iLuxEntity
 {
-typedef iLuxEntity super_class;
-friend class cLuxAreaRopeLoader;
+    typedef iLuxEntity super_class;
+    friend class cLuxAreaRopeLoader;
 public:
     cLuxRope(const tString& asName, int alID, cLuxMap *apMap);
     ~cLuxRope();
@@ -67,13 +67,31 @@ public:
 
     //////////////////////
     //Quick and dirt entity implementations
-    eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos){ return eLuxFocusCrosshair_Default; }
-    iEntity3D* GetAttachEntity(){ return NULL;}
-    void GiveDamage(float afAmount, int alStrength){}
-    bool CanInteract(iPhysicsBody *apBody){ return false; }
-    bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos){ return false;}
-    int GetBodyNum(){ return 0;}
-    iPhysicsBody* GetBody(int alIdx){ return NULL;}
+    eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
+    {
+        return eLuxFocusCrosshair_Default;
+    }
+    iEntity3D* GetAttachEntity()
+    {
+        return NULL;
+    }
+    void GiveDamage(float afAmount, int alStrength) {}
+    bool CanInteract(iPhysicsBody *apBody)
+    {
+        return false;
+    }
+    bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
+    {
+        return false;
+    }
+    int GetBodyNum()
+    {
+        return 0;
+    }
+    iPhysicsBody* GetBody(int alIdx)
+    {
+        return NULL;
+    }
 
     //////////////////////
     //Save data stuff
@@ -97,10 +115,10 @@ private:
     cVector3f mvStartPos;
     cVector3f mvEndPos;
 
-    tString msEndPosNode; 
+    tString msEndPosNode;
     tString msStartBody;
     tString msEndBody;
-    
+
     float mfMinTotalLength;
     float mfMaxTotalLength;
     float mfSegmentLength;
@@ -124,8 +142,8 @@ private:
 class cLuxAreaRopeLoader : public iAreaLoader
 {
 public:
-    cLuxAreaRopeLoader(const tString& asName) : iAreaLoader(asName){}
-    virtual ~cLuxAreaRopeLoader(){}
+    cLuxAreaRopeLoader(const tString& asName) : iAreaLoader(asName) {}
+    virtual ~cLuxAreaRopeLoader() {}
 
     void Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform,cWorld *apWorld);
 };

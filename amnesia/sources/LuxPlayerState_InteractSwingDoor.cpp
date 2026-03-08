@@ -16,14 +16,14 @@
 
 cLuxPlayerState_InteractSwingDoor::cLuxPlayerState_InteractSwingDoor(cLuxPlayer *apPlayer) : iLuxPlayerState_InteractRotateBase(apPlayer, eLuxPlayerState_InteractSwingDoor)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
 
 cLuxPlayerState_InteractSwingDoor::~cLuxPlayerState_InteractSwingDoor()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -57,7 +57,7 @@ float cLuxPlayerState_InteractSwingDoor::GetSpeedAdd(cCamera *apCam)
     cVector3f vPushRotateDir = cMath::Vector3Cross(vJointToBody, vPushAmount);
 
     float fSpeedAdd = cMath::Vector3Dot(vPushRotateDir, mpCurrentJoint->GetPinDir());
-    
+
     return fSpeedAdd;
 }
 

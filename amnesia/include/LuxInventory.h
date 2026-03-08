@@ -25,45 +25,105 @@ enum eLuxInventoryFader
 
 //----------------------------------------------
 
-class cLuxInventory_Item 
+class cLuxInventory_Item
 {
 public:
     cLuxInventory_Item(const tString& asName, eLuxItemType aType, const tString& asSubType, cLuxInventory *apInventory);
     ~cLuxInventory_Item();
 
-    const tString& GetName(){ return msName; }
-    eLuxItemType GetType() { return mType;}
-    const tString& GetSubType(){ return msSubType; }
+    const tString& GetName()
+    {
+        return msName;
+    }
+    eLuxItemType GetType()
+    {
+        return mType;
+    }
+    const tString& GetSubType()
+    {
+        return msSubType;
+    }
 
-    void SetImage(cGuiGfxElement *apImage){ mpImage = apImage;}
-    cGuiGfxElement* GetImage(){ return mpImage;}
+    void SetImage(cGuiGfxElement *apImage)
+    {
+        mpImage = apImage;
+    }
+    cGuiGfxElement* GetImage()
+    {
+        return mpImage;
+    }
 
-    void SetImageName(const tString& asName){ msImageName = asName;}
-    const tString& GetImageName(){ return msImageName;}
+    void SetImageName(const tString& asName)
+    {
+        msImageName = asName;
+    }
+    const tString& GetImageName()
+    {
+        return msImageName;
+    }
 
-    void SetStringVal(const tString& asVal){ msVal = asVal;}
-    const tString& GetStringVal(){ return msVal;}
+    void SetStringVal(const tString& asVal)
+    {
+        msVal = asVal;
+    }
+    const tString& GetStringVal()
+    {
+        return msVal;
+    }
 
-    void SetExtraStringVal(const tString& asExtraVal){ msExtraVal = asExtraVal;}
-    const tString& GetExtraStringVal(){ return msExtraVal;}
+    void SetExtraStringVal(const tString& asExtraVal)
+    {
+        msExtraVal = asExtraVal;
+    }
+    const tString& GetExtraStringVal()
+    {
+        return msExtraVal;
+    }
 
     tString msImageFile;
 
-    float GetAmount(){ return mfAmount;}
-    int GetCount(){ return mlCount;}
-    const tString& GetGameNameEntry(){ return msGameNameEntry;}
-    const tString& GetGameDescEntry(){ return msGameDescEntry;}
+    float GetAmount()
+    {
+        return mfAmount;
+    }
+    int GetCount()
+    {
+        return mlCount;
+    }
+    const tString& GetGameNameEntry()
+    {
+        return msGameNameEntry;
+    }
+    const tString& GetGameDescEntry()
+    {
+        return msGameDescEntry;
+    }
 
-    void SetAmount(float afX){ mfAmount = afX;}
-    void SetCount(int alX){ mlCount = alX; }
-    void AddCount(int alX){ mlCount += alX; }
-    void SetGameNameEntry(const tString& asEntry){ msGameNameEntry =  asEntry;}
-    void SetGameDescEntry(const tString& asEntry){ msGameDescEntry =  asEntry;}
+    void SetAmount(float afX)
+    {
+        mfAmount = afX;
+    }
+    void SetCount(int alX)
+    {
+        mlCount = alX;
+    }
+    void AddCount(int alX)
+    {
+        mlCount += alX;
+    }
+    void SetGameNameEntry(const tString& asEntry)
+    {
+        msGameNameEntry =  asEntry;
+    }
+    void SetGameDescEntry(const tString& asEntry)
+    {
+        msGameDescEntry =  asEntry;
+    }
 
 private:
     cLuxInventory *mpInventory;
 
-    tString msName;    
+    tString msName;
     eLuxItemType mType;
     tString msSubType;
     tString msVal;
@@ -71,7 +131,7 @@ private:
 
     cGuiGfxElement *mpImage;
     tString msImageName;
-    
+
     int mlCount;
     float mfAmount;
     tString msGameNameEntry;
@@ -87,7 +147,10 @@ public:
     cLuxInventory_Slot(cLuxInventory *apInventory, cWidgetImage* apImage, int alIdx);
     ~cLuxInventory_Slot();
 
-    cWidgetImage* GetImageWidget() { return mpImage; }
+    cWidgetImage* GetImageWidget()
+    {
+        return mpImage;
+    }
 
 private:
     ////////////////////////
@@ -125,7 +188,7 @@ private:
 
     bool OnUIButtonDoublePress(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(OnUIButtonDoublePress);
-    
+
 
     bool OnUpdate(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(OnUpdate);
@@ -151,13 +214,13 @@ private:
 
 class cLuxInventory : public iLuxUpdateable
 {
-friend class cLuxInventory_SaveData;
-friend class cLuxInventory_Slot;
-friend class cLuxInventory_Item;
-public:    
+    friend class cLuxInventory_SaveData;
+    friend class cLuxInventory_Slot;
+    friend class cLuxInventory_Item;
+public:
     cLuxInventory();
     ~cLuxInventory();
-    
+
     ////////////////////////
     // General
     void OnClearFonts();
@@ -165,7 +228,7 @@ public:
 
     void OnStart();
     void Reset();
-    
+
     void OnGameStart();
 
     void Update(float afTimeStep);
@@ -175,7 +238,10 @@ public:
 
     void OnDraw(float afFrameTime);
 
-    cGuiSet* GetSet() { return mpGuiSet; }
+    cGuiSet* GetSet()
+    {
+        return mpGuiSet;
+    }
 
     void ExitPressed();
 
@@ -191,7 +257,10 @@ public:
     void RemoveItem(cLuxInventory_Item *apItem);
     void RemoveItemOfType(eLuxItemType aType);
     int GetItemIndex(cLuxInventory_Item *apItem);
-    bool ItemExists(cLuxInventory_Item *apItem){ return GetItemIndex(apItem) >= 0; }
+    bool ItemExists(cLuxInventory_Item *apItem)
+    {
+        return GetItemIndex(apItem) >= 0;
+    }
     cLuxInventory_Item* GetItem(const tString& asName);
     cLuxInventory_Item* GetItemFromSubType(const tString& asSubType);
     bool HasItemOfType(eLuxItemType aType);
@@ -211,36 +280,72 @@ public:
 
     ////////////////////////
     // Properties
-    void SetDisabled(bool abX){ mbDisabled = abX;}
-    bool GetDisabled(){ return mbDisabled;}
+    void SetDisabled(bool abX)
+    {
+        mbDisabled = abX;
+    }
+    bool GetDisabled()
+    {
+        return mbDisabled;
+    }
 
     void SetDescText(const tWString &asHeader, const tWString &asNormal);
     /**
      * if life time is <=0 then the life time is calculated based on string length.
      */
     void SetMessageText(const tWString &asText, float afLifeTime);
-    bool GetMessageActive(){ return mbMessageActive;}
+    bool GetMessageActive()
+    {
+        return mbMessageActive;
+    }
 
     void SetPickedItem(cLuxInventory_Item *apItem, const cVector2f& avOffset);
-    cLuxInventory_Item* GetPickedItem(){ return mpPickedItem;}
+    cLuxInventory_Item* GetPickedItem()
+    {
+        return mpPickedItem;
+    }
 
     void SetCurrentWidget(iWidget *apWidget);
-    iWidget* GetCurrentWidget(){ return mpCurrentWidget;}
+    iWidget* GetCurrentWidget()
+    {
+        return mpCurrentWidget;
+    }
 
-    void SetEnterFromJournal(bool abX){ mbEnterFromJournal = abX;}
+    void SetEnterFromJournal(bool abX)
+    {
+        mbEnterFromJournal = abX;
+    }
 
-    cLuxInventory_Item* GetItem(int alIdx){ return mvItems[alIdx];}
-    int GetItemNum(){ return (int)mvItems.size();}
-    
+    cLuxInventory_Item* GetItem(int alIdx)
+    {
+        return mvItems[alIdx];
+    }
+    int GetItemNum()
+    {
+        return (int)mvItems.size();
+    }
+
     void SetEquippedHandItem(cLuxInventory_Item *apItem);
-    cLuxInventory_Item* GetEquippedHandItem(){ return mpEquippedItem; }
+    cLuxInventory_Item* GetEquippedHandItem()
+    {
+        return mpEquippedItem;
+    }
 
     eLuxItemType GetItemTypeFromString(const tString& asType);
-    iLuxItemType * GetItemTypeData(eLuxItemType aType){ return mvItemTypes[aType];}
+    iLuxItemType * GetItemTypeData(eLuxItemType aType)
+    {
+        return mvItemTypes[aType];
+    }
 
 
-    bool GetPickedItemMoved() { return mbPickedObjectMoved; }
-    double GetItemPickedAt() { return mfPickedUpAt; }
+    bool GetPickedItemMoved()
+    {
+        return mbPickedObjectMoved;
+    }
+    double GetItemPickedAt()
+    {
+        return mfPickedUpAt;
+    }
 
 #ifdef USE_GAMEPAD
     void AppDeviceWasPlugged();
@@ -345,7 +450,7 @@ private:
     bool InventoryWidgetOnLoseUINavFocus(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(InventoryWidgetOnLoseUINavFocus);
 
-    
+
     bool InventoryDrawFocus(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(InventoryDrawFocus);
 
@@ -359,16 +464,16 @@ private:
      * \param avOffset Vector3f holding an offset value (useful when wanting to adjust frame z-value for example)
      * \param avSize Vector2f that states size for the base rectangle(-1 in will use widget size)
      */
-    void DrawFrameAroundWidget(cGuiGfxElement** apGfxCorners, cGuiGfxElement** apGfxBorders, 
-                                    iWidget* apWidget, 
-                                    const cVector2f& avHPadding=0, const cVector2f& avVPadding=0, 
-                                    const cVector3f& avOffset=0, const cVector2f& avSize=-1);
+    void DrawFrameAroundWidget(cGuiGfxElement** apGfxCorners, cGuiGfxElement** apGfxBorders,
+                               iWidget* apWidget,
+                               const cVector2f& avHPadding=0, const cVector2f& avVPadding=0,
+                               const cVector3f& avOffset=0, const cVector2f& avSize=-1);
 
     /**
      * Draws a frame around a rectangle given by a position and size
      */
-    void DrawFrame(cGuiGfxElement** apGfxFrameCorners, cGuiGfxElement** apGfxFrameBorders, 
-                    const cVector3f& avPosition, const cVector2f& avSize);
+    void DrawFrame(cGuiGfxElement** apGfxFrameCorners, cGuiGfxElement** apGfxFrameBorders,
+                   const cVector3f& avPosition, const cVector2f& avSize);
 
     bool OnDrawInvWidget(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(OnDrawInvWidget);
@@ -377,13 +482,13 @@ private:
     // Settings
     float mfFadeInTime;
     float mfFadeOutTime;
-    
+
     ///////////////////////
     // Data
     cGui *mpGui;
     cScene *mpScene;
     cGraphics *mpGraphics;
-    
+
     cGuiSkin *mpGuiSkin;
     cGuiSet *mpGuiSet;
 
@@ -398,9 +503,9 @@ private:
 
     std::vector<cLuxInventory_Slot*> mvSlots;
     std::vector<cLuxInventory_Item*> mvItems;
-    
+
     std::vector<cWidgetImage*> mvImageWidgets;
-    
+
     cVector2f mvScreenSize;
     cVector2f mvGuiSetCenterSize;
     cVector2f mvGuiSetSize;
@@ -549,7 +654,7 @@ private:
     cLuxAlphaFader mvAlphaFader[eLuxInventoryFader_LastEnum];
 
     tLuxCombineItemsCallbackList mlstCombineCallbacks;
-    
+
     tWString msHeaderText;
     tWString msNormalText;
 
@@ -561,7 +666,7 @@ private:
     float mfMessageTextLife;
     float mfMessageTextAlpha;
     bool mbMessageActive;
-    
+
     double mfPickedUpAt;
     bool mbPickedObjectMoved;
     cLuxInventory_Item *mpPickedItem;

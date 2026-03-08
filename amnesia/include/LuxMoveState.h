@@ -14,7 +14,7 @@ class cLuxPlayer;
 
 class iLuxMoveState
 {
-public:    
+public:
     iLuxMoveState(cLuxPlayer *apPlayer);
     virtual ~iLuxMoveState();
 
@@ -36,7 +36,7 @@ public:
     virtual void OnJump(bool abActive)=0;
 
     virtual void OnDraw(float afFrameTime)=0;
-    
+
 protected:
     virtual void OnUpdate(float afTimeStep)=0;
 

@@ -9,13 +9,13 @@
 //----------------------------------------------
 
 class cLuxAction
-{    
+{
 public:
-    cLuxAction() : msName(""){}
-    cLuxAction(const tString& asName, 
-               int alId, 
-               bool abConfigurable, 
-               eLuxActionCategory aCat) : msName(asName), mlId(alId), mbConfigurable(abConfigurable), mCat(aCat){}
+    cLuxAction() : msName("") {}
+    cLuxAction(const tString& asName,
+               int alId,
+               bool abConfigurable,
+               eLuxActionCategory aCat) : msName(asName), mlId(alId), mbConfigurable(abConfigurable), mCat(aCat) {}
 
     tString msName;
     int mlId;
@@ -31,11 +31,11 @@ typedef tLuxActionVec::iterator tLuxActionVecIt;
 class cLuxInput
 {
 public:
-    cLuxInput() : msInputType(""){}
-    cLuxInput(const tString& asInputType, int alValue, int alActionId) : 
-                msInputType(asInputType), mlValue(alValue), mlActionId(alActionId){}
+    cLuxInput() : msInputType("") {}
+    cLuxInput(const tString& asInputType, int alValue, int alActionId) :
+        msInputType(asInputType), mlValue(alValue), mlActionId(alActionId) {}
 
-    
+
     tString msInputType;
     int mlValue;
     int mlActionId;
@@ -53,13 +53,13 @@ class cLuxPlayer;
 
 class cLuxInputHandler : public iLuxUpdateable
 {
-public:    
+public:
     cLuxInputHandler();
     ~cLuxInputHandler();
 
     void LoadUserConfig();
     void SaveUserConfig();
-    
+
     void OnStart();
     void Update(float afTimeStep);
     void Reset();
@@ -68,25 +68,55 @@ public:
     tWString GetInputName(const tString& asActionName);
 
     void ChangeState(eLuxInputState aState);
-    eLuxInputState GetState(){ return mState; }
+    eLuxInputState GetState()
+    {
+        return mState;
+    }
 
-    bool GetInvertMouse(){ return mbInvertMouse;}
-    void SetInvertMouse(bool abX) { mbInvertMouse = abX; }
+    bool GetInvertMouse()
+    {
+        return mbInvertMouse;
+    }
+    void SetInvertMouse(bool abX)
+    {
+        mbInvertMouse = abX;
+    }
 
-    bool GetSmoothMouse() { return mbSmoothMouse; }
-    void SetSmoothMouse(bool abX) { mbSmoothMouse = abX; }
+    bool GetSmoothMouse()
+    {
+        return mbSmoothMouse;
+    }
+    void SetSmoothMouse(bool abX)
+    {
+        mbSmoothMouse = abX;
+    }
 
-    float GetMouseSensitivity() { return mfMouseSensitivity; }
+    float GetMouseSensitivity()
+    {
+        return mfMouseSensitivity;
+    }
     void SetMouseSensitivity(float afX);
 
 #ifdef USE_GAMEPAD
-    bool GetInvertGamepadLook() { return mbGamepadLookInvert; }
-    void SetInvertGamepadLook(bool abX) { mbGamepadLookInvert = abX; }
+    bool GetInvertGamepadLook()
+    {
+        return mbGamepadLookInvert;
+    }
+    void SetInvertGamepadLook(bool abX)
+    {
+        mbGamepadLookInvert = abX;
+    }
 
-    float GetGamepadLookSensitivity() { return mfGamepadLookSensitivity; }
+    float GetGamepadLookSensitivity()
+    {
+        return mfGamepadLookSensitivity;
+    }
     void SetGamepadLookSensitivity(float afX);
 
-    iGamepad* GetGamepad() { return mpPad; }
+    iGamepad* GetGamepad()
+    {
+        return mpPad;
+    }
 #endif
 
     cLuxAction*   GetActionByName(const tString& asName);
@@ -108,12 +138,12 @@ public:
 private:
     void UpdateGlobalInput();
     bool UpdateGamepadUIInput();
-    
+
     void UpdateGameInput();
     void UpdateGamePlayerInput();
     void UpdateGameMessageInput();
     void UpdateGameEffectInput();
-    
+
     void UpdatePreMenuInput();
     void UpdateMainMenuInput();
     void UpdateInventoryInput();

@@ -6,43 +6,47 @@
 
 #include "math/MathTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class iVertexBuffer;
-    class iCollideShape;
-    class cBinaryBuffer;
+class iVertexBuffer;
+class iCollideShape;
+class cBinaryBuffer;
 
-    typedef std::vector<iCollideShape*> tCollideShapeVec;
-    typedef tCollideShapeVec::iterator tCollideShapeVecIt;
+typedef std::vector<iCollideShape*> tCollideShapeVec;
+typedef tCollideShapeVec::iterator tCollideShapeVecIt;
 
-    class cCollideShapeNewton : public iCollideShape
+class cCollideShapeNewton : public iCollideShape
+{
+public:
+    cCollideShapeNewton(eCollideShapeType aType, const cVector3f &avSize,
+                        cMatrixf* apOffsetMtx,NewtonWorld* apNewtonWorld,
+                        iPhysicsWorld *apWorld);
+    ~cCollideShapeNewton();
+
+    iCollideShape* GetSubShape(int alIdx);
+    int GetSubShapeNum();
+
+    cVector3f GetInertia(float afMass);
+
+    void CreateStaticSceneFromShapeVec(tCollideShapeVec &avShapes, tMatrixfVec *apMatrices);
+    void CreateCompoundFromShapeVec(tCollideShapeVec &avShapes);
+    void CreateFromVertices(const unsigned int* apIndexArray, int alIndexNum,
+                            const float *apVertexArray, int alVtxStride, int alVtxNum);
+
+    void SaveToSerializedData(cBinaryBuffer* apBinBuffer);
+    void CreateFromSerializedData(cBinaryBuffer* apBinBuffer);
+
+    NewtonCollision* GetNewtonCollision()
     {
-    public:
-        cCollideShapeNewton(eCollideShapeType aType, const cVector3f &avSize,
-                            cMatrixf* apOffsetMtx,NewtonWorld* apNewtonWorld,
-                            iPhysicsWorld *apWorld);
-        ~cCollideShapeNewton();
+        return mpNewtonCollision;
+    }
 
-        iCollideShape* GetSubShape(int alIdx);
-        int GetSubShapeNum();
+private:
+    NewtonCollision* mpNewtonCollision;
+    NewtonWorld *mpNewtonWorld;
 
-        cVector3f GetInertia(float afMass);
-
-        void CreateStaticSceneFromShapeVec(tCollideShapeVec &avShapes, tMatrixfVec *apMatrices);
-        void CreateCompoundFromShapeVec(tCollideShapeVec &avShapes);
-        void CreateFromVertices(const unsigned int* apIndexArray, int alIndexNum,
-                                const float *apVertexArray, int alVtxStride, int alVtxNum);
-
-        void SaveToSerializedData(cBinaryBuffer* apBinBuffer);
-        void CreateFromSerializedData(cBinaryBuffer* apBinBuffer);
-
-        NewtonCollision* GetNewtonCollision(){ return mpNewtonCollision;}
-
-    private:
-        NewtonCollision* mpNewtonCollision;
-        NewtonWorld *mpNewtonWorld;
-
-        tCollideShapeVec mvSubShapes;
-    };
+    tCollideShapeVec mvSubShapes;
+};
 };
 #endif // HPL_COLLIDE_SHAPE_NEWTON_H

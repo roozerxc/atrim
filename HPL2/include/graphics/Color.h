@@ -6,46 +6,49 @@
 
 #include "system/SystemTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cColor
+class cColor
+{
+public:
+    union
     {
-    public:
-        union{
-            struct {
-                float r,g,b,a;
-            };
-            float v[4];
-        };    
-        
-        cColor(float afR, float afG, float afB, float afA);
-        cColor(float afR, float afG, float afB);
-        cColor();
-        cColor(float afVal);
-        cColor(float afVal, float afA);
-
-        cColor operator*(float afVal) const;
-        cColor operator/(float afVal) const;
-        
-        cColor operator+(const cColor &aCol) const;
-        cColor operator-(const cColor &aCol) const;
-        cColor operator*(const cColor &aCol) const;
-        cColor operator/(const cColor &aCol) const;
-        
-        bool operator==(cColor aCol) const;
-
-        tString ToString() const;
-
-        tString ToFileString() const;
-
-        void FromVec(float *apV);
+        struct
+        {
+            float r,g,b,a;
+        };
+        float v[4];
     };
 
-    typedef std::list<cColor> tColorList;
-    typedef tColorList::iterator tColorListIt;
+    cColor(float afR, float afG, float afB, float afA);
+    cColor(float afR, float afG, float afB);
+    cColor();
+    cColor(float afVal);
+    cColor(float afVal, float afA);
 
-    typedef std::vector<cColor> tColorVec;
-    typedef tColorVec::iterator tColorVecIt;
+    cColor operator*(float afVal) const;
+    cColor operator/(float afVal) const;
+
+    cColor operator+(const cColor &aCol) const;
+    cColor operator-(const cColor &aCol) const;
+    cColor operator*(const cColor &aCol) const;
+    cColor operator/(const cColor &aCol) const;
+
+    bool operator==(cColor aCol) const;
+
+    tString ToString() const;
+
+    tString ToFileString() const;
+
+    void FromVec(float *apV);
+};
+
+typedef std::list<cColor> tColorList;
+typedef tColorList::iterator tColorListIt;
+
+typedef std::vector<cColor> tColorVec;
+typedef tColorVec::iterator tColorVecIt;
 
 };
 #endif // HPL_COLOR_H

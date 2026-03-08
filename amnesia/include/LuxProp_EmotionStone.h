@@ -25,9 +25,9 @@ public:
 
 class cLuxProp_EmotionStone : public iLuxProp
 {
-typedef iLuxProp super_class;
-friend class cLuxPropLoader_EmotionStone;
-public:    
+    typedef iLuxProp super_class;
+    friend class cLuxPropLoader_EmotionStone;
+public:
     cLuxProp_EmotionStone(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxProp_EmotionStone();
 
@@ -35,13 +35,13 @@ public:
     //General
     bool CanInteract(iPhysicsBody *apBody);
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
-    
+
     void OnSetupAfterLoad(cWorld *apWorld);
 
     void OnResetProperties();
 
     void UpdatePropSpecific(float afTimeStep);
-    
+
     void BeforePropDestruction();
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
@@ -49,7 +49,7 @@ public:
 
     //////////////////////
     //Properties
-    
+
     //////////////////////
     //Connection callbacks
     void OnConnectionStateChange(iLuxEntity *apEntity, int alState);
@@ -65,7 +65,7 @@ public:
 private:
     //////////////////////
     // Data
-        
+
     //////////////////////
     // Variables
     tString msDescCat;
@@ -83,7 +83,7 @@ class cLuxPropLoader_EmotionStone : public iLuxPropLoader
 {
 public:
     cLuxPropLoader_EmotionStone(const tString& asName);
-    virtual ~cLuxPropLoader_EmotionStone(){}
+    virtual ~cLuxPropLoader_EmotionStone() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);

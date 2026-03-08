@@ -11,152 +11,153 @@
 
 #include "system/PreprocessParser.h"
 
-namespace hpl {
-    
-    //////////////////////////////////////////////////////////////////////////
-    // PROGRAM VARS
-    //////////////////////////////////////////////////////////////////////////
+namespace hpl
+{
 
-    #define kVar_afAlpha    0
+//////////////////////////////////////////////////////////////////////////
+// PROGRAM VARS
+//////////////////////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////////////////////////
-    // POST EFFECT BASE
-    //////////////////////////////////////////////////////////////////////////
+#define kVar_afAlpha    0
 
-    //-----------------------------------------------------------------------
-    
-    cPostEffectType_ImageTrail::cPostEffectType_ImageTrail(cGraphics *apGraphics, cResources *apResources) : iPostEffectType("ImageTrail",apGraphics,apResources)
+//////////////////////////////////////////////////////////////////////////
+// POST EFFECT BASE
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+cPostEffectType_ImageTrail::cPostEffectType_ImageTrail(cGraphics *apGraphics, cResources *apResources) : iPostEffectType("ImageTrail",apGraphics,apResources)
+{
+    cParserVarContainer vars;
+    vars.Add("UseUv");
+
+    mpProgram = mpGraphics->CreateGpuProgramFromShaders("ImageTrail","deferred_base_vtx.glsl", "posteffect_image_trail_frag.glsl", &vars);
+    if(mpProgram)
     {
-        cParserVarContainer vars;
-        vars.Add("UseUv");
-
-        mpProgram = mpGraphics->CreateGpuProgramFromShaders("ImageTrail","deferred_base_vtx.glsl", "posteffect_image_trail_frag.glsl", &vars);
-        if(mpProgram)
-        {
-            mpProgram->GetVariableAsId("afAlpha",kVar_afAlpha);
-        }
+        mpProgram->GetVariableAsId("afAlpha",kVar_afAlpha);
     }
-    
-    //-----------------------------------------------------------------------
+}
 
-    cPostEffectType_ImageTrail::~cPostEffectType_ImageTrail()
+//-----------------------------------------------------------------------
+
+cPostEffectType_ImageTrail::~cPostEffectType_ImageTrail()
+{
+
+}
+
+//-----------------------------------------------------------------------
+
+iPostEffect * cPostEffectType_ImageTrail::CreatePostEffect(iPostEffectParams *apParams)
+{
+    cPostEffect_ImageTrail *pEffect = hplNew(cPostEffect_ImageTrail, (mpGraphics,mpResources,this));
+    cPostEffectParams_ImageTrail *pImageTrailParams = static_cast<cPostEffectParams_ImageTrail*>(apParams);
+
+    return pEffect;
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// POST EFFECT
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+cPostEffect_ImageTrail::cPostEffect_ImageTrail(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType) : iPostEffect(apGraphics,apResources,apType)
+{
+    cVector2l vSize = mpLowLevelGraphics->GetScreenSizeInt();
+
+    mpAccumTexture = mpGraphics->CreateTexture("ImageTrailTexture", eTextureType_Rect, eTextureUsage_RenderTarget);
+    mpAccumTexture->CreateFromRawData(cVector3l(vSize.x, vSize.y,1), ePixelFormat_RGB, NULL);
+
+    mpAccumBuffer = mpGraphics->CreateFrameBuffer("ImageTrailBuffer");
+    mpAccumBuffer->SetTexture2D(0, mpAccumTexture);
+    if(mpAccumBuffer->CompileAndValidate()==false)
     {
-
-    }
-
-    //-----------------------------------------------------------------------
-
-    iPostEffect * cPostEffectType_ImageTrail::CreatePostEffect(iPostEffectParams *apParams)
-    {
-        cPostEffect_ImageTrail *pEffect = hplNew(cPostEffect_ImageTrail, (mpGraphics,mpResources,this));
-        cPostEffectParams_ImageTrail *pImageTrailParams = static_cast<cPostEffectParams_ImageTrail*>(apParams);
-
-        return pEffect;
-    }
-    
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // POST EFFECT
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-
-    cPostEffect_ImageTrail::cPostEffect_ImageTrail(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType) : iPostEffect(apGraphics,apResources,apType)
-    {
-        cVector2l vSize = mpLowLevelGraphics->GetScreenSizeInt();
-        
-        mpAccumTexture = mpGraphics->CreateTexture("ImageTrailTexture", eTextureType_Rect, eTextureUsage_RenderTarget);    
-        mpAccumTexture->CreateFromRawData(cVector3l(vSize.x, vSize.y,1), ePixelFormat_RGB, NULL);
-
-        mpAccumBuffer = mpGraphics->CreateFrameBuffer("ImageTrailBuffer");
-        mpAccumBuffer->SetTexture2D(0, mpAccumTexture);
-        if(mpAccumBuffer->CompileAndValidate()==false)
-        {
-            Error("Could not compile and validate image trail frame buffer!\n");
-        }
-
-        mpImageTrailType = static_cast<cPostEffectType_ImageTrail*>(mpType);
-
-        mbClearFrameBuffer = true;
+        Error("Could not compile and validate image trail frame buffer!\n");
     }
 
-    //-----------------------------------------------------------------------
+    mpImageTrailType = static_cast<cPostEffectType_ImageTrail*>(mpType);
 
-    cPostEffect_ImageTrail::~cPostEffect_ImageTrail()
+    mbClearFrameBuffer = true;
+}
+
+//-----------------------------------------------------------------------
+
+cPostEffect_ImageTrail::~cPostEffect_ImageTrail()
+{
+
+}
+
+//-----------------------------------------------------------------------
+
+void cPostEffect_ImageTrail::Reset()
+{
+    mbClearFrameBuffer = true;
+}
+
+//-----------------------------------------------------------------------
+
+void cPostEffect_ImageTrail::OnSetParams()
+{
+
+}
+
+//-----------------------------------------------------------------------
+
+void cPostEffect_ImageTrail::OnSetActive(bool abX)
+{
+    if(abX == false)
     {
+        Reset();
+    }
+}
 
+//-----------------------------------------------------------------------
+
+
+iTexture* cPostEffect_ImageTrail::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
+{
+    /////////////////////////
+    // Init render states
+    mpCurrentComposite->SetFlatProjection();
+    mpCurrentComposite->SetBlendMode(eMaterialBlendMode_Alpha);
+    mpCurrentComposite->SetChannelMode(eMaterialChannelMode_RGBA);
+    mpCurrentComposite->SetTextureRange(NULL,0);
+
+    /////////////////////////
+    // Render to accumulation buffer
+    mpCurrentComposite->SetFrameBuffer(mpAccumBuffer);
+
+    mpCurrentComposite->SetProgram(mpImageTrailType->mpProgram);
+    if(mbClearFrameBuffer)
+    {
+        mpCurrentComposite->ClearFrameBuffer(eClearFrameBufferFlag_Color, true);
+        mbClearFrameBuffer = false;
+        if(mpImageTrailType->mpProgram)
+            mpImageTrailType->mpProgram->SetFloat(kVar_afAlpha, 1.0f);
+    }
+    else
+    {
+        // Get the amount of blur depending frame time.
+        //*30 is just so that good amount values are still between 0 - 1
+        float fFrameTime = mpCurrentComposite->GetCurrentFrameTime();
+        float fPow = (1.0f / fFrameTime) * mParams.mfAmount; //The higher this is, the more blur!
+        float fAmount = exp(-fPow * 0.015f);
+        if(mpImageTrailType->mpProgram)
+            mpImageTrailType->mpProgram->SetFloat(kVar_afAlpha, fAmount);
     }
 
-    //-----------------------------------------------------------------------
+    mpCurrentComposite->SetTexture(0, apInputTexture);
 
-    void cPostEffect_ImageTrail::Reset()
-    {
-        mbClearFrameBuffer = true;
-    }
+    DrawQuad(0, 1, apInputTexture, true);
 
-    //-----------------------------------------------------------------------
+    mpCurrentComposite->SetProgram(NULL);
+    mpCurrentComposite->SetBlendMode(eMaterialBlendMode_None);
 
-    void cPostEffect_ImageTrail::OnSetParams()
-    {
-        
-    }
+    return mpAccumTexture;
+}
 
-    //-----------------------------------------------------------------------
-
-    void cPostEffect_ImageTrail::OnSetActive(bool abX)
-    {
-        if(abX == false)
-        {
-            Reset();
-        }
-    }
-
-    //-----------------------------------------------------------------------
-
-
-    iTexture* cPostEffect_ImageTrail::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
-    {
-        /////////////////////////
-        // Init render states
-        mpCurrentComposite->SetFlatProjection();
-        mpCurrentComposite->SetBlendMode(eMaterialBlendMode_Alpha);
-        mpCurrentComposite->SetChannelMode(eMaterialChannelMode_RGBA);
-        mpCurrentComposite->SetTextureRange(NULL,0);
-
-        /////////////////////////
-        // Render to accumulation buffer
-        mpCurrentComposite->SetFrameBuffer(mpAccumBuffer);
-        
-        mpCurrentComposite->SetProgram(mpImageTrailType->mpProgram);
-        if(mbClearFrameBuffer)
-        {
-            mpCurrentComposite->ClearFrameBuffer(eClearFrameBufferFlag_Color, true);
-            mbClearFrameBuffer = false;
-            if(mpImageTrailType->mpProgram)
-                mpImageTrailType->mpProgram->SetFloat(kVar_afAlpha, 1.0f);
-        }
-        else
-        {
-            // Get the amount of blur depending frame time.
-            //*30 is just so that good amount values are still between 0 - 1
-            float fFrameTime = mpCurrentComposite->GetCurrentFrameTime();
-            float fPow = (1.0f / fFrameTime) * mParams.mfAmount; //The higher this is, the more blur!
-            float fAmount = exp(-fPow * 0.015f); 
-            if(mpImageTrailType->mpProgram)
-                mpImageTrailType->mpProgram->SetFloat(kVar_afAlpha, fAmount);
-        }
-        
-        mpCurrentComposite->SetTexture(0, apInputTexture);
-                
-        DrawQuad(0, 1, apInputTexture, true);
-
-        mpCurrentComposite->SetProgram(NULL);
-        mpCurrentComposite->SetBlendMode(eMaterialBlendMode_None);
-        
-        return mpAccumTexture;
-    }
-
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
 }

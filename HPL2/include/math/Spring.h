@@ -3,38 +3,40 @@
 
 #include "math/MathTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    template <class T> 
-    class cSpring
+template <class T>
+class cSpring
+{
+public:
+    float k;
+    float b;
+
+    //////////////////////////////////////////
+    // Constructors
+    /////////////////////////////////////////
+    cSpring() {}
+
+    cSpring(float afK, float afB)
     {
-    public:
-        float k;
-        float b;
+        k = afK;
+        b = afB;
+    }
 
-        //////////////////////////////////////////
-        // Constructors
-        /////////////////////////////////////////
-        cSpring(){}
+    //////////////////////////////////////////
+    // Public
+    /////////////////////////////////////////
 
-        cSpring(float afK, float afB)
-        {
-            k = afK; b = afB;
-        }
+    T Output(T aError, T aV)
+    {
+        return aError * k - aV * b;
+    }
+};
 
-        //////////////////////////////////////////
-        // Public
-        /////////////////////////////////////////
+//---------------------------------
 
-        T Output(T aError, T aV)
-        {
-            return aError * k - aV * b;
-        }
-    };
-
-    //---------------------------------
-
-    typedef cSpring<float> cSpringf;
-    typedef cSpring<cVector3f> cSpringVec3;
+typedef cSpring<float> cSpringf;
+typedef cSpring<cVector3f> cSpringVec3;
 };
 #endif // HPL_SPRING_H

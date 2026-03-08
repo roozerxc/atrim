@@ -40,10 +40,10 @@ extern int hplMain(const hpl::tString &asCommandLine);
 #ifdef _WIN32
 #include <windows.h>
 int WINAPI WinMain(
-        HINSTANCE hInstance,
-        HINSTANCE hPrevInstance,
-        LPSTR lpCmdLine,
-        int nCmdShow)
+    HINSTANCE hInstance,
+    HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine,
+    int nCmdShow)
 {
     return hplMain(lpCmdLine);
 }
@@ -54,367 +54,368 @@ int WINAPI WinMain(
 
 
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // LOG WRITER
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// LOG WRITER
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    static cLogWriter gLogWriter(_W("hpl.log"));
-    static cLogWriter gUpdateLogWriter(_W("hpl_update.log"));
+static cLogWriter gLogWriter(_W("hpl.log"));
+static cLogWriter gUpdateLogWriter(_W("hpl_update.log"));
 
-    //-----------------------------------------------------------------------
-    
-    cLogWriter::cLogWriter(const tWString& asFileName)
-    {
-        msFileName = asFileName;
-        mpFile = NULL;
-    }
+//-----------------------------------------------------------------------
 
-    cLogWriter::~cLogWriter()
-    {
-        if(mpFile) fclose(mpFile);
-    }
+cLogWriter::cLogWriter(const tWString& asFileName)
+{
+    msFileName = asFileName;
+    mpFile = NULL;
+}
 
-    void cLogWriter::Write(const tString& asMessage)
-    {
+cLogWriter::~cLogWriter()
+{
+    if(mpFile) fclose(mpFile);
+}
+
+void cLogWriter::Write(const tString& asMessage)
+{
 #ifdef _WIN32
-        OutputDebugStringA(asMessage.c_str());
+    OutputDebugStringA(asMessage.c_str());
 #endif
 
-        if(!mpFile) ReopenFile();
-        
-        if(mpFile)
+    if(!mpFile) ReopenFile();
+
+    if(mpFile)
+    {
+        fprintf(mpFile, "%s", asMessage.c_str());
+        fflush(mpFile);
+    }
+}
+
+void cLogWriter::Clear()
+{
+    ReopenFile();
+    if(mpFile) fflush(mpFile);
+}
+
+//-----------------------------------------------------------------------
+
+
+void cLogWriter::SetFileName(const tWString& asFile)
+{
+    if(msFileName == asFile) return;
+
+    msFileName = asFile;
+    if(mpFile) ReopenFile();
+}
+
+//-----------------------------------------------------------------------
+
+
+void cLogWriter::ReopenFile()
+{
+    if(mpFile) fclose(mpFile);
+
+#ifdef _WIN32
+    mpFile = _wfopen(msFileName.c_str(),_W("w"));
+#else
+    mpFile = fopen(cString::To8Char(msFileName).c_str(),"w");
+#endif
+}
+
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// LOG FUNCTIONS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+static tLogMessageCallbackFunc gpLogMessageCallbackFunc=NULL;
+
+//-----------------------------------------------------------------------
+
+void SetLogFile(const tWString &asFile)
+{
+    gLogWriter.SetFileName(asFile);
+}
+
+//-----------------------------------------------------------------------
+
+void FatalError(const char* fmt,... )
+{
+    char text[4096];
+    va_list ap;
+    if (fmt == NULL)
+        return;
+    va_start(ap, fmt);
+    vsprintf(text, fmt, ap);
+    va_end(ap);
+
+    tString sMess = "FATAL ERROR: ";
+    sMess += text;
+    gLogWriter.Write(sMess);
+
+    if(gpLogMessageCallbackFunc) gpLogMessageCallbackFunc(eLogOutputType_FatalError, sMess.c_str());
+
+    cPlatform::CreateMessageBox(eMsgBoxType_Error, _W("FATAL ERROR"), _W("%ls"), cString::To16Char(sMess).c_str());
+
+    exit(1);
+}
+
+//-----------------------------------------------------------------------
+
+void Error(const char* fmt, ...)
+{
+    char text[2048];
+    va_list ap;
+    if (fmt == NULL)
+        return;
+    va_start(ap, fmt);
+    vsprintf(text, fmt, ap);
+    va_end(ap);
+
+    tString sMess = "ERROR: ";
+    sMess += text;
+    gLogWriter.Write(sMess);
+
+    if(gpLogMessageCallbackFunc) gpLogMessageCallbackFunc(eLogOutputType_Error, sMess.c_str());
+}
+
+//-----------------------------------------------------------------------
+
+
+void Warning(const char* fmt, ...)
+{
+    char text[2048];
+    va_list ap;
+    if (fmt == NULL)
+        return;
+    va_start(ap, fmt);
+    vsprintf(text, fmt, ap);
+    va_end(ap);
+
+    tString sMess = "WARNING: ";
+    sMess += text;
+    gLogWriter.Write(sMess);
+
+    if(gpLogMessageCallbackFunc) gpLogMessageCallbackFunc(eLogOutputType_Warning, sMess.c_str());
+}
+
+//-----------------------------------------------------------------------
+
+
+void Log(const char* fmt, ...)
+{
+    char text[4096];
+    va_list ap;
+    if (fmt == NULL)
+        return;
+    va_start(ap, fmt);
+    vsprintf(text, fmt, ap);
+    va_end(ap);
+
+    tString sMess = "";
+    sMess += text;
+    gLogWriter.Write(sMess);
+
+    if(gpLogMessageCallbackFunc) gpLogMessageCallbackFunc(eLogOutputType_Normal, sMess.c_str());
+}
+
+//-----------------------------------------------------------------------
+
+static bool gbUpdateLogIsActive;
+void SetUpdateLogFile(const tWString &asFile)
+{
+    gUpdateLogWriter.SetFileName(asFile);
+}
+
+void ClearUpdateLogFile()
+{
+    if(!gbUpdateLogIsActive) return;
+
+    gUpdateLogWriter.Clear();
+}
+
+void SetUpdateLogActive(bool abX)
+{
+    gbUpdateLogIsActive =abX;
+}
+
+bool GetUpdateLogActive()
+{
+    return gbUpdateLogIsActive;
+}
+
+//-----------------------------------------------------------------------
+
+void LogUpdate(const char* fmt, ...)
+{
+    if(!gbUpdateLogIsActive) return;
+
+    char text[2048];
+    va_list ap;
+    if (fmt == NULL)
+        return;
+    va_start(ap, fmt);
+    vsprintf(text, fmt, ap);
+    va_end(ap);
+
+    tString sMess = "";
+    sMess += text;
+    gUpdateLogWriter.Write(sMess);
+}
+
+//-----------------------------------------------------------------------
+
+extern void SetLogMessageCallback(tLogMessageCallbackFunc apFunc)
+{
+    gpLogMessageCallbackFunc = apFunc;
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// SCRIPT OUTPUT
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+void cScriptOutput::AddMessage(const asSMessageInfo *msg)
+{
+    char sMess[1024];
+
+    tString type = "ERR ";
+    if( msg->type == asMSGTYPE_WARNING )
+        type = "WARN";
+    else if( msg->type == asMSGTYPE_INFORMATION )
+        type = "INFO";
+
+    sprintf(sMess,"%s (%d, %d) : %s : %s\n", msg->section, msg->row, msg->col, type.c_str(), msg->message);
+
+    msMessage += sMess;
+}
+//-----------------------------------------------------------------------
+
+void cScriptOutput::Display()
+{
+    if(msMessage.size()>500)
+    {
+        while(msMessage.size() > 500)
         {
-            fprintf(mpFile, "%s", asMessage.c_str());
-            fflush(mpFile);
+            tString sSub = msMessage.substr(0,500);
+            msMessage = msMessage.substr(500);
+            Log(sSub.c_str());
         }
+        Log(msMessage.c_str());
     }
-
-    void cLogWriter::Clear()
+    else
     {
-        ReopenFile();
-        if(mpFile) fflush(mpFile);
+        Log(msMessage.c_str());
     }
+}
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
+void cScriptOutput::Clear()
+{
+    msMessage = "";
+}
+
+//-----------------------------------------------------------------------
 
 
-    void cLogWriter::SetFileName(const tWString& asFile)
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+cLowLevelSystemSDL::cLowLevelSystemSDL()
+{
+    mpScriptEngine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
+    if(mpScriptEngine==NULL)
     {
-        if(msFileName == asFile) return;
-
-        msFileName = asFile;
-        if(mpFile) ReopenFile();
+        Error("Failed to start angel script!\n");
     }
 
-    //-----------------------------------------------------------------------
+    mpScriptOutput = hplNew( cScriptOutput, () );
+    mpScriptEngine->SetMessageCallback(asMETHOD(cScriptOutput,AddMessage), mpScriptOutput, asCALL_THISCALL);
+
+    RegisterScriptString(mpScriptEngine);
+
+    mlHandleCount = 0;
+
+    Log("-------- THE HPL ENGINE LOG ------------\n");
+    //Log("Engine build ID %s\n\n",
+    //    GetBuildID_HPL2_0());
+
+    //const char* pASLibOptions = asGetLibraryOptions();
+    //Log(" AngelScript options: '%s'\n", pASLibOptions);
+}
+
+//-----------------------------------------------------------------------
+
+cLowLevelSystemSDL::~cLowLevelSystemSDL()
+{
+    /*Release all runnings contexts */
+
+    mpScriptEngine->Release();
+    hplDelete(mpScriptOutput);
+
+    //perhaps not the best thing to skip :)
+    //if(gpLogWriter)    hplDelete(gpLogWriter);
+    //gpLogWriter = NULL;
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
 
 
-    void cLogWriter::ReopenFile()
+iScript* cLowLevelSystemSDL::CreateScript(const tString& asName)
+{
+    return hplNew( cSqScript, (asName,mpScriptEngine,mpScriptOutput,mlHandleCount++) );
+}
+
+//-----------------------------------------------------------------------
+
+bool cLowLevelSystemSDL::AddScriptFunc(const tString& asFuncDecl, void* pFunc)
+{
+    if(mpScriptEngine->RegisterGlobalFunction(asFuncDecl.c_str(),asFUNCTION(pFunc),asCALL_STDCALL)<0)
     {
-        if(mpFile) fclose(mpFile);
-                        
-        #ifdef _WIN32
-            mpFile = _wfopen(msFileName.c_str(),_W("w"));
-        #else
-            mpFile = fopen(cString::To8Char(msFileName).c_str(),"w");
-        #endif
+        Error("Couldn't add func '%s'\n",asFuncDecl.c_str());
+        return false;
     }
 
+    return true;
+}
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    //////////////////////////////////////////////////////////////////////////
-    // LOG FUNCTIONS
-    //////////////////////////////////////////////////////////////////////////
-    
-    //-----------------------------------------------------------------------
-
-    static tLogMessageCallbackFunc gpLogMessageCallbackFunc=NULL;
-
-    //-----------------------------------------------------------------------
-    
-    void SetLogFile(const tWString &asFile)
+bool cLowLevelSystemSDL::AddScriptVar(const tString& asVarDecl, void *pVar)
+{
+    if(mpScriptEngine->RegisterGlobalProperty(asVarDecl.c_str(),pVar)<0)
     {
-        gLogWriter.SetFileName(asFile);
+        Error("Couldn't add var '%s'\n",asVarDecl.c_str());
+        return false;
     }
 
-    //-----------------------------------------------------------------------
+    return true;
+}
 
-    void FatalError(const char* fmt,... )
-    {
-        char text[4096];
-        va_list ap;    
-        if (fmt == NULL)
-            return;    
-        va_start(ap, fmt);
-        vsprintf(text, fmt, ap);
-        va_end(ap);
+//-----------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
 
-        tString sMess = "FATAL ERROR: ";
-        sMess += text;
-        gLogWriter.Write(sMess);
+//-----------------------------------------------------------------------
 
-        if(gpLogMessageCallbackFunc) gpLogMessageCallbackFunc(eLogOutputType_FatalError, sMess.c_str());
-
-        cPlatform::CreateMessageBox(eMsgBoxType_Error, _W("FATAL ERROR"), _W("%ls"), cString::To16Char(sMess).c_str());
-
-        exit(1);
-    }
-
-    //-----------------------------------------------------------------------
-
-    void Error(const char* fmt, ...)
-    {
-        char text[2048];
-        va_list ap;    
-        if (fmt == NULL)
-            return;    
-        va_start(ap, fmt);
-        vsprintf(text, fmt, ap);
-        va_end(ap);
-
-        tString sMess = "ERROR: ";
-        sMess += text;
-        gLogWriter.Write(sMess);
-
-        if(gpLogMessageCallbackFunc) gpLogMessageCallbackFunc(eLogOutputType_Error, sMess.c_str());
-    }
-
-    //-----------------------------------------------------------------------
-
-
-    void Warning(const char* fmt, ...)
-    {
-        char text[2048];
-        va_list ap;    
-        if (fmt == NULL)
-            return;    
-        va_start(ap, fmt);
-        vsprintf(text, fmt, ap);
-        va_end(ap);
-
-        tString sMess = "WARNING: ";
-        sMess += text;
-        gLogWriter.Write(sMess);
-
-        if(gpLogMessageCallbackFunc) gpLogMessageCallbackFunc(eLogOutputType_Warning, sMess.c_str());
-    }
-
-    //-----------------------------------------------------------------------
-
-
-    void Log(const char* fmt, ...)
-    {
-        char text[4096];
-        va_list ap;    
-        if (fmt == NULL)
-            return;    
-        va_start(ap, fmt);
-        vsprintf(text, fmt, ap);
-        va_end(ap);
-
-        tString sMess = "";
-        sMess += text;
-        gLogWriter.Write(sMess);
-
-        if(gpLogMessageCallbackFunc) gpLogMessageCallbackFunc(eLogOutputType_Normal, sMess.c_str());
-    }
-
-    //-----------------------------------------------------------------------
-
-    static bool gbUpdateLogIsActive;
-    void SetUpdateLogFile(const tWString &asFile)
-    {
-        gUpdateLogWriter.SetFileName(asFile);
-    }
-
-    void ClearUpdateLogFile()
-    {
-        if(!gbUpdateLogIsActive) return;
-
-        gUpdateLogWriter.Clear();
-    }
-
-    void SetUpdateLogActive(bool abX)
-    {
-        gbUpdateLogIsActive =abX;
-    }
-
-    bool GetUpdateLogActive()
-    {
-        return gbUpdateLogIsActive;
-    }
-
-    //-----------------------------------------------------------------------
-
-    void LogUpdate(const char* fmt, ...)
-    {
-        if(!gbUpdateLogIsActive) return;
-
-        char text[2048];
-        va_list ap;    
-        if (fmt == NULL)
-            return;    
-        va_start(ap, fmt);
-        vsprintf(text, fmt, ap);
-        va_end(ap);
-
-        tString sMess = "";
-        sMess += text;
-        gUpdateLogWriter.Write(sMess);
-    }
-
-    //-----------------------------------------------------------------------
-
-    extern void SetLogMessageCallback(tLogMessageCallbackFunc apFunc)
-    {
-        gpLogMessageCallbackFunc = apFunc;
-    }
-
-    //-----------------------------------------------------------------------
-    
-    //////////////////////////////////////////////////////////////////////////
-    // SCRIPT OUTPUT
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-
-    void cScriptOutput::AddMessage(const asSMessageInfo *msg)
-    {
-        char sMess[1024];
-
-        tString type = "ERR ";
-        if( msg->type == asMSGTYPE_WARNING ) 
-            type = "WARN";
-        else if( msg->type == asMSGTYPE_INFORMATION ) 
-            type = "INFO";
-
-        sprintf(sMess,"%s (%d, %d) : %s : %s\n", msg->section, msg->row, msg->col, type.c_str(), msg->message);
-
-        msMessage += sMess;
-    }
-    //-----------------------------------------------------------------------
-
-    void cScriptOutput::Display()
-    {
-        if(msMessage.size()>500)
-        {
-            while(msMessage.size() > 500)
-            {
-                tString sSub = msMessage.substr(0,500);
-                msMessage = msMessage.substr(500);
-                Log(sSub.c_str());
-            }
-            Log(msMessage.c_str());
-        }
-        else
-        {
-            Log(msMessage.c_str());
-        }
-    }
-    //-----------------------------------------------------------------------
-
-    void cScriptOutput::Clear()
-    {
-        msMessage = "";
-    }
-    
-    //-----------------------------------------------------------------------
-
-    
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-
-    cLowLevelSystemSDL::cLowLevelSystemSDL()
-    {
-        mpScriptEngine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
-        if(mpScriptEngine==NULL)
-        {
-            Error("Failed to start angel script!\n");
-        }
-        
-        mpScriptOutput = hplNew( cScriptOutput, () );
-        mpScriptEngine->SetMessageCallback(asMETHOD(cScriptOutput,AddMessage), mpScriptOutput, asCALL_THISCALL);
-
-        RegisterScriptString(mpScriptEngine);
-    
-        mlHandleCount = 0;
-
-        Log("-------- THE HPL ENGINE LOG ------------\n");
-        //Log("Engine build ID %s\n\n", 
-        //    GetBuildID_HPL2_0());
-
-        //const char* pASLibOptions = asGetLibraryOptions();
-        //Log(" AngelScript options: '%s'\n", pASLibOptions);
-    }
-
-    //-----------------------------------------------------------------------
-
-    cLowLevelSystemSDL::~cLowLevelSystemSDL()
-    {
-        /*Release all runnings contexts */
-        
-        mpScriptEngine->Release();
-        hplDelete(mpScriptOutput);
-
-        //perhaps not the best thing to skip :)
-        //if(gpLogWriter)    hplDelete(gpLogWriter);
-        //gpLogWriter = NULL;
-    }
-
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
-    
-    //-----------------------------------------------------------------------
-
-    
-    iScript* cLowLevelSystemSDL::CreateScript(const tString& asName)
-    {
-        return hplNew( cSqScript, (asName,mpScriptEngine,mpScriptOutput,mlHandleCount++) );
-    }
-
-    //-----------------------------------------------------------------------
-
-    bool cLowLevelSystemSDL::AddScriptFunc(const tString& asFuncDecl, void* pFunc)
-    {
-        if(mpScriptEngine->RegisterGlobalFunction(asFuncDecl.c_str(),asFUNCTION(pFunc),asCALL_STDCALL)<0)
-        {
-            Error("Couldn't add func '%s'\n",asFuncDecl.c_str());
-            return false;
-        }
-
-        return true;
-    }
-    
-    //-----------------------------------------------------------------------
-
-    bool cLowLevelSystemSDL::AddScriptVar(const tString& asVarDecl, void *pVar)
-    {
-        if(mpScriptEngine->RegisterGlobalProperty(asVarDecl.c_str(),pVar)<0)
-        {
-            Error("Couldn't add var '%s'\n",asVarDecl.c_str());
-            return false;
-        }
-
-        return true;
-    }
-    
-    //-----------------------------------------------------------------------
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
-    
-    //-----------------------------------------------------------------------
-
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 }

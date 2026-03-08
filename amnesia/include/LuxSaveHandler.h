@@ -37,7 +37,7 @@ protected:
 
 class cLuxSaveHandler : public iLuxUpdateable
 {
-public:    
+public:
     cLuxSaveHandler();
     ~cLuxSaveHandler();
 
@@ -65,7 +65,10 @@ public:
 
     tWString GetProperSaveName(const tWString& asFile);
 
-    cLuxSaveHandlerThreadClass* GetThreadClass() { return &mSaveHandlerThreadClass; }
+    cLuxSaveHandlerThreadClass* GetThreadClass()
+    {
+        return &mSaveHandlerThreadClass;
+    }
 private:
     tWString GetSaveName(const tWString &asPrefix);
     void DeleteOldestSaveFiles(const tWString &asFolder, int alMax);

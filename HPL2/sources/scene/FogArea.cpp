@@ -4,72 +4,73 @@
 
 #include "resources/Resources.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cFogArea::cFogArea(tString asName, cResources *apResources) : iRenderable(asName)
-    {
-        mColor = cColor(1,1);
-        mvSize = 1;
+cFogArea::cFogArea(tString asName, cResources *apResources) : iRenderable(asName)
+{
+    mColor = cColor(1,1);
+    mvSize = 1;
 
-        mfStart = 0;
-        mfEnd = 10;
-        mfFalloffExp = 1.0f;
+    mfStart = 0;
+    mfEnd = 10;
+    mfFalloffExp = 1.0f;
 
-        mbShowBacksideWhenOutside = true;
-        mbShowBacksideWhenInside = true;
+    mbShowBacksideWhenOutside = true;
+    mbShowBacksideWhenInside = true;
 
-        mbApplyTransformToBV = true;
+    mbApplyTransformToBV = true;
 
-        mBoundingVolume.SetSize(1);
-    }
+    mBoundingVolume.SetSize(1);
+}
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cFogArea::~cFogArea()
-    {
-    }    
+cFogArea::~cFogArea()
+{
+}
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
-    
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
 
-    void cFogArea::SetSize(const cVector3f& avSize)
-    {
-        mvSize = avSize;
+//-----------------------------------------------------------------------
 
-        mBoundingVolume.SetSize(cVector3f(mvSize.x, mvSize.y, mvSize.x));
-        
-        
-        SetTransformUpdated();
-    }
-    
-    //-----------------------------------------------------------------------
+void cFogArea::SetSize(const cVector3f& avSize)
+{
+    mvSize = avSize;
 
-    cMatrixf* cFogArea::GetModelMatrix(cFrustum* apFrustum)
-    {
-        m_mtxModelOutput = cMath::MatrixMul(GetWorldMatrix(), cMath::MatrixScale(mvSize));
+    mBoundingVolume.SetSize(cVector3f(mvSize.x, mvSize.y, mvSize.x));
 
-        return &m_mtxModelOutput;
-    }
-    //-----------------------------------------------------------------------
-    
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+    SetTransformUpdated();
+}
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+
+cMatrixf* cFogArea::GetModelMatrix(cFrustum* apFrustum)
+{
+    m_mtxModelOutput = cMath::MatrixMul(GetWorldMatrix(), cMath::MatrixScale(mvSize));
+
+    return &m_mtxModelOutput;
+}
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+//-----------------------------------------------------------------------
 
 }

@@ -5,74 +5,93 @@
 #include "graphics/GraphicsTypes.h"
 #include "system/SystemTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cAnimation;
-    class cNode3D;
+class cAnimation;
+class cNode3D;
 
-    class cAnimationTrack
+class cAnimationTrack
+{
+public:
+    cAnimationTrack(const tString &asName, tAnimTransformFlag aTransformFlags, cAnimation *apParent);
+    ~cAnimationTrack();
+
+    void ResizeKeyFrames(int alSize);
+
+    /**
+     * Creates a new key frame. These should be added in sequential order.
+     * \param afTime the time for the key frame.
+     */
+    cKeyFrame* CreateKeyFrame(float afTime);
+    void ClearKeyFrames();
+
+    inline cKeyFrame* GetKeyFrame(int alIndex)
     {
-    public:
-        cAnimationTrack(const tString &asName, tAnimTransformFlag aTransformFlags, cAnimation *apParent);
-        ~cAnimationTrack();
+        return mvKeyFrames[alIndex];
+    }
+    inline int GetKeyFrameNum()
+    {
+        return (int) mvKeyFrames.size();
+    }
 
-        void ResizeKeyFrames(int alSize);
+    inline tAnimTransformFlag GetTransformFlags()
+    {
+        return mTransformFlags;
+    }
 
-        /**
-         * Creates a new key frame. These should be added in sequential order.
-         * \param afTime the time for the key frame.
-         */
-        cKeyFrame* CreateKeyFrame(float afTime);
-        void ClearKeyFrames();
-        
-        inline cKeyFrame* GetKeyFrame(int alIndex){ return mvKeyFrames[alIndex];}
-        inline int GetKeyFrameNum(){ return (int) mvKeyFrames.size();}
+    /**
+     * Apply the animation to a node. The method uses Node->AddXXX() so Update matrix must be called
+     * for the transformation to be applied.
+     * \param apNode The node with it's base pose
+     * \param afTime The time at which to apply the animation
+     * \param afWeight The weight of the animation, a value from 0 to 1.
+     */
+    void ApplyToNode(cNode3D* apNode, float afTime, float afWeight,bool bLoop=true);
 
-        inline tAnimTransformFlag GetTransformFlags(){ return mTransformFlags;}
-        
-        /**
-         * Apply the animation to a node. The method uses Node->AddXXX() so Update matrix must be called
-         * for the transformation to be applied.
-         * \param apNode The node with it's base pose
-         * \param afTime The time at which to apply the animation
-         * \param afWeight The weight of the animation, a value from 0 to 1.
-         */
-        void ApplyToNode(cNode3D* apNode, float afTime, float afWeight,bool bLoop=true);
+    /**
+     * Get a KeyFrame that contains an interpolated value.
+     * \param afTime The time from which to create the key frame.
+     */
+    cKeyFrame GetInterpolatedKeyFrame(float afTime,bool bLoop=true);
 
-        /**
-         * Get a KeyFrame that contains an interpolated value.
-         * \param afTime The time from which to create the key frame.
-         */
-        cKeyFrame GetInterpolatedKeyFrame(float afTime,bool bLoop=true);
+    /**
+     * Gets key frames between for a specific time.
+     * \param afTime The time
+     * \param &apKeyFrameA The frame that is equal to or before time
+     * \param &apKeyFrameB The frame that is after time.
+     * \return Weight of the different frames. 0 = 100% A, 1 = 100% B 0.5 = 50% A and 50% B
+     */
+    float GetKeyFramesAtTime(float afTime, cKeyFrame** apKeyFrameA,cKeyFrame** apKeyFrameB,bool bLoop=true);
 
-        /**
-         * Gets key frames between for a specific time.
-         * \param afTime The time
-         * \param &apKeyFrameA The frame that is equal to or before time
-         * \param &apKeyFrameB The frame that is after time. 
-         * \return Weight of the different frames. 0 = 100% A, 1 = 100% B 0.5 = 50% A and 50% B
-         */
-        float GetKeyFramesAtTime(float afTime, cKeyFrame** apKeyFrameA,cKeyFrame** apKeyFrameB,bool bLoop=true);
+    void Smooth(float afAmount, float afPow, int alSamples,bool abTranslation, bool abRotation);
 
-        void Smooth(float afAmount, float afPow, int alSamples,bool abTranslation, bool abRotation);
-        
-        const tString& GetName(){ return msName;}
-        
-        void SetNodeIndex(int alIndex){ mlNodeIdx = alIndex;}
-        int GetNodeIndex(){ return mlNodeIdx;}
+    const tString& GetName()
+    {
+        return msName;
+    }
 
-    private:
-        tString msName;
+    void SetNodeIndex(int alIndex)
+    {
+        mlNodeIdx = alIndex;
+    }
+    int GetNodeIndex()
+    {
+        return mlNodeIdx;
+    }
 
-        int mlNodeIdx;
+private:
+    tString msName;
 
-        tKeyFramePtrVec mvKeyFrames;
-        tAnimTransformFlag mTransformFlags;
+    int mlNodeIdx;
 
-        float mfMaxFrameTime;
-        
-        cAnimation* mpParent;
-    };
+    tKeyFramePtrVec mvKeyFrames;
+    tAnimTransformFlag mTransformFlags;
+
+    float mfMaxFrameTime;
+
+    cAnimation* mpParent;
+};
 
 };
 #endif // HPL_ANIMATION_TRACK_H

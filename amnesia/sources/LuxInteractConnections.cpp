@@ -40,8 +40,8 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-cLuxInteractConnection_Rope::cLuxInteractConnection_Rope(const tString& asName, iLuxProp *apProp,  iPhysicsRope *apRope, float afSpeedMul, 
-                                                        float afMinSpeed, float afMaxSpeed,bool abInvert, int alStatesUsed)
+cLuxInteractConnection_Rope::cLuxInteractConnection_Rope(const tString& asName, iLuxProp *apProp,  iPhysicsRope *apRope, float afSpeedMul,
+        float afMinSpeed, float afMaxSpeed,bool abInvert, int alStatesUsed)
     : iLuxInteractConnection(asName,apProp, abInvert, alStatesUsed)
 {
     mpRope = apRope;
@@ -60,7 +60,7 @@ cLuxInteractConnection_Rope::~cLuxInteractConnection_Rope()
 
 void cLuxInteractConnection_Rope::Update(float afTimeStep)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -84,9 +84,9 @@ void cLuxInteractConnection_Rope::UpdateProp(float afTimeStep)
     if(mpProp->GetPropType() == eLuxPropType_Wheel)
     {
         cLuxProp_Wheel *pWheel = static_cast<cLuxProp_Wheel*>(mpProp);
-        
+
         float fAngle = pWheel->GetMinLimit() + fT * (pWheel->GetMaxLimit() - pWheel->GetMinLimit());
-        
+
         pWheel->SetAngle(fAngle, true);
     }
 
@@ -126,11 +126,11 @@ void cLuxInteractConnection_Rope::OnLimit(int alState)
     float fWantedLength =0;
     if(alState == 1)
     {
-        fWantedLength = mpRope->GetMaxTotalLength();    
+        fWantedLength = mpRope->GetMaxTotalLength();
     }
     else if(alState == -1)
     {
-        fWantedLength = mpRope->GetMinTotalLength();    
+        fWantedLength = mpRope->GetMinTotalLength();
     }
 
     mpRope->SetMotorActive(true);
@@ -153,14 +153,16 @@ iLuxInteractConnection* cLuxInteractConnection_Rope_SaveData::CreateConnection(c
 {
     //Get the rope!
     iPhysicsRope *pRope = apMap->GetPhysicsWorld()->GetRopeFromUniqueID(mlRopeId);
-    if(pRope==NULL){
+    if(pRope==NULL)
+    {
         Error("Rope with ID %d was not found when creating saved connection '%s'!\n", mlRopeId, msName.c_str());
         return NULL;
     }
 
     //Get the prop
     iLuxProp *pProp = static_cast<iLuxProp*>(apMap->GetEntityByID(mlPropId, eLuxEntityType_Prop));
-    if(pProp==NULL){
+    if(pProp==NULL)
+    {
         Error("Prop with ID %d was not found when creating saved connection '%s'!\n", mlPropId, msName.c_str());
         return NULL;
     }
@@ -176,7 +178,7 @@ void cLuxInteractConnection_Rope_SaveData::FromConnection(iLuxInteractConnection
 {
     iLuxInteractConnection_SaveData::FromConnection(apConnection);
     cLuxInteractConnection_Rope *pData = static_cast<cLuxInteractConnection_Rope*>(apConnection);
-    
+
     mlRopeId = pData->mpRope->GetUniqueID();
 
     kCopyFromVar(pData, mfSpeedMul);
@@ -203,11 +205,11 @@ kEndSerialize()
 //-----------------------------------------------------------------------
 
 cLuxInteractConnection_MoveObject::cLuxInteractConnection_MoveObject(const tString& asName, iLuxProp *apProp, cLuxProp_MoveObject *apMoveObject,
-                                                                    bool abInvert,  int alStatesUsed)
-: iLuxInteractConnection(asName,apProp, abInvert, alStatesUsed)
+        bool abInvert,  int alStatesUsed)
+    : iLuxInteractConnection(asName,apProp, abInvert, alStatesUsed)
 {
     mpMoveObject = apMoveObject;
-    
+
     mbPropNeedsUpdate = true; //Used to make sure that the prop gets update at the start.
 }
 
@@ -229,8 +231,8 @@ void cLuxInteractConnection_MoveObject::Update(float afTimeStep)
 
 void cLuxInteractConnection_MoveObject::UpdateProp(float afTimeStep)
 {
-    if(    mbInteractionOnly==false || 
-        (mpMoveObject->IsMoving()==false && mbPropNeedsUpdate==false))
+    if(    mbInteractionOnly==false ||
+            (mpMoveObject->IsMoving()==false && mbPropNeedsUpdate==false))
     {
         return;
     }
@@ -241,12 +243,12 @@ void cLuxInteractConnection_MoveObject::UpdateProp(float afTimeStep)
 
     float fT = mpMoveObject->GetMoveState();
     if(mbInvert) fT = 1 - fT;
-    
+
     ////////////////////////
     // Update wheel
     cLuxProp_Wheel *pWheel = static_cast<cLuxProp_Wheel*>(mpProp);
     float fAngle = pWheel->GetMinLimit() + fT * (pWheel->GetMaxLimit() - pWheel->GetMinLimit());
-    
+
     if(mpProp->IsInteractedWith())
     {
         float fLimitAdd = (pWheel->GetMaxLimit() - pWheel->GetMinLimit()) * 0.2f;
@@ -308,11 +310,12 @@ iLuxInteractConnection* cLuxInteractConnection_MoveObject_SaveData::CreateConnec
         Error("MoveObject with ID %d was not found when creating saved connection '%s'!\n", mlMoveObjectId, msName.c_str());
         return NULL;
     }
-    
+
     //////////////////
     //Get the prop
     iLuxProp *pProp = static_cast<iLuxProp*>(apMap->GetEntityByID(mlPropId,eLuxEntityType_Prop));
-    if(pProp==NULL){
+    if(pProp==NULL)
+    {
         Error("Prop with ID %d was not found when creating saved connection '%s'!\n", mlPropId, msName.c_str());
         return NULL;
     }
@@ -320,7 +323,7 @@ iLuxInteractConnection* cLuxInteractConnection_MoveObject_SaveData::CreateConnec
     cLuxInteractConnection_MoveObject *pConn = hplNew( cLuxInteractConnection_MoveObject,(msName, pProp, pMoveObject, mbInvert, mlStateUsed) );
     pConn->SetInteractionOnly(mbInteractionOnly);
     return pConn;
-    
+
     return pConn;
 }
 

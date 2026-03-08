@@ -62,7 +62,7 @@ enum eLuxAchievement
     eLuxAchievement_MasterArchivist,
 
     eLuxAchievement_LastEnum,
-    
+
     // pig
     eLuxAchievement_TheTeeth,
     eLuxAchievement_TheThroat,
@@ -99,7 +99,7 @@ enum eLuxEntityType
     eLuxEntityType_Enemy,
     eLuxEntityType_Rope,
     eLuxEntityType_CommentaryIcon,
-    
+
     eLuxEntityType_LastEnum
 };
 
@@ -121,7 +121,7 @@ enum eLuxPropType
     eLuxPropType_EmotionStone,
     eLuxPropType_NPC,
     eLuxPropType_MultiSlider,
-        
+
     eLuxPropType_LastEnum
 };
 
@@ -157,7 +157,7 @@ enum eLuxObjectType
     eLuxObjectType_Grab,
     eLuxObjectType_Push,
     eLuxObjectType_Slide,
-    
+
     eLuxObjectType_LastEnum
 };
 
@@ -185,7 +185,7 @@ enum eLuxItemType
     eLuxItemType_LampOil,
     eLuxItemType_Tinderbox,
     eLuxItemType_HandObject,
-    
+
     eLuxItemType_LastEnum
 };
 
@@ -397,14 +397,14 @@ enum eLuxAction
     eLuxAction_Ignite,
     eLuxAction_Rotate,
     eLuxAction_Lantern,
-    
+
     eLuxAction_Run,
     eLuxAction_Jump,
     eLuxAction_Crouch,
 
     eLuxAction_ZoomIn,
     eLuxAction_ZoomOut,
-    
+
 
     eLuxAction_LastEnum
 };
@@ -414,7 +414,7 @@ enum eLuxAction
 enum eLuxIgniteSource
 {
     eLuxIgniteSource_Player,
-    
+
     eLuxIgniteSource_LastEnum
 };
 
@@ -470,7 +470,7 @@ enum eLuxGlobalVolumeType
     eLuxGlobalVolumeType_InsanityCollapse,
     eLuxGlobalVolumeType_Commentary,
     eLuxGlobalVolumeType_DebugMenu,
-    
+
     eLuxGlobalVolumeType_LastEnum
 };
 
@@ -537,59 +537,70 @@ class cLuxMap;
 class iLuxUpdateable : public iUpdateable
 {
 public:
-    iLuxUpdateable(const tString& asName) : iUpdateable(asName){}
-    virtual ~iLuxUpdateable(){}
+    iLuxUpdateable(const tString& asName) : iUpdateable(asName) {}
+    virtual ~iLuxUpdateable() {}
 
-    virtual void LoadMainConfig(){}
-    virtual void LoadUserConfig(){}
+    virtual void LoadMainConfig() {}
+    virtual void LoadUserConfig() {}
 
-    virtual void SaveMainConfig(){}
-    virtual void SaveUserConfig(){}
+    virtual void SaveMainConfig() {}
+    virtual void SaveUserConfig() {}
 
-    virtual void LoadFonts(){}
+    virtual void LoadFonts() {}
     void ClearFonts();
     virtual void OnClearFonts() {}
     iFontData* LoadFont(const tString& asFile);
 
-    virtual void OnGameStart(){}
+    virtual void OnGameStart() {}
 
-    virtual void OnMapEnter(cLuxMap *apMap){}
-    virtual void OnMapLeave(cLuxMap *apMap){}
+    virtual void OnMapEnter(cLuxMap *apMap) {}
+    virtual void OnMapLeave(cLuxMap *apMap) {}
 
-    virtual void DestroyWorldEntities(cLuxMap *apMap){}
-    virtual void CreateWorldEntities(cLuxMap *apMap){}
+    virtual void DestroyWorldEntities(cLuxMap *apMap) {}
+    virtual void CreateWorldEntities(cLuxMap *apMap) {}
 
     void LuxRunMessage(eLuxUpdateableMessage aMessage, void * apData)
     {
         switch(aMessage)
         {
         case eLuxUpdateableMessage_OnMapEnter:
-            OnMapEnter((cLuxMap*) apData); break;
+            OnMapEnter((cLuxMap*) apData);
+            break;
         case eLuxUpdateableMessage_OnMapLeave:
-            OnMapLeave((cLuxMap*) apData); break;
-        
+            OnMapLeave((cLuxMap*) apData);
+            break;
+
         case eLuxUpdateableMessage_SaveMainConfig:
-            SaveMainConfig(); break;
+            SaveMainConfig();
+            break;
         case eLuxUpdateableMessage_SaveUserConfig:
-            SaveUserConfig(); break;
+            SaveUserConfig();
+            break;
 
         case eLuxUpdateableMessage_DestroyWorldEntities:
-            DestroyWorldEntities((cLuxMap*) apData); break;
+            DestroyWorldEntities((cLuxMap*) apData);
+            break;
         case eLuxUpdateableMessage_CreateWorldEntities:
-            CreateWorldEntities((cLuxMap*) apData); break;
+            CreateWorldEntities((cLuxMap*) apData);
+            break;
 
         case eLuxUpdateableMessage_OnGameStart:
-            OnGameStart(); break;
+            OnGameStart();
+            break;
 
         case eLuxUpdateableMessage_LoadMainConfig:
-            LoadMainConfig(); break;
+            LoadMainConfig();
+            break;
         case eLuxUpdateableMessage_LoadUserConfig:
-            LoadUserConfig(); break;
+            LoadUserConfig();
+            break;
 
         case eLuxUpdateableMessage_ClearFonts:
-            ClearFonts(); break;
+            ClearFonts();
+            break;
         case eLuxUpdateableMessage_LoadFonts:
-            LoadFonts(); break;
+            LoadFonts();
+            break;
         };
     }
 
@@ -611,11 +622,11 @@ class cLuxPlayer;
 class iLuxPlayerHelper : public iLuxUpdateable
 {
 public:
-    iLuxPlayerHelper(cLuxPlayer *apPlayer, const tString& asName) : mpPlayer(apPlayer) ,iLuxUpdateable(asName){}
-    virtual ~iLuxPlayerHelper(){}
+    iLuxPlayerHelper(cLuxPlayer *apPlayer, const tString& asName) : mpPlayer(apPlayer),iLuxUpdateable(asName) {}
+    virtual ~iLuxPlayerHelper() {}
 
-    virtual void RenderSolid(cRendererCallbackFunctions* apFunctions){}
-    virtual void RenderTrans(cRendererCallbackFunctions* apFunctions){}
+    virtual void RenderSolid(cRendererCallbackFunctions* apFunctions) {}
+    virtual void RenderTrans(cRendererCallbackFunctions* apFunctions) {}
 
 protected:
     cLuxPlayer *mpPlayer;
@@ -644,17 +655,23 @@ class iLuxCollideCallbackContainer
 {
 public:
     iLuxCollideCallbackContainer();
-    
+
     void DestroyCollideCallbacks();
 
     virtual int GetBodyNum()=0;
     virtual iPhysicsBody* GetBody(int alIdx)=0;
-    
+
     void CheckCollisionCallback(const tString& asName, cLuxMap *apMap);
     bool CheckEntityCollision(iLuxEntity*apEntity, cLuxMap *apMap);
 
-    bool HasCollideCallbacks(){ return mlstCollideCallbacks.empty() == false;}
-    tLuxCollideCallbackList* GetCollideCallbackList(){ return &mlstCollideCallbacks;}
+    bool HasCollideCallbacks()
+    {
+        return mlstCollideCallbacks.empty() == false;
+    }
+    tLuxCollideCallbackList* GetCollideCallbackList()
+    {
+        return &mlstCollideCallbacks;
+    }
     void AddCollideCallback(iLuxEntity *apEntity, const tString& asCallbackFunc, bool abRemoveAtCollide, int alStates);
     void RemoveCollideCallback(cLuxCollideCallback *apCallback);
     void RemoveCollideCallback(const tString& asEntityName);
@@ -674,7 +691,7 @@ typedef tLuxCollideCallbackContainerList::iterator tLuxCollideCallbackContainerL
 class cLuxAlphaFader
 {
 public:
-    cLuxAlphaFader() : mfAlpha(0), mbActive(false) {}    
+    cLuxAlphaFader() : mfAlpha(0), mbActive(false) {}
 
     void Reset();
     void Update(float afTimeStep);
@@ -793,8 +810,8 @@ class cLuxScriptVar : public iSerializable
 {
     kSerializableClassInit(cLuxScriptVar)
 public:
-    cLuxScriptVar(){}
-    cLuxScriptVar(const tString &asName) : msName(asName), msVal(""){}
+    cLuxScriptVar() {}
+    cLuxScriptVar(const tString &asName) : msName(asName), msVal("") {}
 
     tString msName;
     tString msVal;
@@ -860,11 +877,17 @@ class cLuxNode_Pos
 {
     friend class cLuxAreaNodeLoader_PosNode;
 public:
-    cLuxNode_Pos(const tString& asName) : msName(asName){}
+    cLuxNode_Pos(const tString& asName) : msName(asName) {}
 
-    const tString& GetName(){ return msName;}
+    const tString& GetName()
+    {
+        return msName;
+    }
 
-    const cVector3f& GetPosition(){ return mvPos;}
+    const cVector3f& GetPosition()
+    {
+        return mvPos;
+    }
 
 private:
     tString msName;

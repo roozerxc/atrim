@@ -3,66 +3,70 @@
 
 #include "graphics/PostEffect.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //------------------------------------------
-    
-    class cPostEffectParams_ImageTrail : public iPostEffectParams
-    {
-    public:
-        cPostEffectParams_ImageTrail() : iPostEffectParams("ImageTrail"),
+//------------------------------------------
 
-            mfAmount(0.3f)
-        {}
-        
-        kPostEffectParamsClassInit(cPostEffectParams_ImageTrail)
+class cPostEffectParams_ImageTrail : public iPostEffectParams
+{
+public:
+    cPostEffectParams_ImageTrail() : iPostEffectParams("ImageTrail"),
 
-        float mfAmount;
+        mfAmount(0.3f)
+    {}
 
-    };
+    kPostEffectParamsClassInit(cPostEffectParams_ImageTrail)
 
-    //------------------------------------------
-    
-    class cPostEffectType_ImageTrail : public iPostEffectType
-    {
+    float mfAmount;
+
+};
+
+//------------------------------------------
+
+class cPostEffectType_ImageTrail : public iPostEffectType
+{
     friend class cPostEffect_ImageTrail;
-    public:
-        cPostEffectType_ImageTrail(cGraphics *apGraphics, cResources *apResources);
-        virtual ~cPostEffectType_ImageTrail();
+public:
+    cPostEffectType_ImageTrail(cGraphics *apGraphics, cResources *apResources);
+    virtual ~cPostEffectType_ImageTrail();
 
-        iPostEffect *CreatePostEffect(iPostEffectParams *apParams);
-    
-    private:
-        iGpuProgram *mpProgram;
-    };
-    
-    //------------------------------------------
+    iPostEffect *CreatePostEffect(iPostEffectParams *apParams);
 
-    class cPostEffect_ImageTrail : public iPostEffect
+private:
+    iGpuProgram *mpProgram;
+};
+
+//------------------------------------------
+
+class cPostEffect_ImageTrail : public iPostEffect
+{
+public:
+    cPostEffect_ImageTrail(cGraphics *apGraphics,cResources *apResources, iPostEffectType *apType);
+    ~cPostEffect_ImageTrail();
+
+    void Reset();
+
+private:
+    void OnSetActive(bool abX);
+    void OnSetParams();
+    iPostEffectParams *GetTypeSpecificParams()
     {
-    public:
-        cPostEffect_ImageTrail(cGraphics *apGraphics,cResources *apResources, iPostEffectType *apType);
-        ~cPostEffect_ImageTrail();
+        return &mParams;
+    }
 
-        void Reset();
+    iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
 
-    private:
-        void OnSetActive(bool abX);
-        void OnSetParams();
-        iPostEffectParams *GetTypeSpecificParams() { return &mParams; }
-        
-        iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
+    iFrameBuffer *mpAccumBuffer;
+    iTexture *mpAccumTexture;
 
-        iFrameBuffer *mpAccumBuffer;
-        iTexture *mpAccumTexture;
-        
-        cPostEffectType_ImageTrail *mpImageTrailType;
-        cPostEffectParams_ImageTrail mParams;
+    cPostEffectType_ImageTrail *mpImageTrailType;
+    cPostEffectParams_ImageTrail mParams;
 
-        bool mbClearFrameBuffer;
-    };
+    bool mbClearFrameBuffer;
+};
 
-    //------------------------------------------
+//------------------------------------------
 
 };
 #endif // HPL_POSTEFFECT_IMAGE_TRAIL_H

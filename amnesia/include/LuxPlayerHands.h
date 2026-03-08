@@ -31,7 +31,7 @@ private:
 
 enum eLuxHandsState
 {
-    eLuxHandsState_Disabled, 
+    eLuxHandsState_Disabled,
     eLuxHandsState_Holster,
     eLuxHandsState_Draw,
     eLuxHandsState_Idle,
@@ -42,12 +42,12 @@ enum eLuxHandsState
 
 class cLuxPlayerHands : public iLuxPlayerHelper
 {
-friend class cLuxPlayerHands_SaveData;
-friend class cLuxPlayerHandsLoader;
-public:    
+    friend class cLuxPlayerHands_SaveData;
+    friend class cLuxPlayerHandsLoader;
+public:
     cLuxPlayerHands(cLuxPlayer *apPlayer);
     ~cLuxPlayerHands();
-    
+
     ///////////////////////////////
     // General
     void OnStart();
@@ -78,15 +78,27 @@ public:
     iLuxHandObject* GetHandObject(const tString& asName);
 
     void SetCurrentHandObject(iLuxHandObject *apObject);
-    iLuxHandObject* GetCurrentHandObject(){ return mpCurrentHandObject;}
+    iLuxHandObject* GetCurrentHandObject()
+    {
+        return mpCurrentHandObject;
+    }
 
     void SetState(eLuxHandsState aState);
-    eLuxHandsState GetState(){ return mHandState; }
+    eLuxHandsState GetState()
+    {
+        return mHandState;
+    }
 
-    const tString& GetCurrentAnimation(){ return msCurrentAnim; }
-    cMeshEntity *GetHandsEntity(){ return mpHandsEntity;}
+    const tString& GetCurrentAnimation()
+    {
+        return msCurrentAnim;
+    }
+    cMeshEntity *GetHandsEntity()
+    {
+        return mpHandsEntity;
+    }
 
-    
+
 public://Only used by hand object
     float mfHandObjectChargeCount;
     int mlHandObjectState;
@@ -101,7 +113,7 @@ private:
     void DestroyHandEntity(cLuxMap *apMap);
     void CreateAndAttachHandObject(cLuxMap *apMap, iLuxHandObject *apHandObject);
     void HideAllHandObjects();
-    
+
     void UpdatePlayerHandsPos(float afTimeStep);
 
     iLuxHandObject* LoadHandObject(const tString& asName);

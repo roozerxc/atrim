@@ -3,109 +3,113 @@
 
 #include "math/MathTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    template <class T>
-    class cPidController
+template <class T>
+class cPidController
+{
+public:
+    float p, i,d;
+    //////////////////////////////////////////
+    // Constructors
+    /////////////////////////////////////////
+    cPidController()
     {
-    public:
-        float p, i ,d;
-        //////////////////////////////////////////
-        // Constructors
-        /////////////////////////////////////////
-        cPidController()
+        Reset();
+    }
+    cPidController(float afP, float afI, float afD, int alErrorNum)
+    {
+        p = afP;
+        i=afI;
+        d = afD;
+        SetErrorNum(alErrorNum);
+        Reset();
+    }
+
+    //////////////////////////////////////////
+    // Public
+    /////////////////////////////////////////
+
+    //------------------------------------
+    T Output(T aError, float afTimeStep)
+    {
+        mvErrors[mlErrorNum] = aError;
+        mvTimeSteps[mlErrorNum] = afTimeStep;
+
+        integral =0;
+        size_t lCount = mvErrors.size();
+        for(size_t error=0; error<lCount; ++error)
         {
-            Reset();
-        }
-        cPidController(float afP, float afI, float afD, int alErrorNum)
-        {
-            p = afP; i=afI; d = afD;
-            SetErrorNum(alErrorNum);
-            Reset();
-        }
-
-        //////////////////////////////////////////
-        // Public
-        /////////////////////////////////////////
-
-        //------------------------------------
-        T Output(T aError, float afTimeStep)
-        {
-            mvErrors[mlErrorNum] = aError;
-            mvTimeSteps[mlErrorNum] = afTimeStep;
-
-            integral =0;
-            size_t lCount = mvErrors.size();
-            for(size_t error=0; error<lCount;++error){
-                integral += mvErrors[error] * mvTimeSteps[error];
-            }
-
-            derivative = 0.0f;
-            if(mlLastNum>=0)
-            {
-                derivative = (mvErrors[mlErrorNum] - mvErrors[mlLastNum]) / afTimeStep;
-            }
-
-            mlLastNum = mlErrorNum;
-            mlErrorNum++;
-            if(mlErrorNum >= (int)mvErrors.size())mlErrorNum =0;
-
-            return mvErrors[mlLastNum]*p + integral*i + derivative*d;
+            integral += mvErrors[error] * mvTimeSteps[error];
         }
 
-        //------------------------------------
-
-        void SetErrorNum(int alErrorNum)
+        derivative = 0.0f;
+        if(mlLastNum>=0)
         {
-            mvErrors.resize(alErrorNum,0);
-            mvTimeSteps.resize(alErrorNum,0);
+            derivative = (mvErrors[mlErrorNum] - mvErrors[mlLastNum]) / afTimeStep;
         }
 
-        //------------------------------------
+        mlLastNum = mlErrorNum;
+        mlErrorNum++;
+        if(mlErrorNum >= (int)mvErrors.size())mlErrorNum =0;
 
-        void Reset()
-        {
-            mlErrorNum = 0;
-            mlLastNum =-1;
-            mvTimeSteps.assign(mvTimeSteps.size(),0);
+        return mvErrors[mlLastNum]*p + integral*i + derivative*d;
+    }
 
-            integral = 0;
-            derivative = 0;
-        }
+    //------------------------------------
 
-        //------------------------------------
+    void SetErrorNum(int alErrorNum)
+    {
+        mvErrors.resize(alErrorNum,0);
+        mvTimeSteps.resize(alErrorNum,0);
+    }
 
-        T GetLastError()
-        {
-            if(mlLastNum>=0) return mvErrors[mlLastNum];
-            return 0;
-        }
+    //------------------------------------
 
-        T GetLastDerivative()
-        {
-            return derivative;
-        }
+    void Reset()
+    {
+        mlErrorNum = 0;
+        mlLastNum =-1;
+        mvTimeSteps.assign(mvTimeSteps.size(),0);
 
-        T GetLastIntegral()
-        {
-            return integral;
-        }
+        integral = 0;
+        derivative = 0;
+    }
 
-        //------------------------------------
+    //------------------------------------
 
-    private:
-        std::vector<T> mvErrors;
-        std::vector<float> mvTimeSteps;
+    T GetLastError()
+    {
+        if(mlLastNum>=0) return mvErrors[mlLastNum];
+        return 0;
+    }
 
-        T integral,derivative;
+    T GetLastDerivative()
+    {
+        return derivative;
+    }
 
-        int mlErrorNum;
-        int mlLastNum;
-    };
+    T GetLastIntegral()
+    {
+        return integral;
+    }
 
-    //---------------------------------
+    //------------------------------------
 
-    typedef cPidController<float> cPidControllerf;
-    typedef cPidController<cVector3f> cPidControllerVec3;
+private:
+    std::vector<T> mvErrors;
+    std::vector<float> mvTimeSteps;
+
+    T integral,derivative;
+
+    int mlErrorNum;
+    int mlLastNum;
+};
+
+//---------------------------------
+
+typedef cPidController<float> cPidControllerf;
+typedef cPidController<cVector3f> cPidControllerVec3;
 };
 #endif // HPL_PID_CONTROLLER_H

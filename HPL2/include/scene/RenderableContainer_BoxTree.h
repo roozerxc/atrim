@@ -3,106 +3,146 @@
 
 #include "scene/RenderableContainer.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //-------------------------------------------
+//-------------------------------------------
 
-    class cBoxTreeTempNode;
+class cBoxTreeTempNode;
 
-    typedef std::list<cBoxTreeTempNode*> tBoxTreeTempNodeList;
-    typedef std::list<cBoxTreeTempNode*>::iterator tBoxTreeTempNodeListIt;
+typedef std::list<cBoxTreeTempNode*> tBoxTreeTempNodeList;
+typedef std::list<cBoxTreeTempNode*>::iterator tBoxTreeTempNodeListIt;
 
-    class cBoxTreeTempNode
+class cBoxTreeTempNode
+{
+public:
+    cBoxTreeTempNode(cBoxTreeTempNode *apParent) : mpParent(apParent), mlSplitAxisCount(0) {}
+    ~cBoxTreeTempNode()
     {
-    public:
-        cBoxTreeTempNode(cBoxTreeTempNode *apParent) : mpParent(apParent), mlSplitAxisCount(0) {}
-        ~cBoxTreeTempNode(){ STLDeleteAll(mlstChildren); };
-
-        cBoxTreeTempNode *mpParent;
-        int mlSplitAxisCount;
-
-        tBoxTreeTempNodeList mlstChildren;
-        tRenderableList mlstObjects;
+        STLDeleteAll(mlstChildren);
     };
 
-    //-------------------------------------------
-    
-    class cRCNode_BoxTree : public iRenderableContainerNode
-    {
+    cBoxTreeTempNode *mpParent;
+    int mlSplitAxisCount;
+
+    tBoxTreeTempNodeList mlstChildren;
+    tRenderableList mlstObjects;
+};
+
+//-------------------------------------------
+
+class cRCNode_BoxTree : public iRenderableContainerNode
+{
     friend class cRenderableContainer_BoxTree;
-    public:
-        cRCNode_BoxTree();
-        ~cRCNode_BoxTree();
+public:
+    cRCNode_BoxTree();
+    ~cRCNode_BoxTree();
 
-    };
+};
 
-    //-------------------------------------------
-    
-    class cRenderableContainer_BoxTree : public iRenderableContainer
+//-------------------------------------------
+
+class cRenderableContainer_BoxTree : public iRenderableContainer
+{
+public:
+    cRenderableContainer_BoxTree();
+    ~cRenderableContainer_BoxTree();
+
+    void Add(iRenderable *apRenderable);
+    /**
+     * Note that this is only allowed before compilation!
+     */
+    void Remove(iRenderable *apRenderable);
+
+    iRenderableContainerNode* GetRoot();
+
+    void Compile();
+
+    void RenderDebug(cRendererCallbackFunctions *apFunctions);
+
+    void SetMinLeafObjects(int alX)
     {
-    public:
-        cRenderableContainer_BoxTree();
-        ~cRenderableContainer_BoxTree();
+        mlMinLeafObjects = alX;
+    }
+    int GetMinLeafObjects()
+    {
+        return mlMinLeafObjects;
+    }
 
-        void Add(iRenderable *apRenderable);
-        /**
-         * Note that this is only allowed before compilation!
-         */
-        void Remove(iRenderable *apRenderable);
+    void SetMinSideLength(float afX)
+    {
+        mfMinSideLength = afX;
+    }
+    float GetMinSideLength()
+    {
+        return mfMinSideLength;
+    }
 
-        iRenderableContainerNode* GetRoot();
+    void SetMaxSideLength(float afX)
+    {
+        mfMaxSideLength = afX;
+    }
+    float GetMaxnSideLength()
+    {
+        return mfMaxSideLength;
+    }
 
-        void Compile();    
+    void SetMaxVolumeCalcObjects(int alX)
+    {
+        mlMaxVolumeCalcObjects = alX;
+    }
+    int GetMaxVolumeCalcObjects()
+    {
+        return mlMaxVolumeCalcObjects;
+    }
 
-        void RenderDebug(cRendererCallbackFunctions *apFunctions);
+    void SetMaxIntersectionAmount(float afX)
+    {
+        mfMaxIntersectionAmount = afX;
+    }
+    float GetMaxIntersectionAmount()
+    {
+        return mfMaxIntersectionAmount;
+    }
 
-        void SetMinLeafObjects(int alX){mlMinLeafObjects = alX;}
-        int GetMinLeafObjects(){ return mlMinLeafObjects;}
+    void SetMinForceIntersectionRelativeSize(float afX)
+    {
+        mfMinForceIntersectionRelativeSize = afX;
+    }
+    float GetMinForceIntersectionRelativeSize()
+    {
+        return mfMinForceIntersectionRelativeSize;
+    }
 
-        void SetMinSideLength(float afX){mfMinSideLength = afX;}
-        float GetMinSideLength(){ return mfMinSideLength;}
 
-        void SetMaxSideLength(float afX){mfMaxSideLength = afX;}
-        float GetMaxnSideLength(){ return mfMaxSideLength;}
+private:
+    void CompileTempNode(cBoxTreeTempNode *apNode, int alLevel, int alSplitAxis);
+    void BuildNodeFromTemp(cBoxTreeTempNode *apTempNode, cRCNode_BoxTree *apNode, int alLevel);
 
-        void SetMaxVolumeCalcObjects(int alX){mlMaxVolumeCalcObjects = alX;}
-        int GetMaxVolumeCalcObjects(){ return mlMaxVolumeCalcObjects;}
+    void RenderDebugNode(cRendererCallbackFunctions *apFunctions, cRCNode_BoxTree *apNode, int alLevel);
 
-        void SetMaxIntersectionAmount(float afX){mfMaxIntersectionAmount = afX;}
-        float GetMaxIntersectionAmount(){ return mfMaxIntersectionAmount;}
-        
-        void SetMinForceIntersectionRelativeSize(float afX){mfMinForceIntersectionRelativeSize = afX;}
-        float GetMinForceIntersectionRelativeSize(){ return mfMinForceIntersectionRelativeSize;}
-        
+    void CalculateMinMax(tRenderableList *apObjectList, cVector3f& avMin, cVector3f& avMax);
+    cVector3f CalculateSize(tRenderableList *apObjectList);
 
-    private:
-        void CompileTempNode(cBoxTreeTempNode *apNode, int alLevel, int alSplitAxis);
-        void BuildNodeFromTemp(cBoxTreeTempNode *apTempNode, cRCNode_BoxTree *apNode, int alLevel);
+    float CalculateObjectsVolume(tRenderableList &alstObjects);
+    float CalculateBestCutPlane(tRenderableList &alstObjects, int alAxis, const cVector3f &avNodeSize);
 
-        void RenderDebugNode(cRendererCallbackFunctions *apFunctions, cRCNode_BoxTree *apNode, int alLevel);
+    int GetSplitGroup(iRenderable *apObject, float afCutPlane, int alAxis, const cVector3f &avNodeSize);
 
-        void CalculateMinMax(tRenderableList *apObjectList, cVector3f& avMin, cVector3f& avMax);
-        cVector3f CalculateSize(tRenderableList *apObjectList);
+    cRCNode_BoxTree* mpRoot;
 
-        float CalculateObjectsVolume(tRenderableList &alstObjects);
-        float CalculateBestCutPlane(tRenderableList &alstObjects, int alAxis, const cVector3f &avNodeSize);
+    int mlMinLeafObjects;
+    float mfMinSideLength;
+    float mfMaxSideLength;
+    float mfMaxIntersectionAmount;
+    int mlMaxVolumeCalcObjects;
+    float mfMinForceIntersectionRelativeSize;
 
-        int GetSplitGroup(iRenderable *apObject, float afCutPlane, int alAxis, const cVector3f &avNodeSize);
-        
-        cRCNode_BoxTree* mpRoot;
+    tRenderableList m_mlstTempObjects;
 
-        int mlMinLeafObjects;
-        float mfMinSideLength;
-        float mfMaxSideLength;
-        float mfMaxIntersectionAmount;
-        int mlMaxVolumeCalcObjects;
-        float mfMinForceIntersectionRelativeSize;
+    cRenderableContainerObjectCallback *mpObjectCalllback;
+};
 
-        tRenderableList m_mlstTempObjects;
-
-        cRenderableContainerObjectCallback *mpObjectCalllback;
-    };
-
-    //-------------------------------------------
+//-------------------------------------------
 };
 #endif // HPL_RENDERABLE_CONTAINER_BOXTREE_H

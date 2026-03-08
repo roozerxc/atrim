@@ -75,7 +75,7 @@ void cLuxPropLoader_Item::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsO
 
     ///////////////////////////
     // All
-    tString sCustomSubItemTypeName = apInstanceVars->GetVarString("CustomSubItemTypeName","");    
+    tString sCustomSubItemTypeName = apInstanceVars->GetVarString("CustomSubItemTypeName","");
 
     if(sCustomSubItemTypeName != "") pItem->msSubItemTypeName = sCustomSubItemTypeName;
 
@@ -134,9 +134,9 @@ bool cLuxProp_Item::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 {
     ////////////////////
     //Picked up item
-    bool bRemoveProp=true;    
+    bool bRemoveProp=true;
 
-    gpBase->mpInventory->AddItem(msName, mItemType, msSubItemTypeName, msImageFile, mfAmount, msVal,msExtraVal ,&bRemoveProp);
+    gpBase->mpInventory->AddItem(msName, mItemType, msSubItemTypeName, msImageFile, mfAmount, msVal,msExtraVal,&bRemoveProp);
 
     if(bRemoveProp)
     {
@@ -159,7 +159,7 @@ bool cLuxProp_Item::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
     {
     }
 
-    
+
     return true;
 }
 
@@ -174,7 +174,7 @@ void cLuxProp_Item::OnResetProperties()
 
 void cLuxProp_Item::OnSetupAfterLoad(cWorld *apWorld)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -188,7 +188,7 @@ void cLuxProp_Item::UpdatePropSpecific(float afTimeStep)
     cCamera *pCam =  gpBase->mpPlayer->GetCamera();
     cVector3f vCameraPos = pCam->GetPosition();
     cVector3f vBodyPos = mvBodies[0]->GetLocalPosition();
-    vCameraPos.y=0; 
+    vCameraPos.y=0;
     vBodyPos.y =0;
 
     float fDistSqrt = cMath::Vector3DistSqr(vCameraPos, vBodyPos);
@@ -292,7 +292,7 @@ void cLuxProp_Item::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //Init
     super_class::LoadFromSaveData(apSaveData);
     cLuxProp_Item_SaveData *pData = static_cast<cLuxProp_Item_SaveData*>(apSaveData);
-    
+
     //////////////////
     //Set variables
     kCopyFromVar(pData,msVal);

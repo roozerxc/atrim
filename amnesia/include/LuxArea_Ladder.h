@@ -20,9 +20,9 @@ public:
 
 class cLuxArea_Ladder : public iLuxArea
 {
-typedef iLuxArea super_class;
-friend class cLuxAreaLoader_Ladder;
-public:    
+    typedef iLuxArea super_class;
+    friend class cLuxAreaLoader_Ladder;
+public:
     cLuxArea_Ladder(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxArea_Ladder();
 
@@ -40,16 +40,28 @@ public:
     //////////////////////
     //Properties
     cVector3f GetStartRotation();
-    
-    const cVector3f& GetForward(){ return mvForward;}
-    float GetMaxY(){ return mfMaxY;}
-    float GetMinY(){ return mfMinY;}
 
-    const tString& GetMaterial(){return msMaterial;}
+    const cVector3f& GetForward()
+    {
+        return mvForward;
+    }
+    float GetMaxY()
+    {
+        return mfMaxY;
+    }
+    float GetMinY()
+    {
+        return mfMinY;
+    }
+
+    const tString& GetMaterial()
+    {
+        return msMaterial;
+    }
 
     //////////////////////
     //Connection callbacks
-    void OnConnectionStateChange(iLuxEntity *apEntity, int alState){}
+    void OnConnectionStateChange(iLuxEntity *apEntity, int alState) {}
 
     //////////////////////
     //Save data stuff
@@ -84,10 +96,10 @@ public:
     ~cLuxAreaLoader_Ladder();
 
     iLuxArea *CreateArea(const tString& asName, int alID, cLuxMap *apMap);
-    
+
     void LoadVariables(iLuxArea *apArea, cWorld *apWorld);
     void SetupArea(iLuxArea *apArea, cWorld *apWorld);
-    
+
 };
 
 //----------------------------------------------

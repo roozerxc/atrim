@@ -5,22 +5,23 @@
 
 struct SDL_mutex;
 
-namespace hpl {
+namespace hpl
+{
 
-    class cMutexSDL : public iMutex
-    {
-    public:
-        
-        cMutexSDL();
-        ~cMutexSDL();
+class cMutexSDL : public iMutex
+{
+public:
 
-        bool Lock();
-        bool Unlock();
+    cMutexSDL();
+    ~cMutexSDL();
 
-    private:
-        SDL_mutex* mpMutexHandle;
+    bool Lock();
+    bool Unlock();
 
-    };
+private:
+    SDL_mutex* mpMutexHandle;
+
+};
 
 };
 #endif // HPL_MUTEX_SDL_H

@@ -8,63 +8,64 @@
 
 #include "scene/Scene.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
-    
-    cVideoLoaderHandler::cVideoLoaderHandler(cResources* apResources,cGraphics *apGraphics)
+//-----------------------------------------------------------------------
+
+cVideoLoaderHandler::cVideoLoaderHandler(cResources* apResources,cGraphics *apGraphics)
+{
+    mpResources = apResources;
+    mpGraphics = apGraphics;
+}
+
+//-----------------------------------------------------------------------
+
+cVideoLoaderHandler::~cVideoLoaderHandler()
+{
+
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+iVideoStream* cVideoLoaderHandler::LoadVideo(const tWString& asFile)
+{
+    iVideoLoader *pVideoLoader = static_cast<iVideoLoader*>(GetLoaderForFile(asFile));
+
+    if(pVideoLoader)
     {
-        mpResources = apResources;
-        mpGraphics = apGraphics;
-    }
-    
-    //-----------------------------------------------------------------------
-
-    cVideoLoaderHandler::~cVideoLoaderHandler()
-    {
-        
-    }
-
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-    
-    iVideoStream* cVideoLoaderHandler::LoadVideo(const tWString& asFile)
-    {
-        iVideoLoader *pVideoLoader = static_cast<iVideoLoader*>(GetLoaderForFile(asFile));
-
-        if(pVideoLoader)
-        {
-                return pVideoLoader->LoadVideo(asFile);
-        }
-        
-        return NULL;
+        return pVideoLoader->LoadVideo(asFile);
     }
 
-    //-----------------------------------------------------------------------
+    return NULL;
+}
 
-    
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
 
-    
-    void cVideoLoaderHandler::SetupLoader(iResourceLoader *apLoader)
-    {
-        iVideoLoader *pVideoLoader = static_cast<iVideoLoader*>(apLoader);
-        
-        pVideoLoader->mpLowLevelGraphics = mpGraphics->GetLowLevel();
-    }
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+
+
+void cVideoLoaderHandler::SetupLoader(iResourceLoader *apLoader)
+{
+    iVideoLoader *pVideoLoader = static_cast<iVideoLoader*>(apLoader);
+
+    pVideoLoader->mpLowLevelGraphics = mpGraphics->GetLowLevel();
+}
+
+//-----------------------------------------------------------------------
 }

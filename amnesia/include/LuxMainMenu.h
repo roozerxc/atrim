@@ -33,7 +33,7 @@ enum eLuxMainMenuExit
     eLuxMainMenuExit_QuitToMenu,
     eLuxMainMenuExit_QuitAndSave,
     eLuxMainMenuExit_LoadGame,
-    
+
     eLuxMainMenuExit_LastEnum
 };
 
@@ -43,8 +43,8 @@ class iLuxMainMenuWindow
 {
 public:
     iLuxMainMenuWindow(cGuiSet *apGuiSet, cGuiSkin *apGuiSkin);
-    virtual ~iLuxMainMenuWindow(){}
-    
+    virtual ~iLuxMainMenuWindow() {}
+
     virtual void CreateGui()=0;
 
     virtual void ExitPressed()=0;
@@ -52,7 +52,7 @@ public:
     void SetActive(bool abX);
 
 protected:
-    virtual void OnSetActive(bool abX){}
+    virtual void OnSetActive(bool abX) {}
 
     cGui *mpGui;
 
@@ -70,7 +70,7 @@ protected:
 
 class cLuxMainMenu : public iLuxUpdateable
 {
-public:    
+public:
     cLuxMainMenu();
     ~cLuxMainMenu();
 
@@ -79,7 +79,7 @@ public:
 
     void LoadFonts();
     void OnClearFonts();
-    
+
     void OnStart();
     void Update(float afTimeStep);
     void Reset();
@@ -91,14 +91,23 @@ public:
     void OnDraw(float afFrameTime);
     void OnPostRender(float afFrameTime);
 
-    cGuiSet* GetSet() { return mpGuiSet; }
+    cGuiSet* GetSet()
+    {
+        return mpGuiSet;
+    }
 
     void SetWindowActive(eLuxMainMenuWindow aWindow);
-    void SetTopMenuAlpha(float afX) { mfTopMenuAlpha = afX; }
+    void SetTopMenuAlpha(float afX)
+    {
+        mfTopMenuAlpha = afX;
+    }
 
     void ExitPressed();
 
-    void RecreateGui(){ mbRecreateGui = true;}
+    void RecreateGui()
+    {
+        mbRecreateGui = true;
+    }
 
     void AppLostInputFocus();
     void AppGotInputFocus();
@@ -109,18 +118,18 @@ public:
     void AppDeviceWasPlugged();
     void AppDeviceWasRemoved();
 #endif
-    
+
 private:
     ///////////////////////
     // Helper methods
-    
+
     void OnMenuExit();
 
     void UpdateBase(float afTimeStep);
 
     void UpdateTopMenu(float afTimeStep);
     void SetTopMenuVisible(bool abVisible);
-    
+
     void CreateGui();
 
     void CreateTopMenuGui();
@@ -158,7 +167,7 @@ private:
 
     bool PressBackToGame(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressBackToGame);
-    
+
     bool ClickedStartGamePopup(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(ClickedStartGamePopup);
 
@@ -179,7 +188,7 @@ private:
 
     bool PressExitToMainMenu(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressExitToMainMenu);
-    
+
     bool ClickedExitToMainMenuPopup(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(ClickedExitToMainMenuPopup);
 
@@ -250,7 +259,7 @@ private:
     cGuiSet *mpGuiSet;
 
     iFontData *mpFont;
-    
+
     cViewport *mpViewport;
 
     iTexture *mpScreenTexture;
@@ -260,7 +269,7 @@ private:
     iGpuProgram *mpBlurProgram[2]; //0=Hori, 1=Vert
 
     cGuiGfxElement *mpLogoGfx;
-    
+
     std::vector<iLuxMainMenuWindow*> mvWindows;
     eLuxMainMenuWindow mCurrentWindow;
 
@@ -275,9 +284,9 @@ private:
     std::vector<cWidgetLabel*> mvTopMenuLabels;
     bool mbTopMenuVisible;
     float mfTopMenuAlpha;
-    
+
     float mfMenuFadeAlpha;
-    
+
     bool mbRecreateGui;
     bool mbExiting;
     eLuxMainMenuExit mExitMessage;

@@ -12,7 +12,7 @@
 
 cLuxSavedMap::cLuxSavedMap()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -78,7 +78,7 @@ void cLuxSavedMap::FromMap(cLuxMap *apMap)
     mfFogEnd = pWorld->GetFogEnd();
     mfFogFalloffExp = pWorld->GetFogFalloffExp();
     mFogColor = pWorld->GetFogColor();
-    
+
     /////////////////////////////////
     // Lights
     {
@@ -143,7 +143,7 @@ void cLuxSavedMap::FromMap(cLuxMap *apMap)
         {
             iLuxEntity_SaveData *pSaveData = pEntity->CreateSaveData();
             pEntity->SaveToSaveData(pSaveData);
-            
+
             mlstEntities.Add(pSaveData);
         }
     }
@@ -176,7 +176,7 @@ void cLuxSavedMap::FromMap(cLuxMap *apMap)
         while(ropeIt.HasNext())
         {
             cRopeEntity *pRope = ropeIt.Next();
-            
+
             cEngineRope_SaveData saveRope;
             saveRope.FromRope(pRope);
 
@@ -201,7 +201,7 @@ void cLuxSavedMap::FromMap(cLuxMap *apMap)
 //-----------------------------------------------------------------------
 
 void cLuxSavedMap::ToMap(cLuxMap *apMap)
-{    
+{
     /////////////////////////////////
     // Init
     cWorld *pWorld = apMap->GetWorld();
@@ -226,7 +226,7 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
     /////////////////////////////////
     // Sky box
     pWorld->SetSkyBoxActive(mbSkyBoxActive);
-    if(msSkyboxTexture=="")    
+    if(msSkyboxTexture=="")
     {
         pWorld->SetSkyBox(NULL, true);
     }
@@ -258,7 +258,7 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
             iLight *pLight = pWorld->GetLightFromUniqueID(saveLight.mlID);
             if(pLight)
             {
-                saveLight.ToLight(pLight);    
+                saveLight.ToLight(pLight);
             }
             else
             {
@@ -278,7 +278,7 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
             cSoundEntity *pSound = pWorld->CreateSoundEntity(saveSound.msName, saveSound.msSoundDataName, saveSound.mbRemoveWhenOver);
             if(pSound)
             {
-                saveSound.ToSound(pSound);    
+                saveSound.ToSound(pSound);
             }
             else
             {
@@ -311,7 +311,7 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
     // Entities
     tLuxEntityList lstEntities;
     {
-        gpBase->mpCurrentMapLoading = apMap;    
+        gpBase->mpCurrentMapLoading = apMap;
 
         /////////////////////
         //Create entities
@@ -320,7 +320,8 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
         {
             iLuxEntity_SaveData *pSaveEntity = it.Next();
             iLuxEntity *pGameEntity = pSaveEntity->CreateEntity(apMap);
-            if (pGameEntity) {
+            if (pGameEntity)
+            {
                 pGameEntity->LoadFromSaveData(pSaveEntity);
                 pGameEntity->SetSaveData(pSaveEntity);
 
@@ -330,7 +331,7 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
 
         gpBase->mpCurrentMapLoading = NULL;
     }
-    
+
     /////////////////////////////////
     // Ropes (needs to be after entities)
     {
@@ -367,13 +368,13 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
         while(it.HasNext())
         {
             cLuxEventTimer& savedTimer = it.Next();
-            
+
             cLuxEventTimer *pTimer = hplNew(cLuxEventTimer,());
             *pTimer = savedTimer;
 
             apMap->mlstTimers.push_back(pTimer);
         }
-        
+
     }
 
     /////////////////////
@@ -387,7 +388,7 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
 
             pEntity->SetupSaveData(pEntity->GetSaveData());
             if(pEntity->IsActive())
-                pEntity->UpdateLogic(0.001f); 
+                pEntity->UpdateLogic(0.001f);
         }
 
         gpBase->mpCurrentMapLoading = NULL;
@@ -402,7 +403,7 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
         {
             cLuxUseItemCallback *pCallback = hplNew(cLuxUseItemCallback, ());
             *pCallback = mvUseItemCallbacks[i];
-            
+
             //Log("Adding callback: '%s' '%s' '%s' '%s'\n", pCallback->msName.c_str(), pCallback->msEntity.c_str(), pCallback->msItem.c_str(), pCallback->msFunction.c_str());
 
             apMap->mlstUseItemCallbacks.push_back(pCallback);

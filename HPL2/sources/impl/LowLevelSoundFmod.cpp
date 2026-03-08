@@ -12,162 +12,165 @@
 
 #include <fmod/fmod.h>
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cLowLevelSoundFmod::cLowLevelSoundFmod()
+cLowLevelSoundFmod::cLowLevelSoundFmod()
+{
+    mvFormats[0] = "WAV";
+    mvFormats[1] = "OGG";
+    mvFormats[2] = "MP3";
+    mvFormats[3] = "";
+
+
+    Log(" Initializing FMOD.\n");
+    FSOUND_SetDriver(0);
+    FSOUND_SetMixer(FSOUND_MIXER_AUTODETECT);
+
+    //Debug:
+    //FSOUND_SetMaxHardwareChannels(0);
+
+    FSOUND_Init(44100, 32, 0); //Change this to get effects later on..
+
+    //Setup channel limit.
+    int lChannels2D, lChannels3d, lChannelsTotal;
+    FSOUND_GetNumHWChannels(&lChannels2D,&lChannels3d,&lChannelsTotal);
+    Log(" Number of hardware 2D channels: %d\n",lChannels2D);
+    Log(" Number of hardware 3D channels: %d\n",lChannels3d);
+    Log(" Number of total hardware channels: %d\n",lChannelsTotal);
+
+    FSOUND_SetMinHardwareChannels(32);
+    FSOUND_SetMaxHardwareChannels(32);
+
+    //Default listener settings.
+    float Pos[3] = {0,0,0};
+    float Vel[3] = {0,0,0};
+
+    FSOUND_3D_Listener_SetAttributes(Pos,Vel,0,0,-1,0,1,0);
+    mvListenerForward = cVector3f(0,0,-1);
+    mvListenerUp = cVector3f(0,1,0);
+
+    //Default volume:
+    SetVolume(1.0f);
+}
+
+//-----------------------------------------------------------------------
+
+cLowLevelSoundFmod::~cLowLevelSoundFmod()
+{
+    FSOUND_Close();
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHOD
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+iSoundData* cLowLevelSoundFmod::LoadSoundData(const tString& asName, const tString& asFilePath,
+        const tString& asType, bool abStream,bool abLoopStream)
+{
+    cFmodSoundData* pSoundData = new cFmodSoundData(asName,abStream);
+
+    pSoundData->SetLoopStream(abLoopStream);
+
+    if(pSoundData->CreateFromFile(asFilePath)==false)
     {
-        mvFormats[0] = "WAV";mvFormats[1] = "OGG";mvFormats[2] = "MP3";
-        mvFormats[3] = "";
-
-        
-        Log(" Initializing FMOD.\n");
-        FSOUND_SetDriver(0);
-        FSOUND_SetMixer(FSOUND_MIXER_AUTODETECT);
-
-        //Debug:
-        //FSOUND_SetMaxHardwareChannels(0);
-        
-        FSOUND_Init(44100, 32, 0); //Change this to get effects later on..
-
-        //Setup channel limit.
-        int lChannels2D, lChannels3d, lChannelsTotal;
-        FSOUND_GetNumHWChannels(&lChannels2D,&lChannels3d,&lChannelsTotal);
-        Log(" Number of hardware 2D channels: %d\n",lChannels2D);
-        Log(" Number of hardware 3D channels: %d\n",lChannels3d);
-        Log(" Number of total hardware channels: %d\n",lChannelsTotal);
-        
-        FSOUND_SetMinHardwareChannels(32);
-        FSOUND_SetMaxHardwareChannels(32);
-                
-        //Default listener settings.
-        float Pos[3] = {0,0,0};
-        float Vel[3] = {0,0,0};
-
-        FSOUND_3D_Listener_SetAttributes(Pos,Vel,0,0,-1,0,1,0);
-        mvListenerForward = cVector3f(0,0,-1);
-        mvListenerUp = cVector3f(0,1,0);
-
-        //Default volume:
-        SetVolume(1.0f);
+        delete pSoundData;
+        return NULL;
     }
 
-    //-----------------------------------------------------------------------
+    return pSoundData;
+}
 
-    cLowLevelSoundFmod::~cLowLevelSoundFmod()
+//-----------------------------------------------------------------------
+
+void cLowLevelSoundFmod::GetSupportedFormats(tStringList &alstFormats)
+{
+    int lPos = 0;
+
+    while(mvFormats[lPos]!="")
     {
-        FSOUND_Close();
+        alstFormats.push_back(mvFormats[lPos]);
+        lPos++;
     }
+}
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
+void cLowLevelSoundFmod::UpdateSound(float afTimeStep)
+{
+    FSOUND_Update();
+}
 
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHOD
-    //////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
+void cLowLevelSoundFmod::SetListenerAttributes(const cVector3f &avPos,const cVector3f &avVel,
+        const cVector3f &avForward,const cVector3f &avUp)
+{
+    mvListenerPosition = avPos;
+    mvListenerVelocity = avVel;
+    mvListenerForward = avForward;
+    mvListenerUp = avUp;
 
-    iSoundData* cLowLevelSoundFmod::LoadSoundData(const tString& asName, const tString& asFilePath,
-                                                const tString& asType, bool abStream,bool abLoopStream)
-    {
-        cFmodSoundData* pSoundData = new cFmodSoundData(asName,abStream);
-        
-        pSoundData->SetLoopStream(abLoopStream);
-        
-        if(pSoundData->CreateFromFile(asFilePath)==false)
-        {
-            delete pSoundData;
-            return NULL;
-        }
+    mvListenerRight = cMath::Vector3Cross(mvListenerForward,mvListenerUp);
 
-        return pSoundData;
-    }
+    m_mtxListener = cMatrixf(
+                        -mvListenerRight.x, -mvListenerRight.y,-mvListenerRight.z, avPos.x,
+                        -mvListenerUp.x, -mvListenerUp.y,-mvListenerUp.z, avPos.y,
+                        -mvListenerForward.x, -mvListenerForward.y,-mvListenerForward.z, avPos.z,
+                        0, 0,0, 1
+                    );
 
-    //-----------------------------------------------------------------------
+    float fVel[3]= {0,0,0};
+    FSOUND_3D_Listener_SetAttributes(avPos.v,fVel,
+                                     mvListenerForward.x,mvListenerForward.y,mvListenerForward.z,
+                                     mvListenerUp.x,mvListenerUp.y,mvListenerUp.z);
+}
 
-    void cLowLevelSoundFmod::GetSupportedFormats(tStringList &alstFormats)
-    {
-        int lPos = 0;
+//-----------------------------------------------------------------------
 
-        while(mvFormats[lPos]!="")
-        {
-            alstFormats.push_back(mvFormats[lPos]);
-            lPos++;
-        }
-    }
-    //-----------------------------------------------------------------------
-    
-    void cLowLevelSoundFmod::UpdateSound(float afTimeStep)
-    {
-        FSOUND_Update();
-    }
-    
-    //-----------------------------------------------------------------------
+void cLowLevelSoundFmod::SetListenerPosition(const cVector3f &avPos)
+{
+    mvListenerPosition = avPos;
 
-    void cLowLevelSoundFmod::SetListenerAttributes(const cVector3f &avPos,const cVector3f &avVel,
-                            const cVector3f &avForward,const cVector3f &avUp)
-    {
-        mvListenerPosition = avPos;
-        mvListenerVelocity = avVel;
-        mvListenerForward = avForward;
-        mvListenerUp = avUp;
+    FSOUND_3D_Listener_SetAttributes(avPos.v,mvListenerVelocity.v,
+                                     mvListenerForward.x,mvListenerForward.y,mvListenerForward.z,
+                                     mvListenerUp.x,mvListenerUp.y,mvListenerUp.z);
+}
 
-        mvListenerRight = cMath::Vector3Cross(mvListenerForward,mvListenerUp);
+//-----------------------------------------------------------------------
 
-        m_mtxListener = cMatrixf(
-                -mvListenerRight.x, -mvListenerRight.y,-mvListenerRight.z, avPos.x,
-                -mvListenerUp.x, -mvListenerUp.y,-mvListenerUp.z, avPos.y,
-                -mvListenerForward.x, -mvListenerForward.y,-mvListenerForward.z, avPos.z,
-                0, 0,0, 1
-            );
+void cLowLevelSoundFmod::SetListenerAttenuation (bool abEnabled)
+{
+    mbListenerAttenuation = abEnabled;
+}
 
-        float fVel[3]={0,0,0};
-        FSOUND_3D_Listener_SetAttributes(avPos.v,fVel,
-                                        mvListenerForward.x,mvListenerForward.y,mvListenerForward.z,
-                                        mvListenerUp.x,mvListenerUp.y,mvListenerUp.z);
-    }
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
+void cLowLevelSoundFmod::SetSetRolloffFactor(float afFactor)
+{
+    FSOUND_3D_SetRolloffFactor(afFactor);
+}
 
-    void cLowLevelSoundFmod::SetListenerPosition(const cVector3f &avPos)
-    {
-        mvListenerPosition = avPos;
-    
-        FSOUND_3D_Listener_SetAttributes(avPos.v,mvListenerVelocity.v,
-            mvListenerForward.x,mvListenerForward.y,mvListenerForward.z,
-            mvListenerUp.x,mvListenerUp.y,mvListenerUp.z);
-    }
-    
-    //-----------------------------------------------------------------------
-        
-    void cLowLevelSoundFmod::SetListenerAttenuation (bool abEnabled)
-    {
-        mbListenerAttenuation = abEnabled;
-    }
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
+void cLowLevelSoundFmod::SetVolume(float afVolume)
+{
+    mfVolume = afVolume;
 
-    void cLowLevelSoundFmod::SetSetRolloffFactor(float afFactor)
-    {
-        FSOUND_3D_SetRolloffFactor(afFactor);
-    }
-    
-    //-----------------------------------------------------------------------
+    int lVol = (int)(255.0f*afVolume);
 
-    void cLowLevelSoundFmod::SetVolume(float afVolume)
-    {
-        mfVolume = afVolume;
+    FSOUND_SetSFXMasterVolume(lVol);
+}
 
-        int lVol = (int)(255.0f*afVolume);
-
-        FSOUND_SetSFXMasterVolume(lVol);
-    }
-
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
 }

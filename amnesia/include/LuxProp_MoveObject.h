@@ -21,9 +21,9 @@ public:
 
 class cLuxProp_MoveObject : public iLuxProp
 {
-typedef iLuxProp super_class;
-friend class cLuxPropLoader_MoveObject;
-public:    
+    typedef iLuxProp super_class;
+    friend class cLuxPropLoader_MoveObject;
+public:
     cLuxProp_MoveObject(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxProp_MoveObject();
 
@@ -31,13 +31,13 @@ public:
     //Genera
     bool CanInteract(iPhysicsBody *apBody);
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
-    
+
     void OnSetupAfterLoad(cWorld *apWorld);
 
     void OnResetProperties();
 
     void UpdatePropSpecific(float afTimeStep);
-    
+
     void BeforePropDestruction();
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
@@ -51,11 +51,17 @@ public:
     //Properties
     void SetAngularOffsetPos(const cVector3f& avWorldPos);
 
-    const cMatrixf& GetClosedTransform(){ return m_mtxClosedTransform;}
-    const cMatrixf& GetOpenTransform(){ return m_mtxOpenTransform;}
-    
+    const cMatrixf& GetClosedTransform()
+    {
+        return m_mtxClosedTransform;
+    }
+    const cMatrixf& GetOpenTransform()
+    {
+        return m_mtxOpenTransform;
+    }
+
     float GetMoveState();
-        
+
     //////////////////////
     //Connection callbacks
     void OnConnectionStateChange(iLuxEntity *apEntity, int alState);
@@ -72,7 +78,7 @@ private:
 
     void OnStartMove();
     void CalculateOpenRotateMatrix();
-    
+
     //Vars
     cVector3f mvAngularOffsetPos;
     bool mbUseAngularLocalOffset;
@@ -88,10 +94,10 @@ private:
 
     float mfOpenAcc;
     float mfOpenSpeed;
-    
+
     float mfCloseAcc;
     float mfCloseSpeed;
-    
+
     bool mbAutoMove;
     float mfAutoMoveStateGoal;
     float mfAutoMoveAcc;
@@ -108,7 +114,7 @@ class cLuxPropLoader_MoveObject : public iLuxPropLoader
 {
 public:
     cLuxPropLoader_MoveObject(const tString& asName);
-    virtual ~cLuxPropLoader_MoveObject(){}
+    virtual ~cLuxPropLoader_MoveObject() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);

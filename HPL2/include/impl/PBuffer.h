@@ -9,38 +9,39 @@
 
 
 #include "graphics/GraphicsTypes.h"
-namespace hpl {
-    class iLowLevelGraphics;
+namespace hpl
+{
+class iLowLevelGraphics;
 
-    class cPBuffer
-    {
-    public:
-        cPBuffer(iLowLevelGraphics* apLowLevelGraphics,bool abShareObjects,bool abUseMipMaps=false,bool abUseDepth=true,bool abUseStencil=true);
-        ~cPBuffer();
+class cPBuffer
+{
+public:
+    cPBuffer(iLowLevelGraphics* apLowLevelGraphics,bool abShareObjects,bool abUseMipMaps=false,bool abUseDepth=true,bool abUseStencil=true);
+    ~cPBuffer();
 
-        bool Init(unsigned int alWidth,unsigned int alHeight, cColor aCol);
+    bool Init(unsigned int alWidth,unsigned int alHeight, cColor aCol);
 
-        int MakeCurrentContext();
+    int MakeCurrentContext();
 
-        void Bind();
-        void UnBind();
+    void Bind();
+    void UnBind();
 
-    private:
-        #ifdef _WIN32
-        HDC         mDeviceContext;
-        HGLRC       mGLContext;
-        HPBUFFERARB mPBuffer;
-        #endif
+private:
+#ifdef _WIN32
+    HDC         mDeviceContext;
+    HGLRC       mGLContext;
+    HPBUFFERARB mPBuffer;
+#endif
 
-        int mlWidth;
-        int mlHeight;
+    int mlWidth;
+    int mlHeight;
 
-        bool mbShareObjects;
-        iLowLevelGraphics* mpLowLevelGraphics;
+    bool mbShareObjects;
+    iLowLevelGraphics* mpLowLevelGraphics;
 
-        std::vector<int> mvAttribBuffer;
-        std::vector<int> mvAttribFormat;
-    };
+    std::vector<int> mvAttribBuffer;
+    std::vector<int> mvAttribFormat;
+};
 
 };
 #endif // HPL_P_BUFFER_H

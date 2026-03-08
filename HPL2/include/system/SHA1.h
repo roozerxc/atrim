@@ -26,9 +26,11 @@
 #include "system/SystemTypes.h"
 #include <string>
 
-namespace hpl {
+namespace hpl
+{
 
-class SHA1 {
+class SHA1
+{
 public:
     SHA1();
     virtual ~SHA1();

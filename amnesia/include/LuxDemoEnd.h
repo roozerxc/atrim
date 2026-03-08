@@ -9,7 +9,7 @@
 
 class cLuxDemoEnd : public iLuxUpdateable
 {
-public:    
+public:
     cLuxDemoEnd();
     ~cLuxDemoEnd();
 
@@ -29,8 +29,11 @@ public:
     void AppLostInputFocus();
     void AppGotInputFocus();
 
-    bool ShowOnAllExit(){ return mbShowOnAllExit;}
-    
+    bool ShowOnAllExit()
+    {
+        return mbShowOnAllExit;
+    }
+
 private:
     void SetUpButtonLabel(cWidgetLabel* apLabel, float* apFadeValue, tGuiCallbackFunc apCallback);
 
@@ -75,7 +78,7 @@ private:
 
     float mfBuyButtonY;
     float mfExitButtonY;
-    
+
     cVector2f mvMessageFontSize;
     cVector2f mvAvailableAtFontSize;
     cVector2f mvButtonFontSize;
@@ -98,7 +101,7 @@ private:
 
     bool mbExiting;
     bool mbGotoWebsiteAtExit;
-        
+
     float mfBuyNowFade;
     cWidgetLabel* mpLBuyNow;
     float mfExitFade;
@@ -108,7 +111,7 @@ private:
     cGuiGfxElement* mpGfxBackground;
 
     tWStringVec mvTextRows;
-    
+
     tString msDestinationURL;
 };
 

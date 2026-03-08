@@ -4,132 +4,133 @@
 #include "system/LowLevelSystem.h"
 #include "system/String.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
-    
-    cOpenALSoundData::cOpenALSoundData(const tString& asName, bool abStream) : iSoundData(asName,_W(""), abStream)
-    {
-        mpSample = NULL;
-        mpStream = NULL;
+//-----------------------------------------------------------------------
+
+cOpenALSoundData::cOpenALSoundData(const tString& asName, bool abStream) : iSoundData(asName,_W(""), abStream)
+{
+    mpSample = NULL;
+    mpStream = NULL;
 //        mpSoundData = NULL;
-    }
-    
-    //-----------------------------------------------------------------------
+}
 
-    cOpenALSoundData::~cOpenALSoundData()
+//-----------------------------------------------------------------------
+
+cOpenALSoundData::~cOpenALSoundData()
+{
+    if (mbStream)
     {
-        if (mbStream)
-        {
-            if(mpStream)
-                OAL_Stream_Unload ( mpStream );//static_cast<cOAL_Stream*>(mpSoundData) );
-        }
-        else
-        {
-            if(mpSample) 
-                OAL_Sample_Unload ( mpSample );//static_cast<cOAL_Sample*>(mpSoundData) );
-        }
+        if(mpStream)
+            OAL_Stream_Unload ( mpStream );//static_cast<cOAL_Stream*>(mpSoundData) );
     }
-    
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-    
-    bool cOpenALSoundData::CreateFromFile(const tWString &asFile)
+    else
     {
-        SetFullPath(asFile);
+        if(mpSample)
+            OAL_Sample_Unload ( mpSample );//static_cast<cOAL_Sample*>(mpSoundData) );
+    }
+}
 
-        int lFlags=0;
-        unsigned int lCaps = 0;
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+bool cOpenALSoundData::CreateFromFile(const tWString &asFile)
+{
+    SetFullPath(asFile);
+
+    int lFlags=0;
+    unsigned int lCaps = 0;
 //        FSOUND_GetDriverCaps(0, &lCaps);//Current driver here instead of 0
-        
-        //Get the load flags
+
+    //Get the load flags
 //        if(lCaps & FSOUND_CAPS_HARDWARE)    lFlags |= FSOUND_HW3D;
-        //if(mbStream)                        lFlags |= FSOUND_STREAMABLE;
-        
-        if(mbStream)
+    //if(mbStream)                        lFlags |= FSOUND_STREAMABLE;
+
+    if(mbStream)
+    {
+        //mpSoundData
+        mpStream = OAL_Stream_Load ( asFile.c_str() );
+
+
+
+        if(mpStream == NULL )//mpSoundData==NULL){
         {
-            //mpSoundData 
-            mpStream = OAL_Stream_Load ( asFile.c_str() ); 
-            
-                
-
-            if(mpStream == NULL )//mpSoundData==NULL){
-            { 
-                Error("Couldn't load sound stream '%s'\n", cString::To8Char(asFile).c_str());
-                return false;
-            }
-            else
-                OAL_Stream_SetLoop(mpStream,mbLoopStream);
-                //mpStream->SetLoop(mbLoopStream);
-                //mpSoundData->SetLoop(mbLoopStream);
-
+            Error("Couldn't load sound stream '%s'\n", cString::To8Char(asFile).c_str());
+            return false;
         }
         else
-        {
-            mpSample = OAL_Sample_Load ( asFile.c_str() );
+            OAL_Stream_SetLoop(mpStream,mbLoopStream);
+        //mpStream->SetLoop(mbLoopStream);
+        //mpSoundData->SetLoop(mbLoopStream);
+
+    }
+    else
+    {
+        mpSample = OAL_Sample_Load ( asFile.c_str() );
 //            mpSoundData = OAL_Sample_Load ( asFile.c_str() );
-            if(mpSample == NULL)//mpSoundData==NULL){
-            {
-                Error("Couldn't load sound data '%s'\n", cString::To8Char(asFile).c_str());
-                return false;
-            }
-            else
-                OAL_Sample_SetLoop(mpSample,true);
-                //mpSample->SetLoop ( true );
-
-        }
-                
-        return true;
-    }
-    
-    //-----------------------------------------------------------------------
-
-    iSoundChannel* cOpenALSoundData::CreateChannel(int alPriority)
-    {
-        //if(mpSoundData==NULL)return NULL;
-        if ( (mpSample == NULL) && (mpStream == NULL) ) return NULL;
-
-        int lHandle;
-        iSoundChannel *pSoundChannel=NULL;
-        if(mbStream)
+        if(mpSample == NULL)//mpSoundData==NULL){
         {
-            lHandle = OAL_Stream_Play ( OAL_FREE, GetStream(), 1.0f, true );
-            if(lHandle==-1)return NULL;
-            
-            pSoundChannel = hplNew( cOpenALSoundChannel, (this,lHandle, mpSoundManger) );
+            Error("Couldn't load sound data '%s'\n", cString::To8Char(asFile).c_str());
+            return false;
         }
         else
-        {
-            lHandle = OAL_Sample_Play ( OAL_FREE, GetSample(), 1.0f, true, alPriority);
-            if(lHandle==-1)return NULL;
-            
-            pSoundChannel = hplNew( cOpenALSoundChannel, (this,lHandle, mpSoundManger) );
-        }
+            OAL_Sample_SetLoop(mpSample,true);
+        //mpSample->SetLoop ( true );
 
-        return pSoundChannel;
     }
 
-    //-----------------------------------------------------------------------
+    return true;
+}
 
-    bool cOpenALSoundData::IsStereo()
+//-----------------------------------------------------------------------
+
+iSoundChannel* cOpenALSoundData::CreateChannel(int alPriority)
+{
+    //if(mpSoundData==NULL)return NULL;
+    if ( (mpSample == NULL) && (mpStream == NULL) ) return NULL;
+
+    int lHandle;
+    iSoundChannel *pSoundChannel=NULL;
+    if(mbStream)
     {
-        if (mbStream)
-            return (OAL_Stream_GetChannels(mpStream)==2);
-        if (mpSample)
-            return (OAL_Sample_GetChannels(mpSample)==2);
+        lHandle = OAL_Stream_Play ( OAL_FREE, GetStream(), 1.0f, true );
+        if(lHandle==-1)return NULL;
 
-        return false;
+        pSoundChannel = hplNew( cOpenALSoundChannel, (this,lHandle, mpSoundManger) );
+    }
+    else
+    {
+        lHandle = OAL_Sample_Play ( OAL_FREE, GetSample(), 1.0f, true, alPriority);
+        if(lHandle==-1)return NULL;
+
+        pSoundChannel = hplNew( cOpenALSoundChannel, (this,lHandle, mpSoundManger) );
     }
 
-    //-----------------------------------------------------------------------
+    return pSoundChannel;
+}
+
+//-----------------------------------------------------------------------
+
+bool cOpenALSoundData::IsStereo()
+{
+    if (mbStream)
+        return (OAL_Stream_GetChannels(mpStream)==2);
+    if (mpSample)
+        return (OAL_Sample_GetChannels(mpSample)==2);
+
+    return false;
+}
+
+//-----------------------------------------------------------------------
 
 }

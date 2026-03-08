@@ -3,37 +3,41 @@
 
 #include "gui/Widget.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cGuiSkinFont;
+class cGuiSkinFont;
 
-    class cWidgetImage : public iWidget
+class cWidgetImage : public iWidget
+{
+public:
+    cWidgetImage(cGuiSet *apSet, cGuiSkin *apSkin);
+    virtual ~cWidgetImage();
+
+    void SetImage(cGuiGfxElement *apGfx);
+    cGuiGfxElement* GetImage()
     {
-    public:
-        cWidgetImage(cGuiSet *apSet, cGuiSkin *apSkin);
-        virtual ~cWidgetImage();
+        return mpGfxImage;
+    }
 
-        void SetImage(cGuiGfxElement *apGfx);
-        cGuiGfxElement* GetImage(){ return mpGfxImage;}
+protected:
+    /////////////////////////
+    // Implemented functions
+    void OnLoadGraphics();
+    void OnChangeSize();
 
-    protected:
-        /////////////////////////
-        // Implemented functions
-        void OnLoadGraphics();
-        void OnChangeSize();
-        
-        void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
+    void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
 
-        bool OnMouseMove(const cGuiMessageData& aData);
-        bool OnMouseDown(const cGuiMessageData& aData);
-        bool OnMouseUp(const cGuiMessageData& aData);
-        bool OnMouseEnter(const cGuiMessageData& aData);
-        bool OnMouseLeave(const cGuiMessageData& aData);
+    bool OnMouseMove(const cGuiMessageData& aData);
+    bool OnMouseDown(const cGuiMessageData& aData);
+    bool OnMouseUp(const cGuiMessageData& aData);
+    bool OnMouseEnter(const cGuiMessageData& aData);
+    bool OnMouseLeave(const cGuiMessageData& aData);
 
-        /////////////////////////
-        // Data
-        cGuiGfxElement *mpGfxImage;
-    };
+    /////////////////////////
+    // Data
+    cGuiGfxElement *mpGfxImage;
+};
 
 };
 #endif // HPL_WIDGET_IMAGE_H

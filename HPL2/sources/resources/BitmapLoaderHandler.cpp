@@ -9,80 +9,81 @@
 #include "resources/BitmapLoader.h"
 
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
-    
-    cBitmapLoaderHandler::cBitmapLoaderHandler(cResources* apResources, cGraphics* apGraphics)
+//-----------------------------------------------------------------------
+
+cBitmapLoaderHandler::cBitmapLoaderHandler(cResources* apResources, cGraphics* apGraphics)
+{
+    mpResources = apResources;
+    mpGraphics = apGraphics;
+}
+
+//-----------------------------------------------------------------------
+
+cBitmapLoaderHandler::~cBitmapLoaderHandler()
+{
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+cBitmap* cBitmapLoaderHandler::LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags)
+{
+    iBitmapLoader *pBitmapLoader = static_cast<iBitmapLoader*>(GetLoaderForFile(asFile));
+
+    if(pBitmapLoader)
     {
-        mpResources = apResources;
-        mpGraphics = apGraphics;
-    }
-    
-    //-----------------------------------------------------------------------
+        cBitmap* pBitmap = pBitmapLoader->LoadBitmap(asFile, aFlags);
 
-    cBitmapLoaderHandler::~cBitmapLoaderHandler()
+        //Set name of the file loaded.
+        if(pBitmap) pBitmap->SetFileName(cString::GetFileNameW(asFile));
+
+        return pBitmap;
+    }
+    else
     {
+        return NULL;
     }
+}
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
+bool cBitmapLoaderHandler::SaveBitmap(cBitmap* apBitmap, const tWString& asFile, tBitmapSaveFlag aFlags)
+{
+    iBitmapLoader *pBitmapLoader = static_cast<iBitmapLoader*>(GetLoaderForFile(asFile));
 
-    //-----------------------------------------------------------------------
-    
-    cBitmap* cBitmapLoaderHandler::LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags)
+    if(pBitmapLoader)
     {
-        iBitmapLoader *pBitmapLoader = static_cast<iBitmapLoader*>(GetLoaderForFile(asFile));
-
-        if(pBitmapLoader)
-        {
-            cBitmap* pBitmap = pBitmapLoader->LoadBitmap(asFile, aFlags);
-
-            //Set name of the file loaded.
-            if(pBitmap) pBitmap->SetFileName(cString::GetFileNameW(asFile));
-
-            return pBitmap;
-        }
-        else
-        {
-            return NULL;
-        }
+        return pBitmapLoader->SaveBitmap(apBitmap,asFile,aFlags);
     }
+    return false;
+}
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    bool cBitmapLoaderHandler::SaveBitmap(cBitmap* apBitmap, const tWString& asFile, tBitmapSaveFlag aFlags)
-    {
-        iBitmapLoader *pBitmapLoader = static_cast<iBitmapLoader*>(GetLoaderForFile(asFile));
-        
-        if(pBitmapLoader)
-        {
-            return pBitmapLoader->SaveBitmap(apBitmap,asFile,aFlags);
-        }
-        return false;
-    }
-    
-    //-----------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
+void cBitmapLoaderHandler::SetupLoader(iResourceLoader *apLoader)
+{
+    iBitmapLoader *pBitmapLoader = static_cast<iBitmapLoader*>(apLoader);
 
-    void cBitmapLoaderHandler::SetupLoader(iResourceLoader *apLoader)
-    {
-        iBitmapLoader *pBitmapLoader = static_cast<iBitmapLoader*>(apLoader);
+    pBitmapLoader->mpLowLevelGraphics = mpGraphics->GetLowLevel();
+}
 
-        pBitmapLoader->mpLowLevelGraphics = mpGraphics->GetLowLevel();
-    }
-    
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 }

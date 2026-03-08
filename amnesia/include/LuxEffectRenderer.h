@@ -19,7 +19,7 @@ public:
 
 class cLuxEffectRenderer : public iLuxUpdateable
 {
-public:    
+public:
     cLuxEffectRenderer();
     ~cLuxEffectRenderer();
 
@@ -41,13 +41,13 @@ public:
 private:
     void RenderFlashObjects(cRendererCallbackFunctions* apFunctions);
     void RenderEnemyGlow(cRendererCallbackFunctions* apFunctions);
-    
+
     void RenderOutline(cRendererCallbackFunctions* apFunctions);
     void RenderOutlineBlur(cRendererCallbackFunctions* apFunctions, iTexture *apInputTex);
-        
+
     std::vector<cGlowObject> mvFlashObjects;
     std::vector<cGlowObject> mvEnemyGlowObjects;
-    
+
     std::vector<iRenderable*> mvOutlineObjects;
 
     iFrameBuffer *mpDeferredAccumBuffer;

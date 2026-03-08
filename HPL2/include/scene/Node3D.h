@@ -4,123 +4,163 @@
 #include "math/MathTypes.h"
 #include "scene/SceneTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cNode3D
+class cNode3D
+{
+    friend class iEntity3D;
+public:
+    cNode3D(const tString &asName="", bool abAutoDeleteChildren = true);
+    virtual ~cNode3D();
+
+    ///////////////////////
+    // Hierarchy
+    bool AddEntity(iEntity3D* apEntity);
+    bool RemoveEntity(iEntity3D* apEntity);
+    void ClearEntities();
+
+    cNode3D* GetParent();
+
+    cNode3DIterator GetChildIterator();
+    tNode3DList* GetChildList()
     {
-        friend class iEntity3D;
-    public:
-        cNode3D(const tString &asName="", bool abAutoDeleteChildren = true);
-        virtual ~cNode3D();
+        return &mlstNode;
+    }
 
-        ///////////////////////
-        // Hierarchy
-        bool AddEntity(iEntity3D* apEntity);
-        bool RemoveEntity(iEntity3D* apEntity);
-        void ClearEntities();
-        
-        cNode3D* GetParent();
-        
-        cNode3DIterator GetChildIterator();
-        tNode3DList* GetChildList(){ return &mlstNode;}
+    cEntity3DIterator GetEntityIterator();
 
-        cEntity3DIterator GetEntityIterator();
-
-        cNode3D* CreateChild(const tString &asName="", bool abAutoDeleteChildren = true);
-        void RemoveChild(cNode3D* apNode);
+    cNode3D* CreateChild(const tString &asName="", bool abAutoDeleteChildren = true);
+    void RemoveChild(cNode3D* apNode);
 
 
-        //Extra stuff that shouldn't be used externally
-        void SetParent(cNode3D* apNode);
-        void AddChild(cNode3D* apChild);
-        
-        ///////////////////////
-        //Properties
-        const tString& GetName();
+    //Extra stuff that shouldn't be used externally
+    void SetParent(cNode3D* apNode);
+    void AddChild(cNode3D* apChild);
 
-        void SetActive(bool abX){mbActive = abX;}
-        bool IsActive(){return mbActive;}
+    ///////////////////////
+    //Properties
+    const tString& GetName();
 
-        int SetVisible(bool abX, bool abCascade);
-        
-        cVector3f GetLocalPosition();
-        cMatrixf& GetLocalMatrix();
+    void SetActive(bool abX)
+    {
+        mbActive = abX;
+    }
+    bool IsActive()
+    {
+        return mbActive;
+    }
 
-        cVector3f GetWorldPosition();
-        cMatrixf& GetWorldMatrix();
+    int SetVisible(bool abX, bool abCascade);
 
-        void SetPosition(const cVector3f& avPos);
-        void SetMatrix(const cMatrixf& a_mtxTransform, bool abSetChildrenUpdated=true);
+    cVector3f GetLocalPosition();
+    cMatrixf& GetLocalMatrix();
 
-        void SetWorldPosition(const cVector3f& avWorldPos);
-        void SetWorldMatrix(const cMatrixf& a_mtxWorldTransform);
+    cVector3f GetWorldPosition();
+    cMatrixf& GetWorldMatrix();
 
-        void AddRotation(const cVector3f& avRot, eEulerRotationOrder aOrder);
-        void AddRotation(const cQuaternion& aqRotation);
+    void SetPosition(const cVector3f& avPos);
+    void SetMatrix(const cMatrixf& a_mtxTransform, bool abSetChildrenUpdated=true);
 
-        void AddScale(const cVector3f& avScale);
+    void SetWorldPosition(const cVector3f& avWorldPos);
+    void SetWorldMatrix(const cMatrixf& a_mtxWorldTransform);
 
-        void AddTranslation(const cVector3f& avTrans);
+    void AddRotation(const cVector3f& avRot, eEulerRotationOrder aOrder);
+    void AddRotation(const cQuaternion& aqRotation);
 
-        bool GetUsePreAnimTransform(){ return mbUsePostTransform;}
-        bool GetUsePostAnimTransform(){ return mbUsePostTransform;}
-        const cMatrixf& GetPreAnimTransform(){ return m_mtxPostTransform;}
-        const cMatrixf& GetPostAnimTransform(){ return m_mtxPostTransform;}
-        
-        void SetUsePreTransform(bool abX){ mbUsePreTransform = abX;}
-        void SetUsePostTransform(bool abX){ mbUsePostTransform = abX;}
-        void SetPreTransform(const cMatrixf& a_mtxTransform){ m_mtxPreTransform = a_mtxTransform;}
-        void SetPostTransform(const cMatrixf& a_mtxTransform){ m_mtxPostTransform = a_mtxTransform;}
-        
-        /**
-         * Applies the pre and post transforms to current matrix
-         */
-        void ApplyPreAnimTransform(bool abSetChildrenUpdated);
-        void ApplyPostAnimTransform(bool abSetChildrenUpdated);
+    void AddScale(const cVector3f& avScale);
 
-        void SetCustomFlags(int alX){ mlCustomFlags = alX;}
-        int GetCustomFlags(){ return mlCustomFlags;}
-        
-        /**
-         * Updates the matrix with the added scales, translations and rotation. It also resets these values.
-         */
-        void UpdateMatrix(bool abSetChildrenUpdated);
+    void AddTranslation(const cVector3f& avTrans);
 
-        void UpdateWorldTransform();
-        void SetWorldTransformUpdated();
+    bool GetUsePreAnimTransform()
+    {
+        return mbUsePostTransform;
+    }
+    bool GetUsePostAnimTransform()
+    {
+        return mbUsePostTransform;
+    }
+    const cMatrixf& GetPreAnimTransform()
+    {
+        return m_mtxPostTransform;
+    }
+    const cMatrixf& GetPostAnimTransform()
+    {
+        return m_mtxPostTransform;
+    }
 
-        void UpdateEntityChildren();
-    private:
-        tString msName;
-        bool mbActive;
-        
-        int mlCustomFlags;
+    void SetUsePreTransform(bool abX)
+    {
+        mbUsePreTransform = abX;
+    }
+    void SetUsePostTransform(bool abX)
+    {
+        mbUsePostTransform = abX;
+    }
+    void SetPreTransform(const cMatrixf& a_mtxTransform)
+    {
+        m_mtxPreTransform = a_mtxTransform;
+    }
+    void SetPostTransform(const cMatrixf& a_mtxTransform)
+    {
+        m_mtxPostTransform = a_mtxTransform;
+    }
 
-        bool mbAutoDeleteChildren;
+    /**
+     * Applies the pre and post transforms to current matrix
+     */
+    void ApplyPreAnimTransform(bool abSetChildrenUpdated);
+    void ApplyPostAnimTransform(bool abSetChildrenUpdated);
 
-        cMatrixf m_mtxLocalTransform;
-        cMatrixf m_mtxWorldTransform;
+    void SetCustomFlags(int alX)
+    {
+        mlCustomFlags = alX;
+    }
+    int GetCustomFlags()
+    {
+        return mlCustomFlags;
+    }
 
-        cVector3f mvWorldPosition;
+    /**
+     * Updates the matrix with the added scales, translations and rotation. It also resets these values.
+     */
+    void UpdateMatrix(bool abSetChildrenUpdated);
 
-        bool mbUsePreTransform;
-        bool mbUsePostTransform;
-        
-        cMatrixf m_mtxPreTransform;
-        cMatrixf m_mtxPostTransform;
+    void UpdateWorldTransform();
+    void SetWorldTransformUpdated();
 
-        cQuaternion mqRotation;
-        cVector3f mvScale;
-        cVector3f mvTranslation;
+    void UpdateEntityChildren();
+private:
+    tString msName;
+    bool mbActive;
 
-        bool mbTransformUpdated;
+    int mlCustomFlags;
 
-        cNode3D* mpParent;
-        iEntity3D* mpEntityParent;
+    bool mbAutoDeleteChildren;
 
-        tEntity3DList mlstEntity;
-        tNode3DList mlstNode;
-    };
+    cMatrixf m_mtxLocalTransform;
+    cMatrixf m_mtxWorldTransform;
+
+    cVector3f mvWorldPosition;
+
+    bool mbUsePreTransform;
+    bool mbUsePostTransform;
+
+    cMatrixf m_mtxPreTransform;
+    cMatrixf m_mtxPostTransform;
+
+    cQuaternion mqRotation;
+    cVector3f mvScale;
+    cVector3f mvTranslation;
+
+    bool mbTransformUpdated;
+
+    cNode3D* mpParent;
+    iEntity3D* mpEntityParent;
+
+    tEntity3DList mlstEntity;
+    tNode3DList mlstNode;
+};
 
 };
 #endif // HPL_NODE3D_H

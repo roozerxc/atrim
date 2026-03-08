@@ -9,7 +9,7 @@
 
 class cLuxConfigHandler
 {
-public:    
+public:
     cLuxConfigHandler();
     ~cLuxConfigHandler();
 
@@ -18,7 +18,11 @@ public:
 
     bool ShowRestartWarning(cGuiSet* apSet, void* apObject, tGuiCallbackFunc apCallback);
 
-    void SetGameNeedsRestart() { mbGameNeedsRestart=true; mbRestartDialogShown=false; }
+    void SetGameNeedsRestart()
+    {
+        mbGameNeedsRestart=true;
+        mbRestartDialogShown=false;
+    }
 
     // Variables
     bool mbLoadDebugMenu;
@@ -29,7 +33,7 @@ public:
     bool mbForceCacheLoadingAndSkipSaving;
 
     tString msLangFile;
-    
+
     cVector2l mvScreenSize;
     int mlDisplay;
     bool mbFullscreen;
@@ -44,14 +48,14 @@ public:
     bool mbSSAOActive;
     int mlSSAOSamples;
     int mlSSAOResolution; //0= medium(div2), 1=high (same as screen resolution)
-    
+
     int mlParallaxQuality;
     bool mbParallaxEnabled;
 
     bool mbOcclusionTestLights;
-    
+
     bool mbEdgeSmooth;
-        
+
     bool mbWorldReflection;
     bool mbRefraction;
     bool mbShadowsActive;
@@ -67,7 +71,7 @@ public:
     int mlSoundStreamBuffers;
     int mlSoundStreamBufferSize;
 
-    
+
 private:
     bool mbGameNeedsRestart;
     bool mbRestartDialogShown;

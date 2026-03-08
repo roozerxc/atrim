@@ -5,159 +5,223 @@
 #include "system/SystemTypes.h"
 #include "math/MathTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //------------------------------------------
+//------------------------------------------
 
-    class iPhysicsBody;
-    class iPhysicsWorld;
+class iPhysicsBody;
+class iPhysicsWorld;
 
-    class cVerletParticle;
-    class iVerletParticleContainer;
+class cVerletParticle;
+class iVerletParticleContainer;
 
-    //------------------------------------------
+//------------------------------------------
 
-    typedef std::list<cVerletParticle*> tVerletParticleList;
-    typedef tVerletParticleList::iterator tVerletParticleListIt;
+typedef std::list<cVerletParticle*> tVerletParticleList;
+typedef tVerletParticleList::iterator tVerletParticleListIt;
 
-    typedef cSTLIterator<cVerletParticle*, tVerletParticleList, tVerletParticleListIt> cVerletParticleIterator;
+typedef cSTLIterator<cVerletParticle*, tVerletParticleList, tVerletParticleListIt> cVerletParticleIterator;
 
-    //------------------------------------------
+//------------------------------------------
 
-    class cVerletParticleRayCallback : public iPhysicsRayCallback
+class cVerletParticleRayCallback : public iPhysicsRayCallback
+{
+    friend class iVerletParticleContainer;
+public:
+    cVerletParticleRayCallback(iVerletParticleContainer *apContainer);
+
+    void Reset();
+
+    bool BeforeIntersect(iPhysicsBody *pBody);
+    bool OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams);
+
+private:
+    iVerletParticleContainer *mpContainer;
+
+    bool mbIntersected;
+    cVector3f mvIntersectPos;
+    cVector3f mvIntersectNormal;
+    float mfClosestDist;
+};
+
+//------------------------------------------
+
+class cVerletParticle
+{
+    friend class iVerletParticleContainer;
+public:
+    cVerletParticle(iVerletParticleContainer *apRope);
+    cVerletParticle(iVerletParticleContainer *apRope, const cVector3f& avPos, float afInvMass);
+    ~cVerletParticle();
+
+    void UpdateMovement(float afTimeStep);
+
+    void SetPosition(const cVector3f& avPos, bool abSetPrevPos);
+    void AddPosition(const cVector3f& avAdd, bool abSetPrevPos)
     {
-        friend class iVerletParticleContainer;
-    public:
-        cVerletParticleRayCallback(iVerletParticleContainer *apContainer);
-
-        void Reset();
-
-        bool BeforeIntersect(iPhysicsBody *pBody);
-        bool OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams);
-
-    private:
-        iVerletParticleContainer *mpContainer;
-
-        bool mbIntersected;
-        cVector3f mvIntersectPos;
-        cVector3f mvIntersectNormal;
-        float mfClosestDist;
-    };
-    
-    //------------------------------------------
-
-    class cVerletParticle
+        SetPosition(mvPosition+avAdd, abSetPrevPos);
+    }
+    inline const cVector3f& GetPosition() const
     {
-        friend class iVerletParticleContainer;
-    public:
-        cVerletParticle(iVerletParticleContainer *apRope);
-        cVerletParticle(iVerletParticleContainer *apRope, const cVector3f& avPos, float afInvMass);
-        ~cVerletParticle();
+        return mvPosition;
+    }
 
-        void UpdateMovement(float afTimeStep);
-
-        void SetPosition(const cVector3f& avPos, bool abSetPrevPos);
-        void AddPosition(const cVector3f& avAdd, bool abSetPrevPos){ SetPosition(mvPosition+avAdd, abSetPrevPos); }
-        inline const cVector3f& GetPosition() const { return mvPosition; }
-        
-        inline void SetPrevPosition(const cVector3f& avPos) { mvPrevPosition = avPos; }
-        inline const cVector3f& GetPrevPosition() const { return mvPrevPosition; }
-        
-        inline void SetSmoothPosition(const cVector3f& avPos) { mvSmoothPosition = avPos;}
-        inline const cVector3f& GetSmoothPosition() const { return mvSmoothPosition;}
-
-        void SetInvMass(float afInvMass){ mfInvMass = afInvMass; }
-        inline float GetInvMass() const { return mfInvMass; }
-
-    private:
-        iVerletParticleContainer *mpContainer;
-
-        cVector3f mvPosition;
-        cVector3f mvPrevPosition;
-        cVector3f mvSmoothPosition;
-        float mfInvMass;
-    };
-
-    //------------------------------------------
-    
-    class iVerletParticleContainer
+    inline void SetPrevPosition(const cVector3f& avPos)
     {
-        friend class cVerletParticleRayCallback;
-        friend class cVerletParticle;
-    public:
-        iVerletParticleContainer(const tString &asName, iPhysicsWorld *apWorld);
-        virtual ~iVerletParticleContainer();
+        mvPrevPosition = avPos;
+    }
+    inline const cVector3f& GetPrevPosition() const
+    {
+        return mvPrevPosition;
+    }
 
-        const tString& GetName(){return msName;}
+    inline void SetSmoothPosition(const cVector3f& avPos)
+    {
+        mvSmoothPosition = avPos;
+    }
+    inline const cVector3f& GetSmoothPosition() const
+    {
+        return mvSmoothPosition;
+    }
 
-        void SetUniqueID(int alX){ mlUniqueID = alX;}
-        int GetUniqueID(){ return mlUniqueID;}
+    void SetInvMass(float afInvMass)
+    {
+        mfInvMass = afInvMass;
+    }
+    inline float GetInvMass() const
+    {
+        return mfInvMass;
+    }
 
-        virtual void RemoveAttachedBody(iPhysicsBody *apBody, bool abRemoveContainerFromBody=true)=0;
+private:
+    iVerletParticleContainer *mpContainer;
 
-        void SetGravityForce(const cVector3f& avX){ mvGravityForce = avX;}
-        const cVector3f& GetGravityForce(){ return mvGravityForce;}
+    cVector3f mvPosition;
+    cVector3f mvPrevPosition;
+    cVector3f mvSmoothPosition;
+    float mfInvMass;
+};
 
-        void SetDamping(float afX);
-        float GetDamping(){ return mfDamping;}
-        
-        void SetParticleRadius(float afX);
-        float GetParticleRadius(){ return mfParticleRadius;}
+//------------------------------------------
 
-        void SetSlideAmount(float afX){ mfSlideAmount = afX; }
-        float GetSlideAmount(){ return mfSlideAmount;}
+class iVerletParticleContainer
+{
+    friend class cVerletParticleRayCallback;
+    friend class cVerletParticle;
+public:
+    iVerletParticleContainer(const tString &asName, iPhysicsWorld *apWorld);
+    virtual ~iVerletParticleContainer();
 
-        void SetCollide(bool abX){ mbCollide  = abX;}
-        bool GetCollide(){ return mbCollide;}
+    const tString& GetName()
+    {
+        return msName;
+    }
 
-        void SetSleeping(bool abX);
+    void SetUniqueID(int alX)
+    {
+        mlUniqueID = alX;
+    }
+    int GetUniqueID()
+    {
+        return mlUniqueID;
+    }
 
-        inline int GetUpdateCount() const { return mlUpdateCount; }
+    virtual void RemoveAttachedBody(iPhysicsBody *apBody, bool abRemoveContainerFromBody=true)=0;
 
-        cVerletParticleIterator GetParticleIterator(){ return cVerletParticleIterator(&mlstParticles); }
-        
-    protected:
-        virtual bool CheckParticleBodyCollision(iPhysicsBody *apBody)=0;
-        virtual bool CheckSpecificDataSleeping()=0;    //Tested when container is NOT sleeping
-        virtual bool CheckSpecificDataAwake()=0;        //Tested when container IS sleeping
-        virtual void SetSpecificDataSleeping(bool abSleeping)=0;
-        
-        void PreUpdate(float afTimeStep);
+    void SetGravityForce(const cVector3f& avX)
+    {
+        mvGravityForce = avX;
+    }
+    const cVector3f& GetGravityForce()
+    {
+        return mvGravityForce;
+    }
 
-        void UpdateLengthConstraint(cVerletParticle *apP1, cVerletParticle *apP2, float afLength);
-        void UpdateParticleCollisionConstraint(cVerletParticle *apPart, const cVector3f &avPrevPos, float afRadius);
+    void SetDamping(float afX);
+    float GetDamping()
+    {
+        return mfDamping;
+    }
 
-        tString msName;
-        iPhysicsWorld *mpWorld;
+    void SetParticleRadius(float afX);
+    float GetParticleRadius()
+    {
+        return mfParticleRadius;
+    }
 
-        int mlUniqueID;
+    void SetSlideAmount(float afX)
+    {
+        mfSlideAmount = afX;
+    }
+    float GetSlideAmount()
+    {
+        return mfSlideAmount;
+    }
 
-        cVerletParticleRayCallback *mpRayParticleCallback;
-        
-        tVerletParticleList mlstParticles;
+    void SetCollide(bool abX)
+    {
+        mbCollide  = abX;
+    }
+    bool GetCollide()
+    {
+        return mbCollide;
+    }
 
-        bool mbCollide;
+    void SetSleeping(bool abX);
 
-        bool mbSleeping;
-        float mfSleepCheckCount;
-        float mfSleepCheckTime;
-        float mfSleepCheckSqrLimit;
-        int mlSleepCount;
-        int mlSleepMaxCount;
-                
-        cVector3f mvGravityForce;
-        float mfDamping;
-        float mfDampingMul;
-        
-        float mfParticleRadius;
+    inline int GetUpdateCount() const
+    {
+        return mlUpdateCount;
+    }
 
-        float mfSlideAmount;
+    cVerletParticleIterator GetParticleIterator()
+    {
+        return cVerletParticleIterator(&mlstParticles);
+    }
 
-        int mlUpdateCount;
-    };
+protected:
+    virtual bool CheckParticleBodyCollision(iPhysicsBody *apBody)=0;
+    virtual bool CheckSpecificDataSleeping()=0;    //Tested when container is NOT sleeping
+    virtual bool CheckSpecificDataAwake()=0;        //Tested when container IS sleeping
+    virtual void SetSpecificDataSleeping(bool abSleeping)=0;
+
+    void PreUpdate(float afTimeStep);
+
+    void UpdateLengthConstraint(cVerletParticle *apP1, cVerletParticle *apP2, float afLength);
+    void UpdateParticleCollisionConstraint(cVerletParticle *apPart, const cVector3f &avPrevPos, float afRadius);
+
+    tString msName;
+    iPhysicsWorld *mpWorld;
+
+    int mlUniqueID;
+
+    cVerletParticleRayCallback *mpRayParticleCallback;
+
+    tVerletParticleList mlstParticles;
+
+    bool mbCollide;
+
+    bool mbSleeping;
+    float mfSleepCheckCount;
+    float mfSleepCheckTime;
+    float mfSleepCheckSqrLimit;
+    int mlSleepCount;
+    int mlSleepMaxCount;
+
+    cVector3f mvGravityForce;
+    float mfDamping;
+    float mfDampingMul;
+
+    float mfParticleRadius;
+
+    float mfSlideAmount;
+
+    int mlUpdateCount;
+};
 
 
-    //------------------------------------------
+//------------------------------------------
 
 
 };

@@ -7,80 +7,99 @@
 #include "graphics/GraphicsTypes.h"
 #include "system/SystemTypes.h"
 
-namespace hpl {
-    
-    class cSkeleton;
-    class cBone;
+namespace hpl
+{
 
-    typedef std::list<cBone*> tBoneList;
-    typedef tBoneList::iterator tBoneListIt;
+class cSkeleton;
+class cBone;
 
-    typedef cSTLIterator<cBone*,tBoneList,tBoneListIt> cBoneIterator;
-    
-    class cBone
-    {
+typedef std::list<cBone*> tBoneList;
+typedef tBoneList::iterator tBoneListIt;
+
+typedef cSTLIterator<cBone*,tBoneList,tBoneListIt> cBoneIterator;
+
+class cBone
+{
     friend class cSkeleton;
-    public:
-        cBone(const tString &asName,const tString &asSid, cSkeleton* apSkeleton);
-        ~cBone();
+public:
+    cBone(const tString &asName,const tString &asSid, cSkeleton* apSkeleton);
+    ~cBone();
 
-        cBone* CreateChildBone(const tString &asName,const tString &asId);
+    cBone* CreateChildBone(const tString &asName,const tString &asId);
 
-        void SetTransform(const cMatrixf &a_mtxTransform);
-        const cMatrixf& GetLocalTransform();
-        const cMatrixf& GetWorldTransform();
-        const cMatrixf& GetInvWorldTransform();
+    void SetTransform(const cMatrixf &a_mtxTransform);
+    const cMatrixf& GetLocalTransform();
+    const cMatrixf& GetWorldTransform();
+    const cMatrixf& GetInvWorldTransform();
 
-        //// -- <UNSCALED> -- ///
-        void SetTransformUnscaled(const cMatrixf &a_mtxTransform);
-        const cMatrixf& GetWorldTransformUnscaled();
-        const cMatrixf& GetLocalTransformUnscaled();
-        void NeedsUpdateUnscaled();
-        //// -- </UNSCALED> -- ///
+    //// -- <UNSCALED> -- ///
+    void SetTransformUnscaled(const cMatrixf &a_mtxTransform);
+    const cMatrixf& GetWorldTransformUnscaled();
+    const cMatrixf& GetLocalTransformUnscaled();
+    void NeedsUpdateUnscaled();
+    //// -- </UNSCALED> -- ///
 
-        const tString& GetName(){ return msName;}
-        const tString& GetSid(){ return msSid;}
+    const tString& GetName()
+    {
+        return msName;
+    }
+    const tString& GetSid()
+    {
+        return msSid;
+    }
 
-        cBoneIterator GetChildIterator();
-        tBoneList* GetChildList(){ return &mlstChildren; }
+    cBoneIterator GetChildIterator();
+    tBoneList* GetChildList()
+    {
+        return &mlstChildren;
+    }
 
-        void Detach();
+    void Detach();
 
-        cBone* GetParent(){ return mpParent;}
-        
-        //Needed for some loading stuff..
-        int GetValue(){ return mlValue;}
-        void SetValue(int alVal){ mlValue = alVal;}
-        
-    private:
-        void NeedsUpdate();
+    cBone* GetParent()
+    {
+        return mpParent;
+    }
 
-        void UpdateMatrix();
-    
-        tString msName;
-        tString msSid;
+    //Needed for some loading stuff..
+    int GetValue()
+    {
+        return mlValue;
+    }
+    void SetValue(int alVal)
+    {
+        mlValue = alVal;
+    }
 
-        cMatrixf m_mtxTransform;
+private:
+    void NeedsUpdate();
 
-        cMatrixf m_mtxWorldTransform;
-        cMatrixf m_mtxInvWorldTransform;
-        
-        //// -- <UNSCALED> -- ///
-        cMatrixf m_mtxTransformUnscaled;
-        cMatrixf m_mtxWorldTransformUnscaled;
-        bool mbNeedsUnscaledUpdate;
-        void UpdateUnscaledMatrix();
-        //// -- </UNSCALED> -- ///
+    void UpdateMatrix();
 
-        cBone* mpParent;
-        tBoneList mlstChildren;
+    tString msName;
+    tString msSid;
 
-        cSkeleton* mpSkeleton;
+    cMatrixf m_mtxTransform;
 
-        bool mbNeedsUpdate;
+    cMatrixf m_mtxWorldTransform;
+    cMatrixf m_mtxInvWorldTransform;
 
-        int mlValue;
-    };
+    //// -- <UNSCALED> -- ///
+    cMatrixf m_mtxTransformUnscaled;
+    cMatrixf m_mtxWorldTransformUnscaled;
+    bool mbNeedsUnscaledUpdate;
+    void UpdateUnscaledMatrix();
+    //// -- </UNSCALED> -- ///
+
+    cBone* mpParent;
+    tBoneList mlstChildren;
+
+    cSkeleton* mpSkeleton;
+
+    bool mbNeedsUpdate;
+
+    int mlValue;
+};
 
 };
 #endif // HPL_BONE_H

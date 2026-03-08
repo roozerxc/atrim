@@ -6,107 +6,108 @@
 #include "system/SystemTypes.h"
 #include "system/SerializeClass.h"
 
-namespace hpl {
-    
-    class iLowLevelGraphics;
-    class cBoundingVolume;
+namespace hpl
+{
 
-    class cBVTempArray
-    {
-    public:
-        const float *mpArray;
-        int mlSize;
-    };
+class iLowLevelGraphics;
+class cBoundingVolume;
 
-    enum eBVCollision
-    {
-        eBVCollision_Inside,
-        eBVCollision_Outside,
-        eBVCollision_Intersect,
-        eBVCollision_LastEnum
-    };
+class cBVTempArray
+{
+public:
+    const float *mpArray;
+    int mlSize;
+};
 
-    typedef std::list<cBVTempArray> tBVTempArrayList;
-    typedef tBVTempArrayList::iterator tBVTempArrayListIt;
+enum eBVCollision
+{
+    eBVCollision_Inside,
+    eBVCollision_Outside,
+    eBVCollision_Intersect,
+    eBVCollision_LastEnum
+};
 
-    class cShadowVolumeBV
-    {
-    public:
-        cPlanef mvPlanes[12];
-        int mlPlaneCount;
-        tVector3fVec mvPoints;
-        int mlCapPlanes;
+typedef std::list<cBVTempArray> tBVTempArrayList;
+typedef tBVTempArrayList::iterator tBVTempArrayListIt;
 
-        bool CollideBoundingVolume(cBoundingVolume* aBV);
+class cShadowVolumeBV
+{
+public:
+    cPlanef mvPlanes[12];
+    int mlPlaneCount;
+    tVector3fVec mvPoints;
+    int mlCapPlanes;
 
-    private:
-        bool CollideBVSphere(cBoundingVolume* aBV);
-        bool CollideBVAABB(cBoundingVolume* aBV);
-    };
+    bool CollideBoundingVolume(cBoundingVolume* aBV);
 
-    class cBoundingVolume : public iSerializable
-    {
+private:
+    bool CollideBVSphere(cBoundingVolume* aBV);
+    bool CollideBVAABB(cBoundingVolume* aBV);
+};
+
+class cBoundingVolume : public iSerializable
+{
     friend class cMath;
-        kSerializableClassInit(cBoundingVolume)
-    public:
-        cBoundingVolume();
-        
-        const cVector3f& GetMax();
-        const cVector3f& GetMin();
+    kSerializableClassInit(cBoundingVolume)
+public:
+    cBoundingVolume();
 
-        const cVector3f& GetLocalMax();
-        const cVector3f& GetLocalMin();
+    const cVector3f& GetMax();
+    const cVector3f& GetMin();
 
-        void SetLocalMinMax(const cVector3f& mvMin,const cVector3f& mvMax);
-        
-        void SetPosition(const cVector3f& avPos);
-        cVector3f GetPosition();
-        
-        void SetSize(const cVector3f& avSize);
-        cVector3f GetSize();
+    const cVector3f& GetLocalMax();
+    const cVector3f& GetLocalMin();
 
-        void SetTransform(const cMatrixf &a_mtxTransform);
-        const cMatrixf& GetTransform();
+    void SetLocalMinMax(const cVector3f& mvMin,const cVector3f& mvMax);
 
-        cVector3f GetLocalCenter();
-        cVector3f GetWorldCenter();
+    void SetPosition(const cVector3f& avPos);
+    cVector3f GetPosition();
 
-        float GetRadius();
-        
-        void AddArrayPoints(const float *apArray, int alNumOfVectors);
-        void CreateFromPoints(int alStride);
+    void SetSize(const cVector3f& avSize);
+    cVector3f GetSize();
 
-        cShadowVolumeBV* GetShadowVolume(const cVector3f& avLightPos,float afLightRange, bool abForceUpdate);
+    void SetTransform(const cMatrixf &a_mtxTransform);
+    const cMatrixf& GetTransform();
 
-        //Debug:
-        void DrawEdges(const cVector3f& avLightPos,float afLightRange, iLowLevelGraphics *apLowLevelGraphics);
-        void UpdateSize();
-        
-        cMatrixf m_mtxTransform;
+    cVector3f GetLocalCenter();
+    cVector3f GetWorldCenter();
 
-        cVector3f mvLocalMax;
-        cVector3f mvLocalMin;
-        
-        cVector3f mvMax;
-        cVector3f mvMin;
+    float GetRadius();
 
-        cVector3f mvPivot;
-        
-        cVector3f mvWorldMax;
-        cVector3f mvWorldMin;
-        
-        cVector3f mvPosition;
-        cVector3f mvSize;
-        float mfRadius;
-    
-    private:
-        bool mbPositionUpdated;
-        bool mbSizeUpdated;
+    void AddArrayPoints(const float *apArray, int alNumOfVectors);
+    void CreateFromPoints(int alStride);
 
-        tBVTempArrayList mlstArrays;
+    cShadowVolumeBV* GetShadowVolume(const cVector3f& avLightPos,float afLightRange, bool abForceUpdate);
 
-        cShadowVolumeBV mShadowVolume;
-        bool mbShadowPlanesNeedUpdate;
-    };
+    //Debug:
+    void DrawEdges(const cVector3f& avLightPos,float afLightRange, iLowLevelGraphics *apLowLevelGraphics);
+    void UpdateSize();
+
+    cMatrixf m_mtxTransform;
+
+    cVector3f mvLocalMax;
+    cVector3f mvLocalMin;
+
+    cVector3f mvMax;
+    cVector3f mvMin;
+
+    cVector3f mvPivot;
+
+    cVector3f mvWorldMax;
+    cVector3f mvWorldMin;
+
+    cVector3f mvPosition;
+    cVector3f mvSize;
+    float mfRadius;
+
+private:
+    bool mbPositionUpdated;
+    bool mbSizeUpdated;
+
+    tBVTempArrayList mlstArrays;
+
+    cShadowVolumeBV mShadowVolume;
+    bool mbShadowPlanesNeedUpdate;
+};
 };
 #endif // HPL_BOUNDING_VOLUME_H

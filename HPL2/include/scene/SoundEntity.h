@@ -4,138 +4,172 @@
 #include "scene/Entity3D.h"
 #include "sound/SoundTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cSoundHandler;
-    class cSoundEntityData;
-    class cSoundEntityManager;
-    class cWorld;
-    class cSoundEntry;
+class cSoundHandler;
+class cSoundEntityData;
+class cSoundEntityManager;
+class cWorld;
+class cSoundEntry;
 
-    class cSoundEntity;
+class cSoundEntity;
 
-    class cSoundEntityChannelCallback : public iSoundEntryCallback
-    {
-    public:
-        void OnPriorityRelease();
+class cSoundEntityChannelCallback : public iSoundEntryCallback
+{
+public:
+    void OnPriorityRelease();
 
-        cSoundEntity *mpEntity;
-    };
+    cSoundEntity *mpEntity;
+};
 
-    //------------------------------------------
+//------------------------------------------
 
-    class iSoundEntityGlobalCallback
-    {
-    public:
-        virtual void OnStart(cSoundEntity *apSoundEntity)=0;
-    };
+class iSoundEntityGlobalCallback
+{
+public:
+    virtual void OnStart(cSoundEntity *apSoundEntity)=0;
+};
 
-    typedef std::list<iSoundEntityGlobalCallback*> tSoundEntityGlobalCallbackList;
-    typedef tSoundEntityGlobalCallbackList::iterator tSoundEntityGlobalCallbackListIt;
+typedef std::list<iSoundEntityGlobalCallback*> tSoundEntityGlobalCallbackList;
+typedef tSoundEntityGlobalCallbackList::iterator tSoundEntityGlobalCallbackListIt;
 
-    //------------------------------------------
+//------------------------------------------
 
-    class cSoundEntity : public iEntity3D
-    {
-    #ifdef __GNUC__
-        typedef iEntity3D __super;
-    #endif
+class cSoundEntity : public iEntity3D
+{
+#ifdef __GNUC__
+    typedef iEntity3D __super;
+#endif
     friend class cSoundEntityChannelCallback;
-    public:
-        cSoundEntity(const tString& asName,cSoundEntityData *apData,
-                        cSoundEntityManager *apSoundEntityManager,
-                        cWorld *apWorld,
-                        cSoundHandler *apSoundHandler, bool abRemoveWhenOver, int alCreationID);
-        ~cSoundEntity();
+public:
+    cSoundEntity(const tString& asName,cSoundEntityData *apData,
+                 cSoundEntityManager *apSoundEntityManager,
+                 cWorld *apWorld,
+                 cSoundHandler *apSoundHandler, bool abRemoveWhenOver, int alCreationID);
+    ~cSoundEntity();
 
-        //void Setup(const tString& asName,cSoundEntityData *apData, bool abRemoveWhenOver, alCreationID);
+    //void Setup(const tString& asName,cSoundEntityData *apData, bool abRemoveWhenOver, alCreationID);
 
-        void Play(bool abPlayStart=true);
-        void Stop(bool abPlayEnd=true);
+    void Play(bool abPlayStart=true);
+    void Stop(bool abPlayEnd=true);
 
-        void FadeIn(float afSpeed);
-        void FadeOut(float afSpeed);
+    void FadeIn(float afSpeed);
+    void FadeOut(float afSpeed);
 
-        bool IsStopped();
-        bool IsFadingOut();
-        bool GetRemoveWhenOver();
+    bool IsStopped();
+    bool IsFadingOut();
+    bool GetRemoveWhenOver();
 
-        void SetVolume(float afX){ mfVolume = afX;}
-        float GetVolume(){ return mfVolume;}
+    void SetVolume(float afX)
+    {
+        mfVolume = afX;
+    }
+    float GetVolume()
+    {
+        return mfVolume;
+    }
 
-        float GetMinDistance(){ return mfMinDistance;}
-        float GetMaxDistance(){ return mfMaxDistance;}
-        void SetMinDistance(float afX){ mfMinDistance = afX;}
-        void SetMaxDistance(float afX){ mfMaxDistance = afX;}
+    float GetMinDistance()
+    {
+        return mfMinDistance;
+    }
+    float GetMaxDistance()
+    {
+        return mfMaxDistance;
+    }
+    void SetMinDistance(float afX)
+    {
+        mfMinDistance = afX;
+    }
+    void SetMaxDistance(float afX)
+    {
+        mfMaxDistance = afX;
+    }
 
-        void SetForcePlayAsGUISound(bool abX){ mbForcePlayAsGUISound = abX;}
-        bool GetForcePlayAsGUISound(){ return mbForcePlayAsGUISound;}
-        
-        /**
-         * Gets the sound entry. return can be NULL whether validity is checked or not, best is to ALWAYS check validity, unless the entry has been validated in same code block.
-         */
-        cSoundEntry* GetSoundEntry(eSoundEntityType aType, bool abCheckEntryValidity);
+    void SetForcePlayAsGUISound(bool abX)
+    {
+        mbForcePlayAsGUISound = abX;
+    }
+    bool GetForcePlayAsGUISound()
+    {
+        return mbForcePlayAsGUISound;
+    }
 
-        //Entity implementation
-        void UpdateLogic(float afTimeStep);
+    /**
+     * Gets the sound entry. return can be NULL whether validity is checked or not, best is to ALWAYS check validity, unless the entry has been validated in same code block.
+     */
+    cSoundEntry* GetSoundEntry(eSoundEntityType aType, bool abCheckEntryValidity);
 
-        tString GetEntityType(){ return "SoundEntity";}
+    //Entity implementation
+    void UpdateLogic(float afTimeStep);
 
-        cSoundEntityData* GetData(){ return mpData;}
+    tString GetEntityType()
+    {
+        return "SoundEntity";
+    }
 
-        int GetCreationID(){ return mlCreationID; }
+    cSoundEntityData* GetData()
+    {
+        return mpData;
+    }
 
-        static void AddGlobalCallback(iSoundEntityGlobalCallback *apCallback);
-        static void RemoveGlobalCallback(iSoundEntityGlobalCallback *apCallback);
+    int GetCreationID()
+    {
+        return mlCreationID;
+    }
+
+    static void AddGlobalCallback(iSoundEntityGlobalCallback *apCallback);
+    static void RemoveGlobalCallback(iSoundEntityGlobalCallback *apCallback);
 
 
-    private:
-        bool CheckIsOutOfRange();
+private:
+    bool CheckIsOutOfRange();
 
-        bool PlaySound(eSoundEntityType aType,bool abLoop);
+    bool PlaySound(eSoundEntityType aType,bool abLoop);
 
-        float GetListenerSqrLength();
+    float GetListenerSqrLength();
 
-        cSoundEntityManager *mpSoundEntityManager;
-        cSoundHandler *mpSoundHandler;
-        cSoundEntityData *mpData;
-        cWorld *mpWorld;
+    cSoundEntityManager *mpSoundEntityManager;
+    cSoundHandler *mpSoundHandler;
+    cSoundEntityData *mpData;
+    cWorld *mpWorld;
 
-        cSoundEntry *mvSoundEntries[3];
-        int mvSoundEntryID[3];
+    cSoundEntry *mvSoundEntries[3];
+    int mvSoundEntryID[3];
 
-        int mlCreationID;
+    int mlCreationID;
 
-        bool mbForcePlayAsGUISound;
+    bool mbForcePlayAsGUISound;
 
-        float mfMinDistance;
-        float mfMaxDistance;
-        
-        bool mbStopped;
-        bool mbRemoveWhenOver;
+    float mfMinDistance;
+    float mfMaxDistance;
 
-        bool mbOutOfRange;
+    bool mbStopped;
+    bool mbRemoveWhenOver;
 
-        float mfIntervalCount;
+    bool mbOutOfRange;
 
-        cSoundEntityChannelCallback *mpSoundCallback;
+    float mfIntervalCount;
 
-        bool mbStarted;
+    cSoundEntityChannelCallback *mpSoundCallback;
 
-        bool mbFadingOut;
+    bool mbStarted;
 
-        bool mbLog;
-    
-        float mfVolume;
+    bool mbFadingOut;
 
-        bool mbPrioRemove;
+    bool mbLog;
 
-        bool mbSkipStartEnd;
+    float mfVolume;
 
-        float mfSleepCount;
+    bool mbPrioRemove;
 
-        static tSoundEntityGlobalCallbackList mlstGobalCallbacks;
-    };
+    bool mbSkipStartEnd;
+
+    float mfSleepCount;
+
+    static tSoundEntityGlobalCallbackList mlstGobalCallbacks;
+};
 
 };
 #endif // HPL_SOUND_ENTITY_H

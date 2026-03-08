@@ -13,16 +13,16 @@ class cLuxEnemy_Grunt_SaveData : public iLuxEnemy_SaveData
 public:
     ////////////////
     //Properties
-        
+
 };
 
 //----------------------------------------------
 
 class cLuxEnemy_Grunt : public iLuxEnemy
 {
-friend class cLuxEnemyLoader_Grunt;
-typedef iLuxEnemy super_class;
-public:    
+    friend class cLuxEnemyLoader_Grunt;
+    typedef iLuxEnemy super_class;
+public:
     cLuxEnemy_Grunt(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxEnemy_Grunt();
 
@@ -40,15 +40,15 @@ public:
     //////////////////////
     //Debug
     void OnRenderSolidImplemented(cRendererCallbackFunctions* apFunctions);
-        
-    
+
+
     //////////////////////
     //Save data stuff
     iLuxEntity_SaveData* CreateSaveData();
     void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);
-    
+
 private:
     //////////////////////
     // Callbacks
@@ -62,7 +62,7 @@ private:
     // State stuff
     void PatrolUpdateGoal();
     void PatrolEndOfPath();
-    
+
     //////////////
     //Data
     tString msNoticeSound;
@@ -82,13 +82,13 @@ private:
     float mfIdleExtraTimeMin;
     float mfIdleExtraTimeMax;
     int mlIdleExtraNum;
-    
-    
+
+
     //////////////
     //Variables
     float mfWaitTime;
     float mfAlertRunTowardsCount;
-    
+
 };
 
 //----------------------------------------------
@@ -97,7 +97,7 @@ class cLuxEnemyLoader_Grunt : public iLuxEnemyLoader
 {
 public:
     cLuxEnemyLoader_Grunt(const tString& asName);
-    virtual ~cLuxEnemyLoader_Grunt(){}
+    virtual ~cLuxEnemyLoader_Grunt() {}
 
     iLuxEnemy *CreateEnemy(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxEnemy *apEnemy, cXmlElement *apRootElem);

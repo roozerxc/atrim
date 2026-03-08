@@ -25,7 +25,7 @@ cLuxPlayerState_InteractWheel::cLuxPlayerState_InteractWheel(cLuxPlayer *apPlaye
 
 cLuxPlayerState_InteractWheel::~cLuxPlayerState_InteractWheel()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -51,17 +51,17 @@ void cLuxPlayerState_InteractWheel::RenderSolid(cRendererCallbackFunctions* apFu
 
     cVector3f vPinDir = mpCurrentJoint->GetPinDir();
     vPinDir = cMath::MatrixMul(mpCurrentBody->GetInertiaMatrix(), vPinDir);
-    
+
     cVector3f vPivot = mpCurrentJoint->GetPivotPoint();
     //apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot+cVector3f(1,0,0)*vAxes.x*10, cColor(1,0,0,1));
     //apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot+cVector3f(0,1,0)*vAxes.y*10, cColor(0,1,0,1));
     //apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot+cVector3f(0,0,1)*vAxes.z*-10, cColor(0,0,1,1));
 
     apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot+vPinDir*10, cColor(0,0,1,1));
-    
+
     //apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot+mpCurrentJoint->GetPinDir(), cColor(0,0,1,1));
-    //apFunctions->GetLowLevelGfx()->DrawLine(mpCurrentBody->GetLocalPosition(), 
-    //                                        mpCurrentBody->GetLocalPosition() + mpCurrentBody->GetAngularVelocity(), 
+    //apFunctions->GetLowLevelGfx()->DrawLine(mpCurrentBody->GetLocalPosition(),
+    //                                        mpCurrentBody->GetLocalPosition() + mpCurrentBody->GetAngularVelocity(),
     //                                        cColor(0,0,1,1));
 
 }
@@ -104,8 +104,8 @@ float cLuxPlayerState_InteractWheel::GetSpeedAdd(cCamera *apCam)
     bool bFirst = true;
     float fProperPosCount =0;
 
-    cVector3f vTanCenterVec[2]={0,0};
-    
+    cVector3f vTanCenterVec[2]= {0,0};
+
     //Iterate the latest 10 moveadds, get tanget (both dirs) and for each tangent dir calculate
     //prev_pos + tan and add to that tan center vec accu,
     for(std::list<cVector2f>::iterator it = mlstMoveAdds.begin(); it != mlstMoveAdds.end(); ++it)
@@ -134,39 +134,40 @@ float cLuxPlayerState_InteractWheel::GetSpeedAdd(cCamera *apCam)
 
         fProperPosCount += 1;
     }
-    
+
     //The the median tan center vec
-    float fTanCenterDist[2]={0,0};
+    float fTanCenterDist[2]= {0,0};
     for(int i=0; i<2; ++i)
     {
-        fTanCenterDist[i] = (vTanCenterVec[i] / fProperPosCount).Length();    
+        fTanCenterDist[i] = (vTanCenterVec[i] / fProperPosCount).Length();
     }
 
     //Get the direction of the rotation and also make sure there is some rotation going on.
     float fDirMul = 1;
     float fMinDist = fTanCenterDist[1];
-    if(fTanCenterDist[0] < fTanCenterDist[1]){
+    if(fTanCenterDist[0] < fTanCenterDist[1])
+    {
         fDirMul = -1;
         fMinDist = fTanCenterDist[0];
     }
 
     //If too far from center, there is no real rotation made, so skip the movement.
     if(fMinDist > 0.75f) return 0;
-    
+
     ///////////////////////////////
     //Get the rotate direction based on the pin.
     cCamera *pCam = mpPlayer->GetCamera();
-    
+
     cVector3f vFwd = pCam->GetForward();
     cVector3f vPinDir = mpCurrentJoint->GetPinDir();
-    
+
     if(cMath::Vector3Dot(vPinDir, vFwd) < 0) fDirMul = -fDirMul;
 
 
     ///////////////////////////////
     //Calculate the speed
     float fLength = mvMouseAdd.Length();
-    
+
     return fDirMul *fLength* 1.0f;
 }
 

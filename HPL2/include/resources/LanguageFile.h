@@ -4,56 +4,61 @@
 #include <map>
 #include "system/SystemTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cResources;
+class cResources;
 
-    //--------------------------------
+//--------------------------------
 
-    class cLanguageEntry
+class cLanguageEntry
+{
+public:
+    tWString mwsText;
+};
+
+typedef std::map<tString, cLanguageEntry*> tLanguageEntryMap;
+typedef tLanguageEntryMap::iterator tLanguageEntryMapIt;
+
+//--------------------------------
+
+class cLanguageCategory
+{
+public:
+    ~cLanguageCategory()
     {
-    public:
-        tWString mwsText;        
-    };
+        STLMapDeleteAll(m_mapEntries);
+    }
 
-    typedef std::map<tString, cLanguageEntry*> tLanguageEntryMap;
-    typedef tLanguageEntryMap::iterator tLanguageEntryMapIt;
+    tLanguageEntryMap m_mapEntries;
+};
 
-    //--------------------------------
+typedef std::map<tString, cLanguageCategory*> tLanguageCategoryMap;
+typedef tLanguageCategoryMap::iterator tLanguageCategoryMapIt;
 
-    class cLanguageCategory
+//--------------------------------
+
+class cLanguageFile
+{
+public:
+    cLanguageFile(cResources *apResources);
+    ~cLanguageFile();
+
+    bool AddFromFile(const tWString& asFile, bool abAddResourceDirs, const tWString& asAltPath = _W(""));
+
+    const tWString& Translate(const tString& asCat, const tString& asName);
+
+    tLanguageCategoryMap* GetCategoryMap()
     {
-    public:
-        ~cLanguageCategory(){
-            STLMapDeleteAll(m_mapEntries);
-        }
+        return &m_mapCategories;
+    }
 
-        tLanguageEntryMap m_mapEntries;
-    };
+private:
+    tLanguageCategoryMap m_mapCategories;
+    tWString mwsEmpty;
 
-    typedef std::map<tString, cLanguageCategory*> tLanguageCategoryMap;
-    typedef tLanguageCategoryMap::iterator tLanguageCategoryMapIt;
-
-    //--------------------------------
-
-    class cLanguageFile
-    {
-    public:
-        cLanguageFile(cResources *apResources);
-        ~cLanguageFile();
-        
-        bool AddFromFile(const tWString& asFile, bool abAddResourceDirs, const tWString& asAltPath = _W(""));
-        
-        const tWString& Translate(const tString& asCat, const tString& asName);
-
-        tLanguageCategoryMap* GetCategoryMap(){ return &m_mapCategories;}
-        
-    private:
-        tLanguageCategoryMap m_mapCategories;    
-        tWString mwsEmpty;
-
-        cResources *mpResources;
-    };
+    cResources *mpResources;
+};
 
 };
 #endif // HPL_LANGUAGE_FILE_H

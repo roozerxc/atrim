@@ -36,7 +36,7 @@ void cLuxAreaLoader_Script::LoadVariables(iLuxArea *apArea, cWorld *apWorld)
                                         GetVarBool("PlayerLookAtCallbackAutoRemove",false) );
 
     apArea->SetPlayerInteractCallback(    GetVarString("PlayerInteractCallback",""),
-                                        GetVarBool("PlayerInteractCallbackAutoRemove",false) );
+                                          GetVarBool("PlayerInteractCallbackAutoRemove",false) );
 
 
     pScriptArea->mbItemInteraction = GetVarBool("ItemInteraction", false);

@@ -3,41 +3,42 @@
 
 #include "scene/RenderableContainer.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //-------------------------------------------
-    
-    class cRCNode_List : public iRenderableContainerNode
-    {
+//-------------------------------------------
+
+class cRCNode_List : public iRenderableContainerNode
+{
     friend class cRenderableContainer_List;
-    public:
-        cRCNode_List();
-        ~cRCNode_List();
+public:
+    cRCNode_List();
+    ~cRCNode_List();
 
-    private:
-    };
+private:
+};
 
-    //-------------------------------------------
-    
-    class cRenderableContainer_List : public iRenderableContainer
-    {
-    public:
-        cRenderableContainer_List();
-        ~cRenderableContainer_List();
+//-------------------------------------------
 
-        void Add(iRenderable *apRenderable);
-        void Remove(iRenderable *apRenderable);
+class cRenderableContainer_List : public iRenderableContainer
+{
+public:
+    cRenderableContainer_List();
+    ~cRenderableContainer_List();
 
-        iRenderableContainerNode* GetRoot();
+    void Add(iRenderable *apRenderable);
+    void Remove(iRenderable *apRenderable);
 
-        void Compile();    
+    iRenderableContainerNode* GetRoot();
 
-        void RenderDebug(cRendererCallbackFunctions *apFunctions);
+    void Compile();
 
-    private:
-        cRCNode_List mRoot;
-    };
+    void RenderDebug(cRendererCallbackFunctions *apFunctions);
 
-    //-------------------------------------------
+private:
+    cRCNode_List mRoot;
+};
+
+//-------------------------------------------
 };
 #endif // HPL_RENDERABLE_CONTAINER_LIST_H

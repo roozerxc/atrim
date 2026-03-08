@@ -3,30 +3,31 @@
 
 #include "resources/ResourceLoader.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cScene;
-    class cWorld;
-    class cPhysics;
-    class cGraphics;
-    class cResources;
-    
-    //----------------------------------------
+class cScene;
+class cWorld;
+class cPhysics;
+class cGraphics;
+class cResources;
 
-    class iWorldLoader : public iResourceLoader
-    {
+//----------------------------------------
+
+class iWorldLoader : public iResourceLoader
+{
     friend class cWorldLoaderHandler;
-    public:
-        
-        virtual cWorld* LoadWorld(const tWString& asFile, tWorldLoadFlag aFlags)=0;
+public:
 
-    protected:
+    virtual cWorld* LoadWorld(const tWString& asFile, tWorldLoadFlag aFlags)=0;
 
-        cScene *mpScene;
-        cGraphics *mpGraphics;
-        cResources *mpResources;
-        cPhysics *mpPhysics;
-    };
+protected:
+
+    cScene *mpScene;
+    cGraphics *mpGraphics;
+    cResources *mpResources;
+    cPhysics *mpPhysics;
+};
 
 };
 #endif // HPL_MESH_LOADER_H

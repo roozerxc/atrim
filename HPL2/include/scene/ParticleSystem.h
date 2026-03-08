@@ -7,131 +7,201 @@
 #include "resources/ResourceBase.h"
 
 
-namespace hpl {
+namespace hpl
+{
 
-    //----------------------------------------------------
+//----------------------------------------------------
 
-    class cGraphics;
-    class cResources;
-    class iParticleEmitter;
-    class iParticleEmitterData;
-    class cParticleManager;
-    class cXmlElement;
+class cGraphics;
+class cResources;
+class iParticleEmitter;
+class iParticleEmitterData;
+class cParticleManager;
+class cXmlElement;
 
-    //----------------------------------------------------
+//----------------------------------------------------
 
-    class cParticleSystem;
+class cParticleSystem;
 
-    class cParticleSystemData : public iResourceBase
+class cParticleSystemData : public iResourceBase
+{
+public:
+    cParticleSystemData(const tString &asName,cResources* apResources,cGraphics *apGraphics);
+    virtual ~cParticleSystemData();
+
+    cParticleSystem* Create(tString asName, cVector3f avSize);
+
+    bool LoadFromFile(const tWString &asFile);
+    bool LoadFromElement(cXmlElement* apElement);
+
+    void AddEmitterData(iParticleEmitterData *apData);
+
+    bool Reload()
     {
-    public:
-        cParticleSystemData(const tString &asName,cResources* apResources,cGraphics *apGraphics);
-        virtual ~cParticleSystemData();
+        return false;
+    }
+    void Unload() {}
+    void Destroy() {}
 
-        cParticleSystem* Create(tString asName, cVector3f avSize);
-
-        bool LoadFromFile(const tWString &asFile);
-        bool LoadFromElement(cXmlElement* apElement);
-
-        void AddEmitterData(iParticleEmitterData *apData);
-
-        bool Reload(){ return false;}
-        void Unload(){}
-        void Destroy(){}
-
-        iParticleEmitterData* GetEmitterData(int alIdx) const { return mvEmitterData[alIdx]; }
-
-    private:
-        cResources* mpResources;
-        cGraphics *mpGraphics;
-
-        std::vector<iParticleEmitterData*> mvEmitterData;
-    };
-
-    //----------------------------------------------------
-
-
-    class cParticleSystem : public iEntity3D
+    iParticleEmitterData* GetEmitterData(int alIdx) const
     {
-    #ifdef __GNUC__
-        typedef iEntity3D __super;
-    #endif
+        return mvEmitterData[alIdx];
+    }
+
+private:
+    cResources* mpResources;
+    cGraphics *mpGraphics;
+
+    std::vector<iParticleEmitterData*> mvEmitterData;
+};
+
+//----------------------------------------------------
+
+
+class cParticleSystem : public iEntity3D
+{
+#ifdef __GNUC__
+    typedef iEntity3D __super;
+#endif
     friend class iParticleEmitter;
-    public:
-        cParticleSystem(    const tString asName,cParticleSystemData *apData, 
-                            cResources *apResources, cGraphics *apGraphics);
-        ~cParticleSystem();
+public:
+    cParticleSystem(    const tString asName,cParticleSystemData *apData,
+                        cResources *apResources, cGraphics *apGraphics);
+    ~cParticleSystem();
 
-        bool IsVisible(){ return mbIsVisible;}
-        void SetVisible(bool abVisible);
+    bool IsVisible()
+    {
+        return mbIsVisible;
+    }
+    void SetVisible(bool abVisible);
 
-        void UpdateLogic(float afTimeStep);
+    void UpdateLogic(float afTimeStep);
 
-        bool IsDead();
-        bool IsDying();
-        bool GetRemoveWhenDead() { return mbRemoveWhenDead; }
-        void SetRemoveWhenDead(bool abX) { mbRemoveWhenDead = abX; }
+    bool IsDead();
+    bool IsDying();
+    bool GetRemoveWhenDead()
+    {
+        return mbRemoveWhenDead;
+    }
+    void SetRemoveWhenDead(bool abX)
+    {
+        mbRemoveWhenDead = abX;
+    }
 
-        void Kill();
-        void KillInstantly();
+    void Kill();
+    void KillInstantly();
 
-        void AddEmitter(iParticleEmitter* apEmitter);
-        iParticleEmitter* GetEmitter(int alIdx);
-        int GetEmitterNum();
+    void AddEmitter(iParticleEmitter* apEmitter);
+    iParticleEmitter* GetEmitter(int alIdx);
+    int GetEmitterNum();
 
-        tString GetEntityType(){ return "ParticleSystem3D"; }
+    tString GetEntityType()
+    {
+        return "ParticleSystem3D";
+    }
 
-        void SetDataName(const tString &asName) {msDataName = asName;}
-        void SetDataSize(const cVector3f &avSize) {mvDataSize = avSize;}
+    void SetDataName(const tString &asName)
+    {
+        msDataName = asName;
+    }
+    void SetDataSize(const cVector3f &avSize)
+    {
+        mvDataSize = avSize;
+    }
 
-        const tString& GetDataName() { return msDataName;}
-        const cVector3f& GetDataSize() { return mvDataSize;}
+    const tString& GetDataName()
+    {
+        return msDataName;
+    }
+    const cVector3f& GetDataSize()
+    {
+        return mvDataSize;
+    }
 
-        void SetColor(const cColor& aColor){ mColor = aColor;}
-        void SetFadeAtDistance(bool abX){ mbFadeAtDistance = abX;}
-        void SetMinFadeDistanceStart(float afX){ mfMinFadeDistanceStart = afX;}
-        void SetMinFadeDistanceEnd(float afX){ mfMinFadeDistanceEnd = afX;}
-        void SetMaxFadeDistanceStart(float afX){ mfMaxFadeDistanceStart = afX;}
-        void SetMaxFadeDistanceEnd(float afX){ mfMaxFadeDistanceEnd = afX;}
+    void SetColor(const cColor& aColor)
+    {
+        mColor = aColor;
+    }
+    void SetFadeAtDistance(bool abX)
+    {
+        mbFadeAtDistance = abX;
+    }
+    void SetMinFadeDistanceStart(float afX)
+    {
+        mfMinFadeDistanceStart = afX;
+    }
+    void SetMinFadeDistanceEnd(float afX)
+    {
+        mfMinFadeDistanceEnd = afX;
+    }
+    void SetMaxFadeDistanceStart(float afX)
+    {
+        mfMaxFadeDistanceStart = afX;
+    }
+    void SetMaxFadeDistanceEnd(float afX)
+    {
+        mfMaxFadeDistanceEnd = afX;
+    }
 
-        cColor GetColor(){ return mColor;}
-        bool GetFadeAtDistance(){ return mbFadeAtDistance;}
-        float GetMinFadeDistanceStart(){ return mfMinFadeDistanceStart;}
-        float GetMinFadeDistanceEnd(){ return mfMinFadeDistanceEnd;}
-        float GetMaxFadeDistanceStart(){ return mfMaxFadeDistanceStart;}
-        float GetMaxFadeDistanceEnd(){ return mfMaxFadeDistanceEnd;}
-        
-        void SetParticleManager(cParticleManager *apParticleManager)
-        {
-            mpParticleManager = apParticleManager;
-        }
+    cColor GetColor()
+    {
+        return mColor;
+    }
+    bool GetFadeAtDistance()
+    {
+        return mbFadeAtDistance;
+    }
+    float GetMinFadeDistanceStart()
+    {
+        return mfMinFadeDistanceStart;
+    }
+    float GetMinFadeDistanceEnd()
+    {
+        return mfMinFadeDistanceEnd;
+    }
+    float GetMaxFadeDistanceStart()
+    {
+        return mfMaxFadeDistanceStart;
+    }
+    float GetMaxFadeDistanceEnd()
+    {
+        return mfMaxFadeDistanceEnd;
+    }
 
-        cParticleSystemData *GetData(){ return mpData;}
+    void SetParticleManager(cParticleManager *apParticleManager)
+    {
+        mpParticleManager = apParticleManager;
+    }
 
-    private:
-        cResources *mpResources;
-        cGraphics *mpGraphics;
-        cParticleManager *mpParticleManager;
-        cParticleSystemData *mpData;
+    cParticleSystemData *GetData()
+    {
+        return mpData;
+    }
 
-        std::vector<iParticleEmitter*> mvEmitters;
+private:
+    cResources *mpResources;
+    cGraphics *mpGraphics;
+    cParticleManager *mpParticleManager;
+    cParticleSystemData *mpData;
 
-        bool mbRemoveWhenDead;
+    std::vector<iParticleEmitter*> mvEmitters;
 
-        bool mbIsVisible;
+    bool mbRemoveWhenDead;
 
-        cColor mColor;
-        bool mbFadeAtDistance;
-        float mfMinFadeDistanceStart;
-        float mfMinFadeDistanceEnd;
-        float mfMaxFadeDistanceStart;
-        float mfMaxFadeDistanceEnd;
+    bool mbIsVisible;
 
-        tString msDataName;
-        cVector3f mvDataSize;
+    cColor mColor;
+    bool mbFadeAtDistance;
+    float mfMinFadeDistanceStart;
+    float mfMinFadeDistanceEnd;
+    float mfMaxFadeDistanceStart;
+    float mfMaxFadeDistanceEnd;
 
-        bool mbFirstUpdate;
-    };
+    tString msDataName;
+    cVector3f mvDataSize;
+
+    bool mbFirstUpdate;
+};
 
 };
 #endif // HPL_PARTICLE_SYSTEM_H

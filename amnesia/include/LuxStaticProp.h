@@ -12,7 +12,7 @@ class cLuxMap;
 
 //----------------------------------------------
 // ATTENTION!
-// The entity classes is only be used if for some reason 
+// The entity classes is only be used if for some reason
 // static props needs to be turned of or what not.
 //----------------------------------------------
 
@@ -31,11 +31,11 @@ public:
 
 class cLuxStaticProp
 {
-friend class cLuxStaticPropLoader;
+    friend class cLuxStaticPropLoader;
 public:
     cLuxStaticProp(const tString &asName, int alID);
     ~cLuxStaticProp();
-    
+
 private:
     tString msName;
     int mlID;
@@ -45,7 +45,7 @@ private:
     cMatrixf m_mtxOnLoadTransform;
 
     cMeshEntity *mpMeshEntity;
-    
+
     std::vector<iPhysicsBody*> mvBodies;
     std::vector<iPhysicsJoint*> mvJoints;
 
@@ -63,7 +63,7 @@ class cLuxStaticPropLoader : public cEntityLoader_Object
 {
 public:
     cLuxStaticPropLoader(const tString& asName);
-    virtual ~cLuxStaticPropLoader(){}
+    virtual ~cLuxStaticPropLoader() {}
 
     void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
     void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);

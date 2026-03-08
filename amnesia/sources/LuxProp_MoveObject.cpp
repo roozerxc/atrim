@@ -68,7 +68,7 @@ eLuxMoveObjectType cLuxPropLoader_MoveObject::ToMoveObjectType(const tString& as
 void cLuxPropLoader_MoveObject::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
     cLuxProp_MoveObject  *pMoveObject = static_cast<cLuxProp_MoveObject*>(apProp);
-    
+
     //This varaible will only be used until the first update and then set to "" again.
     // so it is only temp and used to make sure that the area is loaded.
     pMoveObject->msAngularOffsetArea = apInstanceVars->GetVarString("AngularOffsetArea", "");
@@ -125,7 +125,7 @@ void cLuxProp_MoveObject::OnSetupAfterLoad(cWorld *apWorld)
     iPhysicsBody *pBody = GetMainBody();
 
     m_mtxClosedTransform = pBody->GetLocalMatrix();
-    
+
     cVector3f vMul[3] = {cVector3f(1,0,0), cVector3f(0,1,0), cVector3f(0,0,1) };
 
     ///////////////////
@@ -174,11 +174,11 @@ void cLuxProp_MoveObject::UpdatePropSpecific(float afTimeStep)
         msAngularOffsetArea = "";
     }
 
-    
+
     //////////////////////
     //Update Automove
     UpdateAutoMove(afTimeStep);
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -206,26 +206,26 @@ void cLuxProp_MoveObject::MoveToState(float afState, float afAcc, float afMaxSpe
     // Linear
     if(mMoveObjectType == eLuxMoveObjectType_Linear)
     {
-        cVector3f vWanted = m_mtxClosedTransform.GetTranslation() * (1-afState) + 
+        cVector3f vWanted = m_mtxClosedTransform.GetTranslation() * (1-afState) +
                             m_mtxOpenTransform.GetTranslation() * afState;
-        
+
         MoveLinearTo(vWanted, afAcc, afMaxSpeed,afSlowdownDist,abResetSpeed);
     }
     ///////////////////
     // Angular
     else
     {
-        //afState = cMath::Clamp(afState,0,1);    
-        
+        //afState = cMath::Clamp(afState,0,1);
+
         cMatrixf mtxWanted = cMath::MatrixSlerp(afState, m_mtxClosedTransform,m_mtxOpenTransform, true);
 
         cMatrixf mtxInvClose = cMath::MatrixInverse(m_mtxClosedTransform);
         cVector3f vLocalOffset = cMath::MatrixMul(mtxInvClose, mvAngularOffsetPos);
 
         if(mbUseAngularLocalOffset)
-            MoveAngularTo(mtxWanted, afAcc, afMaxSpeed,afSlowdownDist,abResetSpeed, true, mvAngularOffsetPos ,vLocalOffset);
+            MoveAngularTo(mtxWanted, afAcc, afMaxSpeed,afSlowdownDist,abResetSpeed, true, mvAngularOffsetPos,vLocalOffset);
         else
-            MoveAngularTo(mtxWanted, afAcc, afMaxSpeed,afSlowdownDist,abResetSpeed, false, 0 ,0);
+            MoveAngularTo(mtxWanted, afAcc, afMaxSpeed,afSlowdownDist,abResetSpeed, false, 0,0);
     }
 }
 
@@ -278,11 +278,11 @@ float cLuxProp_MoveObject::GetMoveState()
         vT =    vDelta / cMath::MatrixEulerAngleDistance(m_mtxClosedTransform, m_mtxOpenTransform);
     }
 
-    float fT = 0; 
+    float fT = 0;
     if(vDelta.x != 0)        fT = vT.x;
     else if(vDelta.y != 0)    fT = vT.y;
     else if(vDelta.z != 0)    fT = vT.z;
-    
+
     return fT;
 }
 
@@ -308,7 +308,7 @@ void cLuxProp_MoveObject::UpdateAutoMove(float afTimeStep)
     ///////////////////////
     //Skip update if update is off, the entity is moving or the goal is reached.
     if(mbAutoMove==false || mbMoving || mbAutoMoveReachedGoal) return;
-    
+
     ///////////////////////
     //Check if the auto move goal has been reached
     if(cMath::Abs(GetMoveState() - mfAutoMoveStateGoal) < 0.001f)
@@ -390,7 +390,7 @@ void cLuxProp_MoveObject::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //Init
     super_class::LoadFromSaveData(apSaveData);
     cLuxProp_MoveObject_SaveData *pData = static_cast<cLuxProp_MoveObject_SaveData*>(apSaveData);
-    
+
     //////////////////
     //Set variables
     kCopyFromVar(pData, mvAngularOffsetPos);

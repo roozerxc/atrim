@@ -9,13 +9,13 @@
 
 class cLuxProgressLogHandler : public iLuxUpdateable
 {
-public:    
+public:
     cLuxProgressLogHandler();
     ~cLuxProgressLogHandler();
 
     void LoadUserConfig();
     void SaveUserConfig();
-    
+
     void OnStart();
     void Update(float afTimeStep);
     void Reset();
@@ -23,7 +23,7 @@ public:
     void CreateAndResetLogFile();
 
     void AddLog(eLuxProgressLogLevel aLevel, const tString& asMessage);
-    
+
 private:
     tString LevelToString(eLuxProgressLogLevel aLevel);
 

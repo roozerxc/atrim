@@ -12,7 +12,7 @@ class cLuxProp_Chest_SaveData : public iLuxProp_SaveData
     kSerializableClassInit(cLuxProp_Chest_SaveData)
 public:
     bool mbLocked;
-    
+
     int mlCoinsNeeded;
 };
 
@@ -48,10 +48,10 @@ private:
 
 class cLuxProp_Chest : public iLuxProp
 {
-typedef iLuxProp super_class;
-friend class cLuxPropLoader_Chest;
-friend class cLuxChestMessageCallback;
-public:    
+    typedef iLuxProp super_class;
+    friend class cLuxPropLoader_Chest;
+    friend class cLuxChestMessageCallback;
+public:
     cLuxProp_Chest(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxProp_Chest();
 
@@ -59,13 +59,13 @@ public:
     //General
     bool CanInteract(iPhysicsBody *apBody);
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
-    
+
     void OnSetupAfterLoad(cWorld *apWorld);
 
     void OnResetProperties();
 
     void UpdatePropSpecific(float afTimeStep);
-    
+
     void BeforePropDestruction();
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
@@ -79,11 +79,17 @@ public:
 
     //////////////////////
     //Properties
-    iLuxInteractData_RotateBase* GetMoveBaseData(){ return &mSwingDoorData;}
-    
+    iLuxInteractData_RotateBase* GetMoveBaseData()
+    {
+        return &mSwingDoorData;
+    }
+
     void SetLocked(bool abLocked, bool abEffects);
-    bool GetLocked(){ return mbLocked;}
-    
+    bool GetLocked()
+    {
+        return mbLocked;
+    }
+
     //////////////////////
     //Connection callbacks
     void OnConnectionStateChange(iLuxEntity *apEntity, int alState);
@@ -111,7 +117,7 @@ private:
     //////////////////////
     // Variables
     bool mbLocked;
-    
+
     int mlCoinsNeeded;
 
 };
@@ -122,7 +128,7 @@ class cLuxPropLoader_Chest : public iLuxPropLoader
 {
 public:
     cLuxPropLoader_Chest(const tString& asName);
-    virtual ~cLuxPropLoader_Chest(){}
+    virtual ~cLuxPropLoader_Chest() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);

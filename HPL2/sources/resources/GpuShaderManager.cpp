@@ -14,106 +14,152 @@
 #include <io.h>
 #endif
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cGpuShaderManager::cGpuShaderManager(cFileSearcher *apFileSearcher,iLowLevelGraphics *apLowLevelGraphics, 
-        iLowLevelResources *apLowLevelResources,iLowLevelSystem *apLowLevelSystem)
-        : iResourceManager(apFileSearcher, apLowLevelResources,apLowLevelSystem)
+cGpuShaderManager::cGpuShaderManager(cFileSearcher *apFileSearcher,iLowLevelGraphics *apLowLevelGraphics,
+                                     iLowLevelResources *apLowLevelResources,iLowLevelSystem *apLowLevelSystem)
+    : iResourceManager(apFileSearcher, apLowLevelResources,apLowLevelSystem)
+{
+    mpLowLevelGraphics = apLowLevelGraphics;
+
+    mpPreprocessParser = hplNew(cPreprocessParser, () );
+
+    mpPreprocessParser->GetEnvVarContainer()->Add("ScreenWidth",mpLowLevelGraphics->GetScreenSizeInt().x);
+    mpPreprocessParser->GetEnvVarContainer()->Add("ScreenHeigth",mpLowLevelGraphics->GetScreenSizeInt().y);
+
+#ifdef _WIN32
+    mpPreprocessParser->GetEnvVarContainer()->Add("OS_Windows");
+#endif
+}
+
+cGpuShaderManager::~cGpuShaderManager()
+{
+    hplDelete(mpPreprocessParser);
+
+    DestroyAll();
+
+    Log(" Done with Gpu programs\n");
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+void cGpuShaderManager::CheckFeatureSupport()
+{
+    ////////////////////////////
+    //Shader model variables
+    if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_2))        mpPreprocessParser->GetEnvVarContainer()->Add("ShaderModel_2");
+    if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_3))        mpPreprocessParser->GetEnvVarContainer()->Add("ShaderModel_3");
+    if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_4))        mpPreprocessParser->GetEnvVarContainer()->Add("ShaderModel_4");
+
+    /////////////////////////
+    // Test Feature support
+    if(IsShaderSupported("_test_array_support_frag.glsl", eGpuShaderType_Fragment)==false)
     {
-        mpLowLevelGraphics = apLowLevelGraphics;
-
-        mpPreprocessParser = hplNew(cPreprocessParser, () );
-
-        mpPreprocessParser->GetEnvVarContainer()->Add("ScreenWidth",mpLowLevelGraphics->GetScreenSizeInt().x);
-        mpPreprocessParser->GetEnvVarContainer()->Add("ScreenHeigth",mpLowLevelGraphics->GetScreenSizeInt().y);
-
-        #ifdef _WIN32
-            mpPreprocessParser->GetEnvVarContainer()->Add("OS_Windows");
-        #endif
+        Log("ATTENTION: System does not support const arrays in glsl!\n");
+        mpPreprocessParser->GetEnvVarContainer()->Add("FeatureNotSupported_ConstArray");
     }
+}
 
-    cGpuShaderManager::~cGpuShaderManager()
+//-----------------------------------------------------------------------
+
+iGpuShader* cGpuShaderManager::CreateShader(const tString& asName, eGpuShaderType aType,
+        cParserVarContainer *apVarContainer)
+{
+    iGpuShader* pShader;
+
+    BeginLoad(asName);
+
+    /////////////////////////////////////////
+    // If we have a variable container do NOT add the shader as a resource!
+    if(apVarContainer)
     {
-        hplDelete(mpPreprocessParser);
+        tString sFileData;
+        tString sParsedOutput;
 
-        DestroyAll();
-
-        Log(" Done with Gpu programs\n");
-    }
-
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-
-    void cGpuShaderManager::CheckFeatureSupport()
-    {
-        ////////////////////////////
-        //Shader model variables
-        if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_2))        mpPreprocessParser->GetEnvVarContainer()->Add("ShaderModel_2");
-        if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_3))        mpPreprocessParser->GetEnvVarContainer()->Add("ShaderModel_3");
-        if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_4))        mpPreprocessParser->GetEnvVarContainer()->Add("ShaderModel_4");
-
-        /////////////////////////
-        // Test Feature support
-        if(IsShaderSupported("_test_array_support_frag.glsl", eGpuShaderType_Fragment)==false)
+        /////////////////////////////////
+        //Get file from file searcher
+        tWString sPath = mpFileSearcher->GetFilePath(asName);
+        if(sPath==_W(""))
         {
-            Log("ATTENTION: System does not support const arrays in glsl!\n");
-            mpPreprocessParser->GetEnvVarContainer()->Add("FeatureNotSupported_ConstArray");
+            Error("Couldn't find file '%s' in resources\n",asName.c_str());
+            EndLoad();
+            return NULL;
+        }
+
+        /////////////////////////////////
+        //Load data
+        unsigned int lFileSize = cPlatform::GetFileSize(sPath);
+
+        sFileData.resize(lFileSize);
+        cPlatform::CopyFileToBuffer(sPath,&sFileData[0],lFileSize);
+
+        /////////////////////////////////
+        //Parse file
+        mpPreprocessParser->Parse(&sFileData, &sParsedOutput,apVarContainer,cString::GetFilePathW(sPath));
+
+        /////////////////////////////////
+        //Compile
+        pShader = mpLowLevelGraphics->CreateGpuShader(asName, aType);
+        pShader->SetFullPath(sPath);
+
+        if(pShader->CreateFromString(sParsedOutput.c_str())==false)
+        {
+            Error("Couldn't create program '%s'\n",asName.c_str());
+            hplDelete(pShader);
+            EndLoad();
+            return NULL;
+        }
+
+        /////////////////////////////////
+        //Sampler to texture units setup, if needed
+        if(aType == eGpuShaderType_Fragment && pShader->SamplerNeedsTextureUnitSetup())
+        {
+            tParseVarMap *pVarMap = mpPreprocessParser->GetParsingVarContainer()->GetMapPtr();
+            tParseVarMapIt varIt = pVarMap->begin();
+            for(; varIt != pVarMap->end(); ++varIt)
+            {
+                const tString& sVarName = varIt->first;
+                const tString& sVarVal = varIt->second;
+                if(sVarName == "") continue;
+
+                tStringVec vStrings;
+                tString sSepp = "_";
+                cString::GetStringVec(sVarName,vStrings,&sSepp);
+                if(vStrings.size()>=2 && vStrings[0]=="sampler")
+                {
+                    int lUnit = cString::ToInt(sVarVal.c_str(), 0);
+
+                    pShader->AddSamplerUnit(vStrings[1], lUnit);
+                }
+
+            }
         }
     }
-
-    //-----------------------------------------------------------------------
-
-    iGpuShader* cGpuShaderManager::CreateShader(const tString& asName, eGpuShaderType aType,
-                                                cParserVarContainer *apVarContainer)
+    /////////////////////////////////////////
+    // Normal resource load
+    else
     {
-        iGpuShader* pShader;
+        tWString sPath;
+        pShader = static_cast<iGpuShader*>(FindLoadedResource(asName,sPath));
 
-        BeginLoad(asName);
-
-        /////////////////////////////////////////
-        // If we have a variable container do NOT add the shader as a resource!
-        if(apVarContainer)
+        if(pShader==NULL && sPath!=_W(""))
         {
-            tString sFileData;
-            tString sParsedOutput;
-        
-            /////////////////////////////////
-            //Get file from file searcher
-            tWString sPath = mpFileSearcher->GetFilePath(asName);
-            if(sPath==_W("")){
-                Error("Couldn't find file '%s' in resources\n",asName.c_str());
-                EndLoad();
-                return NULL;
-            }
-
-            /////////////////////////////////
-            //Load data
-            unsigned int lFileSize = cPlatform::GetFileSize(sPath);
-
-            sFileData.resize(lFileSize);
-            cPlatform::CopyFileToBuffer(sPath,&sFileData[0],lFileSize);
-
-            /////////////////////////////////
-            //Parse file
-            mpPreprocessParser->Parse(&sFileData, &sParsedOutput,apVarContainer,cString::GetFilePathW(sPath));
-            
-            /////////////////////////////////
-            //Compile
             pShader = mpLowLevelGraphics->CreateGpuShader(asName, aType);
-            pShader->SetFullPath(sPath);
-            
-            if(pShader->CreateFromString(sParsedOutput.c_str())==false)
+
+            if(pShader->CreateFromFile(sPath)==false)
             {
                 Error("Couldn't create program '%s'\n",asName.c_str());
                 hplDelete(pShader);
@@ -121,109 +167,67 @@ namespace hpl {
                 return NULL;
             }
 
-            /////////////////////////////////
-            //Sampler to texture units setup, if needed
-            if(aType == eGpuShaderType_Fragment && pShader->SamplerNeedsTextureUnitSetup())
-            {
-                tParseVarMap *pVarMap = mpPreprocessParser->GetParsingVarContainer()->GetMapPtr();
-                tParseVarMapIt varIt = pVarMap->begin();
-                for(; varIt != pVarMap->end(); ++varIt)
-                {
-                    const tString& sVarName = varIt->first;
-                    const tString& sVarVal = varIt->second;
-                    if(sVarName == "") continue;
-                    
-                    tStringVec vStrings;
-                    tString sSepp = "_";
-                    cString::GetStringVec(sVarName,vStrings,&sSepp);
-                    if(vStrings.size()>=2 && vStrings[0]=="sampler")
-                    {
-                        int lUnit = cString::ToInt(sVarVal.c_str(), 0);
-                        
-                        pShader->AddSamplerUnit(vStrings[1], lUnit);
-                    }
-                    
-                }
-            }
+            AddResource(pShader);
         }
-        /////////////////////////////////////////
-        // Normal resource load
-        else
-        {
-            tWString sPath;
-            pShader = static_cast<iGpuShader*>(FindLoadedResource(asName,sPath));
 
-            if(pShader==NULL && sPath!=_W(""))
-            {
-                pShader = mpLowLevelGraphics->CreateGpuShader(asName, aType);
-
-                if(pShader->CreateFromFile(sPath)==false)
-                {
-                    Error("Couldn't create program '%s'\n",asName.c_str());
-                    hplDelete(pShader);
-                    EndLoad();
-                    return NULL;
-                }
-
-                AddResource(pShader);
-            }
-
-            if(pShader)pShader->IncUserCount();
-            else Error("Couldn't load program '%s'\n",asName.c_str());
-        }
-        
-        
-        EndLoad();
-        return pShader;
-     }
-
-    //-----------------------------------------------------------------------
-
-    void cGpuShaderManager::Unload(iResourceBase* apResource)
-    {
-
-    }
-    //-----------------------------------------------------------------------
-
-    void cGpuShaderManager::Destroy(iResourceBase* apResource)
-    {
-        apResource->DecUserCount();
-
-        if(apResource->HasUsers()==false){
-            RemoveResource(apResource);
-            hplDelete(apResource);
-        }
+        if(pShader)pShader->IncUserCount();
+        else Error("Couldn't load program '%s'\n",asName.c_str());
     }
 
-    //-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
+    EndLoad();
+    return pShader;
+}
 
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
-    
-    bool cGpuShaderManager::IsShaderSupported(const tString& asName, eGpuShaderType aType)
+void cGpuShaderManager::Unload(iResourceBase* apResource)
+{
+
+}
+//-----------------------------------------------------------------------
+
+void cGpuShaderManager::Destroy(iResourceBase* apResource)
+{
+    apResource->DecUserCount();
+
+    if(apResource->HasUsers()==false)
     {
-        /////////////////////////////////
-        //Get file from file searcher
-        tWString sPath = mpFileSearcher->GetFilePath(asName);
-        if(sPath==_W("")){
-            Error("Couldn't find test file '%s' in resources\n",asName.c_str());
-            return false;
-        }
-
-        /////////////////////////////////
-        //Compile
-        iGpuShader* pShader = mpLowLevelGraphics->CreateGpuShader(asName, aType);
-        
-        bool bRet = pShader->CreateFromFile(sPath, "main", false);
-        hplDelete(pShader);
-        
-        return bRet;
+        RemoveResource(apResource);
+        hplDelete(apResource);
     }
-    
-    //-----------------------------------------------------------------------
+}
+
+//-----------------------------------------------------------------------
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+bool cGpuShaderManager::IsShaderSupported(const tString& asName, eGpuShaderType aType)
+{
+    /////////////////////////////////
+    //Get file from file searcher
+    tWString sPath = mpFileSearcher->GetFilePath(asName);
+    if(sPath==_W(""))
+    {
+        Error("Couldn't find test file '%s' in resources\n",asName.c_str());
+        return false;
+    }
+
+    /////////////////////////////////
+    //Compile
+    iGpuShader* pShader = mpLowLevelGraphics->CreateGpuShader(asName, aType);
+
+    bool bRet = pShader->CreateFromFile(sPath, "main", false);
+    hplDelete(pShader);
+
+    return bRet;
+}
+
+//-----------------------------------------------------------------------
 }

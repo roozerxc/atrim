@@ -53,7 +53,7 @@ void cMapHandlerSoundCallback::OnStart(cSoundEntity *apSoundEntity)
 {
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
     if(pMap==NULL) return;
-    
+
     ///////////////////////////
     //Check if the sound is something to worry bout
     tString sTypeName = apSoundEntity->GetData()->GetName();
@@ -69,16 +69,16 @@ void cMapHandlerSoundCallback::OnStart(cSoundEntity *apSoundEntity)
         }
     }
     if(bUsed == false) return;
-    
+
     ///////////////////////////
     //Iterate enemies and send sound message to those close enough
     float fMaxDist = apSoundEntity->GetMaxDistance();
     float fMinDist = apSoundEntity->GetMaxDistance();
     float fVolume = apSoundEntity->GetVolume();
     cVector3f vPos = apSoundEntity->GetWorldPosition();
-    
+
     pMap->BroadcastEnemySoundMessage(vPos, fVolume, fMinDist, fMaxDist);
-}    
+}
 
 //-----------------------------------------------------------------------
 
@@ -103,7 +103,7 @@ void cLuxDebugRenderCallback::OnPostSolidDraw(cRendererCallbackFunctions* apFunc
         apFunctions->SetBlendMode(eMaterialBlendMode_Alpha);
         apFunctions->SetTextureRange(NULL,0);
         apFunctions->SetProgram(NULL);
-        
+
         apFunctions->SetDepthTest(true);
         apFunctions->SetDepthWrite(false);
 
@@ -145,14 +145,14 @@ cLuxMapHandler::cLuxMapHandler() : iLuxUpdateable("LuxMapHandler")
     cGraphics *pGraphics = gpBase->mpEngine->GetGraphics();
     cPostEffectComposite *pPostEffectComp = pGraphics->CreatePostEffectComposite();
     mpViewport->SetPostEffectComposite(pPostEffectComp);
-    
+
     //Bloom
     cPostEffectParams_Bloom bloomParams;
     bloomParams.mfBlurSize = 1.0f;
     bloomParams.mvRgbToIntensity = bloomParams.mvRgbToIntensity * 1.0f;
     mpPostEffect_Bloom = pGraphics->CreatePostEffect(&bloomParams);
     pPostEffectComp->AddPostEffect(mpPostEffect_Bloom, 100);
-    
+
     //Image trail
     cPostEffectParams_ImageTrail imageTrailParams;
     mpPostEffect_ImageTrail = pGraphics->CreatePostEffect(&imageTrailParams);
@@ -173,12 +173,12 @@ cLuxMapHandler::cLuxMapHandler() : iLuxUpdateable("LuxMapHandler")
     mpPostEffect_Sepia = pGraphics->CreatePostEffect(&sepiaParams);
     pPostEffectComp->AddPostEffect(mpPostEffect_Sepia, 4);
     mpPostEffect_Sepia->SetActive(false);
-    
+
     //////////////////////////
     //Saving
     mpSavedGame = hplNew( cLuxSavedGameMapCollection, () );
 
-    
+
     //////////////////////////
     //Callbacks
     mpSoundCallback = hplNew( cMapHandlerSoundCallback, () );
@@ -217,13 +217,13 @@ cLuxMapHandler::~cLuxMapHandler()
 void cLuxMapHandler::OnStart()
 {
     //////////////////////
-    //Set up viewport     
+    //Set up viewport
     mpViewport->SetCamera(gpBase->mpPlayer->GetCamera());
 
     mpViewport->AddGuiSet(gpBase->mpGameDebugSet);
     mpViewport->AddGuiSet(gpBase->mpGameHudSet);
 
-    
+
     mpViewport->AddRendererCallback(&mRenderCallback);
     UpdateViewportRenderProperties();
 }
@@ -283,14 +283,14 @@ void cLuxMapHandler::OnQuit()
     gpBase->mpEngine->GetUpdater()->SetContainer("MainMenu");
 
     gpBase->mpLoadScreenHandler->DrawMenuScreen();
-    
+
     //Destroy map
     cLuxMapHandler *mpMapHandler = gpBase->mpMapHandler;
     if(mpMapHandler->GetCurrentMap())
     {
         //Save
         gpBase->mpSaveHandler->AutoSave();
-        
+
         mpMapHandler->DestroyMap(mpMapHandler->GetCurrentMap(),false);
 
         //Reset game
@@ -321,7 +321,7 @@ void cLuxMapHandler::SaveUserConfig()
 void cLuxMapHandler::CreateDataCache()
 {
     if(mpDataCache) DestroyDataCache();
-    
+
     mpDataCache = hplNew(cLuxModelCache, () );
     mpDataCache->Create();
 }
@@ -338,7 +338,7 @@ void cLuxMapHandler::DestroyDataCache()
 void cLuxMapHandler::SetUpdateActive(bool abX)
 {
     mbUpdateActive = abX;
-    
+
     if(mpCurrentMap) mpCurrentMap->GetWorld()->SetActive(mbUpdateActive);
 }
 
@@ -392,7 +392,7 @@ void cLuxMapHandler::ChangeMap(const tString& asMapName, const tString& asStartP
 cLuxMap* cLuxMapHandler::LoadMap(const tString& asFileName, bool abLoadEntities)
 {
     cLuxMap *pMap = hplNew( cLuxMap, ( FileToMapName(asFileName)) );
-    
+
     pMap->LoadFromFile(msMapFolder+asFileName, abLoadEntities);
 
     mlstMaps.push_back(pMap);
@@ -421,7 +421,7 @@ void cLuxMapHandler::SetCurrentMap(cLuxMap* apMap, bool abRunScript, bool abFirs
     if(mpCurrentMap)
     {
         mpCurrentMap->OnLeave(abRunScript);
-        
+
         //Leave callback for modules
         gpBase->RunModuleMessage(eLuxUpdateableMessage_DestroyWorldEntities, mpCurrentMap);
         gpBase->RunModuleMessage(eLuxUpdateableMessage_OnMapLeave, mpCurrentMap);
@@ -442,7 +442,7 @@ void cLuxMapHandler::SetCurrentMap(cLuxMap* apMap, bool abRunScript, bool abFirs
 
         //Create an automatic checkpoint
         mpCurrentMap->SetCheckPoint("_auto", asPlayerPos, "");
-        
+
         //Map enter callback
         mpCurrentMap->OnEnter(abRunScript, abFirstTime);
 
@@ -487,7 +487,7 @@ void cLuxMapHandler::ResumeSoundsAndMusic()
 void cLuxMapHandler::ClearSaveMapCollection()
 {
     mpSavedGameMutex->Lock();
-        mpSavedGame->Reset();
+    mpSavedGame->Reset();
     mpSavedGameMutex->Unlock();
 }
 
@@ -615,7 +615,7 @@ void cLuxMapHandler::CheckMapChange(float afTimeStep)
         //////////////////////
         // Fadeout sounds and disable stop (meaning they will fade even when sound entities are destroyed)
         gpBase->mpEngine->GetSound()->GetSoundHandler()->FadeOutAll(eSoundEntryType_World, 0.5f, true);
-        
+
         //////////////////////
         // Load new map
         cLuxMap *pLastMap = mpCurrentMap;
@@ -625,7 +625,7 @@ void cLuxMapHandler::CheckMapChange(float afTimeStep)
             Error("Could not load map '%s'!\n", mMapChangeData.msMapFile.c_str());
             return;
         }
-        
+
         if(pLastMap)
         {
             if (pLastMap->GetName() == "08_cellar_maze" && pMap->GetName() == "09_back_hall")
@@ -641,7 +641,7 @@ void cLuxMapHandler::CheckMapChange(float afTimeStep)
             //////////////
             // HARDMODE
             if (gpBase->mbHardMode &&
-                pLastMap->GetName() == "27_torture_chancel_redux" && pMap->GetName() == "28_inner_sanctum")
+                    pLastMap->GetName() == "27_torture_chancel_redux" && pMap->GetName() == "28_inner_sanctum")
             {
                 gpBase->mpPlayer->AddSanity(100.f, true);
             }
@@ -649,8 +649,8 @@ void cLuxMapHandler::CheckMapChange(float afTimeStep)
 
         //////////////////////
         // Set new and destroy old
-        bool bFirstTime = mpSavedGame->MapExists(sNewMapName)==false;    
-        
+        bool bFirstTime = mpSavedGame->MapExists(sNewMapName)==false;
+
         SetCurrentMap(pMap, false, bFirstTime, mMapChangeData.msStartPos);
         DestroyMap(pLastMap, false);
 
@@ -669,7 +669,7 @@ void cLuxMapHandler::CheckMapChange(float afTimeStep)
         //////////////////////////////////
         //Check if any more load time needed
         fTimeTaken = (float)(cPlatform::GetApplicationTime() - lLoadStartTime)/1000.0f;
-        
+
         ProgLog(eLuxProgressLogLevel_High, "Entering map "+ mpCurrentMap->GetName());
     }
     ///////////////////////

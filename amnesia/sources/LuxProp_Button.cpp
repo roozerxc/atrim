@@ -90,7 +90,7 @@ bool cLuxProp_Button::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 
 void cLuxProp_Button::OnSetupAfterLoad(cWorld *apWorld)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -194,7 +194,7 @@ void cLuxProp_Button::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //Init
     super_class::LoadFromSaveData(apSaveData);
     cLuxProp_Button_SaveData *pData = static_cast<cLuxProp_Button_SaveData*>(apSaveData);
-    
+
     //////////////////
     //Set variables
     kCopyFromVar(pData,mbSwitchedOn);

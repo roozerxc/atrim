@@ -23,9 +23,9 @@ public:
 
 class cLuxProp_Item : public iLuxProp
 {
-typedef iLuxProp super_class;
-friend class cLuxPropLoader_Item;
-public:    
+    typedef iLuxProp super_class;
+    friend class cLuxPropLoader_Item;
+public:
     cLuxProp_Item(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxProp_Item();
 
@@ -39,26 +39,50 @@ public:
     void OnResetProperties();
 
     void UpdatePropSpecific(float afTimeStep);
-    
+
     void BeforePropDestruction();
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
 
     //////////////////////
     //Properties
-    const tString& GetStringVal(){ return msVal; }
+    const tString& GetStringVal()
+    {
+        return msVal;
+    }
 
-    eLuxItemType GetItemType(){ return mItemType;}
+    eLuxItemType GetItemType()
+    {
+        return mItemType;
+    }
 
-    const tString& GetImageFile(){ return msImageFile;}
-    const tString& GetPickSound(){ return msPickSound;}
-    const tString& GetSubItemTypeName(){ return msSubItemTypeName;}
+    const tString& GetImageFile()
+    {
+        return msImageFile;
+    }
+    const tString& GetPickSound()
+    {
+        return msPickSound;
+    }
+    const tString& GetSubItemTypeName()
+    {
+        return msSubItemTypeName;
+    }
 
-    float GetAmount(){ return mfAmount;}
+    float GetAmount()
+    {
+        return mfAmount;
+    }
 
-    int GetSpawnContainerID() { return mlSpawnContainerID;}
-    void SetSpawnContainerID(int alX) { mlSpawnContainerID = alX;}
-    
+    int GetSpawnContainerID()
+    {
+        return mlSpawnContainerID;
+    }
+    void SetSpawnContainerID(int alX)
+    {
+        mlSpawnContainerID = alX;
+    }
+
     //////////////////////
     //Connection callbacks
     void OnConnectionStateChange(iLuxEntity *apEntity, int alState);
@@ -98,7 +122,7 @@ class cLuxPropLoader_Item : public iLuxPropLoader
 {
 public:
     cLuxPropLoader_Item(const tString& asName);
-    virtual ~cLuxPropLoader_Item(){}
+    virtual ~cLuxPropLoader_Item() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);

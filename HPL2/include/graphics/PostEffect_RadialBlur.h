@@ -3,64 +3,68 @@
 
 #include "graphics/PostEffect.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //------------------------------------------
-    
-    class cPostEffectParams_RadialBlur : public iPostEffectParams
-    {
-    public:
-        cPostEffectParams_RadialBlur() : iPostEffectParams("RadialBlur"),
-            mfSize(0.06f),
-            mfAlpha(1.0f),
-            mfBlurStartDist(0)
-        {}
-        
-        kPostEffectParamsClassInit(cPostEffectParams_RadialBlur)
+//------------------------------------------
 
-        float mfSize;
-        float mfAlpha;
-        float mfBlurStartDist;
-    };
+class cPostEffectParams_RadialBlur : public iPostEffectParams
+{
+public:
+    cPostEffectParams_RadialBlur() : iPostEffectParams("RadialBlur"),
+        mfSize(0.06f),
+        mfAlpha(1.0f),
+        mfBlurStartDist(0)
+    {}
 
-    //------------------------------------------
-    
-    class cPostEffectType_RadialBlur : public iPostEffectType
-    {
+    kPostEffectParamsClassInit(cPostEffectParams_RadialBlur)
+
+    float mfSize;
+    float mfAlpha;
+    float mfBlurStartDist;
+};
+
+//------------------------------------------
+
+class cPostEffectType_RadialBlur : public iPostEffectType
+{
     friend class cPostEffect_RadialBlur;
-    public:
-        cPostEffectType_RadialBlur(cGraphics *apGraphics, cResources *apResources);
-        virtual ~cPostEffectType_RadialBlur();
+public:
+    cPostEffectType_RadialBlur(cGraphics *apGraphics, cResources *apResources);
+    virtual ~cPostEffectType_RadialBlur();
 
-        iPostEffect *CreatePostEffect(iPostEffectParams *apParams);
-    
-    private:
-        iGpuProgram *mpProgram;
-    };
-    
-    //------------------------------------------
+    iPostEffect *CreatePostEffect(iPostEffectParams *apParams);
 
-    class cPostEffect_RadialBlur : public iPostEffect
+private:
+    iGpuProgram *mpProgram;
+};
+
+//------------------------------------------
+
+class cPostEffect_RadialBlur : public iPostEffect
+{
+public:
+    cPostEffect_RadialBlur(cGraphics *apGraphics,cResources *apResources, iPostEffectType *apType);
+    ~cPostEffect_RadialBlur();
+
+    void Reset();
+
+private:
+    void OnSetParams();
+    iPostEffectParams *GetTypeSpecificParams()
     {
-    public:
-        cPostEffect_RadialBlur(cGraphics *apGraphics,cResources *apResources, iPostEffectType *apType);
-        ~cPostEffect_RadialBlur();
+        return &mParams;
+    }
 
-        void Reset();
+    iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
 
-    private:
-        void OnSetParams();
-        iPostEffectParams *GetTypeSpecificParams() { return &mParams; }
-        
-        iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
+    void RenderBlur(iTexture *apInputTex);
 
-        void RenderBlur(iTexture *apInputTex);
+    cPostEffectType_RadialBlur *mpRadialBlurType;
+    cPostEffectParams_RadialBlur mParams;
+};
 
-        cPostEffectType_RadialBlur *mpRadialBlurType;
-        cPostEffectParams_RadialBlur mParams;
-    };
-
-    //------------------------------------------
+//------------------------------------------
 
 };
 #endif // HPL_POSTEFFECT_IMAGE_TRAIL_H

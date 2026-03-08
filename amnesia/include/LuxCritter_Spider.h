@@ -24,10 +24,10 @@ public:
 
 class cLuxCritter_Spider : public iLuxProp_CritterBase
 {
-typedef iLuxProp_CritterBase super_class;
-friend class cLuxPropLoader_Critter_Spider;
-friend class cLuxCritter_SpiderRayCallback;
-public:    
+    typedef iLuxProp_CritterBase super_class;
+    friend class cLuxPropLoader_Critter_Spider;
+    friend class cLuxCritter_SpiderRayCallback;
+public:
     cLuxCritter_Spider(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxCritter_Spider();
 
@@ -35,20 +35,20 @@ public:
     //General
     void UpdateCritterSpecific(float afTimeStep);
     void OnShapeCollision(const cVector3f& avPushVec, float afTimeStep);
-    
+
     void OnDamageCritter(float afAmount);
     void OnKillCritter();
-    
+
     float DrawDebug(cGuiSet *apSet,iFontData *apFont,float afStartY);
 
 
     //////////////////////
     //Properties
-    
+
     //////////////////////
     //Connection callbacks
-    void OnConnectionStateChange(iLuxEntity *apEntity, int alState){}
-    
+    void OnConnectionStateChange(iLuxEntity *apEntity, int alState) {}
+
     //////////////////////
     //Save data stuff
     iLuxEntity_SaveData* CreateSaveData();
@@ -58,14 +58,14 @@ public:
 
 
 private:
-    
+
     void UpdateVelocity(float afTimeStep);
     void UpdateGroundCheck(float afTimeStep);
-    
+
     //Data
     float mfMaxIdleSpeed;
     float mfMaxHuntSpeed;
-    
+
     tString msHitSound;
     tString msIdleSound;
     cVector2f mvIdleSoundRandMinMax;
@@ -93,7 +93,7 @@ class cLuxPropLoader_Critter_Spider : public iLuxPropLoader_Critter
 {
 public:
     cLuxPropLoader_Critter_Spider(const tString& asName);
-    virtual ~cLuxPropLoader_Critter_Spider(){}
+    virtual ~cLuxPropLoader_Critter_Spider() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadCritterVariables(iLuxProp *apProp, cXmlElement *apRootElem);

@@ -6,47 +6,63 @@
 #include "graphics/GraphicsTypes.h"
 #include "generate/GenerateTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //-------------------------------
+//-------------------------------
 
-    class iLowLevelGraphics;
+class iLowLevelGraphics;
 
-    //-------------------------------
+//-------------------------------
 
-    class cVoxelMap
+class cVoxelMap
+{
+public:
+    cVoxelMap(const cVector3l& avSize);
+    ~cVoxelMap();
+
+    /////////////////////////////////
+    // Action
+    void SetVoxel(const cVector3l &avPos, char alVal);
+
+    /////////////////////////////////
+    // Properties
+    const cVector3l& GetSize()
     {
-    public:
-        cVoxelMap(const cVector3l& avSize);
-        ~cVoxelMap();
+        return mvSize;
+    }
+    void SetSize(const cVector3l& avSize);
 
-        /////////////////////////////////
-        // Action
-        void SetVoxel(const cVector3l &avPos, char alVal);
+    float GetVoxelSize()
+    {
+        return mfVoxelSize;
+    }
+    void SetVoxelSize(float afX)
+    {
+        mfVoxelSize = afX;
+    }
 
-        /////////////////////////////////
-        // Properties
-        const cVector3l& GetSize(){ return mvSize; }
-        void SetSize(const cVector3l& avSize);
+    const cVector3f& GetPosition()
+    {
+        return mvPosition;
+    }
+    void SetPosition(const cVector3f& avPos)
+    {
+        mvPosition = avPos;
+    }
 
-        float GetVoxelSize(){ return mfVoxelSize;}
-        void SetVoxelSize(float afX){ mfVoxelSize = afX;}
+    /////////////////////////////////
+    // Debug
+    void DebugRender(iLowLevelGraphics *apLowGfx, const cColor &aCol);
 
-        const cVector3f& GetPosition(){ return mvPosition;}
-        void SetPosition(const cVector3f& avPos){ mvPosition = avPos;}
+private:
+    unsigned char* mpData;
 
-        /////////////////////////////////
-        // Debug
-        void DebugRender(iLowLevelGraphics *apLowGfx, const cColor &aCol);
+    cVector3l mvSize;
 
-    private:
-        unsigned char* mpData;
-
-        cVector3l mvSize;
-
-        float mfVoxelSize;
-        cVector3f mvPosition;
-    };
+    float mfVoxelSize;
+    cVector3f mvPosition;
+};
 
 };
 #endif // HPL_VOXEL_MAP_H

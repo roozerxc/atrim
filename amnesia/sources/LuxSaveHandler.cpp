@@ -103,7 +103,7 @@ void cLuxSaveHandlerThreadClass::ProcessPendingSaves()
     iMutex* pMutex = gpBase->mpMapHandler->mpSavedGameMutex;
     pMutex->Lock();
     {
-        for(int i=0;i<(int)vSaveDataCopy.size();++i)
+        for(int i=0; i<(int)vSaveDataCopy.size(); ++i)
         {
             cLuxSaveGame_SaveData* pData = vSaveDataCopy[i];
             const tWString& sFile = vSaveFileNamesCopy[i];
@@ -202,9 +202,9 @@ void cLuxSaveHandler::SaveGameToFile(const tWString& asFile, bool abSaveSnapshot
     {
         tWString sFileExt = cString::GetFileExtW(asFile);
         tWString sFileName = cString::SubW(asFile,0, (int)asFile.size()-((int)sFileExt.size()+1)) +  _W(".jpg");
-        
+
         cEngine *pEngine = gpBase->mpEngine;
-        
+
         cBitmap *pBmp = pEngine->GetGraphics()->GetLowLevel()->CopyFrameBufferToBitmap();
         pEngine->GetResources()->GetBitmapLoaderHandler()->SaveBitmap(pBmp,sFileName,0);
         hplDelete(pBmp);
@@ -225,7 +225,7 @@ void cLuxSaveHandler::LoadGameFromFile(const tWString& asFile)
     //cSerializeClass::SetLog(true);
     cSerializeClass::LoadFromFile(pSaveGame,asFile);
     //cSerializeClass::SetLog(false);
-    
+
     LoadSaveGameData(pSaveGame);
 
     hplDelete(pSaveGame);
@@ -244,7 +244,7 @@ bool cLuxSaveHandler::AutoSave()
 
 
     DeleteOldestSaveFiles(gpBase->msProfileSavePath, mlMaxAutoSaves);
-    
+
     SaveGameToFile(gpBase->msProfileSavePath+GetSaveName(_W("AutoSave")));
 
     return true;
@@ -258,7 +258,7 @@ bool cLuxSaveHandler::AutoLoad(bool abResetProgressLogger)
     // Wait until any pending save is done.
     if(mSaveHandlerThreadClass.IsRunning())
         mSaveHandlerThreadClass.ProcessPendingSaves();
-    
+
     //Get newest file (if any!)
     tWString sFile = GetNewestSaveFile(gpBase->msProfileSavePath);
     if(sFile == _W(""))
@@ -266,7 +266,7 @@ bool cLuxSaveHandler::AutoLoad(bool abResetProgressLogger)
         Error("Could not find a save file in '%s'!\n", cString::To8Char(gpBase->msProfileSavePath).c_str());
         return false;
     }
-    
+
     ////////////////////////////////
     // HARDMODE
     if (gpBase->mbHardMode)
@@ -287,7 +287,7 @@ bool cLuxSaveHandler::AutoLoad(bool abResetProgressLogger)
 
 
     LoadGameFromFile(gpBase->msProfileSavePath+sFile);
-        
+
     return true;
 }
 
@@ -394,16 +394,16 @@ void cLuxSaveHandler::LoadSaveGameData(cLuxSaveGame_SaveData *apSave)
 
     gpBase->mpInventory->LoadScript();
     gpBase->mpGlobalDataHandler->LoadScript();
-    
+
     ///////////////////
     // Load new map
-    if(    pCurrentMap==NULL || 
-        msOldMapFolder != gpBase->mpMapHandler->GetMapFolder() || 
-        pCurrentMap->GetFileName() != apSave->mMap.msFileName)
+    if(    pCurrentMap==NULL ||
+            msOldMapFolder != gpBase->mpMapHandler->GetMapFolder() ||
+            pCurrentMap->GetFileName() != apSave->mMap.msFileName)
     {
         cLuxMap *pNewMap = gpBase->mpMapHandler->LoadMap(apSave->mMap.msFileName, false);
         if(pNewMap==NULL) FatalError("Could not load quicksave map '%s'\n", apSave->mMap.msFileName.c_str());
-    
+
         // Destroy old and set new
         if(pCurrentMap) gpBase->mpMapHandler->DestroyMap(pCurrentMap, false);
         gpBase->mpMapHandler->SetCurrentMap(pNewMap, false, false,"");
@@ -421,21 +421,21 @@ void cLuxSaveHandler::LoadSaveGameData(cLuxSaveGame_SaveData *apSave)
         pCurrentMap->GetWorld()->DestroyAllParticleSystems();
 
         pCurrentMap->DestroyAllEntities();
-        
+
         //Destroy all to be destroyed particle systems
         cParticleSystemIterator partIt = pCurrentMap->GetWorld()->GetParticleSystemIterator();
         while(partIt.HasNext())
         {
             cParticleSystem *pPS = partIt.Next();
-            if(pPS->IsDying()) pPS->KillInstantly();        
+            if(pPS->IsDying()) pPS->KillInstantly();
         }
 
         //TODO: Destroy all special in player (???)
-        
+
         // Create map data
         gpBase->RunModuleMessage(eLuxUpdateableMessage_CreateWorldEntities, pCurrentMap);
     }
-    
+
     ///////////////////
     // Load save data
     apSave->mMap.ToMap(pCurrentMap);
@@ -448,11 +448,11 @@ void cLuxSaveHandler::LoadSaveGameData(cLuxSaveGame_SaveData *apSave)
     apSave->mGlobalDataHandler.ToGlobalDataHandler(pCurrentMap, gpBase->mpGlobalDataHandler);
     apSave->mInsanityHandler.ToInsanityHandler(pCurrentMap, gpBase->mpInsanityHandler);
     apSave->mLoadScreenHandler.ToLoadScreenHandler(pCurrentMap, gpBase->mpLoadScreenHandler);
-                             
+
     ///////////////////
     // Load saved maps
     gpBase->mpMapHandler->SetSavedMapCollection(apSave->mpSavedMaps);
-    
+
     ///////////////////
     //Hardmode
     gpBase->mbHardMode = apSave->mbHardmode;
@@ -460,7 +460,7 @@ void cLuxSaveHandler::LoadSaveGameData(cLuxSaveGame_SaveData *apSave)
     //////////////////////////////////
     //Clean up
     gpBase->mpHelpFuncs->CleanupData();
-    
+
     ///////////////////
     // Destroy cache
     cache.Destroy();

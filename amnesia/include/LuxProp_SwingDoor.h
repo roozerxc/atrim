@@ -23,7 +23,7 @@ public:
     int mlCurrentMeshEntity;
 
 
-    cEngineMeshEntity_SaveData mDamageMesh1;    
+    cEngineMeshEntity_SaveData mDamageMesh1;
     cEngineMeshEntity_SaveData mDamageMesh2;
 };
 
@@ -44,9 +44,9 @@ public:
 
 class cLuxProp_SwingDoor : public iLuxProp
 {
-typedef iLuxProp super_class;
-friend class cLuxPropLoader_SwingDoor;
-public:    
+    typedef iLuxProp super_class;
+    friend class cLuxPropLoader_SwingDoor;
+public:
     cLuxProp_SwingDoor(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxProp_SwingDoor();
 
@@ -54,13 +54,13 @@ public:
     //Genera
     bool CanInteract(iPhysicsBody *apBody);
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
-    
+
     void OnSetupAfterLoad(cWorld *apWorld);
 
     void OnResetProperties();
 
     void UpdatePropSpecific(float afTimeStep);
-    
+
     void BeforePropDestruction();
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
@@ -72,10 +72,16 @@ public:
 
     //////////////////////
     //Properties
-    iLuxInteractData_RotateBase* GetMoveBaseData(){ return &mSwingDoorData;}
-    
+    iLuxInteractData_RotateBase* GetMoveBaseData()
+    {
+        return &mSwingDoorData;
+    }
+
     void SetClosed(bool abClosed, bool abEffects);
-    bool GetClosed(){ return mbClosed;}
+    bool GetClosed()
+    {
+        return mbClosed;
+    }
 
     /**
      * -1=closed 0=between 1=open
@@ -83,16 +89,28 @@ public:
     int GetDoorState();
 
     void SetLocked(bool abLocked, bool abEffects);
-    bool GetLocked(){ return mbLocked;}
+    bool GetLocked()
+    {
+        return mbLocked;
+    }
 
-    void SetDisableAutoClose(bool abX){ mbDisableAutoClose=abX;}
-    bool GetDisableAutoClose(){ return mbDisableAutoClose;}
+    void SetDisableAutoClose(bool abX)
+    {
+        mbDisableAutoClose=abX;
+    }
+    bool GetDisableAutoClose()
+    {
+        return mbDisableAutoClose;
+    }
 
     void SetCurrentDamageLevel(int alX);
 
     cMeshEntity* GetEffectMeshEntity();
 
-    bool IsBroken(){ return mbBroken;}
+    bool IsBroken()
+    {
+        return mbBroken;
+    }
 
     //////////////////////
     //Connection callbacks
@@ -124,7 +142,7 @@ private:
     tString msLockOnSound;
     tString msLockOffSound;
     tString msInteractLockedSound;
-    
+
     bool mbDisableBreakable;
     bool mbBreakable;
 
@@ -165,7 +183,7 @@ class cLuxPropLoader_SwingDoor : public iLuxPropLoader
 {
 public:
     cLuxPropLoader_SwingDoor(const tString& asName);
-    virtual ~cLuxPropLoader_SwingDoor(){}
+    virtual ~cLuxPropLoader_SwingDoor() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);

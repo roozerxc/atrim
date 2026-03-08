@@ -8,101 +8,104 @@
 #include "sound/SoundHandler.h"
 #include "sound/SoundChannel.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cSoundEntityManager::cSoundEntityManager(cSound* apSound,cResources *apResources)
-        : iResourceManager(apResources->GetFileSearcher(), apResources->GetLowLevel(),
-                            apResources->GetLowLevelSystem())
+cSoundEntityManager::cSoundEntityManager(cSound* apSound,cResources *apResources)
+    : iResourceManager(apResources->GetFileSearcher(), apResources->GetLowLevel(),
+                       apResources->GetLowLevelSystem())
+{
+    mpSound = apSound;
+    mpResources = apResources;
+}
+
+cSoundEntityManager::~cSoundEntityManager()
+{
+    DestroyAll();
+
+    Log(" Done with sound entities\n");
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+void cSoundEntityManager::Preload(const tString& asFile)
+{
+    cSoundEntityData *pData = CreateSoundEntity(asFile);
+    if(pData == NULL)
     {
-        mpSound = apSound;
-        mpResources = apResources;
+        Warning("Couldn't preload sound entity '%s'\n",asFile.c_str());
+        return;
     }
 
-    cSoundEntityManager::~cSoundEntityManager()
+    pData->PreloadSounds();
+}
+
+//-----------------------------------------------------------------------
+
+cSoundEntityData* cSoundEntityManager::CreateSoundEntity(const tString& asName)
+{
+    tWString sPath;
+    cSoundEntityData* pSoundEntity;
+    tString asNewName;
+
+    BeginLoad(asName);
+
+    asNewName = cString::SetFileExt(asName,"snt");
+
+    pSoundEntity = static_cast<cSoundEntityData*>(this->FindLoadedResource(asNewName,sPath));
+
+    if(pSoundEntity==NULL && sPath!=_W(""))
     {
-        DestroyAll();
+        pSoundEntity = hplNew( cSoundEntityData, (asNewName, mpResources,mpSound) );
 
-        Log(" Done with sound entities\n");
-    }
-
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-
-    void cSoundEntityManager::Preload(const tString& asFile)
-    {
-        cSoundEntityData *pData = CreateSoundEntity(asFile);
-        if(pData == NULL) {
-            Warning("Couldn't preload sound entity '%s'\n",asFile.c_str());
-            return;
-        }
-
-        pData->PreloadSounds();
-    }
-
-    //-----------------------------------------------------------------------
-
-    cSoundEntityData* cSoundEntityManager::CreateSoundEntity(const tString& asName)
-    {
-        tWString sPath;
-        cSoundEntityData* pSoundEntity;
-        tString asNewName;
-        
-        BeginLoad(asName);
-
-        asNewName = cString::SetFileExt(asName,"snt");
-        
-        pSoundEntity = static_cast<cSoundEntityData*>(this->FindLoadedResource(asNewName,sPath));
-
-        if(pSoundEntity==NULL && sPath!=_W(""))
+        if(pSoundEntity->CreateFromFile(sPath))
         {
-            pSoundEntity = hplNew( cSoundEntityData, (asNewName, mpResources,mpSound) );
-
-            if(pSoundEntity->CreateFromFile(sPath))
-            {
-                AddResource(pSoundEntity);
-            }
-            else
-            {
-                hplDelete(pSoundEntity);
-                pSoundEntity =NULL;
-            }
+            AddResource(pSoundEntity);
         }
-        
-        if(pSoundEntity)pSoundEntity->IncUserCount();
-        else Error("Couldn't create SoundEntity '%s'\n",asNewName.c_str());
-        
-        EndLoad();
-        return pSoundEntity;
-    }
-
-    //-----------------------------------------------------------------------
-
-    void cSoundEntityManager::Unload(iResourceBase* apResource)
-    {
-
-    }
-    //-----------------------------------------------------------------------
-
-    void cSoundEntityManager::Destroy(iResourceBase* apResource)
-    {
-        apResource->DecUserCount();
-
-        if(apResource->HasUsers()==false){
-            RemoveResource(apResource);
-            hplDelete(apResource);
+        else
+        {
+            hplDelete(pSoundEntity);
+            pSoundEntity =NULL;
         }
     }
 
-    //-----------------------------------------------------------------------
+    if(pSoundEntity)pSoundEntity->IncUserCount();
+    else Error("Couldn't create SoundEntity '%s'\n",asNewName.c_str());
+
+    EndLoad();
+    return pSoundEntity;
+}
+
+//-----------------------------------------------------------------------
+
+void cSoundEntityManager::Unload(iResourceBase* apResource)
+{
+
+}
+//-----------------------------------------------------------------------
+
+void cSoundEntityManager::Destroy(iResourceBase* apResource)
+{
+    apResource->DecUserCount();
+
+    if(apResource->HasUsers()==false)
+    {
+        RemoveResource(apResource);
+        hplDelete(apResource);
+    }
+}
+
+//-----------------------------------------------------------------------
 }

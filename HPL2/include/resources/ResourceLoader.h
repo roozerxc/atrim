@@ -4,21 +4,22 @@
 #include "system/SystemTypes.h"
 #include "resources/ResourcesTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class iResourceLoader
-    {
+class iResourceLoader
+{
     friend class iResourceLoaderHandler;
-    public:
-        virtual ~iResourceLoader() {}
+public:
+    virtual ~iResourceLoader() {}
 
-        bool IsSupported(const tString& asFileExt);
+    bool IsSupported(const tString& asFileExt);
 
-        void AddSupportedExtension(const tString& asExt);
+    void AddSupportedExtension(const tString& asExt);
 
-    protected:
-        tStringList mlstExtensions;
-    };
+protected:
+    tStringList mlstExtensions;
+};
 
 };
 #endif // HPL_RESOURCE_LOADER_H

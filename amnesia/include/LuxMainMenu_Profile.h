@@ -18,14 +18,14 @@ public:
 
 class cLuxMainMenu_Profile : public iLuxMainMenuWindow
 {
-public:    
+public:
     cLuxMainMenu_Profile(cGuiSet *apGuiSet, cGuiSkin *apGuiSkin);
     ~cLuxMainMenu_Profile();
-    
+
     void CreateGui();
 
     void ExitPressed();
-    
+
 private:
     void OnSetActive(bool abX);
 
@@ -35,7 +35,7 @@ private:
     void AddProfilesInListBox();
 
     void SelectProfile(int alNum);
-    
+
     ////////////////////////
     // Properties
     tWString msDefaultProfileName;
@@ -70,7 +70,7 @@ private:
     kGuiCallbackDeclarationEnd(UIPressList);
 
     bool WindowUIPress(iWidget* apWidget, const cGuiMessageData& aData);
-    kGuiCallbackDeclarationEnd(WindowUIPress); 
+    kGuiCallbackDeclarationEnd(WindowUIPress);
 
     bool ClickedExitPopup(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(ClickedExitPopup);
@@ -93,7 +93,7 @@ private:
     bool PressDeleteProfilePopupClose(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressDeleteProfilePopupClose);
 
-    
+
     bool PressEnterNameCreate(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressEnterNameCreate);
 

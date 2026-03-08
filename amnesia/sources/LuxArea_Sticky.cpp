@@ -128,7 +128,7 @@ cLuxArea_Sticky::~cLuxArea_Sticky()
 
 void cLuxArea_Sticky::SetupAfterLoad(cWorld *apWorld)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -148,7 +148,7 @@ void cLuxArea_Sticky::AttachBody(iPhysicsBody *apBody)
     //Log("Attaching body %s\n", pAttachBody->GetName().c_str());
 
     /////////////////////////
-    //If in an interact state, set the previous state        
+    //If in an interact state, set the previous state
     gpBase->mpPlayer->GetCurrentStateData()->OnAttachBodyToStickyArea(apBody);
 
     /////////////////////////
@@ -232,7 +232,7 @@ void cLuxArea_Sticky::DetachBody()
 void cLuxArea_Sticky::UpdateAttachBody(float afTimeStep)
 {
     if(mpAttachedBody==NULL || mfSetMtxTime >= 1) return;
-    
+
     //////////////////////////////////
     // Move and rotate
     if(mbMoveBody && mbRotateBody)
@@ -257,7 +257,7 @@ void cLuxArea_Sticky::UpdateAttachBody(float afTimeStep)
         cVector3f vGoal = mpBody->GetWorldPosition() - mpAttachedBody->GetMassCentre();
 
         cVector3f vNew =    mtxAttachedStart.GetTranslation()* (1-mfSetMtxTime) +
-            vGoal *mfSetMtxTime;
+                            vGoal *mfSetMtxTime;
 
         mpAttachedBody->SetPosition(vNew);
     }
@@ -353,7 +353,7 @@ void cLuxArea_Sticky::UpdateCollision(float afTimeStep)
             //If this was the last body that was attached, it has now moved out and does not need to be rejected.
             if(pBody == mpLastAttachedBody)
                 mpLastAttachedBody = NULL;
-            
+
             continue;
         }
 
@@ -373,11 +373,11 @@ void cLuxArea_Sticky::UpdateCollision(float afTimeStep)
         ///////////////////////////////
         //Check for collision
         if(pPhysicsWorld->CheckShapeCollision(    pBody->GetShape(),pBody->GetLocalMatrix(), pAreaBody->GetShape(), pAreaBody->GetLocalMatrix(),
-                                                collideData,1, false)==false)
+                collideData,1, false)==false)
         {
             continue;
         }
-    
+
         ///////////////////////////
         // Call callback and see if it should be attached.
         if(msAttachFunction!="")
@@ -399,7 +399,7 @@ void cLuxArea_Sticky::UpdateCollision(float afTimeStep)
 
 tString cLuxArea_Sticky::GetCallbackFunc(const tString &asFunc,iPhysicsBody *apBody)
 {
-    return asFunc + "(\"" + msName + "\",\"" + apBody->GetName() + "\")"; 
+    return asFunc + "(\"" + msName + "\",\"" + apBody->GetName() + "\")";
 }
 
 //-----------------------------------------------------------------------
@@ -466,7 +466,7 @@ void cLuxArea_Sticky::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     if(mpAttachedBody)
     {
         iLuxEntity *pEntity = static_cast<iLuxEntity*>(mpAttachedBody->GetUserData());
-        
+
         pData->mlAttachedBodyID = mpAttachedBody->GetUniqueID();
         pData->mlAttachedEntityID = pEntity->GetID();
     }
@@ -535,7 +535,7 @@ void cLuxArea_Sticky::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
         mpLastAttachedBody = NULL;
     }
 
-    
+
     /////////////////////////
     // Properties
     kCopyFromVar(pData,msAttachFunction);

@@ -3,34 +3,38 @@
 
 #include "system/SystemTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class iResourceLoader;
+class iResourceLoader;
 
-    typedef std::list<iResourceLoader*> tResourceLoaderList;
-    typedef tResourceLoaderList::iterator tResourceLoaderListIt;
-    
-    //------------------------------------
+typedef std::list<iResourceLoader*> tResourceLoaderList;
+typedef tResourceLoaderList::iterator tResourceLoaderListIt;
 
-    class iResourceLoaderHandler
+//------------------------------------
+
+class iResourceLoaderHandler
+{
+public:
+    virtual ~iResourceLoaderHandler();
+
+    void AddLoader(iResourceLoader *apLoader);
+
+    tStringVec* GetSupportedTypes()
     {
-    public:
-        virtual ~iResourceLoaderHandler();
+        return &mvSupportedTypes;
+    }
 
-        void AddLoader(iResourceLoader *apLoader);
+    iResourceLoader* GetLoaderForFile(const tString& asFileName);
+    iResourceLoader* GetLoaderForFile(const tWString& asFileName);
 
-        tStringVec* GetSupportedTypes(){ return &mvSupportedTypes;}
-        
-        iResourceLoader* GetLoaderForFile(const tString& asFileName);
-        iResourceLoader* GetLoaderForFile(const tWString& asFileName);
+protected:
+    virtual void SetupLoader(iResourceLoader *apLoader)=0;
 
-    protected:
-        virtual void SetupLoader(iResourceLoader *apLoader)=0;
+    tStringVec mvSupportedTypes;
 
-        tStringVec mvSupportedTypes;
-
-        tResourceLoaderList mlstLoaders;
-    };
+    tResourceLoaderList mlstLoaders;
+};
 
 };
 #endif // HPL_RESOURCE_LOADER_HANDLER_H

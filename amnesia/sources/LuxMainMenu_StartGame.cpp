@@ -6,20 +6,25 @@
 //-----------------------------------------------------------------------
 
 const
-class nullptr_t {
-    public:
-        template<class T>
-            operator T*() const
-                { return 0; }
-        
-        template<class C, class T>
-            operator T C::*() const
-                { return 0; }
+class nullptr_t
+{
+public:
+    template<class T>
+    operator T*() const
+    {
+        return 0;
+    }
 
-    private:
-        void operator&() const;
+    template<class C, class T>
+    operator T C::*() const
+    {
+        return 0;
+    }
+
+private:
+    void operator&() const;
 }
- 
+
 nullptr = {};
 
 //-----------------------------------------------------------------------
@@ -91,9 +96,9 @@ void cLuxMainMenu_StartGame::CreateGui()
     vPos.x = (mvWindowSize.x) - ((fButtonWidth * 2.0f) + fButtonSepp * 4);
 
     cVector3f vButtonPosition = cVector3f(
-        (vPos.x / 2.0f) - (fButtonWidth / 2.0f), 
-        (fBorderSize + (mvWindowSize.y / 4.0f)) - (fButtonHeight / 2.0f), 
-        0.1f);
+                                    (vPos.x / 2.0f) - (fButtonWidth / 2.0f),
+                                    (fBorderSize + (mvWindowSize.y / 4.0f)) - (fButtonHeight / 2.0f),
+                                    0.1f);
     vButtonPosition.z = 0.1f;
 
     // Normal mode
@@ -117,11 +122,11 @@ void cLuxMainMenu_StartGame::CreateGui()
 
     ////////////////////////////////////////
     // Set up focus navigation
-    
+
     // 0 = Start Game
     // 1 = Cancel
     // 2 = Normal
-    // 3 = Hardmode 
+    // 3 = Hardmode
 
     vButtons[0]->SetFocusNavigation(eUIArrow_Up, vButtons[3]);
     vButtons[0]->SetFocusNavigation(eUIArrow_Left, vButtons[1]);
@@ -130,7 +135,7 @@ void cLuxMainMenu_StartGame::CreateGui()
     vButtons[1]->SetFocusNavigation(eUIArrow_Right, vButtons[0]);
 
     vButtons[2]->SetFocusNavigation(eUIArrow_Down, vButtons[3]);
-    
+
     vButtons[3]->SetFocusNavigation(eUIArrow_Up, vButtons[2]);
     vButtons[3]->SetFocusNavigation(eUIArrow_Down, vButtons[0]);
 
@@ -143,12 +148,12 @@ void cLuxMainMenu_StartGame::CreateGui()
     // Description
 
     cVector3f vDescriptionPos = cVector3f(
-        mvWindowSize.x - ((fButtonWidth * 2.0f) + fButtonSepp * 4),
-        30 + fBorderSize, 
-        0.1f
-    );
+                                    mvWindowSize.x - ((fButtonWidth * 2.0f) + fButtonSepp * 4),
+                                    30 + fBorderSize,
+                                    0.1f
+                                );
 
-    cVector2f vDescriptionSize = cVector2f(mvWindowSize.x - (vDescriptionPos.x + fButtonSepp)  , mvWindowSize.y - (fBorderSize * 2) - 60);
+    cVector2f vDescriptionSize = cVector2f(mvWindowSize.x - (vDescriptionPos.x + fButtonSepp), mvWindowSize.y - (fBorderSize * 2) - 60);
     vDescriptionSize.x -= fButtonSepp * 3.0f;
 
     mpLDescription = mpGuiSet->CreateWidgetLabel(vDescriptionPos, vDescriptionSize, kTranslate("MainMenu", "NormalModeDescription"), mpWindow);
@@ -185,7 +190,7 @@ void cLuxMainMenu_StartGame::OnSetActive(bool abX)
 
 bool cLuxMainMenu_StartGame::WindowOnUpdate(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    return true; 
+    return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_StartGame, WindowOnUpdate);
 
@@ -230,10 +235,10 @@ bool cLuxMainMenu_StartGame::PressStartGame(iWidget* apWidget, const cGuiMessage
     tWString sDesciption = gpBase->mbHardMode == false ? kTranslate("MainMenu", "Start a new game?") : kTranslate("MainMenu", "HardModeStartNewGame");
 
     cGuiPopUpMessageBox *pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""), sDesciption,
-        kTranslate("MainMenu", "Yes"), kTranslate("MainMenu", "No"),
-        this,
-        kGuiCallback(ClickedStartGamePopup));
-    
+                                  kTranslate("MainMenu", "Yes"), kTranslate("MainMenu", "No"),
+                                  this,
+                                  kGuiCallback(ClickedStartGamePopup));
+
     pPopUp->GetGuiSet()->SetDrawFocus(mpGuiSet->GetDrawFocus());
     pPopUp->SetKillOnEscapeKey(false);
 
@@ -247,7 +252,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_StartGame, PressStartGame);
 bool cLuxMainMenu_StartGame::PressCancel(iWidget* apWidget, const cGuiMessageData& aData)
 {
     ExitCallback(NULL, cGuiMessageData(0));
-    return true; 
+    return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_StartGame, PressCancel);
 
@@ -274,8 +279,10 @@ bool cLuxMainMenu_StartGame::UIPressStart(iWidget* apWidget, const cGuiMessageDa
 {
     switch(aData.mlVal)
     {
-    case eUIButton_Primary:    return PressStartGame(apWidget, aData);
-    case eUIButton_Secondary: return PressCancel(apWidget, aData);
+    case eUIButton_Primary:
+        return PressStartGame(apWidget, aData);
+    case eUIButton_Secondary:
+        return PressCancel(apWidget, aData);
     }
 
     return false;
@@ -287,8 +294,10 @@ bool cLuxMainMenu_StartGame::UIPressNormalMode(iWidget* apWidget, const cGuiMess
 {
     switch (aData.mlVal)
     {
-    case eUIButton_Primary:    return PressNormalMode(apWidget, aData);
-    case eUIButton_Secondary: return PressCancel(apWidget, aData);
+    case eUIButton_Primary:
+        return PressNormalMode(apWidget, aData);
+    case eUIButton_Secondary:
+        return PressCancel(apWidget, aData);
     }
 
     return false;
@@ -301,8 +310,10 @@ bool cLuxMainMenu_StartGame::UIPressHardmode(iWidget* apWidget, const cGuiMessag
 {
     switch (aData.mlVal)
     {
-    case eUIButton_Primary:    return PressHardMode(apWidget, aData);
-    case eUIButton_Secondary: return PressCancel(apWidget, aData);
+    case eUIButton_Primary:
+        return PressHardMode(apWidget, aData);
+    case eUIButton_Secondary:
+        return PressCancel(apWidget, aData);
     }
 
     return false;
@@ -313,8 +324,10 @@ bool cLuxMainMenu_StartGame::UIPressCancel(iWidget* apWidget, const cGuiMessageD
 {
     switch(aData.mlVal)
     {
-    case eUIButton_Primary: return PressCancel(apWidget, aData);
-    case eUIButton_Secondary: return PressCancel(apWidget, aData);
+    case eUIButton_Primary:
+        return PressCancel(apWidget, aData);
+    case eUIButton_Secondary:
+        return PressCancel(apWidget, aData);
     }
 
     return false;

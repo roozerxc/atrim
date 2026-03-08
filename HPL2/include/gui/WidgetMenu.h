@@ -7,93 +7,127 @@
 
 using namespace std;
 
-namespace hpl {
+namespace hpl
+{
 
-    class cGuiSet;
-    class cGuiSkin;
-    class cWidgetMenuItem;
+class cGuiSet;
+class cGuiSkin;
+class cWidgetMenuItem;
 
-    typedef vector<cWidgetMenuItem*>        tWidgetMenuItemVector;
-    typedef tWidgetMenuItemVector::iterator    tWidgetMenuItemVectorIt;
+typedef vector<cWidgetMenuItem*>        tWidgetMenuItemVector;
+typedef tWidgetMenuItemVector::iterator    tWidgetMenuItemVectorIt;
 
-    
-    class iWidgetMenu : public iWidget
+
+class iWidgetMenu : public iWidget
+{
+    friend class cWidgetMenuItem;
+public:
+    iWidgetMenu(eWidgetType aeMenuType,cGuiSet *apSet, cGuiSkin *apSkin);
+    virtual ~iWidgetMenu();
+
+    virtual cWidgetMenuItem* AddMenuItem(const tWString &asText);
+    virtual void AddSeparator() {}
+    virtual void ClearMenuItems();
+
+
+
+    void SetParentItem( cWidgetMenuItem* apParentItem );
+    cWidgetMenuItem* GetParentItem()
     {
-        friend class cWidgetMenuItem;
-    public:
-        iWidgetMenu(eWidgetType aeMenuType,cGuiSet *apSet, cGuiSkin *apSkin);
-        virtual ~iWidgetMenu();
+        return mpParentItem;
+    }
+    iWidgetMenu* GetParentMenu();
 
-        virtual cWidgetMenuItem* AddMenuItem(const tWString &asText);
-        virtual void AddSeparator() {}
-        virtual void ClearMenuItems();
+    void SetPrevAttention(iWidget* apWidget)
+    {
+        mpPrevAttention = apWidget;
+    }
 
-        
+    void SetHighlightedItem( cWidgetMenuItem* apItem )
+    {
+        if(apItem!=mpHighlightedItem) mpHighlightedItem = apItem;
+    }
+    cWidgetMenuItem* GetHightlightedItem ()
+    {
+        return mpHighlightedItem;
+    }
 
-        void SetParentItem( cWidgetMenuItem* apParentItem );
-        cWidgetMenuItem* GetParentItem() { return mpParentItem; }
-        iWidgetMenu* GetParentMenu();
+    /**
+     * Hide() : Hides current menu and submenues
+     */
+    virtual void Hide() {}
 
-        void SetPrevAttention(iWidget* apWidget) { mpPrevAttention = apWidget; }
+    virtual void SetMustHide(bool abX);
 
-        void SetHighlightedItem( cWidgetMenuItem* apItem ) { if(apItem!=mpHighlightedItem) mpHighlightedItem = apItem; }
-        cWidgetMenuItem* GetHightlightedItem () { return mpHighlightedItem; }
+    bool IsSubmenuOpen();
 
-        /**
-         * Hide() : Hides current menu and submenues
-         */
-        virtual void Hide(){}
+    iWidgetMenu* GetTopMostMenu();
 
-        virtual void SetMustHide(bool abX);
+    virtual void OnChildMenuHide() {};
 
-        bool IsSubmenuOpen();
+    void SetTextPos(const cVector3f& avPos)
+    {
+        mvTextPos = avPos;
+    }
+    void SetArrowPos(const cVector3f& avPos)
+    {
+        mvArrowPos = avPos;
+    }
+    void SetCheckPos(const cVector3f& avPos)
+    {
+        mvCheckPos = avPos;
+    }
 
-        iWidgetMenu* GetTopMostMenu();
+    const cVector3f& GetTextOffset()
+    {
+        return mvTextPos;
+    }
+    const cVector3f& GetArrowOffset()
+    {
+        return mvArrowPos;
+    }
+    const cVector3f& GetCheckOffset()
+    {
+        return mvCheckPos;
+    }
 
-        virtual void OnChildMenuHide() {};
+    virtual float GetMenuItemWidth()
+    {
+        return 0;
+    }
 
-        void SetTextPos(const cVector3f& avPos) { mvTextPos = avPos; }
-        void SetArrowPos(const cVector3f& avPos) { mvArrowPos = avPos; }
-        void SetCheckPos(const cVector3f& avPos) { mvCheckPos = avPos; }
+protected:
 
-        const cVector3f& GetTextOffset() { return mvTextPos; }
-        const cVector3f& GetArrowOffset() { return mvArrowPos; }
-        const cVector3f& GetCheckOffset() { return mvCheckPos; }
+    /**
+    * void UpdateMenuItemsPos(cWidgetMenuItem* apNewItem) : update item positions after adding apNewItem
+    */
 
-        virtual float GetMenuItemWidth() { return 0; }
+    virtual void UpdateMenuItemsPos(cWidgetMenuItem* apNewItem) {};
 
-    protected:
+    /**
+    * void UpdateMenuItemsSize(cWidgetMenuItem* apNewItem) : update item sizes after adding apNewItem
+    */
+    virtual void UpdateMenuItemsSize(cWidgetMenuItem* apNewItem) {};
 
-        /**
-        * void UpdateMenuItemsPos(cWidgetMenuItem* apNewItem) : update item positions after adding apNewItem
-        */ 
-
-        virtual void UpdateMenuItemsPos(cWidgetMenuItem* apNewItem) {};
-
-        /**
-        * void UpdateMenuItemsSize(cWidgetMenuItem* apNewItem) : update item sizes after adding apNewItem
-        */ 
-        virtual void UpdateMenuItemsSize(cWidgetMenuItem* apNewItem) {};
-
-        virtual void UpdateMenuWidth(float afWidth) {};
+    virtual void UpdateMenuWidth(float afWidth) {};
 
 
 
-        ////////////////////////////
-        // Data
-        tWidgetMenuItemVector mvMenuItems;
-        cWidgetMenuItem* mpHighlightedItem;
+    ////////////////////////////
+    // Data
+    tWidgetMenuItemVector mvMenuItems;
+    cWidgetMenuItem* mpHighlightedItem;
 
-        cVector3f mvTextPos;
-        cVector3f mvArrowPos;
-        cVector3f mvCheckPos;
+    cVector3f mvTextPos;
+    cVector3f mvArrowPos;
+    cVector3f mvCheckPos;
 
-        cWidgetMenuItem* mpParentItem;
+    cWidgetMenuItem* mpParentItem;
 
-        iWidget* mpPrevAttention;
+    iWidget* mpPrevAttention;
 
-        bool mbMustHide;
-    };
+    bool mbMustHide;
+};
 
 };
 

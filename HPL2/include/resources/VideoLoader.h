@@ -3,23 +3,24 @@
 
 #include "resources/ResourceLoader.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class iVideoStream;
-    class iLowLevelGraphics;
-    
-    //----------------------------------------
+class iVideoStream;
+class iLowLevelGraphics;
 
-    class iVideoLoader : public iResourceLoader
-    {
+//----------------------------------------
+
+class iVideoLoader : public iResourceLoader
+{
     friend class cVideoLoaderHandler;
-    public:
-        
-        virtual iVideoStream* LoadVideo(const tWString& asFile)=0;
+public:
 
-    protected:
-        iLowLevelGraphics *mpLowLevelGraphics;
-    };
+    virtual iVideoStream* LoadVideo(const tWString& asFile)=0;
+
+protected:
+    iLowLevelGraphics *mpLowLevelGraphics;
+};
 
 };
 #endif // HPL_VIDEO_LOADER_H

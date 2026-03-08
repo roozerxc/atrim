@@ -37,19 +37,19 @@ private:
 
 class cLuxHelpFuncs : public iLuxUpdateable
 {
-public:    
+public:
     cLuxHelpFuncs();
     ~cLuxHelpFuncs();
 
     void LoadFonts();
 
-        
+
     bool PlayGuiSoundData(    const tString& asName, eSoundEntryType aDestType, float afVolMul=1.0f,
-                            eSoundEntityType aSoundType= eSoundEntityType_Main, bool abSkipPreviousRandom=true,
-                            cLuxSoundExtraData *apOutputData= NULL);
+                              eSoundEntityType aSoundType= eSoundEntityType_Main, bool abSkipPreviousRandom=true,
+                              cLuxSoundExtraData *apOutputData= NULL);
 
     void DrawSetToScreen(bool abClearScreen=true, const cColor& aCol = cColor(0,0), cGuiSet* apSet=NULL);
-    
+
     void CleanupData();
 
     tWString ParseString(const tWString& asInput);
@@ -62,7 +62,10 @@ public:
     void RenderBackgroundScreen(bool abDrawFullHUD);
 
 
-    cGuiSet* GetSet(){ return mpSet;}
+    cGuiSet* GetSet()
+    {
+        return mpSet;
+    }
 private:
     tWString ParseStringCommand(const tWString& asCommand);
 

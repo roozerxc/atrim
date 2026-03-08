@@ -5,75 +5,100 @@
 #include "math/MathTypes.h"
 #include "system/SystemTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //---------------------------------------------
+//---------------------------------------------
 
-    class iRenderable;
-    class iLight;
-    class cFrustum;
-    class cFogArea;
+class iRenderable;
+class iLight;
+class cFrustum;
+class cFogArea;
 
-    //---------------------------------------------
+//---------------------------------------------
 
-    typedef cSTLIterator<iRenderable*, tRenderableVec, tRenderableVecIt> cRenderableVecIterator;
+typedef cSTLIterator<iRenderable*, tRenderableVec, tRenderableVecIt> cRenderableVecIterator;
 
-    //---------------------------------------------
-    
-    class cRenderList
+//---------------------------------------------
+
+class cRenderList
+{
+public:
+    cRenderList();
+    ~cRenderList();
+
+    void Setup(float afFrameTime, cFrustum *apFrustum);
+
+    void AddObject(iRenderable *apObject);
+
+    void Compile(tRenderListCompileFlag aFlags);
+
+    bool ArrayHasObjects(eRenderListType aType);
+    cRenderableVecIterator GetArrayIterator(eRenderListType aType);
+
+    cRenderableVecIterator GetOcclusionQueryObjectIterator();
+
+    void Clear();
+
+    iLight* GetLight(int alIdx)
     {
-    public:
-        cRenderList();
-        ~cRenderList();
+        return mvLights[alIdx];
+    }
+    int GetLightNum()
+    {
+        return(int)mvLights.size();
+    }
 
-        void Setup(float afFrameTime, cFrustum *apFrustum);
+    cFogArea* GetFogArea(int alIdx)
+    {
+        return mvFogAreas[alIdx];
+    }
+    int GetFogAreaNum()
+    {
+        return(int)mvFogAreas.size();
+    }
 
-        void AddObject(iRenderable *apObject);
+    void PrintAllObjects();
 
-        void Compile(tRenderListCompileFlag aFlags);
-        
-        bool ArrayHasObjects(eRenderListType aType);
-        cRenderableVecIterator GetArrayIterator(eRenderListType aType);
+    //Temp:
+    int GetSolidObjectNum()
+    {
+        return (int)mvSolidObjects.size();
+    }
+    iRenderable* GetSolidObject(int alIdx)
+    {
+        return mvSolidObjects[alIdx];
+    }
 
-        cRenderableVecIterator GetOcclusionQueryObjectIterator();
+    int GetTransObjectNum()
+    {
+        return (int)mvTransObjects.size();
+    }
+    iRenderable* GetTransObject(int alIdx)
+    {
+        return mvTransObjects[alIdx];
+    }
 
-        void Clear();
+private:
+    void CompileArray(eRenderListType aType);
 
-        iLight* GetLight(int alIdx){ return mvLights[alIdx];}
-        int GetLightNum(){ return(int)mvLights.size();}
+    void FindNearestLargeSurfacePlane();
 
-        cFogArea* GetFogArea(int alIdx){ return mvFogAreas[alIdx];}
-        int GetFogAreaNum(){ return(int)mvFogAreas.size();}
+    float mfFrameTime;
+    cFrustum *mpFrustum;
 
-        void PrintAllObjects();
-        
-        //Temp:
-        int GetSolidObjectNum(){ return (int)mvSolidObjects.size();}
-        iRenderable* GetSolidObject(int alIdx){ return mvSolidObjects[alIdx];}
+    tRenderableVec mvOcclusionQueryObjects;
+    tRenderableVec mvSolidObjects;
+    tRenderableVec mvTransObjects;
+    tRenderableVec mvDecalObjects;
+    tRenderableVec mvIllumObjects;
+    std::vector<iLight*> mvLights;
+    std::vector<cFogArea*> mvFogAreas;
 
-        int GetTransObjectNum(){ return (int)mvTransObjects.size();}
-        iRenderable* GetTransObject(int alIdx){ return mvTransObjects[alIdx];}
+    tRenderableVec mvSortedArrays[eRenderListType_LastEnum];
+};
 
-    private:
-        void CompileArray(eRenderListType aType);
-        
-        void FindNearestLargeSurfacePlane();
-
-        float mfFrameTime;
-        cFrustum *mpFrustum;
-
-        tRenderableVec mvOcclusionQueryObjects;
-        tRenderableVec mvSolidObjects;
-        tRenderableVec mvTransObjects;
-        tRenderableVec mvDecalObjects;
-        tRenderableVec mvIllumObjects;
-        std::vector<iLight*> mvLights;
-        std::vector<cFogArea*> mvFogAreas;
-
-        tRenderableVec mvSortedArrays[eRenderListType_LastEnum];
-    };
-
-    //---------------------------------------------
+//---------------------------------------------
 
 };
 #endif // HPL_RENDER_LIST_H

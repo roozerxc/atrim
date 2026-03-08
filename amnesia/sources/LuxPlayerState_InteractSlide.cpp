@@ -30,7 +30,7 @@ cLuxPlayerState_InteractSlide::cLuxPlayerState_InteractSlide(cLuxPlayer *apPlaye
 
 cLuxPlayerState_InteractSlide::~cLuxPlayerState_InteractSlide()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -72,9 +72,9 @@ void cLuxPlayerState_InteractSlide::OnEnterState(eLuxPlayerState aPrevState)
 
     //Get the local position
     cMatrixf mtxTransformInv = cMath::MatrixInverse(mpCurrentBody->GetLocalMatrix());
-    mvLocalInteractPos = cMath::MatrixMul(mtxTransformInv ,mvCurrentFocusPos);
-    
-            
+    mvLocalInteractPos = cMath::MatrixMul(mtxTransformInv,mvCurrentFocusPos);
+
+
     ///////////////////////
     //Calculate the max distance
     mfMaxDistance = cMath::Vector3Dist(mpPlayer->GetCamera()->GetPosition(), mvCurrentFocusPos)*1.4f;
@@ -104,7 +104,7 @@ void cLuxPlayerState_InteractSlide::Update(float afTimeStep)
 
     cVector3f vWorldInteractPos = cMath::MatrixMul(mpCurrentBody->GetLocalMatrix(), mvLocalInteractPos);
 
-        //////////////////////////////
+    //////////////////////////////
     //Check if out of range
     float fDistance = cMath::Vector3Dist(pCam->GetPosition(), vWorldInteractPos);
     if(fDistance > mfMaxDistance)
@@ -121,12 +121,12 @@ void cLuxPlayerState_InteractSlide::Update(float afTimeStep)
     //////////////////////////////
     //Update speed
     float fSlowDownSpeed = cMath::Abs(mfSlideSpeed) * 3.0f * mpSlideData->mfSlideSlowDownFactor;
-    if(mfSlideSpeed > 0) 
+    if(mfSlideSpeed > 0)
     {
         mfSlideSpeed -= afTimeStep * fSlowDownSpeed;
         if(mfSlideSpeed < 0) mfSlideSpeed = 0;
     }
-    if(mfSlideSpeed < 0) 
+    if(mfSlideSpeed < 0)
     {
         mfSlideSpeed += afTimeStep * fSlowDownSpeed;
         if(mfSlideSpeed > 0) mfSlideSpeed = 0;
@@ -143,13 +143,13 @@ void cLuxPlayerState_InteractSlide::Update(float afTimeStep)
     //////////////////////////////
     //Update force
     cVector3f vBodyVel = mpCurrentBody->GetLinearVelocity();
-    
+
     cVector3f vJointVel = mpCurrentJoint->GetPinDir() * cMath::Vector3Dot(mpCurrentJoint->GetPinDir(), vBodyVel);
     cVector3f vWantedVel = mpCurrentJoint->GetPinDir() * mfSlideSpeed;
 
-    
+
     cVector3f vForce = mForcePid.Output(vWantedVel - vJointVel, afTimeStep) * mpCurrentBody->GetMass();
-    
+
     vForce = cMath::Vector3MaxLength(vForce, mfMaxForce);
 
     mpCurrentBody->AddForce(vForce);
@@ -164,7 +164,7 @@ void cLuxPlayerState_InteractSlide::Update(float afTimeStep)
 
 void cLuxPlayerState_InteractSlide::PostUpdate(float afTimeStep)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -193,13 +193,13 @@ bool cLuxPlayerState_InteractSlide::OnDoAction(eLuxPlayerAction aAction,bool abP
             cVector3f vImpulse = mpCurrentJoint->GetPinDir() * cMath::Vector3Dot(mpCurrentJoint->GetPinDir(), mpPlayer->GetCamera()->GetForward());
             vImpulse.Normalize();
             vImpulse = vImpulse * mpSlideData->mfSlideThrowImpulse;
-            
+
             mpCurrentBody->AddImpulse(vImpulse);
 
             return false;
         }
     }
-    
+
     return true;
 }
 
@@ -258,18 +258,18 @@ cGuiGfxElement* cLuxPlayerState_InteractSlide::GetCrosshair()
 
 void cLuxPlayerState_InteractSlide::OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
 
 float cLuxPlayerState_InteractSlide::DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY)
 {
-    
+
     apSet->DrawFont(apFont, cVector3f(5,afStartY,0),12,cColor(1,1),_W("SideSpeed: %f Force: %ls"), mfSlideSpeed, cString::To16Char(mvLastForce.ToString()).c_str());
     afStartY += 13;
 
-    
+
 
     return afStartY;
 }
@@ -291,7 +291,7 @@ void cLuxPlayerState_InteractSlide::RenderSolid(cRendererCallbackFunctions* apFu
     cVector3f vWorldInteractPos = cMath::MatrixMul(mpCurrentBody->GetLocalMatrix(), mvLocalInteractPos);
 
     apFunctions->GetLowLevelGfx()->DrawSphere(vWorldInteractPos, 0.1f, cColor(0,1,0,1));
-    
+
     cVector3f vMouseCamDir = vUp * mvLastMouseAdd.y + vRight * -mvLastMouseAdd.x;
     float fSpeedAdd = cMath::Vector3Dot(vMouseCamDir, mpCurrentJoint->GetPinDir());
 
@@ -299,7 +299,7 @@ void cLuxPlayerState_InteractSlide::RenderSolid(cRendererCallbackFunctions* apFu
 
     apFunctions->GetLowLevelGfx()->DrawLine(vWorldInteractPos, vWorldInteractPos+mpCurrentJoint->GetPinDir(),cColor(0,0,0.3f,1));
     apFunctions->GetLowLevelGfx()->DrawLine(vWorldInteractPos, vWorldInteractPos+mpCurrentJoint->GetPinDir()*fSpeedAdd*50,cColor(0,0,1,1));
-     
+
 
     //apFunctions->GetLowLevelGfx()->DrawLine(vPos, vPos+vRight, cColor(1,0,1,1));
 }
@@ -341,7 +341,7 @@ void cLuxPlayerState_InteractSlide::SaveToSaveData(iLuxPlayerState_SaveData* apS
     super_class::SaveToSaveData(apSaveData);
     cLuxPlayerState_InteractSlide_SaveData *pData = static_cast<cLuxPlayerState_InteractSlide_SaveData*>(apSaveData);
 
-    
+
     ///////////////////////
     // Save vars
 }
@@ -357,7 +357,7 @@ void cLuxPlayerState_InteractSlide::LoadFromSaveDataBeforeEnter(cLuxMap *apMap, 
 
     ///////////////////////
     // Setup before entering
-    
+
 }
 
 //-----------------------------------------------------------------------

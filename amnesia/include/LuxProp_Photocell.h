@@ -22,9 +22,9 @@ public:
 
 class cLuxProp_Photocell : public iLuxProp
 {
-typedef iLuxProp super_class;
-friend class cLuxPropLoader_Photocell;
-public:    
+    typedef iLuxProp super_class;
+    friend class cLuxPropLoader_Photocell;
+public:
     cLuxProp_Photocell(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxProp_Photocell();
 
@@ -32,24 +32,24 @@ public:
     //General
     bool CanInteract(iPhysicsBody *apBody);
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
-    
+
     void OnSetupAfterLoad(cWorld *apWorld);
 
     void OnResetProperties();
 
     void UpdatePropSpecific(float afTimeStep);
-    
+
     void BeforePropDestruction();
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
 
     //////////////////////
     //Properties
-    
+
     //////////////////////
     //Connection callbacks
-    void OnConnectionStateChange(iLuxEntity *apEntity, int alState){}
-    
+    void OnConnectionStateChange(iLuxEntity *apEntity, int alState) {}
+
     //////////////////////
     //Save data stuff
     iLuxEntity_SaveData* CreateSaveData();
@@ -62,13 +62,13 @@ private:
     void UpdateLightLevel(float afTimeStep);
 
     //General
-    
+
 
     //Vars
     bool mbLit;
     float mfLightLevel;
     float mfLightLevelCheckCount;
-    
+
     float mfLightLevelOnLimit;
     float mfLightLevelOffLimit;
 };
@@ -79,7 +79,7 @@ class cLuxPropLoader_Photocell : public iLuxPropLoader
 {
 public:
     cLuxPropLoader_Photocell(const tString& asName);
-    virtual ~cLuxPropLoader_Photocell(){}
+    virtual ~cLuxPropLoader_Photocell() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);

@@ -3,75 +3,97 @@
 
 #include "gui/Widget.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cGuiSkinFont;
+class cGuiSkinFont;
 
-    class cWidgetButton : public iWidget
+class cWidgetButton : public iWidget
+{
+public:
+    cWidgetButton(cGuiSet *apSet, cGuiSkin *apSkin);
+    virtual ~cWidgetButton();
+
+    void SetImage(cGuiGfxElement *apImage, bool abDestroyImage=true);
+    cGuiGfxElement *GetImage()
     {
-    public:
-        cWidgetButton(cGuiSet *apSet, cGuiSkin *apSkin);
-        virtual ~cWidgetButton();
+        return mpImage;
+    }
 
-        void SetImage(cGuiGfxElement *apImage, bool abDestroyImage=true);
-        cGuiGfxElement *GetImage(){return mpImage;}
+    void SetRepeatActive(bool abX)
+    {
+        mbRepeatActive = abX;
+    }
+    bool GetRepeatActive()
+    {
+        return mbRepeatActive;
+    }
 
-        void SetRepeatActive(bool abX) { mbRepeatActive = abX; }
-        bool GetRepeatActive() { return mbRepeatActive; }
-        
-        void SetRepeatFreq(float afFreq);
-        
-        void SetToggleable(bool abX) { mbToggleable = abX; }
-        bool IsToggleable() { return mbToggleable; }
+    void SetRepeatFreq(float afFreq);
 
-        void SetPressed(bool abX, bool abGenCallback=true);
-        bool IsPressed() { return mbPressed; }
-        
-    protected:
-        /////////////////////////
-        // Implemented functions
-        void OnLoadGraphics();
-        
-        void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
+    void SetToggleable(bool abX)
+    {
+        mbToggleable = abX;
+    }
+    bool IsToggleable()
+    {
+        return mbToggleable;
+    }
 
-        void OnUpdate(float afTimeStep);
+    void SetPressed(bool abX, bool abGenCallback=true);
+    bool IsPressed()
+    {
+        return mbPressed;
+    }
 
-        bool OnMouseMove(const cGuiMessageData& aData);
-        bool OnMouseDown(const cGuiMessageData& aData);
-        bool OnMouseUp(const cGuiMessageData& aData);
-        bool OnMouseEnter(const cGuiMessageData& aData);
-        bool OnMouseLeave(const cGuiMessageData& aData);
+protected:
+    /////////////////////////
+    // Implemented functions
+    void OnLoadGraphics();
 
-        bool OnMouseDoubleClick(const cGuiMessageData& aData) { return true; }
+    void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
 
-        bool OnLostFocus(const cGuiMessageData& aData);
+    void OnUpdate(float afTimeStep);
 
-        bool OnUIButtonPress(const cGuiMessageData& aData);
-        bool OnUIButtonRelease(const cGuiMessageData& aData);
+    bool OnMouseMove(const cGuiMessageData& aData);
+    bool OnMouseDown(const cGuiMessageData& aData);
+    bool OnMouseUp(const cGuiMessageData& aData);
+    bool OnMouseEnter(const cGuiMessageData& aData);
+    bool OnMouseLeave(const cGuiMessageData& aData);
 
-        /////////////////////////
-        // Data
-        bool mbPressed;
+    bool OnMouseDoubleClick(const cGuiMessageData& aData)
+    {
+        return true;
+    }
 
-        bool mbToggleable;
+    bool OnLostFocus(const cGuiMessageData& aData);
 
-        cGuiGfxElement *mpImage;
-        bool mbDestroyImage;
+    bool OnUIButtonPress(const cGuiMessageData& aData);
+    bool OnUIButtonRelease(const cGuiMessageData& aData);
 
-        float mfTimer;
-        bool mbRepeatActive;
-        float mfRepeatPeriod;
-        int mlRepeatTimes;
-        cGuiMessageData mPressedData;
+    /////////////////////////
+    // Data
+    bool mbPressed;
 
-        cGuiGfxElement *mpGfxBackgroundUp;
-        cGuiGfxElement *mvGfxBordersUp[4];
-        cGuiGfxElement *mvGfxCornersUp[4];
+    bool mbToggleable;
 
-        cGuiGfxElement *mpGfxBackgroundDown;
-        cGuiGfxElement *mvGfxBordersDown[4];
-        cGuiGfxElement *mvGfxCornersDown[4];
-    };
+    cGuiGfxElement *mpImage;
+    bool mbDestroyImage;
+
+    float mfTimer;
+    bool mbRepeatActive;
+    float mfRepeatPeriod;
+    int mlRepeatTimes;
+    cGuiMessageData mPressedData;
+
+    cGuiGfxElement *mpGfxBackgroundUp;
+    cGuiGfxElement *mvGfxBordersUp[4];
+    cGuiGfxElement *mvGfxCornersUp[4];
+
+    cGuiGfxElement *mpGfxBackgroundDown;
+    cGuiGfxElement *mvGfxBordersDown[4];
+    cGuiGfxElement *mvGfxCornersDown[4];
+};
 
 };
 #endif // HPL_WIDGET_BUTTON_H

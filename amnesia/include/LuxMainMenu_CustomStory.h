@@ -28,7 +28,7 @@ private:
 
     bool PressContinue(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressContinue);
-    
+
     bool PressStart(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressStart);
 

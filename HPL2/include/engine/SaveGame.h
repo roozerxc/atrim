@@ -74,151 +74,161 @@ class TiXmlElement;
 
 
 
-namespace hpl {
+namespace hpl
+{
 
-    //--------------------------------------------------------
+//--------------------------------------------------------
 
 
-    class cSaveObjectHandler;
-    class iSaveObject;
-    class cEngine;
+class cSaveObjectHandler;
+class iSaveObject;
+class cEngine;
 
-    /**
-    * This is data that is created by a SaveObject and the data can be loaded into the object.
-    */
-    class iSaveData : public iSerializable
-    {
+/**
+* This is data that is created by a SaveObject and the data can be loaded into the object.
+*/
+class iSaveData : public iSerializable
+{
     kSerializableClassInit(iSaveData)
-    public:
-        virtual ~iSaveData() {}
-        int mlSaveDataId;
-
-        /**
-          * Creates the SaveObject using previously saved objects and the data in this class.
-          */
-        virtual iSaveObject* CreateSaveObject(cSaveObjectHandler *apSaveObjectHandler,cEngine *apGame)=0;
-
-        /**
-          * The lower number the earlier it will be created.
-          */
-        virtual int GetSaveCreatePrio()=0;
-    };
-
-
-
-    //--------------------------------------------------------
+public:
+    virtual ~iSaveData() {}
+    int mlSaveDataId;
 
     /**
-    * This is class is inherited by object that are to be saved.
-    */
-    class iSaveObject
-    {
+      * Creates the SaveObject using previously saved objects and the data in this class.
+      */
+    virtual iSaveObject* CreateSaveObject(cSaveObjectHandler *apSaveObjectHandler,cEngine *apGame)=0;
+
+    /**
+      * The lower number the earlier it will be created.
+      */
+    virtual int GetSaveCreatePrio()=0;
+};
+
+
+
+//--------------------------------------------------------
+
+/**
+* This is class is inherited by object that are to be saved.
+*/
+class iSaveObject
+{
     friend class cSaveObjectHandler;
-    public:
-        iSaveObject();
-        ~iSaveObject();
-
-        /**
-        * Get a unique id for this object.
-        */
-        int GetSaveObjectId(){ return mlSaveObjectId;}
-
-        /**
-        * Save it's data to a SaveData
-        */
-        virtual void SaveToSaveData(iSaveData *apSaveData);
-        /**
-        * Load it's data from a SaveData
-        */
-        virtual void LoadFromSaveData(iSaveData *apSaveData);
-
-        /**
-        * Creates the SaveData that this class uses.
-        */
-        virtual iSaveData* CreateSaveData()=0;
-
-        /**
-        * After all objects have been created, this function is called to enable setup.
-        */
-        virtual void SaveDataSetup(cSaveObjectHandler *apSaveObjectHandler, cEngine *apGame);
-
-        void SetIsSaved(bool abX){ mbIsSaved = abX;}
-        bool IsSaved(){ return mbIsSaved;}
-
-    protected:
-        iSaveData *mpSaveData;
-    private:
-        int mlSaveObjectId;
-        bool mbIsSaved;
-        static int _mlGlobalIdCount;
-    };
-
-    //---------------------------------------------------------
-
-    typedef std::multimap<int, iSaveObject*> tSaveObjectMap;
-    typedef tSaveObjectMap::iterator tSaveObjectMapIt;
-
-    typedef cSTLMapIterator<iSaveObject*,tSaveObjectMap,tSaveObjectMapIt> cSaveObjectIterator;
+public:
+    iSaveObject();
+    ~iSaveObject();
 
     /**
-    * This store all the SaveObjects created at load time.
+    * Get a unique id for this object.
     */
-    class cSaveObjectHandler
+    int GetSaveObjectId()
     {
-    public:
-        cSaveObjectHandler();
-        ~cSaveObjectHandler();
-
-    public:
-        void Add(iSaveObject *pObject);
-
-        iSaveObject* Get(int alId);
-
-        cSaveObjectIterator GetIterator();
-
-        void SetUpAll(cEngine *apGame);
-
-        void Clear();
-        size_t Size();
-
-    private:
-
-        tSaveObjectMap m_mapSaveObjects;
-    };
-
-    //---------------------------------------------------------
-
-    typedef std::multimap<int, iSaveData*> tSaveDataMap;
-    typedef tSaveDataMap::iterator tSaveDataMapIt;
-
-    typedef cSTLMapIterator<iSaveData*,tSaveDataMap,tSaveDataMapIt> cSaveDataIterator;
+        return mlSaveObjectId;
+    }
 
     /**
-    * Used to keep track of save data.
+    * Save it's data to a SaveData
     */
-    class cSaveDataHandler : public iContainer
+    virtual void SaveToSaveData(iSaveData *apSaveData);
+    /**
+    * Load it's data from a SaveData
+    */
+    virtual void LoadFromSaveData(iSaveData *apSaveData);
+
+    /**
+    * Creates the SaveData that this class uses.
+    */
+    virtual iSaveData* CreateSaveData()=0;
+
+    /**
+    * After all objects have been created, this function is called to enable setup.
+    */
+    virtual void SaveDataSetup(cSaveObjectHandler *apSaveObjectHandler, cEngine *apGame);
+
+    void SetIsSaved(bool abX)
     {
-    public:
-        cSaveDataHandler();
-        ~cSaveDataHandler();
+        mbIsSaved = abX;
+    }
+    bool IsSaved()
+    {
+        return mbIsSaved;
+    }
 
-        void Add(iSaveData *pData);
+protected:
+    iSaveData *mpSaveData;
+private:
+    int mlSaveObjectId;
+    bool mbIsSaved;
+    static int _mlGlobalIdCount;
+};
 
-        cSaveDataIterator GetIterator();
+//---------------------------------------------------------
 
-        void Clear();
-        size_t Size();
+typedef std::multimap<int, iSaveObject*> tSaveObjectMap;
+typedef tSaveObjectMap::iterator tSaveObjectMapIt;
 
-    private:
-        void AddVoidPtr(void **apPtr);
-        void AddVoidClass(void *apClass);
+typedef cSTLMapIterator<iSaveObject*,tSaveObjectMap,tSaveObjectMapIt> cSaveObjectIterator;
 
-        iContainerIterator* CreateIteratorPtr();
+/**
+* This store all the SaveObjects created at load time.
+*/
+class cSaveObjectHandler
+{
+public:
+    cSaveObjectHandler();
+    ~cSaveObjectHandler();
 
-        tSaveDataMap m_mapSaveData;
-    };
+public:
+    void Add(iSaveObject *pObject);
 
-    //---------------------------------------------------------
+    iSaveObject* Get(int alId);
+
+    cSaveObjectIterator GetIterator();
+
+    void SetUpAll(cEngine *apGame);
+
+    void Clear();
+    size_t Size();
+
+private:
+
+    tSaveObjectMap m_mapSaveObjects;
+};
+
+//---------------------------------------------------------
+
+typedef std::multimap<int, iSaveData*> tSaveDataMap;
+typedef tSaveDataMap::iterator tSaveDataMapIt;
+
+typedef cSTLMapIterator<iSaveData*,tSaveDataMap,tSaveDataMapIt> cSaveDataIterator;
+
+/**
+* Used to keep track of save data.
+*/
+class cSaveDataHandler : public iContainer
+{
+public:
+    cSaveDataHandler();
+    ~cSaveDataHandler();
+
+    void Add(iSaveData *pData);
+
+    cSaveDataIterator GetIterator();
+
+    void Clear();
+    size_t Size();
+
+private:
+    void AddVoidPtr(void **apPtr);
+    void AddVoidClass(void *apClass);
+
+    iContainerIterator* CreateIteratorPtr();
+
+    tSaveDataMap m_mapSaveData;
+};
+
+//---------------------------------------------------------
 
 };
 #endif // HPL_SAVE_GAME_H

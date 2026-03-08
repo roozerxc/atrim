@@ -20,9 +20,9 @@ public:
 
 class cLuxArea_Script : public iLuxArea
 {
-typedef iLuxArea super_class;
-friend class cLuxAreaLoader_Script;
-public:    
+    typedef iLuxArea super_class;
+    friend class cLuxAreaLoader_Script;
+public:
     cLuxArea_Script(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxArea_Script();
 
@@ -34,7 +34,7 @@ public:
 
     //////////////////////
     //Connection callbacks
-    void OnConnectionStateChange(iLuxEntity *apEntity, int alState){}
+    void OnConnectionStateChange(iLuxEntity *apEntity, int alState) {}
 
     //////////////////////
     //Save data stuff
@@ -56,10 +56,10 @@ public:
     ~cLuxAreaLoader_Script();
 
     iLuxArea *CreateArea(const tString& asName, int alID, cLuxMap *apMap);
-    
+
     void LoadVariables(iLuxArea *apArea, cWorld *apWorld);
     void SetupArea(iLuxArea *apArea, cWorld *apWorld);
-    
+
 };
 
 //----------------------------------------------

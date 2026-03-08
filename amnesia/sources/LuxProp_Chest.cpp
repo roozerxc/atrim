@@ -87,7 +87,7 @@ void cLuxChestMessageCallback::OnPress(bool abYes)
 
 cLuxProp_Chest::cLuxProp_Chest(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_Chest)
 {
-    mbLocked = false;    
+    mbLocked = false;
 
     mpMessageCallback = hplNew(cLuxChestMessageCallback, (this));
 }
@@ -131,8 +131,8 @@ bool cLuxProp_Chest::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
         sText += kTranslate("Game", "InteractChest03_Question")+_W("\n");
         gpBase->mpMessageHandler->StartPauseMessage(sText,true, mpMessageCallback);
     }
-    
-    
+
+
     return true;
 }
 
@@ -183,7 +183,7 @@ void cLuxProp_Chest::OnResetProperties()
 
 void cLuxProp_Chest::UpdatePropSpecific(float afTimeStep)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -217,21 +217,21 @@ tWString cLuxProp_Chest::GetFocusText()
 
 void cLuxProp_Chest::ImplementedOnSetActive(bool abX)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxProp_Chest::OnDamage(float afAmount, int alStrength)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxProp_Chest::InFocusDraw(cGuiSet *apGuiSet, float afFrameTime)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -337,7 +337,7 @@ void cLuxProp_Chest::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //Set variables
     kCopyToVar(pData, mbLocked);
     kCopyToVar(pData, mlCoinsNeeded);
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -348,7 +348,7 @@ void cLuxProp_Chest::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //Init
     super_class::LoadFromSaveData(apSaveData);
     cLuxProp_Chest_SaveData *pData = static_cast<cLuxProp_Chest_SaveData*>(apSaveData);
-    
+
     //////////////////
     //Set variables
     SetLocked(pData->mbLocked, false);

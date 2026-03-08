@@ -3,63 +3,64 @@
 
 #include "gui/WidgetListBoxBase.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cWidgetLabel;
+class cWidgetLabel;
 
-    //-------------------------------------------------------------------
+//-------------------------------------------------------------------
 
-    class cSubList
-    {
-    public:
-        cSubList(const tString& asName, const int alIndex, eFontAlign aAlign) : msName(asName), mlIndex(alIndex), mAlign(aAlign) {}
+class cSubList
+{
+public:
+    cSubList(const tString& asName, const int alIndex, eFontAlign aAlign) : msName(asName), mlIndex(alIndex), mAlign(aAlign) {}
 
-        tString msName;
-        int mlIndex;
-        eFontAlign mAlign;
-    };
+    tString msName;
+    int mlIndex;
+    eFontAlign mAlign;
+};
 
-    //-------------------------------------------------------------------
+//-------------------------------------------------------------------
 
-    typedef std::vector<cSubList> tSubListVec;
-    typedef tSubListVec::iterator tSubListVecIt;
+typedef std::vector<cSubList> tSubListVec;
+typedef tSubListVec::iterator tSubListVecIt;
 
-    typedef std::vector<cWidgetLabel*> tLabelVec;
-    typedef tLabelVec::iterator tLabelVecIt;
+typedef std::vector<cWidgetLabel*> tLabelVec;
+typedef tLabelVec::iterator tLabelVecIt;
 
-    //-------------------------------------------------------------------
+//-------------------------------------------------------------------
 
-    class cWidgetMultiPropertyListBox : public iWidgetListBoxBase
-    {
-    public:
-        cWidgetMultiPropertyListBox(cGuiSet* apSet, cGuiSkin* apSkin);
-        virtual ~cWidgetMultiPropertyListBox();
+class cWidgetMultiPropertyListBox : public iWidgetListBoxBase
+{
+public:
+    cWidgetMultiPropertyListBox(cGuiSet* apSet, cGuiSkin* apSkin);
+    virtual ~cWidgetMultiPropertyListBox();
 
-        void AddColumn(const tString& asName, const int alIndex, eFontAlign aAlign=eFontAlign_Left );
+    void AddColumn(const tString& asName, const int alIndex, eFontAlign aAlign=eFontAlign_Left );
 
-        void SetColumnWidth(const int alIdx, float afWidth);
+    void SetColumnWidth(const int alIdx, float afWidth);
 
-        cVector3f GetItemStartPos();
+    cVector3f GetItemStartPos();
 
-    protected:
-        ////////////////////////
-        // Own functions
-        void UpdateColumns();
+protected:
+    ////////////////////////
+    // Own functions
+    void UpdateColumns();
 
-        ////////////////////////
-        // Implemented functions
-        void DrawItems(float afTimeStep, cGuiClipRegion* apClipRegion);
+    ////////////////////////
+    // Implemented functions
+    void DrawItems(float afTimeStep, cGuiClipRegion* apClipRegion);
 
-        void OnLoadGraphics();
+    void OnLoadGraphics();
 
-        //////////////////////////////
-        // Data
+    //////////////////////////////
+    // Data
 
-        tSubListVec mvSubLists;
-        tLabelVec    mvColumns;
+    tSubListVec mvSubLists;
+    tLabelVec    mvColumns;
 
-        float mfIconSize;
-    };
+    float mfIconSize;
+};
 };
 
 #endif // HPL_WIDGET_MULTI_PROPERTY_LIST_BOX_H

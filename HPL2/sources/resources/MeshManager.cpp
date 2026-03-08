@@ -10,153 +10,156 @@
 #include "graphics/VertexBuffer.h"
 
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cMeshManager::cMeshManager(cGraphics* apGraphic,cResources *apResources)
-        : iResourceManager(apResources->GetFileSearcher(), apResources->GetLowLevel(),
-                            apResources->GetLowLevelSystem())
+cMeshManager::cMeshManager(cGraphics* apGraphic,cResources *apResources)
+    : iResourceManager(apResources->GetFileSearcher(), apResources->GetLowLevel(),
+                       apResources->GetLowLevelSystem())
+{
+    mpGraphics = apGraphic;
+    mpResources = apResources;
+
+    msFastloadMaterial = "";
+    mbUseFastloadMaterial = false;
+}
+
+cMeshManager::~cMeshManager()
+{
+    DestroyAll();
+
+    Log(" Done with meshes\n");
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+cMesh* cMeshManager::CreateMesh(const tString& asName, tMeshLoadFlag aFlag)
+{
+    tWString sPath;
+    cMesh* pMesh;
+    tString asNewName;
+
+    BeginLoad(asName);
+
+    asNewName = asName;
+
+    //If the file is missing an extension, search for an existing file.
+    if(cString::GetFileExt(asNewName) == "")
     {
-        mpGraphics = apGraphic;
-        mpResources = apResources;
-
-        msFastloadMaterial = "";
-        mbUseFastloadMaterial = false;
-    }
-
-    cMeshManager::~cMeshManager()
-    {
-        DestroyAll();
-
-        Log(" Done with meshes\n");
-    }
-
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-
-    cMesh* cMeshManager::CreateMesh(const tString& asName, tMeshLoadFlag aFlag)
-    {
-        tWString sPath;
-        cMesh* pMesh;
-        tString asNewName;
-
-        BeginLoad(asName);
-
-        asNewName = asName;
-
-        //If the file is missing an extension, search for an existing file.
-        if(cString::GetFileExt(asNewName) == "")
+        bool bFound = false;
+        tStringVec *pTypes = mpResources->GetMeshLoaderHandler()->GetSupportedTypes();
+        for(size_t i=0; i< pTypes->size(); i++)
         {
-            bool bFound = false;
-            tStringVec *pTypes = mpResources->GetMeshLoaderHandler()->GetSupportedTypes();
-            for(size_t i=0; i< pTypes->size(); i++)
+            asNewName = cString::SetFileExt(asNewName, (*pTypes)[i]);
+            tWString sPath = mpResources->GetFileSearcher()->GetFilePath(asNewName);
+            if(sPath != _W(""))
             {
-                asNewName = cString::SetFileExt(asNewName, (*pTypes)[i]);
-                tWString sPath = mpResources->GetFileSearcher()->GetFilePath(asNewName);
-                if(sPath != _W(""))
-                {
-                    bFound = true;
-                    break;
-                }
-            }
-
-            if(bFound == false){
-                Error("Couldn't find mesh file '%s' in any supported format!\n",asName.c_str());
-                EndLoad();
-                return NULL;
+                bFound = true;
+                break;
             }
         }
 
-        pMesh = static_cast<cMesh*>(FindLoadedResource(asNewName,sPath));
-
-        //An extra hackish check to load msh or anim
-        //TODO: When the model is loaded, then it 
-        /*if(pMesh==NULL && sPath==_W(""))
+        if(bFound == false)
         {
-            tString sExt = cString::GetFileExt(asNewName);
-            tString sNewExt="";
-            if(sExt=="dae") sNewExt = "msh";
-            if(sExt=="dae_anim") sNewExt = "anim";
-            
-            if(sNewExt != "")
-            {
-                FindLoadedResource(cString::SetFileExt(asNewName, sNewExt), sPath);
-
-                if(sPath!=_W("")) sPath = cString::SetFileExtW(sPath, cString::To16Char(sExt));
-            }
-        }*/
-
-        if(pMesh==NULL && sPath!=_W(""))
-        {
-            pMesh = mpResources->GetMeshLoaderHandler()->LoadMesh(sPath,aFlag);
-            if(pMesh == NULL)
-            {
-                EndLoad();
-                return NULL;
-            }
-
-            AddResource(pMesh);
-        }
-
-        if(pMesh)pMesh->IncUserCount();
-        else Error("Couldn't load mesh '%s'\n",asNewName.c_str());
-        
-        EndLoad();
-        return pMesh;
-    }
-
-    //-----------------------------------------------------------------------
-
-    iVertexBuffer* cMeshManager::CreateVertexBufferFromMesh(const tString& asName, tVertexElementFlag alVtxToCopy)
-    {
-        cMesh *pMesh = CreateMesh(asName);
-        if(pMesh==NULL) return NULL;
-
-        iVertexBuffer *pVtxBuffer = pMesh->GetSubMesh(0)->GetVertexBuffer()->CreateCopy(eVertexBufferType_Hardware,
-                                                                                        eVertexBufferUsageType_Static,
-                                                                                        alVtxToCopy);
-        Destroy(pMesh);
-        return pVtxBuffer;
-    }
-
-    //-----------------------------------------------------------------------
-
-    void cMeshManager::Unload(iResourceBase* apResource)
-    {
-
-    }
-    //-----------------------------------------------------------------------
-
-    void cMeshManager::Destroy(iResourceBase* apResource)
-    {
-        apResource->DecUserCount();
-
-        if(apResource->HasUsers()==false){
-            RemoveResource(apResource);
-            hplDelete(apResource);
+            Error("Couldn't find mesh file '%s' in any supported format!\n",asName.c_str());
+            EndLoad();
+            return NULL;
         }
     }
 
-    //-----------------------------------------------------------------------
+    pMesh = static_cast<cMesh*>(FindLoadedResource(asNewName,sPath));
 
-    //-----------------------------------------------------------------------
+    //An extra hackish check to load msh or anim
+    //TODO: When the model is loaded, then it
+    /*if(pMesh==NULL && sPath==_W(""))
+    {
+        tString sExt = cString::GetFileExt(asNewName);
+        tString sNewExt="";
+        if(sExt=="dae") sNewExt = "msh";
+        if(sExt=="dae_anim") sNewExt = "anim";
 
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
+        if(sNewExt != "")
+        {
+            FindLoadedResource(cString::SetFileExt(asNewName, sNewExt), sPath);
 
-    //-----------------------------------------------------------------------
+            if(sPath!=_W("")) sPath = cString::SetFileExtW(sPath, cString::To16Char(sExt));
+        }
+    }*/
+
+    if(pMesh==NULL && sPath!=_W(""))
+    {
+        pMesh = mpResources->GetMeshLoaderHandler()->LoadMesh(sPath,aFlag);
+        if(pMesh == NULL)
+        {
+            EndLoad();
+            return NULL;
+        }
+
+        AddResource(pMesh);
+    }
+
+    if(pMesh)pMesh->IncUserCount();
+    else Error("Couldn't load mesh '%s'\n",asNewName.c_str());
+
+    EndLoad();
+    return pMesh;
+}
+
+//-----------------------------------------------------------------------
+
+iVertexBuffer* cMeshManager::CreateVertexBufferFromMesh(const tString& asName, tVertexElementFlag alVtxToCopy)
+{
+    cMesh *pMesh = CreateMesh(asName);
+    if(pMesh==NULL) return NULL;
+
+    iVertexBuffer *pVtxBuffer = pMesh->GetSubMesh(0)->GetVertexBuffer()->CreateCopy(eVertexBufferType_Hardware,
+                                eVertexBufferUsageType_Static,
+                                alVtxToCopy);
+    Destroy(pMesh);
+    return pVtxBuffer;
+}
+
+//-----------------------------------------------------------------------
+
+void cMeshManager::Unload(iResourceBase* apResource)
+{
+
+}
+//-----------------------------------------------------------------------
+
+void cMeshManager::Destroy(iResourceBase* apResource)
+{
+    apResource->DecUserCount();
+
+    if(apResource->HasUsers()==false)
+    {
+        RemoveResource(apResource);
+        hplDelete(apResource);
+    }
+}
+
+//-----------------------------------------------------------------------
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
 
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 }

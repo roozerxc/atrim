@@ -7,99 +7,102 @@
 
 
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cScriptManager::cScriptManager(cSystem* apSystem,cResources *apResources)
-        : iResourceManager(apResources->GetFileSearcher(), apResources->GetLowLevel(),
-                            apResources->GetLowLevelSystem())
+cScriptManager::cScriptManager(cSystem* apSystem,cResources *apResources)
+    : iResourceManager(apResources->GetFileSearcher(), apResources->GetLowLevel(),
+                       apResources->GetLowLevelSystem())
+{
+    mpSystem = apSystem;
+    mpResources = apResources;
+}
+
+cScriptManager::~cScriptManager()
+{
+    DestroyAll();
+    Log(" Done with scripts\n");
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+iScript* cScriptManager::CreateScript(const tString& asName, tString *apCompileMessages)
+{
+    tWString sPath;
+    iScript* pScript;
+    tString asNewName;
+
+    BeginLoad(asName);
+
+    if(cString::GetFileExt(asName) != "chps")
+        asNewName = cString::SetFileExt(asName,"hps");
+    else
+        asNewName = cString::SetFileExt(asName,"chps");
+
+    pScript = static_cast<iScript*>(this->FindLoadedResource(asNewName,sPath));
+
+    if(pScript==NULL && sPath!=_W(""))
     {
-        mpSystem = apSystem;
-        mpResources = apResources;
-    }
+        pScript = mpSystem->GetLowLevel()->CreateScript(asNewName);
 
-    cScriptManager::~cScriptManager()
-    {
-        DestroyAll();
-        Log(" Done with scripts\n");
-    }
-
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-
-    iScript* cScriptManager::CreateScript(const tString& asName, tString *apCompileMessages)
-    {
-        tWString sPath;
-        iScript* pScript;
-        tString asNewName;
-
-        BeginLoad(asName);
-        
-        if(cString::GetFileExt(asName) != "chps")
-            asNewName = cString::SetFileExt(asName,"hps");
-        else
-            asNewName = cString::SetFileExt(asName,"chps");
-        
-        pScript = static_cast<iScript*>(this->FindLoadedResource(asNewName,sPath));
-        
-        if(pScript==NULL && sPath!=_W(""))
+        if(pScript->CreateFromFile(sPath, apCompileMessages)==false)
         {
-            pScript = mpSystem->GetLowLevel()->CreateScript(asNewName);
-            
-            if(pScript->CreateFromFile(sPath, apCompileMessages)==false){
-                hplDelete(pScript);
-                EndLoad();
-                return NULL;
-            }
-            
-            AddResource(pScript);
+            hplDelete(pScript);
+            EndLoad();
+            return NULL;
         }
 
-        if(pScript)pScript->IncUserCount();
-        else Error("Couldn't create script '%s'\n",asNewName.c_str());
-        
-        EndLoad();
-        return pScript;
+        AddResource(pScript);
     }
 
-    //-----------------------------------------------------------------------
+    if(pScript)pScript->IncUserCount();
+    else Error("Couldn't create script '%s'\n",asNewName.c_str());
 
-    void cScriptManager::Unload(iResourceBase* apResource)
+    EndLoad();
+    return pScript;
+}
+
+//-----------------------------------------------------------------------
+
+void cScriptManager::Unload(iResourceBase* apResource)
+{
+
+}
+//-----------------------------------------------------------------------
+
+void cScriptManager::Destroy(iResourceBase* apResource)
+{
+    apResource->DecUserCount();
+
+    if(apResource->HasUsers()==false)
     {
-
+        RemoveResource(apResource);
+        hplDelete(apResource);
     }
-    //-----------------------------------------------------------------------
+}
 
-    void cScriptManager::Destroy(iResourceBase* apResource)
-    {
-        apResource->DecUserCount();
+//-----------------------------------------------------------------------
 
-        if(apResource->HasUsers()==false){
-            RemoveResource(apResource);
-            hplDelete(apResource);
-        }
-    }
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 }

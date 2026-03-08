@@ -7,40 +7,41 @@
 #include "graphics/GraphicsTypes.h"
 #include "system/SystemTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cBone;
+class cBone;
 
-    typedef std::vector<cBone*> tBoneVec;
-    typedef tBoneVec::iterator tBoneVecIt;
-    
-    typedef std::map<tString,int> tBoneIdxNameMap;
-    typedef tBoneIdxNameMap::iterator tBoneIdxNameMapIt;
+typedef std::vector<cBone*> tBoneVec;
+typedef tBoneVec::iterator tBoneVecIt;
 
-    class cSkeleton
-    {
-    public:
-        cSkeleton();
-        ~cSkeleton();
+typedef std::map<tString,int> tBoneIdxNameMap;
+typedef tBoneIdxNameMap::iterator tBoneIdxNameMapIt;
 
-        void AddBone(cBone* apBone);
-        void RemoveBone(cBone* apBone);
+class cSkeleton
+{
+public:
+    cSkeleton();
+    ~cSkeleton();
 
-        cBone* GetRootBone();
-        
-        cBone* GetBoneByIndex(int alIndex);
-        cBone* GetBoneByName(const tString &asName);
-        cBone* GetBoneBySid(const tString &asSid);
-        int GetBoneIndexBySid(const tString &asName);
-        int GetBoneIndexByName(const tString &asName);
-        int GetBoneNum();
-    
-    private:
-        cBone* mpRootBone;
+    void AddBone(cBone* apBone);
+    void RemoveBone(cBone* apBone);
 
-        tBoneVec mvBones;
-        tBoneIdxNameMap m_mapBonesIdxByName;
-    };
+    cBone* GetRootBone();
+
+    cBone* GetBoneByIndex(int alIndex);
+    cBone* GetBoneByName(const tString &asName);
+    cBone* GetBoneBySid(const tString &asSid);
+    int GetBoneIndexBySid(const tString &asName);
+    int GetBoneIndexByName(const tString &asName);
+    int GetBoneNum();
+
+private:
+    cBone* mpRootBone;
+
+    tBoneVec mvBones;
+    tBoneIdxNameMap m_mapBonesIdxByName;
+};
 
 };
 #endif // HPL_SKELETON_H

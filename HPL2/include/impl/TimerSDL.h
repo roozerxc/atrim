@@ -4,39 +4,40 @@
 #include "system/Timer.h"
 
 #ifdef _WIN32   // Windows system specific
-    #include <windows.h>
+#include <windows.h>
 #else          // Unix based system specific
-    #include <sys/time.h>
+#include <sys/time.h>
 #endif
 
-namespace hpl {
+namespace hpl
+{
 
-    class cTimerSDL : public iTimer
-    {
-    public:
-        
-        cTimerSDL();
-        ~cTimerSDL();
-        
-        void Start();
-        void Stop();
+class cTimerSDL : public iTimer
+{
+public:
 
-        double GetTimeInMicroSec(); 
-    private:
-        double mfStartTimeInMicroSec;
-        double mfEndTimeInMicroSec;
-        bool   mbStopped;
-        
-        #ifdef _WIN32
-            LARGE_INTEGER mFrequency; 
-            LARGE_INTEGER mStartCount;
-            LARGE_INTEGER mEndCount;  
-        #else
-            double mFrequency;
-            timeval mStartCount;
-            timeval mEndCount;
-        #endif
-    };
+    cTimerSDL();
+    ~cTimerSDL();
+
+    void Start();
+    void Stop();
+
+    double GetTimeInMicroSec();
+private:
+    double mfStartTimeInMicroSec;
+    double mfEndTimeInMicroSec;
+    bool   mbStopped;
+
+#ifdef _WIN32
+    LARGE_INTEGER mFrequency;
+    LARGE_INTEGER mStartCount;
+    LARGE_INTEGER mEndCount;
+#else
+    double mFrequency;
+    timeval mStartCount;
+    timeval mEndCount;
+#endif
+};
 
 };
 #endif // HPL_TIMER_SDL_H

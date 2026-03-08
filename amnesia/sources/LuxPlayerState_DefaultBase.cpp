@@ -67,7 +67,7 @@ void iLuxPlayerState_DefaultBase::OnLeaveState(eLuxPlayerState aNewState)
 
 void iLuxPlayerState_DefaultBase::OnMapEnter(cLuxMap *apMap)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -86,8 +86,8 @@ void iLuxPlayerState_DefaultBase::Update(float afTimeStep)
     // Get the entity currently in focus
     cCamera *pCam = mpPlayer->GetCamera();
 
-    gpBase->mpMapHelper->GetClosestEntity(    pCam->GetPosition(), pCam->GetForward(), 20.0f, 
-                                            &mfFocusDistance,&mpBodyInFocus,&mpEntityInFocus);
+    gpBase->mpMapHelper->GetClosestEntity(    pCam->GetPosition(), pCam->GetForward(), 20.0f,
+            &mfFocusDistance,&mpBodyInFocus,&mpEntityInFocus);
     mvFocusPos = pCam->GetPosition() + pCam->GetForward()*mfFocusDistance;
 
     AddOutlineObjects(mpBodyInFocus,mpEntityInFocus, mvFocusPos);
@@ -108,12 +108,12 @@ void iLuxPlayerState_DefaultBase::Update(float afTimeStep)
 
 void iLuxPlayerState_DefaultBase::PostUpdate(float afTimeStep)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
 
-void iLuxPlayerState_DefaultBase::OnDraw(cGuiSet *apGuiSet ,float afFrameTime)
+void iLuxPlayerState_DefaultBase::OnDraw(cGuiSet *apGuiSet,float afFrameTime)
 {
     if(mpEntityInFocus && CanInteractWithEntity())
     {
@@ -149,7 +149,7 @@ bool iLuxPlayerState_DefaultBase::OnDoAction(eLuxPlayerAction aAction,bool abPre
             return false;
         }
     }
-    
+
 
     return true;
 }
@@ -157,14 +157,14 @@ bool iLuxPlayerState_DefaultBase::OnDoAction(eLuxPlayerAction aAction,bool abPre
 //-----------------------------------------------------------------------
 
 cGuiGfxElement* iLuxPlayerState_DefaultBase::GetCrosshair()
-{ 
+{
     if(mpEntityInFocus && mfFocusDistance < mpEntityInFocus->GetMaxFocusDistance())
     {
         eLuxFocusCrosshair crossHair = mpEntityInFocus->GetFocusCrosshair(mpBodyInFocus, mvFocusPos);
         if(mpEntityInFocus->GetInteractionDisabled()) crossHair = eLuxFocusCrosshair_Default;
 
         if(    crossHair == eLuxFocusCrosshair_LastEnum ||
-            crossHair == eLuxFocusCrosshair_Default)
+                crossHair == eLuxFocusCrosshair_Default)
         {
             return mpDefaultCrosshairGfx;
         }
@@ -216,8 +216,8 @@ bool iLuxPlayerState_DefaultBase::ShowOutlineOnEntity(iLuxEntity *apEntity, iPhy
 
 bool iLuxPlayerState_DefaultBase::CanInteractWithEntity()
 {
-    if(    mpEntityInFocus && mfFocusDistance < mpEntityInFocus->GetMaxFocusDistance() && 
-        mpEntityInFocus->CanInteract(mpBodyInFocus) && mpEntityInFocus->GetInteractionDisabled()==false)
+    if(    mpEntityInFocus && mfFocusDistance < mpEntityInFocus->GetMaxFocusDistance() &&
+            mpEntityInFocus->CanInteract(mpBodyInFocus) && mpEntityInFocus->GetInteractionDisabled()==false)
     {
         return true;
     }
@@ -239,10 +239,10 @@ static bool BodyIsAdded(iPhysicsBody *apBody, tPhysicsBodyList &alstBodies)
 void iLuxPlayerState_DefaultBase::AddOutlineObjects(iPhysicsBody *apBody, iLuxEntity *apEntity, const cVector3f &avFocusPos)
 {
     gpBase->mpEffectRenderer->ClearOutlineObjects();
-    if(    apEntity==NULL || 
-        apEntity->GetEntityType()!= eLuxEntityType_Prop || 
-        mfFocusDistance > apEntity->GetMaxFocusDistance() || 
-        ShowOutlineOnEntity(apEntity, apBody, avFocusPos)==false)
+    if(    apEntity==NULL ||
+            apEntity->GetEntityType()!= eLuxEntityType_Prop ||
+            mfFocusDistance > apEntity->GetMaxFocusDistance() ||
+            ShowOutlineOnEntity(apEntity, apBody, avFocusPos)==false)
     {
         mbCurrentEntityHasOutline = false;
         return;
@@ -251,20 +251,20 @@ void iLuxPlayerState_DefaultBase::AddOutlineObjects(iPhysicsBody *apBody, iLuxEn
     mbCurrentEntityHasOutline = true;
 
     iLuxProp *pProp = static_cast<iLuxProp*>(apEntity);
-    
+
     /////////////////////////////
     //Show all connected bodies
     if(pProp->ShowOutlinesOnConnectedBodies())
     {
         tPhysicsBodyList lstAttachedBodies;
         GetAttachedBodies(apBody, lstAttachedBodies);
-        
+
         cMeshEntity *pMeshEntity = pProp->GetEffectMeshEntity();
         if(pMeshEntity==NULL) return;
         for(int i=0; i<pMeshEntity->GetSubMeshEntityNum(); ++i)
         {
             cSubMeshEntity *pSubEnt = pMeshEntity->GetSubMeshEntity(i);
-            
+
             if(BodyIsAdded(static_cast<iPhysicsBody*>(pSubEnt->GetEntityParent()), lstAttachedBodies))
             {
                 gpBase->mpEffectRenderer->AddOutlineObject(pSubEnt);
@@ -294,7 +294,7 @@ void iLuxPlayerState_DefaultBase::GetAttachedBodies(iPhysicsBody *apBody, tPhysi
 {
     alstBodies.push_back(apBody);
 
-    for(int i=0; i<apBody->GetJointNum();++i)
+    for(int i=0; i<apBody->GetJointNum(); ++i)
     {
         iPhysicsJoint *pJoint = apBody->GetJoint(i);
         iPhysicsBody *pChild = pJoint->GetChildBody();

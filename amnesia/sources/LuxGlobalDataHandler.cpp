@@ -15,7 +15,7 @@
 cLuxGlobalDataHandler::cLuxGlobalDataHandler() : iLuxUpdateable("LuxGlobalDataHandler")
 {
     mpScript = NULL;
-    
+
     mfLightLampMinSanityIncrease = gpBase->mpGameCfg->GetFloat("Player_Sanity", "LightLampMinSanityIncrease",0);
     mfLightLampMaxSanityIncrease = gpBase->mpGameCfg->GetFloat("Player_Sanity", "LightLampMaxSanityIncrease",0);
 }
@@ -49,14 +49,14 @@ void cLuxGlobalDataHandler::LoadAndInitGlobalScript()
 
 void cLuxGlobalDataHandler::OnGameStart()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxGlobalDataHandler::OnStart()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------

@@ -85,7 +85,7 @@ public:
     void SetActive();
 
     /**
-     * Starts a new game using the custom settings. 
+     * Starts a new game using the custom settings.
      * NOTE: Should be called from a copied object, NEVER from one in the Custom Story List window!!
      */
     bool StartGame();
@@ -109,7 +109,7 @@ typedef std::vector<cLuxCustomStorySettings*> tCustomStorySettingsVec;
 
 class cLuxBase
 {
-public:    
+public:
     cLuxBase();
     ~cLuxBase();
 
@@ -147,7 +147,7 @@ public:
     void ExitConfig();
 
     cConfigFile* LoadConfigFile(const tWString& asDefaultPath, const tWString& asWantedPath, bool abForceLoadDefault=false, bool *abDidLoadDefault = NULL);
-        
+
     bool InitEngine();
     void ExitEngine();
 
@@ -156,7 +156,7 @@ public:
 
     void InitOver();
 
-    
+
     bool LoadLanguage(const tString& asName, bool abForceReload=false);
 
     iLuxUpdateable *AddModule(iLuxUpdateable *apModule, const tString& asContainer);
@@ -263,7 +263,7 @@ public:
     tString msMaterialConfigPath;
     tString msDefaultBaseLanguage;
     tString msDefaultGameLanguage;
-    
+
     tString msBaseLanguageFolder;
     tString msGameLanguageFolder;
 

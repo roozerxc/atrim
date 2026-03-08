@@ -3,32 +3,33 @@
 
 #include "scene/Node3D.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class iPhysicsBody;
+class iPhysicsBody;
 
-    class cBoneState : public cNode3D
-    {
-    public:
-        cBoneState(const tString &asName, bool abAutoDeleteChildren);
-        
-        void SetBody(iPhysicsBody *apBody);
-        iPhysicsBody* GetBody();
+class cBoneState : public cNode3D
+{
+public:
+    cBoneState(const tString &asName, bool abAutoDeleteChildren);
 
-        void SetColliderBody(iPhysicsBody *apBody);
-        iPhysicsBody* GetColliderBody();
+    void SetBody(iPhysicsBody *apBody);
+    iPhysicsBody* GetBody();
 
-        void SetBodyMatrix(const cMatrixf &a_mtxBody);
-        const cMatrixf& GetBodyMatrix();
-        const cMatrixf& GetInvBodyMatrix();
+    void SetColliderBody(iPhysicsBody *apBody);
+    iPhysicsBody* GetColliderBody();
 
-    private:
-        iPhysicsBody *mpBody;
-        cMatrixf m_mtxBody;
-        cMatrixf m_mtxInvBody;
+    void SetBodyMatrix(const cMatrixf &a_mtxBody);
+    const cMatrixf& GetBodyMatrix();
+    const cMatrixf& GetInvBodyMatrix();
 
-        iPhysicsBody *mpColliderBody;
-    };
+private:
+    iPhysicsBody *mpBody;
+    cMatrixf m_mtxBody;
+    cMatrixf m_mtxInvBody;
+
+    iPhysicsBody *mpColliderBody;
+};
 
 };
 #endif // HPL_BONE_STATE_H

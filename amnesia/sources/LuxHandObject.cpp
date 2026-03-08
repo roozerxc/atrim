@@ -21,7 +21,7 @@ iLuxHandObject::iLuxHandObject(const tString& asName, cLuxPlayerHands *apHands)
 
 iLuxHandObject::~iLuxHandObject()
 {
-    if(mpMesh) 
+    if(mpMesh)
     {
         gpBase->mpEngine->GetResources()->GetMeshManager()->Destroy(mpMesh);
     }
@@ -113,8 +113,8 @@ bool iLuxHandObject::LoadMainData(cXmlElement *apMainElem)
 void iLuxHandObject::LoadSettings(cXmlElement *apVarsElem)
 {
     /////////////////////////////
-    //Load base settings 
-    
+    //Load base settings
+
     //Offset matrix
     cVector3f vOffsetScale = apVarsElem->GetAttributeVector3f("OffsetScale",1);
     cVector3f vOffsetRotation =cMath::Vector3ToRad(apVarsElem->GetAttributeVector3f("OffsetRotation",0));
@@ -130,7 +130,7 @@ void iLuxHandObject::LoadSettings(cXmlElement *apVarsElem)
 
     //Bone that object attaches to
     msAttachBoneName =    apVarsElem->GetAttributeString("AttachBoneName", "attachpoint");
-    
+
 
     /////////////////////////////
     //Load implemented vars
@@ -147,7 +147,7 @@ void iLuxHandObject::CreateEntity(cLuxMap *apMap)
     // Load the entity
     tString sFile = "models/player/"+msName+"/"+ msModelFile;
     apMap->GetWorld()->CreateEntity("PlayerHands", cMatrixf::Identity, sFile);
-    
+
     ///////////////////////
     // Set up the mesh
     if(mpMeshEntity)
@@ -224,18 +224,18 @@ void iLuxHandObject::SetSetEntitiesVisible(bool abVisible)
         mpMeshEntity->SetVisible(abVisible);
         mpMeshEntity->SetActive(abVisible);
     }
-    
+
     for(size_t i=0; i<mvBillboards.size(); ++i)
     {
         mvBillboards[i]->SetVisible(abVisible);
     }
-    
+
     for(size_t i=0; i<mvParticleSystems.size(); ++i)
     {
         mvParticleSystems[i]->SetVisible(abVisible);
         mvParticleSystems[i]->SetActive(abVisible);
     }
-    
+
     for(size_t i=0; i<mvLights.size(); ++i)
     {
         mvLights[i]->SetVisible(abVisible);

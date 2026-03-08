@@ -49,14 +49,14 @@ void cLuxProgressLogHandler::SaveUserConfig()
 
 void cLuxProgressLogHandler::OnStart()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxProgressLogHandler::Reset()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -76,14 +76,14 @@ void cLuxProgressLogHandler::CreateAndResetLogFile()
     // Get file name of log
     cDate currentDate =  cPlatform::GetDate();
     tWString sFileName =    _W("ProgLog_") + gpBase->msProfileName + _W("_") +
-        cString::ToStringW(currentDate.year,4)+_W("_") +
-        cString::ToStringW(currentDate.month+1,2)+_W("_") +
-        cString::ToStringW(currentDate.month_day,2)+_W("_") +
-        cString::ToStringW(currentDate.hours,2)+_W("_") +
-        cString::ToStringW(currentDate.minutes,2)+_W("_") +
-        cString::ToStringW(currentDate.seconds,2)+_W("_") +
-        cString::ToStringW(mlFileNameCount,2)+
-        _W(".log");
+                            cString::ToStringW(currentDate.year,4)+_W("_") +
+                            cString::ToStringW(currentDate.month+1,2)+_W("_") +
+                            cString::ToStringW(currentDate.month_day,2)+_W("_") +
+                            cString::ToStringW(currentDate.hours,2)+_W("_") +
+                            cString::ToStringW(currentDate.minutes,2)+_W("_") +
+                            cString::ToStringW(currentDate.seconds,2)+_W("_") +
+                            cString::ToStringW(mlFileNameCount,2)+
+                            _W(".log");
 
     /////////////////////////////
     // Open file
@@ -138,7 +138,7 @@ void cLuxProgressLogHandler::AddLog(eLuxProgressLogLevel aLevel, const tString& 
     tString sTinderboxes = cString::ToString(pPlayer->GetTinderboxes());
     tString sOil = cString::ToString(pPlayer->GetLampOil(),0);
     tString sCoins = cString::ToString(pPlayer->GetCoins());
-    
+
     tString sFinalMess = "# "+LevelToString(aLevel)+" # "+ sTemp;
     sFinalMess += " | "+sMapName + " | H:"+sHealth+ " | S:"+sSanity+ " | O:"+sOil+ " | T:"+sTinderboxes+ " | C:"+sCoins +" \n > ";
     for(size_t i=0; i<asMessage.size(); ++i)
@@ -151,7 +151,7 @@ void cLuxProgressLogHandler::AddLog(eLuxProgressLogLevel aLevel, const tString& 
         }
     }
     sFinalMess += "\n";
-    
+
     fprintf(mpFile, "%s", sFinalMess.c_str());
     fflush(mpFile);
 }

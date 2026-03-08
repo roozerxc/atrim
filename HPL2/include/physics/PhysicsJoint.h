@@ -9,245 +9,370 @@
 
 #include "physics/PhysicsController.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class iPhysicsBody;
-    class iPhysicsWorld;
-    class cSoundEntity;
-    class iPhysicsJoint;
-    class iPhysicsController;
+class iPhysicsBody;
+class iPhysicsWorld;
+class cSoundEntity;
+class iPhysicsJoint;
+class iPhysicsController;
 
-    typedef std::map<tString, iPhysicsController*> tPhysicsControllerMap;
-    typedef tPhysicsControllerMap::iterator tPhysicsControllerMapIt;
+typedef std::map<tString, iPhysicsController*> tPhysicsControllerMap;
+typedef tPhysicsControllerMap::iterator tPhysicsControllerMapIt;
 
-     
-    typedef cSTLMapIterator<iPhysicsController*, tPhysicsControllerMap, tPhysicsControllerMapIt> cPhysicsControllerIterator;
 
-    //-----------------------------------
+typedef cSTLMapIterator<iPhysicsController*, tPhysicsControllerMap, tPhysicsControllerMapIt> cPhysicsControllerIterator;
 
-    enum ePhysicsJointType
+//-----------------------------------
+
+enum ePhysicsJointType
+{
+    ePhysicsJointType_Ball,
+    ePhysicsJointType_Hinge,
+    ePhysicsJointType_Slider,
+    ePhysicsJointType_Screw,
+    ePhysicsJointType_LastEnum
+};
+
+//-----------------------------------
+
+enum ePhysicsJointSpeed
+{
+    ePhysicsJointSpeed_Linear,
+    ePhysicsJointSpeed_Angular,
+    ePhysicsJointSpeed_LastEnum
+};
+
+//-----------------------------------
+
+
+class cJointLimitEffect : public iSerializable
+{
+    kSerializableClassInit(cJointLimitEffect)
+public:
+    tString msSound;
+    float mfMinSpeed;
+    float mfMaxSpeed;
+};
+
+//-----------------------------------
+
+class iPhysicsJointCallback
+{
+public:
+    virtual ~iPhysicsJointCallback() {}
+
+    virtual void OnMinLimit(iPhysicsJoint *apJoint)=0;
+    virtual void OnMaxLimit(iPhysicsJoint *apJoint)=0;
+
+    //Ugly trick to support joint script callback.
+    virtual bool IsScript()
     {
-        ePhysicsJointType_Ball,
-        ePhysicsJointType_Hinge,
-        ePhysicsJointType_Slider,
-        ePhysicsJointType_Screw,
-        ePhysicsJointType_LastEnum
-    };
+        return false;
+    }
+};
 
-    //-----------------------------------
+//-----------------------------------
 
-    enum ePhysicsJointSpeed
+class iPhysicsJoint
+{
+#ifdef __GNUC__
+    typedef iSaveObject __super;
+#endif
+public:
+    iPhysicsJoint(    const tString &asName, iPhysicsBody *apParentBody, iPhysicsBody *apChildBody,
+                      iPhysicsWorld *apWorld,const cVector3f &avPivotPoint, const cVector3f &avPinDir);
+    virtual ~iPhysicsJoint();
+
+    const tString& GetName()
     {
-        ePhysicsJointSpeed_Linear,
-        ePhysicsJointSpeed_Angular,
-        ePhysicsJointSpeed_LastEnum
-    };
+        return msName;
+    }
 
-    //-----------------------------------
-
-
-    class cJointLimitEffect : public iSerializable
+    void SetUniqueID(int alID)
     {
-        kSerializableClassInit(cJointLimitEffect)
-    public:
-        tString msSound;
-        float mfMinSpeed;
-        float mfMaxSpeed;
-    };
-
-    //-----------------------------------
-
-    class iPhysicsJointCallback
+        mlUniqueID = alID;
+    }
+    int GetUniqueID()
     {
-    public:
-        virtual ~iPhysicsJointCallback(){}
+        return mlUniqueID;
+    }
 
-        virtual void OnMinLimit(iPhysicsJoint *apJoint)=0;
-        virtual void OnMaxLimit(iPhysicsJoint *apJoint)=0;
-
-        //Ugly trick to support joint script callback.
-        virtual bool IsScript(){ return false;}
-    };
-
-    //-----------------------------------
-
-    class iPhysicsJoint
+    iPhysicsBody * GetParentBody()
     {
-    #ifdef __GNUC__
-        typedef iSaveObject __super;
-    #endif
-    public:
-        iPhysicsJoint(    const tString &asName, iPhysicsBody *apParentBody, iPhysicsBody *apChildBody,
-                        iPhysicsWorld *apWorld,const cVector3f &avPivotPoint, const cVector3f &avPinDir);
-        virtual ~iPhysicsJoint();
+        return mpParentBody;
+    }
+    iPhysicsBody * GetChildBody()
+    {
+        return mpChildBody;
+    }
 
-        const tString& GetName(){ return msName;}
+    void RemoveBody(iPhysicsBody *apBody);
 
-        void SetUniqueID(int alID){mlUniqueID = alID;}
-        int GetUniqueID(){return mlUniqueID;}
+    const cVector3f& GetPivotPoint()
+    {
+        return mvPivotPoint;
+    }
+    const cVector3f& GetPinDir()
+    {
+        return mvPinDir;
+    }
 
-        iPhysicsBody * GetParentBody(){ return mpParentBody;}
-        iPhysicsBody * GetChildBody(){ return mpChildBody;}
+    virtual ePhysicsJointType GetType()=0;
 
-        void RemoveBody(iPhysicsBody *apBody);
+    virtual void SetCollideBodies(bool abX)=0;
+    virtual bool GetCollideBodies()=0;
 
-        const cVector3f& GetPivotPoint(){ return mvPivotPoint;}
-        const cVector3f& GetPinDir(){ return mvPinDir;}
+    virtual void SetStiffness(float afX)=0;
+    virtual float GetStiffness()=0;
 
-        virtual ePhysicsJointType GetType()=0;
+    virtual cVector3f GetVelocity()=0;
+    virtual cVector3f GetAngularVelocity()=0;
+    virtual float GetForceSize()=0;
 
-        virtual void SetCollideBodies(bool abX)=0;
-        virtual bool GetCollideBodies()=0;
+    virtual float GetDistance()=0;
+    virtual float GetAngle()=0;
 
-        virtual void SetStiffness(float afX)=0;
-        virtual float GetStiffness()=0;
+    cJointLimitEffect* GetMaxLimit()
+    {
+        return &mMaxLimit;
+    }
+    cJointLimitEffect* GetMinLimit()
+    {
+        return &mMinLimit;
+    }
 
-        virtual cVector3f GetVelocity()=0;
-        virtual cVector3f GetAngularVelocity()=0;
-        virtual float GetForceSize()=0;
+    void SetMoveSound(tString &asName)
+    {
+        msMoveSound = asName;
+    }
 
-        virtual float GetDistance()=0;
-        virtual float GetAngle()=0;
+    void SetMoveSpeedType(ePhysicsJointSpeed aType)
+    {
+        mMoveSpeedType = aType;
+    }
+    void SetMinMoveSpeed(float afX)
+    {
+        mfMinMoveSpeed = afX;
+    }
+    void SetMinMoveFreq(float afX)
+    {
+        mfMinMoveFreq = afX;
+    }
+    void SetMinMoveFreqSpeed(float afX)
+    {
+        mfMinMoveFreqSpeed = afX;
+    }
+    void SetMinMoveVolume(float afX)
+    {
+        mfMinMoveVolume = afX;
+    }
+    void SetMaxMoveFreq(float afX)
+    {
+        mfMaxMoveFreq = afX;
+    }
+    void SetMaxMoveVolume(float afX)
+    {
+        mfMaxMoveVolume = afX;
+    }
+    void SetMaxMoveFreqSpeed(float afX)
+    {
+        mfMaxMoveFreqSpeed = afX;
+    }
+    void SetMiddleMoveSpeed(float afX)
+    {
+        mfMiddleMoveSpeed = afX;
+    }
+    void SetMiddleMoveVolume(float afX)
+    {
+        mfMiddleMoveVolume = afX;
+    }
 
-        cJointLimitEffect* GetMaxLimit(){ return &mMaxLimit;}
-        cJointLimitEffect* GetMinLimit(){ return &mMinLimit;}
+    void SetCallback(iPhysicsJointCallback *apCallback, bool abAutoDelete)
+    {
+        mpCallback = apCallback;
+        mbAutoDeleteCallback = abAutoDelete;
+    }
 
-        void SetMoveSound(tString &asName) {msMoveSound = asName;}
+    iPhysicsJointCallback* GetCallback()
+    {
+        return mpCallback;
+    }
 
-        void SetMoveSpeedType(ePhysicsJointSpeed aType){ mMoveSpeedType = aType;}
-        void SetMinMoveSpeed(float afX){mfMinMoveSpeed = afX;}
-        void SetMinMoveFreq(float afX){mfMinMoveFreq = afX; }
-        void SetMinMoveFreqSpeed(float afX){mfMinMoveFreqSpeed = afX; }
-        void SetMinMoveVolume(float afX){mfMinMoveVolume = afX; }
-        void SetMaxMoveFreq(float afX){mfMaxMoveFreq = afX; }
-        void SetMaxMoveVolume(float afX){mfMaxMoveVolume = afX; }
-        void SetMaxMoveFreqSpeed(float afX){mfMaxMoveFreqSpeed = afX; }
-        void SetMiddleMoveSpeed(float afX){mfMiddleMoveSpeed = afX; }
-        void SetMiddleMoveVolume(float afX){mfMiddleMoveVolume = afX; }
+    bool CheckBreakage();
 
-        void SetCallback(iPhysicsJointCallback *apCallback, bool abAutoDelete){
-                        mpCallback = apCallback;
-                        mbAutoDeleteCallback = abAutoDelete;
-        }
+    void SetBreakable(bool abX)
+    {
+        mbBreakable = abX;
+    }
+    bool IsBreakable()
+    {
+        return mbBreakable;
+    }
+    void SetBreakForce(float afForce)
+    {
+        mfBreakForce = afForce;
+    }
+    float GetBreakForce()
+    {
+        return mfBreakForce;
+    }
+    void SetBreakSound(const tString &asSound)
+    {
+        msBreakSound = asSound;
+    }
 
-        iPhysicsJointCallback* GetCallback(){return mpCallback; }
+    void SetLimitAutoSleep(bool abX)
+    {
+        mbLimitAutoSleep = abX;
+    }
+    void SetLimitAutoSleepDist(float afX)
+    {
+        mfLimitAutoSleepDist = afX;
+    }
+    void SetLimitAutoSleepNumSteps(int alX)
+    {
+        mlLimitAutoSleepNumSteps = alX;
+    }
 
-        bool CheckBreakage();
+    bool GetLimitAutoSleep()
+    {
+        return mbLimitAutoSleep;
+    }
+    float GetLimitAutoSleepDist()
+    {
+        return mfLimitAutoSleepDist;
+    }
+    int GetLimitAutoSleepNumSteps()
+    {
+        return mlLimitAutoSleepNumSteps;
+    }
 
-        void SetBreakable(bool abX){ mbBreakable = abX;}
-        bool IsBreakable(){ return mbBreakable;}
-        void SetBreakForce(float afForce){ mfBreakForce = afForce;}
-        float GetBreakForce(){ return mfBreakForce;}
-        void SetBreakSound(const tString &asSound){ msBreakSound = asSound;}
+    void SetStickyMinLimit(bool abX)
+    {
+        mbStickyMinLimit = abX;
+    }
+    void SetStickyMaxLimit(bool abX)
+    {
+        mbStickyMaxLimit = abX;
+    }
+    bool GetStickyMinLimit()
+    {
+        return mbStickyMinLimit;
+    }
+    bool GetStickyMaxLimit()
+    {
+        return mbStickyMaxLimit;
+    }
 
-        void SetLimitAutoSleep(bool abX){ mbLimitAutoSleep = abX;}
-        void SetLimitAutoSleepDist(float afX){ mfLimitAutoSleepDist = afX;}
-        void SetLimitAutoSleepNumSteps(int alX){ mlLimitAutoSleepNumSteps = alX;}
+    void Break();
 
-        bool GetLimitAutoSleep(){ return mbLimitAutoSleep;}
-        float GetLimitAutoSleepDist(){ return mfLimitAutoSleepDist;}
-        int GetLimitAutoSleepNumSteps(){ return mlLimitAutoSleepNumSteps;}
+    bool IsBroken()
+    {
+        return mbBroken;
+    }
 
-        void SetStickyMinLimit(bool abX){ mbStickyMinLimit = abX;}
-        void SetStickyMaxLimit(bool abX){ mbStickyMaxLimit = abX;}
-        bool GetStickyMinLimit(){ return mbStickyMinLimit;}
-        bool GetStickyMaxLimit(){ return mbStickyMaxLimit;}
+    void SetUserData(void *apUserData)
+    {
+        mpUserData = apUserData;
+    }
 
-        void Break();
+    void AddController(iPhysicsController *apController);
+    iPhysicsController* GetController(const tString &asName);
+    bool ChangeController(const tString &asName);
+    cPhysicsControllerIterator GetControllerIterator();
 
-        bool IsBroken(){ return mbBroken;}
+    void SetAllControllersPaused(bool abX);
 
-        void SetUserData(void *apUserData){ mpUserData = apUserData;}
+    bool OnPhysicsUpdate();
 
-        void AddController(iPhysicsController *apController);
-        iPhysicsController* GetController(const tString &asName);
-        bool ChangeController(const tString &asName);
-        cPhysicsControllerIterator GetControllerIterator();
+    void SetSound(cSoundEntity *apSound);
+    cSoundEntity* GetSound()
+    {
+        return mpSound;
+    }
+    int GetSoundID()
+    {
+        return mlSoundID;
+    }
 
-        void SetAllControllersPaused(bool abX);
+protected:
+    tString msName;
+    int mlUniqueID;
 
-        bool OnPhysicsUpdate();
+    iPhysicsBody *mpParentBody;
+    iPhysicsBody *mpChildBody;
+    iPhysicsWorld *mpWorld;
 
-        void SetSound(cSoundEntity *apSound);
-        cSoundEntity* GetSound(){ return mpSound;}
-        int GetSoundID(){ return mlSoundID;}
+    cMatrixf m_mtxParentBodySetup;
+    cMatrixf m_mtxChildBodySetup;
 
-    protected:
-        tString msName;
-        int mlUniqueID;
+    cVector3f mvPinDir;
+    cVector3f mvPivotPoint;
+    cVector3f mvStartPivotPoint;
 
-        iPhysicsBody *mpParentBody;
-        iPhysicsBody *mpChildBody;
-        iPhysicsWorld *mpWorld;
+    cVector3f mvLocalPivot;
+    cVector3f mvLocalPinDir;
+    cVector3f mvStartPinDir;
 
-        cMatrixf m_mtxParentBodySetup;
-        cMatrixf m_mtxChildBodySetup;
+    bool mbStickyMinLimit;
+    bool mbStickyMaxLimit;
 
-        cVector3f mvPinDir;
-        cVector3f mvPivotPoint;
-        cVector3f mvStartPivotPoint;
+    tPhysicsControllerMap m_mapControllers;
 
-        cVector3f mvLocalPivot;
-        cVector3f mvLocalPinDir;
-        cVector3f mvStartPinDir;
+    cJointLimitEffect mMaxLimit;
+    cJointLimitEffect mMinLimit;
 
-        bool mbStickyMinLimit;
-        bool mbStickyMaxLimit;
+    int mlSpeedCount;
 
-        tPhysicsControllerMap m_mapControllers;
+    cMatrixf m_mtxPrevChild;
+    cMatrixf m_mtxPrevParent;
 
-        cJointLimitEffect mMaxLimit;
-        cJointLimitEffect mMinLimit;
+    tString msMoveSound;
 
-        int mlSpeedCount;
+    float mfMinMoveSpeed;
+    float mfMinMoveFreq;
+    float mfMinMoveFreqSpeed;
+    float mfMinMoveVolume;
+    float mfMaxMoveFreq;
+    float mfMaxMoveFreqSpeed;
+    float mfMaxMoveVolume;
+    float mfMiddleMoveSpeed;
+    float mfMiddleMoveVolume;
+    ePhysicsJointSpeed mMoveSpeedType;
 
-        cMatrixf m_mtxPrevChild;
-        cMatrixf m_mtxPrevParent;
+    bool mbBreakable;
+    float mfBreakForce;
+    tString msBreakSound;
+    bool mbBroken;
 
-        tString msMoveSound;
+    bool mbLimitAutoSleep;
+    float mfLimitAutoSleepDist;
+    int mlLimitAutoSleepNumSteps;
 
-        float mfMinMoveSpeed;
-        float mfMinMoveFreq;
-        float mfMinMoveFreqSpeed;
-        float mfMinMoveVolume;
-        float mfMaxMoveFreq;
-        float mfMaxMoveFreqSpeed;
-        float mfMaxMoveVolume;
-        float mfMiddleMoveSpeed;
-        float mfMiddleMoveVolume;
-        ePhysicsJointSpeed mMoveSpeedType;
+    cSoundEntity *mpSound;
+    int mlSoundID;
+    bool mbHasCollided;
 
-        bool mbBreakable;
-        float mfBreakForce;
-        tString msBreakSound;
-        bool mbBroken;
+    iPhysicsJointCallback *mpCallback;
+    bool mbAutoDeleteCallback;
 
-        bool mbLimitAutoSleep;
-        float mfLimitAutoSleepDist;
-        int mlLimitAutoSleepNumSteps;
+    int mlLimitStepCount;
 
-        cSoundEntity *mpSound;
-        int mlSoundID;
-        bool mbHasCollided;
+    void *mpUserData;
 
-        iPhysicsJointCallback *mpCallback;
-        bool mbAutoDeleteCallback;
-
-        int mlLimitStepCount;
-
-        void *mpUserData;
-
-        static void CheckLimitAutoSleep(iPhysicsJoint *apJoint, const float afMin, const float afMax,
-                                        const float afDist);
+    static void CheckLimitAutoSleep(iPhysicsJoint *apJoint, const float afMin, const float afMax,
+                                    const float afDist);
 
 
-        void OnMaxLimit();
-        void OnMinLimit();
-        void OnNoLimit();
+    void OnMaxLimit();
+    void OnMinLimit();
+    void OnNoLimit();
 
-        void CalcSoundFreq(float afSpeed,float *apFreq, float *apVol);
+    void CalcSoundFreq(float afSpeed,float *apFreq, float *apVol);
 
-        void LimitEffect(cJointLimitEffect *pEffect);
-    };
+    void LimitEffect(cJointLimitEffect *pEffect);
+};
 };
 #endif // HPL_PHYSICS_JOINT_H

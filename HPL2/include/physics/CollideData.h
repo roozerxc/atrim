@@ -4,29 +4,31 @@
 #include "math/MathTypes.h"
 #include "system/SystemTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cCollidePoint
+class cCollidePoint
+{
+public:
+    cVector3f mvPoint;
+    cVector3f mvNormal;
+    float mfDepth;
+};
+
+typedef std::vector<cCollidePoint> tCollidePointVec;
+typedef tCollidePointVec::iterator tCollidePointVecIt;
+
+class cCollideData
+{
+public:
+    tCollidePointVec mvContactPoints;
+    int mlNumOfPoints;
+
+    void SetMaxSize(int alSize)
     {
-    public:
-        cVector3f mvPoint;
-        cVector3f mvNormal;
-        float mfDepth;
-    };
-
-    typedef std::vector<cCollidePoint> tCollidePointVec;
-    typedef tCollidePointVec::iterator tCollidePointVecIt;
-
-    class cCollideData
-    {
-    public:
-        tCollidePointVec mvContactPoints;
-        int mlNumOfPoints;
-
-        void SetMaxSize(int alSize){
-            mvContactPoints.resize(alSize);
-        }
-    };
+        mvContactPoints.resize(alSize);
+    }
+};
 
 };
 #endif // HPL_COLLIDE_DATA_H

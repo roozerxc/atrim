@@ -9,7 +9,7 @@
 
 class cLuxCredits : public iLuxUpdateable
 {
-public:    
+public:
     cLuxCredits();
     ~cLuxCredits();
 
@@ -31,7 +31,7 @@ public:
 
     void AppLostInputFocus();
     void AppGotInputFocus();
-    
+
 private:
     ///////////////////////
     // Data

@@ -5,70 +5,86 @@
 #include "graphics/Texture.h"
 #include "graphics/Material.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cGraphics;
-    class cResources;
-    class cMaterial;
-    class iMaterialType;
+class cGraphics;
+class cResources;
+class cMaterial;
+class iMaterialType;
 
-    class cMaterialManager : public iResourceManager
+class cMaterialManager : public iResourceManager
+{
+public:
+    cMaterialManager(cGraphics* apGraphics,cResources *apResources);
+    ~cMaterialManager();
+
+    cMaterial* CreateMaterial(const tString& asName);
+
+    void Update(float afTimeStep);
+
+    void Destroy(iResourceBase* apResource);
+    void Unload(iResourceBase* apResource);
+
+    void SetTextureSizeDownScaleLevel(unsigned int alLevel)
     {
-    public:
-        cMaterialManager(cGraphics* apGraphics,cResources *apResources);
-        ~cMaterialManager();
+        mlTextureSizeDownScaleLevel = alLevel;
+    }
+    int GetTextureSizeDownScaleLevel()
+    {
+        return mlTextureSizeDownScaleLevel;
+    }
 
-        cMaterial* CreateMaterial(const tString& asName);
+    void SetTextureFilter(eTextureFilter aFilter);
+    eTextureFilter GetTextureFilter()
+    {
+        return mTextureFilter;
+    }
 
-        void Update(float afTimeStep);
-        
-        void Destroy(iResourceBase* apResource);
-        void Unload(iResourceBase* apResource);
+    void SetTextureAnisotropy(float afX);
+    float GetTextureAnisotropy()
+    {
+        return mfTextureAnisotropy;
+    }
 
-        void SetTextureSizeDownScaleLevel(unsigned int alLevel){ mlTextureSizeDownScaleLevel = alLevel;}
-        int GetTextureSizeDownScaleLevel(){ return mlTextureSizeDownScaleLevel;}
+    tString GetPhysicsMaterialName(const tString& asName);
 
-        void SetTextureFilter(eTextureFilter aFilter);
-        eTextureFilter GetTextureFilter(){ return mTextureFilter;}
+    cMaterial* CreateCustomMaterial(const tString& asName, iMaterialType *apMaterialType);
 
-        void SetTextureAnisotropy(float afX);
-        float GetTextureAnisotropy(){ return mfTextureAnisotropy;}
+    tString GetTextureString(eMaterialTexture aType);
 
-        tString GetPhysicsMaterialName(const tString& asName);
+    void SetDisableRenderDataLoading(bool abX)
+    {
+        mbDisableRenderDataLoading = abX;
+    }
 
-        cMaterial* CreateCustomMaterial(const tString& asName, iMaterialType *apMaterialType);
+    // Useful stuff if public
+    eTextureType GetType(const tString& asType);
+    eTextureWrap GetWrap(const tString& asType);
+    eTextureAnimMode GetAnimMode(const tString& asType);
+    eMaterialBlendMode GetBlendMode(const tString& asType);
 
-        tString GetTextureString(eMaterialTexture aType);
+    eMaterialUvAnimation GetUvAnimType(const char* apString);
+    eMaterialAnimationAxis GetAnimAxis(const char* apString);
 
-        void SetDisableRenderDataLoading(bool abX){ mbDisableRenderDataLoading = abX;}
+private:
+    cMaterial* LoadFromFile(const tString& asName,const tWString& asPath);
 
-        // Useful stuff if public
-        eTextureType GetType(const tString& asType);
-        eTextureWrap GetWrap(const tString& asType);
-        eTextureAnimMode GetAnimMode(const tString& asType);
-        eMaterialBlendMode GetBlendMode(const tString& asType);
+    unsigned int mlTextureSizeDownScaleLevel;
+    eTextureFilter mTextureFilter;
+    float mfTextureAnisotropy;
 
-        eMaterialUvAnimation GetUvAnimType(const char* apString);
-        eMaterialAnimationAxis GetAnimAxis(const char* apString);
+    tStringList mlstFileFormats;
 
-    private:
-        cMaterial* LoadFromFile(const tString& asName,const tWString& asPath);
+    tStringVec mvCubeSideSuffixes;
 
-        unsigned int mlTextureSizeDownScaleLevel;
-        eTextureFilter mTextureFilter;
-        float mfTextureAnisotropy;
+    cGraphics* mpGraphics;
+    cResources* mpResources;
 
-        tStringList mlstFileFormats;
+    bool mbDisableRenderDataLoading;
 
-        tStringVec mvCubeSideSuffixes;
-
-        cGraphics* mpGraphics;
-        cResources* mpResources;
-
-        bool mbDisableRenderDataLoading;
-
-        int mlIdCounter;
-    };
+    int mlIdCounter;
+};
 
 };
 #endif // HPL_MATERIAL_MANAGER_H

@@ -47,13 +47,13 @@ distribution.
     used. Be nice to old compilers and macro it here:
 */
 #if defined(_MSC_VER) && (_MSC_VER >= 1200 )
-    // Microsoft visual studio, version 6 and higher.
-    #define TIXML_EXPLICIT explicit
+// Microsoft visual studio, version 6 and higher.
+#define TIXML_EXPLICIT explicit
 #elif defined(__GNUC__) && (__GNUC__ >= 3 )
-    // GCC version 3 and higher.s
-    #define TIXML_EXPLICIT explicit
+// GCC version 3 and higher.s
+#define TIXML_EXPLICIT explicit
 #else
-    #define TIXML_EXPLICIT
+#define TIXML_EXPLICIT
 #endif
 
 
@@ -66,9 +66,9 @@ distribution.
 */
 class TiXmlString
 {
-  public :
+public :
     // The size type used
-      typedef size_t size_type;
+    typedef size_t size_type;
 
     // Error value for find primitive
     static const size_type npos; // = -1;
@@ -139,22 +139,40 @@ class TiXmlString
 
 
     // Convert a TiXmlString into a null-terminated char *
-    const char * c_str () const { return rep_->str; }
+    const char * c_str () const
+    {
+        return rep_->str;
+    }
 
     // Convert a TiXmlString into a char * (need not be null terminated).
-    const char * data () const { return rep_->str; }
+    const char * data () const
+    {
+        return rep_->str;
+    }
 
     // Return the length of a TiXmlString
-    size_type length () const { return rep_->size; }
+    size_type length () const
+    {
+        return rep_->size;
+    }
 
     // Alias for length()
-    size_type size () const { return rep_->size; }
+    size_type size () const
+    {
+        return rep_->size;
+    }
 
     // Checks if a TiXmlString is empty
-    bool empty () const { return rep_->size == 0; }
+    bool empty () const
+    {
+        return rep_->size == 0;
+    }
 
     // Return capacity of string
-    size_type capacity () const { return rep_->capacity; }
+    size_type capacity () const
+    {
+        return rep_->capacity;
+    }
 
 
     // single char extraction
@@ -184,7 +202,7 @@ class TiXmlString
 
         for (const char* p = c_str() + offset; *p != '\0'; ++p)
         {
-           if (*p == tofind) return static_cast< size_type >( p - c_str() );
+            if (*p == tofind) return static_cast< size_type >( p - c_str() );
         }
         return npos;
     }
@@ -215,12 +233,24 @@ class TiXmlString
         other.rep_ = r;
     }
 
-  private:
+private:
 
-    void init(size_type sz) { init(sz, sz); }
-    void set_size(size_type sz) { rep_->str[ rep_->size = sz ] = '\0'; }
-    char* start() const { return rep_->str; }
-    char* finish() const { return rep_->str + rep_->size; }
+    void init(size_type sz)
+    {
+        init(sz, sz);
+    }
+    void set_size(size_type sz)
+    {
+        rep_->str[ rep_->size = sz ] = '\0';
+    }
+    char* start() const
+    {
+        return rep_->str;
+    }
+    char* finish() const
+    {
+        return rep_->str + rep_->size;
+    }
 
     struct Rep
     {
@@ -238,7 +268,7 @@ class TiXmlString
             // to the normal allocation, although use an 'int' for systems
             // that are overly picky about structure alignment.
             const size_type bytesNeeded = sizeof(Rep) + cap;
-            const size_type intsNeeded = ( bytesNeeded + sizeof(int) - 1 ) / sizeof( int ); 
+            const size_type intsNeeded = ( bytesNeeded + sizeof(int) - 1 ) / sizeof( int );
             rep_ = reinterpret_cast<Rep*>( new int[ intsNeeded ] );
 
             rep_->str[ rep_->size = sz ] = '\0';
@@ -269,22 +299,46 @@ class TiXmlString
 inline bool operator == (const TiXmlString & a, const TiXmlString & b)
 {
     return    ( a.length() == b.length() )                // optimization on some platforms
-           && ( strcmp(a.c_str(), b.c_str()) == 0 );    // actual compare
+              && ( strcmp(a.c_str(), b.c_str()) == 0 );    // actual compare
 }
 inline bool operator < (const TiXmlString & a, const TiXmlString & b)
 {
     return strcmp(a.c_str(), b.c_str()) < 0;
 }
 
-inline bool operator != (const TiXmlString & a, const TiXmlString & b) { return !(a == b); }
-inline bool operator >  (const TiXmlString & a, const TiXmlString & b) { return b < a; }
-inline bool operator <= (const TiXmlString & a, const TiXmlString & b) { return !(b < a); }
-inline bool operator >= (const TiXmlString & a, const TiXmlString & b) { return !(a < b); }
+inline bool operator != (const TiXmlString & a, const TiXmlString & b)
+{
+    return !(a == b);
+}
+inline bool operator >  (const TiXmlString & a, const TiXmlString & b)
+{
+    return b < a;
+}
+inline bool operator <= (const TiXmlString & a, const TiXmlString & b)
+{
+    return !(b < a);
+}
+inline bool operator >= (const TiXmlString & a, const TiXmlString & b)
+{
+    return !(a < b);
+}
 
-inline bool operator == (const TiXmlString & a, const char* b) { return strcmp(a.c_str(), b) == 0; }
-inline bool operator == (const char* a, const TiXmlString & b) { return b == a; }
-inline bool operator != (const TiXmlString & a, const char* b) { return !(a == b); }
-inline bool operator != (const char* a, const TiXmlString & b) { return !(b == a); }
+inline bool operator == (const TiXmlString & a, const char* b)
+{
+    return strcmp(a.c_str(), b) == 0;
+}
+inline bool operator == (const char* a, const TiXmlString & b)
+{
+    return b == a;
+}
+inline bool operator != (const TiXmlString & a, const char* b)
+{
+    return !(a == b);
+}
+inline bool operator != (const char* a, const TiXmlString & b)
+{
+    return !(b == a);
+}
 
 TiXmlString operator + (const TiXmlString & a, const TiXmlString & b);
 TiXmlString operator + (const TiXmlString & a, const char* b);

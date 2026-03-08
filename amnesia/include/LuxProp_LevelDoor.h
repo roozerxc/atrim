@@ -29,9 +29,9 @@ public:
 
 class cLuxProp_LevelDoor : public iLuxProp
 {
-typedef iLuxProp super_class;
-friend class cLuxPropLoader_LevelDoor;
-public:    
+    typedef iLuxProp super_class;
+    friend class cLuxPropLoader_LevelDoor;
+public:
     cLuxProp_LevelDoor(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxProp_LevelDoor();
 
@@ -39,13 +39,13 @@ public:
     //Genera
     bool CanInteract(iPhysicsBody *apBody);
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
-    
+
     void OnSetupAfterLoad(cWorld *apWorld);
 
     void OnResetProperties();
 
     void UpdatePropSpecific(float afTimeStep);
-    
+
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
     tWString GetFocusText();
 
@@ -53,11 +53,21 @@ public:
     //////////////////////
     //Properties
     void SetLocked(bool abLocked);
-    bool GetLocked(){ return mbLocked; }
+    bool GetLocked()
+    {
+        return mbLocked;
+    }
 
-    void SetLockedSound(const tString& asSound){ msLockedSound = asSound;}
-    void SetLockedText(const tString& asCat, const tString& asEntry){ msLockedTextCat = asCat; msLockedTextEntry=asEntry;}
-    
+    void SetLockedSound(const tString& asSound)
+    {
+        msLockedSound = asSound;
+    }
+    void SetLockedText(const tString& asCat, const tString& asEntry)
+    {
+        msLockedTextCat = asCat;
+        msLockedTextEntry=asEntry;
+    }
+
     //////////////////////
     //Connection callbacks
     void OnConnectionStateChange(iLuxEntity *apEntity, int alState);
@@ -73,7 +83,7 @@ private:
 
     //////////////////////
     // Data
-    tString msEnterSound;    
+    tString msEnterSound;
     tString msExitSound;
 
     //////////////////////
@@ -98,7 +108,7 @@ class cLuxPropLoader_LevelDoor : public iLuxPropLoader
 {
 public:
     cLuxPropLoader_LevelDoor(const tString& asName);
-    virtual ~cLuxPropLoader_LevelDoor(){}
+    virtual ~cLuxPropLoader_LevelDoor() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);

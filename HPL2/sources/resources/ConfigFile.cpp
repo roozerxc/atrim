@@ -9,315 +9,322 @@
 
 #include <stdio.h>
 
-namespace hpl {
+namespace hpl
+{
 
-    #define kCRCKey (0x16AF2C1D)
+#define kCRCKey (0x16AF2C1D)
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cConfigFile::cConfigFile(const tWString& asFile, const tWString& asAltPath)
+cConfigFile::cConfigFile(const tWString& asFile, const tWString& asAltPath)
+{
+    if (asAltPath.length() && cPlatform::FileExists(asAltPath + asFile))
     {
-        if (asAltPath.length() && cPlatform::FileExists(asAltPath + asFile)) {
-            msFile = asAltPath + asFile;
-        } else {
-            msFile = asFile;
-        }
-        mpXmlDoc = hplNew( TiXmlDocument,() );
-        //mpFileSearcher = apFileSearcher;
-
-        mbUseCRC = false;
+        msFile = asAltPath + asFile;
     }
-
-    cConfigFile::~cConfigFile()
+    else
     {
-        hplDelete(mpXmlDoc);
+        msFile = asFile;
     }
+    mpXmlDoc = hplNew( TiXmlDocument,() );
+    //mpFileSearcher = apFileSearcher;
 
-    //-----------------------------------------------------------------------
+    mbUseCRC = false;
+}
 
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
+cConfigFile::~cConfigFile()
+{
+    hplDelete(mpXmlDoc);
+}
 
-    //-----------------------------------------------------------------------
-    
-    bool cConfigFile::Load()
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+bool cConfigFile::Load()
+{
+    ////////////////////////////////////
+    // CRC Loading
+    if(mbUseCRC)
     {
-        ////////////////////////////////////
-        // CRC Loading
-        if(mbUseCRC)
+        /////////////////////////////////
+        // Load
+        cBinaryBuffer buff;
+        if(buff.Load(msFile)==false)
         {
-            /////////////////////////////////
-            // Load 
-            cBinaryBuffer buff;
-            if(buff.Load(msFile)==false)
-            {
-                Error("Unable to open binary config file '%s'!\n", cString::To8Char(msFile).c_str());
-                return false;
-            }
-
-            /////////////////////////////////
-            // CRC
-            if(buff.CheckInternalCRC(kCRCKey)==false)
-            {
-                Error("CRC check for binary config file '%s' failed!\n", cString::To8Char(msFile).c_str());
-                return false;
-            }
-
-            /////////////////////////////////
-            // Get XML
-            mpXmlDoc->Parse(buff.GetDataPointerAtCurrentPos());
-
-            if(mpXmlDoc->Error())
-            {
-                Error("Parsing binary config file '%s' failed!\n", cString::To8Char(msFile).c_str());
-                return false;
-            }
-
-            return true;
+            Error("Unable to open binary config file '%s'!\n", cString::To8Char(msFile).c_str());
+            return false;
         }
-        ////////////////////////////////////
-        // Normal load
-        else
+
+        /////////////////////////////////
+        // CRC
+        if(buff.CheckInternalCRC(kCRCKey)==false)
         {
-            FILE *pFile = cPlatform::OpenFile(msFile, _W("rb"));
-
-            if(pFile==NULL)
-            {
-                Error("Unable to open config file '%s'! Invalid filepointer returned!\n", cString::To8Char(msFile).c_str());
-                return false;
-            }
-        
-            bool bRet = mpXmlDoc->LoadFile(pFile);
-
-            if(pFile) fclose(pFile);
-            return bRet;
+            Error("CRC check for binary config file '%s' failed!\n", cString::To8Char(msFile).c_str());
+            return false;
         }
-    }
 
-    //-----------------------------------------------------------------------
+        /////////////////////////////////
+        // Get XML
+        mpXmlDoc->Parse(buff.GetDataPointerAtCurrentPos());
 
-    bool cConfigFile::Save()
-    {
-        ////////////////////////////////////
-        // CRC Loading
-        if(mbUseCRC)
+        if(mpXmlDoc->Error())
         {
-            /////////////////////////////
-            // Get the data
-            tString sData;
-            sData << *mpXmlDoc;
-
-            /////////////////////////////
-            // Compress the data
-            cBinaryBuffer buff;
-
-            buff.AddCRC_Begin();
-
-            buff.AddCharArray(sData.c_str(), sData.size()+1);
-            
-            buff.AddCRC_End(kCRCKey);
-
-            /////////////////////////////
-            // Save the file
-            if(buff.Save(msFile)==false)
-            {
-                Error("Unable to save bin config file '%s'!\n", cString::To8Char(msFile).c_str());
-                return false;
-            }
-
-            return true;
+            Error("Parsing binary config file '%s' failed!\n", cString::To8Char(msFile).c_str());
+            return false;
         }
-        ////////////////////////////////////
-        // Normal load
-        else
+
+        return true;
+    }
+    ////////////////////////////////////
+    // Normal load
+    else
+    {
+        FILE *pFile = cPlatform::OpenFile(msFile, _W("rb"));
+
+        if(pFile==NULL)
         {
-            #ifdef _WIN32
-                        tWString sFile = cString::ReplaceCharToW(msFile, _W("/"), _W("\\"));
-                        FILE *pFile = _wfopen(sFile.c_str(),_W("w+"));
-            #else
-                        FILE *pFile = fopen(cString::To8Char(msFile).c_str(),"w+");
-            #endif
-
-            if(pFile==NULL)
-            {
-                Error("Unable to save config file '%s'! Invalid filepointer returned!\n", cString::To8Char(msFile).c_str());
-                return false;
-            }
-
-            bool bRet = mpXmlDoc->SaveFile(pFile);
-
-            if(pFile) fclose(pFile);
-
-            return bRet;
-        }
-        
-    }
-
-    //-----------------------------------------------------------------------
-
-    void cConfigFile::SetString(const tString& asLevel, const tString& asName, const tString& asVal)
-    {
-        TiXmlElement *pLevelElem = mpXmlDoc->FirstChildElement(asLevel.c_str());
-        
-        if(pLevelElem==NULL){
-            TiXmlElement *pNodeChild = hplNew( TiXmlElement, (asLevel.c_str()) );
-            pLevelElem = static_cast<TiXmlElement*>(mpXmlDoc->InsertEndChild(*pNodeChild));
-            hplDelete(pNodeChild);
-        }
-        
-        pLevelElem->SetAttribute(asName.c_str(),asVal.c_str());
-    }
-    //-----------------------------------------------------------------------
-
-    void cConfigFile::SetInt(const tString& asLevel, const tString& asName, int alVal)
-    {
-        char sBuffer[40];
-        sprintf(sBuffer,"%d",alVal);
-
-        SetString(asLevel,asName,sBuffer);
-    }
-    
-    //-----------------------------------------------------------------------
-    
-    void cConfigFile::SetFloat(const tString& asLevel, const tString& asName, float afVal)
-    {
-        char sBuffer[40];
-        sprintf(sBuffer,"%f",afVal);
-
-        SetString(asLevel,asName,sBuffer);
-    }
-    
-    //-----------------------------------------------------------------------
-
-    void cConfigFile::SetBool(const tString& asLevel, const tString& asName, bool abVal)
-    {
-        SetString(asLevel,asName,abVal?"true":"false");
-    }
-
-    void cConfigFile::SetVector2f(const tString& asLevel, const tString& asName, const cVector2f& avVal)
-    {
-        tString sVal =    cString::ToString(avVal.x) + " " +
-                        cString::ToString(avVal.y);
-        SetString(asLevel,asName, sVal.c_str());
-    }
-    void cConfigFile::SetVector3f(const tString& asLevel, const tString& asName, const cVector3f& avVal)
-    {
-        tString sVal =    cString::ToString(avVal.x) + " " +
-                        cString::ToString(avVal.y) + " " +
-                        cString::ToString(avVal.z);
-        SetString(asLevel,asName, sVal.c_str());
-    }
-    void cConfigFile::SetVector2l(const tString& asLevel, const tString& asName, const cVector2l& avVal)
-    {
-        tString sVal =    cString::ToString(avVal.x) + " " +
-                        cString::ToString(avVal.y);
-        SetString(asLevel,asName, sVal.c_str());
-    }
-    void cConfigFile::SetVector3l(const tString& asLevel, const tString& asName, const cVector3l& avVal)
-    {
-        tString sVal =    cString::ToString(avVal.x) + " " +
-                        cString::ToString(avVal.y) + " " +
-                        cString::ToString(avVal.z);
-        SetString(asLevel,asName, sVal.c_str());
-    }
-
-    //-----------------------------------------------------------------------
-
-    tString cConfigFile::GetString(const tString& asLevel, const tString& asName, const tString& asDefault)
-    {
-        const char *sVal = GetCharArray(asLevel,asName);
-        if(sVal==NULL){
-            return asDefault;
+            Error("Unable to open config file '%s'! Invalid filepointer returned!\n", cString::To8Char(msFile).c_str());
+            return false;
         }
 
-        return sVal;
+        bool bRet = mpXmlDoc->LoadFile(pFile);
+
+        if(pFile) fclose(pFile);
+        return bRet;
     }
+}
 
-    tWString cConfigFile::GetStringW(const tString& asLevel, const tString& asName, const tWString& asDefault)
+//-----------------------------------------------------------------------
+
+bool cConfigFile::Save()
+{
+    ////////////////////////////////////
+    // CRC Loading
+    if(mbUseCRC)
     {
-        tString str = GetString(asLevel,asName,cString::To8Char(asDefault));
+        /////////////////////////////
+        // Get the data
+        tString sData;
+        sData << *mpXmlDoc;
 
-        return cString::To16Char(str);
-    }
+        /////////////////////////////
+        // Compress the data
+        cBinaryBuffer buff;
 
-    int cConfigFile::GetInt(const tString& asLevel, const tString& asName, int alDefault)
-    {
-        const char *sVal = GetCharArray(asLevel,asName);
-        if(sVal==NULL) return alDefault;
-        
-        return cString::ToInt(sVal,alDefault);
-    }
-    
-    float cConfigFile::GetFloat(const tString& asLevel, const tString& asName,float afDefault)
-    {
-        const char *sVal = GetCharArray(asLevel,asName);
-        if(sVal==NULL) return afDefault;
+        buff.AddCRC_Begin();
 
-        return cString::ToFloat(sVal,afDefault);
-    }
+        buff.AddCharArray(sData.c_str(), sData.size()+1);
 
-    bool cConfigFile::GetBool(const tString& asLevel, const tString& asName, bool abDefault)
-    {
-        const char *sVal = GetCharArray(asLevel,asName);
-        if(sVal==NULL) return abDefault;
-        
-        return cString::ToBool(sVal,abDefault);
-    }
+        buff.AddCRC_End(kCRCKey);
 
-    //-----------------------------------------------------------------------
-    
-    cVector2f cConfigFile::GetVector2f(const tString& asLevel, const tString& asName, const cVector2f& avDefault)
-    {
-        return cString::ToVector2f(GetCharArray(asLevel,asName),avDefault);
-    }
-    
-    cVector3f cConfigFile::GetVector3f(const tString& asLevel, const tString& asName, const cVector3f& avDefault)
-    {
-        return cString::ToVector3f(GetCharArray(asLevel,asName),avDefault);
-    }
-
-    //-----------------------------------------------------------------------
-
-    cVector2l cConfigFile::GetVector2l(const tString& asLevel, const tString& asName, const cVector2l& avDefault)
-    {
-        return cString::ToVector2l(GetCharArray(asLevel,asName),avDefault);
-    }
-
-    cVector3l cConfigFile::GetVector3l(const tString& asLevel, const tString& asName, const cVector3l& avDefault)
-    {
-        return cString::ToVector3l(GetCharArray(asLevel,asName),avDefault);
-    }
-
-    //-----------------------------------------------------------------------
-
-
-    cColor cConfigFile::GetColor(const tString& asLevel, const tString& asName, const cColor& aDefault)
-    {
-        return cString::ToColor(GetCharArray(asLevel,asName),aDefault);
-    }
-
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-
-    const char* cConfigFile::GetCharArray(tString asLevel, tString asName)
-    {
-        TiXmlElement *pLevelElem = mpXmlDoc->FirstChildElement(asLevel.c_str());
-        if(pLevelElem==NULL){
-            return NULL;
+        /////////////////////////////
+        // Save the file
+        if(buff.Save(msFile)==false)
+        {
+            Error("Unable to save bin config file '%s'!\n", cString::To8Char(msFile).c_str());
+            return false;
         }
-        
-        return pLevelElem->Attribute(asName.c_str());
+
+        return true;
+    }
+    ////////////////////////////////////
+    // Normal load
+    else
+    {
+#ifdef _WIN32
+        tWString sFile = cString::ReplaceCharToW(msFile, _W("/"), _W("\\"));
+        FILE *pFile = _wfopen(sFile.c_str(),_W("w+"));
+#else
+        FILE *pFile = fopen(cString::To8Char(msFile).c_str(),"w+");
+#endif
+
+        if(pFile==NULL)
+        {
+            Error("Unable to save config file '%s'! Invalid filepointer returned!\n", cString::To8Char(msFile).c_str());
+            return false;
+        }
+
+        bool bRet = mpXmlDoc->SaveFile(pFile);
+
+        if(pFile) fclose(pFile);
+
+        return bRet;
     }
 
-    //-----------------------------------------------------------------------
+}
+
+//-----------------------------------------------------------------------
+
+void cConfigFile::SetString(const tString& asLevel, const tString& asName, const tString& asVal)
+{
+    TiXmlElement *pLevelElem = mpXmlDoc->FirstChildElement(asLevel.c_str());
+
+    if(pLevelElem==NULL)
+    {
+        TiXmlElement *pNodeChild = hplNew( TiXmlElement, (asLevel.c_str()) );
+        pLevelElem = static_cast<TiXmlElement*>(mpXmlDoc->InsertEndChild(*pNodeChild));
+        hplDelete(pNodeChild);
+    }
+
+    pLevelElem->SetAttribute(asName.c_str(),asVal.c_str());
+}
+//-----------------------------------------------------------------------
+
+void cConfigFile::SetInt(const tString& asLevel, const tString& asName, int alVal)
+{
+    char sBuffer[40];
+    sprintf(sBuffer,"%d",alVal);
+
+    SetString(asLevel,asName,sBuffer);
+}
+
+//-----------------------------------------------------------------------
+
+void cConfigFile::SetFloat(const tString& asLevel, const tString& asName, float afVal)
+{
+    char sBuffer[40];
+    sprintf(sBuffer,"%f",afVal);
+
+    SetString(asLevel,asName,sBuffer);
+}
+
+//-----------------------------------------------------------------------
+
+void cConfigFile::SetBool(const tString& asLevel, const tString& asName, bool abVal)
+{
+    SetString(asLevel,asName,abVal?"true":"false");
+}
+
+void cConfigFile::SetVector2f(const tString& asLevel, const tString& asName, const cVector2f& avVal)
+{
+    tString sVal =    cString::ToString(avVal.x) + " " +
+                      cString::ToString(avVal.y);
+    SetString(asLevel,asName, sVal.c_str());
+}
+void cConfigFile::SetVector3f(const tString& asLevel, const tString& asName, const cVector3f& avVal)
+{
+    tString sVal =    cString::ToString(avVal.x) + " " +
+                      cString::ToString(avVal.y) + " " +
+                      cString::ToString(avVal.z);
+    SetString(asLevel,asName, sVal.c_str());
+}
+void cConfigFile::SetVector2l(const tString& asLevel, const tString& asName, const cVector2l& avVal)
+{
+    tString sVal =    cString::ToString(avVal.x) + " " +
+                      cString::ToString(avVal.y);
+    SetString(asLevel,asName, sVal.c_str());
+}
+void cConfigFile::SetVector3l(const tString& asLevel, const tString& asName, const cVector3l& avVal)
+{
+    tString sVal =    cString::ToString(avVal.x) + " " +
+                      cString::ToString(avVal.y) + " " +
+                      cString::ToString(avVal.z);
+    SetString(asLevel,asName, sVal.c_str());
+}
+
+//-----------------------------------------------------------------------
+
+tString cConfigFile::GetString(const tString& asLevel, const tString& asName, const tString& asDefault)
+{
+    const char *sVal = GetCharArray(asLevel,asName);
+    if(sVal==NULL)
+    {
+        return asDefault;
+    }
+
+    return sVal;
+}
+
+tWString cConfigFile::GetStringW(const tString& asLevel, const tString& asName, const tWString& asDefault)
+{
+    tString str = GetString(asLevel,asName,cString::To8Char(asDefault));
+
+    return cString::To16Char(str);
+}
+
+int cConfigFile::GetInt(const tString& asLevel, const tString& asName, int alDefault)
+{
+    const char *sVal = GetCharArray(asLevel,asName);
+    if(sVal==NULL) return alDefault;
+
+    return cString::ToInt(sVal,alDefault);
+}
+
+float cConfigFile::GetFloat(const tString& asLevel, const tString& asName,float afDefault)
+{
+    const char *sVal = GetCharArray(asLevel,asName);
+    if(sVal==NULL) return afDefault;
+
+    return cString::ToFloat(sVal,afDefault);
+}
+
+bool cConfigFile::GetBool(const tString& asLevel, const tString& asName, bool abDefault)
+{
+    const char *sVal = GetCharArray(asLevel,asName);
+    if(sVal==NULL) return abDefault;
+
+    return cString::ToBool(sVal,abDefault);
+}
+
+//-----------------------------------------------------------------------
+
+cVector2f cConfigFile::GetVector2f(const tString& asLevel, const tString& asName, const cVector2f& avDefault)
+{
+    return cString::ToVector2f(GetCharArray(asLevel,asName),avDefault);
+}
+
+cVector3f cConfigFile::GetVector3f(const tString& asLevel, const tString& asName, const cVector3f& avDefault)
+{
+    return cString::ToVector3f(GetCharArray(asLevel,asName),avDefault);
+}
+
+//-----------------------------------------------------------------------
+
+cVector2l cConfigFile::GetVector2l(const tString& asLevel, const tString& asName, const cVector2l& avDefault)
+{
+    return cString::ToVector2l(GetCharArray(asLevel,asName),avDefault);
+}
+
+cVector3l cConfigFile::GetVector3l(const tString& asLevel, const tString& asName, const cVector3l& avDefault)
+{
+    return cString::ToVector3l(GetCharArray(asLevel,asName),avDefault);
+}
+
+//-----------------------------------------------------------------------
+
+
+cColor cConfigFile::GetColor(const tString& asLevel, const tString& asName, const cColor& aDefault)
+{
+    return cString::ToColor(GetCharArray(asLevel,asName),aDefault);
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+const char* cConfigFile::GetCharArray(tString asLevel, tString asName)
+{
+    TiXmlElement *pLevelElem = mpXmlDoc->FirstChildElement(asLevel.c_str());
+    if(pLevelElem==NULL)
+    {
+        return NULL;
+    }
+
+    return pLevelElem->Attribute(asName.c_str());
+}
+
+//-----------------------------------------------------------------------
 }

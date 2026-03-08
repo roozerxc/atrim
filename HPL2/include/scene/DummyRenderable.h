@@ -4,43 +4,59 @@
 #include "graphics/GraphicsTypes.h"
 #include "graphics/Renderable.h"
 
-namespace hpl {
-    
-    //------------------------------------------
+namespace hpl
+{
 
-    class cCamera;
-    class cFrustum;
-    class iTexture;
-    class cResources;
-    
-    //------------------------------------------
+//------------------------------------------
 
-    class cDummyRenderable : public iRenderable
+class cCamera;
+class cFrustum;
+class iTexture;
+class cResources;
+
+//------------------------------------------
+
+class cDummyRenderable : public iRenderable
+{
+public:
+    cDummyRenderable(tString asName);
+    virtual ~cDummyRenderable();
+
+    //////////////////////////////
+    //Properties
+
+    //////////////////////////////
+    //iEntity implementation
+    tString GetEntityType()
     {
-    public:
-        cDummyRenderable(tString asName);
-        virtual ~cDummyRenderable();
+        return "cDummy";
+    }
 
-        //////////////////////////////
-        //Properties
+    ///////////////////////////////
+    //Renderable implementation:
+    cMaterial *GetMaterial()
+    {
+        return NULL;
+    }
+    iVertexBuffer* GetVertexBuffer()
+    {
+        return NULL;
+    }
 
-        //////////////////////////////
-        //iEntity implementation
-        tString GetEntityType(){ return "cDummy";}
+    eRenderableType GetRenderType()
+    {
+        return eRenderableType_Dummy;
+    }
 
-        ///////////////////////////////
-        //Renderable implementation:
-        cMaterial *GetMaterial(){ return NULL;}
-        iVertexBuffer* GetVertexBuffer(){ return NULL;}
+    int GetMatrixUpdateCount()
+    {
+        return GetTransformUpdateCount();
+    }
+    cMatrixf* GetModelMatrix(cFrustum* apFrustum);
 
-        eRenderableType GetRenderType(){ return eRenderableType_Dummy;}
-
-        int GetMatrixUpdateCount(){ return GetTransformUpdateCount();}
-        cMatrixf* GetModelMatrix(cFrustum* apFrustum);
-        
-    private:
-        cMatrixf m_mtxModelOutput;
-    };
+private:
+    cMatrixf m_mtxModelOutput;
+};
 
 };
 #endif // HPL_DUMMY_RENDERABLE_H

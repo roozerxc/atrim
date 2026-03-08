@@ -46,7 +46,7 @@ void iLuxPlayerState_Interact::OnAttachBodyToStickyArea(iPhysicsBody *apBody)
     bool bBodyInProp = false;
     for(int i=0; i<mpCurrentProp->GetBodyNum(); ++i)
     {
-        if(mpCurrentProp->GetBody(i) == apBody) 
+        if(mpCurrentProp->GetBody(i) == apBody)
         {
             bBodyInProp = true;
             break;
@@ -75,7 +75,7 @@ void iLuxPlayerState_Interact::SetupInteractVars()
     mvCurrentFocusPos = cLuxPlayerStateVars::mvInteractPos;
 
     mpCurrentProp->SetIsInteractedWith(true);
-}    
+}
 
 //-----------------------------------------------------------------------
 
@@ -128,7 +128,7 @@ void iLuxPlayerState_Interact::LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxP
     // Init
     super_class::LoadFromSaveDataBeforeEnter(apMap,apSaveData);
     iLuxPlayerState_Interact_SaveData *pData = static_cast<iLuxPlayerState_Interact_SaveData*>(apSaveData);
-    
+
     //////////////////////
     //Setup interaction vars
     iPhysicsBody* pFoucsBody=NULL;

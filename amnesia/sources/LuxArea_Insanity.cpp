@@ -136,7 +136,7 @@ void cLuxArea_Insanity::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     super_class::SaveToSaveData(apSaveData);
     cLuxArea_Insanity_SaveData *pData = static_cast<cLuxArea_Insanity_SaveData*>(apSaveData);
 
-   kCopyToVar(pData, mbAutoDisable);
+    kCopyToVar(pData, mbAutoDisable);
 }
 
 //-----------------------------------------------------------------------

@@ -12,13 +12,13 @@ class cLuxArea_Liquid_SaveData : public iLuxArea_SaveData
     kSerializableClassInit(cLuxArea_Liquid_SaveData)
 public:
     iLuxArea* CreateArea(cLuxMap *apMap);
-    
+
     float mfDensity;
     float mfLinearViscosity;
     float mfAngularViscosity;
 
     tString msPhysicsMaterial;
-    
+
     bool mbHasWaves;
     float mfWaveAmp;
     float mfWaveFreq;
@@ -33,9 +33,9 @@ public:
 
 class cLuxArea_Liquid : public iLuxArea
 {
-typedef iLuxArea super_class;
-friend class cLuxAreaLoader_Liquid;
-public:    
+    typedef iLuxArea super_class;
+    friend class cLuxAreaLoader_Liquid;
+public:
     cLuxArea_Liquid(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxArea_Liquid();
 
@@ -46,7 +46,7 @@ public:
 
     //////////////////////
     //Connection callbacks
-    void OnConnectionStateChange(iLuxEntity *apEntity, int alState){}
+    void OnConnectionStateChange(iLuxEntity *apEntity, int alState) {}
 
     //////////////////////
     //Save data stuff
@@ -58,15 +58,15 @@ public:
 private:
     void DoBuoyancyOnBody(iPhysicsBody *apBody, float afSurfaceY, bool abInsideWater);
     void DoBuoyancyOnCharBody(iCharacterBody *apCharBody, float afSurfaceY, bool abInsideWater);
-    
+
     void SplashEffect(iPhysicsBody *apBody, float afSurfaceY);
-    
+
     /////////////////////////
     // Data
     float mfDensity;
     float mfLinearViscosity;
     float mfAngularViscosity;
-    
+
     iPhysicsMaterial *mpPhysicsMaterial;
 
     bool mbHasWaves;
@@ -92,10 +92,10 @@ public:
     ~cLuxAreaLoader_Liquid();
 
     iLuxArea *CreateArea(const tString& asName, int alID, cLuxMap *apMap);
-    
+
     void LoadVariables(iLuxArea *apArea, cWorld *apWorld);
     void SetupArea(iLuxArea *apArea, cWorld *apWorld);
-    
+
 };
 
 //----------------------------------------------

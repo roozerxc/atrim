@@ -6,32 +6,33 @@
 #include "graphics/GraphicsTypes.h"
 #include "generate/GenerateTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //-------------------------------------
-    
-    class cGraphics;
-    class cResources;
+//-------------------------------------
 
-    class cVoxelMap;
+class cGraphics;
+class cResources;
 
-    //-------------------------------------
+class cVoxelMap;
 
-    class cGenerate
-    {
-    public:
-        cGenerate();
-        ~cGenerate();
+//-------------------------------------
 
-        void Init(cResources *apResources, cGraphics *apGraphics);
+class cGenerate
+{
+public:
+    cGenerate();
+    ~cGenerate();
 
-        cVoxelMap* CreateVoxelMap(const cVector3l& avSize);
-        void DestroyVoxelMap(cVoxelMap* apMap);
+    void Init(cResources *apResources, cGraphics *apGraphics);
 
-    private:
-        cResources *mpResources;
-        cGraphics *mpGraphics;
-    };
+    cVoxelMap* CreateVoxelMap(const cVector3l& avSize);
+    void DestroyVoxelMap(cVoxelMap* apMap);
+
+private:
+    cResources *mpResources;
+    cGraphics *mpGraphics;
+};
 
 };
 #endif // HPL_GENERATE_H

@@ -26,10 +26,10 @@ enum eLuxEnemyMoveState
 
 class cLuxEnemyMover
 {
-friend class cLuxEnemyMover_SaveData;
-friend class iLuxEnemy;
-friend class cLuxEnemy_ManPig;
-public:    
+    friend class cLuxEnemyMover_SaveData;
+    friend class iLuxEnemy;
+    friend class cLuxEnemy_ManPig;
+public:
     cLuxEnemyMover(iLuxEnemy *apEnemy, iCharacterBody *apCharBody);
     virtual ~cLuxEnemyMover();
 
@@ -47,7 +47,7 @@ public:
     void TurnToAngle(float afAngle);
 
     void UseMoveStateAnimations();
-    
+
     //////////////////////
     //Properties
 
@@ -60,23 +60,41 @@ public:
     //This gets speed / wanted_speed
     float GetWantedSpeedAmount();
 
-    void SetOverideMoveState(bool abX){ mbOverideMoveState = abX;}
-    bool GetOverideMoveState(){ return mbOverideMoveState;}
+    void SetOverideMoveState(bool abX)
+    {
+        mbOverideMoveState = abX;
+    }
+    bool GetOverideMoveState()
+    {
+        return mbOverideMoveState;
+    }
 
-    float GetStuckCounter(){ return mfStuckCounter; }
-    float GetMaxStuckCounter(){ return mfMaxStuckCounter; }
-    bool GetStuckCounterIsAtMax(){ return mfStuckCounter >= mfMaxStuckCounter;}
-    void ResetStuckCounter(){ mfStuckCounter =0; }
+    float GetStuckCounter()
+    {
+        return mfStuckCounter;
+    }
+    float GetMaxStuckCounter()
+    {
+        return mfMaxStuckCounter;
+    }
+    bool GetStuckCounterIsAtMax()
+    {
+        return mfStuckCounter >= mfMaxStuckCounter;
+    }
+    void ResetStuckCounter()
+    {
+        mfStuckCounter =0;
+    }
 
-    
+
     //////////////////////
     //Data
-    
+
     //////////////////////
     //Save data stuff
-    
+
 private:
-    void UpdateStuckCounter(float afTimeStep);    
+    void UpdateStuckCounter(float afTimeStep);
     void UpdateTurning(float afTimeStep);
     void UpdateMoveAnimation(float afTimeStep);
     void UpdateStepEffects(float afTimeStep);

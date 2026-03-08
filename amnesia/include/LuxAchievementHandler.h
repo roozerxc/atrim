@@ -23,12 +23,21 @@ public:
     void CreateAchievement(int alID, const tString& asName);
     void UnlockAchievement(int alID);
     virtual void RegisterAchievements();
-    
+
     tString GetAchievementName(int alID);
     virtual bool GetAchievementUnlocked(int alID);
-    virtual tString GetAchievementDisplayName(int alID){return "";}
-    virtual tString GetAchievementDescription(int alID){return "";}
-    virtual int GetAchievementIcon(int alID){return -1;}
+    virtual tString GetAchievementDisplayName(int alID)
+    {
+        return "";
+    }
+    virtual tString GetAchievementDescription(int alID)
+    {
+        return "";
+    }
+    virtual int GetAchievementIcon(int alID)
+    {
+        return -1;
+    }
 
     virtual void OnUnlockedAchievement(int alID);
 

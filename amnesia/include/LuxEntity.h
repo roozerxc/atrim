@@ -33,7 +33,7 @@ class iLuxEntity_SaveData : public iSerializable
 {
     kSerializableClassInit(iLuxEntity_SaveData)
 public:
-    virtual ~iLuxEntity_SaveData(){}
+    virtual ~iLuxEntity_SaveData() {}
 
     tString msName;
     bool mbActive;
@@ -65,20 +65,35 @@ public:
 
 class cLuxEntityConnection
 {
-friend class cLuxEntityConnection_SaveData;
+    friend class cLuxEntityConnection_SaveData;
 public:
-    cLuxEntityConnection(){}
-    cLuxEntityConnection(const tString& asName, iLuxEntity *apEntity, bool abInvertStateSent, int alStatesUsed, const tString& asCallbackFunc) 
+    cLuxEntityConnection() {}
+    cLuxEntityConnection(const tString& asName, iLuxEntity *apEntity, bool abInvertStateSent, int alStatesUsed, const tString& asCallbackFunc)
         : msName(asName), mpEntity(apEntity), mbInvertStateSent(abInvertStateSent), mlStatesUsed(alStatesUsed), msCallbackFunc(asCallbackFunc) {}
 
-    const tString& GetName(){ return msName; }
+    const tString& GetName()
+    {
+        return msName;
+    }
 
-    iLuxEntity* GetEntity(){ return mpEntity; }
+    iLuxEntity* GetEntity()
+    {
+        return mpEntity;
+    }
 
-    bool GetInvertStateSent(){ return mbInvertStateSent;}
-    int GetStateUsed(){ return mlStatesUsed;}
+    bool GetInvertStateSent()
+    {
+        return mbInvertStateSent;
+    }
+    int GetStateUsed()
+    {
+        return mlStatesUsed;
+    }
 
-    const tString& GetCallbackFunc(){ return msCallbackFunc; }
+    const tString& GetCallbackFunc()
+    {
+        return msCallbackFunc;
+    }
 
 private:
     tString msName;
@@ -94,10 +109,10 @@ class cLuxMap;
 
 class iLuxEntity : public iLuxCollideCallbackContainer
 {
-friend class cLuxMap;
-friend class cLuxSavedGameEntity;
-friend class cLuxSavedGameMap;
-public:    
+    friend class cLuxMap;
+    friend class cLuxSavedGameEntity;
+    friend class cLuxSavedGameMap;
+public:
     iLuxEntity(const tString &asName, int alID, cLuxMap *apMap,eLuxEntityType aEntityType);
     virtual ~iLuxEntity();
 
@@ -105,15 +120,15 @@ public:
     // General
     void UpdateLogic(float afTimeStep);
 
-    virtual void OnRenderSolid(cRendererCallbackFunctions* apFunctions){}
+    virtual void OnRenderSolid(cRendererCallbackFunctions* apFunctions) {}
 
     virtual bool CanInteract(iPhysicsBody *apBody)=0;
     virtual bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)=0;
-    
-    virtual void AfterWorldLoad(){}
-    virtual void OnMapEnter(){}
 
-    virtual void InFocusDraw(cGuiSet *apGuiSet,float afFrameTime){}
+    virtual void AfterWorldLoad() {}
+    virtual void OnMapEnter() {}
+
+    virtual void InFocusDraw(cGuiSet *apGuiSet,float afFrameTime) {}
 
     //////////////////
     // Action
@@ -126,62 +141,134 @@ public:
 
     //////////////////
     // Properties
-    eLuxEntityType GetEntityType()const{ return mEntityType;}
-    
-    const tString& GetName()const{ return msName;}
-    int GetID(){ return mlID;}
+    eLuxEntityType GetEntityType()const
+    {
+        return mEntityType;
+    }
+
+    const tString& GetName()const
+    {
+        return msName;
+    }
+    int GetID()
+    {
+        return mlID;
+    }
 
     void SetActive(bool abX);
-    bool IsActive(){ return mbActive;}
+    bool IsActive()
+    {
+        return mbActive;
+    }
 
-    cLuxMap *GetMap(){ return mpMap;}
+    cLuxMap *GetMap()
+    {
+        return mpMap;
+    }
 
-    void SetFullGameSave(bool abX){ mbFullGameSave=abX;}
-    bool GetFullGameSave(){ return mbFullGameSave;}
+    void SetFullGameSave(bool abX)
+    {
+        mbFullGameSave=abX;
+    }
+    bool GetFullGameSave()
+    {
+        return mbFullGameSave;
+    }
 
-    void SetIsSaved(bool abX){ mbIsSaved = abX;}
-    bool IsSaved(){ return mbIsSaved;}
-    bool GetDestroyMe(){ return mbDestroyMe;}
+    void SetIsSaved(bool abX)
+    {
+        mbIsSaved = abX;
+    }
+    bool IsSaved()
+    {
+        return mbIsSaved;
+    }
+    bool GetDestroyMe()
+    {
+        return mbDestroyMe;
+    }
 
-    void SetInteractionDisabled(bool abX){ mbInteractionDisabled = abX; }
-    bool GetInteractionDisabled(){ return mbInteractionDisabled; }
+    void SetInteractionDisabled(bool abX)
+    {
+        mbInteractionDisabled = abX;
+    }
+    bool GetInteractionDisabled()
+    {
+        return mbInteractionDisabled;
+    }
 
-    float GetMaxFocusDistance(){ return mfMaxFocusDistance;}
+    float GetMaxFocusDistance()
+    {
+        return mfMaxFocusDistance;
+    }
     virtual eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)=0;
 
-    void SetCustomFocusCrossHair(eLuxFocusCrosshair aX){ mCustomFocusCrossHair = aX;}
+    void SetCustomFocusCrossHair(eLuxFocusCrosshair aX)
+    {
+        mCustomFocusCrossHair = aX;
+    }
 
-    virtual tWString GetFocusText(){ return _W("");}
+    virtual tWString GetFocusText()
+    {
+        return _W("");
+    }
 
     virtual iEntity3D* GetAttachEntity()=0;
 
-    virtual cMeshEntity* GetMeshEntity(){ return NULL; }
+    virtual cMeshEntity* GetMeshEntity()
+    {
+        return NULL;
+    }
 
-    void SetCallbackFunc(const tString& asFunc){ msCallbackFunc = asFunc;}
-    void SetConnectionStateChangeCallback(const tString& asFunc){ msConnectionStateChangeCallback = asFunc;}
+    void SetCallbackFunc(const tString& asFunc)
+    {
+        msCallbackFunc = asFunc;
+    }
+    void SetConnectionStateChangeCallback(const tString& asFunc)
+    {
+        msConnectionStateChangeCallback = asFunc;
+    }
 
     void SetPlayerInteractCallback(const tString &asCallbackFunc, bool abRemoveWhenInteracted);
     void SetPlayerLookAtCallback(const tString &asCallbackFunc, bool abRemoveWhenLookedAt);
-    bool IsLookedAtByPlayer(){ return mbIsLookedAt; }
+    bool IsLookedAtByPlayer()
+    {
+        return mbIsLookedAt;
+    }
 
     void AddCollideCallbackParent(iLuxCollideCallbackContainer* apCallback);
     void RemoveCollideCallbackParent(iLuxCollideCallbackContainer* apCallback);
-    
+
     //////////////////
     // Connection
-    int GetConnectionNum(){ return (int)mvConnections.size();}
-    cLuxEntityConnection *GetConnection(int lIdx){ return mvConnections[lIdx];}
+    int GetConnectionNum()
+    {
+        return (int)mvConnections.size();
+    }
+    cLuxEntityConnection *GetConnection(int lIdx)
+    {
+        return mvConnections[lIdx];
+    }
     void AddConnection(const tString& asName, iLuxEntity *apEntity, bool abInvertStateSent, int alStatesUsed, const tString &asCallbackFunc);
 
     ////////////////
     // Debug
-    virtual float DrawDebug(cGuiSet *apSet,iFontData *apFont,float afStartY){ return afStartY;}
+    virtual float DrawDebug(cGuiSet *apSet,iFontData *apFont,float afStartY)
+    {
+        return afStartY;
+    }
 
-        
+
     //////////////////////
     //Save data stuff
-    void SetSaveData(iLuxEntity_SaveData *apData){ mpSaveData = apData;}
-    iLuxEntity_SaveData *GetSaveData(){ return mpSaveData;}
+    void SetSaveData(iLuxEntity_SaveData *apData)
+    {
+        mpSaveData = apData;
+    }
+    iLuxEntity_SaveData *GetSaveData()
+    {
+        return mpSaveData;
+    }
 
     virtual iLuxEntity_SaveData* CreateSaveData()=0;
     virtual void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
@@ -197,8 +284,8 @@ protected:
     //Virtual methods
     virtual void OnConnectionStateChange(iLuxEntity *apEntity, int alState)=0;
     virtual void OnUpdate(float afTimeStep)=0;
-    virtual void BeforeEntityDestruction(){}
-    virtual void OnSetActive(bool abX){}
+    virtual void BeforeEntityDestruction() {}
+    virtual void OnSetActive(bool abX) {}
 
     /////////////////
     //Helper methods
@@ -233,7 +320,7 @@ protected:
     cLuxMap *mpMap;
 
     bool mbDestroyMe;
-    
+
     iLuxEntity_SaveData *mpSaveData;
 
     std::vector<cMesh*> mvPreloadedMeshes;
@@ -242,7 +329,10 @@ protected:
 private:
     eLuxEntityType mEntityType;
 
-    void DestroyMe(){ mbDestroyMe = true;}
+    void DestroyMe()
+    {
+        mbDestroyMe = true;
+    }
 };
 
 //----------------------------------------------

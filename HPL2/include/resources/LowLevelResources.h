@@ -3,23 +3,24 @@
 
 #include "system/SystemTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cMeshLoaderHandler;
-    class cBitmapLoaderHandler;
-    class cVideoLoaderHandler;
-    class iXmlDocument;
+class cMeshLoaderHandler;
+class cBitmapLoaderHandler;
+class cVideoLoaderHandler;
+class iXmlDocument;
 
-    class iLowLevelResources
-    {
-    public:
-        virtual ~iLowLevelResources(){}
-        
-        virtual void AddBitmapLoaders(cBitmapLoaderHandler* apHandler)=0;
-        virtual void AddMeshLoaders(cMeshLoaderHandler* apHandler)=0;
-        virtual void AddVideoLoaders(cVideoLoaderHandler* apHandler)=0;
+class iLowLevelResources
+{
+public:
+    virtual ~iLowLevelResources() {}
 
-        virtual iXmlDocument* CreateXmlDocument(const tString& asName="")=0;
-    };
+    virtual void AddBitmapLoaders(cBitmapLoaderHandler* apHandler)=0;
+    virtual void AddMeshLoaders(cMeshLoaderHandler* apHandler)=0;
+    virtual void AddVideoLoaders(cVideoLoaderHandler* apHandler)=0;
+
+    virtual iXmlDocument* CreateXmlDocument(const tString& asName="")=0;
+};
 };
 #endif // HPL_LOWLEVELRESOURCES_H

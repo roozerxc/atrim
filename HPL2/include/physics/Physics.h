@@ -7,88 +7,119 @@
 #include "system/SystemTypes.h"
 #include "physics/PhysicsMaterial.h"
 
-namespace hpl {
-    
-    class iLowLevelPhysics;
-    class iPhysicsWorld;
-    class cSurfaceData;
-    class cResources;
+namespace hpl
+{
 
-    //------------------------------------------------
+class iLowLevelPhysics;
+class iPhysicsWorld;
+class cSurfaceData;
+class cResources;
 
-    typedef std::list<iPhysicsWorld*> tPhysicsWorldList;
-    typedef tPhysicsWorldList::iterator tPhysicsWorldListIt;
+//------------------------------------------------
 
-    typedef std::map<tString, cSurfaceData*> tSurfaceDataMap;
-    typedef tSurfaceDataMap::iterator tSurfaceDataMapIt;
+typedef std::list<iPhysicsWorld*> tPhysicsWorldList;
+typedef tPhysicsWorldList::iterator tPhysicsWorldListIt;
 
-    typedef cSTLMapIterator<cSurfaceData*, tSurfaceDataMap, tSurfaceDataMapIt> cSurfaceDataIterator;
+typedef std::map<tString, cSurfaceData*> tSurfaceDataMap;
+typedef tSurfaceDataMap::iterator tSurfaceDataMapIt;
 
-    //------------------------------------------------
+typedef cSTLMapIterator<cSurfaceData*, tSurfaceDataMap, tSurfaceDataMapIt> cSurfaceDataIterator;
 
-    class cPhysicsImpactCount
+//------------------------------------------------
+
+class cPhysicsImpactCount
+{
+public:
+    cPhysicsImpactCount()
     {
-    public:
-        cPhysicsImpactCount(){ mfCount =0;}
+        mfCount =0;
+    }
 
-        float mfCount;
-    };
+    float mfCount;
+};
 
-    typedef std::list<cPhysicsImpactCount> tPhysicsImpactCountList;
-    typedef tPhysicsImpactCountList::iterator tPhysicsImpactCountListIt;
+typedef std::list<cPhysicsImpactCount> tPhysicsImpactCountList;
+typedef tPhysicsImpactCountList::iterator tPhysicsImpactCountListIt;
 
-    //------------------------------------------------
+//------------------------------------------------
 
-    class cPhysics : public iUpdateable
+class cPhysics : public iUpdateable
+{
+public:
+    cPhysics(iLowLevelPhysics *apLowLevelPhysics);
+    ~cPhysics();
+
+    void Init(cResources *apResources);
+
+    void Update(float afTimeStep);
+
+    iPhysicsWorld* CreateWorld(bool abAddSurfaceData);
+    void DestroyWorld(iPhysicsWorld* apWorld);
+
+    cSurfaceData *CreateSurfaceData(const tString& asName);
+    cSurfaceData *GetSurfaceData(const tString& asName);
+    bool LoadSurfaceData(const tString& asFile);
+
+    iLowLevelPhysics* GetLowLevel()
     {
-    public:
-        cPhysics(iLowLevelPhysics *apLowLevelPhysics);
-        ~cPhysics();
+        return mpLowLevelPhysics;
+    }
 
-        void Init(cResources *apResources);
+    void SetImpactDuration(float afX)
+    {
+        mfImpactDuration = afX;
+    }
+    float GetImpactDuration()
+    {
+        return mfImpactDuration;
+    }
 
-        void Update(float afTimeStep);
+    void SetMaxImpacts(int alX)
+    {
+        mlMaxImpacts = alX;
+    }
+    int GetMaxImpacts()
+    {
+        return mlMaxImpacts;
+    }
+    int GetNumOfImpacts()
+    {
+        return (int)mlstImpactCounts.size();
+    }
 
-        iPhysicsWorld* CreateWorld(bool abAddSurfaceData);
-        void DestroyWorld(iPhysicsWorld* apWorld);
+    bool CanPlayImpact();
+    void AddImpact();
 
-        cSurfaceData *CreateSurfaceData(const tString& asName);
-        cSurfaceData *GetSurfaceData(const tString& asName);
-        bool LoadSurfaceData(const tString& asFile);
+    cSurfaceDataIterator GetSurfaceDataIterator()
+    {
+        return cSurfaceDataIterator(&m_mapSurfaceData);
+    }
 
-        iLowLevelPhysics* GetLowLevel(){ return mpLowLevelPhysics;}
+    void SetDebugLog(bool abX)
+    {
+        mbLog = abX;
+    }
+    bool GetDebugLog()
+    {
+        return mbLog;
+    }
 
-        void SetImpactDuration(float afX){ mfImpactDuration = afX;}
-        float GetImpactDuration(){ return mfImpactDuration;}
+private:
+    ePhysicsMaterialCombMode GetCombMode(const char *apName);
 
-        void SetMaxImpacts(int alX){ mlMaxImpacts = alX;}
-        int GetMaxImpacts(){ return mlMaxImpacts;}
-        int GetNumOfImpacts(){ return (int)mlstImpactCounts.size();}
+    void UpdateImpactCounts(float afTimeStep);
 
-        bool CanPlayImpact();
-        void AddImpact();
+    iLowLevelPhysics *mpLowLevelPhysics;
+    cResources *mpResources;
 
-        cSurfaceDataIterator GetSurfaceDataIterator() { return cSurfaceDataIterator(&m_mapSurfaceData); }
+    tPhysicsWorldList mlstWorlds;
+    tSurfaceDataMap m_mapSurfaceData;
 
-        void SetDebugLog(bool abX){ mbLog = abX;}
-        bool GetDebugLog(){ return mbLog;}
-    
-    private:
-        ePhysicsMaterialCombMode GetCombMode(const char *apName);
-
-        void UpdateImpactCounts(float afTimeStep);
-
-        iLowLevelPhysics *mpLowLevelPhysics;
-        cResources *mpResources;
-
-        tPhysicsWorldList mlstWorlds;
-        tSurfaceDataMap m_mapSurfaceData;
-
-        tPhysicsImpactCountList mlstImpactCounts;
-        float mfImpactDuration;
-        int mlMaxImpacts;
-        bool mbLog;
-    };
+    tPhysicsImpactCountList mlstImpactCounts;
+    float mfImpactDuration;
+    int mlMaxImpacts;
+    bool mbLog;
+};
 
 };
 #endif // HPL_Physics_H

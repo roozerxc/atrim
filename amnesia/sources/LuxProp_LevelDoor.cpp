@@ -40,7 +40,7 @@ void cLuxPropLoader_LevelDoor::LoadVariables(iLuxProp *apProp, cXmlElement *apRo
 void cLuxPropLoader_LevelDoor::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
     cLuxProp_LevelDoor  *pLevelDoor = static_cast<cLuxProp_LevelDoor*>(apProp);
-    
+
     pLevelDoor->msTextEntry = apInstanceVars->GetVarString("TextEntry","");
     pLevelDoor->msMapFile = apInstanceVars->GetVarString("MapFile","");
     pLevelDoor->msStartPos = apInstanceVars->GetVarString("StartPos","");
@@ -114,7 +114,7 @@ bool cLuxProp_LevelDoor::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
 
 void cLuxProp_LevelDoor::OnSetupAfterLoad(cWorld *apWorld)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -156,10 +156,10 @@ tWString cLuxProp_LevelDoor::GetFocusText()
             float fP = ((float)pSavedMap->mlCurrentCompletionAmount / (float)pSavedMap->mlTotalCompletionAmount) *100.0f;
             lPercent = (int)fP;
         }
-        
+
         sStr += cString::ToStringW(lPercent)+_W("% ")+kTranslate("CompletionCount", "Completed");
     }*/
-    
+
     return sStr;
 }
 
@@ -174,7 +174,7 @@ void cLuxProp_LevelDoor::SetLocked(bool abLocked)
 
 void cLuxProp_LevelDoor::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -247,7 +247,7 @@ void cLuxProp_LevelDoor::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //Init
     super_class::LoadFromSaveData(apSaveData);
     cLuxProp_LevelDoor_SaveData *pData = static_cast<cLuxProp_LevelDoor_SaveData*>(apSaveData);
-    
+
     //////////////////
     //Set variables
     kCopyFromVar(pData, msTextEntry);

@@ -5,48 +5,49 @@
 
 #include "gui/GuiSkin.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cWidgetMainMenu : public iWidgetMenu
-    {
-    public:
-        cWidgetMainMenu(cGuiSet *apSet, cGuiSkin *apSkin);
-        ~cWidgetMainMenu();
+class cWidgetMainMenu : public iWidgetMenu
+{
+public:
+    cWidgetMainMenu(cGuiSet *apSet, cGuiSkin *apSkin);
+    ~cWidgetMainMenu();
 
-        //////////////////////////////
-        // Implemented iWidgetMenu functions
-        void Hide();
+    //////////////////////////////
+    // Implemented iWidgetMenu functions
+    void Hide();
 
-    protected:
+protected:
 
-        //////////////////////////////
-        // Implemented iWidgetMenu functions
+    //////////////////////////////
+    // Implemented iWidgetMenu functions
 
-        void UpdateMenuItemsPos(cWidgetMenuItem* apNewItem);
-        void UpdateMenuItemsSize(cWidgetMenuItem* apNewItem);
+    void UpdateMenuItemsPos(cWidgetMenuItem* apNewItem);
+    void UpdateMenuItemsSize(cWidgetMenuItem* apNewItem);
 
-        void OnChildMenuHide();
+    void OnChildMenuHide();
 
-        //////////////////////////////
-        // Implemented iWidget functions
-        void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
+    //////////////////////////////
+    // Implemented iWidget functions
+    void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
 
-        void OnUpdate(float afTimeStep);
+    void OnUpdate(float afTimeStep);
 
-        void OnInit();
+    void OnInit();
 
-        void OnLoadGraphics();
+    void OnLoadGraphics();
 
-        /////////////////////////////
-        // Data
+    /////////////////////////////
+    // Data
 
-        float mfItemSeparation;
-        float mfItemVPadding;
-        float mfItemTextPadding;
+    float mfItemSeparation;
+    float mfItemVPadding;
+    float mfItemTextPadding;
 
-        cGuiGfxElement* mpGfxBackground;
-        
-    };
+    cGuiGfxElement* mpGfxBackground;
+
+};
 };
 
 #endif // HPL_WIDGET_MAIN_MENU

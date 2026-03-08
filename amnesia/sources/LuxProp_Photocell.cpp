@@ -28,7 +28,7 @@ void cLuxPropLoader_Photocell::LoadVariables(iLuxProp *apProp, cXmlElement *apRo
 {
     cLuxProp_Photocell  *pPhotocell = static_cast<cLuxProp_Photocell*>(apProp);
 
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -72,7 +72,7 @@ cLuxProp_Photocell::~cLuxProp_Photocell()
 bool cLuxProp_Photocell::CanInteract(iPhysicsBody *apBody)
 {
     return false;
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -88,7 +88,7 @@ bool cLuxProp_Photocell::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
 
 void cLuxProp_Photocell::OnSetupAfterLoad(cWorld *apWorld)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -109,7 +109,7 @@ void cLuxProp_Photocell::UpdatePropSpecific(float afTimeStep)
     /////////////////////
     // Set mesh alpha
     float fGoalAmount = cMath::Clamp( (mfLightLevel - mfLightLevelOffLimit) / (mfLightLevelOnLimit - mfLightLevelOffLimit), 0.0f, 1.0f);
-    
+
     if(mpMeshEntity && mpMeshEntity->GetIlluminationAmount() != fGoalAmount)
     {
         float fCurrent = mpMeshEntity->GetIlluminationAmount();
@@ -162,7 +162,8 @@ void cLuxProp_Photocell::UpdateLightLevel(float afTimeStep)
     mfLightLevel = 0;
     cBoundingVolume *pBV = mpMeshEntity->GetBoundingVolume();
     cVector3f vAxisAdd = pBV->GetSize()*0.5f + cVector3f(0.02f);
-    cVector3f vSamplePos[6] = {
+    cVector3f vSamplePos[6] =
+    {
         pBV->GetWorldCenter() + cVector3f(vAxisAdd.x,0,0),
         pBV->GetWorldCenter() - cVector3f(vAxisAdd.x,0,0),
         pBV->GetWorldCenter() + cVector3f(0,vAxisAdd.y,0),
@@ -250,7 +251,7 @@ void cLuxProp_Photocell::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //Init
     super_class::LoadFromSaveData(apSaveData);
     cLuxProp_Photocell_SaveData *pData = static_cast<cLuxProp_Photocell_SaveData*>(apSaveData);
-    
+
     //////////////////
     //Set variables
     kCopyFromVar(pData,mbLit);

@@ -57,7 +57,7 @@ cLuxMusicHandler::~cLuxMusicHandler()
 
 void cLuxMusicHandler::OnStart()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -98,13 +98,13 @@ void cLuxMusicHandler::Update(float afTimeStep)
 
     ///////////////////////////////////
     //Check if close by music should be played.
-    UpdateDangerMusic(afTimeStep);    
+    UpdateDangerMusic(afTimeStep);
 
     ///////////////////////////////////
     //Check if attack music should be played.
     UpdateEnemyMusic(afTimeStep, eLuxEnemyMusic_Search);
     UpdateEnemyMusic(afTimeStep, eLuxEnemyMusic_Attack);
-    
+
     ///////////////////////////////////
     //Check if current song is over
     if(mlCurrentMaxPrio >=0)
@@ -234,10 +234,10 @@ void cLuxMusicHandler::UpdateDangerMusic(float afTimeStep)
     {
         if(mbEnemyPlaying[i]) return;
     }
-    
+
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
     if(pMap==NULL) return;
-    
+
     ////////////////////////////
     //Music not playing
     if(mbEnemyClosePlaying==false)

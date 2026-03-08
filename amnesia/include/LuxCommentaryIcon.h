@@ -20,7 +20,7 @@ public:
     tString msTalker;
     tString msTopic;
     tString msSoundFile;
-    
+
     iLuxEntity* CreateEntity(cLuxMap *apMap);
 };
 
@@ -28,9 +28,9 @@ public:
 
 class cLuxCommentaryIcon : public iLuxEntity
 {
-typedef iLuxEntity super_class;
-friend class cLuxCommentaryIconLoader;
-public:    
+    typedef iLuxEntity super_class;
+    friend class cLuxCommentaryIconLoader;
+public:
     cLuxCommentaryIcon(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxCommentaryIcon();
 
@@ -40,39 +40,69 @@ public:
 
     void OnUpdate(float afTimeStep);
 
-    virtual float OnInteractDebugDraw(cGuiSet *apSet,iFontData *apFont, float afStartY){return afStartY;}
+    virtual float OnInteractDebugDraw(cGuiSet *apSet,iFontData *apFont, float afStartY)
+    {
+        return afStartY;
+    }
 
     //////////////////////
     //Actions
-    void GiveDamage(float afAmount, int alStrength){}
+    void GiveDamage(float afAmount, int alStrength) {}
 
-    bool CanInteract(iPhysicsBody *apBody){return true;}
+    bool CanInteract(iPhysicsBody *apBody)
+    {
+        return true;
+    }
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
 
-    eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos){ return eLuxFocusCrosshair_Grab; }
-    virtual iEntity3D* GetAttachEntity(){ return mvBodies[0];}
+    eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
+    {
+        return eLuxFocusCrosshair_Grab;
+    }
+    virtual iEntity3D* GetAttachEntity()
+    {
+        return mvBodies[0];
+    }
 
     tWString GetFocusText();
 
     //////////////////////
     //Properies
     void SetPlayingSound(bool abX);
-    bool GetPlayingSound(){ return mbPlayingSound;}
+    bool GetPlayingSound()
+    {
+        return mbPlayingSound;
+    }
 
     //////////////////////
     //Data
-    cMeshEntity * GetMeshEntity(){ return mpMeshEntity;}
-    virtual cMeshEntity* GetEffectMeshEntity(){ return mpMeshEntity;}
+    cMeshEntity * GetMeshEntity()
+    {
+        return mpMeshEntity;
+    }
+    virtual cMeshEntity* GetEffectMeshEntity()
+    {
+        return mpMeshEntity;
+    }
 
-    int GetBodyNum(){ return (int)mvBodies.size();}
-    iPhysicsBody* GetBody(int alIdx){ return mvBodies[alIdx];}
-    
-    iPhysicsBody* GetMainBody(){ return mvBodies[0];}
+    int GetBodyNum()
+    {
+        return (int)mvBodies.size();
+    }
+    iPhysicsBody* GetBody(int alIdx)
+    {
+        return mvBodies[alIdx];
+    }
+
+    iPhysicsBody* GetMainBody()
+    {
+        return mvBodies[0];
+    }
 
     //////////////////////
     //Connection callbacks
-    void OnConnectionStateChange(iLuxEntity *apEntity, int alState){}
-        
+    void OnConnectionStateChange(iLuxEntity *apEntity, int alState) {}
+
     //////////////////////
     //Save data stuff
     iLuxEntity_SaveData* CreateSaveData();
@@ -106,7 +136,7 @@ protected:
     std::vector<cMatrixf> mvSubMeshMatrix;
 
     tString msRotateSubMesh;
-    
+
 
     //////////////
     //Save specific
@@ -121,11 +151,11 @@ class cLuxCommentaryIconLoader : public cEntityLoader_Object
 {
 public:
     cLuxCommentaryIconLoader(const tString& asName);
-    virtual ~cLuxCommentaryIconLoader(){}
+    virtual ~cLuxCommentaryIconLoader() {}
 
     void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
     void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
-    
+
 protected:
     float mfDefaultMaxFocusDistance;
 };

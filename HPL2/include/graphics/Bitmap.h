@@ -4,86 +4,132 @@
 #include "math/MathTypes.h"
 #include "graphics/GraphicsTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //-----------------------------------------
+//-----------------------------------------
 
-    class cBitmapData
+class cBitmapData
+{
+public:
+    cBitmapData();
+    ~cBitmapData();
+
+    void SetData(const unsigned char* apData, int alSize);
+
+    unsigned char *mpData;
+    int mlSize;
+};
+
+//-----------------------------------------
+
+class cBitmap
+{
+public:
+    cBitmap();
+    ~cBitmap();
+
+    inline const cVector3l& GetSize() const
     {
-    public:
-        cBitmapData();
-        ~cBitmapData();
-
-        void SetData(const unsigned char* apData, int alSize);
-
-        unsigned char *mpData;
-        int mlSize;    
-    };
-
-    //-----------------------------------------
-    
-    class cBitmap
+        return mvSize;
+    }
+    inline int GetWidth() const
     {
-    public:
-        cBitmap();
-        ~cBitmap();
+        return mvSize.x;
+    }
+    inline int GetHeight() const
+    {
+        return mvSize.y;
+    }
+    inline int GetDepth() const
+    {
+        return mvSize.z;
+    }
 
-        inline const cVector3l& GetSize() const { return mvSize;}
-        inline int GetWidth() const { return mvSize.x;}
-        inline int GetHeight() const { return mvSize.y;}
-        inline int GetDepth() const { return mvSize.z;}
+    void SetSize(const cVector3l& avSize)
+    {
+        mvSize = avSize;
+    }
 
-        void SetSize(const cVector3l& avSize){ mvSize = avSize; }
-        
-        inline ePixelFormat GetPixelFormat() const { return mPixelFormat;}
-        inline char GetBytesPerPixel() const { return mlBytesPerPixel; }
-        inline int GetNumOfMipMaps() const { return mlNumOfMipMaps;}
-        inline int GetNumOfImages() const { return mlNumOfImages;}
+    inline ePixelFormat GetPixelFormat() const
+    {
+        return mPixelFormat;
+    }
+    inline char GetBytesPerPixel() const
+    {
+        return mlBytesPerPixel;
+    }
+    inline int GetNumOfMipMaps() const
+    {
+        return mlNumOfMipMaps;
+    }
+    inline int GetNumOfImages() const
+    {
+        return mlNumOfImages;
+    }
 
-        void SetPixelFormat(ePixelFormat aFormat){ mPixelFormat = aFormat;}
-        void SetBytesPerPixel(char alBpp){ mlBytesPerPixel = alBpp;}
-        
-        cBitmapData* GetData(int alImage, int alMipMapLevel);
-        void SetUpData(int alNumOfImages, int alNumOfMipmaps);
-        inline bool IsCompressed() const { return mbDataIsCompressed;}
-        void SetIsCompressed(bool abX) { mbDataIsCompressed = abX;}
+    void SetPixelFormat(ePixelFormat aFormat)
+    {
+        mPixelFormat = aFormat;
+    }
+    void SetBytesPerPixel(char alBpp)
+    {
+        mlBytesPerPixel = alBpp;
+    }
 
-        inline const tWString& GetFileName()const { return msFileName;}
-        void SetFileName(const tWString& asFileName) { msFileName = asFileName;}
+    cBitmapData* GetData(int alImage, int alMipMapLevel);
+    void SetUpData(int alNumOfImages, int alNumOfMipmaps);
+    inline bool IsCompressed() const
+    {
+        return mbDataIsCompressed;
+    }
+    void SetIsCompressed(bool abX)
+    {
+        mbDataIsCompressed = abX;
+    }
 
-        void CreateData(const cVector3l& avSize, ePixelFormat aFormat, int alImage, int alMipMap);
-    
-        void Clear( const cColor& aColor,int alImage, int alMipMap);
+    inline const tWString& GetFileName()const
+    {
+        return msFileName;
+    }
+    void SetFileName(const tWString& asFileName)
+    {
+        msFileName = asFileName;
+    }
 
-        void Blit(    cBitmap *apSrc,
-                    const cVector3l& avDestPosition,const cVector3l& avSrcSize,
-                    const cVector3l& avSrcPosition,
-                    int alDestImage=0, int alDestMipMap=0,
-                    int alSrcImage=0, int alSrcMipMap=0);
+    void CreateData(const cVector3l& avSize, ePixelFormat aFormat, int alImage, int alMipMap);
 
-        
-        void SetPixel(int alImage, int alMipMapLevel, const cVector3l& avPixelPos, unsigned char* apPixelData);
-        void GetPixel(int alImage, int alMipMapLevel, const cVector3l& avPixelPos, unsigned char* apDestPixelData);
+    void Clear( const cColor& aColor,int alImage, int alMipMap);
 
-        
-    private:
-        void CopyPixel(    unsigned char* apDest, ePixelFormat aDestFormat, 
-                        unsigned char* apSrc, ePixelFormat aSrcFormat);
-        unsigned char* ConvertDataToFormat(unsigned char* apPixelData, ePixelFormat aSrcFormat, ePixelFormat aDestFormat);
-        unsigned char* ConvertDataToRGBA(unsigned char* apPixelData, ePixelFormat aFormat);
+    void Blit(    cBitmap *apSrc,
+                  const cVector3l& avDestPosition,const cVector3l& avSrcSize,
+                  const cVector3l& avSrcPosition,
+                  int alDestImage=0, int alDestMipMap=0,
+                  int alSrcImage=0, int alSrcMipMap=0);
 
-        std::vector<cBitmapData> mvImages;
-        bool mbDataIsCompressed;
 
-        tWString msFileName;
+    void SetPixel(int alImage, int alMipMapLevel, const cVector3l& avPixelPos, unsigned char* apPixelData);
+    void GetPixel(int alImage, int alMipMapLevel, const cVector3l& avPixelPos, unsigned char* apDestPixelData);
 
-        cVector3l mvSize;
-        ePixelFormat mPixelFormat;
 
-        char mlBytesPerPixel;
-        
-        int mlNumOfImages;
-        int mlNumOfMipMaps;
-    };
+private:
+    void CopyPixel(    unsigned char* apDest, ePixelFormat aDestFormat,
+                       unsigned char* apSrc, ePixelFormat aSrcFormat);
+    unsigned char* ConvertDataToFormat(unsigned char* apPixelData, ePixelFormat aSrcFormat, ePixelFormat aDestFormat);
+    unsigned char* ConvertDataToRGBA(unsigned char* apPixelData, ePixelFormat aFormat);
+
+    std::vector<cBitmapData> mvImages;
+    bool mbDataIsCompressed;
+
+    tWString msFileName;
+
+    cVector3l mvSize;
+    ePixelFormat mPixelFormat;
+
+    char mlBytesPerPixel;
+
+    int mlNumOfImages;
+    int mlNumOfMipMaps;
+};
 };
 #endif // HPL_BITMAP_H

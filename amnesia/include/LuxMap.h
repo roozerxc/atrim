@@ -47,26 +47,38 @@ typedef tLuxDissolveEntityList::iterator tLuxDissolveEntityListIt;
 
 class cLuxMap
 {
-friend class cLuxDissolveEntity;
-friend class cLuxSavedMap;
-friend class cLuxSavedGameMap;
-public:    
+    friend class cLuxDissolveEntity;
+    friend class cLuxSavedMap;
+    friend class cLuxSavedGameMap;
+public:
     cLuxMap(const tString& asName);
     ~cLuxMap();
 
-    const tString& GetName(){ return msName;}
-    const tString& GetFileName(){ return msFileName;}
+    const tString& GetName()
+    {
+        return msName;
+    }
+    const tString& GetFileName()
+    {
+        return msFileName;
+    }
 
-    void SetDisplayNameEntry(const tString& asEntry){ msDisplayNameEntry = asEntry;}
-    const tString& GetDisplayNameEntry(){ return msDisplayNameEntry;}
+    void SetDisplayNameEntry(const tString& asEntry)
+    {
+        msDisplayNameEntry = asEntry;
+    }
+    const tString& GetDisplayNameEntry()
+    {
+        return msDisplayNameEntry;
+    }
 
     bool LoadFromFile(const tString & asFile, bool abLoadEntities);
-    
+
     void AfterWorldLoadEntitySetup();
-    
+
     void OnEnter(bool abRunScript, bool abFirstTime);
     void OnLeave(bool abRunScript);
-    
+
     void Update(float afTimeStep);
 
     void RunScript(const tString& asCommand);
@@ -75,9 +87,15 @@ public:
     bool RecompileScript(tString *apOutput);
 
     void OnRenderSolid(cRendererCallbackFunctions* apFunctions);
-    
-    cWorld* GetWorld(){ return mpWorld; }
-    iPhysicsWorld* GetPhysicsWorld(){ return mpPhysicsWorld; }
+
+    cWorld* GetWorld()
+    {
+        return mpWorld;
+    }
+    iPhysicsWorld* GetPhysicsWorld()
+    {
+        return mpPhysicsWorld;
+    }
 
     void PlacePlayerAtStartPos(const tString& asPosName);
 
@@ -96,15 +114,21 @@ public:
     void DestroyEntity(iLuxEntity *apEntity);
     iLuxEntity *GetEntityByName(const tString& asName, eLuxEntityType aType=eLuxEntityType_LastEnum, int alSubType=-1);
     iLuxEntity *GetEntityByID(int alID, eLuxEntityType aType=eLuxEntityType_LastEnum, int alSubType=-1);
-    iLuxEntity *GetLatestEntity(){ return mpLatestAddedEntity;}
-    void ResetLatestEntity(){ mpLatestAddedEntity=NULL;}
+    iLuxEntity *GetLatestEntity()
+    {
+        return mpLatestAddedEntity;
+    }
+    void ResetLatestEntity()
+    {
+        mpLatestAddedEntity=NULL;
+    }
     bool EntityExists(iLuxEntity *apEntity);
     cLuxEntityIterator GetEntityIterator();
     cLuxEnemyIterator GetEnemyIterator();
 
     void BroadcastEnemyMessage(eLuxEnemyMessage aType, bool abHasPosition, const cVector3f& avPos, float afRadius,
-                                float afTime=0, bool abLocalScope=false, const cVector3f& avX=0,float afX=0, int alX=0);
-    void BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume ,float afMinDist, float afMaxDist);
+                               float afTime=0, bool abLocalScope=false, const cVector3f& avX=0,float afX=0, int alX=0);
+    void BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume,float afMinDist, float afMaxDist);
     /**
      * Gets number of enemies that are in range of player
      */
@@ -130,15 +154,21 @@ public:
     void AddPlayerStart(cLuxNode_PlayerStart *apNode);
     cLuxNode_PlayerStart *GetPlayerStart(const tString & asName);
     cLuxNode_PlayerStart *GetFirstPlayerStart();
-    int GetPlayerStartNodeNum(){ return (int)mvPlayerStartNodes.size();}
-    cLuxNode_PlayerStart *GetPlayerStartNode(int alIdx){ return mvPlayerStartNodes[alIdx];}
+    int GetPlayerStartNodeNum()
+    {
+        return (int)mvPlayerStartNodes.size();
+    }
+    cLuxNode_PlayerStart *GetPlayerStartNode(int alIdx)
+    {
+        return mvPlayerStartNodes[alIdx];
+    }
 
     void AddPosNode(cLuxNode_Pos *apNode);
     cLuxNode_Pos *GetPosNode(const tString & asName);
 
     void SetCheckPoint(const tString& asName, const tString& asStartPos, const tString& asCallback);
     void LoadCheckPoint();
-    
+
     void AddUseItemCallback(    const tString& asName, const tString& asItem, const tString& asEntity,
                                 const tString& asFunction, bool abAutoCallback);
     void RemoveUseItemCallback( const tString& asName);
@@ -152,7 +182,7 @@ public:
     void AddTimer(const tString& asName, float afTime, const tString& asFunction);
     void RemoveTimer(const tString& asName);
     cLuxEventTimer* GetTimer(const tString& asName);
-    
+
     void AddDissolveEntity(cMeshEntity *apMeshEntity, float afTime);
 
     cLuxLampLightConnection* AddLampLightConnection(cLuxProp_Lamp *apLamp, iLight *apLight, float afAmount, bool abUseOnColor, bool abUseSpec);
@@ -160,18 +190,33 @@ public:
 
     cLuxScriptVar* GetVar(const tString &asName);
 
-    bool IsDeletingAllWorldEntities(){ return mbDeletingAllWorldEntities;}
+    bool IsDeletingAllWorldEntities()
+    {
+        return mbDeletingAllWorldEntities;
+    }
 
     //////////////////////////
-    // Properties    
-    void SetNumberOfQuests(int alX){mlNumberOfQuests = alX;}
-    int GetNumberOfQuests(){ return mlNumberOfQuests;}
+    // Properties
+    void SetNumberOfQuests(int alX)
+    {
+        mlNumberOfQuests = alX;
+    }
+    int GetNumberOfQuests()
+    {
+        return mlNumberOfQuests;
+    }
     void AddCompletionAmount(int alAmount, float afDelay=0.0f);
 
-    void SetLanternLitCallback(const tString& asCallback){ msLanternLitCallback = asCallback;}
-    const tString& GetLanternLitCallback(){ return msLanternLitCallback;}
-    
-    
+    void SetLanternLitCallback(const tString& asCallback)
+    {
+        msLanternLitCallback = asCallback;
+    }
+    const tString& GetLanternLitCallback()
+    {
+        return msLanternLitCallback;
+    }
+
+
 private:
     void CalculateTotalCompletionAmount();
 
@@ -191,7 +236,7 @@ private:
     bool mbUpdatingTimers;
 
     bool mbDeletingAllWorldEntities;
-    
+
     cEngine *mpEngine;
     cWorld *mpWorld;
     iPhysicsWorld *mpPhysicsWorld;
@@ -218,7 +263,7 @@ private:
     tLuxEventTimerList mlstTimers;
 
     tLuxScriptVarMap m_mapVars;
-    
+
     tLuxEntityNameMap m_mapEntitiesByName;
     tLuxEntityIDMap m_mapEntitiesByID;
     tLuxEntityList mlstEntities;
@@ -237,7 +282,7 @@ private:
     tLuxDissolveEntityList mlstDissolveEntities;
 
     tLuxLampLightConnectionList mlstLampLightConnections;
-    
+
     bool mbRunUpdateScript;
 };
 

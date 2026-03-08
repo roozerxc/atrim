@@ -21,8 +21,8 @@ public:
 
 class cLuxPlayerState_InteractWheel : public iLuxPlayerState_InteractRotateBase
 {
-typedef iLuxPlayerState_InteractRotateBase super_class;
-public:    
+    typedef iLuxPlayerState_InteractRotateBase super_class;
+public:
     cLuxPlayerState_InteractWheel(cLuxPlayer *apPlayer);
     virtual ~cLuxPlayerState_InteractWheel();
 
@@ -30,7 +30,10 @@ public:
 
     /////////////////////////////////
     //Save data stuff
-    virtual bool IsSaved(){ return false; }
+    virtual bool IsSaved()
+    {
+        return false;
+    }
     iLuxPlayerState_SaveData* CreateSaveData();
 
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);

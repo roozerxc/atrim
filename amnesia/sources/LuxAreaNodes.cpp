@@ -36,13 +36,13 @@ void cLuxAreaNodeLoader_PlayerStart::Load(const tString &asName, int alID, bool 
 
     cLuxNode_PlayerStart *pNode = hplNew(cLuxNode_PlayerStart, (asName));
     pNode->mvPos = a_mtxTransform.GetTranslation() + cVector3f(0,0.05f, 0);
-    
+
     cVector3f vForward = cMath::MatrixMul(a_mtxTransform.GetRotation(), cVector3f(0,0,1));
-    
+
     pNode->mfAngle = -cMath::GetAngleFromPoints2D(0, cVector2f(vForward.x, vForward.z));
 
     //pNode->mfAngle = cMath::Vector3Angle(vForward, cVector3f(0,0,1));
-    //if(cMath::Vector3Dot(vForward, cVector3f(1,0,0)) < 0) pNode->mfAngle = -pNode->mfAngle;    
+    //if(cMath::Vector3Dot(vForward, cVector3f(1,0,0)) < 0) pNode->mfAngle = -pNode->mfAngle;
 
     pMap->AddPlayerStart(pNode);
 }
@@ -55,7 +55,7 @@ void cLuxAreaNodeLoader_PlayerStart::Load(const tString &asName, int alID, bool 
 
 //-----------------------------------------------------------------------
 
-cLuxAreaNodeLoader_PathNode::cLuxAreaNodeLoader_PathNode(const tString& asName)  : iAreaLoader(asName) 
+cLuxAreaNodeLoader_PathNode::cLuxAreaNodeLoader_PathNode(const tString& asName)  : iAreaLoader(asName)
 {
 
     mbCreatesStaticArea = true;

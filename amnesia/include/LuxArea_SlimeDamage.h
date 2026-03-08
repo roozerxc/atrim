@@ -33,9 +33,9 @@ public:
 
 class cLuxArea_SlimeDamage : public iLuxArea
 {
-typedef iLuxArea super_class;
-friend class cLuxAreaLoader_SlimeDamage;
-public:    
+    typedef iLuxArea super_class;
+    friend class cLuxAreaLoader_SlimeDamage;
+public:
     cLuxArea_SlimeDamage(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxArea_SlimeDamage();
 
@@ -45,7 +45,7 @@ public:
 
     //////////////////////
     //Connection callbacks
-    void OnConnectionStateChange(iLuxEntity *apEntity, int alState){}
+    void OnConnectionStateChange(iLuxEntity *apEntity, int alState) {}
 
     //////////////////////
     //Save data stuff
@@ -56,7 +56,7 @@ public:
 protected:
 
 private:
-    
+
     /////////////////////////
     // Data
     int mlSlimeType;
@@ -86,10 +86,10 @@ public:
     ~cLuxAreaLoader_SlimeDamage();
 
     iLuxArea *CreateArea(const tString& asName, int alID, cLuxMap *apMap);
-    
+
     void LoadVariables(iLuxArea *apArea, cWorld *apWorld);
     void SetupArea(iLuxArea *apArea, cWorld *apWorld);
-    
+
 };
 
 //----------------------------------------------

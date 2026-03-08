@@ -45,7 +45,7 @@ cLuxPlayerState_Ladder::~cLuxPlayerState_Ladder()
 
 void cLuxPlayerState_Ladder::OnEnterState(eLuxPlayerState aPrevState)
 {
-    
+
     /////////////////////////////////////
     // Load the data
     mpLadder = cLuxPlayerStateVars::mpLadder;
@@ -54,7 +54,7 @@ void cLuxPlayerState_Ladder::OnEnterState(eLuxPlayerState aPrevState)
     /////////////////////////////////////
     // Get data
     iCharacterBody *pCharBody = mpPlayer->GetCharacterBody();
-    
+
     /////////////////////////////////////
     // Set up player
     mpPlayer->ChangeMoveState(eLuxMoveState_Normal);
@@ -84,13 +84,13 @@ void cLuxPlayerState_Ladder::OnEnterState(eLuxPlayerState aPrevState)
     mfPitchMinLimit = mpPlayer->GetCamera()->GetPitchMinLimit();
     mfPitchMaxLimit = mpPlayer->GetCamera()->GetPitchMaxLimit();
 
-    /////////////////////////////////////        
+    /////////////////////////////////////
     //Different time if player is above the ladder.
     float fTime = 0.5f;
     if(mpPlayer->GetCharacterBody()->GetPosition().y > mpLadder->GetMaxY()) fTime = 1.2f;
 
     mfTimeCount = fTime;
-    
+
     /////////////////////////////////////
     //Get the goal position and then add used to get there
     mvGoalPos = mvStartPosition;
@@ -209,7 +209,7 @@ void cLuxPlayerState_Ladder::Update(float afTimeStep)
         if(pCharBody->CheckCharacterFits(mvCharPosition,false,0,NULL,kEpsilonf)==false)
         {
             mfMoveMul =0;
-            return;    
+            return;
         }
 
         /////////////////////////////////
@@ -234,7 +234,7 @@ void cLuxPlayerState_Ladder::Update(float afTimeStep)
                 mbPlayedSound = true;
             }
         }
-        
+
         /////////////////////////////////
         //Update character body
         pCharBody->SetPosition(mvCharPosition);
@@ -242,8 +242,8 @@ void cLuxPlayerState_Ladder::Update(float afTimeStep)
 
         /////////////////////////////////
         //Get the rays that will be tested to see if something solid was hit when clibming down.
-        cVector3f vGroundRayStart1 = pCharBody->GetFeetPosition() + cVector3f(0,0.05f,0) + 
-                                    mpLadder->GetForward()*pCharBody->GetSize().x*0.7f;
+        cVector3f vGroundRayStart1 = pCharBody->GetFeetPosition() + cVector3f(0,0.05f,0) +
+                                     mpLadder->GetForward()*pCharBody->GetSize().x*0.7f;
         cVector3f vGroundRayEnd1 = vGroundRayStart1 - cVector3f(0,0.1f,0);
 
         cVector3f vGroundRayStart2 = pCharBody->GetFeetPosition() + cVector3f(0,0.05f,0);
@@ -259,12 +259,12 @@ void cLuxPlayerState_Ladder::Update(float afTimeStep)
         }
         ///////////////////////////
         //Check if at bottom
-        else if(    mfMoveMul < 0 && 
+        else if(    mfMoveMul < 0 &&
                     (  (mvCharPosition.y - pCharBody->GetSize().y/2) < mpLadder->GetMinY() ||
-                        pCharBody->CheckRayIntersection(vGroundRayStart1, vGroundRayEnd1,NULL,NULL) ||
-                        pCharBody->CheckRayIntersection(vGroundRayStart2, vGroundRayEnd2,NULL,NULL) 
+                       pCharBody->CheckRayIntersection(vGroundRayStart1, vGroundRayEnd1,NULL,NULL) ||
+                       pCharBody->CheckRayIntersection(vGroundRayStart2, vGroundRayEnd2,NULL,NULL)
                     )
-                )
+               )
         {
             mpPlayer->ChangeState(eLuxPlayerState_Normal);
         }
@@ -303,7 +303,7 @@ void cLuxPlayerState_Ladder::PostUpdate(float afTimeStep)
 //-----------------------------------------------------------------------
 
 
-void cLuxPlayerState_Ladder::OnDraw(cGuiSet *apGuiSet ,float afFrameTime)
+void cLuxPlayerState_Ladder::OnDraw(cGuiSet *apGuiSet,float afFrameTime)
 {
 
 }
@@ -327,7 +327,7 @@ bool cLuxPlayerState_Ladder::OnMove(eCharDir aDir, float afMul)
 
     mfMoveMul = afMul;
 
-    return false;    
+    return false;
 }
 
 //-----------------------------------------------------------------------
@@ -385,7 +385,7 @@ bool cLuxPlayerState_Ladder::OnDoAction(eLuxPlayerAction aAction,bool abPressed)
         ////////////////////////////////
         //Release grip from ladder
         if(    aAction == eLuxPlayerAction_Interact ||
-            aAction == eLuxPlayerAction_Attack)
+                aAction == eLuxPlayerAction_Attack)
         {
             mpPlayer->ChangeState(eLuxPlayerState_Normal);
         }
@@ -397,7 +397,7 @@ bool cLuxPlayerState_Ladder::OnDoAction(eLuxPlayerAction aAction,bool abPressed)
     {
         return true;
     }
-    
+
     return false;
 }
 
@@ -506,7 +506,7 @@ void cLuxPlayerState_Ladder::SaveToSaveData(iLuxPlayerState_SaveData* apSaveData
         pData->mlLadderID = mpLadder->GetID();
     else
         pData->mlLadderID = -1;
-    
+
     kCopyToVar(pData, mlState);
     kCopyToVar(pData, mvStartPosition);
 
@@ -553,7 +553,7 @@ void cLuxPlayerState_Ladder::LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxPla
     {
         mpLadder = static_cast<cLuxArea_Ladder*>(pEntity);
     }
-    
+
     kCopyFromVar(pData, mvStartPosition);
 
     cLuxPlayerStateVars::SetupLadder(mpLadder, mvStartPosition);
@@ -571,7 +571,7 @@ void cLuxPlayerState_Ladder::LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlay
     ///////////////////////
     // Load vars
     kCopyFromVar(pData, mlState);
-    
+
     kCopyFromVar(pData, mfTimeCount);
 
     kCopyFromVar(pData, mvCharPosition);

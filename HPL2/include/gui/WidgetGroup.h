@@ -4,46 +4,47 @@
 #include "gui/Widget.h"
 
 
-namespace hpl {
+namespace hpl
+{
 
-    class cWidgetLabel;
-    class cGuiGfxElement;
+class cWidgetLabel;
+class cGuiGfxElement;
 
-    class cWidgetGroup : public iWidget
-    {
-    public:
-        cWidgetGroup(cGuiSet* apSet, cGuiSkin* apSkin);
-        ~cWidgetGroup();
+class cWidgetGroup : public iWidget
+{
+public:
+    cWidgetGroup(cGuiSet* apSet, cGuiSkin* apSkin);
+    ~cWidgetGroup();
 
-        void SetHeaderText(const tWString& asText);
-        const tWString& GetHeaderText();
+    void SetHeaderText(const tWString& asText);
+    const tWString& GetHeaderText();
 
-        void SetDefaultFontSize(const cVector2f& avSize);
-    protected:
-        /////////////////////////////
-        // Implemented functions
-        void OnInit();
-        void OnLoadGraphics();
+    void SetDefaultFontSize(const cVector2f& avSize);
+protected:
+    /////////////////////////////
+    // Implemented functions
+    void OnInit();
+    void OnLoadGraphics();
 
-        void OnChangeText();
+    void OnChangeText();
 
-        void OnDraw(float afTimeStep, cGuiClipRegion* apClipRegion);
-        void OnDrawAfterClip(float afTimeStep, cGuiClipRegion *apClipRegion);
+    void OnDraw(float afTimeStep, cGuiClipRegion* apClipRegion);
+    void OnDrawAfterClip(float afTimeStep, cGuiClipRegion *apClipRegion);
 
-        /////////////////////////////
-        // Data
+    /////////////////////////////
+    // Data
 
-        cWidgetLabel *mpHeader;
-        cVector2f mvHeaderSize;
+    cWidgetLabel *mpHeader;
+    cVector2f mvHeaderSize;
 
-        cGuiGfxElement *mpGfxBackground;
-        
-        cGuiGfxElement *mvGfxBorders[4];
-        cGuiGfxElement *mvGfxCorners[4];
+    cGuiGfxElement *mpGfxBackground;
 
-        float mfHeaderOffset;
-        bool mbHeaderBreaksUpperBorder;
-    };
+    cGuiGfxElement *mvGfxBorders[4];
+    cGuiGfxElement *mvGfxCorners[4];
+
+    float mfHeaderOffset;
+    bool mbHeaderBreaksUpperBorder;
+};
 };
 
 

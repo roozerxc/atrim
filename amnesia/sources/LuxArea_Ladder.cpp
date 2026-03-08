@@ -40,7 +40,7 @@ iLuxArea *cLuxAreaLoader_Ladder::CreateArea(const tString& asName, int alID, cLu
 void cLuxAreaLoader_Ladder::LoadVariables(iLuxArea *apArea, cWorld *apWorld)
 {
     cLuxArea_Ladder *pLadderArea = static_cast<cLuxArea_Ladder*>(apArea);
-    
+
     pLadderArea->msMaterial = GetVarString("Material","metal");
 }
 
@@ -122,7 +122,7 @@ bool cLuxArea_Ladder::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
             {
                 vStartPos+=cVector3f(0,0.1f,0);
             }
-            
+
             bFound = true;
             break;
         }
@@ -151,7 +151,7 @@ bool cLuxArea_Ladder::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 
 eLuxFocusCrosshair cLuxArea_Ladder::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    return eLuxFocusCrosshair_Ladder;    
+    return eLuxFocusCrosshair_Ladder;
 }
 
 //-----------------------------------------------------------------------

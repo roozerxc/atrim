@@ -15,11 +15,11 @@ enum eLuxLoadScreenState
 
 class cLuxLoadScreenHandler : public iLuxUpdateable
 {
-friend class cLuxLoadScreenHandler_SaveData;
-public:    
+    friend class cLuxLoadScreenHandler_SaveData;
+public:
     cLuxLoadScreenHandler();
     ~cLuxLoadScreenHandler();
-    
+
     void LoadFonts();
 
     void OnStart();
@@ -36,7 +36,7 @@ public:
     * Called when game loading is done. Must be called after DrawGameScreen has been called!
     */
     void GameScreenLoadDone(const tString& asEndSound, float afLoadTime);
-    
+
     void DrawGameScreen();
     void DrawMenuScreen();
     void DrawBlankScreen();
@@ -49,21 +49,33 @@ public:
     * If alRandomNum > 1, then it will randomize between 1 and alRandom for each LoadScreen giving entry the suffix XX (eg 01). If <=1 then no suffix is added
     */
     void SetupLoadText(const tString& asCat, const tString& asEntry, int alRandomNum, const tString& asImage);
-    
-    const tString& GetLoadTextCat(){ return msLoadTextCat;}
-    const tString& GetLoadTextEntry(){ return msLoadTextEntry;}
-    const tString& GetLoadTextImage(){ return msLoadTextImage;}
-    int GetLoadTextEntryRandomNum(){ return mlTextRandomNum; }
+
+    const tString& GetLoadTextCat()
+    {
+        return msLoadTextCat;
+    }
+    const tString& GetLoadTextEntry()
+    {
+        return msLoadTextEntry;
+    }
+    const tString& GetLoadTextImage()
+    {
+        return msLoadTextImage;
+    }
+    int GetLoadTextEntryRandomNum()
+    {
+        return mlTextRandomNum;
+    }
 
 private:
     void Exit();
     tString GetGameScreenTextEntry();
     void LoadCurrentImage(const tString &asImage);
-        
+
     void UpdateGameState(float afTimeStep);
     void DrawGameState(float afFrameTime);
     void DrawGameScreen(cGuiSet *apSet);
-    
+
     //////////////////
     // Data
     cGui *mpGui;
@@ -75,7 +87,7 @@ private:
     cGuiSet *mpGuiSet;
 
     cGuiGfxElement* mpWhiteGfx;
-    
+
     cVector2f mvScreenSize;
     cVector2f mvGuiSetCenterSize;//Size of the part that is inside a 4:3 ratio!
     cVector2f mvGuiSetSize;
@@ -99,7 +111,7 @@ private:
     // Variables
     cGuiGfxElement* mpCurrentImage;
     tString msCurrentImage;
-    
+
     tString msLoadTextCat;
     tString msLoadTextEntry;
     tString msLoadTextImage;

@@ -6,26 +6,30 @@
 
 #include "engine/Updateable.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cAINodeGenerator;
-    
-    class cAI : public iUpdateable
+class cAINodeGenerator;
+
+class cAI : public iUpdateable
+{
+public:
+    cAI();
+    ~cAI();
+
+    void Reset();
+    void Update(float afTimeStep);
+
+    void Init();
+
+    cAINodeGenerator *GetNodeGenerator()
     {
-    public:
-        cAI();
-        ~cAI();
+        return mpAINodeGenerator;
+    }
 
-        void Reset();
-        void Update(float afTimeStep);
-        
-        void Init();
-        
-        cAINodeGenerator *GetNodeGenerator(){ return mpAINodeGenerator;}
-
-    private:
-        cAINodeGenerator *mpAINodeGenerator;
-    };
+private:
+    cAINodeGenerator *mpAINodeGenerator;
+};
 
 };
 #endif // HPL_AI_H

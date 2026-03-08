@@ -57,10 +57,10 @@ cLuxDemoEnd::cLuxDemoEnd() : iLuxUpdateable("LuxDemoEnd")
 
     msBackgroundFile = gpBase->mpDemoCfg->GetString("DemoEnd", "BackgroundImage", "");
 
-    mvMessageFontSize = gpBase->mpDemoCfg->GetVector2f("DemoEnd", "MessageFontSize" ,0);
+    mvMessageFontSize = gpBase->mpDemoCfg->GetVector2f("DemoEnd", "MessageFontSize",0);
     mMessageFontColor = gpBase->mpDemoCfg->GetColor("DemoEnd", "MessageFontColor", cColor(1,1));
 
-    mvAvailableAtFontSize = gpBase->mpDemoCfg->GetVector2f("DemoEnd", "AvailableAtFontSize" ,0);
+    mvAvailableAtFontSize = gpBase->mpDemoCfg->GetVector2f("DemoEnd", "AvailableAtFontSize",0);
     mAvailableAtFontColor = gpBase->mpDemoCfg->GetColor("DemoEnd", "AvailableAtFontColor", cColor(1,1));
 
     mvButtonFontSize = gpBase->mpDemoCfg->GetVector2f("DemoEnd", "ButtonFontSize", 0);
@@ -73,7 +73,7 @@ cLuxDemoEnd::cLuxDemoEnd() : iLuxUpdateable("LuxDemoEnd")
 
     mfBuyButtonY = gpBase->mpDemoCfg->GetFloat("DemoEnd", "BuyButtonY",0);
     mfExitButtonY = gpBase->mpDemoCfg->GetFloat("DemoEnd", "ExitButtonY",0);
-    
+
     msDestinationURL = gpBase->mpDemoCfg->GetString("DemoEnd", "DestinationURL", "");
 
     mpBlackGfx = mpGui->CreateGfxFilledRect(cColor(0,1), eGuiMaterial_Alpha);
@@ -81,7 +81,7 @@ cLuxDemoEnd::cLuxDemoEnd() : iLuxUpdateable("LuxDemoEnd")
     mfFadeSpeed = gpBase->mpDemoCfg->GetFloat("DemoEnd","FadeSpeed",0);
 
     mbShowOnAllExit = gpBase->mpDemoCfg->GetBool("DemoEnd","ShowOnAllExit",false);
-    
+
     //Create buttons label buttons
     cVector2f vButtonSize = cVector2f(150, mvButtonFontSize.y);
 
@@ -91,7 +91,7 @@ cLuxDemoEnd::cLuxDemoEnd() : iLuxUpdateable("LuxDemoEnd")
 
     vButtonPos.y = mfBuyButtonY;
     mpLBuyNow = mpGuiSet->CreateWidgetLabel(vButtonPos, vButtonSize, kTranslate("Demo", "BuyNow"), NULL);
-    
+
     vButtonPos.y = mfExitButtonY;
     mpLExit = mpGuiSet->CreateWidgetLabel(vButtonPos, vButtonSize, kTranslate("Demo", "Exit"), NULL);
 
@@ -158,7 +158,7 @@ void cLuxDemoEnd::OnEnterContainer(const tString& asOldContainer)
     //Fade out music
     cMusicHandler* pMusHandler = gpBase->mpEngine->GetSound()->GetMusicHandler();
     pMusHandler->Stop(0.3f);
-    
+
     // Load background
     iTexture* pTex = gpBase->mpEngine->GetResources()->GetTextureManager()->Create2D(msBackgroundFile, false, eTextureType_Rect);
     if(pTex) mpGfxBackground = mpGui->CreateGfxTexture(pTex, true, eGuiMaterial_Alpha);
@@ -192,7 +192,7 @@ void cLuxDemoEnd::OnLeaveContainer(const tString& asNewContainer)
 void cLuxDemoEnd::Update(float afTimeStep)
 {
     mfTime += afTimeStep;
-    
+
     if(mbExiting)
     {
         mfFadeAlpha += afTimeStep*0.7f;
@@ -325,7 +325,7 @@ void cLuxDemoEnd::SetUpButtonLabel(cWidgetLabel* apLabel, float* apFadeValue, tG
 bool cLuxDemoEnd::BuyNowOnPressed(iWidget* apWidget, const cGuiMessageData& aData)
 {
     Exit(true);
-    
+
     return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxDemoEnd, BuyNowOnPressed);

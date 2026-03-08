@@ -21,8 +21,8 @@ public:
 
 class iLuxPlayerState_InteractRotateBase : public iLuxPlayerState_Interact
 {
-typedef iLuxPlayerState_Interact super_class;
-public:    
+    typedef iLuxPlayerState_Interact super_class;
+public:
     iLuxPlayerState_InteractRotateBase(cLuxPlayer *apPlayer, eLuxPlayerState aState);
     virtual ~iLuxPlayerState_InteractRotateBase();
 
@@ -41,29 +41,38 @@ public:
     bool OnAddYaw(float afAmount);
     bool OnAddPitch(float afAmount);
 
-    bool OnRun(bool abPressed){ return true;}
-    bool OnJump(bool abPressed){ return false;}
+    bool OnRun(bool abPressed)
+    {
+        return true;
+    }
+    bool OnJump(bool abPressed)
+    {
+        return false;
+    }
 
     cGuiGfxElement* GetCrosshair();
 
-    void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter){}
+    void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter) {}
 
     float DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY);
-    
+
     virtual void RenderSolid(cRendererCallbackFunctions* apFunctions);
 
     /////////////////////////////////
     //Save data stuff
-    virtual bool IsSaved(){ return false; }
-    
+    virtual bool IsSaved()
+    {
+        return false;
+    }
+
     virtual void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);
     virtual void LoadFromSaveDataBeforeEnter(cLuxMap *apMap,iLuxPlayerState_SaveData* apSaveData);
     virtual void LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
 
 
 protected:
-    virtual void EnterRotateBase(eLuxPlayerState aPrevState){}
-    virtual void LeaveRotateBase(eLuxPlayerState aNewState){}
+    virtual void EnterRotateBase(eLuxPlayerState aPrevState) {}
+    virtual void LeaveRotateBase(eLuxPlayerState aNewState) {}
 
     virtual float GetSpeedAdd(cCamera *apCam)=0;
     virtual void OnThrow()=0;
@@ -78,19 +87,19 @@ protected:
     float mfMaxTorque;
 
     bool mbHasGravity;
-    
+
     float mfMaxDistance;
 
     cVector3f mvJointRight;
     cVector3f mvJointForward;
-    
+
     cVector3f mvForceAxis[2];
-    
+
     cVector2f mvMouseAdd;
     cVector2f mvLastMouseAdd;
-    
+
     float mfRotSpeed;
-    
+
     cPidController<cVector3f> mRotatePid;
 
     cVector3f mvCamDir[3];

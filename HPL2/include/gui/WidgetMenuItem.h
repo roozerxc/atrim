@@ -5,112 +5,140 @@
 
 #include "input/InputTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
 
-    class iWidgetMenu;
+class iWidgetMenu;
 
-    class cGuiSet;
-    class cGuiSkin;
+class cGuiSet;
+class cGuiSkin;
 
 
 
-    //----------------------------
+//----------------------------
 
-    class cWidgetMenuItem : public iWidget
+class cWidgetMenuItem : public iWidget
+{
+public:
+    cWidgetMenuItem(iWidgetMenu* apParent);
+    virtual ~cWidgetMenuItem();
+
+    cWidgetMenuItem* AddMenuItem(const tWString &asText, const tWString &asIconFilename = _W(""));
+    void AddSeparator();
+    void ClearMenuItems();
+
+    bool IsParent()
     {
-    public:
-        cWidgetMenuItem(iWidgetMenu* apParent);
-        virtual ~cWidgetMenuItem();
+        return (mpChildMenu != NULL);
+    }
+    bool IsChecked()
+    {
+        return mbChecked;
+    }
+    void SetChecked(bool abX)
+    {
+        mbChecked = abX;
+    }
+    bool IsDefault()
+    {
+        return mbDefault;
+    }
+    void SetDefault(bool abX)
+    {
+        mbDefault = abX;
+    }
 
-        cWidgetMenuItem* AddMenuItem(const tWString &asText, const tWString &asIconFilename = _W(""));
-        void AddSeparator();
-        void ClearMenuItems();
+    iWidgetMenu*    GetParentMenu()
+    {
+        return (iWidgetMenu*)mpParent;
+    }
+    iWidgetMenu*    GetChildMenu()
+    {
+        return mpChildMenu;
+    }
 
-        bool IsParent() { return (mpChildMenu != NULL); }
-        bool IsChecked()    { return mbChecked; }
-        void SetChecked(bool abX) { mbChecked = abX; }
-        bool IsDefault()    { return mbDefault; }
-        void SetDefault(bool abX) { mbDefault = abX; }
-        
-        iWidgetMenu*    GetParentMenu()    { return (iWidgetMenu*)mpParent; }
-        iWidgetMenu*    GetChildMenu() { return mpChildMenu; }
+    bool IsMenuOpen();
 
-        bool IsMenuOpen();
+    bool IsSeparator()
+    {
+        return (msText==_W(""));
+    }
 
-        bool IsSeparator() { return (msText==_W(""));}
+    cGuiGlobalShortcut* AddShortcut(int alKeyModifiers, eKey aKey, eGuiMessage aMsg=eGuiMessage_ButtonPressed,
+                                    bool abBypassVisibility=true, bool abBypassEnabled=true);
 
-        cGuiGlobalShortcut* AddShortcut(int alKeyModifiers, eKey aKey, eGuiMessage aMsg=eGuiMessage_ButtonPressed, 
-                         bool abBypassVisibility=true, bool abBypassEnabled=true);
+    const tWString& GetShortcutText()
+    {
+        return msShortcutText;
+    }
 
-        const tWString& GetShortcutText() { return msShortcutText; }
+    float GetTextLength();
 
-        float GetTextLength();
+protected:
 
-    protected:
+    /////////////////////////
+    // Own functions
+    void ShowSubMenu();
+    /////////////////////////
+    // Implemented functions
+    void OnInit();
+    void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
+    void OnUpdate(float afTimeStep);
 
-        /////////////////////////
-        // Own functions
-        void ShowSubMenu();
-        /////////////////////////
-        // Implemented functions
-        void OnInit();
-        void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
-        void OnUpdate(float afTimeStep);
-        
-        void OnChangeSize();
-
-
-        bool OnMouseDown(const cGuiMessageData& aData);
-        bool OnMouseUp(const cGuiMessageData& aData);
-        bool OnMouseEnter(const cGuiMessageData& aData);
-        bool OnMouseLeave(const cGuiMessageData& aData);
-
-        bool OnMouseMove(const cGuiMessageData& aData);
-
-        bool OnKeyPress(const cGuiMessageData& aData);
-
-        bool OnLostFocus(const cGuiMessageData& aData);
-        bool OnGotFocus(const cGuiMessageData& aData);
-
-        void OnLoadGraphics();
+    void OnChangeSize();
 
 
-        //////////////////////////
-        // Data
-        eWidgetType mItemType;
+    bool OnMouseDown(const cGuiMessageData& aData);
+    bool OnMouseUp(const cGuiMessageData& aData);
+    bool OnMouseEnter(const cGuiMessageData& aData);
+    bool OnMouseLeave(const cGuiMessageData& aData);
 
-        bool    mbChecked;
-        bool    mbDefault;
+    bool OnMouseMove(const cGuiMessageData& aData);
 
-        float    mfTimer;
-        float    mfOpenMenuTime;
+    bool OnKeyPress(const cGuiMessageData& aData);
 
-        bool    mbPressed;
+    bool OnLostFocus(const cGuiMessageData& aData);
+    bool OnGotFocus(const cGuiMessageData& aData);
 
-        iWidgetMenu*    mpChildMenu;
+    void OnLoadGraphics();
 
-        cGuiGfxElement*    mpGfxSelection;
-        cGuiGfxElement*    mpGfxSubMenuArrow;
-        cGuiGfxElement* mpGfxChecked[2];
 
-        cGuiGfxElement* mpGfxLine;
+    //////////////////////////
+    // Data
+    eWidgetType mItemType;
 
-        float mfItemHPadding;
-        float mfItemTextLeftPadding;
-        float mfItemTextRightPadding;
-        float mfItemVPadding;
-        float mfItemSeparation;
-        float mfItemArrowIconSize;
-        float mfItemCheckIconSize;
+    bool    mbChecked;
+    bool    mbDefault;
 
-        float mfSeparatorPadding;
-        float mfSeparatorHeight;
+    float    mfTimer;
+    float    mfOpenMenuTime;
 
-        tWString msShortcutText;
-    };
+    bool    mbPressed;
 
-    
+    iWidgetMenu*    mpChildMenu;
+
+    cGuiGfxElement*    mpGfxSelection;
+    cGuiGfxElement*    mpGfxSubMenuArrow;
+    cGuiGfxElement* mpGfxChecked[2];
+
+    cGuiGfxElement* mpGfxLine;
+
+    float mfItemHPadding;
+    float mfItemTextLeftPadding;
+    float mfItemTextRightPadding;
+    float mfItemVPadding;
+    float mfItemSeparation;
+    float mfItemArrowIconSize;
+    float mfItemCheckIconSize;
+
+    float mfSeparatorPadding;
+    float mfSeparatorHeight;
+
+    tWString msShortcutText;
+};
+
+
 };
 
 #endif    // HPL_WIDGET_MENU_ITEM

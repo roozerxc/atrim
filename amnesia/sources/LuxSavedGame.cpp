@@ -66,7 +66,7 @@ void cLuxSavedGameEntity::FromEntity(iLuxEntity *apEntity)
     ////////////////////////
     //Connections
     mvConnections.Resize(apEntity->mvConnections.size());
-    for(size_t i=0; i<apEntity->mvConnections.size();++i)
+    for(size_t i=0; i<apEntity->mvConnections.size(); ++i)
     {
         mvConnections[i].FromConnection(apEntity->mvConnections[i]);
     }
@@ -118,7 +118,7 @@ void cLuxSavedGameEntity::ToEntity(cLuxMap *apMap,iLuxEntity *apEntity)
     ////////////////////////
     //Connections
     apEntity->mvConnections.resize(mvConnections.Size());
-    for(size_t i=0; i<mvConnections.Size();++i)
+    for(size_t i=0; i<mvConnections.Size(); ++i)
     {
         apEntity->mvConnections[i] = hplNew( cLuxEntityConnection, () );
         mvConnections[i].ToConnection(apEntity->mvConnections[i], apMap);
@@ -306,7 +306,7 @@ void cLuxSavedGameMap::FromMap(cLuxMap *apMap)
             mlstVars.Add(it->second);
         }
     }
-    
+
     /////////////////////////////////
     // Use Item callbacks
     {
@@ -417,11 +417,11 @@ void cLuxSavedGameMap::FromMap(cLuxMap *apMap)
                     iLuxEntity_SaveData *pSavedEntity = pEntity->CreateSaveData();
                     pEntity->SaveToSaveData(pSavedEntity);
                     mlstFullEntities.Add(pSavedEntity);
-                    
+
                     continue; //No need to save further stuff!
                 }
             }
-            
+
             ///////////////////////////////////
             //Save collide callbacks or connections
             if(pEntity->HasCollideCallbacks() || pEntity->GetConnectionNum()>0)
@@ -429,43 +429,43 @@ void cLuxSavedGameMap::FromMap(cLuxMap *apMap)
                 cLuxSavedGameEntity *pSavedEnt = hplNew(cLuxSavedGameEntity, () );
                 pSavedEnt->FromEntity(pEntity);
                 mlstCollideAndConnectEntities.Add(pSavedEnt);
-                
+
                 bAddedToColliderAndConnectEntities = true;
             }
 
             ///////////////////////////////////
             //Full functions
             {
-                // Look 
-                if(pEntity->msLookAtCallback != "") 
+                // Look
+                if(pEntity->msLookAtCallback != "")
                     mlstEntityFunc_Look.Add(cLuxSavedGameEntityFunc(pEntity->GetID(), pEntity->msLookAtCallback, pEntity->mbLookAtCallbackRemove));
-                
+
                 // Interact
-                if(pEntity->msInteractCallback != "") 
+                if(pEntity->msInteractCallback != "")
                     mlstEntityFunc_Interact.Add(cLuxSavedGameEntityFunc(pEntity->GetID(), pEntity->msInteractCallback, pEntity->mbInteractCallbackRemove));
 
                 // Callback
-                if(pEntity->msCallbackFunc != "") 
+                if(pEntity->msCallbackFunc != "")
                     mlstEntityFunc_Callback.Add(cLuxSavedGameEntityFunc(pEntity->GetID(), pEntity->msCallbackFunc, false));
 
                 // State Change
-                if(pEntity->msConnectionStateChangeCallback != "") 
+                if(pEntity->msConnectionStateChangeCallback != "")
                     mlstEntityFunc_StateChange.Add(cLuxSavedGameEntityFunc(pEntity->GetID(), pEntity->msConnectionStateChangeCallback, false));
             }
 
             ///////////////////////////////////
             //Active
             if(pEntity->IsActive()==false)    mlstDisabledEntities.Add(pEntity->GetID());
-            
-            
+
+
             ///////////////////////////////////
             //Enemy
             if(entityType == eLuxEntityType_Enemy)
             {
                 iLuxEnemy *pEnemy = static_cast<iLuxEnemy*>(pEntity);
-                
+
                 cLuxSavedGameEnemy *pSavedEnemy = hplNew(cLuxSavedGameEnemy, () );
-                pSavedEnemy->FromEnemy(pEnemy);    
+                pSavedEnemy->FromEnemy(pEnemy);
 
                 mlstEnemies.Add(pSavedEnemy);
             }
@@ -478,8 +478,8 @@ void cLuxSavedGameMap::FromMap(cLuxMap *apMap)
 
                 //////////////
                 // If has attached prop (and is not yet added) add to collide and connect!
-                if(    bAddedToColliderAndConnectEntities==false && 
-                    (pProp->HasAttachedProp() || pProp->GetInteractionConnectionNum()>0) )
+                if(    bAddedToColliderAndConnectEntities==false &&
+                        (pProp->HasAttachedProp() || pProp->GetInteractionConnectionNum()>0) )
                 {
                     cLuxSavedGameEntity *pSavedEnt = hplNew(cLuxSavedGameEntity, () );
                     pSavedEnt->FromEntity(pEntity);
@@ -491,8 +491,8 @@ void cLuxSavedGameMap::FromMap(cLuxMap *apMap)
                 if(propType == eLuxPropType_SwingDoor)
                 {
                     cLuxProp_SwingDoor *pSwingDoor = static_cast<cLuxProp_SwingDoor*>(pProp);
-                    
-                    if(pSwingDoor->GetLocked()) mlstLockedDoors.Add(pSwingDoor->GetID());                    
+
+                    if(pSwingDoor->GetLocked()) mlstLockedDoors.Add(pSwingDoor->GetID());
                 }
                 //////////////
                 //Level door
@@ -500,14 +500,14 @@ void cLuxSavedGameMap::FromMap(cLuxMap *apMap)
                 {
                     cLuxProp_LevelDoor *pLevelDoor = static_cast<cLuxProp_LevelDoor*>(pProp);
 
-                    if(pLevelDoor->GetLocked()) mlstLockedLevelDoors.Add(pLevelDoor->GetID());                    
+                    if(pLevelDoor->GetLocked()) mlstLockedLevelDoors.Add(pLevelDoor->GetID());
                 }
                 //////////////
                 //Item
                 else if(propType == eLuxPropType_Item)
                 {
                     cLuxProp_Item *pItem = static_cast<cLuxProp_Item*>(pProp);
-                    
+
                     //Item was spawned from object
                     if(pItem->GetSpawnContainerID() >= 0)
                     {
@@ -535,8 +535,8 @@ void cLuxSavedGameMap::FromMap(cLuxMap *apMap)
                 else if(propType == eLuxPropType_Chest)
                 {
                     cLuxProp_Chest *pChest = static_cast<cLuxProp_Chest*>(pProp);
-                    
-                    if(pChest->GetLocked()==false) mlstOpenChests.Add(pEntity->GetID()); 
+
+                    if(pChest->GetLocked()==false) mlstOpenChests.Add(pEntity->GetID());
                 }
                 //////////////
                 //Lamp
@@ -544,7 +544,7 @@ void cLuxSavedGameMap::FromMap(cLuxMap *apMap)
                 {
                     cLuxProp_Lamp *pLamp = static_cast<cLuxProp_Lamp*>(pProp);
 
-                    if(pLamp->GetLit()==false) mlstUnlitLamps.Add(pEntity->GetID()); 
+                    if(pLamp->GetLit()==false) mlstUnlitLamps.Add(pEntity->GetID());
                 }
             }
         }
@@ -590,7 +590,7 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
     /////////////////////////////////
     // Sky box
     pWorld->SetSkyBoxActive(mbSkyBoxActive);
-    if(msSkyboxTexture=="")    
+    if(msSkyboxTexture=="")
     {
         pWorld->SetSkyBox(NULL, true);
     }
@@ -610,7 +610,7 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
     pWorld->SetFogEnd(mfFogEnd);
     pWorld->SetFogFalloffExp(mfFogFalloffExp);
     pWorld->SetFogColor(mFogColor);
-    
+
 
     /////////////////////
     //Script Vars
@@ -652,7 +652,7 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
         }
 
     }
-    
+
     /////////////////////////////////
     // Saved connections and collision callbacks
     {
@@ -696,14 +696,14 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
     // Player collide callbacks
     {
         tLuxCollideCallbackList *pPlayerCallbackList = gpBase->mpPlayer->GetCollideCallbackList();
-        
+
         cContainerListIterator<cLuxCollideCallback_SaveData> it = mlstPlayerCollideCallbacks.GetIterator();
         while(it.HasNext())
         {
             cLuxCollideCallback_SaveData& saveCallback = it.Next();
             cLuxCollideCallback *pCallback = hplNew(cLuxCollideCallback, ());
 
-            saveCallback.ToCallback(apMap,gpBase->mpPlayer , pCallback);
+            saveCallback.ToCallback(apMap,gpBase->mpPlayer, pCallback);
             pPlayerCallbackList->push_back(pCallback);
         }
     }
@@ -782,7 +782,7 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
             iLight *pLight = pWorld->GetLightFromUniqueID(saveLight.mlID);
             if(pLight)
             {
-                saveLight.ToLight(pLight);    
+                saveLight.ToLight(pLight);
             }
             else
             {
@@ -792,23 +792,23 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
     }
 
     /////////////////////////////////
-    // Sounds 
+    // Sounds
     {
         cContainerListIterator<cEngineSound_SaveData> saveSoundIt = mlstSounds.GetIterator();
         while (saveSoundIt.HasNext())
         {
             cEngineSound_SaveData& saveSound = saveSoundIt.Next();
-            
+
             cSoundEntity *pSound;
 
             if(saveSound.mlID >=0)
                 pSound = pWorld->GetSoundEntityFromUniqueID(saveSound.mlID);
             else
                 pSound = pWorld->CreateSoundEntity(saveSound.msName, saveSound.msSoundDataName, saveSound.mbRemoveWhenOver);
-            
+
             if(pSound)
             {
-                saveSound.ToSound(pSound);    
+                saveSound.ToSound(pSound);
             }
             else
             {
@@ -828,7 +828,7 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
         while (savePSIt.HasNext())
         {
             cEnginePS_SaveData& savePS = savePSIt.Next();
-            
+
             ///////////////////////
             // PS add in editor
             if(savePS.mlID >=0)
@@ -836,7 +836,7 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
                 cParticleSystem *pPS = pWorld->GetParticleSystemFromUniqueID(savePS.mlID);
                 if(pPS)
                 {
-                    savePS.ToPS(pPS);    
+                    savePS.ToPS(pPS);
                 }
                 setSavedPS.insert(savePS.mlID);
             }
@@ -847,7 +847,7 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
                 cParticleSystem *pPS = pWorld->CreateParticleSystem(savePS.msName, savePS.msType, 1);
                 if(pPS)
                 {
-                    savePS.ToPS(pPS);    
+                    savePS.ToPS(pPS);
                 }
                 else
                 {
@@ -873,7 +873,7 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
         }
     }
 
-    
+
     /////////////////////////////////
     // Full Game Entities
     tLuxEntityList lstSetupEntities;
@@ -925,17 +925,17 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
         ListToSet(mlstLockedDoors, setLockedDoors);
         ListToSet(mlstLockedLevelDoors, setLockedLevelDoors);
         ListToSet(mlstActiveItems, setActiveItems);
-        ListToSet(mlstOpenChests, setOpenChests); 
+        ListToSet(mlstOpenChests, setOpenChests);
         ListToSet(mlstUnbrokenItemContainers, setUnbrokenItemContainers);
         ListToSet(mlstBrokenContainersWithActiveItem, setBrokenContainersWithActiveItem);
         ListToSet(mlstUnlitLamps, setUnlitLamps);
-        
-        
+
+
         cLuxEntityIterator it = apMap->GetEntityIterator();
         while(it.HasNext())
         {
             iLuxEntity *pEntity = it.Next();
-            
+
             int lID = pEntity->GetID();
             eLuxEntityType entityType = pEntity->GetEntityType();
 
@@ -943,14 +943,14 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
             {
                 continue;
             }
-            
+
             ///////////////////////////
             // Active
             if(ExistsInSet(lID, setDisabledEntities))
                 pEntity->SetActive(false);
             else
                 pEntity->SetActive(true);
-            
+
             ///////////////////////////
             // Props
             if(entityType == eLuxEntityType_Prop)
@@ -977,7 +977,7 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
                         pLevelDoor->SetLocked(true);
                     else
                         pLevelDoor->SetLocked(false);
-                }    
+                }
                 ////////////////
                 //Item
                 else if(propType == eLuxPropType_Item)
@@ -1056,7 +1056,7 @@ bool cLuxSavedGameMap::EntitySaveDataExists(int alID)
     while(it.HasNext())
     {
         iLuxEntity_SaveData *pSavedEntity = it.Next();
-        
+
         if(pSavedEntity->mlID == alID) return true;
     }
     return false;
@@ -1073,7 +1073,7 @@ bool cLuxSavedGameMap::EntitySaveDataExists(int alID)
 
 cLuxSavedGameMapCollection::cLuxSavedGameMapCollection()
 {
-        
+
 }
 
 cLuxSavedGameMapCollection::~cLuxSavedGameMapCollection()

@@ -13,7 +13,7 @@ class cLuxPlayer;
 
 class cLuxPlayerInsanityCollapse : public iLuxPlayerHelper
 {
-friend class cLuxPlayer_SaveData;
+    friend class cLuxPlayer_SaveData;
 public:
     cLuxPlayerInsanityCollapse(cLuxPlayer *apPlayer);
     ~cLuxPlayerInsanityCollapse();
@@ -22,7 +22,10 @@ public:
 
     void Start();
     void Stop();
-    bool IsActive(){ return mbActive; }
+    bool IsActive()
+    {
+        return mbActive;
+    }
 
     void Update(float afTimeStep);
 
@@ -37,14 +40,14 @@ private:
     float mfRollAwakeSpeed;
 
     float mfHeightAddGoal;
-    
+
     float mfAwakenSanity;
-    
+
     float mfSleepTime;
 
     float mfSleepSpeedMul;
     float mfWakeUpSpeedMul;
-    
+
     tString msStartSound;
     tString msAwakenSound;
     tString msSleepLoopSound;
@@ -53,7 +56,7 @@ private:
     tString msSleepRandomSound;
     float mfSleepRandomMinTime;
     float mfSleepRandomMaxTime;
-    
+
     float mfHeightAdd;
     float mfRoll;
 
@@ -119,8 +122,14 @@ public:
 
     void RespawnAll();
 
-    bool IsActive(){ return mbActive;}
-    const tString& GetFileName(){ return msFileName;}
+    bool IsActive()
+    {
+        return mbActive;
+    }
+    const tString& GetFileName()
+    {
+        return msFileName;
+    }
 
     void Update(float afTimeStep);
 private:
@@ -133,7 +142,7 @@ private:
 
     bool mbActive;
     tString msFileName;
-    
+
     tString msParticleSystem;
     float mfHeightFromFeet;
     float mfHeightAddMin;
@@ -166,7 +175,7 @@ public:
 
 private:
     std::vector<cGuiGfxElement*> mvNoiseGfx;
-    float mfEffectStartHealth;    
+    float mfEffectStartHealth;
     float mfMinMoveMul;
     float mfMaxPantCount;
     float mfPantSpeed;
@@ -178,7 +187,7 @@ private:
     float mfNoiseAlpha;
     float mfNoiseFreq;
     cColor mNoiseColor;
-    
+
     float mfPantCount;
     float mfPantPosAdd;
     float mfPantPosAddVel;
@@ -194,7 +203,7 @@ private:
 class cLuxFlashbackData
 {
 public:
-    cLuxFlashbackData(){}
+    cLuxFlashbackData() {}
     cLuxFlashbackData(const tString &asFile, const tString &asCallback) : msFile(asFile), msCallback(asCallback) {}
 
     tString msFile;
@@ -208,20 +217,23 @@ typedef tLuxFlashbackDataList::iterator tLuxFlashbackDataListIt;
 
 class cLuxPlayerFlashback : public iLuxPlayerHelper
 {
-friend class cLuxPlayer_SaveData;
+    friend class cLuxPlayer_SaveData;
 public:
     cLuxPlayerFlashback (cLuxPlayer *apPlayer);
     ~cLuxPlayerFlashback ();
 
     void Reset();
-    
+
     void Start(const tString &asFlashbackFile, const tString &asCallback);
 
     void Update(float afTimeStep);
 
     void OnDraw(float afFrameTime);
 
-    bool IsActive(){ return mbActive; }
+    bool IsActive()
+    {
+        return mbActive;
+    }
 
 private:
     void LoadAndPlayFlashbackFile(const tString& asFlashbackFile);
@@ -240,14 +252,14 @@ private:
     tString msFlashbackFile;
     tString msCallback;
     tLuxFlashbackDataList mlstFlashbackQueue;
-    
+
 };
 
 //---------------------------------------------
 
 class cLuxPlayerLookAt : public iLuxPlayerHelper
 {
-friend class cLuxPlayer_SaveData;
+    friend class cLuxPlayer_SaveData;
 public:
     cLuxPlayerLookAt(cLuxPlayer *apPlayer);
     ~cLuxPlayerLookAt();
@@ -257,9 +269,12 @@ public:
     void Reset();
 
     void SetTarget(const cVector3f &avTargetPos, float afSpeedMul, float afMaxSpeed, const tString& asAtTargetCallback);
-    
+
     void SetActive(bool abX);
-    bool IsActive(){ return mbActive;}
+    bool IsActive()
+    {
+        return mbActive;
+    }
 
 private:
     bool mbActive;
@@ -281,7 +296,7 @@ private:
 
 class cLuxPlayerSanity : public iLuxPlayerHelper
 {
-friend class cLuxPlayer_SaveData;
+    friend class cLuxPlayer_SaveData;
 public:
     cLuxPlayerSanity(cLuxPlayer *apPlayer);
     ~cLuxPlayerSanity();
@@ -295,7 +310,10 @@ public:
 
     void OnDraw(float afFrameTime);
 
-    float GetAtLowSanityCount(){ return mfAtLowSanityCount;}
+    float GetAtLowSanityCount()
+    {
+        return mfAtLowSanityCount;
+    }
 
 private:
     float GetCurrentSizeMul();
@@ -303,12 +321,12 @@ private:
     void UpdateInsaneEffects(float afTimeStep);
     void UpdateCheckEnemySeen(float afTimeStep);
     void UpdateHit(float afTimeStep);
-    
+
     void UpdateInsanityVisuals(float afTimeStep);
     void UpdateEnemySeenEffect(float afTimeStep);
     void UpdateLosingSanity(float afTimeStep);
     void UpdateLowSanity(float afTimeStep);
-    
+
     float mfHitAlpha;
     bool mbHitActive;
     float mfSanityLostCount;
@@ -364,7 +382,7 @@ private:
 
 class cLuxPlayerLantern : public iLuxPlayerHelper
 {
-public:    
+public:
     cLuxPlayerLantern(cLuxPlayer *apPlayer);
     ~cLuxPlayerLantern();
 
@@ -379,12 +397,21 @@ public:
     void DestroyWorldEntities(cLuxMap *apMap);
 
     void SetActive(bool abX, bool abUseEffects, bool abCheckForOilAndItems=true, bool abCheckIfAllowed=true);
-    bool IsActive(){ return mbActive;}
+    bool IsActive()
+    {
+        return mbActive;
+    }
 
     void SetDisabled(bool abX);
-    bool GetDisabled(){ return mbDisabled;}
+    bool GetDisabled()
+    {
+        return mbDisabled;
+    }
 
-    iLight* GetLight(){ return mpLight;}
+    iLight* GetLight()
+    {
+        return mpLight;
+    }
 
 private:
     cColor mDefaultColor;
@@ -398,12 +425,12 @@ private:
     tString msDisabledSound;
     float mfLowerOilSpeed;
     float mfFadeLightOilAmount;
-    
+
     bool mbDisabled;
     bool mbActive;
     float mfAlpha;
     cLightPoint *mpLight;
-    
+
 };
 
 //----------------------------------------------
@@ -430,16 +457,34 @@ public:
 
     void OnPressButton();
 
-    float GetFadeAlpha(){ return mfFadeAlpha;}
+    float GetFadeAlpha()
+    {
+        return mfFadeAlpha;
+    }
 
-    void DisableStartSound(){ mbSkipStartSound = true; }
+    void DisableStartSound()
+    {
+        mbSkipStartSound = true;
+    }
 
-    bool ShowHint(){ return mbShowHint;}
-    void SetShowHint(bool abX){ mbShowHint=abX;}
+    bool ShowHint()
+    {
+        return mbShowHint;
+    }
+    void SetShowHint(bool abX)
+    {
+        mbShowHint=abX;
+    }
 
     void SetHint(const tString& asCat, const tString& asEntry);
-    const tString& GetHintCat(){ return msHintCat; }
-    const tString& GetHintEntry(){ return msHintEntry; }
+    const tString& GetHintCat()
+    {
+        return msHintCat;
+    }
+    const tString& GetHintEntry()
+    {
+        return msHintEntry;
+    }
 
 
 
@@ -487,13 +532,13 @@ private:
     cGuiGfxElement *mpWhiteModGfx;
 
     iFontData *mpFont;
-        
+
     float mfFadeAlpha;
     float mfTextAlpha1;
     float mfTextAlpha2;
     float mfTextOnScreenCount;
     float mfWhiteCount;
-    
+
     cLinearOscillation mFlashOscill;
 
     cSoundEntry *mpVoiceEntry;
@@ -505,10 +550,10 @@ private:
 
 class cLuxPlayerLean : public iLuxPlayerHelper
 {
-public:    
+public:
     cLuxPlayerLean(cLuxPlayer *apPlayer);
     ~cLuxPlayerLean();
-    
+
     void CreateWorldEntities(cLuxMap *apMap);
     void DestroyWorldEntities(cLuxMap *apMap);
 
@@ -548,7 +593,7 @@ public:
 class cLuxPlayerHudEffect_Splash
 {
 public:
-    cGuiGfxElement *mpImage;    
+    cGuiGfxElement *mpImage;
     cVector3f mvPos;
     cVector2f mvSize;
     float mfAlpha;
@@ -575,7 +620,7 @@ public:
     void OnDraw(float afFrameTime);
     void Update(float afTimeStep);
     void Reset();
-    
+
 private:
     void DrawSplashes(float afFrameTime);
     void UpdateSplashes(float afTimeStep);
@@ -602,18 +647,24 @@ private:
 
 class cLuxPlayerLightLevel : public iLuxPlayerHelper
 {
-public:    
+public:
     cLuxPlayerLightLevel(cLuxPlayer *apPlayer);
     ~cLuxPlayerLightLevel();
-    
+
     void OnStart();
     void Update(float afTimeStep);
     void Reset();
 
     void OnMapEnter(cLuxMap *apMap);
 
-    float GetExtendedLightLevel(){ return mfExtendedLightLevel;}
-    float GetNormalLightLevel(){ return mfNormalLightLevel;}
+    float GetExtendedLightLevel()
+    {
+        return mfExtendedLightLevel;
+    }
+    float GetNormalLightLevel()
+    {
+        return mfNormalLightLevel;
+    }
 
 private:
     float mfExtendedLightLevel;    //Uses longer range on point lights
@@ -627,8 +678,8 @@ private:
 
 class cLuxPlayerInDarkness : public iLuxPlayerHelper
 {
-friend class cLuxPlayer_SaveData;
-public:    
+    friend class cLuxPlayer_SaveData;
+public:
     cLuxPlayerInDarkness(cLuxPlayer *apPlayer);
     ~cLuxPlayerInDarkness();
 
@@ -642,7 +693,10 @@ public:
     void CreateWorldEntities(cLuxMap *apMap);
     void DestroyWorldEntities(cLuxMap *apMap);
 
-    cLightPoint* GetAmbientLight(){ return mpAmbientLight;}
+    cLightPoint* GetAmbientLight()
+    {
+        return mpAmbientLight;
+    }
 
     bool InDarkness();
 
@@ -652,7 +706,7 @@ private:
     cSoundHandler *mpSoundHandler;
 
     float mfMinDarknessLightLevel;
-    
+
     float mfAmbientLightMinLightLevel;
     float mfAmbientLightRadius;
     float mfAmbientLightIntensity;

@@ -36,7 +36,7 @@ cLuxPlayerState_HandObject::~cLuxPlayerState_HandObject()
 bool cLuxPlayerState_HandObject::ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed)
 {
     ////////////////////
-    // Holster 
+    // Holster
     if(aAction == eLuxPlayerAction_Holster && abPressed)
     {
         mpPlayer->ChangeState(eLuxPlayerState_Normal);
@@ -66,9 +66,9 @@ void cLuxPlayerState_HandObject::ImplementedOnEnterState(eLuxPlayerState aPrevSt
 void cLuxPlayerState_HandObject::ImplementedOnLeaveState(eLuxPlayerState aNewState)
 {
     //TODO: More states here?
-    if(    aNewState == eLuxPlayerState_Normal || 
-        aNewState == eLuxPlayerState_InteractPush || 
-        aNewState == eLuxPlayerState_InteractGrab)
+    if(    aNewState == eLuxPlayerState_Normal ||
+            aNewState == eLuxPlayerState_InteractPush ||
+            aNewState == eLuxPlayerState_InteractGrab)
     {
         mpPlayer->SetCurrentHandObjectDrawn(false);
     }

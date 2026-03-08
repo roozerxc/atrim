@@ -43,7 +43,7 @@ void cLuxHandObject_LightSource::LoadImplementedVars(cXmlElement *apVarsElem)
     mfMaxSwayVel = apVarsElem->GetAttributeFloat("MaxSwayVel", 0);
     mvSwayAngleLimits = cMath::Vector2ToRad(apVarsElem->GetAttributeVector2f("SwayAngleLimits", 0));
     mvSwayDownAngleLimits= cMath::Vector2ToRad(apVarsElem->GetAttributeVector2f("SwayDownAngleLimits", 0));
-    
+
     mfSwayGravity = apVarsElem->GetAttributeFloat("SwayGravity", 0);
     mfSwayFriction = apVarsElem->GetAttributeFloat("SwayFriction", 0);
     mvSwayPinDir = apVarsElem->GetAttributeVector3f("SwayPinDir", 1);
@@ -100,9 +100,9 @@ void cLuxHandObject_LightSource::Update(float afTimeStep)
 
     ///////////////////
     // Sway Physics
-    if(mbHasSwayPhysics)    
+    if(mbHasSwayPhysics)
     {
-        UpdateSwayPhysics(afTimeStep);    
+        UpdateSwayPhysics(afTimeStep);
     }
 
     ///////////////////
@@ -120,7 +120,7 @@ void cLuxHandObject_LightSource::Update(float afTimeStep)
 
         mpHands->mfHandObjectAlpha -= mfFadeOutSpeed * afTimeStep;
         if(mpHands->mfHandObjectAlpha < 0.0f) mpHands->mfHandObjectAlpha = 0.0f;
-        
+
         bUpdate = true;
     }
     ///////////////////
@@ -146,7 +146,7 @@ void cLuxHandObject_LightSource::Update(float afTimeStep)
             mvLightFadeOutColor[i] = mvLights[i]->GetDiffuseColor();
         }
     }
-    
+
 
     ///////////////////
     // Set alpha
@@ -160,14 +160,14 @@ void cLuxHandObject_LightSource::Update(float afTimeStep)
             col.a = mpHands->mfHandObjectAlpha;
             mvBillboards[i]->SetColor(col);
         }
-        
+
         for(size_t i=0; i<mvParticleSystems.size(); ++i)
         {
             cColor col = mvParticleSystems[i]->GetColor();
             col.a = mpHands->mfHandObjectAlpha;
             mvParticleSystems[i]->SetColor(col);
         }
-        
+
         for(size_t i=0; i<mvLights.size(); ++i)
         {
             if(mpHands->GetState() == eLuxHandsState_Holster)
@@ -232,7 +232,7 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(float afTimeStep)
         /////////////////////////////
         // Player velocity
         iCharacterBody *pCharBody = gpBase->mpPlayer->GetCharacterBody();
-        float fPlayerSpeed = pCharBody->GetVelocity(gpBase->mpEngine->GetStepSize()).Length();    
+        float fPlayerSpeed = pCharBody->GetVelocity(gpBase->mpEngine->GetStepSize()).Length();
         if(pCharBody->GetMoveSpeed(eCharDir_Forward)<0) fPlayerSpeed = -fPlayerSpeed;
 
         mfSwayVel += -fPlayerSpeed * mfSwayPlayerSpeedMul;
@@ -262,7 +262,7 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(float afTimeStep)
         mfSwayVel =0;
         mfSwayAngle = mvSwayAngleLimits.y;
     }
-    
+
     /////////////////////////////
     // Update Model matrix
     cMatrixf mtxSway = cMath::MatrixRotate(mvSwayPinDir * mfSwayAngle, eEulerRotationOrder_XYZ);
@@ -274,7 +274,7 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(float afTimeStep)
         cSubMeshEntity *pSubEnt = mpMeshEntity->GetSubMeshEntity((unsigned int)i);
         if(pSubEnt->GetSubMesh()->GetName() == msSkipSwaySubMesh) continue;
         //Log("'%s'\n",pSubEnt->GetSubMesh()->GetName().c_str());
-        
+
         pSubEnt->SetMatrix(cMath::MatrixMul(mtxSway, mvDefaultSubMeshMatrix[i]) );
     }
     mpMeshEntity->SetMatrix(m_mtxOffset);

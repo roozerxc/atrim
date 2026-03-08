@@ -34,7 +34,7 @@ private:
     cColor        mColor;
     tString        msFontFile;
     eFontAlign    mAlign;
-    
+
     float        mfTime;
 };
 
@@ -56,14 +56,26 @@ public:
     void AddTextElement(cLuxPreMenuTextElement* apText);
     bool HasTextElements();
 
-    const tPreMenuTextList& GetTextElements() { return mlstTextElements; }
+    const tPreMenuTextList& GetTextElements()
+    {
+        return mlstTextElements;
+    }
 
     cGuiGfxElement* CreateBackground(cGui* apGui, cTextureManager* apTexMgr);
-    float GetTime() { return mfTime; }
+    float GetTime()
+    {
+        return mfTime;
+    }
 
-    bool ShowFirstStartOnly(){ return mbShowFirstStartOnly;}
+    bool ShowFirstStartOnly()
+    {
+        return mbShowFirstStartOnly;
+    }
 
-    bool HasGammaSettings() { return mbHasGammaSettings; }
+    bool HasGammaSettings()
+    {
+        return mbHasGammaSettings;
+    }
 
 public:
     cColor mBackgroundColor;
@@ -82,7 +94,7 @@ public:
 
 class cLuxPreMenu : public iLuxUpdateable
 {
-public:    
+public:
     cLuxPreMenu();
     ~cLuxPreMenu();
 
@@ -97,9 +109,18 @@ public:
 
     void AppLostInputFocus();
     void AppGotInputFocus();
-    cGuiSet* GetSet() { return mpGuiSet; }
-    eLuxPreMenuState GetState() { return mCurrentState; }
-    bool IsContinueButtonVisible() { return mpBContinue->IsVisible(); }
+    cGuiSet* GetSet()
+    {
+        return mpGuiSet;
+    }
+    eLuxPreMenuState GetState()
+    {
+        return mCurrentState;
+    }
+    bool IsContinueButtonVisible()
+    {
+        return mpBContinue->IsVisible();
+    }
 
 private:
     void UpdateActions(float afTimeStep);
@@ -111,7 +132,7 @@ private:
 
     bool Gamma_ChangeValue(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(Gamma_ChangeValue);
-    
+
     bool Continue_Pressed(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(Continue_Pressed);
 
@@ -122,11 +143,11 @@ private:
     kGuiCallbackDeclarationEnd(Gamma_UIArrowPressed);
     ///////////////////////
     // Settings
-    
+
     ///////////////////////
     // Variables
     cGraphics *mpGraphics;
-    
+
     cGui* mpGui;
     cGuiSet* mpGuiSet;
 
@@ -137,14 +158,14 @@ private:
     cVector2f mvGuiSetCenterSize;
     cVector2f mvGuiSetOffset;
     cVector3f mvGuiSetStartPos;
-    
+
     eLuxPreMenuState mCurrentState;
     int mlCurrentSectionIdx;
     float mfTimer;
     float mfAlphaFade;
 
     bool mbExitPreMenu;
-    
+
     cGuiGfxElement* mpBlackFade;
 
     std::vector<cLuxPreMenuSection*> mvSections;
@@ -152,7 +173,7 @@ private:
     cLuxPreMenuSection* mpCurrentSection;
     cGuiGfxElement* mpCurrentBackground;
     std::vector<cWidgetLabel*> mvCurrentLabels;
-    
+
     cWidgetButton* mpBContinue;
 
     cWidgetDummy* mpGGamma;

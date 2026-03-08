@@ -10,7 +10,11 @@
 class cLuxOption_ExtData
 {
 public:
-    cLuxOption_ExtData(bool abNeedsRestart, const tWString& asMessage) { mbNeedsRestart = abNeedsRestart; msMessage = asMessage; }
+    cLuxOption_ExtData(bool abNeedsRestart, const tWString& asMessage)
+    {
+        mbNeedsRestart = abNeedsRestart;
+        msMessage = asMessage;
+    }
 
     bool mbNeedsRestart;
     tWString msMessage;
@@ -23,14 +27,14 @@ typedef tOptionDataVec::iterator         tOptionDataVecIt;
 
 class cLuxMainMenu_Options : public iLuxMainMenuWindow
 {
-public:    
+public:
     cLuxMainMenu_Options(cGuiSet *apGuiSet, cGuiSkin *apGuiSkin);
     ~cLuxMainMenu_Options();
-    
+
     void CreateGui();
 
     void ExitPressed();
-    
+
 private:
     void OnSetActive(bool abX);
 
@@ -52,12 +56,24 @@ private:
 
     void ApplyChanges();
 
-    float GetGamma() { return GetSliderValue(mpSGamma, mfGammaMin, mfGammaMax); }
-    float GetSensitivity() { return GetSliderValue(mpSMouseSensitivity, mfMouseSensitivityMin, mfMouseSensitivityMax); }
+    float GetGamma()
+    {
+        return GetSliderValue(mpSGamma, mfGammaMin, mfGammaMax);
+    }
+    float GetSensitivity()
+    {
+        return GetSliderValue(mpSMouseSensitivity, mfMouseSensitivityMin, mfMouseSensitivityMax);
+    }
 #ifdef USE_GAMEPAD
-    float GetGamepadLookSensitivity() { return GetSliderValue(mpSGamepadLookSensitivity, mfGamepadLookSensitivityMin, mfGamepadLookSensitivityMax); }
+    float GetGamepadLookSensitivity()
+    {
+        return GetSliderValue(mpSGamepadLookSensitivity, mfGamepadLookSensitivityMin, mfGamepadLookSensitivityMax);
+    }
 #endif
-    float GetVolume() { return GetSliderValue(mpSVolume, mfVolumeMin, mfVolumeMax); }
+    float GetVolume()
+    {
+        return GetSliderValue(mpSVolume, mfVolumeMin, mfVolumeMax);
+    }
 
     void SetGammaLabelString(float afX);
     void SetSensitivityLabelString(float afX);
@@ -68,13 +84,13 @@ private:
     kGuiCallbackDeclarationEnd(ChangeLanguage);
 
     void PopulateLanguageList();
-    
+
     void PopulateSoundDevices();
 
     ////////////////////////
     // Slider value helpers
-    void SetUpSlider(cWidgetSlider* apSlider, float afMinValue, float afMaxValue, float afStepValue, 
-                        tGuiCallbackFunc apCallback=NULL, cWidgetLabel** apValueDisplay=NULL);
+    void SetUpSlider(cWidgetSlider* apSlider, float afMinValue, float afMaxValue, float afStepValue,
+                     tGuiCallbackFunc apCallback=NULL, cWidgetLabel** apValueDisplay=NULL);
     void SetSliderValue(cWidgetSlider* apSlider, float afValue, bool abGenCallback, float afMinValue, float afMaxValue);
     float GetSliderValue(cWidgetSlider* apSlider, float afMinValue, float afMaxValue);
 
@@ -99,7 +115,7 @@ private:
     // Properties
     cVector2f mvWindowSize;
     bool mbShowCommentary;
-    
+
     ///////////////////////
     // Data and variables
     iWidget *mpShoulderHint[2];
@@ -126,7 +142,7 @@ private:
     cWidgetCheckBox *mpChBShowCrosshair;
     cWidgetComboBox *mpCBFocusIconStyle;
     cWidgetCheckBox *mpChBShowCommentary;
-    
+
     // Graphics;
     cWidgetDummy    *mpDBasicGfxOptions;
     cWidgetComboBox *mpCBResolution;
@@ -150,7 +166,7 @@ private:
     cWidgetComboBox *mpCBAnisotropy;
     cWidgetCheckBox *mpChBParallax;
     cWidgetComboBox *mpCBParallaxQuality;
-    
+
     cWidgetCheckBox *mpChEdgeSmooth;
 
     cWidgetCheckBox    *mpChBBloom;
@@ -198,7 +214,7 @@ private:
     float mfMouseSensitivityMin;
     float mfMouseSensitivityMax;
     float mfMouseSensitivityStep;
-    
+
 #ifdef USE_GAMEPAD
     float mfGamepadLookSensitivityMin;
     float mfGamepadLookSensitivityMax;
@@ -240,9 +256,9 @@ private:
 
     bool Option_OnMouseOver(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(Option_OnMouseOver);
-    
+
     bool Option_OnChangeValue(iWidget* apWidget, const cGuiMessageData& aData);
-    kGuiCallbackDeclarationEnd(Option_OnChangeValue);    
+    kGuiCallbackDeclarationEnd(Option_OnChangeValue);
 
     bool GammaSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(GammaSlider_OnMove);

@@ -15,7 +15,7 @@ public:
     cLuxMoveState_Normal_Callback(cLuxMoveState_Normal *apMoveState);
 
     void OnGravityCollide(iCharacterBody *apCharBody, iPhysicsBody *apBody, cCollideData *apCollideData);
-    void OnHitGround(iCharacterBody *apCharBody,const cVector3f &avVel){}
+    void OnHitGround(iCharacterBody *apCharBody,const cVector3f &avVel) {}
 
 
 private:
@@ -26,7 +26,7 @@ private:
 
 enum eLuxFootSound
 {
-    eLuxFootSound_Step,    
+    eLuxFootSound_Step,
     eLuxFootSound_Landing
 };
 
@@ -34,12 +34,12 @@ enum eLuxFootSound
 
 class cLuxMoveState_Normal : public iLuxMoveState
 {
-friend class cLuxMoveState_Normal_Callback;
-friend class cLuxPlayer_SaveData;
-public:    
+    friend class cLuxMoveState_Normal_Callback;
+    friend class cLuxPlayer_SaveData;
+public:
     cLuxMoveState_Normal(cLuxPlayer *apPlayer);
     ~cLuxMoveState_Normal();
-    
+
     void OnMapEnter();
 
     void OnEnterState(eLuxMoveState aPrevState);
@@ -56,22 +56,31 @@ public:
     void OnRun(bool abActive);
     void OnCrouch(bool abActive);
     void OnJump(bool abActive);
-    
+
     void Jump();
 
     void OnDraw(float afFrameTime);
 
-    float GetHeadBobCount(){ return mfHeadBobCount;}
+    float GetHeadBobCount()
+    {
+        return mfHeadBobCount;
+    }
 
-    bool IsRunning(){ return mbRunning;}
-    bool IsCrouching(){ return mbCrouching;}
+    bool IsRunning()
+    {
+        return mbRunning;
+    }
+    bool IsCrouching()
+    {
+        return mbCrouching;
+    }
 
     void SetCrouch(bool abActive);
     void ResetJumping();
 
     float GetMoveSpeedMul();
     float GetRunSpeedMul();
-    
+
 private:
     bool UpdateLedgeCheck(float afTimeStep);
     void UpdateMovement(float afTimeStep);
@@ -88,7 +97,7 @@ private:
     tString msJumpSound;
     tString msCrouchSound;
     tString msStandSound;
-    
+
     bool mbWasMoving;
 
     float mfRunForwardMul;
@@ -103,7 +112,7 @@ private:
     float mfInAirBackwardMul;
     float mfInAirSidewayMul;
 
-    float mfDefaultForwardMul; 
+    float mfDefaultForwardMul;
 
     float mfMinHitGroundBounceSpeed;
 
@@ -125,17 +134,17 @@ private:
 
     bool mbHeadGroundBounceActive;
     float mfHeadGroundBounce;
-    
+
     cVector2f mvWalkBobMax;
     cVector2f mvRunBobMax;
     cVector2f mvCrouchBobMax;
-    
+
     float mfWalkMinBobSpeed;
     float mfWalkMaxBobSpeed;
-    
+
     float mfRunMinBobSpeed;
     float mfRunMaxBobSpeed;
-    
+
     float mfCrouchMinBobSpeed;
     float mfCrouchMaxBobSpeed;
 
@@ -144,7 +153,7 @@ private:
 
     float mfGroundBounceSize;
     float mfGroundBounceSpeed;
-    
+
     float mfBounceSizeMul;
     float mfBounceSpeedMul;
 

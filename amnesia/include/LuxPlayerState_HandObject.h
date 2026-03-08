@@ -22,19 +22,22 @@ public:
 
 class cLuxPlayerState_HandObject : public iLuxPlayerState_DefaultBase
 {
-typedef iLuxPlayerState_DefaultBase super_class;
-public:    
+    typedef iLuxPlayerState_DefaultBase super_class;
+public:
     cLuxPlayerState_HandObject(cLuxPlayer *apPlayer);
     virtual ~cLuxPlayerState_HandObject();
 
-    
+
     bool ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed);
     void ImplementedOnEnterState(eLuxPlayerState aPrevState);
     void ImplementedOnLeaveState(eLuxPlayerState aNewState);
-    
+
     /////////////////////////////////
     //Save data stuff
-    virtual bool IsSaved(){ return true; }
+    virtual bool IsSaved()
+    {
+        return true;
+    }
     iLuxPlayerState_SaveData* CreateSaveData();
 
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);

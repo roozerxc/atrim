@@ -3,36 +3,37 @@
 
 #include "resources/ResourceManager.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cResources;
-    class cGraphics;
-    class iVideoStream;
-    class iVideoStreamLoader;
+class cResources;
+class cGraphics;
+class iVideoStream;
+class iVideoStreamLoader;
 
-    //----------------------------------------------------
+//----------------------------------------------------
 
-    typedef std::list<iVideoStream*> tVideoStreamList;
-    typedef tVideoStreamList::iterator tVideoStreamListIt;
+typedef std::list<iVideoStream*> tVideoStreamList;
+typedef tVideoStreamList::iterator tVideoStreamListIt;
 
-    //----------------------------------------------------
+//----------------------------------------------------
 
-    class cVideoManager : public iResourceManager
-    {
-    public:
-        cVideoManager(cGraphics* apGraphics,cResources *apResources);
-        ~cVideoManager();
-        
-        iVideoStream* CreateVideo(const tString& asName);
+class cVideoManager : public iResourceManager
+{
+public:
+    cVideoManager(cGraphics* apGraphics,cResources *apResources);
+    ~cVideoManager();
 
-        void Destroy(iResourceBase* apResource);
-        void Unload(iResourceBase* apResource);
+    iVideoStream* CreateVideo(const tString& asName);
 
-        void Update(float afTimeStep);
-    private:
-        cGraphics* mpGraphics;
-        cResources *mpResources;
-    };
+    void Destroy(iResourceBase* apResource);
+    void Unload(iResourceBase* apResource);
+
+    void Update(float afTimeStep);
+private:
+    cGraphics* mpGraphics;
+    cResources *mpResources;
+};
 
 };
 #endif // HPL_VIDEO_MANAGER_H

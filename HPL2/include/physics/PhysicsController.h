@@ -7,159 +7,226 @@
 
 #include "engine/SaveGame.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //-------------------------------------------
+//-------------------------------------------
 
-    enum ePhysicsControllerType
+enum ePhysicsControllerType
+{
+    ePhysicsControllerType_Pid,
+    ePhysicsControllerType_Spring,
+    ePhysicsControllerType_LastEnum
+};
+
+//-------------------------------------------
+
+enum ePhysicsControllerInput
+{
+    ePhysicsControllerInput_JointAngle,
+    ePhysicsControllerInput_JointDist,
+    ePhysicsControllerInput_LinearSpeed,
+    ePhysicsControllerInput_AngularSpeed,
+    ePhysicsControllerInput_LastEnum
+};
+
+//-------------------------------------------
+
+enum ePhysicsControllerOutput
+{
+    ePhysicsControllerOutput_Force,
+    ePhysicsControllerOutput_Torque,
+    ePhysicsControllerOutput_LastEnum
+};
+
+//-------------------------------------------
+
+enum ePhysicsControllerAxis
+{
+    ePhysicsControllerAxis_X,
+    ePhysicsControllerAxis_Y,
+    ePhysicsControllerAxis_Z,
+    ePhysicsControllerAxis_LastEnum
+};
+
+//-------------------------------------------
+
+enum ePhysicsControllerEnd
+{
+    ePhysicsControllerEnd_Null,
+    ePhysicsControllerEnd_OnDest,
+    ePhysicsControllerEnd_OnMin,
+    ePhysicsControllerEnd_OnMax,
+    ePhysicsControllerEnd_LastEnum
+};
+
+//-------------------------------------------
+
+class iPhysicsWorld;
+class iPhysicsJoint;
+class iPhysicsBody;
+
+class iPhysicsController
+{
+public:
+    iPhysicsController(const tString &asName, iPhysicsWorld *apWorld);
+    virtual ~iPhysicsController();
+
+    void Update(float afTimeStep);
+
+    const tString& GetName()
     {
-        ePhysicsControllerType_Pid,
-        ePhysicsControllerType_Spring,
-        ePhysicsControllerType_LastEnum
-    };
+        return msName;
+    }
 
-    //-------------------------------------------
-
-    enum ePhysicsControllerInput
+    void SetJoint(iPhysicsJoint *apJoint)
     {
-        ePhysicsControllerInput_JointAngle,
-        ePhysicsControllerInput_JointDist,
-        ePhysicsControllerInput_LinearSpeed,
-        ePhysicsControllerInput_AngularSpeed,
-        ePhysicsControllerInput_LastEnum
-    };
-
-    //-------------------------------------------
-
-    enum ePhysicsControllerOutput
+        mpJoint = apJoint;
+    }
+    iPhysicsJoint* GetJoint()
     {
-        ePhysicsControllerOutput_Force,
-        ePhysicsControllerOutput_Torque,
-        ePhysicsControllerOutput_LastEnum
-    };
-
-    //-------------------------------------------
-
-    enum ePhysicsControllerAxis
+        return mpJoint;
+    }
+    void SetBody(iPhysicsBody *apBody)
     {
-        ePhysicsControllerAxis_X,
-        ePhysicsControllerAxis_Y,
-        ePhysicsControllerAxis_Z,
-        ePhysicsControllerAxis_LastEnum
-    };
-
-    //-------------------------------------------
-
-    enum ePhysicsControllerEnd
+        mpBody = apBody;
+    }
+    iPhysicsBody* GetBody()
     {
-        ePhysicsControllerEnd_Null,
-        ePhysicsControllerEnd_OnDest,
-        ePhysicsControllerEnd_OnMin,
-        ePhysicsControllerEnd_OnMax,
-        ePhysicsControllerEnd_LastEnum
-    };
+        return mpBody;
+    }
 
-    //-------------------------------------------
-
-    class iPhysicsWorld;
-    class iPhysicsJoint;
-    class iPhysicsBody;
-
-    class iPhysicsController
+    bool IsActive()
     {
-    public:
-        iPhysicsController(const tString &asName, iPhysicsWorld *apWorld);
-        virtual ~iPhysicsController();
+        return mbActive;
+    }
+    void SetActive(bool abX);
 
-        void Update(float afTimeStep);
+    /*
+     * p in Pid and k in springs
+     */
+    void SetA(float afA)
+    {
+        mfA = afA;
+    }
+    /*
+    * i in Pid and b in springs
+    */
+    void SetB(float afB)
+    {
+        mfB = afB;
+    }
+    /*
+    * d in Pid and not used in springs
+    */
+    void SetC(float afC)
+    {
+        mfC = afC;
+    }
 
-        const tString& GetName(){ return msName;}
+    void SetPidIntegralSize(int alSize);
 
-        void SetJoint(iPhysicsJoint *apJoint){ mpJoint = apJoint;}
-        iPhysicsJoint* GetJoint(){ return mpJoint;}
-        void SetBody(iPhysicsBody *apBody){ mpBody = apBody;}
-        iPhysicsBody* GetBody(){ return mpBody;}
+    void SetType(ePhysicsControllerType aType)
+    {
+        mType = aType;
+    }
 
-        bool IsActive(){ return mbActive;}
-        void SetActive(bool abX);
+    void SetDestValue(float afX)
+    {
+        mfDestValue = afX;
+    }
+    float GetDestValue()
+    {
+        return mfDestValue;
+    }
 
-        /*
-         * p in Pid and k in springs
-         */
-        void SetA(float afA){ mfA = afA;}
-        /*
-        * i in Pid and b in springs
-        */
-        void SetB(float afB){ mfB = afB;}
-        /*
-        * d in Pid and not used in springs
-        */
-        void SetC(float afC){ mfC = afC;}
+    void SetMaxOutput(float afX)
+    {
+        mfMaxOutput = afX;
+    }
 
-        void SetPidIntegralSize(int alSize);
+    void SetInputType(ePhysicsControllerInput aInput, ePhysicsControllerAxis aAxis)
+    {
+        mInputType = aInput;
+        mInputAxis = aAxis;
+    }
 
-        void SetType(ePhysicsControllerType aType){ mType = aType;}
+    void SetOutputType(ePhysicsControllerOutput aOutput, ePhysicsControllerAxis aAxis)
+    {
+        mOutputType = aOutput;
+        mOutputAxis = aAxis;
+    }
+    void SetMulMassWithOutput(bool abX)
+    {
+        mbMulMassWithOutput = abX;
+    }
 
-        void SetDestValue(float afX){ mfDestValue = afX;}
-        float GetDestValue(){ return mfDestValue;}
+    void SetEndType(ePhysicsControllerEnd aEnd)
+    {
+        mEndType = aEnd;
+    }
+    ePhysicsControllerEnd GetEndType()
+    {
+        return mEndType;
+    }
 
-        void SetMaxOutput(float afX){ mfMaxOutput = afX;}
+    void SetNextController(const tString &asName)
+    {
+        msNextController = asName;
+    }
+    const tString& GetNextController()
+    {
+        return msNextController;
+    }
 
-        void SetInputType(ePhysicsControllerInput aInput, ePhysicsControllerAxis aAxis){
-            mInputType = aInput; mInputAxis = aAxis;}
+    void SetLogInfo(bool abX)
+    {
+        mbLogInfo = abX;
+    }
 
-        void SetOutputType(ePhysicsControllerOutput aOutput, ePhysicsControllerAxis aAxis){
-            mOutputType = aOutput; mOutputAxis = aAxis;}
-        void SetMulMassWithOutput(bool abX){ mbMulMassWithOutput = abX;}
+    void SetPaused(bool abX)
+    {
+        mbPaused = abX;
+    }
 
-        void SetEndType(ePhysicsControllerEnd aEnd){ mEndType = aEnd;}
-        ePhysicsControllerEnd GetEndType(){ return mEndType;}
+protected:
+    cVector3f GetInputValue(ePhysicsControllerInput aInput);
+    float GetOutputValue(float afError,float afInput, float afTimeStep);
+    void AddOutputValue(ePhysicsControllerOutput aOutput, ePhysicsControllerAxis aAxis,
+                        float afVal);
+    float GetAxisValue(ePhysicsControllerAxis aAxis, const cVector3f &avVec);
 
-        void SetNextController(const tString &asName){ msNextController = asName;}
-        const tString& GetNextController(){ return msNextController;}
+    iPhysicsWorld *mpWorld;
+    tString msName;
 
-        void SetLogInfo(bool abX){mbLogInfo = abX;}
+    iPhysicsBody *mpBody;
+    iPhysicsJoint *mpJoint;
 
-        void SetPaused(bool abX){mbPaused = abX;}
+    float mfA,mfB,mfC;
 
-    protected:
-        cVector3f GetInputValue(ePhysicsControllerInput aInput);
-        float GetOutputValue(float afError,float afInput, float afTimeStep);
-        void AddOutputValue(ePhysicsControllerOutput aOutput, ePhysicsControllerAxis aAxis,
-                            float afVal);
-        float GetAxisValue(ePhysicsControllerAxis aAxis, const cVector3f &avVec);
+    float mfDestValue;
+    float mfMaxOutput;
 
-        iPhysicsWorld *mpWorld;
-        tString msName;
+    bool mbMulMassWithOutput;
 
-        iPhysicsBody *mpBody;
-        iPhysicsJoint *mpJoint;
+    ePhysicsControllerType mType;
 
-        float mfA,mfB,mfC;
+    ePhysicsControllerInput mInputType;
+    ePhysicsControllerAxis mInputAxis;
 
-        float mfDestValue;
-        float mfMaxOutput;
+    ePhysicsControllerOutput mOutputType;
+    ePhysicsControllerAxis mOutputAxis;
 
-        bool mbMulMassWithOutput;
+    ePhysicsControllerEnd mEndType;
 
-        ePhysicsControllerType mType;
+    tString msNextController;
 
-        ePhysicsControllerInput mInputType;
-        ePhysicsControllerAxis mInputAxis;
+    cPidControllerf mPidController;
 
-        ePhysicsControllerOutput mOutputType;
-        ePhysicsControllerAxis mOutputAxis;
+    bool mbActive;
+    bool mbPaused;
 
-        ePhysicsControllerEnd mEndType;
-
-        tString msNextController;
-
-        cPidControllerf mPidController;
-
-        bool mbActive;
-        bool mbPaused;
-
-        bool mbLogInfo;
-    };
+    bool mbLogInfo;
+};
 };
 #endif // HPL_PHYSICS_CONTROLLER_H

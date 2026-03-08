@@ -5,26 +5,27 @@
 
 #include <windows.h>
 
-namespace hpl {
+namespace hpl
+{
 
-    class cThreadWin32 : public iThread
-    {
-    public:
-        
-        cThreadWin32();
-        ~cThreadWin32();
-        
-        void Start();
-        void Stop();
-        void Sleep(unsigned int alSleepTime);
+class cThreadWin32 : public iThread
+{
+public:
 
-        void SetPriority(eThreadPrio aPrio);
+    cThreadWin32();
+    ~cThreadWin32();
 
-    private:
-        int TranslateEnginePrio(eThreadPrio aPrio);
-        HANDLE mpThreadHandle;
+    void Start();
+    void Stop();
+    void Sleep(unsigned int alSleepTime);
 
-    };
+    void SetPriority(eThreadPrio aPrio);
+
+private:
+    int TranslateEnginePrio(eThreadPrio aPrio);
+    HANDLE mpThreadHandle;
+
+};
 
 };
 #endif // HPL_THREAD_WIN32_H

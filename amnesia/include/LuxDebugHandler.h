@@ -21,13 +21,13 @@ typedef tLuxDebugMessageList::iterator tLuxDebugMessageListIt;
 
 class cLuxDebugHandler : public iLuxUpdateable
 {
-public:    
+public:
     cLuxDebugHandler();
     ~cLuxDebugHandler();
 
     void LoadUserConfig();
     void SaveUserConfig();
-    
+
     void OnStart();
     void Update(float afTimeStep);
     void Reset();
@@ -37,22 +37,43 @@ public:
 
 
     void SetDebugWindowActive(bool abActive);
-    bool GetDebugWindowActive(){ return mbWindowActive;}
-        
+    bool GetDebugWindowActive()
+    {
+        return mbWindowActive;
+    }
+
     void OnDraw(float afFrameTime);
     void RenderSolid(cRendererCallbackFunctions* apFunctions);
 
     void AddErrorOrWarningMessage(const tWString& asText);
     void AddMessage(const tWString& asText, bool abCheckForDuplicates);
 
-    bool GetShowPlayerInfo(){ return mbShowPlayerInfo;}
-    bool GetShowEntityInfo(){ return mbShowEntityInfo;}
-    bool GetScriptDebugOn(){ return mbScriptDebugOn;}
-    bool GetDisableFlashBacks(){ return mbDisableFlashBacks;}
-    bool GetAllowQuickSave(){ return mbAllowQuickSave;}
+    bool GetShowPlayerInfo()
+    {
+        return mbShowPlayerInfo;
+    }
+    bool GetShowEntityInfo()
+    {
+        return mbShowEntityInfo;
+    }
+    bool GetScriptDebugOn()
+    {
+        return mbScriptDebugOn;
+    }
+    bool GetDisableFlashBacks()
+    {
+        return mbDisableFlashBacks;
+    }
+    bool GetAllowQuickSave()
+    {
+        return mbAllowQuickSave;
+    }
 
     void SetFastForward(bool abX);
-    bool GetFastForward(){ return mbFastForward;}
+    bool GetFastForward()
+    {
+        return mbFastForward;
+    }
 
     void QuickReloadMap();
 
@@ -73,7 +94,7 @@ private:
     void TestChangeMapSave();
 
     void LoadBatchLoadFile(const tWString& asFilePath);
-    
+
     void DrawDynamicContainerDebugInfo();
     void OutputContainerContentsRec(iRenderableContainerNode *apNode, int alLevel);
     void CheckDynamicContainerBugsRec(iRenderableContainerNode *apNode, int alLevel);
@@ -141,7 +162,7 @@ private:
     cWidgetFrame *mpScriptOutputFrame;
 
     cWidgetCheckBox *mpCBFastForward;
-    
+
     tWidgetList mlstScriptOutputWidgets;
 
     bool mbShowFPS;
@@ -154,7 +175,7 @@ private:
     bool mbDrawPhysics;
 
     bool mbAllowQuickSave;
-    
+
     bool mbWindowActive;
 
     bool mbReloadFromCurrentPosition;

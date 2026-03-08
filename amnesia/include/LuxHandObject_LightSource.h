@@ -10,10 +10,10 @@
 
 class cLuxHandObject_LightSource : public iLuxHandObject
 {
-public:    
+public:
     cLuxHandObject_LightSource(const tString& asName, cLuxPlayerHands *apHands);
     ~cLuxHandObject_LightSource();
-    
+
     void LoadImplementedVars(cXmlElement *apVarsElem);
 
     void ImplementedCreateEntity(cLuxMap *apMap);
@@ -31,7 +31,7 @@ private:
 
     float mfFadeInSpeed;
     float mfFadeOutSpeed;
-    
+
     bool mbHasSwayPhysics;
     float mfMaxSwayVel;
     cVector2f mvSwayAngleLimits;
@@ -42,7 +42,7 @@ private:
     float mfSwayPlayerSpeedMul;
     float mfSwayCameraRollMul;
     tString msSkipSwaySubMesh;
-    
+
     float mfSwayAngle;
     float mfSwayVel;
 

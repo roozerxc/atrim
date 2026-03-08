@@ -45,7 +45,7 @@ void cLuxPropLoader_SwingDoor::LoadVariables(iLuxProp *apProp, cXmlElement *apRo
     pSwingDoor->msLockOffSound = GetVarString("LockOffSound", "");
     pSwingDoor->msInteractLockedSound = GetVarString("InteractLockedSound", "");
 
-    
+
     pSwingDoor->mbBreakable = GetVarBool("Breakable", false);
 
     pSwingDoor->msDamageMesh[0] = GetVarString("DamageMesh1", "");
@@ -68,13 +68,13 @@ void cLuxPropLoader_SwingDoor::LoadVariables(iLuxProp *apProp, cXmlElement *apRo
 void cLuxPropLoader_SwingDoor::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
     cLuxProp_SwingDoor  *pSwingDoor = static_cast<cLuxProp_SwingDoor*>(apProp);
-    
+
     pSwingDoor->mbDisableBreakable = apInstanceVars->GetVarBool("DisableBreakable",false);
 
     pSwingDoor->SetLocked(apInstanceVars->GetVarBool("Locked",false),false);
     float fOpenAmount = apInstanceVars->GetVarFloat("OpenAmount",0);
-    
-    pSwingDoor->SetupDoorPhysics(fOpenAmount);    
+
+    pSwingDoor->SetupDoorPhysics(fOpenAmount);
 }
 //-----------------------------------------------------------------------
 
@@ -88,7 +88,7 @@ void cLuxPropLoader_SwingDoor::LoadInstanceVariables(iLuxProp *apProp, cResource
 cLuxProp_SwingDoor::cLuxProp_SwingDoor(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_SwingDoor)
 {
     mbClosed = false;
-    mbLocked = false;    
+    mbLocked = false;
 
     mlBrokenEntityID = -1;
 
@@ -109,7 +109,7 @@ cLuxProp_SwingDoor::~cLuxProp_SwingDoor()
 {
     for(int i=1; i<3; ++i)
     {
-        if(mpDamageMeshEntity[i]) 
+        if(mpDamageMeshEntity[i])
             mpWorld->DestroyMeshEntity(mpDamageMeshEntity[i]);
     }
 }
@@ -124,7 +124,7 @@ cLuxProp_SwingDoor::~cLuxProp_SwingDoor()
 
 bool cLuxProp_SwingDoor::CanInteract(iPhysicsBody *apBody)
 {
-    if(    apBody->GetMass()==0 && mbCanInteractWithStaticBody==false && mpMap->BodyIsInDetachableStickyArea(apBody)==false) 
+    if(    apBody->GetMass()==0 && mbCanInteractWithStaticBody==false && mpMap->BodyIsInDetachableStickyArea(apBody)==false)
     {
         return false;
     }
@@ -175,7 +175,7 @@ bool cLuxProp_SwingDoor::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
 
     cLuxPlayerStateVars::SetupInteraction(apBody, avPos);
     gpBase->mpPlayer->ChangeState(eLuxPlayerState_InteractSwingDoor);
-    
+
     return true;
 }
 
@@ -216,19 +216,20 @@ void cLuxProp_SwingDoor::OnSetupAfterLoad(cWorld *apWorld)
     iPhysicsBody *pDynBody = NULL;
     for(size_t i=0; i<mvBodies.size(); ++i)
     {
-        if(mvBodies[i]->GetMass()!=0){
+        if(mvBodies[i]->GetMass()!=0)
+        {
             pDynBody = mvBodies[i];
             break;
         }
     }
 
     cMatrixf mtxInvDynBody = pDynBody ? cMath::MatrixInverse(pDynBody->GetLocalMatrix()) : cMatrixf::Identity;
-    
+
     ////////////////////////////////////
     // Set up damage mesh entities
     cMeshManager *pMeshManager = gpBase->mpEngine->GetResources()->GetMeshManager();
     mpDamageMeshEntity[0] = mpMeshEntity;
-    for(int i=0; i<2;++i)
+    for(int i=0; i<2; ++i)
     {
         if(msDamageMesh[i]=="") continue;
         //Log("DamageMesh: %d\n", i);
@@ -269,7 +270,7 @@ void cLuxProp_SwingDoor::OnSetupAfterLoad(cWorld *apWorld)
                 pBaseSubEnt->GetEntityParent()->AddChild(pDamSubEnt);
             }
         }
-                
+
         pDamageEntity->SetVisible(false);
         pDamageEntity->SetActive(false);
         mpDamageMeshEntity[i+1] = pDamageEntity;
@@ -292,7 +293,7 @@ void cLuxProp_SwingDoor::OnResetProperties()
             }
         }
     }
-    
+
     SetupDoorPhysics(0.0f);
 
     SetCurrentDamageLevel(0);
@@ -406,7 +407,7 @@ void cLuxProp_SwingDoor::OnHealthChange()
     // Broken
     if(mfHealth <= 0 && mbBroken == false)
     {
-        mbBroken = true;    
+        mbBroken = true;
 
         SetCurrentDamageLevel(0);
 
@@ -439,7 +440,7 @@ void cLuxProp_SwingDoor::OnHealthChange()
                 }
             }
         }
-        
+
         ////////////////////////////
         //Create broken entity
         if(pMainBody && msBrokenEntity != "")
@@ -450,7 +451,7 @@ void cLuxProp_SwingDoor::OnHealthChange()
             cMatrixf mtxEntity = cMath::MatrixMul(pMainBody->GetLocalMatrix(), mtxInvLocalBody);
 
             mpMap->ResetLatestEntity();
-            mpMap->CreateEntity(msName + "_broken", msBrokenEntity, mtxEntity, mvOnLoadScale);    
+            mpMap->CreateEntity(msName + "_broken", msBrokenEntity, mtxEntity, mvOnLoadScale);
 
             ////////////////////////
             //Add impulse and velocity
@@ -472,7 +473,7 @@ void cLuxProp_SwingDoor::OnHealthChange()
                 }
             }
         }
-        
+
         msSound = msBreakSound;
         msPS = msBreakPS;
 
@@ -484,7 +485,7 @@ void cLuxProp_SwingDoor::OnHealthChange()
     // Damage 2
     else if(mfHealth <  mfHealthDamage[1] && mlCurrentMeshEntity<=1)
     {
-        SetCurrentDamageLevel(2);    
+        SetCurrentDamageLevel(2);
 
         msSound = msDamageSound;
         msPS = msDamagePS;
@@ -525,7 +526,7 @@ void cLuxProp_SwingDoor::OnHealthChange()
 
 void cLuxProp_SwingDoor::OnDamage(float afAmount, int alStrength)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -580,7 +581,7 @@ int cLuxProp_SwingDoor::GetDoorState()
         iPhysicsJointHinge *pHingeJoint = mvJointData[i].mpHingeJoint;
 
         float fAbsAngle = cMath::Abs(pHingeJoint->GetAngle());
-        
+
         float fClosedAngle = cMath::ToRad(5);
         float fOpenAngle = cMath::Abs(mvJointData[i].mfMaxAngle)*0.70f;
 
@@ -592,7 +593,7 @@ int cLuxProp_SwingDoor::GetDoorState()
         else if(fAbsAngle >  fOpenAngle)
         {
             if(lState == -1) return 0;
-            lState = 1;    
+            lState = 1;
         }
         else
         {
@@ -611,7 +612,7 @@ void cLuxProp_SwingDoor::SetLocked(bool abLocked, bool abEffects)
     if(mbLocked == abLocked) return;
 
     mbLocked = abLocked;
-    
+
     if(mbLocked) SetClosed(true, false);
 
     if(abEffects)
@@ -680,7 +681,8 @@ void cLuxProp_SwingDoor::SetupDoorPhysics(float afOpenAmount)
             iPhysicsBody *pChildBody = mvJointData[i].mpChildBody;
             float fWantedAngle = mvJointData[i].mfMaxAngle * afOpenAmount;
 
-            cQuaternion qRotation; qRotation.FromAngleAxis(-fWantedAngle, pHingeJoint->GetPinDir());
+            cQuaternion qRotation;
+            qRotation.FromAngleAxis(-fWantedAngle, pHingeJoint->GetPinDir());
             cMatrixf mtxRotation = cMath::MatrixQuaternion(qRotation);
             cMatrixf mtxBody = pChildBody->GetLocalMatrix();
 
@@ -696,7 +698,7 @@ void cLuxProp_SwingDoor::SetupDoorPhysics(float afOpenAmount)
     }
 
     ////////////////////////////////////
-    // Close door (using no effects) if in range. 
+    // Close door (using no effects) if in range.
     if(mvJoints.size()==1)
     {
         for(size_t i=0; i<mvJointData.size(); ++i)
@@ -794,7 +796,7 @@ void cLuxProp_SwingDoor::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //Init
     super_class::LoadFromSaveData(apSaveData);
     cLuxProp_SwingDoor_SaveData *pData = static_cast<cLuxProp_SwingDoor_SaveData*>(apSaveData);
-    
+
     //////////////////
     //Set variables
     SetClosed(pData->mbClosed, false);

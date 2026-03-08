@@ -9,11 +9,11 @@
 
 class cLuxGlobalDataHandler : public iLuxUpdateable
 {
-friend class cLuxGlobalDataHandler_SaveData;
-public:    
+    friend class cLuxGlobalDataHandler_SaveData;
+public:
     cLuxGlobalDataHandler();
     ~cLuxGlobalDataHandler();
-    
+
     void LoadAndInitGlobalScript();
     void OnGameStart();
     void OnStart();
@@ -38,8 +38,14 @@ public:
 
     /////////////////////////////
     // Misc settings
-    float GetLightLampMinSanityIncrease(){return mfLightLampMinSanityIncrease;}
-    float GetLightLampMaxSanityIncrease(){return mfLightLampMaxSanityIncrease;}
+    float GetLightLampMinSanityIncrease()
+    {
+        return mfLightLampMinSanityIncrease;
+    }
+    float GetLightLampMaxSanityIncrease()
+    {
+        return mfLightLampMaxSanityIncrease;
+    }
 
 private:
     tLuxScriptVarMap m_mapVars;

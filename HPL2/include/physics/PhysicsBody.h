@@ -5,299 +5,495 @@
 #include "graphics/GraphicsTypes.h"
 #include "physics/PhysicsTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class iPhysicsWorld;
-    class iCollideShape;
-    class iPhysicsMaterial;
-    class iLowLevelGraphics;
-    class cNode3D;
-    class cSoundEntity;
-    class iPhysicsJoint;
-    class cPhysicsContactData;
-    class iCharacterBody;
-    class iVerletParticleContainer;
+class iPhysicsWorld;
+class iCollideShape;
+class iPhysicsMaterial;
+class iLowLevelGraphics;
+class cNode3D;
+class cSoundEntity;
+class iPhysicsJoint;
+class cPhysicsContactData;
+class iCharacterBody;
+class iVerletParticleContainer;
 
-    //------------------------------------------
+//------------------------------------------
 
-    class iPhysicsBody;
-    class iPhysicsBodyCallback
+class iPhysicsBody;
+class iPhysicsBodyCallback
+{
+public:
+    virtual bool OnAABBCollide(iPhysicsBody *apBody, iPhysicsBody *apCollideBody)=0;
+    virtual void OnBodyCollide(iPhysicsBody *apBody, iPhysicsBody *apCollideBody,cPhysicsContactData* apContactData)=0;
+};
+
+typedef std::list<iPhysicsBodyCallback*> tPhysicsBodyCallbackList;
+typedef tPhysicsBodyCallbackList::iterator tPhysicsBodyCallbackListIt;
+
+//------------------------------------------
+
+struct cPhysicsBody_Buoyancy
+{
+    cPhysicsBody_Buoyancy() : mbActive(false), mfDensity(1),
+        mfLinearViscosity(1), mfAngularViscosity(1) {}
+
+    bool mbActive;
+
+    float mfDensity;
+    float mfLinearViscosity;
+    float mfAngularViscosity;
+
+    cPlanef mSurface;
+};
+
+//------------------------------------------
+
+class iPhysicsBody : public iEntity3D
+{
+#ifdef __GNUC__
+    typedef iEntity3D __super;
+#endif
+public:
+    iPhysicsBody(const tString &asName, iPhysicsWorld *apWorld,iCollideShape *apShape);
+    virtual ~iPhysicsBody();
+
+    void Destroy();
+
+    virtual void SetMaterial(iPhysicsMaterial* apMaterial)=0;
+    iPhysicsMaterial* GetMaterial();
+
+    iCollideShape* GetShape();
+
+    void AddJoint(iPhysicsJoint *apJoint);
+    iPhysicsJoint* GetJoint(int alIndex);
+    int GetJointNum();
+    void RemoveJoint(iPhysicsJoint *apJoint);
+
+    virtual void SetLinearVelocity(const cVector3f &avVel)=0;
+    virtual cVector3f GetLinearVelocity() const=0;
+    virtual void SetAngularVelocity(const cVector3f &avVel)=0;
+    virtual cVector3f GetAngularVelocity() const=0;
+    virtual void SetLinearDamping(float afDamping)=0;
+    virtual float GetLinearDamping() const=0;
+    virtual void SetAngularDamping(float afDamping)=0;
+    virtual float GetAngularDamping() const=0;
+    virtual void SetMaxLinearSpeed(float afSpeed)=0;
+    virtual float GetMaxLinearSpeed() const=0;
+    virtual void SetMaxAngularSpeed(float afDamping)=0;
+    virtual float GetMaxAngularSpeed() const=0;
+    virtual cVector3f GetInertiaVector() =0;
+    virtual cMatrixf GetInertiaMatrix() =0;
+
+    cVector3f GetVelocityAtPosition(const cVector3f& avPos);
+    cVector3f GetTorqueFromForceAtPosition(const cVector3f& avForce, const cVector3f& avPos);
+
+    virtual void  SetMass(float afMass)=0;
+    virtual float GetMass() const=0;
+    virtual void  SetMassCentre(const cVector3f& avCentre)=0;
+    virtual cVector3f GetMassCentre() const=0;
+
+    virtual void AddForce(const cVector3f &avForce)=0;
+    virtual void AddForceAtPosition(const cVector3f &avForce, const cVector3f &avPos)=0;
+    virtual void AddTorque(const cVector3f &avTorque)=0;
+    virtual void AddImpulse(const cVector3f &avImpulse)=0;
+    virtual void AddImpulseAtPosition(const cVector3f &avImpulse, const cVector3f &avPos)=0;
+
+    virtual void Enable()=0;
+    virtual bool GetEnabled() const=0;
+    virtual void SetAutoDisable(bool abEnabled)=0;
+    virtual bool GetAutoDisable() const=0;
+    virtual void SetAutoDisableLinearThreshold(float afThresold)=0;
+    virtual float GetAutoDisableLinearThreshold() const=0;
+    virtual void SetAutoDisableAngularThreshold(float afThresold)=0;
+    virtual float GetAutoDisableAngularThreshold() const=0;
+    virtual void SetAutoDisableNumSteps(int alNum)=0;
+    virtual int GetAutoDisableNumSteps() const=0;
+    virtual void SetContinuousCollision(bool abOn)=0;
+    virtual bool GetContinuousCollision()=0;
+
+    virtual void SetGravity(bool abEnabled)=0;
+    virtual bool GetGravity() const=0;
+
+    virtual void RenderDebugGeometry(iLowLevelGraphics *apLowLevel,const cColor &aColor)=0;
+
+    bool UpdateBeforeSimulate(float afTimeStep);
+    void UpdateAfterSimulate(float afTimeStep);
+
+    void StaticLinearMove(const cVector3f& avVelocity);
+    void StaticAngularMove(const cVector3f& avVelocity);
+
+    void SetBlocksSound(bool abX)
     {
-    public:
-        virtual bool OnAABBCollide(iPhysicsBody *apBody, iPhysicsBody *apCollideBody)=0;
-        virtual void OnBodyCollide(iPhysicsBody *apBody, iPhysicsBody *apCollideBody,cPhysicsContactData* apContactData)=0;
-    };
-
-    typedef std::list<iPhysicsBodyCallback*> tPhysicsBodyCallbackList;
-    typedef tPhysicsBodyCallbackList::iterator tPhysicsBodyCallbackListIt;
-
-    //------------------------------------------
-
-    struct cPhysicsBody_Buoyancy
+        mbBlocksSound = abX;
+    }
+    bool GetBlocksSound()
     {
-        cPhysicsBody_Buoyancy() : mbActive(false), mfDensity(1), 
-                                mfLinearViscosity(1), mfAngularViscosity(1){}
+        return mbBlocksSound;
+    }
 
-        bool mbActive;
-
-        float mfDensity;
-        float mfLinearViscosity;
-        float mfAngularViscosity;
-
-        cPlanef mSurface;
-    };
-
-    //------------------------------------------
-
-    class iPhysicsBody : public iEntity3D
+    void SetBlocksLight(bool abX)
     {
-    #ifdef __GNUC__
-        typedef iEntity3D __super;
-    #endif
-    public:
-        iPhysicsBody(const tString &asName, iPhysicsWorld *apWorld,iCollideShape *apShape);
-        virtual ~iPhysicsBody();
+        mbBlocksLight = abX;
+    }
+    bool GetBlocksLight()
+    {
+        return mbBlocksLight;
+    }
 
-        void Destroy();
+    /**
+     * Must be true with both bodies in a collision if any effect is to be played.
+     */
+    void SetUseSurfaceEffects(bool abX)
+    {
+        mbUseSurfaceEffects = abX;
+    }
+    bool GetUseSurfaceEffects()
+    {
+        return mbUseSurfaceEffects;
+    }
 
-        virtual void SetMaterial(iPhysicsMaterial* apMaterial)=0;
-        iPhysicsMaterial* GetMaterial();
 
-        iCollideShape* GetShape();
+    void SetScrapeSoundEntity(cSoundEntity *apEntity);
+    cSoundEntity* GetScrapeSoundEntity()
+    {
+        return mpScrapeSoundEntity;
+    }
+    void SetScrapeSoundEntityID(int alID)
+    {
+        mlScrapeSoundEntityID = alID;
+    }
+    int GetScrapeSoundEntityID()
+    {
+        return mlScrapeSoundEntityID;
+    }
+    void SetScrapeBody(iPhysicsBody *apBody)
+    {
+        mpScrapeBody =apBody;
+    }
+    iPhysicsBody * GetScrapeBody()
+    {
+        return mpScrapeBody;
+    }
+    const cMatrixf& GetPreveScrapeMatrix()
+    {
+        return m_mtxPrevScrapeMatrix;
+    }
+    void SetPreveScrapeMatrix(const cMatrixf& a_mtxMtx)
+    {
+        m_mtxPrevScrapeMatrix = a_mtxMtx;
+    }
 
-        void AddJoint(iPhysicsJoint *apJoint);
-        iPhysicsJoint* GetJoint(int alIndex);
-        int GetJointNum();
-        void RemoveJoint(iPhysicsJoint *apJoint);
+    void SetRollSoundEntity(cSoundEntity *apEntity);
+    cSoundEntity* GetRollSoundEntity()
+    {
+        return mpRollSoundEntity;
+    }
+    int GetRollSoundEntityID()
+    {
+        return mlRollSoundEntityID;
+    }
 
-        virtual void SetLinearVelocity(const cVector3f &avVel)=0;
-        virtual cVector3f GetLinearVelocity() const=0;
-        virtual void SetAngularVelocity(const cVector3f &avVel)=0;
-        virtual cVector3f GetAngularVelocity() const=0;
-        virtual void SetLinearDamping(float afDamping)=0;
-        virtual float GetLinearDamping() const=0;
-        virtual void SetAngularDamping(float afDamping)=0;
-        virtual float GetAngularDamping() const=0;
-        virtual void SetMaxLinearSpeed(float afSpeed)=0;
-        virtual float GetMaxLinearSpeed() const=0;
-        virtual void SetMaxAngularSpeed(float afDamping)=0;
-        virtual float GetMaxAngularSpeed() const=0;
-        virtual cVector3f GetInertiaVector() =0;
-        virtual cMatrixf GetInertiaMatrix() =0;
+    void SetHasSlide(bool abX)
+    {
+        mbHasSlide = abX;
+    }
+    bool HasSlide()
+    {
+        return mbHasSlide;
+    }
 
-        cVector3f GetVelocityAtPosition(const cVector3f& avPos);
-        cVector3f GetTorqueFromForceAtPosition(const cVector3f& avForce, const cVector3f& avPos);
+    bool HasCollision()
+    {
+        return mbHasCollision;
+    }
 
-        virtual void  SetMass(float afMass)=0;
-        virtual float GetMass() const=0;
-        virtual void  SetMassCentre(const cVector3f& avCentre)=0;
-        virtual cVector3f GetMassCentre() const=0;
+    void SetUserData(void* apUserData)
+    {
+        mpUserData = apUserData;
+    }
+    void* GetUserData()
+    {
+        return mpUserData;
+    }
 
-        virtual void AddForce(const cVector3f &avForce)=0;
-        virtual void AddForceAtPosition(const cVector3f &avForce, const cVector3f &avPos)=0;
-        virtual void AddTorque(const cVector3f &avTorque)=0;
-        virtual void AddImpulse(const cVector3f &avImpulse)=0;
-        virtual void AddImpulseAtPosition(const cVector3f &avImpulse, const cVector3f &avPos)=0;
+    void AddBodyCallback(iPhysicsBodyCallback *apCallback);
+    void RemoveBodyCallback(iPhysicsBodyCallback *apCallback);
 
-        virtual void Enable()=0;
-        virtual bool GetEnabled() const=0;
-        virtual void SetAutoDisable(bool abEnabled)=0;
-        virtual bool GetAutoDisable() const=0;
-        virtual void SetAutoDisableLinearThreshold(float afThresold)=0;
-        virtual float GetAutoDisableLinearThreshold() const=0;
-        virtual void SetAutoDisableAngularThreshold(float afThresold)=0;
-        virtual float GetAutoDisableAngularThreshold() const=0;
-        virtual void SetAutoDisableNumSteps(int alNum)=0;
-        virtual int GetAutoDisableNumSteps() const=0;
-        virtual void SetContinuousCollision(bool abOn)=0;
-        virtual bool GetContinuousCollision()=0;
+    bool OnAABBCollision(iPhysicsBody *apBody);
+    void OnCollide(iPhysicsBody *apBody,cPhysicsContactData* apContactData);
 
-        virtual void SetGravity(bool abEnabled)=0;
-        virtual bool GetGravity() const=0;
+    void SetCollide(bool abX)
+    {
+        mbCollide = abX;
+    }
+    bool GetCollide()
+    {
+        return mbCollide;
+    }
 
-        virtual void RenderDebugGeometry(iLowLevelGraphics *apLowLevel,const cColor &aColor)=0;
+    void SetIsCharacter(bool abX)
+    {
+        mbIsCharacter = abX;
+    }
+    bool IsCharacter()
+    {
+        return mbIsCharacter;
+    }
 
-        bool UpdateBeforeSimulate(float afTimeStep);
-        void UpdateAfterSimulate(float afTimeStep);
+    void SetCollideCharacter(bool abX)
+    {
+        mbCollideCharacter = abX;
+    }
+    bool GetCollideCharacter()
+    {
+        return mbCollideCharacter;
+    }
 
-        void StaticLinearMove(const cVector3f& avVelocity);
-        void StaticAngularMove(const cVector3f& avVelocity);
+    void SetCharacterBody(iCharacterBody *apCharBody)
+    {
+        mpCharacterBody = apCharBody;
+    }
+    iCharacterBody* GetCharacterBody()
+    {
+        return mpCharacterBody;
+    }
 
-        void SetBlocksSound(bool abX){ mbBlocksSound = abX;}
-        bool GetBlocksSound(){ return mbBlocksSound;}
+    void SetPushStrength(int alX)
+    {
+        mlPushStrength = alX;
+    }
+    int GetPushStrength()
+    {
+        return mlPushStrength;
+    }
 
-        void SetBlocksLight(bool abX){ mbBlocksLight = abX;}
-        bool GetBlocksLight(){ return mbBlocksLight;}
+    void SetCollideFlags(tFlag alX)
+    {
+        mlCollideFlags = alX;
+    }
+    inline tFlag GetCollideFlags() const
+    {
+        return mlCollideFlags;
+    }
 
-        /**
-         * Must be true with both bodies in a collision if any effect is to be played.
-         */
-        void SetUseSurfaceEffects(bool abX){ mbUseSurfaceEffects = abX;}
-        bool GetUseSurfaceEffects(){ return mbUseSurfaceEffects;}
-        
+    void SetIsRagDoll(bool abX)
+    {
+        mbIsRagDoll = abX;
+    }
+    bool IsRagDoll()
+    {
+        return mbIsRagDoll;
+    }
 
-        void SetScrapeSoundEntity(cSoundEntity *apEntity);
-        cSoundEntity* GetScrapeSoundEntity(){ return mpScrapeSoundEntity;}
-        void SetScrapeSoundEntityID(int alID){ mlScrapeSoundEntityID = alID;}
-        int GetScrapeSoundEntityID(){ return mlScrapeSoundEntityID;}
-        void SetScrapeBody(iPhysicsBody *apBody){ mpScrapeBody =apBody;}
-        iPhysicsBody * GetScrapeBody(){ return mpScrapeBody;}
-        const cMatrixf& GetPreveScrapeMatrix(){ return m_mtxPrevScrapeMatrix;}
-        void SetPreveScrapeMatrix(const cMatrixf& a_mtxMtx){ m_mtxPrevScrapeMatrix = a_mtxMtx;}
+    void SetCollideRagDoll(bool abX)
+    {
+        mbCollideRagDoll = abX;
+    }
+    bool GetCollideRagDoll()
+    {
+        return mbCollideRagDoll;
+    }
 
-        void SetRollSoundEntity(cSoundEntity *apEntity);
-        cSoundEntity* GetRollSoundEntity(){ return mpRollSoundEntity;}
-        int GetRollSoundEntityID(){ return mlRollSoundEntityID;}
+    void SetVolatile(bool abX)
+    {
+        mbVolatile = abX;
+    }
+    bool IsVolatile()
+    {
+        return mbVolatile;
+    }
 
-        void SetHasSlide(bool abX){ mbHasSlide = abX;}
-        bool HasSlide(){ return mbHasSlide;}
+    void SetPushedByCharacterGravity(bool abX)
+    {
+        mbPushedByCharacterGravity = abX;
+    }
+    bool GetPushedByCharacterGravity()
+    {
+        return mbPushedByCharacterGravity;
+    }
 
-        bool HasCollision(){ return mbHasCollision;}
+    void SetBuoyancyActive(bool abX)
+    {
+        mBuoyancy.mbActive = abX;
+    }
+    void SetBuoyancyDensity(float afX)
+    {
+        mBuoyancy.mfDensity = afX;
+    }
+    void SetBuoyancyLinearViscosity(float afX)
+    {
+        mBuoyancy.mfLinearViscosity = afX;
+    }
+    void SetBuoyancyAngularViscosity(float afX)
+    {
+        mBuoyancy.mfAngularViscosity = afX;
+    }
+    void SetBuoyancySurface(const cPlanef &aP)
+    {
+        mBuoyancy.mSurface = aP;
+    }
 
-        void SetUserData(void* apUserData){ mpUserData = apUserData;}
-        void* GetUserData(){ return mpUserData;}
+    bool GetBuoyancyActive()
+    {
+        return mBuoyancy.mbActive;
+    }
+    float GetBuoyancyDensity()
+    {
+        return mBuoyancy.mfDensity;
+    }
+    float GetBuoyancyLinearViscosity()
+    {
+        return mBuoyancy.mfLinearViscosity;
+    }
+    float GetBuoyancyAngularViscosity()
+    {
+        return mBuoyancy.mfAngularViscosity;
+    }
+    cPlanef SetBuoyancySurface()
+    {
+        return mBuoyancy.mSurface;
+    }
 
-        void AddBodyCallback(iPhysicsBodyCallback *apCallback);
-        void RemoveBodyCallback(iPhysicsBodyCallback *apCallback);
+    float GetBuoyancyDensityMul()
+    {
+        return mfBuoyancyDensityMul;
+    }
+    void SetBuoyancyDensityMul(float afX)
+    {
+        mfBuoyancyDensityMul = afX;
+    }
 
-        bool OnAABBCollision(iPhysicsBody *apBody);
-        void OnCollide(iPhysicsBody *apBody,cPhysicsContactData* apContactData);
+    void SetGravityCanAttachCharacter(bool abX)
+    {
+        mbGravityCanAttachCharacter = abX;
+    }
+    void SetGravityAttachmentRotation(bool abX)
+    {
+        mbGravityAttachmentRotation = abX;
+    }
+    void SetGravityAttachmentVelocity(bool abX)
+    {
+        mbGravityAttachmentVelocity = abX;
+    }
+    void SetGravityAttachmentVelocityAxes(eVelocityAxes aAxes)
+    {
+        mGravityAttachmentVelocityAxes = aAxes;
+    }
 
-        void SetCollide(bool abX){mbCollide = abX;}
-        bool GetCollide(){ return mbCollide;}
+    bool GetGravityCanAttachCharacter()
+    {
+        return mbGravityCanAttachCharacter;
+    }
+    bool GetGravityAttachmentRotation()
+    {
+        return mbGravityAttachmentRotation;
+    }
+    bool GetGravityAttachmentVelocity()
+    {
+        return mbGravityAttachmentVelocity;
+    }
+    eVelocityAxes GetGravityAttachmentVelocityAxes()
+    {
+        return mGravityAttachmentVelocityAxes;
+    }
 
-        void SetIsCharacter(bool abX){ mbIsCharacter = abX;}
-        bool IsCharacter(){ return mbIsCharacter;}
+    void AddConnectedCharacter(iCharacterBody *apCharBody);
+    void RemoveConnectedCharacter(iCharacterBody *apCharBody);
 
-        void SetCollideCharacter(bool abX){ mbCollideCharacter = abX;}
-        bool GetCollideCharacter(){ return mbCollideCharacter;}
+    bool IsInUpdateList()
+    {
+        return mbInUpdateList;
+    }
+    void SetInUpdateList(bool abX)
+    {
+        mbInUpdateList = abX;
+    }
 
-        void SetCharacterBody(iCharacterBody *apCharBody){ mpCharacterBody = apCharBody;}
-        iCharacterBody* GetCharacterBody(){ return mpCharacterBody;}
+    void AddAttachedVerletContainer(iVerletParticleContainer *apContainer);
+    void RemoveAttachedVerletContainer(iVerletParticleContainer *apContainer);
 
-        void SetPushStrength(int alX){ mlPushStrength = alX;}
-        int GetPushStrength(){ return mlPushStrength;}
+    iPhysicsWorld *GetWorld()
+    {
+        return mpWorld;
+    }
 
-        void SetCollideFlags(tFlag alX) { mlCollideFlags = alX;}
-        inline tFlag GetCollideFlags() const { return mlCollideFlags;}
-        
-        void SetIsRagDoll(bool abX){ mbIsRagDoll = abX;}
-        bool IsRagDoll(){ return mbIsRagDoll;}
+    void DisableAfterSimulation()
+    {
+        mbDisableAfterSimulation = true;
+    }
 
-        void SetCollideRagDoll(bool abX){ mbCollideRagDoll = abX;}
-        bool GetCollideRagDoll(){ return mbCollideRagDoll;}
+    //Entity implementation
+    tString GetEntityType()
+    {
+        return "Body";
+    }
 
-        void SetVolatile(bool abX){ mbVolatile = abX;}
-        bool IsVolatile(){ return mbVolatile;}
+    virtual void DeleteLowLevel()=0;
+protected:
+    iPhysicsWorld *mpWorld;
+    iCollideShape *mpShape;
+    iPhysicsMaterial *mpMaterial;
 
-        void SetPushedByCharacterGravity(bool abX){ mbPushedByCharacterGravity = abX;}
-        bool GetPushedByCharacterGravity(){ return mbPushedByCharacterGravity;}
+    iCharacterBody *mpCharacterBody;
 
-        void SetBuoyancyActive(bool abX){ mBuoyancy.mbActive = abX;}
-        void SetBuoyancyDensity(float afX){ mBuoyancy.mfDensity = afX;}
-        void SetBuoyancyLinearViscosity(float afX){ mBuoyancy.mfLinearViscosity = afX;}
-        void SetBuoyancyAngularViscosity(float afX){ mBuoyancy.mfAngularViscosity = afX;}
-        void SetBuoyancySurface(const cPlanef &aP){ mBuoyancy.mSurface = aP;}
+    std::vector<iPhysicsJoint*> mvJoints;
 
-        bool GetBuoyancyActive(){ return mBuoyancy.mbActive;}
-        float GetBuoyancyDensity(){ return mBuoyancy.mfDensity;}
-        float GetBuoyancyLinearViscosity(){ return mBuoyancy.mfLinearViscosity;}
-        float GetBuoyancyAngularViscosity(){ return mBuoyancy.mfAngularViscosity;}
-        cPlanef SetBuoyancySurface(){ return mBuoyancy.mSurface;}
+    bool mbDestroying;
 
-        float GetBuoyancyDensityMul(){ return mfBuoyancyDensityMul;}
-        void SetBuoyancyDensityMul(float afX){ mfBuoyancyDensityMul = afX;}
+    std::list<iCharacterBody*> mlstConnectedCharBodies;
 
-        void SetGravityCanAttachCharacter(bool abX){ mbGravityCanAttachCharacter = abX;}
-        void SetGravityAttachmentRotation(bool abX){ mbGravityAttachmentRotation = abX;}
-        void SetGravityAttachmentVelocity(bool abX){ mbGravityAttachmentVelocity = abX;}
-        void SetGravityAttachmentVelocityAxes(eVelocityAxes aAxes){ mGravityAttachmentVelocityAxes = aAxes;}
+    iPhysicsBody *mpScrapeBody;
+    cSoundEntity *mpScrapeSoundEntity;
+    int mlScrapeSoundEntityID;
+    cSoundEntity *mpRollSoundEntity;
+    int mlRollSoundEntityID;
+    cMatrixf m_mtxPrevScrapeMatrix;
+    bool mbHasSlide;
+    int mlSlideCount;
+    int mlImpactCount;
+    bool mbInUpdateList;
 
-        bool GetGravityCanAttachCharacter(){ return mbGravityCanAttachCharacter;}
-        bool GetGravityAttachmentRotation(){ return mbGravityAttachmentRotation;}
-        bool GetGravityAttachmentVelocity(){ return mbGravityAttachmentVelocity;}
-        eVelocityAxes GetGravityAttachmentVelocityAxes(){ return mGravityAttachmentVelocityAxes;}
-        
-        void AddConnectedCharacter(iCharacterBody *apCharBody);
-        void RemoveConnectedCharacter(iCharacterBody *apCharBody);
+    float mfBuoyancyDensityMul;
 
-        bool IsInUpdateList(){ return mbInUpdateList;}
-        void SetInUpdateList(bool abX){ mbInUpdateList = abX;}
+    bool mbStaticMovement;
+    cVector3f mvTotalStaticLinearVel;
+    cVector3f mvTotalStaticAngularVel;
 
-        void AddAttachedVerletContainer(iVerletParticleContainer *apContainer);
-        void RemoveAttachedVerletContainer(iVerletParticleContainer *apContainer);
+    tFlag mlCollideFlags;
 
-        iPhysicsWorld *GetWorld(){ return mpWorld;}
+    bool mbPushedByCharacterGravity;
 
-        void DisableAfterSimulation(){ mbDisableAfterSimulation = true;}
+    bool mbBlocksSound;
+    bool mbBlocksLight;
+    bool mbIsCharacter;
+    bool mbCollideCharacter;
+    bool mbIsRagDoll;
+    bool mbCollideRagDoll;
+    bool mbVolatile;
+    bool mbUseSurfaceEffects;
 
-        //Entity implementation
-        tString GetEntityType(){ return "Body";}
+    bool mbGravityCanAttachCharacter;
+    bool mbGravityAttachmentRotation;
+    bool mbGravityAttachmentVelocity;
+    eVelocityAxes mGravityAttachmentVelocityAxes;
 
-        virtual void DeleteLowLevel()=0;
-    protected:
-        iPhysicsWorld *mpWorld;
-        iCollideShape *mpShape;
-        iPhysicsMaterial *mpMaterial;
-        
-        iCharacterBody *mpCharacterBody;
+    int mlPushStrength;
 
-        std::vector<iPhysicsJoint*> mvJoints;
+    cPhysicsBody_Buoyancy mBuoyancy;
 
-        bool mbDestroying;
-        
-        std::list<iCharacterBody*> mlstConnectedCharBodies;
-                        
-        iPhysicsBody *mpScrapeBody;
-        cSoundEntity *mpScrapeSoundEntity;
-        int mlScrapeSoundEntityID;
-        cSoundEntity *mpRollSoundEntity;
-        int mlRollSoundEntityID;
-        cMatrixf m_mtxPrevScrapeMatrix;
-        bool mbHasSlide;
-        int mlSlideCount;
-        int mlImpactCount;
-        bool mbInUpdateList;
+    bool mbDisableAfterSimulation;
 
-        float mfBuoyancyDensityMul;
+    bool mbHasCollision;
 
-        bool mbStaticMovement;
-        cVector3f mvTotalStaticLinearVel;
-        cVector3f mvTotalStaticAngularVel;
+    tPhysicsBodyCallbackList mlstBodyCallbacks;
 
-        tFlag mlCollideFlags;
+    void *mpUserData;
 
-        bool mbPushedByCharacterGravity;
+    tVerletParticleContainerList mlstAttachedVerletContainers;
 
-        bool mbBlocksSound;
-        bool mbBlocksLight;
-        bool mbIsCharacter;
-        bool mbCollideCharacter;
-        bool mbIsRagDoll;
-        bool mbCollideRagDoll;
-        bool mbVolatile;
-        bool mbUseSurfaceEffects;
-
-        bool mbGravityCanAttachCharacter;
-        bool mbGravityAttachmentRotation;
-        bool mbGravityAttachmentVelocity;
-        eVelocityAxes mGravityAttachmentVelocityAxes;
-
-        int mlPushStrength;
-
-        cPhysicsBody_Buoyancy mBuoyancy;
-
-        bool mbDisableAfterSimulation;
-
-        bool mbHasCollision;
-
-        tPhysicsBodyCallbackList mlstBodyCallbacks;
-
-        void *mpUserData;
-
-        tVerletParticleContainerList mlstAttachedVerletContainers;
-
-        bool mbCollide;
-    };
+    bool mbCollide;
+};
 };
 #endif // HPL_PHYSICS_BODY_H

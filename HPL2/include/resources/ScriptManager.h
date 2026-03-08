@@ -3,32 +3,33 @@
 
 #include "resources/ResourceManager.h"
 
-namespace hpl {
-    
-    class cSystem;
-    class cResources;
-    class iScript;
+namespace hpl
+{
 
-    class cScriptManager : public iResourceManager
-    {
-    public:
-        cScriptManager(cSystem* apSystem,cResources *apResources);
-        ~cScriptManager();
+class cSystem;
+class cResources;
+class iScript;
 
-        /**
-         * Create a new script.
-         * \param asName name of the script.
-         * \return 
-         */
-        iScript* CreateScript(const tString& asName, tString *apCompileMessages=NULL);
+class cScriptManager : public iResourceManager
+{
+public:
+    cScriptManager(cSystem* apSystem,cResources *apResources);
+    ~cScriptManager();
 
-        void Destroy(iResourceBase* apResource);
-        void Unload(iResourceBase* apResource);
+    /**
+     * Create a new script.
+     * \param asName name of the script.
+     * \return
+     */
+    iScript* CreateScript(const tString& asName, tString *apCompileMessages=NULL);
 
-    private:
-        cSystem* mpSystem;
-        cResources *mpResources;
-    };
+    void Destroy(iResourceBase* apResource);
+    void Unload(iResourceBase* apResource);
+
+private:
+    cSystem* mpSystem;
+    cResources *mpResources;
+};
 
 };
 #endif // HPL_SCRIPT_MANAGER_H

@@ -7,136 +7,179 @@
 #include "scene/Entity3D.h"
 #include "graphics/Renderable.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cMaterialManager;
-    class cResources;
-    class cGraphics;
-    class cFileSearcher;
-    class iLowLevelGraphics;
-    class cMaterial;
-    class iVertexBuffer;
-    
-    //------------------------------------------
-    
-    class cBeam;
-    class cBeamEnd : public iEntity3D
-    {
+class cMaterialManager;
+class cResources;
+class cGraphics;
+class cFileSearcher;
+class iLowLevelGraphics;
+class cMaterial;
+class iVertexBuffer;
+
+//------------------------------------------
+
+class cBeam;
+class cBeamEnd : public iEntity3D
+{
     friend class cBeam;
     friend class cBeamEnd_UpdateCallback;
-    public:
-        cBeamEnd(const tString asName, cBeam *apBeam) : iEntity3D(asName), 
-                        mColor(1,1),mpBeam(apBeam) {}
+public:
+    cBeamEnd(const tString asName, cBeam *apBeam) : iEntity3D(asName),
+        mColor(1,1),mpBeam(apBeam) {}
 
-        void SetColor(const cColor &aColor);
-        const cColor& GetColor(){ return mColor;}
-
-        /////////////////////////////////
-        //Entity implementation
-        tString GetEntityType(){ return "BeamEnd";}
-    private:
-        cColor mColor;
-        cBeam *mpBeam;
-    };
-
-    //------------------------------------------
-    
-    class cBeamEnd_UpdateCallback : public iEntityCallback
+    void SetColor(const cColor &aColor);
+    const cColor& GetColor()
     {
-    public:
-        void OnTransformUpdate(iEntity3D * apEntity);
-    };
+        return mColor;
+    }
 
-    //------------------------------------------
-
-    class cBeam : public iRenderable
+    /////////////////////////////////
+    //Entity implementation
+    tString GetEntityType()
     {
-    #ifdef __GNUC__
-        typedef iRenderable __super;
-    #endif
+        return "BeamEnd";
+    }
+private:
+    cColor mColor;
+    cBeam *mpBeam;
+};
+
+//------------------------------------------
+
+class cBeamEnd_UpdateCallback : public iEntityCallback
+{
+public:
+    void OnTransformUpdate(iEntity3D * apEntity);
+};
+
+//------------------------------------------
+
+class cBeam : public iRenderable
+{
+#ifdef __GNUC__
+    typedef iRenderable __super;
+#endif
     friend class cBeamEnd;
-    public:
-        cBeam(const tString asName, cResources *apResources,cGraphics *apGraphics);
-        ~cBeam();
+public:
+    cBeam(const tString asName, cResources *apResources,cGraphics *apGraphics);
+    ~cBeam();
 
-        void SetMaterial(cMaterial * apMaterial);
-        
-        const tString& GetFileName(){return msFileName;}
+    void SetMaterial(cMaterial * apMaterial);
 
-        /**
-         * Set the size. X= the thickness of the line, width of texture used. Y = the length that one texture height takes.
-         * \param avSize 
-         */
-        void SetSize(const cVector2f& avSize);
-        cVector2f GetSize(){ return mvSize;}
-        
-        void SetColor(const cColor &aColor);
-        const cColor& GetColor(){ return mColor;}
+    const tString& GetFileName()
+    {
+        return msFileName;
+    }
 
-        void SetTileHeight(bool abX);
-        bool GetTileHeight(){ return mbTileHeight;}
+    /**
+     * Set the size. X= the thickness of the line, width of texture used. Y = the length that one texture height takes.
+     * \param avSize
+     */
+    void SetSize(const cVector2f& avSize);
+    cVector2f GetSize()
+    {
+        return mvSize;
+    }
 
-        void SetMultiplyAlphaWithColor(bool abX);
-        bool GetMultiplyAlphaWithColor(){ return mbMultiplyAlphaWithColor;}
+    void SetColor(const cColor &aColor);
+    const cColor& GetColor()
+    {
+        return mColor;
+    }
 
-        cBeamEnd* GetEnd(){ return mpEnd;}
+    void SetTileHeight(bool abX);
+    bool GetTileHeight()
+    {
+        return mbTileHeight;
+    }
 
-        bool LoadXMLProperties(const tString asFile);
+    void SetMultiplyAlphaWithColor(bool abX);
+    bool GetMultiplyAlphaWithColor()
+    {
+        return mbMultiplyAlphaWithColor;
+    }
 
-        cVector3f GetAxis(){ return mvAxis;}
-        cVector3f GetMidPosition(){ return mvMidPosition;}
+    cBeamEnd* GetEnd()
+    {
+        return mpEnd;
+    }
 
-        /////////////////////////////////
-        //Entity implementation
-        tString GetEntityType(){ return "Beam";}
+    bool LoadXMLProperties(const tString asFile);
 
-        bool IsVisible();
-        
-        //Renderable implementations
-        cMaterial *GetMaterial(){ return mpMaterial;}
-        iVertexBuffer* GetVertexBuffer(){return mpVtxBuffer;}
+    cVector3f GetAxis()
+    {
+        return mvAxis;
+    }
+    cVector3f GetMidPosition()
+    {
+        return mvMidPosition;
+    }
 
-        void UpdateGraphicsForFrame(float afFrameTime);
+    /////////////////////////////////
+    //Entity implementation
+    tString GetEntityType()
+    {
+        return "Beam";
+    }
 
-        cBoundingVolume* GetBoundingVolume();
+    bool IsVisible();
 
-        cMatrixf* GetModelMatrix(cFrustum *apFrustum);
+    //Renderable implementations
+    cMaterial *GetMaterial()
+    {
+        return mpMaterial;
+    }
+    iVertexBuffer* GetVertexBuffer()
+    {
+        return mpVtxBuffer;
+    }
 
-        int GetMatrixUpdateCount();
+    void UpdateGraphicsForFrame(float afFrameTime);
+
+    cBoundingVolume* GetBoundingVolume();
+
+    cMatrixf* GetModelMatrix(cFrustum *apFrustum);
+
+    int GetMatrixUpdateCount();
 
 
-        eRenderableType GetRenderType(){ return eRenderableType_Beam;}
-    private:
-        cMaterialManager* mpMaterialManager;
-        cFileSearcher *mpFileSearcher;
-        iLowLevelGraphics* mpLowLevelGraphics;
-        
-        cMaterial *mpMaterial;
-        iVertexBuffer* mpVtxBuffer;
+    eRenderableType GetRenderType()
+    {
+        return eRenderableType_Beam;
+    }
+private:
+    cMaterialManager* mpMaterialManager;
+    cFileSearcher *mpFileSearcher;
+    iLowLevelGraphics* mpLowLevelGraphics;
 
-        cBeamEnd *mpEnd;
+    cMaterial *mpMaterial;
+    iVertexBuffer* mpVtxBuffer;
 
-        tString msFileName;
+    cBeamEnd *mpEnd;
 
-        int mlStartTransformCount;
-        int mlEndTransformCount;
+    tString msFileName;
 
-        cMatrixf m_mtxTempTransform;
-        
-        int mlLastRenderCount;
+    int mlStartTransformCount;
+    int mlEndTransformCount;
 
-        cBeamEnd_UpdateCallback mEndCallback;
+    cMatrixf m_mtxTempTransform;
 
-        cVector2f mvSize;
-        
-        cVector3f mvAxis;
-        cVector3f mvMidPosition;
+    int mlLastRenderCount;
 
-        bool mbTileHeight;
-        bool mbMultiplyAlphaWithColor;
+    cBeamEnd_UpdateCallback mEndCallback;
 
-        cColor mColor;
-    };
+    cVector2f mvSize;
+
+    cVector3f mvAxis;
+    cVector3f mvMidPosition;
+
+    bool mbTileHeight;
+    bool mbMultiplyAlphaWithColor;
+
+    cColor mColor;
+};
 
 };
 #endif // HPL_BEAM_H

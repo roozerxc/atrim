@@ -23,8 +23,8 @@ public:
 
 class iLuxPlayerState_DefaultBase : public iLuxPlayerState
 {
-typedef iLuxPlayerState super_class;
-public:    
+    typedef iLuxPlayerState super_class;
+public:
     iLuxPlayerState_DefaultBase(cLuxPlayer *apPlayer, eLuxPlayerState aType);
     virtual ~iLuxPlayerState_DefaultBase();
 
@@ -36,20 +36,23 @@ public:
 
     void Update(float afTimeStep);
     void PostUpdate(float afTimeStep);
-    virtual void OnDraw(cGuiSet *apGuiSet ,float afFrameTime);
+    virtual void OnDraw(cGuiSet *apGuiSet,float afFrameTime);
 
     virtual cGuiGfxElement* GetCrosshair();
 
     bool OnDoAction(eLuxPlayerAction aAction,bool abPressed);
 
-    void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter){}
+    void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter) {}
 
     float DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY);
 
     /////////////////////////////////
     //Save data stuff
-    virtual bool IsSaved(){ return true; }
-    
+    virtual bool IsSaved()
+    {
+        return true;
+    }
+
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);
     void LoadFromSaveDataBeforeEnter(cLuxMap *apMap,iLuxPlayerState_SaveData* apSaveData);
     void LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
@@ -57,12 +60,15 @@ public:
 protected:
     virtual bool ShowOutlineOnEntity(iLuxEntity *apEntity, iPhysicsBody *apBody, const cVector3f &avFocusPos);
 
-    virtual void ImplementedUpdate(float afTimeStep){}
-    virtual bool ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed){return true;}
-    virtual void ImplementedOnEnterState(eLuxPlayerState aPrevState){}
-    virtual void ImplementedOnLeaveState(eLuxPlayerState aNewState){}
+    virtual void ImplementedUpdate(float afTimeStep) {}
+    virtual bool ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed)
+    {
+        return true;
+    }
+    virtual void ImplementedOnEnterState(eLuxPlayerState aPrevState) {}
+    virtual void ImplementedOnLeaveState(eLuxPlayerState aNewState) {}
 
-    bool CanInteractWithEntity();    
+    bool CanInteractWithEntity();
 
     void AddOutlineObjects(iPhysicsBody *apBody, iLuxEntity *apEntity, const cVector3f &avFocusPos);
     void GetAttachedBodies(iPhysicsBody *apBody, tPhysicsBodyList &alstBodies);

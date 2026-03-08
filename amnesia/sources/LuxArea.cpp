@@ -25,7 +25,7 @@ void iLuxAreaLoader::Load(const tString &asName, int alID, bool abActive, const 
     pBody->SetCollideCharacter(false);
     pBody->SetMatrix(a_mtxTransform);
     pBody->SetUserData(pArea);
-    
+
     pArea->mpBody = pBody;
 
     //////////////////////////////
@@ -89,7 +89,7 @@ void iLuxArea::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
     /*if(mpBody==NULL) return;
 
     cBoundingVolume* pBV = mpBody->GetBoundingVolume();
-    
+
     apFunctions->GetLowLevelGfx()->DrawBoxMinMax(pBV->GetMin(), pBV->GetMax(),cColor(1,1,1,1));*/
 }
 
@@ -129,7 +129,7 @@ iEntity3D* iLuxArea::GetAttachEntity()
 //////////////////////////////////////////////////////////////////////////
 
 void iLuxArea::OnSetActive(bool abX)
-{    
+{
     ///////////////
     //Bodies
     if(mpBody)
@@ -140,7 +140,7 @@ void iLuxArea::OnSetActive(bool abX)
 
 void iLuxArea::OnUpdate(float afTimeStep)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -201,7 +201,7 @@ void iLuxArea::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     pBody->SetActive(mbActive);
 
     mpBody = pBody;
-    
+
     ///////////////////
     //Do setup
     SetupAfterLoad(mpMap->GetWorld());

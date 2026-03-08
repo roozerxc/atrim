@@ -45,8 +45,8 @@ public:
 
 class cLuxPlayerState_InteractGrab : public iLuxPlayerState_Interact
 {
-typedef iLuxPlayerState_Interact super_class;
-public:    
+    typedef iLuxPlayerState_Interact super_class;
+public:
     cLuxPlayerState_InteractGrab(cLuxPlayer *apPlayer);
     virtual ~cLuxPlayerState_InteractGrab();
 
@@ -69,12 +69,15 @@ public:
     bool AllowBuoyancy(iPhysicsBody *apBody);
 
     float DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY);
-    
+
     void RenderSolid(cRendererCallbackFunctions* apFunctions);
 
     /////////////////////////////////
     //Save data stuff
-    virtual bool IsSaved(){ return true; }
+    virtual bool IsSaved()
+    {
+        return true;
+    }
     iLuxPlayerState_SaveData* CreateSaveData();
 
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);
@@ -97,7 +100,7 @@ protected:
 
     float mfMaxLeaveAngularSpeed;
     float mfMaxLeaveLinearSpeed;
-    
+
     std::vector<cGrabbedBodyProperties> mvBodyProperties;
     std::vector<cGrabbedSubMeshProperties> mvSubMeshProperties;
 

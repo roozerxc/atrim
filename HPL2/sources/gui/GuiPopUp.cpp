@@ -10,169 +10,171 @@
 
 #include "gui/WidgetWindow.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    iGuiPopUp::iGuiPopUp(cGuiSet *apSet, bool abAddCloseButton, const cVector2f& avPopUpSize)
+iGuiPopUp::iGuiPopUp(cGuiSet *apSet, bool abAddCloseButton, const cVector2f& avPopUpSize)
+{
+    mpSet = apSet;
+    mpSkin = mpSet->GetSkin();
+
+    mpSet->mlPopupCount++;
+
+    cVector3f vPos = cVector3f(mpSet->GetVirtualSize()-avPopUpSize)*0.5f + cVector3f(0,0, mpSet->GetPopUpZ());
+    mpSet->IncPopUpZ();
+
+    mpWindow = mpSet->CreateWidgetWindow(abAddCloseButton?eWidgetWindowButtonFlag_ButtonClose:eWidgetWindowButtonFlag_None,
+                                         vPos, avPopUpSize, _W(""), NULL);
+    mpWindow->SetCloseButtonDisablesWindow(false);
+    mpWindow->AddCallback(eGuiMessage_WindowClose, this, kGuiCallback(Window_OnClose));
+
+    ////////////////////////
+    // Set up Attention and focus
+
+    mbAttChanged = false;
+    mpNewAttention = mpSet->GetAttentionWidget();
+    mbFocusChanged = false;
+    mpNewFocused = mpSet->GetFocusedWidget();
+    mbDefaultUIFocusChanged = false;
+    mpNewDefaultUIFocus = mpSet->GetDefaultFocusNavWidget();
+
+    mpSet->PushAttentionWidget();
+    mpSet->PushFocusedWidget();
+    mpSet->PushDefaultFocusNavWidget();
+
+    mpSet->SetAttentionWidget(mpWindow);
+
+    SetKillOnEscapeKey(true);
+
+    mpDestroyCallbackObject = NULL;
+    mpDestroyCallback = NULL;
+}
+
+//-----------------------------------------------------------------------
+
+iGuiPopUp::~iGuiPopUp()
+{
+    mpSet->mlPopupCount--;
+
+    mpSet->PopAttentionWidget();
+    mpSet->PopFocusedWidget();
+    mpSet->PopDefaultFocusNavWidget();
+
+    if(mbAttChanged)
+        mpSet->SetAttentionWidget(mpNewAttention);
+    if(mbFocusChanged)
+        mpSet->SetFocusedWidget(mpNewFocused);
+    if(mbDefaultUIFocusChanged)
+        mpSet->SetDefaultFocusNavWidget(mpNewDefaultUIFocus);
+
+    if(mpDestroyCallbackObject && mpDestroyCallback)
     {
-        mpSet = apSet;
-        mpSkin = mpSet->GetSkin();
-
-        mpSet->mlPopupCount++;
-
-        cVector3f vPos = cVector3f(mpSet->GetVirtualSize()-avPopUpSize)*0.5f + cVector3f(0,0, mpSet->GetPopUpZ());
-        mpSet->IncPopUpZ();
-
-        mpWindow = mpSet->CreateWidgetWindow(abAddCloseButton?eWidgetWindowButtonFlag_ButtonClose:eWidgetWindowButtonFlag_None,
-                                             vPos, avPopUpSize, _W(""), NULL);
-        mpWindow->SetCloseButtonDisablesWindow(false);
-        mpWindow->AddCallback(eGuiMessage_WindowClose, this, kGuiCallback(Window_OnClose));
-
-        ////////////////////////
-        // Set up Attention and focus
-
-        mbAttChanged = false;
-        mpNewAttention = mpSet->GetAttentionWidget();
-        mbFocusChanged = false;
-        mpNewFocused = mpSet->GetFocusedWidget();
-        mbDefaultUIFocusChanged = false;
-        mpNewDefaultUIFocus = mpSet->GetDefaultFocusNavWidget();
-
-        mpSet->PushAttentionWidget();
-        mpSet->PushFocusedWidget();
-        mpSet->PushDefaultFocusNavWidget();
-                
-        mpSet->SetAttentionWidget(mpWindow);
-
-        SetKillOnEscapeKey(true);
-
-        mpDestroyCallbackObject = NULL;
-        mpDestroyCallback = NULL;
+        mpDestroyCallback(mpDestroyCallbackObject, NULL, cGuiMessageData());
     }
 
-    //-----------------------------------------------------------------------
+    if(mpWindow) mpSet->DestroyWidget(mpWindow, true);
+}
 
-    iGuiPopUp::~iGuiPopUp()
-    {
-        mpSet->mlPopupCount--;
+//-----------------------------------------------------------------------
 
-        mpSet->PopAttentionWidget();
-        mpSet->PopFocusedWidget();
-        mpSet->PopDefaultFocusNavWidget();
-        
-        if(mbAttChanged)
-            mpSet->SetAttentionWidget(mpNewAttention);
-        if(mbFocusChanged)
-            mpSet->SetFocusedWidget(mpNewFocused);
-        if(mbDefaultUIFocusChanged)
-            mpSet->SetDefaultFocusNavWidget(mpNewDefaultUIFocus);
-        
-        if(mpDestroyCallbackObject && mpDestroyCallback) {
-            mpDestroyCallback(mpDestroyCallbackObject, NULL, cGuiMessageData());
-        }
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
 
-        if(mpWindow) mpSet->DestroyWidget(mpWindow, true);
-    }
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
+void iGuiPopUp::AddOnDestroyCallback(void *apCallbackObject, tGuiCallbackFunc apCallback)
+{
+    mpDestroyCallbackObject = apCallbackObject;
+    mpDestroyCallback = apCallback;
+}
 
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
+void iGuiPopUp::SetKillOnEscapeKey(bool abX)
+{
+    mpWindow->SetEscapeKeyClosesWindow(abX);
+}
 
-    //-----------------------------------------------------------------------
-    
-    void iGuiPopUp::AddOnDestroyCallback(void *apCallbackObject, tGuiCallbackFunc apCallback)
-    {
-        mpDestroyCallbackObject = apCallbackObject;
-        mpDestroyCallback = apCallback;
-    }
+bool iGuiPopUp::GetKillOnEscapeKey()
+{
+    return mpWindow->GetEscapeKeyClosesWindow();
+}
 
-    void iGuiPopUp::SetKillOnEscapeKey(bool abX)
-    {
-        mpWindow->SetEscapeKeyClosesWindow(abX);
-    }
-
-    bool iGuiPopUp::GetKillOnEscapeKey()
-    {
-        return mpWindow->GetEscapeKeyClosesWindow();
-    }
-
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
 
-    //////////////////////////////////////////////////////////////////////////
-    // PROTECTED METHODS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// PROTECTED METHODS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    bool iGuiPopUp::Window_OnClose(iWidget* apWidget, const cGuiMessageData& aData)
-    {
-        OnCloseSpecific();
-        SelfDestruct();
+bool iGuiPopUp::Window_OnClose(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    OnCloseSpecific();
+    SelfDestruct();
 
-        return true;
-    }
-    kGuiCallbackDeclaredFuncEnd(iGuiPopUp, Window_OnClose);
+    return true;
+}
+kGuiCallbackDeclaredFuncEnd(iGuiPopUp, Window_OnClose);
 
-    //-----------------------------------------------------------------------
-    
-    void iGuiPopUp::SelfDestruct()
-    {
-        mpSet->DestroyPopUp(this);
-    }
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
+void iGuiPopUp::SelfDestruct()
+{
+    mpSet->DestroyPopUp(this);
+}
 
-    bool iGuiPopUp::RunCallback(void* apObj, tGuiCallbackFunc apCallback, 
+//-----------------------------------------------------------------------
+
+bool iGuiPopUp::RunCallback(void* apObj, tGuiCallbackFunc apCallback,
                             iWidget* apWidget, const cGuiMessageData& aData, bool abRunFocusChangeChecks)
+{
+    if(apObj==NULL || apCallback==NULL) return false;
+
+    iWidget *pPreCallAtt = NULL, *pPreCallFocus = NULL, *pPreCallDefaultUIFocus = NULL, *pPostCallAtt, *pPostCallFocus, *pPostCallDefaultUIFocus;
+
+    if(abRunFocusChangeChecks)
     {
-        if(apObj==NULL || apCallback==NULL) return false;
-
-        iWidget *pPreCallAtt = NULL, *pPreCallFocus = NULL, *pPreCallDefaultUIFocus = NULL, *pPostCallAtt, *pPostCallFocus, *pPostCallDefaultUIFocus;
-        
-        if(abRunFocusChangeChecks)
-        {
-            pPreCallAtt = mpSet->GetAttentionWidget();
-            pPreCallFocus = mpSet->GetFocusedWidget();
-            pPreCallDefaultUIFocus = mpSet->GetDefaultFocusNavWidget();
-        }
-
-        bool bRet = apCallback(apObj, apWidget, aData);
-
-        if(abRunFocusChangeChecks)
-        {
-            pPostCallAtt = mpSet->GetAttentionWidget();
-            pPostCallFocus = mpSet->GetFocusedWidget();
-            pPostCallDefaultUIFocus = mpSet->GetDefaultFocusNavWidget();
-
-            mbAttChanged = pPreCallAtt!=pPostCallAtt;
-            if(mbAttChanged)
-                mpNewAttention = pPostCallAtt;
-            
-            mbFocusChanged = pPreCallFocus!=pPostCallFocus;
-            if(mbFocusChanged)
-                mpNewFocused = pPostCallFocus;
-
-            mbDefaultUIFocusChanged = pPreCallDefaultUIFocus!=pPostCallDefaultUIFocus;
-            if(mbDefaultUIFocusChanged)
-                mpNewDefaultUIFocus = pPostCallDefaultUIFocus;
-        }
-
-        return bRet;
+        pPreCallAtt = mpSet->GetAttentionWidget();
+        pPreCallFocus = mpSet->GetFocusedWidget();
+        pPreCallDefaultUIFocus = mpSet->GetDefaultFocusNavWidget();
     }
 
-    //-----------------------------------------------------------------------
+    bool bRet = apCallback(apObj, apWidget, aData);
 
-    void iGuiPopUp::SetUpDefaultFocus(iWidget* apWidget)
+    if(abRunFocusChangeChecks)
     {
-        mpSet->SetDefaultFocusNavWidget(apWidget);
-        mpSet->SetFocusedWidget(apWidget);
+        pPostCallAtt = mpSet->GetAttentionWidget();
+        pPostCallFocus = mpSet->GetFocusedWidget();
+        pPostCallDefaultUIFocus = mpSet->GetDefaultFocusNavWidget();
+
+        mbAttChanged = pPreCallAtt!=pPostCallAtt;
+        if(mbAttChanged)
+            mpNewAttention = pPostCallAtt;
+
+        mbFocusChanged = pPreCallFocus!=pPostCallFocus;
+        if(mbFocusChanged)
+            mpNewFocused = pPostCallFocus;
+
+        mbDefaultUIFocusChanged = pPreCallDefaultUIFocus!=pPostCallDefaultUIFocus;
+        if(mbDefaultUIFocusChanged)
+            mpNewDefaultUIFocus = pPostCallDefaultUIFocus;
     }
+
+    return bRet;
+}
+
+//-----------------------------------------------------------------------
+
+void iGuiPopUp::SetUpDefaultFocus(iWidget* apWidget)
+{
+    mpSet->SetDefaultFocusNavWidget(apWidget);
+    mpSet->SetFocusedWidget(apWidget);
+}
 }

@@ -89,7 +89,7 @@ cLuxArea_Examine::~cLuxArea_Examine()
 
 void cLuxArea_Examine::SetupAfterLoad(cWorld *apWorld)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -111,7 +111,7 @@ bool cLuxArea_Examine::CanInteract(iPhysicsBody *apBody)
 bool cLuxArea_Examine::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 {
     float fSanity = gpBase->mpPlayer->GetSanity();
-    
+
     ////////////////////////////////
     // Show text
     if(msDescCat != "")
@@ -148,7 +148,7 @@ bool cLuxArea_Examine::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 
 eLuxFocusCrosshair cLuxArea_Examine::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    return eLuxFocusCrosshair_Grab;    
+    return eLuxFocusCrosshair_Grab;
 }
 
 //-----------------------------------------------------------------------

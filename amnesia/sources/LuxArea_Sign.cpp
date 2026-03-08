@@ -69,7 +69,7 @@ cLuxArea_Sign::~cLuxArea_Sign()
 
 void cLuxArea_Sign::SetupAfterLoad(cWorld *apWorld)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -96,7 +96,7 @@ bool cLuxArea_Sign::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 
 eLuxFocusCrosshair cLuxArea_Sign::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    return eLuxFocusCrosshair_Default;    
+    return eLuxFocusCrosshair_Default;
 }
 
 //-----------------------------------------------------------------------

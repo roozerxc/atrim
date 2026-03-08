@@ -5,25 +5,37 @@
 
 namespace hpl
 {
-    class cSoundManager;
+class cSoundManager;
 
-    class iSoundEnvironment
+class iSoundEnvironment
+{
+public:
+    iSoundEnvironment ( ) {}
+    virtual ~iSoundEnvironment () {}
+
+    virtual bool CreateFromFile(const tString &asFile)
     {
-    public:
-        iSoundEnvironment ( ){}        
-        virtual ~iSoundEnvironment () {}
+        return false;
+    }
 
-        virtual bool CreateFromFile(const tString &asFile){ return false;}
+    tString& GetName()
+    {
+        return mstrName;
+    }
+    tString& GetFileName()
+    {
+        return msFileName;
+    }
+    void SetFileName(const tString & asFileName)
+    {
+        msFileName = asFileName;
+    }
 
-        tString& GetName() { return mstrName; }
-        tString& GetFileName() { return msFileName; }
-        void SetFileName(const tString & asFileName){ msFileName = asFileName; }
+protected:
+    tString mstrName;
+    tString msFileName;
+};
 
-    protected:
-        tString mstrName;
-        tString msFileName;
-    };
-    
 }
 
 

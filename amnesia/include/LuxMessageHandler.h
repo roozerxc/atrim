@@ -10,11 +10,11 @@
 
 class cLuxMessageHandler : public iLuxUpdateable
 {
-friend class cLuxMusicHandler_SaveData;
-public:    
+    friend class cLuxMusicHandler_SaveData;
+public:
     cLuxMessageHandler();
     ~cLuxMessageHandler();
-    
+
     void LoadFonts();
     void OnStart();
     void Update(float afTimeStep);
@@ -29,31 +29,49 @@ public:
     void StarQuestAddedMessage();
 
     void StartPauseMessage(const tWString& asText, bool abYesNo, iLuxMessageCallback *apCallback);
-    
+
     /**
     * if time is <=0 then the life time is calculated based on string length.
     */
     void SetMessage(const tWString& asText, float afTime);
-    bool IsMessageActive(){ return mfMessageTime>0; }
+    bool IsMessageActive()
+    {
+        return mfMessageTime>0;
+    }
 
     void OnDraw(float afFrameTime);
 
     void DoAction(eLuxPlayerAction aAction, bool abPressed);
 
-    bool IsPauseMessageActive(){ return mbPauseMessageActive; }
+    bool IsPauseMessageActive()
+    {
+        return mbPauseMessageActive;
+    }
     void SetPauseMessageActive(bool abX);
 
-    bool ShowSubtitles(){ return mbShowSubtitles;}
-    void SetShowSubtitles(bool abX){ mbShowSubtitles=abX;}
+    bool ShowSubtitles()
+    {
+        return mbShowSubtitles;
+    }
+    void SetShowSubtitles(bool abX)
+    {
+        mbShowSubtitles=abX;
+    }
 
-    bool ShowEffectSubtitles(){ return mbShowEffectSubtitles; }
-    void SetShowEffectSubtitles(bool abX){ mbShowEffectSubtitles=abX; }
+    bool ShowEffectSubtitles()
+    {
+        return mbShowEffectSubtitles;
+    }
+    void SetShowEffectSubtitles(bool abX)
+    {
+        mbShowEffectSubtitles=abX;
+    }
 private:
     void DrawQuestAdded();
     void DrawMessage();
     void DrawPauseMessage();
-    
-    
+
+
     //////////////////
     // Data
     cGuiGfxElement *mpBlackGfx;
@@ -61,9 +79,9 @@ private:
 
     cGuiGfxElement *mpQuestAddedIcon;
     tString msQuestAddedSound;
-    
+
     cVector2f mvFontSize;
-    
+
     //////////////////
     // Variables
     bool mbShowSubtitles;

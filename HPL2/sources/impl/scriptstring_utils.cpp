@@ -330,7 +330,7 @@ void StringJoin_Generic(asIScriptGeneric *gen)
 //       int64    parseInt(const string &in str, int &out bytesParsed);
 //       double   parseDouble(const string &in str, int &out bytesParsed);
 //       string @ formatString(int64, const string &in format);  // should use sprintf to format the string
-//       string @ formatDouble(double, const string &in format); 
+//       string @ formatDouble(double, const string &in format);
 //
 //       int16    byteStringToInt16(const string &in str, int start);
 //       int32    byteStringToInt32(const string &in str, int start);
@@ -352,21 +352,36 @@ void RegisterScriptStringUtils(asIScriptEngine *engine)
 {
     int r;
 
-    r = engine->RegisterGlobalFunction("string@ substring(const string &in, int, int)", asFUNCTION(StringSubString_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("int findFirst(const string &in, const string &in)", asFUNCTION(StringFindFirst0_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("int findFirst(const string &in, const string &in, int)", asFUNCTION(StringFindFirst_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("int findLast(const string &in, const string &in)", asFUNCTION(StringFindLast0_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("int findLast(const string &in, const string &in, int)", asFUNCTION(StringFindLast_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("int findFirstOf(const string &in, const string &in)", asFUNCTION(StringFindFirstOf0_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("int findFirstOf(const string &in, const string &in, int)", asFUNCTION(StringFindFirstOf_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("int findFirstNotOf(const string &in, const string &in)", asFUNCTION(StringFindFirstNotOf0_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("int findFirstNotOf(const string &in, const string &in, int)", asFUNCTION(StringFindFirstNotOf_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("int findLastOf(const string &in, const string &in)", asFUNCTION(StringFindLastOf0_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("int findLastOf(const string &in, const string &in, int)", asFUNCTION(StringFindLastOf_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("int findLastNotOf(const string &in, const string &in)", asFUNCTION(StringFindLastNotOf0_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("int findLastNotOf(const string &in, const string &in, int)", asFUNCTION(StringFindLastNotOf_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("string@[]@ split(const string &in, const string &in)", asFUNCTION(StringSplit_Generic), asCALL_GENERIC); assert(r >= 0);
-    r = engine->RegisterGlobalFunction("string@ join(const string@[] &in, const string &in)", asFUNCTION(StringJoin_Generic), asCALL_GENERIC); assert(r >= 0);
+    r = engine->RegisterGlobalFunction("string@ substring(const string &in, int, int)", asFUNCTION(StringSubString_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("int findFirst(const string &in, const string &in)", asFUNCTION(StringFindFirst0_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("int findFirst(const string &in, const string &in, int)", asFUNCTION(StringFindFirst_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("int findLast(const string &in, const string &in)", asFUNCTION(StringFindLast0_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("int findLast(const string &in, const string &in, int)", asFUNCTION(StringFindLast_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("int findFirstOf(const string &in, const string &in)", asFUNCTION(StringFindFirstOf0_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("int findFirstOf(const string &in, const string &in, int)", asFUNCTION(StringFindFirstOf_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("int findFirstNotOf(const string &in, const string &in)", asFUNCTION(StringFindFirstNotOf0_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("int findFirstNotOf(const string &in, const string &in, int)", asFUNCTION(StringFindFirstNotOf_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("int findLastOf(const string &in, const string &in)", asFUNCTION(StringFindLastOf0_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("int findLastOf(const string &in, const string &in, int)", asFUNCTION(StringFindLastOf_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("int findLastNotOf(const string &in, const string &in)", asFUNCTION(StringFindLastNotOf0_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("int findLastNotOf(const string &in, const string &in, int)", asFUNCTION(StringFindLastNotOf_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("string@[]@ split(const string &in, const string &in)", asFUNCTION(StringSplit_Generic), asCALL_GENERIC);
+    assert(r >= 0);
+    r = engine->RegisterGlobalFunction("string@ join(const string@[] &in, const string &in)", asFUNCTION(StringJoin_Generic), asCALL_GENERIC);
+    assert(r >= 0);
 }
 
 END_AS_NAMESPACE

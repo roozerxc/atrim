@@ -65,7 +65,7 @@ cLuxDebugHandler::cLuxDebugHandler() : iLuxUpdateable("LuxDebugHandler")
     msCurrentFilePath = _W("");
 
     mbWindowActive = false;
-    
+
     mbFastForward = false;
     mpCBFastForward = NULL;
 }
@@ -111,17 +111,17 @@ void cLuxDebugHandler::LoadUserConfig()
 
     if(gpBase->mbPTestActivated)
     {
-        #ifndef SKIP_PTEST_TESTS
-            mbShowFPS = false;
-            mbShowSoundPlaying = false;
-            mbShowPlayerInfo = false;
-            mbShowEntityInfo = false;
-            mbShowDebugMessages = false;
-            mbShowErrorMessages = false;
-            mbScriptDebugOn = false;
-            mbInspectionMode = false;
-            mbDisableFlashBacks = false;
-        #endif
+#ifndef SKIP_PTEST_TESTS
+        mbShowFPS = false;
+        mbShowSoundPlaying = false;
+        mbShowPlayerInfo = false;
+        mbShowEntityInfo = false;
+        mbShowDebugMessages = false;
+        mbShowErrorMessages = false;
+        mbScriptDebugOn = false;
+        mbInspectionMode = false;
+        mbDisableFlashBacks = false;
+#endif
     }
 
     /////////////////////////////////////////
@@ -135,20 +135,20 @@ void cLuxDebugHandler::LoadUserConfig()
 
 void cLuxDebugHandler::SaveUserConfig()
 {
-     gpBase->mpUserConfig->SetBool("Debug", "ShowFPS", mbShowFPS);
-     gpBase->mpUserConfig->SetBool("Debug", "ShowSoundPlaying", mbShowSoundPlaying);
-     gpBase->mpUserConfig->SetBool("Debug", "ShowPlayerInfo", mbShowPlayerInfo);
-     gpBase->mpUserConfig->SetBool("Debug", "ShowEntityInfo", mbShowEntityInfo);
-     gpBase->mpUserConfig->SetBool("Debug", "ShowDebugMessages", mbShowDebugMessages);
-     gpBase->mpUserConfig->SetBool("Debug", "ShowErrorsAndWarnings", mbShowErrorMessages);
-     gpBase->mpUserConfig->SetBool("Debug", "ScriptDebugOn", mbScriptDebugOn);
-     gpBase->mpUserConfig->SetBool("Debug", "InspectionMode", mbInspectionMode);
-     gpBase->mpUserConfig->SetBool("Debug", "DisableFlashBacks", mbDisableFlashBacks);
-     gpBase->mpUserConfig->SetBool("Debug", "DrawPhysics", mbDrawPhysics);
+    gpBase->mpUserConfig->SetBool("Debug", "ShowFPS", mbShowFPS);
+    gpBase->mpUserConfig->SetBool("Debug", "ShowSoundPlaying", mbShowSoundPlaying);
+    gpBase->mpUserConfig->SetBool("Debug", "ShowPlayerInfo", mbShowPlayerInfo);
+    gpBase->mpUserConfig->SetBool("Debug", "ShowEntityInfo", mbShowEntityInfo);
+    gpBase->mpUserConfig->SetBool("Debug", "ShowDebugMessages", mbShowDebugMessages);
+    gpBase->mpUserConfig->SetBool("Debug", "ShowErrorsAndWarnings", mbShowErrorMessages);
+    gpBase->mpUserConfig->SetBool("Debug", "ScriptDebugOn", mbScriptDebugOn);
+    gpBase->mpUserConfig->SetBool("Debug", "InspectionMode", mbInspectionMode);
+    gpBase->mpUserConfig->SetBool("Debug", "DisableFlashBacks", mbDisableFlashBacks);
+    gpBase->mpUserConfig->SetBool("Debug", "DrawPhysics", mbDrawPhysics);
 
-     gpBase->mpUserConfig->SetBool("Debug", "ReloadFromCurrentPosition", mbReloadFromCurrentPosition);
+    gpBase->mpUserConfig->SetBool("Debug", "ReloadFromCurrentPosition", mbReloadFromCurrentPosition);
 
-     gpBase->mpUserConfig->SetBool("Debug", "AllowQuickSave", mbAllowQuickSave);
+    gpBase->mpUserConfig->SetBool("Debug", "AllowQuickSave", mbAllowQuickSave);
 }
 
 //-----------------------------------------------------------------------
@@ -176,23 +176,23 @@ static tString gsTemp;
 static const char* GetSpaces(int alAmount)
 {
     gsTemp.resize(alAmount, ' ');
-    return gsTemp.c_str();    
+    return gsTemp.c_str();
 }
 
 static void PrintContainerNode(iRenderableContainerNode *apNode, int alLevel)
 {
     //apNode->UpdateBeforeUse();
-    Log("%sNode %d Radius: %f Min: (%s) Max: (%s) Objects: %d\n",    GetSpaces(alLevel), apNode, apNode->GetRadius(), 
-                                                                    apNode->GetMin().ToString().c_str(), 
-                                                                    apNode->GetMax().ToString().c_str(),
-                                                                    apNode->GetObjectNum());
-    
+    Log("%sNode %d Radius: %f Min: (%s) Max: (%s) Objects: %d\n",    GetSpaces(alLevel), apNode, apNode->GetRadius(),
+        apNode->GetMin().ToString().c_str(),
+        apNode->GetMax().ToString().c_str(),
+        apNode->GetObjectNum());
+
     tRenderableList *pObjList = apNode->GetObjectList();
     tRenderableListIt objIt = pObjList->begin();
     for(; objIt != pObjList->end(); ++objIt)
     {
         iRenderable *pObject = *objIt;
-        
+
         //Log("%s -> '%s'\n", GetSpaces(alLevel), pObject->GetName().c_str());
     }
 
@@ -209,16 +209,16 @@ static void PrintContainerNode(iRenderableContainerNode *apNode, int alLevel)
 void cLuxDebugHandler::Update(float afTimeStep)
 {
     iCharacterBody *pCharBody = gpBase->mpPlayer->GetCharacterBody();
-    
+
     if(mbFirstUpdateOnMap)// && mlTempCount>0)
     {
         mbFirstUpdateOnMap = false;
-        
+
         //DEBUG:
         //gpBase->mpEngine->GetUpdater()->SetContainer("Journal");
         //gpBase->mpJournal->OpenNote(gpBase->mpJournal->GetNote(0));
         //gpBase->mpEngine->GetUpdater()->SetContainer("Inventory");
-        
+
         cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
         if(pMap)
         {
@@ -248,7 +248,7 @@ void cLuxDebugHandler::Update(float afTimeStep)
         cache.Destroy();
     }
 
-    
+
     UpdateInspectionMeshEntity(afTimeStep);
     UpdateMessages(afTimeStep);
 }
@@ -304,7 +304,8 @@ void cLuxDebugHandler::SetDebugWindowActive(bool abActive)
         mpGuiSet->SetActive(true);
         gpBase->mpInputHandler->ChangeState(eLuxInputState_Debug);
 
-        if(gpBase->mpConfigHandler->mbFullscreen==false) {
+        if(gpBase->mpConfigHandler->mbFullscreen==false)
+        {
             gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(false);
             gpBase->mpEngine->GetInput()->GetLowLevel()->RelativeMouse(false);
         }
@@ -318,7 +319,8 @@ void cLuxDebugHandler::SetDebugWindowActive(bool abActive)
         mpGuiSet->SetActive(false);
         gpBase->mpInputHandler->ChangeState(eLuxInputState_Game);
 
-        if(gpBase->mpConfigHandler->mbFullscreen==false) {
+        if(gpBase->mpConfigHandler->mbFullscreen==false)
+        {
             gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(true);
             gpBase->mpEngine->GetInput()->GetLowLevel()->RelativeMouse(true);
         }
@@ -331,46 +333,72 @@ static tString PixelFormatToString(ePixelFormat aFormat)
 {
     switch(aFormat)
     {
-    case ePixelFormat_Unknown:            return "Unknown";
-    case ePixelFormat_Alpha:            return "Alpha";
-    case ePixelFormat_Luminance:        return "Luminance";
-    case ePixelFormat_LuminanceAlpha:    return "LuminanceALpha";
-    case ePixelFormat_RGB:                return "RGB";
-    case ePixelFormat_RGBA:                return "RGBA";
-    case ePixelFormat_BGR:                return "BGR";
-    case ePixelFormat_BGRA:                return "BGRA";
-    case ePixelFormat_DXT1:                return "DXT1";
-    case ePixelFormat_DXT2:                return "DXT2";
-    case ePixelFormat_DXT3:                return "DXT3";
-    case ePixelFormat_DXT4:                return "DXT4";
-    case ePixelFormat_DXT5:                return "DXT5";
-    case ePixelFormat_Depth16:            return "Depth16";
-    case ePixelFormat_Depth24:            return "Depth24";
-    case ePixelFormat_Depth32:            return "Depth32";
-    case ePixelFormat_Alpha16:            return "Alpha16";
-    case ePixelFormat_Luminance16:        return "Luminance16";
-    case ePixelFormat_LuminanceAlpha16:    return "LuminanceAlpha16";
-    case ePixelFormat_RGB16:            return "RGB16";
-    case ePixelFormat_RGBA16:            return "RGBA16";
-    case ePixelFormat_Alpha32:            return "Alpha32";
-    case ePixelFormat_Luminance32:        return "Luminance32";
-    case ePixelFormat_LuminanceAlpha32:    return "LuminanceAlpha32";
-    case ePixelFormat_RGB32:            return "RGB32";
-    case ePixelFormat_RGBA32:            return "RGBA32";
-    }    
+    case ePixelFormat_Unknown:
+        return "Unknown";
+    case ePixelFormat_Alpha:
+        return "Alpha";
+    case ePixelFormat_Luminance:
+        return "Luminance";
+    case ePixelFormat_LuminanceAlpha:
+        return "LuminanceALpha";
+    case ePixelFormat_RGB:
+        return "RGB";
+    case ePixelFormat_RGBA:
+        return "RGBA";
+    case ePixelFormat_BGR:
+        return "BGR";
+    case ePixelFormat_BGRA:
+        return "BGRA";
+    case ePixelFormat_DXT1:
+        return "DXT1";
+    case ePixelFormat_DXT2:
+        return "DXT2";
+    case ePixelFormat_DXT3:
+        return "DXT3";
+    case ePixelFormat_DXT4:
+        return "DXT4";
+    case ePixelFormat_DXT5:
+        return "DXT5";
+    case ePixelFormat_Depth16:
+        return "Depth16";
+    case ePixelFormat_Depth24:
+        return "Depth24";
+    case ePixelFormat_Depth32:
+        return "Depth32";
+    case ePixelFormat_Alpha16:
+        return "Alpha16";
+    case ePixelFormat_Luminance16:
+        return "Luminance16";
+    case ePixelFormat_LuminanceAlpha16:
+        return "LuminanceAlpha16";
+    case ePixelFormat_RGB16:
+        return "RGB16";
+    case ePixelFormat_RGBA16:
+        return "RGBA16";
+    case ePixelFormat_Alpha32:
+        return "Alpha32";
+    case ePixelFormat_Luminance32:
+        return "Luminance32";
+    case ePixelFormat_LuminanceAlpha32:
+        return "LuminanceAlpha32";
+    case ePixelFormat_RGB32:
+        return "RGB32";
+    case ePixelFormat_RGBA32:
+        return "RGBA32";
+    }
     return "Unknown";
 }
 
 void cLuxDebugHandler::OnDraw(float afFrameTime)
 {
     float fY = 5.0f;
-    
+
     ////////////////////
     // FPS
     if(mbShowFPS)
     {
         gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-            _W("FrameTime: %.1fms FPS: %.1f\n"),gpBase->mpEngine->GetAvgFrameTimeInMS(), gpBase->mpEngine->GetFPS());
+                                         _W("FrameTime: %.1fms FPS: %.1f\n"),gpBase->mpEngine->GetAvgFrameTimeInMS(), gpBase->mpEngine->GetFPS());
         fY+=13.0f;
     }
 
@@ -379,10 +407,10 @@ void cLuxDebugHandler::OnDraw(float afFrameTime)
     if(mbShowDebugMessages || mbShowErrorMessages)
     {
         float fY= gpBase->mpEngine->GetGraphics()->GetLowLevel()->GetScreenSizeFloat().y - 40;
-        for(tLuxDebugMessageListIt it = mlstMessages.begin(); it != mlstMessages.end();++it)
+        for(tLuxDebugMessageListIt it = mlstMessages.begin(); it != mlstMessages.end(); ++it)
         {
             cLuxDebugMessage& debugMessage = *it;
-            
+
             gpBase->mpGameDebugSet->DrawFont(debugMessage.msText,gpBase->mpDefaultFont,cVector3f(5,fY,10),14,cColor(1,1));
             fY -= 17;
         }
@@ -397,48 +425,48 @@ void cLuxDebugHandler::OnDraw(float afFrameTime)
         iCharacterBody *pCharBody = pPlayer->GetCharacterBody();
 
         gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-            _W("Position: %ls OnGround: %d Moved: %d Mass: %f ActiveSize: %d\n"),cString::To16Char(pCharBody->GetPosition().ToString()).c_str(), 
-                                                            pCharBody->IsOnGround(),pCharBody->GetMovedLastUpdate(),
-                                                            pCharBody->GetMass(),
-                                                            pCharBody->GetActiveSize());
+                                         _W("Position: %ls OnGround: %d Moved: %d Mass: %f ActiveSize: %d\n"),cString::To16Char(pCharBody->GetPosition().ToString()).c_str(),
+                                         pCharBody->IsOnGround(),pCharBody->GetMovedLastUpdate(),
+                                         pCharBody->GetMass(),
+                                         pCharBody->GetActiveSize());
         fY+=15.0f;
         gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-            _W("MoveSpeed: %f, %f (%f) Mul: %f AvgSpeed: %f\n"), pCharBody->GetMoveSpeed(eCharDir_Forward), pCharBody->GetMoveSpeed(eCharDir_Right),
-                                                                    pCharBody->GetVelocity(gpBase->mpEngine->GetStepSize()).Length(),
-                                                                    pPlayer->GetInteractionMoveSpeedMul(),
-                                                                    pPlayer->GetAvgSpeed());
+                                         _W("MoveSpeed: %f, %f (%f) Mul: %f AvgSpeed: %f\n"), pCharBody->GetMoveSpeed(eCharDir_Forward), pCharBody->GetMoveSpeed(eCharDir_Right),
+                                         pCharBody->GetVelocity(gpBase->mpEngine->GetStepSize()).Length(),
+                                         pPlayer->GetInteractionMoveSpeedMul(),
+                                         pPlayer->GetAvgSpeed());
         fY+=15.0f;
 
         gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-            _W("Climbing: %d\n"), pCharBody->IsClimbing());
+                                         _W("Climbing: %d\n"), pCharBody->IsClimbing());
         fY+=15.0f;
 
         if(pPlayer->GetCurrentMoveState()==eLuxMoveState_Normal)
         {
             cLuxMoveState_Normal *pMoveNormal = static_cast<cLuxMoveState_Normal*>(pPlayer->GetCurrentMoveStateData());
             gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-                _W("Crouching: %d Running: %d MoveSpeedMul %f RunSpeedMul %f\n"), pMoveNormal->IsCrouching(), pMoveNormal->IsRunning(), 
-                                pMoveNormal->GetMoveSpeedMul(), pMoveNormal->GetRunSpeedMul());
+                                             _W("Crouching: %d Running: %d MoveSpeedMul %f RunSpeedMul %f\n"), pMoveNormal->IsCrouching(), pMoveNormal->IsRunning(),
+                                             pMoveNormal->GetMoveSpeedMul(), pMoveNormal->GetRunSpeedMul());
             fY+=15.0f;
         }
 
         gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-            _W("ForceVel: %ls\n"), cString::To16Char(pCharBody->GetForceVelocity().ToString()).c_str());
+                                         _W("ForceVel: %ls\n"), cString::To16Char(pCharBody->GetForceVelocity().ToString()).c_str());
         fY+=15.0f;
         //gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,0),12,cColor(1,1),
         //                            _W("Force Vel: %ls\n"), cString::To16Char(pCharBody->GetForceVelocity().ToString()).c_str() );
 
         //fY+=13.0f;
         gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-                            _W("ExtLightLevel: %f NormalLightlevel: %f\n"), pPlayer->GetHelperLightLevel()->GetExtendedLightLevel(), pPlayer->GetHelperLightLevel()->GetNormalLightLevel() );
+                                         _W("ExtLightLevel: %f NormalLightlevel: %f\n"), pPlayer->GetHelperLightLevel()->GetExtendedLightLevel(), pPlayer->GetHelperLightLevel()->GetNormalLightLevel() );
         fY+=15.0f;
 
         gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-                            _W("Health: %f Terror: %f\n"), pPlayer->GetHealth(), pPlayer->GetTerror() );
+                                         _W("Health: %f Terror: %f\n"), pPlayer->GetHealth(), pPlayer->GetTerror() );
         fY+=15.0f;
 
         gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-                            _W("Oil: %f Sanity: %f Tinderboxes: %d"), pPlayer->GetLampOil() , pPlayer->GetSanity(), pPlayer->GetTinderboxes());
+                                         _W("Oil: %f Sanity: %f Tinderboxes: %d"), pPlayer->GetLampOil(), pPlayer->GetSanity(), pPlayer->GetTinderboxes());
         fY+=15.0f;
 
 
@@ -447,7 +475,7 @@ void cLuxDebugHandler::OnDraw(float afFrameTime)
         //fY+=13.0f;
 
         gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-                                        _W("State: %d\n"), pPlayer->GetCurrentState() );
+                                         _W("State: %d\n"), pPlayer->GetCurrentState() );
         fY+=15.0f;
 
         tString sHandAnim = pPlayer->GetHands()->GetCurrentAnimation();
@@ -455,7 +483,7 @@ void cLuxDebugHandler::OnDraw(float afFrameTime)
         if(pAnim)
         {
             gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-                _W("HandAnim: '%ls' Time: %f/%f\n"), cString::To16Char(sHandAnim).c_str(), pAnim->GetTimePosition(), pAnim->GetRelativeTimePosition() );
+                                             _W("HandAnim: '%ls' Time: %f/%f\n"), cString::To16Char(sHandAnim).c_str(), pAnim->GetTimePosition(), pAnim->GetRelativeTimePosition() );
             fY+=15.0f;
         }
 
@@ -467,21 +495,21 @@ void cLuxDebugHandler::OnDraw(float afFrameTime)
 
             float fBob = pNormalMoveState->GetHeadBobCount();
             gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-                                    _W("HeadBob: %f cos: %f sin: %f\n"), fBob, cos(fBob), sin(fBob) );
+                                             _W("HeadBob: %f cos: %f sin: %f\n"), fBob, cos(fBob), sin(fBob) );
             fY+=15.0f;
         }
 
         gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-            _W("Sanity Between event time: %f AtLowSanityCount: %f\n"), gpBase->mpInsanityHandler->GetNewEventCount() , pPlayer->GetHelperSanity()->GetAtLowSanityCount());
+                                         _W("Sanity Between event time: %f AtLowSanityCount: %f\n"), gpBase->mpInsanityHandler->GetNewEventCount(), pPlayer->GetHelperSanity()->GetAtLowSanityCount());
         fY+=15.0f;
 
         ////////////////////
         // HARDMODE
         gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
-            _W("Hardcore mode: %d "), gpBase->mbHardMode);
+                                         _W("Hardcore mode: %d "), gpBase->mbHardMode);
         fY+=15.0f;
 
-        fY = pPlayer->GetStateData(pPlayer->GetCurrentState())->DrawDebug(gpBase->mpGameDebugSet,gpBase->mpDefaultFont, fY);        
+        fY = pPlayer->GetStateData(pPlayer->GetCurrentState())->DrawDebug(gpBase->mpGameDebugSet,gpBase->mpDefaultFont, fY);
     }
 
     ////////////////////
@@ -517,15 +545,15 @@ void cLuxDebugHandler::OnDraw(float afFrameTime)
             fY+=5.0f;
             iSoundChannel *pChannel = pMusic->mpStream;
             gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont,cVector3f(5,fY,10),14,cColor(1,1),
-                _W("Music: '%ls' vol: %.2f playing: %d prio: %d elapsed: %.2f total time: %.2f %ls"),
-                cString::To16Char(pChannel->GetData()->GetName()).c_str(),
-                pChannel->GetVolume(),
-                pChannel->IsPlaying(),
-                pChannel->GetPriority(),
-                pChannel->GetElapsedTime(),
-                pChannel->GetTotalTime(),
-                pChannel->IsBufferUnderrun()? _W("*BUFFER UNDERRUN!!*") : _W("")
-                );
+                                             _W("Music: '%ls' vol: %.2f playing: %d prio: %d elapsed: %.2f total time: %.2f %ls"),
+                                             cString::To16Char(pChannel->GetData()->GetName()).c_str(),
+                                             pChannel->GetVolume(),
+                                             pChannel->IsPlaying(),
+                                             pChannel->GetPriority(),
+                                             pChannel->GetElapsedTime(),
+                                             pChannel->GetTotalTime(),
+                                             pChannel->IsBufferUnderrun()? _W("*BUFFER UNDERRUN!!*") : _W("")
+                                            );
             fY+=15.0f;
         }
 
@@ -534,14 +562,14 @@ void cLuxDebugHandler::OnDraw(float afFrameTime)
 
         //Get names and entries
         tSoundEntryList *pEntryList = pSoundHandler->GetEntryList();
-        for(tSoundEntryListIt it = pEntryList->begin(); it != pEntryList->end();++it)
+        for(tSoundEntryListIt it = pEntryList->begin(); it != pEntryList->end(); ++it)
         {
             cSoundEntry *pEntry = *it;
             iSoundChannel *pSound = pEntry->GetChannel();
             vSoundNames.push_back(pSound->GetData()->GetName());
             vEntries.push_back(pEntry);
         }
-        
+
         //Draw number of sounds
         gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),_W("Num of sounds: %d"),vSoundNames.size());
         fY+=15.0f;
@@ -551,23 +579,24 @@ void cLuxDebugHandler::OnDraw(float afFrameTime)
         for(int i=0; i< (int)vSoundNames.size(); i++)
         {
             cSoundEntry *pEntry = vEntries[i];
-            if(pEntry == NULL){
+            if(pEntry == NULL)
+            {
                 lRow = 4;
                 lCol =0;
                 continue;
             }
             iSoundChannel* pChannel = pEntry->GetChannel();
             gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont,cVector3f((float)lCol*250,fY+(float)lRow*15,10),14,cColor(1,1),
-                _W("%ls%ls%ls(%.2f)(%d) (%.2f/%.2f)"),
-                cString::To16Char(vSoundNames[i]).c_str(),
-                pChannel->GetData()->IsStream()? _W("*st*") : _W(""),
-                pChannel->IsBufferUnderrun()? _W("BUFFER UNDERRUN!!") : _W(""),
-                pChannel->GetVolume(),
-                pChannel->GetPriority(),
-                pChannel->GetElapsedTime(),
-                pChannel->GetTotalTime()
-                );
-            
+                                             _W("%ls%ls%ls(%.2f)(%d) (%.2f/%.2f)"),
+                                             cString::To16Char(vSoundNames[i]).c_str(),
+                                             pChannel->GetData()->IsStream()? _W("*st*") : _W(""),
+                                             pChannel->IsBufferUnderrun()? _W("BUFFER UNDERRUN!!") : _W(""),
+                                             pChannel->GetVolume(),
+                                             pChannel->GetPriority(),
+                                             pChannel->GetElapsedTime(),
+                                             pChannel->GetTotalTime()
+                                            );
+
             lCol++;
             if(lCol == 3)
             {
@@ -588,13 +617,13 @@ void cLuxDebugHandler::OnDraw(float afFrameTime)
         /////////////////////////////
         // Add text for the mesh entity
         cMaterial *pMaterial = mpInspectMeshEntity->GetMaterial();
-        pSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),_W("EntityName: '%ls'"), cString::To16Char(mpInspectMeshEntity->GetName()).c_str()); 
-        fY += 15;
-        
-        pSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),_W("MaterialFile: '%ls'"), pMaterial->GetFullPath().c_str()); 
+        pSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),_W("EntityName: '%ls'"), cString::To16Char(mpInspectMeshEntity->GetName()).c_str());
         fY += 15;
 
-        pSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),_W("---------------------")); 
+        pSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),_W("MaterialFile: '%ls'"), pMaterial->GetFullPath().c_str());
+        fY += 15;
+
+        pSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),_W("---------------------"));
         fY += 15;
 
         for(int i=0; i<eMaterialTexture_LastEnum; ++i)
@@ -604,10 +633,10 @@ void cLuxDebugHandler::OnDraw(float afFrameTime)
 
             float fMemSize = ((float)pTex->GetMemorySize()) / (1024*1024);
 
-            pSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),_W(" %d size: %d x %d x %d mem: %.2fmb type: %ls file: '%ls'"), 
-                i, pTex->GetSize().x, pTex->GetSize().y, pTex->GetSize().z, fMemSize,
-                cString::To16Char(PixelFormatToString(pTex->GetPixelFormat())).c_str(),
-                pTex->GetFullPath().c_str()); 
+            pSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),_W(" %d size: %d x %d x %d mem: %.2fmb type: %ls file: '%ls'"),
+                           i, pTex->GetSize().x, pTex->GetSize().y, pTex->GetSize().z, fMemSize,
+                           cString::To16Char(PixelFormatToString(pTex->GetPixelFormat())).c_str(),
+                           pTex->GetFullPath().c_str());
             fY += 15;
         }
     }
@@ -643,12 +672,12 @@ void cLuxDebugHandler::AddErrorOrWarningMessage(const tWString& asText)
 
     /////////////////////////////
     // Check if message exists
-    for(tLuxDebugMessageListIt it = mlstMessages.begin(); it != mlstMessages.end();++it)
+    for(tLuxDebugMessageListIt it = mlstMessages.begin(); it != mlstMessages.end(); ++it)
     {
         cLuxDebugMessage& debugMessage = *it;
         if(debugMessage.msText == asText) return;
     }
-    
+
     /////////////////////////////
     // Add message
     cLuxDebugMessage debugMessage;
@@ -669,13 +698,13 @@ void cLuxDebugHandler::AddMessage(const tWString& asText, bool abCheckForDuplica
     // Check if message exists
     if(abCheckForDuplicates)
     {
-        for(tLuxDebugMessageListIt it = mlstMessages.begin(); it != mlstMessages.end();++it)
+        for(tLuxDebugMessageListIt it = mlstMessages.begin(); it != mlstMessages.end(); ++it)
         {
             cLuxDebugMessage& debugMessage = *it;
             if(debugMessage.msText == asText) return;
         }
     }
-    
+
     /////////////////////////////
     // Add message
     cLuxDebugMessage debugMessage;
@@ -714,11 +743,11 @@ static float gfMinT=0;
 void cLuxDebugHandler::CheckLineObjectIntersection(iRenderable *apObject, const cVector3f& avStart, const cVector3f& avEnd, cBoundingVolume *apBV)
 {
     cBoundingVolume *pObjectBV = apObject->GetBoundingVolume();
-    
+
     if(cMath::CheckBVIntersection(*pObjectBV, *apBV)==false) return;
 
     float fT=0;
-    
+
     if(cMath::CheckPointInBVIntersection(avStart, *pObjectBV)==false)
     {
         if(cMath::CheckAABBLineIntersection(pObjectBV->GetMin(), pObjectBV->GetMax(), avStart, avEnd, NULL, &fT)==false) return;
@@ -728,7 +757,7 @@ void cLuxDebugHandler::CheckLineObjectIntersection(iRenderable *apObject, const 
     cMatrixf mtxInvModel = cMath::MatrixInverse(apObject->GetWorldMatrix());
     bool bIntersect = cMath::CheckLineTriVertexBufferIntersection(    avStart, avEnd,mtxInvModel, apObject->GetVertexBuffer(),NULL, &fT, NULL,true);
     if(bIntersect==false || fT > gfMinT) return;
-    
+
     gfMinT = fT;
     mpInspectMeshEntity = static_cast<cSubMeshEntity*>(apObject);
 }
@@ -742,7 +771,7 @@ void cLuxDebugHandler::IterateRenderableNode(iRenderableContainerNode *apNode, c
     if(    apNode->GetParent()!=NULL)
     {
         if(cMath::CheckAABBIntersection(apNode->GetMin(), apNode->GetMax(), apBV->GetMin(), apBV->GetMax())==false) return;
-    
+
         if(cMath::CheckPointInAABBIntersection(avStart, apNode->GetMin(), apNode->GetMax())==false)
         {
             float fT=0;
@@ -760,7 +789,7 @@ void cLuxDebugHandler::IterateRenderableNode(iRenderableContainerNode *apNode, c
         {
             iRenderable *pObject = *it;
             if(pObject->GetRenderType() != eRenderableType_SubMesh) continue;
-            
+
             CheckLineObjectIntersection(pObject, avStart, avEnd, apBV);
         }
     }
@@ -791,19 +820,20 @@ void cLuxDebugHandler::UpdateInspectionMeshEntity(float afTimeStep)
     cCamera *pCam = gpBase->mpPlayer->GetCamera();
     cVector3f vStart = pCam->GetPosition();
     cVector3f vEnd = vStart + pCam->GetForward()*15;
-    
+
     cBoundingVolume lineBV;
     lineBV.SetLocalMinMax(cMath::Vector3Min(vStart, vEnd), cMath::Vector3Max(vStart, vEnd));
-    
+
     /////////////////////////////
     // Set up variables
     gfMinT = 9999.0f;
     mpInspectMeshEntity = NULL;
-    
+
     /////////////////////////////
     // Get Containers
     cWorld *pWorld = gpBase->mpMapHandler->GetCurrentMap()->GetWorld();
-    iRenderableContainer *pContainers[2] ={
+    iRenderableContainer *pContainers[2] =
+    {
         pWorld->GetRenderableContainer(eWorldContainerType_Dynamic),
         pWorld->GetRenderableContainer(eWorldContainerType_Static),
     };
@@ -813,7 +843,7 @@ void cLuxDebugHandler::UpdateInspectionMeshEntity(float afTimeStep)
     for(int i=0; i<2; ++i)
     {
         pContainers[i]->UpdateBeforeRendering();
-        IterateRenderableNode(pContainers[i]->GetRoot(), vStart, vEnd, &lineBV);               
+        IterateRenderableNode(pContainers[i]->GetRoot(), vStart, vEnd, &lineBV);
     }
 }
 
@@ -868,7 +898,7 @@ void cLuxDebugHandler::CreateScriptOutputWindow()
     // Button
     vGroupSize = cVector2f(110, 30);
     vGroupPos = cVector3f(vSize.x/2 - vGroupSize.x/2, vSize.y - vGroupSize.y - 10,1);
-    pButton = mpGuiSet->CreateWidgetButton(vGroupPos, vGroupSize,_W("Close Window"), mpScriptOutputWindow); 
+    pButton = mpGuiSet->CreateWidgetButton(vGroupPos, vGroupSize,_W("Close Window"), mpScriptOutputWindow);
     pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressCloseScriptOutput));
 
     mpScriptOutputWindow->SetVisible(false);
@@ -885,11 +915,11 @@ void cLuxDebugHandler::CreateScriptOutputWindowText(const tWString& asOutput)
     // Destroy all widgets
     if(mlstScriptOutputWidgets.size()>0)
     {
-        tWidgetListIt it = mlstScriptOutputWidgets.begin(); 
+        tWidgetListIt it = mlstScriptOutputWidgets.begin();
         for(; it != mlstScriptOutputWidgets.end(); ++it)
         {
             iWidget *pWidget = *it;
-            
+
             mpGuiSet->DestroyWidget(pWidget);
         }
     }
@@ -900,7 +930,7 @@ void cLuxDebugHandler::CreateScriptOutputWindowText(const tWString& asOutput)
     // Create text widgets
     cWidgetLabel *pLabel = NULL;
     iFontData *pFont =mpGuiSet->GetSkin()->GetFont(eGuiSkinFont_Default)->mpFont;
-    
+
     cVector3f vGroupPos = cVector3f(5, 10, 1);
     cVector2f vGroupSize = cVector2f(200, 16);
     cVector2f vFontSize = 14;
@@ -913,7 +943,7 @@ void cLuxDebugHandler::CreateScriptOutputWindowText(const tWString& asOutput)
     {
         float fWidth = pFont->GetLength(vFontSize, vRows[i].c_str());
 
-        pLabel = mpGuiSet->CreateWidgetLabel(vGroupPos, cVector2f(fWidth ,vGroupSize.y),vRows[i], mpScriptOutputFrame);
+        pLabel = mpGuiSet->CreateWidgetLabel(vGroupPos, cVector2f(fWidth,vGroupSize.y),vRows[i], mpScriptOutputFrame);
         pLabel->SetDefaultFontSize(vFontSize);
         mlstScriptOutputWidgets.push_back(pLabel);
 
@@ -1091,13 +1121,13 @@ void cLuxDebugHandler::CreateGuiWindow()
         mpCBPlayerStarts = mpGuiSet->CreateWidgetComboBox(vGroupPos,vSize,_W("None"),pGroup);
         mpCBPlayerStarts->SetSelectedItem(-1);
         vGroupPos.y += 22;
-        
+
         pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,_W("Map Batch"),pGroup);
         pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressBatchLoad));
         vGroupPos.y += 22;
-        
 
-        
+
+
         //Group end
         vGroupSize.y = vGroupPos.y + 15;
         pGroup->SetSize(vGroupSize);
@@ -1116,7 +1146,7 @@ void cLuxDebugHandler::CreateGuiWindow()
         pCheckBox->SetUserValue(10);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
-        
+
         pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,_W("Reload Insanity Effects"),pGroup);
         pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressReloadInsanityEffect));
         vGroupPos.y += 22;
@@ -1129,7 +1159,7 @@ void cLuxDebugHandler::CreateGuiWindow()
         for(int i=0; i<gpBase->mpInsanityHandler->GetEventNum(); ++i)
         {
             iLuxInstanityEvent *pEvent = gpBase->mpInsanityHandler->GetEvent(i);
-            mpCBInsanityEvents->AddItem(pEvent->GetName());            
+            mpCBInsanityEvents->AddItem(pEvent->GetName());
         }
         if(gpBase->mpInsanityHandler->GetEventNum()>0) mpCBInsanityEvents->SetSelectedItem(0);
         vGroupPos.y += 22;
@@ -1183,7 +1213,7 @@ void cLuxDebugHandler::ShowScriptOutputWindow(const tWString& asName, const tStr
 bool cLuxDebugHandler::RecompileScript()
 {
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    
+
     tString sOutput;
     if(pMap->RecompileScript(&sOutput)==false)
     {
@@ -1200,7 +1230,7 @@ bool cLuxDebugHandler::RecompileScript()
         ShowScriptOutputWindow(_W("Global"), sOutput);
         return false;
     }
-    
+
     return true;
 }
 
@@ -1244,7 +1274,7 @@ void cLuxDebugHandler::ReloadMap()
     //Reload map
     tString sMapFile = gpBase->mpMapHandler->GetCurrentMap()->GetFileName();
     gpBase->Reset();
-    
+
     gpBase->mpEngine->GetResources()->GetSoundManager()->DestroyUnused(0);
     gpBase->mpEngine->GetResources()->GetParticleManager()->DestroyUnused(0);
     gpBase->mpEngine->GetResources()->GetSoundEntityManager()->DestroyUnused(0);
@@ -1274,15 +1304,15 @@ void cLuxDebugHandler::QuickReloadMap()
     // Save cache of all entity meshes
     cLuxModelCache cache;
     cache.Create();
-    
-    
+
+
     ///////////////////
     // Reload
-    ReloadMap();    
+    ReloadMap();
 
     ///////////////////
     // Destroy mesh and animation cache
-    cache.Destroy();    
+    cache.Destroy();
 }
 
 //-----------------------------------------------------------------------
@@ -1319,9 +1349,9 @@ void cLuxDebugHandler::TestChangeMapSave()
     cSerializeClass::LoadFromFile(pSavedMaps, sFile);
 
     pMap = gpBase->mpMapHandler->LoadMap(sMapFile,true);
-    
+
     gpBase->mpMapHandler->SetCurrentMap(pMap, false, false, "");
-    
+
     pSavedMaps->LoadMap(pMap);
 
     pMap->RunScript("OnEnter()");
@@ -1367,7 +1397,7 @@ void cLuxDebugHandler::DrawDynamicContainerDebugInfo()
 {
     iRenderableContainer* pDynContainer = gpBase->mpMapHandler->GetCurrentMap()->GetWorld()->GetRenderableContainer(eWorldContainerType_Dynamic);
     pDynContainer->UpdateBeforeRendering();
-    
+
     ////////////////////////////////////////
     // Dynamic container output
     Log("---------- BEGIN DYNAMIC CONTAINER OUTPUT ---------------\n");
@@ -1379,7 +1409,7 @@ void cLuxDebugHandler::DrawDynamicContainerDebugInfo()
     ////////////////////////////////////////
     // Dynamic container bugs
     Log("---------- BEGIN CHECK DYNAMIC BUGS ---------------\n");
-    
+
     CheckDynamicContainerBugsRec(pDynContainer->GetRoot(), 0);
 
     Log("---------- STOP CHECK DYNAMIC BUGS ---------------\n");
@@ -1414,8 +1444,8 @@ void cLuxDebugHandler::OutputContainerContentsRec(iRenderableContainerNode *apNo
             iRenderable *pObject = *it;
             cBoundingVolume *pBV = pObject->GetBoundingVolume();
 
-            Log("%s %s (%s) AABB: (%s)-(%s)\n", GetTab(alLevel).c_str(), pObject->GetName().c_str(),pObject->GetEntityType().c_str(), 
-                                                pBV->GetMin().ToString().c_str(), pBV->GetMax().ToString().c_str());                
+            Log("%s %s (%s) AABB: (%s)-(%s)\n", GetTab(alLevel).c_str(), pObject->GetName().c_str(),pObject->GetEntityType().c_str(),
+                pBV->GetMin().ToString().c_str(), pBV->GetMax().ToString().c_str());
         }
     }
 
@@ -1556,7 +1586,7 @@ bool cLuxDebugHandler::ChangeDebugText(iWidget* apWidget, const cGuiMessageData&
     else if(lNum == 14)  gpBase->mpPlayer->SetFreeCamSpeed( cMath::Max((float)aData.mlVal/ 100.0f, 0.001f) );
 
     else if(lNum == 17)  SetFastForward(bActive);
-    
+
 
     return true;
 }
@@ -1588,7 +1618,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressRebuildDynCont);
 bool cLuxDebugHandler::PressLevelReload(iWidget* apWidget, const cGuiMessageData& aData)
 {
     ReloadMap();
-    
+
     return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressLevelReload);
@@ -1598,7 +1628,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressLevelReload);
 bool cLuxDebugHandler::PressQuickLevelReload(iWidget* apWidget, const cGuiMessageData& aData)
 {
     QuickReloadMap();
-    
+
     return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressQuickLevelReload);
@@ -1611,21 +1641,21 @@ bool cLuxDebugHandler::PressTestChangeMapSave(iWidget* apWidget,const cGuiMessag
 
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressTestChangeMapSave); 
+kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressTestChangeMapSave);
 
 //-----------------------------------------------------------------------
 
 bool cLuxDebugHandler::PressLoadWorld(iWidget* apWidget,const cGuiMessageData& aData)
 {
     mvPickedFiles.clear();
-    
+
     cGuiPopUpFilePicker* pPicker = mpGuiSet->CreatePopUpLoadFilePicker(mvPickedFiles,false,msCurrentFilePath,false, this, kGuiCallback(LoadWorldFromFilePicker));
     pPicker->AddCategory(_W("Scenes"),_W("*.map"));
     pPicker->AddFilter(0, _W("*.dae"));
 
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressLoadWorld); 
+kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressLoadWorld);
 
 bool cLuxDebugHandler::LoadWorldFromFilePicker(iWidget* apWidget,const cGuiMessageData& aData)
 {
@@ -1634,14 +1664,14 @@ bool cLuxDebugHandler::LoadWorldFromFilePicker(iWidget* apWidget,const cGuiMessa
     tWString& sFilePath = mvPickedFiles[0];
 
     msCurrentFilePath = cString::GetFilePathW(sFilePath);
-    
+
     tString sMapFile = cString::To8Char(cString::GetFileNameW(sFilePath));
     gpBase->Reset();
     gpBase->StartGame(sMapFile, "", "");
-    
-    return true;        
+
+    return true;
 }
-kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, LoadWorldFromFilePicker); 
+kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, LoadWorldFromFilePicker);
 
 //-----------------------------------------------------------------------
 
@@ -1650,13 +1680,13 @@ bool cLuxDebugHandler::PressTelportPlayer(iWidget* apWidget,const cGuiMessageDat
     if(mpCBPlayerStarts->GetSelectedItem()<0) return true;
 
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    
+
     const cWidgetItem *pItem = mpCBPlayerStarts->GetItem(mpCBPlayerStarts->GetSelectedItem());
     pMap->PlacePlayerAtStartPos(cString::To8Char(pItem->GetText()));
-    
+
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressTelportPlayer); 
+kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressTelportPlayer);
 
 //-----------------------------------------------------------------------
 
@@ -1666,10 +1696,10 @@ bool cLuxDebugHandler::PressRecompileScript(iWidget* apWidget,const cGuiMessageD
     {
         ReloadTranslations();
     }
-    
+
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressRecompileScript); 
+kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressRecompileScript);
 
 //-----------------------------------------------------------------------
 
@@ -1683,14 +1713,14 @@ bool cLuxDebugHandler::PressReloadInsanityEffect(iWidget* apWidget,const cGuiMes
     for(int i=0; i<gpBase->mpInsanityHandler->GetEventNum(); ++i)
     {
         iLuxInstanityEvent *pEvent = gpBase->mpInsanityHandler->GetEvent(i);
-        mpCBInsanityEvents->AddItem(pEvent->GetName());            
+        mpCBInsanityEvents->AddItem(pEvent->GetName());
     }
-    if(gpBase->mpInsanityHandler->GetEventNum()>0) 
-        mpCBInsanityEvents->SetSelectedItem(0);    
+    if(gpBase->mpInsanityHandler->GetEventNum()>0)
+        mpCBInsanityEvents->SetSelectedItem(0);
 
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressReloadInsanityEffect); 
+kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressReloadInsanityEffect);
 
 //-----------------------------------------------------------------------
 
@@ -1702,7 +1732,7 @@ bool cLuxDebugHandler::PressStartInsanityEffect(iWidget* apWidget,const cGuiMess
 
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressStartInsanityEffect); 
+kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressStartInsanityEffect);
 
 //-----------------------------------------------------------------------
 
@@ -1713,7 +1743,7 @@ bool cLuxDebugHandler::PressCloseScriptOutput(iWidget* apWidget,const cGuiMessag
 
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressCloseScriptOutput); 
+kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressCloseScriptOutput);
 
 //-----------------------------------------------------------------------
 
@@ -1731,12 +1761,12 @@ kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressBatchLoad);
 bool cLuxDebugHandler::PressLoadBatchLoadFile(iWidget* apWidget,const cGuiMessageData& aData)
 {
     if(mvPickedFiles.empty()) return true;
-    
+
     LoadBatchLoadFile(mvPickedFiles[0]);
-    
-    return true;        
+
+    return true;
 }
-kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressLoadBatchLoadFile); 
+kGuiCallbackDeclaredFuncEnd(cLuxDebugHandler, PressLoadBatchLoadFile);
 
 
 //-----------------------------------------------------------------------

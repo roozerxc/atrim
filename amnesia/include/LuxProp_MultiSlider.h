@@ -32,9 +32,9 @@ public:
 
 class cLuxProp_MultiSlider : public iLuxProp
 {
-typedef iLuxProp super_class;
-friend class cLuxPropLoader_MultiSlider;
-public:    
+    typedef iLuxProp super_class;
+    friend class cLuxPropLoader_MultiSlider;
+public:
     cLuxProp_MultiSlider(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxProp_MultiSlider();
 
@@ -42,35 +42,53 @@ public:
     //General
     bool CanInteract(iPhysicsBody *apBody);
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
-    
+
     void OnSetupAfterLoad(cWorld *apWorld);
 
     void OnResetProperties();
 
     void UpdatePropSpecific(float afTimeStep);
-    
+
     void BeforePropDestruction();
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
 
     //////////////////////
     //Properties
-    cLuxInteractData_Slide* GetSlideData(){ return &mSlideData;}
-    
-    int GetMultiSliderState(){ return mlCurrentState; }
+    cLuxInteractData_Slide* GetSlideData()
+    {
+        return &mSlideData;
+    }
+
+    int GetMultiSliderState()
+    {
+        return mlCurrentState;
+    }
 
     void SetStuckState(int alState, bool abEffects);
-    int  GetStuckState(){ return mlStuckState; }
+    int  GetStuckState()
+    {
+        return mlStuckState;
+    }
 
-    void SetInteractionDisablesStuck(bool abX){ mbInteractionDisablesStuck = abX;}
-    bool GetInteractionDisablesStuck(bool abX){ return mbInteractionDisablesStuck;}
+    void SetInteractionDisablesStuck(bool abX)
+    {
+        mbInteractionDisablesStuck = abX;
+    }
+    bool GetInteractionDisablesStuck(bool abX)
+    {
+        return mbInteractionDisablesStuck;
+    }
 
-    void SetChangeStateCallback(const tString &asCallback){ msChangeStateCallback=asCallback;}
+    void SetChangeStateCallback(const tString &asCallback)
+    {
+        msChangeStateCallback=asCallback;
+    }
 
     //////////////////////
     //Connection callbacks
     void OnConnectionStateChange(iLuxEntity *apEntity, int alState);
-    
+
     //////////////////////
     //Save data stuff
     iLuxEntity_SaveData* CreateSaveData();
@@ -95,13 +113,13 @@ private:
 
     int mlNumOfStates;
     float mfStickToStateMaxDist;
-    
+
     bool mbCanInteractWithStaticBody;
-    
+
     bool mbAutoMoveToCurrentState;
     float mfAutoMoveSpeedFactor;
     float mfAutoMoveMaxSpeed;
-    
+
     tString msChangeStateSound;
     tString msStuckSound;
 
@@ -125,7 +143,7 @@ class cLuxPropLoader_MultiSlider : public iLuxPropLoader
 {
 public:
     cLuxPropLoader_MultiSlider(const tString& asName);
-    virtual ~cLuxPropLoader_MultiSlider(){}
+    virtual ~cLuxPropLoader_MultiSlider() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);

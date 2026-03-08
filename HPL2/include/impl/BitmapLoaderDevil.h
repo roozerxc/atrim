@@ -5,28 +5,29 @@
 
 #include <IL/il.h>
 
-namespace hpl {
+namespace hpl
+{
 
 
-    class iBitmapLoaderDevil : public iBitmapLoader
-    {
-    public:
-        iBitmapLoaderDevil();
-        virtual ~iBitmapLoaderDevil();
-        
-        bool SaveBitmap(cBitmap* apBitmap,const tWString& asFile, tBitmapSaveFlag aFlags);
-    
-    protected:
-        void Initialize();
+class iBitmapLoaderDevil : public iBitmapLoader
+{
+public:
+    iBitmapLoaderDevil();
+    virtual ~iBitmapLoaderDevil();
 
-        bool LoadDevilImageW(const tWString& asFile);
+    bool SaveBitmap(cBitmap* apBitmap,const tWString& asFile, tBitmapSaveFlag aFlags);
 
-        ePixelFormat DevilPixelFormatToHPL(int alFormat);
-        ILenum HPLPixelFormatToDevil(ePixelFormat aFormat);
-        ILenum FileNameToDevilTypeW(const tWString& asFile);
+protected:
+    void Initialize();
 
-        static bool mbIsInitialized;
-    };
+    bool LoadDevilImageW(const tWString& asFile);
+
+    ePixelFormat DevilPixelFormatToHPL(int alFormat);
+    ILenum HPLPixelFormatToDevil(ePixelFormat aFormat);
+    ILenum FileNameToDevilTypeW(const tWString& asFile);
+
+    static bool mbIsInitialized;
+};
 
 };
 #endif // HPL_BITMAP_LOADER_DEVIL_H

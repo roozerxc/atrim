@@ -113,11 +113,11 @@ cRopeEntity* cEngineRope_SaveData::CreateRope(cLuxMap *apMap)
     // Create rope entity
     cRopeEntity *pRope = apMap->GetWorld()->CreateRopeEntity(msName,pPhysicsRope, mlMaxSegments);
     pRope->SetUniqueID(mlUniqueGfxID);
-    
+
     pRope->SetRadius(mfRadius);
     pRope->SetLengthTileAmount(mfLengthTileAmount);
     pRope->SetLengthTileSize(mfLengthTileSize);
-    
+
     cMaterial *pMaterial = gpBase->mpEngine->GetResources()->GetMaterialManager()->CreateMaterial(msMaterial);
     if(pMaterial) pRope->SetMaterial(pMaterial);
 
@@ -144,7 +144,7 @@ void cEngineRope_SaveData::FromRope(cRopeEntity *apRope)
     mvEndPos = pPhysicsRope->GetEndParticle()->GetPosition();
 
     msMaterial = cString::To8Char(apRope->GetMaterial()->GetFullPath());
-    
+
     mlMaxSegments = apRope->GetMaxSegments();
 
     msSound = pPhysicsRope->GetMotorSound();
@@ -161,11 +161,11 @@ void cEngineRope_SaveData::FromRope(cRopeEntity *apRope)
     //Variables stuff
     mStartBody = LuxGetIdPairFromBody(pPhysicsRope->GetAttachedStartBody());
     mEndBody = LuxGetIdPairFromBody(pPhysicsRope->GetAttachedEndBody());
-    
+
     mvStartBodyLocalPos = pPhysicsRope->GetAttachment(0)->mvBodyLocalPos;
     mvEndBodyLocalPos = pPhysicsRope->GetAttachment(1)->mvBodyLocalPos;
-    
-    
+
+
     mlMaxIterations = pPhysicsRope->GetMaxIterations();
     mfTotalLength = pPhysicsRope->GetTotalLength();
     mfMinTotalLength = pPhysicsRope->GetMinTotalLength();
@@ -181,7 +181,7 @@ void cEngineRope_SaveData::FromRope(cRopeEntity *apRope)
     mfMotorSpeedMul = pPhysicsRope->GetMotorSpeedMul();
     mfMotorMinSpeed = pPhysicsRope->GetMotorMinSpeed();
     mfMotorMaxSpeed = pPhysicsRope->GetMotorMaxSpeed();
-    
+
     mbAutoMove = pPhysicsRope->GetAutoMoveActive();
     mfAutoMoveSpeed  = pPhysicsRope->GetAutoMoveSpeed();
     mfAutoMoveAcc = pPhysicsRope->GetAutoMoveAcc();
@@ -258,7 +258,7 @@ void cEngineRope_SaveData::ToRope(cRopeEntity *apRope, cLuxMap *apMap)
         pPhysicsRope->SetAttachedEndBody(pEndBody);
         pPhysicsRope->GetAttachment(1)->mvBodyLocalPos = mvEndBodyLocalPos;
     }
-    
+
 }
 
 //------------------------------------------------------------------------
@@ -461,7 +461,7 @@ void cEngineMeshEntity_SaveData::ToMeshEntity(cMeshEntity *apMeshEntity)
     apMeshEntity->SetVisible(mbVisible);
     apMeshEntity->SetIlluminationAmount(mfIlluminationAmount);
     apMeshEntity->SetMatrix(m_mtxTransform);
-    
+
     //If not equal, something is wrong so skip!
     if(mvAnimations.Size() == apMeshEntity->GetAnimationStateNum())
     {
@@ -580,33 +580,33 @@ void cEngineJoint_SaveData::FromJoint(iPhysicsJoint *apJoint, iPhysicsWorld *apP
     switch(apJoint->GetType())
     {
     case ePhysicsJointType_Ball:
-        {
-            iPhysicsJointBall *pBallJoint = static_cast<iPhysicsJointBall*>(apJoint);
-            mfMaxLimit = pBallJoint->GetMaxConeAngle();
-            mfMinLimit = pBallJoint->GetMaxTwistAngle();
-            break;
-        }
+    {
+        iPhysicsJointBall *pBallJoint = static_cast<iPhysicsJointBall*>(apJoint);
+        mfMaxLimit = pBallJoint->GetMaxConeAngle();
+        mfMinLimit = pBallJoint->GetMaxTwistAngle();
+        break;
+    }
     case ePhysicsJointType_Hinge:
-        {
-            iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge*>(apJoint);
-            mfMaxLimit = pHingeJoint->GetMaxAngle();
-            mfMinLimit = pHingeJoint->GetMinAngle();
-            break;
-        }
+    {
+        iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge*>(apJoint);
+        mfMaxLimit = pHingeJoint->GetMaxAngle();
+        mfMinLimit = pHingeJoint->GetMinAngle();
+        break;
+    }
     case ePhysicsJointType_Screw:
-        {
-            iPhysicsJointScrew *pScrewJoint = static_cast<iPhysicsJointScrew*>(apJoint);
-            mfMinLimit = pScrewJoint->GetMinDistance();
-            mfMaxLimit = pScrewJoint->GetMaxDistance();
-            break;
-        }
+    {
+        iPhysicsJointScrew *pScrewJoint = static_cast<iPhysicsJointScrew*>(apJoint);
+        mfMinLimit = pScrewJoint->GetMinDistance();
+        mfMaxLimit = pScrewJoint->GetMaxDistance();
+        break;
+    }
     case ePhysicsJointType_Slider:
-        {
-            iPhysicsJointSlider *pSliderJoint = static_cast<iPhysicsJointSlider*>(apJoint);
-            mfMinLimit = pSliderJoint->GetMinDistance();
-            mfMaxLimit = pSliderJoint->GetMaxDistance();
-            break;
-        }
+    {
+        iPhysicsJointSlider *pSliderJoint = static_cast<iPhysicsJointSlider*>(apJoint);
+        mfMinLimit = pSliderJoint->GetMinDistance();
+        mfMaxLimit = pSliderJoint->GetMaxDistance();
+        break;
+    }
     }
 }
 
@@ -632,32 +632,32 @@ void cEngineJoint_SaveData::ToJoint(iPhysicsJoint *apJoint)
     switch(apJoint->GetType())
     {
     case ePhysicsJointType_Ball:
-        {
-            iPhysicsJointBall *pBallJoint = static_cast<iPhysicsJointBall*>(apJoint);
-            pBallJoint->SetConeLimits(mfMaxLimit,mfMinLimit);
-            break;
-        }
+    {
+        iPhysicsJointBall *pBallJoint = static_cast<iPhysicsJointBall*>(apJoint);
+        pBallJoint->SetConeLimits(mfMaxLimit,mfMinLimit);
+        break;
+    }
     case ePhysicsJointType_Hinge:
-        {
-            iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge*>(apJoint);
-            pHingeJoint->SetMaxAngle(mfMaxLimit);
-            pHingeJoint->SetMinAngle(mfMinLimit);
-            break;
-        }
+    {
+        iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge*>(apJoint);
+        pHingeJoint->SetMaxAngle(mfMaxLimit);
+        pHingeJoint->SetMinAngle(mfMinLimit);
+        break;
+    }
     case ePhysicsJointType_Screw:
-        {
-            iPhysicsJointScrew *pScrewJoint = static_cast<iPhysicsJointScrew*>(apJoint);
-            pScrewJoint->SetMinDistance(mfMinLimit);
-            pScrewJoint->SetMaxDistance(mfMaxLimit);
-            break;
-        }
+    {
+        iPhysicsJointScrew *pScrewJoint = static_cast<iPhysicsJointScrew*>(apJoint);
+        pScrewJoint->SetMinDistance(mfMinLimit);
+        pScrewJoint->SetMaxDistance(mfMaxLimit);
+        break;
+    }
     case ePhysicsJointType_Slider:
-        {
-            iPhysicsJointSlider *pSliderJoint = static_cast<iPhysicsJointSlider*>(apJoint);
-            pSliderJoint->SetMinDistance(mfMinLimit);
-            pSliderJoint->SetMaxDistance(mfMaxLimit);
-            break;
-        }
+    {
+        iPhysicsJointSlider *pSliderJoint = static_cast<iPhysicsJointSlider*>(apJoint);
+        pSliderJoint->SetMinDistance(mfMinLimit);
+        pSliderJoint->SetMaxDistance(mfMaxLimit);
+        break;
+    }
     }
 }
 
@@ -809,7 +809,7 @@ void cEngineBeam_SaveData::FromBeam(cBeam *apBeam)
 
 void cEngineBeam_SaveData::ToBeam(cBeam *apBeam)
 {
-    apBeam->LoadXMLProperties(msFile);    
+    apBeam->LoadXMLProperties(msFile);
 
     apBeam->SetPosition(mvStartPos);
     apBeam->GetEnd()->SetPosition(mvEndPos);
@@ -901,8 +901,8 @@ void cEngineLight_SaveData::FromLight(iLight *apLight)
 
     mbActive = apLight->IsActive();
     mbVisible = apLight->GetVisibleVar();
-    
-    
+
+
     if(bHasParent==false)
     {
         if(apLight->IsFading() && apLight->GetFlickerActive()==false)
@@ -923,7 +923,7 @@ void cEngineLight_SaveData::FromLight(iLight *apLight)
         }
 
         //TODO: Add billboard attaching!
-        
+
         mbFlickering = apLight->GetFlickerActive();
         msFlickerOffSound = apLight->GetFlickerOffSound();
         msFlickerOnSound = apLight->GetFlickerOnSound();
@@ -967,12 +967,12 @@ void cEngineLight_SaveData::ToLight(iLight *apLight)
 
         apLight->SetFlickerActive(mbFlickering);
         apLight->SetFlicker(mFlickerOffColor,mfFlickerOffRadius,
-            mfFlickerOnMinLength,mfFlickerOnMaxLength,
-            msFlickerOnSound,msFlickerOnPS,
-            mfFlickerOffMinLength,mfFlickerOffMaxLength,
-            msFlickerOffSound,msFlickerOffPS,
-            mbFlickerFade,mfFlickerOnFadeMinLength,mfFlickerOnFadeMaxLength,
-            mfFlickerOffFadeMinLength, mfFlickerOffFadeMaxLength);
+                            mfFlickerOnMinLength,mfFlickerOnMaxLength,
+                            msFlickerOnSound,msFlickerOnPS,
+                            mfFlickerOffMinLength,mfFlickerOffMaxLength,
+                            msFlickerOffSound,msFlickerOffPS,
+                            mbFlickerFade,mfFlickerOnFadeMinLength,mfFlickerOnFadeMaxLength,
+                            mfFlickerOffFadeMinLength, mfFlickerOffFadeMaxLength);
     }
 }
 

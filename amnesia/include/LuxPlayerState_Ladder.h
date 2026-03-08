@@ -52,8 +52,8 @@ public:
 
 class cLuxPlayerState_Ladder : public iLuxPlayerState
 {
-typedef iLuxPlayerState super_class;
-public:    
+    typedef iLuxPlayerState super_class;
+public:
     cLuxPlayerState_Ladder(cLuxPlayer *apPlayer);
     virtual ~cLuxPlayerState_Ladder();
 
@@ -62,7 +62,7 @@ public:
 
     void Update(float afTimeStep);
     void PostUpdate(float afTimeStep);
-    virtual void OnDraw(cGuiSet *apGuiSet ,float afFrameTime);
+    virtual void OnDraw(cGuiSet *apGuiSet,float afFrameTime);
 
     virtual cGuiGfxElement* GetCrosshair();
 
@@ -76,18 +76,27 @@ public:
     bool OnCrouch(bool abPressed);
 
     bool OnDoAction(eLuxPlayerAction aAction,bool abPressed);
-    
-    void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter){}
+
+    void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter) {}
 
     float DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY);
 
-    bool AllowPlayerMenus(){ return false;}
+    bool AllowPlayerMenus()
+    {
+        return false;
+    }
 
-    bool AllowLantern(){ return false;}
-    
+    bool AllowLantern()
+    {
+        return false;
+    }
+
     /////////////////////////////////
     //Save data stuff
-    virtual bool IsSaved(){ return true; }
+    virtual bool IsSaved()
+    {
+        return true;
+    }
     iLuxPlayerState_SaveData* CreateSaveData();
 
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);
@@ -123,7 +132,7 @@ private:
 
     float mfPitchMaxLimit;
     float mfPitchMinLimit;
-    
+
     float mfLeaveAtTopCount;
 
     bool mbLanternDrawn;

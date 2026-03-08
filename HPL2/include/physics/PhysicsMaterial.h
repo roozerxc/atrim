@@ -5,89 +5,106 @@
 
 
 
-namespace hpl {
+namespace hpl
+{
 
-    class iPhysicsWorld;
-    class cSurfaceData;
+class iPhysicsWorld;
+class cSurfaceData;
 
-    //----------------------------------------------------
+//----------------------------------------------------
 
-    //! Enum the different combination modes
-    //! This decides how two material properties are combined when colliding.
-    //! If the two differ the enum with the highest num.
-    enum ePhysicsMaterialCombMode
+//! Enum the different combination modes
+//! This decides how two material properties are combined when colliding.
+//! If the two differ the enum with the highest num.
+enum ePhysicsMaterialCombMode
+{
+    //! result = (value1 + value2)/2
+    ePhysicsMaterialCombMode_Average=    0,
+    //! result = min(value1, value2)
+    ePhysicsMaterialCombMode_Min=        1,
+    //! result = value1 * value2
+    ePhysicsMaterialCombMode_Multiply=    2,
+    //! result = max(value1, value2)
+    ePhysicsMaterialCombMode_Max=        3,
+    //! Internal.
+    ePhysicsMaterialCombMode_LastEnum
+};
+
+//----------------------------------------------------
+
+class cPhysicsContactData
+{
+public:
+    cPhysicsContactData()
     {
-        //! result = (value1 + value2)/2
-        ePhysicsMaterialCombMode_Average=    0,
-        //! result = min(value1, value2)
-        ePhysicsMaterialCombMode_Min=        1,
-        //! result = value1 * value2
-        ePhysicsMaterialCombMode_Multiply=    2,
-        //! result = max(value1, value2)
-        ePhysicsMaterialCombMode_Max=        3,
-        //! Internal.
-        ePhysicsMaterialCombMode_LastEnum
-    };
-    
-    //----------------------------------------------------
+        mfMaxContactNormalSpeed =0;
+        mfMaxContactTangentSpeed =0;
+        mvContactNormal = cVector3f(0,0,0);
+        mvContactPosition = cVector3f(0,0,0);
+        mvForce = cVector3f(0,0,0);
+    }
 
-    class cPhysicsContactData
+    float mfMaxContactNormalSpeed;
+    float mfMaxContactTangentSpeed;
+    cVector3f mvContactNormal;
+    cVector3f mvContactPosition;
+    cVector3f mvForce;
+};
+
+
+//----------------------------------------------------
+
+
+class iPhysicsMaterial
+{
+public:
+    iPhysicsMaterial(const tString &asName, iPhysicsWorld *apWorld)
+        : msName(asName), mpWorld(apWorld),mpSurfaceData(NULL),
+          mbPreloaded(false) {}
+    virtual ~iPhysicsMaterial() {}
+
+    const tString& GetName() const
     {
-    public:
-        cPhysicsContactData() {
-            mfMaxContactNormalSpeed =0;
-            mfMaxContactTangentSpeed =0;
-            mvContactNormal = cVector3f(0,0,0);
-            mvContactPosition = cVector3f(0,0,0);
-            mvForce = cVector3f(0,0,0);
-        }
+        return msName;
+    }
 
-        float mfMaxContactNormalSpeed;
-        float mfMaxContactTangentSpeed;
-        cVector3f mvContactNormal;
-        cVector3f mvContactPosition;
-        cVector3f mvForce;
-    };
+    virtual void SetElasticity(float afElasticity)=0;
+    virtual float GetElasticity() const=0;
+    virtual void SetStaticFriction(float afElasticity)=0;
+    virtual float GetStaticFriction() const=0;
+    virtual void SetKineticFriction(float afElasticity)=0;
+    virtual float GetKineticFriction() const=0;
 
+    virtual void SetFrictionCombMode(ePhysicsMaterialCombMode aMode)=0;
+    virtual ePhysicsMaterialCombMode GetFrictionCombMode() const=0;
+    virtual void SetElasticityCombMode(ePhysicsMaterialCombMode aMode)=0;
+    virtual ePhysicsMaterialCombMode GetElasticityCombMode() const=0;
 
-    //----------------------------------------------------
-
-    
-    class iPhysicsMaterial
+    void SetSurfaceData(cSurfaceData *apData)
     {
-    public:
-        iPhysicsMaterial(const tString &asName, iPhysicsWorld *apWorld) 
-                : msName(asName), mpWorld(apWorld),mpSurfaceData(NULL),
-                    mbPreloaded(false){}
-        virtual ~iPhysicsMaterial(){}
+        mpSurfaceData = apData;
+    }
+    cSurfaceData* GetSurfaceData()
+    {
+        return mpSurfaceData;
+    }
 
-        const tString& GetName() const{ return msName;}
+    void SetPreloaded(bool abX)
+    {
+        mbPreloaded = abX;
+    }
+    bool IsPreloaded()
+    {
+        return mbPreloaded;
+    }
 
-        virtual void SetElasticity(float afElasticity)=0;
-        virtual float GetElasticity() const=0;
-        virtual void SetStaticFriction(float afElasticity)=0;
-        virtual float GetStaticFriction() const=0;
-        virtual void SetKineticFriction(float afElasticity)=0;
-        virtual float GetKineticFriction() const=0;
-        
-        virtual void SetFrictionCombMode(ePhysicsMaterialCombMode aMode)=0;
-        virtual ePhysicsMaterialCombMode GetFrictionCombMode() const=0;
-        virtual void SetElasticityCombMode(ePhysicsMaterialCombMode aMode)=0;
-        virtual ePhysicsMaterialCombMode GetElasticityCombMode() const=0;
+protected:
+    iPhysicsWorld *mpWorld;
+    tString msName;
 
-        void SetSurfaceData(cSurfaceData *apData){ mpSurfaceData = apData;}
-        cSurfaceData* GetSurfaceData(){ return mpSurfaceData;}
+    bool mbPreloaded;
 
-        void SetPreloaded(bool abX){ mbPreloaded = abX;}
-        bool IsPreloaded(){ return mbPreloaded;}
-
-    protected:
-        iPhysicsWorld *mpWorld;
-        tString msName;
-
-        bool mbPreloaded;
-
-        cSurfaceData *mpSurfaceData;
-    };
+    cSurfaceData *mpSurfaceData;
+};
 };
 #endif // HPL_PHYSICS_MATERIAL_H

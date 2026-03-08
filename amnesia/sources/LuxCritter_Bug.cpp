@@ -38,7 +38,7 @@ void cLuxPropLoader_Critter_Bug::LoadCritterVariables(iLuxProp *apProp, cXmlElem
     pCritter_Bug->mfGravity = GetVarFloat("Gravity", 0);
 
     pCritter_Bug->mfPlayerFleeDistance = GetVarFloat("PlayerFleeDistance", 0);
-    
+
     pCritter_Bug->mfFleeMul = GetVarFloat("FleeMul", 0);
     pCritter_Bug->mfBackToSpawnPointMul = GetVarFloat("BackToSpawnPointMul", 0);
     pCritter_Bug->mfWanderCircleRadius = GetVarFloat("WanderCircleRadius", 0);
@@ -107,8 +107,8 @@ void cLuxCritter_Bug::UpdateCritterSpecific(float afTimeStep)
 
 void cLuxCritter_Bug::UpdateVelocity(float afTimeStep)
 {
-    
-    /////////////////// 
+
+    ///////////////////
     // Check if scared
     bool bScared=false;
     cVector3f vPlayerPos = gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition();
@@ -119,7 +119,7 @@ void cLuxCritter_Bug::UpdateVelocity(float afTimeStep)
         mbPaused=false;
     }
 
-    /////////////////// 
+    ///////////////////
     // Pause
     if(mbHasRandomPauses && bScared==false)
     {
@@ -138,12 +138,12 @@ void cLuxCritter_Bug::UpdateVelocity(float afTimeStep)
             }
         }
     }
-        
-    /////////////////// 
+
+    ///////////////////
     // Movement
     if(mbPaused==false)
     {
-        /////////////////// 
+        ///////////////////
         // Wandering
         cVector3f vDir;
         if(mvVel==0)
@@ -165,20 +165,20 @@ void cLuxCritter_Bug::UpdateVelocity(float afTimeStep)
         float fAngle = cMath::RandRectf(0, k2Pif);
 
         cVector3f vForce = cMath::MatrixMul(cMath::MatrixRotateY(fAngle),cVector3f(mfWanderCircleRadius,0,0));
-        
+
         mvVel += (vDir*mfWanderCircleDist + vForce) * afTimeStep;
-        
-        /////////////////// 
+
+        ///////////////////
         // Avoid player
         if(bScared)
         {
             float fPlayerDistance = sqrt(fPlayerDistanceSqr);
-        
+
             if(fPlayerDistance ==0) fPlayerDistance = 0.0001f;
-            
+
             vPlayerPos.y = mpBody->GetWorldPosition().y;
             cVector3f vWantedVel = cMath::Vector3Normalize(mpBody->GetWorldPosition() - vPlayerPos) * mfMaxSpeed;
-            
+
             cVector3f vForce = (vWantedVel - mvVel) * mfFleeMul * (1.0f/fPlayerDistance);
             mvVel += vForce * afTimeStep;
 
@@ -189,11 +189,11 @@ void cLuxCritter_Bug::UpdateVelocity(float afTimeStep)
             mfMaxSpeed = mfMaxSpeedNormal;
         }
 
-        /////////////////// 
+        ///////////////////
         // Swarm around point
         {
             float fSwarmPointDist = cMath::Vector3Dist(mvSwarmPoint, mpBody->GetWorldPosition());
-            
+
             cVector3f vSwarmPos = cVector3f(mvSwarmPoint.x, mpBody->GetWorldPosition().y, mvSwarmPoint.z);
             cVector3f vWantedVel = cMath::Vector3Normalize(vSwarmPos - mpBody->GetWorldPosition()) * mfMaxSpeed;
             vWantedVel.y=0;
@@ -202,25 +202,25 @@ void cLuxCritter_Bug::UpdateVelocity(float afTimeStep)
             mvVel += vForce * afTimeStep;
         }
     }
-    /////////////////// 
+    ///////////////////
     // Stopping
     else
     {
         mvVel -= mvVel*afTimeStep*3.0f;
     }
-    
-    /////////////////// 
+
+    ///////////////////
     // Sound
     mfPlaySoundCount-=afTimeStep;
     if(mfPlaySoundCount < 0)
     {
-        mfPlaySoundCount = bScared ? cMath::RandRectf(mvScaredSoundRandMinMax.x, mvScaredSoundRandMinMax.y) : 
-                                    cMath::RandRectf(mvNormalSoundRandMinMax.x, mvNormalSoundRandMinMax.y);
+        mfPlaySoundCount = bScared ? cMath::RandRectf(mvScaredSoundRandMinMax.x, mvScaredSoundRandMinMax.y) :
+                           cMath::RandRectf(mvNormalSoundRandMinMax.x, mvNormalSoundRandMinMax.y);
         PlaySound("Critter_BugSound",bScared ? msScaredSound : msNormalSound,true, true);
     }
-    
 
-    /////////////////// 
+
+    ///////////////////
     // Cap speed
     float fSpeed = mvVel.Length();
     if(fSpeed > mfMaxSpeed)
@@ -275,7 +275,7 @@ void cLuxCritter_Bug::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //Init
     super_class::LoadFromSaveData(apSaveData);
     cLuxCritter_Bug_SaveData *pData = static_cast<cLuxCritter_Bug_SaveData*>(apSaveData);
-    
+
     //////////////////
     //Set variables
     kCopyFromVar(pData,mfPlaySoundCount);

@@ -44,7 +44,7 @@ iLuxEntity::iLuxEntity(const tString &asName, int alID, cLuxMap *apMap, eLuxEnti
 
 iLuxEntity::~iLuxEntity()
 {
-    for(size_t i=0; i<mvPreloadedMeshes.size();++i)
+    for(size_t i=0; i<mvPreloadedMeshes.size(); ++i)
     {
         gpBase->mpEngine->GetResources()->GetMeshManager()->Destroy(mvPreloadedMeshes[i]);
     }
@@ -70,7 +70,7 @@ iLuxEntity::~iLuxEntity()
 //-----------------------------------------------------------------------
 
 void iLuxEntity::UpdateLogic(float afTimeStep)
-{    
+{
     //////////////////////
     // Normal update
     UpdateCheckCollideCallback(afTimeStep);
@@ -78,7 +78,7 @@ void iLuxEntity::UpdateLogic(float afTimeStep)
 
 
     ///////////////////////
-    // Update implemented 
+    // Update implemented
     OnUpdate(afTimeStep);
 }
 
@@ -113,9 +113,9 @@ void iLuxEntity::RunCallbackFunc(const tString& asType)
 void iLuxEntity::RunInteractCallbackFunc()
 {
     if(msInteractCallback=="")return;
-    
+
     mpMap->RunScript(msInteractCallback + "(\""+msName+"\")");
-    
+
     if(mbInteractCallbackRemove) msInteractCallback = "";
 }
 
@@ -211,15 +211,15 @@ void iLuxEntity::UpdatePlayerLookAt(float afTimeStep)
         {
             continue;
         }
-        
+
         /////////////////////////
         // Set up line of sight check
         cVector3f vStart = pCamera->GetPosition();
         cVector3f vEnd = pBV->GetWorldCenter();
-        
+
         cVector3f vDir = vEnd - vStart;
         float fSqrDist = vDir.SqrLength();
-        
+
         if(fSqrDist > 50*50) continue;
 
         /////////////////////////
@@ -230,7 +230,7 @@ void iLuxEntity::UpdatePlayerLookAt(float afTimeStep)
         {
             continue;
         }
-        
+
         /////////////////////////
         // If close enough then it is visible
         float fSqrRadius = pBV->GetRadius()*pBV->GetRadius()+0.05f;
@@ -251,7 +251,7 @@ void iLuxEntity::UpdatePlayerLookAt(float afTimeStep)
         vLineOfSightTestPos[2] = vLineOfSightTestPos[0] - pCamera->GetUp() * fHalfRadius;
         vLineOfSightTestPos[3] = vLineOfSightTestPos[0] + pCamera->GetRight() * fHalfRadius;
         vLineOfSightTestPos[4] = vLineOfSightTestPos[0] - pCamera->GetRight() * fHalfRadius;
-                
+
         for(int i=0; i<5; ++i)
         {
             if(gpBase->mpMapHelper->CheckLineOfSight(vStart, vLineOfSightTestPos[i], false))
@@ -274,7 +274,7 @@ void iLuxEntity::UpdatePlayerLookAt(float afTimeStep)
     }
     else if(bLookingAt==false && mbIsLookedAt)
     {
-        mpMap->RunScript(msLookAtCallback + "(\""+msName+"\", -1)" );    
+        mpMap->RunScript(msLookAtCallback + "(\""+msName+"\", -1)" );
     }
 
     mbIsLookedAt = bLookingAt;
@@ -288,8 +288,8 @@ void iLuxEntity::ConnectionStateChange(int alState)
     // Callback
     if(msConnectionStateChangeCallback != "")
     {
-        mpMap->RunScript(    msConnectionStateChangeCallback + 
-                            "(\""+msName+"\", "+ cString::ToString(alState) + ")");
+        mpMap->RunScript(    msConnectionStateChangeCallback +
+                             "(\""+msName+"\", "+ cString::ToString(alState) + ")");
     }
 
     //////////////////////////////////
@@ -297,7 +297,7 @@ void iLuxEntity::ConnectionStateChange(int alState)
     for(size_t i=0; i< mvConnections.size(); ++i)
     {
         cLuxEntityConnection *pConn = mvConnections[i];
-        
+
         //See if this state will send a message.
         if(pConn->GetStateUsed()!=0)
         {
@@ -315,10 +315,10 @@ void iLuxEntity::ConnectionStateChange(int alState)
         {
             //Syntax: ConnectionName,ParentEnt, ChildEnt, state
             tString sCommand = pConn->GetCallbackFunc() + "(\"" + pConn->GetName() + "\"," +
-                                                            "\"" + msName +  + "\"," +
-                                                            "\"" + pConn->GetEntity()->GetName() + "\"," +
-                                                            cString::ToString(lState) + ")";
-            mpMap->RunScript(sCommand);        
+                               "\"" + msName +  + "\"," +
+                               "\"" + pConn->GetEntity()->GetName() + "\"," +
+                               cString::ToString(lState) + ")";
+            mpMap->RunScript(sCommand);
         }
     }
 }
@@ -330,15 +330,16 @@ void iLuxEntity::PreloadEntityModel(const tString &asFile)
     cResources *pResources = gpBase->mpEngine->GetResources();
 
     tString sFileName = cString::SetFileExt(asFile,"ent");
-    
+
     //////////////////////
     // Load XML document
     iXmlDocument *pEntityDoc = pResources->LoadXmlDocument(sFileName);
-    if(pEntityDoc==NULL){
+    if(pEntityDoc==NULL)
+    {
         Error("Could not load xml file '%s'\n", sFileName.c_str());
         return;
     }
-    
+
     //////////////////////
     // Get Model File name
     cXmlElement *pModelDataElem = pEntityDoc->GetFirstElement("ModelData");
@@ -375,7 +376,7 @@ bool iLuxEntity::CollidesWithPlayer()
         {
             continue;
         }
-        
+
         if(pPhysicsWorld->CheckShapeCollision(pBody->GetShape(), pBody->GetLocalMatrix(), pPlayerBody->GetShape(), pPlayerBody->GetLocalMatrix(), collideData,1, false))
         {
             return true;
@@ -404,7 +405,7 @@ kEndSerialize()
 void cLuxEntityConnection_SaveData::FromConnection(cLuxEntityConnection *apConnection)
 {
     mlEntityId = apConnection->mpEntity->GetID();
-    
+
     kCopyFromVar(apConnection, msName);
     kCopyFromVar(apConnection, mbInvertStateSent);
     kCopyFromVar(apConnection, mlStatesUsed);
@@ -478,7 +479,7 @@ void iLuxEntity::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     kCopyToVar(apSaveData, mbIsLookedAt);
 
     apSaveData->mvConnections.Resize(mvConnections.size());
-    for(size_t i=0; i<mvConnections.size();++i)
+    for(size_t i=0; i<mvConnections.size(); ++i)
     {
         apSaveData->mvConnections[i].FromConnection(mvConnections[i]);
     }
@@ -521,7 +522,7 @@ void iLuxEntity::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 void iLuxEntity::SetupSaveData(iLuxEntity_SaveData *apSaveData)
 {
     mvConnections.resize(apSaveData->mvConnections.Size());
-    for(size_t i=0; i<apSaveData->mvConnections.Size();++i)
+    for(size_t i=0; i<apSaveData->mvConnections.Size(); ++i)
     {
         mvConnections[i] = hplNew( cLuxEntityConnection, () );
         apSaveData->mvConnections[i].ToConnection(mvConnections[i], mpMap);
@@ -532,7 +533,7 @@ void iLuxEntity::SetupSaveData(iLuxEntity_SaveData *apSaveData)
     {
         cLuxCollideCallback_SaveData& saveCallback = it.Next();
         cLuxCollideCallback *pCallback = hplNew(cLuxCollideCallback, ());
-        
+
         saveCallback.ToCallback(mpMap, this, pCallback);
         mlstCollideCallbacks.push_back(pCallback);
     }

@@ -38,11 +38,11 @@ protected:
 
 class iLuxInteractConnection
 {
-friend class iLuxInteractConnection_SaveData;
+    friend class iLuxInteractConnection_SaveData;
 public:
-    iLuxInteractConnection(const tString& asName, iLuxProp *apProp,bool abInvert, int alStatesUsed) 
+    iLuxInteractConnection(const tString& asName, iLuxProp *apProp,bool abInvert, int alStatesUsed)
         : msName(asName), mpProp(apProp), mbInteractionOnly(true), mbInvert(abInvert), mlStateUsed(alStatesUsed) {}
-    virtual ~iLuxInteractConnection(){}
+    virtual ~iLuxInteractConnection() {}
 
     ///////////////
     //General
@@ -56,15 +56,24 @@ public:
 
     ///////////////
     //Properties
-    const tString& GetName(){ return msName; }
+    const tString& GetName()
+    {
+        return msName;
+    }
 
-    void SetInteractionOnly(bool abX){ mbInteractionOnly = abX;}
-    bool GetInteractionOnly(){ return mbInteractionOnly;}
+    void SetInteractionOnly(bool abX)
+    {
+        mbInteractionOnly = abX;
+    }
+    bool GetInteractionOnly()
+    {
+        return mbInteractionOnly;
+    }
 
     ///////////////
     //Save
     virtual iLuxInteractConnection_SaveData* CreateSaveData()=0;
-    
+
 protected:
     tString msName;
     bool mbInteractionOnly;
@@ -93,7 +102,7 @@ public:
 
 class cLuxInteractConnection_Rope : public iLuxInteractConnection
 {
-friend class cLuxInteractConnection_Rope_SaveData;
+    friend class cLuxInteractConnection_Rope_SaveData;
 public:
     cLuxInteractConnection_Rope(const tString& asName, iLuxProp *apProp,  iPhysicsRope *apRope, float afSpeedMul, float afMinSpeed, float afMaxSpeed,
                                 bool abInvert, int alStatesUsed);
@@ -138,7 +147,7 @@ public:
 
 class cLuxInteractConnection_MoveObject : public iLuxInteractConnection
 {
-friend class cLuxInteractConnection_MoveObject_SaveData;
+    friend class cLuxInteractConnection_MoveObject_SaveData;
 public:
 
     /**

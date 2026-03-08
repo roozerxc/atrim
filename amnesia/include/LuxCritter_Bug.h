@@ -18,10 +18,10 @@ public:
 
 class cLuxCritter_Bug : public iLuxProp_CritterBase
 {
-typedef iLuxProp_CritterBase super_class;
-friend class cLuxPropLoader_Critter_Bug;
-friend class cLuxCritter_BugRayCallback;
-public:    
+    typedef iLuxProp_CritterBase super_class;
+    friend class cLuxPropLoader_Critter_Bug;
+    friend class cLuxCritter_BugRayCallback;
+public:
     cLuxCritter_Bug(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxCritter_Bug();
 
@@ -31,11 +31,11 @@ public:
 
     //////////////////////
     //Properties
-    
+
     //////////////////////
     //Connection callbacks
-    void OnConnectionStateChange(iLuxEntity *apEntity, int alState){}
-    
+    void OnConnectionStateChange(iLuxEntity *apEntity, int alState) {}
+
     //////////////////////
     //Save data stuff
     iLuxEntity_SaveData* CreateSaveData();
@@ -47,14 +47,14 @@ public:
 private:
     void UpdateVelocity(float afTimeStep);
     void UpdateMovement(float afTimeStep);
-    
+
     //General
-    
+
     //Vars
     float mfPlaySoundCount;
     float mfPauseCount;
     bool mbPaused;
-    
+
     //Data
     float mfMaxSpeed;
     float mfMaxSpeedNormal;
@@ -85,7 +85,7 @@ class cLuxPropLoader_Critter_Bug : public iLuxPropLoader_Critter
 {
 public:
     cLuxPropLoader_Critter_Bug(const tString& asName);
-    virtual ~cLuxPropLoader_Critter_Bug(){}
+    virtual ~cLuxPropLoader_Critter_Bug() {}
 
     iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap);
     void LoadCritterVariables(iLuxProp *apProp, cXmlElement *apRootElem);

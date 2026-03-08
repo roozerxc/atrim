@@ -9,42 +9,42 @@
 namespace hpl
 {
 
-    //---------------------------------------------------------------
+//---------------------------------------------------------------
 
-    /////////////////////////////////////////////////////////////////
-    // Predicate for sorting video mode lists
+/////////////////////////////////////////////////////////////////
+// Predicate for sorting video mode lists
 
-    bool VideoComp::operator() (const cVideoMode& aVM1, const cVideoMode& aVM2) const
+bool VideoComp::operator() (const cVideoMode& aVM1, const cVideoMode& aVM2) const
+{
+    //Log("Comparing video mode (1) %dx%d/%d-%d to (2) %dx%d/%d-%d\n", aVM1.mvScreenSize.x, aVM1.mvScreenSize.y,
+    //aVM1.mlBitsPerPixel, aVM1.mlRefreshRate,
+    //                                                    aVM2.mvScreenSize.x, aVM2.mvScreenSize.y,
+    //aVM2.mlBitsPerPixel, aVM1.mlRefreshRate);
+
+    if(aVM1.mlDisplay != aVM2.mlDisplay)
     {
-        //Log("Comparing video mode (1) %dx%d/%d-%d to (2) %dx%d/%d-%d\n", aVM1.mvScreenSize.x, aVM1.mvScreenSize.y, 
-                                                                            //aVM1.mlBitsPerPixel, aVM1.mlRefreshRate,
-        //                                                    aVM2.mvScreenSize.x, aVM2.mvScreenSize.y, 
-                                                                            //aVM2.mlBitsPerPixel, aVM1.mlRefreshRate);
+        return aVM1.mlDisplay < aVM2.mlDisplay;
+    }
 
-        if(aVM1.mlDisplay != aVM2.mlDisplay)
-        {
-            return aVM1.mlDisplay < aVM2.mlDisplay;
-        }
+    if(aVM1.mvScreenSize.x != aVM2.mvScreenSize.x)
+    {
+        //if(aVM1.mvScreenSize.x < aVM2.mvScreenSize.x)
+        //    Log("(1) wins by width\n");
+        //else
+        //    Log("(2) wins by width\n");
 
-        if(aVM1.mvScreenSize.x != aVM2.mvScreenSize.x)
-        {
-            //if(aVM1.mvScreenSize.x < aVM2.mvScreenSize.x)
-            //    Log("(1) wins by width\n");
-            //else
-            //    Log("(2) wins by width\n");
+        return aVM1.mvScreenSize.x < aVM2.mvScreenSize.x;
+    }
 
-            return aVM1.mvScreenSize.x < aVM2.mvScreenSize.x;
-        }
+    if(aVM1.mvScreenSize.y != aVM2.mvScreenSize.y)
+    {
+        //if(aVM1.mvScreenSize.y < aVM2.mvScreenSize.y)
+        //    Log("(1) wins by height\n");
+        //else
+        //    Log("(2) wins by height\n");
 
-        if(aVM1.mvScreenSize.y != aVM2.mvScreenSize.y)
-        {
-            //if(aVM1.mvScreenSize.y < aVM2.mvScreenSize.y)
-            //    Log("(1) wins by height\n");
-            //else
-            //    Log("(2) wins by height\n");
-
-            return aVM1.mvScreenSize.y < aVM2.mvScreenSize.y;
-        }
+        return aVM1.mvScreenSize.y < aVM2.mvScreenSize.y;
+    }
 
 //        if(aVM1.mlBitsPerPixel != aVM2.mlBitsPerPixel)
 //        {
@@ -66,46 +66,46 @@ namespace hpl
 //            return aVM1.mlRefreshRate < aVM2.mlRefreshRate;
 //        }
 
-        //Log("(1) & (2) are equal\n");
+    //Log("(1) & (2) are equal\n");
 
-        return false;
-    }
+    return false;
+}
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    void cPlatform::CreateMessageBox( eMsgBoxType eType, const wchar_t* asCaption, const wchar_t* fmt, ...)
-    {
-        va_list ap;    
+void cPlatform::CreateMessageBox( eMsgBoxType eType, const wchar_t* asCaption, const wchar_t* fmt, ...)
+{
+    va_list ap;
 
-        if (fmt == NULL)
-            return;    
-        va_start(ap, fmt);
-        CreateMessageBoxBase(eType, asCaption, fmt, ap);
-        va_end(ap);
-    }
+    if (fmt == NULL)
+        return;
+    va_start(ap, fmt);
+    CreateMessageBoxBase(eType, asCaption, fmt, ap);
+    va_end(ap);
+}
 
-    void cPlatform::CreateMessageBox( const wchar_t* asCaption, const wchar_t *fmt, ...)
-    {
-        va_list ap;    
-        if (fmt == NULL)
-            return;    
-        va_start(ap, fmt);
-        CreateMessageBoxBase( eMsgBoxType_Default, asCaption, fmt, ap );
-        va_end(ap);
-    }
+void cPlatform::CreateMessageBox( const wchar_t* asCaption, const wchar_t *fmt, ...)
+{
+    va_list ap;
+    if (fmt == NULL)
+        return;
+    va_start(ap, fmt);
+    CreateMessageBoxBase( eMsgBoxType_Default, asCaption, fmt, ap );
+    va_end(ap);
+}
 
-    void cPlatform::CreateMessageBox( const wchar_t* asCaption, const wchar_t *fmt, va_list ap)
-    {
-        CreateMessageBoxBase(eMsgBoxType_Default, asCaption, fmt, ap);
-    }
+void cPlatform::CreateMessageBox( const wchar_t* asCaption, const wchar_t *fmt, va_list ap)
+{
+    CreateMessageBoxBase(eMsgBoxType_Default, asCaption, fmt, ap);
+}
 
-    void cPlatform::CreateMessageBox( eMsgBoxType eType, const wchar_t* asCaption, const wchar_t *fmt, va_list ap)
-    {
-        CreateMessageBoxBase(eType, asCaption, fmt, ap);
-    }
+void cPlatform::CreateMessageBox( eMsgBoxType eType, const wchar_t* asCaption, const wchar_t *fmt, va_list ap)
+{
+    CreateMessageBoxBase(eType, asCaption, fmt, ap);
+}
 
-    //---------------------------------------------------------------
+//---------------------------------------------------------------
 
 }

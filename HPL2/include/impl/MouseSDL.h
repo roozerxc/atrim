@@ -5,47 +5,48 @@
 #include "input/Mouse.h"
 
 
-namespace hpl {
-    
-    class iLowLevelGraphics;
-    class cLowLevelInputSDL;
+namespace hpl
+{
 
-    class cMouseSDL : public iMouse
-    {
-    public:
-        cMouseSDL(cLowLevelInputSDL *apLowLevelInputSDL);
+class iLowLevelGraphics;
+class cLowLevelInputSDL;
 
-        bool ButtonIsDown(eMouseButton);
-        
-        void Update();
-        
-        /**
-        * \todo Fix so it works and handles screen size
-        * \return 
-        */
-        cVector2l GetAbsPosition();
-        
-        /**
-         * \todo Fix so it works and handles screen size
-         * \return 
-         */
-        cVector2l GetRelPosition();
+class cMouseSDL : public iMouse
+{
+public:
+    cMouseSDL(cLowLevelInputSDL *apLowLevelInputSDL);
 
-        void Reset();
-        
-    private:
-        bool mbFirstTime;
+    bool ButtonIsDown(eMouseButton);
 
-        cVector2l mvMouseAbsPos;
-        cVector2l mvMouseRelPos;
+    void Update();
 
-        std::vector<bool> mvMButtonArray;
+    /**
+    * \todo Fix so it works and handles screen size
+    * \return
+    */
+    cVector2l GetAbsPosition();
 
-        cLowLevelInputSDL *mpLowLevelInputSDL;
-        
-        bool mbWheelUpMoved;
-        bool mbWheelDownMoved;
-    };
+    /**
+     * \todo Fix so it works and handles screen size
+     * \return
+     */
+    cVector2l GetRelPosition();
+
+    void Reset();
+
+private:
+    bool mbFirstTime;
+
+    cVector2l mvMouseAbsPos;
+    cVector2l mvMouseRelPos;
+
+    std::vector<bool> mvMButtonArray;
+
+    cLowLevelInputSDL *mpLowLevelInputSDL;
+
+    bool mbWheelUpMoved;
+    bool mbWheelDownMoved;
+};
 
 };
 

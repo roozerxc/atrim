@@ -61,7 +61,7 @@ public:
 class cLuxInteractData_SwingDoor : public iLuxInteractData_RotateBase
 {
 public:
-    
+
 };
 
 class cLuxInteractData_Lever : public iLuxInteractData_RotateBase
@@ -72,7 +72,7 @@ public:
 class cLuxInteractData_Wheel : public iLuxInteractData_RotateBase
 {
 public:
-    
+
 };
 
 //----------------------------------------------
@@ -125,10 +125,10 @@ public:
     float mfMoveAngularSpeed;
     float mfMoveAngularSlowdownDist;
     cMatrixf m_mtxMoveAngularGoal;
-    
+
     bool mbMoveAngularNoGoal;
     cVector3f mvMoveAngularNoGoalDir;
-    
+
     bool mbMoveAngularUseOffset;
     cVector3f mvMoveAngularWorldOffset;
     cVector3f mvMoveAngularLocalOffset;
@@ -207,11 +207,11 @@ public:
 
 class iLuxProp : public iLuxEntity
 {
-typedef iLuxEntity super_class;
-friend class cLuxSavedGameEntity;
-friend class iLuxPropLoader;
-friend class cLuxProp_WorldCollisionCallback;
-public:    
+    typedef iLuxEntity super_class;
+    friend class cLuxSavedGameEntity;
+    friend class iLuxPropLoader;
+    friend class cLuxProp_WorldCollisionCallback;
+public:
     iLuxProp(const tString &asName, int alID, cLuxMap *apMap, eLuxPropType aPropType);
     virtual ~iLuxProp();
 
@@ -221,12 +221,15 @@ public:
 
     void OnUpdate(float afTimeStep);
 
-    virtual float OnInteractDebugDraw(cGuiSet *apSet,iFontData *apFont, float afStartY){return afStartY;}
+    virtual float OnInteractDebugDraw(cGuiSet *apSet,iFontData *apFont, float afStartY)
+    {
+        return afStartY;
+    }
 
     void BeforeEntityDestruction();
 
     virtual void OnRenderSolid(cRendererCallbackFunctions* apFunctions);
-    
+
     //////////////////////
     //Actions
     void GiveDamage(float afAmount, int alStrength);
@@ -235,11 +238,11 @@ public:
 
     void MoveLinearTo(const cVector3f& avGoal, float afAcc, float afMaxSpeed, float afSlowdownDist, bool abResetSpeed);
     void MoveAngularTo(    const cMatrixf& a_mtxGoal, float afAcc, float afMaxSpeed, float afSlowdownDist, bool abResetSpeed, bool abUseOffset,
-                        const cVector3f &avWorldOffset, const cVector3f &avLocalOffset);
+                           const cVector3f &avWorldOffset, const cVector3f &avLocalOffset);
     void RotateAtSpeed(    float afAcc, float afGoalSpeed, const cVector3f& avAxis, bool abResetSpeed,
-                        bool abUseOffset, const cVector3f &avWorldOffset, const cVector3f &avLocalOffset);
+                           bool abUseOffset, const cVector3f &avWorldOffset, const cVector3f &avLocalOffset);
     void StopMove();
-    
+
     void FadeInMeshEntity(float afTime);
 
     void ResetProperties();
@@ -251,45 +254,93 @@ public:
 
     //////////////////////
     //Properties
-    eLuxPropType GetPropType(){ return mPropType;}
-    
+    eLuxPropType GetPropType()
+    {
+        return mPropType;
+    }
+
     void SetHealth(float afX);
-    float GetHealth(){ return mfHealth;}
+    float GetHealth()
+    {
+        return mfHealth;
+    }
 
     void SetEffectsActive(bool abActive, bool abFadeAndPlaySounds);
 
-    float GetEffectsAlpha(){ return mfEffectsAlpha;}
+    float GetEffectsAlpha()
+    {
+        return mfEffectsAlpha;
+    }
 
-    void SetIsInteractedWith(bool abX){  mbIsInteractedWith = abX;}
-    bool IsInteractedWith(){  return mbIsInteractedWith;}
+    void SetIsInteractedWith(bool abX)
+    {
+        mbIsInteractedWith = abX;
+    }
+    bool IsInteractedWith()
+    {
+        return mbIsInteractedWith;
+    }
 
-    bool IsMoving(){ return mbMoving; }
-    
-    virtual cLuxInteractData_Grab* GetGrabData(){ return NULL;}
-    virtual cLuxInteractData_Push* GetPushData(){ return NULL;}
-    virtual cLuxInteractData_Slide* GetSlideData(){ return NULL;}
-    virtual iLuxInteractData_RotateBase* GetMoveBaseData(){ return NULL;}
+    bool IsMoving()
+    {
+        return mbMoving;
+    }
+
+    virtual cLuxInteractData_Grab* GetGrabData()
+    {
+        return NULL;
+    }
+    virtual cLuxInteractData_Push* GetPushData()
+    {
+        return NULL;
+    }
+    virtual cLuxInteractData_Slide* GetSlideData()
+    {
+        return NULL;
+    }
+    virtual iLuxInteractData_RotateBase* GetMoveBaseData()
+    {
+        return NULL;
+    }
 
     virtual iEntity3D* GetAttachEntity();
 
-    virtual bool ShowOutlinesOnConnectedBodies(){ return true;}
-    
-    const cMatrixf& GetOnLoadTransform(){ return m_mtxOnLoadTransform; }
+    virtual bool ShowOutlinesOnConnectedBodies()
+    {
+        return true;
+    }
 
-    bool GetStaticPhysics(bool abX){ return mbStaticPhysics;}
+    const cMatrixf& GetOnLoadTransform()
+    {
+        return m_mtxOnLoadTransform;
+    }
+
+    bool GetStaticPhysics(bool abX)
+    {
+        return mbStaticPhysics;
+    }
     void SetStaticPhysics(bool abX);
 
     //////////////////////
     //Attached Prop
-    iLuxProp* GetAttachmentParent(){ return mpAttachmentParent;}
-    void SetAttachmentParent(iLuxProp *apProp){mpAttachmentParent = apProp; }
+    iLuxProp* GetAttachmentParent()
+    {
+        return mpAttachmentParent;
+    }
+    void SetAttachmentParent(iLuxProp *apProp)
+    {
+        mpAttachmentParent = apProp;
+    }
 
     void AddAndAttachProp(const tString& asName, const tString& asFileName, const cMatrixf& a_mtxOffset);
     bool DestroyAttachedProp(const tString& asName);
     void DestroyAttachedProp(cLuxProp_AttachedProp *pProp);
     bool RemoveAttachedProp(iLuxProp *apProp);
-    bool HasAttachedProp(){ return mlstAttachedProps.empty()==false; }
-    
+    bool HasAttachedProp()
+    {
+        return mlstAttachedProps.empty()==false;
+    }
+
 
     //////////////////////
     //Connections
@@ -297,23 +348,41 @@ public:
     iLuxInteractConnection* GetInteractionConnectionFromIndex(int alIndex);
     iLuxInteractConnection* GetInteractionConnectionFromName(const tString& asName);
     void DestroyInteractConnection(iLuxInteractConnection *apConnection);
-    int GetInteractionConnectionNum(){ return (int)mvInteractConnections.size(); }
+    int GetInteractionConnectionNum()
+    {
+        return (int)mvInteractConnections.size();
+    }
 
     void InteractConnectionLimit(int alState);
     void InteractConnectionTurn(float afAngle, float afPrevAngle, float afMinAngle, float afMaxAngle);
 
     //////////////////////
     //Data
-    cMeshEntity * GetMeshEntity(){ return mpMeshEntity;}
-    virtual cMeshEntity* GetEffectMeshEntity(){ return mpMeshEntity;}
+    cMeshEntity * GetMeshEntity()
+    {
+        return mpMeshEntity;
+    }
+    virtual cMeshEntity* GetEffectMeshEntity()
+    {
+        return mpMeshEntity;
+    }
 
-    int GetBodyNum(){ return (int)mvBodies.size();}
-    iPhysicsBody* GetBody(int alIdx){ return mvBodies[alIdx];}
+    int GetBodyNum()
+    {
+        return (int)mvBodies.size();
+    }
+    iPhysicsBody* GetBody(int alIdx)
+    {
+        return mvBodies[alIdx];
+    }
     iPhysicsBody* GetBodyFromID(int alID);
     int GetBodyIndexFromName(const tString& asName);
 
-    iPhysicsBody* GetMainBody(){ return mpMainBody ? mpMainBody : mvBodies[0];}
-        
+    iPhysicsBody* GetMainBody()
+    {
+        return mpMainBody ? mpMainBody : mvBodies[0];
+    }
+
     //////////////////////
     //Save data stuff
     virtual void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
@@ -323,17 +392,17 @@ public:
 protected:
     void OnSetActive(bool abX);
 
-    virtual void OnHealthChange(){}
-    virtual void OnDamage(float afAmount, int alStrength){}
+    virtual void OnHealthChange() {}
+    virtual void OnDamage(float afAmount, int alStrength) {}
 
     virtual void OnResetProperties()=0;
 
     virtual void OnSetupAfterLoad(cWorld *apWorld)=0;
     virtual void UpdatePropSpecific(float afTimeStep)=0;
-    virtual void ImplementedOnSetActive(bool abX){}
-    virtual void BeforePropDestruction(){}
+    virtual void ImplementedOnSetActive(bool abX) {}
+    virtual void BeforePropDestruction() {}
 
-    virtual void OnStartMove(){}
+    virtual void OnStartMove() {}
 
     void UpdateAttachedProps(float afTimeStep, bool abForceUpdate);
 
@@ -342,13 +411,13 @@ protected:
     void SetupEffectData();
     bool BillboardConnectedToLight(cBillboard *apBB);
     void UpdateEffectFading(float afTimeStep);
-    
+
     void UpdateMoveSoundVolume();
 
     void UpdateMoving(float afTimeStep);
     void UpdateLinearMoving(float afTimeStep);
     void UpdateAngularMoving(float afTimeStep);
-    
+
     void UpdateMeshFading(float afTimeStep);
 
     void CheckMoveCollision(cVector3f& avMoveVel, float &afSpeed, float afTimeStep);
@@ -370,11 +439,11 @@ protected:
     bool mbEffectAlphaFading;
 
     bool mbStaticPhysics;
-    
+
     bool mbHasFlickering;
 
     bool mbMoving;
-    
+
     float mfMovingVolume;
     float mfMoveStartCount;
 
@@ -419,7 +488,7 @@ protected:
     int mlToughness;
 
     bool mbShowMesh;
-    
+
     cWorld *mpWorld;
     std::vector<iPhysicsBody*> mvBodies;
     std::vector<iPhysicsJoint*> mvJoints;
@@ -468,7 +537,7 @@ protected:
     tString msFileName;
     cMatrixf m_mtxOnLoadTransform;
     cVector3f mvOnLoadScale;
-    
+
 private:
     eLuxPropType mPropType;
 };
@@ -479,11 +548,11 @@ class iLuxPropLoader : public cEntityLoader_Object
 {
 public:
     iLuxPropLoader(const tString& asName);
-    virtual ~iLuxPropLoader(){}
+    virtual ~iLuxPropLoader() {}
 
     void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
     void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
-    
+
     virtual iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap)=0;
     virtual void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)=0;
     virtual void LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)=0;

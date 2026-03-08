@@ -9,7 +9,7 @@
 
 class cLuxMusic
 {
-friend class cLuxMusicHandler;
+    friend class cLuxMusicHandler;
 public:
     cLuxMusic();
 
@@ -27,21 +27,33 @@ public:
 
 class cLuxMusicHandler : public iLuxUpdateable
 {
-friend class cLuxMusicHandler_SaveData;
-public:    
+    friend class cLuxMusicHandler_SaveData;
+public:
     cLuxMusicHandler();
     ~cLuxMusicHandler();
-    
+
     void OnStart();
     void Update(float afTimeStep);
     void Reset();
 
-    float GetVolumeMul(){ return mfVolumeMul;}
+    float GetVolumeMul()
+    {
+        return mfVolumeMul;
+    }
 
-    int GetMaxPrio(){ return mlMaxPrio;}
-    int GetCurrentMaxPrio(){ return mlCurrentMaxPrio;}
+    int GetMaxPrio()
+    {
+        return mlMaxPrio;
+    }
+    int GetCurrentMaxPrio()
+    {
+        return mlCurrentMaxPrio;
+    }
 
-    cLuxMusic* GetMusic(int alPrio){ return &mvGameMusic[alPrio]; }
+    cLuxMusic* GetMusic(int alPrio)
+    {
+        return &mvGameMusic[alPrio];
+    }
 
     void OnMapEnter(cLuxMap *apMap);
     void OnMapLeave(cLuxMap *apMap);
@@ -52,11 +64,11 @@ public:
     void AddEnemy(eLuxEnemyMusic aType, iLuxEnemy *apEnemy);
     void RemoveEnemy(eLuxEnemyMusic aType, iLuxEnemy *apEnemy);
     bool EnemyExist(eLuxEnemyMusic aType, iLuxEnemy *apEnemy);
-    
+
     void AddSearcher(iLuxEnemy *apEnemy);
     void RemoveSearcher(iLuxEnemy *apEnemy);
     bool SearcherExist(iLuxEnemy *apEnemy);
- 
+
 private:
     void UpdateDangerMusic(float afTimeStep);
     void UpdateEnemyMusic(float afTimeStep, eLuxEnemyMusic aType);
@@ -75,11 +87,11 @@ private:
     float mfUpdateAttackCount;
 
     std::vector<cLuxMusic> mvGameMusic;
-    
+
     int mlCurrentMaxPrio;
 
     tLuxEnemySet m_setEnemies[eLuxEnemyMusic_LastEnum];
-    
+
     bool mbEnemyPlaying[eLuxEnemyMusic_LastEnum];
     float mfEnemyPlayCount[eLuxEnemyMusic_LastEnum];
     float mfEnemyStopCount[eLuxEnemyMusic_LastEnum];

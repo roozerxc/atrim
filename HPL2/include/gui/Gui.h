@@ -8,163 +8,173 @@
 #include "gui/GuiTypes.h"
 #include "system/SystemTypes.h"
 
-namespace hpl {
-    
-    class cResources;
-    class cGraphics;
-    class cSound;
-    class cScene;
-    class cInput;
-    
-    class cGuiSet;
-    class cGuiSkin;
-    class cGuiGfxElement;
+namespace hpl
+{
 
-    class iGuiMaterial;
-    class iTexture;
+class cResources;
+class cGraphics;
+class cSound;
+class cScene;
+class cInput;
 
-    //------------------------------------------------
+class cGuiSet;
+class cGuiSkin;
+class cGuiGfxElement;
 
-    typedef std::map<tString, cGuiSkin*> tGuiSkinMap;
-    typedef tGuiSkinMap::iterator tGuiSkinMapIt;
-    
-    //-------------------------------------
+class iGuiMaterial;
+class iTexture;
 
-    typedef std::map<tString, eGuiSkinGfx> tGuiSkinGfxMap;
-    typedef tGuiSkinGfxMap::iterator tGuiSkinGfxMapIt;
+//------------------------------------------------
 
-    typedef std::map<tString, eGuiSkinFont> tGuiSkinFontMap;
-    typedef tGuiSkinFontMap::iterator tGuiSkinFontMapIt;
+typedef std::map<tString, cGuiSkin*> tGuiSkinMap;
+typedef tGuiSkinMap::iterator tGuiSkinMapIt;
 
-    typedef std::map<tString, eGuiSkinAttribute> tGuiSkinAttributeMap;
-    typedef tGuiSkinAttributeMap::iterator tGuiSkinAttributeMapIt;
+//-------------------------------------
+
+typedef std::map<tString, eGuiSkinGfx> tGuiSkinGfxMap;
+typedef tGuiSkinGfxMap::iterator tGuiSkinGfxMapIt;
+
+typedef std::map<tString, eGuiSkinFont> tGuiSkinFontMap;
+typedef tGuiSkinFontMap::iterator tGuiSkinFontMapIt;
+
+typedef std::map<tString, eGuiSkinAttribute> tGuiSkinAttributeMap;
+typedef tGuiSkinAttributeMap::iterator tGuiSkinAttributeMapIt;
 
 
-    //------------------------------------------------
+//------------------------------------------------
 
-    class cGui : public iUpdateable
+class cGui : public iUpdateable
+{
+public:
+    cGui();
+    ~cGui();
+
+    ///////////////////////////////
+    // General
+
+    void Init(    cResources *apResources, cGraphics* apGraphics,
+                  cSound *apSound, cScene *apScene, cInput *apInput);
+
+    void Update(float afTimeStep);
+    void OnDraw(float afFrameTime);
+    void OnPostBufferSwap();
+
+    iGuiMaterial* GetMaterial(eGuiMaterial aType);
+
+    ///////////////////////////////
+    // Skins
+    cGuiSkin* CreateSkin(const tString& asFile);
+
+    eGuiSkinGfx GetSkinGfxFromString(const tString& asType);
+    eGuiSkinFont GetSkinFontFromString(const tString& asType);
+    eGuiSkinAttribute GetSkinAttributeFromString(const tString& asType);
+
+    tString GetSkinGfxString(eGuiSkinGfx aType);
+    tString GetSkinFontString(eGuiSkinFont aType);
+    tString GetSkinAttributeString(eGuiSkinAttribute aType);
+
+    ///////////////////////////////
+    // Sets
+    cGuiSet* CreateSet(const tString& asName, cGuiSkin *apSkin);
+    cGuiSet* GetSetFromName(const tString& asName);
+    void SetFocus(cGuiSet* apSet);
+    void SetFocusByName(const tString& asSetName);
+    cGuiSet* GetFocusedSet()
     {
-    public:
-        cGui();
-        ~cGui();
+        return mpSetInFocus;
+    }
+    void DestroySet(cGuiSet *apSet);
 
-        ///////////////////////////////
-        // General
+    ///////////////////////////////
+    // Graphics creation
+    cGuiGfxElement* CreateGfxFilledRect(const cColor& aColor, eGuiMaterial aMaterial, bool abAddToList=true);
 
-        void Init(    cResources *apResources, cGraphics* apGraphics,
-                    cSound *apSound, cScene *apScene, cInput *apInput);
+    cGuiGfxElement* CreateGfxImage(    const tString &asFile,eGuiMaterial aMaterial,
+                                       const cColor& aColor=cColor(1,1), bool abAddToList=true);
 
-        void Update(float afTimeStep);
-        void OnDraw(float afFrameTime);
-        void OnPostBufferSwap();
+    cGuiGfxElement* CreateGfxTexture(    const tString &asFile,eGuiMaterial aMaterial,
+                                         eTextureType aTextureType = eTextureType_2D,
+                                         const cColor& aColor=cColor(1,1),
+                                         bool abMipMaps=false,
+                                         bool abAddToList=true);
 
-        iGuiMaterial* GetMaterial(eGuiMaterial aType);
+    cGuiGfxElement* CreateGfxTexture(    iTexture *apTexture, bool abAutoDestroyTexture,
+                                         eGuiMaterial aMaterial,
+                                         const cColor& aColor=cColor(1,1),bool abAddToList=true,
+                                         const cVector2f& avStartUV=0, const cVector2f& avEndUV=1);
 
-        ///////////////////////////////
-        // Skins
-        cGuiSkin* CreateSkin(const tString& asFile);
-        
-        eGuiSkinGfx GetSkinGfxFromString(const tString& asType);
-        eGuiSkinFont GetSkinFontFromString(const tString& asType);
-        eGuiSkinAttribute GetSkinAttributeFromString(const tString& asType);
 
-        tString GetSkinGfxString(eGuiSkinGfx aType);
-        tString GetSkinFontString(eGuiSkinFont aType);
-        tString GetSkinAttributeString(eGuiSkinAttribute aType);
+    /**
+     * Loads several images asFile+00, etc. Used for animations.Must have extension!
+     */
+    cGuiGfxElement* CreateGfxImageBuffer(    const tString &asFile,eGuiMaterial aMaterial,
+            bool abCreateAnimation=true,
+            const cColor& aColor=cColor(1,1), bool abAddToList=true);
 
-        ///////////////////////////////
-        // Sets
-        cGuiSet* CreateSet(const tString& asName, cGuiSkin *apSkin);
-        cGuiSet* GetSetFromName(const tString& asName);
-        void SetFocus(cGuiSet* apSet);
-        void SetFocusByName(const tString& asSetName);
-        cGuiSet* GetFocusedSet(){return mpSetInFocus;}
-        void DestroySet(cGuiSet *apSet);
+    void DestroyGfx(cGuiGfxElement* apGfx);
 
-        ///////////////////////////////
-        // Graphics creation
-        cGuiGfxElement* CreateGfxFilledRect(const cColor& aColor, eGuiMaterial aMaterial, bool abAddToList=true);
-        
-        cGuiGfxElement* CreateGfxImage(    const tString &asFile,eGuiMaterial aMaterial,
-                                        const cColor& aColor=cColor(1,1), bool abAddToList=true);
-        
-        cGuiGfxElement* CreateGfxTexture(    const tString &asFile,eGuiMaterial aMaterial,
-                                            eTextureType aTextureType = eTextureType_2D,
-                                            const cColor& aColor=cColor(1,1), 
-                                            bool abMipMaps=false,
-                                            bool abAddToList=true);
-        
-        cGuiGfxElement* CreateGfxTexture(    iTexture *apTexture, bool abAutoDestroyTexture, 
-                                            eGuiMaterial aMaterial,
-                                            const cColor& aColor=cColor(1,1),bool abAddToList=true,
-                                            const cVector2f& avStartUV=0, const cVector2f& avEndUV=1);
-        
-        
-        /**
-         * Loads several images asFile+00, etc. Used for animations.Must have extension!
-         */
-        cGuiGfxElement* CreateGfxImageBuffer(    const tString &asFile,eGuiMaterial aMaterial,
-                                                bool abCreateAnimation=true,
-                                                const cColor& aColor=cColor(1,1), bool abAddToList=true);
-        
-        void DestroyGfx(cGuiGfxElement* apGfx);
-        
-        ///////////////////////////////
-        // Input sending TODO (need some other way to pass key modifiers, but this will do now)
-        bool SendMousePos(const cVector2l &avPos, const cVector2l &avRel);
-        bool SendMouseClickDown(eGuiMouseButton aButton, int alKeyModifiers=0);
-        bool SendMouseClickUp(eGuiMouseButton aButton, int alKeyModifiers=0);
-        bool SendMouseDoubleClick(eGuiMouseButton aButton, int alKeyModifiers=0);
+    ///////////////////////////////
+    // Input sending TODO (need some other way to pass key modifiers, but this will do now)
+    bool SendMousePos(const cVector2l &avPos, const cVector2l &avRel);
+    bool SendMouseClickDown(eGuiMouseButton aButton, int alKeyModifiers=0);
+    bool SendMouseClickUp(eGuiMouseButton aButton, int alKeyModifiers=0);
+    bool SendMouseDoubleClick(eGuiMouseButton aButton, int alKeyModifiers=0);
 
-        bool SendKeyPress(const cKeyPress& keyPress);
-        bool SendKeyRelease(const cKeyPress& keyPress);
+    bool SendKeyPress(const cKeyPress& keyPress);
+    bool SendKeyRelease(const cKeyPress& keyPress);
 
-        bool SendGamepadInput(const cGamepadInputData& aInput);
-        
-        bool SendUIArrowPress(eUIArrow aX);
-        bool SendUIArrowRelease(eUIArrow aX);
+    bool SendGamepadInput(const cGamepadInputData& aInput);
 
-        bool SendUIButtonPress(eUIButton aX);
-        bool SendUIButtonRelease(eUIButton aX);
-        bool SendUIButtonDoublePress(eUIButton aX);
+    bool SendUIArrowPress(eUIArrow aX);
+    bool SendUIArrowRelease(eUIArrow aX);
 
-        eMouseButton TranslateGuiMouseToMouse(eGuiMouseButton aButton);
-        eGuiMouseButton TranslateMouseToGuiMouse(eMouseButton aButton);
+    bool SendUIButtonPress(eUIButton aX);
+    bool SendUIButtonRelease(eUIButton aX);
+    bool SendUIButtonDoublePress(eUIButton aX);
 
-        ///////////////////////////////
-        // Properties
-        cResources* GetResources(){ return mpResources;}
-        cInput*    GetInput() { return mpInput; }
+    eMouseButton TranslateGuiMouseToMouse(eGuiMouseButton aButton);
+    eGuiMouseButton TranslateMouseToGuiMouse(eMouseButton aButton);
+
+    ///////////////////////////////
+    // Properties
+    cResources* GetResources()
+    {
+        return mpResources;
+    }
+    cInput*    GetInput()
+    {
+        return mpInput;
+    }
 
 
 
-        static cGuiGfxElement* mpGfxRect;
+    static cGuiGfxElement* mpGfxRect;
 
-    private:
-        void GenerateSkinTypeStrings();
+private:
+    void GenerateSkinTypeStrings();
 
-        cResources *mpResources;
-        cGraphics *mpGraphics;
-        cSound *mpSound;
-        cScene *mpScene;
-        cInput *mpInput;
+    cResources *mpResources;
+    cGraphics *mpGraphics;
+    cSound *mpSound;
+    cScene *mpScene;
+    cInput *mpInput;
 
-        cGuiSet *mpSetInFocus;
+    cGuiSet *mpSetInFocus;
 
-        tGuiSetMap m_mapSets;
-        tGuiSkinMap m_mapSkins;
+    tGuiSetMap m_mapSets;
+    tGuiSkinMap m_mapSkins;
 
-        iGuiMaterial *mvMaterials[eGuiMaterial_LastEnum];
+    iGuiMaterial *mvMaterials[eGuiMaterial_LastEnum];
 
-        tGuiGfxElementList mlstGfxElements;
-        tGuiGfxElementList mlstToBeDestroyedGfxElements;
+    tGuiGfxElementList mlstGfxElements;
+    tGuiGfxElementList mlstToBeDestroyedGfxElements;
 
-        tGuiSkinGfxMap m_mapSkinGfxStrings;
-        tGuiSkinFontMap m_mapSkinFontStrings;
-        tGuiSkinAttributeMap m_mapSkinAttributeStrings;
+    tGuiSkinGfxMap m_mapSkinGfxStrings;
+    tGuiSkinFontMap m_mapSkinFontStrings;
+    tGuiSkinAttributeMap m_mapSkinAttributeStrings;
 
-        unsigned long mlLastRenderTime;
-    };
+    unsigned long mlLastRenderTime;
+};
 
 };
 #endif // HPL_GUI_H

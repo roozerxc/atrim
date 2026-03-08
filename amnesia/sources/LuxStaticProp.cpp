@@ -33,7 +33,7 @@ void cLuxStaticPropLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_
     if(pMap==NULL) return;
 
     // ATTENTION!
-    // The entity classes is only be used if for some reason 
+    // The entity classes is only be used if for some reason
     // static props needs to be turned of or what not.
 
     /*cLuxStaticProp *pStaticProp = hplNew( cLuxStaticProp, (msName, mlID) );
@@ -59,7 +59,7 @@ void cLuxStaticPropLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_
     //////////////////////////////
     //Add to the current map
     pMap->AddStaticProp(pStaticProp);*/
-    
+
     ///////////////////////////////
     // Instance vars
     if(apInstanceVars)
@@ -124,7 +124,7 @@ cLuxStaticProp::~cLuxStaticProp()
         for(size_t i=0; i<mvLights.size(); ++i) pWorld->DestroyLight(mvLights[i]);
 
         //Particle systems
-        for(size_t i=0; i<mvParticleSystems.size(); ++i) 
+        for(size_t i=0; i<mvParticleSystems.size(); ++i)
         {
             cParticleSystem *pPS = mvParticleSystems[i];
             if(pPS && pWorld->ParticleSystemExists(pPS)) pPS->Kill();
@@ -138,7 +138,7 @@ cLuxStaticProp::~cLuxStaticProp()
 
         //Sound entities
         for(size_t i=0; i<mvSoundEntities.size(); ++i)     pWorld->DestroySoundEntity(mvSoundEntities[i]);
-    }    
+    }
 }
 
 //-----------------------------------------------------------------------

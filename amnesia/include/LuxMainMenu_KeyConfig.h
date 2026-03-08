@@ -20,10 +20,10 @@ class cLuxMainMenu_KeyConfig;
 class cSubActionWrapper
 {
 public:
-    cSubActionWrapper(eInputDeviceType aType, int alInputId) : 
-      mType(aType), mGamepadInputType(eGamepadInputType_LastEnum), mlInputId(alInputId), mfInputValue(1.0f) {}
-    cSubActionWrapper(eGamepadInputType aType, int alInputId, float afInputValue) : 
-      mType(eInputDeviceType_Gamepad), mGamepadInputType(aType), mlInputId(alInputId), mfInputValue(afInputValue) {}
+    cSubActionWrapper(eInputDeviceType aType, int alInputId) :
+        mType(aType), mGamepadInputType(eGamepadInputType_LastEnum), mlInputId(alInputId), mfInputValue(1.0f) {}
+    cSubActionWrapper(eGamepadInputType aType, int alInputId, float afInputValue) :
+        mType(eInputDeviceType_Gamepad), mGamepadInputType(aType), mlInputId(alInputId), mfInputValue(afInputValue) {}
 
     eInputDeviceType mType;
     eGamepadInputType mGamepadInputType;
@@ -109,7 +109,7 @@ private:
 
     cSubActionWrapper GetSubActionWrapperFromSubAction(iSubAction* apSubAction);
     cSubActionWrapper GetSubActionWrapperFromLuxInput(cLuxInput* apInput);
-    
+
     cSubActionWrapper GetSubActionWrapperFromString(const tString& asX, int alValue);
 
     cSubActionWrapper GetSubActionWrapperFromStringVecKeyboard(const tStringVec& avX, int alValue);
@@ -177,17 +177,26 @@ public:
 
     void ExitPressed();
 
-    iWidget* GetWaitingInput() { return mpWaitingInput; }
+    iWidget* GetWaitingInput()
+    {
+        return mpWaitingInput;
+    }
     void SetWaitingInput(iWidget* apInput);
 
-    void CancelInputSetting() { mbInputSettingCancelled = true; }
+    void CancelInputSetting()
+    {
+        mbInputSettingCancelled = true;
+    }
 private:
     void OnSetActive(bool abX);
-    
+
     cLuxInputMenuEntry* CreateInputEntry(cLuxAction* apAction, iWidget* apParent, const cVector3f& avPos);
 
     void SetCurrentToolTipEntry(cLuxInputMenuEntry* apEntry);
-    cLuxInputMenuEntry* GetCurrentToolTipEntry() { return mpCurrentTipEntry; }
+    cLuxInputMenuEntry* GetCurrentToolTipEntry()
+    {
+        return mpCurrentTipEntry;
+    }
 
     void ApplyChanges();
     void SetDefaultValues();
@@ -242,7 +251,7 @@ private:
 
     bool CategorySelector_OnUIButtonPress(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(CategorySelector_OnUIButtonPress);
-    
+
     bool PressSetDefault(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressSetDefault);
 

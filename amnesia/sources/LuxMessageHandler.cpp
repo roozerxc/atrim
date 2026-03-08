@@ -50,7 +50,7 @@ void cLuxMessageHandler::LoadFonts()
 
 void cLuxMessageHandler::OnStart()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -119,7 +119,7 @@ void cLuxMessageHandler::StarQuestAddedMessage()
 void cLuxMessageHandler::StartPauseMessage(const tWString& asText, bool abYesNo, iLuxMessageCallback *apCallback)
 {
     mvLines.clear();
-    
+
     mpFont->GetWordWrapRows(500,mvFontSize.y+2,mvFontSize, gpBase->mpHelpFuncs->ParseString(asText),&mvLines);
     mbMessageYesNo = abYesNo;
     mpCallback = apCallback;
@@ -134,7 +134,7 @@ void cLuxMessageHandler::SetMessage(const tWString& asText, float afTime)
     tWString sParsedText = gpBase->mpHelpFuncs->ParseString(asText);
     mfMessageAlpha =0.0f;
     mfMessageTime = afTime <=0 ? gpBase->mpHelpFuncs->GetStringDuration(sParsedText) : afTime;
-    
+
     mvMessageRows.clear();
 
     mpFont->GetWordWrapRows(700,mvFontSize.y+2,mvFontSize, sParsedText, &mvMessageRows);
@@ -149,7 +149,7 @@ void cLuxMessageHandler::Update(float afTimeStep)
     if(mfMessageTime > 0)
     {
         mfMessageTime -= afTimeStep;
-        
+
         mfMessageAlpha += afTimeStep*1;
         if(mfMessageAlpha > 1) mfMessageAlpha =1;
     }
@@ -267,7 +267,7 @@ void cLuxMessageHandler::DrawQuestAdded()
     vPos -= gpBase->mvHudVirtualStartPos;//minus since coordinates are negative!
 
     gpBase->mpGameHudSet->DrawGfx(mpQuestAddedIcon, vPos, -1, cColor(1, mfQuestMessageAlpha));
-    
+
     for(int i=0; i<2; ++i)
         gpBase->mpGameHudSet->DrawGfx(mpQuestAddedIcon, vPos+cVector3f(0,0,1), -1, cColor(mfQuestMessageAlpha*mQuestOscill.val, 1), eGuiMaterial_Additive);
 }
@@ -283,14 +283,14 @@ void cLuxMessageHandler::DrawMessage()
     {
         fAlpha = mfMessageAlpha * (1-mfPauseMessageAlpha);
     }
-    
+
     cVector3f vTextPos = cVector3f(400, 345, 4);
     for(size_t i=0; i<mvMessageRows.size(); ++i)
     {
         gpBase->mpGameHudSet->DrawFont(mvMessageRows[i], mpFont,vTextPos,mvFontSize, cColor(1, fAlpha),eFontAlign_Center);
         vTextPos.y += mvFontSize.y+2;
     }
-    
+
 }
 
 //-----------------------------------------------------------------------

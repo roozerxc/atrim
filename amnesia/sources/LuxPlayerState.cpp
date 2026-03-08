@@ -32,7 +32,7 @@ cVector3f cLuxPlayerStateVars::mvLadderStartPos = 0;
 void cLuxPlayerStateVars::SetupInteraction(iPhysicsBody *apBody, const cVector3f &avInteractPos)
 {
     mpInteractBody = apBody;
-    
+
     iLuxEntity *pEntity = (iLuxEntity*)apBody->GetUserData();
     if(pEntity && pEntity->GetEntityType() == eLuxEntityType_Prop)
     {
@@ -60,7 +60,7 @@ iLuxPlayerState::iLuxPlayerState(cLuxPlayer *apPlayer, eLuxPlayerState aType)
     cGui *pGui = gpBase->mpEngine->GetGui();
     mpDefaultCrosshairGfx = pGui->CreateGfxImage("hud_crosshair_default.tga",eGuiMaterial_Alpha);
     mpSimpleInteractCrosshairGfx = pGui->CreateGfxImage("hud_crosshair_active.tga",eGuiMaterial_Alpha);
-    
+
     mPreviousState = eLuxPlayerState_LastEnum;
 }
 

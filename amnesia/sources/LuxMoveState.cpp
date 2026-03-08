@@ -15,7 +15,7 @@ iLuxMoveState::iLuxMoveState(cLuxPlayer *apPlayer)
     mfMaxForwardSpeed = 0.0f;
     mfMaxBackwardSpeed = 0.0f;
     mfMaxSidwaySpeed = 0.0f;
-    
+
     mfForwardAcc = gpBase->mpGameCfg->GetFloat("Player_Movement_Default","ForwardAcc",0);
     mfSidewayAcc = gpBase->mpGameCfg->GetFloat("Player_Movement_Default","SidewayAcc",0);
     mfForwardDeacc = gpBase->mpGameCfg->GetFloat("Player_Movement_Default","ForwardDeacc",0);
@@ -51,7 +51,7 @@ void iLuxMoveState::Update(float afTimeStep)
 
     //////////////////////////////
     // Set move state variables
-    iCharacterBody *pCharBody = gpBase->mpPlayer->GetCharacterBody();    
+    iCharacterBody *pCharBody = gpBase->mpPlayer->GetCharacterBody();
 
     pCharBody->SetMaxPositiveMoveSpeed(eCharDir_Forward,mfMaxForwardSpeed * mfMaxForwardSpeedMul);
     pCharBody->SetMaxNegativeMoveSpeed(eCharDir_Forward,-mfMaxBackwardSpeed * mfMaxBackwardSpeedMul);

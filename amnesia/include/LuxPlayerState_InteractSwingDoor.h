@@ -21,14 +21,17 @@ public:
 
 class cLuxPlayerState_InteractSwingDoor : public iLuxPlayerState_InteractRotateBase
 {
-typedef iLuxPlayerState_InteractRotateBase super_class;
-public:    
+    typedef iLuxPlayerState_InteractRotateBase super_class;
+public:
     cLuxPlayerState_InteractSwingDoor(cLuxPlayer *apPlayer);
     virtual ~cLuxPlayerState_InteractSwingDoor();
 
     /////////////////////////////////
     //Save data stuff
-    virtual bool IsSaved(){ return false; }
+    virtual bool IsSaved()
+    {
+        return false;
+    }
     iLuxPlayerState_SaveData* CreateSaveData();
 
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);

@@ -8,264 +8,267 @@
 #include "resources/BinaryBuffer.h"
 #include "resources/Resources.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC DATA
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC DATA
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    #define kEncryptKey 0x4516FFDD
+#define kEncryptKey 0x4516FFDD
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cSqScript::cSqScript(const tString& asName,asIScriptEngine *apScriptEngine,
-                            cScriptOutput *apScriptOutput, int alHandle)
-        : iScript(asName, _W(""))
+cSqScript::cSqScript(const tString& asName,asIScriptEngine *apScriptEngine,
+                     cScriptOutput *apScriptOutput, int alHandle)
+    : iScript(asName, _W(""))
+{
+    mpScriptEngine = apScriptEngine;
+    mpScriptOutput = apScriptOutput;
+    mlHandle = alHandle;
+
+    mpContext = mpScriptEngine->CreateContext();
+
+    //Create a unique module name
+    msModuleName = "Module_"+cString::ToString(cMath::RandRectl(0,1000000))+
+                   "_"+cString::ToString(mlHandle);
+
+}
+
+cSqScript::~cSqScript()
+{
+    mpScriptEngine->DiscardModule(msModuleName.c_str());
+    mpContext->Release();
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+bool cSqScript::CreateFromFile(const tWString& asFileName, tString *apCompileMessages)
+{
+    SetFullPath(asFileName);
+
+    tWString sExt = cString::ToLowerCaseW(cString::GetFileExtW(asFileName));
+
+    /////////////////////////////////////////
+    // Load file
+    int lLength = 0;
+    char *pCharBuffer = NULL;
+
+    /////////////////////////////////////
+    // Normal load
+    if(sExt == _W("hps"))
     {
-        mpScriptEngine = apScriptEngine;
-        mpScriptOutput = apScriptOutput;
-        mlHandle = alHandle;
-
-        mpContext = mpScriptEngine->CreateContext();
-
-        //Create a unique module name
-        msModuleName = "Module_"+cString::ToString(cMath::RandRectl(0,1000000))+
-                        "_"+cString::ToString(mlHandle);
-
-    }
-
-    cSqScript::~cSqScript()
-    {
-        mpScriptEngine->DiscardModule(msModuleName.c_str());
-        mpContext->Release();
-    }
-
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-
-    bool cSqScript::CreateFromFile(const tWString& asFileName, tString *apCompileMessages)
-    {
-        SetFullPath(asFileName);
-
-        tWString sExt = cString::ToLowerCaseW(cString::GetFileExtW(asFileName));
-
-        /////////////////////////////////////////
-        // Load file
-        int lLength = 0;
-        char *pCharBuffer = NULL;
-        
-        /////////////////////////////////////
-        // Normal load
-        if(sExt == _W("hps"))
+        pCharBuffer = LoadCharBuffer(asFileName,lLength);
+        if(pCharBuffer==NULL)
         {
-            pCharBuffer = LoadCharBuffer(asFileName,lLength);
-            if(pCharBuffer==NULL){
-                Error("Couldn't load script '%s'!\n",asFileName.c_str());
-                return false;
-            }
+            Error("Couldn't load script '%s'!\n",asFileName.c_str());
+            return false;
         }
-        /////////////////////////////////////
-        // Compressed load
-        else if(cResources::GetCreateAndLoadCompressedMaps())
+    }
+    /////////////////////////////////////
+    // Compressed load
+    else if(cResources::GetCreateAndLoadCompressedMaps())
+    {
+        cBinaryBuffer compBuffer;
+        if(compBuffer.Load(asFileName)==false)
         {
-            cBinaryBuffer compBuffer;
-            if(compBuffer.Load(asFileName)==false)
-            {
-                //Log("Could not load compressed map!\n");
-                return false;
-            }
+            //Log("Could not load compressed map!\n");
+            return false;
+        }
+
+        int lKey = kEncryptKey;
+        compBuffer.XorTransform((char*)&lKey, sizeof(lKey));
+
+        cBinaryBuffer textBuff;
+        if(textBuff.DecompressAndAddFromBuffer(&compBuffer, false)==false)
+        {
+            //Log("Could not decompress map!\n");
+            return false;
+        }
+
+        textBuff.SetPos(0);
+        lLength = (int)textBuff.GetSize();
+        pCharBuffer = hplNewArray(char,lLength);
+        textBuff.GetCharArray(pCharBuffer, lLength);
+    }
+
+    /////////////////////////////////////////
+    // Save compressed
+    if(sExt == _W("hps") && cResources::GetCreateAndLoadCompressedMaps())
+    {
+        tWString sCompFile = cString::SetFileExtW(asFileName,_W("chps"));
+
+        //Only recreate if file does not exist or if out of date.
+        if(    cPlatform::FileExists(sCompFile)==false ||
+                cPlatform::FileModifiedDate(sCompFile) < cPlatform::FileModifiedDate(asFileName))
+        {
+            cBinaryBuffer textBuff;
+            textBuff.AddCharArray(pCharBuffer, lLength);
+
+            cBinaryBuffer compBuff;
+            compBuff.CompressAndAdd(textBuff.GetDataPointer(), textBuff.GetSize());
 
             int lKey = kEncryptKey;
-            compBuffer.XorTransform((char*)&lKey, sizeof(lKey));
+            compBuff.XorTransform((char*)&lKey, sizeof(lKey));
 
-            cBinaryBuffer textBuff;
-            if(textBuff.DecompressAndAddFromBuffer(&compBuffer, false)==false)
-            {
-                //Log("Could not decompress map!\n");
-                return false;
-            }
-
-            textBuff.SetPos(0);
-            lLength = (int)textBuff.GetSize();
-            pCharBuffer = hplNewArray(char,lLength);
-            textBuff.GetCharArray(pCharBuffer, lLength);
+            compBuff.Save(sCompFile);
         }
+    }
 
-        /////////////////////////////////////////
-        // Save compressed
-        if(sExt == _W("hps") && cResources::GetCreateAndLoadCompressedMaps())
-        {
-            tWString sCompFile = cString::SetFileExtW(asFileName,_W("chps"));
+    /////////////////////////////////////////
+    // Create module
+    mpModule = mpScriptEngine->GetModule(msModuleName.c_str(), asGM_ALWAYS_CREATE);
+    if(mpModule->AddScriptSection("main", pCharBuffer, lLength)<0)
+    {
+        Error("Couldn't add script '%s'!\n",asFileName.c_str());
+        hplDeleteArray(pCharBuffer);
+        return false;
+    }
 
-            //Only recreate if file does not exist or if out of date.
-            if(    cPlatform::FileExists(sCompFile)==false || 
-                cPlatform::FileModifiedDate(sCompFile) < cPlatform::FileModifiedDate(asFileName))
-            {
-                cBinaryBuffer textBuff;
-                textBuff.AddCharArray(pCharBuffer, lLength);
+    int lBuildOutput = mpModule->Build();
+    if(apCompileMessages) *apCompileMessages = mpScriptOutput->GetMessage();
 
-                cBinaryBuffer compBuff;
-                compBuff.CompressAndAdd(textBuff.GetDataPointer(), textBuff.GetSize());
-
-                int lKey = kEncryptKey;
-                compBuff.XorTransform((char*)&lKey, sizeof(lKey));
-
-                compBuff.Save(sCompFile);
-            }
-        }
-        
-        /////////////////////////////////////////
-        // Create module
-        mpModule = mpScriptEngine->GetModule(msModuleName.c_str(), asGM_ALWAYS_CREATE);
-        if(mpModule->AddScriptSection("main", pCharBuffer, lLength)<0)
-        {
-            Error("Couldn't add script '%s'!\n",asFileName.c_str());
-            hplDeleteArray(pCharBuffer);
-            return false;
-        }
-
-        int lBuildOutput = mpModule->Build();
-        if(apCompileMessages) *apCompileMessages = mpScriptOutput->GetMessage();
-
-        if(lBuildOutput<0)
-        {
-            Error("Couldn't build script '%s'!\n",cString::To8Char(asFileName).c_str());
-            Log("------- SCRIPT OUTPUT BEGIN --------------------------\n");
-            mpScriptOutput->Display();
-            mpScriptOutput->Clear();
-            Log("------- SCRIPT OUTPUT END ----------------------------\n");
-            
-            hplDeleteArray(pCharBuffer);
-            return false;
-        }
+    if(lBuildOutput<0)
+    {
+        Error("Couldn't build script '%s'!\n",cString::To8Char(asFileName).c_str());
+        Log("------- SCRIPT OUTPUT BEGIN --------------------------\n");
+        mpScriptOutput->Display();
         mpScriptOutput->Clear();
+        Log("------- SCRIPT OUTPUT END ----------------------------\n");
 
         hplDeleteArray(pCharBuffer);
-        return true;
+        return false;
     }
+    mpScriptOutput->Clear();
 
-    //-----------------------------------------------------------------------
+    hplDeleteArray(pCharBuffer);
+    return true;
+}
 
-    int cSqScript::GetFuncHandle(const tString& asFunc)
+//-----------------------------------------------------------------------
+
+int cSqScript::GetFuncHandle(const tString& asFunc)
+{
+    return mpModule->GetFunctionIdByName(asFunc.c_str());
+}
+
+//-----------------------------------------------------------------------
+
+void cSqScript::AddArg(const tString& asArg)
+{
+
+}
+
+//-----------------------------------------------------------------------
+
+bool cSqScript::Run(const tString& asFuncLine)
+{
+    ExecuteString(mpScriptEngine, asFuncLine.c_str(), mpModule);
+
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
+bool cSqScript::RunFuncString(const tString& asFuncName, tString& asStringArg0)
+{
+    int alHandle = mpModule->GetFunctionIdByName(asFuncName.c_str());
+
+    if (alHandle == asNO_FUNCTION)
     {
-        return mpModule->GetFunctionIdByName(asFunc.c_str());
+        return false;
     }
 
-    //-----------------------------------------------------------------------
+    mpContext->Prepare(alHandle);
+    mpContext->SetArgObject(0, &asStringArg0);
+    mpContext->Execute();
 
-    void cSqScript::AddArg(const tString& asArg)
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
+bool cSqScript::RunFuncFloat(const tString& asFuncName, float asFloatArg0)
+{
+    int alHandle = mpModule->GetFunctionIdByName(asFuncName.c_str());
+
+    if (alHandle == asNO_FUNCTION)
     {
-
+        return false;
     }
 
-    //-----------------------------------------------------------------------
+    mpContext->Prepare(alHandle);
+    mpContext->SetArgFloat(0, asFloatArg0);
+    mpContext->Execute();
 
-    bool cSqScript::Run(const tString& asFuncLine)
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
+bool cSqScript::Run(int alHandle)
+{
+    mpContext->Prepare(alHandle);
+
+    /* Set all the args here */
+
+    mpContext->Execute();
+
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+char* cSqScript::LoadCharBuffer(const tWString& asFileName, int& alLength)
+{
+    FILE *pFile = cPlatform::OpenFile(asFileName, _W("rb"));
+    if(pFile==NULL)
     {
-        ExecuteString(mpScriptEngine, asFuncLine.c_str(), mpModule);
-
-        return true;
+        return NULL;
     }
 
-    //-----------------------------------------------------------------------
+    fseek(pFile,0,SEEK_END);
+    int lLength = (int)ftell(pFile);
+    rewind(pFile);
 
-    bool cSqScript::RunFuncString(const tString& asFuncName, tString& asStringArg0)
-    {
-        int alHandle = mpModule->GetFunctionIdByName(asFuncName.c_str());
+    alLength = lLength;
 
-        if (alHandle == asNO_FUNCTION)
-        {
-            return false;
-        }
-        
-        mpContext->Prepare(alHandle);
-        mpContext->SetArgObject(0, &asStringArg0);
-        mpContext->Execute();
+    char *pBuffer = hplNewArray(char,lLength);
+    fread(pBuffer, lLength, 1, pFile);
 
-        return true;
-    }
+    fclose(pFile);
 
-    //-----------------------------------------------------------------------
+    return pBuffer;
+}
 
-    bool cSqScript::RunFuncFloat(const tString& asFuncName, float asFloatArg0)
-    {
-        int alHandle = mpModule->GetFunctionIdByName(asFuncName.c_str());
+//-----------------------------------------------------------------------
 
-        if (alHandle == asNO_FUNCTION)
-        {
-            return false;
-        }
-        
-        mpContext->Prepare(alHandle);
-        mpContext->SetArgFloat(0, asFloatArg0);
-        mpContext->Execute();
+//////////////////////////////////////////////////////////////////////////
+// STATIC PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
 
-        return true;
-    }
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
-
-    bool cSqScript::Run(int alHandle)
-    {
-        mpContext->Prepare(alHandle);
-
-        /* Set all the args here */
-
-        mpContext->Execute();
-
-        return true;
-    }
-
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-
-    char* cSqScript::LoadCharBuffer(const tWString& asFileName, int& alLength)
-    {
-        FILE *pFile = cPlatform::OpenFile(asFileName, _W("rb"));
-        if(pFile==NULL){
-            return NULL;
-        }
-
-        fseek(pFile,0,SEEK_END);
-        int lLength = (int)ftell(pFile);
-        rewind(pFile);
-        
-        alLength = lLength;
-
-        char *pBuffer = hplNewArray(char,lLength);
-        fread(pBuffer, lLength, 1, pFile);
-
-        fclose(pFile);
-
-        return pBuffer;
-    }
-
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // STATIC PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
 }

@@ -16,20 +16,24 @@
 #endif
 #define PERSONAL_RELATIVEGAME_PARENT _W("settings/")
 #define PERSONAL_RESOURCES _W("local_resources/")
-namespace hpl {
+namespace hpl
+{
 inline void SetupBaseDirs(tWStringVec& vDirs, const tWString& asRelativeParent = _W(""), const tWString& asMainFolder = _W(""),
-                                        bool userDir = false, const tWString& asCustomStoryPath = _W(""))
+                          bool userDir = false, const tWString& asCustomStoryPath = _W(""))
 {
     vDirs.clear();
 #if PERSONAL_RELATIVEPIECES_COUNT > 0
     tWString aDirs[] = { PERSONAL_RELATIVEPIECES };
-    for (int i = 0; i < PERSONAL_RELATIVEPIECES_COUNT; ++i) {
+    for (int i = 0; i < PERSONAL_RELATIVEPIECES_COUNT; ++i)
+    {
         vDirs.push_back(aDirs[i]);
     }
 #endif
-    if (asRelativeParent.length()) {
+    if (asRelativeParent.length())
+    {
         vDirs.push_back(PERSONAL_RELATIVEROOT + asRelativeParent);
-        if (asMainFolder.length()) {
+        if (asMainFolder.length())
+        {
             vDirs.push_back(PERSONAL_RELATIVEROOT + asRelativeParent + asMainFolder + _W("/"));
         }
     }
@@ -38,9 +42,11 @@ inline void SetupBaseDirs(tWStringVec& vDirs, const tWString& asRelativeParent =
     iFileBrowser::msGameDir = cString::AddSlashAtEndW(cPlatform::GetWorkingDir());
     iFileBrowser::msPersonalDir = PERSONAL_RELATIVEROOT PERSONAL_RELATIVEGAME_PARENT;
 #endif
-    if (userDir) {
+    if (userDir)
+    {
         vDirs.push_back(PERSONAL_RELATIVEROOT PERSONAL_RELATIVEGAME_PARENT PERSONAL_RESOURCES);
-        if (asCustomStoryPath.length()) {
+        if (asCustomStoryPath.length())
+        {
             vDirs.push_back(PERSONAL_RELATIVEROOT PERSONAL_RELATIVEGAME_PARENT PERSONAL_RESOURCES
                             + asCustomStoryPath + _W("/"));
         }

@@ -42,7 +42,7 @@ void cLuxCompletionCountHandler::LoadFonts()
 
 void cLuxCompletionCountHandler::OnStart()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -109,13 +109,13 @@ void cLuxCompletionCountHandler::Update(float afTimeStep)
 void cLuxCompletionCountHandler::OnDraw(float afFrameTime)
 {
     return;
-    
+
     float fPrecent = mfDisplayedAmount * 100;
     gpBase->mpGameHudSet->DrawFont(mpFont, cVector3f(400,20,1),21,cColor(1,mfAlpha), eFontAlign_Right,eGuiMaterial_FontNormal,
-                                    _W("%.1f%%"), fPrecent);
+                                   _W("%.1f%%"), fPrecent);
     gpBase->mpGameHudSet->DrawFont(mpFont, cVector3f(400,20,1),21,cColor(1,mfAlpha), eFontAlign_Left,eGuiMaterial_FontNormal,
-                                    _W(" %ls"), kTranslate("CompletionCount", "Completed").c_str());
-    
+                                   _W(" %ls"), kTranslate("CompletionCount", "Completed").c_str());
+
 }
 
 //-----------------------------------------------------------------------

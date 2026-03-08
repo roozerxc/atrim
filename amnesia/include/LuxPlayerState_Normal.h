@@ -22,16 +22,19 @@ public:
 
 class cLuxPlayerState_Normal : public iLuxPlayerState_DefaultBase
 {
-typedef iLuxPlayerState_DefaultBase super_class;
-public:    
+    typedef iLuxPlayerState_DefaultBase super_class;
+public:
     cLuxPlayerState_Normal(cLuxPlayer *apPlayer);
     virtual ~cLuxPlayerState_Normal();
 
     bool ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed);
-    
+
     /////////////////////////////////
     //Save data stuff
-    virtual bool IsSaved(){ return true; }
+    virtual bool IsSaved()
+    {
+        return true;
+    }
     iLuxPlayerState_SaveData* CreateSaveData();
 
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);

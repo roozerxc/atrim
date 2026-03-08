@@ -45,7 +45,7 @@ class iLuxJournalWidgetData
 {
 public:
     iLuxJournalWidgetData(iWidget *apWidget) : mpWidget(apWidget) {}
-    virtual ~iLuxJournalWidgetData(){}
+    virtual ~iLuxJournalWidgetData() {}
 
     virtual void Update(float afTimeStep)=0;
 
@@ -60,8 +60,8 @@ typedef tLuxJournalWidgetData::iterator tLuxJournalWidgetDataIt;
 
 class cLuxJournalTextData : public iLuxJournalWidgetData
 {
-public:    
-    cLuxJournalTextData(iWidget *apWidget, eLuxJournalState aType) : iLuxJournalWidgetData(apWidget), mType(aType), mfEffectfAlpha(0){}
+public:
+    cLuxJournalTextData(iWidget *apWidget, eLuxJournalState aType) : iLuxJournalWidgetData(apWidget), mType(aType), mfEffectfAlpha(0) {}
 
     void Update(float afTimeStep);
 
@@ -116,13 +116,13 @@ public:
 
 class cLuxJournal : public iLuxUpdateable
 {
-friend class cLuxMusicHandler_SaveData;
-friend class cLuxJournalStateData;
-friend class cLuxJournal_SaveData;
-public:    
+    friend class cLuxMusicHandler_SaveData;
+    friend class cLuxJournalStateData;
+    friend class cLuxJournal_SaveData;
+public:
     cLuxJournal();
     ~cLuxJournal();
-    
+
     void OnClearFonts();
     void LoadFonts();
 
@@ -138,18 +138,27 @@ public:
 
     void OnDraw(float afFrameTime);
 
-    cGuiSet* GetSet() { return mpGuiSet; }
+    cGuiSet* GetSet()
+    {
+        return mpGuiSet;
+    }
 
     void ExitPressed(bool abInstantExit);
 
     void Exit();
 
-    void SetForceInstantExit(bool abX){ mbForceInstantExit = abX;}
-    void SetOpenedFromInventory(bool abX){ mbOpenedFromInventory = abX;}
+    void SetForceInstantExit(bool abX)
+    {
+        mbForceInstantExit = abX;
+    }
+    void SetOpenedFromInventory(bool abX)
+    {
+        mbOpenedFromInventory = abX;
+    }
 
     cLuxNote* AddNote(const tString& asNameAndTextEntry, const tString& asImage);
     cLuxDiary* AddDiary(const tString& asNameAndTextEntry, const tString& asImage, int &alCurrentEntryIdx);
-    
+
     bool AddQuestNote(const tString& asName, const tString& asNameAndTextEntry);
     bool DisableQuestNote(const tString& asName);
     cLuxQuestNote* GetQuestNote(const tString& asName);
@@ -157,13 +166,16 @@ public:
     void ChangeState(eLuxJournalState aState);
 
     void OpenNote(cLuxNote *apNote, bool abNarration);
-    cLuxNote* GetNote(int alIdx){ return mvNotes[alIdx];}
+    cLuxNote* GetNote(int alIdx)
+    {
+        return mvNotes[alIdx];
+    }
 
     void OpenDiary(cLuxDiary *apDiary, bool abNarration);
     void SetDiaryAsLastRead(cLuxDiary *apDiary);
 
     void OpenLastReadText();
-    
+
 private:
     cLuxDiaryContainer* CreateDiaryContainer(const tString& asType);
 
@@ -176,10 +188,10 @@ private:
 
     void SetStateBackgroundGfx(const tString& asFile);
 
-    void LoadText(const tWString &asName ,const tWString &asText);
-    void LoadNarrationText(const tWString &asName ,const tWString &asText);
+    void LoadText(const tWString &asName,const tWString &asText);
+    void LoadNarrationText(const tWString &asName,const tWString &asText);
     void SetNotePage(int alPageNum);
-    
+
     int GetNoteListIndex(eLuxJournalState aState);//Return values: 0=notes, 1=diaries, 2=quests
     void SetNoteListPage(int alPageNum, eLuxJournalState aState);
 
@@ -207,7 +219,7 @@ private:
 
     bool MainMenuTextOnDraw(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(MainMenuTextOnDraw);
-    
+
     bool ListTextOnDraw(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(ListTextOnDraw);
 
@@ -222,7 +234,7 @@ private:
 
     bool DiaryTextClick(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(DiaryTextClick);
-    
+
     bool ImageButtonOnDraw(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(ImageButtonOnDraw);
 
@@ -259,7 +271,7 @@ private:
     std::vector<cLuxNote*> mvNotes;
     std::vector<cLuxDiaryContainer*> mvDiaryContainers;
     std::vector<cLuxQuestNote*> mvQuestNotes;
-    
+
     cGuiGfxElement *mpStateBackgroundGfx;
 
     float mfMouseOverPulse;
@@ -267,7 +279,7 @@ private:
     tWString msHeader;
     std::vector<cLuxNotePage> mvPages;
     int mlCurrentNotePage;
-    
+
     cSoundEntry *mpVoiceEntry;
     int mlVoiceEntryID;
 
@@ -293,7 +305,7 @@ private:
     cWidgetImage *mpImageForward[eLuxJournalState_LastEnum];
     iWidget         *mpWidgetReturn[eLuxJournalState_LastEnum];
     cWidgetImage *mpImageBackward[eLuxJournalState_LastEnum];
-    
+
     iTexture *mpScreenTexture;
     cGuiGfxElement *mpScreenGfx;
     iTexture *mpScreenBgTexture;

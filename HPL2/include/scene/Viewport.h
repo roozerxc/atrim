@@ -6,98 +6,165 @@
 #include "gui/GuiTypes.h"
 #include "scene/SceneTypes.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //------------------------------------------
-    
-    class cScene;
-    class cCamera;
-    class iRenderer;
-    class iFrameBuffer;
-    class cRenderSettings;
-    class cPostEffectComposite;
-    class cWorld;
-    class iViewportCallback;
-    class iRendererCallback;
-    class cGuiSet;
-    
-    //------------------------------------------
-    
-    class cViewport
+//------------------------------------------
+
+class cScene;
+class cCamera;
+class iRenderer;
+class iFrameBuffer;
+class cRenderSettings;
+class cPostEffectComposite;
+class cWorld;
+class iViewportCallback;
+class iRendererCallback;
+class cGuiSet;
+
+//------------------------------------------
+
+class cViewport
+{
+public:
+    cViewport(cScene *apScene);
+    ~cViewport();
+
+    void SetActive(bool abX)
     {
-    public:
-        cViewport(cScene *apScene);
-        ~cViewport();
+        mbActive = abX;
+    }
+    void SetVisible(bool abX)
+    {
+        mbVisible = abX;
+    }
+    bool IsActive()
+    {
+        return mbActive;
+    }
+    bool IsVisible()
+    {
+        return mbVisible;
+    }
 
-        void SetActive(bool abX){ mbActive = abX;}
-        void SetVisible(bool abX) { mbVisible = abX;}
-        bool IsActive(){ return mbActive;}
-        bool IsVisible(){ return mbVisible;}
+    void SetIsListener(bool abX)
+    {
+        mbIsListener = abX;
+    }
+    bool IsListener()
+    {
+        return mbIsListener;
+    }
 
-        void SetIsListener(bool abX){ mbIsListener = abX;}
-        bool IsListener(){ return mbIsListener;}
+    void SetCamera(cCamera *apCamera)
+    {
+        mpCamera = apCamera;
+    }
+    cCamera* GetCamera()
+    {
+        return mpCamera;
+    }
 
-        void SetCamera(cCamera *apCamera){ mpCamera = apCamera;}
-        cCamera* GetCamera(){ return mpCamera;}
+    void SetWorld(cWorld *apWorld);
+    cWorld* GetWorld()
+    {
+        return mpWorld;
+    }
 
-        void SetWorld(cWorld *apWorld);
-        cWorld* GetWorld(){ return mpWorld;}
-        
-        void SetRenderer(iRenderer *apRenderer){ mpRenderer = apRenderer;}
-        iRenderer* GetRenderer(){ return mpRenderer;}
+    void SetRenderer(iRenderer *apRenderer)
+    {
+        mpRenderer = apRenderer;
+    }
+    iRenderer* GetRenderer()
+    {
+        return mpRenderer;
+    }
 
-        cRenderSettings* GetRenderSettings(){ return mpRenderSettings;}
+    cRenderSettings* GetRenderSettings()
+    {
+        return mpRenderSettings;
+    }
 
-        void SetFrameBuffer(iFrameBuffer *apFrameBuffer){ mRenderTarget.mpFrameBuffer = apFrameBuffer;}
-        iFrameBuffer* GetFrameBuffer(){ return mRenderTarget.mpFrameBuffer;}
+    void SetFrameBuffer(iFrameBuffer *apFrameBuffer)
+    {
+        mRenderTarget.mpFrameBuffer = apFrameBuffer;
+    }
+    iFrameBuffer* GetFrameBuffer()
+    {
+        return mRenderTarget.mpFrameBuffer;
+    }
 
-        void SetPostEffectComposite(cPostEffectComposite *apPostEffectComposite){ mpPostEffectComposite = apPostEffectComposite;}
-        cPostEffectComposite* GetPostEffectComposite(){ return mpPostEffectComposite;}
+    void SetPostEffectComposite(cPostEffectComposite *apPostEffectComposite)
+    {
+        mpPostEffectComposite = apPostEffectComposite;
+    }
+    cPostEffectComposite* GetPostEffectComposite()
+    {
+        return mpPostEffectComposite;
+    }
 
-        void AddGuiSet(cGuiSet *apSet);
-        void RemoveGuiSet(cGuiSet *apSet);
-        cGuiSetListIterator GetGuiSetIterator();
+    void AddGuiSet(cGuiSet *apSet);
+    void RemoveGuiSet(cGuiSet *apSet);
+    cGuiSetListIterator GetGuiSetIterator();
 
-        void SetPosition(const cVector2l& avPos){ mRenderTarget.mvPos = avPos;}
-        void SetSize(const cVector2l& avSize){ mRenderTarget.mvSize = avSize;}
-        
-        const cVector2l& GetPosition(){ return  mRenderTarget.mvPos;}
-        const cVector2l& GetSize(){ return mRenderTarget.mvSize;}
+    void SetPosition(const cVector2l& avPos)
+    {
+        mRenderTarget.mvPos = avPos;
+    }
+    void SetSize(const cVector2l& avSize)
+    {
+        mRenderTarget.mvSize = avSize;
+    }
 
-        cRenderTarget* GetRenderTarget(){ return &mRenderTarget; }
-        
-        void AddViewportCallback(iViewportCallback *apCallback);
-        void RemoveViewportCallback(iViewportCallback *apCallback);
-        void RunViewportCallbackMessage(eViewportMessage aMessage);
+    const cVector2l& GetPosition()
+    {
+        return  mRenderTarget.mvPos;
+    }
+    const cVector2l& GetSize()
+    {
+        return mRenderTarget.mvSize;
+    }
 
-        void AddRendererCallback(iRendererCallback *apCallback);
-        void RemoveRendererCallback(iRendererCallback *apCallback);
-        tRendererCallbackList* GetRendererCallbackList(){ return &mlstRendererCallbacks;}
-            
-    private:
-        cScene *mpScene;
+    cRenderTarget* GetRenderTarget()
+    {
+        return &mRenderTarget;
+    }
 
-        cCamera *mpCamera;
-        cWorld *mpWorld;
+    void AddViewportCallback(iViewportCallback *apCallback);
+    void RemoveViewportCallback(iViewportCallback *apCallback);
+    void RunViewportCallbackMessage(eViewportMessage aMessage);
 
-        bool mbActive;
-        bool mbVisible;
+    void AddRendererCallback(iRendererCallback *apCallback);
+    void RemoveRendererCallback(iRendererCallback *apCallback);
+    tRendererCallbackList* GetRendererCallbackList()
+    {
+        return &mlstRendererCallbacks;
+    }
 
-        bool mbIsListener;
+private:
+    cScene *mpScene;
 
-        iRenderer *mpRenderer;
-        cPostEffectComposite *mpPostEffectComposite;
+    cCamera *mpCamera;
+    cWorld *mpWorld;
 
-        cRenderTarget mRenderTarget;
-        
-        tViewportCallbackList mlstCallbacks;
-        tRendererCallbackList mlstRendererCallbacks;
-        tGuiSetList mlstGuiSets;
-        
-        cRenderSettings *mpRenderSettings;
-    };
+    bool mbActive;
+    bool mbVisible;
 
-    //------------------------------------------
+    bool mbIsListener;
+
+    iRenderer *mpRenderer;
+    cPostEffectComposite *mpPostEffectComposite;
+
+    cRenderTarget mRenderTarget;
+
+    tViewportCallbackList mlstCallbacks;
+    tRendererCallbackList mlstRendererCallbacks;
+    tGuiSetList mlstGuiSets;
+
+    cRenderSettings *mpRenderSettings;
+};
+
+//------------------------------------------
 
 };
 #endif // HPL_VIEWPORT_H

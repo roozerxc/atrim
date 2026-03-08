@@ -3,33 +3,34 @@
 
 #include "sound/LowLevelSound.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cLowLevelSoundFmod : public iLowLevelSound
-    {
-    public:
-        cLowLevelSoundFmod();
-        ~cLowLevelSoundFmod();
+class cLowLevelSoundFmod : public iLowLevelSound
+{
+public:
+    cLowLevelSoundFmod();
+    ~cLowLevelSoundFmod();
 
-        void GetSupportedFormats(tStringList &alstFormats);
+    void GetSupportedFormats(tStringList &alstFormats);
 
-        iSoundData* LoadSoundData(const tString& asName,const tString& asFilePath,
-                                    const tString& asType, bool abStream,bool abLoopStream);
+    iSoundData* LoadSoundData(const tString& asName,const tString& asFilePath,
+                              const tString& asType, bool abStream,bool abLoopStream);
 
-        void UpdateSound(float afTimeStep);
+    void UpdateSound(float afTimeStep);
 
-        void SetListenerAttributes (const cVector3f &avPos,const cVector3f &avVel,
+    void SetListenerAttributes (const cVector3f &avPos,const cVector3f &avVel,
                                 const cVector3f &avForward,const cVector3f &avUp);
-        void SetListenerPosition(const cVector3f &avPos);
+    void SetListenerPosition(const cVector3f &avPos);
 
-        void SetSetRolloffFactor(float afFactor);
+    void SetSetRolloffFactor(float afFactor);
 
-        void SetListenerAttenuation (bool abEnabled);
+    void SetListenerAttenuation (bool abEnabled);
 
-        virtual void SetVolume(float afVolume);
+    virtual void SetVolume(float afVolume);
 
-    private:
-        tString mvFormats[30];
-    };
+private:
+    tString mvFormats[30];
+};
 };
 #endif // HPL_LOWLEVELSOUND_FMOD_H

@@ -11,98 +11,99 @@
 
 #include "resources/MeshLoader.h"
 
-namespace hpl {
-    
-    class cAI;
-    class cGraphics;
-    class cResources;
-    class cSystem;
-    class cSound;
-    class cPhysics;
-    class cGui;
+namespace hpl
+{
 
-    class cCamera;
-    class cFrustum;
-    class cUpdater;
-    class cWorld;
-    class cViewport;
+class cAI;
+class cGraphics;
+class cResources;
+class cSystem;
+class cSound;
+class cPhysics;
+class cGui;
 
-    //--------------------------------------------------------------------
-    
-    typedef std::list<cViewport*> tViewportList;
-    typedef tViewportList::iterator tViewportListIt;
-        
-    typedef std::list<cCamera*> tCameraList;
-    typedef tCameraList::iterator tCameraListIt;
-    
-    typedef std::list<cWorld*> tWorldList;
-    typedef tWorldList::iterator tWorldListIt;
+class cCamera;
+class cFrustum;
+class cUpdater;
+class cWorld;
+class cViewport;
 
-    //--------------------------------------------------------------------
+//--------------------------------------------------------------------
+
+typedef std::list<cViewport*> tViewportList;
+typedef tViewportList::iterator tViewportListIt;
+
+typedef std::list<cCamera*> tCameraList;
+typedef tCameraList::iterator tCameraListIt;
+
+typedef std::list<cWorld*> tWorldList;
+typedef tWorldList::iterator tWorldListIt;
+
+//--------------------------------------------------------------------
 
 
-    #define tSceneRenderFlag_World            0x00000001
-    #define tSceneRenderFlag_Gui            0x00000002
-    #define tSceneRenderFlag_PostEffects    0x00000004
-    #define tSceneRenderFlag_All            0xFFFFFFFF
+#define tSceneRenderFlag_World            0x00000001
+#define tSceneRenderFlag_Gui            0x00000002
+#define tSceneRenderFlag_PostEffects    0x00000004
+#define tSceneRenderFlag_All            0xFFFFFFFF
 
-    //--------------------------------------------------------------------
+//--------------------------------------------------------------------
 
-    class cScene : public iUpdateable
-    {
-    public:
-        cScene(cGraphics *apGraphics,cResources *apResources, cSound* apSound, cPhysics *apPhysics,
-                cSystem *apSystem, cAI *apAI,cGui *apGui);
-        ~cScene();
+class cScene : public iUpdateable
+{
+public:
+    cScene(cGraphics *apGraphics,cResources *apResources, cSound* apSound, cPhysics *apPhysics,
+           cSystem *apSystem, cAI *apAI,cGui *apGui);
+    ~cScene();
 
-        void Reset();
-        
-        /**
-         * Called by cEngine
-         */
-        void Render(float afFrameTime, tFlag alFlags);
+    void Reset();
 
-        void PostUpdate(float afTimeStep);
-        
-        ///// VIEW PORT METHODS ////////////////////
-        
-        cViewport* CreateViewport(cCamera *apCamera=NULL, cWorld *apWorld=NULL, bool abPushFront = false);
-        void DestroyViewport(cViewport* apViewPort);
-        bool ViewportExists(cViewport* apViewPort);
+    /**
+     * Called by cEngine
+     */
+    void Render(float afFrameTime, tFlag alFlags);
 
-        void SetCurrentListener(cViewport* apViewPort);
-        
-        ///// CAMERA METHODS ////////////////////
+    void PostUpdate(float afTimeStep);
 
-        cCamera* CreateCamera(eCameraMoveMode aMoveMode);
-        void DestroyCamera(cCamera* apCam);
-        
-        ///// WORLD METHODS ////////////////////
+    ///// VIEW PORT METHODS ////////////////////
 
-        cWorld* LoadWorld(const tString& asFile, tWorldLoadFlag aFlags);
-        cWorld* CreateWorld(const tString& asName);
-        void DestroyWorld(cWorld* apWorld);
-        bool WorldExists(cWorld* apWorld);
-        
-        
-    private:
-        void Render3DGui(cViewport* apViewPort,cFrustum *apFrustum,float afTimeStep);
-        void RenderScreenGui(cViewport* apViewPort, float afTimeStep);
+    cViewport* CreateViewport(cCamera *apCamera=NULL, cWorld *apWorld=NULL, bool abPushFront = false);
+    void DestroyViewport(cViewport* apViewPort);
+    bool ViewportExists(cViewport* apViewPort);
 
-        cGraphics *mpGraphics;
-        cResources *mpResources;
-        cSound *mpSound;
-        cPhysics *mpPhysics;
-        cSystem *mpSystem;
-        cAI *mpAI;
-        cGui *mpGui;
+    void SetCurrentListener(cViewport* apViewPort);
 
-        cViewport *mpCurrentListener;
+    ///// CAMERA METHODS ////////////////////
 
-        tViewportList mlstViewports;
-        tWorldList mlstWorlds;
-        tCameraList mlstCameras;
-    };
+    cCamera* CreateCamera(eCameraMoveMode aMoveMode);
+    void DestroyCamera(cCamera* apCam);
+
+    ///// WORLD METHODS ////////////////////
+
+    cWorld* LoadWorld(const tString& asFile, tWorldLoadFlag aFlags);
+    cWorld* CreateWorld(const tString& asName);
+    void DestroyWorld(cWorld* apWorld);
+    bool WorldExists(cWorld* apWorld);
+
+
+private:
+    void Render3DGui(cViewport* apViewPort,cFrustum *apFrustum,float afTimeStep);
+    void RenderScreenGui(cViewport* apViewPort, float afTimeStep);
+
+    cGraphics *mpGraphics;
+    cResources *mpResources;
+    cSound *mpSound;
+    cPhysics *mpPhysics;
+    cSystem *mpSystem;
+    cAI *mpAI;
+    cGui *mpGui;
+
+    cViewport *mpCurrentListener;
+
+    tViewportList mlstViewports;
+    tWorldList mlstWorlds;
+    tCameraList mlstCameras;
+};
 
 };
 #endif // HPL_SCENE_H

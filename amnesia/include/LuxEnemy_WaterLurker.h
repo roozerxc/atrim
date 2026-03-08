@@ -13,7 +13,7 @@ class cLuxEnemy_WaterLurker_SaveData : public iLuxEnemy_SaveData
 public:
     ////////////////
     //Properties
-    float mfPlayerDetectionHeight;    
+    float mfPlayerDetectionHeight;
 };
 
 //----------------------------------------------
@@ -30,9 +30,9 @@ enum eWaterLurkerSplash
 
 class cLuxEnemy_WaterLurker : public iLuxEnemy
 {
-friend class cLuxEnemyLoader_WaterLurker;
-typedef iLuxEnemy super_class;
-public:    
+    friend class cLuxEnemyLoader_WaterLurker;
+    typedef iLuxEnemy super_class;
+public:
     cLuxEnemy_WaterLurker(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxEnemy_WaterLurker();
 
@@ -53,15 +53,15 @@ public:
     //////////////////////
     //Debug
     void OnRenderSolidImplemented(cRendererCallbackFunctions* apFunctions);
-        
-    
+
+
     //////////////////////
     //Save data stuff
     iLuxEntity_SaveData* CreateSaveData();
     void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);
-    
+
 private:
     //////////////////////
     // Actions
@@ -78,7 +78,7 @@ private:
     // State stuff
     void PatrolUpdateGoal();
     void PatrolEndOfPath();
-    
+
     //////////////
     //Data
     float mfPlayerDetectionHeight;
@@ -94,11 +94,11 @@ private:
     tString msSplashSound_Run;
     tString msSplashSound_Eat;
     tString msSplashSound_Attack;
-    
+
     //////////////
     //Variables
 
-    
+
 };
 
 //----------------------------------------------
@@ -107,7 +107,7 @@ class cLuxEnemyLoader_WaterLurker : public iLuxEnemyLoader
 {
 public:
     cLuxEnemyLoader_WaterLurker(const tString& asName);
-    virtual ~cLuxEnemyLoader_WaterLurker(){}
+    virtual ~cLuxEnemyLoader_WaterLurker() {}
 
     iLuxEnemy *CreateEnemy(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxEnemy *apEnemy, cXmlElement *apRootElem);

@@ -21,9 +21,9 @@ public:
 
 class cLuxArea_Sign : public iLuxArea
 {
-typedef iLuxArea super_class;
-friend class cLuxAreaLoader_Sign;
-public:    
+    typedef iLuxArea super_class;
+    friend class cLuxAreaLoader_Sign;
+public:
     cLuxArea_Sign(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxArea_Sign();
 
@@ -41,10 +41,10 @@ public:
 
     //////////////////////
     //Properties
-    
+
     //////////////////////
     //Connection callbacks
-    void OnConnectionStateChange(iLuxEntity *apEntity, int alState){}
+    void OnConnectionStateChange(iLuxEntity *apEntity, int alState) {}
 
     //////////////////////
     //Save data stuff
@@ -72,10 +72,10 @@ public:
     ~cLuxAreaLoader_Sign();
 
     iLuxArea *CreateArea(const tString& asName, int alID, cLuxMap *apMap);
-    
+
     void LoadVariables(iLuxArea *apArea, cWorld *apWorld);
     void SetupArea(iLuxArea *apArea, cWorld *apWorld);
-    
+
 };
 
 //----------------------------------------------

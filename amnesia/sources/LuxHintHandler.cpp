@@ -96,7 +96,7 @@ void cLuxHintHandler::LoadFonts()
 
 void cLuxHintHandler::OnStart()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -149,7 +149,7 @@ void cLuxHintHandler::DrawHintText(float afFrameTime, cGuiSet *apGuiSet)
     float fX = mHintOscill.val*0.5f;
     cColor hintCol(1,fX,fX, mfAlpha);
     apGuiSet->DrawFont(mpFont, cVector3f(400,mfYPos,20),mvFontSize,hintCol, eFontAlign_Center, eGuiMaterial_FontNormal,
-        _W(" %ls"), kTranslate("Hints", "HINT:").c_str());
+                       _W(" %ls"), kTranslate("Hints", "HINT:").c_str());
 
     tWStringVec vRows;
     float fMaxWidth = 680;
@@ -158,14 +158,14 @@ void cLuxHintHandler::DrawHintText(float afFrameTime, cGuiSet *apGuiSet)
     if(vRows.size()==1)
     {
         apGuiSet->DrawFont(mpFont, cVector3f(400,fStartY,20),mvFontSize,cColor(1,mfAlpha), eFontAlign_Center, eGuiMaterial_FontNormal,
-                            _W(" %ls"), msCurrentText.c_str());
+                           _W(" %ls"), msCurrentText.c_str());
     }
     else
     {
         for(size_t i=0; i<vRows.size(); ++i)
         {
             apGuiSet->DrawFont(mpFont, cVector3f(400-fMaxWidth*0.5f, fStartY + (float)i* (mvFontSize.y+2.0f), 20),mvFontSize,cColor(1,mfAlpha), eFontAlign_Left, eGuiMaterial_FontNormal,
-                                _W(" %ls"), vRows[i].c_str());
+                               _W(" %ls"), vRows[i].c_str());
         }
     }
 
@@ -281,15 +281,15 @@ void cLuxHintHandler::ParseStringForGamepadIcons()
     tWString sOutput=_W("");
     tWString sCommand =_W("");
     bool bParseVar = false;
-    
+
     int lPosition = 0;
- 
+
     /////////////////
     // Find all the icons
     for(size_t i=0; i<msCurrentText.size(); ++i)
     {
         wchar_t lChar = msCurrentText[i];
-        
+
         ////////////////////////
         // Parse variable
         if(bParseVar)
@@ -371,24 +371,24 @@ void cLuxHintHandler::ParseStringForGamepadIcons()
             while(sRowText[lCount] != 0)
             {
                 wchar_t lGlyphNum = ((wchar_t)sRowText[lCount]);
-            
+
                 //Check if the glyph is valid (in range)
-                if(    lGlyphNum < mpFont->GetFirstChar() || 
-                    lGlyphNum > mpFont->GetLastChar())
+                if(    lGlyphNum < mpFont->GetFirstChar() ||
+                        lGlyphNum > mpFont->GetLastChar())
                 {
                     lCount++;
                     continue;
                 }
                 //Get actual number of the glyph in the font.
                 lGlyphNum -= mpFont->GetFirstChar();
-            
+
                 //Get glyph data and draw.
                 cGlyph *pGlyph = mpFont->GetGlyph(lGlyphNum);
 
                 if(pGlyph)
                 {
                     cVector2f vSize(pGlyph->mvSize * mvFontSize);
-                    vPos.x += pGlyph->mfAdvance*mvFontSize.x; 
+                    vPos.x += pGlyph->mfAdvance*mvFontSize.x;
                 }
 
                 if(lPosition == mvHintIcons[lIconIdx].mlCharacterPosition)
@@ -467,7 +467,7 @@ tWString cLuxHintHandler::AddGamepadIconAtPosition(const tWString& asCommand, in
     {
         eGamepadHat hat = iGamepad::StringToHat(vInputParts[1]);
         eGamepadAxis axis = iGamepad::StringToAxis(vInputParts[1]);
-                                
+
         if(hat!=eGamepadHat_LastEnum)
         {
             eGamepadHatState state = iGamepad::StringToHatState(vInputParts[2]);

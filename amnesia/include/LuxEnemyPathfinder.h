@@ -14,8 +14,8 @@ class cLuxEnemyMover;
 
 class cLuxEnemyPathfinder
 {
-friend class cLuxEnemyPathfinder_SaveData;
-public:    
+    friend class cLuxEnemyPathfinder_SaveData;
+public:
     cLuxEnemyPathfinder(iLuxEnemy *apEnemy, cLuxEnemyMover *apMover);
     virtual ~cLuxEnemyPathfinder();
 
@@ -23,7 +23,7 @@ public:
     //General
     void SetupAfterLoad(cWorld *apWorld);
     void AfterWorldLoad();
-    
+
     void OnUpdate(float afTimeStep);
 
     //////////////////////
@@ -31,21 +31,30 @@ public:
     bool MoveTo(const cVector3f& avPos);
     void Stop();
 
-    cAINode* GetNodeAtPos(    const cVector3f &avPos,float afMinDistance,float afMaxDistance, bool abGetClosest, 
-                            bool abPosToNodeFreePathCheck,bool abEnemyToNodeFreePathCheck,
-                            cAINode *apSkipNode, int alFreePathRayNum=-1, 
-                            tAIFreePathFlag alFreePathFlags=eAIFreePathFlag_SkipDynamic,
-                            bool abSkipUsedNodes=true);
-    
+    cAINode* GetNodeAtPos(    const cVector3f &avPos,float afMinDistance,float afMaxDistance, bool abGetClosest,
+                              bool abPosToNodeFreePathCheck,bool abEnemyToNodeFreePathCheck,
+                              cAINode *apSkipNode, int alFreePathRayNum=-1,
+                              tAIFreePathFlag alFreePathFlags=eAIFreePathFlag_SkipDynamic,
+                              bool abSkipUsedNodes=true);
+
     //////////////////////
     //Properties
-    tAINodeList* GetNodeList(){ return &mlstPathNodes;}
+    tAINodeList* GetNodeList()
+    {
+        return &mlstPathNodes;
+    }
 
-    bool IsMoving(){ return mbMoving;}
+    bool IsMoving()
+    {
+        return mbMoving;
+    }
     cVector3f GetNextGoalPos();
     const cVector3f& GetFinalGoalPos();
 
-    cAINodeContainer* GetNodeContainer(){ return mpNodeContainer;}
+    cAINodeContainer* GetNodeContainer()
+    {
+        return mpNodeContainer;
+    }
 
     //////////////////////
     //Data
@@ -54,10 +63,10 @@ public:
     //////////////////////
     //Debug
     void OnRenderSolid(cRendererCallbackFunctions* apFunctions);
-    
+
     //////////////////////
     //Save data stuff
-    
+
 private:
     void UpdateMoving(float afTimeStep);
 

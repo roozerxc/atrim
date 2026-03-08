@@ -28,7 +28,7 @@ cLuxEnemyPathfinder::cLuxEnemyPathfinder(iLuxEnemy *apEnemy, cLuxEnemyMover *apM
 cLuxEnemyPathfinder::~cLuxEnemyPathfinder()
 {
     cWorld *pWorld = mpEnemy->mpMap->GetWorld();
-    if(mpAStar) pWorld->DestroyAStarHandler(mpAStar);    
+    if(mpAStar) pWorld->DestroyAStarHandler(mpAStar);
 }
 
 //-----------------------------------------------------------------------
@@ -41,7 +41,7 @@ cLuxEnemyPathfinder::~cLuxEnemyPathfinder()
 
 void cLuxEnemyPathfinder::SetupAfterLoad(cWorld *apWorld)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -51,7 +51,7 @@ void cLuxEnemyPathfinder::AfterWorldLoad()
     cWorld *pWorld = mpEnemy->mpMap->GetWorld();
 
     tString sType = cString::SetFileExt(cString::GetFileName(mpEnemy->msFileName),"");
-    mpNodeContainer = pWorld->CreateAINodeContainer( sType, "Default", mpEnemy->mpCharBody->GetSize(), false, 2 , 6 , 5.0f,0.41f);
+    mpNodeContainer = pWorld->CreateAINodeContainer( sType, "Default", mpEnemy->mpCharBody->GetSize(), false, 2, 6, 5.0f,0.41f);
     if(mpNodeContainer==NULL)
         Error("No node container found for enemy '%s'\n", mpEnemy->GetName().c_str());
 
@@ -72,7 +72,7 @@ bool cLuxEnemyPathfinder::MoveTo(const cVector3f& avPos)
     mlstPathNodeDistances.clear();
     mlstPathNodes.clear();
     mbMoving = true;
-    
+
     /////////////////////////////////////
     //Get the start and goal position
     cVector3f vStartPos = pCharBody->GetPosition();
@@ -84,7 +84,7 @@ bool cLuxEnemyPathfinder::MoveTo(const cVector3f& avPos)
     {
         return false;
     }
-    
+
 
     //If node is not at center, the nodes are assumed to be at feet, adjust for this!
     if(mpNodeContainer==NULL || mpNodeContainer->GetNodeIsAtCenter()==false)
@@ -104,7 +104,7 @@ bool cLuxEnemyPathfinder::MoveTo(const cVector3f& avPos)
         //TODO: Debug output
     }
 
-    
+
     return bRet;
 }
 
@@ -117,13 +117,13 @@ void cLuxEnemyPathfinder::Stop()
     mlstPathNodeDistances.clear();
 }
 
-cAINode* cLuxEnemyPathfinder::GetNodeAtPos(const cVector3f &avPos,float afMinDistance,float afMaxDistance,bool abGetClosest, 
-                                            bool abPosToNodeFreePathCheck,bool abEnemyToNodeFreePathCheck,
-                                            cAINode *apSkipNode,
-                                            int alFreePathRayNum, tAIFreePathFlag alFreePathFlags,
-                                            bool abSkipUsedNodes)
+cAINode* cLuxEnemyPathfinder::GetNodeAtPos(const cVector3f &avPos,float afMinDistance,float afMaxDistance,bool abGetClosest,
+        bool abPosToNodeFreePathCheck,bool abEnemyToNodeFreePathCheck,
+        cAINode *apSkipNode,
+        int alFreePathRayNum, tAIFreePathFlag alFreePathFlags,
+        bool abSkipUsedNodes)
 {
-    if(mpNodeContainer==NULL) return NULL;    
+    if(mpNodeContainer==NULL) return NULL;
 
     float fMaxDistSqr = afMaxDistance * afMaxDistance;
     float fMinDistSqr = afMinDistance * afMinDistance;
@@ -144,13 +144,13 @@ cAINode* cLuxEnemyPathfinder::GetNodeAtPos(const cVector3f &avPos,float afMinDis
 
         if(pNode == apSkipNode) continue;
         if(abSkipUsedNodes && mpEnemy->mpMap->AINodeIsUsedAsGoal(pNode)) continue;
-        
-        
+
+
         float fDistSqr = cMath::Vector3DistSqr(pNode->GetPosition(), avPos);
 
         //Log(" %s dist: %f. pos: (%s)\n", pNode->GetName().c_str(), sqrtf(fDistSqr), pNode->GetPosition().ToString().c_str());
 
-        
+
         ////////////////////
         // Check if within distance
         if(fDistSqr > fMaxDistSqr || fDistSqr < fMinDistSqr)
@@ -169,11 +169,11 @@ cAINode* cLuxEnemyPathfinder::GetNodeAtPos(const cVector3f &avPos,float afMinDis
                 continue;
             }
         }
-                
+
         ///////////////////////////////////
         //Check if there is a free path from pos to node
         if(    abPosToNodeFreePathCheck &&
-            mpNodeContainer->FreePath(avPos, pNode->GetPosition(),alFreePathRayNum, alFreePathRayNum)==false)
+                mpNodeContainer->FreePath(avPos, pNode->GetPosition(),alFreePathRayNum, alFreePathRayNum)==false)
         {
             //Log("Not free path from pps!\n");
             continue;
@@ -182,7 +182,7 @@ cAINode* cLuxEnemyPathfinder::GetNodeAtPos(const cVector3f &avPos,float afMinDis
         ///////////////////////////////////
         //Check if there is a free path from pos to node
         if(    abEnemyToNodeFreePathCheck &&
-            mpNodeContainer->FreePath(mpEnemy->mpCharBody->GetPosition(), pNode->GetPosition(),alFreePathRayNum, alFreePathRayNum)==false)
+                mpNodeContainer->FreePath(mpEnemy->mpCharBody->GetPosition(), pNode->GetPosition(),alFreePathRayNum, alFreePathRayNum)==false)
         {
             //Log("Not free path from enemy!\n");
             continue;
@@ -193,7 +193,7 @@ cAINode* cLuxEnemyPathfinder::GetNodeAtPos(const cVector3f &avPos,float afMinDis
         {
             vNodesInDistance.push_back(pNode);
         }
-        
+
         pRetNode = pNode;
         fClosestDistSqr = fDistSqr;
     }
@@ -203,8 +203,8 @@ cAINode* cLuxEnemyPathfinder::GetNodeAtPos(const cVector3f &avPos,float afMinDis
         int lIdx = cMath::RandRectl(0, (int)vNodesInDistance.size()-1);
         return vNodesInDistance[lIdx];
     }
-    
-    
+
+
     return pRetNode;
 }
 
@@ -283,7 +283,7 @@ void cLuxEnemyPathfinder::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
     apFunctions->GetLowLevelGfx()->DrawSphere(vStartPos,0.2f,cColor(1,0,1));
     apFunctions->GetLowLevelGfx()->DrawLine(vLastVec, vStartPos,cColor(1,0,1));
 
-    
+
 }
 
 cVector3f  cLuxEnemyPathfinder::GetNextGoalPos()
@@ -318,9 +318,9 @@ void cLuxEnemyPathfinder::UpdateMoving(float afTimeStep)
 
     iCharacterBody *pCharBody = mpEnemy->mpCharBody;
     cAINode *pCurrentNode = NULL;
-    
+
     cVector3f vGoal;
-    cVector3f vPos = pCharBody->GetPosition(); 
+    cVector3f vPos = pCharBody->GetPosition();
 
     cBoundingVolume tempBV; //= *pCharBody->GetCurrentBody()->GetBoundingVolume();
     cVector3f vBodySize = pCharBody->GetSize();
@@ -333,7 +333,8 @@ void cLuxEnemyPathfinder::UpdateMoving(float afTimeStep)
     {
         vGoal = mvMoveGoalPos;
     }
-    else{
+    else
+    {
         pCurrentNode = mlstPathNodes.back();
         vGoal = pCurrentNode->GetPosition();
     }
@@ -341,7 +342,7 @@ void cLuxEnemyPathfinder::UpdateMoving(float afTimeStep)
     ////////////////////////////////
     // Move to the position
     mpMover->MoveToPos(vGoal);
-    
+
     ////////////////////////////////
     //Check if character is stuck at node
     bool bStuckAtNode = false;
@@ -355,7 +356,7 @@ void cLuxEnemyPathfinder::UpdateMoving(float afTimeStep)
         std::list<float>::iterator it = mlstPathNodeDistances.begin();
         float fPreviousDistance = *it;
         ++it;
-        for(; it != mlstPathNodeDistances.end();++it)
+        for(; it != mlstPathNodeDistances.end(); ++it)
         {
             float fChange = *it - fPreviousDistance;
             fNodeDistAvg += fChange;
@@ -445,7 +446,7 @@ void cLuxEnemyPathfinder_SaveData::SetupPathfinder(cLuxEnemyPathfinder *apPathfi
     {
         cAINode *pNode = apPathfinder->mpNodeContainer->GetNodeFromID(mvPathNodeIds[i]);
         if(pNode) apPathfinder->mlstPathNodes.push_back(pNode);
-    }    
+    }
 }
 
 

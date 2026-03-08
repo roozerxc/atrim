@@ -10,414 +10,422 @@
 #include "system/Platform.h"
 
 
-namespace hpl {
+namespace hpl
+{
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
-    cMusicHandler::cMusicHandler(iLowLevelSound* apLowLevelSound, cResources* apResources)
+cMusicHandler::cMusicHandler(iLowLevelSound* apLowLevelSound, cResources* apResources)
+{
+    mpLowLevelSound = apLowLevelSound;
+    mpResources = apResources;
+
+    mpMainSong = NULL;
+    mpLock  = NULL;
+    mbIsPaused = false;
+
+    mfVolumeMul = 1.0f;
+    mfVolumeMulFadeGoal = 1.0f;
+    mfVolumeMulFadeSpeed = 1.0f;
+}
+
+//-----------------------------------------------------------------------
+
+cMusicHandler::~cMusicHandler()
+{
+    if(mpMainSong)
     {
-        mpLowLevelSound = apLowLevelSound;
-        mpResources = apResources;
-
-        mpMainSong = NULL;
-        mpLock  = NULL;
-        mbIsPaused = false;
-
-        mfVolumeMul = 1.0f;
-        mfVolumeMulFadeGoal = 1.0f;
-        mfVolumeMulFadeSpeed = 1.0f;
+        hplDelete(mpMainSong->mpStream);
+        hplDelete(mpMainSong);
     }
 
-    //-----------------------------------------------------------------------
-
-    cMusicHandler::~cMusicHandler()
+    tMusicEntryListIt it = mlstFadingSongs.begin();
+    while(it != mlstFadingSongs.end())
     {
-        if(mpMainSong){
-            hplDelete(mpMainSong->mpStream);
-            hplDelete(mpMainSong);
-        }
-        
-        tMusicEntryListIt it = mlstFadingSongs.begin();
-        while(it != mlstFadingSongs.end())
-        {
-            cMusicEntry* pSong = *it;
-            hplDelete(pSong->mpStream);
-            hplDelete(pSong);
+        cMusicEntry* pSong = *it;
+        hplDelete(pSong->mpStream);
+        hplDelete(pSong);
 
-            it = mlstFadingSongs.erase(it);
-            //it++;
-        }
-
-        STLDeleteAll(mlstResumeEntries);
+        it = mlstFadingSongs.erase(it);
+        //it++;
     }
 
-    //-----------------------------------------------------------------------
+    STLDeleteAll(mlstResumeEntries);
+}
 
-    //////////////////////////////////////////////////////////////////////////
-    // PUBLIC METHODS
-    //////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------
-    
-    bool cMusicHandler::Play(const tString& asFileName,float afVolume, float afFadeStepSize, bool abLoop, bool abResume)
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+bool cMusicHandler::Play(const tString& asFileName,float afVolume, float afFadeStepSize, bool abLoop, bool abResume)
+{
+    bool bSongIsPlaying = false;
+
+    if(mpLock!=NULL)
     {
-        bool bSongIsPlaying = false;  
-
-        if(mpLock!=NULL){
-            mpLock->msFileName = asFileName;
-            mpLock->mfVolume = afVolume;
-            mpLock->mbLoop = abLoop;
-            return true;
-        }
-
-        if(mpMainSong != NULL)
-            if(asFileName == mpMainSong->msFileName) bSongIsPlaying = true;
-        
-        if(!bSongIsPlaying)
-        {
-            //Put the previous song in the fading queue
-            if(mpMainSong != NULL)
-            {
-                mpMainSong->mfVolumeAdd = afFadeStepSize; 
-                mlstFadingSongs.push_back(mpMainSong);
-            }
-            
-            //If there the song to be played is in the fade que, stop it.
-            tMusicEntryListIt it = mlstFadingSongs.begin();
-            while(it != mlstFadingSongs.end())
-            {
-                cMusicEntry* pSong = *it;
-                if(pSong->msFileName == asFileName)
-                {
-                    pSong->mfVolume= 0;
-                    pSong->mpStream->Stop();
-                    hplDelete(pSong->mpStream);
-                    hplDelete(pSong);
-
-                    it = mlstFadingSongs.erase(it);
-                } else {
-                    it++;
-                }
-            }
-
-            
-            //add it and set its properties
-            mpMainSong = hplNew( cMusicEntry, () );
-            
-            if(LoadAndStart(asFileName, mpMainSong,0,abLoop, abResume)==false)
-            {
-                hplDelete(mpMainSong);
-                mpMainSong = NULL;
-                return false;
-            }
-        }
-        else
-        {
-            if(mpMainSong->mfMaxVolume == afVolume)return true;
-        }
-
-        ///////////////////////////
-        //Set Properties
-        mpMainSong->mfMaxVolume = afVolume;
-        mpMainSong->mbLoop = abLoop;
-        
-        if(mpMainSong->mfMaxVolume > mpMainSong->mfVolume)
-            mpMainSong->mfVolumeAdd = afFadeStepSize;
-        else
-            mpMainSong->mfVolumeAdd = -afFadeStepSize;
-        
-        
+        mpLock->msFileName = asFileName;
+        mpLock->mfVolume = afVolume;
+        mpLock->mbLoop = abLoop;
         return true;
     }
-    
-    //-----------------------------------------------------------------------
 
-    void cMusicHandler::Stop(float afFadeStepSize)
+    if(mpMainSong != NULL)
+        if(asFileName == mpMainSong->msFileName) bSongIsPlaying = true;
+
+    if(!bSongIsPlaying)
     {
-        if(mpMainSong==NULL)return;
-
-        if(afFadeStepSize<0)afFadeStepSize=-afFadeStepSize;
-
-        mpMainSong->mfVolumeAdd = afFadeStepSize; 
-        
-        UpdateResumeEntry(mpMainSong, afFadeStepSize);
-        
-        if(afFadeStepSize==0)
-        {
-            mpMainSong->mpStream->SetVolume(0);
-            mpMainSong->mpStream->Stop();
-            mpMainSong->mfVolume =0;
-        }
-
-        mlstFadingSongs.push_back(mpMainSong);
-        mpMainSong = NULL;
-    }
-    
-    //-----------------------------------------------------------------------
-
-    void cMusicHandler::Pause()
-    {
-        if(mpMainSong != NULL)mpMainSong->mpStream->SetPaused(true);
-
-        tMusicEntryListIt it = mlstFadingSongs.begin();
-        while(it != mlstFadingSongs.end()){
-            (*it)->mpStream->SetPaused(true);
-            it++;
-        }
-
-        mbIsPaused = true;
-    }
-    
-    //-----------------------------------------------------------------------
-
-    void cMusicHandler::Resume()
-    {
-        if(mpMainSong != NULL)mpMainSong->mpStream->SetPaused(false);
-
-        tMusicEntryListIt it = mlstFadingSongs.begin();
-        while(it != mlstFadingSongs.end()){
-            (*it)->mpStream->SetPaused(false);
-            it++;
-        }
-
-        mbIsPaused = false;
-    }
-
-    //-----------------------------------------------------------------------
-
-
-    void cMusicHandler::Lock(cMusicLock* apLock)
-    {
-        mpLock = apLock;
-    }
-
-    //-----------------------------------------------------------------------
-
-    void cMusicHandler::UnLock()
-    {
-        mpLock = NULL;
-    }
-
-    //-----------------------------------------------------------------------
-
-    void cMusicHandler::FadeVolumeMul(float afDest, float afSpeed)
-    {
-        mfVolumeMulFadeGoal = afDest;
-        mfVolumeMulFadeSpeed = afSpeed;
-    }
-
-    //-----------------------------------------------------------------------
-
-    void cMusicHandler::SetVolumeMul(float afMul)
-    {
-        mfVolumeMul = afMul;
-        mfVolumeMulFadeGoal = afMul;
-    }
-    
-    //-----------------------------------------------------------------------
-
-    tString cMusicHandler::GetCurrentSongName()
-    {
-        if(mpMainSong!=NULL)
-            return mpMainSong->msFileName;
-        else
-            return "";
-    }
-    
-    //-----------------------------------------------------------------------
-
-    float cMusicHandler::GetCurrentSongVolume()
-    {
-        if(mpMainSong!=NULL)
-            return mpMainSong->mfVolume;
-        else
-            return 0;
-    }
-
-    //-----------------------------------------------------------------------
-
-    cMusicEntry* cMusicHandler::GetCurrentSong()
-    {
-        return mpMainSong;
-    }
-
-    //-----------------------------------------------------------------------
-
-    void cMusicHandler::Update(float afTimeStep)
-    {
-        if(mbIsPaused)return;
-
-        /////////////////////////////////
-        // Update volume mul
-        if(mfVolumeMul != mfVolumeMulFadeGoal)
-        {
-            if(mfVolumeMul < mfVolumeMulFadeGoal)
-            {
-                mfVolumeMul += afTimeStep*mfVolumeMulFadeSpeed;
-                if(mfVolumeMul > mfVolumeMulFadeGoal) mfVolumeMul = mfVolumeMulFadeGoal;
-            }
-            if(mfVolumeMul > mfVolumeMulFadeGoal)
-            {
-                mfVolumeMul -= afTimeStep*mfVolumeMulFadeSpeed;
-                if(mfVolumeMul < mfVolumeMulFadeGoal) mfVolumeMul = mfVolumeMulFadeGoal;
-            }
-        }
-
-
-        /////////////////////////////////
-        // Update main song
+        //Put the previous song in the fading queue
         if(mpMainSong != NULL)
         {
-            if(mpMainSong->mpStream->IsPlaying()==false)
-            {
-                hplDelete(mpMainSong->mpStream);
-                hplDelete(mpMainSong);
-                mpMainSong = NULL;
-            }
-            else
-            {
-                /////////////////////////////////
-                //Update the main song
-                mpMainSong->mfVolume+=mpMainSong->mfVolumeAdd*afTimeStep;
-
-                if(mpMainSong->mfVolumeAdd>0)
-                {
-                    if(mpMainSong->mfVolume>=mpMainSong->mfMaxVolume)
-                        mpMainSong->mfVolume= mpMainSong->mfMaxVolume;
-                }
-                else
-                {
-                    if(mpMainSong->mfVolume<=mpMainSong->mfMaxVolume)
-                        mpMainSong->mfVolume= mpMainSong->mfMaxVolume;
-                }
-                
-                float fNewVolume = mpMainSong->mfVolume * mfVolumeMul;
-
-                if(mpMainSong->mpStream->GetVolume()!=fNewVolume)
-                {
-                    mpMainSong->mpStream->SetVolume(fNewVolume);
-                }
-            }
+            mpMainSong->mfVolumeAdd = afFadeStepSize;
+            mlstFadingSongs.push_back(mpMainSong);
         }
 
-
-        //Update the fading songs
+        //If there the song to be played is in the fade que, stop it.
         tMusicEntryListIt it = mlstFadingSongs.begin();
         while(it != mlstFadingSongs.end())
         {
             cMusicEntry* pSong = *it;
-            pSong->mfVolume-=pSong->mfVolumeAdd*afTimeStep;
-
-            if(pSong->mfVolume<=0)
+            if(pSong->msFileName == asFileName)
             {
-                //Destroy song
                 pSong->mfVolume= 0;
                 pSong->mpStream->Stop();
                 hplDelete(pSong->mpStream);
                 hplDelete(pSong);
-                
+
                 it = mlstFadingSongs.erase(it);
             }
             else
             {
-                pSong->mpStream->SetVolume(pSong->mfVolume* mfVolumeMul);
                 it++;
             }
         }
-    }
 
-    //-----------------------------------------------------------------------
 
-    void cMusicHandler::ResetResumeData()
-    {
-        STLDeleteAll(mlstResumeEntries);
-    }
+        //add it and set its properties
+        mpMainSong = hplNew( cMusicEntry, () );
 
-    //-----------------------------------------------------------------------
-
-    //////////////////////////////////////////////////////////////////////////
-    // PRIVATE METHODS
-    //////////////////////////////////////////////////////////////////////////
-
-    //-----------------------------------------------------------------------
-
-    cMusicResumeEntry* cMusicHandler::GetResumeEntry(const tString& asFileName)
-    {
-        for(tMusicResumeEntryListIt it = mlstResumeEntries.begin(); it != mlstResumeEntries.end(); ++it)
+        if(LoadAndStart(asFileName, mpMainSong,0,abLoop, abResume)==false)
         {
-            cMusicResumeEntry* pEntry = *it;
-            if(pEntry->msFileName == asFileName)
+            hplDelete(mpMainSong);
+            mpMainSong = NULL;
+            return false;
+        }
+    }
+    else
+    {
+        if(mpMainSong->mfMaxVolume == afVolume)return true;
+    }
+
+    ///////////////////////////
+    //Set Properties
+    mpMainSong->mfMaxVolume = afVolume;
+    mpMainSong->mbLoop = abLoop;
+
+    if(mpMainSong->mfMaxVolume > mpMainSong->mfVolume)
+        mpMainSong->mfVolumeAdd = afFadeStepSize;
+    else
+        mpMainSong->mfVolumeAdd = -afFadeStepSize;
+
+
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
+void cMusicHandler::Stop(float afFadeStepSize)
+{
+    if(mpMainSong==NULL)return;
+
+    if(afFadeStepSize<0)afFadeStepSize=-afFadeStepSize;
+
+    mpMainSong->mfVolumeAdd = afFadeStepSize;
+
+    UpdateResumeEntry(mpMainSong, afFadeStepSize);
+
+    if(afFadeStepSize==0)
+    {
+        mpMainSong->mpStream->SetVolume(0);
+        mpMainSong->mpStream->Stop();
+        mpMainSong->mfVolume =0;
+    }
+
+    mlstFadingSongs.push_back(mpMainSong);
+    mpMainSong = NULL;
+}
+
+//-----------------------------------------------------------------------
+
+void cMusicHandler::Pause()
+{
+    if(mpMainSong != NULL)mpMainSong->mpStream->SetPaused(true);
+
+    tMusicEntryListIt it = mlstFadingSongs.begin();
+    while(it != mlstFadingSongs.end())
+    {
+        (*it)->mpStream->SetPaused(true);
+        it++;
+    }
+
+    mbIsPaused = true;
+}
+
+//-----------------------------------------------------------------------
+
+void cMusicHandler::Resume()
+{
+    if(mpMainSong != NULL)mpMainSong->mpStream->SetPaused(false);
+
+    tMusicEntryListIt it = mlstFadingSongs.begin();
+    while(it != mlstFadingSongs.end())
+    {
+        (*it)->mpStream->SetPaused(false);
+        it++;
+    }
+
+    mbIsPaused = false;
+}
+
+//-----------------------------------------------------------------------
+
+
+void cMusicHandler::Lock(cMusicLock* apLock)
+{
+    mpLock = apLock;
+}
+
+//-----------------------------------------------------------------------
+
+void cMusicHandler::UnLock()
+{
+    mpLock = NULL;
+}
+
+//-----------------------------------------------------------------------
+
+void cMusicHandler::FadeVolumeMul(float afDest, float afSpeed)
+{
+    mfVolumeMulFadeGoal = afDest;
+    mfVolumeMulFadeSpeed = afSpeed;
+}
+
+//-----------------------------------------------------------------------
+
+void cMusicHandler::SetVolumeMul(float afMul)
+{
+    mfVolumeMul = afMul;
+    mfVolumeMulFadeGoal = afMul;
+}
+
+//-----------------------------------------------------------------------
+
+tString cMusicHandler::GetCurrentSongName()
+{
+    if(mpMainSong!=NULL)
+        return mpMainSong->msFileName;
+    else
+        return "";
+}
+
+//-----------------------------------------------------------------------
+
+float cMusicHandler::GetCurrentSongVolume()
+{
+    if(mpMainSong!=NULL)
+        return mpMainSong->mfVolume;
+    else
+        return 0;
+}
+
+//-----------------------------------------------------------------------
+
+cMusicEntry* cMusicHandler::GetCurrentSong()
+{
+    return mpMainSong;
+}
+
+//-----------------------------------------------------------------------
+
+void cMusicHandler::Update(float afTimeStep)
+{
+    if(mbIsPaused)return;
+
+    /////////////////////////////////
+    // Update volume mul
+    if(mfVolumeMul != mfVolumeMulFadeGoal)
+    {
+        if(mfVolumeMul < mfVolumeMulFadeGoal)
+        {
+            mfVolumeMul += afTimeStep*mfVolumeMulFadeSpeed;
+            if(mfVolumeMul > mfVolumeMulFadeGoal) mfVolumeMul = mfVolumeMulFadeGoal;
+        }
+        if(mfVolumeMul > mfVolumeMulFadeGoal)
+        {
+            mfVolumeMul -= afTimeStep*mfVolumeMulFadeSpeed;
+            if(mfVolumeMul < mfVolumeMulFadeGoal) mfVolumeMul = mfVolumeMulFadeGoal;
+        }
+    }
+
+
+    /////////////////////////////////
+    // Update main song
+    if(mpMainSong != NULL)
+    {
+        if(mpMainSong->mpStream->IsPlaying()==false)
+        {
+            hplDelete(mpMainSong->mpStream);
+            hplDelete(mpMainSong);
+            mpMainSong = NULL;
+        }
+        else
+        {
+            /////////////////////////////////
+            //Update the main song
+            mpMainSong->mfVolume+=mpMainSong->mfVolumeAdd*afTimeStep;
+
+            if(mpMainSong->mfVolumeAdd>0)
             {
-                return pEntry;
+                if(mpMainSong->mfVolume>=mpMainSong->mfMaxVolume)
+                    mpMainSong->mfVolume= mpMainSong->mfMaxVolume;
+            }
+            else
+            {
+                if(mpMainSong->mfVolume<=mpMainSong->mfMaxVolume)
+                    mpMainSong->mfVolume= mpMainSong->mfMaxVolume;
+            }
+
+            float fNewVolume = mpMainSong->mfVolume * mfVolumeMul;
+
+            if(mpMainSong->mpStream->GetVolume()!=fNewVolume)
+            {
+                mpMainSong->mpStream->SetVolume(fNewVolume);
             }
         }
-
-        cMusicResumeEntry* pEntry = hplNew(cMusicResumeEntry,());
-        pEntry->msFileName = asFileName;
-        pEntry->mfCurrentPos = 0.0;
-        mlstResumeEntries.push_back(pEntry);
-
-        return pEntry;
     }
 
-    //-----------------------------------------------------------------------
 
-    void cMusicHandler::UpdateResumeEntry(cMusicEntry* apSong, float afFadeStepSize)
+    //Update the fading songs
+    tMusicEntryListIt it = mlstFadingSongs.begin();
+    while(it != mlstFadingSongs.end())
     {
-        cMusicResumeEntry* pResumeEntry = GetResumeEntry(apSong->msFileName);
-        
-        float fTimeAdd = 0;
-        if(afFadeStepSize > 0) fTimeAdd = apSong->mpStream->GetVolume() / afFadeStepSize; 
+        cMusicEntry* pSong = *it;
+        pSong->mfVolume-=pSong->mfVolumeAdd*afTimeStep;
 
-        pResumeEntry->mfCurrentPos = apSong->mpStream->GetElapsedTime() + fTimeAdd;
+        if(pSong->mfVolume<=0)
+        {
+            //Destroy song
+            pSong->mfVolume= 0;
+            pSong->mpStream->Stop();
+            hplDelete(pSong->mpStream);
+            hplDelete(pSong);
+
+            it = mlstFadingSongs.erase(it);
+        }
+        else
+        {
+            pSong->mpStream->SetVolume(pSong->mfVolume* mfVolumeMul);
+            it++;
+        }
     }
-    
-    //-----------------------------------------------------------------------
-    
-    bool cMusicHandler::LoadAndStart(const tString& asFileName,cMusicEntry* apSong  ,float afVolume, bool abLoop, bool abResume)
+}
+
+//-----------------------------------------------------------------------
+
+void cMusicHandler::ResetResumeData()
+{
+    STLDeleteAll(mlstResumeEntries);
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+cMusicResumeEntry* cMusicHandler::GetResumeEntry(const tString& asFileName)
+{
+    for(tMusicResumeEntryListIt it = mlstResumeEntries.begin(); it != mlstResumeEntries.end(); ++it)
     {
-        /////////////////////////
-        // Create data
-        iSoundData* pData = mpResources->GetSoundManager()->CreateSoundData(asFileName,true,abLoop);
-        if(pData==NULL){
-            Error("Couldn't load music '%s'\n",asFileName.c_str());
-            return false;
-        }
-        
-        
-        /////////////////////////
-        // Create stream
-        iSoundChannel *pStream = pData->CreateChannel(256);
-        if(pStream == NULL)
+        cMusicResumeEntry* pEntry = *it;
+        if(pEntry->msFileName == asFileName)
         {
-            //Need to destroy channel else it will never be deleted!
-            mpResources->GetSoundManager()->Destroy(pData); 
-            
-            Error("Couldn't stream music '%s'!\n",asFileName.c_str());
-            return false;
+            return pEntry;
         }
-        
-        apSong->msFileName = asFileName;
-        apSong->mpStream = pStream;
-        apSong->mpStream->SetVolume(afVolume);
-
-        if(abResume)
-        {
-            cMusicResumeEntry* pResumeEntry = GetResumeEntry(asFileName);
-            double fPos = pResumeEntry->mfCurrentPos;
-            if(fPos >= pStream->GetTotalTime()) fPos =0;
-            pStream->SetElapsedTime(fPos);    
-
-        }
-        
-        apSong->mpStream->Play();
-        
-        return true;
     }
-    //-----------------------------------------------------------------------
+
+    cMusicResumeEntry* pEntry = hplNew(cMusicResumeEntry,());
+    pEntry->msFileName = asFileName;
+    pEntry->mfCurrentPos = 0.0;
+    mlstResumeEntries.push_back(pEntry);
+
+    return pEntry;
+}
+
+//-----------------------------------------------------------------------
+
+void cMusicHandler::UpdateResumeEntry(cMusicEntry* apSong, float afFadeStepSize)
+{
+    cMusicResumeEntry* pResumeEntry = GetResumeEntry(apSong->msFileName);
+
+    float fTimeAdd = 0;
+    if(afFadeStepSize > 0) fTimeAdd = apSong->mpStream->GetVolume() / afFadeStepSize;
+
+    pResumeEntry->mfCurrentPos = apSong->mpStream->GetElapsedTime() + fTimeAdd;
+}
+
+//-----------------------------------------------------------------------
+
+bool cMusicHandler::LoadAndStart(const tString& asFileName,cMusicEntry* apSong,float afVolume, bool abLoop, bool abResume)
+{
+    /////////////////////////
+    // Create data
+    iSoundData* pData = mpResources->GetSoundManager()->CreateSoundData(asFileName,true,abLoop);
+    if(pData==NULL)
+    {
+        Error("Couldn't load music '%s'\n",asFileName.c_str());
+        return false;
+    }
+
+
+    /////////////////////////
+    // Create stream
+    iSoundChannel *pStream = pData->CreateChannel(256);
+    if(pStream == NULL)
+    {
+        //Need to destroy channel else it will never be deleted!
+        mpResources->GetSoundManager()->Destroy(pData);
+
+        Error("Couldn't stream music '%s'!\n",asFileName.c_str());
+        return false;
+    }
+
+    apSong->msFileName = asFileName;
+    apSong->mpStream = pStream;
+    apSong->mpStream->SetVolume(afVolume);
+
+    if(abResume)
+    {
+        cMusicResumeEntry* pResumeEntry = GetResumeEntry(asFileName);
+        double fPos = pResumeEntry->mfCurrentPos;
+        if(fPos >= pStream->GetTotalTime()) fPos =0;
+        pStream->SetElapsedTime(fPos);
+
+    }
+
+    apSong->mpStream->Play();
+
+    return true;
+}
+//-----------------------------------------------------------------------
 
 }

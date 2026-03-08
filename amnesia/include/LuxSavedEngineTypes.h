@@ -34,7 +34,7 @@ class cEngineVerletParticle_SaveData : public iSerializable
 public:
     void FromParticle(cVerletParticle *apPart);
     void ToParticle(cVerletParticle *apPart);
-    
+
     cVector3f mvPosition;
     cVector3f mvPrevPosition;
     cVector3f mvSmoothPosition;
@@ -71,23 +71,23 @@ public:
 
     int mlMaxIterations;
     float mfTotalLength;
-    float mfMinTotalLength; 
+    float mfMinTotalLength;
     float mfMaxTotalLength;
     float mfSegmentLength;
 
     float mfDamping;
     float mfStrength;
     float mfStiffness;
-    
+
     tString msMaterial;
-    
+
     float mfParticleRadius;
 
     int mlMaxSegments;
     float mfRadius;
     float mfLengthTileAmount;
     float mfLengthTileSize;
-    
+
     tString msSound;
     float mfSoundStartSpeed;
     float mfSoundStopSpeed;
@@ -97,7 +97,7 @@ public:
     float mfMotorSpeedMul;
     float mfMotorMinSpeed;
     float mfMotorMaxSpeed;
-        
+
     bool mbAutoMove;
     float mfAutoMoveSpeed;
     float mfAutoMoveAcc;
@@ -124,7 +124,7 @@ class cEngineAnimationState_SaveData : public iSerializable
 public:
     void FromAnim(cAnimationState *apAnim);
     void ToAnim(cAnimationState *apAnim);
-    
+
     bool mbActive;
     bool mbLoop;
 

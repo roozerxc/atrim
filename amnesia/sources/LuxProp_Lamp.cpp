@@ -99,7 +99,7 @@ cLuxLampLightConnection::~cLuxLampLightConnection()
 void cLuxLampLightConnection::Update(float afTimeStep)
 {
     cColor finalColor = mpLight->GetDefaultDiffuseColor();
-    
+
     tLuxLampLightConnection_LampListIt it = mlstLamps.begin();
     for(; it != mlstLamps.end(); ++it)
     {
@@ -108,7 +108,7 @@ void cLuxLampLightConnection::Update(float afTimeStep)
         if(pLamp->mvLights.empty()) continue;
 
         cColor lightColor = pLampConnection->mbUseLightOnColor ?    pLamp->mvEffectLightData[0].mOnColor :
-                                                                    pLamp->mvLights[0]->GetDiffuseColor();
+                            pLamp->mvLights[0]->GetDiffuseColor();
         if(pLampConnection->mbUseLightSpec==false) lightColor.a = 0;
 
         finalColor = finalColor + lightColor * pLampConnection->mfAmount * pLampConnection->mpLamp->GetEffectsAlpha();
@@ -185,7 +185,7 @@ bool cLuxProp_Lamp::CanInteract(iPhysicsBody *apBody)
 {
     if(CanBeIgnitByPlayer() && mbLit==false) return true;
     if(msInteractCallback != "") return true;
-    
+
     return false;
 }
 
@@ -216,18 +216,18 @@ bool cLuxProp_Lamp::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
         // Add sanity
         float fIncreaseAmount = 1.0f - gpBase->mpPlayer->GetSanity() / 100.0f;
         fIncreaseAmount = fIncreaseAmount*fIncreaseAmount; //Want exp curve
-        float fSanityAdd =    gpBase->mpGlobalDataHandler->GetLightLampMinSanityIncrease() * (1-fIncreaseAmount) + 
-                            gpBase->mpGlobalDataHandler->GetLightLampMaxSanityIncrease()*fIncreaseAmount;
+        float fSanityAdd =    gpBase->mpGlobalDataHandler->GetLightLampMinSanityIncrease() * (1-fIncreaseAmount) +
+                              gpBase->mpGlobalDataHandler->GetLightLampMaxSanityIncrease()*fIncreaseAmount;
         gpBase->mpPlayer->AddSanity(fSanityAdd, false);
 
         ////////////////////
         // Negate tinderboxes
         gpBase->mpPlayer->AddTinderboxes(-1);
-        
+
         gpBase->mpHelpFuncs->PlayGuiSoundData("ui_use_tinderbox", eSoundEntryType_Gui);
 
         RunCallbackFunc("OnIgnite");
-        
+
         SetLit(true, true);
     }
 
@@ -245,7 +245,7 @@ void cLuxProp_Lamp::OnResetProperties()
 
 void cLuxProp_Lamp::OnSetupAfterLoad(cWorld *apWorld)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -281,7 +281,7 @@ eLuxFocusCrosshair cLuxProp_Lamp::GetFocusCrosshair(iPhysicsBody *apBody, const 
 
 tWString cLuxProp_Lamp::GetFocusText()
 {
-    if(CanInteract(GetMainBody()) && mbLit==false) 
+    if(CanInteract(GetMainBody()) && mbLit==false)
     {
         return _W("x ") + cString::ToStringW(gpBase->mpPlayer->GetTinderboxes());
     }
@@ -295,7 +295,7 @@ void cLuxProp_Lamp::SetLit(bool abX, bool abUseEffects)
     if(mbLit == abX) return;
 
     mbLit =  abX;
-    
+
     SetEffectsActive(mbLit, abUseEffects);
 }
 
@@ -331,8 +331,8 @@ void cLuxProp_Lamp::SetupLampLightConnection()
                 break;
             }
         }
-        
-            
+
+
         if(pConnectionLight)
         {
             mpMap->AddLampLightConnection(this, pConnectionLight, mfConnectionLightAmount, mbConnectionLightUseOnColor, mbConnectionLightUseSpec);
@@ -404,7 +404,7 @@ void cLuxProp_Lamp::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //Init
     super_class::LoadFromSaveData(apSaveData);
     cLuxProp_Lamp_SaveData *pData = static_cast<cLuxProp_Lamp_SaveData*>(apSaveData);
-    
+
     //////////////////
     //Set variables
     kCopyFromVar(pData,    mbLit);

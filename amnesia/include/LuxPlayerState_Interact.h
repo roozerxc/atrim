@@ -24,11 +24,11 @@ public:
 
 class iLuxPlayerState_Interact : public iLuxPlayerState
 {
-typedef iLuxPlayerState super_class;
-public:    
+    typedef iLuxPlayerState super_class;
+public:
     iLuxPlayerState_Interact(cLuxPlayer *apPlayer, eLuxPlayerState aType);
     virtual ~iLuxPlayerState_Interact();
-    
+
     void OnDestroyEntity(iLuxEntity *apEntity);
     void OnAttachBodyToStickyArea(iPhysicsBody *apBody);
 

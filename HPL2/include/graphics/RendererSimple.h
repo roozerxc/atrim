@@ -3,41 +3,48 @@
 
 #include "graphics/Renderer.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    //---------------------------------------------
-    
-    class iFrameBuffer;
-    class iDepthStencilBuffer;
-    class iTexture;
-    class iLight;
-    
-    //---------------------------------------------
-    
-    class cRendererSimple : public  iRenderer
+//---------------------------------------------
+
+class iFrameBuffer;
+class iDepthStencilBuffer;
+class iTexture;
+class iLight;
+
+//---------------------------------------------
+
+class cRendererSimple : public  iRenderer
+{
+public:
+    cRendererSimple(cGraphics *apGraphics,cResources* apResources);
+    ~cRendererSimple();
+
+    bool LoadData();
+    void DestroyData();
+
+    static void SetUseShaders(bool abX)
     {
-    public:
-        cRendererSimple(cGraphics *apGraphics,cResources* apResources);
-        ~cRendererSimple();
-        
-        bool LoadData();
-        void DestroyData();
+        mbUseShaders = abX;
+    }
+    static bool GetUseShaders()
+    {
+        return mbUseShaders;
+    }
 
-        static void SetUseShaders(bool abX){mbUseShaders = abX; }
-        static bool GetUseShaders(){return mbUseShaders; }
+private:
+    void CopyToFrameBuffer();
+    void SetupRenderList();
+    void RenderObjects();
 
-    private:
-        void CopyToFrameBuffer();
-        void SetupRenderList();
-        void RenderObjects();
+    static bool mbUseShaders;
 
-        static bool mbUseShaders;
+    iGpuProgram *mpFlatProgram;
+    iGpuProgram *mpDiffuseProgram;
+};
 
-        iGpuProgram *mpFlatProgram;
-        iGpuProgram *mpDiffuseProgram;
-    };
-
-    //---------------------------------------------
+//---------------------------------------------
 
 };
 #endif // HPL_RENDERER_WIRE_FRAME_H

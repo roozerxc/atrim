@@ -3,64 +3,68 @@
 
 #include "gui/Widget.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cGuiSkinFont;
-    class cWidgetLabel;
+class cGuiSkinFont;
+class cWidgetLabel;
 
-    class cWidgetCheckBox : public iWidget
+class cWidgetCheckBox : public iWidget
+{
+public:
+    cWidgetCheckBox(cGuiSet *apSet, cGuiSkin *apSkin);
+    virtual ~cWidgetCheckBox();
+
+    void SetChecked(bool abX, bool abGenCallback=true);
+    bool IsChecked()
     {
-    public:
-        cWidgetCheckBox(cGuiSet *apSet, cGuiSkin *apSkin);
-        virtual ~cWidgetCheckBox();
+        return mbChecked;
+    }
 
-        void SetChecked(bool abX, bool abGenCallback=true);
-        bool IsChecked(){return mbChecked;}
+    void SetDefaultFontType(iFontData *apFont);
+    void SetDefaultFontColor(const cColor& aColor);
+    void SetDefaultFontSize(const cVector2f& avSize);
 
-        void SetDefaultFontType(iFontData *apFont);
-        void SetDefaultFontColor(const cColor& aColor);
-        void SetDefaultFontSize(const cVector2f& avSize);
-    
-    protected:
-        /////////////////////////
-        // Own functions
-        bool Label_MouseDown(iWidget* apWidget, const cGuiMessageData& aData);
-        kGuiCallbackDeclarationEnd(Label_MouseDown);
-        bool Label_MouseUp(iWidget* apWidget, const cGuiMessageData& aData);
-        kGuiCallbackDeclarationEnd(Label_MouseUp);
-        
-        void UpdateLabel();
+protected:
+    /////////////////////////
+    // Own functions
+    bool Label_MouseDown(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(Label_MouseDown);
+    bool Label_MouseUp(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(Label_MouseUp);
 
-        /////////////////////////
-        // Implemented functions
-        void OnInit();
-        void OnLoadGraphics();
-        void OnChangeSize();
-        void OnChangeText();
-        
-        void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
+    void UpdateLabel();
 
-        bool OnMouseMove(const cGuiMessageData& aData);
-        bool OnMouseDown(const cGuiMessageData& aData);
-        bool OnMouseUp(const cGuiMessageData& aData);
-        bool OnMouseEnter(const cGuiMessageData& aData);
-        bool OnMouseLeave(const cGuiMessageData& aData);
+    /////////////////////////
+    // Implemented functions
+    void OnInit();
+    void OnLoadGraphics();
+    void OnChangeSize();
+    void OnChangeText();
 
-        bool OnUIButtonPress(const cGuiMessageData& aData);
-        bool OnUIButtonRelease(const cGuiMessageData& aData);
+    void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
 
-        /////////////////////////
-        // Data
-        bool mbChecked;
-        bool mbPressed;
+    bool OnMouseMove(const cGuiMessageData& aData);
+    bool OnMouseDown(const cGuiMessageData& aData);
+    bool OnMouseUp(const cGuiMessageData& aData);
+    bool OnMouseEnter(const cGuiMessageData& aData);
+    bool OnMouseLeave(const cGuiMessageData& aData);
 
-        cGuiGfxElement *mvGfxBox[2][2];
+    bool OnUIButtonPress(const cGuiMessageData& aData);
+    bool OnUIButtonRelease(const cGuiMessageData& aData);
 
-        cVector2f mvBoxSize;
+    /////////////////////////
+    // Data
+    bool mbChecked;
+    bool mbPressed;
 
-        cWidgetLabel    *mpLabel;
-        
-    };
+    cGuiGfxElement *mvGfxBox[2][2];
+
+    cVector2f mvBoxSize;
+
+    cWidgetLabel    *mpLabel;
+
+};
 
 };
 #endif // HPL_WIDGET_CHECK_BOX_H

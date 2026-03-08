@@ -7,30 +7,43 @@
 
 #include <fmod/fmod.h>
 
-namespace hpl {
+namespace hpl
+{
 
-    class cFmodSoundData : public iSoundData
+class cFmodSoundData : public iSoundData
+{
+public:
+    cFmodSoundData(const tString& asName, bool abStream);
+    ~cFmodSoundData();
+
+    bool CreateFromFile(const tWString &asFile);
+
+    iSoundChannel* CreateChannel(int alPriority);
+
+    bool IsStream()
     {
-    public:
-        cFmodSoundData(const tString& asName, bool abStream);
-        ~cFmodSoundData();
+        return mbStream;
+    }
 
-        bool CreateFromFile(const tWString &asFile);
+    bool IsStereo()
+    {
+        return false;
+    }
 
-        iSoundChannel* CreateChannel(int alPriority);
+    //FMOD Specific
+    FSOUND_SAMPLE *GetSample()
+    {
+        return mpSample;
+    }
+    FSOUND_STREAM *GetStream()
+    {
+        return mpStream;
+    }
 
-        bool IsStream(){ return mbStream;}
-
-        bool IsStereo(){ return false;}
-
-        //FMOD Specific
-        FSOUND_SAMPLE *GetSample(){ return mpSample;}
-        FSOUND_STREAM *GetStream(){ return mpStream;}
-    
-    private:
-        FSOUND_SAMPLE * mpSample;
-        FSOUND_STREAM * mpStream;
-    };
+private:
+    FSOUND_SAMPLE * mpSample;
+    FSOUND_STREAM * mpStream;
+};
 };
 #endif // HPL_FMOD_SOUND_DATA_H
 #endif

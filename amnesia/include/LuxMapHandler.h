@@ -48,7 +48,7 @@ public:
 class cLuxMapHandler_ChangeMap
 {
 public:
-    cLuxMapHandler_ChangeMap() : mbActive(false){}
+    cLuxMapHandler_ChangeMap() : mbActive(false) {}
 
     bool mbActive;
     tString msMapFile;
@@ -60,11 +60,11 @@ public:
 
 class cLuxMapHandler : public iLuxUpdateable
 {
-friend class cMapHandlerSoundCallback;
-public:    
+    friend class cMapHandlerSoundCallback;
+public:
     cLuxMapHandler();
     ~cLuxMapHandler();
-    
+
     void OnStart();
     void Update(float afTimeStep);
     void Reset();
@@ -79,7 +79,7 @@ public:
     void UpdateViewportRenderProperties();
 
     void SetUpdateActive(bool abX);
-    
+
     void RenderSolid(cRendererCallbackFunctions* apFunctions);
 
     void OnEnterContainer(const tString& asOldContainer);
@@ -87,42 +87,75 @@ public:
 
     void ChangeMap(const tString& asMapName, const tString& asStartPos, const tString& asStartSound, const tString& asEndSound);
 
-    bool MapIsLoaded(){ return mpCurrentMap != NULL;}
+    bool MapIsLoaded()
+    {
+        return mpCurrentMap != NULL;
+    }
 
     cLuxMap* LoadMap(const tString& asName, bool abLoadEntities);
     void DestroyMap(cLuxMap* apMap, bool abRunScript);
 
     void SetCurrentMap(cLuxMap* apMap, bool abRunScript, bool abFirstTime, const tString& asPlayerPos);
-    cLuxMap* GetCurrentMap(){ return mpCurrentMap;}
+    cLuxMap* GetCurrentMap()
+    {
+        return mpCurrentMap;
+    }
 
-    cViewport* GetViewport(){ return mpViewport;}
+    cViewport* GetViewport()
+    {
+        return mpViewport;
+    }
 
-    const tString& GetMapFolder(){ return msMapFolder;}
-    void SetMapFolder(const tString& asFolder){ msMapFolder = asFolder;}
+    const tString& GetMapFolder()
+    {
+        return msMapFolder;
+    }
+    void SetMapFolder(const tString& asFolder)
+    {
+        msMapFolder = asFolder;
+    }
 
     void PauseSoundsAndMusic();
     void ResumeSoundsAndMusic();
 
-    iPostEffect *GetPostEffect_Bloom(){ return mpPostEffect_Bloom;}
-    iPostEffect *GetPostEffect_ImageTrail(){ return mpPostEffect_ImageTrail;}
-    iPostEffect *GetPostEffect_Sepia(){ return mpPostEffect_Sepia;}
-    iPostEffect *GetPostEffect_RadialBlur(){ return mpPostEffect_RadialBlur;}
+    iPostEffect *GetPostEffect_Bloom()
+    {
+        return mpPostEffect_Bloom;
+    }
+    iPostEffect *GetPostEffect_ImageTrail()
+    {
+        return mpPostEffect_ImageTrail;
+    }
+    iPostEffect *GetPostEffect_Sepia()
+    {
+        return mpPostEffect_Sepia;
+    }
+    iPostEffect *GetPostEffect_RadialBlur()
+    {
+        return mpPostEffect_RadialBlur;
+    }
 
     void ClearSaveMapCollection();
-    cLuxSavedGameMapCollection *GetSavedMapCollection(){ return mpSavedGame;}
+    cLuxSavedGameMapCollection *GetSavedMapCollection()
+    {
+        return mpSavedGame;
+    }
     void SetSavedMapCollection(cLuxSavedGameMapCollection *apMaps);
 
     tString FileToMapName(const tString& asFile);
 
     void SetShowCommentary(bool abX);
-    bool GetShowCommentary(){ return mbShowCommentary;}
+    bool GetShowCommentary()
+    {
+        return mbShowCommentary;
+    }
 
     void AppLostInputFocus();
     void AppGotInputFocus();
 
     //////////////////////////////////
     // Used to lock the SavedMapCollection
-    iMutex *mpSavedGameMutex; 
+    iMutex *mpSavedGameMutex;
 private:
     void LoadMainConfig();
     void SaveMainConfig();

@@ -102,7 +102,7 @@ void cLuxPropLoader_Object::LoadVariables(iLuxProp *apProp, cXmlElement *apRootE
         pObject->mSlideData.mfSlideSlowDownFactor = GetVarFloat("SlideSlowDownFactor", 1.0f);
         pObject->mSlideData.mfSlideSpeedFactor = GetVarFloat("SlideSpeedFactor", 1.0f);
         pObject->mSlideData.mfSlideThrowImpulse = GetVarFloat("SlideThrowImpulse", 3.0f);
-        
+
         if(pObject->mfMaxFocusDistance<=0) pObject->mfMaxFocusDistance = mfSlideDefaultMaxFocusDist;
     }
 }
@@ -120,7 +120,7 @@ void cLuxPropLoader_Object::LoadInstanceVariables(iLuxProp *apProp, cResourceVar
 
     if(pObject->mbIsInsanityVision)
         pObject->SetInsanityVisionVisability(false);
-    
+
     pObject->msContainedItem = apInstanceVars->GetVarString("ContainedItem","");
     if(pObject->msContainedItem == "None") pObject->msContainedItem= "";
 }
@@ -136,7 +136,7 @@ eLuxObjectType cLuxPropLoader_Object::GetObjectType(const tString& asName)
     if(sLowName == "push")    return eLuxObjectType_Push;
     if(sLowName == "slide")    return eLuxObjectType_Slide;
 
-    Error("Object type '%s' in '%s' does not exist!\n", asName.c_str(), msFileName.c_str());    
+    Error("Object type '%s' in '%s' does not exist!\n", asName.c_str(), msFileName.c_str());
     return eLuxObjectType_Grab;
 }
 
@@ -170,13 +170,13 @@ bool cLuxProp_Object_BodyCallback::OnAABBCollide(iPhysicsBody *apBody, iPhysicsB
 static inline cVector3f GetCorrectNormal(const cVector3f& avNormal, const cVector3f& avCollidePoint, const cVector3f& avBodyACenter)
 {
     cVector3f vCenterToCollidePoint = avCollidePoint - avBodyACenter;
-    
+
     //Make sure the normal faces the other body
-    if(cMath::Vector3Dot(vCenterToCollidePoint,avNormal)>0)    
+    if(cMath::Vector3Dot(vCenterToCollidePoint,avNormal)>0)
         return avNormal;
     else
         return avNormal * -1;
-    
+
 }
 
 void cLuxProp_Object_BodyCallback::OnBodyCollide(iPhysicsBody *apBody, iPhysicsBody *apCollideBody, cPhysicsContactData* apContactData)
@@ -185,7 +185,7 @@ void cLuxProp_Object_BodyCallback::OnBodyCollide(iPhysicsBody *apBody, iPhysicsB
     // Check breakage
     if(mpObject->mBreakData.mbActive)
     {
-    
+
         /////////////////////////////
         // Check energy and see if it breaks.
         float fTotalEnergy =0;
@@ -209,8 +209,8 @@ void cLuxProp_Object_BodyCallback::OnBodyCollide(iPhysicsBody *apBody, iPhysicsB
             mpObject->Break();
         }
     }
-    
-    
+
+
     /////////////////////////////
     // Prop stuff
     // This is not needed since the code above does all breaking needs!
@@ -218,14 +218,14 @@ void cLuxProp_Object_BodyCallback::OnBodyCollide(iPhysicsBody *apBody, iPhysicsB
     if(pEntity && pEntity->GetEntityType() == eLuxEntityType_Prop)
     {
         iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
-        
+
         if(pProp->GetPropType() != eLuxPropType_Critter) return;
 
         float fSpeed = apBody->GetLinearVelocity().Length();
         if(fSpeed >= mpObject->mfMinHitDamageSpeed)
         {
-            pProp->GiveDamage(mpObject->mfHitDamageAmount, mpObject->mlHitDamageStrength);            
-        }    
+            pProp->GiveDamage(mpObject->mfHitDamageAmount, mpObject->mlHitDamageStrength);
+        }
     }*/
 
     /////////////////////////////
@@ -297,11 +297,11 @@ bool cLuxProp_Object::CanInteract(iPhysicsBody *apBody)
     }
 
     if(    (apBody->GetMass()==0 && mpMap->BodyIsInDetachableStickyArea(apBody)==false  && msInteractCallback=="") ||
-        (mObjectType == eLuxObjectType_Static && msInteractCallback=="") ) 
+            (mObjectType == eLuxObjectType_Static && msInteractCallback=="") )
     {
         return false;
     }
-    
+
     return true;
 }
 
@@ -341,7 +341,7 @@ bool cLuxProp_Object::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
         cLuxPlayerStateVars::SetupInteraction(pBody, avPos);
         gpBase->mpPlayer->ChangeState(eLuxPlayerState_InteractSlide);
     }
-    
+
     return true;
 }
 
@@ -352,13 +352,13 @@ void cLuxProp_Object::OnSetupAfterLoad(cWorld *apWorld)
     /////////////////////
     // Preloading
     cResources *pResources = gpBase->mpEngine->GetResources();
-    if(mBreakData.msEntity != "") 
+    if(mBreakData.msEntity != "")
     {
         PreloadEntityModel(mBreakData.msEntity);
     }
     if(mBreakData.msParticleSystem != "")
     {
-        gpBase->PreloadParticleSystem(mBreakData.msParticleSystem);    
+        gpBase->PreloadParticleSystem(mBreakData.msParticleSystem);
     }
     if(mBreakData.msSound != "")
     {
@@ -370,7 +370,7 @@ void cLuxProp_Object::OnSetupAfterLoad(cWorld *apWorld)
     for(size_t i=0; i<mvBodies.size(); ++i)
     {
         iPhysicsBody *pBody = mvBodies[i];
-        
+
         pBody->AddBodyCallback(mpBodyCallback);
     }
 
@@ -385,7 +385,7 @@ void cLuxProp_Object::OnSetupAfterLoad(cWorld *apWorld)
         if(pJoint->GetType() == ePhysicsJointType_Hinge)
         {
             iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge*>(pJoint);
-            
+
             pJointData->mfMinLimit = pHingeJoint->GetMinAngle();
             pJointData->mfMaxLimit = pHingeJoint->GetMaxAngle();
             pJointData->mfLockedRange = cMath::ToRad(5);
@@ -406,7 +406,7 @@ void cLuxProp_Object::OnSetupAfterLoad(cWorld *apWorld)
             pJointData->mfMaxLimit = pScrewJoint->GetMaxDistance();
             pJointData->mfLockedRange = cMath::ToRad(0.1f);
         }
-        
+
     }
 }
 
@@ -435,7 +435,7 @@ void cLuxProp_Object::UpdatePropSpecific(float afTimeStep)
     if(mfLifeLength > 0)
     {
         mfLifeLengthCount += afTimeStep;
-        
+
         float fDist = cMath::Max(mfLifeLength - mfLifeLengthCount,0.0f);
         if(fDist < 1.0f)
         {
@@ -456,12 +456,12 @@ void cLuxProp_Object::BeforePropDestruction()
 {
     //////////////////////////////
     // Check if break should happen and init stuff
-    #ifndef LUXPROP_OBJECT_BREAKABLE_WORKAROUND
-        if(mbBroken == false || mBreakData.mbActive==false || mvBodies.empty() || mbDisableBreakable)
-        {
-            return;
-        }
-    #endif /* LUXPROP_OBJECT_BREAKABLE_WORKAROUND */
+#ifndef LUXPROP_OBJECT_BREAKABLE_WORKAROUND
+    if(mbBroken == false || mBreakData.mbActive==false || mvBodies.empty() || mbDisableBreakable)
+    {
+        return;
+    }
+#endif /* LUXPROP_OBJECT_BREAKABLE_WORKAROUND */
 
     cWorld *pWorld = mpMap->GetWorld();
     cMatrixf mtxCenterTransform = cMatrixf::Identity;
@@ -472,7 +472,8 @@ void cLuxProp_Object::BeforePropDestruction()
     if(mBreakData.msEntityAlignBody != "")
     {
         lIdx = GetBodyIndexFromName(mBreakData.msEntityAlignBody);
-        if(lIdx < 0){
+        if(lIdx < 0)
+        {
             lIdx = 0;
             Warning("Body '%s' was not found in object '%s'", mBreakData.msEntityAlignBody.c_str(), msName.c_str());
         }
@@ -508,7 +509,7 @@ void cLuxProp_Object::BeforePropDestruction()
         for(size_t i=0; i<mvBodies.size(); ++i)
         {
             iPhysicsBody *pBody = mvBodies[i];
-            
+
             cVector3f vBodyCenter = cMath::MatrixMul(pBody->GetLocalMatrix(), pBody->GetMassCentre());
 
             cVector3f vImpulseDir = cMath::Vector3Normalize(vBodyCenter - vBodyCenter);
@@ -529,8 +530,8 @@ void cLuxProp_Object::BeforePropDestruction()
             cMatrixf mtxEntity = cMath::MatrixMul(pBaseBody->GetLocalMatrix(), mtxInvLocalBody);
 
             mpMap->ResetLatestEntity();
-            mpMap->CreateEntity(msName + "_broken", mBreakData.msEntity, mtxEntity, mvOnLoadScale);        
-            
+            mpMap->CreateEntity(msName + "_broken", mBreakData.msEntity, mtxEntity, mvOnLoadScale);
+
             ////////////////////////
             //Add impulse and velocity
             iLuxEntity *pEntity = mpMap->GetLatestEntity();
@@ -543,7 +544,7 @@ void cLuxProp_Object::BeforePropDestruction()
                 }
 
                 iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
-                
+
                 for(int i=0; i< pProp->GetBodyNum(); ++i)
                 {
                     iPhysicsBody *pNewBody = pProp->GetBody(i);
@@ -562,7 +563,7 @@ void cLuxProp_Object::BeforePropDestruction()
     for(size_t i=0; i<mvConnectedProps.size(); ++i)
     {
         tString sProp = mvConnectedProps[i];
-        
+
         //////////////////////
         //Get Prop
         iLuxEntity *pEntity = mpMap->GetEntityByName(sProp, eLuxEntityType_Prop);
@@ -639,7 +640,7 @@ eLuxFocusCrosshair cLuxProp_Object::GetFocusCrosshair(iPhysicsBody *apBody, cons
 {
     if(CanInteract(apBody)==false) return eLuxFocusCrosshair_Default;
 
-    
+
     if(mObjectType == eLuxObjectType_Static)
     {
         return mCustomFocusCrossHair==eLuxFocusCrosshair_Default ? eLuxFocusCrosshair_Grab : mCustomFocusCrossHair;
@@ -656,7 +657,7 @@ eLuxFocusCrosshair cLuxProp_Object::GetFocusCrosshair(iPhysicsBody *apBody, cons
     {
         return mCustomFocusCrossHair==eLuxFocusCrosshair_Default ? eLuxFocusCrosshair_Grab : mCustomFocusCrossHair;
     }
-    
+
     return eLuxFocusCrosshair_LastEnum;
 }
 
@@ -688,7 +689,7 @@ void  cLuxProp_Object::SetStuckState(int alState)
         //If sleeping, make sure it moves!
         if(pJoint->GetChildBody())
             pJoint->GetChildBody()->AddForce(cVector3f(1,1,1));
-        
+
     }
 }
 
@@ -715,7 +716,7 @@ void cLuxProp_Object::OnHealthChange()
 
 void cLuxProp_Object::OnDamage(float afAmount, int alStrength)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -766,12 +767,12 @@ void cLuxProp_Object::UpdateInsanityVision(float afTimeStep)
 {
     if(mbIsInsanityVision==false) return;
     if(mpMeshEntity==NULL) return;
-    
+
     //////////////////////////////////
     //Check if the object should be disabled or enabled
     float fSanity = gpBase->mpPlayer->GetSanity();
     if( (fSanity <= mfVisionMaxSanity && mbInsanityVisionActive) ||
-        (fSanity > mfVisionMaxSanity && mbInsanityVisionActive==false) )
+            (fSanity > mfVisionMaxSanity && mbInsanityVisionActive==false) )
     {
         return;
     }
@@ -789,7 +790,7 @@ void cLuxProp_Object::UpdateInsanityVision(float afTimeStep)
     //Init variables
     cCamera *pCam = gpBase->mpPlayer->GetCamera();
     bool bInsideFOV = false;
-    
+
     ///////////////////////////////
     // Check so not interacted with
     if(IsInteractedWith())
@@ -802,7 +803,7 @@ void cLuxProp_Object::UpdateInsanityVision(float afTimeStep)
     if(bInsideFOV==false)
     {
         for(int i=0; i<mpMeshEntity->GetSubMeshEntityNum(); ++i)
-        {    
+        {
             cSubMeshEntity *pSubEnt = mpMeshEntity->GetSubMeshEntity(i);
 
             if(pCam->GetFrustum()->CollideBoundingVolume(pSubEnt->GetBoundingVolume())!=eCollision_Outside)
@@ -929,7 +930,7 @@ void cLuxProp_Object::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //Init
     super_class::LoadFromSaveData(apSaveData);
     cLuxProp_Object_SaveData *pData = static_cast<cLuxProp_Object_SaveData*>(apSaveData);
-    
+
     //////////////////
     //Set variables
     kCopyFromVar(pData, mfLifeLengthCount);

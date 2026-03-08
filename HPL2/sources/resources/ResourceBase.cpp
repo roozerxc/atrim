@@ -4,46 +4,48 @@
 #include "system/String.h"
 
 
-namespace hpl {
+namespace hpl
+{
 
-    bool iResourceBase::mbLogCreateAndDelete=false;
+bool iResourceBase::mbLogCreateAndDelete=false;
 
 
-    //////////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
 
-    //-----------------------------------------------------------------------
-    iResourceBase::iResourceBase(const tString& asName, const tWString& asFullPath,unsigned long alPrio){
-        mlTime = (unsigned long)time(NULL);
-        mlPrio = alPrio;
-        mlHandle = 0;
-        mlUserCount =0;
-        msName = asName;
-        mbLogDestruction = false;
-        msFullPath = asFullPath;
-    }
+//-----------------------------------------------------------------------
+iResourceBase::iResourceBase(const tString& asName, const tWString& asFullPath,unsigned long alPrio)
+{
+    mlTime = (unsigned long)time(NULL);
+    mlPrio = alPrio;
+    mlHandle = 0;
+    mlUserCount =0;
+    msName = asName;
+    mbLogDestruction = false;
+    msFullPath = asFullPath;
+}
 
-    iResourceBase::~iResourceBase()
-    {
-        if(mbLogDestruction && mbLogCreateAndDelete)
-            Log("  Destroyed resource '%s'\n",msName.c_str());
-    }
-    //-----------------------------------------------------------------------
+iResourceBase::~iResourceBase()
+{
+    if(mbLogDestruction && mbLogCreateAndDelete)
+        Log("  Destroyed resource '%s'\n",msName.c_str());
+}
+//-----------------------------------------------------------------------
 
-    void iResourceBase::IncUserCount()
-    {
-        mlUserCount++;
-        mlTime = (unsigned long)time(NULL);
-    }
-    
-    //-----------------------------------------------------------------------
+void iResourceBase::IncUserCount()
+{
+    mlUserCount++;
+    mlTime = (unsigned long)time(NULL);
+}
 
-    void iResourceBase::SetFullPath(const tWString& asPath)
-    {
-        msFullPath = asPath;
-    }
-    
-    //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+
+void iResourceBase::SetFullPath(const tWString& asPath)
+{
+    msFullPath = asPath;
+}
+
+//-----------------------------------------------------------------------
 
 }

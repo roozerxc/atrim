@@ -21,7 +21,7 @@ public:
     float mfLanternSensitivity;
 
     bool mbAllowZeroWaitTime;
-    
+
     int mIdleBehavior;
     int mPatrolMoveSpeed;
 
@@ -46,9 +46,9 @@ public:
 
 class cLuxEnemy_ManPig : public iLuxEnemy
 {
-friend class cLuxEnemyLoader_ManPig;
-typedef iLuxEnemy super_class;
-public:    
+    friend class cLuxEnemyLoader_ManPig;
+    typedef iLuxEnemy super_class;
+public:
     cLuxEnemy_ManPig(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxEnemy_ManPig();
 
@@ -66,17 +66,29 @@ public:
 
     //////////////////////
     // Movement animation names
-    virtual const tString & GetBackwardAnimationName() { return msBackwardAnimationName[mCurrentMoveType][mCurrentPose]; }
-    virtual const tString & GetIdleAnimationName() { return msIdleAnimationName[mCurrentMoveType][mCurrentPose]; }
-    virtual const tString & GetWalkAnimationName() { return msWalkAnimationName[mCurrentMoveType][mCurrentPose]; }
-    virtual const tString & GetRunAnimationName() { return msRunAnimationName[mCurrentMoveType][mCurrentPose]; }
+    virtual const tString & GetBackwardAnimationName()
+    {
+        return msBackwardAnimationName[mCurrentMoveType][mCurrentPose];
+    }
+    virtual const tString & GetIdleAnimationName()
+    {
+        return msIdleAnimationName[mCurrentMoveType][mCurrentPose];
+    }
+    virtual const tString & GetWalkAnimationName()
+    {
+        return msWalkAnimationName[mCurrentMoveType][mCurrentPose];
+    }
+    virtual const tString & GetRunAnimationName()
+    {
+        return msRunAnimationName[mCurrentMoveType][mCurrentPose];
+    }
 
 
     //////////////////////
     //Debug
     void OnRenderSolidImplemented(cRendererCallbackFunctions* apFunctions);
-        
-    
+
+
     //////////////////////
     //Save data stuff
     iLuxEntity_SaveData* CreateSaveData();
@@ -119,12 +131,12 @@ private:
     void SetTeslaEffectsAmount(float afX);
     void ResetMindFuckEffects();
     void UpdateTesla(float afTimeStep);
-        
+
     //////////////
     //Data
     tString msNoticeSound;
     tString msGiveUpNoticeSound;
-    tString msEnabledSound; 
+    tString msEnabledSound;
     tString msChaseSound;
     tString msTeslaMindFuckLoop;
 
@@ -141,7 +153,7 @@ private:
 
 
     std::vector<cColor> mvDefaultLightColors;
-    
+
     //////////////
     //Variables
     float mfWaitTime;
@@ -157,7 +169,7 @@ private:
 
     float mfDamageMul;
     float mfRunSpeedMul;
-    
+
     bool mbThreatenOnAlert;
     bool mbFleeFromPlayer;
     bool mbAutoDisableAfterFlee;
@@ -194,7 +206,7 @@ private:
     int mlHuntSoundId;
 
     eLuxEnemyMoveType mCurrentMoveType;
-    
+
 };
 
 //----------------------------------------------
@@ -203,7 +215,7 @@ class cLuxEnemyLoader_ManPig : public iLuxEnemyLoader
 {
 public:
     cLuxEnemyLoader_ManPig(const tString& asName);
-    virtual ~cLuxEnemyLoader_ManPig(){}
+    virtual ~cLuxEnemyLoader_ManPig() {}
 
     iLuxEnemy *CreateEnemy(const tString& asName, int alID, cLuxMap *apMap);
     void LoadVariables(iLuxEnemy *apEnemy, cXmlElement *apRootElem);

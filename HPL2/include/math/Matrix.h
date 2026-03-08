@@ -4,10 +4,12 @@
 #include <math.h>
 #include "Vector3.h"
 
-namespace hpl {
+namespace hpl
+{
 
-template <class T>     class cMatrix {
-    public:
+template <class T>     class cMatrix
+{
+public:
     //The ways to reference the matrix
     //format is [row][col]
     union
@@ -89,21 +91,21 @@ template <class T>     class cMatrix {
     inline bool operator==(const cMatrix<T>& aMtx) const
     {
         if(    m[0][0] == aMtx.m[0][0] &&
-            m[0][1] == aMtx.m[0][1] &&
-            m[0][2] == aMtx.m[0][2] &&
-            m[0][3] == aMtx.m[0][3] &&
-            m[1][0] == aMtx.m[1][0] &&
-            m[1][1] == aMtx.m[1][1] &&
-            m[1][2] == aMtx.m[1][2] &&
-            m[1][3] == aMtx.m[1][3] &&
-            m[2][0] == aMtx.m[2][0] &&
-            m[2][1] == aMtx.m[2][1] &&
-            m[2][2] == aMtx.m[2][2] &&
-            m[2][3] == aMtx.m[2][3] &&
-            m[3][0] == aMtx.m[3][0] &&
-            m[3][1] == aMtx.m[3][1] &&
-            m[3][2] == aMtx.m[3][2] &&
-            m[3][3] == aMtx.m[3][3])
+                m[0][1] == aMtx.m[0][1] &&
+                m[0][2] == aMtx.m[0][2] &&
+                m[0][3] == aMtx.m[0][3] &&
+                m[1][0] == aMtx.m[1][0] &&
+                m[1][1] == aMtx.m[1][1] &&
+                m[1][2] == aMtx.m[1][2] &&
+                m[1][3] == aMtx.m[1][3] &&
+                m[2][0] == aMtx.m[2][0] &&
+                m[2][1] == aMtx.m[2][1] &&
+                m[2][2] == aMtx.m[2][2] &&
+                m[2][3] == aMtx.m[2][3] &&
+                m[3][0] == aMtx.m[3][0] &&
+                m[3][1] == aMtx.m[3][1] &&
+                m[3][2] == aMtx.m[3][2] &&
+                m[3][3] == aMtx.m[3][3])
         {
             return true;
         }
@@ -230,10 +232,10 @@ template <class T>     class cMatrix {
 
     inline cMatrix<T> GetRotation() const
     {
-        return cMatrix<T>(  m[0][0], m[0][1], m[0][2] ,0,
-                            m[1][0], m[1][1], m[1][2] ,0,
-                            m[2][0], m[2][1], m[2][2] ,0,
-                            0,         0,          0          ,1);
+        return cMatrix<T>(  m[0][0], m[0][1], m[0][2],0,
+                            m[1][0], m[1][1], m[1][2],0,
+                            m[2][0], m[2][1], m[2][2],0,
+                            0,         0,          0,1);
     }
 
 
@@ -241,10 +243,10 @@ template <class T>     class cMatrix {
 
     inline cMatrix<T> GetTranspose() const
     {
-        return cMatrix<T>(m[0][0], m[1][0], m[2][0] ,m[3][0],
-                        m[0][1], m[1][1], m[2][1] ,m[3][1],
-                        m[0][2], m[1][2], m[2][2] ,m[3][2],
-                        m[0][3], m[1][3], m[2][3] ,m[3][3]);
+        return cMatrix<T>(m[0][0], m[1][0], m[2][0],m[3][0],
+                          m[0][1], m[1][1], m[2][1],m[3][1],
+                          m[0][2], m[1][2], m[2][2],m[3][2],
+                          m[0][3], m[1][3], m[2][3],m[3][3]);
     }
 
     //-----------------------------------------------------------------------
@@ -253,10 +255,10 @@ template <class T>     class cMatrix {
     {
         char buf[512];
         sprintf(buf,"[%f : %f : %f : %f] [%f : %f : %f : %f] [%f : %f : %f : %f] [%f : %f : %f : %f]",
-                    m[0][0],m[0][1],m[0][2],m[0][3],
-                    m[1][0],m[1][1],m[1][2],m[1][3],
-                    m[2][0],m[2][1],m[2][2],m[2][3],
-                    m[3][0],m[3][1],m[3][2],m[3][3]);
+                m[0][0],m[0][1],m[0][2],m[0][3],
+                m[1][0],m[1][1],m[1][2],m[1][3],
+                m[2][0],m[2][1],m[2][2],m[2][3],
+                m[3][0],m[3][1],m[3][2],m[3][3]);
         return buf;
     }
 
@@ -264,10 +266,10 @@ template <class T>     class cMatrix {
     {
         char buf[512];
         sprintf(buf,"%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g",
-            m[0][0],m[0][1],m[0][2],m[0][3],
-            m[1][0],m[1][1],m[1][2],m[1][3],
-            m[2][0],m[2][1],m[2][2],m[2][3],
-            m[3][0],m[3][1],m[3][2],m[3][3]);
+                m[0][0],m[0][1],m[0][2],m[0][3],
+                m[1][0],m[1][1],m[1][2],m[1][3],
+                m[2][0],m[2][1],m[2][2],m[2][3],
+                m[3][0],m[3][1],m[3][2],m[3][3]);
         return buf;
     }
 };

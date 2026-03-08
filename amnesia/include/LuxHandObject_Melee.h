@@ -10,10 +10,10 @@
 
 class cLuxHandObject_Melee : public iLuxHandObject
 {
-public:    
+public:
     cLuxHandObject_Melee(const tString& asName, cLuxPlayerHands *apHands);
     ~cLuxHandObject_Melee();
-    
+
     void LoadImplementedVars(cXmlElement *apVarsElem);
 
     void ImplementedCreateEntity(cLuxMap *apMap);
@@ -21,7 +21,7 @@ public:
 
     void RenderSolid(cRendererCallbackFunctions* apFunctions);
     void RenderTrans(cRendererCallbackFunctions* apFunctions);
-    
+
     void ImplementedReset();
 
     void Update(float afTimeStep);
@@ -32,8 +32,8 @@ public:
 private:
     void UpdateCharge(float afTimeStep);
     void UpdateCheckDamageEvent(float afTimeStep);
-    
-    
+
+
     void Charge();
     void Swing();
 

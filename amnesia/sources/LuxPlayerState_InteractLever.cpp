@@ -16,14 +16,14 @@
 
 cLuxPlayerState_InteractLever::cLuxPlayerState_InteractLever(cLuxPlayer *apPlayer) : iLuxPlayerState_InteractRotateBase(apPlayer, eLuxPlayerState_InteractLever)
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
 
 cLuxPlayerState_InteractLever::~cLuxPlayerState_InteractLever()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -88,7 +88,7 @@ float cLuxPlayerState_InteractLever::GetSpeedAdd(cCamera *apCam)
     cVector3f vUp = apCam->GetUp();
     cVector3f vRight = apCam->GetRight();
     cVector3f vForward = apCam->GetForward();
-    
+
     cVector3f vUpJointForward = cMath::Vector3Cross(vUp, mpCurrentJoint->GetPinDir());
     cVector3f vUpAdd = vUpJointForward * cMath::Vector3Dot(vUp, vJointToBody);
     vUp = cMath::Vector3Normalize(vUpAdd + vUp);
@@ -96,7 +96,7 @@ float cLuxPlayerState_InteractLever::GetSpeedAdd(cCamera *apCam)
     cVector3f vRightJointForward = cMath::Vector3Cross(vRight, mpCurrentJoint->GetPinDir());
     cVector3f vRightAdd = vRightJointForward * cMath::Vector3Dot(vRight, vJointToBody);
     vRight = cMath::Vector3Normalize(vRightAdd + vRight);
-    
+
     cVector3f vPushAmount = (vUp) * mvMouseAdd.y + (vRight) * -mvMouseAdd.x;
     cVector3f vPushRotateDir = cMath::Vector3Cross(vJointToBody, vPushAmount);
 

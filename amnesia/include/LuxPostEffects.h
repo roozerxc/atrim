@@ -10,14 +10,17 @@
 class iLuxPostEffect : public iPostEffect
 {
 public:
-    iLuxPostEffect(cGraphics *apGraphics, cResources *apResources) : iPostEffect(apGraphics, apResources, NULL){}
-    virtual ~iLuxPostEffect(){}
+    iLuxPostEffect(cGraphics *apGraphics, cResources *apResources) : iPostEffect(apGraphics, apResources, NULL) {}
+    virtual ~iLuxPostEffect() {}
 
-    virtual void Update(float afTimeStep){}
+    virtual void Update(float afTimeStep) {}
 
 protected:
-    void OnSetParams(){}
-    iPostEffectParams *GetTypeSpecificParams() { return NULL; }
+    void OnSetParams() {}
+    iPostEffectParams *GetTypeSpecificParams()
+    {
+        return NULL;
+    }
 };
 
 
@@ -31,9 +34,18 @@ public:
 
     void Update(float afTimeStep);
 
-    void SetWaveAlpha(float afX){ mfWaveAlpha = afX;}
-    void SetZoomAlpha(float afX){ mfZoomAlpha = afX;}
-    void SetWaveSpeed(float afX){ mfWaveSpeed = afX;}
+    void SetWaveAlpha(float afX)
+    {
+        mfWaveAlpha = afX;
+    }
+    void SetZoomAlpha(float afX)
+    {
+        mfZoomAlpha = afX;
+    }
+    void SetWaveSpeed(float afX)
+    {
+        mfWaveSpeed = afX;
+    }
 
 private:
     iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
@@ -55,7 +67,7 @@ private:
 
 class cLuxPostEffectHandler : public iLuxUpdateable
 {
-public:    
+public:
     cLuxPostEffectHandler();
     ~cLuxPostEffectHandler();
 
@@ -63,7 +75,10 @@ public:
     void Update(float afTimeStep);
     void Reset();
 
-    cLuxPostEffect_Insanity* GetInsanity(){ return mpInsanity; }
+    cLuxPostEffect_Insanity* GetInsanity()
+    {
+        return mpInsanity;
+    }
 
 private:
     void LoadMainConfig();
@@ -74,7 +89,7 @@ private:
     cLuxPostEffect_Insanity *mpInsanity;
 
     std::vector<iLuxPostEffect*> mvPostEffects;
-    
+
 };
 
 //----------------------------------------------

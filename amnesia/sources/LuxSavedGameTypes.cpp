@@ -327,7 +327,7 @@ void cLuxEffectHandler_SaveData::FromEffectHandler(cLuxEffectHandler *apEffects)
     {
         mvVoiceData.Add(*voiceIt);
     }
-    
+
     //////////////////////
     // Sound volume and speed mul
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
@@ -393,7 +393,7 @@ void cLuxEffectHandler_SaveData::ToEffectHandler(cLuxMap *apMap, cLuxEffectHandl
     {
         apEffects->GetPlayVoice()->mlstVoices.push_back(mvVoiceData[i]);
     }
-    
+
     //////////////////////
     // Sound volume and speed mul
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
@@ -404,7 +404,7 @@ void cLuxEffectHandler_SaveData::ToEffectHandler(cLuxMap *apMap, cLuxEffectHandl
 
         mvGlobalSoundVolumeMul[i].ToEntry((int)i, pSoundHandler->GetGlobalVolumeSettingsHandler() );
     }
-    
+
     for(size_t i=0; i<mvGlobalSoundSpeedMul.Size(); ++i)
     {
         if(i == eLuxGlobalVolumeType_Commentary || i == eLuxGlobalVolumeType_DebugMenu) continue;
@@ -532,12 +532,12 @@ void cLuxMusicHandler_SaveData::ToMusicHandler(cLuxMap *apMap, cLuxMusicHandler 
     {
         bool bRet = apMusic->mpMusicHandler->Play(msCurrentMusic,mfCurrentMusicMaxVolume,0.1f, mbCurrentMusicLoop, false);
         if(bRet)
-        {    
+        {
             cMusicEntry *pMusicEntry = apMusic->mpMusicHandler->GetCurrentSong();
             if(pMusicEntry)
             {
                 pMusicEntry->mfMaxVolume = mfCurrentMusicMaxVolume;
-                pMusicEntry->mfVolume = mfCurrentMusicVolume; 
+                pMusicEntry->mfVolume = mfCurrentMusicVolume;
                 pMusicEntry->mfVolumeAdd = mfCurrentMusicVolumeAdd;
                 pMusicEntry->mpStream->SetElapsedTime(mfCurrentMusicTime);
                 pMusicEntry->mbLoop = mbCurrentMusicLoop;
@@ -552,7 +552,7 @@ void cLuxMusicHandler_SaveData::ToMusicHandler(cLuxMap *apMap, cLuxMusicHandler 
     apMusic->mbEnemyPlaying[eLuxEnemyMusic_Attack] = mbAttackPlaying;
     apMusic->mbEnemyPlaying[eLuxEnemyMusic_Search] = mbSearchPlaying;
 
-    
+
     ///////////////////
     // Music
     for(size_t i=0; i<mvMusic.Size(); ++i)
@@ -801,7 +801,7 @@ kEndSerialize()
 
 
 //////////////////////////////////////////////////////////////////////////
-// INVENTORY 
+// INVENTORY
 //////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------
@@ -840,7 +840,7 @@ void cLuxInventory_SaveData::FromInventory(cLuxInventory *apInventory)
         for(; it != apInventory->mlstCombineCallbacks.end(); ++it)
         {
             cLuxCombineItemsCallback *pCallback = *it;
-            mvCombineCallbacks.Add(*pCallback);    
+            mvCombineCallbacks.Add(*pCallback);
         }
     }
 }
@@ -869,8 +869,8 @@ void cLuxInventory_SaveData::ToInventory(cLuxMap *apMap, cLuxInventory *apInvent
     {
         cLuxInventory_Item_SaveData& saveItem = mvItems[i];
 
-        cLuxInventory_Item *pItem = apInventory->AddItem(    saveItem.msName, (eLuxItemType)saveItem.mlType, saveItem.msSubType, 
-                                                            saveItem.msImageFile, saveItem.mfAmount, saveItem.msVal, saveItem.msExtraVal);
+        cLuxInventory_Item *pItem = apInventory->AddItem(    saveItem.msName, (eLuxItemType)saveItem.mlType, saveItem.msSubType,
+                                    saveItem.msImageFile, saveItem.mfAmount, saveItem.msVal, saveItem.msExtraVal);
         pItem->SetGameNameEntry(saveItem.msGameNameEntry);
         pItem->SetGameDescEntry(saveItem.msGameDescEntry);
         pItem->SetCount(saveItem.mlCount);
@@ -906,7 +906,7 @@ kEndSerialize()
 void cLuxPlayerHands_SaveData::FromPlayerHands(cLuxPlayerHands *apPlayerHands)
 {
     mlState = apPlayerHands->mHandState;
-    
+
     if(apPlayerHands->mpCurrentHandObject)
         msCurrentHandObject = apPlayerHands->mpCurrentHandObject->GetName();
     else
@@ -1037,7 +1037,7 @@ void cLuxPlayer_SaveData::FromPlayer(cLuxPlayer *apPlayer)
     /// SpawnPS
     mbSpawnPSActive = apPlayer->GetHelperSpawnPS()->IsActive();
     mbSpawnPSFile = apPlayer->GetHelperSpawnPS()->GetFileName();
-    
+
     //////////////////////
     /// Flashback
     mbFlashbackActive = apPlayer->GetHelperFlashback()->mbActive;
@@ -1133,7 +1133,7 @@ void cLuxPlayer_SaveData::FromPlayer(cLuxPlayer *apPlayer)
     //////////////////////
     ///Body
     mCharBody.FromBody(apPlayer->mpCharBody);
-    
+
     //////////////////////
     ///Camera
     cCamera *pCam = apPlayer->GetCamera();
@@ -1193,7 +1193,7 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
     apPlayer->mfHealth = mfHealth;
     apPlayer->mfSanity = mfSanity;
     apPlayer->mfLampOil = mfLampOil;
-    
+
     apPlayer->mfTerror = mfTerror;
     apPlayer->mlCoins = mlCoins;
     apPlayer->mlTinderboxes = mlTinderboxes;
@@ -1212,13 +1212,13 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
     /// SpawnPS
     if(mbSpawnPSActive)
     {
-        apPlayer->GetHelperSpawnPS()->Start(mbSpawnPSFile); 
+        apPlayer->GetHelperSpawnPS()->Start(mbSpawnPSFile);
     }
     else
     {
         apPlayer->GetHelperSpawnPS()->Stop();
     }
-     
+
     //////////////////////
     /// Flashback
     apPlayer->GetHelperFlashback()->mbActive = mbFlashbackActive;
@@ -1226,7 +1226,7 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
     apPlayer->GetHelperFlashback()->mfFlashDelay = mfFlashDelay;
     apPlayer->GetHelperFlashback()->msFlashbackFile = msFlashbackFile;
     apPlayer->GetHelperFlashback()->msCallback = msFlashbackCallback;
-    
+
     apPlayer->GetHelperFlashback()->mlstFlashbackQueue.clear();
     cContainerListIterator<cLuxFlashbackData_SaveData> flashIt =mlstFlashbackQueue.GetIterator();
     while(flashIt.HasNext())
@@ -1259,7 +1259,7 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
     apPlayer->GetHelperLookAt()->mfFov = mfLookAt_Fov;
     apPlayer->GetHelperLookAt()->mfFovSpeed = mfLookAt_FovSpeed;
     apPlayer->GetHelperLookAt()->mfFovMaxSpeed = mfLookAt_FovMaxSpeed;
-    
+
     //////////////////////
     // Darkness
     apPlayer->GetHelperInDarkness()->SetActive(mfDarkness_Active);
@@ -1319,7 +1319,7 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
     cCamera *pCam = apPlayer->GetCamera();
     pCam->SetPitchLimits(mfPitchMinLimit, mfPitchMaxLimit);
     pCam->SetYawLimits(mfYawMinLimit, mfYawMaxLimit);
-    
+
     pCam->SetPitch(mvCameraAngles.x);
     pCam->SetYaw(mvCameraAngles.y);
     pCam->SetRoll(mvCameraAngles.z);
@@ -1329,7 +1329,7 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
         for(size_t i=0; i<apPlayer->mvHeadPosAdds.size(); ++i)
             apPlayer->mvHeadPosAdds[i] = mvHeadPosAdds[i];
     }
-    
+
     ///////////////////
     // Terror Enemies
     for(size_t i=0; i<mvTerrorEnemyIDs.Size(); ++i)
@@ -1465,7 +1465,7 @@ kSerializeVar(mfLookAt_DestFovMul, eSerializeType_Float32)
 kSerializeVar(mfLookAt_Fov, eSerializeType_Float32)
 kSerializeVar(mfLookAt_FovSpeed, eSerializeType_Float32)
 kSerializeVar(mfLookAt_FovMaxSpeed, eSerializeType_Float32)
-    
+
 kSerializeVar(mfDarkness_Active, eSerializeType_Bool)
 
 kSerializeVar(mCharBody, eSerializeType_Class)

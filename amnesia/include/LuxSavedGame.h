@@ -61,10 +61,10 @@ class cLuxSavedGameEntityFunc : public iSerializable
     kSerializableClassInit(cLuxSavedGameEntityFunc)
 public:
     cLuxSavedGameEntityFunc() {}
-    cLuxSavedGameEntityFunc(int alID, const tString& asFunc, bool abAutoRemove) : mlID(alID), msFunc(asFunc), mbAutoRemove(abAutoRemove){}
+    cLuxSavedGameEntityFunc(int alID, const tString& asFunc, bool abAutoRemove) : mlID(alID), msFunc(asFunc), mbAutoRemove(abAutoRemove) {}
 
     int mlID;
-    tString msFunc;    
+    tString msFunc;
     bool mbAutoRemove;
 };
 
@@ -74,7 +74,7 @@ public:
 class cLuxSavedGameMap : public iSerializable
 {
     kSerializableClassInit(cLuxSavedGameMap)
-public:    
+public:
     cLuxSavedGameMap();
     ~cLuxSavedGameMap();
 
@@ -82,7 +82,7 @@ public:
 
     void FromMap(cLuxMap *apMap);
     void ToMap(cLuxMap *apMap);
-    
+
     tString msName;
     tString msDisplayNameEntry;
 
@@ -102,7 +102,7 @@ public:
     cColor mFogColor;
 
     cContainerList<iLuxEntity_SaveData*> mlstFullEntities;
-    
+
     cContainerList<cLuxSavedGameEntity*> mlstCollideAndConnectEntities;
     cContainerList<cLuxSavedGameEnemy*> mlstEnemies;
 
@@ -116,7 +116,7 @@ public:
     cContainerVec<cLuxUseItemCallback> mvUseItemCallbacks;
 
     cContainerList<cLuxCollideCallback_SaveData> mlstPlayerCollideCallbacks;
-    
+
     cContainerList<cLuxSavedGameEntityFunc> mlstEntityFunc_Look;
     cContainerList<cLuxSavedGameEntityFunc> mlstEntityFunc_Interact;
     cContainerList<cLuxSavedGameEntityFunc> mlstEntityFunc_Callback;
@@ -139,7 +139,7 @@ private:
 class cLuxSavedGameMapCollection : public iSerializable
 {
     kSerializableClassInit(cLuxSavedGameMapCollection)
-public:    
+public:
     cLuxSavedGameMapCollection();
     ~cLuxSavedGameMapCollection();
 
@@ -149,9 +149,9 @@ public:
     void LoadMap(cLuxMap *apMap);
 
     bool MapExists(const tString& asName);
-    
+
     cLuxSavedGameMap* GetSavedMap(const tString& asName, bool abCreateNew);
-    
+
 public:
     cContainerList<cLuxSavedGameMap*> mlstMaps;
 };

@@ -86,7 +86,7 @@ void cLuxLoadScreenHandler::LoadFonts()
 
 void cLuxLoadScreenHandler::OnStart()
 {
-    
+
 }
 
 //-----------------------------------------------------------------------
@@ -124,7 +124,9 @@ void cLuxLoadScreenHandler::Update(float afTimeStep)
 {
     switch(mState)
     {
-    case eLuxLoadScreenState_Game: UpdateGameState(afTimeStep); break;
+    case eLuxLoadScreenState_Game:
+        UpdateGameState(afTimeStep);
+        break;
     }
 }
 
@@ -152,13 +154,15 @@ void cLuxLoadScreenHandler::OnDraw(float afFrameTime)
 {
     switch(mState)
     {
-    case eLuxLoadScreenState_Game: DrawGameState(afFrameTime); break;
+    case eLuxLoadScreenState_Game:
+        DrawGameState(afFrameTime);
+        break;
     }
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxLoadScreenHandler::GameScreenLoadDone(const tString& asEndSound ,float afLoadTime)
+void cLuxLoadScreenHandler::GameScreenLoadDone(const tString& asEndSound,float afLoadTime)
 {
     /////////////////////////////
     // Init variables
@@ -182,7 +186,7 @@ void cLuxLoadScreenHandler::GameScreenLoadDone(const tString& asEndSound ,float 
         //Log("TimeTaken: %f TimeWanted: %f\n", afLoadTime,fTimeWanted);
     }
 
-    
+
     /////////////////////////////
     // Change State
     gpBase->mpEngine->GetUpdater()->SetContainer("LoadScreen");
@@ -235,7 +239,7 @@ void cLuxLoadScreenHandler::DrawMenuScreen()
     //Draw Image
     cVector2f vImageSize = pImage->GetImageSize();
     pSet->DrawGfx(pImage, cVector3f(400,300,0)- cVector3f(vImageSize.x/2.0f, vImageSize.y/2.0f, 0));
-    
+
     //////////////////////
     //Draw Text
     cVector2f vSize(20);
@@ -298,7 +302,7 @@ void cLuxLoadScreenHandler::Exit()
 tString cLuxLoadScreenHandler::GetGameScreenTextEntry()
 {
     if(msLoadTextCat == "" || msLoadTextEntry == "") return "";
-    
+
     tString sEntry = msLoadTextEntry;
     if(mlTextRandomNum > 1)
     {
@@ -311,7 +315,7 @@ tString cLuxLoadScreenHandler::GetGameScreenTextEntry()
                 lNum = lIdx;
                 break;
             }
-            ++lIdx; 
+            ++lIdx;
             if(lIdx >= mlTextRandomNum) lIdx =0;
         }
 
@@ -360,7 +364,7 @@ void cLuxLoadScreenHandler::UpdateGameState(float afTimeStep)
         mfExtraTime -= afTimeStep;
         return;
     }
-    
+
     ////////////////////////////
     // Alpha
     mfAlpha -= afTimeStep * (1.0f/mfFadeOutTime);

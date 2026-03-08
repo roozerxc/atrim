@@ -6,94 +6,110 @@
 
 #include "gui/Widget.h"
 
-namespace hpl {
+namespace hpl
+{
 
-    class cGuiSkinFont;
-    class cWidgetButton;
+class cGuiSkinFont;
+class cWidgetButton;
 
 
-    class cWidgetWindow : public iWidget
+class cWidgetWindow : public iWidget
+{
+public:
+    cWidgetWindow(cGuiSet *apSet, cGuiSkin *apSkin, tWidgetWindowButtonFlag alFlags = 0);
+    virtual ~cWidgetWindow();
+
+    void SetStatic(bool abX);
+    bool GetStatic()
     {
-    public:
-        cWidgetWindow(cGuiSet *apSet, cGuiSkin *apSkin, tWidgetWindowButtonFlag alFlags = 0);
-        virtual ~cWidgetWindow();
+        return mbStatic;
+    }
 
-        void SetStatic(bool abX);
-        bool GetStatic(){return mbStatic;}
+    void SetDrawLabel(bool abX);
 
-        void SetDrawLabel(bool abX);
-        
-        void SetCloseButtonDisablesWindow(bool abX){mbCloseButtonDisablesWindow = abX;}
-        bool GetCloseButtonDisablesWindow(){ return mbCloseButtonDisablesWindow;}
+    void SetCloseButtonDisablesWindow(bool abX)
+    {
+        mbCloseButtonDisablesWindow = abX;
+    }
+    bool GetCloseButtonDisablesWindow()
+    {
+        return mbCloseButtonDisablesWindow;
+    }
 
-        void SetEscapeKeyClosesWindow(bool abX) { mbCloseOnEscapeKey = abX; }
-        bool GetEscapeKeyClosesWindow() { return mbCloseOnEscapeKey; }
-        
-    protected:
+    void SetEscapeKeyClosesWindow(bool abX)
+    {
+        mbCloseOnEscapeKey = abX;
+    }
+    bool GetEscapeKeyClosesWindow()
+    {
+        return mbCloseOnEscapeKey;
+    }
 
-        /////////////////////////
-        // Window Button Callbacks
-        bool ButtonPressed(iWidget* apWidget, const cGuiMessageData& aData);
-        kGuiCallbackDeclarationEnd(ButtonPressed);
+protected:
 
-        /////////////////////////
-        // Implemented functions
-        void OnInit();
-        void OnLoadGraphics();
-        void OnAttachChild(iWidget *apChild);
+    /////////////////////////
+    // Window Button Callbacks
+    bool ButtonPressed(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(ButtonPressed);
 
-        void OnChangeSize();
-        
-        void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
+    /////////////////////////
+    // Implemented functions
+    void OnInit();
+    void OnLoadGraphics();
+    void OnAttachChild(iWidget *apChild);
 
-        bool OnMouseMove(const cGuiMessageData& aData);
-        bool OnMouseDown(const cGuiMessageData& aData);
-        bool OnMouseUp(const cGuiMessageData& aData);
-        bool OnMouseEnter(const cGuiMessageData& aData);
-        bool OnMouseLeave(const cGuiMessageData& aData);
+    void OnChangeSize();
 
-        bool OnKeyPress(const cGuiMessageData& aData);
+    void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
 
-        bool OnGotFocus(const cGuiMessageData& aData);
-        bool OnLostFocus(const cGuiMessageData& aData);
+    bool OnMouseMove(const cGuiMessageData& aData);
+    bool OnMouseDown(const cGuiMessageData& aData);
+    bool OnMouseUp(const cGuiMessageData& aData);
+    bool OnMouseEnter(const cGuiMessageData& aData);
+    bool OnMouseLeave(const cGuiMessageData& aData);
 
-        void OnChildGotFocus(iWidget* apChild, const cGuiMessageData& aData);
-        void OnChildLostFocus(iWidget* apChild, const cGuiMessageData& aData);
+    bool OnKeyPress(const cGuiMessageData& aData);
 
-        /////////////////////////
-        // Data
-        cGuiSkinFont *mpLabelFont;
+    bool OnGotFocus(const cGuiMessageData& aData);
+    bool OnLostFocus(const cGuiMessageData& aData);
 
-        cWidgetButton* mvButtons[1];
+    void OnChildGotFocus(iWidget* apChild, const cGuiMessageData& aData);
+    void OnChildLostFocus(iWidget* apChild, const cGuiMessageData& aData);
 
-        cGuiGfxElement *mpGfxBackground;
-        cGuiGfxElement *mpGfxLabel;
+    /////////////////////////
+    // Data
+    cGuiSkinFont *mpLabelFont;
 
-        cGuiGfxElement *mvGfxBorders[4];
-        cGuiGfxElement *mvGfxCorners[4];
+    cWidgetButton* mvButtons[1];
 
-        cGuiGfxElement *mpGfxButtonCross;
+    cGuiGfxElement *mpGfxBackground;
+    cGuiGfxElement *mpGfxLabel;
 
-        cVector3f mvLabelTextOffset;
+    cGuiGfxElement *mvGfxBorders[4];
+    cGuiGfxElement *mvGfxCorners[4];
 
-        tWidgetWindowButtonFlag mlFlags;
+    cGuiGfxElement *mpGfxButtonCross;
 
-        bool mbStatic;
-        bool mbCloseButtonDisablesWindow;
-        bool mbCloseOnEscapeKey;
+    cVector3f mvLabelTextOffset;
 
-        bool mbDrawLabel;
-        bool mbFocused;
+    tWidgetWindowButtonFlag mlFlags;
 
-        cVector3f mvRelMousePos;
-        bool mbMoving;
-        iWidget* mpPrevAttention;
-        cWidgetWindow* mpPrevTopMostWindow;
+    bool mbStatic;
+    bool mbCloseButtonDisablesWindow;
+    bool mbCloseOnEscapeKey;
 
-        float mfButtonSize;
+    bool mbDrawLabel;
+    bool mbFocused;
 
-        bool mbDrawBordersOutside;
-    };
+    cVector3f mvRelMousePos;
+    bool mbMoving;
+    iWidget* mpPrevAttention;
+    cWidgetWindow* mpPrevTopMostWindow;
+
+    float mfButtonSize;
+
+    bool mbDrawBordersOutside;
+};
 
 };
 #endif // HPL_WIDGET_H

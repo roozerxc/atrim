@@ -24,11 +24,11 @@ public:
 
 class cLuxHintHandler : public iLuxUpdateable
 {
-friend class cLuxHintHandler_SaveData;
-public:    
+    friend class cLuxHintHandler_SaveData;
+public:
     cLuxHintHandler();
     ~cLuxHintHandler();
-    
+
     void LoadFonts();
     void OnStart();
     void Update(float afTimeStep);
@@ -41,7 +41,10 @@ public:
     void UpdateHintText(float afTimeStep);
 
     void SetActive(bool abX);
-    bool IsActive() { return mbActive; }
+    bool IsActive()
+    {
+        return mbActive;
+    }
 
     /**
     * if time shown is <=0 then the life time is calculated based on string length.
@@ -66,7 +69,7 @@ private:
     cVector2f mvFontSize;
 
     float mfTextDurationMul;
-    
+
     //////////////////
     // Variables
     bool mbActive;

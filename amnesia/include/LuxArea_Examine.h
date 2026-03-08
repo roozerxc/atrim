@@ -27,9 +27,9 @@ public:
 
 class cLuxArea_Examine : public iLuxArea
 {
-typedef iLuxArea super_class;
-friend class cLuxAreaLoader_Examine;
-public:    
+    typedef iLuxArea super_class;
+    friend class cLuxAreaLoader_Examine;
+public:
     cLuxArea_Examine(const tString &asName, int alID, cLuxMap *apMap);
     virtual ~cLuxArea_Examine();
 
@@ -46,10 +46,10 @@ public:
 
     //////////////////////
     //Properties
-    
+
     //////////////////////
     //Connection callbacks
-    void OnConnectionStateChange(iLuxEntity *apEntity, int alState){}
+    void OnConnectionStateChange(iLuxEntity *apEntity, int alState) {}
 
     //////////////////////
     //Save data stuff
@@ -74,7 +74,7 @@ private:
 
     tString msSound;
     tString msInsaneSound;
-    
+
     /////////////////////////
     // Variables
     float mfPlaySoundCount;
@@ -89,10 +89,10 @@ public:
     ~cLuxAreaLoader_Examine();
 
     iLuxArea *CreateArea(const tString& asName, int alID, cLuxMap *apMap);
-    
+
     void LoadVariables(iLuxArea *apArea, cWorld *apWorld);
     void SetupArea(iLuxArea *apArea, cWorld *apWorld);
-    
+
 };
 
 //----------------------------------------------

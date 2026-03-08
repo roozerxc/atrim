@@ -7,81 +7,82 @@
 #include <GL/glew.h>
 #include <GL/glu.h>
 
-namespace hpl {
+namespace hpl
+{
 
-    class cBitmapData;
+class cBitmapData;
 
-    class cSDLTexture : public iTexture
-    {
-    public:
-        cSDLTexture(const tString& asName, eTextureType aType, eTextureUsage aUsage, iLowLevelGraphics* apLowLevelGraphics);
-        ~cSDLTexture();
+class cSDLTexture : public iTexture
+{
+public:
+    cSDLTexture(const tString& asName, eTextureType aType, eTextureUsage aUsage, iLowLevelGraphics* apLowLevelGraphics);
+    ~cSDLTexture();
 
-        bool CreateFromBitmap(cBitmap* pBmp);
-        bool CreateAnimFromBitmapVec(std::vector<cBitmap*> *avBitmaps);
-        bool CreateCubeFromBitmapVec(std::vector<cBitmap*> *avBitmaps);
-        bool CreateFromRawData(const cVector3l &avSize,ePixelFormat aPixelFormat, unsigned char *apData);
+    bool CreateFromBitmap(cBitmap* pBmp);
+    bool CreateAnimFromBitmapVec(std::vector<cBitmap*> *avBitmaps);
+    bool CreateCubeFromBitmapVec(std::vector<cBitmap*> *avBitmaps);
+    bool CreateFromRawData(const cVector3l &avSize,ePixelFormat aPixelFormat, unsigned char *apData);
 
-        virtual void SetRawData(    int alLevel, const cVector3l& avOffset, const cVector3l& avSize, 
-                                    ePixelFormat aPixelFormat, void *apData);
-        
-        void SetFilter(eTextureFilter aFilter);
-        void SetAnisotropyDegree(float afX);
+    virtual void SetRawData(    int alLevel, const cVector3l& avOffset, const cVector3l& avSize,
+                                ePixelFormat aPixelFormat, void *apData);
 
-        void SetWrapS(eTextureWrap aMode);
-        void SetWrapT(eTextureWrap aMode);
-        void SetWrapR(eTextureWrap aMode);
-        void SetWrapSTR(eTextureWrap aMode);
+    void SetFilter(eTextureFilter aFilter);
+    void SetAnisotropyDegree(float afX);
 
-        void SetCompareMode(eTextureCompareMode aMode);
-        void SetCompareFunc(eTextureCompareFunc aFunc);
+    void SetWrapS(eTextureWrap aMode);
+    void SetWrapT(eTextureWrap aMode);
+    void SetWrapR(eTextureWrap aMode);
+    void SetWrapSTR(eTextureWrap aMode);
 
-        void AutoGenerateMipmaps();
+    void SetCompareMode(eTextureCompareMode aMode);
+    void SetCompareFunc(eTextureCompareFunc aFunc);
 
-        void Update(float afTimeStep);
+    void AutoGenerateMipmaps();
 
-        bool HasAnimation();
-        void NextFrame();
-        void PrevFrame();
-        float GetT();
-        float GetTimeCount();
-        void SetTimeCount(float afX);
-        int GetCurrentLowlevelHandle();
+    void Update(float afTimeStep);
 
-        /// SDL / OGL Specific ///////////
+    bool HasAnimation();
+    void NextFrame();
+    void PrevFrame();
+    float GetT();
+    float GetTimeCount();
+    void SetTimeCount(float afX);
+    int GetCurrentLowlevelHandle();
 
-        unsigned int GetTextureHandle();
-    private:
-        void GenerateHandles(int alNumOfHandles);
+    /// SDL / OGL Specific ///////////
 
-        bool CreateFromBitmapToIndex(cBitmap* apBmp, int alIdx);
+    unsigned int GetTextureHandle();
+private:
+    void GenerateHandles(int alNumOfHandles);
 
-        bool CreateTexture(    int alTextureHandle,
-                            cBitmapData* apBitmapImage, int alNumOfMipMaps,
-                            const cVector3l avSize, ePixelFormat aPixelFormat, 
-                            int alFaceNum,bool abGenerateMipMaps,
-                            bool abCheckForResize);
+    bool CreateFromBitmapToIndex(cBitmap* apBmp, int alIdx);
 
-        bool CopyTextureDataToGL(    int alTextureHandle, int alLevel,unsigned char *apData,int alDataSize,
-                                    const cVector3l avSize, ePixelFormat aPixelFormat,int alFaceNum);
+    bool CreateTexture(    int alTextureHandle,
+                           cBitmapData* apBitmapImage, int alNumOfMipMaps,
+                           const cVector3l avSize, ePixelFormat aPixelFormat,
+                           int alFaceNum,bool abGenerateMipMaps,
+                           bool abCheckForResize);
 
-        void GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelFormat,const cVector3l avSize, 
-                                unsigned char *apData,int alDataSize, int alFaceNum);
-        
-        void SetupProperties(int alTextureHandle);
+    bool CopyTextureDataToGL(    int alTextureHandle, int alLevel,unsigned char *apData,int alDataSize,
+                                 const cVector3l avSize, ePixelFormat aPixelFormat,int alFaceNum);
+
+    void GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelFormat,const cVector3l avSize,
+                             unsigned char *apData,int alDataSize, int alFaceNum);
+
+    void SetupProperties(int alTextureHandle);
 
 
-        unsigned char* ResizePixelData(unsigned char *apData, int alBytesPerPixel);
+    unsigned char* ResizePixelData(unsigned char *apData, int alBytesPerPixel);
 
-        
-        tUIntVec mvTextureHandles;
-        bool mbContainsData;
-        cLowLevelGraphicsSDL* mpGfxSDL;
 
-        float mfTimeCount;
-        int mlTextureIndex;
-        float mfTimeDir;
-    };
+    tUIntVec mvTextureHandles;
+    bool mbContainsData;
+    cLowLevelGraphicsSDL* mpGfxSDL;
+
+    float mfTimeCount;
+    int mlTextureIndex;
+    float mfTimeDir;
+};
 
 };
 #endif // HPL_SDL_TEXTURE_H
