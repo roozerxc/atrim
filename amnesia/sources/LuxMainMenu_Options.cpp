@@ -198,19 +198,10 @@ void cLuxMainMenu_Options::CreateMainGui()
 
     pTabFrame->AddCallback(eGuiMessage_SelectionChange, this, kGuiCallback(TabFrame_OnPageChange));
 
-
-
-#ifdef USE_ONLIVE
-    mpTabGame = pTabFrame->AddTab(kTranslate("MainMenu","OptionsGame"));
-    mpTabInput = pTabFrame->AddTab(kTranslate("MainMenu","OptionsInput"));
-    mpTabGraphics = NULL;
-    mpTabSound = NULL;
-#else
     mpTabGame = pTabFrame->AddTab(kTranslate("MainMenu","OptionsGame"));
     mpTabGraphics = pTabFrame->AddTab(kTranslate("MainMenu","OptionsGraphics"));
     mpTabInput = pTabFrame->AddTab(kTranslate("MainMenu","OptionsInput"));
     mpTabSound = pTabFrame->AddTab(kTranslate("MainMenu","OptionsSound"));
-#endif
 
 #if USE_GAMEPAD
     ///////////////////
@@ -238,10 +229,8 @@ void cLuxMainMenu_Options::CreateMainGui()
             pTab->GetTabLabel()->SetFocusNavigation(eUIArrow_Right, pTabFrame->GetTab(lNext)->GetTabLabel());
     }
 
-#ifndef USE_ONLIVE
     AddGraphicsOptions(mpTabGraphics);
     AddSoundOptions(mpTabSound);
-#endif
     AddGameOptions(mpTabGame);
     AddInputOptions(mpTabInput);
 
@@ -1057,7 +1046,6 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
             mpCBLanguage->SetSelectedItem(lLangIndex, false, false);
         }
     }
-#ifndef USE_ONLIVE
     ////////////////////////////////
     // Graphics options
     {
@@ -1274,7 +1262,6 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
         SetSliderValue(mpSGamma, fGamma, false, mfGammaMin, mfGammaMax);
         SetGammaLabelString(fGamma);
     }
-#endif
     ////////////////////////////////
     // Input
     mpChBInvertMouse->SetChecked(aObj.GetVarBool("InvertMouse"), false); 
@@ -1294,7 +1281,6 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
 
     ////////////////////////////////
     // Sound
-#ifndef USE_ONLIVE
     float fVolume = aObj.GetVarFloat("SoundVolume");
     SetSliderValue(mpSVolume, fVolume, false, mfVolumeMin, mfVolumeMax);
     SetVolumeLabelString(fVolume);
@@ -1310,12 +1296,10 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
         }
     }
     
-
     if(lSndDevIdx==-1)
         mpCBSndDevice->SetSelectedItem(mpCBSndDevice->GetItemNum()-1, true, false);
     else
         mpCBSndDevice->SetSelectedItem(lSndDevIdx, true, false);
-#endif
 
     mbSettingInitialValues = false;
 }
