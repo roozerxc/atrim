@@ -2106,7 +2106,6 @@ namespace hpl {
 
         if(bRet==false)
         {
-            // roozy: auto was used here and caused a C4430
             cGuiGlobalShortcut* shortcut = FindShortcut(tData.mKeyPress);
             if(shortcut)
             {

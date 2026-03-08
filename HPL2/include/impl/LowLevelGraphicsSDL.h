@@ -85,7 +85,6 @@ namespace hpl {
 
         void SetWindowCaption(const tString &asName);
 
-        // roozy: add SetWindowIcon declaration
         void SetWindowIcon();
 
         bool GetWindowMouseFocus();

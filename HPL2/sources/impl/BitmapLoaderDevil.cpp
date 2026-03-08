@@ -134,10 +134,6 @@ namespace hpl {
     }
     static ILHANDLE ILAPIENTRY DevilOpen(const ILstring apFile)
     {
-        // roozy: Call _wfopen if the preprocessor definition is
-        //        _UNICODE, because this fails after compilation
-        //        through the Debug configuration.
-
         #ifdef _UNICODE
             return _wfopen(apFile, L"wb");
         #else

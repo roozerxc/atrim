@@ -645,7 +645,6 @@ bool cLuxBase::ParseCommandLine(const tString &asCommandline)
 bool cLuxBase::InitApp()
 {
     // We load this HERE so the "userdir" magic can work
-    // roozy: Account for portable backport effort
     tWString sPersonalDir = cString::AddSlashAtEndW(cPlatform::GetWorkingDir());
 
     /////////////////////////

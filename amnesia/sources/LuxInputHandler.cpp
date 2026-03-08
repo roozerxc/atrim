@@ -631,7 +631,6 @@ void cLuxInputHandler::UpdateGlobalInput()
     // ScreenShot
     if(mpInput->BecameTriggerd(eLuxAction_ScreenShot))
     {
-        // roozy: Account for portable backport effort
         tWString sScreenShotDir = _W("screenshots");
         if(cPlatform::FolderExists(sScreenShotDir) == false)
             cPlatform::CreateFolder(sScreenShotDir);

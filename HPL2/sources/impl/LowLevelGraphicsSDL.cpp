@@ -169,15 +169,6 @@ namespace hpl {
 
         // If caption set before engine creation, no chance for the "SDL_App" to appear for even a msec
         SetWindowCaption(asWindowCaption);
-
-        //////////////////////////////////////////////////////////////////////
-        //
-        // roozy: After SetWindowCaption, we should call SetWindowIcon now.
-        //        This MUST be called BEFORE SDL_SetVideoMode, otherwise
-        //        it will not work at all
-        //
-        //////////////////////////////////////////////////////////////////////
-
         SetWindowIcon();
 
         Log(" Setting video mode: %d x %d - %d bpp\n",alWidth, alHeight, alBpp);
@@ -541,22 +532,8 @@ namespace hpl {
     {
     }
 
-    /////////////////////////////////////////////////////////////
-    //
-    // roozy: Add a SetWindowIcon function to use SDL_WM_SetIcon
-    //        so that when the game launches in windowed mode or
-    //        when focus is off the window the player can see
-    //        the game icon. The icon must be a 24-bit BITMAP,
-    //        and it must be present in the game directory
-    //
-    //        Since SDL does not have ownership of the icon
-    //        surface it must be freed to prevent nasty leaks
-    //
-    /////////////////////////////////////////////////////////////
-
     void cLowLevelGraphicsSDL::SetWindowIcon()
     {
-        // roozy: Load the bitmap icon
         SDL_Surface* mpGameIcon = SDL_LoadBMP("amnesia.bmp");
         if(mpGameIcon)
         {

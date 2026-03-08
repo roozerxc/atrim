@@ -14,7 +14,6 @@
 #define PERSONAL_RELATIVEPIECES
 #define PERSONAL_RELATIVEPIECES_COUNT 0
 #endif
-// roozy: Account for portable backport effort
 #define PERSONAL_RELATIVEGAME_PARENT _W("settings/")
 #define PERSONAL_RESOURCES _W("local_resources/")
 namespace hpl {
@@ -36,7 +35,6 @@ inline void SetupBaseDirs(tWStringVec& vDirs, const tWString& asRelativeParent =
     }
     vDirs.push_back(PERSONAL_RELATIVEROOT PERSONAL_RELATIVEGAME_PARENT);
 #ifndef HPL_MINIMAL
-    // roozy: Account for portable backport effort
     iFileBrowser::msGameDir = cString::AddSlashAtEndW(cPlatform::GetWorkingDir());
     iFileBrowser::msPersonalDir = PERSONAL_RELATIVEROOT PERSONAL_RELATIVEGAME_PARENT;
 #endif
