@@ -1179,22 +1179,6 @@
 				Name="Sound"
 				>
 				<File
-					RelativePath=".\sources\impl\FmodSoundChannel.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\include\impl\FmodSoundChannel.h"
-					>
-				</File>
-				<File
-					RelativePath=".\sources\impl\FmodSoundData.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\include\impl\FmodSoundData.h"
-					>
-				</File>
-				<File
 					RelativePath=".\sources\impl\LowLevelSoundOpenAL.cpp"
 					>
 				</File>
