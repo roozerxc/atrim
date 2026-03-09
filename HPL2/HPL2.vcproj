@@ -955,6 +955,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\impl\LowLevelGraphicsIcon.h"
+					>
+				</File>
+				<File
 					RelativePath=".\sources\impl\LowLevelGraphicsSDL.cpp"
 					>
 				</File>

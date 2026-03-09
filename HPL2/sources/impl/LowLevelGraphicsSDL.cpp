@@ -10,6 +10,7 @@
 #include "system/Platform.h"
 #include "system/Mutex.h"
 
+#include "impl/LowLevelGraphicsIcon.h"
 #include "impl/LowLevelGraphicsSDL.h"
 #include "impl/SDLFontData.h"
 #include "impl/SDLTexture.h"
@@ -558,11 +559,20 @@ void cLowLevelGraphicsSDL::SetRelativeMouse(bool abX)
 
 void cLowLevelGraphicsSDL::SetWindowIcon()
 {
-    SDL_Surface* mpGameIcon = SDL_LoadBMP("amnesia.bmp");
-    if(mpGameIcon)
+    SDL_Surface* mpWindowIcon = SDL_CreateRGBSurfaceFrom(
+        (void *)HPL_CLIENT_ICON.pixel_data,
+                HPL_CLIENT_ICON.width,
+                HPL_CLIENT_ICON.height,
+                HPL_CLIENT_ICON.bytes_per_pixel * 8,
+                HPL_CLIENT_ICON.bytes_per_pixel *
+                HPL_CLIENT_ICON.width,
+        0x000000FF, 0x0000FF00, 0x00FF0000, 0x00000000
+    );
+
+    if(mpWindowIcon)
     {
-        SDL_WM_SetIcon(mpGameIcon, NULL);
-        SDL_FreeSurface(mpGameIcon);
+        SDL_WM_SetIcon(mpWindowIcon, NULL);
+        SDL_FreeSurface(mpWindowIcon);
     }
 }
 
