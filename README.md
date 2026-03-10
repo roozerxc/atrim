@@ -3,7 +3,9 @@
 
 Also known as Amnesia2K or `atrim`. This is a backport of Frictional Games' *Amnesia: The Dark Descent* (and *A Machine for Pigs* coming soon), and a fork of Amnesia64 for the Microsoft *Windows 2000* operating system.
 
-For a list of key changes please see `CHANGELOG.md`
+For residents living in the states of California and Colorado in the United States of America, please read the legal notice in [`LEGAL-NOTICE.md`](LEGAL-NOTICE.md)
+
+For a list of key changes, see [`CHANGELOG.md`](CHANGELOG.md).
 
 ## NOTE about gamepad support
 Both *DirectInput* and *XInput* controllers work and are fully functional with this port.
