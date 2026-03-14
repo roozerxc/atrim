@@ -563,10 +563,9 @@ void cLowLevelGraphicsSDL::SetWindowIcon()
         (void *)HPL_CLIENT_ICON.pixel_data,
                 HPL_CLIENT_ICON.width,
                 HPL_CLIENT_ICON.height,
-                HPL_CLIENT_ICON.bytes_per_pixel * 8,
-                HPL_CLIENT_ICON.bytes_per_pixel *
-                HPL_CLIENT_ICON.width,
-        0x000000FF, 0x0000FF00, 0x00FF0000, 0x00000000
+                24, // temporary workaround for issue #5
+                3 * HPL_CLIENT_ICON.width,
+        0x000000FF, 0x0000FF00, 0x00FF0000, 0
     );
 
     if(mpWindowIcon)
