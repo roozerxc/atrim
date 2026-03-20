@@ -559,14 +559,11 @@ void cLowLevelGraphicsSDL::SetRelativeMouse(bool abX)
 
 void cLowLevelGraphicsSDL::SetWindowIcon()
 {
-    SDL_Surface* mpWindowIcon = SDL_CreateRGBSurfaceFrom(
-        (void *)HPL_CLIENT_ICON.pixel_data,
-                HPL_CLIENT_ICON.width,
-                HPL_CLIENT_ICON.height,
-                24, // temporary workaround for issue #5
-                3 * HPL_CLIENT_ICON.width,
-        0x000000FF, 0x0000FF00, 0x00FF0000, 0
-    );
+    SDL_RWops * mpWindowIconData = SDL_RWFromMem(
+    HPL_CLIENT_ICON, CLIENT_ICON_SIZE);
+
+    SDL_Surface * mpWindowIcon = SDL_LoadBMP_RW(
+    mpWindowIconData, 1);
 
     if(mpWindowIcon)
     {
