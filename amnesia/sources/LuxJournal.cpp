@@ -1321,7 +1321,7 @@ void cLuxJournal::SetNoteListPage(int alPageNum, eLuxJournalState aState)
 
 
     std::vector<cLuxJournal_ListPage> &vPages = mvNoteListPages[lIdx];
-    if(mlCurrentNoteListPage[lIdx] >= static_cast<int>(vPages.size()))
+    if(mlCurrentNoteListPage[lIdx] >= vPages.size())
     {
         //No pages, disable both arrows.
         mpImageBackward[aState]->SetEnabled(false);
@@ -1477,7 +1477,7 @@ void cLuxJournal::CreateMainGui()
 
             if(lPrev>=0)
                 pWidget->SetFocusNavigation(eUIArrow_Up, vLabels[lPrev]);
-            if(lNext<static_cast<int>(vLabels.size()))
+            if(lNext<vLabels.size())
                 pWidget->SetFocusNavigation(eUIArrow_Down,vLabels[lNext]);
         }
 
@@ -1570,7 +1570,7 @@ void cLuxJournal::CreateNotesGui()
 
             if(lPrev>=0)
                 pLabel->SetFocusNavigation(eUIArrow_Up, pListPage->mvEntries[lPrev].mlstWidgets.front());
-            if(lNext<static_cast<int>(pListPage->mvEntries.size()))
+            if(lNext<pListPage->mvEntries.size())
                 pLabel->SetFocusNavigation(eUIArrow_Down, pListPage->mvEntries[lNext].mlstWidgets.front());
         }
     }
@@ -1675,7 +1675,7 @@ void cLuxJournal::CreateDiariesGui()
 
             if(lPrev>=0)
                 pLabel->SetFocusNavigation(eUIArrow_Up, pListPage->mvEntries[lPrev].mlstWidgets.front());
-            if(lNext<static_cast<int>(pListPage->mvEntries.size()))
+            if(lNext<pListPage->mvEntries.size())
                 pLabel->SetFocusNavigation(eUIArrow_Down, pListPage->mvEntries[lNext].mlstWidgets.front());
         }
     }
