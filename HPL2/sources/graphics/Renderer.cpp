@@ -2128,10 +2128,6 @@ void iRenderer::SetMaterialProgram(eMaterialRenderMode aRenderMode, cMaterial *a
             mpCurrentMaterial = apMaterial;
         }
     }
-
-
-
-    //TODO: If Cg is to be used, the worldviewproj matrix need to be setup!
 }
 
 //-----------------------------------------------------------------------

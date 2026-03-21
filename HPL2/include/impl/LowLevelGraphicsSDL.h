@@ -288,12 +288,6 @@ public:
     /////////// IMPLEMENTION SPECIFICS /////////////////
     /////////////////////////////////////////////////////
 
-#ifdef WITH_CG
-    CGcontext GetGC_Context()
-    {
-        return mCG_Context;
-    }
-#endif
     void SetupGL();
 
 private:
@@ -376,12 +370,6 @@ private:
     //Texture
     GLenum mvCurrentTextureTarget[kMaxTextureUnits];
 
-#ifdef WITH_CG
-    //////////////////////////////////////
-    //CG Compiler Variables
-    CGcontext mCG_Context;
-#endif
-
     //////////////////////////////////////
     //Multisample
     void CheckMultisampleCaps();
@@ -389,13 +377,6 @@ private:
     //////////////////////////////////////
     //Double sided stencil
     bool mbDoubleSidedStencilIsSet;
-
-#ifdef WITH_CG
-    //////////////////////////////////////
-    //CG Helper
-    void InitCG();
-    void ExitCG();
-#endif
 
     //////////////////////////////////////
     //Matrix helper

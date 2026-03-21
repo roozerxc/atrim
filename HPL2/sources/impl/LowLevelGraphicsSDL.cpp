@@ -79,13 +79,6 @@ cLowLevelGraphicsSDL::cLowLevelGraphicsSDL()
     mbInitHasBeenRun = false;
 
     //Init extra stuff
-#ifdef WITH_CG
-    if(mGpuProgramFormat == eGpuProgramFormat_CG)
-    {
-        InitCG();
-    }
-#endif
-
     //TTF_Init();
 }
 
@@ -666,7 +659,6 @@ iGpuProgram* cLowLevelGraphicsSDL::CreateGpuProgram(const tString& asName)
     ;
 
     return hplNew( cGLSLProgram, (asName) );
-    //return hplNew( cCGProgram, () );
 }
 
 iGpuShader* cLowLevelGraphicsSDL::CreateGpuShader(const tString& asName, eGpuShaderType aType)
@@ -674,7 +666,6 @@ iGpuShader* cLowLevelGraphicsSDL::CreateGpuShader(const tString& asName, eGpuSha
     ;
 
     return hplNew( cGLSLShader, (asName,aType, this) );
-    //return hplNew( cCGShader, (asName,mCG_Context, aType) );
 }
 
 //-----------------------------------------------------------------------
@@ -2243,19 +2234,6 @@ void cLowLevelGraphicsSDL::SetVtxBatchStates(tVtxBatchFlag aFlags)
 
 
 }
-#ifdef WITH_CG
-void cLowLevelGraphicsSDL::InitCG()
-{
-    mCG_Context = cgCreateContext();
-}
-
-//-----------------------------------------------------------------------
-
-void cLowLevelGraphicsSDL::ExitCG()
-{
-    cgDestroyContext(mCG_Context);
-}
-#endif
 
 //-----------------------------------------------------------------------
 

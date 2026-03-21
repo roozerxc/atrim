@@ -626,11 +626,6 @@ void iRenderFunctions::SetMatrix(cMatrixf *apMatrix)
 
         mpCurrentMatrix = apMatrix;
     }
-
-    //////////////////////////
-    // Setup program
-
-    //TODO: Only needed when using Cg
 }
 
 //-----------------------------------------------------------------------
@@ -642,11 +637,6 @@ void iRenderFunctions::SetModelViewMatrix(const cMatrixf& a_mtxModelView)
 
     mpLowLevelGraphics->SetMatrix(eMatrix_ModelView,a_mtxModelView);
     mpCurrentMatrix = &m_mtxNULL;
-
-    //////////////////////////
-    // Setup program
-
-    //TODO: Only needed when using Cg
 }
 
 //-----------------------------------------------------------------------
