@@ -4,11 +4,7 @@
 #include "resources/ResourceBase.h"
 
 #ifdef __GNUC__
-#if defined __ppc__ || defined(__LP64__)
-#define __stdcall
-#else
 #define __stdcall __attribute__((stdcall))
-#endif
 #endif
 
 namespace hpl

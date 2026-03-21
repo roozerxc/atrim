@@ -25,14 +25,6 @@
 
 #include "SDL/SDL_syswm.h"
 
-#ifndef _WIN32
-#if defined __ppc__ || defined(__LP64__)
-#define CALLBACK
-#else
-#define CALLBACK __attribute__ ((__stdcall__))
-#endif
-#endif
-
 namespace hpl
 {
 

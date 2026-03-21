@@ -33,12 +33,7 @@
 // Specifies the size of the memory unit in streaming ( currently 4 KB ) 
 // (buffer sizes are set using multiples of this unit)
 #define STREAMING_BLOCK_SIZE 4096
-
-#if defined(__ppc__)
-	#define SYS_ENDIANNESS 1
-#else
-	#define SYS_ENDIANNESS 0
-#endif
+#define SYS_ENDIANNESS 0
 
 #define OAL_FREE	-3
 #define OAL_ALL		-2
