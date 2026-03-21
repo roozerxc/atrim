@@ -176,7 +176,7 @@ FILE *cPlatform::OpenFile(const tWString& asFileName, const tWString asMode)
 
 //-----------------------------------------------------------------------
 
-static cDate DateFromGMTime(struct tm* apClock)
+static cDate DateFromLocalTime(struct tm* apClock)
 {
     cDate date;
 
@@ -199,9 +199,16 @@ cDate cPlatform::FileModifiedDate(const tWString& asFilePath)
     struct _stat attrib;
     _wstat(asFilePath.c_str(), &attrib);
 
-    pClock = gmtime(&(attrib.st_mtime));    // Get the last modified time and put it into the time structure
+    // Get the last modified time and put it into the time structure
+    pClock = localtime(&(attrib.st_mtime));
+    cDate date = DateFromLocalTime(pClock);
 
-    cDate date = DateFromGMTime(pClock);
+    #ifdef _DEBUG
+        Log("DEBUG: Modified time for file '%s': %02d-%02d-%04d %02d:%02d:%02d\n",
+        cString::To8Char(asFilePath).c_str(),
+        date.month, date.month_day, date.year,
+        date.hours, date.minutes, date.seconds);
+    #endif
 
     return date;
 }
@@ -211,12 +218,20 @@ cDate cPlatform::FileModifiedDate(const tWString& asFilePath)
 cDate cPlatform::FileCreationDate(const tWString& asFilePath)
 {
     struct tm* pClock;
+
     struct _stat attrib;
     _wstat(asFilePath.c_str(), &attrib);
 
-    pClock = gmtime(&(attrib.st_ctime));    // Get the last modified time and put it into the time structure
+    // Get the last created time and put it into the time structure
+    pClock = localtime(&(attrib.st_ctime));
+    cDate date = DateFromLocalTime(pClock);
 
-    cDate date = DateFromGMTime(pClock);
+    #ifdef _DEBUG
+        Log("DEBUG: Creation time for file '%s': %02d-%02d-%04d %02d:%02d:%02d\n",
+        cString::To8Char(asFilePath).c_str(),
+        date.month, date.month_day, date.year,
+        date.hours, date.minutes, date.seconds);
+    #endif
 
     return date;
 }
@@ -450,7 +465,7 @@ cDate cPlatform::GetDate()
     struct tm* pClock;
     pClock = localtime(&lTime);
 
-    return DateFromGMTime(pClock);
+    return DateFromLocalTime(pClock);
 }
 
 //-----------------------------------------------------------------------
