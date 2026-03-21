@@ -421,9 +421,6 @@ static void GetBinaryBufferDataWithFormat(cBinaryBuffer* apBuffer, void *apDestD
 
 void cWorldLoaderHplMap::LoadCacheFile(const tWString& asFile)
 {
-#if (defined(__PPC__) || defined(__ppc__))
-    return;
-#endif
     tWString sCacheFile = cString::SetFileExtW(asFile, msCacheFileExt);
 
     ////////////////////////////////////////
@@ -456,14 +453,49 @@ void cWorldLoaderHplMap::LoadCacheFile(const tWString& asFile)
     //Check magic number
     if(lMagicNum != MAP_CACHE_FORMAT_MAGIC_NUMBER)
     {
-        Error("File '%s' does not have right MAP_CACHE magic number (%X instead of %X)! Invalid header!\n", cString::To8Char(asFile).c_str(),lMagicNum,MAP_CACHE_FORMAT_MAGIC_NUMBER);
+        Error("File '%s' does not have right MAP_CACHE magic number (%X instead of %X)! ",
+        cString::To8Char(sCacheFile).c_str(), lMagicNum, MAP_CACHE_FORMAT_MAGIC_NUMBER
+        + "Invalid header!\n");
         return;
     }
 
-    //Check so file has he right version
+    //Check so file has the right map cache version
     if(lVersion != MAP_CACHE_FORMAT_VERSION)
     {
-        Error("File '%s' does not have right MAP_CACHE version! Is %d, newest is %d\n", cString::To8Char(asFile).c_str(),lVersion,MAP_CACHE_FORMAT_VERSION);
+        Error("File '%s' does not have right MAP_CACHE version! (%d instead of %d)\n",
+        cString::To8Char(sCacheFile).c_str(), lVersion, MAP_CACHE_FORMAT_VERSION);
+        return;
+    }
+    
+    //Check TDD map cache version
+    if(lVersion == MAP_CACHE_FORMAT_VERSION_TDD)
+    {
+        Log("File '%s' is a The Dark Descent map cache file (version %d)\n",
+        cString::To8Char(sCacheFile).c_str(), MAP_CACHE_FORMAT_VERSION_TDD);
+        return;
+    }
+    
+    //Check MFP map cache version
+    if(lVersion == MAP_CACHE_FORMAT_VERSION_MFP)
+    {
+        Log("File '%s' is a Machine for Pigs map cache file (version %d)\n",
+        cString::To8Char(sCacheFile).c_str(), MAP_CACHE_FORMAT_VERSION_MFP);
+        return;
+    }
+    
+    //Check HiP map cache version
+    if(lVersion == MAP_CACHE_FORMAT_VERSION_ROOZY)
+    {
+        Log("File '%s' is a Hate is Peace map cache file (version %d)\n",
+        cString::To8Char(sCacheFile).c_str(), MAP_CACHE_FORMAT_VERSION_ROOZY);
+        return;
+    }
+    
+    //Check BUzer map cache version
+    if(lVersion == MAP_CACHE_FORMAT_VERSION_BUZER)
+    {
+        Log("File '%s' is an Amnesia64 map cache file (version %d)\n",
+        cString::To8Char(sCacheFile).c_str(), MAP_CACHE_FORMAT_VERSION_BUZER);
         return;
     }
 
@@ -682,9 +714,6 @@ void cWorldLoaderHplMap::LoadCacheFile(const tWString& asFile)
 
 void cWorldLoaderHplMap::SaveCacheFile(const tWString& asFile)
 {
-#if (defined(__PPC__) || defined(__ppc__))
-    return;
-#endif
     if(mbLoadedCache) return; //No need to save if cache was loaded!
     if(cResources::GetForceCacheLoadingAndSkipSaving()) return;
 

@@ -22,16 +22,16 @@ class iPhysicsBody;
 
 //----------------------------------------
 
-#if (defined(__ppc__) || defined(__PPC__)) && !defined(__LP64__)
-// PPC here
-#define MAP_CACHE_FORMAT_MAGIC_NUMBER        0xF4414550
-#else
-// Only need to specialize PPC as 64bit and 32bit newton data is the same
-#define MAP_CACHE_FORMAT_MAGIC_NUMBER        0xF441451F
-#endif
+#define MAP_CACHE_FORMAT_MAGIC_NUMBER       0xF441451F
 
-// buzer: set it to some arbitrary large number so it won't interfere with other source mods
-#define MAP_CACHE_FORMAT_VERSION            219676930
+// Specify map cache format versions for other games.
+#define MAP_CACHE_FORMAT_VERSION_TDD        10
+#define MAP_CACHE_FORMAT_VERSION_MFP        11
+#define MAP_CACHE_FORMAT_VERSION_ROOZY      20
+#define MAP_CACHE_FORMAT_VERSION_BUZER      219676930
+
+// Use The Dark Descent's map cache format version as default
+#define MAP_CACHE_FORMAT_VERSION MAP_CACHE_FORMAT_VERSION_TDD
 
 //----------------------------------------
 
