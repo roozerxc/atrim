@@ -20,7 +20,7 @@
 			OutputDirectory="$(SolutionDir)\compiled\$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="0"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -42,11 +42,13 @@
 				UseUnicodeResponseFiles="false"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\dependencies\include;..\HPL2\include;.\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;USE_GAMEPAD;USE_XINPUT;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MEMORY_MANAGER_ACTIVE;USE_GAMEPAD;USE_XINPUT;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
+				PrecompiledHeaderThrough="stdafx.h"
+				PrecompiledHeaderFile="$(IntDir)$(TargetName).pch"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
@@ -65,6 +67,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				UseUnicodeResponseFiles="false"
 				AdditionalDependencies="AngelScript.lib DevIL.lib freealut.lib GLEW.lib Imm32.lib jpeg.lib Newton.lib ogg.lib OpenAL32.lib png.lib SDL.lib setupapi.lib theora.lib Version.lib vorbis.lib winmm.lib zlib.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(PlatformName)-$(ConfigurationName).exe"
 				LinkIncremental="2"
@@ -133,7 +136,7 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;USE_GAMEPAD;USE_XINPUT;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H;LUXPROP_OBJECT_BREAKABLE_WORKAROUND"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
+				EnableFunctionLevelLinking="false"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="stdafx.h"
 				PrecompiledHeaderFile="$(IntDir)$(TargetName).pch"
@@ -142,7 +145,7 @@
 				DebugInformationFormat="3"
 				CompileAs="2"
 				DisableSpecificWarnings="26495;26812"
-				UseFullPaths="true"
+				UseFullPaths="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
