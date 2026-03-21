@@ -44,6 +44,7 @@
 				AdditionalIncludeDirectories="..\dependencies\include;..\HPL2\include;.\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MEMORY_MANAGER_ACTIVE;USE_GAMEPAD;USE_XINPUT;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H"
 				MinimalRebuild="true"
+				ExceptionHandling="2"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
