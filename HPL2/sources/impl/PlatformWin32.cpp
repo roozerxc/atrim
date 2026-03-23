@@ -178,6 +178,11 @@ FILE *cPlatform::OpenFile(const tWString& asFileName, const tWString asMode)
 
 static cDate DateFromLocalTime(struct tm* apClock)
 {
+    if(!apClock)
+    {
+        return cDate();
+    }
+
     cDate date;
 
     date.seconds = apClock->tm_sec;
@@ -192,15 +197,25 @@ static cDate DateFromLocalTime(struct tm* apClock)
     return date;
 }
 
+//-----------------------------------------------------------------------
+
 cDate cPlatform::FileModifiedDate(const tWString& asFilePath)
 {
-    struct tm* pClock;
-
     struct _stat attrib;
-    _wstat(asFilePath.c_str(), &attrib);
+    if(_wstat(asFilePath.c_str(), &attrib) != 0)
+    {
+        Error("Cannot create attrib time struct for file '%s'!\n", cString::To8Char(asFilePath).c_str());
+        return cDate();
+    }
 
     // Get the last modified time and put it into the time structure
-    pClock = localtime(&(attrib.st_mtime));
+    struct tm* pClock = localtime(&(attrib.st_mtime));
+    if(!pClock)
+    {
+        Error("Failed to get last modified time for file '%s'!\n", cString::To8Char(asFilePath).c_str());
+        return cDate();
+    }
+
     cDate date = DateFromLocalTime(pClock);
 
     #ifdef _DEBUG
@@ -217,13 +232,21 @@ cDate cPlatform::FileModifiedDate(const tWString& asFilePath)
 
 cDate cPlatform::FileCreationDate(const tWString& asFilePath)
 {
-    struct tm* pClock;
-
     struct _stat attrib;
-    _wstat(asFilePath.c_str(), &attrib);
+    if(_wstat(asFilePath.c_str(), &attrib) != 0)
+    {
+        Error("Cannot create attrib time struct for file '%s'!\n", cString::To8Char(asFilePath).c_str());
+        return cDate();
+    }
 
     // Get the last created time and put it into the time structure
-    pClock = localtime(&(attrib.st_ctime));
+    struct tm* pClock = localtime(&(attrib.st_ctime));
+    if(!pClock)
+    {
+        Error("Failed to get last created time for file '%s'!\n", cString::To8Char(asFilePath).c_str());
+        return cDate();
+    }
+
     cDate date = DateFromLocalTime(pClock);
 
     #ifdef _DEBUG

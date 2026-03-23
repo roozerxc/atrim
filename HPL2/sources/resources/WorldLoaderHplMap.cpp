@@ -441,7 +441,7 @@ void cWorldLoaderHplMap::LoadCacheFile(const tWString& asFile)
     cBinaryBuffer binBuff(sCacheFile);
     if(binBuff.Load()==false)
     {
-        Error("Could not map cache file '%s'.", cString::To8Char(asFile).c_str());
+        Error("Could not map cache file '%s'!\n", cString::To8Char(asFile).c_str());
         return;
     }
 
