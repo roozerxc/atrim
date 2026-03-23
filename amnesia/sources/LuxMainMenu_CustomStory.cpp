@@ -153,7 +153,7 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
     if(sDescription==_W(""))
         sDescription = kTranslate("CustomStory", "NoDescription");
 
-    // Create picture
+    // Check to see if image exists and set if it does
     if(mpStory->msImgFile!="")
     {
         cGuiGfxElement* pGfx = mpIPicture->GetImage();
@@ -168,6 +168,10 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
             pGfx = mpGui->CreateGfxTexture(pTex, true, eGuiMaterial_Alpha);
 
         mpIPicture->SetImage(pGfx);
+    }
+    else if(mpStory->msImgFile=="")
+    {
+        mpIPicture->SetImage(NULL);
     }
 
 
