@@ -10,7 +10,7 @@
 - [`a78779f`](https://github.com/roozerxc/atrim/commit/a78779f31c37468d731ee5cb968871ef45ff9c7f) Fixed fly camera typo when the player's sanity was too low
 - [`45b4bcb`](https://github.com/roozerxc/atrim/commit/45b4bcba472eb64aa58ab2256db24bb9dc3778d7) Fixed fullscreen boolean that used to return as an integer value
 - [`5d97e08`](https://github.com/roozerxc/atrim/commit/5d97e08ebd80958677958062da31bce6d11192dc) Fixed insanity event boolean that returned as nothing
-- [`5146d49`](https://github.com/roozerxc/atrim/commit/5146d4994de95c16c075b213c19ac645528847d4) Fixed mipmap generation to use `GL_SGIS_mipmap_generation` instead of the framebuffer object
+- [`5146d49`](https://github.com/roozerxc/atrim/commit/5146d4994de95c16c075b213c19ac645528847d4) Fixed mipmap generation to use `GL_SGIS_generate_mipmap` instead of the framebuffer object
 - [`3bcb545`](https://github.com/roozerxc/atrim/commit/3bcb5453dee5e4d02a256602515fa36b350cd07a) Fixed non-working player particle system destructor
 - [`3c6ec17`](https://github.com/roozerxc/atrim/commit/3c6ec17627b23ec1d594e2ffdee65adfd7824c48) Player can now look straight up and down in a 90 degree angle
 - [`4f98490`](https://github.com/roozerxc/atrim/commit/4f98490efb4e29cfb76680b05df0f750fe7d2156) Removed dangerous "suicide" (`H`) key (`eLuxAction_Holster`)
