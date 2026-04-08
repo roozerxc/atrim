@@ -14,4 +14,4 @@ The atrim project specifically concerns **technical problems**, and is not a pla
 
 Additionally, given that this project is based on a game notorious for having one of the most toxic modding scenes, acknowledging this fact helps the atrim project request everyone to stay neutral towards each other regardless of identity or political beliefs. **Neutral meaning no arguing, lashing out, fighting, drama, violence, and vendettas against anyone regardless of the above factors.**
 
-The author welcomes everyone so long as everything stays neutral and within the scope of this project.
+The author of the atrim project welcomes everyone so long as everything stays neutral and within the scope of this project.
