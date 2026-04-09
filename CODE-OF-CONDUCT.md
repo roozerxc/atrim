@@ -12,6 +12,8 @@ Pull requests that add these will be denied and the contributor (or contributors
 
 The atrim project specifically concerns **technical problems**, and is not a platform for activism and political expression.
 
+**As an extension to the above, the atrim project also does not allow off-topic and NSFW contributions.** Issues, pull requests, comments, code, commits and documentation that are inappropriate and have nothing to do with the project's purpose will be immediately rejected with no warning or comment. There is an exception to this, since the base games, Amnesia: The Dark Descent and Amnesia: A Machine for Pigs, may contain nudity, and it is perfectly fine to send screenshot images and video footage of the games in your issue(s).
+
 Additionally, given that this project is based on a game notorious for having one of the most toxic modding scenes, acknowledging this fact helps the atrim project request everyone to stay neutral towards each other regardless of identity or political beliefs. **Neutral meaning no arguing, lashing out, fighting, drama, violence, and vendettas against anyone regardless of the above factors.**
 
 The author of the atrim project welcomes everyone so long as everything stays neutral and within the scope of this project.
