@@ -1,6 +1,6 @@
 # Amnesia 2000: The Dark Descent
 <div id="toc" align="center">
-    <img width="640" height="320" alt="Amnesia 2000: The Dark Descent" src="https://github.com/user-attachments/assets/7830c574-5d96-4adf-99c2-991ede0c7b5e" />
+    <img width="640" height="320" alt="Amnesia 2000: The Dark Descent" src="https://repository-images.githubusercontent.com/1168530724/f43a0b07-28d1-4433-a6ff-552195fff4c3" />
     <ul style="list-style: none">
         <summary>
             <h1>NOTICE: A legal, unmodified and DRM-free copy of <i>Amnesia: The Dark Descent</i> and/or <i>Amnesia: A Machine for Pigs</i> is required.</h1>
