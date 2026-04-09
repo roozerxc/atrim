@@ -1,7 +1,12 @@
 # Amnesia 2000: The Dark Descent
-<img width="1692" height="1332" alt="Amnesia2K" src="https://github.com/user-attachments/assets/9b26bfa7-55ec-440b-9225-ab4d84c18180" />
-
-<div id="toc" align="center"><ul style="list-style: none"><summary><h1>NOTICE: A legal, unmodified and DRM-free copy of <i>Amnesia: The Dark Descent</i> and/or <i>Amnesia: A Machine for Pigs</i> is required.</h1></summary></ul></div>
+<div id="toc" align="center">
+    <img width="640" height="320" alt="Amnesia 2000: The Dark Descent" src="https://github.com/user-attachments/assets/7830c574-5d96-4adf-99c2-991ede0c7b5e" />
+    <ul style="list-style: none">
+        <summary>
+            <h1>NOTICE: A legal, unmodified and DRM-free copy of <i>Amnesia: The Dark Descent</i> and/or <i>Amnesia: A Machine for Pigs</i> is required.</h1>
+        </summary>
+    </ul>
+</div>
 
 Also known as Amnesia2K or `atrim`. This is a backport of Frictional Games' *Amnesia: The Dark Descent* (and *A Machine for Pigs* coming soon), and a fork of Amnesia64 for the Microsoft *Windows 2000* operating system.
 
