@@ -1,5 +1,12 @@
 # TODO
-- **Compile the HPL2 Editor Suite; either from [Amnesia64](https://github.com/buzer2020/Amnesia64) or [TiManGames/AmnesiaTheDarkDescent](https://github.com/TiManGames/AmnesiaTheDarkDescent)**
-- **Implement FLAC, the Free Lossless Audio Codec support for sounds and music streams**
-- **Bring over a majority of new features and updates from Amnesia: A Machine for Pigs**
-- **Break free from msvc to MinGW/LLVM and use the Cmake system**
+- **Everything from the issues page:**
+  - **!!! Fix a couple of bugs first.** [#2](https://github.com/roozerxc/atrim/issues/2) [#3](https://github.com/roozerxc/atrim/issues/3)
+  - Bring over a majority of new engine features and updates from *Amnesia: A Machine for Pigs*
+  - Compile the community-edited version of the HPL2 Editor Suite from [TiManGames/AmnesiaTheDarkDescent](https://github.com/TiManGames/AmnesiaTheDarkDescent)
+  - Document the HPL2 engine functions and game logic code for *Amnesia: The Dark Descent* and *Amnesia: A Machine for Pigs*
+  - FBX Support with Machine for Pigs character models
+  - Optimize the graphics code (Rough ideas: LoD, Older opengl version, shader rewrite, etc.)
+  - Responsive hardware cursor using SDL and gui pointer bitmap data
+- **FLAC support for sounds and music streams**
+- **Use cmake and gcc/mingw32 instead of msvc (Visual Studio 2005)**
+  - Ideally, the compiler should produce binaries that are compatible with Windows 2000
