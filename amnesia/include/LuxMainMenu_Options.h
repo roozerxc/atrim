@@ -167,8 +167,6 @@ private:
     cWidgetCheckBox *mpChBParallax;
     cWidgetComboBox *mpCBParallaxQuality;
 
-    cWidgetCheckBox *mpChEdgeSmooth;
-
     cWidgetCheckBox    *mpChBBloom;
     cWidgetCheckBox *mpChBImageTrail;
     cWidgetCheckBox *mpChBSepia;

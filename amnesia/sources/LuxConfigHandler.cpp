@@ -81,7 +81,6 @@ void cLuxConfigHandler::LoadMainConfig()
     // Misc
     mbWorldReflection = gpBase->mpMainConfig->GetBool("Graphics", "WorldReflection", true);
     mbRefraction =        gpBase->mpMainConfig->GetBool("Graphics", "Refraction", true);
-    mbEdgeSmooth =        gpBase->mpMainConfig->GetBool("Graphics", "EdgeSmooth", false);
 
     // SSAO
     mbSSAOActive =        gpBase->mpMainConfig->GetBool("Graphics","SSAOActive", true);
@@ -163,8 +162,6 @@ void cLuxConfigHandler::SaveMainConfig()
 
     gpBase->mpMainConfig->SetInt("Graphics","ParallaxQuality", mlParallaxQuality);
     gpBase->mpMainConfig->SetBool("Graphics", "ParallaxEnabled", mbParallaxEnabled);
-
-    gpBase->mpMainConfig->SetBool("Graphics", "EdgeSmooth", mbEdgeSmooth);
 
     gpBase->mpMainConfig->SetBool("Graphics", "ForceShaderModel3And4Off", mbForceShaderModel3And4Off);
 

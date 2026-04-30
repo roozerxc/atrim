@@ -760,12 +760,6 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         float fBorderSize = 15;
         cVector3f vPosInGroup = cVector3f(fBorderSize, fBorderSize, 0.1f);
 
-        // Enabled
-        mpChEdgeSmooth = mpGuiSet->CreateWidgetCheckBox(vPosInGroup, 0, kTranslate("OptionsMenu","FullscreenSmooth"), pGroup);
-        SetUpInput(NULL, mpChEdgeSmooth, true, kTranslate("OptionsMenu","EdgeSmoothTip"));
-
-        vPosInGroup.y += mpChEdgeSmooth->GetSize().y + 10;
-
         mpChBRefraction = mpGuiSet->CreateWidgetCheckBox(vPosInGroup, 0, kTranslate("OptionsMenu", "Refraction"), pGroup);
         SetUpInput(NULL, mpChBRefraction, true, kTranslate("OptionsMenu", "RefractionTip"));
 
@@ -799,7 +793,6 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
     mpCBSSAOSamples;
     mpCBSSAOResolution;
 
-    mpChEdgeSmooth;
     mpChBWorldReflection;
     mpChBRefraction;
 
@@ -867,22 +860,17 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         mpCBSSAOSamples->SetFocusNavigation(eUIArrow_Left, mpChBSSAO);
         mpCBSSAOResolution->SetFocusNavigation(eUIArrow_Left, mpCBSSAOSamples);
 
-        mpChBSSAO->SetFocusNavigation(eUIArrow_Down, mpChEdgeSmooth);
+        mpChBSSAO->SetFocusNavigation(eUIArrow_Down, mpChBWorldReflection);
         mpCBSSAOSamples->SetFocusNavigation(eUIArrow_Down, mpChBWorldReflection);
         mpCBSSAOResolution->SetFocusNavigation(eUIArrow_Down, mpChBWorldReflection);
     }
 
     {
-        mpChEdgeSmooth->SetFocusNavigation(eUIArrow_Up, mpChBSSAO);
         mpChBWorldReflection->SetFocusNavigation(eUIArrow_Up, mpCBSSAOSamples);
-
-        mpChEdgeSmooth->SetFocusNavigation(eUIArrow_Right, mpChBWorldReflection);
-        mpChBWorldReflection->SetFocusNavigation(eUIArrow_Left, mpChEdgeSmooth);
-
-        mpChEdgeSmooth->SetFocusNavigation(eUIArrow_Down, mpChBRefraction);
+        mpChBWorldReflection->SetFocusNavigation(eUIArrow_Left, mpCBSSAOSamples);
         mpChBWorldReflection->SetFocusNavigation(eUIArrow_Down, mpChBRefraction);
 
-        mpChBRefraction->SetFocusNavigation(eUIArrow_Up, mpChEdgeSmooth);
+        mpChBRefraction->SetFocusNavigation(eUIArrow_Up, mpChBRefraction);
     }
 }
 
@@ -1188,13 +1176,6 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
         }
 
         /////////////////////////
-        // Smoothing
-        {
-            //Enabled
-            mpChEdgeSmooth->SetChecked(aObj.GetVarBool("EdgeSmooth"), false);
-        }
-
-        /////////////////////////
         // Shadows & Parallax
         {
             mpChBShadows->SetChecked(aObj.GetVarBool("ShadowsActive"), false);
@@ -1453,13 +1434,6 @@ void cLuxMainMenu_Options::ApplyChanges()
 
         //Update the viewport stuff
         gpBase->mpMapHandler->UpdateViewportRenderProperties();
-
-        /////////////////////////
-        // Smoothing
-        {
-            //Enabled
-            pCfgHdr->mbEdgeSmooth = mpChEdgeSmooth->IsChecked();
-        }
 
         /////////////////////
         // PostEffects
@@ -1743,10 +1717,6 @@ void cLuxMainMenu_Options::DumpInitialValues(cResourceVarsObject &aObj)
         aObj.AddVarFloat("TextureAnisotropy", gpBase->mpConfigHandler->mfTextureAnisotropy);
 
         /////////////////////////
-        // Smoothing
-        aObj.AddVarBool("EdgeSmooth", gpBase->mpConfigHandler->mbEdgeSmooth);
-
-        /////////////////////////
         // Shadows & Parallax
         aObj.AddVarBool("ShadowsActive", gpBase->mpConfigHandler->mbShadowsActive);
         aObj.AddVarInt("ShadowQuality", gpBase->mpConfigHandler->mlShadowQuality);
@@ -1836,10 +1806,6 @@ void cLuxMainMenu_Options::DumpCurrentValues(cResourceVarsObject &aObj)
         aObj.AddVarInt("TextureQuality", (mpCBTextureSizeLevel->GetItemNum()-1) - mpCBTextureSizeLevel->GetSelectedItem());
         aObj.AddVarInt("TextureFilter", mpCBTextureFilter->GetSelectedItem());
         aObj.AddVarFloat("TextureAnisotropy", GetAnisotropyFromIndex(mpCBAnisotropy->GetSelectedItem()));
-
-        /////////////////////////
-        // Smoothing
-        aObj.AddVarBool("EdgeSmooth", mpChEdgeSmooth->IsChecked());
 
         /////////////////////////
         // Shadows & Parallax

@@ -534,7 +534,6 @@ void cLuxMapHandler::LoadMainConfig()
     mpPostEffect_RadialBlur->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectRadialBlur", true)==false);
 
     cRenderSettings *pRenderSettings = mpViewport->GetRenderSettings();
-    pRenderSettings->mbUseEdgeSmooth = gpBase->mpConfigHandler->mbEdgeSmooth; //This is saved in config handler!
 }
 
 void cLuxMapHandler::SaveMainConfig()

@@ -59,7 +59,6 @@ float cRendererDeferred::mfSSAOScatterLengthMax = 0.13f;
 float cRendererDeferred::mfSSAODepthDiffMul = 1.5f;
 float cRendererDeferred::mfSSAOSkipEdgeLimit = 3.0f;
 eDeferredSSAO cRendererDeferred::mSSAOType = eDeferredSSAO_OnColorBuffer;
-bool cRendererDeferred::mbEdgeSmoothLoaded = false;
 
 //debug
 bool cRendererDeferred::mbOcclusionTestLargeLights = true;
@@ -590,52 +589,6 @@ bool cRendererDeferred::LoadData()
     }
 
     ////////////////////////////////////
-    //Create Smooth Edge and textures
-    if(mbEdgeSmoothLoaded && mpLowLevelGraphics->GetCaps(eGraphicCaps_TextureFloat)==0)
-    {
-        mbEdgeSmoothLoaded = false;
-        Warning("System does not support float textures! Edge smooth is disabled.\n");
-    }
-    if(mbEdgeSmoothLoaded)
-    {
-        /////////////////////////////////////
-        // Textures and frame buffers
-
-        // Textures
-        mpEdgeSmooth_LinearDepthTexture = CreateRenderTexture("EdgeSmoothLinearDepth", mvScreenSize,ePixelFormat_RGB16);
-        mpEdgeSmooth_TempAccum = mpGraphics->GetTempFrameBuffer(mvScreenSize,ePixelFormat_RGBA,0)->GetColorBuffer(0)->ToTexture();
-
-        //Frame buffers
-        mpEdgeSmooth_LinearDepthBuffer = mpGraphics->CreateFrameBuffer("EdgeSmoothLinearDepth");
-        mpEdgeSmooth_LinearDepthBuffer->SetTexture2D(0,mpEdgeSmooth_LinearDepthTexture);
-        mpEdgeSmooth_LinearDepthBuffer->CompileAndValidate();
-
-        /////////////////////////////////////
-        // Programs
-
-        cParserVarContainer programVars;
-
-        //Program for unpacking depth
-        if(mGBufferType == eDeferredGBuffer_32Bit)    programVars.Add("Deferred_32bit");
-        else                                        programVars.Add("Deferred_64bit");
-        programVars.Add("UseUv");
-        mpEdgeSmooth_UnpackDepthProgram = mpGraphics->CreateGpuProgramFromShaders("EdgeSmoothUnpackDepth","deferred_base_vtx.glsl", "deferred_unpack_depth_frag.glsl",&programVars);
-        if(mpEdgeSmooth_UnpackDepthProgram)
-        {
-            mpEdgeSmooth_UnpackDepthProgram->GetVariableAsId("afNegInvFarPlane",kVar_afNegInvFarPlane);
-        }
-        programVars.Clear();
-
-        //Program for edge smoothing
-        programVars.Add("UseUv");
-        mpEdgeSmooth_RenderProgram =  mpGraphics->CreateGpuProgramFromShaders("EdgeSmoothRender","deferred_base_vtx.glsl", "deferred_edge_smooth_frag.glsl",&programVars);
-        if(mpEdgeSmooth_RenderProgram)
-        {
-            mpEdgeSmooth_RenderProgram->GetVariableAsId("afFarPlane",kVar_afFarPlane);
-        }
-    }
-
-    ////////////////////////////////////
     //Create light shapes
     tFlag lVtxFlag = eVertexElementFlag_Position | eVertexElementFlag_Color0 | eVertexElementFlag_Texture0;
     mpShapeSphere[eDeferredShapeQuality_High] = LoadVertexBufferFromMesh("core_12_12_sphere.dae",lVtxFlag);
@@ -735,17 +688,6 @@ void cRendererDeferred::DestroyData()
         for(int i=0; i<2; ++i)
             mpGraphics->DestroyGpuProgram(mpSSAOBlurProgram[i]);
         mpGraphics->DestroyGpuProgram(mpSSAORenderProgram);
-    }
-
-    /////////////////////////////
-    // Edge smooth
-    if(mbEdgeSmoothLoaded)
-    {
-        mpGraphics->DestroyTexture(mpEdgeSmooth_LinearDepthTexture);
-        mpGraphics->DestroyFrameBuffer(mpEdgeSmooth_LinearDepthBuffer);
-
-        mpGraphics->DestroyGpuProgram(mpEdgeSmooth_UnpackDepthProgram);
-        mpGraphics->DestroyGpuProgram(mpEdgeSmooth_RenderProgram);
     }
 
     /////////////////////////
@@ -908,8 +850,6 @@ void cRendererDeferred::RenderObjects()
 
     RenderFog();
     RenderFullScreenFog();
-
-    RenderEdgeSmooth();
 
 #ifndef kDebug_RenderLightData
     RenderBasicSkyBox();
@@ -1209,73 +1149,6 @@ void cRendererDeferred::RenderSSAO()
         DrawQuad(0,1, 0,vSSAOSize, true);
         SetChannelMode(eMaterialChannelMode_RGBA);
     }
-
-    /////////////////////////////
-    // Set render states back to normal
-    SetNormalFrustumProjection();
-
-    END_RENDER_PASS();
-}
-
-//-----------------------------------------------------------------------
-
-void cRendererDeferred::RenderEdgeSmooth()
-{
-    if(mbEdgeSmoothLoaded==false || mpCurrentSettings->mbUseEdgeSmooth==false) return;
-    //if(mbEdgeSmoothLoaded==false) return;
-
-    START_RENDER_PASS(EdgeSmooth);
-
-    //////////////////////////////
-    // Set up variables
-    cVector3f vQuadPos = cVector3f(mfFarLeft,mfFarBottom,-mfFarPlane);
-    cVector2f vQuadSize = cVector2f(mfFarRight*2,mfFarTop*2);
-
-    iTexture *pGBufferDepthTexture = GetBufferTexture(2);
-    iTexture *pGBufferNormalTexture = GetBufferTexture(1);
-
-    //////////////////////////////
-    // Set up render states
-    SetChannelMode(eMaterialChannelMode_RGBA);
-    SetTextureRange(NULL, 1);
-    SetAlphaMode(eMaterialAlphaMode_Solid);
-    SetBlendMode(eMaterialBlendMode_None);
-    SetDepthWrite(false);
-    SetDepthTest(false);
-
-    SetFlatProjectionMinMax(cVector3f(mfFarLeft,mfFarBottom,-mfFarPlane*1.5f),cVector3f(mfFarRight,mfFarTop,mfFarPlane*1.5f));
-
-    ////////////////////////////////////////////
-    // Render linear depth to texture
-    SetFrameBuffer(mpEdgeSmooth_LinearDepthBuffer);
-
-    if(mGBufferType == eDeferredGBuffer_64Bit)
-    {
-        mpEdgeSmooth_UnpackDepthProgram->SetFloat(kVar_afNegInvFarPlane, -1.0f / mfFarPlane);
-    }
-    SetProgram(mpEdgeSmooth_UnpackDepthProgram);
-    SetTexture(0, pGBufferDepthTexture);    //Set G-buffer depth texture
-
-    DrawQuad(vQuadPos, vQuadSize,0, mvScreenSizeFloat,true);
-
-    ////////////////////////////////////////////
-    // Copy the screen to temp texture
-    SetAccumulationBuffer();
-    CopyFrameBufferToTexure(mpEdgeSmooth_TempAccum,0,mvScreenSize,0, true);
-
-    //////////////////////////////
-    // Render Edge smoothing
-    SetTexture(0,mpEdgeSmooth_TempAccum);
-    SetTexture(1,mpEdgeSmooth_LinearDepthTexture);
-    SetTexture(2,pGBufferNormalTexture);
-
-    SetProgram(mpEdgeSmooth_RenderProgram);
-    if(mpEdgeSmooth_RenderProgram)
-    {
-        mpEdgeSmooth_RenderProgram->SetFloat(kVar_afFarPlane, mfFarPlane);
-    }
-
-    DrawQuad(vQuadPos, vQuadSize,0, mvScreenSizeFloat,true);
 
     /////////////////////////////
     // Set render states back to normal

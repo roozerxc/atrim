@@ -239,15 +239,6 @@ public:
         return mfSSAOSkipEdgeLimit;
     }
 
-    static void SetEdgeSmoothLoaded(bool abX)
-    {
-        mbEdgeSmoothLoaded = abX;
-    }
-    static bool GetEdgeSmoothLoaded()
-    {
-        return mbEdgeSmoothLoaded;
-    }
-
     static void SetOcclusionTestLargeLights(bool abX)
     {
         mbOcclusionTestLargeLights = abX;
@@ -279,7 +270,6 @@ private:
     void RenderDynamicZTemp();
     void RenderGbuffer();
     void RenderSSAO();
-    void RenderEdgeSmooth();
     void RenderDeferredSkyBox();
 
     void SetupLightsAndRenderQueries();
@@ -380,19 +370,14 @@ private:
     iTexture *mpSSAOTexture;
     iTexture *mpSSAOBlurTexture;
     iTexture *mpSSAOScatterDisk;
-    iTexture *mpEdgeSmooth_LinearDepthTexture;
-    iTexture *mpEdgeSmooth_TempAccum;
 
     iFrameBuffer *mpLinearDepthBuffer;
     iFrameBuffer *mpSSAOBuffer;
     iFrameBuffer *mpSSAOBlurBuffer;
-    iFrameBuffer *mpEdgeSmooth_LinearDepthBuffer;
 
     iGpuProgram *mpUnpackDepthProgram;
     iGpuProgram *mpSSAOBlurProgram[2];
     iGpuProgram *mpSSAORenderProgram;
-    iGpuProgram *mpEdgeSmooth_UnpackDepthProgram;
-    iGpuProgram *mpEdgeSmooth_RenderProgram;
 
     std::vector<cDeferredLight*> mvTempDeferredLights;
     std::vector<cDeferredLight*> mvSortedLights[eDeferredLightList_LastEnum];
@@ -420,7 +405,6 @@ private:
     static eDeferredSSAO mSSAOType;
     static int mlSSAOBufferSizeDiv;
 
-    static bool mbEdgeSmoothLoaded;
     static bool mbEnableParallax;
 
     static bool mbDebugRenderFrameBuffers;

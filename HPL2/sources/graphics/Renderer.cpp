@@ -113,8 +113,6 @@ cRenderSettings::cRenderSettings(bool abIsReflection)
 
     mbUseCallbacks = true;
 
-    mbUseEdgeSmooth = false;
-
     mbUseOcclusionCulling = true;
 
     mMaxShadowMapResolution = eShadowMapResolution_High;
@@ -186,7 +184,7 @@ void cRenderSettings::ResetVariables()
 
 //////////////////////////////////////////////////
 //The render settings will use the default setup, except for the variables below
-// This means SSAO, edgesmooth, etc are always off for reflections.
+// This means SSAO and other shader effects will always be off for reflections.
 #define RenderSettingsCopy(aVar) mpReflectionSettings->aVar = aVar
 void cRenderSettings::SetupReflectionSettings()
 {

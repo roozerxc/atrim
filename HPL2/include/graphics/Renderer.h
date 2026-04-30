@@ -141,8 +141,6 @@ public:
 
     bool mbUseOcclusionCulling;
 
-    bool mbUseEdgeSmooth;
-
     tPlanefVec mvOcclusionPlanes;
 
     bool mbUseCallbacks;

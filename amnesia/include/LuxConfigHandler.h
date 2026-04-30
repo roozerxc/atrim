@@ -54,8 +54,6 @@ public:
 
     bool mbOcclusionTestLights;
 
-    bool mbEdgeSmooth;
-
     bool mbWorldReflection;
     bool mbRefraction;
     bool mbShadowsActive;
