@@ -130,7 +130,6 @@
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 				CompileAs="2"
-				DisableSpecificWarnings="26495;26812;26451"
 				UseFullPaths="false"
 			/>
 			<Tool
