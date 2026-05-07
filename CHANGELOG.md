@@ -1,4 +1,19 @@
 # Changelog
+### v1.4.6-win32-release (currently in private testing)
+- [`067186b`](https://github.com/roozerxc/atrim/commit/067186ba7c6c50bfe807f7d07bd356d904b3ccca) Added customizable top menu font color settings
+- [`bc98941`](https://github.com/roozerxc/atrim/commit/bc989418e2455b48983440c0dfd17386dbfc6794) Added map cache version number detection
+- [`0d132a5`](https://github.com/roozerxc/atrim/commit/0d132a505bff363d721a56bc014e57196b45b404) Added "Reset List" button for Custom Story menu
+- [`ef6c70e`](https://github.com/roozerxc/atrim/commit/ef6c70e534c2eb12e7cc8371bae3f74a15590c2d) Decoupled timers and scripts to use their own functions instead of using the same "Run" function
+- [`c2d7155`](https://github.com/roozerxc/atrim/commit/c2d7155de5f6522622a7174a201c45a221433d45) Fixed buggy enemy collision behavior
+- [`b496952`](https://github.com/roozerxc/atrim/commit/b496952608936ed83cde7a959521c7ec5c01ffff) Fixed custom story pictures not being wiped when another custom story was selected
+- [`73424fd`](https://github.com/roozerxc/atrim/commit/73424fd9c3410726fa91b79d674709298a9383ff) Fixed invalid serialization of coins needed to unlock chests
+- [`8c946b1`](https://github.com/roozerxc/atrim/commit/8c946b1a695330e05308fb5df4db5791a204ea3c) Fixed missing xinput support
+- [`5c29b95`](https://github.com/roozerxc/atrim/commit/5c29b958d314dd2ba9d2cb44e5e7b86c25e22ea4) Fixed the SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
+- [`45bda0f`](https://github.com/roozerxc/atrim/commit/45bda0fb26a98d19165b91bbd6aa79f5ad7bc2e6) Removed fake anti-aliasing shader (Edge Smoothing)
+- [`7491cc4`](https://github.com/roozerxc/atrim/commit/7491cc43e3e7b712c8723bfb12038d2146264d2c) Replaced loading icons from loose bitmaps with header-based RWops in the executable
+- [`0a3de4d`](https://github.com/roozerxc/atrim/commit/0a3de4d6e60806f30c31cb48281bd80c29efd79a) Replaced OpenAL with OpenAL-Soft
+- [`1731b30`](https://github.com/roozerxc/atrim/commit/1731b3071cefc3034e3a2fd3c152bd7998d68d3e) Restored unused Penumbra-style head leaning behavior
+
 ### v1.4.5-win32-release
 - [`19dc606`](https://github.com/roozerxc/atrim/commit/19dc606e47500a52f9ab685abe2531cf2b0d1c41) Added `LUXPROP_OBJECT_BREAKABLE_WORKAROUND` preprocessor definition for breakable objects
 - [`0080872`](https://github.com/roozerxc/atrim/commit/00808725cbe4de2cbc021c8656dc0d682c90e9a2) Disabled `UpdateLogActive` by default to fix severe performance degradation on first launch
