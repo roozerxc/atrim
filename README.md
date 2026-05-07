@@ -15,13 +15,15 @@ For residents living in the states of California, Colorado and New York in the U
 For a list of key changes, see [`CHANGELOG.md`](CHANGELOG.md).
 
 ## NOTE about gamepad support
-Both *DirectInput* and *XInput* controllers work and are fully functional with this port.
+**WARNING: Only *DirectInput* controllers are supported on *Windows 2000*! Attempting to compile the game and engine with the `USE_XINPUT` preprocessor definition will make the compiled binaries not work on *Windows 2000* unless you use an extended kernel!**
+
+Both *DirectInput* and *XInput* controllers work and are fully functional with this port, however in order to use *XInput* controllers (for example, any *Xbox 360*, *Xbox One*, and/or *Xbox Series* controllers), you must add the `USE_XINPUT` preprocessor definition to the `HPL2` and `amnesia` projects on the `Debug` and `Release` configurations. Compiled binaries that use this preprocessor definition must require at least *Windows XP Service Pack 1*.
 
 To use *DirectInput* or *XInput*-compatible controllers, you will need to install the *DirectX End-User Runtimes*:
 
 https://www.techpowerup.com/download/directx-redistributable-runtime/
 
-If you are on *Windows 2000* and want to use a controller to play the game, install the February 2010 version of the *DirectX End-User Runtimes*:
+If you are on *Windows 2000* and want to use a *DirectInput* controller to play the game, install the February 2010 version of the *DirectX End-User Runtimes*:
 
 https://legacyupdate.net/download-center/download/9033/directx-end-user-runtimes-february-2010
 
