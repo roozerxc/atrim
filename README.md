@@ -13,28 +13,27 @@ The core purpose of this project is to run the game on significantly weaker hard
 For a list of changes, read [`CHANGELOG.md`](CHANGELOG.md). Special thanks are in [`THANKS.md`](THANKS.md).
 
 ## Building
-
 ### Prerequisites
 
 - [*Creative Labs OpenAL 1.1 Core SDK*](https://openal.org/downloads)
 - [*Microsoft DirectX SDK February 2010*](https://archive.org/download/dxsdk_feb10/DXSDK_Feb10.exe)
 - *Microsoft Visual Studio 2005*
 - [*Microsoft Visual Studio 2005 Service Pack 1*](https://archive.org/download/vs80sp1-all-langs/SP1/)
-- [*Microsoft Visual Studio 2005 + Service Pack 1* Updates](https://archive.org/download/vs80sp1-all-langs/sp1-updates/)
+- [*Microsoft Visual Studio 2005 + Service Pack 1 Updates*](https://archive.org/download/vs80sp1-all-langs/sp1-updates/)
 - *Microsoft Windows 2000 Professional Service Pack 4*
 
-You will also need to [configure the DirectX SDK in your *Visual C++* directories](https://stackoverflow.com/a/46762539).
+You will also need to [configure the *DirectX SDK* in your *Visual C++* directories](https://stackoverflow.com/a/46762539).
 
 ### Steps
+The dependency libraries are precompiled, so you don't have to recompile them as from before.
 
-The dependency libs are precompiled so you don't have to recompile.
-
-1. `git clone` or download the repository from the Code button.
+1. `git clone` or download the repository from the **Code** button.
 2. Open the `atrim.sln` solution file.
 3. Press F7 to build the solution. This will compile the `HPL2` project first and then the `amnesia` project.
 
-To debug the game after compilation:
+Compiled binaries are found in the `compiled` folder of the solution's root. In order to play the game with these binaries, you need to copy `amnesia-Win32-Release.exe` and paste it into your *Amnesia: The Dark Descent* installation folder. 
 
+### Debugging
 1. Right-click on the `amnesia` project and set it as a **StartUp Project**.
 2. Go to the `amnesia` project properties and click on `Debugging`
 3. Change the `Working Directory` field to the path of your *Amnesia: The Dark Descent* install.
@@ -52,7 +51,6 @@ You can also test regular *Justine* functionality by simply adding `ptest` to th
 Then, click **Apply** and **OK**.
 
 ## Project Configurations
-
 ### Release
 
 This is the configuration that should be used when you set up the project for the first time. This has full code optimization and typically is the most stable especially for playing the base game and its *Justine* DLC, custom stories, total and full conversion mods.
@@ -75,3 +73,8 @@ https://www.techpowerup.com/download/directx-redistributable-runtime/
 If you are on *Windows 2000* and want to use a *DirectInput* controller to play the game, install the February 2010 version of the *DirectX End-User Runtimes*:
 
 https://legacyupdate.net/download-center/download/9033/directx-end-user-runtimes-february-2010
+
+## License
+The atrim project is licensed under Version 3 of the GNU General Public License (GNU GPL).
+
+Read the license information via the **GPL-3.0 license** tab on the top, or open the [`LICENSE.md`](LICENSE.md) file.
