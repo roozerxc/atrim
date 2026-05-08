@@ -16,6 +16,7 @@ For a list of changes, read [`CHANGELOG.md`](CHANGELOG.md). Special thanks are i
 
 ### Prerequisites
 
+- [*Creative Labs OpenAL 1.1 Core SDK*](https://openal.org/downloads)
 - [*Microsoft DirectX SDK February 2010*](https://archive.org/download/dxsdk_feb10/DXSDK_Feb10.exe)
 - *Microsoft Visual Studio 2005*
 - [*Microsoft Visual Studio 2005 Service Pack 1*](https://archive.org/download/vs80sp1-all-langs/SP1/)
