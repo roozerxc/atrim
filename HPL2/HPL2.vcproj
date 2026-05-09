@@ -42,7 +42,7 @@
 				UseUnicodeResponseFiles="false"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories=".\include\;..\dependencies\include\;..\dependencies\include\AL\;..\dependencies\sources\zlib\;..\dependencies\sources\AngelScript\include\"
+				AdditionalIncludeDirectories=".\core\include\;.\dependencies\include\;.\dependencies\include\AL\;.\dependencies\sources\zlib\;.\dependencies\sources\AngelScript\include\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_WINDOWS;_USRDLL;HPL_EXPORTS;MEMORY_MANAGER_ACTIVE;_CRT_SECURE_NO_WARNINGS;USE_GAMEPAD;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H"
 				MinimalRebuild="true"
 				ExceptionHandling="2"
@@ -116,7 +116,7 @@
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories=".\include\;..\dependencies\include\;..\dependencies\include\AL\;..\dependencies\sources\zlib\;..\dependencies\sources\AngelScript\include\"
+				AdditionalIncludeDirectories=".\core\include\;.\dependencies\include\;.\dependencies\include\AL\;.\dependencies\sources\zlib\;.\dependencies\sources\AngelScript\include\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_WINDOWS;_USRDLL;HPL_EXPORTS;_CRT_SECURE_NO_WARNINGS;USE_GAMEPAD;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
@@ -168,43 +168,43 @@
 			Name="AI"
 			>
 			<File
-				RelativePath=".\sources\ai\AI.cpp"
+				RelativePath=".\core\sources\ai\AI.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\ai\AI.h"
+				RelativePath=".\core\include\ai\AI.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\ai\AINodeContainer.cpp"
+				RelativePath=".\core\sources\ai\AINodeContainer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\ai\AINodeContainer.h"
+				RelativePath=".\core\include\ai\AINodeContainer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\ai\AINodeGenerator.cpp"
+				RelativePath=".\core\sources\ai\AINodeGenerator.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\ai\AINodeGenerator.h"
+				RelativePath=".\core\include\ai\AINodeGenerator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\ai\AStar.cpp"
+				RelativePath=".\core\sources\ai\AStar.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\ai\AStar.h"
+				RelativePath=".\core\include\ai\AStar.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\ai\StateMachine.cpp"
+				RelativePath=".\core\sources\ai\StateMachine.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\ai\StateMachine.h"
+				RelativePath=".\core\include\ai\StateMachine.h"
 				>
 			</File>
 		</Filter>
@@ -212,55 +212,55 @@
 			Name="Engine"
 			>
 			<File
-				RelativePath=".\sources\engine\Engine.cpp"
+				RelativePath=".\core\sources\engine\Engine.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\engine\Engine.h"
+				RelativePath=".\core\include\engine\Engine.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\engine\EngineInitVars.h"
+				RelativePath=".\core\include\engine\EngineInitVars.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\engine\EngineTypes.cpp"
+				RelativePath=".\core\sources\engine\EngineTypes.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\engine\EngineTypes.h"
+				RelativePath=".\core\include\engine\EngineTypes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\engine\LowLevelEngineSetup.h"
+				RelativePath=".\core\include\engine\LowLevelEngineSetup.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\engine\SaveGame.cpp"
+				RelativePath=".\core\sources\engine\SaveGame.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\engine\SaveGame.h"
+				RelativePath=".\core\include\engine\SaveGame.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\engine\ScriptFuncs.cpp"
+				RelativePath=".\core\sources\engine\ScriptFuncs.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\engine\ScriptFuncs.h"
+				RelativePath=".\core\include\engine\ScriptFuncs.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\engine\Updateable.h"
+				RelativePath=".\core\include\engine\Updateable.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\engine\Updater.cpp"
+				RelativePath=".\core\sources\engine\Updater.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\engine\Updater.h"
+				RelativePath=".\core\include\engine\Updater.h"
 				>
 			</File>
 		</Filter>
@@ -268,27 +268,27 @@
 			Name="Generate"
 			>
 			<File
-				RelativePath=".\sources\generate\Generate.cpp"
+				RelativePath=".\core\sources\generate\Generate.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\generate\Generate.h"
+				RelativePath=".\core\include\generate\Generate.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\generate\GenerateTypes.cpp"
+				RelativePath=".\core\sources\generate\GenerateTypes.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\generate\GenerateTypes.h"
+				RelativePath=".\core\include\generate\GenerateTypes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\generate\VoxelMap.cpp"
+				RelativePath=".\core\sources\generate\VoxelMap.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\generate\VoxelMap.h"
+				RelativePath=".\core\include\generate\VoxelMap.h"
 				>
 			</File>
 		</Filter>
@@ -296,326 +296,326 @@
 			Name="Graphics"
 			>
 			<File
-				RelativePath=".\sources\graphics\Animation.cpp"
+				RelativePath=".\core\sources\graphics\Animation.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\Animation.h"
+				RelativePath=".\core\include\graphics\Animation.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\AnimationTrack.cpp"
+				RelativePath=".\core\sources\graphics\AnimationTrack.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\AnimationTrack.h"
+				RelativePath=".\core\include\graphics\AnimationTrack.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\Bitmap.cpp"
+				RelativePath=".\core\sources\graphics\Bitmap.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\Bitmap.h"
+				RelativePath=".\core\include\graphics\Bitmap.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\Bone.cpp"
+				RelativePath=".\core\sources\graphics\Bone.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\Bone.h"
+				RelativePath=".\core\include\graphics\Bone.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\BoneState.cpp"
+				RelativePath=".\core\sources\graphics\BoneState.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\BoneState.h"
+				RelativePath=".\core\include\graphics\BoneState.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\Color.cpp"
+				RelativePath=".\core\sources\graphics\Color.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\Color.h"
+				RelativePath=".\core\include\graphics\Color.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\DecalCreator.cpp"
+				RelativePath=".\core\sources\graphics\DecalCreator.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\DecalCreator.h"
+				RelativePath=".\core\include\graphics\DecalCreator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\FontData.cpp"
+				RelativePath=".\core\sources\graphics\FontData.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\FontData.h"
+				RelativePath=".\core\include\graphics\FontData.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\FrameBase.h"
+				RelativePath=".\core\include\graphics\FrameBase.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\FrameBitmap.cpp"
+				RelativePath=".\core\sources\graphics\FrameBitmap.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\FrameBitmap.h"
+				RelativePath=".\core\include\graphics\FrameBitmap.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\FrameBuffer.h"
+				RelativePath=".\core\include\graphics\FrameBuffer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\FrameSubImage.cpp"
+				RelativePath=".\core\sources\graphics\FrameSubImage.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\FrameSubImage.h"
+				RelativePath=".\core\include\graphics\FrameSubImage.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\FrameTexture.cpp"
+				RelativePath=".\core\sources\graphics\FrameTexture.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\FrameTexture.h"
+				RelativePath=".\core\include\graphics\FrameTexture.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\GPUProgram.cpp"
+				RelativePath=".\core\sources\graphics\GPUProgram.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\GPUProgram.h"
+				RelativePath=".\core\include\graphics\GPUProgram.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\GPUShader.cpp"
+				RelativePath=".\core\sources\graphics\GPUShader.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\GPUShader.h"
+				RelativePath=".\core\include\graphics\GPUShader.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\Graphics.cpp"
+				RelativePath=".\core\sources\graphics\Graphics.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\Graphics.h"
+				RelativePath=".\core\include\graphics\Graphics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\GraphicsTypes.cpp"
+				RelativePath=".\core\sources\graphics\GraphicsTypes.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\GraphicsTypes.h"
+				RelativePath=".\core\include\graphics\GraphicsTypes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\LowLevelGraphics.cpp"
+				RelativePath=".\core\sources\graphics\LowLevelGraphics.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\LowLevelGraphics.h"
+				RelativePath=".\core\include\graphics\LowLevelGraphics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\Material.cpp"
+				RelativePath=".\core\sources\graphics\Material.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\Material.h"
+				RelativePath=".\core\include\graphics\Material.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\MaterialType.cpp"
+				RelativePath=".\core\sources\graphics\MaterialType.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\MaterialType.h"
+				RelativePath=".\core\include\graphics\MaterialType.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\Mesh.cpp"
+				RelativePath=".\core\sources\graphics\Mesh.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\Mesh.h"
+				RelativePath=".\core\include\graphics\Mesh.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\MeshCreator.cpp"
+				RelativePath=".\core\sources\graphics\MeshCreator.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\MeshCreator.h"
+				RelativePath=".\core\include\graphics\MeshCreator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\OcclusionQuery.h"
+				RelativePath=".\core\include\graphics\OcclusionQuery.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\PostEffect.cpp"
+				RelativePath=".\core\sources\graphics\PostEffect.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\PostEffect.h"
+				RelativePath=".\core\include\graphics\PostEffect.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\PostEffectComposite.cpp"
+				RelativePath=".\core\sources\graphics\PostEffectComposite.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\PostEffectComposite.h"
+				RelativePath=".\core\include\graphics\PostEffectComposite.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\ProgramComboManager.cpp"
+				RelativePath=".\core\sources\graphics\ProgramComboManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\ProgramComboManager.h"
+				RelativePath=".\core\include\graphics\ProgramComboManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\Renderable.cpp"
+				RelativePath=".\core\sources\graphics\Renderable.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\Renderable.h"
+				RelativePath=".\core\include\graphics\Renderable.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\Renderer.cpp"
+				RelativePath=".\core\sources\graphics\Renderer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\Renderer.h"
+				RelativePath=".\core\include\graphics\Renderer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\RendererDeferred.cpp"
+				RelativePath=".\core\sources\graphics\RendererDeferred.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\RendererDeferred.h"
+				RelativePath=".\core\include\graphics\RendererDeferred.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\RendererSimple.cpp"
+				RelativePath=".\core\sources\graphics\RendererSimple.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\RendererSimple.h"
+				RelativePath=".\core\include\graphics\RendererSimple.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\RendererWireFrame.cpp"
+				RelativePath=".\core\sources\graphics\RendererWireFrame.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\RendererWireFrame.h"
+				RelativePath=".\core\include\graphics\RendererWireFrame.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\RenderFunctions.cpp"
+				RelativePath=".\core\sources\graphics\RenderFunctions.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\RenderFunctions.h"
+				RelativePath=".\core\include\graphics\RenderFunctions.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\RenderList.cpp"
+				RelativePath=".\core\sources\graphics\RenderList.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\RenderList.h"
+				RelativePath=".\core\include\graphics\RenderList.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\Skeleton.cpp"
+				RelativePath=".\core\sources\graphics\Skeleton.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\Skeleton.h"
+				RelativePath=".\core\include\graphics\Skeleton.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\SubMesh.cpp"
+				RelativePath=".\core\sources\graphics\SubMesh.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\SubMesh.h"
+				RelativePath=".\core\include\graphics\SubMesh.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\Texture.h"
+				RelativePath=".\core\include\graphics\Texture.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\graphics\TextureCreator.cpp"
+				RelativePath=".\core\sources\graphics\TextureCreator.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\TextureCreator.h"
+				RelativePath=".\core\include\graphics\TextureCreator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\VertexBuffer.h"
+				RelativePath=".\core\include\graphics\VertexBuffer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\graphics\VideoStream.h"
+				RelativePath=".\core\include\graphics\VideoStream.h"
 				>
 			</File>
 			<Filter
 				Name="MaterialTypes"
 				>
 				<File
-					RelativePath=".\sources\graphics\MaterialType_BasicSolid.cpp"
+					RelativePath=".\core\sources\graphics\MaterialType_BasicSolid.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\graphics\MaterialType_BasicSolid.h"
+					RelativePath=".\core\include\graphics\MaterialType_BasicSolid.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\graphics\MaterialType_BasicTranslucent.cpp"
+					RelativePath=".\core\sources\graphics\MaterialType_BasicTranslucent.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\graphics\MaterialType_BasicTranslucent.h"
+					RelativePath=".\core\include\graphics\MaterialType_BasicTranslucent.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\graphics\MaterialType_Decal.cpp"
+					RelativePath=".\core\sources\graphics\MaterialType_Decal.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\graphics\MaterialType_Decal.h"
+					RelativePath=".\core\include\graphics\MaterialType_Decal.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\graphics\MaterialType_Water.cpp"
+					RelativePath=".\core\sources\graphics\MaterialType_Water.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\graphics\MaterialType_Water.h"
+					RelativePath=".\core\include\graphics\MaterialType_Water.h"
 					>
 				</File>
 			</Filter>
@@ -623,35 +623,35 @@
 				Name="PostEffectTypes"
 				>
 				<File
-					RelativePath=".\sources\graphics\PostEffect_Bloom.cpp"
+					RelativePath=".\core\sources\graphics\PostEffect_Bloom.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\graphics\PostEffect_Bloom.h"
+					RelativePath=".\core\include\graphics\PostEffect_Bloom.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\graphics\PostEffect_ColorConvTex.cpp"
+					RelativePath=".\core\sources\graphics\PostEffect_ColorConvTex.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\graphics\PostEffect_ColorConvTex.h"
+					RelativePath=".\core\include\graphics\PostEffect_ColorConvTex.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\graphics\PostEffect_ImageTrail.cpp"
+					RelativePath=".\core\sources\graphics\PostEffect_ImageTrail.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\graphics\PostEffect_ImageTrail.h"
+					RelativePath=".\core\include\graphics\PostEffect_ImageTrail.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\graphics\PostEffect_RadialBlur.cpp"
+					RelativePath=".\core\sources\graphics\PostEffect_RadialBlur.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\graphics\PostEffect_RadialBlur.h"
+					RelativePath=".\core\include\graphics\PostEffect_RadialBlur.h"
 					>
 				</File>
 			</Filter>
@@ -660,259 +660,259 @@
 			Name="Gui"
 			>
 			<File
-				RelativePath=".\sources\gui\Gui.cpp"
+				RelativePath=".\core\sources\gui\Gui.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\Gui.h"
+				RelativePath=".\core\include\gui\Gui.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\GuiGfxElement.cpp"
+				RelativePath=".\core\sources\gui\GuiGfxElement.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\GuiGfxElement.h"
+				RelativePath=".\core\include\gui\GuiGfxElement.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\GuiMaterial.h"
+				RelativePath=".\core\include\gui\GuiMaterial.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\GuiMaterialBasicTypes.cpp"
+				RelativePath=".\core\sources\gui\GuiMaterialBasicTypes.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\GuiMaterialBasicTypes.h"
+				RelativePath=".\core\include\gui\GuiMaterialBasicTypes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\GuiPopUp.cpp"
+				RelativePath=".\core\sources\gui\GuiPopUp.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\GuiPopUp.h"
+				RelativePath=".\core\include\gui\GuiPopUp.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\GuiPopUpColorPicker.cpp"
+				RelativePath=".\core\sources\gui\GuiPopUpColorPicker.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\GuiPopUpColorPicker.h"
+				RelativePath=".\core\include\gui\GuiPopUpColorPicker.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\GuiPopUpFilePicker.cpp"
+				RelativePath=".\core\sources\gui\GuiPopUpFilePicker.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\GuiPopUpFilePicker.h"
+				RelativePath=".\core\include\gui\GuiPopUpFilePicker.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\GuiPopUpMessageBox.cpp"
+				RelativePath=".\core\sources\gui\GuiPopUpMessageBox.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\GuiPopUpMessageBox.h"
+				RelativePath=".\core\include\gui\GuiPopUpMessageBox.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\GuiPopUpUIKeyboard.cpp"
+				RelativePath=".\core\sources\gui\GuiPopUpUIKeyboard.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\GuiPopUpUIKeyboard.h"
+				RelativePath=".\core\include\gui\GuiPopUpUIKeyboard.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\GuiSet.cpp"
+				RelativePath=".\core\sources\gui\GuiSet.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\GuiSet.h"
+				RelativePath=".\core\include\gui\GuiSet.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\GuiSkin.cpp"
+				RelativePath=".\core\sources\gui\GuiSkin.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\GuiSkin.h"
+				RelativePath=".\core\include\gui\GuiSkin.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\GuiTypes.h"
+				RelativePath=".\core\include\gui\GuiTypes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\Widget.cpp"
+				RelativePath=".\core\sources\gui\Widget.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\Widget.h"
+				RelativePath=".\core\include\gui\Widget.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetBaseClasses.cpp"
+				RelativePath=".\core\sources\gui\WidgetBaseClasses.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetBaseClasses.h"
+				RelativePath=".\core\include\gui\WidgetBaseClasses.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetButton.cpp"
+				RelativePath=".\core\sources\gui\WidgetButton.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetButton.h"
+				RelativePath=".\core\include\gui\WidgetButton.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetCheckBox.cpp"
+				RelativePath=".\core\sources\gui\WidgetCheckBox.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetCheckBox.h"
+				RelativePath=".\core\include\gui\WidgetCheckBox.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetComboBox.cpp"
+				RelativePath=".\core\sources\gui\WidgetComboBox.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetComboBox.h"
+				RelativePath=".\core\include\gui\WidgetComboBox.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetContextMenu.cpp"
+				RelativePath=".\core\sources\gui\WidgetContextMenu.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetContextMenu.h"
+				RelativePath=".\core\include\gui\WidgetContextMenu.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetDummy.cpp"
+				RelativePath=".\core\sources\gui\WidgetDummy.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetDummy.h"
+				RelativePath=".\core\include\gui\WidgetDummy.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetFrame.cpp"
+				RelativePath=".\core\sources\gui\WidgetFrame.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetFrame.h"
+				RelativePath=".\core\include\gui\WidgetFrame.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetGroup.cpp"
+				RelativePath=".\core\sources\gui\WidgetGroup.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetGroup.h"
+				RelativePath=".\core\include\gui\WidgetGroup.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetImage.cpp"
+				RelativePath=".\core\sources\gui\WidgetImage.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetImage.h"
+				RelativePath=".\core\include\gui\WidgetImage.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetLabel.cpp"
+				RelativePath=".\core\sources\gui\WidgetLabel.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetLabel.h"
+				RelativePath=".\core\include\gui\WidgetLabel.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetListBox.cpp"
+				RelativePath=".\core\sources\gui\WidgetListBox.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetListBox.h"
+				RelativePath=".\core\include\gui\WidgetListBox.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetListBoxBase.cpp"
+				RelativePath=".\core\sources\gui\WidgetListBoxBase.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetListBoxBase.h"
+				RelativePath=".\core\include\gui\WidgetListBoxBase.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetMainMenu.cpp"
+				RelativePath=".\core\sources\gui\WidgetMainMenu.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetMainMenu.h"
+				RelativePath=".\core\include\gui\WidgetMainMenu.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetMenu.cpp"
+				RelativePath=".\core\sources\gui\WidgetMenu.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetMenu.h"
+				RelativePath=".\core\include\gui\WidgetMenu.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetMenuItem.cpp"
+				RelativePath=".\core\sources\gui\WidgetMenuItem.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetMenuItem.h"
+				RelativePath=".\core\include\gui\WidgetMenuItem.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetMultiPropertyListBox.cpp"
+				RelativePath=".\core\sources\gui\WidgetMultiPropertyListBox.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetMultiPropertyListBox.h"
+				RelativePath=".\core\include\gui\WidgetMultiPropertyListBox.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetSlider.cpp"
+				RelativePath=".\core\sources\gui\WidgetSlider.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetSlider.h"
+				RelativePath=".\core\include\gui\WidgetSlider.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetTabFrame.cpp"
+				RelativePath=".\core\sources\gui\WidgetTabFrame.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetTabFrame.h"
+				RelativePath=".\core\include\gui\WidgetTabFrame.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetTextBox.cpp"
+				RelativePath=".\core\sources\gui\WidgetTextBox.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetTextBox.h"
+				RelativePath=".\core\include\gui\WidgetTextBox.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\gui\WidgetWindow.cpp"
+				RelativePath=".\core\sources\gui\WidgetWindow.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\gui\WidgetWindow.h"
+				RelativePath=".\core\include\gui\WidgetWindow.h"
 				>
 			</File>
 		</Filter>
@@ -923,11 +923,11 @@
 				Name="Engine"
 				>
 				<File
-					RelativePath=".\sources\impl\SDLEngineSetup.cpp"
+					RelativePath=".\core\sources\impl\SDLEngineSetup.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\SDLEngineSetup.h"
+					RelativePath=".\core\include\impl\SDLEngineSetup.h"
 					>
 				</File>
 			</Filter>
@@ -935,103 +935,103 @@
 				Name="Graphics"
 				>
 				<File
-					RelativePath=".\sources\impl\FrameBufferGL.cpp"
+					RelativePath=".\core\sources\impl\FrameBufferGL.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\FrameBufferGL.h"
+					RelativePath=".\core\include\impl\FrameBufferGL.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\GLSLProgram.cpp"
+					RelativePath=".\core\sources\impl\GLSLProgram.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\GLSLProgram.h"
+					RelativePath=".\core\include\impl\GLSLProgram.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\GLSLShader.cpp"
+					RelativePath=".\core\sources\impl\GLSLShader.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\GLSLShader.h"
+					RelativePath=".\core\include\impl\GLSLShader.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\LowLevelGraphicsIcon.h"
+					RelativePath=".\core\include\impl\LowLevelGraphicsIcon.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\LowLevelGraphicsSDL.cpp"
+					RelativePath=".\core\sources\impl\LowLevelGraphicsSDL.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\LowLevelGraphicsSDL.h"
+					RelativePath=".\core\include\impl\LowLevelGraphicsSDL.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\OcclusionQueryOGL.cpp"
+					RelativePath=".\core\sources\impl\OcclusionQueryOGL.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\OcclusionQueryOGL.h"
+					RelativePath=".\core\include\impl\OcclusionQueryOGL.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\PBuffer.cpp"
+					RelativePath=".\core\sources\impl\PBuffer.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\PBuffer.h"
+					RelativePath=".\core\include\impl\PBuffer.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\SDLFontData.cpp"
+					RelativePath=".\core\sources\impl\SDLFontData.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\SDLFontData.h"
+					RelativePath=".\core\include\impl\SDLFontData.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\SDLTexture.cpp"
+					RelativePath=".\core\sources\impl\SDLTexture.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\SDLTexture.h"
+					RelativePath=".\core\include\impl\SDLTexture.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\VertexBufferOGL_Array.cpp"
+					RelativePath=".\core\sources\impl\VertexBufferOGL_Array.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\VertexBufferOGL_Array.h"
+					RelativePath=".\core\include\impl\VertexBufferOGL_Array.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\VertexBufferOGL_VBO.cpp"
+					RelativePath=".\core\sources\impl\VertexBufferOGL_VBO.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\VertexBufferOGL_VBO.h"
+					RelativePath=".\core\include\impl\VertexBufferOGL_VBO.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\VertexBufferOpenGL.cpp"
+					RelativePath=".\core\sources\impl\VertexBufferOpenGL.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\VertexBufferOpenGL.h"
+					RelativePath=".\core\include\impl\VertexBufferOpenGL.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\VideoStreamTheora.cpp"
+					RelativePath=".\core\sources\impl\VideoStreamTheora.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\VideoStreamTheora.h"
+					RelativePath=".\core\include\impl\VideoStreamTheora.h"
 					>
 				</File>
 			</Filter>
@@ -1039,43 +1039,43 @@
 				Name="Input"
 				>
 				<File
-					RelativePath=".\sources\impl\GamepadSDL.cpp"
+					RelativePath=".\core\sources\impl\GamepadSDL.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\GamepadSDL.h"
+					RelativePath=".\core\include\impl\GamepadSDL.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\GamepadXInput.cpp"
+					RelativePath=".\core\sources\impl\GamepadXInput.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\GamepadXInput.h"
+					RelativePath=".\core\include\impl\GamepadXInput.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\KeyboardSDL.cpp"
+					RelativePath=".\core\sources\impl\KeyboardSDL.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\KeyboardSDL.h"
+					RelativePath=".\core\include\impl\KeyboardSDL.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\LowLevelInputSDL.cpp"
+					RelativePath=".\core\sources\impl\LowLevelInputSDL.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\LowLevelInputSDL.h"
+					RelativePath=".\core\include\impl\LowLevelInputSDL.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\MouseSDL.cpp"
+					RelativePath=".\core\sources\impl\MouseSDL.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\MouseSDL.h"
+					RelativePath=".\core\include\impl\MouseSDL.h"
 					>
 				</File>
 			</Filter>
@@ -1083,103 +1083,103 @@
 				Name="Physics"
 				>
 				<File
-					RelativePath=".\sources\impl\CharacterBodyNewton.cpp"
+					RelativePath=".\core\sources\impl\CharacterBodyNewton.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\CharacterBodyNewton.h"
+					RelativePath=".\core\include\impl\CharacterBodyNewton.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\CollideShapeNewton.cpp"
+					RelativePath=".\core\sources\impl\CollideShapeNewton.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\CollideShapeNewton.h"
+					RelativePath=".\core\include\impl\CollideShapeNewton.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\LowLevelPhysicsNewton.cpp"
+					RelativePath=".\core\sources\impl\LowLevelPhysicsNewton.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\LowLevelPhysicsNewton.h"
+					RelativePath=".\core\include\impl\LowLevelPhysicsNewton.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\PhysicsBodyNewton.cpp"
+					RelativePath=".\core\sources\impl\PhysicsBodyNewton.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\PhysicsBodyNewton.h"
+					RelativePath=".\core\include\impl\PhysicsBodyNewton.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\PhysicsControllerNewton.cpp"
+					RelativePath=".\core\sources\impl\PhysicsControllerNewton.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\PhysicsControllerNewton.h"
+					RelativePath=".\core\include\impl\PhysicsControllerNewton.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\PhysicsJointBallNewton.cpp"
+					RelativePath=".\core\sources\impl\PhysicsJointBallNewton.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\PhysicsJointBallNewton.h"
+					RelativePath=".\core\include\impl\PhysicsJointBallNewton.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\PhysicsJointHingeNewton.cpp"
+					RelativePath=".\core\sources\impl\PhysicsJointHingeNewton.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\PhysicsJointHingeNewton.h"
+					RelativePath=".\core\include\impl\PhysicsJointHingeNewton.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\PhysicsJointNewton.h"
+					RelativePath=".\core\include\impl\PhysicsJointNewton.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\PhysicsJointScrewNewton.cpp"
+					RelativePath=".\core\sources\impl\PhysicsJointScrewNewton.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\PhysicsJointScrewNewton.h"
+					RelativePath=".\core\include\impl\PhysicsJointScrewNewton.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\PhysicsJointSliderNewton.cpp"
+					RelativePath=".\core\sources\impl\PhysicsJointSliderNewton.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\PhysicsJointSliderNewton.h"
+					RelativePath=".\core\include\impl\PhysicsJointSliderNewton.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\PhysicsMaterialNewton.cpp"
+					RelativePath=".\core\sources\impl\PhysicsMaterialNewton.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\PhysicsMaterialNewton.h"
+					RelativePath=".\core\include\impl\PhysicsMaterialNewton.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\PhysicsRopeNewton.cpp"
+					RelativePath=".\core\sources\impl\PhysicsRopeNewton.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\PhysicsRopeNewton.h"
+					RelativePath=".\core\include\impl\PhysicsRopeNewton.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\PhysicsWorldNewton.cpp"
+					RelativePath=".\core\sources\impl\PhysicsWorldNewton.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\PhysicsWorldNewton.h"
+					RelativePath=".\core\include\impl\PhysicsWorldNewton.h"
 					>
 				</File>
 			</Filter>
@@ -1187,230 +1187,230 @@
 				Name="Sound"
 				>
 				<File
-					RelativePath=".\sources\impl\LowLevelSoundOpenAL.cpp"
+					RelativePath=".\core\sources\impl\LowLevelSoundOpenAL.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\LowLevelSoundOpenAL.h"
+					RelativePath=".\core\include\impl\LowLevelSoundOpenAL.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\OpenALSoundChannel.cpp"
+					RelativePath=".\core\sources\impl\OpenALSoundChannel.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\OpenALSoundChannel.h"
+					RelativePath=".\core\include\impl\OpenALSoundChannel.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\OpenALSoundData.cpp"
+					RelativePath=".\core\sources\impl\OpenALSoundData.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\OpenALSoundData.h"
+					RelativePath=".\core\include\impl\OpenALSoundData.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\OpenALSoundEnvironment.cpp"
+					RelativePath=".\core\sources\impl\OpenALSoundEnvironment.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\OpenALSoundEnvironment.h"
+					RelativePath=".\core\include\impl\OpenALSoundEnvironment.h"
 					>
 				</File>
 				<Filter
 					Name="OpenAL"
 					>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_AudioData.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_AudioData.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_AudioData.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_AudioData.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_Buffer.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_Buffer.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Buffer.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Buffer.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_Device.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_Device.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Device.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Device.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_Effect.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_Effect.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Effect.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Effect.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_Effect_Reverb.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_Effect_Reverb.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Effect_Reverb.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Effect_Reverb.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_EffectSlot.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_EffectSlot.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_EffectSlot.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_EffectSlot.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_EFX.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_EFX.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_EFX.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_EFX.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_EFXManager.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_EFXManager.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_EFXManager.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_EFXManager.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_Filter.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_Filter.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Filter.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Filter.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Funcs.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Funcs.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_Helper.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_Helper.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Helper.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Helper.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_Init.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_Init.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Init.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Init.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_Loaders.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_Loaders.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Loaders.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Loaders.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_LoggerObject.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_LoggerObject.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_LoggerObject.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_LoggerObject.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_LowLevelObject.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_LowLevelObject.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_OggHelper.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_OggHelper.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_OggHelper.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_OggHelper.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_OggSample.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_OggSample.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_OggSample.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_OggSample.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_OggStream.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_OggStream.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_OggStream.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_OggStream.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_Playback.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_Playback.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Playback.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Playback.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_Sample.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_Sample.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Sample.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Sample.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_Source.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_Source.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Source.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Source.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_SourceManager.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_SourceManager.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_SourceManager.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_SourceManager.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_Stream.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_Stream.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Stream.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Stream.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_Types.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_Types.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_Types.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_Types.h"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\sources\OpenAL\OAL_WAVSample.cpp"
+						RelativePath=".\dependencies\sources\OpenAL\OAL_WAVSample.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\dependencies\include\OpenAL\OAL_WAVSample.h"
+						RelativePath=".\dependencies\include\OpenAL\OAL_WAVSample.h"
 						>
 					</File>
 				</Filter>
@@ -1419,67 +1419,67 @@
 				Name="System"
 				>
 				<File
-					RelativePath=".\sources\impl\LowLevelSystemSDL.cpp"
+					RelativePath=".\core\sources\impl\LowLevelSystemSDL.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\LowLevelSystemSDL.h"
+					RelativePath=".\core\include\impl\LowLevelSystemSDL.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\MutexWin32.cpp"
+					RelativePath=".\core\sources\impl\MutexWin32.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\MutexWin32.h"
+					RelativePath=".\core\include\impl\MutexWin32.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\PlatformWin32.cpp"
+					RelativePath=".\core\sources\impl\PlatformWin32.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\scripthelper.cpp"
+					RelativePath=".\core\sources\impl\scripthelper.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\scripthelper.h"
+					RelativePath=".\core\include\impl\scripthelper.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\scriptstring.cpp"
+					RelativePath=".\core\sources\impl\scriptstring.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\scriptstring.h"
+					RelativePath=".\core\include\impl\scriptstring.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\scriptstring_utils.cpp"
+					RelativePath=".\core\sources\impl\scriptstring_utils.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\SqScript.cpp"
+					RelativePath=".\core\sources\impl\SqScript.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\SqScript.h"
+					RelativePath=".\core\include\impl\SqScript.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\ThreadWin32.cpp"
+					RelativePath=".\core\sources\impl\ThreadWin32.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\ThreadWin32.h"
+					RelativePath=".\core\include\impl\ThreadWin32.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\TimerSDL.cpp"
+					RelativePath=".\core\sources\impl\TimerSDL.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\TimerSDL.h"
+					RelativePath=".\core\include\impl\TimerSDL.h"
 					>
 				</File>
 			</Filter>
@@ -1487,27 +1487,27 @@
 				Name="TinyXml"
 				>
 				<File
-					RelativePath=".\sources\impl\tinyXml\tinystr.cpp"
+					RelativePath=".\core\sources\impl\tinyXml\tinystr.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\tinyXML\tinystr.h"
+					RelativePath=".\core\include\impl\tinyXML\tinystr.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\tinyXml\tinyxml.cpp"
+					RelativePath=".\core\sources\impl\tinyXml\tinyxml.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\tinyXML\tinyxml.h"
+					RelativePath=".\core\include\impl\tinyXML\tinyxml.h"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\tinyXml\tinyxmlerror.cpp"
+					RelativePath=".\core\sources\impl\tinyXml\tinyxmlerror.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\tinyXml\tinyxmlparser.cpp"
+					RelativePath=".\core\sources\impl\tinyXml\tinyxmlparser.cpp"
 					>
 				</File>
 			</Filter>
@@ -1516,99 +1516,99 @@
 			Name="Input"
 			>
 			<File
-				RelativePath=".\sources\input\Action.cpp"
+				RelativePath=".\core\sources\input\Action.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\input\Action.h"
+				RelativePath=".\core\include\input\Action.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\input\ActionGamepadAxis.cpp"
+				RelativePath=".\core\sources\input\ActionGamepadAxis.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\input\ActionGamepadAxis.h"
+				RelativePath=".\core\include\input\ActionGamepadAxis.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\input\ActionGamepadButton.cpp"
+				RelativePath=".\core\sources\input\ActionGamepadButton.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\input\ActionGamepadButton.h"
+				RelativePath=".\core\include\input\ActionGamepadButton.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\input\ActionGamepadHat.cpp"
+				RelativePath=".\core\sources\input\ActionGamepadHat.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\input\ActionGamepadHat.h"
+				RelativePath=".\core\include\input\ActionGamepadHat.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\input\ActionKeyboard.cpp"
+				RelativePath=".\core\sources\input\ActionKeyboard.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\input\ActionKeyboard.h"
+				RelativePath=".\core\include\input\ActionKeyboard.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\input\ActionMouseButton.cpp"
+				RelativePath=".\core\sources\input\ActionMouseButton.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\input\ActionMouseButton.h"
+				RelativePath=".\core\include\input\ActionMouseButton.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\input\Gamepad.cpp"
+				RelativePath=".\core\sources\input\Gamepad.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\input\Gamepad.h"
+				RelativePath=".\core\include\input\Gamepad.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\input\Input.cpp"
+				RelativePath=".\core\sources\input\Input.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\input\Input.h"
+				RelativePath=".\core\include\input\Input.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\input\InputDevice.cpp"
+				RelativePath=".\core\sources\input\InputDevice.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\input\InputDevice.h"
+				RelativePath=".\core\include\input\InputDevice.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\input\InputTypes.h"
+				RelativePath=".\core\include\input\InputTypes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\input\Keyboard.cpp"
+				RelativePath=".\core\sources\input\Keyboard.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\input\Keyboard.h"
+				RelativePath=".\core\include\input\Keyboard.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\input\LowLevelInput.h"
+				RelativePath=".\core\include\input\LowLevelInput.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\input\Mouse.cpp"
+				RelativePath=".\core\sources\input\Mouse.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\input\Mouse.h"
+				RelativePath=".\core\include\input\Mouse.h"
 				>
 			</File>
 		</Filter>
@@ -1616,83 +1616,83 @@
 			Name="Math"
 			>
 			<File
-				RelativePath=".\sources\math\BoundingVolume.cpp"
+				RelativePath=".\core\sources\math\BoundingVolume.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\math\BoundingVolume.h"
+				RelativePath=".\core\include\math\BoundingVolume.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\math\CRC.cpp"
+				RelativePath=".\core\sources\math\CRC.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\math\CRC.h"
+				RelativePath=".\core\include\math\CRC.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\math\Frustum.cpp"
+				RelativePath=".\core\sources\math\Frustum.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\math\Frustum.h"
+				RelativePath=".\core\include\math\Frustum.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\math\Math.cpp"
+				RelativePath=".\core\sources\math\Math.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\math\Math.h"
+				RelativePath=".\core\include\math\Math.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\math\MathTypes.cpp"
+				RelativePath=".\core\sources\math\MathTypes.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\math\MathTypes.h"
+				RelativePath=".\core\include\math\MathTypes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\math\Matrix.h"
+				RelativePath=".\core\include\math\Matrix.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\math\MeshTypes.cpp"
+				RelativePath=".\core\sources\math\MeshTypes.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\math\MeshTypes.h"
+				RelativePath=".\core\include\math\MeshTypes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\math\PidController.h"
+				RelativePath=".\core\include\math\PidController.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\math\Quaternion.cpp"
+				RelativePath=".\core\sources\math\Quaternion.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\math\Quaternion.h"
+				RelativePath=".\core\include\math\Quaternion.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\math\Spring.cpp"
+				RelativePath=".\core\sources\math\Spring.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\math\Spring.h"
+				RelativePath=".\core\include\math\Spring.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\math\Vector2.h"
+				RelativePath=".\core\include\math\Vector2.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\math\Vector3.h"
+				RelativePath=".\core\include\math\Vector3.h"
 				>
 			</File>
 		</Filter>
@@ -1700,127 +1700,127 @@
 			Name="Physics"
 			>
 			<File
-				RelativePath=".\sources\physics\CharacterBody.cpp"
+				RelativePath=".\core\sources\physics\CharacterBody.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\CharacterBody.h"
+				RelativePath=".\core\include\physics\CharacterBody.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\CollideData.h"
+				RelativePath=".\core\include\physics\CollideData.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\CollideShape.h"
+				RelativePath=".\core\include\physics\CollideShape.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\LowLevelPhysics.h"
+				RelativePath=".\core\include\physics\LowLevelPhysics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\physics\Physics.cpp"
+				RelativePath=".\core\sources\physics\Physics.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\Physics.h"
+				RelativePath=".\core\include\physics\Physics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\physics\PhysicsBody.cpp"
+				RelativePath=".\core\sources\physics\PhysicsBody.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\PhysicsBody.h"
+				RelativePath=".\core\include\physics\PhysicsBody.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\physics\PhysicsController.cpp"
+				RelativePath=".\core\sources\physics\PhysicsController.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\PhysicsController.h"
+				RelativePath=".\core\include\physics\PhysicsController.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\physics\PhysicsJoint.cpp"
+				RelativePath=".\core\sources\physics\PhysicsJoint.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\PhysicsJoint.h"
+				RelativePath=".\core\include\physics\PhysicsJoint.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\physics\PhysicsJointBall.cpp"
+				RelativePath=".\core\sources\physics\PhysicsJointBall.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\PhysicsJointBall.h"
+				RelativePath=".\core\include\physics\PhysicsJointBall.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\physics\PhysicsJointHinge.cpp"
+				RelativePath=".\core\sources\physics\PhysicsJointHinge.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\PhysicsJointHinge.h"
+				RelativePath=".\core\include\physics\PhysicsJointHinge.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\physics\PhysicsJointScrew.cpp"
+				RelativePath=".\core\sources\physics\PhysicsJointScrew.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\PhysicsJointScrew.h"
+				RelativePath=".\core\include\physics\PhysicsJointScrew.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\physics\PhysicsJointSlider.cpp"
+				RelativePath=".\core\sources\physics\PhysicsJointSlider.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\PhysicsJointSlider.h"
+				RelativePath=".\core\include\physics\PhysicsJointSlider.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\PhysicsMaterial.h"
+				RelativePath=".\core\include\physics\PhysicsMaterial.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\physics\PhysicsRope.cpp"
+				RelativePath=".\core\sources\physics\PhysicsRope.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\PhysicsRope.h"
+				RelativePath=".\core\include\physics\PhysicsRope.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\PhysicsTypes.h"
+				RelativePath=".\core\include\physics\PhysicsTypes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\physics\PhysicsWorld.cpp"
+				RelativePath=".\core\sources\physics\PhysicsWorld.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\PhysicsWorld.h"
+				RelativePath=".\core\include\physics\PhysicsWorld.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\physics\SurfaceData.cpp"
+				RelativePath=".\core\sources\physics\SurfaceData.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\SurfaceData.h"
+				RelativePath=".\core\include\physics\SurfaceData.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\physics\VerletParticle.cpp"
+				RelativePath=".\core\sources\physics\VerletParticle.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\physics\VerletParticle.h"
+				RelativePath=".\core\include\physics\VerletParticle.h"
 				>
 			</File>
 		</Filter>
@@ -1828,339 +1828,339 @@
 			Name="Resources"
 			>
 			<File
-				RelativePath=".\sources\resources\AnimationManager.cpp"
+				RelativePath=".\core\sources\resources\AnimationManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\AnimationManager.h"
+				RelativePath=".\core\include\resources\AnimationManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\BinaryBuffer.cpp"
+				RelativePath=".\core\sources\resources\BinaryBuffer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\BinaryBuffer.h"
+				RelativePath=".\core\include\resources\BinaryBuffer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\BitmapLoader.h"
+				RelativePath=".\core\include\resources\BitmapLoader.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\impl\BitmapLoaderDevil.cpp"
+				RelativePath=".\core\sources\impl\BitmapLoaderDevil.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\impl\BitmapLoaderDevil.h"
+				RelativePath=".\core\include\impl\BitmapLoaderDevil.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\impl\BitmapLoaderDevilDDS.cpp"
+				RelativePath=".\core\sources\impl\BitmapLoaderDevilDDS.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\impl\BitmapLoaderDevilDDS.h"
+				RelativePath=".\core\include\impl\BitmapLoaderDevilDDS.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\impl\BitmapLoaderDevilMisc.cpp"
+				RelativePath=".\core\sources\impl\BitmapLoaderDevilMisc.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\impl\BitmapLoaderDevilMisc.h"
+				RelativePath=".\core\include\impl\BitmapLoaderDevilMisc.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\BitmapLoaderHandler.cpp"
+				RelativePath=".\core\sources\resources\BitmapLoaderHandler.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\BitmapLoaderHandler.h"
+				RelativePath=".\core\include\resources\BitmapLoaderHandler.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\ConfigFile.cpp"
+				RelativePath=".\core\sources\resources\ConfigFile.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\ConfigFile.h"
+				RelativePath=".\core\include\resources\ConfigFile.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\EngineFileLoading.cpp"
+				RelativePath=".\core\sources\resources\EngineFileLoading.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\EngineFileLoading.h"
+				RelativePath=".\core\include\resources\EngineFileLoading.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\EntFileManager.cpp"
+				RelativePath=".\core\sources\resources\EntFileManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\EntFileManager.h"
+				RelativePath=".\core\include\resources\EntFileManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\EntityLoader_Object.cpp"
+				RelativePath=".\core\sources\resources\EntityLoader_Object.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\EntityLoader_Object.h"
+				RelativePath=".\core\include\resources\EntityLoader_Object.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\FileSearcher.cpp"
+				RelativePath=".\core\sources\resources\FileSearcher.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\FileSearcher.h"
+				RelativePath=".\core\include\resources\FileSearcher.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\FontManager.cpp"
+				RelativePath=".\core\sources\resources\FontManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\FontManager.h"
+				RelativePath=".\core\include\resources\FontManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\GpuShaderManager.cpp"
+				RelativePath=".\core\sources\resources\GpuShaderManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\GpuShaderManager.h"
+				RelativePath=".\core\include\resources\GpuShaderManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\ImageManager.cpp"
+				RelativePath=".\core\sources\resources\ImageManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\ImageManager.h"
+				RelativePath=".\core\include\resources\ImageManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\LanguageFile.cpp"
+				RelativePath=".\core\sources\resources\LanguageFile.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\LanguageFile.h"
+				RelativePath=".\core\include\resources\LanguageFile.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\LowLevelResources.h"
+				RelativePath=".\core\include\resources\LowLevelResources.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\impl\LowLevelResourcesSDL.cpp"
+				RelativePath=".\core\sources\impl\LowLevelResourcesSDL.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\impl\LowLevelResourcesSDL.h"
+				RelativePath=".\core\include\impl\LowLevelResourcesSDL.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\MaterialManager.cpp"
+				RelativePath=".\core\sources\resources\MaterialManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\MaterialManager.h"
+				RelativePath=".\core\include\resources\MaterialManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\MeshLoader.h"
+				RelativePath=".\core\include\resources\MeshLoader.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\impl\MeshLoaderCollada.cpp"
+				RelativePath=".\core\sources\impl\MeshLoaderCollada.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\impl\MeshLoaderCollada.h"
+				RelativePath=".\core\include\impl\MeshLoaderCollada.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\impl\MeshLoaderColladaHelpers.cpp"
+				RelativePath=".\core\sources\impl\MeshLoaderColladaHelpers.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\impl\MeshLoaderColladaLoader.cpp"
+				RelativePath=".\core\sources\impl\MeshLoaderColladaLoader.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\impl\MeshLoaderFBX.cpp"
+				RelativePath=".\core\sources\impl\MeshLoaderFBX.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\impl\MeshLoaderFBX.h"
+				RelativePath=".\core\include\impl\MeshLoaderFBX.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\MeshLoaderHandler.cpp"
+				RelativePath=".\core\sources\resources\MeshLoaderHandler.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\MeshLoaderHandler.h"
+				RelativePath=".\core\include\resources\MeshLoaderHandler.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\impl\MeshLoaderMSH.cpp"
+				RelativePath=".\core\sources\impl\MeshLoaderMSH.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\impl\MeshLoaderMSH.h"
+				RelativePath=".\core\include\impl\MeshLoaderMSH.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\MeshManager.cpp"
+				RelativePath=".\core\sources\resources\MeshManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\MeshManager.h"
+				RelativePath=".\core\include\resources\MeshManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\ParticleManager.cpp"
+				RelativePath=".\core\sources\resources\ParticleManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\ParticleManager.h"
+				RelativePath=".\core\include\resources\ParticleManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\ResourceBase.cpp"
+				RelativePath=".\core\sources\resources\ResourceBase.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\ResourceBase.h"
+				RelativePath=".\core\include\resources\ResourceBase.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\ResourceLoader.cpp"
+				RelativePath=".\core\sources\resources\ResourceLoader.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\ResourceLoader.h"
+				RelativePath=".\core\include\resources\ResourceLoader.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\ResourceLoaderHandler.cpp"
+				RelativePath=".\core\sources\resources\ResourceLoaderHandler.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\ResourceLoaderHandler.h"
+				RelativePath=".\core\include\resources\ResourceLoaderHandler.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\ResourceManager.cpp"
+				RelativePath=".\core\sources\resources\ResourceManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\ResourceManager.h"
+				RelativePath=".\core\include\resources\ResourceManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\Resources.cpp"
+				RelativePath=".\core\sources\resources\Resources.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\Resources.h"
+				RelativePath=".\core\include\resources\Resources.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\ResourcesTypes.h"
+				RelativePath=".\core\include\resources\ResourcesTypes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\ScriptManager.cpp"
+				RelativePath=".\core\sources\resources\ScriptManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\ScriptManager.h"
+				RelativePath=".\core\include\resources\ScriptManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\SoundEntityManager.cpp"
+				RelativePath=".\core\sources\resources\SoundEntityManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\SoundEntityManager.h"
+				RelativePath=".\core\include\resources\SoundEntityManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\SoundManager.cpp"
+				RelativePath=".\core\sources\resources\SoundManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\SoundManager.h"
+				RelativePath=".\core\include\resources\SoundManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\TextureManager.cpp"
+				RelativePath=".\core\sources\resources\TextureManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\TextureManager.h"
+				RelativePath=".\core\include\resources\TextureManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\VideoLoader.h"
+				RelativePath=".\core\include\resources\VideoLoader.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\VideoLoaderHandler.cpp"
+				RelativePath=".\core\sources\resources\VideoLoaderHandler.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\VideoLoaderHandler.h"
+				RelativePath=".\core\include\resources\VideoLoaderHandler.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\VideoManager.cpp"
+				RelativePath=".\core\sources\resources\VideoManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\VideoManager.h"
+				RelativePath=".\core\include\resources\VideoManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\WorldLoader.h"
+				RelativePath=".\core\include\resources\WorldLoader.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\WorldLoaderHandler.cpp"
+				RelativePath=".\core\sources\resources\WorldLoaderHandler.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\WorldLoaderHandler.h"
+				RelativePath=".\core\include\resources\WorldLoaderHandler.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\WorldLoaderHplMap.cpp"
+				RelativePath=".\core\sources\resources\WorldLoaderHplMap.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\WorldLoaderHplMap.h"
+				RelativePath=".\core\include\resources\WorldLoaderHplMap.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\resources\XmlDocument.cpp"
+				RelativePath=".\core\sources\resources\XmlDocument.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\resources\XmlDocument.h"
+				RelativePath=".\core\include\resources\XmlDocument.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\impl\XmlDocumentTiny.cpp"
+				RelativePath=".\core\sources\impl\XmlDocumentTiny.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\impl\XmlDocumentTiny.h"
+				RelativePath=".\core\include\impl\XmlDocumentTiny.h"
 				>
 			</File>
 		</Filter>
@@ -2168,231 +2168,231 @@
 			Name="Scene"
 			>
 			<File
-				RelativePath=".\sources\scene\AnimationState.cpp"
+				RelativePath=".\core\sources\scene\AnimationState.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\AnimationState.h"
+				RelativePath=".\core\include\scene\AnimationState.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\Beam.cpp"
+				RelativePath=".\core\sources\scene\Beam.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\Beam.h"
+				RelativePath=".\core\include\scene\Beam.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\BillBoard.cpp"
+				RelativePath=".\core\sources\scene\BillBoard.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\BillBoard.h"
+				RelativePath=".\core\include\scene\BillBoard.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\Camera.cpp"
+				RelativePath=".\core\sources\scene\Camera.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\Camera.h"
+				RelativePath=".\core\include\scene\Camera.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\DummyRenderable.cpp"
+				RelativePath=".\core\sources\scene\DummyRenderable.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\DummyRenderable.h"
+				RelativePath=".\core\include\scene\DummyRenderable.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\Entity3D.cpp"
+				RelativePath=".\core\sources\scene\Entity3D.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\Entity3D.h"
+				RelativePath=".\core\include\scene\Entity3D.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\FogArea.cpp"
+				RelativePath=".\core\sources\scene\FogArea.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\FogArea.h"
+				RelativePath=".\core\include\scene\FogArea.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\GuiSetEntity.cpp"
+				RelativePath=".\core\sources\scene\GuiSetEntity.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\GuiSetEntity.h"
+				RelativePath=".\core\include\scene\GuiSetEntity.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\Light.cpp"
+				RelativePath=".\core\sources\scene\Light.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\Light.h"
+				RelativePath=".\core\include\scene\Light.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\LightBox.cpp"
+				RelativePath=".\core\sources\scene\LightBox.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\LightBox.h"
+				RelativePath=".\core\include\scene\LightBox.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\LightPoint.cpp"
+				RelativePath=".\core\sources\scene\LightPoint.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\LightPoint.h"
+				RelativePath=".\core\include\scene\LightPoint.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\LightSpot.cpp"
+				RelativePath=".\core\sources\scene\LightSpot.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\LightSpot.h"
+				RelativePath=".\core\include\scene\LightSpot.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\MeshEntity.cpp"
+				RelativePath=".\core\sources\scene\MeshEntity.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\MeshEntity.h"
+				RelativePath=".\core\include\scene\MeshEntity.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\Node3D.cpp"
+				RelativePath=".\core\sources\scene\Node3D.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\Node3D.h"
+				RelativePath=".\core\include\scene\Node3D.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\NodeState.cpp"
+				RelativePath=".\core\sources\scene\NodeState.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\NodeState.h"
+				RelativePath=".\core\include\scene\NodeState.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\ParticleEmitter.cpp"
+				RelativePath=".\core\sources\scene\ParticleEmitter.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\ParticleEmitter.h"
+				RelativePath=".\core\include\scene\ParticleEmitter.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\ParticleEmitter_UserData.cpp"
+				RelativePath=".\core\sources\scene\ParticleEmitter_UserData.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\ParticleEmitter_UserData.h"
+				RelativePath=".\core\include\scene\ParticleEmitter_UserData.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\ParticleSystem.cpp"
+				RelativePath=".\core\sources\scene\ParticleSystem.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\ParticleSystem.h"
+				RelativePath=".\core\include\scene\ParticleSystem.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\RenderableContainer.cpp"
+				RelativePath=".\core\sources\scene\RenderableContainer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\RenderableContainer.h"
+				RelativePath=".\core\include\scene\RenderableContainer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\RenderableContainer_BoxTree.cpp"
+				RelativePath=".\core\sources\scene\RenderableContainer_BoxTree.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\RenderableContainer_BoxTree.h"
+				RelativePath=".\core\include\scene\RenderableContainer_BoxTree.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\RenderableContainer_DynBoxTree.cpp"
+				RelativePath=".\core\sources\scene\RenderableContainer_DynBoxTree.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\RenderableContainer_DynBoxTree.h"
+				RelativePath=".\core\include\scene\RenderableContainer_DynBoxTree.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\RenderableContainer_List.cpp"
+				RelativePath=".\core\sources\scene\RenderableContainer_List.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\RenderableContainer_List.h"
+				RelativePath=".\core\include\scene\RenderableContainer_List.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\RopeEntity.cpp"
+				RelativePath=".\core\sources\scene\RopeEntity.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\RopeEntity.h"
+				RelativePath=".\core\include\scene\RopeEntity.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\Scene.cpp"
+				RelativePath=".\core\sources\scene\Scene.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\Scene.h"
+				RelativePath=".\core\include\scene\Scene.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\SceneTypes.h"
+				RelativePath=".\core\include\scene\SceneTypes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\SoundEntity.cpp"
+				RelativePath=".\core\sources\scene\SoundEntity.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\SoundEntity.h"
+				RelativePath=".\core\include\scene\SoundEntity.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\SubMeshEntity.cpp"
+				RelativePath=".\core\sources\scene\SubMeshEntity.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\SubMeshEntity.h"
+				RelativePath=".\core\include\scene\SubMeshEntity.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\Viewport.cpp"
+				RelativePath=".\core\sources\scene\Viewport.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\Viewport.h"
+				RelativePath=".\core\include\scene\Viewport.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\scene\World.cpp"
+				RelativePath=".\core\sources\scene\World.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\scene\World.h"
+				RelativePath=".\core\include\scene\World.h"
 				>
 			</File>
 		</Filter>
@@ -2400,63 +2400,63 @@
 			Name="Sound"
 			>
 			<File
-				RelativePath=".\sources\sound\LowLevelSound.cpp"
+				RelativePath=".\core\sources\sound\LowLevelSound.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\sound\LowLevelSound.h"
+				RelativePath=".\core\include\sound\LowLevelSound.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\sound\MusicHandler.cpp"
+				RelativePath=".\core\sources\sound\MusicHandler.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\sound\MusicHandler.h"
+				RelativePath=".\core\include\sound\MusicHandler.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\sound\Sound.cpp"
+				RelativePath=".\core\sources\sound\Sound.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\sound\Sound.h"
+				RelativePath=".\core\include\sound\Sound.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\sound\SoundChannel.cpp"
+				RelativePath=".\core\sources\sound\SoundChannel.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\sound\SoundChannel.h"
+				RelativePath=".\core\include\sound\SoundChannel.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\sound\SoundData.h"
+				RelativePath=".\core\include\sound\SoundData.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\sound\SoundEntityData.cpp"
+				RelativePath=".\core\sources\sound\SoundEntityData.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\sound\SoundEntityData.h"
+				RelativePath=".\core\include\sound\SoundEntityData.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\sound\SoundEnvironment.h"
+				RelativePath=".\core\include\sound\SoundEnvironment.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\sound\SoundHandler.cpp"
+				RelativePath=".\core\sources\sound\SoundHandler.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\sound\SoundHandler.h"
+				RelativePath=".\core\include\sound\SoundHandler.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\sound\SoundTypes.h"
+				RelativePath=".\core\include\sound\SoundTypes.h"
 				>
 			</File>
 		</Filter>
@@ -2464,116 +2464,116 @@
 			Name="System"
 			>
 			<File
-				RelativePath=".\include\system\BinTree.h"
+				RelativePath=".\core\include\system\BinTree.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\system\Container.cpp"
+				RelativePath=".\core\sources\system\Container.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\Container.h"
+				RelativePath=".\core\include\system\Container.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\system\LogicTimer.cpp"
+				RelativePath=".\core\sources\system\LogicTimer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\LogicTimer.h"
+				RelativePath=".\core\include\system\LogicTimer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\LowLevelSystem.h"
+				RelativePath=".\core\include\system\LowLevelSystem.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\system\MemoryManager.cpp"
+				RelativePath=".\core\sources\system\MemoryManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\MemoryManager.h"
+				RelativePath=".\core\include\system\MemoryManager.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\system\Mutex.cpp"
+				RelativePath=".\core\sources\system\Mutex.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\Mutex.h"
+				RelativePath=".\core\include\system\Mutex.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\system\Platform.cpp"
+				RelativePath=".\core\sources\system\Platform.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\Platform.h"
+				RelativePath=".\core\include\system\Platform.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\system\PreprocessParser.cpp"
+				RelativePath=".\core\sources\system\PreprocessParser.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\PreprocessParser.h"
+				RelativePath=".\core\include\system\PreprocessParser.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\Script.h"
+				RelativePath=".\core\include\system\Script.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\system\SerializeClass.cpp"
+				RelativePath=".\core\sources\system\SerializeClass.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\SerializeClass.h"
+				RelativePath=".\core\include\system\SerializeClass.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\system\SHA1.cpp"
+				RelativePath=".\core\sources\system\SHA1.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\SHA1.h"
+				RelativePath=".\core\include\system\SHA1.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\system\String.cpp"
+				RelativePath=".\core\sources\system\String.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\String.h"
+				RelativePath=".\core\include\system\String.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\system\System.cpp"
+				RelativePath=".\core\sources\system\System.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\System.h"
+				RelativePath=".\core\include\system\System.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\SystemTypes.h"
+				RelativePath=".\core\include\system\SystemTypes.h"
 				>
 			</File>
 			<File
-				RelativePath=".\sources\system\Thread.cpp"
+				RelativePath=".\core\sources\system\Thread.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\Thread.h"
+				RelativePath=".\core\include\system\Thread.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\system\Timer.h"
+				RelativePath=".\core\include\system\Timer.h"
 				>
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\include\hpl.h"
+			RelativePath=".\core\include\hpl.h"
 			>
 		</File>
 		<File
