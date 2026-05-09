@@ -26,7 +26,7 @@ tWString gsNullStringW = _W("");
 
 //-------------------------------------------------------------------------
 
-#include "../../LuxBasePersonal.h"
+#include "LuxBasePersonal.h"
 
 //-------------------------------------------------------------------------
 
@@ -267,7 +267,7 @@ bool cDirectoryHandler::IsSameDir(const tWString& asDir1, const tWString& asDir2
 	tWString sDir1 = cString::ReplaceCharToW(asDir1, _W("\\"), _W("/"));
 	tWString sDir2 = cString::ReplaceCharToW(asDir2, _W("\\"), _W("/"));
 
-#ifdef WIN32
+#ifdef _WIN32
 	sDir1 = cString::ToLowerCaseW(sDir1);
 	sDir2 = cString::ToLowerCaseW(sDir2);
 #endif

@@ -749,7 +749,6 @@ cEngine* iEditorBase::Init(cEngine* apEngine, const tString asName, const tStrin
 	//Set up engine
 	
 	mpEngine->SetLimitFPS(false);
-	mpEngine->SetWaitIfAppOutOfFocus(true);
 	mpEngine->GetGraphics()->GetLowLevel()->ShowCursor(true);  // Enable system cursor
 
 	mpViewport = mpEngine->GetScene()->CreateViewport(NULL,NULL);

@@ -21,13 +21,12 @@
 using namespace hpl;
 
 #include "LevelEditor.h"
-#include "Versioning.h"
 
 #ifdef WITH_BINRELOC
 #include "binreloc.h"
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
@@ -39,17 +38,11 @@ using namespace hpl;
 
 int hplMain(const tString& asCommandLine)
 {
-	//////////////////////////
-	// Init BlackBox
-	#ifdef WIN32
-		HINSTANCE hBlackBoxLib = LoadLibrary( "BlackBox.dll" );
-	#endif
-
 	//cMemoryManager::SetLogCreation(true);
 
 	cLevelEditor* pEditor = hplNew(cLevelEditor, ());
 
-	cEngine* pEngine = pEditor->Init(NULL, "LevelEditor", FormatBuildId(__DATE__, __TIME__), false);
+	cEngine* pEngine = pEditor->Init(NULL, "LevelEditor", NULL, false);
 
 	pEngine->Run();
 
@@ -59,7 +52,7 @@ int hplMain(const tString& asCommandLine)
 
 	//////////////////////////
 	// Exit BlackBox
-	#ifdef WIN32
+	#ifdef _WIN32
 			if(hBlackBoxLib) FreeLibrary(hBlackBoxLib);
 	#endif
 
