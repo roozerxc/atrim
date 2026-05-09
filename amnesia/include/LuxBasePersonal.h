@@ -1,12 +1,21 @@
+/*
+ *  LusBasePersonal.h
+ *  Lux
+ *
+ *  Created by Edward Rudd on 8/27/10.
+ *  Copyright 2010 Frictional Games All rights reserved.
+ *
+ */
+
+/////////////////////////
+// Multi platform personal directory specifics.
 #if defined(_WIN32)
 #define PERSONAL_RELATIVEROOT _W("")
 #define PERSONAL_RELATIVEPIECES
 #define PERSONAL_RELATIVEPIECES_COUNT 0
 #endif
-
 #define PERSONAL_RELATIVEGAME_PARENT _W("settings/")
 #define PERSONAL_RESOURCES _W("local_resources/")
-
 namespace hpl
 {
 inline void SetupBaseDirs(tWStringVec& vDirs, const tWString& asRelativeParent = _W(""), const tWString& asMainFolder = _W(""),
