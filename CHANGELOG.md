@@ -1,8 +1,9 @@
 # Changelog
-### v1.4.6-win32-release (currently in private testing)
+### v1.4.6-win32-release (currently in public testing)
 - [`067186b`](https://github.com/roozerxc/atrim/commit/067186ba7c6c50bfe807f7d07bd356d904b3ccca) Added customizable top menu font color settings
 - [`bc98941`](https://github.com/roozerxc/atrim/commit/bc989418e2455b48983440c0dfd17386dbfc6794) Added map cache version number detection
 - [`0d132a5`](https://github.com/roozerxc/atrim/commit/0d132a505bff363d721a56bc014e57196b45b404) Added "Reset List" button for Custom Story menu
+- [`b1de39b`](https://github.com/roozerxc/atrim/commit/b1de39b0c8dda4a1e647669a0ebf09af09e26d1e) Added string localization for hardcoded texts (Finnish and German translation by [@phnxs](https://github.com/phnxs) and ANDREWJOHN5)
 - [`ef6c70e`](https://github.com/roozerxc/atrim/commit/ef6c70e534c2eb12e7cc8371bae3f74a15590c2d) Decoupled timers and scripts to use their own functions instead of using the same "Run" function
 - [`c2d7155`](https://github.com/roozerxc/atrim/commit/c2d7155de5f6522622a7174a201c45a221433d45) Fixed buggy enemy collision behavior
 - [`b496952`](https://github.com/roozerxc/atrim/commit/b496952608936ed83cde7a959521c7ec5c01ffff) Fixed custom story pictures not being wiped when another custom story was selected
