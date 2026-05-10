@@ -263,9 +263,11 @@ public:
     tString msMaterialConfigPath;
     tString msDefaultBaseLanguage;
     tString msDefaultGameLanguage;
+    tString msDefaultPatchLanguage;
 
     tString msBaseLanguageFolder;
     tString msGameLanguageFolder;
+	tString msPatchLanguageFolder;
 
     tString msCustomStoryPath;
 

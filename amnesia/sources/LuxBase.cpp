@@ -678,6 +678,7 @@ bool cLuxBase::InitApp()
 
     msDefaultBaseLanguage = pInitCfg->GetString("ConfigFiles", "DefaultBaseLanguage", "");
     msDefaultGameLanguage = pInitCfg->GetString("ConfigFiles", "DefaultGameLanguage", "");
+    msDefaultPatchLanguage = pInitCfg->GetString("ConfigFiles", "DefaultPatchLanguage", "");
 
     //Directories
     msBaseLanguageFolder = pInitCfg->GetString("Directories","BaseLanguageFolder","");
@@ -1290,7 +1291,6 @@ void cLuxBase::InitOver()
 {
     //Set proper caption when loading is done.
     gpBase->mpEngine->GetGraphics()->GetLowLevel()->SetWindowCaption(msGameName);
-
 }
 
 //-----------------------------------------------------------------------
@@ -1413,6 +1413,7 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
 
     tString sGameFileName = cString::SetFileExt(asName,"lang");
     tString sBaseFileName = "base_"+sGameFileName;
+    tString sPatchFileName = "patch_"+sGameFileName;
 
     ////////////////////////////////////////////////////
     //Clear the resources so we can load other fonts
@@ -1445,6 +1446,9 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
     pResources->AddLanguageFile(msGameLanguageFolder + sGameFileName, true);
     pResources->AddLanguageFile(msBaseLanguageFolder + sBaseFileName, true);
 
+	// Patched lang for some hardcoded strings in source tree
+    pResources->AddLanguageFile(msBaseLanguageFolder + sPatchFileName, true);
+
     ////////////////////////////////////////////
     //If not default language, add default to so only missing entries are filled in
     if(mpCustomStory && sGameFileName != mpCustomStory->msDefaultExtraLanguage)
@@ -1457,6 +1461,9 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
 
     if(sBaseFileName != msDefaultBaseLanguage)
         pResources->AddLanguageFile(msBaseLanguageFolder + msDefaultBaseLanguage, false);
+
+    if(sPatchFileName != msDefaultPatchLanguage)
+		pResources->AddLanguageFile(msBaseLanguageFolder + "patch_" + sGameFileName, true);
 
     // Refresh all modules with new translation
     //RunModuleMessage(eLuxUpdateableMessage_LoadFonts, NULL);

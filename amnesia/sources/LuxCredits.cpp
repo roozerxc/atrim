@@ -329,9 +329,9 @@ void cLuxCredits::OnDraw(float afFrameTime)
         if(mlEndNum >=0 && mlEndNum<=2 && gpBase->mbPTestActivated==false)
         {
             tWString sCode = _W("");
-            if(mlEndNum==0)    sCode = _W("tyr299");
-            if(mlEndNum==1)    sCode = _W("odn314");
-            if(mlEndNum==2)    sCode = _W("lke271");
+            if(mlEndNum==0)    sCode = kTranslate("SecretCodes", "CodeA");
+            if(mlEndNum==1)    sCode = kTranslate("SecretCodes", "CodeB");
+            if(mlEndNum==2)    sCode = kTranslate("SecretCodes", "CodeC");
 
             mpGuiSet->DrawFont(sCode, mpFontNormal, cVector3f(400,560,10),15,cColor(0.65f,1),eFontAlign_Center);
         }

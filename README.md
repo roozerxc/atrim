@@ -30,6 +30,7 @@ The dependency libraries are precompiled, so you don't have to recompile them as
 1. `git clone` or download the repository from the **Code** button.
 2. Open the `atrim.sln` solution file.
 3. Press F7 to build the solution. This will compile the `HPL2` project first and then the `amnesia` project.
+4. Copy the files from the `patches` directory in the repository into your *Amnesia: The Dark Descent* installation folder.
 
 Compiled binaries are found in the `compiled` folder of the solution's root. In order to play the game with these binaries, you need to copy `amnesia-Win32-Release.exe` and paste it into your *Amnesia: The Dark Descent* installation folder. 
 

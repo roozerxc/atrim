@@ -552,7 +552,7 @@ void cLuxDebugHandler::OnDraw(float afFrameTime)
                                              pChannel->GetPriority(),
                                              pChannel->GetElapsedTime(),
                                              pChannel->GetTotalTime(),
-                                             pChannel->IsBufferUnderrun()? _W("*BUFFER UNDERRUN!!*") : _W("")
+                                             pChannel->IsBufferUnderrun()? _W("*BUFFER UNDERRUN!*") : _W("")
                                             );
             fY+=15.0f;
         }
@@ -590,7 +590,7 @@ void cLuxDebugHandler::OnDraw(float afFrameTime)
                                              _W("%ls%ls%ls(%.2f)(%d) (%.2f/%.2f)"),
                                              cString::To16Char(vSoundNames[i]).c_str(),
                                              pChannel->GetData()->IsStream()? _W("*st*") : _W(""),
-                                             pChannel->IsBufferUnderrun()? _W("BUFFER UNDERRUN!!") : _W(""),
+                                             pChannel->IsBufferUnderrun()? _W("BUFFER UNDERRUN!") : _W(""),
                                              pChannel->GetVolume(),
                                              pChannel->GetPriority(),
                                              pChannel->GetElapsedTime(),
@@ -972,10 +972,10 @@ void cLuxDebugHandler::CreateGuiWindow()
 
     ///////////////////////////
     //Window
-    cVector2f vSize = cVector2f(250, 780);
+    cVector2f vSize = cVector2f(320, 780);
     vGroupSize.x = vSize.x - 20;
     cVector3f vPos = cVector3f(mpGuiSet->GetVirtualSize().x - vSize.x - 10, 10, 0);
-    mpDebugWindow = mpGuiSet->CreateWidgetWindow(0,vPos,vSize,_W("Debug Toolbar") );
+    mpDebugWindow = mpGuiSet->CreateWidgetWindow(0,vPos,vSize,kTranslate("Debug", "Debug Toolbar") );
 
     vSize = cVector2f(vSize.x-30, 18);
     vPos = cVector3f(10, 30, 0.1f);
@@ -986,85 +986,85 @@ void cLuxDebugHandler::CreateGuiWindow()
     {
         //Group
         vGroupPos = cVector3f(5,10,0.1f);
-        pGroup = mpGuiSet->CreateWidgetGroup(vPos,100,_W("Debug texts"),mpDebugWindow);
+        pGroup = mpGuiSet->CreateWidgetGroup(vPos,100,kTranslate("Debug", "Debug texts"),mpDebugWindow);
 
         //Show FPS
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,_W("Show FPS"),pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,kTranslate("Debug", "Show FPS"),pGroup);
         pCheckBox->SetChecked(mbShowFPS);
         pCheckBox->SetUserValue(0);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
 
         //Show player info
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,_W("Show player info"),pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,kTranslate("Debug", "Show player info"),pGroup);
         pCheckBox->SetChecked(mbShowPlayerInfo);
         pCheckBox->SetUserValue(1);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
 
         //Show entity info
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,_W("Show entity info"),pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,kTranslate("Debug", "Show entity info"),pGroup);
         pCheckBox->SetChecked(mbShowEntityInfo);
         pCheckBox->SetUserValue(2);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
 
         //Show sounds playing
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,_W("Show sounds playing"),pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,kTranslate("Debug", "Show sounds playing"),pGroup);
         pCheckBox->SetChecked(mbShowSoundPlaying);
         pCheckBox->SetUserValue(3);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
 
         //Show debug messages
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,_W("Show debug messages"),pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,kTranslate("Debug", "Show debug messages"),pGroup);
         pCheckBox->SetChecked(mbShowDebugMessages);
         pCheckBox->SetUserValue(4);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
 
         //Show error messages
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,_W("Show errors and warnings"),pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,kTranslate("Debug", "Show errors and warnings"),pGroup);
         pCheckBox->SetChecked(mbShowErrorMessages);
         pCheckBox->SetUserValue(12);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
 
         //Inspection mode
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,_W("Inspection mode"),pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,kTranslate("Debug", "Inspection mode"),pGroup);
         pCheckBox->SetChecked(mbInspectionMode);
         pCheckBox->SetUserValue(5);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
 
         //Occlusion culling
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,_W("Occlusion Culling"),pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos,vSize,kTranslate("Debug", "Occlusion Culling"),pGroup);
         pCheckBox->SetChecked(gpBase->mpMapHandler->GetViewport()->GetRenderSettings()->mbUseOcclusionCulling);
         pCheckBox->SetUserValue(6);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
 
         //Physics debug drawing
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize, _W("Draw physics debug"), pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize,kTranslate("Debug", "Draw physics debug"), pGroup);
         pCheckBox->SetChecked(mbDrawPhysics);
         pCheckBox->SetUserValue(11);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
 
         //Resource logging
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize, _W("Resource Logging"), pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize,kTranslate("Debug", "Resource Logging"), pGroup);
         pCheckBox->SetChecked(iResourceBase::GetLogCreateAndDelete(), false);
         pCheckBox->SetUserValue(7);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
 
         //Print Container debug info
-        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,_W("Print Container Debug Info"),pGroup);
+        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,kTranslate("Debug", "Print Container Debug Info"),pGroup);
         pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressPrinfContDebugInfo));
         vGroupPos.y += 22;
 
         //Rebuild dyn contianer
-        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,_W("Rebuild Dyn Container"),pGroup);
+        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,kTranslate("Debug", "Rebuild Dyn Container"),pGroup);
         pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressRebuildDynCont));
         vGroupPos.y += 22;
 
@@ -1080,49 +1080,49 @@ void cLuxDebugHandler::CreateGuiWindow()
     {
         //Group
         vGroupPos = cVector3f(5,10,0.1f);
-        pGroup = mpGuiSet->CreateWidgetGroup(vPos,100,_W("Map"),mpDebugWindow);
+        pGroup = mpGuiSet->CreateWidgetGroup(vPos,100,kTranslate("Debug", "Map"),mpDebugWindow);
 
-        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,_W("Load Map"),pGroup);
+        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,kTranslate("Debug", "Load Map"),pGroup);
         pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressLoadWorld));
         vGroupPos.y += 22;
 
-        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,_W("Recompile Script and Lang"),pGroup);
+        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,kTranslate("Debug", "Recompile Script and Lang"),pGroup);
         pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressRecompileScript));
         vGroupPos.y += 22;
 
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize, _W("Reload from current pos"), pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize,kTranslate("Debug", "Reload from current pos"), pGroup);
         pCheckBox->SetChecked(mbReloadFromCurrentPosition, false);
         pCheckBox->SetUserValue(8);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
 
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize, _W("Fast Physics Load"), pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize,kTranslate("Debug", "Fast Physics Load"), pGroup);
         pCheckBox->SetChecked(gpBase->mpConfigHandler->mbFastPhysicsLoad, false);
         pCheckBox->SetUserValue(9);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
 
-        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,_W("Reload Map"),pGroup);
+        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,kTranslate("Debug", "Reload Map"),pGroup);
         pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressLevelReload));
         vGroupPos.y += 22;
 
-        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,_W("Quick Map Reload (F2)"),pGroup);
+        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,kTranslate("Debug", "Quick Map Reload (F2)"),pGroup);
         pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressQuickLevelReload));
         vGroupPos.y += 22;
 
-        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,_W("Test Change Map Save"),pGroup);
+        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,kTranslate("Debug", "Test Change Map Save"),pGroup);
         pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressTestChangeMapSave));
         vGroupPos.y += 22;
 
-        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,_W("Teleport to start pos"),pGroup);
+        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,kTranslate("Debug", "Teleport to start pos"),pGroup);
         pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressTelportPlayer));
         vGroupPos.y += 22;
 
-        mpCBPlayerStarts = mpGuiSet->CreateWidgetComboBox(vGroupPos,vSize,_W("None"),pGroup);
+        mpCBPlayerStarts = mpGuiSet->CreateWidgetComboBox(vGroupPos,vSize,kTranslate("Debug", "None"),pGroup);
         mpCBPlayerStarts->SetSelectedItem(-1);
         vGroupPos.y += 22;
 
-        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,_W("Map Batch"),pGroup);
+        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,kTranslate("Debug", "Map Batch"),pGroup);
         pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressBatchLoad));
         vGroupPos.y += 22;
 
@@ -1139,19 +1139,19 @@ void cLuxDebugHandler::CreateGuiWindow()
     {
         //Group
         vGroupPos = cVector3f(5,10,0.1f);
-        pGroup = mpGuiSet->CreateWidgetGroup(vPos,100,_W("Game"),mpDebugWindow);
+        pGroup = mpGuiSet->CreateWidgetGroup(vPos,100,kTranslate("Debug", "Game"),mpDebugWindow);
 
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize, _W("Disable Flashbacks"), pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize, kTranslate("Debug", "Disable Flashbacks"), pGroup);
         pCheckBox->SetChecked(mbDisableFlashBacks, false);
         pCheckBox->SetUserValue(10);
         pCheckBox->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         vGroupPos.y += 22;
 
-        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,_W("Reload Insanity Effects"),pGroup);
+        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,kTranslate("Debug", "Reload Insanity Effects"),pGroup);
         pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressReloadInsanityEffect));
         vGroupPos.y += 22;
 
-        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,_W("Start Insanity Effect"),pGroup);
+        pButton = mpGuiSet->CreateWidgetButton(vGroupPos,vSize,kTranslate("Debug", "Start Insanity Effect"),pGroup);
         pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressStartInsanityEffect));
         vGroupPos.y += 22;
 
@@ -1164,14 +1164,14 @@ void cLuxDebugHandler::CreateGuiWindow()
         if(gpBase->mpInsanityHandler->GetEventNum()>0) mpCBInsanityEvents->SetSelectedItem(0);
         vGroupPos.y += 22;
 
-        mpCBFastForward = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize, _W("Fast Forward (F3)"), pGroup);
+        mpCBFastForward = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize, kTranslate("Debug", "Fast Forward (F3)"), pGroup);
         mpCBFastForward->SetChecked(mbFastForward, false);
         mpCBFastForward->AddCallback(eGuiMessage_CheckChange,this, kGuiCallback(ChangeDebugText));
         mpCBFastForward->SetUserValue(17);
         vGroupPos.y += 22;
 
         //Enable fly camera
-        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize, _W("Fly camera"), pGroup);
+        pCheckBox = mpGuiSet->CreateWidgetCheckBox(vGroupPos, vSize, kTranslate("Debug", "Fly camera"), pGroup);
         pCheckBox->SetChecked(false);
         pCheckBox->SetUserValue(13);
         pCheckBox->AddCallback(eGuiMessage_CheckChange, this, kGuiCallback(ChangeDebugText));
@@ -1202,7 +1202,7 @@ void cLuxDebugHandler::ShowScriptOutputWindow(const tWString& asName, const tStr
 {
     CreateScriptOutputWindowText(cString::To16Char(asText));
 
-    mpScriptOutputWindow->SetText(_W("Script output for ")+asName);
+	mpScriptOutputWindow->SetText(kTranslate("Debug", "Script output for") + _W(": ") + asName);
     mpScriptOutputWindow->SetEnabled(true);
     mpScriptOutputWindow->SetVisible(true);
 }
@@ -1217,17 +1217,17 @@ bool cLuxDebugHandler::RecompileScript()
     tString sOutput;
     if(pMap->RecompileScript(&sOutput)==false)
     {
-        ShowScriptOutputWindow(_W("Map"), sOutput);
+        ShowScriptOutputWindow(kTranslate("Debug", "Map"), sOutput);
         return false;
     }
     if(gpBase->mpInventory->RecompileScript(&sOutput)==false)
     {
-        ShowScriptOutputWindow(_W("Inventory"), sOutput);
+        ShowScriptOutputWindow(kTranslate("Debug", "Inventory"), sOutput);
         return false;
     }
     if(gpBase->mpGlobalDataHandler->RecompileScript(&sOutput)==false)
     {
-        ShowScriptOutputWindow(_W("Global"), sOutput);
+        ShowScriptOutputWindow(kTranslate("Debug", "Global"), sOutput);
         return false;
     }
 
