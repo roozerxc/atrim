@@ -43,7 +43,7 @@ For example this path is `C:\Games\AmnesiaTDD_Work\`
 
 **You MUST add a backslash at the end of the path when specifying your own.**
 
-To load full conversions mod via the debugger, edit the `Command Arguments` field. For example, to load [In Lucy's Eyes](https://www.moddb.com/mods/in-lucys-eyes) with the atrim client:
+To load full conversion mods via the debugger, edit the `Command Arguments` field. For example, to load [In Lucy's Eyes](https://www.moddb.com/mods/in-lucys-eyes) with the atrim client:
 ```
 InLucysEyes/config/main_init.cfg
 ```
