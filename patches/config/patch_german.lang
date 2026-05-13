@@ -1,7 +1,7 @@
 <LANGUAGE>
     <RESOURCES />
     <CATEGORY Name="Debug">
-        <Entry Name="None">None</Entry>
+        <Entry Name="None">Keine</Entry>
 
         <Entry Name="Debug Toolbar">Debug Symbolleiste</Entry>
 
@@ -23,17 +23,17 @@
 
         <Entry Name="Map">Karte</Entry>
 
-        <Entry Name="Load Map">Map laden</Entry>
+        <Entry Name="Load Map">Karte laden</Entry>
         <Entry Name="Recompile Script and Lang">Skript und Sprache neu kompilieren</Entry>
         <Entry Name="Reload from current pos">Neu laden von der aktuellen Position</Entry>
-        <Entry Name="Fast Physics Load">Fast Physics laden</Entry>
-        <Entry Name="Reload Map">Map neuladen</Entry>
-        <Entry Name="Quick Map Reload (F2)">Schnell Mapneuladung (F2)</Entry>
-        <Entry Name="Test Change Map Save">Mapänderung Save testen</Entry>
+        <Entry Name="Fast Physics Load">Schnell Physik laden</Entry>
+        <Entry Name="Reload Map">Karte neuladen</Entry>
+        <Entry Name="Quick Map Reload (F2)">Schnell Karteneuladung (F2)</Entry>
+        <Entry Name="Test Change Map Save">Karteänderung Save testen</Entry>
         <Entry Name="Teleport to start pos">Zur Start-Position teleportieren</Entry>
-        <Entry Name="Map Batch">Map Batch</Entry>
+        <Entry Name="Map Batch">Stapelkarte</Entry>
 
-        <Entry Name="Game">Game</Entry>
+        <Entry Name="Game">Spiel</Entry>
 
         <Entry Name="Disable Flashbacks">Flashbacks ausschalten</Entry>
         <Entry Name="Reload Insanity Effects">Mentalitäteffekte neuladen</Entry>
@@ -45,8 +45,12 @@
 
         <Entry Name="Script output for">Skriptausgabe für</Entry>
 
-        <Entry Name="Inventory">Inventar</Entry>
+        <Entry Name="Inventory">Bestand</Entry>
         <Entry Name="Global">Global</Entry>
+    </CATEGORY>
+
+    <CATEGORY Name="CustomStory">
+        <Entry Name="ResetList">Neu absuchen</Entry>
     </CATEGORY>
 
     <!-- No need to localize these! -->

@@ -683,6 +683,7 @@ bool cLuxBase::InitApp()
     //Directories
     msBaseLanguageFolder = pInitCfg->GetString("Directories","BaseLanguageFolder","");
     msGameLanguageFolder = pInitCfg->GetString("Directories","GameLanguageFolder","");
+    msPatchLanguageFolder = pInitCfg->GetString("Directories","PatchLanguageFolder","");
 
     msCustomStoryPath = pInitCfg->GetString("Directories", "CustomStoryPath", "");
 
@@ -1447,7 +1448,7 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
     pResources->AddLanguageFile(msBaseLanguageFolder + sBaseFileName, true);
 
 	// Patched lang for some hardcoded strings in source tree
-    pResources->AddLanguageFile(msBaseLanguageFolder + sPatchFileName, true);
+    pResources->AddLanguageFile(msPatchLanguageFolder + sPatchFileName, true);
 
     ////////////////////////////////////////////
     //If not default language, add default to so only missing entries are filled in
@@ -1462,8 +1463,15 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
     if(sBaseFileName != msDefaultBaseLanguage)
         pResources->AddLanguageFile(msBaseLanguageFolder + msDefaultBaseLanguage, false);
 
+    ////////////////////////////////////////////
+	// Add new patch language file
     if(sPatchFileName != msDefaultPatchLanguage)
-		pResources->AddLanguageFile(msBaseLanguageFolder + "patch_" + sGameFileName, true);
+        pResources->AddLanguageFile(msPatchLanguageFolder + msDefaultPatchLanguage, false);
+
+    ////////////////////////////////////////////
+	// If not found in main_init.cfg, load it through base config folder anyway
+	if(sPatchFileName=="" && msPatchLanguageFolder=="" || sPatchFileName != msDefaultPatchLanguage)
+		pResources->AddLanguageFile("config/patch_" + sGameFileName, true);
 
     // Refresh all modules with new translation
     //RunModuleMessage(eLuxUpdateableMessage_LoadFonts, NULL);
