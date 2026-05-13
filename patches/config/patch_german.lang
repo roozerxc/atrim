@@ -23,15 +23,15 @@
 
         <Entry Name="Map">Karte</Entry>
 
-        <Entry Name="Load Map">Karte laden</Entry>
+        <Entry Name="Load Map">Map laden</Entry>
         <Entry Name="Recompile Script and Lang">Skript und Sprache neu kompilieren</Entry>
         <Entry Name="Reload from current pos">Neu laden von der aktuellen Position</Entry>
-        <Entry Name="Fast Physics Load">Schnell Physik laden</Entry>
-        <Entry Name="Reload Map">Karte neuladen</Entry>
-        <Entry Name="Quick Map Reload (F2)">Schnell Karteneuladung (F2)</Entry>
-        <Entry Name="Test Change Map Save">Karteänderung Save testen</Entry>
+        <Entry Name="Fast Physics Load">Fast Physics laden</Entry>
+        <Entry Name="Reload Map">Map neuladen</Entry>
+        <Entry Name="Quick Map Reload (F2)">Schnell Mapneuladung (F2)</Entry>
+        <Entry Name="Test Change Map Save">Mapänderung Save testen</Entry>
         <Entry Name="Teleport to start pos">Zur Start-Position teleportieren</Entry>
-        <Entry Name="Map Batch">Stapelkarte</Entry>
+        <Entry Name="Map Batch">Stapel Map</Entry>
 
         <Entry Name="Game">Spiel</Entry>
 
