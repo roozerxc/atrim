@@ -6,6 +6,10 @@
 ## Information
 **NOTICE: A legal, unmodified and DRM-free copy of *Amnesia: The Dark Descent* and/or *Amnesia: A Machine for Pigs* is required.**
 
+### **WARNING: If you have the latest Steam release of *Amnesia: The Dark Descent* version 1.5, Custom Stories and Total/Full Conversion mods that were downloaded from the Steam Workshop WILL NOT WORK WITH THIS PORT! This is because Frictional Games has not provided the source code for version 1.5 yet (and there is no ETA on when that will happen)! THIS MEANS THIS PORT IS MISSING WORKSHOP SUPPORT!**
+
+### **We recommend downloading your mods from their original sources (ModDB, Nexus Mods, GameBanana) as long as they support version 1.4.3 (which also comes with the GOG.com and Epic Games Store distributions)! Additionally, you may convert Steam Workshop mods to make them compatible with version 1.4.3 (1.41b), but this is a MANUAL PROCESS which requires some experience and familiarity with the HPL2 engine, and is not RECOMMENDED!**
+
 *Amnesia 2000: The Dark Descent* (also known as *atrim*) is a port of *Amnesia: The Dark Descent*, *Amnesia: A Machine for Pigs* and their editors to the Microsoft *Windows 2000* operating system.
 
 The core purpose of this project is to run the game on significantly weaker hardware below the minimum official specifications. Besides this, the project also has several bugfixes and enhancements to the engine and base game.
