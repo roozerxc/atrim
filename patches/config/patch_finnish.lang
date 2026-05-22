@@ -49,10 +49,6 @@
         <Entry Name="Global">Yleinen</Entry>
     </CATEGORY>
 
-    <CATEGORY Name="CustomStory">
-        <Entry Name="ResetList">Uudelleenskannata</Entry>
-    </CATEGORY>
-
     <!-- No need to localize these! -->
 
     <CATEGORY Name="Languages">

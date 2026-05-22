@@ -338,27 +338,22 @@ void cLuxMainMenu_CustomStoryList::CreateGui()
     mpLBStories->AddCallback(eGuiMessage_SelectionChange, this, kGuiCallback(SelectStory));
     mpLBStories->AddCallback(eGuiMessage_SelectionDoubleClick, this, kGuiCallback(PressOK));
 
-    //////////////////////////
-    //Buttons
-    float fButtonWidth = 80;
-    float fButtonSepp = 3;
+	//////////////////////////
+	//Buttons
+	float fButtonWidth = 80;
+	float fButtonSepp = 3;
 
-    vPos.x = mpWindow->GetSize().x - fButtonWidth*7.36f-fButtonSepp-5;
-    vPos.y = mpWindow->GetSize().y - 25 - 10;
+	vPos.x = mpWindow->GetSize().x - fButtonWidth*2-fButtonSepp-5;
+	vPos.y = mpWindow->GetSize().y - 25 - 10;
 
-    //Reset List
-    cWidgetButton* pButton  = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),kTranslate("CustomStory", "ResetList"),mpWindow);
-    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(RepopulateStoryList));
+	//Start
+	cWidgetButton* pButton  = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),kTranslate("Global","OK"),mpWindow);
+	pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressOK));
 
-    //Start
-    vPos.x += fButtonWidth*5.36f + fButtonSepp;
-    pButton  = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),kTranslate("Global","OK"),mpWindow);
-    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressOK));
-
-    //Cancel
-    vPos.x += fButtonWidth + fButtonSepp;
-    pButton = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),kTranslate("Global","Cancel"),mpWindow);
-    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressCancel));
+	//Cancel
+	vPos.x += fButtonWidth + fButtonSepp;
+	pButton = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),kTranslate("Global","Cancel"),mpWindow);
+	pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressCancel));
 }
 
 //-----------------------------------------------------------------------
@@ -486,24 +481,20 @@ bool cLuxMainMenu_CustomStoryList::PressOK(iWidget* apWidget, const cGuiMessageD
 {
     /////////////////////////////////////////////////////////////
     // Check if the list has a valid selection, and warn if not
+
+    cWidgetItem* pItem = mpLBStories->GetItem(mpLBStories->GetSelectedItem());
+    cLuxCustomStorySettings* pStory = (cLuxCustomStorySettings*)pItem->GetUserData();
+    mpStoryWindow->SetCurrentStory(pStory);
+
+    gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_CustomStory);
+
     if(mpLBStories->GetSelectedItem()<0)
+	{
         mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"),
                                         kTranslate("CustomStory", "NoValidStory"),
                                         kTranslate("Global","OK"), _W(""),
                                         NULL, NULL);
-    else
-        mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"),
-                                        kTranslate("CustomStory", "StartCustomQuestion"),
-                                        kTranslate("Global","OK"), kTranslate("Global","Cancel"),
-                                        this, kGuiCallback(LoadStoryCallback));
-
-    {
-        cWidgetItem* pItem = mpLBStories->GetItem(mpLBStories->GetSelectedItem());
-        cLuxCustomStorySettings* pStory = (cLuxCustomStorySettings*)pItem->GetUserData();
-        mpStoryWindow->SetCurrentStory(pStory);
-
-        gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_CustomStory);
-    }
+	}
 
     return true;
 }

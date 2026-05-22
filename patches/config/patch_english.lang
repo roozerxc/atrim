@@ -49,10 +49,6 @@
         <Entry Name="Global">Global</Entry>
     </CATEGORY>
 
-    <CATEGORY Name="CustomStory">
-        <Entry Name="ResetList">Rescan</Entry>
-    </CATEGORY>
-
     <!-- No need to localize these! -->
 
     <CATEGORY Name="Languages">
