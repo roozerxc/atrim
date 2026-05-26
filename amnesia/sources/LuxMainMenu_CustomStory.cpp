@@ -481,19 +481,20 @@ bool cLuxMainMenu_CustomStoryList::PressOK(iWidget* apWidget, const cGuiMessageD
 {
     /////////////////////////////////////////////////////////////
     // Check if the list has a valid selection, and warn if not
-
-    cWidgetItem* pItem = mpLBStories->GetItem(mpLBStories->GetSelectedItem());
-    cLuxCustomStorySettings* pStory = (cLuxCustomStorySettings*)pItem->GetUserData();
-    mpStoryWindow->SetCurrentStory(pStory);
-
-    gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_CustomStory);
-
     if(mpLBStories->GetSelectedItem()<0)
 	{
         mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"),
                                         kTranslate("CustomStory", "NoValidStory"),
                                         kTranslate("Global","OK"), _W(""),
                                         NULL, NULL);
+	}
+	else
+	{
+		cWidgetItem* pItem = mpLBStories->GetItem(mpLBStories->GetSelectedItem());
+		cLuxCustomStorySettings* pStory = (cLuxCustomStorySettings*)pItem->GetUserData();
+		mpStoryWindow->SetCurrentStory(pStory);
+
+		gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_CustomStory);
 	}
 
     return true;
