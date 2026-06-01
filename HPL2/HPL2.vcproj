@@ -265,34 +265,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Generate"
-			>
-			<File
-				RelativePath=".\core\sources\generate\Generate.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\core\include\generate\Generate.h"
-				>
-			</File>
-			<File
-				RelativePath=".\core\sources\generate\GenerateTypes.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\core\include\generate\GenerateTypes.h"
-				>
-			</File>
-			<File
-				RelativePath=".\core\sources\generate\VoxelMap.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\core\include\generate\VoxelMap.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="Graphics"
 			>
 			<File

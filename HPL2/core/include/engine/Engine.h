@@ -21,7 +21,6 @@ class cSound;
 class cPhysics;
 class cAI;
 class cGui;
-class cGenerate;
 class cEngine;
 class cEngineInitVars;
 class iTimer;
@@ -135,10 +134,6 @@ public:
     cGui* GetGui()
     {
         return mpGui;
-    }
-    cGenerate* GetGenerate()
-    {
-        return mpGenerate;
     }
 
     void ResetLogicTimer();
@@ -263,7 +258,6 @@ private:
     cPhysics *mpPhysics;
     cAI *mpAI;
     cGui *mpGui;
-    cGenerate* mpGenerate;
 };
 
 };
