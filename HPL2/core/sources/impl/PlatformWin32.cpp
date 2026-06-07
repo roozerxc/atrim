@@ -218,12 +218,12 @@ cDate cPlatform::FileModifiedDate(const tWString& asFilePath)
 
     cDate date = DateFromLocalTime(pClock);
 
-    #ifdef _DEBUG
-        Log("DEBUG: Modified time for file '%s': %02d-%02d-%04d %02d:%02d:%02d\n",
+#ifdef _DEBUG
+    Log("DEBUG: Modified time for file '%s': %02d-%02d-%04d %02d:%02d:%02d\n",
         cString::To8Char(asFilePath).c_str(),
         date.month, date.month_day, date.year,
         date.hours, date.minutes, date.seconds);
-    #endif
+#endif
 
     return date;
 }
@@ -249,12 +249,12 @@ cDate cPlatform::FileCreationDate(const tWString& asFilePath)
 
     cDate date = DateFromLocalTime(pClock);
 
-    #ifdef _DEBUG
-        Log("DEBUG: Creation time for file '%s': %02d-%02d-%04d %02d:%02d:%02d\n",
+#ifdef _DEBUG
+    Log("DEBUG: Creation time for file '%s': %02d-%02d-%04d %02d:%02d:%02d\n",
         cString::To8Char(asFilePath).c_str(),
         date.month, date.month_day, date.year,
         date.hours, date.minutes, date.seconds);
-    #endif
+#endif
 
     return date;
 }

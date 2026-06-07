@@ -424,10 +424,10 @@ tWString cLuxHintHandler::AddGamepadIconAtPosition(const tWString& asCommand, in
     tString sCommand;
     sCommand.reserve(asCommand.size());
 
-	for(tWString::const_iterator si = asCommand.begin(); si != asCommand.end(); ++si)
-	{
-		sCommand += static_cast<char>(*si);
-	}
+    for(tWString::const_iterator si = asCommand.begin(); si != asCommand.end(); ++si)
+    {
+        sCommand += static_cast<char>(*si);
+    }
 
     ////////////////
     // Get icon from command string

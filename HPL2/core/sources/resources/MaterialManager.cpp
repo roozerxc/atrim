@@ -411,27 +411,27 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
             if(type == eTextureType_1D)
             {
                 pTex = mpResources->GetTextureManager()->Create1D(sFile,bMipMaps,
-                        eTextureUsage_Normal,
-                        mlTextureSizeDownScaleLevel);
+                       eTextureUsage_Normal,
+                       mlTextureSizeDownScaleLevel);
             }
             else if(type == eTextureType_2D)
             {
                 pTex = mpResources->GetTextureManager()->Create2D(sFile,bMipMaps, eTextureType_2D,
-                        eTextureUsage_Normal,
-                        mlTextureSizeDownScaleLevel);
+                       eTextureUsage_Normal,
+                       mlTextureSizeDownScaleLevel);
             }
             else if(type == eTextureType_3D)
             {
                 pTex = mpResources->GetTextureManager()->Create3D(sFile,bMipMaps,
-                        eTextureUsage_Normal,
-                        mlTextureSizeDownScaleLevel);
+                       eTextureUsage_Normal,
+                       mlTextureSizeDownScaleLevel);
             }
             else if(type == eTextureType_CubeMap)
             {
                 //Check for DDS ending and load cubemap as file.
                 pTex = mpResources->GetTextureManager()->CreateCubeMap(sFile,bMipMaps,
-                        eTextureUsage_Normal,
-                        mlTextureSizeDownScaleLevel);
+                       eTextureUsage_Normal,
+                       mlTextureSizeDownScaleLevel);
             }
         }
 

@@ -503,11 +503,11 @@ int cLowLevelGraphicsSDL::GetCaps(eGraphicCaps aType)
     case eGraphicCaps_ShaderModel_2:
         return (GLEW_ARB_fragment_program || GLEW_ARB_fragment_shader) ? 1 : 0;
 #ifdef __APPLE__
-	// Force return false for OS X as dynamic branching doesn't work well (it's slow)
+    // Force return false for OS X as dynamic branching doesn't work well (it's slow)
     case eGraphicCaps_ShaderModel_3:
         return 0;
     case eGraphicCaps_ShaderModel_4:
-		return 0;
+        return 0;
 #endif
     case eGraphicCaps_ShaderModel_3:
     {
@@ -564,10 +564,10 @@ void cLowLevelGraphicsSDL::SetRelativeMouse(bool abX)
 void cLowLevelGraphicsSDL::SetWindowIcon()
 {
     SDL_RWops * mpWindowIconData = SDL_RWFromMem(
-    HPL_CLIENT_ICON, CLIENT_ICON_SIZE);
+                                       HPL_CLIENT_ICON, CLIENT_ICON_SIZE);
 
     SDL_Surface * mpWindowIcon = SDL_LoadBMP_RW(
-    mpWindowIconData, 1);
+                                     mpWindowIconData, 1);
 
     if(mpWindowIcon)
     {
@@ -607,20 +607,20 @@ void cLowLevelGraphicsSDL::SetVsyncActive(bool abX, bool abAdaptive)
         wglSwapIntervalEXT(abX ? (abAdaptive ? -1 : 1) : 0);
     }
 #elif defined(__linux__)
-		if (GLX_SGI_swap_control)
-		{
-			GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalSGI");
-			glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
-		}
-		else if (GLX_MESA_swap_control)
-		{
-			GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalMESA");
-			glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
-		}
+    if (GLX_SGI_swap_control)
+    {
+        GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalSGI");
+        glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
+    }
+    else if (GLX_MESA_swap_control)
+    {
+        GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalMESA");
+        glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
+    }
 #elif defined(__APPLE__)
-		CGLContextObj ctx = CGLGetCurrentContext();
-		GLint swap = abX ? 1 : 0;
-		CGLSetParameter(ctx, kCGLCPSwapInterval, &swap);
+    CGLContextObj ctx = CGLGetCurrentContext();
+    GLint swap = abX ? 1 : 0;
+    CGLSetParameter(ctx, kCGLCPSwapInterval, &swap);
 #endif
 }
 

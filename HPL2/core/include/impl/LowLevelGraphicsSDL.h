@@ -19,7 +19,7 @@
 namespace hpl
 {
 #ifdef __linux__
-	typedef int (*GLXSWAPINTERVALPROC)(int interval);
+typedef int (*GLXSWAPINTERVALPROC)(int interval);
 #endif
 //-------------------------------------------------
 

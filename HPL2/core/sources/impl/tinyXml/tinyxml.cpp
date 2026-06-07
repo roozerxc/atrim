@@ -1155,6 +1155,7 @@ const TiXmlAttribute* TiXmlAttribute::Next() const
     // have a value or name.
     if ( next->value.empty() && next->name.empty() )
         return 0;
+
     return next;
 }
 
@@ -1175,6 +1176,7 @@ const TiXmlAttribute* TiXmlAttribute::Previous() const
     // have a value or name.
     if ( prev->value.empty() && prev->name.empty() )
         return 0;
+
     return prev;
 }
 
@@ -1410,8 +1412,11 @@ void TiXmlDeclaration::operator=( const TiXmlDeclaration& copy )
 
 void TiXmlDeclaration::Print( FILE* cfile, int /*depth*/, TIXML_STRING* str ) const
 {
-    if ( cfile ) fprintf( cfile, "<?xml " );
-    if ( str )     (*str) += "<?xml ";
+    if ( cfile )
+        fprintf( cfile, "<?xml " );
+
+    if ( str )
+        (*str) += "<?xml ";
 
     if ( !version.empty() )
     {
@@ -1423,6 +1428,7 @@ void TiXmlDeclaration::Print( FILE* cfile, int /*depth*/, TIXML_STRING* str ) co
             (*str) += "\" ";
         }
     }
+
     if ( !encoding.empty() )
     {
         if ( cfile ) fprintf (cfile, "encoding=\"%s\" ", encoding.c_str ());
@@ -1433,6 +1439,7 @@ void TiXmlDeclaration::Print( FILE* cfile, int /*depth*/, TIXML_STRING* str ) co
             (*str) += "\" ";
         }
     }
+
     if ( !standalone.empty() )
     {
         if ( cfile ) fprintf (cfile, "standalone=\"%s\" ", standalone.c_str ());
@@ -1443,8 +1450,12 @@ void TiXmlDeclaration::Print( FILE* cfile, int /*depth*/, TIXML_STRING* str ) co
             (*str) += "\" ";
         }
     }
-    if ( cfile ) fprintf( cfile, "?>" );
-    if ( str )     (*str) += "?>";
+
+    if ( cfile )
+        fprintf( cfile, "?>" );
+
+    if ( str )
+        (*str) += "?>";
 }
 
 

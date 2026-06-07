@@ -1202,7 +1202,7 @@ void cLuxDebugHandler::ShowScriptOutputWindow(const tWString& asName, const tStr
 {
     CreateScriptOutputWindowText(cString::To16Char(asText));
 
-	mpScriptOutputWindow->SetText(kTranslate("Debug", "Script output for") + _W(": ") + asName);
+    mpScriptOutputWindow->SetText(kTranslate("Debug", "Script output for") + _W(": ") + asName);
     mpScriptOutputWindow->SetEnabled(true);
     mpScriptOutputWindow->SetVisible(true);
 }

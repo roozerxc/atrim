@@ -95,22 +95,22 @@ void cLowLevelInputSDL::BeginInputUpdate()
             if (sdlEvent.type==SDL_KEYDOWN)
             {
                 if (sdlEvent.key.keysym.sym == SDLK_q && sdlEvent.key.keysym.mod & KMOD_GUI)
-				{
+                {
                     mbQuitMessagePosted = true;
                 }
-				else
-				{
+                else
+                {
                     mlstEvents.push_back(sdlEvent);
                 }
             }
-			else
-#endif
-            if (sdlEvent.type==SDL_QUIT)
-            {
-                mbQuitMessagePosted = true;
-            }
             else
-                mlstEvents.push_back(sdlEvent);
+#endif
+                if (sdlEvent.type==SDL_QUIT)
+                {
+                    mbQuitMessagePosted = true;
+                }
+                else
+                    mlstEvents.push_back(sdlEvent);
     }
 }
 

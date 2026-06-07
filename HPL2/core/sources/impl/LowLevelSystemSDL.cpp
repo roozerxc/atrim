@@ -51,53 +51,53 @@ int WINAPI WinMain(
 int main(int argc, char *argv[])
 {
 #ifdef __linux__
-	if(!std::setlocale(LC_CTYPE, ""))
-	{
-		fprintf(stderr, "Can't set the specified locale! Check LANG, LC_CTYPE, LC_ALL.\n");
-		return 1;
-	}
+    if(!std::setlocale(LC_CTYPE, ""))
+    {
+        fprintf(stderr, "Can't set the specified locale! Check LANG, LC_CTYPE, LC_ALL.\n");
+        return 1;
+    }
 
-	char *charset = nl_langinfo(CODESET);
-	bool utf8_mode = (strcasecmp(charset, "UTF-8") == 0);
+    char *charset = nl_langinfo(CODESET);
+    bool utf8_mode = (strcasecmp(charset, "UTF-8") == 0);
 
-	if (!utf8_mode)
-	{
-		fprintf(stderr, "UTF-8 Charset %s available.\nCurrent LANG is %s\nCharset: %s\n",
-			utf8_mode ? "is" : "not", getenv("LANG"), charset);
-	}
+    if (!utf8_mode)
+    {
+        fprintf(stderr, "UTF-8 Charset %s available.\nCurrent LANG is %s\nCharset: %s\n",
+                utf8_mode ? "is" : "not", getenv("LANG"), charset);
+    }
 #endif
-	bool cwd = false;
-	hpl::tString cmdline = "";
-	for (int i=1; i < argc; i++)
-	{
+    bool cwd = false;
+    hpl::tString cmdline = "";
+    for (int i=1; i < argc; i++)
+    {
         if (strcmp(argv[i], "-cwd") == 0)
-		{
+        {
             cwd = true;
         }
-		else if (strncmp(argv[i], "-psn", 4) == 0)
-		{
+        else if (strncmp(argv[i], "-psn", 4) == 0)
+        {
             // skip "finder" process number
-		}
-		else
-		{
-			if (cmdline.length()>0)
-			{
-				cmdline.append(" ").append(argv[i]);
-			}
-			else
-			{
-				cmdline.append(argv[i]);
-			}
-		}
-	}
-	if (!cwd)
-	{
+        }
+        else
+        {
+            if (cmdline.length()>0)
+            {
+                cmdline.append(" ").append(argv[i]);
+            }
+            else
+            {
+                cmdline.append(argv[i]);
+            }
+        }
+    }
+    if (!cwd)
+    {
         hpl::tString dataDir = hpl::cPlatform::GetDataDir();
 
         chdir(dataDir.c_str());
-	}
+    }
 
-	return hplMain(cmdline);
+    return hplMain(cmdline);
 }
 #endif
 #endif
@@ -210,7 +210,7 @@ void FatalError(const char* fmt,... )
     if(gpLogMessageCallbackFunc) gpLogMessageCallbackFunc(eLogOutputType_FatalError, sMess.c_str());
 
 #if defined(__APPLE__) || defined(__linux__)
-	SDL_Quit();
+    SDL_Quit();
 #endif
 
     cPlatform::CreateMessageBox(eMsgBoxType_Error, _W("FATAL ERROR"), _W("%ls"), cString::To16Char(sMess).c_str());

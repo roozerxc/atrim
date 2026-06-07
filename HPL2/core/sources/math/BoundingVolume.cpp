@@ -298,7 +298,7 @@ cShadowVolumeBV* cBoundingVolume::GetShadowVolume(const cVector3f& avLightPos,
         if(gvFaces[face].facingLight)
         {
             mShadowVolume.mvPlanes[mShadowVolume.mlPlaneCount] = cPlanef(
-                        gvFaces[face].normal*-1.0f,vCorners[kvFacePoints[face]]);
+                    gvFaces[face].normal*-1.0f,vCorners[kvFacePoints[face]]);
             mShadowVolume.mlPlaneCount++;
         }
     }
