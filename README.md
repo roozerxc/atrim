@@ -1,83 +1,54 @@
-# Amnesia 2000: The Dark Descent
+# Amnesia: Legacy Edition
 <div id="toc" align="center">
-    <img width="640" height="320" alt="Amnesia 2000: The Dark Descent" src="https://repository-images.githubusercontent.com/1168530724/f43a0b07-28d1-4433-a6ff-552195fff4c3" />
+    <img width="1024" height="512" alt="Amnesia: Legacy Edition" src="https://github.com/user-attachments/assets/e068ab0a-e6d4-4c9e-abfb-6b1b39ba69d0" />
 </div>
 
 ## Information
-**NOTICE: A legal, unmodified and DRM-free copy of *Amnesia: The Dark Descent* and/or *Amnesia: A Machine for Pigs* is required.**
+**A legal, unmodified and DRM-free copy of *Amnesia: The Dark Descent* and/or *Amnesia: A Machine for Pigs* is required.**
 
-### **WARNING: If you have the latest Steam release of *Amnesia: The Dark Descent* version 1.5, Custom Stories and Total/Full Conversion mods that were downloaded from the Steam Workshop WILL NOT WORK WITH THIS PORT! This is because Frictional Games has not provided the source code for version 1.5 yet (and there is no ETA on when that will happen)! THIS MEANS THIS PORT IS MISSING WORKSHOP SUPPORT!**
-
-### **We recommend downloading your mods from their original sources (ModDB, Nexus Mods, GameBanana) as long as they support version 1.4.3 (which also comes with the GOG.com and Epic Games Store distributions)! Additionally, you may convert Steam Workshop mods to make them compatible with version 1.4.3 (1.41b), but this is a MANUAL PROCESS which requires some experience and familiarity with the HPL2 engine, and is NOT RECOMMENDED!**
-
-*Amnesia 2000: The Dark Descent* (also known as *atrim*) is a port of *Amnesia: The Dark Descent*, *Amnesia: A Machine for Pigs* and their editors to the Microsoft *Windows 2000* operating system.
-
-The core purpose of this project is to run the game on significantly weaker hardware below the minimum official specifications. Besides this, the project also has several bugfixes and enhancements to the engine and base game.
+*Amnesia: Legacy Edition* (also known as *the atrim project*) is a port of *Amnesia: The Dark Descent*, *Amnesia: A Machine for Pigs* and their editors to significantly weaker (or unorthodox) hardware, usually below the minimum official specifications. Besides this, the project also has several bugfixes and enhancements to the engine and base game.
 
 For a list of changes, read [`CHANGELOG.md`](CHANGELOG.md). Special thanks are in [`THANKS.md`](THANKS.md).
 
+### IMPORTANT!
+
+**WARNING: If you have the latest Steam release of Amnesia: The Dark Descent version 1.5, Custom Stories and Total/Full Conversion mods that were downloaded from the Steam Workshop WILL NOT WORK WITH THIS PORT! This is because Frictional Games has not provided the source code for version 1.5 yet (and there is no ETA on when that will happen! IT MEANS THIS PORT IS COMPLETELY MISSING STEAM WORKSHOP SUPPORT!**
+
+With this port, you should download and install mods from their original sources (*ModDB*, *Nexus Mods*, *GameBanana*) as long as they support at least **version 1.4.3** (also called version 1.41b, *GOG.com* and *Epic Games Store* copies have this version)! Additionally, you may convert *Steam Workshop* mods to make them compatible with version 1.4.3, but this is a **MANUAL PROCESS** which requires some experience and familiarity with the HPL2 engine, and is **NOT RECOMMENDED!**
+
+*DirectInput* controller support is very poor via SDL 1.2.15 (see issue #21). *XInput* controllers, however, do work and are fully functional with this port, but in order to use *XInput* controllers (for example, any *Xbox 360*, *Xbox One*, and/or *Xbox Series* controllers), you must add the `USE_XINPUT` preprocessor definition to both the `HPL2` and `amnesia` projects on the `Debug` and `Release` configurations.
+
+**Compiled binaries that use this preprocessor definition (`USE_XINPUT`) must require at least *Windows XP Service Pack 1*.**
+
+## Installation
+### Steps
+1. Go to the Releases section which can be found on the right-hand side of the page.
+2. Download the zip file of the latest release (for example, `v1.4.5-win32-release`)
+3. Open the zip file and drag all of its contents into your *Amnesia: The Dark Descent* installation folder.
+
+### System Requirements
+- 1.8+ GHz single-core CPU
+- *OpenGL* 2.1-compatible graphics card
+- *DirectX* and/or *OpenAL*-compatible sound card
+
 ## Building
 ### Prerequisites
-
 - [*Creative Labs OpenAL 1.1 Core SDK*](https://openal.org/downloads)
 - [*Microsoft DirectX SDK February 2010*](https://archive.org/download/dxsdk_feb10/DXSDK_Feb10.exe)
 - *Microsoft Visual Studio 2005*
 - [*Microsoft Visual Studio 2005 Service Pack 1*](https://archive.org/download/vs80sp1-all-langs/SP1/)
 - [*Microsoft Visual Studio 2005 + Service Pack 1 Updates*](https://archive.org/download/vs80sp1-all-langs/sp1-updates/)
-- *Microsoft Windows 2000 Professional Service Pack 4*
 
 You will also need to [configure the *DirectX SDK* in your *Visual C++* directories](https://stackoverflow.com/a/46762539).
 
 ### Steps
-The dependency libraries are precompiled, so you don't have to recompile them as from before.
+Dependencies must be manually compiled via `dependencies.sln` first to avoid LNK4099 warnings as with issue #25.
 
-1. `git clone` or download the repository from the **Code** button.
+1. `git clone` the repository or download it from the **Code** button.
 2. Open the `atrim.sln` solution file.
 3. Press F7 to build the solution. This will compile the `HPL2` project first and then the `amnesia` project.
-4. Copy the files from the `patches` directory in the repository into your *Amnesia: The Dark Descent* installation folder.
 
-Compiled binaries are found in the `compiled` folder of the solution's root. In order to play the game with these binaries, you need to copy `amnesia-Win32-Release.exe` and paste it into your *Amnesia: The Dark Descent* installation folder. 
-
-### Debugging
-1. Right-click on the `amnesia` project and set it as a **StartUp Project**.
-2. Go to the `amnesia` project properties and click on `Debugging`
-3. Change the `Working Directory` field to the path of your *Amnesia: The Dark Descent* install.
-
-For example this path is `C:\Games\AmnesiaTDD_Work\`
-
-**You MUST add a backslash at the end of the path when specifying your own.**
-
-To load full conversion mods via the debugger, edit the `Command Arguments` field. For example, to load [In Lucy's Eyes](https://www.moddb.com/mods/in-lucys-eyes) with the atrim client:
-```
-InLucysEyes/config/main_init.cfg
-```
-You can also test regular *Justine* functionality by simply adding `ptest` to the `Command Arguments` field. Please note that this will **NOT** work with full conversion mods.
-
-Then, click **Apply** and **OK**.
-
-## Project Configurations
-### Release
-
-This is the configuration that should be used when you set up the project for the first time. This has full code optimization and typically is the most stable especially for playing the base game and its *Justine* DLC, custom stories, total and full conversion mods.
-
-### Debug
-
-This is the least stable configuration, without any code optimization. While it can be used to play *Amnesia: The Dark Descent* and its mods, performance is quite slow; more specifically, crashes can happen and are imminent. This configuration is only useful for diagnosing bugs and crashes, and using a hardware breakpoint should be necessary if you are looking to fix them.
-
-If you just want to play some mods and enjoy the game, the **Debug** configuration is not designed for this purpose at all; you should use the **Release** configuration.
-
-## NOTE about gamepad support
-**WARNING: Only *DirectInput* controllers are supported on *Windows 2000*! Attempting to compile the game and engine with the `USE_XINPUT` preprocessor definition will make the compiled binaries not work on *Windows 2000* unless you use an extended kernel!**
-
-Both *DirectInput* and *XInput* controllers work and are fully functional with this port, however in order to use *XInput* controllers (for example, any *Xbox 360*, *Xbox One*, and/or *Xbox Series* controllers), you must add the `USE_XINPUT` preprocessor definition to the `HPL2` and `amnesia` projects on the `Debug` and `Release` configurations. Compiled binaries that use this preprocessor definition must require at least *Windows XP Service Pack 1*.
-
-To use *DirectInput* or *XInput*-compatible controllers, you will need to install the *DirectX End-User Runtimes*:
-
-https://www.techpowerup.com/download/directx-redistributable-runtime/
-
-If you are on *Windows 2000* and want to use a *DirectInput* controller to play the game, install the February 2010 version of the *DirectX End-User Runtimes*:
-
-https://legacyupdate.net/download-center/download/9033/directx-end-user-runtimes-february-2010
+Compiled binaries are found in the `compiled` folder of the solution's root and in it there should be a folder for the configuration you chose to compile the project (`debug`, `release`).
 
 ## License
 The atrim project is licensed under Version 3 of the GNU General Public License (GNU GPL).
