@@ -1,6 +1,6 @@
 # Amnesia: Legacy Edition
 <div id="toc" align="center">
-    <img width="1024" height="512" alt="Amnesia: Legacy Edition" src="https://github.com/user-attachments/assets/e068ab0a-e6d4-4c9e-abfb-6b1b39ba69d0" />
+    <img width="1024" height="512" alt="Amnesia: Legacy Edition" src="https://github.com/user-attachments/assets/c0573759-9294-4635-bfee-ed1ef99db206" />
 </div>
 
 ## Information
