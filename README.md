@@ -45,7 +45,7 @@ You will also need to [configure the *DirectX SDK* in your *Visual C++* director
 Dependencies must be manually compiled via `dependencies.sln` first to avoid LNK4099 warnings as with issue #25.
 
 1. `git clone` the repository or download it from the **Code** button.
-2. Open the `atrim.sln` solution file.
+2. Open the `AmnesiaLX.sln` solution file.
 3. Press F7 to build the solution. This will compile the `HPL2` project first and then the `amnesia` project.
 
 Compiled binaries are found in the `compiled` folder of the solution's root and in it there should be a folder for the configuration you chose to compile the project (`debug`, `release`).
