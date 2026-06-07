@@ -3468,8 +3468,8 @@ void __stdcall cLuxScriptHandler::InteractConnectPropWithRope(    string& asName
     }
 
     cLuxInteractConnection_Rope *pConnection = hplNew(cLuxInteractConnection_Rope, (asName, pProp,pRope, afSpeedMul,
-        -cMath::Abs(afMinSpeed), cMath::Abs(afMaxSpeed),
-        abInvert, alStatesUsed));
+            -cMath::Abs(afMinSpeed), cMath::Abs(afMaxSpeed),
+            abInvert, alStatesUsed));
     pConnection->SetInteractionOnly(abInteractOnly);
 
     pProp->AddInteractConnection(pConnection);

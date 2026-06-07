@@ -160,7 +160,7 @@ bool cPBuffer::Init(unsigned int alWidth,unsigned int alHeight, cColor aCol)
 
     wglMakeCurrent(OldHDC,OldGLRC);
 #elif defined(__linux__)
-    return false;
+	return false;
 #endif
 
     return true;

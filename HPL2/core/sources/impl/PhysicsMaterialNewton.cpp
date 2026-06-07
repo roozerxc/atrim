@@ -145,9 +145,9 @@ void cPhysicsMaterialNewton::UpdateMaterials()
         cPhysicsMaterialNewton* pMat = static_cast<cPhysicsMaterialNewton*>(MatIt.Next());
 
         ePhysicsMaterialCombMode frictionMode =   (ePhysicsMaterialCombMode) std::max(mFrictionMode,
-            pMat->mFrictionMode);
+                pMat->mFrictionMode);
         ePhysicsMaterialCombMode elasticityMode = (ePhysicsMaterialCombMode) std::max(mElasticityMode,
-            pMat->mElasticityMode);
+                pMat->mElasticityMode);
 
         //If the material is the same do not blend.
         if(pMat == this)

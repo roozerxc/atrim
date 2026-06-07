@@ -82,7 +82,7 @@ cWidgetFrame::~cWidgetFrame()
 
 void cWidgetFrame::ChangeBackgroundForColorPicking()
 {
-    mpGfxBackground = mpSkin->GetGfx(eGuiSkinGfx_FrameBackgroundColorPicking);
+	mpGfxBackground = mpSkin->GetGfx(eGuiSkinGfx_FrameBackgroundColorPicking);
 }
 
 //-----------------------------------------------------------------------

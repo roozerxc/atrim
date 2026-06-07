@@ -608,8 +608,8 @@ void cBinaryBuffer::AddString(const tString& asStr)
 void cBinaryBuffer::AddStringW(const tWString& asStr)
 {
 #ifdef BIG_ENDIAN
-    // Important for Xenon, PlayStation 3 and other PowerPC systems!
-    AddInt32Array(asStr[i], asStr.size()+1);
+	// Important for Xenon, PlayStation 3 and other PowerPC systems!
+	AddInt32Array(asStr[i], asStr.size()+1);
 #else
     AddData(asStr.c_str(), sizeof(wchar_t) * (asStr.size()+1) ); //+1 for the zero!
 #endif

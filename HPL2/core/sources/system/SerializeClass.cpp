@@ -149,7 +149,7 @@ cSerializeClass::cSerializeClass(const char* asName,const char* asParent,
                                  iSerializable* (*apCreateFunc)())
 {
     gvSerializeTempClasses[glSerializeTempClassesNum] = cSerializeSavedClass(asName,asParent,
-        apMemberFields,alSize,apCreateFunc);
+            apMemberFields,alSize,apCreateFunc);
 
     glSerializeTempClassesNum++;
 }
@@ -575,9 +575,9 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     {
         cMatrixf &Mtx = PointerValue(pVal,cMatrixf);
         sprintf(msTempCharArray, "%f %f %f %f "
-                                 "%f %f %f %f "
-                                 "%f %f %f %f "
-                                 "%f %f %f %f",
+                "%f %f %f %f "
+                "%f %f %f %f "
+                "%f %f %f %f",
                 Mtx.m[0][0],Mtx.m[0][1],Mtx.m[0][2],Mtx.m[0][3],
                 Mtx.m[1][0],Mtx.m[1][1],Mtx.m[1][2],Mtx.m[1][3],
                 Mtx.m[2][0],Mtx.m[2][1],Mtx.m[2][2],Mtx.m[2][3],

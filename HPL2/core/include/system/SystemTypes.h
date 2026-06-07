@@ -45,11 +45,11 @@ namespace hpl
 enum ePlatform
 {
     ePlatform_Win32,    // Windows NT 32 & 64-bit
-    ePlatform_Linux,    // Linux, Unix and BSD
-    ePlatform_Mac,      // maybe Intel or PPC Apple Mac?
+	ePlatform_Linux,    // Linux, Unix and BSD
+	ePlatform_Mac,      // maybe Intel or PPC Apple Mac?
 
-    ePlatform_Xenon,    // Microsoft Xbox 360
-    ePlatform_CELL,     // Sony PlayStation 3
+	ePlatform_Xenon,    // Microsoft Xbox 360
+	ePlatform_CELL,     // Sony PlayStation 3
 
     ePlatform_LastEnum
 };
@@ -227,46 +227,46 @@ public:
         if(year > aDate.year) return true;
         else if(year < aDate.year) return false;
 
-            if(month > aDate.month) return true;
-                else if(month < aDate.month) return false;
+        if(month > aDate.month) return true;
+        else if(month < aDate.month) return false;
 
-                    if(month_day > aDate.month_day) return true;
-                        else if(month_day < aDate.month_day) return false;
+        if(month_day > aDate.month_day) return true;
+        else if(month_day < aDate.month_day) return false;
 
-                            if(hours > aDate.hours) return true;
-                                else if(hours < aDate.hours) return false;
+        if(hours > aDate.hours) return true;
+        else if(hours < aDate.hours) return false;
 
-                                    if(minutes > aDate.minutes) return true;
-                                        else if(minutes < aDate.minutes) return false;
+        if(minutes > aDate.minutes) return true;
+        else if(minutes < aDate.minutes) return false;
 
-                                            if(seconds > aDate.seconds) return true;
-                                                else if(seconds < aDate.seconds) return false;
+        if(seconds > aDate.seconds) return true;
+        else if(seconds < aDate.seconds) return false;
 
-                                                    return false;
-                                                }
+        return false;
+    }
 
-bool operator<(const cDate &aDate) const
+    bool operator<(const cDate &aDate) const
     {
         if(year < aDate.year) return true;
         else if(year > aDate.year) return false;
 
-            if(month < aDate.month) return true;
-                else if(month > aDate.month) return false;
+        if(month < aDate.month) return true;
+        else if(month > aDate.month) return false;
 
-                    if(month_day < aDate.month_day) return true;
-                        else if(month_day > aDate.month_day) return false;
+        if(month_day < aDate.month_day) return true;
+        else if(month_day > aDate.month_day) return false;
 
-                            if(hours < aDate.hours) return true;
-                                else if(hours > aDate.hours) return false;
+        if(hours < aDate.hours) return true;
+        else if(hours > aDate.hours) return false;
 
-                                    if(minutes < aDate.minutes) return true;
-                                        else if(minutes > aDate.minutes) return false;
+        if(minutes < aDate.minutes) return true;
+        else if(minutes > aDate.minutes) return false;
 
-                                            if(seconds < aDate.seconds) return true;
-                                                else if(seconds > aDate.seconds) return false;
+        if(seconds < aDate.seconds) return true;
+        else if(seconds > aDate.seconds) return false;
 
-                                                    return false;
-                                                }
+        return false;
+    }
 };
 
 //--------------------------------------------------------
@@ -275,9 +275,9 @@ template <class T>
 class cMemoryPool
 {
 public:
-//---------------------------------
+    //---------------------------------
 
-cMemoryPool(size_t alSize, T* (*apCreateFunc)())
+    cMemoryPool(size_t alSize, T* (*apCreateFunc)())
     {
         mvData.resize(alSize,NULL);
         mlCurrentData = 0;

@@ -468,11 +468,11 @@ bool iFileBrowser::NavigateTo(const tWString& asPath)
             mvCurrentDirFullPath.push_back(asPath);
         }
 #ifndef _WIN32
-        // On Unix-like environments, the system root is always '/'
-        else if (mvCurrentDirFullPath.empty() && asPath.length() > 0 && asPath[0] != _W('/') && cPlatform::FolderExists( GetCurrentFullPath() + asPath ))
-        {
-            mvCurrentDirFullPath.push_back(asPath);
-        }
+	    // On Unix-like environments, the system root is always '/'
+	    else if (mvCurrentDirFullPath.empty() && asPath.length() > 0 && asPath[0] != _W('/') && cPlatform::FolderExists( GetCurrentFullPath() + asPath ))
+	    {
+	        mvCurrentDirFullPath.push_back(asPath);
+	    }
 #endif
         else if(cPlatform::FolderExists(cString::AddSlashAtEndW(cPlatform::GetWorkingDir()) + asPath) )
         {
@@ -577,7 +577,7 @@ tWString iFileBrowser::GetCurrentFullPath()
 {
     tWString sPath;
 #ifndef _WIN32
-    sPath = _W("/");
+	sPath = _W("/");
 #endif
 
     for(int i=0; i<(int)mvCurrentDirFullPath.size(); ++i)
