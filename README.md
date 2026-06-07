@@ -6,7 +6,7 @@
 ## Information
 **A legal, unmodified and DRM-free copy of *Amnesia: The Dark Descent* and/or *Amnesia: A Machine for Pigs* is required.**
 
-*Amnesia: Legacy Edition* (also known as *the atrim project*) is a port of *Amnesia: The Dark Descent*, *Amnesia: A Machine for Pigs* and their editors to significantly weaker (or unorthodox) hardware, usually below the minimum official specifications. Besides this, the project also has several bugfixes and enhancements to the engine and base game.
+*Amnesia: Legacy Edition* is a port of *Amnesia: The Dark Descent*, *Amnesia: A Machine for Pigs* and their editors to significantly weaker (or unorthodox) hardware, usually below the minimum official specifications. Besides this, the project also has several bugfixes and enhancements to the engine and base game.
 
 For a list of changes, read [`CHANGELOG.md`](CHANGELOG.md). Special thanks are in [`THANKS.md`](THANKS.md).
 
@@ -51,6 +51,6 @@ Dependencies must be manually compiled via `dependencies.sln` first to avoid LNK
 Compiled binaries are found in the `compiled` folder of the solution's root and in it there should be a folder for the configuration you chose to compile the project (`debug`, `release`).
 
 ## License
-The atrim project is licensed under Version 3 of the GNU General Public License (GNU GPL).
+*Amnesia: Legacy Edition* is licensed under Version 3 of the GNU General Public License (GNU GPL).
 
 Read the license information via the **GPL-3.0 license** tab on the top, or open the [`LICENSE.md`](LICENSE.md) file.
