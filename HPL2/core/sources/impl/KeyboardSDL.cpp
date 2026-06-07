@@ -23,6 +23,14 @@ cKeyboardSDL::cKeyboardSDL(cLowLevelInputSDL *apLowLevelInputSDL) : iKeyboard("S
     mpLowLevelInputSDL = apLowLevelInputSDL;
 
     mvKeyArray.resize(eKey_LastEnum);
+
+	// "World Key" Stuff
+	mvWorldKeyMap.resize(96);
+	for (int k=0; k<=95; ++k)
+	{
+		mvWorldKeyMap[k] = eKey_None;
+	}
+
     ClearKeyList();
 
     SDL_EnableUNICODE(1);

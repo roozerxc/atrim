@@ -44,7 +44,12 @@ namespace hpl
 
 enum ePlatform
 {
-    ePlatform_Win32,
+    ePlatform_Win32,    // Windows NT 32 & 64-bit
+	ePlatform_Linux,    // Linux, Unix and BSD
+	ePlatform_Mac,      // maybe Intel or PPC Apple Mac?
+
+	ePlatform_Xenon,    // Microsoft Xbox 360
+	ePlatform_CELL,     // Sony PlayStation 3
 
     ePlatform_LastEnum
 };

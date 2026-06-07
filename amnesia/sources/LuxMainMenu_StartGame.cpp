@@ -38,7 +38,11 @@ nullptr = {};
 cLuxMainMenu_StartGame::cLuxMainMenu_StartGame(cGuiSet *apGuiSet, cGuiSkin *apGuiSkin) : iLuxMainMenuWindow(apGuiSet, apGuiSkin)
 {
     mvWindowSize = cVector2f(400, 220);
+#if MAC_OS || LINUX
+	mpStartButton = 0;
+#else
     mpStartButton = nullptr;
+#endif
 }
 
 //-----------------------------------------------------------------------

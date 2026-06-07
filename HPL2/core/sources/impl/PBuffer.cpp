@@ -65,6 +65,7 @@ cPBuffer::cPBuffer(iLowLevelGraphics* apLowLevelGraphics,bool abShareObjects,boo
     //Set end of attributes vectors
     mvAttribFormat.push_back(0);
     mvAttribBuffer.push_back(0);
+#elif defined(__linux__)
 #endif
 }
 
@@ -75,6 +76,7 @@ cPBuffer::~cPBuffer()
     wglDeleteContext(mGLContext);
     wglReleasePbufferDCARB(mPBuffer, mDeviceContext);
     wglDestroyPbufferARB(mPBuffer);
+#elif defined(__linux__)
 #endif
 }
 
@@ -157,6 +159,8 @@ bool cPBuffer::Init(unsigned int alWidth,unsigned int alHeight, cColor aCol)
     mpLowLevelGraphics->ClearFrameBuffer(eClearFrameBufferFlag_Color);
 
     wglMakeCurrent(OldHDC,OldGLRC);
+#elif defined(__linux__)
+	return false;
 #endif
 
     return true;
@@ -183,6 +187,7 @@ void cPBuffer::Bind()
     {
         Error("Error Binding pbuffer...\n");
     }
+#elif defined(__linux__)
 #endif
 }
 
@@ -195,6 +200,7 @@ void cPBuffer::UnBind()
     {
         Error("Error UnBinding pbuffer...\n");
     }
+#elif defined(__linux__)
 #endif
 }
 

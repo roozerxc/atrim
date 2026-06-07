@@ -23,7 +23,19 @@
 
 #include "graphics/Bitmap.h"
 
+#ifdef __APPLE__
+#include <OpenGL/OpenGL.h>
+#endif
+
 #include "SDL/SDL_syswm.h"
+
+#ifndef _WIN32
+#if defined __ppc__ || defined(__LP64__)
+#define CALLBACK
+#else
+#define CALLBACK __attribute__ ((__stdcall__))
+#endif
+#endif
 
 namespace hpl
 {
@@ -490,6 +502,13 @@ int cLowLevelGraphicsSDL::GetCaps(eGraphicCaps aType)
 
     case eGraphicCaps_ShaderModel_2:
         return (GLEW_ARB_fragment_program || GLEW_ARB_fragment_shader) ? 1 : 0;
+#ifdef __APPLE__
+	// Force return false for OS X as dynamic branching doesn't work well (it's slow)
+    case eGraphicCaps_ShaderModel_3:
+        return 0;
+    case eGraphicCaps_ShaderModel_4:
+		return 0;
+#endif
     case eGraphicCaps_ShaderModel_3:
     {
         if(mbForceShaderModel3And4Off)
@@ -587,6 +606,21 @@ void cLowLevelGraphicsSDL::SetVsyncActive(bool abX, bool abAdaptive)
     {
         wglSwapIntervalEXT(abX ? (abAdaptive ? -1 : 1) : 0);
     }
+#elif defined(__linux__)
+		if (GLX_SGI_swap_control)
+		{
+			GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalSGI");
+			glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
+		}
+		else if (GLX_MESA_swap_control)
+		{
+			GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalMESA");
+			glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
+		}
+#elif defined(__APPLE__)
+		CGLContextObj ctx = CGLGetCurrentContext();
+		GLint swap = abX ? 1 : 0;
+		CGLSetParameter(ctx, kCGLCPSwapInterval, &swap);
 #endif
 }
 

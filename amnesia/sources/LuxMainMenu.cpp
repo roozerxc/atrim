@@ -1849,7 +1849,11 @@ bool cLuxMainMenu::ClickedSaveGamePopup(iWidget* apWidget, const cGuiMessageData
 
     ///////////////////////////
     // Get save label
+#if MAC_OS || LINUX
+	cWidgetLabel* pSaveLabel = 0;
+#else
     cWidgetLabel* pSaveLabel = nullptr;
+#endif
     for (size_t i = 0; i < mvTopMenuLabels.size(); ++i)
     {
         if (mvTopMenuLabels[i]->GetName() == "Save")

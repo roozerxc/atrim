@@ -31,6 +31,10 @@ private:
     HDC         mDeviceContext;
     HGLRC       mGLContext;
     HPBUFFERARB mPBuffer;
+#elif defined(__linux__)
+	Display *gDpy;
+	GLXContext glCtx;
+	GLXPbuffer gPBuffer;
 #endif
 
     int mlWidth;
