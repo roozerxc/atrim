@@ -272,34 +272,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Generate"
-			>
-			<File
-				RelativePath=".\core\sources\generate\Generate.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\core\include\generate\Generate.h"
-				>
-			</File>
-			<File
-				RelativePath=".\core\sources\generate\GenerateTypes.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\core\include\generate\GenerateTypes.h"
-				>
-			</File>
-			<File
-				RelativePath=".\core\sources\generate\VoxelMap.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\core\include\generate\VoxelMap.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="Graphics"
 			>
 			<File
@@ -1667,10 +1639,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\core\sources\math\MeshTypes.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\core\include\math\MeshTypes.h"
 				>
 			</File>
@@ -1684,10 +1652,6 @@
 			</File>
 			<File
 				RelativePath=".\core\include\math\Quaternion.h"
-				>
-			</File>
-			<File
-				RelativePath=".\core\sources\math\Spring.cpp"
 				>
 			</File>
 			<File
@@ -1759,15 +1723,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\core\sources\physics\PhysicsJointBall.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\core\include\physics\PhysicsJointBall.h"
-				>
-			</File>
-			<File
-				RelativePath=".\core\sources\physics\PhysicsJointHinge.cpp"
 				>
 			</File>
 			<File
@@ -1775,15 +1731,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\core\sources\physics\PhysicsJointScrew.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\core\include\physics\PhysicsJointScrew.h"
-				>
-			</File>
-			<File
-				RelativePath=".\core\sources\physics\PhysicsJointSlider.cpp"
 				>
 			</File>
 			<File
@@ -2287,10 +2235,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\core\sources\scene\NodeState.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\core\include\scene\NodeState.h"
 				>
 			</File>
@@ -2472,10 +2416,6 @@
 			>
 			<File
 				RelativePath=".\core\include\system\BinTree.h"
-				>
-			</File>
-			<File
-				RelativePath=".\core\sources\system\Container.cpp"
 				>
 			</File>
 			<File

@@ -8,7 +8,6 @@
 #include "graphics/Graphics.h"
 #include "gui/Gui.h"
 #include "scene/Scene.h"
-#include "generate/Generate.h"
 
 #include "system/LogicTimer.h"
 #include "system/String.h"
@@ -231,10 +230,6 @@ void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, 
     Log(" Creating gui module\n");
     mpGui = hplNew(cGui,());
 
-    Log(" Creating generate module\n");
-    mpGenerate = hplNew(cGenerate,());
-
-
     Log(" Creating scene module\n");
     mpScene = mpGameSetup->CreateScene(mpGraphics, mpResources, mpSound,mpPhysics,mpSystem,mpAI,mpGui);
 
@@ -277,9 +272,6 @@ void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, 
 
     //Init Gui
     mpGui->Init(mpResources,mpGraphics,mpSound,mpScene, mpInput);
-
-    //Init Generate
-    mpGenerate->Init(mpResources,mpGraphics);
 
     Log("Initializing Game Module\n");
     Log("--------------------------------------------------------\n");
@@ -343,7 +335,6 @@ cEngine::~cEngine()
     hplDelete(mpUpdater);
 
     hplDelete(mpGui);
-    hplDelete(mpGenerate);
     hplDelete(mpScene);
     hplDelete(mpInput);
     hplDelete(mpSound);
