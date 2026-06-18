@@ -44,8 +44,14 @@ cInput::~cInput()
 
     STLMapDeleteAll(m_mapActions);
 
-    if(mpKeyboard)hplDelete(mpKeyboard);
-    if(mpMouse)hplDelete(mpMouse);
+    if(mpKeyboard)
+    {
+        hplDelete(mpKeyboard);
+    }
+    if(mpMouse)
+    {
+        hplDelete(mpMouse);
+    }
 
     Log("--------------------------------------------------------\n\n");
 }
@@ -135,7 +141,10 @@ bool cInput::IsTriggerd(int alId)
 bool cInput::WasTriggerd(const tString& asName)
 {
     cAction *pAction = GetAction(asName);
-    if(pAction==NULL)return false;
+    if(pAction==NULL)
+    {
+        return false;
+    }
 
     return pAction->WasTriggerd();
 }
@@ -143,7 +152,10 @@ bool cInput::WasTriggerd(const tString& asName)
 bool cInput::WasTriggerd(int alId)
 {
     cAction *pAction = GetAction(alId);
-    if(pAction==NULL)return false;
+    if(pAction==NULL)
+    {
+        return false;
+    }
 
     return pAction->WasTriggerd();
 }
@@ -153,7 +165,10 @@ bool cInput::WasTriggerd(int alId)
 bool cInput::BecameTriggerd(const tString& asName)
 {
     cAction *pAction = GetAction(asName);
-    if(pAction==NULL)return false;
+    if(pAction==NULL)
+    {
+        return false;
+    }
 
     return pAction->BecameTriggerd();
 }
@@ -161,7 +176,10 @@ bool cInput::BecameTriggerd(const tString& asName)
 bool cInput::BecameTriggerd(int alId)
 {
     cAction *pAction = GetAction(alId);
-    if(pAction==NULL)return false;
+    if(pAction==NULL)
+    {
+        return false;
+    }
 
     return pAction->BecameTriggerd();
 }
@@ -171,14 +189,20 @@ bool cInput::BecameTriggerd(int alId)
 bool cInput::DoubleTriggerd(const tString& asName, float afLimit)
 {
     cAction *pAction = GetAction(asName);
-    if(pAction==NULL)return false;
+    if(pAction==NULL)
+    {
+        return false;
+    }
 
     return pAction->DoubleTriggerd(afLimit);
 }
 bool cInput::DoubleTriggerd(int alId, float afLimit)
 {
     cAction *pAction = GetAction(alId);
-    if(pAction==NULL)return false;
+    if(pAction==NULL)
+    {
+        return false;
+    }
 
     return pAction->DoubleTriggerd(afLimit);
 }
@@ -203,7 +227,9 @@ void cInput::RefreshGamepads()
 {
     tGamepadListIt it = mlstGamepads.begin();
     for(; it!=mlstGamepads.end(); ++it)
+    {
         mlstInputDevices.remove(*it);
+    }
     STLDeleteAll(mlstGamepads);
 
 #if USE_XINPUT
@@ -254,7 +280,9 @@ iGamepad* cInput::GetGamepad(int alIdx)
     for(size_t i=0; it!=mlstGamepads.end(); ++i, ++it)
     {
         if(i==alIdx)
+        {
             return *it;
+        }
     }
 
     return NULL;
@@ -265,7 +293,10 @@ iGamepad* cInput::GetGamepad(int alIdx)
 cAction* cInput::GetAction(const tString& asName)
 {
     tActionMapIt it = m_mapActions.find(asName);
-    if(it==m_mapActions.end())return NULL;
+    if(it==m_mapActions.end())
+    {
+        return NULL;
+    }
 
     return it->second;
 }
@@ -273,7 +304,10 @@ cAction* cInput::GetAction(const tString& asName)
 cAction* cInput::GetAction(int alId)
 {
     tActionIdMapIt it = m_mapActionIds.find(alId);
-    if(it==m_mapActionIds.end()) return NULL;
+    if(it==m_mapActionIds.end())
+    {
+        return NULL;
+    }
 
     return it->second;
 }
@@ -300,7 +334,10 @@ void cInput::DestroyAction(cAction *apAction)
         }
     }
 
-    if(apAction) hplDelete(apAction);
+    if(apAction)
+    {
+        hplDelete(apAction);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -311,14 +348,20 @@ bool cInput::CheckForInput()
     //Keyboard
     for(int i=0; i< eKey_LastEnum; ++i)
     {
-        if(mpKeyboard->KeyIsDown((eKey)i)) return true;
+        if(mpKeyboard->KeyIsDown((eKey)i))
+        {
+            return true;
+        }
     }
 
     //////////////////////
     //Mouse
     for(int i=0; i< eMouseButton_LastEnum; ++i)
     {
-        if(mpMouse->ButtonIsDown((eMouseButton)i)) return true;
+        if(mpMouse->ButtonIsDown((eMouseButton)i))
+        {
+            return true;
+        }
     }
 
     return false;

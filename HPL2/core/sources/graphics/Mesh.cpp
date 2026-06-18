@@ -50,7 +50,10 @@ cMesh::~cMesh()
     {
         hplDelete(mvSubMeshes[i]);
     }
-    if(mpSkeleton) hplDelete(mpSkeleton);
+    if(mpSkeleton)
+    {
+        hplDelete(mpSkeleton);
+    }
 
     for(int i=0; i< (int)mvAnimations.size(); i++)
     {
@@ -58,7 +61,10 @@ cMesh::~cMesh()
         hplDelete(mvAnimations[i]);
     }
 
-    if(mpRootNode) hplDelete(mpRootNode);
+    if(mpRootNode)
+    {
+        hplDelete(mpRootNode);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -92,7 +98,10 @@ cSubMesh* cMesh::CreateSubMesh(const tString &asName)
 
 cSubMesh* cMesh::GetSubMesh(unsigned int alIdx)
 {
-    if(alIdx >= mvSubMeshes.size()) return NULL;
+    if(alIdx >= mvSubMeshes.size())
+    {
+        return NULL;
+    }
 
     return mvSubMeshes[alIdx];
 }
@@ -101,7 +110,10 @@ int cMesh::GetSubMeshIndex(const tString &asName)
 {
     for(size_t i=0; i<mvSubMeshes.size(); ++i)
     {
-        if(mvSubMeshes[i]->GetName() == asName) return (int)i;
+        if(mvSubMeshes[i]->GetName() == asName)
+        {
+            return (int)i;
+        }
     }
 
     return -1;
@@ -110,7 +122,10 @@ int cMesh::GetSubMeshIndex(const tString &asName)
 cSubMesh* cMesh::GetSubMeshName(const tString &asName)
 {
     tSubMeshMapIt it = m_mapSubMeshes.find(asName);
-    if(it == m_mapSubMeshes.end())return NULL;
+    if(it == m_mapSubMeshes.end())
+    {
+        return NULL;
+    }
 
     return it->second;
 }
@@ -133,7 +148,9 @@ int cMesh::GetTriangleCount()
         iVertexBuffer* pVB = (*it)->GetVertexBuffer();
 
         if(pVB)
+        {
             lTriangleCount += (int)pVB->GetIndexNum()/3;
+        }
     }
 
     return lTriangleCount;
@@ -215,7 +232,10 @@ int cMesh::GetAnimationNum()
 
 void cMesh::CompileBonesAndSubMeshes()
 {
-    if(mpSkeleton == NULL) return;
+    if(mpSkeleton == NULL)
+    {
+        return;
+    }
 
     ///////////////////////////////////////
     // Calculate the bounding radius for all bones

@@ -104,7 +104,10 @@ cMaterial::cMaterial(const tString& asName, const tWString& asFullPath, cGraphic
 
 cMaterial::~cMaterial()
 {
-    if(mpVars) hplDelete(mpVars);
+    if(mpVars)
+    {
+        hplDelete(mpVars);
+    }
 
     if(mbDestroyTypeSpecifics && mpType)
     {
@@ -125,7 +128,10 @@ cMaterial::~cMaterial()
     {
         for(int i=0; i<eMaterialTexture_LastEnum; ++i)
         {
-            if(mvTextures[i]) mpResources->GetTextureManager()->Destroy(mvTextures[i]);
+            if(mvTextures[i])
+            {
+                mpResources->GetTextureManager()->Destroy(mvTextures[i]);
+            }
         }
     }
 }
@@ -140,12 +146,21 @@ cMaterial::~cMaterial()
 
 void cMaterial::SetType(iMaterialType* apType)
 {
-    if(mpType==apType) return;
+    if(mpType==apType)
+    {
+        return;
+    }
 
     mpType = apType;
 
-    if(mpVars) hplDelete(mpVars);
-    if(mpType) mpVars = mpType->CreateSpecificVariables();
+    if(mpVars)
+    {
+        hplDelete(mpVars);
+    }
+    if(mpType)
+    {
+        mpVars = mpType->CreateSpecificVariables();
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -169,7 +184,10 @@ void cMaterial::Compile()
             mvPrograms[j][i] = mpType->GetGpuProgram(this, (eMaterialRenderMode)i, j);
 
             //Destroy any previous program (this is so recompilations work with program count!)
-            if(pPrevProg) mpType->DestroyProgram(this, (eMaterialRenderMode)i,pPrevProg, j);
+            if(pPrevProg)
+            {
+                mpType->DestroyProgram(this, (eMaterialRenderMode)i,pPrevProg, j);
+            }
         }
 
     ///////////////////
@@ -220,7 +238,10 @@ void cMaterial::LoadVariablesFromVarsObject(cResourceVarsObject* apVarsObject)
 
 void cMaterial::SetBlendMode(eMaterialBlendMode aBlendMode)
 {
-    if(mpType->IsTranslucent()==false) return;
+    if(mpType->IsTranslucent()==false)
+    {
+        return;
+    }
 
     mBlendMode = aBlendMode;
 }
@@ -234,7 +255,10 @@ void cMaterial::SetAlphaMode(eMaterialAlphaMode aAlphaMode)
 
 void cMaterial::SetDepthTest(bool abDepthTest)
 {
-    if(mpType->IsTranslucent()==false) return;
+    if(mpType->IsTranslucent()==false)
+    {
+        return;
+    }
 
     mbDepthTest = abDepthTest;
 }
@@ -243,7 +267,10 @@ void cMaterial::SetDepthTest(bool abDepthTest)
 
 void cMaterial::UpdateBeforeRendering(float afTimeStep)
 {
-    if(mbHasUvAnimation) UpdateAnimations(afTimeStep);
+    if(mbHasUvAnimation)
+    {
+        UpdateAnimations(afTimeStep);
+    }
 }
 
 //-----------------------------------------------------------------------

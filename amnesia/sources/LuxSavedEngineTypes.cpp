@@ -119,7 +119,10 @@ cRopeEntity* cEngineRope_SaveData::CreateRope(cLuxMap *apMap)
     pRope->SetLengthTileSize(mfLengthTileSize);
 
     cMaterial *pMaterial = gpBase->mpEngine->GetResources()->GetMaterialManager()->CreateMaterial(msMaterial);
-    if(pMaterial) pRope->SetMaterial(pMaterial);
+    if(pMaterial)
+    {
+        pRope->SetMaterial(pMaterial);
+    }
 
     return pRope;
 }
@@ -734,7 +737,10 @@ void cEnginePS_SaveData::FromPS(cParticleSystem *apPS)
 
 void cEnginePS_SaveData::ToPS(cParticleSystem *apPS)
 {
-    if(apPS==NULL) return;
+    if(apPS==NULL)
+    {
+        return;
+    }
 
     apPS->SetActive(mbActive);
     apPS->SetVisible(mbVisible);
@@ -840,9 +846,13 @@ void cEngineSound_SaveData::FromSound(cSoundEntity* apSound)
     mbRemoveWhenOver = apSound->GetRemoveWhenOver();
 
     if(apSound->IsStopped() || apSound->IsFadingOut())
+    {
         mbStopped = true;
+    }
     else
+    {
         mbStopped = false;
+    }
 
     msSoundDataName = apSound->GetData()->GetName();
 
@@ -858,7 +868,10 @@ void cEngineSound_SaveData::ToSound(cSoundEntity* apSound)
 {
     apSound->SetUniqueID(mlID);
     apSound->SetActive(mbActive);
-    if(mbStopped) apSound->Stop(false);
+    if(mbStopped)
+    {
+        apSound->Stop(false);
+    }
 
     apSound->SetMinDistance(mfMinDistance);
     apSound->SetMaxDistance(mfMaxDistance);

@@ -161,11 +161,17 @@ void cXmlDocumentTiny::SaveToTinyXMLData(TiXmlElement* apTinyElem, cXmlElement *
 bool cXmlDocumentTiny::CreateTinyXMLFromFile(TiXmlDocument* pDoc,const tWString& asPath)
 {
     FILE *pFile = cPlatform::OpenFile(asPath, _W("rb"));
-    if(pFile==NULL) return false;
+    if(pFile==NULL)
+    {
+        return false;
+    }
 
     bool bRet = pDoc->LoadFile(pFile);
 
-    if(pFile) fclose(pFile);
+    if(pFile)
+    {
+        fclose(pFile);
+    }
 
     return bRet;
 }
@@ -174,14 +180,23 @@ bool cXmlDocumentTiny::CreateTinyXMLFromFile(TiXmlDocument* pDoc,const tWString&
 
 bool cXmlDocumentTiny::SaveTinyXMLToFile(TiXmlDocument* pDoc,const tWString& asPath)
 {
-    if(asPath == _W("")) return false;
+    if(asPath == _W(""))
+    {
+        return false;
+    }
 
     FILE *pFile = cPlatform::OpenFile(asPath, _W("w+"));
-    if (!pFile) return false;
+    if (!pFile)
+    {
+        return false;
+    }
 
     bool bRet = pDoc->SaveFile(pFile);
 
-    if(pFile) fclose(pFile);
+    if(pFile)
+    {
+        fclose(pFile);
+    }
 
     return bRet;
 }

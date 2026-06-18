@@ -71,7 +71,9 @@ void cLuxSaveHandlerThreadClass::SetUpThread()
 void cLuxSaveHandlerThreadClass::Save(cLuxSaveGame_SaveData* apSaveData, const tWString& asFile)
 {
     if(apSaveData==NULL)
+    {
         return;
+    }
 
     mpSaveMutex->Lock();
 
@@ -175,7 +177,10 @@ void cLuxSaveHandler::Reset()
     if(mbInitialized==false)
     {
         mbInitialized = true;
-        if(mbStartThread) mSaveHandlerThreadClass.SetUpThread();
+        if(mbStartThread)
+        {
+            mSaveHandlerThreadClass.SetUpThread();
+        }
     }
 }
 
@@ -188,7 +193,9 @@ void cLuxSaveHandler::SaveGameToFile(const tWString& asFile, bool abSaveSnapshot
     cLuxSaveGame_SaveData* pData = CreateSaveGameData();
 
     if(mSaveHandlerThreadClass.IsRunning())
+    {
         mSaveHandlerThreadClass.Save(pData, asFile);
+    }
     else
     {
         pData->mpSavedMaps = gpBase->mpMapHandler->GetSavedMapCollection();
@@ -240,7 +247,9 @@ bool cLuxSaveHandler::AutoSave()
     //////////////////////
     // HARDMODE
     if (gpBase->mbHardMode)
+    {
         return true;
+    }
 
 
     DeleteOldestSaveFiles(gpBase->msProfileSavePath, mlMaxAutoSaves);
@@ -257,7 +266,9 @@ bool cLuxSaveHandler::AutoLoad(bool abResetProgressLogger)
 {
     // Wait until any pending save is done.
     if(mSaveHandlerThreadClass.IsRunning())
+    {
         mSaveHandlerThreadClass.ProcessPendingSaves();
+    }
 
     //Get newest file (if any!)
     tWString sFile = GetNewestSaveFile(gpBase->msProfileSavePath);
@@ -295,7 +306,10 @@ bool cLuxSaveHandler::AutoLoad(bool abResetProgressLogger)
 
 bool cLuxSaveHandler::SaveFileExists()
 {
-    if(gpBase->msProfileSavePath==_W("")) return false;
+    if(gpBase->msProfileSavePath==_W(""))
+    {
+        return false;
+    }
 
     return GetNewestSaveFile(gpBase->msProfileSavePath)!=_W("");
 }
@@ -402,10 +416,16 @@ void cLuxSaveHandler::LoadSaveGameData(cLuxSaveGame_SaveData *apSave)
             pCurrentMap->GetFileName() != apSave->mMap.msFileName)
     {
         cLuxMap *pNewMap = gpBase->mpMapHandler->LoadMap(apSave->mMap.msFileName, false);
-        if(pNewMap==NULL) FatalError("Could not load quicksave map '%s'\n", apSave->mMap.msFileName.c_str());
+        if(pNewMap==NULL)
+        {
+            FatalError("Could not load quicksave map '%s'\n", apSave->mMap.msFileName.c_str());
+        }
 
         // Destroy old and set new
-        if(pCurrentMap) gpBase->mpMapHandler->DestroyMap(pCurrentMap, false);
+        if(pCurrentMap)
+        {
+            gpBase->mpMapHandler->DestroyMap(pCurrentMap, false);
+        }
         gpBase->mpMapHandler->SetCurrentMap(pNewMap, false, false,"");
 
         pCurrentMap = pNewMap;
@@ -427,7 +447,10 @@ void cLuxSaveHandler::LoadSaveGameData(cLuxSaveGame_SaveData *apSave)
         while(partIt.HasNext())
         {
             cParticleSystem *pPS = partIt.Next();
-            if(pPS->IsDying()) pPS->KillInstantly();
+            if(pPS->IsDying())
+            {
+                pPS->KillInstantly();
+            }
         }
 
         //TODO: Destroy all special in player (???)
@@ -477,7 +500,10 @@ tWString cLuxSaveHandler::GetProperSaveName(const tWString &asFile)
     tWString sSeparator = _W("_");
     cString::GetStringVecW(asFile, vSaveNameStrings, &sSeparator);
 
-    if(vSaveNameStrings.size() != 9) return _W("INVALID SAVE FILE SYNTAX");
+    if(vSaveNameStrings.size() != 9)
+    {
+        return _W("INVALID SAVE FILE SYNTAX");
+    }
 
     // Store prefix
     sProperName = vSaveNameStrings[0];
@@ -493,7 +519,10 @@ tWString cLuxSaveHandler::GetProperSaveName(const tWString &asFile)
 
     // Store time, adding a padding '0' if only one char
     for(int i=5; i<=7; ++i)
-        if(vSaveNameStrings[i].size()==1) vSaveNameStrings[i] = _W("0")+vSaveNameStrings[i];
+        if(vSaveNameStrings[i].size()==1)
+        {
+            vSaveNameStrings[i] = _W("0")+vSaveNameStrings[i];
+        }
     sProperName += vSaveNameStrings[5] + _W(":") + vSaveNameStrings[6] + _W(":")+ vSaveNameStrings[7];
 
     return sProperName;
@@ -512,7 +541,10 @@ tWString cLuxSaveHandler::GetSaveName(const tWString &asPrefix)
     cLuxMap *pCurrentMap = gpBase->mpMapHandler->GetCurrentMap();
 
     tString sMapName = pCurrentMap->GetDisplayNameEntry();
-    if(sMapName == "") sMapName = "NULL";
+    if(sMapName == "")
+    {
+        sMapName = "NULL";
+    }
 
     cDate currentDate = cPlatform::GetDate();
     tWString sFileName =    asPrefix+ _W("_") +
@@ -526,7 +558,10 @@ tWString cLuxSaveHandler::GetSaveName(const tWString &asPrefix)
                             cString::ToStringW(mlSaveNameCount)+
                             _W(".sav");
     mlSaveNameCount++;
-    if(mlSaveNameCount >= 100 || currentDate!=mLatestSaveDate) mlSaveNameCount =0;
+    if(mlSaveNameCount >= 100 || currentDate!=mLatestSaveDate)
+    {
+        mlSaveNameCount =0;
+    }
 
     mLatestSaveDate = currentDate;
 
@@ -590,7 +625,10 @@ tWString cLuxSaveHandler::GetNewestSaveFile(const tWString &asFolder)
     tWStringList lstFiles;
     cPlatform::FindFilesInDir(lstFiles, asFolder, _W("*.sav"));
 
-    if(lstFiles.empty()) return _W("");
+    if(lstFiles.empty())
+    {
+        return _W("");
+    }
 
     cDate newestDate;
     tWString sNewestFile;

@@ -70,16 +70,25 @@ static tString gsEmptyString = "";
 
 const tString& cSoundEntityData::GetSoundName(eSoundEntityType aType, int alIdx)
 {
-    if((int)mvSoundNameVecs[aType].size() <= alIdx) return gsEmptyString;
+    if((int)mvSoundNameVecs[aType].size() <= alIdx)
+    {
+        return gsEmptyString;
+    }
 
     return mvSoundNameVecs[aType][alIdx];
 }
 
 const tString& cSoundEntityData::GetRandomSoundName(eSoundEntityType aType, bool abSkipPrevious)
 {
-    if(mvSoundNameVecs[aType].empty()) return gsEmptyString;
+    if(mvSoundNameVecs[aType].empty())
+    {
+        return gsEmptyString;
+    }
     int lSize = (int)mvSoundNameVecs[aType].size();
-    if(lSize==1) return mvSoundNameVecs[aType][0];
+    if(lSize==1)
+    {
+        return mvSoundNameVecs[aType][0];
+    }
 
     int lStart = -1;
     int lSizeAdd = -1;
@@ -90,7 +99,10 @@ const tString& cSoundEntityData::GetRandomSoundName(eSoundEntityType aType, bool
     }
 
     int lRand = cMath::RandRectl(lStart+1, lSize + lSizeAdd);
-    if(lRand >= lSize) lRand = lRand - lSize;
+    if(lRand >= lSize)
+    {
+        lRand = lRand - lSize;
+    }
 
     mlPrevious[aType] = lRand;
 
@@ -108,7 +120,10 @@ int cSoundEntityData::GetSoundNum(eSoundEntityType aType)
 
 void cSoundEntityData::SetSoundName(const tString& asName, eSoundEntityType aType, int alIdx)
 {
-    if((int)mvSoundNameVecs[aType].size() <= alIdx) return;
+    if((int)mvSoundNameVecs[aType].size() <= alIdx)
+    {
+        return;
+    }
 
     mvSoundNameVecs[aType][alIdx] = asName;
 }
@@ -134,16 +149,25 @@ void cSoundEntityData::PreloadSoundsOfType(eSoundEntityType aType)
 
 void cSoundEntityData::PreloadSounds()
 {
-    if(mbStream) return;
+    if(mbStream)
+    {
+        return;
+    }
 
-    for(int i=0; i<3; ++i) PreloadSoundsOfType( (eSoundEntityType)i );
+    for(int i=0; i<3; ++i)
+    {
+        PreloadSoundsOfType( (eSoundEntityType)i );
+    }
 }
 
 //-----------------------------------------------------------------------
 
 void cSoundEntityData::LoadSoundsInElement(cXmlElement *apElement, tStringVec *apStringVec)
 {
-    if(apElement == NULL) return;
+    if(apElement == NULL)
+    {
+        return;
+    }
 
     cXmlNodeListIterator it = apElement->GetChildIterator();
     while(it.HasNext())

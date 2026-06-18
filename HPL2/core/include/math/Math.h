@@ -309,8 +309,14 @@ public:
      */
     static inline int FastPosAndNegFloatToInt(float afVal)
     {
-        if(afVal>=0)    return FastPositiveFloatToInt(afVal);
-        else            return FastNegativeFloatToInt(afVal);
+        if(afVal>=0)
+        {
+            return FastPositiveFloatToInt(afVal);
+        }
+        else
+        {
+            return FastNegativeFloatToInt(afVal);
+        }
     }
 
     /**
@@ -387,23 +393,35 @@ public:
 
     inline static float Max(float afX,float afY)
     {
-        if(afX>afY) return afX;
+        if(afX>afY)
+        {
+            return afX;
+        }
         return afY;
     }
     inline static float Min(float afX,float afY)
     {
-        if(afX<afY) return afX;
+        if(afX<afY)
+        {
+            return afX;
+        }
         return afY;
     }
 
     inline static int Max(int alX,int alY)
     {
-        if(alX>alY) return alX;
+        if(alX>alY)
+        {
+            return alX;
+        }
         return alY;
     }
     inline static int Min(int alX,int alY)
     {
-        if(alX<alY) return alX;
+        if(alX<alY)
+        {
+            return alX;
+        }
         return alY;
     }
 
@@ -437,8 +455,14 @@ public:
 
     inline static float GetCorrectSignOfSpeed(float afCurrent, float afDest, float afSpeed)
     {
-        if(afDest < afCurrent && afSpeed > 0) return -afSpeed;
-        if(afDest > afCurrent && afSpeed < 0) return -afSpeed;
+        if(afDest < afCurrent && afSpeed > 0)
+        {
+            return -afSpeed;
+        }
+        if(afDest > afCurrent && afSpeed < 0)
+        {
+            return -afSpeed;
+        }
         return afSpeed;
     }
 
@@ -522,29 +546,53 @@ public:
 
     static inline bool Vector2Less(const cVector2f &avVec, const cVector2f &avCompareVec)
     {
-        if(avVec.x >= avCompareVec.x) return false;
-        if(avVec.y >= avCompareVec.y) return false;
+        if(avVec.x >= avCompareVec.x)
+        {
+            return false;
+        }
+        if(avVec.y >= avCompareVec.y)
+        {
+            return false;
+        }
         return true;
     }
 
     static inline bool Vector2Greater(const cVector2f &avVec, const cVector2f &avCompareVec)
     {
-        if(avVec.x <= avCompareVec.x) return false;
-        if(avVec.y <= avCompareVec.y) return false;
+        if(avVec.x <= avCompareVec.x)
+        {
+            return false;
+        }
+        if(avVec.y <= avCompareVec.y)
+        {
+            return false;
+        }
         return true;
     }
 
     static inline bool Vector2LessEqual(const cVector2f &avVec, const cVector2f &avCompareVec)
     {
-        if(avVec.x > avCompareVec.x) return false;
-        if(avVec.y > avCompareVec.y) return false;
+        if(avVec.x > avCompareVec.x)
+        {
+            return false;
+        }
+        if(avVec.y > avCompareVec.y)
+        {
+            return false;
+        }
         return true;
     }
 
     static inline bool Vector2GreaterEqual(const cVector2f &avVec, const cVector2f &avCompareVec)
     {
-        if(avVec.x < avCompareVec.x) return false;
-        if(avVec.y < avCompareVec.y) return false;
+        if(avVec.x < avCompareVec.x)
+        {
+            return false;
+        }
+        if(avVec.y < avCompareVec.y)
+        {
+            return false;
+        }
         return true;
     }
 
@@ -615,33 +663,69 @@ public:
 
     static inline bool Vector3Less(const cVector3f &avVec, const cVector3f &avCompareVec)
     {
-        if(avVec.x >= avCompareVec.x) return false;
-        if(avVec.y >= avCompareVec.y) return false;
-        if(avVec.z >= avCompareVec.z) return false;
+        if(avVec.x >= avCompareVec.x)
+        {
+            return false;
+        }
+        if(avVec.y >= avCompareVec.y)
+        {
+            return false;
+        }
+        if(avVec.z >= avCompareVec.z)
+        {
+            return false;
+        }
         return true;
     }
 
     static inline bool Vector3Greater(const cVector3f &avVec, const cVector3f &avCompareVec)
     {
-        if(avVec.x <= avCompareVec.x) return false;
-        if(avVec.y <= avCompareVec.y) return false;
-        if(avVec.z <= avCompareVec.z) return false;
+        if(avVec.x <= avCompareVec.x)
+        {
+            return false;
+        }
+        if(avVec.y <= avCompareVec.y)
+        {
+            return false;
+        }
+        if(avVec.z <= avCompareVec.z)
+        {
+            return false;
+        }
         return true;
     }
 
     static inline bool Vector3LessEqual(const cVector3f &avVec, const cVector3f &avCompareVec)
     {
-        if(avVec.x > avCompareVec.x) return false;
-        if(avVec.y > avCompareVec.y) return false;
-        if(avVec.z > avCompareVec.z) return false;
+        if(avVec.x > avCompareVec.x)
+        {
+            return false;
+        }
+        if(avVec.y > avCompareVec.y)
+        {
+            return false;
+        }
+        if(avVec.z > avCompareVec.z)
+        {
+            return false;
+        }
         return true;
     }
 
     static inline bool Vector3GreaterEqual(const cVector3f &avVec, const cVector3f &avCompareVec)
     {
-        if(avVec.x < avCompareVec.x) return false;
-        if(avVec.y < avCompareVec.y) return false;
-        if(avVec.z < avCompareVec.z) return false;
+        if(avVec.x < avCompareVec.x)
+        {
+            return false;
+        }
+        if(avVec.y < avCompareVec.y)
+        {
+            return false;
+        }
+        if(avVec.z < avCompareVec.z)
+        {
+            return false;
+        }
         return true;
     }
 

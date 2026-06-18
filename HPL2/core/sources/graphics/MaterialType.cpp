@@ -41,14 +41,21 @@ iMaterialType::iMaterialType(cGraphics *apGraphics, cResources *apResources)
 
     //Need to do this to support NULL materials (that do not use graphical stuff)
     if(mpGraphics && mpResources)
+    {
         mpProgramManager = hplNew( cProgramComboManager, ("",mpGraphics, mpResources,eMaterialRenderMode_LastEnum ));
+    }
     else
+    {
         mpProgramManager = NULL;
+    }
 }
 
 iMaterialType::~iMaterialType()
 {
-    if(mpProgramManager) hplDelete( mpProgramManager );
+    if(mpProgramManager)
+    {
+        hplDelete( mpProgramManager );
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -70,7 +77,9 @@ void iMaterialType::SetName(const tString& asName)
 cMaterialUserVariable* iMaterialType::GetUserVariable(int alIdx)
 {
     if(alIdx>=0 && alIdx<GetUserVariableNum())
+    {
         return &mvUserVariables[alIdx];
+    }
 
     return NULL;
 }
@@ -81,7 +90,9 @@ cMaterialUserVariable* iMaterialType::GetUserVariable(const tString& asName)
     {
         cMaterialUserVariable* pVar = &mvUserVariables[i];
         if(pVar->msName==asName)
+        {
             return pVar;
+        }
     }
 
     return NULL;

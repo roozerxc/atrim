@@ -34,7 +34,10 @@ void cSoundRayCallback::Reset()
 
 bool cSoundRayCallback::BeforeIntersect(iPhysicsBody *pBody)
 {
-    if(pBody->GetBlocksSound()) return true;
+    if(pBody->GetBlocksSound())
+    {
+        return true;
+    }
 
     return false;
 }
@@ -94,7 +97,10 @@ cSoundEntry::cSoundEntry(    const tString& asName, iSoundChannel* apSound, floa
 
     mpCallback = NULL;
 
-    if(gbLogEntry)Log("Creating sound entry %d id: %d\n", this, mlId);
+    if(gbLogEntry)
+    {
+        Log("Creating sound entry %d id: %d\n", this, mlId);
+    }
 }
 
 ///////////////////////////////////////
@@ -137,7 +143,10 @@ cSoundEntry::cSoundEntry(    const tString& asName, iSoundChannel* apSound, floa
 
 cSoundEntry::~cSoundEntry()
 {
-    if(gbLogEntry)Log("Destroying sound entry %d id: %d\n", this, mlId);
+    if(gbLogEntry)
+    {
+        Log("Destroying sound entry %d id: %d\n", this, mlId);
+    }
     if(mpSound)
     {
         mpSound->Stop();
@@ -169,11 +178,17 @@ bool cSoundEntry::Update(float afTimeStep)
         mfBlockMul += mfBlockFadeSpeed*afTimeStep;
         if(mfBlockFadeSpeed<0)
         {
-            if(mfBlockMul < mfBlockFadeDest)    mfBlockMul = mfBlockFadeDest;
+            if(mfBlockMul < mfBlockFadeDest)
+            {
+                mfBlockMul = mfBlockFadeDest;
+            }
         }
         else
         {
-            if(mfBlockMul > mfBlockFadeDest)    mfBlockMul = mfBlockFadeDest;
+            if(mfBlockMul > mfBlockFadeDest)
+            {
+                mfBlockMul = mfBlockFadeDest;
+            }
         }
     }
 
@@ -222,7 +237,10 @@ bool cSoundEntry::Update(float afTimeStep)
                 mpSound->GetLooping() &&
                 mfVolumeFadeDest !=0)
         {
-            if(gbLogEntry)Log("PriorityRelease sound entry %d id: %d\n", this, mlId);
+            if(gbLogEntry)
+            {
+                Log("PriorityRelease sound entry %d id: %d\n", this, mlId);
+            }
             mpCallback->OnPriorityRelease();
         }
 
@@ -305,7 +323,10 @@ void cSoundEntry::Update3DSpecifics(float afTimeStep)
         mfBlockFadeDest = 0.0f;
         mfBlockFadeSpeed = -1.0f / 0.55f;
 
-        if(mbFirstTime)    mfBlockMul = 0.0f;
+        if(mbFirstTime)
+        {
+            mfBlockMul = 0.0f;
+        }
 
         //pSound->SetFiltering(true, 0xF); TODO
         bBlocked = true;
@@ -315,7 +336,10 @@ void cSoundEntry::Update3DSpecifics(float afTimeStep)
         mfBlockFadeDest = 1;
         mfBlockFadeSpeed = 1.0f / 0.2f;
 
-        if(mbFirstTime) mfBlockMul = 1.0f;
+        if(mbFirstTime)
+        {
+            mfBlockMul = 1.0f;
+        }
 
         //pSound->SetFiltering(false, 0xF); TODO
     }
@@ -360,7 +384,10 @@ void cSoundEntry::Update3DSpecifics(float afTimeStep)
 
 void cSoundEntry::Stop()
 {
-    if(mbStopDisabled) return;
+    if(mbStopDisabled)
+    {
+        return;
+    }
 
     if(mbFirstTime)
     {
@@ -408,7 +435,10 @@ void cSoundEntry::SetSpeedMul(float afMul)
 
 void cSoundEntry::FadeVolumeMulTo(float afDestMul, float afSpeed)
 {
-    if(gbLogEntry)Log("Fade vol sound entry %d id: %d to %f\n", this, mlId, afDestMul);
+    if(gbLogEntry)
+    {
+        Log("Fade vol sound entry %d id: %d to %f\n", this, mlId, afDestMul);
+    }
 
     mfVolumeFadeDest = afDestMul;
     mfVolumeFadeSpeed = cMath::GetCorrectSignOfSpeed(mfVolumeMul,mfVolumeFadeDest,afSpeed);
@@ -422,7 +452,10 @@ void cSoundEntry::FadeSpeedMulTo(float afDestMul, float afSpeed)
 
 void cSoundEntry::FadeOut(float afSpeed)
 {
-    if(gbLogEntry)Log("Fade out sound entry %d id: %d\n", this, mlId);
+    if(gbLogEntry)
+    {
+        Log("Fade out sound entry %d id: %d\n", this, mlId);
+    }
 
     mfVolumeFadeDest = 0;
     mfVolumeFadeSpeed = cMath::GetCorrectSignOfSpeed(mfVolumeMul,0,afSpeed);
@@ -431,7 +464,10 @@ void cSoundEntry::FadeOut(float afSpeed)
 
 void cSoundEntry::FadeIn(float afVolumeMul,float afSpeed)
 {
-    if(gbLogEntry)Log("Fade in sound entry %d id: %d\n", this, mlId);
+    if(gbLogEntry)
+    {
+        Log("Fade in sound entry %d id: %d\n", this, mlId);
+    }
 
     mfVolumeFadeDest = afVolumeMul;
     mfVolumeMul = 0;
@@ -523,7 +559,10 @@ cSoundEntry* cSoundHandler::Play(    const tString& asName,bool abLoop,float afV
                                      eSoundEntryType aEntryType,bool abRelative,
                                      bool ab3D,int alPriorityModifier, bool abStream, bool *apNotEnoughChannels)
 {
-    if(asName == "") return NULL;
+    if(asName == "")
+    {
+        return NULL;
+    }
 
     /////////////////////////////////
     //Calculate priority
@@ -532,26 +571,42 @@ cSoundEntry* cSoundHandler::Play(    const tString& asName,bool abLoop,float afV
     {
         float fDist = cMath::Vector3Dist(avPos, mpLowLevelSound->GetListenerPosition());
         if(fDist >= afMaxDist)
+        {
             lDistPrio = 0;
+        }
         else if(fDist >= afMinDist)
+        {
             lDistPrio = 10;
+        }
         else
+        {
             lDistPrio = 100;
+        }
     }
 
     ///////////////////////////////
     //Create sound channel
-    if(apNotEnoughChannels) *apNotEnoughChannels = false;
+    if(apNotEnoughChannels)
+    {
+        *apNotEnoughChannels = false;
+    }
     bool bNotEnoughChannels;
     iSoundChannel *pSound = CreateChannel(asName,lDistPrio + alPriorityModifier, abStream,&bNotEnoughChannels);
     if(pSound == NULL)
     {
-        if(apNotEnoughChannels) *apNotEnoughChannels = bNotEnoughChannels;
+        if(apNotEnoughChannels)
+        {
+            *apNotEnoughChannels = bNotEnoughChannels;
+        }
 
         if(bNotEnoughChannels==false)
+        {
             Error("Can't find sound '%s'!\n",asName.c_str());
+        }
         else
+        {
             Warning("Could not start sound '%s', too many sounds playing!\n",asName.c_str());
+        }
 
         return NULL;
     }
@@ -671,10 +726,16 @@ cSoundEntry* cSoundHandler::PlaySoundEntityGui(    const tString& asName,bool ab
         const cVector3f& avPos, bool *apNotEnoughChannels)
 {
     cSoundEntityData *pData = mpResources->GetSoundEntityManager()->CreateSoundEntity(asName);
-    if(pData == NULL) return NULL;
+    if(pData == NULL)
+    {
+        return NULL;
+    }
 
     tString sSoundName = pData->GetRandomSoundName(eSoundEntityType_Main,true);
-    if(sSoundName=="") return NULL;
+    if(sSoundName=="")
+    {
+        return NULL;
+    }
 
     if(pData->GetStream())
     {
@@ -769,7 +830,10 @@ void cSoundHandler::FadeOutAll(tFlag mTypes,float afFadeSpeed, bool abDisableSto
         if(pEntry->GetType() & mTypes)
         {
             pEntry->FadeOut(afFadeSpeed);
-            if(abDisableStop) pEntry->SetStopDisabled(true);
+            if(abDisableStop)
+            {
+                pEntry->SetStopDisabled(true);
+            }
         }
     }
 }
@@ -780,7 +844,10 @@ bool cSoundHandler::IsPlaying(const tString& asName)
 {
     cSoundEntry *pEntry = GetEntry(asName);
 
-    if(pEntry) return pEntry->GetChannel()->IsPlaying();
+    if(pEntry)
+    {
+        return pEntry->GetChannel()->IsPlaying();
+    }
 
     return false;
 }
@@ -795,8 +862,14 @@ bool cSoundHandler::IsValid(cSoundEntry *apEntry, int alID)
 
         if(pEntry == apEntry)
         {
-            if(pEntry->GetId() == alID)    return true;
-            else                        return false;
+            if(pEntry->GetId() == alID)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 
@@ -807,7 +880,10 @@ bool cSoundHandler::IsValid(cSoundEntry *apEntry, int alID)
 
 int cSoundHandler::SetGlobalVolume(float afVolume, tFlag aAffectedTypes, int alId)
 {
-    if(alId < 0) alId = mGlobalVolumeHandler.CreateEntry();
+    if(alId < 0)
+    {
+        alId = mGlobalVolumeHandler.CreateEntry();
+    }
 
     cMultipleSettingsHandler::cGSEntry* pEntry = mGlobalVolumeHandler.GetEntry(alId, true);
 
@@ -821,7 +897,10 @@ int cSoundHandler::SetGlobalVolume(float afVolume, tFlag aAffectedTypes, int alI
 
 int cSoundHandler::SetGlobalSpeed(float afSpeed, tFlag aAffectedTypes, int alId)
 {
-    if(alId < 0) alId = mGlobalSpeedHandler.CreateEntry();
+    if(alId < 0)
+    {
+        alId = mGlobalSpeedHandler.CreateEntry();
+    }
 
     cMultipleSettingsHandler::cGSEntry* pEntry = mGlobalSpeedHandler.GetEntry(alId, true);
 
@@ -835,7 +914,10 @@ int cSoundHandler::SetGlobalSpeed(float afSpeed, tFlag aAffectedTypes, int alId)
 
 int cSoundHandler::FadeGlobalVolume(float afDestVolume, float afSpeed,tFlag aAffectedTypes, int alId, bool abDestroyIdAtDest)
 {
-    if(alId < 0) alId = mGlobalVolumeHandler.CreateEntry();
+    if(alId < 0)
+    {
+        alId = mGlobalVolumeHandler.CreateEntry();
+    }
 
     cMultipleSettingsHandler::cGSEntry* pEntry = mGlobalVolumeHandler.GetEntry(alId, true);
 
@@ -847,7 +929,10 @@ int cSoundHandler::FadeGlobalVolume(float afDestVolume, float afSpeed,tFlag aAff
 
 int cSoundHandler::FadeGlobalSpeed(float afDestSpeed, float afSpeed,tFlag aAffectedTypes, int alId, bool abDestroyIdAtDest)
 {
-    if(alId < 0) alId = mGlobalSpeedHandler.CreateEntry();
+    if(alId < 0)
+    {
+        alId = mGlobalSpeedHandler.CreateEntry();
+    }
 
     cMultipleSettingsHandler::cGSEntry* pEntry = mGlobalSpeedHandler.GetEntry(alId, true);
 
@@ -861,14 +946,26 @@ int cSoundHandler::FadeGlobalSpeed(float afDestSpeed, float afSpeed,tFlag aAffec
 
 float cSoundHandler::GetGlobalVolume(eSoundEntryType aType)
 {
-    if(aType == eSoundEntryType_World)    return mfGlobalVolume[0];
-    else                                return mfGlobalVolume[1];
+    if(aType == eSoundEntryType_World)
+    {
+        return mfGlobalVolume[0];
+    }
+    else
+    {
+        return mfGlobalVolume[1];
+    }
 }
 
 float cSoundHandler::GetGlobalSpeed(eSoundEntryType aType)
 {
-    if(aType == eSoundEntryType_World)    return mfGlobalSpeed[0];
-    else                                return mfGlobalSpeed[1];
+    if(aType == eSoundEntryType_World)
+    {
+        return mfGlobalSpeed[0];
+    }
+    else
+    {
+        return mfGlobalSpeed[1];
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -889,7 +986,10 @@ tSoundEntryList* cSoundHandler::GetEntryList()
 
 bool cSoundHandler::CheckSoundIsBlocked(const cVector3f& avSoundPosition)
 {
-    if(mpWorld==NULL || mpWorld->GetPhysicsWorld()==NULL) return false;
+    if(mpWorld==NULL || mpWorld->GetPhysicsWorld()==NULL)
+    {
+        return false;
+    }
 
     iPhysicsWorld *pPhysicsWorld = mpWorld->GetPhysicsWorld();
 
@@ -932,7 +1032,10 @@ cSoundEntry* cSoundHandler::GetEntry(const tString& asName)
 
 iSoundChannel* cSoundHandler::CreateChannel(const tString& asName, int alPriority, bool abStream, bool *apNotEnoughChannels)
 {
-    if(apNotEnoughChannels) *apNotEnoughChannels = false;
+    if(apNotEnoughChannels)
+    {
+        *apNotEnoughChannels = false;
+    }
 
     ////////////////////////
     //Load the data
@@ -949,9 +1052,15 @@ iSoundChannel* cSoundHandler::CreateChannel(const tString& asName, int alPriorit
     if(pSound == NULL)
     {
         //Need to destroy channel else it will never be deleted!
-        if(abStream) mpResources->GetSoundManager()->Destroy(pData);
+        if(abStream)
+        {
+            mpResources->GetSoundManager()->Destroy(pData);
+        }
 
-        if(apNotEnoughChannels) *apNotEnoughChannels = true;
+        if(apNotEnoughChannels)
+        {
+            *apNotEnoughChannels = true;
+        }
     }
 
     return pSound;

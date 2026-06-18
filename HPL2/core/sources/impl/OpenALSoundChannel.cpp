@@ -38,7 +38,9 @@ cOpenALSoundChannel::cOpenALSoundChannel(iSoundData* apData, int alChannel,cSoun
 cOpenALSoundChannel::~cOpenALSoundChannel()
 {
     if(mlChannel>=0)
+    {
         OAL_Source_Stop ( mlChannel );
+    }
 
     DestroyData();
 }
@@ -194,8 +196,14 @@ double cOpenALSoundChannel::GetTotalTime()
 }
 void cOpenALSoundChannel::SetElapsedTime(double afTime)
 {
-    if(afTime < 0) afTime =0;
-    if(afTime > GetTotalTime()) afTime = GetTotalTime() - 0.0001;
+    if(afTime < 0)
+    {
+        afTime =0;
+    }
+    if(afTime > GetTotalTime())
+    {
+        afTime = GetTotalTime() - 0.0001;
+    }
 
     OAL_Source_SetElapsedTime(mlChannel, afTime);
 }
@@ -205,7 +213,10 @@ void cOpenALSoundChannel::SetElapsedTime(double afTime)
 void cOpenALSoundChannel::SetPriority(int alX)
 {
     int lPrio = alX+mlPriorityModifier;
-    if(lPrio>255)lPrio = 255;
+    if(lPrio>255)
+    {
+        lPrio = 255;
+    }
 
     OAL_Source_SetPriority ( mlChannel, lPrio );
 }
@@ -227,9 +238,13 @@ void cOpenALSoundChannel::SetAffectedByEnv(bool abAffected)
     iSoundChannel::SetAffectedByEnv(abAffected);
 
     if (mbAffectedByEnv)
+    {
         OAL_Source_SetAuxSendSlot(mlChannel,0,0);
+    }
     else
+    {
         OAL_Source_SetAuxSendSlot(mlChannel,0,-1);
+    }
 }
 
 void cOpenALSoundChannel::SetFiltering(bool abEnabled, int alFlags)

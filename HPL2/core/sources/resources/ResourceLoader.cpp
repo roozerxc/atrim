@@ -22,7 +22,10 @@ bool iResourceLoader::IsSupported(const tString& asFileExt)
     tStringListIt it = mlstExtensions.begin();
     for(; it != mlstExtensions.end(); ++it)
     {
-        if(asFileExt == *it) return true;
+        if(asFileExt == *it)
+        {
+            return true;
+        }
     }
 
     return false;

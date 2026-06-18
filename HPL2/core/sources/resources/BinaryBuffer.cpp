@@ -199,10 +199,16 @@ void cBinaryBuffer::SaveToCharEncode(tString& asOutputData)
 
 bool cBinaryBuffer::Reserve(size_t alSize)
 {
-    if(alSize <= mlReservedDataSize) return false;
+    if(alSize <= mlReservedDataSize)
+    {
+        return false;
+    }
 
     char* pNewData = (char*)hplRealloc(mpData, alSize);
-    if(pNewData==NULL) return false;
+    if(pNewData==NULL)
+    {
+        return false;
+    }
 
     mpData = pNewData;
     mlReservedDataSize = alSize;
@@ -223,7 +229,10 @@ void cBinaryBuffer::Clear()
 
 bool cBinaryBuffer::SetPos(size_t alPos)
 {
-    if(alPos >= mlDataSize) return false;
+    if(alPos >= mlDataSize)
+    {
+        return false;
+    }
 
     mlDataPos = alPos;
     return true;
@@ -233,7 +242,10 @@ bool cBinaryBuffer::SetPos(size_t alPos)
 
 bool cBinaryBuffer::AddPos(size_t alSize)
 {
-    if(mlDataPos + alSize >= mlDataSize) return false;
+    if(mlDataPos + alSize >= mlDataSize)
+    {
+        return false;
+    }
 
     mlDataPos += alSize;
     return true;
@@ -245,8 +257,14 @@ bool cBinaryBuffer::CompressAndAdd(char *apSrcData, size_t alSize, int alCompres
 {
     ///////////////////////////
     // Check the parameters
-    if(apSrcData==NULL) return false;
-    if(alCompressionLevel>9) return false;
+    if(apSrcData==NULL)
+    {
+        return false;
+    }
+    if(alCompressionLevel>9)
+    {
+        return false;
+    }
 
     ///////////////////////////
     // Write a dummy size for data
@@ -269,7 +287,10 @@ bool cBinaryBuffer::CompressAndAdd(char *apSrcData, size_t alSize, int alCompres
     ///////////////////////////
     // Init compression
     int ret = deflateInit(&zipStream, alCompressionLevel<0 ? Z_DEFAULT_COMPRESSION : alCompressionLevel);
-    if (ret != Z_OK) return false;
+    if (ret != Z_OK)
+    {
+        return false;
+    }
 
     zipStream.avail_in = (uInt)alSize;
     zipStream.next_in = (Bytef *)apSrcData;
@@ -322,7 +343,10 @@ bool cBinaryBuffer::DecompressAndAdd(char *apSrcData, size_t alSize)
 {
     ///////////////////////////
     // Check the parameters
-    if(apSrcData==NULL) return false;
+    if(apSrcData==NULL)
+    {
+        return false;
+    }
 
 
     ///////////////////////////
@@ -340,7 +364,10 @@ bool cBinaryBuffer::DecompressAndAdd(char *apSrcData, size_t alSize)
     ///////////////////////////
     // Init decompression
     int ret = inflateInit(&zipStream);
-    if (ret != Z_OK) return false;
+    if (ret != Z_OK)
+    {
+        return false;
+    }
 
     ///////////////////////////
     // Decompress, chunk by chunk
@@ -408,7 +435,10 @@ void cBinaryBuffer::XorTransform(const char* apKeyData, size_t alKeySize)
     {
         mpData[i] = mpData[i] ^ apKeyData[lCurrentKeyChar];
         ++lCurrentKeyChar;
-        if(lCurrentKeyChar >= alKeySize) lCurrentKeyChar =0;
+        if(lCurrentKeyChar >= alKeySize)
+        {
+            lCurrentKeyChar =0;
+        }
     }
 }
 
@@ -450,7 +480,10 @@ unsigned int cBinaryBuffer::GetCRC(unsigned int alKey,int alDataPos, int alCount
 
 bool cBinaryBuffer::CheckInternalCRC(unsigned int alKey, int alCount)
 {
-    if(alCount>0) alCount = alCount-4; //Skip the first four bytes
+    if(alCount>0)
+    {
+        alCount = alCount-4;    //Skip the first four bytes
+    }
 
     int lSavedCRC = GetInt32();
     int lCurrentCRC = GetCRC(alKey, -1, alCount);
@@ -608,8 +641,8 @@ void cBinaryBuffer::AddString(const tString& asStr)
 void cBinaryBuffer::AddStringW(const tWString& asStr)
 {
 #ifdef BIG_ENDIAN
-	// Important for Xenon, PlayStation 3 and other PowerPC systems!
-	AddInt32Array(asStr[i], asStr.size()+1);
+    // Important for Xenon, PlayStation 3 and other PowerPC systems!
+    AddInt32Array(asStr[i], asStr.size()+1);
 #else
     AddData(asStr.c_str(), sizeof(wchar_t) * (asStr.size()+1) ); //+1 for the zero!
 #endif
@@ -627,7 +660,10 @@ void cBinaryBuffer::AddCharArray(const char* apData, size_t alSize)
 void cBinaryBuffer::AddShort16Array(const short* apData, size_t alSize)
 {
 #ifdef SDL_BIG_ENDIAN
-    for(size_t i=0; i<alSize; ++i) AddShort16(apData[i]);
+    for(size_t i=0; i<alSize; ++i)
+    {
+        AddShort16(apData[i]);
+    }
 #else
     AddData(apData, sizeof(short) * alSize);
 #endif
@@ -638,7 +674,10 @@ void cBinaryBuffer::AddShort16Array(const short* apData, size_t alSize)
 void cBinaryBuffer::AddInt32Array(const int* apData, size_t alSize)
 {
 #ifdef SDL_BIG_ENDIAN
-    for(size_t i=0; i<alSize; ++i) AddInt32(apData[i]);
+    for(size_t i=0; i<alSize; ++i)
+    {
+        AddInt32(apData[i]);
+    }
 #else
     AddData(apData, sizeof(int) * alSize);
 #endif
@@ -649,7 +688,10 @@ void cBinaryBuffer::AddInt32Array(const int* apData, size_t alSize)
 void cBinaryBuffer::AddFloat32Array(const float* apData, size_t alSize)
 {
 #ifdef SDL_BIG_ENDIAN
-    for (size_t i=0; i<alSize; ++i) AddFloat32(apData[i]);
+    for (size_t i=0; i<alSize; ++i)
+    {
+        AddFloat32(apData[i]);
+    }
 #else
     AddData(apData, sizeof(float) * alSize);
 #endif
@@ -857,7 +899,10 @@ void cBinaryBuffer::GetCharArray(char* apData, size_t alSize)
 void cBinaryBuffer::GetShort16Array(short* apData, size_t alSize)
 {
 #ifdef SDL_BIG_ENDIAN
-    for(size_t i=0; i<alSize; ++i) apData[i] = GetShort16();
+    for(size_t i=0; i<alSize; ++i)
+    {
+        apData[i] = GetShort16();
+    }
 #else
     GetData(apData, sizeof(short) * alSize);
 #endif
@@ -868,7 +913,10 @@ void cBinaryBuffer::GetShort16Array(short* apData, size_t alSize)
 void cBinaryBuffer::GetInt32Array(int* apData, size_t alSize)
 {
 #ifdef SDL_BIG_ENDIAN
-    for(size_t i=0; i<alSize; ++i) apData[i] = GetInt32();
+    for(size_t i=0; i<alSize; ++i)
+    {
+        apData[i] = GetInt32();
+    }
 #else
     GetData(apData, sizeof(int) * alSize);
 #endif
@@ -879,7 +927,10 @@ void cBinaryBuffer::GetInt32Array(int* apData, size_t alSize)
 void cBinaryBuffer::GetFloat32Array(float* apData, size_t alSize)
 {
 #ifdef SDL_BIG_ENDIAN
-    for(size_t i=0; i<alSize; ++i) apData[i] = GetFloat32();
+    for(size_t i=0; i<alSize; ++i)
+    {
+        apData[i] = GetFloat32();
+    }
 #else
     GetData(apData, sizeof(float) * alSize);
 #endif

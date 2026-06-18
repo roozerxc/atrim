@@ -39,7 +39,10 @@ cWidgetImage::~cWidgetImage()
 
 void cWidgetImage::SetImage(cGuiGfxElement *apGfx)
 {
-    if(mpGfxImage == apGfx) return;
+    if(mpGfxImage == apGfx)
+    {
+        return;
+    }
 
     mpGfxImage = apGfx;
 }
@@ -87,7 +90,9 @@ bool cWidgetImage::OnMouseMove(const cGuiMessageData& aData)
 bool cWidgetImage::OnMouseDown(const cGuiMessageData& aData)
 {
     if(aData.mlVal==eGuiMouseButton_WheelUp || aData.mlVal==eGuiMouseButton_WheelDown)
+    {
         return false;
+    }
 
     return true;
 }
@@ -97,7 +102,9 @@ bool cWidgetImage::OnMouseDown(const cGuiMessageData& aData)
 bool cWidgetImage::OnMouseUp(const cGuiMessageData& aData)
 {
     if(aData.mlVal==eGuiMouseButton_WheelUp || aData.mlVal==eGuiMouseButton_WheelDown)
+    {
         return false;
+    }
 
     return true;
 }

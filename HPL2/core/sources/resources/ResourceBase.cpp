@@ -29,7 +29,9 @@ iResourceBase::iResourceBase(const tString& asName, const tWString& asFullPath,u
 iResourceBase::~iResourceBase()
 {
     if(mbLogDestruction && mbLogCreateAndDelete)
+    {
         Log("  Destroyed resource '%s'\n",msName.c_str());
+    }
 }
 //-----------------------------------------------------------------------
 

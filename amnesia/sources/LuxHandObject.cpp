@@ -141,7 +141,10 @@ void iLuxHandObject::LoadSettings(cXmlElement *apVarsElem)
 
 void iLuxHandObject::CreateEntity(cLuxMap *apMap)
 {
-    if(mpMeshEntity) return;
+    if(mpMeshEntity)
+    {
+        return;
+    }
 
     ///////////////////////
     // Load the entity

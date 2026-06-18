@@ -97,7 +97,10 @@ int cNode3D::SetVisible(bool abX, bool abCascade)
 
 bool cNode3D::AddEntity(iEntity3D* apEntity)
 {
-    if(apEntity->HasParent())return false;
+    if(apEntity->HasParent())
+    {
+        return false;
+    }
 
     mlstEntity.push_back(apEntity);
     apEntity->SetParent(this);
@@ -217,9 +220,13 @@ void cNode3D::SetMatrix(const cMatrixf& a_mtxTransform, bool abSetChildrenUpdate
     m_mtxLocalTransform = a_mtxTransform;
 
     if(abSetChildrenUpdated)
+    {
         SetWorldTransformUpdated();
+    }
     else
+    {
         mbTransformUpdated = true;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -273,7 +280,9 @@ void cNode3D::SetParent(cNode3D* apNode)
     mpParent = apNode;
 
     if(mpParent)
+    {
         mpParent->mlstNode.push_back(this);
+    }
 }
 
 void cNode3D::AddChild(cNode3D* apChild)
@@ -337,7 +346,10 @@ void cNode3D::UpdateMatrix(bool abSetChildrenUpdated)
 
 void cNode3D::ApplyPreAnimTransform(bool abSetChildrenUpdated)
 {
-    if(mbUsePreTransform==false) return;
+    if(mbUsePreTransform==false)
+    {
+        return;
+    }
 
     cMatrixf mtxTransform = GetLocalMatrix();
     mtxTransform = cMath::MatrixMul(mtxTransform, m_mtxPreTransform);
@@ -347,7 +359,10 @@ void cNode3D::ApplyPreAnimTransform(bool abSetChildrenUpdated)
 
 void cNode3D::ApplyPostAnimTransform(bool abSetChildrenUpdated)
 {
-    if(mbUsePostTransform==false) return;
+    if(mbUsePostTransform==false)
+    {
+        return;
+    }
 
     cMatrixf mtxTransform = GetLocalMatrix();
     mtxTransform = cMath::MatrixMul(m_mtxPostTransform, mtxTransform);

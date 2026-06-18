@@ -69,7 +69,10 @@ cStateMachine::~cStateMachine()
 
 void cStateMachine::Update(float afTime)
 {
-    if(mbActive== false || mpCurrentState==NULL) return;
+    if(mbActive== false || mpCurrentState==NULL)
+    {
+        return;
+    }
 
     mpCurrentState->Update(afTime);
 }
@@ -83,7 +86,10 @@ void cStateMachine::AddState(iAIState *apState, const tString& asName, int alId,
     apState->msName = asName;
     apState->mfUpdateStep = afUpdateStep;
 
-    if(m_mapStates.empty()) mpCurrentState = apState;
+    if(m_mapStates.empty())
+    {
+        mpCurrentState = apState;
+    }
 
     m_mapStates.insert(tAIStateMap::value_type(alId, apState));
 }
@@ -92,7 +98,10 @@ void cStateMachine::AddState(iAIState *apState, const tString& asName, int alId,
 
 void cStateMachine::ChangeState(int alId)
 {
-    if(alId == mpCurrentState->GetId()) return;
+    if(alId == mpCurrentState->GetId())
+    {
+        return;
+    }
 
     iAIState *pState = GetState(alId);
     if(pState==NULL)
@@ -101,7 +110,10 @@ void cStateMachine::ChangeState(int alId)
         return;
     }
 
-    if(mpCurrentState) mpCurrentState->OnLeaveState(pState->GetId());
+    if(mpCurrentState)
+    {
+        mpCurrentState->OnLeaveState(pState->GetId());
+    }
     pState->OnEnterState(mpCurrentState==NULL ? -1 : mpCurrentState->GetId());
 
     mpCurrentState = pState;
@@ -112,7 +124,10 @@ void cStateMachine::ChangeState(int alId)
 iAIState* cStateMachine::GetState(int alId)
 {
     tAIStateMapIt it = m_mapStates.find(alId);
-    if(it == m_mapStates.end()) return NULL;
+    if(it == m_mapStates.end())
+    {
+        return NULL;
+    }
 
     return it->second;
 }

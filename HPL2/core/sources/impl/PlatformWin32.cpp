@@ -43,7 +43,10 @@ unsigned long cPlatform::GetFileSize(const tWString& asFileName)
     return (unsigned long)fileStat.st_size; */
 
     FILE *pFile = _wfopen(asFileName.c_str(),_W("rb"));
-    if(pFile==NULL)    return 0;
+    if(pFile==NULL)
+    {
+        return 0;
+    }
 
     fseek(pFile,0,SEEK_END);
     long lFileSize = ftell(pFile);
@@ -58,7 +61,10 @@ unsigned long cPlatform::GetFileSize(const tWString& asFileName)
 bool cPlatform::CopyFileToBuffer(const tWString& asFileName, void *apBuffer, unsigned long alSize)
 {
     FILE *pFile = _wfopen(asFileName.c_str(),_W("rb"));
-    if(pFile==NULL)    return false;
+    if(pFile==NULL)
+    {
+        return false;
+    }
 
     fread(apBuffer, sizeof(char), alSize, pFile);
 
@@ -218,12 +224,12 @@ cDate cPlatform::FileModifiedDate(const tWString& asFilePath)
 
     cDate date = DateFromLocalTime(pClock);
 
-    #ifdef _DEBUG
-        Log("DEBUG: Modified time for file '%s': %02d-%02d-%04d %02d:%02d:%02d\n",
+#ifdef _DEBUG
+    Log("DEBUG: Modified time for file '%s': %02d-%02d-%04d %02d:%02d:%02d\n",
         cString::To8Char(asFilePath).c_str(),
         date.month, date.month_day, date.year,
         date.hours, date.minutes, date.seconds);
-    #endif
+#endif
 
     return date;
 }
@@ -249,12 +255,12 @@ cDate cPlatform::FileCreationDate(const tWString& asFilePath)
 
     cDate date = DateFromLocalTime(pClock);
 
-    #ifdef _DEBUG
-        Log("DEBUG: Creation time for file '%s': %02d-%02d-%04d %02d:%02d:%02d\n",
+#ifdef _DEBUG
+    Log("DEBUG: Creation time for file '%s': %02d-%02d-%04d %02d:%02d:%02d\n",
         cString::To8Char(asFilePath).c_str(),
         date.month, date.month_day, date.year,
         date.hours, date.minutes, date.seconds);
-    #endif
+#endif
 
     return date;
 }
@@ -274,12 +280,16 @@ void cPlatform::FindFilesInDir(tWStringList &alstStrings,const tWString& asDir, 
     wchar_t sSpec[256];
 
     if (sDir.empty())
+    {
         swprintf(sSpec, 256, _W("%s"), asMask.c_str());
+    }
     else
     {
         wchar_t end = sDir[sDir.size() - 1];
         if (end == _W('\\') || end == _W('/'))
+        {
             swprintf(sSpec, 256, _W("%s%s"), sDir.c_str(), asMask.c_str());
+        }
         else
         {
             //these windows functions only works with "\".. sucks ...
@@ -294,17 +304,25 @@ void cPlatform::FindFilesInDir(tWStringList &alstStrings,const tWString& asDir, 
 
     //Find the first file:
     lHandle = _wfindfirst(sSpec, &FileInfo );
-    if(lHandle==-1L)return;
+    if(lHandle==-1L)
+    {
+        return;
+    }
 
     //Check so it is not a subdir
     if((FileInfo.attrib & _A_SUBDIR)==0 && (abAddHidden || (FileInfo.attrib & _A_HIDDEN)==0) )
     {
         if(bMaskNotNull)
         {
-            if(cString::ToLowerCaseW(cString::GetFileExtW(FileInfo.name))==sMaskExt) alstStrings.push_back(FileInfo.name);
+            if(cString::ToLowerCaseW(cString::GetFileExtW(FileInfo.name))==sMaskExt)
+            {
+                alstStrings.push_back(FileInfo.name);
+            }
         }
         else
+        {
             alstStrings.push_back(FileInfo.name);
+        }
     }
 
     //Get the other files.
@@ -314,10 +332,15 @@ void cPlatform::FindFilesInDir(tWStringList &alstStrings,const tWString& asDir, 
         {
             if(bMaskNotNull)
             {
-                if(cString::ToLowerCaseW(cString::GetFileExtW(FileInfo.name))==sMaskExt) alstStrings.push_back(FileInfo.name);
+                if(cString::ToLowerCaseW(cString::GetFileExtW(FileInfo.name))==sMaskExt)
+                {
+                    alstStrings.push_back(FileInfo.name);
+                }
             }
             else
+            {
                 alstStrings.push_back(FileInfo.name);
+            }
         }
     }
 
@@ -329,12 +352,24 @@ void cPlatform::FindFilesInDir(tWStringList &alstStrings,const tWString& asDir, 
 
 static bool IsGoodFolder(struct _wfinddata_t* pFileInfo, bool abAddHidden, bool abAddUpFolder)
 {
-    if( (pFileInfo->attrib & _A_SUBDIR) ==0) return false;
-    if( abAddHidden==false && (pFileInfo->attrib & _A_HIDDEN)) return false;
+    if( (pFileInfo->attrib & _A_SUBDIR) ==0)
+    {
+        return false;
+    }
+    if( abAddHidden==false && (pFileInfo->attrib & _A_HIDDEN))
+    {
+        return false;
+    }
 
     tWString sName = pFileInfo->name;
-    if( sName == _W("..") ) return abAddUpFolder;
-    if( sName == _W(".") ) return false;
+    if( sName == _W("..") )
+    {
+        return abAddUpFolder;
+    }
+    if( sName == _W(".") )
+    {
+        return false;
+    }
 
     return true;
 }
@@ -349,7 +384,9 @@ void cPlatform::FindFoldersInDir(tWStringList &alstStrings,const tWString& asDir
     wchar_t end = sDir[sDir.size()-1];
 
     if(end == _W('\\') || end== _W('/'))
+    {
         swprintf(sSpec,256,_W("%s%s"),sDir.c_str(),_W("*.*"));
+    }
     else
     {
         //these windows functions only works with "\".. sucks ...
@@ -362,7 +399,10 @@ void cPlatform::FindFoldersInDir(tWStringList &alstStrings,const tWString& asDir
 
     //Find the first file:
     lHandle = _wfindfirst(sSpec, &FileInfo );
-    if(lHandle==-1L)return;
+    if(lHandle==-1L)
+    {
+        return;
+    }
 
     //Check so it IS a sub dir
     if( IsGoodFolder(&FileInfo, abAddHidden, abAddUpFolder))
@@ -427,7 +467,9 @@ void cPlatform::CreateMessageBoxBase(eMsgBoxType eType, const wchar_t* asCaption
     wchar_t text[2048];
 
     if (fmt == NULL)
+    {
         return;
+    }
     vswprintf(text, 2047, fmt, ap);
 
     tWString sMess = _W("");
@@ -496,7 +538,9 @@ cDate cPlatform::GetDate()
 void cPlatform::CopyTextToClipboard(const tWString &asText)
 {
     if(!OpenClipboard(NULL))
+    {
         return;
+    }
 
     EmptyClipboard();
 
@@ -526,7 +570,10 @@ tWString cPlatform::LoadTextFromClipboard()
 
     wchar_t *pBuffer = (wchar_t*)GlobalLock(clipbuffer);
 
-    if(pBuffer != NULL) sText = pBuffer;
+    if(pBuffer != NULL)
+    {
+        sText = pBuffer;
+    }
 
     GlobalUnlock(clipbuffer);
 
@@ -692,7 +739,9 @@ bool cPlatform::OpenFileOnShell( const tWString& asPath )
     };
 
     if(bRet==false)
+    {
         cPlatform::CreateMessageBox(eMsgBoxType_Error, _W("Error"), sMessage.c_str());
+    }
 
     return bRet;
 }

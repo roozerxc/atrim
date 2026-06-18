@@ -107,7 +107,10 @@ cLuxProp_MultiSlider::~cLuxProp_MultiSlider()
 
 bool cLuxProp_MultiSlider::CanInteract(iPhysicsBody *apBody)
 {
-    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false) return false;
+    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false)
+    {
+        return false;
+    }
 
     return true;
 }
@@ -129,7 +132,9 @@ bool cLuxProp_MultiSlider::OnInteract(iPhysicsBody *apBody, const cVector3f &avP
     }
 
     if(mlStuckState !=0 && mbInteractionDisablesStuck)
+    {
         SetStuckState(-1, true);
+    }
 
     gpBase->mpHintHandler->Add("EntitySlide", kTranslate("Hints", "EntitySlide"), 0);
 
@@ -203,7 +208,10 @@ void cLuxProp_MultiSlider::BeforePropDestruction()
 
 eLuxFocusCrosshair cLuxProp_MultiSlider::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false) return eLuxFocusCrosshair_Default;
+    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false)
+    {
+        return eLuxFocusCrosshair_Default;
+    }
 
     return eLuxFocusCrosshair_Grab;
 }
@@ -212,7 +220,10 @@ eLuxFocusCrosshair cLuxProp_MultiSlider::GetFocusCrosshair(iPhysicsBody *apBody,
 
 void cLuxProp_MultiSlider::SetStuckState(int alState, bool abEffects)
 {
-    if(mlStuckState == alState) return;
+    if(mlStuckState == alState)
+    {
+        return;
+    }
 
     mlStuckState = alState;
 
@@ -260,7 +271,10 @@ void cLuxProp_MultiSlider::OnConnectionStateChange(iLuxEntity *apEntity, int alS
 
 void cLuxProp_MultiSlider::UpdateCheckStuckSound(float afTimeStep)
 {
-    if(mlStuckState <0 || mbIsInteractedWith==false) return;
+    if(mlStuckState <0 || mbIsInteractedWith==false)
+    {
+        return;
+    }
 
     if(mfStuckSoundTimer >0)
     {
@@ -280,12 +294,18 @@ void cLuxProp_MultiSlider::UpdateCheckStuckSound(float afTimeStep)
 
 void cLuxProp_MultiSlider::UpdateCheckNewState(float afPos, float afTimeStep)
 {
-    if(mlStuckState >=0) return;
+    if(mlStuckState >=0)
+    {
+        return;
+    }
 
     for(size_t i=0; i<mvStates.size(); ++i)
     {
         cLuxProp_MultiSlider_State *pState = &mvStates[i];
-        if(i==mlCurrentState) continue;
+        if(i==mlCurrentState)
+        {
+            continue;
+        }
 
         float fDistToState = cMath::Abs(afPos-pState->mfPos);
         if(fDistToState <= mfStickToStateMaxDist)
@@ -301,17 +321,29 @@ void cLuxProp_MultiSlider::UpdateCheckNewState(float afPos, float afTimeStep)
 
 void cLuxProp_MultiSlider::UpdateAutoMove(float afPos, float afTimeStep)
 {
-    if(IsInteractedWith() || mbAutoMoveToCurrentState==false || mlStuckState!=-1 || mlCurrentState==-1) return;
+    if(IsInteractedWith() || mbAutoMoveToCurrentState==false || mlStuckState!=-1 || mlCurrentState==-1)
+    {
+        return;
+    }
 
     ///////////////////////////
     // Get the wanted speed
     float fGoalPos = mvStates[mlCurrentState].mfPos;
 
     float fWantedSpeed = mfAutoMoveSpeedFactor * (fGoalPos - afPos);
-    if(cMath::Abs(fWantedSpeed)<0.003f) return;
+    if(cMath::Abs(fWantedSpeed)<0.003f)
+    {
+        return;
+    }
 
-    if(fWantedSpeed > mfAutoMoveMaxSpeed)    fWantedSpeed = mfAutoMoveMaxSpeed;
-    if(fWantedSpeed < -mfAutoMoveMaxSpeed)    fWantedSpeed = -mfAutoMoveMaxSpeed;
+    if(fWantedSpeed > mfAutoMoveMaxSpeed)
+    {
+        fWantedSpeed = mfAutoMoveMaxSpeed;
+    }
+    if(fWantedSpeed < -mfAutoMoveMaxSpeed)
+    {
+        fWantedSpeed = -mfAutoMoveMaxSpeed;
+    }
 
     ///////////////////////////
     // Calculate the torque
@@ -333,7 +365,10 @@ void cLuxProp_MultiSlider::UpdateAutoMove(float afPos, float afTimeStep)
 
 void cLuxProp_MultiSlider::ChangeState(int alState, bool abEffects)
 {
-    if(mlCurrentState == alState) return;
+    if(mlCurrentState == alState)
+    {
+        return;
+    }
 
     mlCurrentState = alState;
 
@@ -342,7 +377,10 @@ void cLuxProp_MultiSlider::ChangeState(int alState, bool abEffects)
     if(abEffects  && msChangeStateSound != "")
     {
         cSoundEntity *pSound = mpMap->GetWorld()->CreateSoundEntity("MultiSliderSound", msChangeStateSound, true);
-        if(pSound) pSound->SetPosition(mpSliderBody->GetLocalPosition());
+        if(pSound)
+        {
+            pSound->SetPosition(mpSliderBody->GetLocalPosition());
+        }
     }
 
     ///////////////////////

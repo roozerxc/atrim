@@ -136,9 +136,18 @@ cVtxBufferGLElementArray::cVtxBufferGLElementArray(eVertexBufferElementFormat aF
 
 cVtxBufferGLElementArray::~cVtxBufferGLElementArray()
 {
-    if(mpByteArray)    hplDelete(mpByteArray);
-    if(mpIntArray)    hplDelete(mpIntArray);
-    if(mpFloatArray)hplDelete(mpFloatArray);
+    if(mpByteArray)
+    {
+        hplDelete(mpByteArray);
+    }
+    if(mpIntArray)
+    {
+        hplDelete(mpIntArray);
+    }
+    if(mpFloatArray)
+    {
+        hplDelete(mpFloatArray);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -232,13 +241,18 @@ iVertexBufferOpenGL::iVertexBufferOpenGL(    iLowLevelGraphics* apLowLevelGraphi
     iVertexBuffer(apLowLevelGraphics, aType, aDrawType,aUsageType, alReserveVtxSize, alReserveIdxSize)
 {
     if(alReserveIdxSize>0)
+    {
         mvIndexArray.reserve(alReserveIdxSize);
+    }
 
     mbHasShadowDouble = false;
 
     mpLowLevelGraphics = apLowLevelGraphics;
 
-    for(int i=0; i< eVertexBufferElement_LastEnum; ++i)    mvElementArrayIndex[i] =-1;
+    for(int i=0; i< eVertexBufferElement_LastEnum; ++i)
+    {
+        mvElementArrayIndex[i] =-1;
+    }
 }
 
 //----------------------------------------------------------------------
@@ -272,7 +286,10 @@ void iVertexBufferOpenGL::CreateElementArray(    eVertexBufferElement aType, eVe
     pElement->mlElementNum = alElementNum;
     pElement->mlProgramVarIndex = alProgramVarIndex;
 
-    if(mlReservedVtxSize > 0) pElement->Reserve(alElementNum * mlReservedVtxSize);
+    if(mlReservedVtxSize > 0)
+    {
+        pElement->Reserve(alElementNum * mlReservedVtxSize);
+    }
 
     mvElementArrayIndex[aType] = (char)mvElementArrays.size();
 
@@ -288,7 +305,9 @@ void iVertexBufferOpenGL::AddVertexVec3f(eVertexBufferElement aType,const cVecto
     pElement->PushBack(&avVtx.y);
 
     if(pElement->mlElementNum > 2)
+    {
         pElement->PushBack(&avVtx.z);
+    }
     if(pElement->mlElementNum > 3)
     {
         float lX = 1;
@@ -433,13 +452,19 @@ void iVertexBufferOpenGL::Transform(const cMatrixf &a_mtxTransform)
     //Get normal
     float *pNormalArray = NULL;
     cVtxBufferGLElementArray *pNormalElement = GetElementArray(eVertexBufferElement_Normal);
-    if(pNormalElement) pNormalArray = (float*)pNormalElement->GetArrayPtr();
+    if(pNormalElement)
+    {
+        pNormalArray = (float*)pNormalElement->GetArrayPtr();
+    }
 
     ///////////////
     //Get tangent
     float *pTangentArray = NULL;
     cVtxBufferGLElementArray *pTangentElement = GetElementArray(eVertexBufferElement_Texture1Tangent);
-    if(pTangentElement)    pTangentArray = (float*)pTangentElement->GetArrayPtr();
+    if(pTangentElement)
+    {
+        pTangentArray = (float*)pTangentElement->GetArrayPtr();
+    }
 
     //////////////////////
     // Get variables
@@ -505,8 +530,14 @@ void iVertexBufferOpenGL::Transform(const cMatrixf &a_mtxTransform)
     ////////////////////////////
     //Update the data
     tVertexElementFlag vtxFlag = eVertexElementFlag_Position;
-    if(pNormalArray) vtxFlag |= eVertexElementFlag_Normal;
-    if(pTangentArray) vtxFlag |= eVertexElementFlag_Texture1;
+    if(pNormalArray)
+    {
+        vtxFlag |= eVertexElementFlag_Normal;
+    }
+    if(pTangentArray)
+    {
+        vtxFlag |= eVertexElementFlag_Texture1;
+    }
 
     UpdateData(vtxFlag,false);
 }
@@ -516,7 +547,10 @@ void iVertexBufferOpenGL::Transform(const cMatrixf &a_mtxTransform)
 int iVertexBufferOpenGL::GetElementNum(eVertexBufferElement aElement)
 {
     cVtxBufferGLElementArray *pElement = GetElementArray(aElement);
-    if(pElement==NULL) return 0;
+    if(pElement==NULL)
+    {
+        return 0;
+    }
 
     return pElement->mlElementNum;
 }
@@ -526,7 +560,10 @@ int iVertexBufferOpenGL::GetElementNum(eVertexBufferElement aElement)
 eVertexBufferElementFormat iVertexBufferOpenGL::GetElementFormat(eVertexBufferElement aElement)
 {
     cVtxBufferGLElementArray *pElement = GetElementArray(aElement);
-    if(pElement==NULL) return eVertexBufferElementFormat_LastEnum;
+    if(pElement==NULL)
+    {
+        return eVertexBufferElementFormat_LastEnum;
+    }
 
     return pElement->mFormat;
 }
@@ -536,7 +573,10 @@ eVertexBufferElementFormat iVertexBufferOpenGL::GetElementFormat(eVertexBufferEl
 int iVertexBufferOpenGL::GetElementProgramVarIndex(eVertexBufferElement aElement)
 {
     cVtxBufferGLElementArray *pElement = GetElementArray(aElement);
-    if(pElement==NULL) return 0;
+    if(pElement==NULL)
+    {
+        return 0;
+    }
 
     return pElement->mlProgramVarIndex;
 }
@@ -546,7 +586,10 @@ int iVertexBufferOpenGL::GetElementProgramVarIndex(eVertexBufferElement aElement
 float* iVertexBufferOpenGL::GetFloatArray(eVertexBufferElement aElement)
 {
     cVtxBufferGLElementArray *pElement = GetElementArray(aElement);
-    if(pElement==NULL) return NULL;
+    if(pElement==NULL)
+    {
+        return NULL;
+    }
 
     return (float*)pElement->GetArrayPtr();
 }
@@ -554,7 +597,10 @@ float* iVertexBufferOpenGL::GetFloatArray(eVertexBufferElement aElement)
 int* iVertexBufferOpenGL::GetIntArray(eVertexBufferElement aElement)
 {
     cVtxBufferGLElementArray *pElement = GetElementArray(aElement);
-    if(pElement==NULL) return NULL;
+    if(pElement==NULL)
+    {
+        return NULL;
+    }
 
     return (int*)pElement->GetArrayPtr();
 }
@@ -562,7 +608,10 @@ int* iVertexBufferOpenGL::GetIntArray(eVertexBufferElement aElement)
 unsigned char* iVertexBufferOpenGL::GetByteArray(eVertexBufferElement aElement)
 {
     cVtxBufferGLElementArray *pElement = GetElementArray(aElement);
-    if(pElement==NULL) return NULL;
+    if(pElement==NULL)
+    {
+        return NULL;
+    }
 
     return (unsigned char*)pElement->GetArrayPtr();
 }
@@ -579,7 +628,10 @@ unsigned int* iVertexBufferOpenGL::GetIndices()
 void iVertexBufferOpenGL::ResizeArray(eVertexBufferElement aElement, int alSize)
 {
     cVtxBufferGLElementArray *pElement = GetElementArray(aElement);
-    if(pElement==NULL) return;
+    if(pElement==NULL)
+    {
+        return;
+    }
 
     pElement->Resize(alSize);
 }
@@ -596,7 +648,10 @@ void iVertexBufferOpenGL::ResizeIndices(int alSize)
 iVertexBuffer* iVertexBufferOpenGL::CreateCopy(    eVertexBufferType aType, eVertexBufferUsageType aUsageType,
         tVertexElementFlag alVtxToCopy)
 {
-    if(alVtxToCopy == eFlagBit_All) alVtxToCopy = mVertexFlags;
+    if(alVtxToCopy == eFlagBit_All)
+    {
+        alVtxToCopy = mVertexFlags;
+    }
 
     iVertexBufferOpenGL *pVtxBuff;
     if(mpLowLevelGraphics->GetCaps(eGraphicCaps_VertexBufferObject) && aType == eVertexBufferType_Hardware)
@@ -612,7 +667,10 @@ iVertexBuffer* iVertexBufferOpenGL::CreateCopy(    eVertexBufferType aType, eVer
     for(size_t i=0; i<mvElementArrays.size(); ++i)
     {
         cVtxBufferGLElementArray *pSrcElement = mvElementArrays[i];
-        if( (pSrcElement->mFlag & alVtxToCopy) == 0) continue;
+        if( (pSrcElement->mFlag & alVtxToCopy) == 0)
+        {
+            continue;
+        }
 
         pVtxBuff->CreateElementArray(pSrcElement->mType,pSrcElement->mFormat,pSrcElement->mlElementNum,pSrcElement->mlProgramVarIndex);
         cVtxBufferGLElementArray *pDestElement = pVtxBuff->GetElementArray(pSrcElement->mType);
@@ -658,8 +716,14 @@ int iVertexBufferOpenGL::GetVertexNum()
     int lSize = (int)pPosElement->Size() / pPosElement->mlElementNum;
 
     //If there is a shadow double, just return the length of the first half.
-    if(mbHasShadowDouble)    return lSize / 2;
-    else                    return lSize;
+    if(mbHasShadowDouble)
+    {
+        return lSize / 2;
+    }
+    else
+    {
+        return lSize;
+    }
 }
 
 //-----------------------------------------------------------------------

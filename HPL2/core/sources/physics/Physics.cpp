@@ -91,8 +91,14 @@ void cPhysics::DestroyWorld(iPhysicsWorld* apWorld)
 
 bool cPhysics::CanPlayImpact()
 {
-    if((int)mlstImpactCounts.size() >= mlMaxImpacts) return false;
-    else return true;
+    if((int)mlstImpactCounts.size() >= mlMaxImpacts)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 void cPhysics::AddImpact()
@@ -114,7 +120,10 @@ cSurfaceData *cPhysics::CreateSurfaceData(const tString& asName)
 cSurfaceData *cPhysics::GetSurfaceData(const tString& asName)
 {
     tSurfaceDataMapIt it = m_mapSurfaceData.find(asName);
-    if(it == m_mapSurfaceData.end()) return NULL;
+    if(it == m_mapSurfaceData.end())
+    {
+        return NULL;
+    }
 
     return it->second;
 }
@@ -143,7 +152,10 @@ bool cPhysics::LoadSurfaceData(const tString& asFile)
     for(; pChildElem != NULL; pChildElem = pChildElem->NextSiblingElement("Material"))
     {
         tString sName = cString::ToString(pChildElem->Attribute("Name"),"");
-        if(sName=="") continue;
+        if(sName=="")
+        {
+            continue;
+        }
 
         cSurfaceData *pData = CreateSurfaceData(sName);
 
@@ -186,9 +198,18 @@ bool cPhysics::LoadSurfaceData(const tString& asFile)
         for(size_t i=0; i<vAxes.size(); ++i)
         {
             tString sAxis = cString::ToLowerCase(vAxes[i]);
-            if(sAxis == "x")        axisFlags |= eRollAxisFlag_X;
-            else if(sAxis == "y")    axisFlags |= eRollAxisFlag_Y;
-            else if(sAxis == "z")    axisFlags |= eRollAxisFlag_Z;
+            if(sAxis == "x")
+            {
+                axisFlags |= eRollAxisFlag_X;
+            }
+            else if(sAxis == "y")
+            {
+                axisFlags |= eRollAxisFlag_Y;
+            }
+            else if(sAxis == "z")
+            {
+                axisFlags |= eRollAxisFlag_Z;
+            }
         }
         pData->SetRollAxisFlags(axisFlags);
 
@@ -239,14 +260,29 @@ bool cPhysics::LoadSurfaceData(const tString& asFile)
 
 ePhysicsMaterialCombMode cPhysics::GetCombMode(const char *apName)
 {
-    if(apName == NULL) return ePhysicsMaterialCombMode_Average;
+    if(apName == NULL)
+    {
+        return ePhysicsMaterialCombMode_Average;
+    }
 
     tString sMode = cString::ToLowerCase(apName);
 
-    if(sMode == "average") return ePhysicsMaterialCombMode_Average;
-    if(sMode == "min") return ePhysicsMaterialCombMode_Min;
-    if(sMode == "max") return ePhysicsMaterialCombMode_Max;
-    if(sMode == "multiply") return ePhysicsMaterialCombMode_Multiply;
+    if(sMode == "average")
+    {
+        return ePhysicsMaterialCombMode_Average;
+    }
+    if(sMode == "min")
+    {
+        return ePhysicsMaterialCombMode_Min;
+    }
+    if(sMode == "max")
+    {
+        return ePhysicsMaterialCombMode_Max;
+    }
+    if(sMode == "multiply")
+    {
+        return ePhysicsMaterialCombMode_Multiply;
+    }
 
     return ePhysicsMaterialCombMode_Average;
 }

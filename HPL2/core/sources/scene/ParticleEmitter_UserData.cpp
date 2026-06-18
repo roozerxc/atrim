@@ -57,11 +57,20 @@ iParticleEmitter* cParticleEmitterData_UserData::Create(tString asName, cVector3
 // NEW
 static ePEType GetPEType(const char *apString)
 {
-    if(apString==NULL) return ePEType_Normal;
+    if(apString==NULL)
+    {
+        return ePEType_Normal;
+    }
     tString sType = cString::ToLowerCase(apString);
 
-    if(sType == "beam") return ePEType_Beam;
-    else if(sType == "normal") return ePEType_Normal;
+    if(sType == "beam")
+    {
+        return ePEType_Beam;
+    }
+    else if(sType == "normal")
+    {
+        return ePEType_Normal;
+    }
 
     return ePEType_Normal;
 }
@@ -72,12 +81,21 @@ static ePEType GetPEType(const char *apString)
 
 static ePEStartPosType GetStartPosType(const char *apString)
 {
-    if(apString==NULL) return ePEStartPosType_Box;
+    if(apString==NULL)
+    {
+        return ePEStartPosType_Box;
+    }
 
     tString sType = cString::ToLowerCase(apString);
 
-    if(sType == "box") return ePEStartPosType_Box;
-    else if(sType == "sphere") return ePEStartPosType_Sphere;
+    if(sType == "box")
+    {
+        return ePEStartPosType_Box;
+    }
+    else if(sType == "sphere")
+    {
+        return ePEStartPosType_Sphere;
+    }
 
     return ePEStartPosType_Box;
 }
@@ -86,12 +104,21 @@ static ePEStartPosType GetStartPosType(const char *apString)
 
 static eParticleEmitterCoordSystem GetCoordSystem(const char *apString)
 {
-    if(apString==NULL) return eParticleEmitterCoordSystem_World;
+    if(apString==NULL)
+    {
+        return eParticleEmitterCoordSystem_World;
+    }
 
     tString sType = cString::ToLowerCase(apString);
 
-    if(sType=="world") return eParticleEmitterCoordSystem_World;
-    else if(sType=="local") return eParticleEmitterCoordSystem_Local;
+    if(sType=="world")
+    {
+        return eParticleEmitterCoordSystem_World;
+    }
+    else if(sType=="local")
+    {
+        return eParticleEmitterCoordSystem_Local;
+    }
 
     return eParticleEmitterCoordSystem_World;
 }
@@ -100,11 +127,17 @@ static eParticleEmitterCoordSystem GetCoordSystem(const char *apString)
 
 static ePEDeathType GetDeathType(const char *apString)
 {
-    if(apString==NULL) return ePEDeathType_Age;
+    if(apString==NULL)
+    {
+        return ePEDeathType_Age;
+    }
 
     tString sType = cString::ToLowerCase(apString);
 
-    if(sType=="age") return ePEDeathType_Age;
+    if(sType=="age")
+    {
+        return ePEDeathType_Age;
+    }
 
     return ePEDeathType_Age;
 }
@@ -113,13 +146,25 @@ static ePEDeathType GetDeathType(const char *apString)
 
 static eParticleEmitterType GetDrawType(const char *apString)
 {
-    if(apString==NULL) return eParticleEmitterType_DynamicPoint;
+    if(apString==NULL)
+    {
+        return eParticleEmitterType_DynamicPoint;
+    }
 
     tString sType = cString::ToLowerCase(apString);
 
-    if(sType == "point") return eParticleEmitterType_DynamicPoint;
-    else if(sType == "line") return eParticleEmitterType_Line;
-    else if(sType == "axis") return eParticleEmitterType_Axis;
+    if(sType == "point")
+    {
+        return eParticleEmitterType_DynamicPoint;
+    }
+    else if(sType == "line")
+    {
+        return eParticleEmitterType_Line;
+    }
+    else if(sType == "axis")
+    {
+        return eParticleEmitterType_Axis;
+    }
 
     return eParticleEmitterType_DynamicPoint;
 }
@@ -128,13 +173,25 @@ static eParticleEmitterType GetDrawType(const char *apString)
 
 static ePEGravityType GetGravityType(const char *apString)
 {
-    if(apString==NULL) return ePEGravityType_None;
+    if(apString==NULL)
+    {
+        return ePEGravityType_None;
+    }
 
     tString sType = cString::ToLowerCase(apString);
 
-    if(sType == "none") return ePEGravityType_None;
-    else if(sType == "vector") return ePEGravityType_Vector;
-    else if(sType == "center") return ePEGravityType_Center;
+    if(sType == "none")
+    {
+        return ePEGravityType_None;
+    }
+    else if(sType == "vector")
+    {
+        return ePEGravityType_Vector;
+    }
+    else if(sType == "center")
+    {
+        return ePEGravityType_Center;
+    }
 
     return ePEGravityType_None;
 }
@@ -143,12 +200,21 @@ static ePEGravityType GetGravityType(const char *apString)
 
 static ePESubDivType GetSubDivType(const char *apString)
 {
-    if(apString==NULL) return ePESubDivType_Random;
+    if(apString==NULL)
+    {
+        return ePESubDivType_Random;
+    }
 
     tString sType = cString::ToLowerCase(apString);
 
-    if(sType == "random") return ePESubDivType_Random;
-    else if(sType == "animation") return ePESubDivType_Animation;
+    if(sType == "random")
+    {
+        return ePESubDivType_Random;
+    }
+    else if(sType == "animation")
+    {
+        return ePESubDivType_Animation;
+    }
 
     return ePESubDivType_Random;
 }
@@ -158,12 +224,21 @@ static ePESubDivType GetSubDivType(const char *apString)
 
 static ePEPartSpinType GetPartSpinType(const char *apString)
 {
-    if (apString==NULL) return ePEPartSpinType_Constant;
+    if (apString==NULL)
+    {
+        return ePEPartSpinType_Constant;
+    }
 
     tString sType = cString::ToLowerCase(apString);
 
-    if (sType == "constant") return ePEPartSpinType_Constant;
-    else if (sType == "movement") return ePEPartSpinType_Movement;
+    if (sType == "constant")
+    {
+        return ePEPartSpinType_Constant;
+    }
+    else if (sType == "movement")
+    {
+        return ePEPartSpinType_Movement;
+    }
 
     return ePEPartSpinType_Constant;
 }
@@ -218,20 +293,32 @@ void cParticleEmitterData_UserData::LoadFromElement(cXmlElement *apElement)
         sMaterial = cString::SetFileExt(sMaterial,"mat");
         cMaterial *pMaterial = mpResources->GetMaterialManager()->CreateMaterial(sMaterial);
 
-        if(pMaterial) mvMaterials.push_back(pMaterial);
+        if(pMaterial)
+        {
+            mvMaterials.push_back(pMaterial);
+        }
     }
     else
     {
         for(int i=1; i<lMaterialNum+1; ++i)
         {
             tString sFileName;
-            if(i>9)        sFileName = sMaterial + cString::ToString(i);
-            else        sFileName = sMaterial + "0"+cString::ToString(i);
+            if(i>9)
+            {
+                sFileName = sMaterial + cString::ToString(i);
+            }
+            else
+            {
+                sFileName = sMaterial + "0"+cString::ToString(i);
+            }
 
             sFileName = cString::SetFileExt(sFileName,"mat");
 
             cMaterial *pMaterial = mpResources->GetMaterialManager()->CreateMaterial(sFileName);
-            if(pMaterial) mvMaterials.push_back(pMaterial);
+            if(pMaterial)
+            {
+                mvMaterials.push_back(pMaterial);
+            }
         }
     }
 
@@ -464,8 +551,14 @@ cParticleEmitter_UserData::cParticleEmitter_UserData(
 
     //Calculate max size of particles.
     float fSizeMul = apData->mfStartRelSize;
-    if(fSizeMul < apData->mfMiddleRelSize) fSizeMul = apData->mfMiddleRelSize;
-    if(fSizeMul < apData->mfEndRelSize) fSizeMul = apData->mfEndRelSize;
+    if(fSizeMul < apData->mfMiddleRelSize)
+    {
+        fSizeMul = apData->mfMiddleRelSize;
+    }
+    if(fSizeMul < apData->mfEndRelSize)
+    {
+        fSizeMul = apData->mfEndRelSize;
+    }
     mvMaxDrawSize = apData->mvMaxStartSize * fSizeMul;
 
 
@@ -615,7 +708,10 @@ cParticleEmitter_UserData::~cParticleEmitter_UserData()
 
 bool cParticleEmitter_UserData::IsDying()
 {
-    if(mbRespawn==false || mbDying) return true;
+    if(mbRespawn==false || mbDying)
+    {
+        return true;
+    }
 
     return false;
 }
@@ -647,9 +743,13 @@ void cParticleEmitter_UserData::SetParticleDefaults(cParticle *apParticle)
     ///////////////////////////////////
     //Start Size
     if(mpData->mvMinStartSize.y == 0 && mpData->mvMaxStartSize.y==0)
+    {
         apParticle->mvStartSize = cMath::RandRectf(mpData->mvMinStartSize.x,mpData->mvMaxStartSize.x);
+    }
     else
+    {
         apParticle->mvStartSize = cMath::RandRectVector2f(mpData->mvMinStartSize,mpData->mvMaxStartSize);
+    }
     apParticle->mvSize = apParticle->mvStartSize * mpData->mfStartRelSize;
 
     ////////////////////////////////////
@@ -989,12 +1089,18 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
             pParticle->mfSpin += pParticle->mfSpinVel * afTimeStep;
 
             if (mpData->mPartSpinType == ePEPartSpinType_Movement)
+            {
                 pParticle->mfSpinVel = pParticle->mvVel.Length() * pParticle->mfSpinFactor;
+            }
 
             if (pParticle->mfSpin >= k2Pif)
+            {
                 pParticle->mfSpin -= k2Pif;
+            }
             else if (pParticle->mfSpin <= -k2Pif)
+            {
                 pParticle->mfSpin += k2Pif;
+            }
 
         }
 
@@ -1055,9 +1161,13 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
             if(mbRespawn)
             {
                 if(mbPaused)
+                {
                     SwapRemove(i);
+                }
                 else
+                {
                     SetParticleDefaults(pParticle);
+                }
             }
             else
             {

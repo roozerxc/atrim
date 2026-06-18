@@ -72,7 +72,10 @@ public:
      */
     inline cGlyph* GetGlyph(int alNum)const
     {
-        if(alNum<0 || alNum>=(int)mvGlyphs.size()) return NULL;
+        if(alNum<0 || alNum>=(int)mvGlyphs.size())
+        {
+            return NULL;
+        }
         return mvGlyphs[alNum];
     }
 

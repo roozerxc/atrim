@@ -32,7 +32,9 @@ bool cActionGamepadHat::IsTriggerd()
 {
     iGamepad* pPad = mpInput->GetGamepad(mlPadIndex);
     if(pPad)
+    {
         return pPad->HatIsInState(mHat, mHatState);
+    }
 
     return false;
 }
@@ -41,8 +43,14 @@ bool cActionGamepadHat::IsTriggerd()
 
 float cActionGamepadHat::GetValue()
 {
-    if(IsTriggerd())return 1.0;
-    else return 0.0;
+    if(IsTriggerd())
+    {
+        return 1.0;
+    }
+    else
+    {
+        return 0.0;
+    }
 }
 
 //-----------------------------------------------------------------------

@@ -98,7 +98,10 @@ void cLuxCritter_Spider::UpdateCritterSpecific(float afTimeStep)
 
 void cLuxCritter_Spider::OnDamageCritter(float afAmount)
 {
-    if(afAmount <= 2) return;
+    if(afAmount <= 2)
+    {
+        return;
+    }
 
     mfCount = 1.0f;
     mState = eLuxCritterState_Hit;
@@ -143,7 +146,10 @@ void cLuxCritter_Spider::UpdateVelocity(float afTimeStep)
 {
     cVector3f vMoveVelAdd =0;
 
-    if(mfCount>0) mfCount-= afTimeStep;
+    if(mfCount>0)
+    {
+        mfCount-= afTimeStep;
+    }
 
     //If lantern is on, flee!
     if(mState != eLuxCritterState_Flee && gpBase->mpPlayer->GetHelperLantern()->IsActive())
@@ -288,7 +294,10 @@ void cLuxCritter_Spider::UpdateVelocity(float afTimeStep)
     // Hit
     else if(mState == eLuxCritterState_Hit)
     {
-        if(mfCount<=0) mState = eLuxCritterState_Idle;
+        if(mfCount<=0)
+        {
+            mState = eLuxCritterState_Idle;
+        }
     }
     ////////////////////////
     // Attack 1
@@ -312,7 +321,10 @@ void cLuxCritter_Spider::UpdateVelocity(float afTimeStep)
     {
         mfMaxSpeed = mfMaxHuntSpeed;
         vMoveVelAdd += GetTowardPlayerAdd(false, afTimeStep);
-        if(mfCount<=0) mState= eLuxCritterState_Idle;
+        if(mfCount<=0)
+        {
+            mState= eLuxCritterState_Idle;
+        }
     }
 
     /////////////////////
@@ -389,7 +401,10 @@ void cLuxCritter_Spider::UpdateGroundCheck(float afTimeStep)
 
 void cLuxCritter_Spider::OnShapeCollision(const cVector3f& avPushVec, float afTimeStep)
 {
-    if(mState == eLuxCritterState_Hit) return;
+    if(mState == eLuxCritterState_Hit)
+    {
+        return;
+    }
 
     /////////////////////////////
     // Update count, so
@@ -422,11 +437,17 @@ void cLuxCritter_Spider::OnShapeCollision(const cVector3f& avPushVec, float afTi
     if(mpRayCallback->GetIntersected())
     {
         //No climbing on dynamic bodies allowed
-        if(mpRayCallback->GetBody()->GetMass()!=0) return;
+        if(mpRayCallback->GetBody()->GetMass()!=0)
+        {
+            return;
+        }
 
         mvIntersectNormal = mpRayCallback->GetNormal();
 
-        if(mvIntersectNormal ==0) return;
+        if(mvIntersectNormal ==0)
+        {
+            return;
+        }
 
         //Must be enough difference!
         if(cMath::Vector3Dot(mvIntersectNormal, mvGroundNormal) > 8)//0.71f)
@@ -467,7 +488,10 @@ void cLuxCritter_Spider::OnShapeCollision(const cVector3f& avPushVec, float afTi
         vEndPos = vStartPos + vPushDir * (mpBody->GetShape()->GetRadius()+0.25f);
 
         pPhysicsWorld->CastRay(mpRayCallback, vStartPos, vEndPos, false,false,false, true);
-        if(mpRayCallback->GetIntersected()) lClimbPointCount++;
+        if(mpRayCallback->GetIntersected())
+        {
+            lClimbPointCount++;
+        }
     }
     if(lClimbPointCount < 3)
     {

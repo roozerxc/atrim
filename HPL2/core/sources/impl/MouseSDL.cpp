@@ -111,20 +111,38 @@ void cMouseSDL::Update()
                 break;
             case SDL_BUTTON_WHEELUP:
                 mvMButtonArray[eMouseButton_WheelUp] = bButtonIsDown;
-                if(bButtonIsDown) mbWheelUpMoved = true;
+                if(bButtonIsDown)
+                {
+                    mbWheelUpMoved = true;
+                }
                 break;
             case SDL_BUTTON_WHEELDOWN:
                 mvMButtonArray[eMouseButton_WheelDown] = bButtonIsDown;
-                if(bButtonIsDown) mbWheelDownMoved = true;
+                if(bButtonIsDown)
+                {
+                    mbWheelDownMoved = true;
+                }
                 break;
             }
         }
     }
 
-    if(mbWheelDownMoved)    mvMButtonArray[eMouseButton_WheelDown] = true;
-    else                    mvMButtonArray[eMouseButton_WheelDown] = false;
-    if(mbWheelUpMoved)        mvMButtonArray[eMouseButton_WheelUp] = true;
-    else                    mvMButtonArray[eMouseButton_WheelUp] = false;
+    if(mbWheelDownMoved)
+    {
+        mvMButtonArray[eMouseButton_WheelDown] = true;
+    }
+    else
+    {
+        mvMButtonArray[eMouseButton_WheelDown] = false;
+    }
+    if(mbWheelUpMoved)
+    {
+        mvMButtonArray[eMouseButton_WheelUp] = true;
+    }
+    else
+    {
+        mvMButtonArray[eMouseButton_WheelUp] = false;
+    }
 
     int lX,lY;
     SDL_GetRelativeMouseState(&lX, &lY);

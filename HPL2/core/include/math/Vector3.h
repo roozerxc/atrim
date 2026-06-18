@@ -69,27 +69,51 @@ public:
 
     inline bool operator==(const cVector3<T> &aVec) const
     {
-        if(x == aVec.x && y==aVec.y && z==aVec.z)return true;
-        else return false;
+        if(x == aVec.x && y==aVec.y && z==aVec.z)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     inline bool operator!=(const cVector3<T> &aVec) const
     {
-        if(x == aVec.x && y==aVec.y && z==aVec.z)return false;
-        else return true;
+        if(x == aVec.x && y==aVec.y && z==aVec.z)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     inline bool operator<(const cVector3<T> &aVec) const
     {
-        if(x != aVec.x) return x < aVec.x;
-        if(y != aVec.y) return y < aVec.y;
+        if(x != aVec.x)
+        {
+            return x < aVec.x;
+        }
+        if(y != aVec.y)
+        {
+            return y < aVec.y;
+        }
         return z < aVec.z;
     }
 
     inline bool operator>(const cVector3<T> &aVec) const
     {
-        if(x != aVec.x) return x > aVec.x;
-        if(y != aVec.y) return y > aVec.y;
+        if(x != aVec.x)
+        {
+            return x > aVec.x;
+        }
+        if(y != aVec.y)
+        {
+            return y > aVec.y;
+        }
         return z > aVec.z;
     }
 

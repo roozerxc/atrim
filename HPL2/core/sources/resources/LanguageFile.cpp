@@ -63,7 +63,10 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
         return false;
     }
 
-    if(bLog) Log("Loading lang file '%ls'\n---------------------\n",asFile.c_str());
+    if(bLog)
+    {
+        Log("Loading lang file '%ls'\n---------------------\n",asFile.c_str());
+    }
 
     TiXmlElement *pRootElem = pDoc->FirstChildElement();
 
@@ -85,7 +88,10 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
 
                 bool bAddSubDirs = cString::ToBool(pDirElem->Attribute("AddSubDirs"), true);
 
-                if(sPath[0]=='/' || sPath[0]=='\\') sPath = cString::Sub(sPath, 1);
+                if(sPath[0]=='/' || sPath[0]=='\\')
+                {
+                    sPath = cString::Sub(sPath, 1);
+                }
 #ifndef HPL_MINIMAL
                 //Log("Adding lang path: '%s' %d\n", sPath.c_str(), bAddSubDirs);
                 if (asAltPath.length())
@@ -119,13 +125,19 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
             pCategory = hplNew( cLanguageCategory, () );
             m_mapCategories.insert(tLanguageCategoryMap::value_type(sCatName, pCategory));
 
-            if(bLog) Log("Creating category '%s'\n",sCatName.c_str());
+            if(bLog)
+            {
+                Log("Creating category '%s'\n",sCatName.c_str());
+            }
         }
         else
         {
             pCategory = CatIt->second;
 
-            if(bLog) Log("Got existing category '%s'\n",sCatName.c_str());
+            if(bLog)
+            {
+                Log("Got existing category '%s'\n",sCatName.c_str());
+            }
         }
 
 
@@ -140,7 +152,10 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
             //Check if the entry already exists, if so, just continue.
             if(pCategory->m_mapEntries.find(sEntryName) != pCategory->m_mapEntries.end())
             {
-                if(bLog) Log("Entry '%s' already exist!\n",sEntryName.c_str());
+                if(bLog)
+                {
+                    Log("Entry '%s' already exist!\n",sEntryName.c_str());
+                }
 
                 continue;
             }
@@ -149,7 +164,10 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
             //Create entry
             cLanguageEntry *pEntry = hplNew( cLanguageEntry, () );
 
-            if(bLog) Log("Creating Entry '%s'\n",sEntryName.c_str());
+            if(bLog)
+            {
+                Log("Creating Entry '%s'\n",sEntryName.c_str());
+            }
 
 
             ////////////////////////

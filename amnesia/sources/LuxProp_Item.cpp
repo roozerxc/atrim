@@ -77,7 +77,10 @@ void cLuxPropLoader_Item::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsO
     // All
     tString sCustomSubItemTypeName = apInstanceVars->GetVarString("CustomSubItemTypeName","");
 
-    if(sCustomSubItemTypeName != "") pItem->msSubItemTypeName = sCustomSubItemTypeName;
+    if(sCustomSubItemTypeName != "")
+    {
+        pItem->msSubItemTypeName = sCustomSubItemTypeName;
+    }
 
     ///////////////////////////
     // Note
@@ -126,7 +129,10 @@ cLuxProp_Item::~cLuxProp_Item()
 
 bool cLuxProp_Item::CanInteract(iPhysicsBody *apBody)
 {
-    if(mbDestroyMe) return false; //To be 100% a player cannot double click on a note (if he is REALLY fast after closing journal)
+    if(mbDestroyMe)
+    {
+        return false;    //To be 100% a player cannot double click on a note (if he is REALLY fast after closing journal)
+    }
     return true;
 }
 
@@ -181,7 +187,10 @@ void cLuxProp_Item::OnSetupAfterLoad(cWorld *apWorld)
 
 void cLuxProp_Item::UpdatePropSpecific(float afTimeStep)
 {
-    if(mbInteractionDisabled) return;
+    if(mbInteractionDisabled)
+    {
+        return;
+    }
 
     /////////////////////////////////
     // If near player, flash
@@ -195,12 +204,18 @@ void cLuxProp_Item::UpdatePropSpecific(float afTimeStep)
     if(fDistSqrt < 4.0f * 4.0f)
     {
         mfFlashAlpha += afTimeStep;
-        if(mfFlashAlpha >1)mfFlashAlpha =1;
+        if(mfFlashAlpha >1)
+        {
+            mfFlashAlpha =1;
+        }
     }
     else
     {
         mfFlashAlpha -=afTimeStep;
-        if(mfFlashAlpha <0)mfFlashAlpha =0;
+        if(mfFlashAlpha <0)
+        {
+            mfFlashAlpha =0;
+        }
     }
 
     if(mfFlashAlpha> 0)
@@ -210,7 +225,9 @@ void cLuxProp_Item::UpdatePropSpecific(float afTimeStep)
             cSubMeshEntity *pSubEnt = mpMeshEntity->GetSubMeshEntity(i);
 
             if(pCam->GetFrustum()->CollideBoundingVolume(pSubEnt->GetBoundingVolume()) != eCollision_Outside)
+            {
                 gpBase->mpEffectRenderer->AddFlashObject(pSubEnt, mfFlashAlpha);
+            }
         }
     }
 }

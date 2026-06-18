@@ -83,7 +83,10 @@ cBone* cSkeleton::GetBoneByIndex(int alIndex)
 cBone* cSkeleton::GetBoneByName(const tString &asName)
 {
     int alIdx = GetBoneIndexByName(asName);
-    if(alIdx <0) return NULL;
+    if(alIdx <0)
+    {
+        return NULL;
+    }
 
     return mvBones[alIdx];
 }
@@ -91,7 +94,10 @@ cBone* cSkeleton::GetBoneBySid(const tString &asSid)
 {
     for(size_t i=0; i<mvBones.size(); ++i)
     {
-        if(mvBones[i]->GetSid() == asSid) return mvBones[i];
+        if(mvBones[i]->GetSid() == asSid)
+        {
+            return mvBones[i];
+        }
     }
     return NULL;
 }
@@ -99,7 +105,10 @@ cBone* cSkeleton::GetBoneBySid(const tString &asSid)
 int cSkeleton::GetBoneIndexByName(const tString &asName)
 {
     tBoneIdxNameMapIt it = m_mapBonesIdxByName.find(asName);
-    if(it == m_mapBonesIdxByName.end()) return -1;
+    if(it == m_mapBonesIdxByName.end())
+    {
+        return -1;
+    }
 
     return it->second;
 }
@@ -107,7 +116,10 @@ int cSkeleton::GetBoneIndexBySid(const tString &asSid)
 {
     for(size_t i=0; i<mvBones.size(); ++i)
     {
-        if(mvBones[i]->GetSid() == asSid) return (int)i;
+        if(mvBones[i]->GetSid() == asSid)
+        {
+            return (int)i;
+        }
     }
     return-1;
 }

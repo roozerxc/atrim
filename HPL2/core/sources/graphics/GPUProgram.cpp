@@ -22,7 +22,10 @@ iGpuProgram::iGpuProgram(const tString& asName,eGpuProgramFormat aProgramFormat)
 
     mbAutoDestroyShaders = true;
 
-    for(int i=0; i<2; ++i) mpShader[i] = NULL;
+    for(int i=0; i<2; ++i)
+    {
+        mpShader[i] = NULL;
+    }
 
     mlUserId = 0;
 }
@@ -33,7 +36,10 @@ iGpuProgram::~iGpuProgram()
     {
         for(int i=0; i<2; ++i)
         {
-            if(mpShader[i]) mpResources->GetGpuShaderManager()->Destroy(mpShader[i]);
+            if(mpShader[i])
+            {
+                mpResources->GetGpuShaderManager()->Destroy(mpShader[i]);
+            }
         }
     }
 }

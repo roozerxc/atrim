@@ -66,9 +66,13 @@ cBitmap* cBitmapLoaderDevilDDS::LoadBitmap(const tWString& asFile, tBitmapLoadFl
     {
         lNumOfImages = ilGetInteger(IL_NUM_FACES) + 1;
         if (lNumOfImages > 1)
+        {
             useFacesInsteadOfImages = true;
+        }
         else
+        {
             lNumOfImages = 6;
+        }
     }
 
     //No need to setup if only one image and mipmap, data is already setup for that.
@@ -115,12 +119,18 @@ cBitmap* cBitmapLoaderDevilDDS::LoadBitmap(const tWString& asFile, tBitmapLoadFl
                     if (lNumOfImages > 1)
                     {
                         if (useFacesInsteadOfImages)
+                        {
                             ilActiveFace(image);
+                        }
                         else
+                        {
                             ilActiveImage(image);
+                        }
                     }
                     if(lNumOfMipMaps > 1)
+                    {
                         ilActiveMipmap(mip);
+                    }
                 }
 
                 cBitmapData *pImage = pBitmap->GetData(image,mip);
@@ -153,12 +163,18 @@ cBitmap* cBitmapLoaderDevilDDS::LoadBitmap(const tWString& asFile, tBitmapLoadFl
                     if (lNumOfImages > 1)
                     {
                         if (useFacesInsteadOfImages)
+                        {
                             ilActiveFace(image);
+                        }
                         else
+                        {
                             ilActiveImage(image);
+                        }
                     }
                     if (lNumOfMipMaps > 1)
+                    {
                         ilActiveMipmap(mip);
+                    }
                 }
 
                 cBitmapData *pImage = pBitmap->GetData(image,mip);

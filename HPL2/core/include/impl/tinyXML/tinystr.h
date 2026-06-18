@@ -198,11 +198,17 @@ public :
     // find a char in a string from an offset. Return TiXmlString::npos if not found
     size_type find (char tofind, size_type offset) const
     {
-        if (offset >= length()) return npos;
+        if (offset >= length())
+        {
+            return npos;
+        }
 
         for (const char* p = c_str() + offset; *p != '\0'; ++p)
         {
-            if (*p == tofind) return static_cast< size_type >( p - c_str() );
+            if (*p == tofind)
+            {
+                return static_cast< size_type >( p - c_str() );
+            }
         }
         return npos;
     }

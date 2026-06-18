@@ -72,7 +72,9 @@ void cLuxMainMenu_CustomStory::CreateGui()
                              sLabel.c_str());
 
         if(fButtonWidth < fLabelLength)
+        {
             fButtonWidth = fLabelLength;
+        }
     }
 
     //////////////////////////
@@ -124,7 +126,9 @@ void cLuxMainMenu_CustomStory::CreateGui()
 void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
 {
     if(mpStory==apStory)
+    {
         return;
+    }
 
     if(apStory==NULL)
     {
@@ -141,17 +145,23 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
     // Retrieve story name
     sName = mpStory->msName;
     if(sName==_W(""))
+    {
         sName = kTranslate("CustomStory", "NoName");
+    }
 
     // Retrieve author name
     sAuthor = mpStory->msAuthor;
     if(sAuthor==_W(""))
+    {
         sAuthor = kTranslate("CustomStory", "NoAuthor");
+    }
 
     // Retrieve description
     sDescription = kTranslate("CustomStoryMain", "Description");
     if(sDescription==_W(""))
+    {
         sDescription = kTranslate("CustomStory", "NoDescription");
+    }
 
     // Check to see if image exists and set if it does
     if(mpStory->msImgFile!="")
@@ -165,7 +175,9 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
 
         iTexture* pTex = gpBase->mpEngine->GetResources()->GetTextureManager()->Create2D(mpStory->msImgFile, false, eTextureType_Rect);
         if(pTex)
+        {
             pGfx = mpGui->CreateGfxTexture(pTex, true, eGuiMaterial_Alpha);
+        }
 
         mpIPicture->SetImage(pGfx);
     }
@@ -182,7 +194,9 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
     ////////////////////////////////////////////////////
     // Set up buttons (positioning and visibility)
     if(mvButtons.empty())
+    {
         return;
+    }
 
     float fButtonSep = 3.0f;
     bool bSaveFileExists = gpBase->mpSaveHandler->SaveFileExists();
@@ -209,7 +223,9 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
         pButton->SetVisible(bButtonActive);
 
         if(bButtonActive==false)
+        {
             continue;
+        }
 
         pButton->SetPosition(vButtonPos);
 
@@ -260,11 +276,15 @@ bool cLuxMainMenu_CustomStory::PressStart(iWidget* apWidget, const cGuiMessageDa
     // Create save folder if not already present
     tWString sProfileCustomSaveFolder = gpBase->msMainProfileSavePath + _W("custom");
     if(cPlatform::FolderExists(sProfileCustomSaveFolder)==false)
+    {
         cPlatform::CreateFolder(sProfileCustomSaveFolder);
+    }
     else
     {
         if(cPlatform::FolderExists(gpBase->msProfileSavePath)==false)
+        {
             cPlatform::CreateFolder(gpBase->msProfileSavePath);
+        }
     }
 
     gpBase->StartCustomStory();
@@ -338,22 +358,22 @@ void cLuxMainMenu_CustomStoryList::CreateGui()
     mpLBStories->AddCallback(eGuiMessage_SelectionChange, this, kGuiCallback(SelectStory));
     mpLBStories->AddCallback(eGuiMessage_SelectionDoubleClick, this, kGuiCallback(PressOK));
 
-	//////////////////////////
-	//Buttons
-	float fButtonWidth = 80;
-	float fButtonSepp = 3;
+    //////////////////////////
+    //Buttons
+    float fButtonWidth = 80;
+    float fButtonSepp = 3;
 
-	vPos.x = mpWindow->GetSize().x - fButtonWidth*2-fButtonSepp-5;
-	vPos.y = mpWindow->GetSize().y - 25 - 10;
+    vPos.x = mpWindow->GetSize().x - fButtonWidth*2-fButtonSepp-5;
+    vPos.y = mpWindow->GetSize().y - 25 - 10;
 
-	//Start
-	cWidgetButton* pButton  = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),kTranslate("Global","OK"),mpWindow);
-	pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressOK));
+    //Start
+    cWidgetButton* pButton  = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),kTranslate("Global","OK"),mpWindow);
+    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressOK));
 
-	//Cancel
-	vPos.x += fButtonWidth + fButtonSepp;
-	pButton = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),kTranslate("Global","Cancel"),mpWindow);
-	pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressCancel));
+    //Cancel
+    vPos.x += fButtonWidth + fButtonSepp;
+    pButton = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),kTranslate("Global","Cancel"),mpWindow);
+    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressCancel));
 }
 
 //-----------------------------------------------------------------------
@@ -361,7 +381,10 @@ void cLuxMainMenu_CustomStoryList::CreateGui()
 
 void cLuxMainMenu_CustomStoryList::ExitPressed()
 {
-    if(mpGuiSet->PopUpIsActive()) return;
+    if(mpGuiSet->PopUpIsActive())
+    {
+        return;
+    }
 
     gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_LastEnum);
 }
@@ -377,9 +400,13 @@ void cLuxMainMenu_CustomStoryList::ExitPressed()
 void cLuxMainMenu_CustomStoryList::OnSetActive(bool abX)
 {
     if(abX)
+    {
         PopulateStoryList();
+    }
     else
+    {
         ClearStoryList();
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -410,7 +437,9 @@ void cLuxMainMenu_CustomStoryList::PopulateStoryList()
             pItem->SetUserData(pStory);
         }
         else
+        {
             hplDelete(pStory);
+        }
     }
 }
 
@@ -482,20 +511,20 @@ bool cLuxMainMenu_CustomStoryList::PressOK(iWidget* apWidget, const cGuiMessageD
     /////////////////////////////////////////////////////////////
     // Check if the list has a valid selection, and warn if not
     if(mpLBStories->GetSelectedItem()<0)
-	{
+    {
         mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"),
                                         kTranslate("CustomStory", "NoValidStory"),
                                         kTranslate("Global","OK"), _W(""),
                                         NULL, NULL);
-	}
-	else
-	{
-		cWidgetItem* pItem = mpLBStories->GetItem(mpLBStories->GetSelectedItem());
-		cLuxCustomStorySettings* pStory = (cLuxCustomStorySettings*)pItem->GetUserData();
-		mpStoryWindow->SetCurrentStory(pStory);
+    }
+    else
+    {
+        cWidgetItem* pItem = mpLBStories->GetItem(mpLBStories->GetSelectedItem());
+        cLuxCustomStorySettings* pStory = (cLuxCustomStorySettings*)pItem->GetUserData();
+        mpStoryWindow->SetCurrentStory(pStory);
 
-		gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_CustomStory);
-	}
+        gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_CustomStory);
+    }
 
     return true;
 }
@@ -516,7 +545,9 @@ bool cLuxMainMenu_CustomStoryList::LoadStoryCallback(iWidget* apWidget, const cG
 {
     bool bOkPressed = aData.mlVal==0? true : false;
     if(bOkPressed==false)
+    {
         return true;
+    }
 
     LoadStory(mpLBStories->GetSelectedItem());
 

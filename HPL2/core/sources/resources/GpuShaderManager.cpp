@@ -37,9 +37,9 @@ cGpuShaderManager::cGpuShaderManager(cFileSearcher *apFileSearcher,iLowLevelGrap
 #ifdef _WIN32
     mpPreprocessParser->GetEnvVarContainer()->Add("OS_Windows");
 #elif defined(__APPLE__)
-	mpPreprocessParser->GetEnvVarContainer()->Add("OS_OSX");
+    mpPreprocessParser->GetEnvVarContainer()->Add("OS_OSX");
 #elif defined(__linux__)
-	mpPreprocessParser->GetEnvVarContainer()->Add("OS_Linux");
+    mpPreprocessParser->GetEnvVarContainer()->Add("OS_Linux");
 #endif
 }
 
@@ -64,9 +64,18 @@ void cGpuShaderManager::CheckFeatureSupport()
 {
     ////////////////////////////
     //Shader model variables
-    if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_2))        mpPreprocessParser->GetEnvVarContainer()->Add("ShaderModel_2");
-    if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_3))        mpPreprocessParser->GetEnvVarContainer()->Add("ShaderModel_3");
-    if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_4))        mpPreprocessParser->GetEnvVarContainer()->Add("ShaderModel_4");
+    if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_2))
+    {
+        mpPreprocessParser->GetEnvVarContainer()->Add("ShaderModel_2");
+    }
+    if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_3))
+    {
+        mpPreprocessParser->GetEnvVarContainer()->Add("ShaderModel_3");
+    }
+    if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_4))
+    {
+        mpPreprocessParser->GetEnvVarContainer()->Add("ShaderModel_4");
+    }
 
     /////////////////////////
     // Test Feature support
@@ -137,7 +146,10 @@ iGpuShader* cGpuShaderManager::CreateShader(const tString& asName, eGpuShaderTyp
             {
                 const tString& sVarName = varIt->first;
                 const tString& sVarVal = varIt->second;
-                if(sVarName == "") continue;
+                if(sVarName == "")
+                {
+                    continue;
+                }
 
                 tStringVec vStrings;
                 tString sSepp = "_";
@@ -174,8 +186,14 @@ iGpuShader* cGpuShaderManager::CreateShader(const tString& asName, eGpuShaderTyp
             AddResource(pShader);
         }
 
-        if(pShader)pShader->IncUserCount();
-        else Error("Couldn't load program '%s'\n",asName.c_str());
+        if(pShader)
+        {
+            pShader->IncUserCount();
+        }
+        else
+        {
+            Error("Couldn't load program '%s'\n",asName.c_str());
+        }
     }
 
 

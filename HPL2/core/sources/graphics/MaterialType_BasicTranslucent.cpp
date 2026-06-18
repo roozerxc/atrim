@@ -93,7 +93,9 @@ cMaterialType_Translucent::cMaterialType_Translucent(cGraphics *apGraphics, cRes
     AddVarBool("AffectedByLightLevel", false, "The the material alpha is affected by the light level.");
 
     for(int i=0; i<5; ++i)
+    {
         mpBlendProgramManager[i] = hplNew( cProgramComboManager, ("Blend"+cString::ToString(i),mpGraphics, mpResources,eMaterialRenderMode_LastEnum) );
+    }
 
     mbHasTypeSpecifics[eMaterialRenderMode_Diffuse] = true;
     mbHasTypeSpecifics[eMaterialRenderMode_DiffuseFog] = true;
@@ -104,7 +106,9 @@ cMaterialType_Translucent::cMaterialType_Translucent(cGraphics *apGraphics, cRes
 cMaterialType_Translucent::~cMaterialType_Translucent()
 {
     for(int i=0; i<5; ++i)
+    {
         hplDelete(mpBlendProgramManager[i]);
+    }
 }
 
 
@@ -135,11 +139,26 @@ void cMaterialType_Translucent::LoadData()
         defaultVars.Add("UseNormals");
         defaultVars.Add("UseColor");
 
-        if(i==0) defaultVars.Add("BlendMode_Add");
-        if(i==1) defaultVars.Add("BlendMode_Mul");
-        if(i==2) defaultVars.Add("BlendMode_MulX2");
-        if(i==3) defaultVars.Add("BlendMode_Alpha");
-        if(i==4) defaultVars.Add("BlendMode_PremulAlpha");
+        if(i==0)
+        {
+            defaultVars.Add("BlendMode_Add");
+        }
+        if(i==1)
+        {
+            defaultVars.Add("BlendMode_Mul");
+        }
+        if(i==2)
+        {
+            defaultVars.Add("BlendMode_MulX2");
+        }
+        if(i==3)
+        {
+            defaultVars.Add("BlendMode_Alpha");
+        }
+        if(i==4)
+        {
+            defaultVars.Add("BlendMode_PremulAlpha");
+        }
 
         mpBlendProgramManager[i]->SetupGenerateProgramData(    eMaterialRenderMode_Diffuse,"Diffuse","deferred_base_vtx.glsl", "deferred_transparent_frag.glsl",
                 vDiffuseFeatureVec,kDiffuseFeatureNum, defaultVars);
@@ -161,7 +180,10 @@ void cMaterialType_Translucent::LoadData()
 }
 void cMaterialType_Translucent::DestroyData()
 {
-    for(int i=0; i<5; ++i) mpBlendProgramManager[i]->DestroyShadersAndPrograms();
+    for(int i=0; i<5; ++i)
+    {
+        mpBlendProgramManager[i]->DestroyShadersAndPrograms();
+    }
 }
 
 //--------------------------------------------------------------------------
@@ -184,9 +206,13 @@ iTexture* cMaterialType_Translucent::GetTextureForUnit(cMaterial *apMaterial,eMa
             return apMaterial->GetTexture(eMaterialTexture_NMap);
         case 2:
             if(bRefractionEnabled)
+            {
                 return mpGraphics->GetRenderer(eRenderer_Main)->GetRefractionTexture();
+            }
             else
+            {
                 return NULL;
+            }
         case 3:
             return apMaterial->GetTexture(eMaterialTexture_CubeMap);
         case 4:
@@ -233,17 +259,38 @@ iGpuProgram* cMaterialType_Translucent::GetGpuProgram(cMaterial *apMaterial, eMa
         int lProgramNum = apMaterial->GetBlendMode()-1;
 
         tFlag lFlags =0;
-        if(apMaterial->GetTexture(eMaterialTexture_Diffuse))    lFlags |= eFeature_Diffuse_DiffuseMap;
-        if(aRenderMode == eMaterialRenderMode_DiffuseFog)        lFlags |= eFeature_Diffuse_Fog;
-        if(apMaterial->HasUvAnimation())                        lFlags |= eFeature_Diffuse_UvAnimation;
-        if(apMaterial->GetTexture(eMaterialTexture_NMap))        lFlags |= eFeature_Diffuse_NormalMap;
+        if(apMaterial->GetTexture(eMaterialTexture_Diffuse))
+        {
+            lFlags |= eFeature_Diffuse_DiffuseMap;
+        }
+        if(aRenderMode == eMaterialRenderMode_DiffuseFog)
+        {
+            lFlags |= eFeature_Diffuse_Fog;
+        }
+        if(apMaterial->HasUvAnimation())
+        {
+            lFlags |= eFeature_Diffuse_UvAnimation;
+        }
+        if(apMaterial->GetTexture(eMaterialTexture_NMap))
+        {
+            lFlags |= eFeature_Diffuse_NormalMap;
+        }
         if(bRefractionEnabled && apMaterial->GetTexture(eMaterialTexture_CubeMap))
         {
             lFlags |= eFeature_Diffuse_EnvMap;
-            if(apMaterial->GetTexture(eMaterialTexture_CubeMapAlpha))    lFlags |= eFeature_Diffuse_CubeMapAlpha;
+            if(apMaterial->GetTexture(eMaterialTexture_CubeMapAlpha))
+            {
+                lFlags |= eFeature_Diffuse_CubeMapAlpha;
+            }
         }
-        if(bRefractionEnabled)                                    lFlags |= eFeature_Diffuse_UseRefraction;
-        if(pVars->mbRefractionNormals && bRefractionEnabled)    lFlags |= eFeature_Diffuse_UseScreenNormal;
+        if(bRefractionEnabled)
+        {
+            lFlags |= eFeature_Diffuse_UseRefraction;
+        }
+        if(pVars->mbRefractionNormals && bRefractionEnabled)
+        {
+            lFlags |= eFeature_Diffuse_UseScreenNormal;
+        }
 
         return mpBlendProgramManager[lProgramNum]->GenerateProgram(eMaterialRenderMode_Diffuse, lFlags);
     }
@@ -256,12 +303,21 @@ iGpuProgram* cMaterialType_Translucent::GetGpuProgram(cMaterial *apMaterial, eMa
             int lProgramNum = eMaterialBlendMode_Add - 1;
 
             tFlag lFlags =0;
-            if(aRenderMode == eMaterialRenderMode_IlluminationFog)    lFlags |= eFeature_Diffuse_Fog;
-            if(apMaterial->GetTexture(eMaterialTexture_NMap))        lFlags |= eFeature_Diffuse_NormalMap;
+            if(aRenderMode == eMaterialRenderMode_IlluminationFog)
+            {
+                lFlags |= eFeature_Diffuse_Fog;
+            }
+            if(apMaterial->GetTexture(eMaterialTexture_NMap))
+            {
+                lFlags |= eFeature_Diffuse_NormalMap;
+            }
             if(apMaterial->GetTexture(eMaterialTexture_CubeMap))
             {
                 lFlags |= eFeature_Diffuse_EnvMap;
-                if(apMaterial->GetTexture(eMaterialTexture_CubeMapAlpha))    lFlags |= eFeature_Diffuse_CubeMapAlpha;
+                if(apMaterial->GetTexture(eMaterialTexture_CubeMapAlpha))
+                {
+                    lFlags |= eFeature_Diffuse_CubeMapAlpha;
+                }
             }
 
             return mpBlendProgramManager[lProgramNum]->GenerateProgram(eMaterialRenderMode_Diffuse, lFlags);
@@ -471,7 +527,9 @@ void cMaterialType_Translucent::CompileMaterialSpecifics(cMaterial *apMaterial)
     if(apMaterial->GetTexture(eMaterialTexture_CubeMap))
     {
         if(bRefractionEnabled==false)
+        {
             apMaterial->SetHasTranslucentIllumination(true);
+        }
     }
 }
 

@@ -267,7 +267,7 @@ public:
 
     tString msBaseLanguageFolder;
     tString msGameLanguageFolder;
-	tString msPatchLanguageFolder;
+    tString msPatchLanguageFolder;
 
     tString msCustomStoryPath;
 

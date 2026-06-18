@@ -76,7 +76,10 @@ public:
     void IncUserCount();
     void DecUserCount()
     {
-        if(mlUserCount>0)mlUserCount--;
+        if(mlUserCount>0)
+        {
+            mlUserCount--;
+        }
     }
     bool HasUsers()
     {

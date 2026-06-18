@@ -54,8 +54,14 @@ cFrameSubImage::cFrameSubImage(    const tString& asName,const tWString& asFullP
 
 cFrameSubImage::~cFrameSubImage()
 {
-    if(mpFrameBitmap) mpFrameBitmap->SetNeedReorganisation();
-    if(mpFrameBitmapImage) mpFrameBitmapImage->mpSubImage = NULL; //Since we are deleting, it is no longer valid.
+    if(mpFrameBitmap)
+    {
+        mpFrameBitmap->SetNeedReorganisation();
+    }
+    if(mpFrameBitmapImage)
+    {
+        mpFrameBitmapImage->mpSubImage = NULL;    //Since we are deleting, it is no longer valid.
+    }
 
     mvVtx.clear();
     //mpFrameTexture->DecPicCount();
@@ -98,7 +104,9 @@ tVertexVec cFrameSubImage::GetVertexVecCopy(const cVector2f &avPos, const cVecto
     }
 
     for(int i=0; i<4; i++)
+    {
         vTmpVtx[i].pos+=avPos;
+    }
 
     return vTmpVtx;
 }
@@ -155,7 +163,10 @@ void cFrameSubImage::Destroy()
 
 void cFrameSubImage::UpdateUvs()
 {
-    if(mpFrameBitmapImage==NULL) return;
+    if(mpFrameBitmapImage==NULL)
+    {
+        return;
+    }
 
     ++mlUpdateCount;
 

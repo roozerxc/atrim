@@ -68,7 +68,9 @@ cDecalCreator::~cDecalCreator()
 bool cDecalCreator::AddSubMesh(cSubMeshEntity* apSubMesh)
 {
     if(apSubMesh==NULL)
+    {
         return false;
+    }
 
     cBoundingVolume* pMeshBV = apSubMesh->GetBoundingVolume();
     cBoundingVolume* pDecalBV = GetDecalBoundingVolume();
@@ -87,7 +89,9 @@ bool cDecalCreator::AddSubMesh(cSubMeshEntity* apSubMesh)
 void cDecalCreator::AddAffectedSubMesh(cSubMeshEntity* apSubMesh)
 {
     if(apSubMesh==NULL)
+    {
         return;
+    }
 
     mvMeshes.push_back(apSubMesh);
 
@@ -106,7 +110,9 @@ void cDecalCreator::ClearMeshes()
 void cDecalCreator::SetDecalPosition(const cVector3f& avPosition)
 {
     if(mvDecalPosition==avPosition)
+    {
         return;
+    }
 
     mvDecalPosition = avPosition;
 
@@ -119,12 +125,17 @@ void cDecalCreator::SetDecalPosition(const cVector3f& avPosition)
 void cDecalCreator::SetDecalUp(const cVector3f& avUp, bool abComputeBasis)
 {
     if(mvDecalUp==avUp)
+    {
         return;
+    }
 
     mvDecalUp = avUp;
     mvDecalUp.Normalize();
 
-    if(abComputeBasis)    ComputeBasis();
+    if(abComputeBasis)
+    {
+        ComputeBasis();
+    }
 
     mbUpdated = true;
     mbBVUpdated = true;
@@ -135,12 +146,17 @@ void cDecalCreator::SetDecalUp(const cVector3f& avUp, bool abComputeBasis)
 void cDecalCreator::SetDecalRight(const cVector3f& avRight, bool abComputeBasis)
 {
     if(mvDecalRight==avRight)
+    {
         return;
+    }
 
     mvDecalRight = avRight;
     mvDecalRight.Normalize();
 
-    if(abComputeBasis)    ComputeBasis();
+    if(abComputeBasis)
+    {
+        ComputeBasis();
+    }
 
     mbUpdated = true;
     mbBVUpdated = true;
@@ -151,12 +167,17 @@ void cDecalCreator::SetDecalRight(const cVector3f& avRight, bool abComputeBasis)
 void cDecalCreator::SetDecalForward(const cVector3f& avForward, bool abComputeBasis)
 {
     if(mvDecalForward==avForward)
+    {
         return;
+    }
 
     mvDecalForward = avForward;
     mvDecalForward.Normalize();
 
-    if(abComputeBasis)    ComputeBasis();
+    if(abComputeBasis)
+    {
+        ComputeBasis();
+    }
 
     mbUpdated = true;
     mbBVUpdated = true;
@@ -167,7 +188,9 @@ void cDecalCreator::SetDecalForward(const cVector3f& avForward, bool abComputeBa
 void cDecalCreator::SetDecalOffset(float afOffset)
 {
     if(mfDecalOffset==afOffset)
+    {
         return;
+    }
 
     mfDecalOffset = afOffset;
 
@@ -179,7 +202,9 @@ void cDecalCreator::SetDecalOffset(float afOffset)
 void cDecalCreator::SetDecalSize(const cVector3f& avSize)
 {
     if(mvDecalSize==avSize)
+    {
         return;
+    }
 
     mvDecalSize = avSize;
 
@@ -191,18 +216,24 @@ void cDecalCreator::SetDecalSize(const cVector3f& avSize)
 void cDecalCreator::SetMaterial(const tString& asMat)
 {
     if(msMaterial==asMat)
+    {
         return;
+    }
 
     cMaterialManager* pManager = mpResources->GetMaterialManager();
     cMaterial* pMat = pManager->CreateMaterial(asMat);
     if(pMat)
     {
         if(mpDecalMaterial==pMat)
+        {
             pManager->Destroy(pMat);
+        }
         else
         {
             if(mpDecalMaterial)
+            {
                 pManager->Destroy(mpDecalMaterial);
+            }
 
             mpDecalMaterial = pMat;
             msMaterial = asMat;
@@ -211,7 +242,9 @@ void cDecalCreator::SetMaterial(const tString& asMat)
     else
     {
         if(mpDecalMaterial)
+        {
             pManager->Destroy(mpDecalMaterial);
+        }
         mpDecalMaterial = NULL;
         msMaterial = "";
     }
@@ -224,7 +257,9 @@ void cDecalCreator::SetMaterial(const tString& asMat)
 void cDecalCreator::SetColor(const cColor& aCol)
 {
     if(mColor==aCol)
+    {
         return;
+    }
 
     mColor = aCol;
 
@@ -236,7 +271,9 @@ void cDecalCreator::SetColor(const cColor& aCol)
 void cDecalCreator::SetUVSubDivisions(const cVector2l& avSubDiv)
 {
     if(mvSubDiv==avSubDiv)
+    {
         return;
+    }
 
     mvSubDiv = avSubDiv;
 
@@ -248,7 +285,9 @@ void cDecalCreator::SetUVSubDivisions(const cVector2l& avSubDiv)
 void cDecalCreator::SetCurrentSubDiv(int alSubDiv)
 {
     if(mlCurrentSubDiv==alSubDiv)
+    {
         return;
+    }
 
     mlCurrentSubDiv = alSubDiv;
 
@@ -266,9 +305,13 @@ bool cDecalCreator::Compile()
         mbCompiled = false;
 
         if(mvMeshes.empty())
+        {
             return false;
+        }
         if(cMath::Abs(mvDecalSize.x)<kEpsilonf || cMath::Abs(mvDecalSize.y)<kEpsilonf)
+        {
             return false;
+        }
 
         mbUpdated = false;
 
@@ -359,11 +402,15 @@ bool cDecalCreator::CanCreateDecal()
 cMesh* cDecalCreator::CreateDecalMesh()
 {
     if(CanCreateDecal()==false)
+    {
         return NULL;
+    }
 
     cMaterial* pMat = mpResources->GetMaterialManager()->CreateMaterial(msMaterial);
     if(pMat==NULL)
+    {
         return NULL;
+    }
 
     cMesh *pMesh = hplNew( cMesh, ("", _W(""), mpResources->GetMaterialManager(), mpResources->GetAnimationManager()) );
     cSubMesh* pSubMesh = pMesh->CreateSubMesh("Decal");
@@ -404,7 +451,10 @@ void cDecalCreator::DrawDebug(cRendererCallbackFunctions* apFunctions, bool abDr
             apFunctions->SetTextureRange(NULL,0);
             apFunctions->SetBlendMode(eMaterialBlendMode_None);
         }
-        if(abDrawWireframe)    apFunctions->DrawWireFrame(mpDecalVB, cColor(1));
+        if(abDrawWireframe)
+        {
+            apFunctions->DrawWireFrame(mpDecalVB, cColor(1));
+        }
     }
 
     if(abDrawAxes)
@@ -495,7 +545,9 @@ bool cDecalCreator::AddPolygon(    int alVertexCount, const cVector3f* apVertice
     int lPolyTriCount = alVertexCount-2;
 
     if(mlDecalTriangleCount + lPolyTriCount > mlMaxDecalTriangleCount)
+    {
         return false;
+    }
 
     mlDecalTriangleCount += lPolyTriCount;
 
@@ -593,7 +645,9 @@ void cDecalCreator::ClipMesh(cSubMeshEntity* apSubMesh,iVertexBuffer* apDecalVB)
         vTriNormal.Normalize();
 
         if(cMath::Vector3Dot(vTransformedUp, vTriNormal)<=kEpsilonf)
+        {
             continue;
+        }
 
         vNewVertices[0] = vTriangle[0];
         vNewVertices[1] = vTriangle[1];
@@ -605,7 +659,10 @@ void cDecalCreator::ClipMesh(cSubMeshEntity* apSubMesh,iVertexBuffer* apDecalVB)
 
         // Clip triangle against planes
         int lCount = ClipPolygon(3, vNewVertices, vNewNormals, vNewVertices, vNewNormals, vTransformedPlanes);
-        if((lCount!=0) && (AddPolygon(lCount, vNewVertices, vNewNormals, apDecalVB, mtxSubMeshWorldMatrix,mtxSubMeshWorldNormalRot)==false)) break;
+        if((lCount!=0) && (AddPolygon(lCount, vNewVertices, vNewNormals, apDecalVB, mtxSubMeshWorldMatrix,mtxSubMeshWorldNormalRot)==false))
+        {
+            break;
+        }
     }
 }
 
@@ -668,7 +725,9 @@ int cDecalCreator::ClipPolygonAgainstPlane(const cPlanef& aPlane, int alVertexCo
     //Log("\n");
 
     if(lNegativeCount==alVertexCount)
+    {
         return 0;
+    }
 
     int lCount = 0;
     for(int i=0; i<alVertexCount; ++i)

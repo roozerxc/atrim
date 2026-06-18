@@ -52,10 +52,22 @@ cSubMesh::cSubMesh(const tString &asName, cMaterialManager* apMaterialManager)
 
 cSubMesh::~cSubMesh()
 {
-    if(mpMaterial)mpMaterialManager->Destroy(mpMaterial);
-    if(mpVtxBuffer) hplDelete(mpVtxBuffer);
-    if(mpVertexBones) hplDeleteArray(mpVertexBones);
-    if(mpVertexWeights) hplDeleteArray(mpVertexWeights);
+    if(mpMaterial)
+    {
+        mpMaterialManager->Destroy(mpMaterial);
+    }
+    if(mpVtxBuffer)
+    {
+        hplDelete(mpVtxBuffer);
+    }
+    if(mpVertexBones)
+    {
+        hplDeleteArray(mpVertexBones);
+    }
+    if(mpVertexWeights)
+    {
+        hplDeleteArray(mpVertexWeights);
+    }
 
     STLDeleteAll(mvColliders);
 }
@@ -70,7 +82,10 @@ cSubMesh::~cSubMesh()
 
 void cSubMesh::SetMaterial(cMaterial* apMaterial)
 {
-    if(mpMaterial) mpMaterialManager->Destroy(mpMaterial);
+    if(mpMaterial)
+    {
+        mpMaterialManager->Destroy(mpMaterial);
+    }
     mpMaterial = apMaterial;
 }
 
@@ -78,7 +93,10 @@ void cSubMesh::SetMaterial(cMaterial* apMaterial)
 
 void cSubMesh::SetVertexBuffer(iVertexBuffer* apVtxBuffer)
 {
-    if(mpVtxBuffer == apVtxBuffer) return;
+    if(mpVtxBuffer == apVtxBuffer)
+    {
+        return;
+    }
 
     mpVtxBuffer = apVtxBuffer;
 }
@@ -170,7 +188,10 @@ iCollideShape* cSubMesh::CreateCollideShapeFromCollider(cMeshCollider *pCollider
 
 iCollideShape* cSubMesh::CreateCollideShape(iPhysicsWorld *apWorld)
 {
-    if(mvColliders.empty()) return NULL;
+    if(mvColliders.empty())
+    {
+        return NULL;
+    }
 
     //Create a single object
     if(mvColliders.size() == 1)
@@ -213,11 +234,17 @@ void cSubMesh::CheckOneSided()
 {
     //Log("--- %s\n",GetName().c_str());
 
-    if(mpVtxBuffer==NULL) return;
+    if(mpVtxBuffer==NULL)
+    {
+        return;
+    }
 
     int lIdxNum = mpVtxBuffer->GetIndexNum();
 
-    if(lIdxNum > 400*3) return; //Just skip larger buffers for now, they should never be planes.
+    if(lIdxNum > 400*3)
+    {
+        return;    //Just skip larger buffers for now, they should never be planes.
+    }
 
     unsigned int* pIndices = mpVtxBuffer->GetIndices();
     float *pPositions = mpVtxBuffer->GetFloatArray(eVertexBufferElement_Position);
@@ -259,7 +286,10 @@ void cSubMesh::CheckOneSided()
         }
         else
         {
-            if(cMath::Vector3Dot(vFirstNormal, vNormal) < 0.9f) return;
+            if(cMath::Vector3Dot(vFirstNormal, vNormal) < 0.9f)
+            {
+                return;
+            }
             vNormalSum += vNormal;
         }
 
@@ -275,7 +305,10 @@ void cSubMesh::CheckOneSided()
 
 void cSubMesh::CompileBonePairs()
 {
-    if(mvVtxBonePairs.empty()) return;
+    if(mvVtxBonePairs.empty())
+    {
+        return;
+    }
 
     mpVertexWeights = hplNewArray( float, 4 * mpVtxBuffer->GetVertexNum());
     mpVertexBones = hplNewArray( unsigned char, 4 * mpVtxBuffer->GetVertexNum()) ;
@@ -302,7 +335,10 @@ void cSubMesh::CompileBonePairs()
         //If no place was found there are too many bones on the vertex.
         if(lPos==-1)
         {
-            if (bWarn) Warning("More than 4 bones on a vertex in submesh '%s' in mesh '%s' !\n",GetName().c_str(), mpParent->GetName().c_str());
+            if (bWarn)
+            {
+                Warning("More than 4 bones on a vertex in submesh '%s' in mesh '%s' !\n",GetName().c_str(), mpParent->GetName().c_str());
+            }
             bWarn = false;
             continue;
         }

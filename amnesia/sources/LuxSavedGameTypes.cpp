@@ -335,7 +335,10 @@ void cLuxEffectHandler_SaveData::FromEffectHandler(cLuxEffectHandler *apEffects)
     mvGlobalSoundSpeedMul.Resize(eLuxGlobalVolumeType_LastEnum);
     for(size_t i=0; i<eLuxGlobalVolumeType_LastEnum; ++i)
     {
-        if(i == eLuxGlobalVolumeType_Commentary || i == eLuxGlobalVolumeType_DebugMenu)continue;
+        if(i == eLuxGlobalVolumeType_Commentary || i == eLuxGlobalVolumeType_DebugMenu)
+        {
+            continue;
+        }
 
         mvGlobalSoundVolumeMul[i].FromEntry(pSoundHandler->GetGlobalVolumeSettingsHandler()->GetEntry((int)i, false) );
         mvGlobalSoundSpeedMul[i].FromEntry(pSoundHandler->GetGlobalSpeedSettingsHandler()->GetEntry((int)i, false) );
@@ -400,14 +403,20 @@ void cLuxEffectHandler_SaveData::ToEffectHandler(cLuxMap *apMap, cLuxEffectHandl
 
     for(size_t i=0; i<mvGlobalSoundVolumeMul.Size(); ++i)
     {
-        if(i == eLuxGlobalVolumeType_Commentary || i == eLuxGlobalVolumeType_DebugMenu) continue;
+        if(i == eLuxGlobalVolumeType_Commentary || i == eLuxGlobalVolumeType_DebugMenu)
+        {
+            continue;
+        }
 
         mvGlobalSoundVolumeMul[i].ToEntry((int)i, pSoundHandler->GetGlobalVolumeSettingsHandler() );
     }
 
     for(size_t i=0; i<mvGlobalSoundSpeedMul.Size(); ++i)
     {
-        if(i == eLuxGlobalVolumeType_Commentary || i == eLuxGlobalVolumeType_DebugMenu) continue;
+        if(i == eLuxGlobalVolumeType_Commentary || i == eLuxGlobalVolumeType_DebugMenu)
+        {
+            continue;
+        }
 
         mvGlobalSoundSpeedMul[i].ToEntry((int)i, pSoundHandler->GetGlobalSpeedSettingsHandler() );
     }
@@ -908,9 +917,13 @@ void cLuxPlayerHands_SaveData::FromPlayerHands(cLuxPlayerHands *apPlayerHands)
     mlState = apPlayerHands->mHandState;
 
     if(apPlayerHands->mpCurrentHandObject)
+    {
         msCurrentHandObject = apPlayerHands->mpCurrentHandObject->GetName();
+    }
     else
+    {
         msCurrentHandObject = "";
+    }
 
     msCurrentAnim = apPlayerHands->msCurrentAnim;
 
@@ -931,7 +944,9 @@ void cLuxPlayerHands_SaveData::ToPlayerHands(cLuxMap *apMap, cLuxPlayerHands *ap
     {
         apPlayerHands->mpCurrentHandObject = apPlayerHands->GetHandObject(msCurrentHandObject);
         if(apPlayerHands->mpCurrentHandObject)
+        {
             apPlayerHands->CreateAndAttachHandObject(apMap, apPlayerHands->mpCurrentHandObject);
+        }
     }
 
     apPlayerHands->msCurrentAnim = msCurrentAnim;
@@ -987,7 +1002,10 @@ cLuxPlayer_SaveData::cLuxPlayer_SaveData()
 
 cLuxPlayer_SaveData::~cLuxPlayer_SaveData()
 {
-    if(mpStateData) hplDelete(mpStateData);
+    if(mpStateData)
+    {
+        hplDelete(mpStateData);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1146,7 +1164,9 @@ void cLuxPlayer_SaveData::FromPlayer(cLuxPlayer *apPlayer)
 
     mvHeadPosAdds.Resize(apPlayer->mvHeadPosAdds.size());
     for(size_t i=0; i<mvHeadPosAdds.Size(); ++i)
+    {
         mvHeadPosAdds[i] = apPlayer->mvHeadPosAdds[i];
+    }
 
     ///////////////////
     // Terror Enemies
@@ -1182,9 +1202,15 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
     eLuxPlayerState playerState = (eLuxPlayerState)mlState;
     iLuxPlayerState *pState = apPlayer->GetStateData(playerState);
 
-    if(mpStateData) pState->LoadFromSaveDataBeforeEnter(apMap, mpStateData);
+    if(mpStateData)
+    {
+        pState->LoadFromSaveDataBeforeEnter(apMap, mpStateData);
+    }
     apPlayer->ChangeState(playerState);
-    if(mpStateData) pState->LoadFromSaveDataAfterEnter(apMap, mpStateData);
+    if(mpStateData)
+    {
+        pState->LoadFromSaveDataAfterEnter(apMap, mpStateData);
+    }
 
     //////////////////////
     ///Variables
@@ -1327,7 +1353,9 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
     if(apPlayer->mvHeadPosAdds.size() == mvHeadPosAdds.Size())
     {
         for(size_t i=0; i<apPlayer->mvHeadPosAdds.size(); ++i)
+        {
             apPlayer->mvHeadPosAdds[i] = mvHeadPosAdds[i];
+        }
     }
 
     ///////////////////

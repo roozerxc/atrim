@@ -329,7 +329,10 @@ bool cVideoMode::operator==(const hpl::cVideoMode &o) const
 
 iTexture* iFrameBufferAttachment::ToTexture()
 {
-    if(GetFrameBufferAttachmentType() != eFrameBufferAttachment_Texture) return NULL;
+    if(GetFrameBufferAttachmentType() != eFrameBufferAttachment_Texture)
+    {
+        return NULL;
+    }
 
     return static_cast<iTexture*>(this);
 }
@@ -338,7 +341,10 @@ iTexture* iFrameBufferAttachment::ToTexture()
 
 iDepthStencilBuffer* iFrameBufferAttachment::ToDepthStencilBuffer()
 {
-    if(GetFrameBufferAttachmentType() != eFrameBufferAttachment_RenderBuffer) return NULL;
+    if(GetFrameBufferAttachmentType() != eFrameBufferAttachment_RenderBuffer)
+    {
+        return NULL;
+    }
 
     return static_cast<iDepthStencilBuffer*>(this);
 }

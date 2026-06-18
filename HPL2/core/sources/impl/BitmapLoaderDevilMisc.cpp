@@ -62,7 +62,9 @@ cBitmap* cBitmapLoaderDevilMisc::LoadBitmap(const tWString& asFile, tBitmapLoadF
 
     //If there is no image series, 0 number of images is returned, this still means that there is an image though
     if(lNumOfImages > 1)
+    {
         pBitmap->SetUpData(lNumOfImages, lNumOfMipMaps);
+    }
 
     cVector3l vSize;
     vSize.x = ilGetInteger(IL_IMAGE_WIDTH);
@@ -86,7 +88,10 @@ cBitmap* cBitmapLoaderDevilMisc::LoadBitmap(const tWString& asFile, tBitmapLoadF
     for(int image=0; image < lCount; ++image)
     {
         //When 1 image only, no need to set up active image.
-        if(lNumOfImages > 1)ilActiveImage(image);
+        if(lNumOfImages > 1)
+        {
+            ilActiveImage(image);
+        }
 
         cBitmapData *pImage = pBitmap->GetData(image,0);
 

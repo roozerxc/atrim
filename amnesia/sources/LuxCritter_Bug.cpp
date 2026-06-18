@@ -174,7 +174,10 @@ void cLuxCritter_Bug::UpdateVelocity(float afTimeStep)
         {
             float fPlayerDistance = sqrt(fPlayerDistanceSqr);
 
-            if(fPlayerDistance ==0) fPlayerDistance = 0.0001f;
+            if(fPlayerDistance ==0)
+            {
+                fPlayerDistance = 0.0001f;
+            }
 
             vPlayerPos.y = mpBody->GetWorldPosition().y;
             cVector3f vWantedVel = cMath::Vector3Normalize(mpBody->GetWorldPosition() - vPlayerPos) * mfMaxSpeed;

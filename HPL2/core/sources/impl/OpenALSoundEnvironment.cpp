@@ -38,7 +38,9 @@ bool cOpenALSoundEnvironment::CreateFromFile(const tString &asFile)
     tString strType;
     TiXmlDocument doc;
     if (!doc.LoadFile(asFile.c_str()))
+    {
         return false;
+    }
 
     TiXmlElement* pMain = doc.FirstChildElement("SoundEnvironment")->FirstChildElement("Main");
     if (pMain)

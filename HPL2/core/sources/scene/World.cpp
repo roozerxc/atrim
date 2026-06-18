@@ -131,7 +131,10 @@ cWorld::cWorld(tString asName,cGraphics *apGraphics,cResources *apResources,cSou
 
 cWorld::~cWorld()
 {
-    if(mpSkyBoxVtxBuffer) hplDelete(mpSkyBoxVtxBuffer);
+    if(mpSkyBoxVtxBuffer)
+    {
+        hplDelete(mpSkyBoxVtxBuffer);
+    }
     if(mpSkyBoxTexture && mbAutoDestroySkybox)
     {
         mpResources->GetTextureManager()->Destroy(mpSkyBoxTexture);
@@ -146,7 +149,10 @@ cWorld::~cWorld()
 
     for(int i=0; i<2; ++i)
     {
-        if(mpRenderableContainer[i]) hplDelete(mpRenderableContainer[i]);
+        if(mpRenderableContainer[i])
+        {
+            hplDelete(mpRenderableContainer[i]);
+        }
     }
 
     hplDelete(mpRootNode);
@@ -163,7 +169,9 @@ cWorld::~cWorld()
 void cWorld::DestroyAllEntities(tWorldDestroyAllFlag aFlags)
 {
     if( (aFlags & eWorldDestroyAllFlag_SkipStaticEntities)==0)
+    {
         STLDeleteAll(mlstStaticMeshEntities);
+    }
 
     STLDeleteAll(mlstDynamicMeshEntities);
     STLDeleteAll(mlstLights);
@@ -184,7 +192,9 @@ void cWorld::DestroyAllEntities(tWorldDestroyAllFlag aFlags)
     if( (aFlags & eWorldDestroyAllFlag_SkipPhysics)==0)
     {
         if(mpPhysicsWorld && mbAutoDeletePhysicsWorld)
+        {
             mpPhysics->DestroyWorld(mpPhysicsWorld);
+        }
     }
 
     //So that bodies can stop sound entities on destruction.
@@ -197,7 +207,10 @@ void cWorld::DestroyAllEntities(tWorldDestroyAllFlag aFlags)
 void cWorld::Update(float afTimeStep)
 {
     START_TIMING(Physics);
-    if(mpPhysicsWorld) mpPhysicsWorld->Update(afTimeStep);
+    if(mpPhysicsWorld)
+    {
+        mpPhysicsWorld->Update(afTimeStep);
+    }
     STOP_TIMING(Physics);
 
 
@@ -226,7 +239,10 @@ void cWorld::PreUpdate(float afTotalTime, float afTimeStep)
 
     while(afTotalTime>0)
     {
-        if(mpPhysicsWorld) mpPhysicsWorld->Update(afTimeStep);
+        if(mpPhysicsWorld)
+        {
+            mpPhysicsWorld->Update(afTimeStep);
+        }
         UpdateParticles(afTimeStep);
 
         afTotalTime -= afTimeStep;
@@ -249,7 +265,9 @@ void cWorld::SetPhysicsWorld(iPhysicsWorld *apWorld, bool abAutoDelete)
     mpPhysicsWorld = apWorld;
     mbAutoDeletePhysicsWorld = abAutoDelete;
     if(mpPhysicsWorld)
+    {
         mpPhysicsWorld->SetWorld(this);
+    }
 }
 
 iPhysicsWorld* cWorld::GetPhysicsWorld()
@@ -262,14 +280,32 @@ iPhysicsWorld* cWorld::GetPhysicsWorld()
 static void CheckMinMaxUpdate(cVector3f &avMin,cVector3f &avMax,
                               const cVector3f &avLocalMin,const cVector3f &avLocalMax)
 {
-    if(avMin.x > avLocalMin.x) avMin.x = avLocalMin.x;
-    if(avMax.x < avLocalMax.x) avMax.x = avLocalMax.x;
+    if(avMin.x > avLocalMin.x)
+    {
+        avMin.x = avLocalMin.x;
+    }
+    if(avMax.x < avLocalMax.x)
+    {
+        avMax.x = avLocalMax.x;
+    }
 
-    if(avMin.y > avLocalMin.y) avMin.y = avLocalMin.y;
-    if(avMax.y < avLocalMax.y) avMax.y = avLocalMax.y;
+    if(avMin.y > avLocalMin.y)
+    {
+        avMin.y = avLocalMin.y;
+    }
+    if(avMax.y < avLocalMax.y)
+    {
+        avMax.y = avLocalMax.y;
+    }
 
-    if(avMin.z > avLocalMin.z) avMin.z = avLocalMin.z;
-    if(avMax.z < avLocalMax.z) avMax.z = avLocalMax.z;
+    if(avMin.z > avLocalMin.z)
+    {
+        avMin.z = avLocalMin.z;
+    }
+    if(avMax.z < avLocalMax.z)
+    {
+        avMax.z = avLocalMax.z;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -277,7 +313,10 @@ static void CheckMinMaxUpdate(cVector3f &avMin,cVector3f &avMax,
 void cWorld::Compile(bool abCalcPhysicsWorldSize)
 {
     for(int i=0; i<2; ++i)
-        if(mpRenderableContainer[i]) mpRenderableContainer[i]->Compile();
+        if(mpRenderableContainer[i])
+        {
+            mpRenderableContainer[i]->Compile();
+        }
 
     if(mpPhysicsWorld && abCalcPhysicsWorldSize)
     {
@@ -316,7 +355,10 @@ void cWorld::SetSkyBoxActive(bool abX)
 
 void cWorld::SetSkyBoxColor(const cColor& aColor)
 {
-    if(mSkyBoxColor == aColor) return;
+    if(mSkyBoxColor == aColor)
+    {
+        return;
+    }
 
     mSkyBoxColor = aColor;
 
@@ -346,7 +388,10 @@ cAreaEntity* cWorld::CreateAreaEntity(const tString &asName)
 cAreaEntity* cWorld::GetAreaEntity(const tString &asName)
 {
     tAreaEntityMapIt it = m_mapAreaEntities.find(asName);
-    if(it== m_mapAreaEntities.end()) return NULL;
+    if(it== m_mapAreaEntities.end())
+    {
+        return NULL;
+    }
 
     return it->second;
 }
@@ -360,7 +405,10 @@ iEntity3D* cWorld::CreateEntity(const tString& asName, const cMatrixf &a_mtxTran
     iEntity3D *pEntity = NULL;
 
     cEntFile *pEntFile = mpResources->GetEntFileManager()->CreateEntFile(asFile);
-    if(pEntFile==NULL) return NULL;
+    if(pEntFile==NULL)
+    {
+        return NULL;
+    }
 
     mlstEntFileCache.push_back(pEntFile);
 
@@ -388,7 +436,10 @@ iEntity3D* cWorld::CreateEntity(const tString& asName, const cMatrixf &a_mtxTran
         if(abSkipNonStaticEntity==false || pLoader->GetCreatesStaticEntity())
         {
             pEntity = pLoader->Load(asName,alID, abActive, pDoc,a_mtxTransform, avScale, this,pEntFile->GetName(),pEntFile->GetFullPath(), apInstanceVars);
-            if(pEntity) pEntity->SetSourceFile(pEntFile->GetName());
+            if(pEntity)
+            {
+                pEntity->SetSourceFile(pEntFile->GetName());
+            }
         }
     }
     else
@@ -410,9 +461,13 @@ cMeshEntity* cWorld::CreateMeshEntity(const tString &asName,cMesh *apMesh, bool 
     //////////////////////////////
     //Put in entity list
     if(abStatic)
+    {
         mlstStaticMeshEntities.push_back(pMeshEntity);
+    }
     else
+    {
         mlstDynamicMeshEntities.push_back(pMeshEntity);
+    }
 
 
     //////////////////////////////
@@ -420,7 +475,10 @@ cMeshEntity* cWorld::CreateMeshEntity(const tString &asName,cMesh *apMesh, bool 
     for(int i=0; i<pMeshEntity->GetSubMeshEntityNum(); ++i)
     {
         cSubMeshEntity *pSubEntity = pMeshEntity->GetSubMeshEntity(i);
-        if(pSubEntity->GetSubMesh()->IsCollideShape()) continue; //Collide shapes are never rendered!
+        if(pSubEntity->GetSubMesh()->IsCollideShape())
+        {
+            continue;    //Collide shapes are never rendered!
+        }
 
         pSubEntity->SetStatic(abStatic);
         AddRenderableToContainer(pSubEntity);
@@ -435,7 +493,10 @@ cMeshEntity* cWorld::CreateMeshEntity(const tString &asName,cMesh *apMesh, bool 
 
 void cWorld::DestroyMeshEntity(cMeshEntity* apMesh)
 {
-    if(apMesh==NULL) return;
+    if(apMesh==NULL)
+    {
+        return;
+    }
 
     for(int i=0; i<apMesh->GetSubMeshEntityNum(); ++i)
     {
@@ -443,9 +504,13 @@ void cWorld::DestroyMeshEntity(cMeshEntity* apMesh)
     }
 
     if(apMesh->IsStatic())
+    {
         STLFindAndDelete(mlstStaticMeshEntities,apMesh);
+    }
     else
+    {
         STLFindAndDelete(mlstDynamicMeshEntities,apMesh);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -476,7 +541,10 @@ void cWorld::DrawMeshBoundingBoxes(const cColor &aColor, bool abStatic)
     {
         cMeshEntity *pEntity = *It;
 
-        if(abStatic==false && pEntity->IsStatic()) continue;
+        if(abStatic==false && pEntity->IsStatic())
+        {
+            continue;
+        }
 
         cBoundingVolume *pBV = pEntity->GetBoundingVolume();
         mpGraphics->GetLowLevel()->DrawBoxMinMax(pBV->GetMin(), pBV->GetMax(), aColor);
@@ -495,9 +563,13 @@ cLightPoint* cWorld::CreateLightPoint(const tString &asName,const tString &asGob
     {
         iTexture *pTexture = mpResources->GetTextureManager()->CreateCubeMap(asGobo,true);
         if(pTexture!=NULL)
+        {
             pLight->SetGoboTexture(pTexture);
+        }
         else
+        {
             Warning("Couldn't load gobo texture '%s' for light '%s'",asGobo.c_str(), asName.c_str());
+        }
     }
 
     pLight->SetStatic(abStatic);
@@ -520,9 +592,13 @@ cLightSpot* cWorld::CreateLightSpot(const tString &asName, const tString &asGobo
     {
         iTexture *pTexture = mpResources->GetTextureManager()->Create2D(asGobo,true);
         if(pTexture!=NULL)
+        {
             pLight->SetGoboTexture(pTexture);
+        }
         else
+        {
             Warning("Couldn't load gobo texture '%s' for light '%s'",asGobo.c_str(), asName.c_str());
+        }
     }
 
     pLight->SetStatic(abStatic);
@@ -674,7 +750,10 @@ cBeam* cWorld::GetBeamFromUniqueID(int alID)
 {
     for(tBeamListIt BeamIt=mlstBeams.begin(); BeamIt !=mlstBeams.end(); ++BeamIt)
     {
-        if((*BeamIt)->GetUniqueID() == alID) return *BeamIt;
+        if((*BeamIt)->GetUniqueID() == alID)
+        {
+            return *BeamIt;
+        }
     }
     return NULL;
 }
@@ -763,7 +842,10 @@ cParticleSystem* cWorld::CreateParticleSystem(const tString& asName, const tStri
 
 void cWorld::DestroyParticleSystem(cParticleSystem* apPS)
 {
-    if(apPS==NULL)return;
+    if(apPS==NULL)
+    {
+        return;
+    }
 
     for(int i=0; i< apPS->GetEmitterNum(); ++i)
     {
@@ -786,7 +868,10 @@ cParticleSystem* cWorld::GetParticleSystemFromUniqueID(int alID)
 {
     for(tParticleSystemListIt PSIt=mlstParticleSystems.begin(); PSIt !=mlstParticleSystems.end(); ++PSIt)
     {
-        if((*PSIt)->GetUniqueID() == alID) return *PSIt;
+        if((*PSIt)->GetUniqueID() == alID)
+        {
+            return *PSIt;
+        }
     }
     return NULL;
 }
@@ -798,7 +883,10 @@ bool cWorld::ParticleSystemExists(cParticleSystem* apPS)
     tParticleSystemListIt it = mlstParticleSystems.begin();
     for(; it != mlstParticleSystems.end(); ++it)
     {
-        if(apPS == *it) return true;
+        if(apPS == *it)
+        {
+            return true;
+        }
     }
     return false;
 }
@@ -850,7 +938,10 @@ cGuiSetEntity* cWorld::GetGuiSetEntityFromUniqueID(int alID)
 {
     for(tGuiSetEntityListIt it=mlstGuiSetEntities.begin(); it !=mlstGuiSetEntities.end(); ++it)
     {
-        if((*it)->GetUniqueID() == alID) return *it;
+        if((*it)->GetUniqueID() == alID)
+        {
+            return *it;
+        }
     }
     return NULL;
 }
@@ -888,7 +979,10 @@ cRopeEntity* cWorld::GetRopeEntityFromUniqueID(int alID)
 {
     for(tRopeEntityListIt it=mlstRopeEntities.begin(); it !=mlstRopeEntities.end(); ++it)
     {
-        if((*it)->GetUniqueID() == alID) return *it;
+        if((*it)->GetUniqueID() == alID)
+        {
+            return *it;
+        }
     }
     return NULL;
 }
@@ -928,7 +1022,10 @@ cFogArea* cWorld::GetFogAreaFromUniqueID(int alID)
 {
     for(tFogAreaListIt it=mlstFogAreas.begin(); it !=mlstFogAreas.end(); ++it)
     {
-        if((*it)->GetUniqueID() == alID) return *it;
+        if((*it)->GetUniqueID() == alID)
+        {
+            return *it;
+        }
     }
     return NULL;
 }
@@ -1027,7 +1124,10 @@ cSoundEntity* cWorld::GetSoundEntityFromUniqueID(int alID)
 {
     for(tSoundEntityListIt it=mlstSoundEntities.begin(); it !=mlstSoundEntities.end(); ++it)
     {
-        if((*it)->GetUniqueID() == alID) return *it;
+        if((*it)->GetUniqueID() == alID)
+        {
+            return *it;
+        }
     }
     return NULL;
 }
@@ -1041,8 +1141,14 @@ bool cWorld::SoundEntityExists(cSoundEntity* apEntity, int alCreationID)
         cSoundEntity *pTestSound = *it;
         if(*it == apEntity)
         {
-            if(alCreationID==pTestSound->GetCreationID())    return true;
-            else                                            return false;
+            if(alCreationID==pTestSound->GetCreationID())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 
@@ -1067,7 +1173,10 @@ cStartPosEntity* cWorld::GetStartPosEntity(const tString &asName)
 
 cStartPosEntity* cWorld::GetFirstStartPosEntity()
 {
-    if(mlstStartPosEntities.empty()) return NULL;
+    if(mlstStartPosEntities.empty())
+    {
+        return NULL;
+    }
 
     return mlstStartPosEntities.front();
 }
@@ -1274,7 +1383,10 @@ cDummyRenderable* cWorld::GetDummyRenderableFromUniqueID(int alID)
 {
     for(tDummyRenderableListIt it=mlstDummyRenderables.begin(); it !=mlstDummyRenderables.end(); ++it)
     {
-        if((*it)->GetUniqueID() == alID) return *it;
+        if((*it)->GetUniqueID() == alID)
+        {
+            return *it;
+        }
     }
     return NULL;
 }
@@ -1295,17 +1407,27 @@ cDummyRenderableIterator cWorld::GetDummyRenderableIterator()
 void cWorld::AddRenderableToContainer(iRenderable *apObject)
 {
     if(apObject->IsStatic())
+    {
         mpRenderableContainer[eWorldContainerType_Static]->Add(apObject);
+    }
     else
+    {
         mpRenderableContainer[eWorldContainerType_Dynamic]->Add(apObject);
+    }
 }
 
 //-----------------------------------------------------------------------
 
 void cWorld::RemoveRenderableFromContainer(iRenderable *apObject)
 {
-    if(apObject->IsStatic())    mpRenderableContainer[eWorldContainerType_Static]->Remove(apObject);
-    else                        mpRenderableContainer[eWorldContainerType_Dynamic]->Remove(apObject);
+    if(apObject->IsStatic())
+    {
+        mpRenderableContainer[eWorldContainerType_Static]->Remove(apObject);
+    }
+    else
+    {
+        mpRenderableContainer[eWorldContainerType_Dynamic]->Remove(apObject);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1374,7 +1496,10 @@ void cWorld::UpdateLights(float afTimeStep)
     {
         iLight *pLight = *it;
 
-        if(pLight->IsActive()) pLight->UpdateLogic(afTimeStep);
+        if(pLight->IsActive())
+        {
+            pLight->UpdateLogic(afTimeStep);
+        }
 
         ++it;
     }
@@ -1390,7 +1515,10 @@ void cWorld::UpdateSoundEntities(float afTimeStep)
     {
         cSoundEntity *pSound = *it;
 
-        if(pSound->IsActive()) pSound->UpdateLogic(afTimeStep);
+        if(pSound->IsActive())
+        {
+            pSound->UpdateLogic(afTimeStep);
+        }
 
         //Check if the system is stopped, else destroy
         if(pSound->IsStopped() && pSound->GetRemoveWhenOver())

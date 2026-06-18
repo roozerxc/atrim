@@ -45,7 +45,10 @@ static bool TestAndExpandNodeAABB(iRenderable *apObject, cVector3f& avNodeMin,cV
 
     //////////////////////////////////
     //Check if object is inside
-    if(cMath::CheckAABBInside(vMin,vMax, avNodeMin, avNodeMax)) return false;
+    if(cMath::CheckAABBInside(vMin,vMax, avNodeMin, avNodeMax))
+    {
+        return false;
+    }
 
     //////////////////////////////////
     //Calculate the new AABB
@@ -275,7 +278,10 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
         mbRecalculateAABB = false;
 
         //Calculate the AABB based on the objects (if any)
-        if(HasObjects()) CalculateMinMaxFromObjects();
+        if(HasObjects())
+        {
+            CalculateMinMaxFromObjects();
+        }
 
         //Increase the AABB based on children.
         if(HasChildNodes())
@@ -602,11 +608,17 @@ void cRCNode_DynBoxTree::RecalculateAABB()
 
 void cRCNode_DynBoxTree::ObjectMoved()
 {
-    if(mbObjectMoved) return;
+    if(mbObjectMoved)
+    {
+        return;
+    }
 
     mbObjectMoved = true;
     cRCNode_DynBoxTree* pParentNode = static_cast<cRCNode_DynBoxTree*>(mpParent);
-    if(pParentNode) pParentNode->ObjectMoved();
+    if(pParentNode)
+    {
+        pParentNode->ObjectMoved();
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -712,7 +724,10 @@ void cRenderableContainer_DynBoxTree::Remove(iRenderable *apRenderable)
     //////////////////////////////////
     // Get the node where the object is
     cRCNode_DynBoxTree *pNode = static_cast<cRCNode_DynBoxTree*>(apRenderable->GetRenderContainerNode());    //Assume one node only
-    if(pNode==NULL) return;
+    if(pNode==NULL)
+    {
+        return;
+    }
 
     if(gbLog  || HasDebug(apRenderable))
     {
@@ -840,7 +855,10 @@ void cRenderableContainer_DynBoxTree::SpecificUpdateBeforeRendering()
 
     ///////////////////////////////////
     // Rebuild tree if needed
-    if(mlRebuildCount >0) return;
+    if(mlRebuildCount >0)
+    {
+        return;
+    }
 
     mlRebuildCount = mlMaxRebuildCount;
 
@@ -897,7 +915,10 @@ void cRenderableContainer_DynBoxTree::RenderDebugNode(cRendererCallbackFunctions
 void cRenderableContainer_DynBoxTree::RemoveNode(cRCNode_DynBoxTree *apRemoveNode)
 {
     cRCNode_DynBoxTree *pParent = static_cast<cRCNode_DynBoxTree*>(apRemoveNode->GetParent());
-    if(pParent == NULL) return;
+    if(pParent == NULL)
+    {
+        return;
+    }
 
 
     if(gbLog)
@@ -928,7 +949,10 @@ void cRenderableContainer_DynBoxTree::RemoveNode(cRCNode_DynBoxTree *apRemoveNod
         for(; it != pChild->mlstObjects.end(); ++it)
         {
             iRenderable *pChildObject = *it;
-            if(gbLog) Log("   %s / %d\n", pChildObject->GetName().c_str(), pChildObject);
+            if(gbLog)
+            {
+                Log("   %s / %d\n", pChildObject->GetName().c_str(), pChildObject);
+            }
 
             //Set new node
             pChildObject->SetRenderContainerNode(pParent);
@@ -951,7 +975,10 @@ void cRenderableContainer_DynBoxTree::RemoveNode(cRCNode_DynBoxTree *apRemoveNod
         {
             iRenderableContainerNode *pChild_ChildNode = *it;
 
-            if(gbLog) Log("   %d\n", pChild_ChildNode);
+            if(gbLog)
+            {
+                Log("   %d\n", pChild_ChildNode);
+            }
 
             //Set new parent and add to parents child node list
             pChild_ChildNode->SetParent(pParent);
@@ -994,7 +1021,9 @@ void cRenderableContainer_DynBoxTree::CheckNodeAABBNeedsUpdateIterative(cRCNode_
         //Check if parent needs update too
         cRCNode_DynBoxTree *pParent = static_cast<cRCNode_DynBoxTree*>(apNode->GetParent());
         if(pParent)
+        {
             CheckNodeAABBNeedsUpdateIterative(pParent, apObject);
+        }
     }
 }
 
@@ -1032,7 +1061,10 @@ void cRenderableContainer_DynBoxTree::AddObjectToNodeIterative(cRCNode_DynBoxTre
 
         apNode->RecalculateSplit();
 
-        if(gbLog || HasDebug(apObject)) Log("  Expanded AABB\n");
+        if(gbLog || HasDebug(apObject))
+        {
+            Log("  Expanded AABB\n");
+        }
     }
 
     /////////////////////////////
@@ -1058,8 +1090,14 @@ void cRenderableContainer_DynBoxTree::AddObjectToNodeIterative(cRCNode_DynBoxTre
     else
     {
         //Assuming always two children!
-        if(lSplitGroup==0)    AddObjectToNodeIterative(static_cast<cRCNode_DynBoxTree*>(apNode->mlstChildNodes.front()),apObject);
-        if(lSplitGroup==1)    AddObjectToNodeIterative(static_cast<cRCNode_DynBoxTree*>(apNode->mlstChildNodes.back()),apObject);
+        if(lSplitGroup==0)
+        {
+            AddObjectToNodeIterative(static_cast<cRCNode_DynBoxTree*>(apNode->mlstChildNodes.front()),apObject);
+        }
+        if(lSplitGroup==1)
+        {
+            AddObjectToNodeIterative(static_cast<cRCNode_DynBoxTree*>(apNode->mlstChildNodes.back()),apObject);
+        }
     }
 }
 
@@ -1109,7 +1147,10 @@ int cRenderableContainer_DynBoxTree::GetSplitGroup(iRenderable *apObject, float 
         /////////////////////
         //Check if the amount of cross over is small enough to not treat it as an intersection.
         float fMinCrossOverAmount = fMinDist / fNodeSize;
-        if(fMinCrossOverAmount <= mfMaxIntersectionAmount) return lDestDir;
+        if(fMinCrossOverAmount <= mfMaxIntersectionAmount)
+        {
+            return lDestDir;
+        }
 
         return 2;
     }
@@ -1127,12 +1168,17 @@ void cRenderableContainer_DynBoxTree::UpdateObjectInContainer(iRenderable* apObj
     ////////////////////////////////////////////
     //Get Node of correct type
     cRCNode_DynBoxTree *pNode =  static_cast<cRCNode_DynBoxTree*>(apObject->GetRenderContainerNode());
-    if(pNode==NULL) return;
+    if(pNode==NULL)
+    {
+        return;
+    }
 
     pNode->ObjectMoved();    //Notify the node that an object moved inside it.
 
     if(bUpdateLog)
+    {
         Log("------- Updating %s. Node: %d -------\n",apObject->GetName().c_str(), pNode);
+    }
 
 
     ////////////////////////////////////////////
@@ -1156,21 +1202,33 @@ void cRenderableContainer_DynBoxTree::UpdateObjectInContainer(iRenderable* apObj
     // Iterate through the parent nodes of the current and try and find one that fits the node, stopping at root
     mpCheckForFitTempNode = pNode; //Node with fit will be placed here
     cRCNode_DynBoxTree *pParent =  static_cast<cRCNode_DynBoxTree*>(pNode->GetParent());
-    if(pParent) CheckForFitIterative(pParent, pBV);
+    if(pParent)
+    {
+        CheckForFitIterative(pParent, pBV);
+    }
 
-    if(bUpdateLog) Log(" Found fit in %d (by starting in parent %d)\n", mpCheckForFitTempNode, pParent);
+    if(bUpdateLog)
+    {
+        Log(" Found fit in %d (by starting in parent %d)\n", mpCheckForFitTempNode, pParent);
+    }
 
     ////////////////////////////////////////////
     // Get the node where the object is to be added
     cRCNode_DynBoxTree *pNewNode = GetAddNode(mpCheckForFitTempNode, apObject);
 
-    if(bUpdateLog) Log("  Node to add object in: %d (leaf: %d)\n", pNewNode, pNewNode->HasChildNodes()==false ? 1:0);
+    if(bUpdateLog)
+    {
+        Log("  Node to add object in: %d (leaf: %d)\n", pNewNode, pNewNode->HasChildNodes()==false ? 1:0);
+    }
 
     ////////////////////////////////////////////
     // If the new node is not the same, then the the object needs removed from the old node and added to new.
     if(pNewNode != pNode)
     {
-        if(bUpdateLog) Log("  Moving node\n");
+        if(bUpdateLog)
+        {
+            Log("  Moving node\n");
+        }
 
         //Notify the new node that an object moved inside it.
         pNewNode->ObjectMoved();
@@ -1214,12 +1272,18 @@ void cRenderableContainer_DynBoxTree::UpdateObjectInContainer(iRenderable* apObj
     //If the same node, then we want to recalculate AABB
     else
     {
-        if(bUpdateLog) Log("  Same node %d\n", pNode);
+        if(bUpdateLog)
+        {
+            Log("  Same node %d\n", pNode);
+        }
 
         pNode->PushUpNeedAABBUpdate();
     }
 
-    if(bUpdateLog) Log("---------------------\n");
+    if(bUpdateLog)
+    {
+        Log("---------------------\n");
+    }
 }
 
 //-----------------------------------------------------------------------

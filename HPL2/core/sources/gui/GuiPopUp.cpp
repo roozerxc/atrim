@@ -67,18 +67,27 @@ iGuiPopUp::~iGuiPopUp()
     mpSet->PopDefaultFocusNavWidget();
 
     if(mbAttChanged)
+    {
         mpSet->SetAttentionWidget(mpNewAttention);
+    }
     if(mbFocusChanged)
+    {
         mpSet->SetFocusedWidget(mpNewFocused);
+    }
     if(mbDefaultUIFocusChanged)
+    {
         mpSet->SetDefaultFocusNavWidget(mpNewDefaultUIFocus);
+    }
 
     if(mpDestroyCallbackObject && mpDestroyCallback)
     {
         mpDestroyCallback(mpDestroyCallbackObject, NULL, cGuiMessageData());
     }
 
-    if(mpWindow) mpSet->DestroyWidget(mpWindow, true);
+    if(mpWindow)
+    {
+        mpSet->DestroyWidget(mpWindow, true);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -135,7 +144,10 @@ void iGuiPopUp::SelfDestruct()
 bool iGuiPopUp::RunCallback(void* apObj, tGuiCallbackFunc apCallback,
                             iWidget* apWidget, const cGuiMessageData& aData, bool abRunFocusChangeChecks)
 {
-    if(apObj==NULL || apCallback==NULL) return false;
+    if(apObj==NULL || apCallback==NULL)
+    {
+        return false;
+    }
 
     iWidget *pPreCallAtt = NULL, *pPreCallFocus = NULL, *pPreCallDefaultUIFocus = NULL, *pPostCallAtt, *pPostCallFocus, *pPostCallDefaultUIFocus;
 
@@ -156,15 +168,21 @@ bool iGuiPopUp::RunCallback(void* apObj, tGuiCallbackFunc apCallback,
 
         mbAttChanged = pPreCallAtt!=pPostCallAtt;
         if(mbAttChanged)
+        {
             mpNewAttention = pPostCallAtt;
+        }
 
         mbFocusChanged = pPreCallFocus!=pPostCallFocus;
         if(mbFocusChanged)
+        {
             mpNewFocused = pPostCallFocus;
+        }
 
         mbDefaultUIFocusChanged = pPreCallDefaultUIFocus!=pPostCallDefaultUIFocus;
         if(mbDefaultUIFocusChanged)
+        {
             mpNewDefaultUIFocus = pPostCallDefaultUIFocus;
+        }
     }
 
     return bRet;

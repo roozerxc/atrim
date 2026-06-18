@@ -152,7 +152,10 @@ void iMaterialType_SolidBase::DestroyProgram(cMaterial *apMaterial, eMaterialRen
 
 void iMaterialType_SolidBase::CreateGlobalPrograms()
 {
-    if(mbGlobalDataCreated) return;
+    if(mbGlobalDataCreated)
+    {
+        return;
+    }
 
     mbGlobalDataCreated = true;
     mbIsGlobalDataCreator = true;
@@ -192,7 +195,10 @@ void iMaterialType_SolidBase::LoadData()
 
 void iMaterialType_SolidBase::DestroyData()
 {
-    if(mpDissolveTexture) mpResources->GetTextureManager()->Destroy(mpDissolveTexture);
+    if(mpDissolveTexture)
+    {
+        mpResources->GetTextureManager()->Destroy(mpDissolveTexture);
+    }
 
     //If this instace was global data creator, then it needs to be recreated.
     if(mbIsGlobalDataCreator)
@@ -282,12 +288,24 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
     defaultVars.Add("VirtualPositionAddScale",mfVirtualPositionAddScale);
 
     //Get the G-buffer type
-    if(cRendererDeferred::GetGBufferType() == eDeferredGBuffer_32Bit)    defaultVars.Add("Deferred_32bit");
-    else                                                                defaultVars.Add("Deferred_64bit");
+    if(cRendererDeferred::GetGBufferType() == eDeferredGBuffer_32Bit)
+    {
+        defaultVars.Add("Deferred_32bit");
+    }
+    else
+    {
+        defaultVars.Add("Deferred_64bit");
+    }
 
     //Set up number of gbuffer textures used
-    if(cRendererDeferred::GetNumOfGBufferTextures() == 4)    defaultVars.Add("RenderTargets_4");
-    else                                                    defaultVars.Add("RenderTargets_3");
+    if(cRendererDeferred::GetNumOfGBufferTextures() == 4)
+    {
+        defaultVars.Add("RenderTargets_4");
+    }
+    else
+    {
+        defaultVars.Add("RenderTargets_3");
+    }
 
     //Set up relief mapping method
     if(    iRenderer::GetParallaxQuality() != eParallaxQuality_Low &&
@@ -454,9 +472,18 @@ iGpuProgram* cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
     if(aRenderMode == eMaterialRenderMode_Z)
     {
         tFlag lFlags =0;
-        if(apMaterial->GetTexture(eMaterialTexture_Alpha))    lFlags |= eFeature_Z_UseAlpha;
-        if(apMaterial->HasUvAnimation())                    lFlags |= eFeature_Z_UvAnimation;
-        if(pVars->mbAlphaDissolveFilter)                    lFlags |= eFeature_Z_UseAlphaDissolveFilter;
+        if(apMaterial->GetTexture(eMaterialTexture_Alpha))
+        {
+            lFlags |= eFeature_Z_UseAlpha;
+        }
+        if(apMaterial->HasUvAnimation())
+        {
+            lFlags |= eFeature_Z_UvAnimation;
+        }
+        if(pVars->mbAlphaDissolveFilter)
+        {
+            lFlags |= eFeature_Z_UseAlphaDissolveFilter;
+        }
 
         return mpGlobalProgramManager->GenerateProgram(eMaterialRenderMode_Z, lFlags);
     }
@@ -466,10 +493,22 @@ iGpuProgram* cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
     {
         tFlag lFlags =0;
         lFlags |= eFeature_Z_Dissolve;
-        if(apMaterial->GetTexture(eMaterialTexture_Alpha))            lFlags |= eFeature_Z_UseAlpha;
-        if(apMaterial->GetTexture(eMaterialTexture_DissolveAlpha))    lFlags |= eFeature_Z_DissolveAlpha;
-        if(apMaterial->HasUvAnimation())                            lFlags |= eFeature_Z_UvAnimation;
-        if(pVars->mbAlphaDissolveFilter)                            lFlags |= eFeature_Z_UseAlphaDissolveFilter;
+        if(apMaterial->GetTexture(eMaterialTexture_Alpha))
+        {
+            lFlags |= eFeature_Z_UseAlpha;
+        }
+        if(apMaterial->GetTexture(eMaterialTexture_DissolveAlpha))
+        {
+            lFlags |= eFeature_Z_DissolveAlpha;
+        }
+        if(apMaterial->HasUvAnimation())
+        {
+            lFlags |= eFeature_Z_UvAnimation;
+        }
+        if(pVars->mbAlphaDissolveFilter)
+        {
+            lFlags |= eFeature_Z_UseAlphaDissolveFilter;
+        }
 
         return mpGlobalProgramManager->GenerateProgram(eMaterialRenderMode_Z, lFlags);
     }
@@ -478,16 +517,31 @@ iGpuProgram* cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
     else if(aRenderMode == eMaterialRenderMode_Diffuse)
     {
         tFlag lFlags =0;
-        if(apMaterial->GetTexture(eMaterialTexture_NMap))            lFlags |= eFeature_Diffuse_NormalMaps;
-        if(apMaterial->GetTexture(eMaterialTexture_Specular))        lFlags |= eFeature_Diffuse_Specular;
+        if(apMaterial->GetTexture(eMaterialTexture_NMap))
+        {
+            lFlags |= eFeature_Diffuse_NormalMaps;
+        }
+        if(apMaterial->GetTexture(eMaterialTexture_Specular))
+        {
+            lFlags |= eFeature_Diffuse_Specular;
+        }
         if(    apMaterial->GetTexture(eMaterialTexture_Height) &&
-                iRenderer::GetParallaxEnabled())                        lFlags |= eFeature_Diffuse_Parallax;
+                iRenderer::GetParallaxEnabled())
+        {
+            lFlags |= eFeature_Diffuse_Parallax;
+        }
         if(apMaterial->GetTexture(eMaterialTexture_CubeMap))
         {
             lFlags |= eFeature_Diffuse_EnvMap;
-            if(apMaterial->GetTexture(eMaterialTexture_CubeMapAlpha))    lFlags |= eFeature_Diffuse_CubeMapAlpha;
+            if(apMaterial->GetTexture(eMaterialTexture_CubeMapAlpha))
+            {
+                lFlags |= eFeature_Diffuse_CubeMapAlpha;
+            }
         }
-        if(apMaterial->HasUvAnimation())                            lFlags |= eFeature_Diffuse_UvAnimation;
+        if(apMaterial->HasUvAnimation())
+        {
+            lFlags |= eFeature_Diffuse_UvAnimation;
+        }
 
 
         return mpProgramManager->GenerateProgram(aRenderMode,lFlags);
@@ -497,7 +551,10 @@ iGpuProgram* cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
     else if(aRenderMode == eMaterialRenderMode_Illumination)
     {
         tFlag lFlags =0;
-        if(apMaterial->HasUvAnimation())    lFlags |= eFeature_Illum_UvAnimation;
+        if(apMaterial->HasUvAnimation())
+        {
+            lFlags |= eFeature_Illum_UvAnimation;
+        }
 
         return mpProgramManager->GenerateProgram(aRenderMode,lFlags);
     }
@@ -571,7 +628,10 @@ void cMaterialType_SolidDiffuse::SetupObjectSpecificData(    eMaterialRenderMode
     if(aRenderMode == eMaterialRenderMode_Z_Dissolve)
     {
         bool bRet = apProgram->SetFloat(kVar_afDissolveAmount, apObject->GetCoverageAmount());
-        if(bRet==false)Error("Could not set variable!\n");
+        if(bRet==false)
+        {
+            Error("Could not set variable!\n");
+        }
     }
     ////////////////////////////
     //Illumination

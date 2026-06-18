@@ -28,7 +28,9 @@ int hplMain(const tString &asCommandline)
     else
     {
         if(gpBase->msErrorMessage==_W(""))
+        {
             gpBase->msErrorMessage = _W("Error occured");
+        }
 
         cPlatform::CreateMessageBox(_W("Error!"),gpBase->msErrorMessage.c_str());
         //No Exit, since it was not sure everything was created as it should.

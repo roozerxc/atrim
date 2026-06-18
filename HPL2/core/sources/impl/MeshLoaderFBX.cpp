@@ -127,7 +127,10 @@ cMesh* cMeshLoaderFBX::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags)
 
     cSkeleton* pSkeleton = new cSkeleton();
 
-    if(mbLog)Log("Loading skeleton '%s':\n", asFile.c_str());
+    if(mbLog)
+    {
+        Log("Loading skeleton '%s':\n", asFile.c_str());
+    }
     LoadSkeletonRec(pSkeleton->GetRootBone(),pScene->GetRootNode(),0);
 
     //Check if any bones where found.
@@ -138,7 +141,10 @@ cMesh* cMeshLoaderFBX::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags)
     }
 
     //Go through all nodes
-    if(mbLog)Log("Loading scene '%s':\n", asFile.c_str());
+    if(mbLog)
+    {
+        Log("Loading scene '%s':\n", asFile.c_str());
+    }
     LoadSceneRec(&lstSubData,pSkeleton,NULL,pScene->GetRootNode(),0, false);
 
     //Finalize the bones. That is remove non-linked bones and
@@ -164,10 +170,16 @@ cMesh* cMeshLoaderFBX::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags)
     cMesh *pMesh = hplNew( cMesh, (cString::To8Char(asFile), asFile, mpMaterialManager,mpAnimationManager) );
 
     //Set skeleton.
-    if(pSkeleton) pMesh->SetSkeleton(pSkeleton);
+    if(pSkeleton)
+    {
+        pMesh->SetSkeleton(pSkeleton);
+    }
 
     //Add Animation
-    if(pAnimation) pMesh->AddAnimation(pAnimation);
+    if(pAnimation)
+    {
+        pMesh->AddAnimation(pAnimation);
+    }
 
     tSubMeshDataListIt it = lstSubData.begin();
     for(; it != lstSubData.end(); it++)
@@ -204,7 +216,10 @@ cMesh* cMeshLoaderFBX::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags)
     }
 
     //Setup the joints (create new vertex coords, etc)
-    if(pSkeleton) pMesh->CompileBonesAndSubMeshes();
+    if(pSkeleton)
+    {
+        pMesh->CompileBonesAndSubMeshes();
+    }
 
     /////////////////////////////////////////////////
     // SAVE MSH FORMAT
@@ -251,7 +266,10 @@ cAnimation* cMeshLoaderFBX::LoadAnimation(const tWString& asFile)
 
     cSkeleton* pSkeleton = new cSkeleton();
 
-    if(mbLog)Log("Loading skeleton '%s':\n", asFile.c_str());
+    if(mbLog)
+    {
+        Log("Loading skeleton '%s':\n", asFile.c_str());
+    }
     LoadSkeletonRec(pSkeleton->GetRootBone(),pScene->GetRootNode(),0);
 
     //Check if any bones where found.
@@ -284,7 +302,10 @@ cAnimation* cMeshLoaderFBX::LoadAnimation(const tWString& asFile)
     pScene->Destroy(true,true);
     pImporter->Destroy(true,true);
 
-    if(pSkeleton) hplDelete(pSkeleton);
+    if(pSkeleton)
+    {
+        hplDelete(pSkeleton);
+    }
 
     /////////////////////////////////////////////////
     // SAVE MSH FORMAT
@@ -325,7 +346,10 @@ cAnimation*  cMeshLoaderFBX::LoadAnimations(KFbxScene *apScene, KFbxImporter* ap
     for(int i=0; i<vStrings.GetCount(); i++)
     {
         KFbxTakeInfo* pTakeInfo = apScene->GetTakeInfo(*vStrings[i]);
-        if(pTakeInfo==NULL)continue;
+        if(pTakeInfo==NULL)
+        {
+            continue;
+        }
 
         Log("Info for '%s'\n",vStrings[i]->Buffer());
 
@@ -367,19 +391,46 @@ static KFCurve *GetCurve(KFbxNode *apNode, KFbxAnimLayer * apAnimLayer, tAnimTra
     switch(aType)
     {
     case eAnimTransformFlag_Translate:
-        if(alAxis==0) pCurve = apNode->LclTranslation.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_T_X, true)->GetKFCurve();
-        if(alAxis==1) pCurve = apNode->LclTranslation.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_T_Y, true)->GetKFCurve();
-        if(alAxis==2) pCurve = apNode->LclTranslation.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_T_Z, true)->GetKFCurve();
+        if(alAxis==0)
+        {
+            pCurve = apNode->LclTranslation.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_T_X, true)->GetKFCurve();
+        }
+        if(alAxis==1)
+        {
+            pCurve = apNode->LclTranslation.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_T_Y, true)->GetKFCurve();
+        }
+        if(alAxis==2)
+        {
+            pCurve = apNode->LclTranslation.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_T_Z, true)->GetKFCurve();
+        }
         break;
     case eAnimTransformFlag_Scale:
-        if(alAxis==0) pCurve = apNode->LclScaling.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_S_X, true)->GetKFCurve();
-        if(alAxis==1) pCurve = apNode->LclScaling.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_S_Y, true)->GetKFCurve();
-        if(alAxis==2) pCurve = apNode->LclScaling.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_S_Z, true)->GetKFCurve();
+        if(alAxis==0)
+        {
+            pCurve = apNode->LclScaling.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_S_X, true)->GetKFCurve();
+        }
+        if(alAxis==1)
+        {
+            pCurve = apNode->LclScaling.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_S_Y, true)->GetKFCurve();
+        }
+        if(alAxis==2)
+        {
+            pCurve = apNode->LclScaling.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_S_Z, true)->GetKFCurve();
+        }
         break;
     case eAnimTransformFlag_Rotate:
-        if(alAxis==0) pCurve = apNode->LclRotation.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_R_X, true)->GetKFCurve();
-        if(alAxis==1) pCurve = apNode->LclRotation.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_R_Y, true)->GetKFCurve();
-        if(alAxis==2) pCurve = apNode->LclRotation.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_R_Z, true)->GetKFCurve();
+        if(alAxis==0)
+        {
+            pCurve = apNode->LclRotation.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_R_X, true)->GetKFCurve();
+        }
+        if(alAxis==1)
+        {
+            pCurve = apNode->LclRotation.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_R_Y, true)->GetKFCurve();
+        }
+        if(alAxis==2)
+        {
+            pCurve = apNode->LclRotation.GetCurve<KFbxAnimCurve>(apAnimLayer, KFCURVENODE_R_Z, true)->GetKFCurve();
+        }
         break;
     }
 
@@ -435,7 +486,10 @@ static int FindTimeIndex(tTempKeyFrameDataVec *pVec, float afTime)
 {
     for(int i=0; i< (int)pVec->size(); i++)
     {
-        if(std::abs(afTime - (*pVec)[i].mfTime) < kEpsilonf) return i;
+        if(std::abs(afTime - (*pVec)[i].mfTime) < kEpsilonf)
+        {
+            return i;
+        }
     }
 
     return -1;
@@ -760,7 +814,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
         //If the mesh has been transformed to triangles or not.
         bool mbTriangulated=false;
 
-        if(mbLog)Log("%s Loading node: '%s'\n",GetTabs(alDepth),apNode->GetName());
+        if(mbLog)
+        {
+            Log("%s Loading node: '%s'\n",GetTabs(alDepth),apNode->GetName());
+        }
 
         //triangulate the mesh
 
@@ -770,7 +827,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
 
 
         KFbxMesh *pTriMesh = pMesh;
-        if(mbTriangulated==false)pTriMesh = pConverter.TriangulateMesh(pMesh);
+        if(mbTriangulated==false)
+        {
+            pTriMesh = pConverter.TriangulateMesh(pMesh);
+        }
 
         //mpSdkManager->DestroyKFbxGeometryConverter(pConverter);
 
@@ -778,28 +838,55 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
 
         //////////////////////////////////////////////////////
         //Polygons (indicies)
-        if(mbLowLog)Log("%s Polygons:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+        if(mbLowLog)
+        {
+            Log("%s Polygons:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+        }
         for(int i=0; i<pTriMesh->GetPolygonCount(); i++)
         {
-            if(mbLowLog)Log("[");
+            if(mbLowLog)
+            {
+                Log("[");
+            }
             for(int j=0; j<pTriMesh->GetPolygonSize(i); j++)
             {
-                if(mbLowLog)Log("%d", pTriMesh->GetPolygonVertex(i,j));
-                if(mbLowLog)if(j != pTriMesh->GetPolygonSize(i)-1)Log(", ");
+                if(mbLowLog)
+                {
+                    Log("%d", pTriMesh->GetPolygonVertex(i,j));
+                }
+                if(mbLowLog)if(j != pTriMesh->GetPolygonSize(i)-1)
+                    {
+                        Log(", ");
+                    }
 
                 mvIndexes.push_back(pTriMesh->GetPolygonVertex(i,j));
             }
-            if(mbLowLog)Log("]");
+            if(mbLowLog)
+            {
+                Log("]");
+            }
         }
-        if(mbLowLog)Log("\n");
+        if(mbLowLog)
+        {
+            Log("\n");
+        }
 
         //////////////////////////////////////////////////////
         //Positions (vertrices)
-        if(mbLowLog)Log("%s Positions:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+        if(mbLowLog)
+        {
+            Log("%s Positions:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+        }
         for(int i=0; i<pMesh->GetControlPointsCount(); i++)
         {
-            if(mbLowLog)Log("(%.1f, %.1f, %.1f) ", pPositions[i].GetAt(0),pPositions[i].GetAt(1),pPositions[i].GetAt(2));
-            if(mbLowLog)if(i != pMesh->GetControlPointsCount()-1)Log(", ");
+            if(mbLowLog)
+            {
+                Log("(%.1f, %.1f, %.1f) ", pPositions[i].GetAt(0),pPositions[i].GetAt(1),pPositions[i].GetAt(2));
+            }
+            if(mbLowLog)if(i != pMesh->GetControlPointsCount()-1)
+                {
+                    Log(", ");
+                }
 
             cVector3f vPos((float)pPositions[i].GetAt(0),(float)pPositions[i].GetAt(1),(float)pPositions[i].GetAt(2));
 
@@ -807,7 +894,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
             //And then extra uvs can be found.
             mvVertexes.push_back(cVertex(vPos,cVector3f(0,0,-1),cColor(1,1)));
         }
-        if(mbLowLog)Log("\n");
+        if(mbLowLog)
+        {
+            Log("\n");
+        }
 
         KFbxLayer *pLayer = pTriMesh->GetLayer(0);
 
@@ -817,25 +907,43 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
 
         if(pNormLayer)
         {
-            if(mbLog)Log("%s Normal mapping mode: %d \n",GetTabs(alDepth), pNormLayer->GetMappingMode());
-            if(mbLog)Log("%s Normal reference mode: %d \n",GetTabs(alDepth), pNormLayer->GetReferenceMode());
+            if(mbLog)
+            {
+                Log("%s Normal mapping mode: %d \n",GetTabs(alDepth), pNormLayer->GetMappingMode());
+            }
+            if(mbLog)
+            {
+                Log("%s Normal reference mode: %d \n",GetTabs(alDepth), pNormLayer->GetReferenceMode());
+            }
 
             if(pNormLayer->GetMappingMode() == KFbxLayerElementNormal::eBY_CONTROL_POINT)
             {
                 KFbxLayerElementNormal::DirectArrayType pNormals = pNormLayer->GetDirectArray();
 
-                if(mbLowLog)Log("%s Normals:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+                if(mbLowLog)
+                {
+                    Log("%s Normals:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+                }
                 for(int i=0; i<pMesh->GetControlPointsCount(); i++)
                 {
-                    if(mbLowLog)Log("(%.1f, %.1f, %.1f) ", pNormals[i].GetAt(0),pNormals[i].GetAt(1),pNormals[i].GetAt(2));
-                    if(mbLowLog)if(i != pMesh->GetControlPointsCount()-1)Log(", ");
+                    if(mbLowLog)
+                    {
+                        Log("(%.1f, %.1f, %.1f) ", pNormals[i].GetAt(0),pNormals[i].GetAt(1),pNormals[i].GetAt(2));
+                    }
+                    if(mbLowLog)if(i != pMesh->GetControlPointsCount()-1)
+                        {
+                            Log(", ");
+                        }
 
                     cVector3f vPos((float)pNormals[i].GetAt(0),(float)pNormals[i].GetAt(1),(float)pNormals[i].GetAt(2));
 
                     mvVertexes[i].norm = vPos;
                 }
 
-                if(mbLowLog)Log("\n");
+                if(mbLowLog)
+                {
+                    Log("\n");
+                }
             }
             else if(pNormLayer->GetMappingMode() == KFbxLayerElementNormal::eBY_POLYGON_VERTEX)
             {
@@ -843,7 +951,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
                 {
                     KFbxLayerElementNormal::DirectArrayType pNormals = pNormLayer->GetDirectArray();
 
-                    if(mbLowLog)Log("%s Normals:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+                    if(mbLowLog)
+                    {
+                        Log("%s Normals:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+                    }
                     for ( int i = 0; i < (int)mvIndexes.size(); i++)
                     {
                         cVector3f vPos((float)pNormals[i].GetAt(0),(float)pNormals[i].GetAt(1),(float)pNormals[i].GetAt(2));
@@ -864,26 +975,44 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
 
         if(pTangentLayer)
         {
-            if(mbLog)Log("%s Tangent mapping mode: %d \n",GetTabs(alDepth), pTangentLayer->GetMappingMode());
-            if(mbLog)Log("%s Tangent reference mode: %d \n",GetTabs(alDepth), pTangentLayer->GetReferenceMode());
+            if(mbLog)
+            {
+                Log("%s Tangent mapping mode: %d \n",GetTabs(alDepth), pTangentLayer->GetMappingMode());
+            }
+            if(mbLog)
+            {
+                Log("%s Tangent reference mode: %d \n",GetTabs(alDepth), pTangentLayer->GetReferenceMode());
+            }
 
             KFbxLayerElementTangent::DirectArrayType pTangents = pTangentLayer->GetDirectArray();
             KFbxLayerElementArrayTemplate<int> pTangentIndices = pTangentLayer->GetIndexArray();
 
             if(pTangentLayer->GetMappingMode() == KFbxLayerElementNormal::eBY_CONTROL_POINT)
             {
-                if(mbLowLog)Log("%s Tangents:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+                if(mbLowLog)
+                {
+                    Log("%s Tangents:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+                }
                 for(int i=0; i<pMesh->GetControlPointsCount(); i++)
                 {
-                    if(mbLowLog)Log("(%.1f, %.1f, %.1f) ", pTangents[i].GetAt(0),pTangents[i].GetAt(1),pTangents[i].GetAt(2));
-                    if(mbLowLog)if(i != pMesh->GetControlPointsCount()-1)Log(", ");
+                    if(mbLowLog)
+                    {
+                        Log("(%.1f, %.1f, %.1f) ", pTangents[i].GetAt(0),pTangents[i].GetAt(1),pTangents[i].GetAt(2));
+                    }
+                    if(mbLowLog)if(i != pMesh->GetControlPointsCount()-1)
+                        {
+                            Log(", ");
+                        }
 
                     cVector3f vPos((float)pTangents[i].GetAt(0),(float)pTangents[i].GetAt(1),(float)pTangents[i].GetAt(2));
 
                     mvVertexes[i].tan = vPos;
                 }
 
-                if(mbLowLog)Log("\n");
+                if(mbLowLog)
+                {
+                    Log("\n");
+                }
             }
             else if(pTangentLayer->GetMappingMode() == KFbxLayerElementNormal::eBY_POLYGON_VERTEX)
             {
@@ -932,7 +1061,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
 
                 if ( pTangentLayer->GetReferenceMode() == KFbxLayerElement::eDIRECT )
                 {
-                    if(mbLowLog)Log("%s Tangents:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+                    if(mbLowLog)
+                    {
+                        Log("%s Tangents:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+                    }
                     for ( int i = 0; i < (int)mvIndexes.size(); i++)
                     {
                         cVector3f vPos((float)pTangents[i].GetAt(0),(float)pTangents[i].GetAt(1),(float)pTangents[i].GetAt(2));
@@ -956,7 +1088,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
 
                     if(mbLowLog)if(i != mvIndexes.size()-1)Log(", ");
                 }*/
-                if(mbLowLog)Log("\n");
+                if(mbLowLog)
+                {
+                    Log("\n");
+                }
             }
         }
 
@@ -970,17 +1105,32 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
             KFbxLayerElementUV::DirectArrayType pUvs = pUvLayer->GetDirectArray();
             KFbxLayerElementArrayTemplate<int> pUvIndices = pUvLayer->GetIndexArray();
 
-            if(mbLog)Log("%s UV mapping mode: %d \n",GetTabs(alDepth), pUvLayer->GetMappingMode());
-            if(mbLog)Log("%s UV reference mode: %d \n",GetTabs(alDepth), pUvLayer->GetReferenceMode());
+            if(mbLog)
+            {
+                Log("%s UV mapping mode: %d \n",GetTabs(alDepth), pUvLayer->GetMappingMode());
+            }
+            if(mbLog)
+            {
+                Log("%s UV reference mode: %d \n",GetTabs(alDepth), pUvLayer->GetReferenceMode());
+            }
 
             //One UV for each position
             if(pUvLayer->GetMappingMode() == KFbxLayerElementNormal::eBY_CONTROL_POINT)
             {
-                if(mbLowLog)Log("%s Uvs:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+                if(mbLowLog)
+                {
+                    Log("%s Uvs:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+                }
                 for(int i=0; i<pMesh->GetControlPointsCount(); i++)
                 {
-                    if(mbLowLog)Log("(%.1f, %.1f) ", pUvs[i].GetAt(0),pUvs[i].GetAt(1));
-                    if(mbLowLog)if(i != pMesh->GetControlPointsCount()-1)Log(", ");
+                    if(mbLowLog)
+                    {
+                        Log("(%.1f, %.1f) ", pUvs[i].GetAt(0),pUvs[i].GetAt(1));
+                    }
+                    if(mbLowLog)if(i != pMesh->GetControlPointsCount()-1)
+                        {
+                            Log(", ");
+                        }
 
                     //Invert y sicne it uses a another coord system
                     cVector3f vPos(    (float)pUvs[i].GetAt(0),
@@ -988,16 +1138,25 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
 
                     mvVertexes[i].tex = vPos;
                 }
-                if(mbLog)Log("\n");
+                if(mbLog)
+                {
+                    Log("\n");
+                }
             }
             //One UV for each vertex, find what vertex the index belongs to.
             else if(pUvLayer->GetMappingMode() == KFbxLayerElementNormal::eBY_POLYGON_VERTEX)
             {
-                if(mbLowLog)Log("%s Uvs:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+                if(mbLowLog)
+                {
+                    Log("%s Uvs:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
+                }
                 for(int i=0; i<(int)mvIndexes.size(); i++)
                 {
                     int lPos = pUvIndices[i];
-                    if(mbLowLog)Log("(%.1f, %.1f) ", pUvs[lPos].GetAt(0),pUvs[lPos].GetAt(1));
+                    if(mbLowLog)
+                    {
+                        Log("(%.1f, %.1f) ", pUvs[lPos].GetAt(0),pUvs[lPos].GetAt(1));
+                    }
 
                     //Invert y sicne it uses a another coord system
                     cVector3f vPos(    (float)pUvs[lPos].GetAt(0),
@@ -1016,9 +1175,15 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
                         mvVertexes[VtxPos].tex = vPos;
                     }
 
-                    if(mbLowLog)if(i != mvIndexes.size()-1)Log(", ");
+                    if(mbLowLog)if(i != mvIndexes.size()-1)
+                        {
+                            Log(", ");
+                        }
                 }
-                if(mbLowLog)Log("\n");
+                if(mbLowLog)
+                {
+                    Log("\n");
+                }
             }
             else
             {
@@ -1037,7 +1202,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
         if(pUvLayer)
         {
             //Add extra vertexes if needed
-            if(mbLowLog)Log("%s Adding new vertexes to indices: ",GetTabs(alDepth));
+            if(mbLowLog)
+            {
+                Log("%s Adding new vertexes to indices: ",GetTabs(alDepth));
+            }
             tExtraVtxValueListIt it = lstExtraValues.begin();
             int lStartPos = (int)mvVertexes.size();
             for(; it != lstExtraValues.end(); it++)
@@ -1045,7 +1213,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
                 cExtraVtxValue &val = *it;
                 cVertex newVtx;
 
-                if(mbLowLog)Log("%d ",val.mlIndexNum);
+                if(mbLowLog)
+                {
+                    Log("%d ",val.mlIndexNum);
+                }
 
                 //Check if there is allready a point added with the same values.
                 bool bOldFound = false;
@@ -1062,7 +1233,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
                     }
                 }
 
-                if(bOldFound)continue;
+                if(bOldFound)
+                {
+                    continue;
+                }
 
                 unsigned int lVtxNum = mvIndexes[val.mlIndexNum];
 
@@ -1079,7 +1253,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
 
                 mvIndexes[val.mlIndexNum] = (unsigned int)mvVertexes.size()-1;
             }
-            if(mbLowLog)Log("\n");
+            if(mbLowLog)
+            {
+                Log("\n");
+            }
         }
 
         //////////////////////////////////////////////////////
@@ -1167,7 +1344,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
         subMeshData.m_mtxGlobal = cMatrixf(&GMtx.Transpose().mData[0][0]);
         subMeshData.m_mtxLocal = cMatrixf(&LMtx.Transpose().mData[0][0]);
 
-        if(mbLog)Log("%s Matrix: %s\n",GetTabs(alDepth),cMath::MatrixToChar(subMeshData.m_mtxGlobal));
+        if(mbLog)
+        {
+            Log("%s Matrix: %s\n",GetTabs(alDepth),cMath::MatrixToChar(subMeshData.m_mtxGlobal));
+        }
 
 
         //Transform the vertices according to the matrix
@@ -1199,7 +1379,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
     if(apSkeleton)
     {
         int deformerCount = pMesh->GetDeformerCount( KFbxDeformer::eSKIN );
-        if(deformerCount  != 1 ) Error("No or multiple skin deformers assigned to mesh!\n");
+        if(deformerCount  != 1 )
+        {
+            Error("No or multiple skin deformers assigned to mesh!\n");
+        }
 
         for(int i=0; i<deformerCount; i++)
         {
@@ -1215,7 +1398,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
 
                 KFbxNode* pAssNode = pLink->GetAssociateModel();
                 tString sAssName ="None";
-                if(pAssNode)sAssName = pAssNode->GetName();
+                if(pAssNode)
+                {
+                    sAssName = pAssNode->GetName();
+                }
 
                 if(mbLog)Log("%s Link: %d,LinkNode: %s, Mode: %s AssModel: %s\n",GetTabs(alDepth), i,
                                  pBoneNode->GetName(),
@@ -1258,7 +1444,10 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
                 cMatrixf mtxBone =  cMath::MatrixMul(mtxR,mtxS);
                 mtxBone = cMath::MatrixMul(mtxT,mtxBone);
 
-                if(mbLog)Log("%s LTransform: %s\n",GetTabs(alDepth),cMath::MatrixToChar(mtxBone));
+                if(mbLog)
+                {
+                    Log("%s LTransform: %s\n",GetTabs(alDepth),cMath::MatrixToChar(mtxBone));
+                }
 
                 //Sets the global position at rest for the bone!
                 pBone->SetTransform(mtxBone);
@@ -1350,15 +1539,24 @@ void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apS
         }
 
         //Compile the vertex buffer
-        if(mbLog)Log("\n%s Compiling mesh\n",GetTabs(alDepth));
+        if(mbLog)
+        {
+            Log("\n%s Compiling mesh\n",GetTabs(alDepth));
+        }
         subMeshData.mpVtxBuffer->Compile(compileFlags);
 
         //Add the sub mesh data to the list
-        if(apSubMeshList) apSubMeshList->push_back(subMeshData);
+        if(apSubMeshList)
+        {
+            apSubMeshList->push_back(subMeshData);
+        }
     }
 
     //end of mesh
-    if(mbLog)Log("\n");
+    if(mbLog)
+    {
+        Log("\n");
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1367,7 +1565,10 @@ const char* cMeshLoaderFBX::GetTabs(int alDepth)
 {
     msTemp = "";
 
-    for(int i=0; i<alDepth; i++)msTemp+="\t";
+    for(int i=0; i<alDepth; i++)
+    {
+        msTemp+="\t";
+    }
 
     return msTemp.c_str();
 }

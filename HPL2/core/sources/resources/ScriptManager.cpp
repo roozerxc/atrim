@@ -47,9 +47,13 @@ iScript* cScriptManager::CreateScript(const tString& asName, tString *apCompileM
     BeginLoad(asName);
 
     if(cString::GetFileExt(asName) != "chps")
+    {
         asNewName = cString::SetFileExt(asName,"hps");
+    }
     else
+    {
         asNewName = cString::SetFileExt(asName,"chps");
+    }
 
     pScript = static_cast<iScript*>(this->FindLoadedResource(asNewName,sPath));
 
@@ -67,8 +71,14 @@ iScript* cScriptManager::CreateScript(const tString& asName, tString *apCompileM
         AddResource(pScript);
     }
 
-    if(pScript)pScript->IncUserCount();
-    else Error("Couldn't create script '%s'\n",asNewName.c_str());
+    if(pScript)
+    {
+        pScript->IncUserCount();
+    }
+    else
+    {
+        Error("Couldn't create script '%s'\n",asNewName.c_str());
+    }
 
     EndLoad();
     return pScript;

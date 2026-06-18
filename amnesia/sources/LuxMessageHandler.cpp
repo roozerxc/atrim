@@ -22,8 +22,14 @@ cLuxMessageHandler::cLuxMessageHandler() : iLuxUpdateable("LuxMusicHandler")
 
     msQuestAddedSound = gpBase->mpMenuCfg->GetString("Messages", "QuestAddedSound","");
     tString sQuestAddedImage = gpBase->mpMenuCfg->GetString("Messages", "QuestAddedIcon","");
-    if(sQuestAddedImage != "")    mpQuestAddedIcon = pGui->CreateGfxImage(sQuestAddedImage, eGuiMaterial_Alpha);
-    else                    mpQuestAddedIcon = NULL;
+    if(sQuestAddedImage != "")
+    {
+        mpQuestAddedIcon = pGui->CreateGfxImage(sQuestAddedImage, eGuiMaterial_Alpha);
+    }
+    else
+    {
+        mpQuestAddedIcon = NULL;
+    }
 
     mvFontSize = gpBase->mpMenuCfg->GetVector2f("Messages", "GameMessageFontSize",0);
 }
@@ -106,7 +112,10 @@ void cLuxMessageHandler::OnMapLeave(cLuxMap *apMap)
 
 void cLuxMessageHandler::StarQuestAddedMessage()
 {
-    if(mbQuestMessageActive) return;
+    if(mbQuestMessageActive)
+    {
+        return;
+    }
 
     mbQuestMessageActive = true;
     mfQuestMessageAlpha =0;
@@ -151,12 +160,18 @@ void cLuxMessageHandler::Update(float afTimeStep)
         mfMessageTime -= afTimeStep;
 
         mfMessageAlpha += afTimeStep*1;
-        if(mfMessageAlpha > 1) mfMessageAlpha =1;
+        if(mfMessageAlpha > 1)
+        {
+            mfMessageAlpha =1;
+        }
     }
     else if(mfMessageAlpha > 0)
     {
         mfMessageAlpha -= afTimeStep * 1.5f;
-        if(mfMessageAlpha < 0) mfMessageAlpha =0;
+        if(mfMessageAlpha < 0)
+        {
+            mfMessageAlpha =0;
+        }
     }
 
     ////////////////////////////////
@@ -167,7 +182,9 @@ void cLuxMessageHandler::Update(float afTimeStep)
         {
             mfQuestMessageAlpha += afTimeStep;
             if(mfQuestMessageAlpha >= 0.1)
-                gpBase->mpHelpFuncs->PlayGuiSoundData(msQuestAddedSound, eSoundEntryType_Gui); //Have it here so that is not played directly!
+            {
+                gpBase->mpHelpFuncs->PlayGuiSoundData(msQuestAddedSound, eSoundEntryType_Gui);    //Have it here so that is not played directly!
+            }
         }
         else if(mfQuestMessageAlpha < 1)
         {
@@ -189,10 +206,16 @@ void cLuxMessageHandler::Update(float afTimeStep)
     else if(mfQuestMessageAlpha > 0)
     {
         mfQuestMessageAlpha -= afTimeStep;
-        if(mfQuestMessageAlpha <0) mfQuestMessageAlpha =0;
+        if(mfQuestMessageAlpha <0)
+        {
+            mfQuestMessageAlpha =0;
+        }
     }
 
-    if(mfQuestMessageAlpha >0) mQuestOscill.Update(afTimeStep);
+    if(mfQuestMessageAlpha >0)
+    {
+        mQuestOscill.Update(afTimeStep);
+    }
 
 
     ////////////////////////////////
@@ -200,12 +223,18 @@ void cLuxMessageHandler::Update(float afTimeStep)
     if(mbPauseMessageActive)
     {
         mfPauseMessageAlpha += afTimeStep * 2.0f;
-        if(mfPauseMessageAlpha > 1)mfPauseMessageAlpha = 1;
+        if(mfPauseMessageAlpha > 1)
+        {
+            mfPauseMessageAlpha = 1;
+        }
     }
     else
     {
         mfPauseMessageAlpha -= afTimeStep * 2.0f;
-        if(mfPauseMessageAlpha < 0) mfPauseMessageAlpha =0;
+        if(mfPauseMessageAlpha < 0)
+        {
+            mfPauseMessageAlpha =0;
+        }
     }
 }
 
@@ -229,11 +258,17 @@ void cLuxMessageHandler::DoAction(eLuxPlayerAction aAction, bool abPressed)
         {
             if(aAction == eLuxPlayerAction_Interact)
             {
-                if(mpCallback) mpCallback->OnPress(true);
+                if(mpCallback)
+                {
+                    mpCallback->OnPress(true);
+                }
             }
             else if(aAction == eLuxPlayerAction_Attack)
             {
-                if(mpCallback) mpCallback->OnPress(false);
+                if(mpCallback)
+                {
+                    mpCallback->OnPress(false);
+                }
             }
         }
     }
@@ -243,7 +278,10 @@ void cLuxMessageHandler::DoAction(eLuxPlayerAction aAction, bool abPressed)
 
 void cLuxMessageHandler::SetPauseMessageActive(bool abX)
 {
-    if(mbPauseMessageActive == abX) return;
+    if(mbPauseMessageActive == abX)
+    {
+        return;
+    }
 
     mbPauseMessageActive = abX;
 
@@ -260,7 +298,10 @@ void cLuxMessageHandler::SetPauseMessageActive(bool abX)
 
 void cLuxMessageHandler::DrawQuestAdded()
 {
-    if(mfQuestMessageAlpha <= 0 || mpQuestAddedIcon==NULL) return;
+    if(mfQuestMessageAlpha <= 0 || mpQuestAddedIcon==NULL)
+    {
+        return;
+    }
 
     cVector2f vPos2D = gpBase->mvHudVirtualCenterSize - mpQuestAddedIcon->GetActiveSize() - cVector2f(20,20);
     cVector3f vPos(vPos2D.x, vPos2D.y, 10);
@@ -269,14 +310,19 @@ void cLuxMessageHandler::DrawQuestAdded()
     gpBase->mpGameHudSet->DrawGfx(mpQuestAddedIcon, vPos, -1, cColor(1, mfQuestMessageAlpha));
 
     for(int i=0; i<2; ++i)
+    {
         gpBase->mpGameHudSet->DrawGfx(mpQuestAddedIcon, vPos+cVector3f(0,0,1), -1, cColor(mfQuestMessageAlpha*mQuestOscill.val, 1), eGuiMaterial_Additive);
+    }
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxMessageHandler::DrawMessage()
 {
-    if(mfMessageAlpha <= 0) return;
+    if(mfMessageAlpha <= 0)
+    {
+        return;
+    }
 
     float fAlpha = mfMessageAlpha;
     if(mfPauseMessageAlpha > 0)
@@ -297,7 +343,10 @@ void cLuxMessageHandler::DrawMessage()
 
 void cLuxMessageHandler::DrawPauseMessage()
 {
-    if(mfPauseMessageAlpha <= 0) return;
+    if(mfPauseMessageAlpha <= 0)
+    {
+        return;
+    }
 
     ////////////////////////
     // Black background

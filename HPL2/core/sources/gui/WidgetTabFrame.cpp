@@ -189,9 +189,13 @@ cWidgetTab::~cWidgetTab()
 void cWidgetTab::AttachChild(iWidget* apChild)
 {
     if(apChild==mpTabLabel || apChild==mpFrame)
+    {
         iWidget::AttachChild(apChild);
+    }
     else
+    {
         mpFrame->AttachChild(apChild);
+    }
 }
 
 //-------------------------------------------------------------------
@@ -199,9 +203,13 @@ void cWidgetTab::AttachChild(iWidget* apChild)
 void cWidgetTab::RemoveChild(iWidget* apChild)
 {
     if(apChild==mpTabLabel || apChild==mpFrame)
+    {
         iWidget::RemoveChild(apChild);
+    }
     else
+    {
         mpFrame->RemoveChild(apChild);
+    }
 }
 
 //-------------------------------------------------------------------
@@ -240,9 +248,14 @@ void cWidgetTab::SetOnTop(bool abX)
 bool cWidgetTab::PointIsInside(const cVector2f& avPoint, bool abOnlyClipped)
 {
     if(CheckPointInsideClippingParent(avPoint)==false)
+    {
         return false;
+    }
 
-    if(abOnlyClipped && mbClipsGraphics==false) return true;
+    if(abOnlyClipped && mbClipsGraphics==false)
+    {
+        return true;
+    }
 
     bool bLabelVisible = mpTabLabel->IsVisible();
     cVector3f vLabelGlobalPos = mpTabLabel->GetGlobalPosition();
@@ -257,9 +270,13 @@ bool cWidgetTab::PointIsInside(const cVector2f& avPoint, bool abOnlyClipped)
         if( bLabelVisible==false ||
                 avPoint.x < vLabelGlobalPos.x || avPoint.x > vLabelGlobalPos.x + vLabelSize.x ||
                 avPoint.y < vLabelGlobalPos.y || avPoint.y > vLabelGlobalPos.y + vLabelSize.y)
+        {
             return false;
+        }
         else
+        {
             return true;
+        }
     }
     else
     {
@@ -277,14 +294,20 @@ bool cWidgetTab::PointIsInside(const cVector2f& avPoint, bool abOnlyClipped)
 
 void cWidgetTab::OnChangeText()
 {
-    if(mpTabLabel!=NULL) mpTabLabel->SetText(msText);
+    if(mpTabLabel!=NULL)
+    {
+        mpTabLabel->SetText(msText);
+    }
 }
 
 //-------------------------------------------------------------------
 
 void cWidgetTab::OnChangeSize()
 {
-    if(mpTabLabel == NULL || mpFrame == NULL) return;
+    if(mpTabLabel == NULL || mpFrame == NULL)
+    {
+        return;
+    }
 
     float fTextHeight = mpDefaultFont->mvSize.y + 8;
 
@@ -396,7 +419,9 @@ cWidgetTabFrame::~cWidgetTabFrame()
     if(mpSet->IsDestroyingSet()==false)
     {
         for(int i=0; i<2; ++i)
+        {
             mpSet->DestroyWidget(mvArrowButtons[i]);
+        }
         ClearTabs();
     }
 }
@@ -420,7 +445,9 @@ cWidgetTab* cWidgetTabFrame::AddTab(const tWString& asTabCaption)
     pTab->SetPosition(cVector3f(0,0,mfBackgroundZ));
 
     if(mvTabs.empty())
+    {
         SetTabOnTop(pTab);
+    }
 
     mvTabs.push_back(pTab);
 
@@ -434,7 +461,9 @@ cWidgetTab* cWidgetTabFrame::AddTab(const tWString& asTabCaption)
 void cWidgetTabFrame::ClearTabs()
 {
     for(tWidgetTabVectorIt it = mvTabs.begin(); it != mvTabs.end(); ++it)
+    {
         mpSet->DestroyWidget(*it);
+    }
 
     mvTabs.clear();
 }
@@ -461,7 +490,9 @@ cWidgetTab* cWidgetTabFrame::GetTab(const tWString& asTabCaption)
     {
         cWidgetTab* pTab = GetTab(i);
         if(pTab->GetText()==asTabCaption)
+        {
             return pTab;
+        }
     }
 
     return NULL;
@@ -493,7 +524,10 @@ void cWidgetTabFrame::SetTabOnTop(cWidgetTab* apTab)
     /////////////////////////////////////////////
     // Move current top tab to the background,
     // and then move apTab to top
-    if(apTab == mpTopTab) return;
+    if(apTab == mpTopTab)
+    {
+        return;
+    }
 
     cVector3f vNewPos;
 
@@ -513,7 +547,9 @@ void cWidgetTabFrame::SetTabOnTop(cWidgetTab* apTab)
     mpTopTab->SetOnTop(true);
 
     if(mvTabs.empty()==false)
+    {
         ProcessMessage(eGuiMessage_SelectionChange, cGuiMessageData(mpTopTab->GetIndex()));
+    }
 }
 
 //-------------------------------------------------------------------
@@ -521,7 +557,9 @@ void cWidgetTabFrame::SetTabOnTop(cWidgetTab* apTab)
 void cWidgetTabFrame::SetTabOnTopByIndex(int alIdx)
 {
     if(alIdx<0 || alIdx>=(int)mvTabs.size())
+    {
         return;
+    }
 
     SetTabOnTop(mvTabs[alIdx]);
 }
@@ -531,7 +569,9 @@ void cWidgetTabFrame::SetTabOnTopByIndex(int alIdx)
 void cWidgetTabFrame::SetHorizontalScrollEnabled(bool abX)
 {
     if(mvTabs.empty())
+    {
         mbHoriScrollEnabled = abX;
+    }
 }
 
 //-------------------------------------------------------------------
@@ -539,7 +579,9 @@ void cWidgetTabFrame::SetHorizontalScrollEnabled(bool abX)
 void cWidgetTabFrame::SetVerticalScrollEnabled(bool abX)
 {
     if(mvTabs.empty())
+    {
         mbVertScrollEnabled = abX;
+    }
 }
 
 //-------------------------------------------------------------------
@@ -563,7 +605,9 @@ bool cWidgetTabFrame::OnUIButtonPress(const cGuiMessageData& aData)
         SetTabOnTopByIndex(++lTabOnTopIndex);
     }
     else
+    {
         return false;
+    }
 
     return true;
 }
@@ -577,14 +621,18 @@ bool cWidgetTabFrame::ArrowButton_Pressed(iWidget* apWidget, const cGuiMessageDa
     if(apWidget==mvArrowButtons[0])
     {
         if(mlFirstVisibleTab>0)
+        {
             mlFirstVisibleTab--;
+        }
     }
     ///////////////////////////
     // Right Arrow Button
     if(apWidget==mvArrowButtons[1])
     {
         if(mlLastVisibleTab < (int) mvTabs.size()-1)
+        {
             mlFirstVisibleTab++;
+        }
     }
 
     UpdateTabVisibility();
@@ -620,7 +668,9 @@ void cWidgetTabFrame::UpdateTabVisibility()
 
 
         if(fPosX+pTab->mpTabLabel->GetSize().x < mvSize.x-(mfButtonSize*2+2))
+        {
             mlLastVisibleTab = i;
+        }
 
         fPosX += pTab->mpTabLabel->GetSize().x + mfTabSeparation;
     }
@@ -671,12 +721,19 @@ void cWidgetTabFrame::OnInit()
 
 void cWidgetTabFrame::OnChangeSize()
 {
-    if(mvArrowButtons[0]==NULL || mvArrowButtons[1]==NULL) return;
+    if(mvArrowButtons[0]==NULL || mvArrowButtons[1]==NULL)
+    {
+        return;
+    }
     for(int i = 0; i<2; ++i)
+    {
         mvArrowButtons[i]->SetPosition(cVector3f(mvSize.x - (mfButtonSize+2)*(2-i), 0, mfForegroundZ+0.5f));
+    }
 
     for(int i=0; i<(int)mvTabs.size(); ++i)
+    {
         mvTabs[i]->SetSize(mvSize);
+    }
 
     UpdateTabVisibility();
 }

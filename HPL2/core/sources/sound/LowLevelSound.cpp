@@ -48,7 +48,10 @@ iSoundEnvironment* iLowLevelSound::GetSoundEnvironmentFromFileName (const tStrin
     {
         iSoundEnvironment* pSoundEnv = *SEIt;
 
-        if(sLowName == pSoundEnv->GetFileName()) return pSoundEnv;
+        if(sLowName == pSoundEnv->GetFileName())
+        {
+            return pSoundEnv;
+        }
     }
     return NULL;
 }
@@ -67,7 +70,9 @@ iSoundEnvironment* iLowLevelSound::GetSoundEnvironmentFromFileName (const tStrin
 const tSoundDeviceVec& iLowLevelSound::GetAvailableSoundDevices()
 {
     if(mvSoundDevices.empty())
+    {
         PopulateAvailableSoundDevices(mvSoundDevices);
+    }
 
     return mvSoundDevices;
 }
@@ -88,7 +93,9 @@ const tSoundDeviceVec& iLowLevelSound::GetFilteredSoundDevices()
             tString sLowCaseName = cString::ToLowerCase(pSndDev->GetName());
 
             if(cString::GetFirstStringPos(sLowCaseName, sLowCaseFilter)!=-1)
+            {
                 mvFilteredSoundDevices.push_back(pSndDev);
+            }
         }
     }
 

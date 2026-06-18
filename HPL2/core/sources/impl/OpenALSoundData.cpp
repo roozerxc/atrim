@@ -27,12 +27,16 @@ cOpenALSoundData::~cOpenALSoundData()
     if (mbStream)
     {
         if(mpStream)
-            OAL_Stream_Unload ( mpStream );//static_cast<cOAL_Stream*>(mpSoundData) );
+        {
+            OAL_Stream_Unload ( mpStream );    //static_cast<cOAL_Stream*>(mpSoundData) );
+        }
     }
     else
     {
         if(mpSample)
-            OAL_Sample_Unload ( mpSample );//static_cast<cOAL_Sample*>(mpSoundData) );
+        {
+            OAL_Sample_Unload ( mpSample );    //static_cast<cOAL_Sample*>(mpSoundData) );
+        }
     }
 }
 
@@ -69,7 +73,9 @@ bool cOpenALSoundData::CreateFromFile(const tWString &asFile)
             return false;
         }
         else
+        {
             OAL_Stream_SetLoop(mpStream,mbLoopStream);
+        }
         //mpStream->SetLoop(mbLoopStream);
         //mpSoundData->SetLoop(mbLoopStream);
 
@@ -84,7 +90,9 @@ bool cOpenALSoundData::CreateFromFile(const tWString &asFile)
             return false;
         }
         else
+        {
             OAL_Sample_SetLoop(mpSample,true);
+        }
         //mpSample->SetLoop ( true );
 
     }
@@ -97,21 +105,30 @@ bool cOpenALSoundData::CreateFromFile(const tWString &asFile)
 iSoundChannel* cOpenALSoundData::CreateChannel(int alPriority)
 {
     //if(mpSoundData==NULL)return NULL;
-    if ( (mpSample == NULL) && (mpStream == NULL) ) return NULL;
+    if ( (mpSample == NULL) && (mpStream == NULL) )
+    {
+        return NULL;
+    }
 
     int lHandle;
     iSoundChannel *pSoundChannel=NULL;
     if(mbStream)
     {
         lHandle = OAL_Stream_Play ( OAL_FREE, GetStream(), 1.0f, true );
-        if(lHandle==-1)return NULL;
+        if(lHandle==-1)
+        {
+            return NULL;
+        }
 
         pSoundChannel = hplNew( cOpenALSoundChannel, (this,lHandle, mpSoundManger) );
     }
     else
     {
         lHandle = OAL_Sample_Play ( OAL_FREE, GetSample(), 1.0f, true, alPriority);
-        if(lHandle==-1)return NULL;
+        if(lHandle==-1)
+        {
+            return NULL;
+        }
 
         pSoundChannel = hplNew( cOpenALSoundChannel, (this,lHandle, mpSoundManger) );
     }
@@ -124,9 +141,13 @@ iSoundChannel* cOpenALSoundData::CreateChannel(int alPriority)
 bool cOpenALSoundData::IsStereo()
 {
     if (mbStream)
+    {
         return (OAL_Stream_GetChannels(mpStream)==2);
+    }
     if (mpSample)
+    {
         return (OAL_Sample_GetChannels(mpSample)==2);
+    }
 
     return false;
 }

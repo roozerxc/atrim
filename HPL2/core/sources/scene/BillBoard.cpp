@@ -74,15 +74,27 @@ cBillboard::cBillboard(const tString asName,const cVector2f& avSize,eBillboardTy
         mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Normal,cVector3f(0,0,1));
     }
 
-    for(int i=0; i<3; i++) mpVtxBuffer->AddIndex(i);
-    for(int i=2; i<5; i++) mpVtxBuffer->AddIndex(i==4?0:i);
+    for(int i=0; i<3; i++)
+    {
+        mpVtxBuffer->AddIndex(i);
+    }
+    for(int i=2; i<5; i++)
+    {
+        mpVtxBuffer->AddIndex(i==4?0:i);
+    }
 
     //If the type is fixed, then we need a backside too
     //To do this, just all all the same indices in reversed order.
     if(mType == eBillboardType_FixedAxis)
     {
-        for(int i=2; i>=0; i--) mpVtxBuffer->AddIndex(i);
-        for(int i=4; i>=2; i--) mpVtxBuffer->AddIndex(i==4?0:i);
+        for(int i=2; i>=0; i--)
+        {
+            mpVtxBuffer->AddIndex(i);
+        }
+        for(int i=4; i>=2; i--)
+        {
+            mpVtxBuffer->AddIndex(i==4?0:i);
+        }
     }
 
     mpVtxBuffer->Compile(eVertexCompileFlag_CreateTangents);
@@ -100,9 +112,18 @@ cBillboard::cBillboard(const tString asName,const cVector2f& avSize,eBillboardTy
 
 cBillboard::~cBillboard()
 {
-    if(mpMaterial) mpMaterialManager->Destroy(mpMaterial);
-    if(mpVtxBuffer) hplDelete(mpVtxBuffer);
-    if(mpHaloSourceBV) hplDelete(mpHaloSourceBV);
+    if(mpMaterial)
+    {
+        mpMaterialManager->Destroy(mpMaterial);
+    }
+    if(mpVtxBuffer)
+    {
+        hplDelete(mpVtxBuffer);
+    }
+    if(mpHaloSourceBV)
+    {
+        hplDelete(mpHaloSourceBV);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -136,7 +157,10 @@ void cBillboard::SetSize(const cVector2f& avSize)
 
     mpVtxBuffer->UpdateData(eVertexElementFlag_Position,false);
 
-    if(mType == eBillboardType_Axis) SetAxis(mvAxis);
+    if(mType == eBillboardType_Axis)
+    {
+        SetAxis(mvAxis);
+    }
 
     SetTransformUpdated();
 }
@@ -152,7 +176,10 @@ void cBillboard::SetAxis(const cVector3f& avAxis)
     if(mType == eBillboardType_Axis && mvAxis != cVector3f(0,1,0))
     {
         float fMax = mvSize.x;
-        if(fMax < mvSize.y) fMax = mvSize.y;
+        if(fMax < mvSize.y)
+        {
+            fMax = mvSize.y;
+        }
 
         fMax *= kSqrt2f;
 
@@ -166,7 +193,10 @@ void cBillboard::SetAxis(const cVector3f& avAxis)
 
 void cBillboard::SetColor(const cColor &aColor)
 {
-    if(mColor == aColor) return;
+    if(mColor == aColor)
+    {
+        return;
+    }
 
     mColor = aColor;
 
@@ -227,7 +257,10 @@ void cBillboard::SetMaterial(cMaterial * apMaterial)
 
 cMatrixf* cBillboard::GetModelMatrix(cFrustum *apFrustum)
 {
-    if(apFrustum==NULL)return &GetWorldMatrix();
+    if(apFrustum==NULL)
+    {
+        return &GetWorldMatrix();
+    }
 
     //////////////////////
     // Fixed Axis
@@ -265,7 +298,9 @@ cMatrixf* cBillboard::GetModelMatrix(cFrustum *apFrustum)
             Warning("Billboard Right vector is not correct! Contact programmer!\n");
         }
         else
+        {
             vRight = cMath::Vector3Cross(vUp, vCameraForward);
+        }
 
         vRight.Normalize();
         vForward = cMath::Vector3Cross(vRight, vUp);
@@ -311,7 +346,10 @@ int cBillboard::GetMatrixUpdateCount()
 
 bool cBillboard::IsVisible()
 {
-    if(mColor.r <= 0 && mColor.g <= 0 && mColor.b <= 0) return false;
+    if(mColor.r <= 0 && mColor.g <= 0 && mColor.b <= 0)
+    {
+        return false;
+    }
 
     return mbIsVisible;
 }
@@ -328,7 +366,10 @@ void cBillboard::SetIsHalo(bool abX)
         SetHaloAlpha(0);
 
         //Create source bv
-        if(mpHaloSourceBV == NULL) mpHaloSourceBV = hplNew(cBoundingVolume, ());
+        if(mpHaloSourceBV == NULL)
+        {
+            mpHaloSourceBV = hplNew(cBoundingVolume, ());
+        }
     }
     else
     {
@@ -361,7 +402,10 @@ bool cBillboard::UsesOcclusionQuery()
 
 void cBillboard::AssignOcclusionQuery(iRenderer *apRenderer)
 {
-    if(mbIsHalo==false) return;
+    if(mbIsHalo==false)
+    {
+        return;
+    }
 
     m_mtxHaloOcclusionMatrix = cMath::MatrixScale(mvHaloSourceSize);
     m_mtxHaloOcclusionMatrix = cMath::MatrixMul(GetWorldMatrix(), m_mtxHaloOcclusionMatrix);
@@ -376,7 +420,10 @@ void cBillboard::AssignOcclusionQuery(iRenderer *apRenderer)
 
 bool cBillboard::RetrieveOcculsionQuery(iRenderer *apRenderer)
 {
-    if(mbIsHalo==false) return  true;
+    if(mbIsHalo==false)
+    {
+        return  true;
+    }
 
     int lSamples = apRenderer->RetrieveOcclusionObjectSamples(this, 0);
     int lMaxSamples = apRenderer->RetrieveOcclusionObjectSamples(this, 1);
@@ -414,18 +461,36 @@ bool cBillboard::RetrieveOcculsionQuery(iRenderer *apRenderer)
         {
             cVector3f vTotalSize = vMax -vMin;
 
-            if(vMin.x < -1) vMin.x = -1;
-            if(vMin.y < -1) vMin.y = -1;
-            if(vMax.x > 1) vMax.x = 1;
-            if(vMax.y > 1) vMax.y = 1;
+            if(vMin.x < -1)
+            {
+                vMin.x = -1;
+            }
+            if(vMin.y < -1)
+            {
+                vMin.y = -1;
+            }
+            if(vMax.x > 1)
+            {
+                vMax.x = 1;
+            }
+            if(vMax.y > 1)
+            {
+                vMax.y = 1;
+            }
 
             cVector3f vInsideSize = vMax -vMin;
 
             float fInsideArea = vInsideSize.x*vInsideSize.y;
             float fTotalArea = vTotalSize.x*vTotalSize.y;
 
-            if(fTotalArea > 0)    fAlpha *= fInsideArea / fTotalArea;
-            else                fAlpha = 0;
+            if(fTotalArea > 0)
+            {
+                fAlpha *= fInsideArea / fTotalArea;
+            }
+            else
+            {
+                fAlpha = 0;
+            }
 
 
             SetHaloAlpha(fAlpha);

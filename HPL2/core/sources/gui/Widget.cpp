@@ -56,8 +56,14 @@ iWidget::iWidget(eWidgetType aType,cGuiSet *apSet, cGuiSkin *apSkin)
 
     mColorMul = cColor(1,1);
 
-    if(mpSkin)  mpPointerGfx = mpSkin->GetGfx(eGuiSkinGfx_PointerNormal);
-    else        mpPointerGfx = NULL;
+    if(mpSkin)
+    {
+        mpPointerGfx = mpSkin->GetGfx(eGuiSkinGfx_PointerNormal);
+    }
+    else
+    {
+        mpPointerGfx = NULL;
+    }
 
     mpUserData = NULL;
     mlUserValue = 0;
@@ -79,7 +85,9 @@ iWidget::iWidget(eWidgetType aType,cGuiSet *apSet, cGuiSkin *apSkin)
 iWidget::~iWidget()
 {
     if(mpSet->GetToolTipWidget()==this)
+    {
         mpSet->SetToolTipWidget(NULL);
+    }
 
     for(size_t i=0; i<mvShortcuts.size(); ++i)
     {
@@ -99,7 +107,10 @@ iWidget::~iWidget()
 
     ////////////////////////////
     //Remove from parent
-    if(mpParent) mpParent->RemoveChild(this);
+    if(mpParent)
+    {
+        mpParent->RemoveChild(this);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -127,7 +138,10 @@ void iWidget::Update(float afTimeStep)
 
 void iWidget::Draw(float afTimeStep, cGuiClipRegion *apClipRegion)
 {
-    if(mbVisible==false) return;
+    if(mbVisible==false)
+    {
+        return;
+    }
 
     OnDraw(afTimeStep, apClipRegion);
 
@@ -157,7 +171,10 @@ void iWidget::Draw(float afTimeStep, cGuiClipRegion *apClipRegion)
         pChild->Draw(afTimeStep, pChildRegion);
     }
 
-    if(mbClipsGraphics) mpSet->SetCurrentClipRegion(apClipRegion);
+    if(mbClipsGraphics)
+    {
+        mpSet->SetCurrentClipRegion(apClipRegion);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -184,7 +201,10 @@ bool iWidget::ProcessMessage(eGuiMessage aMessage, const cGuiMessageData& aData,
 {
     if(mbCallbacksDisabled ||
             !abSkipVisCheck && IsVisible()==false ||
-            !abSkipEnabledCheck && IsEnabled()==false) return false;
+            !abSkipEnabledCheck && IsEnabled()==false)
+    {
+        return false;
+    }
 
     cGuiMessageData tData = aData;
     tData.mMessage = aMessage;
@@ -254,7 +274,10 @@ bool iWidget::ProcessMessage(eGuiMessage aMessage, const cGuiMessageData& aData,
 
     /////////////////////////////////////////
     //Process user callbacks for the event.
-    if(ProcessCallbacks(aMessage,tData)) bRet = true;
+    if(ProcessCallbacks(aMessage,tData))
+    {
+        bRet = true;
+    }
 
     return bRet;
 }
@@ -271,9 +294,14 @@ void iWidget::AddCallback(eGuiMessage aMessage,void *apObject,tGuiCallbackFunc a
 bool iWidget::PointIsInside(const cVector2f& avPoint, bool abOnlyClipped)
 {
     if(CheckPointInsideClippingParent(avPoint)==false)
+    {
         return false;
+    }
 
-    if(abOnlyClipped && mbClipsGraphics==false) return true;
+    if(abOnlyClipped && mbClipsGraphics==false)
+    {
+        return true;
+    }
 
     cVector3f vGlobalPos = GetGlobalPosition();
 
@@ -332,7 +360,10 @@ void iWidget::RemoveChild(iWidget *apChild)
 
 void iWidget::SetEnabled(bool abX)
 {
-    if(mbEnabled == abX) return;
+    if(mbEnabled == abX)
+    {
+        return;
+    }
 
     mbEnabled = abX;
 
@@ -342,8 +373,14 @@ bool iWidget::IsEnabled()
 {
     if(mpParent)
     {
-        if(mpParent->IsEnabled()) return mbEnabled;
-        else                    return false;
+        if(mpParent->IsEnabled())
+        {
+            return mbEnabled;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     return mbEnabled;
@@ -353,20 +390,31 @@ bool iWidget::IsEnabled()
 
 void iWidget::SetVisible(bool abX)
 {
-    if(mbVisible == abX) return;
+    if(mbVisible == abX)
+    {
+        return;
+    }
 
     mbVisible = abX;
 
     if(mpParent)
+    {
         mpParent->OnChildUpdate(this);
+    }
 }
 
 bool iWidget::IsVisible()
 {
     if(mpParent)
     {
-        if(mpParent->IsVisible())    return mbVisible;
-        else                        return false;
+        if(mpParent->IsVisible())
+        {
+            return mbVisible;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     return mbVisible;
@@ -383,7 +431,10 @@ bool iWidget::HasFocus()
 
 void iWidget::SetText(const tWString& asText)
 {
-    if(asText == msText) return;
+    if(asText == msText)
+    {
+        return;
+    }
 
     mbTextChanged = true;
 
@@ -393,7 +444,9 @@ void iWidget::SetText(const tWString& asText)
     ProcessMessage(eGuiMessage_TextChange, cGuiMessageData());
 
     if(mpParent)
+    {
         mpParent->OnChildUpdate(this);
+    }
 
     mbTextChanged = false;
 }
@@ -403,12 +456,16 @@ void iWidget::SetText(const tWString& asText)
 void iWidget::SetPosition(const cVector3f &avPos)
 {
     if(mvPosition.z!=avPos.z)
+    {
         mpSet->SetWidgetsNeedSorting();
+    }
 
     mvPosition = avPos;
 
     if(mpParent)
+    {
         mpParent->OnChildUpdate(this);
+    }
 
     SetPositionUpdated();
 }
@@ -416,9 +473,13 @@ void iWidget::SetPosition(const cVector3f &avPos)
 void iWidget::SetGlobalPosition(const cVector3f &avPos)
 {
     if(mpParent)
+    {
         SetPosition(avPos - mpParent->GetGlobalPosition() - mpParent->GetChildrenOffset());
+    }
     else
+    {
         SetPosition(avPos);
+    }
 }
 
 const cVector3f& iWidget::GetLocalPosition()
@@ -448,7 +509,9 @@ const cVector3f& iWidget::GetGlobalPosition()
 void iWidget::SetChildrenOffset(const cVector3f& avX)
 {
     if(mvChildrenOffset==avX)
+    {
         return;
+    }
 
     mvChildrenOffset = avX;
     SetPositionUpdated();
@@ -459,7 +522,9 @@ void iWidget::SetChildrenOffset(const cVector3f& avX)
 void iWidget::SetAffectedByScroll(bool abX)
 {
     if(mbAffectedByScroll==abX)
+    {
         return;
+    }
 
     mbAffectedByScroll = abX;
     SetPositionUpdated();
@@ -468,7 +533,9 @@ void iWidget::SetAffectedByScroll(bool abX)
 void iWidget::SetScrollAmount(const cVector3f& avX)
 {
     if(mvScrollAmount==avX)
+    {
         return;
+    }
 
     mvScrollAmount = avX;
     SetPositionUpdated();
@@ -493,14 +560,19 @@ void iWidget::SetSize(const cVector2f &avSize)
     OnChangeSize();
 
     if(mpParent)
+    {
         mpParent->OnChildUpdate(this);
+    }
 }
 
 //-----------------------------------------------------------------------
 
 bool iWidget::ClipsGraphics()
 {
-    if(mpParent && mpParent->ClipsGraphics()) return true;
+    if(mpParent && mpParent->ClipsGraphics())
+    {
+        return true;
+    }
 
     return mbClipsGraphics;
 }
@@ -509,12 +581,24 @@ bool iWidget::ClipsGraphics()
 
 bool iWidget::IsConnectedTo(iWidget *apWidget, bool abIsStartWidget)
 {
-    if(abIsStartWidget == false && mbConnectedToChildren==false) return false;
+    if(abIsStartWidget == false && mbConnectedToChildren==false)
+    {
+        return false;
+    }
 
-    if(apWidget == NULL) return false;
-    if(apWidget == this) return true;
+    if(apWidget == NULL)
+    {
+        return false;
+    }
+    if(apWidget == this)
+    {
+        return true;
+    }
 
-    if(mpParent) return mpParent->IsConnectedTo(apWidget,false);
+    if(mpParent)
+    {
+        return mpParent->IsConnectedTo(apWidget,false);
+    }
 
     return false;
 }
@@ -544,7 +628,10 @@ iWidget* iWidget::GetFocusNavigation(eUIArrow aDir)
 bool iWidget::HasFocusNavigation()
 {
     for(size_t i=0; i<mvFocusNavWidgets.size(); ++i)
-        if(mvFocusNavWidgets[i]) return true;
+        if(mvFocusNavWidgets[i])
+        {
+            return true;
+        }
 
     return false;
 }
@@ -562,7 +649,9 @@ bool iWidget::GetFocus(const cGuiMessageData& aData)
 {
     bool bRet = ProcessMessage(eGuiMessage_GotFocus, aData);
     if(bRet)
+    {
         OnChildGotFocus(this, aData);
+    }
 
     return bRet;
 }
@@ -575,7 +664,9 @@ bool iWidget::OnGotFocus(const cGuiMessageData& aData)
 void iWidget::OnChildGotFocus(iWidget* apChild, const cGuiMessageData& aData)
 {
     if(mpParent)
+    {
         mpParent->OnChildGotFocus(apChild, aData);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -584,7 +675,9 @@ bool iWidget::GetTabFocus(const cGuiMessageData& aData)
 {
     bool bRet = ProcessMessage(eGuiMessage_GotTabFocus, aData);
     if(bRet)
+    {
         OnChildGotTabFocus(this, aData);
+    }
 
     return bRet;
 }
@@ -597,7 +690,9 @@ bool iWidget::OnGotTabFocus(const cGuiMessageData& aData)
 void iWidget::OnChildGotTabFocus(iWidget* apChild, const cGuiMessageData& aData)
 {
     if(mpParent)
+    {
         mpParent->OnChildGotTabFocus(apChild, aData);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -606,7 +701,9 @@ bool iWidget::LoseFocus(const cGuiMessageData& aData)
 {
     bool bRet = ProcessMessage(eGuiMessage_LostFocus, aData);
     if(bRet)
+    {
         OnChildLostFocus(this, aData);
+    }
 
     return bRet;
 }
@@ -614,7 +711,9 @@ bool iWidget::LoseFocus(const cGuiMessageData& aData)
 void iWidget::OnChildLostFocus(iWidget* apChild, const cGuiMessageData& aData)
 {
     if(mpParent)
+    {
         mpParent->OnChildLostFocus(apChild, aData);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -797,7 +896,10 @@ void iWidget::DrawSkinText(    const tWString& asText,eGuiSkinFont aFont,
 void iWidget::DrawDefaultText(    const tWString& asText,
                                   const cVector3f& avPosition,eFontAlign aAlign)
 {
-    if(mpDefaultFontType==NULL) return;
+    if(mpDefaultFontType==NULL)
+    {
+        return;
+    }
 
     mpSet->DrawFont(asText,mpDefaultFontType,avPosition,mvDefaultFontSize,
                     mDefaultFontColor*mColorMul, aAlign);
@@ -808,7 +910,10 @@ void iWidget::DrawDefaultText(    const tWString& asText,
 void iWidget::DrawDefaultText(    const tWString& asText,
                                   const cVector3f& avPosition,eFontAlign aAlign, const cColor& aCol)
 {
-    if(mpDefaultFontType==NULL) return;
+    if(mpDefaultFontType==NULL)
+    {
+        return;
+    }
 
     mpSet->DrawFont(asText,mpDefaultFontType,avPosition,mvDefaultFontSize,
                     aCol*mColorMul, aAlign);
@@ -820,7 +925,10 @@ void iWidget::DrawDefaultText(    const tWString& asText,
 void iWidget::DrawDefaultTextHighlight(    const tWString& asText,
         const cVector3f& avPosition,eFontAlign aAlign) //, int alFirstVisibleChar, int alHighlightStart, int alHighlightSize )
 {
-    if(mpDefaultFontType==NULL) return;
+    if(mpDefaultFontType==NULL)
+    {
+        return;
+    }
     /*
             if(alHighlightSize!=asText.size())
                 mpSet->DrawFont(asText,mpDefaultFontType,avPosition,mvDefaultFontSize,
@@ -843,7 +951,10 @@ bool iWidget::ProcessCallbacks(eGuiMessage aMessage, const cGuiMessageData& aDat
 {
     tWidgetCallbackList &lstCallbacks = mvCallbackLists[aMessage];
 
-    if(lstCallbacks.empty()) return false;
+    if(lstCallbacks.empty())
+    {
+        return false;
+    }
 
     bool bRet = false;
     tWidgetCallbackListIt it = lstCallbacks.begin();
@@ -852,7 +963,10 @@ bool iWidget::ProcessCallbacks(eGuiMessage aMessage, const cGuiMessageData& aDat
         cWidgetCallback &callback = *it;
 
         bool bX = (callback.mpFunc)(callback.mpObject,this, aData);
-        if(bX) bRet = true;
+        if(bX)
+        {
+            bRet = true;
+        }
     }
 
     return bRet;

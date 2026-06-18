@@ -108,7 +108,10 @@ bool cLuxProp_OilBarrel::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
     {
         fFillAmount = mfOilAmount - (fOil - 100.0f);
         mfOilAmount = fOil - 100.0f;
-        if(mfOilAmount < 1.0f) mfOilAmount =0; //If very little oil left, just let it be empty.
+        if(mfOilAmount < 1.0f)
+        {
+            mfOilAmount =0;    //If very little oil left, just let it be empty.
+        }
         fOil = 100;
     }
     else
@@ -129,13 +132,21 @@ bool cLuxProp_OilBarrel::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
     else
     {
         if(fFillAmount < 25)
+        {
             gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "OilBarrel_Refill_Amount_025"),0);
+        }
         else if(fFillAmount < 50)
+        {
             gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "OilBarrel_Refill_Amount_050"),0);
+        }
         else if(fFillAmount < 75)
+        {
             gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "OilBarrel_Refill_Amount_075"),0);
+        }
         else
+        {
             gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "OilBarrel_Refill_Amount_100"),0);
+        }
     }
 
 
@@ -191,13 +202,21 @@ tWString cLuxProp_OilBarrel::GetFocusText()
     else
     {
         if(mfOilAmount < 25)
+        {
             sText = kTranslate("Game", "OilBarrel_FocusText_025");
+        }
         else if(mfOilAmount < 50)
+        {
             sText = kTranslate("Game", "OilBarrel_FocusText_050");
+        }
         else if(mfOilAmount < 75)
+        {
             sText = kTranslate("Game", "OilBarrel_FocusText_075");
+        }
         else
+        {
             sText = kTranslate("Game", "OilBarrel_FocusText_100");
+        }
     }
 
     return sText;
@@ -221,7 +240,10 @@ void cLuxProp_OilBarrel::OnConnectionStateChange(iLuxEntity *apEntity, int alSta
 
 void cLuxProp_OilBarrel::CalculateOilAmount()
 {
-    if(mbAmountCalculated) return;
+    if(mbAmountCalculated)
+    {
+        return;
+    }
 
     //////////////////////
     // HARDMODE
@@ -240,14 +262,23 @@ void cLuxProp_OilBarrel::CalculateOilAmount()
     for(int i=0; i<gpBase->mpInventory->GetItemNum(); ++i)
     {
         cLuxInventory_Item *pItem = gpBase->mpInventory->GetItem(i);
-        if(pItem->GetType() != eLuxItemType_LampOil) continue;
+        if(pItem->GetType() != eLuxItemType_LampOil)
+        {
+            continue;
+        }
 
         fTotalOil += pItem->GetAmount() * (float)pItem->GetCount();
     }
 
     float fAdd = 100 - fTotalOil;
-    if(fAdd < 0) fAdd = 0;
-    if(fAdd > 90) fAdd = 90;
+    if(fAdd < 0)
+    {
+        fAdd = 0;
+    }
+    if(fAdd > 90)
+    {
+        fAdd = 90;
+    }
 
     mfOilAmount += fAdd;
 

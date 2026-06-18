@@ -44,14 +44,20 @@ iResourceBase* iResourceManager::GetResource(const tWString& asFullPath)
     unsigned int lHash = cString::GetHashW(asFullPath);
 
     tResourceBaseMapIt it = m_mapResources.find(lHash);
-    if(it == m_mapResources.end())return NULL;
+    if(it == m_mapResources.end())
+    {
+        return NULL;
+    }
 
     size_t lCount = m_mapResources.count(lHash);
     for(size_t i=0; i<lCount; ++i, ++it)
     {
         iResourceBase *pResource = it->second;
 
-        if(pResource->GetFullPath() == asFullPath) return pResource;
+        if(pResource->GetFullPath() == asFullPath)
+        {
+            return pResource;
+        }
     }
 
     return NULL;
@@ -86,7 +92,10 @@ void iResourceManager::DestroyUnused(int alMaxToKeep)
 {
     //Log("Start Num Of: %d\n",m_mapHandleResources.size());
     //Check if there are too many resources.
-    if((int)m_mapResources.size() <= alMaxToKeep) return;
+    if((int)m_mapResources.size() <= alMaxToKeep)
+    {
+        return;
+    }
 
     //Add resources to a vector
     std::vector<iResourceBase*> vResources;
@@ -134,7 +143,10 @@ void iResourceManager::DestroyAll()
         //Log(" res: %d ...", pResource);
         //Log(" res: '%s' / '%s': %d ...",pResource->GetName().c_str(), cString::To8Char(pResource->GetFullPath()).c_str(),pResource->GetUserCount());
 
-        while(pResource->HasUsers()) pResource->DecUserCount();
+        while(pResource->HasUsers())
+        {
+            pResource->DecUserCount();
+        }
 
         Destroy(pResource);
 
@@ -187,7 +199,10 @@ iResourceBase* iResourceManager::FindLoadedResource(const tString &asName, tWStr
 tString iResourceManager::GetTabs()
 {
     tString sTabs ="";
-    for(int i=0; i<mlTabCount; ++i) sTabs+="  ";
+    for(int i=0; i<mlTabCount; ++i)
+    {
+        sTabs+="  ";
+    }
     return sTabs;
 }
 

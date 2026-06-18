@@ -175,7 +175,10 @@ void cGLSLShader::LogShaderCode(const char *apStringData)
     for(int i=0; apStringData[i]!=0; ++i)
     {
         char lChar = apStringData[i];
-        if(lChar=='\r') continue; //Can skip this sign.
+        if(lChar=='\r')
+        {
+            continue;    //Can skip this sign.
+        }
 
         if(lChar == '\n')
         {

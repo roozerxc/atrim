@@ -135,7 +135,10 @@ public:
     void Add(const T& aNewVal)
     {
         mlstValues.push_back(aNewVal);
-        if(mlstValues.size() > mlMaxValues) mlstValues.pop_front();
+        if(mlstValues.size() > mlMaxValues)
+        {
+            mlstValues.pop_front();
+        }
     }
 
     void Clear()

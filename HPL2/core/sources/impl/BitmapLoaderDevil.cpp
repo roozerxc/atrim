@@ -86,7 +86,10 @@ bool iBitmapLoaderDevil::SaveBitmap(cBitmap* apBitmap,const tWString& asFile, tB
 
     //Save the image to file
     int lRet = ilSaveF(lType, pFile);
-    if(lRet ==0) Error("Error when saving image '%s' to file!\n",cString::To8Char(asFile).c_str());
+    if(lRet ==0)
+    {
+        Error("Error when saving image '%s' to file!\n",cString::To8Char(asFile).c_str());
+    }
 
     //Close file pointer
     fclose(pFile);
@@ -171,7 +174,10 @@ static ILboolean ILAPIENTRY DevilEof(ILHANDLE apHandle)
     FileSize = DevilTell(apHandle);
     DevilSeek(apHandle, OrigPos, IL_SEEK_SET);
 
-    if (DevilTell(apHandle) >= FileSize) return IL_TRUE;
+    if (DevilTell(apHandle) >= FileSize)
+    {
+        return IL_TRUE;
+    }
     return IL_FALSE;
 }
 
@@ -189,7 +195,10 @@ ILint ILAPIENTRY DevilRead(void *Buffer, ILuint Size, ILuint Number, ILHANDLE Ha
 
 void iBitmapLoaderDevil::Initialize()
 {
-    if(mbIsInitialized==true) return;
+    if(mbIsInitialized==true)
+    {
+        return;
+    }
 
     Log(" Initializing DevIL\n");
     ilInit();
@@ -264,18 +273,51 @@ ILenum iBitmapLoaderDevil::HPLPixelFormatToDevil(ePixelFormat aFormat)
 ILenum iBitmapLoaderDevil::FileNameToDevilTypeW(const tWString& asFile)
 {
     tWString sExt = cString::ToLowerCaseW(cString::GetFileExtW(asFile));
-    if(sExt==_W("")) return 0;
+    if(sExt==_W(""))
+    {
+        return 0;
+    }
 
-    if(sExt == _W("bmp"))    return IL_BMP;
-    if(sExt == _W("jpeg"))    return IL_JPG;
-    if(sExt == _W("jpg"))    return IL_JPG;
-    if(sExt == _W("pcx"))    return IL_PCX;
-    if(sExt == _W("png"))    return IL_PNG;
-    if(sExt == _W("tga"))    return IL_TGA;
-    if(sExt == _W("tif"))    return IL_TIF;
-    if(sExt == _W("dds"))    return IL_DDS;
-    if(sExt == _W("psd"))    return IL_PSD;
-    if(sExt == _W("sgi"))    return IL_SGI;
+    if(sExt == _W("bmp"))
+    {
+        return IL_BMP;
+    }
+    if(sExt == _W("jpeg"))
+    {
+        return IL_JPG;
+    }
+    if(sExt == _W("jpg"))
+    {
+        return IL_JPG;
+    }
+    if(sExt == _W("pcx"))
+    {
+        return IL_PCX;
+    }
+    if(sExt == _W("png"))
+    {
+        return IL_PNG;
+    }
+    if(sExt == _W("tga"))
+    {
+        return IL_TGA;
+    }
+    if(sExt == _W("tif"))
+    {
+        return IL_TIF;
+    }
+    if(sExt == _W("dds"))
+    {
+        return IL_DDS;
+    }
+    if(sExt == _W("psd"))
+    {
+        return IL_PSD;
+    }
+    if(sExt == _W("sgi"))
+    {
+        return IL_SGI;
+    }
 
     return 0;
 }

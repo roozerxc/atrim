@@ -101,40 +101,40 @@ cColor cColor::operator/(float afVal) const
 cColor cColor::operator+(const cColor &aCol) const
 {
     return cColor(
-               r + aCol.r,
-               g + aCol.g,
-               b + aCol.b,
-               a + aCol.a
+           r + aCol.r,
+           g + aCol.g,
+           b + aCol.b,
+           a + aCol.a
            );
 }
 
 cColor cColor::operator-(const cColor &aCol) const
 {
     return cColor(
-               r - aCol.r,
-               g - aCol.g,
-               b - aCol.b,
-               a - aCol.a
+           r - aCol.r,
+           g - aCol.g,
+           b - aCol.b,
+           a - aCol.a
            );
 }
 
 cColor cColor::operator*(const cColor &aCol) const
 {
     return cColor(
-               r * aCol.r,
-               g * aCol.g,
-               b * aCol.b,
-               a * aCol.a
+           r * aCol.r,
+           g * aCol.g,
+           b * aCol.b,
+           a * aCol.a
            );
 }
 
 cColor cColor::operator/(const cColor &aCol) const
 {
     return cColor(
-               r / aCol.r,
-               g / aCol.g,
-               b / aCol.b,
-               a / aCol.a
+           r / aCol.r,
+           g / aCol.g,
+           b / aCol.b,
+           a / aCol.a
            );
 }
 
@@ -143,9 +143,13 @@ cColor cColor::operator/(const cColor &aCol) const
 bool cColor::operator==(cColor aCol) const
 {
     if(r == aCol.r && g == aCol.g && b == aCol.b && a == aCol.a)
+    {
         return true;
+    }
     else
+    {
         return false;
+    }
 }
 
 //-----------------------------------------------------------------------

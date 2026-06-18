@@ -36,7 +36,9 @@ cCollideShapeNewton::cCollideShapeNewton(eCollideShapeType aType, const cVector3
         pMtx = &(mtxTranspose.m[0][0]);
     }
     else
+    {
         m_mtxOffset = cMatrixf::Identity;
+    }
 
     ////////////////////////////////////////////
     // Create Newton collision
@@ -94,7 +96,9 @@ cCollideShapeNewton::cCollideShapeNewton(eCollideShapeType aType, const cVector3
 
         //Not gonna be correct for capsule...
         if(mType == eCollideShapeType_Cylinder)
+        {
             mfVolume = kPif * (mvSize.x*mvSize.x)*mvSize.y;
+        }
         else
         {
             //Height of the cylinder part.
@@ -103,7 +107,9 @@ cCollideShapeNewton::cCollideShapeNewton(eCollideShapeType aType, const cVector3
 
             //The volume of the cylinder part.
             if(fCylHeight>0)
+            {
                 mfVolume += kPif * (mvSize.x*mvSize.x)*fCylHeight;
+            }
 
             //The volume of the sphere part.
             mfVolume += (4.0f / 3.0f) * kPif * (mvSize.x*mvSize.x*mvSize.x);
@@ -119,7 +125,9 @@ cCollideShapeNewton::~cCollideShapeNewton()
 {
     //Release Newton Collision
     if(mpNewtonCollision)
+    {
         NewtonReleaseCollision(mpNewtonWorld,mpNewtonCollision);
+    }
 
     //Release all subshapes (for compound objects)
     for(int i=0; i < (int)mvSubShapes.size(); i++)
@@ -139,17 +147,25 @@ cCollideShapeNewton::~cCollideShapeNewton()
 iCollideShape* cCollideShapeNewton::GetSubShape(int alIdx)
 {
     if(mType == eCollideShapeType_Compound)
+    {
         return mvSubShapes[alIdx];
+    }
     else
+    {
         return this;
+    }
 }
 
 int cCollideShapeNewton::GetSubShapeNum()
 {
     if(mType == eCollideShapeType_Compound)
+    {
         return (int)mvSubShapes.size();
+    }
     else
+    {
         return 1;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -272,14 +288,32 @@ void cCollideShapeNewton::CreateCompoundFromShapeVec(tCollideShapeVec &avShapes)
         cVector3f vMax = avShapes[i]->GetBoundingVolume().GetMax();
         cVector3f vMin = avShapes[i]->GetBoundingVolume().GetMin();
 
-        if(vFinalMax.x < vMax.x) vFinalMax.x = vMax.x;
-        if(vFinalMin.x > vMin.x) vFinalMin.x = vMin.x;
+        if(vFinalMax.x < vMax.x)
+        {
+            vFinalMax.x = vMax.x;
+        }
+        if(vFinalMin.x > vMin.x)
+        {
+            vFinalMin.x = vMin.x;
+        }
 
-        if(vFinalMax.y < vMax.y) vFinalMax.y = vMax.y;
-        if(vFinalMin.y > vMin.y) vFinalMin.y = vMin.y;
+        if(vFinalMax.y < vMax.y)
+        {
+            vFinalMax.y = vMax.y;
+        }
+        if(vFinalMin.y > vMin.y)
+        {
+            vFinalMin.y = vMin.y;
+        }
 
-        if(vFinalMax.z < vMax.z) vFinalMax.z = vMax.z;
-        if(vFinalMin.z > vMin.z) vFinalMin.z = vMin.z;
+        if(vFinalMax.z < vMax.z)
+        {
+            vFinalMax.z = vMax.z;
+        }
+        if(vFinalMin.z > vMin.z)
+        {
+            vFinalMin.z = vMin.z;
+        }
     }
 
     mBoundingVolume.SetLocalMinMax(vFinalMin, vFinalMax);

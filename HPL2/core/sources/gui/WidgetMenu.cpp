@@ -74,7 +74,9 @@ cWidgetMenuItem* iWidgetMenu::AddMenuItem(const tWString &asText)
 void iWidgetMenu::ClearMenuItems()
 {
     for (tWidgetMenuItemVectorIt it= mvMenuItems.begin(); it != mvMenuItems.end(); ++it)
+    {
         mpSet->DestroyWidget(*it);
+    }
 
     mvMenuItems.clear();
 }
@@ -99,7 +101,9 @@ void iWidgetMenu::SetParentItem( cWidgetMenuItem* apParentItem )
 iWidgetMenu* iWidgetMenu::GetParentMenu()
 {
     if(mpParentItem==NULL)
+    {
         return NULL;
+    }
 
     return mpParentItem->GetParentMenu();
 }
@@ -124,7 +128,9 @@ void iWidgetMenu::SetMustHide(bool abX)
 bool iWidgetMenu::IsSubmenuOpen()
 {
     if(mpHighlightedItem!=NULL)
+    {
         return mpHighlightedItem->IsMenuOpen();
+    }
 
     return false;
 }
@@ -138,9 +144,13 @@ bool iWidgetMenu::IsSubmenuOpen()
 iWidgetMenu* iWidgetMenu::GetTopMostMenu()
 {
     if(mpParentItem!=NULL)
+    {
         return GetParentMenu()->GetTopMostMenu();
+    }
     else
+    {
         return this;
+    }
 }
 
 //-----------------------------------------------------------------------

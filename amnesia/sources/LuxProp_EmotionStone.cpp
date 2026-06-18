@@ -128,7 +128,10 @@ eLuxFocusCrosshair cLuxProp_EmotionStone::GetFocusCrosshair(iPhysicsBody *apBody
 
 tWString cLuxProp_EmotionStone::GetFocusText()
 {
-    if(msDescCat == "" || msDescEntry == "") return _W("");
+    if(msDescCat == "" || msDescEntry == "")
+    {
+        return _W("");
+    }
 
     return gpBase->mpHelpFuncs->ParseString(kTranslate(msDescCat,msDescEntry));
 }

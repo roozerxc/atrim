@@ -124,20 +124,32 @@ void cLuxPlayerState_InteractSlide::Update(float afTimeStep)
     if(mfSlideSpeed > 0)
     {
         mfSlideSpeed -= afTimeStep * fSlowDownSpeed;
-        if(mfSlideSpeed < 0) mfSlideSpeed = 0;
+        if(mfSlideSpeed < 0)
+        {
+            mfSlideSpeed = 0;
+        }
     }
     if(mfSlideSpeed < 0)
     {
         mfSlideSpeed += afTimeStep * fSlowDownSpeed;
-        if(mfSlideSpeed > 0) mfSlideSpeed = 0;
+        if(mfSlideSpeed > 0)
+        {
+            mfSlideSpeed = 0;
+        }
     }
     if(mvMouseAdd == 0)
     {
         mfSlideSpeed = 0;
     }
     mfSlideSpeed += fSpeedAdd * 850.0f * afTimeStep  * mpSlideData->mfSlideSpeedFactor;
-    if(mfSlideSpeed > mpSlideData->mfSlideMaxSpeed)    mfSlideSpeed = mpSlideData->mfSlideMaxSpeed;
-    if(mfSlideSpeed < -mpSlideData->mfSlideMaxSpeed)mfSlideSpeed = -mpSlideData->mfSlideMaxSpeed;
+    if(mfSlideSpeed > mpSlideData->mfSlideMaxSpeed)
+    {
+        mfSlideSpeed = mpSlideData->mfSlideMaxSpeed;
+    }
+    if(mfSlideSpeed < -mpSlideData->mfSlideMaxSpeed)
+    {
+        mfSlideSpeed = -mpSlideData->mfSlideMaxSpeed;
+    }
 
 
     //////////////////////////////
@@ -224,13 +236,25 @@ bool cLuxPlayerState_InteractSlide::OnAddPitch(float afAmount)
         if(cMath::Abs(gpBase->mpInputHandler->GetGamepad()->GetAxisValue(eGamepadAxis_3)) > 0.0f)
         {
             //Gamepad was used
-            if(gpBase->mpInputHandler->GetInvertGamepadLook()) afAmount = -afAmount;
+            if(gpBase->mpInputHandler->GetInvertGamepadLook())
+            {
+                afAmount = -afAmount;
+            }
         }
-        else if(gpBase->mpInputHandler->GetInvertMouse()) afAmount = -afAmount;
+        else if(gpBase->mpInputHandler->GetInvertMouse())
+        {
+            afAmount = -afAmount;
+        }
     }
-    else if(gpBase->mpInputHandler->GetInvertMouse()) afAmount = -afAmount;
+    else if(gpBase->mpInputHandler->GetInvertMouse())
+    {
+        afAmount = -afAmount;
+    }
 #else
-    if(gpBase->mpInputHandler->GetInvertMouse()) afAmount = -afAmount;
+    if(gpBase->mpInputHandler->GetInvertMouse())
+    {
+        afAmount = -afAmount;
+    }
 #endif
     mvMouseAdd.y += afAmount;
 
@@ -241,8 +265,14 @@ bool cLuxPlayerState_InteractSlide::OnAddPitch(float afAmount)
 
 bool cLuxPlayerState_InteractSlide::OnMove(eCharDir aDir, float afMul)
 {
-    if(aDir == eCharDir_Forward)    mvMouseAdd.y += afMul * mfMoveToMouseAddFactor;
-    else                            mvMouseAdd.x += afMul * -mfMoveToMouseAddFactor;
+    if(aDir == eCharDir_Forward)
+    {
+        mvMouseAdd.y += afMul * mfMoveToMouseAddFactor;
+    }
+    else
+    {
+        mvMouseAdd.x += afMul * -mfMoveToMouseAddFactor;
+    }
 
     return true;
 }

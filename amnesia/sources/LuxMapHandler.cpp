@@ -52,7 +52,10 @@ cMapHandlerSoundCallback::cMapHandlerSoundCallback()
 void cMapHandlerSoundCallback::OnStart(cSoundEntity *apSoundEntity)
 {
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    if(pMap==NULL) return;
+    if(pMap==NULL)
+    {
+        return;
+    }
 
     ///////////////////////////
     //Check if the sound is something to worry bout
@@ -68,7 +71,10 @@ void cMapHandlerSoundCallback::OnStart(cSoundEntity *apSoundEntity)
             break;
         }
     }
-    if(bUsed == false) return;
+    if(bUsed == false)
+    {
+        return;
+    }
 
     ///////////////////////////
     //Iterate enemies and send sound message to those close enough
@@ -247,7 +253,9 @@ void cLuxMapHandler::Update(float afTimeStep)
     CheckMapChange(afTimeStep);
 
     if(mpCurrentMap && mMapChangeData.mbActive==false)
+    {
         mpCurrentMap->Update(afTimeStep);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -320,7 +328,10 @@ void cLuxMapHandler::SaveUserConfig()
 
 void cLuxMapHandler::CreateDataCache()
 {
-    if(mpDataCache) DestroyDataCache();
+    if(mpDataCache)
+    {
+        DestroyDataCache();
+    }
 
     mpDataCache = hplNew(cLuxModelCache, () );
     mpDataCache->Create();
@@ -328,7 +339,10 @@ void cLuxMapHandler::CreateDataCache()
 
 void cLuxMapHandler::DestroyDataCache()
 {
-    if(mpDataCache==NULL) return;
+    if(mpDataCache==NULL)
+    {
+        return;
+    }
     hplDelete(mpDataCache);
     mpDataCache = NULL;
 }
@@ -339,7 +353,10 @@ void cLuxMapHandler::SetUpdateActive(bool abX)
 {
     mbUpdateActive = abX;
 
-    if(mpCurrentMap) mpCurrentMap->GetWorld()->SetActive(mbUpdateActive);
+    if(mpCurrentMap)
+    {
+        mpCurrentMap->GetWorld()->SetActive(mbUpdateActive);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -347,7 +364,10 @@ void cLuxMapHandler::SetUpdateActive(bool abX)
 void cLuxMapHandler::RenderSolid(cRendererCallbackFunctions* apFunctions)
 {
     //mpViewport->GetRenderSettings()->mbLog = false;
-    if(mpCurrentMap) mpCurrentMap->OnRenderSolid(apFunctions);
+    if(mpCurrentMap)
+    {
+        mpCurrentMap->OnRenderSolid(apFunctions);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -357,7 +377,10 @@ void cLuxMapHandler::OnEnterContainer(const tString& asOldContainer)
     mpViewport->SetActive(true);
     mpViewport->SetVisible(true);
 
-    if(mpCurrentMap) mpCurrentMap->GetWorld()->SetActive(true);
+    if(mpCurrentMap)
+    {
+        mpCurrentMap->GetWorld()->SetActive(true);
+    }
 
     ResumeSoundsAndMusic();
 }
@@ -367,7 +390,10 @@ void cLuxMapHandler::OnLeaveContainer(const tString& asNewContainer)
     mpViewport->SetActive(false);
     mpViewport->SetVisible(false);
 
-    if(mpCurrentMap) mpCurrentMap->GetWorld()->SetActive(false);
+    if(mpCurrentMap)
+    {
+        mpCurrentMap->GetWorld()->SetActive(false);
+    }
 }
 
 
@@ -405,7 +431,10 @@ void cLuxMapHandler::DestroyMap(cLuxMap* apMap, bool abLoadingSaveGame)
 {
     ////////////////////////////////
     //If the map do me destroyed is current, make sure it is not current
-    if(mpCurrentMap == apMap) SetCurrentMap(NULL, abLoadingSaveGame, false,"");
+    if(mpCurrentMap == apMap)
+    {
+        SetCurrentMap(NULL, abLoadingSaveGame, false,"");
+    }
 
     STLFindAndDelete(mlstMaps,apMap);
 }
@@ -414,7 +443,10 @@ void cLuxMapHandler::DestroyMap(cLuxMap* apMap, bool abLoadingSaveGame)
 
 void cLuxMapHandler::SetCurrentMap(cLuxMap* apMap, bool abRunScript, bool abFirstTime, const tString& asPlayerPos)
 {
-    if(mpCurrentMap == apMap) return;
+    if(mpCurrentMap == apMap)
+    {
+        return;
+    }
 
     //////////////////////////////////
     //Unload stuff from previous map
@@ -463,7 +495,10 @@ void cLuxMapHandler::SetCurrentMap(cLuxMap* apMap, bool abRunScript, bool abFirs
 
 void cLuxMapHandler::PauseSoundsAndMusic()
 {
-    if(mbPausedSoundsAndMusic) return;
+    if(mbPausedSoundsAndMusic)
+    {
+        return;
+    }
 
     cSound *pSound = gpBase->mpEngine->GetSound();
     pSound->GetSoundHandler()->PauseAll(eSoundEntryType_All);
@@ -567,8 +602,14 @@ void cLuxMapHandler::SetShowCommentary(bool abX)
 
 void cLuxMapHandler::CheckMapChange(float afTimeStep)
 {
-    if(mMapChangeData.mbActive==false) return;
-    if(gpBase->mpEffectHandler->GetFade()->IsFading()) return;
+    if(mMapChangeData.mbActive==false)
+    {
+        return;
+    }
+    if(gpBase->mpEffectHandler->GetFade()->IsFading())
+    {
+        return;
+    }
 
     ///////////////////////////////////////
     // Setup variables
@@ -584,7 +625,9 @@ void cLuxMapHandler::CheckMapChange(float afTimeStep)
     // Write pending savegame queries
     cLuxSaveHandlerThreadClass* pThreadClass = gpBase->mpSaveHandler->GetThreadClass();
     if(pThreadClass->IsRunning())
+    {
         pThreadClass->ProcessPendingSaves();
+    }
 
     //////////////////////////////////
     //Clean up
@@ -659,7 +702,10 @@ void cLuxMapHandler::CheckMapChange(float afTimeStep)
 
         //////////////////////
         // Run enter script! (otherwise a save in oneter will not be correct!)
-        if(bFirstTime) mpCurrentMap->RunScript("OnStart()");
+        if(bFirstTime)
+        {
+            mpCurrentMap->RunScript("OnStart()");
+        }
         mpCurrentMap->RunScript("OnEnter()");
 
 

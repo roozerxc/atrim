@@ -62,7 +62,10 @@ void iRenderFunctions::InitAndResetRenderFunctions(    cFrustum *apFrustum, cRen
     mpCurrentMaterial = NULL;
     mpCurrentMaterialType = NULL;
 
-    for(int i=0; i<kMaxTextureUnits; ++i) mvCurrentTexture[i] = NULL;
+    for(int i=0; i<kMaxTextureUnits; ++i)
+    {
+        mvCurrentTexture[i] = NULL;
+    }
 
     ////////////////////////////////
     //Get size of render target
@@ -90,7 +93,10 @@ void iRenderFunctions::ExitAndCleanUpRenderFunctions()
     {
         mbUseGlobalScissorRect = false;
 
-        if(mbLog) Log("  Setting scissor active: 0\n");
+        if(mbLog)
+        {
+            Log("  Setting scissor active: 0\n");
+        }
         mpLowLevelGraphics->SetScissorActive(false);
     }
 }
@@ -105,7 +111,10 @@ void iRenderFunctions::ExitAndCleanUpRenderFunctions()
 
 void iRenderFunctions::SetFlatProjection(const cVector2f &avSize,float afMin,float afMax)
 {
-    if(mbLog) Log(" Setting Ortho Projection size: %fx%f, minz: %f maxz: %f\n",avSize.x, avSize.y, afMin,afMax);
+    if(mbLog)
+    {
+        Log(" Setting Ortho Projection size: %fx%f, minz: %f maxz: %f\n",avSize.x, avSize.y, afMin,afMax);
+    }
 
     mpLowLevelGraphics->SetOrthoProjection(avSize,afMin,afMax);
     mpLowLevelGraphics->SetIdentityMatrix(eMatrix_ModelView);
@@ -119,7 +128,10 @@ void iRenderFunctions::SetFlatProjection(const cVector2f &avSize,float afMin,flo
 
 void iRenderFunctions::SetFlatProjectionMinMax(const cVector3f &avMin,const cVector3f &avMax)
 {
-    if(mbLog) Log(" Setting Ortho Projection min: %s, max: %s\n",avMin.ToString().c_str(), avMax.ToString().c_str());
+    if(mbLog)
+    {
+        Log(" Setting Ortho Projection min: %s, max: %s\n",avMin.ToString().c_str(), avMax.ToString().c_str());
+    }
 
     mpLowLevelGraphics->SetOrthoProjection(avMin,avMax);
     mpLowLevelGraphics->SetIdentityMatrix(eMatrix_ModelView);
@@ -147,9 +159,15 @@ void iRenderFunctions::SetFrustumProjection(cFrustum *apFrustum)
 
 void iRenderFunctions::SetProjectionMatrix(const cMatrixf *apProjMatrix)
 {
-    if(mpCurrentProjectionMatrix == apProjMatrix) return;
+    if(mpCurrentProjectionMatrix == apProjMatrix)
+    {
+        return;
+    }
 
-    if(mbLog) Log(" Setting projection matrix: %d  %s.\n",apProjMatrix, apProjMatrix->ToString().c_str());
+    if(mbLog)
+    {
+        Log(" Setting projection matrix: %d  %s.\n",apProjMatrix, apProjMatrix->ToString().c_str());
+    }
 
     mpLowLevelGraphics->SetMatrix(eMatrix_Projection, *apProjMatrix);
     mpCurrentMatrix = &m_mtxNULL;
@@ -160,9 +178,15 @@ void iRenderFunctions::SetProjectionMatrix(const cMatrixf *apProjMatrix)
 
 bool iRenderFunctions::SetDepthTest(bool abX)
 {
-    if(mbCurrentDepthTest == abX) return false;
+    if(mbCurrentDepthTest == abX)
+    {
+        return false;
+    }
 
-    if(mbLog) Log("  Setting depth test active: %d\n", abX);
+    if(mbLog)
+    {
+        Log("  Setting depth test active: %d\n", abX);
+    }
 
     mpLowLevelGraphics->SetDepthTestActive(abX);
     mbCurrentDepthTest = abX;
@@ -174,9 +198,15 @@ bool iRenderFunctions::SetDepthTest(bool abX)
 
 bool iRenderFunctions::SetDepthWrite(bool abX)
 {
-    if(mbCurrentDepthWrite == abX) return false;
+    if(mbCurrentDepthWrite == abX)
+    {
+        return false;
+    }
 
-    if(mbLog) Log("  Setting depth write active: %d\n", abX);
+    if(mbLog)
+    {
+        Log("  Setting depth write active: %d\n", abX);
+    }
 
     mpLowLevelGraphics->SetDepthWriteActive(abX);
     mbCurrentDepthWrite = abX;
@@ -188,7 +218,10 @@ bool iRenderFunctions::SetDepthWrite(bool abX)
 
 bool iRenderFunctions::SetDepthTestFunc(eDepthTestFunc aFunc)
 {
-    if(mCurrentDepthTestFunc == aFunc) return false;
+    if(mCurrentDepthTestFunc == aFunc)
+    {
+        return false;
+    }
 
     if(mbLog)
     {
@@ -233,9 +266,15 @@ bool iRenderFunctions::SetDepthTestFunc(eDepthTestFunc aFunc)
 
 bool iRenderFunctions::SetCullActive(bool abX)
 {
-    if(mbCurrentCullActive == abX) return false;
+    if(mbCurrentCullActive == abX)
+    {
+        return false;
+    }
 
-    if(mbLog) Log("  Setting cull active: %d\n",abX);
+    if(mbLog)
+    {
+        Log("  Setting cull active: %d\n",abX);
+    }
 
     mbCurrentCullActive = abX;
     mpLowLevelGraphics->SetCullActive(abX);
@@ -249,9 +288,14 @@ bool iRenderFunctions::SetCullActive(bool abX)
 bool iRenderFunctions::SetCullMode(eCullMode aMode, bool abCheckIfInverted)
 {
     if(abCheckIfInverted && mbInvertCullMode)
+    {
         aMode = aMode==eCullMode_Clockwise ? eCullMode_CounterClockwise : eCullMode_Clockwise;
+    }
 
-    if(mCurrentCullMode == aMode) return false;
+    if(mCurrentCullMode == aMode)
+    {
+        return false;
+    }
 
     if(mbLog)
     {
@@ -278,9 +322,15 @@ bool iRenderFunctions::SetCullMode(eCullMode aMode, bool abCheckIfInverted)
 
 bool iRenderFunctions::SetStencilActive(bool abX)
 {
-    if(mbCurrentStencilActive == abX) return false;
+    if(mbCurrentStencilActive == abX)
+    {
+        return false;
+    }
 
-    if(mbLog) Log("  Setting stencil active: %d\n",abX);
+    if(mbLog)
+    {
+        Log("  Setting stencil active: %d\n",abX);
+    }
 
     mpLowLevelGraphics->SetStencilActive(abX);
     mbCurrentStencilActive = abX;
@@ -317,7 +367,10 @@ void iRenderFunctions::SetStencilTwoSide(    eStencilFunc aFrontFunc,eStencilFun
 
 bool iRenderFunctions::SetScissorActive(bool abX)
 {
-    if(mbCurrentScissorActive == abX) return false;
+    if(mbCurrentScissorActive == abX)
+    {
+        return false;
+    }
 
     ////////////////////////
     // Change scissor rect
@@ -326,7 +379,9 @@ bool iRenderFunctions::SetScissorActive(bool abX)
         if(mbCurrentScissorActive)
         {
             if(mvCurrentScissorRectSize.x > -1)
+            {
                 SetScissorRect(mvCurrentScissorRectPos, mvCurrentScissorRectSize, false);
+            }
         }
         else
         {
@@ -339,7 +394,10 @@ bool iRenderFunctions::SetScissorActive(bool abX)
     // Set scissor on / off
     else
     {
-        if(mbLog) Log("  Setting scissor active: %d\n",abX);
+        if(mbLog)
+        {
+            Log("  Setting scissor active: %d\n",abX);
+        }
 
         mpLowLevelGraphics->SetScissorActive(abX);
         mbCurrentScissorActive = abX;
@@ -365,15 +423,30 @@ bool iRenderFunctions::SetScissorRect(const cVector2l& avPos, const cVector2l& a
     cVector2l vMin = mbUseGlobalScissorRect ? mvGlobalScissorRectPos : mpCurrentRenderTarget->mvPos;
     cVector2l vMax = mbUseGlobalScissorRect ? mvGlobalScissorRectSize+vMin : mvRenderTargetSize+vMin;
 
-    if(vFinalPos.x < vMin.x) vFinalPos.x = vMin.x;
-    if(vFinalPos.y < vMin.y) vFinalPos.y = vMin.y;
+    if(vFinalPos.x < vMin.x)
+    {
+        vFinalPos.x = vMin.x;
+    }
+    if(vFinalPos.y < vMin.y)
+    {
+        vFinalPos.y = vMin.y;
+    }
 
-    if(vFinalPos.x+vFinalSize.x > vMax.x) vFinalSize.x = vMax.x - vFinalPos.x;
-    if(vFinalPos.y+vFinalSize.y > vMax.y) vFinalSize.y = vMax.y - vFinalPos.y;
+    if(vFinalPos.x+vFinalSize.x > vMax.x)
+    {
+        vFinalSize.x = vMax.x - vFinalPos.x;
+    }
+    if(vFinalPos.y+vFinalSize.y > vMax.y)
+    {
+        vFinalSize.y = vMax.y - vFinalPos.y;
+    }
 
     /////////////////////////////
     // Check if already set
-    if(mvCurrentScissorRectPos == vFinalPos && mvCurrentScissorRectSize == vFinalSize) return false;
+    if(mvCurrentScissorRectPos == vFinalPos && mvCurrentScissorRectSize == vFinalSize)
+    {
+        return false;
+    }
 
     mvCurrentScissorRectPos = vFinalPos;
     mvCurrentScissorRectSize = vFinalSize;
@@ -384,15 +457,23 @@ bool iRenderFunctions::SetScissorRect(const cVector2l& avPos, const cVector2l& a
             vFinalPos.x == 0 && vFinalPos.y ==0 &&
             vFinalSize.x == mvRenderTargetSize.x && vFinalSize.y == mvRenderTargetSize.y)
     {
-        if(abAutoEnabling)SetScissorActive(false);
+        if(abAutoEnabling)
+        {
+            SetScissorActive(false);
+        }
         return false;
     }
     else
     {
-        if(abAutoEnabling) SetScissorActive(true);
+        if(abAutoEnabling)
+        {
+            SetScissorActive(true);
+        }
 
         if(mbLog)
+        {
             Log("  Setting scissor rect: %d, %d, %dx%d\n",    vFinalPos.x, vFinalPos.y, vFinalSize.x,vFinalSize.y);
+        }
 
         mpLowLevelGraphics->SetScissorRect(mvCurrentScissorRectPos, mvCurrentScissorRectSize);
         return true;
@@ -403,24 +484,39 @@ bool iRenderFunctions::SetScissorRect(const cVector2l& avPos, const cVector2l& a
 
 bool iRenderFunctions::SetChannelMode(eMaterialChannelMode aMode)
 {
-    if(mCurrentChannelMode == aMode) return false;
+    if(mCurrentChannelMode == aMode)
+    {
+        return false;
+    }
 
     switch(aMode)
     {
     case eMaterialChannelMode_RGBA:
-        if(mbLog) Log("  Setting channel mode: RGBA\n");
+        if(mbLog)
+        {
+            Log("  Setting channel mode: RGBA\n");
+        }
         mpLowLevelGraphics->SetColorWriteActive(true, true, true, true);
         break;
     case eMaterialChannelMode_RGB:
-        if(mbLog) Log("  Setting channel mode: RGB\n");
+        if(mbLog)
+        {
+            Log("  Setting channel mode: RGB\n");
+        }
         mpLowLevelGraphics->SetColorWriteActive(true, true, true, false);
         break;
     case eMaterialChannelMode_A:
-        if(mbLog) Log("  Setting channel mode: A\n");
+        if(mbLog)
+        {
+            Log("  Setting channel mode: A\n");
+        }
         mpLowLevelGraphics->SetColorWriteActive(false, false, false, true);
         break;
     case eMaterialChannelMode_None:
-        if(mbLog) Log("  Setting channel mode: None\n");
+        if(mbLog)
+        {
+            Log("  Setting channel mode: None\n");
+        }
         mpLowLevelGraphics->SetColorWriteActive(false, false, false, false);
         break;
     }
@@ -434,16 +530,25 @@ bool iRenderFunctions::SetChannelMode(eMaterialChannelMode aMode)
 
 bool iRenderFunctions::SetAlphaMode(eMaterialAlphaMode aMode)
 {
-    if(mCurrentAlphaMode == aMode) return false;
+    if(mCurrentAlphaMode == aMode)
+    {
+        return false;
+    }
 
     if(aMode == eMaterialAlphaMode_Solid)
     {
-        if(mbLog) Log("  Setting alpha mode: Solid\n");
+        if(mbLog)
+        {
+            Log("  Setting alpha mode: Solid\n");
+        }
         mpLowLevelGraphics->SetAlphaTestActive(false);
     }
     else
     {
-        if(mbLog) Log("  Setting alpha mode: Trans\n");
+        if(mbLog)
+        {
+            Log("  Setting alpha mode: Trans\n");
+        }
         mpLowLevelGraphics->SetAlphaTestActive(true);
     }
     mCurrentAlphaMode = aMode;
@@ -453,11 +558,17 @@ bool iRenderFunctions::SetAlphaMode(eMaterialAlphaMode aMode)
 
 bool iRenderFunctions::SetAlphaLimit(float afLimit)
 {
-    if(afLimit == mfCurrentAlphaLimit) return false;
+    if(afLimit == mfCurrentAlphaLimit)
+    {
+        return false;
+    }
 
     mfCurrentAlphaLimit = afLimit;
 
-    if(mbLog) Log("  Setting alpha limit: %f\n", mfCurrentAlphaLimit);
+    if(mbLog)
+    {
+        Log("  Setting alpha limit: %f\n", mfCurrentAlphaLimit);
+    }
 
     mpLowLevelGraphics->SetAlphaTestFunc(eAlphaTestFunc_GreaterOrEqual, mfCurrentAlphaLimit);
 
@@ -468,13 +579,19 @@ bool iRenderFunctions::SetAlphaLimit(float afLimit)
 
 bool iRenderFunctions::SetBlendMode(eMaterialBlendMode aMode)
 {
-    if(mCurrentBlendMode == aMode) return false;
+    if(mCurrentBlendMode == aMode)
+    {
+        return false;
+    }
 
     ///////////////////////////
     // Blend off
     if(aMode == eMaterialBlendMode_None)
     {
-        if(mbLog) Log("  Setting blend mode: None\n");
+        if(mbLog)
+        {
+            Log("  Setting blend mode: None\n");
+        }
         mpLowLevelGraphics->SetBlendActive(false);
     }
     ///////////////////////////
@@ -486,23 +603,38 @@ bool iRenderFunctions::SetBlendMode(eMaterialBlendMode aMode)
         switch(aMode)
         {
         case eMaterialBlendMode_Add:
-            if(mbLog) Log("  Setting blend mode: Add\n");
+            if(mbLog)
+            {
+                Log("  Setting blend mode: Add\n");
+            }
             mpLowLevelGraphics->SetBlendFunc(eBlendFunc_One,eBlendFunc_One);
             break;
         case eMaterialBlendMode_Mul:
-            if(mbLog) Log("  Setting blend mode: Mul\n");
+            if(mbLog)
+            {
+                Log("  Setting blend mode: Mul\n");
+            }
             mpLowLevelGraphics->SetBlendFunc(eBlendFunc_Zero,eBlendFunc_SrcColor);
             break;
         case eMaterialBlendMode_MulX2:
-            if(mbLog) Log("  Setting blend mode: MulX2\n");
+            if(mbLog)
+            {
+                Log("  Setting blend mode: MulX2\n");
+            }
             mpLowLevelGraphics->SetBlendFunc(eBlendFunc_DestColor,eBlendFunc_SrcColor);
             break;
         case eMaterialBlendMode_Alpha:
-            if(mbLog) Log("  Setting blend mode: Alpha\n");
+            if(mbLog)
+            {
+                Log("  Setting blend mode: Alpha\n");
+            }
             mpLowLevelGraphics->SetBlendFunc(eBlendFunc_SrcAlpha,eBlendFunc_OneMinusSrcAlpha);
             break;
         case eMaterialBlendMode_PremulAlpha:
-            if(mbLog) Log("  Setting blend mode: PremulAlpha\n");
+            if(mbLog)
+            {
+                Log("  Setting blend mode: PremulAlpha\n");
+            }
             mpLowLevelGraphics->SetBlendFunc(eBlendFunc_One,eBlendFunc_OneMinusSrcAlpha);
             break;
         }
@@ -517,16 +649,25 @@ bool iRenderFunctions::SetBlendMode(eMaterialBlendMode aMode)
 
 bool iRenderFunctions::SetProgram(iGpuProgram *apProgram)
 {
-    if(mpCurrentProgram == apProgram) return false;
+    if(mpCurrentProgram == apProgram)
+    {
+        return false;
+    }
 
     if(apProgram)
     {
-        if(mbLog) Log("  Setting gpu program %d : '%s'\n", apProgram, apProgram->GetName().c_str());
+        if(mbLog)
+        {
+            Log("  Setting gpu program %d : '%s'\n", apProgram, apProgram->GetName().c_str());
+        }
         apProgram->Bind();
     }
     else
     {
-        if(mbLog) Log("  Setting gpu program NULL\n");
+        if(mbLog)
+        {
+            Log("  Setting gpu program NULL\n");
+        }
         mpCurrentProgram->UnBind();
     }
 
@@ -543,14 +684,21 @@ bool iRenderFunctions::SetProgram(iGpuProgram *apProgram)
 
 void iRenderFunctions::SetTexture(int alUnit, iTexture *apTexture)
 {
-    if(mvCurrentTexture[alUnit] == apTexture) return;
+    if(mvCurrentTexture[alUnit] == apTexture)
+    {
+        return;
+    }
 
     if(mbLog)
     {
         if(apTexture)
+        {
             Log("  Setting texture unit: %d, %d/'%s'\n",alUnit,apTexture,apTexture->GetName().c_str());
+        }
         else
+        {
             Log("  Setting texture unit: %d, 'NULL\n",alUnit);
+        }
     }
     mpLowLevelGraphics->SetTexture(alUnit, apTexture);
 
@@ -568,9 +716,13 @@ void iRenderFunctions::SetTextureRange(iTexture *apTexture, int alFirstUnit, int
             if(mbLog)
             {
                 if(apTexture)
+                {
                     Log("  Setting texture unit: %d, %d/'%s'\n",i,apTexture,apTexture->GetName().c_str());
+                }
                 else
+                {
                     Log("  Setting texture unit: %d, 'NULL\n",i);
+                }
             }
 
             mpLowLevelGraphics->SetTexture(i, apTexture);
@@ -583,18 +735,31 @@ void iRenderFunctions::SetTextureRange(iTexture *apTexture, int alFirstUnit, int
 
 void iRenderFunctions::SetVertexBuffer(iVertexBuffer *apVtxBuffer)
 {
-    if(mpCurrentVtxBuffer == apVtxBuffer) return;
+    if(mpCurrentVtxBuffer == apVtxBuffer)
+    {
+        return;
+    }
 
     if(mbLog)
     {
         if(apVtxBuffer)
+        {
             Log("  Setting vertex buffer: %d\n",apVtxBuffer);
+        }
         else
+        {
             Log("  Setting vertex buffer: NULL\n");
+        }
     }
 
-    if(mpCurrentVtxBuffer) mpCurrentVtxBuffer->UnBind();
-    if(apVtxBuffer) apVtxBuffer->Bind();
+    if(mpCurrentVtxBuffer)
+    {
+        mpCurrentVtxBuffer->UnBind();
+    }
+    if(apVtxBuffer)
+    {
+        apVtxBuffer->Bind();
+    }
 
     mpCurrentVtxBuffer = apVtxBuffer;
 }
@@ -610,7 +775,10 @@ void iRenderFunctions::SetMatrix(cMatrixf *apMatrix)
         //Normal matrix
         if(apMatrix)
         {
-            if(mbLog) Log("  Setting model matrix: %d / %s\n",apMatrix, apMatrix->ToString().c_str());
+            if(mbLog)
+            {
+                Log("  Setting model matrix: %d / %s\n",apMatrix, apMatrix->ToString().c_str());
+            }
 
             cMatrixf mtxModel = cMath::MatrixMul(mpCurrentFrustum->GetViewMatrix(), *apMatrix);
 
@@ -619,7 +787,10 @@ void iRenderFunctions::SetMatrix(cMatrixf *apMatrix)
         //NULL matrix
         else
         {
-            if(mbLog) Log("  Setting model matrix: NULL\n");
+            if(mbLog)
+            {
+                Log("  Setting model matrix: NULL\n");
+            }
 
             mpLowLevelGraphics->SetMatrix(eMatrix_ModelView,mpCurrentFrustum->GetViewMatrix());
         }
@@ -633,7 +804,10 @@ void iRenderFunctions::SetMatrix(cMatrixf *apMatrix)
 void iRenderFunctions::SetModelViewMatrix(const cMatrixf& a_mtxModelView)
 {
     //No test here...
-    if(mbLog) Log("  Setting view matrix: %s\n",cMath::MatrixToChar(a_mtxModelView));
+    if(mbLog)
+    {
+        Log("  Setting view matrix: %s\n",cMath::MatrixToChar(a_mtxModelView));
+    }
 
     mpLowLevelGraphics->SetMatrix(eMatrix_ModelView,a_mtxModelView);
     mpCurrentMatrix = &m_mtxNULL;
@@ -645,10 +819,16 @@ void iRenderFunctions::SetModelViewMatrix(const cMatrixf& a_mtxModelView)
 
 void iRenderFunctions::SetInvertCullMode(bool abX)
 {
-    if(mbInvertCullMode == abX) return;
+    if(mbInvertCullMode == abX)
+    {
+        return;
+    }
 
     mbInvertCullMode = abX;
-    if(mbLog) Log(" Inverting Cull Modes!\n");
+    if(mbLog)
+    {
+        Log(" Inverting Cull Modes!\n");
+    }
 
     SetCullMode(mCurrentCullMode == eCullMode_Clockwise ? eCullMode_CounterClockwise : eCullMode_Clockwise, false);
 }
@@ -725,7 +905,10 @@ void iRenderFunctions::SetFrameBuffer(iFrameBuffer *apFrameBuffer, bool abUsePos
         {
             if(mbGlobalScissorRectActive)
             {
-                if(mbLog) Log("  Setting scissor active: 0\n");
+                if(mbLog)
+                {
+                    Log("  Setting scissor active: 0\n");
+                }
 
                 mpLowLevelGraphics->SetScissorActive(false);
                 mbGlobalScissorRectActive = false;
@@ -781,7 +964,9 @@ void iRenderFunctions::ClearFrameBuffer(tClearFrameBufferFlag aFlags, bool abUse
     mpLowLevelGraphics->ClearFrameBuffer(aFlags);
 
     if(bScissorUsed)
+    {
         mpLowLevelGraphics->SetScissorActive(false);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -845,9 +1030,15 @@ void iRenderFunctions::DrawQuad(    const cVector3f& aPos, const cVector2f& avSi
 
 void iRenderFunctions::DrawCurrent(eVertexBufferDrawType aDrawType)
 {
-    if(mbLog) Log("   Drawing vertex buffer\n");
+    if(mbLog)
+    {
+        Log("   Drawing vertex buffer\n");
+    }
 
-    if(mpCurrentVtxBuffer) mpCurrentVtxBuffer->Draw(aDrawType);
+    if(mpCurrentVtxBuffer)
+    {
+        mpCurrentVtxBuffer->Draw(aDrawType);
+    }
 
 }
 
@@ -858,7 +1049,10 @@ void iRenderFunctions::DrawWireFrame(iVertexBuffer *apVtxBuffer, const cColor &a
     ///////////////////////////////////////
     //Set up variables
     int lIndexNum = apVtxBuffer->GetElementNum();
-    if(lIndexNum<0) lIndexNum = apVtxBuffer->GetIndexNum();
+    if(lIndexNum<0)
+    {
+        lIndexNum = apVtxBuffer->GetIndexNum();
+    }
     unsigned int* pIndexArray = apVtxBuffer->GetIndices();
 
     float *pVertexArray = apVtxBuffer->GetFloatArray(eVertexBufferElement_Position);
@@ -932,9 +1126,13 @@ void iRenderFunctions::CopyFrameBufferToTexure(    iTexture *apTexture, const cV
 
     }
     if(abTextureOffsetUsesRenderTargetPos)
+    {
         mpLowLevelGraphics->CopyFrameBufferToTexure(apTexture, avPos, avSize, avTextureOffset + mpCurrentRenderTarget->mvPos);
+    }
     else
+    {
         mpLowLevelGraphics->CopyFrameBufferToTexure(apTexture, avPos, avSize, avTextureOffset);
+    }
 }
 
 //-----------------------------------------------------------------------

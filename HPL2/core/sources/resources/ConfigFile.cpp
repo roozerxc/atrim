@@ -98,7 +98,10 @@ bool cConfigFile::Load()
 
         bool bRet = mpXmlDoc->LoadFile(pFile);
 
-        if(pFile) fclose(pFile);
+        if(pFile)
+        {
+            fclose(pFile);
+        }
         return bRet;
     }
 }
@@ -155,7 +158,10 @@ bool cConfigFile::Save()
 
         bool bRet = mpXmlDoc->SaveFile(pFile);
 
-        if(pFile) fclose(pFile);
+        if(pFile)
+        {
+            fclose(pFile);
+        }
 
         return bRet;
     }
@@ -254,7 +260,10 @@ tWString cConfigFile::GetStringW(const tString& asLevel, const tString& asName, 
 int cConfigFile::GetInt(const tString& asLevel, const tString& asName, int alDefault)
 {
     const char *sVal = GetCharArray(asLevel,asName);
-    if(sVal==NULL) return alDefault;
+    if(sVal==NULL)
+    {
+        return alDefault;
+    }
 
     return cString::ToInt(sVal,alDefault);
 }
@@ -262,7 +271,10 @@ int cConfigFile::GetInt(const tString& asLevel, const tString& asName, int alDef
 float cConfigFile::GetFloat(const tString& asLevel, const tString& asName,float afDefault)
 {
     const char *sVal = GetCharArray(asLevel,asName);
-    if(sVal==NULL) return afDefault;
+    if(sVal==NULL)
+    {
+        return afDefault;
+    }
 
     return cString::ToFloat(sVal,afDefault);
 }
@@ -270,7 +282,10 @@ float cConfigFile::GetFloat(const tString& asLevel, const tString& asName,float 
 bool cConfigFile::GetBool(const tString& asLevel, const tString& asName, bool abDefault)
 {
     const char *sVal = GetCharArray(asLevel,asName);
-    if(sVal==NULL) return abDefault;
+    if(sVal==NULL)
+    {
+        return abDefault;
+    }
 
     return cString::ToBool(sVal,abDefault);
 }

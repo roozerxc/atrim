@@ -45,11 +45,11 @@ namespace hpl
 enum ePlatform
 {
     ePlatform_Win32,    // Windows NT 32 & 64-bit
-	ePlatform_Linux,    // Linux, Unix and BSD
-	ePlatform_Mac,      // maybe Intel or PPC Apple Mac?
+    ePlatform_Linux,    // Linux, Unix and BSD
+    ePlatform_Mac,      // maybe Intel or PPC Apple Mac?
 
-	ePlatform_Xenon,    // Microsoft Xbox 360
-	ePlatform_CELL,     // Sony PlayStation 3
+    ePlatform_Xenon,    // Microsoft Xbox 360
+    ePlatform_CELL,     // Sony PlayStation 3
 
     ePlatform_LastEnum
 };
@@ -224,49 +224,121 @@ public:
 
     bool operator>(const cDate &aDate) const
     {
-        if(year > aDate.year) return true;
-        else if(year < aDate.year) return false;
-
-        if(month > aDate.month) return true;
-        else if(month < aDate.month) return false;
-
-        if(month_day > aDate.month_day) return true;
-        else if(month_day < aDate.month_day) return false;
-
-        if(hours > aDate.hours) return true;
-        else if(hours < aDate.hours) return false;
-
-        if(minutes > aDate.minutes) return true;
-        else if(minutes < aDate.minutes) return false;
-
-        if(seconds > aDate.seconds) return true;
-        else if(seconds < aDate.seconds) return false;
-
-        return false;
-    }
-
-    bool operator<(const cDate &aDate) const
+        if(year > aDate.year)
     {
-        if(year < aDate.year) return true;
-        else if(year > aDate.year) return false;
-
-        if(month < aDate.month) return true;
-        else if(month > aDate.month) return false;
-
-        if(month_day < aDate.month_day) return true;
-        else if(month_day > aDate.month_day) return false;
-
-        if(hours < aDate.hours) return true;
-        else if(hours > aDate.hours) return false;
-
-        if(minutes < aDate.minutes) return true;
-        else if(minutes > aDate.minutes) return false;
-
-        if(seconds < aDate.seconds) return true;
-        else if(seconds > aDate.seconds) return false;
-
+        return true;
+    }
+    else if(year < aDate.year)
+    {
         return false;
     }
+
+    if(month > aDate.month)
+    {
+        return true;
+    }
+    else if(month < aDate.month)
+    {
+        return false;
+    }
+
+    if(month_day > aDate.month_day)
+    {
+        return true;
+    }
+    else if(month_day < aDate.month_day)
+    {
+        return false;
+    }
+
+    if(hours > aDate.hours)
+    {
+        return true;
+    }
+    else if(hours < aDate.hours)
+    {
+        return false;
+    }
+
+    if(minutes > aDate.minutes)
+    {
+        return true;
+    }
+    else if(minutes < aDate.minutes)
+    {
+        return false;
+    }
+
+    if(seconds > aDate.seconds)
+    {
+        return true;
+    }
+    else if(seconds < aDate.seconds)
+    {
+        return false;
+    }
+
+    return false;
+}
+
+bool operator<(const cDate &aDate) const
+    {
+        if(year < aDate.year)
+    {
+        return true;
+    }
+    else if(year > aDate.year)
+    {
+        return false;
+    }
+
+    if(month < aDate.month)
+    {
+        return true;
+    }
+    else if(month > aDate.month)
+    {
+        return false;
+    }
+
+    if(month_day < aDate.month_day)
+    {
+        return true;
+    }
+    else if(month_day > aDate.month_day)
+    {
+        return false;
+    }
+
+    if(hours < aDate.hours)
+    {
+        return true;
+    }
+    else if(hours > aDate.hours)
+    {
+        return false;
+    }
+
+    if(minutes < aDate.minutes)
+    {
+        return true;
+    }
+    else if(minutes > aDate.minutes)
+    {
+        return false;
+    }
+
+    if(seconds < aDate.seconds)
+    {
+        return true;
+    }
+    else if(seconds > aDate.seconds)
+    {
+        return false;
+    }
+
+    return false;
+}
 };
 
 //--------------------------------------------------------
@@ -275,9 +347,9 @@ template <class T>
 class cMemoryPool
 {
 public:
-    //---------------------------------
+//---------------------------------
 
-    cMemoryPool(size_t alSize, T* (*apCreateFunc)())
+cMemoryPool(size_t alSize, T* (*apCreateFunc)())
     {
         mvData.resize(alSize,NULL);
         mlCurrentData = 0;
@@ -286,8 +358,14 @@ public:
 
         for(size_t i=0; i< mvData.size(); ++i)
         {
-            if(mpCreateFunc)    mvData[i] = mpCreateFunc();
-            else                mvData[i] = hplNew(T, () );
+            if(mpCreateFunc)
+            {
+                mvData[i] = mpCreateFunc();
+            }
+            else
+            {
+                mvData[i] = hplNew(T, () );
+            }
         }
     }
 
@@ -295,7 +373,10 @@ public:
 
     ~cMemoryPool()
     {
-        for(size_t i=0; i< mvData.size(); ++i) hplDelete(mvData[i]);
+        for(size_t i=0; i< mvData.size(); ++i)
+        {
+            hplDelete(mvData[i]);
+        }
     }
 
     //---------------------------------
@@ -312,8 +393,14 @@ public:
 
             for(size_t i=lStart; i< mvData.size(); ++i)
             {
-                if(mpCreateFunc)    mvData[i] = mpCreateFunc();
-                else                mvData[i] = hplNew(T,());
+                if(mpCreateFunc)
+                {
+                    mvData[i] = mpCreateFunc();
+                }
+                else
+                {
+                    mvData[i] = hplNew(T,());
+                }
             }
 
             ++mlCurrentData;
@@ -330,7 +417,10 @@ public:
 
     void Release(T *apData)
     {
-        if(mlCurrentData==0) return;
+        if(mlCurrentData==0)
+        {
+            return;
+        }
 
         --mlCurrentData;
         mvData[mlCurrentData] = apData;
@@ -451,7 +541,9 @@ bool STLContainsPointer(CONT &aCont, const void* apPointer)
     for(; it != aCont.end(); ++it)
     {
         if((*it)==apPointer)
+        {
             return true;
+        }
     }
 
     return false;
@@ -540,7 +632,9 @@ public:
     void* NextPtr()
     {
         if(mIt == mpCont->end())
+        {
             return NULL;
+        }
         else
         {
             T &temp = const_cast<T &> (*mIt);
@@ -554,7 +648,9 @@ public:
     T Next()
     {
         if(mIt == mpCont->end())
+        {
             return NULL;
+        }
         else
         {
             T &temp = const_cast<T &> (*mIt);
@@ -568,7 +664,9 @@ public:
     T PeekNext()
     {
         if(mIt == mpCont->end())
+        {
             return NULL;
+        }
         else
         {
             return *mIt;
@@ -607,7 +705,9 @@ public:
     void* NextPtr()
     {
         if(mIt == mpCont->end())
+        {
             return NULL;
+        }
         else
         {
             T& temp = mIt->second;
@@ -621,7 +721,9 @@ public:
     T Next()
     {
         if(mIt == mpCont->end())
+        {
             return NULL;
+        }
         else
         {
             T temp = mIt->second;
@@ -635,7 +737,9 @@ public:
     T PeekNext()
     {
         if(mIt == mpCont->end())
+        {
             return NULL;
+        }
         else
         {
             return mIt->second;

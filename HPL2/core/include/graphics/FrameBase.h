@@ -21,7 +21,10 @@ public:
     }
     void DecPicCount()
     {
-        if(mlPicCount>0)mlPicCount--;
+        if(mlPicCount>0)
+        {
+            mlPicCount--;
+        }
     }
     int GetPicCount()
     {

@@ -346,7 +346,9 @@ protected:
     inline static bool IsWhiteSpace( int c )
     {
         if ( c < 256 )
+        {
             return IsWhiteSpace( (char) c );
+        }
         return false;    // Again, only truly correct for English/Latin...but usually works.
     }
 
@@ -392,7 +394,9 @@ protected:
         if ( *length == 1 )
         {
             if ( *p == '&' )
+            {
                 return GetEntity( p, _value, length, encoding );
+            }
             *_value = *p;
             return p+1;
         }
@@ -436,7 +440,10 @@ protected:
     {
         if ( encoding == TIXML_ENCODING_UTF8 )
         {
-            if ( v < 128 ) return tolower( v );
+            if ( v < 128 )
+            {
+                return tolower( v );
+            }
             return v;
         }
         else
@@ -1266,12 +1273,16 @@ public:
     {
         const TiXmlAttribute* node = attributeSet.Find( name );
         if ( !node )
+        {
             return TIXML_NO_ATTRIBUTE;
+        }
 
         std::stringstream sstream( node->ValueStr() );
         sstream >> *outValue;
         if ( !sstream.fail() )
+        {
             return TIXML_SUCCESS;
+        }
         return TIXML_WRONG_TYPE;
     }
 
@@ -1279,7 +1290,9 @@ public:
     {
         const TiXmlAttribute* node = attributeSet.Find( name );
         if ( !node )
+        {
             return TIXML_NO_ATTRIBUTE;
+        }
         *outValue = node->ValueStr();
         return TIXML_SUCCESS;
     }
@@ -2207,7 +2220,9 @@ private:
     void DoIndent()
     {
         for( int i=0; i<depth; ++i )
+        {
             buffer += indent;
+        }
     }
     void DoLineBreak()
     {

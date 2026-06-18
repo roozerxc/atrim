@@ -70,14 +70,26 @@ bool cAINodeRayCallback::Intersected()
 
 bool cAINodeRayCallback::BeforeIntersect(iPhysicsBody *pBody)
 {
-    if(pBody->GetCollideCharacter()==false) return false;
+    if(pBody->GetCollideCharacter()==false)
+    {
+        return false;
+    }
 
-    if( (mFlags & eAIFreePathFlag_SkipStatic) && pBody->GetMass() == 0) return false;
+    if( (mFlags & eAIFreePathFlag_SkipStatic) && pBody->GetMass() == 0)
+    {
+        return false;
+    }
 
     if( (mFlags & eAIFreePathFlag_SkipDynamic) &&
-            (pBody->GetMass() > 0 || pBody->IsCharacter()) ) return false;
+            (pBody->GetMass() > 0 || pBody->IsCharacter()) )
+    {
+        return false;
+    }
 
-    if( (mFlags & eAIFreePathFlag_SkipVolatile) && pBody->IsVolatile()) return false;
+    if( (mFlags & eAIFreePathFlag_SkipVolatile) && pBody->IsVolatile())
+    {
+        return false;
+    }
 
     return true;
 }
@@ -158,7 +170,10 @@ cAINodeIterator::cAINodeIterator(cAINodeContainer *apContainer, const cVector3f 
 
 bool cAINodeIterator::HasNext()
 {
-    if(mpNodeList==NULL || mpNodeList->empty()) return false;
+    if(mpNodeList==NULL || mpNodeList->empty())
+    {
+        return false;
+    }
 
     return true;
 }
@@ -193,7 +208,10 @@ cAINode *cAINodeIterator::Next()
             mpNodeList = NULL;
         }
 
-        if(mpNodeList) mNodeIt = mpNodeList->begin();
+        if(mpNodeList)
+        {
+            mNodeIt = mpNodeList->begin();
+        }
     }
 
     return pNode;
@@ -363,9 +381,15 @@ void cAINodeContainer::Compile()
         {
             cAINode *pEndNode = nodeIt.Next();
 
-            if(pEndNode == pNode) continue;
+            if(pEndNode == pNode)
+            {
+                continue;
+            }
             float fDist = cMath::Vector3Dist(pNode->mvPosition, pEndNode->mvPosition);
-            if(fDist > mfMaxEndDistance*2) continue;
+            if(fDist > mfMaxEndDistance*2)
+            {
+                continue;
+            }
             //Log("'%s'(%f) ",pEndNode->GetName().c_str(),fDist);
 
             float fHeight = fabs(pNode->mvPosition.y - pEndNode->mvPosition.y);
@@ -412,7 +436,10 @@ void cAINodeContainer::BuildNodeGridMap()
 {
     bool bLog=false;
 
-    if(bLog)Log("Nodes: %d\n",mvNodes.size());
+    if(bLog)
+    {
+        Log("Nodes: %d\n",mvNodes.size());
+    }
 
     ////////////////////////////////////
     // Calculate min and max
@@ -423,11 +450,23 @@ void cAINodeContainer::BuildNodeGridMap()
     {
         cAINode *pNode = mvNodes[i];
 
-        if(vMin.x > pNode->GetPosition().x) vMin.x = pNode->GetPosition().x;
-        if(vMin.y > pNode->GetPosition().z) vMin.y = pNode->GetPosition().z;
+        if(vMin.x > pNode->GetPosition().x)
+        {
+            vMin.x = pNode->GetPosition().x;
+        }
+        if(vMin.y > pNode->GetPosition().z)
+        {
+            vMin.y = pNode->GetPosition().z;
+        }
 
-        if(vMax.x < pNode->GetPosition().x) vMax.x = pNode->GetPosition().x;
-        if(vMax.y < pNode->GetPosition().z) vMax.y = pNode->GetPosition().z;
+        if(vMax.x < pNode->GetPosition().x)
+        {
+            vMax.x = pNode->GetPosition().x;
+        }
+        if(vMax.y < pNode->GetPosition().z)
+        {
+            vMax.y = pNode->GetPosition().z;
+        }
     }
 
     mvMinGridPos = vMin;
@@ -437,7 +476,10 @@ void cAINodeContainer::BuildNodeGridMap()
     // Determine size of grids
     int lGridNum = (int)(sqrt((float)mvNodes.size() / (float)mlNodesPerGrid)+0.5f)+1;
 
-    if(bLog)Log("Grid Num: %d\n",lGridNum);
+    if(bLog)
+    {
+        Log("Grid Num: %d\n",lGridNum);
+    }
 
     mvGridMapSize.x = lGridNum;
     mvGridMapSize.y = lGridNum;
@@ -449,9 +491,18 @@ void cAINodeContainer::BuildNodeGridMap()
     mvGridSize.x /= (float)mvGridMapSize.x;
     mvGridSize.y /= (float)mvGridMapSize.y;
 
-    if(bLog)Log("GridSize: %f : %f\n",mvGridSize.x,mvGridSize.y);
-    if(bLog)Log("MinPos: %s\n",mvMinGridPos.ToString().c_str());
-    if(bLog)Log("MaxPos: %s\n",mvMaxGridPos.ToString().c_str());
+    if(bLog)
+    {
+        Log("GridSize: %f : %f\n",mvGridSize.x,mvGridSize.y);
+    }
+    if(bLog)
+    {
+        Log("MinPos: %s\n",mvMinGridPos.ToString().c_str());
+    }
+    if(bLog)
+    {
+        Log("MaxPos: %s\n",mvMaxGridPos.ToString().c_str());
+    }
 
     ////////////////////////////////////
     // Add nodes to grid
@@ -465,9 +516,13 @@ void cAINodeContainer::BuildNodeGridMap()
         cVector2l vGridPos(0);
         //Have checks so we are sure there is no division by zero.
         if(mvGridSize.x >0)
+        {
             vGridPos.x = (int)(vLocalPos.x / mvGridSize.x);
+        }
         if(mvGridSize.y >0)
+        {
             vGridPos.y = (int)(vLocalPos.y / mvGridSize.y);
+        }
 
         if(false)Log("Adding node %d, world: (%s) local (%s), at %d : %d\n",i,
                          pNode->GetPosition().ToString().c_str(),
@@ -498,10 +553,16 @@ bool cAINodeContainer::FreePath(const cVector3f &avStart, const cVector3f &avEnd
                                 tAIFreePathFlag aFlags,iAIFreePathCallback *apCallback)
 {
     iPhysicsWorld *pPhysicsWorld = mpWorld->GetPhysicsWorld();
-    if(pPhysicsWorld==NULL) return true;
+    if(pPhysicsWorld==NULL)
+    {
+        return true;
+    }
 
 
-    if(alRayNum<0 || alRayNum>5) alRayNum =5;
+    if(alRayNum<0 || alRayNum>5)
+    {
+        alRayNum =5;
+    }
 
     /////////////////////////////
     //Calculate the right vector
@@ -532,7 +593,10 @@ bool cAINodeContainer::FreePath(const cVector3f &avStart, const cVector3f &avEnd
 
         pPhysicsWorld->CastRay(mpRayCallback,vStart,vEnd,false,false,false,true);
 
-        if(mpRayCallback->Intersected()) return false;
+        if(mpRayCallback->Intersected())
+        {
+            return false;
+        }
     }
 
     return true;
@@ -583,7 +647,10 @@ void cAINodeContainer::LoadFromFile(const tWString &asFile)
     BuildNodeGridMap();
 
     FILE *pFile = cPlatform::OpenFile(asFile, _W("rb"));
-    if(pFile==NULL) return;
+    if(pFile==NULL)
+    {
+        return;
+    }
 
     TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
     if(pXmlDoc->LoadFile(pFile)==false)
@@ -636,10 +703,22 @@ cVector2l cAINodeContainer::GetGridPosFromLocal(const cVector2f &avLocalPos)
     vGridPos.x = (int)(avLocalPos.x / mvGridSize.x);
     vGridPos.y = (int)(avLocalPos.y / mvGridSize.y);
 
-    if(vGridPos.x <0)vGridPos.x =0;
-    if(vGridPos.y <0)vGridPos.y =0;
-    if(vGridPos.x > mvGridMapSize.x) vGridPos.x = mvGridMapSize.x;
-    if(vGridPos.y > mvGridMapSize.y) vGridPos.y = mvGridMapSize.y;
+    if(vGridPos.x <0)
+    {
+        vGridPos.x =0;
+    }
+    if(vGridPos.y <0)
+    {
+        vGridPos.y =0;
+    }
+    if(vGridPos.x > mvGridMapSize.x)
+    {
+        vGridPos.x = mvGridMapSize.x;
+    }
+    if(vGridPos.y > mvGridMapSize.y)
+    {
+        vGridPos.y = mvGridMapSize.y;
+    }
 
     return vGridPos;
 }

@@ -53,7 +53,10 @@ void cVertexBufferOGL_Array::Draw(eVertexBufferDrawType aDrawType)
     GLenum mode = GetDrawModeFromDrawType(drawType);
 
     int lSize = mlElementNum;
-    if(mlElementNum<0) lSize = GetIndexNum();
+    if(mlElementNum<0)
+    {
+        lSize = GetIndexNum();
+    }
 
     glDrawElements(mode,lSize,GL_UNSIGNED_INT, &mvIndexArray[0]);
 }
@@ -97,7 +100,10 @@ void cVertexBufferOGL_Array::UnBind()
         cVtxBufferGLElementArray *pElement = mvElementArrays[i];
 
         int lTextureUnit = GetVertexElementTextureUnit(pElement->mType);
-        if(lTextureUnit >=0) glClientActiveTextureARB(GL_TEXTURE0_ARB + lTextureUnit);
+        if(lTextureUnit >=0)
+        {
+            glClientActiveTextureARB(GL_TEXTURE0_ARB + lTextureUnit);
+        }
 
         glDisableClientState( GetGLArrayFromVertexElement(pElement->mType) );
     }
@@ -137,7 +143,10 @@ void cVertexBufferOGL_Array::SetVertexStates()
         int lSize = pElement->mlElementNum;
 
         int lTextureUnit = GetVertexElementTextureUnit(pElement->mType);
-        if(lTextureUnit >=0) glClientActiveTextureARB(GL_TEXTURE0_ARB + lTextureUnit);
+        if(lTextureUnit >=0)
+        {
+            glClientActiveTextureARB(GL_TEXTURE0_ARB + lTextureUnit);
+        }
 
         glEnableClientState( GetGLArrayFromVertexElement(pElement->mType) );
 

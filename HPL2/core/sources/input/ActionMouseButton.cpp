@@ -33,8 +33,14 @@ bool cActionMouseButton::IsTriggerd()
 
 float cActionMouseButton::GetValue()
 {
-    if(IsTriggerd())return 1.0;
-    else return 0.0;
+    if(IsTriggerd())
+    {
+        return 1.0;
+    }
+    else
+    {
+        return 0.0;
+    }
 }
 
 //-----------------------------------------------------------------------

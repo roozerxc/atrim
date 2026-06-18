@@ -175,9 +175,13 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     }
 
     if(mvPatrolNodes.empty())
+    {
         ChangeState(eLuxEnemyState_Wait);
+    }
     else
+    {
         ChangeState(eLuxEnemyState_Patrol);
+    }
 
     kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
     //Nothing
@@ -205,9 +209,13 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     kLuxState(eLuxEnemyState_Wait)
     kLuxOnEnter
     if(mfWaitTime <= 0)
+    {
         SendMessage(eLuxEnemyMessage_TimeOut, cMath::RandRectf(1, 3), true);
+    }
     else
+    {
         SendMessage(eLuxEnemyMessage_TimeOut, mfWaitTime, true);
+    }
     mfWaitTime =0;
 
     SendMessage(eLuxEnemyMessage_TimeOut_2, cMath::RandRectf(mfIdleExtraTimeMin, mfIdleExtraTimeMax), true);
@@ -314,9 +322,13 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     PlaySound(msGiveUpNoticeSound);
 
     if(mPreviousState == eLuxEnemyState_Search)
+    {
         ChangeState(eLuxEnemyState_Search);
+    }
     else
+    {
         ChangeState(eLuxEnemyState_Patrol);
+    }
 
     kLuxOnUpdate
     if(mbStuckAtDoor)// && mpMap->DoorIsClosed(mlStuckDoorID))
@@ -337,7 +349,9 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     {
         cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true,NULL,1);
         if(pNode)
+        {
             mpPathfinder->MoveTo(pNode->GetPosition());
+        }
 
         mfTempVal = apMessage->mfCustomValue;
     }
@@ -382,7 +396,10 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     {
         mfAlertRunTowardsCount-=1;
     }
-    if(mfAlertRunTowardsCount<0) mfAlertRunTowardsCount=0;
+    if(mfAlertRunTowardsCount<0)
+    {
+        mfAlertRunTowardsCount=0;
+    }
 
     //Update the speed of movement.
     if(fDistToPlayer > mfIncreaseAlertSpeedDistance)
@@ -408,7 +425,9 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     else if(PlayerIsDetected()==false)
     {
         if(gpBase->mpPlayer->GetTerror() < 1)
+        {
             ChangeState(eLuxEnemyState_Search);
+        }
     }
     //Player is seen, see if close enough for hunt
     else
@@ -439,7 +458,9 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     //Update move to
     kLuxOnMessage(eLuxEnemyMessage_TimeOut)
     if(PlayerIsDetected())
+    {
         mpPathfinder->MoveTo(mvLastKnownPlayerPos);
+    }
 
     SendMessage(eLuxEnemyMessage_TimeOut, 0.3f, true);
 
@@ -485,9 +506,13 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     //cAINode * pNode = GetSearchForPlayerNode();
     cAINode * pNode = mpPathfinder->GetNodeAtPos(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition(), 4, 12,false, false, true, NULL);
     if(pNode)
+    {
         mpPathfinder->MoveTo(pNode->GetPosition());
+    }
     else
+    {
         ChangeState(eLuxEnemyState_Patrol);
+    }
 
     //End of searching
     kLuxOnMessage(eLuxEnemyMessage_TimeOut)
@@ -646,9 +671,13 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 
     cAINode * pNode = mpPathfinder->GetNodeAtPos(mpCharBody->GetFeetPosition(), 2, 5, false, true, true, NULL);
     if(pNode)
+    {
         mpPathfinder->MoveTo(pNode->GetPosition());
+    }
     else
+    {
         ChangeState(eLuxEnemyState_Hunt);
+    }
 
     ///////////////////////
     // Enter
@@ -690,7 +719,9 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     kLuxOnMessage(eLuxEnemyMessage_TimeOut)
 
     if(DistToPlayer2D() > 2.0f)
+    {
         mpPathfinder->MoveTo(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition());
+    }
 
     if(CanSeePlayer())
     {
@@ -732,9 +763,13 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     else if(mpMap->DoorIsBroken(mlStuckDoorID))
     {
         if(mPreviousState == eLuxEnemyState_Hurt)
+        {
             ChangeState(eLuxEnemyState_Hunt);
+        }
         else
+        {
             ChangeState(mPreviousState);
+        }
     }
     else
     {
@@ -766,9 +801,13 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 
     kLuxOnMessage(eLuxEnemyMessage_AnimationOver)
     if(mPreviousState == eLuxEnemyState_Hurt)
+    {
         ChangeState(eLuxEnemyState_Hunt);
+    }
     else
+    {
         ChangeState(mPreviousState);
+    }
 
     kLuxOnMessage(eLuxEnemyMessage_AnimationSpecialEvent)
     Attack(mNormalAttackSize, mNormalAttackDamage);
@@ -907,7 +946,10 @@ bool cLuxEnemy_Grunt::PlayerIsDetected()
 
 void cLuxEnemy_Grunt::OnDisableTriggers()
 {
-    if(mCurrentState == eLuxEnemyState_Idle) return;
+    if(mCurrentState == eLuxEnemyState_Idle)
+    {
+        return;
+    }
 
     ChangeState(eLuxEnemyState_Patrol);
 }
@@ -923,7 +965,10 @@ float cLuxEnemy_Grunt::GetDamageMul(float afAmount, int alStrength)
     {
         return 1.0f;
     }
-    if( mCurrentState == eLuxEnemyState_Hurt) return 0.5f;
+    if( mCurrentState == eLuxEnemyState_Hurt)
+    {
+        return 0.5f;
+    }
 
     return 0.2f;
 }
@@ -976,9 +1021,13 @@ void cLuxEnemy_Grunt::PatrolEndOfPath()
 
     cLuxEnemyPatrolNode *pNode = GetCurrentPatrolNode();
     if(pNode)
+    {
         mfWaitTime = pNode->mfWaitTime;
+    }
     else
+    {
         mfWaitTime =0;
+    }
 
     ChangeState(eLuxEnemyState_Wait);
 
@@ -1032,9 +1081,18 @@ void cLuxEnemy_Grunt::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 
     ////////////////////////
     // Handle changed enums
-    if (mCurrentState >= eLuxEnemyState_PigEnumStart) mCurrentState = eLuxEnemyState_LastEnum;
-    if (mNextState >= eLuxEnemyState_PigEnumStart) mNextState = eLuxEnemyState_LastEnum;
-    if (mPreviousState >= eLuxEnemyState_PigEnumStart) mPreviousState = eLuxEnemyState_LastEnum;
+    if (mCurrentState >= eLuxEnemyState_PigEnumStart)
+    {
+        mCurrentState = eLuxEnemyState_LastEnum;
+    }
+    if (mNextState >= eLuxEnemyState_PigEnumStart)
+    {
+        mNextState = eLuxEnemyState_LastEnum;
+    }
+    if (mPreviousState >= eLuxEnemyState_PigEnumStart)
+    {
+        mPreviousState = eLuxEnemyState_LastEnum;
+    }
 }
 
 //-----------------------------------------------------------------------

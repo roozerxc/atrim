@@ -44,7 +44,10 @@ void cParserVarContainer::Add(const tString& asName, float afVal)
 bool cParserVarContainer::Remove(const tString& asName)
 {
     tParseVarMapIt it = m_mapVars.find(asName);
-    if(it == m_mapVars.end()) return false;
+    if(it == m_mapVars.end())
+    {
+        return false;
+    }
 
     m_mapVars.erase(it);
     return true;
@@ -55,7 +58,10 @@ bool cParserVarContainer::Remove(const tString& asName)
 tString* cParserVarContainer::Get(const tString& asName)
 {
     tParseVarMapIt it = m_mapVars.find(asName);
-    if(it == m_mapVars.end()) return NULL;
+    if(it == m_mapVars.end())
+    {
+        return NULL;
+    }
 
     return &it->second;
 }
@@ -169,7 +175,10 @@ bool cPreprocessParser::Parse(const tString* apInput, tString *apOutput, cParser
 
     while(EndOfSymbols() == false)
     {
-        if(ParseSymbol(mpCurrentSymbol)==false) return false;
+        if(ParseSymbol(mpCurrentSymbol)==false)
+        {
+            return false;
+        }
     }
 
     return true;
@@ -200,8 +209,14 @@ bool cPreprocessParser::VariableExists(const tString &asName)
 tString* cPreprocessParser::GetVar(const tString &asName)
 {
     tString *pVar = mEnvironmentVars.Get(asName);
-    if(mpCurrentVars && pVar == NULL) pVar = mpCurrentVars->Get(asName);
-    if(pVar == NULL) pVar = mParsingVars.Get(asName);
+    if(mpCurrentVars && pVar == NULL)
+    {
+        pVar = mpCurrentVars->Get(asName);
+    }
+    if(pVar == NULL)
+    {
+        pVar = mParsingVars.Get(asName);
+    }
 
     return pVar;
 }
@@ -210,7 +225,10 @@ tString* cPreprocessParser::GetVar(const tString &asName)
 
 bool cPreprocessParser::EndOfInput()
 {
-    if(mlInputPos >= (int)mpCurrentInput->length()) return true;
+    if(mlInputPos >= (int)mpCurrentInput->length())
+    {
+        return true;
+    }
 
     return false;
 }
@@ -219,7 +237,10 @@ bool cPreprocessParser::EndOfInput()
 
 static bool DivideWordsToSymbols(eSymbolProcess aProcess)
 {
-    if(aProcess == eSymbolProcess_PureText) return false;
+    if(aProcess == eSymbolProcess_PureText)
+    {
+        return false;
+    }
     return true;
 }
 
@@ -233,7 +254,10 @@ void cPreprocessParser::GetNextString()
     {
         //Get character
         char lChar = (*mpCurrentInput)[mlInputPos];
-        if(lChar == '\n' || lChar == '\r') mlRowCount++;
+        if(lChar == '\n' || lChar == '\r')
+        {
+            mlRowCount++;
+        }
 
         //printf("process: %d ", mProcess);
         //if(lChar == '\n')        printf("char: newline\n");
@@ -251,7 +275,9 @@ void cPreprocessParser::GetNextString()
                 if(mProcess != eSymbolProcess_PureText)
                 {
                     if( lChar=='\n' || lChar=='\r' || mProcess == eSymbolProcess_Variable)
+                    {
                         mProcess = eSymbolProcess_PureText;
+                    }
                 }
 
                 mlInputPos++;
@@ -313,7 +339,10 @@ void cPreprocessParser::GetNextString()
                         while(lLastChar == ' ' || lLastChar=='\t')
                         {
                             msCurrentString.resize(msCurrentString.size()-1);
-                            if(msCurrentString.empty()) break;
+                            if(msCurrentString.empty())
+                            {
+                                break;
+                            }
                             lLastChar = msCurrentString[msCurrentString.size()-1];
                         }
                     }
@@ -354,20 +383,44 @@ void cPreprocessParser::GetNextString()
 
 eParserKeyword cPreprocessParser::StringToKeyword(const tString& asString)
 {
-    if(asString =="define") return eParserKeyword_Define;
-    if(asString =="ifdef")    return eParserKeyword_Ifdef;
-    if(asString =="else")    return eParserKeyword_Else;
-    if(asString =="elseif") return eParserKeyword_Elseif;
-    if(asString =="endif")    return eParserKeyword_Endif;
-    if(asString =="include")return eParserKeyword_Include;
+    if(asString =="define")
+    {
+        return eParserKeyword_Define;
+    }
+    if(asString =="ifdef")
+    {
+        return eParserKeyword_Ifdef;
+    }
+    if(asString =="else")
+    {
+        return eParserKeyword_Else;
+    }
+    if(asString =="elseif")
+    {
+        return eParserKeyword_Elseif;
+    }
+    if(asString =="endif")
+    {
+        return eParserKeyword_Endif;
+    }
+    if(asString =="include")
+    {
+        return eParserKeyword_Include;
+    }
 
     return eParserKeyword_LastEnum;
 }
 
 eParserOperator cPreprocessParser::StringToOperator(const tString& asString)
 {
-    if(asString =="&&") return eParserOperator_And;
-    if(asString =="||") return eParserOperator_Or;
+    if(asString =="&&")
+    {
+        return eParserOperator_And;
+    }
+    if(asString =="||")
+    {
+        return eParserOperator_Or;
+    }
 
     return eParserOperator_LastEnum;
 }
@@ -389,8 +442,14 @@ bool cPreprocessParser::ParseStringToSymbol(eSymbolProcess aProcess, const tStri
     else if(aProcess == eSymbolProcess_Variable)
     {
         //Check so the variable is not used a space or empty
-        if(asString.size()==0) return true;
-        if(asString[0] == ' ' || asString[0] == '\t') return true;
+        if(asString.size()==0)
+        {
+            return true;
+        }
+        if(asString[0] == ' ' || asString[0] == '\t')
+        {
+            return true;
+        }
 
         AddSymbol( hplNew(cParserSymbolVariable,(asString,mlCurrentRow) ) );
     }
@@ -399,8 +458,14 @@ bool cPreprocessParser::ParseStringToSymbol(eSymbolProcess aProcess, const tStri
     else if(aProcess == eSymbolProcess_Line)
     {
         //Check so the variable is not used a space or empty
-        if(asString.size()==0) return true;
-        if(asString[0] == ' ' || asString[0] == '\t') return true;
+        if(asString.size()==0)
+        {
+            return true;
+        }
+        if(asString[0] == ' ' || asString[0] == '\t')
+        {
+            return true;
+        }
 
         ///////////////////////
         //Keyword
@@ -558,11 +623,17 @@ bool cPreprocessParser::ParseBooleanDefineStatement(bool& abStatmentValue)
         tString &sName = mpCurrentSymbol->ToVariable()->msName;
         if(VariableExists(sName))
         {
-            if(prevOp != eParserOperator_And) abStatmentValue = true;
+            if(prevOp != eParserOperator_And)
+            {
+                abStatmentValue = true;
+            }
         }
         else
         {
-            if(prevOp == eParserOperator_And) abStatmentValue = false;
+            if(prevOp == eParserOperator_And)
+            {
+                abStatmentValue = false;
+            }
         }
 
         //////////////////////////////
@@ -586,12 +657,21 @@ bool cPreprocessParser::ParseBooleanDefineStatement(bool& abStatmentValue)
 
 static bool KeyWordIsOfType(iParserSymbol *apSymbol, eParserKeyword* apKeywordArray, int alAmount)
 {
-    if(apSymbol==NULL) return false;
-    if(apSymbol->GetType()!= eParserSymbol_Keyword) return false;
+    if(apSymbol==NULL)
+    {
+        return false;
+    }
+    if(apSymbol->GetType()!= eParserSymbol_Keyword)
+    {
+        return false;
+    }
 
     for(int i=0; i<alAmount; ++i)
     {
-        if(apSymbol->ToKeyword()->mKeyword == apKeywordArray[i]) return true;
+        if(apSymbol->ToKeyword()->mKeyword == apKeywordArray[i])
+        {
+            return true;
+        }
     }
 
     return false;
@@ -677,7 +757,9 @@ bool cPreprocessParser::ParseKeyword(cParserSymbolKeyword *apKeyword)
                 }
             }
             if(EndOfSymbols()==false)
+            {
                 currentKeyword = mpCurrentSymbol->ToKeyword()->mKeyword;
+            }
         }
         GetNextSymbol();
 
@@ -697,9 +779,13 @@ bool cPreprocessParser::ParseKeyword(cParserSymbolKeyword *apKeyword)
                 return false;
             }
             if(i==0)
+            {
                 pVarName = mpCurrentSymbol->ToVariable();
+            }
             else
+            {
                 pVarVal = mpCurrentSymbol->ToVariable();
+            }
         }
 
         mParsingVars.Add(pVarName->msName, pVarVal->msName);
@@ -718,9 +804,13 @@ bool cPreprocessParser::ParseKeyword(cParserSymbolKeyword *apKeyword)
         tString sFile = mpCurrentSymbol->ToVariable()->msName;
         tWString sPath;
         if(msCurrentDirectory!=_W(""))
+        {
             sPath = cString::SetFilePathW(cString::To16Char(sFile), msCurrentDirectory);
+        }
         else
+        {
             sPath = cString::To16Char(sFile);
+        }
 
         if(cPlatform::FileExists(sPath))
         {

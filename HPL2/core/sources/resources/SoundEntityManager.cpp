@@ -81,8 +81,14 @@ cSoundEntityData* cSoundEntityManager::CreateSoundEntity(const tString& asName)
         }
     }
 
-    if(pSoundEntity)pSoundEntity->IncUserCount();
-    else Error("Couldn't create SoundEntity '%s'\n",asNewName.c_str());
+    if(pSoundEntity)
+    {
+        pSoundEntity->IncUserCount();
+    }
+    else
+    {
+        Error("Couldn't create SoundEntity '%s'\n",asNewName.c_str());
+    }
 
     EndLoad();
     return pSoundEntity;

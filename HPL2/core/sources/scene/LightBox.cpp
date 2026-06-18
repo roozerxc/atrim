@@ -52,7 +52,9 @@ void cLightBox::SetSize(const cVector3f& avSize)
 bool cLightBox::IsVisible()
 {
     if(mDiffuseColor.r <=0 && mDiffuseColor.g <=0 && mDiffuseColor.b <=0 && mDiffuseColor.a <=0)
+    {
         return false;
+    }
 
     return mbIsVisible;
 }

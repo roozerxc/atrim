@@ -21,7 +21,9 @@ int ExecuteString(asIScriptEngine *engine, const char *code, asIScriptModule *mo
     asIScriptFunction *func = 0;
     int r = execMod->CompileFunction("ExecuteString", funcCode.c_str(), -1, 0, &func);
     if( r < 0 )
+    {
         return r;
+    }
 
     // If no context was provided, request a new one from the engine
     asIScriptContext *execCtx = ctx ? ctx : engine->CreateContext();
@@ -29,7 +31,10 @@ int ExecuteString(asIScriptEngine *engine, const char *code, asIScriptModule *mo
     if( r < 0 )
     {
         func->Release();
-        if( !ctx ) execCtx->Release();
+        if( !ctx )
+        {
+            execCtx->Release();
+        }
         return r;
     }
 
@@ -38,7 +43,10 @@ int ExecuteString(asIScriptEngine *engine, const char *code, asIScriptModule *mo
 
     // Clean up
     func->Release();
-    if( !ctx ) execCtx->Release();
+    if( !ctx )
+    {
+        execCtx->Release();
+    }
 
     return r;
 }

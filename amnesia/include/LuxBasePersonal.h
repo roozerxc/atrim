@@ -59,7 +59,10 @@ inline void CreateBaseDirs(const tWStringVec& vDirs, const tWString& asRoot)
     for(tWStringVec::const_iterator it = vDirs.begin(); it != vDirs.end(); ++it)
     {
         tWString sDir = asRoot + (*it);
-        if(cPlatform::FolderExists(sDir)) continue;
+        if(cPlatform::FolderExists(sDir))
+        {
+            continue;
+        }
 
         cPlatform::CreateFolder(sDir);
     }

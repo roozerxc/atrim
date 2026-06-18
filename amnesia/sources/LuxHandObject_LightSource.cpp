@@ -34,8 +34,14 @@ void cLuxHandObject_LightSource::LoadImplementedVars(cXmlElement *apVarsElem)
 {
     float fFadeInTime = apVarsElem->GetAttributeFloat("FadeInTime", 0);
     float fFadeOutTime = apVarsElem->GetAttributeFloat("FadeOutTime", 0);
-    if(fFadeInTime == 0) fFadeInTime = 0.001f;
-    if(fFadeOutTime == 0) fFadeOutTime = 0.001f;
+    if(fFadeInTime == 0)
+    {
+        fFadeInTime = 0.001f;
+    }
+    if(fFadeOutTime == 0)
+    {
+        fFadeOutTime = 0.001f;
+    }
     mfFadeInSpeed = 1.0f / fFadeInTime;
     mfFadeOutSpeed = 1.0f / fFadeOutTime;
 
@@ -119,7 +125,10 @@ void cLuxHandObject_LightSource::Update(float afTimeStep)
         }
 
         mpHands->mfHandObjectAlpha -= mfFadeOutSpeed * afTimeStep;
-        if(mpHands->mfHandObjectAlpha < 0.0f) mpHands->mfHandObjectAlpha = 0.0f;
+        if(mpHands->mfHandObjectAlpha < 0.0f)
+        {
+            mpHands->mfHandObjectAlpha = 0.0f;
+        }
 
         bUpdate = true;
     }
@@ -185,7 +194,10 @@ void cLuxHandObject_LightSource::Update(float afTimeStep)
     {
         for(size_t i=0; i<mvLights.size(); ++i)
         {
-            if(mvDefaultLightFlicker[i]) mvLights[i]->SetFlickerActive(true);
+            if(mvDefaultLightFlicker[i])
+            {
+                mvLights[i]->SetFlickerActive(true);
+            }
         }
     }
 }
@@ -233,14 +245,23 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(float afTimeStep)
         // Player velocity
         iCharacterBody *pCharBody = gpBase->mpPlayer->GetCharacterBody();
         float fPlayerSpeed = pCharBody->GetVelocity(gpBase->mpEngine->GetStepSize()).Length();
-        if(pCharBody->GetMoveSpeed(eCharDir_Forward)<0) fPlayerSpeed = -fPlayerSpeed;
+        if(pCharBody->GetMoveSpeed(eCharDir_Forward)<0)
+        {
+            fPlayerSpeed = -fPlayerSpeed;
+        }
 
         mfSwayVel += -fPlayerSpeed * mfSwayPlayerSpeedMul;
 
         /////////////////////////////
         // Cap and Friction
-        if(mfSwayVel> mfMaxSwayVel)        mfSwayVel = mfMaxSwayVel;
-        if(mfSwayVel< -mfMaxSwayVel)    mfSwayVel = -mfMaxSwayVel;
+        if(mfSwayVel> mfMaxSwayVel)
+        {
+            mfSwayVel = mfMaxSwayVel;
+        }
+        if(mfSwayVel< -mfMaxSwayVel)
+        {
+            mfSwayVel = -mfMaxSwayVel;
+        }
 
         mfSwayVel -= mfSwayVel*mfSwayFriction*afTimeStep;
     }
@@ -272,7 +293,10 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(float afTimeStep)
     for(int i=0; i<mpMeshEntity->GetSubMeshEntityNum(); ++i)
     {
         cSubMeshEntity *pSubEnt = mpMeshEntity->GetSubMeshEntity((unsigned int)i);
-        if(pSubEnt->GetSubMesh()->GetName() == msSkipSwaySubMesh) continue;
+        if(pSubEnt->GetSubMesh()->GetName() == msSkipSwaySubMesh)
+        {
+            continue;
+        }
         //Log("'%s'\n",pSubEnt->GetSubMesh()->GetName().c_str());
 
         pSubEnt->SetMatrix(cMath::MatrixMul(mtxSway, mvDefaultSubMeshMatrix[i]) );

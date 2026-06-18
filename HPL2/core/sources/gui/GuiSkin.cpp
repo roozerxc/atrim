@@ -57,7 +57,10 @@ cGuiSkin::~cGuiSkin()
 {
     for(size_t i=0; i< mvGfxElements.size(); ++i)
     {
-        if(mvGfxElements[i]) mpGui->DestroyGfx(mvGfxElements[i]);
+        if(mvGfxElements[i])
+        {
+            mpGui->DestroyGfx(mvGfxElements[i]);
+        }
     }
 
     STLDeleteAll(mvFonts);
@@ -73,14 +76,29 @@ cGuiSkin::~cGuiSkin()
 
 static eGuiGfxAnimationType ToAnimType(const char* apString)
 {
-    if(apString==NULL) return eGuiGfxAnimationType_Loop;
+    if(apString==NULL)
+    {
+        return eGuiGfxAnimationType_Loop;
+    }
 
     tString sLow = cString::ToLowerCase(apString);
 
-    if(sLow == "loop") return eGuiGfxAnimationType_Loop;
-    if(sLow == "oscillate") return eGuiGfxAnimationType_Oscillate;
-    if(sLow == "random") return eGuiGfxAnimationType_Random;
-    if(sLow == "stop_at_end") return eGuiGfxAnimationType_StopAtEnd;
+    if(sLow == "loop")
+    {
+        return eGuiGfxAnimationType_Loop;
+    }
+    if(sLow == "oscillate")
+    {
+        return eGuiGfxAnimationType_Oscillate;
+    }
+    if(sLow == "random")
+    {
+        return eGuiGfxAnimationType_Random;
+    }
+    if(sLow == "stop_at_end")
+    {
+        return eGuiGfxAnimationType_StopAtEnd;
+    }
 
     Warning("Animation type '%s' does not exist!\n",sLow.c_str());
 
@@ -89,16 +107,37 @@ static eGuiGfxAnimationType ToAnimType(const char* apString)
 
 static eGuiMaterial ToMaterial(const char* apString)
 {
-    if(apString==NULL) return eGuiMaterial_Alpha;
+    if(apString==NULL)
+    {
+        return eGuiMaterial_Alpha;
+    }
 
     tString sLow = cString::ToLowerCase(apString);
 
-    if(sLow=="alpha") return eGuiMaterial_Alpha;
-    if(sLow=="diffuse") return eGuiMaterial_Diffuse;
-    if(sLow=="font_normal") return eGuiMaterial_FontNormal;
-    if(sLow=="additive") return eGuiMaterial_Additive;
-    if(sLow=="modulative") return eGuiMaterial_Modulative;
-    if(sLow=="premulalpha") return eGuiMaterial_PremulAlpha;
+    if(sLow=="alpha")
+    {
+        return eGuiMaterial_Alpha;
+    }
+    if(sLow=="diffuse")
+    {
+        return eGuiMaterial_Diffuse;
+    }
+    if(sLow=="font_normal")
+    {
+        return eGuiMaterial_FontNormal;
+    }
+    if(sLow=="additive")
+    {
+        return eGuiMaterial_Additive;
+    }
+    if(sLow=="modulative")
+    {
+        return eGuiMaterial_Modulative;
+    }
+    if(sLow=="premulalpha")
+    {
+        return eGuiMaterial_PremulAlpha;
+    }
 
     Warning("Material type '%s' does not exist!\n",sLow.c_str());
 
@@ -144,7 +183,10 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
         tString sType = cString::ToString(pAttributeElem->Attribute("type"),"");
 
         eGuiSkinAttribute type = mpGui->GetSkinAttributeFromString(sType);
-        if(type == eGuiSkinAttribute_LastEnum) continue;
+        if(type == eGuiSkinAttribute_LastEnum)
+        {
+            continue;
+        }
 
         tString sValue = cString::ToString(pAttributeElem->Attribute("value"),"");
 
@@ -153,9 +195,18 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
         tString sSepp=" ";
         cString::GetFloatVec(sValue,vValues,&sSepp);
 
-        if(vValues.size()>0) vVal.x = vValues[0];
-        if(vValues.size()>1) vVal.y = vValues[1];
-        if(vValues.size()>2) vVal.z = vValues[2];
+        if(vValues.size()>0)
+        {
+            vVal.x = vValues[0];
+        }
+        if(vValues.size()>1)
+        {
+            vVal.y = vValues[1];
+        }
+        if(vValues.size()>2)
+        {
+            vVal.z = vValues[2];
+        }
 
         mvAttributes[type] = vVal;
         vAttribLoaded[type] = true;
@@ -164,7 +215,10 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
     // Error checking, see so all elements are there
     for(int i=0; i<eGuiSkinAttribute_LastEnum; ++i)
     {
-        if(vAttribLoaded[i]==false) Error("Could not find gui skin '%s' attribute %s!\n", msName.c_str(),mpGui->GetSkinAttributeString((eGuiSkinAttribute)i).c_str());
+        if(vAttribLoaded[i]==false)
+        {
+            Error("Could not find gui skin '%s' attribute %s!\n", msName.c_str(),mpGui->GetSkinAttributeString((eGuiSkinAttribute)i).c_str());
+        }
     }
 
 
@@ -180,7 +234,10 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
         tString sType = cString::ToString(pFontElem->Attribute("type"),"");
 
         eGuiSkinFont type = mpGui->GetSkinFontFromString(sType);
-        if(type == eGuiSkinFont_LastEnum) continue;
+        if(type == eGuiSkinFont_LastEnum)
+        {
+            continue;
+        }
 
         tString sFontFile = cString::ToString(pFontElem->Attribute("file"),"");
         cVector2f vSize = cString::ToVector2f(pFontElem->Attribute("size"),1);
@@ -199,7 +256,10 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
     // Error checking, see so all elements are there
     for(int i=0; i<eGuiSkinFont_LastEnum; ++i)
     {
-        if(mvFonts[i]==NULL) Error("Could not find gui skin '%s' font %s!\n", msName.c_str(),mpGui->GetSkinFontString((eGuiSkinFont)i).c_str());
+        if(mvFonts[i]==NULL)
+        {
+            Error("Could not find gui skin '%s' font %s!\n", msName.c_str(),mpGui->GetSkinFontString((eGuiSkinFont)i).c_str());
+        }
     }
 
 
@@ -216,7 +276,10 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
         tString sType = cString::ToString(pGfxElem->Attribute("type"),"");
 
         eGuiSkinGfx type = mpGui->GetSkinGfxFromString(sType);
-        if(type == eGuiSkinGfx_LastEnum) continue;
+        if(type == eGuiSkinGfx_LastEnum)
+        {
+            continue;
+        }
 
         tString sFile = cString::ToString(pGfxElem->Attribute("file"),"");
         cVector2f vOffset = cString::ToVector2f(pGfxElem->Attribute("offset"),0);
@@ -255,7 +318,9 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
             }
 
             if(vSize.x >=0)
+            {
                 pGfx->SetActiveSize(vSize);
+            }
             pGfx->SetOffset(cVector3f(vOffset.x, vOffset.y,0));
 
             mvGfxElements[type] = pGfx;
@@ -265,7 +330,10 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
     // Error checking, see so all elements are there
     for(int i=0; i<eGuiSkinGfx_LastEnum; ++i)
     {
-        if(mvGfxElements[i]==NULL) Error("Could not find gui skin '%s' gfx %s!\n", msName.c_str(),mpGui->GetSkinGfxString((eGuiSkinGfx)i).c_str());
+        if(mvGfxElements[i]==NULL)
+        {
+            Error("Could not find gui skin '%s' gfx %s!\n", msName.c_str(),mpGui->GetSkinGfxString((eGuiSkinGfx)i).c_str());
+        }
     }
 
     hplDelete(pXmlDoc);

@@ -68,7 +68,10 @@ void cLuxCompletionCountHandler::Update(float afTimeStep)
     if(mbActive==false)
     {
         mfAlpha -= 0.5f * afTimeStep;
-        if(mfAlpha <0) mfAlpha =0;
+        if(mfAlpha <0)
+        {
+            mfAlpha =0;
+        }
         return;
     }
 
@@ -81,7 +84,10 @@ void cLuxCompletionCountHandler::Update(float afTimeStep)
     /////////////////////
     //Increase alpha
     mfAlpha += 1.2f * afTimeStep;
-    if(mfAlpha >1) mfAlpha =1;
+    if(mfAlpha >1)
+    {
+        mfAlpha =1;
+    }
 
     /////////////////////
     //Increase count
@@ -91,7 +97,10 @@ void cLuxCompletionCountHandler::Update(float afTimeStep)
         {
             float fDistance = 0;//(mfNewAmount - mfDisplayedAmount);
             mfDisplayedAmount += (fDistance+0.001f) * 30 * afTimeStep;
-            if(mfDisplayedAmount > mfNewAmount)mfDisplayedAmount = mfNewAmount;
+            if(mfDisplayedAmount > mfNewAmount)
+            {
+                mfDisplayedAmount = mfNewAmount;
+            }
         }
         else
         {
@@ -131,7 +140,10 @@ void cLuxCompletionCountHandler::ShowCompletionIncrease(float afPrevius, float a
 {
     return;
 
-    if(afPrevius == afNew) return;
+    if(afPrevius == afNew)
+    {
+        return;
+    }
 
     mbActive = true;
 

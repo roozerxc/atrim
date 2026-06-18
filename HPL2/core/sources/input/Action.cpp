@@ -188,7 +188,10 @@ void cAction::Update(float afTimeStep)
     for(size_t i=0; i< mvSubActions.size(); ++i)
     {
         iSubAction *pSubAction = mvSubActions[i];
-        if(pSubAction->IsTriggerd()) mbIsDown = true;
+        if(pSubAction->IsTriggerd())
+        {
+            mbIsDown = true;
+        }
     }
 
     if(mbIsDown)
@@ -200,7 +203,10 @@ void cAction::Update(float afTimeStep)
         mbIsTriggerd=false;
         mbDoubleTrigger_Down = false;
 
-        if(mfTimeCount >= 0) mfTimeCount += afTimeStep;
+        if(mfTimeCount >= 0)
+        {
+            mfTimeCount += afTimeStep;
+        }
     }
 
 

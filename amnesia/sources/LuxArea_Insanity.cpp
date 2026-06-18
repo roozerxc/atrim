@@ -77,7 +77,10 @@ void cLuxArea_Insanity::OnUpdate(float afTimeStep)
     //////////////////////////
     // Check update count
     mfCheckCollisionCount-=afTimeStep;
-    if(mfCheckCollisionCount>0) return;
+    if(mfCheckCollisionCount>0)
+    {
+        return;
+    }
     mfCheckCollisionCount = cMath::RandRectf(mfCheckTimeMin, mfCheckTimeMax);
 
     //////////////////////////
@@ -86,7 +89,10 @@ void cLuxArea_Insanity::OnUpdate(float afTimeStep)
     {
         if(gpBase->mpInsanityHandler->NewEventIsPossible())
         {
-            if(mbAutoDisable) SetActive(false);
+            if(mbAutoDisable)
+            {
+                SetActive(false);
+            }
             gpBase->mpInsanityHandler->StartEvent();
         }
     }

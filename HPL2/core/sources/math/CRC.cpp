@@ -9,7 +9,10 @@ cCRCTable cCRC::mTable;
 
 void cCRCTable::Init (tCRCKey aKey)
 {
-    if (aKey == mKey) return;
+    if (aKey == mKey)
+    {
+        return;
+    }
 
     mKey = aKey;
 
@@ -23,7 +26,9 @@ void cCRCTable::Init (tCRCKey aKey)
             bool topBit = (reg & 0x80000000) != 0;
             reg <<= 1;
             if (topBit)
+            {
                 reg ^= mKey;
+            }
         }
         mTable [i] = reg;
     }

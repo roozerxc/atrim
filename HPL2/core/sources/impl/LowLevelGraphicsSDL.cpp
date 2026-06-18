@@ -45,11 +45,17 @@ iMutex *gpLowlevelGfxMutex=NULL;
 
 cLowlevelGfxMutex::cLowlevelGfxMutex()
 {
-    if(gpLowlevelGfxMutex) gpLowlevelGfxMutex->Lock();
+    if(gpLowlevelGfxMutex)
+    {
+        gpLowlevelGfxMutex->Lock();
+    }
 }
 cLowlevelGfxMutex::~cLowlevelGfxMutex()
 {
-    if(gpLowlevelGfxMutex) gpLowlevelGfxMutex->Unlock();
+    if(gpLowlevelGfxMutex)
+    {
+        gpLowlevelGfxMutex->Unlock();
+    }
 }
 #endif
 
@@ -73,7 +79,9 @@ cLowLevelGraphicsSDL::cLowLevelGraphicsSDL()
     mpFrameBuffer = NULL;
 
     for(int i=0; i<kMaxTextureUnits; i++)
+    {
         mvCurrentTextureTarget[i] = 0;
+    }
 
     //Create the batch arrays:
     mlBatchStride = 13;
@@ -106,7 +114,10 @@ cLowLevelGraphicsSDL::~cLowLevelGraphicsSDL()
 
     hplFree(mpVertexArray);
     hplFree(mpIndexArray);
-    for(int i=0; i<kMaxTextureUnits; i++)    hplFree(mpTexCoordArray[i]);
+    for(int i=0; i<kMaxTextureUnits; i++)
+    {
+        hplFree(mpTexCoordArray[i]);
+    }
 
     //Exit extra stuff
     //TTF_Quit();
@@ -140,7 +151,10 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alDisplay, int al
     mlMultisampling = alMultisampling;
 
     mGpuProgramFormat = aGpuProgramFormat;
-    if(mGpuProgramFormat == eGpuProgramFormat_LastEnum) mGpuProgramFormat = eGpuProgramFormat_GLSL;
+    if(mGpuProgramFormat == eGpuProgramFormat_LastEnum)
+    {
+        mGpuProgramFormat = eGpuProgramFormat_GLSL;
+    }
 
     //Set some GL Attributes
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
@@ -170,7 +184,10 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alDisplay, int al
     }
     unsigned int mlFlags = SDL_OPENGL;
 
-    if(abFullscreen) mlFlags |= SDL_FULLSCREEN;
+    if(abFullscreen)
+    {
+        mlFlags |= SDL_FULLSCREEN;
+    }
 
     // If caption set before engine creation, no chance for the "SDL_App" to appear for even a msec
     SetWindowCaption(asWindowCaption);
@@ -395,7 +412,9 @@ void cLowLevelGraphicsSDL::SetupGL()
 
     Log("  Anisotropic filtering: %d\n",GetCaps(eGraphicCaps_AnisotropicFiltering));
     if(GetCaps(eGraphicCaps_AnisotropicFiltering))
+    {
         Log("  Max Anisotropic degree: %d\n",GetCaps(eGraphicCaps_MaxAnisotropicFiltering));
+    }
 
     Log("  Multisampling: %d\n",GetCaps(eGraphicCaps_Multisampling));
 
@@ -435,9 +454,18 @@ int cLowLevelGraphicsSDL::GetCaps(eGraphicCaps aType)
         return GLEW_ARB_vertex_buffer_object?1:0;
     case eGraphicCaps_TwoSideStencil:
     {
-        if(GLEW_EXT_stencil_two_side) return 1;
-        else if(GLEW_ATI_separate_stencil) return 1;
-        else return 0;
+        if(GLEW_EXT_stencil_two_side)
+        {
+            return 1;
+        }
+        else if(GLEW_ATI_separate_stencil)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     case eGraphicCaps_MaxTextureImageUnits:
@@ -465,7 +493,10 @@ int cLowLevelGraphicsSDL::GetCaps(eGraphicCaps aType)
 
     case eGraphicCaps_MaxAnisotropicFiltering:
     {
-        if(!GLEW_EXT_texture_filter_anisotropic) return 0;
+        if(!GLEW_EXT_texture_filter_anisotropic)
+        {
+            return 0;
+        }
 
         float fMax;
         glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT,&fMax);
@@ -503,25 +534,33 @@ int cLowLevelGraphicsSDL::GetCaps(eGraphicCaps aType)
     case eGraphicCaps_ShaderModel_2:
         return (GLEW_ARB_fragment_program || GLEW_ARB_fragment_shader) ? 1 : 0;
 #ifdef __APPLE__
-	// Force return false for OS X as dynamic branching doesn't work well (it's slow)
+    // Force return false for OS X as dynamic branching doesn't work well (it's slow)
     case eGraphicCaps_ShaderModel_3:
         return 0;
     case eGraphicCaps_ShaderModel_4:
-		return 0;
+        return 0;
 #endif
     case eGraphicCaps_ShaderModel_3:
     {
         if(mbForceShaderModel3And4Off)
+        {
             return 0;
+        }
         else
+        {
             return  (GLEW_NV_vertex_program3 || GLEW_ATI_shader_texture_lod) ? 1 : 0;
+        }
     }
     case eGraphicCaps_ShaderModel_4:
     {
         if(mbForceShaderModel3And4Off)
+        {
             return 0;
+        }
         else
+        {
             return  GLEW_EXT_gpu_shader4 ? 1 : 0;
+        }
     }
 
     case eGraphicCaps_OGL_ATIFragmentShader:
@@ -544,9 +583,13 @@ void cLowLevelGraphicsSDL::ShowCursor(bool abX)
     ;
 
     if(abX)
+    {
         SDL_ShowCursor(SDL_ENABLE);
+    }
     else
+    {
         SDL_ShowCursor(SDL_DISABLE);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -564,10 +607,10 @@ void cLowLevelGraphicsSDL::SetRelativeMouse(bool abX)
 void cLowLevelGraphicsSDL::SetWindowIcon()
 {
     SDL_RWops * mpWindowIconData = SDL_RWFromMem(
-    HPL_CLIENT_ICON, CLIENT_ICON_SIZE);
+                                       HPL_CLIENT_ICON, CLIENT_ICON_SIZE);
 
     SDL_Surface * mpWindowIcon = SDL_LoadBMP_RW(
-    mpWindowIconData, 1);
+                                     mpWindowIconData, 1);
 
     if(mpWindowIcon)
     {
@@ -607,20 +650,20 @@ void cLowLevelGraphicsSDL::SetVsyncActive(bool abX, bool abAdaptive)
         wglSwapIntervalEXT(abX ? (abAdaptive ? -1 : 1) : 0);
     }
 #elif defined(__linux__)
-		if (GLX_SGI_swap_control)
-		{
-			GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalSGI");
-			glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
-		}
-		else if (GLX_MESA_swap_control)
-		{
-			GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalMESA");
-			glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
-		}
+    if (GLX_SGI_swap_control)
+    {
+        GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalSGI");
+        glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
+    }
+    else if (GLX_MESA_swap_control)
+    {
+        GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalMESA");
+        glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
+    }
 #elif defined(__APPLE__)
-		CGLContextObj ctx = CGLGetCurrentContext();
-		GLint swap = abX ? 1 : 0;
-		CGLSetParameter(ctx, kCGLCPSwapInterval, &swap);
+    CGLContextObj ctx = CGLGetCurrentContext();
+    GLint swap = abX ? 1 : 0;
+    CGLSetParameter(ctx, kCGLCPSwapInterval, &swap);
 #endif
 }
 
@@ -630,12 +673,19 @@ void cLowLevelGraphicsSDL::SetMultisamplingActive(bool abX)
 {
     ;
 
-    if(!GLEW_ARB_multisample || mlMultisampling<=0) return;
+    if(!GLEW_ARB_multisample || mlMultisampling<=0)
+    {
+        return;
+    }
 
     if(abX)
+    {
         glEnable(GL_MULTISAMPLE_ARB);
+    }
     else
+    {
         glDisable(GL_MULTISAMPLE_ARB);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -742,7 +792,10 @@ iFrameBuffer* cLowLevelGraphicsSDL::CreateFrameBuffer(const tString& asName)
 {
     ;
 
-    if(GetCaps(eGraphicCaps_RenderToTexture)==0) return NULL;
+    if(GetCaps(eGraphicCaps_RenderToTexture)==0)
+    {
+        return NULL;
+    }
 
     return hplNew(cFrameBufferGL,(asName, this));
 }
@@ -753,7 +806,10 @@ iDepthStencilBuffer* cLowLevelGraphicsSDL::CreateDepthStencilBuffer(const cVecto
 {
     ;
 
-    if(GetCaps(eGraphicCaps_RenderToTexture)==0) return NULL;
+    if(GetCaps(eGraphicCaps_RenderToTexture)==0)
+    {
+        return NULL;
+    }
 
     return hplNew(cDepthStencilBufferGL,(avSize, alDepthBits,alStencilBits));
 }
@@ -781,9 +837,18 @@ void cLowLevelGraphicsSDL::ClearFrameBuffer(tClearFrameBufferFlag aFlags)
 
     GLbitfield bitmask=0;
 
-    if(aFlags & eClearFrameBufferFlag_Color)    bitmask |= GL_COLOR_BUFFER_BIT;
-    if(aFlags & eClearFrameBufferFlag_Depth)    bitmask |= GL_DEPTH_BUFFER_BIT;
-    if(aFlags & eClearFrameBufferFlag_Stencil)    bitmask |= GL_STENCIL_BUFFER_BIT;
+    if(aFlags & eClearFrameBufferFlag_Color)
+    {
+        bitmask |= GL_COLOR_BUFFER_BIT;
+    }
+    if(aFlags & eClearFrameBufferFlag_Depth)
+    {
+        bitmask |= GL_DEPTH_BUFFER_BIT;
+    }
+    if(aFlags & eClearFrameBufferFlag_Stencil)
+    {
+        bitmask |= GL_STENCIL_BUFFER_BIT;
+    }
 
     glClear(bitmask);
 }
@@ -816,11 +881,20 @@ void cLowLevelGraphicsSDL::CopyFrameBufferToTexure(iTexture* apTex, const cVecto
 {
     ;
 
-    if(apTex==NULL)return;
+    if(apTex==NULL)
+    {
+        return;
+    }
 
     cVector2l vSize = avSize;
-    if(vSize.x <= 0) vSize.x = mvFrameBufferSize.x;
-    if(vSize.y <= 0) vSize.y = mvFrameBufferSize.y;
+    if(vSize.x <= 0)
+    {
+        vSize.x = mvFrameBufferSize.x;
+    }
+    if(vSize.y <= 0)
+    {
+        vSize.y = mvFrameBufferSize.y;
+    }
 
     cVector2l vPos = mvFrameBufferPos + avPos;
     vPos.y = (mvFrameBufferTotalSize.y - vSize.y)-vPos.y;
@@ -843,8 +917,14 @@ cBitmap* cLowLevelGraphicsSDL::CopyFrameBufferToBitmap(    const cVector2l &avSc
     ;
 
     cVector2l vSize = avScreenSize;
-    if(vSize.x <= 0) vSize.x = mvFrameBufferSize.x;
-    if(vSize.y <= 0) vSize.y = mvFrameBufferSize.y;
+    if(vSize.x <= 0)
+    {
+        vSize.x = mvFrameBufferSize.x;
+    }
+    if(vSize.y <= 0)
+    {
+        vSize.y = mvFrameBufferSize.y;
+    }
 
     cVector2l vPos = mvFrameBufferPos + avScreenPos;
     vPos.y = (mvFrameBufferTotalSize.y - vSize.y)-vPos.y;
@@ -910,8 +990,14 @@ void cLowLevelGraphicsSDL::SetCurrentFrameBuffer(iFrameBuffer* apFrameBuffer, co
 
     /////////////////////////////////////
     //Get framebuffer size
-    if(mpFrameBuffer)    mvFrameBufferTotalSize = mpFrameBuffer->GetSize();
-    else                mvFrameBufferTotalSize = mvScreenSize;
+    if(mpFrameBuffer)
+    {
+        mvFrameBufferTotalSize = mpFrameBuffer->GetSize();
+    }
+    else
+    {
+        mvFrameBufferTotalSize = mvScreenSize;
+    }
 
     cVector2l vFrameBufferSize = avSize;
     if(vFrameBufferSize.x <0 || vFrameBufferSize.y<0)
@@ -1014,7 +1100,10 @@ void cLowLevelGraphicsSDL::SetDepthWriteActive(bool abX)
 {
     ;
 
-    if(mbDepthWrite == abX) return;
+    if(mbDepthWrite == abX)
+    {
+        return;
+    }
 
     mbDepthWrite = abX;
 
@@ -1027,12 +1116,21 @@ void cLowLevelGraphicsSDL::SetDepthTestActive(bool abX)
 {
     ;
 
-    if(mbDepthTestActive == abX) return;
+    if(mbDepthTestActive == abX)
+    {
+        return;
+    }
 
     mbDepthTestActive = abX;
 
-    if(abX) glEnable(GL_DEPTH_TEST);
-    else glDisable(GL_DEPTH_TEST);
+    if(abX)
+    {
+        glEnable(GL_DEPTH_TEST);
+    }
+    else
+    {
+        glDisable(GL_DEPTH_TEST);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1041,7 +1139,10 @@ void cLowLevelGraphicsSDL::SetDepthTestFunc(eDepthTestFunc aFunc)
 {
     ;
 
-    if(mDepthTestFunc == aFunc) return;
+    if(mDepthTestFunc == aFunc)
+    {
+        return;
+    }
     mDepthTestFunc = aFunc;
 
     glDepthFunc(GetGLDepthTestFuncEnum(aFunc));
@@ -1053,12 +1154,21 @@ void cLowLevelGraphicsSDL::SetAlphaTestActive(bool abX)
 {
     ;
 
-    if(mbAlphaTestActive == abX) return;
+    if(mbAlphaTestActive == abX)
+    {
+        return;
+    }
 
     mbAlphaTestActive = abX;
 
-    if(abX) glEnable(GL_ALPHA_TEST);
-    else glDisable(GL_ALPHA_TEST);
+    if(abX)
+    {
+        glEnable(GL_ALPHA_TEST);
+    }
+    else
+    {
+        glDisable(GL_ALPHA_TEST);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1067,7 +1177,10 @@ void cLowLevelGraphicsSDL::SetAlphaTestFunc(eAlphaTestFunc aFunc,float afRef)
 {
     ;
 
-    if(mAlphaTestFunc == aFunc && mfAlphaTestFuncRef == afRef) return;
+    if(mAlphaTestFunc == aFunc && mfAlphaTestFuncRef == afRef)
+    {
+        return;
+    }
 
     mAlphaTestFunc = aFunc;
     mfAlphaTestFuncRef = afRef;
@@ -1186,8 +1299,14 @@ void cLowLevelGraphicsSDL::SetCullActive(bool abX)
     //if(mbCullActive == abX) return;
     mbCullActive = abX;
 
-    if(abX) glEnable(GL_CULL_FACE);
-    else    glDisable(GL_CULL_FACE);
+    if(abX)
+    {
+        glEnable(GL_CULL_FACE);
+    }
+    else
+    {
+        glDisable(GL_CULL_FACE);
+    }
     glCullFace(GL_BACK);
 }
 void cLowLevelGraphicsSDL::SetCullMode(eCullMode aMode)
@@ -1196,8 +1315,14 @@ void cLowLevelGraphicsSDL::SetCullMode(eCullMode aMode)
     mCullMode = aMode;
 
     glCullFace(GL_BACK);
-    if(aMode == eCullMode_Clockwise)    glFrontFace(GL_CCW);
-    else                                glFrontFace(GL_CW);
+    if(aMode == eCullMode_Clockwise)
+    {
+        glFrontFace(GL_CCW);
+    }
+    else
+    {
+        glFrontFace(GL_CW);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1206,12 +1331,21 @@ void cLowLevelGraphicsSDL::SetScissorActive(bool abX)
 {
     ;
 
-    if(mbScissorActive == abX) return;
+    if(mbScissorActive == abX)
+    {
+        return;
+    }
 
     mbScissorActive = abX;
 
-    if(abX) glEnable(GL_SCISSOR_TEST);
-    else glDisable(GL_SCISSOR_TEST);
+    if(abX)
+    {
+        glEnable(GL_SCISSOR_TEST);
+    }
+    else
+    {
+        glDisable(GL_SCISSOR_TEST);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1221,8 +1355,14 @@ void cLowLevelGraphicsSDL::SetScissorRect(const cVector2l& avPos, const cVector2
     ;
 
     cVector2l vFrameBufferSize;
-    if(mpFrameBuffer)    vFrameBufferSize = mpFrameBuffer->GetSize();
-    else                vFrameBufferSize = mvScreenSize;
+    if(mpFrameBuffer)
+    {
+        vFrameBufferSize = mpFrameBuffer->GetSize();
+    }
+    else
+    {
+        vFrameBufferSize = mvScreenSize;
+    }
 
     glScissor(avPos.x, (vFrameBufferSize.y - avPos.y)-avSize.y, avSize.x, avSize.y);
 }
@@ -1253,8 +1393,14 @@ void cLowLevelGraphicsSDL::SetClipPlaneActive(int alIdx, bool abX)
 {
     ;
 
-    if(abX) glEnable(GL_CLIP_PLANE0 + alIdx);
-    else    glDisable(GL_CLIP_PLANE0 + alIdx);
+    if(abX)
+    {
+        glEnable(GL_CLIP_PLANE0 + alIdx);
+    }
+    else
+    {
+        glDisable(GL_CLIP_PLANE0 + alIdx);
+    }
 }
 
 
@@ -1264,13 +1410,20 @@ void cLowLevelGraphicsSDL::SetBlendActive(bool abX)
 {
     ;
 
-    if(mbBlendActive == abX) return;
+    if(mbBlendActive == abX)
+    {
+        return;
+    }
     mbBlendActive = abX;
 
     if(abX)
+    {
         glEnable(GL_BLEND);
+    }
     else
+    {
         glDisable(GL_BLEND);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1309,8 +1462,14 @@ void cLowLevelGraphicsSDL::SetPolygonOffsetActive(bool abX)
 {
     ;
 
-    if(abX)    glEnable(GL_POLYGON_OFFSET_FILL);
-    else    glDisable(GL_POLYGON_OFFSET_FILL);
+    if(abX)
+    {
+        glEnable(GL_POLYGON_OFFSET_FILL);
+    }
+    else
+    {
+        glDisable(GL_POLYGON_OFFSET_FILL);
+    }
 
 }
 
@@ -1406,7 +1565,10 @@ void cLowLevelGraphicsSDL::SetTexture(unsigned int alUnit,iTexture* apTex)
     ;
 
     GLenum NewTarget=0;
-    if(apTex)    NewTarget = GetGLTextureTargetEnum(apTex->GetType());
+    if(apTex)
+    {
+        NewTarget = GetGLTextureTargetEnum(apTex->GetType());
+    }
 
     GLenum LastTarget = mvCurrentTextureTarget[alUnit];
 
@@ -1420,7 +1582,9 @@ void cLowLevelGraphicsSDL::SetTexture(unsigned int alUnit,iTexture* apTex)
     if(apTex == NULL)
     {
         if(LastTarget!=0)
+        {
             glDisable(LastTarget);
+        }
 
         //glBindTexture(LastTarget,0);
     }
@@ -2152,7 +2316,9 @@ void cLowLevelGraphicsSDL::FlushTriBatch(tVtxBatchFlag aTypeFlags, bool abAutoCl
         mlIndexCount = 0;
         mlVertexCount = 0;
         for(int i=0; i<kMaxTextureUnits; i++)
+        {
             mlTexCoordArrayCount[i]=0;
+        }
     }
 }
 
@@ -2172,7 +2338,9 @@ void cLowLevelGraphicsSDL::FlushQuadBatch(tVtxBatchFlag aTypeFlags, bool abAutoC
         mlIndexCount = 0;
         mlVertexCount = 0;
         for(int i=0; i<kMaxTextureUnits; i++)
+        {
             mlTexCoordArrayCount[i]=0;
+        }
     }
 }
 
@@ -2223,14 +2391,32 @@ void cLowLevelGraphicsSDL::SetVtxBatchStates(tVtxBatchFlag aFlags)
 {
     ;
 
-    if(aFlags & eVtxBatchFlag_Position)    glEnableClientState(GL_VERTEX_ARRAY );
-    else glDisableClientState(GL_VERTEX_ARRAY );
+    if(aFlags & eVtxBatchFlag_Position)
+    {
+        glEnableClientState(GL_VERTEX_ARRAY );
+    }
+    else
+    {
+        glDisableClientState(GL_VERTEX_ARRAY );
+    }
 
-    if(aFlags & eVtxBatchFlag_Color0) glEnableClientState(GL_COLOR_ARRAY );
-    else glDisableClientState(GL_COLOR_ARRAY );
+    if(aFlags & eVtxBatchFlag_Color0)
+    {
+        glEnableClientState(GL_COLOR_ARRAY );
+    }
+    else
+    {
+        glDisableClientState(GL_COLOR_ARRAY );
+    }
 
-    if(aFlags & eVtxBatchFlag_Normal) glEnableClientState(GL_NORMAL_ARRAY );
-    else glDisableClientState(GL_NORMAL_ARRAY );
+    if(aFlags & eVtxBatchFlag_Normal)
+    {
+        glEnableClientState(GL_NORMAL_ARRAY );
+    }
+    else
+    {
+        glDisableClientState(GL_NORMAL_ARRAY );
+    }
 
 
     if(aFlags & eVtxBatchFlag_Texture0)

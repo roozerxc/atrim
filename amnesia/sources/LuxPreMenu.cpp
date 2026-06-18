@@ -13,11 +13,17 @@ static eFontAlign ToFontAlign(const tString& asX)
 {
     tString sLowerCase = cString::ToLowerCase(asX);
     if(sLowerCase == "center")
+    {
         return eFontAlign_Center;
+    }
     else if(sLowerCase == "right")
+    {
         return eFontAlign_Right;
+    }
     else if(sLowerCase == "left")
+    {
         return eFontAlign_Left;
+    }
 
     Error("The font alignment '%s' does not exist!\n", asX.c_str());
     return eFontAlign_Left;
@@ -38,7 +44,10 @@ cLuxPreMenuSection::~cLuxPreMenuSection()
 
 void cLuxPreMenuSection::AddTextElement(cLuxPreMenuTextElement* apText)
 {
-    if(apText) mlstTextElements.push_back(apText);
+    if(apText)
+    {
+        mlstTextElements.push_back(apText);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -61,7 +70,10 @@ cGuiGfxElement* cLuxPreMenuSection::CreateBackground(cGui* apGui, cTextureManage
     else
     {
         iTexture* pTex = apTexMgr->Create2D(msBackgroundFile, false, eTextureType_Rect);
-        if(pTex) pBG = apGui->CreateGfxTexture(pTex, true, eGuiMaterial_Alpha);
+        if(pTex)
+        {
+            pBG = apGui->CreateGfxTexture(pTex, true, eGuiMaterial_Alpha);
+        }
     }
 
     return pBG;
@@ -72,7 +84,9 @@ cGuiGfxElement* cLuxPreMenuSection::CreateBackground(cGui* apGui, cTextureManage
 bool cLuxPreMenuSection::Load(cXmlElement* apElement, const cVector2f& avGuiSetSize)
 {
     if(apElement==NULL)
+    {
         return false;
+    }
 
     mBackgroundColor = apElement->GetAttributeColor("Color", cColor(0,1));
     msBackgroundFile = apElement->GetAttributeString("Image", "");
@@ -96,9 +110,13 @@ bool cLuxPreMenuSection::Load(cXmlElement* apElement, const cVector2f& avGuiSetS
         // Create and set up text element
         cLuxPreMenuTextElement* pText = hplNew(cLuxPreMenuTextElement,());
         if(pText->Load(pTextElement, avGuiSetSize))
+        {
             AddTextElement(pText);
+        }
         else
+        {
             hplDelete(pText);
+        }
     }
 
     return true;
@@ -109,7 +127,9 @@ bool cLuxPreMenuSection::Load(cXmlElement* apElement, const cVector2f& avGuiSetS
 bool cLuxPreMenuTextElement::Load(cXmlElement* apElement, const cVector2f& avGuiSetSize)
 {
     if(apElement==NULL)
+    {
         return false;
+    }
 
     // Load text data
     tString sCat = apElement->GetAttributeString("TextCat");
@@ -131,7 +151,10 @@ bool cLuxPreMenuTextElement::Load(cXmlElement* apElement, const cVector2f& avGui
 
 cWidgetLabel* cLuxPreMenuTextElement::CreateLabel(cGuiSet* apSet)
 {
-    if(apSet==NULL)    return NULL;
+    if(apSet==NULL)
+    {
+        return NULL;
+    }
 
     cWidgetLabel* pLabel = apSet->CreateWidgetLabel(mvPos, mvFrameSize, msText);
     pLabel->SetDefaultFontColor(mColor);
@@ -453,7 +476,10 @@ kGuiCallbackDeclaredFuncEnd(cLuxPreMenu, Gamma_UIArrowPressed);
 
 void cLuxPreMenu::ButtonPressed()
 {
-    if(mpCurrentSection && mpCurrentSection->mbAllowSkipping==false) return;
+    if(mpCurrentSection && mpCurrentSection->mbAllowSkipping==false)
+    {
+        return;
+    }
 
     mCurrentState = eLuxPreMenuState_FastFadeOut;
 }
@@ -528,16 +554,22 @@ void cLuxPreMenu::UpdateActions(float afTimeStep)
     {
         // Update alpha for fading in
         if(mfAlphaFade>0)
+        {
             mfAlphaFade -= afTimeStep;
+        }
         else
+        {
             mfAlphaFade = 0;
+        }
     }
     break;
     case eLuxPreMenuState_FadeOut:
     {
         // Update alpha for fading out
         if(mfAlphaFade<1)
+        {
             mfAlphaFade += afTimeStep;
+        }
         else
         {
             mfAlphaFade = 1;
@@ -548,7 +580,9 @@ void cLuxPreMenu::UpdateActions(float afTimeStep)
     {
         // Fast fade out (2x)
         if(mfAlphaFade<1)
+        {
             mfAlphaFade += afTimeStep*2;
+        }
         else
         {
             mfAlphaFade = 1;
@@ -732,9 +766,13 @@ void cLuxPreMenu::LoadPreMenuSections()
 
             cLuxPreMenuSection* pSection = hplNew(cLuxPreMenuSection, ());
             if(pSection->Load(pSectionElement, mvGuiSetCenterSize))
+            {
                 mvSections.push_back(pSection);
+            }
             else
+            {
                 hplDelete(pSection);
+            }
         }
     }
 

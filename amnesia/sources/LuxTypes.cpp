@@ -13,12 +13,21 @@
 
 bool LuxIsCorrectType(iLuxEntity *apEntity, eLuxEntityType aType, int alSubType)
 {
-    if(aType == eLuxEntityType_LastEnum) return true;
+    if(aType == eLuxEntityType_LastEnum)
+    {
+        return true;
+    }
 
     eLuxEntityType entityType = apEntity->GetEntityType();
-    if(entityType != aType) return false;
+    if(entityType != aType)
+    {
+        return false;
+    }
 
-    if(alSubType<0) return true;
+    if(alSubType<0)
+    {
+        return true;
+    }
 
     if(entityType == eLuxEntityType_Area)
     {
@@ -81,7 +90,9 @@ void iLuxUpdateable::ClearFonts()
 {
     cFontManager* pFontManager = gpBase->mpEngine->GetResources()->GetFontManager();
     for(int i=0; i<(int)mvFonts.size(); ++i)
+    {
         pFontManager->Destroy(mvFonts[i]);
+    }
 
     mvFonts.clear();
 
@@ -97,7 +108,9 @@ iFontData* iLuxUpdateable::LoadFont(const tString& asFile)
     pFont = gpBase->mpEngine->GetResources()->GetFontManager()->CreateFontData(asFile);
 
     if(pFont)
+    {
         mvFonts.push_back(pFont);
+    }
 
     return pFont;
 }
@@ -143,8 +156,14 @@ void iLuxCollideCallbackContainer::CheckCollisionCallback(const tString& asName,
         iLuxEntity *pEntity = pCallback->mpCollideEntity;
         bool bCollide=false;
 
-        if(pEntity==NULL) continue;
-        if(pEntity->IsActive()==false) continue;
+        if(pEntity==NULL)
+        {
+            continue;
+        }
+        if(pEntity->IsActive()==false)
+        {
+            continue;
+        }
 
         bCollide = CheckEntityCollision(pEntity, apMap);
 
@@ -223,7 +242,10 @@ bool iLuxCollideCallbackContainer::CheckEntityCollision(iLuxEntity*apEntity, cLu
                 bool bCollide = pPhysicsWorld->CheckShapeCollision(    pBodyA->GetShape(), pBodyA->GetLocalMatrix(),
                                 pBodyB->GetShape(), pBodyB->GetLocalMatrix(),
                                 collideData,1,false);
-                if(bCollide) return true;
+                if(bCollide)
+                {
+                    return true;
+                }
             }
         }
     }
@@ -333,12 +355,18 @@ void cLuxAlphaFader::Update(float afTimeStep)
     if(mbActive)
     {
         mfAlpha += mfFadeInSpeed*afTimeStep;
-        if(mfAlpha > 1.0f) mfAlpha = 1.0f;
+        if(mfAlpha > 1.0f)
+        {
+            mfAlpha = 1.0f;
+        }
     }
     else
     {
         mfAlpha -= mfFadeOutSpeed*afTimeStep;
-        if(mfAlpha < 0) mfAlpha = 0;
+        if(mfAlpha < 0)
+        {
+            mfAlpha = 0;
+        }
     }
 }
 
@@ -490,8 +518,14 @@ kEndSerialize()
 
 void cLuxCollideCallback_SaveData::FromCallback(cLuxCollideCallback *apCallback)
 {
-    if(apCallback->mpCollideEntity)    mlCollideEntity = apCallback->mpCollideEntity->GetID();
-    else                            mlCollideEntity = -1;
+    if(apCallback->mpCollideEntity)
+    {
+        mlCollideEntity = apCallback->mpCollideEntity->GetID();
+    }
+    else
+    {
+        mlCollideEntity = -1;
+    }
 
     msCallbackFunc = apCallback->msCallbackFunc;
     mbDeleteWhenColliding = apCallback->mbDeleteWhenColliding;

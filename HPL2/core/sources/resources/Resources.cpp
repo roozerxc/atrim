@@ -97,7 +97,10 @@ cResources::~cResources()
     hplDelete(mpWorldLoaderHandler);
     hplDelete(mpVideoLoaderHandler);
 
-    if(mpLanguageFile) hplDelete(mpLanguageFile);
+    if(mpLanguageFile)
+    {
+        hplDelete(mpLanguageFile);
+    }
 
     mlstManagers.clear();
     Log("--------------------------------------------------------\n\n");
@@ -337,7 +340,9 @@ bool cResources::AddResourceDir(const tWString &asDir, bool abAddSubDirectories,
 {
     mpFileSearcher->AddDirectory(asDir, asMask, abAddSubDirectories);
     if(iResourceBase::GetLogCreateAndDelete())
+    {
         Log(" Added resource directory '%s'\n",cString::To8Char(asDir).c_str());
+    }
     return true;
 }
 
@@ -472,7 +477,10 @@ bool cResources::LoadResourceDirsFile(const tString &asFile, const tWString &asA
 
         bool bAddSubDirs = pChildElem->GetAttributeBool("AddSubDirs",false);
 
-        if(sPath[0]=='/' || sPath[0]=='\\') sPath = cString::Sub(sPath, 1);
+        if(sPath[0]=='/' || sPath[0]=='\\')
+        {
+            sPath = cString::Sub(sPath, 1);
+        }
 
         tWString tsPath = cString::To16Char(sPath);
         if (asAltPath.length() > 0)

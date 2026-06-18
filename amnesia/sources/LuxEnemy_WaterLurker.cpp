@@ -68,7 +68,10 @@ void cLuxEnemyLoader_WaterLurker::LoadInstanceVariables(iLuxEnemy *apEnemy, cRes
     cLuxEnemy_WaterLurker *pWaterLurker = static_cast<cLuxEnemy_WaterLurker*>(apEnemy);
 
     float fHeight = apInstanceVars->GetVarFloat("PlayerDetectionHeight", 0);
-    if(fHeight >0) pWaterLurker->mfPlayerDetectionHeight = fHeight;
+    if(fHeight >0)
+    {
+        pWaterLurker->mfPlayerDetectionHeight = fHeight;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -262,7 +265,9 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     {
         cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true,NULL,1);
         if(pNode)
+        {
             mpPathfinder->MoveTo(pNode->GetPosition());
+        }
 
         mfTempVal = apMessage->mfCustomValue;
     }
@@ -333,15 +338,21 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     //Move forward
     kLuxOnUpdate
     if(Dist2D(mvTempPos) > mpCharBody->GetSize().x*0.75f)
+    {
         mpMover->MoveToPos(mvTempPos);
+    }
 
     ////////////////////////////////
     //Player detection, only hunt if player is really close.
     kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
     if(DistToPlayer2D() < 2.0f)
+    {
         ChangeState(eLuxEnemyState_Hunt);
+    }
     else
+    {
         mbPlayerDetected = false;
+    }
 
 
     ////////////////////////
@@ -384,7 +395,9 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     // Movement effect
     kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
     if(mpMover->GetWantedSpeedAmount() > 0.2f)
+    {
         SplashWater(eWaterLurkerSplash_Run);
+    }
     SendMessage(eLuxEnemyMessage_TimeOut_2, 0.6f, true);
 
     ///////////////////////
@@ -553,23 +566,50 @@ void cLuxEnemy_WaterLurker::OnRenderSolidImplemented(cRendererCallbackFunctions*
 void cLuxEnemy_WaterLurker::SplashWater(eWaterLurkerSplash aType)
 {
     tString sPS = "";
-    if(aType == eWaterLurkerSplash_Walk)        sPS = msSplashPS_Walk;
-    else if(aType == eWaterLurkerSplash_Run)    sPS = msSplashPS_Run;
-    else if(aType == eWaterLurkerSplash_Eat)    sPS = msSplashPS_Eat;
-    else if(aType == eWaterLurkerSplash_Attack)    sPS = msSplashPS_Attack;
+    if(aType == eWaterLurkerSplash_Walk)
+    {
+        sPS = msSplashPS_Walk;
+    }
+    else if(aType == eWaterLurkerSplash_Run)
+    {
+        sPS = msSplashPS_Run;
+    }
+    else if(aType == eWaterLurkerSplash_Eat)
+    {
+        sPS = msSplashPS_Eat;
+    }
+    else if(aType == eWaterLurkerSplash_Attack)
+    {
+        sPS = msSplashPS_Attack;
+    }
 
     if(sPS!="")
     {
         cParticleSystem *pPS = mpMap->GetWorld()->CreateParticleSystem("LurkerSplash", sPS,1);
-        if(pPS) pPS->SetPosition(mpCharBody->GetFeetPosition() + cVector3f(0, 0.7f, 0));
+        if(pPS)
+        {
+            pPS->SetPosition(mpCharBody->GetFeetPosition() + cVector3f(0, 0.7f, 0));
+        }
     }
 
 
     tString sSound = "";
-    if(aType == eWaterLurkerSplash_Walk)        sSound = msSplashSound_Walk;
-    else if(aType == eWaterLurkerSplash_Run)    sSound = msSplashSound_Run;
-    else if(aType == eWaterLurkerSplash_Eat)    sSound = msSplashSound_Eat;
-    else if(aType == eWaterLurkerSplash_Attack)    sSound = msSplashSound_Attack;
+    if(aType == eWaterLurkerSplash_Walk)
+    {
+        sSound = msSplashSound_Walk;
+    }
+    else if(aType == eWaterLurkerSplash_Run)
+    {
+        sSound = msSplashSound_Run;
+    }
+    else if(aType == eWaterLurkerSplash_Eat)
+    {
+        sSound = msSplashSound_Eat;
+    }
+    else if(aType == eWaterLurkerSplash_Attack)
+    {
+        sSound = msSplashSound_Attack;
+    }
 
     PlaySound(sSound);
 }
@@ -601,7 +641,10 @@ float cLuxEnemy_WaterLurker::GetDamageMul(float afAmount, int alStrength)
     {
         return 1.0f;
     }
-    if( mCurrentState == eLuxEnemyState_Hurt) return 0.5f;
+    if( mCurrentState == eLuxEnemyState_Hurt)
+    {
+        return 0.5f;
+    }
 
     return 0.2f;
 }
@@ -670,9 +713,18 @@ void cLuxEnemy_WaterLurker::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 
     ////////////////////////
     // Handle changed enums
-    if (mCurrentState >= eLuxEnemyState_PigEnumStart) mCurrentState = eLuxEnemyState_LastEnum;
-    if (mNextState >= eLuxEnemyState_PigEnumStart) mNextState = eLuxEnemyState_LastEnum;
-    if (mPreviousState >= eLuxEnemyState_PigEnumStart) mPreviousState = eLuxEnemyState_LastEnum;
+    if (mCurrentState >= eLuxEnemyState_PigEnumStart)
+    {
+        mCurrentState = eLuxEnemyState_LastEnum;
+    }
+    if (mNextState >= eLuxEnemyState_PigEnumStart)
+    {
+        mNextState = eLuxEnemyState_LastEnum;
+    }
+    if (mPreviousState >= eLuxEnemyState_PigEnumStart)
+    {
+        mPreviousState = eLuxEnemyState_LastEnum;
+    }
 }
 
 //-----------------------------------------------------------------------

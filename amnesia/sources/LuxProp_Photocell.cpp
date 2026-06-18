@@ -116,12 +116,18 @@ void cLuxProp_Photocell::UpdatePropSpecific(float afTimeStep)
         if(fCurrent < fGoalAmount)
         {
             fCurrent += afTimeStep;
-            if(fCurrent > fGoalAmount) fCurrent = fGoalAmount;
+            if(fCurrent > fGoalAmount)
+            {
+                fCurrent = fGoalAmount;
+            }
         }
         else if(fCurrent > fGoalAmount)
         {
             fCurrent -= afTimeStep;
-            if(fCurrent < fGoalAmount) fCurrent = fGoalAmount;
+            if(fCurrent < fGoalAmount)
+            {
+                fCurrent = fGoalAmount;
+            }
         }
 
         mpMeshEntity->SetIlluminationAmount(fCurrent);
@@ -155,7 +161,10 @@ eLuxFocusCrosshair cLuxProp_Photocell::GetFocusCrosshair(iPhysicsBody *apBody, c
 void cLuxProp_Photocell::UpdateLightLevel(float afTimeStep)
 {
     mfLightLevelCheckCount += afTimeStep;
-    if(mfLightLevelCheckCount < 1.0f / 30.0f) return;
+    if(mfLightLevelCheckCount < 1.0f / 30.0f)
+    {
+        return;
+    }
 
     mfLightLevelCheckCount = 0;
 
@@ -175,7 +184,10 @@ void cLuxProp_Photocell::UpdateLightLevel(float afTimeStep)
     for(int i=0; i<6; ++i)
     {
         float fLight = gpBase->mpMapHelper->GetLightLevelAtPos(vSamplePos[i]);
-        if(fLight > mfLightLevel) mfLightLevel = fLight;
+        if(fLight > mfLightLevel)
+        {
+            mfLightLevel = fLight;
+        }
     }
 
     ////////////////////////////

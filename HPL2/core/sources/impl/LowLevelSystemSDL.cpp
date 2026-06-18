@@ -51,53 +51,53 @@ int WINAPI WinMain(
 int main(int argc, char *argv[])
 {
 #ifdef __linux__
-	if(!std::setlocale(LC_CTYPE, ""))
-	{
-		fprintf(stderr, "Can't set the specified locale! Check LANG, LC_CTYPE, LC_ALL.\n");
-		return 1;
-	}
+    if(!std::setlocale(LC_CTYPE, ""))
+    {
+        fprintf(stderr, "Can't set the specified locale! Check LANG, LC_CTYPE, LC_ALL.\n");
+        return 1;
+    }
 
-	char *charset = nl_langinfo(CODESET);
-	bool utf8_mode = (strcasecmp(charset, "UTF-8") == 0);
+    char *charset = nl_langinfo(CODESET);
+    bool utf8_mode = (strcasecmp(charset, "UTF-8") == 0);
 
-	if (!utf8_mode)
-	{
-		fprintf(stderr, "UTF-8 Charset %s available.\nCurrent LANG is %s\nCharset: %s\n",
-			utf8_mode ? "is" : "not", getenv("LANG"), charset);
-	}
+    if (!utf8_mode)
+    {
+        fprintf(stderr, "UTF-8 Charset %s available.\nCurrent LANG is %s\nCharset: %s\n",
+                utf8_mode ? "is" : "not", getenv("LANG"), charset);
+    }
 #endif
-	bool cwd = false;
-	hpl::tString cmdline = "";
-	for (int i=1; i < argc; i++)
-	{
+    bool cwd = false;
+    hpl::tString cmdline = "";
+    for (int i=1; i < argc; i++)
+    {
         if (strcmp(argv[i], "-cwd") == 0)
-		{
+        {
             cwd = true;
         }
-		else if (strncmp(argv[i], "-psn", 4) == 0)
-		{
+        else if (strncmp(argv[i], "-psn", 4) == 0)
+        {
             // skip "finder" process number
-		}
-		else
-		{
-			if (cmdline.length()>0)
-			{
-				cmdline.append(" ").append(argv[i]);
-			}
-			else
-			{
-				cmdline.append(argv[i]);
-			}
-		}
-	}
-	if (!cwd)
-	{
+        }
+        else
+        {
+            if (cmdline.length()>0)
+            {
+                cmdline.append(" ").append(argv[i]);
+            }
+            else
+            {
+                cmdline.append(argv[i]);
+            }
+        }
+    }
+    if (!cwd)
+    {
         hpl::tString dataDir = hpl::cPlatform::GetDataDir();
 
         chdir(dataDir.c_str());
-	}
+    }
 
-	return hplMain(cmdline);
+    return hplMain(cmdline);
 }
 #endif
 #endif
@@ -124,7 +124,10 @@ cLogWriter::cLogWriter(const tWString& asFileName)
 
 cLogWriter::~cLogWriter()
 {
-    if(mpFile) fclose(mpFile);
+    if(mpFile)
+    {
+        fclose(mpFile);
+    }
 }
 
 void cLogWriter::Write(const tString& asMessage)
@@ -133,7 +136,10 @@ void cLogWriter::Write(const tString& asMessage)
     OutputDebugStringA(asMessage.c_str());
 #endif
 
-    if(!mpFile) ReopenFile();
+    if(!mpFile)
+    {
+        ReopenFile();
+    }
 
     if(mpFile)
     {
@@ -145,7 +151,10 @@ void cLogWriter::Write(const tString& asMessage)
 void cLogWriter::Clear()
 {
     ReopenFile();
-    if(mpFile) fflush(mpFile);
+    if(mpFile)
+    {
+        fflush(mpFile);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -153,10 +162,16 @@ void cLogWriter::Clear()
 
 void cLogWriter::SetFileName(const tWString& asFile)
 {
-    if(msFileName == asFile) return;
+    if(msFileName == asFile)
+    {
+        return;
+    }
 
     msFileName = asFile;
-    if(mpFile) ReopenFile();
+    if(mpFile)
+    {
+        ReopenFile();
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -164,7 +179,10 @@ void cLogWriter::SetFileName(const tWString& asFile)
 
 void cLogWriter::ReopenFile()
 {
-    if(mpFile) fclose(mpFile);
+    if(mpFile)
+    {
+        fclose(mpFile);
+    }
 
 #ifdef _WIN32
     mpFile = _wfopen(msFileName.c_str(),_W("w"));
@@ -198,7 +216,9 @@ void FatalError(const char* fmt,... )
     char text[4096];
     va_list ap;
     if (fmt == NULL)
+    {
         return;
+    }
     va_start(ap, fmt);
     vsprintf(text, fmt, ap);
     va_end(ap);
@@ -207,10 +227,13 @@ void FatalError(const char* fmt,... )
     sMess += text;
     gLogWriter.Write(sMess);
 
-    if(gpLogMessageCallbackFunc) gpLogMessageCallbackFunc(eLogOutputType_FatalError, sMess.c_str());
+    if(gpLogMessageCallbackFunc)
+    {
+        gpLogMessageCallbackFunc(eLogOutputType_FatalError, sMess.c_str());
+    }
 
 #if defined(__APPLE__) || defined(__linux__)
-	SDL_Quit();
+    SDL_Quit();
 #endif
 
     cPlatform::CreateMessageBox(eMsgBoxType_Error, _W("FATAL ERROR"), _W("%ls"), cString::To16Char(sMess).c_str());
@@ -225,7 +248,9 @@ void Error(const char* fmt, ...)
     char text[2048];
     va_list ap;
     if (fmt == NULL)
+    {
         return;
+    }
     va_start(ap, fmt);
     vsprintf(text, fmt, ap);
     va_end(ap);
@@ -234,7 +259,10 @@ void Error(const char* fmt, ...)
     sMess += text;
     gLogWriter.Write(sMess);
 
-    if(gpLogMessageCallbackFunc) gpLogMessageCallbackFunc(eLogOutputType_Error, sMess.c_str());
+    if(gpLogMessageCallbackFunc)
+    {
+        gpLogMessageCallbackFunc(eLogOutputType_Error, sMess.c_str());
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -245,7 +273,9 @@ void Warning(const char* fmt, ...)
     char text[2048];
     va_list ap;
     if (fmt == NULL)
+    {
         return;
+    }
     va_start(ap, fmt);
     vsprintf(text, fmt, ap);
     va_end(ap);
@@ -254,7 +284,10 @@ void Warning(const char* fmt, ...)
     sMess += text;
     gLogWriter.Write(sMess);
 
-    if(gpLogMessageCallbackFunc) gpLogMessageCallbackFunc(eLogOutputType_Warning, sMess.c_str());
+    if(gpLogMessageCallbackFunc)
+    {
+        gpLogMessageCallbackFunc(eLogOutputType_Warning, sMess.c_str());
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -265,7 +298,9 @@ void Log(const char* fmt, ...)
     char text[4096];
     va_list ap;
     if (fmt == NULL)
+    {
         return;
+    }
     va_start(ap, fmt);
     vsprintf(text, fmt, ap);
     va_end(ap);
@@ -274,7 +309,10 @@ void Log(const char* fmt, ...)
     sMess += text;
     gLogWriter.Write(sMess);
 
-    if(gpLogMessageCallbackFunc) gpLogMessageCallbackFunc(eLogOutputType_Normal, sMess.c_str());
+    if(gpLogMessageCallbackFunc)
+    {
+        gpLogMessageCallbackFunc(eLogOutputType_Normal, sMess.c_str());
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -287,7 +325,10 @@ void SetUpdateLogFile(const tWString &asFile)
 
 void ClearUpdateLogFile()
 {
-    if(!gbUpdateLogIsActive) return;
+    if(!gbUpdateLogIsActive)
+    {
+        return;
+    }
 
     gUpdateLogWriter.Clear();
 }
@@ -306,12 +347,17 @@ bool GetUpdateLogActive()
 
 void LogUpdate(const char* fmt, ...)
 {
-    if(!gbUpdateLogIsActive) return;
+    if(!gbUpdateLogIsActive)
+    {
+        return;
+    }
 
     char text[2048];
     va_list ap;
     if (fmt == NULL)
+    {
         return;
+    }
     va_start(ap, fmt);
     vsprintf(text, fmt, ap);
     va_end(ap);
@@ -342,9 +388,13 @@ void cScriptOutput::AddMessage(const asSMessageInfo *msg)
 
     tString type = "ERR ";
     if( msg->type == asMSGTYPE_WARNING )
+    {
         type = "WARN";
+    }
     else if( msg->type == asMSGTYPE_INFORMATION )
+    {
         type = "INFO";
+    }
 
     sprintf(sMess,"%s (%d, %d) : %s : %s\n", msg->section, msg->row, msg->col, type.c_str(), msg->message);
 

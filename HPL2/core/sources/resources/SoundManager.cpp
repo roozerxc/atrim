@@ -154,7 +154,10 @@ iSoundData *cSoundManager::FindSampleData(const tString &asName, tWString &asFil
             tString sNewName = cString::SetFileExt(asName,*it);
 
             pData = static_cast<iSoundData*> (FindLoadedResource(sNewName, asFilePath));
-            if((pData==NULL && asFilePath!=_W("")) || pData!=NULL)break;
+            if((pData==NULL && asFilePath!=_W("")) || pData!=NULL)
+            {
+                break;
+            }
         }
     }
     else
@@ -178,7 +181,10 @@ void cSoundManager::FindStreamPath(const tString &asName, tWString &asFilePath)
             tString sNewName = cString::SetFileExt(asName,*it);
 
             asFilePath = mpFileSearcher->GetFilePath(sNewName);
-            if(asFilePath != _W("")) break;
+            if(asFilePath != _W(""))
+            {
+                break;
+            }
         }
     }
     else

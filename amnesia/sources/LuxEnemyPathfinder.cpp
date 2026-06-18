@@ -28,7 +28,10 @@ cLuxEnemyPathfinder::cLuxEnemyPathfinder(iLuxEnemy *apEnemy, cLuxEnemyMover *apM
 cLuxEnemyPathfinder::~cLuxEnemyPathfinder()
 {
     cWorld *pWorld = mpEnemy->mpMap->GetWorld();
-    if(mpAStar) pWorld->DestroyAStarHandler(mpAStar);
+    if(mpAStar)
+    {
+        pWorld->DestroyAStarHandler(mpAStar);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -53,12 +56,18 @@ void cLuxEnemyPathfinder::AfterWorldLoad()
     tString sType = cString::SetFileExt(cString::GetFileName(mpEnemy->msFileName),"");
     mpNodeContainer = pWorld->CreateAINodeContainer( sType, "Default", mpEnemy->mpCharBody->GetSize(), false, 2, 6, 5.0f,0.41f);
     if(mpNodeContainer==NULL)
+    {
         Error("No node container found for enemy '%s'\n", mpEnemy->GetName().c_str());
+    }
 
     if(mpNodeContainer)
+    {
         mpAStar = pWorld->CreateAStarHandler(mpNodeContainer);
+    }
     else
+    {
         mpAStar = NULL;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -123,7 +132,10 @@ cAINode* cLuxEnemyPathfinder::GetNodeAtPos(const cVector3f &avPos,float afMinDis
         int alFreePathRayNum, tAIFreePathFlag alFreePathFlags,
         bool abSkipUsedNodes)
 {
-    if(mpNodeContainer==NULL) return NULL;
+    if(mpNodeContainer==NULL)
+    {
+        return NULL;
+    }
 
     float fMaxDistSqr = afMaxDistance * afMaxDistance;
     float fMinDistSqr = afMinDistance * afMinDistance;
@@ -142,8 +154,14 @@ cAINode* cLuxEnemyPathfinder::GetNodeAtPos(const cVector3f &avPos,float afMinDis
     {
         cAINode *pNode = startNodeIt.Next();
 
-        if(pNode == apSkipNode) continue;
-        if(abSkipUsedNodes && mpEnemy->mpMap->AINodeIsUsedAsGoal(pNode)) continue;
+        if(pNode == apSkipNode)
+        {
+            continue;
+        }
+        if(abSkipUsedNodes && mpEnemy->mpMap->AINodeIsUsedAsGoal(pNode))
+        {
+            continue;
+        }
 
 
         float fDistSqr = cMath::Vector3DistSqr(pNode->GetPosition(), avPos);
@@ -222,7 +240,10 @@ void cLuxEnemyPathfinder::OnUpdate(float afTimeStep)
 
 void cLuxEnemyPathfinder::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
 {
-    if(mpNodeContainer==NULL) return;
+    if(mpNodeContainer==NULL)
+    {
+        return;
+    }
 
     ///////////////////////
     //Render all nodes
@@ -242,7 +263,10 @@ void cLuxEnemyPathfinder::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
 
     ///////////////////////
     //Render current goal position
-    if(mbMoving==false) return;
+    if(mbMoving==false)
+    {
+        return;
+    }
 
     //////////////////////////////
     //GoalPos
@@ -314,7 +338,10 @@ const cVector3f& cLuxEnemyPathfinder::GetFinalGoalPos()
 
 void cLuxEnemyPathfinder::UpdateMoving(float afTimeStep)
 {
-    if(mbMoving==false) return;
+    if(mbMoving==false)
+    {
+        return;
+    }
 
     iCharacterBody *pCharBody = mpEnemy->mpCharBody;
     cAINode *pCurrentNode = NULL;
@@ -440,12 +467,18 @@ void cLuxEnemyPathfinder_SaveData::ToPathfinder(cLuxEnemyPathfinder *apPathfinde
 
 void cLuxEnemyPathfinder_SaveData::SetupPathfinder(cLuxEnemyPathfinder *apPathfinder)
 {
-    if(apPathfinder->mpNodeContainer==NULL) return;
+    if(apPathfinder->mpNodeContainer==NULL)
+    {
+        return;
+    }
 
     for(size_t i=0; i<mvPathNodeIds.Size(); ++i)
     {
         cAINode *pNode = apPathfinder->mpNodeContainer->GetNodeFromID(mvPathNodeIds[i]);
-        if(pNode) apPathfinder->mlstPathNodes.push_back(pNode);
+        if(pNode)
+        {
+            apPathfinder->mlstPathNodes.push_back(pNode);
+        }
     }
 }
 

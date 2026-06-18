@@ -27,7 +27,10 @@ void cLuxCommentaryIconLoader::BeforeLoad(cXmlElement *apRootElem, const cMatrix
 void cLuxCommentaryIconLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars)
 {
     cLuxMap *pMap = gpBase->mpCurrentMapLoading;
-    if(pMap==NULL)    return;
+    if(pMap==NULL)
+    {
+        return;
+    }
 
     cLuxCommentaryIcon *pCommentaryIcon = hplNew(cLuxCommentaryIcon, (mpEntity->GetName(), mlID,pMap));
 
@@ -113,20 +116,32 @@ cLuxCommentaryIcon::~cLuxCommentaryIcon()
     // Destroy graphics
     {
         //Mesh entity
-        if(mpMeshEntity) pWorld->DestroyMeshEntity(mpMeshEntity);
+        if(mpMeshEntity)
+        {
+            pWorld->DestroyMeshEntity(mpMeshEntity);
+        }
 
         //Lights
-        for(size_t i=0; i<mvLights.size(); ++i) pWorld->DestroyLight(mvLights[i]);
+        for(size_t i=0; i<mvLights.size(); ++i)
+        {
+            pWorld->DestroyLight(mvLights[i]);
+        }
 
         //Particle systems
         for(size_t i=0; i<mvParticleSystems.size(); ++i)
         {
             cParticleSystem *pPS = mvParticleSystems[i];
-            if(pPS && pWorld->ParticleSystemExists(pPS)) pPS->Kill();
+            if(pPS && pWorld->ParticleSystemExists(pPS))
+            {
+                pPS->Kill();
+            }
         }
 
         //Billboards
-        for(size_t i=0; i<mvBillboards.size(); ++i)    pWorld->DestroyBillboard(mvBillboards[i]);
+        for(size_t i=0; i<mvBillboards.size(); ++i)
+        {
+            pWorld->DestroyBillboard(mvBillboards[i]);
+        }
     }
 }
 
@@ -163,7 +178,10 @@ void cLuxCommentaryIcon::OnUpdate(float afTimeStep)
         {
             mvRotAngle.y = cMath::Wrap(mvRotAngle.y, 0, kPif);
             mvRotAngle.y += afTimeStep*2.5f;
-            if(mvRotAngle.y>kPif) mvRotAngle.y =0;
+            if(mvRotAngle.y>kPif)
+            {
+                mvRotAngle.y =0;
+            }
         }
     }
 
@@ -171,7 +189,10 @@ void cLuxCommentaryIcon::OnUpdate(float afTimeStep)
     {
         cSubMeshEntity *pSubEnt = mpMeshEntity->GetSubMeshEntity(i);
         cSubMesh *pSubMesh = pSubEnt->GetSubMesh();
-        if(pSubMesh->GetName() != msRotateSubMesh) continue;
+        if(pSubMesh->GetName() != msRotateSubMesh)
+        {
+            continue;
+        }
 
         cMatrixf mtxTrans = cMath::MatrixMul(mvSubMeshMatrix[i], cMath::MatrixRotate(mvRotAngle, eEulerRotationOrder_XYZ));
         pSubEnt->SetMatrix(mtxTrans);
@@ -206,7 +227,10 @@ tWString cLuxCommentaryIcon::GetFocusText()
 
 void cLuxCommentaryIcon::SetPlayingSound(bool abX)
 {
-    if(mbPlayingSound ==abX) return;
+    if(mbPlayingSound ==abX)
+    {
+        return;
+    }
 
     mbPlayingSound = abX;
 

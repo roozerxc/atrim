@@ -70,7 +70,9 @@ cLowLevelSoundOpenAL::cLowLevelSoundOpenAL()
 cLowLevelSoundOpenAL::~cLowLevelSoundOpenAL()
 {
     if(mbInitialized)
+    {
         OAL_Close();
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -213,14 +215,18 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
     initParams.mbUseEFX = abUseEnvAudio;
 
     if(mbLogSounds)
+    {
         Log("  Sound logging enabled\n");
+    }
 
     /////////////////////////////////////////////////////////
     // List all available devices
     Log("  Available OpenAL devices:\n");
     const tSoundDeviceVec& vSndDevices = GetAvailableSoundDevices();
     if(vSndDevices.empty())
+    {
         FatalError("   No sound devices available! Check your OpenAL installation\n");
+    }
 
     for(int i=0; i<(int)vSndDevices.size(); ++i)
     {
@@ -265,7 +271,9 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
                 initParams.msDeviceName = pValidDefaultDev->GetName();
             }
             else
+            {
                 alSoundDeviceID = -2;
+            }
         }
 
         if(alSoundDeviceID==-2)
@@ -316,7 +324,9 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
         {
             iSoundDeviceIdentifier* pDev = vSndDevices[i];
             if(pDev->IsDefault()==false)
+            {
                 continue;
+            }
 
             initParams.msDeviceName = pDev->GetName();
 
@@ -398,7 +408,9 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
             Log("  Setting up Environmental Audio...Success.\n");
         }
         else
+        {
             Log("  Setting up Environmental Audio...Failed.\n");
+        }
     }
 #endif
 
@@ -422,12 +434,18 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
 void cLowLevelSoundOpenAL::SetEnvVolume( float afEnvVolume )
 {
     if (!mbEnvAudioEnabled)
+    {
         return;
+    }
 
     if (afEnvVolume <0)
+    {
         afEnvVolume = 0;
+    }
     if (afEnvVolume >1)
+    {
         afEnvVolume = 1;
+    }
     mfEnvVolume = afEnvVolume;
     OAL_EffectSlot_SetGain(0, mfEnvVolume);
 }
@@ -437,7 +455,9 @@ void cLowLevelSoundOpenAL::SetEnvVolume( float afEnvVolume )
 iSoundDeviceIdentifier* cLowLevelSoundOpenAL::GetCurrentSoundDevice()
 {
     if(mlCurrentSoundDevID<0 || mlCurrentSoundDevID>=(int)mvSoundDevices.size())
+    {
         return GetFirstDefaultDevice();
+    }
 
     return mvSoundDevices[mlCurrentSoundDevID];
 }
@@ -447,12 +467,17 @@ iSoundDeviceIdentifier* cLowLevelSoundOpenAL::GetCurrentSoundDevice()
 iSoundEnvironment* cLowLevelSoundOpenAL::LoadSoundEnvironment(const tString &asFilePath)
 {
     if (!mbEnvAudioEnabled)
+    {
         return NULL;
+    }
 
     /////////////////////////////////////////////
     ///Check if sound already exist
     iSoundEnvironment *pSE = GetSoundEnvironmentFromFileName(asFilePath);
-    if(pSE) return pSE;
+    if(pSE)
+    {
+        return pSE;
+    }
 
     /////////////////////////////////////////////
     ///Create new and load from file
@@ -479,7 +504,9 @@ iSoundEnvironment* cLowLevelSoundOpenAL::LoadSoundEnvironment(const tString &asF
 void cLowLevelSoundOpenAL::SetSoundEnvironment ( iSoundEnvironment* apSoundEnv )
 {
     if (!mbEnvAudioEnabled)
+    {
         return;
+    }
 
     if (apSoundEnv == NULL)
     {
@@ -573,17 +600,25 @@ void cLowLevelSoundOpenAL::SetSoundEnvironment ( iSoundEnvironment* apSoundEnv )
 void cLowLevelSoundOpenAL::FadeSoundEnvironment( iSoundEnvironment* apSourceSoundEnv, iSoundEnvironment* apDestSoundEnv, float afT )
 {
     if (!mbEnvAudioEnabled)
+    {
         return;
+    }
 
     if (afT<0)
+    {
         afT = 0;
+    }
     if (afT>1)
+    {
         afT = 1;
+    }
 
     float fOneMinusT = 1-afT;
 
     if ((apSourceSoundEnv == NULL) && (apDestSoundEnv==NULL))
+    {
         return;
+    }
 
     cOpenALSoundEnvironment pEnv;
 
@@ -692,12 +727,16 @@ iSoundDeviceIdentifier* cLowLevelSoundOpenAL::GetFirstValidDefaultDevice()
     {
         iSoundDeviceIdentifier* pSndDev = vValidSndDevices[i];
         if(pSndDev->IsDefault())
+        {
             return pSndDev;
+        }
     }
     /////////////////////////////////
     // If no default device found in valid list, return 1st
     if(vValidSndDevices.empty()==false)
+    {
         return vValidSndDevices[0];
+    }
 
     return NULL;
 }
@@ -710,7 +749,9 @@ iSoundDeviceIdentifier* cLowLevelSoundOpenAL::GetFirstDefaultDevice()
     iSoundDeviceIdentifier* pSndDev = GetFirstValidDefaultDevice();
 
     if(pSndDev)
+    {
         return pSndDev;
+    }
 
     ///////////////////////////////////////////////////////////////
     // This will be run if there are no filtered sound devices at all
@@ -722,7 +763,9 @@ iSoundDeviceIdentifier* cLowLevelSoundOpenAL::GetFirstDefaultDevice()
     {
         iSoundDeviceIdentifier* pSndDev = vSndDevices[i];
         if(pSndDev->IsDefault())
+        {
             return pSndDev;
+        }
     }
 
     ////////////////////////////////

@@ -54,7 +54,10 @@ void cViewport::SetWorld(cWorld *apWorld)
     }
 
     mpWorld = apWorld;
-    if(mpWorld) mpWorld->SetIsSoundEmitter(true);
+    if(mpWorld)
+    {
+        mpWorld->SetIsSoundEmitter(true);
+    }
 
     mpRenderSettings->ResetVariables();
 }

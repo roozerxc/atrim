@@ -110,7 +110,10 @@ unsigned cPhysicsJointSliderNewton::LimitCallback(const NewtonJoint* pSlider, Ne
     float fDistance = NewtonSliderGetJointPosit (pSlider);
     //Log("Dist: %f\n",fDistance);
 
-    if(pSliderJoint->mfMinDistance == 0 && pSliderJoint->mfMaxDistance == 0) return 0;
+    if(pSliderJoint->mfMinDistance == 0 && pSliderJoint->mfMaxDistance == 0)
+    {
+        return 0;
+    }
 
     //Avoid oscillation
     CheckLimitAutoSleep(pSliderJoint, pSliderJoint->mfMinDistance,pSliderJoint->mfMaxDistance,fDistance);

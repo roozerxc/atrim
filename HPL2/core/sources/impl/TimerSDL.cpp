@@ -67,13 +67,17 @@ double cTimerSDL::GetTimeInMicroSec()
 {
 #ifdef _WIN32
     if(mbStopped==false)
+    {
         QueryPerformanceCounter(&mEndCount);
+    }
 
     mfStartTimeInMicroSec = mStartCount.QuadPart * (1000000.0 / mFrequency.QuadPart);
     mfEndTimeInMicroSec = mEndCount.QuadPart * (1000000.0 / mFrequency.QuadPart);
 #else
     if(mbStopped==false)
+    {
         gettimeofday(&mEndCount, NULL);
+    }
 
     mfStartTimeInMicroSec = ((double)mStartCount.tv_sec * 1000000.0) + mStartCount.tv_usec;
     mfEndTimeInMicroSec = ((double)mEndCount.tv_sec * 1000000.0) + mEndCount.tv_usec;

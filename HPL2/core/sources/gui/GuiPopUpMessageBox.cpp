@@ -39,7 +39,10 @@ cGuiPopUpMessageBox::cGuiPopUpMessageBox(cGuiSet *apSet,
     float fWindowMinLength = pFont->mpFont->GetLength(pFont->mvSize,asLabel.c_str());
     float fTextLength = pFont->mpFont->GetLength(pFont->mvSize,asText.c_str());
 
-    if(fTextLength > fWindowMinLength) fWindowMinLength = fTextLength;
+    if(fTextLength > fWindowMinLength)
+    {
+        fWindowMinLength = fTextLength;
+    }
 
     float fWindowWidth = fWindowMinLength+40 > 200 ? fWindowMinLength+40 : 200;
 
@@ -101,9 +104,18 @@ cGuiPopUpMessageBox::cGuiPopUpMessageBox(cGuiSet *apSet,
 
 cGuiPopUpMessageBox::~cGuiPopUpMessageBox()
 {
-    if(mvButtons[0]) mpSet->DestroyWidget(mvButtons[0]);
-    if(mvButtons[1]) mpSet->DestroyWidget(mvButtons[1]);
-    if(mpLabel) mpSet->DestroyWidget(mpLabel);
+    if(mvButtons[0])
+    {
+        mpSet->DestroyWidget(mvButtons[0]);
+    }
+    if(mvButtons[1])
+    {
+        mpSet->DestroyWidget(mvButtons[1]);
+    }
+    if(mpLabel)
+    {
+        mpSet->DestroyWidget(mpLabel);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -141,9 +153,15 @@ kGuiCallbackDeclaredFuncEnd(cGuiPopUpMessageBox,ButtonPress)
 
 bool cGuiPopUpMessageBox::GamepadButtonPress(iWidget* apWidget,const cGuiMessageData& aData)
 {
-    if(!(aData.mlVal == eUIButton_Primary || aData.mlVal == eUIButton_Secondary)) return false;
+    if(!(aData.mlVal == eUIButton_Primary || aData.mlVal == eUIButton_Secondary))
+    {
+        return false;
+    }
 
-    if(aData.mlVal == eUIButton_Secondary && mvButtons[1]) apWidget = mvButtons[1];
+    if(aData.mlVal == eUIButton_Secondary && mvButtons[1])
+    {
+        apWidget = mvButtons[1];
+    }
 
     return ButtonPress(apWidget, aData);
 }

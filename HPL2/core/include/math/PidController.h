@@ -52,7 +52,10 @@ public:
 
         mlLastNum = mlErrorNum;
         mlErrorNum++;
-        if(mlErrorNum >= (int)mvErrors.size())mlErrorNum =0;
+        if(mlErrorNum >= (int)mvErrors.size())
+        {
+            mlErrorNum =0;
+        }
 
         return mvErrors[mlLastNum]*p + integral*i + derivative*d;
     }
@@ -81,7 +84,10 @@ public:
 
     T GetLastError()
     {
-        if(mlLastNum>=0) return mvErrors[mlLastNum];
+        if(mlLastNum>=0)
+        {
+            return mvErrors[mlLastNum];
+        }
         return 0;
     }
 

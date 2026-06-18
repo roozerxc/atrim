@@ -198,21 +198,36 @@ eLuxFocusCrosshair cLuxProp_NPC::GetFocusCrosshair(iPhysicsBody *apBody, const c
 
 void cLuxProp_NPC::SetAwake(bool abX, bool abEffects)
 {
-    if(mbAwake == abX) return;
+    if(mbAwake == abX)
+    {
+        return;
+    }
 
     mbAwake = abX;
 
     if(abEffects)
     {
-        if(mbAwake)    PlayAnimation("Awake", 0.3f, false, "");
-        else        PlayAnimation("Sleep", 0.3f, false, "");
+        if(mbAwake)
+        {
+            PlayAnimation("Awake", 0.3f, false, "");
+        }
+        else
+        {
+            PlayAnimation("Sleep", 0.3f, false, "");
+        }
 
         mbPlayingWakeAnim = true;
     }
     else
     {
-        if(mbAwake)    PlayAnimation("Idle", 0.05f, true, "");
-        else        PlayAnimation("SleepIdle", 0.05f, true, "");
+        if(mbAwake)
+        {
+            PlayAnimation("Idle", 0.05f, true, "");
+        }
+        else
+        {
+            PlayAnimation("SleepIdle", 0.05f, true, "");
+        }
     }
 
 }
@@ -235,14 +250,23 @@ void cLuxProp_NPC::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 
 void cLuxProp_NPC::UpdateWakeState(float afTimeStep)
 {
-    if(mbPlayingWakeAnim==false) return;
+    if(mbPlayingWakeAnim==false)
+    {
+        return;
+    }
 
     if(mlCurrentNonLoopAnimIndex <0)
     {
         mbPlayingWakeAnim = false;
 
-        if(mbAwake)    PlayAnimation("Idle", 0.3f, true, "");
-        else        PlayAnimation("SleepIdle", 0.3f, true, "");
+        if(mbAwake)
+        {
+            PlayAnimation("Idle", 0.3f, true, "");
+        }
+        else
+        {
+            PlayAnimation("SleepIdle", 0.3f, true, "");
+        }
     }
 }
 
@@ -250,12 +274,18 @@ void cLuxProp_NPC::UpdateWakeState(float afTimeStep)
 
 void cLuxProp_NPC::UpdateCheckPlayerIsInArea(float afTimeStep)
 {
-    if(mpFollowPlayerArea==NULL) return;
+    if(mpFollowPlayerArea==NULL)
+    {
+        return;
+    }
 
     ///////////////////////
     // Only check twice per second.
     mfInAreaCount -= afTimeStep;
-    if(mfInAreaCount > 0) return;
+    if(mfInAreaCount > 0)
+    {
+        return;
+    }
     mfInAreaCount = 0.5f;
 
     ///////////////////////
@@ -289,7 +319,10 @@ void cLuxProp_NPC::UpdateHeadMovement(float afTimeStep)
 
         //Calculate angle and get correct sign.
         fWantedAngle = cMath::Vector3Angle(vFwd, vToPlayer);
-        if(cMath::Vector3Dot(vRight, vToPlayer)<0)    fWantedAngle = -fWantedAngle;
+        if(cMath::Vector3Dot(vRight, vToPlayer)<0)
+        {
+            fWantedAngle = -fWantedAngle;
+        }
 
         fWantedAngle = cMath::Clamp(fWantedAngle, -mfMaxHeadAngle, mfMaxHeadAngle);
     }
@@ -311,7 +344,10 @@ void cLuxProp_NPC::UpdateHeadMovement(float afTimeStep)
     for(size_t i=0; i<mvHeadMoveBones.size(); ++i)
     {
         cLuxProp_NPC_HeadMoveBone& boneData = mvHeadMoveBones[i];
-        if(boneData.mlBoneIdx<0) continue;
+        if(boneData.mlBoneIdx<0)
+        {
+            continue;
+        }
 
         cBoneState *pBoneState = mpMeshEntity->GetBoneState(boneData.mlBoneIdx);
 

@@ -161,7 +161,10 @@ void cLuxDemoEnd::OnEnterContainer(const tString& asOldContainer)
 
     // Load background
     iTexture* pTex = gpBase->mpEngine->GetResources()->GetTextureManager()->Create2D(msBackgroundFile, false, eTextureType_Rect);
-    if(pTex) mpGfxBackground = mpGui->CreateGfxTexture(pTex, true, eGuiMaterial_Alpha);
+    if(pTex)
+    {
+        mpGfxBackground = mpGui->CreateGfxTexture(pTex, true, eGuiMaterial_Alpha);
+    }
 
     // Set up message text
     tWString sText = kTranslate("Demo", "EndMessage");
@@ -201,7 +204,9 @@ void cLuxDemoEnd::Update(float afTimeStep)
             mfFadeAlpha =1;
             gpBase->mpEngine->Exit();
             if(mbGotoWebsiteAtExit)
+            {
                 cPlatform::OpenBrowserWindow(cString::To16Char(msDestinationURL));
+            }
         }
     }
     else
@@ -209,7 +214,10 @@ void cLuxDemoEnd::Update(float afTimeStep)
         if(mfFadeAlpha>0.0f)
         {
             mfFadeAlpha -= afTimeStep*0.7f;
-            if(mfFadeAlpha< 0) mfFadeAlpha =0;
+            if(mfFadeAlpha< 0)
+            {
+                mfFadeAlpha =0;
+            }
         }
     }
 }
@@ -352,7 +360,10 @@ bool cLuxDemoEnd::ButtonLabelOnUpdate(iWidget* apWidget, const cGuiMessageData& 
         if(*pFade<1.0f)
         {
             *pFade += aData.mfVal*3.0f;
-            if(*pFade>1)*pFade =1;
+            if(*pFade>1)
+            {
+                *pFade =1;
+            }
         }
     }
     else
@@ -360,7 +371,10 @@ bool cLuxDemoEnd::ButtonLabelOnUpdate(iWidget* apWidget, const cGuiMessageData& 
         if(*pFade>0)
         {
             *pFade -= aData.mfVal;
-            if(*pFade<0)*pFade =0;
+            if(*pFade<0)
+            {
+                *pFade =0;
+            }
         }
     }
 

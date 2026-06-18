@@ -167,14 +167,23 @@ eCollision cFrustum::CollideFrustum(cFrustum *apFrustum)
     //This Frustum vs other
     int lPlanes = mbInfFarPlane ? 5 : 6;
     eCollision collision = cMath::CheckPointsPlanesCollision(&apFrustum->mvVertices[0], 8, &mPlane[0], lPlanes);
-    if(collision == eCollision_Outside) return eCollision_Outside;
-    if(collision == eCollision_Inside) return eCollision_Inside;
+    if(collision == eCollision_Outside)
+    {
+        return eCollision_Outside;
+    }
+    if(collision == eCollision_Inside)
+    {
+        return eCollision_Inside;
+    }
 
     /////////////////////////////
     //Other Frustum vs this
     lPlanes = apFrustum->mbInfFarPlane ? 5 : 6;
     collision = cMath::CheckPointsPlanesCollision(&mvVertices[0], 8, &apFrustum->mPlane[0], lPlanes);
-    if(collision == eCollision_Outside) return eCollision_Outside;
+    if(collision == eCollision_Outside)
+    {
+        return eCollision_Outside;
+    }
 
     //Not sure how good it works, and not sure if it is 100% either...
     //Just letting code be here for easy switch in the future
@@ -202,7 +211,10 @@ bool cFrustum::CheckSphereNearPlaneIntersection(const cVector3f &avCenter, float
     // Near plane points vs Sphere
     for(int i=0; i<4; ++i)
     {
-        if(cMath::CheckPointInSphereIntersection(mvVertices[i], avCenter, afRadius)) return true;
+        if(cMath::CheckPointInSphereIntersection(mvVertices[i], avCenter, afRadius))
+        {
+            return true;
+        }
     }
 
     //////////////////////////////
@@ -243,12 +255,18 @@ bool cFrustum::CheckAABBNearPlaneIntersection(const cVector3f &avMin, const cVec
     // Near plane points vs AABB
     for(int i=0; i<4; ++i)
     {
-        if(cMath::CheckPointInAABBIntersection(mvVertices[i], avMin, avMax)) return true;
+        if(cMath::CheckPointInAABBIntersection(mvVertices[i], avMin, avMax))
+        {
+            return true;
+        }
     }
 
     //////////////////////////////
     // Check if near plane points intersect with box
-    if(cMath::CheckPointsAABBPlanesCollision(mvVertices, 4, avMin, avMax)!=eCollision_Outside) return true;
+    if(cMath::CheckPointsAABBPlanesCollision(mvVertices, 4, avMin, avMax)!=eCollision_Outside)
+    {
+        return true;
+    }
 
     return false;
 }
@@ -268,16 +286,25 @@ bool cFrustum::CheckBVNearPlaneIntersection(cBoundingVolume* apBV)
     // Near plane points vs AABB
     for(int i=0; i<4; ++i)
     {
-        if(cMath::CheckPointInBVIntersection(mvVertices[i], *apBV)) return true;
+        if(cMath::CheckPointInBVIntersection(mvVertices[i], *apBV))
+        {
+            return true;
+        }
     }
 
     //////////////////////////////
     // Check if Sphere Inside the frustum (check only frustum sides!)
-    if(CollideSphere(apBV->GetWorldCenter(), apBV->GetRadius(),4)==eCollision_Inside) return true;
+    if(CollideSphere(apBV->GetWorldCenter(), apBV->GetRadius(),4)==eCollision_Inside)
+    {
+        return true;
+    }
 
     //////////////////////////////
     // Check if AABB Inside frustum (check only frustum sides!)
-    if(cMath::CheckPointsAABBPlanesCollision(mvVertices, 4, apBV->GetMin(), apBV->GetMax())!=eCollision_Outside) return true;
+    if(cMath::CheckPointsAABBPlanesCollision(mvVertices, 4, apBV->GetMin(), apBV->GetMax())!=eCollision_Outside)
+    {
+        return true;
+    }
 
     return false;
 }
@@ -306,7 +333,10 @@ bool cFrustum::CheckFrustumNearPlaneIntersection(cFrustum* apFrustum)
             break;
         }
     }
-    if(bInside) return false;
+    if(bInside)
+    {
+        return false;
+    }
 
     //////////////////////////////
     // Near plane points vs Frustum
@@ -425,13 +455,22 @@ eCollision cFrustum::CollideAABB(const cVector3f& avMin,const cVector3f& avMax, 
     /////////////////////////////
     //Frustum vs AABB
     eCollision collision = cMath::CheckPointsPlanesCollision(&vCorners[0], 8, &mPlane[0], mbInfFarPlane ? 5 : 6);
-    if(collision == eCollision_Outside) return eCollision_Outside;
-    if(collision == eCollision_Inside) return eCollision_Inside;
+    if(collision == eCollision_Outside)
+    {
+        return eCollision_Outside;
+    }
+    if(collision == eCollision_Inside)
+    {
+        return eCollision_Inside;
+    }
 
     /////////////////////////////
     //AABB vs Frustum
     collision = cMath::CheckPointsAABBPlanesCollision(&mvVertices[0], 8, avMin, avMax);
-    if(collision == eCollision_Outside) return eCollision_Outside;
+    if(collision == eCollision_Outside)
+    {
+        return eCollision_Outside;
+    }
 
     return eCollision_Intersect;
     //return cMath::CheckPointsPlanesCollision(&vCorners[0], 8, &mPlane[0], mbInfFarPlane ? 5 : 6);
@@ -638,14 +677,32 @@ void cFrustum::UpdateBV()
 
     for(int i=1; i<8; i++)
     {
-        if(vMax.x < mvVertices[i].x)        vMax.x = mvVertices[i].x;
-        else if(vMin.x > mvVertices[i].x)    vMin.x = mvVertices[i].x;
+        if(vMax.x < mvVertices[i].x)
+        {
+            vMax.x = mvVertices[i].x;
+        }
+        else if(vMin.x > mvVertices[i].x)
+        {
+            vMin.x = mvVertices[i].x;
+        }
 
-        if(vMax.y < mvVertices[i].y)        vMax.y = mvVertices[i].y;
-        else if(vMin.y > mvVertices[i].y)    vMin.y = mvVertices[i].y;
+        if(vMax.y < mvVertices[i].y)
+        {
+            vMax.y = mvVertices[i].y;
+        }
+        else if(vMin.y > mvVertices[i].y)
+        {
+            vMin.y = mvVertices[i].y;
+        }
 
-        if(vMax.z < mvVertices[i].z)        vMax.z = mvVertices[i].z;
-        else if(vMin.z > mvVertices[i].z)    vMin.z = mvVertices[i].z;
+        if(vMax.z < mvVertices[i].z)
+        {
+            vMax.z = mvVertices[i].z;
+        }
+        else if(vMin.z > mvVertices[i].z)
+        {
+            vMin.z = mvVertices[i].z;
+        }
     }
 
     mBoundingVolume.SetLocalMinMax(vMin, vMax);
@@ -685,15 +742,24 @@ void cFrustum::Draw(iLowLevelGraphics *apLowLevelGraphics, const cColor &aColor)
     }
 
     for(int i=0; i<4; ++i)
+    {
         apLowLevelGraphics->DrawLine(mvVertices[i==0?3:i-1], mvVertices[i],aColor);
+    }
 
     for(int i=4; i<8; ++i)
+    {
         apLowLevelGraphics->DrawLine(mvVertices[i==4?7:i-1], mvVertices[i],aColor);
+    }
 
     for(int i=0; i<4; ++i)
+    {
         apLowLevelGraphics->DrawLine(mvVertices[i], mvVertices[i+4],aColor);
+    }
 
-    if(mbInvertsCullMode==false) return;
+    if(mbInvertsCullMode==false)
+    {
+        return;
+    }
 
     //////////////////7
     //Planes

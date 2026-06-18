@@ -19,11 +19,26 @@
 
 static int GetIndexFromAnisotropy(float afX)
 {
-    if(afX <= 1) return 0;
-    if(afX <= 2) return 1;
-    if(afX <= 4) return 2;
-    if(afX <= 8) return 3;
-    if(afX <= 16) return 4;
+    if(afX <= 1)
+    {
+        return 0;
+    }
+    if(afX <= 2)
+    {
+        return 1;
+    }
+    if(afX <= 4)
+    {
+        return 2;
+    }
+    if(afX <= 8)
+    {
+        return 3;
+    }
+    if(afX <= 16)
+    {
+        return 4;
+    }
     return 0;
 }
 
@@ -49,10 +64,22 @@ static float GetAnisotropyFromIndex(int alX)
 
 static int GetIndexFromSSAOSamples(int alX)
 {
-    if(alX <= 4) return 0;
-    if(alX <= 8) return 1;
-    if(alX <= 16) return 2;
-    if(alX <= 32) return 3;
+    if(alX <= 4)
+    {
+        return 0;
+    }
+    if(alX <= 8)
+    {
+        return 1;
+    }
+    if(alX <= 16)
+    {
+        return 2;
+    }
+    if(alX <= 32)
+    {
+        return 3;
+    }
     //if(alX <= 64) return 4;
     //if(alX <= 128) return 5;
     return 0;
@@ -148,7 +175,10 @@ void cLuxMainMenu_Options::CreateGui()
 
 void cLuxMainMenu_Options::ExitPressed()
 {
-    if(mpGuiSet->PopUpIsActive()) return;
+    if(mpGuiSet->PopUpIsActive())
+    {
+        return;
+    }
 
     gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_LastEnum);
 }
@@ -234,9 +264,13 @@ void cLuxMainMenu_Options::CreateMainGui()
         int lNext = i+1;
 
         if(lPrev>=0)
+        {
             pTab->GetTabLabel()->SetFocusNavigation(eUIArrow_Left, pTabFrame->GetTab(lPrev)->GetTabLabel());
+        }
         if(lNext<pTabFrame->GetTabNum())
+        {
             pTab->GetTabLabel()->SetFocusNavigation(eUIArrow_Right, pTabFrame->GetTab(lNext)->GetTabLabel());
+        }
     }
 
     AddGraphicsOptions(mpTabGraphics);
@@ -367,7 +401,9 @@ void cLuxMainMenu_Options::AddGameOptions(cWidgetTab* apTab)
     mpChBShowCrosshair->SetFocusNavigation(eUIArrow_Up, mpChBShowDeathHints);
     mpCBFocusIconStyle->SetFocusNavigation(eUIArrow_Up, mpChBShowCrosshair);
     if(mbShowCommentary)
+    {
         mpChBShowCommentary->SetFocusNavigation(eUIArrow_Up, mpCBFocusIconStyle);
+    }
 
     // Left/Right
     mpChBShowSubtitles->SetFocusNavigation(eUIArrow_Right, mpChBShowEffectSubtitles);
@@ -412,7 +448,9 @@ void cLuxMainMenu_Options::AddGraphicsOptions(cWidgetTab* apTab)
                               mpBToggleShowGfxOptions->GetText().c_str()) + 10;
 
         if(fButtonWidth < fStringLength)
+        {
             fButtonWidth = fStringLength;
+        }
     }
 
 
@@ -486,7 +524,9 @@ void cLuxMainMenu_Options::AddBasicGfxOptions(cWidgetDummy* apDummy)
 
     mpCBTextureSizeLevel->ClearItems();
     for(int i=0; i<(int)vTexQualityStrings.size(); ++i)
+    {
         mpCBTextureSizeLevel->AddItem(vTexQualityStrings[i]);
+    }
 
     /////////////////////////////////
     // Gamma
@@ -657,7 +697,9 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         SetUpInput(NULL, mpChBBloom, false, kTranslate("OptionsMenu","BloomTip"));
 
         if(fMaxWidth < mpChBBloom->GetSize().x)
+        {
             fMaxWidth = mpChBBloom->GetSize().x;
+        }
 
         vPosInGroup.y += mpChBBloom->GetSize().y + fInputSep;
 
@@ -666,7 +708,9 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         SetUpInput(NULL, mpChBImageTrail, false, kTranslate("OptionsMenu","ImageTrailTip"));
 
         if(fMaxWidth < mpChBImageTrail->GetSize().x)
+        {
             fMaxWidth = mpChBImageTrail->GetSize().x;
+        }
 
         vPosInGroup.y = fBorderSize;
         //vPosInGroup.x += fMaxWidth + fInputSep;
@@ -679,7 +723,9 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         SetUpInput(NULL, mpChBSepia, false, kTranslate("OptionsMenu","SepiaTip"));
 
         if(fMaxWidth < mpChBBloom->GetSize().x)
+        {
             fMaxWidth = mpChBBloom->GetSize().x;
+        }
 
         vPosInGroup.y += mpChBSepia->GetSize().y + fInputSep;
 
@@ -688,7 +734,9 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         SetUpInput(NULL, mpChBRadialBlur, false, kTranslate("OptionsMenu","RadialBlurTip"));
 
         if(fMaxWidth < mpChBRadialBlur->GetSize().x)
+        {
             fMaxWidth = mpChBRadialBlur->GetSize().x;
+        }
 
         vPosInGroup.y = fBorderSize;
         //vPosInGroup.x += fMaxWidth + fInputSep;
@@ -1032,7 +1080,9 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
 
         mpCBFocusIconStyle->SetSelectedItem(aObj.GetVarInt("FocusIconStyle"), false, false);
         if(mpCBFocusIconStyle->GetSelectedItem()==-1)
+        {
             mpCBFocusIconStyle->SetSelectedItem(0, false, true);
+        }
 
         if(mbShowCommentary)
         {
@@ -1085,7 +1135,10 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
                         lRemove++;
                         lRefreshRate = cMath::Max(lRefreshRate, vVidModes[i].mlRefreshRate);
                     }
-                    else break;
+                    else
+                    {
+                        break;
+                    }
                 }
 
                 //////////////
@@ -1096,7 +1149,10 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
                 }
                 vVidModes[i].mlRefreshRate = lRefreshRate;
 
-                while(lRemove--) vVidModes.pop_back();
+                while(lRemove--)
+                {
+                    vVidModes.pop_back();
+                }
             }
 
             mpCBResolution->ClearItems();
@@ -1120,7 +1176,9 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
                 mvScreenSizes.push_back(mode);
 
                 if(mode==vCurrentRes)
+                {
                     lCurrentMode = mpCBResolution->GetItemNum()-1;
+                }
             }
             if(lCurrentMode==-1)
             {
@@ -1158,7 +1216,9 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
 
             mpCBTextureFilter->ClearItems();
             for(int i=0; i<(int)vTexFilterStrings.size(); ++i)
+            {
                 mpCBTextureFilter->AddItem(vTexFilterStrings[i]);
+            }
 
             mpCBTextureFilter->SetSelectedItem(aObj.GetVarInt("TextureFilter"), true, false);
 
@@ -1298,9 +1358,13 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
     }
 
     if(lSndDevIdx==-1)
+    {
         mpCBSndDevice->SetSelectedItem(mpCBSndDevice->GetItemNum()-1, true, false);
+    }
     else
+    {
         mpCBSndDevice->SetSelectedItem(lSndDevIdx, true, false);
+    }
 
     mbSettingInitialValues = false;
 }
@@ -1337,7 +1401,9 @@ void cLuxMainMenu_Options::SetUpInput(cWidgetLabel* apLabel, iWidget* apInput, b
         break;
     }
     if(message!=eGuiMessage_LastEnum)
+    {
         apInput->AddCallback(message, this, kGuiCallback(Option_OnChangeValue));
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1586,7 +1652,9 @@ void cLuxMainMenu_Options::PopulateSoundDevices()
         {
             iSoundDeviceIdentifier* pSndDev = mvSoundDevices[i];
             if(bCurrentDevFound==false && pSndDev==pCurSndDev)
+            {
                 bCurrentDevFound = true;
+            }
 
             cWidgetItem* pItem = mpCBSndDevice->AddItem(pSndDev->GetName());
             pItem->SetUserData(pSndDev);
@@ -1656,20 +1724,30 @@ void cLuxMainMenu_Options::SetSliderLabelString(cWidgetLabel* apLabel, float afV
     if(afValue<=afMinValue)
     {
         if(asMin.empty())
+        {
             afValue = afMinValue;
+        }
         else
+        {
             sText = asMin;
+        }
     }
     else if(afValue>=afMaxValue)
     {
         if(asMax.empty())
+        {
             afValue = afMaxValue;
+        }
         else
+        {
             sText = asMax;
+        }
     }
 
     if(sText.empty())
+    {
         sText = cString::ToStringW(afValue, 3, true);
+    }
 
     apLabel->SetText(sText);
 }
@@ -1878,7 +1956,9 @@ bool cLuxMainMenu_Options::Window_OnUpdate(iWidget* apWidget, const cGuiMessageD
     ///////////////////////////////////////////////////
     // If there is a popup active, dont update tips
     if(mpGuiSet->PopUpIsActive())
+    {
         return true;
+    }
 
     ////////////////////////////////////////////////////
     // Update Tip label fade
@@ -1935,7 +2015,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Options, Window_OnUpdate);
 bool cLuxMainMenu_Options::Option_OnMouseOver(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(apWidget->GetUserData()==NULL)
+    {
         return true;
+    }
 
     SetCurrentTipWidget(apWidget);
 
@@ -1976,13 +2058,17 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Options, Option_OnMouseOver);
 bool cLuxMainMenu_Options::Option_OnChangeValue(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(mbSettingInitialValues)
+    {
         return true;
+    }
 
     if(apWidget->GetUserData())
     {
         cLuxOption_ExtData* pData = (cLuxOption_ExtData*)apWidget->GetUserData();
         if(pData->mbNeedsRestart)
+        {
             gpBase->mpConfigHandler->SetGameNeedsRestart();
+        }
     }
     return true;
 }
@@ -2098,7 +2184,9 @@ bool cLuxMainMenu_Options::PressOK(iWidget* apWidget, const cGuiMessageData& aDa
     gpBase->SaveConfig();
     //If some major stuff (that needs restart) have been changed. Then say so!
     if(gpBase->mpConfigHandler->ShowRestartWarning(mpGuiSet, this, kGuiCallback(MessageBoxCallback))==false)
+    {
         gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_LastEnum);
+    }
 
     return true;
 }
@@ -2163,14 +2251,18 @@ void cLuxMainMenu_Options::OnSetActive(bool abX)
             else
             {
                 if(mInitialValues.GetVarBool("InitialValuesSet")==false)
+                {
                     DumpInitialValues(mInitialValues);
+                }
 
                 SetInputValues(mInitialValues);
                 mInitialValues.AddVarBool("InitialValuesSet", true);
             }
         }
         else
+        {
             mbKeyConfigOpen = false;
+        }
     }
 
 #ifdef USE_GAMEPAD
@@ -2214,7 +2306,9 @@ void cLuxMainMenu_Options::SetTabNavigation(cWidgetTab* apTab, bool abSetFocus)
 
     mpGuiSet->SetDefaultFocusNavWidget(pFirstWidget);
     if(abSetFocus)
+    {
         mpGuiSet->SetFocusedWidget(pFirstWidget);
+    }
 
     mpBOK->SetFocusNavigation(eUIArrow_Up, pLastWidget);
     mpBCancel->SetFocusNavigation(eUIArrow_Up, pLastWidget);

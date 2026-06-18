@@ -29,7 +29,10 @@ const static bool gbLogStuff = false;
 
 void cProgramComboProgram::DestroyProgram()
 {
-    if(mpProgram==NULL) return;
+    if(mpProgram==NULL)
+    {
+        return;
+    }
 
     hplDelete(mpProgram);
     mpProgram = NULL;
@@ -103,7 +106,9 @@ iGpuProgram* cProgramComboManager::GenerateProgram(int alMainMode, int alFlags)
         iGpuProgram* pProgram = NULL;
 
         if(pVtxShader && pFragShader)
+        {
             pProgram = CreateProgramFromShaders(sProgramName, pVtxShader, pFragShader,false);
+        }
 
         pProgData->mpProgram = pProgram;
 
@@ -161,7 +166,9 @@ void cProgramComboManager::SetupGenerateProgramData(int alMainMode, const tStrin
 
     comboSettings.mvFeatures.resize(alFeatureNum);
     for(int i=0; i<alFeatureNum; ++i)
+    {
         comboSettings.mvFeatures[i] = apFeatures[i];
+    }
 
     tParseVarMap* pVarMap = avDefaultVars.GetMapPtr();
     comboSettings.mvDefaultVars.reserve(pVarMap->size());
@@ -206,15 +213,22 @@ void cProgramComboManager::DestroyGeneratedProgram(int alMainMode, iGpuProgram* 
         //Destroy program
         //Log("    Destroying program '%s'/%d id: %d\n", pProgram->GetName().c_str(),pProgram, pProgram->GetUserId());
         mvProgramSets[alMainMode].erase(it);
-        if(pProgram) hplDelete(pProgram);
+        if(pProgram)
+        {
+            hplDelete(pProgram);
+        }
         hplDelete(pProgData);
 
         /////////////////////////
         //Destroy shaders (must be done after program deletion!)
         if(pVtxShader)
+        {
             DestroyGeneratedShader(alMainMode,pVtxShader, eGpuShaderType_Vertex);
+        }
         if(pFragShader)
+        {
             DestroyGeneratedShader(alMainMode,pFragShader, eGpuShaderType_Fragment);
+        }
     }
 }
 
@@ -244,7 +258,10 @@ void cProgramComboManager::DestroyGeneratedShader(int alMainMode, iGpuShader* ap
         //Log(" Destroying shader '%s' id: %d\n", pShader->GetName().c_str(), pShader->GetUserId());
 
         pShaderSet->erase(it);
-        if(pShader) mpResources->GetGpuShaderManager()->Destroy(pShader);
+        if(pShader)
+        {
+            mpResources->GetGpuShaderManager()->Destroy(pShader);
+        }
         hplDelete(pShaderData);
     }
 
@@ -287,7 +304,10 @@ iGpuShader *cProgramComboManager::CreateShader(const tString& asName,eGpuShaderT
 
 void cProgramComboManager::DestroyShader(iGpuShader * apShader)
 {
-    if(apShader == NULL) return;
+    if(apShader == NULL)
+    {
+        return;
+    }
 
     STLFindAndRemove(mlstExtraShaders, apShader);
 
@@ -313,7 +333,10 @@ iGpuProgram* cProgramComboManager::CreateProgramFromShaders(const tString &asPro
     iGpuShader *pVtxShader, *pFragShader;
 
     pVtxShader = CreateShader(asVtxShaderName,eGpuShaderType_Vertex,apVars, abAddtoList);
-    if(pVtxShader == NULL) return NULL;
+    if(pVtxShader == NULL)
+    {
+        return NULL;
+    }
 
     pFragShader = CreateShader(asFragShaderName,eGpuShaderType_Fragment,apVars, abAddtoList);
     if(pFragShader == NULL)
@@ -373,9 +396,13 @@ iGpuProgram* cProgramComboManager::CreateProgramFromShaders(const tString &asPro
     {
         Error("Could not link program '%s' in ProgramComboManager!\n",asProgramName.c_str());
         if(abAddtoList)
+        {
             DestroyProgram(pProgram);
+        }
         else
+        {
             hplDelete(pProgram);
+        }
         return NULL;
     }
 
@@ -402,10 +429,16 @@ void cProgramComboManager::DestroyShadersAndPrograms()
 
         //Shaders (must be after programs!)
         for(tProgramComboShaderMapIt it = mvVtxShaderSets[rmode].begin(); it != mvVtxShaderSets[rmode].end(); ++it)
-            if(it->second->mpShader)    mpResources->GetGpuShaderManager()->Destroy(it->second->mpShader);
+            if(it->second->mpShader)
+            {
+                mpResources->GetGpuShaderManager()->Destroy(it->second->mpShader);
+            }
 
         for(tProgramComboShaderMapIt it = mvFragShaderSets[rmode].begin(); it != mvFragShaderSets[rmode].end(); ++it)
-            if(it->second->mpShader)    mpResources->GetGpuShaderManager()->Destroy(it->second->mpShader);
+            if(it->second->mpShader)
+            {
+                mpResources->GetGpuShaderManager()->Destroy(it->second->mpShader);
+            }
 
         STLMapDeleteAll(mvVtxShaderSets[rmode]);
         STLMapDeleteAll(mvFragShaderSets[rmode]);
@@ -495,7 +528,10 @@ iGpuShader* cProgramComboManager::GetShaderForCombo(int alMainMode, int alBitFla
     pShaderData->mlUserCount++;
     pShaderSet->insert(tProgramComboShaderMap::value_type(lValidBits, pShaderData));
 
-    if(pShader) pShader->SetUserId(lValidBits);
+    if(pShader)
+    {
+        pShader->SetUserId(lValidBits);
+    }
 
     //tString sTempName = asShaderName +"_"+GenerateProgramName(alMainMode, lValidBits);
     //Log("Created shader '%s' id: %d\n", pShader->GetName().c_str(), pShader->GetUserId());

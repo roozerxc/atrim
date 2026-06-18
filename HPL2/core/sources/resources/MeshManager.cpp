@@ -110,8 +110,14 @@ cMesh* cMeshManager::CreateMesh(const tString& asName, tMeshLoadFlag aFlag)
         AddResource(pMesh);
     }
 
-    if(pMesh)pMesh->IncUserCount();
-    else Error("Couldn't load mesh '%s'\n",asNewName.c_str());
+    if(pMesh)
+    {
+        pMesh->IncUserCount();
+    }
+    else
+    {
+        Error("Couldn't load mesh '%s'\n",asNewName.c_str());
+    }
 
     EndLoad();
     return pMesh;
@@ -122,7 +128,10 @@ cMesh* cMeshManager::CreateMesh(const tString& asName, tMeshLoadFlag aFlag)
 iVertexBuffer* cMeshManager::CreateVertexBufferFromMesh(const tString& asName, tVertexElementFlag alVtxToCopy)
 {
     cMesh *pMesh = CreateMesh(asName);
-    if(pMesh==NULL) return NULL;
+    if(pMesh==NULL)
+    {
+        return NULL;
+    }
 
     iVertexBuffer *pVtxBuffer = pMesh->GetSubMesh(0)->GetVertexBuffer()->CreateCopy(eVertexBufferType_Hardware,
                                 eVertexBufferUsageType_Static,

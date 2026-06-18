@@ -86,9 +86,13 @@ void cWidgetMultiPropertyListBox::SetColumnWidth(const int alIdx, float afWidth)
         float fTextWidth = mpDefaultFontType->GetLength(mvDefaultFontSize, pLabel->GetText().c_str());
 
         if(afWidth < fTextWidth)
+        {
             vSize.x = fTextWidth;
+        }
         else
+        {
             vSize.x = afWidth;
+        }
 
         mvColumns[alIdx]->SetSize(vSize);
 
@@ -149,7 +153,10 @@ void cWidgetMultiPropertyListBox::DrawItems(float afTimeStep, cGuiClipRegion* ap
     vPosition = GetItemStartPos();
     for(size_t i=static_cast<size_t>(mlFirstItem); i<mvItems.size(); ++i)
     {
-        if(i-mlFirstItem > static_cast<size_t>(mlMaxItems)) break;
+        if(i-mlFirstItem > static_cast<size_t>(mlMaxItems))
+        {
+            break;
+        }
 
         cWidgetItem* pItem = mvItems[i];
 
@@ -170,10 +177,14 @@ void cWidgetMultiPropertyListBox::DrawItems(float afTimeStep, cGuiClipRegion* ap
 
             vPosition.x = mvColumns[j]->GetGlobalPosition().x;
             if(sublist.mAlign==eFontAlign_Right)
+            {
                 vPosition.x+= mvColumns[j]->GetSize().x-10;
+            }
 
             if(pProp==NULL)
+            {
                 continue;
+            }
 
             mpSet->SetCurrentClipRegion(pRegion[j]);
 
@@ -183,12 +194,19 @@ void cWidgetMultiPropertyListBox::DrawItems(float afTimeStep, cGuiClipRegion* ap
             {
             case eItemPropertyType_String:
                 if(bSelected)
+                {
                     DrawDefaultTextHighlight(pProp->GetText(), vPosition, sublist.mAlign);
+                }
                 else
+                {
                     DrawDefaultText(pProp->GetText(), vPosition, sublist.mAlign);
+                }
                 break;
             case eItemPropertyType_Image:
-                if(pProp->GetGfx()) mpSet->DrawGfx(pProp->GetGfx(), vPosition, mfIconSize);
+                if(pProp->GetGfx())
+                {
+                    mpSet->DrawGfx(pProp->GetGfx(), vPosition, mfIconSize);
+                }
                 break;
             }
 

@@ -326,15 +326,27 @@ bool cRendererDeferred::LoadData()
         cVector3l(1024, 1024,1)
     };
     int lStartSize = 2;
-    if(mShadowMapResolution == eShadowMapResolution_Medium)        lStartSize = 1;
-    else if(mShadowMapResolution == eShadowMapResolution_Low)    lStartSize = 0;
+    if(mShadowMapResolution == eShadowMapResolution_Medium)
+    {
+        lStartSize = 1;
+    }
+    else if(mShadowMapResolution == eShadowMapResolution_Low)
+    {
+        lStartSize = 0;
+    }
 
     for(int i=0; i<1; ++i)
+    {
         CreateAndAddShadowMap(eShadowMapResolution_High, vShadowSize[lStartSize + eShadowMapResolution_High],ePixelFormat_Depth16);
+    }
     for(int i=0; i<4; ++i)
+    {
         CreateAndAddShadowMap(eShadowMapResolution_Medium, vShadowSize[lStartSize + eShadowMapResolution_Medium],ePixelFormat_Depth16);
+    }
     for(int i=0; i<6; ++i)
+    {
         CreateAndAddShadowMap(eShadowMapResolution_Low, vShadowSize[lStartSize + eShadowMapResolution_Low],ePixelFormat_Depth16);
+    }
 
 
     // Select samples depending quality and shader model (if dynamic branching is supported)
@@ -411,14 +423,19 @@ bool cRendererDeferred::LoadData()
     //Create Fog program
     {
         cParserVarContainer vars;
-        if(GetGBufferType() == eDeferredGBuffer_32Bit)    vars.Add("PackedDepth");
+        if(GetGBufferType() == eDeferredGBuffer_32Bit)
+        {
+            vars.Add("PackedDepth");
+        }
 
         mpFogProgramManager = hplNew(    cProgramComboManager, ("FogArea", mpGraphics, mpResources, 1));
 
         mpFogProgramManager->SetupGenerateProgramData(0,"Fog","deferred_fog_vtx.glsl","deferred_fog_frag.glsl",gvFogAreaFeatureVec,kFogAreaFeatureNum,vars);
 
         if(GetGBufferType() == eDeferredGBuffer_32Bit)
+        {
             mpFogProgramManager->AddGenerateProgramVariableId("afNegFarPlane", kVar_afNegFarPlane,0);
+        }
         mpFogProgramManager->AddGenerateProgramVariableId("avFogStartAndLength", kVar_avFogStartAndLength,0);
         mpFogProgramManager->AddGenerateProgramVariableId("avFogColor", kVar_avFogColor,0);
         mpFogProgramManager->AddGenerateProgramVariableId("avRayCastStart", kVar_avRayCastStart,0);
@@ -447,7 +464,10 @@ bool cRendererDeferred::LoadData()
             //Light box
             for(int i=0; i<2; ++i)
             {
-                if(i==1) vars.Add("UseSSAO");
+                if(i==1)
+                {
+                    vars.Add("UseSSAO");
+                }
                 mpLightBoxProgram[i] = mpProgramManager->CreateProgramFromShaders("LightBoxNormal",
                                        "deferred_base_vtx.glsl",
                                        "deferred_light_box_frag.glsl",
@@ -471,19 +491,40 @@ bool cRendererDeferred::LoadData()
             defaultVars.Add("ShadowJitterSamplesDiv2",mlShadowJitterSamples / 2);
             defaultVars.Add("ShadowJitterSamples", mlShadowJitterSamples);
 
-            if(mShadowMapQuality == eShadowMapQuality_High)        defaultVars.Add("ShadowMapQuality_High");
-            if(mShadowMapQuality == eShadowMapQuality_Medium)    defaultVars.Add("ShadowMapQuality_Medium");
-            if(mShadowMapQuality == eShadowMapQuality_Low)        defaultVars.Add("ShadowMapQuality_Low");
+            if(mShadowMapQuality == eShadowMapQuality_High)
+            {
+                defaultVars.Add("ShadowMapQuality_High");
+            }
+            if(mShadowMapQuality == eShadowMapQuality_Medium)
+            {
+                defaultVars.Add("ShadowMapQuality_Medium");
+            }
+            if(mShadowMapQuality == eShadowMapQuality_Low)
+            {
+                defaultVars.Add("ShadowMapQuality_Low");
+            }
 
             //Vertex shader will handles deferred lights
             defaultVars.Add("DeferredLight");
 
             //Deferred renderer type
-            if(mGBufferType == eDeferredGBuffer_32Bit)    defaultVars.Add("Deferred_32bit","");
-            else                                        defaultVars.Add("Deferred_64bit","");
+            if(mGBufferType == eDeferredGBuffer_32Bit)
+            {
+                defaultVars.Add("Deferred_32bit","");
+            }
+            else
+            {
+                defaultVars.Add("Deferred_64bit","");
+            }
 
-            if(mlNumOfGBufferTextures == 4)                defaultVars.Add("RenderTargets_4","");
-            else                                        defaultVars.Add("RenderTargets_3","");
+            if(mlNumOfGBufferTextures == 4)
+            {
+                defaultVars.Add("RenderTargets_4","");
+            }
+            else
+            {
+                defaultVars.Add("RenderTargets_3","");
+            }
 
             mpProgramManager->SetupGenerateProgramData(    eDefferredProgramMode_Lights,"Lights", "deferred_base_vtx.glsl", "deferred_light_frag.glsl",gvLightFeatureVec,
                     kLightFeatureNum,defaultVars);
@@ -549,8 +590,14 @@ bool cRendererDeferred::LoadData()
         cParserVarContainer programVars;
 
         //Program for unpacking depth to a lower resolution texture
-        if(mGBufferType == eDeferredGBuffer_32Bit)    programVars.Add("Deferred_32bit");
-        else                                        programVars.Add("Deferred_64bit");
+        if(mGBufferType == eDeferredGBuffer_32Bit)
+        {
+            programVars.Add("Deferred_32bit");
+        }
+        else
+        {
+            programVars.Add("Deferred_64bit");
+        }
         programVars.Add("UseUv");
         mpUnpackDepthProgram = mpGraphics->CreateGpuProgramFromShaders("UnpackDepth","deferred_base_vtx.glsl", "deferred_unpack_depth_frag.glsl",&programVars);
         if(mpUnpackDepthProgram)
@@ -626,15 +673,27 @@ void cRendererDeferred::DestroyData()
 {
     /////////////////////////
     //Vertex buffers
-    if(mpBatchBuffer) hplDelete(mpBatchBuffer);
+    if(mpBatchBuffer)
+    {
+        hplDelete(mpBatchBuffer);
+    }
 
-    if(mpFullscreenLightQuad) hplDelete(mpFullscreenLightQuad);
+    if(mpFullscreenLightQuad)
+    {
+        hplDelete(mpFullscreenLightQuad);
+    }
 
     for(int i=0; i< eDeferredShapeQuality_LastEnum; ++i)
     {
-        if(mpShapeSphere[i]) hplDelete(mpShapeSphere[i]);
+        if(mpShapeSphere[i])
+        {
+            hplDelete(mpShapeSphere[i]);
+        }
     }
-    if(mpShapePyramid) hplDelete(mpShapePyramid);
+    if(mpShapePyramid)
+    {
+        hplDelete(mpShapePyramid);
+    }
 
 
     /////////////////////////
@@ -665,7 +724,10 @@ void cRendererDeferred::DestroyData()
     //Shadow textures
     DestroyShadowMaps();
 
-    if(mpShadowJitterTexture) mpGraphics->DestroyTexture(mpShadowJitterTexture);
+    if(mpShadowJitterTexture)
+    {
+        mpGraphics->DestroyTexture(mpShadowJitterTexture);
+    }
 
     /////////////////////////
     //Fog stuff
@@ -686,7 +748,9 @@ void cRendererDeferred::DestroyData()
 
         mpGraphics->DestroyGpuProgram(mpUnpackDepthProgram);
         for(int i=0; i<2; ++i)
+        {
             mpGraphics->DestroyGpuProgram(mpSSAOBlurProgram[i]);
+        }
         mpGraphics->DestroyGpuProgram(mpSSAORenderProgram);
     }
 
@@ -730,7 +794,10 @@ iTexture* cRendererDeferred::GetGbufferTexture(int alIdx)
 
 void cRendererDeferred::CopyToFrameBuffer()
 {
-    if(mpCurrentSettings->mbIsReflection) return;
+    if(mpCurrentSettings->mbIsReflection)
+    {
+        return;
+    }
 
     START_RENDER_PASS(CopyToFrameBuffer);
 
@@ -779,8 +846,14 @@ void cRendererDeferred::RenderObjects()
     SetupGBuffer();
 
     tRenderableFlag lVisibleFlags=0;
-    if(mpCurrentSettings->mbIsReflection)    lVisibleFlags |= eRenderableFlag_VisibleInReflection;
-    else                                    lVisibleFlags |= eRenderableFlag_VisibleInNonReflection;
+    if(mpCurrentSettings->mbIsReflection)
+    {
+        lVisibleFlags |= eRenderableFlag_VisibleInReflection;
+    }
+    else
+    {
+        lVisibleFlags |= eRenderableFlag_VisibleInNonReflection;
+    }
 
     ///////////////////////////
     //Occlusion testing
@@ -797,7 +870,10 @@ void cRendererDeferred::RenderObjects()
                                          eRenderListCompileFlag_Translucent |
                                          eRenderListCompileFlag_Decal |
                                          eRenderListCompileFlag_Illumination);
-        if(mbLog)mpCurrentRenderList->PrintAllObjects();
+        if(mbLog)
+        {
+            mpCurrentRenderList->PrintAllObjects();
+        }
         //RenderDynamicZTemp();
 
     }
@@ -813,7 +889,10 @@ void cRendererDeferred::RenderObjects()
                                          eRenderListCompileFlag_Translucent |
                                          eRenderListCompileFlag_Decal |
                                          eRenderListCompileFlag_Illumination);
-        if(mbLog)mpCurrentRenderList->PrintAllObjects();
+        if(mbLog)
+        {
+            mpCurrentRenderList->PrintAllObjects();
+        }
         RenderZ();
 
         AssignAndRenderOcclusionQueryObjects(false, NULL, true);
@@ -862,7 +941,9 @@ void cRendererDeferred::RenderObjects()
     RunCallback(eRendererMessage_PostTranslucent);
 
     if(mbOcclusionTestLargeLights)
-        RetrieveAllLightOcclusionPair(false); //false = we do not stop and wait.
+    {
+        RetrieveAllLightOcclusionPair(false);    //false = we do not stop and wait.
+    }
 
     //Debug for testing reflection!
     /*if(mpCurrentSettings->mbIsReflection==false)
@@ -943,7 +1024,10 @@ void cRendererDeferred::RenderDynamicZTemp()
     for(int i=0; i<mpCurrentRenderList->GetSolidObjectNum(); ++i)
     {
         iRenderable *pObject = mpCurrentRenderList->GetSolidObject(i);
-        if(pObject->IsStatic()) continue;
+        if(pObject->IsStatic())
+        {
+            continue;
+        }
 
         cMaterial *pMaterial = pObject->GetMaterial();
 
@@ -1013,7 +1097,10 @@ void cRendererDeferred::RenderGbuffer()
 void cRendererDeferred::RenderSSAO()
 {
     //If not active or loaded, return.
-    if(mbSSAOLoaded==false || mpCurrentSettings->mbSSAOActive==false) return;
+    if(mbSSAOLoaded==false || mpCurrentSettings->mbSSAOActive==false)
+    {
+        return;
+    }
 
     //Check so any box lights are to be rendered, else return
     if(mSSAOType == eDeferredSSAO_InBoxLight)
@@ -1056,7 +1143,9 @@ void cRendererDeferred::RenderSSAO()
     if(mGBufferType == eDeferredGBuffer_64Bit)
     {
         if(mpUnpackDepthProgram)
+        {
             mpUnpackDepthProgram->SetFloat(kVar_afNegInvFarPlane, -1.0f / mfFarPlane);
+        }
     }
     SetProgram(mpUnpackDepthProgram);
     SetTexture(0, pGBufferDepthTexture);    //Set G-buffer depth texture
@@ -1096,7 +1185,9 @@ void cRendererDeferred::RenderSSAO()
         SetTexture(1,mpLinearDepthTexture);
 
         if(mpSSAOBlurProgram[0])
+        {
             mpSSAOBlurProgram[0]->SetFloat(kVar_afFarPlane, mfFarPlane);
+        }
         SetProgram(mpSSAOBlurProgram[0]);
         DrawQuad(vQuadPos, vQuadSize,0, vSSAOSize,true);
 
@@ -1106,7 +1197,9 @@ void cRendererDeferred::RenderSSAO()
         SetTexture(1,mpLinearDepthTexture);
 
         if(mpSSAOBlurProgram[1])
+        {
             mpSSAOBlurProgram[1]->SetFloat(kVar_afFarPlane, mfFarPlane);
+        }
         SetProgram(mpSSAOBlurProgram[1]);
         DrawQuad(vQuadPos, vQuadSize,0, vSSAOSize,true);
     }
@@ -1206,7 +1299,10 @@ void cRendererDeferred::SetupLightProgramVariables(    iGpuProgram *apProgram,cD
 {
     iLight *pLight = apLightData->mpLight;
 
-    if(apProgram==NULL) return;
+    if(apProgram==NULL)
+    {
+        return;
+    }
 
     ///////////////////////
     // General variables
@@ -1245,7 +1341,9 @@ void cRendererDeferred::SetupLightProgramVariables(    iGpuProgram *apProgram,cD
                                         1.0f / (float)apLightData->mpShadowTexture->GetHeight());
 
             if(mpShadowJitterTexture)
+            {
                 apProgram->SetVec2f(kVar_avShadowMapOffsetMul, vInvShadowMapSize * pLight->GetShadowMapBlurAmount());
+            }
 
             apLightData->mpShadowTexture = NULL;
         }
@@ -1280,14 +1378,23 @@ iGpuProgram* cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightD
     /////////////////////////
     //Flag setup
     tFlag lFlags = alExtraFlags;
-    if(pLight->GetDiffuseColor().a > 0)    lFlags |= eFeature_Light_Specular;
-    if(pLight->GetGoboTexture())        lFlags |= eFeature_Light_Gobo;
+    if(pLight->GetDiffuseColor().a > 0)
+    {
+        lFlags |= eFeature_Light_Specular;
+    }
+    if(pLight->GetGoboTexture())
+    {
+        lFlags |= eFeature_Light_Gobo;
+    }
 
     //Spotlight specifics
     if(lightType == eLightType_Spot)
     {
         lFlags |= eFeature_Light_SpotLight;
-        if(lFlags & eFeature_Light_LightShapes) lFlags |= eFeature_Light_DivideInFrag;
+        if(lFlags & eFeature_Light_LightShapes)
+        {
+            lFlags |= eFeature_Light_DivideInFrag;
+        }
 
         //Only spot lights can cast shadows (for now)
         if(apLightData->mbCastShadows && apLightData->mpShadowTexture)
@@ -1309,7 +1416,10 @@ iGpuProgram* cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightD
     //Textures
     SetTexture(4,pLight->GetFalloffMap());
 
-    if(pLight->GetGoboTexture())        SetTexture(5, pLight->GetGoboTexture());
+    if(pLight->GetGoboTexture())
+    {
+        SetTexture(5, pLight->GetGoboTexture());
+    }
 
     ////////////////////////
     // Point light specific
@@ -1328,12 +1438,17 @@ iGpuProgram* cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightD
         {
             SetTexture(6, apLightData->mpShadowTexture);
 
-            if(mpShadowJitterTexture) SetTexture(7, mpShadowJitterTexture);
+            if(mpShadowJitterTexture)
+            {
+                SetTexture(7, mpShadowJitterTexture);
+            }
         }
 
         //Spot fall off
         if(pLight->GetGoboTexture()==NULL)
+        {
             SetTexture(5,pLightSpot->GetSpotFalloffMap());
+        }
 
     }
 
@@ -1363,7 +1478,10 @@ void cRendererDeferred::RenderLightShadowMap(cDeferredLight* apLightData)
     }
 
     //Set back G-buffer textures
-    for(int i=0; i<mlNumOfGBufferTextures; ++i) SetTexture(i, GetBufferTexture(i));
+    for(int i=0; i<mlNumOfGBufferTextures; ++i)
+    {
+        SetTexture(i, GetBufferTexture(i));
+    }
 
     //Reset render states
     SetDepthTestFunc(eDepthTestFunc_GreaterOrEqual);
@@ -1407,7 +1525,9 @@ static bool SortFunc_Box(const cDeferredLight* apLightDataA, const cDeferredLigh
     cLightBox *pBoxLightB = static_cast<cLightBox*>(pLightB);
 
     if(pBoxLightA->GetBoxLightPrio() != pBoxLightB->GetBoxLightPrio())
+    {
         return pBoxLightA->GetBoxLightPrio() < pBoxLightB->GetBoxLightPrio();
+    }
 
     //////////////////////////
     //Pointer
@@ -1554,7 +1674,10 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
 
         ////////////////////////////
         // Skip box lights
-        if(lightType == eLightType_Box) continue;
+        if(lightType == eLightType_Box)
+        {
+            continue;
+        }
 
         ////////////////////////
         //Check if near plane is inside light volume
@@ -1632,7 +1755,9 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
                 else if(fDistToLight > mfShadowDistanceLow)
                 {
                     if(pLightData->mShadowResolution == eShadowMapResolution_Low)
+                    {
                         pLightData->mbCastShadows = false;
+                    }
                     pLightData->mShadowResolution = eShadowMapResolution_Low;
                 }
                 ///////////////////////
@@ -1640,9 +1765,13 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
                 else if(fDistToLight > mfShadowDistanceMedium)
                 {
                     if(pLightData->mShadowResolution == eShadowMapResolution_High)
+                    {
                         pLightData->mShadowResolution = eShadowMapResolution_Medium;
+                    }
                     else
+                    {
                         pLightData->mShadowResolution = eShadowMapResolution_Low;
+                    }
                 }
             }
 
@@ -1653,15 +1782,24 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
         // Render Query
 
         //If not doing occlusion testing on large light, might as well just skip here
-        if(mbOcclusionTestLargeLights==false || mpCurrentSettings->mbUseOcclusionCulling==false) continue;
+        if(mbOcclusionTestLargeLights==false || mpCurrentSettings->mbUseOcclusionCulling==false)
+        {
+            continue;
+        }
 
         // If inside near plane or too small on screen skip queries
-        if(pLightData->mbInsideNearPlane || pLightData->mlArea < mlMinLargeLightArea) continue;
+        if(pLightData->mbInsideNearPlane || pLightData->mlArea < mlMinLargeLightArea)
+        {
+            continue;
+        }
 
 
         ///////////////////////////
         // Only check if light was invisible last frame
-        if(STLObjectExists(setPrevVisibleLights,pLight)) continue;
+        if(STLObjectExists(setPrevVisibleLights,pLight))
+        {
+            continue;
+        }
 
         ////////////////////////////////
         //Render light shape and make a query
@@ -1767,7 +1905,9 @@ void cRendererDeferred::InitLightRendering()
                 }
 
                 if(mbLog)
+                {
                     Log(" Fetching query for light '%s'/%d. Have %d samples. Visible: %d\n", pLight->GetName().c_str(), pLight,lSampleCount, !bLightInvisible);
+                }
             }
 
             ReleaseOcclusionQuery(pQuery);
@@ -1800,9 +1940,13 @@ void cRendererDeferred::InitLightRendering()
             if(lightType == eLightType_Point)
             {
                 if(pLightData->mlArea >= mlMinLargeLightArea)
+                {
                     mvSortedLights[eDeferredLightList_StencilFront_RenderBack].push_back(pLightData);
+                }
                 else
+                {
                     mvSortedLights[eDeferredLightList_RenderBack].push_back(pLightData);
+                }
             }
             //Always do double passes for spotlights as they need to will get artefacts otherwise...
             //(At least with gobos)l
@@ -1841,8 +1985,14 @@ void cRendererDeferred::InitLightRendering()
 
 void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
 {
-    if(mvSortedLights[eDeferredLightList_StencilBack_ScreenQuad].empty()) return;
-    if(mbLog) Log("---\nRendering Lights StencilBack_ScreenQuad Begin\n");
+    if(mvSortedLights[eDeferredLightList_StencilBack_ScreenQuad].empty())
+    {
+        return;
+    }
+    if(mbLog)
+    {
+        Log("---\nRendering Lights StencilBack_ScreenQuad Begin\n");
+    }
 
     //Check if stencil is dirty
     if(mbStencilNeedClearing)
@@ -1851,7 +2001,10 @@ void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
         mbStencilNeedClearing = false;
     }
 
-    if(mbDepthCullLights) SetStencilActive(true);
+    if(mbDepthCullLights)
+    {
+        SetStencilActive(true);
+    }
 
     ///////////////////////
     // Render Inside Near Plane Lights
@@ -1863,24 +2016,37 @@ void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
         //cVector2l vMaxClip(-1000,-10000);
 
         int lIterations;
-        if(lNumOfNearPlaneLights >kMaxStencilBitsUsed)    lIterations = kMaxStencilBitsUsed;
-        else                                            lIterations = lNumOfNearPlaneLights;
+        if(lNumOfNearPlaneLights >kMaxStencilBitsUsed)
+        {
+            lIterations = kMaxStencilBitsUsed;
+        }
+        else
+        {
+            lIterations = lNumOfNearPlaneLights;
+        }
 
         lNumOfNearPlaneLights -= lIterations;
 
         /////////////////////////////
         //Render stencil
         if(mbDepthCullLights)
+        {
             SetDepthTest(true);
+        }
         else
+        {
             SetDepthTest(false);
+        }
         SetChannelMode(eMaterialChannelMode_None);
         SetStencil(eStencilFunc_Always,0xFF,0xFF,eStencilOp_Keep,eStencilOp_Keep,eStencilOp_Replace);
         for(int i=0; i<lIterations; ++i)
         {
             cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_StencilBack_ScreenQuad][lStartLight + i];
             iLight *pLight = pLightData->mpLight;
-            if(mbLog)Log(" Stencil light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+            if(mbLog)
+            {
+                Log(" Stencil light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+            }
 
             //Stencil
             SetStencilWriteMask(cMath::GetFlagBit(kStartStencilBit + i));
@@ -1947,7 +2113,10 @@ void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
 
             //////////////////
             // Render light
-            if(mbLog)Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+            if(mbLog)
+            {
+                Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+            }
 
             //Stencil
             SetStencil(    eStencilFunc_Equal, 0xFF, cMath::GetFlagBit(kStartStencilBit + i),
@@ -2001,15 +2170,24 @@ void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
     ////////////////////////////////////////
     // Reset things needed
     mbStencilNeedClearing = true;
-    if(mbLog) Log("Rendering Lights StencilBack_ScreenQuad End\n---\n");
+    if(mbLog)
+    {
+        Log("Rendering Lights StencilBack_ScreenQuad End\n---\n");
+    }
 }
 
 //-----------------------------------------------------------------------
 
 void cRendererDeferred::RenderLights_StencilFront_RenderBack()
 {
-    if(mvSortedLights[eDeferredLightList_StencilFront_RenderBack].empty()) return;
-    if(mbLog) Log("---\nRendering Lights StencilFront_RenderBack Begin\n");
+    if(mvSortedLights[eDeferredLightList_StencilFront_RenderBack].empty())
+    {
+        return;
+    }
+    if(mbLog)
+    {
+        Log("---\nRendering Lights StencilFront_RenderBack Begin\n");
+    }
 
     //Check if stencil is dirty
     if(mbStencilNeedClearing)
@@ -2037,8 +2215,14 @@ void cRendererDeferred::RenderLights_StencilFront_RenderBack()
 
 
         int lIterations;
-        if(lNumOfNearPlaneLights >kMaxStencilBitsUsed)    lIterations = kMaxStencilBitsUsed;
-        else                                            lIterations = lNumOfNearPlaneLights;
+        if(lNumOfNearPlaneLights >kMaxStencilBitsUsed)
+        {
+            lIterations = kMaxStencilBitsUsed;
+        }
+        else
+        {
+            lIterations = lNumOfNearPlaneLights;
+        }
 
         lNumOfNearPlaneLights -= lIterations;
 
@@ -2051,7 +2235,10 @@ void cRendererDeferred::RenderLights_StencilFront_RenderBack()
         {
             cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_StencilFront_RenderBack][lStartLight + i];
             iLight *pLight = pLightData->mpLight;
-            if(mbLog)Log(" Stencil light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+            if(mbLog)
+            {
+                Log(" Stencil light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+            }
 
             //Stencil
             SetStencilWriteMask(cMath::GetFlagBit(kStartStencilBit + i));
@@ -2101,7 +2288,10 @@ void cRendererDeferred::RenderLights_StencilFront_RenderBack()
 
             //////////////////
             // Render light
-            if(mbLog)Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+            if(mbLog)
+            {
+                Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+            }
 
             //Stencil
             SetStencil(    eStencilFunc_Equal, 0xFF, cMath::GetFlagBit(kStartStencilBit + i),
@@ -2155,15 +2345,24 @@ void cRendererDeferred::RenderLights_StencilFront_RenderBack()
     ////////////////////////////////////////
     // Reset things needed
     mbStencilNeedClearing = true;
-    if(mbLog) Log("Rendering Lights StencilFront_RenderBack End\n---\n");
+    if(mbLog)
+    {
+        Log("Rendering Lights StencilFront_RenderBack End\n---\n");
+    }
 }
 
 //-----------------------------------------------------------------------
 
 void cRendererDeferred::RenderLights_RenderBack()
 {
-    if(mvSortedLights[eDeferredLightList_RenderBack].empty()) return;
-    if(mbLog) Log("---\nRendering Lights RenderBack Begin\n");
+    if(mvSortedLights[eDeferredLightList_RenderBack].empty())
+    {
+        return;
+    }
+    if(mbLog)
+    {
+        Log("---\nRendering Lights RenderBack Begin\n");
+    }
 
     if(mbDepthCullLights)
     {
@@ -2199,7 +2398,10 @@ void cRendererDeferred::RenderLights_RenderBack()
 
         //////////////////
         // Render light
-        if(mbLog)Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+        if(mbLog)
+        {
+            Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+        }
 
         //Set up matrix
         SetModelViewMatrix(pLightData->m_mtxViewSpaceRender);
@@ -2210,7 +2412,10 @@ void cRendererDeferred::RenderLights_RenderBack()
 
         //Set up program and textures
         tFlag lExtraFlags = eFeature_Light_LightShapes;
-        if(pLightData->mbInsideNearPlane) lExtraFlags |= eFeature_Light_DivideInFrag;
+        if(pLightData->mbInsideNearPlane)
+        {
+            lExtraFlags |= eFeature_Light_DivideInFrag;
+        }
         iGpuProgram *pProgram = SetupProgramAndTextures(pLightData,lExtraFlags);
 
         //Set up Light specific variables
@@ -2219,7 +2424,10 @@ void cRendererDeferred::RenderLights_RenderBack()
         //Draw the light
         DrawCurrent();
     }
-    if(mbLog) Log("Rendering Lights RenderBack End\n---\n");
+    if(mbLog)
+    {
+        Log("Rendering Lights RenderBack End\n---\n");
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -2227,7 +2435,10 @@ void cRendererDeferred::RenderLights_RenderBack()
 void cRendererDeferred::RenderBoxLight(cDeferredLight* apLightData)
 {
     iLight *pLight = apLightData->mpLight;
-    if(mbLog)Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+    if(mbLog)
+    {
+        Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+    }
 
     cLightBox *pLightBox = static_cast<cLightBox*>(pLight);
 
@@ -2235,7 +2446,10 @@ void cRendererDeferred::RenderBoxLight(cDeferredLight* apLightData)
     int lProgramNum =    (mbSSAOLoaded && mpCurrentSettings->mbSSAOActive && mSSAOType == eDeferredSSAO_InBoxLight) ? 1 :0;
 
     //Set up texture
-    if(lProgramNum == 1) SetTexture(5, mpSSAOTexture);
+    if(lProgramNum == 1)
+    {
+        SetTexture(5, mpSSAOTexture);
+    }
 
     //Set up program
     SetProgram(mpLightBoxProgram[lProgramNum]);
@@ -2268,8 +2482,14 @@ void cRendererDeferred::RenderBoxLight(cDeferredLight* apLightData)
 
 void cRendererDeferred::RenderLights_Box_StencilFront_RenderBack()
 {
-    if(mvSortedLights[eDeferredLightList_Box_StencilFront_RenderBack].empty()) return;
-    if(mbLog) Log("---\nRendering Lights Box_StencilFront_RenderBack Begin\n");
+    if(mvSortedLights[eDeferredLightList_Box_StencilFront_RenderBack].empty())
+    {
+        return;
+    }
+    if(mbLog)
+    {
+        Log("---\nRendering Lights Box_StencilFront_RenderBack Begin\n");
+    }
 
     //Check if stencil is dirty
     if(mbStencilNeedClearing)
@@ -2296,8 +2516,14 @@ void cRendererDeferred::RenderLights_Box_StencilFront_RenderBack()
     while(lNumOfNearPlaneLights>0)
     {
         int lIterations;
-        if(lNumOfNearPlaneLights >kMaxStencilBitsUsed)    lIterations = kMaxStencilBitsUsed;
-        else                                            lIterations = lNumOfNearPlaneLights;
+        if(lNumOfNearPlaneLights >kMaxStencilBitsUsed)
+        {
+            lIterations = kMaxStencilBitsUsed;
+        }
+        else
+        {
+            lIterations = lNumOfNearPlaneLights;
+        }
 
         lNumOfNearPlaneLights -= lIterations;
 
@@ -2310,7 +2536,10 @@ void cRendererDeferred::RenderLights_Box_StencilFront_RenderBack()
         {
             cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_Box_StencilFront_RenderBack][lStartLight + i];
             iLight *pLight = pLightData->mpLight;
-            if(mbLog)Log(" Stencil light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+            if(mbLog)
+            {
+                Log(" Stencil light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+            }
 
             //Stencil
             SetStencilWriteMask(cMath::GetFlagBit(kStartStencilBit + i));
@@ -2333,7 +2562,10 @@ void cRendererDeferred::RenderLights_Box_StencilFront_RenderBack()
         {
             cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_Box_StencilFront_RenderBack][lStartLight + i];
             iLight *pLight = pLightData->mpLight;
-            if(mbLog)Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+            if(mbLog)
+            {
+                Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+            }
 
             //Stencil
             SetStencil(    eStencilFunc_Equal, 0xFF, cMath::GetFlagBit(kStartStencilBit + i),
@@ -2358,15 +2590,24 @@ void cRendererDeferred::RenderLights_Box_StencilFront_RenderBack()
     mbStencilNeedClearing = true;
     SetBlendMode(eMaterialBlendMode_Add);
 
-    if(mbLog) Log("Rendering Lights Box_StencilFront_RenderBack End\n---\n");
+    if(mbLog)
+    {
+        Log("Rendering Lights Box_StencilFront_RenderBack End\n---\n");
+    }
 }
 
 //------------------------------------------------------------------------------
 
 void cRendererDeferred::RenderLights_Box_RenderBack()
 {
-    if(mvSortedLights[eDeferredLightList_Box_RenderBack].empty()) return;
-    if(mbLog) Log("---\nRendering Lights Box_RenderBack Begin\n");
+    if(mvSortedLights[eDeferredLightList_Box_RenderBack].empty())
+    {
+        return;
+    }
+    if(mbLog)
+    {
+        Log("---\nRendering Lights Box_RenderBack Begin\n");
+    }
 
     if(mbDepthCullLights)
     {
@@ -2393,7 +2634,10 @@ void cRendererDeferred::RenderLights_Box_RenderBack()
     //Reset what is needed.
     SetBlendMode(eMaterialBlendMode_Add);
 
-    if(mbLog) Log("Rendering Lights Box_RenderBack End\n---\n");
+    if(mbLog)
+    {
+        Log("Rendering Lights Box_RenderBack End\n---\n");
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -2419,7 +2663,10 @@ void cRendererDeferred::RenderLights()
     SetAlphaMode(eMaterialAlphaMode_Solid);
     SetChannelMode(eMaterialChannelMode_RGBA);
 
-    for(int i=0; i<mlNumOfGBufferTextures; ++i) SetTexture(i, GetBufferTexture(i));
+    for(int i=0; i<mlNumOfGBufferTextures; ++i)
+    {
+        SetTexture(i, GetBufferTexture(i));
+    }
     SetTextureRange(NULL, mlNumOfGBufferTextures);
 
     ////////////////////////////////
@@ -2500,12 +2747,18 @@ void cRendererDeferred::RenderLights()
 
 void cRendererDeferred::RenderIllumination()
 {
-    if(mpCurrentRenderList->ArrayHasObjects(eRenderListType_Illumination)==false) return;
+    if(mpCurrentRenderList->ArrayHasObjects(eRenderListType_Illumination)==false)
+    {
+        return;
+    }
 
     START_RENDER_PASS(Illumination);
 
     cRenderableVecIterator illumIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Illumination);
-    if(illumIt.HasNext()==false) return;
+    if(illumIt.HasNext()==false)
+    {
+        return;
+    }
 
 
     SetDepthTest(true);
@@ -2542,7 +2795,10 @@ void cRendererDeferred::RenderIllumination()
 
 void cRendererDeferred::RenderDecals()
 {
-    if(mpCurrentRenderList->ArrayHasObjects(eRenderListType_Decal)==false) return;
+    if(mpCurrentRenderList->ArrayHasObjects(eRenderListType_Decal)==false)
+    {
+        return;
+    }
 
     START_RENDER_PASS(Decals);
 
@@ -2589,7 +2845,10 @@ void cRendererDeferred::RenderDecals()
 
 void cRendererDeferred::RenderFullScreenFog()
 {
-    if(mpCurrentWorld->GetFogActive()==false) return;
+    if(mpCurrentWorld->GetFogActive()==false)
+    {
+        return;
+    }
 
     START_RENDER_PASS(FullScreenFog);
 
@@ -2617,7 +2876,9 @@ void cRendererDeferred::RenderFullScreenFog()
     if(pProgram)
     {
         if(GetGBufferType() == eDeferredGBuffer_32Bit)
+        {
             pProgram->SetFloat(kVar_afNegFarPlane, -mpCurrentFrustum->GetFarPlane());
+        }
         pProgram->SetVec2f(kVar_avFogStartAndLength, cVector2f(mpCurrentWorld->GetFogStart(), mpCurrentWorld->GetFogEnd() - mpCurrentWorld->GetFogStart()));
         pProgram->SetColor4f(kVar_avFogColor, mpCurrentWorld->GetFogColor());
         pProgram->SetFloat(kVar_afFalloffExp, mpCurrentWorld->GetFogFalloffExp());
@@ -2676,23 +2937,34 @@ void cRendererDeferred::RenderFog()
         int lFlags =0;
         if(fogData.mbInsideNearFrustum)
         {
-            if(pFogArea->GetShowBacksideWhenInside()) lFlags |= eFeature_FogArea_Backside;
+            if(pFogArea->GetShowBacksideWhenInside())
+            {
+                lFlags |= eFeature_FogArea_Backside;
+            }
         }
         else
         {
-            if(pFogArea->GetShowBacksideWhenOutside()) lFlags |= eFeature_FogArea_Backside;
+            if(pFogArea->GetShowBacksideWhenOutside())
+            {
+                lFlags |= eFeature_FogArea_Backside;
+            }
             lFlags |= eFeature_FogArea_OutsideBox;
         }
 
         iGpuProgram *pProgram = mpFogProgramManager->GenerateProgram(0, lFlags);
-        if(pProgram==NULL) continue;
+        if(pProgram==NULL)
+        {
+            continue;
+        }
 
         /////////////////////////////////////////////
         // Setup program
         SetProgram(pProgram);
 
         if(GetGBufferType() == eDeferredGBuffer_32Bit)
+        {
             pProgram->SetFloat(kVar_afNegFarPlane, -mpCurrentFrustum->GetFarPlane());
+        }
         pProgram->SetVec2f(kVar_avFogStartAndLength, cVector2f(pFogArea->GetStart(), pFogArea->GetEnd() - pFogArea->GetStart()));
         pProgram->SetColor4f(kVar_avFogColor, pFogArea->GetColor());
         pProgram->SetFloat(kVar_afFalloffExp, pFogArea->GetFalloffExp());
@@ -2742,7 +3014,10 @@ void cRendererDeferred::RenderFog()
 
 void cRendererDeferred::RenderTranslucent()
 {
-    if(mpCurrentRenderList->ArrayHasObjects(eRenderListType_Translucent)==false) return;
+    if(mpCurrentRenderList->ArrayHasObjects(eRenderListType_Translucent)==false)
+    {
+        return;
+    }
 
     START_RENDER_PASS(Translucent);
 
@@ -2767,10 +3042,16 @@ void cRendererDeferred::RenderTranslucent()
         cMaterial *pMaterial = pObject->GetMaterial();
 
         eMaterialRenderMode renderMode = mpCurrentWorld->GetFogActive() ? eMaterialRenderMode_DiffuseFog : eMaterialRenderMode_Diffuse;
-        if(pMaterial->GetAffectedByFog()==false) renderMode = eMaterialRenderMode_Diffuse;
+        if(pMaterial->GetAffectedByFog()==false)
+        {
+            renderMode = eMaterialRenderMode_Diffuse;
+        }
 
         //No world reflections in a reflection!
-        if(mpCurrentSettings->mbIsReflection && pMaterial->HasWorldReflection()) continue;
+        if(mpCurrentSettings->mbIsReflection && pMaterial->HasWorldReflection())
+        {
+            continue;
+        }
 
         ////////////////////////////////////////
         // Check the fog area alpha
@@ -2804,14 +3085,19 @@ void cRendererDeferred::RenderTranslucent()
         // World reflection
         if(pMaterial->HasWorldReflection() && pObject->GetRenderType() == eRenderableType_SubMesh)
         {
-            if(CheckRenderablePlaneIsVisible(pObject, mpCurrentFrustum)==false) continue;
+            if(CheckRenderablePlaneIsVisible(pObject, mpCurrentFrustum)==false)
+            {
+                continue;
+            }
 
             ///////////////////////////////////
             //Retrieve all occlusion queries before rendering new scene.
             //  Otherwise it will lead to problems on some cards.
             WaitAndRetrieveAllOcclusionQueries();    //Queires for halos and such
             if(mbOcclusionTestLargeLights)
+            {
                 RetrieveAllLightOcclusionPair(false);    //Queries for light visibility (false = no stop and wait!)
+            }
 
             ///////////////////////////////////
             //Render the reflection
@@ -2823,14 +3109,19 @@ void cRendererDeferred::RenderTranslucent()
         // Refraction set up
         if(pMaterial->HasRefraction())
         {
-            if(CheckRenderablePlaneIsVisible(pObject, mpCurrentFrustum)==false) continue;
+            if(CheckRenderablePlaneIsVisible(pObject, mpCurrentFrustum)==false)
+            {
+                continue;
+            }
 
             ////////////////////////////////////
             // Get the clip rect needed by the refraction
             cBoundingVolume *pBV = pObject->GetBoundingVolume();
 
             if(fHalfFovTan ==0)
+            {
                 fHalfFovTan = tan(mpCurrentFrustum->GetFOV()*0.5f);
+            }
             cRect2l clipRect = GetClipRectFromObject(pObject, 0.2f, mpCurrentFrustum, mvRenderTargetSize, fHalfFovTan);
 
             ////////////////////////////////////
@@ -2880,8 +3171,14 @@ void cRendererDeferred::RenderTranslucent()
 
         ////////////////////////////////////////
         // Set up and render
-        if(pMaterial->HasRefraction())    SetBlendMode(eMaterialBlendMode_None); //Blending shall take place in shader!
-        else                            SetBlendMode(pMaterial->GetBlendMode());
+        if(pMaterial->HasRefraction())
+        {
+            SetBlendMode(eMaterialBlendMode_None);    //Blending shall take place in shader!
+        }
+        else
+        {
+            SetBlendMode(pMaterial->GetBlendMode());
+        }
         SetDepthTest(pMaterial->GetDepthTest());
 
         SetMaterialProgram(renderMode,pMaterial);
@@ -2961,7 +3258,10 @@ void cRendererDeferred::RenderReflection(iRenderable *apObject)
     {
         if(mbReflectionTextureCleared == false)
         {
-            if(mpCurrentSettings->mbLog) Log("- Clear reflection Begin!\n");
+            if(mpCurrentSettings->mbLog)
+            {
+                Log("- Clear reflection Begin!\n");
+            }
 
             cRenderTarget renderTarget;
             renderTarget.mpFrameBuffer = mpReflectionBuffer;
@@ -2974,7 +3274,10 @@ void cRendererDeferred::RenderReflection(iRenderable *apObject)
 
             mbReflectionTextureCleared = true;
 
-            if(mpCurrentSettings->mbLog) Log("- Clear reflection End!\n");
+            if(mpCurrentSettings->mbLog)
+            {
+                Log("- Clear reflection End!\n");
+            }
         }
     }
 }
@@ -2985,7 +3288,10 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
 {
     cMaterial *pRelfMaterial = pReflectionObject->GetMaterial();
 
-    if(mbLog) Log("------------- Setting up Reflection rendering -----------\n");
+    if(mbLog)
+    {
+        Log("------------- Setting up Reflection rendering -----------\n");
+    }
 
     ////////////////////////
     //Reset settings from normal rendering
@@ -3104,7 +3410,10 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
             cVector3f vNormal = cMath::Vector3Cross(vPoint1-vReflOrigin, vPoint2-vReflOrigin);
             vNormal.Normalize();
             //make sure normal has correct sign!
-            if(cMath::Vector3Dot(vSurfaceNormal, vNormal)<0) vNormal = vNormal*-1;
+            if(cMath::Vector3Dot(vSurfaceNormal, vNormal)<0)
+            {
+                vNormal = vNormal*-1;
+            }
 
             maxRelfctionDistPlane.FromNormalPoint(vNormal, vPoint1);
         }
@@ -3132,7 +3441,10 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
         bool bVisible = cMath::GetNormalizedClipRectFromBV(vMin, vMax, *pReflectionObject->GetBoundingVolume(), &reflectFrustum, fHalfFovTan);
         if(bVisible)
         {
-            if(mbLog) Log("  Normalized Clip limits: (%s) -> (%s)\n", vMin.ToString().c_str(), vMax.ToString().c_str());
+            if(mbLog)
+            {
+                Log("  Normalized Clip limits: (%s) -> (%s)\n", vMin.ToString().c_str(), vMax.ToString().c_str());
+            }
             ////////////////////////////
             // Right
             if(vMax.x <1)
@@ -3189,7 +3501,10 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
                 cRect2l clipRect;
                 cMath::GetClipRectFromBV(clipRect, *pReflectionObject->GetBoundingVolume(), mpCurrentFrustum, vRenderTargetSize, fHalfFovTan);
 
-                if(mbLog) Log("  Setting up scissor rect. pos: (%d, %d)  %d x %d\n", clipRect.x, clipRect.y,clipRect.w, clipRect.h);
+                if(mbLog)
+                {
+                    Log("  Setting up scissor rect. pos: (%d, %d)  %d x %d\n", clipRect.x, clipRect.y,clipRect.w, clipRect.h);
+                }
 
                 mpCurrentSettings->mpReflectionSettings->mbUseScissorRect = true;
                 mpCurrentSettings->mpReflectionSettings->mvScissorRectPos = cVector2l(clipRect.x, clipRect.y);
@@ -3201,12 +3516,16 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
     ///////////////////////////
     //Render
     if(mpCurrentSettings->mbLog)
+    {
         Log("\n==============================\n= BEGIN RENDER REFLECTION\n==============================\n\n");
+    }
 
     Render(mfCurrentFrameTime, &reflectFrustum, mpCurrentWorld, mpCurrentSettings->mpReflectionSettings, &renderTarget, false, mpCallbackList);
 
     if(mpCurrentSettings->mbLog)
+    {
         Log("\n==============================\n= END RENDER REFLECTION\n==============================\n\n");
+    }
 
 
     ///////////////////////////
@@ -3230,9 +3549,13 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
 void cRendererDeferred::SetAccumulationBuffer()
 {
     if(mpCurrentSettings->mbIsReflection)
+    {
         SetFrameBuffer(mpReflectionBuffer, true);
+    }
     else
+    {
         SetFrameBuffer(mpAccumBuffer, true);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -3265,7 +3588,10 @@ iTexture* cRendererDeferred::GetBufferTexture(int alIdx)
 
 void cRendererDeferred::RenderDeferredSkyBox()
 {
-    if(mpCurrentWorld==NULL || mpCurrentWorld->GetSkyBoxActive()==false) return;
+    if(mpCurrentWorld==NULL || mpCurrentWorld->GetSkyBoxActive()==false)
+    {
+        return;
+    }
     START_RENDER_PASS(DeferredSkyBox);
 
     SetGBuffer(eGBufferComponents_ColorAndDepth);

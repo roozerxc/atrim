@@ -37,7 +37,10 @@ cPostEffectType_Bloom::cPostEffectType_Bloom(cGraphics *apGraphics, cResources *
     for(int i=0; i<2; ++i)
     {
         cParserVarContainer vars;
-        if(i==1) vars.Add("BlurHorisontal");
+        if(i==1)
+        {
+            vars.Add("BlurHorisontal");
+        }
         mpBlurProgram[i] = mpGraphics->CreateGpuProgramFromShaders("BloomBlur",    "posteffect_bloom_blur_vtx.glsl",
                            "posteffect_bloom_blur_frag.glsl", &vars);
 
@@ -91,7 +94,9 @@ cPostEffect_Bloom::cPostEffect_Bloom(cGraphics *apGraphics, cResources *apResour
     {
         mpBlurBuffer[i] = mpGraphics->GetTempFrameBuffer(vSize/4,ePixelFormat_RGBA,i);
         if(mpBlurBuffer[i])
+        {
             mpBlurTexture[i] = mpBlurBuffer[i]->GetColorBuffer(0)->ToTexture();
+        }
     }
 
     mpBloomType = static_cast<cPostEffectType_Bloom*>(mpType);

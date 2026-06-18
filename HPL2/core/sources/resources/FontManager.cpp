@@ -93,8 +93,14 @@ iFontData* cFontManager::CreateFontData(const tString& asName, int alSize,unsign
         AddResource(pFont);
     }
 
-    if(pFont)pFont->IncUserCount();
-    else Error("Couldn't create font '%s'\n",asNewName.c_str());
+    if(pFont)
+    {
+        pFont->IncUserCount();
+    }
+    else
+    {
+        Error("Couldn't create font '%s'\n",asNewName.c_str());
+    }
 
     EndLoad();
     return pFont;

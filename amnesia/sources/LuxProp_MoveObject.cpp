@@ -55,8 +55,14 @@ eLuxMoveObjectType cLuxPropLoader_MoveObject::ToMoveObjectType(const tString& as
 {
     tString sLowType = cString::ToLowerCase(asType);
 
-    if(sLowType == "linear")    return eLuxMoveObjectType_Linear;
-    if(sLowType == "angular")    return eLuxMoveObjectType_Angular;
+    if(sLowType == "linear")
+    {
+        return eLuxMoveObjectType_Linear;
+    }
+    if(sLowType == "angular")
+    {
+        return eLuxMoveObjectType_Angular;
+    }
 
     Error("MoveObjectType '%s' does not exist!\n", asType.c_str());
 
@@ -193,9 +199,13 @@ void cLuxProp_MoveObject::BeforePropDestruction()
 eLuxFocusCrosshair cLuxProp_MoveObject::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
     if(msInteractCallback != "")
+    {
         return eLuxFocusCrosshair_Grab;
+    }
     else
+    {
         return eLuxFocusCrosshair_Default;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -223,9 +233,13 @@ void cLuxProp_MoveObject::MoveToState(float afState, float afAcc, float afMaxSpe
         cVector3f vLocalOffset = cMath::MatrixMul(mtxInvClose, mvAngularOffsetPos);
 
         if(mbUseAngularLocalOffset)
+        {
             MoveAngularTo(mtxWanted, afAcc, afMaxSpeed,afSlowdownDist,abResetSpeed, true, mvAngularOffsetPos,vLocalOffset);
+        }
         else
+        {
             MoveAngularTo(mtxWanted, afAcc, afMaxSpeed,afSlowdownDist,abResetSpeed, false, 0,0);
+        }
     }
 }
 
@@ -235,9 +249,13 @@ void cLuxProp_MoveObject::MoveToState(float afState)
     //if(fCurrent == afState) return;z
 
     if(afState < fCurrent)
+    {
         MoveToState(afState, mfCloseAcc, mfCloseSpeed, 0.3f, true);
+    }
     else
+    {
         MoveToState(afState, mfOpenAcc, mfOpenSpeed, 0.3f, true);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -279,9 +297,18 @@ float cLuxProp_MoveObject::GetMoveState()
     }
 
     float fT = 0;
-    if(vDelta.x != 0)        fT = vT.x;
-    else if(vDelta.y != 0)    fT = vT.y;
-    else if(vDelta.z != 0)    fT = vT.z;
+    if(vDelta.x != 0)
+    {
+        fT = vT.x;
+    }
+    else if(vDelta.y != 0)
+    {
+        fT = vT.y;
+    }
+    else if(vDelta.z != 0)
+    {
+        fT = vT.z;
+    }
 
     return fT;
 }
@@ -290,8 +317,14 @@ float cLuxProp_MoveObject::GetMoveState()
 
 void cLuxProp_MoveObject::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 {
-    if(alState > 0)    MoveToState(1.0f);
-    if(alState < 0)    MoveToState(0.0f);
+    if(alState > 0)
+    {
+        MoveToState(1.0f);
+    }
+    if(alState < 0)
+    {
+        MoveToState(0.0f);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -307,7 +340,10 @@ void cLuxProp_MoveObject::UpdateAutoMove(float afTimeStep)
 {
     ///////////////////////
     //Skip update if update is off, the entity is moving or the goal is reached.
-    if(mbAutoMove==false || mbMoving || mbAutoMoveReachedGoal) return;
+    if(mbAutoMove==false || mbMoving || mbAutoMoveReachedGoal)
+    {
+        return;
+    }
 
     ///////////////////////
     //Check if the auto move goal has been reached

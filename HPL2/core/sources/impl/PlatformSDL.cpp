@@ -112,10 +112,16 @@ void cPlatform::GetAvailableVideoModes(tVideoModeVec& avDestVidModes, int alMinB
     avDestVidModes.assign(uniqVideoModes.begin(), uniqVideoModes.end());
 #else
     const SDL_VideoInfo *info = SDL_GetVideoInfo();
-    if (!info) return;
+    if (!info)
+    {
+        return;
+    }
     SDL_Rect **modes = SDL_ListModes(info->vfmt, SDL_OPENGL | SDL_FULLSCREEN);
     avDestVidModes.clear();
-    if (modes == NULL) return;
+    if (modes == NULL)
+    {
+        return;
+    }
     for (int i=0; modes[i]; i++)
     {
         avDestVidModes.push_back(cVideoMode(cVector2l(modes[i]->w, modes[i]->h),info->vfmt->BitsPerPixel,1));

@@ -25,7 +25,10 @@ cLuxModelCache::~cLuxModelCache()
 
 void cLuxModelCache::Create()
 {
-    if(gpBase->mpMapHandler->GetCurrentMap()==NULL) return;
+    if(gpBase->mpMapHandler->GetCurrentMap()==NULL)
+    {
+        return;
+    }
 
     ///////////////////////////////
     // Textures
@@ -56,7 +59,10 @@ void cLuxModelCache::Create()
             for(int i=0; i<pMeshEntity->GetAnimationStateNum(); ++i)
             {
                 cAnimationState *pAnimState =pMeshEntity->GetAnimationState(i);
-                if(pAnimState->DataIsInMeshFile()) continue; //Data will be saved with mesh!
+                if(pAnimState->DataIsInMeshFile())
+                {
+                    continue;    //Data will be saved with mesh!
+                }
 
                 cAnimation *pAnim = pAnimState->GetAnimation();
 
@@ -139,13 +145,19 @@ void cLuxHelpFuncs::LoadFonts()
 bool cLuxHelpFuncs::PlayGuiSoundData(const tString& asName,eSoundEntryType aDestType, float afVolMul, eSoundEntityType aSoundType, bool abSkipPreviousRandom,
                                      cLuxSoundExtraData *apOutputData)
 {
-    if(asName=="") return false;
+    if(asName=="")
+    {
+        return false;
+    }
 
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
     cResources *pResources = gpBase->mpEngine->GetResources();
 
     cSoundEntityData *pSoundData = pResources->GetSoundEntityManager()->CreateSoundEntity(asName);
-    if(pSoundData == NULL) return false;
+    if(pSoundData == NULL)
+    {
+        return false;
+    }
 
     tString sSoundName = pSoundData->GetRandomSoundName(aSoundType, abSkipPreviousRandom);
     cSoundEntry *pSound = pSoundHandler->PlayGui(sSoundName, false, pSoundData->GetVolume()*afVolMul,cVector3f(0,0,1),aDestType);
@@ -177,7 +189,9 @@ void cLuxHelpFuncs::DrawSetToScreen(bool abClearScreen, const cColor& aCol, cGui
     // Draw set
     cGuiSet* pSet = mpSet;
     if(apSet!=NULL)
+    {
         pSet = apSet;
+    }
 
     pSet->Render(NULL);
     pSet->ClearRenderObjects();
@@ -250,7 +264,10 @@ tWString cLuxHelpFuncs::ParseString(const tWString& asInput)
 float cLuxHelpFuncs::GetStringDuration(const tWString& asStr)
 {
     float fTime = mfTextDuration_StartTime + (float)asStr.length() * mfTextDuration_CharTime;
-    if(fTime < mfTextDuration_MinTime) fTime = mfTextDuration_MinTime;
+    if(fTime < mfTextDuration_MinTime)
+    {
+        fTime = mfTextDuration_MinTime;
+    }
     return fTime;
 }
 
@@ -272,12 +289,17 @@ void cLuxHelpFuncs::RenderBackgroundScreen(bool abDrawFullHUD)
     }
 
     tFlag lFlags = tSceneRenderFlag_World | tSceneRenderFlag_PostEffects;
-    if(abDrawFullHUD) lFlags |= tSceneRenderFlag_Gui;
+    if(abDrawFullHUD)
+    {
+        lFlags |= tSceneRenderFlag_Gui;
+    }
 
     gpBase->mpEngine->GetScene()->Render(0.0001f, lFlags);
 
     if(abDrawFullHUD==false)
+    {
         gpBase->mpGameHudSet->Render(NULL);
+    }
 
     gpBase->mpGameHudSet->ClearRenderObjects();
     gpBase->mpMapHandler->GetViewport()->SetVisible(false);
@@ -318,7 +340,10 @@ tWString cLuxHelpFuncs::ParseStringCommand(const tWString& asCommand)
         for(size_t i=0; i<pAction->GetSubActionNum(); ++i)
         {
             iSubAction *pSubAction = pAction->GetSubAction(i);
-            if(i!=0) sOutput += _W(" / ");
+            if(i!=0)
+            {
+                sOutput += _W(" / ");
+            }
 
 #ifdef USE_GAMEPAD
             tString sType = pSubAction->GetInputType();

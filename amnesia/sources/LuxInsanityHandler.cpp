@@ -77,7 +77,9 @@ void cLuxInstanityEvent_Bugs::OnLoadData(cXmlElement * apVarElem)
 {
     tString sImage = apVarElem->GetAttributeString("BugImage","");
     if(sImage != "")
+    {
         mpBugImage = gpBase->mpEngine->GetGui()->CreateGfxImage(sImage, eGuiMaterial_Alpha);
+    }
 
     mlNumOfBugs = apVarElem->GetAttributeInt("NumOfBugs",10);
 
@@ -203,7 +205,10 @@ void cLuxInstanityEvent_Bugs::Update(float afTimeStep)
         if(bActive && pBug->mfAlpha < 1)
         {
             pBug->mfAlpha += cMath::RandRectf(0.2f,1.0f)*afTimeStep;
-            if(pBug->mfAlpha>1) pBug->mfAlpha=1;
+            if(pBug->mfAlpha>1)
+            {
+                pBug->mfAlpha=1;
+            }
         }
         else if(bActive==false)
         {
@@ -335,7 +340,9 @@ void cLuxInstanityEvent_Particles::OnStart()
         {
             mlSoundEntryID = mpSoundEntry->GetId();
             if(mfSoundFadeInTime>0)
+            {
                 mpSoundEntry->FadeIn(1, 1.0f / mfSoundFadeInTime);
+            }
         }
     }
 
@@ -378,9 +385,13 @@ void cLuxInstanityEvent_Particles::OnExit()
     if(mpSoundEntry && pSoundHandler->IsValid(mpSoundEntry, mlSoundEntryID))
     {
         if(mfSoundFadeOutTime>0)
+        {
             mpSoundEntry->FadeOut(1.0f/mfSoundFadeOutTime);
+        }
         else
+        {
             mpSoundEntry->Stop();
+        }
         mpSoundEntry = NULL;
     }
 }
@@ -436,15 +447,24 @@ void cLuxInstanityEvent_SoundStream::OnLoadData(cXmlElement * apVarElem)
     msFile = apVarElem->GetAttributeString("File", "");
     mfVolume = apVarElem->GetAttributeFloat("Volume", 1);
     mfSoundDelayTime = apVarElem->GetAttributeFloat("SoundDelayTime", 0);
-    if(mfSoundDelayTime <=0) mfSoundDelayTime = 0.001f;
+    if(mfSoundDelayTime <=0)
+    {
+        mfSoundDelayTime = 0.001f;
+    }
 
     mbFadeScreen = apVarElem->GetAttributeBool("FadeScreen", false);
     mFadeColor = apVarElem->GetAttributeColor("FadeColor", cColor(1));
     mfFadeInSpeed = apVarElem->GetAttributeFloat("FadeInTime", 0);
     mfFadeOutSpeed = apVarElem->GetAttributeFloat("FadeOutTime", 0);
 
-    if(mfFadeInSpeed<=0) mfFadeInSpeed = 0.001f;
-    if(mfFadeOutSpeed<=0) mfFadeOutSpeed = 0.001f;
+    if(mfFadeInSpeed<=0)
+    {
+        mfFadeInSpeed = 0.001f;
+    }
+    if(mfFadeOutSpeed<=0)
+    {
+        mfFadeOutSpeed = 0.001f;
+    }
     mfFadeInSpeed = 1.0f / mfFadeInSpeed;
     mfFadeOutSpeed = 1.0f / mfFadeOutSpeed;
 
@@ -466,7 +486,10 @@ void cLuxInstanityEvent_SoundStream::OnStart()
     mfSoundCount = mfSoundDelayTime;
     mfFadeAlpha =0;
     mfFadeAlphaSpeed = mfFadeInSpeed;
-    if(mbDisablePlayer) gpBase->mpPlayer->SetActive(false);
+    if(mbDisablePlayer)
+    {
+        gpBase->mpPlayer->SetActive(false);
+    }
 
     if(msSubtitleCat != "" && msSubtitleEntry !="")
     {
@@ -482,10 +505,14 @@ void cLuxInstanityEvent_SoundStream::OnStart()
 void cLuxInstanityEvent_SoundStream::OnExit()
 {
     if(mpFadeImage)
+    {
         gpBase->mpEngine->GetGui()->DestroyGfx(mpFadeImage);
+    }
 
     if(mbDisablePlayer)
+    {
         gpBase->mpPlayer->SetActive(true);
+    }
 
     mvCurrentTextRows.clear();
 }
@@ -505,7 +532,9 @@ void cLuxInstanityEvent_SoundStream::Update(float afTimeStep)
         {
             mpSoundEntry = pSoundHandler->PlayGuiStream(msFile, false, mfVolume);
             if(mpSoundEntry)
+            {
                 mlSoundEntryID = mpSoundEntry->GetId();
+            }
         }
     }
 
@@ -534,7 +563,9 @@ void cLuxInstanityEvent_SoundStream::Update(float afTimeStep)
             EventIsDone();
         }
         if(mfFadeAlphaSpeed>0)
+        {
             mfFadeAlphaSpeed = -mfFadeOutSpeed;
+        }
     }
 }
 
@@ -558,9 +589,13 @@ void cLuxInstanityEvent_SoundStream::OnDraw(float afFrameTime)
     if(mbFadeScreen)
     {
         if(mpFadeImage)
+        {
             gpBase->mpGameHudSet->DrawGfx(mpFadeImage, gpBase->mvHudVirtualStartPos, gpBase->mvHudVirtualSize, mFadeColor * mfFadeAlpha);
+        }
         else
+        {
             gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx, gpBase->mvHudVirtualStartPos, gpBase->mvHudVirtualSize, mFadeColor*mfFadeAlpha + cColor(1,1)*(1-mfFadeAlpha));
+        }
     }
 }
 
@@ -633,7 +668,10 @@ void cLuxInstanityEvent_Steps::Update(float afTimeStep)
         mvPosition = cMath::Vector3Normalize(mvPosition) * mvPosition.Length() * mfDistanceMulPerStep;
 
         mlCount--;
-        if(mlCount <=0) EventIsDone();
+        if(mlCount <=0)
+        {
+            EventIsDone();
+        }
     }
     else
     {
@@ -698,7 +736,9 @@ void cLuxInsanityHandler::OnStart()
 void cLuxInsanityHandler::Reset()
 {
     if(mlCurrentEvent >=0)
+    {
         mvEvents[mlCurrentEvent]->OnExit();
+    }
     mlCurrentEvent = -1;
 
     mfNewEventCount =0;
@@ -729,11 +769,17 @@ void cLuxInsanityHandler::Update(float afTimeStep)
 
             //Between between events depends on sanity level.
             if(fSanity <= mfMaxSanity_ShortWait)
+            {
                 mfNewEventCount = mfTimeBetween_ShortWait;
+            }
             else if(fSanity <= mfMaxSanity_MedWait)
+            {
                 mfNewEventCount = mfTimeBetween_MedWait;
+            }
             else
+            {
                 mfNewEventCount = mfTimeBetween_LongWait;
+            }
         }
     }
 }
@@ -742,19 +788,27 @@ void cLuxInsanityHandler::Update(float afTimeStep)
 
 void cLuxInsanityHandler::OnDraw(float afFrameTime)
 {
-    if(mlCurrentEvent>=0) mvEvents[mlCurrentEvent]->OnDraw(afFrameTime);
+    if(mlCurrentEvent>=0)
+    {
+        mvEvents[mlCurrentEvent]->OnDraw(afFrameTime);
+    }
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxInsanityHandler::StartEvent()
 {
-    if(mvEvents.empty()) return;
+    if(mvEvents.empty())
+    {
+        return;
+    }
 
     float fPlayerSanity = gpBase->mpPlayer->GetSanity();
 
     if(mlCurrentEvent >=0)
+    {
         mvEvents[mlCurrentEvent]->OnExit();
+    }
     mlCurrentEvent = -1;
 
     /////////////////////////////////
@@ -767,11 +821,20 @@ void cLuxInsanityHandler::StartEvent()
         bool bUsed = pEvent->IsUsed();
         bool bDisabled = SetIsDisabled(pEvent->GetSet()) || fPlayerSanity>pEvent->GetMaxSanity();
 
-        if(bUsed == false && bDisabled==false)    lUnusedEvents++;
-        if(bDisabled==false)    lTotalEnabledEvents++;
+        if(bUsed == false && bDisabled==false)
+        {
+            lUnusedEvents++;
+        }
+        if(bDisabled==false)
+        {
+            lTotalEnabledEvents++;
+        }
     }
 
-    if(lTotalEnabledEvents==0) return;
+    if(lTotalEnabledEvents==0)
+    {
+        return;
+    }
 
     /////////////////////////////////////
     //If all events are used, reset!
@@ -793,7 +856,10 @@ void cLuxInsanityHandler::StartEvent()
     for(size_t i=0; i<mvEvents.size(); ++i)
     {
         iLuxInstanityEvent *pEvent = mvEvents[i];
-        if(SetIsDisabled(pEvent->GetSet()) || pEvent->IsUsed() || fPlayerSanity>pEvent->GetMaxSanity()) continue;
+        if(SetIsDisabled(pEvent->GetSet()) || pEvent->IsUsed() || fPlayerSanity>pEvent->GetMaxSanity())
+        {
+            continue;
+        }
 
         if(lCurrentEvent == lIdx)
         {
@@ -805,7 +871,10 @@ void cLuxInsanityHandler::StartEvent()
 
     ///////////////////////////////
     // If no events are available, return
-    if(mlCurrentEvent < 0) return;
+    if(mlCurrentEvent < 0)
+    {
+        return;
+    }
 
     ///////////////////////////////
     // Start the event
@@ -819,7 +888,9 @@ void cLuxInsanityHandler::StartEvent()
 void cLuxInsanityHandler::StartEvent(int alIdx)
 {
     if(mlCurrentEvent >=0)
+    {
         mvEvents[mlCurrentEvent]->OnExit();
+    }
 
     mlCurrentEvent = alIdx;
     mvEvents[mlCurrentEvent]->Start();
@@ -840,10 +911,15 @@ void cLuxInsanityHandler::StartEvent(const tString &asName)
         }
     }
 
-    if (lEventIndex < 0) return;
+    if (lEventIndex < 0)
+    {
+        return;
+    }
 
     if(mlCurrentEvent >=0)
+    {
         mvEvents[mlCurrentEvent]->OnExit();
+    }
 
     mlCurrentEvent = lEventIndex;
     mvEvents[mlCurrentEvent]->Start();
@@ -854,7 +930,9 @@ void cLuxInsanityHandler::StartEvent(const tString &asName)
 void cLuxInsanityHandler::StopCurrentEvent()
 {
     if(mlCurrentEvent >=0)
+    {
         mvEvents[mlCurrentEvent]->OnExit();
+    }
 
     mlCurrentEvent = -1;
 }
@@ -905,10 +983,22 @@ iLuxInstanityEvent* cLuxInsanityHandler::EventTypeToData(const tString& asType)
 {
     tString sLowType = cString::ToLowerCase(asType);
 
-    if(sLowType == "soundstream") return hplNew(cLuxInstanityEvent_SoundStream, () );
-    if(sLowType == "steps") return hplNew(cLuxInstanityEvent_Steps, () );
-    if(sLowType == "particles") return hplNew(cLuxInstanityEvent_Particles, () );
-    if(sLowType == "bugs") return hplNew(cLuxInstanityEvent_Bugs, () );
+    if(sLowType == "soundstream")
+    {
+        return hplNew(cLuxInstanityEvent_SoundStream, () );
+    }
+    if(sLowType == "steps")
+    {
+        return hplNew(cLuxInstanityEvent_Steps, () );
+    }
+    if(sLowType == "particles")
+    {
+        return hplNew(cLuxInstanityEvent_Particles, () );
+    }
+    if(sLowType == "bugs")
+    {
+        return hplNew(cLuxInstanityEvent_Bugs, () );
+    }
 
     Error("Insanity event type '%s' does not exist!\n", asType.c_str());
     return NULL;

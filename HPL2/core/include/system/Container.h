@@ -90,7 +90,9 @@ public:
     void Erase()
     {
         if(mIt != mpVec->end())
+        {
             mIt = mpVec->erase(mIt);
+        }
     }
 
 private:
@@ -204,7 +206,9 @@ public:
     void Erase()
     {
         if(mIt != mpVec->end())
+        {
             mIt = mpVec->erase(mIt);
+        }
     }
 
 private:

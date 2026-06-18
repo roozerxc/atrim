@@ -64,8 +64,14 @@ void iPhysicsController::SetPidIntegralSize(int alSize)
 
 void iPhysicsController::Update(float afTimeStep)
 {
-    if(mbActive==false || mbPaused) return;
-    if(mpBody==NULL) return;
+    if(mbActive==false || mbPaused)
+    {
+        return;
+    }
+    if(mpBody==NULL)
+    {
+        return;
+    }
 
     cVector3f vInput = GetInputValue(mInputType);
     //Get the local input.
@@ -79,13 +85,19 @@ void iPhysicsController::Update(float afTimeStep)
     if(mfMaxOutput>0)
     {
         if(fOutput>0)
+        {
             fOutput = cMath::Min(fOutput, mfMaxOutput);
+        }
         else
+        {
             fOutput = cMath::Max(fOutput, -mfMaxOutput);
+        }
     }
 
     if(mbLogInfo)
+    {
         Log("%s | Input: %f Dest: %f Error: %f OutPut: %f\n",msName.c_str(),fValue,mfDestValue,fError,fOutput);
+    }
 
     AddOutputValue(mOutputType,mOutputAxis,fOutput);
 
@@ -97,7 +109,10 @@ void iPhysicsController::Update(float afTimeStep)
         {
             mbActive = false;
             iPhysicsController *pNext = mpJoint->GetController(msNextController);
-            if(pNext) pNext->SetActive(true);
+            if(pNext)
+            {
+                pNext->SetActive(true);
+            }
         }
     }
 }
@@ -106,7 +121,10 @@ void iPhysicsController::Update(float afTimeStep)
 
 void iPhysicsController::SetActive(bool abX)
 {
-    if(abX == mbActive) return;
+    if(abX == mbActive)
+    {
+        return;
+    }
 
     mPidController.Reset();
 
@@ -176,7 +194,10 @@ void iPhysicsController::AddOutputValue(ePhysicsControllerOutput aOutput,
         break;
     }
 
-    if(mbMulMassWithOutput) vVec = vVec * mpBody->GetMass();
+    if(mbMulMassWithOutput)
+    {
+        vVec = vVec * mpBody->GetMass();
+    }
 
     //Set the output to body space
     vVec = cMath::MatrixMul(mpBody->GetLocalMatrix().GetRotation(), vVec);

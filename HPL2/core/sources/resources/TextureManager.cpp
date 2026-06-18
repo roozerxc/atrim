@@ -142,9 +142,13 @@ iTexture* cTextureManager::CreateAnim(const tString& asFirstFrameName,bool abUse
             {
                 vPaths.push_back(sPath);
                 if(lNum<10)
+                {
                     sTest = sFileName + "0"+cString::ToString(lNum)+"."+sFileExt;
+                }
                 else
+                {
                     sTest = sFileName + cString::ToString(lNum)+"."+sFileExt;
+                }
 
                 ++lNum;
             }
@@ -165,7 +169,10 @@ iTexture* cTextureManager::CreateAnim(const tString& asFirstFrameName,bool abUse
             {
                 Error("Couldn't load bitmap '%s'!\n",cString::To8Char(vPaths[i]).c_str());
 
-                for(int j=0; j<(int)vBitmaps.size(); j++) hplDelete(vBitmaps[j]);
+                for(int j=0; j<(int)vBitmaps.size(); j++)
+                {
+                    hplDelete(vBitmaps[j]);
+                }
 
                 EndLoad();
                 return NULL;
@@ -184,20 +191,32 @@ iTexture* cTextureManager::CreateAnim(const tString& asFirstFrameName,bool abUse
         {
             Error("Couldn't create animated texture '%s'!\n", sBaseName.c_str());
             hplDelete(pTexture);
-            for(int j=0; j<(int)vBitmaps.size(); j++) hplDelete(vBitmaps[j]);
+            for(int j=0; j<(int)vBitmaps.size(); j++)
+            {
+                hplDelete(vBitmaps[j]);
+            }
             EndLoad();
             return NULL;
         }
 
         //Bitmaps no longer needed.
-        for(int j=0; j<(int)vBitmaps.size(); j++) hplDelete(vBitmaps[j]);
+        for(int j=0; j<(int)vBitmaps.size(); j++)
+        {
+            hplDelete(vBitmaps[j]);
+        }
 
         mlMemoryUsage += pTexture->GetMemorySize();
         AddResource(pTexture);
     }
 
-    if(pTexture)pTexture->IncUserCount();
-    else Error("Couldn't texture '%s'\n",asFirstFrameName.c_str());
+    if(pTexture)
+    {
+        pTexture->IncUserCount();
+    }
+    else
+    {
+        Error("Couldn't texture '%s'\n",asFirstFrameName.c_str());
+    }
 
     EndLoad();
     return pTexture;
@@ -241,7 +260,10 @@ iTexture* cTextureManager::CreateCubeMap(const tString& asPathName,bool abUseMip
                     tString sNewName = sName + mvCubeSideSuffixes[i] + "." + *it;
                     sPath = mpFileSearcher->GetFilePath(sNewName);
 
-                    if(sPath!=_W(""))break;
+                    if(sPath!=_W(""))
+                    {
+                        break;
+                    }
                 }
 
                 if(sPath==_W(""))
@@ -262,7 +284,10 @@ iTexture* cTextureManager::CreateCubeMap(const tString& asPathName,bool abUseMip
                 if(pBmp==NULL)
                 {
                     Error("Couldn't load bitmap '%s'!\n",cString::To8Char(vPaths[i]).c_str());
-                    for(int j=0; j<(int)vBitmaps.size(); j++) hplDelete(vBitmaps[j]);
+                    for(int j=0; j<(int)vBitmaps.size(); j++)
+                    {
+                        hplDelete(vBitmaps[j]);
+                    }
                     EndLoad();
                     return NULL;
                 }
@@ -281,20 +306,32 @@ iTexture* cTextureManager::CreateCubeMap(const tString& asPathName,bool abUseMip
             {
                 Error("Couldn't create cubemap '%s'!\n", sName.c_str());
                 hplDelete(pTexture);
-                for(int j=0; j<(int)vBitmaps.size(); j++) hplDelete(vBitmaps[j]);
+                for(int j=0; j<(int)vBitmaps.size(); j++)
+                {
+                    hplDelete(vBitmaps[j]);
+                }
                 EndLoad();
                 return NULL;
             }
 
             //Bitmaps no longer needed.
-            for(int j=0; j<(int)vBitmaps.size(); j++)    hplDelete(vBitmaps[j]);
+            for(int j=0; j<(int)vBitmaps.size(); j++)
+            {
+                hplDelete(vBitmaps[j]);
+            }
 
             mlMemoryUsage += pTexture->GetMemorySize();
             AddResource(pTexture);
         }
 
-        if(pTexture)pTexture->IncUserCount();
-        else Error("Couldn't texture '%s'\n",sName.c_str());
+        if(pTexture)
+        {
+            pTexture->IncUserCount();
+        }
+        else
+        {
+            Error("Couldn't texture '%s'\n",sName.c_str());
+        }
 
         EndLoad();
         return pTexture;
@@ -390,8 +427,14 @@ iTexture* cTextureManager::CreateSimpleTexture(    const tString& asName,bool ab
         AddResource(pTexture);
     }
 
-    if(pTexture)pTexture->IncUserCount();
-    else Error("Couldn't texture '%s'\n",asName.c_str());
+    if(pTexture)
+    {
+        pTexture->IncUserCount();
+    }
+    else
+    {
+        Error("Couldn't texture '%s'\n",asName.c_str());
+    }
 
     EndLoad();
     return pTexture;

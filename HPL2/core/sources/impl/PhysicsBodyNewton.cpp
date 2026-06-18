@@ -85,7 +85,10 @@ void cPhysicsBodyNewton::DeleteLowLevel()
 
 void cPhysicsBodyNewtonCallback::OnTransformUpdate(iEntity3D * apEntity)
 {
-    if(cPhysicsBodyNewton::mbUseCallback==false) return;
+    if(cPhysicsBodyNewton::mbUseCallback==false)
+    {
+        return;
+    }
 
     cPhysicsBodyNewton *pRigidBody = static_cast<cPhysicsBodyNewton*>(apEntity);
     NewtonBodySetMatrix(pRigidBody->mpNewtonBody, &apEntity->GetLocalMatrix().GetTranspose().m[0][0]);
@@ -103,7 +106,10 @@ void cPhysicsBodyNewton::SetMaterial(iPhysicsMaterial* apMaterial)
 {
     mpMaterial = apMaterial;
 
-    if(apMaterial == NULL) return;
+    if(apMaterial == NULL)
+    {
+        return;
+    }
 
     cPhysicsMaterialNewton* pNewtonMat = static_cast<cPhysicsMaterialNewton*>(mpMaterial);
 
@@ -140,7 +146,10 @@ cVector3f cPhysicsBodyNewton::GetAngularVelocity() const
 
 void cPhysicsBodyNewton::SetLinearDamping(float afDamping)
 {
-    if(afDamping < 0.001f)afDamping = 0.001f;
+    if(afDamping < 0.001f)
+    {
+        afDamping = 0.001f;
+    }
 
     NewtonBodySetLinearDamping(mpNewtonBody,afDamping);
 }
@@ -153,7 +162,10 @@ float cPhysicsBodyNewton::GetLinearDamping() const
 
 void cPhysicsBodyNewton::SetAngularDamping(float afDamping)
 {
-    if(afDamping < 0.001f)afDamping = 0.001f;
+    if(afDamping < 0.001f)
+    {
+        afDamping = 0.001f;
+    }
 
     float fDamp[3] = {afDamping,afDamping,afDamping};
     NewtonBodySetAngularDamping(mpNewtonBody,fDamp);

@@ -157,8 +157,14 @@ void cLuxCredits::Update(float afTimeStep)
         for(size_t i=0; i< mvTextRows.size(); ++i)
         {
             int lSize =0;
-            if(mvTextRows[i][0] == _W('*')) lSize=1;
-            if(mvTextRows[i].size()<=1) fY += fSize[lSize];
+            if(mvTextRows[i][0] == _W('*'))
+            {
+                lSize=1;
+            }
+            if(mvTextRows[i].size()<=1)
+            {
+                fY += fSize[lSize];
+            }
             fY += fSize[lSize];
         }
         //Almost done, fade out song.
@@ -174,7 +180,10 @@ void cLuxCredits::Update(float afTimeStep)
             mfTime =0;
             mlState++;
         }
-        if(mlState ==0) return;
+        if(mlState ==0)
+        {
+            return;
+        }
     }
     //////////////////////////////////////////////
     // STATE 1/4 - FADE OUT
@@ -242,10 +251,16 @@ void cLuxCredits::Setup(const tString& asMusic, bool abLoopMusic, const tString&
 void cLuxCredits::ExitPressed()
 {
     //Only skip forward during text roll or The End
-    if(mlState!=0 && mlState!=3) return;
+    if(mlState!=0 && mlState!=3)
+    {
+        return;
+    }
 
     //Always show for at least 3 sec
-    if(mfTime <3) return;
+    if(mfTime <3)
+    {
+        return;
+    }
 
     mlState++;
     mfTime =0;
@@ -295,23 +310,36 @@ void cLuxCredits::OnDraw(float afFrameTime)
             else
             {
                 //Check if header
-                if(mvTextRows[i][0] == _W('*'))    lSize=1;
+                if(mvTextRows[i][0] == _W('*'))
+                {
+                    lSize=1;
+                }
 
                 ////////////////////////
                 //Draw Font
                 if(fY >= -fRowAdd[lSize])
                 {
-                    if(fY > 600) continue;
+                    if(fY > 600)
+                    {
+                        continue;
+                    }
 
                     float fAlpha = fY/300;
-                    if(fAlpha > 1) fAlpha = (2 - fAlpha);
+                    if(fAlpha > 1)
+                    {
+                        fAlpha = (2 - fAlpha);
+                    }
 
                     //Normal
                     if(lSize==0)
+                    {
                         mpGuiSet->DrawFont(mvTextRows[i], mpFontNormal, cVector3f(400,fY,10), mvNormalFontSize, cColor(1,fAlpha),eFontAlign_Center);
+                    }
                     //Header
                     else
+                    {
                         mpGuiSet->DrawFont(cString::SubW(mvTextRows[i],1), mpFontHeader, cVector3f(400,fY,10), mvHeaderFontSize, cColor(0.8f,fAlpha),eFontAlign_Center);
+                    }
                 }
             }
 
@@ -329,9 +357,18 @@ void cLuxCredits::OnDraw(float afFrameTime)
         if(mlEndNum >=0 && mlEndNum<=2 && gpBase->mbPTestActivated==false)
         {
             tWString sCode = _W("");
-            if(mlEndNum==0)    sCode = kTranslate("SecretCodes", "CodeA");
-            if(mlEndNum==1)    sCode = kTranslate("SecretCodes", "CodeB");
-            if(mlEndNum==2)    sCode = kTranslate("SecretCodes", "CodeC");
+            if(mlEndNum==0)
+            {
+                sCode = kTranslate("SecretCodes", "CodeA");
+            }
+            if(mlEndNum==1)
+            {
+                sCode = kTranslate("SecretCodes", "CodeB");
+            }
+            if(mlEndNum==2)
+            {
+                sCode = kTranslate("SecretCodes", "CodeC");
+            }
 
             mpGuiSet->DrawFont(sCode, mpFontNormal, cVector3f(400,560,10),15,cColor(0.65f,1),eFontAlign_Center);
         }

@@ -109,7 +109,10 @@ bool cScene::ViewportExists(cViewport* apViewPort)
 {
     for(tViewportListIt it = mlstViewports.begin(); it != mlstViewports.end(); ++it)
     {
-        if(apViewPort == *it) return true;
+        if(apViewPort == *it)
+        {
+            return true;
+        }
     }
 
     return false;
@@ -124,7 +127,10 @@ void cScene::SetCurrentListener(cViewport* apViewPort)
     {
         mpCurrentListener->SetIsListener(false);
         cWorld *pWorld = mpCurrentListener->GetWorld();
-        if(pWorld && WorldExists(pWorld)) pWorld->SetIsSoundEmitter(false);
+        if(pWorld && WorldExists(pWorld))
+        {
+            pWorld->SetIsSoundEmitter(false);
+        }
     }
 
     mpCurrentListener = apViewPort;
@@ -132,7 +138,10 @@ void cScene::SetCurrentListener(cViewport* apViewPort)
     {
         mpCurrentListener->SetIsListener(true);
         cWorld *pWorld = mpCurrentListener->GetWorld();
-        if(pWorld) pWorld->SetIsSoundEmitter(true);
+        if(pWorld)
+        {
+            pWorld->SetIsSoundEmitter(true);
+        }
     }
 }
 
@@ -172,7 +181,10 @@ void cScene::Render(float afFrameTime, tFlag alFlags)
     for(; viewIt != mlstViewports.end(); ++viewIt)
     {
         cViewport *pViewPort = *viewIt;
-        if(pViewPort->IsVisible()==false) continue;
+        if(pViewPort->IsVisible()==false)
+        {
+            continue;
+        }
 
         //////////////////////////////////////////////
         //Init vars
@@ -255,7 +267,10 @@ void cScene::PostUpdate(float afTimeStep)
     for(; it != mlstWorlds.end(); ++it)
     {
         cWorld *pWorld = *it;
-        if(pWorld->IsActive()) pWorld->Update(afTimeStep);
+        if(pWorld->IsActive())
+        {
+            pWorld->Update(afTimeStep);
+        }
     }
 
 
@@ -285,7 +300,9 @@ cWorld* cScene::LoadWorld(const tString& asFile, tWorldLoadFlag aFlags)
     if(asPath == _W(""))
     {
         if(cResources::GetCreateAndLoadCompressedMaps())
+        {
             asPath = mpResources->GetFileSearcher()->GetFilePath(cString::SetFileExt(asFile,"cmap"));
+        }
 
         if(asPath == _W(""))
         {
@@ -329,7 +346,10 @@ bool cScene::WorldExists(cWorld* apWorld)
 {
     for(tWorldListIt it = mlstWorlds.begin(); it != mlstWorlds.end(); ++it)
     {
-        if(apWorld == *it) return true;
+        if(apWorld == *it)
+        {
+            return true;
+        }
     }
 
     return false;
@@ -345,7 +365,10 @@ bool cScene::WorldExists(cWorld* apWorld)
 
 void cScene::Render3DGui(cViewport *apViewPort,cFrustum *apFrustum,float afTimeStep)
 {
-    if(apViewPort->GetCamera()==NULL) return;
+    if(apViewPort->GetCamera()==NULL)
+    {
+        return;
+    }
 
     cGuiSetListIterator it = apViewPort->GetGuiSetIterator();
     while(it.HasNext())
@@ -371,12 +394,17 @@ void cScene::RenderScreenGui(cViewport *apViewPort,float afTimeStep)
         cGuiSet *pSet = it.Next();
 
         if(pSet->Is3D()==false)
+        {
             mapSortedSets.insert(tPrioMap::value_type(pSet->GetDrawPriority(),pSet));
+        }
     }
 
     ///////////////////////////////////////
     //Iterate and render all sets
-    if(mapSortedSets.empty()) return;
+    if(mapSortedSets.empty())
+    {
+        return;
+    }
     tPrioMap::iterator SortIt = mapSortedSets.begin();
     for(; SortIt != mapSortedSets.end(); ++SortIt)
     {

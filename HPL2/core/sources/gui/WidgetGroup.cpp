@@ -97,7 +97,9 @@ void cWidgetGroup::OnLoadGraphics()
 void cWidgetGroup::OnChangeText()
 {
     if(mpHeader)
+    {
         mpHeader->SetText(msText);
+    }
 }
 
 //-----------------------------------------------------------------------

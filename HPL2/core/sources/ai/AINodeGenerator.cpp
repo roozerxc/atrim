@@ -47,7 +47,10 @@ class cCollideRayCallback : public iPhysicsRayCallback
 public:
     bool OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams)
     {
-        if(pBody->GetMass()!=0) return true;
+        if(pBody->GetMass()!=0)
+        {
+            return true;
+        }
 
         mbIntersected = true;
         mvPos = apParams->mvPoint;
@@ -142,16 +145,34 @@ void cAINodeGenerator::Generate(cWorld* apWorld,cAINodeGeneratorParams *apParams
         cVector3f vMax = pBody->GetBoundingVolume()->GetMax();
 
         //X
-        if(vWorldMin.x > vMin.x) vWorldMin.x = vMin.x;
-        if(vWorldMax.x < vMax.x) vWorldMax.x = vMax.x;
+        if(vWorldMin.x > vMin.x)
+        {
+            vWorldMin.x = vMin.x;
+        }
+        if(vWorldMax.x < vMax.x)
+        {
+            vWorldMax.x = vMax.x;
+        }
 
         //Y
-        if(vWorldMin.y > vMin.y) vWorldMin.y = vMin.y;
-        if(vWorldMax.y < vMax.y) vWorldMax.y = vMax.y;
+        if(vWorldMin.y > vMin.y)
+        {
+            vWorldMin.y = vMin.y;
+        }
+        if(vWorldMax.y < vMax.y)
+        {
+            vWorldMax.y = vMax.y;
+        }
 
         //Z
-        if(vWorldMin.z > vMin.z) vWorldMin.z = vMin.z;
-        if(vWorldMax.z < vMax.z) vWorldMax.z = vMax.z;
+        if(vWorldMin.z > vMin.z)
+        {
+            vWorldMin.z = vMin.z;
+        }
+        if(vWorldMax.z < vMax.z)
+        {
+            vWorldMax.z = vMax.z;
+        }
     }
 
     //Make the world small according to grid size.
@@ -162,14 +183,32 @@ void cAINodeGenerator::Generate(cWorld* apWorld,cAINodeGeneratorParams *apParams
 
     /////////////////////////////////////////
     //Check against the user set min and max
-    if(vWorldMin.x < mpParams->mvMinPos.x) vWorldMin.x = mpParams->mvMinPos.x;
-    if(vWorldMax.x > mpParams->mvMaxPos.x) vWorldMax.x = mpParams->mvMaxPos.x;
+    if(vWorldMin.x < mpParams->mvMinPos.x)
+    {
+        vWorldMin.x = mpParams->mvMinPos.x;
+    }
+    if(vWorldMax.x > mpParams->mvMaxPos.x)
+    {
+        vWorldMax.x = mpParams->mvMaxPos.x;
+    }
 
-    if(vWorldMin.y < mpParams->mvMinPos.y) vWorldMin.y = mpParams->mvMinPos.y;
-    if(vWorldMax.y > mpParams->mvMaxPos.y) vWorldMax.y = mpParams->mvMaxPos.y;
+    if(vWorldMin.y < mpParams->mvMinPos.y)
+    {
+        vWorldMin.y = mpParams->mvMinPos.y;
+    }
+    if(vWorldMax.y > mpParams->mvMaxPos.y)
+    {
+        vWorldMax.y = mpParams->mvMaxPos.y;
+    }
 
-    if(vWorldMin.z < mpParams->mvMinPos.z) vWorldMin.z = mpParams->mvMinPos.z;
-    if(vWorldMax.z > mpParams->mvMaxPos.z) vWorldMax.z = mpParams->mvMaxPos.z;
+    if(vWorldMin.z < mpParams->mvMinPos.z)
+    {
+        vWorldMin.z = mpParams->mvMinPos.z;
+    }
+    if(vWorldMax.z > mpParams->mvMaxPos.z)
+    {
+        vWorldMax.z = mpParams->mvMaxPos.z;
+    }
 
 
     /////////////////////////////////////////
@@ -248,7 +287,10 @@ void cAINodeGenerator::Generate(cWorld* apWorld,cAINodeGeneratorParams *apParams
 
 bool cAINodeGenerator::OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams)
 {
-    if(pBody->GetMass() != 0) return true;
+    if(pBody->GetMass() != 0)
+    {
+        return true;
+    }
 
     iPhysicsWorld *pPhysicsWorld = mpWorld->GetPhysicsWorld();
 
@@ -264,7 +306,10 @@ bool cAINodeGenerator::OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apPara
 
 void cAINodeGenerator::SaveToFile()
 {
-    if(mpWorld->GetFilePath() == _W("")) return;
+    if(mpWorld->GetFilePath() == _W(""))
+    {
+        return;
+    }
 
     cSystem *pSystem = mpWorld->GetSystem();
     cResources *pResources = mpWorld->GetResources();
@@ -306,7 +351,10 @@ void cAINodeGenerator::SaveToFile()
 
 void cAINodeGenerator::LoadFromFile()
 {
-    if(mpWorld->GetFilePath() == _W("")) return;
+    if(mpWorld->GetFilePath() == _W(""))
+    {
+        return;
+    }
 
     cSystem *pSystem = mpWorld->GetSystem();
     cResources *pResources = mpWorld->GetResources();

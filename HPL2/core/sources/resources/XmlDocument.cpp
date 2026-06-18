@@ -29,8 +29,14 @@ iXmlNode::~iXmlNode()
 
 cXmlElement* iXmlNode::ToElement()
 {
-    if(mType == eXmlNodeType_Element)    return static_cast<cXmlElement*> ( this );
-    else                                return NULL;
+    if(mType == eXmlNodeType_Element)
+    {
+        return static_cast<cXmlElement*> ( this );
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 cXmlElement* iXmlNode::GetFirstElement()
@@ -68,14 +74,20 @@ void iXmlNode::DestroyChild(iXmlNode* apNode)
 
 iXmlNode* iXmlNode::GetFirstOfType(eXmlNodeType aType)
 {
-    if(mlstChildren.empty()) return NULL;
+    if(mlstChildren.empty())
+    {
+        return NULL;
+    }
 
     tXmlNodeListIt it = mlstChildren.begin();
     iXmlNode *pNode = *it;
     while(pNode->GetType() != eXmlNodeType_Element)
     {
         ++it;
-        if(it == mlstChildren.end()) return NULL;
+        if(it == mlstChildren.end())
+        {
+            return NULL;
+        }
         pNode = *it;
     }
 
@@ -86,7 +98,10 @@ iXmlNode* iXmlNode::GetFirstOfType(eXmlNodeType aType)
 
 iXmlNode* iXmlNode::GetFirstOfType(eXmlNodeType aType, const tString& asName)
 {
-    if(mlstChildren.empty()) return NULL;
+    if(mlstChildren.empty())
+    {
+        return NULL;
+    }
 
     tXmlNodeListIt it = mlstChildren.begin();
     iXmlNode *pNode = *it;
@@ -94,7 +109,10 @@ iXmlNode* iXmlNode::GetFirstOfType(eXmlNodeType aType, const tString& asName)
               pNode->GetValue() != asName )
     {
         ++it;
-        if(it == mlstChildren.end()) return NULL;
+        if(it == mlstChildren.end())
+        {
+            return NULL;
+        }
         pNode = *it;
     }
 
@@ -148,8 +166,14 @@ const char* cXmlElement::GetAttribute(const tString& asName)
 tString cXmlElement::GetAttributeString(const tString& asName, const tString& asDefault)
 {
     const char* pString = GetAttribute(asName);
-    if(pString)    return pString;
-    else        return asDefault;
+    if(pString)
+    {
+        return pString;
+    }
+    else
+    {
+        return asDefault;
+    }
 }
 
 float cXmlElement::GetAttributeFloat(const tString& asName, float afDefault)

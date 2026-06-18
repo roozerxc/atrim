@@ -145,9 +145,9 @@ void cPhysicsMaterialNewton::UpdateMaterials()
         cPhysicsMaterialNewton* pMat = static_cast<cPhysicsMaterialNewton*>(MatIt.Next());
 
         ePhysicsMaterialCombMode frictionMode =   (ePhysicsMaterialCombMode) std::max(mFrictionMode,
-                pMat->mFrictionMode);
+            pMat->mFrictionMode);
         ePhysicsMaterialCombMode elasticityMode = (ePhysicsMaterialCombMode) std::max(mElasticityMode,
-                pMat->mElasticityMode);
+            pMat->mElasticityMode);
 
         //If the material is the same do not blend.
         if(pMat == this)
@@ -225,19 +225,46 @@ int cPhysicsMaterialNewton::OnAABBOverlapCallback(    const NewtonMaterial* apMa
     cPhysicsBodyNewton* pContactBody1 = (cPhysicsBodyNewton*) NewtonBodyGetUserData(apBody1);
     cPhysicsBodyNewton* pContactBody2 = (cPhysicsBodyNewton*) NewtonBodyGetUserData(apBody2);
 
-    if( (pContactBody1->GetCollideFlags() & pContactBody2->GetCollideFlags())==0 ) return 0;
+    if( (pContactBody1->GetCollideFlags() & pContactBody2->GetCollideFlags())==0 )
+    {
+        return 0;
+    }
 
-    if(pContactBody1->GetCollide()==false) return 0;
-    if(pContactBody2->GetCollide()==false) return 0;
+    if(pContactBody1->GetCollide()==false)
+    {
+        return 0;
+    }
+    if(pContactBody2->GetCollide()==false)
+    {
+        return 0;
+    }
 
-    if(pContactBody1->IsActive()==false) return 0;
-    if(pContactBody2->IsActive()==false) return 0;
+    if(pContactBody1->IsActive()==false)
+    {
+        return 0;
+    }
+    if(pContactBody2->IsActive()==false)
+    {
+        return 0;
+    }
 
-    if(pContactBody1->IsRagDoll() && pContactBody2->GetCollideRagDoll()==false) return 0;
-    if(pContactBody2->IsRagDoll() && pContactBody1->GetCollideRagDoll()==false) return 0;
+    if(pContactBody1->IsRagDoll() && pContactBody2->GetCollideRagDoll()==false)
+    {
+        return 0;
+    }
+    if(pContactBody2->IsRagDoll() && pContactBody1->GetCollideRagDoll()==false)
+    {
+        return 0;
+    }
 
-    if(pContactBody1->IsCharacter() && pContactBody2->GetCollideCharacter()==false) return 0;
-    if(pContactBody2->IsCharacter() && pContactBody1->GetCollideCharacter()==false) return 0;
+    if(pContactBody1->IsCharacter() && pContactBody2->GetCollideCharacter()==false)
+    {
+        return 0;
+    }
+    if(pContactBody2->IsCharacter() && pContactBody1->GetCollideCharacter()==false)
+    {
+        return 0;
+    }
 
     //TODO: Not using this in character body any more!
     //if(pContactBody1->IsCharacter() || pContactBody2->IsCharacter()) return 0;
@@ -250,8 +277,14 @@ int cPhysicsMaterialNewton::OnAABBOverlapCallback(    const NewtonMaterial* apMa
     cNewtonLockBodyUntilReturn criticalLock2(apBody2);
 
     //Call the callbacks
-    if(pContactBody1->OnAABBCollision(pContactBody2)==false) return 0;
-    if(pContactBody2->OnAABBCollision(pContactBody1)==false) return 0;
+    if(pContactBody1->OnAABBCollision(pContactBody2)==false)
+    {
+        return 0;
+    }
+    if(pContactBody2->OnAABBCollision(pContactBody1)==false)
+    {
+        return 0;
+    }
 
 
     return 1;
@@ -287,13 +320,22 @@ void cPhysicsMaterialNewton::ContactsProcessCallback(const NewtonJoint* apContac
 
         //Normal speed
         float fNormSpeed = NewtonMaterialGetContactNormalSpeed(pMaterial);
-        if(contactData.mfMaxContactNormalSpeed < fNormSpeed) contactData.mfMaxContactNormalSpeed = fNormSpeed;
+        if(contactData.mfMaxContactNormalSpeed < fNormSpeed)
+        {
+            contactData.mfMaxContactNormalSpeed = fNormSpeed;
+        }
 
         //Tangent speed
         float fTanSpeed0 = NewtonMaterialGetContactTangentSpeed(pMaterial,0);
         float fTanSpeed1 = NewtonMaterialGetContactTangentSpeed(pMaterial,1);
-        if(std::abs(contactData.mfMaxContactTangentSpeed) < std::abs(fTanSpeed0)) contactData.mfMaxContactTangentSpeed = fTanSpeed0;
-        if(std::abs(contactData.mfMaxContactTangentSpeed) < std::abs(fTanSpeed1)) contactData.mfMaxContactTangentSpeed = fTanSpeed1;
+        if(std::abs(contactData.mfMaxContactTangentSpeed) < std::abs(fTanSpeed0))
+        {
+            contactData.mfMaxContactTangentSpeed = fTanSpeed0;
+        }
+        if(std::abs(contactData.mfMaxContactTangentSpeed) < std::abs(fTanSpeed1))
+        {
+            contactData.mfMaxContactTangentSpeed = fTanSpeed1;
+        }
 
         //Force
         cVector3f vForce;

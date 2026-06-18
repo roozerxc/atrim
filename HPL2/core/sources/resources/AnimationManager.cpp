@@ -85,8 +85,14 @@ cAnimation* cAnimationManager::CreateAnimation(const tString& asName)
         AddResource(pAnimation);
     }
 
-    if(pAnimation) pAnimation->IncUserCount();
-    else Error("Couldn't create animation '%s'\n",asNewName.c_str());
+    if(pAnimation)
+    {
+        pAnimation->IncUserCount();
+    }
+    else
+    {
+        Error("Couldn't create animation '%s'\n",asNewName.c_str());
+    }
 
     EndLoad();
     return pAnimation;

@@ -84,8 +84,14 @@ void cLuxMoveState_ClimbLedge::OnUpdate(float afTimeStep)
     //Move the pitch to 0
     float fPitch = mpPlayer->GetCamera()->GetPitch();
     float fAdd = -fPitch * mfMovePitchFactor;
-    if(fAdd < -mfMaxMovePitchSpeed) fAdd = -mfMaxMovePitchSpeed;
-    if(fAdd > mfMaxMovePitchSpeed)  fAdd = mfMaxMovePitchSpeed;
+    if(fAdd < -mfMaxMovePitchSpeed)
+    {
+        fAdd = -mfMaxMovePitchSpeed;
+    }
+    if(fAdd > mfMaxMovePitchSpeed)
+    {
+        fAdd = mfMaxMovePitchSpeed;
+    }
     mpPlayer->GetCamera()->AddPitch(fAdd * afTimeStep);
 }
 

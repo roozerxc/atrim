@@ -94,7 +94,10 @@ void cLuxMusicHandler::Reset()
 
 void cLuxMusicHandler::Update(float afTimeStep)
 {
-    if(gpBase->mpPlayer->IsDead()) return;
+    if(gpBase->mpPlayer->IsDead())
+    {
+        return;
+    }
 
     ///////////////////////////////////
     //Check if close by music should be played.
@@ -123,9 +126,15 @@ void cLuxMusicHandler::Update(float afTimeStep)
 
 void cLuxMusicHandler::Play(const tString &asFile, bool abLoop,float afVolume, float afFadeTime, int alPrio, bool abResume, bool abSpecialEffect)
 {
-    if(alPrio> mlMaxPrio) alPrio = mlMaxPrio;
+    if(alPrio> mlMaxPrio)
+    {
+        alPrio = mlMaxPrio;
+    }
 
-    if(mvGameMusic[alPrio].msFile == asFile) return;
+    if(mvGameMusic[alPrio].msFile == asFile)
+    {
+        return;
+    }
 
     float fVolume = afVolume * mfVolumeMul;
 
@@ -149,7 +158,10 @@ void cLuxMusicHandler::Play(const tString &asFile, bool abLoop,float afVolume, f
 
 void cLuxMusicHandler::Stop(float afFadeTime, int alPrio)
 {
-    if(alPrio> mlMaxPrio) alPrio = mlMaxPrio;
+    if(alPrio> mlMaxPrio)
+    {
+        alPrio = mlMaxPrio;
+    }
 
     //Check if there is any song playing at this prio
     if(mvGameMusic[alPrio].msFile != "")
@@ -186,7 +198,10 @@ void cLuxMusicHandler::RemoveEnemy(eLuxEnemyMusic aType, iLuxEnemy *apEntity)
 bool cLuxMusicHandler::EnemyExist(eLuxEnemyMusic aType, iLuxEnemy *apEntity)
 {
     tLuxEnemySetIt it = m_setEnemies[aType].find(apEntity);
-    if(it == m_setEnemies[aType].end()) return false;
+    if(it == m_setEnemies[aType].end())
+    {
+        return false;
+    }
 
     return true;
 }
@@ -213,7 +228,10 @@ void cLuxMusicHandler::OnMapLeave(cLuxMap *apMap)
     }
 
 
-    for(int i=0; i<60; ++i)Update(0.1f);
+    for(int i=0; i<60; ++i)
+    {
+        Update(0.1f);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -228,15 +246,24 @@ void cLuxMusicHandler::UpdateDangerMusic(float afTimeStep)
 {
     ////////////////////////////
     // HARDMODE early out
-    if (gpBase->mbHardMode == true) return;
+    if (gpBase->mbHardMode == true)
+    {
+        return;
+    }
 
     for(int i=0; i<eLuxEnemyMusic_LastEnum; ++i)
     {
-        if(mbEnemyPlaying[i]) return;
+        if(mbEnemyPlaying[i])
+        {
+            return;
+        }
     }
 
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    if(pMap==NULL) return;
+    if(pMap==NULL)
+    {
+        return;
+    }
 
     ////////////////////////////
     //Music not playing
@@ -249,7 +276,10 @@ void cLuxMusicHandler::UpdateDangerMusic(float afTimeStep)
         {
             iLuxEnemy *pEnemy = enemyIt.Next();
 
-            if(pEnemy->GetHealth() <= 0 || pEnemy->IsActive()==false) continue;
+            if(pEnemy->GetHealth() <= 0 || pEnemy->IsActive()==false)
+            {
+                continue;
+            }
 
             if(pEnemy->GetPlayerInRange())
             {
@@ -282,7 +312,10 @@ void cLuxMusicHandler::UpdateDangerMusic(float afTimeStep)
         {
             iLuxEnemy *pEnemy = enemyIt.Next();
 
-            if(pEnemy->GetHealth() <= 0 || pEnemy->IsActive()==false) continue;
+            if(pEnemy->GetHealth() <= 0 || pEnemy->IsActive()==false)
+            {
+                continue;
+            }
 
             if(pEnemy->GetPlayerInRange())
             {
@@ -308,11 +341,17 @@ void cLuxMusicHandler::UpdateDangerMusic(float afTimeStep)
 void cLuxMusicHandler::UpdateEnemyMusic(float afTimeStep, eLuxEnemyMusic aType)
 {
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    if(pMap==NULL) return;
+    if(pMap==NULL)
+    {
+        return;
+    }
 
     for(int i=aType+1; i<eLuxEnemyMusic_LastEnum; ++i)
     {
-        if(mbEnemyPlaying[i]) return;
+        if(mbEnemyPlaying[i])
+        {
+            return;
+        }
     }
 
     ////////////////////////////////////////
