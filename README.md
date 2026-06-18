@@ -1,17 +1,11 @@
-# Amnesia: Legacy Edition
-<div id="toc" align="center">
-    <img width="1024" height="512" alt="Amnesia: Legacy Edition" src="https://github.com/user-attachments/assets/c0573759-9294-4635-bfee-ed1ef99db206" />
-</div>
-
-## Information
+# atrim
 **A legal, unmodified and DRM-free copy of *Amnesia: The Dark Descent* and/or *Amnesia: A Machine for Pigs* is required.**
 
-*Amnesia: Legacy Edition* is a port of *Amnesia: The Dark Descent*, *Amnesia: A Machine for Pigs* and their editors to significantly weaker (or unorthodox) hardware, usually below the minimum official specifications. Besides this, the project also has several bugfixes and enhancements to the engine and base game.
+atrim is a port of *Amnesia: The Dark Descent*, *Amnesia: A Machine for Pigs* and their editors to significantly weaker (or unorthodox) hardware, usually below the minimum official specifications. Besides this, the project also has several bug fixes and enhancements to the engine and base game.
 
 For a list of changes, read [`CHANGELOG.md`](CHANGELOG.md). Special thanks are in [`THANKS.md`](THANKS.md).
 
 ### IMPORTANT!
-
 **WARNING: If you have the latest Steam release of Amnesia: The Dark Descent version 1.5, Custom Stories and Total/Full Conversion mods that were downloaded from the Steam Workshop WILL NOT WORK WITH THIS PORT! This is because Frictional Games has not provided the source code for version 1.5 yet (and there is no ETA on when that will happen! IT MEANS THIS PORT IS COMPLETELY MISSING STEAM WORKSHOP SUPPORT!**
 
 With this port, you should download and install mods from their original sources (*ModDB*, *Nexus Mods*, *GameBanana*) as long as they support at least **version 1.4.3** (also called version 1.41b, *GOG.com* and *Epic Games Store* copies have this version)! Additionally, you may convert *Steam Workshop* mods to make them compatible with version 1.4.3, but this is a **MANUAL PROCESS** which requires some experience and familiarity with the HPL2 engine, and is **NOT RECOMMENDED!**
@@ -45,12 +39,12 @@ You will also need to [configure the *DirectX SDK* in your *Visual C++* director
 Dependencies must be manually compiled via `dependencies.sln` first to avoid LNK4099 warnings as with issue #25.
 
 1. `git clone` the repository or download it from the **Code** button.
-2. Open the `AmnesiaLX.sln` solution file.
+2. Open the `atrim.sln` solution file.
 3. Press F7 to build the solution. This will compile the `HPL2` project first and then the `amnesia` project.
 
 Compiled binaries are found in the `compiled` folder of the solution's root and in it there should be a folder for the configuration you chose to compile the project (`debug`, `release`).
 
 ## License
-*Amnesia: Legacy Edition* is licensed under Version 3 of the GNU General Public License (GNU GPL).
+atrim is licensed under Version 3 of the GNU General Public License (GNU GPL).
 
 Read the license information via the **GPL-3.0 license** tab on the top, or open the [`LICENSE.md`](LICENSE.md) file.
