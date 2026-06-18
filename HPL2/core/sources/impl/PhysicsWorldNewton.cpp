@@ -452,7 +452,10 @@ static cPhysicsRayParams gRayParams;
 static unsigned RayCastPrefilterFunc (const NewtonBody* apNewtonBody,const NewtonCollision* collision, void* userData)
 {
     cPhysicsBodyNewton* pRigidBody = (cPhysicsBodyNewton*) NewtonBodyGetUserData(apNewtonBody);
-    if(pRigidBody->IsActive()==false) return 0;
+    if(pRigidBody->IsActive()==false)
+    {
+        return 0;
+    }
 
     //Temp:
     cBoundingVolume *pBv = pRigidBody->GetBoundingVolume();
@@ -463,15 +466,24 @@ static unsigned RayCastPrefilterFunc (const NewtonBody* apNewtonBody,const Newto
 
     bool bRet = gpRayCallback->BeforeIntersect(pRigidBody);
 
-    if(bRet) return 1;
-    else return 0;
+    if(bRet)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 static float RayCastFilterFunc (const NewtonBody* apNewtonBody, const float* apNormalVec,
                                 int alCollisionID, void* apUserData, float afIntersetParam)
 {
     cPhysicsBodyNewton* pRigidBody = (cPhysicsBodyNewton*) NewtonBodyGetUserData(apNewtonBody);
-    if(pRigidBody->IsActive()==false) return 1;
+    if(pRigidBody->IsActive()==false)
+    {
+        return 1;
+    }
 
     gRayParams.mfT = afIntersetParam;
 
@@ -493,8 +505,14 @@ static float RayCastFilterFunc (const NewtonBody* apNewtonBody, const float* apN
     bool bRet = gpRayCallback->OnIntersect(pRigidBody,&gRayParams);
 
     //return correct value.
-    if(bRet) return 1;//afIntersetParam;
-    else return 0;
+    if(bRet)
+    {
+        return 1;    //afIntersetParam;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 //////////////////////////////////////
@@ -534,9 +552,13 @@ void cPhysicsWorldNewton::CastRay(iPhysicsRayCallback *apCallback,
 
 
     if(abUsePrefilter)
+    {
         NewtonWorldRayCast(mpNewtonWorld, avOrigin.v, avEnd.v,RayCastFilterFunc, NULL, RayCastPrefilterFunc);
+    }
     else
+    {
         NewtonWorldRayCast(mpNewtonWorld, avOrigin.v, avEnd.v,RayCastFilterFunc, NULL, NULL);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -588,8 +610,14 @@ bool cPhysicsWorldNewton::CheckShapeCollision(    iCollideShape* apShapeA, const
                                                   pSubShapeA->GetNewtonCollision(), &(mtxTransposeA.m[0][0]),
                                                   pSubShapeB->GetNewtonCollision(), &(mtxTransposeB.m[0][0]),
                                                   mpTempPoints, mpTempNormals, mpTempDepths, 0);
-                if(lNum<1) continue;
-                if(lNum > alMaxPoints )lNum = alMaxPoints;
+                if(lNum<1)
+                {
+                    continue;
+                }
+                if(lNum > alMaxPoints )
+                {
+                    lNum = alMaxPoints;
+                }
 
                 bCollision = true;
 
@@ -616,15 +644,23 @@ bool cPhysicsWorldNewton::CheckShapeCollision(    iCollideShape* apShapeA, const
                     /////////
                     //Correct the normal
                     if(abCorrectNormalDirection && apShapeA->GetType() != eCollideShapeType_Mesh)
+                    {
                         CorrectNormalDirection(CollPoint.mvNormal,CollPoint.mvPoint, a_mtxA.GetTranslation());
+                    }
                 }
 
                 lCollideDataStart += lNum;
                 aCollideData.mlNumOfPoints += lNum;
 
-                if(alMaxPoints <= 0) break;
+                if(alMaxPoints <= 0)
+                {
+                    break;
+                }
             }
-            if(alMaxPoints <= 0) break;
+            if(alMaxPoints <= 0)
+            {
+                break;
+            }
         }
 
         return bCollision;
@@ -639,8 +675,14 @@ bool cPhysicsWorldNewton::CheckShapeCollision(    iCollideShape* apShapeA, const
                                           pNewtonShapeB->GetNewtonCollision(), &(mtxTransposeB.m[0][0]),
                                           mpTempPoints, mpTempNormals, mpTempDepths, 0);
 
-        if(lNum<1) return false;
-        if(lNum > alMaxPoints )lNum = alMaxPoints;
+        if(lNum<1)
+        {
+            return false;
+        }
+        if(lNum > alMaxPoints )
+        {
+            lNum = alMaxPoints;
+        }
 
         //Log(" 2\n");
         for(int i=0; i<lNum; i++)
@@ -661,7 +703,9 @@ bool cPhysicsWorldNewton::CheckShapeCollision(    iCollideShape* apShapeA, const
             /////////
             //Correct the normal
             if(abCorrectNormalDirection && apShapeA->GetType() != eCollideShapeType_Mesh)
+            {
                 CorrectNormalDirection(CollPoint.mvNormal,CollPoint.mvPoint, a_mtxA.GetTranslation());
+            }
 
         }
 

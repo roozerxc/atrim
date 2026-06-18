@@ -53,10 +53,15 @@ void cWidgetListBox::DrawItems(float afTimeStep, cGuiClipRegion* apClipRegion)
     cVector3f vPosition = GetItemStartPos()+cVector3f(3,0,mfBackgroundZ+0.1f);
     for(int i=mlFirstItem; i < (int)mvItems.size(); ++i)
     {
-        if(i-mlFirstItem > mlMaxItems) break;
+        if(i-mlFirstItem > mlMaxItems)
+        {
+            break;
+        }
         cWidgetItem* pItem = mvItems[i];
         if(pItem==NULL)
+        {
             continue;
+        }
 
         if(pItem->IsSelectable()==false)
         {
@@ -70,7 +75,9 @@ void cWidgetListBox::DrawItems(float afTimeStep, cGuiClipRegion* apClipRegion)
             DrawDefaultTextHighlight(pItem->GetText(),vPosition,eFontAlign_Left);
         }
         else
+        {
             DrawDefaultText(pItem->GetText(),vPosition,eFontAlign_Left);
+        }
 
         vPosition.y += mvDefaultFontSize.y +2;
     }

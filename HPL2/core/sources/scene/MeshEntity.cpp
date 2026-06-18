@@ -163,9 +163,13 @@ cMeshEntity::cMeshEntity(const tString asName,cMesh* apMesh, cMaterialManager* a
             {
                 cNode3D *pParentState = GetBoneStateFromName(pBone->GetParent()->GetName());
                 if(pParentState)
+                {
                     pState->SetParent(pParentState);
+                }
                 else
+                {
                     pState->SetParent(mpBoneStateRoot);
+                }
             }
             else
             {
@@ -225,9 +229,13 @@ cMeshEntity::cMeshEntity(const tString asName,cMesh* apMesh, cMaterialManager* a
             {
                 cNode3D* pNode = mpMesh->GetNodeByName(pSubMesh->GetName());
                 if(pNode)
+                {
                     pSubEnt->SetMatrix(pNode->GetWorldMatrix());
+                }
                 else
+                {
                     Error("Cannot find node '%s' in mesh '%s'\n",pSubMesh->GetName().c_str(), mpMesh->GetName().c_str());
+                }
             }
             //Attach the submesh
             AddChild(pSubEnt);
@@ -245,7 +253,10 @@ cMeshEntity::~cMeshEntity()
 
         //Remove from parent
         iEntity3D *pParent = pSub->GetEntityParent();
-        if(pParent) pParent->RemoveChild(pSub);
+        if(pParent)
+        {
+            pParent->RemoveChild(pSub);
+        }
 
         hplDelete(pSub);
     }
@@ -344,7 +355,10 @@ void cMeshEntity::UpdateNodeMatrixRec(cNode3D *apNode)
 
 void cMeshEntity::UpdateLogic(float afTimeStep)
 {
-    if(mbStatic) return; //No update on static models
+    if(mbStatic)
+    {
+        return;    //No update on static models
+    }
 
     /////////////////////////////////////////////
     //Update the skeleton physics fade
@@ -492,7 +506,9 @@ void cMeshEntity::UpdateLogic(float afTimeStep)
                                 pTrack->SetNodeIndex(-2);
                             }
                             else
+                            {
                                 pTrack->SetNodeIndex(lBoneIdx);
+                            }
                         }
 
                         cNode3D* pState = GetBoneState(pTrack->GetNodeIndex());
@@ -575,7 +591,10 @@ void cMeshEntity::UpdateLogic(float afTimeStep)
                 for(size_t i=0; i < mvNodeStates.size(); i++)
                 {
                     cNode3D *pState = mvNodeStates[i];
-                    if(pState->IsActive()) pState->SetMatrix(cMatrixf::Identity);
+                    if(pState->IsActive())
+                    {
+                        pState->SetMatrix(cMatrixf::Identity);
+                    }
                 }
 
                 //////////////////////////////////
@@ -602,7 +621,9 @@ void cMeshEntity::UpdateLogic(float afTimeStep)
                             cNode3D* pNodeState = GetNodeState(pTrack->GetNodeIndex());
 
                             if(pNodeState->IsActive())
+                            {
                                 pTrack->ApplyToNode(pNodeState,pAnimState->GetTimePosition(),pAnimState->GetWeight() * fAnimationWeightMul);
+                            }
                         }
 
                         pAnimState->Update(afTimeStep);
@@ -631,7 +652,10 @@ void cMeshEntity::UpdateLogic(float afTimeStep)
                 {
                     cNode3D *pState = mvNodeStates[i];
                     cNode3D* pMeshNode = mpMesh->GetNode((int)i);
-                    if(pState->IsActive()) pState->SetMatrix(pMeshNode->GetLocalMatrix());
+                    if(pState->IsActive())
+                    {
+                        pState->SetMatrix(pMeshNode->GetLocalMatrix());
+                    }
                 }
                 mbHasUpdatedAnimation = false;
             }
@@ -639,7 +663,10 @@ void cMeshEntity::UpdateLogic(float afTimeStep)
 
         //////////////////
         //Call callback
-        if(mpCallback )mpCallback->AfterAnimationUpdate(this,afTimeStep);
+        if(mpCallback )
+        {
+            mpCallback->AfterAnimationUpdate(this,afTimeStep);
+        }
     }
 
     /////////////////////////////////////////
@@ -659,7 +686,10 @@ void cMeshEntity::UpdateLogic(float afTimeStep)
         {
             cAnimationState *pState = mvAnimationStates[i];
 
-            if(pState->IsActive()==false || pState->IsPaused()) continue;
+            if(pState->IsActive()==false || pState->IsPaused())
+            {
+                continue;
+            }
 
             for(int j=0; j < pState->GetEventNum(); ++j)
             {
@@ -676,7 +706,10 @@ void cMeshEntity::UpdateLogic(float afTimeStep)
 
     /////////////////////////////////////////
     /// Final things
-    if(mpMesh->GetSkeleton()) mbBoneMatricesNeedUpdate = true;
+    if(mpMesh->GetSkeleton())
+    {
+        mbBoneMatricesNeedUpdate = true;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -745,8 +778,14 @@ int cMeshEntity::GetAnimationStateNum()
 
 void cMeshEntity::Play(int alIndex,bool abLoop, bool bStopPrev)
 {
-    if(bStopPrev) Stop();
-    if(alIndex >= (int)mvAnimationStates.size()) return;
+    if(bStopPrev)
+    {
+        Stop();
+    }
+    if(alIndex >= (int)mvAnimationStates.size())
+    {
+        return;
+    }
 
     mvAnimationStates[alIndex]->SetActive(true);
     mvAnimationStates[alIndex]->SetTimePosition(0);
@@ -777,7 +816,10 @@ void cMeshEntity::PlayFadeTo(int alIndex,bool abLoop, float afTime)
     for(size_t i=0; i< mvAnimationStates.size(); i++)
     {
         cAnimationState *pAnim = mvAnimationStates[i];
-        if(pAnim->IsActive()) pAnim->FadeOut(afTime);
+        if(pAnim->IsActive())
+        {
+            pAnim->FadeOut(afTime);
+        }
     }
 
     ///////////////////////
@@ -863,7 +905,10 @@ int cMeshEntity::GetBoneStateIndexFromPtr(cBoneState* apBoneState)
 {
     for(size_t i=0; i<mvBoneStates.size(); ++i)
     {
-        if(apBoneState == mvBoneStates[i]) return (int)i;
+        if(apBoneState == mvBoneStates[i])
+        {
+            return (int)i;
+        }
     }
 
     return -1;
@@ -943,7 +988,10 @@ void cMeshEntity::FadeSkeletonPhysicsWeight(float afTime)
             iPhysicsBody *pBody = pState->GetBody();
             iPhysicsBody *pColliderBody = pState->GetColliderBody();
 
-            if(pBody) pBody->SetActive(false);
+            if(pBody)
+            {
+                pBody->SetActive(false);
+            }
         }
     }
 }
@@ -974,8 +1022,14 @@ void cMeshEntity::SetSkeletonCollidersActive(bool abX)
 
         if(pColliderBody)
         {
-            if(abX && !mbSkeletonPhysics) pColliderBody->SetActive(true);
-            else if(!abX) pColliderBody->SetActive(false);
+            if(abX && !mbSkeletonPhysics)
+            {
+                pColliderBody->SetActive(true);
+            }
+            else if(!abX)
+            {
+                pColliderBody->SetActive(false);
+            }
         }
     }
 }
@@ -1036,8 +1090,14 @@ cMatrixf cMeshEntity::CalculateTransformFromSkeleton(cVector3f *apPostion,cVecto
 
     mtxTransform.SetTranslation(pBoneState->GetWorldPosition());// - vRootBoneOffset);
 
-    if(apPostion) *apPostion = pBoneState->GetWorldPosition();// - vRootBoneOffset;
-    if(apAngles) *apAngles = cVector3f(0,fYAngle,0);
+    if(apPostion)
+    {
+        *apPostion = pBoneState->GetWorldPosition();    // - vRootBoneOffset;
+    }
+    if(apAngles)
+    {
+        *apAngles = cVector3f(0,fYAngle,0);
+    }
 
     return mtxTransform;
 }
@@ -1056,7 +1116,10 @@ bool cMeshEntity::CheckColliderShapeCollision(iPhysicsWorld *apWorld,
     {
         cBoneState *pState = mvBoneStates[i];
         iPhysicsBody *pBody = pState->GetColliderBody();
-        if(pBody==NULL) continue;
+        if(pBody==NULL)
+        {
+            continue;
+        }
 
         cMatrixf mtxBody = cMath::MatrixMul(pState->GetWorldMatrix(), pState->GetBodyMatrix());
         pBody->SetMatrix(mtxBody);
@@ -1069,10 +1132,19 @@ bool cMeshEntity::CheckColliderShapeCollision(iPhysicsWorld *apWorld,
         if(bRet)
         {
             bCollision = true;
-            if(!apPosList && !apNumList) break;
+            if(!apPosList && !apNumList)
+            {
+                break;
+            }
 
-            if(apPosList) apPosList->push_back(collideData.mvContactPoints[0].mvPoint);
-            if(apNumList) apNumList->push_back((int)i);
+            if(apPosList)
+            {
+                apPosList->push_back(collideData.mvContactPoints[0].mvPoint);
+            }
+            if(apNumList)
+            {
+                apNumList->push_back((int)i);
+            }
         }
     }
 
@@ -1131,7 +1203,10 @@ int cMeshEntity::GetNodeStateNum()
 
 cSubMeshEntity* cMeshEntity::GetSubMeshEntity(unsigned int alIdx)
 {
-    if(alIdx >= mvSubMeshes.size()) return NULL;
+    if(alIdx >= mvSubMeshes.size())
+    {
+        return NULL;
+    }
 
     return mvSubMeshes[alIdx];
 }
@@ -1139,7 +1214,10 @@ cSubMeshEntity* cMeshEntity::GetSubMeshEntity(unsigned int alIdx)
 cSubMeshEntity* cMeshEntity::GetSubMeshEntityName(const tString &asName)
 {
     tSubMeshEntityMapIt it = m_mapSubMeshes.find(asName);
-    if(it == m_mapSubMeshes.end())return NULL;
+    if(it == m_mapSubMeshes.end())
+    {
+        return NULL;
+    }
 
     return it->second;
 }
@@ -1193,7 +1271,10 @@ void cMeshEntity::UpdateGraphicsForFrame(float afFrameTime)
 
 void cMeshEntity::SetVisible(bool abX)
 {
-    if(abX == mbIsVisible) return;
+    if(abX == mbIsVisible)
+    {
+        return;
+    }
 
     mbIsVisible = abX;
     for(int i=0; i<(int)mvSubMeshes.size(); i++)
@@ -1235,14 +1316,32 @@ cBoundingVolume* cMeshEntity::GetBoundingVolume()
                 cVector3f vMin = pBV->GetMin();
                 cVector3f vMax = pBV->GetMax();
 
-                if(vFinalMin.x > vMin.x)vFinalMin.x = vMin.x;
-                if(vFinalMax.x < vMax.x)vFinalMax.x = vMax.x;
+                if(vFinalMin.x > vMin.x)
+                {
+                    vFinalMin.x = vMin.x;
+                }
+                if(vFinalMax.x < vMax.x)
+                {
+                    vFinalMax.x = vMax.x;
+                }
 
-                if(vFinalMin.y > vMin.y)vFinalMin.y = vMin.y;
-                if(vFinalMax.y < vMax.y)vFinalMax.y = vMax.y;
+                if(vFinalMin.y > vMin.y)
+                {
+                    vFinalMin.y = vMin.y;
+                }
+                if(vFinalMax.y < vMax.y)
+                {
+                    vFinalMax.y = vMax.y;
+                }
 
-                if(vFinalMin.z > vMin.z)vFinalMin.z = vMin.z;
-                if(vFinalMax.z < vMax.z)vFinalMax.z = vMax.z;
+                if(vFinalMin.z > vMin.z)
+                {
+                    vFinalMin.z = vMin.z;
+                }
+                if(vFinalMax.z < vMax.z)
+                {
+                    vFinalMax.z = vMax.z;
+                }
             }
 
             mBoundingVolume.SetLocalMinMax(vFinalMin,vFinalMax);
@@ -1257,7 +1356,10 @@ cBoundingVolume* cMeshEntity::GetBoundingVolume()
 
 void cMeshEntity::SetStatic(bool abX)
 {
-    if(abX == mbStatic) return;
+    if(abX == mbStatic)
+    {
+        return;
+    }
 
     mbStatic = abX;
     for(int i=0; i<(int)mvSubMeshes.size(); i++)
@@ -1278,7 +1380,10 @@ void cMeshEntity::SetRenderFlagBit(tRenderableFlag alFlagBit, bool abSet)
 
 void cMeshEntity::SetIlluminationAmount(float afX)
 {
-    if(mfIlluminationAmount == afX) return;
+    if(mfIlluminationAmount == afX)
+    {
+        return;
+    }
 
     mfIlluminationAmount = afX;
 
@@ -1290,7 +1395,10 @@ void cMeshEntity::SetIlluminationAmount(float afX)
 
 void cMeshEntity::SetCoverageAmount(float afX)
 {
-    if(mfCoverageAmount == afX) return;
+    if(mfCoverageAmount == afX)
+    {
+        return;
+    }
 
     mfCoverageAmount = afX;
 
@@ -1312,7 +1420,10 @@ void cMeshEntity::SetCoverageAmount(float afX)
 
 float cMeshEntity::GetAnimationWeightMul()
 {
-    if(mbNormalizeAnimationWeights==false) return 1.0f;
+    if(mbNormalizeAnimationWeights==false)
+    {
+        return 1.0f;
+    }
 
     float fAnimNum =0;
     float fTotalAnimWeight =0;
@@ -1342,9 +1453,18 @@ void cMeshEntity::CreateNodes()
 {
     /////////////////////////////////
     //Check so it is okay to add nodes
-    if(mvNodeStates.empty() ==false) return;
-    if(mpMesh->GetSkeleton()) return;
-    if(mpMesh->GetNodeNum()==0) return;
+    if(mvNodeStates.empty() ==false)
+    {
+        return;
+    }
+    if(mpMesh->GetSkeleton())
+    {
+        return;
+    }
+    if(mpMesh->GetNodeNum()==0)
+    {
+        return;
+    }
 
     ////////////////////////
     //Make sure that the submeshes are not added to t
@@ -1427,7 +1547,10 @@ void cMeshEntity::CreateNodes()
 
 void cMeshEntity::HandleAnimationEvent(cAnimationEvent *apEvent)
 {
-    if(apEvent->msValue == "") return;
+    if(apEvent->msValue == "")
+    {
+        return;
+    }
 
     switch(apEvent->mType)
     {
@@ -1457,7 +1580,10 @@ void cMeshEntity::HandleAnimationEvent(cAnimationEvent *apEvent)
 
 void cMeshEntity::UpdateBVFromSkeleton()
 {
-    if(mpMesh->GetSkeleton()==NULL) return;
+    if(mpMesh->GetSkeleton()==NULL)
+    {
+        return;
+    }
 
     if(mvBoneStates.empty())
     {
@@ -1475,7 +1601,9 @@ void cMeshEntity::UpdateBVFromSkeleton()
                                            pVtxBuffer->GetVertexNum());
         }
         if(GetSubMeshEntityNum()>0)
+        {
             mBoundingVolume.CreateFromPoints(GetSubMeshEntity(0)->GetVertexBuffer()->GetElementNum(eVertexBufferElement_Position));
+        }
     }
     else
     {
@@ -1503,13 +1631,31 @@ void cMeshEntity::GetAABBFromBones(cVector3f &avMin, cVector3f &avMax)
         cVector3f vMaxPos = pState->GetWorldPosition() + cVector3f(fBoundingRadius);
         cVector3f vMinPos = pState->GetWorldPosition() - cVector3f(fBoundingRadius);
 
-        if(avMax.x < vMaxPos.x) avMax.x = vMaxPos.x;
-        if(avMax.y < vMaxPos.y) avMax.y = vMaxPos.y;
-        if(avMax.z < vMaxPos.z) avMax.z = vMaxPos.z;
+        if(avMax.x < vMaxPos.x)
+        {
+            avMax.x = vMaxPos.x;
+        }
+        if(avMax.y < vMaxPos.y)
+        {
+            avMax.y = vMaxPos.y;
+        }
+        if(avMax.z < vMaxPos.z)
+        {
+            avMax.z = vMaxPos.z;
+        }
 
-        if(avMin.x > vMinPos.x) avMin.x = vMinPos.x;
-        if(avMin.y > vMinPos.y) avMin.y = vMinPos.y;
-        if(avMin.z > vMinPos.z) avMin.z = vMinPos.z;
+        if(avMin.x > vMinPos.x)
+        {
+            avMin.x = vMinPos.x;
+        }
+        if(avMin.y > vMinPos.y)
+        {
+            avMin.y = vMinPos.y;
+        }
+        if(avMin.z > vMinPos.z)
+        {
+            avMin.z = vMinPos.z;
+        }
     }
 }
 

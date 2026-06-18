@@ -29,7 +29,10 @@ public:
 
     BinTreeNode(T aData, BinTreeNode<T> *aParent, eBinTreeNode aParentDir)
     {
-        for(int i=0; i<2; i++) mChild[i]=NULL;
+        for(int i=0; i<2; i++)
+        {
+            mChild[i]=NULL;
+        }
         mData = aData;
         mParent = aParent;
         mParentDir = aParentDir;
@@ -143,12 +146,18 @@ public:
      */
     BinTreeNode<T>* InsertAt(T aData,BinTreeNode<T>* aNode, eBinTreeNode aChild=eBinTreeNode_Left)
     {
-        if(aNode == NULL)return NULL;
+        if(aNode == NULL)
+        {
+            return NULL;
+        }
 
         if(aNode->GetChild(aChild)!=NULL)
         {
             aChild = aChild==eBinTreeNode_Left ? eBinTreeNode_Right : eBinTreeNode_Left;
-            if(aNode->GetChild(aChild)!=NULL)return NULL;
+            if(aNode->GetChild(aChild)!=NULL)
+            {
+                return NULL;
+            }
         }
 
         return aNode->AddChild(aChild, aData);
@@ -192,7 +201,10 @@ private:
 
     void DeleteNode(BinTreeNode<T>* aNode)
     {
-        if(aNode==NULL)    return;
+        if(aNode==NULL)
+        {
+            return;
+        }
 
         DeleteNode(aNode->GetChild(eBinTreeNode_Left));
         DeleteNode(aNode->GetChild(eBinTreeNode_Right));
@@ -203,7 +215,10 @@ private:
 
     void PopulateNodeList(BinTreeNode<T>* aNode)
     {
-        if(aNode==NULL)    return;
+        if(aNode==NULL)
+        {
+            return;
+        }
 
         PopulateNodeList(aNode->GetChild(eBinTreeNode_Left));
         mvNodes.push_back(aNode);
@@ -212,7 +227,10 @@ private:
 
     void PopulateLeafList(BinTreeNode<T>* aNode)
     {
-        if(aNode==NULL)    return;
+        if(aNode==NULL)
+        {
+            return;
+        }
 
         if(aNode->GetChild(eBinTreeNode_Left)==NULL &&
                 aNode->GetChild(eBinTreeNode_Right)==NULL)

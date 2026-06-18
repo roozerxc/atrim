@@ -51,15 +51,42 @@ tString iMouse::ButtonToString(eMouseButton aButton)
 
 eMouseButton iMouse::StringToButton(const tString& asButton)
 {
-    if(asButton=="LeftMouse") return eMouseButton_Left;
-    if(asButton=="MiddleMouse") return eMouseButton_Middle;
-    if(asButton=="RightMouse") return eMouseButton_Right;
-    if(asButton=="WheelUp") return eMouseButton_WheelUp;
-    if(asButton=="WheelDown") return eMouseButton_WheelDown;
-    if(asButton=="Mouse6") return eMouseButton_Button6;
-    if(asButton=="Mouse7") return eMouseButton_Button7;
-    if(asButton=="Mouse8") return eMouseButton_Button8;
-    if(asButton=="Mouse9") return eMouseButton_Button9;
+    if(asButton=="LeftMouse")
+    {
+        return eMouseButton_Left;
+    }
+    if(asButton=="MiddleMouse")
+    {
+        return eMouseButton_Middle;
+    }
+    if(asButton=="RightMouse")
+    {
+        return eMouseButton_Right;
+    }
+    if(asButton=="WheelUp")
+    {
+        return eMouseButton_WheelUp;
+    }
+    if(asButton=="WheelDown")
+    {
+        return eMouseButton_WheelDown;
+    }
+    if(asButton=="Mouse6")
+    {
+        return eMouseButton_Button6;
+    }
+    if(asButton=="Mouse7")
+    {
+        return eMouseButton_Button7;
+    }
+    if(asButton=="Mouse8")
+    {
+        return eMouseButton_Button8;
+    }
+    if(asButton=="Mouse9")
+    {
+        return eMouseButton_Button9;
+    }
 
     return eMouseButton_LastEnum;
 }

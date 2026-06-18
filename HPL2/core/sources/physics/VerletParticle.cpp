@@ -36,7 +36,10 @@ void cVerletParticleRayCallback::Reset()
 
 bool cVerletParticleRayCallback::BeforeIntersect(iPhysicsBody *pBody)
 {
-    if(pBody->GetCollide()==false) return false;
+    if(pBody->GetCollide()==false)
+    {
+        return false;
+    }
 
     return mpContainer->CheckParticleBodyCollision(pBody);
 }
@@ -92,7 +95,10 @@ cVerletParticle::~cVerletParticle()
 void cVerletParticle::SetPosition(const cVector3f& avPos, bool abSetPrevPos)
 {
     mvPosition = avPos;
-    if(abSetPrevPos) mvPrevPosition = mvPosition;
+    if(abSetPrevPos)
+    {
+        mvPrevPosition = mvPosition;
+    }
 
     mpContainer->SetSleeping(false);
 }
@@ -168,7 +174,10 @@ void iVerletParticleContainer::SetDamping(float afX)
 
 void iVerletParticleContainer::SetParticleRadius(float afX)
 {
-    if(mfParticleRadius == afX) return;
+    if(mfParticleRadius == afX)
+    {
+        return;
+    }
 
     mfParticleRadius = afX;
 
@@ -179,7 +188,10 @@ void iVerletParticleContainer::SetParticleRadius(float afX)
 
 void iVerletParticleContainer::SetSleeping(bool abX)
 {
-    if(mbSleeping == abX) return;
+    if(mbSleeping == abX)
+    {
+        return;
+    }
 
     mbSleeping = abX;
     mlSleepCount = 0;
@@ -210,7 +222,10 @@ void iVerletParticleContainer::PreUpdate(float afTimeStep)
         //////////////////////////
         //Update counter and see if time for check
         mfSleepCheckCount+= afTimeStep;
-        if(mfSleepCheckCount < mfSleepCheckTime) return;
+        if(mfSleepCheckCount < mfSleepCheckTime)
+        {
+            return;
+        }
 
         //////////////////////////
         //Iterate particles and see if all are sleeping
@@ -268,10 +283,16 @@ void iVerletParticleContainer::UpdateLengthConstraint(cVerletParticle *apP1, cVe
 
 void iVerletParticleContainer::UpdateParticleCollisionConstraint(cVerletParticle *apPart, const cVector3f &avPrevPos, float afRadius)
 {
-    if(mbCollide==false) return;
+    if(mbCollide==false)
+    {
+        return;
+    }
 
     cVector3f vDiff = apPart->mvPosition - avPrevPos;
-    if(vDiff == cVector3f(0,0,0)) return;
+    if(vDiff == cVector3f(0,0,0))
+    {
+        return;
+    }
 
     float fLength = vDiff.Length();
     cVector3f vDir = vDiff / fLength;

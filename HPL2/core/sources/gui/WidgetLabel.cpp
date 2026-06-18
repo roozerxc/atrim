@@ -60,7 +60,10 @@ cWidgetLabel::~cWidgetLabel()
 
 void cWidgetLabel::SetMaxTextLength(int alLength)
 {
-    if(mlMaxCharacters == alLength) return;
+    if(mlMaxCharacters == alLength)
+    {
+        return;
+    }
 
     mlMaxCharacters = alLength;
 }
@@ -69,7 +72,10 @@ void cWidgetLabel::SetMaxTextLength(int alLength)
 
 void cWidgetLabel::SetAutogenerateSize(bool abX)
 {
-    if(mbAutogenerateSize == abX) return;
+    if(mbAutogenerateSize == abX)
+    {
+        return;
+    }
 
     mbAutogenerateSize = abX;
 
@@ -102,8 +108,14 @@ void cWidgetLabel::DrawText(float afTimeStep, cGuiClipRegion *apClipRegion)
     ////////////////////////////////
     // Texts
     cVector3f vOffset = 0;
-    if(mTextAlign == eFontAlign_Center)        vOffset.x += mvSize.x/2;
-    else if(mTextAlign == eFontAlign_Right)    vOffset.x += mvSize.x;
+    if(mTextAlign == eFontAlign_Center)
+    {
+        vOffset.x += mvSize.x/2;
+    }
+    else if(mTextAlign == eFontAlign_Right)
+    {
+        vOffset.x += mvSize.x;
+    }
 
     if(mbWordWrap)
     {
@@ -131,7 +143,9 @@ void cWidgetLabel::DrawText(float afTimeStep, cGuiClipRegion *apClipRegion)
             }
 
             if(bEnabled)
+            {
                 DrawDefaultText(vRows[i], GetGlobalPosition()+vOffset-cVector3f(0,mfWordWrapOffset,0),mTextAlign);
+            }
             else
             {
                 DrawDefaultText(vRows[i], GetGlobalPosition()+vOffset-cVector3f(0,mfWordWrapOffset,0),mTextAlign, cColor(0.5f, mDefaultFontColor.a));
@@ -139,7 +153,10 @@ void cWidgetLabel::DrawText(float afTimeStep, cGuiClipRegion *apClipRegion)
             }
             vOffset.y += fHeight;
 
-            if(bBreak) break;
+            if(bBreak)
+            {
+                break;
+            }
         }
     }
     else
@@ -147,7 +164,9 @@ void cWidgetLabel::DrawText(float afTimeStep, cGuiClipRegion *apClipRegion)
         if(mlMaxCharacters>=0 && (int)msText.length() > mlMaxCharacters)
         {
             if(IsEnabled())
+            {
                 DrawDefaultText(cString::SubW(msText,0,mlMaxCharacters), GetGlobalPosition()+vOffset,mTextAlign);
+            }
             else
             {
                 DrawDefaultText(cString::SubW(msText,0,mlMaxCharacters), GetGlobalPosition()+vOffset,mTextAlign, cColor(0.5f, mDefaultFontColor.a));
@@ -157,7 +176,9 @@ void cWidgetLabel::DrawText(float afTimeStep, cGuiClipRegion *apClipRegion)
         else
         {
             if(IsEnabled())
+            {
                 DrawDefaultText(msText, GetGlobalPosition()+vOffset,mTextAlign);
+            }
             else
             {
                 DrawDefaultText(msText, GetGlobalPosition()+vOffset, mTextAlign, cColor(0.5f, mDefaultFontColor.a));
@@ -179,13 +200,17 @@ void cWidgetLabel::OnLoadGraphics()
 void cWidgetLabel::OnUpdate(float afTimeStep)
 {
     if(mbWordWrap==false)
+    {
         return;
+    }
 
     ////////////////////////////////////
     // Do a little wait before starting to scroll
     mfScrollTimer -= afTimeStep;
     if(mfScrollTimer >= 0)
+    {
         return;
+    }
 
     float fAdvance = afTimeStep * mfScrollSpeedMul;
 
@@ -193,17 +218,25 @@ void cWidgetLabel::OnUpdate(float afTimeStep)
     if(mbScrollingDown)
     {
         if(mfWordWrapOffset+mvSize.y+fAdvance > mfWordWrapRowsHeight)
+        {
             mbScrollingDown = false;
+        }
         else
+        {
             mfWordWrapOffset += fAdvance;
+        }
     }
     // Scroll up
     else
     {
         if(mfWordWrapOffset-fAdvance < 0)
+        {
             mbScrollingDown = true;
+        }
         else
+        {
             mfWordWrapOffset -= fAdvance;
+        }
     }
 }
 
@@ -215,7 +248,10 @@ void cWidgetLabel::OnChangeText()
     mfWordWrapOffset = 0;
     mbScrollingDown = true;
 
-    if(mbAutogenerateSize==false) return;
+    if(mbAutogenerateSize==false)
+    {
+        return;
+    }
 
     float fLength = mpDefaultFontType->GetLength(mvDefaultFontSize, msText.c_str());
 
@@ -235,7 +271,9 @@ void cWidgetLabel::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
     }
 
     if(mbClipsGraphics)
+    {
         return;
+    }
 
     DrawText(afTimeStep, apClipRegion);
 }

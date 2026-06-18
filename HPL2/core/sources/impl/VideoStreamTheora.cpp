@@ -152,7 +152,10 @@ cVideoStreamTheora::cVideoStreamTheora(const tString& asName, cVideoStreamTheora
 
 cVideoStreamTheora::~cVideoStreamTheora()
 {
-    if(mpFile) fclose(mpFile);
+    if(mpFile)
+    {
+        fclose(mpFile);
+    }
 
     ogg_sync_clear(&mOggSyncState);
 
@@ -164,7 +167,10 @@ cVideoStreamTheora::~cVideoStreamTheora()
     if(mbVideoLoaded)
     {
         theora_clear(&mTheoraState);
-        if(mpFrameBuffer) hplDeleteArray(mpFrameBuffer);
+        if(mpFrameBuffer)
+        {
+            hplDeleteArray(mpFrameBuffer);
+        }
     }
 }
 
@@ -197,10 +203,16 @@ bool cVideoStreamTheora::LoadFromFile(const tWString& asFilePath)
     mbVideoLoaded = false;
 
     //Get headers
-    if(GetHeaders()==false)    return false;
+    if(GetHeaders()==false)
+    {
+        return false;
+    }
 
     //Initialize decoders and attributes
-    if(InitDecoders()==false) return false;
+    if(InitDecoders()==false)
+    {
+        return false;
+    }
 
 
     return true;
@@ -210,7 +222,10 @@ bool cVideoStreamTheora::LoadFromFile(const tWString& asFilePath)
 
 void cVideoStreamTheora::Update(float afTimeStep)
 {
-    if(mbPlaying==false || mbPaused) return;
+    if(mbPlaying==false || mbPaused)
+    {
+        return;
+    }
 
     mfTime += afTimeStep;
     ////////////////////////////////
@@ -247,12 +262,18 @@ void cVideoStreamTheora::Update(float afTimeStep)
                 //Fill streams with pages.
                 if(bytes!=0)
                 {
-                    while(ogg_sync_pageout(&mOggSyncState,&page)>0) QueuePage(&page);
+                    while(ogg_sync_pageout(&mOggSyncState,&page)>0)
+                    {
+                        QueuePage(&page);
+                    }
                 }
                 //No more buffer data in file, stop video
                 else
                 {
-                    if(mbLooping==false) mbPlaying = false;
+                    if(mbLooping==false)
+                    {
+                        mbPlaying = false;
+                    }
                     ResetStreams();
                 }
 
@@ -265,7 +286,10 @@ void cVideoStreamTheora::Update(float afTimeStep)
     // Theora Check for end of file.
     if(!mlVideobufReady && feof(mpFile))
     {
-        if(mbLooping==false) mbPlaying = false;
+        if(mbLooping==false)
+        {
+            mbPlaying = false;
+        }
         ResetStreams();
     }
 }
@@ -303,7 +327,10 @@ void cVideoStreamTheora::SetLoop(bool abX)
 
 void cVideoStreamTheora::CopyToTexture(iTexture *apTexture)
 {
-    if(mbVideoLoaded==false || mpFrameBuffer ==NULL) return;
+    if(mbVideoLoaded==false || mpFrameBuffer ==NULL)
+    {
+        return;
+    }
 
     if(mbVideoFrameReady)
     {
@@ -600,7 +627,10 @@ void cVideoStreamTheora::ResetStreams()
                 {
                     ogg_packet testPacket;
                     int lRet = ogg_stream_packetout(&mTheoraStreamState, &testPacket);
-                    if(lRet < 1) break; //No packets left, we need new page.
+                    if(lRet < 1)
+                    {
+                        break;    //No packets left, we need new page.
+                    }
                     ++lPackCount;
                 }
             }
@@ -671,7 +701,10 @@ bool cVideoStreamTheora::GetHeaders()
                 ogg_stream_clear(&testStream);
             }
 
-            if(mbVideoLoaded) bFoundHeaders = true;
+            if(mbVideoLoaded)
+            {
+                bFoundHeaders = true;
+            }
         }
     }
 
@@ -689,7 +722,10 @@ bool cVideoStreamTheora::GetHeaders()
             //////////////////////////
             // Get next packet
             lRet = ogg_stream_packetout(&mTheoraStreamState,&packet);
-            if(lRet == 0) break; //End of page, need to load new page.
+            if(lRet == 0)
+            {
+                break;    //End of page, need to load new page.
+            }
 
             if(lRet<0)
             {
@@ -702,7 +738,10 @@ bool cVideoStreamTheora::GetHeaders()
                 return false;
             }
             lTheoraHeaderPackets++;
-            if(lTheoraHeaderPackets==3)break;
+            if(lTheoraHeaderPackets==3)
+            {
+                break;
+            }
         }
 
         //////////////////////

@@ -309,46 +309,70 @@ void cGuiPopUpUIKeyboard::Init()
             iWidget* pLeft = NULL;
 
             if(lHPrev>=0)
+            {
                 pLeft = vRow[lHPrev];
+            }
             else
+            {
                 pLeft = vRow[vRow.size() - 1];
+            }
             if(lHNext<(int)vRow.size())
+            {
                 pRight = vRow[lHNext];
+            }
             else
+            {
                 pRight = vRow[0];
+            }
 
             if(lVPrev>=0)
             {
                 const tWidgetVec& vPrevRow = vKeyMatrix[lVPrev];
                 if(j<(int)vPrevRow.size())
+                {
                     pUpper = vPrevRow[j];
+                }
                 else
+                {
                     pUpper = vPrevRow.back();
+                }
             }
             else
             {
                 const tWidgetVec& vPrevRow = vKeyMatrix[vKeyMatrix.size() - 1];
                 if(j<(int)vPrevRow.size())
+                {
                     pUpper = vPrevRow[j];
+                }
                 else
+                {
                     pUpper = vPrevRow.back();
+                }
             }
 
             if(lVNext<(int)vKeyMatrix.size())
             {
                 const tWidgetVec& vNextRow = vKeyMatrix[lVNext];
                 if(j<(int)vNextRow.size())
+                {
                     pLower = vNextRow[j];
+                }
                 else
+                {
                     pLower = vNextRow.back();
+                }
             }
             else
             {
                 const tWidgetVec& vNextRow = vKeyMatrix[0];
                 if(j<(int)vNextRow.size())
+                {
                     pLower = vNextRow[j];
+                }
                 else
+                {
                     pLower = vNextRow.back();
+                }
             }
 
             pWidget->SetFocusNavigation(eUIArrow_Up, pUpper);
@@ -372,7 +396,10 @@ void cGuiPopUpUIKeyboard::ClosePopUp()
 
 void cGuiPopUpUIKeyboard::SetShiftActive(bool abX)
 {
-    if(mbShift==abX) return;
+    if(mbShift==abX)
+    {
+        return;
+    }
 
     mbShift = abX;
     tWidgetListIt it = mlstKeyWidgets.begin();
@@ -381,7 +408,10 @@ void cGuiPopUpUIKeyboard::SetShiftActive(bool abX)
         iWidget* pKeyWidget = *it;
         cUIKey* pKey = static_cast<cUIKey*>(pKeyWidget->GetUserData());
 
-        if(pKey) pKeyWidget->SetText(tWString(1, pKey->mvUnicode[mbShift]));
+        if(pKey)
+        {
+            pKeyWidget->SetText(tWString(1, pKey->mvUnicode[mbShift]));
+        }
     }
 }
 

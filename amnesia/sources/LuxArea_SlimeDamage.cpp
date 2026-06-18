@@ -93,7 +93,10 @@ void cLuxArea_SlimeDamage::OnUpdate(float afTimeStep)
     //////////////////////////
     // Check update count
     mfCheckCollisionCount-=afTimeStep;
-    if(mfCheckCollisionCount>0) return;
+    if(mfCheckCollisionCount>0)
+    {
+        return;
+    }
 
     mfCheckCollisionCount = cMath::RandRectf(mfMinCheckAttackTime, mfMaxCheckAttackTime);
 

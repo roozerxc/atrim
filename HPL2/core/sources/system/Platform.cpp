@@ -80,7 +80,9 @@ void cPlatform::CreateMessageBox( eMsgBoxType eType, const wchar_t* asCaption, c
     va_list ap;
 
     if (fmt == NULL)
+    {
         return;
+    }
     va_start(ap, fmt);
     CreateMessageBoxBase(eType, asCaption, fmt, ap);
     va_end(ap);
@@ -90,7 +92,9 @@ void cPlatform::CreateMessageBox( const wchar_t* asCaption, const wchar_t *fmt, 
 {
     va_list ap;
     if (fmt == NULL)
+    {
         return;
+    }
     va_start(ap, fmt);
     CreateMessageBoxBase( eMsgBoxType_Default, asCaption, fmt, ap );
     va_end(ap);

@@ -149,8 +149,14 @@ void cRendererSimple::RenderObjects()
             //If shaders and an alpha channel, use a program that handles textures.
             if(mbUseShaders)
             {
-                if(pTex)    SetProgram(mpDiffuseProgram);
-                else        SetProgram(mpFlatProgram);
+                if(pTex)
+                {
+                    SetProgram(mpDiffuseProgram);
+                }
+                else
+                {
+                    SetProgram(mpFlatProgram);
+                }
             }
 
             SetTexture(0,pTex);

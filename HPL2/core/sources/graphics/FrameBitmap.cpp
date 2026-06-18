@@ -23,7 +23,10 @@ namespace hpl
 
 cFBitmapImage::~cFBitmapImage()
 {
-    if(mpSubImage) mpSubImage->mpFrameBitmapImage = NULL;
+    if(mpSubImage)
+    {
+        mpSubImage->mpFrameBitmapImage = NULL;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -91,21 +94,30 @@ cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPa
     //Debug
     int node=0;
 
-    if(DEBUG_BTREE)Log("**** Image %d *****\n",mlPicCount);
+    if(DEBUG_BTREE)
+    {
+        Log("**** Image %d *****\n",mlPicCount);
+    }
 
     //Get the leaves of the tree and search it for a good pos.
     const tRectTreeNodeVec& lstNodes =  mRects.GetLeafList();
     tRectTreeNodeVecConstIt it;
     for(it = lstNodes.begin(); it!=lstNodes.end(); ++it)
     {
-        if(DEBUG_BTREE)Log("Checking node %d:\n",node++);
+        if(DEBUG_BTREE)
+        {
+            Log("Checking node %d:\n",node++);
+        }
         tRectTreeNode *TopNode = *it;
         cFBitmapRect* pData = TopNode->GetData();
 
         //Check if the space is free
         if(pData->mlHandle<0)
         {
-            if(DEBUG_BTREE)Log("Found free node\n");
+            if(DEBUG_BTREE)
+            {
+                Log("Found free node\n");
+            }
             bFoundEmptyNode = true; //An empty node was found.. bitmap not full yet.
 
             //Check if the Image fits in the rect
@@ -116,20 +128,29 @@ cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPa
 
             if(cMath::CheckRectFit(NewRect, pData->mRect))
             {
-                if(DEBUG_BTREE)Log("The node fits!\n");
+                if(DEBUG_BTREE)
+                {
+                    Log("The node fits!\n");
+                }
                 bFoundNode = true;
 
                 //If the bitmap fits perfectly add the node without splitting
                 if(MinimumFit(NewRect,pData->mRect))
                 {
-                    if(DEBUG_BTREE)Log("Minimum fit!\n");
+                    if(DEBUG_BTREE)
+                    {
+                        Log("Minimum fit!\n");
+                    }
                     pData->mRect = NewRect;
                     pData->mlHandle = 1;
                 }
                 //If there is still space left, make new nodes.
                 else
                 {
-                    if(DEBUG_BTREE)Log("Normal fit!\n");
+                    if(DEBUG_BTREE)
+                    {
+                        Log("Normal fit!\n");
+                    }
                     //Insert 2 children for the top node (lower and upper part.
                     tRectTreeNode* UpperNode;
                     //Upper
@@ -221,7 +242,10 @@ cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPa
         mbIsUpdated = true;
     }
 
-    if(apFoundNode) *apFoundNode = bFoundNode;
+    if(apFoundNode)
+    {
+        *apFoundNode = bFoundNode;
+    }
 
     /// LAST DEBUG ///
     if(DEBUG_BTREE)
@@ -262,7 +286,10 @@ cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPa
 
 bool cFrameBitmap::MinimumFit(cRect2l aSrc,cRect2l aDest)
 {
-    if(aDest.w-aSrc.w<mlMinHole && aDest.h-aSrc.h<mlMinHole) return true;
+    if(aDest.w-aSrc.w<mlMinHole && aDest.h-aSrc.h<mlMinHole)
+    {
+        return true;
+    }
 
     return false;
 }
@@ -335,7 +362,10 @@ public:
         //Sort by greatest length
         int lMaxA = vSizeA.x > vSizeA.y ? vSizeA.x : vSizeA.y;
         int lMaxB = vSizeB.x > vSizeB.y ? vSizeB.x : vSizeB.y;
-        if(lMaxA != lMaxB) return lMaxA > lMaxB;
+        if(lMaxA != lMaxB)
+        {
+            return lMaxA > lMaxB;
+        }
 
         //If equal go by area
         return vSizeA.x*vSizeA.y > vSizeB.x *vSizeB.y;
@@ -366,7 +396,10 @@ void cFrameBitmap::Reorganize()
     for(; imageIt != mlstImages.end(); ++imageIt)
     {
         cFBitmapImage* pImage = *imageIt;
-        if(pImage->mpSubImage==NULL) continue;
+        if(pImage->mpSubImage==NULL)
+        {
+            continue;
+        }
 
         //Log("Node: %dx%d (%d, %d)\n",pRect->mRect.w,pRect->mRect.h,pRect->mRect.x,pRect->mRect.y);
 
@@ -383,7 +416,10 @@ void cFrameBitmap::Reorganize()
         setSortedBitmaps.insert(pBmpComb);
         lstBitmaps.push_back(pBmpComb);
     }
-    if(mbLogTime)Log(" getting image data took: %dms\n",cPlatform::GetApplicationTime()-lStartTime);
+    if(mbLogTime)
+    {
+        Log(" getting image data took: %dms\n",cPlatform::GetApplicationTime()-lStartTime);
+    }
 
 
     ///////////////////////////////////////
@@ -392,7 +428,10 @@ void cFrameBitmap::Reorganize()
 
     ClearAddedImages();//Clears the tree and image list.
 
-    if(mbLogTime)Log(" clearing data took: %dms\n",cPlatform::GetApplicationTime()-lStartTime);
+    if(mbLogTime)
+    {
+        Log(" clearing data took: %dms\n",cPlatform::GetApplicationTime()-lStartTime);
+    }
 
 
     lStartTime = cPlatform::GetApplicationTime();
@@ -406,7 +445,10 @@ void cFrameBitmap::Reorganize()
         cBitmapSubImageComb *pComb = *bmpIt;
 
         AddBitmap(pComb->mpBitmap, pComb->mpSubImage->GetFullPath(), pComb->mpSubImage, &bAllNodesFit);
-        if(bAllNodesFit==false) break;
+        if(bAllNodesFit==false)
+        {
+            break;
+        }
     }
 
     ///////////////////////////////////////
@@ -431,7 +473,10 @@ void cFrameBitmap::Reorganize()
     }
 
 
-    if(mbLogTime)Log(" adding again took: %dms\n",cPlatform::GetApplicationTime()-lStartTime);
+    if(mbLogTime)
+    {
+        Log(" adding again took: %dms\n",cPlatform::GetApplicationTime()-lStartTime);
+    }
 
 
     //Do this on demand instead...
@@ -439,7 +484,10 @@ void cFrameBitmap::Reorganize()
     for(; imageIt != mlstImages.end(); ++imageIt)
     {
         cFBitmapImage* pImage = *imageIt;
-        if(pImage->mpSubImage) pImage->mpSubImage->SetNeedUpdateUvs();
+        if(pImage->mpSubImage)
+        {
+            pImage->mpSubImage->SetNeedUpdateUvs();
+        }
     }
 
 

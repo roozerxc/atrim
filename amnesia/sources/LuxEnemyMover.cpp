@@ -88,7 +88,10 @@ void cLuxEnemyMover::TurnToAngle(float afAngle)
 
 void cLuxEnemyMover::UseMoveStateAnimations()
 {
-    if(mbOverideMoveState==false) return;
+    if(mbOverideMoveState==false)
+    {
+        return;
+    }
 
     mbOverideMoveState = false;
     mMoveState = eLuxEnemyMoveState_LastEnum;
@@ -109,7 +112,10 @@ float cLuxEnemyMover::CalculateSpeedMul(float afTimeStep)
         if(fAngleDist >= mpEnemy->mfTurnMinBreakAngle && mpCharBody->GetMoveSpeed(eCharDir_Forward)>0.15f)
         {
             fMul -= mpEnemy->mfTurnBreakMul * fAngleDist;
-            if(fMul<0) fMul =0;
+            if(fMul<0)
+            {
+                fMul =0;
+            }
         }
 
         //Log("%p: %f, %f, %f\n", this, cMath::ToDeg(fAngleDist), fMul, mpCharBody->GetMoveSpeed(eCharDir_Forward));
@@ -133,7 +139,10 @@ float cLuxEnemyMover::GetWantedSpeedAmount()
     float fWantedSpeed = mpCharBody->GetMoveSpeed(eCharDir_Forward);
     float fRealSpeed = GetMoveSpeed();
 
-    if(fabs(fWantedSpeed) < 0.001f) return 1;
+    if(fabs(fWantedSpeed) < 0.001f)
+    {
+        return 1;
+    }
 
     return fRealSpeed / fWantedSpeed;
 }
@@ -167,12 +176,18 @@ void cLuxEnemyMover::UpdateStuckCounter(float afTimeStep)
     if( fRealSpeed/fWantedSpeed < mfStuckLimit || (std::fabs(fCos) < 0.3f && fWantedSpeed > 0.001f) )
     {
         mfStuckCounter += afTimeStep ;
-        if(mfStuckCounter > mfMaxStuckCounter) mfStuckCounter = mfMaxStuckCounter;
+        if(mfStuckCounter > mfMaxStuckCounter)
+        {
+            mfStuckCounter = mfMaxStuckCounter;
+        }
     }
     else
     {
         mfStuckCounter -= afTimeStep*0.8f;
-        if(mfStuckCounter<0)mfStuckCounter =0;
+        if(mfStuckCounter<0)
+        {
+            mfStuckCounter =0;
+        }
     }
 }
 
@@ -180,7 +195,10 @@ void cLuxEnemyMover::UpdateStuckCounter(float afTimeStep)
 
 void cLuxEnemyMover::UpdateTurning(float afTimeStep)
 {
-    if(mbTurning==false) return;
+    if(mbTurning==false)
+    {
+        return;
+    }
 
     //////////////////////////////
     //Get distance to goal angle
@@ -200,17 +218,29 @@ void cLuxEnemyMover::UpdateTurning(float afTimeStep)
     //Calculate the turn speed
     mfTurnSpeed = cMath::Min(mpEnemy->mfTurnSpeedMul * std::fabs(fAngleDist), mpEnemy->mfTurnMaxSpeed);
 
-    if(fAngleDist < 0)    mpCharBody->AddYaw(-mfTurnSpeed * afTimeStep);
-    else                mpCharBody->AddYaw(mfTurnSpeed * afTimeStep);
+    if(fAngleDist < 0)
+    {
+        mpCharBody->AddYaw(-mfTurnSpeed * afTimeStep);
+    }
+    else
+    {
+        mpCharBody->AddYaw(mfTurnSpeed * afTimeStep);
+    }
 }
 //-----------------------------------------------------------------------
 
 void cLuxEnemyMover::UpdateMoveAnimation(float afTimeStep)
 {
-    if(mbOverideMoveState) return;
+    if(mbOverideMoveState)
+    {
+        return;
+    }
 
     float fSpeed = GetMoveSpeed();
-    if(mpCharBody->GetMoveSpeed(eCharDir_Forward) <0) fSpeed = -fSpeed;
+    if(mpCharBody->GetMoveSpeed(eCharDir_Forward) <0)
+    {
+        fSpeed = -fSpeed;
+    }
 
     //Log("Update move anim. Speed: %f Current: %d\n", fSpeed, mMoveState);
 
@@ -226,7 +256,9 @@ void cLuxEnemyMover::UpdateMoveAnimation(float afTimeStep)
     // Backward
     case eLuxEnemyMoveState_Backward:
         if(fSpeed >= 0)
+        {
             mMoveState = eLuxEnemyMoveState_Stopped;
+        }
 
         break;
 
@@ -234,11 +266,17 @@ void cLuxEnemyMover::UpdateMoveAnimation(float afTimeStep)
     // Stopped State
     case eLuxEnemyMoveState_Stopped:
         if(fSpeed < -0.05f)
+        {
             mMoveState = eLuxEnemyMoveState_Backward;
+        }
         else if(fSpeed >= mpEnemy->mfStoppedToWalkSpeed[pose])
+        {
             mMoveState = eLuxEnemyMoveState_Walking;
+        }
         else if(std::fabs(mfTurnSpeed) > 0.07f && mpCharBody->GetMoveDelay()<=0)
+        {
             mMoveState = eLuxEnemyMoveState_Walking;
+        }
 
         break;
 
@@ -246,10 +284,15 @@ void cLuxEnemyMover::UpdateMoveAnimation(float afTimeStep)
     // Walking State
     case eLuxEnemyMoveState_Walking:
         if(fSpeed >= mpEnemy->mfWalkToRunSpeed[pose])
+        {
             mMoveState = eLuxEnemyMoveState_Running;
+        }
         else if(fSpeed <= mpEnemy->mfWalkToStoppedSpeed[pose])
         {
-            if(std::fabs(mfTurnSpeed) < 0.03f) mMoveState = eLuxEnemyMoveState_Stopped;
+            if(std::fabs(mfTurnSpeed) < 0.03f)
+            {
+                mMoveState = eLuxEnemyMoveState_Stopped;
+            }
         }
 
         break;
@@ -258,7 +301,9 @@ void cLuxEnemyMover::UpdateMoveAnimation(float afTimeStep)
     // Running State
     case eLuxEnemyMoveState_Running:
         if(fSpeed <= mpEnemy->mfRunToWalkSpeed[pose])
+        {
             mMoveState = eLuxEnemyMoveState_Walking;
+        }
 
         break;
 
@@ -324,10 +369,16 @@ void cLuxEnemyMover::UpdateMoveAnimation(float afTimeStep)
 
 void cLuxEnemyMover::UpdateStepEffects(float afTimeStep)
 {
-    if(mpEnemy->IsInWater()==false || mpEnemy->GetWaterSurfaceData()==NULL) return;
+    if(mpEnemy->IsInWater()==false || mpEnemy->GetWaterSurfaceData()==NULL)
+    {
+        return;
+    }
 
     cAnimationState *pAnim = mpEnemy->GetCurrentAnimation();
-    if(pAnim==NULL) return;
+    if(pAnim==NULL)
+    {
+        return;
+    }
 
     ///////////////////////////////////////
     // Check if a step is occuring!
@@ -335,7 +386,10 @@ void cLuxEnemyMover::UpdateStepEffects(float afTimeStep)
     for(int i=0; i<pAnim->GetEventNum(); ++i)
     {
         cAnimationEvent *pEvent = pAnim->GetEvent(i);
-        if(pEvent->mType != eAnimationEventType_Step) continue;
+        if(pEvent->mType != eAnimationEventType_Step)
+        {
+            continue;
+        }
 
         if(    pEvent->mfTime >= pAnim->GetPreviousTimePosition() &&
                 pEvent->mfTime < pAnim->GetTimePosition())
@@ -344,7 +398,10 @@ void cLuxEnemyMover::UpdateStepEffects(float afTimeStep)
             break;
         }
     }
-    if(bStep==false) return;
+    if(bStep==false)
+    {
+        return;
+    }
 
     ///////////////////////////////////////
     // Do the liquid effect
@@ -372,13 +429,19 @@ void cLuxEnemyMover::UpdateStepEffects(float afTimeStep)
     if(pImpact->GetPSName() != "")
     {
         cParticleSystem *pPS = pWorld->CreateParticleSystem("Splash", pImpact->GetPSName(),1);
-        if(pPS) pPS->SetPosition(vEffectPos);
+        if(pPS)
+        {
+            pPS->SetPosition(vEffectPos);
+        }
     }
 
     if(pImpact->GetSoundName() != "")
     {
         cSoundEntity *pSound = pWorld->CreateSoundEntity("Splash",pImpact->GetSoundName(),true);
-        if(pSound) pSound->SetPosition(vEffectPos);
+        if(pSound)
+        {
+            pSound->SetPosition(vEffectPos);
+        }
     }
 }
 

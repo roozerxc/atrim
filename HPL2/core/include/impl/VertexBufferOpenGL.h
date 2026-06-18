@@ -101,7 +101,10 @@ protected:
     inline cVtxBufferGLElementArray* GetElementArray(eVertexBufferElement aElement)
     {
         int lIdx = mvElementArrayIndex[aElement];
-        if(lIdx <0) return NULL;
+        if(lIdx <0)
+        {
+            return NULL;
+        }
         return mvElementArrays[ lIdx ];
     }
 

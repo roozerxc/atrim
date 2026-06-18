@@ -65,7 +65,10 @@ cRenderableContainer_BoxTree::cRenderableContainer_BoxTree()
 
 cRenderableContainer_BoxTree::~cRenderableContainer_BoxTree()
 {
-    if(mpRoot) hplDelete(mpRoot);
+    if(mpRoot)
+    {
+        hplDelete(mpRoot);
+    }
 
     hplDelete( mpObjectCalllback );
 }
@@ -102,7 +105,10 @@ iRenderableContainerNode* cRenderableContainer_BoxTree::GetRoot()
 void cRenderableContainer_BoxTree::Compile()
 {
     //Create root (delete first if needed)
-    if(mpRoot) hplDelete(mpRoot);
+    if(mpRoot)
+    {
+        hplDelete(mpRoot);
+    }
     mpRoot = hplNew( cRCNode_BoxTree, ());
     mpRoot->mpParent = NULL;
     mpRoot->mfViewDistance =0;
@@ -138,7 +144,10 @@ void cRenderableContainer_BoxTree::RenderDebug(cRendererCallbackFunctions *apFun
     {
         glCount =0;
         glDrawLevel++;
-        if(glDrawLevel > 5) glDrawLevel =0;
+        if(glDrawLevel > 5)
+        {
+            glDrawLevel =0;
+        }
     }
 
     apFunctions->SetDepthTest(true);
@@ -188,7 +197,10 @@ float GetAxisFromVec(const cVector3f& avVec, int alAxis)
 //Checks is child is NULL, and if so creates child else just returns it.
 cBoxTreeTempNode* CreateNodeIfNeeded(cBoxTreeTempNode* apParentNode, cBoxTreeTempNode* &apChildNode)
 {
-    if(apChildNode) return apChildNode;
+    if(apChildNode)
+    {
+        return apChildNode;
+    }
 
     apChildNode = hplNew( cBoxTreeTempNode,(apParentNode) );
     apParentNode->mlstChildren.push_back(apChildNode);
@@ -258,7 +270,10 @@ int cRenderableContainer_BoxTree::GetSplitGroup(iRenderable *apObject, float afC
         /////////////////////
         //Check if the amount of cross over is small enough to not treat it as an intersection.
         float fMinCrossOverAmount = fMinDist / fNodeSize;
-        if(fMinCrossOverAmount <= mfMaxIntersectionAmount) return lDestDir;
+        if(fMinCrossOverAmount <= mfMaxIntersectionAmount)
+        {
+            return lDestDir;
+        }
 
         return 2;
     }
@@ -268,7 +283,10 @@ int cRenderableContainer_BoxTree::GetSplitGroup(iRenderable *apObject, float afC
 
 float cRenderableContainer_BoxTree::CalculateObjectsVolume(tRenderableList &alstObjects)
 {
-    if(alstObjects.empty()) return 0;
+    if(alstObjects.empty())
+    {
+        return 0;
+    }
 
     cVector3f vMin,vMax;
     CalculateMinMax(&alstObjects,vMin,vMax);
@@ -305,11 +323,20 @@ float cRenderableContainer_BoxTree::CalculateBestCutPlane(tRenderableList &alstO
             int lGroup = GetSplitGroup(pTestObject,fCutPlaneVal,alAxis,avNodeSize);
 
             //Above cut plane
-            if(lGroup==0)        vObjectGroup[0].push_back(pTestObject);
+            if(lGroup==0)
+            {
+                vObjectGroup[0].push_back(pTestObject);
+            }
             //Below cut plane
-            else if(lGroup==1)    vObjectGroup[1].push_back(pTestObject);
+            else if(lGroup==1)
+            {
+                vObjectGroup[1].push_back(pTestObject);
+            }
             //Intersection
-            else                vObjectGroup[2].push_back(pTestObject);
+            else
+            {
+                vObjectGroup[2].push_back(pTestObject);
+            }
         }
 
         ///////////////////////////////////
@@ -335,8 +362,14 @@ float cRenderableContainer_BoxTree::CalculateBestCutPlane(tRenderableList &alstO
 static float GetLongestSide(const cVector3f& avSize)
 {
     float fLongestSide = avSize.x;
-    if(fLongestSide < avSize.y)    fLongestSide = avSize.y;
-    if(fLongestSide < avSize.z)    fLongestSide = avSize.z;
+    if(fLongestSide < avSize.y)
+    {
+        fLongestSide = avSize.y;
+    }
+    if(fLongestSide < avSize.z)
+    {
+        fLongestSide = avSize.z;
+    }
     return fLongestSide;
 }
 
@@ -384,9 +417,18 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     int lAxis = alSplitAxis;
     if(lAxis <0) //If axis < 0, make it depend on largest side
     {
-        if(fLongestSide == vNodeSize.x)            lAxis =0;
-        else if(fLongestSide == vNodeSize.y)    lAxis =1;
-        else if(fLongestSide == vNodeSize.z)    lAxis =2;
+        if(fLongestSide == vNodeSize.x)
+        {
+            lAxis =0;
+        }
+        else if(fLongestSide == vNodeSize.y)
+        {
+            lAxis =1;
+        }
+        else if(fLongestSide == vNodeSize.z)
+        {
+            lAxis =2;
+        }
     }
 
 
@@ -435,7 +477,10 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     ////////////////////////////////////////
     //Add objects to children depending on where they are in the clipping plane
 
-    if(bLog) Log("%s ---------------\n",GetSpaces(alLevel));
+    if(bLog)
+    {
+        Log("%s ---------------\n",GetSpaces(alLevel));
+    }
 
     cBoxTreeTempNode *pHighChild=NULL;            //For objects above fCutPlaneVal
     cBoxTreeTempNode *pLowChild=NULL;            //For objects below fCutPlaneVal
@@ -453,21 +498,30 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
         //Above cut plane
         if(lGroup==0)
         {
-            if(bLog) Log("  adding above...\n");
+            if(bLog)
+            {
+                Log("  adding above...\n");
+            }
             CreateNodeIfNeeded(apNode, pHighChild)->mlstObjects.push_back(pObject);
         }
         //////////////////////////
         //Below cut plane
         else if(lGroup==1)
         {
-            if(bLog) Log("  adding below...\n");
+            if(bLog)
+            {
+                Log("  adding below...\n");
+            }
             CreateNodeIfNeeded(apNode, pLowChild)->mlstObjects.push_back(pObject);
         }
         //////////////////////////
         //Intersection
         else
         {
-            if(bLog) Log("  adding intersect...\n");
+            if(bLog)
+            {
+                Log("  adding intersect...\n");
+            }
             CreateNodeIfNeeded(apNode, pIntersectChild)->mlstObjects.push_back(pObject);
         }
     }
@@ -478,17 +532,32 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     //Get longest sides of each group
     float fHigh_LongestSide=0,  fLow_LongestSide=0, fIntersect_LongestSide=0;
     if(pHighChild)
+    {
         fHigh_LongestSide = GetLongestSide(CalculateSize(&pHighChild->mlstObjects));
+    }
     if(pLowChild)
+    {
         fLow_LongestSide = GetLongestSide(CalculateSize(&pLowChild->mlstObjects));
+    }
     if(pIntersectChild)
+    {
         fIntersect_LongestSide = GetLongestSide(CalculateSize(&pIntersectChild->mlstObjects));
+    }
 
     if(bLog)
     {
-        if(pHighChild) Log("%s objects above: %d Longest side: %f\n",GetSpaces(alLevel), pHighChild->mlstObjects.size(), fHigh_LongestSide);
-        if(pLowChild) Log("%s objects below: %d Longest side: %f\n",GetSpaces(alLevel), pLowChild->mlstObjects.size(), fLow_LongestSide);
-        if(pIntersectChild) Log("%s objects intersected: %d Longest side: %f\n",GetSpaces(alLevel), pIntersectChild->mlstObjects.size(), fIntersect_LongestSide);
+        if(pHighChild)
+        {
+            Log("%s objects above: %d Longest side: %f\n",GetSpaces(alLevel), pHighChild->mlstObjects.size(), fHigh_LongestSide);
+        }
+        if(pLowChild)
+        {
+            Log("%s objects below: %d Longest side: %f\n",GetSpaces(alLevel), pLowChild->mlstObjects.size(), fLow_LongestSide);
+        }
+        if(pIntersectChild)
+        {
+            Log("%s objects intersected: %d Longest side: %f\n",GetSpaces(alLevel), pIntersectChild->mlstObjects.size(), fIntersect_LongestSide);
+        }
     }
 
     /////////////////////////////////////
@@ -523,7 +592,10 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
             //If object is in more in the high child, move it there
             else if( pHighChild && (fAboveDist > fBelowDist || pLowChild==NULL) )
             {
-                if(bLog) Log("%s  moving '%s' to high!\n",GetSpaces(alLevel),pObject->GetName().c_str());
+                if(bLog)
+                {
+                    Log("%s  moving '%s' to high!\n",GetSpaces(alLevel),pObject->GetName().c_str());
+                }
                 pHighChild->mlstObjects.push_back(pObject);
                 it = pIntersectChild->mlstObjects.erase(it);
                 bMovedObjects = true;
@@ -531,7 +603,10 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
             //If objects is more the lower child, move it there
             else if(pLowChild)
             {
-                if(bLog) Log("%s  moving '%s' to low!\n",GetSpaces(alLevel),pObject->GetName().c_str());
+                if(bLog)
+                {
+                    Log("%s  moving '%s' to low!\n",GetSpaces(alLevel),pObject->GetName().c_str());
+                }
                 pLowChild->mlstObjects.push_back(pObject);
                 it = pIntersectChild->mlstObjects.erase(it);
                 bMovedObjects = true;
@@ -554,7 +629,10 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     // Above:
     if(pHighChild && (int)pHighChild->mlstObjects.size() < mlMinLeafObjects && pIntersectChild && fHigh_LongestSide < mfMaxSideLength)
     {
-        if(bLog) Log("%s moving high to intersected!\n",GetSpaces(alLevel));
+        if(bLog)
+        {
+            Log("%s moving high to intersected!\n",GetSpaces(alLevel));
+        }
         pIntersectChild->mlstObjects.splice(pIntersectChild->mlstObjects.end(),pHighChild->mlstObjects);
         STLFindAndDelete(apNode->mlstChildren, pHighChild);
         pHighChild = NULL;
@@ -563,7 +641,10 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     // Below
     if(pLowChild && (int)pLowChild->mlstObjects.size() < mlMinLeafObjects && pIntersectChild && fLow_LongestSide < mfMaxSideLength)
     {
-        if(bLog) Log("%s moving low to intersected!\n",GetSpaces(alLevel));
+        if(bLog)
+        {
+            Log("%s moving low to intersected!\n",GetSpaces(alLevel));
+        }
         pIntersectChild->mlstObjects.splice(pIntersectChild->mlstObjects.end(),pLowChild->mlstObjects);
         STLFindAndDelete(apNode->mlstChildren, pLowChild);
         pLowChild = NULL;
@@ -572,12 +653,24 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
 
     if(bLog && bMovedObjects)
     {
-        if(pHighChild) Log("%s objects above: %d\n",GetSpaces(alLevel), pHighChild->mlstObjects.size());
-        if(pLowChild) Log("%s objects below: %d\n",GetSpaces(alLevel), pLowChild->mlstObjects.size());
-        if(pIntersectChild) Log("%s objects intersected: %d\n",GetSpaces(alLevel), pIntersectChild->mlstObjects.size());
+        if(pHighChild)
+        {
+            Log("%s objects above: %d\n",GetSpaces(alLevel), pHighChild->mlstObjects.size());
+        }
+        if(pLowChild)
+        {
+            Log("%s objects below: %d\n",GetSpaces(alLevel), pLowChild->mlstObjects.size());
+        }
+        if(pIntersectChild)
+        {
+            Log("%s objects intersected: %d\n",GetSpaces(alLevel), pIntersectChild->mlstObjects.size());
+        }
     }
 
-    if(bLog) Log("%s ---------------\n",GetSpaces(alLevel));
+    if(bLog)
+    {
+        Log("%s ---------------\n",GetSpaces(alLevel));
+    }
 
     ///////////////////////////////////////
     //If only one child node was created, try splitting on another axis
@@ -585,7 +678,10 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     // when all axes have been tried
     if(apNode->mlstChildren.size() <= 1)
     {
-        if(bLog) Log("%s==================================\n",GetSpaces(alLevel));
+        if(bLog)
+        {
+            Log("%s==================================\n",GetSpaces(alLevel));
+        }
 
         STLDeleteAll(apNode->mlstChildren);
 
@@ -594,7 +690,10 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
         if(apNode->mlSplitAxisCount < 3)
         {
             int lNewAxis = lAxis +1;
-            if(lNewAxis > 2) lNewAxis =0;
+            if(lNewAxis > 2)
+            {
+                lNewAxis =0;
+            }
 
             CompileTempNode(apNode,alLevel, lNewAxis);
         }
@@ -618,7 +717,10 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
         CompileTempNode(pIntersectChild,alLevel+1, -1);
     }
 
-    if(bLog) Log("%s==================================\n",GetSpaces(alLevel));
+    if(bLog)
+    {
+        Log("%s==================================\n",GetSpaces(alLevel));
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -694,7 +796,9 @@ void cRenderableContainer_BoxTree::RenderDebugNode(cRendererCallbackFunctions *a
 {
     //if(apNode->GetNodeList()->empty())
     if(glDrawLevel==alLevel || (glDrawLevel > alLevel && apNode->GetChildNodeList()->empty()))
+    {
         apFunctions->GetLowLevelGfx()->DrawBoxMinMax(apNode->GetMin(),apNode->GetMax(),LevelColor[alLevel % 10]);
+    }
 
     tRenderableContainerNodeListIt childIt = apNode->GetChildNodeList()->begin();
     for(; childIt != apNode->GetChildNodeList()->end(); ++childIt)
@@ -727,13 +831,31 @@ void cRenderableContainer_BoxTree::CalculateMinMax(tRenderableList *apObjectList
         const cVector3f &vMin = pObject->GetBoundingVolume()->GetMin();
         const cVector3f &vMax = pObject->GetBoundingVolume()->GetMax();
 
-        if(vNodeMin.x > vMin.x) vNodeMin.x = vMin.x;
-        if(vNodeMin.y > vMin.y) vNodeMin.y = vMin.y;
-        if(vNodeMin.z > vMin.z) vNodeMin.z = vMin.z;
+        if(vNodeMin.x > vMin.x)
+        {
+            vNodeMin.x = vMin.x;
+        }
+        if(vNodeMin.y > vMin.y)
+        {
+            vNodeMin.y = vMin.y;
+        }
+        if(vNodeMin.z > vMin.z)
+        {
+            vNodeMin.z = vMin.z;
+        }
 
-        if(vNodeMax.x < vMax.x) vNodeMax.x = vMax.x;
-        if(vNodeMax.y < vMax.y) vNodeMax.y = vMax.y;
-        if(vNodeMax.z < vMax.z) vNodeMax.z = vMax.z;
+        if(vNodeMax.x < vMax.x)
+        {
+            vNodeMax.x = vMax.x;
+        }
+        if(vNodeMax.y < vMax.y)
+        {
+            vNodeMax.y = vMax.y;
+        }
+        if(vNodeMax.z < vMax.z)
+        {
+            vNodeMax.z = vMax.z;
+        }
     }
 
     avMin = vNodeMin;

@@ -68,7 +68,10 @@ cWorld* cMeshLoaderMSH::LoadWorld(const tWString& asFile, cScene* apScene,tWorld
 
 cMesh* cMeshLoaderMSH::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
 {
-    if(gbLogMSHLoad) Log("------ Loading ---------\n");
+    if(gbLogMSHLoad)
+    {
+        Log("------ Loading ---------\n");
+    }
     /////////////////////////////////////////////////
     // Load file
     cBinaryBuffer binBuff(asFile);
@@ -103,7 +106,10 @@ cMesh* cMeshLoaderMSH::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
     int lAnimationNum = binBuff.GetInt32();
     bool bSkeleton = binBuff.GetBool();
 
-    if(gbLogMSHLoad) Log("General: %d %d %d\n", lSubMeshNum, lAnimationNum, bSkeleton);
+    if(gbLogMSHLoad)
+    {
+        Log("General: %d %d %d\n", lSubMeshNum, lAnimationNum, bSkeleton);
+    }
 
     // Create the mesh
     tString sMeshName = cString::GetFileName(cString::To8Char(asFile));
@@ -130,7 +136,10 @@ cMesh* cMeshLoaderMSH::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
         cNode3D *pRootNode = pMesh->GetRootNode();
 
         int lRootChildNum = binBuff.GetInt32();
-        if(gbLogMSHLoad) Log("Nodes num: %d\n", lRootChildNum);
+        if(gbLogMSHLoad)
+        {
+            Log("Nodes num: %d\n", lRootChildNum);
+        }
 
         for(int i=0; i<lRootChildNum; ++i)
         {
@@ -177,14 +186,20 @@ cMesh* cMeshLoaderMSH::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
             pSubMesh->SetMaterial(pMaterial);
         }
 
-        if(gbLogMSHLoad) Log("Submesh %d: '%s' '%s'\n", sub, sName.c_str(), sMaterial.c_str());
+        if(gbLogMSHLoad)
+        {
+            Log("Submesh %d: '%s' '%s'\n", sub, sName.c_str(), sMaterial.c_str());
+        }
 
         ////////////////////
         // Colliders
         {
             int lColliderNum = binBuff.GetInt32();
 
-            if(gbLogMSHLoad) Log(" Colliders: %d\n",lColliderNum);
+            if(gbLogMSHLoad)
+            {
+                Log(" Colliders: %d\n",lColliderNum);
+            }
 
             for(int i=0; i<lColliderNum; ++i)
             {
@@ -206,7 +221,10 @@ cMesh* cMeshLoaderMSH::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
             int lVtxBonePairNum = binBuff.GetInt32();
             pSubMesh->ResizeVertexBonePairs(lVtxBonePairNum);
 
-            if(gbLogMSHLoad) Log(" VertexBonePairs: %d\n",pSubMesh->GetVertexBonePairNum(), lVtxBonePairNum);
+            if(gbLogMSHLoad)
+            {
+                Log(" VertexBonePairs: %d\n",pSubMesh->GetVertexBonePairNum(), lVtxBonePairNum);
+            }
 
             for(int i=0; i<pSubMesh->GetVertexBonePairNum(); ++i)
             {
@@ -226,7 +244,10 @@ cMesh* cMeshLoaderMSH::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
             int lVtxNum = binBuff.GetInt32();
             int lVtxTypeNum = binBuff.GetInt32();
 
-            if(gbLogMSHLoad) Log(" VertexBuffers num: %d typenum: %d\n",lVtxNum, lVtxTypeNum);
+            if(gbLogMSHLoad)
+            {
+                Log(" VertexBuffers num: %d typenum: %d\n",lVtxNum, lVtxTypeNum);
+            }
 
             ////////////////////
             // Get vertex arrays
@@ -238,7 +259,10 @@ cMesh* cMeshLoaderMSH::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
                 int lProgramVarIndex = binBuff.GetInt32();
                 int lElementNum = binBuff.GetInt32();
 
-                if(gbLogMSHLoad) Log("   Vtx %d: %d %d %d\n", i, arrayType, lProgramVarIndex, lElementNum);
+                if(gbLogMSHLoad)
+                {
+                    Log("   Vtx %d: %d %d %d\n", i, arrayType, lProgramVarIndex, lElementNum);
+                }
 
                 //Create the array
                 pVtxBuff->CreateElementArray(arrayType, elementFormat, lElementNum, lProgramVarIndex);
@@ -255,7 +279,10 @@ cMesh* cMeshLoaderMSH::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
         {
             int lIdxNum =  binBuff.GetInt32();
 
-            if(gbLogMSHLoad) Log("Indices: %d\n", lIdxNum);
+            if(gbLogMSHLoad)
+            {
+                Log("Indices: %d\n", lIdxNum);
+            }
 
             pVtxBuff->ResizeIndices(lIdxNum);
             binBuff.GetInt32Array((int*)pVtxBuff->GetIndices(), lIdxNum);
@@ -279,7 +306,10 @@ cMesh* cMeshLoaderMSH::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
     // Animations
     {
         int lAnimationNum = binBuff.GetInt32();
-        if(gbLogMSHLoad) Log(" Animation num: %d\n",lAnimationNum);
+        if(gbLogMSHLoad)
+        {
+            Log(" Animation num: %d\n",lAnimationNum);
+        }
 
         for(int i=0; i<lAnimationNum; ++i)
         {
@@ -298,7 +328,10 @@ bool cMeshLoaderMSH::SaveMesh(cMesh* apMesh, const tWString& asFile)
 {
     cBinaryBuffer binBuff(asFile);
 
-    if(gbLogMSHLoad) Log("------ Saving ---------\n");
+    if(gbLogMSHLoad)
+    {
+        Log("------ Saving ---------\n");
+    }
 
     ////////////////////////////////////////
     // Header
@@ -332,7 +365,10 @@ bool cMeshLoaderMSH::SaveMesh(cMesh* apMesh, const tWString& asFile)
         cNode3D *pRootNode = apMesh->GetRootNode();
         binBuff.AddInt32((int)pRootNode->GetChildList()->size());
 
-        if(gbLogMSHLoad) Log("Nodes num: %d\n", pRootNode->GetChildList()->size());
+        if(gbLogMSHLoad)
+        {
+            Log("Nodes num: %d\n", pRootNode->GetChildList()->size());
+        }
 
         //Iterate child nodes
         cNode3DIterator nodeIt = pRootNode->GetChildIterator();
@@ -359,14 +395,20 @@ bool cMeshLoaderMSH::SaveMesh(cMesh* apMesh, const tWString& asFile)
         binBuff.AddBool(pSubMesh->IsCollideShape());
 
 
-        if(gbLogMSHLoad) Log("Submesh %d: '%s' '%s'\n", sub, pSubMesh->GetName().c_str(), pSubMesh->GetMaterialName().c_str());
+        if(gbLogMSHLoad)
+        {
+            Log("Submesh %d: '%s' '%s'\n", sub, pSubMesh->GetName().c_str(), pSubMesh->GetMaterialName().c_str());
+        }
 
         ////////////////////
         // Colliders
         {
             binBuff.AddInt32(pSubMesh->GetColliderNum());
 
-            if(gbLogMSHLoad) Log(" Colliders: %d\n",pSubMesh->GetColliderNum());
+            if(gbLogMSHLoad)
+            {
+                Log(" Colliders: %d\n",pSubMesh->GetColliderNum());
+            }
 
             for(int i=0; i<pSubMesh->GetColliderNum(); ++i)
             {
@@ -385,7 +427,10 @@ bool cMeshLoaderMSH::SaveMesh(cMesh* apMesh, const tWString& asFile)
         ////////////////////
         // Vertex Bone Pairs
         {
-            if(gbLogMSHLoad) Log(" VertexBonePairs: %d\n",pSubMesh->GetVertexBonePairNum());
+            if(gbLogMSHLoad)
+            {
+                Log(" VertexBonePairs: %d\n",pSubMesh->GetVertexBonePairNum());
+            }
 
             binBuff.AddInt32(pSubMesh->GetVertexBonePairNum());
 
@@ -409,11 +454,17 @@ bool cMeshLoaderMSH::SaveMesh(cMesh* apMesh, const tWString& asFile)
             int lVtxTypeNum =  0;
             for(int i=0; i < eVertexBufferElement_LastEnum; i++)
             {
-                if(pVtxBuff->GetElementNum((eVertexBufferElement)i) > 0) ++lVtxTypeNum;
+                if(pVtxBuff->GetElementNum((eVertexBufferElement)i) > 0)
+                {
+                    ++lVtxTypeNum;
+                }
             }
             binBuff.AddInt32(lVtxTypeNum);
 
-            if(gbLogMSHLoad) Log(" VertexBuffers num: %d typenum: %d\n",lVtxNum, lVtxTypeNum);
+            if(gbLogMSHLoad)
+            {
+                Log(" VertexBuffers num: %d typenum: %d\n",lVtxNum, lVtxTypeNum);
+            }
 
             //////////////////////////////
             // Iterate the Vertices
@@ -421,7 +472,10 @@ bool cMeshLoaderMSH::SaveMesh(cMesh* apMesh, const tWString& asFile)
             {
                 eVertexBufferElement arrayType = (eVertexBufferElement)i;
 
-                if(pVtxBuff->GetElementNum(arrayType) <= 0) continue;
+                if(pVtxBuff->GetElementNum(arrayType) <= 0)
+                {
+                    continue;
+                }
 
                 int lElementNum = pVtxBuff->GetElementNum(arrayType);
                 eVertexBufferElementFormat elementFormat = pVtxBuff->GetElementFormat(arrayType);
@@ -431,7 +485,10 @@ bool cMeshLoaderMSH::SaveMesh(cMesh* apMesh, const tWString& asFile)
                 binBuff.AddInt32(pVtxBuff->GetElementProgramVarIndex(arrayType));
                 binBuff.AddInt32(lElementNum);
 
-                if(gbLogMSHLoad) Log("  Vtx %d: %d %d %d\n", i, arrayType, pVtxBuff->GetElementProgramVarIndex(arrayType), lElementNum);
+                if(gbLogMSHLoad)
+                {
+                    Log("  Vtx %d: %d %d %d\n", i, arrayType, pVtxBuff->GetElementProgramVarIndex(arrayType), lElementNum);
+                }
 
                 void *pData = GetVertexBufferWithFormat(pVtxBuff, arrayType, elementFormat);
                 AddBinaryBufferDataWithFormat(&binBuff, pData, (size_t)(lVtxNum * lElementNum), elementFormat);
@@ -443,7 +500,10 @@ bool cMeshLoaderMSH::SaveMesh(cMesh* apMesh, const tWString& asFile)
         {
             int lIdxNum =  pVtxBuff->GetIndexNum();
 
-            if(gbLogMSHLoad) Log("Indices: %d\n", lIdxNum);
+            if(gbLogMSHLoad)
+            {
+                Log("Indices: %d\n", lIdxNum);
+            }
 
             binBuff.AddInt32(lIdxNum);
             binBuff.AddInt32Array((int*)pVtxBuff->GetIndices(), lIdxNum);
@@ -455,7 +515,10 @@ bool cMeshLoaderMSH::SaveMesh(cMesh* apMesh, const tWString& asFile)
     // Animations
     {
         binBuff.AddInt32(apMesh->GetAnimationNum());
-        if(gbLogMSHLoad) Log(" Animation num: %d\n",apMesh->GetAnimationNum());
+        if(gbLogMSHLoad)
+        {
+            Log(" Animation num: %d\n",apMesh->GetAnimationNum());
+        }
 
         for(int i=0; i<apMesh->GetAnimationNum(); ++i)
         {
@@ -466,7 +529,10 @@ bool cMeshLoaderMSH::SaveMesh(cMesh* apMesh, const tWString& asFile)
     ////////////////////////////
     // Save data
     bool bRet = binBuff.Save();
-    if(bRet==false)     Error("Couldn't save mesh to '%s'", cString::To8Char(asFile).c_str());
+    if(bRet==false)
+    {
+        Error("Couldn't save mesh to '%s'", cString::To8Char(asFile).c_str());
+    }
 
     return bRet;
 }
@@ -475,7 +541,10 @@ bool cMeshLoaderMSH::SaveMesh(cMesh* apMesh, const tWString& asFile)
 
 cAnimation* cMeshLoaderMSH::LoadAnimation(const tWString& asFile)
 {
-    if(gbLogMSHLoad) Log("------ Loading Anim ---------\n");
+    if(gbLogMSHLoad)
+    {
+        Log("------ Loading Anim ---------\n");
+    }
     /////////////////////////////////////////////////
     // Load file
     cBinaryBuffer binBuff(asFile);
@@ -517,7 +586,10 @@ bool cMeshLoaderMSH::SaveAnimation(cAnimation* apAnimation, const tWString& asFi
 {
     cBinaryBuffer binBuff(asFile);
 
-    if(gbLogMSHLoad) Log("------ Saving ---------\n");
+    if(gbLogMSHLoad)
+    {
+        Log("------ Saving ---------\n");
+    }
 
     ////////////////////////////////////////
     // Header
@@ -531,7 +603,10 @@ bool cMeshLoaderMSH::SaveAnimation(cAnimation* apAnimation, const tWString& asFi
     ////////////////////////////
     // Save data
     bool bRet = binBuff.Save();
-    if(bRet==false)     Error("Couldn't save animation to '%s'", asFile.c_str());
+    if(bRet==false)
+    {
+        Error("Couldn't save animation to '%s'", asFile.c_str());
+    }
 
     return bRet;
 }
@@ -552,7 +627,10 @@ void cMeshLoaderMSH::AddAnimation(cAnimation *apAnimation, cBinaryBuffer* apBuff
     apBuffer->AddFloat32(apAnimation->GetLength());
     apBuffer->AddInt32(apAnimation->GetTrackNum());
 
-    if(gbLogMSHLoad) Log(" Animation %s: %f %d\n", apAnimation->GetName().c_str(), apAnimation->GetLength(), apAnimation->GetTrackNum());
+    if(gbLogMSHLoad)
+    {
+        Log(" Animation %s: %f %d\n", apAnimation->GetName().c_str(), apAnimation->GetLength(), apAnimation->GetTrackNum());
+    }
 
     ////////////////////////
     // Tracks
@@ -566,7 +644,10 @@ void cMeshLoaderMSH::AddAnimation(cAnimation *apAnimation, cBinaryBuffer* apBuff
         apBuffer->AddShort16(pTrack->GetTransformFlags());
         apBuffer->AddInt32(pTrack->GetKeyFrameNum());
 
-        if(gbLogMSHLoad) Log("  Track %d %s: %d %d\n", track, pTrack->GetName().c_str(), pTrack->GetTransformFlags(), pTrack->GetKeyFrameNum());
+        if(gbLogMSHLoad)
+        {
+            Log("  Track %d %s: %d %d\n", track, pTrack->GetName().c_str(), pTrack->GetTransformFlags(), pTrack->GetKeyFrameNum());
+        }
 
         /////////////////////////
         // Key Frames
@@ -598,7 +679,10 @@ cAnimation* cMeshLoaderMSH::GetAnimation(cBinaryBuffer* apBuffer, const tWString
     cAnimation *pAnimation = hplNew(cAnimation, (cString::To8Char(asFullPath), asFullPath, cString::GetFileName(cString::To8Char(asFullPath))));
     pAnimation->SetLength(fLength);
 
-    if(gbLogMSHLoad) Log(" Animation %s: %f %d\n", pAnimation->GetName().c_str(), pAnimation->GetLength(), lTrackNum);
+    if(gbLogMSHLoad)
+    {
+        Log(" Animation %s: %f %d\n", pAnimation->GetName().c_str(), pAnimation->GetLength(), lTrackNum);
+    }
 
     ////////////////////////
     // Tracks
@@ -614,7 +698,10 @@ cAnimation* cMeshLoaderMSH::GetAnimation(cBinaryBuffer* apBuffer, const tWString
 
         cAnimationTrack *pTrack = pAnimation->CreateTrack(sTrackName,transFlag);
 
-        if(gbLogMSHLoad) Log("  Track %d %s: %d %d\n", track, pTrack->GetName().c_str(), pTrack->GetTransformFlags(), lFrameNum);
+        if(gbLogMSHLoad)
+        {
+            Log("  Track %d %s: %d %d\n", track, pTrack->GetName().c_str(), pTrack->GetTransformFlags(), lFrameNum);
+        }
 
         /////////////////////////
         // Key Frames
@@ -640,7 +727,10 @@ static tString gsLevelTemp = "";
 const char* GetLevelSpaces(int alLevel)
 {
     gsLevelTemp ="";
-    for(int i=0; i<alLevel; ++i) gsLevelTemp += " ";
+    for(int i=0; i<alLevel; ++i)
+    {
+        gsLevelTemp += " ";
+    }
     return gsLevelTemp.c_str();
 }
 

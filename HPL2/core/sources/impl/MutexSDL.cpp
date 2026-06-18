@@ -22,7 +22,9 @@ cMutexSDL::cMutexSDL()
 cMutexSDL::~cMutexSDL()
 {
     if(mpMutexHandle)
+    {
         SDL_DestroyMutex(mpMutexHandle);
+    }
 }
 
 //-----------------------------------------------------------------------

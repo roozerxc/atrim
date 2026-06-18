@@ -113,10 +113,15 @@ void cGamepadSDL::Update()
             eGamepadAxis axis = SDLToAxis(pEvent->jaxis.axis);
             float fAxisValue = SDLToAxisValue(pEvent->jaxis.value);
 
-            if(axis < 0 || axis >= GetNumAxes()) continue;
+            if(axis < 0 || axis >= GetNumAxes())
+            {
+                continue;
+            }
 
             if(cMath::Abs(fAxisValue) < mfDeadZoneRadius)
+            {
                 fAxisValue = 0.0f;
+            }
 
             if(fAxisValue!=mvAxisArray[axis])
             {
@@ -132,7 +137,10 @@ void cGamepadSDL::Update()
             eGamepadHat hat = SDLToHat(pEvent->jhat.hat);
             eGamepadHatState state = SDLToHatState(pEvent->jhat.value);
 
-            if(hat < 0 || hat >= GetNumHats()) continue;
+            if(hat < 0 || hat >= GetNumHats())
+            {
+                continue;
+            }
 
             inputUpdate = cGamepadInputData(mlIndex, eGamepadInputType_Hat, hat, (float)state);
             mlstHatStateChanges.push_back(inputUpdate);
@@ -145,7 +153,10 @@ void cGamepadSDL::Update()
         {
             eGamepadBall ball = SDLToBall(pEvent->jball.ball);
 
-            if(ball < 0 || ball >= GetNumBalls()) continue;
+            if(ball < 0 || ball >= GetNumBalls())
+            {
+                continue;
+            }
 
             cVector2l vDelta = cVector2l(pEvent->jball.xrel, pEvent->jball.yrel);
             mvBallRelPosArray[ball] = vDelta;
@@ -156,7 +167,10 @@ void cGamepadSDL::Update()
             eGamepadButton button = SDLToButton(pEvent->jbutton.button);
             inputUpdate = cGamepadInputData(mlIndex, eGamepadInputType_Button, button, 0.0f);
 
-            if(button < 0 || button >= GetNumButtons()) continue;
+            if(button < 0 || button >= GetNumButtons())
+            {
+                continue;
+            }
 
             bool bPressed;
             if(pEvent->type==SDL_JOYBUTTONUP)
@@ -195,9 +209,13 @@ cGamepadInputData cGamepadSDL::GetInputUpdate()
     case eGamepadInputType_Button:
     {
         if(input.mfInputValue==0.0f)
+        {
             mlstButtonsReleased.remove(input);
+        }
         else
+        {
             mlstButtonsPressed.remove(input);
+        }
     }
     break;
     case eGamepadInputType_Hat:

@@ -97,9 +97,18 @@ eLuxAxis StringToAxis(const tString &asAxis)
 {
     tString sLowAxis = cString::ToLowerCase(asAxis);
 
-    if(sLowAxis == "x") return eLuxAxis_X;
-    if(sLowAxis == "y") return eLuxAxis_Y;
-    if(sLowAxis == "z") return eLuxAxis_Z;
+    if(sLowAxis == "x")
+    {
+        return eLuxAxis_X;
+    }
+    if(sLowAxis == "y")
+    {
+        return eLuxAxis_Y;
+    }
+    if(sLowAxis == "z")
+    {
+        return eLuxAxis_Z;
+    }
 
     Error("Axis '%s' does not exist!\n", asAxis.c_str());
 
@@ -193,7 +202,9 @@ bool cLuxCustomStorySettings::CreateFromPath(const tWString& asPath)
     //    - then checking the custom_story_settings.cfg file
     //    - then checking if the data in the cfg file at least exists
     if(cPlatform::FolderExists(asPath)==false)
+    {
         return false;
+    }
 
     tString sErrorMsg;
 
@@ -223,10 +234,14 @@ bool cLuxCustomStorySettings::CreateFromPath(const tWString& asPath)
 
         msName = cString::To16Char(pCustomStoryCfg->GetString("Main", "Name", ""));
         if(msName==_W(""))
+        {
             msName = kTranslate("CustomStory", "NoName");
+        }
         msAuthor = cString::To16Char(pCustomStoryCfg->GetString("Main", "Author", ""));
         if(msAuthor==_W(""))
+        {
             msAuthor = kTranslate("CustomStory", "NoAuthor");
+        }
         this->msImgFile = pCustomStoryCfg->GetString("Main", "ImgFile", "");
 
         msExtraLangFilePrefix = pCustomStoryCfg->GetString("Main", "ExtraLangFilePrefix", "extra_");
@@ -238,7 +253,9 @@ bool cLuxCustomStorySettings::CreateFromPath(const tWString& asPath)
     }
 
     if(bValid==false)
+    {
         Log("Error creating custom story from path \"%ls\" : %s.\n", asPath.c_str(), sErrorMsg.c_str());
+    }
 
     hplDelete(pCustomStoryCfg);
 
@@ -292,7 +309,10 @@ static inline tString DecryptString(const tString &asEncStr)
     for(size_t i=0; i<asEncStr.size(); ++i)
     {
         sOutStr +=  asEncStr[i] ^ keyBuff.GetChar();
-        if(++lBuffPos >= keyBuff.GetSize()) keyBuff.SetPos(0);
+        if(++lBuffPos >= keyBuff.GetSize())
+        {
+            keyBuff.SetPos(0);
+        }
     }
 
     return sOutStr;
@@ -303,7 +323,10 @@ static inline tString DecryptString(const tString &asEncStr)
 static inline unsigned int GetFileCRC(const tString& asFilePath, unsigned int alKey)
 {
     cBinaryBuffer buff;
-    if(buff.Load(cString::To16Char(asFilePath))==false) return 0;
+    if(buff.Load(cString::To16Char(asFilePath))==false)
+    {
+        return 0;
+    }
 
     return buff.GetCRC(alKey, 0);
 }
@@ -311,7 +334,10 @@ static inline unsigned int GetFileCRC(const tString& asFilePath, unsigned int al
 static inline unsigned int GetFileCRC(const tWString& asFilePath, unsigned int alKey)
 {
     cBinaryBuffer buff;
-    if(buff.Load(asFilePath)==false) return 0;
+    if(buff.Load(asFilePath)==false)
+    {
+        return 0;
+    }
 
     return buff.GetCRC(alKey, 0);
 }
@@ -374,7 +400,9 @@ cLuxBase::~cLuxBase()
     ExitEngine();
 
     if(mpCustomStory)
+    {
         hplDelete(mpCustomStory);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -389,30 +417,48 @@ bool cLuxBase::Init(const tString &asCommandline)
 {
     /////////////////////////////
     // Parse the command line
-    if(ParseCommandLine(asCommandline)==false) return false;
+    if(ParseCommandLine(asCommandline)==false)
+    {
+        return false;
+    }
 
     /////////////////////////////
     // Init basic app and engine stuff
-    if(InitApp()==false) return false;
+    if(InitApp()==false)
+    {
+        return false;
+    }
 
     /////////////////////////////
     // Load the config files
-    if(InitMainConfig()==false) return false;
+    if(InitMainConfig()==false)
+    {
+        return false;
+    }
 
     Log("Version %d.%d \n",kCurrentVersion_Main, kCurrentVersion_Minor);
     Log("\n");
 
     /////////////////////////////
     // Init the engine
-    if(InitEngine()==false) return false;
+    if(InitEngine()==false)
+    {
+        return false;
+    }
 
     /////////////////////////////
     // Check so all needed features are supported
-    if(CheckFeatureSupport()==false) return false;
+    if(CheckFeatureSupport()==false)
+    {
+        return false;
+    }
 
     /////////////////////////////
     // Init the game data and structures
-    if(InitGame()==false) return false;
+    if(InitGame()==false)
+    {
+        return false;
+    }
 
 
     //////////////////////////
@@ -440,7 +486,10 @@ bool cLuxBase::Init(const tString &asCommandline)
         SetProfile(msDefaultProfileName);
 
         //Load user config
-        if(InitUserConfig()==false) return false;
+        if(InitUserConfig()==false)
+        {
+            return false;
+        }
 
         //Unlock input if not in window
         if (mpDebugHandler->GetDebugWindowActive() == false)
@@ -469,7 +518,10 @@ bool cLuxBase::Init(const tString &asCommandline)
 
 void cLuxBase::Exit()
 {
-    if(mbSaveConfigAtExit) SaveConfig();
+    if(mbSaveConfigAtExit)
+    {
+        SaveConfig();
+    }
     ExitGame();
     ExitConfig();
 }
@@ -515,11 +567,18 @@ bool cLuxBase::StartGame(const tString& asFile, const tString& asFolder, const t
     if(sMapFile == "")
     {
         if(mpCustomStory)
+        {
             sMapFile = mpCustomStory->msStartMap;
+        }
         else
+        {
             sMapFile = mpUserConfig->GetString("Map","File","");
+        }
 
-        if(sMapFile == "") sMapFile = msStartMapFile;
+        if(sMapFile == "")
+        {
+            sMapFile = msStartMapFile;
+        }
     }
 
     ///////////////////
@@ -528,11 +587,18 @@ bool cLuxBase::StartGame(const tString& asFile, const tString& asFolder, const t
     if(sMapFolder == "")
     {
         if(mpCustomStory)
+        {
             sMapFolder = mpCustomStory->msMapsFolder;
+        }
         else
+        {
             sMapFolder = mpUserConfig->GetString("Map","Folder","");
+        }
 
-        if(sMapFolder == "") sMapFolder = msStartMapFolder;
+        if(sMapFolder == "")
+        {
+            sMapFolder = msStartMapFolder;
+        }
     }
     mpMapHandler->SetMapFolder(sMapFolder);
 
@@ -542,11 +608,18 @@ bool cLuxBase::StartGame(const tString& asFile, const tString& asFolder, const t
     if(sStartPos == "")
     {
         if(mpCustomStory)
+        {
             sStartPos = mpCustomStory->msStartPos;
+        }
         else
+        {
             sStartPos = mpUserConfig->GetString("Map","StartPos","");
+        }
 
-        if(sStartPos == "") sStartPos = msStartMapPos;
+        if(sStartPos == "")
+        {
+            sStartPos = msStartMapPos;
+        }
 
     }
 
@@ -582,7 +655,9 @@ bool cLuxBase::StartGame(const tString& asFile, const tString& asFolder, const t
 bool cLuxBase::StartCustomStory()
 {
     if(mpCustomStory)
+    {
         return mpCustomStory->StartGame();
+    }
 
     return false;
 }
@@ -632,7 +707,9 @@ bool cLuxBase::ParseCommandLine(const tString &asCommandline)
     // TODO: Parse the command line better?
     msInitConfigFile = cString::To16Char(asCommandline);
     if(msInitConfigFile==_W(""))
+    {
         msInitConfigFile = msDefaultInitConfigFile;
+    }
 
     return true;
 }
@@ -841,7 +918,10 @@ bool cLuxBase::InitMainConfig()
     /////////////////////////////////////////////////
     // Load the main settings
     mpMainConfig = LoadConfigFile(msDefaultMainConfigPath, msBaseSavePath + _W("main_settings.cfg"),false);
-    if(mpMainConfig==NULL) return false;
+    if(mpMainConfig==NULL)
+    {
+        return false;
+    }
 
     //Load some basic variables
     mbSaveConfigAtExit = mpMainConfig->GetBool("Main","SaveConfig",true);
@@ -909,26 +989,40 @@ bool cLuxBase::InitUserConfig()
 {
     ////////////////////////////////////////////////
     // Clear previous config
-    if(mpUserConfig) hplDelete(mpUserConfig);
-    if(mpUserKeyConfig) hplDelete(mpUserKeyConfig);
+    if(mpUserConfig)
+    {
+        hplDelete(mpUserConfig);
+    }
+    if(mpUserKeyConfig)
+    {
+        hplDelete(mpUserKeyConfig);
+    }
     mpUserConfig = NULL;
     mpUserKeyConfig = NULL;
 
     ////////////////////////////////////////////////
     // Check if a valid profile is set
     if(msProfileName.empty())
+    {
         return false;
+    }
 
     /////////////////////////////////////////////////
     // Load the user settings
     mpUserConfig = LoadConfigFile(msDefaultUserConfigPath, msMainProfileSavePath +_W("user_settings.cfg") );
-    if(mpUserConfig==NULL) return false;
+    if(mpUserConfig==NULL)
+    {
+        return false;
+    }
 
     /////////////////////////
     //Load user key config
     bool bDidLoadDefault;
     mpUserKeyConfig = LoadConfigFile(msDefaultUserKeyConfigPath, msMainProfileSavePath +_W("user_keys.cfg"), false, &bDidLoadDefault);
-    if(mpUserKeyConfig==NULL) return false;
+    if(mpUserKeyConfig==NULL)
+    {
+        return false;
+    }
 
     /////////////////////////
     //Load the profile language --- REMOVED - Language is now loaded only at startup
@@ -946,11 +1040,20 @@ void cLuxBase::ExitConfig()
     hplDelete(mpConfigHandler);
     Log(" Deleting config files.\n");
     hplDelete(mpMainConfig);
-    if(mpUserConfig) hplDelete(mpUserConfig);
-    if(mpUserKeyConfig) hplDelete(mpUserKeyConfig);
+    if(mpUserConfig)
+    {
+        hplDelete(mpUserConfig);
+    }
+    if(mpUserKeyConfig)
+    {
+        hplDelete(mpUserKeyConfig);
+    }
     hplDelete(mpGameCfg);
     hplDelete(mpMenuCfg);
-    if(mpDemoCfg) hplDelete(mpDemoCfg);
+    if(mpDemoCfg)
+    {
+        hplDelete(mpDemoCfg);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -964,7 +1067,10 @@ void cLuxBase::SaveConfig()
     //////////////////////////////////
     //Make other modules save too!
     RunModuleMessage(eLuxUpdateableMessage_SaveMainConfig);
-    if(mpUserConfig) RunModuleMessage(eLuxUpdateableMessage_SaveUserConfig);
+    if(mpUserConfig)
+    {
+        RunModuleMessage(eLuxUpdateableMessage_SaveUserConfig);
+    }
 
     /////////////////////
     // Main variables
@@ -990,7 +1096,9 @@ void cLuxBase::SaveConfig()
         Log(" Saving user config.\n");
         mpUserConfig->Save();
         if(mpUserKeyConfig)
+        {
             mpUserKeyConfig->Save();
+        }
     }
 }
 
@@ -1100,7 +1208,10 @@ bool cLuxBase::InitEngine()
 
 void cLuxBase::ExitEngine()
 {
-    if(mpEngine) DestroyHPLEngine(mpEngine);
+    if(mpEngine)
+    {
+        DestroyHPLEngine(mpEngine);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1137,9 +1248,13 @@ bool cLuxBase::InitGame()
     // might want to fix this later since some debug text is tiny now
 
     if (msCurrentLanguage == "chinese.lang")
+    {
         mpDefaultFont = mpEngine->GetResources()->GetFontManager()->CreateFontData("game_default.fnt");
+    }
     else
+    {
         mpDefaultFont = mpEngine->GetResources()->GetFontManager()->CreateFontData("font_default.fnt");
+    }
 
     ///////////////////////////////////////
     // Create updater containers
@@ -1300,7 +1415,10 @@ bool cLuxBase::CreateProfile(const tWString& asName)
 {
     tWString sPath = msBaseSavePath + asName + _W("/");
 
-    if(cPlatform::FolderExists(sPath)) return false;
+    if(cPlatform::FolderExists(sPath))
+    {
+        return false;
+    }
 
     cPlatform::CreateFolder(sPath);
 
@@ -1321,7 +1439,9 @@ void cLuxBase::SetProfile(const tWString& asName)
         Log(" Saving user config.\n");
         mpUserConfig->Save();
         if(mpUserKeyConfig)
+        {
             mpUserKeyConfig->Save();
+        }
     }
 
     msProfileName = asName;
@@ -1342,13 +1462,19 @@ void cLuxBase::SetProfile(const tWString& asName)
 
 void cLuxBase::PreloadSound(const tString &asFile)
 {
-    if(asFile=="") return;
+    if(asFile=="")
+    {
+        return;
+    }
     gpBase->mpEngine->GetResources()->GetSoundEntityManager()->Preload(asFile);
 }
 
 void cLuxBase::PreloadParticleSystem(const tString &asFile)
 {
-    if(asFile=="") return;
+    if(asFile=="")
+    {
+        return;
+    }
     gpBase->mpEngine->GetResources()->GetParticleManager()->Preload(asFile);
 }
 
@@ -1360,7 +1486,9 @@ void cLuxBase::SetCustomStory(cLuxCustomStorySettings* apCustomStory)
     //Log("Trying to set custom story 0x%x\n", apCustomStory);
 
     if(mpCustomStory==apCustomStory)
+    {
         return;
+    }
 
     //Debug
     //Log(" Not current one, setting up\n", apCustomStory);
@@ -1386,7 +1514,9 @@ void cLuxBase::SetCustomStory(cLuxCustomStorySettings* apCustomStory)
         mpEngine->GetResources()->AddResourceDir(mpCustomStory->msStoryRootFolder, true);
     }
     else
+    {
         msProfileSavePath = msMainProfileSavePath;
+    }
 
     LoadLanguage(msCurrentLanguage, true);
 }
@@ -1400,7 +1530,10 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
     ////////////////////////////////////////////
     //Check if the language is already loaded.
     tString sLowName = cString::ToLowerCase(asName);
-    if(msCurrentLanguage == sLowName && abForceReload==false) return false;
+    if(msCurrentLanguage == sLowName && abForceReload==false)
+    {
+        return false;
+    }
 
     if(msCurrentLanguage != "")
     {
@@ -1440,14 +1573,16 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
     {
         tString sExtraLangFileName = cString::To8Char(mpCustomStory->msStoryRootFolder) + mpCustomStory->msExtraLangFilePrefix + sGameFileName;
         if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sExtraLangFileName)!=_W(""))
+        {
             pResources->AddLanguageFile(sExtraLangFileName, true);
+        }
     }
 
     // Main game lang
     pResources->AddLanguageFile(msGameLanguageFolder + sGameFileName, true);
     pResources->AddLanguageFile(msBaseLanguageFolder + sBaseFileName, true);
 
-	// Patched lang for some hardcoded strings in source tree
+    // Patched lang for some hardcoded strings in source tree
     pResources->AddLanguageFile(msPatchLanguageFolder + sPatchFileName, true);
 
     ////////////////////////////////////////////
@@ -1458,20 +1593,28 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
                                     mpCustomStory->msDefaultExtraLanguage, false);
 
     if(sGameFileName != msDefaultGameLanguage)
+    {
         pResources->AddLanguageFile(msGameLanguageFolder + msDefaultGameLanguage, false);
+    }
 
     if(sBaseFileName != msDefaultBaseLanguage)
+    {
         pResources->AddLanguageFile(msBaseLanguageFolder + msDefaultBaseLanguage, false);
+    }
 
     ////////////////////////////////////////////
-	// Add new patch language file
+    // Add new patch language file
     if(sPatchFileName != msDefaultPatchLanguage)
+    {
         pResources->AddLanguageFile(msPatchLanguageFolder + msDefaultPatchLanguage, false);
+    }
 
     ////////////////////////////////////////////
-	// If not found in main_init.cfg, load it through base config folder anyway
-	if(sPatchFileName=="" && msPatchLanguageFolder=="" || sPatchFileName != msDefaultPatchLanguage)
-		pResources->AddLanguageFile("config/patch_" + sGameFileName, true);
+    // If not found in main_init.cfg, load it through base config folder anyway
+    if(sPatchFileName=="" && msPatchLanguageFolder=="" || sPatchFileName != msDefaultPatchLanguage)
+    {
+        pResources->AddLanguageFile("config/patch_" + sGameFileName, true);
+    }
 
     // Refresh all modules with new translation
     //RunModuleMessage(eLuxUpdateableMessage_LoadFonts, NULL);
@@ -1519,7 +1662,9 @@ bool cLuxBase::CheckCrashFlag()
 void cLuxBase::RaiseFirstStartFlag()
 {
     if(CheckFirstStartFlag())
+    {
         return;
+    }
 
     FILE* pFirstStartFlagFile = cPlatform::OpenFile(msFirstStartFlagPath.c_str(), _W("w"));
     fclose(pFirstStartFlagFile);
@@ -1537,7 +1682,10 @@ bool cLuxBase::CheckFirstStartFlag()
 
 void cLuxBase::InitAchievements()
 {
-    if(mpAchievementHandler == NULL) return;
+    if(mpAchievementHandler == NULL)
+    {
+        return;
+    }
 
     mpAchievementHandler->CreateAchievement(eLuxAchievement_Insanity, "Insanity");
 

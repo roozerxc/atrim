@@ -307,7 +307,9 @@ float cAStarHandler::Cost(float afDistance, cAINode *apAINode, cAStarNode *apPar
         return afDistance * fHeight;
     }
     else
+    {
         return afDistance;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -323,7 +325,10 @@ float cAStarHandler::Heuristic(const cVector3f& avStart, const cVector3f& avGoal
 bool cAStarHandler::IsGoalNode(cAINode *apAINode)
 {
     tAINodeSetIt it = m_setGoalNodes.find(apAINode);
-    if(it == m_setGoalNodes.end()) return false;
+    if(it == m_setGoalNodes.end())
+    {
+        return false;
+    }
 
     return true;
 }

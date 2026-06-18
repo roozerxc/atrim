@@ -38,7 +38,10 @@ cWidgetSlider::cWidgetSlider(cGuiSet *apSet, cGuiSkin *apSkin,
     mlBarClickValueAdd = mlButtonValueAdd*10;
     mlBarValueSize = 1;
 
-    for(int i=0; i<2; ++i) mvButtons[i] = NULL;
+    for(int i=0; i<2; ++i)
+    {
+        mvButtons[i] = NULL;
+    }
 
     mfButtonSize = mpSkin->GetAttribute(eGuiSkinAttribute_SliderButtonSize).x;
 
@@ -51,7 +54,10 @@ cWidgetSlider::~cWidgetSlider()
 {
     if(mpSet->IsDestroyingSet()==false)
     {
-        for(int i=0; i<2; ++i) mpSet->DestroyWidget(mvButtons[i]);
+        for(int i=0; i<2; ++i)
+        {
+            mpSet->DestroyWidget(mvButtons[i]);
+        }
     }
 }
 
@@ -65,29 +71,49 @@ cWidgetSlider::~cWidgetSlider()
 
 void cWidgetSlider::SetValue(int alValue, bool abGenCallback)
 {
-    if(alValue<0) alValue = 0;
-    if(alValue>mlMaxValue) alValue = mlMaxValue;
+    if(alValue<0)
+    {
+        alValue = 0;
+    }
+    if(alValue>mlMaxValue)
+    {
+        alValue = mlMaxValue;
+    }
 
-    if(mlValue == alValue) return;
+    if(mlValue == alValue)
+    {
+        return;
+    }
     mlValue = alValue;
 
     if(abGenCallback)
     {
         ProcessMessage(eGuiMessage_SliderMove, cGuiMessageData(mlValue));
         if(mbPressed==false)
+        {
             ProcessMessage(eGuiMessage_SliderRelease, cGuiMessageData(mlValue));
+        }
     }
     UpdateBarProperties();
 }
 
 void cWidgetSlider::SetMaxValue(int alMax)
 {
-    if(mlMaxValue == alMax) return;
+    if(mlMaxValue == alMax)
+    {
+        return;
+    }
 
     mlMaxValue = alMax;
-    if(mlMaxValue <0)mlMaxValue=0;
+    if(mlMaxValue <0)
+    {
+        mlMaxValue=0;
+    }
 
-    if(mlBarValueSize > mlMaxValue) mlBarValueSize = mlMaxValue;
+    if(mlBarValueSize > mlMaxValue)
+    {
+        mlBarValueSize = mlMaxValue;
+    }
 
     UpdateBarProperties();
 }
@@ -104,10 +130,16 @@ void cWidgetSlider::SetBarClickValueAdd(int alAdd)
 
 void cWidgetSlider::SetBarValueSize(int alSize)
 {
-    if(mlBarValueSize == alSize) return;
+    if(mlBarValueSize == alSize)
+    {
+        return;
+    }
 
     mlBarValueSize  = alSize;
-    if(mlBarValueSize > mlMaxValue+1) mlBarValueSize = mlMaxValue+1;
+    if(mlBarValueSize > mlMaxValue+1)
+    {
+        mlBarValueSize = mlMaxValue+1;
+    }
 
     UpdateBarProperties();
 }
@@ -133,13 +165,20 @@ void cWidgetSlider::UpdateBarProperties()
                               ((float)mlBarValueSize / (float)(mlMaxValue+1))*(mfSliderSize));
 
         float fMinSize = mvGfxCorners[0]->GetActiveSize().y + mvGfxCorners[3]->GetActiveSize().y + 2;
-        if(mvBarSize.y < fMinSize) mvBarSize.y = fMinSize;
+        if(mvBarSize.y < fMinSize)
+        {
+            mvBarSize.y = fMinSize;
+        }
 
         //The set taken for each value
         if(mlMaxValue > 0)
+        {
             mfValueStep =    (1 / (float)(mlMaxValue)) * (mfSliderSize - mvBarSize.y);
+        }
         else
+        {
             mfValueStep = 0;
+        }
 
         mvBarPos = cVector3f(0, mfButtonSize + mfValueStep*(float)mlValue,0.2f);
     }
@@ -153,13 +192,20 @@ void cWidgetSlider::UpdateBarProperties()
                               mvSize.y);
 
         float fMinSize = mvGfxCorners[0]->GetActiveSize().x + mvGfxCorners[3]->GetActiveSize().x + 2;
-        if(mvBarSize.x < fMinSize) mvBarSize.x = fMinSize;
+        if(mvBarSize.x < fMinSize)
+        {
+            mvBarSize.x = fMinSize;
+        }
 
         //The set taken for each value
         if(mlMaxValue > 0)
+        {
             mfValueStep =    (1 / (float)(mlMaxValue)) * (mfSliderSize - mvBarSize.x);
+        }
         else
+        {
             mfValueStep =0;
+        }
 
         mvBarPos = cVector3f(mfButtonSize + mfValueStep*(float)mlValue,0,0.2f);
     }
@@ -179,10 +225,19 @@ void cWidgetSlider::UpdateBarProperties()
 bool cWidgetSlider::ArrowButtonDown(iWidget* apWidget, const cGuiMessageData& aData)
 {
     int i;
-    for(i=0; i<2; ++i) if(mvButtons[i] == apWidget) break;
+    for(i=0; i<2; ++i) if(mvButtons[i] == apWidget)
+        {
+            break;
+        }
 
-    if(i==0) SetValue(mlValue-mlButtonValueAdd);
-    if(i==1) SetValue(mlValue+mlButtonValueAdd);
+    if(i==0)
+    {
+        SetValue(mlValue-mlButtonValueAdd);
+    }
+    if(i==1)
+    {
+        SetValue(mlValue+mlButtonValueAdd);
+    }
 
     //Call callbacks.
     //ProcessMessage(eGuiMessage_SliderMove, cGuiMessageData(mlValue));
@@ -250,7 +305,10 @@ void cWidgetSlider::OnLoadGraphics()
 
 void cWidgetSlider::OnChangeSize()
 {
-    if(mvButtons[0] == NULL || mvButtons[1] == NULL) return;
+    if(mvButtons[0] == NULL || mvButtons[1] == NULL)
+    {
+        return;
+    }
 
     //////////////////////////
     // Vertical
@@ -323,8 +381,14 @@ bool cWidgetSlider::OnMouseMove(const cGuiMessageData& aData)
         {
             mvBarPos.y = WorldToLocalPosition(aData.mvPos).y + mvRelMousePos.y;
 
-            if(mvBarPos.y > mfMaxPos) mvBarPos.y = mfMaxPos;
-            if(mvBarPos.y < mfMinPos) mvBarPos.y = mfMinPos;
+            if(mvBarPos.y > mfMaxPos)
+            {
+                mvBarPos.y = mfMaxPos;
+            }
+            if(mvBarPos.y < mfMinPos)
+            {
+                mvBarPos.y = mfMinPos;
+            }
 
             mBarRect.y = GetGlobalPosition().y + mvBarPos.y;
             lVal = (int)((mvBarPos.y-mfButtonSize) / mfValueStep + 0.5f);
@@ -334,16 +398,28 @@ bool cWidgetSlider::OnMouseMove(const cGuiMessageData& aData)
         {
             mvBarPos.x = WorldToLocalPosition(aData.mvPos).x + mvRelMousePos.x;
 
-            if(mvBarPos.x > mfMaxPos) mvBarPos.x = mfMaxPos;
-            if(mvBarPos.x < mfMinPos) mvBarPos.x = mfMinPos;
+            if(mvBarPos.x > mfMaxPos)
+            {
+                mvBarPos.x = mfMaxPos;
+            }
+            if(mvBarPos.x < mfMinPos)
+            {
+                mvBarPos.x = mfMinPos;
+            }
 
             mBarRect.x = GetGlobalPosition().x + mvBarPos.x;
             lVal = (int)((mvBarPos.x-mfButtonSize) / mfValueStep + 0.5f);
         }
 
 
-        if(lVal>mlMaxValue)lVal = mlMaxValue;
-        if(lVal<0)lVal = 0;
+        if(lVal>mlMaxValue)
+        {
+            lVal = mlMaxValue;
+        }
+        if(lVal<0)
+        {
+            lVal = 0;
+        }
         if(lVal != mlValue)
         {
             mlValue = lVal;
@@ -389,8 +465,14 @@ bool cWidgetSlider::OnMouseDown(const cGuiMessageData& aData)
             }
 
             mvBarPos.y += fValue;
-            if(mvBarPos.y > mfMaxPos) mvBarPos.y = mfMaxPos;
-            if(mvBarPos.y < mfMinPos) mvBarPos.y = mfMinPos;
+            if(mvBarPos.y > mfMaxPos)
+            {
+                mvBarPos.y = mfMaxPos;
+            }
+            if(mvBarPos.y < mfMinPos)
+            {
+                mvBarPos.y = mfMinPos;
+            }
 
             mBarRect.y = GetGlobalPosition().y + mvBarPos.y;
             lVal = (int)((mvBarPos.y-mfButtonSize) / mfValueStep + 0.5f);
@@ -403,14 +485,26 @@ bool cWidgetSlider::OnMouseDown(const cGuiMessageData& aData)
             }
 
             mvBarPos.x += fValue;
-            if(mvBarPos.x > mfMaxPos) mvBarPos.x = mfMaxPos;
-            if(mvBarPos.x < mfMinPos) mvBarPos.x = mfMinPos;
+            if(mvBarPos.x > mfMaxPos)
+            {
+                mvBarPos.x = mfMaxPos;
+            }
+            if(mvBarPos.x < mfMinPos)
+            {
+                mvBarPos.x = mfMinPos;
+            }
 
             mBarRect.x = GetGlobalPosition().x + mvBarPos.x;
             lVal = (int)((mvBarPos.x-mfButtonSize) / mfValueStep + 0.5f);
         }
-        if(lVal>mlMaxValue)lVal = mlMaxValue;
-        if(lVal<0)lVal = 0;
+        if(lVal>mlMaxValue)
+        {
+            lVal = mlMaxValue;
+        }
+        if(lVal<0)
+        {
+            lVal = 0;
+        }
         if(lVal != mlValue)
         {
             mlValue = lVal;
@@ -476,18 +570,26 @@ bool cWidgetSlider::OnUIArrowPress(const cGuiMessageData& aData)
     if(mOrientation==eWidgetSliderOrientation_Horizontal)
     {
         if(aData.mlVal==eUIArrow_Left)
+        {
             bRet = ArrowButtonDown(mvButtons[0], aData);
+        }
 
         if(aData.mlVal==eUIArrow_Right)
+        {
             bRet = ArrowButtonDown(mvButtons[1], aData);
+        }
     }
     else
     {
         if(aData.mlVal==eUIArrow_Up)
+        {
             bRet = ArrowButtonDown(mvButtons[0], aData);
+        }
 
         if(aData.mlVal==eUIArrow_Down)
+        {
             bRet = ArrowButtonDown(mvButtons[1], aData);
+        }
     }
 
     return bRet;

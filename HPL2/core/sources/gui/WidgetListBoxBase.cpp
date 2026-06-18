@@ -68,10 +68,14 @@ void iWidgetListBoxBase::SetSelectedItem(int alX, bool abMoveList, bool abGenera
         bool abClearPrevious)
 {
     if(abClearPrevious || mbAllowMultiSelection==false)
+    {
         ClearSelection();
+    }
 
     if(abMoveList)
+    {
         SetCursorPos(alX, true, true);
+    }
 
     cWidgetItem* pItem = GetItem(alX);
     if(mbAllowMultiSelection)
@@ -82,13 +86,17 @@ void iWidgetListBoxBase::SetSelectedItem(int alX, bool abMoveList, bool abGenera
         case eListBoxSelectType_Select:
         {
             if(pItem)
+            {
                 pItem->SetSelected(true);
+            }
         }
         break;
         case eListBoxSelectType_Toggle:
         {
             if(pItem)
+            {
                 pItem->SetSelected(!pItem->IsSelected());
+            }
         }
         break;
         case eListBoxSelectType_FromLastCursor:
@@ -102,11 +110,15 @@ void iWidgetListBoxBase::SetSelectedItem(int alX, bool abMoveList, bool abGenera
     else
     {
         if(pItem)
+        {
             pItem->SetSelected(true);
+        }
     }
 
     if(abGenerateCallback)
+    {
         ProcessMessage(eGuiMessage_SelectionChange, cGuiMessageData(alX));
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -114,7 +126,9 @@ void iWidgetListBoxBase::SetSelectedItem(int alX, bool abMoveList, bool abGenera
 int iWidgetListBoxBase::GetSelectedItem()
 {
     if(mlstSelectedItems.empty())
+    {
         return -1;
+    }
 
     return mlstSelectedItems.back();
 }
@@ -127,7 +141,9 @@ int iWidgetListBoxBase::GetMultiSelection(int alIdx)
     for(tIntListIt it=mlstSelectedItems.begin(); it!=mlstSelectedItems.end() || i>alIdx; ++it, ++i)
     {
         if(i==alIdx)
+        {
             return *it;
+        }
     }
     return -1;
 }
@@ -174,20 +190,28 @@ void iWidgetListBoxBase::SelectRange(int alStart, int alEnd)
     int add;
 
     if(alStart<alEnd)
+    {
         add = 1;
+    }
     else
+    {
         add = -1;
+    }
 
     cWidgetItem* pItem = NULL;
     for(int i=alStart; i!=alEnd; i+=add)
     {
         pItem = GetItem(i);
         if(pItem)
+        {
             pItem->SetSelected(true);
+        }
     }
     pItem = GetItem(alEnd);
     if(pItem)
+    {
         pItem->SetSelected(true);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -198,7 +222,9 @@ void iWidgetListBoxBase::UpdateProperties()
     mlMaxItems = (int)(mvSize.y /(mvDefaultFontSize.y +2))-1;
 
     if(mpSlider == NULL)
+    {
         return;
+    }
 
     if((int)mvItems.size() > mlMaxItems)
     {
@@ -219,15 +245,21 @@ void iWidgetListBoxBase::UpdateProperties()
     {
         int lIdx = *it;
         if(lIdx>=GetItemNum())
+        {
             it = mlstSelectedItems.erase(it);
+        }
         else
+        {
             ++it;
+        }
     }
 
     mpSlider->SetValue(GetSelectedItem(), true);
 
     if(mlNumItems==0)
+    {
         SetCursorPos(0,true, true);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -263,7 +295,9 @@ void iWidgetListBoxBase::AddItemToSelection(cWidgetItem* apItem)
 void iWidgetListBoxBase::RemoveItemFromSelection(cWidgetItem* apItem)
 {
     if(mbClearingSelection==false)
+    {
         mlstSelectedItems.remove(apItem->GetIndex());
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -372,7 +406,10 @@ bool iWidgetListBoxBase::OnMouseDown(const cGuiMessageData& aData)
     cVector3f vLocalPos = WorldToLocalPosition(aData.mvPos);
 
     int lSelection = (int)((vLocalPos.y - 2) / (mvDefaultFontSize.y+2)) - mlNumBlankRows;
-    if(lSelection < 0) return false;
+    if(lSelection < 0)
+    {
+        return false;
+    }
 
     lSelection = lSelection + mlFirstItem;
 
@@ -386,18 +423,26 @@ bool iWidgetListBoxBase::OnMouseDown(const cGuiMessageData& aData)
     SetCursorPos(lSelection,true,false);
 
     if(bUsingShift==false)
+    {
         SetAnchorPos(mlCursorPos);
+    }
 
     if(lSelection==mlLastCursorPos)
+    {
         ++mlNumClicksOnSamePos;
+    }
     else
+    {
         mlNumClicksOnSamePos = 1;
+    }
 
     cWidgetItem* pItem = GetItem(mlCursorPos);
     if(GetMultiSelectionNum()==1 && pItem && pItem->IsSelected())
         ;
     else
+    {
         SetSelectedItem(mlCursorPos, false, true, type, bClearSelection);
+    }
 
     return true;
 }
@@ -417,7 +462,9 @@ bool iWidgetListBoxBase::OnMouseDoubleClick(const cGuiMessageData& aData)
 
     // If vLocalPos is on the slider, ignore event
     if(vLocalPos.x > mvSize.x - mpSlider->GetSize().x)
+    {
         return false;
+    }
 
     if(mlCursorPos!=-1 && mlNumClicksOnSamePos>=2)
     {
@@ -457,7 +504,9 @@ bool iWidgetListBoxBase::OnKeyPress(const cGuiMessageData& aData)
     {
         SetCursorPos(mlCursorPos-1, true, true);
         if(bUsingCtrl==false && bUsingShift==false)
+        {
             SetAnchorPos(mlCursorPos);
+        }
 
         if(bUsingCtrl==false && bUsingShift==false)
         {
@@ -474,7 +523,9 @@ bool iWidgetListBoxBase::OnKeyPress(const cGuiMessageData& aData)
     {
         SetCursorPos(mlCursorPos+1, true, true);
         if(bUsingCtrl==false && bUsingShift==false)
+        {
             SetAnchorPos(mlCursorPos);
+        }
 
         if(bUsingCtrl==false && bUsingShift==false)
         {
@@ -516,7 +567,9 @@ bool iWidgetListBoxBase::OnKeyPress(const cGuiMessageData& aData)
 bool iWidgetListBoxBase::OnUIArrowPress(const cGuiMessageData& aData)
 {
     if(mbLocked==false)
+    {
         return false;
+    }
 
     bool bUnlock = false;
 
@@ -533,7 +586,9 @@ bool iWidgetListBoxBase::OnUIArrowPress(const cGuiMessageData& aData)
         bUnlock = lOldPos == mlCursorPos;
     }
     else
+    {
         return false;
+    }
 
     SetSelectedItem(mlCursorPos, true, true, eListBoxSelectType_Select);
 
@@ -577,7 +632,10 @@ bool iWidgetListBoxBase::OnUIButtonPress(const cGuiMessageData& aData)
         }
         if(aData.mlVal==eUIButton_Secondary)
         {
-            if(mbLocked == false) return false;
+            if(mbLocked == false)
+            {
+                return false;
+            }
             mbLocked=false;
         }
 
@@ -615,14 +673,20 @@ void iWidgetListBoxBase::SetCursorPos(int alPos, bool abMoveList, bool abClamp)
     if(abClamp)
     {
         if(alPos<0)
+        {
             alPos = 0;
+        }
         if(alPos>=mlNumItems)
+        {
             alPos = mlNumItems-1;
+        }
     }
     else
     {
         if(alPos<0 || alPos>=mlNumItems)
+        {
             alPos = -1;
+        }
     }
 
     mlLastCursorPos = mlCursorPos;

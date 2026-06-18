@@ -98,9 +98,13 @@ void iLuxPlayerState_DefaultBase::Update(float afTimeStep)
     mpPlayer->SetCurrentFocusDistance(mfFocusDistance);
 
     if(mpEntityInFocus && CanInteractWithEntity())
+    {
         mpPlayer->SetFocusText(mpEntityInFocus->GetFocusText());
+    }
     else
+    {
         mpPlayer->SetFocusText(_W(""));
+    }
 
     //update implemented class
     ImplementedUpdate(afTimeStep);
@@ -125,7 +129,10 @@ void iLuxPlayerState_DefaultBase::OnDraw(cGuiSet *apGuiSet,float afFrameTime)
 
 bool iLuxPlayerState_DefaultBase::OnDoAction(eLuxPlayerAction aAction,bool abPressed)
 {
-    if(mpPlayer->GetCurrentMoveStateData()->GetAllowsInteraction()==false) return true;
+    if(mpPlayer->GetCurrentMoveStateData()->GetAllowsInteraction()==false)
+    {
+        return true;
+    }
 
     ////////////////////////////
     // Implemented
@@ -161,7 +168,10 @@ cGuiGfxElement* iLuxPlayerState_DefaultBase::GetCrosshair()
     if(mpEntityInFocus && mfFocusDistance < mpEntityInFocus->GetMaxFocusDistance())
     {
         eLuxFocusCrosshair crossHair = mpEntityInFocus->GetFocusCrosshair(mpBodyInFocus, mvFocusPos);
-        if(mpEntityInFocus->GetInteractionDisabled()) crossHair = eLuxFocusCrosshair_Default;
+        if(mpEntityInFocus->GetInteractionDisabled())
+        {
+            crossHair = eLuxFocusCrosshair_Default;
+        }
 
         if(    crossHair == eLuxFocusCrosshair_LastEnum ||
                 crossHair == eLuxFocusCrosshair_Default)
@@ -171,9 +181,13 @@ cGuiGfxElement* iLuxPlayerState_DefaultBase::GetCrosshair()
         else
         {
             if(mpPlayer->GetFocusIconStyle()==eLuxFocusIconStyle_Default)
+            {
                 return mvFocusCrosshairGfx[crossHair];
+            }
             else
+            {
                 return mpSimpleInteractCrosshairGfx;
+            }
         }
     }
     else
@@ -205,7 +219,10 @@ float iLuxPlayerState_DefaultBase::DrawDebug(cGuiSet *apSet,iFontData *apFont, f
 
 bool iLuxPlayerState_DefaultBase::ShowOutlineOnEntity(iLuxEntity *apEntity, iPhysicsBody *apBody, const cVector3f &avFocusPos)
 {
-    if(apEntity->GetEntityType() != eLuxEntityType_Prop) return false;
+    if(apEntity->GetEntityType() != eLuxEntityType_Prop)
+    {
+        return false;
+    }
 
     iLuxProp *pProp = static_cast<iLuxProp*>(apEntity);
 
@@ -231,7 +248,10 @@ static bool BodyIsAdded(iPhysicsBody *apBody, tPhysicsBodyList &alstBodies)
 {
     for(tPhysicsBodyListIt it = alstBodies.begin(); it != alstBodies.end(); ++it)
     {
-        if(apBody == *it) return true;
+        if(apBody == *it)
+        {
+            return true;
+        }
     }
     return false;
 }
@@ -260,7 +280,10 @@ void iLuxPlayerState_DefaultBase::AddOutlineObjects(iPhysicsBody *apBody, iLuxEn
         GetAttachedBodies(apBody, lstAttachedBodies);
 
         cMeshEntity *pMeshEntity = pProp->GetEffectMeshEntity();
-        if(pMeshEntity==NULL) return;
+        if(pMeshEntity==NULL)
+        {
+            return;
+        }
         for(int i=0; i<pMeshEntity->GetSubMeshEntityNum(); ++i)
         {
             cSubMeshEntity *pSubEnt = pMeshEntity->GetSubMeshEntity(i);
@@ -299,8 +322,14 @@ void iLuxPlayerState_DefaultBase::GetAttachedBodies(iPhysicsBody *apBody, tPhysi
         iPhysicsJoint *pJoint = apBody->GetJoint(i);
         iPhysicsBody *pChild = pJoint->GetChildBody();
         iPhysicsBody *pParent = pJoint->GetParentBody();
-        if(pChild && BodyIsAdded(pChild, alstBodies)==false)  GetAttachedBodies(pChild,alstBodies);
-        if(pParent && BodyIsAdded(pParent, alstBodies)==false)  GetAttachedBodies(pParent,alstBodies);
+        if(pChild && BodyIsAdded(pChild, alstBodies)==false)
+        {
+            GetAttachedBodies(pChild,alstBodies);
+        }
+        if(pParent && BodyIsAdded(pParent, alstBodies)==false)
+        {
+            GetAttachedBodies(pParent,alstBodies);
+        }
     }
 }
 

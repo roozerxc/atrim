@@ -122,7 +122,10 @@ bool cGLSLProgram::Link()
 
 void cGLSLProgram::Bind()
 {
-    if(mlCurrentProgram == mlHandle) return;
+    if(mlCurrentProgram == mlHandle)
+    {
+        return;
+    }
 
     ;
 
@@ -134,7 +137,10 @@ void cGLSLProgram::Bind()
 
 void cGLSLProgram::UnBind()
 {
-    if(mlCurrentProgram == 0) return;
+    if(mlCurrentProgram == 0)
+    {
+        return;
+    }
 
     ;
 
@@ -150,7 +156,10 @@ bool cGLSLProgram::SetSamplerToUnit(const tString& asSamplerName, int alUnit)
     ;
 
     GLint lVarHandle = glGetUniformLocation(mlHandle,asSamplerName.c_str());
-    if(lVarHandle <0) return false;
+    if(lVarHandle <0)
+    {
+        return false;
+    }
 
     Bind();
     glUniform1i(lVarHandle, alUnit);
@@ -167,11 +176,17 @@ int cGLSLProgram::GetVariableId(const tString& asName)
 
     for(size_t i=0; i<mvParameters.size(); ++i)
     {
-        if(mvParameters[i].msName == asName) return (int)i;
+        if(mvParameters[i].msName == asName)
+        {
+            return (int)i;
+        }
     }
 
     GLint lId = glGetUniformLocation(mlHandle,asName.c_str());
-    if(lId <0) return -1;
+    if(lId <0)
+    {
+        return -1;
+    }
 
     mvParameters.push_back(cGLSLParam(lId,asName));
 
@@ -182,7 +197,10 @@ int cGLSLProgram::GetVariableId(const tString& asName)
 
 bool cGLSLProgram::GetVariableAsId(const tString& asName, int alId)
 {
-    if(alId<0) return false;
+    if(alId<0)
+    {
+        return false;
+    }
 
     ;
 
@@ -192,14 +210,23 @@ bool cGLSLProgram::GetVariableAsId(const tString& asName, int alId)
     {
         if(mvParameters[i].msName == asName)
         {
-            if(i == alId)    return true;
-            else            return false;
+            if(i == alId)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
     ////////////////////////
     // Check if variable exits
     GLint lHandle = glGetUniformLocation(mlHandle,asName.c_str());
-    if(lHandle <0) return false;
+    if(lHandle <0)
+    {
+        return false;
+    }
 
     ////////////////////////
     // Check if the id is taken
@@ -208,9 +235,13 @@ bool cGLSLProgram::GetVariableAsId(const tString& asName, int alId)
         if(mvParameters[alId].mlId >=0)
         {
             if(mvParameters[alId].mlId == lHandle)
+            {
                 return true;
+            }
             else
+            {
                 return false;
+            }
         }
     }
     ////////////////////////
@@ -233,11 +264,17 @@ bool cGLSLProgram::GetVariableAsId(const tString& asName, int alId)
 
 bool cGLSLProgram::SetInt(int alVarId, int alX)
 {
-    if(alVarId<0 || alVarId >= (int)mvParameters.size()) return false;
+    if(alVarId<0 || alVarId >= (int)mvParameters.size())
+    {
+        return false;
+    }
 
     ;
 
-    if(mlCurrentProgram != mlHandle) Bind();
+    if(mlCurrentProgram != mlHandle)
+    {
+        Bind();
+    }
 
     glUniform1i(mvParameters[alVarId].mlId, alX);
 
@@ -249,11 +286,17 @@ bool cGLSLProgram::SetInt(int alVarId, int alX)
 
 bool  cGLSLProgram::SetFloat(int alVarId, float afX)
 {
-    if(alVarId<0 || alVarId >= (int)mvParameters.size()) return false;
+    if(alVarId<0 || alVarId >= (int)mvParameters.size())
+    {
+        return false;
+    }
 
     ;
 
-    if(mlCurrentProgram != mlHandle) Bind();
+    if(mlCurrentProgram != mlHandle)
+    {
+        Bind();
+    }
 
     glUniform1f(mvParameters[alVarId].mlId, afX);
 
@@ -264,11 +307,17 @@ bool  cGLSLProgram::SetFloat(int alVarId, float afX)
 
 bool  cGLSLProgram::SetVec2f(int alVarId, float afX,float afY)
 {
-    if(alVarId<0 || alVarId >= (int)mvParameters.size()) return false;
+    if(alVarId<0 || alVarId >= (int)mvParameters.size())
+    {
+        return false;
+    }
 
     ;
 
-    if(mlCurrentProgram != mlHandle) Bind();
+    if(mlCurrentProgram != mlHandle)
+    {
+        Bind();
+    }
 
     glUniform2f(mvParameters[alVarId].mlId, afX, afY);
 
@@ -279,11 +328,17 @@ bool  cGLSLProgram::SetVec2f(int alVarId, float afX,float afY)
 
 bool  cGLSLProgram::SetVec3f(int alVarId, float afX,float afY,float afZ)
 {
-    if(alVarId<0 || alVarId >= (int)mvParameters.size()) return false;
+    if(alVarId<0 || alVarId >= (int)mvParameters.size())
+    {
+        return false;
+    }
 
     ;
 
-    if(mlCurrentProgram != mlHandle) Bind();
+    if(mlCurrentProgram != mlHandle)
+    {
+        Bind();
+    }
 
     glUniform3f(mvParameters[alVarId].mlId, afX, afY, afZ);
 
@@ -294,11 +349,17 @@ bool  cGLSLProgram::SetVec3f(int alVarId, float afX,float afY,float afZ)
 
 bool  cGLSLProgram::SetVec4f(int alVarId, float afX,float afY,float afZ, float afW)
 {
-    if(alVarId<0 || alVarId >= (int)mvParameters.size()) return false;
+    if(alVarId<0 || alVarId >= (int)mvParameters.size())
+    {
+        return false;
+    }
 
     ;
 
-    if(mlCurrentProgram != mlHandle) Bind();
+    if(mlCurrentProgram != mlHandle)
+    {
+        Bind();
+    }
 
     glUniform4f(mvParameters[alVarId].mlId, afX, afY, afZ,afW);
 
@@ -309,11 +370,17 @@ bool  cGLSLProgram::SetVec4f(int alVarId, float afX,float afY,float afZ, float a
 
 bool cGLSLProgram::SetMatrixf(int alVarId, const cMatrixf& aMtx)
 {
-    if(alVarId<0 || alVarId >= (int)mvParameters.size()) return false;
+    if(alVarId<0 || alVarId >= (int)mvParameters.size())
+    {
+        return false;
+    }
 
     ;
 
-    if(mlCurrentProgram != mlHandle) Bind();
+    if(mlCurrentProgram != mlHandle)
+    {
+        Bind();
+    }
 
     glUniformMatrix4fv(mvParameters[alVarId].mlId, 1, true, aMtx.v);
 

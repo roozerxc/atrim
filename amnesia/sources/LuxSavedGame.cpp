@@ -111,7 +111,10 @@ void cLuxSavedGameEntity::ToEntity(cLuxMap *apMap,iLuxEntity *apEntity)
             iLuxInteractConnection_SaveData *pSaveConn = mvInteractConnections[i];
             iLuxInteractConnection *pConn = pSaveConn->CreateConnection(apMap);
 
-            if(pConn) pProp->mvInteractConnections.push_back(pConn);
+            if(pConn)
+            {
+                pProp->mvInteractConnections.push_back(pConn);
+            }
         }
     }
 
@@ -147,7 +150,10 @@ void cLuxSavedGameEnemy::FromEnemy(iLuxEnemy *apEnemy)
 {
     mlID = apEnemy->GetID();
     mbActive = false; //apEnemy->IsActive();
-    if(apEnemy->GetHealth() <=0) mbActive = false;
+    if(apEnemy->GetHealth() <=0)
+    {
+        mbActive = false;
+    }
 
     ///////////////////////
     //Patrol nodes
@@ -174,7 +180,10 @@ void cLuxSavedGameEnemy::ToEnemy(cLuxMap *apMap, iLuxEnemy *apEnemy)
         for(size_t i=0; i<mvPatrolNodes.Size(); ++i)
         {
             cAINode* pNode = apEnemy->GetPathFinder()->GetNodeContainer()->GetNodeFromID(mvPatrolNodes[i].mlNodeId);
-            if(pNode==NULL) continue;
+            if(pNode==NULL)
+            {
+                continue;
+            }
 
             apEnemy->AddPatrolNode(pNode, mvPatrolNodes[i].mfWaitTime, mvPatrolNodes[i].msAnimation);
         }
@@ -438,24 +447,35 @@ void cLuxSavedGameMap::FromMap(cLuxMap *apMap)
             {
                 // Look
                 if(pEntity->msLookAtCallback != "")
+                {
                     mlstEntityFunc_Look.Add(cLuxSavedGameEntityFunc(pEntity->GetID(), pEntity->msLookAtCallback, pEntity->mbLookAtCallbackRemove));
+                }
 
                 // Interact
                 if(pEntity->msInteractCallback != "")
+                {
                     mlstEntityFunc_Interact.Add(cLuxSavedGameEntityFunc(pEntity->GetID(), pEntity->msInteractCallback, pEntity->mbInteractCallbackRemove));
+                }
 
                 // Callback
                 if(pEntity->msCallbackFunc != "")
+                {
                     mlstEntityFunc_Callback.Add(cLuxSavedGameEntityFunc(pEntity->GetID(), pEntity->msCallbackFunc, false));
+                }
 
                 // State Change
                 if(pEntity->msConnectionStateChangeCallback != "")
+                {
                     mlstEntityFunc_StateChange.Add(cLuxSavedGameEntityFunc(pEntity->GetID(), pEntity->msConnectionStateChangeCallback, false));
+                }
             }
 
             ///////////////////////////////////
             //Active
-            if(pEntity->IsActive()==false)    mlstDisabledEntities.Add(pEntity->GetID());
+            if(pEntity->IsActive()==false)
+            {
+                mlstDisabledEntities.Add(pEntity->GetID());
+            }
 
 
             ///////////////////////////////////
@@ -492,7 +512,10 @@ void cLuxSavedGameMap::FromMap(cLuxMap *apMap)
                 {
                     cLuxProp_SwingDoor *pSwingDoor = static_cast<cLuxProp_SwingDoor*>(pProp);
 
-                    if(pSwingDoor->GetLocked()) mlstLockedDoors.Add(pSwingDoor->GetID());
+                    if(pSwingDoor->GetLocked())
+                    {
+                        mlstLockedDoors.Add(pSwingDoor->GetID());
+                    }
                 }
                 //////////////
                 //Level door
@@ -500,7 +523,10 @@ void cLuxSavedGameMap::FromMap(cLuxMap *apMap)
                 {
                     cLuxProp_LevelDoor *pLevelDoor = static_cast<cLuxProp_LevelDoor*>(pProp);
 
-                    if(pLevelDoor->GetLocked()) mlstLockedLevelDoors.Add(pLevelDoor->GetID());
+                    if(pLevelDoor->GetLocked())
+                    {
+                        mlstLockedLevelDoors.Add(pLevelDoor->GetID());
+                    }
                 }
                 //////////////
                 //Item
@@ -536,7 +562,10 @@ void cLuxSavedGameMap::FromMap(cLuxMap *apMap)
                 {
                     cLuxProp_Chest *pChest = static_cast<cLuxProp_Chest*>(pProp);
 
-                    if(pChest->GetLocked()==false) mlstOpenChests.Add(pEntity->GetID());
+                    if(pChest->GetLocked()==false)
+                    {
+                        mlstOpenChests.Add(pEntity->GetID());
+                    }
                 }
                 //////////////
                 //Lamp
@@ -544,7 +573,10 @@ void cLuxSavedGameMap::FromMap(cLuxMap *apMap)
                 {
                     cLuxProp_Lamp *pLamp = static_cast<cLuxProp_Lamp*>(pProp);
 
-                    if(pLamp->GetLit()==false) mlstUnlitLamps.Add(pEntity->GetID());
+                    if(pLamp->GetLit()==false)
+                    {
+                        mlstUnlitLamps.Add(pEntity->GetID());
+                    }
                 }
             }
         }
@@ -567,7 +599,10 @@ template <class T>
 static bool ExistsInSet(T aVar, std::set<T> &aSet)
 {
     typename std::set<T>::iterator it = aSet.find(aVar);
-    if(it == aSet.end()) return false;
+    if(it == aSet.end())
+    {
+        return false;
+    }
     return true;
 }
 
@@ -719,7 +754,10 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
         while(entIt.HasNext())
         {
             iLuxEntity *pEntity = entIt.Next();
-            if(pEntity->GetFullGameSave()) continue;
+            if(pEntity->GetFullGameSave())
+            {
+                continue;
+            }
 
             pEntity->SetPlayerLookAtCallback("", false);
             pEntity->SetPlayerInteractCallback("", false);
@@ -735,7 +773,9 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
             cLuxSavedGameEntityFunc& saveFunc = it.Next();
             iLuxEntity *pEntity = apMap->GetEntityByID(saveFunc.mlID);
             if(pEntity)
+            {
                 pEntity->SetPlayerLookAtCallback(saveFunc.msFunc, saveFunc.mbAutoRemove);
+            }
         }
 
         ///////////////////
@@ -746,7 +786,9 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
             cLuxSavedGameEntityFunc& saveFunc = it.Next();
             iLuxEntity *pEntity = apMap->GetEntityByID(saveFunc.mlID);
             if(pEntity)
+            {
                 pEntity->SetPlayerInteractCallback(saveFunc.msFunc, saveFunc.mbAutoRemove);
+            }
         }
 
         ///////////////////
@@ -757,7 +799,9 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
             cLuxSavedGameEntityFunc& saveFunc = it.Next();
             iLuxEntity *pEntity = apMap->GetEntityByID(saveFunc.mlID);
             if(pEntity)
+            {
                 pEntity->SetCallbackFunc(saveFunc.msFunc);
+            }
         }
 
         ///////////////////
@@ -768,7 +812,9 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
             cLuxSavedGameEntityFunc& saveFunc = it.Next();
             iLuxEntity *pEntity = apMap->GetEntityByID(saveFunc.mlID);
             if(pEntity)
+            {
                 pEntity->SetConnectionStateChangeCallback(saveFunc.msFunc);
+            }
         }
     }
 
@@ -802,9 +848,13 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
             cSoundEntity *pSound;
 
             if(saveSound.mlID >=0)
+            {
                 pSound = pWorld->GetSoundEntityFromUniqueID(saveSound.mlID);
+            }
             else
+            {
                 pSound = pWorld->CreateSoundEntity(saveSound.msName, saveSound.msSoundDataName, saveSound.mbRemoveWhenOver);
+            }
 
             if(pSound)
             {
@@ -947,9 +997,13 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
             ///////////////////////////
             // Active
             if(ExistsInSet(lID, setDisabledEntities))
+            {
                 pEntity->SetActive(false);
+            }
             else
+            {
                 pEntity->SetActive(true);
+            }
 
             ///////////////////////////
             // Props
@@ -964,9 +1018,13 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
                 {
                     cLuxProp_SwingDoor *pSwingDoor = static_cast<cLuxProp_SwingDoor*>(pProp);
                     if(ExistsInSet(lID, setLockedDoors))
+                    {
                         pSwingDoor->SetLocked(true, false);
+                    }
                     else
+                    {
                         pSwingDoor->SetLocked(false, false);
+                    }
                 }
                 ////////////////
                 //Level door
@@ -974,9 +1032,13 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
                 {
                     cLuxProp_LevelDoor *pLevelDoor = static_cast<cLuxProp_LevelDoor*>(pProp);
                     if(ExistsInSet(lID, setLockedLevelDoors))
+                    {
                         pLevelDoor->SetLocked(true);
+                    }
                     else
+                    {
                         pLevelDoor->SetLocked(false);
+                    }
                 }
                 ////////////////
                 //Item
@@ -1010,9 +1072,13 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
                     cLuxProp_Chest *pChest = static_cast<cLuxProp_Chest*>(pProp);
 
                     if(ExistsInSet(lID, setOpenChests))
+                    {
                         pChest->SetLocked(false, false);
+                    }
                     else
+                    {
                         pChest->SetLocked(true, false);
+                    }
                 }
                 //////////////
                 //Lamp
@@ -1021,9 +1087,13 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
                     cLuxProp_Lamp *pLamp = static_cast<cLuxProp_Lamp*>(pProp);
 
                     if(ExistsInSet(lID, setUnlitLamps))
+                    {
                         pLamp->SetLit(false, false);
+                    }
                     else
+                    {
                         pLamp->SetLit(true, false);
+                    }
                 }
             }
         }
@@ -1040,7 +1110,9 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
 
             pEntity->SetupSaveData(pEntity->GetSaveData());
             if(pEntity->IsActive())
+            {
                 pEntity->UpdateLogic(0.001f);
+            }
         }
 
         gpBase->mpCurrentMapLoading = NULL;
@@ -1057,7 +1129,10 @@ bool cLuxSavedGameMap::EntitySaveDataExists(int alID)
     {
         iLuxEntity_SaveData *pSavedEntity = it.Next();
 
-        if(pSavedEntity->mlID == alID) return true;
+        if(pSavedEntity->mlID == alID)
+        {
+            return true;
+        }
     }
     return false;
 }
@@ -1114,7 +1189,10 @@ void cLuxSavedGameMapCollection::SaveMap(cLuxMap *apMap)
 void cLuxSavedGameMapCollection::LoadMap(cLuxMap *apMap)
 {
     cLuxSavedGameMap *pSavedMap = GetSavedMap(apMap->GetName(), false);
-    if(pSavedMap==NULL) return;
+    if(pSavedMap==NULL)
+    {
+        return;
+    }
 
     pSavedMap->ToMap(apMap);
 }
@@ -1127,7 +1205,10 @@ bool cLuxSavedGameMapCollection::MapExists(const tString& asName)
     while(it.HasNext())
     {
         cLuxSavedGameMap *pSaveMap = it.Next();
-        if(pSaveMap->msName == asName) return true;
+        if(pSaveMap->msName == asName)
+        {
+            return true;
+        }
     }
     return false;
 }
@@ -1141,10 +1222,16 @@ cLuxSavedGameMap* cLuxSavedGameMapCollection::GetSavedMap(const tString& asName,
     while(it.HasNext())
     {
         cLuxSavedGameMap *pSaveMap = it.Next();
-        if(pSaveMap->msName == asName) return pSaveMap;
+        if(pSaveMap->msName == asName)
+        {
+            return pSaveMap;
+        }
     }
 
-    if(abCreateNew==false) return NULL;
+    if(abCreateNew==false)
+    {
+        return NULL;
+    }
 
     //If not exist, create and return.
     cLuxSavedGameMap *pSaveMap = hplNew(cLuxSavedGameMap, () );

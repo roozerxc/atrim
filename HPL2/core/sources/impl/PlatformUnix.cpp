@@ -46,7 +46,10 @@ unsigned long cPlatform::GetFileSize(const tWString& asFileName)
 bool cPlatform::CopyFileToBuffer(const tWString& asFileName, void *apBuffer, unsigned long alSize)
 {
     FILE *pFile = OpenFile(asFileName, _W("r"));
-    if (pFile==NULL) return false;
+    if (pFile==NULL)
+    {
+        return false;
+    }
     fread(apBuffer, sizeof(char), alSize, pFile);
 
     fclose(pFile);
@@ -236,23 +239,39 @@ void cPlatform::FindFilesInDir(tWStringList &alstStrings,const tWString& asDir, 
     struct stat statbuff;
     tWString fileentry;
 
-    if ((dirhandle = opendir(cString::To8Char(asDir).c_str()))==NULL) return;
+    if ((dirhandle = opendir(cString::To8Char(asDir).c_str()))==NULL)
+    {
+        return;
+    }
 
     while ((_entry = readdir(dirhandle)) != NULL)
     {
         if (end==_W('/'))
+        {
             swprintf(sSpec,256,_W("%ls%s"),asDir.c_str(),_entry->d_name);
+        }
         else
+        {
             swprintf(sSpec,256,_W("%ls/%s"),asDir.c_str(),_entry->d_name);
+        }
 
         // skip unreadable
-        if (stat(cString::To8Char(sSpec).c_str(),&statbuff) ==-1) continue;
+        if (stat(cString::To8Char(sSpec).c_str(),&statbuff) ==-1)
+        {
+            continue;
+        }
         // skip directories
-        if (S_ISDIR(statbuff.st_mode)) continue;
+        if (S_ISDIR(statbuff.st_mode))
+        {
+            continue;
+        }
 
         fileentry.assign(cString::To16Char(_entry->d_name));
 
-        if (!patiMatch(asMask.c_str(),fileentry.c_str())) continue;
+        if (!patiMatch(asMask.c_str(),fileentry.c_str()))
+        {
+            continue;
+        }
         alstStrings.push_back(fileentry);
     }
     closedir(dirhandle);
@@ -278,23 +297,41 @@ void cPlatform::FindFoldersInDir(tWStringList &alstStrings,const tWString& asDir
     struct stat statbuff;
     tWString fileentry;
 
-    if ((dirhandle = opendir(cString::To8Char(asDir).c_str()))==NULL) return;
+    if ((dirhandle = opendir(cString::To8Char(asDir).c_str()))==NULL)
+    {
+        return;
+    }
 
     while ((_entry = readdir(dirhandle)) != NULL)
     {
         snprintf(sSpec,256,"%s%s",sDir8.c_str(),_entry->d_name);
 
         // skip unreadable
-        if (stat(sSpec,&statbuff) ==-1) continue;
+        if (stat(sSpec,&statbuff) ==-1)
+        {
+            continue;
+        }
         // skip non-directories
-        if (!S_ISDIR(statbuff.st_mode)) continue;
+        if (!S_ISDIR(statbuff.st_mode))
+        {
+            continue;
+        }
 
         // add updir
-        if (!abAddUpFolder && _entry->d_name[0] == '.' && _entry->d_name[1] == '.' && _entry->d_name[2] == '\0') continue;
+        if (!abAddUpFolder && _entry->d_name[0] == '.' && _entry->d_name[1] == '.' && _entry->d_name[2] == '\0')
+        {
+            continue;
+        }
         // add hidden
-        if (!abAddHidden && _entry->d_name[0] == '.') continue;
+        if (!abAddHidden && _entry->d_name[0] == '.')
+        {
+            continue;
+        }
         // Skip self
-        if (_entry->d_name[0] == '.' && _entry->d_name[1]=='\0') continue;
+        if (_entry->d_name[0] == '.' && _entry->d_name[1]=='\0')
+        {
+            continue;
+        }
 
         fileentry.assign(cString::To16Char(_entry->d_name));
 
@@ -354,7 +391,9 @@ void cPlatform::CreateMessageBoxBase(eMsgBoxType eType, const wchar_t* asCaption
     wchar_t text[2048];
 
     if (fmt == NULL)
+    {
         return;
+    }
     vswprintf(text, 2047, fmt, ap);
 
     tWString sMess = _W("");

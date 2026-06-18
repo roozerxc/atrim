@@ -78,7 +78,10 @@ bool cMusicHandler::Play(const tString& asFileName,float afVolume, float afFadeS
     }
 
     if(mpMainSong != NULL)
-        if(asFileName == mpMainSong->msFileName) bSongIsPlaying = true;
+        if(asFileName == mpMainSong->msFileName)
+        {
+            bSongIsPlaying = true;
+        }
 
     if(!bSongIsPlaying)
     {
@@ -122,7 +125,10 @@ bool cMusicHandler::Play(const tString& asFileName,float afVolume, float afFadeS
     }
     else
     {
-        if(mpMainSong->mfMaxVolume == afVolume)return true;
+        if(mpMainSong->mfMaxVolume == afVolume)
+        {
+            return true;
+        }
     }
 
     ///////////////////////////
@@ -131,9 +137,13 @@ bool cMusicHandler::Play(const tString& asFileName,float afVolume, float afFadeS
     mpMainSong->mbLoop = abLoop;
 
     if(mpMainSong->mfMaxVolume > mpMainSong->mfVolume)
+    {
         mpMainSong->mfVolumeAdd = afFadeStepSize;
+    }
     else
+    {
         mpMainSong->mfVolumeAdd = -afFadeStepSize;
+    }
 
 
     return true;
@@ -143,9 +153,15 @@ bool cMusicHandler::Play(const tString& asFileName,float afVolume, float afFadeS
 
 void cMusicHandler::Stop(float afFadeStepSize)
 {
-    if(mpMainSong==NULL)return;
+    if(mpMainSong==NULL)
+    {
+        return;
+    }
 
-    if(afFadeStepSize<0)afFadeStepSize=-afFadeStepSize;
+    if(afFadeStepSize<0)
+    {
+        afFadeStepSize=-afFadeStepSize;
+    }
 
     mpMainSong->mfVolumeAdd = afFadeStepSize;
 
@@ -166,7 +182,10 @@ void cMusicHandler::Stop(float afFadeStepSize)
 
 void cMusicHandler::Pause()
 {
-    if(mpMainSong != NULL)mpMainSong->mpStream->SetPaused(true);
+    if(mpMainSong != NULL)
+    {
+        mpMainSong->mpStream->SetPaused(true);
+    }
 
     tMusicEntryListIt it = mlstFadingSongs.begin();
     while(it != mlstFadingSongs.end())
@@ -182,7 +201,10 @@ void cMusicHandler::Pause()
 
 void cMusicHandler::Resume()
 {
-    if(mpMainSong != NULL)mpMainSong->mpStream->SetPaused(false);
+    if(mpMainSong != NULL)
+    {
+        mpMainSong->mpStream->SetPaused(false);
+    }
 
     tMusicEntryListIt it = mlstFadingSongs.begin();
     while(it != mlstFadingSongs.end())
@@ -230,9 +252,13 @@ void cMusicHandler::SetVolumeMul(float afMul)
 tString cMusicHandler::GetCurrentSongName()
 {
     if(mpMainSong!=NULL)
+    {
         return mpMainSong->msFileName;
+    }
     else
+    {
         return "";
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -240,9 +266,13 @@ tString cMusicHandler::GetCurrentSongName()
 float cMusicHandler::GetCurrentSongVolume()
 {
     if(mpMainSong!=NULL)
+    {
         return mpMainSong->mfVolume;
+    }
     else
+    {
         return 0;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -256,7 +286,10 @@ cMusicEntry* cMusicHandler::GetCurrentSong()
 
 void cMusicHandler::Update(float afTimeStep)
 {
-    if(mbIsPaused)return;
+    if(mbIsPaused)
+    {
+        return;
+    }
 
     /////////////////////////////////
     // Update volume mul
@@ -265,12 +298,18 @@ void cMusicHandler::Update(float afTimeStep)
         if(mfVolumeMul < mfVolumeMulFadeGoal)
         {
             mfVolumeMul += afTimeStep*mfVolumeMulFadeSpeed;
-            if(mfVolumeMul > mfVolumeMulFadeGoal) mfVolumeMul = mfVolumeMulFadeGoal;
+            if(mfVolumeMul > mfVolumeMulFadeGoal)
+            {
+                mfVolumeMul = mfVolumeMulFadeGoal;
+            }
         }
         if(mfVolumeMul > mfVolumeMulFadeGoal)
         {
             mfVolumeMul -= afTimeStep*mfVolumeMulFadeSpeed;
-            if(mfVolumeMul < mfVolumeMulFadeGoal) mfVolumeMul = mfVolumeMulFadeGoal;
+            if(mfVolumeMul < mfVolumeMulFadeGoal)
+            {
+                mfVolumeMul = mfVolumeMulFadeGoal;
+            }
         }
     }
 
@@ -294,12 +333,16 @@ void cMusicHandler::Update(float afTimeStep)
             if(mpMainSong->mfVolumeAdd>0)
             {
                 if(mpMainSong->mfVolume>=mpMainSong->mfMaxVolume)
+                {
                     mpMainSong->mfVolume= mpMainSong->mfMaxVolume;
+                }
             }
             else
             {
                 if(mpMainSong->mfVolume<=mpMainSong->mfMaxVolume)
+                {
                     mpMainSong->mfVolume= mpMainSong->mfMaxVolume;
+                }
             }
 
             float fNewVolume = mpMainSong->mfVolume * mfVolumeMul;
@@ -378,7 +421,10 @@ void cMusicHandler::UpdateResumeEntry(cMusicEntry* apSong, float afFadeStepSize)
     cMusicResumeEntry* pResumeEntry = GetResumeEntry(apSong->msFileName);
 
     float fTimeAdd = 0;
-    if(afFadeStepSize > 0) fTimeAdd = apSong->mpStream->GetVolume() / afFadeStepSize;
+    if(afFadeStepSize > 0)
+    {
+        fTimeAdd = apSong->mpStream->GetVolume() / afFadeStepSize;
+    }
 
     pResumeEntry->mfCurrentPos = apSong->mpStream->GetElapsedTime() + fTimeAdd;
 }
@@ -417,7 +463,10 @@ bool cMusicHandler::LoadAndStart(const tString& asFileName,cMusicEntry* apSong,f
     {
         cMusicResumeEntry* pResumeEntry = GetResumeEntry(asFileName);
         double fPos = pResumeEntry->mfCurrentPos;
-        if(fPos >= pStream->GetTotalTime()) fPos =0;
+        if(fPos >= pStream->GetTotalTime())
+        {
+            fPos =0;
+        }
         pStream->SetElapsedTime(fPos);
 
     }

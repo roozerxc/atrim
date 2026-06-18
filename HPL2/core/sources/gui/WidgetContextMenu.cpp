@@ -55,12 +55,16 @@ void cWidgetContextMenu::Hide()
     // - And hides the menu
 
     if(IsSubmenuOpen())
+    {
         mpHighlightedItem->GetChildMenu()->Hide();
+    }
 
     SetHighlightedItem(NULL);
 
     if(GetParentMenu())
+    {
         GetParentMenu()->OnChildMenuHide();
+    }
     else
     {
         mpSet->SetAttentionWidget(mpPrevAttention);
@@ -107,9 +111,13 @@ void cWidgetContextMenu::UpdateMenuItemsPos(cWidgetMenuItem* apNewItem)
 
     float fMenuItemY = mvSize.y;
     if(mvMenuItems.size()>1)
+    {
         fMenuItemY -= fUpperBorderHeight;
+    }
     else
+    {
         fMenuItemY += fUpperBorderHeight;
+    }
 
     apNewItem->SetPosition(cVector3f(fLeftBorderWidth, fMenuItemY, 0.1f));
 }
@@ -246,7 +254,9 @@ bool cWidgetContextMenu::OnMouseEnter(const cGuiMessageData& aData)
 bool cWidgetContextMenu::OnMouseLeave(const cGuiMessageData& aData)
 {
     if(IsSubmenuOpen()==false)
+    {
         SetHighlightedItem(NULL);
+    }
     return true;
 }
 
@@ -262,7 +272,9 @@ bool cWidgetContextMenu::OnLostFocus(const cGuiMessageData& aData)
 {
     iWidget* pFocus = mpSet->GetFocusedWidget();
     if(pFocus==NULL || IsConnectedTo(pFocus, false)==false && pFocus->IsConnectedTo(this, false)==false)
+    {
         GetTopMostMenu()->SetMustHide(true);
+    }
 
     return true;
 }
@@ -312,7 +324,9 @@ bool cWidgetContextMenu::OnKeyPress(const cGuiMessageData& aData)
     for(int i=0; i<(int)mvMenuItems.size(); ++i)
     {
         if(mvMenuItems[i]->ProcessMessage(eGuiMessage_KeyPress, aData))
+        {
             break;
+        }
     }
     return true;
 }

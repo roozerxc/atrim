@@ -47,10 +47,14 @@ cGuiPopUpFilePicker::cGuiPopUpFilePicker(cGuiSet* apSet, cGuiSkin* apSkin,
 
     msStartFilename = cString::GetFileNameW(asStartFilename);
     if(msStartFilename.empty())
+    {
         msStartFilename = cString::GetFileNameW(asStartPath);
+    }
 
     if(msStartFilename==asStartPath)
+    {
         msStartFilename.clear();
+    }
 
     mpSaveFileDest = NULL;
     mpLoadFileListDest = NULL;
@@ -60,11 +64,26 @@ cGuiPopUpFilePicker::cGuiPopUpFilePicker(cGuiSet* apSet, cGuiSkin* apSkin,
 
 cGuiPopUpFilePicker::~cGuiPopUpFilePicker()
 {
-    for(int i=0; i<3; ++i) if(mvButtons[i]) mpSet->DestroyWidget(mvButtons[i]);
-    if(mpCurrentDirectory) mpSet->DestroyWidget(mpCurrentDirectory);
-    if(mpCurrentFileName) mpSet->DestroyWidget(mpCurrentFileName);
-    if(mpFileList) mpSet->DestroyWidget(mpFileList);
-    if(mpFilterList) mpSet->DestroyWidget(mpFilterList);
+    for(int i=0; i<3; ++i) if(mvButtons[i])
+        {
+            mpSet->DestroyWidget(mvButtons[i]);
+        }
+    if(mpCurrentDirectory)
+    {
+        mpSet->DestroyWidget(mpCurrentDirectory);
+    }
+    if(mpCurrentFileName)
+    {
+        mpSet->DestroyWidget(mpCurrentFileName);
+    }
+    if(mpFileList)
+    {
+        mpSet->DestroyWidget(mpFileList);
+    }
+    if(mpFilterList)
+    {
+        mpSet->DestroyWidget(mpFilterList);
+    }
 }
 
 //-------------------------------------------------------------------------------
@@ -260,7 +279,10 @@ bool cGuiPopUpFilePicker::FileList_OnSelectionChange(iWidget* apWidget, const cG
 
     ///////////////////////////////////////
     // If checking special folders, do nothing
-    if(lFolder == 0) return true;
+    if(lFolder == 0)
+    {
+        return true;
+    }
 
     ///////////////////////////////////////
     // Else, check if selected item is a folder, if not, add file name to current filename textbox
@@ -274,11 +296,15 @@ bool cGuiPopUpFilePicker::FileList_OnSelectionChange(iWidget* apWidget, const cG
 
         if(pItem)
             // Property 1 : file name
+        {
             sPath = pItem->GetProperty(1)->GetText();
+        }
     }
 
     if(sPath != _W("") && cPlatform::FolderExists(GetCurrentFullPath() + sPath)==false)
+    {
         mpCurrentFileName->SetText( sPath );
+    }
 
     return true;
 }
@@ -334,7 +360,10 @@ void cGuiPopUpFilePicker::OnAddFilter()
 
         for(int j=0; j <(int)pCat->mvFilters.size(); ++j)
         {
-            if(j!=0) sFilterText += _W(", ");
+            if(j!=0)
+            {
+                sFilterText += _W(", ");
+            }
 
             sFilterText += pCat->mvFilters[j];
         }
@@ -381,7 +410,10 @@ void cGuiPopUpFilePicker::PopulateFileList()
 {
     int lSelectedCategoryIndex = mpFilterList->GetSelectedItem();
 
-    if(lSelectedCategoryIndex<0) return;
+    if(lSelectedCategoryIndex<0)
+    {
+        return;
+    }
 
     //////////////////////////////////////
     // Reset Items
@@ -488,7 +520,10 @@ void cGuiPopUpFilePicker::Init()
         mvButtons[i]->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(Button_Pressed));
     }
 
-    if(mpGfxUpButton) mvButtons[0]->SetImage( mpGfxUpButton, false);
+    if(mpGfxUpButton)
+    {
+        mvButtons[0]->SetImage( mpGfxUpButton, false);
+    }
     mvButtons[0]->SetPosition(cVector3f(435,60,0.1f));
     mvButtons[0]->SetSize(23);
 
@@ -543,7 +578,9 @@ void cGuiPopUpFilePicker::Init()
 void cGuiPopUpFilePicker::ClosePopUp(bool abPickedFile)
 {
     if(abPickedFile)
+    {
         mpSet->GetResources()->AddResourceDir(GetCurrentFullPath(), false);
+    }
 
     int lIntMessageData = (int)abPickedFile;
     RunCallback(mpCallbackObject, mpCallback, NULL, cGuiMessageData(lIntMessageData), true);

@@ -107,7 +107,10 @@ const cMatrixf& cBone::GetWorldTransformUnscaled()
 
 void cBone::UpdateUnscaledMatrix()
 {
-    if(mbNeedsUnscaledUpdate == false) return;
+    if(mbNeedsUnscaledUpdate == false)
+    {
+        return;
+    }
 
     if(mpParent==NULL)
     {
@@ -151,7 +154,10 @@ const cMatrixf& cBone::GetInvWorldTransform()
 
 void cBone::Detach()
 {
-    if(mpParent == NULL) return;
+    if(mpParent == NULL)
+    {
+        return;
+    }
 
     tBoneListIt it = mpParent->mlstChildren.begin();
     for(; it != mpParent->mlstChildren.end(); it++)
@@ -177,7 +183,10 @@ cBoneIterator cBone::GetChildIterator()
 
 void cBone::UpdateMatrix()
 {
-    if(mbNeedsUpdate == false) return;
+    if(mbNeedsUpdate == false)
+    {
+        return;
+    }
 
     if(mpParent==NULL)
     {

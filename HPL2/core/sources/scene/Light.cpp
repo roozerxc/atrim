@@ -90,9 +90,18 @@ iLight::iLight(tString asName, cResources *apResources) : iRenderable(asName)
 
 iLight::~iLight()
 {
-    if(mpVisibleNodeTracker) hplDelete(mpVisibleNodeTracker);
-    if(mpFalloffMap) mpTextureManager->Destroy(mpFalloffMap);
-    if(mpGoboTexture) mpTextureManager->Destroy(mpGoboTexture);
+    if(mpVisibleNodeTracker)
+    {
+        hplDelete(mpVisibleNodeTracker);
+    }
+    if(mpFalloffMap)
+    {
+        mpTextureManager->Destroy(mpFalloffMap);
+    }
+    if(mpGoboTexture)
+    {
+        mpTextureManager->Destroy(mpGoboTexture);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -114,8 +123,13 @@ void iLight::OnChangeVisible()
 bool iLight::IsVisible()
 {
     if(mDiffuseColor.r <=0 && mDiffuseColor.g <=0 && mDiffuseColor.b <=0 && mDiffuseColor.a <=0)
+    {
         return false;
-    if(mfRadius <= 0) return false;
+    }
+    if(mfRadius <= 0)
+    {
+        return false;
+    }
 
     return mbIsVisible;
 }
@@ -254,7 +268,10 @@ void iLight::UpdateLight(float afTimeStep)
 
 void iLight::FadeTo(const cColor& aCol, float afRadius, float afTime)
 {
-    if(afTime<=0) afTime = 0.0001f;
+    if(afTime<=0)
+    {
+        afTime = 0.0001f;
+    }
 
     mfFadeTime = afTime;
 
@@ -352,7 +369,10 @@ bool iLight::CheckObjectIntersection(iRenderable *apObject)
 
 void iLight::SetRadius(float afX)
 {
-    if(mfRadius == afX) return;
+    if(mfRadius == afX)
+    {
+        return;
+    }
 
     mfRadius = afX;
 
@@ -404,7 +424,10 @@ iTexture *iLight::GetFalloffMap()
 
 void iLight::SetFalloffMap(iTexture* apTexture)
 {
-    if(mpFalloffMap) mpTextureManager->Destroy(mpFalloffMap);
+    if(mpFalloffMap)
+    {
+        mpTextureManager->Destroy(mpFalloffMap);
+    }
 
     mpFalloffMap = apTexture;
     mpFalloffMap->SetWrapS(eTextureWrap_ClampToEdge);
@@ -417,10 +440,16 @@ void iLight::SetFalloffMap(iTexture* apTexture)
 void iLight::SetGoboTexture(iTexture *apTexture)
 {
     //Destroy any old texture.
-    if(mpGoboTexture) mpTextureManager->Destroy(mpGoboTexture);
+    if(mpGoboTexture)
+    {
+        mpTextureManager->Destroy(mpGoboTexture);
+    }
 
     mpGoboTexture = apTexture;
-    if(mpGoboTexture) mpGoboTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
+    if(mpGoboTexture)
+    {
+        mpGoboTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -440,7 +469,10 @@ void iLight::AddShadowCaster(iRenderable *apObject)
 bool iLight::ShadowCasterIsValid(iRenderable *apObject)
 {
     tShadowCasterCacheMapIt it = m_mapShadowCasterCache.find(apObject);
-    if(it == m_mapShadowCasterCache.end()) return false;
+    if(it == m_mapShadowCasterCache.end())
+    {
+        return false;
+    }
 
     return it->second == apObject->GetTransformUpdateCount();
 }
@@ -461,7 +493,10 @@ bool iLight::ShadowCastersAreUnchanged(const tRenderableVec &avObjects)
         }
     }
 
-    if(lDynObjectCount != m_mapShadowCasterCache.size()) return false;
+    if(lDynObjectCount != m_mapShadowCasterCache.size())
+    {
+        return false;
+    }
 
     return true;
 }
@@ -472,7 +507,10 @@ void iLight::SetShadowCasterCacheFromVec(const tRenderableVec &avObjects)
 
     for(size_t i=0; i<avObjects.size(); ++i)
     {
-        if(avObjects[i]->IsStatic()==false) AddShadowCaster(avObjects[i]);
+        if(avObjects[i]->IsStatic()==false)
+        {
+            AddShadowCaster(avObjects[i]);
+        }
     }
 }
 
@@ -489,7 +527,10 @@ void iLight::LoadXMLProperties(const tString asFile)
     if(sPath != _W(""))
     {
         FILE *pFile = cPlatform::OpenFile(sPath, _W("rb"));
-        if(pFile==NULL) return;
+        if(pFile==NULL)
+        {
+            return;
+        }
 
         TiXmlDocument *pDoc = hplNew( TiXmlDocument,() );
         if(pDoc->LoadFile(pFile))
@@ -505,7 +546,10 @@ void iLight::LoadXMLProperties(const tString asFile)
 
                 tString sFalloffImage = cString::ToString(pMainElem->Attribute("FalloffImage"),"");
                 iTexture *pTexture = mpTextureManager->Create1D(sFalloffImage,false);
-                if(pTexture) SetFalloffMap(pTexture);
+                if(pTexture)
+                {
+                    SetFalloffMap(pTexture);
+                }
 
                 ExtraXMLProperties(pMainElem);
             }
@@ -518,7 +562,10 @@ void iLight::LoadXMLProperties(const tString asFile)
         {
             Error("Couldn't load file '%s'\n",asFile.c_str());
         }
-        if(pFile) fclose(pFile);
+        if(pFile)
+        {
+            fclose(pFile);
+        }
         hplDelete(pDoc);
     }
     else
@@ -584,7 +631,10 @@ void iLight::OnFlickerOff()
     if(msFlickerOffPS!="")
     {
         cParticleSystem *pPS = mpWorld->CreateParticleSystem(GetName() + "_PS", msFlickerOffPS, cVector3f(1,1,1));
-        if(pPS) pPS->SetMatrix(GetWorldMatrix());
+        if(pPS)
+        {
+            pPS->SetMatrix(GetWorldMatrix());
+        }
     }
 }
 
@@ -596,7 +646,10 @@ void iLight::OnFlickerOn()
     if(msFlickerOnPS!="")
     {
         cParticleSystem *pPS = mpWorld->CreateParticleSystem(GetName() + "_PS", msFlickerOnPS, cVector3f(1,1,1));
-        if(pPS) pPS->SetMatrix(GetWorldMatrix());
+        if(pPS)
+        {
+            pPS->SetMatrix(GetWorldMatrix());
+        }
     }
 
 }

@@ -117,7 +117,10 @@ void cMaterialType_Water::LoadData()
     defaultVars.Add("UseRefractionEdgeCheck");
     defaultVars.Add("UseNormals");
     defaultVars.Add("UseNormalMapping");
-    if(iRenderer::GetRefractionEnabled())    defaultVars.Add("UseRefraction");
+    if(iRenderer::GetRefractionEnabled())
+    {
+        defaultVars.Add("UseRefraction");
+    }
 
     mpProgramManager->SetupGenerateProgramData(    eMaterialRenderMode_Diffuse,"Diffuse","deferred_base_vtx.glsl", "water_surface_frag.glsl",
             vDiffuseFeatureVec,kDiffuseFeatureNum, defaultVars);
@@ -172,16 +175,24 @@ iTexture* cMaterialType_Water::GetTextureForUnit(cMaterial *apMaterial,eMaterial
             return apMaterial->GetTexture(eMaterialTexture_NMap);
         case 2:
             if(iRenderer::GetRefractionEnabled())
+            {
                 return mpGraphics->GetRenderer(eRenderer_Main)->GetRefractionTexture();
+            }
             else
+            {
                 return NULL;
+            }
         case 3:
             if(iRenderer::GetRefractionEnabled())
             {
                 if(apMaterial->GetTexture(eMaterialTexture_CubeMap))
+                {
                     return apMaterial->GetTexture(eMaterialTexture_CubeMap);
+                }
                 else
+                {
                     return mpGraphics->GetRenderer(eRenderer_Main)->GetReflectionTexture();
+                }
             }
             else
             {
@@ -220,12 +231,24 @@ iGpuProgram* cMaterialType_Water::GetGpuProgram(cMaterial *apMaterial, eMaterial
 
         if(iRenderer::GetRefractionEnabled())
         {
-            if(pVars->mbHasReflection)                                lFlags |= eFeature_Diffuse_Reflection;
-            if(apMaterial->GetTexture(eMaterialTexture_CubeMap))    lFlags |= eFeature_Diffuse_CubeMapReflection;
+            if(pVars->mbHasReflection)
+            {
+                lFlags |= eFeature_Diffuse_Reflection;
+            }
+            if(apMaterial->GetTexture(eMaterialTexture_CubeMap))
+            {
+                lFlags |= eFeature_Diffuse_CubeMapReflection;
+            }
         }
 
-        if(pVars->mfReflectionFadeEnd>0)                        lFlags |= eFeature_Diffuse_ReflectionFading;
-        if(aRenderMode == eMaterialRenderMode_DiffuseFog)        lFlags |= eFeature_Diffuse_Fog;
+        if(pVars->mfReflectionFadeEnd>0)
+        {
+            lFlags |= eFeature_Diffuse_ReflectionFading;
+        }
+        if(aRenderMode == eMaterialRenderMode_DiffuseFog)
+        {
+            lFlags |= eFeature_Diffuse_Fog;
+        }
 
         return mpProgramManager->GenerateProgram(eMaterialRenderMode_Diffuse,lFlags);
     }
@@ -383,9 +406,13 @@ void cMaterialType_Water::CompileMaterialSpecifics(cMaterial *apMaterial)
     /////////////////////////////////////
     //Set up the blend mode
     if(iRenderer::GetRefractionEnabled())
+    {
         apMaterial->SetBlendMode(eMaterialBlendMode_None);
+    }
     else
+    {
         apMaterial->SetBlendMode(eMaterialBlendMode_Mul);
+    }
 
     /////////////////////////////////////
     //Set up the refraction

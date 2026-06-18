@@ -105,7 +105,10 @@ cMesh* cMeshCreator::CreatePlane(const tString& asName, const cVector3f& avCorne
             lPlaneNormalAxis = i;
             ++lNumSameCoords;
         }
-        else vPlaneAxes.push_back(i);
+        else
+        {
+            vPlaneAxes.push_back(i);
+        }
     }
     if(lPlaneNormalAxis<0 || lNumSameCoords>1)
     {
@@ -145,16 +148,24 @@ cMesh* cMeshCreator::CreatePlane(const tString& asName, const cVector3f& avCorne
         if(vCorner.v[vPlaneAxes[0]]<=0)
         {
             if(vCorner.v[vPlaneAxes[1]]>0)
+            {
                 lCornerIndex=0;
+            }
             else
+            {
                 lCornerIndex=1;
+            }
         }
         else
         {
             if(vCorner.v[vPlaneAxes[1]]>0)
+            {
                 lCornerIndex=3;
+            }
             else
+            {
                 lCornerIndex=2;
+            }
         }
         vCoords[lCornerIndex] = vTempCoords[i];
     }
@@ -189,8 +200,14 @@ cMesh* cMeshCreator::CreatePlane(const tString& asName, const cVector3f& avCorne
 
     }
 
-    for(int i=0; i<3; i++) pVtxBuffer->AddIndex(i);
-    for(int i=2; i<5; i++) pVtxBuffer->AddIndex(i==4?0:i);
+    for(int i=0; i<3; i++)
+    {
+        pVtxBuffer->AddIndex(i);
+    }
+    for(int i=2; i<5; i++)
+    {
+        pVtxBuffer->AddIndex(i==4?0:i);
+    }
 
     pVtxBuffer->Compile(eVertexCompileFlag_CreateTangents);
 
@@ -272,7 +289,9 @@ cMesh* cMeshCreator::CreateSphere(const tString& asName, float afRadius, int alS
 
     // Create faces for inner slices
     for(int i=0; i<alSlices-2; ++i)
+    {
         WrapSides(pVtxBuffer, 1+i*alSections, alSections);
+    }
 
     // Create triangles for south pole slice
     {
@@ -599,8 +618,14 @@ iVertexBuffer* cMeshCreator::CreateSkyBoxVertexBuffer(float afSize)
         for(int y=-1; y<=1; y++)
             for(int z=-1; z<=1; z++)
             {
-                if(x==0 && y==0 && z==0)continue;
-                if(std::abs(x) + std::abs(y) + std::abs(z) > 1)continue;
+                if(x==0 && y==0 && z==0)
+                {
+                    continue;
+                }
+                if(std::abs(x) + std::abs(y) + std::abs(z) > 1)
+                {
+                    continue;
+                }
 
                 //Direction (could say inverse normal) of the quad.
                 cVector3f vDir(0);
@@ -664,7 +689,10 @@ iVertexBuffer* cMeshCreator::CreateSkyBoxVertexBuffer(float afSize)
                 for(int i=0; i<4; i++)
                 {
                     int idx = i;
-                    if(x + y + z < 0) idx = 3-i;
+                    if(x + y + z < 0)
+                    {
+                        idx = 3-i;
+                    }
 
                     pSkyBox->AddVertexColor(eVertexBufferElement_Color0, cColor(1,1,1,1));
                     pSkyBox->AddVertexVec3f(eVertexBufferElement_Position, (vDir+vAdd[idx])*fSize);
@@ -676,7 +704,10 @@ iVertexBuffer* cMeshCreator::CreateSkyBoxVertexBuffer(float afSize)
                 //Log("\n");
             }
 
-    for(int i=0; i<24; i++) pSkyBox->AddIndex(i);
+    for(int i=0; i<24; i++)
+    {
+        pSkyBox->AddIndex(i);
+    }
 
     if(!pSkyBox->Compile(0))
     {
@@ -707,8 +738,14 @@ iVertexBuffer* cMeshCreator::CreateBoxVertexBuffer(cVector3f avSize)
         for(int y=-1; y<=1; y++)
             for(int z=-1; z<=1; z++)
             {
-                if(x==0 && y==0 && z==0)continue;
-                if(std::abs(x) + std::abs(y) + std::abs(z) > 1)continue;
+                if(x==0 && y==0 && z==0)
+                {
+                    continue;
+                }
+                if(std::abs(x) + std::abs(y) + std::abs(z) > 1)
+                {
+                    continue;
+                }
 
                 //Direction (could say inverse normal) of the quad.
                 cVector3f vDir(0);
@@ -787,7 +824,10 @@ iVertexBuffer* cMeshCreator::CreateBoxVertexBuffer(cVector3f avSize)
                     //Log("%d: (%.1f : %.1f : %.1f) ", i,vSide.x,  vSide.y,vSide.z);
                 }
 
-                for(int i=0; i<3; i++)pBox->AddIndex(lVtxIdx + i);
+                for(int i=0; i<3; i++)
+                {
+                    pBox->AddIndex(lVtxIdx + i);
+                }
                 pBox->AddIndex(lVtxIdx + 2);
                 pBox->AddIndex(lVtxIdx + 3);
                 pBox->AddIndex(lVtxIdx + 0);
@@ -837,7 +877,10 @@ cVector3f cMeshCreator::GetBoxTex(int i,int x, int y, int z, cVector3f *vAdd)
 int cMeshCreator::GetBoxIdx(int i,int x, int y, int z)
 {
     int idx = i;
-    if(x + y + z > 0) idx = 3-i;
+    if(x + y + z > 0)
+    {
+        idx = 3-i;
+    }
 
     return idx;
 }

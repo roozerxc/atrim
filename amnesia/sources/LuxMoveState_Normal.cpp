@@ -162,7 +162,9 @@ void cLuxMoveState_Normal::OnMapEnter()
     if(mpPlayer->GetCurrentMoveState()==eLuxMoveState_Normal)
     {
         if(mbCrouching)
+        {
             mpPlayer->GetCharacterBody()->SetActiveSize(1);
+        }
     }
 }
 
@@ -213,7 +215,10 @@ void cLuxMoveState_Normal::OnUpdate(float afTimeStep)
 {
     ////////////////////////////
     // Check if there is any ledge up ahead.
-    if(UpdateLedgeCheck(afTimeStep)) return;
+    if(UpdateLedgeCheck(afTimeStep))
+    {
+        return;
+    }
 
     ////////////////////////////
     // Update movement related stuff
@@ -279,7 +284,10 @@ void cLuxMoveState_Normal::OnRun(bool abActive)
 void cLuxMoveState_Normal::OnCrouch(bool abActive)
 {
     //Do nothing on button release
-    if(abActive==false) return;
+    if(abActive==false)
+    {
+        return;
+    }
 
     SetCrouch(!mbCrouching);
 }
@@ -293,7 +301,10 @@ void cLuxMoveState_Normal::OnJump(bool abActive)
     if(abActive && mbJumping == false)
     {
         iCharacterBody *pCharBody = mpPlayer->GetCharacterBody();
-        if(pCharBody->IsOnGround()==false) return;
+        if(pCharBody->IsOnGround()==false)
+        {
+            return;
+        }
 
         Jump();
     }
@@ -336,7 +347,10 @@ void cLuxMoveState_Normal::OnDraw(float afFrameTime)
 
 void cLuxMoveState_Normal::SetCrouch(bool abActive)
 {
-    if(mbCrouching == abActive) return;
+    if(mbCrouching == abActive)
+    {
+        return;
+    }
 
     iCharacterBody *pCharBody = mpPlayer->GetCharacterBody();
 
@@ -410,7 +424,10 @@ float cLuxMoveState_Normal::GetMoveSpeedMul()
                         mpPlayer->GetEventMoveSpeedMul() *
                         mpPlayer->GetHurtMoveSpeedMul() *
                         mpPlayer->GetInsanityCollapseSpeedMul();
-    if(mpPlayer->IsInWater()) fMoveMul *= mpPlayer->GetWaterSpeedMul();
+    if(mpPlayer->IsInWater())
+    {
+        fMoveMul *= mpPlayer->GetWaterSpeedMul();
+    }
 
     return fMoveMul;
 }
@@ -605,8 +622,14 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
             //Wrap x between -90 and 270 and see where what direction to go
             float fX = cMath::Wrap(mfHeadBobCount,cMath::ToRad(-90),cMath::ToRad(270) );
             float fAdd;
-            if(fX <= cMath::ToRad(90)) fAdd = 1;
-            else                        fAdd = -1;
+            if(fX <= cMath::ToRad(90))
+            {
+                fAdd = 1;
+            }
+            else
+            {
+                fAdd = -1;
+            }
 
             float fPrevCos = cos(mfHeadBobCount);
 
@@ -665,9 +688,13 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
 
         //Slow down on way down, and back up go slow, speed up and then slow.
         if(mfHeadGroundBounce < 0.5f)
+        {
             mvHeadBob.y += sin(kPif + mfHeadGroundBounce * kPif) * mfGroundBounceSize * mfBounceSizeMul;
+        }
         else
+        {
             mvHeadBob.y += (cMath::SmoothCurve( (mfHeadGroundBounce-0.5f)*2.0f )-1) * mfGroundBounceSize * mfBounceSizeMul;
+        }
 
         if(mfHeadGroundBounce >= 1)
         {
@@ -702,7 +729,10 @@ bool cLuxMoveState_Normal::UpdateLedgeCheck(float afTimeStep)
     ////////////////////////////
     //Check so counter is right
     mfClimbLedgeCount -= afTimeStep;
-    if(mfClimbLedgeCount > 0) return false;
+    if(mfClimbLedgeCount > 0)
+    {
+        return false;
+    }
 
     mfClimbLedgeCount = mfMaxClimbLedgeCount;
 
@@ -730,11 +760,17 @@ bool cLuxMoveState_Normal::UpdateLedgeCheck(float afTimeStep)
         if(pCharBody->CheckRayIntersection(vRayStart[i], vRayStart[i]+vStartPosAdd, &fDistance, NULL))
         {
             bIntersection = true;
-            if(fDistance < fMinDistance) fMinDistance = fDistance;
+            if(fDistance < fMinDistance)
+            {
+                fMinDistance = fDistance;
+            }
         }
     }
 
-    if(bIntersection== false) return false;
+    if(bIntersection== false)
+    {
+        return false;
+    }
 
     //////////////////////////////
     // Check if the new position works
@@ -750,17 +786,26 @@ bool cLuxMoveState_Normal::UpdateLedgeCheck(float afTimeStep)
     if(    bFitting==false && vPushBack.y > 0 && vPushBack.Length() <= mfClimbLedgeMaxPushDist)
     {
         bFitting = pCharBody->CheckCharacterFits(vFeetPos + vPushBack, true);
-        if(bFitting) vFeetPos += vPushBack;
+        if(bFitting)
+        {
+            vFeetPos += vPushBack;
+        }
     }
 
     //Check if crouching works
     if( bFitting==false && mbCrouching==false)
     {
         bFitting = pCharBody->CheckCharacterFits(vFeetPos, true,1);
-        if(bFitting) SetCrouch(true);
+        if(bFitting)
+        {
+            SetCrouch(true);
+        }
     }
 
-    if(bFitting == false) return false;
+    if(bFitting == false)
+    {
+        return false;
+    }
 
     //////////////////////////////////////
     // Player fits! Set up stuff
@@ -810,8 +855,14 @@ void cLuxMoveState_Normal::FootSound(eLuxFootSound aType)
     if(aType == eLuxFootSound_Step)
     {
         tString sMoveType = "walk";
-        if(mbRunning) sMoveType = "run";
-        if(mbCrouching) sMoveType = "sneak";
+        if(mbRunning)
+        {
+            sMoveType = "run";
+        }
+        if(mbCrouching)
+        {
+            sMoveType = "sneak";
+        }
 
         sSoundDataName = "step_"+sMoveType+"_"+sMaterialStep;
     }
@@ -848,7 +899,10 @@ void cLuxMoveState_Normal::FootSound(eLuxFootSound aType)
 
 void cLuxMoveState_Normal::FallDamage(float afYSpeed)
 {
-    if(mpPlayer->GetNoFallDamage()) return;
+    if(mpPlayer->GetNoFallDamage())
+    {
+        return;
+    }
 
     tString sSound = "";
     float fDamage = 0.0f;

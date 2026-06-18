@@ -32,7 +32,10 @@ cParticleManager::~cParticleManager()
     for(; it != m_mapResources.end(); ++it)
     {
         iResourceBase* pResource = it->second;
-        while(pResource->HasUsers()) pResource->DecUserCount();
+        while(pResource->HasUsers())
+        {
+            pResource->DecUserCount();
+        }
     }
 
     DestroyUnused(0);

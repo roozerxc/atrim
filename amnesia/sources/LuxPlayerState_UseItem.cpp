@@ -78,7 +78,10 @@ void cLuxPlayerState_UseItem::ImplementedUpdate(float afTimeStep)
 
 cGuiGfxElement* cLuxPlayerState_UseItem::GetCrosshair()
 {
-    if(mpCurrentItem==NULL) return NULL;
+    if(mpCurrentItem==NULL)
+    {
+        return NULL;
+    }
 
     return mpCurrentItem->GetImage();
 }
@@ -87,27 +90,41 @@ cGuiGfxElement* cLuxPlayerState_UseItem::GetCrosshair()
 
 bool cLuxPlayerState_UseItem::OnDrawCrossHair(cGuiGfxElement *apGfx, const cVector3f& avPos, const cVector2f &avSize)
 {
-    if(mpEntityInFocus==NULL) return true;
+    if(mpEntityInFocus==NULL)
+    {
+        return true;
+    }
 
     float fMaxFocusDistance = cMath::Max(mpEntityInFocus->GetMaxFocusDistance(), mfMinUseItemDistance);
-    if(mfFocusDistance > fMaxFocusDistance) return true;
+    if(mfFocusDistance > fMaxFocusDistance)
+    {
+        return true;
+    }
 
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
     if(    mpEntityInFocus->GetEntityType() == eLuxEntityType_Prop)
     {
         iLuxProp *pProp = static_cast<iLuxProp*>(mpEntityInFocus);
-        if(pProp->GetPropType() == eLuxPropType_Item) return true;
+        if(pProp->GetPropType() == eLuxPropType_Item)
+        {
+            return true;
+        }
     }
     else
     {
-        if(pMap->GetUseItemCallback(mpCurrentItem->GetName(), mpEntityInFocus->GetName())==NULL) return true;
+        if(pMap->GetUseItemCallback(mpCurrentItem->GetName(), mpEntityInFocus->GetName())==NULL)
+        {
+            return true;
+        }
     }
 
     cVector3f vNewPos = avPos;
     vNewPos.z += 1;
 
     for(int i=0; i<3; ++i)
+    {
         gpBase->mpGameHudSet->DrawGfx(apGfx, vNewPos, avSize, cColor(mFlashOscill.val), eGuiMaterial_Additive);
+    }
     return true;
 }
 
@@ -164,7 +181,10 @@ bool cLuxPlayerState_UseItem::ShowOutlineOnEntity(iLuxEntity *apEntity, iPhysics
 
 void cLuxPlayerState_UseItem::UseItem()
 {
-    if(mpCurrentItem==NULL) return;
+    if(mpCurrentItem==NULL)
+    {
+        return;
+    }
 
     iLuxEntity *pEntity = mpEntityInFocus;
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();

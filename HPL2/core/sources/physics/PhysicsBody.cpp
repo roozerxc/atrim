@@ -395,7 +395,10 @@ void iPhysicsBody::UpdateAfterSimulate(float afTimeStep)
 
 void iPhysicsBody::StaticLinearMove(const cVector3f& avVelocity)
 {
-    if(GetMass()!=0) return;
+    if(GetMass()!=0)
+    {
+        return;
+    }
 
     mvTotalStaticLinearVel += avVelocity;
     mbStaticMovement = true;
@@ -405,7 +408,10 @@ void iPhysicsBody::StaticLinearMove(const cVector3f& avVelocity)
 
 void iPhysicsBody::StaticAngularMove(const cVector3f& avVelocity)
 {
-    if(GetMass()!=0) return;
+    if(GetMass()!=0)
+    {
+        return;
+    }
 
     mvTotalStaticAngularVel += avVelocity;
     mbStaticMovement = true;
@@ -439,9 +445,13 @@ void iPhysicsBody::SetScrapeSoundEntity(cSoundEntity *apEntity)
 {
     mpScrapeSoundEntity = apEntity;
     if(apEntity)
+    {
         mlScrapeSoundEntityID = apEntity->GetCreationID();
+    }
     else
+    {
         mlScrapeSoundEntityID = -1;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -451,16 +461,23 @@ void iPhysicsBody::SetRollSoundEntity(cSoundEntity *apEntity)
 {
     mpRollSoundEntity = apEntity;
     if(apEntity)
+    {
         mlRollSoundEntityID = apEntity->GetCreationID();
+    }
     else
+    {
         mlRollSoundEntityID = -1;
+    }
 }
 
 //-----------------------------------------------------------------------
 
 bool iPhysicsBody::OnAABBCollision(iPhysicsBody *apBody)
 {
-    if(mlstBodyCallbacks.empty()) return true;
+    if(mlstBodyCallbacks.empty())
+    {
+        return true;
+    }
 
     bool bReturn = true;
 
@@ -469,7 +486,10 @@ bool iPhysicsBody::OnAABBCollision(iPhysicsBody *apBody)
     {
         iPhysicsBodyCallback *pCallback = *it;
 
-        if(pCallback->OnAABBCollide(this, apBody)==false) bReturn = false;
+        if(pCallback->OnAABBCollide(this, apBody)==false)
+        {
+            bReturn = false;
+        }
     }
 
     return bReturn;
@@ -481,7 +501,10 @@ void iPhysicsBody::OnCollide(iPhysicsBody *apBody, cPhysicsContactData* apContac
 {
     mbHasCollision = true;
 
-    if(mlstBodyCallbacks.empty()) return;
+    if(mlstBodyCallbacks.empty())
+    {
+        return;
+    }
 
     tPhysicsBodyCallbackListIt it = mlstBodyCallbacks.begin();
     for(; it != mlstBodyCallbacks.end(); ++it)
@@ -510,14 +533,20 @@ iCollideShape* iPhysicsBody::GetShape()
 
 void iPhysicsBody::AddConnectedCharacter(iCharacterBody *apCharBody)
 {
-    if(mbDestroying) return;
+    if(mbDestroying)
+    {
+        return;
+    }
 
     mlstConnectedCharBodies.push_back(apCharBody);
 }
 
 void iPhysicsBody::RemoveConnectedCharacter(iCharacterBody *apCharBody)
 {
-    if(mbDestroying) return;
+    if(mbDestroying)
+    {
+        return;
+    }
 
     STLFindAndRemove(mlstConnectedCharBodies,apCharBody);
 }

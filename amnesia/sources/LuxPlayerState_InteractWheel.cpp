@@ -94,9 +94,15 @@ float cLuxPlayerState_InteractWheel::GetSpeedAdd(cCamera *apCam)
     mlstMoveAdds.push_back(mvMouseAdd);
 
     size_t lMaxMoveAdds = 10;
-    if(mlstMoveAdds.size() > lMaxMoveAdds) mlstMoveAdds.pop_front();
+    if(mlstMoveAdds.size() > lMaxMoveAdds)
+    {
+        mlstMoveAdds.pop_front();
+    }
 
-    if(mlstMoveAdds.size() < 4) return 0;
+    if(mlstMoveAdds.size() < 4)
+    {
+        return 0;
+    }
 
     ///////////////////////////////
     //Calculate the tangents
@@ -121,7 +127,10 @@ float cLuxPlayerState_InteractWheel::GetSpeedAdd(cCamera *apCam)
         }
 
         cVector2f vDiff = vNormalPos - vPrevPos;
-        if(vDiff.Length() < 0.00001f) continue;
+        if(vDiff.Length() < 0.00001f)
+        {
+            continue;
+        }
 
         cVector2f vTangent[2] = { cVector2f(vDiff.y, -vDiff.x), cVector2f(-vDiff.y, vDiff.x) };
         for(int i=0; i<2; ++i)
@@ -152,7 +161,10 @@ float cLuxPlayerState_InteractWheel::GetSpeedAdd(cCamera *apCam)
     }
 
     //If too far from center, there is no real rotation made, so skip the movement.
-    if(fMinDist > 0.75f) return 0;
+    if(fMinDist > 0.75f)
+    {
+        return 0;
+    }
 
     ///////////////////////////////
     //Get the rotate direction based on the pin.
@@ -161,7 +173,10 @@ float cLuxPlayerState_InteractWheel::GetSpeedAdd(cCamera *apCam)
     cVector3f vFwd = pCam->GetForward();
     cVector3f vPinDir = mpCurrentJoint->GetPinDir();
 
-    if(cMath::Vector3Dot(vPinDir, vFwd) < 0) fDirMul = -fDirMul;
+    if(cMath::Vector3Dot(vPinDir, vFwd) < 0)
+    {
+        fDirMul = -fDirMul;
+    }
 
 
     ///////////////////////////////

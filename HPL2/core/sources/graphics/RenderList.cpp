@@ -149,16 +149,23 @@ void cRenderList::AddObject(iRenderable *apObject)
     // Normal addition
     else
     {
-        if(pMaterial==NULL) return; //Skip if it has no material...
+        if(pMaterial==NULL)
+        {
+            return;    //Skip if it has no material...
+        }
 
         ////////////////////////
         // Transparent
         if(pMaterialType->IsTranslucent())
         {
             if(pMaterialType->IsDecal())
+            {
                 mvDecalObjects.push_back(apObject);
+            }
             else
+            {
                 mvTransObjects.push_back(apObject);
+            }
         }
         ////////////////////////
         // Solid
@@ -177,10 +184,22 @@ void cRenderList::AddObject(iRenderable *apObject)
 
 void cRenderList::Compile(tRenderListCompileFlag aFlags)
 {
-    if(aFlags & eRenderListCompileFlag_Z) CompileArray(eRenderListType_Z);
-    if(aFlags & eRenderListCompileFlag_Diffuse) CompileArray(eRenderListType_Diffuse);
-    if(aFlags & eRenderListCompileFlag_Decal) CompileArray(eRenderListType_Decal);
-    if(aFlags & eRenderListCompileFlag_Illumination) CompileArray(eRenderListType_Illumination);
+    if(aFlags & eRenderListCompileFlag_Z)
+    {
+        CompileArray(eRenderListType_Z);
+    }
+    if(aFlags & eRenderListCompileFlag_Diffuse)
+    {
+        CompileArray(eRenderListType_Diffuse);
+    }
+    if(aFlags & eRenderListCompileFlag_Decal)
+    {
+        CompileArray(eRenderListType_Decal);
+    }
+    if(aFlags & eRenderListCompileFlag_Illumination)
+    {
+        CompileArray(eRenderListType_Illumination);
+    }
     if(aFlags & eRenderListCompileFlag_Translucent)
     {
         FindNearestLargeSurfacePlane();
@@ -227,15 +246,21 @@ void cRenderList::PrintAllObjects()
 
     Log("Solid Objects:\n");
     for(size_t i=0; i<mvSolidObjects.size(); ++i)
+    {
         Log(" '%s' Mat: '%s' RenderCount: %d\n", mvSolidObjects[i]->GetName().c_str(), mvSolidObjects[i]->GetMaterial()->GetName().c_str(), mvSolidObjects[i]->GetRenderFrameCount());
+    }
 
     Log("Decal Objects:\n");
     for(size_t i=0; i<mvDecalObjects.size(); ++i)
+    {
         Log(" '%s' Mat: '%s' RenderCount: %d\n", mvDecalObjects[i]->GetName().c_str(), mvDecalObjects[i]->GetMaterial()->GetName().c_str(), mvSolidObjects[i]->GetRenderFrameCount());
+    }
 
     Log("Illum Objects:\n");
     for(size_t i=0; i<mvIllumObjects.size(); ++i)
+    {
         Log(" '%s' Mat: '%s' RenderCount: %d\n", mvIllumObjects[i]->GetName().c_str(), mvIllumObjects[i]->GetMaterial()->GetName().c_str(), mvSolidObjects[i]->GetRenderFrameCount());
+    }
 
 
     Log("---------------------------------\n");
@@ -325,7 +350,10 @@ static bool SortFunc_Diffuse(iRenderable* apObjectA, iRenderable *apObjectB)
     {
         iTexture *pTexA = pMatA->GetTextureInUnit(eMaterialRenderMode_Diffuse,i);
         iTexture *pTexB = pMatB->GetTextureInUnit(eMaterialRenderMode_Diffuse,i);
-        if(pTexA != pTexB) return pTexA < pTexB;
+        if(pTexA != pTexB)
+        {
+            return pTexA < pTexB;
+        }
     }
 
     //////////////////////////
@@ -441,10 +469,22 @@ static tSortRenderableFunc vSortFunctions[eRenderListType_LastEnum] = {SortFunc_
 void cRenderList::CompileArray(eRenderListType aType)
 {
     tRenderableVec *pSourceVec = NULL;
-    if(aType == eRenderListType_Translucent)        pSourceVec = &mvTransObjects;
-    else if(aType == eRenderListType_Decal)            pSourceVec = &mvDecalObjects;
-    else if(aType == eRenderListType_Illumination)    pSourceVec = &mvIllumObjects;
-    else                                            pSourceVec = &mvSolidObjects;
+    if(aType == eRenderListType_Translucent)
+    {
+        pSourceVec = &mvTransObjects;
+    }
+    else if(aType == eRenderListType_Decal)
+    {
+        pSourceVec = &mvDecalObjects;
+    }
+    else if(aType == eRenderListType_Illumination)
+    {
+        pSourceVec = &mvIllumObjects;
+    }
+    else
+    {
+        pSourceVec = &mvSolidObjects;
+    }
 
     mvSortedArrays[aType] = *pSourceVec;    //Should be fastest way to copy right, or use memcopy?
 
@@ -469,16 +509,25 @@ void cRenderList::FindNearestLargeSurfacePlane()
         /////////////////////////////////
         // Check so object is of right type
         iRenderable *pObject = mvTransObjects[i];
-        if(pObject->GetRenderType() != eRenderableType_SubMesh) continue;
+        if(pObject->GetRenderType() != eRenderableType_SubMesh)
+        {
+            continue;
+        }
 
         cMaterial *pMat = pObject->GetMaterial();
-        if(pMat->GetLargeTransperantSurface()==false) continue;
+        if(pMat->GetLargeTransperantSurface()==false)
+        {
+            continue;
+        }
 
         /////////////////////////////////
         // Check so sub mesh is one sided
         cSubMeshEntity *pSubEnt = static_cast<cSubMeshEntity*>(pObject);
         cSubMesh *pSubMesh = pSubEnt->GetSubMesh();
-        if(pSubMesh->GetIsOneSided()==false) continue;
+        if(pSubMesh->GetIsOneSided()==false)
+        {
+            continue;
+        }
 
         cVector3f vSurfaceNormal = cMath::Vector3Normalize(cMath::MatrixMul3x3(pSubEnt->GetWorldMatrix(), pSubMesh->GetOneSidedNormal()));
         cVector3f vSurfacePos = cMath::MatrixMul(pSubEnt->GetWorldMatrix(), pSubMesh->GetOneSidedPoint());
@@ -486,7 +535,10 @@ void cRenderList::FindNearestLargeSurfacePlane()
         /////////////////////////////////
         // Make sure it does not face away from frustum.
         float fDot = cMath::Vector3Dot(vSurfacePos - mpFrustum->GetOrigin(), vSurfaceNormal);
-        if(fDot >= 0) continue;
+        if(fDot >= 0)
+        {
+            continue;
+        }
 
         /////////////////////////////////
         // Create surface normal and check if nearest.

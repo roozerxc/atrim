@@ -108,13 +108,19 @@ int cWidgetItem::GetPropertyNum()
 void cWidgetItem::SetSelected(bool abX)
 {
     if(mbSelected==abX)
+    {
         return;
+    }
 
     mbSelected = abX;
     if(mbSelected)
+    {
         mpCont->AddItemToSelection(this);
+    }
     else
+    {
         mpCont->RemoveItemFromSelection(this);
+    }
 }
 
 void cWidgetItem::SetText(const tWString& asText)
@@ -216,21 +222,31 @@ void iWidgetItemContainer::ClearItems()
 cWidgetItem* iWidgetItemContainer::GetItem(int alX) const
 {
     if(alX>=0 && alX<(int)mvItems.size())
+    {
         return mvItems[alX];
+    }
     else
+    {
         return NULL;
+    }
 }
 const tWString& iWidgetItemContainer::GetItemText(int alX) const
 {
     if(alX>=0 && alX<(int)mvItems.size())
+    {
         return mvItems[alX]->GetText();
+    }
     else
+    {
         return gsNullText;
+    }
 }
 void iWidgetItemContainer::SetItemText(int alX, const tWString& asText)
 {
     if(alX>=0 && alX<(int)mvItems.size())
+    {
         mvItems[alX]->SetText(asText);
+    }
 }
 int iWidgetItemContainer::GetItemNum() const
 {
@@ -242,7 +258,10 @@ bool iWidgetItemContainer::HasItem(const tWString &asItem)
     tWidgetItemVecIt it = mvItems.begin();
     for(; it != mvItems.end(); ++it)
     {
-        if((*it)->GetText() == asItem) return true;
+        if((*it)->GetText() == asItem)
+        {
+            return true;
+        }
     }
     return false;
 }
@@ -276,7 +295,9 @@ iFileBrowser::iFileBrowser(const tWString& asStartPath, bool abAddHiddenFiles)
     while(lAvailableDrives)
     {
         if(lAvailableDrives & 1)
+        {
             mvSystemRootFolders.push_back(sDrive);
+        }
         sDrive[13]+=1;
         lAvailableDrives >>= 1;
     }
@@ -321,7 +342,9 @@ iFileBrowser::~iFileBrowser()
 void iFileBrowser::InitBrowser()
 {
     if(NavigateTo(msStartPath)==false)
+    {
         NavigateTo(_W("<System Root>"));
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -336,7 +359,9 @@ int iFileBrowser::AddCategory(const tWString &asCategory, const tWString &asFilt
 
     int lIndex = (int)mvCategories.size()-1;
     if(asFilter!=_W(""))
+    {
         AddFilter(lIndex,asFilter);
+    }
 
     return lIndex;
 }
@@ -364,7 +389,10 @@ void iFileBrowser::AddFilter(const int alCategoryId, const tWString &asFilter)
 void iFileBrowser::GetFilesAndFoldersInCurrentPath(int alCategoryIndex, tWStringList& alstDestination)
 {
     if(alCategoryIndex<0 ||
-            alCategoryIndex>=(int)mvCategories.size()) return;
+            alCategoryIndex>=(int)mvCategories.size())
+    {
+        return;
+    }
 
     alstDestination.clear();
 
@@ -401,7 +429,9 @@ void iFileBrowser::GetFilesAndFoldersInCurrentPath(int alCategoryIndex, tWString
 eFileBrowserFileType iFileBrowser::GetFileTypeByName(const tWString &asFilename)
 {
     if(cPlatform::FolderExists( GetCurrentFullPath() + asFilename))
+    {
         return eFileBrowserFileType_Folder;
+    }
 
     ////////////////////////////////////////////////////////////////////
 
@@ -415,7 +445,9 @@ eFileBrowserFileType iFileBrowser::GetFileTypeByName(const tWString &asFilename)
         for(int j=0; j<(int)vFileExtensions.size(); ++j)
         {
             if(sExt == vFileExtensions[j])
+            {
                 return (eFileBrowserFileType)i;
+            }
         }
     }
 
@@ -468,11 +500,11 @@ bool iFileBrowser::NavigateTo(const tWString& asPath)
             mvCurrentDirFullPath.push_back(asPath);
         }
 #ifndef _WIN32
-	    // On Unix-like environments, the system root is always '/'
-	    else if (mvCurrentDirFullPath.empty() && asPath.length() > 0 && asPath[0] != _W('/') && cPlatform::FolderExists( GetCurrentFullPath() + asPath ))
-	    {
-	        mvCurrentDirFullPath.push_back(asPath);
-	    }
+        // On Unix-like environments, the system root is always '/'
+        else if (mvCurrentDirFullPath.empty() && asPath.length() > 0 && asPath[0] != _W('/') && cPlatform::FolderExists( GetCurrentFullPath() + asPath ))
+        {
+            mvCurrentDirFullPath.push_back(asPath);
+        }
 #endif
         else if(cPlatform::FolderExists(cString::AddSlashAtEndW(cPlatform::GetWorkingDir()) + asPath) )
         {
@@ -483,7 +515,9 @@ bool iFileBrowser::NavigateTo(const tWString& asPath)
             SetPathFromString(asPath);
         }
         else
+        {
             return false;
+        }
     }
     OnNavigate();
 
@@ -533,16 +567,24 @@ void iFileBrowser::SetPathFromString(const tWString &asPath)
             else if(sPathPiece == _W(".."))
             {
                 if(mvCurrentDirFullPath.empty())
+                {
                     pathLeadsOutside = true;
+                }
                 else
+                {
                     mvCurrentDirFullPath.pop_back();
+                }
             }
             else
+            {
                 mvCurrentDirFullPath.push_back(sPathPiece);
+            }
         }
 
         if(pathLeadsOutside)
+        {
             Error("Path '%S' leads outside the system root directory\n", asPath.c_str());
+        }
     }
 }
 
@@ -559,9 +601,13 @@ tWString iFileBrowser::GetHumanReadableSize(unsigned long alSize)
     for(; i<4; ++i)
     {
         if(alSize > 1024)
+        {
             alSize >>= 10;
+        }
         else
+        {
             break;
+        }
     }
 
     return cString::ToStringW(alSize) + _W(" ") + mvSizeStrings[i];
@@ -577,11 +623,13 @@ tWString iFileBrowser::GetCurrentFullPath()
 {
     tWString sPath;
 #ifndef _WIN32
-	sPath = _W("/");
+    sPath = _W("/");
 #endif
 
     for(int i=0; i<(int)mvCurrentDirFullPath.size(); ++i)
+    {
         sPath += cString::AddSlashAtEndW(mvCurrentDirFullPath[i]);
+    }
 
     return sPath;
 }

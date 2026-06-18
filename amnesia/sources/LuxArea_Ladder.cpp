@@ -173,9 +173,15 @@ cVector3f cLuxArea_Ladder::GetStartPosition()
     cVector3f vLadderPos =    mpBody->GetWorldPosition() + GetForward()*vCharSize.x *0.6f;
     vLadderPos.y = vPos.y+0.05f;
 
-    if(vLadderPos.y > mfMaxY - vCharSize.y*0.3f) vLadderPos.y = mfMaxY - vCharSize.y*0.3f;
+    if(vLadderPos.y > mfMaxY - vCharSize.y*0.3f)
+    {
+        vLadderPos.y = mfMaxY - vCharSize.y*0.3f;
+    }
 
-    if(vLadderPos.y - vCharSize.y/2 < mfMinY) vLadderPos.y = mfMinY + vCharSize.y/2+0.1f;
+    if(vLadderPos.y - vCharSize.y/2 < mfMinY)
+    {
+        vLadderPos.y = mfMinY + vCharSize.y/2+0.1f;
+    }
 
     return vLadderPos;
 }

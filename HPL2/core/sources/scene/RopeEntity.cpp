@@ -66,8 +66,14 @@ cRopeEntity::cRopeEntity(const tString& asName, cResources *apResources,cGraphic
             mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Normal,    cVector3f(0,0,1));
         }
 
-        for(int j=0; j<3; j++) mpVtxBuffer->AddIndex(j + i*4);
-        for(int j=2; j<5; j++) mpVtxBuffer->AddIndex( (j==4?0:j)  + i*4);
+        for(int j=0; j<3; j++)
+        {
+            mpVtxBuffer->AddIndex(j + i*4);
+        }
+        for(int j=2; j<5; j++)
+        {
+            mpVtxBuffer->AddIndex( (j==4?0:j)  + i*4);
+        }
     }
 
     mpVtxBuffer->Compile(eVertexCompileFlag_CreateTangents);
@@ -81,8 +87,14 @@ cRopeEntity::cRopeEntity(const tString& asName, cResources *apResources,cGraphic
 
 cRopeEntity::~cRopeEntity()
 {
-    if(mpMaterial) mpMaterialManager->Destroy(mpMaterial);
-    if(mpVtxBuffer) hplDelete(mpVtxBuffer);
+    if(mpMaterial)
+    {
+        mpMaterialManager->Destroy(mpMaterial);
+    }
+    if(mpVtxBuffer)
+    {
+        hplDelete(mpVtxBuffer);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -95,7 +107,10 @@ cRopeEntity::~cRopeEntity()
 
 void cRopeEntity::SetMultiplyAlphaWithColor(bool abX)
 {
-    if(mbMultiplyAlphaWithColor == abX) return;
+    if(mbMultiplyAlphaWithColor == abX)
+    {
+        return;
+    }
 
     mbMultiplyAlphaWithColor = abX;
 }
@@ -104,7 +119,10 @@ void cRopeEntity::SetMultiplyAlphaWithColor(bool abX)
 
 void cRopeEntity::SetColor(const cColor &aColor)
 {
-    if(mColor == aColor) return;
+    if(mColor == aColor)
+    {
+        return;
+    }
 
     mColor = aColor;
 
@@ -219,7 +237,10 @@ bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,float afFrameTim
     cVector3f vPrevPos;
     while(it.HasNext())
     {
-        if(lCount >= mlMaxSegments) break;
+        if(lCount >= mlMaxSegments)
+        {
+            break;
+        }
         ++lCount;
 
         cVerletParticle *pPart = it.Next();
@@ -242,7 +263,9 @@ bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,float afFrameTim
         /////////////////////////
         //Update position
         for(int i=0; i<4; ++i)
+        {
             SetVec4(&pPosArray[i*4], vPrevPos + vRight * gvPosAdd[i].x*mfRadius + vUp * gvPosAdd[i].y*fLength);
+        }
 
         /////////////////////////
         //Update uv
@@ -276,7 +299,9 @@ bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,float afFrameTim
         else
         {
             for(int i=0; i<4; ++i)
+            {
                 SetVec3(&pUvArray[i*3], vTexCoords[i]);
+            }
         }
 
         /////////////////////////
@@ -310,7 +335,10 @@ bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,float afFrameTim
 
 cMatrixf* cRopeEntity::GetModelMatrix(cFrustum *apFrustum)
 {
-    if(apFrustum==NULL)return &GetWorldMatrix();
+    if(apFrustum==NULL)
+    {
+        return &GetWorldMatrix();
+    }
 
     return NULL;
 }
@@ -326,7 +354,10 @@ int cRopeEntity::GetMatrixUpdateCount()
 
 bool cRopeEntity::IsVisible()
 {
-    if(mColor.r <= 0 && mColor.g <= 0 && mColor.b <= 0) return false;
+    if(mColor.r <= 0 && mColor.g <= 0 && mColor.b <= 0)
+    {
+        return false;
+    }
 
     return mbIsVisible;
 }

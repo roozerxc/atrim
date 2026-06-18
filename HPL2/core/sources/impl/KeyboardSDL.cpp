@@ -24,12 +24,12 @@ cKeyboardSDL::cKeyboardSDL(cLowLevelInputSDL *apLowLevelInputSDL) : iKeyboard("S
 
     mvKeyArray.resize(eKey_LastEnum);
 
-	// "World Key" Stuff
-	mvWorldKeyMap.resize(96);
-	for (int k=0; k<=95; ++k)
-	{
-		mvWorldKeyMap[k] = eKey_None;
-	}
+    // "World Key" Stuff
+    mvWorldKeyMap.resize(96);
+    for (int k=0; k<=95; ++k)
+    {
+        mvWorldKeyMap[k] = eKey_None;
+    }
 
     ClearKeyList();
 
@@ -65,7 +65,9 @@ void cKeyboardSDL::Update()
                 AddKeyToList(sdl_mod, key, lUnicode, mlstKeysPressed);
             }
             else
+            {
                 AddKeyToList(sdl_mod, key, lUnicode, mlstKeysReleased);
+            }
         }
     }
 }
@@ -607,9 +609,18 @@ void cKeyboardSDL::AddKeyToList(int alSDLMod, eKey aKey, int alUnicode, std::lis
 {
     int mod =0;
 
-    if(alSDLMod & KMOD_CTRL)        mod |= eKeyModifier_Ctrl;
-    if(alSDLMod & KMOD_SHIFT)        mod |= eKeyModifier_Shift;
-    if(alSDLMod & KMOD_ALT)            mod |= eKeyModifier_Alt;
+    if(alSDLMod & KMOD_CTRL)
+    {
+        mod |= eKeyModifier_Ctrl;
+    }
+    if(alSDLMod & KMOD_SHIFT)
+    {
+        mod |= eKeyModifier_Shift;
+    }
+    if(alSDLMod & KMOD_ALT)
+    {
+        mod |= eKeyModifier_Alt;
+    }
 
     alstKeys.push_back(cKeyPress(aKey,alUnicode,mod));
 

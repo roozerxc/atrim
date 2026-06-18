@@ -68,7 +68,10 @@ bool cMemoryManager::RemovePointer(void *apData,const char* apFileString, int al
     {
         char* apTest = (char*)it->second.mpData;
         size_t testSize = it->second.mlMemory;
-        if(apData >= apTest && apData < apTest + testSize) bFound = true;
+        if(apData >= apTest && apData < apTest + testSize)
+        {
+            bFound = true;
+        }
     }
 
     if(bFound==false)
@@ -95,7 +98,10 @@ bool cMemoryManager::IsValid(void *apData)
     {
         char* apTest = (char*)it->second.mpData;
         size_t testSize = it->second.mlMemory;
-        if(apData >= apTest && apData < apTest + testSize) return true;
+        if(apData >= apTest && apData < apTest + testSize)
+        {
+            return true;
+        }
     }
 
     return false;
@@ -125,12 +131,18 @@ void cMemoryManager::LogResults()
         for(; it != m_mapPointers.end(); ++it)
         {
             cAllocatedPointer &ap = it->second;
-            if((int)ap.msFile.length() > lMax) lMax = (int)ap.msFile.length();
+            if((int)ap.msFile.length() > lMax)
+            {
+                lMax = (int)ap.msFile.length();
+            }
         }
 
         lMax += 5;
 
-        for(int i=0; i<lMax-4; ++i) Log(" ");
+        for(int i=0; i<lMax-4; ++i)
+        {
+            Log(" ");
+        }
 
 
         Log("line\t\t memory usage\t  \n");
@@ -142,7 +154,10 @@ void cMemoryManager::LogResults()
         {
             cAllocatedPointer &ap = it->second;
             Log("| 0x%p\t %s",ap.mpData, ap.msFile.c_str());
-            for(int i=0; i<lMax - (int)ap.msFile.length(); ++i) Log(" ");
+            for(int i=0; i<lMax - (int)ap.msFile.length(); ++i)
+            {
+                Log(" ");
+            }
             Log("%d\t\t %d\t\n", ap.mlLine, ap.mlMemory);
         }
     }

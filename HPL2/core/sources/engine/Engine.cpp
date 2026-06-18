@@ -106,33 +106,51 @@ void cSetupVarContainer::AddBool(const tString& asName, bool abValue)
 const tString& cSetupVarContainer::GetString(const tString& asName)
 {
     std::map<tString, tString>::iterator it = m_mapVars.find(asName);
-    if(it == m_mapVars.end()) return msBlank;
-    else return it->second;
+    if(it == m_mapVars.end())
+    {
+        return msBlank;
+    }
+    else
+    {
+        return it->second;
+    }
 }
 
 float cSetupVarContainer::GetFloat(const tString& asName, float afDefault)
 {
     const tString& sVal = GetString(asName);
     if(sVal == "")
+    {
         return afDefault;
+    }
     else
+    {
         return cString::ToFloat(sVal.c_str(),afDefault);
+    }
 }
 int cSetupVarContainer::GetInt(const tString& asName, int alDefault)
 {
     const tString& sVal = GetString(asName);
     if(sVal == "")
+    {
         return alDefault;
+    }
     else
+    {
         return cString::ToInt(sVal.c_str(),alDefault);
+    }
 }
 bool cSetupVarContainer::GetBool(const tString& asName, bool abDefault)
 {
     const tString& sVal = GetString(asName);
     if(sVal == "")
+    {
         return abDefault;
+    }
     else
+    {
         return cString::ToBool(sVal.c_str(),abDefault);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -426,7 +444,10 @@ void cEngine::Run()
                     glClearUpdateCheck++;
                     if(glClearUpdateCheck % 20 == 0)
                     {
-                        if(mpUpdater->GetCurrentContainerName() == "Default") ClearUpdateLogFile();
+                        if(mpUpdater->GetCurrentContainerName() == "Default")
+                        {
+                            ClearUpdateLogFile();
+                        }
                     }
                 }
 
@@ -463,7 +484,10 @@ void cEngine::Run()
             //Log("Swap done: %d\n", cPlatform::GetApplicationTime());
             mpUpdater->RunMessage(eUpdateableMessage_OnPostBufferSwap);
             bSwappedOnce =true;
-            if(mbRenderOnce) continue;
+            if(mbRenderOnce)
+            {
+                continue;
+            }
         }
 
         //if(GetGameIsDone()) Log("3\n");
@@ -608,7 +632,10 @@ cScriptVar* cEngine::CreateLocalVar(const tString& asName)
         Var.msName = asName;
         m_mapLocalVars.insert(tScriptVarMap::value_type(cString::ToLowerCase(asName),Var));
         pVar= GetLocalVar(asName);
-        if(pVar==NULL)FatalError("Very strange error when creating script var!\n");
+        if(pVar==NULL)
+        {
+            FatalError("Very strange error when creating script var!\n");
+        }
     }
     return pVar;
 }
@@ -618,7 +645,10 @@ cScriptVar* cEngine::CreateLocalVar(const tString& asName)
 cScriptVar* cEngine::GetLocalVar(const tString& asName)
 {
     tScriptVarMapIt it = m_mapLocalVars.find(cString::ToLowerCase(asName));
-    if(it==m_mapLocalVars.end()) return NULL;
+    if(it==m_mapLocalVars.end())
+    {
+        return NULL;
+    }
 
     return &it->second;
 }
@@ -642,7 +672,10 @@ cScriptVar* cEngine::CreateGlobalVar(const tString& asName)
         Var.msName = asName;
         m_mapGlobalVars.insert(tScriptVarMap::value_type(cString::ToLowerCase(asName),Var));
         pVar= GetGlobalVar(asName);
-        if(pVar==NULL)FatalError("Very strange error when creating script var!\n");
+        if(pVar==NULL)
+        {
+            FatalError("Very strange error when creating script var!\n");
+        }
     }
     return pVar;
 }
@@ -652,7 +685,10 @@ cScriptVar* cEngine::CreateGlobalVar(const tString& asName)
 cScriptVar* cEngine::GetGlobalVar(const tString& asName)
 {
     tScriptVarMapIt it = m_mapGlobalVars.find(cString::ToLowerCase(asName));
-    if(it==m_mapGlobalVars.end()) return NULL;
+    if(it==m_mapGlobalVars.end())
+    {
+        return NULL;
+    }
 
     return &it->second;
 }
@@ -679,7 +715,9 @@ eVariableType cEngine::GetEngineTypeFromString(const tString& asType)
     for(int i=0; i<(int)mvEngineTypeStrings.size(); ++i)
     {
         if(asType==mvEngineTypeStrings[i])
+        {
             return (eVariableType)i;
+        }
     }
 
     return eVariableType_LastEnum;
@@ -699,7 +737,10 @@ void cEngine::SetPaused(bool abPaused)
     if(mbPaused != abPaused)
     {
         mbPaused = abPaused;
-        if(mbPaused==false) mpLogicTimer->Reset();
+        if(mbPaused==false)
+        {
+            mpLogicTimer->Reset();
+        }
     }
 
     mpMutex->Unlock();

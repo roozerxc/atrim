@@ -34,7 +34,10 @@ cGlyph::cGlyph(    cGuiGfxElement *apGuiGfx,const cVector2f &avOffset, const cVe
 
 cGlyph::~cGlyph()
 {
-    if(mpGuiGfx) hplDelete(mpGuiGfx);
+    if(mpGuiGfx)
+    {
+        hplDelete(mpGuiGfx);
+    }
 
 }
 
@@ -52,7 +55,10 @@ iFontData::~iFontData()
 {
     for(int i=0; i<(int)mvGlyphs.size(); i++)
     {
-        if(mvGlyphs[i]) hplDelete(mvGlyphs[i]);
+        if(mvGlyphs[i])
+        {
+            hplDelete(mvGlyphs[i]);
+        }
     }
 }
 
@@ -305,7 +311,9 @@ void iFontData::GetWordWrapRows(float afLength,float afFontHeight,cVector2f avSi
             i++;
             first_letter = it->mlPos;
             if (it->mbIncr)
+            {
                 first_letter++;
+            }
         }
         apRowVec->push_back(asString.substr(first_letter).c_str());
 
@@ -350,7 +358,10 @@ float iFontData::GetLengthFmt(const cVector2f& avSize,const wchar_t* fmt,...)
 {
     wchar_t sText[256];
     va_list ap;
-    if (fmt == NULL) return 0;
+    if (fmt == NULL)
+    {
+        return 0;
+    }
     va_start(ap, fmt);
     vswprintf(sText, 255, fmt, ap);
     va_end(ap);

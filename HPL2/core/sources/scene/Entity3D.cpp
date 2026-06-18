@@ -42,9 +42,13 @@ iEntity3D::iEntity3D(tString asName)
 iEntity3D::~iEntity3D()
 {
     if(mpParentNode)
+    {
         mpParentNode->RemoveEntity(this);
+    }
     else if(mpParent)
+    {
         mpParent->RemoveChild(this);
+    }
 
     for(tEntity3DListIt it = mlstChildren.begin(); it != mlstChildren.end(); ++it)
     {
@@ -172,7 +176,10 @@ void iEntity3D::SetTransformUpdated(bool abUpdateCallbacks)
     }
 
     //Update callbacks
-    if(mlstCallbacks.empty() || abUpdateCallbacks==false) return;
+    if(mlstCallbacks.empty() || abUpdateCallbacks==false)
+    {
+        return;
+    }
 
     tEntityCallbackListIt it = mlstCallbacks.begin();
     for(; it!= mlstCallbacks.end(); ++it)
@@ -227,7 +234,10 @@ void iEntity3D::RemoveCallback(iEntityCallback *apCallback)
 
 void iEntity3D::AddChild(iEntity3D *apEntity)
 {
-    if(apEntity==NULL)return;
+    if(apEntity==NULL)
+    {
+        return;
+    }
     if(apEntity->mpParent != NULL)
     {
         apEntity->mpParent->RemoveChild(apEntity);
@@ -261,7 +271,10 @@ bool iEntity3D::IsChild(iEntity3D *apEntity)
     for(tEntity3DListIt it = mlstChildren.begin(); it != mlstChildren.end(); ++it)
     {
         iEntity3D *pChild = *it;
-        if(pChild == apEntity) return true;
+        if(pChild == apEntity)
+        {
+            return true;
+        }
     }
     return false;
 }
@@ -313,7 +326,10 @@ bool iEntity3D::IsNodeChild(cNode3D *apNode)
     for(tNode3DListIt it = mlstNodeChildren.begin(); it != mlstNodeChildren.end(); ++it)
     {
         cNode3D *pNode = *it;
-        if(pNode == apNode) return true;
+        if(pNode == apNode)
+        {
+            return true;
+        }
     }
     return false;
 }

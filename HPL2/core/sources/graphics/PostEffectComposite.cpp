@@ -58,7 +58,10 @@ void cPostEffectComposite::Render(float afFrameTime, cFrustum *apFrustum, iTextu
     for(; it!= m_mapPostEffects.end(); ++it)
     {
         iPostEffect *pPostEffect = it->second;
-        if(pPostEffect->IsActive()==false) continue;
+        if(pPostEffect->IsActive()==false)
+        {
+            continue;
+        }
 
         pLastEffect = pPostEffect;
     }
@@ -71,7 +74,10 @@ void cPostEffectComposite::Render(float afFrameTime, cFrustum *apFrustum, iTextu
     for(; it!= m_mapPostEffects.end(); ++it)
     {
         iPostEffect *pPostEffect =it->second;
-        if(pPostEffect->IsActive()==false) continue;
+        if(pPostEffect->IsActive()==false)
+        {
+            continue;
+        }
 
         bool bLastEffect = pPostEffect == pLastEffect;
 
@@ -89,7 +95,10 @@ void cPostEffectComposite::Render(float afFrameTime, cFrustum *apFrustum, iTextu
 
 void cPostEffectComposite::AddPostEffect(iPostEffect *apPostEffect, int alPrio)
 {
-    if(apPostEffect==NULL) return;
+    if(apPostEffect==NULL)
+    {
+        return;
+    }
 
     m_mapPostEffects.insert(tPostEffectMap::value_type(alPrio, apPostEffect));
     mvPostEffects.push_back(apPostEffect);
@@ -99,7 +108,10 @@ void cPostEffectComposite::AddPostEffect(iPostEffect *apPostEffect, int alPrio)
 
 bool  cPostEffectComposite::HasActiveEffects()
 {
-    if(mvPostEffects.empty()) return false;
+    if(mvPostEffects.empty())
+    {
+        return false;
+    }
 
     bool bActiveEffect = false;
     for(size_t i=0; i<mvPostEffects.size(); ++i)
@@ -145,7 +157,9 @@ void cPostEffectComposite::BeginRendering(float afFrameTime, cFrustum *apFrustum
     mpLowLevelGraphics->SetColor(cColor(1,1,1,1));
 
     for(int i=0; i<kMaxTextureUnits; ++i)
+    {
         mpLowLevelGraphics->SetTexture(i, NULL);
+    }
 
 }
 
@@ -162,11 +176,20 @@ void cPostEffectComposite::EndRendering()
     // Unbind all rendering data
     for(int i=0; i<kMaxTextureUnits; ++i)
     {
-        if(mvCurrentTexture[i]) mpLowLevelGraphics->SetTexture(i, NULL);
+        if(mvCurrentTexture[i])
+        {
+            mpLowLevelGraphics->SetTexture(i, NULL);
+        }
     }
 
-    if(mpCurrentProgram)    mpCurrentProgram->UnBind();
-    if(mpCurrentVtxBuffer)    mpCurrentVtxBuffer->UnBind();
+    if(mpCurrentProgram)
+    {
+        mpCurrentProgram->UnBind();
+    }
+    if(mpCurrentVtxBuffer)
+    {
+        mpCurrentVtxBuffer->UnBind();
+    }
 
     /////////////////////////////////////////////
     // Clean up render functions

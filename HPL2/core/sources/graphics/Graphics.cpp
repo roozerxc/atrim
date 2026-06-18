@@ -217,7 +217,10 @@ void cGraphics::Update(float afTimeStep)
 
 iRenderer* cGraphics::GetRenderer(eRenderer aType)
 {
-    if(aType >= (int)mvRenderers.size()) return NULL;
+    if(aType >= (int)mvRenderers.size())
+    {
+        return NULL;
+    }
 
     return mvRenderers[aType];
 }
@@ -442,7 +445,10 @@ iGpuProgram* cGraphics::CreateGpuProgramFromShaders(const tString& asName, const
         cParserVarContainer *apVarContainer)
 {
     iGpuShader *pVtxShader = mpResources->GetGpuShaderManager()->CreateShader(asVtxShader,eGpuShaderType_Vertex,apVarContainer);
-    if(pVtxShader==NULL) return NULL;
+    if(pVtxShader==NULL)
+    {
+        return NULL;
+    }
     iGpuShader *pFragShader = mpResources->GetGpuShaderManager()->CreateShader(asFragShader,eGpuShaderType_Fragment,apVarContainer);
     if(pFragShader==NULL)
     {
@@ -477,7 +483,10 @@ iMaterialType *cGraphics::GetMaterialType(const tString& asName)
     tString sLowName = cString::ToLowerCase(asName);
 
     tMaterialTypeMapIt it = m_mapMaterialTypes.find(sLowName);
-    if(it == m_mapMaterialTypes.end()) return NULL;
+    if(it == m_mapMaterialTypes.end())
+    {
+        return NULL;
+    }
 
     return it->second;
 }

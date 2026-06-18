@@ -103,10 +103,22 @@ void cGamepadXInput::Update()
         ///////////////////
         // D-pad
         int lHatState = 0;
-        if(lButtons & XINPUT_GAMEPAD_DPAD_UP)        lHatState |= eGamepadHatState_Up;
-        if(lButtons & XINPUT_GAMEPAD_DPAD_DOWN)        lHatState |= eGamepadHatState_Down;
-        if(lButtons & XINPUT_GAMEPAD_DPAD_RIGHT)    lHatState |= eGamepadHatState_Right;
-        if(lButtons & XINPUT_GAMEPAD_DPAD_LEFT)        lHatState |= eGamepadHatState_Left;
+        if(lButtons & XINPUT_GAMEPAD_DPAD_UP)
+        {
+            lHatState |= eGamepadHatState_Up;
+        }
+        if(lButtons & XINPUT_GAMEPAD_DPAD_DOWN)
+        {
+            lHatState |= eGamepadHatState_Down;
+        }
+        if(lButtons & XINPUT_GAMEPAD_DPAD_RIGHT)
+        {
+            lHatState |= eGamepadHatState_Right;
+        }
+        if(lButtons & XINPUT_GAMEPAD_DPAD_LEFT)
+        {
+            lHatState |= eGamepadHatState_Left;
+        }
 
         if(mvHatArray[0] != lHatState)
         {
@@ -186,9 +198,13 @@ cGamepadInputData cGamepadXInput::GetInputUpdate()
     case eGamepadInputType_Button:
     {
         if(input.mfInputValue==0.0f)
+        {
             mlstButtonsReleased.remove(input);
+        }
         else
+        {
             mlstButtonsPressed.remove(input);
+        }
     }
     break;
     case eGamepadInputType_Hat:
@@ -351,7 +367,9 @@ bool cGamepadXInput::IsConnected(int alIndex)
 void cGamepadXInput::UpdateAxis(int alAxis, float afVal)
 {
     if(cMath::Abs(afVal) < mfDeadZoneRadius)
+    {
         afVal = 0.0f;
+    }
 
     if(afVal!=mvAxisArray[alAxis])
     {
@@ -371,9 +389,13 @@ void cGamepadXInput::UpdateTrigger(float afLVal, float afRVal)
     // Todo: Remove hack that uses axis 2 for both left and right trigger
 
     if(afLVal < mfDeadZoneRadius)
+    {
         afLVal = 0.0f;
+    }
     if(afRVal < mfDeadZoneRadius)
+    {
         afRVal = 0.0f;
+    }
 
     if(afRVal != mfRightTrigger)
     {

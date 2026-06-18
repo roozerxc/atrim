@@ -38,7 +38,10 @@ cWidgetWindow::cWidgetWindow(cGuiSet *apSet, cGuiSkin *apSkin, tWidgetWindowButt
 
     SetGlobalKeyPressListener(true);
 
-    for(int i=0; i<1; ++i) mvButtons[i] = NULL;
+    for(int i=0; i<1; ++i)
+    {
+        mvButtons[i] = NULL;
+    }
 
     LoadGraphics();
 }
@@ -51,7 +54,10 @@ cWidgetWindow::~cWidgetWindow()
 
     if(mpSet->IsDestroyingSet()==false)
     {
-        for(int i=0; i<1; ++i) if(mvButtons[i]) mpSet->DestroyWidget(mvButtons[i]);
+        for(int i=0; i<1; ++i) if(mvButtons[i])
+            {
+                mpSet->DestroyWidget(mvButtons[i]);
+            }
     }
 }
 
@@ -93,7 +99,10 @@ void cWidgetWindow::SetDrawLabel(bool abX)
 bool cWidgetWindow::ButtonPressed(iWidget* apWidget, const cGuiMessageData& aData)
 {
     int i;
-    for(i=0; i<1; ++i) if(mvButtons[i] == apWidget) break;
+    for(i=0; i<1; ++i) if(mvButtons[i] == apWidget)
+        {
+            break;
+        }
 
 
     if(i == 0)            // Close Button
@@ -104,7 +113,10 @@ bool cWidgetWindow::ButtonPressed(iWidget* apWidget, const cGuiMessageData& aDat
         {
             SetEnabled(false);
             SetVisible(false);
-            if(mpSet->GetAttentionWidget() == this) mpSet->SetAttentionWidget(NULL);
+            if(mpSet->GetAttentionWidget() == this)
+            {
+                mpSet->SetAttentionWidget(NULL);
+            }
         }
     }
 
@@ -217,7 +229,10 @@ void cWidgetWindow::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
 
 bool cWidgetWindow::OnMouseMove(const cGuiMessageData& aData)
 {
-    if(mbMoving) SetGlobalPosition(mvRelMousePos + cVector3f(aData.mvPos.x, aData.mvPos.y,0));
+    if(mbMoving)
+    {
+        SetGlobalPosition(mvRelMousePos + cVector3f(aData.mvPos.x, aData.mvPos.y,0));
+    }
     return true;
 }
 
@@ -225,7 +240,10 @@ bool cWidgetWindow::OnMouseMove(const cGuiMessageData& aData)
 
 bool cWidgetWindow::OnMouseDown(const cGuiMessageData& aData)
 {
-    if(mbStatic) return false;
+    if(mbStatic)
+    {
+        return false;
+    }
 
     ////////////////////////////////
     // Calculate label rectangle
@@ -299,10 +317,14 @@ bool cWidgetWindow::OnMouseLeave(const cGuiMessageData& aData)
 bool cWidgetWindow::OnKeyPress(const cGuiMessageData& aData)
 {
     if(mbFocused==false || mbCloseOnEscapeKey==false)
+    {
         return false;
+    }
 
     if(aData.mKeyPress.mKey==eKey_Escape && aData.mKeyPress.mlModifier==eKeyModifier_None)
+    {
         return ProcessMessage(eGuiMessage_WindowClose, aData);
+    }
 
     return false;
 }
@@ -320,7 +342,9 @@ bool cWidgetWindow::OnGotFocus(const cGuiMessageData& aData)
 bool cWidgetWindow::OnLostFocus(const cGuiMessageData& aData)
 {
     if(mbMoving)
+    {
         return true;
+    }
 
     OnChildLostFocus(NULL, aData);
 
@@ -342,7 +366,9 @@ void cWidgetWindow::OnChildLostFocus(iWidget* apChild, const cGuiMessageData& aD
 {
     iWidget* pWidget = mpSet->GetFocusedWidget();
     if(pWidget==NULL || IsConnectedTo(pWidget,false)==false && pWidget->IsConnectedTo(this, false)==false)
+    {
         mbFocused = false;
+    }
 }
 
 //-----------------------------------------------------------------------

@@ -94,7 +94,9 @@ float cPhysicsJointHingeNewton::GetForceSize()
 
     //Only get for the linear rows!
     for(int i=0; i<3; ++i)
+    {
         fSize += fabs(NewtonUserJointGetRowForce(mpNewtonJoint, i));
+    }
     return fSize;
 }
 
@@ -178,7 +180,10 @@ void cPhysicsJointHingeNewton::SubmitConstraints (dFloat afTimestep, int alThrea
         CheckLimitAutoSleep(this, mfMinAngle,mfMaxAngle,fAngle);
 
         bool bSkipLimitCheck = false;
-        if(std::abs(mfPreviousAngle - fAngle) > cMath::ToRad(300)) bSkipLimitCheck = true;
+        if(std::abs(mfPreviousAngle - fAngle) > cMath::ToRad(300))
+        {
+            bSkipLimitCheck = true;
+        }
 
         ///////////////
         //Min

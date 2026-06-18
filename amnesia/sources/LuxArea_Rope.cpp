@@ -15,7 +15,10 @@
 void cLuxAreaRopeLoader::Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform,cWorld *apWorld)
 {
     cLuxMap *pMap = gpBase->mpCurrentMapLoading;
-    if(pMap==NULL) return;
+    if(pMap==NULL)
+    {
+        return;
+    }
 
     cLuxRope *pRope = hplNew(cLuxRope, (asName, alID,pMap));
 
@@ -42,7 +45,9 @@ void cLuxAreaRopeLoader::Load(const tString &asName, int alID, bool abActive, co
     {
         pDoc = gpBase->mpEngine->GetResources()->LoadXmlDocument(sFile);
         if(pDoc==NULL)
+        {
             Error("Could not load '%s' for rope '%s'. Using set variables instead!\n", sFile.c_str(), asName.c_str());
+        }
     }
 
     // From XML
@@ -131,10 +136,16 @@ void cLuxRope::AfterWorldLoad()
         if(mpRopeGfx==NULL && mpRope==NULL)
         {
             mpRope = mpMap->GetPhysicsWorld()->GetRopeFromUniqueID(mlID);
-            if(mpRope==NULL) Error("Cannot find rope physics entity with ID %d for lux rope '%s'\n", mlID, msName.c_str());
+            if(mpRope==NULL)
+            {
+                Error("Cannot find rope physics entity with ID %d for lux rope '%s'\n", mlID, msName.c_str());
+            }
 
             mpRopeGfx = mpMap->GetWorld()->GetRopeEntityFromUniqueID(mlID);
-            if(mpRopeGfx==NULL) Error("Cannot find rope gfx entity with ID %d for lux rope '%s'\n", mlID, msName.c_str());
+            if(mpRopeGfx==NULL)
+            {
+                Error("Cannot find rope gfx entity with ID %d for lux rope '%s'\n", mlID, msName.c_str());
+            }
         }
 
         return;
@@ -156,10 +167,16 @@ void cLuxRope::AfterWorldLoad()
     /////////////////////////
     // Get Bodies
     iPhysicsBody *pStartBody = NULL;
-    if(msStartBody != "") pStartBody = GetBody(msStartBody);
+    if(msStartBody != "")
+    {
+        pStartBody = GetBody(msStartBody);
+    }
 
     iPhysicsBody *pEndBody = NULL;
-    if(msEndBody != "") pEndBody = GetBody(msEndBody);
+    if(msEndBody != "")
+    {
+        pEndBody = GetBody(msEndBody);
+    }
 
     /////////////////////////
     // Create Physics Rope
@@ -185,7 +202,9 @@ void cLuxRope::AfterWorldLoad()
     {
         mpRope->SetAttachedStartBody(pStartBody);
         if(pStartBody->GetMass() != 0)
+        {
             mpRope->GetStartParticle()->SetInvMass(1.0f);
+        }
     }
 
     //End body

@@ -84,7 +84,10 @@ void cLuxHandObject_Melee::LoadImplementedVars(cXmlElement *apVarsElem)
 
 void cLuxHandObject_Melee::ImplementedCreateEntity(cLuxMap *apMap)
 {
-    if(mpCollideShape) return;
+    if(mpCollideShape)
+    {
+        return;
+    }
 
     cMatrixf mtxOffset = cMath::MatrixTranslate(mvCollideShapeOffset);
     mpCollideShape = apMap->GetPhysicsWorld()->CreateBoxShape(mvCollideShapeSize, &mtxOffset);
@@ -94,7 +97,10 @@ void cLuxHandObject_Melee::ImplementedCreateEntity(cLuxMap *apMap)
 
 void cLuxHandObject_Melee::ImplementedDestroyEntity(cLuxMap *apMap)
 {
-    if(mpCollideShape==NULL) return;
+    if(mpCollideShape==NULL)
+    {
+        return;
+    }
 
     apMap->GetPhysicsWorld()->DestroyShape(mpCollideShape);
     mpCollideShape = NULL;
@@ -143,7 +149,10 @@ bool cLuxHandObject_Melee::DoAction(eLuxPlayerAction aAction, bool abPressed)
             if(abPressed ==false && mpHands->mlHandObjectState != 2)
             {
                 mpHands->mbHandObjectAttackDown = false;
-                if(mpHands->mlHandObjectState !=0) Swing();
+                if(mpHands->mlHandObjectState !=0)
+                {
+                    Swing();
+                }
             }
         }
     }
@@ -197,7 +206,10 @@ bool cLuxHandObject_Melee::AnimationIsOver()
 
 void cLuxHandObject_Melee::UpdateCharge(float afTimeStep)
 {
-    if(mpHands->mbHandObjectAttackDown==false) return;
+    if(mpHands->mbHandObjectAttackDown==false)
+    {
+        return;
+    }
 
     if(mpHands->mfHandObjectChargeCount < 1)
     {

@@ -77,7 +77,10 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, float afX)
                 pUpdateable->RunMessage(aMessage, afX);
 
                 //In case the container is change, do not do any more updating.
-                if(mpCurrentUpdates != pCurrentUpdateContainer) break;;
+                if(mpCurrentUpdates != pCurrentUpdateContainer)
+                {
+                    break;
+                };
             }
         }
     }
@@ -108,7 +111,10 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, float afX)
                 STOP_TIMING(game)
 
                 //In case the container is change, do not do any more updating.
-                if(mpCurrentUpdates != pCurrentUpdateContainer) break;;
+                if(mpCurrentUpdates != pCurrentUpdateContainer)
+                {
+                    break;
+                };
             }
         }
     }
@@ -120,9 +126,15 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, float afX)
 bool cUpdater::SetContainer(tString asContainer)
 {
     tUpdateContainerMapIt it = m_mapUpdateContainer.find(asContainer);
-    if(it == m_mapUpdateContainer.end()) return false;
+    if(it == m_mapUpdateContainer.end())
+    {
+        return false;
+    }
 
-    if(&it->second == mpCurrentUpdates) return true;
+    if(&it->second == mpCurrentUpdates)
+    {
+        return true;
+    }
 
     tString sOldContainer = msCurrentUpdates;
 
@@ -167,7 +179,10 @@ bool cUpdater::SetContainer(tString asContainer)
 
 tString cUpdater::GetCurrentContainerName()
 {
-    if(mpCurrentUpdates==NULL) return "";
+    if(mpCurrentUpdates==NULL)
+    {
+        return "";
+    }
 
     return msCurrentUpdates;
 
@@ -198,7 +213,10 @@ bool cUpdater::AddUpdate(tString asContainer, iUpdateable* apUpdate)
 
     //Search the map for the container name
     tUpdateContainerMapIt it = m_mapUpdateContainer.find(asContainer);
-    if(it == m_mapUpdateContainer.end()) return false;
+    if(it == m_mapUpdateContainer.end())
+    {
+        return false;
+    }
 
     //Add the updatable
     it->second.push_back(apUpdate);

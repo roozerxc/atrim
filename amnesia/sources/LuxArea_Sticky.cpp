@@ -143,7 +143,10 @@ void cLuxArea_Sticky::OnUpdate(float afTimeStep)
 
 void cLuxArea_Sticky::AttachBody(iPhysicsBody *apBody)
 {
-    if(mpAttachedBody) return;
+    if(mpAttachedBody)
+    {
+        return;
+    }
 
     //Log("Attaching body %s\n", pAttachBody->GetName().c_str());
 
@@ -185,7 +188,10 @@ void cLuxArea_Sticky::AttachBody(iPhysicsBody *apBody)
 
 void cLuxArea_Sticky::DetachBody()
 {
-    if(mpAttachedBody==NULL) return;
+    if(mpAttachedBody==NULL)
+    {
+        return;
+    }
 
     cWorld *pWorld = mpMap->GetWorld();
 
@@ -199,14 +205,20 @@ void cLuxArea_Sticky::DetachBody()
     if(msDetachSound!="")
     {
         cSoundEntity *pSound = pWorld->CreateSoundEntity("DetachSound",msDetachSound,true);
-        if(pSound) pSound->SetPosition(mpBody->GetWorldPosition());
+        if(pSound)
+        {
+            pSound->SetPosition(mpBody->GetWorldPosition());
+        }
     }
 
     //Particle System
     if(msDetachPS!="")
     {
         cParticleSystem *pPS = pWorld->CreateParticleSystem("DetachPS",msDetachPS,1);
-        if(pPS) pPS->SetMatrix(mpBody->GetWorldMatrix());
+        if(pPS)
+        {
+            pPS->SetMatrix(mpBody->GetWorldMatrix());
+        }
     }
 
     mpAttachedBody->SetGravity(mbAttachedBodyGravity);
@@ -214,7 +226,10 @@ void cLuxArea_Sticky::DetachBody()
     mpAttachedBody->Enable();
 
     iLuxEntity *pEntity = (iLuxEntity*)mpAttachedBody->GetUserData();
-    if(pEntity) pEntity->SetFullGameSave(mbAttachedEntityFullGameSaved);
+    if(pEntity)
+    {
+        pEntity->SetFullGameSave(mbAttachedEntityFullGameSaved);
+    }
 
     mpAttachedBody = NULL;
 }
@@ -231,14 +246,23 @@ void cLuxArea_Sticky::DetachBody()
 
 void cLuxArea_Sticky::UpdateAttachBody(float afTimeStep)
 {
-    if(mpAttachedBody==NULL || mfSetMtxTime >= 1) return;
+    if(mpAttachedBody==NULL || mfSetMtxTime >= 1)
+    {
+        return;
+    }
 
     //////////////////////////////////
     // Move and rotate
     if(mbMoveBody && mbRotateBody)
     {
-        if(mfPoseTime==0)    mfSetMtxTime = 1.0f;
-        else                mfSetMtxTime += afTimeStep / mfPoseTime;
+        if(mfPoseTime==0)
+        {
+            mfSetMtxTime = 1.0f;
+        }
+        else
+        {
+            mfSetMtxTime += afTimeStep / mfPoseTime;
+        }
 
         cMatrixf mtxGoal = mpBody->GetWorldMatrix();
         mtxGoal.SetTranslation(mpBody->GetWorldPosition() - mpAttachedBody->GetMassCentre());
@@ -251,8 +275,14 @@ void cLuxArea_Sticky::UpdateAttachBody(float afTimeStep)
     // Move only
     else if(mbMoveBody && !mbRotateBody)
     {
-        if(mfPoseTime==0)    mfSetMtxTime = 1.0f;
-        else                mfSetMtxTime += afTimeStep / mfPoseTime;
+        if(mfPoseTime==0)
+        {
+            mfSetMtxTime = 1.0f;
+        }
+        else
+        {
+            mfSetMtxTime += afTimeStep / mfPoseTime;
+        }
 
         cVector3f vGoal = mpBody->GetWorldPosition() - mpAttachedBody->GetMassCentre();
 
@@ -265,8 +295,14 @@ void cLuxArea_Sticky::UpdateAttachBody(float afTimeStep)
     // Rotate only
     else if(!mbMoveBody && mbRotateBody)
     {
-        if(mfPoseTime==0)    mfSetMtxTime = 1.0f;
-        else                mfSetMtxTime += afTimeStep / mfPoseTime;
+        if(mfPoseTime==0)
+        {
+            mfSetMtxTime = 1.0f;
+        }
+        else
+        {
+            mfSetMtxTime += afTimeStep / mfPoseTime;
+        }
 
         cMatrixf mtxGoal = mpBody->GetWorldMatrix();
 
@@ -293,14 +329,20 @@ void cLuxArea_Sticky::UpdateAttachBody(float afTimeStep)
         if(msAttachSound!="")
         {
             cSoundEntity *pSound = pWorld->CreateSoundEntity("AttachSound",msAttachSound,true);
-            if(pSound) pSound->SetPosition(mpBody->GetWorldPosition());
+            if(pSound)
+            {
+                pSound->SetPosition(mpBody->GetWorldPosition());
+            }
         }
 
         //Particle System
         if(msAttachPS!="")
         {
             cParticleSystem *pPS = pWorld->CreateParticleSystem("AttachPS",msAttachPS,1);
-            if(pPS) pPS->SetMatrix(mpBody->GetWorldMatrix());
+            if(pPS)
+            {
+                pPS->SetMatrix(mpBody->GetWorldMatrix());
+            }
         }
     }
 }
@@ -309,7 +351,10 @@ void cLuxArea_Sticky::UpdateAttachBody(float afTimeStep)
 
 void cLuxArea_Sticky::UpdateCollision(float afTimeStep)
 {
-    if(mpAttachedBody) return;
+    if(mpAttachedBody)
+    {
+        return;
+    }
 
     ///////////////////////////
     // Get data
@@ -328,8 +373,14 @@ void cLuxArea_Sticky::UpdateCollision(float afTimeStep)
     {
         iPhysicsBody *pBody = vBodies[i];
 
-        if(pBody->GetCollide()==false || pBody->IsActive()==false) continue;
-        if(pBody->GetMass()==0 && pBody->IsCharacter()==false) continue;
+        if(pBody->GetCollide()==false || pBody->IsActive()==false)
+        {
+            continue;
+        }
+        if(pBody->GetMass()==0 && pBody->IsCharacter()==false)
+        {
+            continue;
+        }
 
         bool bInsideWater = true;
 
@@ -352,21 +403,29 @@ void cLuxArea_Sticky::UpdateCollision(float afTimeStep)
         {
             //If this was the last body that was attached, it has now moved out and does not need to be rejected.
             if(pBody == mpLastAttachedBody)
+            {
                 mpLastAttachedBody = NULL;
+            }
 
             continue;
         }
 
         //////////////////////////
         //If the previously attached body is still inside, then skip it.
-        if(pBody == mpLastAttachedBody) continue;
+        if(pBody == mpLastAttachedBody)
+        {
+            continue;
+        }
 
         ///////////////////////////
         // See if body is right for attaching
         mbAllowAttachment = false;
         if(msAttachableBodyName!="")
         {
-            if(cString::GetFirstStringPos(pBody->GetName(), msAttachableBodyName)<0) continue;
+            if(cString::GetFirstStringPos(pBody->GetName(), msAttachableBodyName)<0)
+            {
+                continue;
+            }
             mbAllowAttachment = true;
         }
 
@@ -384,7 +443,10 @@ void cLuxArea_Sticky::UpdateCollision(float afTimeStep)
         {
             mpMap->RunScript(GetCallbackFunc(msAttachFunction,pBody));
 
-            if(mbAllowAttachment==false) continue;
+            if(mbAllowAttachment==false)
+            {
+                continue;
+            }
         }
 
         ///////////////////////////

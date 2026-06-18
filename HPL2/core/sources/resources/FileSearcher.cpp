@@ -117,7 +117,10 @@ const tWString& cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
     tFilePathMapIt it = m_mapFiles.find(sLowName);
     if(it == m_mapFiles.end())
     {
-        if(apEqualCount) *apEqualCount = 0;
+        if(apEqualCount)
+        {
+            *apEqualCount = 0;
+        }
         return msNull;
     }
 
@@ -133,7 +136,10 @@ const tWString& cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
     /////////////////////////////
     //Compare paths
     tWString sWantedPath = cString::To16Char(cString::GetFilePath(asFileNameAndPath));
-    if(sWantedPath == _W("")) return it->second.msPath;
+    if(sWantedPath == _W(""))
+    {
+        return it->second.msPath;
+    }
 
     tWStringVec vWantedDirs;
     tWString sSepp =_W("/\\");
@@ -186,7 +192,10 @@ const tWString& cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
         }
     }
 
-    if(apEqualCount) *apEqualCount = lBestEqualCount;
+    if(apEqualCount)
+    {
+        *apEqualCount = lBestEqualCount;
+    }
 
     //Return best fit
     return bestEqualIt->second.msPath;

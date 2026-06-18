@@ -98,7 +98,9 @@ cLuxProp_SwingDoor::cLuxProp_SwingDoor(const tString &asName, int alID, cLuxMap 
     mbBroken = false;
 
     for(int i=0; i<3; ++i)
+    {
         mpDamageMeshEntity[i] =NULL;
+    }
 
     mfInteractSoundCount =0;
 }
@@ -110,7 +112,9 @@ cLuxProp_SwingDoor::~cLuxProp_SwingDoor()
     for(int i=1; i<3; ++i)
     {
         if(mpDamageMeshEntity[i])
+        {
             mpWorld->DestroyMeshEntity(mpDamageMeshEntity[i]);
+        }
     }
 }
 
@@ -153,7 +157,10 @@ bool cLuxProp_SwingDoor::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
     ///////////////////////////////
     //Get special swing door data
     cLuxSwingDoorJointData *pData = GetJointDataFromBody(apBody);
-    if(pData==NULL) Error("Could not find swing door data for body '%s'\n", apBody->GetName().c_str());
+    if(pData==NULL)
+    {
+        Error("Could not find swing door data for body '%s'\n", apBody->GetName().c_str());
+    }
 
     mpMap->DetachBodyFromStickyArea(apBody);
 
@@ -171,7 +178,9 @@ bool cLuxProp_SwingDoor::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
     mbDisableAutoClose = false;
 
     if(mbLocked == false  && mbShowHints)
+    {
         gpBase->mpHintHandler->Add("EntitySwingDoor", kTranslate("Hints", "EntitySwingDoor"), 0);
+    }
 
     cLuxPlayerStateVars::SetupInteraction(apBody, avPos);
     gpBase->mpPlayer->ChangeState(eLuxPlayerState_InteractSwingDoor);
@@ -189,7 +198,10 @@ void cLuxProp_SwingDoor::OnSetupAfterLoad(cWorld *apWorld)
     for(size_t i=0; i< mvJoints.size(); ++i)
     {
         iPhysicsJoint *pJoint = mvJoints[i];
-        if(pJoint->GetType() != ePhysicsJointType_Hinge) continue;
+        if(pJoint->GetType() != ePhysicsJointType_Hinge)
+        {
+            continue;
+        }
 
         iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge*>(pJoint);
         mvJointData.push_back(cLuxSwingDoorJointData());
@@ -231,7 +243,10 @@ void cLuxProp_SwingDoor::OnSetupAfterLoad(cWorld *apWorld)
     mpDamageMeshEntity[0] = mpMeshEntity;
     for(int i=0; i<2; ++i)
     {
-        if(msDamageMesh[i]=="") continue;
+        if(msDamageMesh[i]=="")
+        {
+            continue;
+        }
         //Log("DamageMesh: %d\n", i);
 
         //////////////////////////
@@ -303,7 +318,10 @@ void cLuxProp_SwingDoor::OnResetProperties()
     for(size_t i=0; i<mvBodies.size(); ++i)
     {
         iPhysicsBody *pBody = mvBodies[i];
-        if(pBody->GetMass()==0) continue;
+        if(pBody->GetMass()==0)
+        {
+            continue;
+        }
 
         pBody->SetActive(true);
 
@@ -331,7 +349,9 @@ void cLuxProp_SwingDoor::OnResetProperties()
 void cLuxProp_SwingDoor::UpdatePropSpecific(float afTimeStep)
 {
     if(mfInteractSoundCount >0)
+    {
         mfInteractSoundCount-=afTimeStep;
+    }
 
     ////////////////////////////////
     // If the door is close to 0 angle, then close it
@@ -358,7 +378,10 @@ void cLuxProp_SwingDoor::BeforePropDestruction()
 
 eLuxFocusCrosshair cLuxProp_SwingDoor::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    if(CanInteract(apBody)) return eLuxFocusCrosshair_Grab;
+    if(CanInteract(apBody))
+    {
+        return eLuxFocusCrosshair_Grab;
+    }
 
     return eLuxFocusCrosshair_Default;
 }
@@ -383,8 +406,14 @@ void cLuxProp_SwingDoor::ImplementedOnSetActive(bool abX)
 
 void cLuxProp_SwingDoor::OnHealthChange()
 {
-    if(mbBreakable==false || mbDisableBreakable) return;
-    if(mbBroken) return;
+    if(mbBreakable==false || mbDisableBreakable)
+    {
+        return;
+    }
+    if(mbBroken)
+    {
+        return;
+    }
 
     tString msSound = "";
     tString msPS = "";
@@ -416,7 +445,10 @@ void cLuxProp_SwingDoor::OnHealthChange()
         for(size_t i=0; i<mvBodies.size(); ++i)
         {
             iPhysicsBody *pBody = mvBodies[i];
-            if(pBody->GetMass()==0) continue;
+            if(pBody->GetMass()==0)
+            {
+                continue;
+            }
 
             pMainBody = pBody;
             lMainBodyIdx = (int)i;
@@ -509,7 +541,10 @@ void cLuxProp_SwingDoor::OnHealthChange()
         if(msSound != "")
         {
             cSoundEntity *pSound = mpWorld->CreateSoundEntity(msName + "_BreakSound", msSound, true);
-            if(pSound) pSound->SetPosition(pMainBody->GetLocalPosition());
+            if(pSound)
+            {
+                pSound->SetPosition(pMainBody->GetLocalPosition());
+            }
         }
 
         ///////////////////////
@@ -517,7 +552,10 @@ void cLuxProp_SwingDoor::OnHealthChange()
         if(msPS != "")
         {
             cParticleSystem *pPS = mpWorld->CreateParticleSystem(msName + "_BreakPS", msPS,1);
-            if(pPS) pPS->SetMatrix(pMainBody->GetLocalMatrix());
+            if(pPS)
+            {
+                pPS->SetMatrix(pMainBody->GetLocalMatrix());
+            }
         }
     }
 }
@@ -533,7 +571,10 @@ void cLuxProp_SwingDoor::OnDamage(float afAmount, int alStrength)
 
 void cLuxProp_SwingDoor::SetClosed(bool abClosed, bool abEffects)
 {
-    if(mbClosed == abClosed) return;
+    if(mbClosed == abClosed)
+    {
+        return;
+    }
 
     mbClosed = abClosed;
 
@@ -565,8 +606,14 @@ void cLuxProp_SwingDoor::SetClosed(bool abClosed, bool abEffects)
 
     if(abEffects)
     {
-        if(mbClosed)PlaySound("CloseOn",msCloseOnSound,true, true);
-        else        PlaySound("CloseOff",msCloseOffSound,true, true);
+        if(mbClosed)
+        {
+            PlaySound("CloseOn",msCloseOnSound,true, true);
+        }
+        else
+        {
+            PlaySound("CloseOff",msCloseOffSound,true, true);
+        }
     }
 }
 
@@ -587,12 +634,18 @@ int cLuxProp_SwingDoor::GetDoorState()
 
         if(fAbsAngle < fClosedAngle)
         {
-            if(lState == 1) return 0;
+            if(lState == 1)
+            {
+                return 0;
+            }
             lState = -1;
         }
         else if(fAbsAngle >  fOpenAngle)
         {
-            if(lState == -1) return 0;
+            if(lState == -1)
+            {
+                return 0;
+            }
             lState = 1;
         }
         else
@@ -609,16 +662,28 @@ int cLuxProp_SwingDoor::GetDoorState()
 
 void cLuxProp_SwingDoor::SetLocked(bool abLocked, bool abEffects)
 {
-    if(mbLocked == abLocked) return;
+    if(mbLocked == abLocked)
+    {
+        return;
+    }
 
     mbLocked = abLocked;
 
-    if(mbLocked) SetClosed(true, false);
+    if(mbLocked)
+    {
+        SetClosed(true, false);
+    }
 
     if(abEffects)
     {
-        if(mbLocked)PlaySound("LockedOn",msLockOnSound,true, true);
-        else        PlaySound("LockedOff",msLockOffSound,true, true);
+        if(mbLocked)
+        {
+            PlaySound("LockedOn",msLockOnSound,true, true);
+        }
+        else
+        {
+            PlaySound("LockedOff",msLockOffSound,true, true);
+        }
     }
 }
 
@@ -626,7 +691,10 @@ void cLuxProp_SwingDoor::SetLocked(bool abLocked, bool abEffects)
 
 void cLuxProp_SwingDoor::SetCurrentDamageLevel(int alX)
 {
-    if(mlCurrentMeshEntity == alX) return;
+    if(mlCurrentMeshEntity == alX)
+    {
+        return;
+    }
 
     mlCurrentMeshEntity = alX;
 
@@ -646,7 +714,10 @@ void cLuxProp_SwingDoor::SetCurrentDamageLevel(int alX)
 
 cMeshEntity* cLuxProp_SwingDoor::GetEffectMeshEntity()
 {
-    if(mlCurrentMeshEntity <0) return NULL;
+    if(mlCurrentMeshEntity <0)
+    {
+        return NULL;
+    }
 
     return mpDamageMeshEntity[mlCurrentMeshEntity];
 }
@@ -655,8 +726,14 @@ cMeshEntity* cLuxProp_SwingDoor::GetEffectMeshEntity()
 
 void cLuxProp_SwingDoor::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 {
-    if(alState > 0)        SetLocked(true, true);
-    else                SetLocked(false, true);
+    if(alState > 0)
+    {
+        SetLocked(true, true);
+    }
+    else
+    {
+        SetLocked(false, true);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -717,7 +794,10 @@ cLuxSwingDoorJointData* cLuxProp_SwingDoor::GetJointDataFromBody(iPhysicsBody *a
 {
     for(size_t i=0; i<mvJointData.size(); ++i)
     {
-        if(mvJointData[i].mpChildBody == apBody) return &mvJointData[i];
+        if(mvJointData[i].mpChildBody == apBody)
+        {
+            return &mvJointData[i];
+        }
     }
     return NULL;
 }
@@ -728,7 +808,10 @@ cLuxSwingDoorJointData* cLuxProp_SwingDoor::GetJointDataFromJoint(iPhysicsJoint 
 {
     for(size_t i=0; i<mvJointData.size(); ++i)
     {
-        if(mvJointData[i].mpHingeJoint == apJoint) return &mvJointData[i];
+        if(mvJointData[i].mpHingeJoint == apJoint)
+        {
+            return &mvJointData[i];
+        }
     }
     return NULL;
 }
@@ -783,9 +866,13 @@ void cLuxProp_SwingDoor::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     kCopyToVar(pData, mbDisableAutoClose);
 
     if(mpDamageMeshEntity[1])
+    {
         pData->mDamageMesh1.FromMeshEntity(mpDamageMeshEntity[1]);
+    }
     if(mpDamageMeshEntity[2])
+    {
         pData->mDamageMesh2.FromMeshEntity(mpDamageMeshEntity[2]);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -808,9 +895,13 @@ void cLuxProp_SwingDoor::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     kCopyFromVar(pData, mbDisableAutoClose);
 
     if(mpDamageMeshEntity[1])
+    {
         pData->mDamageMesh1.ToMeshEntity(mpDamageMeshEntity[1]);
+    }
     if(mpDamageMeshEntity[2])
+    {
         pData->mDamageMesh2.ToMeshEntity(mpDamageMeshEntity[2]);
+    }
 }
 
 //-----------------------------------------------------------------------

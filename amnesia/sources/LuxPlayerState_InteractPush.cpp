@@ -158,7 +158,10 @@ void cLuxPlayerState_InteractPush::Update(float afTimeStep)
     mvPushDir =0;
     for(int i=0; i<2; ++i)
     {
-        if(mbMoving[i]) mvPushDir += vDirAdd[i] * mfTotalMoveMul[i];
+        if(mbMoving[i])
+        {
+            mvPushDir += vDirAdd[i] * mfTotalMoveMul[i];
+        }
     }
 
     ///////////////////////////////////////
@@ -174,9 +177,13 @@ void cLuxPlayerState_InteractPush::Update(float afTimeStep)
         vForce = cMath::Vector3MaxLength(vForce, mfMaxForce);
 
         if(mpPushData->mbPushAtPoint)
+        {
             mpCurrentBody->AddForceAtPosition(vForce,vAttachPos);
+        }
         else
+        {
             mpCurrentBody->AddForce(vForce);
+        }
 
         return;
     }
@@ -198,9 +205,13 @@ void cLuxPlayerState_InteractPush::Update(float afTimeStep)
     vCorrectForce = cMath::Vector3MaxLength(vCorrectForce, mfMaxForce);
 
     if(mpPushData->mbPushAtPoint)
+    {
         mpCurrentBody->AddForceAtPosition(vCorrectForce,vAttachPos);
+    }
     else
+    {
         mpCurrentBody->AddForce(vCorrectForce);
+    }
 
 
     ///////////////////////////////////////
@@ -285,7 +296,9 @@ void cLuxPlayerState_InteractPush::Update(float afTimeStep)
     for(int i=0; i<2; ++i)
     {
         if(mbMoving[i])
+        {
             pCharBody->Move((eCharDir)i, mfTotalMoveMul[i]);
+        }
     }
 
 }

@@ -85,9 +85,13 @@ cEntFile* cEntFileManager::CreateEntFile(const tString& asName)
     }
 
     if(pEntFile)
+    {
         pEntFile->IncUserCount();
+    }
     else
+    {
         Error("Couldn't create ent file '%s'\n",asNewName.c_str());
+    }
 
     EndLoad();
     return pEntFile;

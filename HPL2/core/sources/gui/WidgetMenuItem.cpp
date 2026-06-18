@@ -93,7 +93,9 @@ cGuiGlobalShortcut* cWidgetMenuItem::AddShortcut(int alKeyModifiers, eKey aKey, 
     cGuiGlobalShortcut* pShortcut = iWidget::AddShortcut(alKeyModifiers, aKey, eGuiMessage_ButtonPressed, true, false);
 
     if(msShortcutText!=_W(""))
+    {
         msShortcutText += _W(",");
+    }
     msShortcutText += cString::To16Char(mvShortcuts.back()->ToString());
 
     GetParentMenu()->UpdateMenuWidth(GetTextLength());
@@ -121,7 +123,9 @@ float cWidgetMenuItem::GetTextLength()
 bool cWidgetMenuItem::IsMenuOpen()
 {
     if(IsParent())
+    {
         return (mpChildMenu->IsVisible());
+    }
 
     return false;
 }
@@ -130,7 +134,10 @@ bool cWidgetMenuItem::IsMenuOpen()
 
 void cWidgetMenuItem::ShowSubMenu()
 {
-    if(mpChildMenu==NULL) return;
+    if(mpChildMenu==NULL)
+    {
+        return;
+    }
 
     ///////////////////////////////////
     // Set up submenu new position
@@ -146,9 +153,13 @@ void cWidgetMenuItem::ShowSubMenu()
     case eWidgetType_ContextMenu:
 
         if(vChildPos.x + fParentWidth + fChildWidth> mpSet->GetVirtualSize().x)
+        {
             vChildPos.x -= fChildWidth;
+        }
         else
+        {
             vChildPos.x += fParentWidth;
+        }
 
         break;
     // If this Item belongs to a MainMenu, pop submenu below
@@ -170,9 +181,13 @@ void cWidgetMenuItem::OnInit()
 {
     float fY = 2*mfItemVPadding;
     if(IsSeparator())
+    {
         fY += mfSeparatorHeight;
+    }
     else
+    {
         fY += mpDefaultFont->mvSize.y;
+    }
 
     SetSize(cVector2f(GetParentMenu()->GetMenuItemWidth(),fY));
 }
@@ -182,12 +197,16 @@ void cWidgetMenuItem::OnInit()
 void cWidgetMenuItem::OnUpdate(float afTimeStep)
 {
     if(IsVisible() == false || (mpSet->GetAttentionWidget()!=NULL && IsConnectedTo(mpSet->GetAttentionWidget())==false))
+    {
         return;
+    }
 
     ////////////////////////////////////////////
     // If context menu, increase timer
     if(GetMouseIsOver() && mItemType==eWidgetType_ContextMenu )
+    {
         mfTimer+=afTimeStep;
+    }
     /////////////////////////////////////////////
     // If item is highlighted, has submenu, and timer has right value, pop up submenu
     if(GetParentMenu()->GetHightlightedItem()==this && IsParent())
@@ -229,13 +248,19 @@ void cWidgetMenuItem::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
 
         // Draw arrow icon if has submenu
         if(IsParent())
+        {
             mpSet->DrawGfx(mpGfxSubMenuArrow,GetGlobalPosition()+vArrowOffset);
+        }
         else
+        {
             DrawDefaultText(msShortcutText, GetGlobalPosition()+cVector3f(vArrowOffset.x,vTextOffset.y,vTextOffset.z), eFontAlign_Right, col);
+        }
 
         // Draw check icon if checked
         if(mbChecked)
+        {
             mpSet->DrawGfx(mpGfxChecked[mbEnabled], GetGlobalPosition() + vCheckOffset);
+        }
 
         break;
     // If this Item belongs to a MainMenu
@@ -280,7 +305,10 @@ void cWidgetMenuItem::OnChangeSize()
 
 bool cWidgetMenuItem::OnMouseDown(const cGuiMessageData& aData)
 {
-    if(IsSeparator()) return false;
+    if(IsSeparator())
+    {
+        return false;
+    }
     ///////////////////////////
     // If clicked, skip timer
     mfTimer = mfOpenMenuTime;
@@ -292,13 +320,21 @@ bool cWidgetMenuItem::OnMouseDown(const cGuiMessageData& aData)
 
 bool cWidgetMenuItem::OnMouseUp(const cGuiMessageData& aData)
 {
-    if(IsSeparator()) return false;
-    if(GetParentMenu()->GetHightlightedItem()!=this) return false;
+    if(IsSeparator())
+    {
+        return false;
+    }
+    if(GetParentMenu()->GetHightlightedItem()!=this)
+    {
+        return false;
+    }
 
     //////////////////////////////////////
     // If is "leaf" item, hide menu (completely if Context, all but topmost if Main)
     if(IsParent()==false)
+    {
         GetParentMenu()->GetTopMostMenu()->Hide();
+    }
 
     ProcessMessage(eGuiMessage_ButtonPressed, aData, true, true);
 
@@ -321,10 +357,14 @@ bool cWidgetMenuItem::OnMouseMove(const cGuiMessageData& aData)
     if(IsVisible()==false ||
             mpSet->GetDrawMouse()==false ||
             (mpSet->GetAttentionWidget()!=NULL && IsConnectedTo(mpSet->GetAttentionWidget())==false))
+    {
         return true;
+    }
 
     if(GetMouseIsOver())
+    {
         GetParentMenu()->SetHighlightedItem(this);
+    }
     return true;
 }
 
@@ -333,10 +373,15 @@ bool cWidgetMenuItem::OnMouseMove(const cGuiMessageData& aData)
 bool cWidgetMenuItem::OnMouseLeave(const cGuiMessageData& aData)
 {
     if(mpSet->GetAttentionWidget()!=NULL &&
-            IsConnectedTo(mpSet->GetAttentionWidget())==false) return false;
+            IsConnectedTo(mpSet->GetAttentionWidget())==false)
+    {
+        return false;
+    }
 
     if(IsMenuOpen()==false)
+    {
         GetParentMenu()->SetHighlightedItem(NULL);
+    }
 
     mfTimer = 0;
 
@@ -350,7 +395,9 @@ bool cWidgetMenuItem::OnKeyPress(const cGuiMessageData& aData)
     eKey key = aData.mKeyPress.mKey;
 
     if(IsParent())
+    {
         return mpChildMenu->ProcessMessage(eGuiMessage_KeyPress, aData);
+    }
 
     return false;
 }

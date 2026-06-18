@@ -57,7 +57,9 @@ void iThread::SetPriority(eThreadPrio aPrio)
 int iThread::MainThreadFunc(void* apThread)
 {
     if(apThread==NULL)
+    {
         return -1;
+    }
 
     iThread* pThread = (iThread*)apThread;
     iThreadClass* pThreadClass = pThread->mpThreadClass;

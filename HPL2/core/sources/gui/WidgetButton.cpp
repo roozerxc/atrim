@@ -72,7 +72,9 @@ void cWidgetButton::SetPressed(bool abX, bool abGenCallback)
         mbPressed = abX;
         cGuiMessageData data;
         if(abGenCallback)
+        {
             ProcessMessage(eGuiMessage_ButtonPressed, data);
+        }
     }
 }
 
@@ -120,7 +122,10 @@ void cWidgetButton::OnLoadGraphics()
 void cWidgetButton::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
 {
     cVector3f vOffset = 0;
-    if(mbPressed) vOffset = mpSkin->GetAttribute(eGuiSkinAttribute_ButtonPressedContentOffset);
+    if(mbPressed)
+    {
+        vOffset = mpSkin->GetAttribute(eGuiSkinAttribute_ButtonPressedContentOffset);
+    }
 
     ////////////////////////////////
     // Image
@@ -208,7 +213,9 @@ bool cWidgetButton::OnMouseDown(const cGuiMessageData& aData)
             ProcessMessage(eGuiMessage_ButtonPressed,aData);
         }
         else
+        {
             mbPressed = true;
+        }
 
         mPressedData = aData;
 
@@ -223,11 +230,17 @@ bool cWidgetButton::OnMouseUp(const cGuiMessageData& aData)
 {
     if(IsEnabled() && aData.mlVal==eGuiMouseButton_Left)
     {
-        if(GetMouseIsOver()==false) return false;
+        if(GetMouseIsOver()==false)
+        {
+            return false;
+        }
 
         if(mbToggleable==false)
         {
-            if(mbPressed && mlRepeatTimes==0) ProcessMessage(eGuiMessage_ButtonPressed,aData);
+            if(mbPressed && mlRepeatTimes==0)
+            {
+                ProcessMessage(eGuiMessage_ButtonPressed,aData);
+            }
             mbPressed = false;
             mlRepeatTimes = 0;
         }
@@ -250,7 +263,9 @@ bool cWidgetButton::OnMouseEnter(const cGuiMessageData& aData)
 bool cWidgetButton::OnMouseLeave(const cGuiMessageData& aData)
 {
     if(mbToggleable==false)
+    {
         mbPressed = false;
+    }
 
     return false;
 }
@@ -260,7 +275,9 @@ bool cWidgetButton::OnMouseLeave(const cGuiMessageData& aData)
 bool cWidgetButton::OnLostFocus(const cGuiMessageData& aData)
 {
     if(mbToggleable==false)
+    {
         mbPressed = false;
+    }
 
     return false;
 }
@@ -272,7 +289,9 @@ bool cWidgetButton::OnUIButtonPress(const cGuiMessageData& aData)
     if(HasFocus())
     {
         if(aData.mlVal==eUIButton_Primary)
+        {
             return OnMouseDown(cGuiMessageData(eGuiMouseButton_Left));
+        }
     }
 
     return false;

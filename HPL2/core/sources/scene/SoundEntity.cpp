@@ -87,12 +87,18 @@ cSoundEntity::cSoundEntity(const tString& asName,cSoundEntityData *apData,
     }
 
     //if( mpData->GetName() == "scrape_wood.snt") mbLog = true;
-    if(mbLog)Log("Created %d\n", this);
+    if(mbLog)
+    {
+        Log("Created %d\n", this);
+    }
 }
 
 cSoundEntity::~cSoundEntity()
 {
-    if(mbLog)Log("Deleting %d\n", this);
+    if(mbLog)
+    {
+        Log("Deleting %d\n", this);
+    }
     for(int i=0; i<3; i++)
     {
         if(mpSoundHandler->IsValid(mvSoundEntries[i], mvSoundEntryID[i]))
@@ -203,7 +209,10 @@ cSoundEntity::~cSoundEntity()
 
 void cSoundEntityChannelCallback::OnPriorityRelease()
 {
-    if(mpEntity->mbStopped || mpEntity->mbFadingOut) return;
+    if(mpEntity->mbStopped || mpEntity->mbFadingOut)
+    {
+        return;
+    }
 
     mpEntity->mbPrioRemove = true;
 }
@@ -232,9 +241,15 @@ cSoundEntry* cSoundEntity::GetSoundEntry(eSoundEntityType aType, bool abCheckEnt
 //-----------------------------------------------------------------------
 void cSoundEntity::Play(bool abPlayStart)
 {
-    if(mpSoundHandler->GetSilent())    return;
+    if(mpSoundHandler->GetSilent())
+    {
+        return;
+    }
 
-    if(mbLog)Log("Playing %d\n", this);
+    if(mbLog)
+    {
+        Log("Playing %d\n", this);
+    }
     mbStopped =false;
     mbOutOfRange = false;
     mbFadingOut = false;
@@ -264,14 +279,23 @@ void cSoundEntity::Play(bool abPlayStart)
 
 void cSoundEntity::Stop(bool abPlayEnd)
 {
-    if(mbStopped) return;
+    if(mbStopped)
+    {
+        return;
+    }
 
     mbStopped = true;
     mbOutOfRange = false;
 
-    if(mvSoundEntries[eSoundEntityType_Main]==NULL) return;
+    if(mvSoundEntries[eSoundEntityType_Main]==NULL)
+    {
+        return;
+    }
 
-    if(mbLog)Log("Stopping %d\n", this);
+    if(mbLog)
+    {
+        Log("Stopping %d\n", this);
+    }
 
     if(mpData->GetLoop())
     {
@@ -300,9 +324,15 @@ void cSoundEntity::Stop(bool abPlayEnd)
 
 void cSoundEntity::FadeIn(float afSpeed)
 {
-    if(mpSoundHandler->GetSilent())    return;
+    if(mpSoundHandler->GetSilent())
+    {
+        return;
+    }
 
-    if(mbLog)Log("Fade in %d\n", this);
+    if(mbLog)
+    {
+        Log("Fade in %d\n", this);
+    }
 
     Play(false);
     cSoundEntry* pEntry = GetSoundEntry(eSoundEntityType_Main, false);
@@ -319,9 +349,15 @@ void cSoundEntity::FadeOut(float afSpeed)
 {
     mbFadingOut = true;
 
-    if(mpSoundHandler->GetSilent())    return;
+    if(mpSoundHandler->GetSilent())
+    {
+        return;
+    }
 
-    if(mbLog)Log("Fading out %d\n", this);
+    if(mbLog)
+    {
+        Log("Fading out %d\n", this);
+    }
 
     if(mvSoundEntries[eSoundEntityType_Main]==NULL)
     {
@@ -388,7 +424,10 @@ void cSoundEntity::UpdateLogic(float afTimeStep)
     {
         if(CheckIsOutOfRange()==false)
         {
-            if(mbLog)Log("%d Inside range stop!\n", this);
+            if(mbLog)
+            {
+                Log("%d Inside range stop!\n", this);
+            }
             Play(false);
             mbOutOfRange = false;
         }
@@ -518,7 +557,10 @@ void cSoundEntity::UpdateLogic(float afTimeStep)
                     {
                         if(mpSoundHandler->IsValid(mvSoundEntries[eSoundEntityType_Main], mvSoundEntryID[eSoundEntityType_Main]))
                         {
-                            if(mbLog)Log("%d Out of range stop!\n", this);
+                            if(mbLog)
+                            {
+                                Log("%d Out of range stop!\n", this);
+                            }
                             mvSoundEntries[eSoundEntityType_Main]->Stop();
                         }
 
@@ -565,7 +607,10 @@ void cSoundEntity::RemoveGlobalCallback(iSoundEntityGlobalCallback *apCallback)
 
 bool cSoundEntity::CheckIsOutOfRange()
 {
-    if(mpWorld->IsSoundEmitter()==false) return true;
+    if(mpWorld->IsSoundEmitter()==false)
+    {
+        return true;
+    }
 
     float fRange = GetListenerSqrLength();
     float fMaxRange = mfMaxDistance * mfMaxDistance;
@@ -578,7 +623,10 @@ bool cSoundEntity::CheckIsOutOfRange()
 bool cSoundEntity::PlaySound(eSoundEntityType aType,bool abLoop)
 {
     tString sSoundName = mpData->GetRandomSoundName(aType,true); //TODO: Add a var instead of null!
-    if(sSoundName == "") return false;
+    if(sSoundName == "")
+    {
+        return false;
+    }
 
     bool bNotEnoughChannels = false;
 
@@ -619,7 +667,9 @@ bool cSoundEntity::PlaySound(eSoundEntityType aType,bool abLoop)
     {
         // Sound entry could not be loaded
         if(bNotEnoughChannels==false)
+        {
             Error("Couldn't play sound '%s' for sound entity %s\n",sSoundName.c_str(),msName.c_str());
+        }
 
         //If could not be loaded and main or not enough channels and non loop: Stop the entity!
         if(    (aType == eSoundEntityType_Main && bNotEnoughChannels==false) ||

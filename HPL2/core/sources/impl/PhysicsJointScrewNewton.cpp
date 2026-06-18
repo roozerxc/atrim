@@ -113,7 +113,10 @@ unsigned cPhysicsJointScrewNewton::LimitCallback(const NewtonJoint* pScrew, Newt
     float fDistance = NewtonCorkscrewGetJointPosit (pScrew);
     //Log("Dist: %f\n",fDistance);
 
-    if(pScrewJoint->mfMinDistance == 0 && pScrewJoint->mfMaxDistance == 0) return 0;
+    if(pScrewJoint->mfMinDistance == 0 && pScrewJoint->mfMaxDistance == 0)
+    {
+        return 0;
+    }
 
     //Avoid oscillation
     CheckLimitAutoSleep(pScrewJoint, pScrewJoint->mfMinDistance,pScrewJoint->mfMaxDistance,fDistance);

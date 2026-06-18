@@ -56,14 +56,26 @@ public:
 
     inline bool operator==(const cVector2<T> &aVec) const
     {
-        if(x == aVec.x && y==aVec.y)return true;
-        else return false;
+        if(x == aVec.x && y==aVec.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     inline bool operator!=(const cVector2<T> &aVec) const
     {
-        if(x == aVec.x && y==aVec.y)return false;
-        else return true;
+        if(x == aVec.x && y==aVec.y)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     //////////////////////////////////////////

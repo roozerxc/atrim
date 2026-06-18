@@ -43,7 +43,9 @@ bool cActionGamepadAxis::IsTriggerd()
 
         fVal = cMath::Abs(fVal);
         if(bValid && mfMinThreshold<=fVal && fVal<=mfMaxThreshold)
+        {
             return true;
+        }
     }
 
     return false;
@@ -54,8 +56,14 @@ bool cActionGamepadAxis::IsTriggerd()
 float cActionGamepadAxis::GetValue()
 {
     iGamepad* pPad = mpInput->GetGamepad(mlPadIndex);
-    if(IsTriggerd()) return cMath::Abs(pPad->GetAxisValue(mAxis));
-    else return 0.0;
+    if(IsTriggerd())
+    {
+        return cMath::Abs(pPad->GetAxisValue(mAxis));
+    }
+    else
+    {
+        return 0.0;
+    }
 }
 
 //-----------------------------------------------------------------------

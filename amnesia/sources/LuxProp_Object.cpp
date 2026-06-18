@@ -82,7 +82,10 @@ void cLuxPropLoader_Object::LoadVariables(iLuxProp *apProp, cXmlElement *apRootE
         pObject->mbGrabSkipNonOuterBodies = GetVarBool("GrabSkipNonOuterBodies", false);
 
 
-        if(pObject->mfMaxFocusDistance<=0) pObject->mfMaxFocusDistance = mfGrabDefaultMaxFocusDist;
+        if(pObject->mfMaxFocusDistance<=0)
+        {
+            pObject->mfMaxFocusDistance = mfGrabDefaultMaxFocusDist;
+        }
     }
     ///////////////////////////
     // Push specific
@@ -92,7 +95,10 @@ void cLuxPropLoader_Object::LoadVariables(iLuxProp *apProp, cXmlElement *apRootE
         pObject->mPushData.mfPushForceMul = GetVarFloat("PushForceMul", 1.0f);
         pObject->mPushData.mfPushImpulse = GetVarFloat("PushImpulse", 2.0f);
 
-        if(pObject->mfMaxFocusDistance<=0) pObject->mfMaxFocusDistance = mfPushDefaultMaxFocusDist;
+        if(pObject->mfMaxFocusDistance<=0)
+        {
+            pObject->mfMaxFocusDistance = mfPushDefaultMaxFocusDist;
+        }
     }
     ///////////////////////////
     // Slide specific
@@ -103,7 +109,10 @@ void cLuxPropLoader_Object::LoadVariables(iLuxProp *apProp, cXmlElement *apRootE
         pObject->mSlideData.mfSlideSpeedFactor = GetVarFloat("SlideSpeedFactor", 1.0f);
         pObject->mSlideData.mfSlideThrowImpulse = GetVarFloat("SlideThrowImpulse", 3.0f);
 
-        if(pObject->mfMaxFocusDistance<=0) pObject->mfMaxFocusDistance = mfSlideDefaultMaxFocusDist;
+        if(pObject->mfMaxFocusDistance<=0)
+        {
+            pObject->mfMaxFocusDistance = mfSlideDefaultMaxFocusDist;
+        }
     }
 }
 
@@ -119,10 +128,15 @@ void cLuxPropLoader_Object::LoadInstanceVariables(iLuxProp *apProp, cResourceVar
     pObject->mfVisionMaxSanity = apInstanceVars->GetVarFloat("VisionMaxSanity",30);
 
     if(pObject->mbIsInsanityVision)
+    {
         pObject->SetInsanityVisionVisability(false);
+    }
 
     pObject->msContainedItem = apInstanceVars->GetVarString("ContainedItem","");
-    if(pObject->msContainedItem == "None") pObject->msContainedItem= "";
+    if(pObject->msContainedItem == "None")
+    {
+        pObject->msContainedItem= "";
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -131,10 +145,22 @@ eLuxObjectType cLuxPropLoader_Object::GetObjectType(const tString& asName)
 {
     tString sLowName = cString::ToLowerCase(asName);
 
-    if(sLowName == "static")return eLuxObjectType_Static;
-    if(sLowName == "grab")    return eLuxObjectType_Grab;
-    if(sLowName == "push")    return eLuxObjectType_Push;
-    if(sLowName == "slide")    return eLuxObjectType_Slide;
+    if(sLowName == "static")
+    {
+        return eLuxObjectType_Static;
+    }
+    if(sLowName == "grab")
+    {
+        return eLuxObjectType_Grab;
+    }
+    if(sLowName == "push")
+    {
+        return eLuxObjectType_Push;
+    }
+    if(sLowName == "slide")
+    {
+        return eLuxObjectType_Slide;
+    }
 
     Error("Object type '%s' in '%s' does not exist!\n", asName.c_str(), msFileName.c_str());
     return eLuxObjectType_Grab;
@@ -173,9 +199,13 @@ static inline cVector3f GetCorrectNormal(const cVector3f& avNormal, const cVecto
 
     //Make sure the normal faces the other body
     if(cMath::Vector3Dot(vCenterToCollidePoint,avNormal)>0)
+    {
         return avNormal;
+    }
     else
+    {
         return avNormal * -1;
+    }
 
 }
 
@@ -193,7 +223,10 @@ void cLuxProp_Object_BodyCallback::OnBodyCollide(iPhysicsBody *apBody, iPhysicsB
         for(int i=0; i<2; ++i)
         {
             iPhysicsBody *pBody = vBodies[i];
-            if(pBody->GetMass()==0) continue;
+            if(pBody->GetMass()==0)
+            {
+                continue;
+            }
 
             cVector3f vBodyCenter = cMath::MatrixMul(pBody->GetLocalMatrix(),pBody->GetMassCentre());
 
@@ -616,7 +649,10 @@ void cLuxProp_Object::BeforePropDestruction()
     if(mBreakData.msSound != "")
     {
         cSoundEntity *pSound = pWorld->CreateSoundEntity(msName + "_BreakSound", mBreakData.msSound, true);
-        if(pSound) pSound->SetPosition(mtxCenterTransform.GetTranslation());
+        if(pSound)
+        {
+            pSound->SetPosition(mtxCenterTransform.GetTranslation());
+        }
     }
 
     ///////////////////////
@@ -624,7 +660,10 @@ void cLuxProp_Object::BeforePropDestruction()
     if(mBreakData.msParticleSystem != "")
     {
         cParticleSystem *pPS = pWorld->CreateParticleSystem(msName + "_BreakPS", mBreakData.msParticleSystem,1);
-        if(pPS) pPS->SetMatrix(mtxCenterTransform);
+        if(pPS)
+        {
+            pPS->SetMatrix(mtxCenterTransform);
+        }
     }
 
 
@@ -638,7 +677,10 @@ void cLuxProp_Object::BeforePropDestruction()
 
 eLuxFocusCrosshair cLuxProp_Object::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    if(CanInteract(apBody)==false) return eLuxFocusCrosshair_Default;
+    if(CanInteract(apBody)==false)
+    {
+        return eLuxFocusCrosshair_Default;
+    }
 
 
     if(mObjectType == eLuxObjectType_Static)
@@ -665,7 +707,10 @@ eLuxFocusCrosshair cLuxProp_Object::GetFocusCrosshair(iPhysicsBody *apBody, cons
 
 void  cLuxProp_Object::SetStuckState(int alState)
 {
-    if(mlStuckState == alState) return;
+    if(mlStuckState == alState)
+    {
+        return;
+    }
     mlStuckState = alState;
 
     for(size_t i=0; i< mvJoints.size(); ++i)
@@ -688,7 +733,9 @@ void  cLuxProp_Object::SetStuckState(int alState)
 
         //If sleeping, make sure it moves!
         if(pJoint->GetChildBody())
+        {
             pJoint->GetChildBody()->AddForce(cVector3f(1,1,1));
+        }
 
     }
 }
@@ -723,7 +770,10 @@ void cLuxProp_Object::OnDamage(float afAmount, int alStrength)
 
 bool cLuxProp_Object::ShowOutlinesOnConnectedBodies()
 {
-    if(mObjectType == eLuxObjectType_Grab) return true;
+    if(mObjectType == eLuxObjectType_Grab)
+    {
+        return true;
+    }
 
     return false;
 }
@@ -738,7 +788,10 @@ bool cLuxProp_Object::ShowOutlinesOnConnectedBodies()
 
 void cLuxProp_Object::UpdateFoodEnemyAttraction(float afTimeStep)
 {
-    if(mbIsFood==false) return;
+    if(mbIsFood==false)
+    {
+        return;
+    }
     if(mfFoodAttractCount > 0)
     {
         mfFoodAttractCount -= afTimeStep;
@@ -753,9 +806,15 @@ void cLuxProp_Object::UpdateFoodEnemyAttraction(float afTimeStep)
     while(enemyIt.HasNext())
     {
         iLuxEnemy *pEnemy = enemyIt.Next();
-        if(pEnemy->IsActive()==false || pEnemy->GetHealth() <= 0) continue;
+        if(pEnemy->IsActive()==false || pEnemy->GetHealth() <= 0)
+        {
+            continue;
+        }
 
-        if(pEnemy->InRangeOfFood(mvBodies[0])==false) continue;
+        if(pEnemy->InRangeOfFood(mvBodies[0])==false)
+        {
+            continue;
+        }
 
         pEnemy->SendMessage(eLuxEnemyMessage_FoodInRange, 0, false, mvBodies[0]->GetLocalPosition());
     }
@@ -765,8 +824,14 @@ void cLuxProp_Object::UpdateFoodEnemyAttraction(float afTimeStep)
 
 void cLuxProp_Object::UpdateInsanityVision(float afTimeStep)
 {
-    if(mbIsInsanityVision==false) return;
-    if(mpMeshEntity==NULL) return;
+    if(mbIsInsanityVision==false)
+    {
+        return;
+    }
+    if(mpMeshEntity==NULL)
+    {
+        return;
+    }
 
     //////////////////////////////////
     //Check if the object should be disabled or enabled

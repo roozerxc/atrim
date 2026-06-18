@@ -30,9 +30,13 @@ public:
         cPhysicsBodyNewton *pNChild = static_cast<cPhysicsBodyNewton*>(apChildBody);
 
         if(apParentBody==NULL)
+        {
             mpNewtonParentBody = NULL;
+        }
         else
+        {
             mpNewtonParentBody = pNParent->GetNewtonBody();
+        }
 
         mpNewtonChildBody = pNChild->GetNewtonBody();
     }
@@ -42,7 +46,9 @@ public:
         //Skip this for now and let newton handle it..
         //Log("Destroying newton joint!\n");
         if(this->mpChildBody || this->mpParentBody)
+        {
             NewtonDestroyJoint(mpNewtonWorld,mpNewtonJoint);
+        }
     }
 
     //-------------------------------------------
@@ -78,7 +84,10 @@ protected:
         cMatrixf mtxPinAndPivot = cMatrixf::Identity;
         cVector3f vUp = cMath::Vector3Normalize(avPinDir);
         cVector3f vTemp = cMath::Vector3Normalize(cVector3f(1) - vUp);
-        if(vTemp == vUp) vTemp = cMath::Vector3Normalize(vTemp * cVector3f(1.5f, 0.5f, 2.0f)); //Make sure all does not become wierd in the special case.
+        if(vTemp == vUp)
+        {
+            vTemp = cMath::Vector3Normalize(vTemp * cVector3f(1.5f, 0.5f, 2.0f));    //Make sure all does not become wierd in the special case.
+        }
 
         cVector3f vRight = cMath::Vector3Normalize( cMath::Vector3Cross(vUp, vTemp ));
         cVector3f vForward = cMath::Vector3Normalize(cMath::Vector3Cross(vUp, vRight));

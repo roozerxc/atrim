@@ -119,7 +119,9 @@ cMaterialManager::~cMaterialManager()
 cMaterial* cMaterialManager::CreateMaterial(const tString& asName)
 {
     if(asName=="")
+    {
         return NULL;
+    }
 
     tWString sPath;
     cMaterial* pMaterial;
@@ -145,8 +147,14 @@ cMaterial* cMaterialManager::CreateMaterial(const tString& asName)
         AddResource(pMaterial);
     }
 
-    if(pMaterial)pMaterial->IncUserCount();
-    else Error("Couldn't create material '%s'\n",asNewName.c_str());
+    if(pMaterial)
+    {
+        pMaterial->IncUserCount();
+    }
+    else
+    {
+        Error("Couldn't create material '%s'\n",asNewName.c_str());
+    }
 
     EndLoad();
     return pMaterial;
@@ -182,7 +190,10 @@ void cMaterialManager::Destroy(iResourceBase* apResource)
 
 void cMaterialManager::SetTextureFilter(eTextureFilter aFilter)
 {
-    if(aFilter == mTextureFilter) return;
+    if(aFilter == mTextureFilter)
+    {
+        return;
+    }
     mTextureFilter = aFilter;
 
     tResourceBaseMapIt it = m_mapResources.begin();
@@ -193,7 +204,10 @@ void cMaterialManager::SetTextureFilter(eTextureFilter aFilter)
         for(int i=0; i<eMaterialTexture_LastEnum; ++i)
         {
             iTexture *pTex = pMat->GetTexture((eMaterialTexture)i);
-            if(pTex)pTex->SetFilter(aFilter);
+            if(pTex)
+            {
+                pTex->SetFilter(aFilter);
+            }
         }
     }
 }
@@ -211,7 +225,10 @@ void cMaterialManager::SetTextureAnisotropy(float afX)
         return;
     }
 
-    if(mfTextureAnisotropy == afX) return;
+    if(mfTextureAnisotropy == afX)
+    {
+        return;
+    }
     mfTextureAnisotropy = afX;
 
     tResourceBaseMapIt it = m_mapResources.begin();
@@ -222,7 +239,10 @@ void cMaterialManager::SetTextureAnisotropy(float afX)
         for(int i=0; i<eMaterialTexture_LastEnum; ++i)
         {
             iTexture *pTex = pMat->GetTexture((eMaterialTexture)i);
-            if(pTex)pTex->SetAnisotropyDegree(mfTextureAnisotropy);
+            if(pTex)
+            {
+                pTex->SetAnisotropyDegree(mfTextureAnisotropy);
+            }
         }
     }
 }
@@ -242,7 +262,10 @@ tString cMaterialManager::GetPhysicsMaterialName(const tString& asName)
     if(pMaterial==NULL && sPath!=_W(""))
     {
         FILE *pFile = cPlatform::OpenFile(sPath, _W("rb"));
-        if(pFile==NULL) return "";
+        if(pFile==NULL)
+        {
+            return "";
+        }
 
         TiXmlDocument *pDoc = hplNew( TiXmlDocument, () );
         if(!pDoc->LoadFile(pFile))
@@ -271,9 +294,13 @@ tString cMaterialManager::GetPhysicsMaterialName(const tString& asName)
     }
 
     if(pMaterial)
+    {
         return pMaterial->GetPhysicsMaterial();
+    }
     else
+    {
         return "";
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -352,7 +379,9 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
     pMat->SetDepthTest(bDepthTest);
     pMat->SetPhysicsMaterial(sPhysicsMatName);
     if(pMatType->IsTranslucent())
+    {
         pMat->SetBlendMode(GetBlendMode(sBlendMode));
+    }
 
     ///////////////////////////
     //Textures
@@ -392,7 +421,10 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
         eTextureAnimMode animMode = GetAnimMode(pTexChild->GetAttributeString("AnimMode", "None"));
         float fFrameTime = pTexChild->GetAttributeFloat("AnimFrameTime", 1.0f);
 
-        if(sFile=="") continue;
+        if(sFile=="")
+        {
+            continue;
+        }
 
         if(cString::GetFilePath(sFile).length() <= 1)
         {
@@ -411,27 +443,27 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
             if(type == eTextureType_1D)
             {
                 pTex = mpResources->GetTextureManager()->Create1D(sFile,bMipMaps,
-                        eTextureUsage_Normal,
-                        mlTextureSizeDownScaleLevel);
+                       eTextureUsage_Normal,
+                       mlTextureSizeDownScaleLevel);
             }
             else if(type == eTextureType_2D)
             {
                 pTex = mpResources->GetTextureManager()->Create2D(sFile,bMipMaps, eTextureType_2D,
-                        eTextureUsage_Normal,
-                        mlTextureSizeDownScaleLevel);
+                       eTextureUsage_Normal,
+                       mlTextureSizeDownScaleLevel);
             }
             else if(type == eTextureType_3D)
             {
                 pTex = mpResources->GetTextureManager()->Create3D(sFile,bMipMaps,
-                        eTextureUsage_Normal,
-                        mlTextureSizeDownScaleLevel);
+                       eTextureUsage_Normal,
+                       mlTextureSizeDownScaleLevel);
             }
             else if(type == eTextureType_CubeMap)
             {
                 //Check for DDS ending and load cubemap as file.
                 pTex = mpResources->GetTextureManager()->CreateCubeMap(sFile,bMipMaps,
-                        eTextureUsage_Normal,
-                        mlTextureSizeDownScaleLevel);
+                       eTextureUsage_Normal,
+                       mlTextureSizeDownScaleLevel);
             }
         }
 
@@ -477,7 +509,10 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
     //Variables
     cXmlElement* pUserVarsRoot = pDoc->GetFirstElement("SpecificVariables");
     cResourceVarsObject userVars;
-    if(pUserVarsRoot) userVars.LoadVariables(pUserVarsRoot);
+    if(pUserVarsRoot)
+    {
+        userVars.LoadVariables(pUserVarsRoot);
+    }
 
     pMatType->LoadVariables(pMat, &userVars);
 
@@ -496,10 +531,22 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
 
 eTextureType cMaterialManager::GetType(const tString& asType)
 {
-    if(cString::ToLowerCase(asType) == "cube") return eTextureType_CubeMap;
-    else if(cString::ToLowerCase(asType) == "1d") return eTextureType_1D;
-    else if(cString::ToLowerCase(asType) == "2d") return eTextureType_2D;
-    else if(cString::ToLowerCase(asType) == "3d") return eTextureType_3D;
+    if(cString::ToLowerCase(asType) == "cube")
+    {
+        return eTextureType_CubeMap;
+    }
+    else if(cString::ToLowerCase(asType) == "1d")
+    {
+        return eTextureType_1D;
+    }
+    else if(cString::ToLowerCase(asType) == "2d")
+    {
+        return eTextureType_2D;
+    }
+    else if(cString::ToLowerCase(asType) == "3d")
+    {
+        return eTextureType_3D;
+    }
 
     return eTextureType_2D;
 }
@@ -536,18 +583,36 @@ tString cMaterialManager::GetTextureString(eMaterialTexture aType)
 
 eTextureWrap cMaterialManager::GetWrap(const tString& asType)
 {
-    if(cString::ToLowerCase(asType) == "repeat") return eTextureWrap_Repeat;
-    else if(cString::ToLowerCase(asType) == "clamp") return eTextureWrap_Clamp;
-    else if(cString::ToLowerCase(asType) == "clamptoedge") return eTextureWrap_ClampToEdge;
+    if(cString::ToLowerCase(asType) == "repeat")
+    {
+        return eTextureWrap_Repeat;
+    }
+    else if(cString::ToLowerCase(asType) == "clamp")
+    {
+        return eTextureWrap_Clamp;
+    }
+    else if(cString::ToLowerCase(asType) == "clamptoedge")
+    {
+        return eTextureWrap_ClampToEdge;
+    }
 
     return eTextureWrap_Repeat;
 }
 
 eTextureAnimMode cMaterialManager::GetAnimMode(const tString& asType)
 {
-    if(cString::ToLowerCase(asType) == "none") return eTextureAnimMode_None;
-    else if(cString::ToLowerCase(asType) == "loop") return eTextureAnimMode_Loop;
-    else if(cString::ToLowerCase(asType) == "oscillate") return eTextureAnimMode_Oscillate;
+    if(cString::ToLowerCase(asType) == "none")
+    {
+        return eTextureAnimMode_None;
+    }
+    else if(cString::ToLowerCase(asType) == "loop")
+    {
+        return eTextureAnimMode_Loop;
+    }
+    else if(cString::ToLowerCase(asType) == "oscillate")
+    {
+        return eTextureAnimMode_Oscillate;
+    }
 
     return eTextureAnimMode_None;
 }
@@ -557,11 +622,26 @@ eTextureAnimMode cMaterialManager::GetAnimMode(const tString& asType)
 eMaterialBlendMode cMaterialManager::GetBlendMode(const tString& asType)
 {
     tString sLow = cString::ToLowerCase(asType);
-    if(sLow == "add")    return eMaterialBlendMode_Add;
-    if(sLow == "mul")    return eMaterialBlendMode_Mul;
-    if(sLow == "mulx2")    return eMaterialBlendMode_MulX2;
-    if(sLow == "alpha")    return eMaterialBlendMode_Alpha;
-    if(sLow == "premulalpha")    return eMaterialBlendMode_PremulAlpha;
+    if(sLow == "add")
+    {
+        return eMaterialBlendMode_Add;
+    }
+    if(sLow == "mul")
+    {
+        return eMaterialBlendMode_Mul;
+    }
+    if(sLow == "mulx2")
+    {
+        return eMaterialBlendMode_MulX2;
+    }
+    if(sLow == "alpha")
+    {
+        return eMaterialBlendMode_Alpha;
+    }
+    if(sLow == "premulalpha")
+    {
+        return eMaterialBlendMode_PremulAlpha;
+    }
 
     Warning("Material BlendMode '%s' does not exist!\n",asType.c_str());
 
@@ -580,9 +660,18 @@ eMaterialUvAnimation cMaterialManager::GetUvAnimType(const char* apString)
 
     tString sLow = cString::ToLowerCase(apString);
 
-    if(sLow == "translate") return eMaterialUvAnimation_Translate;
-    if(sLow == "sin") return eMaterialUvAnimation_Sin;
-    if(sLow == "rotate") return eMaterialUvAnimation_Rotate;
+    if(sLow == "translate")
+    {
+        return eMaterialUvAnimation_Translate;
+    }
+    if(sLow == "sin")
+    {
+        return eMaterialUvAnimation_Sin;
+    }
+    if(sLow == "rotate")
+    {
+        return eMaterialUvAnimation_Rotate;
+    }
 
     Error("Invalid uv animation type %s\n",apString);
     return eMaterialUvAnimation_LastEnum;
@@ -598,9 +687,18 @@ eMaterialAnimationAxis cMaterialManager::GetAnimAxis(const char* apString)
 
     tString sLow = cString::ToLowerCase(apString);
 
-    if(sLow == "x") return eMaterialAnimationAxis_X;
-    if(sLow == "y") return eMaterialAnimationAxis_Y;
-    if(sLow == "z") return eMaterialAnimationAxis_Z;
+    if(sLow == "x")
+    {
+        return eMaterialAnimationAxis_X;
+    }
+    if(sLow == "y")
+    {
+        return eMaterialAnimationAxis_Y;
+    }
+    if(sLow == "z")
+    {
+        return eMaterialAnimationAxis_Z;
+    }
 
     Error("Invalid animation axis %s\n",apString);
     return eMaterialAnimationAxis_LastEnum;

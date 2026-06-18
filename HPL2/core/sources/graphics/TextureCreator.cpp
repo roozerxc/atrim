@@ -49,8 +49,14 @@ void cTextureCreator::GenerateScatterDiskMap3D(iTexture *apOffsetTexture, int al
 {
     ////////////////////
     //Test so sizes are correct
-    if(cMath::IsPow2(alSize)==false) FatalError("OffsetTexture 2D size size non-pow2\n");
-    if(cMath::IsPow2(alSamples)==false) FatalError("OffsetTexture 2D samples size non-pow2\n");
+    if(cMath::IsPow2(alSize)==false)
+    {
+        FatalError("OffsetTexture 2D size size non-pow2\n");
+    }
+    if(cMath::IsPow2(alSamples)==false)
+    {
+        FatalError("OffsetTexture 2D samples size non-pow2\n");
+    }
 
     ////////////////////
     // Calculate size of grid
@@ -213,8 +219,14 @@ void cTextureCreator::GenerateScatterDiskMap2D(iTexture *apOffsetTexture, int al
 {
     ////////////////////
     //Test so sizes are correct
-    if(cMath::IsPow2(alSize)==false) FatalError("OffsetTexture 2D size size non-pow2\n");
-    if(cMath::IsPow2(alSamples)==false) FatalError("OffsetTexture 2D samples size non-pow2\n");
+    if(cMath::IsPow2(alSize)==false)
+    {
+        FatalError("OffsetTexture 2D size size non-pow2\n");
+    }
+    if(cMath::IsPow2(alSamples)==false)
+    {
+        FatalError("OffsetTexture 2D samples size non-pow2\n");
+    }
 
     ////////////////////
     // Calculate size of grid

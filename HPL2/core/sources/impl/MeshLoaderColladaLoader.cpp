@@ -56,7 +56,10 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
         cDate cacheDate = cPlatform::FileModifiedDate(sCacheFile);
 
         //Check if cache is newer
-        if(cacheDate > colladaDate) bLoadCache = true;
+        if(cacheDate > colladaDate)
+        {
+            bLoadCache = true;
+        }
     }
 
     /////////////////////////////////////////////////
@@ -81,7 +84,10 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
     //unsigned long lStartTime = mpSystem->GetLowLevel()->GetTime();
 
     FILE *pFile = cPlatform::OpenFile(asFile, _W("rb"));
-    if(pFile==NULL) return false;
+    if(pFile==NULL)
+    {
+        return false;
+    }
 
     TiXmlDocument* pXmlDoc = hplNew(TiXmlDocument, () );
     if(pXmlDoc->LoadFile(pFile)==false)
@@ -209,10 +215,16 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
         if(pSceneElem)
         {
             pSceneElem = pSceneElem->FirstChildElement("visual_scene");
-            if(pSceneElem==NULL) Warning("No visual scene element found!\n");
+            if(pSceneElem==NULL)
+            {
+                Warning("No visual scene element found!\n");
+            }
         }
 
-        if(pSceneElem==NULL) pSceneElem = pRootElem->FirstChildElement("scene");
+        if(pSceneElem==NULL)
+        {
+            pSceneElem = pRootElem->FirstChildElement("scene");
+        }
 
         if(pSceneElem==NULL)
         {
@@ -247,8 +259,14 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
                             TiXmlText *pText = pParam->FirstChild()->ToText();
                             float fValue = cString::ToFloat(pText->Value(),0);
 
-                            if(sName == "start_time") apColladaScene->mfStartTime = fValue;
-                            else if(sName == "end_time") apColladaScene->mfEndTime = fValue;
+                            if(sName == "start_time")
+                            {
+                                apColladaScene->mfStartTime = fValue;
+                            }
+                            else if(sName == "end_time")
+                            {
+                                apColladaScene->mfEndTime = fValue;
+                            }
                         }
                     }
 
@@ -376,14 +394,38 @@ bool cMeshLoaderCollada::SaveStructures(const tWString &asFile,
 
     TiXmlElement *pRootElem = CreateXMLChild(pXmlDoc,"ColladaCache");
 
-    if(apColladaImageVec)        SaveImageVec(pRootElem,apColladaImageVec);
-    if(apColladaTextureVec)        SaveTextureVec(pRootElem,apColladaTextureVec);
-    if(apColladaMaterialVec)    SaveMaterialVec(pRootElem,apColladaMaterialVec);
-    if(apColladaLightVec)        SaveLightVec(pRootElem,apColladaLightVec);
-    if(apColladaAnimVec)        SaveAnimationVec(pRootElem,apColladaAnimVec);
-    if(apColladaControllerVec)    SaveControllerVec(pRootElem,apColladaControllerVec);
-    if(apColladaGeometryVec)    SaveGeometryVec(pRootElem,apColladaGeometryVec);
-    if(apColladaScene)            SaveScene(pRootElem,apColladaScene);
+    if(apColladaImageVec)
+    {
+        SaveImageVec(pRootElem,apColladaImageVec);
+    }
+    if(apColladaTextureVec)
+    {
+        SaveTextureVec(pRootElem,apColladaTextureVec);
+    }
+    if(apColladaMaterialVec)
+    {
+        SaveMaterialVec(pRootElem,apColladaMaterialVec);
+    }
+    if(apColladaLightVec)
+    {
+        SaveLightVec(pRootElem,apColladaLightVec);
+    }
+    if(apColladaAnimVec)
+    {
+        SaveAnimationVec(pRootElem,apColladaAnimVec);
+    }
+    if(apColladaControllerVec)
+    {
+        SaveControllerVec(pRootElem,apColladaControllerVec);
+    }
+    if(apColladaGeometryVec)
+    {
+        SaveGeometryVec(pRootElem,apColladaGeometryVec);
+    }
+    if(apColladaScene)
+    {
+        SaveScene(pRootElem,apColladaScene);
+    }
 
     FILE *pFile = cPlatform::OpenFile(asFile, _W("w+"));
     if(pFile==NULL || pXmlDoc->SaveFile(pFile)==false)
@@ -547,7 +589,9 @@ static void SaveAnimationVec(TiXmlElement *apRootElem, tColladaAnimationVec *apC
                 pSourceElem->SetAttribute("Id",pSource->msId.c_str());
                 tString sData ="";
                 for(size_t j=0; j< pSource->mvValues.size(); ++j)
+                {
                     sData += cString::ToString(pSource->mvValues[j])+" ";
+                }
 
                 pSourceElem->SetAttribute("Values",sData.c_str());
             }
@@ -860,7 +904,9 @@ static void SaveIterativeNode(TiXmlElement *apParentElem, cColladaNode *apParent
 
             tString sValues = "";
             for(size_t i=0; i< transform.mvValues.size(); ++i)
+            {
                 sValues += cString::ToString(transform.mvValues[i]) + " ";
+            }
 
             pTransformElem->SetAttribute("Values",sValues.c_str());
         }
@@ -912,7 +958,10 @@ bool cMeshLoaderCollada::LoadStructures(const tWString &asFile,
     //unsigned long lStartTime = mpSystem->GetLowLevel()->GetTime();
 
     FILE *pFile = cPlatform::OpenFile(asFile, _W("rb"));
-    if(pFile==NULL) return false;
+    if(pFile==NULL)
+    {
+        return false;
+    }
 
     TiXmlDocument* pXmlDoc = hplNew(TiXmlDocument, () );
     if(pXmlDoc->LoadFile(pFile)==false)
@@ -929,14 +978,38 @@ bool cMeshLoaderCollada::LoadStructures(const tWString &asFile,
 
     TiXmlElement *pRootElem = pXmlDoc->RootElement();
 
-    if(apColladaImageVec)        LoadImageVec(pRootElem,apColladaImageVec);
-    if(apColladaTextureVec)        LoadTextureVec(pRootElem,apColladaTextureVec);
-    if(apColladaMaterialVec)    LoadMaterialVec(pRootElem,apColladaMaterialVec);
-    if(apColladaLightVec)        LoadLightVec(pRootElem,apColladaLightVec);
-    if(apColladaAnimVec)        LoadAnimationVec(pRootElem,apColladaAnimVec);
-    if(apColladaControllerVec)    LoadControllerVec(pRootElem,apColladaControllerVec);
-    if(apColladaGeometryVec)    LoadGeometryVec(pRootElem,apColladaGeometryVec);
-    if(apColladaScene)            LoadScene(pRootElem,apColladaScene);
+    if(apColladaImageVec)
+    {
+        LoadImageVec(pRootElem,apColladaImageVec);
+    }
+    if(apColladaTextureVec)
+    {
+        LoadTextureVec(pRootElem,apColladaTextureVec);
+    }
+    if(apColladaMaterialVec)
+    {
+        LoadMaterialVec(pRootElem,apColladaMaterialVec);
+    }
+    if(apColladaLightVec)
+    {
+        LoadLightVec(pRootElem,apColladaLightVec);
+    }
+    if(apColladaAnimVec)
+    {
+        LoadAnimationVec(pRootElem,apColladaAnimVec);
+    }
+    if(apColladaControllerVec)
+    {
+        LoadControllerVec(pRootElem,apColladaControllerVec);
+    }
+    if(apColladaGeometryVec)
+    {
+        LoadGeometryVec(pRootElem,apColladaGeometryVec);
+    }
+    if(apColladaScene)
+    {
+        LoadScene(pRootElem,apColladaScene);
+    }
 
     hplDelete(pXmlDoc);
     return true;

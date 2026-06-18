@@ -94,7 +94,9 @@ cLuxMap::~cLuxMap()
     mpEngine->GetScene()->DestroyWorld(mpWorld);
 
     if(mpScript)
+    {
         mpEngine->GetResources()->GetScriptManager()->Destroy(mpScript);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -123,10 +125,22 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
 
     tWorldLoadFlag lFlags =0;
     //if(abLoadEntities==false) lFlags |= eWorldLoadFlag_NoGameEntities;
-    if(abLoadEntities==false) lFlags |= eWorldLoadFlag_NoDynamicGameEntities;
-    if(gpBase->mpConfigHandler->mbFastPhysicsLoad) lFlags |= eWorldLoadFlag_FastPhysicsLoad;
-    if(gpBase->mpConfigHandler->mbFastStaticLoad) lFlags |= eWorldLoadFlag_FastStaticLoad;
-    if(gpBase->mpConfigHandler->mbFastEntityLoad) lFlags |= eWorldLoadFlag_FastEntityLoad;
+    if(abLoadEntities==false)
+    {
+        lFlags |= eWorldLoadFlag_NoDynamicGameEntities;
+    }
+    if(gpBase->mpConfigHandler->mbFastPhysicsLoad)
+    {
+        lFlags |= eWorldLoadFlag_FastPhysicsLoad;
+    }
+    if(gpBase->mpConfigHandler->mbFastStaticLoad)
+    {
+        lFlags |= eWorldLoadFlag_FastStaticLoad;
+    }
+    if(gpBase->mpConfigHandler->mbFastEntityLoad)
+    {
+        lFlags |= eWorldLoadFlag_FastEntityLoad;
+    }
 
     //Script file
     bool bScriptExists = false;
@@ -175,11 +189,16 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
     //Load the world
     mpWorld = mpEngine->GetScene()->LoadWorld(asFile,lFlags);
     if(mpWorld==NULL)
+    {
         FatalError("Could not load world file '%s'\n", asFile.c_str());
+    }
 
     mpPhysicsWorld = mpWorld->GetPhysicsWorld();
 
-    if(abLoadEntities) AfterWorldLoadEntitySetup();
+    if(abLoadEntities)
+    {
+        AfterWorldLoadEntitySetup();
+    }
 
     gpBase->mpCurrentMapLoading = NULL;
 
@@ -334,7 +353,10 @@ void cLuxMap::OnLeave(bool abRunScript)
 {
     if(abRunScript)
     {
-        if(mpScript) mpScript->Run("OnLeave()");
+        if(mpScript)
+        {
+            mpScript->Run("OnLeave()");
+        }
     }
 }
 
@@ -356,7 +378,9 @@ void cLuxMap::Update(float afTimeStep)
         iLuxEntity *pEntity = *entityIt;
 
         if(pEntity->IsActive())
+        {
             pEntity->UpdateLogic(afTimeStep);
+        }
     }
 
     UpdateToBeDesotroyedEntities(true);
@@ -373,24 +397,42 @@ void cLuxMap::Update(float afTimeStep)
 
 void cLuxMap::RunScript(const tString& asCommand)
 {
-    if(mpScript==NULL) return;
-    if(this != gpBase->mpMapHandler->GetCurrentMap()) return;
+    if(mpScript==NULL)
+    {
+        return;
+    }
+    if(this != gpBase->mpMapHandler->GetCurrentMap())
+    {
+        return;
+    }
 
     mpScript->Run(asCommand);
 }
 
 void cLuxMap::RunTimer(const tString& asTimerFunc, tString& asTimerName)
 {
-    if(mpScript==NULL) return;
-    if(this != gpBase->mpMapHandler->GetCurrentMap()) return;
+    if(mpScript==NULL)
+    {
+        return;
+    }
+    if(this != gpBase->mpMapHandler->GetCurrentMap())
+    {
+        return;
+    }
 
     mpScript->RunFuncString(asTimerFunc, asTimerName);
 }
 
 void cLuxMap::RunUpdateCallback(float afTimeStep)
 {
-    if(mpScript==NULL) return;
-    if(this != gpBase->mpMapHandler->GetCurrentMap()) return;
+    if(mpScript==NULL)
+    {
+        return;
+    }
+    if(this != gpBase->mpMapHandler->GetCurrentMap())
+    {
+        return;
+    }
 
     mpScript->RunFuncFloat("OnUpdate", afTimeStep);
 }
@@ -399,7 +441,9 @@ void cLuxMap::RunUpdateCallback(float afTimeStep)
 bool cLuxMap::RecompileScript(tString *apOutput)
 {
     if(mpScript)
+    {
         mpEngine->GetResources()->GetScriptManager()->Destroy(mpScript);
+    }
     mpScript = NULL;
 
     tString sScriptFile = cString::SetFileExt(msFileName,"hps");
@@ -420,7 +464,10 @@ bool cLuxMap::RecompileScript(tString *apOutput)
 
 void cLuxMap::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
 {
-    if(gpBase->mpDebugHandler->GetShowEntityInfo()==false) return;
+    if(gpBase->mpDebugHandler->GetShowEntityInfo()==false)
+    {
+        return;
+    }
 
     tLuxEntityListIt entityIt = mlstEntities.begin();
     for(; entityIt != mlstEntities.end(); ++entityIt)
@@ -428,7 +475,9 @@ void cLuxMap::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
         iLuxEntity *pEntity = *entityIt;
 
         if(pEntity->IsActive())
+        {
             pEntity->OnRenderSolid(apFunctions);
+        }
     }
 }
 
@@ -453,7 +502,10 @@ void cLuxMap::PlacePlayerAtStartPos(const tString& asPosName)
 
 void cLuxMap::SetCheckPoint(const tString& asName, const tString& asStartPos, const tString& asCallback)
 {
-    if(msCheckPointName == asName) return;
+    if(msCheckPointName == asName)
+    {
+        return;
+    }
 
     msCheckPointName = asName;
     msCheckPointStartPos = asStartPos;
@@ -476,7 +528,10 @@ void cLuxMap::SetCheckPoint(const tString& asName, const tString& asStartPos, co
 
             //When music handler plays music, it multiplies it to get a new volume. Need to change that back when storing.
             float fMusicVolumeMul =gpBase->mpMusicHandler->GetVolumeMul();
-            if(fMusicVolumeMul>0) mfCheckPointMusicVolume /= fMusicVolumeMul;
+            if(fMusicVolumeMul>0)
+            {
+                mfCheckPointMusicVolume /= fMusicVolumeMul;
+            }
 
             break;
         }
@@ -522,7 +577,9 @@ void cLuxMap::LoadCheckPoint()
     // Music
     gpBase->mpMusicHandler->Reset();
     if(msCheckPointMusic != "")
+    {
         gpBase->mpMusicHandler->Play(msCheckPointMusic, true, mfCheckPointMusicVolume, 1, mlCheckPointMusicPrio,mbCheckPointMusicResume, false);
+    }
 
 
     //////////////////////////////
@@ -539,11 +596,17 @@ void cLuxMap::CreateEntity(const tString& asName, const tString& asFile, const c
     //Only set var if not already set!
     bool bSetCurrentMapLoading = gpBase->mpCurrentMapLoading==NULL;
 
-    if(bSetCurrentMapLoading)    gpBase->mpCurrentMapLoading = this;
+    if(bSetCurrentMapLoading)
+    {
+        gpBase->mpCurrentMapLoading = this;
+    }
 
     mpWorld->CreateEntity(asName, a_mtxTransform, asFile,GetFreeEntityID(), true, avScale);
 
-    if(bSetCurrentMapLoading)    gpBase->mpCurrentMapLoading = NULL;
+    if(bSetCurrentMapLoading)
+    {
+        gpBase->mpCurrentMapLoading = NULL;
+    }
 }
 //-----------------------------------------------------------------------
 
@@ -594,9 +657,15 @@ void cLuxMap::AddEntity(iLuxEntity *apEntity)
 
 void cLuxMap::DestroyEntity(iLuxEntity *apEntity)
 {
-    if(mbDeletingAllWorldEntities) Warning("Trying to delete entity '%s' when Map is destroying all entities!\n", apEntity->GetName().c_str());
+    if(mbDeletingAllWorldEntities)
+    {
+        Warning("Trying to delete entity '%s' when Map is destroying all entities!\n", apEntity->GetName().c_str());
+    }
 
-    if(apEntity->GetDestroyMe()) return;
+    if(apEntity->GetDestroyMe())
+    {
+        return;
+    }
 
     apEntity->DestroyMe();
     mlstToBeDestroyedEntities.push_back(apEntity);
@@ -607,10 +676,16 @@ void cLuxMap::DestroyEntity(iLuxEntity *apEntity)
 iLuxEntity *cLuxMap::GetEntityByName(const tString& asName, eLuxEntityType aType, int alSubType)
 {
     tLuxEntityNameMapIt it = m_mapEntitiesByName.find(cString::ToLowerCase(asName));
-    if(it == m_mapEntitiesByName.end()) return NULL;
+    if(it == m_mapEntitiesByName.end())
+    {
+        return NULL;
+    }
 
     iLuxEntity *pEntity = it->second;
-    if(LuxIsCorrectType(pEntity, aType, alSubType)== false) return NULL;
+    if(LuxIsCorrectType(pEntity, aType, alSubType)== false)
+    {
+        return NULL;
+    }
 
     return pEntity;
 }
@@ -618,11 +693,17 @@ iLuxEntity *cLuxMap::GetEntityByName(const tString& asName, eLuxEntityType aType
 iLuxEntity *cLuxMap::GetEntityByID(int alID, eLuxEntityType aType, int alSubType)
 {
     tLuxEntityIDMapIt it = m_mapEntitiesByID.find(alID);
-    if(it == m_mapEntitiesByID.end()) return NULL;
+    if(it == m_mapEntitiesByID.end())
+    {
+        return NULL;
+    }
 
     iLuxEntity *pEntity = it->second;
 
-    if(LuxIsCorrectType(pEntity, aType, alSubType)== false) return NULL;
+    if(LuxIsCorrectType(pEntity, aType, alSubType)== false)
+    {
+        return NULL;
+    }
 
     return pEntity;
 }
@@ -635,7 +716,10 @@ bool cLuxMap::EntityExists(iLuxEntity *apEntity)
     for(; entityIt != mlstEntities.end(); ++entityIt)
     {
         iLuxEntity *pEntity = *entityIt;
-        if(pEntity == apEntity) return true;
+        if(pEntity == apEntity)
+        {
+            return true;
+        }
     }
 
     return false;
@@ -664,7 +748,10 @@ void cLuxMap::BroadcastEnemyMessage(eLuxEnemyMessage aType, bool abHasPosition, 
     for(; it != mlstEnemies.end(); ++it)
     {
         iLuxEnemy *pEnemy = *it;
-        if(pEnemy->IsActive()==false) continue;
+        if(pEnemy->IsActive()==false)
+        {
+            continue;
+        }
 
         ////////////////////////////////
         // Check if the enemy is in range
@@ -691,7 +778,10 @@ void cLuxMap::BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume,
     while(it.HasNext())
     {
         iLuxEnemy *pEnemy = it.Next();
-        if(pEnemy->IsActive()==false) continue;
+        if(pEnemy->IsActive()==false)
+        {
+            continue;
+        }
 
         /////////////////////////
         //Check intersection
@@ -704,7 +794,10 @@ void cLuxMap::BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume,
         /////////////////////////
         //Calculate volume
         float fDistance = cMath::Vector3Dist(pBv->GetWorldCenter(), avPos);
-        if(fDistance < 2.0f) continue; //Skip sounds that are too close!
+        if(fDistance < 2.0f)
+        {
+            continue;    //Skip sounds that are too close!
+        }
 
         float fHearVolume = 1.0f - cMath::Clamp( (fDistance - afMinDist)/(afMaxDist - afMinDist), 0.0f,1.0f);
         fHearVolume *= afVolume;
@@ -725,8 +818,14 @@ int cLuxMap::GetInRangeEnemyNum()
     while(it.HasNext())
     {
         iLuxEnemy *pEnemy = it.Next();
-        if(pEnemy->IsActive()==false) continue;
-        if(pEnemy->GetPlayerInRange()==false) continue;
+        if(pEnemy->IsActive()==false)
+        {
+            continue;
+        }
+        if(pEnemy->GetPlayerInRange()==false)
+        {
+            continue;
+        }
 
         ++lNum;
     }
@@ -744,9 +843,15 @@ bool cLuxMap::AINodeIsUsedAsGoal(cAINode *apNode)
         iLuxEnemy *pEnemy = it.Next();
 
         tAINodeList *pNodeList = pEnemy->GetPathFinder()->GetNodeList();
-        if(pNodeList->empty()) continue;
+        if(pNodeList->empty())
+        {
+            continue;
+        }
 
-        if(pNodeList->front() == apNode) return true;
+        if(pNodeList->front() == apNode)
+        {
+            return true;
+        }
     }
     return false;
 }
@@ -756,11 +861,20 @@ bool cLuxMap::AINodeIsUsedAsGoal(cAINode *apNode)
 bool cLuxMap::DoorIsBroken(int alID)
 {
     iLuxEntity *pEntity = GetEntityByID(alID);
-    if(pEntity==NULL) return false;
-    if(pEntity->GetEntityType() != eLuxEntityType_Prop) return false;
+    if(pEntity==NULL)
+    {
+        return false;
+    }
+    if(pEntity->GetEntityType() != eLuxEntityType_Prop)
+    {
+        return false;
+    }
 
     iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
-    if(pProp->GetPropType() != eLuxPropType_SwingDoor) return false;
+    if(pProp->GetPropType() != eLuxPropType_SwingDoor)
+    {
+        return false;
+    }
 
     cLuxProp_SwingDoor *pDoor = static_cast<cLuxProp_SwingDoor*>(pProp);
     return pDoor->IsBroken();
@@ -769,11 +883,20 @@ bool cLuxMap::DoorIsBroken(int alID)
 bool cLuxMap::DoorIsClosed(int alID)
 {
     iLuxEntity *pEntity = GetEntityByID(alID);
-    if(pEntity==NULL) return false;
-    if(pEntity->GetEntityType() != eLuxEntityType_Prop) return false;
+    if(pEntity==NULL)
+    {
+        return false;
+    }
+    if(pEntity->GetEntityType() != eLuxEntityType_Prop)
+    {
+        return false;
+    }
 
     iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
-    if(pProp->GetPropType() != eLuxPropType_SwingDoor) return false;
+    if(pProp->GetPropType() != eLuxPropType_SwingDoor)
+    {
+        return false;
+    }
 
     cLuxProp_SwingDoor *pDoor = static_cast<cLuxProp_SwingDoor*>(pProp);
     return pDoor->GetClosed();
@@ -782,11 +905,20 @@ bool cLuxMap::DoorIsClosed(int alID)
 int cLuxMap::GetDoorState(int alID)
 {
     iLuxEntity *pEntity = GetEntityByID(alID);
-    if(pEntity==NULL) return false;
-    if(pEntity->GetEntityType() != eLuxEntityType_Prop) return false;
+    if(pEntity==NULL)
+    {
+        return false;
+    }
+    if(pEntity->GetEntityType() != eLuxEntityType_Prop)
+    {
+        return false;
+    }
 
     iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
-    if(pProp->GetPropType() != eLuxPropType_SwingDoor) return false;
+    if(pProp->GetPropType() != eLuxPropType_SwingDoor)
+    {
+        return false;
+    }
 
     cLuxProp_SwingDoor *pDoor = static_cast<cLuxProp_SwingDoor*>(pProp);
     return pDoor->GetDoorState();
@@ -860,7 +992,10 @@ void cLuxMap::DestroyAllRopes()
 iPhysicsBody* cLuxMap::GetBodyFromEntityBodyIdPair(const cLuxIdPair &aIdPair)
 {
     iLuxEntity *pEntity = GetEntityByID(aIdPair.mlParentId);
-    if(pEntity==NULL) return NULL;
+    if(pEntity==NULL)
+    {
+        return NULL;
+    }
 
     if(pEntity->GetEntityType() == eLuxEntityType_Prop)
     {
@@ -927,7 +1062,10 @@ cLuxNode_PlayerStart * cLuxMap::GetPlayerStart(const tString & asName)
 cLuxNode_PlayerStart *cLuxMap::GetFirstPlayerStart()
 {
     tLuxPlayerStartMapIt it = m_mapPlayerStartNodes.begin();
-    if(it == m_mapPlayerStartNodes.end()) return NULL;
+    if(it == m_mapPlayerStartNodes.end())
+    {
+        return NULL;
+    }
 
     return it->second;
 }
@@ -1172,7 +1310,10 @@ cLuxLampLightConnection* cLuxMap::GetLampLightConnection(iLight *apLight)
     for(; it != mlstLampLightConnections.end(); ++it)
     {
         cLuxLampLightConnection* pConnection = *it;
-        if(pConnection->GetLight() ==apLight) return pConnection;
+        if(pConnection->GetLight() ==apLight)
+        {
+            return pConnection;
+        }
     }
     return NULL;
 }
@@ -1182,7 +1323,10 @@ cLuxLampLightConnection* cLuxMap::GetLampLightConnection(iLight *apLight)
 cLuxScriptVar* cLuxMap::GetVar(const tString &asName)
 {
     tLuxScriptVarMapIt it = m_mapVars.find(asName);
-    if(it != m_mapVars.end()) return &(it->second);
+    if(it != m_mapVars.end())
+    {
+        return &(it->second);
+    }
 
     m_mapVars.insert(tLuxScriptVarMap::value_type(asName, cLuxScriptVar(asName)));
     it = m_mapVars.find(asName);
@@ -1226,9 +1370,18 @@ void cLuxMap::CalculateTotalCompletionAmount()
                 cLuxProp_Item *pItem = static_cast<cLuxProp_Item*>(pProp);
                 eLuxItemType itemType = pItem->GetItemType();
 
-                if(itemType == eLuxItemType_Puzzle) mlTotalCompletionAmount += gpBase->mpCompletionCountHandler->mlItemCompletionValue;
-                if(itemType == eLuxItemType_Note) mlTotalCompletionAmount += gpBase->mpCompletionCountHandler->mlNoteCompletionValue;
-                if(itemType == eLuxItemType_Diary) mlTotalCompletionAmount += gpBase->mpCompletionCountHandler->mlDiaryCompletionValue;
+                if(itemType == eLuxItemType_Puzzle)
+                {
+                    mlTotalCompletionAmount += gpBase->mpCompletionCountHandler->mlItemCompletionValue;
+                }
+                if(itemType == eLuxItemType_Note)
+                {
+                    mlTotalCompletionAmount += gpBase->mpCompletionCountHandler->mlNoteCompletionValue;
+                }
+                if(itemType == eLuxItemType_Diary)
+                {
+                    mlTotalCompletionAmount += gpBase->mpCompletionCountHandler->mlDiaryCompletionValue;
+                }
             }
             /////////////////////////
             // Chest
@@ -1244,7 +1397,10 @@ void cLuxMap::CalculateTotalCompletionAmount()
             iLuxArea *pArea = static_cast<iLuxArea*>(pEntity);
             eLuxAreaType areaType = pArea->GetAreaType();
 
-            if(areaType == eLuxAreaType_Flashback) mlTotalCompletionAmount += gpBase->mpCompletionCountHandler->mlFlashbackCompletionValue;
+            if(areaType == eLuxAreaType_Flashback)
+            {
+                mlTotalCompletionAmount += gpBase->mpCompletionCountHandler->mlFlashbackCompletionValue;
+            }
         }
     }
 
@@ -1263,7 +1419,10 @@ int cLuxMap::GetFreeEntityID()
     {
         int lId = it->first;
 
-        if(lId != lEntId) return lEntId;
+        if(lId != lEntId)
+        {
+            return lEntId;
+        }
         ++lEntId;
     }
 
@@ -1400,7 +1559,10 @@ void cLuxMap::UpdateLampLightConnections(float afTimeStep)
 
 void cLuxMap::UpdateCheckCommentaryIconActive(float afTimeStep)
 {
-    if(mbCommentaryIconsActive == gpBase->mpMapHandler->GetShowCommentary()) return;
+    if(mbCommentaryIconsActive == gpBase->mpMapHandler->GetShowCommentary())
+    {
+        return;
+    }
 
     mbCommentaryIconsActive = gpBase->mpMapHandler->GetShowCommentary();
 

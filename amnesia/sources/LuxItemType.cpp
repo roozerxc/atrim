@@ -39,7 +39,10 @@ iLuxItemType::~iLuxItemType()
 void iLuxItemType::AddCompletionAmount(int alAmount)
 {
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    if(pMap==NULL) return;
+    if(pMap==NULL)
+    {
+        return;
+    }
 
     pMap->AddCompletionAmount(alAmount);
 }
@@ -132,7 +135,10 @@ cLuxItemType_Note::cLuxItemType_Note() : iLuxItemType("Note", eLuxItemType_Note)
 bool cLuxItemType_Note::BeforeAddItem(cLuxInventory_Item *apItem)
 {
     cLuxNote *pNote = gpBase->mpJournal->AddNote(apItem->GetStringVal(), apItem->GetImageName());
-    if(pNote==NULL)return true;
+    if(pNote==NULL)
+    {
+        return true;
+    }
 
     ProgLog(eLuxProgressLogLevel_Medium, "Picked up note "+ apItem->GetStringVal());
 
@@ -141,9 +147,13 @@ bool cLuxItemType_Note::BeforeAddItem(cLuxInventory_Item *apItem)
         gpBase->mpEngine->GetUpdater()->SetContainer("Journal");
         gpBase->mpJournal->SetForceInstantExit(true);
         if(apItem->GetAmount() >= 2)
+        {
             gpBase->mpJournal->OpenNote(pNote, true);
+        }
         else
+        {
             gpBase->mpJournal->OpenNote(pNote, false);
+        }
     }
 
     AddCompletionAmount(gpBase->mpCompletionCountHandler->mlNoteCompletionValue);
@@ -181,7 +191,10 @@ bool cLuxItemType_Diary::BeforeAddItem(cLuxInventory_Item *apItem)
 {
     int lDiaryIdx;
     cLuxDiary *pDiary = gpBase->mpJournal->AddDiary(apItem->GetStringVal(), apItem->GetImageName(), lDiaryIdx);
-    if(pDiary==NULL) return true;
+    if(pDiary==NULL)
+    {
+        return true;
+    }
 
     ProgLog(eLuxProgressLogLevel_Medium, "Picked up diary "+ apItem->GetStringVal());
 
@@ -282,10 +295,16 @@ bool cLuxItemType_Health::BeforeAddItem(cLuxInventory_Item *apItem)
 void cLuxItemType_Health::OnUse(cLuxInventory_Item *apItem, int alSlotIndex)
 {
     float fHealth = gpBase->mpPlayer->GetHealth();
-    if(fHealth >= 100) return;
+    if(fHealth >= 100)
+    {
+        return;
+    }
 
     fHealth += apItem->GetAmount();
-    if(fHealth > 100) fHealth = 100;
+    if(fHealth > 100)
+    {
+        fHealth = 100;
+    }
     gpBase->mpPlayer->SetHealth(fHealth);
     gpBase->mpInventory->RemoveItem(apItem);
 
@@ -317,7 +336,10 @@ bool cLuxItemType_Sanity::BeforeAddItem(cLuxInventory_Item *apItem)
 void cLuxItemType_Sanity::OnUse(cLuxInventory_Item *apItem, int alSlotIndex)
 {
     float fSanity = gpBase->mpPlayer->GetSanity();
-    if(fSanity >= 100) return;
+    if(fSanity >= 100)
+    {
+        return;
+    }
 
     gpBase->mpPlayer->AddSanity(apItem->GetAmount());
     gpBase->mpInventory->RemoveItem(apItem);
@@ -356,10 +378,16 @@ void cLuxItemType_LampOil::OnUse(cLuxInventory_Item *apItem, int alSlotIndex)
     }
 
     float fLampOil = gpBase->mpPlayer->GetLampOil();
-    if(fLampOil >= 100) return;
+    if(fLampOil >= 100)
+    {
+        return;
+    }
 
     fLampOil += apItem->GetAmount();
-    if(fLampOil > 100) fLampOil = 100;
+    if(fLampOil > 100)
+    {
+        fLampOil = 100;
+    }
     gpBase->mpPlayer->SetLampOil(fLampOil);
     pInventory->RemoveItem(apItem);
 

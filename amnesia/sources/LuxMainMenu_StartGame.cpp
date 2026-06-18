@@ -39,7 +39,7 @@ cLuxMainMenu_StartGame::cLuxMainMenu_StartGame(cGuiSet *apGuiSet, cGuiSkin *apGu
 {
     mvWindowSize = cVector2f(400, 220);
 #if MAC_OS || LINUX
-	mpStartButton = 0;
+    mpStartButton = 0;
 #else
     mpStartButton = nullptr;
 #endif
@@ -174,7 +174,10 @@ void cLuxMainMenu_StartGame::CreateGui()
 
 void cLuxMainMenu_StartGame::ExitPressed()
 {
-    if (mpGuiSet->PopUpIsActive()) return;
+    if (mpGuiSet->PopUpIsActive())
+    {
+        return;
+    }
 
     gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_LastEnum);
 }
@@ -266,12 +269,18 @@ bool cLuxMainMenu_StartGame::ExitCallback(iWidget* apWidget, const cGuiMessageDa
 {
     bool bOkPressed = aData.mlVal == 0 ? true : false;
     if (bOkPressed == false)
+    {
         return true;
+    }
 
     if (gpBase->mpCustomStory == NULL)
+    {
         gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_LastEnum);
+    }
     else
+    {
         gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_CustomStory);
+    }
 
     return true;
 }

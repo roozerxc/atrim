@@ -58,8 +58,14 @@ void cVertexBufferOGL_VBO::UpdateData(tVertexElementFlag aTypes, bool abIndices)
     ;
 
     GLenum usageType = GL_STATIC_DRAW_ARB;
-    if(mUsageType== eVertexBufferUsageType_Dynamic) usageType = GL_DYNAMIC_DRAW_ARB;
-    else if(mUsageType== eVertexBufferUsageType_Stream) usageType = GL_STREAM_DRAW_ARB;
+    if(mUsageType== eVertexBufferUsageType_Dynamic)
+    {
+        usageType = GL_DYNAMIC_DRAW_ARB;
+    }
+    else if(mUsageType== eVertexBufferUsageType_Stream)
+    {
+        usageType = GL_STREAM_DRAW_ARB;
+    }
 
     //Create the VBO vertex arrays
     for(size_t i=0; i<mvElementArrays.size(); ++i)
@@ -112,7 +118,10 @@ void cVertexBufferOGL_VBO::Draw(eVertexBufferDrawType aDrawType)
     glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,mlElementHandle);
 
     int lSize = mlElementNum;
-    if(mlElementNum<0) lSize = GetIndexNum();
+    if(mlElementNum<0)
+    {
+        lSize = GetIndexNum();
+    }
 
     glDrawElements(mode,lSize,GL_UNSIGNED_INT, (char*) NULL);
     //glDrawRangeElements(mode,0,GetVertexNum(),lSize,GL_UNSIGNED_INT, NULL);
@@ -162,7 +171,10 @@ void cVertexBufferOGL_VBO::UnBind()
         //Log("Unbinding %d handle %d, type: %d\n",i,pElement->mlGLHandle, pElement->mType);
 
         int lTextureUnit = GetVertexElementTextureUnit(pElement->mType);
-        if(lTextureUnit >=0) glClientActiveTextureARB(GL_TEXTURE0_ARB + lTextureUnit);
+        if(lTextureUnit >=0)
+        {
+            glClientActiveTextureARB(GL_TEXTURE0_ARB + lTextureUnit);
+        }
 
         glDisableClientState( GetGLArrayFromVertexElement(pElement->mType) );
     }
@@ -182,8 +194,14 @@ void cVertexBufferOGL_VBO::CompileSpecific()
     ;
 
     GLenum usageType = GL_STATIC_DRAW_ARB;
-    if(mUsageType== eVertexBufferUsageType_Dynamic) usageType = GL_DYNAMIC_DRAW_ARB;
-    else if(mUsageType== eVertexBufferUsageType_Stream) usageType = GL_STREAM_DRAW_ARB;
+    if(mUsageType== eVertexBufferUsageType_Dynamic)
+    {
+        usageType = GL_DYNAMIC_DRAW_ARB;
+    }
+    else if(mUsageType== eVertexBufferUsageType_Stream)
+    {
+        usageType = GL_STREAM_DRAW_ARB;
+    }
 
     //Create the VBO vertex arrays
     for(size_t i=0; i<mvElementArrays.size(); ++i)
@@ -230,7 +248,10 @@ void cVertexBufferOGL_VBO::SetVertexStates()
     for(size_t i=0; i<mvElementArrays.size(); ++i)
     {
         cVtxBufferGLElementArray *pElement = mvElementArrays[i];
-        if(pElement->mType == eVertexBufferElement_Position) continue;    //Make sure postion is called last...
+        if(pElement->mType == eVertexBufferElement_Position)
+        {
+            continue;    //Make sure postion is called last...
+        }
 
         //Log("Binding %d handle %d, type: %d\n",i,pElement->mlGLHandle, pElement->mType);
 
@@ -240,7 +261,10 @@ void cVertexBufferOGL_VBO::SetVertexStates()
         int lTextureUnit = GetVertexElementTextureUnit(pElement->mType);
         if(lTextureUnit >=0)
         {
-            if(lTextureUnit>0)bHadExtraTextureUnit = true;
+            if(lTextureUnit>0)
+            {
+                bHadExtraTextureUnit = true;
+            }
             glClientActiveTextureARB(GL_TEXTURE0_ARB + lTextureUnit);
         }
 
@@ -277,7 +301,10 @@ void cVertexBufferOGL_VBO::SetVertexStates()
             //TODO: User types
         }
     }
-    if(bHadExtraTextureUnit) glClientActiveTextureARB(GL_TEXTURE0_ARB);
+    if(bHadExtraTextureUnit)
+    {
+        glClientActiveTextureARB(GL_TEXTURE0_ARB);
+    }
 
 
     ////////////////////////////////////////
@@ -285,7 +312,10 @@ void cVertexBufferOGL_VBO::SetVertexStates()
     for(size_t i=0; i<mvElementArrays.size(); ++i)
     {
         cVtxBufferGLElementArray *pElement = mvElementArrays[i];
-        if(pElement->mType != eVertexBufferElement_Position) continue; //Only set position
+        if(pElement->mType != eVertexBufferElement_Position)
+        {
+            continue;    //Only set position
+        }
 
         //Log("Binding %d handle %d, type: %d\n",i,pElement->mlGLHandle, pElement->mType);
 

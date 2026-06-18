@@ -25,7 +25,10 @@ cLuxProgressLogHandler::cLuxProgressLogHandler() : iLuxUpdateable("LuxProgressLo
 
 cLuxProgressLogHandler::~cLuxProgressLogHandler()
 {
-    if(mpFile) fclose(mpFile);
+    if(mpFile)
+    {
+        fclose(mpFile);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -63,7 +66,10 @@ void cLuxProgressLogHandler::Reset()
 
 void cLuxProgressLogHandler::CreateAndResetLogFile()
 {
-    if(mbActive==false) return;
+    if(mbActive==false)
+    {
+        return;
+    }
 
     /////////////////////////////
     // Close previous log file
@@ -95,7 +101,9 @@ void cLuxProgressLogHandler::CreateAndResetLogFile()
 #endif
 
     if(mpFile==NULL)
+    {
         Error("Could not open progress log file '%s'!\n", cString::To8Char(sPath).c_str());
+    }
     else
     {
         fprintf(mpFile, "--- Amnesia Progress Logger ----\n");
@@ -111,7 +119,10 @@ void cLuxProgressLogHandler::CreateAndResetLogFile()
 
 void cLuxProgressLogHandler::Update(float afTimeStep)
 {
-    if(mbActive==false) return;
+    if(mbActive==false)
+    {
+        return;
+    }
 
 
     mlCounter++;
@@ -121,7 +132,10 @@ void cLuxProgressLogHandler::Update(float afTimeStep)
 
 void cLuxProgressLogHandler::AddLog(eLuxProgressLogLevel aLevel, const tString& asMessage)
 {
-    if(mbActive==false || mpFile==NULL) return;
+    if(mbActive==false || mpFile==NULL)
+    {
+        return;
+    }
 
     int lSec = (mlCounter/60) % 60;
     int lMin = (mlCounter/(60*60)) % 60;
@@ -166,9 +180,18 @@ void cLuxProgressLogHandler::AddLog(eLuxProgressLogLevel aLevel, const tString& 
 
 tString cLuxProgressLogHandler::LevelToString(eLuxProgressLogLevel aLevel)
 {
-    if(aLevel == eLuxProgressLogLevel_Low)        return "Low";
-    if(aLevel == eLuxProgressLogLevel_Medium)    return "Medium";
-    if(aLevel == eLuxProgressLogLevel_High)        return "High";
+    if(aLevel == eLuxProgressLogLevel_Low)
+    {
+        return "Low";
+    }
+    if(aLevel == eLuxProgressLogLevel_Medium)
+    {
+        return "Medium";
+    }
+    if(aLevel == eLuxProgressLogLevel_High)
+    {
+        return "High";
+    }
     return "";
 }
 

@@ -45,7 +45,10 @@ public:
 
     void SetHighlightedItem( cWidgetMenuItem* apItem )
     {
-        if(apItem!=mpHighlightedItem) mpHighlightedItem = apItem;
+        if(apItem!=mpHighlightedItem)
+        {
+            mpHighlightedItem = apItem;
+        }
     }
     cWidgetMenuItem* GetHightlightedItem ()
     {

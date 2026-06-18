@@ -66,7 +66,10 @@ cLightSpot::cLightSpot(tString asName, cResources *apResources) : iLight(asName,
 
 cLightSpot::~cLightSpot()
 {
-    if(mpSpotFalloffMap) mpTextureManager->Destroy(mpSpotFalloffMap);
+    if(mpSpotFalloffMap)
+    {
+        mpTextureManager->Destroy(mpSpotFalloffMap);
+    }
 
     hplDelete(mpFrustum);
 }
@@ -191,7 +194,10 @@ iTexture *cLightSpot::GetSpotFalloffMap()
 
 void cLightSpot::SetSpotFalloffMap(iTexture* apTexture)
 {
-    if(mpSpotFalloffMap) mpTextureManager->Destroy(mpSpotFalloffMap);
+    if(mpSpotFalloffMap)
+    {
+        mpTextureManager->Destroy(mpSpotFalloffMap);
+    }
 
     mpSpotFalloffMap = apTexture;
     if(mpSpotFalloffMap)
@@ -206,7 +212,10 @@ void cLightSpot::SetSpotFalloffMap(iTexture* apTexture)
 
 bool cLightSpot::CollidesWithBV(cBoundingVolume *apBV)
 {
-    if(cMath::CheckBVIntersection(*GetBoundingVolume(), *apBV)==false) return false;
+    if(cMath::CheckBVIntersection(*GetBoundingVolume(), *apBV)==false)
+    {
+        return false;
+    }
 
     return GetFrustum()->CollideBoundingVolume(apBV)!= eCollision_Outside;
 }
@@ -229,9 +238,18 @@ bool cLightSpot::CollidesWithFrustum(cFrustum *apFrustum)
 
 static eTextureAnimMode GetAnimMode(const tString& asType)
 {
-    if(cString::ToLowerCase(asType) == "none") return eTextureAnimMode_None;
-    else if(cString::ToLowerCase(asType) == "loop") return eTextureAnimMode_Loop;
-    else if(cString::ToLowerCase(asType) == "oscillate") return eTextureAnimMode_Oscillate;
+    if(cString::ToLowerCase(asType) == "none")
+    {
+        return eTextureAnimMode_None;
+    }
+    else if(cString::ToLowerCase(asType) == "loop")
+    {
+        return eTextureAnimMode_Loop;
+    }
+    else if(cString::ToLowerCase(asType) == "oscillate")
+    {
+        return eTextureAnimMode_Oscillate;
+    }
 
     return eTextureAnimMode_None;
 }

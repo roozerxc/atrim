@@ -59,10 +59,19 @@ iRenderable::iRenderable(const tString &asName) : iEntity3D(asName)
 
 void iRenderable::SetRenderFlagBit(tRenderableFlag alFlagBit, bool abSet)
 {
-    if(abSet)    mlRenderFlags |= alFlagBit;
-    else        mlRenderFlags &= (~alFlagBit);
+    if(abSet)
+    {
+        mlRenderFlags |= alFlagBit;
+    }
+    else
+    {
+        mlRenderFlags &= (~alFlagBit);
+    }
 
-    if(mpRenderCallback) mpRenderCallback->OnRenderFlagsChange(this);
+    if(mpRenderCallback)
+    {
+        mpRenderCallback->OnRenderFlagsChange(this);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -73,7 +82,10 @@ void iRenderable::SetVisible(bool abVisible)
 
     OnChangeVisible();
 
-    if(mpRenderCallback) mpRenderCallback->OnVisibleChange(this);
+    if(mpRenderCallback)
+    {
+        mpRenderCallback->OnVisibleChange(this);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -81,7 +93,10 @@ void iRenderable::SetVisible(bool abVisible)
 cMatrixf* iRenderable::GetInvModelMatrix()
 {
     cMatrixf *pModelMatrix = GetModelMatrix(NULL);
-    if(pModelMatrix==NULL) return NULL;
+    if(pModelMatrix==NULL)
+    {
+        return NULL;
+    }
 
     if(mlLastMatrixCount != GetMatrixUpdateCount())
     {
@@ -97,7 +112,10 @@ cMatrixf* iRenderable::GetInvModelMatrix()
 
 void iRenderable::SetCoverageAmount(float afX)
 {
-    if(mfCoverageAmount == afX) return;
+    if(mfCoverageAmount == afX)
+    {
+        return;
+    }
 
     mfCoverageAmount = afX;
 

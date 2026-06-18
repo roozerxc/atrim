@@ -70,7 +70,10 @@ void cLuxCritterRayCallback::Reset()
 
 bool cLuxCritterRayCallback::BeforeIntersect(iPhysicsBody *pBody)
 {
-    if(pBody->GetCollide()==false || pBody->IsCharacter() || mpCritterBase->mpBody == pBody) return false;
+    if(pBody->GetCollide()==false || pBody->IsCharacter() || mpCritterBase->mpBody == pBody)
+    {
+        return false;
+    }
     return true;
 }
 
@@ -166,9 +169,13 @@ void iLuxProp_CritterBase::OnSetupAfterLoad(cWorld *apWorld)
     }
 
     if(mfAttackSizeRadius > 0)
+    {
         mpDamageShape = apWorld->GetPhysicsWorld()->CreateSphereShape(mfAttackSizeRadius, NULL);
+    }
     else
+    {
         mpDamageShape = NULL;
+    }
 
 
     mvGroundNormal = cMath::MatrixMul(mpBody->GetLocalMatrix().GetRotation(), mvGroundNormal);
@@ -199,7 +206,10 @@ void iLuxProp_CritterBase::UpdatePropSpecific(float afTimeStep)
     //If pLayer is far away do not update
     cVector3f vPlayerPos = gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition();
     float fPlayerDistanceSqr = cMath::Vector3DistSqr(vPlayerPos, mpBody->GetWorldPosition());
-    if(fPlayerDistanceSqr > 15*15) return;
+    if(fPlayerDistanceSqr > 15*15)
+    {
+        return;
+    }
 
     UpdateCritterSpecific(afTimeStep);
 
@@ -260,7 +270,9 @@ void iLuxProp_CritterBase::OnHealthChange()
         cWorld *pWorld = mpMap->GetWorld();
 
         if(msDeathSound != "")
+        {
             PlaySound("CritterDeath",msDeathSound, true, true);
+        }
 
         if(msDeathPS != "")
         {
@@ -358,7 +370,10 @@ cMatrixf iLuxProp_CritterBase::GetAttackMatrix(const cVector3f& avDir)
 
 bool iLuxProp_CritterBase::Attack(const cVector3f& avDir)
 {
-    if(mpDamageShape==NULL) return false;
+    if(mpDamageShape==NULL)
+    {
+        return false;
+    }
 
     bool bHit = gpBase->mpMapHelper->ShapeDamage(mpDamageShape, GetAttackMatrix(avDir), mpBody->GetLocalPosition(),
                 mvAttackDamageMinMax.x, mvAttackDamageMinMax.y,
@@ -415,7 +430,10 @@ cVector3f iLuxProp_CritterBase::GetTowardPlayerAdd(bool abDependOnDistance, floa
     vToPlayer = vToPlayer - mvGroundNormal * cMath::Vector3Dot(mvGroundNormal, vToPlayer);//Only want the direction in the current movement plane.
 
     cVector3f vAdd = vToPlayer * afTimeStep;
-    if(abDependOnDistance) vAdd = vAdd * (1.0f/fToPlayerDist);
+    if(abDependOnDistance)
+    {
+        vAdd = vAdd * (1.0f/fToPlayerDist);
+    }
 
     return vAdd;
 }
@@ -424,7 +442,10 @@ cVector3f iLuxProp_CritterBase::GetTowardPlayerAdd(bool abDependOnDistance, floa
 
 void iLuxProp_CritterBase::UpdateMovement(float afTimeStep)
 {
-    if(mvVel ==0) return;
+    if(mvVel ==0)
+    {
+        return;
+    }
 
     ////////////////////////
     // Move the body
@@ -448,7 +469,10 @@ void iLuxProp_CritterBase::UpdateMesh(float afTimeStep)
     if(mvVel!=0)
     {
         mlstFwdDirs.push_back(cMath::Vector3Normalize(mvVel));
-        if(mlstFwdDirs.size() > 20) mlstFwdDirs.pop_front();
+        if(mlstFwdDirs.size() > 20)
+        {
+            mlstFwdDirs.pop_front();
+        }
     }
 
     ////////////////////////////
@@ -468,7 +492,10 @@ void iLuxProp_CritterBase::UpdateMesh(float afTimeStep)
     ////////////////////////////
     // Get smooth up
     mlstUpDirs.push_back(mvGroundNormal);
-    if(mlstUpDirs.size() > 40) mlstUpDirs.pop_front();
+    if(mlstUpDirs.size() > 40)
+    {
+        mlstUpDirs.pop_front();
+    }
     cVector3f vTotalUp=0;
     for(tVector3fListIt it = mlstUpDirs.begin(); it != mlstUpDirs.end(); ++it)
     {

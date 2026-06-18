@@ -52,7 +52,10 @@ void cLuxMainMenu_Profile::CreateGui()
 
 void cLuxMainMenu_Profile::ExitPressed()
 {
-    if(mpGuiSet->PopUpIsActive()) return;
+    if(mpGuiSet->PopUpIsActive())
+    {
+        return;
+    }
 
     //TODO: If game is active, then return to game!
 }
@@ -75,7 +78,9 @@ void cLuxMainMenu_Profile::OnSetActive(bool abX)
         ////////////////////////////////////////////////////////////
         // If no profiles found, start the Create Profile window
         if(mpListProfiles->GetItemNum()==0)
+        {
             PressCreateProfile(NULL, cGuiMessageData());
+        }
         else
         {
             mpListProfiles->SetIsLocked(true);
@@ -123,7 +128,9 @@ void cLuxMainMenu_Profile::CreateMainGui()
     {
         mpListProfiles->SetSelectedItem(mlLastPickedProfile);
         if(mpListProfiles->GetSelectedItem()==-1)
+        {
             mpListProfiles->SetSelectedItem(0);
+        }
     }
 
 
@@ -172,9 +179,13 @@ void cLuxMainMenu_Profile::CreateMainGui()
 
         pWidget->SetFocusNavigation(eUIArrow_Up, mpListProfiles);
         if(lPrev>=0)
+        {
             pWidget->SetFocusNavigation(eUIArrow_Left, vButtons[lPrev]);
+        }
         if(lNext<static_cast<int>(vButtons.size()))
+        {
             pWidget->SetFocusNavigation(eUIArrow_Right, vButtons[lNext]);
+        }
     }
 }
 
@@ -249,7 +260,9 @@ void cLuxMainMenu_Profile::CreateEnterNameGui()
     vButtons[0]->SetFocusNavigation(eUIArrow_Right, vButtons[1]);
     vButtons[1]->SetFocusNavigation(eUIArrow_Left, vButtons[0]);
     for(size_t i=0; i<vButtons.size(); ++i)
+    {
         vButtons[i]->SetFocusNavigation(eUIArrow_Up, mpTextEnterName);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -313,7 +326,10 @@ bool cLuxMainMenu_Profile::WindowCloses(iWidget* apWidget, const cGuiMessageData
 
         mpWindow->SetEnabled(false);
         mpWindow->SetVisible(false);
-        if(mpGuiSet->GetAttentionWidget() == mpWindow) mpGuiSet->SetAttentionWidget(NULL);
+        if(mpGuiSet->GetAttentionWidget() == mpWindow)
+        {
+            mpGuiSet->SetAttentionWidget(NULL);
+        }
     }
     /////////
     //User config not loaded, pop up quit game message box
@@ -348,8 +364,14 @@ bool cLuxMainMenu_Profile::WindowUIPress(iWidget* apWidget, const cGuiMessageDat
 {
     if(aData.mlVal == eUIButton_Secondary)
     {
-        if(mpListProfiles->GetIsLocked()) return false;
-        if(mpTextEnterName->IsVisible()) return false;
+        if(mpListProfiles->GetIsLocked())
+        {
+            return false;
+        }
+        if(mpTextEnterName->IsVisible())
+        {
+            return false;
+        }
 
         return WindowCloses(apWidget, aData);
     }
@@ -389,7 +411,10 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Profile, SelectedProfileChange);
 
 void cLuxMainMenu_Profile::SelectProfile(int alNum)
 {
-    if(alNum < 0) return;
+    if(alNum < 0)
+    {
+        return;
+    }
 
     mlLastPickedProfile = alNum;
 
@@ -470,7 +495,10 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Profile, PressDeleteProfile);
 bool cLuxMainMenu_Profile::PressDeleteProfilePopupClose(iWidget* apWidget, const cGuiMessageData& aData)
 {
     bool bDeleteProfile = aData.mlVal ==0 ? true : false;
-    if(bDeleteProfile==false) return true;
+    if(bDeleteProfile==false)
+    {
+        return true;
+    }
 
     tWString sFolder = mpListProfiles->GetItem(mpListProfiles->GetSelectedItem())->GetText();
 
@@ -522,8 +550,14 @@ bool cLuxMainMenu_Profile::PressEnterNameCreate(iWidget* apWidget, const cGuiMes
     tWString sProfileName = mpTextEnterName->GetText();
 
 
-    while(sProfileName.size() && sProfileName[0] == ' ') sProfileName = sProfileName.substr(1);
-    while(sProfileName.size() && sProfileName[sProfileName.size()-1] == ' ') sProfileName = sProfileName.substr(0, sProfileName.size()-1);
+    while(sProfileName.size() && sProfileName[0] == ' ')
+    {
+        sProfileName = sProfileName.substr(1);
+    }
+    while(sProfileName.size() && sProfileName[sProfileName.size()-1] == ' ')
+    {
+        sProfileName = sProfileName.substr(0, sProfileName.size()-1);
+    }
 
     if(sProfileName.empty())
     {

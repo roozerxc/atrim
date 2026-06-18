@@ -20,7 +20,9 @@ cMutexWin32::cMutexWin32()
 cMutexWin32::~cMutexWin32()
 {
     if(mpMutexHandle)
+    {
         CloseHandle(mpMutexHandle);
+    }
 }
 
 //-----------------------------------------------------------------------

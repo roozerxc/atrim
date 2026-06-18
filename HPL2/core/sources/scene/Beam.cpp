@@ -79,8 +79,14 @@ cBeam::cBeam(const tString asName, cResources *apResources,cGraphics *apGraphics
         mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Normal,cVector3f(0,0,1));
     }
 
-    for(int i=0; i<3; i++) mpVtxBuffer->AddIndex(i);
-    for(int i=2; i<5; i++) mpVtxBuffer->AddIndex(i==4?0:i);
+    for(int i=0; i<3; i++)
+    {
+        mpVtxBuffer->AddIndex(i);
+    }
+    for(int i=2; i<5; i++)
+    {
+        mpVtxBuffer->AddIndex(i==4?0:i);
+    }
 
     mpVtxBuffer->Compile(eVertexCompileFlag_CreateTangents);
 
@@ -98,8 +104,14 @@ cBeam::cBeam(const tString asName, cResources *apResources,cGraphics *apGraphics
 cBeam::~cBeam()
 {
     hplDelete(mpEnd);
-    if(mpMaterial) mpMaterialManager->Destroy(mpMaterial);
-    if(mpVtxBuffer) hplDelete(mpVtxBuffer);
+    if(mpMaterial)
+    {
+        mpMaterialManager->Destroy(mpMaterial);
+    }
+    if(mpVtxBuffer)
+    {
+        hplDelete(mpVtxBuffer);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -122,7 +134,10 @@ void cBeam::SetSize(const cVector2f& avSize)
 
 void cBeam::SetTileHeight(bool abX)
 {
-    if(mbTileHeight == abX) return;
+    if(mbTileHeight == abX)
+    {
+        return;
+    }
 
     mbTileHeight = abX;
 
@@ -133,7 +148,10 @@ void cBeam::SetTileHeight(bool abX)
 
 void cBeam::SetMultiplyAlphaWithColor(bool abX)
 {
-    if(mbMultiplyAlphaWithColor == abX) return;
+    if(mbMultiplyAlphaWithColor == abX)
+    {
+        return;
+    }
 
     mbMultiplyAlphaWithColor = abX;
 }
@@ -142,7 +160,10 @@ void cBeam::SetMultiplyAlphaWithColor(bool abX)
 
 void cBeam::SetColor(const cColor &aColor)
 {
-    if(mColor == aColor) return;
+    if(mColor == aColor)
+    {
+        return;
+    }
 
     mColor = aColor;
 
@@ -191,13 +212,31 @@ cBoundingVolume* cBeam::GetBoundingVolume()
         cVector3f vMin = vMax;
         cVector3f vEnd = mpEnd->GetWorldPosition();
 
-        if(vMax.x < vEnd.x) vMax.x = vEnd.x;
-        if(vMax.y < vEnd.y) vMax.y = vEnd.y;
-        if(vMax.z < vEnd.z) vMax.z = vEnd.z;
+        if(vMax.x < vEnd.x)
+        {
+            vMax.x = vEnd.x;
+        }
+        if(vMax.y < vEnd.y)
+        {
+            vMax.y = vEnd.y;
+        }
+        if(vMax.z < vEnd.z)
+        {
+            vMax.z = vEnd.z;
+        }
 
-        if(vMin.x > vEnd.x) vMin.x = vEnd.x;
-        if(vMin.y > vEnd.y) vMin.y = vEnd.y;
-        if(vMin.z > vEnd.z) vMin.z = vEnd.z;
+        if(vMin.x > vEnd.x)
+        {
+            vMin.x = vEnd.x;
+        }
+        if(vMin.y > vEnd.y)
+        {
+            vMin.y = vEnd.y;
+        }
+        if(vMin.z > vEnd.z)
+        {
+            vMin.z = vEnd.z;
+        }
 
         vMin -= cVector3f(mvSize.x);
         vMax += cVector3f(mvSize.x);
@@ -287,7 +326,10 @@ void cBeam::UpdateGraphicsForFrame(float afFrameTime)
 
 cMatrixf* cBeam::GetModelMatrix(cFrustum *apFrustum)
 {
-    if(apFrustum==NULL)return &GetWorldMatrix();
+    if(apFrustum==NULL)
+    {
+        return &GetWorldMatrix();
+    }
 
     m_mtxTempTransform = GetWorldMatrix();
     cVector3f vForward, vRight, vUp;
@@ -304,7 +346,9 @@ cMatrixf* cBeam::GetModelMatrix(cFrustum *apFrustum)
         Warning("Beam Right vector is not correct! Contact programmer!\n");
     }
     else
+    {
         vRight = cMath::Vector3Cross(vUp, vCameraForward);
+    }
 
     vRight.Normalize();
     vForward = cMath::Vector3Cross(vRight, vUp);
@@ -348,7 +392,10 @@ bool cBeam::LoadXMLProperties(const tString asFile)
     if(sPath != _W(""))
     {
         FILE *pFile = cPlatform::OpenFile(sPath, _W("rb"));
-        if(pFile==NULL) return false;
+        if(pFile==NULL)
+        {
+            return false;
+        }
         TiXmlDocument *pDoc = hplNew( TiXmlDocument, () );
         if(pDoc->LoadFile(pFile))
         {
@@ -397,7 +444,10 @@ bool cBeam::LoadXMLProperties(const tString asFile)
         {
             Error("Couldn't load file '%s'\n",sNewFile.c_str());
         }
-        if(pFile) fclose(pFile);
+        if(pFile)
+        {
+            fclose(pFile);
+        }
         hplDelete(pDoc);
     }
     else
@@ -413,7 +463,10 @@ bool cBeam::LoadXMLProperties(const tString asFile)
 
 bool cBeam::IsVisible()
 {
-    if(mColor.r <= 0 && mColor.g <= 0 && mColor.b <= 0) return false;
+    if(mColor.r <= 0 && mColor.g <= 0 && mColor.b <= 0)
+    {
+        return false;
+    }
 
     return mbIsVisible;
 }
@@ -444,7 +497,10 @@ void cBeamEnd_UpdateCallback::OnTransformUpdate(iEntity3D * apEntity)
 
 void cBeamEnd::SetColor(const cColor &aColor)
 {
-    if(mColor == aColor) return;
+    if(mColor == aColor)
+    {
+        return;
+    }
 
     mColor = aColor;
 

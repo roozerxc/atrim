@@ -87,7 +87,10 @@ void cAnimationTrack::ClearKeyFrames()
 
 void cAnimationTrack::ApplyToNode(cNode3D* apNode, float afTime, float afWeight, bool bLoop)
 {
-    if(mvKeyFrames.empty()) return;
+    if(mvKeyFrames.empty())
+    {
+        return;
+    }
 
     cKeyFrame Frame = GetInterpolatedKeyFrame(afTime);
 

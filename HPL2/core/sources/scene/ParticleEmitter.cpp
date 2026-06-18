@@ -46,7 +46,10 @@ iParticleEmitterData::~iParticleEmitterData()
 {
     for(int i=0; i<(int)mvMaterials.size(); i++)
     {
-        if(mvMaterials[i]) mpResources->GetMaterialManager()->Destroy(mvMaterials[i]);
+        if(mvMaterials[i])
+        {
+            mpResources->GetMaterialManager()->Destroy(mvMaterials[i]);
+        }
     }
 }
 //-----------------------------------------------------------------------
@@ -99,8 +102,14 @@ iParticleEmitter::iParticleEmitter(tString asName,tMaterialVec *avMaterials,
     for(int i=0; i<(int)alMaxParticles; i++)
     {
         int lStart = i*4;
-        for(int j=0; j<3; j++) mpVtxBuffer->AddIndex(lStart + j);
-        for(int j=2; j<5; j++) mpVtxBuffer->AddIndex(lStart + (j==4?0:j));
+        for(int j=0; j<3; j++)
+        {
+            mpVtxBuffer->AddIndex(lStart + j);
+        }
+        for(int j=2; j<5; j++)
+        {
+            mpVtxBuffer->AddIndex(lStart + (j==4?0:j));
+        }
     }
 
     //////////////////////////////////
@@ -212,18 +221,27 @@ void iParticleEmitter::SetSubDivUV(const cVector2l &avSubDiv)
 //Seems like this fucntion is never called any more...
 void iParticleEmitter::UpdateLogic(float afTimeStep)
 {
-    if(IsActive()==false) return;
+    if(IsActive()==false)
+    {
+        return;
+    }
 
     //////////////////////////////
     // Update sleep
     if(IsDying()==false && iRenderer::GetRenderFrameCount() != mlRenderFrameCount)
     {
-        if(mlSleepCount <= 0)return;
+        if(mlSleepCount <= 0)
+        {
+            return;
+        }
         mlSleepCount--;
     }
     else
     {
-        if(mlSleepCount<10) mlSleepCount =10;
+        if(mlSleepCount<10)
+        {
+            mlSleepCount =10;
+        }
     }
 
     //////////////////////////////
@@ -413,7 +431,10 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,float afFra
             //If this is a reflection, need to invert the ordering.
             if(apFrustum->GetInvertsCullMode())
             {
-                for(int i=0; i<4; ++i)    vAdd[i].y = -vAdd[i].y;
+                for(int i=0; i<4; ++i)
+                {
+                    vAdd[i].y = -vAdd[i].y;
+                }
             }
 
             // NEW
@@ -467,7 +488,10 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,float afFra
             //If this is a reflection, need to invert the ordering.
             if(apFrustum->GetInvertsCullMode())
             {
-                for(int i=0; i<4; ++i)    vAdd[i].y = -vAdd[i].y;
+                for(int i=0; i<4; ++i)
+                {
+                    vAdd[i].y = -vAdd[i].y;
+                }
             }
 
             int lVtxStride = mpVtxBuffer->GetElementNum(eVertexBufferElement_Position);
@@ -575,7 +599,10 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,float afFra
                 vDirX = vDirX * mvDrawSize.x * pParticle->mvSize.x;
                 vDirY = vDirY * mvDrawSize.y * pParticle->mvSize.y;
 
-                if(apFrustum->GetInvertsCullMode()) vDirY = vDirY*-1;
+                if(apFrustum->GetInvertsCullMode())
+                {
+                    vDirY = vDirY*-1;
+                }
 
                 cColor finalColor = pParticle->mColor * colorMul;
 
@@ -658,9 +685,13 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,float afFra
         //Update the vertex buffer data
 
         if(mvSubDivUV.size() > 1)
+        {
             mpVtxBuffer->UpdateData(eVertexElementFlag_Position | eVertexElementFlag_Color0 | eVertexElementFlag_Texture0, false);
+        }
         else
+        {
             mpVtxBuffer->UpdateData(eVertexElementFlag_Position | eVertexElementFlag_Color0, false);
+        }
 
     }
 
@@ -678,7 +709,10 @@ iVertexBuffer* iParticleEmitter::GetVertexBuffer()
 
 bool iParticleEmitter::IsVisible()
 {
-    if(IsActive()==false) return false;
+    if(IsActive()==false)
+    {
+        return false;
+    }
     return mbIsVisible;
 }
 
@@ -702,16 +736,34 @@ cBoundingVolume* iParticleEmitter::GetBoundingVolume()
                 cParticle *pParticle = mvParticles[i];
 
                 //X
-                if(pParticle->mvPos.x < vMin.x)         vMin.x = pParticle->mvPos.x;
-                else if(pParticle->mvPos.x > vMax.x) vMax.x = pParticle->mvPos.x;
+                if(pParticle->mvPos.x < vMin.x)
+                {
+                    vMin.x = pParticle->mvPos.x;
+                }
+                else if(pParticle->mvPos.x > vMax.x)
+                {
+                    vMax.x = pParticle->mvPos.x;
+                }
 
                 //Y
-                if(pParticle->mvPos.y < vMin.y)         vMin.y = pParticle->mvPos.y;
-                else if(pParticle->mvPos.y > vMax.y) vMax.y = pParticle->mvPos.y;
+                if(pParticle->mvPos.y < vMin.y)
+                {
+                    vMin.y = pParticle->mvPos.y;
+                }
+                else if(pParticle->mvPos.y > vMax.y)
+                {
+                    vMax.y = pParticle->mvPos.y;
+                }
 
                 //Z
-                if(pParticle->mvPos.z < vMin.z)         vMin.z = pParticle->mvPos.z;
-                else if(pParticle->mvPos.z > vMax.z) vMax.z = pParticle->mvPos.z;
+                if(pParticle->mvPos.z < vMin.z)
+                {
+                    vMin.z = pParticle->mvPos.z;
+                }
+                else if(pParticle->mvPos.z > vMax.z)
+                {
+                    vMax.z = pParticle->mvPos.z;
+                }
             }
         }
         else
@@ -808,7 +860,10 @@ cMatrixf* iParticleEmitter::GetModelMatrix(cFrustum *apFrustum)
 
 cParticle* iParticleEmitter::CreateParticle()
 {
-    if(mlNumOfParticles == mlMaxParticles) return NULL;
+    if(mlNumOfParticles == mlMaxParticles)
+    {
+        return NULL;
+    }
     ++mlNumOfParticles;
     return mvParticles[mlNumOfParticles-1];
 }

@@ -140,7 +140,10 @@ bool cSqScript::CreateFromFile(const tWString& asFileName, tString *apCompileMes
     }
 
     int lBuildOutput = mpModule->Build();
-    if(apCompileMessages) *apCompileMessages = mpScriptOutput->GetMessage();
+    if(apCompileMessages)
+    {
+        *apCompileMessages = mpScriptOutput->GetMessage();
+    }
 
     if(lBuildOutput<0)
     {

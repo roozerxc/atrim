@@ -172,7 +172,10 @@ void iPhysicsWorld::DestroyShape(iCollideShape *apShape)
 
 void iPhysicsWorld::DestroyBody(iPhysicsBody* apBody)
 {
-    if(apBody->IsInUpdateList()) RemoveBodyFromUpdateList(apBody, true);
+    if(apBody->IsInUpdateList())
+    {
+        RemoveBodyFromUpdateList(apBody, true);
+    }
 
     tPhysicsBodyListIt it = mlstBodies.begin();
     for(; it != mlstBodies.end(); ++it)
@@ -220,7 +223,10 @@ void iPhysicsWorld::EnableBodiesInBV(cBoundingVolume *apBV, bool abEnabled)
 
 void iPhysicsWorld::AddBodyToUpdateList(iPhysicsBody *apBody)
 {
-    if(apBody->IsInUpdateList()) return;
+    if(apBody->IsInUpdateList())
+    {
+        return;
+    }
 
     m_setUpdateBodies.insert(apBody);
     apBody->SetInUpdateList(true);
@@ -230,7 +236,10 @@ void iPhysicsWorld::AddBodyToUpdateList(iPhysicsBody *apBody)
 //        Still want to remove when destroying though.
 void iPhysicsWorld::RemoveBodyFromUpdateList(iPhysicsBody *apBody, bool abDestroyingBody)
 {
-    if(apBody->IsInUpdateList()==false) return;
+    if(apBody->IsInUpdateList()==false)
+    {
+        return;
+    }
 
     m_setUpdateBodies.erase(apBody);
     apBody->SetInUpdateList(false);
@@ -253,7 +262,10 @@ bool iPhysicsWorld::JointExists(iPhysicsJoint* apJoint)
     tPhysicsJointListIt JointIt = mlstJoints.begin();
     for(; JointIt != mlstJoints.end(); ++JointIt)
     {
-        if(*JointIt == apJoint) return true;
+        if(*JointIt == apJoint)
+        {
+            return true;
+        }
     }
     return false;
 }
@@ -316,7 +328,10 @@ iPhysicsRope* iPhysicsWorld::GetRopeFromUniqueID(int alID)
     {
         iPhysicsRope* pRope = *it;
 
-        if(pRope->GetUniqueID() == alID) return pRope;
+        if(pRope->GetUniqueID() == alID)
+        {
+            return pRope;
+        }
     }
     return NULL;
 }
@@ -372,11 +387,17 @@ void iPhysicsWorld::FadeoutAllLoopSounds(float afFadeSpeed)
         iPhysicsBody *pBody = *bodyIt;
 
         cSoundEntity *pRollSound = pBody->GetRollSoundEntity();
-        if(pRollSound && mpWorld->SoundEntityExists(pRollSound,pBody->GetRollSoundEntityID())) pRollSound->FadeOut(afFadeSpeed);
+        if(pRollSound && mpWorld->SoundEntityExists(pRollSound,pBody->GetRollSoundEntityID()))
+        {
+            pRollSound->FadeOut(afFadeSpeed);
+        }
         pBody->SetRollSoundEntity(NULL);
 
         cSoundEntity *pScrapeSound = pBody->GetScrapeSoundEntity();
-        if(pScrapeSound && mpWorld->SoundEntityExists(pScrapeSound, pBody->GetScrapeSoundEntityID())) pScrapeSound->FadeOut(afFadeSpeed);
+        if(pScrapeSound && mpWorld->SoundEntityExists(pScrapeSound, pBody->GetScrapeSoundEntityID()))
+        {
+            pScrapeSound->FadeOut(afFadeSpeed);
+        }
         pBody->SetScrapeSoundEntity(NULL);
     }
 
@@ -389,7 +410,10 @@ void iPhysicsWorld::FadeoutAllLoopSounds(float afFadeSpeed)
         iPhysicsJoint *pJoint = *jointIt;
 
         cSoundEntity *pLoopSound = pJoint->GetSound();
-        if(pLoopSound && mpWorld->SoundEntityExists(pLoopSound, pJoint->GetSoundID())) pLoopSound->FadeOut(afFadeSpeed);
+        if(pLoopSound && mpWorld->SoundEntityExists(pLoopSound, pJoint->GetSoundID()))
+        {
+            pLoopSound->FadeOut(afFadeSpeed);
+        }
         pJoint->SetSound(NULL);
     }
 }
@@ -423,7 +447,10 @@ bool iPhysicsWorld::CheckShapeWorldCollision(cVector3f *apPushVector,
 {
     cCollideData collideData;
 
-    if(apPushVector) *apPushVector = cVector3f(0,0,0);
+    if(apPushVector)
+    {
+        *apPushVector = cVector3f(0,0,0);
+    }
     bool bCollide = false;
 
     cBoundingVolume boundingVolume = apShape->GetBoundingVolume();
@@ -444,14 +471,38 @@ bool iPhysicsWorld::CheckShapeWorldCollision(cVector3f *apPushVector,
     {
         iPhysicsBody *pBody = mvTempBodies[i];
 
-        if(pBody->IsActive()==false)continue;
-        if(pBody->IsCharacter() && abCollideCharacter==false) continue;
-        if(pBody == apSkipBody) continue;
-        if(abSkipStatic && pBody->GetMass()==0 && pBody->IsCharacter()==false) continue;
-        if(abIsCharacter && pBody->GetCollideCharacter()==false) continue;
-        if(abIsCharacter==false && pBody->GetCollide()==false) continue;
-        if(alMinPushStrength > pBody->GetPushStrength()) continue;
-        if( (alCollideFlags & pBody->GetCollideFlags()) == 0)continue;
+        if(pBody->IsActive()==false)
+        {
+            continue;
+        }
+        if(pBody->IsCharacter() && abCollideCharacter==false)
+        {
+            continue;
+        }
+        if(pBody == apSkipBody)
+        {
+            continue;
+        }
+        if(abSkipStatic && pBody->GetMass()==0 && pBody->IsCharacter()==false)
+        {
+            continue;
+        }
+        if(abIsCharacter && pBody->GetCollideCharacter()==false)
+        {
+            continue;
+        }
+        if(abIsCharacter==false && pBody->GetCollide()==false)
+        {
+            continue;
+        }
+        if(alMinPushStrength > pBody->GetPushStrength())
+        {
+            continue;
+        }
+        if( (alCollideFlags & pBody->GetCollideFlags()) == 0)
+        {
+            continue;
+        }
 
         //Note: Still make this check, since GetBodiesInBV is not exact.
         if(cMath::CheckBVIntersection(boundingVolume,*pBody->GetBoundingVolume())==false)
@@ -468,7 +519,10 @@ bool iPhysicsWorld::CheckShapeWorldCollision(cVector3f *apPushVector,
         {
             //if(abDebug) Log(" Collided with '%s'\n",pBody->GetName().c_str());
 
-            if(apCallback) apCallback->OnCollision(pBody, &collideData);
+            if(apCallback)
+            {
+                apCallback->OnCollision(pBody, &collideData);
+            }
 
             for(int i=0; i< collideData.mlNumOfPoints; i++)
             {
@@ -476,12 +530,24 @@ bool iPhysicsWorld::CheckShapeWorldCollision(cVector3f *apPushVector,
 
                 cVector3f vPush = point.mvNormal*point.mfDepth;
 
-                if(std::abs(apPushVector->x) < std::abs(vPush.x)) apPushVector->x = vPush.x;
-                if(std::abs(apPushVector->y) < std::abs(vPush.y)) apPushVector->y = vPush.y;
-                if(std::abs(apPushVector->z) < std::abs(vPush.z)) apPushVector->z = vPush.z;
+                if(std::abs(apPushVector->x) < std::abs(vPush.x))
+                {
+                    apPushVector->x = vPush.x;
+                }
+                if(std::abs(apPushVector->y) < std::abs(vPush.y))
+                {
+                    apPushVector->y = vPush.y;
+                }
+                if(std::abs(apPushVector->z) < std::abs(vPush.z))
+                {
+                    apPushVector->z = vPush.z;
+                }
             }
         }
-        if(bRet)bCollide = true;
+        if(bRet)
+        {
+            bCollide = true;
+        }
     }
     //Log("--------------\n");
 

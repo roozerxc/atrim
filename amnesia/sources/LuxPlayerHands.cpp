@@ -75,7 +75,10 @@ void cLuxPlayerHandsLoader::BeforeLoad(cXmlElement *apRootElem, const cMatrixf &
 void cLuxPlayerHandsLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars)
 {
     mpPlayerHands->mpHandsEntity = mpEntity;
-    if(mpEntity) mpEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster,false);
+    if(mpEntity)
+    {
+        mpEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster,false);
+    }
 
     if(mpMesh && mpPlayerHands->mpHandsMesh==NULL)
     {
@@ -290,12 +293,18 @@ void cLuxPlayerHands::DestroyWorldEntities(cLuxMap *apMap)
 
 void cLuxPlayerHands::RenderSolid(cRendererCallbackFunctions* apFunctions)
 {
-    if(mpCurrentHandObject) mpCurrentHandObject->RenderSolid(apFunctions);
+    if(mpCurrentHandObject)
+    {
+        mpCurrentHandObject->RenderSolid(apFunctions);
+    }
 }
 
 void cLuxPlayerHands::RenderTrans(cRendererCallbackFunctions* apFunctions)
 {
-    if(mpCurrentHandObject) mpCurrentHandObject->RenderTrans(apFunctions);
+    if(mpCurrentHandObject)
+    {
+        mpCurrentHandObject->RenderTrans(apFunctions);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -316,7 +325,10 @@ bool cLuxPlayerHands::AnimOver()
 bool cLuxPlayerHands::CheckAnimationEvent(float afRelTime)
 {
     cAnimationState *pAnim = mpHandsEntity->GetAnimationStateFromName(msCurrentAnim);
-    if(pAnim == NULL) return false;
+    if(pAnim == NULL)
+    {
+        return false;
+    }
 
     float fPrevPos = pAnim->GetPreviousTimePosition() / pAnim->GetLength();
     float fPos = pAnim->GetRelativeTimePosition();
@@ -328,8 +340,14 @@ bool cLuxPlayerHands::CheckAnimationEvent(float afRelTime)
 
 void cLuxPlayerHands::DoAction(eLuxPlayerAction aAction, bool abPressed)
 {
-    if(mpCurrentHandObject==NULL) return;
-    if(mHandState != eLuxHandsState_Idle && mHandState != eLuxHandsState_HandObject) return;
+    if(mpCurrentHandObject==NULL)
+    {
+        return;
+    }
+    if(mHandState != eLuxHandsState_Idle && mHandState != eLuxHandsState_HandObject)
+    {
+        return;
+    }
 
     if(mpCurrentHandObject->DoAction(aAction, abPressed))
     {
@@ -341,12 +359,18 @@ void cLuxPlayerHands::DoAction(eLuxPlayerAction aAction, bool abPressed)
 
 void cLuxPlayerHands::SetActiveHandObject(const tString& asName)
 {
-    if(mpHandsEntity==NULL) return; //Make sure the
+    if(mpHandsEntity==NULL)
+    {
+        return;    //Make sure the
+    }
 
     if(asName != "")
     {
         iLuxHandObject* pObject = GetHandObject(asName);
-        if(pObject) SetCurrentHandObject(pObject);
+        if(pObject)
+        {
+            SetCurrentHandObject(pObject);
+        }
     }
     else
     {
@@ -363,7 +387,10 @@ iLuxHandObject* cLuxPlayerHands::GetHandObject(const tString& asName)
     for(size_t i=0; i<mvHandObjects.size(); ++i)
     {
         iLuxHandObject *apObject = mvHandObjects[i];
-        if(asName == apObject->GetName()) return apObject;
+        if(asName == apObject->GetName())
+        {
+            return apObject;
+        }
     }
 
     //////////////////////////////////////
@@ -376,7 +403,10 @@ iLuxHandObject* cLuxPlayerHands::GetHandObject(const tString& asName)
 
 void cLuxPlayerHands::SetCurrentHandObject(iLuxHandObject *apObject)
 {
-    if(mpCurrentHandObject == apObject) return;
+    if(mpCurrentHandObject == apObject)
+    {
+        return;
+    }
 
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
 
@@ -434,7 +464,10 @@ void cLuxPlayerHands::ResetHandObjectVars()
 
 void cLuxPlayerHands::CreateHandEntity(cLuxMap *apMap)
 {
-    if(mpHandsEntity) return;
+    if(mpHandsEntity)
+    {
+        return;
+    }
 
     apMap->GetWorld()->CreateEntity("PlayerHands", cMatrixf::Identity, "models/player/hands/hands.ent");
     mpHandsEntity->SetVisible(false);
@@ -497,13 +530,19 @@ void cLuxPlayerHands::HideAllHandObjects()
 
 void cLuxPlayerHands::UpdatePlayerHandsPos(float afTimeStep)
 {
-    if(mpHandsEntity==NULL) return;
+    if(mpHandsEntity==NULL)
+    {
+        return;
+    }
 
     cCamera *pCam = mpPlayer->GetCamera();
 
     cVector3f vRotation(pCam->GetPitch(), pCam->GetYaw(), pCam->GetRoll());
     mlstCamRotations.push_back(vRotation);
-    if(mlstCamRotations.size() > mlMaxCamRotations) mlstCamRotations.pop_front();
+    if(mlstCamRotations.size() > mlMaxCamRotations)
+    {
+        mlstCamRotations.pop_front();
+    }
 
     ////////////////////////////////////////
     // Iterate all of the saved rotations and calculate a new
@@ -648,9 +687,18 @@ eLuxHandObjectType cLuxPlayerHands::ToHandObjectType(const tString& asType)
 {
     tString sLowType = cString::ToLowerCase(asType);
 
-    if(sLowType == "melee") return eLuxHandObjectType_Melee;
-    if(sLowType == "ranged") return eLuxHandObjectType_Ranged;
-    if(sLowType == "lightsource") return eLuxHandObjectType_LightSource;
+    if(sLowType == "melee")
+    {
+        return eLuxHandObjectType_Melee;
+    }
+    if(sLowType == "ranged")
+    {
+        return eLuxHandObjectType_Ranged;
+    }
+    if(sLowType == "lightsource")
+    {
+        return eLuxHandObjectType_LightSource;
+    }
 
     Error("Hand object of type '%s' does not exist!", asType.c_str());
     return eLuxHandObjectType_LastEnum;

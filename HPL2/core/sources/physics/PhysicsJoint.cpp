@@ -105,7 +105,10 @@ iPhysicsJoint::iPhysicsJoint(const tString &asName, iPhysicsBody *apParentBody, 
 
 iPhysicsJoint::~iPhysicsJoint()
 {
-    if(mbAutoDeleteCallback && mpCallback) hplDelete(mpCallback);
+    if(mbAutoDeleteCallback && mpCallback)
+    {
+        hplDelete(mpCallback);
+    }
 
     //Destroy all controllers.
     tPhysicsControllerMapIt it = m_mapControllers.begin();
@@ -114,10 +117,19 @@ iPhysicsJoint::~iPhysicsJoint()
         mpWorld->DestroyController(it->second);
     }
 
-    if(mpChildBody) mpChildBody->RemoveJoint(this);
-    if(mpParentBody) mpParentBody->RemoveJoint(this);
+    if(mpChildBody)
+    {
+        mpChildBody->RemoveJoint(this);
+    }
+    if(mpParentBody)
+    {
+        mpParentBody->RemoveJoint(this);
+    }
 
-    if(mpSound) mpWorld->GetWorld()->DestroySoundEntity(mpSound);
+    if(mpSound)
+    {
+        mpWorld->GetWorld()->DestroySoundEntity(mpSound);
+    }
 
     //Log("Deleted joint '%s'\n",msName.c_str());
 }
@@ -135,8 +147,14 @@ iPhysicsJoint::~iPhysicsJoint()
  */
 void iPhysicsJoint::RemoveBody(iPhysicsBody *apBody)
 {
-    if(mpParentBody == apBody) mpParentBody = NULL;
-    if(mpChildBody == apBody) mpChildBody = NULL;
+    if(mpParentBody == apBody)
+    {
+        mpParentBody = NULL;
+    }
+    if(mpChildBody == apBody)
+    {
+        mpChildBody = NULL;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -157,7 +175,10 @@ void iPhysicsJoint::AddController(iPhysicsController *apController)
 iPhysicsController* iPhysicsJoint::GetController(const tString &asName)
 {
     tPhysicsControllerMapIt it = m_mapControllers.find(asName);
-    if(it == m_mapControllers.end()) return NULL;
+    if(it == m_mapControllers.end())
+    {
+        return NULL;
+    }
 
     return it->second;
 }
@@ -167,7 +188,10 @@ iPhysicsController* iPhysicsJoint::GetController(const tString &asName)
 bool iPhysicsJoint::ChangeController(const tString &asName)
 {
     iPhysicsController *pNewCtrl = GetController(asName);
-    if(pNewCtrl==NULL) return false;
+    if(pNewCtrl==NULL)
+    {
+        return false;
+    }
 
     tPhysicsControllerMapIt it = m_mapControllers.begin();
     for(; it != m_mapControllers.end(); ++it)
@@ -238,8 +262,14 @@ void iPhysicsJoint::OnMaxLimit()
             {
                 pCtrl->SetActive(false);
                 iPhysicsController *pNextCtrl = GetController(pCtrl->GetNextController());
-                if(pNextCtrl) pNextCtrl->SetActive(true);
-                else Warning("Controller '%s' does not exist in joint '%s'\n",pCtrl->GetNextController().c_str(),msName.c_str());
+                if(pNextCtrl)
+                {
+                    pNextCtrl->SetActive(true);
+                }
+                else
+                {
+                    Warning("Controller '%s' does not exist in joint '%s'\n",pCtrl->GetNextController().c_str(),msName.c_str());
+                }
             }
         }
     }
@@ -272,8 +302,14 @@ void iPhysicsJoint::OnMinLimit()
             {
                 pCtrl->SetActive(false);
                 iPhysicsController *pNextCtrl = GetController(pCtrl->GetNextController());
-                if(pNextCtrl) pNextCtrl->SetActive(true);
-                else Warning("Controller '%s' does not exist in joint '%s'\n",pCtrl->GetNextController().c_str(),msName.c_str());
+                if(pNextCtrl)
+                {
+                    pNextCtrl->SetActive(true);
+                }
+                else
+                {
+                    Warning("Controller '%s' does not exist in joint '%s'\n",pCtrl->GetNextController().c_str(),msName.c_str());
+                }
             }
         }
     }
@@ -336,11 +372,18 @@ bool iPhysicsJoint::OnPhysicsUpdate()
 {
     bool bFrozen = true;
     if(mpParentBody && mpParentBody->GetEnabled())
+    {
         bFrozen = false;
+    }
     else if(mpChildBody->GetEnabled())
+    {
         bFrozen = false;
+    }
 
-    if(bFrozen && mpSound==NULL) return false;
+    if(bFrozen && mpSound==NULL)
+    {
+        return false;
+    }
 
     //Get the pivot point, if there is no parent, it is stuck.
     if(mpParentBody)
@@ -350,10 +393,19 @@ bool iPhysicsJoint::OnPhysicsUpdate()
     }
 
     cWorld *pWorld = mpWorld->GetWorld();
-    if(pWorld == NULL) return true;
-    if(msMoveSound == "") return true;
+    if(pWorld == NULL)
+    {
+        return true;
+    }
+    if(msMoveSound == "")
+    {
+        return true;
+    }
 
-    if(mpWorld->GetWorld()->GetSound()->GetSoundHandler()->GetSilent()) return true;
+    if(mpWorld->GetWorld()->GetSound()->GetSoundHandler()->GetSilent())
+    {
+        return true;
+    }
 
     //////////////////////////////////////
     //Get the speed
@@ -489,9 +541,13 @@ void iPhysicsJoint::SetSound(cSoundEntity *apSound)
 {
     mpSound = apSound;
     if(apSound)
+    {
         mlSoundID = apSound->GetCreationID();
+    }
     else
+    {
         mlSoundID = -1;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -504,12 +560,19 @@ void iPhysicsJoint::LimitEffect(cJointLimitEffect *pEffect)
     {
         cVector3f vVel(0,0,0);
         if(mpParentBody)
+        {
             vVel = mpChildBody->GetLinearVelocity() - mpParentBody->GetLinearVelocity();
+        }
         else
+        {
             vVel = mpChildBody->GetLinearVelocity();
+        }
 
         float fSpeed = vVel.Length();
-        if(fSpeed > pEffect->mfMaxSpeed) fSpeed = pEffect->mfMaxSpeed;
+        if(fSpeed > pEffect->mfMaxSpeed)
+        {
+            fSpeed = pEffect->mfMaxSpeed;
+        }
 
         //Log("Speed: %f\n",fSpeed);
 
@@ -549,7 +612,10 @@ void iPhysicsJoint::Break()
 
 bool iPhysicsJoint::CheckBreakage()
 {
-    if(mbBreakable==false) return false;
+    if(mbBreakable==false)
+    {
+        return false;
+    }
 
     float fForcesSize = GetForceSize();
 
@@ -586,9 +652,13 @@ void iPhysicsJoint::CheckLimitAutoSleep(iPhysicsJoint *apJoint,
                 fMinDiff < apJoint->mfLimitAutoSleepDist)
         {
             if(apJoint->mlLimitStepCount >= apJoint->mlLimitAutoSleepNumSteps)
+            {
                 apJoint->mpChildBody->DisableAfterSimulation();
+            }
             else
+            {
                 apJoint->mlLimitStepCount++;
+            }
         }
         else
         {

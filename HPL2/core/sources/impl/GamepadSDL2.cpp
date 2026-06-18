@@ -49,7 +49,10 @@ cGamepadSDL2::cGamepadSDL2(cLowLevelInputSDL *apLowLevelInputSDL, int alIndex) :
 
         if(SDL_HapticRumbleInit(mpHaptic) != 0)
         {
-            if(mpHaptic) SDL_HapticClose(mpHaptic);
+            if(mpHaptic)
+            {
+                SDL_HapticClose(mpHaptic);
+            }
             mpHaptic = NULL;
         }
     }
@@ -62,7 +65,10 @@ cGamepadSDL2::~cGamepadSDL2()
         SDL_HapticRumbleStop(mpHaptic);
         SDL_HapticClose(mpHaptic);
     }
-    if(mpHandle) SDL_GameControllerClose(mpHandle);
+    if(mpHandle)
+    {
+        SDL_GameControllerClose(mpHandle);
+    }
 }
 
 
@@ -106,7 +112,10 @@ void cGamepadSDL2::ClearState()
 
 float cGamepadSDL2::GetTimeSinceLastActive()
 {
-    if(mlLastTimeActive == -1) return FLT_MAX;
+    if(mlLastTimeActive == -1)
+    {
+        return FLT_MAX;
+    }
     return (float)(cPlatform::GetApplicationTime() - mlLastTimeActive) / 1000.0f;
 }
 
@@ -150,7 +159,10 @@ void cGamepadSDL2::Update()
                     mlstInputUpdates.push_back(inputUpdate);
                 }
 
-                if(pEvent->caxis.value == 0 || pEvent->caxis.value == 16384) lFlushed++;
+                if(pEvent->caxis.value == 0 || pEvent->caxis.value == 16384)
+                {
+                    lFlushed++;
+                }
 
                 mvAxisArray[axis] = fAxisValue;
             }
@@ -180,7 +192,10 @@ void cGamepadSDL2::Update()
                     mvButtonArray[button] = bPressed;
                 }
 
-                if(bPressed == false) lFlushed++;
+                if(bPressed == false)
+                {
+                    lFlushed++;
+                }
             }
             break;
         }
@@ -227,7 +242,10 @@ void cGamepadSDL2::Update()
             }
         }
 
-        if(bValidInput) mlLastTimeActive = cPlatform::GetApplicationTime();
+        if(bValidInput)
+        {
+            mlLastTimeActive = cPlatform::GetApplicationTime();
+        }
     }
 }
 
@@ -236,7 +254,9 @@ void cGamepadSDL2::Update()
 void cGamepadSDL2::UpdateAxis(int alAxis, float afVal)
 {
     if(cMath::Abs(afVal) < mfDeadZoneRadius)
+    {
         afVal = 0.0f;
+    }
 
     mvAxisArray[alAxis] = afVal;
 }
@@ -276,9 +296,13 @@ cGamepadInputData cGamepadSDL2::GetInputUpdate()
     case eGamepadInputType_Button:
     {
         if(input.mfInputValue==0.0f)
+        {
             mlstButtonsReleased.remove(input);
+        }
         else
+        {
             mlstButtonsPressed.remove(input);
+        }
     }
     break;
     case eGamepadInputType_Axis:
@@ -293,7 +317,10 @@ cGamepadInputData cGamepadSDL2::GetInputUpdate()
 
 bool cGamepadSDL2::ButtonIsDown(eGamepadButton aButton)
 {
-    if ((size_t)aButton >= mvButtonArray.size()) return false;
+    if ((size_t)aButton >= mvButtonArray.size())
+    {
+        return false;
+    }
 
     return mvButtonArray[aButton];
 }
@@ -339,7 +366,10 @@ bool cGamepadSDL2::ButtonIsReleased()
 
 float cGamepadSDL2::GetAxisValue(eGamepadAxis aAxis)
 {
-    if ((size_t)aAxis >= mvAxisArray.size()) return 0;
+    if ((size_t)aAxis >= mvAxisArray.size())
+    {
+        return 0;
+    }
 
     return mvAxisArray[aAxis];
 }
@@ -408,8 +438,14 @@ void cGamepadSDL2::SetRumble(float afValue, int alMillisec)
 {
     if(mpHaptic)
     {
-        if(afValue > 0) SDL_HapticRumblePlay(mpHaptic, afValue, alMillisec);
-        else            SDL_HapticRumbleStop(mpHaptic);
+        if(afValue > 0)
+        {
+            SDL_HapticRumblePlay(mpHaptic, afValue, alMillisec);
+        }
+        else
+        {
+            SDL_HapticRumbleStop(mpHaptic);
+        }
     }
 }
 

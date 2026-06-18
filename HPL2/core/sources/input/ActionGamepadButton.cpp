@@ -34,7 +34,9 @@ bool cActionGamepadButton::IsTriggerd()
 {
     iGamepad* pPad = mpInput->GetGamepad(mlPadIndex);
     if(pPad)
+    {
         return pPad->ButtonIsDown(mButton);
+    }
 
     return false;
 }
@@ -43,8 +45,14 @@ bool cActionGamepadButton::IsTriggerd()
 
 float cActionGamepadButton::GetValue()
 {
-    if(IsTriggerd())return 1.0;
-    else return 0.0;
+    if(IsTriggerd())
+    {
+        return 1.0;
+    }
+    else
+    {
+        return 0.0;
+    }
 }
 
 //-----------------------------------------------------------------------

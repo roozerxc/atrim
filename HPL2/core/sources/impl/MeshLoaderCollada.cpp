@@ -208,7 +208,10 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
                                &vColladaAnimations,
                                &ColladaScene,true);
 
-    if(bRet==false) return NULL;
+    if(bRet==false)
+    {
+        return NULL;
+    }
 
     ////////////////////////
     //Check so the mesh is okay
@@ -290,7 +293,10 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
     cMesh *pMesh = hplNew( cMesh, (cString::To8Char(asFile), asFile, mpMaterialManager,mpAnimationManager) );
 
     //Set the skeleton to the mesh
-    if(pSkeleton) pMesh->SetSkeleton(pSkeleton);
+    if(pSkeleton)
+    {
+        pMesh->SetSkeleton(pSkeleton);
+    }
 
     ///////////////////////////
     //Create Sub meshes
@@ -432,7 +438,9 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
             }
 
             if(bCreateMesh==false)
+            {
                 continue;
+            }
         }
         ////////////////////////////////////////////
         // Luis: this is redundant, the node was retrieved above
@@ -686,7 +694,10 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
         {
             cAnimationTrack *pTrack = CreateAnimTrack(pAnimation, pSkeleton,
                                       vColladaAnimations[i],&ColladaScene);
-            if(pTrack==NULL) continue;
+            if(pTrack==NULL)
+            {
+                continue;
+            }
 
             //Update the state and end times if needed
             if(pTrack->GetKeyFrameNum() >0)
@@ -694,8 +705,14 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
                 cKeyFrame *pFirst = pTrack->GetKeyFrame(0);
                 cKeyFrame *pLast = pTrack->GetKeyFrame(pTrack->GetKeyFrameNum()-1);
 
-                if(fStart > pFirst->time)    fStart = pFirst->time;
-                if(fEnd < pLast->time)        fEnd = pLast->time;
+                if(fStart > pFirst->time)
+                {
+                    fStart = pFirst->time;
+                }
+                if(fEnd < pLast->time)
+                {
+                    fEnd = pLast->time;
+                }
             }
         }
 
@@ -718,7 +735,10 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
         cMatrixf mtxScale = cMath::MatrixScale(mfUnitScale);
         //pSkeleton->GetRootBone()->SetTransform(cMath::MatrixMul(mtxScale, pSkeleton->GetRootBone()->GetLocalTransform()));
 
-        if(mbZToY) mtxScale = cMath::MatrixMul(mtxScale, m_mtxZToY);
+        if(mbZToY)
+        {
+            mtxScale = cMath::MatrixMul(mtxScale, m_mtxZToY);
+        }
 
         cBoneIterator BoneIt = pSkeleton->GetRootBone()->GetChildIterator();
         while(BoneIt.HasNext())
@@ -844,7 +864,10 @@ cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
                                &vColladaAnimations,
                                &ColladaScene,true);
 
-    if(bRet==false) return NULL;
+    if(bRet==false)
+    {
+        return NULL;
+    }
 
     ////////////////////////
     //Create Skeleton
@@ -911,7 +934,10 @@ cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
         for(size_t i=0; i < vColladaAnimations.size(); i++)
         {
             cAnimationTrack *pTrack = CreateAnimTrack(pAnimation, pSkeleton, vColladaAnimations[i],&ColladaScene);
-            if(pTrack==NULL) continue;
+            if(pTrack==NULL)
+            {
+                continue;
+            }
 
             //Update the state and end times if needed
             if(pTrack->GetKeyFrameNum() >0)
@@ -919,8 +945,14 @@ cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
                 cKeyFrame *pFirst = pTrack->GetKeyFrame(0);
                 cKeyFrame *pLast = pTrack->GetKeyFrame(pTrack->GetKeyFrameNum()-1);
 
-                if(fStart > pFirst->time)    fStart = pFirst->time;
-                if(fEnd < pLast->time)        fEnd = pLast->time;
+                if(fStart > pFirst->time)
+                {
+                    fStart = pFirst->time;
+                }
+                if(fEnd < pLast->time)
+                {
+                    fEnd = pLast->time;
+                }
             }
         }
 
@@ -943,7 +975,10 @@ cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
         cMatrixf mtxScale = cMath::MatrixScale(mfUnitScale);
         //pSkeleton->GetRootBone()->SetTransform(cMath::MatrixMul(mtxScale, pSkeleton->GetRootBone()->GetLocalTransform()));
 
-        if(mbZToY) mtxScale = cMath::MatrixMul(mtxScale, m_mtxZToY);
+        if(mbZToY)
+        {
+            mtxScale = cMath::MatrixMul(mtxScale, m_mtxZToY);
+        }
 
         cBoneIterator BoneIt = pSkeleton->GetRootBone()->GetChildIterator();
         while(BoneIt.HasNext())
@@ -967,7 +1002,10 @@ cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
     }
 
 
-    if(pSkeleton) hplDelete(pSkeleton);
+    if(pSkeleton)
+    {
+        hplDelete(pSkeleton);
+    }
 
     /////////////////////////////////////////////////
     // SAVE MSH FORMAT
@@ -1131,8 +1169,14 @@ void cMeshLoaderCollada::CreateHierarchyNodes(cMesh *apMesh, cNode3D* mpParentNo
     pNode->SetMatrix(apColladaNode->m_mtxTransform);
 
     //Set if this node has any geometry source
-    if(apColladaNode->msSource!="")        pNode->SetCustomFlags(1);
-    else                                pNode->SetCustomFlags(0);
+    if(apColladaNode->msSource!="")
+    {
+        pNode->SetCustomFlags(1);
+    }
+    else
+    {
+        pNode->SetCustomFlags(0);
+    }
 
     //Log("Node: %s\n",apColladaNode->msName.c_str());
     //Log(" local node transform: %s\n",pNode->GetLocalPosition().ToString().c_str());

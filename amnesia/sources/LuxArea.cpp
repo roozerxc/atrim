@@ -11,7 +11,10 @@
 void iLuxAreaLoader::Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform,cWorld *apWorld)
 {
     cLuxMap *pMap = gpBase->mpCurrentMapLoading;
-    if(pMap==NULL) return;
+    if(pMap==NULL)
+    {
+        return;
+    }
 
     iLuxArea *pArea = CreateArea(asName, alID,pMap);
 
@@ -133,7 +136,9 @@ void iLuxArea::OnSetActive(bool abX)
     ///////////////
     //Bodies
     if(mpBody)
+    {
         mpBody->SetActive(abX);
+    }
 }
 
 //-----------------------------------------------------------------------

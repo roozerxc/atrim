@@ -47,7 +47,10 @@ cBitmap* cBitmapLoaderHandler::LoadBitmap(const tWString& asFile, tBitmapLoadFla
         cBitmap* pBitmap = pBitmapLoader->LoadBitmap(asFile, aFlags);
 
         //Set name of the file loaded.
-        if(pBitmap) pBitmap->SetFileName(cString::GetFileNameW(asFile));
+        if(pBitmap)
+        {
+            pBitmap->SetFileName(cString::GetFileNameW(asFile));
+        }
 
         return pBitmap;
     }

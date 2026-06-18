@@ -100,7 +100,10 @@ bool cAnimationState::IsFading()
 
 bool cAnimationState::IsOver()
 {
-    if(mbLoop) return false;
+    if(mbLoop)
+    {
+        return false;
+    }
 
     return mfTimePos >= mfLength;
 }
@@ -207,7 +210,10 @@ bool cAnimationState::IsActive()
 }
 void cAnimationState::SetActive(bool abActive)
 {
-    if(mbActive == abActive) return;
+    if(mbActive == abActive)
+    {
+        return;
+    }
 
     mbActive = abActive;
 
@@ -255,7 +261,10 @@ bool cAnimationState::IsBeforeSpecialEvent()
 
 void cAnimationState::AddTimePosition(float afAdd)
 {
-    if(mbPaused) return;
+    if(mbPaused)
+    {
+        return;
+    }
 
     mfPrevTimePos = mfTimePos;
 

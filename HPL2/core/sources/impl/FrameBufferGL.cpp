@@ -117,7 +117,10 @@ cDepthStencilBufferGL::cDepthStencilBufferGL(const cVector2l& avSize, int alDept
 cDepthStencilBufferGL::~cDepthStencilBufferGL()
 {
     ;
-    if(mlHandle != 0)    glDeleteRenderbuffersEXT(1, &mlHandle);
+    if(mlHandle != 0)
+    {
+        glDeleteRenderbuffersEXT(1, &mlHandle);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -156,9 +159,15 @@ cFrameBufferGL::~cFrameBufferGL()
 
 void cFrameBufferGL::SetTexture2D(int alColorIdx, iTexture *apTexture, int alMipmapLevel)
 {
-    if(CheckIfNullTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture)) return;
+    if(CheckIfNullTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture))
+    {
+        return;
+    }
 
-    if(apTexture->GetType() != eTextureType_2D && apTexture->GetType() != eTextureType_Rect) return;
+    if(apTexture->GetType() != eTextureType_2D && apTexture->GetType() != eTextureType_Rect)
+    {
+        return;
+    }
 
     AttachTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture,alMipmapLevel,0);
 }
@@ -167,9 +176,15 @@ void cFrameBufferGL::SetTexture2D(int alColorIdx, iTexture *apTexture, int alMip
 
 void cFrameBufferGL::SetTexture3D(int alColorIdx, iTexture *apTexture, int alZ, int alMipmapLevel)
 {
-    if(CheckIfNullTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture)) return;
+    if(CheckIfNullTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture))
+    {
+        return;
+    }
 
-    if(apTexture->GetType() != eTextureType_3D) return;
+    if(apTexture->GetType() != eTextureType_3D)
+    {
+        return;
+    }
 
     AttachTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture,alMipmapLevel,alZ);
 }
@@ -178,9 +193,15 @@ void cFrameBufferGL::SetTexture3D(int alColorIdx, iTexture *apTexture, int alZ, 
 
 void cFrameBufferGL::SetTextureCubeMap(int alColorIdx, iTexture *apTexture, int alFace, int alMipmapLevel)
 {
-    if(CheckIfNullTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture)) return;
+    if(CheckIfNullTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture))
+    {
+        return;
+    }
 
-    if(apTexture->GetType() != eTextureType_CubeMap) return;
+    if(apTexture->GetType() != eTextureType_CubeMap)
+    {
+        return;
+    }
 
     AttachTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture,alMipmapLevel,alFace);
 }
@@ -189,9 +210,15 @@ void cFrameBufferGL::SetTextureCubeMap(int alColorIdx, iTexture *apTexture, int 
 
 void cFrameBufferGL::SetDepthTexture2D(iTexture *apTexture, int alMipmapLevel)
 {
-    if(CheckIfNullTexture(GL_DEPTH_ATTACHMENT_EXT,0,apTexture)) return;
+    if(CheckIfNullTexture(GL_DEPTH_ATTACHMENT_EXT,0,apTexture))
+    {
+        return;
+    }
 
-    if(apTexture->GetType() != eTextureType_2D && apTexture->GetType() != eTextureType_Rect) return;
+    if(apTexture->GetType() != eTextureType_2D && apTexture->GetType() != eTextureType_Rect)
+    {
+        return;
+    }
     //TODO: Check so it is a depth texture.
 
     AttachTexture(GL_DEPTH_ATTACHMENT_EXT,0,apTexture,alMipmapLevel,0);
@@ -199,9 +226,15 @@ void cFrameBufferGL::SetDepthTexture2D(iTexture *apTexture, int alMipmapLevel)
 
 void cFrameBufferGL::SetDepthTextureCubeMap(iTexture *apTexture, int alFace, int alMipmapLevel)
 {
-    if(CheckIfNullTexture(GL_DEPTH_ATTACHMENT_EXT,0,apTexture)) return;
+    if(CheckIfNullTexture(GL_DEPTH_ATTACHMENT_EXT,0,apTexture))
+    {
+        return;
+    }
 
-    if(apTexture->GetType() != eTextureType_CubeMap) return;
+    if(apTexture->GetType() != eTextureType_CubeMap)
+    {
+        return;
+    }
     //TODO: Check so it is a depth texture.
 
     AttachTexture(GL_DEPTH_ATTACHMENT_EXT,0,apTexture,alMipmapLevel,alFace);
@@ -346,10 +379,19 @@ void cFrameBufferGL::PostBindUpdate()
 {
     for(int i=0; i<kMaxDrawColorBuffers; ++i)
     {
-        if(mpColorBuffer[i]) PostBindUpdateAttachment(mpColorBuffer[i]);
+        if(mpColorBuffer[i])
+        {
+            PostBindUpdateAttachment(mpColorBuffer[i]);
+        }
     }
-    if(mpDepthBuffer) PostBindUpdateAttachment(mpDepthBuffer);
-    if(mpStencilBuffer) PostBindUpdateAttachment(mpStencilBuffer);
+    if(mpDepthBuffer)
+    {
+        PostBindUpdateAttachment(mpDepthBuffer);
+    }
+    if(mpStencilBuffer)
+    {
+        PostBindUpdateAttachment(mpStencilBuffer);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -362,18 +404,26 @@ void cFrameBufferGL::PostBindUpdate()
 
 void cFrameBufferGL::PostBindUpdateAttachment(iFrameBufferAttachment *apAttachment)
 {
-    if(apAttachment->GetFrameBufferAttachmentType() == eFrameBufferAttachment_RenderBuffer) return;
+    if(apAttachment->GetFrameBufferAttachmentType() == eFrameBufferAttachment_RenderBuffer)
+    {
+        return;
+    }
 
     iTexture *pTexture = static_cast<iTexture*>(apAttachment);
     if(pTexture->UsesMipMaps())
+    {
         pTexture->AutoGenerateMipmaps();
+    }
 }
 
 //-----------------------------------------------------------------------
 
 bool cFrameBufferGL::CheckIfNullTexture(int alAttachmentType, int alAttachmentIdx,iTexture *apTexture)
 {
-    if(apTexture) return false;
+    if(apTexture)
+    {
+        return false;
+    }
 
     ;
 
@@ -446,7 +496,10 @@ void cFrameBufferGL::AttachTexture(int alAttachmentType,int alAttachmentIdx,iTex
 
 void cFrameBufferGL::SetFirstSize(const cVector2l &avSize)
 {
-    if(mvSize.x > -1) return;
+    if(mvSize.x > -1)
+    {
+        return;
+    }
 
     mvSize = avSize;
 }

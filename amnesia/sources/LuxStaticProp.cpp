@@ -30,7 +30,10 @@ void cLuxStaticPropLoader::BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a
 void cLuxStaticPropLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars)
 {
     cLuxMap *pMap = gpBase->mpCurrentMapLoading;
-    if(pMap==NULL) return;
+    if(pMap==NULL)
+    {
+        return;
+    }
 
     // ATTENTION!
     // The entity classes is only be used if for some reason
@@ -118,26 +121,44 @@ cLuxStaticProp::~cLuxStaticProp()
     // Destroy graphics
     {
         //Mesh entity
-        if(mpMeshEntity) pWorld->DestroyMeshEntity(mpMeshEntity);
+        if(mpMeshEntity)
+        {
+            pWorld->DestroyMeshEntity(mpMeshEntity);
+        }
 
         //Lights
-        for(size_t i=0; i<mvLights.size(); ++i) pWorld->DestroyLight(mvLights[i]);
+        for(size_t i=0; i<mvLights.size(); ++i)
+        {
+            pWorld->DestroyLight(mvLights[i]);
+        }
 
         //Particle systems
         for(size_t i=0; i<mvParticleSystems.size(); ++i)
         {
             cParticleSystem *pPS = mvParticleSystems[i];
-            if(pPS && pWorld->ParticleSystemExists(pPS)) pPS->Kill();
+            if(pPS && pWorld->ParticleSystemExists(pPS))
+            {
+                pPS->Kill();
+            }
         }
 
         //Billboards
-        for(size_t i=0; i<mvBillboards.size(); ++i)    pWorld->DestroyBillboard(mvBillboards[i]);
+        for(size_t i=0; i<mvBillboards.size(); ++i)
+        {
+            pWorld->DestroyBillboard(mvBillboards[i]);
+        }
 
         //Beams
-        for(size_t i=0; i<mvBeams.size(); ++i)        pWorld->DestroyBeam(mvBeams[i]);
+        for(size_t i=0; i<mvBeams.size(); ++i)
+        {
+            pWorld->DestroyBeam(mvBeams[i]);
+        }
 
         //Sound entities
-        for(size_t i=0; i<mvSoundEntities.size(); ++i)     pWorld->DestroySoundEntity(mvSoundEntities[i]);
+        for(size_t i=0; i<mvSoundEntities.size(); ++i)
+        {
+            pWorld->DestroySoundEntity(mvSoundEntities[i]);
+        }
     }
 }
 

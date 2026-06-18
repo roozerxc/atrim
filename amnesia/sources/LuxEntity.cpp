@@ -86,14 +86,23 @@ void iLuxEntity::UpdateLogic(float afTimeStep)
 
 cSoundEntity* iLuxEntity::PlaySound(const tString& asName, const tString& asFile, bool abRemoveWhenDone, bool abAttach)
 {
-    if(asFile == "") return NULL;
+    if(asFile == "")
+    {
+        return NULL;
+    }
 
     cSoundEntity *pSound = mpMap->GetWorld()->CreateSoundEntity(msName + "_" + asName,asFile,abRemoveWhenDone);
     iEntity3D *pAttachEnt = GetAttachEntity();
     if(pSound && pAttachEnt)
     {
-        if(abAttach)    pAttachEnt->AddChild(pSound);
-        else            pSound->SetPosition(pAttachEnt->GetWorldPosition());
+        if(abAttach)
+        {
+            pAttachEnt->AddChild(pSound);
+        }
+        else
+        {
+            pSound->SetPosition(pAttachEnt->GetWorldPosition());
+        }
     }
 
     return pSound;
@@ -103,7 +112,10 @@ cSoundEntity* iLuxEntity::PlaySound(const tString& asName, const tString& asFile
 
 void iLuxEntity::RunCallbackFunc(const tString& asType)
 {
-    if(msCallbackFunc=="")return;
+    if(msCallbackFunc=="")
+    {
+        return;
+    }
 
     mpMap->RunScript(msCallbackFunc + "(\""+msName+"\", \""+asType+"\")" );
 }
@@ -112,18 +124,27 @@ void iLuxEntity::RunCallbackFunc(const tString& asType)
 
 void iLuxEntity::RunInteractCallbackFunc()
 {
-    if(msInteractCallback=="")return;
+    if(msInteractCallback=="")
+    {
+        return;
+    }
 
     mpMap->RunScript(msInteractCallback + "(\""+msName+"\")");
 
-    if(mbInteractCallbackRemove) msInteractCallback = "";
+    if(mbInteractCallbackRemove)
+    {
+        msInteractCallback = "";
+    }
 }
 
 //-----------------------------------------------------------------------
 
 void iLuxEntity::SetActive(bool abX)
 {
-    if(mbActive == abX) return;
+    if(mbActive == abX)
+    {
+        return;
+    }
 
     mbActive = abX;
 
@@ -186,7 +207,10 @@ void iLuxEntity::UpdateCheckCollideCallback(float afTimeStep)
 
 void iLuxEntity::UpdatePlayerLookAt(float afTimeStep)
 {
-    if(msLookAtCallback == "") return;
+    if(msLookAtCallback == "")
+    {
+        return;
+    }
 
     if(mfLookAtCount > 0)
     {
@@ -220,7 +244,10 @@ void iLuxEntity::UpdatePlayerLookAt(float afTimeStep)
         cVector3f vDir = vEnd - vStart;
         float fSqrDist = vDir.SqrLength();
 
-        if(fSqrDist > 50*50) continue;
+        if(fSqrDist > 50*50)
+        {
+            continue;
+        }
 
         /////////////////////////
         // Check if center of screen is over object
@@ -260,7 +287,10 @@ void iLuxEntity::UpdatePlayerLookAt(float afTimeStep)
                 break;
             }
         }
-        if(bLookingAt) break;
+        if(bLookingAt)
+        {
+            break;
+        }
     }
 
     //////////////////////////////////////
@@ -268,7 +298,10 @@ void iLuxEntity::UpdatePlayerLookAt(float afTimeStep)
     if(bLookingAt && mbIsLookedAt == false)
     {
         tString sTempCallback = msLookAtCallback;
-        if(mbLookAtCallbackRemove) msLookAtCallback = "";
+        if(mbLookAtCallbackRemove)
+        {
+            msLookAtCallback = "";
+        }
 
         mpMap->RunScript(sTempCallback + "(\""+msName+"\", 1)" );
     }
@@ -301,7 +334,10 @@ void iLuxEntity::ConnectionStateChange(int alState)
         //See if this state will send a message.
         if(pConn->GetStateUsed()!=0)
         {
-            if(alState != pConn->GetStateUsed()) continue;
+            if(alState != pConn->GetStateUsed())
+            {
+                continue;
+            }
         }
 
         //Get state sent to child, invert if set so.
@@ -351,9 +387,13 @@ void iLuxEntity::PreloadEntityModel(const tString &asFile)
     // Load Mesh
     cMesh *pMesh = pResources->GetMeshManager()->CreateMesh(sModelFile);
     if(pMesh)
+    {
         mvPreloadedMeshes.push_back(pMesh);
+    }
     else
+    {
         Error("Could not load mesh '%s' when preloading!\n",sModelFile.c_str());
+    }
 
     pResources->DestroyXmlDocument(pEntityDoc);
 }

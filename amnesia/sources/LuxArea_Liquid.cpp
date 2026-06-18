@@ -43,7 +43,9 @@ void cLuxAreaLoader_Liquid::LoadVariables(iLuxArea *apArea, cWorld *apWorld)
     tString sPhysicsMaterial = GetVarString("PhysicsMaterial", "");
     pLiquidArea->mpPhysicsMaterial = apWorld->GetPhysicsWorld()->GetMaterialFromName(sPhysicsMaterial);
     if(pLiquidArea->mpPhysicsMaterial ==NULL)
+    {
         Error("Could not load physics material '%s' for liquid area '%s'!\n",sPhysicsMaterial.c_str(), pLiquidArea->msName.c_str());
+    }
 
     pLiquidArea->mbHasWaves = GetVarBool("HasWaves",false);
     pLiquidArea->mfWaveAmp = GetVarFloat("WaveAmp",0);
@@ -102,7 +104,10 @@ void cLuxArea_Liquid::SetupAfterLoad(cWorld *apWorld)
 void cLuxArea_Liquid::OnUpdate(float afTimeStep)
 {
     //Do not update this unless it is a proper game update (when eveything is 100% intialized)
-    if(afTimeStep < gpBase->mpEngine->GetStepSize()*0.8f) return;
+    if(afTimeStep < gpBase->mpEngine->GetStepSize()*0.8f)
+    {
+        return;
+    }
 
     ///////////////////////////
     // Get data
@@ -128,8 +133,14 @@ void cLuxArea_Liquid::OnUpdate(float afTimeStep)
     {
         iPhysicsBody *pBody = vBodies[i];
 
-        if(pBody->GetCollide()==false || pBody->IsActive()==false) continue;
-        if(pBody->GetMass()==0 && pBody->IsCharacter()==false) continue;
+        if(pBody->GetCollide()==false || pBody->IsActive()==false)
+        {
+            continue;
+        }
+        if(pBody->GetMass()==0 && pBody->IsCharacter()==false)
+        {
+            continue;
+        }
 
         bool bInsideWater = true;
 
@@ -264,7 +275,10 @@ void cLuxArea_Liquid::DoBuoyancyOnCharBody(iCharacterBody *apCharBody, float afS
     else
     {
         iLuxEnemy *pEnemy = (iLuxEnemy*)apCharBody->GetUserData();
-        if(pEnemy==NULL) return;
+        if(pEnemy==NULL)
+        {
+            return;
+        }
 
         if(abInsideWater)
         {
@@ -286,19 +300,29 @@ void cLuxArea_Liquid::DoBuoyancyOnCharBody(iCharacterBody *apCharBody, float afS
 
 void cLuxArea_Liquid::SplashEffect(iPhysicsBody *apBody, float afSurfaceY)
 {
-    if(mpPhysicsMaterial==NULL) return;
+    if(mpPhysicsMaterial==NULL)
+    {
+        return;
+    }
 
     cSurfaceData *pSurface = mpPhysicsMaterial->GetSurfaceData();
 
     float fSpeed;
     if(apBody->IsCharacter())
+    {
         fSpeed = apBody->GetCharacterBody()->GetForceVelocity().Length();
+    }
     else
+    {
         fSpeed = apBody->GetLinearVelocity().Length();
+    }
 
     cSurfaceImpactData *pImpact = pSurface->GetImpactDataFromSpeed(fSpeed);
 
-    if(pImpact == NULL) return;
+    if(pImpact == NULL)
+    {
+        return;
+    }
 
     cVector3f vEffectPos = cMath::MatrixMul(apBody->GetLocalMatrix(),apBody->GetMassCentre());
     vEffectPos.y = afSurfaceY+0.01f;
@@ -309,14 +333,20 @@ void cLuxArea_Liquid::SplashEffect(iPhysicsBody *apBody, float afSurfaceY)
     {
         cParticleSystem *pPS = pWorld->CreateParticleSystem("Splash", pImpact->GetPSName(),1);
 
-        if(pPS) pPS->SetPosition(vEffectPos);
+        if(pPS)
+        {
+            pPS->SetPosition(vEffectPos);
+        }
     }
 
     if(pImpact->GetSoundName() != "")
     {
         cSoundEntity *pSound = pWorld->CreateSoundEntity("Splash",pImpact->GetSoundName(),true);
 
-        if(pSound) pSound->SetPosition(vEffectPos);
+        if(pSound)
+        {
+            pSound->SetPosition(vEffectPos);
+        }
     }
 }
 
@@ -366,7 +396,9 @@ void cLuxArea_Liquid::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     cLuxArea_Liquid_SaveData *pData = static_cast<cLuxArea_Liquid_SaveData*>(apSaveData);
 
     if(mpPhysicsMaterial)
+    {
         pData->msPhysicsMaterial = mpPhysicsMaterial->GetName();
+    }
 
     kCopyToVar(pData, mfDensity);
     kCopyToVar(pData, mfLinearViscosity);
@@ -392,7 +424,9 @@ void cLuxArea_Liquid::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     {
         mpPhysicsMaterial = mpMap->GetPhysicsWorld()->GetMaterialFromName(pData->msPhysicsMaterial);
         if(mpPhysicsMaterial ==NULL)
+        {
             Error("Could not load physics material '%s' for liquid area '%s'!\n",pData->msPhysicsMaterial.c_str(), msName.c_str());
+        }
     }
 
     kCopyFromVar(pData, mfDensity);

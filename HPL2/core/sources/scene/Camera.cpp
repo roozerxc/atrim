@@ -90,8 +90,14 @@ void cCamera::SetPitch(float afAngle)
 
     if(mfPitchLimitMin!=0 || mfPitchLimitMax!=0)
     {
-        if(mfPitch> mfPitchLimitMax) mfPitch = mfPitchLimitMax;
-        if(mfPitch< mfPitchLimitMin) mfPitch = mfPitchLimitMin;
+        if(mfPitch> mfPitchLimitMax)
+        {
+            mfPitch = mfPitchLimitMax;
+        }
+        if(mfPitch< mfPitchLimitMin)
+        {
+            mfPitch = mfPitchLimitMin;
+        }
     }
 
     mbViewUpdated = true;
@@ -104,8 +110,14 @@ void cCamera::SetYaw(float afAngle)
 
     if(mfYawLimitMin!=0 || mfYawLimitMax!=0)
     {
-        if(mfYaw> mfYawLimitMax) mfYaw = mfYawLimitMax;
-        if(mfYaw< mfYawLimitMin) mfYaw = mfYawLimitMin;
+        if(mfYaw> mfYawLimitMax)
+        {
+            mfYaw = mfYawLimitMax;
+        }
+        if(mfYaw< mfYawLimitMin)
+        {
+            mfYaw = mfYawLimitMin;
+        }
     }
 
     mbViewUpdated = true;
@@ -189,7 +201,9 @@ void cCamera::MoveUp(float afDist)
 void cCamera::SetFOV(float afAngle)
 {
     if(mfFOV==afAngle)
+    {
         return;
+    }
 
     mfFOV = afAngle;
 
@@ -202,7 +216,9 @@ void cCamera::SetFOV(float afAngle)
 void cCamera::SetAspect(float afAspect)
 {
     if(mfAspect==afAspect)
+    {
         return;
+    }
 
     mfAspect = afAspect;
 
@@ -213,7 +229,9 @@ void cCamera::SetAspect(float afAspect)
 void cCamera::SetFarClipPlane(float afX)
 {
     if(mfFarClipPlane==afX)
+    {
         return;
+    }
 
     mfFarClipPlane = afX;
 
@@ -224,7 +242,9 @@ void cCamera::SetFarClipPlane(float afX)
 void cCamera::SetNearClipPlane(float afX)
 {
     if(mfNearClipPlane==afX)
+    {
         return;
+    }
 
     mfNearClipPlane = afX;
 
@@ -236,7 +256,10 @@ void cCamera::SetNearClipPlane(float afX)
 
 void cCamera::SetProjectionType(eProjectionType aType)
 {
-    if(mProjectionType == aType) return;
+    if(mProjectionType == aType)
+    {
+        return;
+    }
 
     mProjectionType = aType;
 
@@ -448,8 +471,14 @@ void cCamera::UnProjectHelper(cVector3f *apPosition, cVector3f *apDirection, con
         vDir = cMath::MatrixMul(mtxRot,vDir);
         vDir.Normalize();
 
-        if(apDirection) *apDirection = vDir;
-        if(apPosition) *apPosition = avCameraPos;
+        if(apDirection)
+        {
+            *apDirection = vDir;
+        }
+        if(apPosition)
+        {
+            *apPosition = avCameraPos;
+        }
     }
     //////////////////////////////////////////////
     // Orthographic projection
@@ -467,8 +496,14 @@ void cCamera::UnProjectHelper(cVector3f *apPosition, cVector3f *apDirection, con
         vPos += vRight * vNormalizedScreen.x * mvViewSize.x;
         vPos += vUp * vNormalizedScreen.y * mvViewSize.y;
 
-        if(apDirection) *apDirection = vForward;
-        if(apPosition) *apPosition = vPos;
+        if(apDirection)
+        {
+            *apDirection = vForward;
+        }
+        if(apPosition)
+        {
+            *apPosition = vPos;
+        }
     }
 }
 

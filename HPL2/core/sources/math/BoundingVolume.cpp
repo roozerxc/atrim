@@ -48,7 +48,10 @@ static const int kvFacePoints[6] = {0,5,5,6,4,7};
 bool cShadowVolumeBV::CollideBoundingVolume(cBoundingVolume* aBV)
 {
     //Do a simple sphere collide test
-    if(CollideBVSphere(aBV)==false) return false;
+    if(CollideBVSphere(aBV)==false)
+    {
+        return false;
+    }
 
     return     CollideBVAABB(aBV);
 }
@@ -110,7 +113,10 @@ bool cShadowVolumeBV::CollideBVAABB(cBoundingVolume* aBV)
             }
         }
 
-        if(lInCount==0) return false;
+        if(lInCount==0)
+        {
+            return false;
+        }
     }
 
     return true;
@@ -264,9 +270,15 @@ float cBoundingVolume::GetRadius()
 cShadowVolumeBV* cBoundingVolume::GetShadowVolume(const cVector3f& avLightPos,
         float afLightRange,bool abForceUpdate)
 {
-    if(cMath::CheckPointInBVIntersection(avLightPos, *this)) return NULL;
+    if(cMath::CheckPointInBVIntersection(avLightPos, *this))
+    {
+        return NULL;
+    }
 
-    if(!abForceUpdate && !mbShadowPlanesNeedUpdate) return &mShadowVolume;
+    if(!abForceUpdate && !mbShadowPlanesNeedUpdate)
+    {
+        return &mShadowVolume;
+    }
 
     //Set size 0.
     mShadowVolume.mvPoints.resize(0);
@@ -298,7 +310,7 @@ cShadowVolumeBV* cBoundingVolume::GetShadowVolume(const cVector3f& avLightPos,
         if(gvFaces[face].facingLight)
         {
             mShadowVolume.mvPlanes[mShadowVolume.mlPlaneCount] = cPlanef(
-                        gvFaces[face].normal*-1.0f,vCorners[kvFacePoints[face]]);
+                    gvFaces[face].normal*-1.0f,vCorners[kvFacePoints[face]]);
             mShadowVolume.mlPlaneCount++;
         }
     }
@@ -392,7 +404,9 @@ void cBoundingVolume::DrawEdges(const cVector3f& avLightPos,float afLightRange, 
     {
 
         for(int i=0; i<4; i++)
+        {
             vVtx[i].pos = pVolume->mvPoints[quad+i];
+        }
 
         apLowLevelGraphics->DrawQuad(vVtx,cColor(0.2f,0,0.2f));
 
@@ -431,16 +445,34 @@ void cBoundingVolume::CreateFromPoints(int alStride)
         while(lNumOfVectors)
         {
             //Min and max X
-            if(apVec[0] < mvLocalMin.x) mvLocalMin.x = apVec[0];
-            if(apVec[0] > mvLocalMax.x) mvLocalMax.x = apVec[0];
+            if(apVec[0] < mvLocalMin.x)
+            {
+                mvLocalMin.x = apVec[0];
+            }
+            if(apVec[0] > mvLocalMax.x)
+            {
+                mvLocalMax.x = apVec[0];
+            }
 
             //Min and max Y
-            if(apVec[1] < mvLocalMin.y) mvLocalMin.y = apVec[1];
-            if(apVec[1] > mvLocalMax.y) mvLocalMax.y = apVec[1];
+            if(apVec[1] < mvLocalMin.y)
+            {
+                mvLocalMin.y = apVec[1];
+            }
+            if(apVec[1] > mvLocalMax.y)
+            {
+                mvLocalMax.y = apVec[1];
+            }
 
             //Min and max Z
-            if(apVec[2] < mvLocalMin.z) mvLocalMin.z = apVec[2];
-            if(apVec[2] > mvLocalMax.z) mvLocalMax.z = apVec[2];
+            if(apVec[2] < mvLocalMin.z)
+            {
+                mvLocalMin.z = apVec[2];
+            }
+            if(apVec[2] > mvLocalMax.z)
+            {
+                mvLocalMax.z = apVec[2];
+            }
 
             apVec += alStride;
             lNumOfVectors--;
@@ -487,16 +519,34 @@ void cBoundingVolume::UpdateSize()
         for(int i=1; i<8; i++)
         {
             //X
-            if(vCorners[i].x < mvMin.x) mvMin.x = vCorners[i].x;
-            else if(vCorners[i].x > mvMax.x) mvMax.x = vCorners[i].x;
+            if(vCorners[i].x < mvMin.x)
+            {
+                mvMin.x = vCorners[i].x;
+            }
+            else if(vCorners[i].x > mvMax.x)
+            {
+                mvMax.x = vCorners[i].x;
+            }
 
             //Y
-            if(vCorners[i].y < mvMin.y) mvMin.y = vCorners[i].y;
-            else if(vCorners[i].y > mvMax.y) mvMax.y = vCorners[i].y;
+            if(vCorners[i].y < mvMin.y)
+            {
+                mvMin.y = vCorners[i].y;
+            }
+            else if(vCorners[i].y > mvMax.y)
+            {
+                mvMax.y = vCorners[i].y;
+            }
 
             //Z
-            if(vCorners[i].z < mvMin.z) mvMin.z = vCorners[i].z;
-            else if(vCorners[i].z > mvMax.z) mvMax.z = vCorners[i].z;
+            if(vCorners[i].z < mvMin.z)
+            {
+                mvMin.z = vCorners[i].z;
+            }
+            else if(vCorners[i].z > mvMax.z)
+            {
+                mvMax.z = vCorners[i].z;
+            }
         }
 
         //Get the transformed size.

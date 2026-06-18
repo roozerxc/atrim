@@ -67,8 +67,14 @@ void cLuxInteractConnection_Rope::Update(float afTimeStep)
 
 void cLuxInteractConnection_Rope::UpdateProp(float afTimeStep)
 {
-    if(mpProp->IsInteractedWith()) return;
-    if(mbInteractionOnly==false) return;
+    if(mpProp->IsInteractedWith())
+    {
+        return;
+    }
+    if(mbInteractionOnly==false)
+    {
+        return;
+    }
 
     float fMin = mpRope->GetMinTotalLength();
     float fMax = mpRope->GetMaxTotalLength();
@@ -77,7 +83,10 @@ void cLuxInteractConnection_Rope::UpdateProp(float afTimeStep)
     float fT = (fLength-fMin) / (fMax - fMin);
 
     //Invert if var is set
-    if(mbInvert) fT = 1 - fT;
+    if(mbInvert)
+    {
+        fT = 1 - fT;
+    }
 
     ////////////////////////
     // Update wheel
@@ -97,7 +106,10 @@ void cLuxInteractConnection_Rope::UpdateProp(float afTimeStep)
 void cLuxInteractConnection_Rope::OnTurn(float afAngleAdd, float afT)
 {
     //Invert if var is set
-    if(mbInvert) afT = 1 - afT;
+    if(mbInvert)
+    {
+        afT = 1 - afT;
+    }
 
     float fMin = mpRope->GetMinTotalLength();
     float fMax = mpRope->GetMaxTotalLength();
@@ -115,13 +127,25 @@ void cLuxInteractConnection_Rope::OnTurn(float afAngleAdd, float afT)
 
 void cLuxInteractConnection_Rope::OnLimit(int alState)
 {
-    if(mpProp->GetPropType() == eLuxPropType_Wheel) return;
-    if(alState==0) return;
+    if(mpProp->GetPropType() == eLuxPropType_Wheel)
+    {
+        return;
+    }
+    if(alState==0)
+    {
+        return;
+    }
     //Check if this state is used.
-    if(mlStateUsed != 0 && mlStateUsed != alState) return;
+    if(mlStateUsed != 0 && mlStateUsed != alState)
+    {
+        return;
+    }
 
     //Invert state if var is set.
-    if(mbInvert) alState = -alState;
+    if(mbInvert)
+    {
+        alState = -alState;
+    }
 
     float fWantedLength =0;
     if(alState == 1)
@@ -239,10 +263,16 @@ void cLuxInteractConnection_MoveObject::UpdateProp(float afTimeStep)
 
     mbPropNeedsUpdate = false;
 
-    if(mpProp->GetPropType() != eLuxPropType_Wheel) return;
+    if(mpProp->GetPropType() != eLuxPropType_Wheel)
+    {
+        return;
+    }
 
     float fT = mpMoveObject->GetMoveState();
-    if(mbInvert) fT = 1 - fT;
+    if(mbInvert)
+    {
+        fT = 1 - fT;
+    }
 
     ////////////////////////
     // Update wheel
@@ -272,7 +302,10 @@ void cLuxInteractConnection_MoveObject::UpdateProp(float afTimeStep)
 
 void cLuxInteractConnection_MoveObject::OnTurn(float afAngleAdd, float afT)
 {
-    if(mbInvert) afT = 1 - afT;
+    if(mbInvert)
+    {
+        afT = 1 - afT;
+    }
 
     mpMoveObject->MoveToState(afT, 10.0f, 5, 0.01f, false);
 }
@@ -281,12 +314,24 @@ void cLuxInteractConnection_MoveObject::OnTurn(float afAngleAdd, float afT)
 
 void cLuxInteractConnection_MoveObject::OnLimit(int alState)
 {
-    if(mpProp->GetPropType() == eLuxPropType_Wheel) return;
+    if(mpProp->GetPropType() == eLuxPropType_Wheel)
+    {
+        return;
+    }
 
-    if(alState==0) return;
-    if(mlStateUsed != 0 && mlStateUsed != alState) return;
+    if(alState==0)
+    {
+        return;
+    }
+    if(mlStateUsed != 0 && mlStateUsed != alState)
+    {
+        return;
+    }
 
-    if(mbInvert) alState = -alState;
+    if(mbInvert)
+    {
+        alState = -alState;
+    }
 
     mpMoveObject->MoveToState(alState >0 ? 1.0f : 0.0f);
 }

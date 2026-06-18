@@ -87,7 +87,10 @@ void cLuxPlayerState_Ladder::OnEnterState(eLuxPlayerState aPrevState)
     /////////////////////////////////////
     //Different time if player is above the ladder.
     float fTime = 0.5f;
-    if(mpPlayer->GetCharacterBody()->GetPosition().y > mpLadder->GetMaxY()) fTime = 1.2f;
+    if(mpPlayer->GetCharacterBody()->GetPosition().y > mpLadder->GetMaxY())
+    {
+        fTime = 1.2f;
+    }
 
     mfTimeCount = fTime;
 
@@ -134,7 +137,9 @@ void cLuxPlayerState_Ladder::OnLeaveState(eLuxPlayerState aNewState)
     /////////////////////////////////////
     // Draw lantern if it was before
     if(mbLanternDrawn)
+    {
         mpPlayer->GetHelperLantern()->SetActive(true, true, true, false);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -182,22 +187,34 @@ void cLuxPlayerState_Ladder::Update(float afTimeStep)
         {
             mvCharPosition.y += mfMoveMul*mfUpSpeed* afTimeStep;
 
-            if(mfStepCount<0)mfStepCount=0;
+            if(mfStepCount<0)
+            {
+                mfStepCount=0;
+            }
         }
         //Down
         else if(mfMoveMul < 0)
         {
             mvCharPosition.y += mfMoveMul*mfDownSpeed*afTimeStep;
 
-            if(mfStepCount>0)mfStepCount=0;
+            if(mfStepCount>0)
+            {
+                mfStepCount=0;
+            }
         }
         //Still
         else
         {
             if(!mbPlayedSound)
             {
-                if(mfStepCount>0) PlaySound("up");
-                if(mfStepCount<0) PlaySound("down");
+                if(mfStepCount>0)
+                {
+                    PlaySound("up");
+                }
+                if(mfStepCount<0)
+                {
+                    PlaySound("down");
+                }
             }
 
             mfStepCount =0;
@@ -322,8 +339,14 @@ bool cLuxPlayerState_Ladder::OnMove(eCharDir aDir, float afMul)
 {
     ////////////////////////////////////
     //If in final states, do not move.
-    if(mlState==0 || mlState==2) return false;
-    if(aDir == eCharDir_Right) return false;
+    if(mlState==0 || mlState==2)
+    {
+        return false;
+    }
+    if(aDir == eCharDir_Right)
+    {
+        return false;
+    }
 
     mfMoveMul = afMul;
 
@@ -335,8 +358,14 @@ bool cLuxPlayerState_Ladder::OnMove(eCharDir aDir, float afMul)
 bool cLuxPlayerState_Ladder::OnAddYaw(float afAmount)
 {
     //Do not move camera when attaching
-    if(mlState==0)     return false;
-    else            return true;
+    if(mlState==0)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -344,8 +373,14 @@ bool cLuxPlayerState_Ladder::OnAddYaw(float afAmount)
 bool cLuxPlayerState_Ladder::OnAddPitch(float afAmount)
 {
     //Do not move camera when attaching
-    if(mlState==0)     return false;
-    else            return true;
+    if(mlState==0)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -503,9 +538,13 @@ void cLuxPlayerState_Ladder::SaveToSaveData(iLuxPlayerState_SaveData* apSaveData
     ///////////////////////
     // Save vars
     if(mpLadder)
+    {
         pData->mlLadderID = mpLadder->GetID();
+    }
     else
+    {
         pData->mlLadderID = -1;
+    }
 
     kCopyToVar(pData, mlState);
     kCopyToVar(pData, mvStartPosition);

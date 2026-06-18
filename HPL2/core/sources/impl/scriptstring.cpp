@@ -57,7 +57,9 @@ static void StringAddRef_Generic(asIScriptGeneric *gen)
 void CScriptString::Release() const
 {
     if( --refCount == 0 )
+    {
         delete this;
+    }
 }
 
 static void StringRelease_Generic(asIScriptGeneric *gen)
@@ -112,8 +114,14 @@ static void AddAssignString_Generic(asIScriptGeneric *gen)
 static int StringCmp(const string &a, const string &b)
 {
     int cmp = 0;
-    if( a < b ) cmp = -1;
-    else if( a > b ) cmp = 1;
+    if( a < b )
+    {
+        cmp = -1;
+    }
+    else if( a > b )
+    {
+        cmp = 1;
+    }
     return cmp;
 }
 
@@ -123,8 +131,14 @@ static void StringCmp_Generic(asIScriptGeneric * gen)
     string * b = static_cast<string *>(gen->GetArgAddress(0));
 
     int cmp = 0;
-    if( *a < *b ) cmp = -1;
-    else if( *a > *b ) cmp = 1;
+    if( *a < *b )
+    {
+        cmp = -1;
+    }
+    else if( *a > *b )
+    {
+        cmp = 1;
+    }
 
     *(int*)gen->GetAddressOfReturnLocation() = cmp;
 }
@@ -609,9 +623,13 @@ static void StringLength_Generic(asIScriptGeneric *gen)
     string *s = (string*)gen->GetObject();
     size_t l = s->size();
     if( sizeof(size_t) == 4 )
+    {
         gen->SetReturnDWord((asUINT)l);
+    }
     else
+    {
         gen->SetReturnQWord((asQWORD)l);
+    }
 }
 
 static void StringResize_Generic(asIScriptGeneric *gen)
@@ -854,9 +872,13 @@ void RegisterScriptString_Generic(asIScriptEngine *engine)
 void RegisterScriptString(asIScriptEngine *engine)
 {
     if( strstr(asGetLibraryOptions(), "AS_MAX_PORTABILITY") )
+    {
         RegisterScriptString_Generic(engine);
+    }
     else
+    {
         RegisterScriptString_Native(engine);
+    }
 }
 
 END_AS_NAMESPACE

@@ -140,7 +140,10 @@ static tString gsTabString="";
 const char*    GetTabs()
 {
     gsTabString ="";
-    for(int i=0; i<glTabs; ++i) gsTabString += "   ";
+    for(int i=0; i<glTabs; ++i)
+    {
+        gsTabString += "   ";
+    }
     return gsTabString.c_str();
 }
 
@@ -149,7 +152,7 @@ cSerializeClass::cSerializeClass(const char* asName,const char* asParent,
                                  iSerializable* (*apCreateFunc)())
 {
     gvSerializeTempClasses[glSerializeTempClassesNum] = cSerializeSavedClass(asName,asParent,
-            apMemberFields,alSize,apCreateFunc);
+        apMemberFields,alSize,apCreateFunc);
 
     glSerializeTempClassesNum++;
 }
@@ -218,9 +221,14 @@ bool cSerializeClass::SaveToFile(iSerializable* apData, const tWString &asFile,c
 
         bool bRet = pXmlDoc->SaveFile(pFile);
         if(bRet==false)
+        {
             Error("Couldn't save class to '%s'\n", asFile.c_str());
+        }
 
-        if(pFile) fclose(pFile);
+        if(pFile)
+        {
+            fclose(pFile);
+        }
 
         hplDelete(pXmlDoc);
         return bRet;
@@ -268,7 +276,10 @@ void cSerializeClass::SaveToElement(iSerializable* apData,const tString &asName,
 {
     SetUpData();
 
-    if(apData==NULL) return;
+    if(apData==NULL)
+    {
+        return;
+    }
 
     //Create element
     TiXmlElement* pClassElem=NULL;
@@ -289,7 +300,10 @@ void cSerializeClass::SaveToElement(iSerializable* apData,const tString &asName,
     pClassElem->SetAttribute("type",apData->Serialize_GetTopClass().c_str());
     pClassElem->SetAttribute("name",asName.c_str());
 
-    if(gbLog) Log("---Saving class '%s' Begin---\n",apData->Serialize_GetTopClass().c_str());
+    if(gbLog)
+    {
+        Log("---Saving class '%s' Begin---\n",apData->Serialize_GetTopClass().c_str());
+    }
 
     cSerializeMemberFieldIterator classIt = GetMemberFieldIterator(apData);
 
@@ -297,7 +311,10 @@ void cSerializeClass::SaveToElement(iSerializable* apData,const tString &asName,
     {
         cSerializeMemberField *pField = classIt.GetNext();
 
-        if(gbLog) Log(" Field : '%s', MainType: %d Type: %d\n",pField->msName.c_str(), pField->mMainType, pField->mType);
+        if(gbLog)
+        {
+            Log(" Field : '%s', MainType: %d Type: %d\n",pField->msName.c_str(), pField->mMainType, pField->mType);
+        }
 
         switch(pField->mMainType)
         {
@@ -322,7 +339,10 @@ void cSerializeClass::SaveToElement(iSerializable* apData,const tString &asName,
         }
     }
 
-    if(gbLog) Log("---Done saving class '%s' ---\n",apData->Serialize_GetTopClass().c_str());
+    if(gbLog)
+    {
+        Log("---Done saving class '%s' ---\n",apData->Serialize_GetTopClass().c_str());
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -356,11 +376,17 @@ bool cSerializeClass::LoadFromFile(iSerializable* apData, const tWString &asFile
             Error("Couldn't load saved class file '%s' from %s!\n",
                   cString::To8Char(asFile).c_str(),
                   pXmlDoc->ErrorDesc());
-            if(pFile) fclose(pFile);
+            if(pFile)
+            {
+                fclose(pFile);
+            }
             hplDelete(pXmlDoc);
             return false;
         }
-        if(pFile) fclose(pFile);
+        if(pFile)
+        {
+            fclose(pFile);
+        }
     }
     ///////////////////////////////
     //Compressed Load
@@ -421,7 +447,10 @@ void cSerializeClass::LoadFromElement(iSerializable* apData, TiXmlElement *apEle
     SetUpData();
 
     cSerializeSavedClass *pClass = GetClass(apData->Serialize_GetTopClass());
-    if(pClass==NULL) return;
+    if(pClass==NULL)
+    {
+        return;
+    }
 
     if(gbLog)
     {
@@ -434,7 +463,10 @@ void cSerializeClass::LoadFromElement(iSerializable* apData, TiXmlElement *apEle
     {
         tString sMainType = pMemberElem->Value();
 
-        if(gbLog) Log("%sMember field type %s\n",GetTabs(),sMainType.c_str());
+        if(gbLog)
+        {
+            Log("%sMember field type %s\n",GetTabs(),sMainType.c_str());
+        }
 
         if(sMainType == "var")
         {
@@ -505,8 +537,14 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     /////////// BOOL ////////////////////////////////
     case eSerializeType_Bool:
     {
-        if(PointerValue(pVal,bool)==0) return "false";
-        else return "true";
+        if(PointerValue(pVal,bool)==0)
+        {
+            return "false";
+        }
+        else
+        {
+            return "true";
+        }
         break;
     }
 
@@ -575,9 +613,9 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     {
         cMatrixf &Mtx = PointerValue(pVal,cMatrixf);
         sprintf(msTempCharArray, "%f %f %f %f "
-                "%f %f %f %f "
-                "%f %f %f %f "
-                "%f %f %f %f",
+                                 "%f %f %f %f "
+                                 "%f %f %f %f "
+                                 "%f %f %f %f",
                 Mtx.m[0][0],Mtx.m[0][1],Mtx.m[0][2],Mtx.m[0][3],
                 Mtx.m[1][0],Mtx.m[1][1],Mtx.m[1][2],Mtx.m[1][3],
                 Mtx.m[2][0],Mtx.m[2][1],Mtx.m[2][2],Mtx.m[2][3],
@@ -960,10 +998,16 @@ void cSerializeClass::LoadVariable(TiXmlElement *apElement, iSerializable* apDat
     const char* sVal = apElement->Attribute("val");
     eSerializeType type = cString::ToInt(apElement->Attribute("type"),eSerializeMainType_NULL);
 
-    if(gbLog) Log("%s Saving variable: %s val: %s type: %d\n",GetTabs(),sName.c_str(),sVal,(int)type);
+    if(gbLog)
+    {
+        Log("%s Saving variable: %s val: %s type: %d\n",GetTabs(),sName.c_str(),sVal,(int)type);
+    }
 
     cSerializeMemberField *pField = GetMemberField(sName,apClass);
-    if(pField==NULL) return;
+    if(pField==NULL)
+    {
+        return;
+    }
 
     StringToValue(apData, pField->mlOffset,type,sVal);
 }
@@ -984,7 +1028,10 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData,c
     }
 
     cSerializeMemberField *pField = GetMemberField(sName,apClass);
-    if(pField==NULL) return;
+    if(pField==NULL)
+    {
+        return;
+    }
 
     void *pArrayData = ValuePointer(apData,pField->mlOffset);
 
@@ -1015,9 +1062,15 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData,c
 
             tString sClassType = cString::ToString(pVarElem->Attribute("type"),"");
             cSerializeSavedClass *pSavedClass = GetClass(sClassType);
-            if(pSavedClass==NULL) continue;
+            if(pSavedClass==NULL)
+            {
+                continue;
+            }
 
-            if(gbLog) Log("%s Element Class pointer: %s\n",GetTabs(),sClassType.c_str());
+            if(gbLog)
+            {
+                Log("%s Element Class pointer: %s\n",GetTabs(),sClassType.c_str());
+            }
 
             //If NULL, then just create else delete and then create-
             //virtual pointers here...yes yes...
@@ -1043,7 +1096,10 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData,c
         {
             const char* sVal = pVarElem->Attribute("val");
 
-            if(gbLog) Log("%s Element variable val '%s'\n",GetTabs(),sVal);
+            if(gbLog)
+            {
+                Log("%s Element variable val '%s'\n",GetTabs(),sVal);
+            }
 
             StringToValue(pArrayData,lCount * SizeOfType(type),type,sVal);
         }
@@ -1063,11 +1119,17 @@ void cSerializeClass::LoadClass(TiXmlElement *apElement, iSerializable* apData,c
     tString sName = cString::ToString(apElement->Attribute("name"),"");
 
     cSerializeMemberField *pField = GetMemberField(sName,apClass);
-    if(pField==NULL) return;
+    if(pField==NULL)
+    {
+        return;
+    }
 
     iSerializable *pClassData = (iSerializable*)ValuePointer(apData,pField->mlOffset);
 
-    if(gbLog) Log("%s Saving class name: '%s' top class: '%s'\n",GetTabs(),sName.c_str(),pClassData->Serialize_GetTopClass().c_str());
+    if(gbLog)
+    {
+        Log("%s Saving class name: '%s' top class: '%s'\n",GetTabs(),sName.c_str(),pClassData->Serialize_GetTopClass().c_str());
+    }
 
     LoadFromElement(pClassData,apElement);
 }
@@ -1081,7 +1143,10 @@ void cSerializeClass::LoadClassPointer(TiXmlElement *apElement, iSerializable* a
     bool bNull = cString::ToBool(apElement->Attribute("null"),false);
 
     cSerializeMemberField *pField = GetMemberField(sName,apClass);
-    if(pField==NULL) return;
+    if(pField==NULL)
+    {
+        return;
+    }
 
     iSerializable **pClassDataPtr = (iSerializable**)ValuePointer(apData,pField->mlOffset);
 
@@ -1113,7 +1178,10 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
     eSerializeType type = cString::ToInt(apElement->Attribute("type"),eSerializeMainType_NULL);
 
     cSerializeMemberField *pField = GetMemberField(sName,apClass);
-    if(pField==NULL) return;
+    if(pField==NULL)
+    {
+        return;
+    }
 
     iContainer *pCont = (iContainer*)ValuePointer(apData,pField->mlOffset);
 
@@ -1130,12 +1198,18 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
         pCont->Clear();
 
         cSerializeSavedClass *pSavedClass = GetClass(sClassType);
-        if(pSavedClass==NULL) return;
+        if(pSavedClass==NULL)
+        {
+            return;
+        }
 
         TiXmlElement *pVarElem = apElement->FirstChildElement();
         for(; pVarElem != NULL; pVarElem = pVarElem->NextSiblingElement())
         {
-            if(gbLog) Log("%sCreating element class %s\n",GetTabs(),sClassType.c_str());
+            if(gbLog)
+            {
+                Log("%sCreating element class %s\n",GetTabs(),sClassType.c_str());
+            }
 
             iSerializable *pData = pSavedClass->mpCreateFunc();
 
@@ -1150,7 +1224,10 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
     {
         //This should really be smart pointers.
         //Delete all and clear
-        if(gbLog) Log("%sClearing container and deleting elements\n",GetTabs());
+        if(gbLog)
+        {
+            Log("%sClearing container and deleting elements\n",GetTabs());
+        }
 
         iContainerIterator *pContIt = pCont->CreateIteratorPtr();
         while(pContIt->HasNext())
@@ -1169,9 +1246,15 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
         {
             tString sClassType = cString::ToString(pVarElem->Attribute("type"),"");
             cSerializeSavedClass *pSavedClass = GetClass(sClassType);
-            if(pSavedClass==NULL) continue;
+            if(pSavedClass==NULL)
+            {
+                continue;
+            }
 
-            if(gbLog) Log("%s Container member class pointer '%s'\n",GetTabs(),sClassType.c_str());
+            if(gbLog)
+            {
+                Log("%s Container member class pointer '%s'\n",GetTabs(),sClassType.c_str());
+            }
 
             iSerializable *pData = pSavedClass->mpCreateFunc();
 
@@ -1190,7 +1273,10 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
             const char* sVal = pVarElem->Attribute("val");
             void *pData = hplMalloc(SizeOfType(type));
 
-            if(gbLog) Log("%s Element var val '%s' type: %d\n",GetTabs(),sVal,type);
+            if(gbLog)
+            {
+                Log("%s Element var val '%s' type: %d\n",GetTabs(),sVal,type);
+            }
 
             StringToValue(pData,0,type,sVal);
             pCont->AddVoidClass(pData);
@@ -1216,7 +1302,10 @@ cSerializeMemberField * cSerializeClass::GetMemberField(const tString &asName,cS
     {
         cSerializeMemberField* pField = classIt.GetNext();
 
-        if(asName == pField->msName) return pField;
+        if(asName == pField->msName)
+        {
+            return pField;
+        }
     }
 
     Warning("Couldn't find member field '%s' in class '%s'\n",asName.c_str(), apClass->msName);
@@ -1267,7 +1356,10 @@ size_t cSerializeClass::SizeOfType(eSerializeType aType)
 
 void cSerializeClass::SetUpData()
 {
-    if(mbDataSetup) return;
+    if(mbDataSetup)
+    {
+        return;
+    }
 
     mbDataSetup = true;
 
@@ -1283,7 +1375,10 @@ void cSerializeClass::SetUpData()
 
 void cSerializeClass::FillSaveClassMembersList(tSerializeSavedClassList *apList, cSerializeSavedClass* apClass)
 {
-    if(apClass==NULL) return;
+    if(apClass==NULL)
+    {
+        return;
+    }
     apList->push_back(apClass);
     FillSaveClassMembersList(apList, GetClass(apClass->msParentName));
 }

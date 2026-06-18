@@ -69,7 +69,10 @@ cLuxEffectRenderer::cLuxEffectRenderer() : iLuxUpdateable("LuxEffectRenderer")
     //TODO: Could perhaps use deferred_base_vtx for color? Since the scale can be done to matrix.
     for(int i=0; i<2; ++i)
     {
-        if(i==1) programVars.Add("UseAlpha");
+        if(i==1)
+        {
+            programVars.Add("UseAlpha");
+        }
         mpOutlineColorProgram[i] = pGraphics->CreateGpuProgramFromShaders("GameOutline","game_outline_vtx.glsl", "game_outline_frag.glsl",&programVars);
         programVars.Clear();
     }
@@ -89,15 +92,22 @@ cLuxEffectRenderer::cLuxEffectRenderer() : iLuxUpdateable("LuxEffectRenderer")
     for(int i=0; i<2; ++i)
     {
         cParserVarContainer vars;
-        if(i==1) vars.Add("BlurHorisontal");
+        if(i==1)
+        {
+            vars.Add("BlurHorisontal");
+        }
         mpBlurProgram[i] = pGraphics->CreateGpuProgramFromShaders("BloomBlur","posteffect_bloom_blur_vtx.glsl", "posteffect_bloom_blur_frag.glsl", &vars);
 
         if(mpBlurProgram[i])
+        {
             mpBlurProgram[i]->GetVariableAsId("afBlurSize",kVar_afBlurSize);
+        }
 
         mpBlurBuffer[i] = pGraphics->GetTempFrameBuffer(vScreenSize/mlBlurSizeDiv,ePixelFormat_RGBA,i);
         if(mpBlurBuffer[i])
+        {
             mpBlurTexture[i] = mpBlurBuffer[i]->GetColorBuffer(0)->ToTexture();
+        }
     }
 
 
@@ -147,7 +157,10 @@ void cLuxEffectRenderer::Update(float afTimeStep)
 
 void cLuxEffectRenderer::RenderSolid(cRendererCallbackFunctions* apFunctions)
 {
-    if(apFunctions->GetSettings()->mbIsReflection) return;
+    if(apFunctions->GetSettings()->mbIsReflection)
+    {
+        return;
+    }
 
 }
 
@@ -202,8 +215,14 @@ void cLuxEffectRenderer::AddEnemyGlow(iRenderable *apObject, float afAlpha)
 
 void cLuxEffectRenderer::RenderFlashObjects(cRendererCallbackFunctions* apFunctions)
 {
-    if(mvFlashObjects.empty()) return;
-    if(mpFlashProgram==NULL) return;
+    if(mvFlashObjects.empty())
+    {
+        return;
+    }
+    if(mpFlashProgram==NULL)
+    {
+        return;
+    }
 
     ////////////////////////////////////
     // Setup functions
@@ -225,10 +244,15 @@ void cLuxEffectRenderer::RenderFlashObjects(cRendererCallbackFunctions* apFuncti
     {
         iRenderable *pObject = mvFlashObjects[i].mpObject;
 
-        if(pObject->CollidesWithFrustum(pFrustum)==false) continue;
+        if(pObject->CollidesWithFrustum(pFrustum)==false)
+        {
+            continue;
+        }
 
         if(mpFlashProgram)
+        {
             mpFlashProgram->SetFloat(kVar_afColorMul,mvFlashObjects[i].mfAlpha*fGlobalAlpha);
+        }
 
         apFunctions->SetTexture(0, pObject->GetMaterial()->GetTexture(eMaterialTexture_Diffuse));
 
@@ -236,7 +260,9 @@ void cLuxEffectRenderer::RenderFlashObjects(cRendererCallbackFunctions* apFuncti
         apFunctions->SetMatrix(pObject->GetModelMatrixPtr());
 
         for(int i=0; i<2; ++i)
+        {
             apFunctions->DrawCurrent();
+        }
     }
 
     apFunctions->SetTexture(0,NULL);
@@ -248,8 +274,14 @@ void cLuxEffectRenderer::RenderFlashObjects(cRendererCallbackFunctions* apFuncti
 
 void cLuxEffectRenderer::RenderEnemyGlow(cRendererCallbackFunctions* apFunctions)
 {
-    if(mvEnemyGlowObjects.empty()) return;
-    if(mpEnemyGlowProgram==NULL) return;
+    if(mvEnemyGlowObjects.empty())
+    {
+        return;
+    }
+    if(mpEnemyGlowProgram==NULL)
+    {
+        return;
+    }
 
     ////////////////////////////////////
     // Setup functions
@@ -269,7 +301,10 @@ void cLuxEffectRenderer::RenderEnemyGlow(cRendererCallbackFunctions* apFunctions
     {
         iRenderable *pObject = mvEnemyGlowObjects[i].mpObject;
 
-        if(pObject->CollidesWithFrustum(pFrustum)==false) continue;
+        if(pObject->CollidesWithFrustum(pFrustum)==false)
+        {
+            continue;
+        }
 
         mpEnemyGlowProgram->SetFloat(kVar_afColorMul,mvEnemyGlowObjects[i].mfAlpha);
 
@@ -290,7 +325,10 @@ void cLuxEffectRenderer::RenderEnemyGlow(cRendererCallbackFunctions* apFunctions
 
 void cLuxEffectRenderer::RenderOutline(cRendererCallbackFunctions* apFunctions)
 {
-    if(mvOutlineObjects.empty()) return;
+    if(mvOutlineObjects.empty())
+    {
+        return;
+    }
 
     /////////////////////////////
     //Setup vars
@@ -436,7 +474,9 @@ void cLuxEffectRenderer::RenderOutline(cRendererCallbackFunctions* apFunctions)
     {
         //Reverse order so blur program is not set unneeded times
         if(mpBlurProgram[1-i])
+        {
             mpBlurProgram[1-i]->SetFloat(kVar_afBlurSize, 1.0f);
+        }
     }
 
     int lBlurIterations = 2;

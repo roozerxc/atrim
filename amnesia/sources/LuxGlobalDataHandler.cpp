@@ -65,7 +65,10 @@ void cLuxGlobalDataHandler::Reset()
 {
     m_mapVars.clear();
 
-    if(mpScript) gpBase->mpEngine->GetResources()->GetScriptManager()->Destroy(mpScript);
+    if(mpScript)
+    {
+        gpBase->mpEngine->GetResources()->GetScriptManager()->Destroy(mpScript);
+    }
     mpScript = NULL;
 
     mfEnemyActivateSoundCount =0;
@@ -119,7 +122,9 @@ void cLuxGlobalDataHandler::LoadScript()
 bool cLuxGlobalDataHandler::RecompileScript(tString *apOutput)
 {
     if(mpScript)
+    {
         gpBase->mpEngine->GetResources()->GetScriptManager()->Destroy(mpScript);
+    }
 
     tString sFile = gpBase->mpMapHandler->GetMapFolder() + "global.hps";
     mpScript = gpBase->mpEngine->GetResources()->GetScriptManager()->CreateScript(sFile, apOutput);
@@ -131,7 +136,10 @@ bool cLuxGlobalDataHandler::RecompileScript(tString *apOutput)
 
 void cLuxGlobalDataHandler::RunScript(const tString& asCommand)
 {
-    if(mpScript==NULL) return;
+    if(mpScript==NULL)
+    {
+        return;
+    }
 
     mpScript->Run(asCommand);
 }
@@ -141,7 +149,10 @@ void cLuxGlobalDataHandler::RunScript(const tString& asCommand)
 cLuxScriptVar* cLuxGlobalDataHandler::GetVar(const tString &asName)
 {
     tLuxScriptVarMapIt it = m_mapVars.find(asName);
-    if(it != m_mapVars.end()) return &(it->second);
+    if(it != m_mapVars.end())
+    {
+        return &(it->second);
+    }
 
     m_mapVars.insert(tLuxScriptVarMap::value_type(asName, cLuxScriptVar(asName)));
     it = m_mapVars.find(asName);

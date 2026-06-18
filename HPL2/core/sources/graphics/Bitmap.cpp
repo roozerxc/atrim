@@ -25,7 +25,10 @@ cBitmapData::cBitmapData()
 
 cBitmapData::~cBitmapData()
 {
-    if(mpData) hplDeleteArray( mpData );
+    if(mpData)
+    {
+        hplDeleteArray( mpData );
+    }
 }
 
 
@@ -33,7 +36,10 @@ cBitmapData::~cBitmapData()
 
 void cBitmapData::SetData(const unsigned char* apData, int alSize)
 {
-    if(mpData && mlSize != alSize) hplDelete( mpData );
+    if(mpData && mlSize != alSize)
+    {
+        hplDelete( mpData );
+    }
 
     mlSize = alSize;
     mpData = hplNewArray(unsigned char, mlSize);
@@ -83,8 +89,14 @@ cBitmap::~cBitmap()
 
 cBitmapData* cBitmap::GetData(int alImage, int alMipMapLevel)
 {
-    if(alImage >= mlNumOfImages) return NULL;
-    if(alMipMapLevel >= mlNumOfMipMaps) return NULL;
+    if(alImage >= mlNumOfImages)
+    {
+        return NULL;
+    }
+    if(alMipMapLevel >= mlNumOfMipMaps)
+    {
+        return NULL;
+    }
 
     return &mvImages[alImage * mlNumOfMipMaps + alMipMapLevel];
 }
@@ -104,9 +116,18 @@ void cBitmap::SetUpData(int alNumOfImages, int alNumOfMipmaps)
 void cBitmap::CreateData(const cVector3l& avSize, ePixelFormat aFormat, int alImage, int alMipMap)
 {
     mvSize = avSize;
-    if(mvSize.x<=0)mvSize.x =1;
-    if(mvSize.y<=0)mvSize.y =1;
-    if(mvSize.z<=0)mvSize.z =1;
+    if(mvSize.x<=0)
+    {
+        mvSize.x =1;
+    }
+    if(mvSize.y<=0)
+    {
+        mvSize.y =1;
+    }
+    if(mvSize.z<=0)
+    {
+        mvSize.z =1;
+    }
 
     mPixelFormat = aFormat;
     mlBytesPerPixel = GetChannelsInPixelFormat(aFormat);
@@ -122,7 +143,10 @@ void cBitmap::CreateData(const cVector3l& avSize, ePixelFormat aFormat, int alIm
 
 void cBitmap::Clear( const cColor& aColor,int alImage, int alMipMap)
 {
-    if(mbDataIsCompressed) return; //Cannot draw to compressed data!
+    if(mbDataIsCompressed)
+    {
+        return;    //Cannot draw to compressed data!
+    }
 
     int lDataCount = mvSize.x * mvSize.y * mvSize.z;
 
@@ -152,7 +176,10 @@ void cBitmap::Blit(    cBitmap *apSrcBmp, const cVector3l& avDestPosition,const 
                        int alDestImage, int alDestMipMap,
                        int alSrcImage, int alSrcMipMap)
 {
-    if(mbDataIsCompressed) return; //Cannot blit compressed data!
+    if(mbDataIsCompressed)
+    {
+        return;    //Cannot blit compressed data!
+    }
 
     ////////////////////////////////////////
     //Check so positions are in bounds
@@ -176,9 +203,18 @@ void cBitmap::Blit(    cBitmap *apSrcBmp, const cVector3l& avDestPosition,const 
     int lSrcHeight = avSrcSize.y >    apSrcBmp->GetSize().y ?    apSrcBmp->GetSize().y : avSrcSize.y;
     int lSrcDepth = avSrcSize.z >    apSrcBmp->GetSize().z ?    apSrcBmp->GetSize().z : avSrcSize.z;
 
-    if(lSrcWidth <= 0)    lSrcWidth =1;
-    if(lSrcHeight <= 0) lSrcHeight =1;
-    if(lSrcDepth <= 0)    lSrcDepth =1;
+    if(lSrcWidth <= 0)
+    {
+        lSrcWidth =1;
+    }
+    if(lSrcHeight <= 0)
+    {
+        lSrcHeight =1;
+    }
+    if(lSrcDepth <= 0)
+    {
+        lSrcDepth =1;
+    }
 
     // Get coordinates and check for negative source coordinates
     cVector3l vSrcPos = avSrcPosition;
@@ -199,9 +235,18 @@ void cBitmap::Blit(    cBitmap *apSrcBmp, const cVector3l& avDestPosition,const 
     }
 
     // Check if image is outside of bounds in source
-    if(vSrcPos.x + lSrcWidth > apSrcBmp->GetSize().x)        lSrcWidth = apSrcBmp->GetSize().x - vSrcPos.x;
-    if(vSrcPos.y + lSrcHeight > apSrcBmp->GetSize().y)        lSrcHeight = apSrcBmp->GetSize().y - vSrcPos.y;
-    if(vSrcPos.z + lSrcDepth > apSrcBmp->GetSize().z)        lSrcDepth = apSrcBmp->GetSize().z - vSrcPos.z;
+    if(vSrcPos.x + lSrcWidth > apSrcBmp->GetSize().x)
+    {
+        lSrcWidth = apSrcBmp->GetSize().x - vSrcPos.x;
+    }
+    if(vSrcPos.y + lSrcHeight > apSrcBmp->GetSize().y)
+    {
+        lSrcHeight = apSrcBmp->GetSize().y - vSrcPos.y;
+    }
+    if(vSrcPos.z + lSrcDepth > apSrcBmp->GetSize().z)
+    {
+        lSrcDepth = apSrcBmp->GetSize().z - vSrcPos.z;
+    }
 
     ////////////////////////////////////////
     //Check so source size is not too large for destination
@@ -228,9 +273,18 @@ void cBitmap::Blit(    cBitmap *apSrcBmp, const cVector3l& avDestPosition,const 
     }
 
     // Check if image is outside of bounds in destination
-    if(vDestPos.x + lSrcWidth > mvSize.x)        lSrcWidth = mvSize.x - vDestPos.x;
-    if(vDestPos.y + lSrcHeight > mvSize.y)        lSrcHeight = mvSize.y - vDestPos.y;
-    if(vDestPos.z + lSrcDepth > mvSize.z)        lSrcDepth = mvSize.z - vDestPos.z;
+    if(vDestPos.x + lSrcWidth > mvSize.x)
+    {
+        lSrcWidth = mvSize.x - vDestPos.x;
+    }
+    if(vDestPos.y + lSrcHeight > mvSize.y)
+    {
+        lSrcHeight = mvSize.y - vDestPos.y;
+    }
+    if(vDestPos.z + lSrcDepth > mvSize.z)
+    {
+        lSrcDepth = mvSize.z - vDestPos.z;
+    }
 
     //If any size dimension is zero, then we skip drawing
     if(lSrcWidth <=0 || lSrcHeight <=0 || lSrcDepth <=0)
@@ -365,7 +419,10 @@ static unsigned char gvTempPixelData1[4];
 static unsigned char gvTempPixelData2[4];
 unsigned char* cBitmap::ConvertDataToFormat(unsigned char* apPixelData, ePixelFormat aSrcFormat, ePixelFormat aDestFormat)
 {
-    if(aSrcFormat == aDestFormat) return apPixelData;
+    if(aSrcFormat == aDestFormat)
+    {
+        return apPixelData;
+    }
 
     // Make it into a general RGBA format
     unsigned char *pSrcPixel = ConvertDataToRGBA(apPixelData, aSrcFormat);

@@ -85,8 +85,14 @@ static eLuxEnemyPoseType ToPoseType(const tString& asPose)
 {
     tString sLowStr = cString::ToLowerCase(asPose);
 
-    if(sLowStr == "biped") return eLuxEnemyPoseType_Biped;
-    if(sLowStr == "quadruped") return eLuxEnemyPoseType_Quadruped;
+    if(sLowStr == "biped")
+    {
+        return eLuxEnemyPoseType_Biped;
+    }
+    if(sLowStr == "quadruped")
+    {
+        return eLuxEnemyPoseType_Quadruped;
+    }
 
     Error("Pose type '%s' does not exist! Using biped\n", asPose.c_str());
     return eLuxEnemyPoseType_Biped;
@@ -97,7 +103,10 @@ static eLuxEnemyPoseType ToPoseType(const tString& asPose)
 void iLuxEnemyLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars)
 {
     cLuxMap *pMap = gpBase->mpCurrentMapLoading;
-    if(pMap==NULL) return;
+    if(pMap==NULL)
+    {
+        return;
+    }
 
     iLuxEnemy *pEnemy = CreateEnemy(mpEntity->GetName(), mlID,pMap);
 
@@ -322,7 +331,9 @@ void iLuxEnemyLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTr
     pEnemy->mfAmbientSoundMaxTime[eLuxEnemySoundState_Hunt] = GetVarFloat("AmbientMaxTime_Hunt");
 
     for(size_t i=0; i<eLuxEnemySoundState_LastEnum; ++i)
+    {
         gpBase->PreloadSound(pEnemy->msAmbientSound[i]);
+    }
 
     //////////////////////////////
     // Load type specific Properties
@@ -359,9 +370,18 @@ eLuxDamageType iLuxEnemyLoader::ToDamageType(const tString& asType)
 {
     tString sLowType = cString::ToLowerCase(asType);
 
-    if(sLowType == "bloodsplat") return eLuxDamageType_BloodSplat;
-    if(sLowType == "claws") return eLuxDamageType_Claws;
-    if(sLowType == "slash") return eLuxDamageType_Slash;
+    if(sLowType == "bloodsplat")
+    {
+        return eLuxDamageType_BloodSplat;
+    }
+    if(sLowType == "claws")
+    {
+        return eLuxDamageType_Claws;
+    }
+    if(sLowType == "slash")
+    {
+        return eLuxDamageType_Slash;
+    }
 
     Error("Damage type '%s' does not exist!\n", asType.c_str());
     return eLuxDamageType_BloodSplat;
@@ -516,23 +536,38 @@ iLuxEnemy::~iLuxEnemy()
     // Destroy graphics
     {
         //Mesh entity
-        if(mpMeshEntity) pWorld->DestroyMeshEntity(mpMeshEntity);
+        if(mpMeshEntity)
+        {
+            pWorld->DestroyMeshEntity(mpMeshEntity);
+        }
 
         //Lights
-        for(size_t i=0; i<mvLights.size(); ++i) pWorld->DestroyLight(mvLights[i]);
+        for(size_t i=0; i<mvLights.size(); ++i)
+        {
+            pWorld->DestroyLight(mvLights[i]);
+        }
 
         //Particle systems
         for(size_t i=0; i<mvParticleSystems.size(); ++i)
         {
             cParticleSystem *pPS = mvParticleSystems[i];
-            if(pPS && pWorld->ParticleSystemExists(pPS)) pPS->Kill();
+            if(pPS && pWorld->ParticleSystemExists(pPS))
+            {
+                pPS->Kill();
+            }
         }
 
         //Billboards
-        for(size_t i=0; i<mvBillboards.size(); ++i)    pWorld->DestroyBillboard(mvBillboards[i]);
+        for(size_t i=0; i<mvBillboards.size(); ++i)
+        {
+            pWorld->DestroyBillboard(mvBillboards[i]);
+        }
 
         //Beams
-        for(size_t i=0; i<mvBeams.size(); ++i)        pWorld->DestroyBeam(mvBeams[i]);
+        for(size_t i=0; i<mvBeams.size(); ++i)
+        {
+            pWorld->DestroyBeam(mvBeams[i]);
+        }
     }
 
     ////////////////////
@@ -604,7 +639,10 @@ void iLuxEnemy::OnMapEnter()
 
 void iLuxEnemy::OnUpdate(float afTimeStep)
 {
-    if(mbDisabled) return;
+    if(mbDisabled)
+    {
+        return;
+    }
 
     //In case the update is called in save or anyhting else that just want a quick update, we do not want to be updated.
     //Enemies can be disabled when player is not properly placed and the like.
@@ -728,10 +766,14 @@ void iLuxEnemy::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
     float fMaxRange = mfSightRange;
 
     if(pPlayer->GetHelperLightLevel()->GetNormalLightLevel() < mfPlayerInDarknessLightLevel && pPlayer->GetAvgSpeed() < 0.05f)
+    {
         fMaxRange = mfDarknessSightRange;
+    }
 
     if(bCrouching)
+    {
         fMaxRange = fMaxRange * mfCrouchVisibleRangeMul;
+    }
 
     apFunctions->GetLowLevelGfx()->DrawSphere(mpCharBody->GetPosition(), fMaxRange, cColor(0,1,1));
 
@@ -777,8 +819,14 @@ void iLuxEnemy::GiveDamage(float afAmount, int alStrength)
 {
     if(mfHealth > 0)
 
-        if(alStrength < mlToughness-1)            afAmount =0;
-        else if(alStrength == mlToughness-1)    afAmount *= 0.5;
+        if(alStrength < mlToughness-1)
+        {
+            afAmount =0;
+        }
+        else if(alStrength == mlToughness-1)
+        {
+            afAmount *= 0.5;
+        }
 
     afAmount *= GetDamageMul(afAmount, alStrength);
 
@@ -809,7 +857,10 @@ void iLuxEnemy::ShowPlayerPosition()
 
 void iLuxEnemy::AlertOfPlayerPresence()
 {
-    if(TriggersDisabled()) return;
+    if(TriggersDisabled())
+    {
+        return;
+    }
 
     ShowPlayerPosition();
     if(    mCurrentState == eLuxEnemyState_Idle ||    mCurrentState == eLuxEnemyState_Patrol)
@@ -822,8 +873,14 @@ void iLuxEnemy::AlertOfPlayerPresence()
 
 void iLuxEnemy::ChangeState(eLuxEnemyState aState)
 {
-    if(aState == eLuxEnemyState_LastEnum) return;
-    if(mCurrentState == aState) return;
+    if(aState == eLuxEnemyState_LastEnum)
+    {
+        return;
+    }
+    if(mCurrentState == aState)
+    {
+        return;
+    }
 
     //Log("State %s' -> '%s' LOS: %d\n", cString::To8Char(gsLuxEnemyStates[mCurrentState]).c_str(), cString::To8Char(gsLuxEnemyStates[aState]).c_str(),
     //                                    mbCanSeePlayer);
@@ -835,7 +892,10 @@ void iLuxEnemy::ChangeState(eLuxEnemyState aState)
 
 void iLuxEnemy::SendMessage(eLuxEnemyMessage aType, float afTime, bool abLocalScope, const cVector3f& avX,float afX, int alX)
 {
-    if(mbDisabled) return;
+    if(mbDisabled)
+    {
+        return;
+    }
     if(    TriggersDisabled() &&
             aType > eLuxEnemyMessage_EndOfPath &&
             aType != eLuxEnemyMessage_PlayerInRange &&
@@ -871,7 +931,10 @@ void iLuxEnemy::PlayAnim(    const tString &asName, bool abLoop, float afFadeTim
                              bool abUseMoveAnimWhenCurrentIsOver)
 {
     //if not using animations, then return.
-    if(mbUseAnimations==false) return;
+    if(mbUseAnimations==false)
+    {
+        return;
+    }
 
     //Check if the animation is already playing.
     if(    mpCurrentAnimation != NULL &&
@@ -898,7 +961,10 @@ void iLuxEnemy::PlayAnim(    const tString &asName, bool abLoop, float afFadeTim
     {
         mpCurrentAnimation->FadeOut(afFadeTime);
 
-        if(pNewAnim->IsFading()==false) pNewAnim->SetWeight(0);
+        if(pNewAnim->IsFading()==false)
+        {
+            pNewAnim->SetWeight(0);
+        }
         pNewAnim->FadeIn(afFadeTime);
     }
     else
@@ -932,21 +998,33 @@ void iLuxEnemy::PlayAnim(    const tString &asName, bool abLoop, float afFadeTim
 
 void iLuxEnemy::FadeOutCurrentAnim(float afFadeTime)
 {
-    if(mpCurrentAnimation==NULL) return;
-    if(mpCurrentAnimation->IsLooping()) return;
+    if(mpCurrentAnimation==NULL)
+    {
+        return;
+    }
+    if(mpCurrentAnimation->IsLooping())
+    {
+        return;
+    }
 
     mpCurrentAnimation->FadeOut(afFadeTime);
 
     mpCurrentAnimation = NULL;
 
-    if(mbUseMoveAnimWhenCurrentIsOver) mpMover->UseMoveStateAnimations();
+    if(mbUseMoveAnimWhenCurrentIsOver)
+    {
+        mpMover->UseMoveStateAnimations();
+    }
 }
 
 //-----------------------------------------------------------------------
 
 float iLuxEnemy::ConvertAnimToAbsoluteTime(float afRelativeTimePostion)
 {
-    if(mpCurrentAnimation==NULL) return 0;
+    if(mpCurrentAnimation==NULL)
+    {
+        return 0;
+    }
 
     return mpCurrentAnimation->GetLength() * afRelativeTimePostion;
 }
@@ -955,13 +1033,19 @@ float iLuxEnemy::ConvertAnimToAbsoluteTime(float afRelativeTimePostion)
 
 cSoundEntity* iLuxEnemy::PlaySound(const tString &asName)
 {
-    if(asName=="") return NULL;
+    if(asName=="")
+    {
+        return NULL;
+    }
 
     cSoundEntity *pSound = mpMap->GetWorld()->CreateSoundEntity("EnemySound", asName, true);
     if(pSound)
     {
         //pSound->SetPosition(mpCharBody->GetPosition());
-        if(mpMeshEntity) mpMeshEntity->AddChild(pSound);
+        if(mpMeshEntity)
+        {
+            mpMeshEntity->AddChild(pSound);
+        }
     }
 
     return pSound;
@@ -1034,7 +1118,10 @@ void iLuxEnemy::FadeToSmoke(bool abPlaySound)
             if(pBone->GetParent())
             {
                 float fDist = cMath::Vector3Dist(pBone->GetLocalPosition(), pBone->GetParent()->GetLocalPosition());
-                if(fDist < 0.1f) sPSFile = "ps_enemy_disappear_per_bone_small.ps";
+                if(fDist < 0.1f)
+                {
+                    sPSFile = "ps_enemy_disappear_per_bone_small.ps";
+                }
             }
 
             cParticleSystem *pPS = pWorld->CreateParticleSystem("Disappear",sPSFile,0.3f);
@@ -1045,13 +1132,17 @@ void iLuxEnemy::FadeToSmoke(bool abPlaySound)
     ///////////////////////////
     //Dissolve mesh
     if(mpMeshEntity->IsVisible())
+    {
         gpBase->mpMapHandler->GetCurrentMap()->AddDissolveEntity(mpMeshEntity, 1);
+    }
     SetActive(false);
 
     ///////////////////////////
     //Play sound
     if(abPlaySound)
+    {
         gpBase->mpHelpFuncs->PlayGuiSoundData("enemy_hallucination_disappear", eSoundEntryType_Gui);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1080,7 +1171,9 @@ void iLuxEnemy::ClearPatrolNodes()
 cLuxEnemyPatrolNode* iLuxEnemy::GetCurrentPatrolNode()
 {
     if(mlCurrentPatrolNode>= (int)mvPatrolNodes.size() || mlCurrentPatrolNode<0)
+    {
         return NULL;
+    }
 
     return &mvPatrolNodes[mlCurrentPatrolNode];
 }
@@ -1096,9 +1189,13 @@ void iLuxEnemy::IncCurrentPatrolNode(bool abLoopIfAtEnd)
     if(mlCurrentPatrolNode >= (int)mvPatrolNodes.size())
     {
         if(abLoopIfAtEnd)
+        {
             mlCurrentPatrolNode =0;
+        }
         else
+        {
             mlCurrentPatrolNode = (int)mvPatrolNodes.size()-1;
+        }
     }
 }
 
@@ -1146,7 +1243,10 @@ string& iLuxEnemy::GetCurrentEnemyStateName()
 
 float iLuxEnemy::DrawDebug(cGuiSet *apSet,iFontData *apFont,float afStartY)
 {
-    if(mbDisabled) return afStartY;
+    if(mbDisabled)
+    {
+        return afStartY;
+    }
 
     apSet->DrawFont(apFont, cVector3f(5,afStartY,10),13,cColor(1,1), _W("Name: '%ls'"),cString::To16Char(msName).c_str());
     afStartY += 14;
@@ -1204,7 +1304,9 @@ bool iLuxEnemy::StateEvent(int alState, eLuxEnemyStateEvent aEvent, cLuxStateMes
 {
     bool bRet = StateEventImplement(alState, aEvent, apMessage);
     if(bRet==false)
+    {
         bRet = StateEventImplement(-1, aEvent, apMessage);
+    }
 
     return bRet;
 }
@@ -1258,7 +1360,9 @@ void iLuxEnemy::CheckStateChange()
     if(mNextState != mCurrentState)
     {
         if(mCurrentState != eLuxEnemyState_LastEnum)
+        {
             StateEvent(mCurrentState, eLuxEnemyStateEvent_Leave, NULL);
+        }
 
         mPreviousState = mCurrentState;
         mCurrentState = mNextState;
@@ -1271,7 +1375,10 @@ void iLuxEnemy::CheckStateChange()
 
 void iLuxEnemy::ChangeSoundState(eLuxEnemySoundState aState)
 {
-    if(mSoundState == aState) return;
+    if(mSoundState == aState)
+    {
+        return;
+    }
 
     mSoundState = aState;
 
@@ -1288,11 +1395,20 @@ void iLuxEnemy::ChangeSoundState(eLuxEnemySoundState aState)
 
 void iLuxEnemy::UpdateSoundState(float afTimeStep)
 {
-    if(mSoundState == eLuxEnemySoundState_Silent) return;
-    if(msAmbientSound[mSoundState] == "") return;
+    if(mSoundState == eLuxEnemySoundState_Silent)
+    {
+        return;
+    }
+    if(msAmbientSound[mSoundState] == "")
+    {
+        return;
+    }
 
     //If sound is playing still do nothing.
-    if(mpCurrentSound && mpMap->GetWorld()->SoundEntityExists(mpCurrentSound,mlCurrentSoundID)) return;
+    if(mpCurrentSound && mpMap->GetWorld()->SoundEntityExists(mpCurrentSound,mlCurrentSoundID))
+    {
+        return;
+    }
 
     mpCurrentSound = NULL;
 
@@ -1300,7 +1416,10 @@ void iLuxEnemy::UpdateSoundState(float afTimeStep)
     if(mfAmbientSoundCount <=0)
     {
         mpCurrentSound = PlaySound(msAmbientSound[mSoundState]);
-        if(mpCurrentSound )mlCurrentSoundID = mpCurrentSound->GetCreationID();
+        if(mpCurrentSound )
+        {
+            mlCurrentSoundID = mpCurrentSound->GetCreationID();
+        }
         mfAmbientSoundCount = cMath::RandRectf(mfAmbientSoundMinTime[mSoundState], mfAmbientSoundMaxTime[mSoundState]);
     }
     else
@@ -1313,8 +1432,14 @@ void iLuxEnemy::UpdateSoundState(float afTimeStep)
 
 void iLuxEnemy::UpdateAnimation(float afTimeStep)
 {
-    if(mbUseAnimations==false) return;
-    if(mpMover->GetOverideMoveState()==false || mpCurrentAnimation==NULL) return;
+    if(mbUseAnimations==false)
+    {
+        return;
+    }
+    if(mpMover->GetOverideMoveState()==false || mpCurrentAnimation==NULL)
+    {
+        return;
+    }
 
 
     //////////////////
@@ -1329,7 +1454,10 @@ void iLuxEnemy::UpdateAnimation(float afTimeStep)
     // Check if over
     if(mpCurrentAnimation->IsOver())
     {
-        if(mbUseMoveAnimWhenCurrentIsOver) mpMover->UseMoveStateAnimations();
+        if(mbUseMoveAnimWhenCurrentIsOver)
+        {
+            mpMover->UseMoveStateAnimations();
+        }
         SendMessage(eLuxEnemyMessage_AnimationOver,0,false);
     }
 
@@ -1338,7 +1466,10 @@ void iLuxEnemy::UpdateAnimation(float afTimeStep)
     if(mbAnimationIsSpeedDependant)
     {
         float fSpeed = mpCharBody->GetVelocity(afTimeStep).Length();
-        if(mpCharBody->GetMoveSpeed(eCharDir_Forward) <0) fSpeed = -fSpeed;
+        if(mpCharBody->GetMoveSpeed(eCharDir_Forward) <0)
+        {
+            fSpeed = -fSpeed;
+        }
 
         mpCurrentAnimation->SetSpeed(std::fabs(fSpeed) * mfMoveSpeedAnimMul);
     }
@@ -1362,7 +1493,10 @@ void iLuxEnemy::UpdateCanSeePlayer(float afTimeStep)
 {
     cLuxPlayer *pPlayer = gpBase->mpPlayer;
 
-    if(pPlayer->IsDead()) return;
+    if(pPlayer->IsDead())
+    {
+        return;
+    }
 
     if(TriggersDisabled())
     {
@@ -1373,7 +1507,10 @@ void iLuxEnemy::UpdateCanSeePlayer(float afTimeStep)
     ////////////////////////////////
     //Check if it is time to check for player
     mfLookForPlayerCount-= afTimeStep;
-    if(mfLookForPlayerCount > 0) return;
+    if(mfLookForPlayerCount > 0)
+    {
+        return;
+    }
     mfLookForPlayerCount = 0.3f;
 
     /////////////////////////////
@@ -1400,18 +1537,28 @@ void iLuxEnemy::UpdateCanSeePlayer(float afTimeStep)
     // Check range
     float fMaxRange = mfSightRange;
 
-    if(bLanternOn) fMaxRange *= 1.5f;
+    if(bLanternOn)
+    {
+        fMaxRange *= 1.5f;
+    }
 
     if(bLanternOn==false && pPlayer->GetHelperLightLevel()->GetNormalLightLevel() < mfPlayerInDarknessLightLevel && pPlayer->GetAvgSpeed() < 0.05f &&
             mbSkipVisibilityRangeHandicaps==false)
+    {
         fMaxRange = mfDarknessSightRange;
+    }
 
     if(bCrouching && bLanternOn==false && mbSkipVisibilityRangeHandicaps==false)
+    {
         fMaxRange = fMaxRange * mfCrouchVisibleRangeMul;
+    }
 
     if(fMaxRange < fDist)
     {
-        if(mbCanSeePlayer==false) SendMessage(eLuxEnemyMessage_PlayerUnseen,0,false);
+        if(mbCanSeePlayer==false)
+        {
+            SendMessage(eLuxEnemyMessage_PlayerUnseen,0,false);
+        }
         mbCanSeePlayer = false;
         mlPlayerInLOSCount=0;
         return;
@@ -1465,7 +1612,10 @@ void iLuxEnemy::UpdateCanSeePlayer(float afTimeStep)
 
 void iLuxEnemy::UpdatePlayerDetected(float afTimeStep)
 {
-    if(gpBase->mpPlayer->IsDead()) return;
+    if(gpBase->mpPlayer->IsDead())
+    {
+        return;
+    }
 
     bool bDetected = PlayerIsDetected();
 
@@ -1485,7 +1635,10 @@ void iLuxEnemy::UpdatePlayerDetected(float afTimeStep)
 
 void iLuxEnemy::UpdatePlayerInRange(float afTimeStep)
 {
-    if(gpBase->mpPlayer->IsDead()) return;
+    if(gpBase->mpPlayer->IsDead())
+    {
+        return;
+    }
 
     float fDistance = DistToPlayer();
 
@@ -1513,7 +1666,10 @@ void iLuxEnemy::UpdateCheckStuckAtDoor(float afTimeStep)
     }
 
     mfCheckAtDoorCount -= afTimeStep;
-    if(mfCheckAtDoorCount > 0.0f) return;
+    if(mfCheckAtDoorCount > 0.0f)
+    {
+        return;
+    }
     mfCheckAtDoorCount = 0.1f;
 
     bool bAtDoor = false;
@@ -1528,9 +1684,13 @@ void iLuxEnemy::UpdateCheckStuckAtDoor(float afTimeStep)
     // If moving with path finder get the dir by getting next goal position.
     cVector3f vPlayerDir;
     if(mpPathfinder->IsMoving())
+    {
         vPlayerDir = cMath::Vector3Normalize(mpPathfinder->GetNextGoalPos() - mpCharBody->GetPosition());
+    }
     else
+    {
         vPlayerDir = mpCharBody->GetForward();
+    }
 
 
     //////////////////////
@@ -1539,16 +1699,28 @@ void iLuxEnemy::UpdateCheckStuckAtDoor(float afTimeStep)
     while(entIt.HasNext())
     {
         iLuxEntity *pEntity = entIt.Next();
-        if(pEntity->GetEntityType() != eLuxEntityType_Prop) continue;
-        if(pEntity->GetDestroyMe()) continue;
+        if(pEntity->GetEntityType() != eLuxEntityType_Prop)
+        {
+            continue;
+        }
+        if(pEntity->GetDestroyMe())
+        {
+            continue;
+        }
 
         iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
-        if(pProp->GetPropType() != eLuxPropType_SwingDoor) continue;
+        if(pProp->GetPropType() != eLuxPropType_SwingDoor)
+        {
+            continue;
+        }
 
         for(int i=0; i<pProp->GetBodyNum(); ++i)
         {
             iPhysicsBody *pBody = pProp->GetBody(i);
-            if(pBody->GetMass()==0) continue;
+            if(pBody->GetMass()==0)
+            {
+                continue;
+            }
 
             //////////////////////
             //Check BV intersection
@@ -1572,7 +1744,10 @@ void iLuxEnemy::UpdateCheckStuckAtDoor(float afTimeStep)
             }
         }
 
-        if(bAtDoor) break;
+        if(bAtDoor)
+        {
+            break;
+        }
     }
 
     //////////////////////
@@ -1596,12 +1771,18 @@ void iLuxEnemy::UpdateCheckLastPlayerPos(float afTimeStep)
     if(CanSeePlayer())
     {
         mfLastPlayerPosCount += afTimeStep;
-        if(mfLastPlayerPosCount > 1.0f) mfLastPlayerPosCount = 1.0f;
+        if(mfLastPlayerPosCount > 1.0f)
+        {
+            mfLastPlayerPosCount = 1.0f;
+        }
     }
     else
     {
         mfLastPlayerPosCount -= afTimeStep;
-        if(mfLastPlayerPosCount < 0) mfLastPlayerPosCount=0;
+        if(mfLastPlayerPosCount < 0)
+        {
+            mfLastPlayerPosCount=0;
+        }
     }
 
     if(mfLastPlayerPosCount > 0)
@@ -1621,12 +1802,18 @@ void iLuxEnemy::UpdateDarknessGlow(float afTimeStep)
         if(mfDarknessGlowAlpha > mfDarknessGlowAlphaGoal)
         {
             mfDarknessGlowAlpha -= afTimeStep;
-            if(mfDarknessGlowAlpha < mfDarknessGlowAlphaGoal) mfDarknessGlowAlpha = mfDarknessGlowAlphaGoal;
+            if(mfDarknessGlowAlpha < mfDarknessGlowAlphaGoal)
+            {
+                mfDarknessGlowAlpha = mfDarknessGlowAlphaGoal;
+            }
         }
         else
         {
             mfDarknessGlowAlpha += afTimeStep;
-            if(mfDarknessGlowAlpha > mfDarknessGlowAlphaGoal) mfDarknessGlowAlpha = mfDarknessGlowAlphaGoal;
+            if(mfDarknessGlowAlpha > mfDarknessGlowAlphaGoal)
+            {
+                mfDarknessGlowAlpha = mfDarknessGlowAlphaGoal;
+            }
         }
     }
 
@@ -1646,7 +1833,10 @@ void iLuxEnemy::UpdateDarknessGlow(float afTimeStep)
                 if(fDist > mfEnemyDarknessGlowMaxDistance * 0.5f)
                 {
                     fDistMul = 1 - ((fDist-mfEnemyDarknessGlowMaxDistance * 0.5f) / (mfEnemyDarknessGlowMaxDistance * 0.5f));
-                    if(fDistMul<0) fDistMul =0;
+                    if(fDistMul<0)
+                    {
+                        fDistMul =0;
+                    }
                 }
 
                 float fSanityMul =  gpBase->mpPlayer->GetSanity()/100.0f;
@@ -1665,7 +1855,10 @@ void iLuxEnemy::UpdateDarknessGlow(float afTimeStep)
 
     ////////////////////////////////
     //Check if darkness level should be updated
-    if(mpMeshEntity->IsVisible()==false) return;
+    if(mpMeshEntity->IsVisible()==false)
+    {
+        return;
+    }
     if(mfDarknessGlowUpdateCount > 0)
     {
         mfDarknessGlowUpdateCount -=afTimeStep;
@@ -1680,7 +1873,10 @@ void iLuxEnemy::UpdateDarknessGlow(float afTimeStep)
     mfDarknessGlowAlphaGoal /= 2.0f;
 
     mfDarknessGlowAlphaGoal *= 2;
-    if(mfDarknessGlowAlphaGoal>1.0f) mfDarknessGlowAlphaGoal = 1.0f;
+    if(mfDarknessGlowAlphaGoal>1.0f)
+    {
+        mfDarknessGlowAlphaGoal = 1.0f;
+    }
 
     mfDarknessGlowAlphaGoal = 1.0f - mfDarknessGlowAlphaGoal;
 }
@@ -1689,18 +1885,27 @@ void iLuxEnemy::UpdateDarknessGlow(float afTimeStep)
 
 void iLuxEnemy::UpdateRegenHealth(float afTimeStep)
 {
-    if(mfHealth <= 0) return;
+    if(mfHealth <= 0)
+    {
+        return;
+    }
 
     if(mfHealth < mfMaxRegenHealth && mfRegenHealthSpeed >0)
     {
         mfHealth += afTimeStep * mfRegenHealthSpeed;
-        if(mfHealth > mfMaxRegenHealth) mfHealth = mfMaxRegenHealth;
+        if(mfHealth > mfMaxRegenHealth)
+        {
+            mfHealth = mfMaxRegenHealth;
+        }
     }
 }
 
 void iLuxEnemy::UpdateHallucination(float afTimeStep)
 {
-    if(mbHallucination==false || mfHealth <= 0) return;
+    if(mbHallucination==false || mfHealth <= 0)
+    {
+        return;
+    }
 
     float fDistSqr = cMath::Vector3DistSqr(mpCharBody->GetPosition(), gpBase->mpPlayer->GetCharacterBody()->GetPosition());
     if(fDistSqr < mfHallucinationEndDist * mfHallucinationEndDist)
@@ -1713,10 +1918,16 @@ void iLuxEnemy::UpdateHallucination(float afTimeStep)
 
 void iLuxEnemy::UpdateAlignEntityWithGroundRay(float afTimeStep)
 {
-    if(mbAlignEntityWithGroundRay==false) return;
+    if(mbAlignEntityWithGroundRay==false)
+    {
+        return;
+    }
 
     mfCheckGroundRayCount -= afTimeStep;
-    if(mfCheckGroundRayCount > 0) return;
+    if(mfCheckGroundRayCount > 0)
+    {
+        return;
+    }
 
     mfCheckGroundRayCount = 0.02f;
 
@@ -1731,14 +1942,19 @@ void iLuxEnemy::UpdateAlignEntityWithGroundRay(float afTimeStep)
     cVector3f vStartPos = mpCharBody->GetFeetPosition()+cVector3f(0,fStartAdd,0) + vMoveDir * mpCharBody->GetSize().x*0.5f;
 
     bool bIntersect = gpBase->mpMapHelper->GetClosestCharCollider(vStartPos, cVector3f(0,-1,0),0.5f,&fDist,&vNormal,NULL);
-    if(bIntersect==false) return;
+    if(bIntersect==false)
+    {
+        return;
+    }
     fDist -= fStartAdd;
 
     ///////////////////////////////////
     // Add dist to list, pop oldest element if full
     mlstGroundCheckDists.push_back(fDist);
     if((int)mlstGroundCheckDists.size() > mlMaxGroundCheckDists)
+    {
         mlstGroundCheckDists.pop_front();
+    }
 
     ///////////////////////////////////
     // Calculate avg dist.
@@ -2013,19 +2229,31 @@ cLuxProp_Object* iLuxEnemy::GetClosestFood(float afMaxDist, float afMaxHeightDis
         ///////////////////////////////////////////
         // Check so type is correct
         iLuxEntity *pEntity = it.Next();
-        if(pEntity->GetEntityType() != eLuxEntityType_Prop) continue;
+        if(pEntity->GetEntityType() != eLuxEntityType_Prop)
+        {
+            continue;
+        }
 
         iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
-        if(pProp->GetPropType() != eLuxPropType_Object) continue;
+        if(pProp->GetPropType() != eLuxPropType_Object)
+        {
+            continue;
+        }
 
         cLuxProp_Object *pObject = static_cast<cLuxProp_Object*>(pProp);
-        if(pObject->IsFood()==false) continue;
+        if(pObject->IsFood()==false)
+        {
+            continue;
+        }
 
         ///////////////////////////////////////////
         // Check if height is correct
         float fFoodLowestY = pObject->GetBody(0)->GetBoundingVolume()->GetMin().y;
 
-        if(cMath::Abs(fFoodLowestY - mpCharBody->GetFeetPosition().y) > afMaxHeightDist) continue;
+        if(cMath::Abs(fFoodLowestY - mpCharBody->GetFeetPosition().y) > afMaxHeightDist)
+        {
+            continue;
+        }
 
 
         ///////////////////////////////////////////
@@ -2033,7 +2261,10 @@ cLuxProp_Object* iLuxEnemy::GetClosestFood(float afMaxDist, float afMaxHeightDis
         cVector3f vFoodPos = pObject->GetBody(0)->GetLocalPosition();
 
         float fDistSqr = cMath::Vector3DistSqr(mpCharBody->GetPosition(), vFoodPos);
-        if(fDistSqr > afMaxDist*afMaxDist) continue;
+        if(fDistSqr > afMaxDist*afMaxDist)
+        {
+            continue;
+        }
 
         if(fShortestDist <0 || fDistSqr < fShortestDist)
         {
@@ -2097,14 +2328,20 @@ cVector3f iLuxEnemy::GetDirection2D(const cVector3f &avPos)
 
 float iLuxEnemy::DistToPlayer()
 {
-    if(gpBase->mpPlayer->IsDead()) return 100000.0f;
+    if(gpBase->mpPlayer->IsDead())
+    {
+        return 100000.0f;
+    }
 
     return DistToChar(gpBase->mpPlayer->GetCharacterBody());
 }
 
 float iLuxEnemy::DistToPlayer2D()
 {
-    if(gpBase->mpPlayer->IsDead()) return 100000.0f;
+    if(gpBase->mpPlayer->IsDead())
+    {
+        return 100000.0f;
+    }
 
     return DistToChar2D(gpBase->mpPlayer->GetCharacterBody());
 }
@@ -2116,7 +2353,10 @@ float iLuxEnemy::DistToPlayer2D(const cVector3f& avPos)
 
 float iLuxEnemy::AbsHeightDistToPlayer()
 {
-    if(gpBase->mpPlayer->IsDead()) return 100000.0f;
+    if(gpBase->mpPlayer->IsDead())
+    {
+        return 100000.0f;
+    }
 
     return AbsHeightDistToChar(gpBase->mpPlayer->GetCharacterBody());
 }
@@ -2178,7 +2418,10 @@ float iLuxEnemy::GetPlayerMovementTowardEnemyAmount()
     vPlayerDir.y =0;
 
     //If not moving much, return lowest amount
-    if(vPlayerDir.SqrLength() < 0.1f*0.1f) return -1;
+    if(vPlayerDir.SqrLength() < 0.1f*0.1f)
+    {
+        return -1;
+    }
     vPlayerDir.Normalize();
 
     cVector3f vPlayerToEnemyDir = mpCharBody->GetPosition() - pPlayerBody->GetPosition();
@@ -2215,8 +2458,14 @@ bool iLuxEnemy::InFOV(const cVector3f &avPos)
         float fAngleX = cMath::Abs(cMath::GetAngleDistanceRad(vToPlayerAngle.x,vEnemyAngle.x));
         float fAngleY = cMath::Abs(cMath::GetAngleDistanceRad(vToPlayerAngle.y,vEnemyAngle.y));
 
-        if(fAngleY > fFOV*0.5f) return false;
-        if(fAngleX > fFOV*mfFOVXMul*0.5f) return false;
+        if(fAngleY > fFOV*0.5f)
+        {
+            return false;
+        }
+        if(fAngleX > fFOV*mfFOVXMul*0.5f)
+        {
+            return false;
+        }
     }
     return true;
 }
@@ -2376,7 +2625,10 @@ iLuxEnemy_SaveData::~iLuxEnemy_SaveData()
 cEnginePS_SaveData* iLuxEnemy_SaveData::GetParticleSystem(cParticleSystem* apPS)
 {
     for(size_t i=0; i<mvPS.Size(); ++i)
-        if(mvPS[i].msName == apPS->GetName()) return &mvPS[i];
+        if(mvPS[i].msName == apPS->GetName())
+        {
+            return &mvPS[i];
+        }
 
     return NULL;
 }
@@ -2476,9 +2728,13 @@ void iLuxEnemy::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     ///////////////////////
     //Current animation
     if(mpCurrentAnimation)
+    {
         pData->msCurrentAnimName = mpCurrentAnimation->GetName();
+    }
     else
+    {
         pData->msCurrentAnimName = "";
+    }
 
     ///////////////////////
     //Mesh Entity

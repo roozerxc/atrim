@@ -26,7 +26,10 @@ cVisibleRCNodeTracker::cVisibleRCNodeTracker()
 void cVisibleRCNodeTracker::SwitchAndClearVisibleNodeSet()
 {
     mlCurrentVisibleNodeSet++;
-    if(mlCurrentVisibleNodeSet>=2) mlCurrentVisibleNodeSet=0;
+    if(mlCurrentVisibleNodeSet>=2)
+    {
+        mlCurrentVisibleNodeSet=0;
+    }
 
     m_setVisibleNodes[mlCurrentVisibleNodeSet].clear();
 }
@@ -51,7 +54,10 @@ void cVisibleRCNodeTracker::Reset()
     mlCurrentVisibleNodeSet =0;
     mlFrameCounter =0;
 
-    for(int i=0; i<2; i++) m_setVisibleNodes[i].clear();
+    for(int i=0; i<2; i++)
+    {
+        m_setVisibleNodes[i].clear();
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -74,14 +80,20 @@ static void PushUpNeedPropertyUpdate(iRenderableContainerNode *apNode)
 {
     apNode->SetNeedPropertyUpdate(true);
 
-    if(apNode->GetParent()) PushUpNeedPropertyUpdate(apNode->GetParent());
+    if(apNode->GetParent())
+    {
+        PushUpNeedPropertyUpdate(apNode->GetParent());
+    }
 }
 
 static inline void PushUpNeedPropertyUpdateFromObject(iRenderable *apObject)
 {
     iRenderableContainerNode *pNode = apObject->GetRenderContainerNode();
 
-    if(pNode) PushUpNeedPropertyUpdate(pNode);
+    if(pNode)
+    {
+        PushUpNeedPropertyUpdate(pNode);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -120,11 +132,17 @@ iRenderableContainerNode::iRenderableContainerNode()
 
 void iRenderableContainerNode::PushUpNeedAABBUpdate()
 {
-    if(mbNeedAABBUpdate) return;
+    if(mbNeedAABBUpdate)
+    {
+        return;
+    }
 
     mbNeedAABBUpdate = true;
 
-    if(mpParent) mpParent->PushUpNeedAABBUpdate();
+    if(mpParent)
+    {
+        mpParent->PushUpNeedAABBUpdate();
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -142,13 +160,31 @@ void iRenderableContainerNode::CalculateMinMaxFromObjects()
         const cVector3f &vMin = pObject->GetBoundingVolume()->GetMin();
         const cVector3f &vMax = pObject->GetBoundingVolume()->GetMax();
 
-        if(vNodeMin.x > vMin.x) vNodeMin.x = vMin.x;
-        if(vNodeMin.y > vMin.y) vNodeMin.y = vMin.y;
-        if(vNodeMin.z > vMin.z) vNodeMin.z = vMin.z;
+        if(vNodeMin.x > vMin.x)
+        {
+            vNodeMin.x = vMin.x;
+        }
+        if(vNodeMin.y > vMin.y)
+        {
+            vNodeMin.y = vMin.y;
+        }
+        if(vNodeMin.z > vMin.z)
+        {
+            vNodeMin.z = vMin.z;
+        }
 
-        if(vNodeMax.x < vMax.x) vNodeMax.x = vMax.x;
-        if(vNodeMax.y < vMax.y) vNodeMax.y = vMax.y;
-        if(vNodeMax.z < vMax.z) vNodeMax.z = vMax.z;
+        if(vNodeMax.x < vMax.x)
+        {
+            vNodeMax.x = vMax.x;
+        }
+        if(vNodeMax.y < vMax.y)
+        {
+            vNodeMax.y = vMax.y;
+        }
+        if(vNodeMax.z < vMax.z)
+        {
+            vNodeMax.z = vMax.z;
+        }
     }
 
     mvMin = vNodeMin;
@@ -202,10 +238,16 @@ void iRenderableContainer::CheckNeedPropertyUpdateIteration(iRenderableContainer
         {
             iRenderableContainerNode *pChildNode = *childIt;
 
-            if(pChildNode->GetNeedPropertyUpdate()) CheckNeedPropertyUpdateIteration(pChildNode);
+            if(pChildNode->GetNeedPropertyUpdate())
+            {
+                CheckNeedPropertyUpdateIteration(pChildNode);
+            }
 
             //Update flags according to node.
-            if(pChildNode->HasVisibleObjects()) apNode->mbVisibleObjects = true;
+            if(pChildNode->HasVisibleObjects())
+            {
+                apNode->mbVisibleObjects = true;
+            }
             apNode->mlRenderFlags |= pChildNode->GetRenderFlags();
         }
     }
@@ -219,7 +261,10 @@ void iRenderableContainer::CheckNeedPropertyUpdateIteration(iRenderableContainer
         {
             iRenderable *pObject = *it;
 
-            if(pObject->IsVisible() ) apNode->mbVisibleObjects = true;
+            if(pObject->IsVisible() )
+            {
+                apNode->mbVisibleObjects = true;
+            }
             apNode->mlRenderFlags |= pObject->GetRenderFlags();
         }
     }
@@ -250,7 +295,10 @@ void iRenderableContainer::CheckNeedAABBUpdateIteration(iRenderableContainerNode
         {
             iRenderableContainerNode *pChildNode = *childIt;
 
-            if(pChildNode->GetNeedAABBUpdate()) CheckNeedAABBUpdateIteration(pChildNode);
+            if(pChildNode->GetNeedAABBUpdate())
+            {
+                CheckNeedAABBUpdateIteration(pChildNode);
+            }
 
             cMath::ExpandAABB(apNode->mvMin, apNode->mvMax, pChildNode->mvMin, pChildNode->mvMax);
         }

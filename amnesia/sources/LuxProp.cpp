@@ -31,7 +31,10 @@ void iLuxPropLoader::BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTr
 void iLuxPropLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars)
 {
     cLuxMap *pMap = gpBase->mpCurrentMapLoading;
-    if(pMap==NULL)    return;
+    if(pMap==NULL)
+    {
+        return;
+    }
 
     iLuxProp *pProp = CreateProp(mpEntity->GetName(), mlID,pMap);
 
@@ -76,7 +79,10 @@ void iLuxPropLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTra
     pProp->mfDissolveTime = GetVarFloat("DissolveTime", 1.0f);
 
     pProp->mbShowMesh = GetVarBool("ShowMesh", true);
-    if(mpEntity) mpEntity->SetVisible(pProp->mbShowMesh);
+    if(mpEntity)
+    {
+        mpEntity->SetVisible(pProp->mbShowMesh);
+    }
 
     pProp->mbShowHints = GetVarBool("ShowHints", true);
 
@@ -122,7 +128,10 @@ void iLuxPropLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTra
     // Extra setup
 
     //If focus distance is still 0 or below, set it as default.
-    if(pProp->mfMaxFocusDistance<=0) pProp->mfMaxFocusDistance = mfDefaultMaxFocusDistance;
+    if(pProp->mfMaxFocusDistance<=0)
+    {
+        pProp->mfMaxFocusDistance = mfDefaultMaxFocusDistance;
+    }
 
     pProp->SetupAfterLoad(apWorld);
 
@@ -286,26 +295,44 @@ iLuxProp::~iLuxProp()
     // Destroy graphics
     {
         //Mesh entity
-        if(mpMeshEntity) pWorld->DestroyMeshEntity(mpMeshEntity);
+        if(mpMeshEntity)
+        {
+            pWorld->DestroyMeshEntity(mpMeshEntity);
+        }
 
         //Lights
-        for(size_t i=0; i<mvLights.size(); ++i) pWorld->DestroyLight(mvLights[i]);
+        for(size_t i=0; i<mvLights.size(); ++i)
+        {
+            pWorld->DestroyLight(mvLights[i]);
+        }
 
         //Particle systems
         for(size_t i=0; i<mvParticleSystems.size(); ++i)
         {
             cParticleSystem *pPS = mvParticleSystems[i];
-            if(pPS && pWorld->ParticleSystemExists(pPS)) pPS->Kill();
+            if(pPS && pWorld->ParticleSystemExists(pPS))
+            {
+                pPS->Kill();
+            }
         }
 
         //Billboards
-        for(size_t i=0; i<mvBillboards.size(); ++i)    pWorld->DestroyBillboard(mvBillboards[i]);
+        for(size_t i=0; i<mvBillboards.size(); ++i)
+        {
+            pWorld->DestroyBillboard(mvBillboards[i]);
+        }
 
         //Beams
-        for(size_t i=0; i<mvBeams.size(); ++i)        pWorld->DestroyBeam(mvBeams[i]);
+        for(size_t i=0; i<mvBeams.size(); ++i)
+        {
+            pWorld->DestroyBeam(mvBeams[i]);
+        }
 
         //Sound entities
-        for(size_t i=0; i<mvSoundEntities.size(); ++i)     pWorld->DestroySoundEntity(mvSoundEntities[i]);
+        for(size_t i=0; i<mvSoundEntities.size(); ++i)
+        {
+            pWorld->DestroySoundEntity(mvSoundEntities[i]);
+        }
     }
 }
 
@@ -402,7 +429,10 @@ void iLuxProp::BeforeEntityDestruction()
 void iLuxProp::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
 {
     return;
-    if(mvBodies.size()<=0) return;
+    if(mvBodies.size()<=0)
+    {
+        return;
+    }
 
     cBoundingVolume* pBV = mvBodies[0]->GetBoundingVolume();
     apFunctions->GetLowLevelGfx()->DrawBoxMinMax(pBV->GetMin(), pBV->GetMax(),cColor(1,1,1,1));
@@ -412,7 +442,10 @@ void iLuxProp::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
 
 void iLuxProp::SetEffectsActive(bool abActive, bool abFadeAndPlaySounds)
 {
-    if(abActive == mbEffectsActive) return;
+    if(abActive == mbEffectsActive)
+    {
+        return;
+    }
 
     mbEffectsActive = abActive;
 
@@ -431,7 +464,10 @@ void iLuxProp::SetEffectsActive(bool abActive, bool abFadeAndPlaySounds)
             if(pPS)
             {
                 pPS->SetMatrix(pPSData->m_mtxLocalTransform);
-                if(pPSData->mpParent) pPSData->mpParent->AddChild(pPS);
+                if(pPSData->mpParent)
+                {
+                    pPSData->mpParent->AddChild(pPS);
+                }
             }
 
             mvParticleSystems[i] = pPS;
@@ -462,13 +498,22 @@ void iLuxProp::SetEffectsActive(bool abActive, bool abFadeAndPlaySounds)
         {
             cSoundEntity *pSound = mvSoundEntities[i];
 
-            if(abFadeAndPlaySounds)    pSound->FadeIn(1.0f / mfEffectsOnTime);
-            else                    pSound->Play(false);
+            if(abFadeAndPlaySounds)
+            {
+                pSound->FadeIn(1.0f / mfEffectsOnTime);
+            }
+            else
+            {
+                pSound->Play(false);
+            }
         }
 
         ////////////////
         // Effect alpha
-        if(abFadeAndPlaySounds==false) mfEffectsAlpha = 1.0f;
+        if(abFadeAndPlaySounds==false)
+        {
+            mfEffectsAlpha = 1.0f;
+        }
     }
     ///////////////////////
     // Effects Off stuff
@@ -481,8 +526,14 @@ void iLuxProp::SetEffectsActive(bool abActive, bool abFadeAndPlaySounds)
             cParticleSystem *pPS = mvParticleSystems[i];
             mvParticleSystems[i] = NULL;
 
-            if(abFadeAndPlaySounds)    pPS->Kill();
-            else                    mpWorld->DestroyParticleSystem(pPS);
+            if(abFadeAndPlaySounds)
+            {
+                pPS->Kill();
+            }
+            else
+            {
+                mpWorld->DestroyParticleSystem(pPS);
+            }
         }
 
         ////////////////
@@ -512,13 +563,22 @@ void iLuxProp::SetEffectsActive(bool abActive, bool abFadeAndPlaySounds)
         {
             cSoundEntity *pSound = mvSoundEntities[i];
 
-            if(abFadeAndPlaySounds)    pSound->FadeOut(1.0f / mfEffectsOffTime);
-            else                    pSound->Stop(false);
+            if(abFadeAndPlaySounds)
+            {
+                pSound->FadeOut(1.0f / mfEffectsOffTime);
+            }
+            else
+            {
+                pSound->Stop(false);
+            }
         }
 
         ////////////////
         // Effect alpha
-        if(abFadeAndPlaySounds==false) mfEffectsAlpha = 0.0f;
+        if(abFadeAndPlaySounds==false)
+        {
+            mfEffectsAlpha = 0.0f;
+        }
     }
 
     ////////////////
@@ -542,8 +602,14 @@ void iLuxProp::SetEffectsActive(bool abActive, bool abFadeAndPlaySounds)
 
 void iLuxProp::GiveDamage(float afAmount, int alStrength)
 {
-    if(alStrength < mlToughness-1)            afAmount =0;
-    else if(alStrength == mlToughness-1)    afAmount *= 0.5;
+    if(alStrength < mlToughness-1)
+    {
+        afAmount =0;
+    }
+    else if(alStrength == mlToughness-1)
+    {
+        afAmount *= 0.5;
+    }
 
     SetHealth(mfHealth - afAmount);
 
@@ -584,7 +650,10 @@ void iLuxProp::MoveLinearTo(const cVector3f& avGoal, float afAcc, float afMaxSpe
     mfMoveLinearMaxSpeed = afMaxSpeed;
     mfMoveLinearSlowdownDist = afSlowdownDist;
 
-    if(abResetSpeed) mfMoveLinearSpeed =0;
+    if(abResetSpeed)
+    {
+        mfMoveLinearSpeed =0;
+    }
 
     OnStartMove();
 }
@@ -608,7 +677,10 @@ void iLuxProp::MoveAngularTo(const cMatrixf& a_mtxGoal, float afAcc, float afMax
     mfMoveAngularMaxSpeed = afMaxSpeed;
     mfMoveAngularSlowdownDist = afSlowdownDist;
 
-    if(abResetSpeed) mfMoveAngularSpeed =0;
+    if(abResetSpeed)
+    {
+        mfMoveAngularSpeed =0;
+    }
 
     mbMoveAngularUseOffset = abUseOffset;
     mvMoveAngularWorldOffset = avWorldOffset;
@@ -636,7 +708,10 @@ void iLuxProp::RotateAtSpeed(    float afAcc, float afGoalSpeed, const cVector3f
     mfMoveAngularAcc = afAcc;
     mfMoveAngularMaxSpeed = afGoalSpeed;
 
-    if(abResetSpeed) mfMoveAngularSpeed =0;
+    if(abResetSpeed)
+    {
+        mfMoveAngularSpeed =0;
+    }
 
     mbMoveAngularNoGoal = true;
     mvMoveAngularNoGoalDir = cMath::Vector3Normalize(avAxis);
@@ -657,7 +732,9 @@ void iLuxProp::StopMove()
     mbMoving = false;
 
     if(mfMoveStartCount <=0)
+    {
         PlaySound("MoveStop", msMoveStopSound,true, true);
+    }
 }
 
 //-------------------------------------------------------------------
@@ -666,7 +743,10 @@ void iLuxProp::FadeInMeshEntity(float afTime)
 {
     mfFadeInAlpha =0;
     mfFadeInSpeed = 1.0f/ afTime;
-    if(mpMeshEntity) mpMeshEntity->SetCoverageAmount(0);
+    if(mpMeshEntity)
+    {
+        mpMeshEntity->SetCoverageAmount(0);
+    }
 }
 
 //-------------------------------------------------------------------
@@ -705,7 +785,10 @@ void iLuxProp::ResetProperties()
 
 void iLuxProp::PlayAnimation(const tString& asName, float afFadeTime, bool abLoop, const tString& asCallback)
 {
-    if(mpMeshEntity==NULL) return;
+    if(mpMeshEntity==NULL)
+    {
+        return;
+    }
 
     int lIdx = mpMeshEntity->GetAnimationStateIndex(asName);
     if(lIdx<0)
@@ -715,11 +798,23 @@ void iLuxProp::PlayAnimation(const tString& asName, float afFadeTime, bool abLoo
     }
 
     mpMeshEntity->PlayFadeTo(lIdx, abLoop, afFadeTime);
-    if(abLoop==false)    mlCurrentNonLoopAnimIndex = lIdx;
-    else                mlCurrentNonLoopAnimIndex = -1;
+    if(abLoop==false)
+    {
+        mlCurrentNonLoopAnimIndex = lIdx;
+    }
+    else
+    {
+        mlCurrentNonLoopAnimIndex = -1;
+    }
 
-    if(abLoop==false)    msAnimCallback = asCallback;
-    else                msAnimCallback = "";
+    if(abLoop==false)
+    {
+        msAnimCallback = asCallback;
+    }
+    else
+    {
+        msAnimCallback = "";
+    }
 }
 
 //-------------------------------------------------------------------
@@ -749,7 +844,10 @@ iEntity3D* iLuxProp::GetAttachEntity()
 
 void iLuxProp::SetStaticPhysics(bool abX)
 {
-    if(mbStaticPhysics == abX) return;
+    if(mbStaticPhysics == abX)
+    {
+        return;
+    }
 
     mbStaticPhysics = abX;
 
@@ -897,7 +995,10 @@ void iLuxProp::InteractConnectionLimit(int alState)
     {
         iLuxInteractConnection *pConnection = mvInteractConnections[i];
 
-        if(pConnection->GetInteractionOnly() && mbIsInteractedWith==false) continue;
+        if(pConnection->GetInteractionOnly() && mbIsInteractedWith==false)
+        {
+            continue;
+        }
 
         mvInteractConnections[i]->OnLimit(alState);
     }
@@ -913,7 +1014,10 @@ void iLuxProp::InteractConnectionTurn(float afAngle, float afPrevAngle, float af
     {
         iLuxInteractConnection *pConnection = mvInteractConnections[i];
 
-        if(pConnection->GetInteractionOnly() && mbIsInteractedWith==false) continue;
+        if(pConnection->GetInteractionOnly() && mbIsInteractedWith==false)
+        {
+            continue;
+        }
 
         pConnection->OnTurn(afAngle - afPrevAngle, fT);
     }
@@ -926,7 +1030,10 @@ iPhysicsBody* iLuxProp::GetBodyFromID(int alID)
     for(size_t i=0; i<mvBodies.size(); ++i)
     {
         iPhysicsBody *pBody = mvBodies[i];
-        if(pBody->GetUniqueID() == alID) return pBody;
+        if(pBody->GetUniqueID() == alID)
+        {
+            return pBody;
+        }
     }
 
     return NULL;
@@ -940,7 +1047,10 @@ int iLuxProp::GetBodyIndexFromName(const tString& asName)
     for(size_t i=0; i<mvBodies.size(); ++i)
     {
         iPhysicsBody *pBody = mvBodies[i];
-        if(pBody->GetName() == sFinalName) return (int)i;
+        if(pBody->GetName() == sFinalName)
+        {
+            return (int)i;
+        }
     }
     return -1;
 }
@@ -1013,8 +1123,14 @@ void iLuxProp::OnSetActive(bool abX)
     {
         cSoundEntity *pSoundEntity = mvSoundEntities[i];
 
-        if(abX)    pSoundEntity->Play(false);
-        else    pSoundEntity->Stop(false);
+        if(abX)
+        {
+            pSoundEntity->Play(false);
+        }
+        else
+        {
+            pSoundEntity->Stop(false);
+        }
     }
 
     ImplementedOnSetActive(abX);
@@ -1053,7 +1169,10 @@ void iLuxProp::SetupEffectData()
         lightData.mbFlickering = pLight->GetFlickerActive();
 
         //TODO: Check all lights?
-        if(i==0 && pLight->GetFlickerActive()) mbHasFlickering = true;
+        if(i==0 && pLight->GetFlickerActive())
+        {
+            mbHasFlickering = true;
+        }
 
         mvEffectLightData.push_back(lightData);
     }
@@ -1080,11 +1199,17 @@ bool iLuxProp::BillboardConnectedToLight(cBillboard *apBB)
     {
         iLight *pLight = mvLights[light];
         std::vector<cLightBillboardConnection> *pBBVEc = pLight->GetBillboardVec();
-        if(pBBVEc->empty()) continue;
+        if(pBBVEc->empty())
+        {
+            continue;
+        }
 
         for(size_t i=0; i<pBBVEc->size(); ++i)
         {
-            if( (*pBBVEc)[i].mpBillboard == apBB) return true;
+            if( (*pBBVEc)[i].mpBillboard == apBB)
+            {
+                return true;
+            }
         }
     }
     return false;
@@ -1094,7 +1219,10 @@ bool iLuxProp::BillboardConnectedToLight(cBillboard *apBB)
 
 void iLuxProp::UpdateEffectFading(float afTimeStep)
 {
-    if(mbEffectAlphaFading==false) return;
+    if(mbEffectAlphaFading==false)
+    {
+        return;
+    }
 
     /////////////////
     // Turn on effect
@@ -1132,7 +1260,10 @@ void iLuxProp::UpdateEffectFading(float afTimeStep)
     for(size_t i=0; i<mvBillboards.size(); ++i)
     {
         cBillboard *pBillboard = mvBillboards[i];
-        if(mvEffectBillboardData[i].mbConnectedToLight) continue;
+        if(mvEffectBillboardData[i].mbConnectedToLight)
+        {
+            continue;
+        }
 
         pBillboard->SetColor(mvEffectBillboardData[i].mOnColor * mfEffectsAlpha);
     }
@@ -1150,7 +1281,10 @@ void iLuxProp::UpdateEffectFading(float afTimeStep)
 
 void iLuxProp::UpdateMeshFading(float afTimeStep)
 {
-    if(mfFadeInAlpha >= 1 || mpMeshEntity==NULL) return;
+    if(mfFadeInAlpha >= 1 || mpMeshEntity==NULL)
+    {
+        return;
+    }
 
     mfFadeInAlpha += mfFadeInSpeed * afTimeStep;
     mpMeshEntity->SetCoverageAmount(mfFadeInAlpha);
@@ -1160,15 +1294,24 @@ void iLuxProp::UpdateMeshFading(float afTimeStep)
 
 void iLuxProp::UpdateAttachedProps(float afTimeStep, bool abForceUpdate)
 {
-    if(mlstAttachedProps.empty()) return;
-    if(abForceUpdate==false && GetMainBody()->GetEnabled()==false) return;
+    if(mlstAttachedProps.empty())
+    {
+        return;
+    }
+    if(abForceUpdate==false && GetMainBody()->GetEnabled()==false)
+    {
+        return;
+    }
 
     tLuxProp_AttachedPropListIt it = mlstAttachedProps.begin();
     for(; it != mlstAttachedProps.end(); ++it)
     {
         cLuxProp_AttachedProp *pAttachProp = *it;
         iLuxProp *pProp = pAttachProp->mpProp;
-        if(pProp->GetBodyNum()<=0) continue;
+        if(pProp->GetBodyNum()<=0)
+        {
+            continue;
+        }
 
         iPhysicsBody *pBody = pProp->GetBody(0);
 
@@ -1182,14 +1325,19 @@ void iLuxProp::UpdateAttachedProps(float afTimeStep, bool abForceUpdate)
 
 void iLuxProp::UpdateAnimation(float afTimeStep)
 {
-    if(mlCurrentNonLoopAnimIndex<0) return;
+    if(mlCurrentNonLoopAnimIndex<0)
+    {
+        return;
+    }
 
     cAnimationState *pAnimState = mpMeshEntity->GetAnimationState(mlCurrentNonLoopAnimIndex);
     if(pAnimState->IsOver())
     {
         mlCurrentNonLoopAnimIndex = -1;
         if(msAnimCallback !="")
+        {
             mpMap->RunScript(msAnimCallback + "(\""+ msName + "\")");
+        }
     }
 }
 
@@ -1197,10 +1345,16 @@ void iLuxProp::UpdateAnimation(float afTimeStep)
 
 void iLuxProp::UpdateMoveSoundVolume()
 {
-    if(mpMoveLoopSound==NULL) return;
+    if(mpMoveLoopSound==NULL)
+    {
+        return;
+    }
 
     cSoundEntry *pEntry = mpMoveLoopSound->GetSoundEntry(eSoundEntityType_Main, true);
-    if(pEntry) pEntry->SetVolumeMul(mfMovingVolume);
+    if(pEntry)
+    {
+        pEntry->SetVolumeMul(mfMovingVolume);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1250,7 +1404,10 @@ void iLuxProp::UpdateMoving(float afTimeStep)
         const float fMinLinear = 0.001f * (1.0f/60.0f);
 
         float fSpeedSqr = cMath::Vector3DistSqr(m_mtxLastBodyMoveMatrix.GetTranslation(), GetMainBody()->GetLocalMatrix().GetTranslation());
-        if(fSpeedSqr > fMinLinear*fMinLinear) bHasMoveSpeed = true;
+        if(fSpeedSqr > fMinLinear*fMinLinear)
+        {
+            bHasMoveSpeed = true;
+        }
     }
     if(bHasMoveSpeed == false && mbMovingAngular)
     {
@@ -1258,7 +1415,10 @@ void iLuxProp::UpdateMoving(float afTimeStep)
 
         cVector3f vVel = cMath::MatrixEulerAngleDistance(m_mtxLastBodyMoveMatrix.GetRotation(), GetMainBody()->GetLocalMatrix().GetRotation());
         float fSpeedSqr = vVel.SqrLength();
-        if(fSpeedSqr > fMinAngular*fMinAngular) bHasMoveSpeed = true;
+        if(fSpeedSqr > fMinAngular*fMinAngular)
+        {
+            bHasMoveSpeed = true;
+        }
     }
 
     //////////////////////////////
@@ -1276,14 +1436,20 @@ void iLuxProp::UpdateMoving(float afTimeStep)
                 mpMoveLoopSound->Play(false);
 
                 cSoundEntry* pEntry = mpMoveLoopSound->GetSoundEntry(eSoundEntityType_Main, true);
-                if(pEntry) pEntry->SetVolumeMul(0);
+                if(pEntry)
+                {
+                    pEntry->SetVolumeMul(0);
+                }
             }
         }
 
         //////////////////////////////
         // Increase volume
         mfMovingVolume += afTimeStep*1.2f;//Important that sounds fades in faster than out! (in case mbMoving "flickers" )
-        if(mfMovingVolume >1) mfMovingVolume =1.0f;
+        if(mfMovingVolume >1)
+        {
+            mfMovingVolume =1.0f;
+        }
 
         //////////////////////////////
         // Update sound
@@ -1333,7 +1499,10 @@ void iLuxProp::UpdateMoving(float afTimeStep)
 
 void iLuxProp::UpdateLinearMoving(float afTimeStep)
 {
-    if(mbMovingLinear==false) return;
+    if(mbMovingLinear==false)
+    {
+        return;
+    }
 
     iPhysicsBody *pBody = GetMainBody();
 
@@ -1364,7 +1533,10 @@ void iLuxProp::UpdateLinearMoving(float afTimeStep)
         else
         {
             mfMoveLinearSpeed += mfMoveLinearAcc * afTimeStep;
-            if(mfMoveLinearSpeed > mfMoveLinearMaxSpeed) mfMoveLinearSpeed = mfMoveLinearMaxSpeed;
+            if(mfMoveLinearSpeed > mfMoveLinearMaxSpeed)
+            {
+                mfMoveLinearSpeed = mfMoveLinearMaxSpeed;
+            }
         }
 
         vMoveVel = vDir * mfMoveLinearSpeed;
@@ -1373,7 +1545,9 @@ void iLuxProp::UpdateLinearMoving(float afTimeStep)
     //////////////////////////
     //Check collision, if force == 0 skip!
     if(mbMoveCheckCollision)
+    {
         CheckMoveCollision(vMoveVel, mfMoveLinearSpeed, afTimeStep);
+    }
 
     //////////////////////////
     //Update body position
@@ -1387,7 +1561,10 @@ void iLuxProp::UpdateLinearMoving(float afTimeStep)
 
 void iLuxProp::UpdateAngularMoving(float afTimeStep)
 {
-    if(mbMovingAngular==false) return;
+    if(mbMovingAngular==false)
+    {
+        return;
+    }
 
     iPhysicsBody *pBody = GetMainBody();
     cVector3f vMoveVel =0;
@@ -1447,7 +1624,10 @@ void iLuxProp::UpdateAngularMoving(float afTimeStep)
             else
             {
                 mfMoveAngularSpeed += mfMoveAngularAcc * afTimeStep;
-                if(mfMoveAngularSpeed > mfMoveAngularMaxSpeed) mfMoveAngularSpeed = mfMoveAngularMaxSpeed;
+                if(mfMoveAngularSpeed > mfMoveAngularMaxSpeed)
+                {
+                    mfMoveAngularSpeed = mfMoveAngularMaxSpeed;
+                }
             }
 
             vMoveVel = vDir * mfMoveAngularSpeed;
@@ -1478,7 +1658,10 @@ void iLuxProp::UpdateAngularMoving(float afTimeStep)
 
 void iLuxProp::CheckMoveCollision(cVector3f& avMoveVel, float &afSpeed, float afTimeStep)
 {
-    if(avMoveVel==0) return;
+    if(avMoveVel==0)
+    {
+        return;
+    }
 
     iPhysicsWorld *pPhysicsWorld = mpMap->GetPhysicsWorld();
     iPhysicsBody *pBody = GetMainBody();
@@ -1493,13 +1676,19 @@ void iLuxProp::CheckMoveCollision(cVector3f& avMoveVel, float &afSpeed, float af
     //Check collision and get push back
     cVector3f vPushVec(0);
     pPhysicsWorld->CheckShapeWorldCollision(&vPushVec,pBody->GetShape(),mtxNew, NULL, true, false);
-    if(vPushVec == 0) return;
+    if(vPushVec == 0)
+    {
+        return;
+    }
 
     //See how much of the velocity that needs to be "removed".
     float fAddLengthSqr  = vAdd.SqrLength();
     float fVelAmount = 1.0f - cMath::Vector3Dot(vPushVec, vAdd*-1.0f)/fAddLengthSqr;
     //fVelAmount -= 0.001f;
-    if(fVelAmount < 0) fVelAmount =0;
+    if(fVelAmount < 0)
+    {
+        fVelAmount =0;
+    }
 
     //Update speed and velocity
     afSpeed = afSpeed * fVelAmount;
@@ -1510,7 +1699,10 @@ void iLuxProp::CheckMoveCollision(cVector3f& avMoveVel, float &afSpeed, float af
 
 void iLuxProp::UpdateCheckIfOutsidePlayer(float afTimeStep)
 {
-    if(mbCheckOutsidePlayer==false) return;
+    if(mbCheckOutsidePlayer==false)
+    {
+        return;
+    }
 
     ///////////////////////
     // Set up variables
@@ -1676,24 +1868,36 @@ iLuxProp_SaveData::~iLuxProp_SaveData()
 
 cEnginePS_SaveData* iLuxProp_SaveData::GetParticleSystem(cParticleSystem* apPS)
 {
-    if(apPS==NULL) return NULL;
+    if(apPS==NULL)
+    {
+        return NULL;
+    }
 
     for(size_t i=0; i<mvPS.Size(); ++i)
-        if(mvPS[i].msName == apPS->GetName()) return &mvPS[i];
+        if(mvPS[i].msName == apPS->GetName())
+        {
+            return &mvPS[i];
+        }
 
     return NULL;
 }
 cEngineSound_SaveData* iLuxProp_SaveData::GetSoundEntity(cSoundEntity* apSound)
 {
     for(size_t i=0; i<mvSounds.Size(); ++i)
-        if(mvSounds[i].msName == apSound->GetName()) return &mvSounds[i];
+        if(mvSounds[i].msName == apSound->GetName())
+        {
+            return &mvSounds[i];
+        }
 
     return NULL;
 }
 cEngineJoint_SaveData* iLuxProp_SaveData::GetJoint(iPhysicsJoint* apJoint)
 {
     for(size_t i=0; i<mvJoints.Size(); ++i)
-        if(mvJoints[i].msName == apJoint->GetName()) return &mvJoints[i];
+        if(mvJoints[i].msName == apJoint->GetName())
+        {
+            return &mvJoints[i];
+        }
 
     return NULL;
 }
@@ -1776,12 +1980,16 @@ void iLuxProp::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //Connection
     pData->mvConnectedProps.Resize(mvConnectedProps.size());
     for(size_t i=0; i<mvConnectedProps.size(); ++i)
+    {
         pData->mvConnectedProps[i].msName = mvConnectedProps[i];
+    }
 
     ///////////////////////
     //Mesh Entity
     if(mpMeshEntity)
+    {
         pData->mMeshEntity.FromMeshEntity(mpMeshEntity);
+    }
 
     ///////////////////////
     //Bodies
@@ -1905,12 +2113,16 @@ void iLuxProp::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //Connections
     mvConnectedProps.resize(pData->mvConnectedProps.Size());
     for(size_t i=0; i<mvConnectedProps.size(); ++i)
+    {
         mvConnectedProps[i] = pData->mvConnectedProps[i].msName;
+    }
 
     ///////////////////////
     //Mesh Entity
     if(mpMeshEntity)
+    {
         pData->mMeshEntity.ToMeshEntity(mpMeshEntity);
+    }
 
     ///////////////////////
     //Bodies
@@ -2021,7 +2233,10 @@ void iLuxProp::SetupSaveData(iLuxEntity_SaveData *apSaveData)
         iLuxInteractConnection_SaveData *pSaveConn = pData->mvInteractConnections[i];
         iLuxInteractConnection *pConn = pSaveConn->CreateConnection(mpMap);
 
-        if(pConn) mvInteractConnections.push_back(pConn);
+        if(pConn)
+        {
+            mvInteractConnections.push_back(pConn);
+        }
     }
 }
 

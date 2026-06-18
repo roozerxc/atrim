@@ -27,9 +27,18 @@ iLuxProp *cLuxPropLoader_Wheel::CreateProp(const tString& asName, int alID, cLux
 
 static int ToSpinDir(const tString& asType)
 {
-    if(asType == "BothWays")    return 0;
-    if(asType == "ToMax")        return 1;
-    if(asType == "ToMin")        return -1;
+    if(asType == "BothWays")
+    {
+        return 0;
+    }
+    if(asType == "ToMax")
+    {
+        return 1;
+    }
+    if(asType == "ToMin")
+    {
+        return -1;
+    }
 
     return 0;
 }
@@ -69,9 +78,18 @@ void cLuxPropLoader_Wheel::LoadVariables(iLuxProp *apProp, cXmlElement *apRootEl
 
 static int ToStuckState(const tString& asType)
 {
-    if(asType == "None")    return 0;
-    if(asType == "Min")        return -1;
-    if(asType == "Max")        return 1;
+    if(asType == "None")
+    {
+        return 0;
+    }
+    if(asType == "Min")
+    {
+        return -1;
+    }
+    if(asType == "Max")
+    {
+        return 1;
+    }
 
     return 0;
 }
@@ -150,7 +168,10 @@ cLuxProp_Wheel::~cLuxProp_Wheel()
 
 bool cLuxProp_Wheel::CanInteract(iPhysicsBody *apBody)
 {
-    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false) return false;
+    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false)
+    {
+        return false;
+    }
 
     return true;
 }
@@ -166,10 +187,14 @@ bool cLuxProp_Wheel::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
     ResetAutoMove();
 
     if(mlStuckState !=0 && mbInteractionDisablesStuck)
+    {
         SetStuckState(0, true);
+    }
 
     if(mlStuckState ==0 && mbShowHints)
+    {
         gpBase->mpHintHandler->Add("EntityWheel", kTranslate("Hints", "EntityWheel"), 0);
+    }
 
     cLuxPlayerStateVars::SetupInteraction(apBody, avPos);
     gpBase->mpPlayer->ChangeState(eLuxPlayerState_InteractWheel);
@@ -219,7 +244,10 @@ void cLuxProp_Wheel::OnSetupAfterLoad(cWorld *apWorld)
 
 void cLuxProp_Wheel::UpdatePropSpecific(float afTimeStep)
 {
-    if(mfStuckSoundTimer >0) mfStuckSoundTimer-=afTimeStep;
+    if(mfStuckSoundTimer >0)
+    {
+        mfStuckSoundTimer-=afTimeStep;
+    }
 
     UpdateAngle(afTimeStep);
     UpdateCheckLimit(afTimeStep);
@@ -237,7 +265,10 @@ void cLuxProp_Wheel::BeforePropDestruction()
 
 eLuxFocusCrosshair cLuxProp_Wheel::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false) return eLuxFocusCrosshair_Default;
+    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false)
+    {
+        return eLuxFocusCrosshair_Default;
+    }
 
     return eLuxFocusCrosshair_Grab;
 }
@@ -257,7 +288,10 @@ float cLuxProp_Wheel::OnInteractDebugDraw(cGuiSet *apSet,iFontData *apFont, floa
 
 void cLuxProp_Wheel::SetStuckState(int alState, bool abEffects)
 {
-    if(mlStuckState == alState) return;
+    if(mlStuckState == alState)
+    {
+        return;
+    }
 
     mlStuckState = alState;
 
@@ -307,21 +341,36 @@ void cLuxProp_Wheel::SetStuckState(int alState, bool abEffects)
 
 void cLuxProp_Wheel::SetAngle(float afX, bool abAutoMoveToAngle)
 {
-    if(afX == mfAngle) return;
+    if(afX == mfAngle)
+    {
+        return;
+    }
 
     float fWantedAngle = afX;
-    if(fWantedAngle < mfMinLimit) fWantedAngle = mfMinLimit;
-    if(fWantedAngle > mfMaxLimit) fWantedAngle = mfMaxLimit;
+    if(fWantedAngle < mfMinLimit)
+    {
+        fWantedAngle = mfMinLimit;
+    }
+    if(fWantedAngle > mfMaxLimit)
+    {
+        fWantedAngle = mfMaxLimit;
+    }
 
     //If it is a request to move directly, then we can do proper equal
     if(abAutoMoveToAngle)
     {
-        if(fWantedAngle == mfAngle) return;
+        if(fWantedAngle == mfAngle)
+        {
+            return;
+        }
     }
     //If not then just check if close enough
     else
     {
-        if(cMath::Abs(fWantedAngle - mfAngle) < 0.0001f) return;
+        if(cMath::Abs(fWantedAngle - mfAngle) < 0.0001f)
+        {
+            return;
+        }
     }
 
     if(abAutoMoveToAngle)
@@ -342,8 +391,14 @@ void cLuxProp_Wheel::SetAngle(float afX, bool abAutoMoveToAngle)
 
 void cLuxProp_Wheel::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 {
-    if(alState>0)    SetStuckState(-1,true);
-    else            SetStuckState(0, true);
+    if(alState>0)
+    {
+        SetStuckState(-1,true);
+    }
+    else
+    {
+        SetStuckState(0, true);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -395,7 +450,10 @@ void cLuxProp_Wheel::UpdateAngle(float afTimeStep)
 
 
     //If no limits, skip the rest.
-    if(mfMaxLimit ==0 && mfMinLimit==0) return;
+    if(mfMaxLimit ==0 && mfMinLimit==0)
+    {
+        return;
+    }
 
     /////////////////////////////////////
     //Set Max and min limit
@@ -427,23 +485,35 @@ void cLuxProp_Wheel::UpdateAngle(float afTimeStep)
 
 void cLuxProp_Wheel::UpdateCheckLimit(float afTimeStep)
 {
-    if(mlStuckState !=0) return;
+    if(mlStuckState !=0)
+    {
+        return;
+    }
 
-    if(mfMaxLimit ==0 && mfMinLimit==0) return;
+    if(mfMaxLimit ==0 && mfMinLimit==0)
+    {
+        return;
+    }
 
     ///////////////////////
     //Max
     if(mfAngle > (mfMaxLimit - mfMaxLimitRange))
     {
         ChangeState(1, true);
-        if(mbMaxLimitStuck) SetStuckState(1, false);
+        if(mbMaxLimitStuck)
+        {
+            SetStuckState(1, false);
+        }
     }
     ///////////////////////
     //Min
     else if(mfAngle < (mfMinLimit + mfMinLimitRange))
     {
         ChangeState(-1, true);
-        if(mbMinLimitStuck) SetStuckState(-1, false);
+        if(mbMinLimitStuck)
+        {
+            SetStuckState(-1, false);
+        }
     }
     ///////////////////////
     //Middle
@@ -567,8 +637,14 @@ void cLuxProp_Wheel::SetMinJointAngle(float afMinAngle)
 
 void cLuxProp_Wheel::ChangeState(int alState, bool abEffects)
 {
-    if(mlCurrentState == alState) return;
-    if(mbSkipMiddleState && alState==0) return;
+    if(mlCurrentState == alState)
+    {
+        return;
+    }
+    if(mbSkipMiddleState && alState==0)
+    {
+        return;
+    }
 
     mlCurrentState = alState;
 
@@ -594,7 +670,10 @@ void cLuxProp_Wheel::ChangeState(int alState, bool abEffects)
     if(abEffects  && sSound != "")
     {
         cSoundEntity *pSound = mpMap->GetWorld()->CreateSoundEntity("WheelSound", sSound, true);
-        if(pSound) pSound->SetPosition(mpHingeJoint->GetPivotPoint());
+        if(pSound)
+        {
+            pSound->SetPosition(mpHingeJoint->GetPivotPoint());
+        }
     }
 
     /////////////////

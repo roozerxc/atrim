@@ -77,7 +77,10 @@ public:
     iFrameBuffer(const tString& asName, iLowLevelGraphics* apLowLevelGraphics) :
         msName(asName), mpLowLevelGraphics(apLowLevelGraphics), mvSize(-1), mpDepthBuffer(NULL), mpStencilBuffer(NULL)
     {
-        for(int i=0; i<kMaxDrawColorBuffers; ++i) mpColorBuffer[i] = NULL;
+        for(int i=0; i<kMaxDrawColorBuffers; ++i)
+        {
+            mpColorBuffer[i] = NULL;
+        }
     }
     virtual ~iFrameBuffer() {}
 

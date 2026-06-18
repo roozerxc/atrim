@@ -49,7 +49,10 @@ bool cSDLFontData::CreateFromBitmapFile(const tWString &asFileName)
     ////////////////////////////////////////////
     // Load xml file
     FILE *pFile = cPlatform::OpenFile(asFileName, _W("rb"));
-    if(pFile==NULL) return false;
+    if(pFile==NULL)
+    {
+        return false;
+    }
 
     TiXmlDocument *pXmlDoc = hplNew( TiXmlDocument,() );
     if(pXmlDoc->LoadFile(pFile)==false)
@@ -83,7 +86,10 @@ bool cSDLFontData::CreateFromBitmapFile(const tWString &asFileName)
     for(; pCharElem != NULL; pCharElem = pCharElem->NextSiblingElement("char"))
     {
         int lId = cString::ToInt(pCharElem->Attribute("id"),0);
-        if(lId >lLargestGlyphId) lLargestGlyphId = lId;
+        if(lId >lLargestGlyphId)
+        {
+            lLargestGlyphId = lId;
+        }
     }
 
     mlFirstChar =0;

@@ -105,11 +105,17 @@ void cLuxLampLightConnection::Update(float afTimeStep)
     {
         cLuxLampLightConnection_Lamp *pLampConnection = *it;
         cLuxProp_Lamp *pLamp = pLampConnection->mpLamp;
-        if(pLamp->mvLights.empty()) continue;
+        if(pLamp->mvLights.empty())
+        {
+            continue;
+        }
 
         cColor lightColor = pLampConnection->mbUseLightOnColor ?    pLamp->mvEffectLightData[0].mOnColor :
                             pLamp->mvLights[0]->GetDiffuseColor();
-        if(pLampConnection->mbUseLightSpec==false) lightColor.a = 0;
+        if(pLampConnection->mbUseLightSpec==false)
+        {
+            lightColor.a = 0;
+        }
 
         finalColor = finalColor + lightColor * pLampConnection->mfAmount * pLampConnection->mpLamp->GetEffectsAlpha();
     }
@@ -170,7 +176,9 @@ cLuxProp_Lamp::cLuxProp_Lamp(const tString &asName,int alID, cLuxMap *apMap) : i
 cLuxProp_Lamp::~cLuxProp_Lamp()
 {
     if(mpLightConnection)
+    {
         mpLightConnection->RemoveLamp(this);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -183,8 +191,14 @@ cLuxProp_Lamp::~cLuxProp_Lamp()
 
 bool cLuxProp_Lamp::CanInteract(iPhysicsBody *apBody)
 {
-    if(CanBeIgnitByPlayer() && mbLit==false) return true;
-    if(msInteractCallback != "") return true;
+    if(CanBeIgnitByPlayer() && mbLit==false)
+    {
+        return true;
+    }
+    if(msInteractCallback != "")
+    {
+        return true;
+    }
 
     return false;
 }
@@ -274,7 +288,10 @@ eLuxFocusCrosshair cLuxProp_Lamp::GetFocusCrosshair(iPhysicsBody *apBody, const 
         return mCustomFocusCrossHair;
     }
 
-    if(CanInteract(apBody)) return eLuxFocusCrosshair_Ignite;
+    if(CanInteract(apBody))
+    {
+        return eLuxFocusCrosshair_Ignite;
+    }
 
     return eLuxFocusCrosshair_Default;
 }
@@ -292,7 +309,10 @@ tWString cLuxProp_Lamp::GetFocusText()
 
 void cLuxProp_Lamp::SetLit(bool abX, bool abUseEffects)
 {
-    if(mbLit == abX) return;
+    if(mbLit == abX)
+    {
+        return;
+    }
 
     mbLit =  abX;
 
@@ -303,8 +323,14 @@ void cLuxProp_Lamp::SetLit(bool abX, bool abUseEffects)
 
 void cLuxProp_Lamp::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 {
-    if(alState > 0)    SetLit(true, true);
-    if(alState < 0)    SetLit(false, true);
+    if(alState > 0)
+    {
+        SetLit(true, true);
+    }
+    if(alState < 0)
+    {
+        SetLit(false, true);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -349,7 +375,10 @@ void cLuxProp_Lamp::SetupLampLightConnection()
 
 bool cLuxProp_Lamp::CanBeIgnitByPlayer()
 {
-    if(mbLit || mbCanBeLitByPlayer==false) return false;
+    if(mbLit || mbCanBeLitByPlayer==false)
+    {
+        return false;
+    }
     return true;
 }
 

@@ -113,9 +113,13 @@ void cQuaternion::FromRotationMatrix(const cMatrix<float> &a_mtxRot)
         static size_t s_iNext[3] = { 1, 2, 0 };
         size_t i = 0;
         if ( a_mtxRot.m[1][1] > a_mtxRot.m[0][0] )
+        {
             i = 1;
+        }
         if ( a_mtxRot.m[2][2] > a_mtxRot.m[i][i] )
+        {
             i = 2;
+        }
         size_t j = s_iNext[i];
         size_t k = s_iNext[j];
 

@@ -49,7 +49,9 @@ void iLuxPlayerState_InteractRotateBase::OnEnterState(eLuxPlayerState aPrevState
     /////////////////////////////////
     //Clear smoothing
     if(gpBase->mpInputHandler->GetSmoothMouse()==false)
+    {
         gpBase->mpInputHandler->ResetSmoothMousePos();
+    }
 
     /////////////////////////////////
     //Get the static variables
@@ -116,7 +118,10 @@ void iLuxPlayerState_InteractRotateBase::SetupForceAxes()
     vCamDir[0] = cMath::Vector3Cross(pCam->GetForward(), vCamDir[1]);
     vCamDir[2] = cMath::Vector3Cross(vCamDir[1], vCamDir[0]);
 
-    for(int i=0; i<3; ++i) mvCamDir[i] = vCamDir[i];
+    for(int i=0; i<3; ++i)
+    {
+        mvCamDir[i] = vCamDir[i];
+    }
 
     cVector3f vForceDir[2];
     float fMaxCos[2] = {0,0};
@@ -165,7 +170,10 @@ void iLuxPlayerState_InteractRotateBase::SetupForceAxes()
     for(int force=0; force < 2; ++force)
     {
         float fMul = 1.0f;
-        if(fMaxCos[force] < 0) fMul = -1.0f;
+        if(fMaxCos[force] < 0)
+        {
+            fMul = -1.0f;
+        }
         mvForceAxis[lForceAxis[force]] = vForceDir[force] * fMul;
 
         //debug:
@@ -190,7 +198,9 @@ void iLuxPlayerState_InteractRotateBase::Update(float afTimeStep)
     //Update move add
 
     if(gpBase->mpInputHandler->GetSmoothMouse()==false)
+    {
         mvMouseAdd = gpBase->mpInputHandler->GetSmoothMousePos(mvMouseAdd);
+    }
 
     //////////////////////////////
     //Set up variables
@@ -213,12 +223,18 @@ void iLuxPlayerState_InteractRotateBase::Update(float afTimeStep)
     if(mfRotSpeed > 0)
     {
         mfRotSpeed -= afTimeStep * fSlowDownSpeed;
-        if(mfRotSpeed < 0) mfRotSpeed = 0;
+        if(mfRotSpeed < 0)
+        {
+            mfRotSpeed = 0;
+        }
     }
     if(mfRotSpeed < 0)
     {
         mfRotSpeed += afTimeStep * fSlowDownSpeed;
-        if(mfRotSpeed > 0) mfRotSpeed = 0;
+        if(mfRotSpeed > 0)
+        {
+            mfRotSpeed = 0;
+        }
     }
 
     if(mvMouseAdd == 0)
@@ -234,8 +250,14 @@ void iLuxPlayerState_InteractRotateBase::Update(float afTimeStep)
     //Change the speed and cap it o max if needed
 
     mfRotSpeed +=  fSpeedAdd * 3000.0f * mpMoveBaseData->mfMoveSpeedFactor * afTimeStep;
-    if(mfRotSpeed > mpMoveBaseData->mfMoveMaxSpeed)    mfRotSpeed = mpMoveBaseData->mfMoveMaxSpeed;
-    if(mfRotSpeed < -mpMoveBaseData->mfMoveMaxSpeed)    mfRotSpeed = -mpMoveBaseData->mfMoveMaxSpeed;
+    if(mfRotSpeed > mpMoveBaseData->mfMoveMaxSpeed)
+    {
+        mfRotSpeed = mpMoveBaseData->mfMoveMaxSpeed;
+    }
+    if(mfRotSpeed < -mpMoveBaseData->mfMoveMaxSpeed)
+    {
+        mfRotSpeed = -mpMoveBaseData->mfMoveMaxSpeed;
+    }
 
     ///////////////////////////////////
     //Calculate torque
@@ -304,8 +326,14 @@ void iLuxPlayerState_InteractRotateBase::OnScroll(float afAmount)
 
 bool iLuxPlayerState_InteractRotateBase::OnMove(eCharDir aDir, float afMul)
 {
-    if(aDir == eCharDir_Forward)    mvMouseAdd.y += afMul * mfMoveToMouseAddFactor;
-    else                            mvMouseAdd.x += afMul * -mfMoveToMouseAddFactor;
+    if(aDir == eCharDir_Forward)
+    {
+        mvMouseAdd.y += afMul * mfMoveToMouseAddFactor;
+    }
+    else
+    {
+        mvMouseAdd.x += afMul * -mfMoveToMouseAddFactor;
+    }
 
     return true;
 }
@@ -331,13 +359,25 @@ bool iLuxPlayerState_InteractRotateBase::OnAddPitch(float afAmount)
         if(cMath::Abs(gpBase->mpInputHandler->GetGamepad()->GetAxisValue(eGamepadAxis_3)) > 0.0f)
         {
             //Gamepad was used
-            if(gpBase->mpInputHandler->GetInvertGamepadLook()) afAmount = -afAmount;
+            if(gpBase->mpInputHandler->GetInvertGamepadLook())
+            {
+                afAmount = -afAmount;
+            }
         }
-        else if(gpBase->mpInputHandler->GetInvertMouse()) afAmount = -afAmount;
+        else if(gpBase->mpInputHandler->GetInvertMouse())
+        {
+            afAmount = -afAmount;
+        }
     }
-    else if(gpBase->mpInputHandler->GetInvertMouse()) afAmount = -afAmount;
+    else if(gpBase->mpInputHandler->GetInvertMouse())
+    {
+        afAmount = -afAmount;
+    }
 #else
-    if(gpBase->mpInputHandler->GetInvertMouse()) afAmount = -afAmount;
+    if(gpBase->mpInputHandler->GetInvertMouse())
+    {
+        afAmount = -afAmount;
+    }
 #endif
     mvMouseAdd.y += afAmount;
 

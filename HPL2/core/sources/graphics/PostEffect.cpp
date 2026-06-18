@@ -96,7 +96,10 @@ iTexture* iPostEffect::Render(cPostEffectComposite *apComposite, iTexture *apInp
 
 void iPostEffect::SetActive(bool abX)
 {
-    if(mbActive == abX) return;
+    if(mbActive == abX)
+    {
+        return;
+    }
 
     mbActive = abX;
 
@@ -107,10 +110,16 @@ void iPostEffect::SetActive(bool abX)
 
 void iPostEffect::SetParams(iPostEffectParams *apSrcParams)
 {
-    if(mpType==NULL) return;
+    if(mpType==NULL)
+    {
+        return;
+    }
 
     //Make sure the type is correct!
-    if(apSrcParams->GetName() != mpType->GetName()) return;
+    if(apSrcParams->GetName() != mpType->GetName())
+    {
+        return;
+    }
 
     GetTypeSpecificParams()->LoadFrom(apSrcParams);
     OnSetParams();
@@ -118,10 +127,16 @@ void iPostEffect::SetParams(iPostEffectParams *apSrcParams)
 
 void iPostEffect::GetParams(iPostEffectParams *apDestParams)
 {
-    if(mpType==NULL) return;
+    if(mpType==NULL)
+    {
+        return;
+    }
 
     //Make sure the type is correct!
-    if(apDestParams->GetName() != mpType->GetName()) return;
+    if(apDestParams->GetName() != mpType->GetName())
+    {
+        return;
+    }
 
     GetTypeSpecificParams()->CopyTo(apDestParams);
 }

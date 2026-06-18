@@ -69,7 +69,10 @@ void cLuxPlayerState_InteractSwingDoor::OnThrow()
 
     cVector3f vImpulse = mvJointForward * mpMoveBaseData->mfMoveThrowImpulse;
     float fForwardDot = cMath::Vector3Dot(mvJointForward, mpPlayer->GetCamera()->GetForward());
-    if(fForwardDot < 0) vImpulse = vImpulse * -1;
+    if(fForwardDot < 0)
+    {
+        vImpulse = vImpulse * -1;
+    }
 
     mpCurrentBody->AddImpulse(vImpulse);
 }

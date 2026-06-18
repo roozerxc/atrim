@@ -66,7 +66,10 @@ cGui::~cGui()
     Log(" Deleting all materials\n");
     for(int i=0; i< eGuiMaterial_LastEnum; ++i)
     {
-        if(mvMaterials[i]) hplDelete(mvMaterials[i]);
+        if(mvMaterials[i])
+        {
+            hplDelete(mvMaterials[i]);
+        }
     }
 
     Log("--------------------------------------------------------\n\n");
@@ -91,7 +94,10 @@ void cGui::Init(cResources *apResources, cGraphics* apGraphics,
 
     //////////////////////////////
     // Create materials
-    for(int i=0; i< eGuiMaterial_LastEnum; ++i) mvMaterials[i] = NULL;
+    for(int i=0; i< eGuiMaterial_LastEnum; ++i)
+    {
+        mvMaterials[i] = NULL;
+    }
 
     mvMaterials[eGuiMaterial_Diffuse] = hplNew( cGuiMaterial_Diffuse,(mpGraphics->GetLowLevel()) );
     mvMaterials[eGuiMaterial_Alpha] = hplNew( cGuiMaterial_Alpha,(mpGraphics->GetLowLevel()) );
@@ -109,7 +115,9 @@ void cGui::Init(cResources *apResources, cGraphics* apGraphics,
     //////////////////////////////
     // Set up global gfx
     if(mpGfxRect==NULL)
+    {
         mpGfxRect = CreateGfxFilledRect(cColor(1,1), eGuiMaterial_Alpha);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -122,7 +130,10 @@ void cGui::Update(float afTimeStep)
     for(; it != m_mapSets.end(); ++it)
     {
         cGuiSet *pSet = it->second;
-        if(pSet->IsActive()) pSet->Update(afTimeStep);
+        if(pSet->IsActive())
+        {
+            pSet->Update(afTimeStep);
+        }
     }
 
     /////////////////////////////
@@ -245,7 +256,10 @@ tString cGui::GetSkinGfxString(eGuiSkinGfx aType)
     tGuiSkinGfxMapIt it = m_mapSkinGfxStrings.begin();
     for(; it != m_mapSkinGfxStrings.end(); ++it)
     {
-        if(it->second == aType) return it->first;
+        if(it->second == aType)
+        {
+            return it->first;
+        }
     }
 
     return "Unknown";
@@ -256,7 +270,10 @@ tString cGui::GetSkinFontString(eGuiSkinFont aType)
     tGuiSkinFontMapIt it = m_mapSkinFontStrings.begin();
     for(; it != m_mapSkinFontStrings.end(); ++it)
     {
-        if(it->second == aType) return it->first;
+        if(it->second == aType)
+        {
+            return it->first;
+        }
     }
 
     return "Unknown";
@@ -267,7 +284,10 @@ tString cGui::GetSkinAttributeString(eGuiSkinAttribute aType)
     tGuiSkinAttributeMapIt it = m_mapSkinAttributeStrings.begin();
     for(; it != m_mapSkinAttributeStrings.end(); ++it)
     {
-        if(it->second == aType) return it->first;
+        if(it->second == aType)
+        {
+            return it->first;
+        }
     }
 
     return "Unknown";
@@ -287,14 +307,20 @@ cGuiSet* cGui::CreateSet(const tString& asName, cGuiSkin *apSkin)
 cGuiSet* cGui::GetSetFromName(const tString& asName)
 {
     tGuiSetMapIt it = m_mapSets.find(asName);
-    if(it == m_mapSets.end()) return NULL;
+    if(it == m_mapSets.end())
+    {
+        return NULL;
+    }
 
     return it->second;
 }
 
 void cGui::SetFocus(cGuiSet* apSet)
 {
-    if(mpSetInFocus == apSet) return;
+    if(mpSetInFocus == apSet)
+    {
+        return;
+    }
 
     //TODO: Call lost focus or stuff
 
@@ -304,12 +330,18 @@ void cGui::SetFocus(cGuiSet* apSet)
 void cGui::SetFocusByName(const tString& asSetName)
 {
     cGuiSet *pSet = GetSetFromName(asSetName);
-    if(pSet) SetFocus(pSet);
+    if(pSet)
+    {
+        SetFocus(pSet);
+    }
 }
 
 void cGui::DestroySet(cGuiSet *apSet)
 {
-    if(apSet==NULL) return;
+    if(apSet==NULL)
+    {
+        return;
+    }
 
     tGuiSetMapIt it = m_mapSets.begin();
     for(; it != m_mapSets.end(); ++it)
@@ -332,7 +364,10 @@ cGuiGfxElement* cGui::CreateGfxFilledRect(const cColor& aColor, eGuiMaterial aMa
     pGfxElem->SetColor(aColor);
     pGfxElem->SetMaterial(GetMaterial(aMaterial));
 
-    if(abAddToList) mlstGfxElements.push_back(pGfxElem);
+    if(abAddToList)
+    {
+        mlstGfxElements.push_back(pGfxElem);
+    }
 
     return pGfxElem;
 }
@@ -359,7 +394,10 @@ cGuiGfxElement* cGui::CreateGfxImage(    const tString &asFile, eGuiMaterial aMa
     pGfxElem->SetMaterial(GetMaterial(aMaterial));
     pGfxElem->AddImage(pImage);
 
-    if(abAddToList) mlstGfxElements.push_back(pGfxElem);
+    if(abAddToList)
+    {
+        mlstGfxElements.push_back(pGfxElem);
+    }
 
     //if(abAddToList) Log("Create gfx '%s': %d %d\n", asFile.c_str(), pGfxElem, pImage);
 
@@ -409,14 +447,20 @@ cGuiGfxElement* cGui::CreateGfxTexture(iTexture *apTexture, bool abAutoDestroyTe
 {
     cGuiGfxElement *pGfxElem = hplNew( cGuiGfxElement, (this) );
 
-    if(apTexture->GetUsage() == eTextureUsage_RenderTarget) pGfxElem->SetFlipUvYAxis(true);
+    if(apTexture->GetUsage() == eTextureUsage_RenderTarget)
+    {
+        pGfxElem->SetFlipUvYAxis(true);
+    }
 
     pGfxElem->SetColor(aColor);
     pGfxElem->SetMaterial(GetMaterial(aMaterial));
     pGfxElem->AddTexture(apTexture, avStartUV, avEndUV);
     pGfxElem->SetDestroyTexture(abAutoDestroyTexture);
 
-    if(abAddToList) mlstGfxElements.push_back(pGfxElem);
+    if(abAddToList)
+    {
+        mlstGfxElements.push_back(pGfxElem);
+    }
 
     return pGfxElem;
 }
@@ -440,7 +484,10 @@ cGuiGfxElement* cGui::CreateGfxImageBuffer(    const tString &asFile,eGuiMateria
         tString sNum = lFileNum<=9 ? "0"+cString::ToString(lFileNum) : cString::ToString(lFileNum);
         tString sFile = sName + sNum+"."+sExt;
 
-        if(mpResources->GetFileSearcher()->GetFilePath(sFile)==_W("")) break;
+        if(mpResources->GetFileSearcher()->GetFilePath(sFile)==_W(""))
+        {
+            break;
+        }
 
         cFrameSubImage *pImage = mpResources->GetImageManager()->CreateImage(sFile);
         vImages.push_back(pImage);
@@ -462,11 +509,17 @@ cGuiGfxElement* cGui::CreateGfxImageBuffer(    const tString &asFile,eGuiMateria
 
     for(size_t i=0; i< vImages.size(); ++i)
     {
-        if(i==0) pGfxElem->AddImage(vImages[i]);
+        if(i==0)
+        {
+            pGfxElem->AddImage(vImages[i]);
+        }
         pGfxElem->AddImageToBuffer(vImages[i]);
     }
 
-    if(abAddToList) mlstGfxElements.push_back(pGfxElem);
+    if(abAddToList)
+    {
+        mlstGfxElements.push_back(pGfxElem);
+    }
 
     ///////////////////////////////
     // Create animation
@@ -507,7 +560,10 @@ void cGui::DestroyGfx(cGuiGfxElement* apGfx)
 
 bool cGui::SendMousePos(const cVector2l &avPos, const cVector2l &avRel)
 {
-    if(mpSetInFocus==NULL) return false;
+    if(mpSetInFocus==NULL)
+    {
+        return false;
+    }
 
     cVector2f vVirtualPos = cVector2f( (float)avPos.x, (float)avPos.y) / mpGraphics->GetLowLevel()->GetScreenSizeFloat();
     cVector2f vVirtualRel = cVector2f( (float)avRel.x, (float)avRel.y) / mpGraphics->GetLowLevel()->GetScreenSizeFloat();
@@ -522,7 +578,10 @@ bool cGui::SendMousePos(const cVector2l &avPos, const cVector2l &avRel)
 
 bool cGui::SendMouseClickDown(eGuiMouseButton aButton, int alKeyModifiers)
 {
-    if(mpSetInFocus==NULL)return false;
+    if(mpSetInFocus==NULL)
+    {
+        return false;
+    }
 
     cGuiMessageData data;
     data.mlVal = aButton;
@@ -533,7 +592,10 @@ bool cGui::SendMouseClickDown(eGuiMouseButton aButton, int alKeyModifiers)
 
 bool cGui::SendMouseClickUp(eGuiMouseButton aButton, int alKeyModifiers)
 {
-    if(mpSetInFocus==NULL)return false;
+    if(mpSetInFocus==NULL)
+    {
+        return false;
+    }
 
     cGuiMessageData data;
     data.mlVal = aButton;
@@ -544,7 +606,10 @@ bool cGui::SendMouseClickUp(eGuiMouseButton aButton, int alKeyModifiers)
 
 bool cGui::SendMouseDoubleClick(eGuiMouseButton aButton, int alKeyModifiers)
 {
-    if(mpSetInFocus==NULL)return false;
+    if(mpSetInFocus==NULL)
+    {
+        return false;
+    }
 
     cGuiMessageData data;
     data.mlVal = aButton;
@@ -555,14 +620,20 @@ bool cGui::SendMouseDoubleClick(eGuiMouseButton aButton, int alKeyModifiers)
 
 bool cGui::SendKeyPress(const cKeyPress& keyPress)
 {
-    if(mpSetInFocus==NULL)return false;
+    if(mpSetInFocus==NULL)
+    {
+        return false;
+    }
 
     return mpSetInFocus->SendMessage(eGuiMessage_KeyPress, cGuiMessageData(keyPress));
 }
 
 bool cGui::SendKeyRelease(const cKeyPress& aKeyPress)
 {
-    if(mpSetInFocus==NULL)return false;
+    if(mpSetInFocus==NULL)
+    {
+        return false;
+    }
 
     return mpSetInFocus->SendMessage(eGuiMessage_KeyRelease, cGuiMessageData(aKeyPress));
 }
@@ -571,7 +642,10 @@ bool cGui::SendKeyRelease(const cKeyPress& aKeyPress)
 
 bool cGui::SendGamepadInput(const cGamepadInputData& aInput)
 {
-    if(mpSetInFocus==NULL)return false;
+    if(mpSetInFocus==NULL)
+    {
+        return false;
+    }
 
     return mpSetInFocus->SendMessage(eGuiMessage_GamepadInput, cGuiMessageData(aInput));
 }
@@ -580,35 +654,50 @@ bool cGui::SendGamepadInput(const cGamepadInputData& aInput)
 
 bool cGui::SendUIArrowPress(eUIArrow aX)
 {
-    if(mpSetInFocus==NULL) return false;
+    if(mpSetInFocus==NULL)
+    {
+        return false;
+    }
 
     return mpSetInFocus->SendMessage(eGuiMessage_UIArrowPress, cGuiMessageData(aX));
 }
 
 bool cGui::SendUIArrowRelease(eUIArrow aX)
 {
-    if(mpSetInFocus==NULL) return false;
+    if(mpSetInFocus==NULL)
+    {
+        return false;
+    }
 
     return mpSetInFocus->SendMessage(eGuiMessage_UIArrowRelease, cGuiMessageData(aX));
 }
 
 bool cGui::SendUIButtonPress(eUIButton aX)
 {
-    if(mpSetInFocus==NULL) return false;
+    if(mpSetInFocus==NULL)
+    {
+        return false;
+    }
 
     return mpSetInFocus->SendMessage(eGuiMessage_UIButtonPress, cGuiMessageData(aX));
 }
 
 bool cGui::SendUIButtonRelease(eUIButton aX)
 {
-    if(mpSetInFocus==NULL) return false;
+    if(mpSetInFocus==NULL)
+    {
+        return false;
+    }
 
     return mpSetInFocus->SendMessage(eGuiMessage_UIButtonRelease, cGuiMessageData(aX));
 }
 
 bool cGui::SendUIButtonDoublePress(eUIButton aX)
 {
-    if(mpSetInFocus==NULL) return false;
+    if(mpSetInFocus==NULL)
+    {
+        return false;
+    }
 
     return mpSetInFocus->SendMessage(eGuiMessage_UIButtonDoublePress, cGuiMessageData(aX));
 }

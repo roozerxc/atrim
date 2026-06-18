@@ -89,7 +89,10 @@ iResourceBase* cImageManager::CreateInFrame(const tString& asName, int alFrameHa
                 Error("Imagemanager couldn't create image '%s'\n", asName.c_str());
             }
 
-            if(pImage) AddResource(pImage);
+            if(pImage)
+            {
+                AddResource(pImage);
+            }
         }
     }
     else
@@ -97,8 +100,14 @@ iResourceBase* cImageManager::CreateInFrame(const tString& asName, int alFrameHa
         //Log("Found '%s' in stock!\n",asName.c_str());
     }
 
-    if(pImage)pImage->IncUserCount();
-    else Error("Couldn't load image '%s'\n",asName.c_str());
+    if(pImage)
+    {
+        pImage->IncUserCount();
+    }
+    else
+    {
+        Error("Couldn't load image '%s'\n",asName.c_str());
+    }
 
     //Log("Loaded image %s, it has %d users!\n", pImage->GetName().c_str(),pImage->GetUserCount());
     //Log(" frame has %d pics\n", pImage->GetFrameTexture()->GetPicCount());
@@ -121,7 +130,10 @@ cFrameSubImage* cImageManager::CreateImage(const tString& asName, int alFrameHan
 
 cFrameSubImage* cImageManager::CreateFromBitmap(const tString &asName,cBitmap* apBmp, int alFrameHandle)
 {
-    if(apBmp==NULL)return NULL;
+    if(apBmp==NULL)
+    {
+        return NULL;
+    }
 
     cFrameSubImage *pImage = AddToFrame(apBmp,_W(""), alFrameHandle);
 
@@ -176,7 +188,10 @@ void cImageManager::Destroy(iResourceBase* apResource)
     if(pImage->HasUsers()==false)
     {
         pFrame->DecPicCount(); // Doing it here now instead.
-        if(pBmpFrame) pBmpFrame->DecPicCount();
+        if(pBmpFrame)
+        {
+            pBmpFrame->DecPicCount();
+        }
         RemoveResource(apResource);
         hplDelete(pImage);
 
@@ -235,7 +250,10 @@ int cImageManager::FlushAll()
     int lNum =0;
     for(tFrameBitmapListIt it=mlstBitmapFrames.begin(); it!=mlstBitmapFrames.end(); ++it)
     {
-        if((*it)->FlushToTexture()) lNum++;
+        if((*it)->FlushToTexture())
+        {
+            lNum++;
+        }
     }
 
     //Log("Done!\n");
@@ -248,7 +266,10 @@ int cImageManager::FlushAll()
 cFrameTexture* cImageManager::GetFrameTexture(int alHandle)
 {
     tFrameTextureMapIt it = m_mapTextureFrames.find(alHandle);
-    if(it == m_mapTextureFrames.end()) return NULL;
+    if(it == m_mapTextureFrames.end())
+    {
+        return NULL;
+    }
 
     return it->second;
 }
@@ -259,7 +280,10 @@ int cImageManager::CreateFrame(cVector2l avSize)
 {
     cFrameBitmap *pBFrame = CreateBitmapFrame(avSize);
 
-    if(pBFrame==NULL) return -1;
+    if(pBFrame==NULL)
+    {
+        return -1;
+    }
 
     return pBFrame->GetHandle();
 }
@@ -396,7 +420,9 @@ cFrameSubImage *cImageManager::AddToFrame(cBitmap *apBmp, const tWString& asFull
             it++;
         }
         if(pImage==NULL)
+        {
             Error("Image didn't fit frame %d!\n", alFrameHandle);
+        }
     }
 
     return pImage;

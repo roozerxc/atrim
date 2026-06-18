@@ -43,7 +43,9 @@ void cLuxAreaLoader_Script::LoadVariables(iLuxArea *apArea, cWorld *apWorld)
 
     float fMaxFocusDistance = GetVarFloat("MaxFocusDistance", -1);
     if(fMaxFocusDistance >=0)
+    {
         pScriptArea->mfMaxFocusDistance = fMaxFocusDistance;
+    }
 }
 
 void cLuxAreaLoader_Script::SetupArea(iLuxArea *apArea, cWorld *apWorld)
@@ -80,7 +82,10 @@ cLuxArea_Script::~cLuxArea_Script()
 
 bool cLuxArea_Script::CanInteract(iPhysicsBody *apBody)
 {
-    if(mbItemInteraction) return true;
+    if(mbItemInteraction)
+    {
+        return true;
+    }
 
     return msInteractCallback!="";
 }

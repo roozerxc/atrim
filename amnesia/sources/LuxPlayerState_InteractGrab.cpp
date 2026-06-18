@@ -116,8 +116,14 @@ void cLuxPlayerState_InteractGrab::OnEnterState(eLuxPlayerState aPrevState)
 
         fProperMassSum += pBody->GetMass();
 
-        if(pBody==mpCurrentBody) pBody->SetGravity(false);
-        if(pBody==mpCurrentBody) pBody->SetCollideCharacter(false);
+        if(pBody==mpCurrentBody)
+        {
+            pBody->SetGravity(false);
+        }
+        if(pBody==mpCurrentBody)
+        {
+            pBody->SetCollideCharacter(false);
+        }
         pBody->SetMass(pBody->GetMass() * mpGrabData->mfGrabMassMul);
 
         pBody->SetAngularVelocity(0);
@@ -314,7 +320,10 @@ void cLuxPlayerState_InteractGrab::PostUpdate(float afTimeStep)
     mpCurrentBody->AddForce(vForce * mpGrabData->mfForceMul);
 
 
-    if(mpGrabData->mbUseRotation==false) return;
+    if(mpGrabData->mbUseRotation==false)
+    {
+        return;
+    }
     /////////////////////////
     // Get the wanted speed
     cVector3f vWantedRotSpeed=0;
@@ -379,11 +388,15 @@ bool cLuxPlayerState_InteractGrab::OnDoAction(eLuxPlayerAction aAction,bool abPr
 
                 float fLinearSpeed = pBody->GetLinearVelocity().Length();
                 if(fLinearSpeed > mfMaxLeaveLinearSpeed)
+                {
                     pBody->SetLinearVelocity( (pBody->GetLinearVelocity()/fLinearSpeed)*mfMaxLeaveLinearSpeed );
+                }
 
                 float fAngularSpeed = pBody->GetAngularVelocity().Length();
                 if(fAngularSpeed > mfMaxLeaveAngularSpeed)
+                {
                     pBody->SetAngularVelocity( (pBody->GetAngularVelocity()/fAngularSpeed)*mfMaxLeaveAngularSpeed );
+                }
             }
 
             ///////////////////////
@@ -433,8 +446,14 @@ bool cLuxPlayerState_InteractGrab::OnDoAction(eLuxPlayerAction aAction,bool abPr
 void cLuxPlayerState_InteractGrab::OnScroll(float afAmount)
 {
     mfDepth += afAmount * mpGrabData->mfGrabDepthInc;
-    if(mfDepth < mpGrabData->mfGrabMinDepth) mfDepth = mpGrabData->mfGrabMinDepth;
-    if(mfDepth >mpGrabData-> mfGrabMaxDepth) mfDepth = mpGrabData->mfGrabMaxDepth;
+    if(mfDepth < mpGrabData->mfGrabMinDepth)
+    {
+        mfDepth = mpGrabData->mfGrabMinDepth;
+    }
+    if(mfDepth >mpGrabData-> mfGrabMaxDepth)
+    {
+        mfDepth = mpGrabData->mfGrabMaxDepth;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -466,13 +485,25 @@ bool cLuxPlayerState_InteractGrab::OnAddPitch(float afAmount)
             if(cMath::Abs(gpBase->mpInputHandler->GetGamepad()->GetAxisValue(eGamepadAxis_3)) > 0.0f)
             {
                 //Gamepad was used
-                if(gpBase->mpInputHandler->GetInvertGamepadLook()) afAmount = -afAmount;
+                if(gpBase->mpInputHandler->GetInvertGamepadLook())
+                {
+                    afAmount = -afAmount;
+                }
             }
-            else if(gpBase->mpInputHandler->GetInvertMouse()) afAmount = -afAmount;
+            else if(gpBase->mpInputHandler->GetInvertMouse())
+            {
+                afAmount = -afAmount;
+            }
         }
-        else if(gpBase->mpInputHandler->GetInvertMouse()) afAmount = -afAmount;
+        else if(gpBase->mpInputHandler->GetInvertMouse())
+        {
+            afAmount = -afAmount;
+        }
 #else
-        if(gpBase->mpInputHandler->GetInvertMouse()) afAmount = -afAmount;
+        if(gpBase->mpInputHandler->GetInvertMouse())
+        {
+            afAmount = -afAmount;
+        }
 #endif
         m_mtxBodyRotation = cMath::MatrixMul(cMath::MatrixRotateX(afAmount * -3.2f),m_mtxBodyRotation);
         return false;
@@ -509,7 +540,10 @@ bool cLuxPlayerState_InteractGrab::AllowBuoyancy(iPhysicsBody *apBody)
 {
     iLuxEntity *pBodyEntity = static_cast<iLuxEntity*>(apBody->GetUserData());
 
-    if(pBodyEntity == (iLuxEntity*)mpCurrentProp) return false;
+    if(pBodyEntity == (iLuxEntity*)mpCurrentProp)
+    {
+        return false;
+    }
 
     return true;
 }
@@ -598,8 +632,14 @@ void cLuxPlayerState_InteractGrab::SaveBodyProperties(iPhysicsBody *apBody)
         iPhysicsJoint *pJoint = apBody->GetJoint(i);
         iPhysicsBody *pChild = pJoint->GetChildBody();
         iPhysicsBody *pParent = pJoint->GetParentBody();
-        if(pChild && BodyIsAdded(pChild)==false)  SaveBodyProperties(pChild);
-        if(pParent && BodyIsAdded(pParent)==false)  SaveBodyProperties(pParent);
+        if(pChild && BodyIsAdded(pChild)==false)
+        {
+            SaveBodyProperties(pChild);
+        }
+        if(pParent && BodyIsAdded(pParent)==false)
+        {
+            SaveBodyProperties(pParent);
+        }
     }
 }
 
@@ -610,7 +650,10 @@ bool cLuxPlayerState_InteractGrab::BodyIsAdded(iPhysicsBody *apBody)
 {
     for(size_t i=0; i<mvBodyProperties.size(); ++i)
     {
-        if(mvBodyProperties[i].mpBody == apBody) return true;
+        if(mvBodyProperties[i].mpBody == apBody)
+        {
+            return true;
+        }
     }
     return false;
 }

@@ -106,7 +106,10 @@ cSoundEntity* cEngineFileLoading::LoadSound(cXmlElement* apElement, const tStrin
     bool bUseDefault = apElement->GetAttributeBool("UseDefault");
 
     cSoundEntity *pSound = apWorld->CreateSoundEntity(asNamePrefix+sName,sSoundFile,false);
-    if(pSound==NULL) return NULL;
+    if(pSound==NULL)
+    {
+        return NULL;
+    }
 
     if(bUseDefault==false)
     {
@@ -124,9 +127,18 @@ cSoundEntity* cEngineFileLoading::LoadSound(cXmlElement* apElement, const tStrin
 
 static eBillboardType ToBillboardType(const tString& asType)
 {
-    if(asType == "Axis") return eBillboardType_Axis;
-    if(asType == "Point") return eBillboardType_Point;
-    if(asType == "FixedAxis") return eBillboardType_FixedAxis;
+    if(asType == "Axis")
+    {
+        return eBillboardType_Axis;
+    }
+    if(asType == "Point")
+    {
+        return eBillboardType_Point;
+    }
+    if(asType == "FixedAxis")
+    {
+        return eBillboardType_FixedAxis;
+    }
 
     return eBillboardType_Point;
 }
@@ -141,7 +153,10 @@ cBillboard* cEngineFileLoading::LoadBillboard(cXmlElement* apElement, const tStr
     eBillboardType bbType = ToBillboardType(apElement->GetAttributeString("BillboardType"));
 
     cBillboard *pBillboard = apWorld->CreateBillboard(asNamePrefix+sName,vSize,bbType,sMat, abStatic);
-    if(pBillboard==NULL) return NULL;
+    if(pBillboard==NULL)
+    {
+        return NULL;
+    }
 
     pBillboard->SetForwardOffset(apElement->GetAttributeFloat("BillboardOffset"));
     pBillboard->SetColor(apElement->GetAttributeColor("BillboardColor",cColor(1,1)));
@@ -169,17 +184,35 @@ static eShadowMapResolution ToShadowMapResolution(const tString& asType)
 {
     tString sLowType = cString::ToLowerCase(asType);
 
-    if(sLowType == "high") return eShadowMapResolution_High;
-    if(sLowType == "medium") return eShadowMapResolution_Medium;
-    if(sLowType == "low") return eShadowMapResolution_Low;
+    if(sLowType == "high")
+    {
+        return eShadowMapResolution_High;
+    }
+    if(sLowType == "medium")
+    {
+        return eShadowMapResolution_Medium;
+    }
+    if(sLowType == "low")
+    {
+        return eShadowMapResolution_Low;
+    }
     return eShadowMapResolution_High;
 }
 
 static eTextureAnimMode ToTextureAnimMode(const tString& asType)
 {
-    if(cString::ToLowerCase(asType) == "none") return eTextureAnimMode_None;
-    else if(cString::ToLowerCase(asType) == "loop") return eTextureAnimMode_Loop;
-    else if(cString::ToLowerCase(asType) == "oscillate") return eTextureAnimMode_Oscillate;
+    if(cString::ToLowerCase(asType) == "none")
+    {
+        return eTextureAnimMode_None;
+    }
+    else if(cString::ToLowerCase(asType) == "loop")
+    {
+        return eTextureAnimMode_Loop;
+    }
+    else if(cString::ToLowerCase(asType) == "oscillate")
+    {
+        return eTextureAnimMode_Oscillate;
+    }
 
     return eTextureAnimMode_None;
 }
@@ -219,7 +252,10 @@ iLight* cEngineFileLoading::LoadLight(    cXmlElement* apElement, const tString&
         if(sSpotFalloffMap != "")
         {
             iTexture *pFalloff = apResources->GetTextureManager()->Create1D(sSpotFalloffMap,true);
-            if(pFalloff) pLightSpot->SetSpotFalloffMap(pFalloff);
+            if(pFalloff)
+            {
+                pLightSpot->SetSpotFalloffMap(pFalloff);
+            }
         }
     }
     //////////////////////////
@@ -247,7 +283,10 @@ iLight* cEngineFileLoading::LoadLight(    cXmlElement* apElement, const tString&
         if(sFalloffMap != "")
         {
             iTexture *pFalloff = apResources->GetTextureManager()->Create1D(sFalloffMap,true);
-            if(pFalloff) pLight->SetFalloffMap(pFalloff);
+            if(pFalloff)
+            {
+                pLight->SetFalloffMap(pFalloff);
+            }
         }
 
         //Gobo
@@ -261,16 +300,24 @@ iLight* cEngineFileLoading::LoadLight(    cXmlElement* apElement, const tString&
             if(lightType  == eLightType_Spot)
             {
                 if(animMode == eTextureAnimMode_None)
+                {
                     pGoboTex = apResources->GetTextureManager()->Create2D(sGobo,true);
+                }
                 else
+                {
                     pGoboTex = apResources->GetTextureManager()->CreateAnim(sGobo, true, eTextureType_2D);
+                }
             }
             else
             {
                 if(animMode == eTextureAnimMode_None)
+                {
                     pGoboTex = apResources->GetTextureManager()->CreateCubeMap(sGobo,true);
+                }
                 else
+                {
                     pGoboTex = apResources->GetTextureManager()->CreateAnim(sGobo,true, eTextureType_CubeMap);
+                }
             }
 
             if(pGoboTex)
@@ -292,8 +339,14 @@ iLight* cEngineFileLoading::LoadLight(    cXmlElement* apElement, const tString&
     bool bShadowsAffectDynamic = apElement->GetAttributeBool("ShadowsAffectDynamic", true);
     bool bShadowsAffectStatic = apElement->GetAttributeBool("ShadowsAffectStatic", true);
     tObjectVariabilityFlag lFlags =0;
-    if(bShadowsAffectDynamic)    lFlags |= eObjectVariabilityFlag_Dynamic;
-    if(bShadowsAffectStatic)    lFlags |= eObjectVariabilityFlag_Static;
+    if(bShadowsAffectDynamic)
+    {
+        lFlags |= eObjectVariabilityFlag_Dynamic;
+    }
+    if(bShadowsAffectStatic)
+    {
+        lFlags |= eObjectVariabilityFlag_Static;
+    }
     pLight->SetShadowCastersAffected(lFlags);
 
     //////////////////////
@@ -341,7 +394,10 @@ cMesh* cEngineFileLoading::LoadDecalMeshHelper(cXmlElement* apElement, cGraphics
 {
     ////////////////////////////////
     //Load Vertex data
-    if(apElement==NULL)return NULL;
+    if(apElement==NULL)
+    {
+        return NULL;
+    }
 
     int lNumOfVtx = apElement->GetAttributeInt("NumVerts", 0);
     int lNumOfIdx = apElement->GetAttributeInt("NumInds", 0);
@@ -377,7 +433,9 @@ cMesh* cEngineFileLoading::LoadDecalMeshHelper(cXmlElement* apElement, cGraphics
 
     //Create arrays
     for(int i=0; i<4; ++i)
+    {
         pVtxBuffer->CreateElementArray(glDecalElementType[i],eVertexBufferElementFormat_Float, glDecalNumOfElements[i]);
+    }
     pVtxBuffer->CreateElementArray(eVertexBufferElement_Color0,eVertexBufferElementFormat_Float,4);
 
     //Copy the data!
@@ -389,18 +447,26 @@ cMesh* cEngineFileLoading::LoadDecalMeshHelper(cXmlElement* apElement, cGraphics
             float *pData = &vDataArrays[i][vtx*glDecalNumOfElements[i]];
 
             if(glDecalNumOfElements[i]==2)
+            {
                 pVtxBuffer->AddVertexVec3f(glDecalElementType[i], cVector3f(pData[0],pData[1],0) );
+            }
             else if(glDecalNumOfElements[i]==3)
+            {
                 pVtxBuffer->AddVertexVec3f(glDecalElementType[i], cVector3f(pData[0],pData[1],pData[2]) );
+            }
             else if(glDecalNumOfElements[i]==4)
+            {
                 pVtxBuffer->AddVertexVec4f(glDecalElementType[i], cVector3f(pData[0],pData[1],pData[2]),pData[3]);
+            }
         }
 
         pVtxBuffer->AddVertexColor(eVertexBufferElement_Color0, aColor);
     }
 
     for(int i=0; i<lNumOfIdx; ++i)
+    {
         pVtxBuffer->AddIndex(vIdxArray[i]);
+    }
 
     //Compile
     pVtxBuffer->Compile(0);
@@ -428,7 +494,10 @@ cMesh* cEngineFileLoading::LoadDecalMeshHelper(cXmlElement* apElement, cGraphics
 
 void cEngineFileLoading::SetupWorldEntity(iEntity3D *apEntity, cXmlElement* apElement)
 {
-    if(apEntity==NULL) return;
+    if(apEntity==NULL)
+    {
+        return;
+    }
 
     int lID = apElement->GetAttributeInt("ID");
     cVector3f vPosition = apElement->GetAttributeVector3f("WorldPos",0);

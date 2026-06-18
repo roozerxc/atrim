@@ -135,7 +135,9 @@ iTexture* cPostEffect_ImageTrail::RenderEffect(iTexture *apInputTexture, iFrameB
         mpCurrentComposite->ClearFrameBuffer(eClearFrameBufferFlag_Color, true);
         mbClearFrameBuffer = false;
         if(mpImageTrailType->mpProgram)
+        {
             mpImageTrailType->mpProgram->SetFloat(kVar_afAlpha, 1.0f);
+        }
     }
     else
     {
@@ -145,7 +147,9 @@ iTexture* cPostEffect_ImageTrail::RenderEffect(iTexture *apInputTexture, iFrameB
         float fPow = (1.0f / fFrameTime) * mParams.mfAmount; //The higher this is, the more blur!
         float fAmount = exp(-fPow * 0.015f);
         if(mpImageTrailType->mpProgram)
+        {
             mpImageTrailType->mpProgram->SetFloat(kVar_afAlpha, fAmount);
+        }
     }
 
     mpCurrentComposite->SetTexture(0, apInputTexture);

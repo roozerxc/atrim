@@ -113,7 +113,10 @@ void cLuxConfigHandler::SaveMainConfig()
     /////////////////////
     // Main
     gpBase->mpMainConfig->SetBool("Main","LoadDebugMenu", mbLoadDebugMenu);
-    if(mbFirstStart) gpBase->RaiseFirstStartFlag();
+    if(mbFirstStart)
+    {
+        gpBase->RaiseFirstStartFlag();
+    }
     //gpBase->mpMainConfig->SetBool("Main","FirstStart", false);
 
 

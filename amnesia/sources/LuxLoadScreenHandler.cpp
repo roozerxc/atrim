@@ -301,7 +301,10 @@ void cLuxLoadScreenHandler::Exit()
 
 tString cLuxLoadScreenHandler::GetGameScreenTextEntry()
 {
-    if(msLoadTextCat == "" || msLoadTextEntry == "") return "";
+    if(msLoadTextCat == "" || msLoadTextEntry == "")
+    {
+        return "";
+    }
 
     tString sEntry = msLoadTextEntry;
     if(mlTextRandomNum > 1)
@@ -316,7 +319,10 @@ tString cLuxLoadScreenHandler::GetGameScreenTextEntry()
                 break;
             }
             ++lIdx;
-            if(lIdx >= mlTextRandomNum) lIdx =0;
+            if(lIdx >= mlTextRandomNum)
+            {
+                lIdx =0;
+            }
         }
 
         //All area taken, just take random.
@@ -328,8 +334,14 @@ tString cLuxLoadScreenHandler::GetGameScreenTextEntry()
 
         mlPrevTextNumBitFlags |= cMath::GetFlagBit(lNum);
 
-        if(lNum <10)    sEntry += '0'+cString::ToString(lNum+1);
-        else            sEntry += cString::ToString(lNum+1);
+        if(lNum <10)
+        {
+            sEntry += '0'+cString::ToString(lNum+1);
+        }
+        else
+        {
+            sEntry += cString::ToString(lNum+1);
+        }
     }
     return sEntry;
 }
@@ -338,7 +350,10 @@ tString cLuxLoadScreenHandler::GetGameScreenTextEntry()
 
 void cLuxLoadScreenHandler::LoadCurrentImage(const tString &asImage)
 {
-    if(mpCurrentImage && msCurrentImage == asImage) return;
+    if(mpCurrentImage && msCurrentImage == asImage)
+    {
+        return;
+    }
 
     msCurrentImage = asImage;
     mpCurrentImage = mpGui->CreateGfxTexture(asImage, eGuiMaterial_Alpha, eTextureType_Rect);
@@ -354,7 +369,10 @@ void cLuxLoadScreenHandler::UpdateGameState(float afTimeStep)
     if(mfLoadingAlpha >0)
     {
         mfLoadingAlpha -= afTimeStep*0.33f;
-        if(mfLoadingAlpha<0)mfLoadingAlpha =0;
+        if(mfLoadingAlpha<0)
+        {
+            mfLoadingAlpha =0;
+        }
     }
 
     ////////////////////////////

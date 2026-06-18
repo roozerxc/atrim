@@ -71,8 +71,14 @@ cLuxProp_Button::~cLuxProp_Button()
 
 bool cLuxProp_Button::CanInteract(iPhysicsBody *apBody)
 {
-    if(mbCanBeSwitchedOff && mbSwitchedOn) return true;
-    if(mbCanBeSwitchedOn && mbSwitchedOn==false) return true;
+    if(mbCanBeSwitchedOff && mbSwitchedOn)
+    {
+        return true;
+    }
+    if(mbCanBeSwitchedOn && mbSwitchedOn==false)
+    {
+        return true;
+    }
 
     return false;
 }
@@ -116,7 +122,10 @@ void cLuxProp_Button::BeforePropDestruction()
 
 eLuxFocusCrosshair cLuxProp_Button::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    if(CanInteract(apBody) ) return eLuxFocusCrosshair_Grab;
+    if(CanInteract(apBody) )
+    {
+        return eLuxFocusCrosshair_Grab;
+    }
 
     return eLuxFocusCrosshair_Default;
 }
@@ -125,7 +134,10 @@ eLuxFocusCrosshair cLuxProp_Button::GetFocusCrosshair(iPhysicsBody *apBody, cons
 
 void cLuxProp_Button::SetSwitchedOn(bool abX, bool abUseEffects)
 {
-    if(mbSwitchedOn == abX) return;
+    if(mbSwitchedOn == abX)
+    {
+        return;
+    }
 
     mbSwitchedOn =  abX;
 
@@ -137,8 +149,14 @@ void cLuxProp_Button::SetSwitchedOn(bool abX, bool abUseEffects)
 
 void cLuxProp_Button::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 {
-    if(alState > 0)    SetSwitchedOn(true, true);
-    if(alState < 0)    SetSwitchedOn(false, true);
+    if(alState > 0)
+    {
+        SetSwitchedOn(true, true);
+    }
+    if(alState < 0)
+    {
+        SetSwitchedOn(false, true);
+    }
 }
 
 //-----------------------------------------------------------------------

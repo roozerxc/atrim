@@ -46,7 +46,9 @@ cLuxPostEffect_Insanity::cLuxPostEffect_Insanity(cGraphics *apGraphics, cResourc
     mvAmpMaps.resize(3);
 
     for(size_t i=0; i<mvAmpMaps.size(); ++i)
+    {
         mvAmpMaps[i] = mpResources->GetTextureManager()->Create2D("posteffect_insanity_ampmap"+cString::ToString((int)i), false);
+    }
 
     mpZoomMap = mpResources->GetTextureManager()->Create2D("posteffect_insanity_zoom.jpg", false);
 
@@ -75,7 +77,10 @@ void cLuxPostEffect_Insanity::Update(float afTimeStep)
     mfAnimCount += afTimeStep * 0.15f;
 
     float fMaxAnim = (float)mvAmpMaps.size();
-    if(mfAnimCount >= fMaxAnim) mfAnimCount = mfAnimCount-fMaxAnim;
+    if(mfAnimCount >= fMaxAnim)
+    {
+        mfAnimCount = mfAnimCount-fMaxAnim;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -98,7 +103,10 @@ iTexture* cLuxPostEffect_Insanity::RenderEffect(iTexture *apInputTexture, iFrame
 
     int lAmp0 = (int)mfAnimCount;
     int lAmp1 = (int)(mfAnimCount+1);
-    if(lAmp1 >= (int) mvAmpMaps.size()) lAmp1 = 0;
+    if(lAmp1 >= (int) mvAmpMaps.size())
+    {
+        lAmp1 = 0;
+    }
     float fAmpT = cMath::GetFraction(mfAnimCount);
 
     //Log("AnimCount: %f - %d %d - %f\n", mfAnimCount, lAmp0, lAmp1, fAmpT);
@@ -169,7 +177,10 @@ void cLuxPostEffectHandler::Update(float afTimeStep)
     {
         iLuxPostEffect *pPostEffect = mvPostEffects[i];
 
-        if(pPostEffect->IsActive()) pPostEffect->Update(afTimeStep);
+        if(pPostEffect->IsActive())
+        {
+            pPostEffect->Update(afTimeStep);
+        }
     }
 }
 

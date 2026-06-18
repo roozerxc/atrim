@@ -24,7 +24,10 @@ cFrameTexture::cFrameTexture(iTexture *apTex, int alHandle,cImageManager *apImag
 
 cFrameTexture::~cFrameTexture()
 {
-    if(mpTexture) hplDelete(mpTexture);
+    if(mpTexture)
+    {
+        hplDelete(mpTexture);
+    }
     mpTexture = NULL;
 }
 
@@ -45,7 +48,10 @@ iTexture* cFrameTexture::GetTexture()
 
 cFrameSubImage* cFrameTexture::CreateCustomImage(const cVector2l& avPixelPos,const cVector2l& avPixelSize)
 {
-    if(mbIsCustom==false) return NULL;
+    if(mbIsCustom==false)
+    {
+        return NULL;
+    }
 
     mlPicCount++;
 

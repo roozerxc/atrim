@@ -27,9 +27,18 @@ iLuxProp *cLuxPropLoader_Lever::CreateProp(const tString& asName, int alID, cLux
 
 static int ToAutoMoveGoal(const tString& asType)
 {
-    if(asType == "Middle")    return 0;
-    if(asType == "Max")        return 1;
-    if(asType == "Min")        return -1;
+    if(asType == "Middle")
+    {
+        return 0;
+    }
+    if(asType == "Max")
+    {
+        return 1;
+    }
+    if(asType == "Min")
+    {
+        return -1;
+    }
 
     return 0;
 }
@@ -67,9 +76,18 @@ void cLuxPropLoader_Lever::LoadVariables(iLuxProp *apProp, cXmlElement *apRootEl
 
 static int ToStuckState(const tString& asType)
 {
-    if(asType == "None")    return 0;
-    if(asType == "Min")        return -1;
-    if(asType == "Max")        return 1;
+    if(asType == "None")
+    {
+        return 0;
+    }
+    if(asType == "Min")
+    {
+        return -1;
+    }
+    if(asType == "Max")
+    {
+        return 1;
+    }
 
     return 0;
 }
@@ -135,7 +153,10 @@ cLuxProp_Lever::~cLuxProp_Lever()
 
 bool cLuxProp_Lever::CanInteract(iPhysicsBody *apBody)
 {
-    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false) return false;
+    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false)
+    {
+        return false;
+    }
 
     return true;
 }
@@ -157,10 +178,14 @@ bool cLuxProp_Lever::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
     }
 
     if(mlStuckState !=0 && mbInteractionDisablesStuck)
+    {
         SetStuckState(0, true);
+    }
 
     if(mlStuckState ==0 && mbShowHints)
+    {
         gpBase->mpHintHandler->Add("EntityLever", kTranslate("Hints", "EntityLever"), 0);
+    }
 
     cLuxPlayerStateVars::SetupInteraction(apBody, avPos);
     gpBase->mpPlayer->ChangeState(eLuxPlayerState_InteractLever);
@@ -234,7 +259,10 @@ void cLuxProp_Lever::BeforePropDestruction()
 
 eLuxFocusCrosshair cLuxProp_Lever::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false) return eLuxFocusCrosshair_Default;
+    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false)
+    {
+        return eLuxFocusCrosshair_Default;
+    }
 
     return eLuxFocusCrosshair_Grab;
 }
@@ -243,7 +271,10 @@ eLuxFocusCrosshair cLuxProp_Lever::GetFocusCrosshair(iPhysicsBody *apBody, const
 
 void cLuxProp_Lever::SetStuckState(int alState, bool abEffects)
 {
-    if(mlStuckState == alState) return;
+    if(mlStuckState == alState)
+    {
+        return;
+    }
 
     mlStuckState = alState;
 
@@ -277,8 +308,14 @@ void cLuxProp_Lever::SetStuckState(int alState, bool abEffects)
 
 void cLuxProp_Lever::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 {
-    if(alState >0)    SetStuckState(-1, true);
-    else            SetStuckState(0, true);
+    if(alState >0)
+    {
+        SetStuckState(-1, true);
+    }
+    else
+    {
+        SetStuckState(0, true);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -300,7 +337,10 @@ void cLuxProp_Lever::CalculateMiddleAngle()
 
 void cLuxProp_Lever::UpdateCheckStuckSound(float afTimeStep)
 {
-    if(mlStuckState == 0 || mbIsInteractedWith==false) return;
+    if(mlStuckState == 0 || mbIsInteractedWith==false)
+    {
+        return;
+    }
 
     if(mfStuckSoundTimer >0)
     {
@@ -320,21 +360,30 @@ void cLuxProp_Lever::UpdateCheckStuckSound(float afTimeStep)
 
 void cLuxProp_Lever::UpdateCheckLimit(float afAngle, float afTimeStep)
 {
-    if(mlStuckState !=0) return;
+    if(mlStuckState !=0)
+    {
+        return;
+    }
 
     ///////////////////////
     //Max
     if(afAngle > (mfDefaultMaxAngle - mfMaxLimitRange))
     {
         ChangeState(1, true);
-        if(mbMaxLimitStuck) SetStuckState(1, false);
+        if(mbMaxLimitStuck)
+        {
+            SetStuckState(1, false);
+        }
     }
     ///////////////////////
     //Min
     else if(afAngle < (mfDefaultMinAngle + mfMinLimitRange))
     {
         ChangeState(-1, true);
-        if(mbMinLimitStuck) SetStuckState(-1, false);
+        if(mbMinLimitStuck)
+        {
+            SetStuckState(-1, false);
+        }
     }
     ///////////////////////
     //Middle
@@ -349,19 +398,37 @@ void cLuxProp_Lever::UpdateCheckLimit(float afAngle, float afTimeStep)
 
 void cLuxProp_Lever::UpdateAutoMove(float afAngle, float afTimeStep)
 {
-    if(IsInteractedWith() || mbAutoMoveToAngle==false || mlStuckState!=0) return;
+    if(IsInteractedWith() || mbAutoMoveToAngle==false || mlStuckState!=0)
+    {
+        return;
+    }
 
     ///////////////////////////
     // Get the wanted speed
     float fGoalAngle = 0;
-    if(mlAutoMoveGoal == 0) fGoalAngle = mfMiddleAngle;
-    else if(mlAutoMoveGoal == -1)    fGoalAngle = mfDefaultMinAngle + mfMinLimitRange/2.0f;
-    else if(mlAutoMoveGoal == 1)    fGoalAngle = mfDefaultMaxAngle - mfMaxLimitRange/2.0f;
+    if(mlAutoMoveGoal == 0)
+    {
+        fGoalAngle = mfMiddleAngle;
+    }
+    else if(mlAutoMoveGoal == -1)
+    {
+        fGoalAngle = mfDefaultMinAngle + mfMinLimitRange/2.0f;
+    }
+    else if(mlAutoMoveGoal == 1)
+    {
+        fGoalAngle = mfDefaultMaxAngle - mfMaxLimitRange/2.0f;
+    }
 
     float fWantedSpeed = mfAutoMoveSpeedFactor * (afAngle - fGoalAngle);
 
-    if(fWantedSpeed > mfAutoMoveMaxSpeed)    fWantedSpeed = mfAutoMoveMaxSpeed;
-    if(fWantedSpeed < -mfAutoMoveMaxSpeed)    fWantedSpeed = -mfAutoMoveMaxSpeed;
+    if(fWantedSpeed > mfAutoMoveMaxSpeed)
+    {
+        fWantedSpeed = mfAutoMoveMaxSpeed;
+    }
+    if(fWantedSpeed < -mfAutoMoveMaxSpeed)
+    {
+        fWantedSpeed = -mfAutoMoveMaxSpeed;
+    }
 
     ///////////////////////////
     // Calculate the torque
@@ -384,7 +451,10 @@ void cLuxProp_Lever::UpdateAutoMove(float afAngle, float afTimeStep)
 
 void cLuxProp_Lever::ChangeState(int alState, bool abEffects)
 {
-    if(mlCurrentState == alState) return;
+    if(mlCurrentState == alState)
+    {
+        return;
+    }
 
     mlCurrentState = alState;
 
@@ -416,7 +486,10 @@ void cLuxProp_Lever::ChangeState(int alState, bool abEffects)
     if(abEffects  && sSound != "")
     {
         cSoundEntity *pSound = mpMap->GetWorld()->CreateSoundEntity("LeverSound", sSound, true);
-        if(pSound) pSound->SetPosition(mpHingeJoint->GetPivotPoint());
+        if(pSound)
+        {
+            pSound->SetPosition(mpHingeJoint->GetPivotPoint());
+        }
     }
 
     /////////////////

@@ -148,8 +148,14 @@ void cGuiGfxElement::Update(float afTimeStep)
 
     //////////////////////////////////////
     //Update image animations
-    if(mvAnimations.empty() || mbAnimationPaused) return;
-    if(mlCurrentAnimation >= (int)mvAnimations.size()) return;
+    if(mvAnimations.empty() || mbAnimationPaused)
+    {
+        return;
+    }
+    if(mlCurrentAnimation >= (int)mvAnimations.size())
+    {
+        return;
+    }
 
     cGuiGfxAnimation* pAnim = mvAnimations[mlCurrentAnimation];
 
@@ -276,7 +282,10 @@ void cGuiGfxElement::AddTexture(iTexture* apTexture, const cVector2f& avStartUV,
 
         }
 
-        if(mbFlipUvYAxis) SetFlipUvYAxis(mbFlipUvYAxis);
+        if(mbFlipUvYAxis)
+        {
+            SetFlipUvYAxis(mbFlipUvYAxis);
+        }
     }
 
     mvActiveSize = GetImageSize();
@@ -330,7 +339,10 @@ void cGuiGfxElement::AddTexture(iTexture* apTexture, const cVector2f& avUVUpperL
 
         }
 
-        if(mbFlipUvYAxis) SetFlipUvYAxis(mbFlipUvYAxis);
+        if(mbFlipUvYAxis)
+        {
+            SetFlipUvYAxis(mbFlipUvYAxis);
+        }
     }
 
     mvActiveSize = GetImageSize();
@@ -366,7 +378,10 @@ cGuiGfxAnimation* cGuiGfxElement::CreateAnimtion(const tString& asName)
 
 void cGuiGfxElement::PlayAnimation(int alNum)
 {
-    if(mlCurrentAnimation == alNum) return;
+    if(mlCurrentAnimation == alNum)
+    {
+        return;
+    }
 
     mlCurrentAnimation = alNum;
 
@@ -379,9 +394,13 @@ void cGuiGfxElement::PlayAnimation(int alNum)
 void cGuiGfxElement::SetAnimationTime(float afTime)
 {
     if(mlCurrentAnimation>=0)
+    {
         mfCurrentFrame = afTime / mvAnimations[mlCurrentAnimation]->mfFrameLength;
+    }
     else
+    {
         mfCurrentFrame = afTime;
+    }
 }
 
 //---------------------------------------------------
@@ -395,7 +414,10 @@ void cGuiGfxElement::SetMaterial(iGuiMaterial *apMat)
 
 void cGuiGfxElement::SetColor(const cColor &aColor)
 {
-    for(int i=0; i<4; ++i)    mvVtx[i].col = aColor;
+    for(int i=0; i<4; ++i)
+    {
+        mvVtx[i].col = aColor;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -409,7 +431,10 @@ void cGuiGfxElement::SetFlipUvYAxis(bool abX)
     if(mvImages[0])
     {
         const tVertexVec& vImageVtx = mvImages[0]->GetVertexVec();
-        for(int i=0; i<4; ++i) mvVtx[i].tex = vImageVtx[i].tex;
+        for(int i=0; i<4; ++i)
+        {
+            mvVtx[i].tex = vImageVtx[i].tex;
+        }
         if(mbFlipUvYAxis)
         {
             mvVtx[0].tex.y = mvVtx[2].tex.y;
@@ -462,13 +487,19 @@ void cGuiGfxElement::Flush()
 {
     //Check if element uses images.
     cFrameSubImage *pMainImage = mvImages[0];
-    if(pMainImage == NULL) return;
+    if(pMainImage == NULL)
+    {
+        return;
+    }
 
     //Flush all images
     for(int i=0; i<mlTextureNum; ++i)
     {
         cFrameSubImage *pImage = mvImages[i];
-        if(pImage) pImage->Flush();
+        if(pImage)
+        {
+            pImage->Flush();
+        }
 
     }
 
@@ -476,8 +507,14 @@ void cGuiGfxElement::Flush()
     if(mlImageUpdateCount != pMainImage->GetUpdateCount())
     {
         const tVertexVec& vImageVtx = pMainImage->GetVertexVec();
-        for(int i=0; i<4; ++i) mvVtx[i].tex = vImageVtx[i].tex;
-        if(mbFlipUvYAxis) SetFlipUvYAxis(mbFlipUvYAxis);
+        for(int i=0; i<4; ++i)
+        {
+            mvVtx[i].tex = vImageVtx[i].tex;
+        }
+        if(mbFlipUvYAxis)
+        {
+            SetFlipUvYAxis(mbFlipUvYAxis);
+        }
 
         mlImageUpdateCount = pMainImage->GetUpdateCount();
     }
@@ -512,7 +549,10 @@ void cGuiGfxElement::SetImage(cFrameSubImage* apImage, int alNum)
         mvImageSize.x = (float)apImage->GetWidth();
         mvImageSize.y = (float)apImage->GetHeight();
 
-        if(mbFlipUvYAxis) SetFlipUvYAxis(mbFlipUvYAxis);
+        if(mbFlipUvYAxis)
+        {
+            SetFlipUvYAxis(mbFlipUvYAxis);
+        }
     }
 }
 

@@ -60,7 +60,10 @@ iGraphicPickerMode::iGraphicPickerMode(cGuiPopUpColorPicker* apPicker,
     int j=0;
     for(int i=0; i<3; ++i)
     {
-        if(i==mlSliderParamIndex) continue;
+        if(i==mlSliderParamIndex)
+        {
+            continue;
+        }
 
         vIndices.v[j] = i;
         ++j;
@@ -232,7 +235,10 @@ void cHSBMode::OnSetBox(const cVector2f& avPos)
         SetHSBValue(mlColIndex, vMapValues.y);
     }
 
-    if(bUpdateBox)    iGraphicPickerMode::OnSetBox(avPos);
+    if(bUpdateBox)
+    {
+        iGraphicPickerMode::OnSetBox(avPos);
+    }
 }
 
 //-------------------------------------------------------------------------------
@@ -241,10 +247,15 @@ void cHSBMode::OnSetSlider(float afValue)
 {
     float fValue = mvMaxValues.v[mlSliderParamIndex]*afValue;
 
-    if(fValue==mpPicker->GetHSB().v[mlSliderParamIndex]) return;
+    if(fValue==mpPicker->GetHSB().v[mlSliderParamIndex])
+    {
+        return;
+    }
 
     if(SetHSBValue(mlSliderParamIndex, fValue))
+    {
         iGraphicPickerMode::OnSetSlider(afValue);
+    }
 }
 
 //-------------------------------------------------------------------------------
@@ -435,10 +446,15 @@ void cRGBMode::OnSetSlider(float afValue)
 {
     afValue = mvMaxValues.v[mlSliderParamIndex]*afValue;
 
-    if(afValue==mpPicker->GetColor().v[mlSliderParamIndex]) return;
+    if(afValue==mpPicker->GetColor().v[mlSliderParamIndex])
+    {
+        return;
+    }
 
     if(SetRGBValue(mlSliderParamIndex, afValue))
+    {
         iGraphicPickerMode::OnSetSlider(afValue);
+    }
 }
 
 //-------------------------------------------------------------------------------
@@ -606,8 +622,14 @@ cGuiPopUpColorPicker::cGuiPopUpColorPicker(cGraphics *apGraphics,
     ////////////////////////////////////////
     // Set up target color
     mpDestColor = apDestColor;
-    if(mpDestColor)    mColor = *mpDestColor;
-    else            mColor = cColor(1);
+    if(mpDestColor)
+    {
+        mColor = *mpDestColor;
+    }
+    else
+    {
+        mColor = cColor(1);
+    }
 
     mfAlpha = mColor.a;
     mfOldAlpha = mfAlpha;
@@ -683,7 +705,10 @@ cGuiPopUpColorPicker::~cGuiPopUpColorPicker()
 
 void cGuiPopUpColorPicker::SetColor(const cColor& aX)
 {
-    if(mColor==aX && mfAlpha==aX.a) return;
+    if(mColor==aX && mfAlpha==aX.a)
+    {
+        return;
+    }
 
     mColor = aX;
     mfAlpha = aX.a;
@@ -745,7 +770,10 @@ void cGuiPopUpColorPicker::SaveRecentColorList(cXmlElement* apElem)
 
 bool cGuiPopUpColorPicker::SetHSBValue(int alIdx, float afX, bool abUpdateInput)
 {
-    if(mvHSB.v[alIdx]==afX) return false;
+    if(mvHSB.v[alIdx]==afX)
+    {
+        return false;
+    }
 
     mvHSB.v[alIdx] = afX;
     mvHSBValueUpdated[alIdx] = abUpdateInput;
@@ -760,7 +788,10 @@ bool cGuiPopUpColorPicker::SetHSBValue(int alIdx, float afX, bool abUpdateInput)
 
 bool cGuiPopUpColorPicker::SetRGBValue(int alIdx, float afX, bool abUpdateInput)
 {
-    if(mColor.v[alIdx]==afX) return false;
+    if(mColor.v[alIdx]==afX)
+    {
+        return false;
+    }
 
     mColor.v[alIdx] = afX;
     mvRGBValueUpdated[alIdx] = abUpdateInput;
@@ -774,7 +805,9 @@ bool cGuiPopUpColorPicker::SetRGBValue(int alIdx, float afX, bool abUpdateInput)
 void cGuiPopUpColorPicker::SetRGB(float afR, float afG, float afB)
 {
     if(mColor.r==afR && mColor.g==afG && mColor.b==afB)
+    {
         return;
+    }
 
     mColor.r = afR;
     mColor.g = afG;
@@ -847,7 +880,10 @@ void cGuiPopUpColorPicker::CreateInputs(iWidget* apParent, cVector3f& avPos, tGu
         pInput->SetLowerBound(true, avMin[i]);
         pInput->SetUpperBound(true, avMax[i]);
         pInput->SetUserValue((int)i);
-        if(apCallback) pInput->AddCallback(eGuiMessage_TextBoxEnter, this, apCallback);
+        if(apCallback)
+        {
+            pInput->AddCallback(eGuiMessage_TextBoxEnter, this, apCallback);
+        }
 
         avContainer.push_back(pInput);
         avUpdatedContainer.push_back(true);
@@ -909,9 +945,13 @@ bool cGuiPopUpColorPicker::RecentColor_OnMouseDown(iWidget* apWidget, const cGui
     cWidgetFrame* pFrame = static_cast<cWidgetFrame*>(apWidget);
     cColor* pColor = static_cast<cColor*>(apWidget->GetUserData());
     if(pColor)
+    {
         col = *pColor;
+    }
     else
+    {
         col = mpFPreviousColor->GetBackGroundColor();
+    }
 
     SetColor(col);
 
@@ -991,7 +1031,10 @@ kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, PickerMode_OnSelect);
 
 bool cGuiPopUpColorPicker::Img_OnMouseDown(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(mbImgPressed) return true;
+    if(mbImgPressed)
+    {
+        return true;
+    }
 
     mpSet->PushAttentionWidget();
     mpSet->SetAttentionWidget(apWidget);
@@ -1311,7 +1354,7 @@ void cGuiPopUpColorPicker::Init()
     mpFCurrentColor = mpSet->CreateWidgetFrame(vPos,50,true,mpWindow);
     mpFCurrentColor->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(ColorFrame_OnDraw));
     mpFCurrentColor->SetDrawBackground(true);
-	mpFCurrentColor->ChangeBackgroundForColorPicking();
+    mpFCurrentColor->ChangeBackgroundForColorPicking();
     mpFCurrentColor->SetBackgroundZ(0.1f);
 
     vPos.x += 25;
@@ -1324,7 +1367,7 @@ void cGuiPopUpColorPicker::Init()
     mpFPreviousColor->SetBackGroundColor(mColor);
     mpFPreviousColor->SetUserData(NULL);
     mpFPreviousColor->SetDrawBackground(true);
-	mpFPreviousColor->ChangeBackgroundForColorPicking();
+    mpFPreviousColor->ChangeBackgroundForColorPicking();
     mpFPreviousColor->SetBackgroundZ(0.1f);
 
     /////////////////////////////////////////////////////////////////
@@ -1392,7 +1435,9 @@ void cGuiPopUpColorPicker::AcceptPickedColor()
     if((mColor == mpFPreviousColor->GetBackGroundColor()) == false)
     {
         if(mpDestColor)
+        {
             *mpDestColor = mColor;
+        }
 
         RestorePreviewToOldColor();
 
@@ -1419,12 +1464,17 @@ void cGuiPopUpColorPicker::UpdateHSBInputs(bool abForce)
 {
     for(size_t i=0; i<mvHSBInputs.size(); ++i)
     {
-        if(abForce==false && mvHSBValueUpdated[i]==false) continue;
+        if(abForce==false && mvHSBValueUpdated[i]==false)
+        {
+            continue;
+        }
 
         // If fValue is Saturation or Brightness, do a lil conversion (from range 0-1 to 0-100) - Hue does not need conversion
         float fValue = mvHSB.v[i];
         if(i>0)
+        {
             fValue*=100.0f;
+        }
 
         mvHSBInputs[i]->SetNumericValue(fValue);
         mvHSBValueUpdated[i] = false;
@@ -1439,7 +1489,10 @@ void cGuiPopUpColorPicker::UpdateRGBInputs(bool abForce)
     // Update RGB
     for(size_t i=0; i<mvRGBInputs.size(); ++i)
     {
-        if(abForce==false && mvRGBValueUpdated[i]==false) continue;
+        if(abForce==false && mvRGBValueUpdated[i]==false)
+        {
+            continue;
+        }
 
         float fValue = mColor.v[i]*255.0f;
 
@@ -1469,13 +1522,18 @@ void cGuiPopUpColorPicker::UpdateColor(bool abForce)
 
     if(abForce==false &&
             previewColor.r==mColor.r && previewColor.g==mColor.g && previewColor.b==mColor.b &&
-            mColor.a==mfOldAlpha) return;
+            mColor.a==mfOldAlpha)
+    {
+        return;
+    }
 
     /////////////////////////////////////////////////////
     // Color has changed, GUI needs update
     previewColor = mColor;
     if(mbShowTransPreview==false)
+    {
         previewColor.a = 1.0f;
+    }
 
     mpFCurrentColor->SetBackGroundColor(previewColor);
     //mpInpHexRGB->SetText(cMath::RGBToHexW(mColor));
@@ -1486,7 +1544,10 @@ void cGuiPopUpColorPicker::UpdateColor(bool abForce)
     tWString sVecRGBA;
     for(int i=0; i<4; ++i)
     {
-        if(i>0) sVecRGBA += _W(",");
+        if(i>0)
+        {
+            sVecRGBA += _W(",");
+        }
         sVecRGBA += cString::ToStringW(mColor.v[i], 3, true);
     }
     mpInpVecRGBA->SetText(sVecRGBA);
@@ -1511,7 +1572,10 @@ void cGuiPopUpColorPicker::UpdateColorHSB(bool abForce)
 void cGuiPopUpColorPicker::UpdateColorRGB(bool abForce)
 {
     cMath::RGBToHSBHelper(mColor, mvHSB);
-    if(mvHSB.x==-1) mvHSB.x = 0; // -1 means undefined, just set some value.
+    if(mvHSB.x==-1)
+    {
+        mvHSB.x = 0;    // -1 means undefined, just set some value.
+    }
 
     UpdateHSBInputs(true);
 
@@ -1526,7 +1590,9 @@ void cGuiPopUpColorPicker::AddRecentColor(const cColor& aX)
     mlstRecentColors.push_front(aX);
 
     while(mlstRecentColors.size()>mlRecentColorNum)
+    {
         mlstRecentColors.pop_back();
+    }
 }
 
 //-------------------------------------------------------------------------------

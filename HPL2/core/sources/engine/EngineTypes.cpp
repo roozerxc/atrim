@@ -37,7 +37,10 @@ cMultipleSettingsHandler::~cMultipleSettingsHandler()
 {
     for(size_t i=0; i<mvEntries.size(); ++i)
     {
-        if(mvEntries[i]) hplDelete(mvEntries[i]);
+        if(mvEntries[i])
+        {
+            hplDelete(mvEntries[i]);
+        }
     }
 }
 
@@ -95,7 +98,10 @@ void cMultipleSettingsHandler::DestroyEntry(int alIdx)
 
 float cMultipleSettingsHandler::CalcResults(tFlag aTypes, eMultipleSettingsCalcType aCalcType, float afDefault)
 {
-    if(mvEntries.empty()) return afDefault;
+    if(mvEntries.empty())
+    {
+        return afDefault;
+    }
 
     float fFinal= 0;
     bool bFirst = true;
@@ -104,29 +110,47 @@ float cMultipleSettingsHandler::CalcResults(tFlag aTypes, eMultipleSettingsCalcT
     for(size_t i=0; i<mvEntries.size(); ++i)
     {
         cMultipleSettingsHandler::cGSEntry *pEntry = mvEntries[i];
-        if(pEntry==NULL) continue;
+        if(pEntry==NULL)
+        {
+            continue;
+        }
 
-        if( (pEntry->mTypes & aTypes) == 0) continue;
+        if( (pEntry->mTypes & aTypes) == 0)
+        {
+            continue;
+        }
 
         bUsedEntry = true;
 
         switch(aCalcType)
         {
         case eMultipleSettingsCalcType_Mul:
-            if(bFirst) fFinal =1;
+            if(bFirst)
+            {
+                fFinal =1;
+            }
             fFinal *= pEntry->mfVal;
             break;
 
         case eMultipleSettingsCalcType_Min:
-            if(bFirst || fFinal > pEntry->mfVal) fFinal = pEntry->mfVal;
+            if(bFirst || fFinal > pEntry->mfVal)
+            {
+                fFinal = pEntry->mfVal;
+            }
             break;
 
         case eMultipleSettingsCalcType_Max:
-            if(bFirst || fFinal < pEntry->mfVal) fFinal = pEntry->mfVal;
+            if(bFirst || fFinal < pEntry->mfVal)
+            {
+                fFinal = pEntry->mfVal;
+            }
             break;
 
         case eMultipleSettingsCalcType_Avg:
-            if(bFirst) fFinal =0;
+            if(bFirst)
+            {
+                fFinal =0;
+            }
             fFinal += pEntry->mfVal;
             break;
         }
@@ -135,7 +159,10 @@ float cMultipleSettingsHandler::CalcResults(tFlag aTypes, eMultipleSettingsCalcT
         bFirst = false;
     }
 
-    if(bUsedEntry==false) return afDefault;
+    if(bUsedEntry==false)
+    {
+        return afDefault;
+    }
 
     if(aCalcType == eMultipleSettingsCalcType_Avg)
     {
@@ -152,7 +179,10 @@ void cMultipleSettingsHandler::Update(float afTimeStep)
     for(size_t i=0; i<mvEntries.size(); ++i)
     {
         cMultipleSettingsHandler::cGSEntry *pEntry = mvEntries[i];
-        if(pEntry==NULL) continue;
+        if(pEntry==NULL)
+        {
+            continue;
+        }
 
         if(pEntry->mfVal != pEntry->mfDest)
         {

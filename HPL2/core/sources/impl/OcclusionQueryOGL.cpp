@@ -56,7 +56,10 @@ void cOcclusionQueryOGL::End()
 
 bool cOcclusionQueryOGL::FetchResults()
 {
-    if(mbResultsAreFetched) return true;
+    if(mbResultsAreFetched)
+    {
+        return true;
+    }
 
     ;
 
@@ -70,7 +73,10 @@ bool cOcclusionQueryOGL::FetchResults()
 
     GLint lAvailable=0;
     glGetQueryObjectivARB(mlQueryId,GL_QUERY_RESULT_AVAILABLE_ARB,&lAvailable);
-    if(lAvailable==0) return false;
+    if(lAvailable==0)
+    {
+        return false;
+    }
 
     glGetQueryObjectivARB(mlQueryId,GL_QUERY_RESULT_ARB,(GLint *)&mlLastSampleCount);
 

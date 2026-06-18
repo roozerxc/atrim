@@ -142,9 +142,15 @@ void cLuxHintHandler::OnDraw(float afFrameTime)
 
 void cLuxHintHandler::DrawHintText(float afFrameTime, cGuiSet *apGuiSet)
 {
-    if(gpBase->mbPTestActivated) return;
+    if(gpBase->mbPTestActivated)
+    {
+        return;
+    }
 
-    if(mbActive==false || mfAlpha<=0) return;
+    if(mbActive==false || mfAlpha<=0)
+    {
+        return;
+    }
 
     float fX = mHintOscill.val*0.5f;
     cColor hintCol(1,fX,fX, mfAlpha);
@@ -181,16 +187,25 @@ void cLuxHintHandler::DrawHintText(float afFrameTime, cGuiSet *apGuiSet)
 
 void cLuxHintHandler::UpdateHintText(float afTimeStep)
 {
-    if(mbActive==false) return;
+    if(mbActive==false)
+    {
+        return;
+    }
 
-    if(mfAlpha>0) mHintOscill.Update(afTimeStep);
+    if(mfAlpha>0)
+    {
+        mHintOscill.Update(afTimeStep);
+    }
 
     /////////////////////
     //Decrease alpha
     if(mfShowTextCount<=0 && mfAlpha>0)
     {
         mfAlpha -= 0.5f * afTimeStep;
-        if(mfAlpha <0) mfAlpha =0;
+        if(mfAlpha <0)
+        {
+            mfAlpha =0;
+        }
         return;
     }
     /////////////////////
@@ -198,7 +213,10 @@ void cLuxHintHandler::UpdateHintText(float afTimeStep)
     if(mfShowTextCount > 0)
     {
         mfAlpha += 1.2f * afTimeStep;
-        if(mfAlpha >1) mfAlpha =1;
+        if(mfAlpha >1)
+        {
+            mfAlpha =1;
+        }
 
         mfShowTextCount -= afTimeStep;
     }
@@ -222,12 +240,21 @@ void cLuxHintHandler::SetActive(bool abX)
 
 bool cLuxHintHandler::Add(const tString &asName, const tWString &asMessage, float afTimeShown)
 {
-    if(mfShowTextCount >0) return false;
+    if(mfShowTextCount >0)
+    {
+        return false;
+    }
 
-    if(m_setHintsBlocked.count(asName)>0) return false;
+    if(m_setHintsBlocked.count(asName)>0)
+    {
+        return false;
+    }
 
     tStringSetIt it = m_setHintsGiven.find(asName);
-    if(it != m_setHintsGiven.end()) return false;
+    if(it != m_setHintsGiven.end())
+    {
+        return false;
+    }
 
     m_setHintsGiven.insert(asName);
 
@@ -247,7 +274,10 @@ bool cLuxHintHandler::Add(const tString &asName, const tWString &asMessage, floa
 bool cLuxHintHandler::Remove(const tString &asName)
 {
     tStringSetIt it = m_setHintsGiven.find(asName);
-    if(it == m_setHintsGiven.end()) return false;
+    if(it == m_setHintsGiven.end())
+    {
+        return false;
+    }
 
     m_setHintsGiven.erase(it);
     return true;
@@ -424,10 +454,10 @@ tWString cLuxHintHandler::AddGamepadIconAtPosition(const tWString& asCommand, in
     tString sCommand;
     sCommand.reserve(asCommand.size());
 
-	for(tWString::const_iterator si = asCommand.begin(); si != asCommand.end(); ++si)
-	{
-		sCommand += static_cast<char>(*si);
-	}
+    for(tWString::const_iterator si = asCommand.begin(); si != asCommand.end(); ++si)
+    {
+        sCommand += static_cast<char>(*si);
+    }
 
     ////////////////
     // Get icon from command string
@@ -452,7 +482,9 @@ tWString cLuxHintHandler::AddGamepadIconAtPosition(const tWString& asCommand, in
                 mvHintIcons.push_back(hintIcon);
 
                 if (gpBase->msCurrentLanguage == "chinese.lang")
+                {
                     return _W("                ");
+                }
                 return _W("    ");
             }
             else

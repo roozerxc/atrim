@@ -70,10 +70,16 @@ cSubMeshEntity::~cSubMeshEntity()
 {
     hplDelete(mpEntityCallback);
 
-    if(mpDynVtxBuffer) hplDelete(mpDynVtxBuffer);
+    if(mpDynVtxBuffer)
+    {
+        hplDelete(mpDynVtxBuffer);
+    }
 
     /* Clear any custom textures here*/
-    if(mpMaterial) mpMaterialManager->Destroy(mpMaterial);
+    if(mpMaterial)
+    {
+        mpMaterialManager->Destroy(mpMaterial);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -125,9 +131,13 @@ cMaterial* cSubMeshEntity::GetMaterial()
     }
 
     if(mpMaterial)
+    {
         return mpMaterial;
+    }
     else
+    {
         return mpSubMesh->GetMaterial();
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -200,7 +210,10 @@ void cSubMeshEntity::UpdateGraphicsForFrame(float afFrameTime)
             int lCount = 0;
             //Get pointer to weights and bone index.
             const float *pWeight = &mpSubMesh->mpVertexWeights[vtx*4];
-            if(*pWeight==0) continue;
+            if(*pWeight==0)
+            {
+                continue;
+            }
 
             const unsigned char *pBoneIdx = &mpSubMesh->mpVertexBones[vtx*4];
 
@@ -326,11 +339,23 @@ cMatrixf* cSubMeshEntity::GetModelMatrix(cFrustum *apFrustum)
     {
         if(mlStaticNullMatrixCount==0)
         {
-            if(GetWorldMatrix() == cMatrixf::Identity)     mlStaticNullMatrixCount = 1;
-            else                                        mlStaticNullMatrixCount = -1;
+            if(GetWorldMatrix() == cMatrixf::Identity)
+            {
+                mlStaticNullMatrixCount = 1;
+            }
+            else
+            {
+                mlStaticNullMatrixCount = -1;
+            }
 
-            if(mlStaticNullMatrixCount == 1)return NULL;
-            else                            return &GetWorldMatrix();
+            if(mlStaticNullMatrixCount == 1)
+            {
+                return NULL;
+            }
+            else
+            {
+                return &GetWorldMatrix();
+            }
 
         }
         else
@@ -388,24 +413,36 @@ bool cSubMeshEntity::GetUpdateBody()
 cTriangleData& cSubMeshEntity::GetTriangle(int alIndex)
 {
     if(mpDynVtxBuffer)
+    {
         return mvDynTriangles[alIndex];
+    }
     else
+    {
         return (*mpSubMesh->GetTriangleVecPtr())[alIndex];
+    }
 }
 int cSubMeshEntity::GetTriangleNum()
 {
     if(mpDynVtxBuffer)
+    {
         return (int)mvDynTriangles.size();
+    }
     else
+    {
         return (int)mpSubMesh->GetTriangleVecPtr()->size();
+    }
 }
 
 tTriangleDataVec* cSubMeshEntity::GetTriangleVecPtr()
 {
     if(mpDynVtxBuffer)
+    {
         return &mvDynTriangles;
+    }
     else
+    {
         return mpSubMesh->GetTriangleVecPtr();
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -414,7 +451,10 @@ void cSubMeshEntity::SetCustomMaterial(cMaterial *apMaterial, bool abDestroyOldC
 {
     if(abDestroyOldCustom)
     {
-        if(mpMaterial) mpMaterialManager->Destroy(mpMaterial);
+        if(mpMaterial)
+        {
+            mpMaterialManager->Destroy(mpMaterial);
+        }
     }
 
     mpMaterial = apMaterial;

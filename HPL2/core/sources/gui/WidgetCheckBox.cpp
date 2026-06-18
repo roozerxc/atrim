@@ -53,7 +53,10 @@ cWidgetCheckBox::~cWidgetCheckBox()
 
 void cWidgetCheckBox::SetChecked(bool abX, bool abGenCallback)
 {
-    if(mbChecked == abX) return;
+    if(mbChecked == abX)
+    {
+        return;
+    }
 
     mbChecked = abX;
 
@@ -103,10 +106,14 @@ void cWidgetCheckBox::SetDefaultFontType(iFontData* apFont)
 bool cWidgetCheckBox::Label_MouseDown(iWidget *apWidget, const cGuiMessageData& aData)
 {
     if((aData.mlVal&eGuiMouseButton_Left)==0 && (aData.mlVal&eGuiMouseButton_Right)==0)
+    {
         return false;
+    }
 
     if(mbEnabled)
+    {
         ProcessMessage(eGuiMessage_MouseDown,aData);
+    }
     return true;
 }
 kGuiCallbackDeclaredFuncEnd(cWidgetCheckBox, Label_MouseDown);
@@ -116,10 +123,14 @@ kGuiCallbackDeclaredFuncEnd(cWidgetCheckBox, Label_MouseDown);
 bool cWidgetCheckBox::Label_MouseUp(iWidget *apWidget, const cGuiMessageData& aData)
 {
     if((aData.mlVal&eGuiMouseButton_Left)==0 && (aData.mlVal&eGuiMouseButton_Right)==0)
+    {
         return false;
+    }
 
     if(mbEnabled)
+    {
         ProcessMessage(eGuiMessage_MouseUp,aData);
+    }
     return true;
 }
 kGuiCallbackDeclaredFuncEnd(cWidgetCheckBox, Label_MouseUp);
@@ -204,7 +215,9 @@ bool cWidgetCheckBox::OnMouseMove(const cGuiMessageData& aData)
 bool cWidgetCheckBox::OnMouseDown(const cGuiMessageData& aData)
 {
     if((aData.mlVal&eGuiMouseButton_Left)==0)
+    {
         return false;
+    }
 
     mbPressed = true;
     return true;
@@ -214,7 +227,10 @@ bool cWidgetCheckBox::OnMouseDown(const cGuiMessageData& aData)
 
 bool cWidgetCheckBox::OnMouseUp(const cGuiMessageData& aData)
 {
-    if(mbPressed) SetChecked(!mbChecked);
+    if(mbPressed)
+    {
+        SetChecked(!mbChecked);
+    }
 
     mbPressed = false;
     return true;
@@ -242,7 +258,9 @@ bool cWidgetCheckBox::OnUIButtonPress(const cGuiMessageData& aData)
     if(HasFocus())
     {
         if(aData.mlVal==eUIButton_Primary)
+        {
             return OnMouseDown(cGuiMessageData(eGuiMouseButton_Left));
+        }
     }
 
     return false;
@@ -253,7 +271,9 @@ bool cWidgetCheckBox::OnUIButtonRelease(const cGuiMessageData& aData)
     if(HasFocus())
     {
         if(aData.mlVal==eUIButton_Primary)
+        {
             return OnMouseUp(cGuiMessageData(eGuiMouseButton_Left));
+        }
     }
 
     return false;

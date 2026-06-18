@@ -117,14 +117,18 @@ bool cParticleSystemData::LoadFromFile(const tWString &asFile)
 bool cParticleSystemData::LoadFromElement(cXmlElement* apElement)
 {
     if(apElement->GetValue()!="ParticleSystem")
+    {
         return false;
+    }
 
     cXmlNodeListIterator it = apElement->GetChildIterator();
     while(it.HasNext())
     {
         cXmlElement* pElem = it.Next()->ToElement();
         if(pElem->GetValue()!="ParticleEmitter")
+        {
             continue;
+        }
 
         cParticleEmitterData_UserData *pPE = hplNew( cParticleEmitterData_UserData,("",    mpResources,mpGraphics) );
         pPE->LoadFromElement(pElem);
@@ -187,7 +191,10 @@ cParticleSystem::~cParticleSystem()
     {
         hplDelete(mvEmitters[i]);
     }
-    if(mpParticleManager) mpParticleManager->Destroy(mpData);
+    if(mpParticleManager)
+    {
+        mpParticleManager->Destroy(mpData);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -200,7 +207,10 @@ cParticleSystem::~cParticleSystem()
 
 void cParticleSystem::SetVisible(bool abVisible)
 {
-    if(mbIsVisible == abVisible) return;
+    if(mbIsVisible == abVisible)
+    {
+        return;
+    }
 
     mbIsVisible = abVisible;
 
@@ -221,10 +231,16 @@ bool cParticleSystem::IsDead()
     {
         iParticleEmitter *pPE = mvEmitters[i];
 
-        if(pPE->IsDead()) lCount++;
+        if(pPE->IsDead())
+        {
+            lCount++;
+        }
     }
 
-    if(lCount == mvEmitters.size()) return true;
+    if(lCount == mvEmitters.size())
+    {
+        return true;
+    }
 
     return false;
 }
@@ -237,10 +253,16 @@ bool cParticleSystem::IsDying()
     {
         iParticleEmitter *pPE = mvEmitters[i];
 
-        if(pPE->IsDying()) lCount++;
+        if(pPE->IsDying())
+        {
+            lCount++;
+        }
     }
 
-    if(lCount == mvEmitters.size()) return true;
+    if(lCount == mvEmitters.size())
+    {
+        return true;
+    }
 
     return false;
 }
@@ -275,7 +297,10 @@ void cParticleSystem::KillInstantly()
 
 void cParticleSystem::UpdateLogic(float afTimeStep)
 {
-    if(IsActive()==false) return;
+    if(IsActive()==false)
+    {
+        return;
+    }
 
     for(size_t i=0; i< mvEmitters.size(); ++i)
     {

@@ -115,7 +115,10 @@ void cSurfaceData::OnImpact(float afSpeed,const cVector3f &avPos,int alContacts,
 void cSurfaceData::OnSlide(float afSpeed,const cVector3f &avPos,int alContacts, iPhysicsBody *apBody,
                            iPhysicsBody *apSlideAgainstBody)
 {
-    if(alContacts < mlMinScrapeContacts) return;
+    if(alContacts < mlMinScrapeContacts)
+    {
+        return;
+    }
 
     //Make sure that only one body can update the scrape.
     if(    apBody->GetScrapeBody() && apSlideAgainstBody != apBody->GetScrapeBody())
@@ -124,10 +127,16 @@ void cSurfaceData::OnSlide(float afSpeed,const cVector3f &avPos,int alContacts, 
     }
 
     cWorld *pWorld = apBody->GetWorld()->GetWorld();
-    if(pWorld==NULL) return;
+    if(pWorld==NULL)
+    {
+        return;
+    }
 
     cSoundHandler *pSoundHandler = pWorld->GetSound()->GetSoundHandler();
-    if(pSoundHandler->GetSilent()) return;
+    if(pSoundHandler->GetSilent())
+    {
+        return;
+    }
 
     /////////////////////////////////////
     //Check if sound exist in world.
@@ -255,7 +264,10 @@ void cSurfaceData::OnSlide(float afSpeed,const cVector3f &avPos,int alContacts, 
 void cSurfaceData::CreateImpactEffect(    float afSpeed,const cVector3f &avPos,int alContacts,
         cSurfaceData *apSecondSurface, iPhysicsWorld *apPhysicsWorld)
 {
-    if(afSpeed == 0) return;
+    if(afSpeed == 0)
+    {
+        return;
+    }
 
     cSurfaceImpactData *pDataA = NULL;
     cSurfaceImpactData *pDataB = NULL;
@@ -267,7 +279,10 @@ void cSurfaceData::CreateImpactEffect(    float afSpeed,const cVector3f &avPos,i
     }
 
     cSoundHandler *pSoundHandler = pWorld->GetSound()->GetSoundHandler();
-    if(pSoundHandler->GetSilent()) return;
+    if(pSoundHandler->GetSilent())
+    {
+        return;
+    }
 
     /////////////////////////////
     //Get first surface
@@ -307,16 +322,23 @@ void cSurfaceData::CreateImpactEffect(    float afSpeed,const cVector3f &avPos,i
     else if(pDataA && pDataB)
     {
         if(pDataA->GetPSPrio() >= pDataB->GetPSPrio())
+        {
             sPS = pDataA->GetPSName();
+        }
         else
+        {
             sPS = pDataB->GetPSName();
+        }
     }
 
     if(sPS != "")
     {
         cMatrixf mtxPos = cMath::MatrixTranslate(avPos);
         cParticleSystem *pPS = pWorld->CreateParticleSystem("ImpactPS",sPS,1);
-        if(pPS) pPS->SetMatrix(mtxPos);
+        if(pPS)
+        {
+            pPS->SetMatrix(mtxPos);
+        }
 
 
         //Log("Mat1: '%s' Mat2: '%s' Speed %f particle system '%s' pos: %s\n",
@@ -332,8 +354,14 @@ void cSurfaceData::CreateImpactEffect(    float afSpeed,const cVector3f &avPos,i
 
 void cSurfaceData::UpdateRollEffect(iPhysicsBody *apBody)
 {
-    if(apBody->GetUseSurfaceEffects()==false) return;
-    if(msRollSoundName == "" || mRollAxisFlags ==0) return;
+    if(apBody->GetUseSurfaceEffects()==false)
+    {
+        return;
+    }
+    if(msRollSoundName == "" || mRollAxisFlags ==0)
+    {
+        return;
+    }
 
     /////////////////////////////////
     //Get the max angular speed
@@ -342,25 +370,42 @@ void cSurfaceData::UpdateRollEffect(iPhysicsBody *apBody)
     float fRollingSpeed = 0;
     //X
     if(mRollAxisFlags & eRollAxisFlag_X)
+    {
         fRollingSpeed = std::abs(vAngularSpeed.x);
+    }
     //Y
     if(mRollAxisFlags & eRollAxisFlag_Y)
-        if(fRollingSpeed < std::abs(vAngularSpeed.y)) fRollingSpeed = std::abs(vAngularSpeed.y);
+        if(fRollingSpeed < std::abs(vAngularSpeed.y))
+        {
+            fRollingSpeed = std::abs(vAngularSpeed.y);
+        }
     //Z
     if(mRollAxisFlags & eRollAxisFlag_Z)
-        if(fRollingSpeed < std::abs(vAngularSpeed.z)) fRollingSpeed = std::abs(vAngularSpeed.z);
+        if(fRollingSpeed < std::abs(vAngularSpeed.z))
+        {
+            fRollingSpeed = std::abs(vAngularSpeed.z);
+        }
 
     //Log("Rollspeed: %f\n",fRollingSpeed);
 
-    if(fRollingSpeed==0 && apBody->GetRollSoundEntity()==NULL) return;
+    if(fRollingSpeed==0 && apBody->GetRollSoundEntity()==NULL)
+    {
+        return;
+    }
 
     /////////////////////////////////
     //Update roll sound
     cWorld *pWorld = apBody->GetWorld()->GetWorld();
-    if(pWorld==NULL) return;
+    if(pWorld==NULL)
+    {
+        return;
+    }
 
     cSoundHandler *pSoundHandler = pWorld->GetSound()->GetSoundHandler();
-    if(pSoundHandler->GetSilent()) return;
+    if(pSoundHandler->GetSilent())
+    {
+        return;
+    }
 
     //Check if sound exist in world.
     if(pWorld->SoundEntityExists(apBody->GetRollSoundEntity(), apBody->GetRollSoundEntityID())==false)
@@ -542,8 +587,14 @@ ePhysicsMaterialCombMode cSurfaceData::GetElasticityCombMode() const
 
 void cSurfaceData::PreloadData()
 {
-    if(msRollSoundName!="")mpResources->GetSoundEntityManager()->Preload(msRollSoundName);
-    if(msScrapeSoundName!="")mpResources->GetSoundEntityManager()->Preload(msScrapeSoundName);
+    if(msRollSoundName!="")
+    {
+        mpResources->GetSoundEntityManager()->Preload(msRollSoundName);
+    }
+    if(msScrapeSoundName!="")
+    {
+        mpResources->GetSoundEntityManager()->Preload(msScrapeSoundName);
+    }
 
     for(size_t i=0; i< mvImpactData.size(); ++i)
     {
@@ -559,9 +610,13 @@ void cSurfaceData::PreloadData()
     for(size_t i=0; i< mvHitData.size(); ++i)
     {
         if(mvHitData[i]->msSoundName!="")
+        {
             mpResources->GetSoundEntityManager()->Preload(mvHitData[i]->msSoundName);
+        }
         if(mvHitData[i]->msPSName!="")
+        {
             mpResources->GetParticleManager()->Preload(mvHitData[i]->msPSName);
+        }
     }
 }
 

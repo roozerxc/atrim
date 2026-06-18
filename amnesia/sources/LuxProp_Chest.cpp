@@ -116,7 +116,10 @@ bool cLuxProp_Chest::CanInteract(iPhysicsBody *apBody)
 
 bool cLuxProp_Chest::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    if(mbLocked==false) return false;
+    if(mbLocked==false)
+    {
+        return false;
+    }
 
     tWString sText = kTranslate("Game", "InteractChest01")+_W(" ")+cString::ToStringW(mlCoinsNeeded)+_W(" ")+kTranslate("Game", "InteractChest02")+_W("\n");
     sText += kTranslate("Game", "InteractChest03")+_W(" ")+cString::ToStringW(gpBase->mpPlayer->GetCoins())+_W("\n");
@@ -146,7 +149,10 @@ void cLuxProp_Chest::OnSetupAfterLoad(cWorld *apWorld)
     for(size_t i=0; i< mvJoints.size(); ++i)
     {
         iPhysicsJoint *pJoint = mvJoints[i];
-        if(pJoint->GetType() != ePhysicsJointType_Hinge) continue;
+        if(pJoint->GetType() != ePhysicsJointType_Hinge)
+        {
+            continue;
+        }
 
         iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge*>(pJoint);
         mvJointData.push_back(cLuxChestJointData());
@@ -198,9 +204,13 @@ void cLuxProp_Chest::BeforePropDestruction()
 eLuxFocusCrosshair cLuxProp_Chest::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
     if(mbLocked)
+    {
         return eLuxFocusCrosshair_Grab;
+    }
     else
+    {
         return eLuxFocusCrosshair_Default;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -208,9 +218,13 @@ eLuxFocusCrosshair cLuxProp_Chest::GetFocusCrosshair(iPhysicsBody *apBody, const
 tWString cLuxProp_Chest::GetFocusText()
 {
     if(mbLocked)
+    {
         return    _W("Locked. Costs ")+cString::ToStringW(mlCoinsNeeded)+_W(" Thalers to open.");
+    }
     else
+    {
         return _W("");
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -238,7 +252,10 @@ void cLuxProp_Chest::InFocusDraw(cGuiSet *apGuiSet, float afFrameTime)
 
 void cLuxProp_Chest::SetLocked(bool abLocked, bool abEffects)
 {
-    if(mbLocked == abLocked) return;
+    if(mbLocked == abLocked)
+    {
+        return;
+    }
 
     mbLocked = abLocked;
 
@@ -268,8 +285,14 @@ void cLuxProp_Chest::SetLocked(bool abLocked, bool abEffects)
 
 void cLuxProp_Chest::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 {
-    if(alState > 0)        SetLocked(true, true);
-    else                SetLocked(false, true);
+    if(alState > 0)
+    {
+        SetLocked(true, true);
+    }
+    else
+    {
+        SetLocked(false, true);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -285,7 +308,10 @@ cLuxChestJointData* cLuxProp_Chest::GetJointDataFromBody(iPhysicsBody *apBody)
 {
     for(size_t i=0; i<mvJointData.size(); ++i)
     {
-        if(mvJointData[i].mpChildBody == apBody) return &mvJointData[i];
+        if(mvJointData[i].mpChildBody == apBody)
+        {
+            return &mvJointData[i];
+        }
     }
     return NULL;
 }
@@ -296,7 +322,10 @@ cLuxChestJointData* cLuxProp_Chest::GetJointDataFromJoint(iPhysicsJoint *apJoint
 {
     for(size_t i=0; i<mvJointData.size(); ++i)
     {
-        if(mvJointData[i].mpHingeJoint == apJoint) return &mvJointData[i];
+        if(mvJointData[i].mpHingeJoint == apJoint)
+        {
+            return &mvJointData[i];
+        }
     }
     return NULL;
 }

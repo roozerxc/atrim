@@ -40,7 +40,10 @@ cPostEffectType_ColorConvTex::cPostEffectType_ColorConvTex(cGraphics *apGraphics
     {
         cParserVarContainer vars;
         vars.Add("UseUv");
-        if(i==1) vars.Add("UseFadeAlpha");
+        if(i==1)
+        {
+            vars.Add("UseFadeAlpha");
+        }
 
         mpProgram[i] = mpGraphics->CreateGpuProgramFromShaders("BloomBlur"+cString::ToString(i),"deferred_base_vtx.glsl",
                        "posteffect_color_conv_tex_frag.glsl", &vars);
@@ -97,7 +100,10 @@ cPostEffect_ColorConvTex::~cPostEffect_ColorConvTex()
 
 void cPostEffect_ColorConvTex::OnSetParams()
 {
-    if(mParams.msTextureFile == "") return;
+    if(mParams.msTextureFile == "")
+    {
+        return;
+    }
 
     if(mpColorConvTex)
     {

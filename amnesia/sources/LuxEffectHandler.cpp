@@ -119,9 +119,15 @@ void cLuxEffect_PlayCommentary::Start(const tString &asTalker,const tString &asT
 
 void cLuxEffect_PlayCommentary::Stop()
 {
-    if(mbActive==false) return;
+    if(mbActive==false)
+    {
+        return;
+    }
 
-    if(mpSoundHandler->IsValid(mpSoundEntry,mlSoundEntryID)) mpSoundEntry->FadeOut(1);
+    if(mpSoundHandler->IsValid(mpSoundEntry,mlSoundEntryID))
+    {
+        mpSoundEntry->FadeOut(1);
+    }
     mpSoundEntry = NULL;
 
     mpSoundHandler->FadeGlobalVolume(1.0f,0.5f,  eSoundEntryType_World, eLuxGlobalVolumeType_Commentary, false);
@@ -136,7 +142,10 @@ void cLuxEffect_PlayCommentary::Stop()
 
 void cLuxEffect_PlayCommentary::Update(float afTimeStep)
 {
-    if(mpSoundHandler->IsValid(mpSoundEntry, mlSoundEntryID)) return;
+    if(mpSoundHandler->IsValid(mpSoundEntry, mlSoundEntryID))
+    {
+        return;
+    }
 
     //Set the icon as not playing
     if(gpBase->mpMapHandler->GetCurrentMap())
@@ -167,7 +176,10 @@ void cLuxEffect_PlayCommentary::OnDraw(float afFrameTime)
 
 void cLuxEffect_PlayCommentary::Reset()
 {
-    if(mpSoundEntry != NULL && mpSoundHandler->IsValid(mpSoundEntry,mlSoundEntryID)) mpSoundEntry->Stop();
+    if(mpSoundEntry != NULL && mpSoundHandler->IsValid(mpSoundEntry,mlSoundEntryID))
+    {
+        mpSoundEntry->Stop();
+    }
     mpSoundEntry = NULL;
 
     mpSoundHandler->SetGlobalVolume(1.0f,eSoundEntryType_World, eLuxGlobalVolumeType_Commentary);
@@ -205,7 +217,9 @@ cLuxEffect_EmotionFlash::~cLuxEffect_EmotionFlash()
 void cLuxEffect_EmotionFlash::ClearFonts()
 {
     if(mpFont)
+    {
         gpBase->mpEngine->GetResources()->GetFontManager()->Destroy(mpFont);
+    }
 
     mpFont = NULL;
 }
@@ -267,7 +281,10 @@ void cLuxEffect_EmotionFlash::Update(float afTimeStep)
     else if(mlStep ==1)
     {
         mfTextAlpha += afTimeStep * 3.0f;
-        if(mfTextAlpha > 1) mfTextAlpha =1;
+        if(mfTextAlpha > 1)
+        {
+            mfTextAlpha =1;
+        }
 
         //Check if text has been displayed long enough.
         mfTextTime -= afTimeStep;
@@ -284,7 +301,10 @@ void cLuxEffect_EmotionFlash::Update(float afTimeStep)
     else if(mlStep ==2)
     {
         mfTextAlpha -= afTimeStep * 1.0f;
-        if(mfTextAlpha < 0) mfTextAlpha =0;
+        if(mfTextAlpha < 0)
+        {
+            mfTextAlpha =0;
+        }
 
         mfAlpha -= 0.33f * afTimeStep;
         if(mfAlpha <= 0.0f)
@@ -324,9 +344,15 @@ void cLuxEffect_EmotionFlash::OnDraw(float afFrameTime)
 
 void cLuxEffect_EmotionFlash::DoAction(eLuxPlayerAction aAction, bool abPressed)
 {
-    if(abPressed==false) return;
+    if(abPressed==false)
+    {
+        return;
+    }
 
-    if(mlStep==1) mfTextTime = 0;
+    if(mlStep==1)
+    {
+        mfTextTime = 0;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -523,27 +549,39 @@ void cLuxEffect_ShakeScreen::Update(float afTimeStep)
         if(shake.mfFadeInTime >0)
         {
             shake.mfFadeInTime -= afTimeStep;
-            if(shake.mfFadeInTime<0) shake.mfFadeInTime=0;
+            if(shake.mfFadeInTime<0)
+            {
+                shake.mfFadeInTime=0;
+            }
             float fT = shake.mfFadeInTime / shake.mfMaxFadeInTime;
             shake.mfSize = (1-fT) * shake.mfMaxSize;
         }
         else if(shake.mfTime >0)
         {
             shake.mfTime -= afTimeStep;
-            if(shake.mfTime<0)shake.mfTime=0;
+            if(shake.mfTime<0)
+            {
+                shake.mfTime=0;
+            }
             shake.mfSize = shake.mfMaxSize;
         }
         else
         {
             shake.mfFadeOutTime -= afTimeStep;
-            if(shake.mfFadeOutTime<0) shake.mfFadeOutTime=0;
+            if(shake.mfFadeOutTime<0)
+            {
+                shake.mfFadeOutTime=0;
+            }
             float fT = shake.mfFadeOutTime / shake.mfMaxFadeOutTime;
             shake.mfSize =  fT * shake.mfMaxSize;
         }
 
         //Log("%f, %f, %f size: %f\n",shake.mfFadeInTime,shake.mfTime,shake.mfFadeOutTime,shake.mfSize);
 
-        if(fLargest < shake.mfSize) fLargest = shake.mfSize;
+        if(fLargest < shake.mfSize)
+        {
+            fLargest = shake.mfSize;
+        }
 
         if(shake.mfTime <= 0 && shake.mfFadeOutTime <= 0 && shake.mfFadeInTime <= 0)
         {
@@ -666,8 +704,14 @@ cLuxEffect_Fade::~cLuxEffect_Fade()
 void cLuxEffect_Fade::FadeIn(float afTime)
 {
     mfGoalAlpha = 0;
-    if(afTime <= 0) mfAlpha = 0;
-    else            mfFadeSpeed = 1 / afTime;
+    if(afTime <= 0)
+    {
+        mfAlpha = 0;
+    }
+    else
+    {
+        mfFadeSpeed = 1 / afTime;
+    }
 
     SetActive(true);
 }
@@ -675,8 +719,14 @@ void cLuxEffect_Fade::FadeIn(float afTime)
 void cLuxEffect_Fade::FadeOut(float afTime)
 {
     mfGoalAlpha = 1;
-    if(afTime <= 0) mfAlpha = 1;
-    else            mfFadeSpeed = 1 / afTime;
+    if(afTime <= 0)
+    {
+        mfAlpha = 1;
+    }
+    else
+    {
+        mfFadeSpeed = 1 / afTime;
+    }
 
     SetActive(true);
 }
@@ -685,8 +735,14 @@ void cLuxEffect_Fade::FadeOut(float afTime)
 
 void cLuxEffect_Fade::SetDirectAlpha(float afX)
 {
-    if(afX<=0)    SetActive(false);
-    else        SetActive(true);
+    if(afX<=0)
+    {
+        SetActive(false);
+    }
+    else
+    {
+        SetActive(true);
+    }
 
     mfGoalAlpha = afX;
     mfAlpha = afX;
@@ -696,8 +752,14 @@ void cLuxEffect_Fade::SetDirectAlpha(float afX)
 
 bool cLuxEffect_Fade::IsFading()
 {
-    if(mfGoalAlpha==0 && mfAlpha>0) return true;
-    if(mfGoalAlpha==1 && mfAlpha<1) return true;
+    if(mfGoalAlpha==0 && mfAlpha>0)
+    {
+        return true;
+    }
+    if(mfGoalAlpha==1 && mfAlpha<1)
+    {
+        return true;
+    }
 
     return false;
 }
@@ -729,7 +791,10 @@ void cLuxEffect_Fade::Update(float afTimeStep)
 
 void cLuxEffect_Fade::OnDraw(float afFrameTime)
 {
-    if(mfAlpha <=0) return;
+    if(mfAlpha <=0)
+    {
+        return;
+    }
 
     gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx,gpBase->mvHudVirtualStartPos+cVector3f(0,0,3.2f),gpBase->mvHudVirtualSize,cColor(1-mfAlpha, 1));
 }
@@ -779,7 +844,9 @@ void cLuxEffect_SanityGainFlash::Reset()
 void cLuxEffect_SanityGainFlash::Start()
 {
     if(msSound != "")
+    {
         gpBase->mpHelpFuncs->PlayGuiSoundData(msSound, eSoundEntryType_Gui);
+    }
 
     mbActive = true;
 
@@ -867,9 +934,18 @@ void cLuxEffect_Flash::Start(float afFadeIn, float afWhite, float afFadeOut)
 
     mfAlpha =0;
 
-    if(afFadeIn==0) afFadeIn = 0.000001f;
-    if(afWhite==0) afWhite = 0.000001f;
-    if(afFadeOut==0) afFadeOut = 0.000001f;
+    if(afFadeIn==0)
+    {
+        afFadeIn = 0.000001f;
+    }
+    if(afWhite==0)
+    {
+        afWhite = 0.000001f;
+    }
+    if(afFadeOut==0)
+    {
+        afFadeOut = 0.000001f;
+    }
 
 
     mfFadeInSpeed = 1 / afFadeIn;
@@ -957,10 +1033,16 @@ cLuxEffect_PlayVoice::~cLuxEffect_PlayVoice()
 
 void cLuxEffect_PlayVoice::StopVoices(float afFadeOutSpeed)
 {
-    if(mpSoundHandler->IsValid(mpVoiceEntry,mlVoiceEntryID)) mpVoiceEntry->FadeOut(afFadeOutSpeed);
+    if(mpSoundHandler->IsValid(mpVoiceEntry,mlVoiceEntryID))
+    {
+        mpVoiceEntry->FadeOut(afFadeOutSpeed);
+    }
     mpVoiceEntry = NULL;
 
-    if(mpSoundHandler->IsValid(mpEffectEntry,mlEffectEntryID)) mpEffectEntry->FadeOut(afFadeOutSpeed);
+    if(mpSoundHandler->IsValid(mpEffectEntry,mlEffectEntryID))
+    {
+        mpEffectEntry->FadeOut(afFadeOutSpeed);
+    }
     mpEffectEntry = NULL;
 
     mlstVoices.clear();
@@ -980,9 +1062,13 @@ void cLuxEffect_PlayVoice::AddVoice(const tString& asVoiceFile, const tString& a
     voiceData.msVoiceFile = asVoiceFile;
     voiceData.msEffectFile = asEffectFile;
     if(asTextCat != "" && asTextEntry != "")
+    {
         voiceData.msText = kTranslate(asTextCat, asTextEntry);
+    }
     else
+    {
         voiceData.msText = _W("");
+    }
     voiceData.mbUsePosition = abUsePostion;
     voiceData.mvPosition = avPosition;
     voiceData.mfMinDistance = afMinDistance;
@@ -997,7 +1083,10 @@ void cLuxEffect_PlayVoice::AddVoice(const tString& asVoiceFile, const tString& a
 
 void cLuxEffect_PlayVoice::PauseCurrentVoices()
 {
-    if(mbActive==false || mbPaused) return;
+    if(mbActive==false || mbPaused)
+    {
+        return;
+    }
 
     mbPaused = true;
 
@@ -1018,7 +1107,10 @@ void cLuxEffect_PlayVoice::PauseCurrentVoices()
 
 void cLuxEffect_PlayVoice::UnpauseCurrentVoices()
 {
-    if(mbActive==false || mbPaused==false) return;
+    if(mbActive==false || mbPaused==false)
+    {
+        return;
+    }
 
     mbPaused = false;
 
@@ -1046,14 +1138,24 @@ void cLuxEffect_PlayVoice::Update(float afTimeStep)
     if(mfVolumeMul <1.0f)
     {
         if(mpVoiceEntry && mpSoundHandler->IsValid(mpVoiceEntry, mlVoiceEntryID))
+        {
             mpVoiceEntry->SetVolumeMul(mfVolumeMul);
+        }
 
         if(mpEffectEntry && mpSoundHandler->IsValid(mpEffectEntry, mlEffectEntryID))
+        {
             mpEffectEntry->SetVolumeMul(mfVolumeMul);
+        }
     }
 
-    if(mpSoundHandler->IsValid(mpVoiceEntry, mlVoiceEntryID)) return;
-    if(mpVoiceEntry==NULL && mpSoundHandler->IsValid(mpEffectEntry, mlEffectEntryID)) return;
+    if(mpSoundHandler->IsValid(mpVoiceEntry, mlVoiceEntryID))
+    {
+        return;
+    }
+    if(mpVoiceEntry==NULL && mpSoundHandler->IsValid(mpEffectEntry, mlEffectEntryID))
+    {
+        return;
+    }
 
     if(mlstVoices.empty())
     {
@@ -1067,7 +1169,9 @@ void cLuxEffect_PlayVoice::Update(float afTimeStep)
         SetActive(false);
 
         if(sCallback!="")
+        {
             gpBase->mpMapHandler->GetCurrentMap()->RunScript(sCallback+"()");
+        }
 
         return;
     }
@@ -1079,12 +1183,18 @@ void cLuxEffect_PlayVoice::Update(float afTimeStep)
     if(voiceData.mbUsePosition==false)
     {
         mpVoiceEntry = mpSoundHandler->PlayGuiStream(voiceData.msVoiceFile,false, 1.0f);
-        if(mpVoiceEntry) mlVoiceEntryID = mpVoiceEntry->GetId();
+        if(mpVoiceEntry)
+        {
+            mlVoiceEntryID = mpVoiceEntry->GetId();
+        }
 
         if(voiceData.msEffectFile!="")
         {
             mpEffectEntry = mpSoundHandler->PlayGuiStream(voiceData.msEffectFile,false, 1.0f);
-            if(mpEffectEntry) mlEffectEntryID = mpEffectEntry->GetId();
+            if(mpEffectEntry)
+            {
+                mlEffectEntryID = mpEffectEntry->GetId();
+            }
         }
     }
     //////////////////////
@@ -1093,13 +1203,19 @@ void cLuxEffect_PlayVoice::Update(float afTimeStep)
     {
         mpVoiceEntry = mpSoundHandler->Play(voiceData.msVoiceFile,false, 1.0f, voiceData.mvPosition,voiceData.mfMinDistance, voiceData.mfMaxDistance,
                                             eSoundEntryType_Gui,false,true,0, true);
-        if(mpVoiceEntry) mlVoiceEntryID = mpVoiceEntry->GetId();
+        if(mpVoiceEntry)
+        {
+            mlVoiceEntryID = mpVoiceEntry->GetId();
+        }
 
         if(voiceData.msEffectFile!="")
         {
             mpEffectEntry = mpSoundHandler->Play(    voiceData.msEffectFile,false, 1.0f, voiceData.mvPosition,voiceData.mfMinDistance, voiceData.mfMaxDistance,
                             eSoundEntryType_Gui,false,true,0, true);
-            if(mpEffectEntry) mlEffectEntryID = mpEffectEntry->GetId();
+            if(mpEffectEntry)
+            {
+                mlEffectEntryID = mpEffectEntry->GetId();
+            }
         }
     }
 
@@ -1107,7 +1223,9 @@ void cLuxEffect_PlayVoice::Update(float afTimeStep)
     //Text
     mvCurrentTextRows.clear();
     if(voiceData.msText != _W(""))
+    {
         gpBase->mpDefaultFont->GetWordWrapRows(mfRowWidth,mvFontSize.y+2,mvFontSize, voiceData.msText, &mvCurrentTextRows);
+    }
 
     //////////////////////
     //Pop!
@@ -1122,7 +1240,9 @@ void cLuxEffect_PlayVoice::Update(float afTimeStep)
         SetActive(false);
 
         if(msOverCallback!="")
+        {
             gpBase->mpMapHandler->GetCurrentMap()->RunScript(msOverCallback+"()");
+        }
     }
 }
 
@@ -1130,8 +1250,14 @@ void cLuxEffect_PlayVoice::Update(float afTimeStep)
 
 void cLuxEffect_PlayVoice::OnDraw(float afFrameTime)
 {
-    if(gpBase->mpMessageHandler->ShowSubtitles()==false) return;
-    if(mvCurrentTextRows.empty()) return;
+    if(gpBase->mpMessageHandler->ShowSubtitles()==false)
+    {
+        return;
+    }
+    if(mvCurrentTextRows.empty())
+    {
+        return;
+    }
 
     cVector3f vStartPos(400-mfRowWidth/2, 580 - (mvCurrentTextRows.size()*(mvFontSize.y+2)), 4);
 
@@ -1145,10 +1271,16 @@ void cLuxEffect_PlayVoice::OnDraw(float afFrameTime)
 
 void cLuxEffect_PlayVoice::Reset()
 {
-    if(mpVoiceEntry != NULL && mpSoundHandler->IsValid(mpVoiceEntry,mlVoiceEntryID)) mpVoiceEntry->Stop();
+    if(mpVoiceEntry != NULL && mpSoundHandler->IsValid(mpVoiceEntry,mlVoiceEntryID))
+    {
+        mpVoiceEntry->Stop();
+    }
     mpVoiceEntry = NULL;
 
-    if(mpEffectEntry != NULL && mpSoundHandler->IsValid(mpEffectEntry,mlEffectEntryID)) mpEffectEntry->Stop();
+    if(mpEffectEntry != NULL && mpSoundHandler->IsValid(mpEffectEntry,mlEffectEntryID))
+    {
+        mpEffectEntry->Stop();
+    }
     mpEffectEntry = NULL;
 
     mvCurrentTextRows.clear();
@@ -1167,10 +1299,14 @@ void cLuxEffect_PlayVoice::SetVolumeMul(float afMul)
     mfVolumeMul = afMul;
 
     if(mpVoiceEntry && mpSoundHandler->IsValid(mpVoiceEntry, mlVoiceEntryID))
+    {
         mpVoiceEntry->SetVolumeMul(mfVolumeMul);
+    }
 
     if(mpEffectEntry && mpSoundHandler->IsValid(mpEffectEntry, mlEffectEntryID))
+    {
         mpEffectEntry->SetVolumeMul(mfVolumeMul);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1240,7 +1376,10 @@ void cLuxEffectHandler::Update(float afTimeStep)
     for(size_t i=0; i<mvEffects.size(); ++i)
     {
         iLuxEffect *pEffect = mvEffects[i];
-        if(pEffect->IsActive()) pEffect->Update(afTimeStep);
+        if(pEffect->IsActive())
+        {
+            pEffect->Update(afTimeStep);
+        }
     }
 }
 
@@ -1259,7 +1398,10 @@ void cLuxEffectHandler::OnMapLeave(cLuxMap *apMap)
     // Reset some effects on map leave
     mpSepiaColor->FadeTo(0, 1);
     mpRadialBlur->FadeTo(0, 1);
-    if(mpPlayCommentary->IsActive()) mpPlayCommentary->Stop();
+    if(mpPlayCommentary->IsActive())
+    {
+        mpPlayCommentary->Stop();
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1271,7 +1413,10 @@ void cLuxEffectHandler::OnDraw(float afFrameTime)
     for(size_t i=0; i<mvEffects.size(); ++i)
     {
         iLuxEffect *pEffect = mvEffects[i];
-        if(pEffect->IsActive()) pEffect->OnDraw(afFrameTime);
+        if(pEffect->IsActive())
+        {
+            pEffect->OnDraw(afFrameTime);
+        }
     }
 }
 
@@ -1282,7 +1427,10 @@ void cLuxEffectHandler::DoAction(eLuxPlayerAction aAction, bool abPressed)
     for(size_t i=0; i<mvEffects.size(); ++i)
     {
         iLuxEffect *pEffect = mvEffects[i];
-        if(pEffect->IsActive()) pEffect->DoAction(aAction, abPressed);
+        if(pEffect->IsActive())
+        {
+            pEffect->DoAction(aAction, abPressed);
+        }
     }
 }
 

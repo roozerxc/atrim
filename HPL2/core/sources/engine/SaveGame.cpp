@@ -31,7 +31,10 @@ int iSaveObject::_mlGlobalIdCount =0;
 iSaveObject::iSaveObject()
 {
     mlSaveObjectId = _mlGlobalIdCount++;
-    if(_mlGlobalIdCount <0) _mlGlobalIdCount=0;
+    if(_mlGlobalIdCount <0)
+    {
+        _mlGlobalIdCount=0;
+    }
 
     mbIsSaved = true;
 }
@@ -120,7 +123,10 @@ void cSaveObjectHandler::SetUpAll(cEngine *apGame)
     {
         iSaveObject *pObject = it->second;
 
-        if(pObject->GetSaveObjectId() > lMaxId) lMaxId = pObject->GetSaveObjectId();
+        if(pObject->GetSaveObjectId() > lMaxId)
+        {
+            lMaxId = pObject->GetSaveObjectId();
+        }
 
         pObject->SaveDataSetup(this,apGame);
     }

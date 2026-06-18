@@ -47,7 +47,10 @@ void cLogicTimer::Reset()
 bool cLogicTimer::WantUpdate()
 {
     ++mlUpdateCount;
-    if(mlUpdateCount > mlMaxUpdates) return false;
+    if(mlUpdateCount > mlMaxUpdates)
+    {
+        return false;
+    }
 
     if(mlLocalTime< (double)cPlatform::GetApplicationTime())
     {

@@ -96,7 +96,10 @@ void cLuxArea_Examine::SetupAfterLoad(cWorld *apWorld)
 
 void cLuxArea_Examine::OnUpdate(float afTimeStep)
 {
-    if(mfPlaySoundCount>0) mfPlaySoundCount -= afTimeStep;
+    if(mfPlaySoundCount>0)
+    {
+        mfPlaySoundCount -= afTimeStep;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -133,10 +136,14 @@ bool cLuxArea_Examine::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
     {
         tString sSound = msSound;
         if(fSanity < mfInsaneLimit && msInsaneSound != "")
+        {
             sSound = msInsaneSound;
+        }
 
         if(sSound != "")
+        {
             gpBase->mpHelpFuncs->PlayGuiSoundData(sSound, eSoundEntryType_Gui);
+        }
     }
 
 

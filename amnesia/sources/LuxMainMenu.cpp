@@ -85,7 +85,10 @@ iLuxMainMenuWindow::iLuxMainMenuWindow(cGuiSet *apGuiSet, cGuiSkin *apGuiSkin)
 
 void iLuxMainMenuWindow::SetActive(bool abX)
 {
-    if(mpWindow == NULL) return;
+    if(mpWindow == NULL)
+    {
+        return;
+    }
 
     mpWindow->SetVisible(abX);
     mpWindow->SetEnabled(abX);
@@ -197,7 +200,10 @@ cLuxMainMenu::cLuxMainMenu() : iLuxUpdateable("LuxDebugHandler")
     for(int i=0; i<2; ++i)
     {
         cParserVarContainer programVars;
-        if(i==0) programVars.Add("BlurHorisontal");
+        if(i==0)
+        {
+            programVars.Add("BlurHorisontal");
+        }
 
         mpBlurProgram[i] = mpGraphics->CreateGpuProgramFromShaders("MainMenuBlur"+cString::ToString(i),
                            "mainmenu_screen_blur_vtx.glsl",
@@ -235,7 +241,10 @@ cLuxMainMenu::~cLuxMainMenu()
 {
     for(size_t i=0; i<mvWindows.size(); ++i)
     {
-        if(mvWindows[i]) hplDelete(mvWindows[i]);
+        if(mvWindows[i])
+        {
+            hplDelete(mvWindows[i]);
+        }
     }
 }
 
@@ -299,9 +308,13 @@ void cLuxMainMenu::Reset()
 {
     //TODO: Destroy world and camera too!
     if(mpBgWorld)
+    {
         mpScene->DestroyWorld(mpBgWorld);
+    }
     if(mpBgCamera)
+    {
         mpScene->DestroyCamera(mpBgCamera);
+    }
 
     mpViewport->SetCamera(NULL);
     mpViewport->SetWorld(NULL);
@@ -464,10 +477,14 @@ void cLuxMainMenu::OnDraw(float afFrameTime)
     if(mpScreenGfx)
     {
         if(mpScreenGfx && mfMenuFadeAlpha>0)
+        {
             mpGuiSet->DrawGfx(mpScreenGfx,cVector3f(0,0,0),mvScreenSize);
+        }
 
         if(mpScreenBlurGfx)
+        {
             mpGuiSet->DrawGfx(mpScreenBlurGfx,cVector3f(0,0,0.2f),mvScreenSize,cColor(1, 1-mfMenuFadeAlpha));
+        }
 
         if(    mfMenuFadeAlpha > 0 && mbExiting && mExitMessage != eLuxMainMenuExit_ReturnToGame )
         {
@@ -484,10 +501,14 @@ void cLuxMainMenu::OnDraw(float afFrameTime)
     else
     {
         if(mfMenuFadeAlpha > 0)
+        {
             mpGuiSet->DrawGfx(    mpBlackFade,cVector3f(0,0,50), mvScreenSize, cColor(1,mfMenuFadeAlpha));
+        }
 
         if(mpLogoGfx)
+        {
             mpGuiSet->DrawGfx( mpLogoGfx, mvLogoPos, mvLogoSize, cColor(1, mfTopMenuAlpha) );
+        }
     }
 }
 
@@ -504,7 +525,10 @@ void cLuxMainMenu::OnPostRender(float afFrameTime)
 
 void cLuxMainMenu::SetWindowActive(eLuxMainMenuWindow aWindow)
 {
-    if(mCurrentWindow == aWindow) return;
+    if(mCurrentWindow == aWindow)
+    {
+        return;
+    }
 
 #ifdef USE_GAMEPAD
     bool bHasGamepad = gpBase->mpInputHandler->IsGamepadPresent();
@@ -527,7 +551,10 @@ void cLuxMainMenu::SetWindowActive(eLuxMainMenuWindow aWindow)
 
     if(mCurrentWindow != eLuxMainMenuWindow_LastEnum)
     {
-        if(mvWindows[mCurrentWindow]) mvWindows[mCurrentWindow]->SetActive(false);
+        if(mvWindows[mCurrentWindow])
+        {
+            mvWindows[mCurrentWindow]->SetActive(false);
+        }
     }
 
     mCurrentWindow = aWindow;
@@ -538,7 +565,10 @@ void cLuxMainMenu::SetWindowActive(eLuxMainMenuWindow aWindow)
     else
     {
         SetTopMenuVisible(false);
-        if(mvWindows[mCurrentWindow]) mvWindows[mCurrentWindow]->SetActive(true);
+        if(mvWindows[mCurrentWindow])
+        {
+            mvWindows[mCurrentWindow]->SetActive(true);
+        }
     }
 }
 
@@ -560,7 +590,10 @@ void cLuxMainMenu::ExitPressed()
     else
     {
         iLuxMainMenuWindow *pWindow = mvWindows[mCurrentWindow];
-        if(pWindow) pWindow->ExitPressed();
+        if(pWindow)
+        {
+            pWindow->ExitPressed();
+        }
     }
 
 }
@@ -624,7 +657,9 @@ void cLuxMainMenu::ExitMenu(eLuxMainMenuExit aMessage)
             aMessage == eLuxMainMenuExit_StartGame)
     {
         if(msZoomSound != "")
+        {
             gpBase->mpEngine->GetSound()->GetSoundHandler()->PlayGui(msZoomSound, false,1.0f);
+        }
     }
 
     if (aMessage == eLuxMainMenuExit_QuitToMenu || aMessage == eLuxMainMenuExit_QuitAndSave)
@@ -648,9 +683,13 @@ void cLuxMainMenu::OnMenuExit()
     case eLuxMainMenuExit_QuitGame:
 
         if(gpBase->mpDemoEnd && gpBase->mpDemoEnd->ShowOnAllExit())
+        {
             gpBase->mpEngine->GetUpdater()->SetContainer("DemoEnd");
+        }
         else
+        {
             gpBase->mpEngine->Exit();
+        }
 
         break;
     ////////////////
@@ -779,7 +818,10 @@ void cLuxMainMenu::UpdateBase(float afTimeStep)
         if(mfMenuFadeAlpha < 1.0f)
         {
             mfMenuFadeAlpha += afTimeStep * (1.0f/fFadeSpeed);
-            if(mfMenuFadeAlpha > 1.0f) mfMenuFadeAlpha =1.0f;
+            if(mfMenuFadeAlpha > 1.0f)
+            {
+                mfMenuFadeAlpha =1.0f;
+            }
 
             //gpBase->mpEngine->GetSound()->GetLowLevel()->SetVolume(1-mfMenuFadeAlpha);
         }
@@ -795,7 +837,10 @@ void cLuxMainMenu::UpdateBase(float afTimeStep)
         if(mfMenuFadeAlpha > 0.0f)
         {
             mfMenuFadeAlpha -= afTimeStep * (1.0f/mfMainFadeInTime);
-            if(mfMenuFadeAlpha < 0.0f) mfMenuFadeAlpha =0;
+            if(mfMenuFadeAlpha < 0.0f)
+            {
+                mfMenuFadeAlpha =0;
+            }
         }
     }
 }
@@ -813,7 +858,10 @@ void cLuxMainMenu::UpdateTopMenu(float afTimeStep)
         if(mfTopMenuAlpha < 1.0f)
         {
             mfTopMenuAlpha += afTimeStep * (1.0f/mfTopMenuFadeInTime);
-            if(mfTopMenuAlpha >1) mfTopMenuAlpha =1;
+            if(mfTopMenuAlpha >1)
+            {
+                mfTopMenuAlpha =1;
+            }
             bAlphaChanged = true;
         }
     }
@@ -824,7 +872,10 @@ void cLuxMainMenu::UpdateTopMenu(float afTimeStep)
         if(mfTopMenuAlpha > 0.0f)
         {
             mfTopMenuAlpha -= afTimeStep * (1.0f/mfTopMenuFadeOutTime);
-            if(mfTopMenuAlpha <0) mfTopMenuAlpha =0;
+            if(mfTopMenuAlpha <0)
+            {
+                mfTopMenuAlpha =0;
+            }
             bAlphaChanged = true;
         }
     }
@@ -865,13 +916,17 @@ void cLuxMainMenu::UpdateTopMenu(float afTimeStep)
     {
         mfDescriptionAlpha += afTimeStep;
         if (mfDescriptionAlpha > 1.0f)
+        {
             mfDescriptionAlpha = 1.0f;
+        }
     }
     else
     {
         mfDescriptionAlpha -= afTimeStep;
         if (mfDescriptionAlpha < 0.5f)
+        {
             mfDescriptionAlpha = 0.5f;
+        }
     }
 }
 
@@ -1266,10 +1321,19 @@ void cLuxMainMenu::CreateBackground()
         /////////////////////////////////////
         // World set up (from menu config)
         tString sBGWorldFile = gpBase->mpMenuCfg->GetString("Main", "BGScene", "");
-        if(gbDebug_SkipBGScene) sBGWorldFile = "";
+        if(gbDebug_SkipBGScene)
+        {
+            sBGWorldFile = "";
+        }
 
-        if(sBGWorldFile != "")    mpBgWorld = mpScene->LoadWorld(sBGWorldFile, 0);
-        else                    mpBgWorld = NULL;
+        if(sBGWorldFile != "")
+        {
+            mpBgWorld = mpScene->LoadWorld(sBGWorldFile, 0);
+        }
+        else
+        {
+            mpBgWorld = NULL;
+        }
 
         mpBgCamera = mpScene->CreateCamera(eCameraMoveMode_Fly);
         mpBgCamera->SetRotateMode(eCameraRotateMode_Matrix);
@@ -1287,15 +1351,22 @@ void cLuxMainMenu::CreateBackground()
         {
             cStartPosEntity* pStartPos = mpBgWorld->GetStartPosEntity("CameraPos");
             if(pStartPos)
+            {
                 mtxCamMatrix = pStartPos->GetWorldMatrix();
+            }
             else
+            {
                 Error("Could not find start pos entity CameraPos in '%s'\n", sBGWorldFile.c_str());
+            }
         }
 
         mpBgCamera->SetRotationMatrix(cMath::MatrixInverse(mtxCamMatrix.GetRotation()));
         mpBgCamera->SetPosition(mtxCamMatrix.GetTranslation());
 
-        if(mpBgWorld) mpViewport->SetWorld(mpBgWorld);
+        if(mpBgWorld)
+        {
+            mpViewport->SetWorld(mpBgWorld);
+        }
         mpViewport->SetCamera(mpBgCamera);
     }
 }
@@ -1358,8 +1429,14 @@ void cLuxMainMenu::RenderBlurTexture()
     for(int i=0; i<2; ++i)
     {
         pBlurBuffer[i] = mpGraphics->CreateFrameBuffer("MainMenuBlurBuffer"+cString::ToString(i));
-        if(i==0) pBlurBuffer[i]->SetTexture2D(0,pTempBlurTexture);
-        else    pBlurBuffer[i]->SetTexture2D(0,mpScreenBlurTexture);
+        if(i==0)
+        {
+            pBlurBuffer[i]->SetTexture2D(0,pTempBlurTexture);
+        }
+        else
+        {
+            pBlurBuffer[i]->SetTexture2D(0,mpScreenBlurTexture);
+        }
 
         pBlurBuffer[i]->CompileAndValidate();
     }
@@ -1381,7 +1458,9 @@ void cLuxMainMenu::RenderBlurTexture()
     RenderBlur(mpScreenTexture,pTempBlurTexture,pBlurBuffer);
 
     for(int i=0; i<6; ++i)
+    {
         RenderBlur(mpScreenBlurTexture,pTempBlurTexture,pBlurBuffer);
+    }
 
     ///////////////////////
     // Exit
@@ -1411,7 +1490,10 @@ void cLuxMainMenu::DestroyBackground()
     //Back ground world is loaded
     if(mpBgWorld && mpBgCamera)
     {
-        if(mpLogoGfx) mpGui->DestroyGfx(mpLogoGfx);
+        if(mpLogoGfx)
+        {
+            mpGui->DestroyGfx(mpLogoGfx);
+        }
 
         mpScene->DestroyCamera(mpBgCamera);
         mpScene->DestroyWorld(mpBgWorld);
@@ -1427,10 +1509,22 @@ void cLuxMainMenu::DestroyBackground()
     //No background is loaded.
     else
     {
-        if(mpScreenGfx) mpGui->DestroyGfx(mpScreenGfx);
-        if(mpScreenTexture) mpGraphics->DestroyTexture(mpScreenTexture);
-        if(mpScreenBlurGfx) mpGui->DestroyGfx(mpScreenBlurGfx);
-        if(mpScreenBlurTexture) mpGraphics->DestroyTexture(mpScreenBlurTexture);
+        if(mpScreenGfx)
+        {
+            mpGui->DestroyGfx(mpScreenGfx);
+        }
+        if(mpScreenTexture)
+        {
+            mpGraphics->DestroyTexture(mpScreenTexture);
+        }
+        if(mpScreenBlurGfx)
+        {
+            mpGui->DestroyGfx(mpScreenBlurGfx);
+        }
+        if(mpScreenBlurTexture)
+        {
+            mpGraphics->DestroyTexture(mpScreenBlurTexture);
+        }
 
         mpScreenGfx = NULL;
         mpScreenTexture = NULL;
@@ -1449,7 +1543,10 @@ void cLuxMainMenu::DestroyBackground()
 
 bool cLuxMainMenu::TopMenuTextMouseEnter(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if (mbTopMenuVisible) mpGuiSet->SetFocusedWidget(apWidget);
+    if (mbTopMenuVisible)
+    {
+        mpGuiSet->SetFocusedWidget(apWidget);
+    }
 
     //apWidget->SetDefaultFontColor(cColor(232.0f/255.0f, 201.0f/255.0f, 28.0f/255.0f, mfTopMenuAlpha));
 
@@ -1462,7 +1559,9 @@ bool cLuxMainMenu::TopMenuTextMouseLeave(iWidget* apWidget, const cGuiMessageDat
     if(mbTopMenuVisible)
     {
         if(mpGuiSet->GetFocusedWidget()==apWidget)
+        {
             mpGuiSet->SetFocusedWidget(NULL);
+        }
     }
     //apWidget->SetDefaultFontColor(cColor(1.0f, mfTopMenuAlpha));
     return true;
@@ -1472,7 +1571,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, TopMenuTextMouseLeave);
 bool cLuxMainMenu::TopMenuTextPress(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(aData.mlVal&eUIButton_Primary)
+    {
         return apWidget->ProcessMessage(eGuiMessage_MouseDown, aData);
+    }
     else if(aData.mlVal&eUIButton_Secondary)
     {
         ExitPressed();
@@ -1485,9 +1586,13 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, TopMenuTextPress);
 bool cLuxMainMenu::TopMenuTextDraw(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(apWidget->HasFocus())
+    {
         apWidget->SetDefaultFontColor(cColor(mpTopMenuFontHighlightColor.r, mpTopMenuFontHighlightColor.g, mpTopMenuFontHighlightColor.b, mfTopMenuAlpha));
+    }
     else
+    {
         apWidget->SetDefaultFontColor(cColor(mpTopMenuFontColor.r, mpTopMenuFontColor.g, mpTopMenuFontColor.b, mfTopMenuAlpha));
+    }
 
     return true;
 }
@@ -1498,7 +1603,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, TopMenuTextDraw);
 bool cLuxMainMenu::PressContinue(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(mbTopMenuVisible==false)
+    {
         return true;
+    }
 
     SetTopMenuVisible(false);
 
@@ -1538,7 +1645,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, ClickedContinuePopup)
 bool cLuxMainMenu::PressStartGame(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(mbTopMenuVisible==false)
+    {
         return true;
+    }
 
     /////////////
     //HARDMODE
@@ -1591,7 +1700,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, ClickedStartGamePopup);
 bool cLuxMainMenu::PressBackToGame(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(mbTopMenuVisible==false)
+    {
         return true;
+    }
 
     ExitMenu(eLuxMainMenuExit_ReturnToGame);
 
@@ -1604,7 +1715,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, PressBackToGame);
 bool cLuxMainMenu::PressLoadGame(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(mbTopMenuVisible==false)
+    {
         return true;
+    }
 
     SetWindowActive(eLuxMainMenuWindow_LoadGame);
 
@@ -1624,7 +1737,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, ClickedLoadGamePopup);
 bool cLuxMainMenu::PressCustomStory(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(mbTopMenuVisible==false)
+    {
         return true;
+    }
 
     SetWindowActive(eLuxMainMenuWindow_CustomStoryList);
 
@@ -1637,7 +1752,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, PressCustomStory);
 bool cLuxMainMenu::PressExit(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(mbTopMenuVisible==false)
+    {
         return true;
+    }
 
     SetTopMenuVisible(false);
     mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
@@ -1675,7 +1792,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, ClickedExitPopup);
 bool cLuxMainMenu::PressExitToMainMenu(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(mbTopMenuVisible==false)
+    {
         return true;
+    }
 
     SetTopMenuVisible(false);
     mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
@@ -1713,7 +1832,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, ClickedExitToMainMenuPopup);
 bool cLuxMainMenu::PressExitAndSave(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(mbTopMenuVisible==false)
+    {
         return true;
+    }
 
     SetTopMenuVisible(false);
     mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
@@ -1751,7 +1872,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, ClickedExitAndSavePopup);
 bool cLuxMainMenu::PressChangeProfile(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(mbTopMenuVisible==false)
+    {
         return true;
+    }
 
     SetWindowActive(eLuxMainMenuWindow_Profiles);
 
@@ -1764,7 +1887,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, PressChangeProfile);
 bool cLuxMainMenu::PressOptions(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(mbTopMenuVisible==false)
+    {
         return true;
+    }
 
     SetWindowActive(eLuxMainMenuWindow_Options);
 
@@ -1779,7 +1904,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, PressOptions);
 bool cLuxMainMenu::PressSaveGame(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if (mbTopMenuVisible == false)
+    {
         return true;
+    }
 
     SetTopMenuVisible(false);
 
@@ -1811,7 +1938,9 @@ bool cLuxMainMenu::ClickedSaveGamePopup(iWidget* apWidget, const cGuiMessageData
     SetTopMenuVisible(true);
 
     if (bSave == false)
+    {
         return true;
+    }
 
     ///////////////////////////
     // Get num tinderboxes
@@ -1820,7 +1949,9 @@ bool cLuxMainMenu::ClickedSaveGamePopup(iWidget* apWidget, const cGuiMessageData
     ///////////////////////////
     // decrement tinderboxes
     if (lNumTinderboxes < 4)
+    {
         return true;
+    }
 
     gpBase->mpPlayer->SetTinderboxes(cMath::Max(0, lNumTinderboxes - 4));
 
@@ -1850,7 +1981,7 @@ bool cLuxMainMenu::ClickedSaveGamePopup(iWidget* apWidget, const cGuiMessageData
     ///////////////////////////
     // Get save label
 #if MAC_OS || LINUX
-	cWidgetLabel* pSaveLabel = 0;
+    cWidgetLabel* pSaveLabel = 0;
 #else
     cWidgetLabel* pSaveLabel = nullptr;
 #endif

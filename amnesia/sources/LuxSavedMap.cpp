@@ -388,7 +388,9 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
 
             pEntity->SetupSaveData(pEntity->GetSaveData());
             if(pEntity->IsActive())
+            {
                 pEntity->UpdateLogic(0.001f);
+            }
         }
 
         gpBase->mpCurrentMapLoading = NULL;

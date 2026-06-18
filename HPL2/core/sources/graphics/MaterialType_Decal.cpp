@@ -128,7 +128,10 @@ iGpuProgram* cMaterialType_Decal::GetGpuProgram(cMaterial *apMaterial, eMaterial
     if(aRenderMode == eMaterialRenderMode_Diffuse)
     {
         tFlag lFlags =0;
-        if(apMaterial->HasUvAnimation())                        lFlags |= eFeature_Diffuse_UvAnimation;
+        if(apMaterial->HasUvAnimation())
+        {
+            lFlags |= eFeature_Diffuse_UvAnimation;
+        }
 
         return mpProgramManager->GenerateProgram(aRenderMode,lFlags);
     }

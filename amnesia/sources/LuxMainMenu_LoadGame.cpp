@@ -88,14 +88,19 @@ void cLuxMainMenu_LoadGame::CreateGui()
     vButtons[0]->SetFocusNavigation(eUIArrow_Right, vButtons[1]);
     vButtons[1]->SetFocusNavigation(eUIArrow_Left, vButtons[0]);
     for(size_t i=0; i<vButtons.size(); ++i)
+    {
         vButtons[i]->SetFocusNavigation(eUIArrow_Up, mpLBSavedGames);
+    }
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxMainMenu_LoadGame::ExitPressed()
 {
-    if(mpGuiSet->PopUpIsActive()) return;
+    if(mpGuiSet->PopUpIsActive())
+    {
+        return;
+    }
 
     gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_LastEnum);
 }
@@ -267,7 +272,9 @@ bool cLuxMainMenu_LoadGame::LoadGameCallback(iWidget* apWidget, const cGuiMessag
 {
     bool bOkPressed = aData.mlVal==0? true : false;
     if(bOkPressed==false)
+    {
         return true;
+    }
 
     LoadGame(mpLBSavedGames->GetSelectedItem());
 
@@ -281,12 +288,18 @@ bool cLuxMainMenu_LoadGame::ExitCallback(iWidget* apWidget, const cGuiMessageDat
 {
     bool bOkPressed = aData.mlVal==0? true : false;
     if(bOkPressed==false)
+    {
         return true;
+    }
 
     if(gpBase->mpCustomStory==NULL)
+    {
         gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_LastEnum);
+    }
     else
+    {
         gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_CustomStory);
+    }
 
     return true;
 }
