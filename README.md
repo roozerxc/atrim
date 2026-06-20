@@ -46,7 +46,7 @@ You will also need to [configure the *DirectX SDK* in your *Visual C++* director
 #### Engine and Game
 1. Open the `atrim.sln` solution file.
 2. Right click on the `amnesia` project and in **Properties** change the **Working Directory** to your *Amnesia: The Dark Descent* install folder.
-3. Press `F5` to debug the solution. This will build the `HPL2` project first and then `amnesia`.
+3. Press `F5` to debug the solution. This will build the `HPL2` project first, then `amnesia`, and then launch the game after building.
 
 ## License
 atrim is licensed under Version 3 of the GNU General Public License (GNU GPL).
