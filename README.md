@@ -1,18 +1,18 @@
 # atrim
 **A legal, unmodified and DRM-free copy of *Amnesia: The Dark Descent* and/or *Amnesia: A Machine for Pigs* is required.**
 
-atrim is a port of *Amnesia: The Dark Descent*, *Amnesia: A Machine for Pigs* and their editors to significantly weaker (or unorthodox) hardware, usually below the minimum official specifications. Besides this, the project also has several bug fixes and enhancements to the engine and base game.
+atrim is a port of *Amnesia: The Dark Descent*, *Amnesia: A Machine for Pigs* and their editors to significantly weaker (or unorthodox) hardware, usually below the minimum official specifications.
+
+Besides this, the project also has several bug fixes and enhancements to the engine and base game.
+
+> [!IMPORTANT]
+> - **This port is based on the official *Amnesia: The Dark Descent* version 1.4.3 (1.41b) source code release from October 12th, 2020.**
+> - **Mods installed from the Steam Workshop, including Custom Stories and Full Conversion mods will not work here!**
+
+> [!CAUTION]
+> - **DirectInput controller support on SDL 1.2.15 is very poor! We need your help! (see issue [#21](https://github.com/roozerxc/atrim/issues/21))**
 
 For a list of changes, read [`CHANGELOG.md`](CHANGELOG.md). Special thanks are in [`THANKS.md`](THANKS.md).
-
-### IMPORTANT!
-**WARNING: If you have the latest Steam release of Amnesia: The Dark Descent version 1.5, Custom Stories and Total/Full Conversion mods that were downloaded from the Steam Workshop WILL NOT WORK WITH THIS PORT! This is because Frictional Games has not provided the source code for version 1.5 yet (and there is no ETA on when that will happen! IT MEANS THIS PORT IS COMPLETELY MISSING STEAM WORKSHOP SUPPORT!**
-
-With this port, you should download and install mods from their original sources (*ModDB*, *Nexus Mods*, *GameBanana*) as long as they support at least **version 1.4.3** (also called version 1.41b, *GOG.com* and *Epic Games Store* copies have this version)! Additionally, you may convert *Steam Workshop* mods to make them compatible with version 1.4.3, but this is a **MANUAL PROCESS** which requires some experience and familiarity with the HPL2 engine, and is **NOT RECOMMENDED!**
-
-*DirectInput* controller support is very poor via SDL 1.2.15 (see issue #21). *XInput* controllers, however, do work and are fully functional with this port, but in order to use *XInput* controllers (for example, any *Xbox 360*, *Xbox One*, and/or *Xbox Series* controllers), you must add the `USE_XINPUT` preprocessor definition to both the `HPL2` and `amnesia` projects on the `Debug` and `Release` configurations.
-
-**Compiled binaries that use this preprocessor definition (`USE_XINPUT`) must require at least *Windows XP Service Pack 1*.**
 
 ## Installation
 ### Steps
@@ -23,9 +23,9 @@ With this port, you should download and install mods from their original sources
 ### System Requirements
 - 1.8+ GHz single-core CPU
 - *OpenGL* 2.1-compatible graphics card
-- *DirectX* and/or *OpenAL*-compatible sound card
+- *DirectSound* and/or *OpenAL*-compatible sound card
 
-## Building
+## Building & Debugging
 ### Prerequisites
 - [*Creative Labs OpenAL 1.1 Core SDK*](https://openal.org/downloads)
 - [*Microsoft DirectX SDK February 2010*](https://archive.org/download/dxsdk_feb10/DXSDK_Feb10.exe)
@@ -36,13 +36,17 @@ With this port, you should download and install mods from their original sources
 You will also need to [configure the *DirectX SDK* in your *Visual C++* directories](https://stackoverflow.com/a/46762539).
 
 ### Steps
-Dependencies must be manually compiled via `dependencies.sln` first to avoid LNK4099 warnings as with issue #25.
-
+#### Dependencies
+> [!IMPORTANT]
+> **You must compile the dependencies first before building `atrim.sln`**
 1. `git clone` the repository or download it from the **Code** button.
-2. Open the `atrim.sln` solution file.
-3. Press F7 to build the solution. This will compile the `HPL2` project first and then the `amnesia` project.
+2. Open the `HPL2/dependencies` folder and open the `dependencies.sln` solution file.
+3. Press `F7` to build the solution. This will compile the dependencies needed for the `HPL2` project.
 
-Compiled binaries are found in the `compiled` folder of the solution's root and in it there should be a folder for the configuration you chose to compile the project (`debug`, `release`).
+#### Engine and Game
+1. Open the `atrim.sln` solution file.
+2. Right click on the `amnesia` project and in **Properties** change the **Working Directory** to your *Amnesia: The Dark Descent* install folder.
+3. Press `F5` to debug the solution. This will build the `HPL2` project first and then `amnesia`.
 
 ## License
 atrim is licensed under Version 3 of the GNU General Public License (GNU GPL).
