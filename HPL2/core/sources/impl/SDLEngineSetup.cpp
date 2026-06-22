@@ -37,7 +37,7 @@ namespace hpl
 
 cSDLEngineSetup::cSDLEngineSetup(tFlag alHplSetupFlags)
 {
-    if(SDL_Init( SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_JOYSTICK ) < 0)
+    if(SDL_Init( SDL_INIT_VIDEO | SDL_INIT_TIMER ) < 0)
     {
         FatalError("Couldn't initialize SDL: %s\n", SDL_GetError());
         exit(1);
