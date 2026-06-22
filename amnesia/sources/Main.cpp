@@ -29,7 +29,7 @@ int hplMain(const tString &asCommandline)
     {
         if(gpBase->msErrorMessage==_W(""))
         {
-            gpBase->msErrorMessage = _W("Error occured");
+            gpBase->msErrorMessage = _W("Failed to initialize base engine!");
         }
 
         cPlatform::CreateMessageBox(_W("Error!"),gpBase->msErrorMessage.c_str());
