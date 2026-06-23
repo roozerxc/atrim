@@ -497,15 +497,6 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, SelectStory);
 
 //-----------------------------------------------------------------------
 
-bool cLuxMainMenu_CustomStoryList::RepopulateStoryList(iWidget* apWidget, const cGuiMessageData& aData)
-{
-    PopulateStoryList();
-    return true;
-}
-kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, RepopulateStoryList);
-
-//-----------------------------------------------------------------------
-
 bool cLuxMainMenu_CustomStoryList::PressOK(iWidget* apWidget, const cGuiMessageData& aData)
 {
     /////////////////////////////////////////////////////////////

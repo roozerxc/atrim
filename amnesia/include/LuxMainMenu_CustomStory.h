@@ -90,9 +90,6 @@ private:
     bool SelectStory(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(SelectStory);
 
-    bool RepopulateStoryList(iWidget* apWidget, const cGuiMessageData& aData);
-    kGuiCallbackDeclarationEnd(RepopulateStoryList);
-
     bool PressOK(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressOK);
 
