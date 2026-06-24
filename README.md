@@ -5,7 +5,7 @@ atrim is a client for Frictional Games' *Amnesia: The Dark Descent* that offers 
 
 The game and engine can also be ported to significantly weaker (or unorthodox) hardware which are usually below the official minimum specifications.
 
-atrim is currently being maintained by one person (@RoozerXC). If you want to contribute to atrim, feel free to fork and submit your own pull requests, as long as everything follows the [Code of Conduct (or Anti-CoC)](CODE-OF-CONDUCT.md).
+atrim is currently being maintained by one person ([@RoozerXC](https://github.com/roozerxc)). If you want to contribute to atrim, feel free to fork and submit your own pull requests, as long as everything follows the [Code of Conduct (or Anti-CoC)](CODE-OF-CONDUCT.md).
 
 > [!IMPORTANT]
 > - **This port is based on the official *Amnesia: The Dark Descent* version 1.4.3 (1.41b) source code release from October 12th, 2020.**
