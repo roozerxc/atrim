@@ -84,12 +84,9 @@
 
 //-----------------------------------------------------------------------
 
-#define kCurrentVersion_Main 1
+#define kCurrentVersion_Major 1
 #define kCurrentVersion_Minor 4
-
-//-----------------------------------------------------------------------
-
-extern tString gsSerialKey;
+#define kCurrentVersion_Patch 6
 
 //-----------------------------------------------------------------------
 
@@ -436,8 +433,8 @@ bool cLuxBase::Init(const tString &asCommandline)
         return false;
     }
 
-    Log("Version %d.%d \n",kCurrentVersion_Main, kCurrentVersion_Minor);
-    Log("\n");
+    Log("Version %d.%d.%d", kCurrentVersion_Major, kCurrentVersion_Minor, kCurrentVersion_Patch);
+    Log("\n\n");
 
     /////////////////////////////
     // Init the engine
