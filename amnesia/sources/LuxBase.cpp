@@ -438,7 +438,7 @@ bool cLuxBase::Init(const tString &asCommandline)
         return false;
     }
 
-    Log("Version %d.%d.%d.%d", kCurrentVersion_Major, kCurrentVersion_Minor, kCurrentVersion_Patch, GetBuildID());
+    Log("Version %d.%d.%d.%s", kCurrentVersion_Major, kCurrentVersion_Minor, kCurrentVersion_Patch, GetBuildID());
     Log("\n\n");
 
     /////////////////////////////
