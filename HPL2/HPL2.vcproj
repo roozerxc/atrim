@@ -24,6 +24,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="start tools\buildcounter.bat"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -1411,6 +1412,14 @@
 				</File>
 				<File
 					RelativePath=".\core\include\impl\MutexWin32.h"
+					>
+				</File>
+				<File
+					RelativePath=".\core\sources\impl\PlatformBuildID.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\include\impl\PlatformBuildID.h"
 					>
 				</File>
 				<File

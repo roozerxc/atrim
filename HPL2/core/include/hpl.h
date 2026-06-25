@@ -125,7 +125,6 @@
 #include "scene/FogArea.h"
 #include "scene/DummyRenderable.h"
 
-
 #include "sound/Sound.h"
 #include "sound/SoundChannel.h"
 #include "sound/SoundData.h"

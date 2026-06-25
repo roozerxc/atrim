@@ -28,11 +28,7 @@
 
 #include "system/String.h"
 
-
-// Include for using the versioning header
-//#include "BuildID_HPL2_0.h"
-
-// @todo redo this prototype to take a tStringVec instead
+#include "impl/PlatformBuildID.h"
 
 #ifndef IGNORE_HPL_MAIN
 extern int hplMain(const hpl::tString &asCommandLine);
@@ -440,7 +436,7 @@ cLowLevelSystemSDL::cLowLevelSystemSDL()
     mpScriptEngine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
     if(mpScriptEngine==NULL)
     {
-        Error("Failed to start angel script!\n");
+        Error("Failed to start AngelScript!\n");
     }
 
     mpScriptOutput = hplNew( cScriptOutput, () );
@@ -450,9 +446,8 @@ cLowLevelSystemSDL::cLowLevelSystemSDL()
 
     mlHandleCount = 0;
 
-    Log("-------- THE HPL ENGINE LOG ------------\n");
-    //Log("Engine build ID %s\n\n",
-    //    GetBuildID_HPL2_0());
+    Log("------------------ THE HPL ENGINE LOG ------------------");
+    Log("\n\n");
 
     //const char* pASLibOptions = asGetLibraryOptions();
     //Log(" AngelScript options: '%s'\n", pASLibOptions);
