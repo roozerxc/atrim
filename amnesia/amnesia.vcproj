@@ -81,6 +81,7 @@
 				AdditionalLibraryDirectories="$(SolutionDir)\HPL2\dependencies\lib\$(PlatformName)-$(ConfigurationName)\"
 				GenerateDebugInformation="true"
 				SubSystem="2"
+				LargeAddressAware="2"
 				TargetMachine="1"
 			/>
 			<Tool
