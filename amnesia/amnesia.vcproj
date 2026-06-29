@@ -82,6 +82,7 @@
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				LargeAddressAware="2"
+				TerminalServerAware="1"
 				TargetMachine="1"
 			/>
 			<Tool
