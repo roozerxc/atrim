@@ -76,8 +76,6 @@
 #include "LuxCommentaryIcon.h"
 #include "LuxAchievementHandler.h"
 
-#include "../../HPL2/core/include/impl/PlatformBuildID.h"
-
 //////////////////////////////////////////////////////////////////////////
 // GLOBAL FUNCTIONS
 //////////////////////////////////////////////////////////////////////////
@@ -433,8 +431,7 @@ bool cLuxBase::Init(const tString &asCommandline)
         return false;
     }
 
-    Log("Version %d.%d.%d\n", kCurrentVersion_Major, kCurrentVersion_Minor, kCurrentVersion_Patch);
-    Log("Engine Build ID: %s\n\n", GetBuildID());
+    Log("Version %d.%d.%d\n\n", kCurrentVersion_Major, kCurrentVersion_Minor, kCurrentVersion_Patch);
 
     /////////////////////////////
     // Init the engine

@@ -446,7 +446,8 @@ cLowLevelSystemSDL::cLowLevelSystemSDL()
 
     mlHandleCount = 0;
 
-    Log("------------------ THE HPL ENGINE LOG ------------------");
+    Log("------------------ THE HPL ENGINE LOG ------------------\n");
+    Log("Engine Build ID: %s", GetBuildID());
     Log("\n\n");
 
     //const char* pASLibOptions = asGetLibraryOptions();
