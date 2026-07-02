@@ -15,6 +15,7 @@ class iVideoLoader : public iResourceLoader
 {
     friend class cVideoLoaderHandler;
 public:
+    virtual ~iVideoLoader() { }
 
     virtual iVideoStream* LoadVideo(const tWString& asFile)=0;
 

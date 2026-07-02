@@ -76,6 +76,7 @@ public:
         return mbIsVisible && mfCoverageAmount >0;
     }
     void SetVisible(bool abVisible);
+
     /**
      * This is needed since IsVisible does not return the actual var value!
      */
@@ -92,6 +93,15 @@ public:
     inline float GetIlluminationAmount()const
     {
         return mfIlluminationAmount;
+    }
+
+    virtual void SetShaderTimer(float afX)
+    {
+        mfShaderTimer = afX;
+    }
+    inline float GetShaderTimer()const
+    {
+        return mfShaderTimer;
     }
 
     void SetCoverageAmount(float afX);
@@ -131,6 +141,11 @@ public:
     inline void SetViewSpaceZ(float afZ)
     {
         mfViewSpaceZ = afZ;
+    }
+
+    virtual bool IsOccluder()
+    {
+        return false;
     }
 
     cMatrixf* GetInvModelMatrix();
@@ -226,6 +241,7 @@ protected:
     float mfViewSpaceZ;
 
     float mfIlluminationAmount;
+    float mfShaderTimer;
     float mfCoverageAmount;
 
     iRenderableContainerNode *mpRenderContainerNode;

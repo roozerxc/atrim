@@ -177,6 +177,12 @@ public:
     static void LoadRecentColorList(cXmlElement* apElem);
     static void SaveRecentColorList(cXmlElement* apElem);
 
+    static void SetRecentColorNum(int alX);
+    static int GetRecentColorNum()
+    {
+        return mlRecentColorNum;
+    }
+
     void SetShowTransPreview(bool abX)
     {
         mbShowTransPreview = abX;

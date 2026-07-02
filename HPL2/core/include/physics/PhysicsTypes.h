@@ -81,6 +81,7 @@ class iPhysicsBody;
 class iPhysicsRayCallback
 {
 public:
+    virtual ~iPhysicsRayCallback() {}
     virtual bool BeforeIntersect(iPhysicsBody *pBody)
     {
         return true;
@@ -95,6 +96,7 @@ class cCollideData;
 class iPhysicsWorldCollisionCallback
 {
 public:
+    virtual ~iPhysicsWorldCollisionCallback() {}
     virtual void OnCollision(iPhysicsBody *apBody, cCollideData *apCollideData)=0;
 };
 

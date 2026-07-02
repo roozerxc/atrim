@@ -27,6 +27,7 @@ public:
         mpNewFocused = apNewFocused;
         mbFocusChanged = apNewFocused != NULL;
     }
+
     cGuiSet* GetGuiSet()
     {
         return mpSet;

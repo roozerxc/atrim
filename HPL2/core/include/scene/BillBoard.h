@@ -92,6 +92,7 @@ public:
     }
 
     bool IsVisible();
+    bool IsFullyTranslucent();
 
     //Renderable implementations
     cMaterial *GetMaterial()

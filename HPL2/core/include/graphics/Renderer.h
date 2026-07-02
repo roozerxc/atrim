@@ -213,6 +213,7 @@ public:
     iTexture *mpTexture;
     iFrameBuffer *mpBuffer;
     int mlFrameCount;
+    int mlShadowCasterNum;
 
     cShadowMapLightCache mCache;
 };
@@ -272,6 +273,11 @@ public:
     cRenderList *GetCurrentRenderList()
     {
         return mpCurrentRenderList;
+    }
+
+    float GetCurrentFrameTime()
+    {
+        return mfCurrentFrameTime;
     }
 
     iVertexBuffer* GetShapeBoxVertexBuffer()
@@ -348,6 +354,14 @@ public:
         return mbRefractionEnabled;
     }
 
+    static void IncDrawCalls()
+    {
+        mlDrawCalls++;
+    }
+    static int GetDrawCalls()
+    {
+        return mlDrawCalls;
+    }
 
     //Debug
     tRenderableVec *GetShadowCasterVec()
@@ -539,6 +553,7 @@ protected:
     static bool mbParallaxEnabled;
     static int mlReflectionSizeDiv;
     static bool mbRefractionEnabled;
+    static int mlDrawCalls;
 };
 
 //---------------------------------------------

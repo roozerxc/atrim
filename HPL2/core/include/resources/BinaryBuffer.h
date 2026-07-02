@@ -181,6 +181,7 @@ public:
     void AddShort16(short alX);
     void AddUnsignedShort16(unsigned short alX);
     void AddInt32(int alX);
+    void AddUnsignedInt32(unsigned int alX);
     void AddFloat32(float afX);
     void AddVector2f(const cVector2f& avX);
     void AddVector3f(const cVector3f& avX);
@@ -211,6 +212,7 @@ public:
     short GetShort16();
     unsigned short GetUnsignedShort16();
     int GetInt32();
+    unsigned int GetUnsignedInt32();
     float GetFloat32();
     void GetVector2f(cVector2f *apX);
     void GetVector3f(cVector3f *apX);
@@ -220,7 +222,7 @@ public:
     void GetQuaternion(cQuaternion* apX);
     void GetColor(cColor *apX);
     void GetString( tString *apStr);
-//        void GetStringW(tWString *apStr);
+    void GetStringW(tWString *apStr);
 
     void GetCharArray(char* apData, size_t alSize);
     void GetShort16Array(short* apData, size_t alSize);

@@ -375,7 +375,6 @@ enum eGuiSkinGfx
     eGuiSkinGfx_FilePickerIconOther,
     eGuiSkinGfx_FilePickerIconFolder,
 
-
     eGuiSkinGfx_LastEnum
 };
 

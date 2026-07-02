@@ -31,6 +31,7 @@ class iMeshLoader : public iResourceLoader
     friend class cMeshLoaderHandler;
 public:
     iMeshLoader(iLowLevelGraphics *apLowLevelGraphics): mpLowLevelGraphics(apLowLevelGraphics) {}
+    virtual ~iMeshLoader() { }
 
     virtual cMesh* LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags)=0;
     virtual bool SaveMesh(cMesh* apMesh,const tWString& asFile)=0;

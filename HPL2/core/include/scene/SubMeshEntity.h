@@ -59,6 +59,7 @@ public:
     iVertexBuffer* GetVertexBuffer();
 
     cBoundingVolume* GetBoundingVolume();
+    cBoundingVolume* GetSubMeshBoundingVolume();
 
     cMatrixf* GetModelMatrix(cFrustum *apFrustum);
 
@@ -84,6 +85,15 @@ public:
     void SetUserData(void *apData)
     {
         mpUserData = apData;
+    }
+
+    void SetIsOccluder(bool abX)
+    {
+        mbIsOccluder = abX;
+    }
+    bool IsOccluder()
+    {
+        return mbIsOccluder;
     }
 
     //Entity implementation
@@ -125,7 +135,10 @@ private:
     cSubMeshEntityBodyUpdate* mpEntityCallback;
     bool mbUpdateBody;
 
+    bool mbIsOccluder;
     bool mbGraphicsUpdated;
+    int mlBoneMatricesUpdateCount;
+    float mfDistanceToFrustum;
 
     char mlStaticNullMatrixCount;
     void *mpUserData;

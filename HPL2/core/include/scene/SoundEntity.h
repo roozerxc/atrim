@@ -28,6 +28,8 @@ public:
 class iSoundEntityGlobalCallback
 {
 public:
+    virtual ~iSoundEntityGlobalCallback() {}
+
     virtual void OnStart(cSoundEntity *apSoundEntity)=0;
 };
 

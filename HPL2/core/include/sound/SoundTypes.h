@@ -20,6 +20,7 @@ enum eSoundEntityType
 class iSoundEntryCallback
 {
 public:
+    virtual ~iSoundEntryCallback() {}
     virtual void OnPriorityRelease()=0;
 };
 

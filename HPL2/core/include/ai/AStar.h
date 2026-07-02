@@ -23,6 +23,9 @@ typedef tAINodeList::iterator tAINodeListIt;
 
 //--------------------------------------
 
+#define eAStarNodeFlag_Open			 (0x01)
+#define eAStarNodeFlag_CastRay		 (0x02)
+
 class cAStarNode
 {
 public:
@@ -30,6 +33,9 @@ public:
 
     float mfCost;
     float mfDistance;
+
+    unsigned int mlAStarCount;
+    unsigned char mFlags;
 
     cAStarNode *mpParent;
     cAINode *mpAINode;
@@ -41,9 +47,21 @@ public:
     bool operator()(cAStarNode* apNodeA,cAStarNode* apNodeB) const;
 };
 
+class cAStarNodePresort
+{
+public:
+    bool operator()(cAStarNode* apNodeA,cAStarNode* apNodeB) const;
+};
 
+typedef std::list<cAStarNode*> tAStarNodeList;
 typedef std::set<cAStarNode*,cAStarNodeCompare> tAStarNodeSet;
 typedef tAStarNodeSet::iterator tAStarNodeSetIt;
+
+typedef std::vector<cAStarNode> tAStarNodeVec;
+typedef tAStarNodeVec::iterator tAStarNodeVecIt;
+
+typedef std::set<cAStarNode*,cAStarNodePresort> tAStarNodePresortSet;
+typedef tAStarNodePresortSet::iterator tAStarNodePresortSetIt;
 
 //--------------------------------------
 class cAStarHandler;
@@ -86,25 +104,36 @@ private:
     void AddOpenNode(cAINode *apAINode, cAStarNode *apParent, float afDistance);
 
     cAStarNode* GetBestNode();
+    cAStarNode* GetNode(cAINode *apAINode);
 
     float Cost(float afDistance, cAINode *apAINode, cAStarNode *apParent);
     float Heuristic(const cVector3f& avStart, const cVector3f& avGoal);
 
     bool IsGoalNode(cAINode *apAINode);
 
+    void ClearUnlistedNodes(bool abGoals, bool abOpen);
+
     cVector3f mvGoal;
+    cVector3f mvStart;
 
     cAStarNode* mpGoalNode;
     tAINodeSet m_setGoalNodes;
 
     cAINodeContainer *mpContainer;
 
+    tUIntVec mvOpenListCount;
+    tUIntVec mvGoalListCount;
+
     int mlMaxIterations;
+    unsigned int mlAStarCount;
 
     iAStarCallback *mpCallback;
 
     tAStarNodeSet m_setOpenList;
     tAStarNodeSet m_setClosedList;
+
+    tAStarNodeVec mvNodes;
+    tAStarNodePresortSet m_setPresortNodes;
 };
 
 };

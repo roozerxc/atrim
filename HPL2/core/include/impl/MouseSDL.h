@@ -34,6 +34,8 @@ public:
 
     void Reset();
 
+    static float GetMousePointerSpeed();
+
 private:
     bool mbFirstTime;
 

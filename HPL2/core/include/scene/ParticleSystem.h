@@ -178,6 +178,15 @@ public:
         return mpData;
     }
 
+    void SetFlickerMultiplier(const float afFlickerMultiplier)
+    {
+        mfFlickerMultiplier = afFlickerMultiplier;
+    }
+    float GetFlickerMultiplier()
+    {
+        return mfFlickerMultiplier;
+    }
+
 private:
     cResources *mpResources;
     cGraphics *mpGraphics;
@@ -189,6 +198,8 @@ private:
     bool mbRemoveWhenDead;
 
     bool mbIsVisible;
+
+    float mfFlickerMultiplier;
 
     cColor mColor;
     bool mbFadeAtDistance;

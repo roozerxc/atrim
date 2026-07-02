@@ -382,9 +382,8 @@ void cTextureManager::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-iTexture* cTextureManager::CreateSimpleTexture(    const tString& asName,bool abUseMipMaps,
-        eTextureUsage aUsage, eTextureType aType,
-        unsigned int alTextureSizeLevel)
+iTexture* cTextureManager::CreateSimpleTexture(const tString& asName,bool abUseMipMaps,
+        eTextureUsage aUsage, eTextureType aType, unsigned int alTextureSizeLevel, bool isFlattened3D)
 {
     tWString sPath;
     iTexture* pTexture;

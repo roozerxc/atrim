@@ -251,6 +251,15 @@ public:
         return mbCollideCharacter;
     }
 
+    void SetBlocksPathfinding(bool abX)
+    {
+        mbBlocksPathfinding = abX;
+    }
+    bool GetBlocksPathfinding()
+    {
+        return mbBlocksPathfinding;
+    }
+
     void SetCharacterBody(iCharacterBody *apCharBody)
     {
         mpCharacterBody = apCharBody;
@@ -469,6 +478,7 @@ protected:
     bool mbBlocksLight;
     bool mbIsCharacter;
     bool mbCollideCharacter;
+    bool mbBlocksPathfinding;
     bool mbIsRagDoll;
     bool mbCollideRagDoll;
     bool mbVolatile;

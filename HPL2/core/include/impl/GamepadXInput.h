@@ -19,6 +19,7 @@ class cGamepadXInput : public iGamepad
 {
 public:
     cGamepadXInput(int alIndex);
+    ~cGamepadXInput();
 
     tString GetGamepadName()
     {

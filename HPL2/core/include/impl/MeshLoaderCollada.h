@@ -113,6 +113,15 @@ typedef std::vector<cColladaVtxIndex> tColladaVtxIndexVec;
 
 //------------------------------------------------
 
+struct cColladaSortVertex
+{
+    cColladaSortVertex() : mlOriginalIndex(0), mlMergedIndex(0), mVertex() {}
+    cVertex mVertex;
+    int mlOriginalIndex;
+    int mlMergedIndex;
+};
+
+//------------------------------------------------
 
 class cColladaExtraVtx
 {
@@ -192,6 +201,7 @@ public:
     int mlPosArrayIdx; //The index for array containing positions
     int mlNormArrayIdx; //The index for array containing normals
     int mlTexArrayIdx; //The index for array containing texcoords
+    tIntVec mvOptimizedVertexId;
 };
 
 typedef std::vector<cColladaGeometry> tColladaGeometryVec;
@@ -572,6 +582,10 @@ private:
     tString GetMaterialTextureFile(const tString &asMaterial, tColladaMaterialVec &avColladaMaterialVec,
                                    tColladaTextureVec &avColladaTextureVec,
                                    tColladaImageVec &avColladaImageVec);
+
+    int OptimizeGeometry(tColladaGeometryVec &avColladaGeometryVec);
+
+    void GenerateTangents(cColladaGeometry &aGeometry);
 
     cVector3f GetVectorPos(const cVector3f &avVec);
     cVector3f GetVectorNormal(const cVector3f &avVec);

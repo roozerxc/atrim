@@ -68,9 +68,15 @@ public:
         return mlID;
     }
 
+    int GetListID()
+    {
+        return mlListID;
+    }
+
 private:
     tString msName;
     int mlID;
+    int mlListID;
     cVector3f mvPosition;
     void *mpUserData;
 
@@ -196,6 +202,10 @@ public:
      * Get the number of nodes.
      */
     int GetNodeNum() const;
+    int GetListNum()
+    {
+        return mlListNum;
+    }
 
     /**
      * Get a node.
@@ -205,6 +215,11 @@ public:
     {
         return mvNodes[alIdx];
     }
+
+    inline int GetUniqueID(cAINode* apNode)
+    {
+        return int(apNode - mvNodes.front());
+    };
 
     /**
      * Gets a node based on the name.
@@ -223,6 +238,12 @@ public:
      * Build a grid map for nodes. (Used internally mostly)
      */
     void BuildNodeGridMap();
+
+    /**
+     * Connect the nodes to a list id to easially determine if two seperate nodes are connected
+     */
+    void SetupListID();
+    void SetupListIDIterative(cAINode* apNode, int alID);
 
     /**
      * Returns a node iterator. Note that the radius is not checked, some nodes may lie outside.
@@ -338,6 +359,8 @@ private:
     int mlMinNodeEnds;
     float mfMaxEndDistance;
     float mfMaxHeight;
+
+    int mlListNum;
 };
 
 };

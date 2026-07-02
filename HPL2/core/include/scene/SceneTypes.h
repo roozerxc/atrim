@@ -73,6 +73,7 @@ enum eBillboardType
 class iViewportCallback
 {
 public:
+    virtual ~iViewportCallback() {}
     virtual void OnPreWorldDraw()=0;
     virtual void OnPostWorldDraw()=0;
 
@@ -97,6 +98,7 @@ class iEntity3D;
 class iEntityCallback
 {
 public:
+    virtual ~iEntityCallback() {}
     virtual void OnTransformUpdate(iEntity3D * apEntity)=0;
 };
 
@@ -110,6 +112,8 @@ class cRendererCallbackFunctions;
 class iRendererCallback
 {
 public:
+    virtual ~iRendererCallback() {}
+
     virtual void OnPostSolidDraw(cRendererCallbackFunctions *apFunctions)=0;
     virtual void OnPostTranslucentDraw(cRendererCallbackFunctions *apFunctions)=0;
     virtual void OnPostPostGBufferDraw(cRendererCallbackFunctions *apFunctions) {}

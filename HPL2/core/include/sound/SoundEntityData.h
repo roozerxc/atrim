@@ -50,6 +50,24 @@ public:
         return mbFadeStop;
     }
 
+    void SetKeepPlayingOutOfRange(bool abX)
+    {
+        mbKeepPlayingOutOfRange = abX;
+    }
+    bool GetKeepPlayingOutOfRange()
+    {
+        return mbKeepPlayingOutOfRange;
+    }
+
+    void SetAIVolume(float afX)
+    {
+        mfAIVolume = afX;
+    }
+    float GetAIVolume()
+    {
+        return mfAIVolume;
+    }
+
     void SetVolume(float afX)
     {
         mfVolume = afX;
@@ -164,6 +182,9 @@ protected:
     bool mbFadeStart;
     bool mbFadeStop;
 
+    bool mbKeepPlayingOutOfRange;
+
+    float mfAIVolume;
     float mfVolume;
     float mfMaxDistance;
     float mfMinDistance;

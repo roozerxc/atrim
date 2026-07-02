@@ -46,6 +46,7 @@ class iContainerKeyPair
 {
 public:
     virtual ~iContainerKeyPair() {}
+
     virtual size_t Size()=0;
 
     virtual void AddVoidPtr(void *apKey, void **apClass)=0;
@@ -67,8 +68,16 @@ public:
     cContainerVecIterator(std::vector<T> *apVec)
     {
         mpVec = apVec;
+        if(apVec->empty())
+        {
+            mIt = apVec->end();
+        }
+        else
+        {
         mIt = apVec->begin();
+        }
     }
+    ~cContainerVecIterator() {}
 
     bool HasNext()
     {
@@ -121,6 +130,7 @@ private:
 
 public:
     cContainerVec() {}
+    ~cContainerVec() {}
 
     //////////////////////
     size_t Size()
@@ -183,8 +193,17 @@ public:
     cContainerListIterator(std::list<T> *apVec)
     {
         mpVec = apVec;
-        mIt = apVec->begin();
+        if(apVec->empty())
+        {
+            mIt = apVec->end();
+        }
+        else
+        {
+            mIt = apVec->begin();
+        }
     }
+
+    ~cContainerListIterator() {}
 
     bool HasNext()
     {

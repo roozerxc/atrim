@@ -22,7 +22,12 @@ class iPhysicsBody;
 
 //----------------------------------------
 
+#if (defined(__ppc__) || defined(__PPC__)) && !defined(__LP64__)
+// PowerPC Mac/Xenon must be specialized as x86/x64 Newton data are similar
+#define MAP_CACHE_FORMAT_MAGIC_NUMBER		0xF4414550
+#else
 #define MAP_CACHE_FORMAT_MAGIC_NUMBER       0xF441451F
+#endif
 
 // Specify map cache format versions for other games.
 #define MAP_CACHE_FORMAT_VERSION_TDD        10

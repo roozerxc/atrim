@@ -95,12 +95,12 @@ class iMapDataLoader : public cResourceVarsObject
 {
 public:
     iMapDataLoader(const tString& asName): msName(asName) {}
+    virtual ~iMapDataLoader() {}
 
     const tString& GetName()
     {
         return msName;
     }
-
 
 protected:
     tString msName;

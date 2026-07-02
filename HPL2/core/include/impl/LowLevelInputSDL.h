@@ -26,6 +26,7 @@ public:
     void InitGamepadSupport();
     void DropGamepadSupport();
 
+    bool DirtyGamepads();
     int GetPluggedGamepadNum();
 
     iMouse* CreateMouse();
@@ -41,6 +42,8 @@ public:
     void resetQuitMessagePosted();
 public:
     std::list<SDL_Event> mlstEvents;
+    int mlConnectedDevices;
+    bool mbDirtyGamepads;
 
 private:
     iLowLevelGraphics *mpLowLevelGraphics;

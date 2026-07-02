@@ -143,6 +143,10 @@ public:
     void FadeTo(const cColor& aCol, float afRadius, float afTime);
     void StopFading();
     bool IsFading();
+    float GetFadeProgress()
+    {
+        return 1.0f - mfFadeTime / mfFadeDuration;
+    }
     cColor GetDestColor()
     {
         return mDestCol;
@@ -245,6 +249,26 @@ public:
     }
     void SetDiffuseColor(cColor aColor);
 
+    float GetBrightness()
+    {
+        return mfBrightness;
+    }
+    float GetFalloff()
+    {
+        return mfFalloff;
+    }
+
+    void SetBrightness(float afBrightness)
+    {
+        mfBrightness = afBrightness;
+    }
+    void SetFalloff(float afFalloff)
+    {
+        mfFalloff = afFalloff;
+    }
+
+    cColor GetColor();
+
     const cColor&  GetDefaultDiffuseColor()
     {
         return mDefaultDiffuseColor;
@@ -336,7 +360,6 @@ public:
         return mfRadius;
     }
 
-
     float GetSourceRadius()
     {
         return mfSourceRadius;
@@ -351,6 +374,11 @@ public:
     void SetWorld(cWorld *apWorld)
     {
         mpWorld = apWorld;
+    }
+
+    bool GetFlickerOn()
+    {
+        return mbFlickerOn;
     }
 
 
@@ -387,6 +415,9 @@ protected:
     float mfSourceRadius;
     float mfRadius;
 
+    float mfBrightness;
+    float mfFalloff;
+
     bool mbCastShadows;
     tObjectVariabilityFlag mlShadowCastersAffected;
 
@@ -402,6 +433,7 @@ protected:
     cColor mDestCol;
     float mfDestRadius;
     float mfFadeTime;
+    float mfFadeDuration;
 
     ///////////////////////////
     //Flicker

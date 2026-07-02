@@ -99,6 +99,7 @@ public:
     iTexture *mpShadowTexture;
     bool mbCastShadows;
     eShadowMapResolution mShadowResolution;
+    int mlShadowCasterNum;
 };
 
 //---------------------------------------------
@@ -127,6 +128,10 @@ public:
     {
         return mpAccumBuffer;
     }
+    iFrameBuffer *GetAccumLightBuffer()
+    {
+        return mpAccumLightBuffer;
+    }
 
     iTexture* GetRefractionTexture()
     {
@@ -136,6 +141,10 @@ public:
     {
         return mpReflectionTexture;
     }
+
+    cDeferredLight* GetDeferredLight(int alID);
+    int GetDeferredLightNum();
+    float GetLightComplexity(cDeferredLight* apLightData);
 
     //Static properties. Must be set before renderer data load.
     static void SetGBufferType(eDeferredGBuffer aType)
@@ -239,6 +248,33 @@ public:
         return mfSSAOSkipEdgeLimit;
     }
 
+    static void SetDebugRenderLightComplexity(bool abX)
+    {
+        mbDebugRenderLightComplexity = abX;
+    }
+    static bool GetDebugRenderLightComplexity()
+    {
+        return mbDebugRenderLightComplexity;
+    }
+
+    static void SetDebugRenderOverdraw(bool abX)
+    {
+        mbDebugRenderOverdraw = abX;
+    }
+    static bool GetDebugRenderOverdraw()
+    {
+        return mbDebugRenderOverdraw;
+    }
+
+    static void SetDebugPrevFrameOcclusion(bool abX)
+    {
+        mbDebugPrevFrameOcclusion = abX;
+    }
+    static bool GetDebugPrevFrameOcclusion()
+    {
+        return mbDebugPrevFrameOcclusion;
+    }
+
     static void SetOcclusionTestLargeLights(bool abX)
     {
         mbOcclusionTestLargeLights = abX;
@@ -257,6 +293,29 @@ public:
         return mbDebugRenderFrameBuffers;
     }
 
+    static void SetDebugRenderLightBuffer(bool abX)
+    {
+        mbDebugRenderLightBuffer = abX;
+    }
+    static bool GetDebugRenderLightBuffer()
+    {
+        return mbDebugRenderLightBuffer;
+    }
+
+    static void SetModulateFog(bool abX)
+    {
+        mbModulateFog = abX;
+    }
+    static bool GetModulateFog()
+    {
+        return mbModulateFog;
+    }
+
+    static void EnableFog(bool abX)
+    {
+        mbFogEnabled = abX;
+    }
+
 private:
     void CopyToFrameBuffer();
     void SetupRenderList();
@@ -267,6 +326,7 @@ private:
     void SetupRenderVariables();
 
     void RenderZ();
+    void RenderZDissolve();
     void RenderDynamicZTemp();
     void RenderGbuffer();
     void RenderSSAO();
@@ -293,12 +353,16 @@ private:
     void RenderTranslucent();
 
     void SetAccumulationBuffer();
+    void SetAccumulationLightBuffer();
     void SetGBuffer(eGBufferComponents aComponents);
     iTexture* GetBufferTexture(int alIdx);
 
 
     void RenderGbufferContent();
+    void RenderLightBufferContent();
     void RenderReflectionContent();
+    void RenderLightComplexity();
+    void RenderOverdraw();
 
     ////////////////
     //Draw helpers
@@ -347,10 +411,12 @@ private:
     iFrameBuffer *mpGBuffer[2][eGBufferComponents_LastEnum]; //[2] = reflection or not
 
     iFrameBuffer *mpAccumBuffer;
+    iFrameBuffer *mpAccumLightBuffer;
     iFrameBuffer *mpReflectionBuffer;
 
     iTexture *mpGBufferTexture[2][4];    //[2] = reflection or not
     iTexture *mpAccumBufferTexture;
+    iTexture *mpLightBufferTexture;
     iTexture *mpRefractionTexture;
     iTexture *mpReflectionTexture;
     iDepthStencilBuffer* mpDepthStencil[2];    //[2] = reflection or not
@@ -379,12 +445,15 @@ private:
     iGpuProgram *mpSSAOBlurProgram[2];
     iGpuProgram *mpSSAORenderProgram;
 
+    iGpuProgram *mpOverdrawProgram;
+    iGpuProgram *mpHeatMapProgram;
+
     std::vector<cDeferredLight*> mvTempDeferredLights;
     std::vector<cDeferredLight*> mvSortedLights[eDeferredLightList_LastEnum];
 
     iGpuProgram *mpSkyBoxProgram;
     iGpuProgram *mpLightStencilProgram;
-    iGpuProgram *mpLightBoxProgram[2];//1=SSAO used, 0=no SSAO
+    iGpuProgram *mpLightBoxProgram[3];//0=no SSAO, 1=SSAO used, 2=light debug
 
     cProgramComboManager* mpFogProgramManager;
 
@@ -408,7 +477,15 @@ private:
     static bool mbEnableParallax;
 
     static bool mbDebugRenderFrameBuffers;
+    static bool mbDebugRenderLightBuffer;
+
+    static bool mbModulateFog;
+    static bool mbFogEnabled;
+
     static bool mbOcclusionTestLargeLights;
+    static bool mbDebugPrevFrameOcclusion;
+    static bool mbDebugRenderLightComplexity;
+    static bool mbDebugRenderOverdraw;
 
 };
 

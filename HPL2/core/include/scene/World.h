@@ -71,6 +71,9 @@ public:
     cVector3f mvPos;
     tString msName;
     int mlID;
+
+    cTempAiNode() {};
+    ~cTempAiNode() {};
 };
 
 typedef std::list<cTempAiNode> tTempAiNodeList;
