@@ -560,10 +560,6 @@
 				RelativePath=".\core\include\graphics\VertexBuffer.h"
 				>
 			</File>
-			<File
-				RelativePath=".\core\include\graphics\VideoStream.h"
-				>
-			</File>
 			<Filter
 				Name="MaterialTypes"
 				>
@@ -1005,14 +1001,6 @@
 				</File>
 				<File
 					RelativePath=".\core\include\impl\VertexBufferOpenGL.h"
-					>
-				</File>
-				<File
-					RelativePath=".\core\sources\impl\VideoStreamTheora.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\core\include\impl\VideoStreamTheora.h"
 					>
 				</File>
 			</Filter>
@@ -2062,26 +2050,6 @@
 			</File>
 			<File
 				RelativePath=".\core\include\resources\TextureManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\core\include\resources\VideoLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\core\sources\resources\VideoLoaderHandler.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\core\include\resources\VideoLoaderHandler.h"
-				>
-			</File>
-			<File
-				RelativePath=".\core\sources\resources\VideoManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\core\include\resources\VideoManager.h"
 				>
 			</File>
 			<File

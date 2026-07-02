@@ -34,14 +34,12 @@ class cSoundEntityManager;
 class cAnimationManager;
 class cEntFileManager;
 class cMeshManager;
-class cVideoManager;
 class cConfigFile;
 class cArea2D;
 class cSound;
 class cMeshLoaderHandler;
 class cBitmapLoaderHandler;
 class cWorldLoaderHandler;
-class cVideoLoaderHandler;
 class cScene;
 class cGraphics;
 class iRenderable;
@@ -214,10 +212,6 @@ public:
     {
         return mpWorldLoaderHandler;
     }
-    cVideoLoaderHandler* GetVideoLoaderHandler()
-    {
-        return mpVideoLoaderHandler;
-    }
 
     cImageManager* GetImageManager()
     {
@@ -262,10 +256,6 @@ public:
     cAnimationManager* GetAnimationManager()
     {
         return mpAnimationManager;
-    }
-    cVideoManager* GetVideoManager()
-    {
-        return mpVideoManager;
     }
     cEntFileManager* GetEntFileManager()
     {
@@ -312,7 +302,6 @@ private:
     cMaterialManager* mpMaterialManager;
     cSoundEntityManager* mpSoundEntityManager;
     cAnimationManager *mpAnimationManager;
-    cVideoManager *mpVideoManager;
     cEntFileManager *mpEntFileManager;
 
     cLanguageFile *mpLanguageFile;
@@ -322,7 +311,6 @@ private:
     cMeshLoaderHandler* mpMeshLoaderHandler;
     cBitmapLoaderHandler* mpBitmapLoaderHandler;
     cWorldLoaderHandler *mpWorldLoaderHandler;
-    cVideoLoaderHandler *mpVideoLoaderHandler;
 
     tEntityLoaderMap m_mEntityLoaders;
     iEntityLoader* mpDefaultEntityLoader;

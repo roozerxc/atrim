@@ -21,7 +21,6 @@ public:
 
     void AddBitmapLoaders(cBitmapLoaderHandler* apHandler);
     void AddMeshLoaders(cMeshLoaderHandler* apHandler);
-    void AddVideoLoaders(cVideoLoaderHandler* apHandler);
 
     iXmlDocument* CreateXmlDocument(const tString& asName="");
 

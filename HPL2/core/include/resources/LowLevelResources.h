@@ -8,7 +8,6 @@ namespace hpl
 
 class cMeshLoaderHandler;
 class cBitmapLoaderHandler;
-class cVideoLoaderHandler;
 class iXmlDocument;
 
 class iLowLevelResources
@@ -18,7 +17,6 @@ public:
 
     virtual void AddBitmapLoaders(cBitmapLoaderHandler* apHandler)=0;
     virtual void AddMeshLoaders(cMeshLoaderHandler* apHandler)=0;
-    virtual void AddVideoLoaders(cVideoLoaderHandler* apHandler)=0;
 
     virtual iXmlDocument* CreateXmlDocument(const tString& asName="")=0;
 };
