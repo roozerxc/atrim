@@ -1,6 +1,5 @@
 #include "impl/LowLevelResourcesSDL.h"
 #include "impl/MeshLoaderMSH.h"
-#include "impl/MeshLoaderFBX.h"
 #include "impl/MeshLoaderCollada.h"
 #include "impl/VideoStreamTheora.h"
 #include "impl/XmlDocumentTiny.h"

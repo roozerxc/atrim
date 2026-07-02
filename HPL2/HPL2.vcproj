@@ -1957,14 +1957,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\core\sources\impl\MeshLoaderFBX.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\core\include\impl\MeshLoaderFBX.h"
-				>
-			</File>
-			<File
 				RelativePath=".\core\sources\resources\MeshLoaderHandler.cpp"
 				>
 			</File>
