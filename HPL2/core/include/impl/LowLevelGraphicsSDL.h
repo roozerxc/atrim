@@ -108,7 +108,7 @@ public:
         return mbFullscreen;
     }
 
-    void SetVsyncActive(bool abX, bool abAdaptive);
+    void SetVsyncActive(bool abX);
 
     void SetMultisamplingActive(bool abX);
 

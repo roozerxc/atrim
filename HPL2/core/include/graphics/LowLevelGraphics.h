@@ -76,7 +76,7 @@ public:
     /**
      * Set if vsync should be active
      */
-    virtual void SetVsyncActive(bool abX, bool abAdaptive = false)=0;
+    virtual void SetVsyncActive(bool abX)=0;
 
     virtual void SetMultisamplingActive(bool abX)=0;
 

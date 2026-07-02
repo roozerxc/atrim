@@ -61,7 +61,6 @@ void cLuxConfigHandler::LoadMainConfig()
     mlDisplay =            gpBase->mpMainConfig->GetInt("Screen","Display", 0);
     mbFullscreen =        gpBase->mpMainConfig->GetBool("Screen","FullScreen", false);
     mbVSync =            gpBase->mpMainConfig->GetBool("Screen","Vsync", false);
-    mbAdaptiveVSync =    gpBase->mpMainConfig->GetBool("Screen","AdaptiveVsync", false);
 
     mbFastPhysicsLoad=    gpBase->mpMainConfig->GetBool("MapLoad","FastPhysicsLoad", false);
     mbFastStaticLoad=    gpBase->mpMainConfig->GetBool("MapLoad","FastStaticLoad", false);

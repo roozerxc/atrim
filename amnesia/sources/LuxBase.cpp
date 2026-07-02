@@ -1154,7 +1154,7 @@ bool cLuxBase::InitEngine()
 
     /////////////////////////
     // Set up more properties
-    mpEngine->GetGraphics()->GetLowLevel()->SetVsyncActive(mpConfigHandler->mbVSync, mpConfigHandler->mbAdaptiveVSync);
+    mpEngine->GetGraphics()->GetLowLevel()->SetVsyncActive(mpConfigHandler->mbVSync);
 
     float fGamma = mpMainConfig->GetFloat("Graphics","Gamma", 1.0f);
     mpEngine->GetGraphics()->GetLowLevel()->SetGammaCorrection(fGamma);

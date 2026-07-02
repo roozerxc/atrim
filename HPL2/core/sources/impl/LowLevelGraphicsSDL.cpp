@@ -641,24 +641,24 @@ bool cLowLevelGraphicsSDL::GetWindowIsVisible()
 
 //-----------------------------------------------------------------------
 
-void cLowLevelGraphicsSDL::SetVsyncActive(bool abX, bool abAdaptive)
+void cLowLevelGraphicsSDL::SetVsyncActive(bool abX)
 {
     ;
 #if defined(_WIN32)
     if(WGLEW_EXT_swap_control)
     {
-        wglSwapIntervalEXT(abX ? (abAdaptive ? -1 : 1) : 0);
+        wglSwapIntervalEXT(abX ? 1 : 0);
     }
 #elif defined(__linux__)
     if (GLX_SGI_swap_control)
     {
         GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalSGI");
-        glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
+        glXSwapInterval(abX ? 1 : 0);
     }
     else if (GLX_MESA_swap_control)
     {
         GLXSWAPINTERVALPROC glXSwapInterval = (GLXSWAPINTERVALPROC)glXGetProcAddress((GLubyte*)"glXSwapIntervalMESA");
-        glXSwapInterval(abX ? (abAdaptive ? -1 : 1) : 0);
+        glXSwapInterval(abX ? 1 : 0);
     }
 #elif defined(__APPLE__)
     CGLContextObj ctx = CGLGetCurrentContext();

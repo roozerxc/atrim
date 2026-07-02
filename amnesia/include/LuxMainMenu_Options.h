@@ -148,7 +148,6 @@ private:
     cWidgetComboBox *mpCBResolution;
     cWidgetCheckBox *mpChBFullScreen;
     cWidgetCheckBox *mpChBVSync;
-//    cWidgetCheckBox *mpChBAdaptiveVSync;
 
     cWidgetComboBox *mpCBTextureSizeLevel;
 

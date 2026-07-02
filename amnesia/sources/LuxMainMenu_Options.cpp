@@ -501,11 +501,6 @@ void cLuxMainMenu_Options::AddBasicGfxOptions(cWidgetDummy* apDummy)
 
         mpChBVSync = mpGuiSet->CreateWidgetCheckBox(vPosInGroup + cVector3f(0,mpChBFullScreen->GetSize().y+10,0), 0, kTranslate("OptionsMenu","VSync"), pGroup);
         SetUpInput(NULL, mpChBVSync, false, kTranslate("OptionsMenu","VSyncTip"));
-
-
-//        mpChBAdaptiveVSync = mpGuiSet->CreateWidgetCheckBox(vPosInGroup + cVector3f(mpChBVSync->GetSize().x+10,mpChBFullScreen->GetSize().y+10,0), 0, kTranslate("OptionsMenu","AdaptiveVSync"), pGroup);
-//        SetUpInput(NULL, mpChBAdaptiveVSync, false, kTranslate("OptionsMenu","AdaptiveVSyncTip"));
-
     }
 
     vPos.y += pGroup->GetSize().y + 15;
@@ -565,13 +560,8 @@ void cLuxMainMenu_Options::AddBasicGfxOptions(cWidgetDummy* apDummy)
     mpChBFullScreen->SetFocusNavigation(eUIArrow_Down, mpChBVSync);
 
     mpChBVSync->SetFocusNavigation(eUIArrow_Left, mpCBResolution);
-//    mpChBVSync->SetFocusNavigation(eUIArrow_Right, mpChBAdaptiveVSync);
     mpChBVSync->SetFocusNavigation(eUIArrow_Up, mpChBFullScreen);
     mpChBVSync->SetFocusNavigation(eUIArrow_Down, mpCBTextureSizeLevel);
-
-//    mpChBAdaptiveVSync->SetFocusNavigation(eUIArrow_Left, mpChBVSync);
-//    mpChBAdaptiveVSync->SetFocusNavigation(eUIArrow_Up, mpChBFullScreen);
-//    mpChBAdaptiveVSync->SetFocusNavigation(eUIArrow_Down, mpCBTextureSizeLevel);
 
     mpCBTextureSizeLevel->SetFocusNavigation(eUIArrow_Up, mpCBResolution);
     mpCBTextureSizeLevel->SetFocusNavigation(eUIArrow_Down, mpSGamma);
@@ -1198,7 +1188,6 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
         // Fullscreen & vsync
         mpChBFullScreen->SetChecked(aObj.GetVarBool("FullScreen"), false);
         mpChBVSync->SetChecked(aObj.GetVarBool("VSync"), false);
-//        mpChBAdaptiveVSync->SetChecked(aObj.GetVarBool("AdaptiveVsync"), false);
 
         /////////////////////////
         // Texture quality and filtering
@@ -1470,8 +1459,7 @@ void cLuxMainMenu_Options::ApplyChanges()
         pCfgHdr->mlDisplay = vidMode.mlDisplay;
         pCfgHdr->mbFullscreen = mpChBFullScreen->IsChecked();
         pCfgHdr->mbVSync = mpChBVSync->IsChecked();
-//        pCfgHdr->mbAdaptiveVSync = mpChBAdaptiveVSync->IsChecked();
-        pGfx->GetLowLevel()->SetVsyncActive(pCfgHdr->mbVSync, pCfgHdr->mbAdaptiveVSync);
+        pGfx->GetLowLevel()->SetVsyncActive(pCfgHdr->mbVSync);
         pGfx->GetLowLevel()->SetGammaCorrection(GetGamma());
 
         // Parallax
@@ -1786,7 +1774,6 @@ void cLuxMainMenu_Options::DumpInitialValues(cResourceVarsObject &aObj)
         // Fullscreen & vsync
         aObj.AddVarBool("FullScreen", gpBase->mpConfigHandler->mbFullscreen);
         aObj.AddVarBool("VSync", gpBase->mpConfigHandler->mbVSync);
-        aObj.AddVarBool("AdaptiveVsync", gpBase->mpConfigHandler->mbAdaptiveVSync);
 
         /////////////////////////
         // Texture quality and filtering

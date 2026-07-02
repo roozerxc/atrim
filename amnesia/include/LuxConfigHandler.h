@@ -38,7 +38,6 @@ public:
     int mlDisplay;
     bool mbFullscreen;
     bool mbVSync;
-    bool mbAdaptiveVSync;
     int mlTextureQuality;
     int mlTextureFilter;
     float mfTextureAnisotropy;
