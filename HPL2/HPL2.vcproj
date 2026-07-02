@@ -101,6 +101,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="start tools\buildcounter.bat"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
