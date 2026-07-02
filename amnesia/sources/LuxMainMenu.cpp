@@ -1652,7 +1652,7 @@ bool cLuxMainMenu::PressStartGame(iWidget* apWidget, const cGuiMessageData& aDat
     /////////////
     //HARDMODE
 
-    if (gpBase->mbAllowHardmode == true && gpBase->mpCustomStory == 0)
+    if (gpBase->mbAllowHardMode == true && gpBase->mpCustomStory == 0)
     {
         SetWindowActive(eLuxMainMenuWindow_StartGame);
         gpBase->mbHardMode = false;

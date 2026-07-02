@@ -249,7 +249,7 @@ public:
     /////////////////////////
     // HARDMODE
     bool mbHardMode;
-    bool mbAllowHardmode;
+    bool mbAllowHardMode;
 
     /////////////////////////
     // Kinda private variables

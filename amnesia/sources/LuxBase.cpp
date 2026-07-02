@@ -387,7 +387,7 @@ cLuxBase::cLuxBase()
     ///////////////////////////////
     // HARDMODE
     mbHardMode = false;
-    mbAllowHardmode = false;
+    mbAllowHardMode = false;
 }
 
 //-----------------------------------------------------------------------
@@ -763,7 +763,7 @@ bool cLuxBase::InitApp()
 
     //Various variables
     msGameName = pInitCfg->GetString("Variables","GameName","");
-    mbAllowHardmode = pInitCfg->GetBool("Variables", "AllowHardMode", false);
+    mbAllowHardMode = pInitCfg->GetBool("Variables", "AllowHardMode", false);
 
     //Start map
     msStartMapFile = pInitCfg->GetString("StartMap","File","");
