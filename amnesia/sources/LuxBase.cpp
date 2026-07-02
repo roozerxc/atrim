@@ -76,11 +76,6 @@
 #include "LuxCommentaryIcon.h"
 #include "LuxAchievementHandler.h"
 
-/* 
-    roozy: This should ensure that "Version 1.4.6.20260624200245"
-           will always appear in the beginning of the log file
-*/
-
 #include "../../HPL2/core/include/impl/PlatformBuildID.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -438,7 +433,8 @@ bool cLuxBase::Init(const tString &asCommandline)
         return false;
     }
 
-    Log("Version %d.%d.%d.%s", kCurrentVersion_Major, kCurrentVersion_Minor, kCurrentVersion_Patch, GetBuildID());
+    Log("Version %d.%d.%d/n", kCurrentVersion_Major, kCurrentVersion_Minor, kCurrentVersion_Patch);
+    Log("Engine Build ID: %s", GetBuildID());
     Log("\n\n");
 
     /////////////////////////////
