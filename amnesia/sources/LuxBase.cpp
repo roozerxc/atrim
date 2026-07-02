@@ -433,9 +433,8 @@ bool cLuxBase::Init(const tString &asCommandline)
         return false;
     }
 
-    Log("Version %d.%d.%d/n", kCurrentVersion_Major, kCurrentVersion_Minor, kCurrentVersion_Patch);
-    Log("Engine Build ID: %s", GetBuildID());
-    Log("\n\n");
+    Log("Version %d.%d.%d\n", kCurrentVersion_Major, kCurrentVersion_Minor, kCurrentVersion_Patch);
+    Log("Engine Build ID: %s\n\n", GetBuildID());
 
     /////////////////////////////
     // Init the engine
