@@ -1542,9 +1542,9 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
     //Debug
     //Log("Loading language %s\n", asName.c_str());
 
+    tString sPatchFileName = "patch_"+sGameFileName;
     tString sGameFileName = cString::SetFileExt(asName,"lang");
     tString sBaseFileName = "base_"+sGameFileName;
-    tString sPatchFileName = "patch_"+sGameFileName;
 
     ////////////////////////////////////////////////////
     //Clear the resources so we can load other fonts
@@ -1575,12 +1575,26 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
         }
     }
 
+    // Patched lang for some hardcoded strings in source tree
+    pResources->AddLanguageFile(msPatchLanguageFolder + sPatchFileName, true);
+
     // Main game lang
     pResources->AddLanguageFile(msGameLanguageFolder + sGameFileName, true);
     pResources->AddLanguageFile(msBaseLanguageFolder + sBaseFileName, true);
 
-    // Patched lang for some hardcoded strings in source tree
-    pResources->AddLanguageFile(msPatchLanguageFolder + sPatchFileName, true);
+    ////////////////////////////////////////////
+    // Add new patch language file
+    if(sPatchFileName != msDefaultPatchLanguage)
+    {
+        pResources->AddLanguageFile(msPatchLanguageFolder + msDefaultPatchLanguage, false);
+    }
+
+    ////////////////////////////////////////////
+    // If not found in main_init.cfg, load it through base config folder anyway
+    if(sPatchFileName=="" && msPatchLanguageFolder=="" || sPatchFileName != msDefaultPatchLanguage)
+    {
+        pResources->AddLanguageFile("config/patch_" + sGameFileName, true);
+    }
 
     ////////////////////////////////////////////
     //If not default language, add default to so only missing entries are filled in
@@ -1597,20 +1611,6 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
     if(sBaseFileName != msDefaultBaseLanguage)
     {
         pResources->AddLanguageFile(msBaseLanguageFolder + msDefaultBaseLanguage, false);
-    }
-
-    ////////////////////////////////////////////
-    // Add new patch language file
-    if(sPatchFileName != msDefaultPatchLanguage)
-    {
-        pResources->AddLanguageFile(msPatchLanguageFolder + msDefaultPatchLanguage, false);
-    }
-
-    ////////////////////////////////////////////
-    // If not found in main_init.cfg, load it through base config folder anyway
-    if(sPatchFileName=="" && msPatchLanguageFolder=="" || sPatchFileName != msDefaultPatchLanguage)
-    {
-        pResources->AddLanguageFile("config/patch_" + sGameFileName, true);
     }
 
     // Refresh all modules with new translation

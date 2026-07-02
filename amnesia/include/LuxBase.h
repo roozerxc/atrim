@@ -261,13 +261,14 @@ public:
     tWString msDefaultUserKeyConfigPath;
     tString msResourceConfigPath;
     tString msMaterialConfigPath;
+
+    tString msDefaultPatchLanguage;
     tString msDefaultBaseLanguage;
     tString msDefaultGameLanguage;
-    tString msDefaultPatchLanguage;
 
+    tString msPatchLanguageFolder;
     tString msBaseLanguageFolder;
     tString msGameLanguageFolder;
-    tString msPatchLanguageFolder;
 
     tString msCustomStoryPath;
 
