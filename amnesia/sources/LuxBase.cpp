@@ -1542,8 +1542,8 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
     //Debug
     //Log("Loading language %s\n", asName.c_str());
 
-    tString sPatchFileName = "patch_"+sGameFileName;
     tString sGameFileName = cString::SetFileExt(asName,"lang");
+    tString sPatchFileName = "patch_"+sGameFileName;
     tString sBaseFileName = "base_"+sGameFileName;
 
     ////////////////////////////////////////////////////
