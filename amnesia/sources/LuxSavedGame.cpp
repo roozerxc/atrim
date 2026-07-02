@@ -962,7 +962,7 @@ void cLuxSavedGameMap::ToMap(cLuxMap *apMap)
                 apMap->DestroyEntity(pEntity);
             }
         }
-        apMap->UpdateToBeDesotroyedEntities(false);
+        apMap->UpdateToBeDestroyedEntities(false);
 
         gpBase->mpCurrentMapLoading = NULL;
     }

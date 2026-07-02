@@ -368,7 +368,7 @@ void cLuxMap::Update(float afTimeStep)
     UpdateDissolveEntities(afTimeStep);
     UpdateTimers(afTimeStep);
 
-    UpdateToBeDesotroyedEntities(true);
+    UpdateToBeDestroyedEntities(true);
 
     ////////////////////////////////////
     // Iterate entities
@@ -383,7 +383,7 @@ void cLuxMap::Update(float afTimeStep)
         }
     }
 
-    UpdateToBeDesotroyedEntities(true);
+    UpdateToBeDestroyedEntities(true);
 
     UpdateLampLightConnections(afTimeStep);
 
@@ -1431,7 +1431,7 @@ int cLuxMap::GetFreeEntityID()
 
 //-----------------------------------------------------------------------
 
-void cLuxMap::UpdateToBeDesotroyedEntities(bool abUseCallbacks)
+void cLuxMap::UpdateToBeDestroyedEntities(bool abUseCallbacks)
 {
     tLuxEntityListIt entityIt = mlstToBeDestroyedEntities.begin();
     for(; entityIt != mlstToBeDestroyedEntities.end(); ++entityIt)

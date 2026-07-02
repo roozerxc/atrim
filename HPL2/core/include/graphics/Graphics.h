@@ -91,7 +91,7 @@ public:
     iDepthStencilBuffer* CreateDepthStencilBuffer(    const cVector2l& avSize, int alDepthBits, int alStencilBits,
             bool abLookForMatchingFirst);
     iDepthStencilBuffer* FindDepthStencilBuffer(const cVector2l& avSize, int alMinDepthBits, int alMinStencilBits);
-    void DestoroyDepthStencilBuffer(iDepthStencilBuffer* apBuffer);
+    void DestroyDepthStencilBuffer(iDepthStencilBuffer* apBuffer);
 
     iTexture* CreateTexture(const tString &asName,eTextureType aType,   eTextureUsage aUsage);
     void DestroyTexture(iTexture *apTexture);

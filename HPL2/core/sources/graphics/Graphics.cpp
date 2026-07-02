@@ -358,7 +358,7 @@ iDepthStencilBuffer* cGraphics::FindDepthStencilBuffer(const cVector2l& avSize, 
 
 //-----------------------------------------------------------------------
 
-void cGraphics::DestoroyDepthStencilBuffer(iDepthStencilBuffer* apBuffer)
+void cGraphics::DestroyDepthStencilBuffer(iDepthStencilBuffer* apBuffer)
 {
     apBuffer->DecUserCount();
 

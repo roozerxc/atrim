@@ -710,7 +710,7 @@ void cRendererDeferred::DestroyData()
             mpGraphics->DestroyTexture(mpGBufferTexture[type][j]);
         }
 
-        mpGraphics->DestoroyDepthStencilBuffer(mpDepthStencil[type]);
+        mpGraphics->DestroyDepthStencilBuffer(mpDepthStencil[type]);
     }
 
     mpGraphics->DestroyFrameBuffer(mpAccumBuffer);

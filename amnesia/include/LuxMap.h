@@ -222,7 +222,7 @@ private:
 
     int GetFreeEntityID();
 
-    void UpdateToBeDesotroyedEntities(bool abUseCallbacks);
+    void UpdateToBeDestroyedEntities(bool abUseCallbacks);
     void UpdateTimers(float afTimeStep);
     void UpdateDissolveEntities(float afTimeStep);
     void UpdateLampLightConnections(float afTimeStep);
