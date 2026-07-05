@@ -411,13 +411,13 @@ void cMaterialType_Translucent::SetupObjectSpecificData(eMaterialRenderMode aRen
             {
                 if(pLight->GetLightType() == eLightType_Box)
                 {
-                    fLightAmount += GetMaxColorValue(pLight->GetDiffuseColor());
+                    fLightAmount += GetMaxColorValue(pLight->GetColor());
                 }
                 else
                 {
                     float fDist = cMath::Vector3Dist(pLight->GetWorldPosition(), vCenterPos);
 
-                    fLightAmount += GetMaxColorValue(pLight->GetDiffuseColor()) * cMath::Max(1.0f - (fDist / pLight->GetRadius()), 0.0f);
+                    fLightAmount += GetMaxColorValue(pLight->GetColor()) * cMath::Max(1.0f - (fDist / pLight->GetRadius()), 0.0f);
                 }
 
                 if(fLightAmount >= 1.0f)
