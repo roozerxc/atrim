@@ -1959,11 +1959,17 @@ void cWorldLoaderHplMap::CreateStaticObjectEntity(cXmlElement* apElement, tMeshE
         }
     }
 
-
     ////////////////////////////////
     //Setup mesh entity
     pMeshEntity->SetWorldMatrix(cMath::MatrixMul(cMath::MatrixRotate(vRotation, eEulerRotationOrder_XYZ),cMath::MatrixScale(vScale)));
     pMeshEntity->SetPosition(vPosition);
+
+    // if a static object has an animation, play it.
+    if(pMesh->GetAnimationNum() > 0)
+    {
+        pMeshEntity->SetStatic(false);
+        pMeshEntity->Play(0,true,true);
+    }
 }
 
 //-----------------------------------------------------------------------
