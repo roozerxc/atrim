@@ -51,7 +51,7 @@ namespace hpl
 
 eShadowMapQuality iRenderer::mShadowMapQuality    =        eShadowMapQuality_Medium;
 eShadowMapResolution iRenderer::mShadowMapResolution    =    eShadowMapResolution_High;
-eParallaxQuality iRenderer::mParallaxQuality = eParallaxQuality_Low;
+eParallaxQuality iRenderer::mParallaxQuality = eParallaxQuality_Simple;
 bool iRenderer::mbParallaxEnabled=true;
 int iRenderer::mlReflectionSizeDiv = 2;
 bool iRenderer::mbRefractionEnabled=true;

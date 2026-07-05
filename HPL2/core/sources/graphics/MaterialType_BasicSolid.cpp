@@ -56,7 +56,7 @@ static cProgramComboFeature vDiffuseFeatureVec[] =
 {
     cProgramComboFeature("UseNormalMapping", kPC_VertexBit | kPC_FragmentBit),
     cProgramComboFeature("UseSpecular", kPC_FragmentBit),
-    cProgramComboFeature("UseParallax", kPC_VertexBit | kPC_FragmentBit, eFeature_Diffuse_NormalMaps),
+    cProgramComboFeature("UseParallax", kPC_VertexBit | kPC_FragmentBit, eFeature_Diffuse_Parallax),
     cProgramComboFeature("UseUvAnimation", kPC_VertexBit),
     cProgramComboFeature("UseSkeleton",    kPC_VertexBit),
     cProgramComboFeature("UseEnvMap", kPC_VertexBit | kPC_FragmentBit),
@@ -292,24 +292,24 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
     {
         defaultVars.Add("Deferred_32bit");
     }
-    else
+    else if(cRendererDeferred::GetGBufferType() == eDeferredGBuffer_64Bit)
     {
         defaultVars.Add("Deferred_64bit");
     }
 
     //Set up number of gbuffer textures used
-    if(cRendererDeferred::GetNumOfGBufferTextures() == 4)
-    {
-        defaultVars.Add("RenderTargets_4");
-    }
-    else
+    if(cRendererDeferred::GetNumOfGBufferTextures() == 3)
     {
         defaultVars.Add("RenderTargets_3");
     }
+    else if(cRendererDeferred::GetNumOfGBufferTextures() == 4)
+    {
+        defaultVars.Add("RenderTargets_4");
+    }
 
     //Set up relief mapping method
-    if(    iRenderer::GetParallaxQuality() != eParallaxQuality_Low &&
-            mpGraphics->GetLowLevel()->GetCaps(eGraphicCaps_ShaderModel_3)!=0)
+    if(iRenderer::GetParallaxQuality() != eParallaxQuality_Simple &&
+        mpGraphics->GetLowLevel()->GetCaps(eGraphicCaps_ShaderModel_3)!=0)
     {
         defaultVars.Add("ParallaxMethod_Relief");
     }
@@ -318,9 +318,7 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
         defaultVars.Add("ParallaxMethod_Simple");
     }
 
-
-
-    mpProgramManager->SetupGenerateProgramData(    eMaterialRenderMode_Diffuse,"Diffuse","deferred_base_vtx.glsl", "deferred_gbuffer_solid_frag.glsl",
+    mpProgramManager->SetupGenerateProgramData(eMaterialRenderMode_Diffuse,"Diffuse","deferred_base_vtx.glsl", "deferred_gbuffer_solid_frag.glsl",
             vDiffuseFeatureVec,kDiffuseFeatureNum, defaultVars);
 
     /////////////////////////////

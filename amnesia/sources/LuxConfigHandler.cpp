@@ -87,8 +87,8 @@ void cLuxConfigHandler::LoadMainConfig()
     mlSSAOResolution =    gpBase->mpMainConfig->GetInt("Graphics","SSAOResolution", 0);
 
     // Parallax
-    mbParallaxEnabled = gpBase->mpMainConfig->GetBool("Graphics", "ParallaxEnabled", true);
     mlParallaxQuality = gpBase->mpMainConfig->GetInt("Graphics", "ParallaxQuality", 0);
+    mbParallaxEnabled = gpBase->mpMainConfig->GetBool("Graphics", "ParallaxEnabled", true);
 
     // Texture
     mlTextureQuality =    gpBase->mpMainConfig->GetInt("Graphics", "TextureQuality", 0);

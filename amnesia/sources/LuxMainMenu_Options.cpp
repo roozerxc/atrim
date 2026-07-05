@@ -614,9 +614,15 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
 
         /////////////////////////////
         // Parallax Quality
-        pLabel = mpGuiSet->CreateWidgetLabel(vPosInGroup, -1, kTranslate("Launcher","Parallax"), pGroup);
-        mpCBParallaxQuality = mpGuiSet->CreateWidgetComboBox(cVector3f(0,pLabel->GetSize().y+5,0), cVector2f(100,25), _W(""), pLabel);
-        SetUpInput(pLabel, mpCBParallaxQuality, true, kTranslate("OptionsMenu","ParallaxQualityTip"));
+        mpChBParallax = mpGuiSet->CreateWidgetCheckBox(vPosInGroup, 0, kTranslate("OptionsMenu", "Parallax"), pGroup);
+        SetUpInput(NULL, mpChBParallax, true, kTranslate("OptionsMenu","ParallaxEnabledTip"));
+
+        mpCBParallaxQuality = mpGuiSet->CreateWidgetComboBox(cVector3f(mpCBAnisotropy->GetSize().x+80,mpChBParallax->GetSize().y+5,0), cVector2f(100,25), _W(""), pLabel);
+        SetUpInput(NULL, mpCBParallaxQuality, true, kTranslate("OptionsMenu","ParallaxQualityTipNew"));
+
+        mpCBParallaxQuality->ClearItems();
+        mpCBParallaxQuality->AddItem(kTranslate("OptionsMenu","ParallaxSimple"));
+        mpCBParallaxQuality->AddItem(kTranslate("OptionsMenu","ParallaxRelief"));
     }
 
     vPos.y += pGroup->GetSize().y + 10;
@@ -651,7 +657,6 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         mpCBShadowRes = mpGuiSet->CreateWidgetComboBox(cVector3f(0,pLabel->GetSize().y+5,0), cVector2f(100,25), _W(""), pLabel);
         SetUpInput(pLabel, mpCBShadowRes, true, kTranslate("OptionsMenu","ShadowResTip"));
 
-
         // Set up values
         tWStringVec vOptionStrings;
         vOptionStrings.push_back(kTranslate("OptionsMenu","Low"));
@@ -660,15 +665,11 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
 
         mpCBShadowQuality->ClearItems();
         mpCBShadowRes->ClearItems();
-        mpCBParallaxQuality->ClearItems();
         for(int i=0; i<(int)vOptionStrings.size(); ++i)
         {
             mpCBShadowQuality->AddItem(vOptionStrings[i]);
             mpCBShadowRes->AddItem(vOptionStrings[i]);
         }
-
-        mpCBParallaxQuality->AddItem(kTranslate("Launcher","Off"));
-        mpCBParallaxQuality->AddItem(kTranslate("Launcher","On"));//Skipping medium since high and medium is really the same!
     }
 
     vPos.y += pGroup->GetSize().y + 10;
@@ -802,7 +803,7 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         SetUpInput(NULL, mpChBRefraction, true, kTranslate("OptionsMenu", "RefractionTip"));
 
         vPosInGroup.x += fItemSep;
-        vPosInGroup.y = fBorderSize;
+        //vPosInGroup.y = fBorderSize;
 
         ///////////////////////////
         // World Reflection Active
@@ -1246,11 +1247,12 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
             mpCBShadowQuality->SetSelectedItem(aObj.GetVarInt("ShadowQuality"), true, false);
             mpCBShadowRes->SetSelectedItem(aObj.GetVarInt("ShadowResolution"), true, false);
 
-            mpCBParallaxQuality->AddItem(kTranslate("Launcher","Off"));
-            mpCBParallaxQuality->AddItem(kTranslate("Launcher","On"));//Skipping medium since high and medium is really the same!
+            mpChBParallax->SetChecked(aObj.GetVarBool("ParallaxEnabled"), false);
 
-            int lParallax = aObj.GetVarBool("ParallaxEnabled")? 1 : 0;
-            mpCBParallaxQuality->SetSelectedItem(lParallax, true, false);
+            mpCBParallaxQuality->AddItem(kTranslate("OptionsMenu","ParallaxSimple"));
+            mpCBParallaxQuality->AddItem(kTranslate("OptionsMenu","ParallaxRelief"));
+
+            mpCBParallaxQuality->SetSelectedItem(aObj.GetVarInt("ParallaxQuality"), true, false);
         }
 
         /////////////////////////
@@ -1462,13 +1464,6 @@ void cLuxMainMenu_Options::ApplyChanges()
         pGfx->GetLowLevel()->SetVsyncActive(pCfgHdr->mbVSync);
         pGfx->GetLowLevel()->SetGammaCorrection(GetGamma());
 
-        // Parallax
-        //int lParallax = (int)mpCBParallaxQuality->GetSelectedItem() - 1;
-        //pCfgHdr->mlParallaxQuality = lParallax < 0  ? 0 : lParallax;
-        //pCfgHdr->mbParallaxEnabled = lParallax <0 ? false : true;
-        pCfgHdr->mbParallaxEnabled = (mpCBParallaxQuality->GetSelectedItem()==1);
-
-
         // Texture
         pCfgHdr->mlTextureQuality = (mpCBTextureSizeLevel->GetItemNum()-1) - mpCBTextureSizeLevel->GetSelectedItem();
         pCfgHdr->mlTextureFilter = mpCBTextureFilter->GetSelectedItem();
@@ -1476,6 +1471,10 @@ void cLuxMainMenu_Options::ApplyChanges()
 
         pMatMgr->SetTextureAnisotropy(pCfgHdr->mfTextureAnisotropy);
         pMatMgr->SetTextureFilter((eTextureFilter)pCfgHdr->mlTextureFilter);
+
+        // Parallax
+        pCfgHdr->mbParallaxEnabled = mpChBParallax->IsChecked();
+        pCfgHdr->mlParallaxQuality = mpCBParallaxQuality->GetSelectedItem();
 
         // Shadows
         pCfgHdr->mbShadowsActive = mpChBShadows->IsChecked();
@@ -1877,8 +1876,9 @@ void cLuxMainMenu_Options::DumpCurrentValues(cResourceVarsObject &aObj)
         aObj.AddVarBool("ShadowsActive", mpChBShadows->IsChecked());
         aObj.AddVarInt("ShadowQuality",  mpCBShadowQuality->GetSelectedItem());
         aObj.AddVarInt("ShadowResolution", mpCBShadowRes->GetSelectedItem());
-        aObj.AddVarBool("ParallaxEnabled", mpCBParallaxQuality->GetSelectedItem()==1);
-        //aObj.AddVarInt("ParallaxQuality",  mpCBParallaxQuality->GetSelectedItem()-1);
+
+        aObj.AddVarBool("ParallaxEnabled", mpChBParallax->IsChecked());
+        aObj.AddVarInt("ParallaxQuality",  mpCBParallaxQuality->GetSelectedItem());
 
         /////////////////////////
         // Water

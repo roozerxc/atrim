@@ -628,9 +628,8 @@ enum eShadowMapQuality
 
 enum eParallaxQuality
 {
-    eParallaxQuality_Low,
-    eParallaxQuality_Medium,
-    eParallaxQuality_High,
+    eParallaxQuality_Simple,
+    eParallaxQuality_Relief,
     eParallaxQuality_LastEnum
 };
 
