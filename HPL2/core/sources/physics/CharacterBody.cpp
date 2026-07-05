@@ -453,18 +453,13 @@ void iCharacterBody::SetMass(float afMass)
 
 void iCharacterBody::SetActive(bool abX)
 {
-    if(mbActive == abX)
-    {
-        return;
-    }
-
     mbActive = abX;
 
     if(mbActive==false)
     {
         mpCurrentBody->SetActive(false);
     }
-    else if(mbActive && mbTestCollision)
+    else
     {
         mpCurrentBody->SetActive(true);
     }
@@ -474,11 +469,6 @@ void iCharacterBody::SetActive(bool abX)
 
 void iCharacterBody::SetCollideCharacter(bool abX)
 {
-    if(abX == mbCollideCharacter)
-    {
-        return;
-    }
-
     mbCollideCharacter = abX;
 }
 
@@ -486,18 +476,13 @@ void iCharacterBody::SetCollideCharacter(bool abX)
 
 void iCharacterBody::SetTestCollision(bool abX)
 {
-    if(mbTestCollision == abX)
-    {
-        return;
-    }
-
     mbTestCollision = abX;
 
     if(mbTestCollision==false)
     {
         mpCurrentBody->SetActive(false);
     }
-    else if(mbTestCollision && mbActive)
+    else
     {
         mpCurrentBody->SetActive(true);
     }
