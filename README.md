@@ -54,3 +54,5 @@ You will also need to [configure the *DirectX SDK* in your *Visual C++* director
 atrim is licensed under Version 3 of the GNU General Public License (GNU GPL).
 
 Read the license information via the **GPL-3.0 license** tab on the top, or open the [`LICENSE.md`](LICENSE.md) file.
+
+© 2009-2010 Frictional Games. Frictional, Amnesia: The Dark Descent, and the HPL Engine software are all registered trademarks of Frictional Games. All rights reserved.
