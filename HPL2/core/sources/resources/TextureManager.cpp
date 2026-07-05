@@ -9,7 +9,7 @@
 #include "resources/FileSearcher.h"
 #include "graphics/Bitmap.h"
 #include "resources/BitmapLoaderHandler.h"
-
+#include <assert.h>
 
 namespace hpl
 {
@@ -74,6 +74,14 @@ iTexture* cTextureManager::Create3D(const tString& asName,bool abUseMipMaps, eTe
                                     unsigned int alTextureSizeLevel)
 {
     return CreateSimpleTexture(asName,abUseMipMaps,aUsage, eTextureType_3D,alTextureSizeLevel);
+}
+
+//-----------------------------------------------------------------------
+
+iTexture* cTextureManager::CreateFlattened3D(const tString& asName,bool abUseMipMaps, eTextureUsage aUsage,
+        unsigned int alTextureSizeLevel)
+{
+    return CreateSimpleTexture(asName,abUseMipMaps,aUsage, eTextureType_3D,alTextureSizeLevel,true);
 }
 
 //-----------------------------------------------------------------------
@@ -410,6 +418,18 @@ iTexture* cTextureManager::CreateSimpleTexture(const tString& asName,bool abUseM
 
         pTexture->SetUseMipMaps(abUseMipMaps);
         pTexture->SetSizeDownScaleLevel(alTextureSizeLevel);
+
+        if(isFlattened3D)
+        {
+            cVector3l size = pBmp->GetSize();
+
+            assert(size.z == 1 && size.y == (size.x * size.x));
+
+            size.y = size.x;
+            size.z = size.x;
+
+            pBmp->SetSize(size);
+        }
 
         if(pTexture->CreateFromBitmap(pBmp)==false)
         {
