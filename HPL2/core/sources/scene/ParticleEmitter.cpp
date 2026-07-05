@@ -358,6 +358,7 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,float afFra
             }
         }
     }
+
     //Change color based on alpha
     if(mbMultiplyRGBWithAlpha)
     {
@@ -365,6 +366,13 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,float afFra
         colorMul.g *= colorMul.a;
         colorMul.b *= colorMul.a;
     }
+
+    float flickerMultiplier = mpParentSystem->GetFlickerMultiplier();
+
+    colorMul.r *= flickerMultiplier;
+    colorMul.g *= flickerMultiplier;
+    colorMul.b *= flickerMultiplier;
+    colorMul.a *= flickerMultiplier;
 
     //////////////////////////////
     // If alpha is 0, skip rendering anything
