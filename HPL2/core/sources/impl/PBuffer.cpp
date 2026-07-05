@@ -144,9 +144,10 @@ bool cPBuffer::Init(unsigned int alWidth,unsigned int alHeight, cColor aCol)
     wglQueryPbufferARB(mPBuffer, WGL_PBUFFER_HEIGHT_ARB, &mlHeight);
 
     //Init some GL stuff with the Buffer.
+#ifdef _WIN32
     HDC OldHDC = wglGetCurrentDC();
     HGLRC OldGLRC = wglGetCurrentContext();
-
+#endif
     MakeCurrentContext();
 
     if(mbShareObjects)

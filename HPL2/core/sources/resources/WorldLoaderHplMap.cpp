@@ -448,6 +448,9 @@ static void GetBinaryBufferDataWithFormat(cBinaryBuffer* apBuffer, void *apDestD
 
 void cWorldLoaderHplMap::LoadCacheFile(const tWString& asFile)
 {
+#if (defined(__PPC__) || defined(__ppc__))
+    return;
+#endif
     tWString sCacheFile = cString::SetFileExtW(asFile, msCacheFileExt);
 
     ////////////////////////////////////////
@@ -755,6 +758,9 @@ void cWorldLoaderHplMap::LoadCacheFile(const tWString& asFile)
 
 void cWorldLoaderHplMap::SaveCacheFile(const tWString& asFile)
 {
+#if (defined(__PPC__) || defined(__ppc__))
+    return;
+#endif
     if(mbLoadedCache)
     {
         return;    //No need to save if cache was loaded!
