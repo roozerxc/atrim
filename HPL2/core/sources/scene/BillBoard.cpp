@@ -354,6 +354,18 @@ bool cBillboard::IsVisible()
     return mbIsVisible;
 }
 
+bool cBillboard::IsFullyTranslucent()
+{
+    if(mbIsHalo && mfHaloAlpha <= 0.0f || mColor.a <= 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 //-----------------------------------------------------------------------
 
 void cBillboard::SetIsHalo(bool abX)
@@ -493,14 +505,14 @@ bool cBillboard::RetrieveOcculsionQuery(iRenderer *apRenderer)
             }
 
 
-            SetHaloAlpha(fAlpha);
+            SetHaloAlpha(cMath::Clamp(fAlpha, 0.0f, 1.0f));
+            return fAlpha > 0.0f;
         }
         else
         {
             SetHaloAlpha(0);
+            return false;
         }
-
-        return true;
     }
     ////////////////////////////
     // No Samples are visible
