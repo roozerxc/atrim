@@ -190,6 +190,7 @@ void DestroyHPLEngine(cEngine* apGame)
 
 bool cEngine::mbDevicePlugged = false;
 bool cEngine::mbDeviceRemoved = false;
+int cEngine::mlNumLogicLoops=0;
 
 //-----------------------------------------------------------------------
 
@@ -330,8 +331,20 @@ void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, 
     mfGameTime =0;
 
     mbLimitFPS = true;
+    mfFPSLimit = 1.0 / double(apVars->mGame.mlMaxFramesPerSec);
+    mfLastFrameRender = 0;
+
+    mvMaxGameLogic.reserve(300);
+    mvMaxRenderLogic.reserve(300);
+
+    mfMaxGameLogic = 0;
+    mfMaxRenderLogic = 0;
 
     mpFPSCounter = hplNew( cFPSCounter,(mpSystem->GetLowLevel()) );
+    mpGameLogicTimer = cPlatform::CreateTimer();
+    mpInnerGameLogicTimer = cPlatform::CreateTimer();
+    mpRenderingLogicTimer = cPlatform::CreateTimer();
+    mpFrameLimitTimer = cPlatform::CreateTimer();
     mpFrameTimer = cPlatform::CreateTimer();
     Log("--------------------------------------------------------\n\n");
 
@@ -347,6 +360,10 @@ cEngine::~cEngine()
 
     hplDelete(mpLogicTimer);
     hplDelete(mpFPSCounter);
+    hplDelete(mpGameLogicTimer);
+    hplDelete(mpInnerGameLogicTimer);
+    hplDelete(mpRenderingLogicTimer);
+    hplDelete(mpFrameLimitTimer);
     hplDelete(mpFrameTimer);
     hplDelete(mpMutex);
 
@@ -403,6 +420,7 @@ void cEngine::Run()
     bool bSwappedOnce = false;
 
     //cMemoryManager::SetLogCreation(true);
+    mpFrameLimitTimer->Start();
 
     while(!GetGameIsDone())
     {
@@ -420,10 +438,16 @@ void cEngine::Run()
         {
             //////////////////////////
             //Update logic.
+            int lIterations = 0;
+            mpGameLogicTimer->Start();
             while(mpLogicTimer->WantUpdate() && !GetGameIsDone())
             {
                 /////////////////////////////////////////////
                 // Run Update callback in updater
+                mpInnerGameLogicTimer->Start();
+                lIterations++;
+                mlNumLogicLoops++;
+
                 mpUpdater->RunMessage(eUpdateableMessage_PreUpdate, GetStepSize());
                 mpUpdater->RunMessage(eUpdateableMessage_Update, GetStepSize());
                 mpUpdater->RunMessage(eUpdateableMessage_PostUpdate, GetStepSize());
@@ -431,7 +455,6 @@ void cEngine::Run()
 
                 if (mpInput->isQuitMessagePosted())
                 {
-
                     mpUpdater->RunMessage(eUpdateableMessage_OnQuit);
 
                     mpInput->resetQuitMessagePosted();
@@ -453,11 +476,34 @@ void cEngine::Run()
 
                 //Increase game time.
                 mfGameTime += GetStepSize();
+                mpInnerGameLogicTimer->Stop();
+
+                mvMaxGameLogic.push_back((float)mpInnerGameLogicTimer->GetTimeInMilliSec());
             }
             mpLogicTimer->EndUpdateLoop();
-        }
 
-        //if(GetGameIsDone()) Log("1\n");
+            ////////////////
+            // Update timer
+            mpGameLogicTimer->Stop();
+
+            if(lIterations > 0)
+            {
+                static double fGameLogicTime = 0;
+                static int lGameLogicCount = 0;
+                static int lGameLogicIterations = 0;
+
+                fGameLogicTime += mpGameLogicTimer->GetTimeInMilliSec() * lIterations;
+                lGameLogicCount += lIterations;
+
+                if(lGameLogicIterations++ % 60 == 0)
+                {
+                    mfGameLogicTime = fGameLogicTime / double(lGameLogicCount);
+                    mfGameLogicIterations = double(lGameLogicCount) / 60.0;
+                    fGameLogicTime = 0;
+                    lGameLogicCount = 0;
+                }
+            }
+        }
 
         ////////////////////////////////////
         // If rendering once, make a check and if already drawn screen, just continue
@@ -465,8 +511,6 @@ void cEngine::Run()
         {
             continue;
         }
-
-        //if(GetGameIsDone()) Log("2\n");
 
         ////////////////////////////////////////////////
         //Swap buffers and call callback, do this after update, so hardware can work during update
@@ -490,16 +534,39 @@ void cEngine::Run()
             }
         }
 
-        //if(GetGameIsDone()) Log("3\n");
+        //////////////
+        // Limit fps
+        if(mbLimitFPS)
+        {
+            double fNextFrame = mfLastFrameRender + mfFPSLimit;
+            double fTime = mpFrameLimitTimer->GetTimeInSec();
+
+            if(fTime < fNextFrame)
+            {
+                continue;
+            }
+
+            ////////////////
+            // If the game is running slower than fps limit set time else just add 1.0 / MaxFPS
+            if(fNextFrame + mfFPSLimit < fTime)
+            {
+                mfLastFrameRender = fTime;
+            }
+            else
+            {
+                mfLastFrameRender = mfLastFrameRender + mfFPSLimit;
+            }
+        }
 
         ////////////////////////////////////
         // Render frame
-        if(mbLimitFPS==false || bIsUpdated)
+        if(bIsUpdated)
         {
             ///////////////////////////////////////
             //Get the the from the last frame.
             UpdateFrameTimer();
 
+            mpRenderingLogicTimer->Start();
             //On draw callback sending that to gui, etc
             START_TIMING(OnDraw)
             mpUpdater->RunMessage(eUpdateableMessage_OnDraw, mfFrameTime);
@@ -520,14 +587,51 @@ void cEngine::Run()
 
             //Update fps counter.
             mpFPSCounter->AddFrame();
+            mpRenderingLogicTimer->Stop();
+
+            static double fRenderingLogic = 0;
+            static int lRenderingLogicIterations = 0;
+
+            mvMaxRenderLogic.push_back((float)mpRenderingLogicTimer->GetTimeInMilliSec());
+            fRenderingLogic += mpRenderingLogicTimer->GetTimeInMilliSec();
+            if(lRenderingLogicIterations++ % 60 == 0)
+            {
+                mfRenderingLogicTime = fRenderingLogic / 60.0;
+                fRenderingLogic = 0;
+            }
 
             fNumOfTimes++;
             bIsUpdated = false;
             bBufferSwap = true;
         }
 
-        //if(GetGameIsDone()) Log("4\n");
+        if(mvMaxGameLogic.size() > 300)
+        {
+            mfMaxGameLogic = 0;
+
+            for(size_t i = 0; i < mvMaxGameLogic.size(); ++i)
+            {
+                mfMaxGameLogic = mfMaxGameLogic < mvMaxGameLogic[i] ? mvMaxGameLogic[i] : mfMaxGameLogic;
+            }
+
+            mvMaxGameLogic.clear();
+        }
+
+        if(mvMaxRenderLogic.size() > 300)
+        {
+            mfMaxRenderLogic = 0;
+
+            for(size_t i = 0; i < mvMaxRenderLogic.size(); ++i)
+            {
+                mfMaxRenderLogic = mfMaxRenderLogic < mvMaxRenderLogic[i] ? mvMaxRenderLogic[i] : mfMaxRenderLogic;
+            }
+
+            mvMaxRenderLogic.clear();
+        }
     }
+
+    mpFrameLimitTimer->Stop();
+
     Log("--------------------------------------------------------\n\n");
 
     Log("Statistics\n");
@@ -607,6 +711,11 @@ void cEngine::SetSpeedMul(float afX)
 float cEngine::GetAvgFrameTimeInMS()
 {
     return (1.0f/mpFPSCounter->mfFPS)*1000.0f;
+}
+
+float cEngine::GetRenderingLogicTime()
+{
+    return (float)mfRenderingLogicTime;
 }
 
 //-----------------------------------------------------------------------

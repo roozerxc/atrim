@@ -103,6 +103,10 @@ void cLuxConfigHandler::LoadMainConfig()
     mlMaxSoundChannels = gpBase->mpMainConfig->GetInt("Sound", "MaxChannels", 32);
     mlSoundStreamBuffers = gpBase->mpMainConfig->GetInt("Sound", "StreamBuffers", 4);
     mlSoundStreamBufferSize = gpBase->mpMainConfig->GetInt("Sound", "StreamBufferSize", 262144);
+
+    ///////////////
+    // Engine
+    mlMaxFramesPerSec = gpBase->mpMainConfig->GetInt("Engine", "MaxFramesPerSec", 60);
 }
 
 //-----------------------------------------------------------------------
@@ -179,6 +183,7 @@ void cLuxConfigHandler::SaveMainConfig()
     /////////////////////
     // Engine properties
     gpBase->mpMainConfig->SetBool("Engine","LimitFPS", gpBase->mpEngine->GetLimitFPS());
+    gpBase->mpMainConfig->SetInt("Engine", "MaxFramesPerSec", mlMaxFramesPerSec);
 }
 
 //-----------------------------------------------------------------------
