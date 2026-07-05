@@ -7,6 +7,7 @@
 #include "graphics/LowLevelGraphics.h"
 #include "graphics/Graphics.h"
 #include "graphics/FontData.h"
+#include "graphics/Renderer.h"
 
 #include "resources/Resources.h"
 #include "resources/TextureManager.h"
@@ -336,6 +337,7 @@ cGuiSet::cGuiSet(    const tString &asName, cGui *apGui, cGuiSkin *apSkin,
     mbDrawFocus = false;
     mpFocusDrawObject = NULL;
     mpFocusDrawCallback = NULL;
+    mvFocusColor = cColor(0.8f, 0.2f);
 
     mbSortWidgets = false;
 }
@@ -2687,6 +2689,10 @@ kGuiCallbackDeclaredFuncEnd(cGuiSet,DrawMouse)
 
 bool cGuiSet::DrawFocus(iWidget* apWidget, const cGuiMessageData& aData)
 {
+    static float fColorShift = 0;
+    fColorShift += mpGraphics->GetRenderer(eRenderer_Main)->GetCurrentFrameTime();
+    float fMul = 0.9f + 0.2f * cosf(fColorShift * 0.75f);
+
     if(HasFocus() && mpFocusedWidget && mbDrawFocus &&
             (mpFocusedWidget==mpDefaultFocusNavWidget || mpFocusedWidget->HasFocusNavigation()))
     {
@@ -2698,7 +2704,7 @@ bool cGuiSet::DrawFocus(iWidget* apWidget, const cGuiMessageData& aData)
         {
             cVector3f vPos = mpFocusedWidget->GetGlobalPosition();
             vPos.z = mfMouseZ-1.0f;
-            DrawGfx(cGui::mpGfxRect, vPos, mpFocusedWidget->GetSize(), cColor(0.8f,0.2f));
+            DrawGfx(cGui::mpGfxRect, vPos, mpFocusedWidget->GetSize(), mvFocusColor * cColor(1, fMul));
         }
     }
 
