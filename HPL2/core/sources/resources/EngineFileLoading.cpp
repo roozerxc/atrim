@@ -91,6 +91,7 @@ cParticleSystem* cEngineFileLoading::LoadParticleSystem(cXmlElement* apElement, 
         pPS->SetMinFadeDistanceEnd(apElement->GetAttributeFloat("MinFadeDistanceEnd"));
         pPS->SetMaxFadeDistanceStart(apElement->GetAttributeFloat("MaxFadeDistanceStart"));
         pPS->SetMaxFadeDistanceEnd(apElement->GetAttributeFloat("MaxFadeDistanceEnd"));
+        pPS->SetActive(apElement->GetAttributeBool("Active", true));
     }
 
     kEndWorldEntityLoad(pPS);
@@ -234,6 +235,7 @@ iLight* cEngineFileLoading::LoadLight(    cXmlElement* apElement, const tString&
 
         pLightBox->SetSize(apElement->GetAttributeVector3f("Size", 1));
         pLightBox->SetBlendFunc((eLightBoxBlendFunc) apElement->GetAttributeInt("BlendFunc", 1));
+        pLightBox->SetBoxLightPrio(apElement->GetAttributeInt("Priority", 0));
     }
     //////////////////////////
     // Spotlightt
@@ -334,6 +336,9 @@ iLight* cEngineFileLoading::LoadLight(    cXmlElement* apElement, const tString&
     pLight->SetDefaultDiffuseColor(pLight->GetDiffuseColor());
     pLight->SetRadius(apElement->GetAttributeFloat("Radius", 1));
 
+    pLight->SetBrightness(apElement->GetAttributeFloat("Brightness", 1));
+    pLight->SetFalloff(apElement->GetAttributeFloat("Falloff", 1));
+
     pLight->SetShadowMapResolution( ToShadowMapResolution(apElement->GetAttributeString("ShadowResolution", "High")) );
 
     bool bShadowsAffectDynamic = apElement->GetAttributeBool("ShadowsAffectDynamic", true);
@@ -348,6 +353,8 @@ iLight* cEngineFileLoading::LoadLight(    cXmlElement* apElement, const tString&
         lFlags |= eObjectVariabilityFlag_Static;
     }
     pLight->SetShadowCastersAffected(lFlags);
+
+    pLight->SetActive(apElement->GetAttributeBool("Active", true));
 
     //////////////////////
     // Backwards compitabilty:
