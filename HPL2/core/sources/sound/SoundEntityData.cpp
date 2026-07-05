@@ -34,6 +34,7 @@ cSoundEntityData::cSoundEntityData(const tString& asName, cResources *apResource
     mbFadeStart = false;
     mbFadeStop = false;
 
+    mfAIVolume = 1;
     mfVolume = 1;
     mfMaxDistance =0;
     mfMinDistance=0;
@@ -41,6 +42,8 @@ cSoundEntityData::cSoundEntityData(const tString& asName, cResources *apResource
     mbStream  = false;
     mbLoop = false;
     mbUse3D = true;
+
+    mbKeepPlayingOutOfRange = false;
 
     mfRandom = 1;
     mfInterval =0;
@@ -90,18 +93,10 @@ const tString& cSoundEntityData::GetRandomSoundName(eSoundEntityType aType, bool
         return mvSoundNameVecs[aType][0];
     }
 
-    int lStart = -1;
-    int lSizeAdd = -1;
-    if(abSkipPrevious && lSize > 2 && mlPrevious[aType] < lSize && mlPrevious[aType] > 0)
+    int lRand = cMath::RandRectl(0, lSize - 1);
+    if ( abSkipPrevious && lRand == mlPrevious[aType] )
     {
-        lStart = mlPrevious[aType];
-        lSizeAdd = lStart-1;
-    }
-
-    int lRand = cMath::RandRectl(lStart+1, lSize + lSizeAdd);
-    if(lRand >= lSize)
-    {
-        lRand = lRand - lSize;
+        lRand = ( lRand + 1 ) % lSize;
     }
 
     mlPrevious[aType] = lRand;
@@ -226,6 +221,8 @@ bool cSoundEntityData::CreateFromFile(const tWString &asFile)
     mfMaxDistance = pPropElem->GetAttributeFloat("MaxDistance",1);
     mfMinDistance = pPropElem->GetAttributeFloat("MinDistance",1);
 
+    mfAIVolume = pPropElem->GetAttributeFloat("AIVolume", mfVolume);
+
     mbFadeStart = pPropElem->GetAttributeBool("FadeStart",true);
     mbFadeStop = pPropElem->GetAttributeBool("FadeStop",true);
 
@@ -233,6 +230,8 @@ bool cSoundEntityData::CreateFromFile(const tWString &asFile)
     mfInterval = pPropElem->GetAttributeFloat("Interval",0);
 
     mlPriority = pPropElem->GetAttributeInt("Priority",0);
+
+    mbKeepPlayingOutOfRange = pPropElem->GetAttributeBool("KeepPlayingOutOfRange",false);
 
     hplDelete( pDoc );
 
