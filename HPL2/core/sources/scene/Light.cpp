@@ -58,6 +58,9 @@ iLight::iLight(tString asName, cResources *apResources) : iRenderable(asName)
     mfShadowMapBiasMul = 1;
     mfShadowMapSlopeScaleBiasMul = 1;
 
+    mfFalloff = 1.0f;
+    mfBrightness = 1.0f;
+
     ///////////////////////////////
     //Fade and flicker init
     mDiffuseColor = 0;
@@ -122,6 +125,10 @@ void iLight::OnChangeVisible()
 
 bool iLight::IsVisible()
 {
+    if(mfBrightness <= 0)
+    {
+        return false;
+    }
     if(mDiffuseColor.r <=0 && mDiffuseColor.g <=0 && mDiffuseColor.b <=0 && mDiffuseColor.a <=0)
     {
         return false;
@@ -139,11 +146,11 @@ bool iLight::IsVisible()
 
 void iLight::SetDiffuseColor(cColor aColor)
 {
-    bool bWasVisble = (mDiffuseColor.r >0 || mDiffuseColor.g >0 || mDiffuseColor.b >0 || mDiffuseColor.a >0);
+    bool bWasVisble = IsVisible();
 
     mDiffuseColor = aColor;
 
-    bool bVisible = (mDiffuseColor.r >0 || mDiffuseColor.g >0 || mDiffuseColor.b >0 || mDiffuseColor.a >0);
+    bool bVisible = IsVisible();
 
     //Check if the light changed its visibility
     if(mbIsVisible && bVisible != bWasVisble && mpRenderCallback)
@@ -152,6 +159,11 @@ void iLight::SetDiffuseColor(cColor aColor)
     }
 
     OnSetDiffuse();
+}
+
+cColor iLight::GetColor()
+{
+    return mDiffuseColor * cColor(mfBrightness, 1);
 }
 
 //-----------------------------------------------------------------------
@@ -274,6 +286,7 @@ void iLight::FadeTo(const cColor& aCol, float afRadius, float afTime)
     }
 
     mfFadeTime = afTime;
+    mfFadeDuration = afTime;
 
     mColAdd.r = (aCol.r - mDiffuseColor.r)/afTime;
     mColAdd.g = (aCol.g - mDiffuseColor.g)/afTime;
@@ -543,6 +556,9 @@ void iLight::LoadXMLProperties(const tString asFile)
                 mbCastShadows = cString::ToBool(pMainElem->Attribute("CastsShadows"),mbCastShadows);
 
                 mDiffuseColor.a = cString::ToFloat(pMainElem->Attribute("Specular"),mDiffuseColor.a);
+
+                mfBrightness = cString::ToFloat(pMainElem->Attribute("Brightness"), mfBrightness);
+                mfFalloff = cString::ToFloat(pMainElem->Attribute("Falloff"), mfFalloff);
 
                 tString sFalloffImage = cString::ToString(pMainElem->Attribute("FalloffImage"),"");
                 iTexture *pTexture = mpTextureManager->Create1D(sFalloffImage,false);
