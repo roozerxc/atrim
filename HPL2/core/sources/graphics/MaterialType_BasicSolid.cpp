@@ -35,7 +35,7 @@ namespace hpl
 #define kVar_a_mtxUV                        2
 #define kVar_afColorMul                        3
 #define kVar_afDissolveAmount                4
-#define kVar_avFrenselBiasPow                5
+#define kVar_avFresnelBiasPow                5
 #define kVar_a_mtxInvViewRotation            6
 
 
@@ -263,8 +263,8 @@ cMaterialType_SolidDiffuse::cMaterialType_SolidDiffuse(cGraphics *apGraphics, cR
 
     AddVarFloat("HeightMapScale", 0.05f, "");
     AddVarFloat("HeightMapBias", 0, "");
-    AddVarFloat("FrenselBias", 0.2f, "Bias for Fresnel term. values: 0-1. Higher means that more of reflection is seen when looking straight at object.");
-    AddVarFloat("FrenselPow", 8.0f, "The higher the 'sharper' the reflection is, meaning that it is only clearly seen at sharp angles.");
+    AddVarFloat("FresnelBias", 0.2f, "Bias for Fresnel term. values: 0-1. Higher means that more of reflection is seen when looking straight at object.");
+    AddVarFloat("FresnelPow", 8.0f, "The higher the 'sharper' the reflection is, meaning that it is only clearly seen at sharp angles.");
     AddVarBool("AlphaDissolveFilter", false, "If alpha values between 0 and 1 should be used and dissolve the texture. This can be useful for things like hair.");
 }
 
@@ -334,7 +334,7 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
     mpProgramManager->AddGenerateProgramVariableId("afInvFarPlane",kVar_afInvFarPlane,eMaterialRenderMode_Diffuse);
     mpProgramManager->AddGenerateProgramVariableId("avHeightMapScaleAndBias",kVar_avHeightMapScaleAndBias, eMaterialRenderMode_Diffuse);
     mpProgramManager->AddGenerateProgramVariableId("a_mtxUV",kVar_a_mtxUV,eMaterialRenderMode_Diffuse);
-    mpProgramManager->AddGenerateProgramVariableId("avFrenselBiasPow", kVar_avFrenselBiasPow,eMaterialRenderMode_Diffuse);
+    mpProgramManager->AddGenerateProgramVariableId("avFresnelBiasPow", kVar_avFresnelBiasPow,eMaterialRenderMode_Diffuse);
     mpProgramManager->AddGenerateProgramVariableId("a_mtxInvViewRotation", kVar_a_mtxInvViewRotation,eMaterialRenderMode_Diffuse);
 
     mpProgramManager->AddGenerateProgramVariableId("a_mtxUV",kVar_a_mtxUV,eMaterialRenderMode_Illumination);
@@ -606,7 +606,7 @@ void cMaterialType_SolidDiffuse::SetupMaterialSpecificData(    eMaterialRenderMo
             //Cube Map
             if(apMaterial->GetTexture(eMaterialTexture_CubeMap))
             {
-                apProgram->SetVec2f(kVar_avFrenselBiasPow, pVars->mfFrenselBias, pVars->mfFrenselPow);
+                apProgram->SetVec2f(kVar_avFresnelBiasPow, pVars->mfFresnelBias, pVars->mfFresnelPow);
 
                 cMatrixf mtxInvView = apRenderer->GetCurrentFrustum()->GetViewMatrix().GetTranspose();
                 apProgram->SetMatrixf(kVar_a_mtxInvViewRotation, mtxInvView.GetRotation());
@@ -660,8 +660,8 @@ void cMaterialType_SolidDiffuse::LoadVariables(cMaterial* apMaterial, cResourceV
 
     pVars->mfHeightMapScale = apVars->GetVarFloat("HeightMapScale", 0.1f);
     pVars->mfHeightMapBias = apVars->GetVarFloat("HeightMapBias", 0);
-    pVars->mfFrenselBias = apVars->GetVarFloat("FrenselBias", 0.2f);
-    pVars->mfFrenselPow = apVars->GetVarFloat("FrenselPow", 8.0f);
+    pVars->mfFresnelBias = apVars->GetVarFloat("FresnelBias", 0.2f);
+    pVars->mfFresnelPow = apVars->GetVarFloat("FresnelPow", 8.0f);
     pVars->mbAlphaDissolveFilter = apVars->GetVarBool("AlphaDissolveFilter", false);
 
 }
@@ -674,8 +674,8 @@ void cMaterialType_SolidDiffuse::GetVariableValues(cMaterial* apMaterial, cResou
 
     apVars->AddVarFloat("HeightMapScale", pVars->mfHeightMapScale);
     apVars->AddVarFloat("HeightMapBias", pVars->mfHeightMapBias);
-    apVars->AddVarFloat("FrenselBias", pVars->mfFrenselBias);
-    apVars->AddVarFloat("FrenselPow", pVars->mfFrenselPow);
+    apVars->AddVarFloat("FresnelBias", pVars->mfFresnelBias);
+    apVars->AddVarFloat("FresnelPow", pVars->mfFresnelPow);
     apVars->AddVarBool("AlphaDissolveFilter", pVars->mbAlphaDissolveFilter);
 }
 

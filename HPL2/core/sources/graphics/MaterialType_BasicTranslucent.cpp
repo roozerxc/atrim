@@ -35,7 +35,7 @@ namespace hpl
 #define kVar_a_mtxUV                            4
 #define kVar_afRefractionScale                    5
 #define kVar_a_mtxInvViewRotation                6
-#define kVar_avFrenselBiasPow                    7
+#define kVar_avFresnelBiasPow                    7
 #define kVar_avRimLightMulPow                    8
 #define kVar_afLightLevel                        9
 
@@ -86,8 +86,8 @@ cMaterialType_Translucent::cMaterialType_Translucent(cGraphics *apGraphics, cRes
     AddVarBool("RefractionNormals", false, "If normals should be used when refracting. If no NMap is set this is forced true!");
     AddVarBool("RefractionNormals", false, "If normals should be used when refracting. If no NMap is set this is forced true!");
     AddVarFloat("RefractionScale", 0.1f, "The amount refraction offsets the background");
-    AddVarFloat("FrenselBias", 0.2f, "Bias for Fresnel term. values: 0-1. Higher means that more of reflection is seen when looking straight at the surface.");
-    AddVarFloat("FrenselPow", 8.0f, "The higher the 'sharper' the reflection is, meaning that it is only clearly seen at sharp angles.");
+    AddVarFloat("FresnelBias", 0.2f, "Bias for Fresnel term. values: 0-1. Higher means that more of reflection is seen when looking straight at the surface.");
+    AddVarFloat("FresnelPow", 8.0f, "The higher the 'sharper' the reflection is, meaning that it is only clearly seen at sharp angles.");
     AddVarFloat("RimLightMul", 0.0f, "The amount of rim light based on the reflection. This gives an edge to the object. Values: 0 - inf (although 1.0f should be used for max)");
     AddVarFloat("RimLightPow", 8.0f, "The sharpness of the rim lighting.");
     AddVarBool("AffectedByLightLevel", false, "The the material alpha is affected by the light level.");
@@ -172,7 +172,7 @@ void cMaterialType_Translucent::LoadData()
         mpBlendProgramManager[i]->AddGenerateProgramVariableId("a_mtxUV",kVar_a_mtxUV, eMaterialRenderMode_Diffuse);
         mpBlendProgramManager[i]->AddGenerateProgramVariableId("afRefractionScale", kVar_afRefractionScale, eMaterialRenderMode_Diffuse);
         mpBlendProgramManager[i]->AddGenerateProgramVariableId("a_mtxInvViewRotation", kVar_a_mtxInvViewRotation, eMaterialRenderMode_Diffuse);
-        mpBlendProgramManager[i]->AddGenerateProgramVariableId("avFrenselBiasPow", kVar_avFrenselBiasPow, eMaterialRenderMode_Diffuse);
+        mpBlendProgramManager[i]->AddGenerateProgramVariableId("avFresnelBiasPow", kVar_avFresnelBiasPow, eMaterialRenderMode_Diffuse);
         mpBlendProgramManager[i]->AddGenerateProgramVariableId("avRimLightMulPow", kVar_avRimLightMulPow, eMaterialRenderMode_Diffuse);
         mpBlendProgramManager[i]->AddGenerateProgramVariableId("afLightLevel", kVar_afLightLevel, eMaterialRenderMode_Diffuse);
 
@@ -357,7 +357,7 @@ void cMaterialType_Translucent::SetupMaterialSpecificData(eMaterialRenderMode aR
         cMatrixf mtxInvView = apRenderer->GetCurrentFrustum()->GetViewMatrix().GetTranspose();
         apProgram->SetMatrixf(kVar_a_mtxInvViewRotation, mtxInvView.GetRotation());
 
-        apProgram->SetVec2f(kVar_avFrenselBiasPow, cVector2f(pVars->mfFrenselBias, pVars->mfFrenselPow));
+        apProgram->SetVec2f(kVar_avFresnelBiasPow, cVector2f(pVars->mfFresnelBias, pVars->mfFresnelPow));
         apProgram->SetVec2f(kVar_avRimLightMulPow, cVector2f(pVars->mfRimLightMul, pVars->mfRimLightPow));
     }
 
@@ -466,8 +466,8 @@ void cMaterialType_Translucent::LoadVariables(cMaterial *apMaterial, cResourceVa
     pVars->mbRefractionEdgeCheck = apVars->GetVarBool("RefractionEdgeCheck", true);
     pVars->mbRefractionNormals = apVars->GetVarBool("RefractionNormals", true);
     pVars->mfRefractionScale  = apVars->GetVarFloat("RefractionScale", 1.0f);
-    pVars->mfFrenselBias = apVars->GetVarFloat("FrenselBias", 0.2f);
-    pVars->mfFrenselPow = apVars->GetVarFloat("FrenselPow", 8.0);
+    pVars->mfFresnelBias = apVars->GetVarFloat("FresnelBias", 0.2f);
+    pVars->mfFresnelPow = apVars->GetVarFloat("FresnelPow", 8.0);
     pVars->mfRimLightMul =  apVars->GetVarFloat("RimLightMul", 0.0f);
     pVars->mfRimLightPow = apVars->GetVarFloat("RimLightPow", 8.0f);
     pVars->mbAffectedByLightLevel = apVars->GetVarBool("AffectedByLightLevel", false);
@@ -483,8 +483,8 @@ void cMaterialType_Translucent::GetVariableValues(cMaterial *apMaterial, cResour
     apVars->AddVarBool("RefractionEdgeCheck", pVars->mbRefractionEdgeCheck);
     apVars->AddVarBool("RefractionNormals", pVars->mbRefractionNormals);
     apVars->AddVarFloat("RefractionScale", pVars->mfRefractionScale);
-    apVars->AddVarFloat("FrenselBias", pVars->mfFrenselBias);
-    apVars->AddVarFloat("FrenselPow",pVars->mfFrenselPow);
+    apVars->AddVarFloat("FresnelBias", pVars->mfFresnelBias);
+    apVars->AddVarFloat("FresnelPow",pVars->mfFresnelPow);
     apVars->AddVarFloat("RimLightMul",pVars->mfRimLightMul);
     apVars->AddVarFloat("RimLightPow",pVars->mfRimLightPow);
     apVars->AddVarBool("AffectedByLightLevel", pVars->mbAffectedByLightLevel);

@@ -17,15 +17,15 @@ class cMaterialType_Translucent_Vars : public iMaterialVars
 {
 public:
     cMaterialType_Translucent_Vars() :    mbRefraction(false), mbRefractionEdgeCheck(true), mbRefractionNormals(false), mfRefractionScale(0.1f),
-        mfFrenselBias(0.2f), mfFrenselPow(8.0f) {}
+        mfFresnelBias(0.2f), mfFresnelPow(8.0f) {}
     ~cMaterialType_Translucent_Vars() {}
 
     bool mbRefraction;
     bool mbRefractionEdgeCheck;
     bool mbRefractionNormals;
     float mfRefractionScale;
-    float mfFrenselBias;
-    float mfFrenselPow;
+    float mfFresnelBias;
+    float mfFresnelPow;
     float mfRimLightMul;
     float mfRimLightPow;
     bool mbAffectedByLightLevel;

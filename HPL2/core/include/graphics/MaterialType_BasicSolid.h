@@ -69,8 +69,8 @@ public:
 
     float mfHeightMapScale;
     float mfHeightMapBias;
-    float mfFrenselBias;
-    float mfFrenselPow;
+    float mfFresnelBias;
+    float mfFresnelPow;
     bool mbAlphaDissolveFilter;
 };
 

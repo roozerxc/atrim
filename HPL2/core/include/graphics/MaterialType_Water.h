@@ -14,13 +14,13 @@ namespace hpl
 class cMaterialType_Water_Vars : public iMaterialVars
 {
 public:
-    cMaterialType_Water_Vars() : mbHasReflection(true), mfRefractionScale(0.1f), mfFrenselBias(0.2f), mfFrenselPow(8.0f) {}
+    cMaterialType_Water_Vars() : mbHasReflection(true), mfRefractionScale(0.1f), mfFresnelBias(0.2f), mfFresnelPow(8.0f) {}
     ~cMaterialType_Water_Vars() {}
 
     bool mbHasReflection;
     float mfRefractionScale;
-    float mfFrenselBias;
-    float mfFrenselPow;
+    float mfFresnelBias;
+    float mfFresnelPow;
     float mfReflectionFadeStart;
     float mfReflectionFadeEnd;
     float mfWaveSpeed;

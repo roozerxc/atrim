@@ -35,7 +35,7 @@ namespace hpl
 #define kVar_afRefractionScale                    1
 #define kVar_a_mtxInvViewRotation                2
 #define kVar_avReflectionMapSizeMul                3
-#define kVar_avFrenselBiasPow                    4
+#define kVar_avFresnelBiasPow                    4
 #define kVar_avReflectionFadeStartAndLength        5
 #define kVar_afWaveAmplitude                    6
 #define kVar_afWaveFreq                            7
@@ -77,8 +77,8 @@ cMaterialType_Water::cMaterialType_Water(cGraphics *apGraphics, cResources *apRe
 
 
     AddVarFloat("RefractionScale", 0.1f, "The amount reflection and refraction is offset by ripples in water.");
-    AddVarFloat("FrenselBias", 0.2f, "Bias for Fresnel term. values: 0-1. Higher means that more of reflection is seen when looking straight at water.");
-    AddVarFloat("FrenselPow", 8.0f, "The higher the 'sharper' the reflection is, meaning that it is only clearly seen at sharp angles.");
+    AddVarFloat("FresnelBias", 0.2f, "Bias for Fresnel term. values: 0-1. Higher means that more of reflection is seen when looking straight at water.");
+    AddVarFloat("FresnelPow", 8.0f, "The higher the 'sharper' the reflection is, meaning that it is only clearly seen at sharp angles.");
     AddVarFloat("WaveSpeed", 1.0f, "The speed of the waves.");
     AddVarFloat("WaveAmplitude", 1.0f, "The size of the waves.");
     AddVarFloat("WaveFreq", 1.0f, "The frequency of the waves.");
@@ -132,7 +132,7 @@ void cMaterialType_Water::LoadData()
     mpProgramManager->AddGenerateProgramVariableId("afRefractionScale",kVar_afRefractionScale,eMaterialRenderMode_Diffuse);
     mpProgramManager->AddGenerateProgramVariableId("a_mtxInvViewRotation",kVar_a_mtxInvViewRotation, eMaterialRenderMode_Diffuse);
     mpProgramManager->AddGenerateProgramVariableId("avReflectionMapSizeMul", kVar_avReflectionMapSizeMul, eMaterialRenderMode_Diffuse);
-    mpProgramManager->AddGenerateProgramVariableId("avFrenselBiasPow", kVar_avFrenselBiasPow, eMaterialRenderMode_Diffuse);
+    mpProgramManager->AddGenerateProgramVariableId("avFresnelBiasPow", kVar_avFresnelBiasPow, eMaterialRenderMode_Diffuse);
     mpProgramManager->AddGenerateProgramVariableId("avReflectionFadeStartAndLength", kVar_avReflectionFadeStartAndLength, eMaterialRenderMode_Diffuse);
     mpProgramManager->AddGenerateProgramVariableId("afWaveAmplitude", kVar_afWaveAmplitude, eMaterialRenderMode_Diffuse);
     mpProgramManager->AddGenerateProgramVariableId("afWaveFreq", kVar_afWaveFreq, eMaterialRenderMode_Diffuse);
@@ -297,7 +297,7 @@ void cMaterialType_Water::SetupMaterialSpecificData(eMaterialRenderMode aRenderM
         //Reflection
         if(pVars->mbHasReflection && iRenderer::GetRefractionEnabled())
         {
-            apProgram->SetVec2f(kVar_avFrenselBiasPow, cVector2f(pVars->mfFrenselBias, pVars->mfFrenselPow));
+            apProgram->SetVec2f(kVar_avFresnelBiasPow, cVector2f(pVars->mfFresnelBias, pVars->mfFresnelPow));
 
             //////////////////////////////
             //Cube map reflection
@@ -339,8 +339,8 @@ iMaterialVars* cMaterialType_Water::CreateSpecificVariables()
 
     pVars->mbHasReflection = true;
     pVars->mfRefractionScale = 0.1f;
-    pVars->mfFrenselBias = 0.2f;
-    pVars->mfFrenselPow = 8.0f;
+    pVars->mfFresnelBias = 0.2f;
+    pVars->mfFresnelPow = 8.0f;
 
     return pVars;
 }
@@ -358,8 +358,8 @@ void cMaterialType_Water::LoadVariables(cMaterial *apMaterial, cResourceVarsObje
 
     pVars->mbHasReflection = apVars->GetVarBool("HasReflection", true);
     pVars->mfRefractionScale = apVars->GetVarFloat("RefractionScale", 0.1f);
-    pVars->mfFrenselBias = apVars->GetVarFloat("FrenselBias", 0.2f);
-    pVars->mfFrenselPow = apVars->GetVarFloat("FrenselPow", 8.0f);
+    pVars->mfFresnelBias = apVars->GetVarFloat("FresnelBias", 0.2f);
+    pVars->mfFresnelPow = apVars->GetVarFloat("FresnelPow", 8.0f);
     pVars->mfReflectionFadeStart = apVars->GetVarFloat("ReflectionFadeStart", 0);
     pVars->mfReflectionFadeEnd = apVars->GetVarFloat("ReflectionFadeEnd", 0);
     pVars->mfWaveSpeed = apVars->GetVarFloat("WaveSpeed", 1.0f);
@@ -379,8 +379,8 @@ void cMaterialType_Water::GetVariableValues(cMaterial* apMaterial, cResourceVars
 
     apVars->AddVarBool("HasReflection", pVars->mbHasReflection);
     apVars->AddVarFloat("RefractionScale", pVars->mfRefractionScale);
-    apVars->AddVarFloat("FrenselBias", pVars->mfFrenselBias);
-    apVars->AddVarFloat("FrenselPow", pVars->mfFrenselPow);
+    apVars->AddVarFloat("FresnelBias", pVars->mfFresnelBias);
+    apVars->AddVarFloat("FresnelPow", pVars->mfFresnelPow);
     apVars->AddVarFloat("ReflectionFadeStart", pVars->mfReflectionFadeStart);
     apVars->AddVarFloat("ReflectionFadeEnd", pVars->mfReflectionFadeEnd);
     apVars->AddVarFloat("WaveSpeed",pVars->mfWaveSpeed);
