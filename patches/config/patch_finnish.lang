@@ -1,4 +1,7 @@
 <LANGUAGE>
+
+    <!-- Finnish/Suomi (fiFI) Strings for atrim v1.4.6 by phnxs -->
+
     <RESOURCES />
     <CATEGORY Name="Debug">
         <Entry Name="None">Ei mitään</Entry>
@@ -47,6 +50,15 @@
 
         <Entry Name="Inventory">Tavaraluettelo</Entry>
         <Entry Name="Global">Yleinen</Entry>
+    </CATEGORY>
+
+    <CATEGORY Name="OptionsMenu">
+        <!-- roozy: phnxs had trouble translating this string so I decided to do it myself. Please correct me if this is inaccurate. -->
+        <Entry Name="ParallaxQualityTipNew">Parallaksiefektin kartoituslaatu. Syvyysvaikutelma on erittäin raskas!</Entry>
+
+        <Entry Name="Parallax">Parallax</Entry>
+        <Entry Name="ParallaxSimple">Yksinkertainen</Entry>
+        <Entry Name="ParallaxRelief">Syvyysvaikutelma</Entry>
     </CATEGORY>
 
     <!-- No need to localize these! -->

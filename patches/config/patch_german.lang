@@ -1,4 +1,7 @@
 <LANGUAGE>
+
+    <!-- German/Deutsch (deDE) Strings for atrim v1.4.6 by ANDREWJOHN5/Arkhany -->
+
     <RESOURCES />
     <CATEGORY Name="Debug">
         <Entry Name="None">Keine</Entry>
@@ -47,6 +50,14 @@
 
         <Entry Name="Inventory">Bestand</Entry>
         <Entry Name="Global">Global</Entry>
+    </CATEGORY>
+
+    <CATEGORY Name="OptionsMenu">
+        <Entry Name="ParallaxQualityTipNew">Die Mapping Qualität vom Parallax Effekt. Relief Mapping ist sehr anspruchvoll und braucht Leistung!</Entry>
+
+        <Entry Name="Parallax">Parallax</Entry>
+        <Entry Name="ParallaxSimple">Einfach</Entry>
+        <Entry Name="ParallaxRelief">Relief</Entry>
     </CATEGORY>
 
     <!-- No need to localize these! -->
