@@ -37,7 +37,7 @@ namespace hpl
 #define kVar_afDissolveAmount                4
 #define kVar_avFresnelBiasPow                5
 #define kVar_a_mtxInvViewRotation            6
-
+#define kVar_afTimer						7
 
 //------------------------------
 //Diffuse Features and data
@@ -255,6 +255,7 @@ cMaterialType_SolidDiffuse::cMaterialType_SolidDiffuse(cGraphics *apGraphics, cR
     AddUsedTexture(eMaterialTexture_Specular);
     AddUsedTexture(eMaterialTexture_Height);
     AddUsedTexture(eMaterialTexture_Illumination);
+    AddUsedTexture(eMaterialTexture_IlluminationModulate);
     AddUsedTexture(eMaterialTexture_DissolveAlpha);
     AddUsedTexture(eMaterialTexture_CubeMap);
     AddUsedTexture(eMaterialTexture_CubeMapAlpha);
@@ -328,6 +329,9 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
     mpProgramManager->SetupGenerateProgramData(    eMaterialRenderMode_Illumination,"Illum","deferred_base_vtx.glsl", "deferred_illumination_frag.glsl",
             vIllumFeatureVec,kIllumFeatureNum, defaultVars);
 
+    mpProgramManager->SetupGenerateProgramData(	eMaterialRenderMode_IlluminationModulate,"IllumMod","deferred_base_vtx.glsl", "deferred_illumination_mod_frag.glsl",
+            vIllumFeatureVec,kIllumFeatureNum, defaultVars);
+
 
     ////////////////////////////////
     //Set up variable ids
@@ -339,6 +343,10 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
 
     mpProgramManager->AddGenerateProgramVariableId("a_mtxUV",kVar_a_mtxUV,eMaterialRenderMode_Illumination);
     mpProgramManager->AddGenerateProgramVariableId("afColorMul",kVar_afColorMul,eMaterialRenderMode_Illumination);
+
+    mpProgramManager->AddGenerateProgramVariableId("a_mtxUV",kVar_a_mtxUV,eMaterialRenderMode_IlluminationModulate);
+    mpProgramManager->AddGenerateProgramVariableId("afColorMul",kVar_afColorMul,eMaterialRenderMode_IlluminationModulate);
+    mpProgramManager->AddGenerateProgramVariableId("afTimer",kVar_afTimer,eMaterialRenderMode_IlluminationModulate);
 }
 
 //--------------------------------------------------------------------------
@@ -369,6 +377,7 @@ void cMaterialType_SolidDiffuse::CompileSolidSpecifics(cMaterial *apMaterial)
         apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Z,true);
         apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Diffuse,true);
         apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Illumination,true);
+        apMaterial->SetHasSpecificSettings(eMaterialRenderMode_IlluminationModulate,true);
     }
 
     //////////////////////////////////
@@ -383,6 +392,13 @@ void cMaterialType_SolidDiffuse::CompileSolidSpecifics(cMaterial *apMaterial)
     if(apMaterial->GetTexture(eMaterialTexture_Illumination))
     {
         apMaterial->SetHasObjectSpecificsSettings(eMaterialRenderMode_Illumination,true);
+    }
+
+    //////////////////////////////////
+    //Illuminations specifics
+    if(apMaterial->GetTexture(eMaterialTexture_IlluminationModulate))
+    {
+        apMaterial->SetHasObjectSpecificsSettings(eMaterialRenderMode_IlluminationModulate,true);
     }
 }
 
@@ -437,6 +453,18 @@ iTexture* cMaterialType_SolidDiffuse::GetTextureForUnit(cMaterial *apMaterial,eM
             return apMaterial->GetTexture(eMaterialTexture_CubeMap);
         case 5:
             return apMaterial->GetTexture(eMaterialTexture_CubeMapAlpha);
+        }
+    }
+    ////////////////////////////
+    //Illumination with modulation
+    else if(aRenderMode == eMaterialRenderMode_IlluminationModulate)
+    {
+        switch(alUnit)
+        {
+        case 0:
+            return apMaterial->GetTexture(eMaterialTexture_Illumination);
+        case 1:
+            return apMaterial->GetTexture(eMaterialTexture_IlluminationModulate);
         }
     }
     ////////////////////////////
@@ -546,7 +574,8 @@ iGpuProgram* cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
     }
     ////////////////////////////
     //Illumination
-    else if(aRenderMode == eMaterialRenderMode_Illumination)
+    else if(aRenderMode == eMaterialRenderMode_Illumination
+         || aRenderMode == eMaterialRenderMode_IlluminationModulate )
     {
         tFlag lFlags =0;
         if(apMaterial->HasUvAnimation())
@@ -583,7 +612,8 @@ void cMaterialType_SolidDiffuse::SetupMaterialSpecificData(    eMaterialRenderMo
     if(    aRenderMode == eMaterialRenderMode_Diffuse ||
             aRenderMode == eMaterialRenderMode_Z ||
             aRenderMode == eMaterialRenderMode_Z_Dissolve ||
-            aRenderMode == eMaterialRenderMode_Illumination)
+            aRenderMode == eMaterialRenderMode_Illumination ||
+            aRenderMode == eMaterialRenderMode_IlluminationModulate)
     {
         /////////////////////////
         //UV Animation
@@ -633,9 +663,14 @@ void cMaterialType_SolidDiffuse::SetupObjectSpecificData(    eMaterialRenderMode
     }
     ////////////////////////////
     //Illumination
-    else if(aRenderMode == eMaterialRenderMode_Illumination)
+    else if(aRenderMode == eMaterialRenderMode_Illumination || aRenderMode == eMaterialRenderMode_IlluminationModulate)
     {
-        bool bRet = apProgram->SetFloat(kVar_afColorMul, apObject->GetIlluminationAmount());
+        bool bRet = apProgram->SetFloat(kVar_afColorMul, apObject->GetIlluminationAmount() * apObject->GetIlluminationAmount());
+
+        if ( aRenderMode == eMaterialRenderMode_IlluminationModulate )
+        {
+            bRet = bRet && apProgram->SetFloat(kVar_afTimer, apObject->GetShaderTimer());
+        }
     }
 }
 

@@ -566,6 +566,8 @@ tString cMaterialManager::GetTextureString(eMaterialTexture aType)
         return "Height";
     case eMaterialTexture_Illumination:
         return "Illumination";
+    case eMaterialTexture_IlluminationModulate:
+        return "IlluminationModulate";
     case eMaterialTexture_Specular:
         return "Specular";
     case eMaterialTexture_CubeMap:
