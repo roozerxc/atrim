@@ -24,6 +24,7 @@ namespace hpl
 
 cAINode::cAINode()
 {
+    mlListID = -1;
 }
 
 //-----------------------------------------------------------------------
@@ -259,6 +260,7 @@ cAINodeContainer::cAINodeContainer(    const tString& asName, const tString &asN
     mfMaxHeight = 0.1f;
 
     mlNodesPerGrid = 6;
+    mlListNum = 0;
 
     mbNodeIsAtCenter = true;
 }
@@ -268,8 +270,7 @@ cAINodeContainer::cAINodeContainer(    const tString& asName, const tString &asN
 cAINodeContainer::~cAINodeContainer()
 {
     hplDelete(mpRayCallback);
-
-    STLDeleteAll(mvNodes);
+    mvNodes.clear();
 }
 
 //-----------------------------------------------------------------------
@@ -289,15 +290,23 @@ void cAINodeContainer::ReserveSpace(size_t alReserveSpace)
 
 void cAINodeContainer::AddNode(const tString &asName, int alID, const cVector3f &avPosition, void *apUserData)
 {
-    cAINode *pNode = hplNew( cAINode, () );
-    pNode->msName = asName;
-    pNode->mlID = alID;
-    pNode->mvPosition = avPosition;
-    pNode->mpUserData = apUserData;
+    // Only add if there are reserved nodes!
 
-    mvNodes.push_back(pNode);
-    m_mapNodesByName.insert(tAINodeNameMap::value_type(asName,pNode));
-    m_mapNodesByID.insert(tAINodeIDMap::value_type(alID,pNode));
+    // roozy: TCR did not use hplNew to create the new node
+    // so to avoid C2664 a portion of this code was slightly rewritten
+
+    if(mvNodes.size() < mvNodes.capacity())
+    {
+        cAINode *pNode = hplNew( cAINode, () );
+        pNode->msName = asName;
+        pNode->mlID = alID;
+        pNode->mvPosition = avPosition;
+        pNode->mpUserData = apUserData;
+
+        mvNodes.push_back(pNode);
+        m_mapNodesByName.insert(tAINodeNameMap::value_type(asName,mvNodes.back()));
+        m_mapNodesByID.insert(tAINodeIDMap::value_type(alID,mvNodes.back()));
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -351,31 +360,6 @@ void cAINodeContainer::Compile()
     {
         cAINode *pNode = *CurrentNodeIt;
 
-        ////////////////////////////////////////
-        //Add the ends that are connected to the node.
-        /*Log("Node %s checks: ",pNode->GetName().c_str());
-        tAINodeVecIt EndNodeIt = mvNodes.begin();
-        for(; EndNodeIt != mvNodes.end(); ++EndNodeIt)
-        {
-            cAINode *pEndNode = *EndNodeIt;
-
-            if(pEndNode == pNode) continue;
-            float fDist = cMath::Vector3Dist(pNode->mvPosition, pEndNode->mvPosition);
-            if(fDist > mfMaxEndDistance*2) continue;
-            Log("'%s'(%f) ",pEndNode->GetName().c_str(),fDist);
-
-            float fHeight = fabs(pNode->mvPosition.y - pEndNode->mvPosition.y);
-
-            if(    fHeight <= mfMaxHeight &&
-            FreePath(pNode->mvPosition, pEndNode->mvPosition,-1,eAIFreePathFlag_SkipDynamic))
-            {
-            pNode->AddEdge(pEndNode);
-            Log("Added!");
-            }
-            Log(", ");
-        }
-        Log("\n");*/
-        //Log("Node %s checks: ",pNode->GetName().c_str());
         cAINodeIterator nodeIt = GetNodeIterator(pNode->mvPosition,mfMaxEndDistance*1.5f);
         while(nodeIt.HasNext())
         {
@@ -390,7 +374,6 @@ void cAINodeContainer::Compile()
             {
                 continue;
             }
-            //Log("'%s'(%f) ",pEndNode->GetName().c_str(),fDist);
 
             float fHeight = fabs(pNode->mvPosition.y - pEndNode->mvPosition.y);
 
@@ -399,18 +382,14 @@ void cAINodeContainer::Compile()
                     FreePath(pNode->mvPosition, pEndNode->mvPosition,-1,flag))
             {
                 pNode->AddEdge(pEndNode);
-                //Log("Added!");
             }
-            //Log(", ");
         }
-        //Log("\n");
-
 
         ///////////////////////////////////////
         //Sort nodes and remove unwanted ones.
         std::sort(pNode->mvEdges.begin(), pNode->mvEdges.end(), cSortEndNodes());
 
-        //Resize if to too large
+        //Resize the node if it's too large
         if(mlMaxNodeEnds > 0 && (int)pNode->mvEdges.size() > mlMaxNodeEnds)
         {
             pNode->mvEdges.resize(mlMaxNodeEnds);
@@ -425,9 +404,9 @@ void cAINodeContainer::Compile()
                 break;
             }
         }
-
-        //Log("  Final edge count: %d\n",pNode->mvEdges.size());
     }
+
+    SetupListID();
 }
 
 //-----------------------------------------------------------------------
@@ -535,6 +514,54 @@ void cAINodeContainer::BuildNodeGridMap()
 
 //-----------------------------------------------------------------------
 
+void cAINodeContainer::SetupListID()
+{
+    bool bLog=false;
+
+    if(bLog)
+    {
+        Log("Nodes: %d\n", mvNodes.size());
+    }
+
+    ////////////////////////////////////
+    // Reset variables
+    for(size_t i=0; i< mvNodes.size(); ++i)
+    {
+        mvNodes[i]->mlListID = -1;
+    }
+
+    //////////////
+    // Search for unintialized node and create list from it and all nodes connected to it in any way
+    mlListNum = 0;
+
+    for(size_t i=0; i< mvNodes.size(); ++i)
+    {
+        if(mvNodes[i]->mlListID == -1)
+        {
+            SetupListIDIterative(mvNodes[i], mlListNum++);
+        }
+    }
+}
+
+void cAINodeContainer::SetupListIDIterative(cAINode* apNode, int alID)
+{
+    /////////////
+    // Set id
+    apNode->mlListID = alID;
+
+    /////////////
+    // Set id of all children that have not been set yet
+    for(size_t i = 0; i < apNode->mvEdges.size(); ++i)
+    {
+        if(apNode->mvEdges[i].mpNode->mlListID == -1)
+        {
+            SetupListIDIterative(apNode->mvEdges[i].mpNode, alID);
+        }
+    }
+}
+
+//-----------------------------------------------------------------------
+
 cAINodeIterator cAINodeContainer::GetNodeIterator(const cVector3f &avPosition, float afRadius)
 {
     return cAINodeIterator(this,avPosition, afRadius);
@@ -546,7 +573,11 @@ static const cVector2f gvPosAdds[] = {cVector2f(0,0),
                                       cVector2f(1,0),
                                       cVector2f(-1,0),
                                       cVector2f(0,1),
-                                      cVector2f(0,-1)
+                                      cVector2f(0,-1),
+                                      cVector2f(0.5,0.5),
+                                      cVector2f(0.5,-0.5),
+                                      cVector2f(-0.5,0.5),
+                                      cVector2f(-0.5,-0.5)
                                      };
 
 bool cAINodeContainer::FreePath(const cVector3f &avStart, const cVector3f &avEnd, int alRayNum,
@@ -558,8 +589,7 @@ bool cAINodeContainer::FreePath(const cVector3f &avStart, const cVector3f &avEnd
         return true;
     }
 
-
-    if(alRayNum<0 || alRayNum>5)
+    if(alRayNum<0 || alRayNum>9)
     {
         alRayNum =5;
     }
@@ -575,7 +605,7 @@ bool cAINodeContainer::FreePath(const cVector3f &avStart, const cVector3f &avEnd
     const cVector3f vEndCenter  = mbNodeIsAtCenter ? avEnd : avEnd + cVector3f(0,mvSize.y/2,0);
 
     //Get the half with and height. Make them a little smaller so that player can slide over funk on floor.
-    const float fHalfWidth = mvSize.x * 0.4f;
+    const float fHalfWidth = mvSize.x * 0.55f;
     const float fHalfHeight = mvSize.y * 0.4f;
 
     //Setup ray callback
@@ -609,6 +639,7 @@ void cAINodeContainer::SaveToFile(const tWString &asFile)
     TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument,() );
 
     TiXmlElement *pRootElem = static_cast<TiXmlElement*>(pXmlDoc->InsertEndChild(TiXmlElement("AINodes")));
+    pRootElem->SetAttribute("ListNum", cString::ToString(mlListNum).c_str());
 
     for(size_t i=0; i< mvNodes.size(); ++i)
     {
@@ -617,6 +648,7 @@ void cAINodeContainer::SaveToFile(const tWString &asFile)
 
         pNodeElem->SetAttribute("Name", pNode->GetName().c_str());
         pNodeElem->SetAttribute("ID", cString::ToString(pNode->GetID()).c_str());
+        pNodeElem->SetAttribute("ListID", cString::ToString(pNode->GetListID()).c_str());
 
         for(int edge =0; edge < pNode->GetEdgeNum(); ++edge)
         {
@@ -632,7 +664,7 @@ void cAINodeContainer::SaveToFile(const tWString &asFile)
     FILE *pFile = cPlatform::OpenFile(asFile, _W("w+"));
     if(pFile==NULL || pXmlDoc->SaveFile(pFile)==false)
     {
-        Error("Couldn't save XML file %s\n",asFile.c_str());
+        Error("Couldn't save XML file '%s'\n",asFile.c_str());
         hplDelete(pXmlDoc);
         return;
     }
@@ -663,20 +695,34 @@ void cAINodeContainer::LoadFromFile(const tWString &asFile)
     fclose(pFile);
 
     TiXmlElement *pRootElem = pXmlDoc->RootElement();
+    mlListNum = cString::ToInt(pRootElem->Attribute("ListNum"), 1);
 
     TiXmlElement *pNodeElem = pRootElem->FirstChildElement("Node");
     for(; pNodeElem != NULL; pNodeElem = pNodeElem->NextSiblingElement("Node"))
     {
         tString sName = cString::ToString(pNodeElem->Attribute("Name"),"");
         int alID = cString::ToInt(pNodeElem->Attribute("ID"),-1);
+        int alListID = cString::ToInt(pNodeElem->Attribute("ListID"), 0);
 
         cAINode *pNode = GetNodeFromID(alID);
+        if(pNode==NULL)
+        {
+            Error("Could not find node with id %d in node container cache '%s'\n", alID, cString::To8Char(asFile).c_str());
+            continue;
+        }
+
+        pNode->mlListID = alListID;
 
         TiXmlElement *pEdgeElem = pNodeElem->FirstChildElement("Edge");
         for(; pEdgeElem != NULL; pEdgeElem = pEdgeElem->NextSiblingElement("Edge"))
         {
             tString sNodeName = cString::ToString(pEdgeElem->Attribute("Node"),"");
             cAINode *pEdgeNode = GetNodeFromName(sNodeName);
+            if(pEdgeNode == NULL)
+            {
+                Error("Could not find edge node in node %d with name '%s' in node container cache '%s'\n", alID, sNodeName.c_str(), cString::To8Char(asFile).c_str());
+                continue;
+            }
 
             cAINodeEdge Edge;
             Edge.mpNode = pEdgeNode;
