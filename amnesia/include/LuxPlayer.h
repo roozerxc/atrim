@@ -539,6 +539,14 @@ public:
     void RunHelperMessage(eUpdateableMessage aMessage, float afX);
     void RunHelperLuxMessage(eLuxUpdateableMessage aMessage, void *apData);
 
+    float GetRoll()
+    {
+        return mfRoll;
+    }
+    float GetLeanRoll()
+    {
+        return mfLeanRoll;
+    }
 
 private:
     bool CanDrawCrossHair();
