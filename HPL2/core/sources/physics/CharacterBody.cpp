@@ -758,11 +758,6 @@ cVector3f iCharacterBody::GetCustomGravity()
 
 void iCharacterBody::SetCollideFlags(tFlag alX)
 {
-    if(mlCollideFlags == alX)
-    {
-        return;
-    }
-
     mlCollideFlags = alX;
 
     for(size_t i=0; i<mvBodies.size(); ++i)
@@ -990,11 +985,6 @@ void iCharacterBody::DisconnectBody()
 
 void iCharacterBody::Update(float afTimeStep)
 {
-    if(mbActive == false)
-    {
-        return;
-    }
-
     /////////////////////////
     // Move delay
     if(mfMoveDelayCount>0)
