@@ -609,7 +609,7 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
 
     //Fade into the new max
     float fAdd = 0.1f;
-    mvCurrentBobMax = cMath::Vector2IncreaseTo(mvCurrentBobMax, fAdd * afTimeStep, mvBobMaxGoal);
+    mvCurrentBobMax = cMath::Vector2IncreaseTo(mvCurrentBobMax, cVector2f(fAdd * afTimeStep), mvBobMaxGoal);
 
 
     /////////////////////////
