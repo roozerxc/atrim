@@ -17,7 +17,6 @@ public:
     void OnGravityCollide(iCharacterBody *apCharBody, iPhysicsBody *apBody, cCollideData *apCollideData);
     void OnHitGround(iCharacterBody *apCharBody,const cVector3f &avVel) {}
 
-
 private:
     cLuxMoveState_Normal *mpMoveState;
 };
@@ -126,8 +125,12 @@ private:
     float mfJumpCount;
 
     cVector3f mvHeadBob;
+    cVector2f mvEnergyBobSize;
     float mfPrevHeadBobCount;
     float mfHeadBobCount;
+    float mfHeadBobMul;
+    float mfHeadBobMulTarget;
+    float mfHeadBobMulSpeed;
     bool mbBobbing;
 
     bool mbWasOnGround;
