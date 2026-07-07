@@ -64,8 +64,6 @@ public:
      */
     float GetKeyFramesAtTime(float afTime, cKeyFrame** apKeyFrameA,cKeyFrame** apKeyFrameB,bool bLoop=true);
 
-    void Smooth(float afAmount, float afPow, int alSamples,bool abTranslation, bool abRotation);
-
     const tString& GetName()
     {
         return msName;

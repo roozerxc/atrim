@@ -29,8 +29,6 @@ public:
     void ReserveTrackNum(int alNum);
     int GetTrackNum();
 
-    void SmoothAllTracks(float afAmount, float afPow, int alSamples,bool abTranslation, bool abRotation);
-
     const char* GetAnimationName()
     {
         return msAnimName.c_str();

@@ -94,17 +94,6 @@ int cAnimation::GetTrackNum()
 
 //-----------------------------------------------------------------------
 
-void cAnimation::SmoothAllTracks(float afAmount, float afPow, int alSamples,bool abTranslation, bool abRotation)
-{
-    for(size_t i=0; i< mvTracks.size(); ++i)
-    {
-        mvTracks[i]->Smooth(afAmount, afPow, alSamples, abTranslation, abRotation);
-    }
-}
-
-//-----------------------------------------------------------------------
-
-
 //////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 //////////////////////////////////////////////////////////////////////////
