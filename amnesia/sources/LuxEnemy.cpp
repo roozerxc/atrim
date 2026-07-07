@@ -818,7 +818,7 @@ iEntity3D* iLuxEnemy::GetAttachEntity()
 void iLuxEnemy::GiveDamage(float afAmount, int alStrength)
 {
     if(mfHealth > 0)
-
+    {
         if(alStrength < mlToughness-1)
         {
             afAmount =0;
@@ -827,6 +827,7 @@ void iLuxEnemy::GiveDamage(float afAmount, int alStrength)
         {
             afAmount *= 0.5;
         }
+    }
 
     afAmount *= GetDamageMul(afAmount, alStrength);
 
