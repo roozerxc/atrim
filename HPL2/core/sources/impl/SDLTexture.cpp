@@ -1103,9 +1103,13 @@ void cSDLTexture::SetupProperties(int alTextureHandle)
     glBindTexture(GLTarget, alTextureHandle);
 
     /////////////////////////////////////////
-    //Filtering
+    //Minimum Filtering
     if(mbUseMipMaps && mType != eTextureType_Rect)
     {
+        if(mFilter == eTextureFilter_Nearest)
+        {
+            glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+        }
         if(mFilter == eTextureFilter_Bilinear)
         {
             glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
@@ -1117,10 +1121,25 @@ void cSDLTexture::SetupProperties(int alTextureHandle)
     }
     else
     {
-        glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        if(mFilter == eTextureFilter_Nearest)
+        {
+            glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        }
+        else
+        {
+            glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        }
     }
 
-    glTexParameteri(GLTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // Magnified/Maximum filtering
+    if(mFilter == eTextureFilter_Nearest)
+    {
+        glTexParameteri(GLTarget, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    }
+    else
+    {
+        glTexParameteri(GLTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    }
 
     //////////////////////
     // Rect (force clamp to edge skip anisotropy)
