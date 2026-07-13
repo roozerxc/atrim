@@ -11,9 +11,6 @@ atrim is currently being maintained by one person ([@RoozerXC](https://github.co
 > - **This port is based on the official *Amnesia: The Dark Descent* version 1.4.3 (1.41b) source code release from October 12th, 2020.**
 > - **Mods installed from the Steam Workshop, including Custom Stories and Full Conversion mods will not work here!**
 
-> [!CAUTION]
-> - **DirectInput controller support on SDL 1.2.15 is very poor! We need your help! (see issue [#21](https://github.com/roozerxc/atrim/issues/21))**
-
 For a list of changes, read [`CHANGELOG.md`](CHANGELOG.md). Special thanks are in [`THANKS.md`](THANKS.md).
 
 ## Installation
