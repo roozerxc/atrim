@@ -402,9 +402,10 @@ enum eLuxAction
     eLuxAction_Jump,
     eLuxAction_Crouch,
 
+#ifdef USE_GAMEPAD
     eLuxAction_ZoomIn,
     eLuxAction_ZoomOut,
-
+#endif
 
     eLuxAction_LastEnum
 };

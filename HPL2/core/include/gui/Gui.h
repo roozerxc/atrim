@@ -122,9 +122,9 @@ public:
 
     bool SendKeyPress(const cKeyPress& keyPress);
     bool SendKeyRelease(const cKeyPress& keyPress);
-
+#if USE_GAMEPAD
     bool SendGamepadInput(const cGamepadInputData& aInput);
-
+#endif
     bool SendUIArrowPress(eUIArrow aX);
     bool SendUIArrowRelease(eUIArrow aX);
 

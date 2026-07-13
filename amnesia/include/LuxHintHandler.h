@@ -7,7 +7,7 @@
 
 //---------------------------------------
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
 
 class cLuxHintIcon
 {
@@ -56,7 +56,7 @@ public:
     void UnBlock(const tString &asName);
 
 private:
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     void ParseStringForGamepadIcons();
     tWString AddGamepadIconAtPosition(const tWString& asCommand, int alPosition);
 #endif
@@ -83,7 +83,7 @@ private:
     float mfShowTextCount;
     tWString msCurrentText;
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     cGuiGfxElement* mpGamepadButtonIcon[eGamepadButton_LastEnum];
     cGuiGfxElement* mpGamepadHatIcon[4];
     cGuiGfxElement* mpGampadAxisIcon[eGamepadAxis_LastEnum * 2];

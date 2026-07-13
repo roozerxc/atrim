@@ -475,7 +475,7 @@ bool cLuxPlayerState_InteractGrab::OnAddPitch(float afAmount)
     cInput* pInput = gpBase->mpEngine->GetInput();
     if(pInput->IsTriggerd(eLuxAction_Rotate) && mpGrabData->mbUseRotation)
     {
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
         ////////////////
         // We have both gamepad and mouse connected?
         if(gpBase->mpInputHandler->IsGamepadPresent())

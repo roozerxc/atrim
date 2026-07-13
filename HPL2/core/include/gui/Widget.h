@@ -338,11 +338,12 @@ protected:
     {
         return false;
     }
-
+#if USE_GAMEPAD
     virtual bool OnGamepadButtonPress(const cGuiMessageData& aData)
     {
         return false;
     }
+#endif
 
     virtual bool OnUIArrowPress(const cGuiMessageData& aData)
     {

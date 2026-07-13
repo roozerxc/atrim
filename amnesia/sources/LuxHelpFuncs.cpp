@@ -345,7 +345,7 @@ tWString cLuxHelpFuncs::ParseStringCommand(const tWString& asCommand)
                 sOutput += _W(" / ");
             }
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
             tString sType = pSubAction->GetInputType();
             ////////////
             //
@@ -396,7 +396,7 @@ tWString cLuxHelpFuncs::ParseStringCommand(const tWString& asCommand)
     else if(asCommand == _W("Look"))
     {
         tWString sOutput = _W("");
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
         sOutput += kTranslate("Hints", "Mouse");
 
         if(gpBase->mpInputHandler->IsGamepadPresent())

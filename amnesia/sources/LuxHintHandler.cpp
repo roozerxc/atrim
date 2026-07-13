@@ -1,7 +1,9 @@
 #include "LuxHintHandler.h"
 
 #include "LuxHelpFuncs.h"
+#if USE_GAMEPAD
 #include "input/Gamepad.h"
+#endif
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -25,11 +27,11 @@ cLuxHintHandler::cLuxHintHandler() : iLuxUpdateable("LuxHintHandler")
 
     mHintOscill.SetUp(0, 1, 0, 1, 1);
 
-    //////////////
-    // Set up icons for each gamepad button
     cGuiSet* pGuiSet = gpBase->mpGameHudSet;
     cGui* pGui = pGuiSet->GetGui();
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
+    //////////////
+    // Set up icons for each gamepad button
     for(int i = 0; i < eGamepadButton_LastEnum; ++i)
     {
         //////////
@@ -175,7 +177,7 @@ void cLuxHintHandler::DrawHintText(float afFrameTime, cGuiSet *apGuiSet)
         }
     }
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     /////////////
     // Draw all the icons
     for(size_t i = 0; i < mvHintIcons.size(); ++i)
@@ -262,7 +264,7 @@ bool cLuxHintHandler::Add(const tString &asName, const tWString &asMessage, floa
     mfShowTextCount = afTimeShown <=0 ? gpBase->mpHelpFuncs->GetStringDuration(msCurrentText)*mfTextDurationMul : afTimeShown;
     mfAlpha =0;
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     ParseStringForGamepadIcons();
 #endif
 
@@ -303,7 +305,7 @@ void cLuxHintHandler::UnBlock(const tString &asName)
 
 //-----------------------------------------------------------------------
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
 void cLuxHintHandler::ParseStringForGamepadIcons()
 {
     mvHintIcons.clear();

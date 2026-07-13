@@ -640,6 +640,7 @@ bool cGui::SendKeyRelease(const cKeyPress& aKeyPress)
 
 //-----------------------------------------------------------------------
 
+#if USE_GAMEPAD
 bool cGui::SendGamepadInput(const cGamepadInputData& aInput)
 {
     if(mpSetInFocus==NULL)
@@ -649,6 +650,7 @@ bool cGui::SendGamepadInput(const cGamepadInputData& aInput)
 
     return mpSetInFocus->SendMessage(eGuiMessage_GamepadInput, cGuiMessageData(aInput));
 }
+#endif
 
 //-----------------------------------------------------------------------
 

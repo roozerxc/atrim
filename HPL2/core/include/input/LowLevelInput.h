@@ -40,14 +40,18 @@ public:
     /**
      *
      */
+#if USE_GAMEPAD
     virtual void InitGamepadSupport()=0;
     virtual void DropGamepadSupport()=0;
 
     virtual int GetPluggedGamepadNum()=0;
+#endif
 
     virtual iMouse* CreateMouse()=0;
     virtual iKeyboard* CreateKeyboard()=0;
+#if USE_GAMEPAD
     virtual iGamepad* CreateGamepad(int alIndex)=0;
+#endif
 };
 };
 #endif // HPL_LOWLEVELINPUT_H

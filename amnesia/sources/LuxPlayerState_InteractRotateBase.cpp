@@ -349,7 +349,7 @@ bool iLuxPlayerState_InteractRotateBase::OnAddYaw(float afAmount)
 
 bool iLuxPlayerState_InteractRotateBase::OnAddPitch(float afAmount)
 {
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     ////////////////
     // We have both gamepad and mouse connected?
     if(gpBase->mpInputHandler->IsGamepadPresent())

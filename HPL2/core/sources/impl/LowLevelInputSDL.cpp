@@ -2,7 +2,9 @@
 
 #include "impl/MouseSDL.h"
 #include "impl/KeyboardSDL.h"
+#if USE_GAMEPAD
 #include "impl/GamepadSDL.h"
+#endif
 #if USE_XINPUT
 #pragma comment(lib, "XInput.lib")
 #include "impl/GamepadXInput.h"
@@ -125,6 +127,7 @@ void cLowLevelInputSDL::EndInputUpdate()
 
 //-----------------------------------------------------------------------
 
+#if USE_GAMEPAD
 void cLowLevelInputSDL::InitGamepadSupport()
 {
     SDL_InitSubSystem(SDL_INIT_JOYSTICK);
@@ -143,6 +146,7 @@ int cLowLevelInputSDL::GetPluggedGamepadNum()
     return SDL_NumJoysticks();
 #endif
 }
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -160,10 +164,12 @@ iKeyboard* cLowLevelInputSDL::CreateKeyboard()
 
 //-----------------------------------------------------------------------
 
+#if USE_GAMEPAD
 iGamepad* cLowLevelInputSDL::CreateGamepad(int alIndex)
 {
     return hplNew( cGamepadSDL, (this, alIndex) );
 }
+#endif
 
 //-----------------------------------------------------------------------
 

@@ -7,8 +7,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------
-
+#if USE_GAMEPAD
 bool cLuxInputMenuEntry::mbGamepadButtonPress = false;
+#endif
 
 cLuxInputMenuEntry::cLuxInputMenuEntry(cLuxMainMenu_KeyConfig* apWindow, cLuxAction* apAction, iWidget* apParent, const cVector3f& avPos)
 {
@@ -66,7 +67,9 @@ cLuxInputMenuEntry::cLuxInputMenuEntry(cLuxMainMenu_KeyConfig* apWindow, cLuxAct
         {
             //////////////
             // Not possible to bind lean to gamepad
+#if USE_GAMEPAD
             pLabel->AddCallback(eGuiMessage_GamepadInput, this, kGuiCallback(InputEntryGamepadButtonPress));
+#endif
         }
         pLabel->SetUserData(this);
         pLabel->SetUserValue(i);
@@ -173,14 +176,17 @@ void cLuxInputMenuEntry::UpdateAction()
         case eInputDeviceType_Mouse:
             pAction->AddMouseButton((eMouseButton)lId);
             break;
+#if USE_GAMEPAD
         case eInputDeviceType_Gamepad:
             UpdateGamepadAction(pAction, subAction);
             break;
+#endif
         }
     }
     mbChanged = false;
 }
 
+#if USE_GAMEPAD
 void cLuxInputMenuEntry::UpdateGamepadAction(cAction* pAction, const cSubActionWrapper& aSubAction)
 {
     cInput* pInp = gpBase->mpEngine->GetInput();
@@ -203,6 +209,7 @@ void cLuxInputMenuEntry::UpdateGamepadAction(cAction* pAction, const cSubActionW
     break;
     }
 }
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -246,6 +253,7 @@ void cLuxInputMenuEntry::SetInputMouseButton(eInputMenuEntryPos aPos, eMouseButt
     mvSubActions[aPos] = cSubActionWrapper(eInputDeviceType_Mouse, aButton);
 }
 
+#if USE_GAMEPAD
 void cLuxInputMenuEntry::SetInputGamepadButton(eInputMenuEntryPos aPos, eGamepadButton aButton)
 {
     if(HasGamepadButton(aButton))
@@ -275,6 +283,7 @@ void cLuxInputMenuEntry::SetInputGamepadAxis(eInputMenuEntryPos aPos, eGamepadAx
 
     mvSubActions[aPos] = cSubActionWrapper(eGamepadInputType_Axis, aAxis, (float)aRange);
 }
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -308,6 +317,7 @@ eInputMenuEntryPos cLuxInputMenuEntry::GetMouseButtonPos(eMouseButton aButton)
     return eInputMenuEntryPos_LastEnum;
 }
 
+#if USE_GAMEPAD
 eInputMenuEntryPos cLuxInputMenuEntry::GetGamepadButtonPos(eGamepadButton aButton)
 {
     for(size_t i=0; i<mvSubActions.size(); ++i)
@@ -352,6 +362,7 @@ eInputMenuEntryPos cLuxInputMenuEntry::GetGamepadAxisPos(eGamepadAxis aAxis, eGa
 
     return eInputMenuEntryPos_LastEnum;
 }
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -365,6 +376,7 @@ bool cLuxInputMenuEntry::HasMouseButton(eMouseButton aButton)
     return GetMouseButtonPos(aButton)!=eInputMenuEntryPos_LastEnum;
 }
 
+#if USE_GAMEPAD
 bool cLuxInputMenuEntry::HasGamepadButton(eGamepadButton aButton)
 {
     return GetGamepadButtonPos(aButton)!=eInputMenuEntryPos_LastEnum;
@@ -379,6 +391,7 @@ bool cLuxInputMenuEntry::HasGamepadAxis(eGamepadAxis aAxis, eGamepadAxisRange aR
 {
     return GetGamepadAxisPos(aAxis,aRange)!=eInputMenuEntryPos_LastEnum;
 }
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -417,6 +430,7 @@ tMenuEntryPosVec cLuxInputMenuEntry::GetPosSharingSubAction(cLuxInputMenuEntry* 
                 vEntryPositions.push_back((eInputMenuEntryPos)i);
             }
             break;
+#if USE_GAMEPAD
         case eInputDeviceType_Gamepad:
             switch(subAction.mGamepadInputType)
             {
@@ -440,6 +454,7 @@ tMenuEntryPosVec cLuxInputMenuEntry::GetPosSharingSubAction(cLuxInputMenuEntry* 
                 break;
             }
             break;
+#endif
         }
     }
 
@@ -477,13 +492,16 @@ tString cLuxInputMenuEntry::GetStringFromSubAction(const cSubActionWrapper& aSub
         return pInput->GetKeyboard()->KeyToString((eKey)aSubAction.mlInputId);
     case eInputDeviceType_Mouse:
         return pInput->GetMouse()->ButtonToString((eMouseButton)aSubAction.mlInputId);
+#if USE_GAMEPAD
     case eInputDeviceType_Gamepad:
         return GetStringFromGamepadSubAction(aSubAction);
+#endif
     }
 
     return "None";
 }
 
+#if USE_GAMEPAD
 tString cLuxInputMenuEntry::GetStringFromGamepadSubAction(const cSubActionWrapper& aSubAction)
 {
     switch(aSubAction.mGamepadInputType)
@@ -504,6 +522,7 @@ tString cLuxInputMenuEntry::GetStringFromGamepadSubAction(const cSubActionWrappe
 
     return "None";
 }
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -533,10 +552,12 @@ cSubActionWrapper cLuxInputMenuEntry::GetSubActionWrapperFromString(const tStrin
     {
         return GetSubActionWrapperFromStringVecMouse(vInputParts, alValue);
     }
+#if USE_GAMEPAD
     else if(cString::GetFirstStringPos(sLowerCaseDev, "gamepad")!=-1)
     {
         return GetSubActionWrapperFromStringVecGamepad(vInputParts, alValue);
     }
+#endif
 
     return cSubActionWrapper(eInputDeviceType_LastEnum, -1);
 
@@ -576,6 +597,7 @@ cSubActionWrapper cLuxInputMenuEntry::GetSubActionWrapperFromStringVecMouse(cons
     return cSubActionWrapper(eInputDeviceType_Mouse, button);
 }
 
+#if USE_GAMEPAD
 cSubActionWrapper cLuxInputMenuEntry::GetSubActionWrapperFromStringVecGamepad(const tStringVec& avInputParts, int alValue)
 {
     /*
@@ -638,7 +660,7 @@ cSubActionWrapper cLuxInputMenuEntry::GetSubActionWrapperFromStringVecGamepad(co
 
     return cSubActionWrapper(eInputDeviceType_Gamepad, -1);
 }
-
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -653,10 +675,12 @@ eInputDeviceType cLuxInputMenuEntry::GetInputDeviceTypeFromString(const tString&
     {
         return eInputDeviceType_Mouse;
     }
+#if USE_GAMEPAD
     else if(cString::GetFirstStringPos(sLowerCaseDev, "gamepad")!=-1)
     {
         return eInputDeviceType_Gamepad;
     }
+#endif
 
     return eInputDeviceType_LastEnum;
 }
@@ -690,12 +714,18 @@ void cLuxInputMenuEntry::SaveSubAction(eInputMenuEntryPos aPos, eInputDeviceType
     case eInputDeviceType_Mouse:
         SetInputMouseButton(aPos, (eMouseButton)alInputId);
         break;
+#if USE_GAMEPAD
+    case eInputDeviceType_Gamepad:
+        SetInputGamepadButton(aPos, (eGamepadButton)alInputId);
+        break;
+#endif
     }
 
     UpdateEntry();
     SetWaiting(false, aPos);
 }
 
+#if USE_GAMEPAD
 void cLuxInputMenuEntry::SaveGamepadSubAction(eInputMenuEntryPos aPos, eGamepadInputType aType, int alInputId, float afValue)
 {
     if(aPos==eInputMenuEntryPos_LastEnum)
@@ -724,6 +754,7 @@ void cLuxInputMenuEntry::SaveGamepadSubAction(eInputMenuEntryPos aPos, eGamepadI
     UpdateEntry();
     SetWaiting(false, aPos);
 }
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -879,11 +910,13 @@ kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryKeyPress);
 
 bool cLuxInputMenuEntry::InputEntryUIArrowPress(iWidget* apWidget, const cGuiMessageData& aData)
 {
+#if USE_GAMEPAD
     if(mbGamepadButtonPress)
     {
         mbGamepadButtonPress = false;
         return true;
     }
+#endif
 
     return false;
 }
@@ -896,11 +929,13 @@ bool cLuxInputMenuEntry::InputEntryUIButtonPress(iWidget* apWidget, const cGuiMe
         return false;
     }
 
+#if USE_GAMEPAD
     if(mbGamepadButtonPress)
     {
         mbGamepadButtonPress = false;
         return true;
     }
+#endif
 
     if(mpWindow->GetWaitingInput()==NULL)
     {
@@ -916,7 +951,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryUIButtonPress);
 
 //-----------------------------------------------------------------------
 
-
+#if USE_GAMEPAD
 bool cLuxInputMenuEntry::InputEntryGamepadButtonPress(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(IsWaiting())
@@ -949,6 +984,7 @@ bool cLuxInputMenuEntry::InputEntryGamepadButtonPress(iWidget* apWidget, const c
     return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryGamepadButtonPress);
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -1206,7 +1242,7 @@ void cLuxMainMenu_KeyConfig::OnSetActive(bool abX)
     else
     {
         //mpGuiSet->SetDrawMouse(true);
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
         if(gpBase->mpInputHandler->IsGamepadPresent() == false)
         {
             mpGuiSet->SetDrawMouse(true);

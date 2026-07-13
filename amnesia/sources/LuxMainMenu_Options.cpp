@@ -133,7 +133,7 @@ cLuxMainMenu_Options::cLuxMainMenu_Options(cGuiSet *apGuiSet, cGuiSkin *apGuiSki
     mfMouseSensitivityStep = 0.1f;
     mfMouseSensitivityMax = 5.0f;
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     mfGamepadLookSensitivityMin = 0.5f;
     mfGamepadLookSensitivityStep = 0.05f;
     mfGamepadLookSensitivityMax = 3.0f;
@@ -947,7 +947,7 @@ void cLuxMainMenu_Options::AddInputOptions(cWidgetTab* apTab)
 
     vPos.y += mpSMouseSensitivity->GetLocalPosition().y + mpSMouseSensitivity->GetSize().y + 15;
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     //////////////////////////////////////////////////
     // Gamepad stuff
     mpChBGamepadInvertLook = NULL;
@@ -995,7 +995,7 @@ void cLuxMainMenu_Options::AddInputOptions(cWidgetTab* apTab)
     mpChBInvertMouse->SetFocusNavigation(eUIArrow_Down, mpChBSmoothMouse);
     mpChBSmoothMouse->SetFocusNavigation(eUIArrow_Down, mpSMouseSensitivity);
     mpSMouseSensitivity->SetFocusNavigation(eUIArrow_Down, mpBKeyConfig);
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     mpSMouseSensitivity->SetFocusNavigation(eUIArrow_Down, mpChBGamepadInvertLook);
     mpChBGamepadInvertLook->SetFocusNavigation(eUIArrow_Down, mpSGamepadLookSensitivity);
     mpSGamepadLookSensitivity->SetFocusNavigation(eUIArrow_Down, mpBKeyConfig);
@@ -1006,7 +1006,7 @@ void cLuxMainMenu_Options::AddInputOptions(cWidgetTab* apTab)
     mpChBSmoothMouse->SetFocusNavigation(eUIArrow_Up, mpChBInvertMouse);
     mpSMouseSensitivity->SetFocusNavigation(eUIArrow_Up, mpChBSmoothMouse);
     mpBKeyConfig->SetFocusNavigation(eUIArrow_Up, mpSMouseSensitivity);
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     mpChBGamepadInvertLook->SetFocusNavigation(eUIArrow_Up, mpSMouseSensitivity);
     mpSGamepadLookSensitivity->SetFocusNavigation(eUIArrow_Up, mpChBGamepadInvertLook);
     mpBKeyConfig->SetFocusNavigation(eUIArrow_Up, mpSGamepadLookSensitivity);
@@ -1323,7 +1323,7 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
     SetSliderValue(mpSMouseSensitivity, fSensitivity, false, mfMouseSensitivityMin, mfMouseSensitivityMax);
     SetSensitivityLabelString(fSensitivity);
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     mpChBGamepadInvertLook->SetChecked(aObj.GetVarBool("GamepadInvertLook"), false);
 
     fSensitivity = aObj.GetVarFloat("GamepadLookSensitivity");
@@ -1520,7 +1520,7 @@ void cLuxMainMenu_Options::ApplyChanges()
 
     gpBase->mpInputHandler->SetMouseSensitivity(GetSensitivity());
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     gpBase->mpInputHandler->SetGamepadLookSensitivity(GetGamepadLookSensitivity());
     gpBase->mpInputHandler->SetInvertGamepadLook(mpChBGamepadInvertLook->IsChecked());
 #endif
@@ -1560,7 +1560,7 @@ void cLuxMainMenu_Options::SetSensitivityLabelString(float afX)
 
 //-----------------------------------------------------------------------
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
 void cLuxMainMenu_Options::SetGamepadLookSensitivityLabelString(float afX)
 {
     SetSliderLabelString(mpLGamepadLookSensitivity, afX, mfGamepadLookSensitivityMin, mfGamepadLookSensitivityMax);
@@ -1821,7 +1821,7 @@ void cLuxMainMenu_Options::DumpInitialValues(cResourceVarsObject &aObj)
     aObj.AddVarBool("SmoothMouse", gpBase->mpInputHandler->GetSmoothMouse());
     aObj.AddVarFloat("MouseSensitivity", gpBase->mpInputHandler->GetMouseSensitivity());
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     aObj.AddVarBool("GamepadInvertLook", gpBase->mpInputHandler->GetInvertGamepadLook());
     aObj.AddVarFloat("GamepadLookSensitivity", gpBase->mpInputHandler->GetGamepadLookSensitivity());
 #endif
@@ -1910,7 +1910,7 @@ void cLuxMainMenu_Options::DumpCurrentValues(cResourceVarsObject &aObj)
     aObj.AddVarBool("SmoothMouse", mpChBSmoothMouse->IsChecked());
     aObj.AddVarFloat("MouseSensitivity", GetSensitivity());
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     aObj.AddVarBool("GamepadInvertLook", mpChBGamepadInvertLook->IsChecked());
     aObj.AddVarFloat("GamepadLookSensitivity", GetGamepadLookSensitivity());
 #endif
@@ -2089,7 +2089,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Options, MouseSensitivitySlider_OnMove)
 
 //-----------------------------------------------------------------------
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
 bool cLuxMainMenu_Options::GamepadLookSensitivitySlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData)
 {
     float fSensitivity = GetGamepadLookSensitivity();
@@ -2194,7 +2194,7 @@ bool cLuxMainMenu_Options::PressCancel(iWidget* apWidget, const cGuiMessageData&
     //}
     gpBase->mpEngine->GetGraphics()->GetLowLevel()->SetGammaCorrection(mInitialValues.GetVarFloat("Gamma"));
     gpBase->mpInputHandler->SetMouseSensitivity(mInitialValues.GetVarFloat("MouseSensitivity"));
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     gpBase->mpInputHandler->SetGamepadLookSensitivity(mInitialValues.GetVarFloat("GamepadLookSensitivity"));
 #endif
     gpBase->mpEngine->GetSound()->GetLowLevel()->SetVolume(mInitialValues.GetVarFloat("SoundVolume"));
@@ -2252,7 +2252,7 @@ void cLuxMainMenu_Options::OnSetActive(bool abX)
         }
     }
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     if(mpShoulderHint[0])
     {
         mpShoulderHint[0]->SetVisible(gpBase->mpInputHandler->IsGamepadPresent());

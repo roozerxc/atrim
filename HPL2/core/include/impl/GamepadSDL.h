@@ -1,6 +1,7 @@
 #ifndef HPL_GAMEPAD_SDL_H
 #define HPL_GAMEPAD_SDL_H
 
+#if USE_GAMEPAD
 #include <vector>
 #include <list>
 #include "system/SystemTypes.h"
@@ -93,5 +94,6 @@ private:
 };
 
 };
+#endif
 
 #endif // HPL_GAMEPAD_SDL_H

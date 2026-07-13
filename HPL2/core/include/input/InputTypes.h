@@ -10,7 +10,9 @@ enum eInputDeviceType
 {
     eInputDeviceType_Keyboard,
     eInputDeviceType_Mouse,
+#if USE_GAMEPAD
     eInputDeviceType_Gamepad,
+#endif
     eInputDeviceType_LastEnum
 };
 
@@ -293,6 +295,7 @@ struct cKeyPress
 
 //-------------------------------------------------
 
+#if USE_GAMEPAD
 enum eGamepadInputType
 {
     eGamepadInputType_Button,
@@ -442,6 +445,7 @@ struct cGamepadInputData
     int mlInputId;
     float mfInputValue;
 };
+#endif
 
 //-------------------------------------------------
 

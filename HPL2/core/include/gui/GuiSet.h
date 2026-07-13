@@ -612,9 +612,9 @@ private:
 
     bool OnKeyPress(const cGuiMessageData& aData);
     bool OnKeyRelease(const cGuiMessageData& aData);
-
+#if USE_GAMEPAD
     bool OnGamepadInput(const cGuiMessageData& aData);
-
+#endif
     bool OnUIArrowPress(const cGuiMessageData& aData);
     bool OnUIArrowRelease(const cGuiMessageData& aData);
     bool OnUIButtonPress(const cGuiMessageData& aData);

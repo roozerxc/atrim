@@ -226,7 +226,7 @@ bool cLuxPlayerState_InteractSlide::OnAddYaw(float afAmount)
 
 bool cLuxPlayerState_InteractSlide::OnAddPitch(float afAmount)
 {
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     ////////////////
     // We have both gamepad and mouse connected?
     if(gpBase->mpInputHandler->IsGamepadPresent())

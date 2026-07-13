@@ -1,3 +1,4 @@
+#if USE_GAMEPAD
 #include "input/ActionGamepadHat.h"
 #include "input/Input.h"
 #include "input/Gamepad.h"
@@ -68,3 +69,4 @@ tString  cActionGamepadHat::GetInputName()
 
 //-----------------------------------------------------------------------
 }
+#endif

@@ -13,7 +13,9 @@ namespace hpl
 
 class iKeyboard;
 class iMouse;
+#if USE_GAMEPAD
 class iGamepad;
+#endif
 class iLowLevelInput;
 class iInputDevice;
 class cAction;
@@ -22,17 +24,16 @@ class iSubAction;
 typedef std::map<tString, cAction*> tActionMap;
 typedef tActionMap::iterator tActionMapIt;
 
-typedef std::multimap<tString, cAction*> tActionMultiMap;
-typedef tActionMultiMap::iterator tActionMultiMapIt;
-
 typedef std::multimap<int, cAction*> tActionIdMap;
 typedef tActionIdMap::iterator tActionIdMapIt;
 
 typedef std::list<iInputDevice*> tInputDeviceList;
 typedef tInputDeviceList::iterator tInputDeviceListIt;
 
+#if USE_GAMEPAD
 typedef std::list<iGamepad*> tGamepadList;
 typedef tGamepadList::iterator tGamepadListIt;
+#endif
 
 class cInput : public iUpdateable
 {
@@ -93,6 +94,7 @@ public:
     */
     iMouse * GetMouse();
 
+#if USE_GAMEPAD
     /**
     *
     * Updates list of plugged gamepads
@@ -110,6 +112,7 @@ public:
     * \return gamepad in list
     */
     iGamepad* GetGamepad(int i);
+#endif
 
     /**
     * Get action from map.
@@ -130,7 +133,6 @@ public:
      */
     bool CheckForInput();
 
-
     /**
      * This resets all actions to the current way that
      */
@@ -150,9 +152,10 @@ public:
     {
         return mpLowLevelInput;
     }
-
+#if USE_GAMEPAD
     void AppDeviceWasPlugged();
     void AppDeviceWasRemoved();
+#endif
 private:
 
     tActionMap m_mapActions;
@@ -163,7 +166,9 @@ private:
 
     iMouse* mpMouse;
     iKeyboard* mpKeyboard;
+#if USE_GAMEPAD
     tGamepadList mlstGamepads;
+#endif
 };
 };
 

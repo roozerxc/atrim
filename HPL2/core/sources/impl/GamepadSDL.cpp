@@ -1,3 +1,4 @@
+#if USE_GAMEPAD
 #include "impl/GamepadSDL.h"
 
 #include "impl/LowLevelInputSDL.h"
@@ -406,3 +407,4 @@ eGamepadBall cGamepadSDL::SDLToBall(Uint8 alBall)
 //-----------------------------------------------------------------------
 
 }
+#endif

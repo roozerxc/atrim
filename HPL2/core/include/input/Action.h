@@ -62,9 +62,11 @@ public:
 
     void AddKey(eKey aKey);
     void AddMouseButton(eMouseButton aButton);
+#if USE_GAMEPAD
     void AddGamepadButton(int alPadIndex, eGamepadButton aButton);
     void AddGamepadAxis(int alPadIndex, eGamepadAxis aAxis, eGamepadAxisRange aRange, float afMinThreshold, float afMaxThreshold=1.0f);
     void AddGamepadHat(int alPadIndex, eGamepadHat aHat, eGamepadHatState aHatState);
+#endif
 
     void AddSubAction(iSubAction *apSubAction);
 

@@ -510,7 +510,7 @@ void cLuxJournal::OnEnterContainer(const tString& asOldContainer)
     mpViewport->SetVisible(true);
     mpGuiSet->SetActive(true);
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     if(gpBase->mpInputHandler->IsGamepadPresent() == false)
     {
         mpGuiSet->SetDrawMouse(true);
@@ -2365,7 +2365,7 @@ bool cLuxJournal::UIListenerArrowPress(iWidget* apWidget, const cGuiMessageData&
         }
         break;
     case eUIArrow_Down:
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
         if(gpBase->mpInputHandler->GetGamepad() && gpBase->mpInputHandler->GetGamepad()->HatIsInState(eGamepadHat_0, eGamepadHatState_Down) == false)
         {
             break;

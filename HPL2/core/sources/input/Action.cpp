@@ -4,10 +4,11 @@
 #include "input/Input.h"
 #include "input/ActionKeyboard.h"
 #include "input/ActionMouseButton.h"
+#if USE_GAMEPAD
 #include "input/ActionGamepadButton.h"
 #include "input/ActionGamepadAxis.h"
 #include "input/ActionGamepadHat.h"
-
+#endif
 
 namespace hpl
 {
@@ -72,7 +73,7 @@ void cAction::AddMouseButton(eMouseButton aButton)
 {
     AddSubAction( hplNew(cActionMouseButton, (mpInput,aButton) ));
 }
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
 void cAction::AddGamepadButton(int alPadIndex, eGamepadButton aButton)
 {
     AddSubAction( hplNew(cActionGamepadButton, (mpInput, alPadIndex, aButton)));

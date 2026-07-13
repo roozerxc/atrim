@@ -423,9 +423,9 @@ enum eGuiMessage
 
     eGuiMessage_KeyPress,            //pos= mouse pos, lVal=char code.
     eGuiMessage_KeyRelease,            //pos= mouse pos, lVal=char code.
-
+#if USE_GAMEPAD
     eGuiMessage_GamepadInput,
-
+#endif
     eGuiMessage_UIArrowPress,        //mlVal = arrow dir
     eGuiMessage_UIArrowRelease,
     eGuiMessage_UIButtonPress,        //mlVal = button
@@ -481,14 +481,18 @@ struct cGuiMessageData
     {
         mKeyPress = aKeyPress;
     }
+#if USE_GAMEPAD
     cGuiMessageData(const cGamepadInputData& aGamepadInput)
         : mGamepadInputData(aGamepadInput) {}
+#endif
 
     cVector2f            mvPos;
     cVector2f            mvRel;
     int                    mlVal;
     cKeyPress            mKeyPress;
+#if USE_GAMEPAD
     cGamepadInputData    mGamepadInputData;
+#endif
     float                mfVal;
     void*                mpData;
     eGuiMessage            mMessage;

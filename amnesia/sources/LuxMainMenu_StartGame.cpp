@@ -237,7 +237,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_StartGame, ClickedStartGamePopup);
 
 bool cLuxMainMenu_StartGame::PressStartGame(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
+    #if USE_GAMEPAD
+        mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
+    #endif
 
     tWString sDesciption = gpBase->mbHardMode == false ? kTranslate("MainMenu", "Start a new game?") : kTranslate("MainMenu", "HardModeStartNewGame");
 

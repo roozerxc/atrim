@@ -21,12 +21,16 @@ class cSubActionWrapper
 {
 public:
     cSubActionWrapper(eInputDeviceType aType, int alInputId) :
-        mType(aType), mGamepadInputType(eGamepadInputType_LastEnum), mlInputId(alInputId), mfInputValue(1.0f) {}
+        mType(aType), mlInputId(alInputId), mfInputValue(1.0f) {}
+#if USE_GAMEPAD
     cSubActionWrapper(eGamepadInputType aType, int alInputId, float afInputValue) :
         mType(eInputDeviceType_Gamepad), mGamepadInputType(aType), mlInputId(alInputId), mfInputValue(afInputValue) {}
+#endif
 
     eInputDeviceType mType;
+#if USE_GAMEPAD
     eGamepadInputType mGamepadInputType;
+#endif
     int mlInputId;
     float mfInputValue;
 };
@@ -66,26 +70,34 @@ public:
     void RetrieveInitialValue();
 
     void UpdateAction();
+#if USE_GAMEPAD
     void UpdateGamepadAction(cAction* apAction, const cSubActionWrapper& aSubAction);
+#endif
     void UpdateEntry();
 
     void SetInputKeypress(eInputMenuEntryPos aPos, eKey aKey);
     void SetInputMouseButton(eInputMenuEntryPos aPos, eMouseButton aButton);
+#if USE_GAMEPAD
     void SetInputGamepadButton(eInputMenuEntryPos aPos, eGamepadButton aButton);
     void SetInputGamepadHat(eInputMenuEntryPos aPos, eGamepadHat aHat, eGamepadHatState aState);
     void SetInputGamepadAxis(eInputMenuEntryPos aPos, eGamepadAxis aAxis, eGamepadAxisRange aRange);
+#endif
 
     eInputMenuEntryPos GetKeyPos(eKey aKey);
     eInputMenuEntryPos GetMouseButtonPos(eMouseButton aButton);
+#if USE_GAMEPAD
     eInputMenuEntryPos GetGamepadButtonPos(eGamepadButton aButton);
     eInputMenuEntryPos GetGamepadHatStatePos(eGamepadHat aHat, eGamepadHatState aState);
     eInputMenuEntryPos GetGamepadAxisPos(eGamepadAxis aAxis, eGamepadAxisRange aRange);
+#endif
 
     bool HasKey(eKey aKey);
     bool HasMouseButton(eMouseButton aButton);
+#if USE_GAMEPAD
     bool HasGamepadButton(eGamepadButton aButton);
     bool HasGamepadHatState(eGamepadHat aHat, eGamepadHatState aState);
     bool HasGamepadAxis(eGamepadAxis aAxis, eGamepadAxisRange aRange);
+#endif
 
     bool HasSubActions();
     tMenuEntryPosVec GetPosSharingSubAction(cLuxInputMenuEntry* apEntry);
@@ -105,7 +117,9 @@ private:
     ///////////////////////////
     // Helper funcs
     tString GetStringFromSubAction(const cSubActionWrapper& aSubAction);
+#if USE_GAMEPAD
     tString GetStringFromGamepadSubAction(const cSubActionWrapper& aSubAction);
+#endif
 
     cSubActionWrapper GetSubActionWrapperFromSubAction(iSubAction* apSubAction);
     cSubActionWrapper GetSubActionWrapperFromLuxInput(cLuxInput* apInput);
@@ -114,14 +128,18 @@ private:
 
     cSubActionWrapper GetSubActionWrapperFromStringVecKeyboard(const tStringVec& avX, int alValue);
     cSubActionWrapper GetSubActionWrapperFromStringVecMouse(const tStringVec& avX, int alValue);
+#if USE_GAMEPAD
     cSubActionWrapper GetSubActionWrapperFromStringVecGamepad(const tStringVec& avX, int alValue);
+#endif
 
     eInputDeviceType GetInputDeviceTypeFromString(const tString& asX);
 
     eInputMenuEntryPos GetPosFromInput(iWidget* apWidget);
 
     void SaveSubAction(eInputMenuEntryPos aPos, eInputDeviceType aType, int alInputId);
+#if USE_GAMEPAD
     void SaveGamepadSubAction(eInputMenuEntryPos aPos, eGamepadInputType, int alInputId, float afValue);
+#endif
 
     void SetWaiting(bool abX, eInputMenuEntryPos aCat);
     bool IsWaiting();
@@ -155,10 +173,12 @@ private:
     bool InputEntryUIArrowPress(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(InputEntryUIArrowPress);
 
+#if USE_GAMEPAD
     bool InputEntryGamepadButtonPress(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(InputEntryGamepadButtonPress);
 
     static bool mbGamepadButtonPress;
+#endif
 };
 
 typedef std::vector<cLuxInputMenuEntry*> tInputEntryVec;

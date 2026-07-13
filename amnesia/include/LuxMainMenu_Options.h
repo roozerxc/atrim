@@ -64,7 +64,7 @@ private:
     {
         return GetSliderValue(mpSMouseSensitivity, mfMouseSensitivityMin, mfMouseSensitivityMax);
     }
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     float GetGamepadLookSensitivity()
     {
         return GetSliderValue(mpSGamepadLookSensitivity, mfGamepadLookSensitivityMin, mfGamepadLookSensitivityMax);
@@ -77,7 +77,9 @@ private:
 
     void SetGammaLabelString(float afX);
     void SetSensitivityLabelString(float afX);
+#if USE_GAMEPAD
     void SetGamepadLookSensitivityLabelString(float afX);
+#endif
     void SetVolumeLabelString(float afX);
 
     bool ChangeLanguage(iWidget* apWidget, const cGuiMessageData& aData);
@@ -189,7 +191,7 @@ private:
     cWidgetLabel    *mpLMouseSensitivity;
     cWidgetSlider    *mpSMouseSensitivity;
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     cWidgetCheckBox *mpChBGamepadInvertLook;
     cWidgetLabel    *mpLGamepadLookSensitivity;
     cWidgetSlider    *mpSGamepadLookSensitivity;
@@ -212,7 +214,7 @@ private:
     float mfMouseSensitivityMax;
     float mfMouseSensitivityStep;
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     float mfGamepadLookSensitivityMin;
     float mfGamepadLookSensitivityMax;
     float mfGamepadLookSensitivityStep;
@@ -263,7 +265,7 @@ private:
     bool MouseSensitivitySlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(MouseSensitivitySlider_OnMove);
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     bool GamepadLookSensitivitySlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(GamepadLookSensitivitySlider_OnMove);
 #endif

@@ -22,8 +22,10 @@ public:
 protected:
     bool ButtonPress(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(ButtonPress);
+#if USE_GAMEPAD
     bool GamepadButtonPress(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(GamepadButtonPress);
+#endif
 
     cWidgetButton *mvButtons[2];
     cWidgetLabel *mpLabel;

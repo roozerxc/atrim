@@ -65,7 +65,9 @@ cGuiPopUpMessageBox::cGuiPopUpMessageBox(cGuiSet *apSet,
         vPos = cVector3f(fWindowWidth/2 - 40, 50 + pFont->mvSize.y,1);
         mvButtons[0] = mpSet->CreateWidgetButton(vPos,cVector2f(80,30),asButton1,mpWindow);
         mvButtons[0]->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(ButtonPress));
+#if USE_GAMEPAD
         mvButtons[0]->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(GamepadButtonPress));
+#endif
         mvButtons[0]->SetGlobalUIInputListener(true);
 
         mvButtons[1] = NULL;
@@ -75,13 +77,17 @@ cGuiPopUpMessageBox::cGuiPopUpMessageBox(cGuiSet *apSet,
         vPos = cVector3f(fWindowWidth/2 - (80*2+20)/2, 50 + pFont->mvSize.y,1);
         mvButtons[0] = mpSet->CreateWidgetButton(vPos,cVector2f(80,30),asButton1,mpWindow);
         mvButtons[0]->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(ButtonPress));
+#if USE_GAMEPAD
         mvButtons[0]->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(GamepadButtonPress));
+#endif
         mvButtons[0]->SetGlobalUIInputListener(true);
 
         vPos.x += 80+20;
         mvButtons[1] = mpSet->CreateWidgetButton(vPos,cVector2f(80,30),asButton2,mpWindow);
         mvButtons[1]->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(ButtonPress));
+#if USE_GAMEPAD
         mvButtons[1]->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(GamepadButtonPress));
+#endif
         mvButtons[1]->SetGlobalUIInputListener(true);
 
         mvButtons[0]->SetFocusNavigation(eUIArrow_Right, mvButtons[1]);
@@ -151,6 +157,7 @@ kGuiCallbackDeclaredFuncEnd(cGuiPopUpMessageBox,ButtonPress)
 
 //-----------------------------------------------------------------------
 
+#if USE_GAMEPAD
 bool cGuiPopUpMessageBox::GamepadButtonPress(iWidget* apWidget,const cGuiMessageData& aData)
 {
     if(!(aData.mlVal == eUIButton_Primary || aData.mlVal == eUIButton_Secondary))
@@ -166,7 +173,7 @@ bool cGuiPopUpMessageBox::GamepadButtonPress(iWidget* apWidget,const cGuiMessage
     return ButtonPress(apWidget, aData);
 }
 kGuiCallbackDeclaredFuncEnd(cGuiPopUpMessageBox,GamepadButtonPress)
-
+#endif
 
 //-----------------------------------------------------------------------
 

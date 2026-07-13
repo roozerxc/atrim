@@ -808,7 +808,7 @@ void cLuxInventory::OnEnterContainer(const tString& asOldContainer)
     mpViewport->SetVisible(true);
     mpGuiSet->SetActive(true);
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     if(gpBase->mpInputHandler->IsGamepadPresent() == false)
     {
         mpGuiSet->SetDrawMouse(true);
@@ -1477,7 +1477,7 @@ void cLuxInventory::SetDescText(const tWString &asHeader, const tWString &asNorm
     {
         mfOldDescTextAlpha = 0.0f;
     }
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     msHeaderText = ParseStringForGamepadIconsRemoval(gpBase->mpHelpFuncs->ParseString(asHeader));
     msNormalText = ParseStringForGamepadIconsRemoval(gpBase->mpHelpFuncs->ParseString(asNormal));
 #else
@@ -1563,7 +1563,7 @@ eLuxItemType cLuxInventory::GetItemTypeFromString(const tString& asType)
 }
 
 //-----------------------------------------------------------------------
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
 void cLuxInventory::AppDeviceWasPlugged()
 {
     mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
@@ -2720,7 +2720,7 @@ void cLuxInventory::DrawFrame(cGuiGfxElement** apGfxCorners, cGuiGfxElement** ap
 
 
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
 tWString cLuxInventory::ParseStringForGamepadIconsRemoval(const tWString & asCurrentText)
 {
     tWString sOutput=_W("");

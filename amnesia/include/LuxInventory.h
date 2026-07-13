@@ -347,7 +347,7 @@ public:
         return mfPickedUpAt;
     }
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     void AppDeviceWasPlugged();
     void AppDeviceWasRemoved();
 #endif
@@ -370,7 +370,7 @@ private:
 
     void DrawElementAtCenter(const cVector3f& avCenter, cGuiGfxElement* apGfx, float afAlpha, const cVector2f& avSize=-1, bool abMulColWithAlpha=false);
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     tWString ParseStringForGamepadIconsRemoval(const tWString & asCurrentText);
     tWString AddGamepadTextAtPosition(const tWString& asCommand, int alPosition);
 #endif

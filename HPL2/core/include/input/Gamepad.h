@@ -6,6 +6,7 @@
 
 #include "math/MathTypes.h"
 
+#if USE_GAMEPAD
 namespace hpl
 {
 
@@ -206,5 +207,6 @@ protected:
 //------------------------------
 
 };
+#endif
 
 #endif // HPL_GAMEPAD_H

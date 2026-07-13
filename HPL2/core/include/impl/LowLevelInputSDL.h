@@ -23,15 +23,19 @@ public:
     void BeginInputUpdate();
     void EndInputUpdate();
 
+#if USE_GAMEPAD
     void InitGamepadSupport();
     void DropGamepadSupport();
 
     bool DirtyGamepads();
     int GetPluggedGamepadNum();
+#endif
 
     iMouse* CreateMouse();
     iKeyboard* CreateKeyboard();
+#if USE_GAMEPAD
     iGamepad* CreateGamepad(int alIndex);
+#endif
 
     iLowLevelGraphics* GetLowLevelGraphics()
     {
@@ -42,8 +46,10 @@ public:
     void resetQuitMessagePosted();
 public:
     std::list<SDL_Event> mlstEvents;
+#if USE_GAMEPAD
     int mlConnectedDevices;
     bool mbDirtyGamepads;
+#endif
 
 private:
     iLowLevelGraphics *mpLowLevelGraphics;

@@ -31,8 +31,9 @@ cInput::cInput(iLowLevelInput *apLowLevelInput) : iUpdateable("HPL_Input")
 
     mlstInputDevices.push_back(mpMouse);
     mlstInputDevices.push_back(mpKeyboard);
-
+#if USE_GAMEPAD
     RefreshGamepads();
+#endif
 }
 
 //-----------------------------------------------------------------------
@@ -223,6 +224,7 @@ iMouse* cInput::GetMouse()
 
 //-----------------------------------------------------------------------
 
+#if USE_GAMEPAD
 void cInput::RefreshGamepads()
 {
     tGamepadListIt it = mlstGamepads.begin();
@@ -287,6 +289,7 @@ iGamepad* cInput::GetGamepad(int alIdx)
 
     return NULL;
 }
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -415,6 +418,7 @@ iSubAction* cInput::InputToSubAction()
 
 //-----------------------------------------------------------------------
 
+#if USE_GAMEPAD
 void cInput::AppDeviceWasPlugged()
 {
     RefreshGamepads();
@@ -424,6 +428,7 @@ void cInput::AppDeviceWasRemoved()
 {
     RefreshGamepads();
 }
+#endif
 
 //-----------------------------------------------------------------------
 

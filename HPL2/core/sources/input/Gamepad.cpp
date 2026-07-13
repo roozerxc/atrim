@@ -1,6 +1,7 @@
 #include "input/Gamepad.h"
 #include "input/InputTypes.h"
 
+#if USE_GAMEPAD
 namespace hpl
 {
 
@@ -522,3 +523,4 @@ eGamepadBall iGamepad::StringToBall(const tString& asBall)
 
 //-----------------------------------------------------------------------
 }
+#endif

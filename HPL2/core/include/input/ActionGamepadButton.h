@@ -1,7 +1,7 @@
 #ifndef HPL_ACTIONGAMEPADBUTTON_H
 #define HPL_ACTIONGAMEPADBUTTON_H
 
-
+#if USE_GAMEPAD
 #include "input/InputTypes.h"
 #include "input/Action.h"
 
@@ -36,4 +36,6 @@ private:
 };
 
 };
+#endif
+
 #endif // HPL_ACTIONGAMEPADBUTTON_H

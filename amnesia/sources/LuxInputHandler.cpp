@@ -74,9 +74,9 @@ static cLuxAction gvLuxActions[] =
 
     cLuxAction("LeanRight",eLuxAction_LeanRight,true, eLuxActionCategory_Movement),
     cLuxAction("LeanLeft",eLuxAction_LeanLeft,    true, eLuxActionCategory_Movement),
-
-#ifdef USE_GAMEPAD
     cLuxAction("Lean",eLuxAction_Lean,    true, eLuxActionCategory_Movement),
+
+#if USE_GAMEPAD
     cLuxAction("ZoomOut", eLuxAction_ZoomOut, false, eLuxActionCategory_Action),
     cLuxAction("ZoomIn", eLuxAction_ZoomIn, false, eLuxActionCategory_Action),
 #endif
@@ -117,7 +117,7 @@ static cLuxInput gvLuxInputs[] =
     cLuxInput("MouseButton", eMouseButton_Button8, eLuxAction_MouseButton8Click),
     cLuxInput("MouseButton", eMouseButton_Button9, eLuxAction_MouseButton9Click),
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     cLuxInput("GamepadHat.Hat 0", eGamepadHatState_Up, eLuxAction_UIArrowUp),
     cLuxInput("GamepadHat.Hat 0", eGamepadHatState_Down, eLuxAction_UIArrowDown),
     cLuxInput("GamepadHat.Hat 0", eGamepadHatState_Left, eLuxAction_UIArrowLeft),
@@ -198,7 +198,7 @@ static cLuxInput gvLuxInputs[] =
     // 3 --> (-) Look-Left, (+) Look-Right
     // 4 --> (-) LTrigger, (+) RTrigger
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     cLuxInput("GamepadAxis.Axis 1", eGamepadAxisRange_Negative, eLuxAction_Forward),
     cLuxInput("GamepadAxis.Axis 0", eGamepadAxisRange_Positive, eLuxAction_Right),
     cLuxInput("GamepadAxis.Axis 1", eGamepadAxisRange_Positive, eLuxAction_Backward),
@@ -260,7 +260,7 @@ cLuxInputHandler::cLuxInputHandler() : iLuxUpdateable("LuxInputHandler")
     mlMaxSmoothMousePos = gpBase->mpGameCfg->GetInt("Input","MaxSmoothMousePos",0);
     mfPrevSmoothMousePosMul = gpBase->mpGameCfg->GetFloat("Input","PrevSmoothMousePosMul",0);
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     ////////////////////////////////////
     // Set up gamepad
     SetUpGamepad();
@@ -298,7 +298,7 @@ void cLuxInputHandler::LoadUserConfig()
 
     mfMouseSensitivity = gpBase->mpUserConfig->GetFloat("Input", "MouseSensitivity", 1.0f);
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     mfGamepadWalkSensitivity = gpBase->mpUserConfig->GetFloat("Input", "GamepadWalkSensitivity", 1.0f);
     mfGamepadLookSensitivity = gpBase->mpUserConfig->GetFloat("Input", "GamepadLookSensitivity", 1.5f);
 
@@ -361,7 +361,7 @@ void cLuxInputHandler::SaveUserConfig()
 
     gpBase->mpUserConfig->SetFloat("Input", "MouseSensitivity", mfMouseSensitivity);
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     gpBase->mpUserConfig->SetBool("Input", "InvertGamepadLook", mbGamepadLookInvert);
 
     gpBase->mpUserConfig->SetFloat("Input", "GamepadWalkSensitivity", mfGamepadWalkSensitivity);
@@ -525,7 +525,7 @@ void cLuxInputHandler::SetMouseSensitivity(float afX)
 
 //-----------------------------------------------------------------------
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
 void cLuxInputHandler::SetGamepadLookSensitivity(float afX)
 {
     if(mfGamepadLookSensitivity==afX)
@@ -641,7 +641,7 @@ cVector2f cLuxInputHandler::GetSmoothMousePos(const cVector2f& avRelPosMouse)
 
 //-----------------------------------------------------------------------
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
 bool cLuxInputHandler::IsGamepadPresent()
 {
     return mpPad!=NULL;
@@ -650,14 +650,14 @@ bool cLuxInputHandler::IsGamepadPresent()
 
 //-----------------------------------------------------------------------
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
 void cLuxInputHandler::AppDeviceWasPlugged()
 {
     SetUpGamepad();
 }
 #endif
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
 void cLuxInputHandler::AppDeviceWasRemoved()
 {
     SetUpGamepad();
@@ -844,14 +844,14 @@ void cLuxInputHandler::UpdateGlobalInput()
             pGui->SendMouseDoubleClick(eGuiMouseButton_Button9);
         }
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
         mbGamepadUIInput = false;
         mbGamepadUIInput = UpdateGamepadUIInput();
 #endif
     }
 }
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
 bool cLuxInputHandler::UpdateGamepadUIInput()
 {
     bool bRet = false;
@@ -1225,7 +1225,7 @@ void cLuxInputHandler::UpdateGamePlayerInput()
         mpPlayer->AddLean(vRelPos.x);
     }
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     //////////////////////////////////////////
     // Gamepad movement and look
     if(IsGamepadPresent())
@@ -1338,7 +1338,7 @@ void cLuxInputHandler::UpdateGameMessageInput()
         gpBase->mpMessageHandler->DoAction(eLuxPlayerAction_Interact, false);
     }
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     ////////////
     // Use the UI input from the gamepad to do the same thing
     if(mpInput->BecameTriggerd(eLuxAction_UIPrimary))
@@ -1386,7 +1386,7 @@ void cLuxInputHandler:: UpdateGameEffectInput()
         gpBase->mpEffectHandler->DoAction(eLuxPlayerAction_Interact, false);
     }
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     ////////////
     // Use the UI input from the gamepad to do the same thing
     if(mpInput->BecameTriggerd(eLuxAction_UIPrimary))
@@ -1509,7 +1509,7 @@ void cLuxInputHandler::UpdateJournalInput()
             mpInput->BecameTriggerd(eLuxAction_Inventory) ||
             mpInput->BecameTriggerd(eLuxAction_RecentText))
     {
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
         if(mbGamepadUIInput==false)
         {
             gpBase->mpJournal->ExitPressed(true);
@@ -1628,11 +1628,8 @@ void cLuxInputHandler::CreateActions()
         tStringVec vInputParts;
         cString::GetStringVec(pLuxInput->msInputType, vInputParts, &sSep);
 
-        CreateSubAction(pAction,
-                        vInputParts,
-                        pLuxInput->mlValue);
+        CreateSubAction(pAction, vInputParts, pLuxInput->mlValue);
     }
-
 }
 
 //-----------------------------------------------------------------------
@@ -1651,7 +1648,7 @@ void cLuxInputHandler::CreateSubAction(cAction *apAction, const tStringVec& avTy
     {
         apAction->AddMouseButton((eMouseButton)alValue);
     }
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     //Gamepad
     else if(cString::GetFirstStringPos(sType, "gamepad")==0)
     {
@@ -1720,7 +1717,7 @@ bool cLuxInputHandler::CreateSubActionFromInputString(cAction* apAction, const t
                 lInputValue=-1;
             }
         }
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
         else if(cString::GetFirstStringPos(sInputType,"gamepad")!=-1)
         {
 
@@ -1810,7 +1807,7 @@ bool cLuxInputHandler::ShowMouseOnMouseInput()
         }
         mfMouseActiveAt = gpBase->mpEngine->GetGameTime();
     }
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
     else if(IsGamepadPresent())
     {
         bool bDirPressed = mpInput->IsTriggerd(eLuxAction_UIArrowUp) ||
@@ -1841,7 +1838,7 @@ bool cLuxInputHandler::ShowMouseOnMouseInput()
 
 //-----------------------------------------------------------------------
 
-#ifdef USE_GAMEPAD
+#if USE_GAMEPAD
 void cLuxInputHandler::SetUpGamepad()
 {
     mpPad = mpInput->GetGamepad(0);

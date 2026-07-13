@@ -1,3 +1,4 @@
+#if USE_GAMEPAD
 #include "input/ActionGamepadAxis.h"
 #include "input/Input.h"
 #include "input/Gamepad.h"
@@ -81,3 +82,4 @@ tString  cActionGamepadAxis::GetInputName()
 
 //-----------------------------------------------------------------------
 }
+#endif

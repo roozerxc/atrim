@@ -432,10 +432,10 @@ bool cGuiSet::SendMessage(eGuiMessage aMessage, const cGuiMessageData& aData)
         return OnKeyPress(aData);
     case eGuiMessage_KeyRelease:
         return OnKeyRelease(aData);
-
+#if USE_GAMEPAD
     case eGuiMessage_GamepadInput:
         return OnGamepadInput(aData);
-
+#endif
     case eGuiMessage_UIArrowPress:
         return OnUIArrowPress(aData);
     case eGuiMessage_UIArrowRelease:
@@ -2431,6 +2431,7 @@ bool cGuiSet::OnKeyRelease(const cGuiMessageData& aData)
 
 //-----------------------------------------------------------------------
 
+#if USE_GAMEPAD
 bool cGuiSet::OnGamepadInput(const cGuiMessageData& aData)
 {
     ///////////////////////////
@@ -2472,6 +2473,7 @@ bool cGuiSet::OnGamepadInput(const cGuiMessageData& aData)
 
     return bRet;
 }
+#endif
 
 //-----------------------------------------------------------------------
 
