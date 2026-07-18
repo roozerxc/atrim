@@ -140,7 +140,7 @@ cLuxMainMenu_Options::cLuxMainMenu_Options(cGuiSet *apGuiSet, cGuiSkin *apGuiSki
 #endif
 
     mfVolumeMin = 0.0f;
-    mfVolumeStep = 0.1f;
+    mfVolumeStep = 0.01f;
     mfVolumeMax = 1.0f;
 
     mbShowCommentary = gpBase->mpMenuCfg->GetBool("Options","ShowCommentary", false);
@@ -1035,12 +1035,8 @@ void cLuxMainMenu_Options::AddSoundOptions(cWidgetTab* apTab)
     // Sound Master Volume
     pLabel = mpGuiSet->CreateWidgetLabel(vPos, -1, kTranslate("OptionsMenu", "Volume"), apTab);
     mpSVolume = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, vPos + cVector3f(0,pLabel->GetSize().y+5,0), cVector2f(100,20), 0, apTab);
-    //mpSVolume->AddCallback(eGuiMessage_SliderMove, this, kGuiCallback(SoundSlider_OnMove));
     SetUpInput(pLabel, mpSVolume, false, kTranslate("OptionsMenu", "VolumeTip"));
     SetUpSlider(mpSVolume, mfVolumeMin, mfVolumeMax, mfVolumeStep, kGuiCallback(SoundSlider_OnMove), &mpLVolume);
-
-    //mpLVolume = mpGuiSet->CreateWidgetLabel(cVector3f(mpSVolume->GetSize().x*0.5f,2,1), -1, _W(""), mpSVolume);
-    //mpLVolume->SetTextAlign(eFontAlign_Center);
 
     mpCBSndDevice->SetFocusNavigation(eUIArrow_Down, mpSVolume);
 
@@ -2112,7 +2108,6 @@ bool cLuxMainMenu_Options::SoundSlider_OnMove(iWidget* apWidget, const cGuiMessa
     cSound *pSound = gpBase->mpEngine->GetSound();
 
     pSound->GetLowLevel()->SetVolume(fSndVol);
-    pSound->GetSoundHandler()->PlayGui("ui_use_sanity.ogg", false, 1);
 
     return true;
 }
