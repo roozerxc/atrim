@@ -6,22 +6,22 @@
     <CATEGORY Name="Debug">
         <Entry Name="None">Ei mitään</Entry>
 
-        <Entry Name="Debug Toolbar">Debug Työkalupalkki</Entry>
+        <Entry Name="Debug Toolbar">Debug-työkalupalkki</Entry>
 
-        <Entry Name="Debug texts">Debug tekstit</Entry>
+        <Entry Name="Debug texts">Debug-tekstit</Entry>
 
         <Entry Name="Show FPS">Näytä FPS</Entry>
-        <Entry Name="Show player info">Näytä pelaajan tiedot</Entry>
-        <Entry Name="Show entity info">Näytä olemuksen tiedot</Entry>
-        <Entry Name="Show sounds playing">Näytä soivat äänet</Entry>
-        <Entry Name="Show debug messages">Näytä debug viestit</Entry>
+        <Entry Name="Show player info">Näytä pelaajatiedot</Entry>
+        <Entry Name="Show entity info">Näytä entiteettitiedot</Entry>
+        <Entry Name="Show sounds playing">Näytä toistettavat äänet</Entry>
+        <Entry Name="Show debug messages">Näytä debug-viestit</Entry>
         <Entry Name="Show errors and warnings">Näytä virheet ja varoitukset</Entry>
         <Entry Name="Inspection mode">Tarkastustila</Entry>
-        <Entry Name="Occlusion Culling">Occlusion-poisto</Entry>
-        <Entry Name="Draw physics debug">Piirrä debugfysiikka</Entry>
-        <Entry Name="Resource Logging">Resurssien Kirjaus</Entry>
+        <Entry Name="Occlusion Culling">Peittokarsinta</Entry>
+        <Entry Name="Draw physics debug">Piirrä fysiikan debug</Entry>
+        <Entry Name="Resource Logging">Resurssiloki</Entry>
 
-        <Entry Name="Print Container Debug Info">Tulosta Säiliön Debugtiedot</Entry>
+        <Entry Name="Print Container Debug Info">Tulosta säiliön debug-tiedot</Entry>
         <Entry Name="Rebuild Dyn Container">Uudelleenrakenna Dynaaminen Säiliö</Entry>
 
         <Entry Name="Map">Kartta</Entry>
@@ -34,11 +34,11 @@
         <Entry Name="Quick Map Reload (F2)">Nopea Kartan Uudelleenlataus (F2)</Entry>
         <Entry Name="Test Change Map Save">Testaa Kartanvaihtotallennusta</Entry>
         <Entry Name="Teleport to start pos">Teleporttaa lähtöpositioon</Entry>
-        <Entry Name="Map Batch">Karttajoukko</Entry>
+        <Entry Name="Map Batch">Kartan eräajo</Entry>
 
         <Entry Name="Game">Peli</Entry>
 
-        <Entry Name="Disable Flashbacks">Poista Takaumat</Entry>
+        <Entry Name="Disable Flashbacks">Poista Flashbackit</Entry>
         <Entry Name="Reload Insanity Effects">Uudelleenlataa Hulluusefektit</Entry>
         <Entry Name="Start Insanity Effect">Aloita Hulluusefekti</Entry>
 
@@ -48,17 +48,20 @@
 
         <Entry Name="Script output for">Skriptin ulostulo kohteelle</Entry>
 
-        <Entry Name="Inventory">Tavaraluettelo</Entry>
+        <Entry Name="Inventory">Inventaario</Entry>
         <Entry Name="Global">Yleinen</Entry>
     </CATEGORY>
 
     <CATEGORY Name="OptionsMenu">
         <!-- roozy: phnxs had trouble translating this string so I decided to do it myself. Please correct me if this is inaccurate. -->
-        <Entry Name="ParallaxQualityTipNew">Parallaksiefektin kartoituslaatu. Syvyysvaikutelma on erittäin raskas!</Entry>
+        <Entry Name="ParallaxQualityTipNew">Parallaksiefektin kartoituksen laatu. Relief-mappaus on erittäin raskas!</Entry>
 
         <Entry Name="Parallax">Parallax</Entry>
         <Entry Name="ParallaxSimple">Yksinkertainen</Entry>
         <Entry Name="ParallaxRelief">Syvyysvaikutelma</Entry>
+
+        <Entry Name="VolumeSound">Äänenvoimakkuus</Entry>
+        <Entry Name="VolumeMusic">Musiikkivoimakkuus</Entry>
     </CATEGORY>
 
     <!-- No need to localize these! -->
@@ -76,6 +79,7 @@
         <Entry Name="italian">Italiano</Entry>
         <Entry Name="japanese">Japanese</Entry>
         <Entry Name="korean">Korean (Hangugeo)</Entry>
+        <Entry Name="mexican">Español mexicano</Entry>
         <Entry Name="polish">Polski</Entry>
         <Entry Name="russian">Russian</Entry>
         <Entry Name="slovak">Slovak</Entry>

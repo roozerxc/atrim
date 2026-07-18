@@ -58,6 +58,9 @@
         <Entry Name="Parallax">Parallax</Entry>
         <Entry Name="ParallaxSimple">Simple</Entry>
         <Entry Name="ParallaxRelief">Relief</Entry>
+
+        <Entry Name="VolumeSound">Sound Volume</Entry>
+        <Entry Name="VolumeMusic">Music Volume</Entry>
     </CATEGORY>
 
     <!-- No need to localize these! -->
@@ -75,6 +78,7 @@
         <Entry Name="italian">Italiano</Entry>
         <Entry Name="japanese">Japanese</Entry>
         <Entry Name="korean">Korean (Hangugeo)</Entry>
+        <Entry Name="mexican">Español mexicano</Entry>
         <Entry Name="polish">Polski</Entry>
         <Entry Name="russian">Russian</Entry>
         <Entry Name="slovak">Slovak</Entry>

@@ -6,35 +6,35 @@
     <CATEGORY Name="Debug">
         <Entry Name="None">Keine</Entry>
 
-        <Entry Name="Debug Toolbar">Debug Symbolleiste</Entry>
+        <Entry Name="Debug Toolbar">Debug-Symbolleiste</Entry>
 
-        <Entry Name="Debug texts">Debug Texte</Entry>
+        <Entry Name="Debug texts">Debug-Texte</Entry>
 
         <Entry Name="Show FPS">FPS anzeigen</Entry>
-        <Entry Name="Show player info">Spieler Information anzeigen</Entry>
-        <Entry Name="Show entity info">Wesenliche Information anzeigen</Entry>
-        <Entry Name="Show sounds playing">Abspielende Geräusche anzeigen</Entry>
-        <Entry Name="Show debug messages">Debug Nachrichten anzeigen</Entry>
+        <Entry Name="Show player info">Spielerinfo anzeigen</Entry>
+        <Entry Name="Show entity info">Entity-Info anzeigen</Entry>
+        <Entry Name="Show sounds playing">Aktive Geräusche anzeigen</Entry>
+        <Entry Name="Show debug messages">Debug-Nachrichten anzeigen</Entry>
         <Entry Name="Show errors and warnings">Fehler und Warnungen anzeigen</Entry>
-        <Entry Name="Inspection mode">Inspektion Modus</Entry>
+        <Entry Name="Inspection mode">Inspektionsmodus</Entry>
         <Entry Name="Occlusion Culling">Okklusions-Culling</Entry>
-        <Entry Name="Draw physics debug">Debug Physics zeichnen</Entry>
-        <Entry Name="Resource Logging">Ressourcenprotokollierung</Entry>
+        <Entry Name="Draw physics debug">Physik-Debug zeichnen</Entry>
+        <Entry Name="Resource Logging">Ressourcen-Logging</Entry>
 
         <Entry Name="Print Container Debug Info">Debug-Informationen zum Ausgabecontainer</Entry>
         <Entry Name="Rebuild Dyn Container">Dyn-Container neu erstellen</Entry>
 
         <Entry Name="Map">Karte</Entry>
 
-        <Entry Name="Load Map">Map laden</Entry>
+        <Entry Name="Load Map">Karte laden</Entry>
         <Entry Name="Recompile Script and Lang">Skript und Sprache neu kompilieren</Entry>
         <Entry Name="Reload from current pos">Neu laden von der aktuellen Position</Entry>
         <Entry Name="Fast Physics Load">Fast Physics laden</Entry>
-        <Entry Name="Reload Map">Map neuladen</Entry>
-        <Entry Name="Quick Map Reload (F2)">Schnell Mapneuladung (F2)</Entry>
-        <Entry Name="Test Change Map Save">Mapänderung Save testen</Entry>
+        <Entry Name="Reload Map">Karte neuladen</Entry>
+        <Entry Name="Quick Map Reload (F2)">Schnelles Karte-Neuladung (F2)</Entry>
+        <Entry Name="Test Change Map Save">Karte-Änderung Save testen</Entry>
         <Entry Name="Teleport to start pos">Zur Start-Position teleportieren</Entry>
-        <Entry Name="Map Batch">Stapel Map</Entry>
+        <Entry Name="Map Batch">Karten-Batch</Entry>
 
         <Entry Name="Game">Spiel</Entry>
 
@@ -48,7 +48,7 @@
 
         <Entry Name="Script output for">Skriptausgabe für</Entry>
 
-        <Entry Name="Inventory">Bestand</Entry>
+        <Entry Name="Inventory">Inventar</Entry>
         <Entry Name="Global">Global</Entry>
     </CATEGORY>
 
@@ -58,6 +58,9 @@
         <Entry Name="Parallax">Parallax</Entry>
         <Entry Name="ParallaxSimple">Einfach</Entry>
         <Entry Name="ParallaxRelief">Relief</Entry>
+
+        <Entry Name="VolumeSound">Geräuschelautstärke</Entry>
+        <Entry Name="VolumeMusic">Musiklautstärke</Entry>
     </CATEGORY>
 
     <!-- No need to localize these! -->
@@ -75,6 +78,7 @@
         <Entry Name="italian">Italiano</Entry>
         <Entry Name="japanese">Japanese</Entry>
         <Entry Name="korean">Korean (Hangugeo)</Entry>
+        <Entry Name="mexican">Español mexicano</Entry>
         <Entry Name="polish">Polski</Entry>
         <Entry Name="russian">Russian</Entry>
         <Entry Name="slovak">Slovak</Entry>
