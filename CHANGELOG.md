@@ -1,16 +1,39 @@
 # Changelog
-### v1.4.6-win32-release (currently in public testing)
-- [`067186b`](https://github.com/roozerxc/atrim/commit/067186ba7c6c50bfe807f7d07bd356d904b3ccca) Added customizable top menu font color settings
-- [`bc98941`](https://github.com/roozerxc/atrim/commit/bc989418e2455b48983440c0dfd17386dbfc6794) Added map cache version number detection
-- [`0d132a5`](https://github.com/roozerxc/atrim/commit/0d132a505bff363d721a56bc014e57196b45b404) Added "Reset List" button for Custom Story menu
-- [`b1de39b`](https://github.com/roozerxc/atrim/commit/b1de39b0c8dda4a1e647669a0ebf09af09e26d1e) Added string localization for hardcoded texts (Finnish and German translation by [@phnxs](https://github.com/phnxs) and ANDREWJOHN5)
+### v1.4.6-win32-beta
+- [`067186b`](https://github.com/roozerxc/atrim/commit/067186ba7c6c50bfe807f7d07bd356d904b3ccca) Added customizable top menu font color settings from version 1.5
+- [`569e4f1`](https://github.com/roozerxc/atrim/commit/569e4f177a31747624f279c6dd8b1c4752f56db4) Added new color-shifting effect on GUI button focus
+- [`13114cf`](https://github.com/roozerxc/atrim/commit/13114cfdc289aa7104e92d05c5dba39c3bffaf96) Added new drop-down menu for selecting the type of parallax rendering effect
+- [`9f736da`](https://github.com/roozerxc/atrim/commit/9f736da666e6d02a85ed3fc01cf2597314b2daa2) Added new engine build ID (`YYYYMMDDhhmmss`)
+- [`565e1ba`](https://github.com/roozerxc/atrim/commit/565e1ba9e91d95121da4abac60e5be052b48ef04) Added new engine declarations from Amnesia: A Machine for Pigs
+- [`2f804dc`](https://github.com/roozerxc/atrim/commit/2f804dc72152eb64fed43128085965be669ea4de) Added new "Flattened 3D" texture type
+- [`38f0af7`](https://github.com/roozerxc/atrim/commit/38f0af7bd859ad93c9acb5d88524f3806d73e82a) Added new "lite" version of the deferred light shader for ATi Radeon 9xxx video cards
+- [`344ad77`](https://github.com/roozerxc/atrim/commit/344ad77ad59113f53ffb191a4b612e6e8e2d9519) Added new modulated illumination rendering type for surface materials
+- [`a8e93d9`](https://github.com/roozerxc/atrim/commit/a8e93d9879768efb1f71bf6612f1180026aee28b) Added new patch content for version 1.4.6
+- [`9a19316`](https://github.com/roozerxc/atrim/commit/9a1931670a5cdbb0ed36f55cf15ea817633ab759) Added new pre-post effect screen render method
+- [`576eaaa`](https://github.com/roozerxc/atrim/commit/576eaaabf675f2520d36f42eed56dc722da9e9a8) Added new properties for lights and particles
+- [`b1de39b`](https://github.com/roozerxc/atrim/commit/b1de39b0c8dda4a1e647669a0ebf09af09e26d1e) Added new string localization for hardcoded texts (Finnish and German translation by [@phnxs](https://github.com/phnxs) and ANDREWJOHN5)
+- [`f92c047`](https://github.com/roozerxc/atrim/commit/f92c047ce2bf57988a3e10bee4f627a5a7da8651) Added new "Z Dissolve" rendering list type
+- [`d595f7c`](https://github.com/roozerxc/atrim/commit/d595f7c0fb0f4af6a44227c0ca5923356ef8c0a0) Added post-version 1.3 strings for playing the client with older game versions
+- [`bc98941`](https://github.com/roozerxc/atrim/commit/bc989418e2455b48983440c0dfd17386dbfc6794) Added proper map cache version number detection
+- [`0a80de3`](https://github.com/roozerxc/atrim/commit/0a80de396d33a6ada455d1c888e407ca7d113f62) Conditional if statements now have braces, avoiding the risk of subtle bugs
 - [`ef6c70e`](https://github.com/roozerxc/atrim/commit/ef6c70e534c2eb12e7cc8371bae3f74a15590c2d) Decoupled timers and scripts to use their own functions instead of using the same "Run" function
 - [`c2d7155`](https://github.com/roozerxc/atrim/commit/c2d7155de5f6522622a7174a201c45a221433d45) Fixed buggy enemy collision behavior
-- [`b496952`](https://github.com/roozerxc/atrim/commit/b496952608936ed83cde7a959521c7ec5c01ffff) Fixed custom story pictures not being wiped when another custom story was selected
+- [`b496952`](https://github.com/roozerxc/atrim/commit/b496952608936ed83cde7a959521c7ec5c01ffff) Fixed Custom Story images not being cleared out when another Custom Story was selected
+- [`0111b66`](https://github.com/roozerxc/atrim/commit/0111b66da96c69603a7fd0095302208ab596909d) Fixed engine crash from addressing 32-bit memory more than 2 GB
 - [`73424fd`](https://github.com/roozerxc/atrim/commit/73424fd9c3410726fa91b79d674709298a9383ff) Fixed invalid serialization of coins needed to unlock chests
-- [`8c946b1`](https://github.com/roozerxc/atrim/commit/8c946b1a695330e05308fb5df4db5791a204ea3c) Fixed missing xinput support
+- [`4279f12`](https://github.com/roozerxc/atrim/commit/4279f1294c0d73037b29d7f580643e77a5a29811) Fixed light types only getting diffuse color information
+- [`9a66b63`](https://github.com/roozerxc/atrim/commit/9a66b63dc1b304996d4d3cd5e9d21b0136241dcd) Fixed low-level OpenGL graphics setup to only call the depth test once
 - [`5c29b95`](https://github.com/roozerxc/atrim/commit/5c29b958d314dd2ba9d2cb44e5e7b86c25e22ea4) Fixed the SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
+- [`5e8e5da`](https://github.com/roozerxc/atrim/commit/5e8e5daa9c5cd75699bd5fc11412696fe080b015) Fixed weird behavior in Custom Story menu
+- [`155d025`](https://github.com/roozerxc/atrim/commit/155d025ad20c52e4a5d6772e6fbe5dda221e0215) Improved AI node iterator with changes from Amnesia: A Machine for Pigs
+- [`683b99a`](https://github.com/roozerxc/atrim/commit/683b99a87cc96bc11d28a4d297411acd9399103d) Improved volume slider in the main menu for more precise control
+- [`f8c521a`](https://github.com/roozerxc/atrim/commit/f8c521ae951deef9be4c90ed8dcf650b5a5037c6) Locked game engine loop to 60 FPS for increased consistency and stability
 - [`45bda0f`](https://github.com/roozerxc/atrim/commit/45bda0fb26a98d19165b91bbd6aa79f5ad7bc2e6) Removed fake anti-aliasing shader (Edge Smoothing)
+- [`0e0cbd2`](https://github.com/roozerxc/atrim/commit/0e0cbd2fd4784292347e192307fece8ff089a41d) Removed proprietary Kaydara FBX loader
+- [`11e2304`](https://github.com/roozerxc/atrim/commit/11e2304115b44771811d71ae21e570ab632946b0) Removed unused "Adaptive VSync" feature left over from Amnesia: A Machine for Pigs
+- [`9645c94`](https://github.com/roozerxc/atrim/commit/9645c9487b5b90ae11e5e19738ac4f00eba87039) Removed unused animation smoothing implementation
+- [`f21dab6`](https://github.com/roozerxc/atrim/commit/f21dab6eb2d7242951a657f98b614c0fd6ad9319) Removed unused Generate from the HPL engine creation process (plus unused VoxelMap code)
+- [`abe33ed`](https://github.com/roozerxc/atrim/commit/abe33eda0f6e5edfbc741cac225ed8a36ee24953) Removed unused Ogg/Theora video loader
 - [`7491cc4`](https://github.com/roozerxc/atrim/commit/7491cc43e3e7b712c8723bfb12038d2146264d2c) Replaced loading icons from loose bitmaps with header-based RWops in the executable
 - [`0a3de4d`](https://github.com/roozerxc/atrim/commit/0a3de4d6e60806f30c31cb48281bd80c29efd79a) Replaced OpenAL with OpenAL-Soft
 - [`1731b30`](https://github.com/roozerxc/atrim/commit/1731b3071cefc3034e3a2fd3c152bd7998d68d3e) Restored unused Penumbra-style head leaning behavior
@@ -28,7 +51,7 @@
 - [`5d97e08`](https://github.com/roozerxc/atrim/commit/5d97e08ebd80958677958062da31bce6d11192dc) Fixed insanity event boolean that returned as nothing
 - [`5146d49`](https://github.com/roozerxc/atrim/commit/5146d4994de95c16c075b213c19ac645528847d4) Fixed mipmap generation to use `GL_SGIS_generate_mipmap` instead of the framebuffer object
 - [`3bcb545`](https://github.com/roozerxc/atrim/commit/3bcb5453dee5e4d02a256602515fa36b350cd07a) Fixed non-working player particle system destructor
-- [`3c6ec17`](https://github.com/roozerxc/atrim/commit/3c6ec17627b23ec1d594e2ffdee65adfd7824c48) Player can now look straight up and down in a 90 degree angle
+- [`3c6ec17`](https://github.com/roozerxc/atrim/commit/3c6ec17627b23ec1d594e2ffdee65adfd7824c48) Player can now look straight up and down in a 90-degree angle
 - [`4f98490`](https://github.com/roozerxc/atrim/commit/4f98490efb4e29cfb76680b05df0f750fe7d2156) Removed dangerous "suicide" (`H`) key (`eLuxAction_Holster`)
 - [`ffad602`](https://github.com/roozerxc/atrim/commit/ffad602b3933baaeb5d7d7a05d860c5da90a4e66) Removed `eLuxAction_Holster` entry from `LuxInputHandler`
 - [`9c1bbc9`](https://github.com/roozerxc/atrim/commit/9c1bbc96922c7bfca71db83076f0227b0735cadb) Upgraded OpenGL cube map constants to not use `ARB` extension
