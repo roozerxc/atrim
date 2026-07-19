@@ -1,9 +1,9 @@
 # atrim
 **A legal, unmodified and DRM-free copy of *Amnesia: The Dark Descent* and/or *Amnesia: A Machine for Pigs* is required.**
 
-atrim is a client for Frictional Games' *Amnesia: The Dark Descent* that offers bug fixes and enhancements to the HPL2 engine and base game. Coming soon will be additional fixes and enhancements from, along with support for, The Chinese Room's *Amnesia: A Machine For Pigs*.
+This is atrim, a custom client for *Amnesia: The Dark Descent* which attempts to port the game to very old and weak machines, and make it compatible with operating systems as early as Windows 2000.
 
-The game and engine can also be ported to significantly weaker (or unorthodox) hardware which are usually below the official minimum specifications.
+The client is based on version 1.4.3 of the game and it also brings out new enhancements and features from *Amnesia: A Machine for Pigs*, as well as fixes and improvements to bugs and glitches in the game and engine.
 
 atrim is currently being maintained by one person ([@RoozerXC](https://github.com/roozerxc)). If you want to contribute to atrim, feel free to fork and submit your own pull requests, as long as everything follows the [Code of Conduct (or Anti-CoC)](CODE-OF-CONDUCT.md).
 
