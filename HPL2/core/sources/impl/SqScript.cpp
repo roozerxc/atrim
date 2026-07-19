@@ -5,6 +5,7 @@
 #include "math/Math.h"
 #include <stdio.h>
 #include "impl/scripthelper.h"
+#include "impl/scriptbuilder.h"
 #include "resources/BinaryBuffer.h"
 #include "resources/Resources.h"
 

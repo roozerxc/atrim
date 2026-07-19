@@ -1416,6 +1416,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\core\sources\impl\scriptbuilder.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\core\include\impl\scriptbuilder.h"
+					>
+				</File>
+				<File
 					RelativePath=".\core\sources\impl\scripthelper.cpp"
 					>
 				</File>
