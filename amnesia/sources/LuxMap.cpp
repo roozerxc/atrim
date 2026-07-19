@@ -113,16 +113,6 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
 
     gpBase->mpCurrentMapLoading = this;
 
-    //////////////////////////////
-    //Extra demo check!
-#ifdef LUX_DEMO_VERSION
-    if(cString::GetFirstStringPos(asFile, "demo")<0)
-    {
-        FatalError("Do not use demo exe to run full game!\n");
-    }
-    static int lDemoCount;
-#endif
-
     tWorldLoadFlag lFlags =0;
     //if(abLoadEntities==false) lFlags |= eWorldLoadFlag_NoGameEntities;
     if(abLoadEntities==false)
