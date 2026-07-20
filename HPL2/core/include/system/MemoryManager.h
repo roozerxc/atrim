@@ -53,7 +53,6 @@ public:
     {
         RemovePointer(apData, apFileString, alLine);
         delete apData;
-        return apData;
     }
 
     template<class T>
@@ -61,7 +60,6 @@ public:
     {
         RemovePointer(apData, apFileString, alLine);
         delete[] apData;
-        return apData;
     }
 
     template<class T>
@@ -69,7 +67,6 @@ public:
     {
         RemovePointer(apData, apFileString, alLine);
         free(apData);
-        return apData;
     }
 
     static void SetLogCreation(bool abX);
