@@ -418,3 +418,4 @@ FodyWeavers.xsd
 *.msp
 *.lib
 HPL2/core/sources/impl/PlatformBuildID.cpp
+/compiled
