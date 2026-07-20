@@ -23,8 +23,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vorbis", "sources\vorbis\vo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "sources\zlib\zlib.vcproj", "{BA5A26E5-8FFD-41D0-A431-30DBC58EEDD0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FLAC", "sources\FLAC\FLAC.vcproj", "{FE8F0512-6C14-41C5-869E-D8ED5DF9EAAB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -75,10 +73,6 @@ Global
 		{BA5A26E5-8FFD-41D0-A431-30DBC58EEDD0}.Debug|Win32.Build.0 = Debug|Win32
 		{BA5A26E5-8FFD-41D0-A431-30DBC58EEDD0}.Release|Win32.ActiveCfg = Release|Win32
 		{BA5A26E5-8FFD-41D0-A431-30DBC58EEDD0}.Release|Win32.Build.0 = Release|Win32
-		{FE8F0512-6C14-41C5-869E-D8ED5DF9EAAB}.Debug|Win32.ActiveCfg = Debug|Win32
-		{FE8F0512-6C14-41C5-869E-D8ED5DF9EAAB}.Debug|Win32.Build.0 = Debug|Win32
-		{FE8F0512-6C14-41C5-869E-D8ED5DF9EAAB}.Release|Win32.ActiveCfg = Release|Win32
-		{FE8F0512-6C14-41C5-869E-D8ED5DF9EAAB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
