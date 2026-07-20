@@ -13,17 +13,6 @@ atrim is currently being maintained by one person ([@RoozerXC](https://github.co
 
 For a list of changes, read [`CHANGELOG.md`](CHANGELOG.md). Special thanks are in [`THANKS.md`](THANKS.md).
 
-## Installation
-### Steps
-1. Go to the Releases section which can be found on the right-hand side of the page.
-2. Download the zip file of the latest release (for example, `v1.4.5-win32-release`)
-3. Open the zip file and drag all of its contents into your *Amnesia: The Dark Descent* installation folder.
-
-### System Requirements
-- 1.8+ GHz single-core CPU
-- *OpenGL* 2.1-compatible graphics card
-- *DirectSound* and/or *OpenAL*-compatible sound card
-
 ## Building & Debugging
 ### Prerequisites
 - [*Creative Labs OpenAL 1.1 Core SDK*](https://openal.org/downloads)
