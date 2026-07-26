@@ -115,7 +115,7 @@ void cSubMeshEntityBodyUpdate::OnTransformUpdate(iEntity3D* apEntity)
 
 //-----------------------------------------------------------------------
 
-void cSubMeshEntity::UpdateLogic(float afTimeStep)
+void cSubMeshEntity::UpdateLogic(double adFixedDelta)
 {
 
 }
@@ -176,11 +176,11 @@ static inline void MatrixFloatRotateAdd(float *pDest, const cMatrixf &a_mtxA, co
 
 //-----------------------------------------------------------------------
 
-void cSubMeshEntity::UpdateGraphicsForFrame(float afFrameTime)
+void cSubMeshEntity::UpdateGraphicsForFrame(double adFrameTime)
 {
     ////////////////////////////////////
     //Update things in parent first.
-    mpMeshEntity->UpdateGraphicsForFrame(afFrameTime);
+    mpMeshEntity->UpdateGraphicsForFrame(adFrameTime);
 
     ////////////////////////////////////
     // If it has dynamic mesh, update it.

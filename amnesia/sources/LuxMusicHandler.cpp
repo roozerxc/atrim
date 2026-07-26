@@ -92,7 +92,7 @@ void cLuxMusicHandler::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxMusicHandler::Update(float afTimeStep)
+void cLuxMusicHandler::Update(double adFixedDelta)
 {
     if(gpBase->mpPlayer->IsDead())
     {
@@ -101,12 +101,12 @@ void cLuxMusicHandler::Update(float afTimeStep)
 
     ///////////////////////////////////
     //Check if close by music should be played.
-    UpdateDangerMusic(afTimeStep);
+    UpdateDangerMusic(adFixedDelta);
 
     ///////////////////////////////////
     //Check if attack music should be played.
-    UpdateEnemyMusic(afTimeStep, eLuxEnemyMusic_Search);
-    UpdateEnemyMusic(afTimeStep, eLuxEnemyMusic_Attack);
+    UpdateEnemyMusic(adFixedDelta, eLuxEnemyMusic_Search);
+    UpdateEnemyMusic(adFixedDelta, eLuxEnemyMusic_Attack);
 
     ///////////////////////////////////
     //Check if current song is over
@@ -242,7 +242,7 @@ void cLuxMusicHandler::OnMapLeave(cLuxMap *apMap)
 
 //-----------------------------------------------------------------------
 
-void cLuxMusicHandler::UpdateDangerMusic(float afTimeStep)
+void cLuxMusicHandler::UpdateDangerMusic(double adFixedDelta)
 {
     ////////////////////////////
     // HARDMODE early out
@@ -294,7 +294,7 @@ void cLuxMusicHandler::UpdateDangerMusic(float afTimeStep)
         if(sMusic != "")
         {
             mfEnemyGoneCount =0;
-            mfEnemyCloseCount += afTimeStep;
+            mfEnemyCloseCount += (float)adFixedDelta;
             if(mfEnemyCloseCount > 2.0f)
             {
                 Play(sMusic,true,1.0f, 6.0f, 5, true, true);
@@ -326,7 +326,7 @@ void cLuxMusicHandler::UpdateDangerMusic(float afTimeStep)
         if(bFound == false)
         {
             mfEnemyCloseCount =0;
-            mfEnemyGoneCount += afTimeStep;
+            mfEnemyGoneCount += (float)adFixedDelta;
             if(mfEnemyGoneCount > 6.0f)
             {
                 Stop(6.0f, 5);
@@ -338,7 +338,7 @@ void cLuxMusicHandler::UpdateDangerMusic(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxMusicHandler::UpdateEnemyMusic(float afTimeStep, eLuxEnemyMusic aType)
+void cLuxMusicHandler::UpdateEnemyMusic(double adFixedDelta, eLuxEnemyMusic aType)
 {
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
     if(pMap==NULL)
@@ -359,7 +359,7 @@ void cLuxMusicHandler::UpdateEnemyMusic(float afTimeStep, eLuxEnemyMusic aType)
     if(mbEnemyPlaying[aType]==false && m_setEnemies[aType].empty()==false)
     {
         mfEnemyStopCount[aType] =0;
-        mfEnemyPlayCount[aType] += afTimeStep;
+        mfEnemyPlayCount[aType] += (float)adFixedDelta;
         if(mfEnemyPlayCount[aType] > 0.1f)
         {
             //////////////////////
@@ -409,7 +409,7 @@ void cLuxMusicHandler::UpdateEnemyMusic(float afTimeStep, eLuxEnemyMusic aType)
     else if(mbEnemyPlaying[aType] && m_setEnemies[aType].empty())
     {
         mfEnemyPlayCount[aType] =0;
-        mfEnemyStopCount[aType] += afTimeStep;
+        mfEnemyStopCount[aType] += (float)adFixedDelta;
 
         if(mfEnemyStopCount[aType] > 1.2f)
         {

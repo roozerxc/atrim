@@ -40,7 +40,7 @@ public:
     //General
     void OnSetupAfterLoad(cWorld *apWorld);
     void OnAfterWorldLoad();
-    void UpdateEnemySpecific(float afTimeStep);
+    void UpdateEnemySpecific(double adFixedDelta);
 
     //////////////////////
     //Actions

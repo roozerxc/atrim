@@ -79,11 +79,11 @@ public:
     void OnEnter(bool abRunScript, bool abFirstTime);
     void OnLeave(bool abRunScript);
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     void RunScript(const tString& asCommand);
     void RunTimer(const tString& asTimerFunc, tString& asTimerName);
-    void RunUpdateCallback(float afTimeStep);
+    void RunUpdateCallback(double adFixedDelta);
     bool RecompileScript(tString *apOutput);
 
     void OnRenderSolid(cRendererCallbackFunctions* apFunctions);
@@ -223,10 +223,10 @@ private:
     int GetFreeEntityID();
 
     void UpdateToBeDestroyedEntities(bool abUseCallbacks);
-    void UpdateTimers(float afTimeStep);
-    void UpdateDissolveEntities(float afTimeStep);
-    void UpdateLampLightConnections(float afTimeStep);
-    void UpdateCheckCommentaryIconActive(float afTimeStep);
+    void UpdateTimers(double adFixedDelta);
+    void UpdateDissolveEntities(double adFixedDelta);
+    void UpdateLampLightConnections(double adFixedDelta);
+    void UpdateCheckCommentaryIconActive(double adFixedDelta);
 
     tString msName;
     tString msFileName;

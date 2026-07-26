@@ -37,7 +37,7 @@ public:
     //General
     void SetupAfterLoad(cWorld *apWorld);
 
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     //////////////////////
     //Actions
@@ -52,7 +52,7 @@ public:
     //Properties
 
     //This is used by enemy when caclulting final max speed.
-    float CalculateSpeedMul(float afTimeStep);
+    float CalculateSpeedMul(double adFixedDelta);
 
     //This get the speed along the movement direction (so it does not accound for falling speeds, climbing, etc
     float GetMoveSpeed();
@@ -94,10 +94,10 @@ public:
     //Save data stuff
 
 private:
-    void UpdateStuckCounter(float afTimeStep);
-    void UpdateTurning(float afTimeStep);
-    void UpdateMoveAnimation(float afTimeStep);
-    void UpdateStepEffects(float afTimeStep);
+    void UpdateStuckCounter(double adFixedDelta);
+    void UpdateTurning(double adFixedDelta);
+    void UpdateMoveAnimation(double adFixedDelta);
+    void UpdateStepEffects(double adFixedDelta);
 
     ///////////////////
     // Data

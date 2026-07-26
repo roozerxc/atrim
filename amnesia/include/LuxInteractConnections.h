@@ -46,8 +46,8 @@ public:
 
     ///////////////
     //General
-    virtual void Update(float afTimeStep)=0;
-    virtual void UpdateProp(float afTimeStep)=0;
+    virtual void Update(double adFixedDelta)=0;
+    virtual void UpdateProp(double adFixedDelta)=0;
 
     ///////////////
     //Callbacks
@@ -110,8 +110,8 @@ public:
 
     ///////////////
     //General
-    void Update(float afTimeStep);
-    void UpdateProp(float afTimeStep);
+    void Update(double adFixedDelta);
+    void UpdateProp(double adFixedDelta);
 
     ///////////////
     //Callbacks
@@ -158,8 +158,8 @@ public:
 
     ///////////////
     //General
-    void Update(float afTimeStep);
-    void UpdateProp(float afTimeStep);
+    void Update(double adFixedDelta);
+    void UpdateProp(double adFixedDelta);
 
     ///////////////
     //Callbacks

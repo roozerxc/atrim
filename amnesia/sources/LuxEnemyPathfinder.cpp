@@ -228,11 +228,11 @@ cAINode* cLuxEnemyPathfinder::GetNodeAtPos(const cVector3f &avPos,float afMinDis
 
 //-----------------------------------------------------------------------
 
-void cLuxEnemyPathfinder::OnUpdate(float afTimeStep)
+void cLuxEnemyPathfinder::OnUpdate(double adFixedDelta)
 {
     //TODO: Check if goal position is reached!
     //TODO: Check if Path end is reached. If so notify higher level
-    UpdateMoving(afTimeStep);
+    UpdateMoving(adFixedDelta);
 }
 
 
@@ -336,7 +336,7 @@ const cVector3f& cLuxEnemyPathfinder::GetFinalGoalPos()
 
 //-----------------------------------------------------------------------
 
-void cLuxEnemyPathfinder::UpdateMoving(float afTimeStep)
+void cLuxEnemyPathfinder::UpdateMoving(double adFixedDelta)
 {
     if(mbMoving==false)
     {

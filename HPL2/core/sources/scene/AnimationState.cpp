@@ -64,15 +64,15 @@ cAnimationState::~cAnimationState()
 
 //-----------------------------------------------------------------------
 
-void cAnimationState::Update(float afTimeStep)
+void cAnimationState::Update(double adFixedDelta)
 {
     //Update animation
-    AddTimePosition(afTimeStep);
+    AddTimePosition((float)adFixedDelta);
 
     //Fading
     if(mfFadeStep!=0)
     {
-        mfWeight += mfFadeStep*afTimeStep;
+        mfWeight += mfFadeStep*(float)adFixedDelta;
 
         if(mfFadeStep<0 && mfWeight<=0)
         {

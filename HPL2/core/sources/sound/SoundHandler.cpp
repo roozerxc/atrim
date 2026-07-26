@@ -156,12 +156,12 @@ cSoundEntry::~cSoundEntry()
 
 //-----------------------------------------------------------------------
 
-bool cSoundEntry::Update(float afTimeStep)
+bool cSoundEntry::Update(double adFixedDelta)
 {
     ////////////////////////////////////////////
     // Update Fading
-    UpdateVolumeMulFade(afTimeStep);
-    UpdateSpeedMulFade(afTimeStep);
+    UpdateVolumeMulFade(adFixedDelta);
+    UpdateSpeedMulFade(adFixedDelta);
 
     ////////////////////////////////////////////
     // Set final speed
@@ -175,7 +175,7 @@ bool cSoundEntry::Update(float afTimeStep)
     // Update block volume mul fade
     if(mfBlockMul != mfBlockFadeDest)
     {
-        mfBlockMul += mfBlockFadeSpeed*afTimeStep;
+        mfBlockMul += mfBlockFadeSpeed * (float)adFixedDelta;
         if(mfBlockFadeSpeed<0)
         {
             if(mfBlockMul < mfBlockFadeDest)
@@ -204,7 +204,7 @@ bool cSoundEntry::Update(float afTimeStep)
     // Update 3D Specifics
     if(mb3D)
     {
-        Update3DSpecifics(afTimeStep);
+        Update3DSpecifics(adFixedDelta);
 
     }
     /////////////////////////////
@@ -255,11 +255,11 @@ bool cSoundEntry::Update(float afTimeStep)
 
 //----------------------------------------------------------------------
 
-void cSoundEntry::UpdateVolumeMulFade(float afTimeStep)
+void cSoundEntry::UpdateVolumeMulFade(double adFixedDelta)
 {
     if(mfVolumeMul != mfVolumeFadeDest)
     {
-        mfVolumeMul += mfVolumeFadeSpeed * afTimeStep;
+        mfVolumeMul += mfVolumeFadeSpeed * (float)adFixedDelta;
 
         if(mfVolumeFadeSpeed<0 && mfVolumeMul <= mfVolumeFadeDest)
         {
@@ -281,11 +281,11 @@ void cSoundEntry::UpdateVolumeMulFade(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cSoundEntry::UpdateSpeedMulFade(float afTimeStep)
+void cSoundEntry::UpdateSpeedMulFade(double adFixedDelta)
 {
     if(mfSpeedMul != mfSpeedFadeDest)
     {
-        mfSpeedMul += mfSpeedFadeSpeed * afTimeStep;
+        mfSpeedMul += mfSpeedFadeSpeed * (float)adFixedDelta;
 
         if(mfSpeedFadeSpeed<0 && mfSpeedMul <= mfSpeedFadeDest)
         {
@@ -300,7 +300,7 @@ void cSoundEntry::UpdateSpeedMulFade(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cSoundEntry::Update3DSpecifics(float afTimeStep)
+void cSoundEntry::Update3DSpecifics(double adFixedDelta)
 {
     cVector3f vListnerPos = mpSoundHandler->mpLowLevelSound->GetListenerPosition();
     bool bBlocked = false;
@@ -516,7 +516,7 @@ cSoundHandler::~cSoundHandler()
 
 //-----------------------------------------------------------------------
 
-void cSoundHandler::Update(float afTimeStep)
+void cSoundHandler::Update(double adFixedDelta)
 {
     ///////////////////////////////////////////////
     // Update global volume and speed
@@ -527,8 +527,8 @@ void cSoundHandler::Update(float afTimeStep)
     mfGlobalSpeed[0] = mGlobalSpeedHandler.CalcResults(eSoundEntryType_World,eMultipleSettingsCalcType_Min,1.0f);
     mfGlobalSpeed[1] = mGlobalSpeedHandler.CalcResults(eSoundEntryType_Gui,eMultipleSettingsCalcType_Min,1.0f);
 
-    mGlobalVolumeHandler.Update(afTimeStep);
-    mGlobalSpeedHandler.Update(afTimeStep);
+    mGlobalVolumeHandler.Update(adFixedDelta);
+    mGlobalSpeedHandler.Update(adFixedDelta);
 
     ///////////////////////////////////////////////
     // Update entries
@@ -537,7 +537,7 @@ void cSoundHandler::Update(float afTimeStep)
     {
         cSoundEntry *pEntry = *it;
 
-        if(pEntry->Update(afTimeStep) == false)
+        if(pEntry->Update(adFixedDelta) == false)
         {
             hplDelete( pEntry );
             //m_lstSoundEntriesPool.push_back(pEntry);

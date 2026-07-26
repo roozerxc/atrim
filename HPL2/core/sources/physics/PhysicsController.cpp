@@ -62,7 +62,7 @@ void iPhysicsController::SetPidIntegralSize(int alSize)
 //-----------------------------------------------------------------------
 
 
-void iPhysicsController::Update(float afTimeStep)
+void iPhysicsController::Update(double adFixedDelta)
 {
     if(mbActive==false || mbPaused)
     {
@@ -80,7 +80,7 @@ void iPhysicsController::Update(float afTimeStep)
     float fValue = GetAxisValue(mInputAxis, vInput);
     float fError = mfDestValue - fValue;
 
-    float fOutput = GetOutputValue(fError,fValue,afTimeStep);
+    float fOutput = GetOutputValue(fError,fValue,adFixedDelta);
 
     if(mfMaxOutput>0)
     {
@@ -155,7 +155,7 @@ cVector3f iPhysicsController::GetInputValue(ePhysicsControllerInput aInput)
 
 //-----------------------------------------------------------------------
 
-float iPhysicsController::GetOutputValue(float afError,float afInput, float afTimeStep)
+float iPhysicsController::GetOutputValue(float afError,float afInput, double adFixedDelta)
 {
     if(mType == ePhysicsControllerType_Pid)
     {
@@ -163,7 +163,7 @@ float iPhysicsController::GetOutputValue(float afError,float afInput, float afTi
         mPidController.i = mfB;
         mPidController.d = mfC;
 
-        return mPidController.Output(afError, afTimeStep);
+        return mPidController.Output(afError, adFixedDelta);
     }
     else
     {

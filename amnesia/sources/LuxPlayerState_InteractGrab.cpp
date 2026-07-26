@@ -259,12 +259,12 @@ void cLuxPlayerState_InteractGrab::OnLeaveState(eLuxPlayerState aNewState)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerState_InteractGrab::Update(float afTimeStep)
+void cLuxPlayerState_InteractGrab::Update(double adFixedDelta)
 {
 
 }
 
-void cLuxPlayerState_InteractGrab::PostUpdate(float afTimeStep)
+void cLuxPlayerState_InteractGrab::PostUpdate(double adFixedDelta)
 {
     /////////////////////////////////////
     // Init
@@ -312,7 +312,7 @@ void cLuxPlayerState_InteractGrab::PostUpdate(float afTimeStep)
     cVector3f vWantedPos = mtxGoal.GetTranslation();
     cVector3f vError = vWantedPos - mpCurrentBody->GetLocalPosition();
 
-    cVector3f vForce = mForcePid.Output(vError, afTimeStep) * mfMassSum;
+    cVector3f vForce = mForcePid.Output(vError, adFixedDelta) * mfMassSum;
 
     //Make sure force is not too large
     vForce = cMath::Vector3MaxLength(vForce, mfMaxForce);
@@ -360,7 +360,7 @@ void cLuxPlayerState_InteractGrab::PostUpdate(float afTimeStep)
     // Set speed by torque
     cVector3f vRotError = vWantedRotSpeed - mpCurrentBody->GetAngularVelocity();
 
-    cVector3f vTorque =  mSpeedTorquePid.Output(vRotError,afTimeStep);
+    cVector3f vTorque =  mSpeedTorquePid.Output(vRotError,adFixedDelta);
     vTorque = cMath::MatrixMul(mpCurrentBody->GetInertiaMatrix(), vTorque);
 
     //Make sure force is not too large

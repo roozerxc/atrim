@@ -143,7 +143,7 @@ cGuiGfxElement::~cGuiGfxElement()
 
 //-----------------------------------------------------------------------
 
-void cGuiGfxElement::Update(float afTimeStep)
+void cGuiGfxElement::Update(double adFixedDelta)
 {
 
     //////////////////////////////////////
@@ -164,7 +164,7 @@ void cGuiGfxElement::Update(float afTimeStep)
     // Non random animation update
     if(pAnim->mType != eGuiGfxAnimationType_Random)
     {
-        mfCurrentFrame += afTimeStep * (1.0f/pAnim->mfFrameLength);
+        mfCurrentFrame += (float)adFixedDelta * (1.0f/pAnim->mfFrameLength);
         lFrame = (int) mfCurrentFrame;
         if(lFrame >= (int)mvImageBufferVec.size())
         {
@@ -202,7 +202,7 @@ void cGuiGfxElement::Update(float afTimeStep)
     else if(mvImageBufferVec.size() > 1)
     {
         float fPrev = mfCurrentFrame;
-        mfCurrentFrame += afTimeStep * (1.0f/pAnim->mfFrameLength);
+        mfCurrentFrame += (float)adFixedDelta * (1.0f/pAnim->mfFrameLength);
         lFrame = (int) mfCurrentFrame;
         if((int)mfCurrentFrame != (int)fPrev)
         {

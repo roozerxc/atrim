@@ -118,8 +118,8 @@ public:
 
     virtual void RenderDebugGeometry(iLowLevelGraphics *apLowLevel,const cColor &aColor)=0;
 
-    bool UpdateBeforeSimulate(float afTimeStep);
-    void UpdateAfterSimulate(float afTimeStep);
+    bool UpdateBeforeSimulate(double adFixedDelta);
+    void UpdateAfterSimulate(double adFixedDelta);
 
     void StaticLinearMove(const cVector3f& avVelocity);
     void StaticAngularMove(const cVector3f& avVelocity);

@@ -174,7 +174,7 @@ float cMultipleSettingsHandler::CalcResults(tFlag aTypes, eMultipleSettingsCalcT
 
 //-----------------------------------------------------------------------
 
-void cMultipleSettingsHandler::Update(float afTimeStep)
+void cMultipleSettingsHandler::Update(double adFixedDelta)
 {
     for(size_t i=0; i<mvEntries.size(); ++i)
     {
@@ -186,7 +186,7 @@ void cMultipleSettingsHandler::Update(float afTimeStep)
 
         if(pEntry->mfVal != pEntry->mfDest)
         {
-            pEntry->mfVal += pEntry->mfSpeed * afTimeStep;
+            pEntry->mfVal += pEntry->mfSpeed * (float)adFixedDelta;
             if(pEntry->mfSpeed < 0 && pEntry->mfVal < pEntry->mfDest)
             {
                 pEntry->mfVal = pEntry->mfDest;

@@ -29,7 +29,7 @@ public:
     void SaveUserConfig();
 
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
 
     void OnMapEnter(cLuxMap *apMap);
@@ -42,7 +42,7 @@ public:
         return mbWindowActive;
     }
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
     void RenderSolid(cRendererCallbackFunctions* apFunctions);
 
     void AddErrorOrWarningMessage(const tWString& asText);
@@ -80,12 +80,12 @@ public:
 private:
     void CheckLineObjectIntersection(iRenderable *apObject, const cVector3f& avStart, const cVector3f& avEnd, cBoundingVolume *apBV);
     void IterateRenderableNode(iRenderableContainerNode *apNode, const cVector3f& avStart, const cVector3f& avEnd, cBoundingVolume *apBV);
-    void UpdateInspectionMeshEntity(float afTimeStep);
+    void UpdateInspectionMeshEntity(double adFixedDelta);
 
     void CreateGuiWindow();
     void CreateScriptOutputWindow();
     void CreateScriptOutputWindowText(const tWString& asOutput);
-    void UpdateMessages(float afTimeStep);
+    void UpdateMessages(double adFixedDelta);
 
     void ShowScriptOutputWindow(const tWString& asName, const tString& asText);
     bool RecompileScript();

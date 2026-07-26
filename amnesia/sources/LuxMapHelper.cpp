@@ -242,7 +242,7 @@ void cLuxMapHelper::OnStart()
 
 //-----------------------------------------------------------------------
 
-void cLuxMapHelper::Update(float afTimeStep)
+void cLuxMapHelper::Update(double adFixedDelta)
 {
 }
 

@@ -55,8 +55,8 @@ public:
     void Init(    cResources *apResources, cGraphics* apGraphics,
                   cSound *apSound, cScene *apScene, cInput *apInput);
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime);
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
     void OnPostBufferSwap();
 
     iGuiMaterial* GetMaterial(eGuiMaterial aType);

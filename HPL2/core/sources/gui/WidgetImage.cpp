@@ -68,7 +68,7 @@ void cWidgetImage::OnChangeSize()
 
 //-----------------------------------------------------------------------
 
-void cWidgetImage::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetImage::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     ////////////////////////////////
     // Background

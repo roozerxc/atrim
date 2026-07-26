@@ -694,7 +694,7 @@ public:
     cLuxAlphaFader() : mfAlpha(0), mbActive(false) {}
 
     void Reset();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     float mfAlpha;
     bool mbActive;

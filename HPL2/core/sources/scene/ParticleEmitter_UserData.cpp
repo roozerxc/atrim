@@ -958,13 +958,13 @@ void cParticleEmitter_UserData::SetParticleDefaults(cParticle *apParticle)
 
 //-----------------------------------------------------------------------
 
-void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
+void cParticleEmitter_UserData::UpdateMotion(double adFixedDelta)
 {
     ///////////////////////////////////////////
     //Check if the emitter is ready to start.
     if(mfTime < mpData->mfStartTimeOffset)
     {
-        mfTime += afTimeStep;
+        mfTime += (float)adFixedDelta;
         return;
     }
 
@@ -972,7 +972,7 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
     //Delay check
     if(mbPaused)
     {
-        mfPauseCount -= afTimeStep;
+        mfPauseCount -= (float)adFixedDelta;
         if(mfPauseCount <= 0)
         {
             mbPaused = false;
@@ -982,7 +982,7 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
     }
     else if(mpData->mfMinPauseLength > 0 && mpData->mfMinPauseInterval > 0)
     {
-        mfPauseWaitCount -= afTimeStep;
+        mfPauseWaitCount -= (float)adFixedDelta;
         if(mfPauseWaitCount <= 0)
         {
             mfPauseCount = cMath::RandRectf(mpData->mfMinPauseLength,mpData->mfMaxPauseLength);
@@ -994,7 +994,7 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
     //Particle creation
     if(mbPaused==false && mlNumOfParticles < mlMaxParticles)
     {
-        mfCreateCount += mpData->mfParticlesPerSecond * afTimeStep;
+        mfCreateCount += mpData->mfParticlesPerSecond * (float)adFixedDelta;
 
         while(mfCreateCount >= 0.99999f && (mlNumOfParticles < mlMaxParticles))
         {
@@ -1008,7 +1008,7 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
     bool bColliding=false;
     if(mpData->mbCollides)
     {
-        mfCollideCount -= afTimeStep;
+        mfCollideCount -= (float)adFixedDelta;
         if(mfCollideCount <= 0)
         {
             mfCollideCount = 1.0f/(float)mpData->mlCollisionUpdateRate;
@@ -1026,11 +1026,11 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
         //Position Update
         pParticle->mvLastPos = pParticle->mvPos;
 
-        pParticle->mvPos += pParticle->mvVel * afTimeStep;
+        pParticle->mvPos += pParticle->mvVel * (float)adFixedDelta;
 
         ////////////
         //Speed Update
-        pParticle->mvVel += pParticle->mvAcc * afTimeStep;
+        pParticle->mvVel += pParticle->mvAcc * (float)adFixedDelta;
 
         //gravity
         switch(mpData->mGravityType)
@@ -1041,7 +1041,7 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
         }
         case ePEGravityType_Vector:
         {
-            pParticle->mvVel += mpData->mvGravityAcc * afTimeStep;
+            pParticle->mvVel += mpData->mvGravityAcc * (float)adFixedDelta;
             break;
         }
         case ePEGravityType_Center:
@@ -1060,7 +1060,7 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
 
             vDir.Normalize();
 
-            pParticle->mvVel += vDir * mpData->mvGravityAcc.y * afTimeStep;
+            pParticle->mvVel += vDir * mpData->mvGravityAcc.y * (float)adFixedDelta;
 
             break;
         }
@@ -1078,7 +1078,7 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
 
         if(pParticle->mfSpeedMul!=0 && pParticle->mfSpeedMul!=1)
         {
-            pParticle->mvVel = pParticle->mvVel * pow(pParticle->mfSpeedMul,afTimeStep);
+            pParticle->mvVel = pParticle->mvVel * pow(pParticle->mfSpeedMul,(float)adFixedDelta);
         }
 
         // NEW
@@ -1086,7 +1086,7 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
         //Spin Update
         if (mpData->mbUsePartSpin)
         {
-            pParticle->mfSpin += pParticle->mfSpinVel * afTimeStep;
+            pParticle->mfSpin += pParticle->mfSpinVel * (float)adFixedDelta;
 
             if (mpData->mPartSpinType == ePEPartSpinType_Movement)
             {
@@ -1110,8 +1110,8 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
         // Revolution
         if ( mbUseRevolution )
         {
-            //pParticle->mvRevolution += pParticle->mvRevolutionVel * afTimeStep;
-            cMatrixf mtxRotationMatrix = cMath::MatrixRotate( pParticle->mvRevolutionVel * afTimeStep,  eEulerRotationOrder_XYZ );
+            //pParticle->mvRevolution += pParticle->mvRevolutionVel * adFixedDelta;
+            cMatrixf mtxRotationMatrix = cMath::MatrixRotate( pParticle->mvRevolutionVel * (float)adFixedDelta,  eEulerRotationOrder_XYZ );
             pParticle->mvPos = cMath::MatrixMul(mtxRotationMatrix, pParticle->mvPos);
             pParticle->mvVel = cMath::MatrixMul(mtxRotationMatrix, pParticle->mvVel);
         }
@@ -1154,7 +1154,7 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
 
         ////////////
         //Life Update
-        pParticle->mfLife -= afTimeStep;
+        pParticle->mfLife -= (float)adFixedDelta;
 
         if(pParticle->mfLife <=0)
         {
@@ -1254,7 +1254,7 @@ void cParticleEmitter_UserData::UpdateMotion(float afTimeStep)
     //Frame Update
     if(mvMaterials->size()> 1)
     {
-        mfFrame +=mpData->mfFrameStep*afTimeStep;
+        mfFrame +=mpData->mfFrameStep * (float)adFixedDelta;
         if(mfFrame >= mpData->mfMaxFrameTime)
         {
             mfFrame =0;

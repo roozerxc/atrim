@@ -47,7 +47,7 @@ public:
 class cMeshEntityCallback
 {
 public:
-    virtual void AfterAnimationUpdate(cMeshEntity *apMeshEntity, float afTimeStep)=0;
+    virtual void AfterAnimationUpdate(cMeshEntity *apMeshEntity, double adFixedDelta)=0;
 };
 
 //------------------------------------------
@@ -237,9 +237,9 @@ public:
         return mfCoverageAmount;
     }
 
-    void UpdateLogic(float afTimeStep);
+    void UpdateLogic(double adFixedDelta);
 
-    void UpdateGraphicsForFrame(float afFrameTime);
+    void UpdateGraphicsForFrame(double adFrameTime);
 
     void SetBody(iPhysicsBody* apBody)
     {

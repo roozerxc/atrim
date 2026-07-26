@@ -24,7 +24,7 @@ public:
     void SetupAfterLoad(cWorld *apWorld);
     void AfterWorldLoad();
 
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     //////////////////////
     //Actions
@@ -68,7 +68,7 @@ public:
     //Save data stuff
 
 private:
-    void UpdateMoving(float afTimeStep);
+    void UpdateMoving(double adFixedDelta);
 
     iLuxEnemy *mpEnemy;
     cLuxEnemyMover *mpMover;

@@ -328,23 +328,9 @@ void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, 
 
     mbRenderOnce = false;
 
-    mfGameTime =0;
-
-    mbLimitFPS = true;
-    mfFPSLimit = 1.0 / double(apVars->mGame.mlMaxFramesPerSec);
-    mfLastFrameRender = 0;
-
-    mvMaxGameLogic.reserve(300);
-    mvMaxRenderLogic.reserve(300);
-
-    mfMaxGameLogic = 0;
-    mfMaxRenderLogic = 0;
+    dLogicTime = 0.0;
 
     mpFPSCounter = hplNew( cFPSCounter,(mpSystem->GetLowLevel()) );
-    mpGameLogicTimer = cPlatform::CreateTimer();
-    mpInnerGameLogicTimer = cPlatform::CreateTimer();
-    mpRenderingLogicTimer = cPlatform::CreateTimer();
-    mpFrameLimitTimer = cPlatform::CreateTimer();
     mpFrameTimer = cPlatform::CreateTimer();
     Log("--------------------------------------------------------\n\n");
 
@@ -360,10 +346,6 @@ cEngine::~cEngine()
 
     hplDelete(mpLogicTimer);
     hplDelete(mpFPSCounter);
-    hplDelete(mpGameLogicTimer);
-    hplDelete(mpInnerGameLogicTimer);
-    hplDelete(mpRenderingLogicTimer);
-    hplDelete(mpFrameLimitTimer);
     hplDelete(mpFrameTimer);
     hplDelete(mpMutex);
 
@@ -393,14 +375,15 @@ cEngine::~cEngine()
 
 //-----------------------------------------------------------------------
 
-int glClearUpdateCheck=0;
 void cEngine::Run()
 {
     //Log line that ends user init.
     Log("--------------------------------------------------------\n\n");
 
-    double fNumOfTimes=0;
-    double fMediumTime=0;
+    int glClearUpdateCheck=0;
+
+    double dNumOfTimes=0;
+    double dMediumTime=0;
 
     mpUpdater->BroadcastMessageToAll(eUpdateableMessage_OnStart);
 
@@ -412,98 +395,102 @@ void cEngine::Run()
     Log("Game Running\n");
     Log("--------------------------------------------------------\n");
 
-    mfFrameTime = 0;
     mpFrameTimer->Start();
 
-    bool bIsUpdated = true;
     bool bBufferSwap = false;
     bool bSwappedOnce = false;
 
-    //cMemoryManager::SetLogCreation(true);
-    mpFrameLimitTimer->Start();
+    // Define the current time from UpdateFrameTimer()
+    double dCurrentTime = (float)mpFrameTimer->GetTimeInSec();
+
+    // Adapt fixed delta from the Amnesia timestep
+    double dFixedDelta = 1.0 / 60.0;
+    double dAccumulator = 0.0;
 
     while(!GetGameIsDone())
     {
+        ///////////////////////////////////////
+        // Regain control of the logic timer speed mul
+        float fSpeedMul = mpLogicTimer->GetSpeedMul();
+
+        ///////////////////////////////////////
+        //Get the time from the last frame.
+        double dNewTime = ((float)cPlatform::GetApplicationTime()) / 1000.0;
+        dFrameTime = dNewTime - dCurrentTime;
+
         //////////////////////////
         //Check if paused
         if(GetPaused())
         {
             cPlatform::Sleep(10);
             mpInput->Update(1.0f/100.0f);
-            bIsUpdated = true;
 
             mpUpdater->RunMessage(eUpdateableMessage_OnPauseUpdate, 1.0f/100.0f);
         }
         else
         {
-            //////////////////////////
-            //Update logic.
-            int lIterations = 0;
-            mpGameLogicTimer->Start();
-            while(mpLogicTimer->WantUpdate() && !GetGameIsDone())
+            ///////////////////////////////////////
+            //Dont spiral!
+            if(dFrameTime > 0.25)
             {
-                /////////////////////////////////////////////
-                // Run Update callback in updater
-                mpInnerGameLogicTimer->Start();
-                lIterations++;
-                mlNumLogicLoops++;
+                dFrameTime = 0.25;
+            }
+            dCurrentTime = dNewTime;
 
-                mpUpdater->RunMessage(eUpdateableMessage_PreUpdate, GetStepSize());
-                mpUpdater->RunMessage(eUpdateableMessage_Update, GetStepSize());
-                mpUpdater->RunMessage(eUpdateableMessage_PostUpdate, GetStepSize());
-                bIsUpdated = true;
+            ///////////////////////////////////////
+            //Accumulate the time since last one
+            dAccumulator += dFrameTime * fSpeedMul;
 
-                if (mpInput->isQuitMessagePosted())
+            while(dAccumulator >= dFixedDelta)
+            {
+                ///////////////////////////////////////
+                //Game is not don yet! Need to send messages.
+                if(!GetGameIsDone())
                 {
-                    mpUpdater->RunMessage(eUpdateableMessage_OnQuit);
+                    /////////////////////////////////////////////
+                    // Run Update callback in updater
+                    mpUpdater->RunMessage(eUpdateableMessage_PreUpdate, (float)dFixedDelta);
+                    mpUpdater->RunMessage(eUpdateableMessage_Update, (float)dFixedDelta);
+                    mpUpdater->RunMessage(eUpdateableMessage_PostUpdate, (float)dFixedDelta);
 
-                    mpInput->resetQuitMessagePosted();
-                }
-
-                /////////////////////////////////////////////
-                // If log update is active, clear it regularly.
-                if(GetUpdateLogActive())
-                {
-                    glClearUpdateCheck++;
-                    if(glClearUpdateCheck % 20 == 0)
+                    if(mpInput->isQuitMessagePosted())
                     {
-                        if(mpUpdater->GetCurrentContainerName() == "Default")
+                        mpUpdater->RunMessage(eUpdateableMessage_OnQuit);
+
+                        mpInput->resetQuitMessagePosted();
+                    }
+
+                    /////////////////////////////////////////////
+                    // If log update is active, clear it regularly.
+                    if(GetUpdateLogActive())
+                    {
+                        glClearUpdateCheck++;
+                        if(glClearUpdateCheck % 20 == 0)
                         {
-                            ClearUpdateLogFile();
+                            if(mpUpdater->GetCurrentContainerName() == "Default")
+                            {
+                                ClearUpdateLogFile();
+                            }
                         }
                     }
+
+                    //Increase simulated logic time.
+                    dLogicTime += dFixedDelta;
                 }
-
-                //Increase game time.
-                mfGameTime += GetStepSize();
-                mpInnerGameLogicTimer->Stop();
-
-                mvMaxGameLogic.push_back((float)mpInnerGameLogicTimer->GetTimeInMilliSec());
+                //Subtract accumulated time.
+                dAccumulator -= dFixedDelta;
             }
-            mpLogicTimer->EndUpdateLoop();
 
             ////////////////
             // Update timer
-            mpGameLogicTimer->Stop();
-
-            if(lIterations > 0)
-            {
-                static double fGameLogicTime = 0;
-                static int lGameLogicCount = 0;
-                static int lGameLogicIterations = 0;
-
-                fGameLogicTime += mpGameLogicTimer->GetTimeInMilliSec() * lIterations;
-                lGameLogicCount += lIterations;
-
-                if(lGameLogicIterations++ % 60 == 0)
-                {
-                    mfGameLogicTime = fGameLogicTime / double(lGameLogicCount);
-                    mfGameLogicIterations = double(lGameLogicCount) / 60.0;
-                    fGameLogicTime = 0;
-                    lGameLogicCount = 0;
-                }
-            }
+            mpLogicTimer->EndUpdateLoop();
         }
+
+        // HPL2 does not have a way to properly pass the alpha
+        // from the divided accumulator-fixed delta equation,
+        // so this has to be commented out for brevity's sake:
+
+        //const double dAlpha = dAccumulator / dFixedDelta;
 
         ////////////////////////////////////
         // If rendering once, make a check and if already drawn screen, just continue
@@ -517,15 +504,11 @@ void cEngine::Run()
         if(bBufferSwap)
         {
             bBufferSwap = false;
-            START_TIMING(WaitAndFinishRendering)
-            //mpGraphics->GetLowLevel()->WaitAndFinishRendering();
-            STOP_TIMING(WaitAndFinishRendering)
 
             START_TIMING(SwapBuffers)
             mpGraphics->GetLowLevel()->SwapBuffers();
             STOP_TIMING(SwapBuffers)
 
-            //Log("Swap done: %d\n", cPlatform::GetApplicationTime());
             mpUpdater->RunMessage(eUpdateableMessage_OnPostBufferSwap);
             bSwappedOnce =true;
             if(mbRenderOnce)
@@ -534,103 +517,29 @@ void cEngine::Run()
             }
         }
 
-        //////////////
-        // Limit fps
-        if(mbLimitFPS)
-        {
-            double fNextFrame = mfLastFrameRender + mfFPSLimit;
-            double fTime = mpFrameLimitTimer->GetTimeInSec();
+        UpdateFrameTimer();
 
-            if(fTime < fNextFrame)
-            {
-                continue;
-            }
+        START_TIMING(OnDraw)
+        mpUpdater->RunMessage(eUpdateableMessage_OnDraw, (float)dFrameTime);
+        STOP_TIMING(OnDraw)
 
-            ////////////////
-            // If the game is running slower than fps limit set time else just add 1.0 / MaxFPS
-            if(fNextFrame + mfFPSLimit < fTime)
-            {
-                mfLastFrameRender = fTime;
-            }
-            else
-            {
-                mfLastFrameRender = mfLastFrameRender + mfFPSLimit;
-            }
-        }
+        START_TIMING(RenderAll)
+        mpScene->Render(dFrameTime, tSceneRenderFlag_All);
+        STOP_TIMING(RenderAll)
 
-        ////////////////////////////////////
-        // Render frame
-        if(bIsUpdated)
-        {
-            ///////////////////////////////////////
-            //Get the the from the last frame.
-            UpdateFrameTimer();
+        START_TIMING(PostRender)
+        mpUpdater->RunMessage(eUpdateableMessage_OnPostRender, (float)dFrameTime);
+        STOP_TIMING(PostRender)
 
-            mpRenderingLogicTimer->Start();
-            //On draw callback sending that to gui, etc
-            START_TIMING(OnDraw)
-            mpUpdater->RunMessage(eUpdateableMessage_OnDraw, mfFrameTime);
-            STOP_TIMING(OnDraw)
+        START_TIMING(FlushRender)
+        mpGraphics->GetLowLevel()->FlushRendering();
+        STOP_TIMING(FlushRender)
 
-            //Render this frame
-            START_TIMING(RenderAll)
-            mpScene->Render(mfFrameTime, tSceneRenderFlag_All);
-            STOP_TIMING(RenderAll)
+        mpFPSCounter->AddFrame();
 
-            START_TIMING(PostRender)
-            mpUpdater->RunMessage(eUpdateableMessage_OnPostRender, mfFrameTime);
-            STOP_TIMING(PostRender)
-
-            START_TIMING(FlushRender)
-            mpGraphics->GetLowLevel()->FlushRendering();
-            STOP_TIMING(FlushRender)
-
-            //Update fps counter.
-            mpFPSCounter->AddFrame();
-            mpRenderingLogicTimer->Stop();
-
-            static double fRenderingLogic = 0;
-            static int lRenderingLogicIterations = 0;
-
-            mvMaxRenderLogic.push_back((float)mpRenderingLogicTimer->GetTimeInMilliSec());
-            fRenderingLogic += mpRenderingLogicTimer->GetTimeInMilliSec();
-            if(lRenderingLogicIterations++ % 60 == 0)
-            {
-                mfRenderingLogicTime = fRenderingLogic / 60.0;
-                fRenderingLogic = 0;
-            }
-
-            fNumOfTimes++;
-            bIsUpdated = false;
-            bBufferSwap = true;
-        }
-
-        if(mvMaxGameLogic.size() > 300)
-        {
-            mfMaxGameLogic = 0;
-
-            for(size_t i = 0; i < mvMaxGameLogic.size(); ++i)
-            {
-                mfMaxGameLogic = mfMaxGameLogic < mvMaxGameLogic[i] ? mvMaxGameLogic[i] : mfMaxGameLogic;
-            }
-
-            mvMaxGameLogic.clear();
-        }
-
-        if(mvMaxRenderLogic.size() > 300)
-        {
-            mfMaxRenderLogic = 0;
-
-            for(size_t i = 0; i < mvMaxRenderLogic.size(); ++i)
-            {
-                mfMaxRenderLogic = mfMaxRenderLogic < mvMaxRenderLogic[i] ? mvMaxRenderLogic[i] : mfMaxRenderLogic;
-            }
-
-            mvMaxRenderLogic.clear();
-        }
+        dNumOfTimes++;
+        bBufferSwap = true;
     }
-
-    mpFrameLimitTimer->Stop();
 
     Log("--------------------------------------------------------\n\n");
 
@@ -638,9 +547,9 @@ void cEngine::Run()
     Log("--------------------------------------------------------\n");
 
     unsigned long lTime = cPlatform::GetApplicationTime() - lTempTime;
-    fMediumTime = fNumOfTimes/(((double)lTime)/1000);
+    dMediumTime = dNumOfTimes/(((double)lTime)/1000);
 
-    Log(" Medium framerate: %f\n", fMediumTime);
+    Log(" Medium framerate: %f\n", dMediumTime);
     Log("--------------------------------------------------------\n\n");
 
     Log("User Exit\n");
@@ -708,14 +617,16 @@ void cEngine::SetSpeedMul(float afX)
 
 //-----------------------------------------------------------------------
 
+float cEngine::GetSpeedMul()
+{
+    return mpLogicTimer->GetSpeedMul();
+}
+
+//-----------------------------------------------------------------------
+
 float cEngine::GetAvgFrameTimeInMS()
 {
     return (1.0f/mpFPSCounter->mfFPS)*1000.0f;
-}
-
-float cEngine::GetRenderingLogicTime()
-{
-    return (float)mfRenderingLogicTime;
 }
 
 //-----------------------------------------------------------------------
@@ -879,7 +790,7 @@ bool cEngine::GetPaused()
 void cEngine::UpdateFrameTimer()
 {
     mpFrameTimer->Stop();
-    mfFrameTime = (float) mpFrameTimer->GetTimeInSec();
+    dFrameTime = (float) mpFrameTimer->GetTimeInSec();
 
     /*mlstFrameTimes.push_back(mpFrameTimer->GetTimeInMilliSec());
     if((int)mlstFrameTimes.size() >= mlMaxFrameTimes)

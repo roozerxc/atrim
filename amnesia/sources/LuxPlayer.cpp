@@ -333,27 +333,27 @@ void cLuxPlayer::OnStart()
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayer::Update(float afTimeStep)
+void cLuxPlayer::Update(double adFixedDelta)
 {
     ////////////////////////
     // Update current move state
-    mvMoveStates[mMoveState]->Update(afTimeStep);
+    mvMoveStates[mMoveState]->Update(adFixedDelta);
 
     ////////////////////////
     // Update current state
-    mvStates[mState]->Update(afTimeStep);
+    mvStates[mState]->Update(adFixedDelta);
 
     ////////////////////////
     // Update head
-    UpdateHeadPosAdd(afTimeStep);
-    UpdateHeadSpin(afTimeStep);
+    UpdateHeadPosAdd(adFixedDelta);
+    UpdateHeadSpin(adFixedDelta);
 
-    //mpCamera->AddYaw(afTimeStep * kPif);
-    //mpCharBody->AddYaw(afTimeStep * kPif * 0.5f);
+    //mpCamera->AddYaw(adFixedDelta * kPif);
+    //mpCharBody->AddYaw(adFixedDelta * kPif * 0.5f);
 
     ////////////////////////
     // Run Helper message
-    RunHelperMessage(eUpdateableMessage_Update,afTimeStep);
+    RunHelperMessage(eUpdateableMessage_Update,(float)adFixedDelta);
 
     ////////////////////////
     //Clear some variables
@@ -369,44 +369,44 @@ void cLuxPlayer::Update(float afTimeStep)
     ////////////////////////
     // Update misc
     CheckCollisionCallback("Player", gpBase->mpMapHandler->GetCurrentMap());
-    UpdateCamera(afTimeStep);
-    UpdateTerror(afTimeStep);
-    UpdateFocusText(afTimeStep);
-    UpdateAvgSpeed(afTimeStep);
+    UpdateCamera(adFixedDelta);
+    UpdateTerror(adFixedDelta);
+    UpdateFocusText(adFixedDelta);
+    UpdateAvgSpeed(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayer::PostUpdate(float afTimeStep)
+void cLuxPlayer::PostUpdate(double adFixedDelta)
 {
     ////////////////////////
     // Run Helper message
-    RunHelperMessage(eUpdateableMessage_PostUpdate,afTimeStep);
+    RunHelperMessage(eUpdateableMessage_PostUpdate,(float)adFixedDelta);
 
     ////////////////////////
     // Post Update current state
-    mvStates[mState]->PostUpdate(afTimeStep);
+    mvStates[mState]->PostUpdate(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayer::OnDraw(float afFrameTime)
+void cLuxPlayer::OnDraw(double adFrameTime)
 {
     ////////////////////////
     // Draw with current move state
-    mvMoveStates[mMoveState]->OnDraw(afFrameTime);
+    mvMoveStates[mMoveState]->OnDraw(adFrameTime);
 
     ////////////////////////
     // Draw with current state
-    mvStates[mState]->OnDraw(gpBase->mpGameHudSet, afFrameTime);
+    mvStates[mState]->OnDraw(gpBase->mpGameHudSet, adFrameTime);
 
     ////////////////////////
     // Run Helper message
-    RunHelperMessage(eUpdateableMessage_OnDraw,afFrameTime);
+    RunHelperMessage(eUpdateableMessage_OnDraw,(float)adFrameTime);
 
     ////////////////////////
     // Draw player HUD
-    DrawHud(afFrameTime);
+    DrawHud(adFrameTime);
 }
 
 //-----------------------------------------------------------------------
@@ -1196,7 +1196,7 @@ bool cLuxPlayer::CanDrawCrossHair()
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayer::DrawHud(float afFrameTime)
+void cLuxPlayer::DrawHud(double adFrameTime)
 {
     cVector2f vSetSize = gpBase->mvHudVirtualCenterSize;
 
@@ -1268,7 +1268,7 @@ void cLuxPlayer::RunHelperLuxMessage(eLuxUpdateableMessage aMessage, void *apDat
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayer::UpdateHeadPosAdd(float afTimeStep)
+void cLuxPlayer::UpdateHeadPosAdd(double adFixedDelta)
 {
     cVector3f vAdd = mvCameraPosAdd;
 
@@ -1293,7 +1293,7 @@ void cLuxPlayer::UpdateHeadPosAdd(float afTimeStep)
                 fSpeed *= fDist / pPosAdd->mfMoveSlowDownDist;
             }
 
-            pPosAdd->mvAdd += vDir * fSpeed * afTimeStep;
+            pPosAdd->mvAdd += vDir * fSpeed * (float)adFixedDelta;
 
             if(fDist < 0.001f)
             {
@@ -1312,7 +1312,7 @@ void cLuxPlayer::UpdateHeadPosAdd(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayer::UpdateCamera(float afTimeStep)
+void cLuxPlayer::UpdateCamera(double adFixedDelta)
 {
     if (mbFreeCameraActive)
     {
@@ -1325,7 +1325,7 @@ void cLuxPlayer::UpdateCamera(float afTimeStep)
     if(mfFOVMul != mfFOVMulGoal)
     {
         float fSpeed = (mfFOVMulGoal - mfFOVMul) * mfFOVMulSpeed;
-        mfFOVMul += afTimeStep * fSpeed;
+        mfFOVMul += (float)adFixedDelta * fSpeed;
 
         if(cMath::Abs(mfFOVMulGoal - mfFOVMul) < 0.0f)
         {
@@ -1340,7 +1340,7 @@ void cLuxPlayer::UpdateCamera(float afTimeStep)
     if(mfAspectMul != mfAspectMulGoal)
     {
         float fSpeed = (mfAspectMulGoal - mfAspectMul) * mfAspectMulSpeed;
-        mfAspectMul += afTimeStep * fSpeed;
+        mfAspectMul += (float)adFixedDelta * fSpeed;
 
         if(cMath::Abs(mfAspectMulGoal - mfAspectMul) < 0.0f)
         {
@@ -1365,7 +1365,7 @@ void cLuxPlayer::UpdateCamera(float afTimeStep)
             fSpeed = -mfRollMaxSpeed;
         }
 
-        mfRoll += afTimeStep * fSpeed;
+        mfRoll += (float)adFixedDelta * fSpeed;
 
         if(cMath::Abs(mfRollGoal - mfRoll) < 0.0f)
         {
@@ -1389,7 +1389,7 @@ void cLuxPlayer::UpdateCamera(float afTimeStep)
             fSpeed = -mfLeanRollMaxSpeed;
         }
 
-        mfLeanRoll += afTimeStep * fSpeed;
+        mfLeanRoll += (float)adFixedDelta * fSpeed;
 
         if(cMath::Abs(mfLeanRollGoal - mfLeanRoll) < 0.0f)
         {
@@ -1423,11 +1423,11 @@ void cLuxPlayer::UpdateCamera(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayer::UpdateTerror(float afTimeStep)
+void cLuxPlayer::UpdateTerror(double adFixedDelta)
 {
     if(m_setTerrorEnemies.empty() || IsDead())
     {
-        mfTerror -= mfTerrorDecSpeed * afTimeStep;
+        mfTerror -= mfTerrorDecSpeed * (float)adFixedDelta;
         if(mfTerror < 0)
         {
             mfTerror =0;
@@ -1435,9 +1435,9 @@ void cLuxPlayer::UpdateTerror(float afTimeStep)
     }
     else
     {
-        float fSpeed = mpCharBody->GetVelocity(afTimeStep).Length();
+        float fSpeed = mpCharBody->GetVelocity(adFixedDelta).Length();
 
-        mfTerror += mfTerrorIncSpeed * afTimeStep; //+ fSpeed * afTimeStep * 0.1f;
+        mfTerror += mfTerrorIncSpeed * (float)adFixedDelta; //+ fSpeed * (float)adFixedDelta * 0.1f;
         if(mfTerror > 1)
         {
             mfTerror = 1;
@@ -1491,22 +1491,22 @@ void cLuxPlayer::SpinHead(float afSpeed)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayer::UpdateHeadSpin(float afTimeStep)
+void cLuxPlayer::UpdateHeadSpin(double adFixedDelta)
 {
     if(mvHeadSpinSpeed == 0)
     {
         return;
     }
 
-    mpCamera->AddPitch(mvHeadSpinSpeed.y * afTimeStep);
-    mpCamera->AddYaw(mvHeadSpinSpeed.x * afTimeStep);
+    mpCamera->AddPitch(mvHeadSpinSpeed.y * (float)adFixedDelta);
+    mpCamera->AddYaw(mvHeadSpinSpeed.x * (float)adFixedDelta);
     mpCharBody->SetYaw(mpCamera->GetYaw());
 
     float fLength = mvHeadSpinSpeed.Length();
     cVector2f vDir = mvHeadSpinSpeed;
     vDir.Normalize();
 
-    fLength -= afTimeStep * mfHeadSpinDeacc;
+    fLength -= (float)adFixedDelta * mfHeadSpinDeacc;
     if(fLength < 0)
     {
         fLength = 0;
@@ -1516,13 +1516,13 @@ void cLuxPlayer::UpdateHeadSpin(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayer::UpdateFocusText(float afTimeStep)
+void cLuxPlayer::UpdateFocusText(double adFixedDelta)
 {
     if(    gpBase->mpMessageHandler->IsPauseMessageActive() ||
             //gpBase->mpMessageHandler->IsMessageActive() || <- this interfeere with signs and stuff so not a good thing to have!
             msFocusText == _W(""))
     {
-        mfFocusTextAlpha -= afTimeStep*2.0f;
+        mfFocusTextAlpha -= (float)adFixedDelta*2.0f;
         if(mfFocusTextAlpha < 0.0f)
         {
             mfFocusTextAlpha =0;
@@ -1530,7 +1530,7 @@ void cLuxPlayer::UpdateFocusText(float afTimeStep)
     }
     else
     {
-        mfFocusTextAlpha += afTimeStep*2.0f;
+        mfFocusTextAlpha += (float)adFixedDelta*2.0f;
         if(mfFocusTextAlpha > 1.0f)
         {
             mfFocusTextAlpha =1;
@@ -1540,9 +1540,9 @@ void cLuxPlayer::UpdateFocusText(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayer::UpdateAvgSpeed(float afTimeStep)
+void cLuxPlayer::UpdateAvgSpeed(double adFixedDelta)
 {
-    float fSpeed = mpCharBody->GetVelocity(afTimeStep).Length();
+    float fSpeed = mpCharBody->GetVelocity(adFixedDelta).Length();
     mlstPrevSpeeds.push_back(fSpeed);
     if((int)mlstPrevSpeeds.size() > mlMaxPrevSpeeds)
     {

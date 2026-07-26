@@ -59,7 +59,7 @@ void cLuxCompletionCountHandler::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxCompletionCountHandler::Update(float afTimeStep)
+void cLuxCompletionCountHandler::Update(double adFixedDelta)
 {
     return;
 
@@ -67,7 +67,7 @@ void cLuxCompletionCountHandler::Update(float afTimeStep)
     //Decrease alpha
     if(mbActive==false)
     {
-        mfAlpha -= 0.5f * afTimeStep;
+        mfAlpha -= 0.5f * (float)adFixedDelta;
         if(mfAlpha <0)
         {
             mfAlpha =0;
@@ -77,13 +77,13 @@ void cLuxCompletionCountHandler::Update(float afTimeStep)
 
     if(mfDelay > 0)
     {
-        mfDelay -=afTimeStep;
+        mfDelay  -= (float)adFixedDelta;
         return;
     }
 
     /////////////////////
     //Increase alpha
-    mfAlpha += 1.2f * afTimeStep;
+    mfAlpha += 1.2f * (float)adFixedDelta;
     if(mfAlpha >1)
     {
         mfAlpha =1;
@@ -96,7 +96,7 @@ void cLuxCompletionCountHandler::Update(float afTimeStep)
         if(mfDisplayedAmount < mfNewAmount)
         {
             float fDistance = 0;//(mfNewAmount - mfDisplayedAmount);
-            mfDisplayedAmount += (fDistance+0.001f) * 30 * afTimeStep;
+            mfDisplayedAmount += (fDistance+0.001f) * 30 * (float)adFixedDelta;
             if(mfDisplayedAmount > mfNewAmount)
             {
                 mfDisplayedAmount = mfNewAmount;
@@ -104,7 +104,7 @@ void cLuxCompletionCountHandler::Update(float afTimeStep)
         }
         else
         {
-            mfDisableDelay -=afTimeStep;
+            mfDisableDelay  -= (float)adFixedDelta;
             if(mfDisableDelay <=0)
             {
                 mbActive = false;
@@ -115,7 +115,7 @@ void cLuxCompletionCountHandler::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxCompletionCountHandler::OnDraw(float afFrameTime)
+void cLuxCompletionCountHandler::OnDraw(double adFrameTime)
 {
     return;
 

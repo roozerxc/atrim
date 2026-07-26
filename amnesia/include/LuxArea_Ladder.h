@@ -30,7 +30,7 @@ public:
     //General
     void SetupAfterLoad(cWorld *apWorld);
 
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     bool CanInteract(iPhysicsBody *apBody);
     bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);

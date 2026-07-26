@@ -88,11 +88,11 @@ cLuxArea_SlimeDamage::~cLuxArea_SlimeDamage()
 
 //-----------------------------------------------------------------------
 
-void cLuxArea_SlimeDamage::OnUpdate(float afTimeStep)
+void cLuxArea_SlimeDamage::OnUpdate(double adFixedDelta)
 {
     //////////////////////////
     // Check update count
-    mfCheckCollisionCount-=afTimeStep;
+    mfCheckCollisionCount -= (float)adFixedDelta;
     if(mfCheckCollisionCount>0)
     {
         return;

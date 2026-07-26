@@ -337,7 +337,6 @@ cGuiSet::cGuiSet(    const tString &asName, cGui *apGui, cGuiSkin *apSkin,
     mbDrawFocus = false;
     mpFocusDrawObject = NULL;
     mpFocusDrawCallback = NULL;
-    mvFocusColor = cColor(0.8f, 0.2f);
 
     mbSortWidgets = false;
 }
@@ -365,7 +364,7 @@ cGuiSet::~cGuiSet()
 
 //-----------------------------------------------------------------------
 
-void cGuiSet::Update(float afTimeStep)
+void cGuiSet::Update(double adFixedDelta)
 {
     /////////////////////////////
     // Popups
@@ -380,17 +379,17 @@ void cGuiSet::Update(float afTimeStep)
     for(; it != mlstWidgets.end(); ++it)
     {
         iWidget *pWidget = *it;
-        pWidget->Update(afTimeStep);
+        pWidget->Update(adFixedDelta);
     }
 
     /////////////////////////////
     // Update ToolTip
-    UpdateToolTip(afTimeStep);
+    UpdateToolTip(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
 
-void cGuiSet::DrawAll(float afTimeStep)
+void cGuiSet::DrawAll(double adFixedDelta)
 {
     if(mbActive==false)
     {
@@ -400,7 +399,7 @@ void cGuiSet::DrawAll(float afTimeStep)
     ///////////////////////////////
     //Draw all widgets
     SetCurrentClipRegion(&mBaseClipRegion);
-    mpWidgetRoot->Draw(afTimeStep, &mBaseClipRegion);
+    mpWidgetRoot->Draw(adFixedDelta, &mBaseClipRegion);
 
     SetCurrentClipRegion(&mBaseClipRegion);
 
@@ -2691,10 +2690,6 @@ kGuiCallbackDeclaredFuncEnd(cGuiSet,DrawMouse)
 
 bool cGuiSet::DrawFocus(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    static float fColorShift = 0;
-    fColorShift += mpGraphics->GetRenderer(eRenderer_Main)->GetCurrentFrameTime();
-    float fMul = 0.9f + 0.2f * cosf(fColorShift * 0.75f);
-
     if(HasFocus() && mpFocusedWidget && mbDrawFocus &&
             (mpFocusedWidget==mpDefaultFocusNavWidget || mpFocusedWidget->HasFocusNavigation()))
     {
@@ -2706,7 +2701,7 @@ bool cGuiSet::DrawFocus(iWidget* apWidget, const cGuiMessageData& aData)
         {
             cVector3f vPos = mpFocusedWidget->GetGlobalPosition();
             vPos.z = mfMouseZ-1.0f;
-            DrawGfx(cGui::mpGfxRect, vPos, mpFocusedWidget->GetSize(), mvFocusColor * cColor(1, fMul));
+            DrawGfx(cGui::mpGfxRect, vPos, mpFocusedWidget->GetSize(), cColor(0.8f, 0.2f));
         }
     }
 
@@ -2733,7 +2728,7 @@ cGuiGlobalShortcut* cGuiSet::FindShortcut(const cKeyPress& aKeyPress)
 
 //-----------------------------------------------------------------------
 
-void cGuiSet::UpdateToolTip(float afTimeStep)
+void cGuiSet::UpdateToolTip(double adFixedDelta)
 {
     if(mpSkin==NULL || mpFrameToolTip==NULL)
     {
@@ -2795,7 +2790,7 @@ void cGuiSet::UpdateToolTip(float afTimeStep)
         }
         else
         {
-            mfToolTipTimer+=afTimeStep;
+            mfToolTipTimer+=(float)adFixedDelta;
 
             if(mpFrameToolTip->IsVisible())
             {

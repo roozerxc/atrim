@@ -45,8 +45,8 @@ public:
 
     virtual eRenderableType GetRenderType()=0;
 
-    virtual void UpdateGraphicsForFrame(float afFrameTime) {}
-    virtual bool UpdateGraphicsForViewport(cFrustum *apFrustum,float afFrameTime)
+    virtual void UpdateGraphicsForFrame(double adFrameTime) {}
+    virtual bool UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime)
     {
         return true;
     }

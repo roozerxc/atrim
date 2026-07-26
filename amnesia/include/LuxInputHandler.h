@@ -61,9 +61,9 @@ public:
     void SaveUserConfig();
 
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
-    void OnPostRender(float afFrameTime);
+    void OnPostRender(double adFrameTime);
 
     tWString GetInputName(const tString& asActionName);
 

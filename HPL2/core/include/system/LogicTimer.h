@@ -64,10 +64,8 @@ public:
         return mlLocalTimeAdd;
     }
 
-    void SetSpeedMul(float afX)
-    {
-        mfSpeedMul = afX;
-    }
+    void SetSpeedMul(float afX);
+    float GetSpeedMul();
 
 private:
     void Update();

@@ -18,7 +18,7 @@ public:
     void OnEnterState(eLuxMoveState aPrevState);
     void OnLeaveState(eLuxMoveState aNewState);
 
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     bool GetAllowsInteraction();
 
@@ -30,7 +30,7 @@ public:
     void OnCrouch(bool abActive);
     void OnJump(bool abActive);
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
 private:
     float mfHeadMoveSpeed;

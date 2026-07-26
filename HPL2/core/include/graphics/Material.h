@@ -190,7 +190,7 @@ public:
         return msPhysicsMaterial;
     }
 
-    void UpdateBeforeRendering(float afTimeStep);
+    void UpdateBeforeRendering(double adFixedDelta);
 
     inline int GetRenderFrameCount() const
     {
@@ -261,7 +261,7 @@ public:
     void Destroy() {}
 
 private:
-    void UpdateAnimations(float afTimeStep);
+    void UpdateAnimations(double adFixedDelta);
 
     cGraphics *mpGraphics;
     cResources *mpResources;

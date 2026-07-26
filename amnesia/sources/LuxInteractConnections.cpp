@@ -58,14 +58,14 @@ cLuxInteractConnection_Rope::~cLuxInteractConnection_Rope()
 
 //-----------------------------------------------------------------------
 
-void cLuxInteractConnection_Rope::Update(float afTimeStep)
+void cLuxInteractConnection_Rope::Update(double adFixedDelta)
 {
 
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxInteractConnection_Rope::UpdateProp(float afTimeStep)
+void cLuxInteractConnection_Rope::UpdateProp(double adFixedDelta)
 {
     if(mpProp->IsInteractedWith())
     {
@@ -246,14 +246,14 @@ cLuxInteractConnection_MoveObject::~cLuxInteractConnection_MoveObject()
 
 //-----------------------------------------------------------------------
 
-void cLuxInteractConnection_MoveObject::Update(float afTimeStep)
+void cLuxInteractConnection_MoveObject::Update(double adFixedDelta)
 {
 
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxInteractConnection_MoveObject::UpdateProp(float afTimeStep)
+void cLuxInteractConnection_MoveObject::UpdateProp(double adFixedDelta)
 {
     if(    mbInteractionOnly==false ||
             (mpMoveObject->IsMoving()==false && mbPropNeedsUpdate==false))

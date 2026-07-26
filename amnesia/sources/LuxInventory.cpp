@@ -509,7 +509,7 @@ bool cLuxInventory_Slot::OnUIButtonRelease(iWidget* apWidget, const cGuiMessageD
 
     if(pPickedItem && pItem && pItem == pPickedItem)
     {
-        if(mpInventory->GetItemPickedAt() + 0.5f > gpBase->mpEngine->GetGameTime() && mpInventory->GetPickedItemMoved() == false)
+        if(mpInventory->GetItemPickedAt() + 0.5f > gpBase->mpEngine->GetLogicTime() && mpInventory->GetPickedItemMoved() == false)
         {
             return OnMouseDoubleClick(apWidget, aData);
         }
@@ -675,7 +675,7 @@ void cLuxInventory::OnGameStart()
 
 //-----------------------------------------------------------------------
 
-void cLuxInventory::Update(float afTimeStep)
+void cLuxInventory::Update(double adFixedDelta)
 {
     /////////////////////////////
     // Update Picked item
@@ -692,7 +692,7 @@ void cLuxInventory::Update(float afTimeStep)
     {
         if(mfAlpha < 1)
         {
-            mfAlpha += (1.0f/mfFadeInTime) * afTimeStep;
+            mfAlpha += (1.0f/mfFadeInTime) * (float)adFixedDelta;
             if(mfAlpha > 1)
             {
                 mfAlpha =1;
@@ -702,7 +702,7 @@ void cLuxInventory::Update(float afTimeStep)
     }
     else
     {
-        mfAlpha -= (1.0f/mfFadeOutTime) * afTimeStep;
+        mfAlpha -= (1.0f/mfFadeOutTime) * (float)adFixedDelta;
         if(mfAlpha < 0)
         {
             mfAlpha =0;
@@ -723,16 +723,16 @@ void cLuxInventory::Update(float afTimeStep)
     /// Update misc alpha faders
     for(int i=0; i<eLuxInventoryFader_LastEnum; ++i)
     {
-        mvAlphaFader[i].Update(afTimeStep);
+        mvAlphaFader[i].Update(adFixedDelta);
     }
 
-    mfTimer += afTimeStep;
+    mfTimer += (float)adFixedDelta;
 
     /////////////////////////////
     /// Update old desc text alpha
     if(mfOldDescTextAlpha > 0)
     {
-        mfOldDescTextAlpha -= afTimeStep * 2.2f;
+        mfOldDescTextAlpha -= (float)adFixedDelta * 2.2f;
         if(mfOldDescTextAlpha < 0)
         {
             mfOldDescTextAlpha =0;
@@ -743,17 +743,17 @@ void cLuxInventory::Update(float afTimeStep)
     /// Update message text life and alpha
     if(mbMessageActive) // mfMessageTextLife>0
     {
-        mfMessageTextAlpha += afTimeStep * 3.5f;
+        mfMessageTextAlpha += (float)adFixedDelta * 3.5f;
         if(mfMessageTextAlpha > 1)
         {
             mfMessageTextAlpha =1;
         }
 
-        //mfMessageTextLife -= afTimeStep;
+        //mfMessageTextLife -= (float)adFixedDelta;
     }
     if(mbMessageActive==false && mfMessageTextAlpha > 0) // mfMessageTextLife <=0
     {
-        mfMessageTextAlpha -= afTimeStep * 1.5f;
+        mfMessageTextAlpha -= (float)adFixedDelta * 1.5f;
         if(mfMessageTextAlpha < 0)
         {
             mfMessageTextAlpha =0;
@@ -773,11 +773,11 @@ void cLuxInventory::Update(float afTimeStep)
 
     ////////////////////////
     //Update hints and effects
-    gpBase->mpHintHandler->UpdateHintText(afTimeStep);
+    gpBase->mpHintHandler->UpdateHintText(adFixedDelta);
     cLuxEffect_SanityGainFlash *pSanityGainFlash = gpBase->mpEffectHandler->GetSanityGainFlash();
     if(pSanityGainFlash->IsActive())
     {
-        pSanityGainFlash->Update(afTimeStep);
+        pSanityGainFlash->Update(adFixedDelta);
     }
 }
 
@@ -918,7 +918,7 @@ static int StatusToIndex(float afX)
     return 3;
 }
 
-void cLuxInventory::OnDraw(float afFrameTime)
+void cLuxInventory::OnDraw(double adFrameTime)
 {
     ////////////////////////
     //Draw background
@@ -1037,11 +1037,11 @@ void cLuxInventory::OnDraw(float afFrameTime)
 
     ////////////////////////
     //Draw extra effects and hints
-    gpBase->mpHintHandler->DrawHintText(afFrameTime, mpGuiSet);
+    gpBase->mpHintHandler->DrawHintText(adFrameTime, mpGuiSet);
     cLuxEffect_SanityGainFlash *pSanityGainFlash = gpBase->mpEffectHandler->GetSanityGainFlash();
     if(pSanityGainFlash->IsActive())
     {
-        pSanityGainFlash->DrawFlash(mpGuiSet, afFrameTime);
+        pSanityGainFlash->DrawFlash(mpGuiSet, (float)adFrameTime);
     }
 }
 
@@ -1511,7 +1511,7 @@ void cLuxInventory::SetMessageText(const tWString &asText, float afLifeTime)
 
 void cLuxInventory::SetPickedItem(cLuxInventory_Item *apItem, const cVector2f& avOffset)
 {
-    mfPickedUpAt = gpBase->mpEngine->GetGameTime();
+    mfPickedUpAt = gpBase->mpEngine->GetLogicTime();
     mbPickedObjectMoved = false;
     mpPickedItem = apItem;
     mvPickedItemOffset = avOffset;
@@ -1521,7 +1521,7 @@ void cLuxInventory::SetPickedItem(cLuxInventory_Item *apItem, const cVector2f& a
 
 void cLuxInventory::SetCurrentWidget(iWidget *apWidget)
 {
-    if(mfPickedUpAt + 1.0f/60.0f < gpBase->mpEngine->GetGameTime())
+    if(mfPickedUpAt + 1.0f/60.0f < gpBase->mpEngine->GetLogicTime())
     {
         mbPickedObjectMoved = true;
     }

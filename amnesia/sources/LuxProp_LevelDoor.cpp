@@ -125,11 +125,11 @@ void cLuxProp_LevelDoor::OnResetProperties()
 }
 //-----------------------------------------------------------------------
 
-void cLuxProp_LevelDoor::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_LevelDoor::UpdatePropSpecific(double adFixedDelta)
 {
     if(mfLockedCount >0)
     {
-        mfLockedCount -= afTimeStep;
+        mfLockedCount -= (float)adFixedDelta;
     }
 }
 

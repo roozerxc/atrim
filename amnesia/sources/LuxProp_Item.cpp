@@ -185,7 +185,7 @@ void cLuxProp_Item::OnSetupAfterLoad(cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Item::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_Item::UpdatePropSpecific(double adFixedDelta)
 {
     if(mbInteractionDisabled)
     {
@@ -203,7 +203,7 @@ void cLuxProp_Item::UpdatePropSpecific(float afTimeStep)
     float fDistSqrt = cMath::Vector3DistSqr(vCameraPos, vBodyPos);
     if(fDistSqrt < 4.0f * 4.0f)
     {
-        mfFlashAlpha += afTimeStep;
+        mfFlashAlpha += (float)adFixedDelta;
         if(mfFlashAlpha >1)
         {
             mfFlashAlpha =1;
@@ -211,7 +211,7 @@ void cLuxProp_Item::UpdatePropSpecific(float afTimeStep)
     }
     else
     {
-        mfFlashAlpha -=afTimeStep;
+        mfFlashAlpha  -= (float)adFixedDelta;
         if(mfFlashAlpha <0)
         {
             mfFlashAlpha =0;

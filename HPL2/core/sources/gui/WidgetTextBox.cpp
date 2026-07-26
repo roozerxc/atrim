@@ -654,7 +654,7 @@ void cWidgetTextBox::OnLoadGraphics()
 
 //-----------------------------------------------------------------------
 
-void cWidgetTextBox::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetTextBox::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     ////////////////////////////////
     // Text

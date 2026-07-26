@@ -15,8 +15,8 @@ public:
 
     /////////////////
     // General
-    virtual void Update(float afTimeStep) {}
-    virtual void OnDraw(float afFrameTime) {}
+    virtual void Update(double adFixedDelta) {}
+    virtual void OnDraw(double adFrameTime) {}
 
     void LoadData(cXmlElement * apVarElem);
     virtual void OnLoadData(cXmlElement * apVarElem)=0;
@@ -95,8 +95,8 @@ public:
     void OnStart();
     void OnExit();
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime);
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
 
 private:
     //////////////////
@@ -139,8 +139,8 @@ public:
     void OnStart();
     void OnExit();
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime);
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
 
 private:
     //////////////////
@@ -178,8 +178,8 @@ public:
     void OnStart();
     void OnExit();
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime);
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
 
 private:
     tString msFile;
@@ -219,8 +219,8 @@ public:
     void OnStart();
     void OnExit();
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime);
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
 
 private:
     tString msSound;
@@ -250,8 +250,8 @@ public:
 
     void OnStart();
     void Reset();
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime);
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
 
     void StartEvent();
     void StartEvent(int alIdx);

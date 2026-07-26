@@ -69,7 +69,7 @@ protected:
     void OnChangePosition();
 
 
-    void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
+    void OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion);
 
     bool OnMouseMove(const cGuiMessageData& aData);
     bool OnMouseDown(const cGuiMessageData& aData);

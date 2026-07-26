@@ -356,7 +356,7 @@ public:
     void AfterWorldLoad();
     void OnMapEnter();
 
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     void OnRenderSolid(cRendererCallbackFunctions* apFunctions);
 
@@ -630,23 +630,23 @@ protected:
     bool StateEvent(int alState, eLuxEnemyStateEvent aEvent, cLuxStateMessage *apMessage);
     virtual bool StateEventImplement(int alState, eLuxEnemyStateEvent aEvent, cLuxStateMessage *apMessage)=0;
 
-    void UpdateStateMachine(float afTimeStep);
+    void UpdateStateMachine(double adFixedDelta);
     void CheckStateChange();
 
     void ChangeSoundState(eLuxEnemySoundState aState);
 
-    void UpdateSoundState(float afTimeStep);
-    void UpdateAnimation(float afTimeStep);
-    void UpdateCharBody(float afTimeStep);
-    void UpdateCanSeePlayer(float afTimeStep);
-    void UpdatePlayerDetected(float afTimeStep);
-    void UpdatePlayerInRange(float afTimeStep);
-    void UpdateCheckStuckAtDoor(float afTimeStep);
-    void UpdateCheckLastPlayerPos(float afTimeStep);
-    void UpdateDarknessGlow(float afTimeStep);
-    void UpdateRegenHealth(float afTimeStep);
-    void UpdateHallucination(float afTimeStep);
-    void UpdateAlignEntityWithGroundRay(float afTimeStep);
+    void UpdateSoundState(double adFixedDelta);
+    void UpdateAnimation(double adFixedDelta);
+    void UpdateCharBody(double adFixedDelta);
+    void UpdateCanSeePlayer(double adFixedDelta);
+    void UpdatePlayerDetected(double adFixedDelta);
+    void UpdatePlayerInRange(double adFixedDelta);
+    void UpdateCheckStuckAtDoor(double adFixedDelta);
+    void UpdateCheckLastPlayerPos(double adFixedDelta);
+    void UpdateDarknessGlow(double adFixedDelta);
+    void UpdateRegenHealth(double adFixedDelta);
+    void UpdateHallucination(double adFixedDelta);
+    void UpdateAlignEntityWithGroundRay(double adFixedDelta);
 
     //////////////////////////////
     // Callbacks
@@ -707,7 +707,7 @@ protected:
     virtual void OnDamage(float afAmount, int alStrength) {}
     virtual void OnSetupAfterLoad(cWorld *apWorld)=0;
     virtual void OnAfterWorldLoad()=0;
-    virtual void UpdateEnemySpecific(float afTimeStep)=0;
+    virtual void UpdateEnemySpecific(double adFixedDelta)=0;
     virtual void OnRenderSolidImplemented(cRendererCallbackFunctions* apFunctions)=0;
 
     //////////////

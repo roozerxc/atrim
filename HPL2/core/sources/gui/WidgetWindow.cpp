@@ -196,7 +196,7 @@ void cWidgetWindow::OnChangeSize()
 
 //-----------------------------------------------------------------------
 
-void cWidgetWindow::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetWindow::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     ////////////////////////////////
     // Calc label size

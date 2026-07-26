@@ -144,7 +144,7 @@ void cLuxPlayerState_Ladder::OnLeaveState(eLuxPlayerState aNewState)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerState_Ladder::Update(float afTimeStep)
+void cLuxPlayerState_Ladder::Update(double adFixedDelta)
 {
     iCharacterBody *pCharBody = mpPlayer->GetCharacterBody();
     cCamera *pCam = mpPlayer->GetCamera();
@@ -153,14 +153,14 @@ void cLuxPlayerState_Ladder::Update(float afTimeStep)
     // Attach To Ladder
     if(mlState ==0)
     {
-        mfTimeCount -= afTimeStep;
+        mfTimeCount -= (float)adFixedDelta;
 
-        mvCharPosition += mvPosAdd*afTimeStep;
+        mvCharPosition += mvPosAdd * (float)adFixedDelta;
         pCharBody->SetPosition(mvCharPosition);
         mvCharPosition = pCharBody->GetPosition();
 
-        pCam->AddPitch(mvRotAdd.x *afTimeStep);
-        pCam->AddYaw(mvRotAdd.y *afTimeStep);
+        pCam->AddPitch(mvRotAdd.x * (float)adFixedDelta);
+        pCam->AddYaw(mvRotAdd.y * (float)adFixedDelta);
         pCharBody->SetYaw(pCam->GetYaw());
 
         if(mfTimeCount<=0)
@@ -185,7 +185,7 @@ void cLuxPlayerState_Ladder::Update(float afTimeStep)
         //Up
         if(mfMoveMul > 0)
         {
-            mvCharPosition.y += mfMoveMul*mfUpSpeed* afTimeStep;
+            mvCharPosition.y += mfMoveMul*mfUpSpeed* (float)adFixedDelta;
 
             if(mfStepCount<0)
             {
@@ -195,7 +195,7 @@ void cLuxPlayerState_Ladder::Update(float afTimeStep)
         //Down
         else if(mfMoveMul < 0)
         {
-            mvCharPosition.y += mfMoveMul*mfDownSpeed*afTimeStep;
+            mvCharPosition.y += mfMoveMul * mfDownSpeed * (float)adFixedDelta;
 
             if(mfStepCount>0)
             {
@@ -233,7 +233,7 @@ void cLuxPlayerState_Ladder::Update(float afTimeStep)
         //Check if climb sound should be played.
         if(mfMoveMul > 0)
         {
-            mfStepCount += mfMoveMul*mfUpSpeed*afTimeStep;
+            mfStepCount += mfMoveMul * mfUpSpeed * (float)adFixedDelta;
             if(mfStepCount >= mfStepLength)
             {
                 mfStepCount =0;
@@ -243,7 +243,7 @@ void cLuxPlayerState_Ladder::Update(float afTimeStep)
         }
         else if(mfMoveMul < 0)
         {
-            mfStepCount += mfMoveMul*mfDownSpeed*afTimeStep;
+            mfStepCount += mfMoveMul * mfDownSpeed * (float)adFixedDelta;
             if(mfStepCount <= -mfStepLength)
             {
                 mfStepCount =0;
@@ -292,13 +292,13 @@ void cLuxPlayerState_Ladder::Update(float afTimeStep)
     // On the top of the ladder
     else if(mlState == 2)
     {
-        //mfLeaveAtTopCount -= afTimeStep;
+        //mfLeaveAtTopCount -= (float)adFixedDelta;
         pCharBody->Move(eCharDir_Forward,1);
 
         cVector3f vRayStart = pCharBody->GetFeetPosition() + cVector3f(0,0.1f,0);
         cVector3f vRayEnd = pCharBody->GetFeetPosition() - cVector3f(0,0.3f,0);
 
-        mfLeaveAtTopCount -= afTimeStep;
+        mfLeaveAtTopCount -= (float)adFixedDelta;
         if( pCharBody->CheckRayIntersection(vRayStart, vRayEnd,NULL,NULL))
         {
             mpPlayer->ChangeState(eLuxPlayerState_Normal);
@@ -312,7 +312,7 @@ void cLuxPlayerState_Ladder::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerState_Ladder::PostUpdate(float afTimeStep)
+void cLuxPlayerState_Ladder::PostUpdate(double adFixedDelta)
 {
 
 }
@@ -320,7 +320,7 @@ void cLuxPlayerState_Ladder::PostUpdate(float afTimeStep)
 //-----------------------------------------------------------------------
 
 
-void cLuxPlayerState_Ladder::OnDraw(cGuiSet *apGuiSet,float afFrameTime)
+void cLuxPlayerState_Ladder::OnDraw(cGuiSet *apGuiSet,double adFrameTime)
 {
 
 }

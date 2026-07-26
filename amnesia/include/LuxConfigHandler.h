@@ -44,8 +44,6 @@ public:
     int mlShadowQuality;
     int mlShadowRes;
 
-    int mlMaxFramesPerSec;
-
     bool mbSSAOActive;
     int mlSSAOSamples;
     int mlSSAOResolution; //0= medium(div2), 1=high (same as screen resolution)

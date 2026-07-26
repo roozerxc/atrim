@@ -120,7 +120,7 @@ void cLuxEnemy_WaterLurker::OnAfterWorldLoad()
 
 //-----------------------------------------------------------------------
 
-void cLuxEnemy_WaterLurker::UpdateEnemySpecific(float afTimeStep)
+void cLuxEnemy_WaterLurker::UpdateEnemySpecific(double adFixedDelta)
 {
 }
 

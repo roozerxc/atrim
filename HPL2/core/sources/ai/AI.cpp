@@ -40,7 +40,7 @@ void cAI::Reset()
 
 //-----------------------------------------------------------------------
 
-void cAI::Update(float afTimeStep)
+void cAI::Update(double adFixedDelta)
 {
 
 }

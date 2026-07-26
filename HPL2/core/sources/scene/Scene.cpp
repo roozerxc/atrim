@@ -169,7 +169,7 @@ void cScene::DestroyCamera(cCamera* apCam)
 
 //-----------------------------------------------------------------------
 
-void cScene::Render(float afFrameTime, tFlag alFlags)
+void cScene::Render(double adFrameTime, tFlag alFlags)
 {
     //Increase the frame count (do this at top, so render count is valid until this Render is called again!)
     iRenderer::IncRenderFrameCount();
@@ -208,7 +208,7 @@ void cScene::Render(float afFrameTime, tFlag alFlags)
             if(pRenderer && pViewPort->GetWorld() && pFrustum)
             {
                 START_TIMING(RenderWorld)
-                pRenderer->Render(    afFrameTime,pFrustum,
+                pRenderer->Render(    adFrameTime,pFrustum,
                                       pViewPort->GetWorld(),pViewPort->GetRenderSettings(),
                                       pViewPort->GetRenderTarget(),
                                       bPostEffects,
@@ -229,11 +229,11 @@ void cScene::Render(float afFrameTime, tFlag alFlags)
             //Render 3D GuiSets
             // Should this really be here? Or perhaps send in a frame buffer depending on the renderer.
             START_TIMING(Render3DGui)
-            Render3DGui(pViewPort,pFrustum, afFrameTime);
+            Render3DGui(pViewPort,pFrustum, (float)adFrameTime);
             STOP_TIMING(Render3DGui)
 
             START_TIMING(RenderPrePostEffectScreenGui)
-            RenderPrePostEffectScreenGui(pViewPort, afFrameTime);
+            RenderPrePostEffectScreenGui(pViewPort, (float)adFrameTime);
             STOP_TIMING(RenderPrePostEffectScreenGui)
         }
 
@@ -246,7 +246,7 @@ void cScene::Render(float afFrameTime, tFlag alFlags)
             iTexture *pInputTexture = pRenderer->GetPostEffectTexture();
 
             START_TIMING(RenderPostEffects)
-            pPostEffectComposite->Render(afFrameTime, pFrustum, pInputTexture,pViewPort->GetRenderTarget());
+            pPostEffectComposite->Render(adFrameTime, pFrustum, pInputTexture,pViewPort->GetRenderTarget());
             STOP_TIMING(RenderPostEffects)
         }
 
@@ -255,7 +255,7 @@ void cScene::Render(float afFrameTime, tFlag alFlags)
         if(alFlags & tSceneRenderFlag_Gui)
         {
             START_TIMING(RenderGUI)
-            RenderScreenGui(pViewPort, afFrameTime);
+            RenderScreenGui(pViewPort, (float)adFrameTime);
             STOP_TIMING(RenderGUI)
         }
     }
@@ -263,7 +263,7 @@ void cScene::Render(float afFrameTime, tFlag alFlags)
 
 //-----------------------------------------------------------------------
 
-void cScene::PostUpdate(float afTimeStep)
+void cScene::PostUpdate(double adFixedDelta)
 {
     //////////////////////////////////////
     //Update worlds
@@ -273,7 +273,7 @@ void cScene::PostUpdate(float afTimeStep)
         cWorld *pWorld = *it;
         if(pWorld->IsActive())
         {
-            pWorld->Update(afTimeStep);
+            pWorld->Update(adFixedDelta);
         }
     }
 
@@ -367,7 +367,7 @@ bool cScene::WorldExists(cWorld* apWorld)
 
 //-----------------------------------------------------------------------
 
-void cScene::RenderPrePostEffectScreenGui(cViewport *apViewPort,float afTimeStep)
+void cScene::RenderPrePostEffectScreenGui(cViewport *apViewPort,double adFixedDelta)
 {
     if(apViewPort->GetCamera()==NULL)
     {
@@ -387,7 +387,7 @@ void cScene::RenderPrePostEffectScreenGui(cViewport *apViewPort,float afTimeStep
 
 //-----------------------------------------------------------------------
 
-void cScene::Render3DGui(cViewport *apViewPort,cFrustum *apFrustum,float afTimeStep)
+void cScene::Render3DGui(cViewport *apViewPort,cFrustum *apFrustum,double adFixedDelta)
 {
     if(apViewPort->GetCamera()==NULL)
     {
@@ -405,7 +405,7 @@ void cScene::Render3DGui(cViewport *apViewPort,cFrustum *apFrustum,float afTimeS
     }
 }
 
-void cScene::RenderScreenGui(cViewport *apViewPort,float afTimeStep)
+void cScene::RenderScreenGui(cViewport *apViewPort,double adFixedDelta)
 {
     ///////////////////////////////////////
     //Put all of the non 3D sets in to a sorted map

@@ -25,7 +25,7 @@ public:
     cPostEffectComposite(cGraphics *apGraphics);
     ~cPostEffectComposite();
 
-    void Render(float afFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget);
+    void Render(double adFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget);
 
     /**
      * Highest prio is first!
@@ -42,13 +42,14 @@ public:
 
     bool HasActiveEffects();
 
-    float GetCurrentFrameTime()
+    //Fix current frame time so it always returns the time in Ms !
+    double GetCurrentFrameTime()
     {
-        return mfCurrentFrameTime;
+        return dCurrentFrameTime / 1000.0;
     }
 
 private:
-    void BeginRendering(float afFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget);
+    void BeginRendering(double adFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget);
     void EndRendering();
     void CopyToFrameBuffer(iTexture *apOutputTexture);
 
@@ -57,7 +58,7 @@ private:
 
     iFrameBuffer *mpFinalTempBuffer[2];
 
-    float mfCurrentFrameTime;
+    double dCurrentFrameTime;
 };
 
 //------------------------------------------

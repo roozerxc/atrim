@@ -69,7 +69,7 @@ public:
     iLight(tString asName, cResources *apResources);
     virtual ~iLight();
 
-    void UpdateLogic(float afTimeStep);
+    void UpdateLogic(double adFixedDelta);
 
     bool CheckObjectIntersection(iRenderable *apObject);
 
@@ -369,7 +369,7 @@ public:
         mfSourceRadius = afX;
     }
 
-    void UpdateLight(float afTimeStep);
+    void UpdateLight(double adFixedDelta);
 
     void SetWorld(cWorld *apWorld)
     {

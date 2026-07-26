@@ -832,7 +832,7 @@ void cRendererDeferred::CopyToFrameBuffer()
 
 void cRendererDeferred::SetupRenderList()
 {
-    mpCurrentRenderList->Setup(mfCurrentFrameTime,mpCurrentFrustum);
+    mpCurrentRenderList->Setup(dCurrentFrameTime,mpCurrentFrustum);
 }
 
 //-----------------------------------------------------------------------
@@ -3069,7 +3069,7 @@ void cRendererDeferred::RenderTranslucent()
         // Update object, need to do this here since otherwise the reflection rendering might reset it!
 
         //Before viewport
-        if(pObject->UpdateGraphicsForViewport(mpCurrentFrustum, mfCurrentFrameTime)==false)
+        if(pObject->UpdateGraphicsForViewport(mpCurrentFrustum, dCurrentFrameTime)==false)
         {
             continue;
         }
@@ -3520,7 +3520,7 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
         Log("\n==============================\n= BEGIN RENDER REFLECTION\n==============================\n\n");
     }
 
-    Render(mfCurrentFrameTime, &reflectFrustum, mpCurrentWorld, mpCurrentSettings->mpReflectionSettings, &renderTarget, false, mpCallbackList);
+    Render(dCurrentFrameTime, &reflectFrustum, mpCurrentWorld, mpCurrentSettings->mpReflectionSettings, &renderTarget, false, mpCallbackList);
 
     if(mpCurrentSettings->mbLog)
     {
@@ -3530,7 +3530,7 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
 
     ///////////////////////////
     //Set back to order!
-    BeginRendering(    mfCurrentFrameTime, pSaved_Frustum, mpCurrentWorld, pSaved_Settings, pSaved_RenderTarget,
+    BeginRendering(    dCurrentFrameTime, pSaved_Frustum, mpCurrentWorld, pSaved_Settings, pSaved_RenderTarget,
                        bSaved_SendFrameBufferToPostEffects,mpCallbackList, false);
 
 

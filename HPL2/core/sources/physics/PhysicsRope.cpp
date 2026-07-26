@@ -98,39 +98,39 @@ iPhysicsRope::~iPhysicsRope()
 
 //-----------------------------------------------------------------------
 
-void iPhysicsRope::UpdateBeforeSimulate(float afTimeStep)
+void iPhysicsRope::UpdateBeforeSimulate(double adFixedDelta)
 {
     mbHasUpdated = true;
 
-    PreUpdate(afTimeStep);
+    PreUpdate(adFixedDelta);
     if(mbSleeping)
     {
         return;
     }
 
-    UpdateMotorAndAutoMove(afTimeStep);
-    UpdateMovement(afTimeStep);
+    UpdateMotorAndAutoMove(adFixedDelta);
+    UpdateMovement(adFixedDelta);
 
-    UpdateAttachedParticlePositions(afTimeStep);
+    UpdateAttachedParticlePositions(adFixedDelta);
 
     for(int i=0; i<mlMaxIterations; ++i)
     {
-        UpdateConstraints(afTimeStep);
+        UpdateConstraints(adFixedDelta);
     }
 
-    UpdateAttachedBodies(afTimeStep);
+    UpdateAttachedBodies(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
 
-void iPhysicsRope::UpdateAfterSimulate(float afTimeStep)
+void iPhysicsRope::UpdateAfterSimulate(double adFixedDelta)
 {
     if(mbSleeping)
     {
         return;
     }
 
-    CalculateSmoothPositions(afTimeStep);
+    CalculateSmoothPositions(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -358,19 +358,19 @@ void iPhysicsRope::SetSpecificDataSleeping(bool abSleeping)
 
 //-----------------------------------------------------------------------
 
-void iPhysicsRope::UpdateMovement(float afTimeStep)
+void iPhysicsRope::UpdateMovement(double adFixedDelta)
 {
     for(tVerletParticleListIt it = mlstParticles.begin(); it != mlstParticles.end(); ++it)
     {
         cVerletParticle *pPart = *it;
 
-        pPart->UpdateMovement(afTimeStep);
+        pPart->UpdateMovement(adFixedDelta);
     }
 }
 
 //-----------------------------------------------------------------------
 
-void iPhysicsRope::UpdateMotorAndAutoMove(float afTimeStep)
+void iPhysicsRope::UpdateMotorAndAutoMove(double adFixedDelta)
 {
     float fVel =0;
 
@@ -391,7 +391,7 @@ void iPhysicsRope::UpdateMotorAndAutoMove(float afTimeStep)
             fVel = mfMotorMinSpeed;
         }
 
-        fTotalLength += fVel * afTimeStep;
+        fTotalLength += fVel * (float)adFixedDelta;
 
         SetTotalLength(fTotalLength);
 
@@ -405,7 +405,7 @@ void iPhysicsRope::UpdateMotorAndAutoMove(float afTimeStep)
     else if(mbAutoMoveActive)
     {
         float fTotalLength =  GetTotalLength();
-        mfAutoMoveSpeed += mfAutoMoveAcc*afTimeStep;
+        mfAutoMoveSpeed += mfAutoMoveAcc * (float)adFixedDelta;
 
         if(mfAutoMoveSpeed > mfAutoMoveMaxSpeed)
         {
@@ -416,7 +416,7 @@ void iPhysicsRope::UpdateMotorAndAutoMove(float afTimeStep)
             mfAutoMoveSpeed = -mfAutoMoveMaxSpeed;
         }
 
-        fTotalLength += mfAutoMoveSpeed * afTimeStep;
+        fTotalLength += mfAutoMoveSpeed * (float)adFixedDelta;
 
         bool bStop = false;
         if(fTotalLength > mfMaxTotalLength)
@@ -486,7 +486,7 @@ void iPhysicsRope::UpdateMotorAndAutoMove(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iPhysicsRope::UpdateAttachedParticlePositions(float afTimeStep)
+void iPhysicsRope::UpdateAttachedParticlePositions(double adFixedDelta)
 {
     for(int i=0; i<2; ++i)
     {
@@ -503,7 +503,7 @@ void iPhysicsRope::UpdateAttachedParticlePositions(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iPhysicsRope::UpdateAttachedBodies(float afTimeStep)
+void iPhysicsRope::UpdateAttachedBodies(double adFixedDelta)
 {
     for(int i=0; i<2; ++i)
     {
@@ -524,7 +524,7 @@ void iPhysicsRope::UpdateAttachedBodies(float afTimeStep)
         mForcePid[i].i = 0;
         mForcePid[i].d = mfStrength * 0.1f * mfStiffness;
 
-        cVector3f vForce = mForcePid[i].Output(vError, afTimeStep);
+        cVector3f vForce = mForcePid[i].Output(vError, adFixedDelta);
 
         cVector3f vLocalPos = vCurrentPos - pBody->GetLocalPosition();
         cVector3f vMassCentre = pBody->GetMassCentre();
@@ -545,7 +545,7 @@ void iPhysicsRope::UpdateAttachedBodies(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iPhysicsRope::UpdateConstraints(float afTimeStep)
+void iPhysicsRope::UpdateConstraints(double adFixedDelta)
 {
     cVerletParticle *pPrevPart = NULL;
     tVerletParticleListIt it = mlstParticles.begin();
@@ -585,7 +585,7 @@ void iPhysicsRope::UpdateConstraints(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iPhysicsRope::CalculateSmoothPositions(float afTimeStep)
+void iPhysicsRope::CalculateSmoothPositions(double adFixedDelta)
 {
     cVector3f vBasePos[2] = { GetStartParticle()->GetPosition(), GetEndParticle()->GetPosition()};
     cVector3f vAddPos[2] = {0, 0};

@@ -77,10 +77,10 @@ public:
     //########################################################################################
     //! @{
 
-    void Update(float afTimeStep);
-    virtual void Simulate(float afTimeStep)=0;
+    void Update(double adFixedDelta);
+    virtual void Simulate(double adFixedDelta)=0;
 
-    virtual void  SetMaxTimeStep(float afTimeStep)=0;
+    virtual void  SetMaxTimeStep(double adFixedDelta)=0;
     virtual float GetMaxTimeStep()=0;
 
     virtual void SetWorldSize(const cVector3f &avMin,const cVector3f &avMax)=0;

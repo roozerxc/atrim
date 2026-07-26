@@ -192,13 +192,13 @@ void cLuxDemoEnd::OnLeaveContainer(const tString& asNewContainer)
 
 //-----------------------------------------------------------------------
 
-void cLuxDemoEnd::Update(float afTimeStep)
+void cLuxDemoEnd::Update(double adFixedDelta)
 {
-    mfTime += afTimeStep;
+    mfTime += (float)adFixedDelta;
 
     if(mbExiting)
     {
-        mfFadeAlpha += afTimeStep*0.7f;
+        mfFadeAlpha += (float)adFixedDelta*0.7f;
         if(mfFadeAlpha>1)
         {
             mfFadeAlpha =1;
@@ -213,7 +213,7 @@ void cLuxDemoEnd::Update(float afTimeStep)
     {
         if(mfFadeAlpha>0.0f)
         {
-            mfFadeAlpha -= afTimeStep*0.7f;
+            mfFadeAlpha -= (float)adFixedDelta*0.7f;
             if(mfFadeAlpha< 0)
             {
                 mfFadeAlpha =0;
@@ -234,7 +234,7 @@ void cLuxDemoEnd::Exit(bool abShowWebsite)
 
 //-----------------------------------------------------------------------
 
-void cLuxDemoEnd::OnDraw(float afFrameTime)
+void cLuxDemoEnd::OnDraw(double adFrameTime)
 {
     //////////////////////////////////////////////
     // Background

@@ -49,7 +49,7 @@ public:
     virtual iSoundData* LoadSoundData(const tString& asName,const tWString& asFilePath,
                                       const tString& asType, bool abStream,bool abLoopStream)=0;
 
-    virtual void UpdateSound(float afTimeStep)=0;
+    virtual void UpdateSound(double adFixedDelta)=0;
 
     virtual void SetListenerAttributes (const cVector3f &avPos,const cVector3f &avVel,
                                         const cVector3f &avForward,const cVector3f &avUp)=0;

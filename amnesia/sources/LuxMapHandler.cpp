@@ -245,16 +245,16 @@ void cLuxMapHandler::UpdateViewportRenderProperties()
 
 //-----------------------------------------------------------------------
 
-void cLuxMapHandler::Update(float afTimeStep)
+void cLuxMapHandler::Update(double adFixedDelta)
 {
     //TODO: Bad placement! Moooove!
     gpBase->mpEffectRenderer->ClearRenderLists();
 
-    CheckMapChange(afTimeStep);
+    CheckMapChange(adFixedDelta);
 
     if(mpCurrentMap && mMapChangeData.mbActive==false)
     {
-        mpCurrentMap->Update(afTimeStep);
+        mpCurrentMap->Update(adFixedDelta);
     }
 }
 
@@ -600,7 +600,7 @@ void cLuxMapHandler::SetShowCommentary(bool abX)
 
 //-----------------------------------------------------------------------
 
-void cLuxMapHandler::CheckMapChange(float afTimeStep)
+void cLuxMapHandler::CheckMapChange(double adFixedDelta)
 {
     if(mMapChangeData.mbActive==false)
     {

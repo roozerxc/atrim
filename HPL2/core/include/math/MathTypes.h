@@ -92,9 +92,9 @@ public:
         add = up_speed;
     }
 
-    void Update(float afTimeStep)
+    void Update(double adFixedDelta)
     {
-        val += add * afTimeStep;
+        val += add * (float)adFixedDelta;
         if(add > 0)
         {
             if(val >= max)

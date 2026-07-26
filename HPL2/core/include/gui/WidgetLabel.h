@@ -90,18 +90,18 @@ public:
 protected:
     /////////////////////////
     // Own Funcs
-    void DrawText(float afTimeStep, cGuiClipRegion *apClipRegion);
+    void DrawText(double adFixedDelta, cGuiClipRegion *apClipRegion);
 
     /////////////////////////
     // Implemented functions
     void OnLoadGraphics();
 
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     void OnChangeText();
 
-    void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
-    void OnDrawAfterClip(float afTimeStep, cGuiClipRegion *apClipRegion);
+    void OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion);
+    void OnDrawAfterClip(double adFixedDelta, cGuiClipRegion *apClipRegion);
 
     bool OnMouseMove(const cGuiMessageData& aData);
     bool OnMouseDown(const cGuiMessageData& aData);

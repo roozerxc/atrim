@@ -106,7 +106,7 @@ public:
         return mlCurrentShapeIdx;
     }
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     ///////////////////////////////////////
     //Helpers
@@ -179,7 +179,7 @@ public:
         return mbDeaccelerateMoveSpeedInAir;
     }
 
-    cVector3f GetVelocity(float afFrameTime);
+    cVector3f GetVelocity(double adFrameTime);
 
     void SetPosition(const cVector3f& avPos, bool abSmooth=false);
     const cVector3f& GetPosition();
@@ -587,27 +587,27 @@ public:
 protected:
     void UpdateMoveMatrix();
 
-    void PreUpdateConnection(float afTimeStep);
-    void PostUpdateConnection(float afTimeStep);
-    void UpdateBodyConnection(float afTimeStep);
-    void UpdateCharacterConnection(float afTimeStep);
+    void PreUpdateConnection(double adFixedDelta);
+    void PostUpdateConnection(double adFixedDelta);
+    void UpdateBodyConnection(double adFixedDelta);
+    void UpdateCharacterConnection(double adFixedDelta);
 
-    cVector3f UpdatePostionFromCharSpeed(float afTimeStep);
+    cVector3f UpdatePostionFromCharSpeed(double adFixedDelta);
 
     void AlignPosAddAccordingToGroundNormal(cVector3f &avPosAdd);
 
-    void CheckMoveCollision(const cVector3f &avPosAdd, float afTimeStep);
+    void CheckMoveCollision(const cVector3f &avPosAdd, double adFixedDelta);
 
-    void CheckStepClimbing(const cVector3f &avPosAdd, float afTimeStep);
+    void CheckStepClimbing(const cVector3f &avPosAdd, double adFixedDelta);
 
-    void UpdateStepClimbing(float afTimeStep);
+    void UpdateStepClimbing(double adFixedDelta);
 
-    void UpdateForces(float afTimeStep);
-    void UpdateFriction(float afTimeStep);
+    void UpdateForces(double adFixedDelta);
+    void UpdateFriction(double adFixedDelta);
 
-    void CheckForceCollision(float afTimeStep);
+    void CheckForceCollision(double adFixedDelta);
 
-    void UpdateForcePushing(float afTimeStep);
+    void UpdateForcePushing(double adFixedDelta);
 
     void UpdateCamera();
     void UpdateEntity();

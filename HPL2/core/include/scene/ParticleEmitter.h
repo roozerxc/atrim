@@ -155,7 +155,7 @@ public:
                          cVector3f avSize, cGraphics* apGraphics,cResources *apResources);
     virtual ~iParticleEmitter();
 
-    void UpdateLogic(float afTimeStep);
+    void UpdateLogic(double adFixedDelta);
 
     void Render() {}
 
@@ -207,7 +207,7 @@ public:
     bool IsVisible();
 
     //Renderable implementation
-    bool UpdateGraphicsForViewport(cFrustum *apFrustum,float afFrameTime);
+    bool UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime);
 
     cMaterial *GetMaterial();
     iVertexBuffer* GetVertexBuffer();
@@ -229,7 +229,7 @@ protected:
     void SwapRemove(unsigned int alIndex);
     cParticle* CreateParticle();
 
-    virtual void UpdateMotion(float afTimeStep)=0;
+    virtual void UpdateMotion(double adFixedDelta)=0;
     virtual void SetParticleDefaults(cParticle *apParticle)=0;
 
     cGraphics *mpGraphics;

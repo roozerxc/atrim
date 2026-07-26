@@ -160,7 +160,7 @@ void cLuxProp_MoveObject::OnResetProperties()
 }
 //-----------------------------------------------------------------------
 
-void cLuxProp_MoveObject::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_MoveObject::UpdatePropSpecific(double adFixedDelta)
 {
     //Log("Body pos: (%s) Size: (%s)\n", mvBodies[0]->GetWorldPosition().ToString().c_str(), mvBodies[0]->GetShape()->GetSize().ToString().c_str());
 
@@ -183,7 +183,7 @@ void cLuxProp_MoveObject::UpdatePropSpecific(float afTimeStep)
 
     //////////////////////
     //Update Automove
-    UpdateAutoMove(afTimeStep);
+    UpdateAutoMove(adFixedDelta);
 
 }
 
@@ -336,7 +336,7 @@ void cLuxProp_MoveObject::OnConnectionStateChange(iLuxEntity *apEntity, int alSt
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_MoveObject::UpdateAutoMove(float afTimeStep)
+void cLuxProp_MoveObject::UpdateAutoMove(double adFixedDelta)
 {
     ///////////////////////
     //Skip update if update is off, the entity is moving or the goal is reached.

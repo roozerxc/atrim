@@ -81,15 +81,15 @@ public:
     void OnClearFonts();
 
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
     void OnQuit();
 
     void OnEnterContainer(const tString& asOldContainer);
     void OnLeaveContainer(const tString& asNewContainer);
 
-    void OnDraw(float afFrameTime);
-    void OnPostRender(float afFrameTime);
+    void OnDraw(double adFrameTime);
+    void OnPostRender(double adFrameTime);
 
     cGuiSet* GetSet()
     {
@@ -125,9 +125,9 @@ private:
 
     void OnMenuExit();
 
-    void UpdateBase(float afTimeStep);
+    void UpdateBase(double adFixedDelta);
 
-    void UpdateTopMenu(float afTimeStep);
+    void UpdateTopMenu(double adFixedDelta);
     void SetTopMenuVisible(bool abVisible);
 
     void CreateGui();

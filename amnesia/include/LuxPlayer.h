@@ -51,10 +51,10 @@ public:
     //Main callbacks
     void LoadFonts();
     void OnStart();
-    void Update(float afTimeStep);
-    void PostUpdate(float afTimeStep);
+    void Update(double adFixedDelta);
+    void PostUpdate(double adFixedDelta);
     void Reset();
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
     void LoadUserConfig();
     void SaveUserConfig();
@@ -550,17 +550,17 @@ public:
 
 private:
     bool CanDrawCrossHair();
-    void DrawHud(float afFrameTime);
+    void DrawHud(double adFrameTime);
 
-    void UpdateHeadPosAdd(float afTimeStep);
-    void UpdateCamera(float afTimeStep);
-    void UpdateTerror(float afTimeStep);
-    void UpdateLean(float afTimeStep);
-    void UpdateFocusText(float afTimeStep);
-    void UpdateAvgSpeed(float afTimeStep);
+    void UpdateHeadPosAdd(double adFixedDelta);
+    void UpdateCamera(double adFixedDelta);
+    void UpdateTerror(double adFixedDelta);
+    void UpdateLean(double adFixedDelta);
+    void UpdateFocusText(double adFixedDelta);
+    void UpdateAvgSpeed(double adFixedDelta);
 
     void SpinHead(float afSpeed);
-    void UpdateHeadSpin(float afTimeStep);
+    void UpdateHeadSpin(double adFixedDelta);
 
     void CreateCharacterBody(iPhysicsWorld *apPhysicsWorld);
 

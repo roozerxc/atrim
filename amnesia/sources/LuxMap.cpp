@@ -352,11 +352,11 @@ void cLuxMap::OnLeave(bool abRunScript)
 
 //-----------------------------------------------------------------------
 
-void cLuxMap::Update(float afTimeStep)
+void cLuxMap::Update(double adFixedDelta)
 {
-    UpdateCheckCommentaryIconActive(afTimeStep);
-    UpdateDissolveEntities(afTimeStep);
-    UpdateTimers(afTimeStep);
+    UpdateCheckCommentaryIconActive(adFixedDelta);
+    UpdateDissolveEntities(adFixedDelta);
+    UpdateTimers(adFixedDelta);
 
     UpdateToBeDestroyedEntities(true);
 
@@ -369,17 +369,17 @@ void cLuxMap::Update(float afTimeStep)
 
         if(pEntity->IsActive())
         {
-            pEntity->UpdateLogic(afTimeStep);
+            pEntity->UpdateLogic(adFixedDelta);
         }
     }
 
     UpdateToBeDestroyedEntities(true);
 
-    UpdateLampLightConnections(afTimeStep);
+    UpdateLampLightConnections(adFixedDelta);
 
     if(mbRunUpdateScript)
     {
-        RunUpdateCallback(afTimeStep);
+        RunUpdateCallback(adFixedDelta);
     }
 }
 
@@ -413,7 +413,7 @@ void cLuxMap::RunTimer(const tString& asTimerFunc, tString& asTimerName)
     mpScript->RunFuncString(asTimerFunc, asTimerName);
 }
 
-void cLuxMap::RunUpdateCallback(float afTimeStep)
+void cLuxMap::RunUpdateCallback(double adFixedDelta)
 {
     if(mpScript==NULL)
     {
@@ -424,7 +424,7 @@ void cLuxMap::RunUpdateCallback(float afTimeStep)
         return;
     }
 
-    mpScript->RunFuncFloat("OnUpdate", afTimeStep);
+    mpScript->RunFuncFloat("OnUpdate", (float)adFixedDelta);
 }
 
 
@@ -1461,7 +1461,7 @@ void cLuxMap::UpdateToBeDestroyedEntities(bool abUseCallbacks)
 }
 //-----------------------------------------------------------------------
 
-void cLuxMap::UpdateTimers(float afTimeStep)
+void cLuxMap::UpdateTimers(double adFixedDelta)
 {
     mbUpdatingTimers = true;
 
@@ -1470,7 +1470,7 @@ void cLuxMap::UpdateTimers(float afTimeStep)
     for(tLuxEventTimerListIt it= mlstTimers.begin(); it != mlstTimers.end(); ++it)
     {
         cLuxEventTimer *pTimer = *it;
-        pTimer->mfCount -= afTimeStep;
+        pTimer->mfCount -= (float)adFixedDelta;
     }
 
     //////////////////////
@@ -1511,14 +1511,14 @@ void cLuxMap::UpdateTimers(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxMap::UpdateDissolveEntities(float afTimeStep)
+void cLuxMap::UpdateDissolveEntities(double adFixedDelta)
 {
     tLuxDissolveEntityListIt it = mlstDissolveEntities.begin();
     for(; it != mlstDissolveEntities.end(); )
     {
         cLuxDissolveEntity *pEntity = *it;
 
-        pEntity->mfAlpha-= pEntity->mfFadeSpeed *afTimeStep;
+        pEntity->mfAlpha-= pEntity->mfFadeSpeed * (float)adFixedDelta;
         pEntity->mpEntity->SetCoverageAmount(pEntity->mfAlpha);
         if(pEntity->mfAlpha<=0)
         {
@@ -1534,20 +1534,20 @@ void cLuxMap::UpdateDissolveEntities(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxMap::UpdateLampLightConnections(float afTimeStep)
+void cLuxMap::UpdateLampLightConnections(double adFixedDelta)
 {
     tLuxLampLightConnectionListIt it = mlstLampLightConnections.begin();
     for(; it != mlstLampLightConnections.end(); ++it)
     {
         cLuxLampLightConnection* pConnection = *it;
 
-        pConnection->Update(afTimeStep);
+        pConnection->Update(adFixedDelta);
     }
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxMap::UpdateCheckCommentaryIconActive(float afTimeStep)
+void cLuxMap::UpdateCheckCommentaryIconActive(double adFixedDelta)
 {
     if(mbCommentaryIconsActive == gpBase->mpMapHandler->GetShowCommentary())
     {

@@ -27,7 +27,7 @@ public:
         return mbActive;
     }
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
 private:
     bool mbActive;
@@ -77,14 +77,14 @@ public:
 
     void Reset();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     float AddAndGetYawAdd(float afX);
     float AddAndGetPitchAdd(float afX);
 
 private:
     void SetSwayActive(bool abX);
-    void UpdateSway(float afTimeStep);
+    void UpdateSway(double adFixedDelta);
 
     float mfStartSwayMaxSanity;
 
@@ -131,7 +131,7 @@ public:
         return msFileName;
     }
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 private:
     void GenerateAllSpawnPos();
     cParticleSystem* CreatePS(cLuxPlayerSpawnPS_SpawnPos *apSpawnPos);
@@ -169,9 +169,9 @@ public:
 
     void Reset();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
 private:
     std::vector<cGuiGfxElement*> mvNoiseGfx;
@@ -226,9 +226,9 @@ public:
 
     void Start(const tString &asFlashbackFile, const tString &asCallback);
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
     bool IsActive()
     {
@@ -264,7 +264,7 @@ public:
     cLuxPlayerLookAt(cLuxPlayer *apPlayer);
     ~cLuxPlayerLookAt();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     void Reset();
 
@@ -306,9 +306,9 @@ public:
     void StartHit();
     void SetSanityLost();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
     float GetAtLowSanityCount()
     {
@@ -318,14 +318,14 @@ public:
 private:
     float GetCurrentSizeMul();
 
-    void UpdateInsaneEffects(float afTimeStep);
-    void UpdateCheckEnemySeen(float afTimeStep);
-    void UpdateHit(float afTimeStep);
+    void UpdateInsaneEffects(double adFixedDelta);
+    void UpdateCheckEnemySeen(double adFixedDelta);
+    void UpdateHit(double adFixedDelta);
 
-    void UpdateInsanityVisuals(float afTimeStep);
-    void UpdateEnemySeenEffect(float afTimeStep);
-    void UpdateLosingSanity(float afTimeStep);
-    void UpdateLowSanity(float afTimeStep);
+    void UpdateInsanityVisuals(double adFixedDelta);
+    void UpdateEnemySeenEffect(double adFixedDelta);
+    void UpdateLosingSanity(double adFixedDelta);
+    void UpdateLowSanity(double adFixedDelta);
 
     float mfHitAlpha;
     bool mbHitActive;
@@ -387,7 +387,7 @@ public:
     ~cLuxPlayerLantern();
 
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
 
     void OnMapEnter(cLuxMap *apMap);
@@ -449,11 +449,11 @@ public:
 
     void Start();
 
-    void Update(float afTimeStep);
-    void PostUpdate(float afTimeStep);
+    void Update(double adFixedDelta);
+    void PostUpdate(double adFixedDelta);
 
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
     void OnPressButton();
 
@@ -557,7 +557,7 @@ public:
     void CreateWorldEntities(cLuxMap *apMap);
     void DestroyWorldEntities(cLuxMap *apMap);
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     void SetLean(float afMul);
     void AddLean(float afAdd);
@@ -617,16 +617,16 @@ public:
     void AddDamageSplash(eLuxDamageType aType);
     void Flash(const cColor& aColor, eGuiMaterial aFlashMaterial, float afInTime, float afOutTime);
 
-    void OnDraw(float afFrameTime);
-    void Update(float afTimeStep);
+    void OnDraw(double adFrameTime);
+    void Update(double adFixedDelta);
     void Reset();
 
 private:
-    void DrawSplashes(float afFrameTime);
-    void UpdateSplashes(float afTimeStep);
+    void DrawSplashes(double adFrameTime);
+    void UpdateSplashes(double adFixedDelta);
 
-    void DrawFlash(float afFrameTime);
-    void UpdateFlash(float afTimeStep);
+    void DrawFlash(double adFrameTime);
+    void UpdateFlash(double adFixedDelta);
 
     void LoadDamageData(cLuxPlayerDamageData *apData, const tString& asName);
 
@@ -652,7 +652,7 @@ public:
     ~cLuxPlayerLightLevel();
 
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
 
     void OnMapEnter(cLuxMap *apMap);
@@ -684,7 +684,7 @@ public:
     ~cLuxPlayerInDarkness();
 
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
 
     void OnMapEnter(cLuxMap *apMap);

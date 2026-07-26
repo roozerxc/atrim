@@ -79,9 +79,9 @@ public:
     virtual void OnMapEnter(cLuxMap *apMap) {}
     virtual void OnMapLeave(cLuxMap *apMap) {}
 
-    virtual void Update(float afTimeStep)=0;
-    virtual void PostUpdate(float afTimeStep)=0;
-    virtual void OnDraw(cGuiSet *apGuiSet,float afFrameTime) {}
+    virtual void Update(double adFixedDelta)=0;
+    virtual void PostUpdate(double adFixedDelta)=0;
+    virtual void OnDraw(cGuiSet *apGuiSet,double adFrameTime) {}
 
     virtual bool OnDoAction(eLuxPlayerAction aAction,bool abPressed)=0;
 

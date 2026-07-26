@@ -41,12 +41,12 @@ cSound::~cSound()
 
 //-----------------------------------------------------------------------
 
-void cSound::Update(float afTimeStep)
+void cSound::Update(double adFixedDelta)
 {
-    mpSoundHandler->Update(afTimeStep);
-    mpMusicHandler->Update(afTimeStep);
+    mpSoundHandler->Update(adFixedDelta);
+    mpMusicHandler->Update(adFixedDelta);
 
-    mpLowLevelSound->UpdateSound(afTimeStep);
+    mpLowLevelSound->UpdateSound(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------

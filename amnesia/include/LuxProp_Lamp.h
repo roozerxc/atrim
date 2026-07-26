@@ -43,7 +43,7 @@ public:
     cLuxLampLightConnection(iLight *apLight);
     ~cLuxLampLightConnection();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     iLight* GetLight()
     {
@@ -77,7 +77,7 @@ public:
 
     void OnResetProperties();
 
-    void UpdatePropSpecific(float afTimeStep);
+    void UpdatePropSpecific(double adFixedDelta);
 
     void BeforePropDestruction();
 

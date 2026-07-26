@@ -194,7 +194,7 @@ void cWidgetMenuItem::OnInit()
 
 //----------------------------------------------------------------
 
-void cWidgetMenuItem::OnUpdate(float afTimeStep)
+void cWidgetMenuItem::OnUpdate(double adFixedDelta)
 {
     if(IsVisible() == false || (mpSet->GetAttentionWidget()!=NULL && IsConnectedTo(mpSet->GetAttentionWidget())==false))
     {
@@ -205,7 +205,7 @@ void cWidgetMenuItem::OnUpdate(float afTimeStep)
     // If context menu, increase timer
     if(GetMouseIsOver() && mItemType==eWidgetType_ContextMenu )
     {
-        mfTimer+=afTimeStep;
+        mfTimer+=(float)adFixedDelta;
     }
     /////////////////////////////////////////////
     // If item is highlighted, has submenu, and timer has right value, pop up submenu
@@ -220,7 +220,7 @@ void cWidgetMenuItem::OnUpdate(float afTimeStep)
 
 //----------------------------------------------------------------
 
-void cWidgetMenuItem::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetMenuItem::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     if(IsSeparator())
     {

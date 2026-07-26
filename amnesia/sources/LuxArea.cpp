@@ -143,7 +143,7 @@ void iLuxArea::OnSetActive(bool abX)
 
 //-----------------------------------------------------------------------
 
-void iLuxArea::OnUpdate(float afTimeStep)
+void iLuxArea::OnUpdate(double adFixedDelta)
 {
 
 }

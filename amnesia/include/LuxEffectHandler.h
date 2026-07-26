@@ -14,8 +14,8 @@ public:
     iLuxEffect() : mbActive(false) {}
     ~iLuxEffect() {}
 
-    virtual void Update(float afTimeStep)=0;
-    virtual void OnDraw(float afFrameTime)=0;
+    virtual void Update(double adFixedDelta)=0;
+    virtual void OnDraw(double adFrameTime)=0;
     virtual void Reset()=0;
 
     virtual void DoAction(eLuxPlayerAction aAction, bool abPressed) {}
@@ -46,8 +46,8 @@ public:
     void Start(const tString &asTalker,const tString &asTopic, const tString &asFile, int alIconId);
     void Stop();
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime);
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
     void Reset();
 
 private:
@@ -80,8 +80,8 @@ public:
     void Start(const tString &asTextCat, const tString &asTextEntry, const tString &asSound);
     void Reset();
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime);
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
 
     void DoAction(eLuxPlayerAction aAction, bool abPressed);
 
@@ -116,8 +116,8 @@ public:
         return mfSize;
     }
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime) {}
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime) {}
     void Reset();
 
 private:
@@ -137,8 +137,8 @@ public:
 
     void FadeTo(float afAmount, float afSpeed);
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime) {}
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime) {}
     void Reset();
 
 private:
@@ -169,8 +169,8 @@ public:
 
     void Start(float afAmount, float afTime, float afFadeInTime,float afFadeOutTime);
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime) {}
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime) {}
     void Reset();
 
 private:
@@ -188,8 +188,8 @@ public:
 
     void FadeTo(float afAmount, float afSpeed);
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime) {}
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime) {}
     void Reset();
 
 private:
@@ -212,8 +212,8 @@ public:
 
     bool IsFading();
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime);
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
     void Reset();
 
     void SetDirectAlpha(float afX);
@@ -237,11 +237,11 @@ public:
 
     void Start();
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime);
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
     void Reset();
 
-    void DrawFlash(cGuiSet *apSet,float afTimeStep);
+    void DrawFlash(cGuiSet *apSet,double adFixedDelta);
 
 private:
     cGuiGfxElement *mpWhiteGfx;
@@ -272,8 +272,8 @@ public:
     void Start(float afFadeIn, float afWhite, float afFadeOut);
     void Reset();
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime);
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
 
 private:
     cGuiGfxElement *mpWhiteGfx;
@@ -313,8 +313,8 @@ public:
         msOverCallback = asFunc;
     }
 
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime);
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
     void Reset();
 
     void SetVolumeMul(float afMul);
@@ -362,13 +362,13 @@ public:
     void OnClearFonts();
     void LoadFonts();
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
 
     void OnMapEnter(cLuxMap *apMap);
     void OnMapLeave(cLuxMap *apMap);
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
     void DoAction(eLuxPlayerAction aAction, bool abPressed);
 

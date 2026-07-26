@@ -19,9 +19,9 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-void iSubAction::Update(float afTimeStep)
+void iSubAction::Update(double adFixedDelta)
 {
-    UpdateLogic(afTimeStep);
+    UpdateLogic(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -182,7 +182,7 @@ void cAction::ResetToCurrentState()
 
 //-----------------------------------------------------------------------
 
-void cAction::Update(float afTimeStep)
+void cAction::Update(double adFixedDelta)
 {
     mbIsDown = false;
 
@@ -206,7 +206,7 @@ void cAction::Update(float afTimeStep)
 
         if(mfTimeCount >= 0)
         {
-            mfTimeCount += afTimeStep;
+            mfTimeCount += adFixedDelta;
         }
     }
 

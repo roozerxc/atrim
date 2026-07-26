@@ -72,10 +72,10 @@ protected:
     void OnChangeSize();
 
     void OnChildUpdate(iWidget* apChild);
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
-    void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
-    void OnDrawAfterClip(float afTimeStep, cGuiClipRegion *apClipRegion);
+    void OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion);
+    void OnDrawAfterClip(double adFixedDelta, cGuiClipRegion *apClipRegion);
 
     bool OnMouseMove(const cGuiMessageData& aData);
     bool OnMouseDown(const cGuiMessageData& aData);

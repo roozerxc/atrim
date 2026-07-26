@@ -47,7 +47,7 @@ public:
     iLuxJournalWidgetData(iWidget *apWidget) : mpWidget(apWidget) {}
     virtual ~iLuxJournalWidgetData() {}
 
-    virtual void Update(float afTimeStep)=0;
+    virtual void Update(double adFixedDelta)=0;
 
     iWidget *mpWidget;
     void *mpExtraData;
@@ -63,7 +63,7 @@ class cLuxJournalTextData : public iLuxJournalWidgetData
 public:
     cLuxJournalTextData(iWidget *apWidget, eLuxJournalState aType) : iLuxJournalWidgetData(apWidget), mType(aType), mfEffectfAlpha(0) {}
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     eLuxJournalState mType;
     float mfEffectfAlpha;
@@ -81,8 +81,8 @@ public:
     void Reset();
     void OnEnter();
     void DestroySessionWidgets();
-    void Update(float afTimeStep);
-    void OnDraw(float afFrameTime);
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
 
     tWidgetList mlstSessionWidgets;
     cWidgetDummy* mpRootWidget;
@@ -131,12 +131,12 @@ public:
 
     void OnGameStart();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     void OnEnterContainer(const tString& asOldContainer);
     void OnLeaveContainer(const tString& asNewContainer);
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
     cGuiSet* GetSet()
     {

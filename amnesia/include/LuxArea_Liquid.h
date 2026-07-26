@@ -42,7 +42,7 @@ public:
     //////////////////////
     //General
     void SetupAfterLoad(cWorld *apWorld);
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     //////////////////////
     //Connection callbacks

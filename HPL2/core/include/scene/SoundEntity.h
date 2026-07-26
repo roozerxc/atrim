@@ -104,7 +104,7 @@ public:
     cSoundEntry* GetSoundEntry(eSoundEntityType aType, bool abCheckEntryValidity);
 
     //Entity implementation
-    void UpdateLogic(float afTimeStep);
+    void UpdateLogic(double adFixedDelta);
 
     tString GetEntityType()
     {

@@ -213,7 +213,7 @@ static void PrintContainerNode(iRenderableContainerNode *apNode, int alLevel)
 
 //-----------------------------------------------------------------------
 
-void cLuxDebugHandler::Update(float afTimeStep)
+void cLuxDebugHandler::Update(double adFixedDelta)
 {
     iCharacterBody *pCharBody = gpBase->mpPlayer->GetCharacterBody();
 
@@ -256,8 +256,8 @@ void cLuxDebugHandler::Update(float afTimeStep)
     }
 
 
-    UpdateInspectionMeshEntity(afTimeStep);
-    UpdateMessages(afTimeStep);
+    UpdateInspectionMeshEntity(adFixedDelta);
+    UpdateMessages(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -402,7 +402,7 @@ static tString PixelFormatToString(ePixelFormat aFormat)
     return "Unknown";
 }
 
-void cLuxDebugHandler::OnDraw(float afFrameTime)
+void cLuxDebugHandler::OnDraw(double adFrameTime)
 {
     float fY = 5.0f;
 
@@ -880,7 +880,7 @@ void cLuxDebugHandler::IterateRenderableNode(iRenderableContainerNode *apNode, c
 
 
 
-void cLuxDebugHandler::UpdateInspectionMeshEntity(float afTimeStep)
+void cLuxDebugHandler::UpdateInspectionMeshEntity(double adFixedDelta)
 {
     if(mbInspectionMode==false)
     {
@@ -921,12 +921,12 @@ void cLuxDebugHandler::UpdateInspectionMeshEntity(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxDebugHandler::UpdateMessages(float afTimeStep)
+void cLuxDebugHandler::UpdateMessages(double adFixedDelta)
 {
     for(tLuxDebugMessageListIt it = mlstMessages.begin(); it != mlstMessages.end();)
     {
         cLuxDebugMessage& debugMessage = *it;
-        debugMessage.mfCount-=afTimeStep;
+        debugMessage.mfCount -= (float)adFixedDelta;
         if(debugMessage.mfCount <= 0)
         {
             it = mlstMessages.erase(it);

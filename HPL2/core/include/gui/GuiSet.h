@@ -160,9 +160,9 @@ public:
     ////////////////////////////////////
     // General
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
-    void DrawAll(float afTimeStep);
+    void DrawAll(double adFixedDelta);
 
     bool SendMessage(eGuiMessage aMessage, const cGuiMessageData& aData);
 
@@ -632,7 +632,7 @@ private:
 
     cGuiGlobalShortcut* FindShortcut(const cKeyPress& aKeyPress);
 
-    void UpdateToolTip(float afTimeStep);
+    void UpdateToolTip(double adFixedDelta);
 
     void CreateToolTipWidgets();
 

@@ -33,7 +33,7 @@ public:
     ~cLuxMusicHandler();
 
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
 
     float GetVolumeMul()
@@ -70,8 +70,8 @@ public:
     bool SearcherExist(iLuxEnemy *apEnemy);
 
 private:
-    void UpdateDangerMusic(float afTimeStep);
-    void UpdateEnemyMusic(float afTimeStep, eLuxEnemyMusic aType);
+    void UpdateDangerMusic(double adFixedDelta);
+    void UpdateEnemyMusic(double adFixedDelta, eLuxEnemyMusic aType);
 
     void PlayHighestPriority();
 

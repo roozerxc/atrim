@@ -34,9 +34,9 @@ public:
     void OnMapEnter(cLuxMap *apMap);
     void OnMapLeave(cLuxMap *apMap);
 
-    void Update(float afTimeStep);
-    void PostUpdate(float afTimeStep);
-    virtual void OnDraw(cGuiSet *apGuiSet,float afFrameTime);
+    void Update(double adFixedDelta);
+    void PostUpdate(double adFixedDelta);
+    virtual void OnDraw(cGuiSet *apGuiSet,double adFrameTime);
 
     virtual cGuiGfxElement* GetCrosshair();
 
@@ -60,7 +60,7 @@ public:
 protected:
     virtual bool ShowOutlineOnEntity(iLuxEntity *apEntity, iPhysicsBody *apBody, const cVector3f &avFocusPos);
 
-    virtual void ImplementedUpdate(float afTimeStep) {}
+    virtual void ImplementedUpdate(double adFixedDelta) {}
     virtual bool ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed)
     {
         return true;

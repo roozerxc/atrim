@@ -93,7 +93,7 @@ void cWidgetMainMenu::Hide()
 
 //-----------------------------------------------------------------------
 
-void cWidgetMainMenu::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetMainMenu::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     ////////////////////////////////
     // Draw background
@@ -104,7 +104,7 @@ void cWidgetMainMenu::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
 
 //-----------------------------------------------------------------------
 
-void cWidgetMainMenu::OnUpdate(float afTimeStep)
+void cWidgetMainMenu::OnUpdate(double adFixedDelta)
 {
     if(mbMustHide)
     {

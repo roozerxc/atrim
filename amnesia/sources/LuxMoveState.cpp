@@ -43,11 +43,11 @@ iLuxMoveState::~iLuxMoveState()
 
 //-----------------------------------------------------------------------
 
-void iLuxMoveState::Update(float afTimeStep)
+void iLuxMoveState::Update(double adFixedDelta)
 {
     //////////////////////////////
     // Move state specific update
-    OnUpdate(afTimeStep);
+    OnUpdate(adFixedDelta);
 
     //////////////////////////////
     // Set move state variables

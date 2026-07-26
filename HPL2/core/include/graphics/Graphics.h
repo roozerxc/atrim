@@ -71,7 +71,7 @@ public:
               eGpuProgramFormat aGpuProgramFormat,const tString &asWindowCaption, const cVector2l &avWindowPos,
               cResources* apResources, tFlag alHplSetupFlags);
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     cVideoMode* GetValidVideoMode(int alX);
 

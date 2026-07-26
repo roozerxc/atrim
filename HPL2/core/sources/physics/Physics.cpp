@@ -55,9 +55,9 @@ void cPhysics::Init(cResources *apResources)
 
 //-----------------------------------------------------------------------
 
-void cPhysics::Update(float afTimeStep)
+void cPhysics::Update(double adFixedDelta)
 {
-    UpdateImpactCounts(afTimeStep);
+    UpdateImpactCounts(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -289,12 +289,12 @@ ePhysicsMaterialCombMode cPhysics::GetCombMode(const char *apName)
 
 //-----------------------------------------------------------------------
 
-void cPhysics::UpdateImpactCounts(float afTimeStep)
+void cPhysics::UpdateImpactCounts(double adFixedDelta)
 {
     tPhysicsImpactCountListIt it = mlstImpactCounts.begin();
     while(it != mlstImpactCounts.end())
     {
-        it->mfCount += afTimeStep;
+        it->mfCount += (float)adFixedDelta;
         if(it->mfCount > mfImpactDuration)
         {
             it = mlstImpactCounts.erase(it);

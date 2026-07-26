@@ -603,14 +603,14 @@ float iCharacterBody::GetMoveDeacc(eCharDir aDir)
 
 //-----------------------------------------------------------------------
 
-cVector3f iCharacterBody::GetVelocity(float afFrameTime)
+cVector3f iCharacterBody::GetVelocity(double adFrameTime)
 {
-    if(afFrameTime <=0)
+    if(adFrameTime <=0)
     {
         return 0;
     }
 
-    return (mvPosition - mvLastPosition) / afFrameTime;
+    return (mvPosition - mvLastPosition) / (float)adFrameTime;
 }
 
 //-----------------------------------------------------------------------
@@ -983,25 +983,25 @@ void iCharacterBody::DisconnectBody()
 
 //-----------------------------------------------------------------------
 
-void iCharacterBody::Update(float afTimeStep)
+void iCharacterBody::Update(double adFixedDelta)
 {
     /////////////////////////
     // Move delay
     if(mfMoveDelayCount>0)
     {
-        mfMoveDelayCount-=afTimeStep;
+        mfMoveDelayCount-=(float)adFixedDelta;
     }
 
     //////////////////////////
     //Init
-    PreUpdateConnection(afTimeStep);
+    PreUpdateConnection(adFixedDelta);
     ClearGravityAttachment();
 
     //////////////////////////
     //Push near objects
     //TODO: Not really working....
     //if(mbTestCollision)
-    //    UpdateForcePushing(afTimeStep);
+    //    UpdateForcePushing(adFixedDelta);
 
     //////////////////////////
     // Update the movement
@@ -1013,10 +1013,10 @@ void iCharacterBody::Update(float afTimeStep)
     UpdateMoveMatrix();
 
     //Update some step climbing variables.
-    UpdateStepClimbing(afTimeStep);
+    UpdateStepClimbing(adFixedDelta);
 
     //Update the position according to speed and heading
-    cVector3f vPosAdd = UpdatePostionFromCharSpeed(afTimeStep);
+    cVector3f vPosAdd = UpdatePostionFromCharSpeed(adFixedDelta);
 
     AlignPosAddAccordingToGroundNormal(vPosAdd);
 
@@ -1027,7 +1027,7 @@ void iCharacterBody::Update(float afTimeStep)
     if(mbTestCollision)
     {
         //XZ
-        CheckMoveCollision(vPosAdd, afTimeStep);
+        CheckMoveCollision(vPosAdd, adFixedDelta);
     }
     else
     {
@@ -1036,22 +1036,22 @@ void iCharacterBody::Update(float afTimeStep)
 
     //////////////////////////
     //Update External forces
-    UpdateForces(afTimeStep);
+    UpdateForces(adFixedDelta);
 
     if(mbTestCollision)
     {
-        CheckForceCollision(afTimeStep);
+        CheckForceCollision(adFixedDelta);
     }
 
-    UpdateFriction(afTimeStep);
+    UpdateFriction(adFixedDelta);
 
     //////////////////////////////
     //Final updates
     UpdateGravityAttachment();
     UpdateBody();
 
-    UpdateCharacterConnection(afTimeStep);
-    UpdateBodyConnection(afTimeStep);
+    UpdateCharacterConnection(adFixedDelta);
+    UpdateBodyConnection(adFixedDelta);
 
     //Not needed, since bodies are affected by force anyway!
     //EnableBodiesAroundCharacter();
@@ -1061,7 +1061,7 @@ void iCharacterBody::Update(float afTimeStep)
     UpdateCamera();
     UpdateEntity();
 
-    PostUpdateConnection(afTimeStep);
+    PostUpdateConnection(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -1252,7 +1252,7 @@ void iCharacterBody::UpdateMoveMatrix()
 
 //-----------------------------------------------------------------------
 
-void iCharacterBody::PreUpdateConnection(float afTimeStep)
+void iCharacterBody::PreUpdateConnection(double adFixedDelta)
 {
     if(mpConnectedBody == NULL)
     {
@@ -1269,7 +1269,7 @@ void iCharacterBody::PreUpdateConnection(float afTimeStep)
     }
 }
 
-void iCharacterBody::PostUpdateConnection(float afTimeStep)
+void iCharacterBody::PostUpdateConnection(double adFixedDelta)
 {
     if(mpConnectedBody == NULL)
     {
@@ -1287,7 +1287,7 @@ void iCharacterBody::PostUpdateConnection(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iCharacterBody::UpdateBodyConnection(float afTimeStep)
+void iCharacterBody::UpdateBodyConnection(double adFixedDelta)
 {
     //No connected body = nothing to do
     if(mpConnectedBody == NULL)
@@ -1328,7 +1328,7 @@ void iCharacterBody::UpdateBodyConnection(float afTimeStep)
     cVector3f vCharConnection = GetCharConnectionPos();
 
     cVector3f vError = vCharConnection - vBodyConnection;
-    cVector3f vForce = mBodyConnectionPointPid.Output(vError, afTimeStep);
+    cVector3f vForce = mBodyConnectionPointPid.Output(vError, adFixedDelta);
 
     //Make sure this force is not too much for player, do this here to get correct torque!
     cMath::Vector3ClampToLength(vForce, fMaxRelativeCharForce);
@@ -1363,7 +1363,7 @@ void iCharacterBody::UpdateBodyConnection(float afTimeStep)
         cVector3f vWantedPosition = vCharConnection + vNormalToBody * mfConnectionDistanceToBody;
 
         vError = vWantedPosition - vCenter;
-        vForce = mBodyCenterPid.Output(vError, afTimeStep);
+        vForce = mBodyCenterPid.Output(vError, adFixedDelta);
 
         vTotalForce += vForce;
     }
@@ -1398,7 +1398,7 @@ void iCharacterBody::UpdateBodyConnection(float afTimeStep)
             }
 
             //Log("Error: %f\n", cMath::ToDeg(fError));
-            float fTorqueSize = mBodyOneAxisAngularPid.Output(fError, afTimeStep);
+            float fTorqueSize = mBodyOneAxisAngularPid.Output(fError, adFixedDelta);
 
             cVector3f vTorque = vNormalToBody * fTorqueSize;
             cMath::Vector3ClampToLength(vTorque, fMaxRelativeCharTorque);
@@ -1417,7 +1417,7 @@ void iCharacterBody::UpdateBodyConnection(float afTimeStep)
             cVector3f vCurrentRotation = cMath::MatrixToEulerAngles(mpConnectedBody->GetLocalMatrix().GetRotation(), eEulerRotationOrder_XYZ);
             cVector3f vError = mvConnectionBodyStartRotation - vCurrentRotation;
 
-            cVector3f vTorque = mBodyAngularPid.Output(vError, afTimeStep);
+            cVector3f vTorque = mBodyAngularPid.Output(vError, adFixedDelta);
             cMath::Vector3ClampToLength(vTorque, fMaxRelativeCharTorque);
 
             vTotalTorque += vTorque;
@@ -1445,7 +1445,7 @@ void iCharacterBody::UpdateBodyConnection(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iCharacterBody::UpdateCharacterConnection(float afTimeStep)
+void iCharacterBody::UpdateCharacterConnection(double adFixedDelta)
 {
     //If no connection, do nothing
     if(mpConnectedBody == NULL)
@@ -1494,7 +1494,7 @@ void iCharacterBody::UpdateCharacterConnection(float afTimeStep)
     cVector3f vCharConnection = GetCharConnectionPos();
 
     cVector3f vError = vBodyConnection - vCharConnection;
-    cVector3f vForce = mCharConnectionPointPid.Output(vError, afTimeStep);
+    cVector3f vForce = mCharConnectionPointPid.Output(vError, adFixedDelta);
 
     AddForce(vForce * GetMass());
 }
@@ -1502,7 +1502,7 @@ void iCharacterBody::UpdateCharacterConnection(float afTimeStep)
 //-----------------------------------------------------------------------
 
 
-cVector3f iCharacterBody::UpdatePostionFromCharSpeed(float afTimeStep)
+cVector3f iCharacterBody::UpdatePostionFromCharSpeed(double adFixedDelta)
 {
     /////////////////////////////////////////////////////
     // A special mul if the player is moving diagonally
@@ -1526,7 +1526,7 @@ cVector3f iCharacterBody::UpdatePostionFromCharSpeed(float afTimeStep)
             {
                 if(mfMoveSpeed[i]>0)
                 {
-                    mfMoveSpeed[i] -= mfMoveDeacc[i] * afTimeStep;
+                    mfMoveSpeed[i] -= mfMoveDeacc[i] * (float)adFixedDelta;
                     if(mfMoveSpeed[i]<0)
                     {
                         mfMoveSpeed[i] =0;
@@ -1534,7 +1534,7 @@ cVector3f iCharacterBody::UpdatePostionFromCharSpeed(float afTimeStep)
                 }
                 else
                 {
-                    mfMoveSpeed[i] += mfMoveDeacc[i] * afTimeStep;
+                    mfMoveSpeed[i] += mfMoveDeacc[i] * (float)adFixedDelta;
                     if(mfMoveSpeed[i]>0)
                     {
                         mfMoveSpeed[i] =0;
@@ -1556,7 +1556,7 @@ cVector3f iCharacterBody::UpdatePostionFromCharSpeed(float afTimeStep)
             {
                 if(mfMoveSpeed[i] > fMaxPosSpeed)
                 {
-                    mfMoveSpeed[i] -= mfMoveDeacc[i] * afTimeStep;
+                    mfMoveSpeed[i] -= mfMoveDeacc[i] * (float)adFixedDelta;
                     if(mfMoveSpeed[i] < fMaxPosSpeed)
                     {
                         mfMoveSpeed[i] = fMaxPosSpeed;
@@ -1564,7 +1564,7 @@ cVector3f iCharacterBody::UpdatePostionFromCharSpeed(float afTimeStep)
                 }
                 else if(mfMoveSpeed[i] < fMaxNegSpeed)
                 {
-                    mfMoveSpeed[i] += mfMoveDeacc[i] * afTimeStep;
+                    mfMoveSpeed[i] += mfMoveDeacc[i] * (float)adFixedDelta;
                     if(mfMoveSpeed[i] > fMaxNegSpeed)
                     {
                         mfMoveSpeed[i] = fMaxNegSpeed;
@@ -1592,7 +1592,7 @@ cVector3f iCharacterBody::UpdatePostionFromCharSpeed(float afTimeStep)
             fAccMul = mfMoveOppositeDirAccMul[i];
         }
 
-        float fSpeedAdd = mfCurrentMoveAcc[i] * mfMoveAcc[i] * fAccMul * afTimeStep;
+        float fSpeedAdd = mfCurrentMoveAcc[i] * mfMoveAcc[i] * fAccMul * (float)adFixedDelta;
 
         //Only update speed if max speed had not been reached.
         //This way the current speed can be over max speed (if the player first runs and then goes over to walk)
@@ -1622,14 +1622,14 @@ cVector3f iCharacterBody::UpdatePostionFromCharSpeed(float afTimeStep)
     cVector3f vPosAdd =0;
 
     //Movement velocity
-    vPosAdd += mvForward * mfMoveSpeed[eCharDir_Forward] * afTimeStep;
-    vPosAdd += mvRight * mfMoveSpeed[eCharDir_Right] * afTimeStep;
+    vPosAdd += mvForward * mfMoveSpeed[eCharDir_Forward] * (float)adFixedDelta;
+    vPosAdd += mvRight * mfMoveSpeed[eCharDir_Right] * (float)adFixedDelta;
 
     //TODO: This does not work when one lowers the speed (since it also caps max speed!). So leave in strafe bug / trick for now!
     //Make sure speed is not greater than max forward.
     /*float fMaxStep = mfMoveSpeed[eCharDir_Forward] >=0 ? mfMaxPosMoveSpeed[eCharDir_Forward] : mfMaxNegMoveSpeed[eCharDir_Forward];
 
-    fMaxStep *= afTimeStep;
+    fMaxStep *= adFixedDelta;
     fMaxStep = cMath::Abs(fMaxStep);
 
     float fStepLength = vPosAdd.Length();
@@ -1668,7 +1668,7 @@ void iCharacterBody::AlignPosAddAccordingToGroundNormal(cVector3f &avPosAdd)
 
 //-----------------------------------------------------------------------
 
-void iCharacterBody::CheckMoveCollision(const cVector3f &avPosAdd, float afTimeStep)
+void iCharacterBody::CheckMoveCollision(const cVector3f &avPosAdd, double adFixedDelta)
 {
     //NOTE: We do not skip this test since we always need at least one test for collision, even if the
     //        character never moved.
@@ -1741,12 +1741,12 @@ void iCharacterBody::CheckMoveCollision(const cVector3f &avPosAdd, float afTimeS
 
     /////////////////////////////
     //Always check climbing!
-    CheckStepClimbing(avPosAdd,afTimeStep);
+    CheckStepClimbing(avPosAdd,adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
 
-void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, float afTimeStep)
+void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, double adFixedDelta)
 {
     if(mfCheckStepClimbCount > 0)
     {
@@ -1819,7 +1819,7 @@ void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, float afTimeSt
             if(CheckCharacterFits(vStepPos))
             {
                 //Climb the stair.
-                mvPosition.y += mfStepClimbSpeed * afTimeStep;
+                mvPosition.y += mfStepClimbSpeed * (float)adFixedDelta;
                 mbClimbing = true;
                 break;
             }
@@ -1831,7 +1831,7 @@ void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, float afTimeSt
 
 //-----------------------------------------------------------------------
 
-void iCharacterBody::UpdateStepClimbing(float afTimeStep)
+void iCharacterBody::UpdateStepClimbing(double adFixedDelta)
 {
     if(mbClimbing)
     {
@@ -1840,7 +1840,7 @@ void iCharacterBody::UpdateStepClimbing(float afTimeStep)
     }
     else
     {
-        mfCheckStepClimbCount -= afTimeStep;
+        mfCheckStepClimbCount -= (float)adFixedDelta;
     }
 
     mbClimbing = false;
@@ -1848,7 +1848,7 @@ void iCharacterBody::UpdateStepClimbing(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iCharacterBody::UpdateForces(float afTimeStep)
+void iCharacterBody::UpdateForces(double adFixedDelta)
 {
 
     ////////////////////
@@ -1857,11 +1857,11 @@ void iCharacterBody::UpdateForces(float afTimeStep)
     {
         if(mbCustomGravity)
         {
-            mvVelocity += mvCustomGravity * afTimeStep;
+            mvVelocity += mvCustomGravity * (float)adFixedDelta;
         }
         else
         {
-            mvVelocity += mpWorld->GetGravity() * afTimeStep;
+            mvVelocity += mpWorld->GetGravity() * (float)adFixedDelta;
         }
 
         float fLength = mvVelocity.Length();
@@ -1874,13 +1874,13 @@ void iCharacterBody::UpdateForces(float afTimeStep)
 
     //////////////////
     // Normal force
-    mvVelocity += mvForce * (afTimeStep * (1.0f/mfMass));
+    mvVelocity += mvForce * ((float)adFixedDelta * (1.0f/mfMass));
     mvForce =0;
 }
 
 //-----------------------------------------------------------------------
 
-void iCharacterBody::UpdateFriction(float afTimeStep)
+void iCharacterBody::UpdateFriction(double adFixedDelta)
 {
     ////////////////////
     // Friction (only do for x and z? Really good idea? I think so!)
@@ -1890,7 +1890,7 @@ void iCharacterBody::UpdateFriction(float afTimeStep)
     float fSpeed = vVelXZ.Length();
     vVelXZ.Normalize();
 
-    fSpeed -= fFriction * afTimeStep;
+    fSpeed -= fFriction * (float)adFixedDelta;
     if(fSpeed<0)
     {
         fSpeed=0;
@@ -1906,7 +1906,7 @@ void iCharacterBody::UpdateFriction(float afTimeStep)
     {
         cVector3f vDir = mvGravityAttachmentVelocity / fSpeed;
 
-        fSpeed -= mfAirFriction * afTimeStep;
+        fSpeed -= mfAirFriction * (float)adFixedDelta;
         if(fSpeed<0)
         {
             fSpeed =0;
@@ -1918,17 +1918,17 @@ void iCharacterBody::UpdateFriction(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iCharacterBody::CheckForceCollision(float afTimeStep)
+void iCharacterBody::CheckForceCollision(double adFixedDelta)
 {
     //TODO: Will have to do very specific stuff if custom gravity is no restricted to y axis.
     //        That is true for a lot of the code...
 
     ////////////////////////////
     // Get position add
-    cVector3f vPosAdd = mvVelocity * afTimeStep;
+    cVector3f vPosAdd = mvVelocity * (float)adFixedDelta;
 
     //Extra velocity after leaving a moving gravity attachment
-    vPosAdd += mvGravityAttachmentVelocity * afTimeStep;
+    vPosAdd += mvGravityAttachmentVelocity * (float)adFixedDelta;
 
     cVector3f vNewVelocity = 0;
 
@@ -2082,7 +2082,7 @@ void iCharacterBody::CheckForceCollision(float afTimeStep)
 //-----------------------------------------------------------------------
 
 
-void iCharacterBody::UpdateForcePushing(float afTimeStep)
+void iCharacterBody::UpdateForcePushing(double adFixedDelta)
 {
     cCollideData collideData;
     collideData.SetMaxSize(32);

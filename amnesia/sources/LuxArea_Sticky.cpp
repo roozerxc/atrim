@@ -133,10 +133,10 @@ void cLuxArea_Sticky::SetupAfterLoad(cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-void cLuxArea_Sticky::OnUpdate(float afTimeStep)
+void cLuxArea_Sticky::OnUpdate(double adFixedDelta)
 {
-    UpdateAttachBody(afTimeStep);
-    UpdateCollision(afTimeStep);
+    UpdateAttachBody(adFixedDelta);
+    UpdateCollision(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -244,7 +244,7 @@ void cLuxArea_Sticky::DetachBody()
 
 //-----------------------------------------------------------------------
 
-void cLuxArea_Sticky::UpdateAttachBody(float afTimeStep)
+void cLuxArea_Sticky::UpdateAttachBody(double adFixedDelta)
 {
     if(mpAttachedBody==NULL || mfSetMtxTime >= 1)
     {
@@ -261,7 +261,7 @@ void cLuxArea_Sticky::UpdateAttachBody(float afTimeStep)
         }
         else
         {
-            mfSetMtxTime += afTimeStep / mfPoseTime;
+            mfSetMtxTime += (float)adFixedDelta / mfPoseTime;
         }
 
         cMatrixf mtxGoal = mpBody->GetWorldMatrix();
@@ -281,7 +281,7 @@ void cLuxArea_Sticky::UpdateAttachBody(float afTimeStep)
         }
         else
         {
-            mfSetMtxTime += afTimeStep / mfPoseTime;
+            mfSetMtxTime += (float)adFixedDelta / mfPoseTime;
         }
 
         cVector3f vGoal = mpBody->GetWorldPosition() - mpAttachedBody->GetMassCentre();
@@ -301,7 +301,7 @@ void cLuxArea_Sticky::UpdateAttachBody(float afTimeStep)
         }
         else
         {
-            mfSetMtxTime += afTimeStep / mfPoseTime;
+            mfSetMtxTime += (float)adFixedDelta / mfPoseTime;
         }
 
         cMatrixf mtxGoal = mpBody->GetWorldMatrix();
@@ -349,7 +349,7 @@ void cLuxArea_Sticky::UpdateAttachBody(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxArea_Sticky::UpdateCollision(float afTimeStep)
+void cLuxArea_Sticky::UpdateCollision(double adFixedDelta)
 {
     if(mpAttachedBody)
     {

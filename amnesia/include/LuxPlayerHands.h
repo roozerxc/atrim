@@ -51,8 +51,8 @@ public:
     ///////////////////////////////
     // General
     void OnStart();
-    void Update(float afTimeStep);
-    void PostUpdate(float afTimeStep);
+    void Update(double adFixedDelta);
+    void PostUpdate(double adFixedDelta);
     void Reset();
 
     void OnMapEnter(cLuxMap *apMap);
@@ -114,7 +114,7 @@ private:
     void CreateAndAttachHandObject(cLuxMap *apMap, iLuxHandObject *apHandObject);
     void HideAllHandObjects();
 
-    void UpdatePlayerHandsPos(float afTimeStep);
+    void UpdatePlayerHandsPos(double adFixedDelta);
 
     iLuxHandObject* LoadHandObject(const tString& asName);
     iLuxHandObject* CreateObjectFromType(const tString& asName, eLuxHandObjectType aType);

@@ -112,7 +112,7 @@ void cLowLevelSoundOpenAL::GetSupportedFormats(tStringList &alstFormats)
 }
 //-----------------------------------------------------------------------
 
-void cLowLevelSoundOpenAL::UpdateSound(float afTimeStep)
+void cLowLevelSoundOpenAL::UpdateSound(double adFixedDelta)
 {
     OAL_Update();
 }

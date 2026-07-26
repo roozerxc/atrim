@@ -99,14 +99,14 @@ void cLuxScriptHandler::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxScriptHandler::Update(float afTimeStep)
+void cLuxScriptHandler::Update(double adFixedDelta)
 {
 }
 
 //-----------------------------------------------------------------------
 
 
-void cLuxScriptHandler::OnDraw(float afFrameTime)
+void cLuxScriptHandler::OnDraw(double adFrameTime)
 {
 
 }

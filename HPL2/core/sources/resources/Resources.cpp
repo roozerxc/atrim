@@ -302,14 +302,14 @@ void cResources::Init(    cGraphics* apGraphics,cSystem *apSystem, cSound* apSou
 
 //-----------------------------------------------------------------------
 
-void cResources::Update(float afTimeStep)
+void cResources::Update(double adFixedDelta)
 {
     tResourceManagerListIt it = mlstManagers.begin();
     for(; it != mlstManagers.end(); ++it)
     {
         iResourceManager *pManager = *it;
 
-        pManager->Update(afTimeStep);
+        pManager->Update(adFixedDelta);
     }
 }
 

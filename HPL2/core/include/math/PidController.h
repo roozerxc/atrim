@@ -32,10 +32,10 @@ public:
     /////////////////////////////////////////
 
     //------------------------------------
-    T Output(T aError, float afTimeStep)
+    T Output(T aError, double adFixedDelta)
     {
         mvErrors[mlErrorNum] = aError;
-        mvTimeSteps[mlErrorNum] = afTimeStep;
+        mvTimeSteps[mlErrorNum] = (float)adFixedDelta;
 
         integral =0;
         size_t lCount = mvErrors.size();
@@ -47,7 +47,7 @@ public:
         derivative = 0.0f;
         if(mlLastNum>=0)
         {
-            derivative = (mvErrors[mlErrorNum] - mvErrors[mlLastNum]) / afTimeStep;
+            derivative = (mvErrors[mlErrorNum] - mvErrors[mlLastNum]) / (float)adFixedDelta;
         }
 
         mlLastNum = mlErrorNum;

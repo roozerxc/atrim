@@ -109,8 +109,8 @@ public:
         return mpVtxBuffer;
     }
 
-    void UpdateGraphicsForFrame(float afFrameTime);
-    bool UpdateGraphicsForViewport(cFrustum *apFrustum,float afFrameTime);
+    void UpdateGraphicsForFrame(double adFrameTime);
+    bool UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime);
 
     cBoundingVolume* GetBoundingVolume();
 

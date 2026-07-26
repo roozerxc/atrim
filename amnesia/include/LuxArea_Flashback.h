@@ -29,7 +29,7 @@ public:
 
     //////////////////////
     //General
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     //////////////////////
     //Connection callbacks

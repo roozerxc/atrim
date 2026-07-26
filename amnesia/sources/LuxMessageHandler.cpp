@@ -151,15 +151,15 @@ void cLuxMessageHandler::SetMessage(const tWString& asText, float afTime)
 
 //-----------------------------------------------------------------------
 
-void cLuxMessageHandler::Update(float afTimeStep)
+void cLuxMessageHandler::Update(double adFixedDelta)
 {
     ////////////////////////////////
     // Message
     if(mfMessageTime > 0)
     {
-        mfMessageTime -= afTimeStep;
+        mfMessageTime -= (float)adFixedDelta;
 
-        mfMessageAlpha += afTimeStep*1;
+        mfMessageAlpha += (float)adFixedDelta*1;
         if(mfMessageAlpha > 1)
         {
             mfMessageAlpha =1;
@@ -167,7 +167,7 @@ void cLuxMessageHandler::Update(float afTimeStep)
     }
     else if(mfMessageAlpha > 0)
     {
-        mfMessageAlpha -= afTimeStep * 1.5f;
+        mfMessageAlpha -= (float)adFixedDelta * 1.5f;
         if(mfMessageAlpha < 0)
         {
             mfMessageAlpha =0;
@@ -180,7 +180,7 @@ void cLuxMessageHandler::Update(float afTimeStep)
     {
         if(mfQuestMessageAlpha < 0.1)
         {
-            mfQuestMessageAlpha += afTimeStep;
+            mfQuestMessageAlpha += (float)adFixedDelta;
             if(mfQuestMessageAlpha >= 0.1)
             {
                 gpBase->mpHelpFuncs->PlayGuiSoundData(msQuestAddedSound, eSoundEntryType_Gui);    //Have it here so that is not played directly!
@@ -188,7 +188,7 @@ void cLuxMessageHandler::Update(float afTimeStep)
         }
         else if(mfQuestMessageAlpha < 1)
         {
-            mfQuestMessageAlpha += afTimeStep;
+            mfQuestMessageAlpha += (float)adFixedDelta;
             if(mfQuestMessageAlpha > 1)
             {
                 mfQuestMessageAlpha =1;
@@ -196,7 +196,7 @@ void cLuxMessageHandler::Update(float afTimeStep)
         }
         else
         {
-            mfQuestMessageTime += afTimeStep;
+            mfQuestMessageTime += (float)adFixedDelta;
             if(mfQuestMessageTime > 3)
             {
                 mbQuestMessageActive = false;
@@ -205,7 +205,7 @@ void cLuxMessageHandler::Update(float afTimeStep)
     }
     else if(mfQuestMessageAlpha > 0)
     {
-        mfQuestMessageAlpha -= afTimeStep;
+        mfQuestMessageAlpha -= (float)adFixedDelta;
         if(mfQuestMessageAlpha <0)
         {
             mfQuestMessageAlpha =0;
@@ -214,7 +214,7 @@ void cLuxMessageHandler::Update(float afTimeStep)
 
     if(mfQuestMessageAlpha >0)
     {
-        mQuestOscill.Update(afTimeStep);
+        mQuestOscill.Update(adFixedDelta);
     }
 
 
@@ -222,7 +222,7 @@ void cLuxMessageHandler::Update(float afTimeStep)
     // Pause message
     if(mbPauseMessageActive)
     {
-        mfPauseMessageAlpha += afTimeStep * 2.0f;
+        mfPauseMessageAlpha += (float)adFixedDelta * 2.0f;
         if(mfPauseMessageAlpha > 1)
         {
             mfPauseMessageAlpha = 1;
@@ -230,7 +230,7 @@ void cLuxMessageHandler::Update(float afTimeStep)
     }
     else
     {
-        mfPauseMessageAlpha -= afTimeStep * 2.0f;
+        mfPauseMessageAlpha -= (float)adFixedDelta * 2.0f;
         if(mfPauseMessageAlpha < 0)
         {
             mfPauseMessageAlpha =0;
@@ -240,7 +240,7 @@ void cLuxMessageHandler::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxMessageHandler::OnDraw(float afFrameTime)
+void cLuxMessageHandler::OnDraw(double adFrameTime)
 {
     DrawMessage();
     DrawPauseMessage();

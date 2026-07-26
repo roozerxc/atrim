@@ -91,7 +91,7 @@ void cLuxPlayerState_InteractSlide::OnLeaveState(eLuxPlayerState aNewState)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerState_InteractSlide::Update(float afTimeStep)
+void cLuxPlayerState_InteractSlide::Update(double adFixedDelta)
 {
     //////////////////////////////
     //Set up variables
@@ -123,7 +123,7 @@ void cLuxPlayerState_InteractSlide::Update(float afTimeStep)
     float fSlowDownSpeed = cMath::Abs(mfSlideSpeed) * 3.0f * mpSlideData->mfSlideSlowDownFactor;
     if(mfSlideSpeed > 0)
     {
-        mfSlideSpeed -= afTimeStep * fSlowDownSpeed;
+        mfSlideSpeed -= (float)adFixedDelta * fSlowDownSpeed;
         if(mfSlideSpeed < 0)
         {
             mfSlideSpeed = 0;
@@ -131,7 +131,7 @@ void cLuxPlayerState_InteractSlide::Update(float afTimeStep)
     }
     if(mfSlideSpeed < 0)
     {
-        mfSlideSpeed += afTimeStep * fSlowDownSpeed;
+        mfSlideSpeed += (float)adFixedDelta * fSlowDownSpeed;
         if(mfSlideSpeed > 0)
         {
             mfSlideSpeed = 0;
@@ -141,7 +141,7 @@ void cLuxPlayerState_InteractSlide::Update(float afTimeStep)
     {
         mfSlideSpeed = 0;
     }
-    mfSlideSpeed += fSpeedAdd * 850.0f * afTimeStep  * mpSlideData->mfSlideSpeedFactor;
+    mfSlideSpeed += fSpeedAdd * 850.0f * (float)adFixedDelta  * mpSlideData->mfSlideSpeedFactor;
     if(mfSlideSpeed > mpSlideData->mfSlideMaxSpeed)
     {
         mfSlideSpeed = mpSlideData->mfSlideMaxSpeed;
@@ -160,7 +160,7 @@ void cLuxPlayerState_InteractSlide::Update(float afTimeStep)
     cVector3f vWantedVel = mpCurrentJoint->GetPinDir() * mfSlideSpeed;
 
 
-    cVector3f vForce = mForcePid.Output(vWantedVel - vJointVel, afTimeStep) * mpCurrentBody->GetMass();
+    cVector3f vForce = mForcePid.Output(vWantedVel - vJointVel, adFixedDelta) * mpCurrentBody->GetMass();
 
     vForce = cMath::Vector3MaxLength(vForce, mfMaxForce);
 
@@ -174,7 +174,7 @@ void cLuxPlayerState_InteractSlide::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerState_InteractSlide::PostUpdate(float afTimeStep)
+void cLuxPlayerState_InteractSlide::PostUpdate(double adFixedDelta)
 {
 
 }

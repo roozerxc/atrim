@@ -369,7 +369,7 @@ void cTextureManager::Destroy(iResourceBase* apResource)
 
 //-----------------------------------------------------------------------
 
-void cTextureManager::Update(float afTimeStep)
+void cTextureManager::Update(double adFixedDelta)
 {
     tResourceBaseMapIt it = m_mapResources.begin();
     for(; it != m_mapResources.end(); ++it)
@@ -377,7 +377,7 @@ void cTextureManager::Update(float afTimeStep)
         iResourceBase *pBase = it->second;
         iTexture *pTexture = static_cast<iTexture*>(pBase);
 
-        pTexture->Update(afTimeStep);
+        pTexture->Update(adFixedDelta);
     }
 }
 

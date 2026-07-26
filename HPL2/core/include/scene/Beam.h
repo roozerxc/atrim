@@ -136,7 +136,7 @@ public:
         return mpVtxBuffer;
     }
 
-    void UpdateGraphicsForFrame(float afFrameTime);
+    void UpdateGraphicsForFrame(double adFrameTime);
 
     cBoundingVolume* GetBoundingVolume();
 

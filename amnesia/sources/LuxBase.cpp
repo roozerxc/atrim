@@ -1100,8 +1100,6 @@ bool cLuxBase::InitEngine()
     vars.mGraphics.mbFullscreen =  mpConfigHandler->mbFullscreen;
     vars.mGraphics.msWindowCaption = msGameName + " Loading...";
 
-    vars.mGame.mlMaxFramesPerSec = mpConfigHandler->mlMaxFramesPerSec;
-
     vars.mSound.mlSoundDeviceID = mpConfigHandler->mlSoundDevID;
     vars.mSound.mlMaxChannels = mpConfigHandler->mlMaxSoundChannels;
     vars.mSound.mlStreamBufferCount = mpConfigHandler->mlSoundStreamBuffers;
@@ -1146,8 +1144,6 @@ bool cLuxBase::InitEngine()
 
     float fGamma = mpMainConfig->GetFloat("Graphics","Gamma", 1.0f);
     mpEngine->GetGraphics()->GetLowLevel()->SetGammaCorrection(fGamma);
-
-    mpEngine->SetLimitFPS(mpMainConfig->GetBool("Engine","LimitFPS", false));
 
     cMaterialManager* pMatMgr = mpEngine->GetResources()->GetMaterialManager();
     pMatMgr->SetTextureSizeDownScaleLevel(mpConfigHandler->mlTextureQuality);

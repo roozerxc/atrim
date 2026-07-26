@@ -166,7 +166,7 @@ void cLuxSaveHandler::OnStart()
 
 //-----------------------------------------------------------------------
 
-void cLuxSaveHandler::Update(float afTimeStep)
+void cLuxSaveHandler::Update(double adFixedDelta)
 {
 }
 

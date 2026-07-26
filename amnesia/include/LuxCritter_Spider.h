@@ -33,8 +33,8 @@ public:
 
     //////////////////////
     //General
-    void UpdateCritterSpecific(float afTimeStep);
-    void OnShapeCollision(const cVector3f& avPushVec, float afTimeStep);
+    void UpdateCritterSpecific(double adFixedDelta);
+    void OnShapeCollision(const cVector3f& avPushVec, double adFixedDelta);
 
     void OnDamageCritter(float afAmount);
     void OnKillCritter();
@@ -59,8 +59,8 @@ public:
 
 private:
 
-    void UpdateVelocity(float afTimeStep);
-    void UpdateGroundCheck(float afTimeStep);
+    void UpdateVelocity(double adFixedDelta);
+    void UpdateGroundCheck(double adFixedDelta);
 
     //Data
     float mfMaxIdleSpeed;

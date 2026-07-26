@@ -53,7 +53,7 @@ public:
     //////////////////////
     //General
     void SetupAfterLoad(cWorld *apWorld);
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     //////////////////////
     //Actions
@@ -88,8 +88,8 @@ public:
     virtual void SetupSaveData(iLuxEntity_SaveData *apSaveData);
 
 private:
-    void UpdateAttachBody(float afTimeStep);
-    void UpdateCollision(float afTimeStep);
+    void UpdateAttachBody(double adFixedDelta);
+    void UpdateCollision(double adFixedDelta);
 
 
     tString GetCallbackFunc(const tString &asFunc,iPhysicsBody *apBody);

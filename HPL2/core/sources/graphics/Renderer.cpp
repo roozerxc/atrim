@@ -481,10 +481,10 @@ iRenderer::~iRenderer()
 
 //-----------------------------------------------------------------------
 
-void iRenderer::Render(float afFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
+void iRenderer::Render(double adFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
                        bool abSendFrameBufferToPostEffects,tRendererCallbackList *apCallbackList)
 {
-    BeginRendering(afFrameTime,apFrustum, apWorld, apSettings,apRenderTarget,abSendFrameBufferToPostEffects,apCallbackList);
+    BeginRendering(adFrameTime,apFrustum, apWorld, apSettings,apRenderTarget,abSendFrameBufferToPostEffects,apCallbackList);
 
     SetupRenderList();
     RenderObjects();
@@ -494,9 +494,9 @@ void iRenderer::Render(float afFrameTime,cFrustum *apFrustum, cWorld *apWorld, c
 
 //-----------------------------------------------------------------------
 
-void iRenderer::Update(float afTimeStep)
+void iRenderer::Update(double adFixedDelta)
 {
-    mfTimeCount += afTimeStep;
+    mfTimeCount += (float)adFixedDelta;
 }
 
 //-----------------------------------------------------------------------
@@ -559,7 +559,7 @@ void iRenderer::WaitAndRetrieveAllOcclusionQueries()
 
 //-----------------------------------------------------------------------
 
-void iRenderer::BeginRendering(    float afFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
+void iRenderer::BeginRendering(    double adFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
                                    bool abSendFrameBufferToPostEffects,tRendererCallbackList *apCallbackList, bool abAtStartOfRendering)
 {
     if(apSettings->mbLog)
@@ -570,7 +570,7 @@ void iRenderer::BeginRendering(    float afFrameTime,cFrustum *apFrustum, cWorld
 
     //////////////////////////////////////////
     //Set up variables
-    mfCurrentFrameTime = afFrameTime;
+    dCurrentFrameTime = adFrameTime;
     mpCurrentWorld = apWorld;
     mpCurrentSettings = apSettings;
     mpCurrentRenderList = apSettings->mpRenderList;

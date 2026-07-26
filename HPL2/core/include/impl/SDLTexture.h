@@ -43,7 +43,7 @@ public:
 
     void AutoGenerateMipmaps();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     bool HasAnimation();
     void NextFrame();

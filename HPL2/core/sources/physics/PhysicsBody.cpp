@@ -247,7 +247,7 @@ void iPhysicsBody::RemoveJoint(iPhysicsJoint *apJoint)
 
 //-----------------------------------------------------------------------
 
-bool iPhysicsBody::UpdateBeforeSimulate(float afTimeStep)
+bool iPhysicsBody::UpdateBeforeSimulate(double adFixedDelta)
 {
     /////////////////////
     //See if the body should still be in update list.
@@ -313,7 +313,7 @@ bool iPhysicsBody::UpdateBeforeSimulate(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iPhysicsBody::UpdateAfterSimulate(float afTimeStep)
+void iPhysicsBody::UpdateAfterSimulate(double adFixedDelta)
 {
     //////////////////////////////////
     //Static velocity update
@@ -323,13 +323,13 @@ void iPhysicsBody::UpdateAfterSimulate(float afTimeStep)
 
         if(mvTotalStaticLinearVel != 0)
         {
-            vPos += mvTotalStaticLinearVel * afTimeStep;
+            vPos += mvTotalStaticLinearVel * (float)adFixedDelta;
         }
         if(mvTotalStaticAngularVel != 0)
         {
             cMatrixf mtxRot = GetLocalMatrix().GetRotation();
 
-            mtxRot = cMath::MatrixMul( cMath::MatrixRotate(mvTotalStaticAngularVel * afTimeStep, eEulerRotationOrder_XYZ), mtxRot );
+            mtxRot = cMath::MatrixMul( cMath::MatrixRotate(mvTotalStaticAngularVel * (float)adFixedDelta, eEulerRotationOrder_XYZ), mtxRot );
 
             SetMatrix(mtxRot);
         }

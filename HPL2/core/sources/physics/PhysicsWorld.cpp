@@ -45,7 +45,7 @@ iPhysicsWorld::~iPhysicsWorld()
 
 //-----------------------------------------------------------------------
 
-void iPhysicsWorld::Update(float afTimeStep)
+void iPhysicsWorld::Update(double adFixedDelta)
 {
     //Clear all contact points.
     mvContactPoints.clear();
@@ -56,7 +56,7 @@ void iPhysicsWorld::Update(float afTimeStep)
     {
         iPhysicsController *pCtrl = *CtrlIt;
 
-        pCtrl->Update(afTimeStep);
+        pCtrl->Update(adFixedDelta);
     }
 
     ////////////////////////////////////
@@ -65,7 +65,7 @@ void iPhysicsWorld::Update(float afTimeStep)
     {
         iPhysicsRope *pRope = *it;
 
-        pRope->UpdateBeforeSimulate(afTimeStep);
+        pRope->UpdateBeforeSimulate(adFixedDelta);
     }
 
     ////////////////////////////////////
@@ -75,7 +75,7 @@ void iPhysicsWorld::Update(float afTimeStep)
     {
         iCharacterBody *pBody = *CharIt;
 
-        pBody->Update(afTimeStep);
+        pBody->Update(adFixedDelta);
     }
     STOP_TIMING(PhysicsCharacters)
 
@@ -88,7 +88,7 @@ void iPhysicsWorld::Update(float afTimeStep)
     {
         iPhysicsBody *pBody = *BodyIt;
 
-        if(pBody->UpdateBeforeSimulate(afTimeStep)==false)
+        if(pBody->UpdateBeforeSimulate(adFixedDelta)==false)
         {
             //Add to remove list
             lstRemoveUpdateBodies.push_back(pBody);
@@ -111,7 +111,7 @@ void iPhysicsWorld::Update(float afTimeStep)
     ////////////////////////////////////
     //Simulate the physics
     START_TIMING(Simulate)
-    Simulate(afTimeStep);
+    Simulate(adFixedDelta);
     STOP_TIMING(Simulate)
 
     ////////////////////////////////////
@@ -143,7 +143,7 @@ void iPhysicsWorld::Update(float afTimeStep)
     {
         iPhysicsBody *pBody = *BodyIt;
 
-        pBody->UpdateAfterSimulate(afTimeStep);
+        pBody->UpdateAfterSimulate(adFixedDelta);
     }
     STOP_TIMING(BodyAfterSimulate)
 
@@ -153,7 +153,7 @@ void iPhysicsWorld::Update(float afTimeStep)
     {
         iPhysicsRope *pRope = *it;
 
-        pRope->UpdateAfterSimulate(afTimeStep);
+        pRope->UpdateAfterSimulate(adFixedDelta);
     }
 }
 

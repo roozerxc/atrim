@@ -59,7 +59,7 @@ public:
     void AfterWorldLoad();
 
     void OnSetActive(bool abX);
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     //////////////////////
     //Connection

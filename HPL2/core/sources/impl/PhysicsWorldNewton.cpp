@@ -82,19 +82,19 @@ cPhysicsWorldNewton::~cPhysicsWorldNewton()
 
 //-----------------------------------------------------------------------
 
-void cPhysicsWorldNewton::Simulate(float afTimeStep)
+void cPhysicsWorldNewton::Simulate(double adFixedDelta)
 {
     //cPhysicsBodyNewton::SetUseCallback(false);
     //static lUpdate =0;
     //if(lUpdate % 30==0)
     {
 
-        while(afTimeStep>mfMaxTimeStep)
+        while(adFixedDelta>mfMaxTimeStep)
         {
             NewtonUpdate(mpNewtonWorld, mfMaxTimeStep);
-            afTimeStep -= mfMaxTimeStep;
+            adFixedDelta -= mfMaxTimeStep;
         }
-        NewtonUpdate(mpNewtonWorld, afTimeStep);
+        NewtonUpdate(mpNewtonWorld, (float)adFixedDelta);
     }
     //lUpdate++;
     //cPhysicsBodyNewton::SetUseCallback(true);
@@ -109,9 +109,9 @@ void cPhysicsWorldNewton::Simulate(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cPhysicsWorldNewton::SetMaxTimeStep(float afTimeStep)
+void cPhysicsWorldNewton::SetMaxTimeStep(double adFixedDelta)
 {
-    mfMaxTimeStep = afTimeStep;
+    mfMaxTimeStep = (float)adFixedDelta;
 }
 
 float cPhysicsWorldNewton::GetMaxTimeStep()

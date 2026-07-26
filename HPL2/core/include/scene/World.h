@@ -174,9 +174,9 @@ public:
         return mbActive;
     }
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
-    void PreUpdate(float afTotalTime, float afTimeStep);
+    void PreUpdate(float afTotalTime, double adFixedDelta);
 
     cVector3f GetWorldSize()
     {
@@ -452,10 +452,10 @@ private:
     void AddRenderableToContainer(iRenderable *apObject);
     void RemoveRenderableFromContainer(iRenderable *apObject);
 
-    void UpdateEntities(float afTimeStep);
-    void UpdateParticles(float afTimeStep);
-    void UpdateLights(float afTimeStep);
-    void UpdateSoundEntities(float afTimeStep);
+    void UpdateEntities(double adFixedDelta);
+    void UpdateParticles(double adFixedDelta);
+    void UpdateLights(double adFixedDelta);
+    void UpdateSoundEntities(double adFixedDelta);
 
     tString msName;
     tWString msFilePath;

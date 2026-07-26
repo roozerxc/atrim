@@ -237,14 +237,14 @@ void cLuxEnemy_ManPig::OnAfterWorldLoad()
 
 //-----------------------------------------------------------------------
 
-void cLuxEnemy_ManPig::UpdateEnemySpecific(float afTimeStep)
+void cLuxEnemy_ManPig::UpdateEnemySpecific(double adFixedDelta)
 {
     if(mbIsTelsa)
     {
-        UpdateTesla(afTimeStep);
+        UpdateTesla(adFixedDelta);
     }
 
-    UpdateCheckInLantern(afTimeStep);
+    UpdateCheckInLantern(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -2266,7 +2266,7 @@ bool cLuxEnemy_ManPig::InsidePlayerView()
     return false;
 }
 
-void cLuxEnemy_ManPig::UpdateCheckInLantern(float afTimeStep)
+void cLuxEnemy_ManPig::UpdateCheckInLantern(double adFixedDelta)
 {
     if(gpBase->mpPlayer->GetHelperLantern()->IsActive()==false || mbDisableTriggers)
     {
@@ -2274,7 +2274,7 @@ void cLuxEnemy_ManPig::UpdateCheckInLantern(float afTimeStep)
         return;
     }
 
-    mfCheckFlashLightShining-=afTimeStep;
+    mfCheckFlashLightShining -= (float)adFixedDelta;
     if(mfCheckFlashLightShining>0)
     {
         return;
@@ -2407,7 +2407,7 @@ void cLuxEnemy_ManPig::SetTeslaEasyEscapeDisabled(bool abX)
 
 //-----------------------------------------------------------------------
 
-void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
+void cLuxEnemy_ManPig::UpdateTesla(double adFixedDelta)
 {
     if(gpBase->mpPlayer->IsDead() || IsActive()==false)
     {
@@ -2423,7 +2423,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
     ///////////////////////////////////////
     // Tesla Flickering
     {
-        mfBlackOutCount -= afTimeStep;
+        mfBlackOutCount -= (float)adFixedDelta;
         if(mfBlackOutCount<0)
         {
             mfBlackOutDurationCount = cMath::RandRectf(2.0f, 4.0f);
@@ -2432,10 +2432,10 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
 
         if(mfBlackOutDurationCount>0)
         {
-            mfBlackOutDurationCount -= afTimeStep;
+            mfBlackOutDurationCount -= (float)adFixedDelta;
         }
 
-        mfTeslaFlickerTimer-= afTimeStep;
+        mfTeslaFlickerTimer-= (float)adFixedDelta;
         if(mfTeslaFlickerTimer<=0)
         {
             if(mlTeslaFlickerState==0)
@@ -2460,7 +2460,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
 
         if(mfBlackOutDurationCount>0 && mfTeslaSpecialNoticeCount<0.7f)
         {
-            mfTeslaEffectAmount -= afTimeStep*10;
+            mfTeslaEffectAmount -= (float)adFixedDelta*10;
             if(mfTeslaEffectAmount<0)
             {
                 mfTeslaEffectAmount =0;
@@ -2468,7 +2468,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
         }
         else if(mlTeslaFlickerState==0)
         {
-            mfTeslaEffectAmount -= afTimeStep*25;
+            mfTeslaEffectAmount -= (float)adFixedDelta*25;
             if(mfTeslaEffectAmount<0)
             {
                 mfTeslaEffectAmount =0;
@@ -2476,7 +2476,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
         }
         else
         {
-            mfTeslaEffectAmount += afTimeStep*16;
+            mfTeslaEffectAmount += (float)adFixedDelta*16;
             if(mfTeslaEffectAmount>1)
             {
                 mfTeslaEffectAmount =1;
@@ -2503,7 +2503,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
             if(fDistance>30) fMul *= 0.5f;
             else if(fDistance>15) fMul *= 0.75f;
 
-            mfTeslaSpecialNoticeCount += (fSpeed/fMinSpeed)*afTimeStep*fMul;
+            mfTeslaSpecialNoticeCount += (fSpeed/fMinSpeed)*adFixedDelta*fMul;
             bWasNoticed = true;
         }*/
 
@@ -2511,7 +2511,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
         // Vision
         /*if(mbIsSeenByPlayer)// InsidePlayerView())
         {
-            mfTeslaSpecialNoticeCount += afTimeStep*0.15f;
+            mfTeslaSpecialNoticeCount += (float)adFixedDelta*0.15f;
             bWasNoticed = true;
         }*/
 
@@ -2519,7 +2519,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
         // Terror
         /*if(mbTeslaTerror)
         {
-            mfTeslaSpecialNoticeCount += afTimeStep;
+            mfTeslaSpecialNoticeCount += (float)adFixedDelta;
         }*/
 
         //if(mfTeslaSpecialNoticeCount>fMaxNoticeCount) mfTeslaSpecialNoticeCount =fMaxNoticeCount;
@@ -2536,7 +2536,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
         // No notice
         if(bWasNoticed==false)
         {
-            mfTeslaSpecialNoticeCount -= afTimeStep*0.5f;
+            mfTeslaSpecialNoticeCount -= (float)adFixedDelta*0.5f;
             if(mfTeslaSpecialNoticeCount<0.0f)
             {
                 mfTeslaSpecialNoticeCount=0;
@@ -2588,7 +2588,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
 
             ////////////////////////
             // Pulse update
-            mfTeslaMindFuckPulse += afTimeStep*mfTeslaMindFuckPulseAdd*3*mfTeslaSpecialNoticeCount;
+            mfTeslaMindFuckPulse += (float)adFixedDelta*mfTeslaMindFuckPulseAdd*3*mfTeslaSpecialNoticeCount;
             if(mfTeslaMindFuckPulse>1 && mfTeslaMindFuckPulseAdd>0)
             {
                 mfTeslaMindFuckPulse = 1;
@@ -2624,7 +2624,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
                     }
                 }
 
-                mfMindFuckBlinkCount-=afTimeStep*fCountMul;
+                mfMindFuckBlinkCount -= (float)adFixedDelta*fCountMul;
                 if(mfMindFuckBlinkCount<0)
                 {
                     if(mlMindFuckBlinkState==0)
@@ -2648,7 +2648,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
 
                 if(mlMindFuckBlinkState==0 && mfMindFuckBlinkAmount>0)
                 {
-                    mfMindFuckBlinkAmount -= afTimeStep*6;
+                    mfMindFuckBlinkAmount -= (float)adFixedDelta*6;
                     if(mfMindFuckBlinkAmount<0)
                     {
                         mfMindFuckBlinkAmount=0;
@@ -2656,7 +2656,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
                 }
                 if(mlMindFuckBlinkState==1 && mfMindFuckBlinkAmount<1)
                 {
-                    mfMindFuckBlinkAmount += afTimeStep*15;
+                    mfMindFuckBlinkAmount += (float)adFixedDelta*15;
                     if(mfMindFuckBlinkAmount>1)
                     {
                         mfMindFuckBlinkAmount=1;

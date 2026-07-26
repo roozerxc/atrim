@@ -27,7 +27,7 @@ public:
     cRenderList();
     ~cRenderList();
 
-    void Setup(float afFrameTime, cFrustum *apFrustum);
+    void Setup(double adFrameTime, cFrustum *apFrustum);
 
     void AddObject(iRenderable *apObject);
 
@@ -84,7 +84,7 @@ private:
 
     void FindNearestLargeSurfacePlane();
 
-    float mfFrameTime;
+    double dFrameTime;
     cFrustum *mpFrustum;
 
     tRenderableVec mvOcclusionQueryObjects;

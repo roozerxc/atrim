@@ -30,9 +30,9 @@ protected:
 
     //////////////////////////////
     // Implemented iWidget functions
-    void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
+    void OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion);
 
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     void OnInit();
 

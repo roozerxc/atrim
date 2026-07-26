@@ -50,12 +50,12 @@ void cLuxEnemyMover::SetupAfterLoad(cWorld *apWorld)
 }
 //-----------------------------------------------------------------------
 
-void cLuxEnemyMover::OnUpdate(float afTimeStep)
+void cLuxEnemyMover::OnUpdate(double adFixedDelta)
 {
-    UpdateStuckCounter(afTimeStep);
-    UpdateTurning(afTimeStep);
-    UpdateMoveAnimation(afTimeStep);
-    UpdateStepEffects(afTimeStep);
+    UpdateStuckCounter(adFixedDelta);
+    UpdateTurning(adFixedDelta);
+    UpdateMoveAnimation(adFixedDelta);
+    UpdateStepEffects(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -99,7 +99,7 @@ void cLuxEnemyMover::UseMoveStateAnimations()
 
 //-----------------------------------------------------------------------
 
-float cLuxEnemyMover::CalculateSpeedMul(float afTimeStep)
+float cLuxEnemyMover::CalculateSpeedMul(double adFixedDelta)
 {
     float fMul = 1.0f;
 
@@ -155,13 +155,13 @@ float cLuxEnemyMover::GetWantedSpeedAmount()
 
 //-----------------------------------------------------------------------
 
-void cLuxEnemyMover::UpdateStuckCounter(float afTimeStep)
+void cLuxEnemyMover::UpdateStuckCounter(double adFixedDelta)
 {
     ///////////////////////
     // Get the wanted speed and the real speed
     float fWantedSpeed = mpCharBody->GetMoveSpeed(eCharDir_Forward);
     float fRealSpeed = cMath::Vector3Dist(mpCharBody->GetPosition(), mpCharBody->GetLastPosition());
-    fRealSpeed = fRealSpeed / afTimeStep;
+    fRealSpeed = fRealSpeed / (float)adFixedDelta;
 
     ///////////////////////
     // Get the wanted direction and real direction
@@ -175,7 +175,7 @@ void cLuxEnemyMover::UpdateStuckCounter(float afTimeStep)
     // Calculate
     if( fRealSpeed/fWantedSpeed < mfStuckLimit || (std::fabs(fCos) < 0.3f && fWantedSpeed > 0.001f) )
     {
-        mfStuckCounter += afTimeStep ;
+        mfStuckCounter += (float)adFixedDelta ;
         if(mfStuckCounter > mfMaxStuckCounter)
         {
             mfStuckCounter = mfMaxStuckCounter;
@@ -183,7 +183,7 @@ void cLuxEnemyMover::UpdateStuckCounter(float afTimeStep)
     }
     else
     {
-        mfStuckCounter -= afTimeStep*0.8f;
+        mfStuckCounter -= (float)adFixedDelta*0.8f;
         if(mfStuckCounter<0)
         {
             mfStuckCounter =0;
@@ -193,7 +193,7 @@ void cLuxEnemyMover::UpdateStuckCounter(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxEnemyMover::UpdateTurning(float afTimeStep)
+void cLuxEnemyMover::UpdateTurning(double adFixedDelta)
 {
     if(mbTurning==false)
     {
@@ -220,16 +220,16 @@ void cLuxEnemyMover::UpdateTurning(float afTimeStep)
 
     if(fAngleDist < 0)
     {
-        mpCharBody->AddYaw(-mfTurnSpeed * afTimeStep);
+        mpCharBody->AddYaw(-mfTurnSpeed * (float)adFixedDelta);
     }
     else
     {
-        mpCharBody->AddYaw(mfTurnSpeed * afTimeStep);
+        mpCharBody->AddYaw(mfTurnSpeed * (float)adFixedDelta);
     }
 }
 //-----------------------------------------------------------------------
 
-void cLuxEnemyMover::UpdateMoveAnimation(float afTimeStep)
+void cLuxEnemyMover::UpdateMoveAnimation(double adFixedDelta)
 {
     if(mbOverideMoveState)
     {
@@ -367,7 +367,7 @@ void cLuxEnemyMover::UpdateMoveAnimation(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxEnemyMover::UpdateStepEffects(float afTimeStep)
+void cLuxEnemyMover::UpdateStepEffects(double adFixedDelta)
 {
     if(mpEnemy->IsInWater()==false || mpEnemy->GetWaterSurfaceData()==NULL)
     {

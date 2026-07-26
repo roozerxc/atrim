@@ -242,16 +242,16 @@ void cLuxProp_Wheel::OnSetupAfterLoad(cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Wheel::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_Wheel::UpdatePropSpecific(double adFixedDelta)
 {
     if(mfStuckSoundTimer >0)
     {
-        mfStuckSoundTimer-=afTimeStep;
+        mfStuckSoundTimer -= (float)adFixedDelta;
     }
 
-    UpdateAngle(afTimeStep);
-    UpdateCheckLimit(afTimeStep);
-    UpdateAutoRotation(afTimeStep);
+    UpdateAngle(adFixedDelta);
+    UpdateCheckLimit(adFixedDelta);
+    UpdateAutoRotation(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -410,7 +410,7 @@ void cLuxProp_Wheel::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Wheel::UpdateAngle(float afTimeStep)
+void cLuxProp_Wheel::UpdateAngle(double adFixedDelta)
 {
     /////////////////////////////////////////
     //Update the Angle value
@@ -427,7 +427,7 @@ void cLuxProp_Wheel::UpdateAngle(float afTimeStep)
     //Check for movement and play stuck sound
     if(mlStuckState!=0 && mbIsInteractedWith)
     {
-        if(mfStuckSoundTimer <= 0 && fabs(fAngleAdd) >0.01f * afTimeStep)
+        if(mfStuckSoundTimer <= 0 && fabs(fAngleAdd) >0.01f * (float)adFixedDelta)
         {
             PlaySound("WheelStuck", msStuckSound, true, true);
             mfStuckSoundTimer = 1.5f;
@@ -483,7 +483,7 @@ void cLuxProp_Wheel::UpdateAngle(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Wheel::UpdateCheckLimit(float afTimeStep)
+void cLuxProp_Wheel::UpdateCheckLimit(double adFixedDelta)
 {
     if(mlStuckState !=0)
     {
@@ -525,7 +525,7 @@ void cLuxProp_Wheel::UpdateCheckLimit(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Wheel::UpdateAutoRotation(float afTimeStep)
+void cLuxProp_Wheel::UpdateAutoRotation(double adFixedDelta)
 {
     /////////////////////////////
     //Auto move to angle
@@ -537,7 +537,7 @@ void cLuxProp_Wheel::UpdateAutoRotation(float afTimeStep)
         }
         else
         {
-            float fWantedSpeed = (mfAngle - mfAutoMoveGoal) * 10.0f  + (mfPrevAngle - mfAngle)*afTimeStep*1.0f;
+            float fWantedSpeed = (mfAngle - mfAutoMoveGoal) * 10.0f  + (mfPrevAngle - mfAngle) * (float)adFixedDelta * 1.0f;
 
             //Log("Angle: %f Wanted: %f Diff: %f Speed: %f\n", cMath::ToDeg(mfAngle), cMath::ToDeg(mfAutoMoveGoal),cMath::Abs(mfAngle-mfAutoMoveGoal), fWantedSpeed);
 
@@ -546,7 +546,7 @@ void cLuxProp_Wheel::UpdateAutoRotation(float afTimeStep)
             cVector3f vHingeVel = vRotateDir * cMath::Vector3Dot(vRotateDir, vBodyVel);
             cVector3f vWantedVel = vRotateDir * fWantedSpeed;
 
-            cVector3f vTorque = mRotatePid.Output(vWantedVel - vHingeVel, afTimeStep);
+            cVector3f vTorque = mRotatePid.Output(vWantedVel - vHingeVel, adFixedDelta);
             vTorque = cMath::MatrixMul(mpWheelBody->GetInertiaMatrix(), vTorque);
 
             mpWheelBody->AddTorque(vTorque);
@@ -566,7 +566,7 @@ void cLuxProp_Wheel::UpdateAutoRotation(float afTimeStep)
         cVector3f vBodyVel = mpWheelBody->GetAngularVelocity();
         cVector3f vWantedVel = 0;
 
-        cVector3f vTorque = mRotatePid.Output(vWantedVel - vBodyVel, afTimeStep);
+        cVector3f vTorque = mRotatePid.Output(vWantedVel - vBodyVel, adFixedDelta);
         vTorque = cMath::MatrixMul(mpWheelBody->GetInertiaMatrix(), vTorque);
 
         mpWheelBody->AddTorque(vTorque);

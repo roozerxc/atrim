@@ -118,7 +118,7 @@ public:
 
     //////////////////
     // General
-    void UpdateLogic(float afTimeStep);
+    void UpdateLogic(double adFixedDelta);
 
     virtual void OnRenderSolid(cRendererCallbackFunctions* apFunctions) {}
 
@@ -128,7 +128,7 @@ public:
     virtual void AfterWorldLoad() {}
     virtual void OnMapEnter() {}
 
-    virtual void InFocusDraw(cGuiSet *apGuiSet,float afFrameTime) {}
+    virtual void InFocusDraw(cGuiSet *apGuiSet,double adFrameTime) {}
 
     //////////////////
     // Action
@@ -276,14 +276,14 @@ public:
     virtual void SetupSaveData(iLuxEntity_SaveData *apSaveData);
 
 protected:
-    void UpdateCheckCollideCallback(float afTimeStep);
-    void UpdatePlayerLookAt(float afTimeStep);
+    void UpdateCheckCollideCallback(double adFixedDelta);
+    void UpdatePlayerLookAt(double adFixedDelta);
     void ConnectionStateChange(int alState);
 
     /////////////////
     //Virtual methods
     virtual void OnConnectionStateChange(iLuxEntity *apEntity, int alState)=0;
-    virtual void OnUpdate(float afTimeStep)=0;
+    virtual void OnUpdate(double adFixedDelta)=0;
     virtual void BeforeEntityDestruction() {}
     virtual void OnSetActive(bool abX) {}
 

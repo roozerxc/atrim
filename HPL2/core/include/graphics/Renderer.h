@@ -229,10 +229,10 @@ public:
     iRenderer(const tString& asName, cGraphics *apGraphics,cResources* apResources, int alNumOfProgramComboModes);
     virtual ~iRenderer();
 
-    void Render(float afFrameTime, cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
+    void Render(double adFrameTime, cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
                 bool abSendFrameBufferToPostEffects, tRendererCallbackList *apCallbackList);
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     inline static int GetRenderFrameCount()
     {
@@ -275,9 +275,9 @@ public:
         return mpCurrentRenderList;
     }
 
-    float GetCurrentFrameTime()
+    double GetCurrentFrameTime()
     {
-        return mfCurrentFrameTime;
+        return dCurrentFrameTime;
     }
 
     iVertexBuffer* GetShapeBoxVertexBuffer()
@@ -378,7 +378,7 @@ protected:
     virtual void SetupRenderList()=0;
     virtual void RenderObjects()=0;
 
-    void BeginRendering(float afFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
+    void BeginRendering(double adFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
                         bool abSendFrameBufferToPostEffects, tRendererCallbackList *apCallbackList, bool abAtStartOfRendering=true);
     void EndRendering(bool abAtEndOfRendering=true);
 
@@ -507,7 +507,7 @@ protected:
     bool mbOnlyRenderPrevVisibleOcclusionObjects;
     int mlOnlyRenderPrevVisibleOcclusionObjectsFrameCount;
 
-    float mfCurrentFrameTime;
+    double dCurrentFrameTime;
     cWorld *mpCurrentWorld;
     cRenderSettings *mpCurrentSettings;
     cRenderList *mpCurrentRenderList;

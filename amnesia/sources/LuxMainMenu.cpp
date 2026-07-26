@@ -442,7 +442,7 @@ void cLuxMainMenu::OnLeaveContainer(const tString& asNewContainer)
 
 //-----------------------------------------------------------------------
 
-void cLuxMainMenu::Update(float afTimeStep)
+void cLuxMainMenu::Update(double adFixedDelta)
 {
     //Log("Update start!\n");
     //Log("1\n");
@@ -459,9 +459,9 @@ void cLuxMainMenu::Update(float afTimeStep)
     }
 
     //Log("2\n");
-    UpdateBase(afTimeStep);
+    UpdateBase(adFixedDelta);
     //Log("3\n");
-    UpdateTopMenu(afTimeStep);
+    UpdateTopMenu(adFixedDelta);
     //Log("Update end!\n");
 
     //mpViewport->GetRenderSettings()->mbLog = true;
@@ -470,7 +470,7 @@ void cLuxMainMenu::Update(float afTimeStep)
 //-----------------------------------------------------------------------
 
 
-void cLuxMainMenu::OnDraw(float afFrameTime)
+void cLuxMainMenu::OnDraw(double adFrameTime)
 {
     /////////////////////////////////
     //Screen background
@@ -514,7 +514,7 @@ void cLuxMainMenu::OnDraw(float afFrameTime)
 
 //-----------------------------------------------------------------------
 
-void cLuxMainMenu::OnPostRender(float afFrameTime)
+void cLuxMainMenu::OnPostRender(double adFrameTime)
 {
     //Debug:
     //Turn of logging so it only happens one frame?
@@ -791,7 +791,7 @@ void cLuxMainMenu::OnMenuExit()
 
 //-----------------------------------------------------------------------
 
-void cLuxMainMenu::UpdateBase(float afTimeStep)
+void cLuxMainMenu::UpdateBase(double adFixedDelta)
 {
     //////////////////////////
     //Exiting the main menu
@@ -817,7 +817,7 @@ void cLuxMainMenu::UpdateBase(float afTimeStep)
         //Fade or exit!
         if(mfMenuFadeAlpha < 1.0f)
         {
-            mfMenuFadeAlpha += afTimeStep * (1.0f/fFadeSpeed);
+            mfMenuFadeAlpha += (float)adFixedDelta * (1.0f/fFadeSpeed);
             if(mfMenuFadeAlpha > 1.0f)
             {
                 mfMenuFadeAlpha =1.0f;
@@ -836,7 +836,7 @@ void cLuxMainMenu::UpdateBase(float afTimeStep)
     {
         if(mfMenuFadeAlpha > 0.0f)
         {
-            mfMenuFadeAlpha -= afTimeStep * (1.0f/mfMainFadeInTime);
+            mfMenuFadeAlpha -= (float)adFixedDelta * (1.0f/mfMainFadeInTime);
             if(mfMenuFadeAlpha < 0.0f)
             {
                 mfMenuFadeAlpha =0;
@@ -847,7 +847,7 @@ void cLuxMainMenu::UpdateBase(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxMainMenu::UpdateTopMenu(float afTimeStep)
+void cLuxMainMenu::UpdateTopMenu(double adFixedDelta)
 {
     bool bAlphaChanged = false;
 
@@ -857,7 +857,7 @@ void cLuxMainMenu::UpdateTopMenu(float afTimeStep)
     {
         if(mfTopMenuAlpha < 1.0f)
         {
-            mfTopMenuAlpha += afTimeStep * (1.0f/mfTopMenuFadeInTime);
+            mfTopMenuAlpha += (float)adFixedDelta * (1.0f/mfTopMenuFadeInTime);
             if(mfTopMenuAlpha >1)
             {
                 mfTopMenuAlpha =1;
@@ -871,7 +871,7 @@ void cLuxMainMenu::UpdateTopMenu(float afTimeStep)
     {
         if(mfTopMenuAlpha > 0.0f)
         {
-            mfTopMenuAlpha -= afTimeStep * (1.0f/mfTopMenuFadeOutTime);
+            mfTopMenuAlpha -= (float)adFixedDelta * (1.0f/mfTopMenuFadeOutTime);
             if(mfTopMenuAlpha <0)
             {
                 mfTopMenuAlpha =0;
@@ -914,7 +914,7 @@ void cLuxMainMenu::UpdateTopMenu(float afTimeStep)
 
     if (mbFadeInDescription)
     {
-        mfDescriptionAlpha += afTimeStep;
+        mfDescriptionAlpha += (float)adFixedDelta;
         if (mfDescriptionAlpha > 1.0f)
         {
             mfDescriptionAlpha = 1.0f;
@@ -922,7 +922,7 @@ void cLuxMainMenu::UpdateTopMenu(float afTimeStep)
     }
     else
     {
-        mfDescriptionAlpha -= afTimeStep;
+        mfDescriptionAlpha -= (float)adFixedDelta;
         if (mfDescriptionAlpha < 0.5f)
         {
             mfDescriptionAlpha = 0.5f;

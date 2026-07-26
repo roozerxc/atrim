@@ -84,7 +84,7 @@ public:
 protected:
     virtual void SetupAfterLoad(cWorld *apWorld) {}
     void OnSetActive(bool abX);
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     eLuxAreaType mAreaType;
 

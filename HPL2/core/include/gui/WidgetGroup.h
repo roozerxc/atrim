@@ -28,8 +28,8 @@ protected:
 
     void OnChangeText();
 
-    void OnDraw(float afTimeStep, cGuiClipRegion* apClipRegion);
-    void OnDrawAfterClip(float afTimeStep, cGuiClipRegion *apClipRegion);
+    void OnDraw(double adFixedDelta, cGuiClipRegion* apClipRegion);
+    void OnDrawAfterClip(double adFixedDelta, cGuiClipRegion *apClipRegion);
 
     /////////////////////////////
     // Data

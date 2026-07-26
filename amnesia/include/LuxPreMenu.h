@@ -98,12 +98,12 @@ public:
     cLuxPreMenu();
     ~cLuxPreMenu();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     void OnEnterContainer(const tString& asOldContainer);
     void OnLeaveContainer(const tString& asNewContainer);
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
     void ButtonPressed();
 
@@ -123,7 +123,7 @@ public:
     }
 
 private:
-    void UpdateActions(float afTimeStep);
+    void UpdateActions(double adFixedDelta);
     void UpdateState();
 
     void LoadPreMenuSections();

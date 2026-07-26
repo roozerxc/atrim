@@ -224,12 +224,12 @@ void cSDLTexture::SetRawData(    int alLevel, const cVector3l& avOffset, const c
 
 //-----------------------------------------------------------------------
 
-void cSDLTexture::Update(float afTimeStep)
+void cSDLTexture::Update(double adFixedDelta)
 {
     if(mvTextureHandles.size() > 1)
     {
         float fMax = (float)(mvTextureHandles.size());
-        mfTimeCount += afTimeStep * (1.0f/mfFrameTime) * mfTimeDir;
+        mfTimeCount += (float)adFixedDelta * (1.0f/(float)dFrameTime) * mfTimeDir;
 
         if(mfTimeDir > 0)
         {

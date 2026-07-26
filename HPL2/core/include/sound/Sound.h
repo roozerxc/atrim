@@ -22,7 +22,7 @@ public:
                   int alMaxMonoSourceHint, int alMaxStereoSourceHint,
                   int alStreamingBufferSize, int alStreamingBufferCount, bool abEnableLowLevelLog);
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     iLowLevelSound* GetLowLevel()
     {

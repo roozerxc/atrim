@@ -169,7 +169,7 @@ void cLuxProp_OilBarrel::OnResetProperties()
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_OilBarrel::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_OilBarrel::UpdatePropSpecific(double adFixedDelta)
 {
 
 }

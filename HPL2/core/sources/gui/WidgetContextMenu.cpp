@@ -200,7 +200,7 @@ void cWidgetContextMenu::OnChildMenuHide()
 
 //-----------------------------------------------------------------------
 
-void cWidgetContextMenu::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetContextMenu::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     ////////////////////////////////
     // Background and borders
@@ -212,7 +212,7 @@ void cWidgetContextMenu::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
 
 //-----------------------------------------------------------------------
 
-void cWidgetContextMenu::OnUpdate(float afTimeStep)
+void cWidgetContextMenu::OnUpdate(double adFixedDelta)
 {
     ////////////////////////////////////////////////
     // Checks if should hide (ie if parent menu highlights some item other
@@ -220,7 +220,7 @@ void cWidgetContextMenu::OnUpdate(float afTimeStep)
 
     if(IsVisible() && mpParentItem!=NULL && GetParentMenu()->GetHightlightedItem()!=mpParentItem)
     {
-        mfTimer+=afTimeStep;
+        mfTimer+=(float)adFixedDelta;
         if(mfTimer>=mfHideTime)
         {
             Hide();

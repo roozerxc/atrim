@@ -25,12 +25,12 @@ public:
     void OnStart();
     void Reset();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     void OnEnterContainer(const tString& asOldContainer);
     void OnLeaveContainer(const tString& asNewContainer);
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
     /**
     * Called when game loading is done. Must be called after DrawGameScreen has been called!
@@ -72,8 +72,8 @@ private:
     tString GetGameScreenTextEntry();
     void LoadCurrentImage(const tString &asImage);
 
-    void UpdateGameState(float afTimeStep);
-    void DrawGameState(float afFrameTime);
+    void UpdateGameState(double adFixedDelta);
+    void DrawGameState(double adFrameTime);
     void DrawGameScreen(cGuiSet *apSet);
 
     //////////////////

@@ -17,14 +17,14 @@ public:
 
     virtual void OnStart() {}
 
-    virtual void OnDraw(float afFrameTime) {}
-    virtual void OnPostRender(float afFrameTime) {}
+    virtual void OnDraw(double adFrameTime) {}
+    virtual void OnPostRender(double adFrameTime) {}
 
-    virtual void PreUpdate(float afTimeStep) {}
-    virtual void Update(float afTimeStep) {}
-    virtual void PostUpdate(float afTimeStep) {}
+    virtual void PreUpdate(double adFixedDelta) {}
+    virtual void Update(double adFixedDelta) {}
+    virtual void PostUpdate(double adFixedDelta) {}
 
-    virtual void OnPauseUpdate(float afTimeStep) {}
+    virtual void OnPauseUpdate(double adFixedDelta) {}
 
     virtual void OnQuit() {}
     virtual void OnExit() {}

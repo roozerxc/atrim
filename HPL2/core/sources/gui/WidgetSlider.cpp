@@ -343,7 +343,7 @@ void cWidgetSlider::OnChangePosition()
 
 //-----------------------------------------------------------------------
 
-void cWidgetSlider::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetSlider::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     ////////////////////////////////
     // Background

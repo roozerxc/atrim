@@ -113,7 +113,7 @@ public:
         return msName;
     }
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     bool DataIsInMeshFile()
     {

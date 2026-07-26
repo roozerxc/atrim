@@ -94,11 +94,11 @@ void cLuxArea_Examine::SetupAfterLoad(cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-void cLuxArea_Examine::OnUpdate(float afTimeStep)
+void cLuxArea_Examine::OnUpdate(double adFixedDelta)
 {
     if(mfPlaySoundCount>0)
     {
-        mfPlaySoundCount -= afTimeStep;
+        mfPlaySoundCount -= (float)adFixedDelta;
     }
 }
 

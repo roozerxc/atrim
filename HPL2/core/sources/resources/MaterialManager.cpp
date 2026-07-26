@@ -162,7 +162,7 @@ cMaterial* cMaterialManager::CreateMaterial(const tString& asName)
 
 //-----------------------------------------------------------------------
 
-void cMaterialManager::Update(float afTimeStep)
+void cMaterialManager::Update(double adFixedDelta)
 {
 
 }

@@ -104,7 +104,7 @@ void cWidgetGroup::OnChangeText()
 
 //-----------------------------------------------------------------------
 
-void cWidgetGroup::OnDraw(float afTimeStep, cGuiClipRegion* apClipRegion)
+void cWidgetGroup::OnDraw(double adFixedDelta, cGuiClipRegion* apClipRegion)
 {
     const cVector3f& vPos = GetGlobalPosition();
     if(mbHeaderBreaksUpperBorder)
@@ -194,7 +194,7 @@ void cWidgetGroup::OnDraw(float afTimeStep, cGuiClipRegion* apClipRegion)
 
 //-----------------------------------------------------------------------
 
-void cWidgetGroup::OnDrawAfterClip(float afTimeStep, cGuiClipRegion* apClipRegion)
+void cWidgetGroup::OnDrawAfterClip(double adFixedDelta, cGuiClipRegion* apClipRegion)
 {
 }
 

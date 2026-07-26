@@ -51,9 +51,9 @@ protected:
     // Implemented functions
     void OnLoadGraphics();
 
-    void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
+    void OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion);
 
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     bool OnMouseMove(const cGuiMessageData& aData);
     bool OnMouseDown(const cGuiMessageData& aData);

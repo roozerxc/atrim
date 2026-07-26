@@ -27,7 +27,7 @@ public:
 
     //////////////////////
     //General
-    void UpdateCritterSpecific(float afTimeStep);
+    void UpdateCritterSpecific(double adFixedDelta);
 
     //////////////////////
     //Properties
@@ -45,8 +45,8 @@ public:
 
 
 private:
-    void UpdateVelocity(float afTimeStep);
-    void UpdateMovement(float afTimeStep);
+    void UpdateVelocity(double adFixedDelta);
+    void UpdateMovement(double adFixedDelta);
 
     //General
 

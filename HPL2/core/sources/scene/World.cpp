@@ -204,36 +204,36 @@ void cWorld::DestroyAllEntities(tWorldDestroyAllFlag aFlags)
 
 //-----------------------------------------------------------------------
 
-void cWorld::Update(float afTimeStep)
+void cWorld::Update(double adFixedDelta)
 {
     START_TIMING(Physics);
     if(mpPhysicsWorld)
     {
-        mpPhysicsWorld->Update(afTimeStep);
+        mpPhysicsWorld->Update(adFixedDelta);
     }
     STOP_TIMING(Physics);
 
 
     START_TIMING(Entities);
-    UpdateEntities(afTimeStep);
+    UpdateEntities(adFixedDelta);
     STOP_TIMING(Entities);
 
     START_TIMING(Particles);
-    UpdateParticles(afTimeStep);
+    UpdateParticles(adFixedDelta);
     STOP_TIMING(Particles);
 
     START_TIMING(Lights);
-    UpdateLights(afTimeStep);
+    UpdateLights(adFixedDelta);
     STOP_TIMING(Lights);
 
     START_TIMING(SoundEntities);
-    UpdateSoundEntities(afTimeStep);
+    UpdateSoundEntities(adFixedDelta);
     STOP_TIMING(SoundEntities);
 }
 
 //-----------------------------------------------------------------------
 
-void cWorld::PreUpdate(float afTotalTime, float afTimeStep)
+void cWorld::PreUpdate(float afTotalTime, double adFixedDelta)
 {
     mpSound->GetSoundHandler()->SetSilent(true);
 
@@ -241,11 +241,11 @@ void cWorld::PreUpdate(float afTotalTime, float afTimeStep)
     {
         if(mpPhysicsWorld)
         {
-            mpPhysicsWorld->Update(afTimeStep);
+            mpPhysicsWorld->Update(adFixedDelta);
         }
-        UpdateParticles(afTimeStep);
+        UpdateParticles(adFixedDelta);
 
-        afTotalTime -= afTimeStep;
+        afTotalTime -= (float)adFixedDelta;
     }
 
     mpSound->GetSoundHandler()->SetSilent(false);
@@ -1432,7 +1432,7 @@ void cWorld::RemoveRenderableFromContainer(iRenderable *apObject)
 
 //-----------------------------------------------------------------------
 
-void cWorld::UpdateParticles(float afTimeStep)
+void cWorld::UpdateParticles(double adFixedDelta)
 {
     tParticleSystemListIt it = mlstParticleSystems.begin();
 
@@ -1440,7 +1440,7 @@ void cWorld::UpdateParticles(float afTimeStep)
     {
         cParticleSystem *pPS = *it;
 
-        pPS->UpdateLogic(afTimeStep);
+        pPS->UpdateLogic(adFixedDelta);
 
         //Check if the system is alive, else destroy
         if(pPS->GetRemoveWhenDead() && pPS->IsDead())
@@ -1461,7 +1461,7 @@ void cWorld::UpdateParticles(float afTimeStep)
 //-----------------------------------------------------------------------
 
 
-void cWorld::UpdateEntities(float afTimeStep)
+void cWorld::UpdateEntities(double adFixedDelta)
 {
     //static size_t lLastSize = 0;
     //bool bRenderDebug = lLastSize != mlstDynamicMeshEntities.size() && mlstDynamicMeshEntities.size()>=2;
@@ -1477,7 +1477,7 @@ void cWorld::UpdateEntities(float afTimeStep)
         if(pEntity->IsActive())
         {
             //if(pEntity->IsStatic()==false) START_TIMING_EX(pEntity->GetName().c_str(),entity);
-            pEntity->UpdateLogic(afTimeStep);
+            pEntity->UpdateLogic(adFixedDelta);
             //if(bRenderDebug) Log("Enitity '%s'. Pos: (%s), Matrix: (%s)\n", pEntity->GetName().c_str(), pEntity->GetWorldPosition().ToString().c_str(),
             //pEntity->GetWorldMatrix().ToString().c_str());
             //if(pEntity->IsStatic()==false) STOP_TIMING(entity);
@@ -1488,7 +1488,7 @@ void cWorld::UpdateEntities(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cWorld::UpdateLights(float afTimeStep)
+void cWorld::UpdateLights(double adFixedDelta)
 {
     tLightListIt it = mlstLights.begin();
 
@@ -1498,7 +1498,7 @@ void cWorld::UpdateLights(float afTimeStep)
 
         if(pLight->IsActive())
         {
-            pLight->UpdateLogic(afTimeStep);
+            pLight->UpdateLogic(adFixedDelta);
         }
 
         ++it;
@@ -1507,7 +1507,7 @@ void cWorld::UpdateLights(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cWorld::UpdateSoundEntities(float afTimeStep)
+void cWorld::UpdateSoundEntities(double adFixedDelta)
 {
     tSoundEntityListIt it = mlstSoundEntities.begin();
 
@@ -1517,7 +1517,7 @@ void cWorld::UpdateSoundEntities(float afTimeStep)
 
         if(pSound->IsActive())
         {
-            pSound->UpdateLogic(afTimeStep);
+            pSound->UpdateLogic(adFixedDelta);
         }
 
         //Check if the system is stopped, else destroy

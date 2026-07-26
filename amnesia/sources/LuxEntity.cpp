@@ -69,17 +69,17 @@ iLuxEntity::~iLuxEntity()
 
 //-----------------------------------------------------------------------
 
-void iLuxEntity::UpdateLogic(float afTimeStep)
+void iLuxEntity::UpdateLogic(double adFixedDelta)
 {
     //////////////////////
     // Normal update
-    UpdateCheckCollideCallback(afTimeStep);
-    UpdatePlayerLookAt(afTimeStep);
+    UpdateCheckCollideCallback(adFixedDelta);
+    UpdatePlayerLookAt(adFixedDelta);
 
 
     ///////////////////////
     // Update implemented
-    OnUpdate(afTimeStep);
+    OnUpdate(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -197,7 +197,7 @@ void iLuxEntity::AddConnection(const tString& asName, iLuxEntity *apEntity, bool
 
 //-----------------------------------------------------------------------
 
-void iLuxEntity::UpdateCheckCollideCallback(float afTimeStep)
+void iLuxEntity::UpdateCheckCollideCallback(double adFixedDelta)
 {
     CheckCollisionCallback(msName, mpMap);
 }
@@ -205,7 +205,7 @@ void iLuxEntity::UpdateCheckCollideCallback(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxEntity::UpdatePlayerLookAt(float afTimeStep)
+void iLuxEntity::UpdatePlayerLookAt(double adFixedDelta)
 {
     if(msLookAtCallback == "")
     {
@@ -214,7 +214,7 @@ void iLuxEntity::UpdatePlayerLookAt(float afTimeStep)
 
     if(mfLookAtCount > 0)
     {
-        mfLookAtCount-=afTimeStep;
+        mfLookAtCount -= (float)adFixedDelta;
         return;
     }
     mfLookAtCount = 0.3f;

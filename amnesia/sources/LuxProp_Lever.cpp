@@ -239,13 +239,13 @@ void cLuxProp_Lever::OnResetProperties()
 }
 //-----------------------------------------------------------------------
 
-void cLuxProp_Lever::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_Lever::UpdatePropSpecific(double adFixedDelta)
 {
     float fAngle = mpHingeJoint->GetAngle();
 
-    UpdateCheckStuckSound(afTimeStep);
-    UpdateCheckLimit(fAngle, afTimeStep);
-    UpdateAutoMove(fAngle, afTimeStep);
+    UpdateCheckStuckSound(adFixedDelta);
+    UpdateCheckLimit(fAngle, adFixedDelta);
+    UpdateAutoMove(fAngle, adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -335,7 +335,7 @@ void cLuxProp_Lever::CalculateMiddleAngle()
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Lever::UpdateCheckStuckSound(float afTimeStep)
+void cLuxProp_Lever::UpdateCheckStuckSound(double adFixedDelta)
 {
     if(mlStuckState == 0 || mbIsInteractedWith==false)
     {
@@ -344,7 +344,7 @@ void cLuxProp_Lever::UpdateCheckStuckSound(float afTimeStep)
 
     if(mfStuckSoundTimer >0)
     {
-        mfStuckSoundTimer-=afTimeStep;
+        mfStuckSoundTimer -= (float)adFixedDelta;
         return;
     }
 
@@ -358,7 +358,7 @@ void cLuxProp_Lever::UpdateCheckStuckSound(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Lever::UpdateCheckLimit(float afAngle, float afTimeStep)
+void cLuxProp_Lever::UpdateCheckLimit(float afAngle, double adFixedDelta)
 {
     if(mlStuckState !=0)
     {
@@ -396,7 +396,7 @@ void cLuxProp_Lever::UpdateCheckLimit(float afAngle, float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Lever::UpdateAutoMove(float afAngle, float afTimeStep)
+void cLuxProp_Lever::UpdateAutoMove(float afAngle, double adFixedDelta)
 {
     if(IsInteractedWith() || mbAutoMoveToAngle==false || mlStuckState!=0)
     {
@@ -441,7 +441,7 @@ void cLuxProp_Lever::UpdateAutoMove(float afAngle, float afTimeStep)
     mpLeverBody->SetAngularVelocity(vWantedVel);
 
 
-    cVector3f vTorque = mRotatePid.Output(vWantedVel - vHingeVel, afTimeStep);
+    cVector3f vTorque = mRotatePid.Output(vWantedVel - vHingeVel, adFixedDelta);
     vTorque = cMath::MatrixMul(mpLeverBody->GetInertiaMatrix(), vTorque);
 
     mpLeverBody->AddTorque(vTorque);

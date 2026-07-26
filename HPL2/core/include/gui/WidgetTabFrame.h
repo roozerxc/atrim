@@ -48,7 +48,7 @@ protected:
 
     bool OnGetUINavFocus(const cGuiMessageData& aData);
 
-    void OnDraw(float afTimeStep, cGuiClipRegion* apClipRegion);
+    void OnDraw(double adFixedDelta, cGuiClipRegion* apClipRegion);
     void OnLoadGraphics();
 
     ///////////////////////////
@@ -113,7 +113,7 @@ protected:
 
     void OnInit();
 
-    void OnDraw(float afTimeStep, cGuiClipRegion* apClipRegion);
+    void OnDraw(double adFixedDelta, cGuiClipRegion* apClipRegion);
 
     void OnLoadGraphics();
 

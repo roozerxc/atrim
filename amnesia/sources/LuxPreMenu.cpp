@@ -365,9 +365,9 @@ void cLuxPreMenu::OnLeaveContainer(const tString& asNewContainer)
 
 //-----------------------------------------------------------------------
 
-void cLuxPreMenu::Update(float afTimeStep)
+void cLuxPreMenu::Update(double adFixedDelta)
 {
-    UpdateActions(afTimeStep);
+    UpdateActions(adFixedDelta);
     UpdateState();
 
     ////////////////////////////////////////////////////////
@@ -486,7 +486,7 @@ void cLuxPreMenu::ButtonPressed()
 
 //-----------------------------------------------------------------------
 
-void cLuxPreMenu::OnDraw(float afFrameTime)
+void cLuxPreMenu::OnDraw(double adFrameTime)
 {
     ///////////////////////////////////////
     // Draw fade rect and background
@@ -534,7 +534,7 @@ void cLuxPreMenu::AppGotInputFocus()
 
 //-----------------------------------------------------------------------
 
-void cLuxPreMenu::UpdateActions(float afTimeStep)
+void cLuxPreMenu::UpdateActions(double adFixedDelta)
 {
     //////////////////////////////////////////
     // Update stuff according to state
@@ -555,7 +555,7 @@ void cLuxPreMenu::UpdateActions(float afTimeStep)
         // Update alpha for fading in
         if(mfAlphaFade>0)
         {
-            mfAlphaFade -= afTimeStep;
+            mfAlphaFade -= (float)adFixedDelta;
         }
         else
         {
@@ -568,7 +568,7 @@ void cLuxPreMenu::UpdateActions(float afTimeStep)
         // Update alpha for fading out
         if(mfAlphaFade<1)
         {
-            mfAlphaFade += afTimeStep;
+            mfAlphaFade += (float)adFixedDelta;
         }
         else
         {
@@ -581,7 +581,7 @@ void cLuxPreMenu::UpdateActions(float afTimeStep)
         // Fast fade out (2x)
         if(mfAlphaFade<1)
         {
-            mfAlphaFade += afTimeStep*2;
+            mfAlphaFade += (float)adFixedDelta*2;
         }
         else
         {
@@ -592,7 +592,7 @@ void cLuxPreMenu::UpdateActions(float afTimeStep)
     case eLuxPreMenuState_ShowPremenuSection:
     {
         // Update pic show timer
-        mfTimer -= afTimeStep;
+        mfTimer -= (float)adFixedDelta;
     }
     break;
     }

@@ -36,7 +36,7 @@ public:
 
     void OnResetProperties();
 
-    void UpdatePropSpecific(float afTimeStep);
+    void UpdatePropSpecific(double adFixedDelta);
 
     void BeforePropDestruction();
 
@@ -74,7 +74,7 @@ public:
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);
 
 private:
-    void UpdateAutoMove(float afTimeStep);
+    void UpdateAutoMove(double adFixedDelta);
 
     void OnStartMove();
     void CalculateOpenRotateMatrix();

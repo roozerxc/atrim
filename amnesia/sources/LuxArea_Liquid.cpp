@@ -101,10 +101,10 @@ void cLuxArea_Liquid::SetupAfterLoad(cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-void cLuxArea_Liquid::OnUpdate(float afTimeStep)
+void cLuxArea_Liquid::OnUpdate(double adFixedDelta)
 {
     //Do not update this unless it is a proper game update (when eveything is 100% intialized)
-    if(afTimeStep < gpBase->mpEngine->GetStepSize()*0.8f)
+    if(adFixedDelta < gpBase->mpEngine->GetStepSize()*0.8f)
     {
         return;
     }
@@ -121,7 +121,7 @@ void cLuxArea_Liquid::OnUpdate(float afTimeStep)
 
     ///////////////////////////
     // Update count
-    mfTimeCount += afTimeStep;
+    mfTimeCount += (float)adFixedDelta;
 
 
     ///////////////////////////

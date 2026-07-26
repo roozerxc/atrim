@@ -42,7 +42,7 @@ public:
     ~cLuxSaveHandler();
 
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
 
     void SaveGameToFile(const tWString& asFile, bool abSaveSnapshot=false);
