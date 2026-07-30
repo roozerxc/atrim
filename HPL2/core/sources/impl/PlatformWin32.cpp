@@ -584,47 +584,6 @@ tWString cPlatform::LoadTextFromClipboard()
 
 //-----------------------------------------------------------------------
 
-tWString cPlatform::GetSystemSpecialPath(eSystemPath aPathType)
-{
-    tWString sOutput = _W("");
-
-    ///////////////////////////
-    //Get the correction WIN32 varaible
-    int type;
-    switch(aPathType)
-    {
-    case eSystemPath_Personal:
-        type = CSIDL_PERSONAL;
-        break;
-    default:
-        return _W("");
-    }
-
-    ///////////////////////////
-    //Get string
-    TCHAR sPath[2048];
-    if(SUCCEEDED(SHGetFolderPath(NULL, type | CSIDL_FLAG_CREATE, NULL,0,sPath)))
-    {
-        sOutput = tWString(sPath);
-    }
-    else
-    {
-        return _W("");
-    }
-
-    ///////////////////////////////////////
-    //Make sure the last char is a separator
-    if(    cString::GetLastCharW(sOutput) != _W("/") &&
-            cString::GetLastCharW(sOutput) != _W("\\"))
-    {
-        sOutput += _W("/");
-    }
-
-    return sOutput;
-}
-
-//-----------------------------------------------------------------------
-
 unsigned long cPlatform::GetSystemAvailableDrives()
 {
     return _getdrives();
