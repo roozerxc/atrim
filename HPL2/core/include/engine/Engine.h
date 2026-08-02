@@ -220,6 +220,8 @@ private:
     double dFrameTime;
 
     double dLogicTime;
+
+    double dRenderAlpha;
     
     double mfSpeedMul;
 
