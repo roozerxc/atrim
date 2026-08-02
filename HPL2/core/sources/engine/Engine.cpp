@@ -486,11 +486,7 @@ void cEngine::Run()
             mpLogicTimer->EndUpdateLoop();
         }
 
-        // HPL2 does not have a way to properly pass the alpha
-        // from the divided accumulator-fixed delta equation,
-        // so this has to be commented out for brevity's sake:
-
-        //const double dAlpha = dAccumulator / dFixedDelta;
+        const double dRenderAlpha = dAccumulator / dFixedDelta;
 
         ////////////////////////////////////
         // If rendering once, make a check and if already drawn screen, just continue

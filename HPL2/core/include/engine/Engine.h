@@ -170,6 +170,11 @@ public:
         return dLogicTime;
     }
 
+    double GetRenderAlpha()
+    {
+        return dRenderAlpha;
+    }
+
     void SetPaused(bool abPaused);
     bool GetPaused();
 
