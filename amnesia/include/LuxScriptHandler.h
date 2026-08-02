@@ -88,8 +88,6 @@ private:
     static void __stdcall StartCredits(string& asMusic, bool abLoopMusic, string& asTextCat, string& asTextEntry, int alEndNum);
     static void __stdcall AddKeyPart(int alKeyPart);
 
-    static void __stdcall StartDemoEnd();
-
     // Saving
     static void __stdcall AutoSave();
     /**

@@ -399,8 +399,6 @@ void cLuxScriptHandler::InitScriptFunctions()
     AddFunc("void StartCredits(string &in asMusic, bool abLoopMusic, string &in asTextCat, string &in asTextEntry, int alEndNum)",(void *)StartCredits);
     AddFunc("void AddKeyPart(int alKeyPart)", (void *)AddKeyPart);
 
-    AddFunc("void StartDemoEnd()",(void *)StartDemoEnd);
-
     AddFunc("void AutoSave()", (void *)AutoSave);
     AddFunc("void CheckPoint(string &in asName,string &in asStartPos ,string &in asCallback, string &in asDeathHintCat, string &in asDeathHintEntry)", (void *)CheckPoint);
 
@@ -1034,13 +1032,6 @@ void __stdcall cLuxScriptHandler::StartCredits(string& asMusic, bool abLoopMusic
 void __stdcall cLuxScriptHandler::AddKeyPart(int alKeyPart)
 {
     gpBase->mpCredits->AddKeyPart(alKeyPart);
-}
-
-//-----------------------------------------------------------------------
-
-void __stdcall cLuxScriptHandler::StartDemoEnd()
-{
-    // 0x48, 0x90 - XCHG EAX,EAX
 }
 
 //-----------------------------------------------------------------------
