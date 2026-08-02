@@ -114,6 +114,102 @@
 			/>
 		</Configuration>
 		<Configuration
+			Name="Debug|x64"
+			OutputDirectory="$(SolutionDir)\compiled\$(PlatformName)-$(ConfigurationName)\"
+			IntermediateDirectory="$(SolutionDir)\compiled\$(PlatformName)-$(ConfigurationName)\"
+			ConfigurationType="1"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				UseUnicodeResponseFiles="false"
+				Optimization="0"
+				InlineFunctionExpansion="0"
+				EnableIntrinsicFunctions="false"
+				FavorSizeOrSpeed="0"
+				OmitFramePointers="false"
+				EnableFiberSafeOptimizations="false"
+				WholeProgramOptimization="false"
+				AdditionalIncludeDirectories="..\HPL2\dependencies\include;..\HPL2\core\include;.\include"
+				PreprocessorDefinitions="_DEBUG;_WINDOWS;MEMORY_MANAGER_ACTIVE;USE_GAMEPAD;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H;LUXPROP_OBJECT_BREAKABLE_WORKAROUND"
+				MinimalRebuild="true"
+				ExceptionHandling="2"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderThrough="stdafx.h"
+				PrecompiledHeaderFile="$(IntDir)$(TargetName).pch"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="3"
+				UseFullPaths="true"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				UseUnicodeResponseFiles="false"
+				AdditionalDependencies="AngelScript.lib DevIL.lib freealut.lib GLEW.lib Imm32.lib jpeg.lib Newton.lib ogg.lib OpenAL32.lib png.lib SDL.lib setupapi.lib theora.lib Version.lib vorbis.lib winmm.lib zlib.lib"
+				OutputFile="$(OutDir)\$(ProjectName)-$(PlatformName)-$(ConfigurationName).exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(SolutionDir)\HPL2\dependencies\lib\$(PlatformName)-$(ConfigurationName)\"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				LargeAddressAware="2"
+				TerminalServerAware="1"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)\compiled\$(PlatformName)-$(ConfigurationName)\"
 			IntermediateDirectory="$(SolutionDir)\compiled\$(PlatformName)-$(ConfigurationName)\"
@@ -185,102 +281,6 @@
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
 				FixedBaseAddress="0"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Debug|x64"
-			OutputDirectory="$(SolutionDir)\compiled\$(PlatformName)-$(ConfigurationName)\"
-			IntermediateDirectory="$(SolutionDir)\compiled\$(PlatformName)-$(ConfigurationName)\"
-			ConfigurationType="1"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				TargetEnvironment="3"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				UseUnicodeResponseFiles="false"
-				Optimization="0"
-				InlineFunctionExpansion="0"
-				EnableIntrinsicFunctions="false"
-				FavorSizeOrSpeed="0"
-				OmitFramePointers="false"
-				EnableFiberSafeOptimizations="false"
-				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\HPL2\dependencies\include;..\HPL2\core\include;.\include"
-				PreprocessorDefinitions="_DEBUG;_WINDOWS;MEMORY_MANAGER_ACTIVE;USE_GAMEPAD;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H;LUXPROP_OBJECT_BREAKABLE_WORKAROUND"
-				MinimalRebuild="true"
-				ExceptionHandling="2"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile="$(IntDir)$(TargetName).pch"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="3"
-				UseFullPaths="true"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="AngelScript.lib DevIL.lib freealut.lib GLEW.lib Imm32.lib jpeg.lib Newton.lib ogg.lib OpenAL32.lib png.lib SDL.lib setupapi.lib theora.lib Version.lib vorbis.lib winmm.lib zlib.lib"
-				OutputFile="$(OutDir)\$(ProjectName)-$(PlatformName)-$(ConfigurationName).exe"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(SolutionDir)\HPL2\dependencies\lib\$(PlatformName)-$(ConfigurationName)\"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				LargeAddressAware="2"
-				TerminalServerAware="1"
-				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -425,19 +425,19 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						PreprocessorDefinitions="NDEBUG"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Debug|x64"
 					>
 					<Tool
 						Name="VCResourceCompilerTool"
 						PreprocessorDefinitions="_DEBUG"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						PreprocessorDefinitions="NDEBUG"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -551,10 +551,6 @@
 			</File>
 			<File
 				RelativePath=".\include\LuxDebugHandler.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\LuxDemoEnd.h"
 				>
 			</File>
 			<File
@@ -979,10 +975,6 @@
 			</File>
 			<File
 				RelativePath=".\sources\LuxDebugHandler.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\sources\LuxDemoEnd.cpp"
 				>
 			</File>
 			<File

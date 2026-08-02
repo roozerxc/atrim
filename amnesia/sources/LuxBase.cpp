@@ -28,8 +28,6 @@
 
 #include "LuxCredits.h"
 
-#include "LuxDemoEnd.h"
-
 #include "LuxPreMenu.h"
 
 #include "LuxMainMenu.h"
@@ -367,10 +365,8 @@ cLuxBase::cLuxBase()
 
     mpMenuCfg = NULL;
     mpGameCfg = NULL;
-    mpDemoCfg = NULL;
 
     mpCurrentMapLoading = NULL;
-
 
     ///////////////////////////////
     // Init string
@@ -742,7 +738,6 @@ bool cLuxBase::InitApp()
     msGameConfigPath = pInitCfg->GetStringW("ConfigFiles", "Game",_W(""));
     msMenuConfigPath = pInitCfg->GetStringW("ConfigFiles", "Menu",_W(""));
     msPreMenuConfigPath = pInitCfg->GetStringW("ConfigFiles", "PreMenu", _W(""));
-    msDemoConfigPath = pInitCfg->GetStringW("ConfigFiles", "Demo", _W(""));
 
     msResourceConfigPath = pInitCfg->GetString("ConfigFiles", "Resources","");
     msMaterialConfigPath = pInitCfg->GetString("ConfigFiles", "Materials","");
@@ -1033,10 +1028,6 @@ void cLuxBase::ExitConfig()
     }
     hplDelete(mpGameCfg);
     hplDelete(mpMenuCfg);
-    if(mpDemoCfg)
-    {
-        hplDelete(mpDemoCfg);
-    }
 }
 
 //-----------------------------------------------------------------------
@@ -1282,9 +1273,6 @@ bool cLuxBase::InitGame()
 
     //Credits
     mpCredits = CreateModule( cLuxCredits, "Credits");
-
-    //Demo End
-    mpDemoEnd = NULL;
 
     //Load screen
     mpLoadScreenHandler = CreateModule( cLuxLoadScreenHandler, "LoadScreen");

@@ -37,8 +37,6 @@ class cLuxInventory;
 
 class cLuxCredits;
 
-class cLuxDemoEnd;
-
 class cLuxPreMenu;
 
 class cLuxMainMenu;
@@ -184,7 +182,6 @@ public:
 
     cConfigFile* mpGameCfg;
     cConfigFile* mpMenuCfg;
-    cConfigFile* mpDemoCfg;
     cGuiSet *mpGameDebugSet;
     cGuiSet *mpGameHudSet;
     iFontData *mpDefaultFont;
@@ -220,7 +217,6 @@ public:
     cLuxProgressLogHandler *mpProgressLogHandler;
     cLuxLoadScreenHandler *mpLoadScreenHandler;
     cLuxCredits *mpCredits;
-    cLuxDemoEnd* mpDemoEnd;
     iLuxAchievementHandler* mpAchievementHandler;
 
     tString msGameName;
@@ -278,7 +274,6 @@ public:
     tWString msGameConfigPath;
     tWString msMenuConfigPath;
     tWString msPreMenuConfigPath;
-    tWString msDemoConfigPath;
 
     tWString msCrashFlagPath;
     tWString msFirstStartFlagPath;
