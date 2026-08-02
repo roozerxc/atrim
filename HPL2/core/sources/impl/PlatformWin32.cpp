@@ -647,67 +647,6 @@ void cPlatform::GetDisplayResolution(int alDisplay, int& alHorizontal, int& alVe
 //-----------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
-// SYSTEM COMMANDS
-//////////////////////////////////////////////////////////////////////////
-
-//-----------------------------------------------------------------------
-
-void cPlatform::OpenBrowserWindow ( const tWString& asURL )
-{
-    ShellExecute ( NULL, _W("open"), asURL.c_str(), NULL, NULL, SW_SHOWNORMAL );
-}
-
-//-----------------------------------------------------------------------
-
-bool cPlatform::RunProgram( const tWString& asPath, const tWString& asParams )
-{
-    PROCESS_INFORMATION pi;
-    STARTUPINFO si;
-
-    memset(&si,0,sizeof(si));
-    si.cb= sizeof(si);
-    si.wShowWindow = SW_SHOW;
-
-    tWString sCommandLine = asPath + _W(" ") + asParams;
-
-    bool result = CreateProcess(asPath.c_str(), (LPWSTR)sCommandLine.c_str(), NULL, NULL, false, 0, NULL, NULL, &si, &pi) == TRUE;
-
-    CloseHandle(pi.hProcess);
-    CloseHandle(pi.hThread);
-
-    return result;
-}
-
-//-----------------------------------------------------------------------
-
-bool cPlatform::OpenFileOnShell( const tWString& asPath )
-{
-    int lStatusCode = (int)ShellExecute(NULL, _W("open"), asPath.c_str(), NULL, NULL, SW_SHOWMAXIMIZED);
-    bool bRet = (lStatusCode > 32);
-
-    tWString sMessage = _W("Cannot open file '") + asPath + _W("' - \n");
-    switch(lStatusCode)
-    {
-    case SE_ERR_NOASSOC:
-        sMessage += _W("No associated app found to open files of type: ") + cString::ToUpperCaseW(cString::GetFileExtW(asPath));
-        break;
-    case ERROR_FILE_NOT_FOUND:
-    case ERROR_PATH_NOT_FOUND:
-        sMessage += _W("File not found");
-        break;
-    };
-
-    if(bRet==false)
-    {
-        cPlatform::CreateMessageBox(eMsgBoxType_Error, _W("Error"), sMessage.c_str());
-    }
-
-    return bRet;
-}
-
-//-----------------------------------------------------------------------
-
-//////////////////////////////////////////////////////////////////////////
 // THREADING
 //////////////////////////////////////////////////////////////////////////
 
@@ -728,9 +667,6 @@ iMutex* cPlatform::CreateMutEx()
     return hplNew(cMutexWin32, ());
 }
 
-
 //-----------------------------------------------------------------------
-
-
 
 }
