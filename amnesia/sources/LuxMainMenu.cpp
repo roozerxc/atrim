@@ -1,5 +1,3 @@
-#include <sstream>
-
 #include "LuxMainMenu.h"
 
 #include "LuxMap.h"
@@ -21,6 +19,8 @@
 #include "LuxMainMenu_CustomStory.h"
 
 #include "LuxAchievementHandler.h"
+
+#include <sstream>
 
 //--------------------------------------------------------------------------------
 
