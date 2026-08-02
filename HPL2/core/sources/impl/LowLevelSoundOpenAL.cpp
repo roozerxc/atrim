@@ -285,7 +285,7 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
         }
     }
 
-    Log("  Trying to open device \'%s\'... ", initParams.msDeviceName.c_str());
+    Log("  Trying to open device \'%s\'...\n", initParams.msDeviceName.c_str());
     tString sLogFileName = cString::ReplaceCharTo(initParams.msDeviceName, " ", "_");
     OAL_SetupLogging(mbLogSounds, eOAL_LogOutput_File, eOAL_LogVerbose_High, "HPL_OpenAL_" + sLogFileName);
 
