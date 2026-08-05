@@ -3,6 +3,9 @@
 #include "LuxInputHandler.h"
 #include "LuxDebugHandler.h"
 
+// If you have VS2005 keep this! Otherwise remove if you are using VS2012+!
+#include "../sources/LuxNullptrCpp98.cpp"
+
 //-----------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
