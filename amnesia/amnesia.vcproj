@@ -1126,6 +1126,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\sources\LuxNullptrCpp98.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\sources\LuxPlayer.cpp"
 				>
 			</File>

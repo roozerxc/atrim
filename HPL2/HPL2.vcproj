@@ -1563,6 +1563,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\core\sources\impl\NullptrCpp98.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\core\sources\impl\PlatformBuildID.cpp"
 					>
 				</File>
