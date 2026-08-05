@@ -1510,12 +1510,10 @@ void cLuxMainMenu::DestroyBackground()
 
 bool cLuxMainMenu::TopMenuTextMouseEnter(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if (mbTopMenuVisible)
+    if(mbTopMenuVisible)
     {
         mpGuiSet->SetFocusedWidget(apWidget);
     }
-
-    //apWidget->SetDefaultFontColor(cColor(232.0f/255.0f, 201.0f/255.0f, 28.0f/255.0f, mfTopMenuAlpha));
 
     return true;
 }
@@ -1530,7 +1528,7 @@ bool cLuxMainMenu::TopMenuTextMouseLeave(iWidget* apWidget, const cGuiMessageDat
             mpGuiSet->SetFocusedWidget(NULL);
         }
     }
-    //apWidget->SetDefaultFontColor(cColor(1.0f, mfTopMenuAlpha));
+
     return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, TopMenuTextMouseLeave);
@@ -1546,6 +1544,7 @@ bool cLuxMainMenu::TopMenuTextPress(iWidget* apWidget, const cGuiMessageData& aD
         ExitPressed();
         return true;
     }
+
     return false;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, TopMenuTextPress);
