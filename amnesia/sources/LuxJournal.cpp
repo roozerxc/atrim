@@ -11,8 +11,6 @@
 #include "LuxInventory.h"
 #include "LuxHintHandler.h"
 
-#include "LuxAchievementHandler.h"
-
 //-----------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
@@ -716,33 +714,6 @@ cLuxNote* cLuxJournal::AddNote(const tString& asNameAndTextEntry, const tString&
     pNote->msIconFile = cString::SetFileExt( cString::SetFileExt(asImage,"")+"_icon",sExt);
 
     mvNotes.push_back(pNote);
-
-    if(gpBase->msGameName == "Amnesia - The Dark Descent -")
-    {
-        if(mvNotes.size() == 21)
-        {
-            if(gpBase->mpMainConfig->GetBool("Main", "MasterArchivis_Justine", false))
-            {
-                gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_MasterArchivist);
-            }
-
-            gpBase->mpMainConfig->SetBool("Main", "MasterArchivis_TDD", true);
-            gpBase->mpMainConfig->Save();
-        }
-    }
-    if(gpBase->msGameName == "Amnesia - Justine -")
-    {
-        if(mvNotes.size() == 9)
-        {
-            if(gpBase->mpMainConfig->GetBool("Main", "MasterArchivis_TDD", false))
-            {
-                gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_MasterArchivist);
-            }
-
-            gpBase->mpMainConfig->SetBool("Main", "MasterArchivis_Justine", true);
-            gpBase->mpMainConfig->Save();
-        }
-    }
 
     return pNote;
 }

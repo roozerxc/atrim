@@ -162,7 +162,6 @@ private:
     static void __stdcall StopCurrentInsanityEvent();
     static bool __stdcall InsanityEventIsActive();
 
-
     static void __stdcall UnlockAchievement(string& asName);
 
     // Player

@@ -31,7 +31,6 @@ class cLuxPostEffectHandler;
 class cLuxInsanityHandler;
 class cLuxProgressLogHandler;
 class cLuxLoadScreenHandler;
-class iLuxAchievementHandler;
 
 class cLuxInventory;
 
@@ -169,8 +168,6 @@ public:
     void LowerFirstStartFlag();
     bool CheckFirstStartFlag();
 
-    void InitAchievements();
-
     /////////////////////////
     // Public variables
 public:
@@ -217,7 +214,6 @@ public:
     cLuxProgressLogHandler *mpProgressLogHandler;
     cLuxLoadScreenHandler *mpLoadScreenHandler;
     cLuxCredits *mpCredits;
-    iLuxAchievementHandler* mpAchievementHandler;
 
     tString msGameName;
     tWString msErrorMessage;

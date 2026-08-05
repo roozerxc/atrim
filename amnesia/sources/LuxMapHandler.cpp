@@ -13,7 +13,6 @@
 #include "LuxMainMenu.h"
 
 #include "LuxEnemy.h"
-#include "LuxAchievementHandler.h"
 
 //////////////////////////////////////////////////////////////////////////
 // SOUND ENTITY CALLBACK
@@ -670,16 +669,6 @@ void cLuxMapHandler::CheckMapChange(double adFixedDelta)
 
         if(pLastMap)
         {
-            if (pLastMap->GetName() == "08_cellar_maze" && pMap->GetName() == "09_back_hall")
-            {
-                gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_EscapeArtist);
-            }
-
-            if (pLastMap->GetName() == "14_elevator" && pMap->GetName() == "15_prison_south")
-            {
-                gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Descendant);
-            }
-
             //////////////
             // HARDMODE
             if (gpBase->mbHardMode &&

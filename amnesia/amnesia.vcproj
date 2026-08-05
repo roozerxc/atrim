@@ -466,10 +466,6 @@
 			Name="Include"
 			>
 			<File
-				RelativePath=".\include\LuxAchievementHandler.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\LuxArea.h"
 				>
 			</File>
@@ -893,10 +889,6 @@
 		<Filter
 			Name="Sources"
 			>
-			<File
-				RelativePath=".\sources\LuxAchievementHandler.cpp"
-				>
-			</File>
 			<File
 				RelativePath=".\sources\LuxArea.cpp"
 				>

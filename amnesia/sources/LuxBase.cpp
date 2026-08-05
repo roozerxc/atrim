@@ -72,7 +72,6 @@
 #include "LuxEnemy_ManPig.h"
 
 #include "LuxCommentaryIcon.h"
-#include "LuxAchievementHandler.h"
 
 //////////////////////////////////////////////////////////////////////////
 // GLOBAL FUNCTIONS
@@ -1255,9 +1254,6 @@ bool cLuxBase::InitGame()
     mpGlobalDataHandler = CreateModule( cLuxGlobalDataHandler, "Default");
     mpHintHandler = CreateModule( cLuxHintHandler, "Default");
     mpPostEffectHandler = CreateModule( cLuxPostEffectHandler, "Default");
-    mpAchievementHandler = CreateModule( iLuxAchievementHandler, "Default");
-
-    InitAchievements();
 
     //PreMenu
     mpPreMenu = CreateModule( cLuxPreMenu, "PreMenu");
@@ -1622,70 +1618,4 @@ void cLuxBase::LowerFirstStartFlag()
 bool cLuxBase::CheckFirstStartFlag()
 {
     return cPlatform::FileExists(msFirstStartFlagPath);
-}
-
-void cLuxBase::InitAchievements()
-{
-    if(mpAchievementHandler == NULL)
-    {
-        return;
-    }
-
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Insanity, "Insanity");
-
-    // tdd
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Alchemist, "Alchemist");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_EscapeArtist, "EscapeArtist");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Descendant, "Descendant");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Pipeworker, "Pipeworker");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Restorer, "Restorer");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Survivor, "Survivor");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Sacrifice, "Sacrifice");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Benefactor, "Benefactor");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Illuminatus, "Illuminatus");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_NOPE, "NOPE");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Quitter, "Quitter");
-
-    // justine
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Egotist, "Egotist");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Altruist, "Altruist");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Vacillator, "Vacillator");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_StillAlive, "StillAlive");
-
-    /////////////////////
-    // HARDMODE
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_Masochist, "Masochist");
-
-
-    // general
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_MasterArchivist, "MasterArchivist");
-    //mpAchievementHandler->CreateAchievement(eLuxAchievement_Insomniac, "Insomniac");
-    /*
-    // pig
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_TheTeeth, "TheTeeth");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_TheThroat, "TheThroat");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_TheGut, "TheGut");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_TheEntrails, "TheEntrails");
-    mpAchievementHandler->CreateAchievement(eLuxAchievement_TheHeart, "TheHeart");
-    */
-
-    mpAchievementHandler->RegisterAchievements();
-    /*
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_Alchemist);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_EscapeArtist);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_Descendant);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_Pipeworker);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_Restorer);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_Survivor);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_Sacrifice);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_Benefactor);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_Illuminatus);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_Quitter);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_NOPE);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_Egotist);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_Altruist);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_Vacillator);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_StillAlive);
-    mpAchievementHandler->UnlockAchievement(eLuxAchievement_MasterArchivist);
-    */
 }

@@ -18,8 +18,6 @@
 #include "LuxMainMenu_LoadGame.h"
 #include "LuxMainMenu_CustomStory.h"
 
-#include "LuxAchievementHandler.h"
-
 #include <sstream>
 
 // If you have VS2005 keep this! Otherwise remove if you are using VS2012+!
@@ -634,21 +632,12 @@ void cLuxMainMenu::ExitMenu(eLuxMainMenuExit aMessage)
     mpGuiSet->SetDrawMouse(false);
     mpGui->SetFocus(NULL);
 
-    if(    aMessage == eLuxMainMenuExit_ContinueGame ||
-            aMessage == eLuxMainMenuExit_StartGame)
+    if(aMessage == eLuxMainMenuExit_ContinueGame ||
+        aMessage == eLuxMainMenuExit_StartGame)
     {
         if(msZoomSound != "")
         {
             gpBase->mpEngine->GetSound()->GetSoundHandler()->PlayGui(msZoomSound, false,1.0f);
-        }
-    }
-
-    if (aMessage == eLuxMainMenuExit_QuitToMenu || aMessage == eLuxMainMenuExit_QuitAndSave)
-    {
-        tString mapName = gpBase->mpMapHandler->GetCurrentMap()->GetName();
-        if (mapName == "00_rainy_hall" || mapName == "01_old_archives")
-        {
-            gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_NOPE);
         }
     }
 }

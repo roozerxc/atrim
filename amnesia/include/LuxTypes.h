@@ -30,50 +30,6 @@ enum eLuxAxis
 
 //----------------------------------------------
 
-enum eLuxAchievement
-{
-    eLuxAchievement_Insanity = 0, // Platinum ¡DO NOT USE THIS!
-
-    // tdd
-    eLuxAchievement_Alchemist,
-    eLuxAchievement_EscapeArtist,
-    eLuxAchievement_Descendant,
-    eLuxAchievement_Pipeworker,
-    eLuxAchievement_Restorer,
-    eLuxAchievement_Survivor,
-    eLuxAchievement_Sacrifice,
-    eLuxAchievement_Benefactor,
-    eLuxAchievement_Illuminatus,
-    eLuxAchievement_NOPE,
-    eLuxAchievement_Quitter,
-
-    ///////////////////////
-    // HARDMODE
-    eLuxAchievement_Masochist,
-
-
-    // justine
-    eLuxAchievement_Egotist,
-    eLuxAchievement_Altruist,
-    eLuxAchievement_Vacillator,
-    eLuxAchievement_StillAlive,
-
-    //general
-    eLuxAchievement_MasterArchivist,
-
-    eLuxAchievement_LastEnum,
-
-    // pig
-    eLuxAchievement_TheTeeth,
-    eLuxAchievement_TheThroat,
-    eLuxAchievement_TheGut,
-    eLuxAchievement_TheEntrails,
-    eLuxAchievement_TheHeart,
-    eLuxAchievement_Insomniac
-};
-
-//----------------------------------------------
-
 enum eLuxInputState
 {
     eLuxInputState_Null,

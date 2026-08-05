@@ -45,10 +45,6 @@
 
 #include "LuxInteractConnections.h"
 
-#include "LuxAchievementHandler.h"
-
-
-
 //////////////////////////////////////////////////////////////////////////
 // CONSTRUCTORS
 //////////////////////////////////////////////////////////////////////////
@@ -1315,47 +1311,7 @@ bool __stdcall cLuxScriptHandler::InsanityEventIsActive()
 #pragma optimize("", off)
 void __stdcall cLuxScriptHandler::UnlockAchievement(string& asName)
 {
-    bool bUnlockHardmode = false;
-
-    if (asName == "Benefactor")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Benefactor);
-        bUnlockHardmode = true;
-    }
-    else if (asName == "Survivor")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Survivor);
-        bUnlockHardmode = true;
-    }
-    else if (asName == "Sacrifice")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Sacrifice);
-        bUnlockHardmode = true;
-    }
-    else if (asName == "Quitter")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Quitter);
-    }
-    else if (asName == "Egotist")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Egotist);
-    }
-    else if (asName == "Altruist")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Altruist);
-    }
-    else if (asName == "Vacillator")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Vacillator);
-    }
-
-    if (gpBase->mbHardMode)
-    {
-        if (bUnlockHardmode)
-        {
-            gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Masochist);
-        }
-    }
+    // 0x48, 0x90 - XCHG EAX,EAX
 }
 #pragma optimize("",on)
 
@@ -1840,19 +1796,6 @@ void __stdcall cLuxScriptHandler::CompleteQuest(string& asName, string& asNameAn
         if(pMap)
         {
             pMap->AddCompletionAmount(gpBase->mpCompletionCountHandler->mlQuestCompletionValue, 6.0f);
-        }
-
-        if (asName == "02Web")
-        {
-            gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Alchemist);
-        }
-        else if (asName == "SewerFlooded")
-        {
-            gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Pipeworker);
-        }
-        else if (asName == "21FindOrb")
-        {
-            gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Restorer);
         }
     }
 }

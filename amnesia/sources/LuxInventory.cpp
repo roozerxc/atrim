@@ -12,8 +12,6 @@
 #include "LuxEffectHandler.h"
 #include "LuxJournal.h"
 #include "LuxGlobalDataHandler.h"
-#include "LuxAchievementHandler.h"
-
 
 //////////////////////////////////////////////////////////////////////////
 // CONSTRUCTORS
@@ -1114,32 +1112,6 @@ cLuxInventory_Item * cLuxInventory::AddItem(const tString& asName, eLuxItemType 
         *apRemoveItemProp = false;
     }
 
-    /////////////
-    // Tinderbox achievemtn
-    if (aType == eLuxItemType_Tinderbox)
-    {
-        cLuxScriptVar* pVar = gpBase->mpGlobalDataHandler->GetVar("TinderboxesCollected");
-        if (pVar == NULL)
-        {
-            Error("Couldn't find Global var '%s'\n", asName.c_str());
-            return NULL;
-        }
-        tString sVal = pVar->msVal;
-        int intVal = 0;
-        if (sVal != "")
-        {
-            intVal = cString::ToInt(sVal.c_str(), 0);
-            intVal += 1;
-        }
-
-        pVar->msVal = cString::ToString(intVal);
-
-        if (intVal >= 150)
-        {
-            gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Illuminatus);
-        }
-    }
-
     ////////////
     // Check if has max amount
     if(pItemType->GetHasMaxAmount())
@@ -1187,11 +1159,6 @@ cLuxInventory_Item * cLuxInventory::AddItem(const tString& asName, eLuxItemType 
     pItem->SetImageName(sFullImageName);
     pItem->SetStringVal(asVal);
     pItem->SetExtraStringVal(asExtraVal);
-
-    if (asVal == "L02_Shipment")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_StillAlive);
-    }
 
     //Log("Loaded image %d for '%s'\n", pImage, asSubTypeName.c_str());
     //Log("  Image: %d Offset: (%s) Size: (%s)\n", pImage->GetImage(0), pImage->GetOffset().ToString().c_str(),
