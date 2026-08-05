@@ -87,9 +87,9 @@ public:
 
 
 private:
-    void Render3DGui(cViewport* apViewPort,cFrustum *apFrustum,double adFixedDelta);
-    void RenderPrePostEffectScreenGui(cViewport* apViewPort,double adFixedDelta);
-    void RenderScreenGui(cViewport* apViewPort, double adFixedDelta);
+    void Render3DGui(cViewport* apViewPort,cFrustum *apFrustum,double adFrameTime);
+    void RenderPrePostEffectScreenGui(cViewport* apViewPort,double adFrameTime);
+    void RenderScreenGui(cViewport* apViewPort, double adFrameTime);
 
     cGraphics *mpGraphics;
     cResources *mpResources;

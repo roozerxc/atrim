@@ -1246,12 +1246,12 @@ void cLuxPlayer::DrawHud(double adFrameTime)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayer::RunHelperMessage(eUpdateableMessage aMessage, float afX)
+void cLuxPlayer::RunHelperMessage(eUpdateableMessage aMessage, double adX)
 {
     for(size_t i=0; i<mvHelpers.size(); ++i)
     {
         iLuxPlayerHelper *pHelper = mvHelpers[i];
-        pHelper->RunMessage(aMessage, afX);
+        pHelper->RunMessage(aMessage, adX);
     }
 }
 

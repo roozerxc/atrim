@@ -10,7 +10,6 @@ namespace hpl
 class cUpdater;
 class iLowLevelEngineSetup;
 class iLowLevelSystem;
-class cLogicTimer;
 
 class cSystem;
 class cInput;
@@ -136,18 +135,14 @@ public:
         return mpGui;
     }
 
-    void ResetLogicTimer();
-    void SetUpdatesPerSec(int alUpdatesPerSec);
-    int GetUpdatesPerSec();
-    float GetStepSize();
-
-    cLogicTimer* GetLogicTimer()
+    void SetSpeedMul(double adX)
     {
-        return mpLogicTimer;
+        dSpeedMul = adX;
     }
-
-    void SetSpeedMul(float afX);
-    float GetSpeedMul();
+    double GetSpeedMul()
+    {
+        return dSpeedMul;
+    }
 
     float GetFPS();
     float GetAvgFrameTimeInMS();
@@ -175,8 +170,10 @@ public:
         return dRenderAlpha;
     }
 
-    void SetPaused(bool abPaused);
-    bool GetPaused();
+    double GetStepSize()
+    {
+        return dFixedDelta;
+    }
 
     static void SetDeviceWasPlugged()
     {
@@ -209,25 +206,27 @@ public:
 
     static int mlNumLogicLoops;
 private:
-    void UpdateFrameTimer();
-
     bool mbGameIsDone;
 
     bool mbRenderOnce;
 
     bool mbPaused;
 
+    double dCurrentTime;
+    double dLogicTime;
     double dFrameTime;
 
-    double dLogicTime;
+    double dFixedDelta;
+
+    double dAccumulator;
+    double dNewTime;
 
     double dRenderAlpha;
-    
-    double mfSpeedMul;
+
+    double dSpeedMul;
 
     iLowLevelEngineSetup *mpGameSetup;
     cUpdater *mpUpdater;
-    cLogicTimer *mpLogicTimer;
 
     iMutex *mpMutex;
 

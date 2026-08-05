@@ -770,9 +770,9 @@ void cLuxDebugHandler::SetFastForward(bool abX)
         mpCBFastForward->SetChecked(mbFastForward, false);
     }
 
-    gpBase->mpEngine->SetSpeedMul(mbFastForward ? 4.0f : 1.0f);
+    gpBase->mpEngine->SetSpeedMul(mbFastForward ? 4.0 : 1.0);
 
-    gpBase->mpEngine->GetSound()->GetSoundHandler()->SetGlobalSpeed(mbFastForward ? 4.0f : 1.0f,eSoundEntryType_All, eLuxGlobalVolumeType_DebugMenu);
+    gpBase->mpEngine->GetSound()->GetSoundHandler()->SetGlobalSpeed(mbFastForward ? 4.0f : 1.0f, eSoundEntryType_All, eLuxGlobalVolumeType_DebugMenu);
 }
 
 //-----------------------------------------------------------------------

@@ -1,7 +1,6 @@
 #ifndef HPL_MUTEX_H
 #define HPL_MUTEX_H
 
-
 namespace hpl
 {
 

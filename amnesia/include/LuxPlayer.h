@@ -536,7 +536,7 @@ public:
         return mpHands;
     }
 
-    void RunHelperMessage(eUpdateableMessage aMessage, float afX);
+    void RunHelperMessage(eUpdateableMessage aMessage, double adX);
     void RunHelperLuxMessage(eLuxUpdateableMessage aMessage, void *apData);
 
     float GetRoll()

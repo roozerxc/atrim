@@ -14,19 +14,6 @@ class cEngineInitVars
 {
 public:
     ////////////////////////////////
-    // Game
-    class cEngineVars
-    {
-    public:
-        cEngineVars() :
-            mlUpdateRate(60)
-        {}
-
-        int mlUpdateRate;
-    };
-    cEngineVars mGame;
-
-    ////////////////////////////////
     // Graphics
     class cGraphicsVars
     {

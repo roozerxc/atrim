@@ -9,7 +9,6 @@
 #include "gui/Gui.h"
 #include "scene/Scene.h"
 
-#include "system/LogicTimer.h"
 #include "system/String.h"
 #include "system/Platform.h"
 #include "system/Timer.h"
@@ -312,9 +311,6 @@ void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, 
     mpUpdater->AddContainer("Default");
     mpUpdater->SetContainer("Default");
 
-    //Create the logic timer.
-    mpLogicTimer = mpSystem->CreateLogicTimer(apVars->mGame.mlUpdateRate);
-
     //Init some standard script funcs
     Log(" Initializing script functions\n");
     cScriptFuncs::Init(mpGraphics,mpResources,mpSystem,mpInput,mpScene,mpSound,this);
@@ -327,8 +323,6 @@ void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, 
     mbPaused = false;
 
     mbRenderOnce = false;
-
-    dLogicTime = 0.0;
 
     mpFPSCounter = hplNew( cFPSCounter,(mpSystem->GetLowLevel()) );
     mpFrameTimer = cPlatform::CreateTimer();
@@ -344,7 +338,6 @@ cEngine::~cEngine()
 {
     Log("--------------------------------------------------------\n\n");
 
-    hplDelete(mpLogicTimer);
     hplDelete(mpFPSCounter);
     hplDelete(mpFrameTimer);
     hplDelete(mpMutex);
@@ -387,8 +380,6 @@ void cEngine::Run()
 
     mpUpdater->BroadcastMessageToAll(eUpdateableMessage_OnStart);
 
-    mpLogicTimer->Reset();
-
     //Loop the game... fix the var...
     unsigned long lTempTime = cPlatform::GetApplicationTime();
 
@@ -397,96 +388,81 @@ void cEngine::Run()
 
     mpFrameTimer->Start();
 
+    dLogicTime = 0.0;
+
     bool bBufferSwap = false;
     bool bSwappedOnce = false;
 
-    // Define the current time from UpdateFrameTimer()
-    double dCurrentTime = (float)mpFrameTimer->GetTimeInSec();
+    //Define the current time from UpdateFrameTimer()
+    dCurrentTime = cPlatform::GetApplicationTime() / 1000.0;
 
-    // Adapt fixed delta from the Amnesia timestep
-    double dFixedDelta = 1.0 / 60.0;
-    double dAccumulator = 0.0;
+    //Adapt fixed delta from the Amnesia timestep
+    dFixedDelta = 1.0 / 60.0;
+    dAccumulator = 0.0;
+
+    //Initialize dSpeedMul to control the speed multiplier!
+    dSpeedMul = 1.0;
 
     while(!GetGameIsDone())
     {
         ///////////////////////////////////////
-        // Regain control of the logic timer speed mul
-        float fSpeedMul = mpLogicTimer->GetSpeedMul();
-
-        ///////////////////////////////////////
         //Get the time from the last frame.
-        double dNewTime = ((float)cPlatform::GetApplicationTime()) / 1000.0;
+        dNewTime = cPlatform::GetApplicationTime() / 1000.0;
         dFrameTime = dNewTime - dCurrentTime;
 
-        //////////////////////////
-        //Check if paused
-        if(GetPaused())
+        ///////////////////////////////////////
+        //Dont spiral!
+        if(dFrameTime > 0.25)
         {
-            cPlatform::Sleep(10);
-            mpInput->Update(1.0f/100.0f);
-
-            mpUpdater->RunMessage(eUpdateableMessage_OnPauseUpdate, 1.0f/100.0f);
+            dFrameTime = 0.25;
         }
-        else
+        dCurrentTime = dNewTime;
+
+        ///////////////////////////////////////
+        //Accumulate the time since last one
+        dAccumulator += dFrameTime * dSpeedMul;
+
+        while(dAccumulator >= dFixedDelta)
         {
             ///////////////////////////////////////
-            //Dont spiral!
-            if(dFrameTime > 0.25)
+            //Game is still not done yet! Need to send messages.
+            if(!GetGameIsDone())
             {
-                dFrameTime = 0.25;
-            }
-            dCurrentTime = dNewTime;
+                /////////////////////////////////////////////
+                // Run Update callback in updater
+                mpUpdater->RunMessage(eUpdateableMessage_PreUpdate, dFixedDelta);
+                mpUpdater->RunMessage(eUpdateableMessage_Update, dFixedDelta);
+                mpUpdater->RunMessage(eUpdateableMessage_PostUpdate, dFixedDelta);
 
-            ///////////////////////////////////////
-            //Accumulate the time since last one
-            dAccumulator += dFrameTime * fSpeedMul;
-
-            while(dAccumulator >= dFixedDelta)
-            {
-                ///////////////////////////////////////
-                //Game is not don yet! Need to send messages.
-                if(!GetGameIsDone())
+                if(mpInput->isQuitMessagePosted())
                 {
-                    /////////////////////////////////////////////
-                    // Run Update callback in updater
-                    mpUpdater->RunMessage(eUpdateableMessage_PreUpdate, (float)dFixedDelta);
-                    mpUpdater->RunMessage(eUpdateableMessage_Update, (float)dFixedDelta);
-                    mpUpdater->RunMessage(eUpdateableMessage_PostUpdate, (float)dFixedDelta);
+                    mpUpdater->RunMessage(eUpdateableMessage_OnQuit);
 
-                    if(mpInput->isQuitMessagePosted())
+                    mpInput->resetQuitMessagePosted();
+                }
+
+                /////////////////////////////////////////////
+                // If log update is active, clear it regularly.
+                if(GetUpdateLogActive())
+                {
+                    glClearUpdateCheck++;
+                    if(glClearUpdateCheck % 20 == 0)
                     {
-                        mpUpdater->RunMessage(eUpdateableMessage_OnQuit);
-
-                        mpInput->resetQuitMessagePosted();
-                    }
-
-                    /////////////////////////////////////////////
-                    // If log update is active, clear it regularly.
-                    if(GetUpdateLogActive())
-                    {
-                        glClearUpdateCheck++;
-                        if(glClearUpdateCheck % 20 == 0)
+                        if(mpUpdater->GetCurrentContainerName() == "Default")
                         {
-                            if(mpUpdater->GetCurrentContainerName() == "Default")
-                            {
-                                ClearUpdateLogFile();
-                            }
+                            ClearUpdateLogFile();
                         }
                     }
-
-                    //Increase simulated logic time.
-                    dLogicTime += dFixedDelta;
                 }
-                //Subtract accumulated time.
-                dAccumulator -= dFixedDelta;
-            }
 
-            ////////////////
-            // Update timer
-            mpLogicTimer->EndUpdateLoop();
+                //Increase simulated logic time.
+                dLogicTime += dFixedDelta;
+            }
+            //Subtract accumulated time.
+            dAccumulator -= dFixedDelta;
         }
 
-        const double dRenderAlpha = dAccumulator / dFixedDelta;
+        dRenderAlpha = dAccumulator / dFixedDelta;
 
         ////////////////////////////////////
         // If rendering once, make a check and if already drawn screen, just continue
@@ -513,10 +489,8 @@ void cEngine::Run()
             }
         }
 
-        UpdateFrameTimer();
-
         START_TIMING(OnDraw)
-        mpUpdater->RunMessage(eUpdateableMessage_OnDraw, (float)dFrameTime);
+        mpUpdater->RunMessage(eUpdateableMessage_OnDraw, dFrameTime);
         STOP_TIMING(OnDraw)
 
         START_TIMING(RenderAll)
@@ -524,7 +498,7 @@ void cEngine::Run()
         STOP_TIMING(RenderAll)
 
         START_TIMING(PostRender)
-        mpUpdater->RunMessage(eUpdateableMessage_OnPostRender, (float)dFrameTime);
+        mpUpdater->RunMessage(eUpdateableMessage_OnPostRender, dFrameTime);
         STOP_TIMING(PostRender)
 
         START_TIMING(FlushRender)
@@ -575,47 +549,12 @@ bool cEngine::GetGameIsDone()
 
     return bDone;
 }
-//-----------------------------------------------------------------------
-
-void cEngine::ResetLogicTimer()
-{
-    mpLogicTimer->Reset();
-}
-
-void cEngine::SetUpdatesPerSec(int alUpdatesPerSec)
-{
-    mpLogicTimer->SetUpdatesPerSec(alUpdatesPerSec);
-}
-
-int cEngine::GetUpdatesPerSec()
-{
-    return mpLogicTimer->GetUpdatesPerSec();
-}
-
-float cEngine::GetStepSize()
-{
-    return mpLogicTimer->GetStepSize();
-}
 
 //-----------------------------------------------------------------------
 
 float cEngine::GetFPS()
 {
     return mpFPSCounter->mfFPS;
-}
-
-//-----------------------------------------------------------------------
-
-void cEngine::SetSpeedMul(float afX)
-{
-    mpLogicTimer->SetSpeedMul(afX);
-}
-
-//-----------------------------------------------------------------------
-
-float cEngine::GetSpeedMul()
-{
-    return mpLogicTimer->GetSpeedMul();
 }
 
 //-----------------------------------------------------------------------
@@ -746,62 +685,9 @@ eVariableType cEngine::GetEngineTypeFromStringW(const tWString& asType)
 
 //-----------------------------------------------------------------------
 
-void cEngine::SetPaused(bool abPaused)
-{
-    mpMutex->Lock();
-
-    if(mbPaused != abPaused)
-    {
-        mbPaused = abPaused;
-        if(mbPaused==false)
-        {
-            mpLogicTimer->Reset();
-        }
-    }
-
-    mpMutex->Unlock();
-}
-
-//-----------------------------------------------------------------------
-
-bool cEngine::GetPaused()
-{
-    mpMutex->Lock();
-
-    bool bRet = mbPaused;
-
-    mpMutex->Unlock();
-
-    return bRet;
-}
-
-//-----------------------------------------------------------------------
-
 //////////////////////////////////////////////////////////////////////////
 // PRIVATE METHOD
 //////////////////////////////////////////////////////////////////////////
-
-//-----------------------------------------------------------------------
-
-void cEngine::UpdateFrameTimer()
-{
-    mpFrameTimer->Stop();
-    dFrameTime = (float) mpFrameTimer->GetTimeInSec();
-
-    /*mlstFrameTimes.push_back(mpFrameTimer->GetTimeInMilliSec());
-    if((int)mlstFrameTimes.size() >= mlMaxFrameTimes)
-    {
-        double fFrameSum=0.0;
-        for(tDoubleListIt it = mlstFrameTimes.begin(); it != mlstFrameTimes.end(); it++)
-        {
-            fFrameSum += *it;
-        }
-        mfAvgFrameTimeInMS = (float)(fFrameSum / (double)mlstFrameTimes.size());
-        mlstFrameTimes.clear();
-    }*/
-
-    mpFrameTimer->Start();
-}
 
 //-----------------------------------------------------------------------
 }

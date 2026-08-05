@@ -131,10 +131,8 @@ static bool __stdcall StringContains(std::string asString, std::string asSubStri
 
 static void __stdcall ResetLogicTimer()
 {
-    gpGame->ResetLogicTimer();
+    // 0x48, 0x90 - XCHG EAX,EAX
 }
-
-
 
 //-----------------------------------------------------------------------
 

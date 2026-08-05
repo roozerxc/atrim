@@ -45,7 +45,7 @@ public:
     virtual void AppDeviceWasPlugged() {}
     virtual void AppDeviceWasRemoved() {}
 
-    void RunMessage(eUpdateableMessage aMessage, float afX)
+    void RunMessage(eUpdateableMessage aMessage, double adX)
     {
         switch(aMessage)
         {
@@ -56,19 +56,19 @@ public:
             OnStart();
             break;
         case eUpdateableMessage_OnDraw:
-            OnDraw(afX);
+            OnDraw(adX);
             break;
         case eUpdateableMessage_OnPostRender:
-            OnPostRender(afX);
+            OnPostRender(adX);
             break;
         case eUpdateableMessage_PreUpdate:
-            PreUpdate(afX);
+            PreUpdate(adX);
             break;
         case eUpdateableMessage_Update:
-            Update(afX);
+            Update(adX);
             break;
         case eUpdateableMessage_PostUpdate:
-            PostUpdate(afX);
+            PostUpdate(adX);
             break;
         case eUpdateableMessage_OnQuit:
             OnQuit();
@@ -80,7 +80,7 @@ public:
             Reset();
             break;
         case eUpdateableMessage_OnPauseUpdate:
-            OnPauseUpdate(afX);
+            OnPauseUpdate(adX);
             break;
 
         case eUpdateableMessage_AppGotInputFocus:

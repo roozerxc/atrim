@@ -40,25 +40,6 @@
 namespace hpl
 {
 
-#ifdef HPL_OGL_THREADSAFE
-iMutex *gpLowlevelGfxMutex=NULL;
-
-cLowlevelGfxMutex::cLowlevelGfxMutex()
-{
-    if(gpLowlevelGfxMutex)
-    {
-        gpLowlevelGfxMutex->Lock();
-    }
-}
-cLowlevelGfxMutex::~cLowlevelGfxMutex()
-{
-    if(gpLowlevelGfxMutex)
-    {
-        gpLowlevelGfxMutex->Unlock();
-    }
-}
-#endif
-
 //////////////////////////////////////////////////////////////////////////
 // CONSTRUCTORS
 //////////////////////////////////////////////////////////////////////////

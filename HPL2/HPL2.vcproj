@@ -2564,14 +2564,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\core\sources\system\LogicTimer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\core\include\system\LogicTimer.h"
-				>
-			</File>
-			<File
 				RelativePath=".\core\include\system\LowLevelSystem.h"
 				>
 			</File>

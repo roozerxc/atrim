@@ -174,7 +174,6 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
     //Increase the frame count (do this at top, so render count is valid until this Render is called again!)
     iRenderer::IncRenderFrameCount();
 
-
     ///////////////////////////////////////////
     // Iterate all viewports and render
     tViewportListIt viewIt = mlstViewports.begin();
@@ -229,11 +228,11 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
             //Render 3D GuiSets
             // Should this really be here? Or perhaps send in a frame buffer depending on the renderer.
             START_TIMING(Render3DGui)
-            Render3DGui(pViewPort,pFrustum, (float)adFrameTime);
+            Render3DGui(pViewPort,pFrustum, adFrameTime);
             STOP_TIMING(Render3DGui)
 
             START_TIMING(RenderPrePostEffectScreenGui)
-            RenderPrePostEffectScreenGui(pViewPort, (float)adFrameTime);
+            RenderPrePostEffectScreenGui(pViewPort, adFrameTime);
             STOP_TIMING(RenderPrePostEffectScreenGui)
         }
 
@@ -255,7 +254,7 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
         if(alFlags & tSceneRenderFlag_Gui)
         {
             START_TIMING(RenderGUI)
-            RenderScreenGui(pViewPort, (float)adFrameTime);
+            RenderScreenGui(pViewPort, adFrameTime);
             STOP_TIMING(RenderGUI)
         }
     }
@@ -367,7 +366,7 @@ bool cScene::WorldExists(cWorld* apWorld)
 
 //-----------------------------------------------------------------------
 
-void cScene::RenderPrePostEffectScreenGui(cViewport *apViewPort,double adFixedDelta)
+void cScene::RenderPrePostEffectScreenGui(cViewport *apViewPort,double adFrameTime)
 {
     if(apViewPort->GetCamera()==NULL)
     {
@@ -387,7 +386,7 @@ void cScene::RenderPrePostEffectScreenGui(cViewport *apViewPort,double adFixedDe
 
 //-----------------------------------------------------------------------
 
-void cScene::Render3DGui(cViewport *apViewPort,cFrustum *apFrustum,double adFixedDelta)
+void cScene::Render3DGui(cViewport *apViewPort,cFrustum *apFrustum,double adFrameTime)
 {
     if(apViewPort->GetCamera()==NULL)
     {
@@ -405,7 +404,7 @@ void cScene::Render3DGui(cViewport *apViewPort,cFrustum *apFrustum,double adFixe
     }
 }
 
-void cScene::RenderScreenGui(cViewport *apViewPort,double adFixedDelta)
+void cScene::RenderScreenGui(cViewport *apViewPort,double adFrameTime)
 {
     ///////////////////////////////////////
     //Put all of the non 3D sets in to a sorted map
