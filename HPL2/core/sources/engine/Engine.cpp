@@ -1,3 +1,7 @@
+#include <vector>
+#include <algorithm>
+#include <numeric>
+
 #include "engine/Engine.h"
 
 #include "system/System.h"
@@ -376,14 +380,17 @@ void cEngine::Run()
     int glClearUpdateCheck=0;
 
     double dNumOfTimes=0;
-    double dMediumTime=0;
+    double dAverageFPS=0;
+
+    std::vector<double> vFrameTimes;
+    vFrameTimes.reserve(360000); // 360,000 frames is 100min at 60FPS!
 
     mpUpdater->BroadcastMessageToAll(eUpdateableMessage_OnStart);
 
     //Loop the game... fix the var...
     unsigned long lTempTime = cPlatform::GetApplicationTime();
 
-    Log("Game Running\n");
+    Log("Engine Initialized!\n");
     Log("--------------------------------------------------------\n");
 
     mpFrameTimer->Start();
@@ -408,7 +415,12 @@ void cEngine::Run()
         ///////////////////////////////////////
         //Get the time from the last frame.
         dNewTime = cPlatform::GetApplicationTime() / 1000.0;
-        dFrameTime = dNewTime - dCurrentTime;
+        double dAuthenticFrameTime = dNewTime - dCurrentTime;
+        if(dAuthenticFrameTime > 0.0)
+        {
+            vFrameTimes.push_back(dAuthenticFrameTime);
+        }
+        dFrameTime = dAuthenticFrameTime;
 
         ///////////////////////////////////////
         //Dont spiral!
@@ -482,7 +494,7 @@ void cEngine::Run()
             STOP_TIMING(SwapBuffers)
 
             mpUpdater->RunMessage(eUpdateableMessage_OnPostBufferSwap);
-            bSwappedOnce =true;
+            bSwappedOnce = true;
             if(mbRenderOnce)
             {
                 continue;
@@ -517,9 +529,38 @@ void cEngine::Run()
     Log("--------------------------------------------------------\n");
 
     unsigned long lTime = cPlatform::GetApplicationTime() - lTempTime;
-    dMediumTime = dNumOfTimes/(((double)lTime)/1000);
+    dAverageFPS = dNumOfTimes / (((double)lTime) / 1000.0);
 
-    Log(" Medium framerate: %f\n", dMediumTime);
+    Log(" Average FrameTime: %.1f ms\n", GetAvgFrameTimeInMS());
+    Log(" Average Framerate: %.1f FPS\n", dAverageFPS);
+
+    if(!vFrameTimes.empty())
+    {
+        // Sort the worst frametime first
+        std::sort(vFrameTimes.rbegin(), vFrameTimes.rend());
+
+        // Count both 1 and .1% low frametime
+        size_t iFrameTimeCount01 = std::max((size_t)1, (size_t)(vFrameTimes.size() * 0.01));
+        size_t iFrameTimeCount001 = std::max((size_t)1, (size_t)(vFrameTimes.size() * 0.001));
+
+        double dFrameTimeSum01 = 0.0;
+        for(size_t i = 0; i < iFrameTimeCount01; ++i)
+        {
+            dFrameTimeSum01 += vFrameTimes[i];
+        }
+        double dAverageTime01 = dFrameTimeSum01 / iFrameTimeCount01;
+
+        double dFrameTimeSum001 = 0.0;
+        for(size_t i = 0; i < iFrameTimeCount001; ++i)
+        {
+            dFrameTimeSum001 += vFrameTimes[i];
+        }
+        double dAverageTime001 = dFrameTimeSum001 / iFrameTimeCount001;
+
+        Log("      1%% Framerate: %.1f FPS\n", 1.0 / dAverageTime01);
+        Log("    0.1%% Framerate: %.1f FPS\n", 1.0 / dAverageTime001);
+    }
+
     Log("--------------------------------------------------------\n\n");
 
     Log("User Exit\n");
@@ -527,6 +568,7 @@ void cEngine::Run()
 
     mpUpdater->BroadcastMessageToAll(eUpdateableMessage_OnExit);
 }
+
 //-----------------------------------------------------------------------
 
 void cEngine::Exit()
