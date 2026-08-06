@@ -129,11 +129,6 @@ static bool __stdcall StringContains(std::string asString, std::string asSubStri
     return cString::GetLastStringPos(asString,asSubString)>=0;
 }
 
-static void __stdcall ResetLogicTimer()
-{
-    // 0x48, 0x90 - XCHG EAX,EAX
-}
-
 //-----------------------------------------------------------------------
 
 
@@ -240,8 +235,6 @@ void cScriptFuncs::Init(    cGraphics* apGraphics,
     gpSystem->GetLowLevel()->AddScriptFunc(SCRIPT_REGISTER_FUNC(RandFloat));
     gpSystem->GetLowLevel()->AddScriptFunc(SCRIPT_REGISTER_FUNC(RandInt));
     gpSystem->GetLowLevel()->AddScriptFunc(SCRIPT_REGISTER_FUNC(StringContains));
-
-    gpSystem->GetLowLevel()->AddScriptFunc(SCRIPT_REGISTER_FUNC(ResetLogicTimer));
 
     //Renderer
     gpSystem->GetLowLevel()->AddScriptFunc(SCRIPT_REGISTER_FUNC(SetAmbientColor));
