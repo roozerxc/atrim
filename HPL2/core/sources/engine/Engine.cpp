@@ -327,8 +327,6 @@ void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, 
 
     mbPaused = false;
 
-    mbRenderOnce = false;
-
     mpFPSCounter = hplNew( cFPSCounter,(mpSystem->GetLowLevel()) );
     mpFrameTimer = cPlatform::CreateTimer();
     Log("--------------------------------------------------------\n\n");
@@ -384,7 +382,6 @@ void cEngine::Run()
     double dNumOfTimes=0;
     double dAverageFPS=0;
 
-    const size_t iWorstFrameCount = 2000; // How much worst frames to retain
     std::priority_queue<double, std::vector<double>, std::greater<double>> worst;
     size_t iTotalFrames = 0; // Every frame i saw in the game!
 
@@ -426,7 +423,10 @@ void cEngine::Run()
         {
             ++iTotalFrames;
 
-            if(worst.size() < iWorstFrameCount)
+            // Calculate exactly what 1% of total frames is...
+            size_t iMaxWorstFrames = std::max((size_t)1, (size_t)(iTotalFrames * 0.01));
+
+            if(worst.size() < iMaxWorstFrames)
             {
                 worst.push(dAuthenticFrameTime);
             }
@@ -489,13 +489,13 @@ void cEngine::Run()
         {
             mpUpdater->RunMessage(eUpdateableMessage_OnQuit);
             mpInput->resetQuitMessagePosted();
+            break;
         }
 
         // Make alpha dividing the accumulated time by the fixed delta timestep
         dRenderAlpha = dAccumulator / dFixedDelta;
 
-        //Swap buffers and call callback.
-        //Do this after update, so hardware can work during update
+        //Swap, run callback and move STRAIGHT INTO draw call
         if(bBufferSwap)
         {
             bBufferSwap = false;
@@ -505,11 +505,6 @@ void cEngine::Run()
             STOP_TIMING(SwapBuffers)
 
             mpUpdater->RunMessage(eUpdateableMessage_OnPostBufferSwap);
-
-            if(mbRenderOnce)
-            {
-                continue;
-            }
         }
 
         START_TIMING(OnDraw)

@@ -203,8 +203,6 @@ public:
 private:
     bool mbGameIsDone;
 
-    bool mbRenderOnce;
-
     bool mbPaused;
 
     int iMaxGameUpdates;
