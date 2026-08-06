@@ -1,6 +1,7 @@
-#include <vector>
 #include <algorithm>
 #include <numeric>
+#include <queue>
+#include <vector>
 
 #include "engine/Engine.h"
 
@@ -377,13 +378,15 @@ void cEngine::Run()
     //Log line that ends user init.
     Log("--------------------------------------------------------\n\n");
 
-    int glClearUpdateCheck=0;
+    double dLastLogClearedTime = 0.0;
+    const double dLogClearedInterval = 1.0;
 
     double dNumOfTimes=0;
     double dAverageFPS=0;
 
-    std::vector<double> vFrameTimes;
-    vFrameTimes.reserve(360000); // 360,000 frames is 100min at 60FPS!
+    const size_t iWorstFrameCount = 2000; // How much worst frames to retain
+    std::priority_queue<double, std::vector<double>, std::greater<double>> worst;
+    size_t iTotalFrames = 0; // Every frame i saw in the game!
 
     mpUpdater->BroadcastMessageToAll(eUpdateableMessage_OnStart);
 
@@ -398,7 +401,9 @@ void cEngine::Run()
     dLogicTime = 0.0;
 
     bool bBufferSwap = false;
-    bool bSwappedOnce = false;
+
+    //Make internal update count catch up!
+    iMaxGameUpdates = 6; // 60 % 10 = 6 updates
 
     //Define the current time from UpdateFrameTimer()
     dCurrentTime = cPlatform::GetApplicationTime() / 1000.0;
@@ -416,13 +421,23 @@ void cEngine::Run()
         //Get the time from the last frame.
         dNewTime = cPlatform::GetApplicationTime() / 1000.0;
         double dAuthenticFrameTime = dNewTime - dCurrentTime;
+
         if(dAuthenticFrameTime > 0.0)
         {
-            vFrameTimes.push_back(dAuthenticFrameTime);
+            ++iTotalFrames;
+
+            if(worst.size() < iWorstFrameCount)
+            {
+                worst.push(dAuthenticFrameTime);
+            }
+            else if(dAuthenticFrameTime > worst.top())
+            {
+                worst.pop();
+                worst.push(dAuthenticFrameTime);
+            }
         }
         dFrameTime = dAuthenticFrameTime;
 
-        ///////////////////////////////////////
         //Dont spiral!
         if(dFrameTime > 0.25)
         {
@@ -430,61 +445,57 @@ void cEngine::Run()
         }
         dCurrentTime = dNewTime;
 
-        ///////////////////////////////////////
-        //Accumulate the time since last one
+        //Reset update on current frame, then Accumulate the time since last one
+        //and multiply the accumulated time with the game logic speed mul
+        iUpdatesOnCurrentFrame = 0;
         dAccumulator += dFrameTime * dSpeedMul;
 
-        while(dAccumulator >= dFixedDelta)
+        while(dAccumulator >= dFixedDelta && iUpdatesOnCurrentFrame < iMaxGameUpdates)
         {
-            ///////////////////////////////////////
-            //Game is still not done yet! Need to send messages.
-            if(!GetGameIsDone())
+            if(GetGameIsDone())
             {
-                /////////////////////////////////////////////
-                // Run Update callback in updater
-                mpUpdater->RunMessage(eUpdateableMessage_PreUpdate, dFixedDelta);
-                mpUpdater->RunMessage(eUpdateableMessage_Update, dFixedDelta);
-                mpUpdater->RunMessage(eUpdateableMessage_PostUpdate, dFixedDelta);
-
-                if(mpInput->isQuitMessagePosted())
-                {
-                    mpUpdater->RunMessage(eUpdateableMessage_OnQuit);
-
-                    mpInput->resetQuitMessagePosted();
-                }
-
-                /////////////////////////////////////////////
-                // If log update is active, clear it regularly.
-                if(GetUpdateLogActive())
-                {
-                    glClearUpdateCheck++;
-                    if(glClearUpdateCheck % 20 == 0)
-                    {
-                        if(mpUpdater->GetCurrentContainerName() == "Default")
-                        {
-                            ClearUpdateLogFile();
-                        }
-                    }
-                }
-
-                //Increase simulated logic time.
-                dLogicTime += dFixedDelta;
+                break;
             }
-            //Subtract accumulated time.
+
+            // Run Update callback in updater
+            mpUpdater->RunMessage(eUpdateableMessage_PreUpdate, dFixedDelta);
+            mpUpdater->RunMessage(eUpdateableMessage_Update, dFixedDelta);
+            mpUpdater->RunMessage(eUpdateableMessage_PostUpdate, dFixedDelta);
+
+            // If log update is active, clear it regularly.
+            if(GetUpdateLogActive() && mpUpdater->GetCurrentContainerName() == "Default" &&
+                dLogicTime - dLastLogClearedTime >= dLogClearedInterval)
+            {
+                ClearUpdateLogFile();
+                dLastLogClearedTime = dLogicTime;
+            }
+
+            //Increase simulated logic then subtract
+            dLogicTime += dFixedDelta;
             dAccumulator -= dFixedDelta;
+
+            //Increment updates based on current frame
+            ++iUpdatesOnCurrentFrame;
         }
 
+        // Soft clamp the leftover accumulated time
+        if(iUpdatesOnCurrentFrame >= iMaxGameUpdates)
+        {
+            dAccumulator = std::min(dAccumulator, dFixedDelta);
+        }
+
+        // Check if quit message was actually posted.
+        if(mpInput->isQuitMessagePosted())
+        {
+            mpUpdater->RunMessage(eUpdateableMessage_OnQuit);
+            mpInput->resetQuitMessagePosted();
+        }
+
+        // Make alpha dividing the accumulated time by the fixed delta timestep
         dRenderAlpha = dAccumulator / dFixedDelta;
 
-        ////////////////////////////////////
-        // If rendering once, make a check and if already drawn screen, just continue
-        if(mbRenderOnce && bSwappedOnce)
-        {
-            continue;
-        }
-
-        ////////////////////////////////////////////////
-        //Swap buffers and call callback, do this after update, so hardware can work during update
+        //Swap buffers and call callback.
+        //Do this after update, so hardware can work during update
         if(bBufferSwap)
         {
             bBufferSwap = false;
@@ -494,7 +505,7 @@ void cEngine::Run()
             STOP_TIMING(SwapBuffers)
 
             mpUpdater->RunMessage(eUpdateableMessage_OnPostBufferSwap);
-            bSwappedOnce = true;
+
             if(mbRenderOnce)
             {
                 continue;
@@ -531,34 +542,45 @@ void cEngine::Run()
     unsigned long lTime = cPlatform::GetApplicationTime() - lTempTime;
     dAverageFPS = dNumOfTimes / (((double)lTime) / 1000.0);
 
-    Log(" Average FrameTime: %.1f ms\n", GetAvgFrameTimeInMS());
+    Log(" Average FrameTime: %.1f ms\n", (1.0 / dAverageFPS) * 1000.0);
     Log(" Average Framerate: %.1f FPS\n", dAverageFPS);
 
-    if(!vFrameTimes.empty())
+    if(!worst.empty() && iTotalFrames > 0)
     {
-        // Sort the worst frametime first
-        std::sort(vFrameTimes.rbegin(), vFrameTimes.rend());
+        // Count both 1 and .1% low frametime of the whole session
+        size_t iWorstCount01  = std::max((size_t)1, (size_t)(iTotalFrames * 0.01));
+        size_t iWorstCount001 = std::max((size_t)1, (size_t)(iTotalFrames * 0.001));
 
-        // Count both 1 and .1% low frametime
-        size_t iFrameTimeCount01 = std::max((size_t)1, (size_t)(vFrameTimes.size() * 0.01));
-        size_t iFrameTimeCount001 = std::max((size_t)1, (size_t)(vFrameTimes.size() * 0.001));
+        // Get up the size of heap
+        iWorstCount01  = std::min(iWorstCount01,  worst.size());
+        iWorstCount001 = std::min(iWorstCount001, worst.size());
 
-        double dFrameTimeSum01 = 0.0;
-        for(size_t i = 0; i < iFrameTimeCount01; ++i)
+        // Pull heap into vector and reverse so worst is always first
+        std::vector<double> vWorstFrameTime;
+        vWorstFrameTime.reserve(worst.size());
+        while(!worst.empty())
         {
-            dFrameTimeSum01 += vFrameTimes[i];
+            vWorstFrameTime.push_back(worst.top());
+            worst.pop();
         }
-        double dAverageTime01 = dFrameTimeSum01 / iFrameTimeCount01;
+        std::reverse(vWorstFrameTime.begin(), vWorstFrameTime.end());
 
-        double dFrameTimeSum001 = 0.0;
-        for(size_t i = 0; i < iFrameTimeCount001; ++i)
+        double dWorstSum01 = 0.0;
+        for(size_t i = 0; i < iWorstCount01; ++i)
         {
-            dFrameTimeSum001 += vFrameTimes[i];
+            dWorstSum01 += vWorstFrameTime[i];
         }
-        double dAverageTime001 = dFrameTimeSum001 / iFrameTimeCount001;
+        double dAvgWorst01 = dWorstSum01 / iWorstCount01;
 
-        Log("      1%% Framerate: %.1f FPS\n", 1.0 / dAverageTime01);
-        Log("    0.1%% Framerate: %.1f FPS\n", 1.0 / dAverageTime001);
+        double dWorstSum001 = 0.0;
+        for(size_t i = 0; i < iWorstCount001; ++i)
+        {
+            dWorstSum001 += vWorstFrameTime[i];
+        }
+        double dAvgWorst001 = dWorstSum001 / iWorstCount001;
+
+        Log("      1%% Framerate: %.1f FPS\n", 1.0 / dAvgWorst01);
+        Log("    0.1%% Framerate: %.1f FPS\n", 1.0 / dAvgWorst001);
     }
 
     Log("--------------------------------------------------------\n\n");

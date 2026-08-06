@@ -150,11 +150,6 @@ public:
     void SetFPSUpdateRate(float afSec);
     float GetFPSUpdateRate();
 
-    void SetRenderOnce(bool abX)
-    {
-        mbRenderOnce = abX;
-    }
-
     double GetFrameTime()
     {
         return dFrameTime;
@@ -211,6 +206,9 @@ private:
     bool mbRenderOnce;
 
     bool mbPaused;
+
+    int iMaxGameUpdates;
+    int iUpdatesOnCurrentFrame;
 
     double dCurrentTime;
     double dLogicTime;
