@@ -445,6 +445,14 @@ void cEngine::Run()
         }
         dCurrentTime = dNewTime;
 
+        // Check if quit message was actually posted.
+        if(mpInput->isQuitMessagePosted())
+        {
+            mpUpdater->RunMessage(eUpdateableMessage_OnQuit);
+            mpInput->resetQuitMessagePosted();
+            break;
+        }
+
         //Reset update on current frame, then Accumulate the time since last one
         //and multiply the accumulated time with the game logic speed mul
         iUpdatesOnCurrentFrame = 0;
@@ -482,14 +490,6 @@ void cEngine::Run()
         if(iUpdatesOnCurrentFrame >= iMaxGameUpdates)
         {
             dAccumulator = std::min(dAccumulator, dFixedDelta);
-        }
-
-        // Check if quit message was actually posted.
-        if(mpInput->isQuitMessagePosted())
-        {
-            mpUpdater->RunMessage(eUpdateableMessage_OnQuit);
-            mpInput->resetQuitMessagePosted();
-            break;
         }
 
         // Make alpha dividing the accumulated time by the fixed delta timestep
