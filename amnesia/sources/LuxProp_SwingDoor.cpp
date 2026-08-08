@@ -346,11 +346,11 @@ void cLuxProp_SwingDoor::OnResetProperties()
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_SwingDoor::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_SwingDoor::UpdatePropSpecific(double adFixedDelta)
 {
     if(mfInteractSoundCount >0)
     {
-        mfInteractSoundCount-=afTimeStep;
+        mfInteractSoundCount -= (float)adFixedDelta;
     }
 
     ////////////////////////////////

@@ -51,7 +51,7 @@ public:
 
     void Init(cResources *apResources);
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     iPhysicsWorld* CreateWorld(bool abAddSurfaceData);
     void DestroyWorld(iPhysicsWorld* apWorld);
@@ -107,7 +107,7 @@ public:
 private:
     ePhysicsMaterialCombMode GetCombMode(const char *apName);
 
-    void UpdateImpactCounts(float afTimeStep);
+    void UpdateImpactCounts(double adFixedDelta);
 
     iLowLevelPhysics *mpLowLevelPhysics;
     cResources *mpResources;

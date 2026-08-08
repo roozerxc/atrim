@@ -225,31 +225,31 @@ void cLuxMoveState_Normal::OnLeaveState(eLuxMoveState aNewState)
 
 //-----------------------------------------------------------------------
 
-void cLuxMoveState_Normal::OnUpdate(float afTimeStep)
+void cLuxMoveState_Normal::OnUpdate(double adFixedDelta)
 {
     ////////////////////////////
     // Check if there is any ledge up ahead.
-    if(UpdateLedgeCheck(afTimeStep))
+    if(UpdateLedgeCheck(adFixedDelta))
     {
         return;
     }
 
     ////////////////////////////
     // Update movement related stuff
-    UpdateMovement(afTimeStep);
+    UpdateMovement(adFixedDelta);
 
 
     ////////////////////////////
     // Update multipliers
-    UpdateSpeedMultipliers(afTimeStep);
+    UpdateSpeedMultipliers(adFixedDelta);
 
     ////////////////////////////
     // Update jump and ground checks
-    UpdateJumpAndGroundCheck(afTimeStep);
+    UpdateJumpAndGroundCheck(adFixedDelta);
 
     ////////////////////////////
     // Update head bob
-    UpdateHeadBob(afTimeStep);
+    UpdateHeadBob(adFixedDelta);
 
 }
 
@@ -344,7 +344,7 @@ void cLuxMoveState_Normal::Jump()
 
 //-----------------------------------------------------------------------
 
-void cLuxMoveState_Normal::OnDraw(float afFrameTime)
+void cLuxMoveState_Normal::OnDraw(double adFrameTime)
 {
     return;//Skip for now! Have some special thingy for this!
     float fY = 70;
@@ -461,7 +461,7 @@ float cLuxMoveState_Normal::GetRunSpeedMul()
 
 //-----------------------------------------------------------------------
 
-void cLuxMoveState_Normal::UpdateMovement(float afTimeStep)
+void cLuxMoveState_Normal::UpdateMovement(double adFixedDelta)
 {
     iCharacterBody *pCharBody = mpPlayer->GetCharacterBody();
 
@@ -492,7 +492,7 @@ void cLuxMoveState_Normal::UpdateMovement(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxMoveState_Normal::UpdateSpeedMultipliers(float afTimeStep)
+void cLuxMoveState_Normal::UpdateSpeedMultipliers(double adFixedDelta)
 {
     iCharacterBody *pCharBody = mpPlayer->GetCharacterBody();
 
@@ -545,7 +545,7 @@ void cLuxMoveState_Normal::UpdateSpeedMultipliers(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxMoveState_Normal::UpdateJumpAndGroundCheck(float afTimeStep)
+void cLuxMoveState_Normal::UpdateJumpAndGroundCheck(double adFixedDelta)
 {
     iCharacterBody *pCharBody = mpPlayer->GetCharacterBody();
 
@@ -565,7 +565,7 @@ void cLuxMoveState_Normal::UpdateJumpAndGroundCheck(float afTimeStep)
     // Update Jump button is held down.
     if(mbJumping)
     {
-        mfJumpCount += afTimeStep;
+        mfJumpCount += (float)adFixedDelta;
         if(mfJumpCount >= mfMaxJumpCount)
         {
             mfJumpCount = mfMaxJumpCount;
@@ -584,14 +584,14 @@ void cLuxMoveState_Normal::UpdateJumpAndGroundCheck(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
+void cLuxMoveState_Normal::UpdateHeadBob(double adFixedDelta)
 {
     iCharacterBody *pCharBody = mpPlayer->GetCharacterBody();
 
 #ifdef LUX_HEADBOB_SOMA
     ///////////////////////////////////////
     // Fade
-    mfHeadBobMul = cMath::IncreaseTo(mfHeadBobMul, mfHeadBobMulSpeed * afTimeStep, mfHeadBobMulTarget);
+    mfHeadBobMul = cMath::IncreaseTo(mfHeadBobMul, mfHeadBobMulSpeed * (float)adFixedDelta, mfHeadBobMulTarget);
 #endif
     /////////////////////////
     //Get the current bob max
@@ -623,7 +623,7 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
     mvBobMaxGoal *= (1.0f + fHealthMul);
 #endif
 
-    float fPlayerSpeed = pCharBody->GetVelocity(afTimeStep).Length();
+    float fPlayerSpeed = pCharBody->GetVelocity(adFixedDelta).Length();
     float fMaxPlayerSpeed = mfMaxForwardSpeed * mfDefaultForwardMul;
 #ifdef LUX_HEADBOB_SOMA
     float fBobSpeed = fMinBobSpeed + (fPlayerSpeed / cMath::Max(fMaxPlayerSpeed, 0.001f)) * (fMaxBobSpeed - fMinBobSpeed);
@@ -643,7 +643,7 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
 
     //Fade into the new max
     float fAdd = 0.1f;
-    mvCurrentBobMax = cMath::Vector2IncreaseTo(mvCurrentBobMax, cVector2f(fAdd * afTimeStep), mvBobMaxGoal);
+    mvCurrentBobMax = cMath::Vector2IncreaseTo(mvCurrentBobMax, cVector2f(fAdd * (float)adFixedDelta), mvBobMaxGoal);
 
 
     /////////////////////////
@@ -668,14 +668,14 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
             float fDist = cMath::ToRad(90) - fX;
 
             mfPrevHeadBobCount = mfHeadBobCount;
-            mfHeadBobCount += afTimeStep * k2Pif * fAdd * 6.1f * fDist * 0.05f;
+            mfHeadBobCount += (float)adFixedDelta * k2Pif * fAdd * 6.1f * fDist * 0.05f;
 
             float fSin = sin(mfHeadBobCount) + sin(mfHeadBobCount / 2.3f) * fHealthMul;
 #else
             float fPrevCos = cos(mfHeadBobCount);
 
             mfPrevHeadBobCount = mfHeadBobCount;
-            mfHeadBobCount += afTimeStep * k2Pif * fAdd * 3.1f;
+            mfHeadBobCount += (float)adFixedDelta * k2Pif * fAdd * 3.1f;
 
             float fCos = cos(mfHeadBobCount);
             float fSin = cos(mfHeadBobCount);
@@ -698,7 +698,7 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
         mbBobbing = true;
 
         mfPrevHeadBobCount = mfHeadBobCount;
-        mfHeadBobCount += fBobSpeed * afTimeStep * k2Pif;
+        mfHeadBobCount += fBobSpeed * (float)adFixedDelta * k2Pif;
 
         //Footstep
         float fPrevCos = cos(mfPrevHeadBobCount);
@@ -730,7 +730,7 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
     //Ground bounce
     if(mbHeadGroundBounceActive)
     {
-        mfHeadGroundBounce += afTimeStep * mfGroundBounceSpeed * mfBounceSpeedMul;
+        mfHeadGroundBounce += (float)adFixedDelta * mfGroundBounceSpeed * mfBounceSpeedMul;
 
         //Slow down on way down, and back up go slow, speed up and then slow.
         if(mfHeadGroundBounce < 0.5f)
@@ -763,7 +763,7 @@ void cLuxMoveState_Normal::UpdateHeadBob(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-bool cLuxMoveState_Normal::UpdateLedgeCheck(float afTimeStep)
+bool cLuxMoveState_Normal::UpdateLedgeCheck(double adFixedDelta)
 {
     //////////////////////////////
     // Skipping this for now! It messes up puzzles too much!
@@ -781,7 +781,7 @@ bool cLuxMoveState_Normal::UpdateLedgeCheck(float afTimeStep)
 
     ////////////////////////////
     //Check so counter is right
-    mfClimbLedgeCount -= afTimeStep;
+    mfClimbLedgeCount -= (float)adFixedDelta;
     if(mfClimbLedgeCount > 0)
     {
         return false;

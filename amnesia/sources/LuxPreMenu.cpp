@@ -365,9 +365,9 @@ void cLuxPreMenu::OnLeaveContainer(const tString& asNewContainer)
 
 //-----------------------------------------------------------------------
 
-void cLuxPreMenu::Update(float afTimeStep)
+void cLuxPreMenu::Update(double adFixedDelta)
 {
-    UpdateActions(afTimeStep);
+    UpdateActions(adFixedDelta);
     UpdateState();
 
     ////////////////////////////////////////////////////////
@@ -486,7 +486,7 @@ void cLuxPreMenu::ButtonPressed()
 
 //-----------------------------------------------------------------------
 
-void cLuxPreMenu::OnDraw(float afFrameTime)
+void cLuxPreMenu::OnDraw(double adFrameTime)
 {
     ///////////////////////////////////////
     // Draw fade rect and background
@@ -534,7 +534,7 @@ void cLuxPreMenu::AppGotInputFocus()
 
 //-----------------------------------------------------------------------
 
-void cLuxPreMenu::UpdateActions(float afTimeStep)
+void cLuxPreMenu::UpdateActions(double adFixedDelta)
 {
     //////////////////////////////////////////
     // Update stuff according to state
@@ -542,7 +542,7 @@ void cLuxPreMenu::UpdateActions(float afTimeStep)
     {
     case eLuxPreMenuState_Initial:
         // Set initial fade value
-        mfAlphaFade = 0;
+        mfAlphaFade = 0.0f;
         break;
     case eLuxPreMenuState_Final:
     {
@@ -553,46 +553,46 @@ void cLuxPreMenu::UpdateActions(float afTimeStep)
     case eLuxPreMenuState_FadeIn:
     {
         // Update alpha for fading in
-        if(mfAlphaFade>0)
+        if(mfAlphaFade > 0.0f)
         {
-            mfAlphaFade -= afTimeStep;
+            mfAlphaFade -= (float)adFixedDelta;
         }
         else
         {
-            mfAlphaFade = 0;
+            mfAlphaFade = 0.0f;
         }
     }
     break;
     case eLuxPreMenuState_FadeOut:
     {
         // Update alpha for fading out
-        if(mfAlphaFade<1)
+        if(mfAlphaFade < 1.0f)
         {
-            mfAlphaFade += afTimeStep;
+            mfAlphaFade += (float)adFixedDelta;
         }
         else
         {
-            mfAlphaFade = 1;
+            mfAlphaFade = 1.0f;
         }
     }
     break;
     case eLuxPreMenuState_FastFadeOut:
     {
         // Fast fade out (2x)
-        if(mfAlphaFade<1)
+        if(mfAlphaFade < 1.0f)
         {
-            mfAlphaFade += afTimeStep*2;
+            mfAlphaFade += (float)adFixedDelta * 2.0f;
         }
         else
         {
-            mfAlphaFade = 1;
+            mfAlphaFade = 1.0f;
         }
     }
     break;
     case eLuxPreMenuState_ShowPremenuSection:
     {
         // Update pic show timer
-        mfTimer -= afTimeStep;
+        mfTimer -= (float)adFixedDelta;
     }
     break;
     }
@@ -621,7 +621,7 @@ void cLuxPreMenu::UpdateState()
     // FadeIn state, check if fade is done
     case eLuxPreMenuState_FadeIn:
     {
-        if(mfAlphaFade==0)
+        if(mfAlphaFade <= 0.0f)
         {
             mfTimer = mpCurrentSection->GetTime();
             mCurrentState = eLuxPreMenuState_ShowPremenuSection;
@@ -632,7 +632,7 @@ void cLuxPreMenu::UpdateState()
     case eLuxPreMenuState_FadeOut:
     case eLuxPreMenuState_FastFadeOut:
     {
-        if(mfAlphaFade==1)
+        if(mfAlphaFade >= 1.0f)
         {
             if(mpCurrentBackground)
             {

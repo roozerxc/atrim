@@ -49,9 +49,9 @@ public:
 
     /////////////////////////
     //General
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
-    void Draw(float afTimeStep, cGuiClipRegion *apClipRegion);
+    void Draw(double adFixedDelta, cGuiClipRegion *apClipRegion);
 
     bool ProcessMessage(eGuiMessage aMessage, const cGuiMessageData& aData, bool abSkipVisCheck=false, bool abSkipEnabledCheck=false);
 
@@ -285,10 +285,10 @@ protected:
 
     virtual void OnInit() {}
 
-    virtual void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion) {}
-    virtual void OnDrawAfterClip(float afTimeStep, cGuiClipRegion *apClipRegion) {}
+    virtual void OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion) {}
+    virtual void OnDrawAfterClip(double adFixedDelta, cGuiClipRegion *apClipRegion) {}
 
-    virtual void OnUpdate(float afTimeStep) {}
+    virtual void OnUpdate(double adFixedDelta) {}
 
     virtual bool OnMessage(eGuiMessage aMessage, const cGuiMessageData& aData)
     {

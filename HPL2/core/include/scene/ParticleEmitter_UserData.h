@@ -246,7 +246,7 @@ public:
     bool IsDying();
 
 private:
-    void UpdateMotion(float afTimeStep);
+    void UpdateMotion(double adFixedDelta);
     void SetParticleDefaults(cParticle *apParticle);
 
 

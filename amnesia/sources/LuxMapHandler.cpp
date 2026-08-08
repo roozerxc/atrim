@@ -13,7 +13,6 @@
 #include "LuxMainMenu.h"
 
 #include "LuxEnemy.h"
-#include "LuxAchievementHandler.h"
 
 //////////////////////////////////////////////////////////////////////////
 // SOUND ENTITY CALLBACK
@@ -245,16 +244,16 @@ void cLuxMapHandler::UpdateViewportRenderProperties()
 
 //-----------------------------------------------------------------------
 
-void cLuxMapHandler::Update(float afTimeStep)
+void cLuxMapHandler::Update(double adFixedDelta)
 {
     //TODO: Bad placement! Moooove!
     gpBase->mpEffectRenderer->ClearRenderLists();
 
-    CheckMapChange(afTimeStep);
+    CheckMapChange(adFixedDelta);
 
     if(mpCurrentMap && mMapChangeData.mbActive==false)
     {
-        mpCurrentMap->Update(afTimeStep);
+        mpCurrentMap->Update(adFixedDelta);
     }
 }
 
@@ -600,7 +599,7 @@ void cLuxMapHandler::SetShowCommentary(bool abX)
 
 //-----------------------------------------------------------------------
 
-void cLuxMapHandler::CheckMapChange(float afTimeStep)
+void cLuxMapHandler::CheckMapChange(double adFixedDelta)
 {
     if(mMapChangeData.mbActive==false)
     {
@@ -670,16 +669,6 @@ void cLuxMapHandler::CheckMapChange(float afTimeStep)
 
         if(pLastMap)
         {
-            if (pLastMap->GetName() == "08_cellar_maze" && pMap->GetName() == "09_back_hall")
-            {
-                gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_EscapeArtist);
-            }
-
-            if (pLastMap->GetName() == "14_elevator" && pMap->GetName() == "15_prison_south")
-            {
-                gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Descendant);
-            }
-
             //////////////
             // HARDMODE
             if (gpBase->mbHardMode &&

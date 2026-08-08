@@ -99,7 +99,7 @@ void cLuxHandObject_LightSource::ImplementedReset()
 
 //-----------------------------------------------------------------------
 
-void cLuxHandObject_LightSource::Update(float afTimeStep)
+void cLuxHandObject_LightSource::Update(double adFixedDelta)
 {
     bool bUpdate = false;
     bool bUpdateDone = false;
@@ -108,7 +108,7 @@ void cLuxHandObject_LightSource::Update(float afTimeStep)
     // Sway Physics
     if(mbHasSwayPhysics)
     {
-        UpdateSwayPhysics(afTimeStep);
+        UpdateSwayPhysics(adFixedDelta);
     }
 
     ///////////////////
@@ -124,7 +124,7 @@ void cLuxHandObject_LightSource::Update(float afTimeStep)
             }
         }
 
-        mpHands->mfHandObjectAlpha -= mfFadeOutSpeed * afTimeStep;
+        mpHands->mfHandObjectAlpha -= mfFadeOutSpeed * (float)adFixedDelta;
         if(mpHands->mfHandObjectAlpha < 0.0f)
         {
             mpHands->mfHandObjectAlpha = 0.0f;
@@ -136,7 +136,7 @@ void cLuxHandObject_LightSource::Update(float afTimeStep)
     // Fade in
     else if(mpHands->mfHandObjectAlpha < 1.0f)
     {
-        mpHands->mfHandObjectAlpha += mfFadeInSpeed * afTimeStep;
+        mpHands->mfHandObjectAlpha += mfFadeInSpeed * (float)adFixedDelta;
         if(mpHands->mfHandObjectAlpha > 1.0f)
         {
             mpHands->mfHandObjectAlpha = 1.0f;
@@ -224,7 +224,7 @@ bool cLuxHandObject_LightSource::AnimationIsOver()
 
 //-----------------------------------------------------------------------
 
-void cLuxHandObject_LightSource::UpdateSwayPhysics(float afTimeStep)
+void cLuxHandObject_LightSource::UpdateSwayPhysics(double adFixedDelta)
 {
     /////////////////////////////
     // Update vel
@@ -239,7 +239,7 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(float afTimeStep)
         float fAngle = mfSwayAngle - fDownAngle;
 
         float fForce = -sin(fAngle) * mfSwayGravity;
-        mfSwayVel += fForce * afTimeStep;
+        mfSwayVel += fForce * (float)adFixedDelta;
 
         /////////////////////////////
         // Player velocity
@@ -263,12 +263,12 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(float afTimeStep)
             mfSwayVel = -mfMaxSwayVel;
         }
 
-        mfSwayVel -= mfSwayVel*mfSwayFriction*afTimeStep;
+        mfSwayVel -= mfSwayVel * mfSwayFriction * (float)adFixedDelta;
     }
 
     /////////////////////////////
     // Update Angle
-    mfSwayAngle += mfSwayVel * afTimeStep;
+    mfSwayAngle += mfSwayVel * (float)adFixedDelta;
 
     //Min
     if(mfSwayAngle < mvSwayAngleLimits.x)

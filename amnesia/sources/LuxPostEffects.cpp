@@ -70,11 +70,11 @@ cLuxPostEffect_Insanity::~cLuxPostEffect_Insanity()
 
 //-----------------------------------------------------------------------
 
-void cLuxPostEffect_Insanity::Update(float afTimeStep)
+void cLuxPostEffect_Insanity::Update(double adFixedDelta)
 {
-    mfT += afTimeStep * mfWaveSpeed;
+    mfT += (float)adFixedDelta * mfWaveSpeed;
 
-    mfAnimCount += afTimeStep * 0.15f;
+    mfAnimCount += (float)adFixedDelta * 0.15f;
 
     float fMaxAnim = (float)mvAmpMaps.size();
     if(mfAnimCount >= fMaxAnim)
@@ -171,7 +171,7 @@ void cLuxPostEffectHandler::OnStart()
 
 //-----------------------------------------------------------------------
 
-void cLuxPostEffectHandler::Update(float afTimeStep)
+void cLuxPostEffectHandler::Update(double adFixedDelta)
 {
     for(size_t i=0; i<mvPostEffects.size(); ++i)
     {
@@ -179,7 +179,7 @@ void cLuxPostEffectHandler::Update(float afTimeStep)
 
         if(pPostEffect->IsActive())
         {
-            pPostEffect->Update(afTimeStep);
+            pPostEffect->Update(adFixedDelta);
         }
     }
 }

@@ -11,8 +11,6 @@
 #include "LuxInventory.h"
 #include "LuxHintHandler.h"
 
-#include "LuxAchievementHandler.h"
-
 //-----------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
@@ -51,11 +49,11 @@ static tString gsBackgroundImage[eLuxJournalState_LastEnum] =
 
 //-----------------------------------------------------------------------
 
-void cLuxJournalTextData::Update(float afTimeStep)
+void cLuxJournalTextData::Update(double adFixedDelta)
 {
     if(mpWidget->GetMouseIsOver() || mpWidget->HasFocus())
     {
-        mfEffectfAlpha += afTimeStep * 4.0f;
+        mfEffectfAlpha += (float)adFixedDelta * 4.0f;
         if(mfEffectfAlpha > 1)
         {
             mfEffectfAlpha = 1;
@@ -63,7 +61,7 @@ void cLuxJournalTextData::Update(float afTimeStep)
     }
     else
     {
-        mfEffectfAlpha -= afTimeStep * 2.0f;
+        mfEffectfAlpha -= (float)adFixedDelta * 2.0f;
         if(mfEffectfAlpha < 0)
         {
             mfEffectfAlpha = 0;
@@ -155,13 +153,13 @@ void cLuxJournalStateData::DestroySessionWidgets()
 
 //-----------------------------------------------------------------------
 
-void cLuxJournalStateData::Update(float afTimeStep)
+void cLuxJournalStateData::Update(double adFixedDelta)
 {
     /////////////////////
     //Alpha
     if(mState == mpJournal->mCurrentState)
     {
-        mfAlpha += afTimeStep * 2.0f;
+        mfAlpha += (float)adFixedDelta * 2.0f;
         if(mfAlpha>1)
         {
             mfAlpha = 1;
@@ -169,7 +167,7 @@ void cLuxJournalStateData::Update(float afTimeStep)
     }
     else
     {
-        mfAlpha -= afTimeStep * 5.0f;
+        mfAlpha -= (float)adFixedDelta * 5.0f;
         if(mfAlpha<0)
         {
             mfAlpha = 0;
@@ -189,7 +187,7 @@ void cLuxJournalStateData::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxJournalStateData::OnDraw(float afFrameTime)
+void cLuxJournalStateData::OnDraw(double adFrameTime)
 {
     float fAlpha = mfAlpha * mpJournal->mfAlpha;
 
@@ -416,13 +414,13 @@ void cLuxJournal::OnGameStart()
 
 //-----------------------------------------------------------------------
 
-void cLuxJournal::Update(float afTimeStep)
+void cLuxJournal::Update(double adFixedDelta)
 {
     /////////////////////////
     // Update alpha
     if(mbActive)
     {
-        mfAlpha += afTimeStep*2;
+        mfAlpha += (float)adFixedDelta*2;
         if(mfAlpha >1)
         {
             mfAlpha =1;
@@ -430,7 +428,7 @@ void cLuxJournal::Update(float afTimeStep)
     }
     else
     {
-        mfAlpha -= afTimeStep*3;
+        mfAlpha -= (float)adFixedDelta*3;
         if(mfAlpha<0)
         {
             mfAlpha =0;
@@ -450,14 +448,14 @@ void cLuxJournal::Update(float afTimeStep)
 
     /////////////////////////
     // Update Mouse over pulse
-    mfMouseOverPulse += afTimeStep;
+    mfMouseOverPulse += (float)adFixedDelta;
 
 
     /////////////////////////
     // Update state data
     for(size_t i=0; i<mvStateData.size(); ++i)
     {
-        mvStateData[i]->Update(afTimeStep);
+        mvStateData[i]->Update(adFixedDelta);
     }
 
     /////////////////////////
@@ -466,7 +464,7 @@ void cLuxJournal::Update(float afTimeStep)
     {
         iLuxJournalWidgetData *pData = *it;
 
-        pData->Update(afTimeStep);
+        pData->Update(adFixedDelta);
     }
 
     /////////////////////
@@ -487,7 +485,7 @@ void cLuxJournal::Update(float afTimeStep)
     cLuxEffect_SanityGainFlash *pSanityGainFlash = gpBase->mpEffectHandler->GetSanityGainFlash();
     if(pSanityGainFlash->IsActive())
     {
-        pSanityGainFlash->Update(afTimeStep);
+        pSanityGainFlash->Update(adFixedDelta);
     }
 }
 
@@ -590,7 +588,7 @@ void cLuxJournal::OnLeaveContainer(const tString& asNewContainer)
 
 //-----------------------------------------------------------------------
 
-void cLuxJournal::OnDraw(float afFrameTime)
+void cLuxJournal::OnDraw(double adFrameTime)
 {
     ////////////////////////
     //Draw background
@@ -609,7 +607,7 @@ void cLuxJournal::OnDraw(float afFrameTime)
     {
         if(mvStateData[i]->mfAlpha > 0)
         {
-            mvStateData[i]->OnDraw(afFrameTime);
+            mvStateData[i]->OnDraw(adFrameTime);
         }
     }
 
@@ -625,7 +623,7 @@ void cLuxJournal::OnDraw(float afFrameTime)
     cLuxEffect_SanityGainFlash *pSanityGainFlash = gpBase->mpEffectHandler->GetSanityGainFlash();
     if(pSanityGainFlash->IsActive())
     {
-        pSanityGainFlash->DrawFlash(mpGuiSet, afFrameTime);
+        pSanityGainFlash->DrawFlash(mpGuiSet, (float)adFrameTime);
     }
 }
 
@@ -716,33 +714,6 @@ cLuxNote* cLuxJournal::AddNote(const tString& asNameAndTextEntry, const tString&
     pNote->msIconFile = cString::SetFileExt( cString::SetFileExt(asImage,"")+"_icon",sExt);
 
     mvNotes.push_back(pNote);
-
-    if(gpBase->msGameName == "Amnesia - The Dark Descent -")
-    {
-        if(mvNotes.size() == 21)
-        {
-            if(gpBase->mpMainConfig->GetBool("Main", "MasterArchivis_Justine", false))
-            {
-                gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_MasterArchivist);
-            }
-
-            gpBase->mpMainConfig->SetBool("Main", "MasterArchivis_TDD", true);
-            gpBase->mpMainConfig->Save();
-        }
-    }
-    if(gpBase->msGameName == "Amnesia - Justine -")
-    {
-        if(mvNotes.size() == 9)
-        {
-            if(gpBase->mpMainConfig->GetBool("Main", "MasterArchivis_TDD", false))
-            {
-                gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_MasterArchivist);
-            }
-
-            gpBase->mpMainConfig->SetBool("Main", "MasterArchivis_Justine", true);
-            gpBase->mpMainConfig->Save();
-        }
-    }
 
     return pNote;
 }

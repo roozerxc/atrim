@@ -105,12 +105,12 @@ void cVerletParticle::SetPosition(const cVector3f& avPos, bool abSetPrevPos)
 
 //-----------------------------------------------------------------------
 
-void cVerletParticle::UpdateMovement(float afTimeStep)
+void cVerletParticle::UpdateMovement(double adFixedDelta)
 {
     cVector3f vAcc = mfInvMass == 0 ? 0 : mpContainer->mvGravityForce;
 
     cVector3f vTemp = mvPosition;
-    mvPosition += (mvPosition*mpContainer->mfDampingMul - mvPrevPosition*mpContainer->mfDampingMul) + vAcc * afTimeStep*afTimeStep;
+    mvPosition += (mvPosition*mpContainer->mfDampingMul - mvPrevPosition*mpContainer->mfDampingMul) + vAcc * (float)adFixedDelta * (float)adFixedDelta;
 
     mvPrevPosition = vTemp;
 }
@@ -202,7 +202,7 @@ void iVerletParticleContainer::SetSleeping(bool abX)
 
 //-----------------------------------------------------------------------
 
-void iVerletParticleContainer::PreUpdate(float afTimeStep)
+void iVerletParticleContainer::PreUpdate(double adFixedDelta)
 {
     ///////////////////////////
     //Sleeping
@@ -221,7 +221,7 @@ void iVerletParticleContainer::PreUpdate(float afTimeStep)
 
         //////////////////////////
         //Update counter and see if time for check
-        mfSleepCheckCount+= afTimeStep;
+        mfSleepCheckCount+= (float)adFixedDelta;
         if(mfSleepCheckCount < mfSleepCheckTime)
         {
             return;

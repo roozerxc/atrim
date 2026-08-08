@@ -44,7 +44,7 @@ public:
     /**
      * Updates the input, called by cEngine
      */
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     /**
      * Create and add a new action. The Name must be unique, and the Id is optional

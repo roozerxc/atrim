@@ -148,9 +148,9 @@ void cLuxEffectRenderer::ClearRenderLists()
 
 //-----------------------------------------------------------------------
 
-void cLuxEffectRenderer::Update(float afTimeStep)
+void cLuxEffectRenderer::Update(double adFixedDelta)
 {
-    mFlashOscill.Update(afTimeStep);
+    mFlashOscill.Update(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------

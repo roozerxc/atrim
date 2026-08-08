@@ -139,7 +139,7 @@ void cLuxPlayerHands::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerHands::Update(float afTimeStep)
+void cLuxPlayerHands::Update(double adFixedDelta)
 {
     for(int i=0; i<mpHandsEntity->GetAnimationStateNum(); ++i)
     {
@@ -223,7 +223,7 @@ void cLuxPlayerHands::Update(float afTimeStep)
         iLuxHandObject *pHandObject = mvHandObjects[i];
         if(pHandObject->GetMeshEntity() && pHandObject->GetMeshEntity()->IsActive())
         {
-            pHandObject->Update(afTimeStep);
+            pHandObject->Update(adFixedDelta);
         }
     }
 }
@@ -231,9 +231,9 @@ void cLuxPlayerHands::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerHands::PostUpdate(float afTimeStep)
+void cLuxPlayerHands::PostUpdate(double adFixedDelta)
 {
-    UpdatePlayerHandsPos(afTimeStep);
+    UpdatePlayerHandsPos(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -528,7 +528,7 @@ void cLuxPlayerHands::HideAllHandObjects()
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerHands::UpdatePlayerHandsPos(float afTimeStep)
+void cLuxPlayerHands::UpdatePlayerHandsPos(double adFixedDelta)
 {
     if(mpHandsEntity==NULL)
     {

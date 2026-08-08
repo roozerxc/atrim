@@ -21,13 +21,13 @@ public:
 
     void ImplementedReset();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     bool DoAction(eLuxPlayerAction aAction, bool abPressed);
     bool AnimationIsOver();
 
 private:
-    void UpdateSwayPhysics(float afTimeStep);
+    void UpdateSwayPhysics(double adFixedDelta);
 
     float mfFadeInSpeed;
     float mfFadeOutSpeed;

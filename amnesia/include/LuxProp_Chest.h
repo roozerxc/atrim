@@ -64,7 +64,7 @@ public:
 
     void OnResetProperties();
 
-    void UpdatePropSpecific(float afTimeStep);
+    void UpdatePropSpecific(double adFixedDelta);
 
     void BeforePropDestruction();
 
@@ -75,7 +75,7 @@ public:
 
     void OnDamage(float afAmount, int alStrength);
 
-    void InFocusDraw(cGuiSet *apGuiSet,float afFrameTime);
+    void InFocusDraw(cGuiSet *apGuiSet,double adFrameTime);
 
     //////////////////////
     //Properties

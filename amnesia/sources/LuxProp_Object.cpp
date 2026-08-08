@@ -453,21 +453,21 @@ void cLuxProp_Object::OnResetProperties()
 }
 //-----------------------------------------------------------------------
 
-void cLuxProp_Object::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_Object::UpdatePropSpecific(double adFixedDelta)
 {
     //////////////////////////
     // Food attraction
-    UpdateFoodEnemyAttraction(afTimeStep);
+    UpdateFoodEnemyAttraction(adFixedDelta);
 
     ////////////////////////////
     // Insanity vision
-    UpdateInsanityVision(afTimeStep);
+    UpdateInsanityVision(adFixedDelta);
 
     //////////////////////////
     // Life length
     if(mfLifeLength > 0)
     {
-        mfLifeLengthCount += afTimeStep;
+        mfLifeLengthCount += (float)adFixedDelta;
 
         float fDist = cMath::Max(mfLifeLength - mfLifeLengthCount,0.0f);
         if(fDist < 1.0f)
@@ -786,7 +786,7 @@ bool cLuxProp_Object::ShowOutlinesOnConnectedBodies()
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Object::UpdateFoodEnemyAttraction(float afTimeStep)
+void cLuxProp_Object::UpdateFoodEnemyAttraction(double adFixedDelta)
 {
     if(mbIsFood==false)
     {
@@ -794,7 +794,7 @@ void cLuxProp_Object::UpdateFoodEnemyAttraction(float afTimeStep)
     }
     if(mfFoodAttractCount > 0)
     {
-        mfFoodAttractCount -= afTimeStep;
+        mfFoodAttractCount -= (float)adFixedDelta;
         return;
     }
 
@@ -822,7 +822,7 @@ void cLuxProp_Object::UpdateFoodEnemyAttraction(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Object::UpdateInsanityVision(float afTimeStep)
+void cLuxProp_Object::UpdateInsanityVision(double adFixedDelta)
 {
     if(mbIsInsanityVision==false)
     {
@@ -846,7 +846,7 @@ void cLuxProp_Object::UpdateInsanityVision(float afTimeStep)
     //Update check count
     if(mfInsanityVisionCount > 0)
     {
-        mfInsanityVisionCount -= afTimeStep;
+        mfInsanityVisionCount -= (float)adFixedDelta;
         return;
     }
     mfInsanityVisionCount = 2.0f;

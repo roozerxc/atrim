@@ -80,7 +80,7 @@ void iLuxPlayerState_DefaultBase::OnMapLeave(cLuxMap *apMap)
 
 //-----------------------------------------------------------------------
 
-void iLuxPlayerState_DefaultBase::Update(float afTimeStep)
+void iLuxPlayerState_DefaultBase::Update(double adFixedDelta)
 {
     /////////////////////////////////////////
     // Get the entity currently in focus
@@ -107,21 +107,21 @@ void iLuxPlayerState_DefaultBase::Update(float afTimeStep)
     }
 
     //update implemented class
-    ImplementedUpdate(afTimeStep);
+    ImplementedUpdate(adFixedDelta);
 }
 
-void iLuxPlayerState_DefaultBase::PostUpdate(float afTimeStep)
+void iLuxPlayerState_DefaultBase::PostUpdate(double adFixedDelta)
 {
 
 }
 
 //-----------------------------------------------------------------------
 
-void iLuxPlayerState_DefaultBase::OnDraw(cGuiSet *apGuiSet,float afFrameTime)
+void iLuxPlayerState_DefaultBase::OnDraw(cGuiSet *apGuiSet,double adFrameTime)
 {
     if(mpEntityInFocus && CanInteractWithEntity())
     {
-        mpEntityInFocus->InFocusDraw(apGuiSet, afFrameTime);
+        mpEntityInFocus->InFocusDraw(apGuiSet, adFrameTime);
     }
 }
 

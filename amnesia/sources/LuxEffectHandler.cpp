@@ -140,7 +140,7 @@ void cLuxEffect_PlayCommentary::Stop()
 //-----------------------------------------------------------------------
 
 
-void cLuxEffect_PlayCommentary::Update(float afTimeStep)
+void cLuxEffect_PlayCommentary::Update(double adFixedDelta)
 {
     if(mpSoundHandler->IsValid(mpSoundEntry, mlSoundEntryID))
     {
@@ -169,7 +169,7 @@ void cLuxEffect_PlayCommentary::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_PlayCommentary::OnDraw(float afFrameTime)
+void cLuxEffect_PlayCommentary::OnDraw(double adFrameTime)
 {
 }
 //-----------------------------------------------------------------------
@@ -266,11 +266,11 @@ void cLuxEffect_EmotionFlash::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_EmotionFlash::Update(float afTimeStep)
+void cLuxEffect_EmotionFlash::Update(double adFixedDelta)
 {
     if(mlStep ==0)
     {
-        mfAlpha += 0.5f * afTimeStep;
+        mfAlpha += 0.5f * (float)adFixedDelta;
         if(mfAlpha >= 1.0f)
         {
             mfAlpha = 1.0f;
@@ -280,14 +280,14 @@ void cLuxEffect_EmotionFlash::Update(float afTimeStep)
     }
     else if(mlStep ==1)
     {
-        mfTextAlpha += afTimeStep * 3.0f;
+        mfTextAlpha += (float)adFixedDelta * 3.0f;
         if(mfTextAlpha > 1)
         {
             mfTextAlpha =1;
         }
 
         //Check if text has been displayed long enough.
-        mfTextTime -= afTimeStep;
+        mfTextTime -= (float)adFixedDelta;
         if(mfTextTime < 0)
         {
             gpBase->mpPlayer->FadeFOVMulTo(1.0f, 0.33f);
@@ -300,13 +300,13 @@ void cLuxEffect_EmotionFlash::Update(float afTimeStep)
     }
     else if(mlStep ==2)
     {
-        mfTextAlpha -= afTimeStep * 1.0f;
+        mfTextAlpha -= (float)adFixedDelta * 1.0f;
         if(mfTextAlpha < 0)
         {
             mfTextAlpha =0;
         }
 
-        mfAlpha -= 0.33f * afTimeStep;
+        mfAlpha -= 0.33f * (float)adFixedDelta;
         if(mfAlpha <= 0.0f)
         {
             mbActive = false;
@@ -316,7 +316,7 @@ void cLuxEffect_EmotionFlash::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_EmotionFlash::OnDraw(float afFrameTime)
+void cLuxEffect_EmotionFlash::OnDraw(double adFrameTime)
 {
     gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx,gpBase->mvHudVirtualStartPos + cVector3f(0,0,3.2f),gpBase->mvHudVirtualSize,cColor(mfAlpha, 1));
 
@@ -396,11 +396,11 @@ void cLuxEffect_RadialBlur::FadeTo(float afSize, float afSpeed)
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_RadialBlur::Update(float afTimeStep)
+void cLuxEffect_RadialBlur::Update(double adFixedDelta)
 {
     if(mfSizeGoal < mfSize)
     {
-        mfSize -= mfFadeSpeed * afTimeStep;
+        mfSize -= mfFadeSpeed * (float)adFixedDelta;
         if(mfSize <= mfSizeGoal)
         {
             mfSize =     mfSizeGoal;
@@ -409,7 +409,7 @@ void cLuxEffect_RadialBlur::Update(float afTimeStep)
     }
     else
     {
-        mfSize += mfFadeSpeed * afTimeStep;
+        mfSize += mfFadeSpeed * (float)adFixedDelta;
         if(mfSize >= mfSizeGoal)
         {
             mfSize = mfSizeGoal;
@@ -462,11 +462,11 @@ void cLuxEffect_SepiaColor::FadeTo(float afAmount, float afSpeed)
     gpBase->mpMapHandler->GetPostEffect_Sepia()->SetActive(true);
 }
 
-void cLuxEffect_SepiaColor::Update(float afTimeStep)
+void cLuxEffect_SepiaColor::Update(double adFixedDelta)
 {
     if(mfAmountGoal < mfAmount)
     {
-        mfAmount -= mfFadeSpeed * afTimeStep;
+        mfAmount -= mfFadeSpeed * (float)adFixedDelta;
         if(mfAmount <= mfAmountGoal)
         {
             mfAmount =     mfAmountGoal;
@@ -475,7 +475,7 @@ void cLuxEffect_SepiaColor::Update(float afTimeStep)
     }
     else
     {
-        mfAmount += mfFadeSpeed * afTimeStep;
+        mfAmount += mfFadeSpeed * (float)adFixedDelta;
         if(mfAmount >= mfAmountGoal)
         {
             mfAmount = mfAmountGoal;
@@ -537,7 +537,7 @@ void cLuxEffect_ShakeScreen::Start(float afAmount, float afTime,float afFadeInTi
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_ShakeScreen::Update(float afTimeStep)
+void cLuxEffect_ShakeScreen::Update(double adFixedDelta)
 {
     float fLargest = 0;
 
@@ -548,7 +548,7 @@ void cLuxEffect_ShakeScreen::Update(float afTimeStep)
 
         if(shake.mfFadeInTime >0)
         {
-            shake.mfFadeInTime -= afTimeStep;
+            shake.mfFadeInTime -= (float)adFixedDelta;
             if(shake.mfFadeInTime<0)
             {
                 shake.mfFadeInTime=0;
@@ -558,7 +558,7 @@ void cLuxEffect_ShakeScreen::Update(float afTimeStep)
         }
         else if(shake.mfTime >0)
         {
-            shake.mfTime -= afTimeStep;
+            shake.mfTime -= (float)adFixedDelta;
             if(shake.mfTime<0)
             {
                 shake.mfTime=0;
@@ -567,7 +567,7 @@ void cLuxEffect_ShakeScreen::Update(float afTimeStep)
         }
         else
         {
-            shake.mfFadeOutTime -= afTimeStep;
+            shake.mfFadeOutTime -= (float)adFixedDelta;
             if(shake.mfFadeOutTime<0)
             {
                 shake.mfFadeOutTime=0;
@@ -640,11 +640,11 @@ void cLuxEffect_ImageTrail::FadeTo(float afAmount, float afSpeed)
     gpBase->mpMapHandler->GetPostEffect_ImageTrail()->SetActive(true);
 }
 
-void cLuxEffect_ImageTrail::Update(float afTimeStep)
+void cLuxEffect_ImageTrail::Update(double adFixedDelta)
 {
     if(mfAmountGoal < mfAmount)
     {
-        mfAmount -= mfFadeSpeed * afTimeStep;
+        mfAmount -= mfFadeSpeed * (float)adFixedDelta;
         if(mfAmount <= mfAmountGoal)
         {
             mfAmount =     mfAmountGoal;
@@ -653,7 +653,7 @@ void cLuxEffect_ImageTrail::Update(float afTimeStep)
     }
     else
     {
-        mfAmount += mfFadeSpeed * afTimeStep;
+        mfAmount += mfFadeSpeed * (float)adFixedDelta;
         if(mfAmount >= mfAmountGoal)
         {
             mfAmount = mfAmountGoal;
@@ -766,11 +766,11 @@ bool cLuxEffect_Fade::IsFading()
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_Fade::Update(float afTimeStep)
+void cLuxEffect_Fade::Update(double adFixedDelta)
 {
     if(mfGoalAlpha==0 && mfAlpha > 0)
     {
-        mfAlpha -= afTimeStep * mfFadeSpeed;
+        mfAlpha -= (float)adFixedDelta * mfFadeSpeed;
         if(mfAlpha <0)
         {
             mfAlpha =0;
@@ -779,7 +779,7 @@ void cLuxEffect_Fade::Update(float afTimeStep)
     }
     else if(mfGoalAlpha==1 && mfAlpha < 1)
     {
-        mfAlpha += afTimeStep * mfFadeSpeed;
+        mfAlpha += (float)adFixedDelta * mfFadeSpeed;
         if(mfAlpha >1)
         {
             mfAlpha =1;
@@ -789,7 +789,7 @@ void cLuxEffect_Fade::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_Fade::OnDraw(float afFrameTime)
+void cLuxEffect_Fade::OnDraw(double adFrameTime)
 {
     if(mfAlpha <=0)
     {
@@ -861,11 +861,11 @@ void cLuxEffect_SanityGainFlash::Start()
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_SanityGainFlash::Update(float afTimeStep)
+void cLuxEffect_SanityGainFlash::Update(double adFixedDelta)
 {
     if(mlStep ==0)
     {
-        mfAlpha += mfFadeInSpeed * afTimeStep;
+        mfAlpha += mfFadeInSpeed * (float)adFixedDelta;
         if(mfAlpha >= 1.0f)
         {
             mfAlpha = 1.0f;
@@ -875,7 +875,7 @@ void cLuxEffect_SanityGainFlash::Update(float afTimeStep)
     }
     else if(mlStep ==1)
     {
-        mfCount -= mfWhiteSpeed * afTimeStep;
+        mfCount -= mfWhiteSpeed * (float)adFixedDelta;
         if(mfCount <= 0)
         {
             mlStep = 2;
@@ -883,7 +883,7 @@ void cLuxEffect_SanityGainFlash::Update(float afTimeStep)
     }
     else if(mlStep ==2)
     {
-        mfAlpha -= mfFadeOutSpeed * afTimeStep;
+        mfAlpha -= mfFadeOutSpeed * (float)adFixedDelta;
         if(mfAlpha <= 0.0f)
         {
             mbActive = false;
@@ -894,14 +894,14 @@ void cLuxEffect_SanityGainFlash::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_SanityGainFlash::OnDraw(float afFrameTime)
+void cLuxEffect_SanityGainFlash::OnDraw(double adFrameTime)
 {
-    DrawFlash(gpBase->mpGameHudSet, afFrameTime);
+    DrawFlash(gpBase->mpGameHudSet, (float)adFrameTime);
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_SanityGainFlash::DrawFlash(cGuiSet *apSet,float afTimeStep)
+void cLuxEffect_SanityGainFlash::DrawFlash(cGuiSet *apSet,double adFixedDelta)
 {
     apSet->DrawGfx(mpWhiteGfx,gpBase->mvHudVirtualStartPos+cVector3f(0,0,3.2f),gpBase->mvHudVirtualSize,mColor*mfAlpha);
 }
@@ -964,11 +964,11 @@ void cLuxEffect_Flash::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_Flash::Update(float afTimeStep)
+void cLuxEffect_Flash::Update(double adFixedDelta)
 {
     if(mlStep ==0)
     {
-        mfAlpha += mfFadeInSpeed * afTimeStep;
+        mfAlpha += mfFadeInSpeed * (float)adFixedDelta;
         if(mfAlpha >= 1.0f)
         {
             mfAlpha = 1.0f;
@@ -978,7 +978,7 @@ void cLuxEffect_Flash::Update(float afTimeStep)
     }
     else if(mlStep ==1)
     {
-        mfCount -= mfWhiteSpeed * afTimeStep;
+        mfCount -= mfWhiteSpeed * (float)adFixedDelta;
         if(mfCount <= 0)
         {
             mlStep = 2;
@@ -986,7 +986,7 @@ void cLuxEffect_Flash::Update(float afTimeStep)
     }
     else if(mlStep ==2)
     {
-        mfAlpha -= mfFadeOutSpeed * afTimeStep;
+        mfAlpha -= mfFadeOutSpeed * (float)adFixedDelta;
         if(mfAlpha <= 0.0f)
         {
             mbActive = false;
@@ -997,7 +997,7 @@ void cLuxEffect_Flash::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_Flash::OnDraw(float afFrameTime)
+void cLuxEffect_Flash::OnDraw(double adFrameTime)
 {
     gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx,gpBase->mvHudVirtualStartPos+cVector3f(0,0,3.2f),gpBase->mvHudVirtualSize,cColor(mfAlpha, 1));
 }
@@ -1130,7 +1130,7 @@ void cLuxEffect_PlayVoice::UnpauseCurrentVoices()
 //-----------------------------------------------------------------------
 
 
-void cLuxEffect_PlayVoice::Update(float afTimeStep)
+void cLuxEffect_PlayVoice::Update(double adFixedDelta)
 {
     //do not want to have like this, because then loading save when playing last voice + callback will not work and callback will not be called.
     //if(mpVoiceEntry==NULL && mpEffectEntry==NULL && mlstVoices.empty()) return;
@@ -1248,7 +1248,7 @@ void cLuxEffect_PlayVoice::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_PlayVoice::OnDraw(float afFrameTime)
+void cLuxEffect_PlayVoice::OnDraw(double adFrameTime)
 {
     if(gpBase->mpMessageHandler->ShowSubtitles()==false)
     {
@@ -1371,14 +1371,14 @@ void cLuxEffectHandler::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxEffectHandler::Update(float afTimeStep)
+void cLuxEffectHandler::Update(double adFixedDelta)
 {
     for(size_t i=0; i<mvEffects.size(); ++i)
     {
         iLuxEffect *pEffect = mvEffects[i];
         if(pEffect->IsActive())
         {
-            pEffect->Update(afTimeStep);
+            pEffect->Update(adFixedDelta);
         }
     }
 }
@@ -1408,14 +1408,14 @@ void cLuxEffectHandler::OnMapLeave(cLuxMap *apMap)
 
 
 
-void cLuxEffectHandler::OnDraw(float afFrameTime)
+void cLuxEffectHandler::OnDraw(double adFrameTime)
 {
     for(size_t i=0; i<mvEffects.size(); ++i)
     {
         iLuxEffect *pEffect = mvEffects[i];
         if(pEffect->IsActive())
         {
-            pEffect->OnDraw(afFrameTime);
+            pEffect->OnDraw(adFrameTime);
         }
     }
 }

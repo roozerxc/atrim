@@ -66,7 +66,7 @@ public:
                 cSoundHandler *apSoundHandler);
     ~cSoundEntry();
 
-    bool Update(float afTimeStep);
+    bool Update(double adFixedDelta);
 
     inline const tString& GetName() const
     {
@@ -129,10 +129,10 @@ public:
     }
 
 private:
-    void UpdateVolumeMulFade(float afTimeStep);
-    void UpdateSpeedMulFade(float afTimeStep);
+    void UpdateVolumeMulFade(double adFixedDelta);
+    void UpdateSpeedMulFade(double adFixedDelta);
 
-    void Update3DSpecifics(float afTimeStep);
+    void Update3DSpecifics(double adFixedDelta);
 
     tString msName;
     iSoundChannel* mpSound;
@@ -190,7 +190,7 @@ public:
     cSoundHandler(iLowLevelSound* apLowLevelSound, cResources* apResources);
     ~cSoundHandler();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     /**
      * Plays a sound

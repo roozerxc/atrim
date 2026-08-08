@@ -166,18 +166,18 @@ void cLuxCommentaryIcon::SetupAfterLoad(cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-void cLuxCommentaryIcon::OnUpdate(float afTimeStep)
+void cLuxCommentaryIcon::OnUpdate(double adFixedDelta)
 {
     if(mbPlayingSound)
     {
-        mvRotAngle.y += afTimeStep*2.5f;
+        mvRotAngle.y += (float)adFixedDelta*2.5f;
     }
     else
     {
         if(mvRotAngle.y != 0)
         {
             mvRotAngle.y = cMath::Wrap(mvRotAngle.y, 0, kPif);
-            mvRotAngle.y += afTimeStep*2.5f;
+            mvRotAngle.y += (float)adFixedDelta*2.5f;
             if(mvRotAngle.y>kPif)
             {
                 mvRotAngle.y =0;

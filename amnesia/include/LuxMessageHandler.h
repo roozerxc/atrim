@@ -17,7 +17,7 @@ public:
 
     void LoadFonts();
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
 
     void LoadUserConfig();
@@ -39,7 +39,7 @@ public:
         return mfMessageTime>0;
     }
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
     void DoAction(eLuxPlayerAction aAction, bool abPressed);
 

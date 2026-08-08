@@ -69,9 +69,9 @@ bool cLuxPlayerState_UseItem::ImplementedDoAction(eLuxPlayerAction aAction,bool 
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerState_UseItem::ImplementedUpdate(float afTimeStep)
+void cLuxPlayerState_UseItem::ImplementedUpdate(double adFixedDelta)
 {
-    mFlashOscill.Update(afTimeStep);
+    mFlashOscill.Update(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------

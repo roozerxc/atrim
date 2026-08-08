@@ -23,7 +23,7 @@ protected:
 
     /////////////////////////
     // Implemented iWidgetListBoxBase functions
-    void DrawItems(float afTimeStep, cGuiClipRegion* apClipRegion);
+    void DrawItems(double adFixedDelta, cGuiClipRegion* apClipRegion);
     /////////////////////////
     // Implemented functions
 

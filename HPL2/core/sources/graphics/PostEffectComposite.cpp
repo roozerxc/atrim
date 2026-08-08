@@ -45,11 +45,11 @@ cPostEffectComposite::~cPostEffectComposite()
 
 //-----------------------------------------------------------------------
 
-void cPostEffectComposite::Render(float afFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget)
+void cPostEffectComposite::Render(double adFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget)
 {
     ////////////////////////////////
     //Set up stuff needed for rendering
-    BeginRendering(afFrameTime, apFrustum, apInputTexture, apRenderTarget);
+    BeginRendering(adFrameTime, apFrustum, apInputTexture, apRenderTarget);
 
     ////////////////////////////////
     //Iterate post effects and find the last one.
@@ -134,11 +134,11 @@ bool  cPostEffectComposite::HasActiveEffects()
 
 //-----------------------------------------------------------------------
 
-void cPostEffectComposite::BeginRendering(float afFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget)
+void cPostEffectComposite::BeginRendering(double adFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget)
 {
     ///////////////////////////////
     //Init the render functions
-    mfCurrentFrameTime = afFrameTime;
+    dCurrentFrameTime = adFrameTime;
 
     InitAndResetRenderFunctions(apFrustum, apRenderTarget, false);
 

@@ -179,7 +179,7 @@ void cLuxInstanityEvent_Bugs::OnExit()
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Bugs::Update(float afTimeStep)
+void cLuxInstanityEvent_Bugs::Update(double adFixedDelta)
 {
     cVector2f vSwarmPoint(400, 300);
     bool bActive = true;
@@ -187,7 +187,7 @@ void cLuxInstanityEvent_Bugs::Update(float afTimeStep)
 
     /////////////////////////////////
     // Time
-    mfTimeCount -= afTimeStep;
+    mfTimeCount -= (float)adFixedDelta;
     if(mfTimeCount <0)
     {
         mfTimeCount = 0;
@@ -204,7 +204,7 @@ void cLuxInstanityEvent_Bugs::Update(float afTimeStep)
         // Alpha
         if(bActive && pBug->mfAlpha < 1)
         {
-            pBug->mfAlpha += cMath::RandRectf(0.2f,1.0f)*afTimeStep;
+            pBug->mfAlpha += cMath::RandRectf(0.2f,1.0f) * (float)adFixedDelta;
             if(pBug->mfAlpha>1)
             {
                 pBug->mfAlpha=1;
@@ -212,7 +212,7 @@ void cLuxInstanityEvent_Bugs::Update(float afTimeStep)
         }
         else if(bActive==false)
         {
-            pBug->mfAlpha -= cMath::RandRectf(0.2f,1.0f)*afTimeStep;
+            pBug->mfAlpha -= cMath::RandRectf(0.2f,1.0f) * (float)adFixedDelta;
             if(pBug->mfAlpha<0)
             {
                 pBug->mfAlpha=0;
@@ -230,7 +230,7 @@ void cLuxInstanityEvent_Bugs::Update(float afTimeStep)
 
             cVector3f vForce = cMath::MatrixMul(cMath::MatrixRotateY(fAngle),cVector3f(mfWanderCircleRadius,0,0));
 
-            pBug->mvVel += (vDir*mfWanderCircleDist + cVector2f(vForce.x, vForce.z)) * afTimeStep;
+            pBug->mvVel += (vDir*mfWanderCircleDist + cVector2f(vForce.x, vForce.z)) * (float)adFixedDelta;
         }
 
         ///////////////////
@@ -243,7 +243,7 @@ void cLuxInstanityEvent_Bugs::Update(float afTimeStep)
             vWantedVel *= mfSwarmPointMul;
 
             cVector2f vAcc = vWantedVel * cMath::Min(fSwarmPointDist*0.025f,1.0f);
-            pBug->mvVel += vAcc * afTimeStep;
+            pBug->mvVel += vAcc * (float)adFixedDelta;
         }
 
         /////////////////////////7
@@ -256,7 +256,7 @@ void cLuxInstanityEvent_Bugs::Update(float afTimeStep)
 
         ///////////////////
         // Update pos
-        pBug->mvPos += pBug->mvVel * afTimeStep;
+        pBug->mvPos += pBug->mvVel * (float)adFixedDelta;
 
         ///////////////////
         // Calculate angle
@@ -276,7 +276,7 @@ void cLuxInstanityEvent_Bugs::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Bugs::OnDraw(float afFrameTime)
+void cLuxInstanityEvent_Bugs::OnDraw(double adFrameTime)
 {
     cGuiSet *pSet = gpBase->mpGameHudSet;
 
@@ -398,7 +398,7 @@ void cLuxInstanityEvent_Particles::OnExit()
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Particles::Update(float afTimeStep)
+void cLuxInstanityEvent_Particles::Update(double adFixedDelta)
 {
     /////////////////////////////////
     // Particles
@@ -410,14 +410,14 @@ void cLuxInstanityEvent_Particles::Update(float afTimeStep)
 
     /////////////////////////////////
     // Time
-    mfTimeCount -= afTimeStep;
+    mfTimeCount -= (float)adFixedDelta;
     if(mfTimeCount <0)
     {
         EventIsDone();
     }
 }
 
-void cLuxInstanityEvent_Particles::OnDraw(float afFrameTime)
+void cLuxInstanityEvent_Particles::OnDraw(double adFrameTime)
 {
 
 }
@@ -519,7 +519,7 @@ void cLuxInstanityEvent_SoundStream::OnExit()
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_SoundStream::Update(float afTimeStep)
+void cLuxInstanityEvent_SoundStream::Update(double adFixedDelta)
 {
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
 
@@ -527,7 +527,7 @@ void cLuxInstanityEvent_SoundStream::Update(float afTimeStep)
     // Play sound
     if(mpSoundEntry==NULL && mfSoundCount>0)
     {
-        mfSoundCount-= afTimeStep;
+        mfSoundCount-= (float)adFixedDelta;
         if(mfSoundCount <=0)
         {
             mpSoundEntry = pSoundHandler->PlayGuiStream(msFile, false, mfVolume);
@@ -542,7 +542,7 @@ void cLuxInstanityEvent_SoundStream::Update(float afTimeStep)
     // Fade screen
     if(mbFadeScreen)
     {
-        mfFadeAlpha += mfFadeAlphaSpeed*afTimeStep;
+        mfFadeAlpha += mfFadeAlphaSpeed * (float)adFixedDelta;
         if(mfFadeAlphaSpeed > 0 && mfFadeAlpha > 1.0f)
         {
             mfFadeAlpha = 1.0f;
@@ -571,7 +571,7 @@ void cLuxInstanityEvent_SoundStream::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_SoundStream::OnDraw(float afFrameTime)
+void cLuxInstanityEvent_SoundStream::OnDraw(double adFrameTime)
 {
     if(    gpBase->mpMessageHandler->ShowEffectSubtitles() &&
             mvCurrentTextRows.empty()==false &&
@@ -649,7 +649,7 @@ void cLuxInstanityEvent_Steps::OnExit()
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Steps::Update(float afTimeStep)
+void cLuxInstanityEvent_Steps::Update(double adFixedDelta)
 {
     cWorld *pWorld = gpBase->mpMapHandler->GetCurrentMap()->GetWorld();
 
@@ -675,13 +675,13 @@ void cLuxInstanityEvent_Steps::Update(float afTimeStep)
     }
     else
     {
-        mfSoundCount -= afTimeStep;
+        mfSoundCount -= (float)adFixedDelta;
     }
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Steps::OnDraw(float afFrameTime)
+void cLuxInstanityEvent_Steps::OnDraw(double adFrameTime)
 {
 
 }
@@ -746,20 +746,20 @@ void cLuxInsanityHandler::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxInsanityHandler::Update(float afTimeStep)
+void cLuxInsanityHandler::Update(double adFixedDelta)
 {
     //////////////////////////
     // Update time between events if not event is playing
     if(mfNewEventCount > 0 && mlCurrentEvent < 0)
     {
-        mfNewEventCount -= afTimeStep;
+        mfNewEventCount -= (float)adFixedDelta;
     }
 
     ///////////////////////////
     // Update current event
     if(mlCurrentEvent>=0)
     {
-        mvEvents[mlCurrentEvent]->Update(afTimeStep);
+        mvEvents[mlCurrentEvent]->Update(adFixedDelta);
         if(mvEvents[mlCurrentEvent]->IsOver())
         {
             mvEvents[mlCurrentEvent]->OnExit();
@@ -786,11 +786,11 @@ void cLuxInsanityHandler::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxInsanityHandler::OnDraw(float afFrameTime)
+void cLuxInsanityHandler::OnDraw(double adFrameTime)
 {
     if(mlCurrentEvent>=0)
     {
-        mvEvents[mlCurrentEvent]->OnDraw(afFrameTime);
+        mvEvents[mlCurrentEvent]->OnDraw(adFrameTime);
     }
 }
 

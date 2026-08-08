@@ -117,7 +117,7 @@ void cLuxProgressLogHandler::CreateAndResetLogFile()
 
 //-----------------------------------------------------------------------
 
-void cLuxProgressLogHandler::Update(float afTimeStep)
+void cLuxProgressLogHandler::Update(double adFixedDelta)
 {
     if(mbActive==false)
     {

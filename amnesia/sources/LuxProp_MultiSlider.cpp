@@ -188,13 +188,13 @@ void cLuxProp_MultiSlider::OnResetProperties()
 }
 //-----------------------------------------------------------------------
 
-void cLuxProp_MultiSlider::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_MultiSlider::UpdatePropSpecific(double adFixedDelta)
 {
     float fDist = mpSliderJoint->GetDistance();
 
-    UpdateCheckStuckSound(afTimeStep);
-    UpdateCheckNewState(fDist, afTimeStep);
-    UpdateAutoMove(fDist, afTimeStep);
+    UpdateCheckStuckSound(adFixedDelta);
+    UpdateCheckNewState(fDist, adFixedDelta);
+    UpdateAutoMove(fDist, adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -269,7 +269,7 @@ void cLuxProp_MultiSlider::OnConnectionStateChange(iLuxEntity *apEntity, int alS
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_MultiSlider::UpdateCheckStuckSound(float afTimeStep)
+void cLuxProp_MultiSlider::UpdateCheckStuckSound(double adFixedDelta)
 {
     if(mlStuckState <0 || mbIsInteractedWith==false)
     {
@@ -278,7 +278,7 @@ void cLuxProp_MultiSlider::UpdateCheckStuckSound(float afTimeStep)
 
     if(mfStuckSoundTimer >0)
     {
-        mfStuckSoundTimer-=afTimeStep;
+        mfStuckSoundTimer -= (float)adFixedDelta;
         return;
     }
 
@@ -292,7 +292,7 @@ void cLuxProp_MultiSlider::UpdateCheckStuckSound(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_MultiSlider::UpdateCheckNewState(float afPos, float afTimeStep)
+void cLuxProp_MultiSlider::UpdateCheckNewState(float afPos, double adFixedDelta)
 {
     if(mlStuckState >=0)
     {
@@ -319,7 +319,7 @@ void cLuxProp_MultiSlider::UpdateCheckNewState(float afPos, float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_MultiSlider::UpdateAutoMove(float afPos, float afTimeStep)
+void cLuxProp_MultiSlider::UpdateAutoMove(float afPos, double adFixedDelta)
 {
     if(IsInteractedWith() || mbAutoMoveToCurrentState==false || mlStuckState!=-1 || mlCurrentState==-1)
     {
@@ -353,7 +353,7 @@ void cLuxProp_MultiSlider::UpdateAutoMove(float afPos, float afTimeStep)
 
     //mpMultiSliderBody->SetAngularVelocity(vWantedVel);
 
-    float fForceSize = mAutoMovePid.Output(fWantedSpeed - fSliderSpeed, afTimeStep);
+    float fForceSize = mAutoMovePid.Output(fWantedSpeed - fSliderSpeed, adFixedDelta);
     fForceSize *= mpSliderBody->GetMass();
 
     //Log("Pos: %f Goal: %f Wanted: %f current: %f Force: %f\n", afPos,fGoalPos, fWantedSpeed, fSliderSpeed, fForceSize);

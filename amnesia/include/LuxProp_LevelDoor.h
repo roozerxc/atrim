@@ -44,7 +44,7 @@ public:
 
     void OnResetProperties();
 
-    void UpdatePropSpecific(float afTimeStep);
+    void UpdatePropSpecific(double adFixedDelta);
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
     tWString GetFocusText();

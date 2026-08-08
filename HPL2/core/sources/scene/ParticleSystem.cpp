@@ -297,7 +297,7 @@ void cParticleSystem::KillInstantly()
 
 //-----------------------------------------------------------------------
 
-void cParticleSystem::UpdateLogic(float afTimeStep)
+void cParticleSystem::UpdateLogic(double adFixedDelta)
 {
     if(IsActive()==false)
     {
@@ -329,7 +329,7 @@ void cParticleSystem::UpdateLogic(float afTimeStep)
 
         //////////////////////////
         //Update
-        pPE->UpdateLogic(afTimeStep);
+        pPE->UpdateLogic(adFixedDelta);
     }
 
     //No loner first time!

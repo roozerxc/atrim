@@ -50,7 +50,7 @@ public:
 
     void OnResetProperties();
 
-    void UpdatePropSpecific(float afTimeStep);
+    void UpdatePropSpecific(double adFixedDelta);
 
     void BeforePropDestruction();
 
@@ -82,9 +82,9 @@ public:
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);
 
 private:
-    void UpdateWakeState(float afTimeStep);
-    void UpdateCheckPlayerIsInArea(float afTimeStep);
-    void UpdateHeadMovement(float afTimeStep);
+    void UpdateWakeState(double adFixedDelta);
+    void UpdateCheckPlayerIsInArea(double adFixedDelta);
+    void UpdateHeadMovement(double adFixedDelta);
 
     //////////////////////
     // Data

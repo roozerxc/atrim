@@ -42,8 +42,8 @@ public:
 
     /////////////////////////////
     // General
-    void UpdateBeforeSimulate(float afTimeStep);
-    void UpdateAfterSimulate(float afTimeStep);
+    void UpdateBeforeSimulate(double adFixedDelta);
+    void UpdateAfterSimulate(double adFixedDelta);
 
     void RemoveAttachedBody(iPhysicsBody *apBody, bool abRemoveContainerFromBody=true);
 
@@ -244,14 +244,14 @@ protected:
     bool CheckSpecificDataAwake();
     void SetSpecificDataSleeping(bool abSleeping);
 
-    void UpdateMovement(float afTimeStep);
-    void UpdateMotor(float afTimeStep);
-    void UpdateMotorAndAutoMove(float afTimeStep);
+    void UpdateMovement(double adFixedDelta);
+    void UpdateMotor(double adFixedDelta);
+    void UpdateMotorAndAutoMove(double adFixedDelta);
 
-    void UpdateAttachedParticlePositions(float afTimeStep);
-    void UpdateAttachedBodies(float afTimeStep);
-    void UpdateConstraints(float afTimeStep);
-    void CalculateSmoothPositions(float afTimeStep);
+    void UpdateAttachedParticlePositions(double adFixedDelta);
+    void UpdateAttachedBodies(double adFixedDelta);
+    void UpdateConstraints(double adFixedDelta);
+    void CalculateSmoothPositions(double adFixedDelta);
 
     void BuildRopeParticles();
 

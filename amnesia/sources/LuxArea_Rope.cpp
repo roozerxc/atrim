@@ -237,7 +237,7 @@ void cLuxRope::OnSetActive(bool abX)
 
 //-----------------------------------------------------------------------
 
-void cLuxRope::OnUpdate(float afTimeStep)
+void cLuxRope::OnUpdate(double adFixedDelta)
 {
 
 }

@@ -374,7 +374,7 @@ void cWidgetComboBox::OnLoadGraphics()
 
 //-----------------------------------------------------------------------
 
-void cWidgetComboBox::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetComboBox::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     if(mbMenuOpen)
     {

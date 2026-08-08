@@ -90,7 +90,7 @@ void cLuxArea_Ladder::SetupAfterLoad(cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-void cLuxArea_Ladder::OnUpdate(float afTimeStep)
+void cLuxArea_Ladder::OnUpdate(double adFixedDelta)
 {
 }
 

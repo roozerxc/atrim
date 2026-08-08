@@ -109,7 +109,7 @@ void cLuxEnemy_Grunt::OnAfterWorldLoad()
 
 //-----------------------------------------------------------------------
 
-void cLuxEnemy_Grunt::UpdateEnemySpecific(float afTimeStep)
+void cLuxEnemy_Grunt::UpdateEnemySpecific(double adFixedDelta)
 {
 
 }

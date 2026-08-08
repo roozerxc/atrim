@@ -18,7 +18,7 @@ public:
     ~cAI();
 
     void Reset();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     void Init();
 

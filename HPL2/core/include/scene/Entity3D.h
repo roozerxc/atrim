@@ -39,7 +39,7 @@ public:
 
     virtual tString GetEntityType()=0;
 
-    virtual void UpdateLogic(float afTimeStep) {}
+    virtual void UpdateLogic(double adFixedDelta) {}
 
     tString& GetName()
     {

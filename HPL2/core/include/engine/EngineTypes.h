@@ -163,7 +163,7 @@ public:
 
     float CalcResults(tFlag mTypes, eMultipleSettingsCalcType aCalcType, float afDefault);
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
 private:
     tEntryVec mvEntries;

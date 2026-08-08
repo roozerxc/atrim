@@ -31,13 +31,10 @@ class cLuxPostEffectHandler;
 class cLuxInsanityHandler;
 class cLuxProgressLogHandler;
 class cLuxLoadScreenHandler;
-class iLuxAchievementHandler;
 
 class cLuxInventory;
 
 class cLuxCredits;
-
-class cLuxDemoEnd;
 
 class cLuxPreMenu;
 
@@ -171,8 +168,6 @@ public:
     void LowerFirstStartFlag();
     bool CheckFirstStartFlag();
 
-    void InitAchievements();
-
     /////////////////////////
     // Public variables
 public:
@@ -184,7 +179,6 @@ public:
 
     cConfigFile* mpGameCfg;
     cConfigFile* mpMenuCfg;
-    cConfigFile* mpDemoCfg;
     cGuiSet *mpGameDebugSet;
     cGuiSet *mpGameHudSet;
     iFontData *mpDefaultFont;
@@ -220,8 +214,6 @@ public:
     cLuxProgressLogHandler *mpProgressLogHandler;
     cLuxLoadScreenHandler *mpLoadScreenHandler;
     cLuxCredits *mpCredits;
-    cLuxDemoEnd* mpDemoEnd;
-    iLuxAchievementHandler* mpAchievementHandler;
 
     tString msGameName;
     tWString msErrorMessage;
@@ -278,7 +270,6 @@ public:
     tWString msGameConfigPath;
     tWString msMenuConfigPath;
     tWString msPreMenuConfigPath;
-    tWString msDemoConfigPath;
 
     tWString msCrashFlagPath;
     tWString msFirstStartFlagPath;

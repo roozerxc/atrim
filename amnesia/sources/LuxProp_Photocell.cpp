@@ -100,11 +100,11 @@ void cLuxProp_Photocell::OnResetProperties()
 //-----------------------------------------------------------------------
 
 
-void cLuxProp_Photocell::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_Photocell::UpdatePropSpecific(double adFixedDelta)
 {
     /////////////////////
     // Update light level
-    UpdateLightLevel(afTimeStep);
+    UpdateLightLevel(adFixedDelta);
 
     /////////////////////
     // Set mesh alpha
@@ -115,7 +115,7 @@ void cLuxProp_Photocell::UpdatePropSpecific(float afTimeStep)
         float fCurrent = mpMeshEntity->GetIlluminationAmount();
         if(fCurrent < fGoalAmount)
         {
-            fCurrent += afTimeStep;
+            fCurrent += (float)adFixedDelta;
             if(fCurrent > fGoalAmount)
             {
                 fCurrent = fGoalAmount;
@@ -123,7 +123,7 @@ void cLuxProp_Photocell::UpdatePropSpecific(float afTimeStep)
         }
         else if(fCurrent > fGoalAmount)
         {
-            fCurrent -= afTimeStep;
+            fCurrent -= (float)adFixedDelta;
             if(fCurrent < fGoalAmount)
             {
                 fCurrent = fGoalAmount;
@@ -158,9 +158,9 @@ eLuxFocusCrosshair cLuxProp_Photocell::GetFocusCrosshair(iPhysicsBody *apBody, c
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Photocell::UpdateLightLevel(float afTimeStep)
+void cLuxProp_Photocell::UpdateLightLevel(double adFixedDelta)
 {
-    mfLightLevelCheckCount += afTimeStep;
+    mfLightLevelCheckCount += (float)adFixedDelta;
     if(mfLightLevelCheckCount < 1.0f / 30.0f)
     {
         return;

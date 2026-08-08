@@ -177,7 +177,7 @@ void cLuxPlayerInsanityCollapse::Stop()
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerInsanityCollapse::Update(float afTimeStep)
+void cLuxPlayerInsanityCollapse::Update(double adFixedDelta)
 {
     if(mbActive==false)
     {
@@ -192,7 +192,7 @@ void cLuxPlayerInsanityCollapse::Update(float afTimeStep)
         // Height add
         if(mfHeightAdd > mfHeightAddGoal)
         {
-            mfHeightAdd-= mfHeightAddCollapseSpeed*afTimeStep;
+            mfHeightAdd-= mfHeightAddCollapseSpeed * (float)adFixedDelta;
             if(mfHeightAdd < mfHeightAddGoal)
             {
                 mfHeightAdd = mfHeightAddGoal;
@@ -203,7 +203,7 @@ void cLuxPlayerInsanityCollapse::Update(float afTimeStep)
 
         //////////////////////
         // Roll
-        mfRoll += cMath::ToRad(mfRollCollapseSpeed)*afTimeStep;
+        mfRoll += cMath::ToRad(mfRollCollapseSpeed) * (float)adFixedDelta;
         if(mfRoll > cMath::ToRad(35.0f))
         {
             mfRoll = cMath::ToRad(35.0f);
@@ -215,11 +215,11 @@ void cLuxPlayerInsanityCollapse::Update(float afTimeStep)
     // Sleep
     if(mlState == 1)
     {
-        mfT += afTimeStep;
+        mfT += (float)adFixedDelta;
 
         ////////////////////////
         // Random sounds
-        mfRandomCount -= afTimeStep;
+        mfRandomCount -= (float)adFixedDelta;
         if(mfRandomCount <0)
         {
             gpBase->mpHelpFuncs->PlayGuiSoundData(msSleepRandomSound, eSoundEntryType_Gui);
@@ -257,7 +257,7 @@ void cLuxPlayerInsanityCollapse::Update(float afTimeStep)
         // Height add
         if(mfHeightAdd < 0)
         {
-            mfHeightAdd += mfHeightAddAwakeSpeed*afTimeStep;
+            mfHeightAdd += mfHeightAddAwakeSpeed * (float)adFixedDelta;
             if(mfHeightAdd > 0)
             {
                 mfHeightAdd = 0;
@@ -308,7 +308,7 @@ void cLuxPlayerCamDirEffects::Reset()
 //-----------------------------------------------------------------------
 
 
-void cLuxPlayerCamDirEffects::Update(float afTimeStep)
+void cLuxPlayerCamDirEffects::Update(double adFixedDelta)
 {
     ////////////////////
     // Check if insane
@@ -325,7 +325,7 @@ void cLuxPlayerCamDirEffects::Update(float afTimeStep)
     // Alpha
     if(mbSwayActive && mfSwayAlpha<1)
     {
-        mfSwayAlpha += afTimeStep *0.1f;
+        mfSwayAlpha += (float)adFixedDelta *0.1f;
         if(mfSwayAlpha > 1)
         {
             mfSwayAlpha =1;
@@ -333,7 +333,7 @@ void cLuxPlayerCamDirEffects::Update(float afTimeStep)
     }
     else if(mbSwayActive==false && mfSwayAlpha>0)
     {
-        mfSwayAlpha -= afTimeStep *0.2f;
+        mfSwayAlpha -= (float)adFixedDelta *0.2f;
         if(mfSwayAlpha < 0)
         {
             mfSwayAlpha =0;
@@ -345,7 +345,7 @@ void cLuxPlayerCamDirEffects::Update(float afTimeStep)
 
     ////////////////////
     // Check Sane
-    UpdateSway(afTimeStep);
+    UpdateSway(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -395,7 +395,7 @@ void cLuxPlayerCamDirEffects::SetSwayActive(bool abX)
 //-----------------------------------------------------------------------
 
 
-void cLuxPlayerCamDirEffects::UpdateSway(float afTimeStep)
+void cLuxPlayerCamDirEffects::UpdateSway(double adFixedDelta)
 {
     if(mbSwayActive==false && mlstPrevAdd.empty() && mfSwayAlpha<=0)
     {
@@ -500,7 +500,7 @@ void cLuxPlayerSpawnPS::RespawnAll()
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerSpawnPS::Update(float afTimeStep)
+void cLuxPlayerSpawnPS::Update(double adFixedDelta)
 {
     if(mbActive==false)
     {
@@ -734,13 +734,13 @@ void cLuxPlayerHurt::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerHurt::Update(float afTimeStep)
+void cLuxPlayerHurt::Update(double adFixedDelta)
 {
     ///////////////////////////
     // Health regain
     if(mpPlayer->GetHealth() < mfHealthRegainLimit)
     {
-        mpPlayer->AddHealth(mfHealthRegainSpeed * afTimeStep);
+        mpPlayer->AddHealth(mfHealthRegainSpeed * (float)adFixedDelta);
     }
 
     ////////////////////////////
@@ -768,7 +768,7 @@ void cLuxPlayerHurt::Update(float afTimeStep)
     // Alpha
     if(mfAlpha < fWantedAlpha)
     {
-        mfAlpha += afTimeStep;
+        mfAlpha += (float)adFixedDelta;
         if(mfAlpha > fWantedAlpha)
         {
             mfAlpha = fWantedAlpha;
@@ -776,7 +776,7 @@ void cLuxPlayerHurt::Update(float afTimeStep)
     }
     else if(mfAlpha > fWantedAlpha)
     {
-        mfAlpha -= afTimeStep;
+        mfAlpha -= (float)adFixedDelta;
         if(mfAlpha < fWantedAlpha)
         {
             mfAlpha = fWantedAlpha;
@@ -787,7 +787,7 @@ void cLuxPlayerHurt::Update(float afTimeStep)
 
     //////////////////////////////
     // Noise
-    mfNoiseUpdateCount -= afTimeStep;
+    mfNoiseUpdateCount -= (float)adFixedDelta;
     if(mfNoiseUpdateCount<=0)
     {
         int lNoiseMax = (int)mvNoiseGfx.size()-1;
@@ -803,17 +803,17 @@ void cLuxPlayerHurt::Update(float afTimeStep)
     //////////////////////////////
     // Update pant count
     iCharacterBody *pCharBody =mpPlayer->GetCharacterBody();
-    float fSpeed = pCharBody->GetVelocity(afTimeStep).Length();
+    float fSpeed = pCharBody->GetVelocity(adFixedDelta).Length();
     if(fSpeed < 0.05f)
     {
         if(mfPantCount > 0)
         {
-            mfPantCount -= afTimeStep;
+            mfPantCount -= (float)adFixedDelta;
         }
     }
     else
     {
-        mfPantCount += afTimeStep;
+        mfPantCount += (float)adFixedDelta;
 
         float fMax = mfMaxPantCount * mfAlpha;
         if(mfPantCount > fMax)
@@ -827,10 +827,10 @@ void cLuxPlayerHurt::Update(float afTimeStep)
     // Update panting
     if(mfPantCount > 0 && fSpeed < 0.05f)
     {
-        mfPantPosAddVel += mfPantPosAddDir * afTimeStep;
+        mfPantPosAddVel += mfPantPosAddDir * (float)adFixedDelta;
         mfPantPosAddVel = cMath::Clamp(mfPantPosAddVel, -1, 1);
 
-        mfPantPosAdd += afTimeStep * mfPantPosAddVel * mfPantSpeed;
+        mfPantPosAdd += (float)adFixedDelta * mfPantPosAddVel * mfPantSpeed;
         if(mfPantPosAddDir > 0)
         {
             if(mfPantPosAdd > mfPantSize)
@@ -850,14 +850,14 @@ void cLuxPlayerHurt::Update(float afTimeStep)
     else if(mfPantPosAdd != 0)
     {
         float fDir = mfPantPosAdd > 0 ? -1.0f : 1.0f;
-        mfPantPosAddVel += fDir * afTimeStep;
+        mfPantPosAddVel += fDir * (float)adFixedDelta;
 
         mfPantPosAddDir = 1;
 
         float fMax = cMath::Abs(mfPantPosAdd / mfPantSize);
         mfPantPosAddVel = cMath::Clamp(mfPantPosAddVel, -fMax, fMax);
 
-        mfPantPosAdd += afTimeStep * mfPantPosAddVel * mfPantSpeed;
+        mfPantPosAdd += (float)adFixedDelta * mfPantPosAddVel * mfPantSpeed;
 
         if( (fDir > 0 && mfPantPosAdd >0) || (fDir < 0 && mfPantPosAdd <0) )
         {
@@ -872,7 +872,7 @@ void cLuxPlayerHurt::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerHurt::OnDraw(float afFrameTime)
+void cLuxPlayerHurt::OnDraw(double adFrameTime)
 {
     if(mfAlpha <=0)
     {
@@ -969,13 +969,13 @@ void cLuxPlayerFlashback::Start(const tString &asFlashbackFile, const tString &a
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerFlashback::Update(float afTimeStep)
+void cLuxPlayerFlashback::Update(double adFixedDelta)
 {
     if(mbActive==false)
     {
         if(mlstFlashbackQueue.empty()==false)
         {
-            mfFlashbackStartCount -= afTimeStep;
+            mfFlashbackStartCount -= (float)adFixedDelta;
             if(mfFlashbackStartCount < 0)
             {
                 cLuxFlashbackData data = mlstFlashbackQueue.front();
@@ -992,7 +992,7 @@ void cLuxPlayerFlashback::Update(float afTimeStep)
     // Flash effect (showed after small delay)
     if(mfFlashDelay > 0)
     {
-        mfFlashDelay -= afTimeStep;
+        mfFlashDelay -= (float)adFixedDelta;
         if(mfFlashDelay < 0)
         {
             gpBase->mpEffectHandler->GetFlash()->Start(0.5f, 0.5f, 2.5f);
@@ -1007,7 +1007,7 @@ void cLuxPlayerFlashback::Update(float afTimeStep)
     // Start voices and effects
     if(mfFlashbackStartCount>0)
     {
-        mfFlashbackStartCount -= afTimeStep;
+        mfFlashbackStartCount -= (float)adFixedDelta;
         if(mfFlashbackStartCount <= 0)
         {
             //Sepia
@@ -1061,7 +1061,7 @@ void cLuxPlayerFlashback::Update(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerFlashback::OnDraw(float afFrameTime)
+void cLuxPlayerFlashback::OnDraw(double adFrameTime)
 {
 }
 
@@ -1126,7 +1126,7 @@ cLuxPlayerLookAt::~cLuxPlayerLookAt()
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerLookAt::Update(float afTimeStep)
+void cLuxPlayerLookAt::Update(double adFixedDelta)
 {
     if(mbActive==false)
     {
@@ -1149,13 +1149,13 @@ void cLuxPlayerLookAt::Update(float afTimeStep)
     vWantedSpeed.y = cMath::Min(vDist.y * mfSpeedMul, mfMaxSpeed);
 
     cVector3f vSpeedDiff = vWantedSpeed - mvCurrentSpeed;
-    mvCurrentSpeed += vSpeedDiff*afTimeStep*10;
+    mvCurrentSpeed += vSpeedDiff * (float)adFixedDelta * 10;
 
     //Add Pitch
-    pCam->AddPitch(mvCurrentSpeed.x * afTimeStep);
+    pCam->AddPitch(mvCurrentSpeed.x * (float)adFixedDelta);
 
     //Add yaw
-    pCam->AddYaw(mvCurrentSpeed.y * afTimeStep);
+    pCam->AddYaw(mvCurrentSpeed.y * (float)adFixedDelta);
     mpPlayer->GetCharacterBody()->SetYaw(pCam->GetYaw());
 
     float fTotalDist = vDist.x*vDist.x + vDist.y*vDist.y;
@@ -1293,9 +1293,9 @@ void cLuxPlayerSanity::SetSanityLost()
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerSanity::Update(float afTimeStep)
+void cLuxPlayerSanity::Update(double adFixedDelta)
 {
-    mfT += afTimeStep;
+    mfT += (float)adFixedDelta;
 
     mbHitIsUpdated = false;
     mbSanityLostIsUpdated = false;
@@ -1304,7 +1304,7 @@ void cLuxPlayerSanity::Update(float afTimeStep)
     // Check if player is at low sanity level and update a timer
     if(mpPlayer->GetSanity() < mfSanityLowLimit)
     {
-        mfAtLowSanityCount+=afTimeStep;
+        mfAtLowSanityCount += (float)adFixedDelta;
         if(mfAtLowSanityCount > mfSanityLowLimitMaxTime)
         {
             mfAtLowSanityCount =0;
@@ -1313,7 +1313,7 @@ void cLuxPlayerSanity::Update(float afTimeStep)
     }
     else if(mfAtLowSanityCount >0)
     {
-        mfAtLowSanityCount -= afTimeStep;
+        mfAtLowSanityCount -= (float)adFixedDelta;
         if(mfAtLowSanityCount <0)
         {
             mfAtLowSanityCount =0;
@@ -1322,22 +1322,22 @@ void cLuxPlayerSanity::Update(float afTimeStep)
 
     //////////////////////
     // Update complex stuff
-    UpdateCheckEnemySeen(afTimeStep);
-    UpdateEnemySeenEffect(afTimeStep);
-    UpdateHit(afTimeStep);
-    UpdateInsaneEffects(afTimeStep);
+    UpdateCheckEnemySeen(adFixedDelta);
+    UpdateEnemySeenEffect(adFixedDelta);
+    UpdateHit(adFixedDelta);
+    UpdateInsaneEffects(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerSanity::OnDraw(float afFrameTime)
+void cLuxPlayerSanity::OnDraw(double adFrameTime)
 {
 
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerSanity::UpdateInsanityVisuals(float afTimeStep)
+void cLuxPlayerSanity::UpdateInsanityVisuals(double adFixedDelta)
 {
     if(mpPlayer->GetSanity() > mfSanityEffectsStart && mfSanityDrainVolume <=0 && mfInsaneWaveAlpha <=0)
     {
@@ -1358,7 +1358,7 @@ void cLuxPlayerSanity::UpdateInsanityVisuals(float afTimeStep)
     //Update wave alpha
     if(fGoalAlpha < mfInsaneWaveAlpha)
     {
-        mfInsaneWaveAlpha -= afTimeStep;
+        mfInsaneWaveAlpha -= (float)adFixedDelta;
         if(mfInsaneWaveAlpha < fGoalAlpha)
         {
             mfInsaneWaveAlpha = fGoalAlpha;
@@ -1366,7 +1366,7 @@ void cLuxPlayerSanity::UpdateInsanityVisuals(float afTimeStep)
     }
     else
     {
-        mfInsaneWaveAlpha += afTimeStep;
+        mfInsaneWaveAlpha += (float)adFixedDelta;
         if(mfInsaneWaveAlpha > fGoalAlpha)
         {
             mfInsaneWaveAlpha = fGoalAlpha;
@@ -1386,7 +1386,7 @@ void cLuxPlayerSanity::UpdateInsanityVisuals(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerSanity::UpdateInsaneEffects(float afTimeStep)
+void cLuxPlayerSanity::UpdateInsaneEffects(double adFixedDelta)
 {
     if(mbHitIsUpdated)
     {
@@ -1404,7 +1404,7 @@ void cLuxPlayerSanity::UpdateInsaneEffects(float afTimeStep)
 
     ////////////////////////////////
     // Insanity visual effect
-    UpdateInsanityVisuals(afTimeStep);
+    UpdateInsanityVisuals(adFixedDelta);
 
     if(mpPlayer->IsDead())
     {
@@ -1412,18 +1412,18 @@ void cLuxPlayerSanity::UpdateInsaneEffects(float afTimeStep)
     }
     ////////////////////////////////
     // Player is loosing sanity!
-    UpdateLosingSanity(afTimeStep);
+    UpdateLosingSanity(adFixedDelta);
 
     ////////////////////////////////
     // Show that sanity is low
-    UpdateLowSanity(afTimeStep);
+    UpdateLowSanity(adFixedDelta);
 
     ////////////////////////////////
     // Regain some sanity
     float fSanity = mpPlayer->GetSanity();
     if(fSanity < mfSanityRegainLimit)
     {
-        fSanity += afTimeStep * mfSanityRegainSpeed;
+        fSanity += (float)adFixedDelta * mfSanityRegainSpeed;
         mpPlayer->SetSanity(fSanity);
     }
 
@@ -1431,13 +1431,13 @@ void cLuxPlayerSanity::UpdateInsaneEffects(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerSanity::UpdateCheckEnemySeen(float afTimeStep)
+void cLuxPlayerSanity::UpdateCheckEnemySeen(double adFixedDelta)
 {
     /////////////////////////////////////
     // Check if it is time for a check!
     if(mfCheckEnemySeenCount >0)
     {
-        mfCheckEnemySeenCount-=afTimeStep;
+        mfCheckEnemySeenCount -= (float)adFixedDelta;
         return;
     }
     mfCheckEnemySeenCount = mfCheckNearEnemyInterval;
@@ -1590,7 +1590,7 @@ void cLuxPlayerSanity::UpdateCheckEnemySeen(float afTimeStep)
 //-----------------------------------------------------------------------
 
 
-void cLuxPlayerSanity::UpdateHit(float afTimeStep)
+void cLuxPlayerSanity::UpdateHit(double adFixedDelta)
 {
     if(mpPlayer->IsDead())
     {
@@ -1605,7 +1605,7 @@ void cLuxPlayerSanity::UpdateHit(float afTimeStep)
 
     if(mbHitActive)
     {
-        mfHitAlpha += afTimeStep * mfHitZoomInSpeed;
+        mfHitAlpha += (float)adFixedDelta * mfHitZoomInSpeed;
         if(mfHitAlpha >= 1)
         {
             mfHitAlpha =1;
@@ -1614,7 +1614,7 @@ void cLuxPlayerSanity::UpdateHit(float afTimeStep)
     }
     else
     {
-        mfHitAlpha -= afTimeStep * mfHitZoomOutSpeed;
+        mfHitAlpha -= (float)adFixedDelta * mfHitZoomOutSpeed;
         if(mfHitAlpha < 0)
         {
             mfHitAlpha =0;
@@ -1630,13 +1630,13 @@ void cLuxPlayerSanity::UpdateHit(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerSanity::UpdateEnemySeenEffect(float afTimeStep)
+void cLuxPlayerSanity::UpdateEnemySeenEffect(double adFixedDelta)
 {
     if(mbEnemyIsSeen)
     {
         if(mfSeenEnemyCount <1)
         {
-            mfSeenEnemyCount += afTimeStep * 0.3f;
+            mfSeenEnemyCount += (float)adFixedDelta * 0.3f;
             if(mfSeenEnemyCount>1)
             {
                 mfSeenEnemyCount =1;
@@ -1653,7 +1653,7 @@ void cLuxPlayerSanity::UpdateEnemySeenEffect(float afTimeStep)
     {
         if(mfSeenEnemyCount > 0)
         {
-            mfSeenEnemyCount -= afTimeStep * 0.15f;
+            mfSeenEnemyCount -= (float)adFixedDelta * 0.15f;
             if(mfSeenEnemyCount<0)
             {
                 mfSeenEnemyCount =0;
@@ -1664,13 +1664,13 @@ void cLuxPlayerSanity::UpdateEnemySeenEffect(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerSanity::UpdateLosingSanity(float afTimeStep)
+void cLuxPlayerSanity::UpdateLosingSanity(double adFixedDelta)
 {
     if(mfSanityLostCount <= 0)
     {
         mfSanityDrainCount = 0;
         mfSanityHeartbeatCount =0;
-        mfSanityDrainVolume -= afTimeStep*0.5f;
+        mfSanityDrainVolume -= (float)adFixedDelta*0.5f;
         if(mfSanityDrainVolume < 0)
         {
             mfSanityDrainVolume =0;
@@ -1683,9 +1683,9 @@ void cLuxPlayerSanity::UpdateLosingSanity(float afTimeStep)
     float fNormalizedSanity = fSanity / 100.0f;
 
     mbSanityLostIsUpdated = true;
-    mfSanityLostCount -= afTimeStep;
+    mfSanityLostCount -= (float)adFixedDelta;
 
-    mfSanityDrainVolume += afTimeStep * 0.1f;
+    mfSanityDrainVolume += (float)adFixedDelta * 0.1f;
     if(mfSanityDrainVolume > 1)
     {
         mfSanityDrainVolume =1;
@@ -1693,7 +1693,7 @@ void cLuxPlayerSanity::UpdateLosingSanity(float afTimeStep)
 
     float mfSpeedMul = 1 + (1 - fNormalizedSanity) * 2.0f;
 
-    mfSanityHeartbeatCount += afTimeStep * mfSpeedMul * 0.1f;
+    mfSanityHeartbeatCount += (float)adFixedDelta * mfSpeedMul * 0.1f;
     if(mfSanityHeartbeatCount >= 1)
     {
         mfSanityHeartbeatCount =0;
@@ -1706,7 +1706,7 @@ void cLuxPlayerSanity::UpdateLosingSanity(float afTimeStep)
         }
     }
 
-    mfSanityDrainCount += afTimeStep * mfSpeedMul * 0.33f;
+    mfSanityDrainCount += (float)adFixedDelta * mfSpeedMul * 0.33f;
     if(mfSanityDrainCount >= 1)
     {
         mfSanityDrainCount =0;
@@ -1733,7 +1733,7 @@ void cLuxPlayerSanity::UpdateLosingSanity(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerSanity::UpdateLowSanity(float afTimeStep)
+void cLuxPlayerSanity::UpdateLowSanity(double adFixedDelta)
 {
     if(mpPlayer->GetSanity() > mfSanityVeryLowLimit)
     {
@@ -1747,7 +1747,7 @@ void cLuxPlayerSanity::UpdateLowSanity(float afTimeStep)
     }
     else
     {
-        mfShowHintTimer -= afTimeStep;
+        mfShowHintTimer -= (float)adFixedDelta;
     }
 
 
@@ -1769,7 +1769,7 @@ void cLuxPlayerSanity::UpdateLowSanity(float afTimeStep)
     }
     else
     {
-        mfPantCount -= afTimeStep;
+        mfPantCount -= (float)adFixedDelta;
     }
 }
 
@@ -1822,7 +1822,7 @@ void cLuxPlayerLantern::Reset()
 //-----------------------------------------------------------------------
 
 
-void cLuxPlayerLantern::Update(float afTimeStep)
+void cLuxPlayerLantern::Update(double adFixedDelta)
 {
     if(mbActive ==false && mfAlpha <=0)
     {
@@ -1833,7 +1833,7 @@ void cLuxPlayerLantern::Update(float afTimeStep)
     // Fade in light
     if(mbActive)
     {
-        mfAlpha += afTimeStep;
+        mfAlpha += (float)adFixedDelta;
         if(mfAlpha > 1.0f)
         {
             mfAlpha =1;
@@ -1841,7 +1841,7 @@ void cLuxPlayerLantern::Update(float afTimeStep)
     }
     else if(mfAlpha > 0)
     {
-        mfAlpha -= afTimeStep*2.0f;
+        mfAlpha -= (float)adFixedDelta*2.0f;
         if(mfAlpha < 0)
         {
             mfAlpha =0;
@@ -1862,7 +1862,7 @@ void cLuxPlayerLantern::Update(float afTimeStep)
     if(mbActive && gpBase->mpEffectHandler->GetEmotionFlash()->IsActive()==false)
     {
         float fOil = mpPlayer->GetLampOil();
-        fOil -= mfLowerOilSpeed *afTimeStep;
+        fOil -= mfLowerOilSpeed * (float)adFixedDelta;
         if(fOil <=0)
         {
             fOil = 0;
@@ -2210,15 +2210,15 @@ void cLuxPlayerDeath::Start()
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerDeath::Update(float afTimeStep)
+void cLuxPlayerDeath::Update(double adFixedDelta)
 {
     if(mbActive==false)
     {
         return;
     }
 
-    mfT += afTimeStep;
-    mFlashOscill.Update(afTimeStep);
+    mfT += (float)adFixedDelta;
+    mFlashOscill.Update(adFixedDelta);
 
     //////////////////////
     // Height add
@@ -2226,7 +2226,7 @@ void cLuxPlayerDeath::Update(float afTimeStep)
     {
         if(mfHeightAdd > mfMinHeightAdd)
         {
-            mfHeightAdd-= mfHeightAddSpeed*afTimeStep;
+            mfHeightAdd-= mfHeightAddSpeed * (float)adFixedDelta;
             if(mfHeightAdd < mfMinHeightAdd)
             {
                 mfHeightAdd = mfMinHeightAdd;
@@ -2237,7 +2237,7 @@ void cLuxPlayerDeath::Update(float afTimeStep)
 
         //////////////////////
         // Roll
-        mfRoll += cMath::ToRad(mfRollSpeed)*afTimeStep;
+        mfRoll += cMath::ToRad(mfRollSpeed) * (float)adFixedDelta;
         if(mfRoll > cMath::ToRad(65.0f))
         {
             mfRoll = cMath::ToRad(65.0f);
@@ -2249,7 +2249,7 @@ void cLuxPlayerDeath::Update(float afTimeStep)
     // Fade Out
     if(mlState==1)
     {
-        mfFadeAlpha += afTimeStep * (1.0f/ mfFadeOutTime);
+        mfFadeAlpha += (float)adFixedDelta * (1.0f/ mfFadeOutTime);
         if(mfFadeAlpha > 1)
         {
             mfFadeAlpha = 1;
@@ -2271,7 +2271,7 @@ void cLuxPlayerDeath::Update(float afTimeStep)
         {
             if(!mpPlayer->UsePermaDeath())
             {
-                mfTextAlpha1 += (1 - mfTextAlpha1) * 0.5f * afTimeStep;
+                mfTextAlpha1 += (1 - mfTextAlpha1) * 0.5f * (float)adFixedDelta;
                 if(mfTextAlpha1 > 1)
                 {
                     mfTextAlpha1 = 1;
@@ -2286,7 +2286,7 @@ void cLuxPlayerDeath::Update(float afTimeStep)
 
         if(mfTextAlpha1 > 0.9f && mfFadeAlpha==1)
         {
-            mfTextOnScreenCount += afTimeStep;
+            mfTextOnScreenCount += (float)adFixedDelta;
             if(mfTextOnScreenCount > 5.5f || mbShowHint==false)
             {
                 mlState = 2;
@@ -2308,7 +2308,7 @@ void cLuxPlayerDeath::Update(float afTimeStep)
     // Fade to white
     if(mlState == 2)
     {
-        mfWhiteCount += afTimeStep;
+        mfWhiteCount += (float)adFixedDelta;
         if(mfWhiteCount >= 0.5f)
         {
             mlState = 3;
@@ -2318,8 +2318,8 @@ void cLuxPlayerDeath::Update(float afTimeStep)
     // Fade In
     if(mlState == 3)
     {
-        mfTextAlpha1 -= afTimeStep*0.85f;
-        mfFadeAlpha -= afTimeStep*0.75f;
+        mfTextAlpha1 -= (float)adFixedDelta*0.85f;
+        mfFadeAlpha -= (float)adFixedDelta*0.75f;
         if(mfFadeAlpha < 0)
         {
             mfFadeAlpha = 0;
@@ -2373,7 +2373,7 @@ void cLuxPlayerDeath::Update(float afTimeStep)
 }
 
 
-void cLuxPlayerDeath::PostUpdate(float afTimeStep)
+void cLuxPlayerDeath::PostUpdate(double adFixedDelta)
 {
     ///////////////////////////
     // HARDMODE
@@ -2408,7 +2408,7 @@ void cLuxPlayerDeath::PostUpdate(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerDeath::OnDraw(float afFrameTime)
+void cLuxPlayerDeath::OnDraw(double adFrameTime)
 {
     if(mbActive==false)
     {
@@ -2614,7 +2614,7 @@ void cLuxPlayerLean::DestroyWorldEntities(cLuxMap *apMap)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerLean::Update(float afTimeStep)
+void cLuxPlayerLean::Update(double adFixedDelta)
 {
     if(mpPlayer->IsDead())
     {
@@ -2640,7 +2640,7 @@ void cLuxPlayerLean::Update(float afTimeStep)
         {
             fMoveSpeed = 0.1f*fDir;
         }
-        mfMovement += fMoveSpeed * afTimeStep * 3;
+        mfMovement += fMoveSpeed * (float)adFixedDelta * 3;
 
         if(fGoalPos < 0 && mfMovement < fGoalPos)
         {
@@ -2660,7 +2660,7 @@ void cLuxPlayerLean::Update(float afTimeStep)
             fRotSpeed = 0.13f*-fDir;
         }
 
-        mfRotation += fRotSpeed * afTimeStep * 2;
+        mfRotation += fRotSpeed * (float)adFixedDelta * 2;
 
         if(fGoalRot < 0 && mfRotation < fGoalRot)
         {
@@ -2848,18 +2848,18 @@ void cLuxPlayerHudEffect::Flash(const cColor& aColor, eGuiMaterial aFlashMateria
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerHudEffect::OnDraw(float afFrameTime)
+void cLuxPlayerHudEffect::OnDraw(double adFrameTime)
 {
-    DrawSplashes(afFrameTime);
-    DrawFlash(afFrameTime);
+    DrawSplashes(adFrameTime);
+    DrawFlash(adFrameTime);
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerHudEffect::Update(float afTimeStep)
+void cLuxPlayerHudEffect::Update(double adFixedDelta)
 {
-    UpdateSplashes(afTimeStep);
-    UpdateFlash(afTimeStep);
+    UpdateSplashes(adFixedDelta);
+    UpdateFlash(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -2873,7 +2873,7 @@ void cLuxPlayerHudEffect::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerHudEffect::DrawSplashes(float afFrameTime)
+void cLuxPlayerHudEffect::DrawSplashes(double adFrameTime)
 {
     cLuxPlayerHudEffect_SplashListIt it = mlstSplashes.begin();
     for(; it != mlstSplashes.end(); ++it)
@@ -2884,7 +2884,7 @@ void cLuxPlayerHudEffect::DrawSplashes(float afFrameTime)
     }
 }
 
-void cLuxPlayerHudEffect::UpdateSplashes(float afTimeStep)
+void cLuxPlayerHudEffect::UpdateSplashes(double adFixedDelta)
 {
     cLuxPlayerHudEffect_SplashListIt it = mlstSplashes.begin();
     for(; it != mlstSplashes.end();)
@@ -2893,11 +2893,11 @@ void cLuxPlayerHudEffect::UpdateSplashes(float afTimeStep)
 
         if(pSplash->mfAlpha < pSplash->mfAlphaMoveStart)
         {
-            pSplash->mvPos += pSplash->mvPosVel * afTimeStep;
-            pSplash->mvSize += pSplash->mvSizeVel * afTimeStep;
+            pSplash->mvPos += pSplash->mvPosVel * (float)adFixedDelta;
+            pSplash->mvSize += pSplash->mvSizeVel * (float)adFixedDelta;
         }
 
-        pSplash->mfAlpha -= pSplash->mfAlphaVel * afTimeStep;
+        pSplash->mfAlpha -= pSplash->mfAlphaVel * (float)adFixedDelta;
         if(pSplash->mfAlpha < 0)
         {
             it = mlstSplashes.erase(it);
@@ -2910,7 +2910,7 @@ void cLuxPlayerHudEffect::UpdateSplashes(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerHudEffect::DrawFlash(float afFrameTime)
+void cLuxPlayerHudEffect::DrawFlash(double adFrameTime)
 {
     if(mfFlashAlpha <=0 || mbFlashActive==false)
     {
@@ -2926,14 +2926,14 @@ void cLuxPlayerHudEffect::DrawFlash(float afFrameTime)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerHudEffect::UpdateFlash(float afTimeStep)
+void cLuxPlayerHudEffect::UpdateFlash(double adFixedDelta)
 {
     if(mbFlashActive==false)
     {
         return;
     }
 
-    mfFlashAlpha += mfFlashAlphaSpeed * afTimeStep;
+    mfFlashAlpha += mfFlashAlphaSpeed * (float)adFixedDelta;
 
     if(mfFlashAlpha > 1.0f && mfFlashAlphaSpeed > 0)
     {
@@ -3006,7 +3006,7 @@ void cLuxPlayerLightLevel::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerLightLevel::Update(float afTimeStep)
+void cLuxPlayerLightLevel::Update(double adFixedDelta)
 {
     ///////////////////////////////////////
     //If count reaches 0, update light level
@@ -3064,7 +3064,7 @@ void cLuxPlayerLightLevel::Update(float afTimeStep)
     }
     else
     {
-        mfUpdateCount -= afTimeStep;
+        mfUpdateCount -= (float)adFixedDelta;
     }
 }
 
@@ -3139,7 +3139,7 @@ void cLuxPlayerInDarkness::Reset()
 //-----------------------------------------------------------------------
 
 
-void cLuxPlayerInDarkness::Update(float afTimeStep)
+void cLuxPlayerInDarkness::Update(double adFixedDelta)
 {
     if (!mbActive)
     {
@@ -3205,7 +3205,7 @@ void cLuxPlayerInDarkness::Update(float afTimeStep)
             }
         }*/
 
-        mfLoopSoundCount-= afTimeStep;
+        mfLoopSoundCount-= (float)adFixedDelta;
         if(mfLoopSoundCount <= 0)
         {
             mfLoopSoundCount = 0;
@@ -3214,7 +3214,7 @@ void cLuxPlayerInDarkness::Update(float afTimeStep)
 
         mbInDarkness = false;
 
-        mfSanityLossMul -= afTimeStep*0.3f;
+        mfSanityLossMul -= (float)adFixedDelta*0.3f;
         if(mfSanityLossMul < 0)
         {
             mfSanityLossMul = 0;
@@ -3224,7 +3224,7 @@ void cLuxPlayerInDarkness::Update(float afTimeStep)
     // Darkness
     else
     {
-        mfSanityLossMul += afTimeStep*0.1f;
+        mfSanityLossMul += (float)adFixedDelta*0.1f;
         if(mfSanityLossMul > 1)
         {
             mfSanityLossMul = 1;
@@ -3235,7 +3235,7 @@ void cLuxPlayerInDarkness::Update(float afTimeStep)
         if(    mpPlayer->GetHelperFlashback()->IsActive()==false && mpPlayer->GetSanityDrainDisabled()==false &&
                 gpBase->mpEffectHandler->GetEmotionFlash()->IsActive()==false)
         {
-            mpPlayer->LowerSanity(mfSanityLossPerSecond*afTimeStep*mfSanityLossMul, true);
+            mpPlayer->LowerSanity(mfSanityLossPerSecond * (float)adFixedDelta * mfSanityLossMul, true);
 
             if(mfShowHintTimer<=0 && mfSanityLossMul > 0.05f)
             {
@@ -3244,7 +3244,7 @@ void cLuxPlayerInDarkness::Update(float afTimeStep)
             }
             else
             {
-                mfShowHintTimer -= afTimeStep;
+                mfShowHintTimer -= (float)adFixedDelta;
             }
         }
 
@@ -3259,7 +3259,7 @@ void cLuxPlayerInDarkness::Update(float afTimeStep)
             }
         }*/
 
-        mfLoopSoundCount+= afTimeStep;
+        mfLoopSoundCount+= (float)adFixedDelta;
         if(mfLoopSoundCount >= mfLoopSoundStartupTime)
         {
             mfLoopSoundCount = mfLoopSoundStartupTime;

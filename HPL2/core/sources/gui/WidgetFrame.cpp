@@ -196,7 +196,7 @@ void cWidgetFrame::OnChildUpdate(iWidget* apChild)
 
 //-----------------------------------------------------------------------
 
-void cWidgetFrame::OnUpdate(float afTimeStep)
+void cWidgetFrame::OnUpdate(double adFixedDelta)
 {
     bool bHoriActive = false;
     bool bVertActive = false;
@@ -359,7 +359,7 @@ void cWidgetFrame::OnUpdate(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cWidgetFrame::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetFrame::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     ////////////////////////////////
     // Borders
@@ -377,7 +377,7 @@ void cWidgetFrame::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
 
 //-----------------------------------------------------------------------
 
-void cWidgetFrame::OnDrawAfterClip(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetFrame::OnDrawAfterClip(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     ////////////////////////////////
     // Background

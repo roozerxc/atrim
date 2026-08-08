@@ -7,7 +7,6 @@
 #include "LuxPreMenu.h"
 #include "LuxMainMenu.h"
 #include "LuxCredits.h"
-#include "LuxDemoEnd.h"
 
 #include "LuxInventory.h"
 #include "LuxJournal.h"
@@ -416,7 +415,7 @@ void cLuxInputHandler::OnStart()
 
 //-----------------------------------------------------------------------
 
-void cLuxInputHandler::Update(float afTimeStep)
+void cLuxInputHandler::Update(double adFixedDelta)
 {
     ///////////////////////////////////
     // Update input for current state
@@ -452,10 +451,6 @@ void cLuxInputHandler::Update(float afTimeStep)
     case eLuxInputState_Credits:
         UpdateCreditsInput();
         break;
-    //Demo End
-    case eLuxInputState_DemoEnd:
-        UpdateDemoEndInput();
-        break;
     //Load Screen
     case eLuxInputState_LoadScreen:
         UpdateLoadScreenInput();
@@ -472,7 +467,7 @@ void cLuxInputHandler::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxInputHandler::OnPostRender(float afFrameTime)
+void cLuxInputHandler::OnPostRender(double adFrameTime)
 {
     //Turn of logging so it only happens one frame!
     gpBase->mpMapHandler->GetViewport()->GetRenderSettings()->mbLog = false;
@@ -1546,19 +1541,6 @@ void cLuxInputHandler::UpdateCreditsInput()
 
 //-----------------------------------------------------------------------
 
-void cLuxInputHandler::UpdateDemoEndInput()
-{
-    if(gpBase->mpDemoEnd)
-    {
-        if(mpInput->BecameTriggerd(eLuxAction_Exit))
-        {
-            gpBase->mpDemoEnd->Exit(false);
-        }
-    }
-}
-
-//-----------------------------------------------------------------------
-
 
 void cLuxInputHandler::UpdateLoadScreenInput()
 {
@@ -1590,7 +1572,6 @@ bool cLuxInputHandler::CurrentStateSendsInputToGui()
     case eLuxInputState_Journal:
     case eLuxInputState_MainMenu:
     case eLuxInputState_PreMenu:
-    case eLuxInputState_DemoEnd:
         return true;
     }
 
@@ -1805,7 +1786,7 @@ bool cLuxInputHandler::ShowMouseOnMouseInput()
         {
             bMouseActive = false;
         }
-        mfMouseActiveAt = gpBase->mpEngine->GetGameTime();
+        mfMouseActiveAt = gpBase->mpEngine->GetLogicTime();
     }
 #if USE_GAMEPAD
     else if(IsGamepadPresent())
@@ -1815,7 +1796,7 @@ bool cLuxInputHandler::ShowMouseOnMouseInput()
                            mpInput->IsTriggerd(eLuxAction_UIArrowLeft) ||
                            mpInput->IsTriggerd(eLuxAction_UIArrowRight);
 
-        if(bDirPressed || (mfMouseActiveAt + 5 < gpBase->mpEngine->GetGameTime() && mfMouseActiveAt > 0))
+        if(bDirPressed || (mfMouseActiveAt + 5 < gpBase->mpEngine->GetLogicTime() && mfMouseActiveAt > 0))
         {
             gpBase->mpInventory->GetSet()->SetDrawMouse(false);
             gpBase->mpInventory->GetSet()->SetMouseMovementEnabled(false);

@@ -72,11 +72,11 @@ cLuxArea_Insanity::~cLuxArea_Insanity()
 
 //-----------------------------------------------------------------------
 
-void cLuxArea_Insanity::OnUpdate(float afTimeStep)
+void cLuxArea_Insanity::OnUpdate(double adFixedDelta)
 {
     //////////////////////////
     // Check update count
-    mfCheckCollisionCount-=afTimeStep;
+    mfCheckCollisionCount -= (float)adFixedDelta;
     if(mfCheckCollisionCount>0)
     {
         return;

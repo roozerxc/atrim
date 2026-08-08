@@ -122,7 +122,7 @@ void cGui::Init(cResources *apResources, cGraphics* apGraphics,
 
 //-----------------------------------------------------------------------
 
-void cGui::Update(float afTimeStep)
+void cGui::Update(double adFixedDelta)
 {
     ////////////////////////////////////
     // Update Sets
@@ -132,7 +132,7 @@ void cGui::Update(float afTimeStep)
         cGuiSet *pSet = it->second;
         if(pSet->IsActive())
         {
-            pSet->Update(afTimeStep);
+            pSet->Update(adFixedDelta);
         }
     }
 
@@ -142,19 +142,19 @@ void cGui::Update(float afTimeStep)
     for(; gfxIt != mlstGfxElements.end(); ++gfxIt)
     {
         cGuiGfxElement *pGfx = *gfxIt;
-        pGfx->Update(afTimeStep);
+        pGfx->Update(adFixedDelta);
     }
 }
 
 //-----------------------------------------------------------------------
 
-void cGui::OnDraw(float afFrameTime)
+void cGui::OnDraw(double adFrameTime)
 {
     tGuiSetMapIt setIt = m_mapSets.begin();
     for(; setIt != m_mapSets.end(); ++setIt)
     {
         cGuiSet *pSet = setIt->second;
-        pSet->DrawAll(afFrameTime);
+        pSet->DrawAll(adFrameTime);
     }
 }
 

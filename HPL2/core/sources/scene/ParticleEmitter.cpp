@@ -219,7 +219,7 @@ void iParticleEmitter::SetSubDivUV(const cVector2l &avSubDiv)
 //-----------------------------------------------------------------------
 
 //Seems like this fucntion is never called any more...
-void iParticleEmitter::UpdateLogic(float afTimeStep)
+void iParticleEmitter::UpdateLogic(double adFixedDelta)
 {
     if(IsActive()==false)
     {
@@ -261,7 +261,7 @@ void iParticleEmitter::UpdateLogic(float afTimeStep)
         }
     }
 
-    UpdateMotion(afTimeStep);
+    UpdateMotion(adFixedDelta);
 
     SetTransformUpdated();
 }
@@ -306,7 +306,7 @@ static inline void SetTex(float *apTex, const cVector3f &aPos)
     apTex[2] = aPos.z;
 }
 
-bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,float afFrameTime)
+bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime)
 {
     //if(mbUpdateGfx == false) return;
 

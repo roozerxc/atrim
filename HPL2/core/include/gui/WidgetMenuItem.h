@@ -83,8 +83,8 @@ protected:
     /////////////////////////
     // Implemented functions
     void OnInit();
-    void OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion);
-    void OnUpdate(float afTimeStep);
+    void OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion);
+    void OnUpdate(double adFixedDelta);
 
     void OnChangeSize();
 

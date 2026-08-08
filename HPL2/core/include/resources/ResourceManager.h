@@ -40,7 +40,7 @@ public:
 
     virtual void Unload(iResourceBase* apResource)=0;
 
-    virtual void Update(float afTimeStep) {}
+    virtual void Update(double adFixedDelta) {}
 
 protected:
     tResourceBaseMap m_mapResources;

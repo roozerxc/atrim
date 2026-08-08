@@ -87,7 +87,7 @@ public:
     ~cLuxMapHelper();
 
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
 
     bool ShapeDamage(    iCollideShape *apShape, const cMatrixf& a_mtxTransform, const cVector3f &avOrigin,

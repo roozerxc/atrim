@@ -182,7 +182,7 @@ cBoundingVolume* cRopeEntity::GetBoundingVolume()
 
 //-----------------------------------------------------------------------
 
-void cRopeEntity::UpdateGraphicsForFrame(float afFrameTime)
+void cRopeEntity::UpdateGraphicsForFrame(double adFrameTime)
 {
 
 }
@@ -212,7 +212,7 @@ static cVector2f gvPosAdd[4] =
     cVector2f (1,0), cVector2f (-1,0), cVector2f (-1,1), cVector2f (1,1)
 };
 
-bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,float afFrameTime)
+bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime)
 {
     float *pPosArray = mpVtxBuffer->GetFloatArray(eVertexBufferElement_Position);
     float *pUvArray = mpVtxBuffer->GetFloatArray(eVertexBufferElement_Texture0);

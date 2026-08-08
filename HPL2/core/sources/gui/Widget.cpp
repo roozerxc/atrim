@@ -121,29 +121,29 @@ iWidget::~iWidget()
 
 //-----------------------------------------------------------------------
 
-void iWidget::Update(float afTimeStep)
+void iWidget::Update(double adFixedDelta)
 {
     ////////////////////////////
     //Update callback
     cGuiMessageData data;
-    data.mfVal = afTimeStep;
+    data.mfVal = (float)adFixedDelta;
     ProcessMessage(eGuiMessage_OnUpdate, data);
 
     /////////////////////////////
     //Implemented update
-    OnUpdate(afTimeStep);
+    OnUpdate(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
 
-void iWidget::Draw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void iWidget::Draw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     if(mbVisible==false)
     {
         return;
     }
 
-    OnDraw(afTimeStep, apClipRegion);
+    OnDraw(adFixedDelta, apClipRegion);
 
     cGuiClipRegion *pChildRegion = apClipRegion;
     if(mbClipsGraphics)
@@ -152,12 +152,12 @@ void iWidget::Draw(float afTimeStep, cGuiClipRegion *apClipRegion)
         mpSet->SetCurrentClipRegion(pChildRegion);
     }
 
-    OnDrawAfterClip(afTimeStep,apClipRegion);
+    OnDrawAfterClip(adFixedDelta,apClipRegion);
 
     /////////////////////////////////
     //Draw callbacks
     cGuiMessageData data;
-    data.mfVal = afTimeStep;
+    data.mfVal = (float)adFixedDelta;
     data.mpData = apClipRegion;
     ProcessMessage(eGuiMessage_OnDraw, data);
 
@@ -168,7 +168,7 @@ void iWidget::Draw(float afTimeStep, cGuiClipRegion *apClipRegion)
     {
         iWidget *pChild = *it;
 
-        pChild->Draw(afTimeStep, pChildRegion);
+        pChild->Draw(adFixedDelta, pChildRegion);
     }
 
     if(mbClipsGraphics)

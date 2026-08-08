@@ -265,11 +265,11 @@ void cMaterial::SetDepthTest(bool abDepthTest)
 
 //-----------------------------------------------------------------------
 
-void cMaterial::UpdateBeforeRendering(float afTimeStep)
+void cMaterial::UpdateBeforeRendering(double adFixedDelta)
 {
     if(mbHasUvAnimation)
     {
-        UpdateAnimations(afTimeStep);
+        UpdateAnimations(adFixedDelta);
     }
 }
 
@@ -317,7 +317,7 @@ static cVector3f GetAxisVector(eMaterialAnimationAxis aAxis)
 
 //-----------------------------------------------------------------------
 
-void cMaterial::UpdateAnimations(float afTimeStep)
+void cMaterial::UpdateAnimations(double adFixedDelta)
 {
     m_mtxUV = cMatrixf::Identity;
 
@@ -354,7 +354,7 @@ void cMaterial::UpdateAnimations(float afTimeStep)
         }
     }
 
-    mfAnimTime += afTimeStep;
+    mfAnimTime += (float)adFixedDelta;
 }
 
 //-----------------------------------------------------------------------

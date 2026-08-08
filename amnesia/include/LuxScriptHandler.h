@@ -16,10 +16,10 @@ public:
     ~cLuxScriptHandler();
 
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
 private:
     iLowLevelSystem *mpLowLevelSystem;
@@ -87,8 +87,6 @@ private:
     // Game
     static void __stdcall StartCredits(string& asMusic, bool abLoopMusic, string& asTextCat, string& asTextEntry, int alEndNum);
     static void __stdcall AddKeyPart(int alKeyPart);
-
-    static void __stdcall StartDemoEnd();
 
     // Saving
     static void __stdcall AutoSave();
@@ -163,7 +161,6 @@ private:
     static void __stdcall StartInsanityEvent(string& asEventName);
     static void __stdcall StopCurrentInsanityEvent();
     static bool __stdcall InsanityEventIsActive();
-
 
     static void __stdcall UnlockAchievement(string& asName);
 

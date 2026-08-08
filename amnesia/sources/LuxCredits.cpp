@@ -138,15 +138,15 @@ void cLuxCredits::OnLeaveContainer(const tString& asNewContainer)
 
 //-----------------------------------------------------------------------
 
-void cLuxCredits::Update(float afTimeStep)
+void cLuxCredits::Update(double adFixedDelta)
 {
-    mfTime += afTimeStep;
+    mfTime += (float)adFixedDelta;
 
     //////////////////////////////////////////////
     // STATE 0
     if(mlState ==0 || mlState ==1)
     {
-        mfYPos -= afTimeStep * mfScrollSpeed;
+        mfYPos -= (float)adFixedDelta * mfScrollSpeed;
 
         ////////////////////////////////
         //Check if the credits are over.
@@ -189,7 +189,7 @@ void cLuxCredits::Update(float afTimeStep)
     // STATE 1/4 - FADE OUT
     if(mlState ==1 || mlState==4)
     {
-        mfFadeAlpha += afTimeStep * mfFadeSpeed;
+        mfFadeAlpha += (float)adFixedDelta * mfFadeSpeed;
         if(mfFadeAlpha > 1)
         {
             mfFadeAlpha = 1;
@@ -214,7 +214,7 @@ void cLuxCredits::Update(float afTimeStep)
     // STATE 2 - FADE IN
     if(mlState ==2)
     {
-        mfFadeAlpha -= afTimeStep * mfFadeSpeed;
+        mfFadeAlpha -= (float)adFixedDelta * mfFadeSpeed;
         if(mfFadeAlpha < 0)
         {
             mfFadeAlpha = 0;
@@ -276,7 +276,7 @@ void cLuxCredits::ExitPressed()
 
 //-----------------------------------------------------------------------
 
-void cLuxCredits::OnDraw(float afFrameTime)
+void cLuxCredits::OnDraw(double adFrameTime)
 {
     //////////////////////////////////////////////
     // Background

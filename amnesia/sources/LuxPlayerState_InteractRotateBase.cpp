@@ -192,7 +192,7 @@ void iLuxPlayerState_InteractRotateBase::SetupForceAxes()
 
 //-----------------------------------------------------------------------
 
-void iLuxPlayerState_InteractRotateBase::Update(float afTimeStep)
+void iLuxPlayerState_InteractRotateBase::Update(double adFixedDelta)
 {
     //////////////////////////////
     //Update move add
@@ -222,7 +222,7 @@ void iLuxPlayerState_InteractRotateBase::Update(float afTimeStep)
     float fSlowDownSpeed = cMath::Abs(mfRotSpeed) * mpMoveBaseData->mfMoveSlowDownFactor;
     if(mfRotSpeed > 0)
     {
-        mfRotSpeed -= afTimeStep * fSlowDownSpeed;
+        mfRotSpeed -= (float)adFixedDelta * fSlowDownSpeed;
         if(mfRotSpeed < 0)
         {
             mfRotSpeed = 0;
@@ -230,7 +230,7 @@ void iLuxPlayerState_InteractRotateBase::Update(float afTimeStep)
     }
     if(mfRotSpeed < 0)
     {
-        mfRotSpeed += afTimeStep * fSlowDownSpeed;
+        mfRotSpeed += (float)adFixedDelta * fSlowDownSpeed;
         if(mfRotSpeed > 0)
         {
             mfRotSpeed = 0;
@@ -249,7 +249,7 @@ void iLuxPlayerState_InteractRotateBase::Update(float afTimeStep)
     ///////////////////////////////////
     //Change the speed and cap it o max if needed
 
-    mfRotSpeed +=  fSpeedAdd * 3000.0f * mpMoveBaseData->mfMoveSpeedFactor * afTimeStep;
+    mfRotSpeed +=  fSpeedAdd * 3000.0f * mpMoveBaseData->mfMoveSpeedFactor * (float)adFixedDelta;
     if(mfRotSpeed > mpMoveBaseData->mfMoveMaxSpeed)
     {
         mfRotSpeed = mpMoveBaseData->mfMoveMaxSpeed;
@@ -266,7 +266,7 @@ void iLuxPlayerState_InteractRotateBase::Update(float afTimeStep)
     cVector3f vHingeVel = vRotateDir * cMath::Vector3Dot(vRotateDir, vBodyVel);
     cVector3f vWantedVel = vRotateDir * mfRotSpeed;
 
-    cVector3f vTorque = mRotatePid.Output(vWantedVel - vHingeVel, afTimeStep);
+    cVector3f vTorque = mRotatePid.Output(vWantedVel - vHingeVel, adFixedDelta);
     vTorque = cMath::MatrixMul(mpCurrentBody->GetInertiaMatrix(), vTorque);
 
     vTorque = cMath::Vector3MaxLength(vTorque, mfMaxTorque);
@@ -277,7 +277,7 @@ void iLuxPlayerState_InteractRotateBase::Update(float afTimeStep)
     mvMouseAdd = 0;
 }
 
-void iLuxPlayerState_InteractRotateBase::PostUpdate(float afTimeStep)
+void iLuxPlayerState_InteractRotateBase::PostUpdate(double adFixedDelta)
 {
 }
 

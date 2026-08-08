@@ -254,7 +254,6 @@ enum eGraphicCaps
     eGraphicCaps_Multisampling,
 
     eGraphicCaps_TextureCompression,
-    eGraphicCaps_TextureCompression_DXTC,
 
     eGraphicCaps_AutoGenerateMipMaps,
 

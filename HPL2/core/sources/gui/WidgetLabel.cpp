@@ -103,7 +103,7 @@ void cWidgetLabel::SetDefaultFontSize(const cVector2f& avSize)
 
 //-----------------------------------------------------------------------
 
-void cWidgetLabel::DrawText(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetLabel::DrawText(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     ////////////////////////////////
     // Texts
@@ -197,7 +197,7 @@ void cWidgetLabel::OnLoadGraphics()
 
 //-----------------------------------------------------------------------
 
-void cWidgetLabel::OnUpdate(float afTimeStep)
+void cWidgetLabel::OnUpdate(double adFixedDelta)
 {
     if(mbWordWrap==false)
     {
@@ -206,13 +206,13 @@ void cWidgetLabel::OnUpdate(float afTimeStep)
 
     ////////////////////////////////////
     // Do a little wait before starting to scroll
-    mfScrollTimer -= afTimeStep;
+    mfScrollTimer -= (float)adFixedDelta;
     if(mfScrollTimer >= 0)
     {
         return;
     }
 
-    float fAdvance = afTimeStep * mfScrollSpeedMul;
+    float fAdvance = (float)adFixedDelta * mfScrollSpeedMul;
 
     // Scroll down
     if(mbScrollingDown)
@@ -260,7 +260,7 @@ void cWidgetLabel::OnChangeText()
 
 //-----------------------------------------------------------------------
 
-void cWidgetLabel::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetLabel::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     ////////////////////////////////
     // Background
@@ -275,14 +275,14 @@ void cWidgetLabel::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
         return;
     }
 
-    DrawText(afTimeStep, apClipRegion);
+    DrawText(adFixedDelta, apClipRegion);
 }
 
 //-----------------------------------------------------------------------
 
-void cWidgetLabel::OnDrawAfterClip(float afTimeStep, cGuiClipRegion* apClipRegion)
+void cWidgetLabel::OnDrawAfterClip(double adFixedDelta, cGuiClipRegion* apClipRegion)
 {
-    DrawText(afTimeStep, apClipRegion);
+    DrawText(adFixedDelta, apClipRegion);
 }
 
 //-----------------------------------------------------------------------

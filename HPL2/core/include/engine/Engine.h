@@ -10,7 +10,6 @@ namespace hpl
 class cUpdater;
 class iLowLevelEngineSetup;
 class iLowLevelSystem;
-class cLogicTimer;
 
 class cSystem;
 class cInput;
@@ -136,66 +135,40 @@ public:
         return mpGui;
     }
 
-    void ResetLogicTimer();
-    void SetUpdatesPerSec(int alUpdatesPerSec);
-    int GetUpdatesPerSec();
-    float GetStepSize();
-
-    cLogicTimer* GetLogicTimer()
+    void SetSpeedMul(double adX)
     {
-        return mpLogicTimer;
+        dSpeedMul = adX;
     }
-
-    void SetSpeedMul(float afX);
+    double GetSpeedMul()
+    {
+        return dSpeedMul;
+    }
 
     float GetFPS();
     float GetAvgFrameTimeInMS();
 
-    float GetGameLogicTime(float& afIterations)
-    {
-        afIterations = (float)mfGameLogicIterations;
-        return (float)mfGameLogicTime;
-    }
-    float GetRenderingLogicTime();
-
-    float GetMaxGameLogic()
-    {
-        return mfMaxGameLogic;
-    }
-    float GetMaxRenderLogic()
-    {
-        return mfMaxRenderLogic;
-    }
-
     void SetFPSUpdateRate(float afSec);
     float GetFPSUpdateRate();
 
-    void SetRenderOnce(bool abX)
+    double GetFrameTime()
     {
-        mbRenderOnce = abX;
+        return dFrameTime;
     }
 
-    float GetFrameTime()
+    double GetLogicTime()
     {
-        return mfFrameTime;
+        return dLogicTime;
     }
 
-    double GetGameTime()
+    double GetRenderAlpha()
     {
-        return mfGameTime;
+        return dRenderAlpha;
     }
 
-    void SetLimitFPS(bool abX)
+    double GetStepSize()
     {
-        mbLimitFPS = abX;
+        return dFixedDelta;
     }
-    bool GetLimitFPS()
-    {
-        return mbLimitFPS;
-    }
-
-    void SetPaused(bool abPaused);
-    bool GetPaused();
 
     static void SetDeviceWasPlugged()
     {
@@ -228,45 +201,34 @@ public:
 
     static int mlNumLogicLoops;
 private:
-    void UpdateFrameTimer();
-
     bool mbGameIsDone;
-
-    bool mbRenderOnce;
 
     bool mbPaused;
 
-    float mfFrameTime;
+    int iMaxGameUpdates;
+    int iUpdatesOnCurrentFrame;
 
-    double mfGameTime;
+    double dCurrentTime;
+    double dLogicTime;
+    double dFrameTime;
+
+    double dFixedDelta;
+
+    double dAccumulator;
+    double dNewTime;
+
+    double dRenderAlpha;
+
+    double dSpeedMul;
 
     iLowLevelEngineSetup *mpGameSetup;
     cUpdater *mpUpdater;
-    cLogicTimer *mpLogicTimer;
 
     iMutex *mpMutex;
 
     cFPSCounter* mpFPSCounter;
-    iTimer *mpGameLogicTimer;
-    iTimer *mpInnerGameLogicTimer;
-    iTimer *mpRenderingLogicTimer;
-
-    double mfGameLogicIterations;
-    double mfGameLogicTime;
-    double mfRenderingLogicTime;
-
-    tFloatVec mvMaxGameLogic;
-    tFloatVec mvMaxRenderLogic;
-
-    float mfMaxGameLogic;
-    float mfMaxRenderLogic;
 
     iTimer *mpFrameTimer;
-
-    bool mbLimitFPS;
-    double mfFPSLimit;
-    double mfLastFrameRender;
-    iTimer *mpFrameLimitTimer;
 
     tScriptVarMap m_mapLocalVars;
     tScriptVarMap m_mapGlobalVars;

@@ -17,7 +17,7 @@ public:
     void SaveUserConfig();
 
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
 
     void CreateAndResetLogFile();

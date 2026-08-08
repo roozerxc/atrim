@@ -13,7 +13,7 @@ public:
     iLuxPostEffect(cGraphics *apGraphics, cResources *apResources) : iPostEffect(apGraphics, apResources, NULL) {}
     virtual ~iLuxPostEffect() {}
 
-    virtual void Update(float afTimeStep) {}
+    virtual void Update(double adFixedDelta) {}
 
 protected:
     void OnSetParams() {}
@@ -32,7 +32,7 @@ public:
     cLuxPostEffect_Insanity(cGraphics *apGraphics, cResources *apResources);
     ~cLuxPostEffect_Insanity();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     void SetWaveAlpha(float afX)
     {
@@ -72,7 +72,7 @@ public:
     ~cLuxPostEffectHandler();
 
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
 
     cLuxPostEffect_Insanity* GetInsanity()

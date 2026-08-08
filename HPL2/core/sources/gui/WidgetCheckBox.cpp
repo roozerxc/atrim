@@ -184,7 +184,7 @@ void cWidgetCheckBox::OnChangeText()
 
 //-----------------------------------------------------------------------
 
-void cWidgetCheckBox::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetCheckBox::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     //Log("cWidgetCheckBox::OnDraw - text = %s - address:0x%x - Before DrawGfx ... ", cString::To8Char(msText).c_str(), this);
     ////////////////////////////////

@@ -200,7 +200,7 @@ void iLuxProp_CritterBase::OnResetProperties()
 
 //-----------------------------------------------------------------------
 
-void iLuxProp_CritterBase::UpdatePropSpecific(float afTimeStep)
+void iLuxProp_CritterBase::UpdatePropSpecific(double adFixedDelta)
 {
     /////////////////////////////////////
     //If pLayer is far away do not update
@@ -211,10 +211,10 @@ void iLuxProp_CritterBase::UpdatePropSpecific(float afTimeStep)
         return;
     }
 
-    UpdateCritterSpecific(afTimeStep);
+    UpdateCritterSpecific(adFixedDelta);
 
-    UpdateMovement(afTimeStep);
-    UpdateMesh(afTimeStep);
+    UpdateMovement(adFixedDelta);
+    UpdateMesh(adFixedDelta);
 
 }
 
@@ -389,7 +389,7 @@ bool iLuxProp_CritterBase::Attack(const cVector3f& avDir)
 
 //-----------------------------------------------------------------------
 
-cVector3f iLuxProp_CritterBase::GetWanderAdd(float afLength, float afRadius, float afTimeStep)
+cVector3f iLuxProp_CritterBase::GetWanderAdd(float afLength, float afRadius, double adFixedDelta)
 {
     cVector3f vDir;
     if(mvVel==0)
@@ -417,19 +417,19 @@ cVector3f iLuxProp_CritterBase::GetWanderAdd(float afLength, float afRadius, flo
 
     cVector3f vForce = cMath::MatrixMul(cMath::MatrixQuaternion(qRotation),cVector3f(2,0,0));
 
-    return (vDir*1 + vForce) * afTimeStep;
+    return (vDir*1 + vForce) * (float)adFixedDelta;
 }
 
 //-----------------------------------------------------------------------
 
-cVector3f iLuxProp_CritterBase::GetTowardPlayerAdd(bool abDependOnDistance, float afTimeStep)
+cVector3f iLuxProp_CritterBase::GetTowardPlayerAdd(bool abDependOnDistance, double adFixedDelta)
 {
     cVector3f vToPlayer = gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition() - mpBody->GetLocalPosition();
     float fToPlayerDist = vToPlayer.Length();
     vToPlayer.Normalize();
     vToPlayer = vToPlayer - mvGroundNormal * cMath::Vector3Dot(mvGroundNormal, vToPlayer);//Only want the direction in the current movement plane.
 
-    cVector3f vAdd = vToPlayer * afTimeStep;
+    cVector3f vAdd = vToPlayer * (float)adFixedDelta;
     if(abDependOnDistance)
     {
         vAdd = vAdd * (1.0f/fToPlayerDist);
@@ -440,7 +440,7 @@ cVector3f iLuxProp_CritterBase::GetTowardPlayerAdd(bool abDependOnDistance, floa
 
 //-----------------------------------------------------------------------
 
-void iLuxProp_CritterBase::UpdateMovement(float afTimeStep)
+void iLuxProp_CritterBase::UpdateMovement(double adFixedDelta)
 {
     if(mvVel ==0)
     {
@@ -449,22 +449,22 @@ void iLuxProp_CritterBase::UpdateMovement(float afTimeStep)
 
     ////////////////////////
     // Move the body
-    cVector3f vVelAdd = mvVel * afTimeStep;
-    cVector3f vGravityAdd = mvGravityVel * afTimeStep;
+    cVector3f vVelAdd = mvVel * (float)adFixedDelta;
+    cVector3f vGravityAdd = mvGravityVel * (float)adFixedDelta;
 
     if(mbUseRayCollision)
     {
-        CheckRayCollision(vVelAdd, vGravityAdd, afTimeStep);
+        CheckRayCollision(vVelAdd, vGravityAdd, adFixedDelta);
     }
     else
     {
-        CheckShapeCollision(vVelAdd, vGravityAdd, afTimeStep);
+        CheckShapeCollision(vVelAdd, vGravityAdd, adFixedDelta);
     }
 }
 
 //-----------------------------------------------------------------------
 
-void iLuxProp_CritterBase::UpdateMesh(float afTimeStep)
+void iLuxProp_CritterBase::UpdateMesh(double adFixedDelta)
 {
     if(mvVel!=0)
     {
@@ -571,7 +571,7 @@ void iLuxProp_CritterBase::UpdateMesh(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxProp_CritterBase::CheckRayCollision(const cVector3f& avVelAdd,const cVector3f& avGravityAdd, float afTimeStep)
+void iLuxProp_CritterBase::CheckRayCollision(const cVector3f& avVelAdd,const cVector3f& avGravityAdd, double adFixedDelta)
 {
     iPhysicsWorld *pPhysicsWorld = mpWorld->GetPhysicsWorld();
     cVector3f vPos = mpBody->GetWorldPosition();
@@ -623,7 +623,7 @@ void iLuxProp_CritterBase::CheckRayCollision(const cVector3f& avVelAdd,const cVe
 
 //-----------------------------------------------------------------------
 
-void iLuxProp_CritterBase::CheckShapeCollision(const cVector3f& avVelAdd,const cVector3f& avGravityAdd, float afTimeStep)
+void iLuxProp_CritterBase::CheckShapeCollision(const cVector3f& avVelAdd,const cVector3f& avGravityAdd, double adFixedDelta)
 {
     iPhysicsWorld *pPhysicsWorld = mpWorld->GetPhysicsWorld();
     cVector3f vPos = mpBody->GetWorldPosition();
@@ -653,7 +653,7 @@ void iLuxProp_CritterBase::CheckShapeCollision(const cVector3f& avVelAdd,const c
 
                 cVector3f vPushDir = cMath::Vector3Normalize(vPushVec);
 
-                OnShapeCollision(vPushVec, afTimeStep);
+                OnShapeCollision(vPushVec, adFixedDelta);
 
                 mvVel = mvVel - vPushDir * cMath::Vector3Dot(vPushDir, mvVel);
             }
@@ -678,7 +678,7 @@ void iLuxProp_CritterBase::CheckShapeCollision(const cVector3f& avVelAdd,const c
 
                 cVector3f vPushDir = cMath::Vector3Normalize(vPushVec);
 
-                OnShapeCollision(vPushVec, afTimeStep);
+                OnShapeCollision(vPushVec, adFixedDelta);
 
                 mvGravityVel = mvGravityVel - vPushDir * cMath::Vector3Dot(vPushDir, mvGravityVel);
                 mvGravityVel = mvGroundNormal * cMath::Vector3Dot(mvGravityVel, mvGroundNormal);

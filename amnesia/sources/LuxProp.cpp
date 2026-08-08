@@ -385,28 +385,28 @@ void iLuxProp::SetupAfterLoad(cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-void iLuxProp::OnUpdate(float afTimeStep)
+void iLuxProp::OnUpdate(double adFixedDelta)
 {
     ///////////////////////
     // Prop update
-    UpdateMoving(afTimeStep);
-    UpdateCheckIfOutsidePlayer(afTimeStep);
-    UpdateEffectFading(afTimeStep);
-    UpdateMeshFading(afTimeStep);
-    UpdateAnimation(afTimeStep);
-    UpdateAttachedProps(afTimeStep, false);
+    UpdateMoving(adFixedDelta);
+    UpdateCheckIfOutsidePlayer(adFixedDelta);
+    UpdateEffectFading(adFixedDelta);
+    UpdateMeshFading(adFixedDelta);
+    UpdateAnimation(adFixedDelta);
+    UpdateAttachedProps(adFixedDelta, false);
 
     ///////////////////////
     // Connections
     for(size_t i=0; i<mvInteractConnections.size(); ++i)
     {
-        mvInteractConnections[i]->Update(afTimeStep);
-        mvInteractConnections[i]->UpdateProp(afTimeStep);
+        mvInteractConnections[i]->Update(adFixedDelta);
+        mvInteractConnections[i]->UpdateProp(adFixedDelta);
     }
 
     //////////////////////
     // Specific update
-    UpdatePropSpecific(afTimeStep);
+    UpdatePropSpecific(adFixedDelta);
 
     //if(mvLights.size() > 0)
     //    Log("End Color: %s\n", mvLights[0]->GetDiffuseColor().ToString().c_str());
@@ -1217,7 +1217,7 @@ bool iLuxProp::BillboardConnectedToLight(cBillboard *apBB)
 
 //-----------------------------------------------------------------------
 
-void iLuxProp::UpdateEffectFading(float afTimeStep)
+void iLuxProp::UpdateEffectFading(double adFixedDelta)
 {
     if(mbEffectAlphaFading==false)
     {
@@ -1228,7 +1228,7 @@ void iLuxProp::UpdateEffectFading(float afTimeStep)
     // Turn on effect
     if(mbEffectsActive)
     {
-        mfEffectsAlpha += (1.0f/mfEffectsOnTime) * afTimeStep;
+        mfEffectsAlpha += (1.0f/mfEffectsOnTime) * (float)adFixedDelta;
         if(mfEffectsAlpha > 1.0f)
         {
             mfEffectsAlpha = 1.0f;
@@ -1246,7 +1246,7 @@ void iLuxProp::UpdateEffectFading(float afTimeStep)
     // Turn off effect
     else
     {
-        mfEffectsAlpha -= (1.0f/mfEffectsOffTime) * afTimeStep;
+        mfEffectsAlpha -= (1.0f/mfEffectsOffTime) * (float)adFixedDelta;
         if(mfEffectsAlpha < 0)
         {
             mfEffectsAlpha = 0;
@@ -1279,20 +1279,20 @@ void iLuxProp::UpdateEffectFading(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxProp::UpdateMeshFading(float afTimeStep)
+void iLuxProp::UpdateMeshFading(double adFixedDelta)
 {
     if(mfFadeInAlpha >= 1 || mpMeshEntity==NULL)
     {
         return;
     }
 
-    mfFadeInAlpha += mfFadeInSpeed * afTimeStep;
+    mfFadeInAlpha += mfFadeInSpeed * (float)adFixedDelta;
     mpMeshEntity->SetCoverageAmount(mfFadeInAlpha);
 }
 
 //-----------------------------------------------------------------------
 
-void iLuxProp::UpdateAttachedProps(float afTimeStep, bool abForceUpdate)
+void iLuxProp::UpdateAttachedProps(double adFixedDelta, bool abForceUpdate)
 {
     if(mlstAttachedProps.empty())
     {
@@ -1323,7 +1323,7 @@ void iLuxProp::UpdateAttachedProps(float afTimeStep, bool abForceUpdate)
 
 //-----------------------------------------------------------------------
 
-void iLuxProp::UpdateAnimation(float afTimeStep)
+void iLuxProp::UpdateAnimation(double adFixedDelta)
 {
     if(mlCurrentNonLoopAnimIndex<0)
     {
@@ -1359,13 +1359,13 @@ void iLuxProp::UpdateMoveSoundVolume()
 
 //-----------------------------------------------------------------------
 
-void iLuxProp::UpdateMoving(float afTimeStep)
+void iLuxProp::UpdateMoving(double adFixedDelta)
 {
     ////////////////////////////////
     // Update move start count
     if(mfMoveStartCount > 0)
     {
-        mfMoveStartCount -= afTimeStep;
+        mfMoveStartCount -= (float)adFixedDelta;
     }
 
     ////////////////////////////////
@@ -1375,7 +1375,7 @@ void iLuxProp::UpdateMoving(float afTimeStep)
         //Fade out move sound
         if(mfMovingVolume >0)
         {
-            mfMovingVolume -= afTimeStep;
+            mfMovingVolume -= (float)adFixedDelta;
             if(mfMovingVolume < 0)
             {
                 mfMovingVolume =0;
@@ -1445,7 +1445,7 @@ void iLuxProp::UpdateMoving(float afTimeStep)
 
         //////////////////////////////
         // Increase volume
-        mfMovingVolume += afTimeStep*1.2f;//Important that sounds fades in faster than out! (in case mbMoving "flickers" )
+        mfMovingVolume += (float)adFixedDelta*1.2f;//Important that sounds fades in faster than out! (in case mbMoving "flickers" )
         if(mfMovingVolume >1)
         {
             mfMovingVolume =1.0f;
@@ -1459,7 +1459,7 @@ void iLuxProp::UpdateMoving(float afTimeStep)
     //Fade out move sound
     else if(bHasMoveSpeed==false && mfMovingVolume > 0)
     {
-        mfMovingVolume -= afTimeStep;
+        mfMovingVolume -= (float)adFixedDelta;
         if(mfMovingVolume <0)
         {
             mfMovingVolume =0;
@@ -1484,8 +1484,8 @@ void iLuxProp::UpdateMoving(float afTimeStep)
 
     ///////////////////////////
     // Update movement matrix
-    UpdateLinearMoving(afTimeStep);
-    UpdateAngularMoving(afTimeStep);
+    UpdateLinearMoving(adFixedDelta);
+    UpdateAngularMoving(adFixedDelta);
 
     ///////////////////////////
     // Stop movement
@@ -1497,7 +1497,7 @@ void iLuxProp::UpdateMoving(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxProp::UpdateLinearMoving(float afTimeStep)
+void iLuxProp::UpdateLinearMoving(double adFixedDelta)
 {
     if(mbMovingLinear==false)
     {
@@ -1514,10 +1514,10 @@ void iLuxProp::UpdateLinearMoving(float afTimeStep)
 
     /////////////
     //Check if almost at goal
-    if(fDist <= mfMoveLinearSpeed*afTimeStep*1.05f || fDist < 0.01)
+    if(fDist <= mfMoveLinearSpeed*adFixedDelta*1.05f || fDist < 0.01)
     {
         mfMoveLinearSpeed =0;
-        vMoveVel = vDelta / afTimeStep;
+        vMoveVel = vDelta / (float)adFixedDelta;
         mbMovingLinear = false;
     }
     /////////////
@@ -1532,7 +1532,7 @@ void iLuxProp::UpdateLinearMoving(float afTimeStep)
         }
         else
         {
-            mfMoveLinearSpeed += mfMoveLinearAcc * afTimeStep;
+            mfMoveLinearSpeed += mfMoveLinearAcc * (float)adFixedDelta;
             if(mfMoveLinearSpeed > mfMoveLinearMaxSpeed)
             {
                 mfMoveLinearSpeed = mfMoveLinearMaxSpeed;
@@ -1546,7 +1546,7 @@ void iLuxProp::UpdateLinearMoving(float afTimeStep)
     //Check collision, if force == 0 skip!
     if(mbMoveCheckCollision)
     {
-        CheckMoveCollision(vMoveVel, mfMoveLinearSpeed, afTimeStep);
+        CheckMoveCollision(vMoveVel, mfMoveLinearSpeed, adFixedDelta);
     }
 
     //////////////////////////
@@ -1559,7 +1559,7 @@ void iLuxProp::UpdateLinearMoving(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxProp::UpdateAngularMoving(float afTimeStep)
+void iLuxProp::UpdateAngularMoving(double adFixedDelta)
 {
     if(mbMovingAngular==false)
     {
@@ -1582,7 +1582,7 @@ void iLuxProp::UpdateAngularMoving(float afTimeStep)
     {
         float fAcc = mfMoveAngularMaxSpeed < mfMoveAngularSpeed ? -mfMoveAngularAcc : mfMoveAngularAcc;
 
-        mfMoveAngularSpeed += fAcc * afTimeStep;
+        mfMoveAngularSpeed += fAcc * (float)adFixedDelta;
         if( (fAcc < 0 && mfMoveAngularSpeed < mfMoveAngularMaxSpeed) ||
                 (fAcc > 0 && mfMoveAngularSpeed > mfMoveAngularMaxSpeed) )
         {
@@ -1605,10 +1605,10 @@ void iLuxProp::UpdateAngularMoving(float afTimeStep)
 
         /////////////
         //Check if almost at goal
-        if(fDist <= mfMoveAngularSpeed*afTimeStep*1.05f || fDist < 0.01)
+        if(fDist <= mfMoveAngularSpeed*adFixedDelta*1.05f || fDist < 0.01)
         {
             mfMoveAngularSpeed =0;
-            vMoveVel = vDelta / afTimeStep;
+            vMoveVel = vDelta / (float)adFixedDelta;
             mbMovingAngular = false;
         }
         /////////////
@@ -1623,7 +1623,7 @@ void iLuxProp::UpdateAngularMoving(float afTimeStep)
             }
             else
             {
-                mfMoveAngularSpeed += mfMoveAngularAcc * afTimeStep;
+                mfMoveAngularSpeed += mfMoveAngularAcc * (float)adFixedDelta;
                 if(mfMoveAngularSpeed > mfMoveAngularMaxSpeed)
                 {
                     mfMoveAngularSpeed = mfMoveAngularMaxSpeed;
@@ -1644,19 +1644,19 @@ void iLuxProp::UpdateAngularMoving(float afTimeStep)
     //Update position too.
     if(mbMoveAngularUseOffset)
     {
-        cMatrixf mtxNewBody = cMath::MatrixMul(cMath::MatrixRotate(vMoveVel*afTimeStep,eEulerRotationOrder_XYZ), pBody->GetLocalMatrix().GetRotation());
+        cMatrixf mtxNewBody = cMath::MatrixMul(cMath::MatrixRotate(vMoveVel * (float)adFixedDelta, eEulerRotationOrder_XYZ), pBody->GetLocalMatrix().GetRotation());
         mtxNewBody.SetTranslation(pBody->GetLocalMatrix().GetTranslation());
         cVector3f vOffset = cMath::MatrixMul(mtxNewBody, mvMoveAngularLocalOffset);
 
         cVector3f vDiff = mvMoveAngularWorldOffset - vOffset;
-        pBody->StaticLinearMove(vDiff / afTimeStep );
+        pBody->StaticLinearMove(vDiff / (float)adFixedDelta);
     }
 }
 
 
 //-----------------------------------------------------------------------
 
-void iLuxProp::CheckMoveCollision(cVector3f& avMoveVel, float &afSpeed, float afTimeStep)
+void iLuxProp::CheckMoveCollision(cVector3f& avMoveVel, float &afSpeed, double adFixedDelta)
 {
     if(avMoveVel==0)
     {
@@ -1668,7 +1668,7 @@ void iLuxProp::CheckMoveCollision(cVector3f& avMoveVel, float &afSpeed, float af
 
     //Get matrix after movement
     cMatrixf mtxNew = pBody->GetLocalMatrix();
-    cVector3f vAdd = avMoveVel*afTimeStep;
+    cVector3f vAdd = avMoveVel * (float)adFixedDelta;
     mtxNew.SetTranslation(mtxNew.GetTranslation() + vAdd);
 
     //Log("Checking collision!\n");
@@ -1697,7 +1697,7 @@ void iLuxProp::CheckMoveCollision(cVector3f& avMoveVel, float &afSpeed, float af
 
 //-----------------------------------------------------------------------
 
-void iLuxProp::UpdateCheckIfOutsidePlayer(float afTimeStep)
+void iLuxProp::UpdateCheckIfOutsidePlayer(double adFixedDelta)
 {
     if(mbCheckOutsidePlayer==false)
     {

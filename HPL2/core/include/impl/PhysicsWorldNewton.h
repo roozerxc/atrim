@@ -17,9 +17,9 @@ public:
     cPhysicsWorldNewton();
     ~cPhysicsWorldNewton();
 
-    void Simulate(float afTimeStep);
+    void Simulate(double adFixedDelta);
 
-    void  SetMaxTimeStep(float afTimeStep);
+    void  SetMaxTimeStep(double adFixedDelta);
     float GetMaxTimeStep();
 
     void SetWorldSize(const cVector3f &avMin,const cVector3f &avMax);

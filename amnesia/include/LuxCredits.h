@@ -17,7 +17,7 @@ public:
 
     void Reset();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     void AddKeyPart(int alKey);
     void Setup(const tString& asMusic, bool abLoopMusic, const tString& asTextCat, const tString& asTextEntry, int alEndNum);
@@ -25,7 +25,7 @@ public:
     void OnEnterContainer(const tString& asOldContainer);
     void OnLeaveContainer(const tString& asNewContainer);
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
     void ExitPressed();
 

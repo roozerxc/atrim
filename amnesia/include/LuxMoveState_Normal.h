@@ -44,7 +44,7 @@ public:
     void OnEnterState(eLuxMoveState aPrevState);
     void OnLeaveState(eLuxMoveState aNewState);
 
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     bool GetAllowsInteraction();
 
@@ -58,7 +58,7 @@ public:
 
     void Jump();
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
     float GetHeadBobCount()
     {
@@ -81,11 +81,11 @@ public:
     float GetRunSpeedMul();
 
 private:
-    bool UpdateLedgeCheck(float afTimeStep);
-    void UpdateMovement(float afTimeStep);
-    void UpdateSpeedMultipliers(float afTimeStep);
-    void UpdateJumpAndGroundCheck(float afTimeStep);
-    void UpdateHeadBob(float afTimeStep);
+    bool UpdateLedgeCheck(double adFixedDelta);
+    void UpdateMovement(double adFixedDelta);
+    void UpdateSpeedMultipliers(double adFixedDelta);
+    void UpdateJumpAndGroundCheck(double adFixedDelta);
+    void UpdateHeadBob(double adFixedDelta);
 
     void FootSound(eLuxFootSound aType);
 

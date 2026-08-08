@@ -128,21 +128,21 @@ void cLuxHintHandler::SaveUserConfig()
 
 //-----------------------------------------------------------------------
 
-void cLuxHintHandler::Update(float afTimeStep)
+void cLuxHintHandler::Update(double adFixedDelta)
 {
-    UpdateHintText(afTimeStep);
+    UpdateHintText(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxHintHandler::OnDraw(float afFrameTime)
+void cLuxHintHandler::OnDraw(double adFrameTime)
 {
-    DrawHintText(afFrameTime, gpBase->mpGameHudSet);
+    DrawHintText(adFrameTime, gpBase->mpGameHudSet);
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxHintHandler::DrawHintText(float afFrameTime, cGuiSet *apGuiSet)
+void cLuxHintHandler::DrawHintText(double adFrameTime, cGuiSet *apGuiSet)
 {
     if(gpBase->mbPTestActivated)
     {
@@ -187,7 +187,7 @@ void cLuxHintHandler::DrawHintText(float afFrameTime, cGuiSet *apGuiSet)
 #endif
 }
 
-void cLuxHintHandler::UpdateHintText(float afTimeStep)
+void cLuxHintHandler::UpdateHintText(double adFixedDelta)
 {
     if(mbActive==false)
     {
@@ -196,14 +196,14 @@ void cLuxHintHandler::UpdateHintText(float afTimeStep)
 
     if(mfAlpha>0)
     {
-        mHintOscill.Update(afTimeStep);
+        mHintOscill.Update(adFixedDelta);
     }
 
     /////////////////////
     //Decrease alpha
     if(mfShowTextCount<=0 && mfAlpha>0)
     {
-        mfAlpha -= 0.5f * afTimeStep;
+        mfAlpha -= 0.5f * (float)adFixedDelta;
         if(mfAlpha <0)
         {
             mfAlpha =0;
@@ -214,13 +214,13 @@ void cLuxHintHandler::UpdateHintText(float afTimeStep)
     //Increase alpha
     if(mfShowTextCount > 0)
     {
-        mfAlpha += 1.2f * afTimeStep;
+        mfAlpha += 1.2f * (float)adFixedDelta;
         if(mfAlpha >1)
         {
             mfAlpha =1;
         }
 
-        mfShowTextCount -= afTimeStep;
+        mfShowTextCount -= (float)adFixedDelta;
     }
 }
 

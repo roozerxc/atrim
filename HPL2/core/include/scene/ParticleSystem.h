@@ -75,7 +75,7 @@ public:
     }
     void SetVisible(bool abVisible);
 
-    void UpdateLogic(float afTimeStep);
+    void UpdateLogic(double adFixedDelta);
 
     bool IsDead();
     bool IsDying();

@@ -65,7 +65,7 @@ cInput::~cInput()
 
 //-----------------------------------------------------------------------
 
-void cInput::Update(float afTimeStep)
+void cInput::Update(double adFixedDelta)
 {
     mpLowLevelInput->BeginInputUpdate();
 
@@ -94,7 +94,7 @@ void cInput::Update(float afTimeStep)
 
     for(tActionMapIt it = m_mapActions.begin(); it!= m_mapActions.end(); ++it)
     {
-        it->second->Update(afTimeStep);
+        it->second->Update(adFixedDelta);
     }
 }
 

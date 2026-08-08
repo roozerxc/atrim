@@ -74,7 +74,7 @@ void cLuxArea_Sign::SetupAfterLoad(cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-void cLuxArea_Sign::OnUpdate(float afTimeStep)
+void cLuxArea_Sign::OnUpdate(double adFixedDelta)
 {
 }
 

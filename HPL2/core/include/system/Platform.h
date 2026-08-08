@@ -105,8 +105,6 @@ public:
     static void CopyTextToClipboard(const tWString &asText);
     static tWString LoadTextFromClipboard();
 
-    static tWString GetSystemSpecialPath(eSystemPath aPathType);
-
     static float GetMousePointerSpeed(); //can return 1.0 on all but Windows platforms
 
     static unsigned long GetSystemAvailableDrives();
@@ -116,16 +114,6 @@ public:
     static tWString GetDisplayName(int alDisplay);
 
     static void GetDisplayResolution(int alDisplay, int& alHorizontal, int& alVertical);
-
-    //////////////////////////////////////////////////////
-    ////////// SYSTEM COMMANDS ///////////////////////////
-    //////////////////////////////////////////////////////
-
-    static void OpenBrowserWindow ( const tWString& asURL );
-
-    static bool RunProgram( const tWString& asPath, const tWString& asParams );
-
-    static bool OpenFileOnShell(const tWString& asPath);
 
     //////////////////////////////////////////////////////
     ////////// THREADING /////////////////////////////////

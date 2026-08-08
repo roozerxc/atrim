@@ -60,9 +60,9 @@ public:
     void OnEnterState(eLuxPlayerState aPrevState);
     void OnLeaveState(eLuxPlayerState aNewState);
 
-    void Update(float afTimeStep);
-    void PostUpdate(float afTimeStep);
-    virtual void OnDraw(cGuiSet *apGuiSet,float afFrameTime);
+    void Update(double adFixedDelta);
+    void PostUpdate(double adFixedDelta);
+    virtual void OnDraw(cGuiSet *apGuiSet,double adFrameTime);
 
     virtual cGuiGfxElement* GetCrosshair();
 

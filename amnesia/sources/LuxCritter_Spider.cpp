@@ -88,10 +88,10 @@ cLuxCritter_Spider::~cLuxCritter_Spider()
 
 //-----------------------------------------------------------------------
 
-void cLuxCritter_Spider::UpdateCritterSpecific(float afTimeStep)
+void cLuxCritter_Spider::UpdateCritterSpecific(double adFixedDelta)
 {
-    UpdateVelocity(afTimeStep);
-    UpdateGroundCheck(afTimeStep);
+    UpdateVelocity(adFixedDelta);
+    UpdateGroundCheck(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -142,13 +142,13 @@ float cLuxCritter_Spider::DrawDebug(cGuiSet *apSet,iFontData *apFont,float afSta
 
 //-----------------------------------------------------------------------
 
-void cLuxCritter_Spider::UpdateVelocity(float afTimeStep)
+void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
 {
     cVector3f vMoveVelAdd =0;
 
     if(mfCount>0)
     {
-        mfCount-= afTimeStep;
+        mfCount-= (float)adFixedDelta;
     }
 
     //If lantern is on, flee!
@@ -180,9 +180,9 @@ void cLuxCritter_Spider::UpdateVelocity(float afTimeStep)
     {
         mfMaxSpeed = mfMaxIdleSpeed;
 
-        vMoveVelAdd -= GetTowardPlayerAdd(false, afTimeStep);
+        vMoveVelAdd -= GetTowardPlayerAdd(false, adFixedDelta);
 
-        vMoveVelAdd += GetWanderAdd(1,2, afTimeStep);
+        vMoveVelAdd += GetWanderAdd(1,2, adFixedDelta);
 
         if(mfCount<=0)
         {
@@ -198,7 +198,7 @@ void cLuxCritter_Spider::UpdateVelocity(float afTimeStep)
 
         ///////////////////
         // Wandering
-        vMoveVelAdd += GetWanderAdd(1,2, afTimeStep);
+        vMoveVelAdd += GetWanderAdd(1,2, adFixedDelta);
 
         ///////////////////
         // Swarm around point
@@ -210,7 +210,7 @@ void cLuxCritter_Spider::UpdateVelocity(float afTimeStep)
             vWantedVel.y=0;
 
             cVector3f vForce = (vWantedVel - mvVel) * 0.01f * fSwarmPointDist;
-            vMoveVelAdd += vForce * afTimeStep;
+            vMoveVelAdd += vForce * (float)adFixedDelta;
         }
 
         ///////////////////
@@ -261,9 +261,9 @@ void cLuxCritter_Spider::UpdateVelocity(float afTimeStep)
 
         ///////////////////
         // Move toward player
-        vMoveVelAdd += GetTowardPlayerAdd(false, afTimeStep)*3;
+        vMoveVelAdd += GetTowardPlayerAdd(false, adFixedDelta)*3;
 
-        vMoveVelAdd += GetWanderAdd(1,2, afTimeStep);
+        vMoveVelAdd += GetWanderAdd(1,2, adFixedDelta);
 
         ///////////////////
         // Check attack
@@ -304,7 +304,7 @@ void cLuxCritter_Spider::UpdateVelocity(float afTimeStep)
     else if(mState == eLuxCritterState_Attack_1)
     {
         mfMaxSpeed = mfMaxHuntSpeed;
-        vMoveVelAdd += GetTowardPlayerAdd(false, afTimeStep);
+        vMoveVelAdd += GetTowardPlayerAdd(false, adFixedDelta);
 
         if(mfCount<=0 || GetDistanceToPlayer2D() < 1.5f)
         {
@@ -320,7 +320,7 @@ void cLuxCritter_Spider::UpdateVelocity(float afTimeStep)
     else if(mState == eLuxCritterState_Attack_2)
     {
         mfMaxSpeed = mfMaxHuntSpeed;
-        vMoveVelAdd += GetTowardPlayerAdd(false, afTimeStep);
+        vMoveVelAdd += GetTowardPlayerAdd(false, adFixedDelta);
         if(mfCount<=0)
         {
             mState= eLuxCritterState_Idle;
@@ -335,7 +335,7 @@ void cLuxCritter_Spider::UpdateVelocity(float afTimeStep)
     // Sound
     if(mState == eLuxCritterState_Move || mState == eLuxCritterState_Hunt || mState == eLuxCritterState_Flee)
     {
-        mfPlaySoundCount-=afTimeStep;
+        mfPlaySoundCount -= (float)adFixedDelta;
         if(mfPlaySoundCount < 0)
         {
             mfPlaySoundCount = cMath::RandRectf(mvIdleSoundRandMinMax.x, mvIdleSoundRandMinMax.y);
@@ -351,7 +351,7 @@ void cLuxCritter_Spider::UpdateVelocity(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxCritter_Spider::UpdateGroundCheck(float afTimeStep)
+void cLuxCritter_Spider::UpdateGroundCheck(double adFixedDelta)
 {
     iPhysicsWorld *pPhysicsWorld = mpWorld->GetPhysicsWorld();
 
@@ -380,8 +380,8 @@ void cLuxCritter_Spider::UpdateGroundCheck(float afTimeStep)
     // Gravity
     if(mbOnGround==false || mbColliding==false)
     {
-        mvGravityVel -= mvGroundNormal * 9.8f * afTimeStep;
-        mfFallingCount+= afTimeStep;
+        mvGravityVel -= mvGroundNormal * 9.8f * (float)adFixedDelta;
+        mfFallingCount+= (float)adFixedDelta;
         if(mfFallingCount > 0.3f)
         {
             mvGroundNormal = cVector3f(0,1,0);
@@ -399,7 +399,7 @@ void cLuxCritter_Spider::UpdateGroundCheck(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxCritter_Spider::OnShapeCollision(const cVector3f& avPushVec, float afTimeStep)
+void cLuxCritter_Spider::OnShapeCollision(const cVector3f& avPushVec, double adFixedDelta)
 {
     if(mState == eLuxCritterState_Hit)
     {
@@ -410,7 +410,7 @@ void cLuxCritter_Spider::OnShapeCollision(const cVector3f& avPushVec, float afTi
     // Update count, so
     if(mfNewGroundNormalCount > 0)
     {
-        mfNewGroundNormalCount -= afTimeStep;
+        mfNewGroundNormalCount -= (float)adFixedDelta;
         //gpBase->mpDebugHandler->AddMessage(_W("Newground count too high: ")+ cString::ToStringW(mfNewGroundNormalCount), false);
         return;
     }

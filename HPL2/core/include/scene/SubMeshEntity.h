@@ -54,7 +54,7 @@ public:
 
     cMaterial *GetMaterial();
 
-    void UpdateGraphicsForFrame(float afFrameTime);
+    void UpdateGraphicsForFrame(double adFrameTime);
 
     iVertexBuffer* GetVertexBuffer();
 
@@ -102,7 +102,7 @@ public:
         return "SubMesh";
     }
 
-    void UpdateLogic(float afTimeStep);
+    void UpdateLogic(double adFixedDelta);
 
     cTriangleData& GetTriangle(int alIndex);
     int GetTriangleNum();

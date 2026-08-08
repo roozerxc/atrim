@@ -331,7 +331,7 @@ void iWidgetListBoxBase::OnLoadGraphics()
 
 //-----------------------------------------------------------------------
 
-void iWidgetListBoxBase::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void iWidgetListBoxBase::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     ////////////////////////////////
     // Background
@@ -351,12 +351,12 @@ void iWidgetListBoxBase::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
 
 //-----------------------------------------------------------------------
 
-void iWidgetListBoxBase::OnDrawAfterClip(float afTimeStep, cGuiClipRegion* apClipRegion)
+void iWidgetListBoxBase::OnDrawAfterClip(double adFixedDelta, cGuiClipRegion* apClipRegion)
 {
     cGuiClipRegion* pRegion = apClipRegion->CreateChild(GetGlobalPosition(), mvSize-cVector2f(mfSliderWidth,0));
     mpSet->SetCurrentClipRegion(pRegion);
 
-    DrawItems(afTimeStep, pRegion);
+    DrawItems(adFixedDelta, pRegion);
     // Draw cursor
     if(HasFocus())
     {

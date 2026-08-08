@@ -66,7 +66,7 @@ public:
     ~cLuxMapHandler();
 
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
     void OnQuit();
 
@@ -160,7 +160,7 @@ private:
     void LoadMainConfig();
     void SaveMainConfig();
 
-    void CheckMapChange(float afTimeStep);
+    void CheckMapChange(double adFixedDelta);
 
     cLuxDebugRenderCallback mRenderCallback;
 

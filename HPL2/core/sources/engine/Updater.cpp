@@ -35,12 +35,12 @@ cUpdater::~cUpdater()
 
 //-----------------------------------------------------------------------
 
-void cUpdater::BroadcastMessageToAll(eUpdateableMessage aMessage, float afX)
+void cUpdater::BroadcastMessageToAll(eUpdateableMessage aMessage, double adX)
 {
     for(tUpdateableListIt it = mlstGlobalUpdateableList.begin(); it!=mlstGlobalUpdateableList.end(); ++it)
     {
         iUpdateable *pUpdateable = *it;
-        pUpdateable->RunMessage(aMessage, afX);
+        pUpdateable->RunMessage(aMessage, adX);
     }
 
     tUpdateContainerMapIt contIt = m_mapUpdateContainer.begin();
@@ -51,21 +51,21 @@ void cUpdater::BroadcastMessageToAll(eUpdateableMessage aMessage, float afX)
         for(tUpdateableListIt it = pUpdateList->begin(); it!=pUpdateList->end(); ++it)
         {
             iUpdateable *pUpdateable = *it;
-            pUpdateable->RunMessage(aMessage, afX);
+            pUpdateable->RunMessage(aMessage, adX);
         }
     }
 }
 
 //-----------------------------------------------------------------------
 
-void cUpdater::RunMessage(eUpdateableMessage aMessage, float afX)
+void cUpdater::RunMessage(eUpdateableMessage aMessage, double adX)
 {
     if(aMessage != eUpdateableMessage_Update)
     {
         for(tUpdateableListIt it = mlstGlobalUpdateableList.begin(); it!=mlstGlobalUpdateableList.end(); ++it)
         {
             iUpdateable *pUpdateable = *it;
-            pUpdateable->RunMessage(aMessage, afX);
+            pUpdateable->RunMessage(aMessage, adX);
         }
 
         if(mpCurrentUpdates)
@@ -74,7 +74,7 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, float afX)
             for(tUpdateableListIt it = mpCurrentUpdates->begin(); it!=mpCurrentUpdates->end(); ++it)
             {
                 iUpdateable *pUpdateable = *it;
-                pUpdateable->RunMessage(aMessage, afX);
+                pUpdateable->RunMessage(aMessage, adX);
 
                 //In case the container is change, do not do any more updating.
                 if(mpCurrentUpdates != pCurrentUpdateContainer)
@@ -93,7 +93,7 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, float afX)
             //Log("'%s'\n", pUpdateable->GetName().c_str());
 
             START_TIMING_EX(pUpdateable->GetName().c_str(),game)
-            pUpdateable->RunMessage(aMessage, afX);
+            pUpdateable->RunMessage(aMessage, adX);
             STOP_TIMING(game)
         }
 
@@ -107,7 +107,7 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, float afX)
                 //Log("'%s'\n", pUpdateable->GetName().c_str());
 
                 START_TIMING_EX(pUpdateable->GetName().c_str(),game)
-                pUpdateable->RunMessage(aMessage, afX);
+                pUpdateable->RunMessage(aMessage, adX);
                 STOP_TIMING(game)
 
                 //In case the container is change, do not do any more updating.

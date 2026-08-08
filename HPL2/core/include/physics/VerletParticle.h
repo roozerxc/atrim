@@ -55,7 +55,7 @@ public:
     cVerletParticle(iVerletParticleContainer *apRope, const cVector3f& avPos, float afInvMass);
     ~cVerletParticle();
 
-    void UpdateMovement(float afTimeStep);
+    void UpdateMovement(double adFixedDelta);
 
     void SetPosition(const cVector3f& avPos, bool abSetPrevPos);
     void AddPosition(const cVector3f& avAdd, bool abSetPrevPos)
@@ -186,7 +186,7 @@ protected:
     virtual bool CheckSpecificDataAwake()=0;        //Tested when container IS sleeping
     virtual void SetSpecificDataSleeping(bool abSleeping)=0;
 
-    void PreUpdate(float afTimeStep);
+    void PreUpdate(double adFixedDelta);
 
     void UpdateLengthConstraint(cVerletParticle *apP1, cVerletParticle *apP2, float afLength);
     void UpdateParticleCollisionConstraint(cVerletParticle *apPart, const cVector3f &avPrevPos, float afRadius);

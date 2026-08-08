@@ -284,7 +284,7 @@ cMusicEntry* cMusicHandler::GetCurrentSong()
 
 //-----------------------------------------------------------------------
 
-void cMusicHandler::Update(float afTimeStep)
+void cMusicHandler::Update(double adFixedDelta)
 {
     if(mbIsPaused)
     {
@@ -297,7 +297,7 @@ void cMusicHandler::Update(float afTimeStep)
     {
         if(mfVolumeMul < mfVolumeMulFadeGoal)
         {
-            mfVolumeMul += afTimeStep*mfVolumeMulFadeSpeed;
+            mfVolumeMul += (float)adFixedDelta * mfVolumeMulFadeSpeed;
             if(mfVolumeMul > mfVolumeMulFadeGoal)
             {
                 mfVolumeMul = mfVolumeMulFadeGoal;
@@ -305,7 +305,7 @@ void cMusicHandler::Update(float afTimeStep)
         }
         if(mfVolumeMul > mfVolumeMulFadeGoal)
         {
-            mfVolumeMul -= afTimeStep*mfVolumeMulFadeSpeed;
+            mfVolumeMul -= (float)adFixedDelta * mfVolumeMulFadeSpeed;
             if(mfVolumeMul < mfVolumeMulFadeGoal)
             {
                 mfVolumeMul = mfVolumeMulFadeGoal;
@@ -328,7 +328,7 @@ void cMusicHandler::Update(float afTimeStep)
         {
             /////////////////////////////////
             //Update the main song
-            mpMainSong->mfVolume+=mpMainSong->mfVolumeAdd*afTimeStep;
+            mpMainSong->mfVolume+=mpMainSong->mfVolumeAdd * (float)adFixedDelta;
 
             if(mpMainSong->mfVolumeAdd>0)
             {
@@ -360,7 +360,7 @@ void cMusicHandler::Update(float afTimeStep)
     while(it != mlstFadingSongs.end())
     {
         cMusicEntry* pSong = *it;
-        pSong->mfVolume-=pSong->mfVolumeAdd*afTimeStep;
+        pSong->mfVolume-=pSong->mfVolumeAdd * (float)adFixedDelta;
 
         if(pSong->mfVolume<=0)
         {

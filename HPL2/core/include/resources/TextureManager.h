@@ -52,7 +52,7 @@ public:
     void Destroy(iResourceBase* apResource);
     void Unload(iResourceBase* apResource);
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     int GetMemoryUsage()
     {

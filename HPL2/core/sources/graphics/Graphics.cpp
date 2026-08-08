@@ -203,13 +203,13 @@ bool cGraphics::Init(    int alWidth, int alHeight, int alDisplay, int alBpp, bo
 
 //-----------------------------------------------------------------------
 
-void cGraphics::Update(float afTimeStep)
+void cGraphics::Update(double adFixedDelta)
 {
     for(size_t i=0; i< mvRenderers.size(); ++i)
     {
         iRenderer *pRenderer = mvRenderers[i];
 
-        pRenderer->Update(afTimeStep);
+        pRenderer->Update(adFixedDelta);
     }
 }
 

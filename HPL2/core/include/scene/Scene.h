@@ -61,9 +61,9 @@ public:
     /**
      * Called by cEngine
      */
-    void Render(float afFrameTime, tFlag alFlags);
+    void Render(double adFrameTime, tFlag alFlags);
 
-    void PostUpdate(float afTimeStep);
+    void PostUpdate(double adFixedDelta);
 
     ///// VIEW PORT METHODS ////////////////////
 
@@ -87,9 +87,9 @@ public:
 
 
 private:
-    void Render3DGui(cViewport* apViewPort,cFrustum *apFrustum,float afTimeStep);
-    void RenderPrePostEffectScreenGui(cViewport* apViewPort,float afTimeStep);
-    void RenderScreenGui(cViewport* apViewPort, float afTimeStep);
+    void Render3DGui(cViewport* apViewPort,cFrustum *apFrustum,double adFrameTime);
+    void RenderPrePostEffectScreenGui(cViewport* apViewPort,double adFrameTime);
+    void RenderScreenGui(cViewport* apViewPort, double adFrameTime);
 
     cGraphics *mpGraphics;
     cResources *mpResources;

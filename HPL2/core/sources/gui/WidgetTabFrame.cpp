@@ -99,7 +99,7 @@ bool cWidgetTabLabel::OnGetUINavFocus(const cGuiMessageData& aData)
 
 //-------------------------------------------------------------------
 
-void cWidgetTabLabel::OnDraw(float afTimeStep, cGuiClipRegion* apClipRegion)
+void cWidgetTabLabel::OnDraw(double adFixedDelta, cGuiClipRegion* apClipRegion)
 {
     cWidgetTabFrame* pTabFrame = mpParentTab->mpParentTabFrame;
     cVector3f vTextPos = GetGlobalPosition() + cVector3f(pTabFrame->mfTextLeftPadding,2,0.1f);
@@ -357,7 +357,7 @@ void cWidgetTab::OnInit()
 
 //-------------------------------------------------------------------
 
-void cWidgetTab::OnDraw(float afTimeStep, cGuiClipRegion* apClipRegion)
+void cWidgetTab::OnDraw(double adFixedDelta, cGuiClipRegion* apClipRegion)
 {
     DrawBordersAndCorners(mpParentTabFrame->mpGfxTabBG,
                           mpParentTabFrame->mvGfxTabBorders,

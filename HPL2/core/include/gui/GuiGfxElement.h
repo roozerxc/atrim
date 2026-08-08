@@ -53,7 +53,7 @@ public:
     cGuiGfxElement(cGui* apGui);
     ~cGuiGfxElement();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     void AddImage(cFrameSubImage* apImage);
     void AddTexture(iTexture* apTexture, const cVector2f& avStartUV=0, const cVector2f& avEndUV=1);

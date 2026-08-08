@@ -14,21 +14,6 @@ class cEngineInitVars
 {
 public:
     ////////////////////////////////
-    // Game
-    class cEngineVars
-    {
-    public:
-        cEngineVars() :
-            mlUpdateRate(60),
-            mlMaxFramesPerSec(60)
-        {}
-
-        int mlUpdateRate;
-        int mlMaxFramesPerSec;
-    };
-    cEngineVars mGame;
-
-    ////////////////////////////////
     // Graphics
     class cGraphicsVars
     {

@@ -56,7 +56,7 @@ public:
     //General
     void OnSetupAfterLoad(cWorld *apWorld);
     void OnAfterWorldLoad();
-    void UpdateEnemySpecific(float afTimeStep);
+    void UpdateEnemySpecific(double adFixedDelta);
 
     //////////////////////
     //Actions
@@ -126,11 +126,11 @@ private:
     // Helper
     void PlayHuntSound();
     bool InsidePlayerView();
-    void UpdateCheckInLantern(float afTimeStep);
+    void UpdateCheckInLantern(double adFixedDelta);
 
     void SetTeslaEffectsAmount(float afX);
     void ResetMindFuckEffects();
-    void UpdateTesla(float afTimeStep);
+    void UpdateTesla(double adFixedDelta);
 
     //////////////
     //Data

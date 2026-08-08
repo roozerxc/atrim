@@ -30,8 +30,8 @@ public:
     void OnEnterState(eLuxPlayerState aPrevState);
     void OnLeaveState(eLuxPlayerState aNewState);
 
-    void Update(float afTimeStep);
-    void PostUpdate(float afTimeStep);
+    void Update(double adFixedDelta);
+    void PostUpdate(double adFixedDelta);
 
     bool OnDoAction(eLuxPlayerAction aAction,bool abPressed);
 

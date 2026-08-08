@@ -70,7 +70,7 @@ void cLuxMoveState_ClimbLedge::OnLeaveState(eLuxMoveState aNewState)
 
 //-----------------------------------------------------------------------
 
-void cLuxMoveState_ClimbLedge::OnUpdate(float afTimeStep)
+void cLuxMoveState_ClimbLedge::OnUpdate(double adFixedDelta)
 {
     ///////////////////////////////////
     //See at the top of the climbing, if so end
@@ -92,7 +92,7 @@ void cLuxMoveState_ClimbLedge::OnUpdate(float afTimeStep)
     {
         fAdd = mfMaxMovePitchSpeed;
     }
-    mpPlayer->GetCamera()->AddPitch(fAdd * afTimeStep);
+    mpPlayer->GetCamera()->AddPitch(fAdd * (float)adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -140,7 +140,7 @@ void cLuxMoveState_ClimbLedge::OnJump(bool abActive)
 
 //-----------------------------------------------------------------------
 
-void cLuxMoveState_ClimbLedge::OnDraw(float afFrameTime)
+void cLuxMoveState_ClimbLedge::OnDraw(double adFrameTime)
 {
 
 }

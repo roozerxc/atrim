@@ -405,7 +405,7 @@ bool cSoundEntity::GetRemoveWhenOver()
 
 //-----------------------------------------------------------------------
 
-void cSoundEntity::UpdateLogic(float afTimeStep)
+void cSoundEntity::UpdateLogic(double adFixedDelta)
 {
     if(mpSoundHandler->GetSilent())
     {
@@ -414,7 +414,7 @@ void cSoundEntity::UpdateLogic(float afTimeStep)
 
     if(mfSleepCount >0)
     {
-        mfSleepCount -= afTimeStep;
+        mfSleepCount -= (float)adFixedDelta;
         return;
     }
 
@@ -522,7 +522,7 @@ void cSoundEntity::UpdateLogic(float afTimeStep)
                 mvSoundEntries[eSoundEntityType_Start]==NULL &&
                 mvSoundEntries[eSoundEntityType_Main]==NULL)
         {
-            mfIntervalCount += afTimeStep;
+            mfIntervalCount += (float)adFixedDelta;
 
             //if the interval time has elapsed the sound might be played again.
             if(mfIntervalCount >= mpData->GetInterval())

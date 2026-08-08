@@ -29,13 +29,13 @@ public:
     cLuxPlayerState_UseItem(cLuxPlayer *apPlayer);
     virtual ~cLuxPlayerState_UseItem();
 
-    void OnDraw(cGuiSet *apGuiSet,float afFrameTime) {}//Skip any special drawing.
+    void OnDraw(cGuiSet *apGuiSet,double adFrameTime) {}//Skip any special drawing.
 
     void ImplementedOnEnterState(eLuxPlayerState aPrevState);
 
     bool ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed);
 
-    void ImplementedUpdate(float afTimeStep);
+    void ImplementedUpdate(double adFixedDelta);
 
     cGuiGfxElement* GetCrosshair();
     bool OnDrawCrossHair(cGuiGfxElement *apGfx, const cVector3f& avPos, const cVector2f &avSize);

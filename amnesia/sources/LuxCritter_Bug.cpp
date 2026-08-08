@@ -92,9 +92,9 @@ cLuxCritter_Bug::~cLuxCritter_Bug()
 
 //-----------------------------------------------------------------------
 
-void cLuxCritter_Bug::UpdateCritterSpecific(float afTimeStep)
+void cLuxCritter_Bug::UpdateCritterSpecific(double adFixedDelta)
 {
-    UpdateVelocity(afTimeStep);
+    UpdateVelocity(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -105,7 +105,7 @@ void cLuxCritter_Bug::UpdateCritterSpecific(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxCritter_Bug::UpdateVelocity(float afTimeStep)
+void cLuxCritter_Bug::UpdateVelocity(double adFixedDelta)
 {
 
     ///////////////////
@@ -123,7 +123,7 @@ void cLuxCritter_Bug::UpdateVelocity(float afTimeStep)
     // Pause
     if(mbHasRandomPauses && bScared==false)
     {
-        mfPauseCount -= afTimeStep;
+        mfPauseCount -= (float)adFixedDelta;
         if(mfPauseCount < 0)
         {
             if(mbPaused)
@@ -166,7 +166,7 @@ void cLuxCritter_Bug::UpdateVelocity(float afTimeStep)
 
         cVector3f vForce = cMath::MatrixMul(cMath::MatrixRotateY(fAngle),cVector3f(mfWanderCircleRadius,0,0));
 
-        mvVel += (vDir*mfWanderCircleDist + vForce) * afTimeStep;
+        mvVel += (vDir*mfWanderCircleDist + vForce) * (float)adFixedDelta;
 
         ///////////////////
         // Avoid player
@@ -183,7 +183,7 @@ void cLuxCritter_Bug::UpdateVelocity(float afTimeStep)
             cVector3f vWantedVel = cMath::Vector3Normalize(mpBody->GetWorldPosition() - vPlayerPos) * mfMaxSpeed;
 
             cVector3f vForce = (vWantedVel - mvVel) * mfFleeMul * (1.0f/fPlayerDistance);
-            mvVel += vForce * afTimeStep;
+            mvVel += vForce * (float)adFixedDelta;
 
             mfMaxSpeed = mfMaxSpeedAfraid;
         }
@@ -202,19 +202,19 @@ void cLuxCritter_Bug::UpdateVelocity(float afTimeStep)
             vWantedVel.y=0;
 
             cVector3f vForce = (vWantedVel - mvVel) * 0.2f * fSwarmPointDist;
-            mvVel += vForce * afTimeStep;
+            mvVel += vForce * (float)adFixedDelta;
         }
     }
     ///////////////////
     // Stopping
     else
     {
-        mvVel -= mvVel*afTimeStep*3.0f;
+        mvVel -= mvVel * (float)adFixedDelta * 3.0f;
     }
 
     ///////////////////
     // Sound
-    mfPlaySoundCount-=afTimeStep;
+    mfPlaySoundCount -= (float)adFixedDelta;
     if(mfPlaySoundCount < 0)
     {
         mfPlaySoundCount = bScared ? cMath::RandRectf(mvScaredSoundRandMinMax.x, mvScaredSoundRandMinMax.y) :
@@ -233,7 +233,7 @@ void cLuxCritter_Bug::UpdateVelocity(float afTimeStep)
 
     ////////////////////////
     // Gravity
-    mvGravityVel.y -= mfGravity * afTimeStep;
+    mvGravityVel.y -= mfGravity * (float)adFixedDelta;
     mvGravityVel = cMath::Vector3MaxLength(mvGravityVel, 10);
 }
 

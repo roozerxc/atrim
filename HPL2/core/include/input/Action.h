@@ -14,12 +14,12 @@ class iSubAction
 public:
     virtual ~iSubAction() {}
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     /**
     * Update special logic for the action. Normally empty
     */
-    virtual void UpdateLogic(float afTimeStep) {}
+    virtual void UpdateLogic(double adFixedDelta) {}
 
 
     /**
@@ -100,7 +100,7 @@ public:
     /**
     *Update the Action, called by cInput
     */
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     iSubAction *GetSubAction(size_t alIdx)
     {

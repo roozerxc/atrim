@@ -168,24 +168,24 @@ cColor iLight::GetColor()
 
 //-----------------------------------------------------------------------
 
-void iLight::UpdateLight(float afTimeStep)
+void iLight::UpdateLight(double adFixedDelta)
 {
     /////////////////////////////////////////////
     // Fade
     if(mfFadeTime>0)
     {
-        //Log("Fading: %f / %f\n",afTimeStep,mfFadeTime);
+        //Log("Fading: %f / %f\n",(float)adFixedDelta,mfFadeTime);
 
-        float fNewRadius = mfRadius + mfRadiusAdd*afTimeStep;
+        float fNewRadius = mfRadius + mfRadiusAdd*(float)adFixedDelta;
         SetRadius(fNewRadius);
 
-        mDiffuseColor.r += mColAdd.r*afTimeStep;
-        mDiffuseColor.g += mColAdd.g*afTimeStep;
-        mDiffuseColor.b += mColAdd.b*afTimeStep;
-        mDiffuseColor.a += mColAdd.a*afTimeStep;
+        mDiffuseColor.r += mColAdd.r * (float)adFixedDelta;
+        mDiffuseColor.g += mColAdd.g * (float)adFixedDelta;
+        mDiffuseColor.b += mColAdd.b * (float)adFixedDelta;
+        mDiffuseColor.a += mColAdd.a * (float)adFixedDelta;
         SetDiffuseColor(mDiffuseColor);
 
-        mfFadeTime-=afTimeStep;
+        mfFadeTime -= (float)adFixedDelta;
 
         //Set the dest values.
         if(mfFadeTime<=0)
@@ -267,7 +267,7 @@ void iLight::UpdateLight(float afTimeStep)
             }
         }
 
-        mfFlickerTime += afTimeStep;
+        mfFlickerTime += (float)adFixedDelta;
     }
 
     /*Log("Time: %f Length: %f FadeTime: %f Color: (%f %f %f %f)\n",mfFlickerTime, mfFlickerStateLength,
@@ -396,9 +396,9 @@ void iLight::SetRadius(float afX)
 }
 //-----------------------------------------------------------------------
 
-void iLight::UpdateLogic(float afTimeStep)
+void iLight::UpdateLogic(double adFixedDelta)
 {
-    UpdateLight(afTimeStep);
+    UpdateLight(adFixedDelta);
     if(mfFadeTime>0 || mbFlickering)
     {
         mbUpdateBoundingVolume = true;

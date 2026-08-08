@@ -129,7 +129,7 @@ void cLuxPlayerState_InteractPush::OnLeaveState(eLuxPlayerState aNewState)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerState_InteractPush::Update(float afTimeStep)
+void cLuxPlayerState_InteractPush::Update(double adFixedDelta)
 {
     iPhysicsWorld *pPhysicsWorld = gpBase->mpMapHandler->GetCurrentMap()->GetWorld()->GetPhysicsWorld();
     iCharacterBody *pCharBody = mpPlayer->GetCharacterBody();
@@ -172,7 +172,7 @@ void cLuxPlayerState_InteractPush::Update(float afTimeStep)
         cVector3f vBodyVel = mpPushData->mbPushAtPoint ?  mpCurrentBody->GetVelocityAtPosition(vAttachPos) : mpCurrentBody->GetLinearVelocity();
         cVector3f vVelError = cVector3f(0) - vBodyVel;
         vVelError.y =0; //Skip fixing y and concentrate on ground plane.
-        cVector3f vForce = mStopVelocityPid.Output(vVelError,afTimeStep) * mpCurrentBody->GetMass();
+        cVector3f vForce = mStopVelocityPid.Output(vVelError,adFixedDelta) * mpCurrentBody->GetMass();
 
         vForce = cMath::Vector3MaxLength(vForce, mfMaxForce);
 
@@ -200,7 +200,7 @@ void cLuxPlayerState_InteractPush::Update(float afTimeStep)
     mVelocityPid.d = 0.2f;
     cVector3f vVelError = vVelInDir - vBodyVel;
     vVelError.y =0; //Skip fixing y and concentrate on ground plane.
-    cVector3f vCorrectForce = mVelocityPid.Output(vVelError,afTimeStep) * mpCurrentBody->GetMass();
+    cVector3f vCorrectForce = mVelocityPid.Output(vVelError,adFixedDelta) * mpCurrentBody->GetMass();
 
     vCorrectForce = cMath::Vector3MaxLength(vCorrectForce, mfMaxForce);
 
@@ -303,7 +303,7 @@ void cLuxPlayerState_InteractPush::Update(float afTimeStep)
 
 }
 
-void cLuxPlayerState_InteractPush::PostUpdate(float afTimeStep)
+void cLuxPlayerState_InteractPush::PostUpdate(double adFixedDelta)
 {
     ClearMoveVars();
 }

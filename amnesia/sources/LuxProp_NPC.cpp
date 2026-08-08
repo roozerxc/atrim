@@ -173,11 +173,11 @@ void cLuxProp_NPC::OnResetProperties()
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_NPC::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_NPC::UpdatePropSpecific(double adFixedDelta)
 {
-    UpdateWakeState(afTimeStep);
-    UpdateCheckPlayerIsInArea(afTimeStep);
-    UpdateHeadMovement(afTimeStep);
+    UpdateWakeState(adFixedDelta);
+    UpdateCheckPlayerIsInArea(adFixedDelta);
+    UpdateHeadMovement(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -248,7 +248,7 @@ void cLuxProp_NPC::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_NPC::UpdateWakeState(float afTimeStep)
+void cLuxProp_NPC::UpdateWakeState(double adFixedDelta)
 {
     if(mbPlayingWakeAnim==false)
     {
@@ -272,7 +272,7 @@ void cLuxProp_NPC::UpdateWakeState(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_NPC::UpdateCheckPlayerIsInArea(float afTimeStep)
+void cLuxProp_NPC::UpdateCheckPlayerIsInArea(double adFixedDelta)
 {
     if(mpFollowPlayerArea==NULL)
     {
@@ -281,7 +281,7 @@ void cLuxProp_NPC::UpdateCheckPlayerIsInArea(float afTimeStep)
 
     ///////////////////////
     // Only check twice per second.
-    mfInAreaCount -= afTimeStep;
+    mfInAreaCount -= (float)adFixedDelta;
     if(mfInAreaCount > 0)
     {
         return;
@@ -295,7 +295,7 @@ void cLuxProp_NPC::UpdateCheckPlayerIsInArea(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_NPC::UpdateHeadMovement(float afTimeStep)
+void cLuxProp_NPC::UpdateHeadMovement(double adFixedDelta)
 {
     ////////////////////////////////
     // Calculate angle to player
@@ -336,7 +336,7 @@ void cLuxProp_NPC::UpdateHeadMovement(float afTimeStep)
         //Calculate the turn speed and clamp to max
         float fTurnSpeed = cMath::Clamp(mfHeadMoveSpeedMul * fAngleDist, -mfHeadMoveMaxSpeed, mfHeadMoveMaxSpeed);
 
-        mfHeadAngle += fTurnSpeed * afTimeStep;
+        mfHeadAngle += fTurnSpeed * (float)adFixedDelta;
     }
 
     ////////////////////////////////

@@ -24,14 +24,14 @@ public:
 
     void ImplementedReset();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     bool DoAction(eLuxPlayerAction aAction, bool abPressed);
     bool AnimationIsOver();
 
 private:
-    void UpdateCharge(float afTimeStep);
-    void UpdateCheckDamageEvent(float afTimeStep);
+    void UpdateCharge(double adFixedDelta);
+    void UpdateCheckDamageEvent(double adFixedDelta);
 
 
     void Charge();

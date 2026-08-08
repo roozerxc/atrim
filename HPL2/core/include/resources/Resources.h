@@ -174,7 +174,7 @@ public:
 
     void Init(cGraphics* apGraphics,cSystem *apSystem, cSound* apSound, cScene *apScene, cGui *apGui, cPhysics *apPhysics);
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     iLowLevelResources* GetLowLevel();
     cFileSearcher* GetFileSearcher();

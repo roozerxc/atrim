@@ -49,7 +49,7 @@ protected:
 
     ////////////////////////
     // Implemented functions
-    void DrawItems(float afTimeStep, cGuiClipRegion* apClipRegion);
+    void DrawItems(double adFixedDelta, cGuiClipRegion* apClipRegion);
 
     void OnLoadGraphics();
 

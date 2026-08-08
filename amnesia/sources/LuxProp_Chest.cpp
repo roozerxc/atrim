@@ -187,7 +187,7 @@ void cLuxProp_Chest::OnResetProperties()
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Chest::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_Chest::UpdatePropSpecific(double adFixedDelta)
 {
 
 }
@@ -243,7 +243,7 @@ void cLuxProp_Chest::OnDamage(float afAmount, int alStrength)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Chest::InFocusDraw(cGuiSet *apGuiSet, float afFrameTime)
+void cLuxProp_Chest::InFocusDraw(cGuiSet *apGuiSet, double adFrameTime)
 {
 
 }

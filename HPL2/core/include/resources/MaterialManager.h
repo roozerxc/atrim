@@ -21,7 +21,7 @@ public:
 
     cMaterial* CreateMaterial(const tString& asName);
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     void Destroy(iResourceBase* apResource);
     void Unload(iResourceBase* apResource);

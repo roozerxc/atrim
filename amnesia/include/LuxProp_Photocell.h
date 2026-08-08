@@ -37,7 +37,7 @@ public:
 
     void OnResetProperties();
 
-    void UpdatePropSpecific(float afTimeStep);
+    void UpdatePropSpecific(double adFixedDelta);
 
     void BeforePropDestruction();
 
@@ -59,7 +59,7 @@ public:
 
 
 private:
-    void UpdateLightLevel(float afTimeStep);
+    void UpdateLightLevel(double adFixedDelta);
 
     //General
 

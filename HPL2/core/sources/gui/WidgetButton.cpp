@@ -119,7 +119,7 @@ void cWidgetButton::OnLoadGraphics()
 
 //-----------------------------------------------------------------------
 
-void cWidgetButton::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
+void cWidgetButton::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     cVector3f vOffset = 0;
     if(mbPressed)
@@ -177,11 +177,11 @@ void cWidgetButton::OnDraw(float afTimeStep, cGuiClipRegion *apClipRegion)
 
 //-----------------------------------------------------------------------
 
-void cWidgetButton::OnUpdate(float afTimeStep)
+void cWidgetButton::OnUpdate(double adFixedDelta)
 {
     if(mbPressed && mbRepeatActive)
     {
-        mfTimer+=afTimeStep;
+        mfTimer+=(float)adFixedDelta;
 
         if(mfTimer>mfRepeatPeriod)
         {

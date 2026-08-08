@@ -120,12 +120,12 @@ void cLuxLoadScreenHandler::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxLoadScreenHandler::Update(float afTimeStep)
+void cLuxLoadScreenHandler::Update(double adFixedDelta)
 {
     switch(mState)
     {
     case eLuxLoadScreenState_Game:
-        UpdateGameState(afTimeStep);
+        UpdateGameState(adFixedDelta);
         break;
     }
 }
@@ -150,12 +150,12 @@ void cLuxLoadScreenHandler::OnLeaveContainer(const tString& asNewContainer)
 
 //-----------------------------------------------------------------------
 
-void cLuxLoadScreenHandler::OnDraw(float afFrameTime)
+void cLuxLoadScreenHandler::OnDraw(double adFrameTime)
 {
     switch(mState)
     {
     case eLuxLoadScreenState_Game:
-        DrawGameState(afFrameTime);
+        DrawGameState(adFrameTime);
         break;
     }
 }
@@ -362,13 +362,13 @@ void cLuxLoadScreenHandler::LoadCurrentImage(const tString &asImage)
 //-----------------------------------------------------------------------
 
 
-void cLuxLoadScreenHandler::UpdateGameState(float afTimeStep)
+void cLuxLoadScreenHandler::UpdateGameState(double adFixedDelta)
 {
     ////////////////////////////
     // LoadAlpha
     if(mfLoadingAlpha >0)
     {
-        mfLoadingAlpha -= afTimeStep*0.33f;
+        mfLoadingAlpha -= (float)adFixedDelta*0.33f;
         if(mfLoadingAlpha<0)
         {
             mfLoadingAlpha =0;
@@ -379,13 +379,13 @@ void cLuxLoadScreenHandler::UpdateGameState(float afTimeStep)
     // Update extra time
     if(mfExtraTime > 0)
     {
-        mfExtraTime -= afTimeStep;
+        mfExtraTime -= (float)adFixedDelta;
         return;
     }
 
     ////////////////////////////
     // Alpha
-    mfAlpha -= afTimeStep * (1.0f/mfFadeOutTime);
+    mfAlpha -= (float)adFixedDelta * (1.0f/mfFadeOutTime);
     if(mfAlpha<0)
     {
         mfAlpha =0;
@@ -395,7 +395,7 @@ void cLuxLoadScreenHandler::UpdateGameState(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxLoadScreenHandler::DrawGameState(float afFrameTime)
+void cLuxLoadScreenHandler::DrawGameState(double adFrameTime)
 {
     mpGuiSet->DrawGfx(mpWhiteGfx, cVector3f(mvGuiSetStartPos.x,mvGuiSetStartPos.y,-1), mvGuiSetSize, cColor(0, 1));
 

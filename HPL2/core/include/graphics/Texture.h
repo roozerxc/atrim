@@ -23,7 +23,7 @@ public:
           mlMemorySize(0),
           mPixelFormat(ePixelFormat_Unknown),
           mWrapS(eTextureWrap_Repeat), mWrapT(eTextureWrap_Repeat),mWrapR(eTextureWrap_Repeat),
-          mfFrameTime(1), mAnimMode(eTextureAnimMode_Loop), mlSizeDownScaleLevel(0), mvMinDownScaleSize(16,16,16),
+          dFrameTime(1), mAnimMode(eTextureAnimMode_Loop), mlSizeDownScaleLevel(0), mvMinDownScaleSize(16,16,16),
           mfAnisotropyDegree(1.0f),mFilter(eTextureFilter_Bilinear),
           mCompareMode(eTextureCompareMode_None),
           mCompareFunc(eTextureCompareFunc_LessOrEqual)
@@ -46,7 +46,7 @@ public:
     virtual void SetRawData(    int alLevel, const cVector3l& avOffset, const cVector3l& avSize,
                                 ePixelFormat aPixelFormat, void *apData)=0;
 
-    virtual void Update(float afTimeStep)=0;
+    virtual void Update(double adFixedDelta)=0;
 
     inline ePixelFormat GetPixelFormat() const
     {
@@ -128,13 +128,13 @@ public:
         return mlMemorySize;
     }
 
-    void SetFrameTime(float afX)
+    void SetFrameTime(double adX)
     {
-        mfFrameTime = afX;
+        dFrameTime = adX;
     }
-    float GetFrameTime()
+    double GetFrameTime()
     {
-        return mfFrameTime;
+        return dFrameTime;
     }
 
     eTextureAnimMode GetAnimMode()
@@ -212,7 +212,7 @@ protected:
     bool mbIsCompressed;
     ePixelFormat mPixelFormat;
     iLowLevelGraphics* mpLowLevelGraphics;
-    float mfFrameTime;
+    double dFrameTime;
     eTextureAnimMode mAnimMode;
 
     unsigned int mlSizeDownScaleLevel;

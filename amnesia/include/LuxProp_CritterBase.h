@@ -98,7 +98,7 @@ public:
 
     void OnResetProperties();
 
-    void UpdatePropSpecific(float afTimeStep);
+    void UpdatePropSpecific(double adFixedDelta);
 
     void BeforePropDestruction();
 
@@ -132,8 +132,8 @@ protected:
     virtual void OnDamageCritter(float afAmount) {}
     virtual void OnKillCritter() {}
 
-    virtual void UpdateCritterSpecific(float afTimeStep)=0;
-    virtual void OnShapeCollision(const cVector3f& avPushVec, float afTimeStep) {}
+    virtual void UpdateCritterSpecific(double adFixedDelta)=0;
+    virtual void OnShapeCollision(const cVector3f& avPushVec, double adFixedDelta) {}
 
     void CreateOrthoVectors(cVector3f &avRight, cVector3f& avUp, cVector3f &avForward);
     float GetDistanceToPlayer();
@@ -142,14 +142,14 @@ protected:
     cMatrixf GetAttackMatrix(const cVector3f& avDir);
     bool Attack(const cVector3f& avDir);
 
-    cVector3f GetWanderAdd(float afLength, float afRadius, float afTimeStep);
-    cVector3f GetTowardPlayerAdd(bool abDependOnDistance, float afTimeStep);
+    cVector3f GetWanderAdd(float afLength, float afRadius, double adFixedDelta);
+    cVector3f GetTowardPlayerAdd(bool abDependOnDistance, double adFixedDelta);
 
-    void UpdateMesh(float afTimeStep);
-    void UpdateMovement(float afTimeStep);
+    void UpdateMesh(double adFixedDelta);
+    void UpdateMovement(double adFixedDelta);
 
-    void CheckRayCollision(const cVector3f& avVelAdd,const cVector3f& avGravityAdd, float afTimeStep);
-    void CheckShapeCollision(const cVector3f& avVelAdd,const cVector3f& avGravityAdd, float afTimeStep);
+    void CheckRayCollision(const cVector3f& avVelAdd,const cVector3f& avGravityAdd, double adFixedDelta);
+    void CheckShapeCollision(const cVector3f& avVelAdd,const cVector3f& avGravityAdd, double adFixedDelta);
 
     //Data
     bool mbUseRayCollision;

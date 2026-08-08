@@ -219,7 +219,7 @@ public:
     //General
     void SetupAfterLoad(cWorld *apWorld);
 
-    void OnUpdate(float afTimeStep);
+    void OnUpdate(double adFixedDelta);
 
     virtual float OnInteractDebugDraw(cGuiSet *apSet,iFontData *apFont, float afStartY)
     {
@@ -398,31 +398,31 @@ protected:
     virtual void OnResetProperties()=0;
 
     virtual void OnSetupAfterLoad(cWorld *apWorld)=0;
-    virtual void UpdatePropSpecific(float afTimeStep)=0;
+    virtual void UpdatePropSpecific(double adFixedDelta)=0;
     virtual void ImplementedOnSetActive(bool abX) {}
     virtual void BeforePropDestruction() {}
 
     virtual void OnStartMove() {}
 
-    void UpdateAttachedProps(float afTimeStep, bool abForceUpdate);
+    void UpdateAttachedProps(double adFixedDelta, bool abForceUpdate);
 
-    void UpdateAnimation(float afTimeStep);
+    void UpdateAnimation(double adFixedDelta);
 
     void SetupEffectData();
     bool BillboardConnectedToLight(cBillboard *apBB);
-    void UpdateEffectFading(float afTimeStep);
+    void UpdateEffectFading(double adFixedDelta);
 
     void UpdateMoveSoundVolume();
 
-    void UpdateMoving(float afTimeStep);
-    void UpdateLinearMoving(float afTimeStep);
-    void UpdateAngularMoving(float afTimeStep);
+    void UpdateMoving(double adFixedDelta);
+    void UpdateLinearMoving(double adFixedDelta);
+    void UpdateAngularMoving(double adFixedDelta);
 
-    void UpdateMeshFading(float afTimeStep);
+    void UpdateMeshFading(double adFixedDelta);
 
-    void CheckMoveCollision(cVector3f& avMoveVel, float &afSpeed, float afTimeStep);
+    void CheckMoveCollision(cVector3f& avMoveVel, float &afSpeed, double adFixedDelta);
 
-    void UpdateCheckIfOutsidePlayer(float afTimeStep);
+    void UpdateCheckIfOutsidePlayer(double adFixedDelta);
 
     cVector3f GetWorldCenterPos();
 

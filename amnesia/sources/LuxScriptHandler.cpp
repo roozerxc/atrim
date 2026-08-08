@@ -23,7 +23,6 @@
 #include "LuxLoadScreenHandler.h"
 #include "LuxInsanityHandler.h"
 #include "LuxCredits.h"
-#include "LuxDemoEnd.h"
 
 #include "LuxProp_Object.h"
 #include "LuxProp_SwingDoor.h"
@@ -45,10 +44,6 @@
 #include "LuxItemType.h"
 
 #include "LuxInteractConnections.h"
-
-#include "LuxAchievementHandler.h"
-
-
 
 //////////////////////////////////////////////////////////////////////////
 // CONSTRUCTORS
@@ -99,14 +94,14 @@ void cLuxScriptHandler::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxScriptHandler::Update(float afTimeStep)
+void cLuxScriptHandler::Update(double adFixedDelta)
 {
 }
 
 //-----------------------------------------------------------------------
 
 
-void cLuxScriptHandler::OnDraw(float afFrameTime)
+void cLuxScriptHandler::OnDraw(double adFrameTime)
 {
 
 }
@@ -399,8 +394,6 @@ void cLuxScriptHandler::InitScriptFunctions()
 
     AddFunc("void StartCredits(string &in asMusic, bool abLoopMusic, string &in asTextCat, string &in asTextEntry, int alEndNum)",(void *)StartCredits);
     AddFunc("void AddKeyPart(int alKeyPart)", (void *)AddKeyPart);
-
-    AddFunc("void StartDemoEnd()",(void *)StartDemoEnd);
 
     AddFunc("void AutoSave()", (void *)AutoSave);
     AddFunc("void CheckPoint(string &in asName,string &in asStartPos ,string &in asCallback, string &in asDeathHintCat, string &in asDeathHintEntry)", (void *)CheckPoint);
@@ -1039,16 +1032,6 @@ void __stdcall cLuxScriptHandler::AddKeyPart(int alKeyPart)
 
 //-----------------------------------------------------------------------
 
-void __stdcall cLuxScriptHandler::StartDemoEnd()
-{
-    if(gpBase->mpDemoEnd)
-    {
-        gpBase->mpEngine->GetUpdater()->SetContainer("DemoEnd");
-    }
-}
-
-//-----------------------------------------------------------------------
-
 void __stdcall cLuxScriptHandler::AutoSave()
 {
     gpBase->mpSaveHandler->AutoSave();
@@ -1328,47 +1311,7 @@ bool __stdcall cLuxScriptHandler::InsanityEventIsActive()
 #pragma optimize("", off)
 void __stdcall cLuxScriptHandler::UnlockAchievement(string& asName)
 {
-    bool bUnlockHardmode = false;
-
-    if (asName == "Benefactor")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Benefactor);
-        bUnlockHardmode = true;
-    }
-    else if (asName == "Survivor")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Survivor);
-        bUnlockHardmode = true;
-    }
-    else if (asName == "Sacrifice")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Sacrifice);
-        bUnlockHardmode = true;
-    }
-    else if (asName == "Quitter")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Quitter);
-    }
-    else if (asName == "Egotist")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Egotist);
-    }
-    else if (asName == "Altruist")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Altruist);
-    }
-    else if (asName == "Vacillator")
-    {
-        gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Vacillator);
-    }
-
-    if (gpBase->mbHardMode)
-    {
-        if (bUnlockHardmode)
-        {
-            gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Masochist);
-        }
-    }
+    // 0x48, 0x90 - XCHG EAX,EAX
 }
 #pragma optimize("",on)
 
@@ -1853,19 +1796,6 @@ void __stdcall cLuxScriptHandler::CompleteQuest(string& asName, string& asNameAn
         if(pMap)
         {
             pMap->AddCompletionAmount(gpBase->mpCompletionCountHandler->mlQuestCompletionValue, 6.0f);
-        }
-
-        if (asName == "02Web")
-        {
-            gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Alchemist);
-        }
-        else if (asName == "SewerFlooded")
-        {
-            gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Pipeworker);
-        }
-        else if (asName == "21FindOrb")
-        {
-            gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_Restorer);
         }
     }
 }

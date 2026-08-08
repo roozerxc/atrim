@@ -72,7 +72,7 @@ public:
     iPhysicsController(const tString &asName, iPhysicsWorld *apWorld);
     virtual ~iPhysicsController();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     const tString& GetName()
     {
@@ -191,7 +191,7 @@ public:
 
 protected:
     cVector3f GetInputValue(ePhysicsControllerInput aInput);
-    float GetOutputValue(float afError,float afInput, float afTimeStep);
+    float GetOutputValue(float afError,float afInput, double adFixedDelta);
     void AddOutputValue(ePhysicsControllerOutput aOutput, ePhysicsControllerAxis aAxis,
                         float afVal);
     float GetAxisValue(ePhysicsControllerAxis aAxis, const cVector3f &avVec);

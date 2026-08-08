@@ -112,7 +112,7 @@ public:
 
     cMusicEntry* GetCurrentSong();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     void ResetResumeData();
 

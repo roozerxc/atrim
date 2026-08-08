@@ -353,7 +353,7 @@ void cMeshEntity::UpdateNodeMatrixRec(cNode3D *apNode)
 
 //-----------------------------------------------------------------------
 
-void cMeshEntity::UpdateLogic(float afTimeStep)
+void cMeshEntity::UpdateLogic(double adFixedDelta)
 {
     if(mbStatic)
     {
@@ -364,7 +364,7 @@ void cMeshEntity::UpdateLogic(float afTimeStep)
     //Update the skeleton physics fade
     if(mbSkeletonPhysicsFading && mbSkeletonPhysics)
     {
-        mfSkeletonPhysicsWeight -= afTimeStep * mfSkeletonPhysicsFadeSpeed;
+        mfSkeletonPhysicsWeight -= (float)adFixedDelta * mfSkeletonPhysicsFadeSpeed;
         if(mfSkeletonPhysicsWeight <= 0)
         {
             mbSkeletonPhysicsFading = false;
@@ -522,7 +522,7 @@ void cMeshEntity::UpdateLogic(float afTimeStep)
                     }
 
 
-                    pAnimState->Update(afTimeStep);
+                    pAnimState->Update(adFixedDelta);
                 }
             }
 
@@ -626,7 +626,7 @@ void cMeshEntity::UpdateLogic(float afTimeStep)
                             }
                         }
 
-                        pAnimState->Update(afTimeStep);
+                        pAnimState->Update(adFixedDelta);
                     }
                 }
 
@@ -665,7 +665,7 @@ void cMeshEntity::UpdateLogic(float afTimeStep)
         //Call callback
         if(mpCallback )
         {
-            mpCallback->AfterAnimationUpdate(this,afTimeStep);
+            mpCallback->AfterAnimationUpdate(this,adFixedDelta);
         }
     }
 
@@ -675,7 +675,7 @@ void cMeshEntity::UpdateLogic(float afTimeStep)
     {
         cSubMeshEntity *pSub = mvSubMeshes[i];
 
-        pSub->UpdateLogic(afTimeStep);
+        pSub->UpdateLogic(adFixedDelta);
     }
 
     /////////////////////////////////////////
@@ -1229,7 +1229,7 @@ int cMeshEntity::GetSubMeshEntityNum()
 
 //-----------------------------------------------------------------------
 
-void cMeshEntity::UpdateGraphicsForFrame(float afFrameTime)
+void cMeshEntity::UpdateGraphicsForFrame(double adFrameTime)
 {
     //////////////////////////////////////////
     //Check so update is needed

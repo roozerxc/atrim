@@ -18,33 +18,12 @@
 #include "LuxMainMenu_LoadGame.h"
 #include "LuxMainMenu_CustomStory.h"
 
-#include "LuxDemoEnd.h"
 #include <sstream>
-#include "LuxAchievementHandler.h"
+
+// If you have VS2005 keep this! Otherwise remove if you are using VS2012+!
+#include "../sources/LuxNullptrCpp98.cpp"
 
 //--------------------------------------------------------------------------------
-
-const
-class nullptr_t
-{
-public:
-    template<class T>
-    operator T*() const
-    {
-        return 0;
-    }
-
-    template<class C, class T>
-    operator T C::*() const
-    {
-        return 0;
-    }
-
-private:
-    void operator&() const;
-}
-
-nullptr = {};
 
 static const bool gbDebug_SkipBGScene = false;
 static const bool gbDebug_FastLoadOptions = false;
@@ -442,7 +421,7 @@ void cLuxMainMenu::OnLeaveContainer(const tString& asNewContainer)
 
 //-----------------------------------------------------------------------
 
-void cLuxMainMenu::Update(float afTimeStep)
+void cLuxMainMenu::Update(double adFixedDelta)
 {
     //Log("Update start!\n");
     //Log("1\n");
@@ -459,9 +438,9 @@ void cLuxMainMenu::Update(float afTimeStep)
     }
 
     //Log("2\n");
-    UpdateBase(afTimeStep);
+    UpdateBase(adFixedDelta);
     //Log("3\n");
-    UpdateTopMenu(afTimeStep);
+    UpdateTopMenu(adFixedDelta);
     //Log("Update end!\n");
 
     //mpViewport->GetRenderSettings()->mbLog = true;
@@ -470,7 +449,7 @@ void cLuxMainMenu::Update(float afTimeStep)
 //-----------------------------------------------------------------------
 
 
-void cLuxMainMenu::OnDraw(float afFrameTime)
+void cLuxMainMenu::OnDraw(double adFrameTime)
 {
     /////////////////////////////////
     //Screen background
@@ -514,7 +493,7 @@ void cLuxMainMenu::OnDraw(float afFrameTime)
 
 //-----------------------------------------------------------------------
 
-void cLuxMainMenu::OnPostRender(float afFrameTime)
+void cLuxMainMenu::OnPostRender(double adFrameTime)
 {
     //Debug:
     //Turn of logging so it only happens one frame?
@@ -653,21 +632,12 @@ void cLuxMainMenu::ExitMenu(eLuxMainMenuExit aMessage)
     mpGuiSet->SetDrawMouse(false);
     mpGui->SetFocus(NULL);
 
-    if(    aMessage == eLuxMainMenuExit_ContinueGame ||
-            aMessage == eLuxMainMenuExit_StartGame)
+    if(aMessage == eLuxMainMenuExit_ContinueGame ||
+        aMessage == eLuxMainMenuExit_StartGame)
     {
         if(msZoomSound != "")
         {
             gpBase->mpEngine->GetSound()->GetSoundHandler()->PlayGui(msZoomSound, false,1.0f);
-        }
-    }
-
-    if (aMessage == eLuxMainMenuExit_QuitToMenu || aMessage == eLuxMainMenuExit_QuitAndSave)
-    {
-        tString mapName = gpBase->mpMapHandler->GetCurrentMap()->GetName();
-        if (mapName == "00_rainy_hall" || mapName == "01_old_archives")
-        {
-            gpBase->mpAchievementHandler->UnlockAchievement(eLuxAchievement_NOPE);
         }
     }
 }
@@ -681,16 +651,7 @@ void cLuxMainMenu::OnMenuExit()
     ////////////////
     // Quit Game
     case eLuxMainMenuExit_QuitGame:
-
-        if(gpBase->mpDemoEnd && gpBase->mpDemoEnd->ShowOnAllExit())
-        {
-            gpBase->mpEngine->GetUpdater()->SetContainer("DemoEnd");
-        }
-        else
-        {
-            gpBase->mpEngine->Exit();
-        }
-
+        gpBase->mpEngine->Exit();
         break;
     ////////////////
     // Return To Game
@@ -791,7 +752,7 @@ void cLuxMainMenu::OnMenuExit()
 
 //-----------------------------------------------------------------------
 
-void cLuxMainMenu::UpdateBase(float afTimeStep)
+void cLuxMainMenu::UpdateBase(double adFixedDelta)
 {
     //////////////////////////
     //Exiting the main menu
@@ -817,7 +778,7 @@ void cLuxMainMenu::UpdateBase(float afTimeStep)
         //Fade or exit!
         if(mfMenuFadeAlpha < 1.0f)
         {
-            mfMenuFadeAlpha += afTimeStep * (1.0f/fFadeSpeed);
+            mfMenuFadeAlpha += (float)adFixedDelta * (1.0f/fFadeSpeed);
             if(mfMenuFadeAlpha > 1.0f)
             {
                 mfMenuFadeAlpha =1.0f;
@@ -836,7 +797,7 @@ void cLuxMainMenu::UpdateBase(float afTimeStep)
     {
         if(mfMenuFadeAlpha > 0.0f)
         {
-            mfMenuFadeAlpha -= afTimeStep * (1.0f/mfMainFadeInTime);
+            mfMenuFadeAlpha -= (float)adFixedDelta * (1.0f/mfMainFadeInTime);
             if(mfMenuFadeAlpha < 0.0f)
             {
                 mfMenuFadeAlpha =0;
@@ -847,7 +808,7 @@ void cLuxMainMenu::UpdateBase(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxMainMenu::UpdateTopMenu(float afTimeStep)
+void cLuxMainMenu::UpdateTopMenu(double adFixedDelta)
 {
     bool bAlphaChanged = false;
 
@@ -857,7 +818,7 @@ void cLuxMainMenu::UpdateTopMenu(float afTimeStep)
     {
         if(mfTopMenuAlpha < 1.0f)
         {
-            mfTopMenuAlpha += afTimeStep * (1.0f/mfTopMenuFadeInTime);
+            mfTopMenuAlpha += (float)adFixedDelta * (1.0f/mfTopMenuFadeInTime);
             if(mfTopMenuAlpha >1)
             {
                 mfTopMenuAlpha =1;
@@ -871,7 +832,7 @@ void cLuxMainMenu::UpdateTopMenu(float afTimeStep)
     {
         if(mfTopMenuAlpha > 0.0f)
         {
-            mfTopMenuAlpha -= afTimeStep * (1.0f/mfTopMenuFadeOutTime);
+            mfTopMenuAlpha -= (float)adFixedDelta * (1.0f/mfTopMenuFadeOutTime);
             if(mfTopMenuAlpha <0)
             {
                 mfTopMenuAlpha =0;
@@ -914,7 +875,7 @@ void cLuxMainMenu::UpdateTopMenu(float afTimeStep)
 
     if (mbFadeInDescription)
     {
-        mfDescriptionAlpha += afTimeStep;
+        mfDescriptionAlpha += (float)adFixedDelta;
         if (mfDescriptionAlpha > 1.0f)
         {
             mfDescriptionAlpha = 1.0f;
@@ -922,7 +883,7 @@ void cLuxMainMenu::UpdateTopMenu(float afTimeStep)
     }
     else
     {
-        mfDescriptionAlpha -= afTimeStep;
+        mfDescriptionAlpha -= (float)adFixedDelta;
         if (mfDescriptionAlpha < 0.5f)
         {
             mfDescriptionAlpha = 0.5f;
@@ -1538,12 +1499,10 @@ void cLuxMainMenu::DestroyBackground()
 
 bool cLuxMainMenu::TopMenuTextMouseEnter(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if (mbTopMenuVisible)
+    if(mbTopMenuVisible)
     {
         mpGuiSet->SetFocusedWidget(apWidget);
     }
-
-    //apWidget->SetDefaultFontColor(cColor(232.0f/255.0f, 201.0f/255.0f, 28.0f/255.0f, mfTopMenuAlpha));
 
     return true;
 }
@@ -1558,7 +1517,7 @@ bool cLuxMainMenu::TopMenuTextMouseLeave(iWidget* apWidget, const cGuiMessageDat
             mpGuiSet->SetFocusedWidget(NULL);
         }
     }
-    //apWidget->SetDefaultFontColor(cColor(1.0f, mfTopMenuAlpha));
+
     return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, TopMenuTextMouseLeave);
@@ -1574,6 +1533,7 @@ bool cLuxMainMenu::TopMenuTextPress(iWidget* apWidget, const cGuiMessageData& aD
         ExitPressed();
         return true;
     }
+
     return false;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, TopMenuTextPress);

@@ -350,11 +350,11 @@ void cLuxAlphaFader::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxAlphaFader::Update(float afTimeStep)
+void cLuxAlphaFader::Update(double adFixedDelta)
 {
     if(mbActive)
     {
-        mfAlpha += mfFadeInSpeed*afTimeStep;
+        mfAlpha += mfFadeInSpeed * (float)adFixedDelta;
         if(mfAlpha > 1.0f)
         {
             mfAlpha = 1.0f;
@@ -362,7 +362,7 @@ void cLuxAlphaFader::Update(float afTimeStep)
     }
     else
     {
-        mfAlpha -= mfFadeOutSpeed*afTimeStep;
+        mfAlpha -= mfFadeOutSpeed * (float)adFixedDelta;
         if(mfAlpha < 0)
         {
             mfAlpha = 0;

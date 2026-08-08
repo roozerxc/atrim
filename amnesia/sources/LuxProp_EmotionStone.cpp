@@ -105,7 +105,7 @@ void cLuxProp_EmotionStone::OnResetProperties()
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_EmotionStone::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_EmotionStone::UpdatePropSpecific(double adFixedDelta)
 {
 
 }

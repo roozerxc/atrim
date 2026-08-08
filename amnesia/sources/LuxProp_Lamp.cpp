@@ -96,7 +96,7 @@ cLuxLampLightConnection::~cLuxLampLightConnection()
 
 //-----------------------------------------------------------------------
 
-void cLuxLampLightConnection::Update(float afTimeStep)
+void cLuxLampLightConnection::Update(double adFixedDelta)
 {
     cColor finalColor = mpLight->GetDefaultDiffuseColor();
 
@@ -264,7 +264,7 @@ void cLuxProp_Lamp::OnSetupAfterLoad(cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Lamp::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_Lamp::UpdatePropSpecific(double adFixedDelta)
 {
     if(mbLightConnectionSetup == false)
     {

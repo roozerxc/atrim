@@ -27,8 +27,8 @@ public:
 
     void Reset();
 
-    void BroadcastMessageToAll(eUpdateableMessage aMessage, float afX=0);
-    void RunMessage(eUpdateableMessage aMessage, float afX=0);
+    void BroadcastMessageToAll(eUpdateableMessage aMessage, double adX=0);
+    void RunMessage(eUpdateableMessage aMessage, double adX=0);
 
     /**
      * Sets the active update container to be used.

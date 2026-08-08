@@ -23,7 +23,7 @@ public:
     virtual void OnEnterState(eLuxMoveState aPrevState)=0;
     virtual void OnLeaveState(eLuxMoveState aNewState)=0;
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     virtual bool GetAllowsInteraction()=0;
 
@@ -35,10 +35,10 @@ public:
     virtual void OnCrouch(bool abActive)=0;
     virtual void OnJump(bool abActive)=0;
 
-    virtual void OnDraw(float afFrameTime)=0;
+    virtual void OnDraw(double adFrameTime)=0;
 
 protected:
-    virtual void OnUpdate(float afTimeStep)=0;
+    virtual void OnUpdate(double adFixedDelta)=0;
 
     cLuxPlayer *mpPlayer;
 

@@ -76,11 +76,11 @@ void cLuxGlobalDataHandler::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxGlobalDataHandler::Update(float afTimeStep)
+void cLuxGlobalDataHandler::Update(double adFixedDelta)
 {
     if(mfEnemyActivateSoundCount>0)
     {
-        mfEnemyActivateSoundCount-=afTimeStep;
+        mfEnemyActivateSoundCount -= (float)adFixedDelta;
     }
 }
 

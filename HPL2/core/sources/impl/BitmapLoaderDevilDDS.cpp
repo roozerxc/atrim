@@ -102,8 +102,7 @@ cBitmap* cBitmapLoaderDevilDDS::LoadBitmap(const tWString& asFile, tBitmapLoadFl
 
     //////////////////////////////////////////////////
     // Load compressed image
-    if(    lDXTFormat != IL_DXT_NO_COMP && //mpLowLevelGraphics->GetCaps(eGraphicCaps_TextureCompression_DXTC) &&
-            (aFlags & eBitmapLoadFlag_ForceNoCompression)==0 )
+    if(lDXTFormat != IL_DXT_NO_COMP && (aFlags & eBitmapLoadFlag_ForceNoCompression) == 0)
     {
         ePixelFormat compressedPixelFormat = GetPixelFormatFromILDXT(lDXTFormat);
         pBitmap->SetBytesPerPixel(lBytesPerPixel);

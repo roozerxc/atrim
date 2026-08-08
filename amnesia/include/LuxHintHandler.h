@@ -31,14 +31,14 @@ public:
 
     void LoadFonts();
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void LoadUserConfig();
     void SaveUserConfig();
     void Reset();
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
-    void DrawHintText(float afFrameTime, cGuiSet *apGuiSet);
-    void UpdateHintText(float afTimeStep);
+    void DrawHintText(double adFrameTime, cGuiSet *apGuiSet);
+    void UpdateHintText(double adFixedDelta);
 
     void SetActive(bool abX);
     bool IsActive()

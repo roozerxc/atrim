@@ -231,12 +231,12 @@ public:
 
     void OnGameStart();
 
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
 
     void OnEnterContainer(const tString& asOldContainer);
     void OnLeaveContainer(const tString& asNewContainer);
 
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
     cGuiSet* GetSet()
     {

@@ -637,7 +637,7 @@ void iLuxEnemy::OnMapEnter()
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::OnUpdate(float afTimeStep)
+void iLuxEnemy::OnUpdate(double adFixedDelta)
 {
     if(mbDisabled)
     {
@@ -646,34 +646,34 @@ void iLuxEnemy::OnUpdate(float afTimeStep)
 
     //In case the update is called in save or anyhting else that just want a quick update, we do not want to be updated.
     //Enemies can be disabled when player is not properly placed and the like.
-    if(afTimeStep < gpBase->mpEngine->GetStepSize()*0.8f)
+    if(adFixedDelta < gpBase->mpEngine->GetStepSize()*0.8f)
     {
         return;
     }
 
     //////////////////////
     // Helpers
-    mpPathfinder->OnUpdate(afTimeStep);
-    mpMover->OnUpdate(afTimeStep);
+    mpPathfinder->OnUpdate(adFixedDelta);
+    mpMover->OnUpdate(adFixedDelta);
 
     //////////////////////
     // Senses
     if(mfHealth > 0)
     {
         // Sight
-        UpdateCanSeePlayer(afTimeStep);
+        UpdateCanSeePlayer(adFixedDelta);
 
         // Detection
-        UpdatePlayerDetected(afTimeStep);
+        UpdatePlayerDetected(adFixedDelta);
 
         // In Range
-        UpdatePlayerInRange(afTimeStep);
+        UpdatePlayerInRange(adFixedDelta);
 
         // Is stuck at door check
-        UpdateCheckStuckAtDoor(afTimeStep);
+        UpdateCheckStuckAtDoor(adFixedDelta);
 
         // Check last player position
-        UpdateCheckLastPlayerPos(afTimeStep);
+        UpdateCheckLastPlayerPos(adFixedDelta);
     }
     else
     {
@@ -684,39 +684,39 @@ void iLuxEnemy::OnUpdate(float afTimeStep)
 
     //////////////////////
     // State update
-    UpdateStateMachine(afTimeStep);
+    UpdateStateMachine(adFixedDelta);
 
     //////////////////////
     // Specific
-    UpdateEnemySpecific(afTimeStep);
+    UpdateEnemySpecific(adFixedDelta);
 
     //////////////////////
     // Character body
-    UpdateCharBody(afTimeStep);
+    UpdateCharBody(adFixedDelta);
 
     //////////////////////
     // Animation
-    UpdateAnimation(afTimeStep);
+    UpdateAnimation(adFixedDelta);
 
     //////////////////////
     // Sound
-    UpdateSoundState(afTimeStep);
+    UpdateSoundState(adFixedDelta);
 
     //////////////////////
     // Glow
-    UpdateDarknessGlow(afTimeStep);
+    UpdateDarknessGlow(adFixedDelta);
 
     //////////////////////
     // Health Regeneration
-    UpdateRegenHealth(afTimeStep);
+    UpdateRegenHealth(adFixedDelta);
 
     //////////////////////
     // Hallucination
-    UpdateHallucination(afTimeStep);
+    UpdateHallucination(adFixedDelta);
 
     //////////////////////
     // Align with ground ray
-    UpdateAlignEntityWithGroundRay(afTimeStep);
+    UpdateAlignEntityWithGroundRay(adFixedDelta);
 
     //////////////////////
     // Debug
@@ -1314,7 +1314,7 @@ bool iLuxEnemy::StateEvent(int alState, eLuxEnemyStateEvent aEvent, cLuxStateMes
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::UpdateStateMachine(float afTimeStep)
+void iLuxEnemy::UpdateStateMachine(double adFixedDelta)
 {
     //////////////////
     // Update
@@ -1338,7 +1338,7 @@ void iLuxEnemy::UpdateStateMachine(float afTimeStep)
 
         ////////////////////////////
         //Check if message is to be sent
-        message.mfCount -= afTimeStep;
+        message.mfCount -= (float)adFixedDelta;
         if(message.mfCount <= 0)
         {
             StateEvent(mCurrentState, eLuxEnemyStateEvent_Message, &message);
@@ -1394,7 +1394,7 @@ void iLuxEnemy::ChangeSoundState(eLuxEnemySoundState aState)
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::UpdateSoundState(float afTimeStep)
+void iLuxEnemy::UpdateSoundState(double adFixedDelta)
 {
     if(mSoundState == eLuxEnemySoundState_Silent)
     {
@@ -1425,13 +1425,13 @@ void iLuxEnemy::UpdateSoundState(float afTimeStep)
     }
     else
     {
-        mfAmbientSoundCount -= afTimeStep;
+        mfAmbientSoundCount -= (float)adFixedDelta;
     }
 }
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::UpdateAnimation(float afTimeStep)
+void iLuxEnemy::UpdateAnimation(double adFixedDelta)
 {
     if(mbUseAnimations==false)
     {
@@ -1466,7 +1466,7 @@ void iLuxEnemy::UpdateAnimation(float afTimeStep)
     // Update speed if needed.
     if(mbAnimationIsSpeedDependant)
     {
-        float fSpeed = mpCharBody->GetVelocity(afTimeStep).Length();
+        float fSpeed = mpCharBody->GetVelocity(adFixedDelta).Length();
         if(mpCharBody->GetMoveSpeed(eCharDir_Forward) <0)
         {
             fSpeed = -fSpeed;
@@ -1478,9 +1478,9 @@ void iLuxEnemy::UpdateAnimation(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::UpdateCharBody(float afTimeStep)
+void iLuxEnemy::UpdateCharBody(double adFixedDelta)
 {
-    float fMul = mpMover->CalculateSpeedMul(afTimeStep);
+    float fMul = mpMover->CalculateSpeedMul(adFixedDelta);
 
     mpCharBody->SetMaxPositiveMoveSpeed(eCharDir_Forward, mfForwardSpeed*fMul);
     mpCharBody->SetMaxNegativeMoveSpeed(eCharDir_Forward, mfBackwardSpeed*fMul);
@@ -1490,7 +1490,7 @@ void iLuxEnemy::UpdateCharBody(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::UpdateCanSeePlayer(float afTimeStep)
+void iLuxEnemy::UpdateCanSeePlayer(double adFixedDelta)
 {
     cLuxPlayer *pPlayer = gpBase->mpPlayer;
 
@@ -1507,7 +1507,7 @@ void iLuxEnemy::UpdateCanSeePlayer(float afTimeStep)
 
     ////////////////////////////////
     //Check if it is time to check for player
-    mfLookForPlayerCount-= afTimeStep;
+    mfLookForPlayerCount-= (float)adFixedDelta;
     if(mfLookForPlayerCount > 0)
     {
         return;
@@ -1611,7 +1611,7 @@ void iLuxEnemy::UpdateCanSeePlayer(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::UpdatePlayerDetected(float afTimeStep)
+void iLuxEnemy::UpdatePlayerDetected(double adFixedDelta)
 {
     if(gpBase->mpPlayer->IsDead())
     {
@@ -1634,7 +1634,7 @@ void iLuxEnemy::UpdatePlayerDetected(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::UpdatePlayerInRange(float afTimeStep)
+void iLuxEnemy::UpdatePlayerInRange(double adFixedDelta)
 {
     if(gpBase->mpPlayer->IsDead())
     {
@@ -1658,7 +1658,7 @@ void iLuxEnemy::UpdatePlayerInRange(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::UpdateCheckStuckAtDoor(float afTimeStep)
+void iLuxEnemy::UpdateCheckStuckAtDoor(double adFixedDelta)
 {
     if(mpMover->GetStuckCounter() < 0.1f)
     {
@@ -1666,7 +1666,7 @@ void iLuxEnemy::UpdateCheckStuckAtDoor(float afTimeStep)
         return;
     }
 
-    mfCheckAtDoorCount -= afTimeStep;
+    mfCheckAtDoorCount -= (float)adFixedDelta;
     if(mfCheckAtDoorCount > 0.0f)
     {
         return;
@@ -1767,11 +1767,11 @@ void iLuxEnemy::UpdateCheckStuckAtDoor(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::UpdateCheckLastPlayerPos(float afTimeStep)
+void iLuxEnemy::UpdateCheckLastPlayerPos(double adFixedDelta)
 {
     if(CanSeePlayer())
     {
-        mfLastPlayerPosCount += afTimeStep;
+        mfLastPlayerPosCount += (float)adFixedDelta;
         if(mfLastPlayerPosCount > 1.0f)
         {
             mfLastPlayerPosCount = 1.0f;
@@ -1779,7 +1779,7 @@ void iLuxEnemy::UpdateCheckLastPlayerPos(float afTimeStep)
     }
     else
     {
-        mfLastPlayerPosCount -= afTimeStep;
+        mfLastPlayerPosCount -= (float)adFixedDelta;
         if(mfLastPlayerPosCount < 0)
         {
             mfLastPlayerPosCount=0;
@@ -1794,7 +1794,7 @@ void iLuxEnemy::UpdateCheckLastPlayerPos(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::UpdateDarknessGlow(float afTimeStep)
+void iLuxEnemy::UpdateDarknessGlow(double adFixedDelta)
 {
     ///////////////////////////////
     //Update darkness alpha according to goal
@@ -1802,7 +1802,7 @@ void iLuxEnemy::UpdateDarknessGlow(float afTimeStep)
     {
         if(mfDarknessGlowAlpha > mfDarknessGlowAlphaGoal)
         {
-            mfDarknessGlowAlpha -= afTimeStep;
+            mfDarknessGlowAlpha -= (float)adFixedDelta;
             if(mfDarknessGlowAlpha < mfDarknessGlowAlphaGoal)
             {
                 mfDarknessGlowAlpha = mfDarknessGlowAlphaGoal;
@@ -1810,7 +1810,7 @@ void iLuxEnemy::UpdateDarknessGlow(float afTimeStep)
         }
         else
         {
-            mfDarknessGlowAlpha += afTimeStep;
+            mfDarknessGlowAlpha += (float)adFixedDelta;
             if(mfDarknessGlowAlpha > mfDarknessGlowAlphaGoal)
             {
                 mfDarknessGlowAlpha = mfDarknessGlowAlphaGoal;
@@ -1862,7 +1862,7 @@ void iLuxEnemy::UpdateDarknessGlow(float afTimeStep)
     }
     if(mfDarknessGlowUpdateCount > 0)
     {
-        mfDarknessGlowUpdateCount -=afTimeStep;
+        mfDarknessGlowUpdateCount  -= (float)adFixedDelta;
     }
     mfDarknessGlowUpdateCount = 0.3f;
 
@@ -1884,7 +1884,7 @@ void iLuxEnemy::UpdateDarknessGlow(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::UpdateRegenHealth(float afTimeStep)
+void iLuxEnemy::UpdateRegenHealth(double adFixedDelta)
 {
     if(mfHealth <= 0)
     {
@@ -1893,7 +1893,7 @@ void iLuxEnemy::UpdateRegenHealth(float afTimeStep)
 
     if(mfHealth < mfMaxRegenHealth && mfRegenHealthSpeed >0)
     {
-        mfHealth += afTimeStep * mfRegenHealthSpeed;
+        mfHealth += (float)adFixedDelta * mfRegenHealthSpeed;
         if(mfHealth > mfMaxRegenHealth)
         {
             mfHealth = mfMaxRegenHealth;
@@ -1901,7 +1901,7 @@ void iLuxEnemy::UpdateRegenHealth(float afTimeStep)
     }
 }
 
-void iLuxEnemy::UpdateHallucination(float afTimeStep)
+void iLuxEnemy::UpdateHallucination(double adFixedDelta)
 {
     if(mbHallucination==false || mfHealth <= 0)
     {
@@ -1917,14 +1917,14 @@ void iLuxEnemy::UpdateHallucination(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::UpdateAlignEntityWithGroundRay(float afTimeStep)
+void iLuxEnemy::UpdateAlignEntityWithGroundRay(double adFixedDelta)
 {
     if(mbAlignEntityWithGroundRay==false)
     {
         return;
     }
 
-    mfCheckGroundRayCount -= afTimeStep;
+    mfCheckGroundRayCount -= (float)adFixedDelta;
     if(mfCheckGroundRayCount > 0)
     {
         return;

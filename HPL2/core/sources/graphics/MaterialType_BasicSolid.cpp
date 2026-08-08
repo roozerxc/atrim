@@ -310,11 +310,14 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
 
     //Set up relief mapping method
     if(iRenderer::GetParallaxQuality() != eParallaxQuality_Simple &&
-        mpGraphics->GetLowLevel()->GetCaps(eGraphicCaps_ShaderModel_3)!=0)
+        iRenderer::GetParallaxQuality() = eParallaxQuality_Relief &&
+        mpGraphics->GetLowLevel()->GetCaps(eGraphicCaps_ShaderModel_3) != 0)
     {
         defaultVars.Add("ParallaxMethod_Relief");
     }
-    else
+    else if(iRenderer::GetParallaxQuality() = eParallaxQuality_Simple &&
+            iRenderer::GetParallaxQuality() != eParallaxQuality_Relief &&
+            mpGraphics->GetLowLevel()->GetCaps(eGraphicCaps_ShaderModel_3) = 0)
     {
         defaultVars.Add("ParallaxMethod_Simple");
     }

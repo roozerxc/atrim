@@ -17,14 +17,14 @@ public:
 
     virtual void OnStart() {}
 
-    virtual void OnDraw(float afFrameTime) {}
-    virtual void OnPostRender(float afFrameTime) {}
+    virtual void OnDraw(double adFrameTime) {}
+    virtual void OnPostRender(double adFrameTime) {}
 
-    virtual void PreUpdate(float afTimeStep) {}
-    virtual void Update(float afTimeStep) {}
-    virtual void PostUpdate(float afTimeStep) {}
+    virtual void PreUpdate(double adFixedDelta) {}
+    virtual void Update(double adFixedDelta) {}
+    virtual void PostUpdate(double adFixedDelta) {}
 
-    virtual void OnPauseUpdate(float afTimeStep) {}
+    virtual void OnPauseUpdate(double adFixedDelta) {}
 
     virtual void OnQuit() {}
     virtual void OnExit() {}
@@ -45,7 +45,7 @@ public:
     virtual void AppDeviceWasPlugged() {}
     virtual void AppDeviceWasRemoved() {}
 
-    void RunMessage(eUpdateableMessage aMessage, float afX)
+    void RunMessage(eUpdateableMessage aMessage, double adX)
     {
         switch(aMessage)
         {
@@ -56,19 +56,19 @@ public:
             OnStart();
             break;
         case eUpdateableMessage_OnDraw:
-            OnDraw(afX);
+            OnDraw(adX);
             break;
         case eUpdateableMessage_OnPostRender:
-            OnPostRender(afX);
+            OnPostRender(adX);
             break;
         case eUpdateableMessage_PreUpdate:
-            PreUpdate(afX);
+            PreUpdate(adX);
             break;
         case eUpdateableMessage_Update:
-            Update(afX);
+            Update(adX);
             break;
         case eUpdateableMessage_PostUpdate:
-            PostUpdate(afX);
+            PostUpdate(adX);
             break;
         case eUpdateableMessage_OnQuit:
             OnQuit();
@@ -80,7 +80,7 @@ public:
             Reset();
             break;
         case eUpdateableMessage_OnPauseUpdate:
-            OnPauseUpdate(afX);
+            OnPauseUpdate(adX);
             break;
 
         case eUpdateableMessage_AppGotInputFocus:

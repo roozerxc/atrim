@@ -56,7 +56,7 @@ public:
 
     void OnResetProperties();
 
-    void UpdatePropSpecific(float afTimeStep);
+    void UpdatePropSpecific(double adFixedDelta);
 
     void BeforePropDestruction();
 
@@ -113,9 +113,9 @@ public:
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);
 
 private:
-    void UpdateAngle(float afTimeStep);
-    void UpdateCheckLimit(float afTimeStep);
-    void UpdateAutoRotation(float afTimeStep);
+    void UpdateAngle(double adFixedDelta);
+    void UpdateCheckLimit(double adFixedDelta);
+    void UpdateAutoRotation(double adFixedDelta);
 
     void SetMaxJointAngle(float afMaxAngle);
     void SetMinJointAngle(float afMinAngle);

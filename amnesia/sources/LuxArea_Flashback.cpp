@@ -73,17 +73,17 @@ cLuxArea_Flashback::~cLuxArea_Flashback()
 
 //-----------------------------------------------------------------------
 
-void cLuxArea_Flashback::OnUpdate(float afTimeStep)
+void cLuxArea_Flashback::OnUpdate(double adFixedDelta)
 {
     //Do not update this unless it is a proper game update (when eveything is 100% intialized)
-    if(afTimeStep < gpBase->mpEngine->GetStepSize()*0.8f)
+    if(adFixedDelta < gpBase->mpEngine->GetStepSize()*0.8f)
     {
         return;
     }
 
     //////////////////////////
     // Check update count
-    mfCheckCollisionCount-=afTimeStep;
+    mfCheckCollisionCount -= (float)adFixedDelta;
     if(mfCheckCollisionCount>0)
     {
         return;

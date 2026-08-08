@@ -3,29 +3,8 @@
 #include "LuxInputHandler.h"
 #include "LuxDebugHandler.h"
 
-//-----------------------------------------------------------------------
-
-const
-class nullptr_t
-{
-public:
-    template<class T>
-    operator T*() const
-    {
-        return 0;
-    }
-
-    template<class C, class T>
-    operator T C::*() const
-    {
-        return 0;
-    }
-
-private:
-    void operator&() const;
-}
-
-nullptr = {};
+// If you have VS2005 keep this! Otherwise remove if you are using VS2012+!
+#include "../sources/LuxNullptrCpp98.cpp"
 
 //-----------------------------------------------------------------------
 

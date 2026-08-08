@@ -116,15 +116,15 @@ void cLuxHandObject_Melee::ImplementedReset()
 
 //-----------------------------------------------------------------------
 
-void cLuxHandObject_Melee::Update(float afTimeStep)
+void cLuxHandObject_Melee::Update(double adFixedDelta)
 {
     if(mpHands->mlHandObjectState ==1)
     {
-        UpdateCharge(afTimeStep);
+        UpdateCharge(adFixedDelta);
     }
     else if(mpHands->mlHandObjectState ==2)
     {
-        UpdateCheckDamageEvent(afTimeStep);
+        UpdateCheckDamageEvent(adFixedDelta);
     }
 }
 
@@ -204,7 +204,7 @@ bool cLuxHandObject_Melee::AnimationIsOver()
 
 //-----------------------------------------------------------------------
 
-void cLuxHandObject_Melee::UpdateCharge(float afTimeStep)
+void cLuxHandObject_Melee::UpdateCharge(double adFixedDelta)
 {
     if(mpHands->mbHandObjectAttackDown==false)
     {
@@ -213,7 +213,7 @@ void cLuxHandObject_Melee::UpdateCharge(float afTimeStep)
 
     if(mpHands->mfHandObjectChargeCount < 1)
     {
-        mpHands->mfHandObjectChargeCount += afTimeStep * (1.0f/mfChargeTime);
+        mpHands->mfHandObjectChargeCount += (float)adFixedDelta * (1.0f/mfChargeTime);
         if(mpHands->mfHandObjectChargeCount >= 1.0f)
         {
             mpHands->mfHandObjectChargeCount = 1;
@@ -226,7 +226,7 @@ void cLuxHandObject_Melee::UpdateCharge(float afTimeStep)
 
 //-----------------------------------------------------------------------
 
-void cLuxHandObject_Melee::UpdateCheckDamageEvent(float afTimeStep)
+void cLuxHandObject_Melee::UpdateCheckDamageEvent(double adFixedDelta)
 {
     if(mpHands->CheckAnimationEvent(mfRelativeDamageTime))
     {

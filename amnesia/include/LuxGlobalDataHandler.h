@@ -17,7 +17,7 @@ public:
     void LoadAndInitGlobalScript();
     void OnGameStart();
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
 
     void OnMapEnter(cLuxMap *apMap);

@@ -125,7 +125,7 @@ void cWidgetMultiPropertyListBox::UpdateColumns()
 
 //-------------------------------------------------------------------------------
 
-void cWidgetMultiPropertyListBox::DrawItems(float afTimeStep, cGuiClipRegion* apClipRegion)
+void cWidgetMultiPropertyListBox::DrawItems(double adFixedDelta, cGuiClipRegion* apClipRegion)
 {
     cVector3f vPosition = GetGlobalPosition();
     vPosition.z += mfBackgroundZ+0.01f;

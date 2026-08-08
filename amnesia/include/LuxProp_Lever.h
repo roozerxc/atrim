@@ -41,7 +41,7 @@ public:
 
     void OnResetProperties();
 
-    void UpdatePropSpecific(float afTimeStep);
+    void UpdatePropSpecific(double adFixedDelta);
 
     void BeforePropDestruction();
 
@@ -88,9 +88,9 @@ public:
 private:
     void CalculateMiddleAngle();
 
-    void UpdateCheckStuckSound(float afTimeStep);
-    void UpdateCheckLimit(float afAngle, float afTimeStep);
-    void UpdateAutoMove(float afAngle, float afTimeStep);
+    void UpdateCheckStuckSound(double adFixedDelta);
+    void UpdateCheckLimit(float afAngle, double adFixedDelta);
+    void UpdateAutoMove(float afAngle, double adFixedDelta);
 
     void ChangeState(int alState, bool abEffects);
 

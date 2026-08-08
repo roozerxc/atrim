@@ -41,7 +41,7 @@ public:
 
     ////////////////////////
     //General
-    virtual void Update(float afTimeStep)=0;
+    virtual void Update(double adFixedDelta)=0;
 
     bool LoadMainData(cXmlElement *apMainElem);
     void LoadSettings(cXmlElement *apVarsElem);

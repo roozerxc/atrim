@@ -108,7 +108,7 @@ void cLuxProp_Button::OnResetProperties()
 
 //-----------------------------------------------------------------------
 
-void cLuxProp_Button::UpdatePropSpecific(float afTimeStep)
+void cLuxProp_Button::UpdatePropSpecific(double adFixedDelta)
 {
 }
 

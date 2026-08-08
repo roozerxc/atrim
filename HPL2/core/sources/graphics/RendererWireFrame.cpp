@@ -86,7 +86,7 @@ void cRendererWireFrame::CopyToFrameBuffer()
 
 void cRendererWireFrame::SetupRenderList()
 {
-    mpCurrentRenderList->Setup(mfCurrentFrameTime,mpCurrentFrustum);
+    mpCurrentRenderList->Setup(dCurrentFrameTime,mpCurrentFrustum);
 
     CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Static),0);
     CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Dynamic),0);
@@ -164,7 +164,7 @@ void cRendererWireFrame::RenderObjects()
         iRenderable *pObject = transIt.Next();
         cMaterial *pMaterial = pObject->GetMaterial();
 
-        pObject->UpdateGraphicsForViewport(mpCurrentFrustum, mfCurrentFrameTime);
+        pObject->UpdateGraphicsForViewport(mpCurrentFrustum, dCurrentFrameTime);
 
         SetBlendMode(pMaterial->GetBlendMode());
 

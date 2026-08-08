@@ -16,9 +16,9 @@ public:
 
     void LoadFonts();
     void OnStart();
-    void Update(float afTimeStep);
+    void Update(double adFixedDelta);
     void Reset();
-    void OnDraw(float afFrameTime);
+    void OnDraw(double adFrameTime);
 
     void OnMapExit(cLuxMap *apMap);
 

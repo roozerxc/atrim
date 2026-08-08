@@ -83,7 +83,7 @@ public:
 
     void OnResetProperties();
 
-    void UpdatePropSpecific(float afTimeStep);
+    void UpdatePropSpecific(double adFixedDelta);
 
     void BeforePropDestruction();
 
@@ -142,8 +142,8 @@ public:
 
 
 private:
-    void UpdateFoodEnemyAttraction(float afTimeStep);
-    void UpdateInsanityVision(float afTimeStep);
+    void UpdateFoodEnemyAttraction(double adFixedDelta);
+    void UpdateInsanityVision(double adFixedDelta);
     void SetInsanityVisionVisability(bool abX);
 
     void SetJointMinMax(int alIdx, float afMin, float afMax);
