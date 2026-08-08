@@ -392,7 +392,6 @@ void cLowLevelGraphicsSDL::SetupGL()
     Log("  Multisampling: %d\n",GetCaps(eGraphicCaps_Multisampling));
 
     Log("  Texture compression: %d\n",GetCaps(eGraphicCaps_TextureCompression));
-    Log("  Texture compression S3TC: %d\n",GetCaps(eGraphicCaps_TextureCompression_DXTC));
 
     Log("  Auto generate MipMaps: %d\n",GetCaps(eGraphicCaps_AutoGenerateMipMaps));
 
@@ -481,8 +480,6 @@ int cLowLevelGraphicsSDL::GetCaps(eGraphicCaps aType)
 
     case eGraphicCaps_TextureCompression:
         return GLEW_ARB_texture_compression  ? 1 : 0;
-    case eGraphicCaps_TextureCompression_DXTC:
-        return GLEW_EXT_texture_compression_s3tc ? 1 : 0;
 
     case eGraphicCaps_AutoGenerateMipMaps:
         return GLEW_SGIS_generate_mipmap ? 1 : 0;
