@@ -1229,11 +1229,11 @@ void cLuxInputHandler::UpdateGamePlayerInput()
         {
             if(mpInput->IsTriggerd(eLuxAction_ZoomOut))
             {
-                mpPlayer->Scroll( gpBase->mpEngine->GetFrameTime() * 8.0f);
+                mpPlayer->Scroll((float)gpBase->mpEngine->GetFrameTime() * 8.0f);
             }
             if(mpInput->IsTriggerd(eLuxAction_ZoomIn))
             {
-                mpPlayer->Scroll(-gpBase->mpEngine->GetFrameTime() * 8.0f);
+                mpPlayer->Scroll(-(float)gpBase->mpEngine->GetFrameTime() * 8.0f);
             }
         }
 
@@ -1253,7 +1253,7 @@ void cLuxInputHandler::UpdateGamePlayerInput()
         {
             if(mpInput->IsTriggerd(eLuxAction_Rotate))
             {
-                mpPlayer->Scroll(-gpBase->mpEngine->GetFrameTime() * 6.0f * vAnalogLookAxis.y);
+                mpPlayer->Scroll(-(float)gpBase->mpEngine->GetFrameTime() * 6.0f * vAnalogLookAxis.y);
 
                 vAnalogLookAxis = cVector2f(mpPad->GetAxisValue(eGamepadAxis_0), mpPad->GetAxisValue(eGamepadAxis_1));
 
@@ -1276,7 +1276,7 @@ void cLuxInputHandler::UpdateGamePlayerInput()
             cVector2f vExponent = cMath::Vector2Abs(vAnalogLookAxis);
             vExponent.x = sqrtf(vExponent.x);
             vExponent.y = sqrtf(vExponent.y);
-            cVector2f vGamepadPos = (vAnalogLookAxis * vExponent) * mfGamepadLookSensitivity*gpBase->mpEngine->GetStepSize();
+            cVector2f vGamepadPos = (vAnalogLookAxis * vExponent) * mfGamepadLookSensitivity* (float)gpBase->mpEngine->GetStepSize();
 
             //Invert the Y-axis
             if(mbGamepadLookInvert)
