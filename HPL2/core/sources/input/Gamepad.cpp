@@ -1,7 +1,7 @@
+#if USE_GAMEPAD
 #include "input/Gamepad.h"
 #include "input/InputTypes.h"
 
-#if USE_GAMEPAD
 namespace hpl
 {
 
