@@ -43,6 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\include\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;GLEW_STATIC;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS"
@@ -112,6 +113,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\include\"
 				PreprocessorDefinitions="_DEBUG;_LIB;GLEW_STATIC;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS"
@@ -181,6 +183,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\..\include\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;GLEW_STATIC;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS"
@@ -248,6 +251,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\..\include\"
 				PreprocessorDefinitions="NDEBUG;_LIB;GLEW_STATIC;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS"
@@ -324,10 +328,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

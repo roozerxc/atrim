@@ -43,6 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\DevIL\include;..\..\sources\png;..\..\sources\jpeg;..\..\include\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;IL_STATIC_LIB"
@@ -112,6 +113,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\DevIL\include;..\..\sources\png;..\..\sources\jpeg;..\..\include\"
 				PreprocessorDefinitions="_DEBUG;_LIB;IL_STATIC_LIB"
@@ -181,6 +183,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\DevIL\include;..\..\sources\png;..\..\sources\jpeg;..\..\include\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;IL_STATIC_LIB;"
@@ -249,6 +252,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\DevIL\include;..\..\sources\png;..\..\sources\jpeg;..\..\include\"
 				PreprocessorDefinitions="NDEBUG;_LIB;IL_STATIC_LIB;"
@@ -890,10 +894,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

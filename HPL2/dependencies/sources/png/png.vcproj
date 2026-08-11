@@ -43,6 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\zlib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
@@ -112,6 +113,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\zlib"
 				PreprocessorDefinitions="_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
@@ -181,6 +183,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\zlib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
@@ -248,6 +251,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\zlib"
 				PreprocessorDefinitions="NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
@@ -396,10 +400,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

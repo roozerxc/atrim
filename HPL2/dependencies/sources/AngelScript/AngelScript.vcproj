@@ -21,7 +21,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\lib\$(PlatformName)-$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="0"
 			>
@@ -43,6 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="0"
 				EnableIntrinsicFunctions="false"
@@ -101,7 +102,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description=""
 				CommandLine="ml64.exe /c  /nologo /Fo&quot;$(IntDir)\as_callfunc_x64_msvc_asm.obj&quot; /W3 /Zi /Ta &quot;sources\as_callfunc_x64_msvc_asm.asm&quot;"
 			/>
 			<Tool
@@ -124,6 +124,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="0"
 				EnableIntrinsicFunctions="false"
@@ -177,7 +178,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="..\..\lib\$(PlatformName)-$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
@@ -200,6 +201,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;"
 				MinimalRebuild="true"
@@ -271,6 +273,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
+				AdditionalOptions="/MP"
 				EnableIntrinsicFunctions="true"
 				PreprocessorDefinitions="NDEBUG;_LIB;"
 				MinimalRebuild="true"
@@ -603,10 +606,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

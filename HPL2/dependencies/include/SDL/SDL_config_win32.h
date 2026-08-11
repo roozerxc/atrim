@@ -133,7 +133,7 @@ typedef unsigned int uintptr_t;
 #ifdef _WIN32_WCE
 #define SDL_CDROM_DISABLED      1
 #else
-#define SDL_CDROM_WIN32		1
+#define SDL_CDROM_WIN32		0
 #endif
 
 /* Enable various input drivers */
@@ -161,9 +161,9 @@ typedef unsigned int uintptr_t;
 #define SDL_VIDEO_DRIVER_GAPI	1
 #endif
 #ifndef _WIN32_WCE
-#define SDL_VIDEO_DRIVER_DDRAW	1
+#define SDL_VIDEO_DRIVER_DDRAW	0
 #endif
-#define SDL_VIDEO_DRIVER_DUMMY	1
+#define SDL_VIDEO_DRIVER_DUMMY	0
 #define SDL_VIDEO_DRIVER_WINDIB	1
 
 /* Enable OpenGL support */
