@@ -223,21 +223,28 @@ void cLuxSaveHandler::SaveGameToFile(const tWString& asFile, bool abSaveSnapshot
 
 //-----------------------------------------------------------------------
 
-void cLuxSaveHandler::LoadGameFromFile(const tWString& asFile)
+bool cLuxSaveHandler::LoadGameFromFile(const tWString& asFile)
 {
     Log("-------- BEGIN LOAD FROM %s ---------\n", cString::To8Char(asFile).c_str());
 
     cLuxSaveGame_SaveData * pSaveGame = hplNew(cLuxSaveGame_SaveData, ());
 
-    //cSerializeClass::SetLog(true);
-    cSerializeClass::LoadFromFile(pSaveGame,asFile);
-    //cSerializeClass::SetLog(false);
+    bool bSaveIsLoaded = cSerializeClass::LoadFromFile(pSaveGame,asFile);
+
+    if(bSaveIsLoaded==false)
+    {
+        hplDelete(pSaveGame);
+        Error("Could not load save game from '%s'! Save file is missing or corrupt\n", cString::To8Char(asFile).c_str());
+        Log("-------- END LOAD ---------\n");
+        return false;
+    }
 
     LoadSaveGameData(pSaveGame);
 
     hplDelete(pSaveGame);
 
     Log("-------- END LOAD ---------\n");
+    return true;
 }
 
 //-----------------------------------------------------------------------

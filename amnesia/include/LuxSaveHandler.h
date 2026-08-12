@@ -46,7 +46,7 @@ public:
     void Reset();
 
     void SaveGameToFile(const tWString& asFile, bool abSaveSnapshot=false);
-    void LoadGameFromFile(const tWString& asFile);
+    bool LoadGameFromFile(const tWString& asFile);
 
     bool AutoSave();
     bool AutoLoad(bool abResetProgressLogger);
