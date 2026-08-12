@@ -1752,13 +1752,20 @@ void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, double adFixed
     {
         return;
     }
-    
+
+#if HPL_CHARACTERBODY_BROKEN
+    if(avPosAdd.SqrLength() < kEpsilonf)
+    {
+        return;
+    }
+#else
     float fMoveSpeed = avPosAdd.Length() / (float)adFixedDelta;
     if(fMoveSpeed < 0.6f)
     {
         mfCheckStepClimbCount = mfCheckStepClimbInterval;
         return;
     }
+#endif
 
     //Send a ray in front of the player.
     float fRadius = mpCurrentShape->GetRadius();
@@ -1797,9 +1804,12 @@ void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, double adFixed
         vStart[i] = mvPosition+ vStepAdd[i];//mvPosition + cVector3f(0,mvSize.y/2,0)+ vStepAdd[i];
         vEnd[i] = vStart[i] - cVector3f(0,mvSize.y/2.0f,0);//cVector3f(0,mvSize.y,0);
 
+#if HPL_CHARACTERBODY_BROKEN
+        bCollided[i] = CheckRayIntersection(vStart[i],vEnd[i],&fMinDist[i], NULL);
+#else
         bCollided[i] = CheckRayIntersection(vStart[i],vEnd[i],&fMinDist[i], &vNormal[i]);
+#endif
     }
-
 
     bool bFirmlyOnGround = mlOnGroundCount > mlMaxOnGroundCount-4;
     float fMaxHeight = (bFirmlyOnGround || mbClimbing) ? mfMaxStepHeight : mfMaxStepHeightInAir;
@@ -1815,6 +1825,22 @@ void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, double adFixed
 
         float fHeight = mvSize.y/2.0f - fMinDist[i];
 
+#if HPL_CHARACTERBODY_BROKEN
+        if(fHeight <= fMaxHeight && fHeight > 0.025f)
+        {
+            //Check if there is any collision on the new pos
+            cVector3f vStepPos = mvPosition + cVector3f(0,fHeight+mfClimbHeightAdd,0)+ (vMoveDir*fForwadAdd*mfClimbForwardMul);
+
+            if(CheckCharacterFits(vStepPos))
+            {
+                //Climb the stair.
+                mvPosition.y += mfStepClimbSpeed * (float)adFixedDelta;
+
+                mbClimbing = true;
+                break;
+            }
+        }
+#else
         if(vNormal[i].y < 0.95f)
         {
             continue;
@@ -1839,6 +1865,7 @@ void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, double adFixed
                 break;
             }
         }
+#endif
     }
 
     mfCheckStepClimbCount = mfCheckStepClimbInterval;
