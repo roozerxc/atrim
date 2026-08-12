@@ -73,9 +73,9 @@ static cLuxAction gvLuxActions[] =
 
     cLuxAction("LeanRight",eLuxAction_LeanRight,true, eLuxActionCategory_Movement),
     cLuxAction("LeanLeft",eLuxAction_LeanLeft,    true, eLuxActionCategory_Movement),
-    cLuxAction("Lean",eLuxAction_Lean,    true, eLuxActionCategory_Movement),
 
 #if USE_GAMEPAD
+    cLuxAction("Lean",eLuxAction_Lean,    true, eLuxActionCategory_Movement),
     cLuxAction("ZoomOut", eLuxAction_ZoomOut, false, eLuxActionCategory_Action),
     cLuxAction("ZoomIn", eLuxAction_ZoomIn, false, eLuxActionCategory_Action),
 #endif
@@ -159,8 +159,6 @@ static cLuxInput gvLuxInputs[] =
 
     cLuxInput("Keyboard", eKey_E, eLuxAction_LeanRight),
     cLuxInput("Keyboard", eKey_Q, eLuxAction_LeanLeft),
-
-    cLuxInput("Keyboard", eKey_LeftAlt, eLuxAction_Lean),
 
     cLuxInput("MouseButton", eMouseButton_Right, eLuxAction_Attack),
     cLuxInput("MouseButton", eMouseButton_Left, eLuxAction_Interact),
@@ -1215,11 +1213,6 @@ void cLuxInputHandler::UpdateGamePlayerInput()
         vFinalPos.y = -vFinalPos.y;
     }
 
-    if(mpInput->IsTriggerd(eLuxAction_Lean))
-    {
-        mpPlayer->AddLean(vRelPos.x);
-    }
-
 #if USE_GAMEPAD
     //////////////////////////////////////////
     // Gamepad movement and look
@@ -1300,10 +1293,6 @@ void cLuxInputHandler::UpdateGamePlayerInput()
         }
     }
 #endif
-    if(mpInput->IsTriggerd(eLuxAction_Lean))
-    {
-        vFinalPos = 0;
-    }
 
     mpPlayer->AddYaw(-vFinalPos.x);
     mpPlayer->AddPitch(-vFinalPos.y);

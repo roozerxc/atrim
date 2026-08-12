@@ -345,7 +345,6 @@ enum eLuxAction
 
     eLuxAction_LeanRight,
     eLuxAction_LeanLeft,
-    eLuxAction_Lean,
 
     eLuxAction_Attack,
     eLuxAction_Interact,
@@ -358,6 +357,7 @@ enum eLuxAction
     eLuxAction_Crouch,
 
 #ifdef USE_GAMEPAD
+    eLuxAction_Lean,
     eLuxAction_ZoomIn,
     eLuxAction_ZoomOut,
 #endif
