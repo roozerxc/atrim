@@ -26,16 +26,17 @@ public:
 
     cWidgetLabel* CreateLabel(cGuiSet* apSet);
 
-private:
-    tWString    msText;
-    cVector3f    mvPos;
-    cVector2f    mvFrameSize;
-    cVector2f    mvFontSize;
-    cColor        mColor;
-    tString        msFontFile;
-    eFontAlign    mAlign;
+public:
+    cVector2f mvFrameSize;
 
-    float        mfTime;
+    tWString msText;
+    tString msFontFile;
+    cVector2f mvFontSize;
+    cVector3f mvPos;
+    cColor mColor;
+    eFontAlign mAlign;
+
+    float mfTime;
 };
 
 //----------------------------------------------
@@ -78,16 +79,22 @@ public:
     }
 
 public:
+    tPreMenuTextList mlstTextElements;
+
     cColor mBackgroundColor;
     tString msBackgroundFile;
-    tPreMenuTextList mlstTextElements;
-    float mfTime;
-    bool mbShowFirstStartOnly;
+
+    bool mbHideGuiSet;
     bool mbHasGammaSettings;
+
     tString msMusic;
     float mfMusicVolume;
     float mfMusicFadeTime;
+
+    float mfTime;
+
     bool mbAllowSkipping;
+    bool mbShowFirstStartOnly;
 };
 
 //----------------------------------------------

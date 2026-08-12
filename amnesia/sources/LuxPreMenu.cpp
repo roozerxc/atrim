@@ -33,6 +33,7 @@ static eFontAlign ToFontAlign(const tString& asX)
 
 cLuxPreMenuSection::cLuxPreMenuSection()
 {
+    mbHideGuiSet = false;
 }
 
 cLuxPreMenuSection::~cLuxPreMenuSection()
@@ -678,8 +679,12 @@ void cLuxPreMenu::UpdateState()
                 // Set up current section
                 if(mpCurrentSection)
                 {
-                    bool bHasTextElements = mpCurrentSection->HasTextElements();
-                    bool bGuiSetActive = (bHasTextElements || mpCurrentSection->HasGammaSettings());
+                    bool bGuiSetActive = (mpCurrentSection->HasTextElements() || mpCurrentSection->HasGammaSettings());
+
+                    if(mpCurrentSection->mbHideGuiSet)
+                    {
+                        bGuiSetActive = false;
+                    }
 
                     ////////////////////////////////////////////
                     // Set up Background
@@ -729,9 +734,10 @@ void cLuxPreMenu::UpdateState()
     // ShowPremenuSection state, if no text, check if timer is done or some key was pressed
     case eLuxPreMenuState_ShowPremenuSection:
     {
-        if(mpCurrentSection->HasTextElements()==false &&
-                mpCurrentSection->HasGammaSettings()==false &&
-                mfTimer <= 0)
+        if((mpCurrentSection->mbHideGuiSet==true ||
+            (mpCurrentSection->HasTextElements()==false &&
+            mpCurrentSection->HasGammaSettings()==false))
+            && mfTimer <= 0.0f)
         {
             mCurrentState = eLuxPreMenuState_FadeOut;
         }
@@ -759,6 +765,42 @@ void cLuxPreMenu::LoadPreMenuSections()
         tString sSkinFile = pDoc->GetAttributeString("skin", "gui_default.skin");
         mpGuiSet->SetSkin(mpGui->CreateSkin(sSkinFile));
 
+        // Init new section and text then load it before the ones in cfg file
+        cLuxPreMenuSection* pFreeSection  = hplNew(cLuxPreMenuSection, ());
+        cLuxPreMenuTextElement* pFreeText = hplNew(cLuxPreMenuTextElement, ());
+
+        // Setup new section, disable continue button!
+        pFreeSection->mBackgroundColor = cColor(0,0,0,1);
+        pFreeSection->msBackgroundFile = "";
+
+        pFreeSection->msMusic = "";
+        pFreeSection->mfMusicVolume = 0.0f;
+        pFreeSection->mfMusicFadeTime = 0.0f;
+
+        pFreeSection->mbHideGuiSet = true;
+        pFreeSection->mbHasGammaSettings = false;
+
+        pFreeSection->mbAllowSkipping = true;
+        pFreeSection->mbShowFirstStartOnly = false;
+
+        pFreeSection->mfTime = 2.0f;
+
+        // Setup new text element
+        pFreeText->mvFrameSize = cVector2f(640, 300);
+
+        pFreeText->msText = kTranslate("PreMenu", "FreeWarning");
+        pFreeText->mvFontSize = cVector2f(18, 18);
+        pFreeText->mvPos = cVector3f(80, 280, 0);
+        pFreeText->mColor = cColor(1, 1, 1, 1);
+        pFreeText->mAlign = eFontAlign_Center;
+
+        pFreeText->mfTime = 2.0f;
+
+        // Bind together and make it front!
+        pFreeSection->AddTextElement(pFreeText);
+        mvSections.push_back(pFreeSection);
+
+        // Do everything else as original.
         cXmlNodeListIterator it = pDoc->GetChildIterator();
         while(it.HasNext())
         {
