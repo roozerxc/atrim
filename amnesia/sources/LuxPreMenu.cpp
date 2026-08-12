@@ -477,6 +477,11 @@ kGuiCallbackDeclaredFuncEnd(cLuxPreMenu, Gamma_UIArrowPressed);
 
 void cLuxPreMenu::ButtonPressed()
 {
+    if(mbQuickTransition)
+    {
+        return;
+    }
+
     if(mpCurrentSection && mpCurrentSection->mbAllowSkipping==false)
     {
         return;
@@ -635,6 +640,8 @@ void cLuxPreMenu::UpdateState()
     {
         if(mfAlphaFade >= 1.0f)
         {
+            mbQuickTransition = true;
+
             if(mpCurrentBackground)
             {
                 mpGui->DestroyGfx(mpCurrentBackground);
@@ -729,6 +736,7 @@ void cLuxPreMenu::UpdateState()
                 }
             }
         }
+        mbQuickTransition = false;
     }
     break;
     // ShowPremenuSection state, if no text, check if timer is done or some key was pressed

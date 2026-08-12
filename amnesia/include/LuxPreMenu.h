@@ -173,6 +173,8 @@ private:
 
     bool mbExitPreMenu;
 
+    bool mbQuickTransition;
+
     cGuiGfxElement* mpBlackFade;
 
     std::vector<cLuxPreMenuSection*> mvSections;
