@@ -1752,8 +1752,11 @@ void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, double adFixed
     {
         return;
     }
-    if(avPosAdd.SqrLength() < kEpsilonf)
+    
+    float fMoveSpeed = avPosAdd.Length() / (float)adFixedDelta;
+    if(fMoveSpeed < 0.6f)
     {
+        mfCheckStepClimbCount = mfCheckStepClimbInterval;
         return;
     }
 
@@ -1768,6 +1771,7 @@ void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, double adFixed
     cVector3f vStepAdd[3];
     cVector3f vStart[3];
     cVector3f vEnd[3];
+    cVector3f vNormal[3];
     bool bCollided[3];
     float fMinDist[3];
     int lNumRays= mbAccurateClimbing ? 3 : 1;
@@ -1793,7 +1797,7 @@ void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, double adFixed
         vStart[i] = mvPosition+ vStepAdd[i];//mvPosition + cVector3f(0,mvSize.y/2,0)+ vStepAdd[i];
         vEnd[i] = vStart[i] - cVector3f(0,mvSize.y/2.0f,0);//cVector3f(0,mvSize.y,0);
 
-        bCollided[i] = CheckRayIntersection(vStart[i],vEnd[i],&fMinDist[i], NULL);
+        bCollided[i] = CheckRayIntersection(vStart[i],vEnd[i],&fMinDist[i], &vNormal[i]);
     }
 
 
@@ -1811,7 +1815,12 @@ void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, double adFixed
 
         float fHeight = mvSize.y/2.0f - fMinDist[i];
 
-        if(fHeight <= fMaxHeight && fHeight>0.025f)
+        if(vNormal[i].y < 0.95f)
+        {
+            continue;
+        }
+
+        if(fHeight <= fMaxHeight && fHeight > 0.01f)
         {
             //Check if there is any collision on the new pos
             cVector3f vStepPos = mvPosition + cVector3f(0,fHeight+mfClimbHeightAdd,0)+ (vMoveDir*fForwadAdd*mfClimbForwardMul);
@@ -1819,7 +1828,13 @@ void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, double adFixed
             if(CheckCharacterFits(vStepPos))
             {
                 //Climb the stair.
-                mvPosition.y += mfStepClimbSpeed * (float)adFixedDelta;
+                float fClimb = mfStepClimbSpeed * (float)adFixedDelta;
+                if(fHeight < fClimb)
+                {
+                    fClimb = fHeight;
+                }
+                mvPosition.y += fClimb;
+
                 mbClimbing = true;
                 break;
             }
