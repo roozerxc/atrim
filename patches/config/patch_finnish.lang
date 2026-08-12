@@ -52,6 +52,10 @@
         <Entry Name="Global">Yleinen</Entry>
     </CATEGORY>
 
+    <CATEGORY Name="PreMenu">
+        <Entry Name="FreeWarning">atrim on ILMAINEN avoimen lähdekoodin client Amnesia: The Dark Descent -peliin. Jos ostit sen, pyydä rahojenpalautusta välittömästi!</Entry>
+    </CATEGORY>
+
     <!-- BEGIN HARD MODE STRINGS -->
 
     <CATEGORY Name="MainMenu">

@@ -52,6 +52,10 @@
         <Entry Name="Global">Global</Entry>
     </CATEGORY>
 
+    <CATEGORY Name="PreMenu">
+        <Entry Name="FreeWarning">atrim is a FREE and open-source software client for Amnesia: The Dark Descent. If you have purchased it, demand a refund and get your money back immediately!</Entry>
+    </CATEGORY>
+
     <!-- BEGIN HARD MODE STRINGS -->
 
     <CATEGORY Name="MainMenu">
