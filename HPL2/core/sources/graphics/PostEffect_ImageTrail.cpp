@@ -141,11 +141,15 @@ iTexture* cPostEffect_ImageTrail::RenderEffect(iTexture *apInputTexture, iFrameB
     }
     else
     {
-        // Get the amount of blur depending frame time.
-        //*30 is just so that good amount values are still between 0 - 1
         double dFrameTime = mpCurrentComposite->GetCurrentFrameTime();
-        float fPow = (1.0f / (float)dFrameTime) * mParams.mfAmount; //The higher this is, the more blur!
-        float fAmount = exp(-fPow * 0.015f);
+        if(dFrameTime < 0.0001)
+        {
+            dFrameTime = 1.0 / 60.0; // should be 16.67ms every frame
+        }
+
+        float fAmount60FPS = exp(-0.9f * mParams.mfAmount);
+        float fAmount = 1.0f - pow(1.0f - fAmount60FPS, (float)dFrameTime * 60.0f);
+
         if(mpImageTrailType->mpProgram)
         {
             mpImageTrailType->mpProgram->SetFloat(kVar_afAlpha, fAmount);
