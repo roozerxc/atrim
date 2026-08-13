@@ -21,8 +21,8 @@
 - [`bc98941`](https://github.com/roozerxc/atrim/commit/bc989418e2455b48983440c0dfd17386dbfc6794) Added proper map cache version number detection
 - [`2bda3d0`](https://github.com/roozerxc/atrim/commit/2bda3d06df6338145f749e88eba8180d4996c815) Added SDL 1.2.15 as a static library in the executable
 - [`0a80de3`](https://github.com/roozerxc/atrim/commit/0a80de396d33a6ada455d1c888e407ca7d113f62) Conditional if statements now have braces, avoiding the risk of subtle bugs
-- [`ef6c70e`](https://github.com/roozerxc/atrim/commit/ef6c70e534c2eb12e7cc8371bae3f74a15590c2d) Decoupled timers and scripts to use their own functions instead of using the same "Run" function
 - [`8e3b184`](https://github.com/roozerxc/atrim/commit/8e3b18422a567ee4ba21babfa65a630fcd06583e) Decoupled engine renderer and game logic from each other, allowing for truly uncapped framerates
+- [`ef6c70e`](https://github.com/roozerxc/atrim/commit/ef6c70e534c2eb12e7cc8371bae3f74a15590c2d) Decoupled timers and scripts to use their own functions instead of using the same "Run" function
 - [`c2d7155`](https://github.com/roozerxc/atrim/commit/c2d7155de5f6522622a7174a201c45a221433d45) Fixed buggy enemy collision behavior
 - [`d8e586b`](https://github.com/roozerxc/atrim/commit/d8e586b46bc6af07e28130d62ea0b93bf62048a9) Fixed character body simulation errors (Can be switched back using `HPL_CHARACTERBODY_BROKEN`)
 - [`b496952`](https://github.com/roozerxc/atrim/commit/b496952608936ed83cde7a959521c7ec5c01ffff) Fixed Custom Story images not being cleared out when another Custom Story was selected
