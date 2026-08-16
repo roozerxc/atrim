@@ -1060,13 +1060,12 @@ void cRendererDeferred::RenderGbuffer()
 {
     START_RENDER_PASS(GBuffer);
 
-    SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
+    SetDepthTestFunc(eDepthTestFunc_Equal);
     SetDepthTest(true);
     SetDepthWrite(false);
     SetBlendMode(eMaterialBlendMode_None);
     SetAlphaMode(eMaterialAlphaMode_Solid);
     SetChannelMode(eMaterialChannelMode_RGBA);
-
 
     ////////////////////////////////////
     //Iterate renderable objects and render to G-Buffer
