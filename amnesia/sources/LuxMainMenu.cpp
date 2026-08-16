@@ -20,9 +20,6 @@
 
 #include <sstream>
 
-// If you have VS2005 keep this! Otherwise remove if you are using VS2012+!
-#include "../sources/LuxNullptrCpp98.cpp"
-
 //--------------------------------------------------------------------------------
 
 static const bool gbDebug_SkipBGScene = false;
@@ -1955,7 +1952,7 @@ bool cLuxMainMenu::ClickedSaveGamePopup(iWidget* apWidget, const cGuiMessageData
 #if MAC_OS || LINUX
     cWidgetLabel* pSaveLabel = 0;
 #else
-    cWidgetLabel* pSaveLabel = nullptr;
+    cWidgetLabel* pSaveLabel = NULL;
 #endif
     for (size_t i = 0; i < mvTopMenuLabels.size(); ++i)
     {

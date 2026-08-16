@@ -3,9 +3,6 @@
 #include "LuxInputHandler.h"
 #include "LuxDebugHandler.h"
 
-// If you have VS2005 keep this! Otherwise remove if you are using VS2012+!
-#include "../sources/LuxNullptrCpp98.cpp"
-
 //-----------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
@@ -20,7 +17,7 @@ cLuxMainMenu_StartGame::cLuxMainMenu_StartGame(cGuiSet *apGuiSet, cGuiSkin *apGu
 #if MAC_OS || LINUX
     mpStartButton = 0;
 #else
-    mpStartButton = nullptr;
+    mpStartButton = NULL;
 #endif
 }
 
