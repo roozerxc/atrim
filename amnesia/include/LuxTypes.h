@@ -196,8 +196,7 @@ enum eLuxEnemyMusic
 enum eLuxHandObjectType
 {
     eLuxHandObjectType_Melee,
-    eLuxHandObjectType_Ranged,
-
+    //eLuxHandObjectType_Ranged,
     eLuxHandObjectType_LightSource,
 
     eLuxHandObjectType_LastEnum

@@ -671,7 +671,10 @@ iLuxHandObject* cLuxPlayerHands::CreateObjectFromType(const tString& asName, eLu
     {
     case eLuxHandObjectType_Melee:
         return hplNew(cLuxHandObject_Melee, (asName, this));
-    //case eLuxHandObjectType_Ranged:            return NULL;
+    /*
+    case eLuxHandObjectType_Ranged:
+        return hplNew(cLuxHandObject_Ranged, (asName, this));
+    */
     case eLuxHandObjectType_LightSource:
         return hplNew(cLuxHandObject_LightSource, (asName, this));
     }
@@ -691,10 +694,12 @@ eLuxHandObjectType cLuxPlayerHands::ToHandObjectType(const tString& asType)
     {
         return eLuxHandObjectType_Melee;
     }
+    /*
     if(sLowType == "ranged")
     {
         return eLuxHandObjectType_Ranged;
     }
+    */
     if(sLowType == "lightsource")
     {
         return eLuxHandObjectType_LightSource;
