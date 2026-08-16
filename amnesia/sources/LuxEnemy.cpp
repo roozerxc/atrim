@@ -646,7 +646,7 @@ void iLuxEnemy::OnUpdate(double adFixedDelta)
 
     //In case the update is called in save or anyhting else that just want a quick update, we do not want to be updated.
     //Enemies can be disabled when player is not properly placed and the like.
-    if(adFixedDelta < gpBase->mpEngine->GetFixedDelta() * 0.8f)
+    if(adFixedDelta < gpBase->mpEngine->GetFixedDelta() * 0.8)
     {
         return;
     }

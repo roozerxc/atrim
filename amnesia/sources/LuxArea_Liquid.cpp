@@ -104,7 +104,7 @@ void cLuxArea_Liquid::SetupAfterLoad(cWorld *apWorld)
 void cLuxArea_Liquid::OnUpdate(double adFixedDelta)
 {
     //Do not update this unless it is a proper game update (when eveything is 100% intialized)
-    if(adFixedDelta < gpBase->mpEngine->GetFixedDelta() * 0.8f)
+    if(adFixedDelta < gpBase->mpEngine->GetFixedDelta() * 0.8)
     {
         return;
     }
