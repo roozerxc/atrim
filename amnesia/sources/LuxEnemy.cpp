@@ -646,7 +646,7 @@ void iLuxEnemy::OnUpdate(double adFixedDelta)
 
     //In case the update is called in save or anyhting else that just want a quick update, we do not want to be updated.
     //Enemies can be disabled when player is not properly placed and the like.
-    if(adFixedDelta < gpBase->mpEngine->GetStepSize()*0.8f)
+    if(adFixedDelta < gpBase->mpEngine->GetFixedDelta() * 0.8f)
     {
         return;
     }
@@ -2415,7 +2415,7 @@ float iLuxEnemy::GetPlayerMovementTowardEnemyAmount()
 {
     iCharacterBody *pPlayerBody = gpBase->mpPlayer->GetCharacterBody();
 
-    cVector3f vPlayerDir = pPlayerBody->GetVelocity(gpBase->mpEngine->GetStepSize());
+    cVector3f vPlayerDir = pPlayerBody->GetVelocity(gpBase->mpEngine->GetFixedDelta());
     vPlayerDir.y =0;
 
     //If not moving much, return lowest amount

@@ -445,7 +445,7 @@ void cLuxDebugHandler::OnDraw(double adFrameTime)
         fY+=15.0f;
         gpBase->mpGameDebugSet->DrawFont(gpBase->mpDefaultFont, cVector3f(5,fY,10),14,cColor(1,1),
                                          _W("MoveSpeed: %f, %f (%f) Mul: %f AvgSpeed: %f\n"), pCharBody->GetMoveSpeed(eCharDir_Forward), pCharBody->GetMoveSpeed(eCharDir_Right),
-                                         pCharBody->GetVelocity(gpBase->mpEngine->GetStepSize()).Length(),
+                                         pCharBody->GetVelocity(gpBase->mpEngine->GetFixedDelta()).Length(),
                                          pPlayer->GetInteractionMoveSpeedMul(),
                                          pPlayer->GetAvgSpeed());
         fY+=15.0f;

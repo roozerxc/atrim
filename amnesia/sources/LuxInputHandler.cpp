@@ -1269,7 +1269,7 @@ void cLuxInputHandler::UpdateGamePlayerInput()
             cVector2f vExponent = cMath::Vector2Abs(vAnalogLookAxis);
             vExponent.x = sqrtf(vExponent.x);
             vExponent.y = sqrtf(vExponent.y);
-            cVector2f vGamepadPos = (vAnalogLookAxis * vExponent) * mfGamepadLookSensitivity* (float)gpBase->mpEngine->GetStepSize();
+            cVector2f vGamepadPos = (vAnalogLookAxis * vExponent) * mfGamepadLookSensitivity* (float)gpBase->mpEngine->GetFixedDelta();
 
             //Invert the Y-axis
             if(mbGamepadLookInvert)

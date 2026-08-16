@@ -244,7 +244,7 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(double adFixedDelta)
         /////////////////////////////
         // Player velocity
         iCharacterBody *pCharBody = gpBase->mpPlayer->GetCharacterBody();
-        float fPlayerSpeed = pCharBody->GetVelocity(gpBase->mpEngine->GetStepSize()).Length();
+        float fPlayerSpeed = pCharBody->GetVelocity(gpBase->mpEngine->GetFixedDelta()).Length();
         if(pCharBody->GetMoveSpeed(eCharDir_Forward)<0)
         {
             fPlayerSpeed = -fPlayerSpeed;

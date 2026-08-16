@@ -20,7 +20,7 @@ public:
     void Simulate(double adFixedDelta);
 
     void  SetMaxTimeStep(double adFixedDelta);
-    float GetMaxTimeStep();
+    double GetMaxTimeStep();
 
     void SetWorldSize(const cVector3f &avMin,const cVector3f &avMax);
     cVector3f GetWorldSizeMin();
@@ -101,7 +101,7 @@ private:
     cVector3f mvWorldSizeMin;
     cVector3f mvWorldSizeMax;
     cVector3f mvGravity;
-    float mfMaxTimeStep;
+    double dMaxTimeStep;
 
     ePhysicsAccuracy mAccuracy;
 };

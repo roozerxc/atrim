@@ -165,7 +165,7 @@ public:
         return dRenderAlpha;
     }
 
-    double GetStepSize()
+    double GetFixedDelta()
     {
         return dFixedDelta;
     }

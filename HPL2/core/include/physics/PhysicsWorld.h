@@ -81,7 +81,7 @@ public:
     virtual void Simulate(double adFixedDelta)=0;
 
     virtual void  SetMaxTimeStep(double adFixedDelta)=0;
-    virtual float GetMaxTimeStep()=0;
+    virtual double GetMaxTimeStep()=0;
 
     virtual void SetWorldSize(const cVector3f &avMin,const cVector3f &avMax)=0;
     virtual cVector3f GetWorldSizeMin()=0;

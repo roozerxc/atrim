@@ -47,7 +47,7 @@ cPhysicsWorldNewton::cPhysicsWorldNewton()
     mvWorldSizeMax = cVector3f(0,0,0);
 
     mvGravity = cVector3f(0,-9.81f,0);
-    mfMaxTimeStep = 1.0f/60.0f;
+    dMaxTimeStep = 1.0 / 60.0;
 
     /////////////////////////////////
     //Create default material.
@@ -89,10 +89,10 @@ void cPhysicsWorldNewton::Simulate(double adFixedDelta)
     //if(lUpdate % 30==0)
     {
 
-        while(adFixedDelta>mfMaxTimeStep)
+        while(adFixedDelta > dMaxTimeStep)
         {
-            NewtonUpdate(mpNewtonWorld, mfMaxTimeStep);
-            adFixedDelta -= mfMaxTimeStep;
+            NewtonUpdate(mpNewtonWorld, (float)dMaxTimeStep);
+            adFixedDelta -= dMaxTimeStep;
         }
         NewtonUpdate(mpNewtonWorld, (float)adFixedDelta);
     }
@@ -111,12 +111,12 @@ void cPhysicsWorldNewton::Simulate(double adFixedDelta)
 
 void cPhysicsWorldNewton::SetMaxTimeStep(double adFixedDelta)
 {
-    mfMaxTimeStep = (float)adFixedDelta;
+    dMaxTimeStep = adFixedDelta;
 }
 
-float cPhysicsWorldNewton::GetMaxTimeStep()
+double cPhysicsWorldNewton::GetMaxTimeStep()
 {
-    return mfMaxTimeStep;
+    return dMaxTimeStep;
 }
 
 //-----------------------------------------------------------------------

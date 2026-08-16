@@ -128,7 +128,7 @@ float cLuxEnemyMover::CalculateSpeedMul(double adFixedDelta)
 
 float cLuxEnemyMover::GetMoveSpeed()
 {
-    cVector3f vVel = mpCharBody->GetVelocity(gpBase->mpEngine->GetStepSize());
+    cVector3f vVel = mpCharBody->GetVelocity(gpBase->mpEngine->GetFixedDelta());
     vVel.y =0;
     return vVel.Length();
 }
