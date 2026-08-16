@@ -1060,7 +1060,7 @@ void cRendererDeferred::RenderGbuffer()
 {
     START_RENDER_PASS(GBuffer);
 
-    SetDepthTestFunc(eDepthTestFunc_Equal);
+    SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
     SetDepthTest(true);
     SetDepthWrite(false);
     SetBlendMode(eMaterialBlendMode_None);
