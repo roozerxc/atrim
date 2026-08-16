@@ -617,33 +617,6 @@ void cPlatform::GetAvailableVideoModes(tVideoModeVec &avDestVidModes, int alMinB
     sort(avDestVidModes.begin(), avDestVidModes.end(), VideoComp());
 }
 
-tWString cPlatform::GetDisplayName(int alDisplay)
-{
-    return _W("");
-}
-
-void cPlatform::GetDisplayResolution(int alDisplay, int& alHorizontal, int& alVertical)
-{
-    if(alDisplay != 0)
-    {
-        ///////////
-        // Only main monitor supported
-        alHorizontal = -1;
-        alVertical = -1;
-    }
-    else
-    {
-        ///////////
-        // Get current screen resolution
-        RECT desktop;
-        HWND pDesktop = GetDesktopWindow();
-        GetWindowRect(pDesktop, &desktop);
-
-        alHorizontal = desktop.right;
-        alVertical = desktop.bottom;
-    }
-}
-
 //-----------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////

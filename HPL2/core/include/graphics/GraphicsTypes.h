@@ -25,23 +25,15 @@ class cVideoMode
 public:
     // Old style add a resolution
     cVideoMode(const cVector2l& avScreenSize, int alBitsPerPixel, int alRefreshRate);
-    // add a resolution for a specific monitor
-    cVideoMode(int alDisplay, const cVector2l& avScreenSize, int alBitsPerPixel, int alRefreshRate);
     // Add a custom resolution
     cVideoMode(const cVector2l& avScreenSize);
     cVideoMode();
-
-    bool isFullScreenDesktop() const
-    {
-        return mvScreenSize.x == 0 && mvScreenSize.y == 0;
-    }
 
     bool operator== (const cVideoMode& o) const;
 
     cVector2l mvScreenSize;
     int mlBitsPerPixel;
     int mlRefreshRate;
-    int mlDisplay;
     bool mbCustom;
 };
 

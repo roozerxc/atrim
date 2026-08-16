@@ -76,7 +76,7 @@ public:
     /////////////// GENERAL SETUP ///////////////////////
     /////////////////////////////////////////////////////
 
-    bool Init(    int alWidth, int alHeight, int alDisplay, int alBpp, bool abFullscreen, int alMultisampling,
+    bool Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen, int alMultisampling,
                   eGpuProgramFormat aGpuProgramFormat,const tString& asWindowCaption,
                   const cVector2l &avWindowPos);
 
@@ -298,7 +298,6 @@ public:
 
 private:
     cVector2l mvScreenSize;
-    int mlDisplay;
     int mlMultisampling;
     int mlBpp;
     bool mbFullscreen;

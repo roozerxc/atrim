@@ -285,15 +285,6 @@ bool PixelFormatIsFloatingPoint(ePixelFormat aFormat)
 cVideoMode::cVideoMode(const cVector2l& avScreenSize, int alBitsPerPixel, int alRefreshRate) : mvScreenSize(avScreenSize),
     mlBitsPerPixel(alBitsPerPixel),
     mlRefreshRate(alRefreshRate),
-    mlDisplay(0),
-    mbCustom(false)
-{
-}
-
-cVideoMode::cVideoMode(int alDisplay, const cVector2l& avScreenSize, int alBitsPerPixel, int alRefreshRate) : mvScreenSize(avScreenSize),
-    mlBitsPerPixel(alBitsPerPixel),
-    mlRefreshRate(alRefreshRate),
-    mlDisplay(alDisplay),
     mbCustom(false)
 {
 }
@@ -301,7 +292,6 @@ cVideoMode::cVideoMode(int alDisplay, const cVector2l& avScreenSize, int alBitsP
 cVideoMode::cVideoMode(const cVector2l& avScreenSize) : mvScreenSize(avScreenSize),
     mlBitsPerPixel(-1),
     mlRefreshRate(-1),
-    mlDisplay(0),
     mbCustom(true)
 {
 }
@@ -309,14 +299,13 @@ cVideoMode::cVideoMode(const cVector2l& avScreenSize) : mvScreenSize(avScreenSiz
 cVideoMode::cVideoMode() : mvScreenSize(cVector2l(-1,-1)),
     mlBitsPerPixel(-1),
     mlRefreshRate(-1),
-    mlDisplay(0),
     mbCustom(true)
 {
 }
 
 bool cVideoMode::operator==(const hpl::cVideoMode &o) const
 {
-    return mlDisplay == o.mlDisplay && mvScreenSize == o.mvScreenSize;
+    return mvScreenSize == o.mvScreenSize;
 }
 
 //-----------------------------------------------------------------------

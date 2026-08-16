@@ -35,7 +35,6 @@ public:
     tString msLangFile;
 
     cVector2l mvScreenSize;
-    int mlDisplay;
     bool mbFullscreen;
     bool mbVSync;
     int mlTextureQuality;

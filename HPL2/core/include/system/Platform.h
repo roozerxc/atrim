@@ -111,10 +111,6 @@ public:
 
     static void GetAvailableVideoModes(tVideoModeVec& avDestVidModes, int alMinBpp=-1, int alMinRefreshRate=-1);
 
-    static tWString GetDisplayName(int alDisplay);
-
-    static void GetDisplayResolution(int alDisplay, int& alHorizontal, int& alVertical);
-
     //////////////////////////////////////////////////////
     ////////// THREADING /////////////////////////////////
     //////////////////////////////////////////////////////

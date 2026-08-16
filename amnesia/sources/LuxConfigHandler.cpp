@@ -58,7 +58,6 @@ void cLuxConfigHandler::LoadMainConfig()
     // Engine init variables
     mvScreenSize.x =    gpBase->mpMainConfig->GetInt("Screen","Width", 800);
     mvScreenSize.y =    gpBase->mpMainConfig->GetInt("Screen","Height", 600);
-    mlDisplay =            gpBase->mpMainConfig->GetInt("Screen","Display", 0);
     mbFullscreen =        gpBase->mpMainConfig->GetBool("Screen","FullScreen", false);
     mbVSync =            gpBase->mpMainConfig->GetBool("Screen","Vsync", false);
 

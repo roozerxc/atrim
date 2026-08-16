@@ -31,7 +31,7 @@ public:
     /////////////// GENERAL SETUP ///////////////////////
     /////////////////////////////////////////////////////
 
-    virtual bool Init(    int alWidth, int alHeight, int alDisplay, int alBpp, bool abFullscreen, int alMultisampling,
+    virtual bool Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen, int alMultisampling,
                           eGpuProgramFormat aGpuProgramFormat, const tString& asWindowCaption,
                           const cVector2l &avWindowPos)=0;
 

@@ -1086,7 +1086,6 @@ bool cLuxBase::InitEngine()
 
     cEngineInitVars vars;
     vars.mGraphics.mvScreenSize =  mpConfigHandler->mvScreenSize;
-    vars.mGraphics.mlDisplay = mpConfigHandler->mlDisplay;
     vars.mGraphics.mbFullscreen =  mpConfigHandler->mbFullscreen;
     vars.mGraphics.msWindowCaption = msGameName + " Loading...";
 

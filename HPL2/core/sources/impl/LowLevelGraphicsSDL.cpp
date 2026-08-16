@@ -119,13 +119,12 @@ void CALLBACK OGLDebugOutputCallback(GLenum alSource, GLenum alType, GLuint alID
 
 //-----------------------------------------------------------------------
 
-bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alDisplay, int alBpp, bool abFullscreen,
-                                int alMultisampling, eGpuProgramFormat aGpuProgramFormat,const tString& asWindowCaption,
+bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFullscreen, int alMultisampling,
+                                eGpuProgramFormat aGpuProgramFormat,const tString& asWindowCaption,
                                 const cVector2l &avWindowPos)
 {
     mvScreenSize.x = alWidth;
     mvScreenSize.y = alHeight;
-    mlDisplay = alDisplay;
     mlBpp = alBpp;
     mbFullscreen = abFullscreen;
 

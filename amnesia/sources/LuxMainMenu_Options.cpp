@@ -1104,7 +1104,7 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
             cPlatform::GetAvailableVideoModes(vVidModes, 32);
 
             cVector2f vCurrentResf = aObj.GetVarVector2f("Resolution");
-            cVideoMode vCurrentRes = cVideoMode(aObj.GetVarInt("Display"), cVector2l((int)vCurrentResf.x, (int)vCurrentResf.y), -1, -1);
+            cVideoMode vCurrentRes = cVideoMode(cVector2l((int)vCurrentResf.x, (int)vCurrentResf.y), -1, -1);
 
             /////////////////
             // Remove duplicates
@@ -1147,17 +1147,8 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
             {
                 const cVideoMode& mode = vVidModes[i];
                 tWString sRes;
-                if (mode.isFullScreenDesktop())
-                {
-                    sRes = kTranslate("OptionsMenu", "FullScreenDesktop") + _W(" ") + cPlatform::GetDisplayName(mode.mlDisplay);
-                }
-                else
-                {
-                    sRes = cString::ToStringW(mode.mvScreenSize.x) + _W("x") + cString::ToStringW(mode.mvScreenSize.y);
-                }
-// Since the same resolution on display 0 will have the same text as display 1, this won't work
-//                if(mpCBResolution->HasItem(sRes))
-//                    continue;
+
+                sRes = cString::ToStringW(mode.mvScreenSize.x) + _W("x") + cString::ToStringW(mode.mvScreenSize.y);
 
                 mpCBResolution->AddItem(sRes);
                 mvScreenSizes.push_back(mode);
@@ -1454,7 +1445,6 @@ void cLuxMainMenu_Options::ApplyChanges()
 
         const cVideoMode vidMode = mvScreenSizes[mpCBResolution->GetSelectedItem()];
         pCfgHdr->mvScreenSize = vidMode.mvScreenSize;
-        pCfgHdr->mlDisplay = vidMode.mlDisplay;
         pCfgHdr->mbFullscreen = mpChBFullScreen->IsChecked();
         pCfgHdr->mbVSync = mpChBVSync->IsChecked();
         pGfx->GetLowLevel()->SetVsyncActive(pCfgHdr->mbVSync);
@@ -1763,7 +1753,6 @@ void cLuxMainMenu_Options::DumpInitialValues(cResourceVarsObject &aObj)
         const cVector2l& vResolution = gpBase->mpConfigHandler->mvScreenSize;
         cVector2f vResolutionf = cVector2f((float)vResolution.x, (float)vResolution.y);
         aObj.AddVarVector2f("Resolution", vResolutionf);
-        aObj.AddVarInt("Display", gpBase->mpConfigHandler->mlDisplay);
 
         /////////////////////////
         // Fullscreen & vsync
@@ -1854,7 +1843,6 @@ void cLuxMainMenu_Options::DumpCurrentValues(cResourceVarsObject &aObj)
         const cVideoMode& vResolution = mvScreenSizes[mpCBResolution->GetSelectedItem()];
         cVector2f vResolutionf = cVector2f((float)vResolution.mvScreenSize.x, (float)vResolution.mvScreenSize.y);
         aObj.AddVarVector2f("Resolution", vResolutionf);
-        aObj.AddVarInt("Display", vResolution.mlDisplay);
 
         /////////////////////////
         // Fullscreen & vsync

@@ -20,7 +20,6 @@ public:
     public:
         cGraphicsVars() :
             mvScreenSize(800,600),
-            mlDisplay(0),
             mlScreenBpp(32),
             mbFullscreen(false),
             mlMultisampling(0),
@@ -30,7 +29,6 @@ public:
         {}
 
         cVector2l mvScreenSize;
-        int mlDisplay;
         int mlScreenBpp;
         bool mbFullscreen;
         int mlMultisampling;

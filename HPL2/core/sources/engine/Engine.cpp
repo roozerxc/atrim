@@ -265,7 +265,6 @@ void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, 
     //Init the graphics
     mpGraphics->Init(    apVars->mGraphics.mvScreenSize.x,
                          apVars->mGraphics.mvScreenSize.y,
-                         apVars->mGraphics.mlDisplay,
                          apVars->mGraphics.mlScreenBpp,
                          apVars->mGraphics.mbFullscreen,
                          apVars->mGraphics.mlMultisampling,
