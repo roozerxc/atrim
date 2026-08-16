@@ -111,25 +111,22 @@ eLuxAxis StringToAxis(const tString &asAxis)
 
 void LuxCalcGuiSetOffset(const cVector2f &avVirtualSizeIn, const cVector2f& avScreenSize, cVector2f& avOutSize, cVector2f & avOutOffset)
 {
-
     float fWantedRatio = avVirtualSizeIn.x / avVirtualSizeIn.y;
     float fScreenRatio = avScreenSize.x / avScreenSize.y;
-    //float fAddY = avVirtualSizeIn.y * (fScreenRatio-fWantedRatio);
 
-    if(fScreenRatio >= (4.0f / 3.0f)-0.001f)
+    if(fScreenRatio >= (4.0f / 3.0f) - 0.001f)
     {
-        float fAddX = avVirtualSizeIn.x * (fScreenRatio-fWantedRatio); //The "left overs" on both sides
-        //avOutSize.y = avVirtualSizeIn.y + fAddY;
+        float fAddX = avVirtualSizeIn.y * (fScreenRatio-fWantedRatio);
 
         avOutSize.x = avVirtualSizeIn.x + fAddX;
         avOutSize.y = avVirtualSizeIn.y;
 
         avOutOffset.x = fAddX*0.5f;
-        avOutOffset.y =0;
+        avOutOffset.y = 0.0f;
     }
     else
     {
-        avOutOffset =0;
+        avOutOffset = 0.0f;
         avOutSize.x = avVirtualSizeIn.x;
         avOutSize.y = avVirtualSizeIn.y;
     }
