@@ -92,6 +92,8 @@ private:
 
     float mfAlpha;
 
+    float mfFlashIntensity;
+
     int mlStep;
     float mfCount;
 
@@ -280,6 +282,8 @@ private:
 
     float mfAlpha;
 
+    float mfFlashIntensity;
+
     int mlStep;
     float mfCount;
 
@@ -365,6 +369,9 @@ public:
     void Update(double adFixedDelta);
     void Reset();
 
+    void LoadUserConfig();
+    void SaveUserConfig();
+
     void OnMapEnter(cLuxMap *apMap);
     void OnMapLeave(cLuxMap *apMap);
 
@@ -379,6 +386,12 @@ public:
         return mbPlayerIsPaused;
     }
     void SetPlayerIsPaused(bool abX);
+
+    float GetFlashIntensity()
+    {
+        return mfFlashIntensity;
+    }
+    void SetFlashIntensity(float afX);
 
     ///////////////////////////
     // Effects
@@ -438,6 +451,7 @@ private:
     std::vector<iLuxEffect*> mvEffects;
 
     bool mbPlayerIsPaused;
+    float mfFlashIntensity;
 };
 
 //----------------------------------------------

@@ -2,6 +2,7 @@
 
 #include "LuxMap.h"
 #include "LuxMapHandler.h"
+#include "LuxEffectHandler.h"
 #include "LuxInputHandler.h"
 #include "LuxHintHandler.h"
 #include "LuxConfigHandler.h"
@@ -125,6 +126,10 @@ cLuxMainMenu_Options::cLuxMainMenu_Options(cGuiSet *apGuiSet, cGuiSkin *apGuiSki
     mbTipTextReset = false;
     mpCurrentTipWidget = NULL;
 
+    mfFlashMin = 0.0f;
+    mfFlashStep = 0.05f;
+    mfFlashMax = 1.0f;
+
     mfGammaMin = 0.3f;
     mfGammaStep = 0.05f;
     mfGammaMax = 2.0f;
@@ -222,9 +227,6 @@ void cLuxMainMenu_Options::CreateMainGui()
 
     mpBOK->SetFocusNavigation(eUIArrow_Right, mpBCancel);
     mpBCancel->SetFocusNavigation(eUIArrow_Left, mpBOK);
-
-
-
 
     vPos = cVector3f(fLeftBorderSize, 35+fUpperBorderSize,1);
 
@@ -350,6 +352,15 @@ void cLuxMainMenu_Options::AddGameOptions(cWidgetTab* apTab)
     mpCBFocusIconStyle->AddItem(kTranslate("OptionsMenu", "FocusIconStyleSimple"));
     vPos.y += pLabel->GetSize().y + 15;
 
+    ///////////////////////////////////////////////
+    // Flashback Intensity
+    pLabel = mpGuiSet->CreateWidgetLabel(vPos, -1, kTranslate("OptionsMenu", "FlashIntensity"), apTab);
+    mpSFlash = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, cVector3f(0,pLabel->GetSize().y+5,0), cVector2f(100,20), 0, pLabel);
+    SetUpInput(pLabel, mpSFlash, false, kTranslate("OptionsMenu", "FlashIntensityTip"));
+    SetUpSlider(mpSFlash, mfFlashMin, mfFlashMax, mfFlashStep, kGuiCallback(FlashSlider_OnMove), &mpLFlash);
+
+    vPos.y += mpSFlash->GetLocalPosition().y + mpSFlash->GetSize().y + 15;
+
     //////////////////////////////////
     // Commentary
     if(mbShowCommentary)
@@ -362,10 +373,8 @@ void cLuxMainMenu_Options::AddGameOptions(cWidgetTab* apTab)
     // Populate languages
     PopulateLanguageList();
 
-
     //////////////////////////////////////////////////////////////////////////////////
     // Set up navigation
-
     iWidget* pLastWidget = NULL;
 
     // Down
@@ -391,7 +400,6 @@ void cLuxMainMenu_Options::AddGameOptions(cWidgetTab* apTab)
 
     apTab->SetUserData(pLastWidget);
     apTab->GetTabLabel()->SetUserData(mpCBLanguage);
-
 
     // Up
     mpChBShowSubtitles->SetFocusNavigation(eUIArrow_Up, mpCBLanguage);
@@ -938,12 +946,8 @@ void cLuxMainMenu_Options::AddInputOptions(cWidgetTab* apTab)
     // Mouse Sensitivity
     cWidgetLabel* pLabel = mpGuiSet->CreateWidgetLabel(vPos, -1, kTranslate("OptionsMenu", "MouseSensitivity"), apTab);
     mpSMouseSensitivity = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, cVector3f(0,pLabel->GetSize().y+5,0), cVector2f(100,20), 0, pLabel);
-    //mpSMouseSensitivity->AddCallback(eGuiMessage_SliderMove, this, kGuiCallback(MouseSensitivitySlider_OnMove));
     SetUpInput(pLabel, mpSMouseSensitivity, false, kTranslate("OptionsMenu", "MouseSensitivityTip"));
     SetUpSlider(mpSMouseSensitivity, mfMouseSensitivityMin, mfMouseSensitivityMax, mfMouseSensitivityStep, kGuiCallback(MouseSensitivitySlider_OnMove), &mpLMouseSensitivity);
-
-    //mpLMouseSensitivity = mpGuiSet->CreateWidgetLabel(cVector3f(mpSMouseSensitivity->GetSize().x*0.5f,2,1), -1, _W(""), mpSMouseSensitivity);
-    //mpLMouseSensitivity->SetTextAlign(eFontAlign_Center);
 
     vPos.y += mpSMouseSensitivity->GetLocalPosition().y + mpSMouseSensitivity->GetSize().y + 15;
 
@@ -965,14 +969,10 @@ void cLuxMainMenu_Options::AddInputOptions(cWidgetTab* apTab)
     // Gamepad Sensitivity
     pLabel = mpGuiSet->CreateWidgetLabel(vPos, -1, kTranslate("OptionsMenu", "GamepadLookSensitivity"), apTab);
     mpSGamepadLookSensitivity = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, cVector3f(0,pLabel->GetSize().y+5,0), cVector2f(100,20), 0, pLabel);
-    //mpSGamepadLookSensitivity->AddCallback(eGuiMessage_SliderMove, this, kGuiCallback(MouseSensitivitySlider_OnMove));
     SetUpInput(pLabel, mpSMouseSensitivity, false, kTranslate("OptionsMenu", "GamepadLookSensitivityTip"));
     SetUpSlider(mpSGamepadLookSensitivity, mfGamepadLookSensitivityMin, mfGamepadLookSensitivityMax, mfGamepadLookSensitivityStep, kGuiCallback(GamepadLookSensitivitySlider_OnMove), &mpLGamepadLookSensitivity);
 
     vPos.y += mpSGamepadLookSensitivity->GetLocalPosition().y + mpSGamepadLookSensitivity->GetSize().y + 15;
-
-    //mpLMouseSensitivity = mpGuiSet->CreateWidgetLabel(cVector3f(mpSMouseSensitivity->GetSize().x*0.5f,2,1), -1, _W(""), mpSMouseSensitivity);
-    //mpLMouseSensitivity->SetTextAlign(eFontAlign_Center);
 #endif
 
     //////////////////////////////
@@ -1075,6 +1075,10 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
         {
             mpChBShowCommentary->SetChecked(aObj.GetVarBool("ShowCommentary"), false);
         }
+
+        float mfFlashIntensity = aObj.GetVarFloat("FlashIntensity");
+        SetSliderValue(mpSFlash, mfFlashIntensity, false, mfFlashMin, mfFlashMax);
+        SetFlashLabelString(mfFlashIntensity);
 
         // Language
         {
@@ -1414,7 +1418,6 @@ void cLuxMainMenu_Options::ApplyChanges()
     // Reset initial values on next enter
     mInitialValues.AddVarBool("InitialValuesSet", false);
 
-
     cLuxConfigHandler* pCfgHdr = gpBase->mpConfigHandler;
     ///////////////////////////
     // Game
@@ -1433,6 +1436,8 @@ void cLuxMainMenu_Options::ApplyChanges()
         gpBase->mpPlayer->SetShowCrosshair(mpChBShowCrosshair->IsChecked());
 
         gpBase->mpPlayer->SetFocusIconStyle((eLuxFocusIconStyle)mpCBFocusIconStyle->GetSelectedItem());
+
+        gpBase->mpEffectHandler->SetFlashIntensity(GetFlash());
     }
 
 
@@ -1529,6 +1534,12 @@ void cLuxMainMenu_Options::ApplyChanges()
     //    gpBase->mpMainMenu->RecreateGui();
 }
 
+//-----------------------------------------------------------------------
+
+void cLuxMainMenu_Options::SetFlashLabelString(float afX)
+{
+    SetSliderLabelString(mpLFlash, afX, mfFlashMin, mfFlashMax);
+}
 
 //-----------------------------------------------------------------------
 
@@ -1741,6 +1752,7 @@ void cLuxMainMenu_Options::DumpInitialValues(cResourceVarsObject &aObj)
         aObj.AddVarBool("ShowCrosshair", gpBase->mpPlayer->GetShowCrosshair());
         aObj.AddVarInt("FocusIconStyle", gpBase->mpPlayer->GetFocusIconStyle());
         aObj.AddVarBool("ShowCommentary", gpBase->mpMapHandler->GetShowCommentary());
+        aObj.AddVarFloat("FlashIntensity", gpBase->mpEffectHandler->GetFlashIntensity());
 
         // Language
         aObj.AddVarString("Language", gpBase->mpConfigHandler->msLangFile);
@@ -1831,6 +1843,8 @@ void cLuxMainMenu_Options::DumpCurrentValues(cResourceVarsObject &aObj)
 
         aObj.AddVarBool("ShowCrosshair",    mpChBShowCrosshair->IsChecked());
         aObj.AddVarInt("FocusIconStyle",    mpCBFocusIconStyle->GetSelectedItem());
+        aObj.AddVarBool("ShowCommentary",   mpChBShowCommentary->IsChecked());
+        aObj.AddVarFloat("FlashIntensity",  GetFlash());
 
         aObj.AddVarString("Language",        cString::To8Char(mvLangFiles[mpCBLanguage->GetSelectedItem()]));
     }
@@ -2047,6 +2061,19 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Options, Option_OnChangeValue);
 
 //-----------------------------------------------------------------------
 
+bool cLuxMainMenu_Options::FlashSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    float mfFlashIntensity = GetFlash();
+    SetSliderLabelString(mpLFlash, mfFlashIntensity, mfFlashMin, mfFlashMax);
+
+    gpBase->mpEffectHandler->SetFlashIntensity(mfFlashIntensity);
+
+    return true;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Options, FlashSlider_OnMove);
+
+//-----------------------------------------------------------------------
+
 bool cLuxMainMenu_Options::GammaSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData)
 {
     float fGamma = GetGamma();
@@ -2181,6 +2208,8 @@ bool cLuxMainMenu_Options::PressCancel(iWidget* apWidget, const cGuiMessageData&
     gpBase->mpInputHandler->SetGamepadLookSensitivity(mInitialValues.GetVarFloat("GamepadLookSensitivity"));
 #endif
     gpBase->mpEngine->GetSound()->GetLowLevel()->SetVolume(mInitialValues.GetVarFloat("SoundVolume"));
+
+    gpBase->mpEffectHandler->SetFlashIntensity(mInitialValues.GetVarFloat("FlashIntensity", 1.0f));
 
     MessageBoxCallback(apWidget, aData);
 

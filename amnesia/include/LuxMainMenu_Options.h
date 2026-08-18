@@ -56,6 +56,10 @@ private:
 
     void ApplyChanges();
 
+    float GetFlash()
+    {
+        return GetSliderValue(mpSFlash, mfFlashMin, mfFlashMax);
+    }
     float GetGamma()
     {
         return GetSliderValue(mpSGamma, mfGammaMin, mfGammaMax);
@@ -75,6 +79,7 @@ private:
         return GetSliderValue(mpSVolume, mfVolumeMin, mfVolumeMax);
     }
 
+    void SetFlashLabelString(float afX);
     void SetGammaLabelString(float afX);
     void SetSensitivityLabelString(float afX);
 #if USE_GAMEPAD
@@ -144,6 +149,13 @@ private:
     cWidgetCheckBox *mpChBShowCrosshair;
     cWidgetComboBox *mpCBFocusIconStyle;
     cWidgetCheckBox *mpChBShowCommentary;
+
+    cWidgetLabel    *mpLFlash;
+    cWidgetSlider   *mpSFlash;
+
+    float mfFlashMin;
+    float mfFlashMax;
+    float mfFlashStep;
 
     // Graphics;
     cWidgetDummy    *mpDBasicGfxOptions;
@@ -258,6 +270,9 @@ private:
 
     bool Option_OnChangeValue(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(Option_OnChangeValue);
+
+    bool FlashSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(FlashSlider_OnMove);
 
     bool GammaSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(GammaSlider_OnMove);

@@ -318,7 +318,8 @@ void cLuxEffect_EmotionFlash::Update(double adFixedDelta)
 
 void cLuxEffect_EmotionFlash::OnDraw(double adFrameTime)
 {
-    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx,gpBase->mvHudVirtualStartPos + cVector3f(0,0,3.2f),gpBase->mvHudVirtualSize,cColor(mfAlpha, 1));
+    mfFlashIntensity = gpBase->mpUserConfig->GetFloat("Game", "FlashIntensity", 1.0f);
+    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx,gpBase->mvHudVirtualStartPos + cVector3f(0,0,3.2f),gpBase->mvHudVirtualSize,cColor(mfAlpha * mfFlashIntensity, 1 * mfFlashIntensity));
 
     if(mfTextAlpha > 0)
     {
@@ -333,7 +334,14 @@ void cLuxEffect_EmotionFlash::OnDraw(double adFrameTime)
             float fY = fStartY;
             for(size_t i=0; i<mvTextRows.size(); ++i)
             {
-                gpBase->mpGameHudSet->DrawFont(mvTextRows[i], mpFont, cVector3f(150,fY, 4), mvFontSize, cColor(0, mfTextAlpha), eFontAlign_Left);
+                if(mfFlashIntensity <= 0.45f)
+                {
+                    gpBase->mpGameHudSet->DrawFont(mvTextRows[i], mpFont, cVector3f(150,fY, 4), mvFontSize, cColor(1, mfTextAlpha), eFontAlign_Left);
+                }
+                else if(mfFlashIntensity >= 0.5f)
+                {
+                    gpBase->mpGameHudSet->DrawFont(mvTextRows[i], mpFont, cVector3f(150,fY, 4), mvFontSize, cColor(0, mfTextAlpha), eFontAlign_Left);
+                }
                 fY += mvFontSize.y + 2.0f;
             }
         }
@@ -999,9 +1007,11 @@ void cLuxEffect_Flash::Update(double adFixedDelta)
 
 void cLuxEffect_Flash::OnDraw(double adFrameTime)
 {
-    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx,gpBase->mvHudVirtualStartPos+cVector3f(0,0,3.2f),gpBase->mvHudVirtualSize,cColor(mfAlpha, 1));
+    mfFlashIntensity = gpBase->mpUserConfig->GetFloat("Game", "FlashIntensity", 1.0f);
+    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx,gpBase->mvHudVirtualStartPos+cVector3f(0,0,3.2f),gpBase->mvHudVirtualSize,cColor(mfAlpha * mfFlashIntensity, 1 * mfFlashIntensity));
 }
 
+//-----------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
 // PLAY VOICE
@@ -1371,6 +1381,18 @@ void cLuxEffectHandler::Reset()
 
 //-----------------------------------------------------------------------
 
+void cLuxEffectHandler::LoadUserConfig()
+{
+    mfFlashIntensity = gpBase->mpUserConfig->GetFloat("Game","FlashIntensity", 1.0f);
+}
+
+void cLuxEffectHandler::SaveUserConfig()
+{
+    gpBase->mpUserConfig->SetFloat("Game","FlashIntensity", mfFlashIntensity);
+}
+
+//-----------------------------------------------------------------------
+
 void cLuxEffectHandler::Update(double adFixedDelta)
 {
     for(size_t i=0; i<mvEffects.size(); ++i)
@@ -1440,6 +1462,18 @@ void cLuxEffectHandler::SetPlayerIsPaused(bool abX)
 {
     mbPlayerIsPaused = abX;
     gpBase->mpPlayer->SetActive(!abX);
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxEffectHandler::SetFlashIntensity(float afX)
+{
+    if(mfFlashIntensity == afX)
+    {
+        return;
+    }
+
+    mfFlashIntensity = afX;
 }
 
 //-----------------------------------------------------------------------

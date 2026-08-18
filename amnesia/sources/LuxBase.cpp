@@ -1005,6 +1005,7 @@ bool cLuxBase::InitUserConfig()
     /////////////////////////
     //Let all modules load user config.
     RunModuleMessage(eLuxUpdateableMessage_LoadUserConfig);
+    mpEffectHandler->LoadUserConfig();
 
     return true;
 }
@@ -1040,6 +1041,7 @@ void cLuxBase::SaveConfig()
     if(mpUserConfig)
     {
         RunModuleMessage(eLuxUpdateableMessage_SaveUserConfig);
+        mpEffectHandler->SaveUserConfig();
     }
 
     /////////////////////
