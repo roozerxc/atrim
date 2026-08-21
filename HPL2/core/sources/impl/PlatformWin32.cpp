@@ -38,24 +38,29 @@ namespace hpl
 
 bool cPlatformWin32::DWMCompositorActive()
 {
-    HMODULE hDwmapi = LoadLibraryW(_W("dwmapi.dll"));
+    HMODULE hDwmapi = LoadLibrary(_W("dwmapi.dll"));
     if(!hDwmapi)
     {
         return false;
     }
 
     typedef HRESULT(WINAPI *DwmIsCompositionEnabledFunc)(BOOL*);
-    DwmIsCompositionEnabledFunc pDWMCompositorActive =
-        (DwmIsCompositionEnabledFunc)GetProcAddress(hDwmapi, "DwmIsCompositionEnabled");
+
+    DwmIsCompositionEnabledFunc pDwmIsCompositionEnabled =
+        (DwmIsCompositionEnabledFunc)GetProcAddress(
+        hDwmapi, "DwmIsCompositionEnabled");
 
     BOOL bDwmEnabled = FALSE;
-    if(pDWMCompositorActive)
+    HRESULT hr = E_FAIL;
+
+    if(pDwmIsCompositionEnabled)
     {
-        pDWMCompositorActive(&bDwmEnabled);
+        hr = pDwmIsCompositionEnabled(&bDwmEnabled);
     }
 
     FreeLibrary(hDwmapi);
-    return bDwmEnabled != FALSE;
+
+    return SUCCEEDED(hr) && bDwmEnabled != FALSE;
 }
 
 //-----------------------------------------------------------------------
