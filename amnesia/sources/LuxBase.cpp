@@ -1519,23 +1519,16 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
     // Patched lang for some hardcoded strings in source tree
     pResources->AddLanguageFile(msPatchLanguageFolder + sPatchFileName, true);
 
+    ////////////////////////////////////////////
+    // If not found in main_init.cfg, load it through base config folder anyway
+    if(msPatchLanguageFolder=="")
+    {
+        pResources->AddLanguageFile("config/" + sPatchFileName, true);
+    }
+
     // Main game lang
     pResources->AddLanguageFile(msGameLanguageFolder + sGameFileName, true);
     pResources->AddLanguageFile(msBaseLanguageFolder + sBaseFileName, true);
-
-    ////////////////////////////////////////////
-    // Add new patch language file
-    if(sPatchFileName != msDefaultPatchLanguage)
-    {
-        pResources->AddLanguageFile(msPatchLanguageFolder + msDefaultPatchLanguage, false);
-    }
-
-    ////////////////////////////////////////////
-    // If not found in main_init.cfg, load it through base config folder anyway
-    if(sPatchFileName=="" && msPatchLanguageFolder=="" || sPatchFileName != msDefaultPatchLanguage)
-    {
-        pResources->AddLanguageFile("config/patch_" + sGameFileName, true);
-    }
 
     ////////////////////////////////////////////
     //If not default language, add default to so only missing entries are filled in
@@ -1543,6 +1536,13 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
         pResources->AddLanguageFile(cString::To8Char(mpCustomStory->msStoryRootFolder) +
                                     mpCustomStory->msExtraLangFilePrefix +
                                     mpCustomStory->msDefaultExtraLanguage, false);
+
+    ////////////////////////////////////////////
+    // Add new patch language file
+    if(sPatchFileName != msDefaultPatchLanguage)
+    {
+        pResources->AddLanguageFile(msPatchLanguageFolder + msDefaultPatchLanguage, false);
+    }
 
     if(sGameFileName != msDefaultGameLanguage)
     {
