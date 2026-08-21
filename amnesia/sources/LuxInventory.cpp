@@ -1113,36 +1113,41 @@ cLuxInventory_Item * cLuxInventory::AddItem(const tString& asName, eLuxItemType 
     }
 
     ////////////
-    // Check if has max amount
-    if(pItemType->GetHasMaxAmount())
-    {
-        gpBase->mpMessageHandler->SetMessage(kTranslate("Inventory", "TooManyItemsOfSort"),0);
-        return NULL;
-    }
-
-    ////////////
     // If item type has count then check for
     if(pItemType->HasCount())
     {
-        cLuxInventory_Item *pItem = GetItemFromSubType(asSubTypeName);
-        if(pItem)
+        if(aType == eLuxItemType_Tinderbox)
         {
             /////////////////////////////////
-            //Check if there are too many
-            if(pItem->GetCount() >= pItemType->GetMaxCount())
+            //Check if there are too many tinderboxes
+            if(gpBase->mpPlayer->GetTinderboxes() >= pItemType->GetMaxCount())
             {
                 gpBase->mpMessageHandler->SetMessage(kTranslate("Inventory", "TooManyItemsOfSort"),0);
                 return NULL;
             }
-            else
+        }
+        else
+        {
+            cLuxInventory_Item *pItem = GetItemFromSubType(asSubTypeName);
+            if(pItem)
             {
-                pItem->AddCount(1);
-
-                if(apRemoveItemProp)
+                /////////////////////////////////
+                //Check if there are too many items of sort
+                if(pItem->GetCount() >= pItemType->GetMaxCount())
                 {
-                    *apRemoveItemProp = true;
+                    gpBase->mpMessageHandler->SetMessage(kTranslate("Inventory", "TooManyItemsOfSort"),0);
+                    return NULL;
                 }
-                return pItem;
+                else
+                {
+                    pItem->AddCount(1);
+
+                    if(apRemoveItemProp)
+                    {
+                        *apRemoveItemProp = true;
+                    }
+                    return pItem;
+                }
             }
         }
     }

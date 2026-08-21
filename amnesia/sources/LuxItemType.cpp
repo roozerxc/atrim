@@ -408,12 +408,6 @@ cLuxItemType_Tinderbox::cLuxItemType_Tinderbox()  : iLuxItemType("Tinderbox", eL
     mlMaxCount = 99;
 }
 
-bool cLuxItemType_Tinderbox::GetHasMaxAmount()
-{
-    //if(gpBase->mpPlayer->GetTinderboxes()>=10) return true;
-    return false;
-}
-
 bool cLuxItemType_Tinderbox::BeforeAddItem(cLuxInventory_Item *apItem)
 {
     gpBase->mpHintHandler->Add("PickTinderbox", kTranslate("Hints", "PickTinderbox"), 0);
