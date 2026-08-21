@@ -1579,7 +1579,6 @@ void cLuxPlayerSanity::UpdateCheckEnemySeen(double adFixedDelta)
         if(mbEnemyIsSeen)
         {
             mbEnemyIsSeen = false;
-            gpBase->mpEffectHandler->GetRadialBlur()->FadeTo(0, 0.12f / 2.0f);
         }
     }
 
@@ -1657,6 +1656,7 @@ void cLuxPlayerSanity::UpdateEnemySeenEffect(double adFixedDelta)
                 mfSeenEnemyCount =0;
             }
         }
+        gpBase->mpEffectHandler->GetRadialBlur()->FadeTo(0, 0.12f / 2.0f);
     }
 }
 
