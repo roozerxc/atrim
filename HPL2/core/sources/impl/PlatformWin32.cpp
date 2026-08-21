@@ -1,4 +1,5 @@
 #include "system/Platform.h"
+#include "impl/PlatformWin32.h"
 
 #include "system/String.h"
 
@@ -28,6 +29,36 @@
 
 namespace hpl
 {
+
+//////////////////////////////////////////////////////////////////////////
+// DWM COMPOSITOR CHECK
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+bool cPlatformWin32::DWMCompositorActive()
+{
+    HMODULE hDwmapi = LoadLibraryW(_W("dwmapi.dll"));
+    if(!hDwmapi)
+    {
+        return false;
+    }
+
+    typedef HRESULT(WINAPI *DwmIsCompositionEnabledFunc)(BOOL*);
+    DwmIsCompositionEnabledFunc pDWMCompositorActive =
+        (DwmIsCompositionEnabledFunc)GetProcAddress(hDwmapi, "DwmIsCompositionEnabled");
+
+    BOOL bDwmEnabled = FALSE;
+    if(pDWMCompositorActive)
+    {
+        pDWMCompositorActive(&bDwmEnabled);
+    }
+
+    FreeLibrary(hDwmapi);
+    return bDwmEnabled != FALSE;
+}
+
+//-----------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
 // FILE HANDLING

@@ -1,4 +1,5 @@
 #ifdef _WIN32
+#include "impl/PlatformWin32.h"
 #pragma comment(lib, "OpenGL32.lib")
 #pragma comment(lib, "GLu32.lib")
 #endif
@@ -163,6 +164,24 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFul
         }
     }
     unsigned int mlFlags = SDL_OPENGL;
+
+#ifdef _WIN32
+    bool abBorderless = false;
+
+    if(abFullscreen && cPlatformWin32::DWMCompositorActive())
+    {
+        abBorderless = true;
+        abFullscreen = false;
+        mlFlags |= SDL_NOFRAME;
+
+        const SDL_VideoInfo* iVideoInfo = SDL_GetVideoInfo();
+        if(iVideoInfo)
+        {
+            alWidth = iVideoInfo->current_w;
+            alHeight = iVideoInfo->current_h;
+        }
+    }
+#endif
 
     if(abFullscreen)
     {

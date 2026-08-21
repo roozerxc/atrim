@@ -1579,6 +1579,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\core\include\impl\PlatformWin32.h"
+					>
+				</File>
+				<File
 					RelativePath=".\core\sources\impl\scriptbuilder.cpp"
 					>
 				</File>
