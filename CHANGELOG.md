@@ -2,16 +2,19 @@
 ### v1.4.6-beta
 - [`af4efe8`](https://github.com/roozerxc/atrim/commit/af4efe832886a8c0b429df25e8a459bc1baeb7f3) Added 64-bit support
 - [`72518d7`](https://github.com/roozerxc/atrim/commit/72518d7c986a9b08b2a86abe0a78e093affd0fb4) Added an extra check to ensure the parallax quality setting is applied correctly
+- [`df32fc8`](https://github.com/roozerxc/atrim/commit/df32fc843361a647159ce28537ab91664e681e02) Added borderless window functionality on Windows Vista and 7+
 - [`067186b`](https://github.com/roozerxc/atrim/commit/067186ba7c6c50bfe807f7d07bd356d904b3ccca) Added customizable top menu font color settings from version 1.5
 - [`569e4f1`](https://github.com/roozerxc/atrim/commit/569e4f177a31747624f279c6dd8b1c4752f56db4) Added new color-shifting effect on GUI button focus
 - [`13114cf`](https://github.com/roozerxc/atrim/commit/13114cfdc289aa7104e92d05c5dba39c3bffaf96) Added new drop-down menu for selecting the type of parallax rendering effect
 - [`9f736da`](https://github.com/roozerxc/atrim/commit/9f736da666e6d02a85ed3fc01cf2597314b2daa2) Added new engine build ID (`YYYYMMDDhhmmss`)
 - [`565e1ba`](https://github.com/roozerxc/atrim/commit/565e1ba9e91d95121da4abac60e5be052b48ef04) Added new engine declarations from Amnesia: A Machine for Pigs
 - [`b752c20`](https://github.com/roozerxc/atrim/commit/b752c2004cf94ff32d84f12f65e959a2de528bad) Added new engine performance metrics (saved to `hpl.log`)
+- [`e3e728a`](https://github.com/roozerxc/atrim/commit/e3e728a932fb603b06b3e9175d541dac10d0ebe4) Added new flashback intensity slider
 - [`2f804dc`](https://github.com/roozerxc/atrim/commit/2f804dc72152eb64fed43128085965be669ea4de) Added new "Flattened 3D" texture type
 - [`38f0af7`](https://github.com/roozerxc/atrim/commit/38f0af7bd859ad93c9acb5d88524f3806d73e82a) Added new "lite" version of the deferred light shader for ATi Radeon 9xxx video cards
 - [`344ad77`](https://github.com/roozerxc/atrim/commit/344ad77ad59113f53ffb191a4b612e6e8e2d9519) Added new modulated illumination rendering type for surface materials
 - [`a8e93d9`](https://github.com/roozerxc/atrim/commit/a8e93d9879768efb1f71bf6612f1180026aee28b) Added new patch content for version 1.4.6
+- [`b8dcb44`](https://github.com/roozerxc/atrim/commit/b8dcb44e25e215349a7bd6946466e86115abf4db) Added new player body and camera script funcs
 - [`9a19316`](https://github.com/roozerxc/atrim/commit/9a1931670a5cdbb0ed36f55cf15ea817633ab759) Added new pre-post effect screen render method
 - [`576eaaa`](https://github.com/roozerxc/atrim/commit/576eaaabf675f2520d36f42eed56dc722da9e9a8) Added new properties for lights and particles
 - [`b1de39b`](https://github.com/roozerxc/atrim/commit/b1de39b0c8dda4a1e647669a0ebf09af09e26d1e) Added new string localization for hardcoded texts (Finnish and German translation by [@phnxs](https://github.com/phnxs) and ANDREWJOHN5)
@@ -27,17 +30,24 @@
 - [`d8e586b`](https://github.com/roozerxc/atrim/commit/d8e586b46bc6af07e28130d62ea0b93bf62048a9) Fixed character body simulation errors (Can be switched back using `HPL_CHARACTERBODY_BROKEN`)
 - [`b496952`](https://github.com/roozerxc/atrim/commit/b496952608936ed83cde7a959521c7ec5c01ffff) Fixed Custom Story images not being cleared out when another Custom Story was selected
 - [`0111b66`](https://github.com/roozerxc/atrim/commit/0111b66da96c69603a7fd0095302208ab596909d) Fixed engine crash from addressing 32-bit memory more than 2 GB
+- [`f63ac28`](https://github.com/roozerxc/atrim/commit/f63ac285b013beb7c8dd2af4164a89a048aeae81) Fixed excess screen aspect ratio calculation
 - [`0eebefb`](https://github.com/roozerxc/atrim/commit/0eebefbc2335075aaa692bbe4c1bb1d910c495f4) Fixed game crash when pressing Esc quickly to skip through bootup logos
 - [`73424fd`](https://github.com/roozerxc/atrim/commit/73424fd9c3410726fa91b79d674709298a9383ff) Fixed invalid serialization of coins needed to unlock chests
 - [`4279f12`](https://github.com/roozerxc/atrim/commit/4279f1294c0d73037b29d7f580643e77a5a29811) Fixed light types only getting diffuse color information
+- [`583fd22`](https://github.com/roozerxc/atrim/commit/583fd2230909a246386a86765afa3f1cb038306e) Fixed limit for Tinderboxes not being properly enforced
+- [`73e1a5d`](https://github.com/roozerxc/atrim/commit/73e1a5dc94e33386a92b362451e9610e9604666f) Fixed loading patch strings so that they take precedence over all strings in the game
 - [`9a66b63`](https://github.com/roozerxc/atrim/commit/9a66b63dc1b304996d4d3cd5e9d21b0136241dcd) Fixed low-level OpenGL graphics setup to only call the depth test once
 - [`5d68aef`](https://github.com/roozerxc/atrim/commit/5d68aef3e2c8025a91da89c49701d7e1f447c0d0) Fixed memory manager causing debug builds to fail during compilation
 - [`527c6a5`](https://github.com/roozerxc/atrim/commit/527c6a59ba4695534d461ee0f86f20b7c92b86f3) Fixed post effects breaking at >60 FPS
 - [`5c29b95`](https://github.com/roozerxc/atrim/commit/5c29b958d314dd2ba9d2cb44e5e7b86c25e22ea4) Fixed SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
+- [`da80ae9`](https://github.com/roozerxc/atrim/commit/da80ae9e4b3f8242b8fd2ce72c9710fb6ec42bbc) Fixed `SetSanityDrainDisabled` not working on enemies
+- [`daa0e1b`](https://github.com/roozerxc/atrim/commit/daa0e1bf5f5e241a986d000e56f1b6db69845d80) Fixed Shader Model 3 parallax mapping fallback
+- [`b0ac5f7`](https://github.com/roozerxc/atrim/commit/b0ac5f74da32e29c15905ab75acec83775302bac) Fixed visual bug with ropes disappearing when they were stretched to a significant degree
 - [`5e8e5da`](https://github.com/roozerxc/atrim/commit/5e8e5daa9c5cd75699bd5fc11412696fe080b015) Fixed weird behavior in Custom Story menu
 - [`155d025`](https://github.com/roozerxc/atrim/commit/155d025ad20c52e4a5d6772e6fbe5dda221e0215) Improved AI node iterator with changes from Amnesia: A Machine for Pigs
 - [`5bf2809`](https://github.com/roozerxc/atrim/commit/5bf2809d0f2b22813fdf23ca1dbe021159bc576f) Improved text quality for on-screen debug overlay and game subtitles
 - [`683b99a`](https://github.com/roozerxc/atrim/commit/683b99a87cc96bc11d28a4d297411acd9399103d) Improved volume slider in the main menu for more precise control
+- [`94e18ca`](https://github.com/roozerxc/atrim/commit/94e18cad9d481f41327a0ab4f60a428788a5754c) Moved enemy radial blur fade out to a proper effect updater instead of the "enemy seen" check
 - [`a8470f7`](https://github.com/roozerxc/atrim/commit/a8470f75ed6e38666d9ded91bc0945f3f0077d16) Prevent game crash by kicking the player back into main menu if a save file was missing or corrupt
 - [`7cc5f9d`](https://github.com/roozerxc/atrim/commit/7cc5f9d7782289e24818175897812322f8d798c9) Removed achievement code from the Steam and console versions of Amnesia: The Dark Descent
 - [`8bbad77`](https://github.com/roozerxc/atrim/commit/8bbad775d36a74f18ef7280f770010271c027ba0) Removed code and references to the demo version of Amnesia: The Dark Descent
@@ -53,6 +63,7 @@
 - [`7491cc4`](https://github.com/roozerxc/atrim/commit/7491cc43e3e7b712c8723bfb12038d2146264d2c) Replaced loading icons from loose bitmaps with header-based RWops in the executable
 - [`0a3de4d`](https://github.com/roozerxc/atrim/commit/0a3de4d6e60806f30c31cb48281bd80c29efd79a) Replaced OpenAL with OpenAL-Soft
 - [`1731b30`](https://github.com/roozerxc/atrim/commit/1731b3071cefc3034e3a2fd3c152bd7998d68d3e) Restored unused Penumbra-style head leaning behavior
+- [`9c24285`](https://github.com/roozerxc/atrim/commit/9c2428550d161e27aeb78e57bec20e404d167817) Updated game physics to use double precision
 ------------
 ### v1.4.5-win32-release
 - [`19dc606`](https://github.com/roozerxc/atrim/commit/19dc606e47500a52f9ab685abe2531cf2b0d1c41) Added `LUXPROP_OBJECT_BREAKABLE_WORKAROUND` preprocessor definition for breakable objects
