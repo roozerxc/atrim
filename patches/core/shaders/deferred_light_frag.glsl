@@ -25,7 +25,7 @@
 
 float ShadowOffsetLookup(sampler2DShadow aShadowMap, vec4 avLocation, vec2 avOffset)
 {
-    return shadow2DProj(aShadowMap, vec4(avLocation.xy + avOffset, avLocation.z, avLocation.w) ).x;
+    return shadow2DProj(aShadowMap, vec4(avLocation.xy + (avOffset * avLocation.w), avLocation.z, avLocation.w) ).x;
 }
 
 
@@ -300,7 +300,7 @@ void main()
         
             ////////////////
             // Check if in penumbra
-            if( (fShadowSum-1.0) * fShadowSum * fLDotN != 0)
+            if(fShadowSum > 0.0 && fShadowSum < 1.0)
             {
                 //Multiply, so the X presamples only affect their part (X/all_samples) of samples taken.
                 fShadowSum *= 4.0 / $ShadowJitterSamples;

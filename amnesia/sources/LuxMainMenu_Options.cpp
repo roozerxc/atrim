@@ -670,6 +670,7 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         vOptionStrings.push_back(kTranslate("OptionsMenu","Low"));
         vOptionStrings.push_back(kTranslate("OptionsMenu","Medium"));
         vOptionStrings.push_back(kTranslate("OptionsMenu","High"));
+        vOptionStrings.push_back(kTranslate("OptionsMenu","Ultra"));
 
         mpCBShadowQuality->ClearItems();
         mpCBShadowRes->ClearItems();
@@ -1225,6 +1226,7 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
             vOptionStrings.push_back(kTranslate("OptionsMenu","Low"));
             vOptionStrings.push_back(kTranslate("OptionsMenu","Medium"));
             vOptionStrings.push_back(kTranslate("OptionsMenu","High"));
+            vOptionStrings.push_back(kTranslate("OptionsMenu","Ultra"));
 
             mpCBShadowQuality->ClearItems();
             mpCBShadowRes->ClearItems();

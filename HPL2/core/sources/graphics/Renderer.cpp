@@ -747,7 +747,17 @@ void iRenderer::CreateAndAddShadowMap(eShadowMapResolution aResolution, const cV
     pData->mpTexture->CreateFromRawData(avSize, aFormat, NULL);
     pData->mpTexture->SetCompareMode(eTextureCompareMode_RToTexture);
     pData->mpTexture->SetCompareFunc(eTextureCompareFunc_LessOrEqual);
-    pData->mpTexture->SetFilter(eTextureFilter_Nearest);
+
+    //Another hack to avoid ATI driver failure:
+    if(mpLowLevelGraphics->GetCaps(eGraphicCaps_OGL_ATIFragmentShader))
+    {
+        pData->mpTexture->SetFilter(eTextureFilter_Nearest);
+    }
+    else
+    {
+        pData->mpTexture->SetFilter(eTextureFilter_Bilinear);
+    }
+
     pData->mpTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
 
     //Hack to avoid ATI drier failure:
@@ -2841,9 +2851,13 @@ void iRenderer::RunCallback(eRendererMessage aMessage)
 
 eShadowMapResolution iRenderer::GetShadowMapResolution(eShadowMapResolution aWanted, eShadowMapResolution aMax)
 {
-    if(aMax == eShadowMapResolution_High)
+    if(aMax == eShadowMapResolution_Ultra)
     {
         return aWanted;
+    }
+    else if(aMax == eShadowMapResolution_High)
+    {
+        return aWanted == eShadowMapResolution_Ultra ? eShadowMapResolution_High : aWanted;
     }
     else if(aMax == eShadowMapResolution_Medium)
     {

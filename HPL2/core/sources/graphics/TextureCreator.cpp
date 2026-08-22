@@ -40,22 +40,21 @@ cTextureCreator::~cTextureCreator()
 
 //-----------------------------------------------------------------------
 
-static bool SortFunc_ScatterOffset(const cVector2f& avVec1, const cVector2f& avVec2)
-{
-    return avVec1.Length() > avVec2.Length();
-}
-
 void cTextureCreator::GenerateScatterDiskMap3D(iTexture *apOffsetTexture, int alSize, int alSamples, bool abSortSamples)
 {
     ////////////////////
     //Test so sizes are correct
+    if(alSize <= 0 || alSamples <= 0)
+    {
+        FatalError("Both the OffsetTexture 2D size and sample size must be greater than zero!\n");
+    }
     if(cMath::IsPow2(alSize)==false)
     {
-        FatalError("OffsetTexture 2D size size non-pow2\n");
+        FatalError("OffsetTexture 2D size is non-pow2!\n");
     }
     if(cMath::IsPow2(alSamples)==false)
     {
-        FatalError("OffsetTexture 2D samples size non-pow2\n");
+        FatalError("OffsetTexture 2D sample size is non-pow2!\n");
     }
 
     ////////////////////
@@ -139,7 +138,7 @@ void cTextureCreator::GenerateScatterDiskMap3D(iTexture *apOffsetTexture, int al
         // Sort by length (if set)
         if(abSortSamples)
         {
-            std::sort(vOffsets.begin(),vOffsets.end(), SortFunc_ScatterOffset);
+            std::random_shuffle(vOffsets.begin(),vOffsets.end());
         }
 
         //Debug:
@@ -175,15 +174,13 @@ void cTextureCreator::GenerateScatterDiskMap3D(iTexture *apOffsetTexture, int al
             int lSample = depth*2;
 
             //RG
-            pPixelData[0] = (int)(vOffsets[lSample].x*255.0f);
-            pPixelData[1] = (int)(vOffsets[lSample].y*255.0f);
+            pPixelData[0] = (int)(vOffsets[lSample].x * 255.0f + 0.5f);
+            pPixelData[1] = (int)(vOffsets[lSample].y * 255.0f + 0.5f);
 
             //BA
-            pPixelData[2] = (int)(vOffsets[lSample+1].x*255.0f);
-            pPixelData[3] = (int)(vOffsets[lSample+1].y*255.0f);
+            pPixelData[2] = (int)(vOffsets[lSample+1].x * 255.0f + 0.5f);
+            pPixelData[3] = (int)(vOffsets[lSample+1].y * 255.0f + 0.5f);
         }
-
-
     }
 
     ////////////////////////////
@@ -219,13 +216,17 @@ void cTextureCreator::GenerateScatterDiskMap2D(iTexture *apOffsetTexture, int al
 {
     ////////////////////
     //Test so sizes are correct
+    if(alSize <= 0 || alSamples <= 0)
+    {
+        FatalError("Both the OffsetTexture 2D size and sample size must be greater than zero!\n");
+    }
     if(cMath::IsPow2(alSize)==false)
     {
-        FatalError("OffsetTexture 2D size size non-pow2\n");
+        FatalError("OffsetTexture 2D size is non-pow2!\n");
     }
     if(cMath::IsPow2(alSamples)==false)
     {
-        FatalError("OffsetTexture 2D samples size non-pow2\n");
+        FatalError("OffsetTexture 2D sample size is non-pow2!\n");
     }
 
     ////////////////////
@@ -295,7 +296,7 @@ void cTextureCreator::GenerateScatterDiskMap2D(iTexture *apOffsetTexture, int al
         // Sort by length (if set)
         if(abSortSamples)
         {
-            std::sort(vOffsets.begin(),vOffsets.end(), SortFunc_ScatterOffset);
+            std::random_shuffle(vOffsets.begin(),vOffsets.end());
         }
 
 

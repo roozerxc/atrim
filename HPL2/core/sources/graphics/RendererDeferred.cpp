@@ -170,9 +170,10 @@ cRendererDeferred::cRendererDeferred(cGraphics *apGraphics,cResources* apResourc
     mfMinLargeLightNormalizedArea = 0.2f*0.2f;
     mfMinRenderReflectionNormilzedLength = 0.15f;
 
-    mfShadowDistanceMedium = 10;
-    mfShadowDistanceLow = 20;
-    mfShadowDistanceNone = 40;
+    mfShadowDistanceHigh = 5.0f;
+    mfShadowDistanceMedium = 10.0f;
+    mfShadowDistanceLow = 20.0f;
+    mfShadowDistanceNone = 40.0f;
 
     mlMaxBatchLights = 100;
 
@@ -319,44 +320,80 @@ bool cRendererDeferred::LoadData()
     //Create Shadow Textures
     cVector3l vShadowSize[] =
     {
-        cVector3l(128, 128,1),
-        cVector3l(256, 256,1),
-        cVector3l(256, 256,1),
-        cVector3l(512, 512,1),
-        cVector3l(1024, 1024,1)
+        cVector3l(64, 64,1),     // 0
+        cVector3l(128, 128,1),   // 1
+        cVector3l(256, 256,1),   // 2
+        cVector3l(512, 512,1),   // 3
+        cVector3l(1024, 1024,1), // 4
+        cVector3l(2048, 2048,1), // 5
+        cVector3l(4096, 4096,1)  // 6
     };
-    int lStartSize = 2;
-    if(mShadowMapResolution == eShadowMapResolution_Medium)
+
+    int lStartSizeHigh = 4;
+    int lStartSizeMedium = 3;
+    int lStartSizeLow = 2;
+    int lStartSizeUltra = 5;
+
+    if(mShadowMapResolution == eShadowMapResolution_Ultra)
     {
-        lStartSize = 1;
+        lStartSizeUltra = 6;
+        lStartSizeHigh = 5;
+        lStartSizeMedium = 4;
+        lStartSizeLow = 3;
     }
-    else if(mShadowMapResolution == eShadowMapResolution_Low)
+    else if(mShadowMapResolution == eShadowMapResolution_High)
     {
-        lStartSize = 0;
+        lStartSizeUltra = 5;
+        lStartSizeHigh = 4;
+        lStartSizeMedium = 3;
+        lStartSizeLow = 2;
+    }
+    else if(mShadowMapResolution == eShadowMapResolution_Medium)
+    {
+        lStartSizeUltra = 4;
+        lStartSizeHigh = 3;
+        lStartSizeMedium = 2;
+        lStartSizeLow = 1;
     }
 
+    // ONLY if user has enabled ultra shadows...
+    if(mShadowMapResolution == eShadowMapResolution_Ultra)
+    {
+        for(int i=0; i<1; ++i)
+        {
+            CreateAndAddShadowMap(eShadowMapResolution_Ultra, vShadowSize[lStartSizeUltra],ePixelFormat_Depth24);
+        }
+    }
+
+    // Standard 1-4-6. Haha, version 1.4.6 ;)
     for(int i=0; i<1; ++i)
     {
-        CreateAndAddShadowMap(eShadowMapResolution_High, vShadowSize[lStartSize + eShadowMapResolution_High],ePixelFormat_Depth16);
+        CreateAndAddShadowMap(eShadowMapResolution_High, vShadowSize[lStartSizeHigh],ePixelFormat_Depth16);
     }
     for(int i=0; i<4; ++i)
     {
-        CreateAndAddShadowMap(eShadowMapResolution_Medium, vShadowSize[lStartSize + eShadowMapResolution_Medium],ePixelFormat_Depth16);
+        CreateAndAddShadowMap(eShadowMapResolution_Medium, vShadowSize[lStartSizeMedium],ePixelFormat_Depth16);
     }
     for(int i=0; i<6; ++i)
     {
-        CreateAndAddShadowMap(eShadowMapResolution_Low, vShadowSize[lStartSize + eShadowMapResolution_Low],ePixelFormat_Depth16);
+        CreateAndAddShadowMap(eShadowMapResolution_Low, vShadowSize[lStartSizeLow],ePixelFormat_Depth16);
     }
 
 
     // Select samples depending quality and shader model (if dynamic branching is supported)
     if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_4))
     {
+        //Ultra
+        if(mShadowMapQuality == eShadowMapQuality_Ultra)
+        {
+            mlShadowJitterSize = 64;
+            mlShadowJitterSamples = 64;
+        }
         //High
-        if(mShadowMapQuality == eShadowMapQuality_High)
+        else if(mShadowMapQuality == eShadowMapQuality_High)
         {
             mlShadowJitterSize = 32;
-            mlShadowJitterSamples = 32;    //64 here instead? I mean, ATI has to deal with medium has max? or different max for ATI?
+            mlShadowJitterSamples = 32;
         }
         //Medium
         else if(mShadowMapQuality == eShadowMapQuality_Medium)
@@ -374,8 +411,14 @@ bool cRendererDeferred::LoadData()
     //No dynamic branching
     else
     {
+        //Ultra
+        if(mShadowMapQuality == eShadowMapQuality_Ultra)
+        {
+            mlShadowJitterSize = 64;
+            mlShadowJitterSamples = 32;
+        }
         //High
-        if(mShadowMapQuality == eShadowMapQuality_High)
+        else if(mShadowMapQuality == eShadowMapQuality_High)
         {
             mlShadowJitterSize = 32;
             mlShadowJitterSamples = 16;
@@ -491,6 +534,10 @@ bool cRendererDeferred::LoadData()
             defaultVars.Add("ShadowJitterSamplesDiv2",mlShadowJitterSamples / 2);
             defaultVars.Add("ShadowJitterSamples", mlShadowJitterSamples);
 
+            if(mShadowMapQuality == eShadowMapQuality_Ultra)
+            {
+                defaultVars.Add("ShadowMapQuality_Ultra");
+            }
             if(mShadowMapQuality == eShadowMapQuality_High)
             {
                 defaultVars.Add("ShadowMapQuality_High");
@@ -1753,6 +1800,7 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
                 //Use Low
                 else if(fDistToLight > mfShadowDistanceLow)
                 {
+                    // Just drop to low here!
                     if(pLightData->mShadowResolution == eShadowMapResolution_Low)
                     {
                         pLightData->mbCastShadows = false;
@@ -1763,7 +1811,25 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
                 //Use Medium
                 else if(fDistToLight > mfShadowDistanceMedium)
                 {
-                    if(pLightData->mShadowResolution == eShadowMapResolution_High)
+                    // Both ultra and high should step down to medium...
+                    if(pLightData->mShadowResolution == eShadowMapResolution_Ultra || pLightData->mShadowResolution == eShadowMapResolution_High)
+                    {
+                        pLightData->mShadowResolution = eShadowMapResolution_Medium;
+                    }
+                    else
+                    {
+                        pLightData->mShadowResolution = eShadowMapResolution_Low;
+                    }
+                }
+                ///////////////////////
+                //Use High
+                else if(fDistToLight > mfShadowDistanceHigh)
+                {
+                    if(pLightData->mShadowResolution == eShadowMapResolution_Ultra)
+                    {
+                        pLightData->mShadowResolution = eShadowMapResolution_High;
+                    }
+                    else if(pLightData->mShadowResolution == eShadowMapResolution_High)
                     {
                         pLightData->mShadowResolution = eShadowMapResolution_Medium;
                     }

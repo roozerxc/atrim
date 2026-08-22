@@ -401,6 +401,7 @@ private:
 
     float mfMinRenderReflectionNormilzedLength;
 
+    float mfShadowDistanceHigh;
     float mfShadowDistanceMedium;
     float mfShadowDistanceLow;
     float mfShadowDistanceNone;

@@ -602,6 +602,7 @@ enum eShadowMapResolution
     eShadowMapResolution_Low,
     eShadowMapResolution_Medium,
     eShadowMapResolution_High,
+    eShadowMapResolution_Ultra,
     eShadowMapResolution_LastEnum
 };
 
@@ -612,6 +613,7 @@ enum eShadowMapQuality
     eShadowMapQuality_Low,
     eShadowMapQuality_Medium,
     eShadowMapQuality_High,
+    eShadowMapQuality_Ultra,
     eShadowMapQuality_LastEnum
 };
 
