@@ -198,7 +198,7 @@ bool cRendererDeferred::LoadData()
 {
     cVector2l vRelfectionSize = cVector2l(mvScreenSize.x/mlReflectionSizeDiv, mvScreenSize.y/mlReflectionSizeDiv);
 
-    Log("Setting up G-Bugger: type: %d texturenum: %d\n", mGBufferType, mlNumOfGBufferTextures);
+    Log("Setting up G-Buffer: type: %d texturenum: %d\n", mGBufferType, mlNumOfGBufferTextures);
     ////////////////////////////////////
     //Create G-Buffer textures
     for(int i=0; i<mlNumOfGBufferTextures; ++i)
@@ -286,7 +286,7 @@ bool cRendererDeferred::LoadData()
 
     ////////////////////////////////////
     //Create Accumulation texture
-    mpAccumBufferTexture = mpGraphics->CreateTexture("AccumBiffer",eTextureType_Rect,eTextureUsage_RenderTarget);
+    mpAccumBufferTexture = mpGraphics->CreateTexture("AccumBuffer",eTextureType_Rect,eTextureUsage_RenderTarget);
     mpAccumBufferTexture->CreateFromRawData(cVector3l(mvScreenSize.x, mvScreenSize.y,0),ePixelFormat_RGBA, NULL);
     mpAccumBufferTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
 
