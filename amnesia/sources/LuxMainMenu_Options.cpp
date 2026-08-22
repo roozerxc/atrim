@@ -521,6 +521,7 @@ void cLuxMainMenu_Options::AddBasicGfxOptions(cWidgetDummy* apDummy)
 
     cMaterialManager* pMatMgr = gpBase->mpEngine->GetResources()->GetMaterialManager();
     tWStringVec vTexQualityStrings;
+    vTexQualityStrings.push_back(kTranslate("OptionsMenu","UltraLow"));
     vTexQualityStrings.push_back(kTranslate("OptionsMenu","Low"));
     vTexQualityStrings.push_back(kTranslate("OptionsMenu","Medium"));
     vTexQualityStrings.push_back(kTranslate("OptionsMenu","High"));
