@@ -170,9 +170,10 @@ cBoundingVolume* cRopeEntity::GetBoundingVolume()
             cVerletParticle *pPart = it.Next();
 
             cMath::ExpandAABB(vMin,vMax, pPart->GetPosition(), pPart->GetPosition());
+            cMath::ExpandAABB(vMin,vMax, pPart->GetSmoothPosition(), pPart->GetSmoothPosition());
         }
 
-        mBoundingVolume.SetLocalMinMax(vMin-cVector3f(mfRadius),vMax+cVector3f(mfRadius));
+        mBoundingVolume.SetLocalMinMax(vMin-cVector3f(mfRadius + 2.0f),vMax+cVector3f(mfRadius + 2.0f));
 
         mlLastUpdateCount = mpRope->GetUpdateCount();
     }
@@ -247,7 +248,7 @@ bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTi
 
         if(lCount == 1)
         {
-            vPrevPos = pPart->GetPosition();
+            vPrevPos = pPart->GetSmoothPosition();
             continue;
         }
 
@@ -257,7 +258,18 @@ bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTi
         cVector3f vDelta = vPos - vPrevPos;
         float fLength = vDelta.Length();
         cVector3f vUp = vDelta / fLength;
-        cVector3f vRight = cMath::Vector3Normalize(cMath::Vector3Cross(vUp, apFrustum->GetForward()));
+
+        cVector3f vTempCross = cMath::Vector3Cross(vUp, apFrustum->GetForward());
+        if(vTempCross.SqrLength() < 0.00001f)
+        {
+            vTempCross = cMath::Vector3Cross(vUp, cVector3f(0, 1, 0));
+            if(vTempCross.SqrLength() < 0.00001f)
+            {
+                vTempCross = cMath::Vector3Cross(vUp, cVector3f(1, 0, 0));
+            }
+        }
+
+        cVector3f vRight = cMath::Vector3Normalize(vTempCross);
         cVector3f vFwd = cMath::Vector3Cross(vRight, vUp);
 
         /////////////////////////
