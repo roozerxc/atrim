@@ -838,16 +838,7 @@ cMatrixf* iParticleEmitter::GetModelMatrix(cFrustum *apFrustum)
         else
         {
             m_mtxTemp = cMath::MatrixInverse(apFrustum->GetViewMatrix());
-            //m_mtxTemp = cMath::MatrixMul(cMath::MatrixInverse(apCamera->GetViewMatrix()),
-            //                                GetWorldMatrix());
         }
-
-        //m_mtxTemp.SetTranslation(cVector3f(0,0,0));//GetWorldMatrix().GetTranslation());
-
-        //m_mtxTemp = cMatrixf::Identity;
-
-        //cMatrixf mtxCam = apCamera->GetViewMatrix();
-        //Log("MATRIX: %s\n",mtxCam.ToString().c_str());
 
         return &m_mtxTemp;
 

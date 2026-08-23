@@ -52,7 +52,6 @@ public:
     // General
     void OnStart();
     void Update(double adFixedDelta);
-    void PostUpdate(double adFixedDelta);
     void Reset();
 
     void OnMapEnter(cLuxMap *apMap);

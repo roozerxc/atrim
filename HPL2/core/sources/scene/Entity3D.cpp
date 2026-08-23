@@ -22,6 +22,9 @@ iEntity3D::iEntity3D(tString asName)
     m_mtxLocalTransform = cMatrixf::Identity;
     m_mtxWorldTransform = cMatrixf::Identity;
 
+    m_mtxPrevLocalTransform = cMatrixf::Identity;
+    m_mtxPrevWorldTransform = cMatrixf::Identity;
+
     mbTransformUpdated = true;
 
     mlCount = 0;
@@ -336,17 +339,32 @@ bool iEntity3D::IsNodeChild(cNode3D *apNode)
 
 //-----------------------------------------------------------------------
 
-//////////////////////////////////////////////////////////////////////////
-// PRIVATE METHODS
-//////////////////////////////////////////////////////////////////////////
+void iEntity3D::SavePreviousState()
+{
+    m_mtxPrevLocalTransform = m_mtxLocalTransform;
+    m_mtxPrevWorldTransform = m_mtxWorldTransform;
+
+    //Update children
+    for(tEntity3DListIt EntIt = mlstChildren.begin(); EntIt != mlstChildren.end(); ++EntIt)
+    {
+        iEntity3D *pChild = *EntIt;
+        pChild->SavePreviousState();
+    }
+
+    //Update node children
+    for(tNode3DListIt nodeIt = mlstNodeChildren.begin(); nodeIt != mlstNodeChildren.end(); ++nodeIt)
+    {
+        cNode3D *pNode = *nodeIt;
+        pNode->SavePreviousState();
+    }
+}
 
 //-----------------------------------------------------------------------
+
 void iEntity3D::UpdateWorldTransform()
 {
     if(mbTransformUpdated)
     {
-        //Log("CREATING Entity '%s' world transform!\n",msName.c_str());
-
         mbTransformUpdated = false;
 
         //first check if there is a node parent

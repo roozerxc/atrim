@@ -338,10 +338,6 @@ void cMeshEntity::UpdateNodeMatrixRec(cNode3D *apNode)
     apNode->ApplyPostAnimTransform(false);
 
 
-    //Should not be needed at all:
-    //apNode->UpdateWorldTransform();
-    //const cMatrixf& mtxWorld = apNode->GetWorldMatrix();
-
     cNode3DIterator NodeIt = apNode->GetChildIterator();
     while(NodeIt.HasNext())
     {
@@ -357,7 +353,7 @@ void cMeshEntity::UpdateLogic(double adFixedDelta)
 {
     if(mbStatic)
     {
-        return;    //No update on static models
+        return;
     }
 
     /////////////////////////////////////////////
@@ -1229,7 +1225,7 @@ int cMeshEntity::GetSubMeshEntityNum()
 
 //-----------------------------------------------------------------------
 
-void cMeshEntity::UpdateGraphicsForFrame(double adFrameTime)
+void cMeshEntity::UpdateGraphicsForFrame(double adFrameTime, double adRenderAlpha)
 {
     //////////////////////////////////////////
     //Check so update is needed

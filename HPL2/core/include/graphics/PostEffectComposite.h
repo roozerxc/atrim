@@ -25,7 +25,7 @@ public:
     cPostEffectComposite(cGraphics *apGraphics);
     ~cPostEffectComposite();
 
-    void Render(double adFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget);
+    void Render(double adFrameTime, double adRenderAlpha, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget);
 
     /**
      * Highest prio is first!
@@ -49,7 +49,7 @@ public:
     }
 
 private:
-    void BeginRendering(double adFrameTime, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget);
+    void BeginRendering(double adFrameTime, double adRenderAlpha, cFrustum *apFrustum, iTexture *apInputTexture, cRenderTarget *apRenderTarget);
     void EndRendering();
     void CopyToFrameBuffer(iTexture *apOutputTexture);
 

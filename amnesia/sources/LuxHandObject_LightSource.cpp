@@ -287,8 +287,6 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(double adFixedDelta)
     /////////////////////////////
     // Update Model matrix
     cMatrixf mtxSway = cMath::MatrixRotate(mvSwayPinDir * mfSwayAngle, eEulerRotationOrder_XYZ);
-    //cMatrixf mtxTrans = cMath::MatrixMul(m_mtxOffset, mtxSway);
-    //mpMeshEntity->SetMatrix(mtxTrans);
 
     for(int i=0; i<mpMeshEntity->GetSubMeshEntityNum(); ++i)
     {
@@ -297,7 +295,6 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(double adFixedDelta)
         {
             continue;
         }
-        //Log("'%s'\n",pSubEnt->GetSubMesh()->GetName().c_str());
 
         pSubEnt->SetMatrix(cMath::MatrixMul(mtxSway, mvDefaultSubMeshMatrix[i]) );
     }

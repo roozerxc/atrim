@@ -464,6 +464,8 @@ void cEngine::Run()
                 break;
             }
 
+            mpScene->SavePreviousState();
+
             // Run Update callback in updater
             mpUpdater->RunMessage(eUpdateableMessage_PreUpdate, dFixedDelta);
             mpUpdater->RunMessage(eUpdateableMessage_Update, dFixedDelta);
@@ -511,7 +513,7 @@ void cEngine::Run()
         STOP_TIMING(OnDraw)
 
         START_TIMING(RenderAll)
-        mpScene->Render(dFrameTime, tSceneRenderFlag_All);
+        mpScene->Render(dFrameTime, dRenderAlpha, tSceneRenderFlag_All);
         STOP_TIMING(RenderAll)
 
         START_TIMING(PostRender)

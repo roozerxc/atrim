@@ -115,90 +115,6 @@ cSoundEntity::~cSoundEntity()
     mpData->DecUserCount();
 }
 
-///////////////////////////////////////
-//DEBUG when using pooling test
-/*void cSoundEntity::Setup(const tString& asName,cSoundEntityData *apData, bool abRemoveWhenOver)
-{
-    /////////////////////////////
-    // Entity
-    msName = asName;
-    mbIsActive = true;
-
-    mpParentNode = NULL;
-
-    m_mtxLocalTransform = cMatrixf::Identity;
-    m_mtxWorldTransform = cMatrixf::Identity;
-
-    mbTransformUpdated = true;
-
-    mlCount = 0;
-
-    msSourceFile = "";
-
-    mbApplyTransformToBV = true;
-    mbUpdateBoundingVolume = true;
-
-    mpParent = NULL;
-
-    mlIteratorCount =-1;
-
-    mbIsSaved = true;
-    mlUniqueID = -1;
-
-    /////////////////////////////
-    // Sound ENtityh
-    mbRemoveWhenOver = abRemoveWhenOver;
-
-    mpData = apData;
-    mpData->PreloadSounds();
-
-    for(int i=0; i<3; i++)
-    {
-        mvSoundEntries[i] = NULL;
-        mvSoundEntryID[i]=-1;
-    }
-
-    mfIntervalCount = mpData->GetInterval();
-
-    mfVolume = mpData->GetVolume();
-
-    mfMinDistance = mpData->GetMinDistance();
-    mfMaxDistance = mpData->GetMaxDistance();
-
-    mBoundingVolume.SetSize(mfMaxDistance*2);
-
-    mbStopped = false; //If the sound should be stopped
-    mbStarted = false; //If the sound started playing-
-
-    mbSkipStartEnd = false; //If the end and start sounds should be skipped.
-
-    mbPrioRemove = false; //If the sounds was removed because too many where playing
-
-    mbFadingOut = false; //If the sound is fading out.
-
-    mbOutOfRange = false; //If the sound is out of range.
-
-    mbLog = false;
-
-    mfSleepCount = 0;
-
-    mbForcePlayAsGUISound = false;
-
-    mpSoundCallback->mpEntity = this;
-
-    if(mpSoundHandler->GetSilent())
-    {
-        mbStarted = true;
-        mbStopped = true;
-        mfVolume =0;
-        mbSkipStartEnd = true;
-        mbRemoveWhenOver = true;
-    }
-
-    //if( mpData->GetName() == "scrape_wood.snt") mbLog = true;
-    if(mbLog)Log("Created %d\n", this);
-}*/
-
 //-----------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
@@ -676,10 +592,6 @@ bool cSoundEntity::PlaySound(eSoundEntityType aType,bool abLoop)
                 (bNotEnoughChannels && abLoop==false))
         {
             mbStopped = true;
-
-            //Keep the sound, as a sound that is not removed when over should always be available!
-            //if(bNotEnoughChannels==false)
-            //    mbRemoveWhenOver = true;
         }
 
         return false;
@@ -688,7 +600,6 @@ bool cSoundEntity::PlaySound(eSoundEntityType aType,bool abLoop)
     // Sound entry Successfully created
     else
     {
-        //if(mbLog) Log("    -Setting up sound\n");
 
         mvSoundEntryID[aType] = mvSoundEntries[aType]->GetId();
 
@@ -704,8 +615,6 @@ bool cSoundEntity::PlaySound(eSoundEntityType aType,bool abLoop)
     }
 
     return true;
-
-    //for(int i=0; i<3; ++i) mvSoundEntries[i] = NULL;
 }
 
 //-----------------------------------------------------------------------

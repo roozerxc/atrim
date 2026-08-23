@@ -176,11 +176,13 @@ static inline void MatrixFloatRotateAdd(float *pDest, const cMatrixf &a_mtxA, co
 
 //-----------------------------------------------------------------------
 
-void cSubMeshEntity::UpdateGraphicsForFrame(double adFrameTime)
+void cSubMeshEntity::UpdateGraphicsForFrame(double adFrameTime, double adRenderAlpha)
 {
+    mdLastRenderAlpha = adRenderAlpha;
+
     ////////////////////////////////////
     //Update things in parent first.
-    mpMeshEntity->UpdateGraphicsForFrame(adFrameTime);
+    mpMeshEntity->UpdateGraphicsForFrame(adFrameTime, adRenderAlpha);
 
     ////////////////////////////////////
     // If it has dynamic mesh, update it.

@@ -45,7 +45,7 @@ public:
 
     virtual eRenderableType GetRenderType()=0;
 
-    virtual void UpdateGraphicsForFrame(double adFrameTime) {}
+    virtual void UpdateGraphicsForFrame(double adFrameTime, double adRenderAlpha) {}
     virtual bool UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime)
     {
         return true;
@@ -247,6 +247,8 @@ protected:
     iRenderableContainerNode *mpRenderContainerNode;
 
     void* mpRenderableUserData;
+
+    double adRenderAlpha;
 };
 };
 #endif // HPL_RENDERABLE_H

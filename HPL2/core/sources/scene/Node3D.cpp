@@ -23,6 +23,9 @@ cNode3D::cNode3D(const tString &asName, bool abAutoDeleteChildren)
     m_mtxLocalTransform = cMatrixf::Identity;
     m_mtxWorldTransform = cMatrixf::Identity;
 
+    m_mtxPrevLocalTransform = cMatrixf::Identity;
+    m_mtxPrevWorldTransform = cMatrixf::Identity;
+
     mvWorldPosition = cVector3f(0,0,0);
 
     mbTransformUpdated = true;
@@ -205,7 +208,6 @@ cMatrixf& cNode3D::GetWorldMatrix()
 
 //-----------------------------------------------------------------------
 
-
 void cNode3D::SetPosition(const cVector3f& avPos)
 {
     m_mtxLocalTransform.m[0][3] = avPos.x;
@@ -321,20 +323,12 @@ void cNode3D::UpdateMatrix(bool abSetChildrenUpdated)
     cVector3f vPos = mtxTransform.GetTranslation();
     mtxTransform.SetTranslation(cVector3f(0,0,0));
 
-    //Log("Startpos: %s",vPos.ToString().c_str());
-    //Log("World pos: %s\n",GetWorldMatrix().GetTranslation().ToString().c_str());
-
     //The animation rotation is applied before the local.
     mtxTransform = cMath::MatrixMul(mtxTransform, cMath::MatrixQuaternion(mqRotation));
-
-    //Skip scale for now.
-    //mtxTransform = cMath::MatrixMul(cMath::MatrixScale(mvScale), mtxTransform);
 
     mtxTransform.SetTranslation(vPos + mvTranslation);
 
     SetMatrix(mtxTransform,abSetChildrenUpdated);
-
-    //Log("World pos: %s\n",GetWorldMatrix().GetTranslation().ToString().c_str());
 
     //Reset values
     mqRotation = cQuaternion::Identity;
@@ -384,20 +378,32 @@ void cNode3D::UpdateEntityChildren()
     }
 }
 
+//-----------------------------------------------------------------------
+
+void cNode3D::SavePreviousState()
+{
+    m_mtxPrevLocalTransform = m_mtxLocalTransform;
+    m_mtxPrevWorldTransform = m_mtxWorldTransform;
+
+    for(tEntity3DListIt EIt = mlstEntity.begin(); EIt != mlstEntity.end(); ++EIt)
+    {
+        iEntity3D* pEntity = *EIt;
+        pEntity->SavePreviousState();
+    }
+
+    for(tNode3DListIt NIt = mlstNode.begin(); NIt != mlstNode.end(); ++NIt)
+    {
+        cNode3D* pNode = *NIt;
+        pNode->SavePreviousState();
+    }
+}
 
 //-----------------------------------------------------------------------
 
-//////////////////////////////////////////////////////////////////////////
-// PRIVATE METHODS
-//////////////////////////////////////////////////////////////////////////
-
-//-----------------------------------------------------------------------
 void cNode3D::UpdateWorldTransform()
 {
     if(mbTransformUpdated)
     {
-        //if(msName == "WeaponJoint") LogUpdate("  update world transform!\n");
-
         mbTransformUpdated = false;
 
         if(mpParent)
@@ -418,11 +424,9 @@ void cNode3D::UpdateWorldTransform()
 
 void cNode3D::SetWorldTransformUpdated()
 {
-    //if(msName == "WeaponJoint") LogUpdate("  setworldtransform updated!\n");
-
     mbTransformUpdated = true;
 
-    //Update entity childre
+    //Update entity children
     UpdateEntityChildren();
 
     //Set all child nodes as updated

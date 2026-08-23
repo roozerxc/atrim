@@ -275,17 +275,19 @@ float cLuxHelpFuncs::GetStringDuration(const tWString& asStr)
 
 void cLuxHelpFuncs::RenderBackgroundScreen(bool abDrawFullHUD)
 {
+    // Seriously ? Who the fuck does this ?
+
     gpBase->mpMapHandler->GetViewport()->SetVisible(true);
     gpBase->mpGameHudSet->ClearRenderObjects();
 
     if(abDrawFullHUD==false)
     {
-        gpBase->mpPlayer->RunHelperMessage(eUpdateableMessage_OnDraw,0.0001f);
+        gpBase->mpPlayer->RunHelperMessage(eUpdateableMessage_OnDraw, 0.0001);
     }
     else
     {
-        gpBase->mpPlayer->OnDraw(0.01f);
-        gpBase->mpEffectHandler->OnDraw(0.01f);
+        gpBase->mpPlayer->OnDraw(0.01);
+        gpBase->mpEffectHandler->OnDraw(0.01);
     }
 
     tFlag lFlags = tSceneRenderFlag_World | tSceneRenderFlag_PostEffects;
@@ -294,7 +296,7 @@ void cLuxHelpFuncs::RenderBackgroundScreen(bool abDrawFullHUD)
         lFlags |= tSceneRenderFlag_Gui;
     }
 
-    gpBase->mpEngine->GetScene()->Render(0.0001f, lFlags);
+    gpBase->mpEngine->GetScene()->Render(0.0001, gpBase->mpEngine->GetRenderAlpha(), lFlags);
 
     if(abDrawFullHUD==false)
     {

@@ -61,7 +61,7 @@ public:
     /**
      * Called by cEngine
      */
-    void Render(double adFrameTime, tFlag alFlags);
+    void Render(double adFrameTime, double adRenderAlpha, tFlag alFlags);
 
     void PostUpdate(double adFixedDelta);
 
@@ -85,11 +85,12 @@ public:
     void DestroyWorld(cWorld* apWorld);
     bool WorldExists(cWorld* apWorld);
 
+    void SavePreviousState();
 
 private:
-    void Render3DGui(cViewport* apViewPort,cFrustum *apFrustum,double adFrameTime);
-    void RenderPrePostEffectScreenGui(cViewport* apViewPort,double adFrameTime);
-    void RenderScreenGui(cViewport* apViewPort, double adFrameTime);
+    void Render3DGui(cViewport* apViewPort,cFrustum *apFrustum,double adFrameTime,double adRenderAlpha);
+    void RenderPrePostEffectScreenGui(cViewport* apViewPort,double adFrameTime,double adRenderAlpha);
+    void RenderScreenGui(cViewport* apViewPort, double adFrameTime,double adRenderAlpha);
 
     cGraphics *mpGraphics;
     cResources *mpResources;

@@ -239,7 +239,7 @@ public:
 
     void UpdateLogic(double adFixedDelta);
 
-    void UpdateGraphicsForFrame(double adFrameTime);
+    void UpdateGraphicsForFrame(double adFrameTime, double adRenderAlpha);
 
     void SetBody(iPhysicsBody* apBody)
     {

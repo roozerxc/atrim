@@ -183,7 +183,7 @@ cBoundingVolume* cRopeEntity::GetBoundingVolume()
 
 //-----------------------------------------------------------------------
 
-void cRopeEntity::UpdateGraphicsForFrame(double adFrameTime)
+void cRopeEntity::UpdateGraphicsForFrame(double adFrameTime, double adRenderAlpha)
 {
 
 }

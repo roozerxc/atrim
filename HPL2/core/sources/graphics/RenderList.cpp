@@ -28,6 +28,7 @@ namespace hpl
 cRenderList::cRenderList()
 {
     dFrameTime = 0;
+    dRenderAlpha = 0;
     mpFrustum = NULL;
 }
 
@@ -65,7 +66,7 @@ void cRenderList::AddObject(iRenderable *apObject)
     if(pMaterial && pMaterial->GetRenderFrameCount() != iRenderer::GetRenderFrameCount())
     {
         pMaterial->SetRenderFrameCount(iRenderer::GetRenderFrameCount());
-        pMaterial->UpdateBeforeRendering((float)dFrameTime);
+        pMaterial->UpdateBeforeRendering(dFrameTime);
     }
 
     ////////////////////////////////////////
@@ -73,7 +74,7 @@ void cRenderList::AddObject(iRenderable *apObject)
     if(apObject->GetRenderFrameCount() != iRenderer::GetRenderFrameCount())
     {
         apObject->SetRenderFrameCount(iRenderer::GetRenderFrameCount());
-        apObject->UpdateGraphicsForFrame((float)dFrameTime);
+        apObject->UpdateGraphicsForFrame(dFrameTime, dRenderAlpha);
     }
 
     ////////////////////////////////////////
@@ -82,7 +83,7 @@ void cRenderList::AddObject(iRenderable *apObject)
     if(pMaterialType==NULL || pMaterialType->IsTranslucent()==false || pMaterialType->IsDecal() )
     {
         //skip rendering if the update return false
-        if(apObject->UpdateGraphicsForViewport(mpFrustum,(float)dFrameTime)==false)
+        if(apObject->UpdateGraphicsForViewport(mpFrustum,dFrameTime)==false)
         {
             return;
         }

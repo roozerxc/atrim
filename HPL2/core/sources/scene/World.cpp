@@ -1463,27 +1463,17 @@ void cWorld::UpdateParticles(double adFixedDelta)
 
 void cWorld::UpdateEntities(double adFixedDelta)
 {
-    //static size_t lLastSize = 0;
-    //bool bRenderDebug = lLastSize != mlstDynamicMeshEntities.size() && mlstDynamicMeshEntities.size()>=2;
-    //if(mlstDynamicMeshEntities.size()>=2) lLastSize = mlstDynamicMeshEntities.size();
-
     tMeshEntityListIt MeshIt = mlstDynamicMeshEntities.begin();
     tMeshEntityListIt endIt =mlstDynamicMeshEntities.end();
-    //if(bRenderDebug)Log("----\n");
     for(; MeshIt != endIt; MeshIt++)
     {
         cMeshEntity *pEntity = *MeshIt;
 
         if(pEntity->IsActive())
         {
-            //if(pEntity->IsStatic()==false) START_TIMING_EX(pEntity->GetName().c_str(),entity);
             pEntity->UpdateLogic(adFixedDelta);
-            //if(bRenderDebug) Log("Enitity '%s'. Pos: (%s), Matrix: (%s)\n", pEntity->GetName().c_str(), pEntity->GetWorldPosition().ToString().c_str(),
-            //pEntity->GetWorldMatrix().ToString().c_str());
-            //if(pEntity->IsStatic()==false) STOP_TIMING(entity);
         }
     }
-    //if(bRenderDebug)Log("----\n");
 }
 
 //-----------------------------------------------------------------------
@@ -1524,7 +1514,6 @@ void cWorld::UpdateSoundEntities(double adFixedDelta)
         if(pSound->IsStopped() && pSound->GetRemoveWhenOver())
         {
             it =  mlstSoundEntities.erase(it);
-            //mlstSoundEntityPool.push_back(pSound);
             hplDelete(pSound);
         }
         else

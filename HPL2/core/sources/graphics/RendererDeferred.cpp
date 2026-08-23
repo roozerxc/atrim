@@ -3585,7 +3585,7 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
         Log("\n==============================\n= BEGIN RENDER REFLECTION\n==============================\n\n");
     }
 
-    Render(dCurrentFrameTime, &reflectFrustum, mpCurrentWorld, mpCurrentSettings->mpReflectionSettings, &renderTarget, false, mpCallbackList);
+    Render(dCurrentFrameTime, mdRenderAlpha, &reflectFrustum, mpCurrentWorld, mpCurrentSettings->mpReflectionSettings, &renderTarget, false, mpCallbackList);
 
     if(mpCurrentSettings->mbLog)
     {
@@ -3595,8 +3595,8 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
 
     ///////////////////////////
     //Set back to order!
-    BeginRendering(    dCurrentFrameTime, pSaved_Frustum, mpCurrentWorld, pSaved_Settings, pSaved_RenderTarget,
-                       bSaved_SendFrameBufferToPostEffects,mpCallbackList, false);
+    BeginRendering(    dCurrentFrameTime, mdRenderAlpha, pSaved_Frustum, mpCurrentWorld, pSaved_Settings,
+        pSaved_RenderTarget, bSaved_SendFrameBufferToPostEffects,mpCallbackList, false);
 
 
     SetAccumulationBuffer();

@@ -130,6 +130,8 @@ public:
     void SetWorldTransformUpdated();
 
     void UpdateEntityChildren();
+
+    void SavePreviousState();
 private:
     tString msName;
     bool mbActive;
@@ -140,6 +142,10 @@ private:
 
     cMatrixf m_mtxLocalTransform;
     cMatrixf m_mtxWorldTransform;
+    cMatrixf m_mtxRenderTransform;
+
+    cMatrixf m_mtxPrevLocalTransform;
+    cMatrixf m_mtxPrevWorldTransform;
 
     cVector3f mvWorldPosition;
 

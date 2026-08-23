@@ -251,7 +251,7 @@ cBoundingVolume* cBeam::GetBoundingVolume()
 
 //-----------------------------------------------------------------------
 
-void cBeam::UpdateGraphicsForFrame(double adFrameTime)
+void cBeam::UpdateGraphicsForFrame(double adFrameTime, double adRenderAlpha)
 {
     if(    mlStartTransformCount == GetTransformUpdateCount() &&
             mlEndTransformCount == GetTransformUpdateCount())

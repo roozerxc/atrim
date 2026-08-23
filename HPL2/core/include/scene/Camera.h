@@ -264,10 +264,15 @@ public:
         return m_mtxPrevProjection;
     }
 
+    void SavePreviousState();
+    cMatrixf& GetRenderMatrix(double adRenderAlpha);
+    cFrustum* GetRenderFrustum(double adRenderAlpha);
+
 private:
     void UpdateMoveMatrix();
 
     cVector3f mvPosition;
+    cVector3f mvPrevPosition;
 
     float mfFOV;
     float mfAspect;
@@ -296,11 +301,14 @@ private:
     cMatrixf m_mtxPrevView;
     cMatrixf m_mtxPrevProjection;
 
+    cMatrixf m_mtxRenderView;
+
     cMatrixf m_mtxMatrixRotation;
 
     cNode3D mNode;
 
     cFrustum mFrustum;
+    cFrustum mRenderFrustum;
 
     bool mbInfFarPlane;
 

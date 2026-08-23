@@ -574,6 +574,64 @@ cVector3f cCamera::GetUp()
 
 //-----------------------------------------------------------------------
 
+void cCamera::SavePreviousState()
+{
+    GetViewMatrix();
+
+    mvPrevPosition = mvPosition;
+    m_mtxPrevView = m_mtxView;
+
+    mNode.SavePreviousState();
+}
+
+//-----------------------------------------------------------------------
+
+cMatrixf& cCamera::GetRenderMatrix(double adRenderAlpha)
+{
+    GetViewMatrix();
+
+    m_mtxRenderView = cMath::MatrixSlerp((float)adRenderAlpha, m_mtxPrevView, m_mtxView, true);
+
+    return m_mtxRenderView;
+}
+
+//-----------------------------------------------------------------------
+
+cFrustum* cCamera::GetRenderFrustum(double adRenderAlpha)
+{
+    cVector3f vRenderPos = mvPrevPosition + (mvPosition - mvPrevPosition) * (float)adRenderAlpha;
+    const cMatrixf& m_mtxRenderView = GetRenderMatrix(adRenderAlpha);
+
+    bool bWasInf = false;
+    if(mbInfFarPlane)
+    {
+        SetInifintiveFarPlane(false);
+        bWasInf = true;
+    }
+
+    if(mProjectionType == eProjectionType_Perspective)
+    {
+        mRenderFrustum.SetupPerspectiveProj(GetProjectionMatrix(), m_mtxRenderView, 
+                                            GetFarClipPlane(), GetNearClipPlane(), 
+                                            GetFOV(), GetAspect(), vRenderPos, mbInfFarPlane);
+    }
+    else
+    {
+        mRenderFrustum.SetupOrthoProj(GetProjectionMatrix(), m_mtxRenderView, 
+                                      GetFarClipPlane(), GetNearClipPlane(), 
+                                      mvViewSize, vRenderPos, mbInfFarPlane);
+    }
+
+    if(bWasInf)
+    {
+        SetInifintiveFarPlane(true);
+    }
+
+    return &mRenderFrustum;
+}
+
+//-----------------------------------------------------------------------
+
 //////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 //////////////////////////////////////////////////////////////////////////

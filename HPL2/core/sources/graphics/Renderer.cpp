@@ -481,10 +481,12 @@ iRenderer::~iRenderer()
 
 //-----------------------------------------------------------------------
 
-void iRenderer::Render(double adFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
+void iRenderer::Render(double adFrameTime, double adRenderAlpha, cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
                        bool abSendFrameBufferToPostEffects,tRendererCallbackList *apCallbackList)
 {
-    BeginRendering(adFrameTime,apFrustum, apWorld, apSettings,apRenderTarget,abSendFrameBufferToPostEffects,apCallbackList);
+    mdRenderAlpha = adRenderAlpha;
+
+    BeginRendering(adFrameTime,adRenderAlpha,apFrustum, apWorld, apSettings,apRenderTarget,abSendFrameBufferToPostEffects,apCallbackList);
 
     SetupRenderList();
     RenderObjects();
@@ -559,7 +561,7 @@ void iRenderer::WaitAndRetrieveAllOcclusionQueries()
 
 //-----------------------------------------------------------------------
 
-void iRenderer::BeginRendering(    double adFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
+void iRenderer::BeginRendering(    double adFrameTime, double adRenderAlpha,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings,cRenderTarget *apRenderTarget,
                                    bool abSendFrameBufferToPostEffects,tRendererCallbackList *apCallbackList, bool abAtStartOfRendering)
 {
     if(apSettings->mbLog)

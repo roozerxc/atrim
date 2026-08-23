@@ -54,7 +54,7 @@ public:
 
     cMaterial *GetMaterial();
 
-    void UpdateGraphicsForFrame(double adFrameTime);
+    void UpdateGraphicsForFrame(double adFrameTime, double adRenderAlpha);
 
     iVertexBuffer* GetVertexBuffer();
 
@@ -116,6 +116,8 @@ public:
     {
         return mpMaterial;
     }
+
+    double mdLastRenderAlpha;
 
 private:
     void OnTransformUpdated();

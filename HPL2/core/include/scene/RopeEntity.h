@@ -109,7 +109,7 @@ public:
         return mpVtxBuffer;
     }
 
-    void UpdateGraphicsForFrame(double adFrameTime);
+    void UpdateGraphicsForFrame(double adFrameTime, double adRenderAlpha);
     bool UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime);
 
     cBoundingVolume* GetBoundingVolume();

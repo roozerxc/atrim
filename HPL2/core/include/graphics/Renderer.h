@@ -229,8 +229,8 @@ public:
     iRenderer(const tString& asName, cGraphics *apGraphics,cResources* apResources, int alNumOfProgramComboModes);
     virtual ~iRenderer();
 
-    void Render(double adFrameTime, cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
-                bool abSendFrameBufferToPostEffects, tRendererCallbackList *apCallbackList);
+    void Render(double adFrameTime, double adRenderAlpha, cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings,
+        cRenderTarget *apRenderTarget, bool abSendFrameBufferToPostEffects, tRendererCallbackList *apCallbackList);
 
     void Update(double adFixedDelta);
 
@@ -378,8 +378,8 @@ protected:
     virtual void SetupRenderList()=0;
     virtual void RenderObjects()=0;
 
-    void BeginRendering(double adFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
-                        bool abSendFrameBufferToPostEffects, tRendererCallbackList *apCallbackList, bool abAtStartOfRendering=true);
+    void BeginRendering(double adFrameTime,double adRenderAlpha,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings,
+        cRenderTarget *apRenderTarget,bool abSendFrameBufferToPostEffects, tRendererCallbackList *apCallbackList, bool abAtStartOfRendering=true);
     void EndRendering(bool abAtEndOfRendering=true);
 
     void CreateAndAddShadowMap(eShadowMapResolution aResolution, const cVector3l &avSize, ePixelFormat aFormat);
@@ -554,6 +554,8 @@ protected:
     static int mlReflectionSizeDiv;
     static bool mbRefractionEnabled;
     static int mlDrawCalls;
+
+    double mdRenderAlpha;
 };
 
 //---------------------------------------------

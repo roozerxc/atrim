@@ -85,6 +85,7 @@ private:
     void FindNearestLargeSurfacePlane();
 
     double dFrameTime;
+    double dRenderAlpha;
     cFrustum *mpFrustum;
 
     tRenderableVec mvOcclusionQueryObjects;

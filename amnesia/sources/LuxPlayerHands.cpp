@@ -146,6 +146,8 @@ void cLuxPlayerHands::Update(double adFixedDelta)
         cAnimationState *pAnim = mpHandsEntity->GetAnimationState(i);
     }
 
+    UpdatePlayerHandsPos(adFixedDelta);
+
     ////////////////////////////
     // Disabled
     if(mHandState == eLuxHandsState_Disabled)
@@ -226,14 +228,6 @@ void cLuxPlayerHands::Update(double adFixedDelta)
             pHandObject->Update(adFixedDelta);
         }
     }
-}
-
-
-//-----------------------------------------------------------------------
-
-void cLuxPlayerHands::PostUpdate(double adFixedDelta)
-{
-    UpdatePlayerHandsPos(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------

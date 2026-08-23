@@ -159,9 +159,12 @@ public:
         mlIteratorCount = alX;
     }
 
-protected:
+    void UpdateWorldTransform();
     virtual void OnTransformUpdated() {}
 
+    void SavePreviousState();
+
+protected:
     cNode3D* mpParentNode;
 
     tString msName;
@@ -172,6 +175,10 @@ protected:
 
     cMatrixf m_mtxLocalTransform;
     cMatrixf m_mtxWorldTransform;
+    cMatrixf m_mtxRenderTransform;
+
+    cMatrixf m_mtxPrevLocalTransform;
+    cMatrixf m_mtxPrevWorldTransform;
 
     cBoundingVolume mBoundingVolume;
     bool mbUpdateBoundingVolume;
@@ -191,8 +198,6 @@ protected:
     tNode3DList mlstNodeChildren;
 
     int mlIteratorCount;
-private:
-    void UpdateWorldTransform();
 };
 
 };
