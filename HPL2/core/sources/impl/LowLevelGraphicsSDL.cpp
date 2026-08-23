@@ -79,30 +79,18 @@ cLowLevelGraphicsSDL::cLowLevelGraphicsSDL()
     }
 
     mbInitHasBeenRun = false;
-
-    //Init extra stuff
-    //TTF_Init();
 }
 
 //-----------------------------------------------------------------------
 
 cLowLevelGraphicsSDL::~cLowLevelGraphicsSDL()
 {
-
-    if(mbInitHasBeenRun)
-    {
-        SDL_SetGammaRamp(mvStartGammaArray[0],mvStartGammaArray[1],mvStartGammaArray[2]);
-    }
-
     hplFree(mpVertexArray);
     hplFree(mpIndexArray);
     for(int i=0; i<kMaxTextureUnits; i++)
     {
         hplFree(mpTexCoordArray[i]);
     }
-
-    //Exit extra stuff
-    //TTF_Quit();
 }
 
 //-----------------------------------------------------------------------
@@ -264,9 +252,6 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFul
 
     //Gamma
     mfGammaCorrection = 1.0f;
-    SDL_GetGammaRamp(mvStartGammaArray[0],mvStartGammaArray[1],mvStartGammaArray[2]);
-
-    SDL_SetGamma(mfGammaCorrection,mfGammaCorrection,mfGammaCorrection);
 
     //GL
     Log(" Setting up OpenGL\n");
@@ -276,7 +261,6 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFul
     SDL_GL_SwapBuffers();
 
     mbInitHasBeenRun = true;
-
 
     /*if(GLEW_ARB_debug_output)
     {
@@ -683,7 +667,6 @@ void cLowLevelGraphicsSDL::SetGammaCorrection(float afX)
     ;
 
     mfGammaCorrection = afX;
-    SDL_SetGamma(mfGammaCorrection,mfGammaCorrection,mfGammaCorrection);
 }
 
 float cLowLevelGraphicsSDL::GetGammaCorrection()

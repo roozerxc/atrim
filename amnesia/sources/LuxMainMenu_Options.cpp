@@ -545,21 +545,11 @@ void cLuxMainMenu_Options::AddBasicGfxOptions(cWidgetDummy* apDummy)
         vLabelPos.y += pImg->GetSize().y + 5.0f;
 
         mpSGamma = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal,vLabelPos, cVector2f(pImg->GetSize().x, 20), 0, pLabel);
-        //mpSGamma->AddCallback(eGuiMessage_SliderMove, this, kGuiCallback(GammaSlider_OnMove));
         SetUpInput(pLabel, mpSGamma, false, kTranslate("OptionsMenu","GammaInstructions"));
         SetUpSlider(mpSGamma, mfGammaMin, mfGammaMax, mfGammaStep, kGuiCallback(GammaSlider_OnMove), &mpLGamma);
         mpSGamma->SetBarValueSize(4);
 
-        //mpLGamma = mpGuiSet->CreateWidgetLabel(cVector3f(mpSGamma->GetSize().x*0.5f,2,1), -1, _W(""), mpSGamma);
-        //mpLGamma->SetTextAlign(eFontAlign_Center);
-
         vLabelPos.y += mpSGamma->GetSize().y + 4.0f;
-
-        //cWidgetLabel *pLInstr = mpGuiSet->CreateWidgetLabel(vLabelPos, cVector2f(pImg->GetSize().x,27), kTranslate("OptionsMenu","GammaInstructions"), pLabel);
-        //pLInstr->SetDrawBackGround(true);
-        //pLInstr->SetBackGroundColor(cColor(0, 0.7f));
-        //pLInstr->SetWordWrap(true);
-        //pLInstr->SetDefaultFontSize(12);
     }
 
     mpCBResolution->SetFocusNavigation(eUIArrow_Down, mpCBTextureSizeLevel);

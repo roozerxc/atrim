@@ -64,6 +64,21 @@ private:
 
 //----------------------------------------------
 
+class cLuxPostEffect_Gamma : public iLuxPostEffect
+{
+public:
+    cLuxPostEffect_Gamma(cGraphics *apGraphics, cResources *apResources);
+    ~cLuxPostEffect_Gamma();
+
+private:
+    iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
+
+    iGpuProgram *mpProgram;
+};
+
+
+//----------------------------------------------
+
 
 class cLuxPostEffectHandler : public iLuxUpdateable
 {
@@ -87,6 +102,7 @@ private:
     void AddEffect(iLuxPostEffect *apPostEffect, int alPrio);
 
     cLuxPostEffect_Insanity *mpInsanity;
+    cLuxPostEffect_Gamma *mpGamma;
 
     std::vector<iLuxPostEffect*> mvPostEffects;
 
