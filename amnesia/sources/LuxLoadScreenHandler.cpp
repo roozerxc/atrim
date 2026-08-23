@@ -238,7 +238,10 @@ void cLuxLoadScreenHandler::DrawMenuScreen()
     //////////////////////
     //Draw Image
     cVector2f vImageSize = pImage->GetImageSize();
-    pSet->DrawGfx(pImage, cVector3f(400,300,0)- cVector3f(vImageSize.x/2.0f, vImageSize.y/2.0f, 0));
+    float fRatio = vImageSize.x / vImageSize.y;
+    float fRatioMul = fRatio / (4.0f / 3.0f);
+
+    pSet->DrawGfx(pImage, cVector3f(400*(1-fRatioMul),0,0), cVector2f(800*fRatioMul, 600), cColor(1,1));
 
     //////////////////////
     //Draw Text
