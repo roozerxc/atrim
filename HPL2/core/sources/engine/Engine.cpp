@@ -398,23 +398,23 @@ void cEngine::Run()
 
     bool bBufferSwap = false;
 
-    //Make internal update count catch up!
+    // Make internal update count catch up!
     iMaxGameUpdates = 6; // 60 % 10 = 6 updates
 
-    //Define the current time from UpdateFrameTimer()
+    // Define the current time from UpdateFrameTimer()
     dCurrentTime = cPlatform::GetApplicationTime() / 1000.0;
 
-    //Adapt fixed delta from the Amnesia timestep
+    // Adapt fixed delta from the Amnesia timestep
     dFixedDelta = 1.0 / 60.0;
     dAccumulator = 0.0;
 
-    //Initialize dSpeedMul to control the speed multiplier!
+    // Initialize dSpeedMul to control the speed multiplier!
     dSpeedMul = 1.0;
 
     while(!GetGameIsDone())
     {
         ///////////////////////////////////////
-        //Get the time from the last frame.
+        // Get the time from the last frame.
         dNewTime = cPlatform::GetApplicationTime() / 1000.0;
         double dAuthenticFrameTime = dNewTime - dCurrentTime;
 
@@ -437,7 +437,7 @@ void cEngine::Run()
         }
         dFrameTime = dAuthenticFrameTime;
 
-        //Dont spiral!
+        // Clamp the game frame time and prevent huge single wallclock jump
         if(dFrameTime > 0.25)
         {
             dFrameTime = 0.25;
@@ -452,8 +452,8 @@ void cEngine::Run()
             break;
         }
 
-        //Reset update on current frame, then Accumulate the time since last one
-        //and multiply the accumulated time with the game logic speed mul
+        // Reset update on current frame, then Accumulate the time since last one
+        // and multiply the accumulated time with the game logic speed mul
         iUpdatesOnCurrentFrame = 0;
         dAccumulator += dFrameTime * dSpeedMul;
 
@@ -477,18 +477,18 @@ void cEngine::Run()
                 dLastLogClearedTime = dLogicTime;
             }
 
-            //Increase simulated logic then subtract
+            // Increase simulated logic then subtract
             dLogicTime += dFixedDelta;
             dAccumulator -= dFixedDelta;
 
-            //Increment updates based on current frame
+            // Increment updates based on current frame
             ++iUpdatesOnCurrentFrame;
         }
 
-        // Soft clamp the leftover accumulated time
-        if(iUpdatesOnCurrentFrame >= iMaxGameUpdates)
+        // Game is too far behind and can't catch up, so drop the excess time!
+        if(dAccumulator >= dFixedDelta && iUpdatesOnCurrentFrame >= iMaxGameUpdates)
         {
-            dAccumulator = std::min(dAccumulator, dFixedDelta);
+            dAccumulator = dFixedDelta;
         }
 
         // Make alpha dividing the accumulated time by the fixed delta timestep
