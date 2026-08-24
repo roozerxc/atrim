@@ -194,14 +194,24 @@ void DestroyHPLEngine(cEngine* apGame)
 
 bool cEngine::mbDevicePlugged = false;
 bool cEngine::mbDeviceRemoved = false;
-int cEngine::mlNumLogicLoops=0;
 
 //-----------------------------------------------------------------------
 
 cEngine::cEngine(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, cEngineInitVars *apVars)
+                : mbGameIsDone(false)
+                , mbPaused(false)
+                , iMaxGameUpdates(6)
+                , dMaxFrameTime(0.25)
+                , dFixedDelta(1.0 / 60.0)
+                , iUpdatesOnCurrentFrame(0)
+                , dAccumulator(0.0)
+                , dLogicTime(0.0)
+                , dSpeedMul(1.0)
+                , dFrameTime(0.0)
+                , dCurrentTime(0.0)
+                , dNewTime(0.0)
+                , dRenderAlpha(0.0)
 {
-    GameInit(apGameSetup,alHplSetupFlags, apVars);
-
     //Set up variables
     mbApplicationHasInputFocus = false;
     mbApplicationHasMouseFocus = false;
@@ -216,8 +226,9 @@ cEngine::cEngine(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, cEngin
     mvEngineTypeStrings[eVariableType_String] =    "String";
     mvEngineTypeStrings[eVariableType_Enum] =    "Enum";
     mvEngineTypeStrings[eVariableType_Bool] =    "Bool";
-}
 
+    GameInit(apGameSetup,alHplSetupFlags, apVars);
+}
 
 //-----------------------------------------------------------------------
 
@@ -372,53 +383,44 @@ cEngine::~cEngine()
 
 void cEngine::Run()
 {
-    //Log line that ends user init.
-    Log("--------------------------------------------------------\n\n");
+    bool bBufferSwap = false;
+
+    double dNumOfTimes = 0.0;
+    double dAverageFPS = 0.0;
 
     double dLastLogClearedTime = 0.0;
     const double dLogClearedInterval = 1.0;
 
-    double dNumOfTimes=0;
-    double dAverageFPS=0;
-
     std::priority_queue<double, std::vector<double>, std::greater<double>> worst;
     size_t iTotalFrames = 0; // Every frame i saw in the game!
+    unsigned long lTempTime = cPlatform::GetApplicationTime();
+
+    //Log line that ends user init.
+    Log("--------------------------------------------------------\n\n");
 
     mpUpdater->BroadcastMessageToAll(eUpdateableMessage_OnStart);
-
-    //Loop the game... fix the var...
-    unsigned long lTempTime = cPlatform::GetApplicationTime();
 
     Log("Engine Initialized!\n");
     Log("--------------------------------------------------------\n");
 
     mpFrameTimer->Start();
 
+    // Reset mutable variables since engine init!
     dLogicTime = 0.0;
-
-    bool bBufferSwap = false;
-
-    // Make internal update count catch up!
-    iMaxGameUpdates = 6; // 60 % 10 = 6 updates
+    dAccumulator = 0.0;
+    dSpeedMul = 1.0;
 
     // Define the current time from UpdateFrameTimer()
     dCurrentTime = cPlatform::GetApplicationTime() / 1000.0;
-
-    // Adapt fixed delta from the Amnesia timestep
-    dFixedDelta = 1.0 / 60.0;
-    dAccumulator = 0.0;
-
-    // Initialize dSpeedMul to control the speed multiplier!
-    dSpeedMul = 1.0;
 
     while(!GetGameIsDone())
     {
         ///////////////////////////////////////
         // Get the time from the last frame.
         dNewTime = cPlatform::GetApplicationTime() / 1000.0;
-        double dAuthenticFrameTime = dNewTime - dCurrentTime;
+        double dRawFrameTime = dNewTime - dCurrentTime;
 
-        if(dAuthenticFrameTime > 0.0)
+        if(dRawFrameTime > 0.0)
         {
             ++iTotalFrames;
 
@@ -427,20 +429,20 @@ void cEngine::Run()
 
             if(worst.size() < iMaxWorstFrames)
             {
-                worst.push(dAuthenticFrameTime);
+                worst.push(dRawFrameTime);
             }
-            else if(dAuthenticFrameTime > worst.top())
+            else if(dRawFrameTime > worst.top())
             {
                 worst.pop();
-                worst.push(dAuthenticFrameTime);
+                worst.push(dRawFrameTime);
             }
         }
-        dFrameTime = dAuthenticFrameTime;
+        dFrameTime = dRawFrameTime;
 
         // Clamp the game frame time and prevent huge single wallclock jump
-        if(dFrameTime > 0.25)
+        if(dFrameTime > dMaxFrameTime)
         {
-            dFrameTime = 0.25;
+            dFrameTime = dMaxFrameTime;
         }
         dCurrentTime = dNewTime;
 

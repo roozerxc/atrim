@@ -198,28 +198,25 @@ public:
     {
         return mvEngineTypeStrings[aType];
     }
-
-    static int mlNumLogicLoops;
 private:
     bool mbGameIsDone;
-
     bool mbPaused;
 
-    int iMaxGameUpdates;
+    const int iMaxGameUpdates;
+    const double dMaxFrameTime;
+    const double dFixedDelta;
+
     int iUpdatesOnCurrentFrame;
 
-    double dCurrentTime;
-    double dLogicTime;
-    double dFrameTime;
-
-    double dFixedDelta;
-
     double dAccumulator;
+    double dLogicTime;
+    double dSpeedMul;
+
+    double dFrameTime;
+    double dCurrentTime;
     double dNewTime;
 
     double dRenderAlpha;
-
-    double dSpeedMul;
 
     iLowLevelEngineSetup *mpGameSetup;
     cUpdater *mpUpdater;
