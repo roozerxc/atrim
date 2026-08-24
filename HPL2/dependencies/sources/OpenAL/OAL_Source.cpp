@@ -599,7 +599,7 @@ void cOAL_Source::SetGain(float afGain)
 void cOAL_Source::SetPitch(float afPitch)
 {
 	if(afPitch<=0) afPitch=0.0001f;
-	if(afPitch>2) afPitch=2;
+	if(afPitch>4) afPitch=4;
 
 	mfPitch = afPitch;
 	LowLevelSet(eOAL_SourceParam_Pitch);
