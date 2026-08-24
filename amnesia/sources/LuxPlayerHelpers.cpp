@@ -3192,17 +3192,6 @@ void cLuxPlayerInDarkness::Update(double adFixedDelta)
     // Light
     if(fExtLightLevel > mfMinDarknessLightLevel)
     {
-        ////////////////////////////
-        //Turn off loop sound
-        /*if(mpLoopSound)
-        {
-            if(mfLoopSoundCount <= 0)
-            {
-                mpLoopSound->FadeOut(mfLoopSoundFadeOutSpeed);
-                mpLoopSound = NULL;
-            }
-        }*/
-
         mfLoopSoundCount-= (float)adFixedDelta;
         if(mfLoopSoundCount <= 0)
         {
@@ -3245,17 +3234,6 @@ void cLuxPlayerInDarkness::Update(double adFixedDelta)
                 mfShowHintTimer -= (float)adFixedDelta;
             }
         }
-
-        ////////////////////////////
-        //Check if sound should be played
-        /*if(mpLoopSound == NULL)
-        {
-            if(mfLoopSoundCount >= mfLoopSoundStartupTime)
-            {
-                mpLoopSound = mpSoundHandler->PlayGuiStream(msLoopSoundFile,true,mfLoopSoundVolume);
-                if(mpLoopSound) mpLoopSound->FadeIn(1.0f, mfLoopSoundFadeInSpeed);
-            }
-        }*/
 
         mfLoopSoundCount+= (float)adFixedDelta;
         if(mfLoopSoundCount >= mfLoopSoundStartupTime)
