@@ -167,7 +167,7 @@ public:
 
     double GetFixedDelta()
     {
-        return dFixedDelta;
+        return kFixedDelta;
     }
 
     static void SetDeviceWasPlugged()
@@ -203,8 +203,8 @@ private:
     bool mbPaused;
 
     const int iMaxGameUpdates;
-    const double dMaxFrameTime;
-    const double dFixedDelta;
+    const double kMaxFrameTime;
+    const double kFixedDelta;
 
     int iUpdatesOnCurrentFrame;
 

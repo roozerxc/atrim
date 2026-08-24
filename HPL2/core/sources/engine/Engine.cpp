@@ -201,8 +201,8 @@ cEngine::cEngine(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, cEngin
                 : mbGameIsDone(false)
                 , mbPaused(false)
                 , iMaxGameUpdates(6)
-                , dMaxFrameTime(0.25)
-                , dFixedDelta(1.0 / 60.0)
+                , kMaxFrameTime(0.25)
+                , kFixedDelta(1.0 / 60.0)
                 , iUpdatesOnCurrentFrame(0)
                 , dAccumulator(0.0)
                 , dLogicTime(0.0)
@@ -389,7 +389,7 @@ void cEngine::Run()
     double dAverageFPS = 0.0;
 
     double dLastLogClearedTime = 0.0;
-    const double dLogClearedInterval = 1.0;
+    const double kLogClearedInterval = 1.0;
 
     std::priority_queue<double, std::vector<double>, std::greater<double>> worst;
     size_t iTotalFrames = 0; // Every frame i saw in the game!
@@ -440,9 +440,9 @@ void cEngine::Run()
         dFrameTime = dRawFrameTime;
 
         // Clamp the game frame time and prevent huge single wallclock jump
-        if(dFrameTime > dMaxFrameTime)
+        if(dFrameTime > kMaxFrameTime)
         {
-            dFrameTime = dMaxFrameTime;
+            dFrameTime = kMaxFrameTime;
         }
         dCurrentTime = dNewTime;
 
@@ -459,7 +459,7 @@ void cEngine::Run()
         iUpdatesOnCurrentFrame = 0;
         dAccumulator += dFrameTime * dSpeedMul;
 
-        while(dAccumulator >= dFixedDelta && iUpdatesOnCurrentFrame < iMaxGameUpdates)
+        while(dAccumulator >= kFixedDelta && iUpdatesOnCurrentFrame < iMaxGameUpdates)
         {
             if(GetGameIsDone())
             {
@@ -467,34 +467,34 @@ void cEngine::Run()
             }
 
             // Run Update callback in updater
-            mpUpdater->RunMessage(eUpdateableMessage_PreUpdate, dFixedDelta);
-            mpUpdater->RunMessage(eUpdateableMessage_Update, dFixedDelta);
-            mpUpdater->RunMessage(eUpdateableMessage_PostUpdate, dFixedDelta);
+            mpUpdater->RunMessage(eUpdateableMessage_PreUpdate, kFixedDelta);
+            mpUpdater->RunMessage(eUpdateableMessage_Update, kFixedDelta);
+            mpUpdater->RunMessage(eUpdateableMessage_PostUpdate, kFixedDelta);
 
             // If log update is active, clear it regularly.
             if(GetUpdateLogActive() && mpUpdater->GetCurrentContainerName() == "Default" &&
-                dLogicTime - dLastLogClearedTime >= dLogClearedInterval)
+                dLogicTime - dLastLogClearedTime >= kLogClearedInterval)
             {
                 ClearUpdateLogFile();
                 dLastLogClearedTime = dLogicTime;
             }
 
             // Increase simulated logic then subtract
-            dLogicTime += dFixedDelta;
-            dAccumulator -= dFixedDelta;
+            dLogicTime += kFixedDelta;
+            dAccumulator -= kFixedDelta;
 
             // Increment updates based on current frame
             ++iUpdatesOnCurrentFrame;
         }
 
         // Game is too far behind and can't catch up, so drop the excess time!
-        if(dAccumulator >= dFixedDelta && iUpdatesOnCurrentFrame >= iMaxGameUpdates)
+        if(dAccumulator >= kFixedDelta && iUpdatesOnCurrentFrame >= iMaxGameUpdates)
         {
-            dAccumulator = dFixedDelta;
+            dAccumulator = kFixedDelta;
         }
 
         // Make alpha dividing the accumulated time by the fixed delta timestep
-        dRenderAlpha = dAccumulator / dFixedDelta;
+        dRenderAlpha = dAccumulator / kFixedDelta;
 
         //Swap, run callback and move STRAIGHT INTO draw call
         if(bBufferSwap)
