@@ -205,7 +205,7 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFul
     }
     // update with the screen size ACTUALLY obtained
     mvScreenSize = cVector2l(mpScreen->w, mpScreen->h);
-#   ifdef _WIN32
+#ifdef _WIN32
     //////////////////////////////
     // Set up window position
     if(abFullscreen==false)
@@ -217,12 +217,16 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFul
         RECT r;
         GetWindowRect(pInfo.window, &r);
 
-        if(avWindowPos.x >=0 && avWindowPos.y >=0)
+        if(abBorderless)
         {
-            SetWindowPos(pInfo.window, HWND_TOP, avWindowPos.x, avWindowPos.y, 0, 0,  SWP_NOSIZE);
+            SetWindowPos(pInfo.window, HWND_TOP, 0, 0, alWidth, alHeight, SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+        }
+        else if(avWindowPos.x >=0 && avWindowPos.y >=0)
+        {
+            SetWindowPos(pInfo.window, HWND_TOP, avWindowPos.x, avWindowPos.y, 0, 0, SWP_NOSIZE);
         }
     }
-#   endif
+#endif
     if (mbGrab)
     {
         SetWindowGrab(true);

@@ -316,10 +316,7 @@ cLuxPreMenu::~cLuxPreMenu()
 void cLuxPreMenu::OnEnterContainer(const tString& asOldContainer)
 {
     //Unlock input if not in window
-    if(gpBase->mpConfigHandler->mbFullscreen==false)
-    {
-        gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(false);
-    }
+    gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(false);
     gpBase->mpEngine->GetInput()->GetLowLevel()->RelativeMouse(false);
 
     ////////////////////////////
@@ -346,12 +343,9 @@ void cLuxPreMenu::OnEnterContainer(const tString& asOldContainer)
 void cLuxPreMenu::OnLeaveContainer(const tString& asNewContainer)
 {
     //Unlock input if not in window
-    if (gpBase->mpDebugHandler->GetDebugWindowActive()==false)
+    if(gpBase->mpDebugHandler->GetDebugWindowActive()==false)
     {
-        if(    gpBase->mpConfigHandler->mbFullscreen==false)
-        {
-            gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(true);
-        }
+        gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(true);
         gpBase->mpEngine->GetInput()->GetLowLevel()->RelativeMouse(true);
     }
 

@@ -304,10 +304,7 @@ void cLuxMainMenu::Reset()
 void cLuxMainMenu::OnEnterContainer(const tString& asOldContainer)
 {
     //Unlock input if not in window
-    if(gpBase->mpConfigHandler->mbFullscreen==false)
-    {
-        gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(false);
-    }
+    gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(false);
     gpBase->mpEngine->GetInput()->GetLowLevel()->RelativeMouse(false);
 
     ////////////////////////////
@@ -316,9 +313,6 @@ void cLuxMainMenu::OnEnterContainer(const tString& asOldContainer)
 
     mpViewport->SetActive(true);
     mpViewport->SetVisible(true);
-
-
-//    gpBase->SetDrawOnLiveCursor(false);
 
     mpGuiSet->SetActive(true);
     mpGui->SetFocus(mpGuiSet);
@@ -389,12 +383,9 @@ void cLuxMainMenu::OnEnterContainer(const tString& asOldContainer)
 void cLuxMainMenu::OnLeaveContainer(const tString& asNewContainer)
 {
     //Unlock input if not in window
-    if (gpBase->mpDebugHandler->GetDebugWindowActive()==false)
+    if(gpBase->mpDebugHandler->GetDebugWindowActive()==false)
     {
-        if(    gpBase->mpConfigHandler->mbFullscreen==false)
-        {
-            gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(true);
-        }
+        gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(true);
         gpBase->mpEngine->GetInput()->GetLowLevel()->RelativeMouse(true);
     }
 

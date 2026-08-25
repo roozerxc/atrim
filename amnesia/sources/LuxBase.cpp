@@ -478,12 +478,9 @@ bool cLuxBase::Init(const tString &asCommandline)
         }
 
         //Unlock input if not in window
-        if (mpDebugHandler->GetDebugWindowActive() == false)
+        if(mpDebugHandler->GetDebugWindowActive() == false)
         {
-            if (mpConfigHandler->mbFullscreen == false)
-            {
-                mpEngine->GetInput()->GetLowLevel()->LockInput(true);
-            }
+            mpEngine->GetInput()->GetLowLevel()->LockInput(true);
             mpEngine->GetInput()->GetLowLevel()->RelativeMouse(true);
         }
 
