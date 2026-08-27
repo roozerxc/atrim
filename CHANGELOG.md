@@ -18,14 +18,19 @@
 - [`9a19316`](https://github.com/roozerxc/atrim/commit/9a1931670a5cdbb0ed36f55cf15ea817633ab759) Added new pre-post effect screen render method
 - [`576eaaa`](https://github.com/roozerxc/atrim/commit/576eaaabf675f2520d36f42eed56dc722da9e9a8) Added new properties for lights and particles
 - [`b1de39b`](https://github.com/roozerxc/atrim/commit/b1de39b0c8dda4a1e647669a0ebf09af09e26d1e) Added new string localization for hardcoded texts (Finnish and German translation by [@phnxs](https://github.com/phnxs) and ANDREWJOHN5)
+- [`d2bfe2a`](https://github.com/roozerxc/atrim/commit/d2bfe2ab1abe34ff87fe9b89fb7f1f83131ad352) Added new "Ultra" setting for shadow quality and resolution
+- [`93b364c`](https://github.com/roozerxc/atrim/commit/93b364ccdad59db496a42a26e962ab8d78ba2fb0) Added new "Ultra Low" texture setting for significantly weaker hardware
 - [`c0befb0`](https://github.com/roozerxc/atrim/commit/c0befb030f3705d59b0da573ab044b0282264981) Added new warning on every bootup advising the player to get their money back if they purchased the client.
 - [`f92c047`](https://github.com/roozerxc/atrim/commit/f92c047ce2bf57988a3e10bee4f627a5a7da8651) Added new "Z Dissolve" rendering list type
 - [`d595f7c`](https://github.com/roozerxc/atrim/commit/d595f7c0fb0f4af6a44227c0ca5923356ef8c0a0) Added post-version 1.3 strings for playing the client with older game versions
 - [`bc98941`](https://github.com/roozerxc/atrim/commit/bc989418e2455b48983440c0dfd17386dbfc6794) Added proper map cache version number detection
 - [`2bda3d0`](https://github.com/roozerxc/atrim/commit/2bda3d06df6338145f749e88eba8180d4996c815) Added SDL 1.2.15 as a static library in the executable
 - [`0a80de3`](https://github.com/roozerxc/atrim/commit/0a80de396d33a6ada455d1c888e407ca7d113f62) Conditional if statements now have braces, avoiding the risk of subtle bugs
+- [`9361918`](https://github.com/roozerxc/atrim/commit/93619186345b1e9eaa65a7d70a13d1f585dd9331) Custom Stories can now be loaded from floppy disk
 - [`8e3b184`](https://github.com/roozerxc/atrim/commit/8e3b18422a567ee4ba21babfa65a630fcd06583e) Decoupled engine renderer and game logic from each other, allowing for truly uncapped framerates
 - [`ef6c70e`](https://github.com/roozerxc/atrim/commit/ef6c70e534c2eb12e7cc8371bae3f74a15590c2d) Decoupled timers and scripts to use their own functions instead of using the same "Run" function
+- [`e0bc279`](https://github.com/roozerxc/atrim/commit/e0bc279de985339ae95d69d1cd20df220be5ce5b) Fixed Alt+Tab behavior on Borderless Fullscreen mode
+- [`9361918`](https://github.com/roozerxc/atrim/commit/93619186345b1e9eaa65a7d70a13d1f585dd9331) Fixed aspect ratio calculation for custom `menu_loading_screen.jpg` images
 - [`c2d7155`](https://github.com/roozerxc/atrim/commit/c2d7155de5f6522622a7174a201c45a221433d45) Fixed buggy enemy collision behavior
 - [`d8e586b`](https://github.com/roozerxc/atrim/commit/d8e586b46bc6af07e28130d62ea0b93bf62048a9) Fixed character body simulation errors (Can be switched back using `HPL_CHARACTERBODY_BROKEN`)
 - [`b496952`](https://github.com/roozerxc/atrim/commit/b496952608936ed83cde7a959521c7ec5c01ffff) Fixed Custom Story images not being cleared out when another Custom Story was selected
@@ -42,9 +47,11 @@
 - [`5c29b95`](https://github.com/roozerxc/atrim/commit/5c29b958d314dd2ba9d2cb44e5e7b86c25e22ea4) Fixed SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
 - [`da80ae9`](https://github.com/roozerxc/atrim/commit/da80ae9e4b3f8242b8fd2ce72c9710fb6ec42bbc) Fixed `SetSanityDrainDisabled` not working on enemies
 - [`daa0e1b`](https://github.com/roozerxc/atrim/commit/daa0e1bf5f5e241a986d000e56f1b6db69845d80) Fixed Shader Model 3 parallax mapping fallback
+- [`2808692`](https://github.com/roozerxc/atrim/commit/28086922a6e43d43e8e256fe7d1de81ab789243a) Fixed spiral of death and freezes with certain game logic updates
 - [`b0ac5f7`](https://github.com/roozerxc/atrim/commit/b0ac5f74da32e29c15905ab75acec83775302bac) Fixed visual bug with ropes disappearing when they were stretched to a significant degree
 - [`5e8e5da`](https://github.com/roozerxc/atrim/commit/5e8e5daa9c5cd75699bd5fc11412696fe080b015) Fixed weird behavior in Custom Story menu
 - [`155d025`](https://github.com/roozerxc/atrim/commit/155d025ad20c52e4a5d6772e6fbe5dda221e0215) Improved AI node iterator with changes from Amnesia: A Machine for Pigs
+- [`1708295`](https://github.com/roozerxc/atrim/commit/1708295270702a3fc1e646d973b7623e529a9edf) Improved text quality for notes, diaries and mementos in the Journal
 - [`5bf2809`](https://github.com/roozerxc/atrim/commit/5bf2809d0f2b22813fdf23ca1dbe021159bc576f) Improved text quality for on-screen debug overlay and game subtitles
 - [`683b99a`](https://github.com/roozerxc/atrim/commit/683b99a87cc96bc11d28a4d297411acd9399103d) Improved volume slider in the main menu for more precise control
 - [`94e18ca`](https://github.com/roozerxc/atrim/commit/94e18cad9d481f41327a0ab4f60a428788a5754c) Moved enemy radial blur fade out to a proper effect updater instead of the "enemy seen" check
@@ -62,6 +69,7 @@
 - [`abe33ed`](https://github.com/roozerxc/atrim/commit/abe33eda0f6e5edfbc741cac225ed8a36ee24953) Removed unused Ogg/Theora video loader
 - [`7491cc4`](https://github.com/roozerxc/atrim/commit/7491cc43e3e7b712c8723bfb12038d2146264d2c) Replaced loading icons from loose bitmaps with header-based RWops in the executable
 - [`0a3de4d`](https://github.com/roozerxc/atrim/commit/0a3de4d6e60806f30c31cb48281bd80c29efd79a) Replaced OpenAL with OpenAL-Soft
+- [`5017fb0`](https://github.com/roozerxc/atrim/commit/5017fb0157571124191c1930f29673ad32fc6380) Replaced `SDL_SetGamma` with a dedicated GLSL shader that controls the in-game gamma
 - [`1731b30`](https://github.com/roozerxc/atrim/commit/1731b3071cefc3034e3a2fd3c152bd7998d68d3e) Restored unused Penumbra-style head leaning behavior
 - [`9c24285`](https://github.com/roozerxc/atrim/commit/9c2428550d161e27aeb78e57bec20e404d167817) Updated game physics to use double precision
 ------------
