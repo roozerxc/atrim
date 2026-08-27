@@ -1,7 +1,10 @@
 ## Special thanks to the following testers!
 
-#### v1.4.6-win32-beta
+#### v1.4.6-beta
+- **Ajdino** - Testing
 - **ANDREWJOHN5** - German/Deutsch localization and testing
+- **auxxci** - Testing
+- **Douglas** - Testing
 - **georgeempy** - Testing
 - **phnxs** - Finnish/Suomenkieli localization and testing
 - **visa1337** - Testing
