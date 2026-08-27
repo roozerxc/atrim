@@ -26,7 +26,7 @@
 - [`bc98941`](https://github.com/roozerxc/atrim/commit/bc989418e2455b48983440c0dfd17386dbfc6794) Added proper map cache version number detection
 - [`2bda3d0`](https://github.com/roozerxc/atrim/commit/2bda3d06df6338145f749e88eba8180d4996c815) Added SDL 1.2.15 as a static library in the executable
 - [`0a80de3`](https://github.com/roozerxc/atrim/commit/0a80de396d33a6ada455d1c888e407ca7d113f62) Conditional if statements now have braces, avoiding the risk of subtle bugs
-- [`9361918`](https://github.com/roozerxc/atrim/commit/93619186345b1e9eaa65a7d70a13d1f585dd9331) Custom Stories can now be loaded from floppy disk
+- [`787fa1c`](https://github.com/roozerxc/atrim/commit/787fa1c602d77a3c7a303116204be509e309fdad) Custom Stories can now be loaded from floppy disk
 - [`8e3b184`](https://github.com/roozerxc/atrim/commit/8e3b18422a567ee4ba21babfa65a630fcd06583e) Decoupled engine renderer and game logic from each other, allowing for truly uncapped framerates
 - [`ef6c70e`](https://github.com/roozerxc/atrim/commit/ef6c70e534c2eb12e7cc8371bae3f74a15590c2d) Decoupled timers and scripts to use their own functions instead of using the same "Run" function
 - [`e0bc279`](https://github.com/roozerxc/atrim/commit/e0bc279de985339ae95d69d1cd20df220be5ce5b) Fixed Alt+Tab behavior on Borderless Fullscreen mode
