@@ -1,9 +1,12 @@
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include "LuxMainMenu_CustomStory.h"
 
 #include "LuxInputHandler.h"
 #include "LuxSaveHandler.h"
 #include "LuxProgressLogHandler.h"
-
 
 //-----------------------------------------------------------------------
 
@@ -421,6 +424,29 @@ void cLuxMainMenu_CustomStoryList::PopulateStoryList()
 
     tWStringList lstStoryDirs;
     cPlatform::FindFoldersInDir(lstStoryDirs, sPath, false);
+
+#ifdef _WIN32
+    //////////////////////////////////////////////////////////////////////
+    // Scan and Create a story from Floppy disk (WHAT THE FUCK ?????)
+    UINT iErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
+    cLuxCustomStorySettings* pStoryFloppy = hplNew(cLuxCustomStorySettings, ());
+
+    if(pStoryFloppy->CreateFromPath(_W("A:\\")))
+    {
+        // Add prefix to name ...
+        pStoryFloppy->msName = _W("[Floppy Disk] ") + pStoryFloppy->msName;
+
+        cWidgetItem* pItem = mpLBStories->AddItem(pStoryFloppy->msName);
+        pItem->SetUserData(pStoryFloppy);
+    }
+    else
+    {
+        // Stop leaking if i cant find it. :P
+        hplDelete(pStoryFloppy);
+    }
+
+    SetErrorMode(iErrorMode);
+#endif
 
     //////////////////////////////////////////////////////////////////////
     // Try to create a story using every dir under the custom story dir

@@ -202,6 +202,17 @@ bool cLuxCustomStorySettings::CreateFromPath(const tWString& asPath)
 
     cConfigFile* pCustomStoryCfg = hplNew(cConfigFile,(sFile));
     bValid = pCustomStoryCfg->Load();
+
+    if(bValid==false)
+    {
+        hplDelete(pCustomStoryCfg);
+
+        sFile = cString::AddSlashAtEndW(asPath) + _W("csinfo.cfg");
+        pCustomStoryCfg = hplNew(cConfigFile, (sFile));
+
+        bValid = pCustomStoryCfg->Load();
+    }
+
     if(bValid)
     {
         msStoryRootFolder = cString::AddSlashAtEndW(asPath);
@@ -1504,12 +1515,32 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
     //Load the language files
 
     // Custom story
-    if(mpCustomStory && mpCustomStory->msExtraLangFilePrefix!="")
+    if(mpCustomStory)
     {
-        tString sExtraLangFileName = cString::To8Char(mpCustomStory->msStoryRootFolder) + mpCustomStory->msExtraLangFilePrefix + sGameFileName;
-        if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sExtraLangFileName)!=_W(""))
+        tString sExtraLangFileName;
+#ifdef _WIN32
+        // A custom story installed on the root of floppy disk.
+        if(mpCustomStory->msStoryRootFolder == _W("A:\\") || mpCustomStory->msStoryRootFolder == _W("a:\\"))
         {
-            pResources->AddLanguageFile(sExtraLangFileName, true);
+            tString sExtraLangShortExt = asName.substr(0, 3);
+            sExtraLangFileName = "A:\\cstexts." + sExtraLangShortExt;
+        }
+
+        // Normal custom story installed on the hard disk
+        else
+#endif
+        if(mpCustomStory->msExtraLangFilePrefix != "")
+        {
+            sExtraLangFileName = cString::To8Char(mpCustomStory->msStoryRootFolder) + mpCustomStory->msExtraLangFilePrefix + sGameFileName;
+        }
+
+        // File path string built, load it!
+        if(sExtraLangFileName != "")
+        {
+            if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sExtraLangFileName) != _W(""))
+            {
+                pResources->AddLanguageFile(sExtraLangFileName, true);
+            }
         }
     }
 
