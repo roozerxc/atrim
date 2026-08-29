@@ -52,7 +52,7 @@
 				OmitFramePointers="false"
 				EnableFiberSafeOptimizations="false"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories=".\include\;.\dependencies\include\;.\dependencies\include\AL\;.\dependencies\sources\zlib\;.\dependencies\sources\AngelScript\include\"
+				AdditionalIncludeDirectories=".\include\;.\depends\include\;.\depends\include\AL\;.\depends\sources\zlib\;.\depends\sources\AngelScript\include\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_WINDOWS;_USRDLL;HPL_EXPORTS;MEMORY_MANAGER_ACTIVE;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H;HPL_CHARACTERBODY_BROKEN"
 				MinimalRebuild="true"
 				ExceptionHandling="2"
@@ -130,7 +130,7 @@
 				OmitFramePointers="false"
 				EnableFiberSafeOptimizations="false"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories=".\include\;.\dependencies\include\;.\dependencies\include\AL\;.\dependencies\sources\zlib\;.\dependencies\sources\AngelScript\include\"
+				AdditionalIncludeDirectories=".\include\;.\depends\include\;.\depends\include\AL\;.\depends\sources\zlib\;.\depends\sources\AngelScript\include\"
 				PreprocessorDefinitions="_DEBUG;_LIB;_WINDOWS;_USRDLL;HPL_EXPORTS;MEMORY_MANAGER_ACTIVE;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H;HPL_CHARACTERBODY_BROKEN"
 				MinimalRebuild="true"
 				ExceptionHandling="2"
@@ -208,7 +208,7 @@
 				OmitFramePointers="false"
 				EnableFiberSafeOptimizations="false"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories=".\include\;.\dependencies\include\;.\dependencies\include\AL\;.\dependencies\sources\zlib\;.\dependencies\sources\AngelScript\include\"
+				AdditionalIncludeDirectories=".\include\;.\depends\include\;.\depends\include\AL\;.\depends\sources\zlib\;.\depends\sources\AngelScript\include\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_WINDOWS;_USRDLL;HPL_EXPORTS;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H;HPL_CHARACTERBODY_BROKEN"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
@@ -288,7 +288,7 @@
 				OmitFramePointers="false"
 				EnableFiberSafeOptimizations="false"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories=".\include\;.\dependencies\include\;.\dependencies\include\AL\;.\dependencies\sources\zlib\;.\dependencies\sources\AngelScript\include\"
+				AdditionalIncludeDirectories=".\include\;.\depends\include\;.\depends\include\AL\;.\depends\sources\zlib\;.\depends\sources\AngelScript\include\"
 				PreprocessorDefinitions="NDEBUG;_LIB;_WINDOWS;_USRDLL;HPL_EXPORTS;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;_NEWTON_USE_LIB;IL_STATIC_LIB;HAVE_LIBC;SDL_DISABLE_IMMINTRIN_H;SDL_DISABLE_XMMINTRIN_H;SDL_DISABLE_EMMINTRIN_H;SDL_DISABLE_PMMINTRIN_H;HPL_CHARACTERBODY_BROKEN"
 				MinimalRebuild="true"
 				RuntimeLibrary="2"
@@ -1354,195 +1354,195 @@
 					Name="OpenAL"
 					>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_AudioData.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_AudioData.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_AudioData.h"
+						RelativePath=".\depends\include\OpenAL\OAL_AudioData.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_Buffer.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_Buffer.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Buffer.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Buffer.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_Device.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_Device.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Device.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Device.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_Effect.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_Effect.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Effect.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Effect.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_Effect_Reverb.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_Effect_Reverb.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Effect_Reverb.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Effect_Reverb.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_EffectSlot.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_EffectSlot.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_EffectSlot.h"
+						RelativePath=".\depends\include\OpenAL\OAL_EffectSlot.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_EFX.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_EFX.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_EFX.h"
+						RelativePath=".\depends\include\OpenAL\OAL_EFX.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_EFXManager.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_EFXManager.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_EFXManager.h"
+						RelativePath=".\depends\include\OpenAL\OAL_EFXManager.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_Filter.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_Filter.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Filter.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Filter.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Funcs.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Funcs.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_Helper.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_Helper.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Helper.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Helper.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_Init.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_Init.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Init.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Init.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_Loaders.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_Loaders.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Loaders.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Loaders.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_LoggerObject.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_LoggerObject.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_LoggerObject.h"
+						RelativePath=".\depends\include\OpenAL\OAL_LoggerObject.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_LowLevelObject.h"
+						RelativePath=".\depends\include\OpenAL\OAL_LowLevelObject.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_OggHelper.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_OggHelper.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_OggHelper.h"
+						RelativePath=".\depends\include\OpenAL\OAL_OggHelper.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_OggSample.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_OggSample.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_OggSample.h"
+						RelativePath=".\depends\include\OpenAL\OAL_OggSample.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_OggStream.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_OggStream.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_OggStream.h"
+						RelativePath=".\depends\include\OpenAL\OAL_OggStream.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_Playback.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_Playback.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Playback.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Playback.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_Sample.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_Sample.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Sample.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Sample.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_Source.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_Source.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Source.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Source.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_SourceManager.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_SourceManager.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_SourceManager.h"
+						RelativePath=".\depends\include\OpenAL\OAL_SourceManager.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_Stream.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_Stream.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Stream.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Stream.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_Types.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_Types.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_Types.h"
+						RelativePath=".\depends\include\OpenAL\OAL_Types.h"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\sources\OpenAL\OAL_WAVSample.cpp"
+						RelativePath=".\depends\sources\OpenAL\OAL_WAVSample.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\dependencies\include\OpenAL\OAL_WAVSample.h"
+						RelativePath=".\depends\include\OpenAL\OAL_WAVSample.h"
 						>
 					</File>
 				</Filter>
