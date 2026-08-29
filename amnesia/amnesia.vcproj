@@ -79,7 +79,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalDependencies="AngelScript.lib DevIL.lib freealut.lib GLEW.lib Imm32.lib jpeg.lib Newton.lib ogg.lib OpenAL32.lib png.lib SDL.lib SDLmain.lib setupapi.lib theora.lib Version.lib vorbis.lib winmm.lib zlib.lib"
+				AdditionalDependencies="AngelScript.lib DevIL.lib freealut.lib GLEW.lib Imm32.lib jpeg.lib Newton.lib ogg.lib OpenAL32.lib png.lib SDL.lib SDLmain.lib setupapi.lib Version.lib vorbis.lib winmm.lib zlib.lib"
 				OutputFile="$(OutDir)\$(ProjectName)-$(PlatformName)-$(ConfigurationName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(SolutionDir)\HPL2\depends\lib\$(PlatformName)-$(ConfigurationName)\"
