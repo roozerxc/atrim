@@ -890,7 +890,7 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Prop"
+				Name="Props"
 				>
 				<File
 					RelativePath=".\include\props\LuxProp.h"
@@ -1390,7 +1390,7 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Prop"
+				Name="Props"
 				>
 				<File
 					RelativePath=".\sources\props\LuxProp.cpp"
