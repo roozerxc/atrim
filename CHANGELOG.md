@@ -33,7 +33,9 @@
 - [`9361918`](https://github.com/roozerxc/atrim/commit/93619186345b1e9eaa65a7d70a13d1f585dd9331) Fixed aspect ratio calculation for custom `menu_loading_screen.jpg` images
 - [`c2d7155`](https://github.com/roozerxc/atrim/commit/c2d7155de5f6522622a7174a201c45a221433d45) Fixed buggy enemy collision behavior
 - [`d8e586b`](https://github.com/roozerxc/atrim/commit/d8e586b46bc6af07e28130d62ea0b93bf62048a9) Fixed character body simulation errors (Can be switched back using `HPL_CHARACTERBODY_BROKEN`)
+- [`a044bf4`](https://github.com/roozerxc/atrim/commit/a044bf4713b442cabf56ebc7b22972f951e4ed6c) Fixed crosshair focus for static, non-interactable entities and objects
 - [`b496952`](https://github.com/roozerxc/atrim/commit/b496952608936ed83cde7a959521c7ec5c01ffff) Fixed Custom Story images not being cleared out when another Custom Story was selected
+- [`13b3b04`](https://github.com/roozerxc/atrim/commit/13b3b04812bbd601fd166625ee7980e04adc11b7) Fixed enemies getting stuck in an infinite loop after breaking swing doors
 - [`0111b66`](https://github.com/roozerxc/atrim/commit/0111b66da96c69603a7fd0095302208ab596909d) Fixed engine crash from addressing 32-bit memory more than 2 GB
 - [`f63ac28`](https://github.com/roozerxc/atrim/commit/f63ac285b013beb7c8dd2af4164a89a048aeae81) Fixed excess screen aspect ratio calculation
 - [`0eebefb`](https://github.com/roozerxc/atrim/commit/0eebefbc2335075aaa692bbe4c1bb1d910c495f4) Fixed game crash when pressing Esc quickly to skip through bootup logos
