@@ -209,7 +209,6 @@ cEngine::cEngine(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, cEngin
                 , dSpeedMul(1.0)
                 , dFrameTime(0.0)
                 , dCurrentTime(0.0)
-                , dNewTime(0.0)
                 , dRenderAlpha(0.0)
 {
     //Set up variables
@@ -383,11 +382,7 @@ cEngine::~cEngine()
 
 void cEngine::Run()
 {
-    bool bBufferSwap = false;
-
-    double dNumOfTimes = 0.0;
     double dAverageFPS = 0.0;
-
     double dLastLogClearedTime = 0.0;
     const double kLogClearedInterval = 1.0;
 
@@ -417,13 +412,13 @@ void cEngine::Run()
     {
         ///////////////////////////////////////
         // Get the time from the last frame.
-        dNewTime = cPlatform::GetApplicationTime() / 1000.0;
+        const double dNewTime = cPlatform::GetApplicationTime() / 1000.0;
         double dRawFrameTime = dNewTime - dCurrentTime;
+
+        ++iTotalFrames;
 
         if(dRawFrameTime > 0.0)
         {
-            ++iTotalFrames;
-
             // Calculate exactly what 1% of total frames is...
             size_t iMaxWorstFrames = std::max((size_t)1, (size_t)(iTotalFrames * 0.01));
 
@@ -467,9 +462,11 @@ void cEngine::Run()
             }
 
             // Run Update callback in updater
+            START_TIMING(FixedUpdate)
             mpUpdater->RunMessage(eUpdateableMessage_PreUpdate, kFixedDelta);
             mpUpdater->RunMessage(eUpdateableMessage_Update, kFixedDelta);
             mpUpdater->RunMessage(eUpdateableMessage_PostUpdate, kFixedDelta);
+            STOP_TIMING(FixedUpdate)
 
             // If log update is active, clear it regularly.
             if(GetUpdateLogActive() && mpUpdater->GetCurrentContainerName() == "Default" &&
@@ -487,26 +484,14 @@ void cEngine::Run()
             ++iUpdatesOnCurrentFrame;
         }
 
-        // Game is too far behind and can't catch up, so drop the excess time!
+        // Game is too far behind and can't catch up, zero the accumulated time!
         if(dAccumulator >= kFixedDelta && iUpdatesOnCurrentFrame >= iMaxGameUpdates)
         {
-            dAccumulator = kFixedDelta;
+            dAccumulator = 0;
         }
 
         // Make alpha dividing the accumulated time by the fixed delta timestep
         dRenderAlpha = dAccumulator / kFixedDelta;
-
-        //Swap, run callback and move STRAIGHT INTO draw call
-        if(bBufferSwap)
-        {
-            bBufferSwap = false;
-
-            START_TIMING(SwapBuffers)
-            mpGraphics->GetLowLevel()->SwapBuffers();
-            STOP_TIMING(SwapBuffers)
-
-            mpUpdater->RunMessage(eUpdateableMessage_OnPostBufferSwap);
-        }
 
         START_TIMING(OnDraw)
         mpUpdater->RunMessage(eUpdateableMessage_OnDraw, dFrameTime);
@@ -524,10 +509,13 @@ void cEngine::Run()
         mpGraphics->GetLowLevel()->FlushRendering();
         STOP_TIMING(FlushRender)
 
-        mpFPSCounter->AddFrame();
+        START_TIMING(SwapBuffers)
+        mpGraphics->GetLowLevel()->SwapBuffers();
+        STOP_TIMING(SwapBuffers)
 
-        dNumOfTimes++;
-        bBufferSwap = true;
+        mpUpdater->RunMessage(eUpdateableMessage_OnPostBufferSwap);
+
+        mpFPSCounter->AddFrame();
     }
 
     Log("--------------------------------------------------------\n\n");
@@ -536,7 +524,7 @@ void cEngine::Run()
     Log("--------------------------------------------------------\n");
 
     unsigned long lTime = cPlatform::GetApplicationTime() - lTempTime;
-    dAverageFPS = dNumOfTimes / (((double)lTime) / 1000.0);
+    dAverageFPS = iTotalFrames / (((double)lTime) / 1000.0);
 
     Log(" Average FrameTime: %.1f ms\n", (1.0 / dAverageFPS) * 1000.0);
     Log(" Average Framerate: %.1f FPS\n", dAverageFPS);

@@ -214,7 +214,6 @@ private:
 
     double dFrameTime;
     double dCurrentTime;
-    double dNewTime;
 
     double dRenderAlpha;
 
