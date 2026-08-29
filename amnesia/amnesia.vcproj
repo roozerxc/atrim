@@ -893,78 +893,78 @@
 				Name="Prop"
 				>
 				<File
-					RelativePath=".\include\prop\LuxProp.h"
+					RelativePath=".\include\props\LuxProp.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\prop\LuxStaticProp.h"
+					RelativePath=".\include\props\LuxStaticProp.h"
 					>
 				</File>
 				<Filter
 					Name="PropTypes"
 					>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_Button.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_Button.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_Chest.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_Chest.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_CritterBase.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_CritterBase.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_EmotionStone.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_EmotionStone.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_Item.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_Item.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_Lamp.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_Lamp.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_LevelDoor.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_LevelDoor.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_Lever.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_Lever.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_MoveObject.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_MoveObject.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_MultiSlider.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_MultiSlider.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_NPC.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_NPC.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_Object.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_Object.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_OilBarrel.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_OilBarrel.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_Photocell.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_Photocell.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_SwingDoor.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_SwingDoor.h"
 						>
 					</File>
 					<File
-						RelativePath=".\include\prop\PropTypes\LuxProp_Wheel.h"
+						RelativePath=".\include\props\PropTypes\LuxProp_Wheel.h"
 						>
 					</File>
 				</Filter>
@@ -1393,78 +1393,78 @@
 				Name="Prop"
 				>
 				<File
-					RelativePath=".\sources\prop\LuxProp.cpp"
+					RelativePath=".\sources\props\LuxProp.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\prop\LuxStaticProp.cpp"
+					RelativePath=".\sources\props\LuxStaticProp.cpp"
 					>
 				</File>
 				<Filter
 					Name="PropTypes"
 					>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_Button.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_Button.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_Chest.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_Chest.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_CritterBase.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_CritterBase.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_EmotionStone.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_EmotionStone.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_Item.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_Item.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_Lamp.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_Lamp.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_LevelDoor.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_LevelDoor.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_Lever.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_Lever.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_MoveObject.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_MoveObject.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_MultiSlider.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_MultiSlider.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_NPC.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_NPC.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_Object.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_Object.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_OilBarrel.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_OilBarrel.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_Photocell.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_Photocell.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_SwingDoor.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_SwingDoor.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\sources\prop\PropTypes\LuxProp_Wheel.cpp"
+						RelativePath=".\sources\props\PropTypes\LuxProp_Wheel.cpp"
 						>
 					</File>
 				</Filter>
