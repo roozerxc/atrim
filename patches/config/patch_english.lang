@@ -78,6 +78,14 @@
     <!-- END HARD MODE STRINGS -->
 
     <CATEGORY Name="OptionsMenu">
+        <Entry Name="Ultra">Ultra</Entry>
+        <Entry Name="UltraLow">Ultra Low</Entry>
+
+        <Entry Name="FullScreenTip">Toggle between fullscreen and windowed mode. If you are on Windows Vista or 7+ and have the DWM compositor enabled this setting will activate borderless windowed mode.</Entry>
+
+        <Entry Name="FlashIntensity">Flashback intensity</Entry>
+        <Entry Name="FlashIntensityTip">Adjust the intensity of flashback and emotion stone effects. Lower this if you frequently experience migraines or photosensitivity.</Entry>
+
         <Entry Name="InvertGamepadLook">Invert Right Stick look</Entry>
         <Entry Name="InvertGamepadLookTip">Inverts the gamepad analog look Y-axis.</Entry>
         <Entry Name="GamepadLookSensitivity">Stick look sensitivity</Entry>

@@ -16,7 +16,7 @@ echo const char* GetBuildID(^)
 echo {
 echo     return gsBuildID;
 echo }
-)>core\sources\impl\PlatformBuildID.cpp
+)>sources\impl\PlatformBuildID.cpp
 
-echo Generated Build ID %GENERATEDBID% to file \core\sources\impl\PlatformBuildID.cpp
+echo Generated Build ID %GENERATEDBID% to file \sources\impl\PlatformBuildID.cpp
 exit
