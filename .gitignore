@@ -423,4 +423,4 @@ HPL2/core/sources/impl/PlatformBuildID.cpp
 /compiled
 
 # SDL 1.2.15 Whitelist...
-!sources/SDL/**/[Ww][Ii][Nn]32/
+!HPL2/depends/sources/SDL/**/[Ww][Ii][Nn]32/
