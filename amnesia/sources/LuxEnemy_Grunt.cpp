@@ -12,6 +12,10 @@
 #include "LuxPlayer.h"
 #include "LuxPlayerHelpers.h"
 
+#include "LuxProp.h"
+#include "LuxProp_Object.h"
+#include "LuxProp_SwingDoor.h"
+
 //////////////////////////////////////////////////////////////////////////
 // LOADER
 //////////////////////////////////////////////////////////////////////////
@@ -267,11 +271,32 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 
 
     kLuxOnUpdate
-    if(mbStuckAtDoor)// && mpMap->DoorIsClosed(mlStuckDoorID))
+    if(mbStuckAtDoor)
     {
         iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
-        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-        ChangeState(eLuxEnemyState_BreakDoor);
+        bool bShouldBreak = false;
+
+        if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
+        {
+            iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
+            if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
+            {
+                bShouldBreak = true;
+            }
+        }
+
+        if(bShouldBreak)
+        {
+            mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
+            mReturnState = mCurrentState;
+
+            ChangeState(eLuxEnemyState_BreakDoor);
+        }
+        else
+        {
+            mbStuckAtDoor = false;
+            mpMover->ResetStuckCounter();
+        }
     }
 
     kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
@@ -331,11 +356,32 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     }
 
     kLuxOnUpdate
-    if(mbStuckAtDoor)// && mpMap->DoorIsClosed(mlStuckDoorID))
+    if(mbStuckAtDoor)
     {
         iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
-        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-        ChangeState(eLuxEnemyState_BreakDoor);
+        bool bShouldBreak = false;
+
+        if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
+        {
+            iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
+            if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
+            {
+                bShouldBreak = true;
+            }
+        }
+
+        if(bShouldBreak)
+        {
+            mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
+            mReturnState = mCurrentState;
+
+            ChangeState(eLuxEnemyState_BreakDoor);
+        }
+        else
+        {
+            mbStuckAtDoor = false;
+            mpMover->ResetStuckCounter();
+        }
     }
 
     kLuxOnLeave
@@ -414,11 +460,32 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 
 
     //Stuck at door, break it
-    if(gpBase->mpPlayer->GetTerror() >= 1 && mbStuckAtDoor)// && mpMap->DoorIsClosed(mlStuckDoorID))
+    if(gpBase->mpPlayer->GetTerror() >= 1 && mbStuckAtDoor)
     {
         iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
-        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-        ChangeState(eLuxEnemyState_BreakDoor);
+        bool bShouldBreak = false;
+
+        if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
+        {
+            iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
+            if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
+            {
+                bShouldBreak = true;
+            }
+        }
+
+        if(bShouldBreak)
+        {
+            mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
+            mReturnState = mCurrentState;
+
+            ChangeState(eLuxEnemyState_BreakDoor);
+        }
+        else
+        {
+            mbStuckAtDoor = false;
+            mpMover->ResetStuckCounter();
+        }
     }
     //Player is no longer seen, see if time to search
     else if(PlayerIsDetected()==false)
@@ -488,11 +555,32 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
 
     kLuxOnUpdate
-    if(mbStuckAtDoor)// && mpMap->DoorIsClosed(mlStuckDoorID))
+    if(mbStuckAtDoor)
     {
         iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
-        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-        ChangeState(eLuxEnemyState_BreakDoor);
+        bool bShouldBreak = false;
+
+        if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
+        {
+            iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
+            if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
+            {
+                bShouldBreak = true;
+            }
+        }
+
+        if(bShouldBreak)
+        {
+            mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
+            mReturnState = mCurrentState;
+
+            ChangeState(eLuxEnemyState_BreakDoor);
+        }
+        else
+        {
+            mbStuckAtDoor = false;
+            mpMover->ResetStuckCounter();
+        }
     }
 
     //At node
@@ -575,11 +663,32 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     {
         ChangeState(eLuxEnemyState_AttackMeleeShort);
     }
-    else if(mbStuckAtDoor)// && mpMap->DoorIsClosed(mlStuckDoorID))
+    else if(mbStuckAtDoor)
     {
         iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
-        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-        ChangeState(eLuxEnemyState_BreakDoor);
+        bool bShouldBreak = false;
+
+        if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
+        {
+            iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
+            if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
+            {
+                bShouldBreak = true;
+            }
+        }
+
+        if(bShouldBreak)
+        {
+            mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
+            mReturnState = mCurrentState;
+
+            ChangeState(eLuxEnemyState_BreakDoor);
+        }
+        else
+        {
+            mbStuckAtDoor = false;
+            mpMover->ResetStuckCounter();
+        }
     }
 
     /////////////////////////////
@@ -741,44 +850,90 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     // Break door
     kLuxState(eLuxEnemyState_BreakDoor)
     kLuxOnEnter
-    mpPathfinder->Stop();
-    PlayAnim("BreakDoor",false, 0.3f);
-    mfFOVMul = 4.0f;
+    {
+        mpPathfinder->Stop();
+        PlayAnim("BreakDoor",false, 0.3f);
+        mfFOVMul = 4.0f;
+        mlTempVal = 0;
+
+        mpMover->ResetStuckCounter();
+    }
 
     kLuxOnLeave
     mlAttackHitCounter =0; //When returning from door breakage there should be no pause!
     mfFOVMul = 1.0f;
+
+    mbStuckAtDoor = false;
+    mpMover->ResetStuckCounter();
 
     kLuxOnUpdate
     //Turn towards the door!
     mpMover->TurnToPos(mvTempPos);
 
     kLuxOnMessage(eLuxEnemyMessage_AnimationOver)
-    if(PlayerIsDetected())
     {
-        ChangeState(eLuxEnemyState_Alert);
-    }
-    else if(mpMap->DoorIsBroken(mlStuckDoorID))
-    {
-        if(mPreviousState == eLuxEnemyState_Hurt)
+        mlTempVal++;
+        const int kMaxBreakDoorAttempts = 10;
+
+        iLuxEntity *pDoorEntity = mpMap->GetEntityByID(mlStuckDoorID);
+        bool bDoorIsBroken = false;
+
+        if(pDoorEntity == NULL || pDoorEntity->GetEntityType() != eLuxEntityType_Prop)
         {
-            ChangeState(eLuxEnemyState_Hunt);
+            bDoorIsBroken = true;
         }
         else
         {
-            ChangeState(mPreviousState);
+            iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEntity);
+
+            if(pDoorProp->GetHealth() <= 0.01f || mpMap->DoorIsBroken(mlStuckDoorID))
+            {
+                bDoorIsBroken = true;
+            }
+            else if(pDoorProp->GetPropType() == eLuxPropType_SwingDoor)
+            {
+                cLuxProp_SwingDoor* pSwingDoor = static_cast<cLuxProp_SwingDoor*>(pDoorProp);
+
+                if(pSwingDoor->IsBroken())
+                {
+                    bDoorIsBroken = true;
+                }
+            }
+        }
+
+        float mfDistanceToDoor = cMath::Vector3Dist(mpCharBody->GetPosition(), mvTempPos);
+        bool bEnemyIsTooFar = (mfDistanceToDoor > 2.5f);
+
+        if(PlayerIsDetected())
+        {
+            ChangeState(eLuxEnemyState_Alert);
+        }
+        else if(mpMap->DoorIsBroken(mlStuckDoorID) ||
+            bDoorIsBroken || bEnemyIsTooFar ||
+            mlTempVal >= kMaxBreakDoorAttempts)
+        {
+            mbStuckAtDoor = false;
+            mlStuckDoorID = -1;
+
+            mpMover->ResetStuckCounter();
+
+            if(mReturnState == eLuxEnemyState_Hurt)
+            {
+                ChangeState(eLuxEnemyState_Hunt);
+            }
+            else
+            {
+                ChangeState(mReturnState);
+            }
+        }
+        else
+        {
+            PlayAnim("BreakDoor",false, 0.3f);
         }
     }
-    else
-    {
-        PlayAnim("BreakDoor",false, 0.3f);
-    }
-
-
 
     kLuxOnMessage(eLuxEnemyMessage_AnimationSpecialEvent)
     Attack(mNormalAttackSize, mBreakDoorAttackDamage);
-
 
     ////////////////////////
     // Overload global

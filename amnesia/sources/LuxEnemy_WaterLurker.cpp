@@ -11,7 +11,9 @@
 #include "LuxPlayer.h"
 #include "LuxPlayerHelpers.h"
 
+#include "LuxProp.h"
 #include "LuxProp_Object.h"
+#include "LuxProp_SwingDoor.h"
 
 //////////////////////////////////////////////////////////////////////////
 // LOADER
@@ -418,11 +420,32 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     {
         ChangeState(eLuxEnemyState_AttackMeleeShort);
     }
-    else if(mbStuckAtDoor)// && mpMap->DoorIsClosed(mlStuckDoorID))
+    else if(mbStuckAtDoor)
     {
         iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
-        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-        ChangeState(eLuxEnemyState_BreakDoor);
+        bool bShouldBreak = false;
+
+        if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
+        {
+            iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
+            if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
+            {
+                bShouldBreak = true;
+            }
+        }
+
+        if(bShouldBreak)
+        {
+            mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
+            mReturnState = mCurrentState;
+
+            ChangeState(eLuxEnemyState_BreakDoor);
+        }
+        else
+        {
+            mbStuckAtDoor = false;
+            mpMover->ResetStuckCounter();
+        }
     }
 
     ////////////////////////
@@ -451,6 +474,9 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     kLuxState(eLuxEnemyState_BreakDoor)
     kLuxOnEnter
     mpPathfinder->Stop();
+
+    mpMover->ResetStuckCounter();
+
     SendMessage(eLuxEnemyMessage_TimeOut, 0.01f, true);
 
     ///////////////////
@@ -473,6 +499,11 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
         SendMessage(eLuxEnemyMessage_TimeOut, 1.5f, true);
     }*/
 
+    kLuxOnLeave
+    mlAttackHitCounter =0; //When returning from door breakage there should be no pause!
+
+    mbStuckAtDoor = false;
+    mpMover->ResetStuckCounter();
 
     kLuxOnUpdate
     //Turn towards the door!

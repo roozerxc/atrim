@@ -726,6 +726,7 @@ protected:
     eLuxEnemyState mCurrentState;
     eLuxEnemyState mNextState;
     eLuxEnemyState mPreviousState;
+    eLuxEnemyState mReturnState;
 
     eLuxEnemySoundState mSoundState;
 

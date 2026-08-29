@@ -445,13 +445,12 @@ void cLuxProp_SwingDoor::OnHealthChange()
         for(size_t i=0; i<mvBodies.size(); ++i)
         {
             iPhysicsBody *pBody = mvBodies[i];
-            if(pBody->GetMass()==0)
-            {
-                continue;
-            }
 
-            pMainBody = pBody;
-            lMainBodyIdx = (int)i;
+            if(pBody->GetMass() != 0)
+            {
+                pMainBody = pBody;
+                lMainBodyIdx = (int)i;
+            }
 
             pBody->SetActive(false);
 

@@ -1715,10 +1715,15 @@ void iLuxEnemy::UpdateCheckStuckAtDoor(double adFixedDelta)
             continue;
         }
 
+        if(pProp->GetHealth() <= 0.0f || mpMap->DoorIsBroken(pProp->GetID()))
+        {
+            continue;
+        }
+
         for(int i=0; i<pProp->GetBodyNum(); ++i)
         {
             iPhysicsBody *pBody = pProp->GetBody(i);
-            if(pBody->GetMass()==0)
+            if(pBody->GetMass()==0 || pBody->IsActive() == false)
             {
                 continue;
             }
