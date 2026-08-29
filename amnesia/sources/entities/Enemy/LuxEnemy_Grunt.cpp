@@ -265,10 +265,16 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     // Patrol
     kLuxState(eLuxEnemyState_Patrol)
     kLuxOnEnter
-    ChangeSoundState(eLuxEnemySoundState_Idle);
-    SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
-    PatrolUpdateGoal();
+    {
+        ChangeSoundState(eLuxEnemySoundState_Idle);
+        SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
 
+        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
+        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
+        gpBase->mpPlayer->RemoveTerrorEnemy(this);
+
+        PatrolUpdateGoal();
+    }
 
     kLuxOnUpdate
     if(mbStuckAtDoor)
@@ -406,19 +412,20 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     // Alert
     kLuxState(eLuxEnemyState_Alert)
     kLuxOnEnter
-    ChangeSoundState(eLuxEnemySoundState_Alert);
+    {
+        ChangeSoundState(eLuxEnemySoundState_Alert);
 
-    SendMessage(eLuxEnemyMessage_TimeOut, 0.3f, true);
-    mpPathfinder->MoveTo(mvLastKnownPlayerPos);
+        SendMessage(eLuxEnemyMessage_TimeOut, 0.3f, true);
+        mpPathfinder->MoveTo(mvLastKnownPlayerPos);
 
-    gpBase->mpPlayer->AddTerrorEnemy(this);
-    //gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Search,this);
+        gpBase->mpPlayer->AddTerrorEnemy(this);
 
-    SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
-    mfForwardSpeed *= 1.2f;
-    mfFOVMul = 4.0f;
+        SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
+        mfForwardSpeed *= 1.2f;
+        mfFOVMul = 4.0f;
 
-    mfAlertRunTowardsCount =0;
+        mfAlertRunTowardsCount =0;
+    }
 
     kLuxOnLeave
     mfFOVMul = 1.0f;
@@ -539,17 +546,20 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     // Search
     kLuxState(eLuxEnemyState_Search)
     kLuxOnEnter
-    ChangeSoundState(eLuxEnemySoundState_Alert);
+    {
+        ChangeSoundState(eLuxEnemySoundState_Alert);
 
-    SendMessage(eLuxEnemyMessage_TimeOut, mfPlayerSearchTime, true);
+        gpBase->mpPlayer->RemoveTerrorEnemy(this);
 
-    SendMessage(eLuxEnemyMessage_TimeOut_2,cMath::RandRectf(0,1), true);
+        SendMessage(eLuxEnemyMessage_TimeOut, mfPlayerSearchTime, true);
+        SendMessage(eLuxEnemyMessage_TimeOut_2,cMath::RandRectf(0,1), true);
 
-    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
-    gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Search,this);
+        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
+        gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Search,this);
 
-    SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
-    mfForwardSpeed *= 1.0f;
+        SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
+        mfForwardSpeed *= 1.0f;
+    }
 
     kLuxOnLeave
     SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
@@ -860,11 +870,23 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     }
 
     kLuxOnLeave
-    mlAttackHitCounter =0; //When returning from door breakage there should be no pause!
-    mfFOVMul = 1.0f;
+    {
+        mlAttackHitCounter =0; //When returning from door breakage there should be no pause!
+        mfFOVMul = 1.0f;
 
-    mbStuckAtDoor = false;
-    mpMover->ResetStuckCounter();
+        mbStuckAtDoor = false;
+        mpMover->ResetStuckCounter();
+
+        if(mReturnState != eLuxEnemyState_Alert &&
+            mReturnState != eLuxEnemyState_Hunt &&
+            mReturnState != eLuxEnemyState_HuntPause &&
+            mReturnState != eLuxEnemyState_HuntWander)
+        {
+            gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
+            gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
+            gpBase->mpPlayer->RemoveTerrorEnemy(this);
+        }
+    }
 
     kLuxOnUpdate
     //Turn towards the door!

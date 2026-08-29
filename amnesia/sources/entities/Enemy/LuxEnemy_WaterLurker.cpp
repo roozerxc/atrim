@@ -278,10 +278,12 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     // Search (Scavenge for food!)
     kLuxState(eLuxEnemyState_Search)
     kLuxOnEnter
-    ChangeSoundState(eLuxEnemySoundState_Idle);
+    {
+        ChangeSoundState(eLuxEnemySoundState_Idle);
 
-    mpPathfinder->MoveTo(mvTempPos);
-    SendMessage(eLuxEnemyMessage_TimeOut_2, 0.1f, true);
+        mpPathfinder->MoveTo(mvTempPos);
+        SendMessage(eLuxEnemyMessage_TimeOut_2, 0.1f, true);
+    }
 
     kLuxOnUpdate
 

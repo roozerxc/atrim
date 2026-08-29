@@ -498,19 +498,19 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
     //------------------------------
     kLuxState(eLuxEnemyState_Patrol)
     kLuxOnEnter
-    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
-    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
-
-    gpBase->mpPlayer->RemoveTerrorEnemy(this);
-
-    ChangeSoundState(eLuxEnemySoundState_Idle);
-    SetMoveSpeed(mPatrolMoveSpeed);
-    if(mPatrolMoveSpeed==eLuxEnemyMoveSpeed_Run)
     {
-        mfForwardSpeed *= mfRunSpeedMul;
-    }
-    PatrolUpdateGoal();
+        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
+        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
+        gpBase->mpPlayer->RemoveTerrorEnemy(this);
 
+        ChangeSoundState(eLuxEnemySoundState_Idle);
+        SetMoveSpeed(mPatrolMoveSpeed);
+        if(mPatrolMoveSpeed==eLuxEnemyMoveSpeed_Run)
+        {
+            mfForwardSpeed *= mfRunSpeedMul;
+        }
+        PatrolUpdateGoal();
+    }
 
     kLuxOnUpdate
     if(mbStuckAtDoor)
@@ -1053,19 +1053,22 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
     kLuxState(eLuxEnemyState_Search)
     kLuxOnEnter
-    ForceTeslaSighting();
+    {
+        ForceTeslaSighting();
 
-    ChangeSoundState(eLuxEnemySoundState_Alert);
+        ChangeSoundState(eLuxEnemySoundState_Alert);
 
-    SendMessage(eLuxEnemyMessage_TimeOut, mfPlayerSearchTime, true);
+        gpBase->mpPlayer->RemoveTerrorEnemy(this);
 
-    SendMessage(eLuxEnemyMessage_TimeOut_2,cMath::RandRectf(0,1), true);
+        SendMessage(eLuxEnemyMessage_TimeOut, mfPlayerSearchTime, true);
+        SendMessage(eLuxEnemyMessage_TimeOut_2,cMath::RandRectf(0,1), true);
 
-    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
-    gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Search,this);
+        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
+        gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Search,this);
 
-    SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
-    mfForwardSpeed *= 1.0f;
+        SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
+        mfForwardSpeed *= 1.0f;
+    }
 
     kLuxOnLeave
     SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
@@ -1768,11 +1771,23 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
     mpMover->ResetStuckCounter();
 
     kLuxOnLeave
-    mlAttackHitCounter =0; //When returning from door breakage there should be no pause!
-    mfFOVMul = 1.0f;
+    {
+        mlAttackHitCounter =0; //When returning from door breakage there should be no pause!
+        mfFOVMul = 1.0f;
 
-    mbStuckAtDoor = false;
-    mpMover->ResetStuckCounter();
+        mbStuckAtDoor = false;
+        mpMover->ResetStuckCounter();
+
+        if(mReturnState != eLuxEnemyState_Alert &&
+            mReturnState != eLuxEnemyState_Hunt &&
+            mReturnState != eLuxEnemyState_HuntPause &&
+            mReturnState != eLuxEnemyState_HuntWander)
+        {
+            gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
+            gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
+            gpBase->mpPlayer->RemoveTerrorEnemy(this);
+        }
+    }
 
     //------------------------------
 
