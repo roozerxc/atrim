@@ -417,5 +417,10 @@ FodyWeavers.xsd
 *.msm
 *.msp
 *.lib
+
+# HPL2 Platform Build & Compiled Files
 HPL2/core/sources/impl/PlatformBuildID.cpp
 /compiled
+
+# SDL 1.2.15 Whitelist...
+!sources/SDL/**/[Ww][Ii][Nn]32/
