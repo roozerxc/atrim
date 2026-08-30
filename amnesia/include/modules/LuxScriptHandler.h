@@ -423,6 +423,7 @@ private:
     static void __stdcall TeleportEnemyToNode(string & asEnemyName, string & asNodeName, bool abChangeY);
     static void __stdcall TeleportEnemyToEntity(string & asName, string & asTargetEntity, string & asTargetBody, bool abChangeY);
 
+#if LUX_ENEMY_MANPIG
     /**
      * Pose can be "Biped" or "Quadruped"
      */
@@ -432,6 +433,7 @@ private:
     static void __stdcall SetTeslaPigSoundDisabled(string& asName, bool abX);
     static void __stdcall SetTeslaPigEasyEscapeDisabled(string& asName, bool abX);
     static void __stdcall ForceTeslaPigSighting(string& asName);
+#endif
 
     static string& __stdcall GetEnemyStateName(string& asName);
 

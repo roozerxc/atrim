@@ -99,7 +99,9 @@ enum eLuxEnemyType
 {
     eLuxEnemyType_Grunt,
     eLuxEnemyType_WaterLurker,
+#if LUX_ENEMY_MANPIG
     eLuxEnemyType_ManPig,
+#endif
 
     eLuxEnemyType_LastEnum
 };

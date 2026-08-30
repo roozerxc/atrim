@@ -1,3 +1,4 @@
+#if LUX_ENEMY_MANPIG
 #include "LuxEnemy_ManPig.h"
 
 #include "LuxEnemyMover.h"
@@ -2999,4 +3000,4 @@ void cLuxEnemy_ManPig::SetupSaveData(iLuxEntity_SaveData *apSaveData)
 
 //-----------------------------------------------------------------------
 
-
+#endif

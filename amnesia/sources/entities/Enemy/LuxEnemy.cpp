@@ -50,13 +50,15 @@ tWString gsLuxEnemyStates[] =
 
     _W("Dead"),
 
-    _W("NULL"), // End of pre-Pig states
+    _W("NULL") // End of pre-Pig states
 
-    _W("Flee"),
+#if LUX_ENEMY_MANPIG
+    , _W("Flee"),
     _W("Stalk"),
     _W("Track"),
 
     _W("NULL")
+#endif
 };
 
 //-----------------------------------------------------------------------

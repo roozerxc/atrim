@@ -744,6 +744,7 @@ void cLuxEnemy_WaterLurker::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //Set variables
     kCopyFromVar(pData,mfPlayerDetectionHeight);
 
+#if LUX_ENEMY_MANPIG
     ////////////////////////
     // Handle changed enums
     if (mCurrentState >= eLuxEnemyState_PigEnumStart)
@@ -758,6 +759,7 @@ void cLuxEnemy_WaterLurker::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     {
         mPreviousState = eLuxEnemyState_LastEnum;
     }
+#endif
 }
 
 //-----------------------------------------------------------------------

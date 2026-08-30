@@ -209,11 +209,13 @@ enum eLuxEnemyState
 
     eLuxEnemyState_Dead,
 
+#if LUX_ENEMY_MANPIG
     eLuxEnemyState_PigEnumStart,
 
     eLuxEnemyState_Flee,
     eLuxEnemyState_Stalk,
     eLuxEnemyState_Track,
+#endif
 
     eLuxEnemyState_LastEnum
 };

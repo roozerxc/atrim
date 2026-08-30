@@ -35,12 +35,16 @@
 #include "LuxProp_Button.h"
 #include "LuxProp_NPC.h"
 #include "LuxProp_MultiSlider.h"
-#include "LuxEnemy_ManPig.h"
 
 #include "LuxArea_Sticky.h"
 
 #include "LuxEnemy.h"
 #include "LuxEnemyPathfinder.h"
+
+#if LUX_ENEMY_MANPIG
+#include "LuxEnemy_ManPig.h"
+#endif
+
 #include "LuxItemType.h"
 
 #include "LuxInteractConnections.h"
@@ -177,10 +181,12 @@ static iLuxEnemy* ToEnemy(iLuxEntity *apEntity)
 {
     return static_cast<iLuxEnemy*>(apEntity);
 }
+#if LUX_ENEMY_MANPIG
 static cLuxEnemy_ManPig* ToManPig(iLuxEntity *apEntity)
 {
     return dynamic_cast<cLuxEnemy_ManPig*>(apEntity);
 }
+#endif
 static cLuxProp_LevelDoor* ToLevelDoor(iLuxEntity *apEntity)
 {
     return static_cast<cLuxProp_LevelDoor*>(apEntity);
@@ -627,12 +633,13 @@ void cLuxScriptHandler::InitScriptFunctions()
     AddFunc("void SetEnemySanityDecreaseActive(string &in asName, bool abX)",(void *)SetEnemySanityDecreaseActive);
     AddFunc("void TeleportEnemyToNode(string &in asEnemyName, string &in asNodeName, bool abChangeY)",(void *)TeleportEnemyToNode);
     AddFunc("void TeleportEnemyToEntity(string &in asEnemyName, string &in asTargetEntity, string &in asTargetBody, bool abChangeY)",(void *)TeleportEnemyToEntity);
-
+#if LUX_ENEMY_MANPIG
     AddFunc("void ChangeManPigPose(string&in asName, string&in asPoseType)",(void *)ChangeManPigPose);
     AddFunc("void SetTeslaPigFadeDisabled(string&in asName, bool abX)",(void *)SetTeslaPigFadeDisabled);
     AddFunc("void SetTeslaPigSoundDisabled(string&in asName, bool abX)",(void *)SetTeslaPigSoundDisabled);
     AddFunc("void SetTeslaPigEasyEscapeDisabled(string&in asName, bool abX)",(void *)SetTeslaPigEasyEscapeDisabled);
     AddFunc("void ForceTeslaPigSighting(string&in asName)",(void *)ForceTeslaPigSighting);
+#endif
     AddFunc("string& GetEnemyStateName(string &in asName)",(void *)GetEnemyStateName);
 
     AddFunc("void SetPropHealth(string &in asName, float afHealth)",(void *)SetPropHealth);
@@ -3383,6 +3390,7 @@ void __stdcall cLuxScriptHandler::TeleportEnemyToEntity(string & asName, string 
 
 //-----------------------------------------------------------------------
 
+#if LUX_ENEMY_MANPIG
 void __stdcall cLuxScriptHandler::ChangeManPigPose(string& asName, string& asPoseType)
 {
     eLuxEnemyPoseType pose = eLuxEnemyPoseType_LastEnum;
@@ -3476,6 +3484,7 @@ void __stdcall cLuxScriptHandler::ForceTeslaPigSighting(string& asName)
 
     END_SET_PROPERTY
 }
+#endif
 
 //-----------------------------------------------------------------------
 
