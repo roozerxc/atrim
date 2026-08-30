@@ -7,6 +7,7 @@
 #include "LuxMapHelper.h"
 #include "LuxMusicHandler.h"
 #include "LuxDebugHandler.h"
+#include "LuxGlobalDataHandler.h"
 
 #include "LuxPlayer.h"
 #include "LuxPlayerHelpers.h"
@@ -14,6 +15,8 @@
 #include "LuxProp.h"
 #include "LuxProp_Object.h"
 #include "LuxProp_SwingDoor.h"
+
+//-----------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
 // LOADER
@@ -29,7 +32,7 @@ cLuxEnemyLoader_WaterLurker::cLuxEnemyLoader_WaterLurker(const tString& asName) 
 
 iLuxEnemy *cLuxEnemyLoader_WaterLurker::CreateEnemy(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxEnemy_WaterLurker, (asName, alID,apMap) );
+    return hplNew(cLuxEnemy_WaterLurker, (asName, alID,apMap));
 }
 
 //-----------------------------------------------------------------------
@@ -38,29 +41,29 @@ void cLuxEnemyLoader_WaterLurker::LoadVariables(iLuxEnemy *apEnemy, cXmlElement 
 {
     cLuxEnemy_WaterLurker *pWaterLurker = static_cast<cLuxEnemy_WaterLurker*>(apEnemy);
 
-    pWaterLurker->mfPlayerDetectionHeight = GetVarFloat("PlayerDetectionHeight", 0.6f);
-    pWaterLurker->mfEatDamage = GetVarFloat("EatDamage", 0);
-    pWaterLurker->mfAfterAttackPauseTime = GetVarFloat("AfterAttackPauseTime", 0);
+    pWaterLurker->mfPlayerDetectionHeight  = GetVarFloat("PlayerDetectionHeight", 0.6f);
+    pWaterLurker->mfEatDamage              = GetVarFloat("EatDamage", 0.0f);
+    pWaterLurker->mfAfterAttackPauseTime   = GetVarFloat("AfterAttackPauseTime", 0.0f);
 
-    pWaterLurker->msSplashPS_Walk = GetVarString("SplashPS_Walk", "");
-    pWaterLurker->msSplashPS_Run = GetVarString("SplashPS_Run", "");
-    pWaterLurker->msSplashPS_Eat = GetVarString("SplashPS_Eat", "");
-    pWaterLurker->msSplashPS_Attack = GetVarString("SplashPS_Attack", "");
+    pWaterLurker->msSplashPS_Walk          = GetVarString("SplashPS_Walk", "");
+    pWaterLurker->msSplashPS_Run           = GetVarString("SplashPS_Run", "");
+    pWaterLurker->msSplashPS_Eat           = GetVarString("SplashPS_Eat", "");
+    pWaterLurker->msSplashPS_Attack        = GetVarString("SplashPS_Attack", "");
 
-    pWaterLurker->msSplashSound_Walk = GetVarString("SplashSound_Walk", "");
-    pWaterLurker->msSplashSound_Run = GetVarString("SplashSound_Run", "");
-    pWaterLurker->msSplashSound_Eat = GetVarString("SplashSound_Eat", "");
-    pWaterLurker->msSplashSound_Attack = GetVarString("SplashSound_Attack", "");
-
-    gpBase->PreloadSound(pWaterLurker->msSplashSound_Walk);
-    gpBase->PreloadSound(pWaterLurker->msSplashSound_Run);
-    gpBase->PreloadSound(pWaterLurker->msSplashSound_Eat);
-    gpBase->PreloadSound(pWaterLurker->msSplashSound_Attack);
+    pWaterLurker->msSplashSound_Walk       = GetVarString("SplashSound_Walk", "");
+    pWaterLurker->msSplashSound_Run        = GetVarString("SplashSound_Run", "");
+    pWaterLurker->msSplashSound_Eat        = GetVarString("SplashSound_Eat", "");
+    pWaterLurker->msSplashSound_Attack     = GetVarString("SplashSound_Attack", "");
 
     gpBase->PreloadParticleSystem(pWaterLurker->msSplashPS_Walk);
     gpBase->PreloadParticleSystem(pWaterLurker->msSplashPS_Run);
     gpBase->PreloadParticleSystem(pWaterLurker->msSplashPS_Eat);
     gpBase->PreloadParticleSystem(pWaterLurker->msSplashPS_Attack);
+
+    gpBase->PreloadSound(pWaterLurker->msSplashSound_Walk);
+    gpBase->PreloadSound(pWaterLurker->msSplashSound_Run);
+    gpBase->PreloadSound(pWaterLurker->msSplashSound_Eat);
+    gpBase->PreloadSound(pWaterLurker->msSplashSound_Attack);
 }
 
 //-----------------------------------------------------------------------
@@ -95,7 +98,6 @@ cLuxEnemy_WaterLurker::cLuxEnemy_WaterLurker(const tString &asName, int alID, cL
 
 cLuxEnemy_WaterLurker::~cLuxEnemy_WaterLurker()
 {
-
 }
 
 //-----------------------------------------------------------------------
@@ -106,471 +108,769 @@ cLuxEnemy_WaterLurker::~cLuxEnemy_WaterLurker()
 
 //-----------------------------------------------------------------------
 
+bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent aEvent, cLuxStateMessage *apMessage)
+{
+    ////////////////////////////////
+    // atrim state machine rewrite
+    // by RoozerXC -- 08-30-2026
+
+    // IMPORTANT: FOR ANY STATE OTHER THAN IDLE, NOTICE, OR NON-MOVING STATES,
+    // YOU MUST ALWAYS CHECK THAT THE ENEMY IS ACTUALLY STUCK ON A DOOR IN
+    // ORDER TO PREVENT AN INFINITE LOOP AFTER BREAKING DOORS!
+
+    // When an enemy encounters a stuck door, ONLY CALL ResetStuckCounter()
+    // and clear the flags. DO NOT call mpPathfinder->Stop() since that KILLS
+    // ALL MOVEMENT UNLESS commanded by the player's actions!
+
+    // You should ONLY call mpPathfinder->Stop() when the enemy is standing
+    // still! (short attack, flinch, notice, break door, wait, idles)
+
+    kLuxBeginStateMachine
+    {
+        // DO NOTHING
+        kLuxOnMessage(eLuxEnemyMessage_TakeHit) { }
+
+        ////////////////////////////////
+        // Reset all to default values
+        kLuxOnMessage(eLuxEnemyMessage_Reset)
+        {
+            gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
+            gpBase->mpPlayer->RemoveTerrorEnemy(this);
+            
+            ChangeState(eLuxEnemyState_Wait);
+        }
+
+        // Enemy spots player!
+        kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
+        {
+            ChangeState(eLuxEnemyState_Hunt);
+        }
+
+        // Enemy found something to eat
+        kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
+        {
+            cAINode *pNode = mpPathfinder->GetNodeAtPos(apMessage->mvCustomValue, 0.0f, 1.5f, true, true, true, NULL);
+            if(pNode)
+            {
+                gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
+                gpBase->mpPlayer->RemoveTerrorEnemy(this);
+
+                mvTempPos = pNode->GetPosition();
+                ChangeState(eLuxEnemyState_Search);
+
+                gpBase->mpDebugHandler->AddMessage(_W("Enemy ") +
+                    cString::To16Char(msName) + _W(" found food!"), false);
+            }
+            else
+            {
+                gpBase->mpDebugHandler->AddMessage(_W("Enemy ") +
+                    cString::To16Char(msName) + _W(" found food but no node..."), false);
+            }
+        }
+
+        // Player is dead, don't do anything else yet!
+        kLuxOnMessage(eLuxEnemyMessage_PlayerDead)
+        {
+            ChangeState(eLuxEnemyState_Idle);
+        }
+
+        // ------------------   STATES   ------------------ //
+
+        ////////////////////////////////
+        // Idle
+        kLuxState(eLuxEnemyState_Idle)
+        {
+            kLuxOnEnter
+            {
+                ChangeSoundState(eLuxEnemySoundState_Idle);
+            }
+
+            kLuxOnUpdate
+            {
+                if(PlayerIsDetected()) 
+                {
+                    ChangeState(eLuxEnemyState_Hunt);
+                }
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_SoundHeard)
+            {
+                if(apMessage->mfCustomValue > mfHearVolume)
+                {
+                    ChangeState(eLuxEnemyState_Investigate);
+                    mvTempPos = apMessage->mvCustomValue;
+                    mfTempVal = apMessage->mfCustomValue;
+                }
+            }
+        }
+        
+        ////////////////////////////////
+        // Investigate (heard a sound)
+        kLuxState(eLuxEnemyState_Investigate)
+        {
+            kLuxOnUpdate
+            {
+                // BREAK DOOR CHECK
+                if(mbStuckAtDoor)
+                {
+                    iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
+                    bool bShouldBreak = false;
+
+                    if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
+                    {
+                        iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
+                        if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
+                        {
+                            bShouldBreak = true;
+                        }
+                    }
+
+                    if(bShouldBreak)
+                    {
+                        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
+
+                        ChangeState(eLuxEnemyState_BreakDoor);
+                    }
+                    else
+                    {
+                        mpMover->ResetStuckCounter();
+
+                        mbStuckAtDoor = false;
+                        mlStuckDoorID = -1;
+                    }
+                }
+
+                if(mpMover->GetStuckCounter() > 0.9f)
+                {
+                    ChangeState(eLuxEnemyState_Idle);
+                }
+            }
+
+            kLuxOnEnter
+            {
+                mpPathfinder->Stop();
+
+                cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0.0f, 10.0f, true, true, true, NULL, 1);
+                if(pNode)
+                {
+                    mpPathfinder->MoveTo(pNode->GetPosition());
+                }
+                else
+                {
+                    mpPathfinder->MoveTo(mvTempPos);
+
+                    gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) +
+                        _W(" could not find a node near sound!"), false);
+                }
+
+                SendMessage(eLuxEnemyMessage_TimeOut_2, 0.1f, true);
+
+                // Output: Enemy servant_grunt_1 heard a sound!
+                //         Volume: 0.755555555555555555f
+                gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) + _W(" heard a sound!"), false);
+                gpBase->mpDebugHandler->AddMessage(_W("Volume: ") + cString::ToStringW(mfTempVal) + _W("f"), false);
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_SoundHeard)
+            {
+                if(mpPathfinder->IsMoving() && apMessage->mfCustomValue > mfTempVal)
+                {
+                    cAINode *pNode = mpPathfinder->GetNodeAtPos(apMessage->mvCustomValue, 0.0f, 10.0f, true, true, true, NULL, 1);
+                    if(pNode)
+                    {
+                        mpPathfinder->MoveTo(pNode->GetPosition());
+                    }
+
+                    mvTempPos = apMessage->mvCustomValue;
+                    mfTempVal = apMessage->mfCustomValue;
+                }
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
+            {
+                SplashWater(eWaterLurkerSplash_Walk);
+                SendMessage(eLuxEnemyMessage_TimeOut_2, 1.0f, true);
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
+            {
+                ChangeState(eLuxEnemyState_Idle);
+            }
+        }
+
+        ////////////////////////////////
+        // Search (Scavenge for food!)
+        kLuxState(eLuxEnemyState_Search)
+        {
+            // Overload global
+            kLuxOnMessage(eLuxEnemyMessage_FoodInRange) { }
+
+            kLuxOnUpdate
+            {
+                // BREAK DOOR CHECK
+                if(mbStuckAtDoor)
+                {
+                    iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
+                    bool bShouldBreak = false;
+
+                    if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
+                    {
+                        iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
+                        if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
+                        {
+                            bShouldBreak = true;
+                        }
+                    }
+
+                    if(bShouldBreak)
+                    {
+                        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
+
+                        ChangeState(eLuxEnemyState_BreakDoor);
+                    }
+                    else
+                    {
+                        mpMover->ResetStuckCounter();
+
+                        mbStuckAtDoor = false;
+                        mlStuckDoorID = -1;
+                    }
+                }
+            }
+
+            kLuxOnEnter
+            {
+                ChangeSoundState(eLuxEnemySoundState_Idle);
+
+                mpPathfinder->MoveTo(mvTempPos);
+                SendMessage(eLuxEnemyMessage_TimeOut_2, 0.1f, true);
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
+            {
+                SplashWater(eWaterLurkerSplash_Walk);
+                SendMessage(eLuxEnemyMessage_TimeOut_2, 1.0f, true);
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
+            {
+                ChangeState(eLuxEnemyState_Eat);
+                gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) +
+                    _W(" is eating some yummy food. Om nom nom!\n"), false);
+            }
+        }
+
+        ////////////////////////////////
+        // Eat
+        kLuxState(eLuxEnemyState_Eat)
+        {
+            // Overload global
+            kLuxOnMessage(eLuxEnemyMessage_FoodInRange) { }
+
+            kLuxOnUpdate
+            {
+                // BREAK DOOR CHECK
+                if(mbStuckAtDoor)
+                {
+                    iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
+                    bool bShouldBreak = false;
+
+                    if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
+                    {
+                        iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
+                        if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
+                        {
+                            bShouldBreak = true;
+                        }
+                    }
+
+                    if(bShouldBreak)
+                    {
+                        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
+
+                        ChangeState(eLuxEnemyState_BreakDoor);
+                    }
+                    else
+                    {
+                        mpMover->ResetStuckCounter();
+
+                        mbStuckAtDoor = false;
+                        mlStuckDoorID = -1;
+                    }
+                }
+
+                if(Dist2D(mvTempPos) > mpCharBody->GetSize().x * 0.75f)
+                {
+                    mpMover->MoveToPos(mvTempPos);
+                }
+            }
+
+            kLuxOnEnter
+            {
+                mpPathfinder->Stop();
+
+                ChangeSoundState(eLuxEnemySoundState_Idle);
+
+                SendMessage(eLuxEnemyMessage_TimeOut, 0.1f, true);
+                mvTempPos = mpCharBody->GetFeetPosition();
+            }
+
+            //Search for food and eat it!
+            kLuxOnMessage(eLuxEnemyMessage_TimeOut)
+            {
+                cLuxProp_Object *pFood = GetClosestFood(3.5f,mfPlayerDetectionHeight);
+                if(pFood)
+                {
+                    iPhysicsBody *pFoodBody = pFood->GetBody(0);
+                    cVector3f vToFeet(mpCharBody->GetFeetPosition() - pFoodBody->GetLocalPosition());
+                    vToFeet.Normalize();
+
+                    pFoodBody->AddImpulse(vToFeet*2.5f);
+
+                    SplashWater(eWaterLurkerSplash_Eat);
+                    pFood->GiveDamage(mfEatDamage, 10);
+                    gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) + _W(" took a bite!"), false);
+                    gpBase->mpDebugHandler->AddMessage(_W("Health: ") + cString::ToStringW(pFood->GetHealth()) + _W("f"), false);
+
+                    SendMessage(eLuxEnemyMessage_TimeOut, 1.2f, true);
+                    mvTempPos = pFood->GetBody(0)->GetLocalPosition();
+                }
+                else
+                {
+                    gpBase->mpDebugHandler->AddMessage(_W("No more food for enemy ") + cString::To16Char(msName) + _W("!"),false);
+                    ChangeState(eLuxEnemyState_GoHome);
+                }
+            }
+
+            //Player detection, only hunt if player is really close.
+            kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
+            {
+                if(DistToPlayer2D() < 2.0f)
+                {
+                    ChangeState(eLuxEnemyState_Hunt);
+                }
+                else
+                {
+                    mbPlayerDetected = false;
+                }
+            }
+        }
+
+        ////////////////////////////////
+        // Hunt
+        kLuxState(eLuxEnemyState_Hunt)
+        {
+            // Overload global
+            kLuxOnMessage(eLuxEnemyMessage_FoodInRange) { }
+
+            kLuxOnUpdate
+            {
+                // BREAK DOOR CHECK
+                if(mbStuckAtDoor)
+                {
+                    iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
+                    bool bShouldBreak = false;
+
+                    if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
+                    {
+                        iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
+                        if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
+                        {
+                            bShouldBreak = true;
+                        }
+                    }
+
+                    if(bShouldBreak)
+                    {
+                        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
+
+                        ChangeState(eLuxEnemyState_BreakDoor);
+                    }
+                    else
+                    {
+                        mpMover->ResetStuckCounter();
+
+                        mbStuckAtDoor = false;
+                        mlStuckDoorID = -1;
+                    }
+                }
+
+                if(DistToPlayer() < mfNormalAttackDistance)
+                {
+                    ChangeState(eLuxEnemyState_AttackMeleeShort);
+                }
+            }
+
+            kLuxOnEnter
+            {
+                if(PlayerIsDetected()==false)
+                {
+                    ChangeState(eLuxEnemyState_GoHome);
+                    mbCausesSanityDecrease = false;
+                }
+                else if(mPreviousState == eLuxEnemyState_AttackMeleeShort)
+                {
+                    mlAttackHitCounter = 0;
+
+                    gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Attack,this);
+
+                    ChangeState(eLuxEnemyState_HuntPause);
+                }
+                else
+                {
+                    gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Attack,this);
+
+                    ChangeSoundState(eLuxEnemySoundState_Hunt);
+
+                    SetMoveSpeed(eLuxEnemyMoveSpeed_Run);
+
+                    SendMessage(eLuxEnemyMessage_TimeOut, 0.1f, true);
+                    SendMessage(eLuxEnemyMessage_TimeOut_2, 0.1f, true);
+
+                    mbCausesSanityDecrease = true;
+                }
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_TimeOut)
+            {
+                mpPathfinder->MoveTo(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition());
+
+                SendMessage(eLuxEnemyMessage_TimeOut, 0.4f, true);
+
+                if(PlayerIsDetected()==false)
+                {
+                    ChangeState(eLuxEnemyState_GoHome);
+                    mbCausesSanityDecrease = false;
+                }
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
+            {
+                if(mpMover->GetWantedSpeedAmount() > 0.2f)
+                {
+                    SplashWater(eWaterLurkerSplash_Run);
+                }
+
+                SendMessage(eLuxEnemyMessage_TimeOut_2, 0.6f, true);
+            }
+
+            kLuxOnLeave
+            {
+                SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
+
+                if(mNextState != eLuxEnemyState_HuntPause)
+                {
+                    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
+                    gpBase->mpPlayer->RemoveTerrorEnemy(this);
+                }
+            }
+        }
+
+        ////////////////////////////////
+        // Hunt Pause
+        kLuxState(eLuxEnemyState_HuntPause)
+        {
+            // Overload globals
+            kLuxOnMessage(eLuxEnemyMessage_FoodInRange) { }
+            kLuxOnMessage(eLuxEnemyMessage_PlayerDetected) { }
+
+            kLuxOnEnter
+            {
+                mpPathfinder->Stop();
+
+                SendMessage(eLuxEnemyMessage_TimeOut, mfAfterAttackPauseTime, true);
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_TimeOut)
+            {
+                ChangeState(eLuxEnemyState_Hunt);
+            }
+        }
+
+        ////////////////////////////////
+        // Break door
+        kLuxState(eLuxEnemyState_BreakDoor)
+        {
+            // Overload global
+            kLuxOnMessage(eLuxEnemyMessage_FoodInRange) { }
+            kLuxOnMessage(eLuxEnemyMessage_PlayerDetected) { }
+
+            kLuxOnUpdate
+            {
+                // Turn towards the door
+                mpMover->TurnToPos(mvTempPos);
+            }
+
+            kLuxOnEnter
+            {
+                mpMover->ResetStuckCounter();
+                mpPathfinder->Stop();
+                mlTempVal = 0;
+
+                SendMessage(eLuxEnemyMessage_TimeOut, 0.01f, true);
+            }
+
+            // Damage door
+            kLuxOnMessage(eLuxEnemyMessage_TimeOut)
+            {
+                Attack(mNormalAttackSize, mBreakDoorAttackDamage);
+
+                SendMessage(eLuxEnemyMessage_TimeOut_2, cMath::RandRectf(0.5,1.5f), true);
+            }
+
+            // Check if door is destroyed
+            kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
+            {
+                mlTempVal++;
+                const int kMaxBreakDoorAttempts = 10;
+
+                iLuxEntity *pDoorEntity = mpMap->GetEntityByID(mlStuckDoorID);
+                bool bDoorIsBroken = false;
+
+                if(pDoorEntity == NULL || pDoorEntity->GetEntityType() != eLuxEntityType_Prop)
+                {
+                    bDoorIsBroken = true;
+                }
+                else
+                {
+                    iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEntity);
+
+                    if(pDoorProp->GetHealth() <= 0.01f)
+                    {
+                        bDoorIsBroken = true;
+                    }
+                    else if(pDoorProp->GetPropType() == eLuxPropType_SwingDoor)
+                    {
+                        cLuxProp_SwingDoor* pSwingDoor = static_cast<cLuxProp_SwingDoor*>(pDoorProp);
+
+                        if(pSwingDoor->IsBroken())
+                        {
+                            bDoorIsBroken = true;
+                        }
+                    }
+                }
+
+                float fDistanceToDoor = cMath::Vector3Dist(mpCharBody->GetPosition(), mvTempPos);
+                bool bEnemyIsTooFar = (fDistanceToDoor > 2.5f);
+
+                if(bDoorIsBroken || bEnemyIsTooFar || mlTempVal >= kMaxBreakDoorAttempts)
+                {
+                    mpMover->ResetStuckCounter();
+                    mpPathfinder->Stop();
+
+                    mbStuckAtDoor = false;
+                    mlStuckDoorID = -1;
+
+                    if(bDoorIsBroken)
+                    {
+                        gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) + 
+                            _W(" successfully broke door!"), false);
+                    }
+                    else if(bEnemyIsTooFar)
+                    {
+                        gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) + 
+                            _W(" is too far from door! (") + cString::ToStringW(fDistanceToDoor) + _W(" units)"), false);
+                    }
+                    else if(mlTempVal >= kMaxBreakDoorAttempts)
+                    {
+                        gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) + 
+                            _W(" gave up breaking door after ") + cString::ToStringW(mlTempVal) + _W(" attempts!"), false);
+                    }
+
+                    if(PlayerIsDetected())
+                    {
+                        ChangeState(eLuxEnemyState_Hunt);
+                    }
+                    else
+                    {
+                        ChangeState(mPreviousState);
+                    }
+                }
+                else
+                {
+                    SendMessage(eLuxEnemyMessage_TimeOut, 0.01f, true);
+                }
+            }
+
+            kLuxOnLeave
+            {
+                mpMover->ResetStuckCounter();
+                mpPathfinder->Stop();
+
+                mbStuckAtDoor = false;
+                mlAttackHitCounter = 0;
+
+                if(mNextState != eLuxEnemyState_Hunt &&
+                    mNextState != eLuxEnemyState_HuntPause &&
+                    mNextState != eLuxEnemyState_HuntWander)
+                {
+                    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
+                    gpBase->mpPlayer->RemoveTerrorEnemy(this);
+                }
+            }
+        }
+
+        ////////////////////////////////
+        // Attack Short
+        kLuxState(eLuxEnemyState_AttackMeleeShort)
+        {
+            // Overload global
+            kLuxOnMessage(eLuxEnemyMessage_FoodInRange) { }
+            kLuxOnMessage(eLuxEnemyMessage_PlayerDetected) { }
+
+            kLuxOnEnter
+            {
+                mpMover->ResetStuckCounter();
+                mpPathfinder->Stop();
+
+                SendMessage(eLuxEnemyMessage_TimeOut, 0.3f, true);
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_TimeOut)
+            {
+                SplashWater(eWaterLurkerSplash_Attack);
+
+                Attack(mNormalAttackSize, mNormalAttackDamage);
+
+                SendMessage(eLuxEnemyMessage_TimeOut_2, 0.5f, true);
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
+            {
+                ChangeState(mPreviousState);
+            }
+        }
+
+        ////////////////////////////////
+        // Go Home
+        kLuxState(eLuxEnemyState_GoHome)
+        {
+            kLuxOnUpdate
+            {
+                // BREAK DOOR CHECK
+                if(mbStuckAtDoor)
+                {
+                    iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
+                    bool bShouldBreak = false;
+
+                    if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
+                    {
+                        iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
+                        if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
+                        {
+                            bShouldBreak = true;
+                        }
+                    }
+
+                    if(bShouldBreak)
+                    {
+                        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
+
+                        ChangeState(eLuxEnemyState_BreakDoor);
+                    }
+                    else
+                    {
+                        mpMover->ResetStuckCounter();
+
+                        mbStuckAtDoor = false;
+                        mlStuckDoorID = -1;
+                    }
+                }
+
+                if(mpMover->GetStuckCounter() > 0.9f)
+                {
+                    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
+                    gpBase->mpPlayer->RemoveTerrorEnemy(this);
+
+                    ChangeState(eLuxEnemyState_Idle);
+                }
+            }
+
+            kLuxOnEnter
+            {
+                ChangeSoundState(eLuxEnemySoundState_Idle);
+
+                cAINode *pNode = mpPathfinder->GetNodeAtPos(GetPlayerFeetPos(), 0.0f, 6.0f, false, false, true, NULL);
+                if(pNode)
+                {
+                    mpPathfinder->MoveTo(pNode->GetPosition());
+
+                    gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) + _W(" approaching node!"), false);
+                }
+                else
+                {
+                    mpPathfinder->MoveTo(mvStartPosition);
+
+                    gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) + _W(" approaching start position!"), false);
+                }
+
+                SendMessage(eLuxEnemyMessage_TimeOut_2, 0.1f, true);
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_SoundHeard)
+            {
+                if(apMessage->mfCustomValue > mfHearVolume)
+                {
+                    ChangeState(eLuxEnemyState_Investigate);
+                    mvTempPos = apMessage->mvCustomValue;
+                    mfTempVal = apMessage->mfCustomValue;
+                }
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
+            {
+                SplashWater(eWaterLurkerSplash_Walk);
+                SendMessage(eLuxEnemyMessage_TimeOut_2, 1.0f, true);
+            }
+
+            kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
+            {
+                gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
+                gpBase->mpPlayer->RemoveTerrorEnemy(this);
+
+                ChangeState(eLuxEnemyState_Idle);
+            }
+        }
+
+        ////////////////////////////////
+        // Dead
+        kLuxState(eLuxEnemyState_Dead)
+        {
+            kLuxOnMessage(eLuxEnemyMessage_HelpMe) { }
+            kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)  { }
+
+            kLuxOnEnter
+            {
+                mpMover->ResetStuckCounter();
+                mpPathfinder->Stop();
+
+                mpCharBody->SetActive(false);
+                ChangeSoundState(eLuxEnemySoundState_Silent);
+
+                gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
+                gpBase->mpPlayer->RemoveTerrorEnemy(this);
+
+                mbCausesSanityDecrease = false;
+            }
+        }
+    }
+    kLuxEndStateMachine
+}
+
+//-----------------------------------------------------------------------
+
 void cLuxEnemy_WaterLurker::OnSetupAfterLoad(cWorld *apWorld)
 {
     mpMeshEntity->SetActive(false);
     mpMeshEntity->SetVisible(false);
 }
 
-
-//-----------------------------------------------------------------------
-
-void cLuxEnemy_WaterLurker::OnAfterWorldLoad()
-{
-
-}
-
-//-----------------------------------------------------------------------
-
-void cLuxEnemy_WaterLurker::UpdateEnemySpecific(double adFixedDelta)
-{
-}
-
-//-----------------------------------------------------------------------
-
-bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent aEvent, cLuxStateMessage *apMessage)
-{
-    kLuxBeginStateMachine
-
-    ////////////////////////////////
-    // Default
-    kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
-    ChangeState(eLuxEnemyState_Hunt);
-
-    kLuxOnMessage(eLuxEnemyMessage_TakeHit)
-    //DO NOTHING
-
-    kLuxOnMessage(eLuxEnemyMessage_PlayerDead)
-    ChangeState(eLuxEnemyState_Idle);
-
-    kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
-    cAINode *pNode = mpPathfinder->GetNodeAtPos(apMessage->mvCustomValue, 0, 1.5f, true, true, true, NULL);
-    if(pNode)
-    {
-        gpBase->mpDebugHandler->AddMessage(_W("Found food!"),false);
-
-        mvTempPos = pNode->GetPosition();
-        ChangeState(eLuxEnemyState_Search);
-        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
-    }
-    else
-    {
-        gpBase->mpDebugHandler->AddMessage(_W("Found food but no node.."),false);
-    }
-
-    ////////////////////////////////
-    // Idle
-    kLuxState(eLuxEnemyState_Idle)
-    kLuxOnEnter
-    ChangeSoundState(eLuxEnemySoundState_Idle);
-
-    ///////////////////////
-    // Heard sound
-    kLuxOnMessage(eLuxEnemyMessage_SoundHeard)
-    if(apMessage->mfCustomValue > mfHearVolume)
-    {
-        ChangeState(eLuxEnemyState_Investigate);
-        mvTempPos = apMessage->mvCustomValue;
-        mfTempVal = apMessage->mfCustomValue;
-    }
-
-    ////////////////////////////////
-    // Go Home
-    kLuxState(eLuxEnemyState_GoHome)
-    kLuxOnEnter
-    ChangeSoundState(eLuxEnemySoundState_Idle);
-
-    cAINode *pNode = mpPathfinder->GetNodeAtPos(GetPlayerFeetPos(), 0, 6, false, false, true, NULL);
-    if(pNode)
-    {
-        //gpBase->mpDebugHandler->AddMessage(_W("Going to node!"),false);
-        mpPathfinder->MoveTo(pNode->GetPosition());
-    }
-    else
-    {
-        //gpBase->mpDebugHandler->AddMessage(_W("Going to start position"),false);
-        mpPathfinder->MoveTo(mvStartPosition);
-    }
-    SendMessage(eLuxEnemyMessage_TimeOut_2, 0.1f, true);
-
-
-    ///////////////////////
-    // Update
-    kLuxOnUpdate
-    if(mpMover->GetStuckCounter()>0.9f)
-    {
-        ChangeState(eLuxEnemyState_Idle);
-        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
-    }
-
-    ///////////////////////
-    // Heard sound
-    kLuxOnMessage(eLuxEnemyMessage_SoundHeard)
-    if(apMessage->mfCustomValue > mfHearVolume)
-    {
-        ChangeState(eLuxEnemyState_Investigate);
-        mvTempPos = apMessage->mvCustomValue;
-        mfTempVal = apMessage->mfCustomValue;
-    }
-
-    ///////////////////////
-    // Movement effect
-    kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
-    SplashWater(eWaterLurkerSplash_Walk);
-    SendMessage(eLuxEnemyMessage_TimeOut_2, 1.0f, true);
-
-
-    kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
-    ChangeState(eLuxEnemyState_Idle);
-    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
-
-
-    ////////////////////////////////
-    // Investigate (heard a sound)
-    kLuxState(eLuxEnemyState_Investigate)
-    kLuxOnEnter
-    gpBase->mpDebugHandler->AddMessage(_W("Sound Heard! Vol: ")+cString::ToStringW(mfTempVal),false);
-
-    cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true,NULL,1);
-    if(pNode)
-    {
-        mpPathfinder->MoveTo(pNode->GetPosition());
-    }
-    else
-    {
-        gpBase->mpDebugHandler->AddMessage(_W("Could not find node near sound!"),false);
-        mpPathfinder->MoveTo(mvTempPos);
-    }
-    SendMessage(eLuxEnemyMessage_TimeOut_2, 0.1f, true);
-
-
-    kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
-    ChangeState(eLuxEnemyState_Idle);
-
-    kLuxOnUpdate
-    if(mpMover->GetStuckCounter()>0.9f)
-    {
-        ChangeState(eLuxEnemyState_Idle);
-    }
-
-    ///////////////////////
-    // Movement effect
-    kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
-    SplashWater(eWaterLurkerSplash_Walk);
-    SendMessage(eLuxEnemyMessage_TimeOut_2, 1.0f, true);
-
-    ///////////////////////
-    // Heard new sound
-    kLuxOnMessage(eLuxEnemyMessage_SoundHeard)
-    //If a new sound is loader than the previous go for that instead!
-    if(mpPathfinder->IsMoving() && apMessage->mfCustomValue > mfTempVal)
-    {
-        cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true,NULL,1);
-        if(pNode)
-        {
-            mpPathfinder->MoveTo(pNode->GetPosition());
-        }
-
-        mfTempVal = apMessage->mfCustomValue;
-    }
-
-    ////////////////////////////////
-    // Search (Scavenge for food!)
-    kLuxState(eLuxEnemyState_Search)
-    kLuxOnEnter
-    {
-        ChangeSoundState(eLuxEnemySoundState_Idle);
-
-        mpPathfinder->MoveTo(mvTempPos);
-        SendMessage(eLuxEnemyMessage_TimeOut_2, 0.1f, true);
-    }
-
-    kLuxOnUpdate
-
-    ///////////////////////
-    // Movement effect
-    kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
-    SplashWater(eWaterLurkerSplash_Walk);
-    SendMessage(eLuxEnemyMessage_TimeOut_2, 1.0f, true);
-
-
-    kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
-    gpBase->mpDebugHandler->AddMessage(_W("to eat state!\n"),false);
-    ChangeState(eLuxEnemyState_Eat);
-
-    ////////////////////////
-    // Overload global
-    kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
-
-    ////////////////////////////////
-    // Eat
-    kLuxState(eLuxEnemyState_Eat)
-    kLuxOnEnter
-    ChangeSoundState(eLuxEnemySoundState_Idle);
-
-    SendMessage(eLuxEnemyMessage_TimeOut, 0.1f, true);
-    mvTempPos = mpCharBody->GetFeetPosition();
-    mpPathfinder->Stop();
-
-    ////////////////////////////////
-    //Search for food and eat it!
-    kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-    cLuxProp_Object *pFood = GetClosestFood(3.5f,mfPlayerDetectionHeight);
-    if(pFood)
-    {
-        iPhysicsBody *pFoodBody = pFood->GetBody(0);
-        cVector3f vToFeet(mpCharBody->GetFeetPosition() - pFoodBody->GetLocalPosition());
-        vToFeet.Normalize();
-
-        pFoodBody->AddImpulse(vToFeet*2.5f);
-
-        SplashWater(eWaterLurkerSplash_Eat);
-        pFood->GiveDamage(mfEatDamage, 10);
-        gpBase->mpDebugHandler->AddMessage(_W("took bite!!"),false);
-        gpBase->mpDebugHandler->AddMessage(_W("Health: ")+cString::ToStringW(pFood->GetHealth()),false);
-
-        SendMessage(eLuxEnemyMessage_TimeOut, 1.2f, true);
-        mvTempPos = pFood->GetBody(0)->GetLocalPosition();
-    }
-    else
-    {
-        gpBase->mpDebugHandler->AddMessage(_W("No more food!!"),false);
-        ChangeState(eLuxEnemyState_GoHome);
-    }
-
-    ////////////////////////////////
-    //Move forward
-    kLuxOnUpdate
-    if(Dist2D(mvTempPos) > mpCharBody->GetSize().x*0.75f)
-    {
-        mpMover->MoveToPos(mvTempPos);
-    }
-
-    ////////////////////////////////
-    //Player detection, only hunt if player is really close.
-    kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
-    if(DistToPlayer2D() < 2.0f)
-    {
-        ChangeState(eLuxEnemyState_Hunt);
-    }
-    else
-    {
-        mbPlayerDetected = false;
-    }
-
-
-    ////////////////////////
-    // Overload global
-    kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
-
-
-    ////////////////////////////////
-    // Hunt
-    kLuxState(eLuxEnemyState_Hunt)
-    ///////////////////////
-    // Enter
-    kLuxOnEnter
-    if(PlayerIsDetected()==false)
-    {
-        ChangeState(eLuxEnemyState_GoHome);
-        mbCausesSanityDecrease = false;
-    }
-    else if(mPreviousState == eLuxEnemyState_AttackMeleeShort)
-    {
-        ChangeState(eLuxEnemyState_HuntPause);
-    }
-    else
-    {
-        ChangeSoundState(eLuxEnemySoundState_Hunt);
-
-        SetMoveSpeed(eLuxEnemyMoveSpeed_Run);
-        SendMessage(eLuxEnemyMessage_TimeOut, 0.1f, true);
-        SendMessage(eLuxEnemyMessage_TimeOut_2, 0.1f, true);
-        gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Attack,this);
-        mbCausesSanityDecrease = true;
-    }
-
-    ///////////////////////
-    // Leave
-    kLuxOnLeave
-    SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
-
-    ///////////////////////
-    // Movement effect
-    kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
-    if(mpMover->GetWantedSpeedAmount() > 0.2f)
-    {
-        SplashWater(eWaterLurkerSplash_Run);
-    }
-    SendMessage(eLuxEnemyMessage_TimeOut_2, 0.6f, true);
-
-    ///////////////////////
-    //Update the player position
-    kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-    mpPathfinder->MoveTo(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition());
-    SendMessage(eLuxEnemyMessage_TimeOut, 0.4f, true);
-    if(PlayerIsDetected()==false)
-    {
-        ChangeState(eLuxEnemyState_GoHome);
-        mbCausesSanityDecrease = false;
-    }
-
-    ///////////////////////
-    //On update
-    kLuxOnUpdate
-    if(DistToPlayer() < mfNormalAttackDistance)
-    {
-        ChangeState(eLuxEnemyState_AttackMeleeShort);
-    }
-    else if(mbStuckAtDoor)
-    {
-        iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
-        bool bShouldBreak = false;
-
-        if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
-        {
-            iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
-            if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
-            {
-                bShouldBreak = true;
-            }
-        }
-
-        if(bShouldBreak)
-        {
-            mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-            mReturnState = mCurrentState;
-
-            ChangeState(eLuxEnemyState_BreakDoor);
-        }
-        else
-        {
-            mbStuckAtDoor = false;
-            mpMover->ResetStuckCounter();
-        }
-    }
-
-    ////////////////////////
-    // Overload global
-    kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
-
-    ////////////////////////////////
-    // Hunt Pause
-    kLuxState(eLuxEnemyState_HuntPause)
-    ///////////////////////
-    // Enter
-    kLuxOnEnter
-    mpPathfinder->Stop();
-    SendMessage(eLuxEnemyMessage_TimeOut, mfAfterAttackPauseTime, true);
-
-    kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-    ChangeState(eLuxEnemyState_Hunt);
-
-    ////////////////////////
-    // Overload global
-    kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
-    kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
-
-    ////////////////////////////////
-    // Break door
-    kLuxState(eLuxEnemyState_BreakDoor)
-    kLuxOnEnter
-    mpPathfinder->Stop();
-
-    mpMover->ResetStuckCounter();
-
-    SendMessage(eLuxEnemyMessage_TimeOut, 0.01f, true);
-
-    ///////////////////
-    //Damage door
-    kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-    //SplashWater(eWaterLurkerSplash_Attack);
-    Attack(mNormalAttackSize, mBreakDoorAttackDamage);
-    SendMessage(eLuxEnemyMessage_TimeOut_2, cMath::RandRectf(0.5,1.5f), true);
-
-    ///////////////////
-    //Check if door is destroyed
-    kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
-    ChangeState(eLuxEnemyState_Hunt);
-    /*if(mpMap->DoorIsBroken(mlStuckDoorID))
-    {
-        ChangeState(eLuxEnemyState_Hunt);
-    }
-    else
-    {
-        SendMessage(eLuxEnemyMessage_TimeOut, 1.5f, true);
-    }*/
-
-    kLuxOnLeave
-    mlAttackHitCounter =0; //When returning from door breakage there should be no pause!
-
-    mbStuckAtDoor = false;
-    mpMover->ResetStuckCounter();
-
-    kLuxOnUpdate
-    //Turn towards the door!
-    mpMover->TurnToPos(mvTempPos);
-
-    ////////////////////////
-    // Overload global
-    kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
-    kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
-
-    ////////////////////////////////
-    // Attack Short
-    kLuxState(eLuxEnemyState_AttackMeleeShort)
-    kLuxOnEnter
-    SendMessage(eLuxEnemyMessage_TimeOut, 0.3f, true);
-
-    kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
-    ChangeState(mPreviousState);
-
-    kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-    SplashWater(eWaterLurkerSplash_Attack);
-    Attack(mNormalAttackSize, mNormalAttackDamage);
-    SendMessage(eLuxEnemyMessage_TimeOut_2, 0.5f, true);
-    mpPathfinder->Stop();
-
-    ////////////////////////
-    // Overload global
-    kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
-    kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
-
-
-    ////////////////////////////////
-    // Dead (just in case...)
-    kLuxState(eLuxEnemyState_Dead)
-    kLuxOnEnter
-    ChangeSoundState(eLuxEnemySoundState_Silent);
-
-    mpPathfinder->Stop();
-    //PlayAnim("Dead",false, 0.4f);
-    //PlayAnim("Dead",false, 0.3f,false,1.0f,false,true,false);
-    gpBase->mpPlayer->RemoveTerrorEnemy(this);
-    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
-    mpCharBody->SetActive(false);
-
-
-    kLuxOnMessage(eLuxEnemyMessage_AnimationOver)
-    //PlayAnim("Dead",false, 0.3f,false,1.0f,false,true,false);
-
-    ////////////////////////
-    // Overload global
-    kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
-    kLuxOnMessage(eLuxEnemyMessage_HelpMe)
-
-    kLuxEndStateMachine
-}
-
 //-----------------------------------------------------------------------
 
 bool cLuxEnemy_WaterLurker::InRangeOfFood(iPhysicsBody *apFoodBody)
 {
-    //TODO: Check if in water?
     float fYDist = apFoodBody->GetLocalPosition().y - mpCharBody->GetFeetPosition().y;
-
-    bool bX = cMath::Abs(fYDist) <= mfPlayerDetectionHeight;
-    return bX;
+    return cMath::Abs(fYDist) <= mfPlayerDetectionHeight;
 }
 
 //-----------------------------------------------------------------------
@@ -586,6 +886,18 @@ void cLuxEnemy_WaterLurker::OnRenderSolidImplemented(cRendererCallbackFunctions*
         pPhysicsWorld->RenderShapeDebugGeometry(GetAttackShape(0), GetDamageShapeMatrix(cVector3f(0,0,1)), apFunctions->GetLowLevelGfx(),
                                                 cColor(1,0,0,1));
     }
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxEnemy_WaterLurker::OnAfterWorldLoad()
+{
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxEnemy_WaterLurker::UpdateEnemySpecific(double adFixedDelta)
+{
 }
 
 //-----------------------------------------------------------------------
@@ -625,7 +937,6 @@ void cLuxEnemy_WaterLurker::SplashWater(eWaterLurkerSplash aType)
         }
     }
 
-
     tString sSound = "";
     if(aType == eWaterLurkerSplash_Walk)
     {
@@ -658,7 +969,7 @@ bool cLuxEnemy_WaterLurker::PlayerIsDetected()
 
 void cLuxEnemy_WaterLurker::OnSetActiveEnemySpecific(bool abX)
 {
-    //Make sure the mesh is invisible!
+    // Make sure the mesh is invisible!
     mpMeshEntity->SetActive(false);
     mpMeshEntity->SetVisible(false);
 }
@@ -705,9 +1016,7 @@ void cLuxEnemy_WaterLurker::PatrolEndOfPath()
 //-----------------------------------------------------------------------
 
 kBeginSerialize(cLuxEnemy_WaterLurker_SaveData, iLuxEnemy_SaveData)
-
 kSerializeVar(mfPlayerDetectionHeight, eSerializeType_Float32)
-
 kEndSerialize()
 
 //-----------------------------------------------------------------------
@@ -721,13 +1030,9 @@ iLuxEntity_SaveData* cLuxEnemy_WaterLurker::CreateSaveData()
 
 void cLuxEnemy_WaterLurker::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 {
-    //////////////////
-    //Init
     super_class::SaveToSaveData(apSaveData);
     cLuxEnemy_WaterLurker_SaveData *pData = static_cast<cLuxEnemy_WaterLurker_SaveData*>(apSaveData);
 
-    //////////////////
-    //Set variables
     kCopyToVar(pData,mfPlayerDetectionHeight);
 }
 
@@ -735,27 +1040,23 @@ void cLuxEnemy_WaterLurker::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 
 void cLuxEnemy_WaterLurker::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 {
-    //////////////////
-    //Init
     super_class::LoadFromSaveData(apSaveData);
     cLuxEnemy_WaterLurker_SaveData *pData = static_cast<cLuxEnemy_WaterLurker_SaveData*>(apSaveData);
 
-    //////////////////
-    //Set variables
     kCopyFromVar(pData,mfPlayerDetectionHeight);
 
 #if LUX_ENEMY_MANPIG
     ////////////////////////
     // Handle changed enums
-    if (mCurrentState >= eLuxEnemyState_PigEnumStart)
+    if(mCurrentState >= eLuxEnemyState_PigEnumStart)
     {
         mCurrentState = eLuxEnemyState_LastEnum;
     }
-    if (mNextState >= eLuxEnemyState_PigEnumStart)
+    if(mNextState >= eLuxEnemyState_PigEnumStart)
     {
         mNextState = eLuxEnemyState_LastEnum;
     }
-    if (mPreviousState >= eLuxEnemyState_PigEnumStart)
+    if(mPreviousState >= eLuxEnemyState_PigEnumStart)
     {
         mPreviousState = eLuxEnemyState_LastEnum;
     }
@@ -769,6 +1070,4 @@ void cLuxEnemy_WaterLurker::SetupSaveData(iLuxEntity_SaveData *apSaveData)
     super_class::SetupSaveData(apSaveData);
 }
 
-
 //-----------------------------------------------------------------------
-

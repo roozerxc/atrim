@@ -117,6 +117,7 @@ public:
     int mlCurrentState;
     int mlNextState;
     int mlPreviousState;
+    int mlReturnState;
 
     int mlSoundState;
 
@@ -295,16 +296,29 @@ typedef tLuxStateMessageList::iterator    tLuxStateMessageListIt;
 
 //----------------------------------------------
 
-#define kLuxBeginStateMachine        if(alState < 0){ if(0){
-#define kLuxEndStateMachine            return true;}}else{FatalError("Tried calling undefined state %d!\n", alState ); \
-                                    return false;} return false;
-#define kLuxState(x)                return true;}} else if(x == alState){if(0){
-#define kLuxOnMessage(x)            return true;} else if(aEvent == eLuxEnemyStateEvent_Message && apMessage && apMessage->mType == x){
-#define kLuxOnEvent(x)                return true;} else if(x == aEvent){
-#define kLuxOnEnter                    kLuxOnEvent(eLuxEnemyStateEvent_Enter)
-#define kLuxOnUpdate                kLuxOnEvent(eLuxEnemyStateEvent_Update)
-#define kLuxOnLeave                    kLuxOnEvent(eLuxEnemyStateEvent_Leave)
+#define kLuxBeginStateMachine \
+    bool _bHandled = false; \
+    if(alState < 0)
 
+#define kLuxEndStateMachine \
+    else { \
+        FatalError("Tried calling undefined state %d!\n", alState); \
+        return false; \
+    } \
+    return _bHandled;
+
+#define kLuxState(x) \
+    } else if(alState == x) {
+
+#define kLuxOnEvent(x) \
+    if(aEvent == x ? (_bHandled = true) : false)
+
+#define kLuxOnMessage(x) \
+    if((aEvent == eLuxEnemyStateEvent_Message && apMessage && apMessage->mType == x) ? (_bHandled = true) : false)
+
+#define kLuxOnEnter     kLuxOnEvent(eLuxEnemyStateEvent_Enter)
+#define kLuxOnUpdate    kLuxOnEvent(eLuxEnemyStateEvent_Update)
+#define kLuxOnLeave     kLuxOnEvent(eLuxEnemyStateEvent_Leave)
 
 //----------------------------------------------
 
