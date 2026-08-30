@@ -149,7 +149,7 @@ private:
     float mfIncreasedAlertSpeedMul;
     float mfAlertRunTowardsToHuntLimit;
     float mfAlertRunTowardsCheckDistance;
-    bool mbIsTelsa;
+    bool mbIsTesla;
 
 
     std::vector<cColor> mvDefaultLightColors;

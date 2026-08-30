@@ -75,7 +75,7 @@ void cLuxEnemyLoader_ManPig::LoadVariables(iLuxEnemy *apEnemy, cXmlElement *apRo
     pManPig->mfAlertRunTowardsCheckDistance = GetVarFloat("AlertRunTowardsCheckDistance", 0);
 
     pManPig->msTeslaMindFuckLoop = GetVarString("TeslaSoundLoop");
-    pManPig->mbIsTelsa = GetVarBool("IsTelsa", false);
+    pManPig->mbIsTesla = GetVarBool("IsTesla", false);
 }
 
 //-----------------------------------------------------------------------
@@ -150,7 +150,7 @@ cLuxEnemy_ManPig::cLuxEnemy_ManPig(const tString &asName, int alID, cLuxMap *apM
 
     mbAlignEntityWithGroundRay = true;
 
-    mbIsTelsa=false;
+    mbIsTesla=false;
 
     mbLastShortAttackWasMiss = false;
     mbForceChargeAttack = false;
@@ -203,7 +203,7 @@ cLuxEnemy_ManPig::cLuxEnemy_ManPig(const tString &asName, int alID, cLuxMap *apM
 
 cLuxEnemy_ManPig::~cLuxEnemy_ManPig()
 {
-    if(mbIsTelsa)
+    if(mbIsTesla)
     {
         ResetMindFuckEffects();
     }
@@ -219,7 +219,7 @@ cLuxEnemy_ManPig::~cLuxEnemy_ManPig()
 
 void cLuxEnemy_ManPig::OnSetupAfterLoad(cWorld *apWorld)
 {
-    if(mbIsTelsa)
+    if(mbIsTesla)
     {
         mpMeshEntity->SetVisible(false);
     }
@@ -243,7 +243,7 @@ void cLuxEnemy_ManPig::OnAfterWorldLoad()
 
 void cLuxEnemy_ManPig::UpdateEnemySpecific(double adFixedDelta)
 {
-    if(mbIsTelsa)
+    if(mbIsTesla)
     {
         UpdateTesla(adFixedDelta);
     }
@@ -889,7 +889,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
     else if(PlayerIsDetected()==false)
     {
         float fTerror = gpBase->mpPlayer->GetTerror();
-        if (mbIsTelsa == true)
+        if (mbIsTesla == true)
         {
             if (fTerror < 0.1)
             {
@@ -948,7 +948,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
             //If terror is topped and distance to player is over a value or player is running towards piggie
             //Or if distance to player is less than a value
             float fTerror = gpBase->mpPlayer->GetTerror();
-            if (mbIsTelsa==true)
+            if (mbIsTesla==true)
             {
                 fTerror *= 3;
             }
@@ -974,7 +974,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
         //Path ended and player is not seen or enemy is stuck (this should only happen when at a distance!
         if(PlayerIsDetected()==false || (apMessage->mlCustomValue == 1 && fDistToPlayer>5))
         {
-            if(mbIsTelsa==false)
+            if(mbIsTesla==false)
             {
                 ChangeState(eLuxEnemyState_Search);
             }
@@ -1372,7 +1372,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
     //Check if enemy might be seen
     kLuxOnMessage(eLuxEnemyMessage_TimeOut)
 
-    if(    mbIsTelsa == false &&
+    if(    mbIsTesla == false &&
             IsInPlayerFovAtFeetPos(mpCharBody->GetFeetPosition())==false &&
             //IsVisibleToPlayerAtFeetPos(mpCharBody->GetFeetPosition())==false &&
             DistToPlayer2D() > 6.0f)
@@ -1451,7 +1451,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
     gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
 
-    int lMaxHits = mbIsTelsa ? 1 : cMath::RandRectl(1, 3);
+    int lMaxHits = mbIsTesla ? 1 : cMath::RandRectl(1, 3);
     if(mlAttackHitCounter >= lMaxHits || mbLastShortAttackWasMiss)
     {
         mlAttackHitCounter =0;
@@ -1609,7 +1609,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
         gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
 
-        if(mbThreatenOnAlert || mbIsTelsa)
+        if(mbThreatenOnAlert || mbIsTesla)
         {
             ChangeState(eLuxEnemyState_Patrol);
         }
@@ -2134,7 +2134,7 @@ float cLuxEnemy_ManPig::GetDamageMul(float afAmount, int alStrength)
 
 void cLuxEnemy_ManPig::OnSetActiveEnemySpecific(bool abX)
 {
-    if(mbIsTelsa)
+    if(mbIsTesla)
     {
         mpMeshEntity->SetVisible(false);
 
@@ -2144,7 +2144,7 @@ void cLuxEnemy_ManPig::OnSetActiveEnemySpecific(bool abX)
         }
     }
 
-    if(abX==false && mbIsTelsa)
+    if(abX==false && mbIsTesla)
     {
         ResetMindFuckEffects();
         mbTeslaTerror = false;
@@ -2479,7 +2479,7 @@ void cLuxEnemy_ManPig::UpdateCheckInLantern(double adFixedDelta)
 
 void cLuxEnemy_ManPig::ForceTeslaSighting()
 {
-    if(mbIsTelsa==false)
+    if(mbIsTesla==false)
     {
         return;
     }
