@@ -109,18 +109,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 {
     ////////////////////////////////
     // atrim state machine rewrite
-    // by RoozerXC -- 08-30-2026
-
-    // IMPORTANT: FOR ANY STATE OTHER THAN IDLE, NOTICE, OR NON-MOVING STATES,
-    // YOU MUST ALWAYS CHECK THAT THE ENEMY IS ACTUALLY STUCK ON A DOOR IN
-    // ORDER TO PREVENT AN INFINITE LOOP AFTER BREAKING DOORS!
-
-    // When an enemy encounters a stuck door, ONLY CALL ResetStuckCounter()
-    // and clear the flags. DO NOT call mpPathfinder->Stop() since that KILLS
-    // ALL MOVEMENT UNLESS commanded by the player's actions!
-
-    // You should ONLY call mpPathfinder->Stop() when the enemy is standing
-    // still! (short attack, flinch, notice, break door, wait, idles)
+    // by RoozerXC -- 08-31-2026
 
     kLuxBeginStateMachine
     {
@@ -307,16 +296,11 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     else
                     {
                         mpMover->ResetStuckCounter();
-                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
 
-                        if(mCurrentState == eLuxEnemyState_Patrol ||
-                            mCurrentState == eLuxEnemyState_Search)
-                        {
-                            ChangeState(eLuxEnemyState_Wait);
-                        }
+                        ChangeState(eLuxEnemyState_Wait);
                     }
                 }
             }
@@ -379,16 +363,11 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     else
                     {
                         mpMover->ResetStuckCounter();
-                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
 
-                        if(mCurrentState == eLuxEnemyState_Patrol ||
-                            mCurrentState == eLuxEnemyState_Search)
-                        {
-                            ChangeState(eLuxEnemyState_Wait);
-                        }
+                        ChangeState(eLuxEnemyState_Wait);
                     }
                 }
             }
@@ -398,6 +377,10 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                 if(mPreviousState != eLuxEnemyState_BreakDoor)
                 {
                     mReturnState = mPreviousState;
+                }
+                if(mReturnState == eLuxEnemyState_BreakDoor)
+                {
+                    mReturnState = eLuxEnemyState_Patrol;
                 }
 
                 ChangeSoundState(eLuxEnemySoundState_Alert);
@@ -508,16 +491,11 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     else
                     {
                         mpMover->ResetStuckCounter();
-                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
 
-                        if(mCurrentState == eLuxEnemyState_Patrol ||
-                            mCurrentState == eLuxEnemyState_Search)
-                        {
-                            ChangeState(eLuxEnemyState_Wait);
-                        }
+                        ChangeState(eLuxEnemyState_Wait);
                     }
                 }
 
@@ -613,7 +591,8 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
             {
                 mfFOVMul = 1.0f;
                 
-                if(mNextState != eLuxEnemyState_BreakDoor)
+                if(mNextState != eLuxEnemyState_BreakDoor &&
+                    mNextState != eLuxEnemyState_Hunt)
                 {
                     SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
                     gpBase->mpPlayer->RemoveTerrorEnemy(this);
@@ -651,16 +630,11 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     else
                     {
                         mpMover->ResetStuckCounter();
-                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
 
-                        if(mCurrentState == eLuxEnemyState_Patrol ||
-                            mCurrentState == eLuxEnemyState_Search)
-                        {
-                            ChangeState(eLuxEnemyState_Wait);
-                        }
+                        ChangeState(eLuxEnemyState_Wait);
                     }
                 }
             }
@@ -759,16 +733,11 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     else
                     {
                         mpMover->ResetStuckCounter();
-                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
 
-                        if(mCurrentState == eLuxEnemyState_Patrol ||
-                            mCurrentState == eLuxEnemyState_Search)
-                        {
-                            ChangeState(eLuxEnemyState_Wait);
-                        }
+                        ChangeState(eLuxEnemyState_Wait);
                     }
                 }
 
@@ -1079,14 +1048,11 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                             _W(" gave up breaking door after ") + cString::ToStringW(mlTempVal) + _W(" attempts!"), false);
                     }
 
-                    if(mPreviousState == eLuxEnemyState_Hurt)
+                    if(mPreviousState == eLuxEnemyState_Hurt ||
+                        mPreviousState == eLuxEnemyState_Hunt ||
+                        mPreviousState == eLuxEnemyState_Alert)
                     {
                         ChangeState(eLuxEnemyState_Hunt);
-                    }
-                    else if(mlTempVal >= kMaxBreakDoorAttempts &&
-                        (mPreviousState == eLuxEnemyState_Hunt || mPreviousState == eLuxEnemyState_Alert))
-                    {
-                        ChangeState(eLuxEnemyState_Search);
                     }
                     else
                     {
@@ -1107,6 +1073,11 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                 mbStuckAtDoor = false;
                 mlAttackHitCounter = 0;
                 mfFOVMul = 1.0f;
+
+                if(mReturnState == eLuxEnemyState_BreakDoor)
+                {
+                    mReturnState = eLuxEnemyState_Patrol;
+                }
             }
         }
 

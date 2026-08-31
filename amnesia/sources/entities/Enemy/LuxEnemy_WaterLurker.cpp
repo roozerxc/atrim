@@ -112,18 +112,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 {
     ////////////////////////////////
     // atrim state machine rewrite
-    // by RoozerXC -- 08-30-2026
-
-    // IMPORTANT: FOR ANY STATE OTHER THAN IDLE, NOTICE, OR NON-MOVING STATES,
-    // YOU MUST ALWAYS CHECK THAT THE ENEMY IS ACTUALLY STUCK ON A DOOR IN
-    // ORDER TO PREVENT AN INFINITE LOOP AFTER BREAKING DOORS!
-
-    // When an enemy encounters a stuck door, ONLY CALL ResetStuckCounter()
-    // and clear the flags. DO NOT call mpPathfinder->Stop() since that KILLS
-    // ALL MOVEMENT UNLESS commanded by the player's actions!
-
-    // You should ONLY call mpPathfinder->Stop() when the enemy is standing
-    // still! (short attack, flinch, notice, break door, wait, idles)
+    // by RoozerXC -- 08-31-2026
 
     kLuxBeginStateMachine
     {
@@ -136,8 +125,8 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
         {
             gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
             gpBase->mpPlayer->RemoveTerrorEnemy(this);
-            
-            ChangeState(eLuxEnemyState_Wait);
+
+            ChangeState(eLuxEnemyState_Idle);
         }
 
         // Enemy spots player!
@@ -234,18 +223,19 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                     else
                     {
                         mpMover->ResetStuckCounter();
-                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
 
-                        if(mCurrentState == eLuxEnemyState_Search ||
-                            mCurrentState == eLuxEnemyState_GoHome ||
-                            mCurrentState == eLuxEnemyState_Investigate)
-                        {
-                            ChangeState(eLuxEnemyState_Idle);
-                        }
+                        ChangeState(eLuxEnemyState_Idle);
                     }
+                }
+
+                if(mpMover->GetStuckCounter() > 0.9f)
+                {
+                    mpMover->ResetStuckCounter();
+
+                    ChangeState(eLuxEnemyState_Idle);
                 }
             }
 
@@ -334,18 +324,19 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                     else
                     {
                         mpMover->ResetStuckCounter();
-                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
 
-                        if(mCurrentState == eLuxEnemyState_Search ||
-                            mCurrentState == eLuxEnemyState_GoHome ||
-                            mCurrentState == eLuxEnemyState_Investigate)
-                        {
-                            ChangeState(eLuxEnemyState_Idle);
-                        }
+                        ChangeState(eLuxEnemyState_Idle);
                     }
+                }
+
+                if(mpMover->GetStuckCounter() > 0.9f)
+                {
+                    mpMover->ResetStuckCounter();
+
+                    ChangeState(eLuxEnemyState_Idle);
                 }
             }
 
@@ -404,17 +395,11 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                     else
                     {
                         mpMover->ResetStuckCounter();
-                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
 
-                        if(mCurrentState == eLuxEnemyState_Search ||
-                            mCurrentState == eLuxEnemyState_GoHome ||
-                            mCurrentState == eLuxEnemyState_Investigate)
-                        {
-                            ChangeState(eLuxEnemyState_Idle);
-                        }
+                        ChangeState(eLuxEnemyState_Idle);
                     }
                 }
 
@@ -506,24 +491,23 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                     if(bShouldBreak)
                     {
                         mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-
                         ChangeState(eLuxEnemyState_BreakDoor);
                     }
                     else
                     {
                         mpMover->ResetStuckCounter();
-                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
 
-                        if(mCurrentState == eLuxEnemyState_Search ||
-                            mCurrentState == eLuxEnemyState_GoHome ||
-                            mCurrentState == eLuxEnemyState_Investigate)
-                        {
-                            ChangeState(eLuxEnemyState_Idle);
-                        }
+                        ChangeState(eLuxEnemyState_Idle);
                     }
+                }
+
+                if(mpMover->GetStuckCounter() > 0.9f)
+                {
+                    mpMover->ResetStuckCounter();
+                    ChangeState(eLuxEnemyState_Idle);
                 }
 
                 if(DistToPlayer() < mfNormalAttackDistance)
@@ -630,6 +614,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
             {
                 mpMover->ResetStuckCounter();
                 mpPathfinder->Stop();
+
                 mlTempVal = 0;
 
                 SendMessage(eLuxEnemyMessage_TimeOut, 0.01f, true);
@@ -708,7 +693,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                     }
                     else
                     {
-                        ChangeState(mPreviousState);
+                        ChangeState(eLuxEnemyState_Idle);
                     }
                 }
                 else
@@ -795,18 +780,22 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                     else
                     {
                         mpMover->ResetStuckCounter();
-                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
 
-                        if(mCurrentState == eLuxEnemyState_Search ||
-                            mCurrentState == eLuxEnemyState_GoHome ||
-                            mCurrentState == eLuxEnemyState_Investigate)
-                        {
-                            ChangeState(eLuxEnemyState_Idle);
-                        }
+                        ChangeState(eLuxEnemyState_Idle);
                     }
+                }
+
+                if(mpMover->GetStuckCounter() > 0.9f)
+                {
+                    mpMover->ResetStuckCounter();
+
+                    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
+                    gpBase->mpPlayer->RemoveTerrorEnemy(this);
+
+                    ChangeState(eLuxEnemyState_Idle);
                 }
             }
 
