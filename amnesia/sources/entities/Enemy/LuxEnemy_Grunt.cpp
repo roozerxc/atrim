@@ -1262,6 +1262,8 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                 gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
                 gpBase->mpPlayer->RemoveTerrorEnemy(this);
 
+                mbCausesSanityDecrease = false;
+
                 mpCharBody->SetActive(false);
             }
         }
