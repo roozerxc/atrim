@@ -1,5 +1,6 @@
-#if LUX_ENEMY_MANPIG
 #include "LuxEnemy_ManPig.h"
+
+#if LUX_ENEMY_MANPIG
 
 #include "LuxEnemyMover.h"
 #include "LuxEnemyPathfinder.h"
