@@ -307,9 +307,16 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     else
                     {
                         mpMover->ResetStuckCounter();
+                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
+
+                        if(mCurrentState == eLuxEnemyState_Patrol ||
+                            mCurrentState == eLuxEnemyState_Search)
+                        {
+                            ChangeState(eLuxEnemyState_Wait);
+                        }
                     }
                 }
             }
@@ -372,9 +379,16 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     else
                     {
                         mpMover->ResetStuckCounter();
+                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
+
+                        if(mCurrentState == eLuxEnemyState_Patrol ||
+                            mCurrentState == eLuxEnemyState_Search)
+                        {
+                            ChangeState(eLuxEnemyState_Wait);
+                        }
                     }
                 }
             }
@@ -494,9 +508,16 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     else
                     {
                         mpMover->ResetStuckCounter();
+                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
+
+                        if(mCurrentState == eLuxEnemyState_Patrol ||
+                            mCurrentState == eLuxEnemyState_Search)
+                        {
+                            ChangeState(eLuxEnemyState_Wait);
+                        }
                     }
                 }
 
@@ -630,9 +651,16 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     else
                     {
                         mpMover->ResetStuckCounter();
+                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
+
+                        if(mCurrentState == eLuxEnemyState_Patrol ||
+                            mCurrentState == eLuxEnemyState_Search)
+                        {
+                            ChangeState(eLuxEnemyState_Wait);
+                        }
                     }
                 }
             }
@@ -731,9 +759,16 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     else
                     {
                         mpMover->ResetStuckCounter();
+                        mpPathfinder->Stop();
 
                         mbStuckAtDoor = false;
                         mlStuckDoorID = -1;
+
+                        if(mCurrentState == eLuxEnemyState_Patrol ||
+                            mCurrentState == eLuxEnemyState_Search)
+                        {
+                            ChangeState(eLuxEnemyState_Wait);
+                        }
                     }
                 }
 
@@ -1072,39 +1107,6 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                 mbStuckAtDoor = false;
                 mlAttackHitCounter = 0;
                 mfFOVMul = 1.0f;
-
-                gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
-                gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search, this);
-                gpBase->mpPlayer->RemoveTerrorEnemy(this);
-
-                switch(mNextState)
-                {
-                case eLuxEnemyState_Hunt:
-                case eLuxEnemyState_HuntPause:
-                case eLuxEnemyState_HuntWander:
-                case eLuxEnemyState_AttackMeleeShort:
-                case eLuxEnemyState_AttackMeleeLong:
-                    gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Attack, this);
-                    gpBase->mpPlayer->AddTerrorEnemy(this);
-                    break;
-                
-                case eLuxEnemyState_Alert:
-                    gpBase->mpPlayer->AddTerrorEnemy(this);
-                    break;
-
-                case eLuxEnemyState_Investigate:
-                    if(mReturnState == eLuxEnemyState_Search)
-                    {
-                        gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Search, this);
-                    }
-                    break;
-
-                default:
-                    gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) +
-                        _W(" leaving BreakDoor to unexpected state: ") +
-                        cString::ToStringW((int)mNextState), false);
-                    break;
-                }
             }
         }
 
