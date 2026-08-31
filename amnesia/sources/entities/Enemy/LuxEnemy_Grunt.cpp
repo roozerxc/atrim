@@ -417,7 +417,8 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                 }
                 else
                 {
-                    gpBase->mpDebugHandler->AddMessage(_W("Could not find node near sound!"), false);
+                    gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) +
+                        _W(" could not find node near sound!"), false);
                     mpPathfinder->MoveTo(mvTempPos);
                 }
             }
