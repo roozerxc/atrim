@@ -219,6 +219,10 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFul
 
         if(abBorderless)
         {
+            LONG lStyle = GetWindowLong(pInfo.window, GWL_STYLE);
+            lStyle &= ~(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU);
+            SetWindowLong(pInfo.window, GWL_STYLE, lStyle);
+
             SetWindowPos(pInfo.window, HWND_TOP, 0, 0, alWidth, alHeight, SWP_FRAMECHANGED | SWP_SHOWWINDOW);
         }
         else if(avWindowPos.x >=0 && avWindowPos.y >=0)

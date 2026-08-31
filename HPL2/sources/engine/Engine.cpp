@@ -6,7 +6,6 @@
 #include "engine/Engine.h"
 
 #include "system/System.h"
-#include "sound/Sound.h"
 #include "physics/Physics.h"
 #include "ai/AI.h"
 #include "resources/Resources.h"
@@ -21,6 +20,9 @@
 
 #include "input/Input.h"
 #include "input/Mouse.h"
+
+#include "sound/LowLevelSound.h"
+#include "sound/Sound.h"
 
 #include "graphics/LowLevelGraphics.h"
 #include "graphics/Renderer.h"
@@ -382,6 +384,9 @@ cEngine::~cEngine()
 
 void cEngine::Run()
 {
+    bool bGameWasFocused = true;
+    float fMasterVolume = 1.0f;
+
     double dAverageFPS = 0.0;
     double dLastLogClearedTime = 0.0;
     const double kLogClearedInterval = 1.0;
@@ -440,6 +445,33 @@ void cEngine::Run()
             dFrameTime = kMaxFrameTime;
         }
         dCurrentTime = dNewTime;
+
+        // Do we actually have window focus?
+        bool bGameHasFocus = mpGraphics->GetLowLevel()->GetWindowInputFocus();
+
+        // Detect whether game was in focus at the time
+        if(bGameHasFocus != bGameWasFocused)
+        {
+            if(!bGameHasFocus)
+            {
+                fMasterVolume = mpSound->GetLowLevel()->GetVolume();
+                mpSound->GetLowLevel()->SetVolume(0.0f);
+            }
+            else
+            {
+                mpSound->GetLowLevel()->SetVolume(fMasterVolume);
+            }
+
+            // State tracker update
+            bGameWasFocused = bGameHasFocus;
+        }
+
+        // Throttle game and accumulator
+        if(!bGameHasFocus && !mbPaused)
+        {
+            cPlatform::Sleep(33);
+            dAccumulator = 0.0;
+        }
 
         // Check if quit message was actually posted.
         if(mpInput->isQuitMessagePosted())

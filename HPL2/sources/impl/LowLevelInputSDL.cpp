@@ -113,20 +113,9 @@ void cLowLevelInputSDL::BeginInputUpdate()
                 }
                 else if(sdlEvent.type == SDL_ACTIVEEVENT)
                 {
-                    static bool bIsMinimized = false;
-
                     static bool bInputLocked = false;
                     static bool bRelativeMouse = false;
-
                     static bool bStateSaved = false;
-
-                    bool bIsBorderless = false;
-
-                    SDL_Surface* pScreen = SDL_GetVideoSurface();
-                    if(pScreen && (pScreen->flags & SDL_NOFRAME))
-                    {
-                        bIsBorderless = true;
-                    }
 
                     if((sdlEvent.active.state & SDL_APPINPUTFOCUS) || (sdlEvent.active.state & SDL_APPACTIVE))
                     {
@@ -141,41 +130,9 @@ void cLowLevelInputSDL::BeginInputUpdate()
 
                             LockInput(false);
                             RelativeMouse(false);
-
-                            if(!bIsMinimized && bIsBorderless)
-                            {
-                                bIsMinimized = true;
-#if defined(_WIN32)
-                                SDL_SysWMinfo sdlInfo;
-                                SDL_VERSION(&sdlInfo.version);
-
-                                if(SDL_GetWMInfo(&sdlInfo))
-                                {
-                                    ShowWindow(sdlInfo.window, SW_MINIMIZE);
-                                }
-#else
-                                SDL_WM_IconifyWindow();
-#endif
-                            }
                         }
                         else if(sdlEvent.active.gain == 1)
                         {
-                            if(bIsMinimized && bIsBorderless)
-                            {
-                                bIsMinimized = false;
-#if defined(_WIN32)
-                                SDL_SysWMinfo sdlInfo;
-                                SDL_VERSION(&sdlInfo.version);
-                                if(SDL_GetWMInfo(&sdlInfo))
-                                {
-                                    if(IsIconic(sdlInfo.window))
-                                    {
-                                        ShowWindow(sdlInfo.window, SW_RESTORE);
-                                    }
-                                }
-#endif
-                            }
-
                             LockInput(bInputLocked);
                             RelativeMouse(bRelativeMouse);
 
