@@ -72,8 +72,8 @@ void cLuxEnemyLoader_WaterLurker::LoadInstanceVariables(iLuxEnemy *apEnemy, cRes
 {
     cLuxEnemy_WaterLurker *pWaterLurker = static_cast<cLuxEnemy_WaterLurker*>(apEnemy);
 
-    float fHeight = apInstanceVars->GetVarFloat("PlayerDetectionHeight", 0);
-    if(fHeight >0)
+    float fHeight = apInstanceVars->GetVarFloat("PlayerDetectionHeight", 0.0f);
+    if(fHeight > 0.0f)
     {
         pWaterLurker->mfPlayerDetectionHeight = fHeight;
     }
@@ -120,6 +120,8 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 
     kLuxBeginStateMachine
     {
+        // ------------------- MESSAGES ------------------- //
+
         // DO NOTHING
         kLuxOnMessage(eLuxEnemyMessage_TakeHit) { }
 
@@ -206,34 +208,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                 // BREAK DOOR CHECK
                 if(mbStuckAtDoor)
                 {
-                    iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
-                    bool bShouldBreak = false;
-
-                    if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
-                    {
-                        iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
-                        if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
-                        {
-                            bShouldBreak = true;
-                        }
-                    }
-
-                    if(bShouldBreak)
-                    {
-                        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-
-                        mReturnState = mCurrentState;
-                        ChangeState(eLuxEnemyState_BreakDoor);
-                    }
-                    else
-                    {
-                        mpMover->ResetStuckCounter();
-
-                        mbStuckAtDoor = false;
-                        mlStuckDoorID = -1;
-
-                        ChangeState(eLuxEnemyState_Idle);
-                    }
+                    CheckStuckDoor();
                 }
 
                 if(mpMover->GetStuckCounter() > 0.9f)
@@ -308,34 +283,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                 // BREAK DOOR CHECK
                 if(mbStuckAtDoor)
                 {
-                    iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
-                    bool bShouldBreak = false;
-
-                    if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
-                    {
-                        iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
-                        if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
-                        {
-                            bShouldBreak = true;
-                        }
-                    }
-
-                    if(bShouldBreak)
-                    {
-                        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-
-                        mReturnState = mCurrentState;
-                        ChangeState(eLuxEnemyState_BreakDoor);
-                    }
-                    else
-                    {
-                        mpMover->ResetStuckCounter();
-
-                        mbStuckAtDoor = false;
-                        mlStuckDoorID = -1;
-
-                        ChangeState(eLuxEnemyState_Idle);
-                    }
+                    CheckStuckDoor();
                 }
 
                 if(mpMover->GetStuckCounter() > 0.9f)
@@ -380,34 +328,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                 // BREAK DOOR CHECK
                 if(mbStuckAtDoor)
                 {
-                    iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
-                    bool bShouldBreak = false;
-
-                    if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
-                    {
-                        iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
-                        if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
-                        {
-                            bShouldBreak = true;
-                        }
-                    }
-
-                    if(bShouldBreak)
-                    {
-                        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-
-                        mReturnState = mCurrentState;
-                        ChangeState(eLuxEnemyState_BreakDoor);
-                    }
-                    else
-                    {
-                        mpMover->ResetStuckCounter();
-
-                        mbStuckAtDoor = false;
-                        mlStuckDoorID = -1;
-
-                        ChangeState(eLuxEnemyState_Idle);
-                    }
+                    CheckStuckDoor();
                 }
 
                 if(Dist2D(mvTempPos) > mpCharBody->GetSize().x * 0.75f)
@@ -483,39 +404,13 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                 // BREAK DOOR CHECK
                 if(mbStuckAtDoor)
                 {
-                    iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
-                    bool bShouldBreak = false;
-
-                    if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
-                    {
-                        iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
-                        if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
-                        {
-                            bShouldBreak = true;
-                        }
-                    }
-
-                    if(bShouldBreak)
-                    {
-                        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-
-                        mReturnState = mCurrentState;
-                        ChangeState(eLuxEnemyState_BreakDoor);
-                    }
-                    else
-                    {
-                        mpMover->ResetStuckCounter();
-
-                        mbStuckAtDoor = false;
-                        mlStuckDoorID = -1;
-
-                        ChangeState(eLuxEnemyState_Idle);
-                    }
+                    CheckStuckDoor();
                 }
 
                 if(mpMover->GetStuckCounter() > 0.9f)
                 {
                     mpMover->ResetStuckCounter();
+
                     ChangeState(eLuxEnemyState_Idle);
                 }
 
@@ -784,34 +679,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                 // BREAK DOOR CHECK
                 if(mbStuckAtDoor)
                 {
-                    iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
-                    bool bShouldBreak = false;
-
-                    if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
-                    {
-                        iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
-                        if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
-                        {
-                            bShouldBreak = true;
-                        }
-                    }
-
-                    if(bShouldBreak)
-                    {
-                        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-
-                        mReturnState = mCurrentState;
-                        ChangeState(eLuxEnemyState_BreakDoor);
-                    }
-                    else
-                    {
-                        mpMover->ResetStuckCounter();
-
-                        mbStuckAtDoor = false;
-                        mlStuckDoorID = -1;
-
-                        ChangeState(eLuxEnemyState_Idle);
-                    }
+                    CheckStuckDoor();
                 }
 
                 if(mpMover->GetStuckCounter() > 0.9f)
@@ -920,10 +788,10 @@ void cLuxEnemy_WaterLurker::OnRenderSolidImplemented(cRendererCallbackFunctions*
 
     mpCharBody->GetCurrentBody()->RenderDebugGeometry(apFunctions->GetLowLevelGfx(), cColor(1,1));
 
-    if(mCurrentState == eLuxEnemyState_AttackMeleeShort || mCurrentState== eLuxEnemyState_BreakDoor)
+    if(mCurrentState == eLuxEnemyState_AttackMeleeShort || mCurrentState == eLuxEnemyState_BreakDoor)
     {
-        pPhysicsWorld->RenderShapeDebugGeometry(GetAttackShape(0), GetDamageShapeMatrix(cVector3f(0,0,1)), apFunctions->GetLowLevelGfx(),
-                                                cColor(1,0,0,1));
+        pPhysicsWorld->RenderShapeDebugGeometry(GetAttackShape(0), GetDamageShapeMatrix(cVector3f(0,0,1)),
+            apFunctions->GetLowLevelGfx(), cColor(1,0,0,1));
     }
 }
 

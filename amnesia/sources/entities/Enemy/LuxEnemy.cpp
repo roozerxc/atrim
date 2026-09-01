@@ -1154,6 +1154,40 @@ void iLuxEnemy::FadeToSmoke(bool abPlaySound)
 
 //-----------------------------------------------------------------------
 
+void iLuxEnemy::CheckStuckDoor()
+{
+    iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
+    bool bShouldBreak = false;
+
+    if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
+    {
+        iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
+        if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
+        {
+            bShouldBreak = true;
+        }
+    }
+
+    if(bShouldBreak)
+    {
+        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
+
+        mReturnState = mCurrentState;
+        ChangeState(eLuxEnemyState_BreakDoor);
+    }
+    else
+    {
+        mpMover->ResetStuckCounter();
+
+        mbStuckAtDoor = false;
+        mlStuckDoorID = -1;
+
+        ChangeState(eLuxEnemyState_Wait);
+    }
+}
+
+//-----------------------------------------------------------------------
+
 void iLuxEnemy::AddPatrolNode(cAINode *apNode, float afWaitTime, const tString & asAnimation, bool abLoopAnimation)
 {
     cLuxEnemyPatrolNode patrolNode;

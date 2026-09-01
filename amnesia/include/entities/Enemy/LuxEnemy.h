@@ -424,6 +424,8 @@ public:
 
     void FadeToSmoke(bool abPlaySound);
 
+    void CheckStuckDoor();
+
     //////////////////////
     // Movement animation names
 
