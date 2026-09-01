@@ -836,10 +836,10 @@ void iLuxEnemy::GiveDamage(float afAmount, int alStrength)
     mfHealth -= afAmount;
 
     gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) +
-        _W(" gave damage by amount: ") + cString::ToStringW(afAmount) + _W("f"), false);
+        _W(" took damage by amount: ") + cString::ToStringW(afAmount) + _W("f"), false);
 
     gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) +
-        _W(" damage strength: ") + cString::ToStringW(alStrength), false);
+        _W(" hit strength: ") + cString::ToStringW(alStrength), false);
 
     if(mfHealth <=0)
     {
