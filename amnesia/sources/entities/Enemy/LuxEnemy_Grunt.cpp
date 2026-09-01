@@ -109,7 +109,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 {
     ////////////////////////////////
     // atrim state machine rewrite
-    // by RoozerXC -- 08-31-2026
+    // by RoozerXC -- 09-01-2026
 
     kLuxBeginStateMachine
     {
@@ -291,6 +291,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     {
                         mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
 
+                        mReturnState = mCurrentState;
                         ChangeState(eLuxEnemyState_BreakDoor);
                     }
                     else
@@ -358,6 +359,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     {
                         mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
 
+                        mReturnState = mCurrentState;
                         ChangeState(eLuxEnemyState_BreakDoor);
                     }
                     else
@@ -487,6 +489,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     {
                         mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
 
+                        mReturnState = mCurrentState;
                         ChangeState(eLuxEnemyState_BreakDoor);
                     }
                     else
@@ -626,6 +629,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     {
                         mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
 
+                        mReturnState = mCurrentState;
                         ChangeState(eLuxEnemyState_BreakDoor);
                     }
                     else
@@ -729,6 +733,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                     {
                         mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
 
+                        mReturnState = mCurrentState;
                         ChangeState(eLuxEnemyState_BreakDoor);
                     }
                     else
@@ -830,6 +835,10 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                 if(mpMover->GetWantedSpeedAmount() > 0.5f)
                 {
                     mlHuntWanderCount = 0;
+                }
+                else
+                {
+                    mlHuntWanderCount = cMath::Max(0, mlHuntWanderCount - 1);
                 }
 
                 mpMap->BroadcastEnemyMessage(eLuxEnemyMessage_HelpMe, true, mpCharBody->GetPosition(),
@@ -1049,15 +1058,17 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                             _W(" gave up breaking door after ") + cString::ToStringW(mlTempVal) + _W(" attempts!"), false);
                     }
 
-                    if(mPreviousState == eLuxEnemyState_Hurt ||
-                        mPreviousState == eLuxEnemyState_Hunt ||
-                        mPreviousState == eLuxEnemyState_Alert)
+                    if(mReturnState == eLuxEnemyState_BreakDoor ||
+                        mReturnState == eLuxEnemyState_Alert ||
+                        mReturnState == eLuxEnemyState_Hunt ||
+                        mReturnState == eLuxEnemyState_HuntPause ||
+                        mReturnState == eLuxEnemyState_HuntWander)
                     {
                         ChangeState(eLuxEnemyState_Hunt);
                     }
                     else
                     {
-                        ChangeState(mPreviousState);
+                        ChangeState(mReturnState);
                     }
                 }
                 else
@@ -1078,6 +1089,16 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                 if(mReturnState == eLuxEnemyState_BreakDoor)
                 {
                     mReturnState = eLuxEnemyState_Patrol;
+                }
+
+                if(mNextState != eLuxEnemyState_Alert &&
+                    mNextState != eLuxEnemyState_Hunt &&
+                    mNextState != eLuxEnemyState_HuntPause &&
+                    mNextState != eLuxEnemyState_HuntWander)
+                {
+                    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
+                    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search, this);
+                    gpBase->mpPlayer->RemoveTerrorEnemy(this);
                 }
             }
         }

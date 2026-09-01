@@ -92,6 +92,10 @@ cLuxEnemy_WaterLurker::cLuxEnemy_WaterLurker(const tString &asName, int alID, cL
     mbUseAnimations = false;
     mbCausesSanityDecrease = false;
     mbCausesSanityDecreaseAsDefault = false;
+
+    mfPlayerLostTimer = 0.0f;
+
+    mReturnState = eLuxEnemyState_Idle;
 }
 
 //-----------------------------------------------------------------------
@@ -112,7 +116,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 {
     ////////////////////////////////
     // atrim state machine rewrite
-    // by RoozerXC -- 08-31-2026
+    // by RoozerXC -- 09-01-2026
 
     kLuxBeginStateMachine
     {
@@ -218,6 +222,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                     {
                         mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
 
+                        mReturnState = mCurrentState;
                         ChangeState(eLuxEnemyState_BreakDoor);
                     }
                     else
@@ -319,6 +324,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                     {
                         mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
 
+                        mReturnState = mCurrentState;
                         ChangeState(eLuxEnemyState_BreakDoor);
                     }
                     else
@@ -390,6 +396,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                     {
                         mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
 
+                        mReturnState = mCurrentState;
                         ChangeState(eLuxEnemyState_BreakDoor);
                     }
                     else
@@ -491,6 +498,8 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                     if(bShouldBreak)
                     {
                         mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
+
+                        mReturnState = mCurrentState;
                         ChangeState(eLuxEnemyState_BreakDoor);
                     }
                     else
@@ -518,6 +527,8 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 
             kLuxOnEnter
             {
+                mfPlayerLostTimer = 0.0f;
+
                 if(PlayerIsDetected()==false)
                 {
                     ChangeState(eLuxEnemyState_GoHome);
@@ -549,13 +560,20 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
             kLuxOnMessage(eLuxEnemyMessage_TimeOut)
             {
                 mpPathfinder->MoveTo(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition());
-
                 SendMessage(eLuxEnemyMessage_TimeOut, 0.4f, true);
 
                 if(PlayerIsDetected()==false)
                 {
-                    ChangeState(eLuxEnemyState_GoHome);
-                    mbCausesSanityDecrease = false;
+                    mfPlayerLostTimer += 0.4f;
+                    if(mfPlayerLostTimer >= 1.2f)
+                    {
+                        ChangeState(eLuxEnemyState_GoHome);
+                        mbCausesSanityDecrease = false;
+                    }
+                }
+                else
+                {
+                    mfPlayerLostTimer = 0.0f;
                 }
             }
 
@@ -693,7 +711,14 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                     }
                     else
                     {
-                        ChangeState(eLuxEnemyState_Idle);
+                        if(mReturnState == eLuxEnemyState_BreakDoor)
+                        {
+                            ChangeState(eLuxEnemyState_Idle);
+                        }
+                        else
+                        {
+                            ChangeState(mReturnState);
+                        }
                     }
                 }
                 else
@@ -775,6 +800,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                     {
                         mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
 
+                        mReturnState = mCurrentState;
                         ChangeState(eLuxEnemyState_BreakDoor);
                     }
                     else
@@ -1030,6 +1056,8 @@ void cLuxEnemy_WaterLurker::PatrolEndOfPath()
 
 kBeginSerialize(cLuxEnemy_WaterLurker_SaveData, iLuxEnemy_SaveData)
 kSerializeVar(mfPlayerDetectionHeight, eSerializeType_Float32)
+kSerializeVar(mfPlayerLostTimer, eSerializeType_Float32)
+kSerializeVar(mlReturnState, eSerializeType_Int32)
 kEndSerialize()
 
 //-----------------------------------------------------------------------
@@ -1047,6 +1075,9 @@ void cLuxEnemy_WaterLurker::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     cLuxEnemy_WaterLurker_SaveData *pData = static_cast<cLuxEnemy_WaterLurker_SaveData*>(apSaveData);
 
     kCopyToVar(pData,mfPlayerDetectionHeight);
+    kCopyToVar(pData,mfPlayerLostTimer);
+
+    pData->mlReturnState = (int)mReturnState;
 }
 
 //-----------------------------------------------------------------------
@@ -1057,6 +1088,9 @@ void cLuxEnemy_WaterLurker::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     cLuxEnemy_WaterLurker_SaveData *pData = static_cast<cLuxEnemy_WaterLurker_SaveData*>(apSaveData);
 
     kCopyFromVar(pData,mfPlayerDetectionHeight);
+    kCopyFromVar(pData,mfPlayerLostTimer);
+
+    mReturnState = (eLuxEnemyState)pData->mlReturnState;
 
 #if LUX_ENEMY_MANPIG
     ////////////////////////
@@ -1072,6 +1106,10 @@ void cLuxEnemy_WaterLurker::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     if(mPreviousState >= eLuxEnemyState_PigEnumStart)
     {
         mPreviousState = eLuxEnemyState_LastEnum;
+    }
+    if(mReturnState >= eLuxEnemyState_PigEnumStart)
+    {
+        mReturnState = eLuxEnemyState_LastEnum;
     }
 #endif
 }

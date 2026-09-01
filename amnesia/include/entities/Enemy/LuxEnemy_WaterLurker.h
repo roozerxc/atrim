@@ -14,6 +14,7 @@ public:
     ////////////////
     //Properties
     float mfPlayerDetectionHeight;
+    float mfPlayerLostTimer;
 };
 
 //----------------------------------------------
@@ -97,7 +98,7 @@ private:
 
     //////////////
     //Variables
-
+    float mfPlayerLostTimer;
 
 };
 
