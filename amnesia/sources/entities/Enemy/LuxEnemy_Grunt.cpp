@@ -203,6 +203,9 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
         {
             kLuxOnEnter
             {
+                mpMover->ResetStuckCounter();
+                mpPathfinder->Stop();
+
                 if(mfWaitTime <= 0.0f)
                 {
                     SendMessage(eLuxEnemyMessage_TimeOut, cMath::RandRectf(1.0f, 3.0f), true);
@@ -215,8 +218,6 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 
                 SendMessage(eLuxEnemyMessage_TimeOut_2, cMath::RandRectf(mfIdleExtraTimeMin, mfIdleExtraTimeMax), true);
                 SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
-
-                mpPathfinder->Stop();
             }
 
             kLuxOnMessage(eLuxEnemyMessage_TimeOut)
