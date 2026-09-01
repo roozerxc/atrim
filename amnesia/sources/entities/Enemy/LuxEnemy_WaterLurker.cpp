@@ -119,7 +119,6 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     // by RoozerXC -- 09-01-2026
 
     kLuxBeginStateMachine
-    {
         // ------------------- MESSAGES ------------------- //
 
         // DO NOTHING
@@ -760,7 +759,6 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
                 mbCausesSanityDecrease = false;
             }
         }
-    }
     kLuxEndStateMachine
 }
 
