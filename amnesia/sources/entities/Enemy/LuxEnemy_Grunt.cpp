@@ -112,7 +112,6 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     // by RoozerXC -- 09-01-2026
 
     kLuxBeginStateMachine
-    {
         // ------------------- MESSAGES ------------------- //
 
         // Reset all to default values
@@ -1156,7 +1155,6 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
                 mpCharBody->SetActive(false);
             }
         }
-    }
     kLuxEndStateMachine
 }
 
