@@ -391,8 +391,9 @@ void cEngine::Run()
     double dLastLogClearedTime = 0.0;
     const double kLogClearedInterval = 1.0;
 
-    std::priority_queue<double, std::vector<double>, std::greater<double>> worst;
     size_t iTotalFrames = 0; // Every frame i saw in the game!
+
+    unsigned int iFrameTimeHg[1000] = {0};
     unsigned long lTempTime = cPlatform::GetApplicationTime();
 
     //Log line that ends user init.
@@ -424,18 +425,18 @@ void cEngine::Run()
 
         if(dRawFrameTime > 0.0)
         {
-            // Calculate exactly what 1% of total frames is...
-            size_t iMaxWorstFrames = std::max((size_t)1, (size_t)(iTotalFrames * 0.01));
+            int iFrameMs = (int)(dRawFrameTime * 1000.0);
 
-            if(worst.size() < iMaxWorstFrames)
+            if(iFrameMs < 0)
             {
-                worst.push(dRawFrameTime);
+                iFrameMs = 0;
             }
-            else if(dRawFrameTime > worst.top())
+            if(iFrameMs > 999)
             {
-                worst.pop();
-                worst.push(dRawFrameTime);
+                iFrameMs = 999;
             }
+
+            iFrameTimeHg[iFrameMs]++;
         }
         dFrameTime = dRawFrameTime;
 
@@ -561,38 +562,45 @@ void cEngine::Run()
     Log(" Average FrameTime: %.1f ms\n", (1.0 / dAverageFPS) * 1000.0);
     Log(" Average Framerate: %.1f FPS\n", dAverageFPS);
 
-    if(!worst.empty() && iTotalFrames > 0)
+    if(iTotalFrames > 0)
     {
-        // Count both 1 and .1% low frametime of the whole session
+        // Count both 1 and .1% low frame times of the whole session
         size_t iWorstCount01  = std::max((size_t)1, (size_t)(iTotalFrames * 0.01));
-        size_t iWorstCount001 = std::max((size_t)1, (size_t)(iTotalFrames * 0.001));
-
-        // Get up the size of heap
-        iWorstCount01  = std::min(iWorstCount01,  worst.size());
-        iWorstCount001 = std::min(iWorstCount001, worst.size());
-
-        // Pull heap into vector and reverse so worst is always first
-        std::vector<double> vWorstFrameTime;
-        vWorstFrameTime.reserve(worst.size());
-        while(!worst.empty())
-        {
-            vWorstFrameTime.push_back(worst.top());
-            worst.pop();
-        }
-        std::reverse(vWorstFrameTime.begin(), vWorstFrameTime.end());
-
         double dWorstSum01 = 0.0;
-        for(size_t i = 0; i < iWorstCount01; ++i)
-        {
-            dWorstSum01 += vWorstFrameTime[i];
-        }
-        double dAvgWorst01 = dWorstSum01 / iWorstCount01;
 
+        size_t iWorstCount001 = std::max((size_t)1, (size_t)(iTotalFrames * 0.001));
         double dWorstSum001 = 0.0;
-        for(size_t i = 0; i < iWorstCount001; ++i)
+
+        size_t iCountedFrames = 0;
+
+        // Iterate backwards from worst possible time...
+        for(int i = 999; i >= 0; --i)
         {
-            dWorstSum001 += vWorstFrameTime[i];
+            unsigned int iFramesInBucket = iFrameTimeHg[i];
+
+            while(iFramesInBucket > 0 && iCountedFrames < iWorstCount01)
+            {
+                // Convert the time back to seconds
+                double dSeconds = (double)i / 1000.0;
+
+                dWorstSum01 += dSeconds;
+
+                if(iCountedFrames < iWorstCount001)
+                {
+                    dWorstSum001 += dSeconds;
+                }
+
+                iCountedFrames++;
+                iFramesInBucket--;
+            }
+            
+            if(iCountedFrames >= iWorstCount01)
+            {
+                break;
+            }
         }
+
+        double dAvgWorst01 = dWorstSum01 / iWorstCount01;
         double dAvgWorst001 = dWorstSum001 / iWorstCount001;
 
         Log("      1%% Framerate: %.1f FPS\n", 1.0 / dAvgWorst01);
