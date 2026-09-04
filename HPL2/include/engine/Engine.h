@@ -199,7 +199,7 @@ public:
         return mvEngineTypeStrings[aType];
     }
 private:
-    bool mbGameIsDone;
+    volatile bool mbGameIsDone;
     bool mbPaused;
 
     const int iMaxGameUpdates;

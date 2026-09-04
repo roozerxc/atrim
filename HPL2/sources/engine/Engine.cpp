@@ -611,23 +611,12 @@ void cEngine::Run()
 
 void cEngine::Exit()
 {
-    mpMutex->Lock();
-
     mbGameIsDone = true;
-    //Log("Exit!\n");
-
-    mpMutex->Unlock();
 }
 
 bool cEngine::GetGameIsDone()
 {
-    mpMutex->Lock();
-
-    bool bDone = mbGameIsDone;
-
-    mpMutex->Unlock();
-
-    return bDone;
+    return mbGameIsDone;
 }
 
 //-----------------------------------------------------------------------
