@@ -437,10 +437,14 @@ void cGuiGfxElement::SetFlipUvYAxis(bool abX)
         }
         if(mbFlipUvYAxis)
         {
+            float fOldY0 = mvVtx[0].tex.y;
+            float fOldY1 = mvVtx[1].tex.y;
+
             mvVtx[0].tex.y = mvVtx[2].tex.y;
             mvVtx[1].tex.y = mvVtx[3].tex.y;
-            mvVtx[2].tex.y = mvVtx[0].tex.y;
-            mvVtx[3].tex.y = mvVtx[1].tex.y;
+
+            mvVtx[2].tex.y = fOldY0;
+            mvVtx[3].tex.y = fOldY1;
         }
     }
     ////////////////////////////////////
@@ -469,9 +473,7 @@ void cGuiGfxElement::SetFlipUvYAxis(bool abX)
             mvVtx[2].tex.y = fOldY1;
             mvVtx[3].tex.y = fOldY0;
         }
-
     }
-
 }
 
 //-----------------------------------------------------------------------
