@@ -30,6 +30,10 @@
 namespace hpl
 {
 
+static bool bTimerInitialized = false;
+static LARGE_INTEGER lTimerFrequency;
+static LARGE_INTEGER lTimerStart;
+
 //////////////////////////////////////////////////////////////////////////
 // DWM COMPOSITOR CHECK
 //////////////////////////////////////////////////////////////////////////
@@ -475,6 +479,23 @@ tWString cPlatform::GetWorkingDir()
 // APPLICATION
 //////////////////////////////////////////////////////////////////////////
 
+//-----------------------------------------------------------------------
+
+double cPlatform::GetApplicationTimeX()
+{
+    if(!bTimerInitialized)
+    {
+        QueryPerformanceFrequency(&lTimerFrequency);
+        QueryPerformanceCounter(&lTimerStart);
+        bTimerInitialized = true;
+    }
+
+    LARGE_INTEGER lCurrentTime;
+    QueryPerformanceCounter(&lCurrentTime);
+
+    return (double)(lCurrentTime.QuadPart - lTimerStart.QuadPart) /
+        (double)lTimerFrequency.QuadPart;
+}
 
 //-----------------------------------------------------------------------
 

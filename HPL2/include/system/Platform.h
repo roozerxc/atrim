@@ -75,6 +75,7 @@ public:
     ////////// APPLICATION ///////////////////////////////
     //////////////////////////////////////////////////////
 
+    static double GetApplicationTimeX();
     static unsigned long GetApplicationTime();
     static void Sleep (unsigned int alMilliSecs);
 

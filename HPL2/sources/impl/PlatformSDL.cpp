@@ -13,8 +13,15 @@
 #include <set>
 #include <algorithm>
 
+#include <sys/time.h>
+#include <time.h>
+
 namespace hpl
 {
+
+    static bool bTimerInitialized = false;
+    static struct timespec lTimerStart;
+
 //////////////////////////////////////////////////////////////////////////
 // APPLICATION
 //////////////////////////////////////////////////////////////////////////
@@ -24,6 +31,26 @@ namespace hpl
 unsigned long cPlatform::GetApplicationTime()
 {
     return SDL_GetTicks();
+}
+
+//-----------------------------------------------------------------------
+
+double cPlatform::GetApplicationTimeX()
+{
+    struct timespec lCurrentTime;
+
+    if(!bTimerInitialized)
+    {
+        clock_gettime(CLOCK_MONOTONIC, &lTimerStart);
+        bTimerInitialized = true;
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &lCurrentTime);
+
+    double dSeconds     = (double)(lCurrentTime.tv_sec  - lTimerStart.tv_sec);
+    double dNanoSeconds = (double)(lCurrentTime.tv_nsec - lTimerStart.tv_nsec) / 1000000000.0;
+
+    return dSeconds + dNanoSeconds;
 }
 
 //-----------------------------------------------------------------------

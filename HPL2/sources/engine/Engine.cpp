@@ -55,21 +55,22 @@ cFPSCounter::cFPSCounter(iLowLevelSystem* apLowLevelSystem)
 
     mpLowLevelSystem = apLowLevelSystem;
 
-    mfFrametimestart = ((float)cPlatform::GetApplicationTime()) / 1000.0f;
+    mfFrametimestart = (float)cPlatform::GetApplicationTimeX();
 }
 
 void cFPSCounter::AddFrame()
 {
     mlFramecounter++;
 
-    mfFrametime = (((float)cPlatform::GetApplicationTime()) / 1000.0f) - mfFrametimestart;
+    mfFrametime = (float)cPlatform::GetApplicationTimeX() - mfFrametimestart;
 
     // update the timer
-    if (mfFrametime >= mfUpdateRate)
+    if(mfFrametime >= mfUpdateRate)
     {
-        mfFPS = ((float)mlFramecounter)/mfFrametime;
+        mfFPS = ((float)mlFramecounter) / mfFrametime;
         mlFramecounter = 0;
-        mfFrametimestart = ((float)cPlatform::GetApplicationTime()) / 1000.0f;
+
+        mfFrametimestart = (float)cPlatform::GetApplicationTimeX();
     }
 }
 
@@ -394,7 +395,7 @@ void cEngine::Run()
     size_t iTotalFrames = 0; // Every frame i saw in the game!
 
     unsigned int iFrameTimeHg[1000] = {0};
-    unsigned long lTempTime = cPlatform::GetApplicationTime();
+    double dTempTime = cPlatform::GetApplicationTimeX();
 
     //Log line that ends user init.
     Log("--------------------------------------------------------\n\n");
@@ -411,14 +412,14 @@ void cEngine::Run()
     dAccumulator = 0.0;
     dSpeedMul = 1.0;
 
-    // Define the current time from UpdateFrameTimer()
-    dCurrentTime = cPlatform::GetApplicationTime() / 1000.0;
+    // Should return seconds natively instead of SDL_GetTicks divided by 1000.
+    dCurrentTime = cPlatform::GetApplicationTimeX();
 
     while(!GetGameIsDone())
     {
         ///////////////////////////////////////
         // Get the time from the last frame.
-        const double dNewTime = cPlatform::GetApplicationTime() / 1000.0;
+        const double dNewTime = cPlatform::GetApplicationTimeX();
         double dRawFrameTime = dNewTime - dCurrentTime;
 
         ++iTotalFrames;
@@ -556,8 +557,8 @@ void cEngine::Run()
     Log("Statistics\n");
     Log("--------------------------------------------------------\n");
 
-    unsigned long lTime = cPlatform::GetApplicationTime() - lTempTime;
-    dAverageFPS = iTotalFrames / (((double)lTime) / 1000.0);
+    double dTime = cPlatform::GetApplicationTimeX() - dTempTime;
+    dAverageFPS = iTotalFrames / dTime;
 
     Log(" Average FrameTime: %.1f ms\n", (1.0 / dAverageFPS) * 1000.0);
     Log(" Average Framerate: %.1f FPS\n", dAverageFPS);
