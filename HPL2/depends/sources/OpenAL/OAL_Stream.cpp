@@ -45,9 +45,6 @@ void cOAL_Stream::Update()
 	if(mpBoundSource==NULL)
 		return;
 
-	//unsigned long lTimeStart = hpl::cPlatform::GetApplicationTime();
-	//unsigned long lTimeToRebuffer = 0;
-
 	if(mbNeedsRebuffering)
 	{
 		bool bPlaying = mpBoundSource->mbPlaying;
@@ -72,9 +69,6 @@ void cOAL_Stream::Update()
 			mbNeedsRebuffering = false;
 		if(bPlaying && bPaused==false)
 			mpBoundSource->LowLevelPlay();
-
-		//lTimeToRebuffer = hpl::cPlatform::GetApplicationTime()-lTimeStart;
-		//hpl::Log("Stream rebuffering took %d ms\n", lTimeToRebuffer);
 	}
 
 	if(mlBuffersUsed==0)
@@ -105,9 +99,6 @@ void cOAL_Stream::Update()
 		}
 		lProcessedBuffers--;
 	}
-	
-	//hpl::Log("Stream update took %d ms\n", hpl::cPlatform::GetApplicationTime()-(lTimeStart+lTimeToRebuffer));
-
 }
 
 //-----------------------------------------------------------------------------------
