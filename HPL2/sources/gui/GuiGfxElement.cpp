@@ -422,6 +422,62 @@ void cGuiGfxElement::SetColor(const cColor &aColor)
 
 //-----------------------------------------------------------------------
 
+void cGuiGfxElement::SetFlipUvXAxis(bool abX)
+{
+    mbFlipUvXAxis = abX;
+
+    ////////////////////////////////////
+    //Image
+    if(mvImages[0])
+    {
+        const tVertexVec& vImageVtx = mvImages[0]->GetVertexVec();
+        for(int i=0; i<4; ++i)
+        {
+            mvVtx[i].tex = vImageVtx[i].tex;
+        }
+        if(mbFlipUvXAxis)
+        {
+            float fOldX1 = mvVtx[1].tex.x;
+            float fOldX2 = mvVtx[2].tex.x;
+
+            mvVtx[1].tex.x = mvVtx[0].tex.x;
+            mvVtx[2].tex.x = mvVtx[3].tex.x;
+
+            mvVtx[0].tex.x = fOldX1;
+            mvVtx[3].tex.x = fOldX2;
+        }
+    }
+    ////////////////////////////////////
+    //Texture
+    else if(mvTextures[0])
+    {
+        if(mbFlipUvXAxis)
+        {
+            float fOldX1 = mvVtx[1].tex.x;
+            float fOldX2 = mvVtx[2].tex.x;
+
+            mvVtx[1].tex.x = mvVtx[0].tex.x;
+            mvVtx[0].tex.x = fOldX1;
+
+            mvVtx[2].tex.x = mvVtx[3].tex.x;
+            mvVtx[3].tex.x = fOldX2;
+        }
+        else
+        {
+            float fOldX0 = mvVtx[0].tex.x;
+            float fOldX3 = mvVtx[3].tex.x;
+
+            mvVtx[0].tex.x = mvVtx[1].tex.x;
+            mvVtx[3].tex.x = mvVtx[2].tex.x;
+
+            mvVtx[1].tex.x = fOldX0;
+            mvVtx[2].tex.x = fOldX3;
+        }
+    }
+}
+
+//-----------------------------------------------------------------------
+
 void cGuiGfxElement::SetFlipUvYAxis(bool abX)
 {
     mbFlipUvYAxis = abX;

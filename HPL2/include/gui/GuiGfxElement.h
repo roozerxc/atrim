@@ -123,6 +123,12 @@ public:
 
     void SetColor(const cColor &aColor);
 
+    void SetFlipUvXAxis(bool abX);
+    bool GetFlipUvXAxis()
+    {
+        return mbFlipUvXAxis;
+    }
+
     void SetFlipUvYAxis(bool abX);
     bool GetFlipUvYAxis()
     {
@@ -157,6 +163,7 @@ private:
     bool mbForwardAnim;
     bool mbAnimationPaused;
 
+    bool mbFlipUvXAxis;
     bool mbFlipUvYAxis;
 
     int mlImageUpdateCount;
