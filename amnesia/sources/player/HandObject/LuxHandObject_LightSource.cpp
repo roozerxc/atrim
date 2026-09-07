@@ -83,15 +83,6 @@ void cLuxHandObject_LightSource::ImplementedCreateEntity(cLuxMap *apMap)
         mvDefaultLightColors[i]  = mvLights[i]->GetDiffuseColor();
         mvDefaultLightFlicker[i] = mvLights[i]->GetFlickerActive();
         mvLights[i]->SetFlickerActive(false);
-
-        /* cMatrixf mtxLight = mvDefaultLightMatrix[i];
-
-        if(gpBase->mpPlayer->GetHandOrientation() == eLuxHandOrientation_Right)
-        {
-            mtxLight = cMath::MatrixMul(mtxLight, cMath::MatrixScale(cVector3f(-1.0f, 1.0f, 1.0f)));
-        }
-
-        mvLights[i]->SetMatrix(mtxLight); */
     }
 
     mvDefaultSubMeshMatrix.resize(mpMeshEntity->GetSubMeshEntityNum());
