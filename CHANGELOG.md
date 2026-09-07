@@ -9,6 +9,7 @@
 - [`9f736da`](https://github.com/roozerxc/atrim/commit/9f736da666e6d02a85ed3fc01cf2597314b2daa2) Added new engine build ID (`YYYYMMDDhhmmss`)
 - [`565e1ba`](https://github.com/roozerxc/atrim/commit/565e1ba9e91d95121da4abac60e5be052b48ef04) Added new engine declarations from Amnesia: A Machine for Pigs
 - [`b752c20`](https://github.com/roozerxc/atrim/commit/b752c2004cf94ff32d84f12f65e959a2de528bad) Added new engine performance metrics (saved to `hpl.log`)
+- [`f8d6961`](https://github.com/roozerxc/atrim/commit/f8d6961acad7e93f439145d5568290faa02fa3a2) Added new GUI render function to flip a UV's X axis
 - [`e3e728a`](https://github.com/roozerxc/atrim/commit/e3e728a932fb603b06b3e9175d541dac10d0ebe4) Added new flashback intensity slider
 - [`2f804dc`](https://github.com/roozerxc/atrim/commit/2f804dc72152eb64fed43128085965be669ea4de) Added new "Flattened 3D" texture type
 - [`38f0af7`](https://github.com/roozerxc/atrim/commit/38f0af7bd859ad93c9acb5d88524f3806d73e82a) Added new "lite" version of the deferred light shader for ATi Radeon 9xxx video cards
@@ -31,6 +32,7 @@
 - [`8e3b184`](https://github.com/roozerxc/atrim/commit/8e3b18422a567ee4ba21babfa65a630fcd06583e) Decoupled engine renderer and game logic from each other, allowing for truly uncapped framerates
 - [`ef6c70e`](https://github.com/roozerxc/atrim/commit/ef6c70e534c2eb12e7cc8371bae3f74a15590c2d) Decoupled timers and scripts to use their own functions instead of using the same "Run" function
 - [`e0bc279`](https://github.com/roozerxc/atrim/commit/e0bc279de985339ae95d69d1cd20df220be5ce5b) Fixed Alt+Tab behavior on Borderless Fullscreen mode
+- [`4cade5e`](https://github.com/roozerxc/atrim/commit/4cade5ed993d7d1585f50f3e4eddae2879e614b4) Fixed application timer to use platform high-resolution timer instead of `SDL_GetTicks`
 - [`9361918`](https://github.com/roozerxc/atrim/commit/93619186345b1e9eaa65a7d70a13d1f585dd9331) Fixed aspect ratio calculation for custom `menu_loading_screen.jpg` images
 - [`c2d7155`](https://github.com/roozerxc/atrim/commit/c2d7155de5f6522622a7174a201c45a221433d45) Fixed buggy enemy collision behavior
 - [`d8e586b`](https://github.com/roozerxc/atrim/commit/d8e586b46bc6af07e28130d62ea0b93bf62048a9) Fixed character body simulation errors (Can be switched back using `HPL_CHARACTERBODY_BROKEN`)
@@ -45,6 +47,7 @@
 - [`583fd22`](https://github.com/roozerxc/atrim/commit/583fd2230909a246386a86765afa3f1cb038306e) Fixed limit for Tinderboxes not being properly enforced
 - [`73e1a5d`](https://github.com/roozerxc/atrim/commit/73e1a5dc94e33386a92b362451e9610e9604666f) Fixed loading patch strings so that they take precedence over all strings in the game
 - [`9a66b63`](https://github.com/roozerxc/atrim/commit/9a66b63dc1b304996d4d3cd5e9d21b0136241dcd) Fixed low-level OpenGL graphics setup to only call the depth test once
+- [`72dd39f`](https://github.com/roozerxc/atrim/commit/72dd39f8d1e0d25f38d85c86bbec48111f56c692) Fixed matrix caching bug when UV Y axis was flipped
 - [`5d68aef`](https://github.com/roozerxc/atrim/commit/5d68aef3e2c8025a91da89c49701d7e1f447c0d0) Fixed memory manager causing debug builds to fail during compilation
 - [`527c6a5`](https://github.com/roozerxc/atrim/commit/527c6a59ba4695534d461ee0f86f20b7c92b86f3) Fixed post effects breaking at >60 FPS
 - [`5c29b95`](https://github.com/roozerxc/atrim/commit/5c29b958d314dd2ba9d2cb44e5e7b86c25e22ea4) Fixed SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
@@ -65,6 +68,7 @@
 - [`45bda0f`](https://github.com/roozerxc/atrim/commit/45bda0fb26a98d19165b91bbd6aa79f5ad7bc2e6) Removed fake anti-aliasing shader (Edge Smoothing)
 - [`a2a611c`](https://github.com/roozerxc/atrim/commit/a2a611c0ecb42805dd35ecd524c33d8eda1337ba) Removed "Lean" (`Alt`) key
 - [`86f57b2`](https://github.com/roozerxc/atrim/commit/86f57b241aa1ca59e2ca3311f21acbf14f2ce2d7) Removed logic timer in place of the new fixed delta (`1 % 60 = 16.67ms`)
+- [`67048bb`](https://github.com/roozerxc/atrim/commit/67048bb0034d1c3d7c4179707803e64a5f94516e) Removed performance bottleneck caused by locking and unlocking mutexes
 - [`0e0cbd2`](https://github.com/roozerxc/atrim/commit/0e0cbd2fd4784292347e192307fece8ff089a41d) Removed proprietary Kaydara FBX loader
 - [`11e2304`](https://github.com/roozerxc/atrim/commit/11e2304115b44771811d71ae21e570ab632946b0) Removed unused "Adaptive VSync" feature left over from Amnesia: A Machine for Pigs
 - [`9645c94`](https://github.com/roozerxc/atrim/commit/9645c9487b5b90ae11e5e19738ac4f00eba87039) Removed unused animation smoothing implementation
@@ -73,8 +77,10 @@
 - [`7491cc4`](https://github.com/roozerxc/atrim/commit/7491cc43e3e7b712c8723bfb12038d2146264d2c) Replaced loading icons from loose bitmaps with header-based RWops in the executable
 - [`0a3de4d`](https://github.com/roozerxc/atrim/commit/0a3de4d6e60806f30c31cb48281bd80c29efd79a) Replaced OpenAL with OpenAL-Soft
 - [`5017fb0`](https://github.com/roozerxc/atrim/commit/5017fb0157571124191c1930f29673ad32fc6380) Replaced `SDL_SetGamma` with a dedicated GLSL shader that controls the in-game gamma
+- [`8c69a51`](https://github.com/roozerxc/atrim/commit/8c69a51f493d6d95d1f52a8934e5d95ca84d1f83) Restored unused Brute enemy enabled sound
 - [`1731b30`](https://github.com/roozerxc/atrim/commit/1731b3071cefc3034e3a2fd3c152bd7998d68d3e) Restored unused Penumbra-style head leaning behavior
 - [`9c24285`](https://github.com/roozerxc/atrim/commit/9c2428550d161e27aeb78e57bec20e404d167817) Updated game physics to use double precision
+- [`5244a2f`](https://github.com/roozerxc/atrim/commit/5244a2f5d8a426c4e59caba5ad5f0e464cc92e40) Upgraded low-level system timers to use platform high-resolution timer
 ------------
 ### v1.4.5-win32-release
 - [`19dc606`](https://github.com/roozerxc/atrim/commit/19dc606e47500a52f9ab685abe2531cf2b0d1c41) Added `LUXPROP_OBJECT_BREAKABLE_WORKAROUND` preprocessor definition for breakable objects
