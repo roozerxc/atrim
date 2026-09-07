@@ -682,6 +682,21 @@ bool iRenderFunctions::SetProgram(iGpuProgram *apProgram)
 
 //-----------------------------------------------------------------------
 
+bool iRenderFunctions::SetMatrixMirrored(const cMatrixf& a_mtx)
+{
+    const cVector3f& r = a_mtx.GetRight();
+    const cVector3f& u = a_mtx.GetUp();
+    const cVector3f& f = a_mtx.GetForward();
+
+    float fDet = r.x * (u.y * f.z - u.z * f.y)
+               - r.y * (u.x * f.z - u.z * f.x)
+               + r.z * (u.x * f.y - u.y * f.x);
+
+    return fDet < 0.0f;
+}
+
+//-----------------------------------------------------------------------
+
 void iRenderFunctions::SetTexture(int alUnit, iTexture *apTexture)
 {
     if(mvCurrentTexture[alUnit] == apTexture)
@@ -812,8 +827,6 @@ void iRenderFunctions::SetModelViewMatrix(const cMatrixf& a_mtxModelView)
     mpLowLevelGraphics->SetMatrix(eMatrix_ModelView,a_mtxModelView);
     mpCurrentMatrix = &m_mtxNULL;
 }
-
-//-----------------------------------------------------------------------
 
 //-----------------------------------------------------------------------
 
@@ -1030,6 +1043,15 @@ void iRenderFunctions::DrawQuad(    const cVector3f& aPos, const cVector2f& avSi
 
 void iRenderFunctions::DrawCurrent(eVertexBufferDrawType aDrawType)
 {
+    bool bToggle = false;
+
+    if(mpCurrentMatrix && mpCurrentMatrix != &m_mtxNULL &&
+        SetMatrixMirrored(*mpCurrentMatrix))
+    {
+        bToggle = true;
+        SetInvertCullMode(!mbInvertCullMode);
+    }
+
     if(mbLog)
     {
         Log("   Drawing vertex buffer\n");
@@ -1040,6 +1062,10 @@ void iRenderFunctions::DrawCurrent(eVertexBufferDrawType aDrawType)
         mpCurrentVtxBuffer->Draw(aDrawType);
     }
 
+    if(bToggle)
+    {
+        SetInvertCullMode(!mbInvertCullMode);
+    }
 }
 
 //-----------------------------------------------------------------------

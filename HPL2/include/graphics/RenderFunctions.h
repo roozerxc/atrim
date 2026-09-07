@@ -69,6 +69,7 @@ public:
     bool SetAlphaLimit(float afLimit);
     bool SetBlendMode(eMaterialBlendMode aMode);
     bool SetProgram(iGpuProgram *apProgram);
+    bool SetMatrixMirrored(const cMatrixf& a_mtx);
     void SetTexture(int alUnit, iTexture *apTexture);
     void SetTextureRange(iTexture *apTexture, int alFirstUnit, int alLastUnit = kMaxTextureUnits-1);
     void SetVertexBuffer(iVertexBuffer *apVtxBuffer);
