@@ -353,6 +353,15 @@ void cLuxMainMenu_Options::AddGameOptions(cWidgetTab* apTab)
     vPos.y += pLabel->GetSize().y + 15;
 
     ///////////////////////////////////////////////
+    // Hand orientation Combobox
+    pLabel = mpGuiSet->CreateWidgetLabel(vPos, -1, kTranslate("OptionsMenu","HandOrientation"), apTab);
+    mpCBHandOrientation = mpGuiSet->CreateWidgetComboBox(vPos + cVector3f(pLabel->GetSize().x + 5,-2,0), cVector2f(150, 25), _W(""), apTab);
+    SetUpInput(pLabel, mpCBFocusIconStyle, false, kTranslate("OptionsMenu", "HandOrientationTip"));
+    mpCBHandOrientation->AddItem(kTranslate("ButtonNames", "Left"));
+    mpCBHandOrientation->AddItem(kTranslate("ButtonNames", "Right"));
+    vPos.y += pLabel->GetSize().y + 15;
+
+    ///////////////////////////////////////////////
     // Flashback Intensity
     pLabel = mpGuiSet->CreateWidgetLabel(vPos, -1, kTranslate("OptionsMenu", "FlashIntensity"), apTab);
     mpSFlash = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, cVector3f(0,pLabel->GetSize().y+5,0), cVector2f(100,20), 0, pLabel);
@@ -384,18 +393,19 @@ void cLuxMainMenu_Options::AddGameOptions(cWidgetTab* apTab)
     mpChBShowHints->SetFocusNavigation(eUIArrow_Down, mpChBShowDeathHints);
     mpChBShowDeathHints->SetFocusNavigation(eUIArrow_Down, mpChBShowCrosshair);
     mpChBShowCrosshair->SetFocusNavigation(eUIArrow_Down, mpCBFocusIconStyle);
+    mpCBFocusIconStyle->SetFocusNavigation(eUIArrow_Down, mpCBHandOrientation);
     if(mbShowCommentary)
     {
-        mpCBFocusIconStyle->SetFocusNavigation(eUIArrow_Down, mpChBShowCommentary);
+        mpCBHandOrientation->SetFocusNavigation(eUIArrow_Down, mpChBShowCommentary);
         mpChBShowCommentary->SetFocusNavigation(eUIArrow_Down, mpBOK);
 
         pLastWidget = mpChBShowCommentary;
     }
     else
     {
-        mpCBFocusIconStyle->SetFocusNavigation(eUIArrow_Down, mpBOK);
+        mpCBHandOrientation->SetFocusNavigation(eUIArrow_Down, mpBOK);
 
-        pLastWidget = mpCBFocusIconStyle;
+        pLastWidget = mpCBHandOrientation;
     }
 
     apTab->SetUserData(pLastWidget);
@@ -408,9 +418,10 @@ void cLuxMainMenu_Options::AddGameOptions(cWidgetTab* apTab)
     mpChBShowDeathHints->SetFocusNavigation(eUIArrow_Up, mpChBShowHints);
     mpChBShowCrosshair->SetFocusNavigation(eUIArrow_Up, mpChBShowDeathHints);
     mpCBFocusIconStyle->SetFocusNavigation(eUIArrow_Up, mpChBShowCrosshair);
+    mpCBHandOrientation->SetFocusNavigation(eUIArrow_Up, mpCBFocusIconStyle);
     if(mbShowCommentary)
     {
-        mpChBShowCommentary->SetFocusNavigation(eUIArrow_Up, mpCBFocusIconStyle);
+        mpChBShowCommentary->SetFocusNavigation(eUIArrow_Up, mpCBHandOrientation);
     }
 
     // Left/Right
@@ -1063,6 +1074,12 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
             mpCBFocusIconStyle->SetSelectedItem(0, false, true);
         }
 
+        mpCBHandOrientation->SetSelectedItem(aObj.GetVarInt("HandOrientation"), false, false);
+        if(mpCBHandOrientation->GetSelectedItem()==-1)
+        {
+            mpCBHandOrientation->SetSelectedItem(0, false, true);
+        }
+
         if(mbShowCommentary)
         {
             mpChBShowCommentary->SetChecked(aObj.GetVarBool("ShowCommentary"), false);
@@ -1430,6 +1447,8 @@ void cLuxMainMenu_Options::ApplyChanges()
 
         gpBase->mpPlayer->SetFocusIconStyle((eLuxFocusIconStyle)mpCBFocusIconStyle->GetSelectedItem());
 
+        gpBase->mpPlayer->SetHandOrientation((eLuxHandOrientation)mpCBHandOrientation->GetSelectedItem());
+
         gpBase->mpEffectHandler->SetFlashIntensity(GetFlash());
     }
 
@@ -1744,6 +1763,7 @@ void cLuxMainMenu_Options::DumpInitialValues(cResourceVarsObject &aObj)
 
         aObj.AddVarBool("ShowCrosshair", gpBase->mpPlayer->GetShowCrosshair());
         aObj.AddVarInt("FocusIconStyle", gpBase->mpPlayer->GetFocusIconStyle());
+        aObj.AddVarInt("HandOrientation", gpBase->mpPlayer->GetHandOrientation());
         aObj.AddVarBool("ShowCommentary", gpBase->mpMapHandler->GetShowCommentary());
         aObj.AddVarFloat("FlashIntensity", gpBase->mpEffectHandler->GetFlashIntensity());
 
@@ -1836,6 +1856,7 @@ void cLuxMainMenu_Options::DumpCurrentValues(cResourceVarsObject &aObj)
 
         aObj.AddVarBool("ShowCrosshair",    mpChBShowCrosshair->IsChecked());
         aObj.AddVarInt("FocusIconStyle",    mpCBFocusIconStyle->GetSelectedItem());
+        aObj.AddVarInt("HandOrientation",    mpCBHandOrientation->GetSelectedItem());
         aObj.AddVarBool("ShowCommentary",   mpChBShowCommentary->IsChecked());
         aObj.AddVarFloat("FlashIntensity",  GetFlash());
 

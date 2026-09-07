@@ -148,6 +148,7 @@ private:
     cWidgetCheckBox *mpChBShowDeathHints;
     cWidgetCheckBox *mpChBShowCrosshair;
     cWidgetComboBox *mpCBFocusIconStyle;
+    cWidgetComboBox *mpCBHandOrientation;
     cWidgetCheckBox *mpChBShowCommentary;
 
     cWidgetLabel    *mpLFlash;

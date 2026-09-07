@@ -49,6 +49,7 @@ private:
     std::vector<cColor> mvLightFadeOutColor;
     std::vector<cColor> mvDefaultLightColors;
     std::vector<bool> mvDefaultLightFlicker;
+    std::vector<cMatrixf> mvDefaultLightMatrix;
     std::vector<cMatrixf> mvDefaultSubMeshMatrix;
 };
 

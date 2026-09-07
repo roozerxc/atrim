@@ -567,11 +567,23 @@ void cLuxPlayerHands::UpdatePlayerHandsPos(double adFixedDelta)
     // Set hand matrix
     cMatrixf mtxHands = cMath::MatrixRotate(vFinalRot, eEulerRotationOrder_ZXY);
 
-    cVector3f vHandPosAdd =0;
+    cVector3f vHandPosAdd = 0;
     vHandPosAdd -= mpPlayer->GetHeadPosAdd(eLuxHeadPosAdd_Bob);
     vHandPosAdd -= mpPlayer->GetHeadPosAdd(eLuxHeadPosAdd_ScreenShake);
     vHandPosAdd -= mpPlayer->GetHeadPosAdd(eLuxHeadPosAdd_Hurt);
-    vHandPosAdd -= mpPlayer->GetHeadPosAdd(eLuxHeadPosAdd_Lean);
+
+    if(mpPlayer->GetHandOrientation() == eLuxHandOrientation_Right)
+    {
+        vHandPosAdd += mpPlayer->GetHeadPosAdd(eLuxHeadPosAdd_Lean);
+
+        mtxHands = cMath::MatrixMul(mtxHands, cMath::MatrixScale(cVector3f(-1.0f, 1.0f, 1.0f)));
+
+        vHandPosAdd.x = -vHandPosAdd.x;
+    }
+    else
+    {
+        vHandPosAdd -= mpPlayer->GetHeadPosAdd(eLuxHeadPosAdd_Lean);
+    }
 
     cVector3f vRight = pCam->GetRight();
     cVector3f vUp = pCam->GetUp();

@@ -68,11 +68,30 @@ void cLuxHandObject_LightSource::ImplementedCreateEntity(cLuxMap *apMap)
     mvDefaultLightFlicker.resize(mvLights.size());
     mvLightFadeOutColor.resize(mvLights.size());
 
+    if(mvDefaultLightMatrix.empty())
+    {
+        mvDefaultLightMatrix.resize(mvLights.size());
+
+        for(size_t i=0; i<mvLights.size(); ++i)
+        {
+            mvDefaultLightMatrix[i] = mvLights[i]->GetLocalMatrix();
+        }
+    }
+
     for(size_t i=0; i<mvLights.size(); ++i)
     {
-        mvDefaultLightColors[i] = mvLights[i]->GetDiffuseColor();
-        mvDefaultLightFlicker[i] =mvLights[i]->GetFlickerActive();
+        mvDefaultLightColors[i]  = mvLights[i]->GetDiffuseColor();
+        mvDefaultLightFlicker[i] = mvLights[i]->GetFlickerActive();
         mvLights[i]->SetFlickerActive(false);
+
+        /* cMatrixf mtxLight = mvDefaultLightMatrix[i];
+
+        if(gpBase->mpPlayer->GetHandOrientation() == eLuxHandOrientation_Right)
+        {
+            mtxLight = cMath::MatrixMul(mtxLight, cMath::MatrixScale(cVector3f(-1.0f, 1.0f, 1.0f)));
+        }
+
+        mvLights[i]->SetMatrix(mtxLight); */
     }
 
     mvDefaultSubMeshMatrix.resize(mpMeshEntity->GetSubMeshEntityNum());
@@ -103,6 +122,18 @@ void cLuxHandObject_LightSource::Update(double adFixedDelta)
 {
     bool bUpdate = false;
     bool bUpdateDone = false;
+
+    for(size_t i=0; i<mvLights.size(); ++i)
+    {
+        cMatrixf mtxLight = mvDefaultLightMatrix[i];
+
+        if(gpBase->mpPlayer->GetHandOrientation() == eLuxHandOrientation_Right)
+        {
+            mtxLight = cMath::MatrixMul(mtxLight, cMath::MatrixScale(cVector3f(-1.0f, 1.0f, 1.0f)));
+        }
+
+        mvLights[i]->SetMatrix(mtxLight);
+    }
 
     ///////////////////
     // Sway Physics
@@ -287,8 +318,6 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(double adFixedDelta)
     /////////////////////////////
     // Update Model matrix
     cMatrixf mtxSway = cMath::MatrixRotate(mvSwayPinDir * mfSwayAngle, eEulerRotationOrder_XYZ);
-    //cMatrixf mtxTrans = cMath::MatrixMul(m_mtxOffset, mtxSway);
-    //mpMeshEntity->SetMatrix(mtxTrans);
 
     for(int i=0; i<mpMeshEntity->GetSubMeshEntityNum(); ++i)
     {
@@ -297,7 +326,6 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(double adFixedDelta)
         {
             continue;
         }
-        //Log("'%s'\n",pSubEnt->GetSubMesh()->GetName().c_str());
 
         pSubEnt->SetMatrix(cMath::MatrixMul(mtxSway, mvDefaultSubMeshMatrix[i]) );
     }

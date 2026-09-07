@@ -165,6 +165,8 @@ bool iLuxPlayerState_DefaultBase::OnDoAction(eLuxPlayerAction aAction,bool abPre
 
 cGuiGfxElement* iLuxPlayerState_DefaultBase::GetCrosshair()
 {
+    cGuiGfxElement* pCrosshair = mpDefaultCrosshairGfx;
+
     if(mpEntityInFocus && mfFocusDistance < mpEntityInFocus->GetMaxFocusDistance())
     {
         eLuxFocusCrosshair crossHair = mpEntityInFocus->GetFocusCrosshair(mpBodyInFocus, mvFocusPos);
@@ -173,27 +175,26 @@ cGuiGfxElement* iLuxPlayerState_DefaultBase::GetCrosshair()
             crossHair = eLuxFocusCrosshair_Default;
         }
 
-        if(    crossHair == eLuxFocusCrosshair_LastEnum ||
-                crossHair == eLuxFocusCrosshair_Default)
-        {
-            return mpDefaultCrosshairGfx;
-        }
-        else
+        if(crossHair != eLuxFocusCrosshair_LastEnum && crossHair != eLuxFocusCrosshair_Default)
         {
             if(mpPlayer->GetFocusIconStyle()==eLuxFocusIconStyle_Default)
             {
-                return mvFocusCrosshairGfx[crossHair];
+                pCrosshair = mvFocusCrosshairGfx[crossHair];
             }
             else
             {
-                return mpSimpleInteractCrosshairGfx;
+                pCrosshair = mpSimpleInteractCrosshairGfx;
             }
         }
     }
-    else
+
+    if(pCrosshair)
     {
-        return mpDefaultCrosshairGfx;
+        bool bPlayerIsRightHanded = (mpPlayer->GetHandOrientation() == eLuxHandOrientation_Right);
+        pCrosshair->SetFlipUvXAxis(bPlayerIsRightHanded);
     }
+
+    return pCrosshair;
 }
 
 //-----------------------------------------------------------------------

@@ -39,6 +39,16 @@ enum eLuxFocusIconStyle
 
 //----------------------------------------------
 
+enum eLuxHandOrientation
+{
+    eLuxHandOrientation_Left,
+    eLuxHandOrientation_Right,
+
+    eLuxHandOrientation_LastEnum
+};
+
+//----------------------------------------------
+
 class cLuxPlayer : public iLuxUpdateable, public iLuxCollideCallbackContainer
 {
     friend class cLuxPlayer_SaveData;
@@ -476,8 +486,20 @@ public:
         mFocusIconStyle = aX;
     }
 
+    eLuxHandOrientation GetHandOrientation()
+    {
+        return mHandOrientation;
+    }
+    void SetHandOrientation(eLuxHandOrientation aX)
+    {
+        mHandOrientation = aX;
+    }
+
     static eLuxFocusIconStyle StringToFocusIconStyle(const tString& asX);
     static tString FocusIconStyleToString(eLuxFocusIconStyle aX);
+
+    static eLuxHandOrientation StringToHandOrientation(const tString& asX);
+    static tString HandOrientationToString(eLuxHandOrientation aX);
 
     ////////////////////
     // Free cam
@@ -657,6 +679,7 @@ private:
     bool mbScriptShowFocusIconAndCrossHair;
 
     eLuxFocusIconStyle mFocusIconStyle;
+    eLuxHandOrientation mHandOrientation;
 
     std::list<float> mlstPrevSpeeds;
     int mlMaxPrevSpeeds;

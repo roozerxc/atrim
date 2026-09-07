@@ -415,6 +415,7 @@ void cLuxPlayer::LoadUserConfig()
 {
     mbShowCrossHair = gpBase->mpUserConfig->GetBool("Game", "ShowCrossHair", true);
     mFocusIconStyle = StringToFocusIconStyle(gpBase->mpUserConfig->GetString("Game", "FocusIconStyle", "Default"));
+    mHandOrientation = StringToHandOrientation(gpBase->mpUserConfig->GetString("Game", "HandOrientation", "Default"));
 
     RunHelperLuxMessage(eLuxUpdateableMessage_LoadUserConfig,0);
 }
@@ -423,6 +424,7 @@ void cLuxPlayer::SaveUserConfig()
 {
     gpBase->mpUserConfig->SetBool("Game", "ShowCrossHair", mbShowCrossHair);
     gpBase->mpUserConfig->SetString("Game", "FocusIconStyle", FocusIconStyleToString(mFocusIconStyle));
+    gpBase->mpUserConfig->SetString("Game", "HandOrientation", HandOrientationToString(mHandOrientation));
 
     RunHelperLuxMessage(eLuxUpdateableMessage_SaveUserConfig,0);
 }
@@ -1124,6 +1126,42 @@ tString cLuxPlayer::FocusIconStyleToString(eLuxFocusIconStyle aX)
     }
 
     return "Default";
+}
+
+//-----------------------------------------------------------------------
+
+eLuxHandOrientation cLuxPlayer::StringToHandOrientation(const tString& asX)
+{
+    tString sLowCase = cString::ToLowerCase(asX);
+
+    if(sLowCase=="left")
+    {
+        return eLuxHandOrientation_Left;
+    }
+    else if(sLowCase=="right")
+    {
+        return eLuxHandOrientation_Right;
+    }
+    else
+    {
+        Log("Error converting string to HandOrientation : '%s'\n", asX.c_str());
+    }
+
+    return eLuxHandOrientation_Left;
+}
+
+tString cLuxPlayer::HandOrientationToString(eLuxHandOrientation aX)
+{
+    if(aX==eLuxHandOrientation_Left)
+    {
+        return "Left";
+    }
+    else if(aX==eLuxHandOrientation_Right)
+    {
+        return "Right";
+    }
+
+    return "Left";
 }
 
 //-----------------------------------------------------------------------
