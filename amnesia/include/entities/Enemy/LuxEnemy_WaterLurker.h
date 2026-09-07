@@ -14,7 +14,6 @@ public:
     ////////////////
     //Properties
     float mfPlayerDetectionHeight;
-    float mfPlayerLostTimer;
 };
 
 //----------------------------------------------
@@ -95,11 +94,6 @@ private:
     tString msSplashSound_Run;
     tString msSplashSound_Eat;
     tString msSplashSound_Attack;
-
-    //////////////
-    //Variables
-    float mfPlayerLostTimer;
-
 };
 
 //----------------------------------------------
