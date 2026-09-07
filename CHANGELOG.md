@@ -17,6 +17,7 @@
 - [`b8dcb44`](https://github.com/roozerxc/atrim/commit/b8dcb44e25e215349a7bd6946466e86115abf4db) Added new player body and camera script funcs
 - [`9a19316`](https://github.com/roozerxc/atrim/commit/9a1931670a5cdbb0ed36f55cf15ea817633ab759) Added new pre-post effect screen render method
 - [`576eaaa`](https://github.com/roozerxc/atrim/commit/576eaaabf675f2520d36f42eed56dc722da9e9a8) Added new properties for lights and particles
+- [`383eae1`](https://github.com/roozerxc/atrim/commit/383eae15994837f8440b1bab2c6d3e881096c75f) Added new setting for changing the player's hand orientation
 - [`b1de39b`](https://github.com/roozerxc/atrim/commit/b1de39b0c8dda4a1e647669a0ebf09af09e26d1e) Added new string localization for hardcoded texts (Finnish and German translation by [@phnxs](https://github.com/phnxs) and ANDREWJOHN5)
 - [`d2bfe2a`](https://github.com/roozerxc/atrim/commit/d2bfe2ab1abe34ff87fe9b89fb7f1f83131ad352) Added new "Ultra" setting for shadow quality and resolution
 - [`93b364c`](https://github.com/roozerxc/atrim/commit/93b364ccdad59db496a42a26e962ab8d78ba2fb0) Added new "Ultra Low" texture setting for significantly weaker hardware
