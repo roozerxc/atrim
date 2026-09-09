@@ -17,12 +17,12 @@ namespace hpl
 #ifdef UPDATE_TIMING_ENABLED
 #define START_TIMING_EX(x,y)    LogUpdate("Updating %s in file %s at line %d\n",x,__FILE__,__LINE__); \
                                 double y##_dTime = cPlatform::GetApplicationTimeX();
-#define START_TIMING(x)    LogUpdate("Updating %s in file %s at line %d\n",#x,__FILE__,__LINE__); \
+#define START_TIMING(x)         LogUpdate("Updating %s in file %s at line %d\n",#x,__FILE__,__LINE__); \
                                 double x##_dTime = cPlatform::GetApplicationTimeX();
-#define STOP_TIMING(x)    LogUpdate(" Time spent: %d ms\n",cPlatform::GetApplicationTimeX() - x##_dTime);
-#define START_TIMING_TAB(x)    LogUpdate("\tUpdating %s in file %s at line %d\n",#x,__FILE__,__LINE__); \
-                            double x##_dTime = cPlatform::GetApplicationTimeX();
-#define STOP_TIMING_TAB(x)    LogUpdate("\t Time spent: %d ms\n",cPlatform::GetApplicationTimeX() - x##_dTime);
+#define STOP_TIMING(x)          LogUpdate(" Time spent: %d ms\n",cPlatform::GetApplicationTimeX() - x##_dTime);
+#define START_TIMING_TAB(x)     LogUpdate("\tUpdating %s in file %s at line %d\n",#x,__FILE__,__LINE__); \
+                                double x##_dTime = cPlatform::GetApplicationTimeX();
+#define STOP_TIMING_TAB(x)      LogUpdate("\t Time spent: %d ms\n",cPlatform::GetApplicationTimeX() - x##_dTime);
 #else
 #define START_TIMING_EX(x,y)
 #define START_TIMING(x)
