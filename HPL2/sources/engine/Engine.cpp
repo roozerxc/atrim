@@ -1,3 +1,4 @@
+#include <cmath>
 #include <algorithm>
 #include <numeric>
 #include <queue>
@@ -439,7 +440,7 @@ void cEngine::Run()
 
             iFrameTimeHg[iFrameMs]++;
         }
-        dFrameTime = dRawFrameTime;
+        dFrameTime = std::max(0.0, dRawFrameTime);
 
         // Clamp the game frame time and prevent huge single wallclock jump
         if(dFrameTime > kMaxFrameTime)
@@ -518,10 +519,9 @@ void cEngine::Run()
             ++iUpdatesOnCurrentFrame;
         }
 
-        // Game is too far behind and can't catch up, zero the accumulated time!
         if(dAccumulator >= kFixedDelta && iUpdatesOnCurrentFrame >= iMaxGameUpdates)
         {
-            dAccumulator = 0;
+            dAccumulator = std::fmod(dAccumulator, kFixedDelta);
         }
 
         // Make alpha dividing the accumulated time by the fixed delta timestep
