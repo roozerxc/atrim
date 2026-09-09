@@ -79,7 +79,7 @@ bool cPlatformWin32::DWMCompositorActive()
 
 void LockApplicationThread()
 {
-    // HPET usually runs at ~14.31818 Mhz
+    // HPET usually runs at ~14.31818 MHz
     // ACPI timer runs at ~3.579545 MHz
 
     // Check if this is on an invariant TSC or safe virtualization
@@ -119,7 +119,7 @@ void LockApplicationThread()
         {
             // Find lowest available core mask
             DWORD_PTR pCoreMask = 1;
-            while((pCoreMask & pProcessMask) == 0 && pCoreMask != 0)
+            while(pCoreMask != 0 && (pCoreMask & pProcessMask) == 0)
             {
                 pCoreMask <<= 1;
             }
