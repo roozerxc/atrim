@@ -77,7 +77,7 @@ bool cPlatformWin32::DWMCompositorActive()
 
 //-----------------------------------------------------------------------
 
-void cPlatformWin32::LockApplicationThread()
+void LockApplicationThread()
 {
     OSVERSIONINFO osvi;
     ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
@@ -550,6 +550,8 @@ double cPlatform::GetApplicationTimeX()
 {
     if(!bTimerInitialized)
     {
+        LockApplicationThread();
+
         QueryPerformanceFrequency(&lTimerFrequency);
         QueryPerformanceCounter(&lTimerStart);
         bTimerInitialized = true;
