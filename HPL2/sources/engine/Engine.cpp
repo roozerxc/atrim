@@ -469,11 +469,9 @@ void cEngine::Run()
             bGameWasFocused = bGameHasFocus;
         }
 
-        // Throttle game and accumulator
         if(!bGameHasFocus && !mbPaused)
         {
             cPlatform::Sleep(33);
-            dAccumulator = 0.0;
         }
 
         // Check if quit message was actually posted.
