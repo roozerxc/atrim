@@ -79,19 +79,18 @@ bool cPlatformWin32::DWMCompositorActive()
 
 void LockApplicationThread()
 {
-    OSVERSIONINFO osvi;
-    ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
-    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+    // HPET usually runs at ~14.31818 Mhz
+    // ACPI timer runs at ~3.579545 MHz
 
-    // GetVersionEx is deprecated in win8/8.1
-    // Just return 6.2/6.3 for that version
-#pragma warning(suppress : 4996)
-    GetVersionEx(&osvi);
-
-    // If this is running on windows vista then handle the QPC
-    if(osvi.dwMajorVersion >= 6)
+    // Check if this is on an invariant TSC or safe virtualization
+    LARGE_INTEGER iCpuFreq;
+    if(QueryPerformanceFrequency(&iCpuFreq))
     {
-        return;
+        // Small guide: 10000000 Hz = 10 MHz
+        if(iCpuFreq.QuadPart >= 10000000)
+        {
+            return;
+        }
     }
 
     // Load the kernel32 stub for win9x/nt4/2k/xp and the affinity stuff
