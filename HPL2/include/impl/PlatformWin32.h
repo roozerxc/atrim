@@ -8,6 +8,7 @@ class cPlatformWin32
 {
 public:
     static bool DWMCompositorActive();
+    void LockApplicationThread();
 };
 
 };

@@ -34,6 +34,8 @@ static bool bTimerInitialized = false;
 static LARGE_INTEGER lTimerFrequency;
 static LARGE_INTEGER lTimerStart;
 
+//-----------------------------------------------------------------------
+
 //////////////////////////////////////////////////////////////////////////
 // DWM COMPOSITOR CHECK
 //////////////////////////////////////////////////////////////////////////
@@ -65,6 +67,69 @@ bool cPlatformWin32::DWMCompositorActive()
     FreeLibrary(hDwmapi);
 
     return SUCCEEDED(hr) && bDwmEnabled != FALSE;
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// APP THREAD LOCK
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+void cPlatformWin32::LockApplicationThread()
+{
+    OSVERSIONINFO osvi;
+    ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+
+    // GetVersionEx is deprecated in win8/8.1
+    // Just return 6.2/6.3 for that version
+#pragma warning(suppress : 4996)
+    GetVersionEx(&osvi);
+
+    // If this is running on windows vista then handle the QPC
+    if(osvi.dwMajorVersion >= 6)
+    {
+        return;
+    }
+
+    // Load the kernel32 stub for win9x/nt4/2k/xp and the affinity stuff
+    // If not found, just return and execute anyway assuming the user's
+    // cpu is a 1c1t single socket system on win9x to 2k...
+
+    HMODULE hKernel32 = GetModuleHandleA("kernel32.dll");
+    if(!hKernel32)
+    {
+        return;
+    }
+
+    typedef DWORD_PTR (WINAPI *SetThreadAffMaskFunc)(HANDLE, DWORD_PTR);
+    typedef BOOL (WINAPI *GetProcAffMaskFunc)(HANDLE, PDWORD_PTR, PDWORD_PTR);
+
+    SetThreadAffMaskFunc pSetThreadAffinity =
+        (SetThreadAffMaskFunc)GetProcAddress(hKernel32, "SetThreadAffinityMask");
+    GetProcAffMaskFunc pGetProcessAffinity =
+        (GetProcAffMaskFunc)GetProcAddress(hKernel32, "GetProcessAffinityMask");
+
+    if(pSetThreadAffinity && pGetProcessAffinity)
+    {
+        DWORD_PTR pProcessMask = 0, pSystemMask = 0;
+
+        if(pGetProcessAffinity(GetCurrentProcess(), &pProcessMask, &pSystemMask))
+        {
+            // Find lowest available core mask
+            DWORD_PTR pCoreMask = 1;
+            while((pCoreMask & pProcessMask) == 0 && pCoreMask != 0)
+            {
+                pCoreMask <<= 1;
+            }
+            if(pCoreMask != 0)
+            {
+                pSetThreadAffinity(GetCurrentThread(), pCoreMask);
+            }
+        }
+    }
 }
 
 //-----------------------------------------------------------------------
