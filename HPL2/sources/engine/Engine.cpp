@@ -71,7 +71,7 @@ void cFPSCounter::AddFrame()
         mfFPS = ((float)mlFramecounter) / mfFrametime;
         mlFramecounter = 0;
 
-        mfFrametimestart = (float)cPlatform::GetApplicationTimeX();
+        mfFrametimestart += mfFrametime;
     }
 }
 
