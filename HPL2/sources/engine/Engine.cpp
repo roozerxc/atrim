@@ -487,7 +487,13 @@ void cEngine::Run()
         iUpdatesOnCurrentFrame = 0;
         dAccumulator += dFrameTime * dSpeedMul;
 
-        while(dAccumulator >= kFixedDelta && iUpdatesOnCurrentFrame < iMaxGameUpdates)
+        int iDynamicMaxUpdates = iMaxGameUpdates;
+        if(dSpeedMul > 1.0)
+        {
+            iDynamicMaxUpdates = (int)(iMaxGameUpdates * dSpeedMul);
+        }
+
+        while(dAccumulator >= kFixedDelta && iUpdatesOnCurrentFrame < iDynamicMaxUpdates)
         {
             if(GetGameIsDone())
             {
