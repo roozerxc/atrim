@@ -82,15 +82,19 @@ void LockApplicationThread()
     // HPET usually runs at ~14.31818 MHz
     // ACPI timer runs at ~3.579545 MHz
 
-    // Check if this is on an invariant TSC or safe virtualization
-    LARGE_INTEGER iCpuFreq;
-    if(QueryPerformanceFrequency(&iCpuFreq))
+    static LARGE_INTEGER iCpuFreq = {};
+    static bool bFreqQueried = false;
+
+    if(!bFreqQueried)
     {
-        // Small guide: 10000000 Hz = 10 MHz
-        if(iCpuFreq.QuadPart >= 10000000)
-        {
-            return;
-        }
+        bFreqQueried = true;
+        QueryPerformanceFrequency(&iCpuFreq);
+    }
+
+    // Check if this is on an invariant TSC or safe virtualization
+    if(iCpuFreq.QuadPart >= 10000000)
+    {
+        return;
     }
 
     // Load the kernel32 stub for win9x/nt4/2k/xp and the affinity stuff
@@ -113,19 +117,22 @@ void LockApplicationThread()
 
     if(pSetThreadAffinity && pGetProcessAffinity)
     {
-        DWORD_PTR pProcessMask = 0, pSystemMask = 0;
+        DWORD_PTR processMask = 0;
+        DWORD_PTR systemMask = 0;
 
-        if(pGetProcessAffinity(GetCurrentProcess(), &pProcessMask, &pSystemMask))
+        if(pGetProcessAffinity(GetCurrentProcess(), &processMask, &systemMask))
         {
             // Find lowest available core mask
-            DWORD_PTR pCoreMask = 1;
-            while(pCoreMask != 0 && (pCoreMask & pProcessMask) == 0)
+            DWORD_PTR coreMask = 1;
+
+            while(coreMask != 0 && (coreMask & processMask) == 0)
             {
-                pCoreMask <<= 1;
+                coreMask <<= 1;
             }
-            if(pCoreMask != 0)
+
+            if(coreMask != 0)
             {
-                pSetThreadAffinity(GetCurrentThread(), pCoreMask);
+                pSetThreadAffinity(GetCurrentThread(), coreMask);
             }
         }
     }
