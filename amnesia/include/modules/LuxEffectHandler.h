@@ -68,6 +68,38 @@ private:
 
 //----------------------------------------------
 
+class cLuxEffect_ScreenImage : public iLuxEffect
+{
+public:
+    cLuxEffect_ScreenImage();
+    ~cLuxEffect_ScreenImage();
+
+    void ShowImage(const tString & asImageName, float afX, float afY, float afScale, bool abUseRelativeCoordinates, float afDuration, float afFadeIn, float afFadeOut);
+    void HideImmediately();
+    void HideWithFade(float afFadeOut);
+
+    void Update(double adFixedDelta);
+    void OnDraw(double adFrameTime);
+    void Reset() {};
+
+private:
+    cGuiSet *mpGuiSet;
+
+    tString msTextureName;
+    cGuiGfxElement *mpTextureGfx;
+
+    cVector3f mvPosition;
+
+    float mfFadeInDuration;
+    float mfShowDuration;
+    float mfFadeOutDuration;
+    float mfFadeTimer;
+    float mfScale;
+    float mfCurrentFade;
+};
+
+//----------------------------------------------
+
 class cLuxEffect_EmotionFlash : public iLuxEffect
 {
 public:
@@ -435,6 +467,10 @@ public:
     {
         return  mpPlayCommentary;
     }
+    cLuxEffect_ScreenImage *GetScreenImage()
+    {
+        return  mpScreenImage;
+    }
 
 private:
     cLuxEffect_Fade *mpFade;
@@ -447,6 +483,7 @@ private:
     cLuxEffect_RadialBlur *mpRadialBlur;
     cLuxEffect_EmotionFlash *mpEmotionFlash;
     cLuxEffect_PlayCommentary *mpPlayCommentary;
+    cLuxEffect_ScreenImage *mpScreenImage;
 
     std::vector<iLuxEffect*> mvEffects;
 
