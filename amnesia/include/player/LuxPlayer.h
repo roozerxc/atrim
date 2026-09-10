@@ -338,6 +338,15 @@ public:
         return mbCrouchDisabled;
     }
 
+    void SetGlobalSanityDrainDisabled(bool abX)
+    {
+        mbGlobalSanityDrainDisabled = abX;
+    }
+    bool GetGlobalSanityDrainDisabled()
+    {
+        return mbGlobalSanityDrainDisabled;
+    }
+
     void SetSanityDrainDisabled(bool abX)
     {
         mbSanityDrainDisabled = abX;
@@ -622,7 +631,9 @@ private:
 
     bool mbJumpDisabled;
     bool mbCrouchDisabled;
+
     bool mbSanityDrainDisabled;
+    bool mbGlobalSanityDrainDisabled;
 
     float mfEventMoveSpeedMul;
     float mfEventRunSpeedMul;

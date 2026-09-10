@@ -212,7 +212,9 @@ void cLuxPlayer::Reset()
 
     mbJumpDisabled = false;
     mbCrouchDisabled = false;
+
     mbSanityDrainDisabled = false;
+    mbGlobalSanityDrainDisabled = false;
 
     mbIsInWater = false;
     msWaterStepSound = "";
@@ -615,40 +617,46 @@ void cLuxPlayer::GiveDamage(float afAmount, int alStrength, eLuxDamageType aType
 
 void cLuxPlayer::GiveSanityDamage(float afAmount)
 {
-    gpBase->mpHintHandler->Add("SanityHit", kTranslate("Hints", "SanityHit"), 0);
+    if(gpBase->mpPlayer->GetGlobalSanityDrainDisabled() == false)
+    {
+        gpBase->mpHintHandler->Add("SanityHit", kTranslate("Hints", "SanityHit"), 0);
 
-    LowerSanity(afAmount, true);
+        LowerSanity(afAmount, true);
 
-    mpSanity->StartHit();
+        mpSanity->StartHit();
+    }
 }
 
 
 void cLuxPlayer::LowerSanity(float afAmount, bool abUseEffect)
 {
-    if(mfHealth <=0)
+    if(gpBase->mpPlayer->GetGlobalSanityDrainDisabled() == false)
     {
-        return;
-    }
-
-    mfSanity -= afAmount;
-    if(mfSanity < 0)
-    {
-        mfSanity =0;
-
-
-        mpInsanityCollapse->Start();
-
-        //////////////////
-        // HARDMODE
-        if (gpBase->mbHardMode)
+        if(mfHealth <=0)
         {
-            SetHealth(0.f);
+            return;
         }
-    }
 
-    if(abUseEffect)
-    {
-        mpSanity->SetSanityLost();
+        mfSanity -= afAmount;
+        if(mfSanity < 0)
+        {
+            mfSanity =0;
+
+
+            mpInsanityCollapse->Start();
+
+            //////////////////
+            // HARDMODE
+            if (gpBase->mbHardMode)
+            {
+                SetHealth(0.f);
+            }
+        }
+
+        if(abUseEffect)
+        {
+            mpSanity->SetSanityLost();
+        }
     }
 }
 

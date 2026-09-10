@@ -1568,7 +1568,7 @@ void cLuxPlayerSanity::UpdateCheckEnemySeen(double adFixedDelta)
     // If seen, lower sanity and increase seen count
     if(bSeenEnemy)
     {
-        if(mpPlayer->GetSanityDrainDisabled()==false)
+        if(mpPlayer->GetGlobalSanityDrainDisabled()==false)
         {
             mpPlayer->LowerSanity(mfNearEnemyDecrease, true);
         }
@@ -1637,7 +1637,12 @@ void cLuxPlayerSanity::UpdateEnemySeenEffect(double adFixedDelta)
             if(mfSeenEnemyCount>1)
             {
                 mfSeenEnemyCount =1;
-                gpBase->mpHintHandler->Add("EnemySeen", kTranslate("Hints", "EnemySeen"), 0);
+
+                // Only display the message IF global sanity drain is NOT disabled
+                if(mpPlayer->GetGlobalSanityDrainDisabled() == false)
+                {
+                    gpBase->mpHintHandler->Add("EnemySeen", kTranslate("Hints", "EnemySeen"), 0);
+                }
             }
         }
 
@@ -3219,8 +3224,9 @@ void cLuxPlayerInDarkness::Update(double adFixedDelta)
 
         ////////////////////////////
         //Lower sanity
-        if(    mpPlayer->GetHelperFlashback()->IsActive()==false && mpPlayer->GetSanityDrainDisabled()==false &&
-                gpBase->mpEffectHandler->GetEmotionFlash()->IsActive()==false)
+        if(mpPlayer->GetHelperFlashback()->IsActive()==false &&
+            (mpPlayer->GetSanityDrainDisabled()==false && mpPlayer->GetGlobalSanityDrainDisabled()==false) &&
+            gpBase->mpEffectHandler->GetEmotionFlash()->IsActive()==false)
         {
             mpPlayer->LowerSanity(mfSanityLossPerSecond * (float)adFixedDelta * mfSanityLossMul, true);
 

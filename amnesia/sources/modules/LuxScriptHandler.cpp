@@ -488,7 +488,16 @@ void cLuxScriptHandler::InitScriptFunctions()
     AddFunc("void MovePlayerForward(float afAmount)",(void *)MovePlayerForward);
     AddFunc("void SetPlayerPermaDeathSound(string &in asSound)",(void *)SetPlayerPermaDeathSound);
 
+    // this should prevent EVERYTHING from draining player sanity, including enemies, darkness, etc.
+    AddFunc("void SetGlobalSanityDrainDisabled(bool abX)",(void *)SetGlobalSanityDrainDisabled);
+
+    // this should just call back to the regular SetSanityDrainDisabled script function.
+    AddFunc("void SetPlayerSanityDrainDisabled(bool abX)",(void *)SetPlayerSanityDrainDisabled);
+
+    // old behaviors
+    AddFunc("void SetEnemySanityDecreaseActive(string &in asName, bool abX)",(void *)SetEnemySanityDecreaseActive);
     AddFunc("void SetSanityDrainDisabled(bool abX)",(void *)SetSanityDrainDisabled);
+
     AddFunc("void GiveSanityBoost()",(void *)GiveSanityBoost);
     AddFunc("void GiveSanityBoostSmall()", (void *)GiveSanityBoostSmall);
     AddFunc("void GiveSanityDamage(float afAmount, bool abUseEffect)",(void *)GiveSanityDamage);
@@ -634,7 +643,6 @@ void cLuxScriptHandler::InitScriptFunctions()
     AddFunc("void AlertEnemyOfPlayerPresence(string &in asName)",(void *)AlertEnemyOfPlayerPresence);
     AddFunc("void AddEnemyPatrolNode(string &in asEnemyName, string &in asNodeName, float afWaitTime, string &in asAnimation)",(void *)AddEnemyPatrolNode);
     AddFunc("void ClearEnemyPatrolNodes(string &in asEnemyName)",(void *)ClearEnemyPatrolNodes);
-    AddFunc("void SetEnemySanityDecreaseActive(string &in asName, bool abX)",(void *)SetEnemySanityDecreaseActive);
     AddFunc("void TeleportEnemyToNode(string &in asEnemyName, string &in asNodeName, bool abChangeY)",(void *)TeleportEnemyToNode);
     AddFunc("void TeleportEnemyToEntity(string &in asEnemyName, string &in asTargetEntity, string &in asTargetBody, bool abChangeY)",(void *)TeleportEnemyToEntity);
 #if LUX_ENEMY_MANPIG
@@ -1556,6 +1564,32 @@ void __stdcall cLuxScriptHandler::SetPlayerPermaDeathSound(string& asSound)
 
 //-----------------------------------------------------------------------
 
+void __stdcall cLuxScriptHandler::SetGlobalSanityDrainDisabled(bool abX)
+{
+    gpBase->mpPlayer->SetGlobalSanityDrainDisabled(abX);
+}
+
+//-----------------------------------------------------------------------
+
+void __stdcall cLuxScriptHandler::SetPlayerSanityDrainDisabled(bool abX)
+{
+    SetSanityDrainDisabled(abX);
+}
+
+//-----------------------------------------------------------------------
+
+void __stdcall cLuxScriptHandler::SetEnemySanityDecreaseActive(string& asName, bool abX)
+{
+    BEGIN_SET_PROPERTY(eLuxEntityType_Enemy,-1)
+
+    iLuxEnemy *pEnemy = ToEnemy(pEntity);
+    pEnemy->SetSanityDecreaseActive(abX);
+
+    END_SET_PROPERTY
+}
+
+//-----------------------------------------------------------------------
+
 void __stdcall cLuxScriptHandler::SetSanityDrainDisabled(bool abX)
 {
     gpBase->mpPlayer->SetSanityDrainDisabled(abX);
@@ -1613,13 +1647,16 @@ void __stdcall cLuxScriptHandler::GiveSanityBoostSmall()
 
 void __stdcall cLuxScriptHandler::GiveSanityDamage(float afAmount, bool abUseEffect)
 {
-    if(abUseEffect)
+    if(gpBase->mpPlayer->GetGlobalSanityDrainDisabled() == false)
     {
-        gpBase->mpPlayer->GiveSanityDamage(afAmount);
-    }
-    else
-    {
-        gpBase->mpPlayer->LowerSanity(afAmount, false);
+        if(abUseEffect)
+        {
+            gpBase->mpPlayer->GiveSanityDamage(afAmount);
+        }
+        else
+        {
+            gpBase->mpPlayer->LowerSanity(afAmount, false);
+        }
     }
 }
 
@@ -3337,16 +3374,6 @@ void __stdcall cLuxScriptHandler::ClearEnemyPatrolNodes(string& asName)
 
     iLuxEnemy *pEnemy = ToEnemy(pEntity);
     pEnemy->ClearPatrolNodes();
-
-    END_SET_PROPERTY
-}
-
-void __stdcall cLuxScriptHandler::SetEnemySanityDecreaseActive(string& asName, bool abX)
-{
-    BEGIN_SET_PROPERTY(eLuxEntityType_Enemy,-1)
-
-    iLuxEnemy *pEnemy = ToEnemy(pEntity);
-    pEnemy->SetSanityDecreaseActive(abX);
 
     END_SET_PROPERTY
 }
