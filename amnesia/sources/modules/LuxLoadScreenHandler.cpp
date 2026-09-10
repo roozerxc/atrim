@@ -60,6 +60,10 @@ cLuxLoadScreenHandler::cLuxLoadScreenHandler() : iLuxUpdateable("LuxLoadScreenHa
 
     mfFadeOutTime = gpBase->mpMenuCfg->GetFloat("LoadScreen","FadeOutTime", 0);
     mfTextDurationMul = gpBase->mpMenuCfg->GetFloat("LoadScreen","TextDurationMul", 0);
+
+    mpLoadingTextColor     = gpBase->mpMenuCfg->GetColor("LoadScreen", "LoadingTextColor",     cColor(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f));
+    mpBaseLoadingTextColor = gpBase->mpMenuCfg->GetColor("LoadScreen", "BaseLoadingTextColor", cColor(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f));
+    mpGameLoadingTextColor = gpBase->mpMenuCfg->GetColor("LoadScreen", "GameLoadingTextColor", cColor(255.0f / 255.0f,  0.0f  / 255.0f,  0.0f  / 255.0f));
 }
 
 //-----------------------------------------------------------------------
@@ -247,7 +251,7 @@ void cLuxLoadScreenHandler::DrawMenuScreen()
     //Draw Text
     cVector2f vSize(20);
     cVector3f vPos(400, 530,1);
-    pSet->DrawFont(sLoading, mpFontDefault, vPos, vSize, cColor(1,1), eFontAlign_Center);
+    pSet->DrawFont(sLoading, mpFontDefault, vPos, vSize, cColor(mpBaseLoadingTextColor.r, mpBaseLoadingTextColor.g, mpBaseLoadingTextColor.b, 1.0f), eFontAlign_Center);
 
     gpBase->mpHelpFuncs->DrawSetToScreen();
 
@@ -439,7 +443,9 @@ void cLuxLoadScreenHandler::DrawGameScreen(cGuiSet *apSet)
         cVector3f vTextPos(400-mfTextMaxWidth/2,fY,1);
         for(size_t i=0; i<vTextRows.size(); ++i)
         {
-            apSet->DrawFont(vTextRows[i], mpFontDefault, vTextPos, mvTextFontSize, cColor(1,1));
+            apSet->DrawFont(vTextRows[i], mpFontDefault, vTextPos, mvTextFontSize,
+                cColor(mpLoadingTextColor.r, mpLoadingTextColor.g, mpLoadingTextColor.b, 1.0f));
+
             vTextPos.y += mvTextFontSize.y+2;
         }
 
@@ -448,7 +454,9 @@ void cLuxLoadScreenHandler::DrawGameScreen(cGuiSet *apSet)
         tWString sLoading = kTranslate("General", "Loading");
         cVector3f vPos(400, mfLoadingY,1);
 
-        apSet->DrawFont(sLoading, mpFontDefault, vPos, mvLoadingFontSize, cColor(1,0,0,mfLoadingAlpha), eFontAlign_Center);
+        apSet->DrawFont(sLoading, mpFontDefault, vPos, mvLoadingFontSize,
+            cColor(mpGameLoadingTextColor.r, mpGameLoadingTextColor.g, mpGameLoadingTextColor.b, mfLoadingAlpha),
+            eFontAlign_Center);
     }
     //////////////////////
     //Draw loading only
@@ -457,7 +465,9 @@ void cLuxLoadScreenHandler::DrawGameScreen(cGuiSet *apSet)
         tWString sLoading = kTranslate("General", "Loading");
         cVector3f vPos(400, 300-mvLoadingFontSize.y/2,1);
 
-        apSet->DrawFont(sLoading, mpFontDefault, vPos, mvLoadingFontSize, cColor(1,1), eFontAlign_Center);
+        apSet->DrawFont(sLoading, mpFontDefault, vPos, mvLoadingFontSize,
+            cColor(mpBaseLoadingTextColor.r, mpBaseLoadingTextColor.g, mpBaseLoadingTextColor.b, 1.0f),
+            eFontAlign_Center);
     }
 }
 

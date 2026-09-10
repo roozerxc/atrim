@@ -107,6 +107,10 @@ private:
     float mfFadeOutTime;
     float mfTextDurationMul;
 
+    cColor mpLoadingTextColor;
+    cColor mpBaseLoadingTextColor;
+    cColor mpGameLoadingTextColor;
+
     //////////////////
     // Variables
     cGuiGfxElement* mpCurrentImage;
