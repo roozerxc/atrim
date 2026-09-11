@@ -82,14 +82,12 @@ cLuxScriptHandler::~cLuxScriptHandler()
 
 //-----------------------------------------------------------------------
 
-
 void cLuxScriptHandler::OnStart()
 {
 
 }
 
 //-----------------------------------------------------------------------
-
 
 void cLuxScriptHandler::Reset()
 {
@@ -100,6 +98,13 @@ void cLuxScriptHandler::Reset()
 
 void cLuxScriptHandler::Update(double adFixedDelta)
 {
+    cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
+    if(pMap == NULL)
+    {
+        return;
+    }
+
+    pMap->RunUpdateCallback(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------

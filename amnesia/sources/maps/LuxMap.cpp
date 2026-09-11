@@ -424,7 +424,7 @@ void cLuxMap::RunUpdateCallback(double adFixedDelta)
         return;
     }
 
-    mpScript->RunFuncFloat("OnUpdate", (float)adFixedDelta);
+    mpScript->RunFuncFloat("OnUpdate", static_cast<float>(adFixedDelta));
 }
 
 
