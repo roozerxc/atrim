@@ -491,8 +491,8 @@ void cLuxScriptHandler::InitScriptFunctions()
     // this should prevent EVERYTHING from draining player sanity, including enemies, darkness, etc.
     AddFunc("void SetGlobalSanityDrainDisabled(bool abX)",(void *)SetGlobalSanityDrainDisabled);
 
-    // this should just call back to the regular SetSanityDrainDisabled script function.
-    AddFunc("void SetPlayerSanityDrainDisabled(bool abX)",(void *)SetPlayerSanityDrainDisabled);
+    // this should just fall back to the regular SetSanityDrainDisabled script function.
+    AddFunc("void SetPlayerSanityDrainDisabled(bool abX)",(void *)SetSanityDrainDisabled);
 
     // old behaviors
     AddFunc("void SetEnemySanityDecreaseActive(string &in asName, bool abX)",(void *)SetEnemySanityDecreaseActive);
@@ -1567,13 +1567,6 @@ void __stdcall cLuxScriptHandler::SetPlayerPermaDeathSound(string& asSound)
 void __stdcall cLuxScriptHandler::SetGlobalSanityDrainDisabled(bool abX)
 {
     gpBase->mpPlayer->SetGlobalSanityDrainDisabled(abX);
-}
-
-//-----------------------------------------------------------------------
-
-void __stdcall cLuxScriptHandler::SetPlayerSanityDrainDisabled(bool abX)
-{
-    SetSanityDrainDisabled(abX);
 }
 
 //-----------------------------------------------------------------------

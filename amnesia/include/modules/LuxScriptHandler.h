@@ -205,7 +205,6 @@ private:
     static void __stdcall SetPlayerPermaDeathSound(string& asSound);
 
     static void __stdcall SetGlobalSanityDrainDisabled(bool abX);
-    static void __stdcall SetPlayerSanityDrainDisabled(bool abX);
 
     static void __stdcall SetSanityDrainDisabled(bool abX);
     static void __stdcall SetEnemySanityDecreaseActive(string& asName, bool abX);
