@@ -2064,7 +2064,14 @@ void cLowLevelGraphicsSDL::DrawLineQuad(const cVector3f &avPos,const cVector2f &
 
 void cLowLevelGraphicsSDL::AddVertexToBatch(const cVertex *apVtx)
 {
-    ;
+    if(mlVertexCount / mlBatchStride >= mlBatchArraySize)
+    {
+        Error("Vertex batch has overflown! Flushing early!\n");
+
+        // Zero counter so the current vtx is lost
+        FlushTriBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
+            eVtxBatchFlag_Texture0, true);
+    }
 
     //Coord
     mpVertexArray[mlVertexCount + 0] =    apVtx->pos.x;
@@ -2084,29 +2091,27 @@ void cLowLevelGraphicsSDL::AddVertexToBatch(const cVertex *apVtx)
     mpVertexArray[mlVertexCount + 11] =    apVtx->norm.y;
     mpVertexArray[mlVertexCount + 12] =    apVtx->norm.z;
 
-    mlVertexCount = mlVertexCount + mlBatchStride;
-
-    if(mlVertexCount/mlBatchStride >= mlBatchArraySize)
-    {
-        //Make the array larger.
-    }
+    mlVertexCount += mlBatchStride;
 }
 
 //-----------------------------------------------------------------------
 
 void cLowLevelGraphicsSDL::AddVertexToBatch(const cVertex *apVtx, const cVector3f* avTransform)
 {
-    ;
+    if(mlVertexCount / mlBatchStride >= mlBatchArraySize)
+    {
+        Error("Vertex batch has overflown! Flushing early!\n");
+
+        // Zero counter so the current vtx is lost
+        FlushTriBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
+            eVtxBatchFlag_Texture0, true);
+    }
 
     //Coord
     mpVertexArray[mlVertexCount + 0] =    apVtx->pos.x+avTransform->x;
     mpVertexArray[mlVertexCount + 1] =    apVtx->pos.y+avTransform->y;
     mpVertexArray[mlVertexCount + 2] =    apVtx->pos.z+avTransform->z;
 
-    /*Log("Trans: %s\n",avTransform->ToString().c_str());
-    Log("Adding: %f:%f:%f\n",mpVertexArray[mlVertexCount + 0],
-    mpVertexArray[mlVertexCount + 1],
-    mpVertexArray[mlVertexCount + 2]);*/
     //Color
     mpVertexArray[mlVertexCount + 3] =    apVtx->col.r;
     mpVertexArray[mlVertexCount + 4] =    apVtx->col.g;
@@ -2117,29 +2122,19 @@ void cLowLevelGraphicsSDL::AddVertexToBatch(const cVertex *apVtx, const cVector3
     mpVertexArray[mlVertexCount + 8] =    apVtx->tex.y;
     mpVertexArray[mlVertexCount + 9] =    apVtx->tex.z;
 
-    /*Log("Tex: %f:%f:%f\n",mpVertexArray[mlVertexCount + 7],
-    mpVertexArray[mlVertexCount + 8],
-    mpVertexArray[mlVertexCount + 9]);*/
-
     //Normal coord
     mpVertexArray[mlVertexCount + 10] =    apVtx->norm.x;
     mpVertexArray[mlVertexCount + 11] =    apVtx->norm.y;
     mpVertexArray[mlVertexCount + 12] =    apVtx->norm.z;
 
-    mlVertexCount = mlVertexCount + mlBatchStride;
-
-    if(mlVertexCount/mlBatchStride >= mlBatchArraySize)
-    {
-        //Make the array larger.
-    }
+    mlVertexCount += mlBatchStride;
 }
 
 //-----------------------------------------------------------------------
 
 void cLowLevelGraphicsSDL::AddVertexToBatch(const cVertex *apVtx, const cMatrixf* aMtx)
 {
-    ;
-
+    Error("Vertex to batch matrix func not implemented\n");
 }
 
 //-----------------------------------------------------------------------
@@ -2147,7 +2142,14 @@ void cLowLevelGraphicsSDL::AddVertexToBatch(const cVertex *apVtx, const cMatrixf
 void cLowLevelGraphicsSDL::AddVertexToBatch_Size2D(const cVertex *apVtx, const cVector3f* avTransform,
         const cColor* apCol,const float& mfW, const float& mfH)
 {
-    ;
+    if(mlVertexCount / mlBatchStride >= mlBatchArraySize)
+    {
+        Error("Vertex batch has overflown! Flushing early!\n");
+
+        // Zero counter so the current vtx is lost
+        FlushTriBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
+            eVtxBatchFlag_Texture0, true);
+    }
 
     //Coord
     mpVertexArray[mlVertexCount + 0] =    avTransform->x + mfW;
@@ -2165,13 +2167,7 @@ void cLowLevelGraphicsSDL::AddVertexToBatch_Size2D(const cVertex *apVtx, const c
     mpVertexArray[mlVertexCount + 8] =    apVtx->tex.y;
     mpVertexArray[mlVertexCount + 9] =    apVtx->tex.z;
 
-
-    mlVertexCount = mlVertexCount + mlBatchStride;
-
-    if(mlVertexCount/mlBatchStride >= mlBatchArraySize)
-    {
-        //Make the array larger.
-    }
+    mlVertexCount += mlBatchStride;
 }
 
 //-----------------------------------------------------------------------
@@ -2179,7 +2175,14 @@ void cLowLevelGraphicsSDL::AddVertexToBatch_Size2D(const cVertex *apVtx, const c
 void cLowLevelGraphicsSDL::AddVertexToBatch_Raw(    const cVector3f& avPos, const cColor &aColor,
         const cVector3f& avTex)
 {
-    ;
+    if(mlVertexCount / mlBatchStride >= mlBatchArraySize)
+    {
+        Error("Vertex batch has overflown! Flushing early!\n");
+
+        // Zero counter so the current vtx is lost
+        FlushTriBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
+            eVtxBatchFlag_Texture0, true);
+    }
 
     //Coord
     mpVertexArray[mlVertexCount + 0] =    avPos.x;
@@ -2197,8 +2200,7 @@ void cLowLevelGraphicsSDL::AddVertexToBatch_Raw(    const cVector3f& avPos, cons
     mpVertexArray[mlVertexCount + 8] =    avTex.y;
     mpVertexArray[mlVertexCount + 9] =    avTex.z;
 
-
-    mlVertexCount = mlVertexCount + mlBatchStride;
+    mlVertexCount += mlBatchStride;
 }
 
 
@@ -2206,15 +2208,17 @@ void cLowLevelGraphicsSDL::AddVertexToBatch_Raw(    const cVector3f& avPos, cons
 
 void cLowLevelGraphicsSDL::AddIndexToBatch(int alIndex)
 {
-    ;
+    if(mlIndexCount >= mlBatchArraySize)
+    {
+        Error("Index batch has overflown! Flushing early!\n");
+
+        // Zero counter so the current vtx batch is lost
+        FlushTriBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
+            eVtxBatchFlag_Texture0, true);
+    }
 
     mpIndexArray[mlIndexCount] = alIndex;
     mlIndexCount++;
-
-    if(mlIndexCount>=mlBatchArraySize)
-    {
-        //Make the array larger.
-    }
 }
 
 //-----------------------------------------------------------------------
