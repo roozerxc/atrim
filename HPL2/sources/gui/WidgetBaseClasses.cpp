@@ -562,9 +562,7 @@ void iFileBrowser::SetPathFromString(const tWString &asPath)
         {
             const tWString& sPathPiece = vInputPath[i];
 
-            if(sPathPiece==_W(".") || sPathPiece==_W(""))
-                ;
-            else if(sPathPiece == _W(".."))
+            if(sPathPiece == _W(".."))
             {
                 if(mvCurrentDirFullPath.empty())
                 {
@@ -575,7 +573,7 @@ void iFileBrowser::SetPathFromString(const tWString &asPath)
                     mvCurrentDirFullPath.pop_back();
                 }
             }
-            else
+            else if(sPathPiece != _W(".") || sPathPiece != _W(""))
             {
                 mvCurrentDirFullPath.push_back(sPathPiece);
             }

@@ -437,9 +437,7 @@ bool iWidgetListBoxBase::OnMouseDown(const cGuiMessageData& aData)
     }
 
     cWidgetItem* pItem = GetItem(mlCursorPos);
-    if(GetMultiSelectionNum()==1 && pItem && pItem->IsSelected())
-        ;
-    else
+    if(GetMultiSelectionNum() != 1 || !pItem || !pItem->IsSelected())
     {
         SetSelectedItem(mlCursorPos, false, true, type, bClearSelection);
     }
