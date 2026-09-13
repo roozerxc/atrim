@@ -49,7 +49,7 @@ namespace hpl
 
 cLowLevelGraphicsSDL::cLowLevelGraphicsSDL()
 {
-    mlBatchArraySize = 20000;
+    mlBatchArraySize = 65536;
     mlVertexCount = 0;
     mlIndexCount =0;
     mpScreen = 0;
