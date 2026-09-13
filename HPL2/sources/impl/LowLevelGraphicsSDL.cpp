@@ -1163,6 +1163,42 @@ void cLowLevelGraphicsSDL::SetStencilTwoSide(eStencilFunc aFrontFunc,eStencilFun
 
     mbDoubleSidedStencilIsSet = true;
 
+    static bool bTwoSideStencilChecked = false;
+    static bool bTwoSideStencilIsSafe = false;
+
+    if(bTwoSideStencilChecked == false)
+    {
+        bTwoSideStencilChecked = true;
+
+        // On nvidia prefer the two side stencil
+        // On ati just tell it to use separate stencils.
+
+        if(GLEW_EXT_stencil_two_side)
+        {
+            bTwoSideStencilIsSafe = true;
+        }
+        else if(GLEW_ATI_separate_stencil)
+        {
+            bTwoSideStencilIsSafe = true;
+        }
+        else
+        {
+            bTwoSideStencilIsSafe = false;
+        }
+
+        if(bTwoSideStencilIsSafe == false)
+        {
+            Warning("Two-Sided Stencils requested but no supported extensions were available!\n");
+        }
+    }
+
+    // Fallback to one single sided stencil if no exts found.
+    if(bTwoSideStencilIsSafe == false)
+    {
+        SetStencil(aFrontFunc, alRef, aMask, aFrontFailOp, aFrontZFailOp, aFrontZPassOp);
+        return;
+    }
+
     //Nvidia implementation
     if(GLEW_EXT_stencil_two_side)
     {
