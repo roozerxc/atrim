@@ -33,8 +33,6 @@ cSDLTexture::cSDLTexture(const tString& asName, eTextureType aType, eTextureUsag
 
 cSDLTexture::~cSDLTexture()
 {
-    ;
-
     for(size_t i=0; i<mvTextureHandles.size(); ++i)
     {
         glDeleteTextures(1,(GLuint *)&mvTextureHandles[i]);
@@ -52,8 +50,6 @@ cSDLTexture::~cSDLTexture()
 
 bool cSDLTexture::CreateFromBitmap(cBitmap* apBmp)
 {
-    ;
-
     GenerateHandles(1);
 
     return CreateFromBitmapToIndex(apBmp,0);
@@ -63,8 +59,6 @@ bool cSDLTexture::CreateFromBitmap(cBitmap* apBmp)
 
 bool cSDLTexture::CreateAnimFromBitmapVec(std::vector<cBitmap*> *avBitmaps)
 {
-    ;
-
     GenerateHandles((int)avBitmaps->size());
 
     //////////////////////////////////
@@ -84,8 +78,6 @@ bool cSDLTexture::CreateAnimFromBitmapVec(std::vector<cBitmap*> *avBitmaps)
 
 bool cSDLTexture::CreateCubeFromBitmapVec(std::vector<cBitmap*> *avBitmaps)
 {
-    ;
-
     /////////////////////////////
     //Check so everything is correct
     if(mUsage == eTextureUsage_RenderTarget || mType != eTextureType_CubeMap)
@@ -127,8 +119,6 @@ bool cSDLTexture::CreateCubeFromBitmapVec(std::vector<cBitmap*> *avBitmaps)
 
 bool cSDLTexture::CreateFromRawData(const cVector3l &avSize,ePixelFormat aPixelFormat, unsigned char *apData)
 {
-    ;
-
     GenerateHandles(1);
 
     mvSize = avSize;
@@ -185,8 +175,6 @@ bool cSDLTexture::CreateFromRawData(const cVector3l &avSize,ePixelFormat aPixelF
 void cSDLTexture::SetRawData(    int alLevel, const cVector3l& avOffset, const cVector3l& avSize,
                                  ePixelFormat aPixelFormat, void *apData)
 {
-    ;
-
     if(mbContainsData==false)
     {
         return;
@@ -351,8 +339,6 @@ void cSDLTexture::SetFilter(eTextureFilter aFilter)
         return;
     }
 
-    ;
-
     mFilter = aFilter;
     if(mbContainsData)
     {
@@ -426,8 +412,6 @@ void cSDLTexture::SetAnisotropyDegree(float afX)
         return;
     }
 
-    ;
-
     mfAnisotropyDegree = afX;
 
     GLenum GLTarget = GetGLTextureTargetEnum(mType);
@@ -451,8 +435,6 @@ void cSDLTexture::SetWrapS(eTextureWrap aMode)
     {
         return;    //Rect only has one mode! (clamp to edge)
     }
-
-    ;
 
     mWrapS = aMode;
 
@@ -483,8 +465,6 @@ void cSDLTexture::SetWrapT(eTextureWrap aMode)
         return;    //Rect only has one mode! (clamp to edge)
     }
 
-    ;
-
     mWrapT = aMode;
 
     if(mbContainsData==false)
@@ -514,8 +494,6 @@ void cSDLTexture::SetWrapR(eTextureWrap aMode)
         return;    //Rect only has one mode! (clamp to edge)
     }
 
-    ;
-
     mWrapR = aMode;
 
     if(mbContainsData==false)
@@ -544,8 +522,6 @@ void cSDLTexture::SetWrapSTR(eTextureWrap aMode)
     {
         return;    //Rect only has one mode! (clamp to edge)
     }
-
-    ;
 
     mWrapS = aMode;
     mWrapT = aMode;
@@ -582,8 +558,6 @@ void cSDLTexture::SetCompareMode(eTextureCompareMode aMode)
         return;
     }
 
-    ;
-
     GLenum GLTarget = GetGLTextureTargetEnum(mType);
     GLenum GLCompareMode = GetGLTextureCompareMode(mCompareMode);
 
@@ -607,8 +581,6 @@ void cSDLTexture::SetCompareFunc(eTextureCompareFunc aFunc)
         return;
     }
 
-    ;
-
     GLenum GLTarget = GetGLTextureTargetEnum(mType);
     GLenum GLCompareFunc = GetGLTextureCompareFunc(mCompareFunc);
 
@@ -630,8 +602,6 @@ void cSDLTexture::AutoGenerateMipmaps()
     {
         return;
     }
-
-    ;
 
     if(mbUseMipMaps == true && GLEW_SGIS_generate_mipmap)
     {

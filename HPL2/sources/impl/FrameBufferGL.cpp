@@ -22,8 +22,6 @@ cDepthStencilBufferGL::cDepthStencilBufferGL(const cVector2l& avSize, int alDept
 {
     mlHandle =0;
 
-    ;
-
     ///////////////////////////////////
     // Create packed depth and stencil
     if(alDepthBits>0 && alStencilBits>0)
@@ -116,7 +114,6 @@ cDepthStencilBufferGL::cDepthStencilBufferGL(const cVector2l& avSize, int alDept
 
 cDepthStencilBufferGL::~cDepthStencilBufferGL()
 {
-    ;
     if(mlHandle != 0)
     {
         glDeleteRenderbuffersEXT(1, &mlHandle);
@@ -134,7 +131,6 @@ cDepthStencilBufferGL::~cDepthStencilBufferGL()
 
 cFrameBufferGL::cFrameBufferGL(const tString& asName, iLowLevelGraphics* apLowLevelGraphics) : iFrameBuffer(asName, apLowLevelGraphics)
 {
-    ;
     glGenFramebuffersEXT(1, &mlHandle);
 
     mbIsUpdated = true;
@@ -145,7 +141,6 @@ cFrameBufferGL::cFrameBufferGL(const tString& asName, iLowLevelGraphics* apLowLe
 
 cFrameBufferGL::~cFrameBufferGL()
 {
-    ;
     glDeleteFramebuffersEXT(1, &mlHandle);
 }
 
@@ -244,8 +239,6 @@ void cFrameBufferGL::SetDepthTextureCubeMap(iTexture *apTexture, int alFace, int
 
 void cFrameBufferGL::SetDepthStencilBuffer(iDepthStencilBuffer* apBuffer)
 {
-    ;
-
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, mlHandle);
 
     ////////////////////////////
@@ -290,8 +283,6 @@ void cFrameBufferGL::SetDepthStencilBuffer(iDepthStencilBuffer* apBuffer)
 
 bool cFrameBufferGL::CompileAndValidate()
 {
-    ;
-
     mbIsUpdated = true;
     bool bRet = false;
 
@@ -425,8 +416,6 @@ bool cFrameBufferGL::CheckIfNullTexture(int alAttachmentType, int alAttachmentId
         return false;
     }
 
-    ;
-
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, mlHandle);
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, alAttachmentType + alAttachmentIdx,GL_TEXTURE_2D, 0,0);
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
@@ -437,8 +426,6 @@ bool cFrameBufferGL::CheckIfNullTexture(int alAttachmentType, int alAttachmentId
 //-----------------------------------------------------------------------
 void cFrameBufferGL::AttachTexture(int alAttachmentType,int alAttachmentIdx,iTexture *apTexture, int alMipmapLevel, int alExtra)
 {
-    ;
-
     eTextureType texType = apTexture->GetType();
     GLenum GLTarget = TextureTypeToGLTarget(texType);
 

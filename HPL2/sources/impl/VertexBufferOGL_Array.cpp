@@ -44,8 +44,6 @@ void cVertexBufferOGL_Array::UpdateData(tVertexElementFlag aTypes, bool abIndice
 
 void cVertexBufferOGL_Array::Draw(eVertexBufferDrawType aDrawType)
 {
-    ;
-
     eVertexBufferDrawType drawType = aDrawType == eVertexBufferDrawType_LastEnum ? mDrawType : aDrawType;
 
     ///////////////////////////////
@@ -64,8 +62,6 @@ void cVertexBufferOGL_Array::Draw(eVertexBufferDrawType aDrawType)
 void cVertexBufferOGL_Array::DrawIndices(    unsigned int *apIndices, int alCount,
         eVertexBufferDrawType aDrawType)
 {
-    ;
-
     eVertexBufferDrawType drawType = aDrawType == eVertexBufferDrawType_LastEnum ? mDrawType : aDrawType;
 
     ///////////////////////////////
@@ -82,8 +78,6 @@ void cVertexBufferOGL_Array::DrawIndices(    unsigned int *apIndices, int alCoun
 
 void cVertexBufferOGL_Array::Bind()
 {
-    ;
-
     SetVertexStates();
 }
 
@@ -91,8 +85,6 @@ void cVertexBufferOGL_Array::Bind()
 
 void cVertexBufferOGL_Array::UnBind()
 {
-    ;
-
     glBindBufferARB(GL_ARRAY_BUFFER_ARB,0);
 
     for(size_t i=0; i<mvElementArrays.size(); ++i)

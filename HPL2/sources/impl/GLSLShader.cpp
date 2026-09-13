@@ -22,8 +22,6 @@ namespace hpl
 cGLSLShader::cGLSLShader(const tString& asName,eGpuShaderType aType, iLowLevelGraphics *apLowLevelGraphics)
     : iGpuShader(asName, _W(""), aType, eGpuProgramFormat_GLSL)
 {
-    ;
-
     mpLowLevelGraphics = apLowLevelGraphics;
 
     mlHandle = glCreateShader(GetGLShaderType(aType));
@@ -31,8 +29,6 @@ cGLSLShader::cGLSLShader(const tString& asName,eGpuShaderType aType, iLowLevelGr
 
 cGLSLShader::~cGLSLShader()
 {
-    ;
-
     glDeleteShader(mlHandle);
 }
 
@@ -88,8 +84,6 @@ bool cGLSLShader::CreateFromFile(const tWString &asFile, const tString &asEntry,
 
 bool cGLSLShader::CreateFromString(const char *apStringData, const tString& asEntry, bool abPrintInfoIfFail)
 {
-    ;
-
     ///////////////////////////////////////
     //Compile
 
@@ -147,8 +141,6 @@ bool cGLSLShader::CreateFromString(const char *apStringData, const tString& asEn
 
 void cGLSLShader::LogShaderInfoLog()
 {
-    ;
-
     GLint infologLength = 0;
     GLsizei charsWritten  = 0;
     char *infoLog;

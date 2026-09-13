@@ -395,8 +395,6 @@ void cLowLevelGraphicsSDL::SetupGL()
 
 int cLowLevelGraphicsSDL::GetCaps(eGraphicCaps aType)
 {
-    ;
-
     switch(aType)
     {
     case eGraphicCaps_TextureTargetRectangle:
@@ -527,8 +525,6 @@ int cLowLevelGraphicsSDL::GetCaps(eGraphicCaps aType)
 
 void cLowLevelGraphicsSDL::ShowCursor(bool abX)
 {
-    ;
-
     if(abX)
     {
         SDL_ShowCursor(SDL_ENABLE);
@@ -590,7 +586,6 @@ bool cLowLevelGraphicsSDL::GetWindowIsVisible()
 
 void cLowLevelGraphicsSDL::SetVsyncActive(bool abX)
 {
-    ;
 #if defined(_WIN32)
     if(WGLEW_EXT_swap_control)
     {
@@ -618,15 +613,11 @@ void cLowLevelGraphicsSDL::SetVsyncActive(bool abX)
 
 void cLowLevelGraphicsSDL::SetGammaCorrection(float afX)
 {
-    ;
-
     mfGammaCorrection = afX;
 }
 
 float cLowLevelGraphicsSDL::GetGammaCorrection()
 {
-    ;
-
     return mfGammaCorrection;
 }
 
@@ -634,15 +625,11 @@ float cLowLevelGraphicsSDL::GetGammaCorrection()
 
 cVector2f cLowLevelGraphicsSDL::GetScreenSizeFloat()
 {
-    ;
-
     return cVector2f((float)mvScreenSize.x, (float)mvScreenSize.y);
 }
 
 const cVector2l& cLowLevelGraphicsSDL::GetScreenSizeInt()
 {
-    ;
-
     return mvScreenSize;
 }
 
@@ -656,8 +643,6 @@ const cVector2l& cLowLevelGraphicsSDL::GetScreenSizeInt()
 
 iFontData* cLowLevelGraphicsSDL::CreateFontData(const tString &asName)
 {
-    ;
-
     return hplNew( cSDLFontData, (asName, this) );
 }
 
@@ -665,15 +650,11 @@ iFontData* cLowLevelGraphicsSDL::CreateFontData(const tString &asName)
 
 iGpuProgram* cLowLevelGraphicsSDL::CreateGpuProgram(const tString& asName)
 {
-    ;
-
     return hplNew( cGLSLProgram, (asName) );
 }
 
 iGpuShader* cLowLevelGraphicsSDL::CreateGpuShader(const tString& asName, eGpuShaderType aType)
 {
-    ;
-
     return hplNew( cGLSLShader, (asName,aType, this) );
 }
 
@@ -681,8 +662,6 @@ iGpuShader* cLowLevelGraphicsSDL::CreateGpuShader(const tString& asName, eGpuSha
 
 iTexture* cLowLevelGraphicsSDL::CreateTexture(const tString &asName,eTextureType aType,   eTextureUsage aUsage)
 {
-    ;
-
     cSDLTexture *pTexture = hplNew( cSDLTexture, (asName,aType, aUsage, this) );
 
     return pTexture;
@@ -695,8 +674,6 @@ iVertexBuffer* cLowLevelGraphicsSDL::CreateVertexBuffer(eVertexBufferType aType,
         eVertexBufferUsageType aUsageType,
         int alReserveVtxSize,int alReserveIdxSize)
 {
-    ;
-
     //return hplNew( cVertexBufferVBO,(this, aFlags,aDrawType,aUsageType,alReserveVtxSize,alReserveIdxSize) );
     //return hplNew( cVertexBufferOGL, (this, aFlags,aDrawType,aUsageType,alReserveVtxSize,alReserveIdxSize) );
 
@@ -715,8 +692,6 @@ iVertexBuffer* cLowLevelGraphicsSDL::CreateVertexBuffer(eVertexBufferType aType,
 
 iFrameBuffer* cLowLevelGraphicsSDL::CreateFrameBuffer(const tString& asName)
 {
-    ;
-
     if(GetCaps(eGraphicCaps_RenderToTexture)==0)
     {
         return NULL;
@@ -729,8 +704,6 @@ iFrameBuffer* cLowLevelGraphicsSDL::CreateFrameBuffer(const tString& asName)
 
 iDepthStencilBuffer* cLowLevelGraphicsSDL::CreateDepthStencilBuffer(const cVector2l& avSize, int alDepthBits, int alStencilBits)
 {
-    ;
-
     if(GetCaps(eGraphicCaps_RenderToTexture)==0)
     {
         return NULL;
@@ -743,8 +716,6 @@ iDepthStencilBuffer* cLowLevelGraphicsSDL::CreateDepthStencilBuffer(const cVecto
 
 iOcclusionQuery* cLowLevelGraphicsSDL::CreateOcclusionQuery()
 {
-    ;
-
     return hplNew(cOcclusionQueryOGL, () );
 }
 
@@ -758,8 +729,6 @@ iOcclusionQuery* cLowLevelGraphicsSDL::CreateOcclusionQuery()
 
 void cLowLevelGraphicsSDL::ClearFrameBuffer(tClearFrameBufferFlag aFlags)
 {
-    ;
-
     GLbitfield bitmask=0;
 
     if(aFlags & eClearFrameBufferFlag_Color)
@@ -782,20 +751,14 @@ void cLowLevelGraphicsSDL::ClearFrameBuffer(tClearFrameBufferFlag aFlags)
 
 void cLowLevelGraphicsSDL::SetClearColor(const cColor& aCol)
 {
-    ;
-
     glClearColor(aCol.r, aCol.g, aCol.b, aCol.a);
 }
 void cLowLevelGraphicsSDL::SetClearDepth(float afDepth)
 {
-    ;
-
     glClearDepth(afDepth);
 }
 void cLowLevelGraphicsSDL::SetClearStencil(int alVal)
 {
-    ;
-
     glClearStencil(alVal);
 }
 
@@ -804,8 +767,6 @@ void cLowLevelGraphicsSDL::SetClearStencil(int alVal)
 void cLowLevelGraphicsSDL::CopyFrameBufferToTexure(iTexture* apTex, const cVector2l &avPos,
         const cVector2l &avSize, const cVector2l &avTexOffset)
 {
-    ;
-
     if(apTex==NULL)
     {
         return;
@@ -839,8 +800,6 @@ void cLowLevelGraphicsSDL::CopyFrameBufferToTexure(iTexture* apTex, const cVecto
 
 cBitmap* cLowLevelGraphicsSDL::CopyFrameBufferToBitmap(    const cVector2l &avScreenPos,const cVector2l &avScreenSize)
 {
-    ;
-
     cVector2l vSize = avScreenSize;
     if(vSize.x <= 0)
     {
@@ -886,8 +845,6 @@ cBitmap* cLowLevelGraphicsSDL::CopyFrameBufferToBitmap(    const cVector2l &avSc
 
 void cLowLevelGraphicsSDL::SetCurrentFrameBuffer(iFrameBuffer* apFrameBuffer, const cVector2l &avPos, const cVector2l& avSize)
 {
-    ;
-
     ///////////////////////////////////////////////////////
     //Set frame buffer
     if(true)//mpFrameBuffer != apFrameBuffer)
@@ -954,8 +911,6 @@ void cLowLevelGraphicsSDL::SetCurrentFrameBuffer(iFrameBuffer* apFrameBuffer, co
 
 void cLowLevelGraphicsSDL::SetFrameBufferDrawTargets(int *apTargets, int alNumOfTargets)
 {
-    ;
-
     std::vector<GLenum> vAttachmentVec;
     for(int i=0; i<alNumOfTargets; ++i)
     {
@@ -968,8 +923,6 @@ void cLowLevelGraphicsSDL::SetFrameBufferDrawTargets(int *apTargets, int alNumOf
 
 void cLowLevelGraphicsSDL::FlushRendering()
 {
-    ;
-
     glFlush();
 }
 
@@ -977,7 +930,6 @@ void cLowLevelGraphicsSDL::FlushRendering()
 
 void cLowLevelGraphicsSDL::SwapBuffers()
 {
-    ;
     SDL_GL_SwapBuffers();
 }
 
@@ -991,8 +943,6 @@ void cLowLevelGraphicsSDL::SwapBuffers()
 
 void cLowLevelGraphicsSDL::SetColorWriteActive(bool abR,bool abG,bool abB,bool abA)
 {
-    ;
-
     if( mColorWrite.r == abR &&
             mColorWrite.g == abG &&
             mColorWrite.b == abB &&
@@ -1012,8 +962,6 @@ void cLowLevelGraphicsSDL::SetColorWriteActive(bool abR,bool abG,bool abB,bool a
 
 void cLowLevelGraphicsSDL::SetDepthWriteActive(bool abX)
 {
-    ;
-
     if(mbDepthWrite == abX)
     {
         return;
@@ -1028,8 +976,6 @@ void cLowLevelGraphicsSDL::SetDepthWriteActive(bool abX)
 
 void cLowLevelGraphicsSDL::SetDepthTestActive(bool abX)
 {
-    ;
-
     if(mbDepthTestActive == abX)
     {
         return;
@@ -1051,8 +997,6 @@ void cLowLevelGraphicsSDL::SetDepthTestActive(bool abX)
 
 void cLowLevelGraphicsSDL::SetDepthTestFunc(eDepthTestFunc aFunc)
 {
-    ;
-
     if(mDepthTestFunc == aFunc)
     {
         return;
@@ -1066,8 +1010,6 @@ void cLowLevelGraphicsSDL::SetDepthTestFunc(eDepthTestFunc aFunc)
 
 void cLowLevelGraphicsSDL::SetAlphaTestActive(bool abX)
 {
-    ;
-
     if(mbAlphaTestActive == abX)
     {
         return;
@@ -1089,8 +1031,6 @@ void cLowLevelGraphicsSDL::SetAlphaTestActive(bool abX)
 
 void cLowLevelGraphicsSDL::SetAlphaTestFunc(eAlphaTestFunc aFunc,float afRef)
 {
-    ;
-
     if(mAlphaTestFunc == aFunc && mfAlphaTestFuncRef == afRef)
     {
         return;
@@ -1106,8 +1046,6 @@ void cLowLevelGraphicsSDL::SetAlphaTestFunc(eAlphaTestFunc aFunc,float afRef)
 
 void cLowLevelGraphicsSDL::SetStencilActive(bool abX)
 {
-    ;
-
     if(abX)
     {
         //DO this check, so you can setup stencil and then turn on / off afterwards
@@ -1129,8 +1067,6 @@ void cLowLevelGraphicsSDL::SetStencilActive(bool abX)
 
 void cLowLevelGraphicsSDL::SetStencilWriteMask(unsigned int alMask)
 {
-    ;
-
     glStencilMask(alMask);
 }
 //-----------------------------------------------------------------------
@@ -1138,8 +1074,6 @@ void cLowLevelGraphicsSDL::SetStencilWriteMask(unsigned int alMask)
 void cLowLevelGraphicsSDL::SetStencil(eStencilFunc aFunc,int alRef, unsigned int aMask,
                                       eStencilOp aFailOp,eStencilOp aZFailOp,eStencilOp aZPassOp)
 {
-    ;
-
     mbDoubleSidedStencilIsSet = false;
     if(GLEW_EXT_stencil_two_side)
     {
@@ -1159,8 +1093,6 @@ void cLowLevelGraphicsSDL::SetStencilTwoSide(eStencilFunc aFrontFunc,eStencilFun
         eStencilOp aFrontFailOp,eStencilOp aFrontZFailOp,eStencilOp aFrontZPassOp,
         eStencilOp aBackFailOp,eStencilOp aBackZFailOp,eStencilOp aBackZPassOp)
 {
-    ;
-
     mbDoubleSidedStencilIsSet = true;
 
     static bool bTwoSideStencilChecked = false;
@@ -1244,8 +1176,6 @@ void cLowLevelGraphicsSDL::SetStencilTwoSide(eStencilFunc aFrontFunc,eStencilFun
 
 void cLowLevelGraphicsSDL::SetCullActive(bool abX)
 {
-    ;
-
     //if(mbCullActive == abX) return;
     mbCullActive = abX;
 
@@ -1279,8 +1209,6 @@ void cLowLevelGraphicsSDL::SetCullMode(eCullMode aMode)
 
 void cLowLevelGraphicsSDL::SetScissorActive(bool abX)
 {
-    ;
-
     if(mbScissorActive == abX)
     {
         return;
@@ -1302,8 +1230,6 @@ void cLowLevelGraphicsSDL::SetScissorActive(bool abX)
 
 void cLowLevelGraphicsSDL::SetScissorRect(const cVector2l& avPos, const cVector2l& avSize)
 {
-    ;
-
     cVector2l vFrameBufferSize;
     if(mpFrameBuffer)
     {
@@ -1322,8 +1248,6 @@ void cLowLevelGraphicsSDL::SetScissorRect(const cVector2l& avPos, const cVector2
 
 void cLowLevelGraphicsSDL::SetClipPlane(int alIdx, const cPlanef& aPlane)
 {
-    ;
-
     mvClipPlanes[alIdx] = aPlane;
 
     double vPlane[4];
@@ -1335,14 +1259,10 @@ void cLowLevelGraphicsSDL::SetClipPlane(int alIdx, const cPlanef& aPlane)
 }
 cPlanef cLowLevelGraphicsSDL::GetClipPlane(int alIdx)
 {
-    ;
-
     return mvClipPlanes[alIdx];
 }
 void cLowLevelGraphicsSDL::SetClipPlaneActive(int alIdx, bool abX)
 {
-    ;
-
     if(abX)
     {
         glEnable(GL_CLIP_PLANE0 + alIdx);
@@ -1358,8 +1278,6 @@ void cLowLevelGraphicsSDL::SetClipPlaneActive(int alIdx, bool abX)
 
 void cLowLevelGraphicsSDL::SetBlendActive(bool abX)
 {
-    ;
-
     if(mbBlendActive == abX)
     {
         return;
@@ -1380,8 +1298,6 @@ void cLowLevelGraphicsSDL::SetBlendActive(bool abX)
 
 void cLowLevelGraphicsSDL::SetBlendFunc(eBlendFunc aSrcFactor, eBlendFunc aDestFactor)
 {
-    ;
-
     glBlendFunc(GetGLBlendEnum(aSrcFactor),GetGLBlendEnum(aDestFactor));
 }
 
@@ -1391,8 +1307,6 @@ void cLowLevelGraphicsSDL::SetBlendFunc(eBlendFunc aSrcFactor, eBlendFunc aDestF
 void cLowLevelGraphicsSDL::SetBlendFuncSeparate(eBlendFunc aSrcFactorColor, eBlendFunc aDestFactorColor,
         eBlendFunc aSrcFactorAlpha, eBlendFunc aDestFactorAlpha)
 {
-    ;
-
     if(GLEW_EXT_blend_func_separate)
     {
         glBlendFuncSeparateEXT(GetGLBlendEnum(aSrcFactorColor),
@@ -1410,8 +1324,6 @@ void cLowLevelGraphicsSDL::SetBlendFuncSeparate(eBlendFunc aSrcFactorColor, eBle
 
 void cLowLevelGraphicsSDL::SetPolygonOffsetActive(bool abX)
 {
-    ;
-
     if(abX)
     {
         glEnable(GL_POLYGON_OFFSET_FILL);
@@ -1425,8 +1337,6 @@ void cLowLevelGraphicsSDL::SetPolygonOffsetActive(bool abX)
 
 void cLowLevelGraphicsSDL::SetPolygonOffset(float afBias, float afSlopeScaleBias)
 {
-    ;
-
     glPolygonOffset(afSlopeScaleBias, afBias);
 }
 
@@ -1442,8 +1352,6 @@ void cLowLevelGraphicsSDL::SetPolygonOffset(float afBias, float afSlopeScaleBias
 
 void cLowLevelGraphicsSDL::PushMatrix(eMatrix aMtxType)
 {
-    ;
-
     SetMatrixMode(aMtxType);
     glPushMatrix();
 }
@@ -1453,8 +1361,6 @@ void cLowLevelGraphicsSDL::PushMatrix(eMatrix aMtxType)
 
 void cLowLevelGraphicsSDL::PopMatrix(eMatrix aMtxType)
 {
-    ;
-
     SetMatrixMode(aMtxType);
     glPopMatrix();
 }
@@ -1462,8 +1368,6 @@ void cLowLevelGraphicsSDL::PopMatrix(eMatrix aMtxType)
 
 void cLowLevelGraphicsSDL::SetMatrix(eMatrix aMtxType, const cMatrixf& a_mtxA)
 {
-    ;
-
     SetMatrixMode(aMtxType);
     glLoadIdentity();
     cMatrixf mtxTranpose = a_mtxA.GetTranspose();
@@ -1475,8 +1379,6 @@ void cLowLevelGraphicsSDL::SetMatrix(eMatrix aMtxType, const cMatrixf& a_mtxA)
 
 void cLowLevelGraphicsSDL::SetIdentityMatrix(eMatrix aMtxType)
 {
-    ;
-
     SetMatrixMode(aMtxType);
     glLoadIdentity();
 }
@@ -1485,8 +1387,6 @@ void cLowLevelGraphicsSDL::SetIdentityMatrix(eMatrix aMtxType)
 
 void cLowLevelGraphicsSDL::SetOrthoProjection(const cVector2f& avSize, float afMin, float afMax)
 {
-    ;
-
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0,avSize.x,avSize.y,0,afMin,afMax);
@@ -1494,8 +1394,6 @@ void cLowLevelGraphicsSDL::SetOrthoProjection(const cVector2f& avSize, float afM
 
 void cLowLevelGraphicsSDL::SetOrthoProjection(const cVector3f& avMin, const cVector3f& avMax)
 {
-    ;
-
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(avMin.x,avMax.x,avMax.y,avMin.y,avMin.z,avMax.z);
@@ -1512,8 +1410,6 @@ void cLowLevelGraphicsSDL::SetOrthoProjection(const cVector3f& avMin, const cVec
 
 void cLowLevelGraphicsSDL::SetTexture(unsigned int alUnit,iTexture* apTex)
 {
-    ;
-
     GLenum NewTarget=0;
     if(apTex)
     {
@@ -1565,8 +1461,6 @@ void cLowLevelGraphicsSDL::SetTexture(unsigned int alUnit,iTexture* apTex)
 
 void cLowLevelGraphicsSDL::SetActiveTextureUnit(unsigned int alUnit)
 {
-    ;
-
     glActiveTextureARB(GL_TEXTURE0_ARB + alUnit);
 }
 
@@ -1574,8 +1468,6 @@ void cLowLevelGraphicsSDL::SetActiveTextureUnit(unsigned int alUnit)
 
 void cLowLevelGraphicsSDL::SetTextureEnv(eTextureParam aParam, int alVal)
 {
-    ;
-
     GLenum lParam = GetGLTextureParamEnum(aParam);
 
     glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_ARB);
@@ -1602,8 +1494,6 @@ void cLowLevelGraphicsSDL::SetTextureEnv(eTextureParam aParam, int alVal)
 
 void cLowLevelGraphicsSDL::SetTextureConstantColor(const cColor &aColor)
 {
-    ;
-
     float vColor[4] = {    aColor.r, aColor.g, aColor.b, aColor.a    };
 
     glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, &vColor[0]);
@@ -1613,8 +1503,6 @@ void cLowLevelGraphicsSDL::SetTextureConstantColor(const cColor &aColor)
 
 void cLowLevelGraphicsSDL::SetColor(const cColor &aColor)
 {
-    ;
-
     glColor4f(aColor.r, aColor.g, aColor.b, aColor.a);
 }
 
@@ -1630,8 +1518,6 @@ void cLowLevelGraphicsSDL::SetColor(const cColor &aColor)
 
 void cLowLevelGraphicsSDL::DrawTriangle(tVertexVec& avVtx)
 {
-    ;
-
     assert(avVtx.size()==3);
 
     glBegin(GL_TRIANGLES);
@@ -1650,8 +1536,6 @@ void cLowLevelGraphicsSDL::DrawTriangle(tVertexVec& avVtx)
 
 void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,const cVector2f &avSize,const cColor& aColor)
 {
-    ;
-
     glBegin(GL_QUADS);
     {
         glTexCoord2f(0.0, 0.0);
@@ -1678,8 +1562,6 @@ void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,const cVector2f &avSi
                                     const cVector2f &avMinTexCoord,const cVector2f &avMaxTexCoord,
                                     const cColor& aColor)
 {
-    ;
-
     glBegin(GL_QUADS);
     {
         glTexCoord2f(avMinTexCoord.x, avMinTexCoord.y);
@@ -1706,8 +1588,6 @@ void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,const cVector2f &avSi
                                     const cVector2f &avMinTexCoord1,const cVector2f &avMaxTexCoord1,
                                     const cColor& aColor)
 {
-    ;
-
     glBegin(GL_QUADS);
     {
         glMultiTexCoord2fARB(GL_TEXTURE0_ARB,avMinTexCoord0.x, avMinTexCoord0.y);
@@ -1737,8 +1617,6 @@ void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,const cVector2f &avSi
 
 void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx)
 {
-    ;
-
     assert(avVtx.size()==4);
 
     glBegin(GL_QUADS);
@@ -1757,8 +1635,6 @@ void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx)
 
 void cLowLevelGraphicsSDL::DrawQuadMultiTex(const tVertexVec &avVtx,const tVector3fVec &avExtraUvs)
 {
-    ;
-
     int lExtraUnits = (int)avExtraUvs.size()/4;
     glBegin(GL_QUADS);
     {
@@ -1785,8 +1661,6 @@ void cLowLevelGraphicsSDL::DrawQuadMultiTex(const tVertexVec &avVtx,const tVecto
 
 void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx, const cColor aCol)
 {
-    ;
-
     assert(avVtx.size()==4);
 
     glBegin(GL_QUADS);
@@ -1806,8 +1680,6 @@ void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx, const cColor aCol)
 
 void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx,const float afZ)
 {
-    ;
-
     assert(avVtx.size()==4);
 
     glBegin(GL_QUADS);
@@ -1826,8 +1698,6 @@ void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx,const float afZ)
 
 void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx,const float afZ,const cColor &aCol)
 {
-    ;
-
     assert(avVtx.size()==4);
 
     glBegin(GL_QUADS);
@@ -1846,8 +1716,6 @@ void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx,const float afZ,cons
 
 void cLowLevelGraphicsSDL::DrawLine(const cVector3f& avBegin, const cVector3f& avEnd, cColor aCol)
 {
-    ;
-
     glColor4f(aCol.r,aCol.g,aCol.b,aCol.a);
     glBegin(GL_LINES);
     {
@@ -1859,8 +1727,6 @@ void cLowLevelGraphicsSDL::DrawLine(const cVector3f& avBegin, const cVector3f& a
 
 void cLowLevelGraphicsSDL::DrawLine(const cVector3f& avBegin, const cColor& aBeginCol, const cVector3f& avEnd, const cColor& aEndCol)
 {
-    ;
-
     glBegin(GL_LINES);
     {
         glColor4f(aBeginCol.r,aBeginCol.g,aBeginCol.b,aBeginCol.a);
@@ -1874,8 +1740,6 @@ void cLowLevelGraphicsSDL::DrawLine(const cVector3f& avBegin, const cColor& aBeg
 
 void cLowLevelGraphicsSDL::DrawBoxMinMax(const cVector3f& avMin, const cVector3f& avMax, cColor aCol)
 {
-    ;
-
     glColor4f(aCol.r,aCol.g,aCol.b,aCol.a);
     glBegin(GL_LINES);
     {
@@ -1926,8 +1790,6 @@ void cLowLevelGraphicsSDL::DrawBoxMinMax(const cVector3f& avMin, const cVector3f
 
 void cLowLevelGraphicsSDL::DrawSphere(const cVector3f& avPos, float afRadius, cColor aCol)
 {
-    ;
-
     int alSegments = 32;
     float afAngleStep = k2Pif /(float)alSegments;
 
@@ -1972,8 +1834,6 @@ void cLowLevelGraphicsSDL::DrawSphere(const cVector3f& avPos, float afRadius, cC
 
 void cLowLevelGraphicsSDL::DrawSphere(const cVector3f& avPos, float afRadius, cColor aColX, cColor aColY, cColor aColZ)
 {
-    ;
-
     int alSegments = 32;
     float afAngleStep = k2Pif /(float)alSegments;
 
@@ -2022,8 +1882,6 @@ void cLowLevelGraphicsSDL::DrawSphere(const cVector3f& avPos, float afRadius, cC
 
 void cLowLevelGraphicsSDL::DrawLineQuad(const cRect2f& aRect, float afZ, cColor aCol)
 {
-    ;
-
     glColor4f(aCol.r,aCol.g,aCol.b,aCol.a);
     glBegin(GL_LINE_STRIP);
     {
@@ -2038,8 +1896,6 @@ void cLowLevelGraphicsSDL::DrawLineQuad(const cRect2f& aRect, float afZ, cColor 
 
 void cLowLevelGraphicsSDL::DrawLineQuad(const cVector3f &avPos,const cVector2f &avSize, cColor aCol)
 {
-    ;
-
     glColor4f(aCol.r,aCol.g,aCol.b,aCol.a);
     glBegin(GL_LINE_STRIP);
     {
@@ -2225,8 +2081,6 @@ void cLowLevelGraphicsSDL::AddIndexToBatch(int alIndex)
 
 void cLowLevelGraphicsSDL::AddTexCoordToBatch(unsigned int alUnit,const cVector3f *apCoord)
 {
-    ;
-
     unsigned int lCount = mlTexCoordArrayCount[alUnit];
 
     mpTexCoordArray[alUnit][lCount+0] = apCoord->x;
@@ -2240,8 +2094,6 @@ void cLowLevelGraphicsSDL::AddTexCoordToBatch(unsigned int alUnit,const cVector3
 
 void cLowLevelGraphicsSDL::SetBatchTextureUnitActive(unsigned int alUnit,bool abActive)
 {
-    ;
-
     glClientActiveTextureARB(GL_TEXTURE0_ARB+alUnit);
 
     if(abActive==false)
@@ -2258,8 +2110,6 @@ void cLowLevelGraphicsSDL::SetBatchTextureUnitActive(unsigned int alUnit,bool ab
 
 void cLowLevelGraphicsSDL::FlushTriBatch(tVtxBatchFlag aTypeFlags, bool abAutoClear)
 {
-    ;
-
     SetVtxBatchStates(aTypeFlags);
     SetUpBatchArrays();
 
@@ -2280,8 +2130,6 @@ void cLowLevelGraphicsSDL::FlushTriBatch(tVtxBatchFlag aTypeFlags, bool abAutoCl
 
 void cLowLevelGraphicsSDL::FlushQuadBatch(tVtxBatchFlag aTypeFlags, bool abAutoClear)
 {
-    ;
-
     SetVtxBatchStates(aTypeFlags);
     SetUpBatchArrays();
 
@@ -2324,8 +2172,6 @@ void cLowLevelGraphicsSDL::ClearBatch()
 
 void cLowLevelGraphicsSDL::SetUpBatchArrays()
 {
-    ;
-
     //Set the arrays
     glVertexPointer(3,GL_FLOAT, sizeof(float)*mlBatchStride, mpVertexArray);
     glColorPointer(4,GL_FLOAT,sizeof(float)*mlBatchStride, &mpVertexArray[3]);
@@ -2343,8 +2189,6 @@ void cLowLevelGraphicsSDL::SetUpBatchArrays()
 
 void cLowLevelGraphicsSDL::SetVtxBatchStates(tVtxBatchFlag aFlags)
 {
-    ;
-
     if(aFlags & eVtxBatchFlag_Position)
     {
         glEnableClientState(GL_VERTEX_ARRAY );
@@ -2413,8 +2257,6 @@ void cLowLevelGraphicsSDL::SetVtxBatchStates(tVtxBatchFlag aFlags)
 
 void cLowLevelGraphicsSDL::SetMatrixMode(eMatrix mType)
 {
-    ;
-
     switch(mType)
     {
     case eMatrix_ModelView:
@@ -2439,8 +2281,6 @@ void cLowLevelGraphicsSDL::SetMatrixMode(eMatrix mType)
 
 GLenum GetGLWrapEnum(eTextureWrap aMode)
 {
-    ;
-
     switch(aMode)
     {
     case eTextureWrap_Clamp:
@@ -2461,8 +2301,6 @@ GLenum GetGLWrapEnum(eTextureWrap aMode)
 
 GLenum PixelFormatToGLFormat(ePixelFormat aFormat)
 {
-    ;
-
     switch(aFormat)
     {
     case ePixelFormat_Alpha:
@@ -2514,8 +2352,6 @@ GLenum PixelFormatToGLFormat(ePixelFormat aFormat)
 
 GLenum PixelFormatToGLInternalFormat(ePixelFormat aFormat)
 {
-    ;
-
     switch(aFormat)
     {
     case ePixelFormat_Alpha:
@@ -2567,8 +2403,6 @@ GLenum PixelFormatToGLInternalFormat(ePixelFormat aFormat)
 
 GLenum GetGLCompressionFormatFromPixelFormat(ePixelFormat aFormat)
 {
-    ;
-
     switch(aFormat)
     {
     case ePixelFormat_DXT1:
@@ -2605,8 +2439,6 @@ GLenum TextureTypeToGLTarget(eTextureType aType)
 
 GLenum GetGLBlendEnum(eBlendFunc aType)
 {
-    ;
-
     switch(aType)
     {
     case eBlendFunc_Zero:
@@ -2639,8 +2471,6 @@ GLenum GetGLBlendEnum(eBlendFunc aType)
 
 GLenum GetGLTextureParamEnum(eTextureParam aType)
 {
-    ;
-
     switch(aType)
     {
     case eTextureParam_ColorFunc:
@@ -2683,8 +2513,6 @@ GLenum GetGLTextureParamEnum(eTextureParam aType)
 
 GLenum GetGLTextureOpEnum(eTextureOp aType)
 {
-    ;
-
     switch(aType)
     {
     case eTextureOp_Color:
@@ -2703,8 +2531,6 @@ GLenum GetGLTextureOpEnum(eTextureOp aType)
 
 GLenum GetGLTextureSourceEnum(eTextureSource aType)
 {
-    ;
-
     switch(aType)
     {
     case eTextureSource_Texture:
@@ -2722,8 +2548,6 @@ GLenum GetGLTextureSourceEnum(eTextureSource aType)
 
 GLenum GetGLTextureTargetEnum(eTextureType aType)
 {
-    ;
-
     switch(aType)
     {
     case eTextureType_1D:
@@ -2746,8 +2570,6 @@ GLenum GetGLTextureTargetEnum(eTextureType aType)
 
 GLenum GetGLTextureCompareMode(eTextureCompareMode aMode)
 {
-    ;
-
     switch(aMode)
     {
     case eTextureCompareMode_None:
@@ -2774,8 +2596,6 @@ GLenum GetGLTextureCompareFunc(eTextureCompareFunc aFunc)
 
 GLenum GetGLTextureFuncEnum(eTextureFunc aType)
 {
-    ;
-
     switch(aType)
     {
     case eTextureFunc_Modulate:
@@ -2801,8 +2621,6 @@ GLenum GetGLTextureFuncEnum(eTextureFunc aType)
 //-----------------------------------------------------------------------
 GLenum GetGLDepthTestFuncEnum(eDepthTestFunc aType)
 {
-    ;
-
     switch(aType)
     {
     case eDepthTestFunc_Never:
@@ -2829,8 +2647,6 @@ GLenum GetGLDepthTestFuncEnum(eDepthTestFunc aType)
 
 GLenum GetGLAlphaTestFuncEnum(eAlphaTestFunc aType)
 {
-    ;
-
     switch(aType)
     {
     case eAlphaTestFunc_Never:
@@ -2857,8 +2673,6 @@ GLenum GetGLAlphaTestFuncEnum(eAlphaTestFunc aType)
 
 GLenum GetGLStencilFuncEnum(eStencilFunc aType)
 {
-    ;
-
     switch(aType)
     {
     case eStencilFunc_Never:
@@ -2885,8 +2699,6 @@ GLenum GetGLStencilFuncEnum(eStencilFunc aType)
 
 GLenum GetGLStencilOpEnum(eStencilOp aType)
 {
-    ;
-
     switch(aType)
     {
     case eStencilOp_Keep:

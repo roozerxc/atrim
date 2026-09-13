@@ -33,8 +33,6 @@ cVertexBufferOGL_VBO::cVertexBufferOGL_VBO(iLowLevelGraphics* apLowLevelGraphics
 
 cVertexBufferOGL_VBO::~cVertexBufferOGL_VBO()
 {
-    ;
-
     for(size_t i=0; i<mvElementArrays.size(); ++i)
     {
         cVtxBufferGLElementArray *pElement = mvElementArrays[i];
@@ -55,8 +53,6 @@ cVertexBufferOGL_VBO::~cVertexBufferOGL_VBO()
 
 void cVertexBufferOGL_VBO::UpdateData(tVertexElementFlag aTypes, bool abIndices)
 {
-    ;
-
     GLenum usageType = GL_STATIC_DRAW_ARB;
     if(mUsageType== eVertexBufferUsageType_Dynamic)
     {
@@ -105,8 +101,6 @@ void cVertexBufferOGL_VBO::UpdateData(tVertexElementFlag aTypes, bool abIndices)
 
 void cVertexBufferOGL_VBO::Draw(eVertexBufferDrawType aDrawType)
 {
-    ;
-
     eVertexBufferDrawType drawType = aDrawType == eVertexBufferDrawType_LastEnum ? mDrawType : aDrawType;
 
     ///////////////////////////////
@@ -133,8 +127,6 @@ void cVertexBufferOGL_VBO::Draw(eVertexBufferDrawType aDrawType)
 
 void cVertexBufferOGL_VBO::DrawIndices(unsigned int *apIndices, int alCount,eVertexBufferDrawType aDrawType)
 {
-    ;
-
     eVertexBufferDrawType drawType = aDrawType == eVertexBufferDrawType_LastEnum ? mDrawType : aDrawType;
 
     ///////////////////////////////
@@ -151,8 +143,6 @@ void cVertexBufferOGL_VBO::DrawIndices(unsigned int *apIndices, int alCount,eVer
 
 void cVertexBufferOGL_VBO::Bind()
 {
-    ;
-
     SetVertexStates();
 }
 
@@ -160,8 +150,6 @@ void cVertexBufferOGL_VBO::Bind()
 
 void cVertexBufferOGL_VBO::UnBind()
 {
-    ;
-
     glBindBufferARB(GL_ARRAY_BUFFER_ARB,0);
 
     for(size_t i=0; i<mvElementArrays.size(); ++i)
@@ -191,8 +179,6 @@ void cVertexBufferOGL_VBO::UnBind()
 
 void cVertexBufferOGL_VBO::CompileSpecific()
 {
-    ;
-
     GLenum usageType = GL_STATIC_DRAW_ARB;
     if(mUsageType== eVertexBufferUsageType_Dynamic)
     {
