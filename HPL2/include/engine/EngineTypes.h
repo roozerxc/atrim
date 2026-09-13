@@ -33,7 +33,6 @@ enum eUpdateableMessage
     eUpdateableMessage_OnPostBufferSwap,
     eUpdateableMessage_OnStart,
     eUpdateableMessage_OnDraw,
-    eUpdateableMessage_OnPostRender,
     eUpdateableMessage_PreUpdate,
     eUpdateableMessage_Update,
     eUpdateableMessage_PostUpdate,

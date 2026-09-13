@@ -539,10 +539,6 @@ void cEngine::Run()
         mpScene->Render(dFrameTime, tSceneRenderFlag_All);
         STOP_TIMING(RenderAll)
 
-        START_TIMING(PostRender)
-        mpUpdater->RunMessage(eUpdateableMessage_OnPostRender, dFrameTime);
-        STOP_TIMING(PostRender)
-
         START_TIMING(FlushRender)
         mpGraphics->GetLowLevel()->FlushRendering();
         STOP_TIMING(FlushRender)

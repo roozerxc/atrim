@@ -481,15 +481,6 @@ void cLuxMainMenu::OnDraw(double adFrameTime)
 
 //-----------------------------------------------------------------------
 
-void cLuxMainMenu::OnPostRender(double adFrameTime)
-{
-    //Debug:
-    //Turn of logging so it only happens one frame?
-    //mpViewport->GetRenderSettings()->mbLog->mbLog = true;
-}
-
-//-----------------------------------------------------------------------
-
 void cLuxMainMenu::SetWindowActive(eLuxMainMenuWindow aWindow)
 {
     if(mCurrentWindow == aWindow)

@@ -18,7 +18,6 @@ public:
     virtual void OnStart() {}
 
     virtual void OnDraw(double adFrameTime) {}
-    virtual void OnPostRender(double adFrameTime) {}
 
     virtual void PreUpdate(double adFixedDelta) {}
     virtual void Update(double adFixedDelta) {}
@@ -57,9 +56,6 @@ public:
             break;
         case eUpdateableMessage_OnDraw:
             OnDraw(adX);
-            break;
-        case eUpdateableMessage_OnPostRender:
-            OnPostRender(adX);
             break;
         case eUpdateableMessage_PreUpdate:
             PreUpdate(adX);

@@ -63,7 +63,6 @@ public:
     void OnStart();
     void Update(double adFixedDelta);
     void Reset();
-    void OnPostRender(double adFrameTime);
 
     tWString GetInputName(const tString& asActionName);
 

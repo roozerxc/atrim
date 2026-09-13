@@ -89,7 +89,6 @@ public:
     void OnLeaveContainer(const tString& asNewContainer);
 
     void OnDraw(double adFrameTime);
-    void OnPostRender(double adFrameTime);
 
     cGuiSet* GetSet()
     {

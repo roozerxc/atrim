@@ -465,14 +465,6 @@ void cLuxInputHandler::Reset()
 
 //-----------------------------------------------------------------------
 
-void cLuxInputHandler::OnPostRender(double adFrameTime)
-{
-    //Turn of logging so it only happens one frame!
-    gpBase->mpMapHandler->GetViewport()->GetRenderSettings()->mbLog = false;
-}
-
-//-----------------------------------------------------------------------
-
 tWString gsInvalidActionString = _W("InvalidAction");
 
 tWString cLuxInputHandler::GetInputName(const tString& asActionName)
