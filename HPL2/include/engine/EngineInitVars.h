@@ -22,7 +22,6 @@ public:
             mvScreenSize(800,600),
             mlScreenBpp(32),
             mbFullscreen(false),
-            mlMultisampling(0),
             msWindowCaption(""),
             mvWindowPosition(-1),
             mGpuProgramFormat(eGpuProgramFormat_LastEnum)
@@ -31,7 +30,6 @@ public:
         cVector2l mvScreenSize;
         int mlScreenBpp;
         bool mbFullscreen;
-        int mlMultisampling;
         tString msWindowCaption;
         cVector2l mvWindowPosition;
         eGpuProgramFormat mGpuProgramFormat;

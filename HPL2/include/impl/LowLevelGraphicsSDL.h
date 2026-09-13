@@ -76,7 +76,7 @@ public:
     /////////////// GENERAL SETUP ///////////////////////
     /////////////////////////////////////////////////////
 
-    bool Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen, int alMultisampling,
+    bool Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen,
                   eGpuProgramFormat aGpuProgramFormat,const tString& asWindowCaption,
                   const cVector2l &avWindowPos);
 
@@ -110,15 +110,8 @@ public:
 
     void SetVsyncActive(bool abX);
 
-    void SetMultisamplingActive(bool abX);
-
     void SetGammaCorrection(float afX);
     float GetGammaCorrection();
-
-    int GetMultisampling()
-    {
-        return mlMultisampling;
-    }
 
     cVector2f GetScreenSizeFloat();
     const cVector2l& GetScreenSizeInt();
@@ -298,7 +291,6 @@ public:
 
 private:
     cVector2l mvScreenSize;
-    int mlMultisampling;
     int mlBpp;
     bool mbFullscreen;
     eGpuProgramFormat mGpuProgramFormat;
@@ -374,10 +366,6 @@ private:
     //////////////////////////////////////
     //Texture
     GLenum mvCurrentTextureTarget[kMaxTextureUnits];
-
-    //////////////////////////////////////
-    //Multisample
-    void CheckMultisampleCaps();
 
     //////////////////////////////////////
     //Double sided stencil

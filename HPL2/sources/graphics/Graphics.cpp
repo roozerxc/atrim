@@ -106,10 +106,8 @@ cGraphics::~cGraphics()
 //-----------------------------------------------------------------------
 
 bool cGraphics::Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen,
-                         int alMultisampling,eGpuProgramFormat aGpuProgramFormat,
-                         const tString &asWindowCaption, const cVector2l &avWindowPos,
-                         cResources* apResources,
-                         tFlag alHplSetupFlags)
+                         eGpuProgramFormat aGpuProgramFormat,const tString &asWindowCaption,
+                         const cVector2l &avWindowPos,cResources* apResources,tFlag alHplSetupFlags)
 {
     Log("Initializing Graphics Module\n");
     Log("--------------------------------------------------------\n");
@@ -126,8 +124,8 @@ bool cGraphics::Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen
     // LowLevel Init
     if(alHplSetupFlags & eHplSetup_Screen)
     {
-        Log("Init lowlevel graphics: %dx%d bpp:%d fs:%d ms:%d gpufmt:%d cap:'%s' pos:(%dx%d)\n",alWidth,alHeight,alBpp,abFullscreen,alMultisampling,aGpuProgramFormat, asWindowCaption.c_str(), avWindowPos.x,avWindowPos.y);
-        mpLowLevelGraphics->Init(alWidth,alHeight,alBpp,abFullscreen,alMultisampling,aGpuProgramFormat,asWindowCaption,
+        Log("Init lowlevel graphics: %dx%d bpp:%d fs:%d gpufmt:%d cap:'%s' pos:(%dx%d)\n",alWidth,alHeight,alBpp,abFullscreen,aGpuProgramFormat, asWindowCaption.c_str(), avWindowPos.x,avWindowPos.y);
+        mpLowLevelGraphics->Init(alWidth,alHeight,alBpp,abFullscreen,aGpuProgramFormat,asWindowCaption,
                                  avWindowPos);
         mbScreenIsSetup = true;
     }

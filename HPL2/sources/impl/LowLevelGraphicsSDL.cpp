@@ -52,7 +52,6 @@ cLowLevelGraphicsSDL::cLowLevelGraphicsSDL()
     mlBatchArraySize = 20000;
     mlVertexCount = 0;
     mlIndexCount =0;
-    mlMultisampling =0;
     mpScreen = 0;
     mbGrab = false;
 
@@ -108,7 +107,7 @@ void CALLBACK OGLDebugOutputCallback(GLenum alSource, GLenum alType, GLuint alID
 
 //-----------------------------------------------------------------------
 
-bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFullscreen, int alMultisampling,
+bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFullscreen,
                                 eGpuProgramFormat aGpuProgramFormat,const tString& asWindowCaption,
                                 const cVector2l &avWindowPos)
 {
@@ -116,8 +115,6 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFul
     mvScreenSize.y = alHeight;
     mlBpp = alBpp;
     mbFullscreen = abFullscreen;
-
-    mlMultisampling = alMultisampling;
 
     mGpuProgramFormat = aGpuProgramFormat;
     if(mGpuProgramFormat == eGpuProgramFormat_LastEnum)
@@ -136,21 +133,6 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFul
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-    // Multisampling
-    if(mlMultisampling > 0)
-    {
-        if(SDL_GL_SetAttribute( SDL_GL_MULTISAMPLEBUFFERS, 1)==-1)
-        {
-            Error("Multisample buffers not supported!\n");
-        }
-        else
-        {
-            if(SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, mlMultisampling)==-1)
-            {
-                Error("Couldn't set multisampling samples to %d\n",mlMultisampling);
-            }
-        }
-    }
     unsigned int mlFlags = SDL_OPENGL;
 
 #ifdef _WIN32
@@ -252,9 +234,6 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFul
     mDeviceContext = wglGetCurrentDC();
 #endif
 
-    //Check Multisample properties
-    CheckMultisampleCaps();
-
     //Turn off cursor as default
     ShowCursor(false);
 
@@ -282,13 +261,6 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFul
 
 
     return true;
-}
-
-//-----------------------------------------------------------------------
-
-void cLowLevelGraphicsSDL::CheckMultisampleCaps()
-{
-
 }
 
 //-----------------------------------------------------------------------
@@ -399,8 +371,6 @@ void cLowLevelGraphicsSDL::SetupGL()
         Log("  Max Anisotropic degree: %d\n",GetCaps(eGraphicCaps_MaxAnisotropicFiltering));
     }
 
-    Log("  Multisampling: %d\n",GetCaps(eGraphicCaps_Multisampling));
-
     Log("  Texture compression: %d\n",GetCaps(eGraphicCaps_TextureCompression));
 
     Log("  Auto generate MipMaps: %d\n",GetCaps(eGraphicCaps_AutoGenerateMipMaps));
@@ -484,9 +454,6 @@ int cLowLevelGraphicsSDL::GetCaps(eGraphicCaps aType)
         glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT,&fMax);
         return (int)fMax;
     }
-
-    case eGraphicCaps_Multisampling:
-        return GLEW_ARB_multisample ? 1: 0;
 
     case eGraphicCaps_TextureCompression:
         return GLEW_ARB_texture_compression  ? 1 : 0;
@@ -645,27 +612,6 @@ void cLowLevelGraphicsSDL::SetVsyncActive(bool abX)
     GLint swap = abX ? 1 : 0;
     CGLSetParameter(ctx, kCGLCPSwapInterval, &swap);
 #endif
-}
-
-//-----------------------------------------------------------------------
-
-void cLowLevelGraphicsSDL::SetMultisamplingActive(bool abX)
-{
-    ;
-
-    if(!GLEW_ARB_multisample || mlMultisampling<=0)
-    {
-        return;
-    }
-
-    if(abX)
-    {
-        glEnable(GL_MULTISAMPLE_ARB);
-    }
-    else
-    {
-        glDisable(GL_MULTISAMPLE_ARB);
-    }
 }
 
 //-----------------------------------------------------------------------

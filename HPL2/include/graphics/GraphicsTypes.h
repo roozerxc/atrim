@@ -243,8 +243,6 @@ enum eGraphicCaps
     eGraphicCaps_AnisotropicFiltering,
     eGraphicCaps_MaxAnisotropicFiltering,
 
-    eGraphicCaps_Multisampling,
-
     eGraphicCaps_TextureCompression,
 
     eGraphicCaps_AutoGenerateMipMaps,

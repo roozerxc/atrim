@@ -31,7 +31,7 @@ public:
     /////////////// GENERAL SETUP ///////////////////////
     /////////////////////////////////////////////////////
 
-    virtual bool Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen, int alMultisampling,
+    virtual bool Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen,
                           eGpuProgramFormat aGpuProgramFormat, const tString& asWindowCaption,
                           const cVector2l &avWindowPos)=0;
 
@@ -60,8 +60,6 @@ public:
 
     virtual bool GetWindowIsVisible()=0;
 
-    virtual int GetMultisampling()=0;
-
     /**
      * Get Size of screen
      */
@@ -77,8 +75,6 @@ public:
      * Set if vsync should be active
      */
     virtual void SetVsyncActive(bool abX)=0;
-
-    virtual void SetMultisamplingActive(bool abX)=0;
 
     virtual void SetGammaCorrection(float afX)=0;
     virtual float GetGammaCorrection()=0;
