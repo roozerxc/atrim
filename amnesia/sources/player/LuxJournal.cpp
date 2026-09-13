@@ -1994,7 +1994,6 @@ void cLuxJournal::RenderBackgroundImage()
 
     //Flush the rendering
     pLowGfx->FlushRendering();
-    pLowGfx->WaitAndFinishRendering();
 
     //Destroy data
     mpGraphics->DestroyFrameBuffer(pEffectBuffer);

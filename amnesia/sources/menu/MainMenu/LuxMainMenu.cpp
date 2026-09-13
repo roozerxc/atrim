@@ -1407,7 +1407,6 @@ void cLuxMainMenu::RenderBlurTexture()
 
     //Flush the rendering
     pLowGfx->FlushRendering();
-    pLowGfx->WaitAndFinishRendering();
 
     //Destroy data
     mpGraphics->DestroyTexture(pTempBlurTexture);

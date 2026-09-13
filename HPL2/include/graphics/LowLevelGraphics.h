@@ -115,7 +115,6 @@ public:
     virtual void SetClearStencil(int alVal)=0;
 
     virtual void FlushRendering()=0;
-    virtual void WaitAndFinishRendering()=0;
     virtual void SwapBuffers()=0;
 
     /**

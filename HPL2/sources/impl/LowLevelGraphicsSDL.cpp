@@ -1020,17 +1020,6 @@ void cLowLevelGraphicsSDL::SetFrameBufferDrawTargets(int *apTargets, int alNumOf
 
 //-----------------------------------------------------------------------
 
-void cLowLevelGraphicsSDL::WaitAndFinishRendering()
-{
-    ;
-
-    glFinish();
-    //dont use this any more, SwapBuffers() takes care of it
-}
-
-//-----------------------------------------------------------------------
-
-
 void cLowLevelGraphicsSDL::FlushRendering()
 {
     ;
