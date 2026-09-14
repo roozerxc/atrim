@@ -223,6 +223,8 @@ public:
     /////////////////////////////////////////////////////
 
     void SetTexture(unsigned int alUnit,iTexture* apTex);
+    void ClearTextureHandle(GLuint aHandle);
+
     void SetActiveTextureUnit(unsigned int alUnit);
     void SetTextureEnv(eTextureParam aParam, int alVal);
     void SetTextureConstantColor(const cColor &aColor);
@@ -366,6 +368,7 @@ private:
     //////////////////////////////////////
     //Texture
     GLenum mvCurrentTextureTarget[kMaxTextureUnits];
+    GLenum mvCurrentTextureHandle[kMaxTextureUnits];
 
     //////////////////////////////////////
     //Double sided stencil

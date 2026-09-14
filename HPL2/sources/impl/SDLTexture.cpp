@@ -35,6 +35,11 @@ cSDLTexture::~cSDLTexture()
 {
     for(size_t i=0; i<mvTextureHandles.size(); ++i)
     {
+        mpGfxSDL->ClearTextureHandle(mvTextureHandles[i]);
+    }
+
+    for(size_t i=0; i<mvTextureHandles.size(); ++i)
+    {
         glDeleteTextures(1,(GLuint *)&mvTextureHandles[i]);
     }
 }

@@ -62,6 +62,7 @@ cLowLevelGraphicsSDL::cLowLevelGraphicsSDL()
     for(int i=0; i<kMaxTextureUnits; i++)
     {
         mvCurrentTextureTarget[i] = 0;
+        mvCurrentTextureHandle[i] = 0;
     }
 
     //Create the batch arrays:
@@ -944,18 +945,19 @@ void cLowLevelGraphicsSDL::SwapBuffers()
 void cLowLevelGraphicsSDL::SetColorWriteActive(bool abR,bool abG,bool abB,bool abA)
 {
     if( mColorWrite.r == abR &&
-            mColorWrite.g == abG &&
-            mColorWrite.b == abB &&
-            mColorWrite.a == abA)
+        mColorWrite.g == abG &&
+        mColorWrite.b == abB &&
+        mColorWrite.a == abA)
     {
         return;
     }
+
     mColorWrite.r = abR;
     mColorWrite.g = abG;
     mColorWrite.b = abB;
     mColorWrite.a = abA;
 
-    glColorMask(abR,abG,abB,abA);
+    glColorMask(abR, abG, abB, abA);
 }
 
 //-----------------------------------------------------------------------
@@ -1176,7 +1178,11 @@ void cLowLevelGraphicsSDL::SetStencilTwoSide(eStencilFunc aFrontFunc,eStencilFun
 
 void cLowLevelGraphicsSDL::SetCullActive(bool abX)
 {
-    //if(mbCullActive == abX) return;
+    if(mbCullActive == abX)
+    {
+        return;
+    }
+
     mbCullActive = abX;
 
     if(abX)
@@ -1187,14 +1193,21 @@ void cLowLevelGraphicsSDL::SetCullActive(bool abX)
     {
         glDisable(GL_CULL_FACE);
     }
+
     glCullFace(GL_BACK);
 }
+
 void cLowLevelGraphicsSDL::SetCullMode(eCullMode aMode)
 {
-    //if(mCullMode == aMode) return;
+    if(mCullMode == aMode)
+    {
+        return;
+    }
+
     mCullMode = aMode;
 
     glCullFace(GL_BACK);
+
     if(aMode == eCullMode_Clockwise)
     {
         glFrontFace(GL_CCW);
@@ -1230,7 +1243,16 @@ void cLowLevelGraphicsSDL::SetScissorActive(bool abX)
 
 void cLowLevelGraphicsSDL::SetScissorRect(const cVector2l& avPos, const cVector2l& avSize)
 {
+    if(mvScissorPos == avPos && mvScissorSize == avSize)
+    {
+        return;
+    }
+
+    mvScissorPos = avPos;
+    mvScissorSize = avSize;
+
     cVector2l vFrameBufferSize;
+
     if(mpFrameBuffer)
     {
         vFrameBufferSize = mpFrameBuffer->GetSize();
@@ -1240,7 +1262,7 @@ void cLowLevelGraphicsSDL::SetScissorRect(const cVector2l& avPos, const cVector2
         vFrameBufferSize = mvScreenSize;
     }
 
-    glScissor(avPos.x, (vFrameBufferSize.y - avPos.y)-avSize.y, avSize.x, avSize.y);
+    glScissor(avPos.x, (vFrameBufferSize.y - avPos.y) - avSize.y, avSize.x, avSize.y);
 }
 
 //-----------------------------------------------------------------------
@@ -1282,6 +1304,7 @@ void cLowLevelGraphicsSDL::SetBlendActive(bool abX)
     {
         return;
     }
+
     mbBlendActive = abX;
 
     if(abX)
@@ -1410,51 +1433,73 @@ void cLowLevelGraphicsSDL::SetOrthoProjection(const cVector3f& avMin, const cVec
 
 void cLowLevelGraphicsSDL::SetTexture(unsigned int alUnit,iTexture* apTex)
 {
-    GLenum NewTarget=0;
+    GLenum NewTarget = 0;
+    GLenum NewHandle = 0;
+
     if(apTex)
     {
         NewTarget = GetGLTextureTargetEnum(apTex->GetType());
+
+        cSDLTexture *pSDLTex = static_cast<cSDLTexture*>(apTex);
+        NewHandle = pSDLTex->GetTextureHandle();
     }
 
-    GLenum LastTarget = mvCurrentTextureTarget[alUnit];
+    // Nothing was changed yet! Get out EARLY !
+    if(NewTarget == mvCurrentTextureTarget[alUnit] &&
+        NewHandle == mvCurrentTextureHandle[alUnit])
+    {
+        return;
+    }
 
-    //Check if multi texturing is supported.
+    // Check if multi texturing is supported.
     if(GLEW_ARB_multitexture)
     {
         glActiveTextureARB(GL_TEXTURE0_ARB + alUnit);
     }
 
-    //Disable this unit if NULL
+    // Disable the old target if its different
+    if(mvCurrentTextureTarget[alUnit] != 0 &&
+        mvCurrentTextureTarget[alUnit] != NewTarget)
+    {
+        glDisable(mvCurrentTextureTarget[alUnit]);
+    }
+
     if(apTex == NULL)
     {
-        if(LastTarget!=0)
+        // Disable this unit if the target is already bound
+        if(mvCurrentTextureTarget[alUnit] != 0)
         {
-            glDisable(LastTarget);
+            glDisable(mvCurrentTextureTarget[alUnit]);
         }
-
-        //glBindTexture(LastTarget,0);
     }
-    //Enable the unit, set the texture handle and bind the pbuffer
     else
     {
-        if(LastTarget!=0 && NewTarget != LastTarget)
-        {
-            glDisable(LastTarget);
-        }
-
-        cSDLTexture *pSDLTex = static_cast<cSDLTexture*> (apTex);
-
-        glBindTexture(NewTarget, pSDLTex->GetTextureHandle());
+        glBindTexture(NewTarget, NewHandle);
         glEnable(NewTarget);
-
-        //if it is a render target we need to do some more binding.
-        if(pSDLTex->GetUsage() == eTextureUsage_RenderTarget)
-        {
-            //TODO: Do something else?
-        }
     }
 
     mvCurrentTextureTarget[alUnit] = NewTarget;
+    mvCurrentTextureHandle[alUnit] = NewHandle;
+}
+
+//-----------------------------------------------------------------------
+
+void cLowLevelGraphicsSDL::ClearTextureHandle(GLuint aHandle)
+{
+    if(aHandle == 0)
+    {
+        return;
+    }
+
+    for(int i=0; i < kMaxTextureUnits; ++i)
+    {
+        if(mvCurrentTextureHandle[i] == aHandle)
+        {
+            mvCurrentTextureHandle[i] = 0;
+
+            // Just leave target alone ... settexture will handle this
+        }
+    }
 }
 
 //-----------------------------------------------------------------------
