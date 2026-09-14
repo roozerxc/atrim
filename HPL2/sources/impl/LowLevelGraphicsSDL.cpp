@@ -79,6 +79,12 @@ cLowLevelGraphicsSDL::cLowLevelGraphicsSDL()
     }
 
     mbInitHasBeenRun = false;
+
+    mbPolygonOffsetActive = false;
+    mfPolygonOffsetBias = 0.0f;
+    mfPolygonOffsetSlope = 0.0f;
+
+    mlStencilWriteMask = 0xFFFFFFFF; // default for GL !
 }
 
 //-----------------------------------------------------------------------
@@ -1069,8 +1075,15 @@ void cLowLevelGraphicsSDL::SetStencilActive(bool abX)
 
 void cLowLevelGraphicsSDL::SetStencilWriteMask(unsigned int alMask)
 {
+    if(mlStencilWriteMask == alMask)
+    {
+        return;
+    }
+    mlStencilWriteMask == alMask
+
     glStencilMask(alMask);
 }
+
 //-----------------------------------------------------------------------
 
 void cLowLevelGraphicsSDL::SetStencil(eStencilFunc aFunc,int alRef, unsigned int aMask,
@@ -1321,6 +1334,17 @@ void cLowLevelGraphicsSDL::SetBlendActive(bool abX)
 
 void cLowLevelGraphicsSDL::SetBlendFunc(eBlendFunc aSrcFactor, eBlendFunc aDestFactor)
 {
+    if(mBlendSrcFactor == aSrcFactor &&
+        mBlendDestFactor == aDestFactor &&
+        mbBlendFuncSeparate == false)
+    {
+        return;
+    }
+
+    mBlendSrcFactor = aSrcFactor;
+    mBlendDestFactor = aDestFactor;
+    mbBlendFuncSeparate = false;
+
     glBlendFunc(GetGLBlendEnum(aSrcFactor),GetGLBlendEnum(aDestFactor));
 }
 
@@ -1330,6 +1354,15 @@ void cLowLevelGraphicsSDL::SetBlendFunc(eBlendFunc aSrcFactor, eBlendFunc aDestF
 void cLowLevelGraphicsSDL::SetBlendFuncSeparate(eBlendFunc aSrcFactorColor, eBlendFunc aDestFactorColor,
         eBlendFunc aSrcFactorAlpha, eBlendFunc aDestFactorAlpha)
 {
+    if(mBlendSrcFactor == aSrcFactorColor &&
+        mBlendDestFactor == aDestFactorColor &&
+        mBlendSrcFactorAlpha == aSrcFactorAlpha &&
+        mBlendDestFactorAlpha == aDestFactorAlpha &&
+        mbBlendFuncSeparate == true)
+    {
+        return;
+    }
+
     if(GLEW_EXT_blend_func_separate)
     {
         glBlendFuncSeparateEXT(GetGLBlendEnum(aSrcFactorColor),
@@ -1347,6 +1380,13 @@ void cLowLevelGraphicsSDL::SetBlendFuncSeparate(eBlendFunc aSrcFactorColor, eBle
 
 void cLowLevelGraphicsSDL::SetPolygonOffsetActive(bool abX)
 {
+    if(mbPolygonOffsetActive == abX)
+    {
+        return;
+    }
+
+    mbPolygonOffsetActive = abX;
+
     if(abX)
     {
         glEnable(GL_POLYGON_OFFSET_FILL);
@@ -1360,6 +1400,14 @@ void cLowLevelGraphicsSDL::SetPolygonOffsetActive(bool abX)
 
 void cLowLevelGraphicsSDL::SetPolygonOffset(float afBias, float afSlopeScaleBias)
 {
+    if(mfPolygonOffsetBias == afBias && mfPolygonOffsetSlope == afSlopeScaleBias)
+    {
+        return;
+    }
+
+    mfPolygonOffsetBias = afBias;
+    mfPolygonOffsetSlope = afSlopeScaleBias;
+
     glPolygonOffset(afSlopeScaleBias, afBias);
 }
 

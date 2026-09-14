@@ -307,6 +307,12 @@ private:
 
     bool mbInitHasBeenRun;
 
+    float mfPolygonOffsetBias;
+    float mfPolygonOffsetSlope;
+    bool mbPolygonOffsetActive;
+
+    unsigned int mlStencilWriteMask;
+
     //////////////////////////////////////
     //Render state settings
     cColorWriteDL mColorWrite;
@@ -327,12 +333,17 @@ private:
     cVector2l mvScissorSize;
 
     bool mbBlendActive;
+    eBlendFunc mBlendSrcFactor;
+    eBlendFunc mBlendDestFactor;
+    eBlendFunc mBlendSrcFactorAlpha;
+    eBlendFunc mBlendDestFactorAlpha;
+
+    bool mbBlendFuncSeparate;
 
     iFrameBuffer* mpFrameBuffer;
     cVector2l mvFrameBufferPos;
     cVector2l mvFrameBufferSize;
     cVector2l mvFrameBufferTotalSize;
-
 
     //////////////////////////////////////
     //Gamma
