@@ -1601,8 +1601,6 @@ void cLowLevelGraphicsSDL::SetColor(const cColor &aColor)
 
 //-----------------------------------------------------------------------
 
-
-
 //////////////////////////////////////////////////////////////////////////
 // DRAWING
 //////////////////////////////////////////////////////////////////////////
@@ -1613,97 +1611,108 @@ void cLowLevelGraphicsSDL::DrawTriangle(tVertexVec& avVtx)
 {
     assert(avVtx.size()==3);
 
-    glBegin(GL_TRIANGLES);
+    for(int i=0; i<3; i++)
     {
-        for(int i=0; i<3; i++)
-        {
-            glTexCoord3f(avVtx[i].tex.x,avVtx[i].tex.y,avVtx[i].tex.z);
-            glColor4f(avVtx[i].col.r,avVtx[i].col.g,avVtx[i].col.b,avVtx[i].col.a);
-            glVertex3f(avVtx[i].pos.x,avVtx[i].pos.y,avVtx[i].pos.z);
-        }
+        AddVertexToBatch_Raw(avVtx[i].pos, avVtx[i].col, avVtx[i].tex);
     }
-    glEnd();
+
+    AddIndexToBatch(0);
+    AddIndexToBatch(1);
+    AddIndexToBatch(2);
+
+    FlushTriBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
+        eVtxBatchFlag_Texture0, true);
 }
 
 //-----------------------------------------------------------------------
 
-void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,const cVector2f &avSize,const cColor& aColor)
-{
-    glBegin(GL_QUADS);
-    {
-        glTexCoord2f(0.0, 0.0);
-        glColor4f(aColor.r,aColor.g,aColor.b,aColor.a);
-        glVertex3f(avPos.x, avPos.y,avPos.z);
-
-        glTexCoord2f(1.0, 0.0);
-        glColor4f(aColor.r,aColor.g,aColor.b,aColor.a);
-        glVertex3f(avPos.x+avSize.x, avPos.y,avPos.z);
-
-        glTexCoord2f(1.0, 1.0);
-        glColor4f(aColor.r,aColor.g,aColor.b,aColor.a);
-        glVertex3f(avPos.x+avSize.x, avPos.y+avSize.y,avPos.z);
-
-        glTexCoord2f(0.0, 1.0);
-        glColor4f(aColor.r,aColor.g,aColor.b,aColor.a);
-        glVertex3f(avPos.x, avPos.y+avSize.y,avPos.z);
-
-    }
-    glEnd();
-}
-
-void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,const cVector2f &avSize,
-                                    const cVector2f &avMinTexCoord,const cVector2f &avMaxTexCoord,
+void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,
+                                    const cVector2f &avSize,
                                     const cColor& aColor)
 {
-    glBegin(GL_QUADS);
-    {
-        glTexCoord2f(avMinTexCoord.x, avMinTexCoord.y);
-        glColor4f(aColor.r,aColor.g,aColor.b,aColor.a);
-        glVertex3f(avPos.x, avPos.y,avPos.z);
+    AddVertexToBatch_Raw(cVector3f(avPos.x, avPos.y, avPos.z),
+        aColor, cVector3f(0.0f, 0.0f, 0.0f));
 
-        glTexCoord2f(avMaxTexCoord.x, avMinTexCoord.y);
-        glColor4f(aColor.r,aColor.g,aColor.b,aColor.a);
-        glVertex3f(avPos.x+avSize.x, avPos.y,avPos.z);
+    AddVertexToBatch_Raw(cVector3f(avPos.x + avSize.x, avPos.y, avPos.z),
+        aColor, cVector3f(1.0f, 0.0f, 0.0f));
 
-        glTexCoord2f(avMaxTexCoord.x, avMaxTexCoord.y);
-        glColor4f(aColor.r,aColor.g,aColor.b,aColor.a);
-        glVertex3f(avPos.x+avSize.x, avPos.y+avSize.y,avPos.z);
+    AddVertexToBatch_Raw(cVector3f(avPos.x + avSize.x, avPos.y + avSize.y, avPos.z),
+        aColor, cVector3f(1.0f, 1.0f, 0.0f));
 
-        glTexCoord2f(avMinTexCoord.x, avMaxTexCoord.y);
-        glColor4f(aColor.r,aColor.g,aColor.b,aColor.a);
-        glVertex3f(avPos.x, avPos.y+avSize.y,avPos.z);
-    }
-    glEnd();
+    AddVertexToBatch_Raw(cVector3f(avPos.x, avPos.y + avSize.y, avPos.z),
+        aColor, cVector3f(0.0f, 1.0f, 0.0f));
+
+    AddIndexToBatch(0);
+    AddIndexToBatch(1);
+    AddIndexToBatch(2);
+    AddIndexToBatch(3);
+
+    FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
+        eVtxBatchFlag_Texture0, true);
 }
 
-void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,const cVector2f &avSize,
-                                    const cVector2f &avMinTexCoord0,const cVector2f &avMaxTexCoord0,
-                                    const cVector2f &avMinTexCoord1,const cVector2f &avMaxTexCoord1,
+void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,
+                                    const cVector2f &avSize,
+                                    const cVector2f &avMinTexCoord,
+                                    const cVector2f &avMaxTexCoord,
                                     const cColor& aColor)
 {
-    glBegin(GL_QUADS);
-    {
-        glMultiTexCoord2fARB(GL_TEXTURE0_ARB,avMinTexCoord0.x, avMinTexCoord0.y);
-        glMultiTexCoord2fARB(GL_TEXTURE1_ARB,avMinTexCoord1.x, avMinTexCoord1.y);
-        glColor4f(aColor.r,aColor.g,aColor.b,aColor.a);
-        glVertex3f(avPos.x, avPos.y,avPos.z);
+    AddVertexToBatch_Raw(cVector3f(avPos.x, avPos.y, avPos.z),
+        aColor, cVector3f(avMinTexCoord.x, avMinTexCoord.y, 0.0f));
 
-        glMultiTexCoord2fARB(GL_TEXTURE0_ARB,avMaxTexCoord0.x, avMinTexCoord0.y);
-        glMultiTexCoord2fARB(GL_TEXTURE1_ARB,avMaxTexCoord1.x, avMinTexCoord1.y);
-        glColor4f(aColor.r,aColor.g,aColor.b,aColor.a);
-        glVertex3f(avPos.x+avSize.x, avPos.y,avPos.z);
+    AddVertexToBatch_Raw(cVector3f(avPos.x + avSize.x, avPos.y, avPos.z),
+        aColor, cVector3f(avMaxTexCoord.x, avMinTexCoord.y, 0.0f));
 
-        glMultiTexCoord2fARB(GL_TEXTURE0_ARB,avMaxTexCoord0.x, avMaxTexCoord0.y);
-        glMultiTexCoord2fARB(GL_TEXTURE1_ARB,avMaxTexCoord1.x, avMaxTexCoord1.y);
-        glColor4f(aColor.r,aColor.g,aColor.b,aColor.a);
-        glVertex3f(avPos.x+avSize.x, avPos.y+avSize.y,avPos.z);
+    AddVertexToBatch_Raw(cVector3f(avPos.x + avSize.x, avPos.y + avSize.y, avPos.z),
+        aColor, cVector3f(avMaxTexCoord.x, avMaxTexCoord.y, 0.0f));
 
-        glMultiTexCoord2fARB(GL_TEXTURE0_ARB,avMinTexCoord0.x, avMaxTexCoord0.y);
-        glMultiTexCoord2fARB(GL_TEXTURE1_ARB,avMinTexCoord1.x, avMaxTexCoord1.y);
-        glColor4f(aColor.r,aColor.g,aColor.b,aColor.a);
-        glVertex3f(avPos.x, avPos.y+avSize.y,avPos.z);
-    }
-    glEnd();
+    AddVertexToBatch_Raw(cVector3f(avPos.x, avPos.y + avSize.y, avPos.z),
+        aColor, cVector3f(avMinTexCoord.x, avMaxTexCoord.y, 0.0f));
+
+    AddIndexToBatch(0);
+    AddIndexToBatch(1);
+    AddIndexToBatch(2);
+    AddIndexToBatch(3);
+
+    FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
+        eVtxBatchFlag_Texture0, true);
+}
+
+void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,
+                                    const cVector2f &avSize,
+                                    const cVector2f &avMinTexCoord0,
+                                    const cVector2f &avMaxTexCoord0,
+                                    const cVector2f &avMinTexCoord1,
+                                    const cVector2f &avMaxTexCoord1,
+                                    const cColor& aColor)
+{
+    AddVertexToBatch_Raw(cVector3f(avPos.x, avPos.y, avPos.z),
+        aColor, cVector3f(avMinTexCoord0.x, avMinTexCoord0.y, 0.0f));
+    AddTexCoordToBatch(1, &cVector3f(avMinTexCoord1.x, avMinTexCoord1.y, 0.0f));
+
+    AddVertexToBatch_Raw(cVector3f(avPos.x + avSize.x, avPos.y, avPos.z),
+        aColor, cVector3f(avMaxTexCoord0.x, avMinTexCoord0.y, 0.0f));
+    AddTexCoordToBatch(1, &cVector3f(avMaxTexCoord1.x, avMinTexCoord1.y, 0.0f));
+
+    AddVertexToBatch_Raw(cVector3f(avPos.x + avSize.x, avPos.y + avSize.y, avPos.z),
+        aColor, cVector3f(avMaxTexCoord0.x, avMaxTexCoord0.y, 0.0f));
+    AddTexCoordToBatch(1, &cVector3f(avMaxTexCoord1.x, avMaxTexCoord1.y, 0.0f));
+
+    AddVertexToBatch_Raw(cVector3f(avPos.x, avPos.y + avSize.y, avPos.z),
+        aColor, cVector3f(avMinTexCoord0.x, avMaxTexCoord0.y, 0.0f));
+    AddTexCoordToBatch(1, &cVector3f(avMinTexCoord1.x, avMaxTexCoord1.y, 0.0f));
+
+    AddIndexToBatch(0);
+    AddIndexToBatch(1);
+    AddIndexToBatch(2);
+    AddIndexToBatch(3);
+
+    SetBatchTextureUnitActive(1, true);
+
+    FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
+        eVtxBatchFlag_Texture0 | eVtxBatchFlag_Texture1, true);
+
+    SetBatchTextureUnitActive(1, false);
 }
 
 //-----------------------------------------------------------------------
@@ -1712,113 +1721,157 @@ void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx)
 {
     assert(avVtx.size()==4);
 
-    glBegin(GL_QUADS);
+    for(int i=0; i<4; ++i)
     {
-        for(int i=0; i<4; i++)
-        {
-            glTexCoord3f(avVtx[i].tex.x,avVtx[i].tex.y,avVtx[i].tex.z);
-            glColor4f(avVtx[i].col.r,avVtx[i].col.g,avVtx[i].col.b,avVtx[i].col.a);
-            glVertex3f(avVtx[i].pos.x,avVtx[i].pos.y,avVtx[i].pos.z);
-        }
+        AddVertexToBatch_Raw(avVtx[i].pos, avVtx[i].col, avVtx[i].tex);
     }
-    glEnd();
+
+    AddIndexToBatch(0);
+    AddIndexToBatch(1);
+    AddIndexToBatch(2);
+    AddIndexToBatch(3);
+
+    FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
+        eVtxBatchFlag_Texture0, true);
 }
 
 //-----------------------------------------------------------------------
 
-void cLowLevelGraphicsSDL::DrawQuadMultiTex(const tVertexVec &avVtx,const tVector3fVec &avExtraUvs)
-{
-    int lExtraUnits = (int)avExtraUvs.size()/4;
-    glBegin(GL_QUADS);
-    {
-        for(int i=0; i<4; i++)
-        {
-            glMultiTexCoord3fARB(GL_TEXTURE0_ARB,avVtx[i].tex.x,avVtx[i].tex.y,avVtx[i].tex.z);
-
-            for(int unit=0; unit<lExtraUnits; ++unit)
-            {
-                glMultiTexCoord3fARB(GL_TEXTURE0_ARB + unit + 1,
-                                     avExtraUvs[unit*4 + i].x, avExtraUvs[unit*4 + i].y, avExtraUvs[unit*4 + i].z);
-            }
-
-            glColor4f(avVtx[i].col.r,avVtx[i].col.g,avVtx[i].col.b,avVtx[i].col.a);
-            glVertex3f(avVtx[i].pos.x,avVtx[i].pos.y,avVtx[i].pos.z);
-        }
-    }
-    glEnd();
-
-}
-
-
-//-----------------------------------------------------------------------
-
-void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx, const cColor aCol)
+void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx,
+                                    const cColor aCol)
 {
     assert(avVtx.size()==4);
 
-    glBegin(GL_QUADS);
+    for(int i=0; i<4; ++i)
     {
-        //Make all this inline??
-        for(int i=0; i<4; i++)
-        {
-            glTexCoord3f(avVtx[i].tex.x,avVtx[i].tex.y,avVtx[i].tex.z);
-            glColor4f(aCol.r,aCol.g,aCol.b,aCol.a);
-            glVertex3f(avVtx[i].pos.x,avVtx[i].pos.y,avVtx[i].pos.z);
-        }
+        AddVertexToBatch_Raw(avVtx[i].pos, aCol, avVtx[i].tex);
     }
-    glEnd();
+
+    AddIndexToBatch(0);
+    AddIndexToBatch(1);
+    AddIndexToBatch(2);
+    AddIndexToBatch(3);
+
+    FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
+        eVtxBatchFlag_Texture0, true);
 }
 
 //-----------------------------------------------------------------------
 
-void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx,const float afZ)
+void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx,
+                                    const float afZ)
 {
     assert(avVtx.size()==4);
 
-    glBegin(GL_QUADS);
+    for(int i=0; i<4; ++i)
     {
-        for(int i=0; i<4; i++)
-        {
-            glTexCoord3f(avVtx[i].tex.x,avVtx[i].tex.y,afZ);
-            glColor4f(avVtx[i].col.r,avVtx[i].col.g,avVtx[i].col.b,avVtx[i].col.a);
-            glVertex3f(avVtx[i].pos.x,avVtx[i].pos.y,avVtx[i].pos.z);
-        }
+        cVector3f vVtxTex = avVtx[i].tex;
+        vVtxTex.z = afZ;
+
+        AddVertexToBatch_Raw(avVtx[i].pos, avVtx[i].col, vVtxTex);
     }
-    glEnd();
+
+    AddIndexToBatch(0);
+    AddIndexToBatch(1);
+    AddIndexToBatch(2);
+    AddIndexToBatch(3);
+
+    FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
+        eVtxBatchFlag_Texture0, true);
 }
 
 //-----------------------------------------------------------------------
 
-void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx,const float afZ,const cColor &aCol)
+void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx,
+                                    const float afZ,
+                                    const cColor &aCol)
 {
     assert(avVtx.size()==4);
 
-    glBegin(GL_QUADS);
+    for(int i=0; i<4; ++i)
     {
-        for(int i=0; i<4; i++)
-        {
-            glTexCoord3f(avVtx[i].tex.x,avVtx[i].tex.y,afZ);
-            glColor4f(aCol.r,aCol.g,aCol.b,aCol.a);
-            glVertex3f(avVtx[i].pos.x,avVtx[i].pos.y,avVtx[i].pos.z);
-        }
+        cVector3f vVtxTex = avVtx[i].tex;
+        vVtxTex.z = afZ;
+
+        AddVertexToBatch_Raw(avVtx[i].pos, aCol, vVtxTex);
     }
-    glEnd();
+
+    AddIndexToBatch(0);
+    AddIndexToBatch(1);
+    AddIndexToBatch(2);
+    AddIndexToBatch(3);
+
+    FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
+        eVtxBatchFlag_Texture0, true);
 }
 
 //-----------------------------------------------------------------------
 
-void cLowLevelGraphicsSDL::DrawLine(const cVector3f& avBegin, const cVector3f& avEnd, cColor aCol)
+void cLowLevelGraphicsSDL::DrawQuadMultiTex(const tVertexVec &avVtx,
+                                            const tVector3fVec &avExtraUvs)
 {
-    glColor4f(aCol.r,aCol.g,aCol.b,aCol.a);
+    assert(avVtx.size() == 4);
+
+    int lExtraUnits = (int)avExtraUvs.size() / 4;
+
+    for(int i=0; i<4; i++)
+    {
+        AddVertexToBatch_Raw(avVtx[i].pos, avVtx[i].col, avVtx[i].tex);
+
+        for(int unit=0; unit<lExtraUnits; ++unit)
+        {
+            AddTexCoordToBatch(unit + 1, &avExtraUvs[unit * 4 + i]);
+        }
+    }
+
+    AddIndexToBatch(0);
+    AddIndexToBatch(1);
+    AddIndexToBatch(2);
+    AddIndexToBatch(3);
+
+    for(int unit=0; unit<lExtraUnits; ++unit)
+    {
+        SetBatchTextureUnitActive(unit + 1, true);
+    }
+
+    tVtxBatchFlag flags = eVtxBatchFlag_Position | eVtxBatchFlag_Color0 | eVtxBatchFlag_Texture0;
+
+    if(lExtraUnits >= 1)
+    {
+        flags |= eVtxBatchFlag_Texture1;
+    }
+    if(lExtraUnits >= 2)
+    {
+        flags |= eVtxBatchFlag_Texture2;
+    }
+
+    FlushQuadBatch(flags, true);
+
+    for(int unit=0; unit<lExtraUnits; ++unit)
+    {
+        SetBatchTextureUnitActive(unit + 1, false);
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cLowLevelGraphicsSDL::DrawLine(const cVector3f& avBegin,
+                                    const cVector3f& avEnd,
+                                    cColor aCol)
+{
     glBegin(GL_LINES);
     {
+        glColor4f(aCol.r,aCol.g,aCol.b,aCol.a);
         glVertex3f(avBegin.x,avBegin.y,avBegin.z);
         glVertex3f(avEnd.x,avEnd.y,avEnd.z);
     }
     glEnd();
 }
 
-void cLowLevelGraphicsSDL::DrawLine(const cVector3f& avBegin, const cColor& aBeginCol, const cVector3f& avEnd, const cColor& aEndCol)
+void cLowLevelGraphicsSDL::DrawLine(const cVector3f& avBegin,
+                                    const cColor& aBeginCol,
+                                    const cVector3f& avEnd,
+                                    const cColor& aEndCol)
 {
     glBegin(GL_LINES);
     {
@@ -1831,52 +1884,39 @@ void cLowLevelGraphicsSDL::DrawLine(const cVector3f& avBegin, const cColor& aBeg
     glEnd();
 }
 
-void cLowLevelGraphicsSDL::DrawBoxMinMax(const cVector3f& avMin, const cVector3f& avMax, cColor aCol)
+void cLowLevelGraphicsSDL::DrawBoxMinMax(const cVector3f& avMin,
+                                         const cVector3f& avMax,
+                                         cColor aCol)
 {
-    glColor4f(aCol.r,aCol.g,aCol.b,aCol.a);
-    glBegin(GL_LINES);
-    {
-        //Pos Z Quad
-        glVertex3f(avMax.x,avMax.y,avMax.z);
-        glVertex3f(avMin.x,avMax.y,avMax.z);
+    // Pos Z Quad
+    DrawLine(cVector3f(avMin.x, avMin.y, avMin.z),
+        cVector3f(avMax.x, avMin.y, avMin.z), aCol);
+    DrawLine(cVector3f(avMax.x, avMin.y, avMin.z),
+        cVector3f(avMax.x, avMin.y, avMax.z), aCol);
+    DrawLine(cVector3f(avMax.x, avMin.y, avMax.z),
+        cVector3f(avMin.x, avMin.y, avMax.z), aCol);
+    DrawLine(cVector3f(avMin.x, avMin.y, avMax.z),
+        cVector3f(avMin.x, avMin.y, avMin.z), aCol);
 
-        glVertex3f(avMax.x,avMax.y,avMax.z);
-        glVertex3f(avMax.x,avMin.y,avMax.z);
+    // Neg Z Quad
+    DrawLine(cVector3f(avMin.x, avMax.y, avMin.z),
+        cVector3f(avMax.x, avMax.y, avMin.z), aCol);
+    DrawLine(cVector3f(avMax.x, avMax.y, avMin.z),
+        cVector3f(avMax.x, avMax.y, avMax.z), aCol);
+    DrawLine(cVector3f(avMax.x, avMax.y, avMax.z),
+        cVector3f(avMin.x, avMax.y, avMax.z), aCol);
+    DrawLine(cVector3f(avMin.x, avMax.y, avMax.z),
+        cVector3f(avMin.x, avMax.y, avMin.z), aCol);
 
-        glVertex3f(avMin.x,avMax.y,avMax.z);
-        glVertex3f(avMin.x,avMin.y,avMax.z);
-
-        glVertex3f(avMin.x,avMin.y,avMax.z);
-        glVertex3f(avMax.x,avMin.y,avMax.z);
-
-        //Neg Z Quad
-        glVertex3f(avMax.x,avMax.y,avMin.z);
-        glVertex3f(avMin.x,avMax.y,avMin.z);
-
-        glVertex3f(avMax.x,avMax.y,avMin.z);
-        glVertex3f(avMax.x,avMin.y,avMin.z);
-
-        glVertex3f(avMin.x,avMax.y,avMin.z);
-        glVertex3f(avMin.x,avMin.y,avMin.z);
-
-        glVertex3f(avMin.x,avMin.y,avMin.z);
-        glVertex3f(avMax.x,avMin.y,avMin.z);
-
-        //Lines between
-        glVertex3f(avMax.x,avMax.y,avMax.z);
-        glVertex3f(avMax.x,avMax.y,avMin.z);
-
-        glVertex3f(avMin.x,avMax.y,avMax.z);
-        glVertex3f(avMin.x,avMax.y,avMin.z);
-
-        glVertex3f(avMin.x,avMin.y,avMax.z);
-        glVertex3f(avMin.x,avMin.y,avMin.z);
-
-        glVertex3f(avMax.x,avMin.y,avMax.z);
-        glVertex3f(avMax.x,avMin.y,avMin.z);
-    }
-    glEnd();
-
+    // Lines between
+    DrawLine(cVector3f(avMin.x, avMin.y, avMin.z),
+        cVector3f(avMin.x, avMax.y, avMin.z), aCol);
+    DrawLine(cVector3f(avMax.x, avMin.y, avMin.z),
+        cVector3f(avMax.x, avMax.y, avMin.z), aCol);
+    DrawLine(cVector3f(avMax.x, avMin.y, avMax.z),
+        cVector3f(avMax.x, avMax.y, avMax.z), aCol);
+    DrawLine(cVector3f(avMin.x, avMin.y, avMax.z),
+        cVector3f(avMin.x, avMax.y, avMax.z), aCol);
 }
 
 //-----------------------------------------------------------------------
@@ -1975,33 +2015,31 @@ void cLowLevelGraphicsSDL::DrawSphere(const cVector3f& avPos, float afRadius, cC
 
 void cLowLevelGraphicsSDL::DrawLineQuad(const cRect2f& aRect, float afZ, cColor aCol)
 {
-    glColor4f(aCol.r,aCol.g,aCol.b,aCol.a);
-    glBegin(GL_LINE_STRIP);
-    {
-        glVertex3f(aRect.x,aRect.y,afZ);
-        glVertex3f(aRect.x+aRect.w,aRect.y,afZ);
-        glVertex3f(aRect.x+aRect.w,aRect.y+aRect.h,afZ);
-        glVertex3f(aRect.x,aRect.y+aRect.h,afZ);
-        glVertex3f(aRect.x,aRect.y,afZ);
-    }
-    glEnd();
+    DrawLine(cVector3f(aRect.x, aRect.y, afZ),
+        cVector3f(aRect.x + aRect.w, aRect.y, afZ), aCol);
+
+    DrawLine(cVector3f(aRect.x + aRect.w, aRect.y, afZ),
+        cVector3f(aRect.x + aRect.w, aRect.y + aRect.h, afZ), aCol);
+
+    DrawLine(cVector3f(aRect.x + aRect.w, aRect.y + aRect.h, afZ),
+        cVector3f(aRect.x, aRect.y + aRect.h, afZ), aCol);
+
+    DrawLine(cVector3f(aRect.x, aRect.y + aRect.h, afZ),
+        cVector3f(aRect.x, aRect.y, afZ), aCol);
 }
 
 void cLowLevelGraphicsSDL::DrawLineQuad(const cVector3f &avPos,const cVector2f &avSize, cColor aCol)
 {
-    glColor4f(aCol.r,aCol.g,aCol.b,aCol.a);
-    glBegin(GL_LINE_STRIP);
-    {
-        glVertex3f(avPos.x,avPos.y,avPos.z);
-        glVertex3f(avPos.x+avSize.x,avPos.y,avPos.z);
-        glVertex3f(avPos.x+avSize.x,avPos.y+avSize.y,avPos.z);
-        glVertex3f(avPos.x,avPos.y+avSize.y,avPos.z);
-        glVertex3f(avPos.x,avPos.y,avPos.z);
-    }
-    glEnd();
+    DrawLine(avPos, cVector3f(avPos.x + avSize.x, avPos.y, avPos.z), aCol);
+
+    DrawLine(cVector3f(avPos.x + avSize.x, avPos.y, avPos.z),
+        cVector3f(avPos.x + avSize.x, avPos.y + avSize.y, avPos.z), aCol);
+
+    DrawLine(cVector3f(avPos.x + avSize.x, avPos.y + avSize.y, avPos.z),
+        cVector3f(avPos.x, avPos.y + avSize.y, avPos.z), aCol);
+
+    DrawLine(cVector3f(avPos.x, avPos.y + avSize.y, avPos.z), avPos, aCol);
 }
-
-
 
 //-----------------------------------------------------------------------
 
