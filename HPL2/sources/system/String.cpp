@@ -1482,6 +1482,46 @@ void cString::UIntStringToArray(unsigned int *apArray, const char* apString,int 
 
 //-----------------------------------------------------------------------
 
+void cString::UShortStringToArray(unsigned short *apArray, const char* apString,int alSize)
+{
+    int lArrayCount = 0;
+    unsigned int lCurrentVal = 0;
+    bool bHasDigits = false;
+
+    while(lArrayCount < alSize)
+    {
+        char c = *apString;
+
+        // If it's a number between 0 and 9 then accumulate it
+        if(c >= '0' && c <= '9')
+        {
+            lCurrentVal = lCurrentVal * 10 + (c - '0');
+            bHasDigits = true;
+        }
+        // If it's a space or terminator sequence then commit
+        else if (c == ' ' || c == '\0')
+        {
+            if(bHasDigits)
+            {
+                apArray[lArrayCount] = (unsigned short)lCurrentVal;
+                lArrayCount++;
+
+                lCurrentVal = 0;
+                bHasDigits = false;
+            }
+
+            if(c == '\0')
+            {
+                break;
+            }
+        }
+
+        apString++;
+    }
+}
+
+//-----------------------------------------------------------------------
+
 void cString::FloatStringToArray(float *apArray, const char* apString,int alSize)
 {
     char vTempChar[20];

@@ -235,6 +235,7 @@ public:
     static int GetLastStringPosW(const tWString& aString, const tWString&  aChar);
 
     static void UIntStringToArray(unsigned int *apArray, const char* apString,int alSize);
+    static void UShortStringToArray(unsigned short *apArray, const char* apString,int alSize);
     static void FloatStringToArray(float *apArray, const char* apString,int alSize);
 
     static int CountCharsInString(const tString& aString, const tString& aChar);
