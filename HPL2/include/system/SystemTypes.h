@@ -99,14 +99,8 @@ typedef tByteVec::iterator tByteVecIt;
 typedef std::vector<unsigned int> tUIntVec;
 typedef tUIntVec::iterator tUIntVecIt;
 
-typedef std::vector<unsigned short> tUShortVec;
-typedef tUShortVec::iterator tUShortVecIt;
-
 typedef std::vector<int> tIntVec;
 typedef tIntVec::iterator tIntVecIt;
-
-typedef std::vector<short> tShortVec;
-typedef tShortVec::iterator tShortVecIt;
 
 typedef std::list<int> tIntList;
 typedef tIntList::iterator tIntListIt;
@@ -141,7 +135,6 @@ typedef tBoolVec::iterator tBoolVecIt;
 typedef std::vector<wchar_t> tWCharVec;
 typedef tWCharVec::iterator tWCharVecIt;
 
-//--------------------------------------------------------
 
 typedef enum
 {
