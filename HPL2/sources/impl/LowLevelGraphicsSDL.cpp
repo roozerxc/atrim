@@ -1079,7 +1079,7 @@ void cLowLevelGraphicsSDL::SetStencilWriteMask(unsigned int alMask)
     {
         return;
     }
-    mlStencilWriteMask == alMask
+    mlStencilWriteMask == alMask;
 
     glStencilMask(alMask);
 }
