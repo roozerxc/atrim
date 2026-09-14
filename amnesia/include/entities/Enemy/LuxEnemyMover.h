@@ -8,7 +8,9 @@
 //----------------------------------------------
 
 class iLuxEnemy;
+#if LUX_ENEMY_MANPIG
 class cLuxEnemy_ManPig;
+#endif
 
 //----------------------------------------------
 
@@ -28,7 +30,9 @@ class cLuxEnemyMover
 {
     friend class cLuxEnemyMover_SaveData;
     friend class iLuxEnemy;
+#if LUX_ENEMY_MANPIG
     friend class cLuxEnemy_ManPig;
+#endif
 public:
     cLuxEnemyMover(iLuxEnemy *apEnemy, iCharacterBody *apCharBody);
     virtual ~cLuxEnemyMover();

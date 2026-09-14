@@ -86,10 +86,9 @@ private:
 
     //////////////
     //Variables
-    float mfAlertRunTowardsCount;
     float mfWaitTime;
+    float mfAlertRunTowardsCount;
 
-    int mlHuntWanderCount;
 };
 
 //----------------------------------------------

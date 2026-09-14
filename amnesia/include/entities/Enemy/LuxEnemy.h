@@ -117,7 +117,6 @@ public:
     int mlCurrentState;
     int mlNextState;
     int mlPreviousState;
-    int mlReturnState;
 
     int mlSoundState;
 
@@ -209,7 +208,6 @@ enum eLuxEnemyState
     eLuxEnemyState_BreakDoor,
 
     eLuxEnemyState_Dead,
-
 #if LUX_ENEMY_MANPIG
     eLuxEnemyState_PigEnumStart,
 
@@ -296,42 +294,16 @@ typedef tLuxStateMessageList::iterator    tLuxStateMessageListIt;
 
 //----------------------------------------------
 
-#define kLuxBeginStateMachine \
-    if(alState < 0) \
-    { \
-        if(0)
+#define kLuxBeginStateMachine        if(alState < 0){ if(0){
+#define kLuxEndStateMachine            return true;}}else{FatalError("Tried calling undefined state %d!\n", alState ); \
+                                    return false;} return false;
+#define kLuxState(x)                return true;}} else if(x == alState){if(0){
+#define kLuxOnMessage(x)            return true;} else if(aEvent == eLuxEnemyStateEvent_Message && apMessage && apMessage->mType == x){
+#define kLuxOnEvent(x)                return true;} else if(x == aEvent){
+#define kLuxOnEnter                    kLuxOnEvent(eLuxEnemyStateEvent_Enter)
+#define kLuxOnUpdate                kLuxOnEvent(eLuxEnemyStateEvent_Update)
+#define kLuxOnLeave                    kLuxOnEvent(eLuxEnemyStateEvent_Leave)
 
-#define kLuxEndStateMachine \
-        return true; \
-    } \
-    else { \
-        FatalError("Tried calling undefined state %d!\n", alState); \
-        return false; \
-    } \
-    return false;
-
-#define kLuxState(x) \
-        return true; \
-    } \
-    else if(x == alState) \
-    { \
-        if(0)
-
-#define kLuxOnMessage(x) \
-        return true; \
-    } \
-    else if(aEvent == eLuxEnemyStateEvent_Message && apMessage && apMessage->mType == x) \
-    {
-
-#define kLuxOnEvent(x) \
-        return true; \
-    } \
-    else if(x == aEvent) \
-    {
-
-#define kLuxOnEnter     kLuxOnEvent(eLuxEnemyStateEvent_Enter)
-#define kLuxOnUpdate    kLuxOnEvent(eLuxEnemyStateEvent_Update)
-#define kLuxOnLeave     kLuxOnEvent(eLuxEnemyStateEvent_Leave)
 
 //----------------------------------------------
 
@@ -423,8 +395,6 @@ public:
     void ResetProperties();
 
     void FadeToSmoke(bool abPlaySound);
-
-    void CheckStuckDoor();
 
     //////////////////////
     // Movement animation names
@@ -757,7 +727,6 @@ protected:
     eLuxEnemyState mCurrentState;
     eLuxEnemyState mNextState;
     eLuxEnemyState mPreviousState;
-    eLuxEnemyState mReturnState;
 
     eLuxEnemySoundState mSoundState;
 

@@ -1,7 +1,7 @@
+#if LUX_ENEMY_MANPIG
 #ifndef LUX_ENEMY_MAN_PIG_H
 #define LUX_ENEMY_MAN_PIG_H
 
-#if LUX_ENEMY_MANPIG
 //----------------------------------------------
 
 #include "LuxEnemy.h"
@@ -150,7 +150,7 @@ private:
     float mfIncreasedAlertSpeedMul;
     float mfAlertRunTowardsToHuntLimit;
     float mfAlertRunTowardsCheckDistance;
-    bool mbIsTesla;
+    bool mbIsTelsa;
 
 
     std::vector<cColor> mvDefaultLightColors;

@@ -50,10 +50,11 @@ tWString gsLuxEnemyStates[] =
 
     _W("Dead"),
 
-    _W("NULL") // End of pre-Pig states
-
+    _W("NULL")
 #if LUX_ENEMY_MANPIG
-    , _W("Flee"),
+    , // End of pre-Pig states
+
+    _W("Flee"),
     _W("Stalk"),
     _W("Track"),
 
@@ -835,11 +836,7 @@ void iLuxEnemy::GiveDamage(float afAmount, int alStrength)
 
     mfHealth -= afAmount;
 
-    gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) +
-        _W(" took damage by amount: ") + cString::ToStringW(afAmount) + _W("f"), false);
-
-    gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) +
-        _W(" hit strength: ") + cString::ToStringW(alStrength), false);
+    gpBase->mpDebugHandler->AddMessage(_W("Enemy damage ") + cString::ToStringW(afAmount), false);
 
     if(mfHealth <=0)
     {
@@ -1149,40 +1146,6 @@ void iLuxEnemy::FadeToSmoke(bool abPlaySound)
     if(abPlaySound)
     {
         gpBase->mpHelpFuncs->PlayGuiSoundData("enemy_hallucination_disappear", eSoundEntryType_Gui);
-    }
-}
-
-//-----------------------------------------------------------------------
-
-void iLuxEnemy::CheckStuckDoor()
-{
-    iLuxEntity *pDoorEnt = mpMap->GetEntityByID(mlStuckDoorID);
-    bool bShouldBreak = false;
-
-    if(pDoorEnt && pDoorEnt->GetEntityType() == eLuxEntityType_Prop)
-    {
-        iLuxProp* pDoorProp = static_cast<iLuxProp*>(pDoorEnt);
-        if(pDoorProp->GetHealth() > 0.0f && !mpMap->DoorIsBroken(mlStuckDoorID))
-        {
-            bShouldBreak = true;
-        }
-    }
-
-    if(bShouldBreak)
-    {
-        mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
-
-        mReturnState = mCurrentState;
-        ChangeState(eLuxEnemyState_BreakDoor);
-    }
-    else
-    {
-        mpMover->ResetStuckCounter();
-
-        mbStuckAtDoor = false;
-        mlStuckDoorID = -1;
-
-        ChangeState(eLuxEnemyState_Wait);
     }
 }
 
@@ -1755,15 +1718,10 @@ void iLuxEnemy::UpdateCheckStuckAtDoor(double adFixedDelta)
             continue;
         }
 
-        if(pProp->GetHealth() <= 0.0f || mpMap->DoorIsBroken(pProp->GetID()))
-        {
-            continue;
-        }
-
         for(int i=0; i<pProp->GetBodyNum(); ++i)
         {
             iPhysicsBody *pBody = pProp->GetBody(i);
-            if(pBody->GetMass()==0 || pBody->IsActive() == false)
+            if(pBody->GetMass()==0)
             {
                 continue;
             }
