@@ -434,7 +434,7 @@ void cLuxMainMenu_CustomStoryList::PopulateStoryList()
     if(pStoryFloppy->CreateFromPath(_W("A:\\")))
     {
         // Add prefix to name ...
-        pStoryFloppy->msName = _W("[Floppy Disk] ") + pStoryFloppy->msName;
+        pStoryFloppy->msName = _W("<Floppy Disk> ") + pStoryFloppy->msName;
 
         cWidgetItem* pItem = mpLBStories->AddItem(pStoryFloppy->msName);
         pItem->SetUserData(pStoryFloppy);
