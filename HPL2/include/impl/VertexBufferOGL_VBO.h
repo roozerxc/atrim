@@ -33,6 +33,17 @@ private:
     void SetVertexStates();
 
     unsigned int mlElementHandle;
+
+    unsigned int mlInterleavedHandle[2];
+    int          mlCurrentInterleaved;
+    size_t       mlInterleavedStride;
+
+    std::vector<size_t> mvElementOffsets;
+
+    size_t mlLastUploadedBytes[2];
+
+    bool mbUse16BitIndices;
+    unsigned int mlIndexBufferSize;
 };
 
 };
