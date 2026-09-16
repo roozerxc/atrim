@@ -58,7 +58,13 @@ cBitmap* cBitmapLoaderDevilMisc::LoadBitmap(const tWString& asFile, tBitmapLoadF
     ////////////////////////////////////////
     //Get main image properties
     int lNumOfImages = ilGetInteger(IL_NUM_IMAGES);
-    int lNumOfMipMaps = 1;//ilGetInteger(IL_NUM_MIPMAPS); //Skip for now...
+    int lNumOfMipMaps = ilGetInteger(IL_NUM_MIPMAPS);
+
+    //If there is only one mipmap for this image then just set num of mipmaps to 1
+    if(lNumOfMipMaps <= 1)
+    {
+        lNumOfMipMaps = 1;
+    }
 
     //If there is no image series, 0 number of images is returned, this still means that there is an image though
     if(lNumOfImages > 1)

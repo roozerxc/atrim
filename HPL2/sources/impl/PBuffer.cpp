@@ -32,9 +32,6 @@ cPBuffer::cPBuffer(iLowLevelGraphics* apLowLevelGraphics,bool abShareObjects,boo
 
     mvAttribFormat.push_back(WGL_BIND_TO_TEXTURE_RGBA_ARB);
     mvAttribFormat.push_back(true);
-    //Use this if the texture is a rectangle: (nVidia only!)
-    //mvAttribFormat.push_back(WGL_BIND_TO_TEXTURE_RECTANGLE_RGBA_NV);
-    //mvAttribFormat.push_back(true);
 
     mvAttribFormat.push_back(WGL_DEPTH_BITS_ARB);
     mvAttribFormat.push_back(24);
@@ -51,16 +48,13 @@ cPBuffer::cPBuffer(iLowLevelGraphics* apLowLevelGraphics,bool abShareObjects,boo
 
     mvAttribBuffer.push_back(WGL_TEXTURE_TARGET_ARB);
     mvAttribBuffer.push_back(WGL_TEXTURE_2D_ARB);
-    //Use this if the texture is a rectangle: (nVidia only!)
-    //mvAttribBuffer.push_back(WGL_TEXTURE_RECTANGLE_NV);
 
 
     mvAttribBuffer.push_back(WGL_MIPMAP_TEXTURE_ARB);
     mvAttribBuffer.push_back(false);
 
-    //Use this if you have mipmaps:
-    /*mvAttribBuffer.push_back(WGL_MIPMAP_LEVEL_ARB);
-    mvAttribBuffer.push_back(0);*/
+    mvAttribBuffer.push_back(WGL_MIPMAP_LEVEL_ARB);
+    mvAttribBuffer.push_back(false);
 
     //Set end of attributes vectors
     mvAttribFormat.push_back(0);

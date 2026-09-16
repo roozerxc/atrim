@@ -2691,9 +2691,7 @@ GLenum GetGLTextureTargetEnum(eTextureType aType)
     case eTextureType_2D:
         return GL_TEXTURE_2D;
     case eTextureType_Rect:
-    {
         return GL_TEXTURE_RECTANGLE;
-    }
     case eTextureType_CubeMap:
         return GL_TEXTURE_CUBE_MAP;
     case eTextureType_3D:

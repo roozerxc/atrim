@@ -608,7 +608,7 @@ void cSDLTexture::AutoGenerateMipmaps()
         return;
     }
 
-    if(mbUseMipMaps == true && GLEW_SGIS_generate_mipmap)
+    if(mbUseMipMaps == true && mpLowLevelGraphics->GetCaps(eGraphicCaps_AutoGenerateMipMaps))
     {
         GLenum GLTarget = GetGLTextureTargetEnum(mType);
 
@@ -921,7 +921,7 @@ void cSDLTexture::GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelForma
     // Generate mipmaps if the format is not compressed.
     if(mUsage == eTextureUsage_RenderTarget)
     {
-        if(mbUseMipMaps == true && GLEW_SGIS_generate_mipmap)
+        if(mbUseMipMaps == true && mpLowLevelGraphics->GetCaps(eGraphicCaps_AutoGenerateMipMaps))
         {
             glTexParameteri(aGLTarget, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
         }
