@@ -486,27 +486,6 @@ void cLuxMainMenu_CustomStoryList::ClearStoryList()
 
 //-----------------------------------------------------------------------
 
-void cLuxMainMenu_CustomStoryList::LoadStory(int alIdx)
-{
-    /*cWidgetItem* pItem = mpLBStories->GetItem(alIdx);
-    if(pItem==NULL)
-        return;
-
-    gpBase->mpInputHandler->ChangeState(eLuxInputState_Game);
-
-    gpBase->mpEngine->GetUpdater()->SetContainer("Default");
-    gpBase->mpEngine->GetUpdater()->BroadcastMessageToAll(eUpdateableMessage_Reset);
-
-    gpBase->mpProgressLogHandler->CreateAndResetLogFile();
-
-    ExitCallback(NULL, cGuiMessageData(0));
-
-    gpBase->StartGame("", "", "");
-    */
-}
-
-//-----------------------------------------------------------------------
-
 bool cLuxMainMenu_CustomStoryList::WindowOnUpdate(iWidget* apWidget, const cGuiMessageData& aData)
 {
     return true;
@@ -565,8 +544,6 @@ bool cLuxMainMenu_CustomStoryList::LoadStoryCallback(iWidget* apWidget, const cG
     {
         return true;
     }
-
-    LoadStory(mpLBStories->GetSelectedItem());
 
     return true;
 }

@@ -82,8 +82,6 @@ private:
 
     ////////////////////////
     // Callbacks
-    void LoadStory(int alIdx);
-
     bool WindowOnUpdate(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(WindowOnUpdate);
 
