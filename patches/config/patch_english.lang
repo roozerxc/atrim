@@ -51,6 +51,12 @@
         <Entry Name="Inventory">Inventory</Entry>
         <Entry Name="Global">Global</Entry>
     </CATEGORY>
+    
+    <!-- PTEST PATCHED STRINGS -->
+
+    <CATEGORY Name="Voice">
+        <Entry Name="hector_idle_03">Our Father who art in heaven, hallowed be thy name. Thy kingdom come, Thy will be done on earth, as it is in heaven. The kingdoms of this world are become the kingdoms of our Lord and of his Christ, our Savior.</Entry>
+    </CATEGORY>
 
     <CATEGORY Name="PreMenu">
         <Entry Name="FreeWarning">atrim is a FREE and open-source software client for Amnesia: The Dark Descent. If you have purchased it, demand a refund and get your money back immediately!</Entry>
