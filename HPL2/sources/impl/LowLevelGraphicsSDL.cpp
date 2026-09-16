@@ -676,23 +676,28 @@ iTexture* cLowLevelGraphicsSDL::CreateTexture(const tString &asName,eTextureType
 
 //-----------------------------------------------------------------------
 
-iVertexBuffer* cLowLevelGraphicsSDL::CreateVertexBuffer(eVertexBufferType aType,
-        eVertexBufferDrawType aDrawType,
-        eVertexBufferUsageType aUsageType,
-        int alReserveVtxSize,int alReserveIdxSize)
+iVertexBuffer* cLowLevelGraphicsSDL::CreateVertexBuffer(
+    eVertexBufferType aType,
+    eVertexBufferDrawType aDrawType,
+    eVertexBufferUsageType aUsageType,
+    int alReserveVtxSize,
+    int alReserveIdxSize)
 {
-    //return hplNew( cVertexBufferVBO,(this, aFlags,aDrawType,aUsageType,alReserveVtxSize,alReserveIdxSize) );
-    //return hplNew( cVertexBufferOGL, (this, aFlags,aDrawType,aUsageType,alReserveVtxSize,alReserveIdxSize) );
+    if(GetCaps(eGraphicCaps_VertexBufferObject) != 0 &&
+        (aType == eVertexBufferType_Hardware))
+    {
+#ifdef _DEBUG
+        Log(" Creating ogl hardware VBO\n");
+#endif
+        return hplNew(cVertexBufferOGL_VBO, (this,
+            aDrawType, aUsageType, alReserveVtxSize, alReserveIdxSize));
+    }
 
-    if(GetCaps(eGraphicCaps_VertexBufferObject) && aType == eVertexBufferType_Hardware)
-    {
-        return hplNew( cVertexBufferOGL_VBO, (this, aDrawType,aUsageType,alReserveVtxSize,alReserveIdxSize) );
-    }
-    else
-    {
-        //Error("VBO is not supported, using Vertex array!\n");
-        return hplNew( cVertexBufferOGL_Array, (this, aDrawType,aUsageType,alReserveVtxSize,alReserveIdxSize) );
-    }
+#ifdef _DEBUG
+    Log(" Creating ogl software vtx array\n");
+#endif
+    return hplNew( cVertexBufferOGL_Array, (this,
+        aDrawType, aUsageType, alReserveVtxSize, alReserveIdxSize));
 }
 
 //-----------------------------------------------------------------------
