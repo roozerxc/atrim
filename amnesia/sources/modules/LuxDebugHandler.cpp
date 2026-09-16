@@ -115,22 +115,6 @@ void cLuxDebugHandler::LoadUserConfig()
 
     mbAllowQuickSave = gpBase->mpUserConfig->GetBool("Debug", "AllowQuickSave", false);
 
-
-    if(gpBase->mbPTestActivated)
-    {
-#ifndef SKIP_PTEST_TESTS
-        mbShowFPS = false;
-        mbShowSoundPlaying = false;
-        mbShowPlayerInfo = false;
-        mbShowEntityInfo = false;
-        mbShowDebugMessages = false;
-        mbShowErrorMessages = false;
-        mbScriptDebugOn = false;
-        mbInspectionMode = false;
-        mbDisableFlashBacks = false;
-#endif
-    }
-
     /////////////////////////////////////////
     // Set callback for message
     SetLogMessageCallback(LogMessageCallback);

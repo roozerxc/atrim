@@ -290,99 +290,6 @@ bool cLuxCustomStorySettings::StartGame()
     return gpBase->StartGame(msStartMap, msMapsFolder, msStartPos);
 }
 
-
-//-----------------------------------------------------------------------
-
-//////////////////////////////////////////////////////////////////////////
-// PTEST FUNCTIONS
-//////////////////////////////////////////////////////////////////////////
-
-//-----------------------------------------------------------------------
-
-static inline tString DecryptString(const tString &asEncStr)
-{
-    size_t lBuffPos=0;
-    tString sOutStr;
-
-    cBinaryBuffer keyBuff;
-    keyBuff.AddInt32(0xc3af2528);
-    keyBuff.AddInt32(0xd4152761);
-
-    keyBuff.SetPos(0);
-    for(size_t i=0; i<asEncStr.size(); ++i)
-    {
-        sOutStr +=  asEncStr[i] ^ keyBuff.GetChar();
-        if(++lBuffPos >= keyBuff.GetSize())
-        {
-            keyBuff.SetPos(0);
-        }
-    }
-
-    return sOutStr;
-}
-
-//-----------------------------------------------------------------------
-
-static inline unsigned int GetFileCRC(const tString& asFilePath, unsigned int alKey)
-{
-    cBinaryBuffer buff;
-    if(buff.Load(cString::To16Char(asFilePath))==false)
-    {
-        return 0;
-    }
-
-    return buff.GetCRC(alKey, 0);
-}
-
-static inline unsigned int GetFileCRC(const tWString& asFilePath, unsigned int alKey)
-{
-    cBinaryBuffer buff;
-    if(buff.Load(asFilePath)==false)
-    {
-        return 0;
-    }
-
-    return buff.GetCRC(alKey, 0);
-}
-
-//-----------------------------------------------------------------------
-
-static unsigned char gv_main_init_str[27] =
-{
-    0x4B, 0x4A, 0xC1, 0xA5, 0x8, 0x40, 0x3A,
-    0xA4, 0x5C, 0x4D, 0x5B, 0x5C, 0x77, 0x45,
-    0x49, 0x41, 0x46, 0x77, 0x41, 0x46, 0x41,
-    0x5C, 0x6, 0x4B, 0x4E, 0x4F, 0
-};
-
-static unsigned char gv_error_mess_str[29] =
-{
-    0x6C, 0x4A, 0x8F, 0xAD, 0xE, 0x53, 0x35,
-    0xB9, 0x4D, 0x5B, 0x5B, 0x8, 0x5F, 0x41,
-    0x5C, 0x40, 0x8, 0x5C, 0x40, 0x4D, 0x8,
-    0x4E, 0x41, 0x44, 0x4D, 0x5B, 0x9, 0x9,
-    0
-};
-
-static unsigned char gv_start_map_str[13] =
-{
-    0x18, 0x14, 0xF0, 0xA0, 0x4, 0x4B, 0x79,
-    0xA7, 0x6, 0x45, 0x49, 0x58, 0
-};
-
-static unsigned char gv_start_folder_str[12] =
-{
-    0x45, 0x44, 0xDF, 0xB0, 0x4E, 0x57, 0x61,
-    0xB1, 0x5B, 0x5C, 0x7, 0
-};
-
-static unsigned char gv_start_pos_str[18] =
-{
-    0x78, 0x49, 0xCE, 0xBA, 0x4, 0x55, 0x46,
-    0xA0, 0x49, 0x5A, 0x5C, 0x69, 0x5A, 0x4D,
-    0x49, 0x77, 0x19, 0
-};
-
 //-----------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
@@ -650,17 +557,6 @@ bool cLuxBase::StartGame(const tString& asFile, const tString& asFolder, const t
 
     }
 
-    ///////////////////
-    //Special ptest setup
-    if(gpBase->mbPTestActivated)
-    {
-#ifndef SKIP_PTEST_TESTS
-        sMapFile = DecryptString((char*)gv_start_map_str);
-        sMapFolder = DecryptString((char*)gv_start_folder_str);
-        sStartPos = DecryptString((char*)gv_start_pos_str);
-#endif
-    }
-
     //////////////////
     //Global script
     mpGlobalDataHandler->LoadAndInitGlobalScript();
@@ -706,16 +602,7 @@ bool cLuxBase::ParseCommandLine(const tString &asCommandline)
     if(asCommandline == "ptest")
     {
         mbPTestActivated = true;
-        msInitConfigFile = cString::To16Char(DecryptString((char*)gv_main_init_str)); //_W("config/ptest_main_init.cfg");
-
-        /*#ifndef SKIP_PTEST_TESTS
-            msErrorMessage = cString::To16Char(DecryptString((char*)gv_error_mess_str));
-            unsigned int lCRC = GetFileCRC(msInitConfigFile, 0x11af54e2);
-            #ifdef LOG_CRC
-                Log("main cfg crc: %x\n", lCRC);
-            #endif
-            if(lCRC != 0x4f5c2612) return false;
-        #endif*/
+        msInitConfigFile = _W("config/ptest_main_init.cfg");
 
         return true;
     }
@@ -801,42 +688,6 @@ bool cLuxBase::InitApp()
 
     //Delete the config file
     hplDelete(pInitCfg);
-
-    /////////////////////////////
-    // Check some file CRC
-    if(mbPTestActivated)
-    {
-        /*#ifndef SKIP_PTEST_TESTS
-            msErrorMessage = cString::To16Char(DecryptString((char*)gv_error_mess_str));
-
-            unsigned int lCRC = GetFileCRC(msGameConfigPath, 0x56af34e2);
-            #ifdef LOG_CRC
-                Log("Game cfg crc: %x\n", lCRC);
-            #endif
-            if(lCRC != 0x3f2a8fae) return false;
-
-
-            lCRC = GetFileCRC("entities/ptest/enemy_suitor/enemy_suitor_alois.ent", 0x561f3416);
-            #ifdef LOG_CRC
-                Log("enemy alois crc: %x\n", lCRC);
-            #endif
-            if(lCRC != 0xa7388492) return false;
-
-            lCRC = GetFileCRC("entities/ptest/enemy_suitor/enemy_suitor_basile.ent", 0x59af34a4);
-            #ifdef LOG_CRC
-                Log("enemy basile crc: %x %d %x\n", lCRC, lCRC == 0xa6c66ee00, 0xa6c66ee00);
-            #endif
-            if(lCRC != 1818684928) return false;
-
-
-            lCRC = GetFileCRC("entities/ptest/enemy_suitor/enemy_suitor_malo.ent", 0x59af34a4);
-            #ifdef LOG_CRC
-                Log("enemy malo crc: %x\n", lCRC);
-            #endif
-            if(lCRC != 0xac5e94c0) return false;
-
-        #endif*/
-    }
 
     //////////////////////////////
     //Set up the directories to be created
@@ -984,18 +835,6 @@ bool cLuxBase::InitMainConfig()
     // Create and init config handler
     mpConfigHandler = hplNew(cLuxConfigHandler,());
     mpConfigHandler->LoadMainConfig();
-
-    ///////////////////////////////////
-    // Ptest extra fixes!!
-    if(mbPTestActivated)
-    {
-#ifndef SKIP_PTEST_TESTS
-        mbShowMenu = true;
-        mbShowPreMenu = true;
-        mpConfigHandler->mbLoadDebugMenu = false;
-        mpConfigHandler->msLangFile = "english.lang";
-#endif
-    }
 
     return true;
 }
@@ -1161,7 +1000,6 @@ bool cLuxBase::InitEngine()
     //Other vars
     cResources::SetForceCacheLoadingAndSkipSaving(mpConfigHandler->mbForceCacheLoadingAndSkipSaving);
     cResources::SetCreateAndLoadCompressedMaps(false);
-    //cResources::SetCreateAndLoadCompressedMaps(mbPTestActivated || mpConfigHandler->mbCreateAndLoadCompressedMaps);
 
     /////////////////////////
     // Create the engine
@@ -1190,10 +1028,7 @@ bool cLuxBase::InitEngine()
 
     /////////////////////////
     //Load the start language
-    //if(mbPTestActivated)
-    //    LoadLanguage("english.lang");
-    //else
-    LoadLanguage(mpMainConfig->GetString("Main", "StartLanguage",msDefaultGameLanguage));
+    LoadLanguage(mpMainConfig->GetString("Main", "StartLanguage", msDefaultGameLanguage));
 
     /////////////////////////
     //Add extra paths
