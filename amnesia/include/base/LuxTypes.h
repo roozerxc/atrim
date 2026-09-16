@@ -337,7 +337,6 @@ enum eLuxAction
     eLuxAction_Journal,
     eLuxAction_QuestLog,
     eLuxAction_RecentText,
-    eLuxAction_CrosshairToggle,
 
     eLuxAction_Forward,
     eLuxAction_Backward,

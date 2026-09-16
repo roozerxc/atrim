@@ -64,7 +64,6 @@ static cLuxAction gvLuxActions[] =
     cLuxAction("Journal",eLuxAction_Journal,        true, eLuxActionCategory_Misc),
     cLuxAction("QuestLog",eLuxAction_QuestLog,        true, eLuxActionCategory_Misc),
     cLuxAction("RecentText", eLuxAction_RecentText, true, eLuxActionCategory_Misc),
-    cLuxAction("CrosshairToggle", eLuxAction_CrosshairToggle, true, eLuxActionCategory_Misc),
 
     cLuxAction("Forward",eLuxAction_Forward,    true, eLuxActionCategory_Movement),
     cLuxAction("Backward",eLuxAction_Backward,    true, eLuxActionCategory_Movement),
@@ -150,7 +149,6 @@ static cLuxInput gvLuxInputs[] =
     cLuxInput("Keyboard", eKey_J, eLuxAction_Journal),
     cLuxInput("Keyboard", eKey_M, eLuxAction_QuestLog),
     cLuxInput("Keyboard", eKey_N, eLuxAction_RecentText),
-    cLuxInput("Keyboard", eKey_X, eLuxAction_CrosshairToggle),
 
     cLuxInput("Keyboard", eKey_W, eLuxAction_Forward),
     cLuxInput("Keyboard", eKey_S, eLuxAction_Backward),
@@ -211,7 +209,6 @@ static cLuxInput gvLuxInputs[] =
     cLuxInput("GamepadButton", eGamepadButton_4, eLuxAction_Attack),
     cLuxInput("GamepadButton", eGamepadButton_5, eLuxAction_Interact),
     cLuxInput("GamepadButton", eGamepadButton_7, eLuxAction_Exit),
-    cLuxInput("GamepadButton", eGamepadButton_8, eLuxAction_CrosshairToggle),
     cLuxInput("GamepadButton", eGamepadButton_9, eLuxAction_Rotate),
     cLuxInput("GamepadAxis.Axis 2", eGamepadAxisRange_Positive, eLuxAction_Run),
     cLuxInput("GamepadAxis.Axis 2", eGamepadAxisRange_Negative, eLuxAction_Lean),
@@ -975,13 +972,6 @@ void cLuxInputHandler::UpdateGameInput()
     if(mpInput->BecameTriggerd(eLuxAction_Exit))
     {
         gpBase->mpEngine->GetUpdater()->SetContainer("MainMenu");
-    }
-
-    ////////////////////
-    //Toggle Crosshair
-    if(mpInput->BecameTriggerd(eLuxAction_CrosshairToggle))
-    {
-        gpBase->mpPlayer->SetShowCrosshair(!gpBase->mpPlayer->GetShowCrosshair());
     }
 
     ////////////////////
