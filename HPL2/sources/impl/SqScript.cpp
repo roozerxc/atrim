@@ -132,15 +132,29 @@ bool cSqScript::CreateFromFile(const tWString& asFileName, tString *apCompileMes
 
     /////////////////////////////////////////
     // Create module
-    mpModule = mpScriptEngine->GetModule(msModuleName.c_str(), asGM_ALWAYS_CREATE);
-    if(mpModule->AddScriptSection("main", pCharBuffer, lLength)<0)
+    CScriptBuilder builder;
+    if(builder.StartNewModule(mpScriptEngine, msModuleName.c_str()) < 0)
     {
-        Error("Couldn't add script '%s'!\n",asFileName.c_str());
+        Error("Couldn't start new module '%s'!\n", msModuleName.c_str());
         hplDeleteArray(pCharBuffer);
         return false;
     }
 
-    int lBuildOutput = mpModule->Build();
+    std::string sFileName = cString::To8Char(asFileName);
+    std::string sScriptData(pCharBuffer, lLength);
+
+    if(builder.AddSectionFromMemory(sScriptData.c_str(), sFileName.c_str()) < 0)
+    {
+        Error("Couldn't add script section '%s'!\n", sFileName.c_str());
+        hplDeleteArray(pCharBuffer);
+        return false;
+    }
+
+    int lBuildOutput = builder.BuildModule();
+
+    // do not pass GM_ALWAYS_CREATE, only if it exists...
+    mpModule = mpScriptEngine->GetModule(msModuleName.c_str());
+
     if(apCompileMessages)
     {
         *apCompileMessages = mpScriptOutput->GetMessage();
