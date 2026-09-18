@@ -190,7 +190,9 @@ bool cLuxConfigHandler::ShowRestartWarning(cGuiSet* apSet, void* apObject, tGuiC
                                       kTranslate("OptionsMenu", "ReqRestartMessage"),
                                       kTranslate("MainMenu","OK"), _W(""),
                                       apObject, apCallback);
+#if USE_GAMEPAD
         pPopUp->GetGuiSet()->SetDrawFocus(true);
+#endif
         return true;
     }
 

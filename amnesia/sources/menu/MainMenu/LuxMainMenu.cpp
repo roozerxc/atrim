@@ -490,6 +490,7 @@ void cLuxMainMenu::SetWindowActive(eLuxMainMenuWindow aWindow)
 
 #if USE_GAMEPAD
     bool bHasGamepad = gpBase->mpInputHandler->IsGamepadPresent();
+#endif
 
     switch(aWindow)
     {
@@ -498,14 +499,14 @@ void cLuxMainMenu::SetWindowActive(eLuxMainMenuWindow aWindow)
     case eLuxMainMenuWindow_LoadGame:
     case eLuxMainMenuWindow_Profiles:
     case eLuxMainMenuWindow_StartGame:
+#if USE_GAMEPAD
         mpGuiSet->SetDrawFocus(bHasGamepad);
         break;
+#endif
     default:
         mpGuiSet->SetDrawFocus(false);
         break;
     }
-
-#endif
 
     if(mCurrentWindow != eLuxMainMenuWindow_LastEnum)
     {
