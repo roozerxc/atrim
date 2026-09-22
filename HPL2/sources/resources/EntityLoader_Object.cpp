@@ -394,6 +394,10 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
         //Set entity properties
         //TODO...
         mpEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster,true); //<- Temp
+        if(apInstanceVars)
+        {
+            mpEntity->SetIsOccluder(apInstanceVars->GetVarBool("IsOccluder", false));
+        }
     }
 
     ////////////////////////////////////////
@@ -789,7 +793,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
         {
             iEntity3D *pEntity = *it;
 
-            if(pEntity->GetEntityType() == "SubMesh" && mpMesh->GetSkeleton() == NULL && mpMesh->GetAnimationNum() > 0)
+            if(pEntity->GetEntityType() == "SubMesh" && mpMesh->GetSkeleton() == false && mpMesh->GetAnimationNum() > 0)
             {
                 mbNodeAnimation = true;
                 continue;
@@ -1004,7 +1008,7 @@ void cEntityLoader_Object::LoadAndAttachChildren(    cXmlElement *apMainElem, iE
             //Attach
             if(apEntityParent)
             {
-                if(pEntity->GetEntityType() == "SubMesh" && mpMesh->GetSkeleton() == NULL && mpMesh->GetAnimationNum() > 0)
+                if(pEntity->GetEntityType() == "SubMesh" && mpMesh->GetSkeleton() == false && mpMesh->GetAnimationNum() > 0)
                 {
                     mbNodeAnimation = true;
                     continue;
@@ -1104,6 +1108,7 @@ void cEntityLoader_Object::SetBodyProperties(iPhysicsBody *apBody, cXmlElement *
 
     apBody->SetBlocksSound(apElem->GetAttributeBool("BlocksSound",false));
     apBody->SetCollideCharacter(apElem->GetAttributeBool("CollideCharacter",true));
+    apBody->SetBlocksPathfinding(apElem->GetAttributeBool("BlocksPathfinding",false));
     apBody->SetCollide(apElem->GetAttributeBool("CollideNonCharacter",true));
 
     apBody->SetGravity(apElem->GetAttributeBool("HasGravity",true));
