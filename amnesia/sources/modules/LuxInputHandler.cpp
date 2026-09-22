@@ -99,7 +99,7 @@ static cLuxAction gvLuxActions[] =
 static cLuxInput gvLuxInputs[] =
 {
     cLuxInput("Keyboard", eKey_Escape, eLuxAction_Exit),
-    cLuxInput("Keyboard", eKey_F8, eLuxAction_ScreenShot),
+    cLuxInput("Keyboard", eKey_F12, eLuxAction_ScreenShot),
 
     cLuxInput("MouseButton", eMouseButton_Left, eLuxAction_LeftClick),
     cLuxInput("MouseButton", eMouseButton_Middle, eLuxAction_MiddleClick),
