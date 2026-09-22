@@ -445,7 +445,6 @@ void iLight::SetFalloffMap(iTexture* apTexture)
     mpFalloffMap = apTexture;
     mpFalloffMap->SetWrapS(eTextureWrap_ClampToEdge);
     mpFalloffMap->SetWrapT(eTextureWrap_ClampToEdge);
-
 }
 
 //-----------------------------------------------------------------------
