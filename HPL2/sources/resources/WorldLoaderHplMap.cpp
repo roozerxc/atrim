@@ -158,7 +158,7 @@ cWorld* cWorldLoaderHplMap::LoadWorld(const tWString& asFile,tWorldLoadFlag aFla
         {
             hplDelete(pDoc);
 
-            return NULL;
+            return false;
         }
         bLoadedFromNormalFile = true;
     }
@@ -170,7 +170,7 @@ cWorld* cWorldLoaderHplMap::LoadWorld(const tWString& asFile,tWorldLoadFlag aFla
         if(compBuffer.Load(asFile)==false)
         {
             //Log("Could not load compressed map!\n");
-            return NULL;
+            return false;
         }
 
         int lKey = kEncryptKey;
@@ -180,14 +180,14 @@ cWorld* cWorldLoaderHplMap::LoadWorld(const tWString& asFile,tWorldLoadFlag aFla
         if(textBuff.DecompressAndAddFromBuffer(&compBuffer, false)==false)
         {
             //Log("Could not decompress map!\n");
-            return NULL;
+            return false;
         }
 
-        if(pDoc->CreateFromString(textBuff.GetDataPointer())==false)
+        if(pDoc->CreateFromString(textBuff.GetDataPointerAtCurrentPos())==false)
         {
             hplDelete(pDoc);
             //Log("Could not parse map!\n");
-            return NULL;
+            return false;
         }
     }
 
@@ -208,7 +208,7 @@ cWorld* cWorldLoaderHplMap::LoadWorld(const tWString& asFile,tWorldLoadFlag aFla
             textBuff.AddCharArray(sData.c_str(), sData.size()+1);
 
             cBinaryBuffer compBuff;
-            compBuff.CompressAndAdd(textBuff.GetDataPointer(), textBuff.GetSize());
+            compBuff.CompressAndAdd(textBuff.GetDataPointerAtCurrentPos(), textBuff.GetSize());
 
             int lKey = kEncryptKey;
             compBuff.XorTransform((char*)&lKey, sizeof(lKey));
@@ -301,7 +301,7 @@ cWorld* cWorldLoaderHplMap::LoadWorld(const tWString& asFile,tWorldLoadFlag aFla
     if(pXmlContents==NULL)
     {
         hplDelete(pDoc);
-        return NULL;
+        return false;
     }
 
     ///////////////////////////////////
@@ -604,6 +604,7 @@ void cWorldLoaderHplMap::LoadCacheFile(const tWString& asFile)
         binBuff.GetString(&sName);
         binBuff.GetString(&sMaterial);
         bool bCastShadows = binBuff.GetBool();
+        bool bIOccluder = binBuff.GetBool();
 
         if(gbLogCacheLoad)
         {
@@ -746,6 +747,7 @@ void cWorldLoaderHplMap::LoadCacheFile(const tWString& asFile)
         //Create mesh entity
         cMeshEntity *pMeshEntity = mpCurrentWorld->CreateMeshEntity(sName, pMesh, true);
         pMeshEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster, bCastShadows);
+        pMeshEntity->SetIsOccluder(bIOccluder);
     }
 
 
@@ -854,7 +856,7 @@ void cWorldLoaderHplMap::SaveCacheFile(const tWString& asFile)
         binBuff.AddString(pEntity->GetName());
         binBuff.AddString(pSubMesh->GetMaterialName());
         binBuff.AddBool(pSubEnt->GetRenderFlagBit(eRenderableFlag_ShadowCaster));
-
+        binBuff.AddBool(pSubEnt->IsOccluder());
 
         ////////////////////////////
         //Add Vertices
@@ -1195,6 +1197,11 @@ static bool SortStaticSubMeshesForMeshes(iRenderable* apObjectDataA, iRenderable
         return    apObjectDataA->GetRenderFlagBit(eRenderableFlag_ShadowCaster) <
                   apObjectDataB->GetRenderFlagBit(eRenderableFlag_ShadowCaster);
     }
+    //Occluder check
+    if(	apObjectDataA->IsOccluder() != apObjectDataB->IsOccluder())
+    {
+        return	apObjectDataA->IsOccluder() < apObjectDataB->IsOccluder();
+    }
     //Material check
     if( apObjectDataA->GetMaterial() != apObjectDataB->GetMaterial())
     {
@@ -1366,6 +1373,7 @@ void cWorldLoaderHplMap::CombineAndCreateMeshesAndPhysics(tRenderableList *apObj
             //Check if next object is not part of sequence, if so combine current sequence.
             if(    pNextObject->GetMaterial() != pMeshObject->GetMaterial() ||
                     pNextObject->GetRenderFlagBit(eRenderableFlag_ShadowCaster) != pMeshObject->GetRenderFlagBit(eRenderableFlag_ShadowCaster) ||
+                    pNextObject->IsOccluder() != pMeshObject->IsOccluder() ||
                     pNextObjectUserData->mbCombine == false)
             {
                 CombineObjectsAndCreateMeshEntity(vMeshObjects, lFirstInSequence, (int) i);
@@ -1610,6 +1618,7 @@ void cWorldLoaderHplMap::CombineObjectsAndCreateMeshEntity(tRenderableVec &avObj
 
     //Set up variables
     pMeshEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster, pFirstObject->GetRenderFlagBit(eRenderableFlag_ShadowCaster));
+    pMeshEntity->SetIsOccluder(pFirstObject->IsOccluder());
 
     //Add to list
     mlstStaticMeshEntities.push_back(pMeshEntity);
@@ -1808,6 +1817,7 @@ void cWorldLoaderHplMap::CreateStaticObjectEntity(cXmlElement* apElement, tMeshE
 
     bool bCollides = apElement->GetAttributeBool("Collides", true);
     bool bCastsShadows = apElement->GetAttributeBool("CastShadows", true);
+    bool bIsOccluder = apElement->GetAttributeBool("IsOccluder", true);
 
     int lID = apElement->GetAttributeInt("ID",-1);
 
@@ -1840,6 +1850,7 @@ void cWorldLoaderHplMap::CreateStaticObjectEntity(cXmlElement* apElement, tMeshE
                                        mpResources->GetAnimationManager()) );
     pMeshEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster, bCastsShadows);
     pMeshEntity->SetUniqueID(lID);
+    pMeshEntity->SetIsOccluder(bIsOccluder);
 
     alstMeshEntities.push_back(pMeshEntity);
 
@@ -2113,6 +2124,7 @@ void cWorldLoaderHplMap::CreatePrimitive(    cXmlElement* apElement, tMeshEntity
     tString sMaterialName = sMaterial;
     bool bCastsShadows = apElement->GetAttributeBool("CastShadows", true);
     bool bCollides = apElement->GetAttributeBool("Collides", true);
+    bool bIsOccluder = apElement->GetAttributeBool("IsOccluder", true);
     int lID = apElement->GetAttributeInt("ID",-1);
 
     if((mlCurrentFlags & eWorldLoadFlag_FastStaticLoad))
@@ -2162,6 +2174,7 @@ void cWorldLoaderHplMap::CreatePrimitive(    cXmlElement* apElement, tMeshEntity
                                             mpResources->GetAnimationManager()) );
         pMeshEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster, bCastsShadows);
         pMeshEntity->GetSubMeshEntity(0)->GetSubMesh()->SetMaterialName(sMaterialName);
+        pMeshEntity->SetIsOccluder(bIsOccluder);
     }
 
     //////////////////////////////////
@@ -2266,6 +2279,7 @@ void cWorldLoaderHplMap::CreateDecal(    cXmlElement* apElement, tMeshEntityList
                                         mpResources->GetMaterialManager(),
                                         mpResources->GetMeshManager(),
                                         mpResources->GetAnimationManager()) );
+    pMeshEntity->SetIsOccluder(false);
 
     //////////////////////////////////
     // General Final Stuff
