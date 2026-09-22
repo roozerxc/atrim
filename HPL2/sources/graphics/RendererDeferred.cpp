@@ -59,6 +59,9 @@ float cRendererDeferred::mfSSAOScatterLengthMax = 0.13f;
 float cRendererDeferred::mfSSAODepthDiffMul = 1.5f;
 float cRendererDeferred::mfSSAOSkipEdgeLimit = 3.0f;
 eDeferredSSAO cRendererDeferred::mSSAOType = eDeferredSSAO_OnColorBuffer;
+bool cRendererDeferred::mbDebugPrevFrameOcclusion = false;
+bool cRendererDeferred::mbDebugRenderLightComplexity = false;
+bool cRendererDeferred::mbDebugRenderOverdraw = false;
 
 //debug
 bool cRendererDeferred::mbOcclusionTestLargeLights = true;
@@ -89,8 +92,9 @@ enum eDefferredProgramMode
 #define eFeature_Light_Gobo                eFlagBit_4
 #define eFeature_Light_DivideInFrag        eFlagBit_5
 #define eFeature_Light_ShadowMap        eFlagBit_6
+#define eFeature_Light_DebugComplexity	eFlagBit_7
 
-#define kLightFeatureNum 7
+#define kLightFeatureNum 8
 
 cProgramComboFeature gvLightFeatureVec[] =
 {
@@ -101,6 +105,7 @@ cProgramComboFeature gvLightFeatureVec[] =
     cProgramComboFeature("UseGobo", kPC_FragmentBit),
     cProgramComboFeature("DivideInFrag", kPC_FragmentBit | kPC_VertexBit),
     cProgramComboFeature("UseShadowMap", kPC_FragmentBit, eFeature_Light_SpotLight),
+    cProgramComboFeature("DebugComplexity", kPC_FragmentBit),
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -145,6 +150,8 @@ cProgramComboFeature gvFogAreaFeatureVec[] =
 #define kVar_afFalloffExp                        20
 #define kVar_afDepthDiffMul                        21
 #define kVar_afSkipEdgeLimit                    22
+#define kVar_afFalloff							23
+#define kVar_afComplexity						24
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -522,6 +529,30 @@ bool cRendererDeferred::LoadData()
                     mpLightBoxProgram[i]->GetVariableAsId("avLightColor",kVar_avLightColor);
                 }
             }
+
+            vars.Clear();
+            vars.Add("DebugComplexity");
+            mpLightBoxProgram[2] = mpProgramManager->CreateProgramFromShaders("LightBoxNormal",
+                                   "deferred_base_vtx.glsl",
+                                   "deferred_light_box_frag.glsl",
+                                   &vars,true);
+
+            if(mpLightBoxProgram[2])
+            {
+                mpLightBoxProgram[2]->GetVariableAsId("afComplexity",kVar_afComplexity);
+            }
+
+            vars.Clear();
+            vars.Add("UseUv");
+
+            mpOverdrawProgram = mpProgramManager->CreateProgramFromShaders("Debug Light Complexity",
+                                "deferred_base_vtx.glsl",
+                                "debug_overdraw_frag.glsl",
+                                &vars,true);
+            mpHeatMapProgram = mpProgramManager->CreateProgramFromShaders("Debug Heat map",
+                               "deferred_base_vtx.glsl",
+                               "debug_heat_map_frag.glsl",
+                               &vars,true);
         }
 
         /////////////////////////////
@@ -587,6 +618,8 @@ bool cRendererDeferred::LoadData()
             mpProgramManager->AddGenerateProgramVariableId("a_mtxSpotViewProj", kVar_a_mtxSpotViewProj, eDefferredProgramMode_Lights);
             mpProgramManager->AddGenerateProgramVariableId("a_mtxInvViewRotation", kVar_a_mtxInvViewRotation, eDefferredProgramMode_Lights);
             mpProgramManager->AddGenerateProgramVariableId("avShadowMapOffsetMul", kVar_avShadowMapOffsetMul, eDefferredProgramMode_Lights);
+            mpProgramManager->AddGenerateProgramVariableId("afFalloff",	kVar_afFalloff, eDefferredProgramMode_Lights);
+            mpProgramManager->AddGenerateProgramVariableId("afComplexity",	kVar_afComplexity, eDefferredProgramMode_Lights);
         }
     }
 
@@ -816,6 +849,20 @@ iTexture* cRendererDeferred::GetGbufferTexture(int alIdx)
     return mpGBufferTexture[lType][alIdx];
 }
 
+cDeferredLight* cRendererDeferred::GetDeferredLight(int alID)
+{
+    if(alID < (int)mvTempDeferredLights.size())
+    {
+        return mvTempDeferredLights[alID];
+    }
+    return NULL;
+}
+
+int cRendererDeferred::GetDeferredLightNum()
+{
+    return mvTempDeferredLights.size();
+}
+
 //-----------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
@@ -871,6 +918,8 @@ void cRendererDeferred::SetupRenderList()
 
 void cRendererDeferred::RenderObjects()
 {
+    mlDrawCalls = 0;
+
     //Set up variables used in rendering later on.
     SetupRenderVariables();
 
@@ -894,11 +943,8 @@ void cRendererDeferred::RenderObjects()
         CheckForVisibleObjectsAddToListAndRenderZ(    mpCurrentSettings->mpVisibleNodeTracker,eObjectVariabilityFlag_All, lVisibleFlags,
                 true, NULL);
 
-        AssignAndRenderOcclusionQueryObjects(false, NULL, true);
-
-        SetupLightsAndRenderQueries();
-
-        mpCurrentRenderList->Compile(    eRenderListCompileFlag_Diffuse |
+        mpCurrentRenderList->Compile(	 eRenderListCompileFlag_Z_Dissolve |
+                                         eRenderListCompileFlag_Diffuse |
                                          eRenderListCompileFlag_Translucent |
                                          eRenderListCompileFlag_Decal |
                                          eRenderListCompileFlag_Illumination);
@@ -906,6 +952,7 @@ void cRendererDeferred::RenderObjects()
         {
             mpCurrentRenderList->PrintAllObjects();
         }
+        RenderZDissolve();
     }
     ///////////////////////////
     //Brute force
@@ -914,7 +961,8 @@ void cRendererDeferred::RenderObjects()
         CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Static), lVisibleFlags);
         CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Dynamic), lVisibleFlags);
 
-        mpCurrentRenderList->Compile(    eRenderListCompileFlag_Z |
+        mpCurrentRenderList->Compile(	 eRenderListCompileFlag_Z_Dissolve |
+                                         eRenderListCompileFlag_Z |
                                          eRenderListCompileFlag_Diffuse |
                                          eRenderListCompileFlag_Translucent |
                                          eRenderListCompileFlag_Decal |
@@ -924,10 +972,7 @@ void cRendererDeferred::RenderObjects()
             mpCurrentRenderList->PrintAllObjects();
         }
         RenderZ();
-
-        AssignAndRenderOcclusionQueryObjects(false, NULL, true);
-
-        SetupLightsAndRenderQueries();
+        RenderZDissolve();
     }
 
     RenderGbuffer();
@@ -937,13 +982,25 @@ void cRendererDeferred::RenderObjects()
         return;
     }
 
+    AssignAndRenderOcclusionQueryObjects(false, NULL, true);
+    SetupLightsAndRenderQueries();
+
     RenderDecals();
 
     RunCallback(eRendererMessage_PostGBuffer);
 
     RenderLights();
 
+    if(mbDebugRenderLightComplexity)
+    {
+        RenderLightComplexity();
 
+        if(mbOcclusionTestLargeLights)
+        {
+            RetrieveAllLightOcclusionPair(false);    //false = we do not stop and wait.
+        }
+        return;
+    }
 
     RenderIllumination();
 
@@ -955,6 +1012,17 @@ void cRendererDeferred::RenderObjects()
 #endif
 
     RunCallback(eRendererMessage_PostSolid);
+
+    if(mbDebugRenderOverdraw)
+    {
+        RenderOverdraw();
+
+        if(mbOcclusionTestLargeLights)
+        {
+            RetrieveAllLightOcclusionPair(false);    //false = we do not stop and wait.
+        }
+        return;
+    }
 
     RenderTranslucent();
 
@@ -1011,6 +1079,28 @@ void cRendererDeferred::RenderZ()
     SetTextureRange(NULL,0);
 
     cRenderableVecIterator zIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Z);
+    while(zIt.HasNext())
+    {
+        iRenderable *pObject = zIt.Next();
+        RenderZObject(pObject, NULL);
+    }
+
+    END_RENDER_PASS();
+}
+
+void cRendererDeferred::RenderZDissolve()
+{
+    START_RENDER_PASS(EarlyZDissolveOnly);
+
+    SetDepthTest(true);
+    SetDepthWrite(true);
+    SetBlendMode(eMaterialBlendMode_None);
+    SetAlphaMode(eMaterialAlphaMode_Solid);
+    SetChannelMode(eMaterialChannelMode_None);
+
+    SetTextureRange(NULL,0);
+
+    cRenderableVecIterator zIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Z_Dissolve);
     while(zIt.HasNext())
     {
         iRenderable *pObject = zIt.Next();
@@ -1087,6 +1177,15 @@ void cRendererDeferred::RenderGbuffer()
     {
         iRenderable *pObject = diffuseIt.Next();
         cMaterial *pMaterial = pObject->GetMaterial();
+
+        if(pObject->GetCoverageAmount() <= 1.0f || pMaterial->GetTexture(eMaterialTexture_Alpha))
+        {
+            SetDepthTestFunc(eDepthTestFunc_Equal);
+        }
+        else
+        {
+            SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
+        }
 
         SetMaterialProgram(eMaterialRenderMode_Diffuse,pMaterial);
 
@@ -1320,6 +1419,7 @@ void cRendererDeferred::SetupLightProgramVariables(    iGpuProgram *apProgram,cD
     // General variables
     apProgram->SetVec3f(kVar_avLightPos, apLightData->m_mtxViewSpaceRender.GetTranslation());
     apProgram->SetColor4f(kVar_avLightColor, pLight->GetDiffuseColor());
+    apProgram->SetFloat(kVar_afFalloff, pLight->GetFalloff());
     apProgram->SetFloat(kVar_afInvLightRadius, 1.0f / pLight->GetRadius());
 
     ////////////////////////
@@ -1366,6 +1466,52 @@ void cRendererDeferred::SetupLightProgramVariables(    iGpuProgram *apProgram,cD
             apProgram->SetMatrixf(kVar_a_mtxSpotViewProj, mtxFinal);
         }
     }
+
+    if(mbDebugRenderLightComplexity)
+    {
+        apProgram->SetFloat(kVar_afComplexity, GetLightComplexity(apLightData));
+    }
+}
+
+float cRendererDeferred::GetLightComplexity(cDeferredLight* apLightData)
+{
+    float fComplexity = 8.0f;
+
+    if(apLightData->mpQuery)
+    {
+        fComplexity += 3.0f;
+    }
+    if(apLightData->mbCastShadows)
+    {
+        ///////////////
+        // Add complexity for every shadow caster
+        float fMul = 1.0f;
+
+        switch(apLightData->mShadowResolution)
+        {
+        case eShadowMapResolution_Low:
+            fMul = 0.5f;
+            break;
+        case eShadowMapResolution_Medium:
+            fMul = 1.0f;
+            break;
+        case eShadowMapResolution_High:
+            fMul = 1.5f;
+            break;
+        case eShadowMapResolution_Ultra:
+            fMul = 2.0f;
+            break;
+        }
+
+        if(apLightData->mpLight->GetShadowCastersAffected() == eObjectVariabilityFlag_Static)
+        {
+            fMul *= 0.25f;
+        }
+
+        fComplexity += (fMul * apLightData->mlShadowCasterNum);
+    }
+
+    return fComplexity * 0.4f / 128.0f;
 }
 
 //-----------------------------------------------------------------------
@@ -1413,6 +1559,11 @@ iGpuProgram* cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightD
         {
             lFlags |= eFeature_Light_ShadowMap;
         }
+    }
+
+    if(mbDebugRenderLightComplexity)
+    {
+        lFlags |= eFeature_Light_DebugComplexity;
     }
 
     /////////////////////////
@@ -1474,6 +1625,8 @@ void cRendererDeferred::RenderLightShadowMap(cDeferredLight* apLightData)
     //Setup render states
     SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
 
+    int lDrawCalls = mlDrawCalls;
+
     //Render shadow map and set used shadow texture to data.
     iLight *pLight = apLightData->mpLight;
     eShadowMapResolution shadowMapRes = apLightData->mShadowResolution;
@@ -1487,6 +1640,13 @@ void cRendererDeferred::RenderLightShadowMap(cDeferredLight* apLightData)
 
         //Reset to previous frame buffer
         SetAccumulationBuffer();
+
+        apLightData->mlShadowCasterNum = (mlDrawCalls - lDrawCalls);
+        pShadowData->mlShadowCasterNum = (mlDrawCalls - lDrawCalls);
+    }
+    else
+    {
+        apLightData->mlShadowCasterNum = pShadowData->mlShadowCasterNum;
     }
 
     //Set back G-buffer textures
@@ -2474,6 +2634,11 @@ void cRendererDeferred::RenderBoxLight(cDeferredLight* apLightData)
     //Get correct program, depending if ssao is used or not.
     int lProgramNum =    (mbSSAOLoaded && mpCurrentSettings->mbSSAOActive && mSSAOType == eDeferredSSAO_InBoxLight) ? 1 :0;
 
+    if(mbDebugRenderLightComplexity)
+    {
+        lProgramNum = 2;
+    }
+
     //Set up texture
     if(lProgramNum == 1)
     {
@@ -2487,6 +2652,11 @@ void cRendererDeferred::RenderBoxLight(cDeferredLight* apLightData)
     if(mpLightBoxProgram[lProgramNum])
     {
         mpLightBoxProgram[lProgramNum]->SetColor4f(kVar_avLightColor,pLight->GetDiffuseColor());
+
+        if(mbDebugRenderLightComplexity)
+        {
+            mpLightBoxProgram[lProgramNum]->SetFloat(kVar_afComplexity, GetLightComplexity(apLightData));
+        }
     }
 
     //Blend mode
@@ -2803,19 +2973,35 @@ void cRendererDeferred::RenderIllumination()
     {
         iRenderable *pObject = illumIt.Next();
         cMaterial *pMaterial = pObject->GetMaterial();
-        SetMaterialProgram(eMaterialRenderMode_Illumination,pMaterial);
 
-        SetTexture(0,pMaterial->GetTextureInUnit(eMaterialRenderMode_Illumination,0));
+        if(pObject->GetCoverageAmount() <= 1.0f || pMaterial->GetTexture(eMaterialTexture_Alpha))
+        {
+            SetDepthTestFunc(eDepthTestFunc_Equal);
+        }
+        else
+        {
+            SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
+        }
+
+        eMaterialRenderMode renderMode = pMaterial->GetTexture(eMaterialTexture_IlluminationModulate) ? eMaterialRenderMode_IlluminationModulate : eMaterialRenderMode_Illumination;
+
+        SetMaterialProgram(renderMode,pMaterial);
+
+        SetTexture(0,pMaterial->GetTextureInUnit(renderMode,0));
+
+        if ( renderMode == eMaterialRenderMode_IlluminationModulate )
+        {
+            SetTexture(1,pMaterial->GetTextureInUnit(renderMode,1));
+        }
 
         SetMatrix(pObject->GetModelMatrixPtr());
 
         SetVertexBuffer(pObject->GetVertexBuffer());
 
-        DrawCurrentMaterial(eMaterialRenderMode_Illumination, pObject);
+        DrawCurrentMaterial(renderMode, pObject);
     }
 
     SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
-
 
     END_RENDER_PASS();
 }
@@ -2895,7 +3081,6 @@ void cRendererDeferred::RenderFullScreenFog()
 
     SetMatrix(NULL);
 
-
     //////////////////////////
     // Set up program
     int lFlags =0;
@@ -2912,7 +3097,6 @@ void cRendererDeferred::RenderFullScreenFog()
         pProgram->SetColor4f(kVar_avFogColor, mpCurrentWorld->GetFogColor());
         pProgram->SetFloat(kVar_afFalloffExp, mpCurrentWorld->GetFogFalloffExp());
     }
-
 
     //////////////////////////
     // Set up flat project
@@ -2954,7 +3138,6 @@ void cRendererDeferred::RenderFog()
 
     SetTexture(0, GetGbufferTexture(2)); //depth!
     SetTextureRange(NULL, 1);
-
 
     for(size_t i=0; i<mpCurrentSettings->mvFogRenderData.size(); ++i)
     {
@@ -3700,13 +3883,145 @@ void cRendererDeferred::RenderGbufferContent()
     DrawQuad(cVector2f(0.5f,0),cVector2f(0.5f,0.5f), 0,mvScreenSizeFloat, true);
     SetTexture(0,GetBufferTexture(2));
     DrawQuad(cVector2f(0,0.5f),cVector2f(0.5f,0.5f), 0,mvScreenSizeFloat, true);
+
     if(mlNumOfGBufferTextures > 3)
     {
         SetTexture(0,GetBufferTexture(3));
         DrawQuad(cVector2f(0.5f,0.5f),cVector2f(0.5f,0.5f), 0,mvScreenSizeFloat, true);
     }
 
+    SetNormalFrustumProjection();
+    END_RENDER_PASS();
+}
 
+//-----------------------------------------------------------------------
+
+void cRendererDeferred::RenderLightComplexity()
+{
+    START_RENDER_PASS(LightComplexity);
+
+    /////////////////
+    // Color map the data for better readablitiy
+    SetDepthTest(false);
+    SetMatrix(NULL);
+    SetFrameBuffer(mpGBuffer[0][eGBufferComponents_Normals]);
+    SetCullMode(eCullMode_CounterClockwise);
+
+    SetBlendMode(eMaterialBlendMode_None);
+    SetFlatProjection();
+    SetTexture(0, mpAccumBufferTexture);
+    SetTexture(1, GetBufferTexture(0));
+    SetVertexBuffer(NULL);
+    SetProgram(mpHeatMapProgram);
+
+    DrawQuad(0,1,0,1);
+
+    /////////////
+    // Render it back to accum buffer
+    SetTextureRange(0,0);
+    SetAccumulationBuffer();
+    SetProgram(NULL);
+    SetTexture(0, GetBufferTexture(1));
+
+    DrawQuad(0,1, 0,mvScreenSizeFloat, true);
+
+    /////////////
+    // Reset states
+    SetNormalFrustumProjection();
+    END_RENDER_PASS();
+}
+
+//-----------------------------------------------------------------------
+
+void cRendererDeferred::RenderOverdraw()
+{
+    START_RENDER_PASS(Overdraw);
+
+    /////////////////
+    // Render each translucent object with additive blending
+    SetAccumulationBuffer();
+    mpLowLevelGraphics->SetClearColor(cColor(0,0));
+    ClearFrameBuffer(eClearFrameBufferFlag_Color, true);
+
+    SetDepthWrite(false);
+    SetAlphaMode(eMaterialAlphaMode_Solid);
+    SetBlendMode(eMaterialBlendMode_Add);
+    SetNormalFrustumProjection();
+    SetTextureRange(0,0);
+    SetProgram(mpOverdrawProgram);
+
+
+    cRenderableVecIterator transIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Translucent);
+    while(transIt.HasNext())
+    {
+        ///////////////
+        // Set specific settings
+        iRenderable *pObject =transIt.Next();
+        cMatrixf *pMatrix = pObject->GetModelMatrix(mpCurrentFrustum);
+        cMaterial *pMaterial = pObject->GetMaterial();
+        SetDepthTest(pMaterial->GetDepthTest());
+
+        //////////////
+        // Update
+
+        if(pObject->UpdateGraphicsForViewport(mpCurrentFrustum, dCurrentFrameTime)==false)
+        {
+            continue;
+        }
+
+        int lRenderCount = 1;
+
+        if(pMaterial->HasTranslucentIllumination())
+        {
+            lRenderCount++;
+        }
+
+        if(pObject->UsesOcclusionQuery())
+        {
+            lRenderCount += 3;
+            SetDepthTest(false);
+        }
+
+        pObject->RetrieveOcculsionQuery(this);
+
+        ///////////////
+        // Draw
+        SetMatrix(pMatrix);
+        SetVertexBuffer(pObject->GetVertexBuffer());
+
+        while(lRenderCount-- > 0)
+        {
+            DrawCurrent();
+        }
+    }
+
+    /////////////////
+    // Color map the data for better readablitiy
+    SetDepthTest(false);
+    SetMatrix(NULL);
+    SetFrameBuffer(mpGBuffer[0][eGBufferComponents_Normals]);
+    SetCullMode(eCullMode_CounterClockwise);
+
+    SetBlendMode(eMaterialBlendMode_None);
+    SetFlatProjection();
+    SetTexture(0, mpAccumBufferTexture);
+    SetTexture(1, GetBufferTexture(0));
+    SetVertexBuffer(NULL);
+    SetProgram(mpHeatMapProgram);
+
+    DrawQuad(0,1,0,1);
+
+    /////////////
+    // Render it back to accum buffer
+    SetTextureRange(0,0);
+    SetAccumulationBuffer();
+    SetProgram(NULL);
+    SetTexture(0, GetBufferTexture(1));
+
+    DrawQuad(0,1, 0,mvScreenSizeFloat, true);
+
+    /////////////
+    // Reset states
     SetNormalFrustumProjection();
     END_RENDER_PASS();
 }
