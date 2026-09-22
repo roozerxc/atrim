@@ -588,11 +588,6 @@ bool cRendererDeferred::LoadData()
             mpProgramManager->AddGenerateProgramVariableId("a_mtxInvViewRotation", kVar_a_mtxInvViewRotation, eDefferredProgramMode_Lights);
             mpProgramManager->AddGenerateProgramVariableId("avShadowMapOffsetMul", kVar_avShadowMapOffsetMul, eDefferredProgramMode_Lights);
         }
-
-        //////////////////////////////
-        // Generate some light programs
-        //for(i=0; i<128; ++i)
-        //    mpProgramManager->GenerateProgram(eDefferredProgramMode_Lights, i);
     }
 
     ////////////////////////////////////
@@ -813,16 +808,6 @@ void cRendererDeferred::DestroyData()
 iTexture* cRendererDeferred::GetPostEffectTexture()
 {
     return mpAccumBufferTexture;
-
-    //This should never be needed since if a post effect is used,
-    /*if(mpCurrentRenderTarget->mpFrameBuffer==NULL)
-    {
-        return mpAccumBuffer;
-    }
-    else
-    {
-        return mpCurrentRenderTarget->mpFrameBuffer;
-    }*/
 }
 
 iTexture* cRendererDeferred::GetGbufferTexture(int alIdx)
@@ -921,8 +906,6 @@ void cRendererDeferred::RenderObjects()
         {
             mpCurrentRenderList->PrintAllObjects();
         }
-        //RenderDynamicZTemp();
-
     }
     ///////////////////////////
     //Brute force
@@ -958,18 +941,8 @@ void cRendererDeferred::RenderObjects()
 
     RunCallback(eRendererMessage_PostGBuffer);
 
-    //RenderDeferredSkyBox();
-
-    /*if(mpCurrentSettings->mbIsReflection)
-    {
-        RenderGbufferContent(); //Debug, used to see what gbuffers contain
-        return;
-    }*/
     RenderLights();
 
-    //Debug:
-    //RenderSSAO();
-    //return;
 
 
     RenderIllumination();
@@ -991,13 +964,6 @@ void cRendererDeferred::RenderObjects()
     {
         RetrieveAllLightOcclusionPair(false);    //false = we do not stop and wait.
     }
-
-    //Debug for testing reflection!
-    /*if(mpCurrentSettings->mbIsReflection==false)
-    {
-        RenderReflectionContent();
-        return;
-    }*/
 }
 
 //-----------------------------------------------------------------------
@@ -1641,8 +1607,6 @@ static bool SortFunc_Default(const cDeferredLight* apLightDataA, const cDeferred
     //Pointer
     return pLightA < pLightB;
 }
-
-
 
 //-----------------------------------------------------------------------
 
