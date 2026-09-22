@@ -406,6 +406,12 @@ void cMaterialType_Translucent::SetupObjectSpecificData(eMaterialRenderMode aRen
         {
             iLight* pLight = pRenderList->GetLight(i);
 
+            if ( pLight->GetName() == "PlayerHands_LanternLight1"
+                    || pLight->GetName() == "PlayerHands_LanternLight2" )
+            {
+                continue;    // request by Sindre: lantern does not affect translucent materials
+            }
+
             //Check if there is an intersection
             if(pLight->CheckObjectIntersection(apObject))
             {
