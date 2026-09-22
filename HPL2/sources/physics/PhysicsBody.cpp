@@ -76,6 +76,7 @@ iPhysicsBody::iPhysicsBody(const tString &asName,iPhysicsWorld *apWorld,iCollide
 
     mbIsCharacter = false;
     mbCollideCharacter = true;
+    mbBlocksPathfinding = false;
 
     mbIsRagDoll = false;
     mbCollideRagDoll = true;
