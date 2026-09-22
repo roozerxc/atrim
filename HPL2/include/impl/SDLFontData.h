@@ -15,13 +15,7 @@ public:
     cSDLFontData(const tString &asName, iLowLevelGraphics* apLowLevelGraphics);
     cSDLFontData();
 
-    bool CreateFromFontFile(const tWString &asFileName, int alSize,unsigned short alFirstChar,
-                            unsigned short alLastChar);
     bool CreateFromBitmapFile(const tWString &asFileName);
-
-private:
-    //cGlyph* RenderGlyph(TTF_Font* apFont,unsigned short aChar, int alFontSize);
-
 };
 
 };

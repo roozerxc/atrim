@@ -43,9 +43,6 @@ public:
     iFontData(const tString &asName, iLowLevelGraphics* apLowLevelGraphics);
     ~iFontData();
 
-    virtual bool CreateFromFontFile(const tWString &asFileName, int alSize,unsigned short alFirstChar,
-                                    unsigned short alLastChar)=0;
-
     virtual bool CreateFromBitmapFile(const tWString &asFileName)=0;
 
 
@@ -92,32 +89,6 @@ public:
     {
         return mvSizeRatio;
     }
-
-    /**
-     * Draw a string.
-     * \param avPos Screen pos
-     * \param avSize size of the characters
-     * \param aCol color
-     * \param mAlign alignment
-     * \param fmt
-     * \param ...
-     */
-    //void Draw(const cVector3f& avPos,const cVector2f& avSize, const cColor& aCol,eFontAlign mAlign,
-    //            const wchar_t* fmt,...);
-    /**
-     * Draw a string  with word wrap.
-     * \param avPos Screen pos
-     * \param afLength Max length of a line
-     * \param afFontHeight The distance from base of character above to base of character below
-     * \param avSize size of the characters
-     * \param aCol color
-     * \param aAlign alignment
-     * \param asString
-     * \return Extra number of rows generated.
-     */
-    //int DrawWordWrap(cVector3f avPos,float afLength,float afFontHeight,cVector2f avSize,const cColor& aCol,
-    //                    eFontAlign aAlign,    const tWString &asString);
-
 
     void GetWordWrapRows(float afLength,float afFontHeight,cVector2f avSize,const tWString& asString,
                          tWStringVec *apRowVec);
