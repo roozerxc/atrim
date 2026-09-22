@@ -92,13 +92,7 @@ void cAnimationTrack::ApplyToNode(cNode3D* apNode, float afTime, float afWeight,
         return;
     }
 
-    cKeyFrame Frame = GetInterpolatedKeyFrame(afTime);
-
-    //Scale
-    //Skip this for now...
-    /*cVector3f vOne(1,1,1);
-    cVector3f vScale = (Frame.scale - vOne)*afWeight + vOne;
-    apNode->AddScale(vScale);*/
+    cKeyFrame Frame = GetInterpolatedKeyFrame(afTime, bLoop);
 
     //Rotation
     cQuaternion qRot = cMath::QuaternionSlerp(afWeight, cQuaternion::Identity, Frame.rotation, true);
@@ -190,55 +184,62 @@ float cAnimationTrack::GetKeyFramesAtTime(float afTime, cKeyFrame** apKeyFrameA,
 {
     float fTotalAnimLength = mpParent->GetLength();
 
-    // Wrap time
-    //Not sure it is a good idea to clamp the length.
-    //But wrapping screws loop mode up.
-    //Wrap(..., totalLength + kEpislon), migh work though.
-    afTime = cMath::Clamp(afTime, 0, fTotalAnimLength);
-
-    //If longer than max time return last frame and first
-    if(afTime >= mfMaxFrameTime)
-    {
-        *apKeyFrameA = mvKeyFrames[mvKeyFrames.size()-1];
-        *apKeyFrameB = mvKeyFrames[0];
-
-        //Get T between end to start again. (the last frame doesn't mean the anim is over.
-        // In that case wrap to the first frame).
-        float fDeltaT = fTotalAnimLength - (*apKeyFrameA)->time;
-
-        //If animation time is >= max time might as well just return the last frame.
-        //Not sure if this is good for some looping anims, in that case check the code.
-        return 0.0f;//(afTime - (*apKeyFrameA)->time) / fDeltaT;
-    }
-
     //Get the number of frames
     const int lSize = (int)mvKeyFrames.size();
+    int lFirst = 0, lLast = lSize - 1;
 
     //Find the second frame.
     int lIdxB=-1;
-    for(int i=0; i< lSize; i++)
+
+    while(lFirst <= lLast)
     {
-        if(afTime <= mvKeyFrames[i]->time)
+        int lMid = (lFirst + lLast) >> 1;
+        int lBefore = lMid > 0 ? lMid - 1 : 0;
+
+        if(afTime < mvKeyFrames[lBefore]->time)
         {
-            lIdxB = i;
+            lLast = lMid - 1;
+        }
+        else if(afTime > mvKeyFrames[lMid]->time)
+        {
+            lFirst = lMid + 1;
+        }
+        else
+        {
+            lIdxB = lMid;
             break;
         }
     }
 
     //If first frame was found, the lowest time is not 0.
     //If so return the first frame only.
-    if(lIdxB == 0)
+    if(lIdxB <= 0)
     {
+        /////////////////////
+        // Return the first and last frame if the animation is looping
+        if(bLoop)
+        {
+            afTime = fmod(afTime, fTotalAnimLength + kEpsilonf);
+
+            if(afTime < mvKeyFrames[0]->time)
+            {
+                *apKeyFrameA = mvKeyFrames[mvKeyFrames.size() - 1];
+                *apKeyFrameB = mvKeyFrames[0];
+
+                return afTime / (mvKeyFrames[0]->time + kEpsilonf);
+            }
+        }
+
         *apKeyFrameA = mvKeyFrames[0];
         *apKeyFrameB = mvKeyFrames[0];
         return 0.0f;
     }
 
     //Get the frames
-    *apKeyFrameA = mvKeyFrames[lIdxB-1];
+    *apKeyFrameA = mvKeyFrames[lIdxB - 1];
     *apKeyFrameB = mvKeyFrames[lIdxB];
 
-    float fDeltaT = (*apKeyFrameB)->time - (*apKeyFrameA)->time;
+    float fDeltaT = (*apKeyFrameB)->time - (*apKeyFrameA)->time + kEpsilonf;
 
     return (afTime - (*apKeyFrameA)->time) / fDeltaT;
 }
