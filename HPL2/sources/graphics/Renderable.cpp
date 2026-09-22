@@ -47,6 +47,8 @@ iRenderable::iRenderable(const tString &asName) : iEntity3D(asName)
     mpRenderContainerNode = NULL;
 
     mpRenderableUserData = NULL;
+
+    mfShaderTimer = 0.0f;
 }
 
 //-----------------------------------------------------------------------
