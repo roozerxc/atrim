@@ -779,6 +779,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\sources\graphics\PostEffect_ColorGrading.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\include\graphics\PostEffect_ColorGrading.h"
+					>
+				</File>
+				<File
 					RelativePath=".\sources\graphics\PostEffect_ImageTrail.cpp"
 					>
 				</File>
