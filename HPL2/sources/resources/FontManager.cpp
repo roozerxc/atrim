@@ -61,18 +61,8 @@ iFontData* cFontManager::CreateFontData(const tString& asName, int alSize,unsign
 
         tString sExt = cString::ToLowerCase(cString::GetFileExt(asName));
 
-        //True Type Font
-        if(sExt == "ttf")
-        {
-            if(pFont->CreateFromFontFile(sPath,alSize,alFirstChar,alLastChar)==false)
-            {
-                hplDelete(pFont);
-                EndLoad();
-                return NULL;
-            }
-        }
         //Angel code font type
-        else if(sExt == "fnt")
+        if(sExt == "fnt")
         {
             if(pFont->CreateFromBitmapFile(sPath)==false)
             {
@@ -89,7 +79,6 @@ iFontData* cFontManager::CreateFontData(const tString& asName, int alSize,unsign
             return NULL;
         }
 
-        //mpResources->GetImageManager()->FlushAll();
         AddResource(pFont);
     }
 
