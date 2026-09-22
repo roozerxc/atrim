@@ -30,7 +30,6 @@ static cLuxAction gvLuxActions[] =
     cLuxAction("Exit",eLuxAction_Exit,                false, eLuxActionCategory_System),
     cLuxAction("ExitDirect",eLuxAction_ExitDirect,    false, eLuxActionCategory_System),
     cLuxAction("ScreenShot",eLuxAction_ScreenShot,    false, eLuxActionCategory_System),
-    cLuxAction("PrintInfo",eLuxAction_PrintInfo,    false, eLuxActionCategory_System),
 
     cLuxAction("LeftClick",eLuxAction_LeftClick,    false, eLuxActionCategory_System),
     cLuxAction("MiddleClick",eLuxAction_MiddleClick,false, eLuxActionCategory_System),
@@ -103,7 +102,6 @@ static cLuxInput gvLuxInputs[] =
     cLuxInput("Keyboard", eKey_Escape, eLuxAction_Exit),
     cLuxInput("Keyboard", eKey_F12, eLuxAction_ExitDirect),
     cLuxInput("Keyboard", eKey_F8, eLuxAction_ScreenShot),
-    cLuxInput("Keyboard", eKey_P, eLuxAction_PrintInfo),
 
     cLuxInput("MouseButton", eMouseButton_Left, eLuxAction_LeftClick),
     cLuxInput("MouseButton", eMouseButton_Middle, eLuxAction_MiddleClick),
@@ -691,13 +689,6 @@ void cLuxInputHandler::UpdateGlobalInput()
         cBitmap *pBmp = pEngine->GetGraphics()->GetLowLevel()->CopyFrameBufferToBitmap();
         pEngine->GetResources()->GetBitmapLoaderHandler()->SaveBitmap(pBmp,sFileName,0);
         hplDelete(pBmp);
-    }
-
-    /////////////////
-    // Debug output
-    if(mpInput->BecameTriggerd(eLuxAction_PrintInfo))
-    {
-        gpBase->mpMapHandler->GetViewport()->GetRenderSettings()->mbLog = true;
     }
 
     /////////////////

@@ -303,7 +303,6 @@ enum eLuxAction
     eLuxAction_Exit,
     eLuxAction_ExitDirect,
     eLuxAction_ScreenShot,
-    eLuxAction_PrintInfo,
 
     eLuxAction_LeftClick,
     eLuxAction_MiddleClick,
