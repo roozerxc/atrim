@@ -20,6 +20,7 @@
 #include "physics/PhysicsBody.h"
 
 #include "math/Math.h"
+#include "math/Frustum.h"
 
 namespace hpl
 {
@@ -57,6 +58,7 @@ cSubMeshEntity::cSubMeshEntity(const tString &asName, cMeshEntity *apMeshEntity,
 
     mpMaterial = NULL;
 
+    mbIsOccluder = true;
     mpUserData = NULL;
 
     //This is used to see if null should be returned.
@@ -64,6 +66,7 @@ cSubMeshEntity::cSubMeshEntity(const tString &asName, cMeshEntity *apMeshEntity,
     // -1 = Matrix was not identity
     // 1 = matrix was identiy
     mlStaticNullMatrixCount =0;
+    mlBoneMatricesUpdateCount = -2;
 }
 
 cSubMeshEntity::~cSubMeshEntity()
@@ -176,6 +179,18 @@ static inline void MatrixFloatRotateAdd(float *pDest, const cMatrixf &a_mtxA, co
 
 //-----------------------------------------------------------------------
 
+bool cSubMeshEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime)
+{
+    /////////////////
+    // Get distance to frustum
+    if(IsStatic() == false && apFrustum)
+    {
+        mfDistanceToFrustum = cMath::Vector3DistSqr(apFrustum->GetOrigin(), GetWorldPosition());
+    }
+
+    return true;
+}
+
 void cSubMeshEntity::UpdateGraphicsForFrame(double adFrameTime)
 {
     ////////////////////////////////////
@@ -191,6 +206,12 @@ void cSubMeshEntity::UpdateGraphicsForFrame(double adFrameTime)
             return;
         }
 
+        if(mpMeshEntity->mlBoneMatricesUpdateCount == mlBoneMatricesUpdateCount)
+        {
+            return; //dont update paused animations
+        }
+
+        mlBoneMatricesUpdateCount = mpMeshEntity->mlBoneMatricesUpdateCount;
         mbGraphicsUpdated = true;
 
         const float *pBindPos = mpSubMesh->GetVertexBuffer()->GetFloatArray(eVertexBufferElement_Position);
@@ -311,14 +332,19 @@ cBoundingVolume* cSubMeshEntity::GetBoundingVolume()
     }
     else
     {
-        if(mbUpdateBoundingVolume)
-        {
-            mBoundingVolume.SetTransform(GetWorldMatrix());
-            mbUpdateBoundingVolume = false;
-        }
-
-        return &mBoundingVolume;
+        return GetSubMeshBoundingVolume();
     }
+}
+
+cBoundingVolume* cSubMeshEntity::GetSubMeshBoundingVolume()
+{
+    if(mbUpdateBoundingVolume)
+    {
+        mBoundingVolume.SetTransform(GetWorldMatrix());
+        mbUpdateBoundingVolume = false;
+    }
+
+    return &mBoundingVolume;
 }
 
 //-----------------------------------------------------------------------
