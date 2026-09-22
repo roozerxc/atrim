@@ -28,7 +28,6 @@
 static cLuxAction gvLuxActions[] =
 {
     cLuxAction("Exit",eLuxAction_Exit,                false, eLuxActionCategory_System),
-    cLuxAction("ExitDirect",eLuxAction_ExitDirect,    false, eLuxActionCategory_System),
     cLuxAction("ScreenShot",eLuxAction_ScreenShot,    false, eLuxActionCategory_System),
 
     cLuxAction("LeftClick",eLuxAction_LeftClick,    false, eLuxActionCategory_System),
@@ -100,7 +99,6 @@ static cLuxAction gvLuxActions[] =
 static cLuxInput gvLuxInputs[] =
 {
     cLuxInput("Keyboard", eKey_Escape, eLuxAction_Exit),
-    cLuxInput("Keyboard", eKey_F12, eLuxAction_ExitDirect),
     cLuxInput("Keyboard", eKey_F8, eLuxAction_ScreenShot),
 
     cLuxInput("MouseButton", eMouseButton_Left, eLuxAction_LeftClick),

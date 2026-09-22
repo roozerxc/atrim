@@ -301,7 +301,6 @@ enum eLuxActionCategory
 enum eLuxAction
 {
     eLuxAction_Exit,
-    eLuxAction_ExitDirect,
     eLuxAction_ScreenShot,
 
     eLuxAction_LeftClick,
