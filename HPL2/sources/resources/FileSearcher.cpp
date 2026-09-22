@@ -135,7 +135,13 @@ const tWString& cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
 
     /////////////////////////////
     //Compare paths
-    tWString sWantedPath = cString::To16Char(cString::GetFilePath(asFileNameAndPath));
+    tString string = cString::GetFilePath(asFileNameAndPath);
+    if(string == "")
+    {
+        return it->second.msPath;
+    }
+
+    tWString sWantedPath = cString::To16Char(string);
     if(sWantedPath == _W(""))
     {
         return it->second.msPath;
