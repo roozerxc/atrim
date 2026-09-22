@@ -38,8 +38,6 @@ public:
 
     //////////////////////
     //General
-    virtual void OnRenderSolid(cRendererCallbackFunctions* apFunctions);
-
     virtual bool CanInteract(iPhysicsBody *apBody);
     virtual bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos);
 

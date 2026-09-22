@@ -87,17 +87,6 @@ iLuxArea::~iLuxArea()
 
 //-----------------------------------------------------------------------
 
-void iLuxArea::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
-{
-    /*if(mpBody==NULL) return;
-
-    cBoundingVolume* pBV = mpBody->GetBoundingVolume();
-
-    apFunctions->GetLowLevelGfx()->DrawBoxMinMax(pBV->GetMin(), pBV->GetMax(),cColor(1,1,1,1));*/
-}
-
-//-----------------------------------------------------------------------
-
 bool iLuxArea::CanInteract(iPhysicsBody *apBody)
 {
     return false;
