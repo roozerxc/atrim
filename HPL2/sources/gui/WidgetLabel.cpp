@@ -149,7 +149,6 @@ void cWidgetLabel::DrawText(double adFixedDelta, cGuiClipRegion *apClipRegion)
             else
             {
                 DrawDefaultText(vRows[i], GetGlobalPosition()+vOffset-cVector3f(0,mfWordWrapOffset,0),mTextAlign, cColor(0.5f, mDefaultFontColor.a));
-                //DrawSkinText(vRows[i],eGuiSkinFont_Disabled,GetGlobalPosition()+vOffset,mTextAlign);
             }
             vOffset.y += fHeight;
 
@@ -170,7 +169,6 @@ void cWidgetLabel::DrawText(double adFixedDelta, cGuiClipRegion *apClipRegion)
             else
             {
                 DrawDefaultText(cString::SubW(msText,0,mlMaxCharacters), GetGlobalPosition()+vOffset,mTextAlign, cColor(0.5f, mDefaultFontColor.a));
-                //DrawSkinText(cString::SubW(msText,0,mlMaxCharacters),eGuiSkinFont_Disabled,GetGlobalPosition()+vOffset,mTextAlign);
             }
         }
         else
@@ -182,7 +180,6 @@ void cWidgetLabel::DrawText(double adFixedDelta, cGuiClipRegion *apClipRegion)
             else
             {
                 DrawDefaultText(msText, GetGlobalPosition()+vOffset, mTextAlign, cColor(0.5f, mDefaultFontColor.a));
-                //DrawSkinText(msText,eGuiSkinFont_Disabled,GetGlobalPosition()+vOffset,mTextAlign);
             }
         }
     }
