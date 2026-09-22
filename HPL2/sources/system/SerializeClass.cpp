@@ -423,7 +423,7 @@ bool cSerializeClass::LoadFromFile(iSerializable* apData, const tWString &asFile
 
         ////////////////////
         //Load xml
-        pXmlDoc->Parse(textBuffer.GetDataPointer());
+        pXmlDoc->Parse(textBuffer.GetDataPointerAtCurrentPos());
     }
 
 
