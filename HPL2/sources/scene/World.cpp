@@ -1478,7 +1478,7 @@ void cWorld::UpdateEntities(double adFixedDelta)
         {
             //if(pEntity->IsStatic()==false) START_TIMING_EX(pEntity->GetName().c_str(),entity);
             pEntity->UpdateLogic(adFixedDelta);
-            //if(bRenderDebug) Log("Enitity '%s'. Pos: (%s), Matrix: (%s)\n", pEntity->GetName().c_str(), pEntity->GetWorldPosition().ToString().c_str(),
+            //if(bRenderDebug) Log("Entity '%s'. Pos: (%s), Matrix: (%s)\n", pEntity->GetName().c_str(), pEntity->GetWorldPosition().ToString().c_str(),
             //pEntity->GetWorldMatrix().ToString().c_str());
             //if(pEntity->IsStatic()==false) STOP_TIMING(entity);
         }

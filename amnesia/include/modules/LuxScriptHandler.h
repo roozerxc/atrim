@@ -143,7 +143,7 @@ private:
     // The EffectVoiceOverCallback is not called until ALL voices have finished.
     static void __stdcall AddEffectVoice(    string& asVoiceFile, string& asEffectFile,
             string& asTextCat, string& asTextEntry, bool abUsePosition,
-            string& asPosEnitity, float afMinDistance, float afMaxDistance);
+            string& asPosEntity, float afMinDistance, float afMaxDistance);
     static void __stdcall StopAllEffectVoices(float afFadeOutTime);
     static bool __stdcall GetEffectVoiceActive();
     /**

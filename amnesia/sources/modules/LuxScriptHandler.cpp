@@ -438,7 +438,7 @@ void cLuxScriptHandler::InitScriptFunctions()
 
     AddFunc("void SetInDarknessEffectsActive(bool abX)",(void *)SetInDarknessEffectsActive);
 
-    AddFunc("void AddEffectVoice(string &in asVoiceFile, string &in asEffectFile, string &in asTextCat, string &in asTextEntry, bool abUsePosition, string &in asPosEnitity, float afMinDistance, float afMaxDistance)",(void *)AddEffectVoice);
+    AddFunc("void AddEffectVoice(string &in asVoiceFile, string &in asEffectFile, string &in asTextCat, string &in asTextEntry, bool abUsePosition, string &in asPosEntity, float afMinDistance, float afMaxDistance)",(void *)AddEffectVoice);
     AddFunc("void StopAllEffectVoices(float afFadeOutTime)",(void *)StopAllEffectVoices);
     AddFunc("bool GetEffectVoiceActive()",(void *)GetEffectVoiceActive);
     AddFunc("void SetEffectVoiceOverCallback(string &in asFunc)", (void *)SetEffectVoiceOverCallback);
