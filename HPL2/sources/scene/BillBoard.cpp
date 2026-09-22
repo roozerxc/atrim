@@ -446,7 +446,7 @@ bool cBillboard::RetrieveOcculsionQuery(iRenderer *apRenderer)
     {
         ///////////////////////
         //Calculate the alpha
-        float fAlpha = (float)lSamples / (float)lMaxSamples;
+        float fAlpha = (float)lSamples / (float)(lMaxSamples + 0.00001f);
 
         ///////////////////////
         //Check if inside screen
