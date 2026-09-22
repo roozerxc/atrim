@@ -160,12 +160,12 @@ public:
 
 
     /**
-     * Calculates the transform (and angles and postion if wanted) of a mesh based on the postion of the root bone.
+     * Calculates the transform (and angles and position if wanted) of a mesh based on the position of the root bone.
      * This is useful when going from rag doll to mesh.
-     * \param *apPostion Can be NULL, the postion
+     * \param *apPosition Can be NULL, the position
      * \param *apAngles Can be NULL, the angles.
      */
-    cMatrixf CalculateTransformFromSkeleton(cVector3f *apPostion,cVector3f *apAngles);
+    cMatrixf CalculateTransformFromSkeleton(cVector3f *apPosition,cVector3f *apAngles);
 
     /**
      * Checks collision with the skeletons collider boides

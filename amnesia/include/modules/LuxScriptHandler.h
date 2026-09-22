@@ -142,7 +142,7 @@ private:
     // This adds a voice + effect to be played. It is okay to call this many times in order to play many voices in a row.
     // The EffectVoiceOverCallback is not called until ALL voices have finished.
     static void __stdcall AddEffectVoice(    string& asVoiceFile, string& asEffectFile,
-            string& asTextCat, string& asTextEntry, bool abUsePostion,
+            string& asTextCat, string& asTextEntry, bool abUsePosition,
             string& asPosEnitity, float afMinDistance, float afMaxDistance);
     static void __stdcall StopAllEffectVoices(float afFadeOutTime);
     static bool __stdcall GetEffectVoiceActive();

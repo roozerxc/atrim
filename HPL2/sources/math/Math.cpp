@@ -1092,7 +1092,7 @@ bool cMath::GetNormalizedClipRectFromBV(cVector3f &avDestMin, cVector3f &avDestM
                     }
 
                     //The relationships between connection-pos and connection-nearplane can be seen as
-                    //two equal triangles. Use that to get T and use that to calculate the postion.
+                    //two equal triangles. Use that to get T and use that to calculate the position.
                     //This is a special case for intersection with the nearplane!
                     cVector3f vDelta = vPos - vConnectPos;
                     float fConnectToNear = (-fNearPlane) - vConnectPos.z;

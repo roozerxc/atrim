@@ -386,7 +386,7 @@ public:
                       bool abOverideMoveState=true,
                       bool abUseMoveAnimWhenCurrentIsOver=true);
     void FadeOutCurrentAnim(float afFadeTime);
-    float ConvertAnimToAbsoluteTime(float afRelativeTimePostion);
+    float ConvertAnimToAbsoluteTime(float afRelativeTimePosition);
 
     cSoundEntity* PlaySound(const tString &asName);
 

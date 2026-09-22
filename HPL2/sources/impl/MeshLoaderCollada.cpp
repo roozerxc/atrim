@@ -410,7 +410,7 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
                                         pNode->m_mtxWorldTransform.GetTranslation();
                     vOffset = vOffset * pNode->mvScale;
 
-                    //World postion add
+                    //World position add
                     meshCollider.m_mtxOffset = pNode->m_mtxWorldTransform;
                     cVector3f vRotOffset = cMath::MatrixMul(meshCollider.m_mtxOffset.GetRotation(),
                                                             vOffset);

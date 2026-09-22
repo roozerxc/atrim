@@ -482,7 +482,7 @@ protected:
             const cVector2f& avMinUV=0, const cVector2f& avMaxUV=1,
             bool abInvertY=false);
     iVertexBuffer* LoadVertexBufferFromMesh(const tString& asMeshName, tVertexElementFlag alVtxToCopy);
-    void UpdateqQuadVertexPostion(iVertexBuffer *apVtxBuffer,const cVector3f& avPos, const cVector2f& avSize, bool abCallUpdate);
+    void UpdateqQuadVertexPosition(iVertexBuffer *apVtxBuffer,const cVector3f& avPos, const cVector2f& avSize, bool abCallUpdate);
 
     void RunCallback(eRendererMessage aMessage);
 

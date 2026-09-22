@@ -128,7 +128,7 @@ public:
 
     /**
     * Decompresses the data from a source buffer, beginning at the current position. If abSizeDataWritten is false, it stops at EOF and assumes size has not been writen. If true, it will assume that the first 4 bytes is the size of the data.
-    * It also updates the current postion in the data for SrcBuffer
+    * It also updates the current position in the data for SrcBuffer
     */
     bool DecompressAndAddFromBuffer(cBinaryBuffer *apSrcBuffer, bool abSizeDataWritten);
 

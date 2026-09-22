@@ -500,7 +500,7 @@ void cLuxProp_Object::BeforePropDestruction()
     cMatrixf mtxCenterTransform = cMatrixf::Identity;
 
     ////////////////////////////////
-    // Get the body to use as base for postion
+    // Get the body to use as base for position
     int lIdx = 0;
     if(mBreakData.msEntityAlignBody != "")
     {

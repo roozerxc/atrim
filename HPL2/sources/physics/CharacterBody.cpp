@@ -856,7 +856,7 @@ void iCharacterBody::ConnectToBody(    iPhysicsBody *apBody, const cVector3f& av
     cMatrixf mtxInvBodyWorld = cMath::MatrixInverse(mpConnectedBody->GetLocalMatrix());
 
     //////////////////////////////////////////
-    // Set the local connection postion for body
+    // Set the local connection position for body
     if(mbConnectionDependOnBodyRotation)
     {
         mvConnectionPosLocalToBody = cMath::MatrixMul(mtxInvBodyWorld, avConnectionPos);
@@ -1016,7 +1016,7 @@ void iCharacterBody::Update(double adFixedDelta)
     UpdateStepClimbing(adFixedDelta);
 
     //Update the position according to speed and heading
-    cVector3f vPosAdd = UpdatePostionFromCharSpeed(adFixedDelta);
+    cVector3f vPosAdd = UpdatePositionFromCharSpeed(adFixedDelta);
 
     AlignPosAddAccordingToGroundNormal(vPosAdd);
 
@@ -1502,7 +1502,7 @@ void iCharacterBody::UpdateCharacterConnection(double adFixedDelta)
 //-----------------------------------------------------------------------
 
 
-cVector3f iCharacterBody::UpdatePostionFromCharSpeed(double adFixedDelta)
+cVector3f iCharacterBody::UpdatePositionFromCharSpeed(double adFixedDelta)
 {
     /////////////////////////////////////////////////////
     // A special mul if the player is moving diagonally

@@ -438,7 +438,7 @@ void cLuxScriptHandler::InitScriptFunctions()
 
     AddFunc("void SetInDarknessEffectsActive(bool abX)",(void *)SetInDarknessEffectsActive);
 
-    AddFunc("void AddEffectVoice(string &in asVoiceFile, string &in asEffectFile, string &in asTextCat, string &in asTextEntry, bool abUsePostion,  string &in asPosEnitity, float afMinDistance, float afMaxDistance)",(void *)AddEffectVoice);
+    AddFunc("void AddEffectVoice(string &in asVoiceFile, string &in asEffectFile, string &in asTextCat, string &in asTextEntry, bool abUsePosition, string &in asPosEnitity, float afMinDistance, float afMaxDistance)",(void *)AddEffectVoice);
     AddFunc("void StopAllEffectVoices(float afFadeOutTime)",(void *)StopAllEffectVoices);
     AddFunc("bool GetEffectVoiceActive()",(void *)GetEffectVoiceActive);
     AddFunc("void SetEffectVoiceOverCallback(string &in asFunc)", (void *)SetEffectVoiceOverCallback);
@@ -1262,11 +1262,11 @@ void __stdcall cLuxScriptHandler::SetInDarknessEffectsActive(bool abX)
 //-----------------------------------------------------------------------
 
 void __stdcall cLuxScriptHandler::AddEffectVoice(string& asVoiceFile, string& asEffectFile,
-        string& asTextCat, string& asTextEntry, bool abUsePostion,
+        string& asTextCat, string& asTextEntry, bool abUsePosition,
         string& asPosEntity, float afMinDistance, float afMaxDistance)
 {
     cVector3f vPos(0);
-    if(abUsePostion)
+    if(abUsePosition)
     {
         iLuxEntity *pEntity = GetEntity(asPosEntity,eLuxEntityType_LastEnum,-1);
         if(pEntity && pEntity->GetBodyNum()>0)
@@ -1275,7 +1275,7 @@ void __stdcall cLuxScriptHandler::AddEffectVoice(string& asVoiceFile, string& as
         }
     }
 
-    gpBase->mpEffectHandler->GetPlayVoice()->AddVoice(asVoiceFile, asEffectFile, asTextCat, asTextEntry, abUsePostion, vPos, afMinDistance, afMaxDistance);
+    gpBase->mpEffectHandler->GetPlayVoice()->AddVoice(asVoiceFile, asEffectFile, asTextCat, asTextEntry, abUsePosition, vPos, afMinDistance, afMaxDistance);
 }
 
 //-----------------------------------------------------------------------

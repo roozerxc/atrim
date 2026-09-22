@@ -338,7 +338,7 @@ public:
 
     void StopVoices(float afFadeOutSpeed);
     void AddVoice(    const tString& asVoiceFile, const tString& asEffectFile,
-                      const tString& asTextCat, const tString& asTextEntry, bool abUsePostion,
+                      const tString& asTextCat, const tString& asTextEntry, bool abUsePosition,
                       const cVector3f& avPosition, float afMinDistance, float afMaxDistance);
 
     void PauseCurrentVoices();

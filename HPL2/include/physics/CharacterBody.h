@@ -592,7 +592,7 @@ protected:
     void UpdateBodyConnection(double adFixedDelta);
     void UpdateCharacterConnection(double adFixedDelta);
 
-    cVector3f UpdatePostionFromCharSpeed(double adFixedDelta);
+    cVector3f UpdatePositionFromCharSpeed(double adFixedDelta);
 
     void AlignPosAddAccordingToGroundNormal(cVector3f &avPosAdd);
 

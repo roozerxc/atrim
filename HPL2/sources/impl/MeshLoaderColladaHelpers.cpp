@@ -1648,7 +1648,7 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
 
         ///////////////////////////////////////////////////
         //Get the "real" name for the vertices
-        //This always includes postions and can include normals and tex coords aswell.
+        //This always includes positions and can include normals and tex coords aswell.
         TiXmlElement* pVerticesElem = pMeshElem->FirstChildElement("vertices");
         if(pVerticesElem==NULL)
         {

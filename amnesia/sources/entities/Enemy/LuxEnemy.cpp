@@ -1023,14 +1023,14 @@ void iLuxEnemy::FadeOutCurrentAnim(float afFadeTime)
 
 //-----------------------------------------------------------------------
 
-float iLuxEnemy::ConvertAnimToAbsoluteTime(float afRelativeTimePostion)
+float iLuxEnemy::ConvertAnimToAbsoluteTime(float afRelativeTimePosition)
 {
     if(mpCurrentAnimation==NULL)
     {
         return 0;
     }
 
-    return mpCurrentAnimation->GetLength() * afRelativeTimePostion;
+    return mpCurrentAnimation->GetLength() * afRelativeTimePosition;
 }
 
 //-----------------------------------------------------------------------
@@ -1941,7 +1941,7 @@ void iLuxEnemy::UpdateAlignEntityWithGroundRay(double adFixedDelta)
     float fDist=0;
     cVector3f vNormal;
 
-    //Calculate the start postion depending the way that the character faces.
+    //Calculate the start position depending the way that the character faces.
     cVector3f vMoveDir = cMath::MatrixMul(cMath::MatrixRotateY(mpCharBody->GetYaw()),cVector3f(0,0,-1));
     cVector3f vStartPos = mpCharBody->GetFeetPosition()+cVector3f(0,fStartAdd,0) + vMoveDir * mpCharBody->GetSize().x*0.5f;
 
@@ -2042,7 +2042,7 @@ cAINode *iLuxEnemy::GetSearchForPlayerNode(int alMaxIterations, float afMaxAngle
         //The wanted positon
         cVector3f vWantedPos = mpCharBody->GetFeetPosition() + vSearchDir*fLength;
 
-        //Find the node closests to the postion
+        //Find the node closests to the position
         cAINode * pNode = mpPathfinder->GetNodeAtPos(vWantedPos, 0, fLength,true, false, true, mpLastSearchNode);
         if(pNode)
         {

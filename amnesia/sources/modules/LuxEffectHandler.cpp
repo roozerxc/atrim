@@ -1219,7 +1219,7 @@ void cLuxEffect_PlayVoice::StopVoices(float afFadeOutSpeed)
 //-----------------------------------------------------------------------
 
 void cLuxEffect_PlayVoice::AddVoice(const tString& asVoiceFile, const tString& asEffectFile,
-                                    const tString& asTextCat, const tString& asTextEntry, bool abUsePostion,
+                                    const tString& asTextCat, const tString& asTextEntry, bool abUsePosition,
                                     const cVector3f& avPosition, float afMinDistance, float afMaxDistance)
 {
     cLuxVoiceData voiceData;
@@ -1236,7 +1236,7 @@ void cLuxEffect_PlayVoice::AddVoice(const tString& asVoiceFile, const tString& a
     {
         voiceData.msText = _W("");
     }
-    voiceData.mbUsePosition = abUsePostion;
+    voiceData.mbUsePosition = abUsePosition;
     voiceData.mvPosition = avPosition;
     voiceData.mfMinDistance = afMinDistance;
     voiceData.mfMaxDistance = afMaxDistance;

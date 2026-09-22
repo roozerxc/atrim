@@ -307,8 +307,8 @@ public:
     }
 
     /**
-     * When calculating if there is a free path between two nodes. Is the node postion the center of the collider.
-     * If not the position is the feet postion.
+     * When calculating if there is a free path between two nodes. Is the node position the center of the collider.
+     * If not the position is the feet position.
      */
     void SetNodeIsAtCenter(bool abX)
     {

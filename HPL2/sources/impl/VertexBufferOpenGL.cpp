@@ -364,7 +364,7 @@ cBoundingVolume iVertexBufferOpenGL::CreateBoundingVolume()
     cVtxBufferGLElementArray *pElement = GetElementArray(eVertexBufferElement_Position);
     if(pElement->mFormat != eVertexBufferElementFormat_Float)
     {
-        Warning("Could not breate bounding volume since postion was not for format float in buffer %d!\n",this);
+        Warning("Could not breate bounding volume since position was not for format float in buffer %d!\n",this);
         return bv;
     }
 

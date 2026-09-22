@@ -2777,7 +2777,7 @@ iVertexBuffer* iRenderer::CreateQuadVertexBuffer(    eVertexBufferType aType,
 
 //-----------------------------------------------------------------------
 
-void iRenderer::UpdateqQuadVertexPostion(iVertexBuffer *apVtxBuffer,const cVector3f& avPos, const cVector2f& avSize, bool abCallUpdate)
+void iRenderer::UpdateqQuadVertexPosition(iVertexBuffer *apVtxBuffer,const cVector3f& avPos, const cVector2f& avSize, bool abCallUpdate)
 {
     int lVtxStride = apVtxBuffer->GetElementNum(eVertexBufferElement_Position);
     float *pPos = apVtxBuffer->GetFloatArray(eVertexBufferElement_Position);

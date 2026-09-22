@@ -1200,7 +1200,7 @@ void cMeshEntity::AlignBodiesToSkeleton(bool abCalculateSpeed)
 
 //----------------------------------------------------------------------
 
-cMatrixf cMeshEntity::CalculateTransformFromSkeleton(cVector3f *apPostion,cVector3f *apAngles)
+cMatrixf cMeshEntity::CalculateTransformFromSkeleton(cVector3f *apPosition,cVector3f *apAngles)
 {
     //Root bone
     cNode3DIterator StateIt = mpBoneStateRoot->GetChildIterator();
@@ -1228,9 +1228,9 @@ cMatrixf cMeshEntity::CalculateTransformFromSkeleton(cVector3f *apPostion,cVecto
 
     mtxTransform.SetTranslation(pBoneState->GetWorldPosition());// - vRootBoneOffset);
 
-    if(apPostion)
+    if(apPosition)
     {
-        *apPostion = pBoneState->GetWorldPosition();    // - vRootBoneOffset;
+        *apPosition = pBoneState->GetWorldPosition();    // - vRootBoneOffset;
     }
     if(apAngles)
     {

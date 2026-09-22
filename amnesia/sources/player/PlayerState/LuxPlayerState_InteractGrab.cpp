@@ -292,7 +292,7 @@ void cLuxPlayerState_InteractGrab::PostUpdate(double adFixedDelta)
     mtxCamTransform.SetTranslation(pCam->GetPosition());
 
 
-    // The base postion
+    // The base position
     cVector3f vBasePos;
     if(mpGrabData->mbGrabUseOffset)
     {

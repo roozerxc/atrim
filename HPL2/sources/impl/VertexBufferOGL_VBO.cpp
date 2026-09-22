@@ -374,7 +374,7 @@ void cVertexBufferOGL_VBO::SetVertexStates()
         cVtxBufferGLElementArray *pElement = mvElementArrays[i];
         if(pElement->mType == eVertexBufferElement_Position)
         {
-            continue;    //Make sure postion is called last...
+            continue;    //Make sure position is called last...
         }
 
         GLenum GLType = GetGLTypeFromVertexFormat(pElement->mFormat);
