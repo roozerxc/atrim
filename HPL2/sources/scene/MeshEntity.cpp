@@ -17,6 +17,7 @@
 #include "graphics/Skeleton.h"
 #include "graphics/Bone.h"
 #include "graphics/BoneState.h"
+#include "graphics/Renderer.h"
 
 #include "scene/AnimationState.h"
 #include "scene/NodeState.h"
@@ -49,6 +50,7 @@ cMeshEntity::cMeshEntity(const tString asName,cMesh* apMesh, cMaterialManager* a
     mpAnimationManager = apAnimationManager;
 
     mpWorld = NULL;
+    mbUpdateBonesWhenCulled = false;
 
     mpCallback = NULL;
 
@@ -67,10 +69,12 @@ cMeshEntity::cMeshEntity(const tString asName,cMesh* apMesh, cMaterialManager* a
 
     mlInvWorldMatrixTransformCount = -1;
     mlBoneMatricesTransformCount = -1;
+    mlBoneMatricesUpdateCount = -1;
 
     mbBoneMatricesNeedUpdate = true;
 
     mbStatic = false;
+    mbUpdateBoundingVolume = true;
 
     mbSkeletonPhysics = false;
     mfSkeletonPhysicsWeight = 1.0f;
@@ -357,6 +361,7 @@ void cMeshEntity::UpdateLogic(double adFixedDelta)
 {
     if(mbStatic)
     {
+        mbSkeletonPhysicsSleeping = true;
         return;    //No update on static models
     }
 
@@ -397,9 +402,12 @@ void cMeshEntity::UpdateLogic(double adFixedDelta)
             //mbSkeletonPhysicsSleeping = true;
         }
     }
+
+    bool bUpdateBoneStates = (IsMeshCulled() == false || mbUpdateBonesWhenCulled || mbSkeletonPhysics);
+
     /////////////////////////////////////////////
     //Update animations and skeleton physics
-    if(mvAnimationStates.empty()==false || mbSkeletonPhysics)
+    if((mvAnimationStates.empty()==false || mbSkeletonPhysics))
     {
         ////////////////////////
         //Check if it is animated
@@ -413,251 +421,271 @@ void cMeshEntity::UpdateLogic(double adFixedDelta)
             }
         }
 
-        //////////////////////////////////////
-        // SKELETON
-        if(mpMesh->GetSkeleton())
+        //////////////////////////////////
+        //Go the weight mul (in case weights are normalized!)
+        float fAnimationWeightMul = GetAnimationWeightMul();
+
+        int soloIndex = -1;
+
+        for(size_t i=0; i< mvAnimationStates.size(); i++)
         {
-            //If transform needs to be updated.
-            bool bUpdateTransform = false;
-
-            //////////
-            //Reset all bones states
-            if(    bAnimationActive || mbUpdatedBones == false ||
-                    (mbSkeletonPhysics && !mbSkeletonPhysicsSleeping))
+            cAnimationState *pAnimState = mvAnimationStates[i];
+            if ( !pAnimState->CanBlend() )
             {
-                for(size_t i=0; i < mvBoneStates.size(); i++)
+                if ( pAnimState->IsActive() )
                 {
-                    cNode3D *pState = mvBoneStates[i];
-                    cBone* pBone = mpMesh->GetSkeleton()->GetBoneByIndex((int)i);
-
-                    if(pState->IsActive())
-                    {
-                        pState->SetMatrix(pBone->GetLocalTransform(),false);
-                    }
-
-                    //can optimize this by doing it in the order of the tree
-                    //and using recursive. (should be enough as is...)
-                    if(mbSkeletonPhysics && mfSkeletonPhysicsWeight!=1.0f)
-                    {
-                        mvTempBoneStates[i]->SetMatrix(pBone->GetLocalTransform(),false);
-                    }
+                    soloIndex = i;
+                    fAnimationWeightMul = 1.0f;
                 }
-
-                bUpdateTransform = true;
             }
+        }
 
-            ///////////////////////////
-            // Update skeleton physics
-            if(    mbSkeletonPhysics && (!mbSkeletonPhysicsSleeping || mbUpdatedBones==false))
+
+        //////////////
+        // Only update bones and nodes if the mesh is visible or tagged
+        if(bUpdateBoneStates)
+        {
+            //////////////////////////////////////
+            // SKELETON
+            if(mpMesh->GetSkeleton())
             {
-                mbUpdatedBones = true;
-                cNode3DIterator BoneIt = mpBoneStateRoot->GetChildIterator();
-                while(BoneIt.HasNext())
-                {
-                    cBoneState *pBoneState = static_cast<cBoneState*>(BoneIt.Next());
+                //If transform needs to be updated.
+                bool bUpdateTransform = false;
 
-                    SetBoneMatrixFromBodyRec(mpBoneStateRoot->GetWorldMatrix(),pBoneState);
-                }
-
-                //Interpolate matrices
-                if(mfSkeletonPhysicsWeight!=1.0f)
+                //////////
+                //Reset all bones states
+                if(    bAnimationActive || mbUpdatedBones == false ||
+                        (mbSkeletonPhysics && !mbSkeletonPhysicsSleeping))
                 {
                     for(size_t i=0; i < mvBoneStates.size(); i++)
                     {
-                        cMatrixf mtxMixLocal = cMath::MatrixSlerp(    mfSkeletonPhysicsWeight,
-                                               mvTempBoneStates[i]->GetLocalMatrix(),
-                                               mvBoneStates[i]->GetLocalMatrix(),
-                                               true);
+                        cNode3D *pState = mvBoneStates[i];
+                        cBone* pBone = mpMesh->GetSkeleton()->GetBoneByIndex((int)i);
 
-                        mvBoneStates[i]->SetMatrix(mtxMixLocal, false);
-                    }
-                }
-            }
-
-            //////////////////////////////////
-            //Go the weight mul (in case weights are normalized!)
-            float fAnimationWeightMul = GetAnimationWeightMul();
-
-            //////////////////////////////////
-            //Go through all animations states and update the bones
-            for(size_t i=0; i< mvAnimationStates.size(); i++)
-            {
-                cAnimationState *pAnimState = mvAnimationStates[i];
-
-                if(pAnimState->IsActive())
-                {
-                    cAnimation *pAnim = pAnimState->GetAnimation();
-
-                    /////////////////////////////////////
-                    //Go through all tracks in animation and apply to nodes
-                    for(int i=0; i<pAnim->GetTrackNum(); i++)
-                    {
-                        cAnimationTrack *pTrack = pAnim->GetTrack(i);
-
-                        ///////////////////////////////////
-                        //If index not yet set, get it!
-                        if(pTrack->GetNodeIndex()==-1)
+                        if(pState->IsActive())
                         {
-                            int lBoneIdx = mpMesh->GetSkeleton()->GetBoneIndexByName(pTrack->GetName());
-                            if(lBoneIdx==-1)
-                            {
-                                // XXX: This line is commented to avoid log clutter
-                                //Error("Track '%s' in '%s' does not have a corresponding bone! Skeleton bone name mismatch?\n", pTrack->GetName().c_str(), mpMesh->GetName().c_str());
-                                pTrack->SetNodeIndex(-2);
-                            }
-                            else
-                            {
-                                pTrack->SetNodeIndex(lBoneIdx);
-                            }
+                            pState->SetMatrix(pBone->GetLocalTransform(),false);
                         }
 
-                        cNode3D* pState = GetBoneState(pTrack->GetNodeIndex());
-
-                        ///////////////////////////////////
-                        //Apply the animation track to node.
-                        if(pState && pState->IsActive())
+                        //can optimize this by doing it in the order of the tree
+                        //and using recursive. (should be enough as is...)
+                        if(mbSkeletonPhysics && mfSkeletonPhysicsWeight!=1.0f)
                         {
-                            pTrack->ApplyToNode(pState,pAnimState->GetTimePosition(),pAnimState->GetWeight() * fAnimationWeightMul, pAnimState->IsLooping());
+                            mvTempBoneStates[i]->SetMatrix(pBone->GetLocalTransform(),false);
                         }
                     }
 
-
-                    pAnimState->Update(adFixedDelta);
-                }
-            }
-
-            //////////////////////////////////
-            //Go through all states and update the matrices (and thereby adding the animations together).
-            if(bAnimationActive)
-            {
-                cNode3DIterator NodeIt = mpBoneStateRoot->GetChildIterator();
-                while(NodeIt.HasNext())
-                {
-                    cNode3D *pBoneState = static_cast<cNode3D*>(NodeIt.Next());
-                    UpdateNodeMatrixRec(pBoneState);
+                    bUpdateTransform = true;
                 }
 
-                //Entities are updated after BV is calculated, as the entity has the rootnode attached to it.
-            }
-
-            ////////////////////////////
-            //Update attached entities
-            if(bAnimationActive || mbSkeletonPhysics)
-            {
-                for(size_t i=0; i < mvBoneStates.size(); i++)
+                ///////////////////////////
+                // Update skeleton physics
+                if(    mbSkeletonPhysics && (!mbSkeletonPhysicsSleeping || mbUpdatedBones==false))
                 {
-                    mvBoneStates[i]->UpdateEntityChildren();
-                }
-            }
-
-            //////////////////////////////////
-            //Update the colliders if they are active
-            //Note this must be done after all bone states are updated.
-            if(mbSkeletonColliders && mbSkeletonPhysics==false)
-            {
-                for(size_t i=0; i < mvBoneStates.size(); i++)
-                {
-                    cBoneState *pState = mvBoneStates[i];
-                    iPhysicsBody *pColliderBody = pState->GetColliderBody();
-
-                    if(pColliderBody)
+                    mbUpdatedBones = true;
+                    cNode3DIterator BoneIt = mpBoneStateRoot->GetChildIterator();
+                    while(BoneIt.HasNext())
                     {
-                        cMatrixf mtxBody = cMath::MatrixMul(pState->GetWorldMatrix(), pState->GetBodyMatrix());
-                        pColliderBody->SetMatrix(mtxBody);
+                        cBoneState *pBoneState = static_cast<cBoneState*>(BoneIt.Next());
+
+                        SetBoneMatrixFromBodyRec(mpBoneStateRoot->GetWorldMatrix(),pBoneState);
                     }
-                }
-            }
 
-            /////////////////////////////////////
-            //Update the sub entity transform, so that they are updated in the renderable container.
-            if(bUpdateTransform)
-            {
-                for(size_t i=0; i<mvSubMeshes.size(); ++i)
-                {
-                    mvSubMeshes[i]->SetTransformUpdated(true);
-                }
-            }
-
-        }
-        //////////////////////////
-        // NODES
-        else
-        {
-            //////////////////////////////
-            //Animation is being played
-            if(bAnimationActive)
-            {
-                //Reset all state matrices
-                for(size_t i=0; i < mvNodeStates.size(); i++)
-                {
-                    cNode3D *pState = mvNodeStates[i];
-                    if(pState->IsActive())
+                    //Interpolate matrices
+                    if(mfSkeletonPhysicsWeight!=1.0f)
                     {
-                        pState->SetMatrix(cMatrixf::Identity);
+                        for(size_t i=0; i < mvBoneStates.size(); i++)
+                        {
+                            cMatrixf mtxMixLocal = cMath::MatrixSlerp(    mfSkeletonPhysicsWeight,
+                                                   mvTempBoneStates[i]->GetLocalMatrix(),
+                                                   mvBoneStates[i]->GetLocalMatrix(),
+                                                   true);
+
+                            mvBoneStates[i]->SetMatrix(mtxMixLocal, false);
+                        }
                     }
                 }
 
                 //////////////////////////////////
-                //Go the weight mul (in case weights are normalized!)
-                float fAnimationWeightMul = GetAnimationWeightMul();
-
-                /////////////////////////
-                //Go through all animations states and set the node's
+                //Go through all animations states and update the bones
                 for(size_t i=0; i< mvAnimationStates.size(); i++)
                 {
                     cAnimationState *pAnimState = mvAnimationStates[i];
+
                     if(pAnimState->IsActive())
                     {
                         cAnimation *pAnim = pAnimState->GetAnimation();
 
-                        for(int i=0; i<pAnim->GetTrackNum(); i++)
+                        if(soloIndex == -1 || soloIndex == i)
                         {
-                            cAnimationTrack *pTrack = pAnim->GetTrack(i);
-
-                            if(pTrack->GetNodeIndex()<0)
+                            /////////////////////////////////////
+                            //Go through all tracks in animation and apply to nodes
+                            for(int i=0; i<pAnim->GetTrackNum(); i++)
                             {
-                                pTrack->SetNodeIndex(GetNodeStateIndex(pTrack->GetName()));
-                            }
-                            cNode3D* pNodeState = GetNodeState(pTrack->GetNodeIndex());
+                                cAnimationTrack *pTrack = pAnim->GetTrack(i);
 
-                            if(pNodeState->IsActive())
-                            {
-                                pTrack->ApplyToNode(pNodeState,pAnimState->GetTimePosition(),pAnimState->GetWeight() * fAnimationWeightMul);
+                                ///////////////////////////////////
+                                //If index not yet set, get it!
+                                if(pTrack->GetNodeIndex() <0)
+                                {
+                                    int lBoneIdx = mpMesh->GetSkeleton()->GetBoneIndexByName(pTrack->GetName());
+                                    pTrack->SetNodeIndex(lBoneIdx);
+                                    if(lBoneIdx<0 && pTrack->GetNodeIndex()==-1)
+                                    {
+                                        //Error("Track '%s' in '%s' does not have a corresponding bone! Skeleton bone name mismatch?\n", pTrack->GetName().c_str(), mpMesh->GetName().c_str());
+                                        pTrack->SetNodeIndex(-2);
+                                    }
+                                }
+
+                                cNode3D* pState = GetBoneState(pTrack->GetNodeIndex());
+
+                                ///////////////////////////////////
+                                //Apply the animation track to node.
+                                if(pState && pState->IsActive())
+                                {
+                                    pTrack->ApplyToNode(pState,pAnimState->GetTimePosition(),pAnimState->GetWeight() * fAnimationWeightMul, pAnimState->IsLooping());
+                                }
                             }
                         }
-
-                        pAnimState->Update(adFixedDelta);
                     }
                 }
 
-                //////////////////////
+                //////////////////////////////////
                 //Go through all states and update the matrices (and thereby adding the animations together).
-
-                tNode3DListIt nodeIt = mlstNodeChildren.begin();
-                for(; nodeIt != mlstNodeChildren.end(); ++nodeIt)
+                if(bAnimationActive)
                 {
-                    cNode3D *pNodeState = *nodeIt;
+                    cNode3DIterator NodeIt = mpBoneStateRoot->GetChildIterator();
+                    while(NodeIt.HasNext())
+                    {
+                        cNode3D *pBoneState = static_cast<cNode3D*>(NodeIt.Next());
+                        UpdateNodeMatrixRec(pBoneState);
+                    }
 
-                    UpdateNodeMatrixRec(pNodeState);
+                    //Entities are updated after BV is calculated, as the entity has the rootnode attached to it.
                 }
 
-                mbHasUpdatedAnimation = true;
-            }
-            //////////////////////////////
-            //No animation is played, only do this if an animation has been played.
-            else if(mbHasUpdatedAnimation)
-            {
-                //Reset all state matrices
-                for(size_t i=0; i < mvNodeStates.size(); i++)
+                ////////////////////////////
+                //Update attached entities
+                if(bAnimationActive || mbSkeletonPhysics)
                 {
-                    cNode3D *pState = mvNodeStates[i];
-                    cNode3D* pMeshNode = mpMesh->GetNode((int)i);
-                    if(pState->IsActive())
+                    for(size_t i=0; i < mvBoneStates.size(); i++)
                     {
-                        pState->SetMatrix(pMeshNode->GetLocalMatrix());
+                        mvBoneStates[i]->UpdateEntityChildren();
                     }
                 }
-                mbHasUpdatedAnimation = false;
+
+                //////////////////////////////////
+                //Update the colliders if they are active
+                //Note this must be done after all bone states are updated.
+                if(mbSkeletonColliders && mbSkeletonPhysics==false)
+                {
+                    for(size_t i=0; i < mvBoneStates.size(); i++)
+                    {
+                        cBoneState *pState = mvBoneStates[i];
+                        iPhysicsBody *pColliderBody = pState->GetColliderBody();
+
+                        if(pColliderBody)
+                        {
+                            cMatrixf mtxBody = cMath::MatrixMul(pState->GetWorldMatrix(), pState->GetBodyMatrix());
+                            pColliderBody->SetMatrix(mtxBody);
+                        }
+                    }
+                }
+
+                /////////////////////////////////////
+                //Update the sub entity transform, so that they are updated in the renderable container.
+                if(bUpdateTransform)
+                {
+                    for(size_t i=0; i<mvSubMeshes.size(); ++i)
+                    {
+                        mvSubMeshes[i]->SetTransformUpdated(true);
+                    }
+                }
+            }
+            //////////////////////////
+            // NODES
+            else
+            {
+                //////////////////////////////
+                //Animation is being played
+                if(bAnimationActive)
+                {
+                    //Reset all state matrices
+                    for(size_t i=0; i < mvNodeStates.size(); i++)
+                    {
+                        cNode3D *pState = mvNodeStates[i];
+                        if(pState->IsActive())
+                        {
+                            pState->SetMatrix(cMatrixf::Identity);
+                        }
+                    }
+
+                    //////////////////////////////////
+                    //Go the weight mul (in case weights are normalized!)
+                    float fAnimationWeightMul = GetAnimationWeightMul();
+
+                    /////////////////////////
+                    //Go through all animations states and set the node's
+                    for(size_t i=0; i< mvAnimationStates.size(); i++)
+                    {
+                        cAnimationState *pAnimState = mvAnimationStates[i];
+                        if(pAnimState->IsActive())
+                        {
+                            cAnimation *pAnim = pAnimState->GetAnimation();
+
+                            for(int i=0; i<pAnim->GetTrackNum(); i++)
+                            {
+                                cAnimationTrack *pTrack = pAnim->GetTrack(i);
+
+                                if(pTrack->GetNodeIndex()<0)
+                                {
+                                    pTrack->SetNodeIndex(GetNodeStateIndex(pTrack->GetName()));
+                                }
+                                cNode3D* pNodeState = GetNodeState(pTrack->GetNodeIndex());
+
+                                if(pNodeState->IsActive())
+                                {
+                                    pTrack->ApplyToNode(pNodeState,pAnimState->GetTimePosition(),pAnimState->GetWeight() * fAnimationWeightMul);
+                                }
+                            }
+                        }
+                    }
+
+                    //////////////////////
+                    //Go through all states and update the matrices (and thereby adding the animations together).
+
+                    tNode3DListIt nodeIt = mlstNodeChildren.begin();
+                    for(; nodeIt != mlstNodeChildren.end(); ++nodeIt)
+                    {
+                        cNode3D *pNodeState = *nodeIt;
+
+                        UpdateNodeMatrixRec(pNodeState);
+                    }
+
+                    mbHasUpdatedAnimation = true;
+                }
+                //////////////////////////////
+                //No animation is played, only do this if an animation has been played.
+                else if(mbHasUpdatedAnimation)
+                {
+                    //Reset all state matrices
+                    for(size_t i=0; i < mvNodeStates.size(); i++)
+                    {
+                        cNode3D *pState = mvNodeStates[i];
+                        cNode3D* pMeshNode = mpMesh->GetNode((int)i);
+                        if(pState->IsActive())
+                        {
+                            pState->SetMatrix(pMeshNode->GetLocalMatrix());
+                        }
+                    }
+                    mbHasUpdatedAnimation = false;
+                }
+            }
+            /////////////////////////////////////////
+            /// Final things
+            if(mpMesh->GetSkeleton())
+            {
+                mbBoneMatricesNeedUpdate = true;
             }
         }
 
@@ -686,7 +714,18 @@ void cMeshEntity::UpdateLogic(double adFixedDelta)
         {
             cAnimationState *pState = mvAnimationStates[i];
 
-            if(pState->IsActive()==false || pState->IsPaused())
+            if(bUpdateBoneStates)
+            {
+                float fTime = pState->GetTimePosition();
+                pState->Update(adFixedDelta);
+
+                if(int(pState->GetTimePosition() * 4.0f) - int(fTime * 4.0f) != 0)
+                {
+                    mbUpdateBoundingVolume = true;
+                }
+            }
+
+            if(pState->IsActive()==false || pState->IsPaused() || pState->IsFadingOut())
             {
                 continue;
             }
@@ -730,6 +769,11 @@ cAnimationState* cMeshEntity::AddAnimation(cAnimation *apAnimation,const tString
 
     tAnimationStateIndexMap::value_type value(pAnimState->GetName(), (int)mvAnimationStates.size()-1);
     m_mapAnimationStateIndices.insert(value);
+
+    ///////////////////////////////
+    // Update bouding volume at specific times
+    UpdateSkeletonBounds(apAnimation, mvAnimationStates.back());
+    mbUpdateBoundingVolume = true;
 
     return pAnimState;
 }
@@ -776,6 +820,31 @@ int cMeshEntity::GetAnimationStateNum()
 
 //-----------------------------------------------------------------------
 
+void cMeshEntity::SetIsOccluder(bool abX)
+{
+    for(size_t i=0; i<mvSubMeshes.size(); i++)
+    {
+        mvSubMeshes[i]->SetIsOccluder(abX);
+    }
+}
+
+//----------------------------------------------------------------------
+
+bool cMeshEntity::IsMeshCulled()
+{
+    for(size_t i = 0; i < mvSubMeshes.size(); i++)
+    {
+        if(mvSubMeshes[i]->GetRenderFrameCount() == iRenderer::GetRenderFrameCount() && mvSubMeshes[i]->mfDistanceToFrustum < 20.0f * 20.0f)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
 void cMeshEntity::Play(int alIndex,bool abLoop, bool bStopPrev)
 {
     if(bStopPrev)
@@ -791,6 +860,8 @@ void cMeshEntity::Play(int alIndex,bool abLoop, bool bStopPrev)
     mvAnimationStates[alIndex]->SetTimePosition(0);
     mvAnimationStates[alIndex]->SetLoop(abLoop);
     mvAnimationStates[alIndex]->SetWeight(1);
+
+    mbUpdateBoundingVolume = true;
 }
 
 void cMeshEntity::PlayName(const tString &asName,bool abLoop, bool bStopPrev)
@@ -813,12 +884,24 @@ void cMeshEntity::PlayFadeTo(int alIndex,bool abLoop, float afTime)
 {
     ///////////////////////
     // Fade out previous
-    for(size_t i=0; i< mvAnimationStates.size(); i++)
+    if(afTime != 0)
     {
-        cAnimationState *pAnim = mvAnimationStates[i];
-        if(pAnim->IsActive())
+	    for(size_t i=0; i< mvAnimationStates.size(); i++)
+	    {
+	        cAnimationState *pAnim = mvAnimationStates[i];
+	        if(pAnim->IsActive())
+	        {
+	            pAnim->FadeOut(afTime);
+	        }
+	    }
+    }
+    else
+    {
+        for(size_t i=0; i< mvAnimationStates.size(); i++)
         {
-            pAnim->FadeOut(afTime);
+            cAnimationState *pAnim = mvAnimationStates[i];
+            pAnim->SetActive(false);
+            pAnim->SetTimePosition(0);
         }
     }
 
@@ -833,7 +916,17 @@ void cMeshEntity::PlayFadeTo(int alIndex,bool abLoop, float afTime)
     pAnim->SetActive(true);
     pAnim->SetTimePosition(0);
     pAnim->SetLoop(abLoop);
-    pAnim->FadeIn(afTime);
+
+    if(afTime != 0)
+    {
+        pAnim->FadeIn(afTime);
+    }
+    else
+    {
+        pAnim->SetWeight(1.0f);
+    }
+
+    mbUpdateBoundingVolume = true;
 }
 
 void cMeshEntity::PlayFadeToName(const tString &asName,bool abLoop, float afTime)
@@ -851,6 +944,49 @@ void cMeshEntity::PlayFadeToName(const tString &asName,bool abLoop, float afTime
 
 //-----------------------------------------------------------------------
 
+void cMeshEntity::FadeOutCurrent(float afTime)
+{
+    for(size_t i=0; i< mvAnimationStates.size(); i++)
+    {
+        if(mvAnimationStates[i]->IsActive())
+        {
+            mvAnimationStates[i]->FadeOutSpeed(afTime);
+        }
+    }
+}
+
+void cMeshEntity::FadeInCurrent(float afTime, bool abLoop)
+{
+    bool bAny = false;
+
+    for(size_t i=0; i< mvAnimationStates.size(); i++)
+    {
+        if(mvAnimationStates[i]->IsActive())
+        {
+            mvAnimationStates[i]->FadeInSpeed(afTime);
+            mvAnimationStates[i]->SetLoop(abLoop);
+            bAny = true;
+        }
+    }
+
+    if(bAny == false)
+    {
+        ///////////////
+        // Play the first animation if none are active
+        for(size_t i=0; i< mvAnimationStates.size(); i++)
+        {
+            mvAnimationStates[i]->SetActive(true);
+            mvAnimationStates[i]->SetTimePosition(0);
+            mvAnimationStates[i]->SetLoop(abLoop);
+            mvAnimationStates[i]->FadeIn(0.0001f);
+            mvAnimationStates[i]->FadeInSpeed(afTime);
+            mvAnimationStates[i]->SetSpeed(0);
+        }
+    }
+}
+
+//-----------------------------------------------------------------------
+
 
 void cMeshEntity::Stop()
 {
@@ -859,6 +995,8 @@ void cMeshEntity::Stop()
         mvAnimationStates[i]->SetActive(false);
         mvAnimationStates[i]->SetTimePosition(0);
     }
+
+    mbUpdateBoundingVolume = true;
 }
 
 //-----------------------------------------------------------------------
@@ -1241,6 +1379,7 @@ void cMeshEntity::UpdateGraphicsForFrame(double adFrameTime)
 
     mlBoneMatricesTransformCount = GetTransformUpdateCount();
     mbBoneMatricesNeedUpdate = false;
+    mlBoneMatricesUpdateCount++;
 
     ///////////////////////////////////
     //Update the bone matrices
@@ -1305,13 +1444,13 @@ cBoundingVolume* cMeshEntity::GetBoundingVolume()
         {
             mbUpdateBoundingVolume = false;
 
-            cBoundingVolume *pBV = mvSubMeshes[0]->GetBoundingVolume();
+            cBoundingVolume *pBV = mvSubMeshes[0]->GetSubMeshBoundingVolume();
             cVector3f vFinalMin = pBV->GetMin();
             cVector3f vFinalMax = pBV->GetMax();
 
             for(int i=1; i< (int)mvSubMeshes.size(); i++)
             {
-                cBoundingVolume *pBV = mvSubMeshes[i]->GetBoundingVolume();
+                cBoundingVolume *pBV = mvSubMeshes[i]->GetSubMeshBoundingVolume();
 
                 cVector3f vMin = pBV->GetMin();
                 cVector3f vMax = pBV->GetMax();
@@ -1342,6 +1481,17 @@ cBoundingVolume* cMeshEntity::GetBoundingVolume()
                 {
                     vFinalMax.z = vMax.z;
                 }
+            }
+
+            if(mpMesh->GetSkeleton())
+            {
+                cVector3f vSize = vFinalMax - vFinalMin;
+                cVector3f vCenter = vFinalMin + vSize * 0.5f;
+
+                vSize = vSize * 1.5f;
+
+                vFinalMin = vCenter - vSize;
+                vFinalMax = vCenter + vSize;
             }
 
             mBoundingVolume.SetLocalMinMax(vFinalMin,vFinalMax);
@@ -1390,6 +1540,21 @@ void cMeshEntity::SetIlluminationAmount(float afX)
     for(int i=0; i<(int)mvSubMeshes.size(); i++)
     {
         mvSubMeshes[i]->SetIlluminationAmount(mfIlluminationAmount);
+    }
+}
+
+void cMeshEntity::SetShaderTimer(float afX)
+{
+    if(mfShaderTimer == afX)
+    {
+        return;
+    }
+
+    mfShaderTimer = afX;
+
+    for(int i=0; i<(int)mvSubMeshes.size(); i++)
+    {
+        mvSubMeshes[i]->SetShaderTimer(mfShaderTimer);
     }
 }
 
@@ -1556,23 +1721,152 @@ void cMeshEntity::HandleAnimationEvent(cAnimationEvent *apEvent)
     {
     case eAnimationEventType_PlaySound:
     {
-        cSoundEntity *pSound = mpWorld->CreateSoundEntity("AnimEvent",apEvent->msValue,true);
+        cSoundEntity *pSound = mpWorld->CreateSoundEntity(msName + "_AnimEvent",apEvent->msValue,true);
         if(pSound)
         {
             pSound->SetIsSaved(false);
-            cNode3DIterator nodeIt = mpBoneStateRoot->GetChildIterator();
-            if(nodeIt.HasNext())
+            if (mpBoneStateRoot != NULL )
             {
-                cNode3D *pNode = nodeIt.Next();
-                pNode->AddEntity(pSound);
+                cNode3DIterator nodeIt = mpBoneStateRoot->GetChildIterator();
+                if(nodeIt.HasNext())
+                {
+                    cNode3D *pNode = nodeIt.Next();
+                    pNode->AddEntity(pSound);
+                }
+                else
+                {
+                    pSound->SetPosition(mBoundingVolume.GetWorldCenter());
+                }
             }
             else
             {
-                pSound->SetPosition(mBoundingVolume.GetWorldCenter());
+                pSound->SetPosition(this->GetWorldPosition());
             }
         }
         break;
     }
+    }
+}
+
+void cMeshEntity::UpdateSkeletonBounds(cAnimation * apAnimation, cAnimationState* apState)
+{
+    if(mpMesh->GetSkeleton() == NULL)
+    {
+        return;
+    }
+
+    ////////////////////////////
+    // Index all bones to correct states
+    for(size_t i=0; i< mvAnimationStates.size(); i++)
+    {
+        cAnimationState *pAnimState = mvAnimationStates[i];
+        cAnimation *pAnim = pAnimState->GetAnimation();
+
+        for(int j=0; j<pAnim->GetTrackNum(); j++)
+        {
+            cAnimationTrack *pTrack = pAnim->GetTrack(j);
+
+            ///////////////////////////////////
+            //If index not yet, set get it!
+            if(pTrack->GetNodeIndex() <0)
+            {
+                int lBoneIdx = mpMesh->GetSkeleton()->GetBoneIndexByName(pTrack->GetName());
+                pTrack->SetNodeIndex(lBoneIdx);
+                if(lBoneIdx<0 && pTrack->GetNodeIndex()==-1)
+                {
+                    Error("Track '%s' in '%s' does not have a corresponding bone! Skeleton bone name mismatch?\n", pTrack->GetName().c_str(), mpMesh->GetName().c_str());
+                    pTrack->SetNodeIndex(-2);
+                }
+            }
+        }
+    }
+
+    /////////////////////////
+    // Use the bones and bone radius from this mesh to generate a bounding volume for this animation
+    apState->CreateSkeletonBoundsFromMesh(this, &mvBoneStates);
+
+    //////////
+    // Reset bones to their correct position
+    for(size_t i=0; i < mvBoneStates.size(); i++)
+    {
+        cNode3D *pState = mvBoneStates[i];
+        cBone* pBone = mpMesh->GetSkeleton()->GetBoneByIndex((int)i);
+
+        if(pState->IsActive())
+        {
+            pState->SetMatrix(pBone->GetLocalTransform(),false);
+        }
+    }
+
+
+    float fAnimationWeightMul = GetAnimationWeightMul();
+
+    //////////////////////////////////
+    //Go through all animations states and update the bones
+    for(size_t i=0; i< mvAnimationStates.size(); i++)
+    {
+        cAnimationState *pAnimState = mvAnimationStates[i];
+
+        if(pAnimState->IsActive())
+        {
+            cAnimation *pAnim = pAnimState->GetAnimation();
+
+            /////////////////////////////////////
+            //Go through all tracks in animation and apply to nodes
+            for(int i=0; i<pAnim->GetTrackNum(); i++)
+            {
+                cAnimationTrack *pTrack = pAnim->GetTrack(i);
+
+                ///////////////////////////////////
+                //If index not yet, set get it!
+                if(pTrack->GetNodeIndex() <0)
+                {
+                    int lBoneIdx = mpMesh->GetSkeleton()->GetBoneIndexByName(pTrack->GetName());
+                    pTrack->SetNodeIndex(lBoneIdx);
+                    if(lBoneIdx<0 && pTrack->GetNodeIndex()==-1)
+                    {
+                        //Error("Track '%s' in '%s' does not have a corresponding bone! Skeleton bone name mismatch?\n", pTrack->GetName().c_str(), mpMesh->GetName().c_str());
+                        pTrack->SetNodeIndex(-2);
+                    }
+                }
+
+                cNode3D* pState = GetBoneState(pTrack->GetNodeIndex());
+
+                ///////////////////////////////////
+                //Apply the animation track to node.
+                if(pState && pState->IsActive())
+                {
+                    pTrack->ApplyToNode(pState,pAnimState->GetTimePosition(),pAnimState->GetWeight() * fAnimationWeightMul, pAnimState->IsLooping());
+                }
+            }
+        }
+    }
+
+    //////////////////////////////////
+    //Go through all states and update the matrices (and thereby adding the animations together).
+    {
+        cNode3DIterator NodeIt = mpBoneStateRoot->GetChildIterator();
+        while(NodeIt.HasNext())
+        {
+            cNode3D *pBoneState = static_cast<cNode3D*>(NodeIt.Next());
+            UpdateNodeMatrixRec(pBoneState);
+        }
+
+        //Entities are updated after BV is calculated, as the entity has the rootnode attached to it.
+    }
+
+    ////////////////////////////
+    //Update attached entities
+    for(size_t i=0; i < mvBoneStates.size(); i++)
+    {
+        mvBoneStates[i]->UpdateEntityChildren();
+    }
+
+    /////////////////////////////////////
+    //Update the sub entity transform, so that they are updated in the renderable container.
+    for(size_t i=0; i<mvSubMeshes.size(); ++i)
+    {
+        mvSubMeshes[i]->SetTransformUpdated(true);
     }
 }
 
@@ -1581,6 +1875,10 @@ void cMeshEntity::HandleAnimationEvent(cAnimationEvent *apEvent)
 void cMeshEntity::UpdateBVFromSkeleton()
 {
     if(mpMesh->GetSkeleton()==NULL)
+    {
+        return;
+    }
+    if(mpMesh->GetSubMeshNum()==0)
     {
         return;
     }
@@ -1608,11 +1906,17 @@ void cMeshEntity::UpdateBVFromSkeleton()
     else
     {
         ////////////////////////////////
-        //Using bones
+        //Using precalculated bounds or bones
         cVector3f vMin,vMax;
-        GetAABBFromBones(vMin, vMax);
+        if(GetAABBFromSkeletonBounds(vMin, vMax))
+        {
+            mBoundingVolume.SetTransform(GetWorldMatrix());
+        }
+        else
+        {
+            mBoundingVolume.SetTransform(cMatrixf::Identity);
+        }
 
-        mBoundingVolume.SetTransform(cMatrixf::Identity);
         mBoundingVolume.SetLocalMinMax(vMin, vMax);
     }
 }
@@ -1657,6 +1961,58 @@ void cMeshEntity::GetAABBFromBones(cVector3f &avMin, cVector3f &avMax)
             avMin.z = vMinPos.z;
         }
     }
+}
+
+//-----------------------------------------------------------------------
+
+bool cMeshEntity::GetAABBFromSkeletonBounds(cVector3f &avMin, cVector3f &avMax)
+{
+    int lActiveAnimations = 0;
+
+    avMin = cVector3f(0);
+    avMax = cVector3f(0);
+
+    //////////////////////////////////////
+    // Calculate AABB for each animation
+    // Gets the max cached AABB per animation
+    for(size_t i=0; i< mvAnimationStates.size(); i++)
+    {
+        cAnimationState *pAnimState = mvAnimationStates[i];
+
+        if(pAnimState->IsActive())
+        {
+            cVector3f vMaxPos;
+            cVector3f vMinPos;
+
+            ////////////////
+            // Get the bounding volume of this animation
+            if(pAnimState->TryGetBoundingVolumeAtTime(pAnimState->GetTimePosition(), vMinPos, vMaxPos))
+            {
+                if(lActiveAnimations == 0)
+                {
+                    avMax = vMaxPos;
+                    avMin = vMinPos;
+                }
+                else
+                {
+                    // Expand the min and max for each animation playing
+                    avMax = cMath::Vector3Max(avMax, vMaxPos);
+                    avMin = cMath::Vector3Min(avMin, vMinPos);
+                }
+
+                lActiveAnimations++;
+            }
+        }
+    }
+
+    if(lActiveAnimations == 0)
+    {
+        //There are no active animations, return a bounding box from bone position
+        GetAABBFromBones(avMin, avMax);
+        return false;
+    }
+
+    return true;
 }
 
 //-----------------------------------------------------------------------
