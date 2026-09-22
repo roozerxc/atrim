@@ -54,6 +54,7 @@ public:
 
     cMaterial *GetMaterial();
 
+    bool UpdateGraphicsForViewport(cFrustum *apFrustum, double afFrameTime);
     void UpdateGraphicsForFrame(double adFrameTime);
 
     iVertexBuffer* GetVertexBuffer();
