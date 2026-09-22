@@ -55,6 +55,7 @@ eParallaxQuality iRenderer::mParallaxQuality = eParallaxQuality_Simple;
 bool iRenderer::mbParallaxEnabled=true;
 int iRenderer::mlReflectionSizeDiv = 2;
 bool iRenderer::mbRefractionEnabled=true;
+int iRenderer::mlDrawCalls=1;
 
 //-----------------------------------------------------------------------
 
@@ -1188,7 +1189,7 @@ bool iRenderer::RenderObjectZAndAddToRenderList(iRenderable *apObject)
     ////////////////////////////
     //Check if object is translucent or has no material
     // If so, do not render it.
-    if( pMaterial==NULL || pMaterial->GetType()->IsTranslucent())
+    if( pMaterial==NULL || pMaterial->GetType()->IsTranslucent() || apObject->IsOccluder() == false)
     {
         return false;
     }
