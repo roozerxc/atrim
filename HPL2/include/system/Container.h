@@ -74,7 +74,7 @@ public:
         }
         else
         {
-        mIt = apVec->begin();
+            mIt = apVec->begin();
         }
     }
     ~cContainerVecIterator() {}

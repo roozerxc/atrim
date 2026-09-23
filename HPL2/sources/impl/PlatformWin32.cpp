@@ -54,7 +54,7 @@ bool cPlatformWin32::DWMCompositorActive()
 
     DwmIsCompositionEnabledFunc pDwmIsCompositionEnabled =
         (DwmIsCompositionEnabledFunc)GetProcAddress(
-        hDwmapi, "DwmIsCompositionEnabled");
+            hDwmapi, "DwmIsCompositionEnabled");
 
     BOOL bDwmEnabled = FALSE;
     HRESULT hr = E_FAIL;
@@ -567,7 +567,7 @@ double cPlatform::GetApplicationTimeX()
     QueryPerformanceCounter(&lCurrentTime);
 
     return (double)(lCurrentTime.QuadPart - lTimerStart.QuadPart) /
-        (double)lTimerFrequency.QuadPart;
+           (double)lTimerFrequency.QuadPart;
 }
 
 //-----------------------------------------------------------------------

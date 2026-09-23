@@ -68,7 +68,7 @@ public:
     ~cGraphics();
 
     bool Init(int alWidth, int alHeight, int alBpp, bool abFullscreen, eGpuProgramFormat aGpuProgramFormat,
-        const tString &asWindowCaption, const cVector2l &avWindowPos, cResources* apResources, tFlag alHplSetupFlags);
+              const tString &asWindowCaption, const cVector2l &avWindowPos, cResources* apResources, tFlag alHplSetupFlags);
 
     void Update(double adFixedDelta);
 

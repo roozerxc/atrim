@@ -146,7 +146,7 @@ void cVertexBufferOGL_VBO::UpdateData(tVertexElementFlag aTypes, bool abIndices)
             mlIndexBufferSize = GetIndexNum() * sizeof(unsigned short);
 
             glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
-                mlIndexBufferSize, &shortIndices[0], usageType);
+                            mlIndexBufferSize, &shortIndices[0], usageType);
         }
         else
         {
@@ -154,7 +154,7 @@ void cVertexBufferOGL_VBO::UpdateData(tVertexElementFlag aTypes, bool abIndices)
             mlIndexBufferSize = GetIndexNum() * sizeof(unsigned int);
 
             glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
-                mlIndexBufferSize, &mvIndexArray[0], usageType);
+                            mlIndexBufferSize, &mvIndexArray[0], usageType);
         }
 
         glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
@@ -334,7 +334,7 @@ void cVertexBufferOGL_VBO::CompileSpecific()
         mlIndexBufferSize = GetIndexNum() * sizeof(unsigned short);
 
         glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, mlIndexBufferSize,
-            &shortIndices[0], usageType);
+                        &shortIndices[0], usageType);
     }
     else
     {
@@ -342,7 +342,7 @@ void cVertexBufferOGL_VBO::CompileSpecific()
         mlIndexBufferSize = GetIndexNum() * sizeof(unsigned int);
 
         glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, mlIndexBufferSize,
-            &mvIndexArray[0], usageType);
+                        &mvIndexArray[0], usageType);
     }
 
     glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,0);

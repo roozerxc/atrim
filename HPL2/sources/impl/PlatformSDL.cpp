@@ -19,8 +19,8 @@
 namespace hpl
 {
 
-    static bool bTimerInitialized = false;
-    static struct timespec lTimerStart;
+static bool bTimerInitialized = false;
+static struct timespec lTimerStart;
 
 //////////////////////////////////////////////////////////////////////////
 // APPLICATION

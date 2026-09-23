@@ -202,18 +202,18 @@ bool cEngine::mbDeviceRemoved = false;
 //-----------------------------------------------------------------------
 
 cEngine::cEngine(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, cEngineInitVars *apVars)
-                : mbGameIsDone(false)
-                , mbPaused(false)
-                , iMaxGameUpdates(6)
-                , kMaxFrameTime(0.25)
-                , kFixedDelta(1.0 / 60.0)
-                , iUpdatesOnCurrentFrame(0)
-                , dAccumulator(0.0)
-                , dLogicTime(0.0)
-                , dSpeedMul(1.0)
-                , dFrameTime(0.0)
-                , dCurrentTime(0.0)
-                , dRenderAlpha(0.0)
+    : mbGameIsDone(false)
+    , mbPaused(false)
+    , iMaxGameUpdates(6)
+    , kMaxFrameTime(0.25)
+    , kFixedDelta(1.0 / 60.0)
+    , iUpdatesOnCurrentFrame(0)
+    , dAccumulator(0.0)
+    , dLogicTime(0.0)
+    , dSpeedMul(1.0)
+    , dFrameTime(0.0)
+    , dCurrentTime(0.0)
+    , dRenderAlpha(0.0)
 {
     //Set up variables
     mbApplicationHasInputFocus = false;
@@ -508,7 +508,7 @@ void cEngine::Run()
 
             // If log update is active, clear it regularly.
             if(GetUpdateLogActive() && mpUpdater->GetCurrentContainerName() == "Default" &&
-                dLogicTime - dLastLogClearedTime >= kLogClearedInterval)
+                    dLogicTime - dLastLogClearedTime >= kLogClearedInterval)
             {
                 ClearUpdateLogFile();
                 dLastLogClearedTime = dLogicTime;
@@ -593,7 +593,7 @@ void cEngine::Run()
                 iCountedFrames++;
                 iFramesInBucket--;
             }
-            
+
             if(iCountedFrames >= iWorstCount01)
             {
                 break;

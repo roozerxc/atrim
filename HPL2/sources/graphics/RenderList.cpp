@@ -520,7 +520,7 @@ void cRenderList::CompileArray(eRenderListType aType)
     else
     {
         mvSortedArrays[aType] = *pSourceVec;	//Should be fastest way to copy right, or use memcopy?
-                                                //roozy: Thomas, do not use memcopy, i swear to god
+        //roozy: Thomas, do not use memcopy, i swear to god
     }
 
     std::sort(mvSortedArrays[aType].begin(), mvSortedArrays[aType].end(), vSortFunctions[aType]);

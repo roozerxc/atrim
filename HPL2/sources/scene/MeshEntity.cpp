@@ -886,14 +886,14 @@ void cMeshEntity::PlayFadeTo(int alIndex,bool abLoop, float afTime)
     // Fade out previous
     if(afTime != 0)
     {
-	    for(size_t i=0; i< mvAnimationStates.size(); i++)
-	    {
-	        cAnimationState *pAnim = mvAnimationStates[i];
-	        if(pAnim->IsActive())
-	        {
-	            pAnim->FadeOut(afTime);
-	        }
-	    }
+        for(size_t i=0; i< mvAnimationStates.size(); i++)
+        {
+            cAnimationState *pAnim = mvAnimationStates[i];
+            if(pAnim->IsActive())
+            {
+                pAnim->FadeOut(afTime);
+            }
+        }
     }
     else
     {

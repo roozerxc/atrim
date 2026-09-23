@@ -689,8 +689,8 @@ bool iRenderFunctions::SetMatrixMirrored(const cMatrixf& a_mtx)
     const cVector3f& f = a_mtx.GetForward();
 
     float fDet = r.x * (u.y * f.z - u.z * f.y)
-               - r.y * (u.x * f.z - u.z * f.x)
-               + r.z * (u.x * f.y - u.y * f.x);
+                 - r.y * (u.x * f.z - u.z * f.x)
+                 + r.z * (u.x * f.y - u.y * f.x);
 
     return fDet < 0.0f;
 }
@@ -1046,7 +1046,7 @@ void iRenderFunctions::DrawCurrent(eVertexBufferDrawType aDrawType)
     bool bToggle = false;
 
     if(mpCurrentMatrix && mpCurrentMatrix != &m_mtxNULL &&
-        SetMatrixMirrored(*mpCurrentMatrix))
+            SetMatrixMirrored(*mpCurrentMatrix))
     {
         bToggle = true;
         SetInvertCullMode(!mbInvertCullMode);

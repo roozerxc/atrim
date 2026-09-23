@@ -684,20 +684,20 @@ iVertexBuffer* cLowLevelGraphicsSDL::CreateVertexBuffer(
     int alReserveIdxSize)
 {
     if(GetCaps(eGraphicCaps_VertexBufferObject) != 0 &&
-        (aType == eVertexBufferType_Hardware))
+            (aType == eVertexBufferType_Hardware))
     {
 #ifdef _DEBUG
         Log(" Creating ogl hardware VBO\n");
 #endif
         return hplNew(cVertexBufferOGL_VBO, (this,
-            aDrawType, aUsageType, alReserveVtxSize, alReserveIdxSize));
+                                             aDrawType, aUsageType, alReserveVtxSize, alReserveIdxSize));
     }
 
 #ifdef _DEBUG
     Log(" Creating ogl software vtx array\n");
 #endif
     return hplNew( cVertexBufferOGL_Array, (this,
-        aDrawType, aUsageType, alReserveVtxSize, alReserveIdxSize));
+                                            aDrawType, aUsageType, alReserveVtxSize, alReserveIdxSize));
 }
 
 //-----------------------------------------------------------------------
@@ -956,9 +956,9 @@ void cLowLevelGraphicsSDL::SwapBuffers()
 void cLowLevelGraphicsSDL::SetColorWriteActive(bool abR,bool abG,bool abB,bool abA)
 {
     if( mColorWrite.r == abR &&
-        mColorWrite.g == abG &&
-        mColorWrite.b == abB &&
-        mColorWrite.a == abA)
+            mColorWrite.g == abG &&
+            mColorWrite.b == abB &&
+            mColorWrite.a == abA)
     {
         return;
     }
@@ -1340,8 +1340,8 @@ void cLowLevelGraphicsSDL::SetBlendActive(bool abX)
 void cLowLevelGraphicsSDL::SetBlendFunc(eBlendFunc aSrcFactor, eBlendFunc aDestFactor)
 {
     if(mBlendSrcFactor == aSrcFactor &&
-        mBlendDestFactor == aDestFactor &&
-        mbBlendFuncSeparate == false)
+            mBlendDestFactor == aDestFactor &&
+            mbBlendFuncSeparate == false)
     {
         return;
     }
@@ -1360,10 +1360,10 @@ void cLowLevelGraphicsSDL::SetBlendFuncSeparate(eBlendFunc aSrcFactorColor, eBle
         eBlendFunc aSrcFactorAlpha, eBlendFunc aDestFactorAlpha)
 {
     if(mBlendSrcFactor == aSrcFactorColor &&
-        mBlendDestFactor == aDestFactorColor &&
-        mBlendSrcFactorAlpha == aSrcFactorAlpha &&
-        mBlendDestFactorAlpha == aDestFactorAlpha &&
-        mbBlendFuncSeparate == true)
+            mBlendDestFactor == aDestFactorColor &&
+            mBlendSrcFactorAlpha == aSrcFactorAlpha &&
+            mBlendDestFactorAlpha == aDestFactorAlpha &&
+            mbBlendFuncSeparate == true)
     {
         return;
     }
@@ -1499,7 +1499,7 @@ void cLowLevelGraphicsSDL::SetTexture(unsigned int alUnit,iTexture* apTex)
 
     // Nothing was changed yet! Get out EARLY !
     if(NewTarget == mvCurrentTextureTarget[alUnit] &&
-        NewHandle == mvCurrentTextureHandle[alUnit])
+            NewHandle == mvCurrentTextureHandle[alUnit])
     {
         return;
     }
@@ -1512,7 +1512,7 @@ void cLowLevelGraphicsSDL::SetTexture(unsigned int alUnit,iTexture* apTex)
 
     // Disable the old target if its different
     if(mvCurrentTextureTarget[alUnit] != 0 &&
-        mvCurrentTextureTarget[alUnit] != NewTarget)
+            mvCurrentTextureTarget[alUnit] != NewTarget)
     {
         glDisable(mvCurrentTextureTarget[alUnit]);
     }
@@ -1626,7 +1626,7 @@ void cLowLevelGraphicsSDL::DrawTriangle(tVertexVec& avVtx)
     AddIndexToBatch(2);
 
     FlushTriBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
-        eVtxBatchFlag_Texture0, true);
+                  eVtxBatchFlag_Texture0, true);
 }
 
 //-----------------------------------------------------------------------
@@ -1636,16 +1636,16 @@ void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,
                                     const cColor& aColor)
 {
     AddVertexToBatch_Raw(cVector3f(avPos.x, avPos.y, avPos.z),
-        aColor, cVector3f(0.0f, 0.0f, 0.0f));
+                         aColor, cVector3f(0.0f, 0.0f, 0.0f));
 
     AddVertexToBatch_Raw(cVector3f(avPos.x + avSize.x, avPos.y, avPos.z),
-        aColor, cVector3f(1.0f, 0.0f, 0.0f));
+                         aColor, cVector3f(1.0f, 0.0f, 0.0f));
 
     AddVertexToBatch_Raw(cVector3f(avPos.x + avSize.x, avPos.y + avSize.y, avPos.z),
-        aColor, cVector3f(1.0f, 1.0f, 0.0f));
+                         aColor, cVector3f(1.0f, 1.0f, 0.0f));
 
     AddVertexToBatch_Raw(cVector3f(avPos.x, avPos.y + avSize.y, avPos.z),
-        aColor, cVector3f(0.0f, 1.0f, 0.0f));
+                         aColor, cVector3f(0.0f, 1.0f, 0.0f));
 
     AddIndexToBatch(0);
     AddIndexToBatch(1);
@@ -1653,7 +1653,7 @@ void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,
     AddIndexToBatch(3);
 
     FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
-        eVtxBatchFlag_Texture0, true);
+                   eVtxBatchFlag_Texture0, true);
 }
 
 void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,
@@ -1663,16 +1663,16 @@ void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,
                                     const cColor& aColor)
 {
     AddVertexToBatch_Raw(cVector3f(avPos.x, avPos.y, avPos.z),
-        aColor, cVector3f(avMinTexCoord.x, avMinTexCoord.y, 0.0f));
+                         aColor, cVector3f(avMinTexCoord.x, avMinTexCoord.y, 0.0f));
 
     AddVertexToBatch_Raw(cVector3f(avPos.x + avSize.x, avPos.y, avPos.z),
-        aColor, cVector3f(avMaxTexCoord.x, avMinTexCoord.y, 0.0f));
+                         aColor, cVector3f(avMaxTexCoord.x, avMinTexCoord.y, 0.0f));
 
     AddVertexToBatch_Raw(cVector3f(avPos.x + avSize.x, avPos.y + avSize.y, avPos.z),
-        aColor, cVector3f(avMaxTexCoord.x, avMaxTexCoord.y, 0.0f));
+                         aColor, cVector3f(avMaxTexCoord.x, avMaxTexCoord.y, 0.0f));
 
     AddVertexToBatch_Raw(cVector3f(avPos.x, avPos.y + avSize.y, avPos.z),
-        aColor, cVector3f(avMinTexCoord.x, avMaxTexCoord.y, 0.0f));
+                         aColor, cVector3f(avMinTexCoord.x, avMaxTexCoord.y, 0.0f));
 
     AddIndexToBatch(0);
     AddIndexToBatch(1);
@@ -1680,7 +1680,7 @@ void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,
     AddIndexToBatch(3);
 
     FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
-        eVtxBatchFlag_Texture0, true);
+                   eVtxBatchFlag_Texture0, true);
 }
 
 void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,
@@ -1692,19 +1692,19 @@ void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,
                                     const cColor& aColor)
 {
     AddVertexToBatch_Raw(cVector3f(avPos.x, avPos.y, avPos.z),
-        aColor, cVector3f(avMinTexCoord0.x, avMinTexCoord0.y, 0.0f));
+                         aColor, cVector3f(avMinTexCoord0.x, avMinTexCoord0.y, 0.0f));
     AddTexCoordToBatch(1, &cVector3f(avMinTexCoord1.x, avMinTexCoord1.y, 0.0f));
 
     AddVertexToBatch_Raw(cVector3f(avPos.x + avSize.x, avPos.y, avPos.z),
-        aColor, cVector3f(avMaxTexCoord0.x, avMinTexCoord0.y, 0.0f));
+                         aColor, cVector3f(avMaxTexCoord0.x, avMinTexCoord0.y, 0.0f));
     AddTexCoordToBatch(1, &cVector3f(avMaxTexCoord1.x, avMinTexCoord1.y, 0.0f));
 
     AddVertexToBatch_Raw(cVector3f(avPos.x + avSize.x, avPos.y + avSize.y, avPos.z),
-        aColor, cVector3f(avMaxTexCoord0.x, avMaxTexCoord0.y, 0.0f));
+                         aColor, cVector3f(avMaxTexCoord0.x, avMaxTexCoord0.y, 0.0f));
     AddTexCoordToBatch(1, &cVector3f(avMaxTexCoord1.x, avMaxTexCoord1.y, 0.0f));
 
     AddVertexToBatch_Raw(cVector3f(avPos.x, avPos.y + avSize.y, avPos.z),
-        aColor, cVector3f(avMinTexCoord0.x, avMaxTexCoord0.y, 0.0f));
+                         aColor, cVector3f(avMinTexCoord0.x, avMaxTexCoord0.y, 0.0f));
     AddTexCoordToBatch(1, &cVector3f(avMinTexCoord1.x, avMaxTexCoord1.y, 0.0f));
 
     AddIndexToBatch(0);
@@ -1715,7 +1715,7 @@ void cLowLevelGraphicsSDL::DrawQuad(const cVector3f &avPos,
     SetBatchTextureUnitActive(1, true);
 
     FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
-        eVtxBatchFlag_Texture0 | eVtxBatchFlag_Texture1, true);
+                   eVtxBatchFlag_Texture0 | eVtxBatchFlag_Texture1, true);
 
     SetBatchTextureUnitActive(1, false);
 }
@@ -1737,7 +1737,7 @@ void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx)
     AddIndexToBatch(3);
 
     FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
-        eVtxBatchFlag_Texture0, true);
+                   eVtxBatchFlag_Texture0, true);
 }
 
 //-----------------------------------------------------------------------
@@ -1758,7 +1758,7 @@ void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx,
     AddIndexToBatch(3);
 
     FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
-        eVtxBatchFlag_Texture0, true);
+                   eVtxBatchFlag_Texture0, true);
 }
 
 //-----------------------------------------------------------------------
@@ -1782,7 +1782,7 @@ void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx,
     AddIndexToBatch(3);
 
     FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
-        eVtxBatchFlag_Texture0, true);
+                   eVtxBatchFlag_Texture0, true);
 }
 
 //-----------------------------------------------------------------------
@@ -1807,13 +1807,13 @@ void cLowLevelGraphicsSDL::DrawQuad(const tVertexVec &avVtx,
     AddIndexToBatch(3);
 
     FlushQuadBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
-        eVtxBatchFlag_Texture0, true);
+                   eVtxBatchFlag_Texture0, true);
 }
 
 //-----------------------------------------------------------------------
 
 void cLowLevelGraphicsSDL::DrawQuadMultiTex(const tVertexVec &avVtx,
-                                            const tVector3fVec &avExtraUvs)
+        const tVector3fVec &avExtraUvs)
 {
     assert(avVtx.size() == 4);
 
@@ -1890,38 +1890,38 @@ void cLowLevelGraphicsSDL::DrawLine(const cVector3f& avBegin,
 }
 
 void cLowLevelGraphicsSDL::DrawBoxMinMax(const cVector3f& avMin,
-                                         const cVector3f& avMax,
-                                         cColor aCol)
+        const cVector3f& avMax,
+        cColor aCol)
 {
     // Pos Z Quad
     DrawLine(cVector3f(avMin.x, avMin.y, avMin.z),
-        cVector3f(avMax.x, avMin.y, avMin.z), aCol);
+             cVector3f(avMax.x, avMin.y, avMin.z), aCol);
     DrawLine(cVector3f(avMax.x, avMin.y, avMin.z),
-        cVector3f(avMax.x, avMin.y, avMax.z), aCol);
+             cVector3f(avMax.x, avMin.y, avMax.z), aCol);
     DrawLine(cVector3f(avMax.x, avMin.y, avMax.z),
-        cVector3f(avMin.x, avMin.y, avMax.z), aCol);
+             cVector3f(avMin.x, avMin.y, avMax.z), aCol);
     DrawLine(cVector3f(avMin.x, avMin.y, avMax.z),
-        cVector3f(avMin.x, avMin.y, avMin.z), aCol);
+             cVector3f(avMin.x, avMin.y, avMin.z), aCol);
 
     // Neg Z Quad
     DrawLine(cVector3f(avMin.x, avMax.y, avMin.z),
-        cVector3f(avMax.x, avMax.y, avMin.z), aCol);
+             cVector3f(avMax.x, avMax.y, avMin.z), aCol);
     DrawLine(cVector3f(avMax.x, avMax.y, avMin.z),
-        cVector3f(avMax.x, avMax.y, avMax.z), aCol);
+             cVector3f(avMax.x, avMax.y, avMax.z), aCol);
     DrawLine(cVector3f(avMax.x, avMax.y, avMax.z),
-        cVector3f(avMin.x, avMax.y, avMax.z), aCol);
+             cVector3f(avMin.x, avMax.y, avMax.z), aCol);
     DrawLine(cVector3f(avMin.x, avMax.y, avMax.z),
-        cVector3f(avMin.x, avMax.y, avMin.z), aCol);
+             cVector3f(avMin.x, avMax.y, avMin.z), aCol);
 
     // Lines between
     DrawLine(cVector3f(avMin.x, avMin.y, avMin.z),
-        cVector3f(avMin.x, avMax.y, avMin.z), aCol);
+             cVector3f(avMin.x, avMax.y, avMin.z), aCol);
     DrawLine(cVector3f(avMax.x, avMin.y, avMin.z),
-        cVector3f(avMax.x, avMax.y, avMin.z), aCol);
+             cVector3f(avMax.x, avMax.y, avMin.z), aCol);
     DrawLine(cVector3f(avMax.x, avMin.y, avMax.z),
-        cVector3f(avMax.x, avMax.y, avMax.z), aCol);
+             cVector3f(avMax.x, avMax.y, avMax.z), aCol);
     DrawLine(cVector3f(avMin.x, avMin.y, avMax.z),
-        cVector3f(avMin.x, avMax.y, avMax.z), aCol);
+             cVector3f(avMin.x, avMax.y, avMax.z), aCol);
 }
 
 //-----------------------------------------------------------------------
@@ -2021,16 +2021,16 @@ void cLowLevelGraphicsSDL::DrawSphere(const cVector3f& avPos, float afRadius, cC
 void cLowLevelGraphicsSDL::DrawLineQuad(const cRect2f& aRect, float afZ, cColor aCol)
 {
     DrawLine(cVector3f(aRect.x, aRect.y, afZ),
-        cVector3f(aRect.x + aRect.w, aRect.y, afZ), aCol);
+             cVector3f(aRect.x + aRect.w, aRect.y, afZ), aCol);
 
     DrawLine(cVector3f(aRect.x + aRect.w, aRect.y, afZ),
-        cVector3f(aRect.x + aRect.w, aRect.y + aRect.h, afZ), aCol);
+             cVector3f(aRect.x + aRect.w, aRect.y + aRect.h, afZ), aCol);
 
     DrawLine(cVector3f(aRect.x + aRect.w, aRect.y + aRect.h, afZ),
-        cVector3f(aRect.x, aRect.y + aRect.h, afZ), aCol);
+             cVector3f(aRect.x, aRect.y + aRect.h, afZ), aCol);
 
     DrawLine(cVector3f(aRect.x, aRect.y + aRect.h, afZ),
-        cVector3f(aRect.x, aRect.y, afZ), aCol);
+             cVector3f(aRect.x, aRect.y, afZ), aCol);
 }
 
 void cLowLevelGraphicsSDL::DrawLineQuad(const cVector3f &avPos,const cVector2f &avSize, cColor aCol)
@@ -2038,10 +2038,10 @@ void cLowLevelGraphicsSDL::DrawLineQuad(const cVector3f &avPos,const cVector2f &
     DrawLine(avPos, cVector3f(avPos.x + avSize.x, avPos.y, avPos.z), aCol);
 
     DrawLine(cVector3f(avPos.x + avSize.x, avPos.y, avPos.z),
-        cVector3f(avPos.x + avSize.x, avPos.y + avSize.y, avPos.z), aCol);
+             cVector3f(avPos.x + avSize.x, avPos.y + avSize.y, avPos.z), aCol);
 
     DrawLine(cVector3f(avPos.x + avSize.x, avPos.y + avSize.y, avPos.z),
-        cVector3f(avPos.x, avPos.y + avSize.y, avPos.z), aCol);
+             cVector3f(avPos.x, avPos.y + avSize.y, avPos.z), aCol);
 
     DrawLine(cVector3f(avPos.x, avPos.y + avSize.y, avPos.z), avPos, aCol);
 }
@@ -2062,7 +2062,7 @@ void cLowLevelGraphicsSDL::AddVertexToBatch(const cVertex *apVtx)
 
         // Zero counter so the current vtx is lost
         FlushTriBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
-            eVtxBatchFlag_Texture0, true);
+                      eVtxBatchFlag_Texture0, true);
     }
 
     //Coord
@@ -2096,7 +2096,7 @@ void cLowLevelGraphicsSDL::AddVertexToBatch(const cVertex *apVtx, const cVector3
 
         // Zero counter so the current vtx is lost
         FlushTriBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
-            eVtxBatchFlag_Texture0, true);
+                      eVtxBatchFlag_Texture0, true);
     }
 
     //Coord
@@ -2140,7 +2140,7 @@ void cLowLevelGraphicsSDL::AddVertexToBatch_Size2D(const cVertex *apVtx, const c
 
         // Zero counter so the current vtx is lost
         FlushTriBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
-            eVtxBatchFlag_Texture0, true);
+                      eVtxBatchFlag_Texture0, true);
     }
 
     //Coord
@@ -2173,7 +2173,7 @@ void cLowLevelGraphicsSDL::AddVertexToBatch_Raw(    const cVector3f& avPos, cons
 
         // Zero counter so the current vtx is lost
         FlushTriBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
-            eVtxBatchFlag_Texture0, true);
+                      eVtxBatchFlag_Texture0, true);
     }
 
     //Coord
@@ -2206,7 +2206,7 @@ void cLowLevelGraphicsSDL::AddIndexToBatch(int alIndex)
 
         // Zero counter so the current vtx batch is lost
         FlushTriBatch(eVtxBatchFlag_Position | eVtxBatchFlag_Color0 |
-            eVtxBatchFlag_Texture0, true);
+                      eVtxBatchFlag_Texture0, true);
     }
 
     mpIndexArray[mlIndexCount] = alIndex;

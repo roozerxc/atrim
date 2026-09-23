@@ -2027,8 +2027,8 @@ void cRendererDeferred::InitLightRendering()
     if(mfLastFrustumFOV != mpCurrentFrustum->GetFOV() || mfLastFrustumFarPlane != mfFarPlane)
     {
         UpdateqQuadVertexPosition(    mpFullscreenLightQuad,
-                                     cVector3f(mfFarLeft,mfFarBottom,-mfFarPlane),cVector2f(mfFarRight*2,mfFarTop*2),
-                                     true);
+                                      cVector3f(mfFarLeft,mfFarBottom,-mfFarPlane),cVector2f(mfFarRight*2,mfFarTop*2),
+                                      true);
     }
 
     //////////////////////////////
