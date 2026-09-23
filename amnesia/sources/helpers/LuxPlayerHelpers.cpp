@@ -3225,8 +3225,8 @@ void cLuxPlayerInDarkness::Update(double adFixedDelta)
         ////////////////////////////
         //Lower sanity
         if(mpPlayer->GetHelperFlashback()->IsActive()==false &&
-            (mpPlayer->GetSanityDrainDisabled()==false && mpPlayer->GetGlobalSanityDrainDisabled()==false) &&
-            gpBase->mpEffectHandler->GetEmotionFlash()->IsActive()==false)
+                (mpPlayer->GetSanityDrainDisabled()==false && mpPlayer->GetGlobalSanityDrainDisabled()==false) &&
+                gpBase->mpEffectHandler->GetEmotionFlash()->IsActive()==false)
         {
             mpPlayer->LowerSanity(mfSanityLossPerSecond * (float)adFixedDelta * mfSanityLossMul, true);
 

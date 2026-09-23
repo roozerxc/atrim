@@ -444,7 +444,7 @@ void cLuxLoadScreenHandler::DrawGameScreen(cGuiSet *apSet)
         for(size_t i=0; i<vTextRows.size(); ++i)
         {
             apSet->DrawFont(vTextRows[i], mpFontDefault, vTextPos, mvTextFontSize,
-                cColor(mpLoadingTextColor.r, mpLoadingTextColor.g, mpLoadingTextColor.b, 1.0f));
+                            cColor(mpLoadingTextColor.r, mpLoadingTextColor.g, mpLoadingTextColor.b, 1.0f));
 
             vTextPos.y += mvTextFontSize.y+2;
         }
@@ -455,8 +455,8 @@ void cLuxLoadScreenHandler::DrawGameScreen(cGuiSet *apSet)
         cVector3f vPos(400, mfLoadingY,1);
 
         apSet->DrawFont(sLoading, mpFontDefault, vPos, mvLoadingFontSize,
-            cColor(mpGameLoadingTextColor.r, mpGameLoadingTextColor.g, mpGameLoadingTextColor.b, mfLoadingAlpha),
-            eFontAlign_Center);
+                        cColor(mpGameLoadingTextColor.r, mpGameLoadingTextColor.g, mpGameLoadingTextColor.b, mfLoadingAlpha),
+                        eFontAlign_Center);
     }
     //////////////////////
     //Draw loading only
@@ -466,8 +466,8 @@ void cLuxLoadScreenHandler::DrawGameScreen(cGuiSet *apSet)
         cVector3f vPos(400, 300-mvLoadingFontSize.y/2,1);
 
         apSet->DrawFont(sLoading, mpFontDefault, vPos, mvLoadingFontSize,
-            cColor(mpBaseLoadingTextColor.r, mpBaseLoadingTextColor.g, mpBaseLoadingTextColor.b, 1.0f),
-            eFontAlign_Center);
+                        cColor(mpBaseLoadingTextColor.r, mpBaseLoadingTextColor.g, mpBaseLoadingTextColor.b, 1.0f),
+                        eFontAlign_Center);
     }
 }
 

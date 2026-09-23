@@ -737,9 +737,9 @@ void cLuxPreMenu::UpdateState()
     case eLuxPreMenuState_ShowPremenuSection:
     {
         if((mpCurrentSection->mbHideGuiSet==true ||
-            (mpCurrentSection->HasTextElements()==false &&
-            mpCurrentSection->HasGammaSettings()==false))
-            && mfTimer <= 0.0f)
+                (mpCurrentSection->HasTextElements()==false &&
+                 mpCurrentSection->HasGammaSettings()==false))
+                && mfTimer <= 0.0f)
         {
             mCurrentState = eLuxPreMenuState_FadeOut;
         }

@@ -1399,10 +1399,10 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
         // Normal custom story installed on the hard disk
         else
 #endif
-        if(mpCustomStory->msExtraLangFilePrefix != "")
-        {
-            sExtraLangFileName = cString::To8Char(mpCustomStory->msStoryRootFolder) + mpCustomStory->msExtraLangFilePrefix + sGameFileName;
-        }
+            if(mpCustomStory->msExtraLangFilePrefix != "")
+            {
+                sExtraLangFileName = cString::To8Char(mpCustomStory->msStoryRootFolder) + mpCustomStory->msExtraLangFilePrefix + sGameFileName;
+            }
 
         // File path string built, load it!
         if(sExtraLangFileName != "")

@@ -613,7 +613,7 @@ void cLuxMainMenu::ExitMenu(eLuxMainMenuExit aMessage)
     mpGui->SetFocus(NULL);
 
     if(aMessage == eLuxMainMenuExit_ContinueGame ||
-        aMessage == eLuxMainMenuExit_StartGame)
+            aMessage == eLuxMainMenuExit_StartGame)
     {
         if(msZoomSound != "")
         {
@@ -1543,9 +1543,9 @@ bool cLuxMainMenu::PressContinue(iWidget* apWidget, const cGuiMessageData& aData
 
     SetTopMenuVisible(false);
 
-    #if USE_GAMEPAD
-        mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
-    #endif
+#if USE_GAMEPAD
+    mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
+#endif
     cGuiPopUpMessageBox *pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu","Continue old game?"),
                                   kTranslate("MainMenu","Yes"), kTranslate("MainMenu","No"),
                                   this,
@@ -1598,9 +1598,9 @@ bool cLuxMainMenu::PressStartGame(iWidget* apWidget, const cGuiMessageData& aDat
     {
         SetTopMenuVisible(false);
 
-        #if USE_GAMEPAD
-            mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
-        #endif
+#if USE_GAMEPAD
+        mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
+#endif
         cGuiPopUpMessageBox *pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""), kTranslate("MainMenu", "Start a new game?"),
                                       kTranslate("MainMenu", "Yes"), kTranslate("MainMenu", "No"),
                                       this,
@@ -1697,9 +1697,9 @@ bool cLuxMainMenu::PressExit(iWidget* apWidget, const cGuiMessageData& aData)
 
     SetTopMenuVisible(false);
 
-    #if USE_GAMEPAD
-        mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
-    #endif
+#if USE_GAMEPAD
+    mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
+#endif
     cGuiPopUpMessageBox *pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu", "Sure you want to quit?"),
                                   kTranslate("MainMenu", "Yes"), kTranslate("MainMenu", "No"),
                                   this,
@@ -1740,9 +1740,9 @@ bool cLuxMainMenu::PressExitToMainMenu(iWidget* apWidget, const cGuiMessageData&
 
     SetTopMenuVisible(false);
 
-    #if USE_GAMEPAD
-        mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
-    #endif
+#if USE_GAMEPAD
+    mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
+#endif
     cGuiPopUpMessageBox *pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu", "Sure you want to exit to main menu?"),
                                   kTranslate("MainMenu", "Yes"), kTranslate("MainMenu", "No"),
                                   this,
@@ -1783,9 +1783,9 @@ bool cLuxMainMenu::PressExitAndSave(iWidget* apWidget, const cGuiMessageData& aD
 
     SetTopMenuVisible(false);
 
-    #if USE_GAMEPAD
-        mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
-    #endif
+#if USE_GAMEPAD
+    mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
+#endif
     cGuiPopUpMessageBox *pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu", "Sure you want to exit and save?"),
                                   kTranslate("MainMenu", "Yes"), kTranslate("MainMenu", "No"),
                                   this,
@@ -1864,9 +1864,9 @@ bool cLuxMainMenu::PressSaveGame(iWidget* apWidget, const cGuiMessageData& aData
     size_t lNumIndex = sText.find(L"#");
     sText.replace(lNumIndex, gsHardMode_SaveCostString.size(), gsHardMode_SaveCostString);
 
-    #if USE_GAMEPAD
-        mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
-    #endif
+#if USE_GAMEPAD
+    mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
+#endif
     cGuiPopUpMessageBox *pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""), sText,
                                   kTranslate("MainMenu", "Save"), kTranslate("Global", "Cancel"),
                                   this,
