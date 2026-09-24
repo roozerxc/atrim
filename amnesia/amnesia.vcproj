@@ -43,7 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /FI&quot;..\..\HPL2\include\impl\CompatSnprintf.h&quot;"
 				Optimization="0"
 				InlineFunctionExpansion="0"
 				EnableIntrinsicFunctions="false"
@@ -140,7 +140,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /FI&quot;..\..\HPL2\include\impl\CompatSnprintf.h&quot;"
 				Optimization="0"
 				InlineFunctionExpansion="0"
 				EnableIntrinsicFunctions="false"
@@ -237,7 +237,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /FI&quot;..\..\HPL2\include\impl\CompatSnprintf.h&quot;"
 				Optimization="3"
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="true"
@@ -337,7 +337,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalOptions="/MP"
+				AdditionalOptions="/MP /FI&quot;..\..\HPL2\include\impl\CompatSnprintf.h&quot;"
 				Optimization="3"
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="true"
