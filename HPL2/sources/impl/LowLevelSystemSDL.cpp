@@ -388,7 +388,7 @@ void cScriptOutput::AddMessage(const asSMessageInfo *msg)
         type = "INFO";
     }
 
-    sprintf(sMess,"%s (%d, %d) : %s : %s\n", msg->section, msg->row, msg->col, type.c_str(), msg->message);
+    snprintf(sMess, sizeof(sMess), "%s (%d, %d) : %s : %s\n", msg->section, msg->row, msg->col, type.c_str(), msg->message);
 
     msMessage += sMess;
 }

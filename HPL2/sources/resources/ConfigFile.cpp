@@ -188,7 +188,7 @@ void cConfigFile::SetString(const tString& asLevel, const tString& asName, const
 void cConfigFile::SetInt(const tString& asLevel, const tString& asName, int alVal)
 {
     char sBuffer[40];
-    sprintf(sBuffer,"%d",alVal);
+    snprintf(sBuffer, sizeof(sBuffer), "%d", alVal);
 
     SetString(asLevel,asName,sBuffer);
 }
@@ -198,7 +198,7 @@ void cConfigFile::SetInt(const tString& asLevel, const tString& asName, int alVa
 void cConfigFile::SetFloat(const tString& asLevel, const tString& asName, float afVal)
 {
     char sBuffer[40];
-    sprintf(sBuffer,"%f",afVal);
+    snprintf(sBuffer, sizeof(sBuffer), "%f", afVal);
 
     SetString(asLevel,asName,sBuffer);
 }

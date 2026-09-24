@@ -153,7 +153,7 @@ bool SHA1::Result(tString &hex)
     hex = "";
     for (int i = 0; i < 5; i++)
     {
-        sprintf(buffer,"%08x", H[i]);
+        snprintf(buffer, sizeof(buffer), "%08x", H[i]);
         hex += buffer;
     }
 

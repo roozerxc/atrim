@@ -175,7 +175,7 @@ static void ConcatenateStrings_Generic(asIScriptGeneric *gen)
 static CScriptString &AssignUIntToString(unsigned int i, CScriptString &dest)
 {
     char buf[100];
-    sprintf(buf, "%u", i);
+    snprintf(buf, sizeof(buf), "%u", i);
     dest.buffer = buf;
     return dest;
 }
@@ -191,7 +191,7 @@ static void AssignUIntToString_Generic(asIScriptGeneric *gen)
 static CScriptString &AssignIntToString(int i, CScriptString &dest)
 {
     char buf[100];
-    sprintf(buf, "%d", i);
+    snprintf(buf, sizeof(buf), "%d", i);
     dest.buffer = buf;
     return dest;
 }
@@ -207,7 +207,7 @@ static void AssignIntToString_Generic(asIScriptGeneric *gen)
 static CScriptString &AssignFloatToString(float f, CScriptString &dest)
 {
     char buf[100];
-    sprintf(buf, "%g", f);
+    snprintf(buf, sizeof(buf), "%g", f);
     dest.buffer = buf;
     return dest;
 }
@@ -223,7 +223,7 @@ static void AssignFloatToString_Generic(asIScriptGeneric *gen)
 static CScriptString &AssignDoubleToString(double f, CScriptString &dest)
 {
     char buf[100];
-    sprintf(buf, "%g", f);
+    snprintf(buf, sizeof(buf), "%g", f);
     dest.buffer = buf;
     return dest;
 }
@@ -239,7 +239,7 @@ static void AssignDoubleToString_Generic(asIScriptGeneric *gen)
 static CScriptString &AssignBoolToString(bool b, CScriptString &dest)
 {
     char buf[100];
-    sprintf(buf, "%s", b ? "true" : "false");
+    snprintf(buf, sizeof(buf), "%s", b ? "true" : "false");
     dest.buffer = buf;
     return dest;
 }
@@ -259,7 +259,7 @@ static void AssignBoolToString_Generic(asIScriptGeneric *gen)
 static CScriptString &AddAssignUIntToString(unsigned int i, CScriptString &dest)
 {
     char buf[100];
-    sprintf(buf, "%u", i);
+    snprintf(buf, sizeof(buf), "%u", i);
     dest.buffer += buf;
     return dest;
 }
@@ -275,7 +275,7 @@ static void AddAssignUIntToString_Generic(asIScriptGeneric *gen)
 static CScriptString &AddAssignIntToString(int i, CScriptString &dest)
 {
     char buf[100];
-    sprintf(buf, "%d", i);
+    snprintf(buf, sizeof(buf), "%d", i);
     dest.buffer += buf;
     return dest;
 }
@@ -291,7 +291,7 @@ static void AddAssignIntToString_Generic(asIScriptGeneric *gen)
 static CScriptString &AddAssignFloatToString(float f, CScriptString &dest)
 {
     char buf[100];
-    sprintf(buf, "%g", f);
+    snprintf(buf, sizeof(buf), "%g", f);
     dest.buffer += buf;
     return dest;
 }
@@ -307,7 +307,7 @@ static void AddAssignFloatToString_Generic(asIScriptGeneric *gen)
 static CScriptString &AddAssignDoubleToString(double f, CScriptString &dest)
 {
     char buf[100];
-    sprintf(buf, "%g", f);
+    snprintf(buf, sizeof(buf), "%g", f);
     dest.buffer += buf;
     return dest;
 }
@@ -323,7 +323,7 @@ static void AddAssignDoubleToString_Generic(asIScriptGeneric *gen)
 static CScriptString &AddAssignBoolToString(bool b, CScriptString &dest)
 {
     char buf[100];
-    sprintf(buf, "%s", b ? "true" : "false");
+    snprintf(buf, sizeof(buf), "%s", b ? "true" : "false");
     dest.buffer += buf;
     return dest;
 }
@@ -343,7 +343,7 @@ static void AddAssignBoolToString_Generic(asIScriptGeneric *gen)
 static CScriptString *AddStringUInt(const CScriptString &str, unsigned int i)
 {
     char buf[100];
-    sprintf(buf, "%u", i);
+    snprintf(buf, sizeof(buf), "%u", i);
     return new CScriptString(str.buffer + buf);
 }
 
@@ -358,7 +358,7 @@ static void AddStringUInt_Generic(asIScriptGeneric *gen)
 static CScriptString *AddStringInt(const CScriptString &str, int i)
 {
     char buf[100];
-    sprintf(buf, "%d", i);
+    snprintf(buf, sizeof(buf), "%d", i);
     return new CScriptString(str.buffer + buf);
 }
 
@@ -373,7 +373,7 @@ static void AddStringInt_Generic(asIScriptGeneric *gen)
 static CScriptString *AddStringFloat(const CScriptString &str, float f)
 {
     char buf[100];
-    sprintf(buf, "%g", f);
+    snprintf(buf, sizeof(buf), "%g", f);
     return new CScriptString(str.buffer + buf);
 }
 
@@ -388,7 +388,7 @@ static void AddStringFloat_Generic(asIScriptGeneric *gen)
 static CScriptString *AddStringDouble(const CScriptString &str, double f)
 {
     char buf[100];
-    sprintf(buf, "%g", f);
+    snprintf(buf, sizeof(buf), "%g", f);
     return new CScriptString(str.buffer + buf);
 }
 
@@ -403,7 +403,7 @@ static void AddStringDouble_Generic(asIScriptGeneric *gen)
 static CScriptString *AddStringBool(const CScriptString &str, bool b)
 {
     char buf[100];
-    sprintf(buf, "%s", b ? "true" : "false");
+    snprintf(buf, sizeof(buf), "%s", b ? "true" : "false");
     return new CScriptString(str.buffer + buf);
 }
 
@@ -422,7 +422,7 @@ static void AddStringBool_Generic(asIScriptGeneric *gen)
 static CScriptString *AddIntString(int i, const CScriptString &str)
 {
     char buf[100];
-    sprintf(buf, "%d", i);
+    snprintf(buf, sizeof(buf), "%d", i);
     return new CScriptString(buf + str.buffer);
 }
 
@@ -437,7 +437,7 @@ static void AddIntString_Generic(asIScriptGeneric *gen)
 static CScriptString *AddUIntString(unsigned int i, const CScriptString &str)
 {
     char buf[100];
-    sprintf(buf, "%u", i);
+    snprintf(buf, sizeof(buf), "%u", i);
     return new CScriptString(buf + str.buffer);
 }
 
@@ -452,7 +452,7 @@ static void AddUIntString_Generic(asIScriptGeneric *gen)
 static CScriptString *AddFloatString(float f, const CScriptString &str)
 {
     char buf[100];
-    sprintf(buf, "%g", f);
+    snprintf(buf, sizeof(buf), "%g", f);
     return new CScriptString(buf + str.buffer);
 }
 
@@ -467,7 +467,7 @@ static void AddFloatString_Generic(asIScriptGeneric *gen)
 static CScriptString *AddDoubleString(double f, const CScriptString &str)
 {
     char buf[100];
-    sprintf(buf, "%g", f);
+    snprintf(buf, sizeof(buf), "%g", f);
     return new CScriptString(buf + str.buffer);
 }
 
@@ -482,7 +482,7 @@ static void AddDoubleString_Generic(asIScriptGeneric *gen)
 static CScriptString *AddBoolString(bool b, const CScriptString &str)
 {
     char buf[100];
-    sprintf(buf, "%s", b ? "true" : "false");
+    snprintf(buf, sizeof(buf), "%s", b ? "true" : "false");
     return new CScriptString(buf + str.buffer);
 }
 

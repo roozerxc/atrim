@@ -197,7 +197,7 @@ public:
     {
         char buff[256];
 
-        sprintf(buff,"%d/%d/%d %d:%02d:%02d",month_day,month,year,hours, minutes, seconds);
+        snprintf(buff,sizeof(buff),"%d/%d/%d %d:%02d:%02d",month_day,month,year,hours, minutes, seconds);
 
         return buff;
     }

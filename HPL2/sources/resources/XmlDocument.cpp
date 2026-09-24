@@ -233,12 +233,12 @@ void cXmlElement::SetAttributeString(const tString& asName, const tString& asVal
 }
 void cXmlElement::SetAttributeFloat(const tString& asName, float afVal)
 {
-    sprintf(gvTempStringBuffer, "%g", afVal);
+    snprintf(gvTempStringBuffer, sizeof(gvTempStringBuffer), "%g", afVal);
     SetAttribute(asName, gvTempStringBuffer);
 }
 void cXmlElement::SetAttributeInt(const tString& asName, int alVal)
 {
-    sprintf(gvTempStringBuffer, "%d", alVal);
+    snprintf(gvTempStringBuffer, sizeof(gvTempStringBuffer), "%d", alVal);
     SetAttribute(asName, gvTempStringBuffer);
 }
 void cXmlElement::SetAttributeBool(const tString& asName, bool abVal)

@@ -34,7 +34,7 @@ void cParserVarContainer::Add(const tString& asName, int alVal)
 void cParserVarContainer::Add(const tString& asName, float afVal)
 {
     char sTemp[1024];
-    sprintf(sTemp, "%f", afVal);
+    snprintf(sTemp, sizeof(sTemp), "%f", afVal);
 
     Add(asName, sTemp);
 }

@@ -805,7 +805,6 @@ static void SaveGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
             sData.reserve(pGeometry->mvVertexVec.size() * 10 * 4);
             for(size_t j=0; j < pGeometry->mvTangents.size(); ++j)
             {
-                //    snprintf(sTemp,20,"%g ",pGeometry->mvTangents[j]);
                 sData += sTemp;
             }
             pDataElem = CreateXMLChild(pVertexVecElem,"Tangents");

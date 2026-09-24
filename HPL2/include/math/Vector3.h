@@ -345,7 +345,7 @@ public:
     tString ToString() const
     {
         char buf[512];
-        sprintf(buf,"%f : %f : %f",x,y,z);
+        snprintf(buf, sizeof(buf),"%f : %f : %f",x,y,z);
         tString str = buf;
         return str;
     }
@@ -353,7 +353,7 @@ public:
     tString ToFileString() const
     {
         char buf[512];
-        sprintf(buf,"%g %g %g",x,y,z);
+        snprintf(buf, sizeof(buf),"%g %g %g",x,y,z);
         tString str = buf;
         return str;
     }

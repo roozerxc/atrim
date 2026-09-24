@@ -142,7 +142,7 @@ void cLuxProgressLogHandler::AddLog(eLuxProgressLogLevel aLevel, const tString& 
     int lHour = mlCounter/ (60*60*60);
 
     char sTemp[1024];
-    sprintf(sTemp, "%02d:%02d:%02d", lHour, lMin, lSec);
+    snprintf(sTemp, sizeof(sTemp), "%02d:%02d:%02d", lHour, lMin, lSec);
 
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
     tString sMapName = pMap ? pMap->GetName() : "NoMap";
