@@ -262,19 +262,44 @@ bool cPlatform::RemoveFolder(const tWString& asPath, bool abDeleteAllFiles, bool
         for(tWStringListIt it = lstFolders.begin(); it != lstFolders.end(); ++it)
         {
             tWString sFolderPath = cString::SetFilePathW(*it, sPath);
-            RemoveFolder(sFolderPath, abDeleteAllFiles,abDeleteAllSubFolders);
+
+            DWORD dwAttrs = GetFileAttributesW(sFolderPath.c_str());
+            if (dwAttrs != INVALID_FILE_ATTRIBUTES &&
+                (dwAttrs & FILE_ATTRIBUTE_REPARSE_POINT))
+            {
+                if(dwAttrs & FILE_ATTRIBUTE_READONLY)
+                {
+                    SetFileAttributesW(sFolderPath.c_str(), dwAttrs & ~FILE_ATTRIBUTE_READONLY);
+                }
+
+                RemoveDirectoryW(sFolderPath.c_str());
+            }
+            else
+            {
+                RemoveFolder(sFolderPath, abDeleteAllFiles, abDeleteAllSubFolders);
+            }
         }
     }
 
-    if(RemoveDirectory(sPath.c_str())!=TRUE)
+    ////////////////////
+    // Clear read only bit on the folder to be removed
+    {
+        DWORD dwAttrs = GetFileAttributesW(sPath.c_str());
+
+        if(dwAttrs != INVALID_FILE_ATTRIBUTES && (dwAttrs & FILE_ATTRIBUTE_READONLY))
+        {
+            SetFileAttributesW(sPath.c_str(), dwAttrs & ~FILE_ATTRIBUTE_READONLY);
+        }
+    }
+
+    if(RemoveDirectoryW(sPath.c_str()) != TRUE)
     {
         wchar_t sTempString[2048];
-        FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,0,GetLastError(),0,sTempString,2048,NULL);
+        FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM,0,GetLastError(),0,sTempString,sizeof(sTempString),NULL);
         Error("Could not remove folder: '%s': %s",cString::To8Char(sPath).c_str(), cString::To8Char(sTempString).c_str());
         return false;
     }
     return true;
-
 }
 
 //-----------------------------------------------------------------------
