@@ -416,14 +416,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\sources\engine\ScriptFuncs.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\include\engine\ScriptFuncs.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\engine\Updateable.h"
 				>
 			</File>

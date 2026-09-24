@@ -29,7 +29,6 @@
 #include "graphics/Renderer.h"
 
 #include "engine/Updater.h"
-#include "engine/ScriptFuncs.h"
 #include "engine/EngineInitVars.h"
 
 #include "system/LowLevelSystem.h"
@@ -327,10 +326,6 @@ void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, 
     //Setup the "default" updater container
     mpUpdater->AddContainer("Default");
     mpUpdater->SetContainer("Default");
-
-    //Init some standard script funcs
-    Log(" Initializing script functions\n");
-    cScriptFuncs::Init(mpGraphics,mpResources,mpSystem,mpInput,mpScene,mpSound,this);
 
     mpMutex = cPlatform::CreateMutEx();
 

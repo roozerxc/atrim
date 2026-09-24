@@ -18,8 +18,6 @@
 
 #include "math/Math.h"
 
-#include "engine/ScriptFuncs.h"
-
 namespace hpl
 {
 

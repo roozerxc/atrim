@@ -26,7 +26,6 @@
 #include "engine/Updater.h"
 #include "engine/LowLevelEngineSetup.h"
 #include "engine/Updateable.h"
-#include "engine/ScriptFuncs.h"
 #include "engine/SaveGame.h"
 #include "engine/EngineInitVars.h"
 
