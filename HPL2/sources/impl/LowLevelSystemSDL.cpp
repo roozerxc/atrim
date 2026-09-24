@@ -212,7 +212,7 @@ void FatalError(const char* fmt,... )
         return;
     }
     va_start(ap, fmt);
-    vsprintf(text, fmt, ap);
+    vsnprintf(text, sizeof(text), fmt, ap);
     va_end(ap);
 
     tString sMess = "FATAL ERROR: ";
@@ -244,7 +244,7 @@ void Error(const char* fmt, ...)
         return;
     }
     va_start(ap, fmt);
-    vsprintf(text, fmt, ap);
+    vsnprintf(text, sizeof(text), fmt, ap);
     va_end(ap);
 
     tString sMess = "ERROR: ";
@@ -269,7 +269,7 @@ void Warning(const char* fmt, ...)
         return;
     }
     va_start(ap, fmt);
-    vsprintf(text, fmt, ap);
+    vsnprintf(text, sizeof(text), fmt, ap);
     va_end(ap);
 
     tString sMess = "WARNING: ";
@@ -294,7 +294,7 @@ void Log(const char* fmt, ...)
         return;
     }
     va_start(ap, fmt);
-    vsprintf(text, fmt, ap);
+    vsnprintf(text, sizeof(text), fmt, ap);
     va_end(ap);
 
     tString sMess = "";
@@ -351,7 +351,7 @@ void LogUpdate(const char* fmt, ...)
         return;
     }
     va_start(ap, fmt);
-    vsprintf(text, fmt, ap);
+    vsnprintf(text, sizeof(text), fmt, ap);
     va_end(ap);
 
     tString sMess = "";

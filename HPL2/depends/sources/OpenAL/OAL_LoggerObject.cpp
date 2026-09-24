@@ -46,7 +46,7 @@ void iOAL_LoggerObject::LogMsg(const string& asIDStr, eOAL_LogVerbose aVerbose, 
 	char text[2048];
 	va_list ap;
 	va_start(ap, asMessage);
-	vsprintf(text, asMessage, ap);
+	vsnprintf(text, sizeof(text), asMessage, ap);
 	va_end(ap);
 
 	switch(aType)

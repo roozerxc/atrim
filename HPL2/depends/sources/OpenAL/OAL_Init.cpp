@@ -229,7 +229,7 @@ void OAL_Log( eOAL_LogVerbose aeVerboseLevelReq, eOAL_LogMsg aeMessageType,  con
 	char text[2048];
 	va_list ap;
 	va_start(ap, asMessage);
-	vsprintf(text, asMessage, ap);
+	vsnprintf(text, sizeof(text), asMessage, ap);
 	va_end(ap);
 
 	
