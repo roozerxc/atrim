@@ -548,11 +548,11 @@ void cBinaryBuffer::AddInt32(int alX)
 
 void cBinaryBuffer::AddFloat32(float afX)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     int i = SwabFloat32(afX);
     AddData(&i, sizeof(float));
 #else
-    AddData(afX, sizeof(float));
+    AddData(&afX, sizeof(float));
 #endif
 }
 
@@ -560,11 +560,11 @@ void cBinaryBuffer::AddFloat32(float afX)
 
 void cBinaryBuffer::AddVector2f(const cVector2f& avX)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     AddFloat32(avX.x);
     AddFloat32(avX.y);
 #else
-    AddData(t, sizeof(float)*2);
+    AddData(avX.v, sizeof(float)*2);
 #endif
 }
 
@@ -572,12 +572,12 @@ void cBinaryBuffer::AddVector2f(const cVector2f& avX)
 
 void cBinaryBuffer::AddVector3f(const cVector3f& avX)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     AddFloat32(avX.x);
     AddFloat32(avX.y);
     AddFloat32(avX.z);
 #else
-    AddData(t, sizeof(float)*3);
+    AddData(avX.v, sizeof(float)*3);
 #endif
 }
 
@@ -601,7 +601,7 @@ void cBinaryBuffer::AddVector3l(const cVector3l& avX)
 
 void cBinaryBuffer::AddMatrixf(const cMatrixf& a_mtxX)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     AddFloat32Array(a_mtxX.v, 16);
 #else
     AddData(a_mtxX.v, sizeof(float)*16);
@@ -620,7 +620,7 @@ void cBinaryBuffer::AddQuaternion(const cQuaternion& aqX)
 
 void cBinaryBuffer::AddColor(const cColor& avX)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     AddFloat32(avX.v[0]);
     AddFloat32(avX.v[1]);
     AddFloat32(avX.v[2]);
@@ -640,8 +640,7 @@ void cBinaryBuffer::AddString(const tString& asStr)
 
 void cBinaryBuffer::AddStringW(const tWString& asStr)
 {
-#ifdef BIG_ENDIAN
-    // Important for Xenon, PlayStation 3 and other PowerPC systems!
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     AddInt32Array(asStr[i], asStr.size()+1);
 #else
     AddData(asStr.c_str(), sizeof(wchar_t) * (asStr.size()+1) ); //+1 for the zero!
@@ -659,7 +658,7 @@ void cBinaryBuffer::AddCharArray(const char* apData, size_t alSize)
 
 void cBinaryBuffer::AddShort16Array(const short* apData, size_t alSize)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     for(size_t i=0; i<alSize; ++i)
     {
         AddShort16(apData[i]);
@@ -673,7 +672,7 @@ void cBinaryBuffer::AddShort16Array(const short* apData, size_t alSize)
 
 void cBinaryBuffer::AddInt32Array(const int* apData, size_t alSize)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     for(size_t i=0; i<alSize; ++i)
     {
         AddInt32(apData[i]);
@@ -687,7 +686,7 @@ void cBinaryBuffer::AddInt32Array(const int* apData, size_t alSize)
 
 void cBinaryBuffer::AddFloat32Array(const float* apData, size_t alSize)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     for (size_t i=0; i<alSize; ++i)
     {
         AddFloat32(apData[i]);
@@ -763,7 +762,7 @@ int cBinaryBuffer::GetInt32()
 
 float cBinaryBuffer::GetFloat32()
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     int i;
     GetData(&i, sizeof(float));
     return UnSwabFloat32(i);
@@ -778,7 +777,7 @@ float cBinaryBuffer::GetFloat32()
 
 void cBinaryBuffer::GetVector2f(cVector2f *apX)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     apX->x = GetFloat32();
     apX->y = GetFloat32();
 #else
@@ -790,7 +789,7 @@ void cBinaryBuffer::GetVector2f(cVector2f *apX)
 
 void cBinaryBuffer::GetVector3f(cVector3f *apX)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     apX->x = GetFloat32();
     apX->y = GetFloat32();
     apX->z = GetFloat32();
@@ -804,7 +803,7 @@ void cBinaryBuffer::GetVector3f(cVector3f *apX)
 void cBinaryBuffer::GetVector2l(cVector2l *apX)
 {
     GetData(apX->v, sizeof(int)*2);
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     apX->x = SDL_SwapLE32(apX->x);
     apX->y = SDL_SwapLE32(apX->y);
 #endif
@@ -815,7 +814,7 @@ void cBinaryBuffer::GetVector2l(cVector2l *apX)
 void cBinaryBuffer::GetVector3l(cVector3l *apX)
 {
     GetData(apX->v, sizeof(int)*3);
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     apX->x = SDL_SwapLE32(apX->x);
     apX->y = SDL_SwapLE32(apX->y);
     apX->z = SDL_SwapLE32(apX->z);
@@ -841,7 +840,7 @@ void cBinaryBuffer::GetQuaternion(cQuaternion* apX)
 
 void cBinaryBuffer::GetColor(cColor *apX)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     apX->v[0] = GetFloat32();
     apX->v[1] = GetFloat32();
     apX->v[2] = GetFloat32();
@@ -898,7 +897,7 @@ void cBinaryBuffer::GetCharArray(char* apData, size_t alSize)
 
 void cBinaryBuffer::GetShort16Array(short* apData, size_t alSize)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     for(size_t i=0; i<alSize; ++i)
     {
         apData[i] = GetShort16();
@@ -912,7 +911,7 @@ void cBinaryBuffer::GetShort16Array(short* apData, size_t alSize)
 
 void cBinaryBuffer::GetInt32Array(int* apData, size_t alSize)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     for(size_t i=0; i<alSize; ++i)
     {
         apData[i] = GetInt32();
@@ -926,7 +925,7 @@ void cBinaryBuffer::GetInt32Array(int* apData, size_t alSize)
 
 void cBinaryBuffer::GetFloat32Array(float* apData, size_t alSize)
 {
-#ifdef SDL_BIG_ENDIAN
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
     for(size_t i=0; i<alSize; ++i)
     {
         apData[i] = GetFloat32();
