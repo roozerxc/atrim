@@ -17,6 +17,7 @@
 #define ZLIB_WINAPI
 #include <zlib.h>
 #include <stdio.h>
+#include <cstring>
 
 namespace hpl
 {
@@ -429,9 +430,21 @@ bool cSerializeClass::LoadFromFile(iSerializable* apData, const tWString &asFile
 
     //Get root
     TiXmlElement* pRootElem = pXmlDoc->RootElement();
+    if(pRootElem == NULL)
+    {
+        hplDelete(pXmlDoc);
+        Error("Serialized file '%s' has no root element!\n", cString::To8Char(asFile).c_str());
+        return false;
+    }
 
     //Get first, there should only be ONE class at the root.
     TiXmlElement* pClassElem = pRootElem->FirstChildElement("class");
+    if(pClassElem == NULL)
+    {
+        hplDelete(pXmlDoc);
+        Error("Serialized file '%s' has no class element!\n", cString::To8Char(asFile).c_str());
+        return false;
+    }
 
     LoadFromElement(apData,pClassElem);
 
@@ -445,6 +458,11 @@ void cSerializeClass::LoadFromElement(iSerializable* apData, TiXmlElement *apEle
                                       bool abIsPointer)
 {
     SetUpData();
+
+    if(apData == NULL || apElement == NULL)
+    {
+        return;
+    }
 
     cSerializeSavedClass *pClass = GetClass(apData->Serialize_GetTopClass());
     if(pClass==NULL)
@@ -461,7 +479,7 @@ void cSerializeClass::LoadFromElement(iSerializable* apData, TiXmlElement *apEle
     TiXmlElement *pMemberElem = apElement->FirstChildElement();
     for(; pMemberElem != NULL; pMemberElem = pMemberElem->NextSiblingElement())
     {
-        tString sMainType = pMemberElem->Value();
+        tString sMainType = pMemberElem->Value() ? pMemberElem->Value() : "";
 
         if(gbLog)
         {
@@ -684,6 +702,11 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
 void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeType aType,
                                     const char* asVal)
 {
+    if(asVal == NULL)
+    {
+        asVal = "";
+    }
+
     void *pVal = ValuePointer(apData,alOffset);
 
     switch(aType)
@@ -718,8 +741,13 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Vector2l:
     {
         tIntVec vVals;
-        vVals.reserve(2);
+        vVals.resize(2, 0);
         cString::GetIntVec(asVal,vVals,NULL);
+
+        if(vVals.size() < 2)
+        {
+            vVals.resize(2, 0);
+        }
 
         PointerValue(pVal,cVector2l).FromVec(&vVals[0]);
 
@@ -730,8 +758,13 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Vector2f:
     {
         tFloatVec vVals;
-        vVals.reserve(2);
+        vVals.resize(2, 0.0f);
         cString::GetFloatVec(asVal,vVals,NULL);
+
+        if(vVals.size() < 2)
+        {
+            vVals.resize(2, 0.0f);
+        }
 
         PointerValue(pVal,cVector2f).FromVec(&vVals[0]);
 
@@ -742,8 +775,13 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Vector3l:
     {
         tIntVec vVals;
-        vVals.reserve(3);
+        vVals.resize(3, 0);
         cString::GetIntVec(asVal,vVals,NULL);
+
+        if(vVals.size() < 3)
+        {
+        	vVals.resize(3, 0);
+        }
 
         PointerValue(pVal,cVector3l).FromVec(&vVals[0]);
 
@@ -754,8 +792,13 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Vector3f:
     {
         tFloatVec vVals;
-        vVals.reserve(3);
+        vVals.resize(3, 0.0f);
         cString::GetFloatVec(asVal,vVals,NULL);
+
+        if(vVals.size() < 3)
+        {
+        	vVals.resize(3, 0.0f);
+        }
 
         PointerValue(pVal,cVector3f).FromVec(&vVals[0]);
 
@@ -766,8 +809,13 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Matrixf:
     {
         tFloatVec vVals;
-        vVals.reserve(16);
+        vVals.resize(16, 0.0f);
         cString::GetFloatVec(asVal,vVals,NULL);
+
+        if(vVals.size() < 16)
+        {
+        	vVals.resize(16, 0.0f);
+        }
 
         PointerValue(pVal,cMatrixf).FromVec(&vVals[0]);
 
@@ -778,8 +826,13 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Color:
     {
         tFloatVec vVals;
-        vVals.reserve(4);
+        vVals.resize(4, 0.0f);
         cString::GetFloatVec(asVal,vVals,NULL);
+
+        if(vVals.size() < 4)
+        {
+        	vVals.resize(4, 0.0f);
+        }
 
         PointerValue(pVal,cColor).FromVec(&vVals[0]);
 
@@ -790,8 +843,13 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Rect2l:
     {
         tIntVec vVals;
-        vVals.reserve(4);
+        vVals.resize(4, 0);
         cString::GetIntVec(asVal,vVals,NULL);
+
+        if(vVals.size() < 4)
+        {
+        	vVals.resize(4, 0);
+        }
 
         PointerValue(pVal,cRect2l).FromVec(&vVals[0]);
 
@@ -802,8 +860,13 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Rect2f:
     {
         tFloatVec vVals;
-        vVals.reserve(4);
+        vVals.resize(4, 0.0f);
         cString::GetFloatVec(asVal,vVals,NULL);
+
+        if(vVals.size() < 4)
+        {
+        	vVals.resize(4, 0.0f);
+        }
 
         PointerValue(pVal,cRect2f).FromVec(&vVals[0]);
 
@@ -814,8 +877,13 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Planef:
     {
         tFloatVec vVals;
-        vVals.reserve(4);
+        vVals.resize(4, 0.0f);
         cString::GetFloatVec(asVal,vVals,NULL);
+
+        if(vVals.size() < 4)
+        {
+        	vVals.resize(4, 0.0f);
+        }
 
         PointerValue(pVal,cPlanef).FromVec(&vVals[0]);
 
@@ -996,11 +1064,10 @@ void cSerializeClass::LoadVariable(TiXmlElement *apElement, iSerializable* apDat
 {
     tString sName = cString::ToString(apElement->Attribute("name"),"");
     const char* sVal = apElement->Attribute("val");
-    eSerializeType type = cString::ToInt(apElement->Attribute("type"),eSerializeMainType_NULL);
 
     if(gbLog)
     {
-        Log("%s Saving variable: %s val: %s type: %d\n",GetTabs(),sName.c_str(),sVal,(int)type);
+        Log("%s Loading variable: %s val: %s\n",GetTabs(),sName.c_str(),sVal ? sVal : "(null)");
     }
 
     cSerializeMemberField *pField = GetMemberField(sName,apClass);
@@ -1009,7 +1076,13 @@ void cSerializeClass::LoadVariable(TiXmlElement *apElement, iSerializable* apDat
         return;
     }
 
-    StringToValue(apData, pField->mlOffset,type,sVal);
+    if(pField->mType == eSerializeType_Class || pField->mType == eSerializeType_ClassPointer)
+    {
+        Warning("LoadVariable called for class/class-pointer field '%s' - ignored\n", sName.c_str());
+        return;
+    }
+
+    StringToValue(apData, pField->mlOffset, pField->mType, sVal);
 }
 
 //-----------------------------------------------------------------------
@@ -1018,12 +1091,10 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData,c
 {
     tString sName = cString::ToString(apElement->Attribute("name"),"");
     tString sClassType = cString::ToString(apElement->Attribute("class_type"),"");
-    eSerializeType type = cString::ToInt(apElement->Attribute("type"),eSerializeMainType_NULL);
-    size_t lSize = cString::ToInt(apElement->Attribute("size"),0);
 
     if(gbLog)
     {
-        Log("%s Begin Saving array: '%s' classtype: %s type %d\n",GetTabs(),sName.c_str(),sClassType.c_str(),type);
+        Log("%s Begin Loading array: '%s' classtype: %s\n",GetTabs(),sName.c_str(),sClassType.c_str());
         ++glTabs;
     }
 
@@ -1034,20 +1105,31 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData,c
     }
 
     void *pArrayData = ValuePointer(apData,pField->mlOffset);
+    const size_t lArraySize = pField->mlArraySize;
 
     // CLASS ////////////////////////////////////////////
     if(pField->mType == eSerializeType_Class)
     {
         cSerializeSavedClass *pClass = GetClass(((iSerializable*)pArrayData)->Serialize_GetTopClass());
+        if(pClass==NULL)
+        {
+            return;
+        }
+
         size_t lClassSize = pClass->mlSize;
 
         size_t lCount=0;
         TiXmlElement *pVarElem = apElement->FirstChildElement();
-        for(; pVarElem != NULL; pVarElem = pVarElem->NextSiblingElement(),++lCount)
+        for(; pVarElem != NULL && lCount < lArraySize; pVarElem = pVarElem->NextSiblingElement(),++lCount)
         {
             size_t lOffset = lCount * lClassSize;
 
             LoadFromElement( (iSerializable*)ValuePointer(pArrayData,lOffset),pVarElem);
+        }
+        if(pVarElem != NULL)
+        {
+            Warning("Array '%s' has more elements than declared size %zu - excess ignored\n",
+                    sName.c_str(), lArraySize);
         }
     }
     // CLASS POINTER ////////////////////////////////////////////
@@ -1055,21 +1137,21 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData,c
     {
         size_t lCount=0;
         TiXmlElement *pVarElem = apElement->FirstChildElement();
-        for(; pVarElem != NULL; pVarElem = pVarElem->NextSiblingElement(),++lCount)
+        for(; pVarElem != NULL && lCount < lArraySize; pVarElem = pVarElem->NextSiblingElement(),++lCount)
         {
             size_t lOffset = sizeof(void*) * lCount;
             iSerializable **pValuePtr = (iSerializable**)ValuePointer(pArrayData,lOffset);
 
-            tString sClassType = cString::ToString(pVarElem->Attribute("type"),"");
-            cSerializeSavedClass *pSavedClass = GetClass(sClassType);
-            if(pSavedClass==NULL)
+            tString sElemClassType = cString::ToString(pVarElem->Attribute("type"),"");
+            cSerializeSavedClass *pSavedClass = GetClass(sElemClassType);
+            if(pSavedClass==NULL || pSavedClass->mpCreateFunc==NULL)
             {
                 continue;
             }
 
             if(gbLog)
             {
-                Log("%s Element Class pointer: %s\n",GetTabs(),sClassType.c_str());
+                Log("%s Element Class pointer: %s\n",GetTabs(),sElemClassType.c_str());
             }
 
             //If NULL, then just create else delete and then create-
@@ -1084,31 +1166,55 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData,c
                 *pValuePtr = pSavedClass->mpCreateFunc();
             }
 
+            if(*pValuePtr == NULL)
+            {
+                Warning("mpCreateFunc returned NULL for class '%s'\n", sElemClassType.c_str());
+                continue;
+            }
+
             LoadFromElement(*pValuePtr,pVarElem);
+        }
+        if(pVarElem != NULL)
+        {
+            Warning("Array '%s' has more elements than declared size %zu - excess ignored\n",
+                    sName.c_str(), lArraySize);
         }
     }
     // VARIABLE /////////////////////////////////////////
     else
     {
+        eSerializeType fieldType = pField->mType;
+        size_t lElemSize = SizeOfType(fieldType);
+        if(lElemSize == 0)
+        {
+            Warning("Array '%s' has unknown element type - skipped\n", sName.c_str());
+            return;
+        }
+
         size_t lCount=0;
         TiXmlElement *pVarElem = apElement->FirstChildElement();
-        for(; pVarElem != NULL; pVarElem = pVarElem->NextSiblingElement(),++lCount)
+        for(; pVarElem != NULL && lCount < lArraySize; pVarElem = pVarElem->NextSiblingElement(),++lCount)
         {
             const char* sVal = pVarElem->Attribute("val");
 
             if(gbLog)
             {
-                Log("%s Element variable val '%s'\n",GetTabs(),sVal);
+                Log("%s Element variable val '%s'\n",GetTabs(),sVal ? sVal : "(null)");
             }
 
-            StringToValue(pArrayData,lCount * SizeOfType(type),type,sVal);
+            StringToValue(pArrayData, lCount * lElemSize, fieldType, sVal);
+        }
+        if(pVarElem != NULL)
+        {
+            Warning("Array '%s' has more elements than declared size %zu - excess ignored\n",
+                    sName.c_str(), lArraySize);
         }
     }
 
     if(gbLog)
     {
         --glTabs;
-        Log("%s End Saving array: %s\n",GetTabs(),sName.c_str());
+        Log("%s End Loading array: %s\n",GetTabs(),sName.c_str());
     }
 }
 
@@ -1150,12 +1256,17 @@ void cSerializeClass::LoadClassPointer(TiXmlElement *apElement, iSerializable* a
 
     iSerializable **pClassDataPtr = (iSerializable**)ValuePointer(apData,pField->mlOffset);
 
-    if(gbLog) Log("%s Saving classpointer name: '%s' type: '%s' null: %d\n",GetTabs(),sName.c_str(),
+    if(gbLog) Log("%s Loading classpointer name: '%s' type: '%s' null: %d\n",GetTabs(),sName.c_str(),
                       sType.c_str(),bNull?1:0);
 
     //TODO: Question is here if previous data should be deleted.
     if(bNull)
     {
+    	if(*pClassDataPtr)
+    	{
+    		hplDelete(*pClassDataPtr);
+    	}
+
         *pClassDataPtr = NULL;
         return;
     }
@@ -1164,7 +1275,19 @@ void cSerializeClass::LoadClassPointer(TiXmlElement *apElement, iSerializable* a
     if(*pClassDataPtr == NULL)
     {
         cSerializeSavedClass* pNewClass = GetClass(sType);
+        if(pNewClass==NULL || pNewClass->mpCreateFunc==NULL)
+        {
+            Warning("Cannot create class pointer '%s' of type '%s' - unknown class or no create func\n",
+                    sName.c_str(), sType.c_str());
+            *pClassDataPtr = NULL;
+            return;
+        }
         *pClassDataPtr = pNewClass->mpCreateFunc();
+        if(*pClassDataPtr == NULL)
+        {
+            Warning("mpCreateFunc returned NULL for class '%s'\n", sType.c_str());
+            return;
+        }
     }
 
     LoadFromElement(*pClassDataPtr,apElement);
@@ -1175,7 +1298,6 @@ void cSerializeClass::LoadClassPointer(TiXmlElement *apElement, iSerializable* a
 void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apData,cSerializeSavedClass *apClass)
 {
     tString sName = cString::ToString(apElement->Attribute("name"),"");
-    eSerializeType type = cString::ToInt(apElement->Attribute("type"),eSerializeMainType_NULL);
 
     cSerializeMemberField *pField = GetMemberField(sName,apClass);
     if(pField==NULL)
@@ -1187,7 +1309,7 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
 
     if(gbLog)
     {
-        Log("%s Begin save container name: '%s' type %d\n",GetTabs(),sName.c_str(),type);
+        Log("%s Begin load container name: '%s' type %d\n",GetTabs(),sName.c_str(),(int)pField->mType);
         ++glTabs;
     }
 
@@ -1198,8 +1320,10 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
         pCont->Clear();
 
         cSerializeSavedClass *pSavedClass = GetClass(sClassType);
-        if(pSavedClass==NULL)
+        if(pSavedClass==NULL || pSavedClass->mpCreateFunc==NULL)
         {
+            Warning("Cannot load container '%s' - unknown class '%s' or no create func\n",
+                    sName.c_str(), sClassType.c_str());
             return;
         }
 
@@ -1212,6 +1336,11 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
             }
 
             iSerializable *pData = pSavedClass->mpCreateFunc();
+            if(pData == NULL)
+            {
+                Warning("mpCreateFunc returned NULL for class '%s'\n", sClassType.c_str());
+                continue;
+            }
 
             LoadFromElement(pData,pVarElem);
             pCont->AddVoidClass(pData);
@@ -1246,7 +1375,7 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
         {
             tString sClassType = cString::ToString(pVarElem->Attribute("type"),"");
             cSerializeSavedClass *pSavedClass = GetClass(sClassType);
-            if(pSavedClass==NULL)
+            if(pSavedClass==NULL || pSavedClass->mpCreateFunc==NULL)
             {
                 continue;
             }
@@ -1257,6 +1386,11 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
             }
 
             iSerializable *pData = pSavedClass->mpCreateFunc();
+            if(pData == NULL)
+            {
+                Warning("mpCreateFunc returned NULL for class '%s'\n", sClassType.c_str());
+                continue;
+            }
 
             LoadFromElement(pData,pVarElem,true);
             pCont->AddVoidPtr((void**)&pData);
@@ -1267,18 +1401,38 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
     {
         pCont->Clear();
 
+        eSerializeType fieldType = pField->mType;
+        size_t lElemSize = SizeOfType(fieldType);
+        if(lElemSize == 0)
+        {
+            Warning("Container '%s' has unknown element type - skipped\n", sName.c_str());
+            return;
+        }
+
+        if(fieldType == eSerializeType_String || fieldType == eSerializeType_WString)
+        {
+            Warning("Container '%s' of string type cannot be safely deserialized this way - skipped\n",
+                    sName.c_str());
+            return;
+        }
+
         TiXmlElement *pVarElem = apElement->FirstChildElement();
         for(; pVarElem != NULL; pVarElem = pVarElem->NextSiblingElement())
         {
             const char* sVal = pVarElem->Attribute("val");
-            void *pData = hplMalloc(SizeOfType(type));
+            void *pData = hplMalloc(lElemSize);
+            if(pData == NULL)
+            {
+                continue;
+            }
+            memset(pData, 0, lElemSize);
 
             if(gbLog)
             {
-                Log("%s Element var val '%s' type: %d\n",GetTabs(),sVal,type);
+                Log("%s Element var val '%s' type: %d\n",GetTabs(),sVal ? sVal : "(null)",(int)fieldType);
             }
 
-            StringToValue(pData,0,type,sVal);
+            StringToValue(pData, 0, fieldType, sVal);
             pCont->AddVoidClass(pData);
 
             hplFree(pData);
@@ -1288,7 +1442,7 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
     if(gbLog)
     {
         --glTabs;
-        Log("%s End save container name: '%s'\n",GetTabs(),sName.c_str());
+        Log("%s End load container name: '%s'\n",GetTabs(),sName.c_str());
     }
 }
 
