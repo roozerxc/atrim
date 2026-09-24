@@ -14,7 +14,7 @@
 
 //-----------------------------------------------------------------------
 
-iLuxInstanityEvent::iLuxInstanityEvent()
+iLuxInsanityEvent::iLuxInsanityEvent()
 {
     mbUsed = false;
     mbOver = true;
@@ -23,14 +23,14 @@ iLuxInstanityEvent::iLuxInstanityEvent()
 
 //-----------------------------------------------------------------------
 
-iLuxInstanityEvent::~iLuxInstanityEvent()
+iLuxInsanityEvent::~iLuxInsanityEvent()
 {
 
 }
 
 //-----------------------------------------------------------------------
 
-void iLuxInstanityEvent::LoadData(cXmlElement * apVarElem)
+void iLuxInsanityEvent::LoadData(cXmlElement * apVarElem)
 {
     msName = apVarElem->GetAttributeString("Name","Unknown");
     msSet = apVarElem->GetAttributeString("Set","");
@@ -41,7 +41,7 @@ void iLuxInstanityEvent::LoadData(cXmlElement * apVarElem)
 
 //-----------------------------------------------------------------------
 
-void iLuxInstanityEvent::Start()
+void iLuxInsanityEvent::Start()
 {
     mbUsed = true;
     mbOver = false;
@@ -61,19 +61,19 @@ void iLuxInstanityEvent::Start()
 
 //-----------------------------------------------------------------------
 
-cLuxInstanityEvent_Bugs::cLuxInstanityEvent_Bugs()
+cLuxInsanityEvent_Bugs::cLuxInsanityEvent_Bugs()
 {
 
 }
 
-cLuxInstanityEvent_Bugs::~cLuxInstanityEvent_Bugs()
+cLuxInsanityEvent_Bugs::~cLuxInsanityEvent_Bugs()
 {
 
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Bugs::OnLoadData(cXmlElement * apVarElem)
+void cLuxInsanityEvent_Bugs::OnLoadData(cXmlElement * apVarElem)
 {
     tString sImage = apVarElem->GetAttributeString("BugImage","");
     if(sImage != "")
@@ -98,7 +98,7 @@ void cLuxInstanityEvent_Bugs::OnLoadData(cXmlElement * apVarElem)
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Bugs::OnStart()
+void cLuxInsanityEvent_Bugs::OnStart()
 {
     //////////////////////////////////////////
     // Set up variables
@@ -113,7 +113,7 @@ void cLuxInstanityEvent_Bugs::OnStart()
     mvBugs.resize(mlNumOfBugs);
     for(int i=0; i<mlNumOfBugs; ++i)
     {
-        cLuxInstanityEvent_Bugs_Bug *pBug = &mvBugs[i];
+        cLuxInsanityEvent_Bugs_Bug *pBug = &mvBugs[i];
 
         /////////////////////
         // Position (keep at edges of screen)
@@ -161,7 +161,7 @@ void cLuxInstanityEvent_Bugs::OnStart()
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Bugs::OnExit()
+void cLuxInsanityEvent_Bugs::OnExit()
 {
     //////////////////////////////////
     // Destroy Bugs
@@ -179,7 +179,7 @@ void cLuxInstanityEvent_Bugs::OnExit()
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Bugs::Update(double adFixedDelta)
+void cLuxInsanityEvent_Bugs::Update(double adFixedDelta)
 {
     cVector2f vSwarmPoint(400, 300);
     bool bActive = true;
@@ -198,7 +198,7 @@ void cLuxInstanityEvent_Bugs::Update(double adFixedDelta)
     // Bugs
     for(int i=0; i<mlNumOfBugs; ++i)
     {
-        cLuxInstanityEvent_Bugs_Bug *pBug = &mvBugs[i];
+        cLuxInsanityEvent_Bugs_Bug *pBug = &mvBugs[i];
 
         ///////////////////
         // Alpha
@@ -276,13 +276,13 @@ void cLuxInstanityEvent_Bugs::Update(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Bugs::OnDraw(double adFrameTime)
+void cLuxInsanityEvent_Bugs::OnDraw(double adFrameTime)
 {
     cGuiSet *pSet = gpBase->mpGameHudSet;
 
     for(int i=0; i<mlNumOfBugs; ++i)
     {
-        cLuxInstanityEvent_Bugs_Bug *pBug = &mvBugs[i];
+        cLuxInsanityEvent_Bugs_Bug *pBug = &mvBugs[i];
 
         pSet->DrawGfx(mpBugImage, pBug->mvPos, mpBugImage->GetActiveSize()*pBug->mfSizeMul, cColor(1,pBug->mfAlpha),
                       eGuiMaterial_LastEnum, pBug->mfAngle);
@@ -297,7 +297,7 @@ void cLuxInstanityEvent_Bugs::OnDraw(double adFrameTime)
 
 //-----------------------------------------------------------------------
 
-cLuxInstanityEvent_Particles::cLuxInstanityEvent_Particles()
+cLuxInsanityEvent_Particles::cLuxInsanityEvent_Particles()
 {
     mfTimeCount =0;
     mpSoundEntry = NULL;
@@ -305,14 +305,14 @@ cLuxInstanityEvent_Particles::cLuxInstanityEvent_Particles()
     mpPS = NULL;
 }
 
-cLuxInstanityEvent_Particles::~cLuxInstanityEvent_Particles()
+cLuxInsanityEvent_Particles::~cLuxInsanityEvent_Particles()
 {
 
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Particles::OnLoadData(cXmlElement * apVarElem)
+void cLuxInsanityEvent_Particles::OnLoadData(cXmlElement * apVarElem)
 {
     msSoundFile = apVarElem->GetAttributeString("SoundFile", "");
     mbLoopSound = apVarElem->GetAttributeBool("LoopSound", false);
@@ -327,7 +327,7 @@ void cLuxInstanityEvent_Particles::OnLoadData(cXmlElement * apVarElem)
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Particles::OnStart()
+void cLuxInsanityEvent_Particles::OnStart()
 {
     //////////////////////////////////
     // Create Sound
@@ -364,7 +364,7 @@ void cLuxInstanityEvent_Particles::OnStart()
     mfTimeCount = mfDuration;
 }
 
-void cLuxInstanityEvent_Particles::OnExit()
+void cLuxInsanityEvent_Particles::OnExit()
 {
     /////////////////////////////////
     // Destroy Particles
@@ -398,7 +398,7 @@ void cLuxInstanityEvent_Particles::OnExit()
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Particles::Update(double adFixedDelta)
+void cLuxInsanityEvent_Particles::Update(double adFixedDelta)
 {
     /////////////////////////////////
     // Particles
@@ -417,7 +417,7 @@ void cLuxInstanityEvent_Particles::Update(double adFixedDelta)
     }
 }
 
-void cLuxInstanityEvent_Particles::OnDraw(double adFrameTime)
+void cLuxInsanityEvent_Particles::OnDraw(double adFrameTime)
 {
 
 }
@@ -430,19 +430,19 @@ void cLuxInstanityEvent_Particles::OnDraw(double adFrameTime)
 
 //-----------------------------------------------------------------------
 
-cLuxInstanityEvent_SoundStream::cLuxInstanityEvent_SoundStream() : iLuxInstanityEvent()
+cLuxInsanityEvent_SoundStream::cLuxInsanityEvent_SoundStream() : iLuxInsanityEvent()
 {
     mpWhiteGfx = gpBase->mpEngine->GetGui()->CreateGfxFilledRect(cColor(1), eGuiMaterial_Modulative);
 }
 
-cLuxInstanityEvent_SoundStream::~cLuxInstanityEvent_SoundStream()
+cLuxInsanityEvent_SoundStream::~cLuxInsanityEvent_SoundStream()
 {
 
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_SoundStream::OnLoadData(cXmlElement * apVarElem)
+void cLuxInsanityEvent_SoundStream::OnLoadData(cXmlElement * apVarElem)
 {
     msFile = apVarElem->GetAttributeString("File", "");
     mfVolume = apVarElem->GetAttributeFloat("Volume", 1);
@@ -477,7 +477,7 @@ void cLuxInstanityEvent_SoundStream::OnLoadData(cXmlElement * apVarElem)
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_SoundStream::OnStart()
+void cLuxInsanityEvent_SoundStream::OnStart()
 {
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
 
@@ -502,7 +502,7 @@ void cLuxInstanityEvent_SoundStream::OnStart()
     }
 }
 
-void cLuxInstanityEvent_SoundStream::OnExit()
+void cLuxInsanityEvent_SoundStream::OnExit()
 {
     if(mpFadeImage)
     {
@@ -519,7 +519,7 @@ void cLuxInstanityEvent_SoundStream::OnExit()
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_SoundStream::Update(double adFixedDelta)
+void cLuxInsanityEvent_SoundStream::Update(double adFixedDelta)
 {
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
 
@@ -571,7 +571,7 @@ void cLuxInstanityEvent_SoundStream::Update(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_SoundStream::OnDraw(double adFrameTime)
+void cLuxInsanityEvent_SoundStream::OnDraw(double adFrameTime)
 {
     if(    gpBase->mpMessageHandler->ShowEffectSubtitles() &&
             mvCurrentTextRows.empty()==false &&
@@ -608,18 +608,18 @@ void cLuxInstanityEvent_SoundStream::OnDraw(double adFrameTime)
 
 //-----------------------------------------------------------------------
 
-cLuxInstanityEvent_Steps::cLuxInstanityEvent_Steps() : iLuxInstanityEvent()
+cLuxInsanityEvent_Steps::cLuxInsanityEvent_Steps() : iLuxInsanityEvent()
 {
 }
 
-cLuxInstanityEvent_Steps::~cLuxInstanityEvent_Steps()
+cLuxInsanityEvent_Steps::~cLuxInsanityEvent_Steps()
 {
 
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Steps::OnLoadData(cXmlElement * apVarElem)
+void cLuxInsanityEvent_Steps::OnLoadData(cXmlElement * apVarElem)
 {
     msSound = apVarElem->GetAttributeString("Sound", "");
     mfStepTime = apVarElem->GetAttributeFloat("StepTime", 1);
@@ -632,7 +632,7 @@ void cLuxInstanityEvent_Steps::OnLoadData(cXmlElement * apVarElem)
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Steps::OnStart()
+void cLuxInsanityEvent_Steps::OnStart()
 {
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
 
@@ -643,13 +643,13 @@ void cLuxInstanityEvent_Steps::OnStart()
     mlCount = mlStepNum;
 }
 
-void cLuxInstanityEvent_Steps::OnExit()
+void cLuxInsanityEvent_Steps::OnExit()
 {
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Steps::Update(double adFixedDelta)
+void cLuxInsanityEvent_Steps::Update(double adFixedDelta)
 {
     cWorld *pWorld = gpBase->mpMapHandler->GetCurrentMap()->GetWorld();
 
@@ -681,7 +681,7 @@ void cLuxInstanityEvent_Steps::Update(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-void cLuxInstanityEvent_Steps::OnDraw(double adFrameTime)
+void cLuxInsanityEvent_Steps::OnDraw(double adFrameTime)
 {
 
 }
@@ -817,7 +817,7 @@ void cLuxInsanityHandler::StartEvent()
     int lUnusedEvents =0;            //All events not disabled and unused.
     for(size_t i=0; i<mvEvents.size(); ++i)
     {
-        iLuxInstanityEvent *pEvent = mvEvents[i];
+        iLuxInsanityEvent *pEvent = mvEvents[i];
         bool bUsed = pEvent->IsUsed();
         bool bDisabled = SetIsDisabled(pEvent->GetSet()) || fPlayerSanity>pEvent->GetMaxSanity();
 
@@ -842,7 +842,7 @@ void cLuxInsanityHandler::StartEvent()
     {
         for(size_t i=0; i<mvEvents.size(); ++i)
         {
-            iLuxInstanityEvent *pEvent = mvEvents[i];
+            iLuxInsanityEvent *pEvent = mvEvents[i];
             pEvent->SetUsed(false);
         }
 
@@ -855,7 +855,7 @@ void cLuxInsanityHandler::StartEvent()
     int lCurrentEvent = 0;
     for(size_t i=0; i<mvEvents.size(); ++i)
     {
-        iLuxInstanityEvent *pEvent = mvEvents[i];
+        iLuxInsanityEvent *pEvent = mvEvents[i];
         if(SetIsDisabled(pEvent->GetSet()) || pEvent->IsUsed() || fPlayerSanity>pEvent->GetMaxSanity())
         {
             continue;
@@ -979,25 +979,25 @@ void cLuxInsanityHandler::DisableSet(const tString &asSet)
 
 //-----------------------------------------------------------------------
 
-iLuxInstanityEvent* cLuxInsanityHandler::EventTypeToData(const tString& asType)
+iLuxInsanityEvent* cLuxInsanityHandler::EventTypeToData(const tString& asType)
 {
     tString sLowType = cString::ToLowerCase(asType);
 
     if(sLowType == "soundstream")
     {
-        return hplNew(cLuxInstanityEvent_SoundStream, () );
+        return hplNew(cLuxInsanityEvent_SoundStream, () );
     }
     if(sLowType == "steps")
     {
-        return hplNew(cLuxInstanityEvent_Steps, () );
+        return hplNew(cLuxInsanityEvent_Steps, () );
     }
     if(sLowType == "particles")
     {
-        return hplNew(cLuxInstanityEvent_Particles, () );
+        return hplNew(cLuxInsanityEvent_Particles, () );
     }
     if(sLowType == "bugs")
     {
-        return hplNew(cLuxInstanityEvent_Bugs, () );
+        return hplNew(cLuxInsanityEvent_Bugs, () );
     }
 
     Error("Insanity event type '%s' does not exist!\n", asType.c_str());
@@ -1032,7 +1032,7 @@ void cLuxInsanityHandler::LoadEvents(const tString& asFile)
         cXmlElement *pChildElem = it.Next()->ToElement();
 
         tString sType = pChildElem->GetValue();
-        iLuxInstanityEvent* pEvent = EventTypeToData(sType);
+        iLuxInsanityEvent* pEvent = EventTypeToData(sType);
         if(pEvent)
         {
             pEvent->LoadData(pChildElem);

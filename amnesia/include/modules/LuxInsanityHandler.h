@@ -7,11 +7,11 @@
 
 //----------------------------------------------
 
-class iLuxInstanityEvent
+class iLuxInsanityEvent
 {
 public:
-    iLuxInstanityEvent();
-    virtual ~iLuxInstanityEvent();
+    iLuxInsanityEvent();
+    virtual ~iLuxInsanityEvent();
 
     /////////////////
     // General
@@ -71,7 +71,7 @@ private:
 
 //----------------------------------------------
 
-class cLuxInstanityEvent_Bugs_Bug
+class cLuxInsanityEvent_Bugs_Bug
 {
 public:
     bool mbActive;
@@ -84,11 +84,11 @@ public:
     float mfAlpha;
 };
 
-class cLuxInstanityEvent_Bugs : public iLuxInstanityEvent
+class cLuxInsanityEvent_Bugs : public iLuxInsanityEvent
 {
 public:
-    cLuxInstanityEvent_Bugs();
-    ~cLuxInstanityEvent_Bugs();
+    cLuxInsanityEvent_Bugs();
+    ~cLuxInsanityEvent_Bugs();
 
     void OnLoadData(cXmlElement * apVarElem);
 
@@ -118,7 +118,7 @@ private:
 
     //////////////////
     //Vars
-    std::vector<cLuxInstanityEvent_Bugs_Bug> mvBugs;
+    std::vector<cLuxInsanityEvent_Bugs_Bug> mvBugs;
 
     cSoundEntry *mpSoundEntry;
     int mlSoundEntryID;
@@ -128,11 +128,11 @@ private:
 
 //----------------------------------------------
 
-class cLuxInstanityEvent_Particles : public iLuxInstanityEvent
+class cLuxInsanityEvent_Particles : public iLuxInsanityEvent
 {
 public:
-    cLuxInstanityEvent_Particles();
-    ~cLuxInstanityEvent_Particles();
+    cLuxInsanityEvent_Particles();
+    ~cLuxInsanityEvent_Particles();
 
     void OnLoadData(cXmlElement * apVarElem);
 
@@ -167,11 +167,11 @@ private:
 
 //----------------------------------------------
 
-class cLuxInstanityEvent_SoundStream : public iLuxInstanityEvent
+class cLuxInsanityEvent_SoundStream : public iLuxInsanityEvent
 {
 public:
-    cLuxInstanityEvent_SoundStream();
-    ~cLuxInstanityEvent_SoundStream();
+    cLuxInsanityEvent_SoundStream();
+    ~cLuxInsanityEvent_SoundStream();
 
     void OnLoadData(cXmlElement * apVarElem);
 
@@ -208,11 +208,11 @@ private:
 
 //----------------------------------------------
 
-class cLuxInstanityEvent_Steps : public iLuxInstanityEvent
+class cLuxInsanityEvent_Steps : public iLuxInsanityEvent
 {
 public:
-    cLuxInstanityEvent_Steps();
-    ~cLuxInstanityEvent_Steps();
+    cLuxInsanityEvent_Steps();
+    ~cLuxInsanityEvent_Steps();
 
     void OnLoadData(cXmlElement * apVarElem);
 
@@ -262,7 +262,7 @@ public:
     {
         return (int)mvEvents.size();
     }
-    iLuxInstanityEvent *GetEvent(int alIdx)
+    iLuxInsanityEvent *GetEvent(int alIdx)
     {
         return mvEvents[alIdx];
     };
@@ -286,7 +286,7 @@ public:
 
 
 private:
-    iLuxInstanityEvent* EventTypeToData(const tString& asType);
+    iLuxInsanityEvent* EventTypeToData(const tString& asType);
     void LoadEvents(const tString& asFile);
 
     bool SetIsDisabled(const tString& asSet);
@@ -303,7 +303,7 @@ private:
 
 
 
-    std::vector<iLuxInstanityEvent*> mvEvents;
+    std::vector<iLuxInsanityEvent*> mvEvents;
 
     //////////////////
     // Variables

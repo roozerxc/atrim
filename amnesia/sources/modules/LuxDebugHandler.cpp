@@ -1225,7 +1225,7 @@ void cLuxDebugHandler::CreateGuiWindow()
         mpCBInsanityEvents = mpGuiSet->CreateWidgetComboBox(vGroupPos,vSize,_W(""),pGroup);
         for(int i=0; i<gpBase->mpInsanityHandler->GetEventNum(); ++i)
         {
-            iLuxInstanityEvent *pEvent = gpBase->mpInsanityHandler->GetEvent(i);
+            iLuxInsanityEvent *pEvent = gpBase->mpInsanityHandler->GetEvent(i);
             mpCBInsanityEvents->AddItem(pEvent->GetName());
         }
         if(gpBase->mpInsanityHandler->GetEventNum()>0)
@@ -1878,7 +1878,7 @@ bool cLuxDebugHandler::PressReloadInsanityEffect(iWidget* apWidget,const cGuiMes
 
     for(int i=0; i<gpBase->mpInsanityHandler->GetEventNum(); ++i)
     {
-        iLuxInstanityEvent *pEvent = gpBase->mpInsanityHandler->GetEvent(i);
+        iLuxInsanityEvent *pEvent = gpBase->mpInsanityHandler->GetEvent(i);
         mpCBInsanityEvents->AddItem(pEvent->GetName());
     }
     if(gpBase->mpInsanityHandler->GetEventNum()>0)
