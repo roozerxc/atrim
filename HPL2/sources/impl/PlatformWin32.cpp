@@ -7,6 +7,7 @@
 
 #define UNICODE
 #include <windows.h>
+#include <shlwapi.h>
 #include <shlobj.h>
 
 #include <stdio.h>
@@ -44,7 +45,19 @@ static LARGE_INTEGER lTimerStart;
 
 bool cPlatformWin32::DWMCompositorActive()
 {
-    HMODULE hDwmapi = LoadLibrary(_W("dwmapi.dll"));
+    wchar_t sysDir[MAX_PATH];
+    if(GetSystemDirectoryW(sysDir, MAX_PATH) == 0)
+    {
+        return false;
+    }
+
+    wchar_t dwmPath[MAX_PATH];
+    if(PathCombineW(dwmPath, sysDir, L"dwmapi.dll") == 0)
+    {
+        return false;
+    }
+
+    HMODULE hDwmapi = LoadLibraryW(dwmPath);
     if(!hDwmapi)
     {
         return false;
