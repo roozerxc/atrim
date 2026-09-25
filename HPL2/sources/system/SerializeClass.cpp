@@ -741,12 +741,12 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Vector2l:
     {
         tIntVec vVals;
-        vVals.resize(2, 0);
+        vVals.reserve(2);
         cString::GetIntVec(asVal,vVals,NULL);
 
-        if(vVals.size() < 2)
+        while(vVals.size() < 2)
         {
-            vVals.resize(2, 0);
+            vVals.push_back(0);
         }
 
         PointerValue(pVal,cVector2l).FromVec(&vVals[0]);
@@ -758,12 +758,12 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Vector2f:
     {
         tFloatVec vVals;
-        vVals.resize(2, 0.0f);
+        vVals.reserve(2);
         cString::GetFloatVec(asVal,vVals,NULL);
 
-        if(vVals.size() < 2)
+        while(vVals.size() < 2)
         {
-            vVals.resize(2, 0.0f);
+            vVals.push_back(0.0f);
         }
 
         PointerValue(pVal,cVector2f).FromVec(&vVals[0]);
@@ -775,12 +775,12 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Vector3l:
     {
         tIntVec vVals;
-        vVals.resize(3, 0);
+        vVals.reserve(3);
         cString::GetIntVec(asVal,vVals,NULL);
 
-        if(vVals.size() < 3)
+        while(vVals.size() < 3)
         {
-        	vVals.resize(3, 0);
+        	vVals.push_back(0);
         }
 
         PointerValue(pVal,cVector3l).FromVec(&vVals[0]);
@@ -792,12 +792,12 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Vector3f:
     {
         tFloatVec vVals;
-        vVals.resize(3, 0.0f);
+        vVals.reserve(3);
         cString::GetFloatVec(asVal,vVals,NULL);
 
-        if(vVals.size() < 3)
+        while(vVals.size() < 3)
         {
-        	vVals.resize(3, 0.0f);
+        	vVals.push_back(0.0f);
         }
 
         PointerValue(pVal,cVector3f).FromVec(&vVals[0]);
@@ -809,12 +809,12 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Matrixf:
     {
         tFloatVec vVals;
-        vVals.resize(16, 0.0f);
+        vVals.reserve(16);
         cString::GetFloatVec(asVal,vVals,NULL);
 
-        if(vVals.size() < 16)
+        while(vVals.size() < 16)
         {
-        	vVals.resize(16, 0.0f);
+        	vVals.push_back(0.0f);
         }
 
         PointerValue(pVal,cMatrixf).FromVec(&vVals[0]);
@@ -826,12 +826,12 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Color:
     {
         tFloatVec vVals;
-        vVals.resize(4, 0.0f);
+        vVals.reserve(4);
         cString::GetFloatVec(asVal,vVals,NULL);
 
-        if(vVals.size() < 4)
+        while(vVals.size() < 4)
         {
-        	vVals.resize(4, 0.0f);
+        	vVals.push_back(0.0f);
         }
 
         PointerValue(pVal,cColor).FromVec(&vVals[0]);
@@ -843,12 +843,12 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Rect2l:
     {
         tIntVec vVals;
-        vVals.resize(4, 0);
+        vVals.reserve(4);
         cString::GetIntVec(asVal,vVals,NULL);
 
-        if(vVals.size() < 4)
+        while(vVals.size() < 4)
         {
-        	vVals.resize(4, 0);
+        	vVals.push_back(0);
         }
 
         PointerValue(pVal,cRect2l).FromVec(&vVals[0]);
@@ -860,12 +860,12 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Rect2f:
     {
         tFloatVec vVals;
-        vVals.resize(4, 0.0f);
+        vVals.reserve(4);
         cString::GetFloatVec(asVal,vVals,NULL);
 
-        if(vVals.size() < 4)
+        while(vVals.size() < 4)
         {
-        	vVals.resize(4, 0.0f);
+        	vVals.push_back(0.0f);
         }
 
         PointerValue(pVal,cRect2f).FromVec(&vVals[0]);
@@ -877,12 +877,12 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     case eSerializeType_Planef:
     {
         tFloatVec vVals;
-        vVals.resize(4, 0.0f);
+        vVals.reserve(4);
         cString::GetFloatVec(asVal,vVals,NULL);
 
-        if(vVals.size() < 4)
+        while(vVals.size() < 4)
         {
-        	vVals.resize(4, 0.0f);
+        	vVals.push_back(0.0f);
         }
 
         PointerValue(pVal,cPlanef).FromVec(&vVals[0]);
@@ -1256,8 +1256,11 @@ void cSerializeClass::LoadClassPointer(TiXmlElement *apElement, iSerializable* a
 
     iSerializable **pClassDataPtr = (iSerializable**)ValuePointer(apData,pField->mlOffset);
 
-    if(gbLog) Log("%s Loading classpointer name: '%s' type: '%s' null: %d\n",GetTabs(),sName.c_str(),
+    if(gbLog)
+    {
+        Log("%s Loading classpointer name: '%s' type: '%s' null: %d\n",GetTabs(),sName.c_str(),
                       sType.c_str(),bNull?1:0);
+    }
 
     //TODO: Question is here if previous data should be deleted.
     if(bNull)
