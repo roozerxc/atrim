@@ -265,7 +265,7 @@ bool cPlatform::RemoveFolder(const tWString& asPath, bool abDeleteAllFiles, bool
 
             DWORD dwAttrs = GetFileAttributesW(sFolderPath.c_str());
             if (dwAttrs != INVALID_FILE_ATTRIBUTES &&
-                (dwAttrs & FILE_ATTRIBUTE_REPARSE_POINT))
+                    (dwAttrs & FILE_ATTRIBUTE_REPARSE_POINT))
             {
                 if(dwAttrs & FILE_ATTRIBUTE_READONLY)
                 {

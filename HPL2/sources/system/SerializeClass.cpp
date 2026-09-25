@@ -631,13 +631,13 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     {
         cMatrixf &Mtx = PointerValue(pVal,cMatrixf);
         snprintf(msTempCharArray, sizeof(msTempCharArray), "%f %f %f %f "
-                                 "%f %f %f %f "
-                                 "%f %f %f %f "
-                                 "%f %f %f %f",
-                Mtx.m[0][0],Mtx.m[0][1],Mtx.m[0][2],Mtx.m[0][3],
-                Mtx.m[1][0],Mtx.m[1][1],Mtx.m[1][2],Mtx.m[1][3],
-                Mtx.m[2][0],Mtx.m[2][1],Mtx.m[2][2],Mtx.m[2][3],
-                Mtx.m[3][0],Mtx.m[3][1],Mtx.m[3][2],Mtx.m[3][3]);
+                                                           "%f %f %f %f "
+                                                           "%f %f %f %f "
+                                                           "%f %f %f %f",
+                 Mtx.m[0][0],Mtx.m[0][1],Mtx.m[0][2],Mtx.m[0][3],
+                 Mtx.m[1][0],Mtx.m[1][1],Mtx.m[1][2],Mtx.m[1][3],
+                 Mtx.m[2][0],Mtx.m[2][1],Mtx.m[2][2],Mtx.m[2][3],
+                 Mtx.m[3][0],Mtx.m[3][1],Mtx.m[3][2],Mtx.m[3][3]);
         return msTempCharArray;
         break;
     }
@@ -780,7 +780,7 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
 
         while(vVals.size() < 3)
         {
-        	vVals.push_back(0);
+            vVals.push_back(0);
         }
 
         PointerValue(pVal,cVector3l).FromVec(&vVals[0]);
@@ -797,7 +797,7 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
 
         while(vVals.size() < 3)
         {
-        	vVals.push_back(0.0f);
+            vVals.push_back(0.0f);
         }
 
         PointerValue(pVal,cVector3f).FromVec(&vVals[0]);
@@ -814,7 +814,7 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
 
         while(vVals.size() < 16)
         {
-        	vVals.push_back(0.0f);
+            vVals.push_back(0.0f);
         }
 
         PointerValue(pVal,cMatrixf).FromVec(&vVals[0]);
@@ -831,7 +831,7 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
 
         while(vVals.size() < 4)
         {
-        	vVals.push_back(0.0f);
+            vVals.push_back(0.0f);
         }
 
         PointerValue(pVal,cColor).FromVec(&vVals[0]);
@@ -848,7 +848,7 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
 
         while(vVals.size() < 4)
         {
-        	vVals.push_back(0);
+            vVals.push_back(0);
         }
 
         PointerValue(pVal,cRect2l).FromVec(&vVals[0]);
@@ -865,7 +865,7 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
 
         while(vVals.size() < 4)
         {
-        	vVals.push_back(0.0f);
+            vVals.push_back(0.0f);
         }
 
         PointerValue(pVal,cRect2f).FromVec(&vVals[0]);
@@ -882,7 +882,7 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
 
         while(vVals.size() < 4)
         {
-        	vVals.push_back(0.0f);
+            vVals.push_back(0.0f);
         }
 
         PointerValue(pVal,cPlanef).FromVec(&vVals[0]);
@@ -1259,16 +1259,16 @@ void cSerializeClass::LoadClassPointer(TiXmlElement *apElement, iSerializable* a
     if(gbLog)
     {
         Log("%s Loading classpointer name: '%s' type: '%s' null: %d\n",GetTabs(),sName.c_str(),
-                      sType.c_str(),bNull?1:0);
+            sType.c_str(),bNull?1:0);
     }
 
     //TODO: Question is here if previous data should be deleted.
     if(bNull)
     {
-    	if(*pClassDataPtr)
-    	{
-    		hplDelete(*pClassDataPtr);
-    	}
+        if(*pClassDataPtr)
+        {
+            hplDelete(*pClassDataPtr);
+        }
 
         *pClassDataPtr = NULL;
         return;
