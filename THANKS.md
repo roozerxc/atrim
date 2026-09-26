@@ -2,7 +2,6 @@
 
 #### v1.4.6-beta
 - **Ajdino** - Testing
-- **ANDREWJOHN5** - German/Deutsch localization and testing
 - **auxxci** - Testing
 - **Douglas** - Testing
 - **georgeempy** - Testing
