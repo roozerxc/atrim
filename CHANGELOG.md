@@ -1,104 +1,104 @@
 # Changelog
 ### v1.4.6-beta
-- [`af4efe8`](https://github.com/roozerxc/atrim/commit/af4efe832886a8c0b429df25e8a459bc1baeb7f3) Added 64-bit support
-- [`72518d7`](https://github.com/roozerxc/atrim/commit/72518d7c986a9b08b2a86abe0a78e093affd0fb4) Added an extra check to ensure the parallax quality setting is applied correctly
-- [`df32fc8`](https://github.com/roozerxc/atrim/commit/df32fc843361a647159ce28537ab91664e681e02) Added borderless window functionality on Windows Vista and 7+
-- [`067186b`](https://github.com/roozerxc/atrim/commit/067186ba7c6c50bfe807f7d07bd356d904b3ccca) Added customizable top menu font color settings from version 1.5
-- [`569e4f1`](https://github.com/roozerxc/atrim/commit/569e4f177a31747624f279c6dd8b1c4752f56db4) Added new color-shifting effect on GUI button focus
-- [`13114cf`](https://github.com/roozerxc/atrim/commit/13114cfdc289aa7104e92d05c5dba39c3bffaf96) Added new drop-down menu for selecting the type of parallax rendering effect
-- [`9f736da`](https://github.com/roozerxc/atrim/commit/9f736da666e6d02a85ed3fc01cf2597314b2daa2) Added new engine build ID (`YYYYMMDDhhmmss`)
-- [`565e1ba`](https://github.com/roozerxc/atrim/commit/565e1ba9e91d95121da4abac60e5be052b48ef04) Added new engine declarations from Amnesia: A Machine for Pigs
-- [`b752c20`](https://github.com/roozerxc/atrim/commit/b752c2004cf94ff32d84f12f65e959a2de528bad) Added new engine performance metrics (saved to `hpl.log`)
-- [`f8d6961`](https://github.com/roozerxc/atrim/commit/f8d6961acad7e93f439145d5568290faa02fa3a2) Added new GUI render function to flip a UV's X axis
-- [`e3e728a`](https://github.com/roozerxc/atrim/commit/e3e728a932fb603b06b3e9175d541dac10d0ebe4) Added new flashback intensity slider
-- [`2f804dc`](https://github.com/roozerxc/atrim/commit/2f804dc72152eb64fed43128085965be669ea4de) Added new "Flattened 3D" texture type
-- [`38f0af7`](https://github.com/roozerxc/atrim/commit/38f0af7bd859ad93c9acb5d88524f3806d73e82a) Added new "lite" version of the deferred light shader for ATi Radeon 9xxx video cards
-- [`344ad77`](https://github.com/roozerxc/atrim/commit/344ad77ad59113f53ffb191a4b612e6e8e2d9519) Added new modulated illumination rendering type for surface materials
-- [`a8e93d9`](https://github.com/roozerxc/atrim/commit/a8e93d9879768efb1f71bf6612f1180026aee28b) Added new patch content for version 1.4.6
-- [`b8dcb44`](https://github.com/roozerxc/atrim/commit/b8dcb44e25e215349a7bd6946466e86115abf4db) Added new player body and camera script funcs
-- [`9a19316`](https://github.com/roozerxc/atrim/commit/9a1931670a5cdbb0ed36f55cf15ea817633ab759) Added new pre-post effect screen render method
-- [`576eaaa`](https://github.com/roozerxc/atrim/commit/576eaaabf675f2520d36f42eed56dc722da9e9a8) Added new properties for lights and particles
-- [`383eae1`](https://github.com/roozerxc/atrim/commit/383eae15994837f8440b1bab2c6d3e881096c75f) Added new setting for changing the player's hand orientation
-- [`b1de39b`](https://github.com/roozerxc/atrim/commit/b1de39b0c8dda4a1e647669a0ebf09af09e26d1e) Added new string localization for hardcoded texts (Finnish and German translations by [@phnxs](https://github.com/phnxs) and Arkhany)
-- [`d2bfe2a`](https://github.com/roozerxc/atrim/commit/d2bfe2ab1abe34ff87fe9b89fb7f1f83131ad352) Added new "Ultra" setting for shadow quality and resolution
-- [`93b364c`](https://github.com/roozerxc/atrim/commit/93b364ccdad59db496a42a26e962ab8d78ba2fb0) Added new "Ultra Low" texture setting for significantly weaker hardware
-- [`c0befb0`](https://github.com/roozerxc/atrim/commit/c0befb030f3705d59b0da573ab044b0282264981) Added new warning on every bootup advising the player to get their money back if they purchased the client.
-- [`f92c047`](https://github.com/roozerxc/atrim/commit/f92c047ce2bf57988a3e10bee4f627a5a7da8651) Added new "Z Dissolve" rendering list type
-- [`d595f7c`](https://github.com/roozerxc/atrim/commit/d595f7c0fb0f4af6a44227c0ca5923356ef8c0a0) Added post-version 1.3 strings for playing the client with older game versions
-- [`bc98941`](https://github.com/roozerxc/atrim/commit/bc989418e2455b48983440c0dfd17386dbfc6794) Added proper map cache version number detection
-- [`2bda3d0`](https://github.com/roozerxc/atrim/commit/2bda3d06df6338145f749e88eba8180d4996c815) Added SDL 1.2.15 as a static library in the executable
-- [`0a80de3`](https://github.com/roozerxc/atrim/commit/0a80de396d33a6ada455d1c888e407ca7d113f62) Conditional if statements now have braces, avoiding the risk of subtle bugs
-- [`787fa1c`](https://github.com/roozerxc/atrim/commit/787fa1c602d77a3c7a303116204be509e309fdad) Custom Stories can now be loaded from floppy disk
-- [`8e3b184`](https://github.com/roozerxc/atrim/commit/8e3b18422a567ee4ba21babfa65a630fcd06583e) Decoupled engine renderer and game logic from each other, allowing for truly uncapped framerates
-- [`ef6c70e`](https://github.com/roozerxc/atrim/commit/ef6c70e534c2eb12e7cc8371bae3f74a15590c2d) Decoupled timers and scripts to use their own functions instead of using the same "Run" function
-- [`e0bc279`](https://github.com/roozerxc/atrim/commit/e0bc279de985339ae95d69d1cd20df220be5ce5b) Fixed Alt+Tab behavior on Borderless Fullscreen mode
-- [`4cade5e`](https://github.com/roozerxc/atrim/commit/4cade5ed993d7d1585f50f3e4eddae2879e614b4) Fixed application timer to use platform high-resolution timer instead of `SDL_GetTicks`
-- [`9361918`](https://github.com/roozerxc/atrim/commit/93619186345b1e9eaa65a7d70a13d1f585dd9331) Fixed aspect ratio calculation for custom `menu_loading_screen.jpg` images
-- [`c2d7155`](https://github.com/roozerxc/atrim/commit/c2d7155de5f6522622a7174a201c45a221433d45) Fixed buggy enemy collision behavior
-- [`d8e586b`](https://github.com/roozerxc/atrim/commit/d8e586b46bc6af07e28130d62ea0b93bf62048a9) Fixed character body simulation errors (Can be switched back using `HPL_CHARACTERBODY_BROKEN`)
-- [`a044bf4`](https://github.com/roozerxc/atrim/commit/a044bf4713b442cabf56ebc7b22972f951e4ed6c) Fixed crosshair focus for static, non-interactable entities and objects
-- [`b496952`](https://github.com/roozerxc/atrim/commit/b496952608936ed83cde7a959521c7ec5c01ffff) Fixed Custom Story images not being cleared out when another Custom Story was selected
-- [`13b3b04`](https://github.com/roozerxc/atrim/commit/13b3b04812bbd601fd166625ee7980e04adc11b7) Fixed enemies getting stuck in an infinite loop after breaking swing doors
-- [`0111b66`](https://github.com/roozerxc/atrim/commit/0111b66da96c69603a7fd0095302208ab596909d) Fixed engine crash from addressing 32-bit memory more than 2 GB
-- [`f63ac28`](https://github.com/roozerxc/atrim/commit/f63ac285b013beb7c8dd2af4164a89a048aeae81) Fixed excess screen aspect ratio calculation
-- [`0eebefb`](https://github.com/roozerxc/atrim/commit/0eebefbc2335075aaa692bbe4c1bb1d910c495f4) Fixed game crash when pressing Esc quickly to skip through bootup logos
-- [`73424fd`](https://github.com/roozerxc/atrim/commit/73424fd9c3410726fa91b79d674709298a9383ff) Fixed invalid serialization of coins needed to unlock chests
-- [`4279f12`](https://github.com/roozerxc/atrim/commit/4279f1294c0d73037b29d7f580643e77a5a29811) Fixed light types only getting diffuse color information
-- [`583fd22`](https://github.com/roozerxc/atrim/commit/583fd2230909a246386a86765afa3f1cb038306e) Fixed limit for Tinderboxes not being properly enforced
-- [`73e1a5d`](https://github.com/roozerxc/atrim/commit/73e1a5dc94e33386a92b362451e9610e9604666f) Fixed loading patch strings so that they take precedence over all strings in the game
-- [`9a66b63`](https://github.com/roozerxc/atrim/commit/9a66b63dc1b304996d4d3cd5e9d21b0136241dcd) Fixed low-level OpenGL graphics setup to only call the depth test once
-- [`72dd39f`](https://github.com/roozerxc/atrim/commit/72dd39f8d1e0d25f38d85c86bbec48111f56c692) Fixed matrix caching bug when UV Y axis was flipped
-- [`5d68aef`](https://github.com/roozerxc/atrim/commit/5d68aef3e2c8025a91da89c49701d7e1f447c0d0) Fixed memory manager causing debug builds to fail during compilation
-- [`527c6a5`](https://github.com/roozerxc/atrim/commit/527c6a59ba4695534d461ee0f86f20b7c92b86f3) Fixed post effects breaking at >60 FPS
-- [`5c29b95`](https://github.com/roozerxc/atrim/commit/5c29b958d314dd2ba9d2cb44e5e7b86c25e22ea4) Fixed SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
-- [`da80ae9`](https://github.com/roozerxc/atrim/commit/da80ae9e4b3f8242b8fd2ce72c9710fb6ec42bbc) Fixed `SetSanityDrainDisabled` not working on enemies
-- [`daa0e1b`](https://github.com/roozerxc/atrim/commit/daa0e1bf5f5e241a986d000e56f1b6db69845d80) Fixed Shader Model 3 parallax mapping fallback
-- [`2808692`](https://github.com/roozerxc/atrim/commit/28086922a6e43d43e8e256fe7d1de81ab789243a) Fixed spiral of death and freezes with certain game logic updates
-- [`b0ac5f7`](https://github.com/roozerxc/atrim/commit/b0ac5f74da32e29c15905ab75acec83775302bac) Fixed visual bug with ropes disappearing when they were stretched to a significant degree
-- [`5e8e5da`](https://github.com/roozerxc/atrim/commit/5e8e5daa9c5cd75699bd5fc11412696fe080b015) Fixed weird behavior in Custom Story menu
-- [`155d025`](https://github.com/roozerxc/atrim/commit/155d025ad20c52e4a5d6772e6fbe5dda221e0215) Improved AI node iterator with changes from Amnesia: A Machine for Pigs
-- [`1708295`](https://github.com/roozerxc/atrim/commit/1708295270702a3fc1e646d973b7623e529a9edf) Improved text quality for notes, diaries and mementos in the Journal
-- [`5bf2809`](https://github.com/roozerxc/atrim/commit/5bf2809d0f2b22813fdf23ca1dbe021159bc576f) Improved text quality for on-screen debug overlay and game subtitles
-- [`683b99a`](https://github.com/roozerxc/atrim/commit/683b99a87cc96bc11d28a4d297411acd9399103d) Improved volume slider in the main menu for more precise control
-- [`94e18ca`](https://github.com/roozerxc/atrim/commit/94e18cad9d481f41327a0ab4f60a428788a5754c) Moved enemy radial blur fade out to a proper effect updater instead of the "enemy seen" check
-- [`a8470f7`](https://github.com/roozerxc/atrim/commit/a8470f75ed6e38666d9ded91bc0945f3f0077d16) Prevent game crash by kicking the player back into main menu if a save file was missing or corrupt
-- [`7cc5f9d`](https://github.com/roozerxc/atrim/commit/7cc5f9d7782289e24818175897812322f8d798c9) Removed achievement code from the Steam and console versions of Amnesia: The Dark Descent
-- [`8bbad77`](https://github.com/roozerxc/atrim/commit/8bbad775d36a74f18ef7280f770010271c027ba0) Removed code and references to the demo version of Amnesia: The Dark Descent
-- [`3bb5227`](https://github.com/roozerxc/atrim/commit/3bb522767b84cccd57a12632e28b0a0d5dc8ad62) Removed dangerous system command functions
-- [`45bda0f`](https://github.com/roozerxc/atrim/commit/45bda0fb26a98d19165b91bbd6aa79f5ad7bc2e6) Removed fake anti-aliasing shader (Edge Smoothing)
-- [`a2a611c`](https://github.com/roozerxc/atrim/commit/a2a611c0ecb42805dd35ecd524c33d8eda1337ba) Removed "Lean" (`Alt`) key
-- [`86f57b2`](https://github.com/roozerxc/atrim/commit/86f57b241aa1ca59e2ca3311f21acbf14f2ce2d7) Removed logic timer in place of the new fixed delta (`1 % 60 = 16.67ms`)
-- [`67048bb`](https://github.com/roozerxc/atrim/commit/67048bb0034d1c3d7c4179707803e64a5f94516e) Removed performance bottleneck caused by locking and unlocking mutexes
-- [`0e0cbd2`](https://github.com/roozerxc/atrim/commit/0e0cbd2fd4784292347e192307fece8ff089a41d) Removed proprietary Kaydara FBX loader
-- [`11e2304`](https://github.com/roozerxc/atrim/commit/11e2304115b44771811d71ae21e570ab632946b0) Removed unused "Adaptive VSync" feature left over from Amnesia: A Machine for Pigs
-- [`9645c94`](https://github.com/roozerxc/atrim/commit/9645c9487b5b90ae11e5e19738ac4f00eba87039) Removed unused animation smoothing implementation
-- [`f21dab6`](https://github.com/roozerxc/atrim/commit/f21dab6eb2d7242951a657f98b614c0fd6ad9319) Removed unused Generate from the engine creation process (plus unused VoxelMap code)
-- [`abe33ed`](https://github.com/roozerxc/atrim/commit/abe33eda0f6e5edfbc741cac225ed8a36ee24953) Removed unused Ogg/Theora video loader
-- [`7491cc4`](https://github.com/roozerxc/atrim/commit/7491cc43e3e7b712c8723bfb12038d2146264d2c) Replaced loading icons from loose bitmaps with header-based RWops in the executable
-- [`0a3de4d`](https://github.com/roozerxc/atrim/commit/0a3de4d6e60806f30c31cb48281bd80c29efd79a) Replaced OpenAL with OpenAL-Soft
-- [`5017fb0`](https://github.com/roozerxc/atrim/commit/5017fb0157571124191c1930f29673ad32fc6380) Replaced `SDL_SetGamma` with a dedicated GLSL shader that controls the in-game gamma
-- [`8c69a51`](https://github.com/roozerxc/atrim/commit/8c69a51f493d6d95d1f52a8934e5d95ca84d1f83) Restored unused Brute enemy enabled sound
-- [`1731b30`](https://github.com/roozerxc/atrim/commit/1731b3071cefc3034e3a2fd3c152bd7998d68d3e) Restored unused Penumbra-style head leaning behavior
-- [`9c24285`](https://github.com/roozerxc/atrim/commit/9c2428550d161e27aeb78e57bec20e404d167817) Updated game physics to use double precision
-- [`5244a2f`](https://github.com/roozerxc/atrim/commit/5244a2f5d8a426c4e59caba5ad5f0e464cc92e40) Upgraded low-level system timers to use platform high-resolution timer
+- Added 64-bit support
+- Added an extra check to ensure the parallax quality setting is applied correctly
+- Added borderless window functionality on Windows Vista and 7+
+- Added customizable top menu font color settings from version 1.5
+- Added new color-shifting effect on GUI button focus
+- Added new drop-down menu for selecting the type of parallax rendering effect
+- Added new engine build ID (`YYYYMMDDhhmmss`)
+- Added new engine declarations from Amnesia: A Machine for Pigs
+- Added new engine performance metrics (saved to `hpl.log`)
+- Added new GUI render function to flip a UV's X axis
+- Added new flashback intensity slider
+- Added new "Flattened 3D" texture type
+- Added new "lite" version of the deferred light shader for ATi Radeon 9xxx video cards
+- Added new modulated illumination rendering type for surface materials
+- Added new patch content for version 1.4.6
+- Added new player body and camera script funcs
+- Added new pre-post effect screen render method
+- Added new properties for lights and particles
+- Added new setting for changing the player's hand orientation
+- Added new string localization for hardcoded texts (Finnish and German translations by [@phnxs](https://github.com/phnxs) and Arkhany)
+- Added new "Ultra" setting for shadow quality and resolution
+- Added new "Ultra Low" texture setting for significantly weaker hardware
+- Added new warning on every bootup advising the player to get their money back if they purchased the client.
+- Added new "Z Dissolve" rendering list type
+- Added post-version 1.3 strings for playing the client with older game versions
+- Added proper map cache version number detection
+- Added SDL 1.2.15 as a static library in the executable
+- Conditional if statements now have braces, avoiding the risk of subtle bugs
+- Custom Stories can now be loaded from floppy disk
+- Decoupled engine renderer and game logic from each other, allowing for truly uncapped framerates
+- Decoupled timers and scripts to use their own functions instead of using the same "Run" function
+- Fixed Alt+Tab behavior on Borderless Fullscreen mode
+- Fixed application timer to use platform high-resolution timer instead of `SDL_GetTicks`
+- Fixed aspect ratio calculation for custom `menu_loading_screen.jpg` images
+- Fixed buggy enemy collision behavior
+- Fixed character body simulation errors (Can be switched back using `HPL_CHARACTERBODY_BROKEN`)
+- Fixed crosshair focus for static, non-interactable entities and objects
+- Fixed Custom Story images not being cleared out when another Custom Story was selected
+- Fixed enemies getting stuck in an infinite loop after breaking swing doors
+- Fixed engine crash from addressing 32-bit memory more than 2 GB
+- Fixed excess screen aspect ratio calculation
+- Fixed game crash when pressing Esc quickly to skip through bootup logos
+- Fixed invalid serialization of coins needed to unlock chests
+- Fixed light types only getting diffuse color information
+- Fixed limit for Tinderboxes not being properly enforced
+- Fixed loading patch strings so that they take precedence over all strings in the game
+- Fixed low-level OpenGL graphics setup to only call the depth test once
+- Fixed matrix caching bug when UV Y axis was flipped
+- Fixed memory manager causing debug builds to fail during compilation
+- Fixed post effects breaking at >60 FPS
+- Fixed SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
+- Fixed `SetSanityDrainDisabled` not working on enemies
+- Fixed Shader Model 3 parallax mapping fallback
+- Fixed spiral of death and freezes with certain game logic updates
+- Fixed visual bug with ropes disappearing when they were stretched to a significant degree
+- Fixed weird behavior in Custom Story menu
+- Improved AI node iterator with changes from Amnesia: A Machine for Pigs
+- Improved text quality for notes, diaries and mementos in the Journal
+- Improved text quality for on-screen debug overlay and game subtitles
+- Improved volume slider in the main menu for more precise control
+- Moved enemy radial blur fade out to a proper effect updater instead of the "enemy seen" check
+- Prevent game crash by kicking the player back into main menu if a save file was missing or corrupt
+- Removed achievement code from the Steam and console versions of Amnesia: The Dark Descent
+- Removed code and references to the demo version of Amnesia: The Dark Descent
+- Removed dangerous system command functions
+- Removed fake anti-aliasing shader (Edge Smoothing)
+- Removed "Lean" (`Alt`) key
+- Removed logic timer in place of the new fixed delta (`1 % 60 = 16.67ms`)
+- Removed performance bottleneck caused by locking and unlocking mutexes
+- Removed proprietary Kaydara FBX loader
+- Removed unused "Adaptive VSync" feature left over from Amnesia: A Machine for Pigs
+- Removed unused animation smoothing implementation
+- Removed unused Generate from the engine creation process (plus unused VoxelMap code)
+- Removed unused Ogg/Theora video loader
+- Replaced loading icons from loose bitmaps with header-based RWops in the executable
+- Replaced OpenAL with OpenAL-Soft
+- Replaced `SDL_SetGamma` with a dedicated GLSL shader that controls the in-game gamma
+- Restored unused Brute enemy enabled sound
+- Restored unused Penumbra-style head leaning behavior
+- Updated game physics to use double precision
+- Upgraded low-level system timers to use platform high-resolution timer
 ------------
 ### v1.4.5-win32-release
-- [`19dc606`](https://github.com/roozerxc/atrim/commit/19dc606e47500a52f9ab685abe2531cf2b0d1c41) Added `LUXPROP_OBJECT_BREAKABLE_WORKAROUND` preprocessor definition for breakable objects
-- [`0080872`](https://github.com/roozerxc/atrim/commit/00808725cbe4de2cbc021c8656dc0d682c90e9a2) Disabled `UpdateLogActive` by default to fix severe performance degradation on first launch
-- [`2d5dd97`](https://github.com/roozerxc/atrim/commit/2d5dd97f921ac12ea7ae74a5a78d71c6b8d5d66a) Fixed Aspect, FOV, Lean, and Roll goals
-- [`759d6ad`](https://github.com/roozerxc/atrim/commit/759d6adc4ca1ce59afaab8247e5a99b061103769) Fixed a failure to copy darkness sanity drain variable
-- [`b821937`](https://github.com/roozerxc/atrim/commit/b82193765c91a69f031044966257ece1447b2c1d) Fixed a persistent sanity flash when opening Inventory or Journal
-- [`5573ad5`](https://github.com/roozerxc/atrim/commit/5573ad53c1843b0a1bf48483217288c57f52d683) Fixed enemy sight range multiplication after the player drew their lantern
-- [`64eef0a`](https://github.com/roozerxc/atrim/commit/64eef0a5f5dbb61261f45e4ec8cfad04d4bd9899) Fixed examine area insane messages not appearing
-- [`a78779f`](https://github.com/roozerxc/atrim/commit/a78779f31c37468d731ee5cb968871ef45ff9c7f) Fixed fly camera typo when the player's sanity was too low
-- [`45b4bcb`](https://github.com/roozerxc/atrim/commit/45b4bcba472eb64aa58ab2256db24bb9dc3778d7) Fixed fullscreen boolean that used to return as an integer value
-- [`5d97e08`](https://github.com/roozerxc/atrim/commit/5d97e08ebd80958677958062da31bce6d11192dc) Fixed insanity event boolean that returned as nothing
-- [`5146d49`](https://github.com/roozerxc/atrim/commit/5146d4994de95c16c075b213c19ac645528847d4) Fixed mipmap generation to use `GL_SGIS_generate_mipmap` instead of the framebuffer object
-- [`3bcb545`](https://github.com/roozerxc/atrim/commit/3bcb5453dee5e4d02a256602515fa36b350cd07a) Fixed non-working player particle system destructor
-- [`3c6ec17`](https://github.com/roozerxc/atrim/commit/3c6ec17627b23ec1d594e2ffdee65adfd7824c48) Player can now look straight up and down in a 90-degree angle
-- [`4f98490`](https://github.com/roozerxc/atrim/commit/4f98490efb4e29cfb76680b05df0f750fe7d2156) Removed dangerous "suicide" (`H`) key (`eLuxAction_Holster`)
-- [`ffad602`](https://github.com/roozerxc/atrim/commit/ffad602b3933baaeb5d7d7a05d860c5da90a4e66) Removed `eLuxAction_Holster` entry from `LuxInputHandler`
-- [`9c1bbc9`](https://github.com/roozerxc/atrim/commit/9c1bbc96922c7bfca71db83076f0227b0735cadb) Upgraded OpenGL cube map constants to not use `ARB` extension
+- Added `LUXPROP_OBJECT_BREAKABLE_WORKAROUND` preprocessor definition for breakable objects
+- Disabled `UpdateLogActive` by default to fix severe performance degradation on first launch
+- Fixed Aspect, FOV, Lean, and Roll goals
+- Fixed a failure to copy darkness sanity drain variable
+- Fixed a persistent sanity flash when opening Inventory or Journal
+- Fixed enemy sight range multiplication after the player drew their lantern
+- Fixed examine area insane messages not appearing
+- Fixed fly camera typo when the player's sanity was too low
+- Fixed fullscreen boolean that used to return as an integer value
+- Fixed insanity event boolean that returned as nothing
+- Fixed mipmap generation to use `GL_SGIS_generate_mipmap` instead of the framebuffer object
+- Fixed non-working player particle system destructor
+- Player can now look straight up and down in a 90-degree angle
+- Removed dangerous "suicide" (`H`) key (`eLuxAction_Holster`)
+- Removed `eLuxAction_Holster` entry from `LuxInputHandler`
+- Upgraded OpenGL cube map constants to not use `ARB` extension
 ------------
 ### v1.4.4-win32-release
 - Account for portable backport effort by creating `settings` and `screenshot` folders in Amnesia game directory
