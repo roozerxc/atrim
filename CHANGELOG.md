@@ -2,42 +2,60 @@
 ### v1.4.6-beta
 - Added 64-bit support
 - Added an extra check to ensure the parallax quality setting is applied correctly
+- Added application thread locking for multi-processor systems
 - Added borderless window functionality on Windows Vista and 7+
+- Added customizable loading text colors
 - Added customizable top menu font color settings from version 1.5
+- Added `#include` directive for Version 1.5 mod support
+- Added left- and right-handedness options
 - Added new color-shifting effect on GUI button focus
 - Added new drop-down menu for selecting the type of parallax rendering effect
 - Added new engine build ID (`YYYYMMDDhhmmss`)
-- Added new engine declarations from Amnesia: A Machine for Pigs
 - Added new engine performance metrics (saved to `hpl.log`)
-- Added new GUI render function to flip a UV's X axis
 - Added new flashback intensity slider
 - Added new "Flattened 3D" texture type
+- Added new GUI render function to flip a UV's X axis
 - Added new "lite" version of the deferred light shader for ATi Radeon 9xxx video cards
 - Added new modulated illumination rendering type for surface materials
 - Added new patch content for version 1.4.6
 - Added new player body and camera script funcs
 - Added new pre-post effect screen render method
 - Added new properties for lights and particles
+- Added new sanity drain control script functions
 - Added new setting for changing the player's hand orientation
 - Added new string localization for hardcoded texts (Finnish and German translations by [@phnxs](https://github.com/phnxs) and Arkhany)
-- Added new "Ultra" setting for shadow quality and resolution
 - Added new "Ultra Low" texture setting for significantly weaker hardware
+- Added new "Ultra" setting for shadow quality and resolution
 - Added new warning on every bootup advising the player to get their money back if they purchased the client.
 - Added new "Z Dissolve" rendering list type
+- Added occluder and pathfinding block checks
+- Added `OnUpdate(float afStep)` for Version 1.5 mod support
 - Added post-version 1.3 strings for playing the client with older game versions
 - Added proper map cache version number detection
+- Added ScreenImage effect and script functions from A Machine For Pigs
 - Added SDL 1.2.15 as a static library in the executable
-- Conditional if statements now have braces, avoiding the risk of subtle bugs
+- Added texture state and handle caching
+- Added two-sided stencil safety check for nVidia + ATi
+- Added unused Servant Brute enabled sound
+- Added vertex batch overflow protection
+- Allowed debug menu to be used and individual maps loaded in Justine (ptest)
+- Allowed loading of outlines for bitmap fonts
+- Changed `F8` screenshot key to `F12`, so screenshots can be taken normally
+- Converted immediate OpenGL draw calls to batched versions
 - Custom Stories can now be loaded from floppy disk
 - Decoupled engine renderer and game logic from each other, allowing for truly uncapped framerates
 - Decoupled timers and scripts to use their own functions instead of using the same "Run" function
 - Fixed Alt+Tab behavior on Borderless Fullscreen mode
 - Fixed application timer to use platform high-resolution timer instead of `SDL_GetTicks`
 - Fixed aspect ratio calculation for custom `menu_loading_screen.jpg` images
+- Fixed billboard alphas dividing by zero
+- Fixed broken byte order/endianness check so fast little-endian paths are now used
+- Fixed broken node and bone index resolve for mesh entities
 - Fixed buggy enemy collision behavior
 - Fixed character body simulation errors (Can be switched back using `HPL_CHARACTERBODY_BROKEN`)
 - Fixed crosshair focus for static, non-interactable entities and objects
 - Fixed Custom Story images not being cleared out when another Custom Story was selected
+- Fixed destructive recursive reparse point deletion when a profile is deleted
 - Fixed enemies getting stuck in an infinite loop after breaking swing doors
 - Fixed engine crash from addressing 32-bit memory more than 2 GB
 - Fixed excess screen aspect ratio calculation
@@ -48,39 +66,56 @@
 - Fixed loading patch strings so that they take precedence over all strings in the game
 - Fixed low-level OpenGL graphics setup to only call the depth test once
 - Fixed matrix caching bug when UV Y axis was flipped
+- Fixed max amount of updates not scaling properly with Fast Forward (F3)
 - Fixed memory manager causing debug builds to fail during compilation
+- Fixed mipmap level detection and image loading
+- Fixed occasional game freezing due to a spiral of death
 - Fixed post effects breaking at >60 FPS
+- Fixed scanning `dwmapi.dll` for the borderless window support check so it only scans in `System32`/`SysWOW64`
 - Fixed SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
-- Fixed `SetSanityDrainDisabled` not working on enemies
+- Fixed serializer trusting the XML even when the XML data was incorrect
 - Fixed Shader Model 3 parallax mapping fallback
+- Fixed some vulnerable logging functions which used `sprintf` and `vsprintf`
 - Fixed spiral of death and freezes with certain game logic updates
 - Fixed visual bug with ropes disappearing when they were stretched to a significant degree
 - Fixed weird behavior in Custom Story menu
 - Improved AI node iterator with changes from Amnesia: A Machine for Pigs
+- Improved Father Hector David's idle reciting of biblical verses (specifically the Lord's Prayer (Matthew 6:9–10) and Revelation 11:15)
 - Improved text quality for notes, diaries and mementos in the Journal
 - Improved text quality for on-screen debug overlay and game subtitles
 - Improved volume slider in the main menu for more precise control
+- Increased solid color plane textures to 128x128 for Ultra Low setting
+- Increased vertex batch array size to 65536
 - Moved enemy radial blur fade out to a proper effect updater instead of the "enemy seen" check
+- Optimized vertex buffer object code (dual VBO)
 - Prevent game crash by kicking the player back into main menu if a save file was missing or corrupt
 - Removed achievement code from the Steam and console versions of Amnesia: The Dark Descent
+- Removed annoying crosshair toggle key (`X`)
 - Removed code and references to the demo version of Amnesia: The Dark Descent
+- Removed constant mutex locking and unlocking from the main game loop
 - Removed dangerous system command functions
 - Removed fake anti-aliasing shader (Edge Smoothing)
 - Removed "Lean" (`Alt`) key
 - Removed logic timer in place of the new fixed delta (`1 % 60 = 16.67ms`)
+- Removed `P` key, which activated logging and lagged the game severely
 - Removed performance bottleneck caused by locking and unlocking mutexes
 - Removed proprietary Kaydara FBX loader
 - Removed unused "Adaptive VSync" feature left over from Amnesia: A Machine for Pigs
 - Removed unused animation smoothing implementation
 - Removed unused Generate from the engine creation process (plus unused VoxelMap code)
+- Removed unused multisampling (MSAA) support
 - Removed unused Ogg/Theora video loader
+- Removed unused PostRender update message from the main game loop
+- Removed unused TTF font loading, since amnesia loads bitmap fonts
+- Removed "wait and finish rendering" bottleneck in MainMenu, Inventory and Journal
 - Replaced loading icons from loose bitmaps with header-based RWops in the executable
 - Replaced OpenAL with OpenAL-Soft
 - Replaced `SDL_SetGamma` with a dedicated GLSL shader that controls the in-game gamma
 - Restored unused Brute enemy enabled sound
 - Restored unused Penumbra-style head leaning behavior
-- Updated game physics to use double precision
-- Upgraded low-level system timers to use platform high-resolution timer
+- Upgraded application timing to use platform high resolution timers
+- Upgraded engine code with changes from Machine For Pigs
+- Upgraded game physics to use double precision
 ------------
 ### v1.4.5-win32-release
 - Added `LUXPROP_OBJECT_BREAKABLE_WORKAROUND` preprocessor definition for breakable objects
