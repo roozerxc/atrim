@@ -1,5 +1,6 @@
 # Changelog
-### v1.4.6-beta
+Here are a list of changes from versions v1.4.4 to v1.4.6. This list will be updated however infrequently as a ton of changes are being made to the project.
+
 - Added 64-bit support
 - Added an extra check to ensure the parallax quality setting is applied correctly
 - Added application thread locking for multi-processor systems
@@ -8,6 +9,7 @@
 - Added customizable top menu font color settings from version 1.5
 - Added `#include` directive for Version 1.5 mod support
 - Added left- and right-handedness options
+- Added `LUXPROP_OBJECT_BREAKABLE_WORKAROUND` preprocessor definition for breakable objects
 - Added new color-shifting effect on GUI button focus
 - Added new drop-down menu for selecting the type of parallax rendering effect
 - Added new engine build ID (`YYYYMMDDhhmmss`)
@@ -45,21 +47,30 @@
 - Custom Stories can now be loaded from floppy disk
 - Decoupled engine renderer and game logic from each other, allowing for truly uncapped framerates
 - Decoupled timers and scripts to use their own functions instead of using the same "Run" function
+- Disabled `UpdateLogActive` by default to fix severe performance degradation on first launch
 - Fixed Alt+Tab behavior on Borderless Fullscreen mode
 - Fixed application timer to use platform high-resolution timer instead of `SDL_GetTicks`
+- Fixed Aspect, FOV, Lean, and Roll goals
 - Fixed aspect ratio calculation for custom `menu_loading_screen.jpg` images
 - Fixed billboard alphas dividing by zero
 - Fixed broken byte order/endianness check so fast little-endian paths are now used
 - Fixed broken node and bone index resolve for mesh entities
 - Fixed buggy enemy collision behavior
+- Fixed buggy screenshots that used an incorrect pixel format (`RGBA`)
 - Fixed character body simulation errors (Can be switched back using `HPL_CHARACTERBODY_BROKEN`)
 - Fixed crosshair focus for static, non-interactable entities and objects
 - Fixed Custom Story images not being cleared out when another Custom Story was selected
 - Fixed destructive recursive reparse point deletion when a profile is deleted
 - Fixed enemies getting stuck in an infinite loop after breaking swing doors
+- Fixed enemy sight range multiplication after the player drew their lantern
 - Fixed engine crash from addressing 32-bit memory more than 2 GB
+- Fixed examine area insane messages not appearing
 - Fixed excess screen aspect ratio calculation
+- Fixed failure to copy darkness sanity drain variable
+- Fixed fly camera typo when the player's sanity was too low
+- Fixed fullscreen boolean that used to return as an integer value
 - Fixed game crash when pressing Esc quickly to skip through bootup logos
+- Fixed insanity event boolean that returned as nothing
 - Fixed invalid serialization of coins needed to unlock chests
 - Fixed light types only getting diffuse color information
 - Fixed limit for Tinderboxes not being properly enforced
@@ -68,8 +79,11 @@
 - Fixed matrix caching bug when UV Y axis was flipped
 - Fixed max amount of updates not scaling properly with Fast Forward (F3)
 - Fixed memory manager causing debug builds to fail during compilation
+- Fixed mipmap generation to use `GL_SGIS_generate_mipmap` instead of the framebuffer object
 - Fixed mipmap level detection and image loading
+- Fixed non-working player particle system destructor
 - Fixed occasional game freezing due to a spiral of death
+- Fixed persistent sanity flash when opening Inventory or Journal
 - Fixed post effects breaking at >60 FPS
 - Fixed scanning `dwmapi.dll` for the borderless window support check so it only scans in `System32`/`SysWOW64`
 - Fixed SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
@@ -79,6 +93,7 @@
 - Fixed spiral of death and freezes with certain game logic updates
 - Fixed visual bug with ropes disappearing when they were stretched to a significant degree
 - Fixed weird behavior in Custom Story menu
+- Game is now portable and creates `settings` and `screenshot` folders in Amnesia directory
 - Improved AI node iterator with changes from Amnesia: A Machine for Pigs
 - Improved Father Hector David's idle reciting of biblical verses (specifically the Lord's Prayer (Matthew 6:9–10) and Revelation 11:15)
 - Improved text quality for notes, diaries and mementos in the Journal
@@ -88,18 +103,23 @@
 - Increased vertex batch array size to 65536
 - Moved enemy radial blur fade out to a proper effect updater instead of the "enemy seen" check
 - Optimized vertex buffer object code (dual VBO)
+- Player can now look straight up and down in a 90-degree angle
 - Prevent game crash by kicking the player back into main menu if a save file was missing or corrupt
 - Removed achievement code from the Steam and console versions of Amnesia: The Dark Descent
+- Removed all references to haptics and HaptX code
 - Removed annoying crosshair toggle key (`X`)
 - Removed code and references to the demo version of Amnesia: The Dark Descent
 - Removed constant mutex locking and unlocking from the main game loop
+- Removed dangerous "suicide" (`H`) key (`eLuxAction_Holster`)
 - Removed dangerous system command functions
+- Removed `eLuxAction_Holster` entry from `LuxInputHandler`
 - Removed fake anti-aliasing shader (Edge Smoothing)
 - Removed "Lean" (`Alt`) key
 - Removed logic timer in place of the new fixed delta (`1 % 60 = 16.67ms`)
 - Removed `P` key, which activated logging and lagged the game severely
 - Removed performance bottleneck caused by locking and unlocking mutexes
 - Removed proprietary Kaydara FBX loader
+- Removed SDL2-specific code related to device broadcasting, sleeping and out-of-focus window interactions
 - Removed unused "Adaptive VSync" feature left over from Amnesia: A Machine for Pigs
 - Removed unused animation smoothing implementation
 - Removed unused Generate from the engine creation process (plus unused VoxelMap code)
@@ -108,38 +128,14 @@
 - Removed unused PostRender update message from the main game loop
 - Removed unused TTF font loading, since amnesia loads bitmap fonts
 - Removed "wait and finish rendering" bottleneck in MainMenu, Inventory and Journal
+- Replaced `GL_TEXTURE_RECTANGLE_NV` with standard `GL_TEXTURE_RECTANGLE`
 - Replaced loading icons from loose bitmaps with header-based RWops in the executable
 - Replaced OpenAL with OpenAL-Soft
 - Replaced `SDL_SetGamma` with a dedicated GLSL shader that controls the in-game gamma
+- Replaced `std::to_wstring` with `LongToWString` in the main menu
 - Restored unused Brute enemy enabled sound
 - Restored unused Penumbra-style head leaning behavior
 - Upgraded application timing to use platform high resolution timers
 - Upgraded engine code with changes from Machine For Pigs
 - Upgraded game physics to use double precision
-------------
-### v1.4.5-win32-release
-- Added `LUXPROP_OBJECT_BREAKABLE_WORKAROUND` preprocessor definition for breakable objects
-- Disabled `UpdateLogActive` by default to fix severe performance degradation on first launch
-- Fixed Aspect, FOV, Lean, and Roll goals
-- Fixed a failure to copy darkness sanity drain variable
-- Fixed a persistent sanity flash when opening Inventory or Journal
-- Fixed enemy sight range multiplication after the player drew their lantern
-- Fixed examine area insane messages not appearing
-- Fixed fly camera typo when the player's sanity was too low
-- Fixed fullscreen boolean that used to return as an integer value
-- Fixed insanity event boolean that returned as nothing
-- Fixed mipmap generation to use `GL_SGIS_generate_mipmap` instead of the framebuffer object
-- Fixed non-working player particle system destructor
-- Player can now look straight up and down in a 90-degree angle
-- Removed dangerous "suicide" (`H`) key (`eLuxAction_Holster`)
-- Removed `eLuxAction_Holster` entry from `LuxInputHandler`
 - Upgraded OpenGL cube map constants to not use `ARB` extension
-------------
-### v1.4.4-win32-release
-- Account for portable backport effort by creating `settings` and `screenshot` folders in Amnesia game directory
-- Added customizable 24-bit bitmap icon which can be set as the icon for the game's title bar
-- Fixed buggy screenshots that used an incorrect pixel format (`RGBA`)
-- Replaced `GL_TEXTURE_RECTANGLE_NV` with standard `GL_TEXTURE_RECTANGLE`
-- Replaced `std::to_wstring` with `LongToWString` in the main menu
-- Removed all references to haptics and HaptX code
-- Removed SDL2-specific code related to device broadcasting, sleeping and out-of-focus window interactions
