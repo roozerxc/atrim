@@ -1399,10 +1399,10 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
         // Normal custom story installed on the hard disk
         else
 #endif
-            if(mpCustomStory->msExtraLangFilePrefix != "")
-            {
-                sExtraLangFileName = cString::To8Char(mpCustomStory->msStoryRootFolder) + mpCustomStory->msExtraLangFilePrefix + sGameFileName;
-            }
+        if(mpCustomStory->msExtraLangFilePrefix != "")
+        {
+            sExtraLangFileName = cString::To8Char(mpCustomStory->msStoryRootFolder) + mpCustomStory->msExtraLangFilePrefix + sGameFileName;
+        }
 
         // File path string built, load it!
         if(sExtraLangFileName != "")
@@ -1414,16 +1414,45 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
         }
     }
 
-    // Patched lang for some hardcoded strings in source tree
-    pResources->AddLanguageFile(msPatchLanguageFolder + sPatchFileName, true);
-
     ////////////////////////////////////////////
-    // If not found in main_init.cfg, load it through base config folder anyway
-    if(msPatchLanguageFolder == "")
+    // Client Patch lang
+    // Add English (enUS) fallback for unsupported languages
+    tString sPatchLangFallback = "patch_english.lang";
+    if(msDefaultPatchLanguage != "")
     {
-        pResources->AddLanguageFile("config/" + sPatchFileName, true);
+        sPatchLangFallback = msDefaultPatchLanguage;
     }
 
+    // Using a different language, check if the file really exists.
+    if(sPatchFileName != sPatchLangFallback)
+    {
+        tString sPatchLangPath;
+        if(msPatchLanguageFolder != "")
+        {
+            sPatchLangPath = msPatchLanguageFolder + sPatchFileName;
+        }
+        else
+        {
+            sPatchLangPath = "config/" + sPatchFileName;
+        }
+
+        pResources->AddLanguageFile(sPatchLangPath, true);
+    }
+
+    tString sPatchLangFallbackPath;
+    if(msPatchLanguageFolder != "")
+    {
+        sPatchLangFallbackPath = msPatchLanguageFolder + sPatchLangFallback;
+    }
+    else
+    {
+        sPatchLangFallbackPath = "config/" + sPatchLangFallback;
+    }
+
+    // Fallback language loading must succeed!
+    pResources->AddLanguageFile(sPatchLangFallbackPath, true);
+
+    ////////////////////////////////////////////
     // Main game lang
     pResources->AddLanguageFile(msGameLanguageFolder + sGameFileName, true);
     pResources->AddLanguageFile(msBaseLanguageFolder + sBaseFileName, true);
@@ -1431,15 +1460,10 @@ bool cLuxBase::LoadLanguage(const tString& asName, bool abForceReload)
     ////////////////////////////////////////////
     //If not default language, add default to so only missing entries are filled in
     if(mpCustomStory && sGameFileName != mpCustomStory->msDefaultExtraLanguage)
+    {
         pResources->AddLanguageFile(cString::To8Char(mpCustomStory->msStoryRootFolder) +
                                     mpCustomStory->msExtraLangFilePrefix +
                                     mpCustomStory->msDefaultExtraLanguage, false);
-
-    ////////////////////////////////////////////
-    // Add new patch language file
-    if(sPatchFileName != msDefaultPatchLanguage)
-    {
-        pResources->AddLanguageFile(msPatchLanguageFolder + msDefaultPatchLanguage, false);
     }
 
     if(sGameFileName != msDefaultGameLanguage)
