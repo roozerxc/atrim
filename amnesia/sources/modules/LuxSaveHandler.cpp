@@ -53,7 +53,7 @@ cLuxSaveHandlerThreadClass::~cLuxSaveHandlerThreadClass()
 
 bool cLuxSaveHandlerThreadClass::IsRunning()
 {
-    return mpThread!=NULL;
+    return mpThread != NULL;
 }
 
 //-----------------------------------------------------------------------
@@ -70,7 +70,7 @@ void cLuxSaveHandlerThreadClass::SetUpThread()
 
 void cLuxSaveHandlerThreadClass::Save(cLuxSaveGame_SaveData* apSaveData, const tWString& asFile)
 {
-    if(apSaveData==NULL)
+    if(apSaveData == NULL)
     {
         return;
     }
@@ -87,11 +87,11 @@ void cLuxSaveHandlerThreadClass::Save(cLuxSaveGame_SaveData* apSaveData, const t
 
 void cLuxSaveHandlerThreadClass::ProcessPendingSaves()
 {
-    std::vector<cLuxSaveGame_SaveData*> vSaveDataCopy;
+    std::vector<cLuxSaveGame_SaveData *> vSaveDataCopy;
     std::vector<tWString> vSaveFileNamesCopy;
 
     mpSaveMutex->Lock();
-    if(mvSaveData.empty()==false)
+    if(mvSaveData.empty() == false)
     {
         vSaveDataCopy = mvSaveData;
         vSaveFileNamesCopy = mvSaveFileNames;
@@ -105,7 +105,7 @@ void cLuxSaveHandlerThreadClass::ProcessPendingSaves()
     iMutex* pMutex = gpBase->mpMapHandler->mpSavedGameMutex;
     pMutex->Lock();
     {
-        for(int i=0; i<(int)vSaveDataCopy.size(); ++i)
+        for(int i = 0; i < (int)vSaveDataCopy.size(); ++i)
         {
             cLuxSaveGame_SaveData* pData = vSaveDataCopy[i];
             const tWString& sFile = vSaveFileNamesCopy[i];
@@ -113,7 +113,7 @@ void cLuxSaveHandlerThreadClass::ProcessPendingSaves()
             //Need to set saved maps before saving!
             pData->mpSavedMaps = gpBase->mpMapHandler->GetSavedMapCollection();
 
-            cSerializeClass::SaveToFile(pData,sFile,"SaveGame");
+            cSerializeClass::SaveToFile(pData, sFile, "SaveGame");
 
             hplDelete(pData);
         }
@@ -141,8 +141,8 @@ cLuxSaveHandler::cLuxSaveHandler() : iLuxUpdateable("LuxSaveHandler")
     mbInitialized = false;
     mbStartThread = false;
 
-    mlMaxAutoSaves =  gpBase->mpGameCfg->GetInt("Saving","MaxAutoSaves",20);
-    mlSaveNameCount =0;
+    mlMaxAutoSaves =  gpBase->mpGameCfg->GetInt("Saving", "MaxAutoSaves", 20);
+    mlSaveNameCount = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -174,7 +174,7 @@ void cLuxSaveHandler::Update(double adFixedDelta)
 
 void cLuxSaveHandler::Reset()
 {
-    if(mbInitialized==false)
+    if(mbInitialized == false)
     {
         mbInitialized = true;
         if(mbStartThread)
@@ -199,7 +199,7 @@ void cLuxSaveHandler::SaveGameToFile(const tWString& asFile, bool abSaveSnapshot
     else
     {
         pData->mpSavedMaps = gpBase->mpMapHandler->GetSavedMapCollection();
-        cSerializeClass::SaveToFile(pData,asFile,"SaveGame");
+        cSerializeClass::SaveToFile(pData, asFile, "SaveGame");
         hplDelete(pData);
     }
 
@@ -208,12 +208,12 @@ void cLuxSaveHandler::SaveGameToFile(const tWString& asFile, bool abSaveSnapshot
     if(abSaveSnapshot)
     {
         tWString sFileExt = cString::GetFileExtW(asFile);
-        tWString sFileName = cString::SubW(asFile,0, (int)asFile.size()-((int)sFileExt.size()+1)) +  _W(".jpg");
+        tWString sFileName = cString::SubW(asFile, 0, (int)asFile.size() - ((int)sFileExt.size() + 1)) +  _W(".jpg");
 
         cEngine *pEngine = gpBase->mpEngine;
 
         cBitmap *pBmp = pEngine->GetGraphics()->GetLowLevel()->CopyFrameBufferToBitmap();
-        pEngine->GetResources()->GetBitmapLoaderHandler()->SaveBitmap(pBmp,sFileName,0);
+        pEngine->GetResources()->GetBitmapLoaderHandler()->SaveBitmap(pBmp, sFileName, 0);
         hplDelete(pBmp);
     }
 
@@ -229,9 +229,9 @@ bool cLuxSaveHandler::LoadGameFromFile(const tWString& asFile)
 
     cLuxSaveGame_SaveData * pSaveGame = hplNew(cLuxSaveGame_SaveData, ());
 
-    bool bSaveIsLoaded = cSerializeClass::LoadFromFile(pSaveGame,asFile);
+    bool bSaveIsLoaded = cSerializeClass::LoadFromFile(pSaveGame, asFile);
 
-    if(bSaveIsLoaded==false)
+    if(bSaveIsLoaded == false)
     {
         hplDelete(pSaveGame);
         Error("Could not load save game from '%s'! Save file is missing or corrupt\n", cString::To8Char(asFile).c_str());
@@ -261,7 +261,7 @@ bool cLuxSaveHandler::AutoSave()
 
     DeleteOldestSaveFiles(gpBase->msProfileSavePath, mlMaxAutoSaves);
 
-    SaveGameToFile(gpBase->msProfileSavePath+GetSaveName(_W("AutoSave")));
+    SaveGameToFile(gpBase->msProfileSavePath + GetSaveName(_W("AutoSave")));
 
     return true;
 }
@@ -304,7 +304,7 @@ bool cLuxSaveHandler::AutoLoad(bool abResetProgressLogger)
     }
 
 
-    LoadGameFromFile(gpBase->msProfileSavePath+sFile);
+    LoadGameFromFile(gpBase->msProfileSavePath + sFile);
 
     return true;
 }
@@ -313,12 +313,12 @@ bool cLuxSaveHandler::AutoLoad(bool abResetProgressLogger)
 
 bool cLuxSaveHandler::SaveFileExists()
 {
-    if(gpBase->msProfileSavePath==_W(""))
+    if(gpBase->msProfileSavePath == _W(""))
     {
         return false;
     }
 
-    return GetNewestSaveFile(gpBase->msProfileSavePath)!=_W("");
+    return GetNewestSaveFile(gpBase->msProfileSavePath) != _W("");
 }
 
 //-----------------------------------------------------------------------
@@ -418,12 +418,12 @@ void cLuxSaveHandler::LoadSaveGameData(cLuxSaveGame_SaveData *apSave)
 
     ///////////////////
     // Load new map
-    if(    pCurrentMap==NULL ||
+    if(    pCurrentMap == NULL ||
             msOldMapFolder != gpBase->mpMapHandler->GetMapFolder() ||
             pCurrentMap->GetFileName() != apSave->mMap.msFileName)
     {
         cLuxMap *pNewMap = gpBase->mpMapHandler->LoadMap(apSave->mMap.msFileName, false);
-        if(pNewMap==NULL)
+        if(pNewMap == NULL)
         {
             FatalError("Could not load quicksave map '%s'\n", apSave->mMap.msFileName.c_str());
         }
@@ -433,7 +433,7 @@ void cLuxSaveHandler::LoadSaveGameData(cLuxSaveGame_SaveData *apSave)
         {
             gpBase->mpMapHandler->DestroyMap(pCurrentMap, false);
         }
-        gpBase->mpMapHandler->SetCurrentMap(pNewMap, false, false,"");
+        gpBase->mpMapHandler->SetCurrentMap(pNewMap, false, false, "");
 
         pCurrentMap = pNewMap;
 
@@ -525,12 +525,12 @@ tWString cLuxSaveHandler::GetProperSaveName(const tWString &asFile)
     sProperName += _W(" ");
 
     // Store time, adding a padding '0' if only one char
-    for(int i=5; i<=7; ++i)
-        if(vSaveNameStrings[i].size()==1)
+    for(int i = 5; i <= 7; ++i)
+        if(vSaveNameStrings[i].size() == 1)
         {
-            vSaveNameStrings[i] = _W("0")+vSaveNameStrings[i];
+            vSaveNameStrings[i] = _W("0") + vSaveNameStrings[i];
         }
-    sProperName += vSaveNameStrings[5] + _W(":") + vSaveNameStrings[6] + _W(":")+ vSaveNameStrings[7];
+    sProperName += vSaveNameStrings[5] + _W(":") + vSaveNameStrings[6] + _W(":") + vSaveNameStrings[7];
 
     return sProperName;
 }
@@ -554,20 +554,20 @@ tWString cLuxSaveHandler::GetSaveName(const tWString &asPrefix)
     }
 
     cDate currentDate = cPlatform::GetDate();
-    tWString sFileName =    asPrefix+ _W("_") +
+    tWString sFileName =    asPrefix + _W("_") +
                             cString::To16Char(sMapName) + _W("_") +
-                            cString::ToStringW(currentDate.year)+_W("_") +
-                            cString::ToStringW(currentDate.month+1)+_W("_") +
-                            cString::ToStringW(currentDate.month_day)+_W("_") +
-                            cString::ToStringW(currentDate.hours)+_W("_") +
-                            cString::ToStringW(currentDate.minutes)+_W("_") +
-                            cString::ToStringW(currentDate.seconds)+_W("_") +
-                            cString::ToStringW(mlSaveNameCount)+
+                            cString::ToStringW(currentDate.year) + _W("_") +
+                            cString::ToStringW(currentDate.month + 1) + _W("_") +
+                            cString::ToStringW(currentDate.month_day) + _W("_") +
+                            cString::ToStringW(currentDate.hours) + _W("_") +
+                            cString::ToStringW(currentDate.minutes) + _W("_") +
+                            cString::ToStringW(currentDate.seconds) + _W("_") +
+                            cString::ToStringW(mlSaveNameCount) +
                             _W(".sav");
     mlSaveNameCount++;
-    if(mlSaveNameCount >= 100 || currentDate!=mLatestSaveDate)
+    if(mlSaveNameCount >= 100 || currentDate != mLatestSaveDate)
     {
-        mlSaveNameCount =0;
+        mlSaveNameCount = 0;
     }
 
     mLatestSaveDate = currentDate;

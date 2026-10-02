@@ -13,12 +13,12 @@ class cLuxNode_PlayerStart
 public:
     cLuxNode_PlayerStart(const tString& asName);
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
 
-    const cVector3f& GetPosition()
+    const cVector3f &GetPosition()
     {
         return mvPos;
     }
@@ -40,7 +40,7 @@ class cLuxAreaNodeLoader_PlayerStart : public iAreaLoader
 public:
     cLuxAreaNodeLoader_PlayerStart(const tString& asName);
 
-    void Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform,cWorld *apWorld);
+    void Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform, cWorld *apWorld);
 };
 
 //----------------------------------------------
@@ -50,7 +50,7 @@ class cLuxAreaNodeLoader_PathNode : public iAreaLoader
 public:
     cLuxAreaNodeLoader_PathNode(const tString& asName);
 
-    void Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform,cWorld *apWorld);
+    void Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform, cWorld *apWorld);
 };
 
 //----------------------------------------------
@@ -60,7 +60,7 @@ class cLuxAreaNodeLoader_PosNode : public iAreaLoader
 public:
     cLuxAreaNodeLoader_PosNode(const tString& asName);
 
-    void Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform,cWorld *apWorld);
+    void Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform, cWorld *apWorld);
 };
 
 //----------------------------------------------

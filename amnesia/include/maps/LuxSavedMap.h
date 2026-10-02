@@ -58,7 +58,7 @@ public:
     cContainerList<cEngineSound_SaveData> mlstSounds;
     cContainerList<cEnginePS_SaveData> mlstPS;
 
-    cContainerList<iLuxEntity_SaveData*> mlstEntities;
+    cContainerList<iLuxEntity_SaveData *> mlstEntities;
 
     cContainerList<cLuxEventTimer> mlstTimers;
 

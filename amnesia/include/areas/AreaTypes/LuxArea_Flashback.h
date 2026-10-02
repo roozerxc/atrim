@@ -11,7 +11,7 @@ class cLuxArea_Flashback_SaveData : public iLuxArea_SaveData
 {
     kSerializableClassInit(cLuxArea_Flashback_SaveData)
 public:
-    iLuxArea* CreateArea(cLuxMap *apMap);
+    iLuxArea *CreateArea(cLuxMap *apMap);
 
     tString msFlashbackFile;
     tString msCallback;
@@ -37,7 +37,7 @@ public:
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     virtual void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     virtual void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     virtual void SetupSaveData(iLuxEntity_SaveData *apSaveData);

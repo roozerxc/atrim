@@ -64,10 +64,10 @@ void cLuxPlayerState_InteractLever::RenderSolid(cRendererCallbackFunctions* apFu
     cVector3f vPushRotateDir = cMath::Vector3Cross(vJointToBody, vPushAmount);
 
     cVector3f vPivot = mpCurrentJoint->GetPivotPoint();
-    apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot+vPushAmount*30, cColor(1,0,0,1));
-    apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot+vUpJointForward, cColor(1,0,1,1));
-    apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot+vJointToBody, cColor(0,1,0,1));
-    apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot+mpCurrentJoint->GetPinDir(), cColor(0,0,1,1));
+    apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot + vPushAmount * 30, cColor(1, 0, 0, 1));
+    apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot + vUpJointForward, cColor(1, 0, 1, 1));
+    apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot + vJointToBody, cColor(0, 1, 0, 1));
+    apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot + mpCurrentJoint->GetPinDir(), cColor(0, 0, 1, 1));
 
 }
 
@@ -125,7 +125,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxPlayerState_SaveData* cLuxPlayerState_InteractLever::CreateSaveData()
+iLuxPlayerState_SaveData *cLuxPlayerState_InteractLever::CreateSaveData()
 {
     return hplNew(cLuxPlayerState_InteractLever_SaveData, ());
 }
@@ -138,7 +138,7 @@ void cLuxPlayerState_InteractLever::SaveToSaveData(iLuxPlayerState_SaveData* apS
     ///////////////////////
     // Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxPlayerState_InteractLever_SaveData *pData = static_cast<cLuxPlayerState_InteractLever_SaveData*>(apSaveData);
+    cLuxPlayerState_InteractLever_SaveData *pData = static_cast<cLuxPlayerState_InteractLever_SaveData *>(apSaveData);
 
 
     ///////////////////////
@@ -151,8 +151,8 @@ void cLuxPlayerState_InteractLever::LoadFromSaveDataBeforeEnter(cLuxMap *apMap, 
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataBeforeEnter(apMap,apSaveData);
-    cLuxPlayerState_InteractLever_SaveData *pData = static_cast<cLuxPlayerState_InteractLever_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataBeforeEnter(apMap, apSaveData);
+    cLuxPlayerState_InteractLever_SaveData *pData = static_cast<cLuxPlayerState_InteractLever_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars
@@ -164,8 +164,8 @@ void cLuxPlayerState_InteractLever::LoadFromSaveDataAfterEnter(cLuxMap *apMap, i
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataAfterEnter(apMap,apSaveData);
-    cLuxPlayerState_InteractLever_SaveData *pData = static_cast<cLuxPlayerState_InteractLever_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataAfterEnter(apMap, apSaveData);
+    cLuxPlayerState_InteractLever_SaveData *pData = static_cast<cLuxPlayerState_InteractLever_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars

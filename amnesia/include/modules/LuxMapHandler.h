@@ -11,7 +11,7 @@ class cLuxMap;
 class cLuxSavedGameMapCollection;
 class cLuxModelCache;
 
-typedef std::list<cLuxMap*> tLuxMapList;
+typedef std::list<cLuxMap *> tLuxMapList;
 typedef tLuxMapList::iterator tLuxMapListIt;
 
 //----------------------------------------------
@@ -38,8 +38,8 @@ public:
 
     void OnPostTranslucentDraw(cRendererCallbackFunctions* apFunctions);
 
-    iPhysicsWorld* mpPhysicsWorld;
-    iLowLevelGraphics* mpLowLevelGfx;
+    iPhysicsWorld *mpPhysicsWorld;
+    iLowLevelGraphics *mpLowLevelGfx;
 };
 
 
@@ -92,21 +92,21 @@ public:
         return mpCurrentMap != NULL;
     }
 
-    cLuxMap* LoadMap(const tString& asName, bool abLoadEntities);
+    cLuxMap *LoadMap(const tString& asName, bool abLoadEntities);
     void DestroyMap(cLuxMap* apMap, bool abRunScript);
 
     void SetCurrentMap(cLuxMap* apMap, bool abRunScript, bool abFirstTime, const tString& asPlayerPos);
-    cLuxMap* GetCurrentMap()
+    cLuxMap *GetCurrentMap()
     {
         return mpCurrentMap;
     }
 
-    cViewport* GetViewport()
+    cViewport *GetViewport()
     {
         return mpViewport;
     }
 
-    const tString& GetMapFolder()
+    const tString &GetMapFolder()
     {
         return msMapFolder;
     }
@@ -168,12 +168,12 @@ private:
 
     cLuxModelCache *mpDataCache;
 
-    cLuxMap* mpCurrentMap;
+    cLuxMap *mpCurrentMap;
 
     tLuxMapList mlstMaps;
 
     cViewport *mpViewport;
-    cMapHandlerSoundCallback* mpSoundCallback;
+    cMapHandlerSoundCallback *mpSoundCallback;
 
     bool mbPausedSoundsAndMusic;
 

@@ -17,14 +17,14 @@ cLuxEnemyMover::cLuxEnemyMover(iLuxEnemy *apEnemy, iCharacterBody *apCharBody)
     mpCharBody = apCharBody;
 
     mbTurning = false;
-    mfTurnGoalAngle =0;
-    mfTurnSpeed =0;
-    mfTurnBreakAcc =0;
+    mfTurnGoalAngle = 0;
+    mfTurnSpeed = 0;
+    mfTurnBreakAcc = 0;
 
     mfStuckLimit = 0.3f;
     mfMaxStuckCounter = 2.0f;
 
-    mfStuckCounter =0;
+    mfStuckCounter = 0;
 
     mMoveState = eLuxEnemyMoveState_LastEnum;
     mbOverideMoveState = false;
@@ -63,7 +63,7 @@ void cLuxEnemyMover::OnUpdate(double adFixedDelta)
 void cLuxEnemyMover::MoveToPos(const cVector3f& avFeetPos)
 {
     TurnToPos(avFeetPos);
-    mpCharBody->Move(eCharDir_Forward,1.0f);
+    mpCharBody->Move(eCharDir_Forward, 1.0f);
 }
 
 //-----------------------------------------------------------------------
@@ -88,7 +88,7 @@ void cLuxEnemyMover::TurnToAngle(float afAngle)
 
 void cLuxEnemyMover::UseMoveStateAnimations()
 {
-    if(mbOverideMoveState==false)
+    if(mbOverideMoveState == false)
     {
         return;
     }
@@ -109,12 +109,12 @@ float cLuxEnemyMover::CalculateSpeedMul(double adFixedDelta)
     {
         float fAngleDist = std::fabs(cMath::GetAngleDistanceRad(mpCharBody->GetYaw(), mfTurnGoalAngle));
 
-        if(fAngleDist >= mpEnemy->mfTurnMinBreakAngle && mpCharBody->GetMoveSpeed(eCharDir_Forward)>0.15f)
+        if(fAngleDist >= mpEnemy->mfTurnMinBreakAngle && mpCharBody->GetMoveSpeed(eCharDir_Forward) > 0.15f)
         {
             fMul -= mpEnemy->mfTurnBreakMul * fAngleDist;
-            if(fMul<0)
+            if(fMul < 0)
             {
-                fMul =0;
+                fMul = 0;
             }
         }
 
@@ -129,7 +129,7 @@ float cLuxEnemyMover::CalculateSpeedMul(double adFixedDelta)
 float cLuxEnemyMover::GetMoveSpeed()
 {
     cVector3f vVel = mpCharBody->GetVelocity(gpBase->mpEngine->GetFixedDelta());
-    vVel.y =0;
+    vVel.y = 0;
     return vVel.Length();
 }
 //-----------------------------------------------------------------------
@@ -169,11 +169,11 @@ void cLuxEnemyMover::UpdateStuckCounter(double adFixedDelta)
     cVector3f vRealDir = mpCharBody->GetPosition() - mpCharBody->GetLastPosition();
     vRealDir.Normalize();
 
-    float fCos = cMath::Vector3Dot(vWantedDir,vRealDir);
+    float fCos = cMath::Vector3Dot(vWantedDir, vRealDir);
 
     ///////////////////////
     // Calculate
-    if( fRealSpeed/fWantedSpeed < mfStuckLimit || (std::fabs(fCos) < 0.3f && fWantedSpeed > 0.001f) )
+    if( fRealSpeed / fWantedSpeed < mfStuckLimit || (std::fabs(fCos) < 0.3f && fWantedSpeed > 0.001f) )
     {
         mfStuckCounter += (float)adFixedDelta ;
         if(mfStuckCounter > mfMaxStuckCounter)
@@ -183,10 +183,10 @@ void cLuxEnemyMover::UpdateStuckCounter(double adFixedDelta)
     }
     else
     {
-        mfStuckCounter -= (float)adFixedDelta*0.8f;
-        if(mfStuckCounter<0)
+        mfStuckCounter -= (float)adFixedDelta * 0.8f;
+        if(mfStuckCounter < 0)
         {
-            mfStuckCounter =0;
+            mfStuckCounter = 0;
         }
     }
 }
@@ -195,7 +195,7 @@ void cLuxEnemyMover::UpdateStuckCounter(double adFixedDelta)
 
 void cLuxEnemyMover::UpdateTurning(double adFixedDelta)
 {
-    if(mbTurning==false)
+    if(mbTurning == false)
     {
         return;
     }
@@ -209,8 +209,8 @@ void cLuxEnemyMover::UpdateTurning(double adFixedDelta)
     if(std::fabs(fAngleDist) < 0.001f)
     {
         mbTurning = false;
-        mfTurnSpeed =0;
-        mfTurnBreakAcc =0;
+        mfTurnSpeed = 0;
+        mfTurnBreakAcc = 0;
         return;
     }
 
@@ -237,7 +237,7 @@ void cLuxEnemyMover::UpdateMoveAnimation(double adFixedDelta)
     }
 
     float fSpeed = GetMoveSpeed();
-    if(mpCharBody->GetMoveSpeed(eCharDir_Forward) <0)
+    if(mpCharBody->GetMoveSpeed(eCharDir_Forward) < 0)
     {
         fSpeed = -fSpeed;
     }
@@ -273,7 +273,7 @@ void cLuxEnemyMover::UpdateMoveAnimation(double adFixedDelta)
         {
             mMoveState = eLuxEnemyMoveState_Walking;
         }
-        else if(std::fabs(mfTurnSpeed) > 0.07f && mpCharBody->GetMoveDelay()<=0)
+        else if(std::fabs(mfTurnSpeed) > 0.07f && mpCharBody->GetMoveDelay() <= 0)
         {
             mMoveState = eLuxEnemyMoveState_Walking;
         }
@@ -328,7 +328,7 @@ void cLuxEnemyMover::UpdateMoveAnimation(double adFixedDelta)
         else if(mMoveState == eLuxEnemyMoveState_Stopped)
         {
             //Log(" To Stop\n");
-            mpEnemy->PlayAnim(mpEnemy->GetIdleAnimationName(),true,0.7f,false,1.0f,false,false);
+            mpEnemy->PlayAnim(mpEnemy->GetIdleAnimationName(), true, 0.7f, false, 1.0f, false, false);
         }
         //Walking
         else if(mMoveState == eLuxEnemyMoveState_Walking)
@@ -336,7 +336,7 @@ void cLuxEnemyMover::UpdateMoveAnimation(double adFixedDelta)
             bool bSync = prevMoveState == eLuxEnemyMoveState_Running ? true : false;
             //Log(" To Walk. Synch: %d\n", bSync);
 
-            mpEnemy->PlayAnim(mpEnemy->GetWalkAnimationName(),true, 0.5f, true, mpEnemy->mfMoveSpeedAnimMul, bSync, false);
+            mpEnemy->PlayAnim(mpEnemy->GetWalkAnimationName(), true, 0.5f, true, mpEnemy->mfMoveSpeedAnimMul, bSync, false);
         }
         //Running
         else if(mMoveState == eLuxEnemyMoveState_Running)
@@ -344,7 +344,7 @@ void cLuxEnemyMover::UpdateMoveAnimation(double adFixedDelta)
             bool bSync = prevMoveState == eLuxEnemyMoveState_Walking ? true : false;
             //Log(" To Run. Synch: %d\n", bSync);
 
-            mpEnemy->PlayAnim(mpEnemy->GetRunAnimationName(),true, 0.5f, true, mpEnemy->mfMoveSpeedAnimMul, bSync, false);
+            mpEnemy->PlayAnim(mpEnemy->GetRunAnimationName(), true, 0.5f, true, mpEnemy->mfMoveSpeedAnimMul, bSync, false);
         }
     }
 
@@ -369,13 +369,13 @@ void cLuxEnemyMover::UpdateMoveAnimation(double adFixedDelta)
 
 void cLuxEnemyMover::UpdateStepEffects(double adFixedDelta)
 {
-    if(mpEnemy->IsInWater()==false || mpEnemy->GetWaterSurfaceData()==NULL)
+    if(mpEnemy->IsInWater() == false || mpEnemy->GetWaterSurfaceData() == NULL)
     {
         return;
     }
 
     cAnimationState *pAnim = mpEnemy->GetCurrentAnimation();
-    if(pAnim==NULL)
+    if(pAnim == NULL)
     {
         return;
     }
@@ -383,7 +383,7 @@ void cLuxEnemyMover::UpdateStepEffects(double adFixedDelta)
     ///////////////////////////////////////
     // Check if a step is occuring!
     bool bStep = false;
-    for(int i=0; i<pAnim->GetEventNum(); ++i)
+    for(int i = 0; i < pAnim->GetEventNum(); ++i)
     {
         cAnimationEvent *pEvent = pAnim->GetEvent(i);
         if(pEvent->mType != eAnimationEventType_Step)
@@ -398,7 +398,7 @@ void cLuxEnemyMover::UpdateStepEffects(double adFixedDelta)
             break;
         }
     }
-    if(bStep==false)
+    if(bStep == false)
     {
         return;
     }
@@ -421,14 +421,14 @@ void cLuxEnemyMover::UpdateStepEffects(double adFixedDelta)
     //Get impact effect and coordinate
     cSurfaceImpactData *pImpact = pSurface->GetImpactDataFromSpeed(3.0f);
     cVector3f vEffectPos = mpCharBody->GetPosition();
-    vEffectPos.y =mpEnemy->GetWaterSurfaceY()+0.01f;
+    vEffectPos.y = mpEnemy->GetWaterSurfaceY() + 0.01f;
 
     //Create sounda and ps for effect
     cWorld *pWorld = mpEnemy->GetMap()->GetWorld();
 
     if(pImpact->GetPSName() != "")
     {
-        cParticleSystem *pPS = pWorld->CreateParticleSystem("Splash", pImpact->GetPSName(),1);
+        cParticleSystem *pPS = pWorld->CreateParticleSystem("Splash", pImpact->GetPSName(), 1);
         if(pPS)
         {
             pPS->SetPosition(vEffectPos);
@@ -437,7 +437,7 @@ void cLuxEnemyMover::UpdateStepEffects(double adFixedDelta)
 
     if(pImpact->GetSoundName() != "")
     {
-        cSoundEntity *pSound = pWorld->CreateSoundEntity("Splash",pImpact->GetSoundName(),true);
+        cSoundEntity *pSound = pWorld->CreateSoundEntity("Splash", pImpact->GetSoundName(), true);
         if(pSound)
         {
             pSound->SetPosition(vEffectPos);

@@ -20,18 +20,18 @@ cLuxPropLoader_MoveObject::cLuxPropLoader_MoveObject(const tString& asName) : iL
 
 iLuxProp *cLuxPropLoader_MoveObject::CreateProp(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxProp_MoveObject, (asName, alID,apMap) );
+    return hplNew(cLuxProp_MoveObject, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPropLoader_MoveObject::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    cLuxProp_MoveObject  *pMoveObject = static_cast<cLuxProp_MoveObject*>(apProp);
+    cLuxProp_MoveObject  *pMoveObject = static_cast<cLuxProp_MoveObject *>(apProp);
 
     ///////////////////////////
     // General
-    pMoveObject->mMoveObjectType = ToMoveObjectType(GetVarString("MoveObjectType","Linear"));
+    pMoveObject->mMoveObjectType = ToMoveObjectType(GetVarString("MoveObjectType", "Linear"));
 
     pMoveObject->mfOpenAmount = GetVarFloat("OpenAmount", 1.0f);
     pMoveObject->mMoveAxis = StringToAxis(GetVarString("MoveAxis", "y"));
@@ -73,7 +73,7 @@ eLuxMoveObjectType cLuxPropLoader_MoveObject::ToMoveObjectType(const tString& as
 
 void cLuxPropLoader_MoveObject::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
-    cLuxProp_MoveObject  *pMoveObject = static_cast<cLuxProp_MoveObject*>(apProp);
+    cLuxProp_MoveObject  *pMoveObject = static_cast<cLuxProp_MoveObject *>(apProp);
 
     //This varaible will only be used until the first update and then set to "" again.
     // so it is only temp and used to make sure that the area is loaded.
@@ -88,7 +88,7 @@ void cLuxPropLoader_MoveObject::LoadInstanceVariables(iLuxProp *apProp, cResourc
 
 //-----------------------------------------------------------------------
 
-cLuxProp_MoveObject::cLuxProp_MoveObject(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_MoveObject)
+cLuxProp_MoveObject::cLuxProp_MoveObject(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName, alID, apMap, eLuxPropType_MoveObject)
 {
     mvAngularOffsetPos = 0;
     mbUseAngularLocalOffset = false;
@@ -112,14 +112,14 @@ cLuxProp_MoveObject::~cLuxProp_MoveObject()
 
 bool cLuxProp_MoveObject::CanInteract(iPhysicsBody *apBody)
 {
-    return msInteractCallback!="";
+    return msInteractCallback != "";
 }
 
 //-----------------------------------------------------------------------
 
 bool cLuxProp_MoveObject::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    return msInteractCallback!="";
+    return msInteractCallback != "";
 }
 
 //-----------------------------------------------------------------------
@@ -132,7 +132,7 @@ void cLuxProp_MoveObject::OnSetupAfterLoad(cWorld *apWorld)
 
     m_mtxClosedTransform = pBody->GetLocalMatrix();
 
-    cVector3f vMul[3] = {cVector3f(1,0,0), cVector3f(0,1,0), cVector3f(0,0,1) };
+    cVector3f vMul[3] = {cVector3f(1, 0, 0), cVector3f(0, 1, 0), cVector3f(0, 0, 1) };
 
     ///////////////////
     // Linear
@@ -168,7 +168,7 @@ void cLuxProp_MoveObject::UpdatePropSpecific(double adFixedDelta)
     //Check the anglular offset area
     if(msAngularOffsetArea != "")
     {
-        iLuxArea *pArea = static_cast<iLuxArea*>(mpMap->GetEntityByName(msAngularOffsetArea));
+        iLuxArea *pArea = static_cast<iLuxArea *>(mpMap->GetEntityByName(msAngularOffsetArea));
         if(pArea)
         {
             SetAngularOffsetPos(pArea->GetPosition());
@@ -216,10 +216,10 @@ void cLuxProp_MoveObject::MoveToState(float afState, float afAcc, float afMaxSpe
     // Linear
     if(mMoveObjectType == eLuxMoveObjectType_Linear)
     {
-        cVector3f vWanted = m_mtxClosedTransform.GetTranslation() * (1-afState) +
+        cVector3f vWanted = m_mtxClosedTransform.GetTranslation() * (1 - afState) +
                             m_mtxOpenTransform.GetTranslation() * afState;
 
-        MoveLinearTo(vWanted, afAcc, afMaxSpeed,afSlowdownDist,abResetSpeed);
+        MoveLinearTo(vWanted, afAcc, afMaxSpeed, afSlowdownDist, abResetSpeed);
     }
     ///////////////////
     // Angular
@@ -227,18 +227,18 @@ void cLuxProp_MoveObject::MoveToState(float afState, float afAcc, float afMaxSpe
     {
         //afState = cMath::Clamp(afState,0,1);
 
-        cMatrixf mtxWanted = cMath::MatrixSlerp(afState, m_mtxClosedTransform,m_mtxOpenTransform, true);
+        cMatrixf mtxWanted = cMath::MatrixSlerp(afState, m_mtxClosedTransform, m_mtxOpenTransform, true);
 
         cMatrixf mtxInvClose = cMath::MatrixInverse(m_mtxClosedTransform);
         cVector3f vLocalOffset = cMath::MatrixMul(mtxInvClose, mvAngularOffsetPos);
 
         if(mbUseAngularLocalOffset)
         {
-            MoveAngularTo(mtxWanted, afAcc, afMaxSpeed,afSlowdownDist,abResetSpeed, true, mvAngularOffsetPos,vLocalOffset);
+            MoveAngularTo(mtxWanted, afAcc, afMaxSpeed, afSlowdownDist, abResetSpeed, true, mvAngularOffsetPos, vLocalOffset);
         }
         else
         {
-            MoveAngularTo(mtxWanted, afAcc, afMaxSpeed,afSlowdownDist,abResetSpeed, false, 0,0);
+            MoveAngularTo(mtxWanted, afAcc, afMaxSpeed, afSlowdownDist, abResetSpeed, false, 0, 0);
         }
     }
 }
@@ -340,7 +340,7 @@ void cLuxProp_MoveObject::UpdateAutoMove(double adFixedDelta)
 {
     ///////////////////////
     //Skip update if update is off, the entity is moving or the goal is reached.
-    if(mbAutoMove==false || mbMoving || mbAutoMoveReachedGoal)
+    if(mbAutoMove == false || mbMoving || mbAutoMoveReachedGoal)
     {
         return;
     }
@@ -368,11 +368,11 @@ void cLuxProp_MoveObject::OnStartMove()
 
 void cLuxProp_MoveObject::CalculateOpenRotateMatrix()
 {
-    cVector3f vMul[3] = {cVector3f(1,0,0), cVector3f(0,1,0), cVector3f(0,0,1) };
+    cVector3f vMul[3] = {cVector3f(1, 0, 0), cVector3f(0, 1, 0), cVector3f(0, 0, 1) };
 
     m_mtxOpenTransform = m_mtxClosedTransform.GetRotation();
 
-    cMatrixf mtxRot = cMath::MatrixRotate(vMul[mMoveAxis] * kPi2f * mfOpenAmount,eEulerRotationOrder_XYZ);
+    cMatrixf mtxRot = cMath::MatrixRotate(vMul[mMoveAxis] * kPi2f * mfOpenAmount, eEulerRotationOrder_XYZ);
     m_mtxOpenTransform = cMath::MatrixMul(m_mtxOpenTransform, mtxRot);
 
     m_mtxOpenTransform.SetTranslation(m_mtxClosedTransform.GetTranslation());
@@ -397,7 +397,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxProp_MoveObject::CreateSaveData()
+iLuxEntity_SaveData *cLuxProp_MoveObject::CreateSaveData()
 {
     return hplNew(cLuxProp_MoveObject_SaveData, ());
 }
@@ -409,7 +409,7 @@ void cLuxProp_MoveObject::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxProp_MoveObject_SaveData *pData = static_cast<cLuxProp_MoveObject_SaveData*>(apSaveData);
+    cLuxProp_MoveObject_SaveData *pData = static_cast<cLuxProp_MoveObject_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
@@ -425,7 +425,7 @@ void cLuxProp_MoveObject::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxProp_MoveObject_SaveData *pData = static_cast<cLuxProp_MoveObject_SaveData*>(apSaveData);
+    cLuxProp_MoveObject_SaveData *pData = static_cast<cLuxProp_MoveObject_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables

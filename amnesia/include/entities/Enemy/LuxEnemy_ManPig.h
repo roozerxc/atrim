@@ -61,25 +61,25 @@ public:
 
     //////////////////////
     //Actions
-    void ChangePose(eLuxEnemyPoseType aPose, bool abSendMessage=true);
+    void ChangePose(eLuxEnemyPoseType aPose, bool abSendMessage = true);
     void ChangeMoveType(eLuxEnemyMoveType aMoveType);
     bool StateEventImplement(int alState, eLuxEnemyStateEvent aEvent, cLuxStateMessage *apMessage);
 
     //////////////////////
     // Movement animation names
-    virtual const tString & GetBackwardAnimationName()
+    virtual const tString &GetBackwardAnimationName()
     {
         return msBackwardAnimationName[mCurrentMoveType][mCurrentPose];
     }
-    virtual const tString & GetIdleAnimationName()
+    virtual const tString &GetIdleAnimationName()
     {
         return msIdleAnimationName[mCurrentMoveType][mCurrentPose];
     }
-    virtual const tString & GetWalkAnimationName()
+    virtual const tString &GetWalkAnimationName()
     {
         return msWalkAnimationName[mCurrentMoveType][mCurrentPose];
     }
-    virtual const tString & GetRunAnimationName()
+    virtual const tString &GetRunAnimationName()
     {
         return msRunAnimationName[mCurrentMoveType][mCurrentPose];
     }
@@ -92,7 +92,7 @@ public:
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);

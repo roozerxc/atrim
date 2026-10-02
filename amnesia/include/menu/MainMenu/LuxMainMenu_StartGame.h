@@ -26,13 +26,13 @@ private:
 
     ////////////////////////
     // Layout
-    cWidgetButton* mpNormalModeButton;
-    cWidgetButton* mpHardModeButton;
+    cWidgetButton *mpNormalModeButton;
+    cWidgetButton *mpHardModeButton;
 
     iWidget *mpStartButton;
 
     //Description
-    cWidgetLabel* mpLDescription;
+    cWidgetLabel *mpLDescription;
 
     ////////////////////////
     // Callbacks

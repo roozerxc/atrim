@@ -62,11 +62,11 @@ public:
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
 
-    float OnInteractDebugDraw(cGuiSet *apSet,iFontData *apFont, float afStartY);
+    float OnInteractDebugDraw(cGuiSet *apSet, iFontData *apFont, float afStartY);
 
     //////////////////////
     //Properties
-    iLuxInteractData_RotateBase* GetMoveBaseData()
+    iLuxInteractData_RotateBase *GetMoveBaseData()
     {
         return &mWheelData;
     }
@@ -107,7 +107,7 @@ public:
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);

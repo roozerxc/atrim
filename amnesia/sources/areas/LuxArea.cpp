@@ -8,21 +8,21 @@
 
 //-----------------------------------------------------------------------
 
-void iLuxAreaLoader::Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform,cWorld *apWorld)
+void iLuxAreaLoader::Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform, cWorld *apWorld)
 {
     cLuxMap *pMap = gpBase->mpCurrentMapLoading;
-    if(pMap==NULL)
+    if(pMap == NULL)
     {
         return;
     }
 
-    iLuxArea *pArea = CreateArea(asName, alID,pMap);
+    iLuxArea *pArea = CreateArea(asName, alID, pMap);
 
     //////////////////////////////
     // Create and set body
     iPhysicsWorld *pPhysicsWorld = apWorld->GetPhysicsWorld();
     iCollideShape* pShape = pPhysicsWorld->CreateBoxShape(avSize, NULL);
-    iPhysicsBody* pBody = pPhysicsWorld->CreateBody(asName,pShape);
+    iPhysicsBody* pBody = pPhysicsWorld->CreateBody(asName, pShape);
 
     pBody->SetCollide(false);
     pBody->SetCollideCharacter(false);
@@ -62,7 +62,7 @@ void iLuxAreaLoader::Load(const tString &asName, int alID, bool abActive, const 
 
 //-----------------------------------------------------------------------
 
-iLuxArea::iLuxArea(const tString &asName, int alID, cLuxMap *apMap, eLuxAreaType aAreaType)  : iLuxEntity(asName,alID,apMap, eLuxEntityType_Area)
+iLuxArea::iLuxArea(const tString &asName, int alID, cLuxMap *apMap, eLuxAreaType aAreaType)  : iLuxEntity(asName, alID, apMap, eLuxEntityType_Area)
 {
     mAreaType = aAreaType;
 
@@ -108,7 +108,7 @@ eLuxFocusCrosshair iLuxArea::GetFocusCrosshair(iPhysicsBody *apBody, const cVect
 
 //-----------------------------------------------------------------------
 
-iEntity3D* iLuxArea::GetAttachEntity()
+iEntity3D *iLuxArea::GetAttachEntity()
 {
     return mpBody;
 }
@@ -146,14 +146,14 @@ void iLuxArea::OnUpdate(double adFixedDelta)
 //-----------------------------------------------------------------------
 
 kBeginSerializeVirtual(iLuxArea_SaveData, iLuxEntity_SaveData)
-kSerializeVar(mvSize,eSerializeType_Vector3f)
-kSerializeVar(m_mtxTransform,eSerializeType_Matrixf)
+kSerializeVar(mvSize, eSerializeType_Vector3f)
+kSerializeVar(m_mtxTransform, eSerializeType_Matrixf)
 kEndSerialize()
 
 
 //-----------------------------------------------------------------------
 
-iLuxEntity* iLuxArea_SaveData::CreateEntity(cLuxMap *apMap)
+iLuxEntity *iLuxArea_SaveData::CreateEntity(cLuxMap *apMap)
 {
     iLuxArea *pArea = CreateArea(apMap);
     apMap->AddEntity(pArea);
@@ -166,7 +166,7 @@ iLuxEntity* iLuxArea_SaveData::CreateEntity(cLuxMap *apMap)
 void iLuxArea::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 {
     super_class::SaveToSaveData(apSaveData);
-    iLuxArea_SaveData *pData = static_cast<iLuxArea_SaveData*>(apSaveData);
+    iLuxArea_SaveData *pData = static_cast<iLuxArea_SaveData *>(apSaveData);
 
     kCopyToVar(pData, mvSize);
     kCopyToVar(pData, m_mtxTransform);
@@ -177,7 +177,7 @@ void iLuxArea::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 void iLuxArea::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 {
     super_class::LoadFromSaveData(apSaveData);
-    iLuxArea_SaveData *pData = static_cast<iLuxArea_SaveData*>(apSaveData);
+    iLuxArea_SaveData *pData = static_cast<iLuxArea_SaveData *>(apSaveData);
 
     kCopyFromVar(pData, mvSize);
     kCopyFromVar(pData, m_mtxTransform);
@@ -186,7 +186,7 @@ void iLuxArea::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     // Create and set body
     iPhysicsWorld *pPhysicsWorld = mpMap->GetPhysicsWorld();
     iCollideShape* pShape = pPhysicsWorld->CreateBoxShape(mvSize, NULL);
-    iPhysicsBody* pBody = pPhysicsWorld->CreateBody(msName,pShape);
+    iPhysicsBody* pBody = pPhysicsWorld->CreateBody(msName, pShape);
 
     pBody->SetCollide(false);
     pBody->SetCollideCharacter(false);
@@ -206,7 +206,7 @@ void iLuxArea::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 void iLuxArea::SetupSaveData(iLuxEntity_SaveData *apSaveData)
 {
     super_class::SetupSaveData(apSaveData);
-    iLuxArea_SaveData *pData = static_cast<iLuxArea_SaveData*>(apSaveData);
+    iLuxArea_SaveData *pData = static_cast<iLuxArea_SaveData *>(apSaveData);
 }
 
 //-----------------------------------------------------------------------

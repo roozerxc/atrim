@@ -12,31 +12,31 @@
 
 //-----------------------------------------------------------------------
 
-void cLuxAreaRopeLoader::Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform,cWorld *apWorld)
+void cLuxAreaRopeLoader::Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform, cWorld *apWorld)
 {
     cLuxMap *pMap = gpBase->mpCurrentMapLoading;
-    if(pMap==NULL)
+    if(pMap == NULL)
     {
         return;
     }
 
-    cLuxRope *pRope = hplNew(cLuxRope, (asName, alID,pMap));
+    cLuxRope *pRope = hplNew(cLuxRope, (asName, alID, pMap));
 
 
     //////////////////////////
     //Set Properties
     pRope->mvStartPos = a_mtxTransform.GetTranslation();
 
-    pRope->msEndPosNode = GetVarString("EndPosNode","");
-    pRope->msStartBody = GetVarString("StartBody","");
-    pRope->msEndBody = GetVarString("EndBody","");
+    pRope->msEndPosNode = GetVarString("EndPosNode", "");
+    pRope->msStartBody = GetVarString("StartBody", "");
+    pRope->msEndBody = GetVarString("EndBody", "");
 
-    pRope->mbAutoMove = GetVarBool("AutoMove",false);
-    pRope->mfAutoMoveAcc = GetVarFloat("AutoMoveAcc",0);
-    pRope->mfAutoMoveMaxSpeed = GetVarFloat("AutoMoveMaxSpeed",0);
+    pRope->mbAutoMove = GetVarBool("AutoMove", false);
+    pRope->mfAutoMoveAcc = GetVarFloat("AutoMoveAcc", 0);
+    pRope->mfAutoMoveMaxSpeed = GetVarFloat("AutoMoveMaxSpeed", 0);
 
-    pRope->mfMinTotalLength = GetVarFloat("MinTotalLength",0);
-    pRope->mfMaxTotalLength = GetVarFloat("MaxTotalLength",0);
+    pRope->mfMinTotalLength = GetVarFloat("MinTotalLength", 0);
+    pRope->mfMaxTotalLength = GetVarFloat("MaxTotalLength", 0);
 
     //Load settings file
     tString sFile = GetVarString("RopeFile", "");
@@ -44,7 +44,7 @@ void cLuxAreaRopeLoader::Load(const tString &asName, int alID, bool abActive, co
     if(sFile != "")
     {
         pDoc = gpBase->mpEngine->GetResources()->LoadXmlDocument(sFile);
-        if(pDoc==NULL)
+        if(pDoc == NULL)
         {
             Error("Could not load '%s' for rope '%s'. Using set variables instead!\n", sFile.c_str(), asName.c_str());
         }
@@ -53,34 +53,34 @@ void cLuxAreaRopeLoader::Load(const tString &asName, int alID, bool abActive, co
     // From XML
     if(pDoc)
     {
-        pRope->mfSegmentLength = pDoc->GetAttributeFloat("SegmentLength",0);
-        pRope->mfDamping = pDoc->GetAttributeFloat("Damping",0);
-        pRope->mfStrength = pDoc->GetAttributeFloat("Strength",0);
-        pRope->mfStiffness = pDoc->GetAttributeFloat("Stiffness",0);
-        pRope->msMaterial = pDoc->GetAttributeString("Material","");
-        pRope->mfRadius = pDoc->GetAttributeFloat("Radius",0);
-        pRope->mfLengthTileAmount = pDoc->GetAttributeFloat("LengthTileAmount",0);
-        pRope->mfLengthTileSize = pDoc->GetAttributeFloat("LengthTileSize",0);
-        pRope->msSound = pDoc->GetAttributeString("Sound","");
-        pRope->mfSoundStartSpeed = pDoc->GetAttributeFloat("SoundStartSpeed",0);
-        pRope->mfSoundStopSpeed = pDoc->GetAttributeFloat("SoundStopSpeed",0);
+        pRope->mfSegmentLength = pDoc->GetAttributeFloat("SegmentLength", 0);
+        pRope->mfDamping = pDoc->GetAttributeFloat("Damping", 0);
+        pRope->mfStrength = pDoc->GetAttributeFloat("Strength", 0);
+        pRope->mfStiffness = pDoc->GetAttributeFloat("Stiffness", 0);
+        pRope->msMaterial = pDoc->GetAttributeString("Material", "");
+        pRope->mfRadius = pDoc->GetAttributeFloat("Radius", 0);
+        pRope->mfLengthTileAmount = pDoc->GetAttributeFloat("LengthTileAmount", 0);
+        pRope->mfLengthTileSize = pDoc->GetAttributeFloat("LengthTileSize", 0);
+        pRope->msSound = pDoc->GetAttributeString("Sound", "");
+        pRope->mfSoundStartSpeed = pDoc->GetAttributeFloat("SoundStartSpeed", 0);
+        pRope->mfSoundStopSpeed = pDoc->GetAttributeFloat("SoundStopSpeed", 0);
 
         gpBase->mpEngine->GetResources()->DestroyXmlDocument(pDoc);
     }
     //From Area variables
     else
     {
-        pRope->mfSegmentLength = GetVarFloat("SegmentLength",0);
-        pRope->mfDamping = GetVarFloat("Damping",0);
-        pRope->mfStrength = GetVarFloat("Strength",0);
-        pRope->mfStiffness = GetVarFloat("Stiffness",0);
-        pRope->msMaterial = GetVarString("Material","");
-        pRope->mfRadius = GetVarFloat("Radius",0);
-        pRope->mfLengthTileAmount = GetVarFloat("LengthTileAmount",0);
-        pRope->mfLengthTileSize = GetVarFloat("LengthTileSize",0);
-        pRope->msSound = GetVarString("Sound","");
-        pRope->mfSoundStartSpeed = GetVarFloat("SoundStartSpeed",0);
-        pRope->mfSoundStopSpeed = GetVarFloat("SoundStopSpeed",0);
+        pRope->mfSegmentLength = GetVarFloat("SegmentLength", 0);
+        pRope->mfDamping = GetVarFloat("Damping", 0);
+        pRope->mfStrength = GetVarFloat("Strength", 0);
+        pRope->mfStiffness = GetVarFloat("Stiffness", 0);
+        pRope->msMaterial = GetVarString("Material", "");
+        pRope->mfRadius = GetVarFloat("Radius", 0);
+        pRope->mfLengthTileAmount = GetVarFloat("LengthTileAmount", 0);
+        pRope->mfLengthTileSize = GetVarFloat("LengthTileSize", 0);
+        pRope->msSound = GetVarString("Sound", "");
+        pRope->mfSoundStartSpeed = GetVarFloat("SoundStartSpeed", 0);
+        pRope->mfSoundStopSpeed = GetVarFloat("SoundStopSpeed", 0);
     }
 
 
@@ -98,12 +98,12 @@ void cLuxAreaRopeLoader::Load(const tString &asName, int alID, bool abActive, co
 
 //-----------------------------------------------------------------------
 
-cLuxRope::cLuxRope(const tString& asName, int alID, cLuxMap *apMap)  : iLuxEntity(asName,alID,apMap, eLuxEntityType_Rope)
+cLuxRope::cLuxRope(const tString& asName, int alID, cLuxMap *apMap)  : iLuxEntity(asName, alID, apMap, eLuxEntityType_Rope)
 {
     mbRopeCreated = false;
 
     mpRope = NULL;
-    mpRopeGfx= NULL;
+    mpRopeGfx = NULL;
 }
 
 //-----------------------------------------------------------------------
@@ -133,16 +133,16 @@ void cLuxRope::AfterWorldLoad()
     //The rope entity is only created once!
     if(mbRopeCreated)
     {
-        if(mpRopeGfx==NULL && mpRope==NULL)
+        if(mpRopeGfx == NULL && mpRope == NULL)
         {
             mpRope = mpMap->GetPhysicsWorld()->GetRopeFromUniqueID(mlID);
-            if(mpRope==NULL)
+            if(mpRope == NULL)
             {
                 Error("Cannot find rope physics entity with ID %d for lux rope '%s'\n", mlID, msName.c_str());
             }
 
             mpRopeGfx = mpMap->GetWorld()->GetRopeEntityFromUniqueID(mlID);
-            if(mpRopeGfx==NULL)
+            if(mpRopeGfx == NULL)
             {
                 Error("Cannot find rope gfx entity with ID %d for lux rope '%s'\n", mlID, msName.c_str());
             }
@@ -198,7 +198,7 @@ void cLuxRope::AfterWorldLoad()
     mpRope->SetUniqueID(mlID);
 
     //Start body
-    if(pStartBody!=NULL)
+    if(pStartBody != NULL)
     {
         mpRope->SetAttachedStartBody(pStartBody);
         if(pStartBody->GetMass() != 0)
@@ -208,7 +208,7 @@ void cLuxRope::AfterWorldLoad()
     }
 
     //End body
-    if(pEndBody!=NULL)
+    if(pEndBody != NULL)
     {
         mpRope->SetAttachedEndBody(pEndBody);
     }
@@ -217,7 +217,7 @@ void cLuxRope::AfterWorldLoad()
     // Create Graphical Rope
     cResources *pResources = gpBase->mpEngine->GetResources();
 
-    int lMaxSegments = (int)(mfMaxTotalLength / mfSegmentLength)+4;
+    int lMaxSegments = (int)(mfMaxTotalLength / mfSegmentLength) +4;
     mpRopeGfx = mpMap->GetWorld()->CreateRopeEntity(msName, mpRope, lMaxSegments);
 
     mpRopeGfx->SetMaterial(pResources->GetMaterialManager()->CreateMaterial(msMaterial));
@@ -257,18 +257,18 @@ void cLuxRope::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 
 //-----------------------------------------------------------------------
 
-iPhysicsBody* cLuxRope::GetBody(const tString& asName)
+iPhysicsBody *cLuxRope::GetBody(const tString& asName)
 {
     iPhysicsBody *pBody = mpMap->GetPhysicsWorld()->GetBody(asName);
-    if(pBody==NULL)
+    if(pBody == NULL)
     {
         iLuxEntity *pEntity = mpMap->GetEntityByName(asName, eLuxEntityType_Prop);
-        if(pEntity==NULL)
+        if(pEntity == NULL)
         {
             Error("Could not find body or entity with the name '%s'\n", asName.c_str());
             return NULL;
         }
-        iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+        iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
         pBody = pProp->GetMainBody();
     }
     return pBody;
@@ -284,39 +284,39 @@ iPhysicsBody* cLuxRope::GetBody(const tString& asName)
 
 kBeginSerialize(cLuxRope_SaveData, iLuxEntity_SaveData)
 //mvSize
-kSerializeVar(mbRopeCreated,eSerializeType_Bool)
+kSerializeVar(mbRopeCreated, eSerializeType_Bool)
 
-kSerializeVar(mvStartPos,eSerializeType_Vector3f)
-kSerializeVar(mvEndPos,eSerializeType_Vector3f)
+kSerializeVar(mvStartPos, eSerializeType_Vector3f)
+kSerializeVar(mvEndPos, eSerializeType_Vector3f)
 
-kSerializeVar(msEndPosNode,eSerializeType_String)
-kSerializeVar(msStartBody,eSerializeType_String)
-kSerializeVar(msEndBody,eSerializeType_String)
+kSerializeVar(msEndPosNode, eSerializeType_String)
+kSerializeVar(msStartBody, eSerializeType_String)
+kSerializeVar(msEndBody, eSerializeType_String)
 
-kSerializeVar(mfMinTotalLength,eSerializeType_Float32)
-kSerializeVar(mfMaxTotalLength,eSerializeType_Float32)
-kSerializeVar(mfSegmentLength,eSerializeType_Float32)
-kSerializeVar(mfDamping,eSerializeType_Float32)
-kSerializeVar(mfStrength,eSerializeType_Float32)
-kSerializeVar(mfStiffness,eSerializeType_Float32)
-kSerializeVar(msMaterial,eSerializeType_String)
-kSerializeVar(mfRadius,eSerializeType_Float32)
-kSerializeVar(mfLengthTileAmount,eSerializeType_Float32)
-kSerializeVar(mfLengthTileSize,eSerializeType_Float32)
-kSerializeVar(msSound,eSerializeType_String)
-kSerializeVar(mfSoundStartSpeed,eSerializeType_Float32)
-kSerializeVar(mfSoundStopSpeed,eSerializeType_Float32)
-kSerializeVar(mbAutoMove,eSerializeType_Bool)
-kSerializeVar(mfAutoMoveAcc,eSerializeType_Float32)
-kSerializeVar(mfAutoMoveMaxSpeed,eSerializeType_Float32)
+kSerializeVar(mfMinTotalLength, eSerializeType_Float32)
+kSerializeVar(mfMaxTotalLength, eSerializeType_Float32)
+kSerializeVar(mfSegmentLength, eSerializeType_Float32)
+kSerializeVar(mfDamping, eSerializeType_Float32)
+kSerializeVar(mfStrength, eSerializeType_Float32)
+kSerializeVar(mfStiffness, eSerializeType_Float32)
+kSerializeVar(msMaterial, eSerializeType_String)
+kSerializeVar(mfRadius, eSerializeType_Float32)
+kSerializeVar(mfLengthTileAmount, eSerializeType_Float32)
+kSerializeVar(mfLengthTileSize, eSerializeType_Float32)
+kSerializeVar(msSound, eSerializeType_String)
+kSerializeVar(mfSoundStartSpeed, eSerializeType_Float32)
+kSerializeVar(mfSoundStopSpeed, eSerializeType_Float32)
+kSerializeVar(mbAutoMove, eSerializeType_Bool)
+kSerializeVar(mfAutoMoveAcc, eSerializeType_Float32)
+kSerializeVar(mfAutoMoveMaxSpeed, eSerializeType_Float32)
 kEndSerialize()
 
 
 //-----------------------------------------------------------------------
 
-iLuxEntity* cLuxRope_SaveData::CreateEntity(cLuxMap *apMap)
+iLuxEntity *cLuxRope_SaveData::CreateEntity(cLuxMap *apMap)
 {
-    cLuxRope *pRope = hplNew(cLuxRope, (msName, mlID,apMap));
+    cLuxRope *pRope = hplNew(cLuxRope, (msName, mlID, apMap));
     apMap->AddEntity(pRope);
 
     return pRope;
@@ -324,7 +324,7 @@ iLuxEntity* cLuxRope_SaveData::CreateEntity(cLuxMap *apMap)
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxRope::CreateSaveData()
+iLuxEntity_SaveData *cLuxRope::CreateSaveData()
 {
     return hplNew(cLuxRope_SaveData, ());
 }
@@ -334,7 +334,7 @@ iLuxEntity_SaveData* cLuxRope::CreateSaveData()
 void cLuxRope::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 {
     super_class::SaveToSaveData(apSaveData);
-    cLuxRope_SaveData *pData = static_cast<cLuxRope_SaveData*>(apSaveData);
+    cLuxRope_SaveData *pData = static_cast<cLuxRope_SaveData *>(apSaveData);
 
     ////////////////
     //Variables
@@ -372,7 +372,7 @@ void cLuxRope::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 void cLuxRope::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 {
     super_class::LoadFromSaveData(apSaveData);
-    cLuxRope_SaveData *pData = static_cast<cLuxRope_SaveData*>(apSaveData);
+    cLuxRope_SaveData *pData = static_cast<cLuxRope_SaveData *>(apSaveData);
 
     //(pData, mvSize);
     ////////////////
@@ -411,7 +411,7 @@ void cLuxRope::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 void cLuxRope::SetupSaveData(iLuxEntity_SaveData *apSaveData)
 {
     super_class::SetupSaveData(apSaveData);
-    cLuxRope_SaveData *pData = static_cast<cLuxRope_SaveData*>(apSaveData);
+    cLuxRope_SaveData *pData = static_cast<cLuxRope_SaveData *>(apSaveData);
 }
 
 //-----------------------------------------------------------------------

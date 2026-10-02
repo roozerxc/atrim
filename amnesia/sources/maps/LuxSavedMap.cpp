@@ -19,7 +19,7 @@ cLuxSavedMap::cLuxSavedMap()
 
 cLuxSavedMap::~cLuxSavedMap()
 {
-    cContainerListIterator<iLuxEntity_SaveData*> it = mlstEntities.GetIterator();
+    cContainerListIterator<iLuxEntity_SaveData *> it = mlstEntities.GetIterator();
     while(it.HasNext())
     {
         iLuxEntity_SaveData *pSaveEntity = it.Next();
@@ -87,7 +87,7 @@ void cLuxSavedMap::FromMap(cLuxMap *apMap)
         {
             iLight *pLight = lightIt.Next();
 
-            if(pLight->IsSaved() && pLight->GetEntityParent() == NULL && pLight->GetParent()==NULL)
+            if(pLight->IsSaved() && pLight->GetEntityParent() == NULL && pLight->GetParent() == NULL)
             {
                 cEngineLight_SaveData saveLight;
                 saveLight.FromLight(pLight);
@@ -105,7 +105,7 @@ void cLuxSavedMap::FromMap(cLuxMap *apMap)
         {
             cSoundEntity *pSound = soundIt.Next();
 
-            if(    pSound->IsSaved() && pSound->GetEntityParent() == NULL && pSound->GetParent()==NULL && pSound->GetData()->GetLoop() )
+            if(    pSound->IsSaved() && pSound->GetEntityParent() == NULL && pSound->GetParent() == NULL && pSound->GetData()->GetLoop() )
             {
                 cEngineSound_SaveData saveSound;
                 saveSound.FromSound(pSound);
@@ -123,7 +123,7 @@ void cLuxSavedMap::FromMap(cLuxMap *apMap)
         {
             cParticleSystem *pPS = psIt.Next();
 
-            if(    pPS->IsSaved() && pPS->GetEntityParent() == NULL && pPS->GetParent()==NULL && pPS->IsDying()==false)
+            if(    pPS->IsSaved() && pPS->GetEntityParent() == NULL && pPS->GetParent() == NULL && pPS->IsDying() == false)
             {
                 cEnginePS_SaveData savePS;
                 savePS.FromPS(pPS);
@@ -139,7 +139,7 @@ void cLuxSavedMap::FromMap(cLuxMap *apMap)
     while(entityIt.HasNext())
     {
         iLuxEntity *pEntity = entityIt.Next();
-        if(pEntity->IsSaved() && pEntity->GetDestroyMe()==false)
+        if(pEntity->IsSaved() && pEntity->GetDestroyMe() == false)
         {
             iLuxEntity_SaveData *pSaveData = pEntity->CreateSaveData();
             pEntity->SaveToSaveData(pSaveData);
@@ -226,7 +226,7 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
     /////////////////////////////////
     // Sky box
     pWorld->SetSkyBoxActive(mbSkyBoxActive);
-    if(msSkyboxTexture=="")
+    if(msSkyboxTexture == "")
     {
         pWorld->SetSkyBox(NULL, true);
     }
@@ -315,7 +315,7 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
 
         /////////////////////
         //Create entities
-        cContainerListIterator<iLuxEntity_SaveData*> it = mlstEntities.GetIterator();
+        cContainerListIterator<iLuxEntity_SaveData *> it = mlstEntities.GetIterator();
         while(it.HasNext())
         {
             iLuxEntity_SaveData *pSaveEntity = it.Next();
@@ -369,7 +369,7 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
         {
             cLuxEventTimer& savedTimer = it.Next();
 
-            cLuxEventTimer *pTimer = hplNew(cLuxEventTimer,());
+            cLuxEventTimer *pTimer = hplNew(cLuxEventTimer, ());
             *pTimer = savedTimer;
 
             apMap->mlstTimers.push_back(pTimer);
@@ -401,7 +401,7 @@ void cLuxSavedMap::ToMap(cLuxMap *apMap)
     //Log("---Checking callbacks!\n");
     {
         STLDeleteAll(apMap->mlstUseItemCallbacks);
-        for(size_t i=0; i<mvUseItemCallbacks.Size(); ++i)
+        for(size_t i = 0; i < mvUseItemCallbacks.Size(); ++i)
         {
             cLuxUseItemCallback *pCallback = hplNew(cLuxUseItemCallback, ());
             *pCallback = mvUseItemCallbacks[i];
@@ -466,12 +466,12 @@ kSerializeClassContainer(mlstRopes, cEngineRope_SaveData, eSerializeType_Class)
 kSerializeClassContainer(mlstSounds, cEngineSound_SaveData, eSerializeType_Class)
 kSerializeClassContainer(mlstPS, cEnginePS_SaveData, eSerializeType_Class)
 
-kSerializeClassContainer(mlstEntities,iLuxEntity_SaveData, eSerializeType_ClassPointer)
+kSerializeClassContainer(mlstEntities, iLuxEntity_SaveData, eSerializeType_ClassPointer)
 
 kSerializeClassContainer(mlstTimers, cLuxEventTimer,  eSerializeType_Class)
 kSerializeClassContainer(mlstVars, cLuxScriptVar,  eSerializeType_Class)
 
-kSerializeClassContainer(mvUseItemCallbacks,cLuxUseItemCallback, eSerializeType_Class)
+kSerializeClassContainer(mvUseItemCallbacks, cLuxUseItemCallback, eSerializeType_Class)
 kEndSerialize()
 
 

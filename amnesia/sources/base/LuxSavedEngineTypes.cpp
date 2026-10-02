@@ -96,11 +96,11 @@ kEndSerialize()
 
 //------------------------------------------------------------------------
 
-cRopeEntity* cEngineRope_SaveData::CreateRope(cLuxMap *apMap)
+cRopeEntity *cEngineRope_SaveData::CreateRope(cLuxMap *apMap)
 {
     ////////////////////
     // Create physics rope
-    iPhysicsRope *pPhysicsRope = apMap->GetPhysicsWorld()->CreateRope(msPhysicsName,mvStartPos, mvEndPos);
+    iPhysicsRope *pPhysicsRope = apMap->GetPhysicsWorld()->CreateRope(msPhysicsName, mvStartPos, mvEndPos);
     pPhysicsRope->SetUniqueID(mlUniquePhysicsID);
 
     pPhysicsRope->SetParticleRadius(mfParticleRadius);
@@ -111,7 +111,7 @@ cRopeEntity* cEngineRope_SaveData::CreateRope(cLuxMap *apMap)
 
     ////////////////////
     // Create rope entity
-    cRopeEntity *pRope = apMap->GetWorld()->CreateRopeEntity(msName,pPhysicsRope, mlMaxSegments);
+    cRopeEntity *pRope = apMap->GetWorld()->CreateRopeEntity(msName, pPhysicsRope, mlMaxSegments);
     pRope->SetUniqueID(mlUniqueGfxID);
 
     pRope->SetRadius(mfRadius);
@@ -233,7 +233,7 @@ void cEngineRope_SaveData::ToRope(cRopeEntity *apRope, cLuxMap *apMap)
 
     ////////////////////////
     //Set particles
-    int lPartCount=0;
+    int lPartCount = 0;
     cVerletParticleIterator partIt = pPhysicsRope->GetParticleIterator();
     while(partIt.HasNext())
     {
@@ -442,14 +442,14 @@ void cEngineMeshEntity_SaveData::FromMeshEntity(cMeshEntity *apMeshEntity)
 
     mvAnimations.Resize(apMeshEntity->GetAnimationStateNum());
     //if(mvAnimations.Size()>0) Log("Saving anims  for '%s'\n", apMeshEntity->GetName().c_str());
-    for(size_t i=0; i< mvAnimations.Size(); ++i)
+    for(size_t i = 0; i < mvAnimations.Size(); ++i)
     {
         cAnimationState *pAnimState =  apMeshEntity->GetAnimationState((int)i);
         mvAnimations[i].FromAnim(pAnimState);
     }
 
     mvSubMeshEntities.Resize(apMeshEntity->GetSubMeshEntityNum());
-    for(size_t i=0; i< mvSubMeshEntities.Size(); ++i)
+    for(size_t i = 0; i < mvSubMeshEntities.Size(); ++i)
     {
         cSubMeshEntity *pSubEnt =  apMeshEntity->GetSubMeshEntity((int)i);
         mvSubMeshEntities[i].FromSubMeshEntity(pSubEnt);
@@ -469,7 +469,7 @@ void cEngineMeshEntity_SaveData::ToMeshEntity(cMeshEntity *apMeshEntity)
     if(mvAnimations.Size() == apMeshEntity->GetAnimationStateNum())
     {
         //if(mvAnimations.Size()>0) Log("Loading anims  for '%s'\n", apMeshEntity->GetName().c_str());
-        for(size_t i=0; i< mvAnimations.Size(); ++i)
+        for(size_t i = 0; i < mvAnimations.Size(); ++i)
         {
             cAnimationState *pAnimState =  apMeshEntity->GetAnimationState((int)i);
             mvAnimations[i].ToAnim(pAnimState);
@@ -479,7 +479,7 @@ void cEngineMeshEntity_SaveData::ToMeshEntity(cMeshEntity *apMeshEntity)
     //If not equal, something is wrong so skip!
     if(mvSubMeshEntities.Size() == apMeshEntity->GetSubMeshEntityNum())
     {
-        for(size_t i=0; i< mvSubMeshEntities.Size(); ++i)
+        for(size_t i = 0; i < mvSubMeshEntities.Size(); ++i)
         {
             cSubMeshEntity *pSubEnt =  apMeshEntity->GetSubMeshEntity((int)i);
             mvSubMeshEntities[i].ToSubMeshEntity(pSubEnt);
@@ -536,12 +536,12 @@ void cEngineBody_SaveData::ToBody(iPhysicsBody *apBody)
 //------------------------------------------------------------------------
 
 kBeginSerializeBase(cEngineBody_SaveData)
-kSerializeVar(mfMass,eSerializeType_Float32)
-kSerializeVar(mbActive,eSerializeType_Bool)
-kSerializeVar(mbCollideCharacter,eSerializeType_Bool)
-kSerializeVar(mvLinearVelocity,eSerializeType_Vector3f)
-kSerializeVar(mvAngularVelocity,eSerializeType_Vector3f)
-kSerializeVar(m_mtxTransform,eSerializeType_Matrixf)
+kSerializeVar(mfMass, eSerializeType_Float32)
+kSerializeVar(mbActive, eSerializeType_Bool)
+kSerializeVar(mbCollideCharacter, eSerializeType_Bool)
+kSerializeVar(mvLinearVelocity, eSerializeType_Vector3f)
+kSerializeVar(mvAngularVelocity, eSerializeType_Vector3f)
+kSerializeVar(m_mtxTransform, eSerializeType_Matrixf)
 kEndSerialize()
 
 //------------------------------------------------------------------------
@@ -553,7 +553,7 @@ kEndSerialize()
 //------------------------------------------------------------------------
 void cEngineJoint_SaveData::FromJoint(iPhysicsJoint *apJoint, iPhysicsWorld *apPhysicsWorld)
 {
-    if(apJoint==NULL || apPhysicsWorld->JointExists(apJoint)==false)
+    if(apJoint == NULL || apPhysicsWorld->JointExists(apJoint) == false)
     {
         mbBroken = true;
         return;
@@ -584,28 +584,28 @@ void cEngineJoint_SaveData::FromJoint(iPhysicsJoint *apJoint, iPhysicsWorld *apP
     {
     case ePhysicsJointType_Ball:
     {
-        iPhysicsJointBall *pBallJoint = static_cast<iPhysicsJointBall*>(apJoint);
+        iPhysicsJointBall *pBallJoint = static_cast<iPhysicsJointBall *>(apJoint);
         mfMaxLimit = pBallJoint->GetMaxConeAngle();
         mfMinLimit = pBallJoint->GetMaxTwistAngle();
         break;
     }
     case ePhysicsJointType_Hinge:
     {
-        iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge*>(apJoint);
+        iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge *>(apJoint);
         mfMaxLimit = pHingeJoint->GetMaxAngle();
         mfMinLimit = pHingeJoint->GetMinAngle();
         break;
     }
     case ePhysicsJointType_Screw:
     {
-        iPhysicsJointScrew *pScrewJoint = static_cast<iPhysicsJointScrew*>(apJoint);
+        iPhysicsJointScrew *pScrewJoint = static_cast<iPhysicsJointScrew *>(apJoint);
         mfMinLimit = pScrewJoint->GetMinDistance();
         mfMaxLimit = pScrewJoint->GetMaxDistance();
         break;
     }
     case ePhysicsJointType_Slider:
     {
-        iPhysicsJointSlider *pSliderJoint = static_cast<iPhysicsJointSlider*>(apJoint);
+        iPhysicsJointSlider *pSliderJoint = static_cast<iPhysicsJointSlider *>(apJoint);
         mfMinLimit = pSliderJoint->GetMinDistance();
         mfMaxLimit = pSliderJoint->GetMaxDistance();
         break;
@@ -619,7 +619,7 @@ void cEngineJoint_SaveData::ToJoint(iPhysicsJoint *apJoint)
 {
     //////////////////////////////
     //Controllers
-    for(int i =0; i< (int)mvControllers.Size(); ++i)
+    for(int i = 0; i < (int)mvControllers.Size(); ++i)
     {
         iPhysicsController *pCtrl = apJoint->GetController(mvControllers[i].msName);
 
@@ -636,27 +636,27 @@ void cEngineJoint_SaveData::ToJoint(iPhysicsJoint *apJoint)
     {
     case ePhysicsJointType_Ball:
     {
-        iPhysicsJointBall *pBallJoint = static_cast<iPhysicsJointBall*>(apJoint);
-        pBallJoint->SetConeLimits(mfMaxLimit,mfMinLimit);
+        iPhysicsJointBall *pBallJoint = static_cast<iPhysicsJointBall *>(apJoint);
+        pBallJoint->SetConeLimits(mfMaxLimit, mfMinLimit);
         break;
     }
     case ePhysicsJointType_Hinge:
     {
-        iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge*>(apJoint);
+        iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge *>(apJoint);
         pHingeJoint->SetMaxAngle(mfMaxLimit);
         pHingeJoint->SetMinAngle(mfMinLimit);
         break;
     }
     case ePhysicsJointType_Screw:
     {
-        iPhysicsJointScrew *pScrewJoint = static_cast<iPhysicsJointScrew*>(apJoint);
+        iPhysicsJointScrew *pScrewJoint = static_cast<iPhysicsJointScrew *>(apJoint);
         pScrewJoint->SetMinDistance(mfMinLimit);
         pScrewJoint->SetMaxDistance(mfMaxLimit);
         break;
     }
     case ePhysicsJointType_Slider:
     {
-        iPhysicsJointSlider *pSliderJoint = static_cast<iPhysicsJointSlider*>(apJoint);
+        iPhysicsJointSlider *pSliderJoint = static_cast<iPhysicsJointSlider *>(apJoint);
         pSliderJoint->SetMinDistance(mfMinLimit);
         pSliderJoint->SetMaxDistance(mfMaxLimit);
         break;
@@ -667,20 +667,20 @@ void cEngineJoint_SaveData::ToJoint(iPhysicsJoint *apJoint)
 //------------------------------------------------------------------------
 
 kBeginSerializeBase(cEngineJointController_SaveData)
-kSerializeVar(msName,eSerializeType_String)
-kSerializeVar(mfDestValue,eSerializeType_Float32)
-kSerializeVar(mbActive,eSerializeType_Bool)
+kSerializeVar(msName, eSerializeType_String)
+kSerializeVar(mfDestValue, eSerializeType_Float32)
+kSerializeVar(mbActive, eSerializeType_Bool)
 kEndSerialize()
 
 kBeginSerializeBase(cEngineJoint_SaveData)
-kSerializeVar(msName,eSerializeType_String)
+kSerializeVar(msName, eSerializeType_String)
 kSerializeVar(mlID, eSerializeType_Int32)
-kSerializeVar(mfMinLimit,eSerializeType_Float32)
-kSerializeVar(mfMaxLimit,eSerializeType_Float32)
-kSerializeVar(mbBroken,eSerializeType_Bool)
-kSerializeVar(msOnMinCallback,eSerializeType_String)
-kSerializeVar(msOnMaxCallback,eSerializeType_String)
-kSerializeClassContainer(mvControllers,cEngineJointController_SaveData,eSerializeType_Class)
+kSerializeVar(mfMinLimit, eSerializeType_Float32)
+kSerializeVar(mfMaxLimit, eSerializeType_Float32)
+kSerializeVar(mbBroken, eSerializeType_Bool)
+kSerializeVar(msOnMinCallback, eSerializeType_String)
+kSerializeVar(msOnMaxCallback, eSerializeType_String)
+kSerializeClassContainer(mvControllers, cEngineJointController_SaveData, eSerializeType_Class)
 kEndSerialize()
 //------------------------------------------------------------------------
 
@@ -703,15 +703,15 @@ void cEnginePS_SaveData::FromPS(cParticleSystem *apPS)
         mColor = apPS->GetColor();
         mbFadeAtDistance = apPS->GetFadeAtDistance();
         mfMinFadeDistanceStart = apPS->GetMinFadeDistanceStart();
-        mfMinFadeDistanceEnd =apPS->GetMinFadeDistanceEnd();
-        mfMaxFadeDistanceStart =apPS->GetMaxFadeDistanceStart();
-        mfMaxFadeDistanceEnd =apPS->GetMaxFadeDistanceEnd();
+        mfMinFadeDistanceEnd = apPS->GetMinFadeDistanceEnd();
+        mfMaxFadeDistanceStart = apPS->GetMaxFadeDistanceStart();
+        mfMaxFadeDistanceEnd = apPS->GetMaxFadeDistanceEnd();
 
         mbVisible = apPS->IsVisible();
         mbActive = apPS->IsActive();
 
         mvEmitterActive.Resize(apPS->GetEmitterNum());
-        for(int i=0; i< apPS->GetEmitterNum(); ++i)
+        for(int i = 0; i < apPS->GetEmitterNum(); ++i)
         {
             iParticleEmitter *pEmitter = apPS->GetEmitter(i);
 
@@ -737,7 +737,7 @@ void cEnginePS_SaveData::FromPS(cParticleSystem *apPS)
 
 void cEnginePS_SaveData::ToPS(cParticleSystem *apPS)
 {
-    if(apPS==NULL)
+    if(apPS == NULL)
     {
         return;
     }
@@ -755,11 +755,11 @@ void cEnginePS_SaveData::ToPS(cParticleSystem *apPS)
     apPS->SetMaxFadeDistanceStart(mfMaxFadeDistanceStart);
     apPS->SetMaxFadeDistanceEnd(mfMaxFadeDistanceEnd);
 
-    for(size_t i=0; i< mvEmitterActive.Size(); ++i)
+    for(size_t i = 0; i < mvEmitterActive.Size(); ++i)
     {
         iParticleEmitter *pEmitter = apPS->GetEmitter((int)i);
 
-        if(mvEmitterActive[i].mbActive==false)
+        if(mvEmitterActive[i].mbActive == false)
         {
             pEmitter->KillInstantly();
         }
@@ -769,28 +769,28 @@ void cEnginePS_SaveData::ToPS(cParticleSystem *apPS)
 //------------------------------------------------------------------------
 
 kBeginSerializeBase(cEnginePSEmitter_SaveData)
-kSerializeVar(mbActive,eSerializeType_Bool)
+kSerializeVar(mbActive, eSerializeType_Bool)
 kEndSerialize()
 
 kBeginSerializeBase(cEnginePS_SaveData)
-kSerializeVar(msName,eSerializeType_String)
+kSerializeVar(msName, eSerializeType_String)
 kSerializeVar(mlID, eSerializeType_Int32)
 
-kSerializeVar(mbActive,eSerializeType_Bool)
-kSerializeVar(mbVisible,eSerializeType_Bool)
+kSerializeVar(mbActive, eSerializeType_Bool)
+kSerializeVar(mbVisible, eSerializeType_Bool)
 
-kSerializeVar(msType,eSerializeType_String)
-kSerializeVar(mvSize,eSerializeType_Vector3f)
-kSerializeVar(m_mtxTransform,eSerializeType_Matrixf)
+kSerializeVar(msType, eSerializeType_String)
+kSerializeVar(mvSize, eSerializeType_Vector3f)
+kSerializeVar(m_mtxTransform, eSerializeType_Matrixf)
 
-kSerializeVar(mColor,eSerializeType_Color)
-kSerializeVar(mbFadeAtDistance,eSerializeType_Bool)
-kSerializeVar(mfMinFadeDistanceStart,eSerializeType_Float32)
-kSerializeVar(mfMinFadeDistanceEnd,eSerializeType_Float32)
-kSerializeVar(mfMaxFadeDistanceStart,eSerializeType_Float32)
-kSerializeVar(mfMaxFadeDistanceEnd,eSerializeType_Float32)
+kSerializeVar(mColor, eSerializeType_Color)
+kSerializeVar(mbFadeAtDistance, eSerializeType_Bool)
+kSerializeVar(mfMinFadeDistanceStart, eSerializeType_Float32)
+kSerializeVar(mfMinFadeDistanceEnd, eSerializeType_Float32)
+kSerializeVar(mfMaxFadeDistanceStart, eSerializeType_Float32)
+kSerializeVar(mfMaxFadeDistanceEnd, eSerializeType_Float32)
 
-kSerializeClassContainer(mvEmitterActive,cEnginePSEmitter_SaveData,eSerializeType_Class)
+kSerializeClassContainer(mvEmitterActive, cEnginePSEmitter_SaveData, eSerializeType_Class)
 kEndSerialize()
 
 //------------------------------------------------------------------------
@@ -824,12 +824,12 @@ void cEngineBeam_SaveData::ToBeam(cBeam *apBeam)
 //------------------------------------------------------------------------
 
 kBeginSerializeBase(cEngineBeam_SaveData)
-kSerializeVar(msName,eSerializeType_String)
+kSerializeVar(msName, eSerializeType_String)
 kSerializeVar(mlID, eSerializeType_Int32)
-kSerializeVar(msFile,eSerializeType_String)
+kSerializeVar(msFile, eSerializeType_String)
 
-kSerializeVar(mvStartPos,eSerializeType_Vector3f)
-kSerializeVar(mvEndPos,eSerializeType_Vector3f)
+kSerializeVar(mvStartPos, eSerializeType_Vector3f)
+kSerializeVar(mvEndPos, eSerializeType_Vector3f)
 kEndSerialize()
 
 //------------------------------------------------------------------------
@@ -881,16 +881,16 @@ void cEngineSound_SaveData::ToSound(cSoundEntity* apSound)
 //------------------------------------------------------------------------
 
 kBeginSerializeBase(cEngineSound_SaveData)
-kSerializeVar(msName,eSerializeType_String)
+kSerializeVar(msName, eSerializeType_String)
 kSerializeVar(mlID, eSerializeType_Int32)
-kSerializeVar(mbActive,eSerializeType_Bool)
-kSerializeVar(mbStopped,eSerializeType_Bool)
-kSerializeVar(msSoundDataName,eSerializeType_String)
-kSerializeVar(mfMinDistance,eSerializeType_Float32)
-kSerializeVar(mfMaxDistance,eSerializeType_Float32)
-kSerializeVar(mfVolume,eSerializeType_Float32)
-kSerializeVar(mvLocalPosition,eSerializeType_Vector3f)
-kSerializeVar(mbRemoveWhenOver,eSerializeType_Bool)
+kSerializeVar(mbActive, eSerializeType_Bool)
+kSerializeVar(mbStopped, eSerializeType_Bool)
+kSerializeVar(msSoundDataName, eSerializeType_String)
+kSerializeVar(mfMinDistance, eSerializeType_Float32)
+kSerializeVar(mfMaxDistance, eSerializeType_Float32)
+kSerializeVar(mfVolume, eSerializeType_Float32)
+kSerializeVar(mvLocalPosition, eSerializeType_Vector3f)
+kSerializeVar(mbRemoveWhenOver, eSerializeType_Bool)
 kEndSerialize()
 
 //------------------------------------------------------------------------
@@ -904,7 +904,7 @@ kEndSerialize()
 void cEngineLight_SaveData::FromLight(iLight *apLight)
 {
     bool bHasParent = true;
-    if(apLight->GetParent() == NULL && apLight->GetEntityParent()==NULL)
+    if(apLight->GetParent() == NULL && apLight->GetEntityParent() == NULL)
     {
         bHasParent = false;
     }
@@ -916,9 +916,9 @@ void cEngineLight_SaveData::FromLight(iLight *apLight)
     mbVisible = apLight->GetVisibleVar();
 
 
-    if(bHasParent==false)
+    if(bHasParent == false)
     {
-        if(apLight->IsFading() && apLight->GetFlickerActive()==false)
+        if(apLight->IsFading() && apLight->GetFlickerActive() == false)
         {
             apLight->SetDiffuseColor(apLight->GetDestColor());
             apLight->SetRadius(apLight->GetDestRadius());
@@ -961,17 +961,17 @@ void cEngineLight_SaveData::FromLight(iLight *apLight)
 void cEngineLight_SaveData::ToLight(iLight *apLight)
 {
     bool bHasParent = true;
-    if(apLight->GetParent() == NULL && apLight->GetEntityParent()==NULL)
+    if(apLight->GetParent() == NULL && apLight->GetEntityParent() == NULL)
     {
         bHasParent = false;
     }
 
-    if(bHasParent==false)
+    if(bHasParent == false)
     {
         apLight->SetActive(mbActive);
         apLight->SetVisible(mbVisible);
     }
-    if(bHasParent==false)
+    if(bHasParent == false)
     {
         apLight->SetDiffuseColor(mDiffuseColor);
         apLight->SetRadius(mfFarAttenuation);
@@ -979,12 +979,12 @@ void cEngineLight_SaveData::ToLight(iLight *apLight)
         //TODO: Attach billboards.
 
         apLight->SetFlickerActive(mbFlickering);
-        apLight->SetFlicker(mFlickerOffColor,mfFlickerOffRadius,
-                            mfFlickerOnMinLength,mfFlickerOnMaxLength,
-                            msFlickerOnSound,msFlickerOnPS,
-                            mfFlickerOffMinLength,mfFlickerOffMaxLength,
-                            msFlickerOffSound,msFlickerOffPS,
-                            mbFlickerFade,mfFlickerOnFadeMinLength,mfFlickerOnFadeMaxLength,
+        apLight->SetFlicker(mFlickerOffColor, mfFlickerOffRadius,
+                            mfFlickerOnMinLength, mfFlickerOnMaxLength,
+                            msFlickerOnSound, msFlickerOnPS,
+                            mfFlickerOffMinLength, mfFlickerOffMaxLength,
+                            msFlickerOffSound, msFlickerOffPS,
+                            mbFlickerFade, mfFlickerOnFadeMinLength, mfFlickerOnFadeMaxLength,
                             mfFlickerOffFadeMinLength, mfFlickerOffFadeMaxLength);
     }
 }
@@ -992,27 +992,27 @@ void cEngineLight_SaveData::ToLight(iLight *apLight)
 //------------------------------------------------------------------------
 
 kBeginSerializeBase(cEngineLight_SaveData)
-kSerializeVar(msName,eSerializeType_String)
+kSerializeVar(msName, eSerializeType_String)
 kSerializeVar(mlID, eSerializeType_Int32)
-kSerializeVar(mbActive,eSerializeType_Bool)
-kSerializeVar(mbVisible,eSerializeType_Bool)
-kSerializeVar(mbOnlyAffectInSector,eSerializeType_Bool)
+kSerializeVar(mbActive, eSerializeType_Bool)
+kSerializeVar(mbVisible, eSerializeType_Bool)
+kSerializeVar(mbOnlyAffectInSector, eSerializeType_Bool)
 
 kSerializeVar(mDiffuseColor, eSerializeType_Color)
 kSerializeVar(mfFarAttenuation, eSerializeType_Float32)
 
-kSerializeVar(mbFlickering,eSerializeType_Bool)
-kSerializeVar(msFlickerOffSound,eSerializeType_String)
-kSerializeVar(msFlickerOnSound,eSerializeType_String)
-kSerializeVar(msFlickerOffPS,eSerializeType_String)
-kSerializeVar(msFlickerOnPS,eSerializeType_String)
+kSerializeVar(mbFlickering, eSerializeType_Bool)
+kSerializeVar(msFlickerOffSound, eSerializeType_String)
+kSerializeVar(msFlickerOnSound, eSerializeType_String)
+kSerializeVar(msFlickerOffPS, eSerializeType_String)
+kSerializeVar(msFlickerOnPS, eSerializeType_String)
 kSerializeVar(mfFlickerOnMinLength, eSerializeType_Float32)
 kSerializeVar(mfFlickerOffMinLength, eSerializeType_Float32)
 kSerializeVar(mfFlickerOnMaxLength, eSerializeType_Float32)
 kSerializeVar(mfFlickerOffMaxLength, eSerializeType_Float32)
 kSerializeVar(mFlickerOffColor, eSerializeType_Color)
 kSerializeVar(mfFlickerOffRadius, eSerializeType_Float32)
-kSerializeVar(mbFlickerFade,eSerializeType_Bool)
+kSerializeVar(mbFlickerFade, eSerializeType_Bool)
 kSerializeVar(mfFlickerOnFadeMinLength, eSerializeType_Float32)
 kSerializeVar(mfFlickerOnFadeMaxLength, eSerializeType_Float32)
 kSerializeVar(mfFlickerOffFadeMinLength, eSerializeType_Float32)

@@ -35,25 +35,25 @@ iLuxArea *cLuxAreaLoader_SlimeDamage::CreateArea(const tString& asName, int alID
 
 void cLuxAreaLoader_SlimeDamage::LoadVariables(iLuxArea *apArea, cWorld *apWorld)
 {
-    cLuxArea_SlimeDamage *pFlashArea = static_cast<cLuxArea_SlimeDamage*>(apArea);
+    cLuxArea_SlimeDamage *pFlashArea = static_cast<cLuxArea_SlimeDamage *>(apArea);
 
-    pFlashArea->mlSlimeType = GetVarInt("SlimeType",0);
+    pFlashArea->mlSlimeType = GetVarInt("SlimeType", 0);
 
-    pFlashArea->mfMinCheckAttackTime = GetVarFloat("MinCheckAttackTime",0);
-    pFlashArea->mfMaxCheckAttackTime = GetVarFloat("MaxCheckAttackTime",0);
-    pFlashArea->mbDisableAfterAttack = GetVarBool("DisableAfterAttack",false);
-    pFlashArea->msCallback = GetVarString("Callback","");
+    pFlashArea->mfMinCheckAttackTime = GetVarFloat("MinCheckAttackTime", 0);
+    pFlashArea->mfMaxCheckAttackTime = GetVarFloat("MaxCheckAttackTime", 0);
+    pFlashArea->mbDisableAfterAttack = GetVarBool("DisableAfterAttack", false);
+    pFlashArea->msCallback = GetVarString("Callback", "");
 
     pFlashArea->mfCheckCollisionCount = cMath::RandRectf(pFlashArea->mfMinCheckAttackTime, pFlashArea->mfMaxCheckAttackTime);
 
     //Load from config file.
     tString sPrefix = "SlimeType" + cString::ToString(pFlashArea->mlSlimeType);
 
-    pFlashArea->msAttackSound = gpBase->mpGameCfg->GetString("Slime",sPrefix+"_AttackSound", "");
-    pFlashArea->msAttackPS = gpBase->mpGameCfg->GetString("Slime",sPrefix+"_AttackPS", "");
-    pFlashArea->mfMinAttackDamage = gpBase->mpGameCfg->GetFloat("Slime",sPrefix+"_MinAttackDamage", 0);
-    pFlashArea->mfMaxAttackDamage = gpBase->mpGameCfg->GetFloat("Slime",sPrefix+"_MaxAttackDamage", 0);
-    pFlashArea->mfScreenShakeAmount = gpBase->mpGameCfg->GetFloat("Slime",sPrefix+"_ScreenShakeAmount", 0);
+    pFlashArea->msAttackSound = gpBase->mpGameCfg->GetString("Slime", sPrefix + "_AttackSound", "");
+    pFlashArea->msAttackPS = gpBase->mpGameCfg->GetString("Slime", sPrefix + "_AttackPS", "");
+    pFlashArea->mfMinAttackDamage = gpBase->mpGameCfg->GetFloat("Slime", sPrefix + "_MinAttackDamage", 0);
+    pFlashArea->mfMaxAttackDamage = gpBase->mpGameCfg->GetFloat("Slime", sPrefix + "_MaxAttackDamage", 0);
+    pFlashArea->mfScreenShakeAmount = gpBase->mpGameCfg->GetFloat("Slime", sPrefix + "_ScreenShakeAmount", 0);
 }
 
 void cLuxAreaLoader_SlimeDamage::SetupArea(iLuxArea *apArea, cWorld *apWorld)
@@ -69,7 +69,7 @@ void cLuxAreaLoader_SlimeDamage::SetupArea(iLuxArea *apArea, cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-cLuxArea_SlimeDamage::cLuxArea_SlimeDamage(const tString &asName, int alID, cLuxMap *apMap)  : iLuxArea(asName,alID,apMap, eLuxAreaType_SlimeDamage)
+cLuxArea_SlimeDamage::cLuxArea_SlimeDamage(const tString &asName, int alID, cLuxMap *apMap)  : iLuxArea(asName, alID, apMap, eLuxAreaType_SlimeDamage)
 {
     mfCheckCollisionCount = 0;
 }
@@ -93,7 +93,7 @@ void cLuxArea_SlimeDamage::OnUpdate(double adFixedDelta)
     //////////////////////////
     // Check update count
     mfCheckCollisionCount -= (float)adFixedDelta;
-    if(mfCheckCollisionCount>0)
+    if(mfCheckCollisionCount > 0)
     {
         return;
     }
@@ -107,7 +107,7 @@ void cLuxArea_SlimeDamage::OnUpdate(double adFixedDelta)
         /////////////////////////
         //Damage player
         float fDamage = cMath::RandRectf(mfMinAttackDamage, mfMaxAttackDamage);
-        gpBase->mpPlayer->GiveDamage(fDamage,1,eLuxDamageType_BloodSplat, true, false);
+        gpBase->mpPlayer->GiveDamage(fDamage, 1, eLuxDamageType_BloodSplat, true, false);
 
         /////////////////////////
         //Sound
@@ -117,7 +117,7 @@ void cLuxArea_SlimeDamage::OnUpdate(double adFixedDelta)
         //Particle
         if(msAttackPS != "")
         {
-            cParticleSystem *pPS = mpMap->GetWorld()->CreateParticleSystem("SlimeAttack", msAttackPS,1);
+            cParticleSystem *pPS = mpMap->GetWorld()->CreateParticleSystem("SlimeAttack", msAttackPS, 1);
             if(pPS)
             {
                 pPS->SetPosition(mpBody->GetLocalPosition());
@@ -126,13 +126,13 @@ void cLuxArea_SlimeDamage::OnUpdate(double adFixedDelta)
 
         /////////////////////////
         //ScreenShake
-        gpBase->mpEffectHandler->GetScreenShake()->Start(mfScreenShakeAmount, 0.5f, 0.1f,0.3f);
+        gpBase->mpEffectHandler->GetScreenShake()->Start(mfScreenShakeAmount, 0.5f, 0.1f, 0.3f);
 
         /////////////////////////
         //Run Callback
         if(msCallback != "")
         {
-            mpMap->RunScript(msCallback+"(\""+msName+"\")");
+            mpMap->RunScript(msCallback + "(\"" + msName + "\")");
         }
 
         /////////////////////////
@@ -182,14 +182,14 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxArea* cLuxArea_SlimeDamage_SaveData::CreateArea(cLuxMap *apMap)
+iLuxArea *cLuxArea_SlimeDamage_SaveData::CreateArea(cLuxMap *apMap)
 {
     return hplNew(cLuxArea_SlimeDamage, (msName, mlID, apMap));
 }
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxArea_SlimeDamage::CreateSaveData()
+iLuxEntity_SaveData *cLuxArea_SlimeDamage::CreateSaveData()
 {
     return hplNew(cLuxArea_SlimeDamage_SaveData, ());
 }
@@ -199,7 +199,7 @@ iLuxEntity_SaveData* cLuxArea_SlimeDamage::CreateSaveData()
 void cLuxArea_SlimeDamage::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 {
     super_class::SaveToSaveData(apSaveData);
-    cLuxArea_SlimeDamage_SaveData *pData = static_cast<cLuxArea_SlimeDamage_SaveData*>(apSaveData);
+    cLuxArea_SlimeDamage_SaveData *pData = static_cast<cLuxArea_SlimeDamage_SaveData *>(apSaveData);
 
     kCopyToVar(pData, mlSlimeType);
 
@@ -222,7 +222,7 @@ void cLuxArea_SlimeDamage::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 void cLuxArea_SlimeDamage::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 {
     super_class::LoadFromSaveData(apSaveData);
-    cLuxArea_SlimeDamage_SaveData *pData = static_cast<cLuxArea_SlimeDamage_SaveData*>(apSaveData);
+    cLuxArea_SlimeDamage_SaveData *pData = static_cast<cLuxArea_SlimeDamage_SaveData *>(apSaveData);
 
     kCopyFromVar(pData, mlSlimeType);
 

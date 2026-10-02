@@ -17,8 +17,8 @@
 iLuxPlayerState_InteractRotateBase::iLuxPlayerState_InteractRotateBase(cLuxPlayer *apPlayer, eLuxPlayerState aState)
     : iLuxPlayerState_Interact(apPlayer, aState)
 {
-    mfMoveToMouseAddFactor = gpBase->mpGameCfg->GetFloat("Player_Interaction","MoveToMouseAddFactor", 0.01f);
-    mfMaxTorque = gpBase->mpGameCfg->GetFloat("Player_Interaction","MoveMaxForce", 1000.0f);
+    mfMoveToMouseAddFactor = gpBase->mpGameCfg->GetFloat("Player_Interaction", "MoveToMouseAddFactor", 0.01f);
+    mfMaxTorque = gpBase->mpGameCfg->GetFloat("Player_Interaction", "MoveMaxForce", 1000.0f);
 
 
     mRotatePid.SetErrorNum(10);
@@ -48,7 +48,7 @@ void iLuxPlayerState_InteractRotateBase::OnEnterState(eLuxPlayerState aPrevState
 
     /////////////////////////////////
     //Clear smoothing
-    if(gpBase->mpInputHandler->GetSmoothMouse()==false)
+    if(gpBase->mpInputHandler->GetSmoothMouse() == false)
     {
         gpBase->mpInputHandler->ResetSmoothMousePos();
     }
@@ -64,8 +64,8 @@ void iLuxPlayerState_InteractRotateBase::OnEnterState(eLuxPlayerState aPrevState
     /////////////////////////////////
     //Reset data
     mRotatePid.Reset();
-    mfRotSpeed =0;
-    mvMouseAdd =0;
+    mfRotSpeed = 0;
+    mvMouseAdd = 0;
 
     /////////////////////////////////
     //Setup body
@@ -114,29 +114,29 @@ void iLuxPlayerState_InteractRotateBase::SetupForceAxes()
     cCamera *pCam = mpPlayer->GetCamera();
 
     cVector3f vCamDir[3];
-    vCamDir[1] = cVector3f(0,1,0);
+    vCamDir[1] = cVector3f(0, 1, 0);
     vCamDir[0] = cMath::Vector3Cross(pCam->GetForward(), vCamDir[1]);
     vCamDir[2] = cMath::Vector3Cross(vCamDir[1], vCamDir[0]);
 
-    for(int i=0; i<3; ++i)
+    for(int i = 0; i < 3; ++i)
     {
         mvCamDir[i] = vCamDir[i];
     }
 
     cVector3f vForceDir[2];
-    float fMaxCos[2] = {0,0};
-    int lMaxCam[2] = {-1,-1};
-    int lForceAxis[2] = {-1,-1};
+    float fMaxCos[2] = {0, 0};
+    int lMaxCam[2] = {-1, -1};
+    int lForceAxis[2] = {-1, -1};
 
     /////////////////////////////
     //Get the directions
     vForceDir[0] = cMath::Vector3Cross(pCam->GetForward(), mpCurrentJoint->GetPinDir());
-    vForceDir[1] = cMath::Vector3Cross(mpCurrentJoint->GetPinDir(),vForceDir[0]);
+    vForceDir[1] = cMath::Vector3Cross(mpCurrentJoint->GetPinDir(), vForceDir[0]);
 
     /////////////////////////////
     //Determine the cam direction closes to each force direction
-    for(int force=0; force < 2; ++force)
-        for(int cam=0; cam < 3; ++cam)
+    for(int force = 0; force < 2; ++force)
+        for(int cam = 0; cam < 3; ++cam)
         {
             float fCos = cMath::Vector3Dot(vForceDir[force], vCamDir[cam]);
             if(cMath::Abs(fCos) > cMath::Abs(fMaxCos[force]))
@@ -148,16 +148,16 @@ void iLuxPlayerState_InteractRotateBase::SetupForceAxes()
 
     /////////////////////////////
     //Determine what axis to place each force dir
-    for(int force=0; force < 2; ++force)
+    for(int force = 0; force < 2; ++force)
     {
-        int lOther = force==0?1:0;
-        if(lMaxCam[force]==0)
+        int lOther = force == 0 ? 1 : 0;
+        if(lMaxCam[force] == 0)
         {
-            lForceAxis[force] =0;
+            lForceAxis[force] = 0;
             lForceAxis[lOther] = 1;
             break;
         }
-        if(lMaxCam[force]==1)
+        if(lMaxCam[force] == 1)
         {
             lForceAxis[force] = 1;
             lForceAxis[lOther] = 0;
@@ -167,7 +167,7 @@ void iLuxPlayerState_InteractRotateBase::SetupForceAxes()
 
     /////////////////////////////
     //Set the forces axes
-    for(int force=0; force < 2; ++force)
+    for(int force = 0; force < 2; ++force)
     {
         float fMul = 1.0f;
         if(fMaxCos[force] < 0)
@@ -185,7 +185,7 @@ void iLuxPlayerState_InteractRotateBase::SetupForceAxes()
     float fFwdRightDot = cMath::Vector3Dot(vCamDir[2], mvForceAxis[0]);
     if(fFwdRightDot > 0)
     {
-        mvForceAxis[1] += mvForceAxis[0]*fFwdRightDot;
+        mvForceAxis[1] += mvForceAxis[0] * fFwdRightDot;
         mvForceAxis[1].Normalize();
     }
 }
@@ -197,7 +197,7 @@ void iLuxPlayerState_InteractRotateBase::Update(double adFixedDelta)
     //////////////////////////////
     //Update move add
 
-    if(gpBase->mpInputHandler->GetSmoothMouse()==false)
+    if(gpBase->mpInputHandler->GetSmoothMouse() == false)
     {
         mvMouseAdd = gpBase->mpInputHandler->GetSmoothMousePos(mvMouseAdd);
     }
@@ -206,7 +206,7 @@ void iLuxPlayerState_InteractRotateBase::Update(double adFixedDelta)
     //Set up variables
     iCharacterBody *pCharBody = mpPlayer->GetCharacterBody();
     cCamera *pCam = mpPlayer->GetCamera();
-    iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge*>(mpCurrentJoint);
+    iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge *>(mpCurrentJoint);
 
     //////////////////////////////
     //Check if out of range
@@ -283,14 +283,14 @@ void iLuxPlayerState_InteractRotateBase::PostUpdate(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-bool iLuxPlayerState_InteractRotateBase::OnDoAction(eLuxPlayerAction aAction,bool abPressed)
+bool iLuxPlayerState_InteractRotateBase::OnDoAction(eLuxPlayerAction aAction, bool abPressed)
 {
     ////////////////////////////
     // Interact
     if(aAction == eLuxPlayerAction_Interact)
     {
         // Released
-        if(abPressed==false)
+        if(abPressed == false)
         {
             mpPlayer->ChangeState(mPreviousState);
 
@@ -386,22 +386,22 @@ bool iLuxPlayerState_InteractRotateBase::OnAddPitch(float afAmount)
 
 //-----------------------------------------------------------------------
 
-cGuiGfxElement* iLuxPlayerState_InteractRotateBase::GetCrosshair()
+cGuiGfxElement *iLuxPlayerState_InteractRotateBase::GetCrosshair()
 {
     return NULL;
 }
 
 //-----------------------------------------------------------------------
 
-float iLuxPlayerState_InteractRotateBase::DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY)
+float iLuxPlayerState_InteractRotateBase::DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY)
 {
-    apSet->DrawFont(apFont,cVector3f(5,afStartY,5),12,cColor(1,1),_W("Speed: %f"), mfRotSpeed);//mSmoothSpeed.GetOutput());
+    apSet->DrawFont(apFont, cVector3f(5, afStartY, 5), 12, cColor(1, 1), _W("Speed: %f"), mfRotSpeed); //mSmoothSpeed.GetOutput());
     afStartY += 13.0f;
 
-    apSet->DrawFont(apFont,cVector3f(5,afStartY,5),12,cColor(1,1),_W("Angle: %f"),  cMath::ToDeg(mpCurrentJoint->GetAngle()));
+    apSet->DrawFont(apFont, cVector3f(5, afStartY, 5), 12, cColor(1, 1), _W("Angle: %f"),  cMath::ToDeg(mpCurrentJoint->GetAngle()));
     afStartY += 13.0f;
 
-    apSet->DrawFont(apFont,cVector3f(5,afStartY,5),12,cColor(1,1),_W("AngularVel: (%ls)"),cString::To16Char(mpCurrentBody->GetAngularVelocity().ToString()).c_str());
+    apSet->DrawFont(apFont, cVector3f(5, afStartY, 5), 12, cColor(1, 1), _W("AngularVel: (%ls)"), cString::To16Char(mpCurrentBody->GetAngularVelocity().ToString()).c_str());
     afStartY += 13.0f;
 
 
@@ -411,7 +411,7 @@ float iLuxPlayerState_InteractRotateBase::DrawDebug(cGuiSet *apSet,iFontData *ap
     //afStartY += 13.0f;
 
 
-    afStartY = mpCurrentProp->OnInteractDebugDraw(apSet,apFont,afStartY);
+    afStartY = mpCurrentProp->OnInteractDebugDraw(apSet, apFont, afStartY);
 
     return afStartY;
 }
@@ -475,7 +475,7 @@ void iLuxPlayerState_InteractRotateBase::SaveToSaveData(iLuxPlayerState_SaveData
     ///////////////////////
     // Init
     super_class::SaveToSaveData(apSaveData);
-    iLuxPlayerState_InteractRotateBase_SaveData *pData = static_cast<iLuxPlayerState_InteractRotateBase_SaveData*>(apSaveData);
+    iLuxPlayerState_InteractRotateBase_SaveData *pData = static_cast<iLuxPlayerState_InteractRotateBase_SaveData *>(apSaveData);
 
 
     ///////////////////////
@@ -488,8 +488,8 @@ void iLuxPlayerState_InteractRotateBase::LoadFromSaveDataBeforeEnter(cLuxMap *ap
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataBeforeEnter(apMap,apSaveData);
-    iLuxPlayerState_InteractRotateBase_SaveData *pData = static_cast<iLuxPlayerState_InteractRotateBase_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataBeforeEnter(apMap, apSaveData);
+    iLuxPlayerState_InteractRotateBase_SaveData *pData = static_cast<iLuxPlayerState_InteractRotateBase_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars
@@ -501,8 +501,8 @@ void iLuxPlayerState_InteractRotateBase::LoadFromSaveDataAfterEnter(cLuxMap *apM
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataAfterEnter(apMap,apSaveData);
-    iLuxPlayerState_InteractRotateBase_SaveData *pData = static_cast<iLuxPlayerState_InteractRotateBase_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataAfterEnter(apMap, apSaveData);
+    iLuxPlayerState_InteractRotateBase_SaveData *pData = static_cast<iLuxPlayerState_InteractRotateBase_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars

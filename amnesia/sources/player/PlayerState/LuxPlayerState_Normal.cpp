@@ -33,7 +33,7 @@ cLuxPlayerState_Normal::~cLuxPlayerState_Normal()
 
 //-----------------------------------------------------------------------
 
-bool cLuxPlayerState_Normal::ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed)
+bool cLuxPlayerState_Normal::ImplementedDoAction(eLuxPlayerAction aAction, bool abPressed)
 {
     return true;
 }
@@ -61,7 +61,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxPlayerState_SaveData* cLuxPlayerState_Normal::CreateSaveData()
+iLuxPlayerState_SaveData *cLuxPlayerState_Normal::CreateSaveData()
 {
     return hplNew(cLuxPlayerState_Normal_SaveData, ());
 }
@@ -74,7 +74,7 @@ void cLuxPlayerState_Normal::SaveToSaveData(iLuxPlayerState_SaveData* apSaveData
     ///////////////////////
     // Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxPlayerState_Normal_SaveData *pData = static_cast<cLuxPlayerState_Normal_SaveData*>(apSaveData);
+    cLuxPlayerState_Normal_SaveData *pData = static_cast<cLuxPlayerState_Normal_SaveData *>(apSaveData);
 
 
     ///////////////////////
@@ -87,8 +87,8 @@ void cLuxPlayerState_Normal::LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxPla
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataBeforeEnter(apMap,apSaveData);
-    cLuxPlayerState_Normal_SaveData *pData = static_cast<cLuxPlayerState_Normal_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataBeforeEnter(apMap, apSaveData);
+    cLuxPlayerState_Normal_SaveData *pData = static_cast<cLuxPlayerState_Normal_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars
@@ -100,8 +100,8 @@ void cLuxPlayerState_Normal::LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlay
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataAfterEnter(apMap,apSaveData);
-    cLuxPlayerState_Normal_SaveData *pData = static_cast<cLuxPlayerState_Normal_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataAfterEnter(apMap, apSaveData);
+    cLuxPlayerState_Normal_SaveData *pData = static_cast<cLuxPlayerState_Normal_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars

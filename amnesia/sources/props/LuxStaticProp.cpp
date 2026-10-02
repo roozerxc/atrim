@@ -20,17 +20,17 @@ cLuxStaticPropLoader::cLuxStaticPropLoader(const tString& asName) : cEntityLoade
 
 //-----------------------------------------------------------------------
 
-void cLuxStaticPropLoader::BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars)
+void cLuxStaticPropLoader::BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars)
 {
 
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxStaticPropLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars)
+void cLuxStaticPropLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars)
 {
     cLuxMap *pMap = gpBase->mpCurrentMapLoading;
-    if(pMap==NULL)
+    if(pMap == NULL)
     {
         return;
     }
@@ -98,7 +98,7 @@ cLuxStaticProp::~cLuxStaticProp()
     // Destroy physics
     {
         //Joints
-        for(size_t i=0; i<mvJoints.size(); ++i)
+        for(size_t i = 0; i < mvJoints.size(); ++i)
         {
             iPhysicsJoint *pJoint = mvJoints[i];
 
@@ -109,7 +109,7 @@ cLuxStaticProp::~cLuxStaticProp()
         }
 
         //Bodies
-        for(size_t i=0; i<mvBodies.size(); ++i)
+        for(size_t i = 0; i < mvBodies.size(); ++i)
         {
             iPhysicsBody *pBody = mvBodies[i];
 
@@ -127,13 +127,13 @@ cLuxStaticProp::~cLuxStaticProp()
         }
 
         //Lights
-        for(size_t i=0; i<mvLights.size(); ++i)
+        for(size_t i = 0; i < mvLights.size(); ++i)
         {
             pWorld->DestroyLight(mvLights[i]);
         }
 
         //Particle systems
-        for(size_t i=0; i<mvParticleSystems.size(); ++i)
+        for(size_t i = 0; i < mvParticleSystems.size(); ++i)
         {
             cParticleSystem *pPS = mvParticleSystems[i];
             if(pPS && pWorld->ParticleSystemExists(pPS))
@@ -143,19 +143,19 @@ cLuxStaticProp::~cLuxStaticProp()
         }
 
         //Billboards
-        for(size_t i=0; i<mvBillboards.size(); ++i)
+        for(size_t i = 0; i < mvBillboards.size(); ++i)
         {
             pWorld->DestroyBillboard(mvBillboards[i]);
         }
 
         //Beams
-        for(size_t i=0; i<mvBeams.size(); ++i)
+        for(size_t i = 0; i < mvBeams.size(); ++i)
         {
             pWorld->DestroyBeam(mvBeams[i]);
         }
 
         //Sound entities
-        for(size_t i=0; i<mvSoundEntities.size(); ++i)
+        for(size_t i = 0; i < mvSoundEntities.size(); ++i)
         {
             pWorld->DestroySoundEntity(mvSoundEntities[i]);
         }

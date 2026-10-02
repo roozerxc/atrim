@@ -14,8 +14,8 @@
 
 cLuxHandObject_LightSource::cLuxHandObject_LightSource(const tString& asName, cLuxPlayerHands *apHands) : iLuxHandObject(asName, apHands)
 {
-    mfSwayAngle =0;
-    mfSwayVel =0;
+    mfSwayAngle = 0;
+    mfSwayVel = 0;
 }
 
 cLuxHandObject_LightSource::~cLuxHandObject_LightSource()
@@ -48,7 +48,7 @@ void cLuxHandObject_LightSource::LoadImplementedVars(cXmlElement *apVarsElem)
     mbHasSwayPhysics = apVarsElem->GetAttributeBool("HasSwayPhysics", false);
     mfMaxSwayVel = apVarsElem->GetAttributeFloat("MaxSwayVel", 0);
     mvSwayAngleLimits = cMath::Vector2ToRad(apVarsElem->GetAttributeVector2f("SwayAngleLimits", 0));
-    mvSwayDownAngleLimits= cMath::Vector2ToRad(apVarsElem->GetAttributeVector2f("SwayDownAngleLimits", 0));
+    mvSwayDownAngleLimits = cMath::Vector2ToRad(apVarsElem->GetAttributeVector2f("SwayDownAngleLimits", 0));
 
     mfSwayGravity = apVarsElem->GetAttributeFloat("SwayGravity", 0);
     mfSwayFriction = apVarsElem->GetAttributeFloat("SwayFriction", 0);
@@ -72,13 +72,13 @@ void cLuxHandObject_LightSource::ImplementedCreateEntity(cLuxMap *apMap)
     {
         mvDefaultLightMatrix.resize(mvLights.size());
 
-        for(size_t i=0; i<mvLights.size(); ++i)
+        for(size_t i = 0; i < mvLights.size(); ++i)
         {
             mvDefaultLightMatrix[i] = mvLights[i]->GetLocalMatrix();
         }
     }
 
-    for(size_t i=0; i<mvLights.size(); ++i)
+    for(size_t i = 0; i < mvLights.size(); ++i)
     {
         mvDefaultLightColors[i]  = mvLights[i]->GetDiffuseColor();
         mvDefaultLightFlicker[i] = mvLights[i]->GetFlickerActive();
@@ -86,7 +86,7 @@ void cLuxHandObject_LightSource::ImplementedCreateEntity(cLuxMap *apMap)
     }
 
     mvDefaultSubMeshMatrix.resize(mpMeshEntity->GetSubMeshEntityNum());
-    for(int i=0; i<mpMeshEntity->GetSubMeshEntityNum(); ++i)
+    for(int i = 0; i < mpMeshEntity->GetSubMeshEntityNum(); ++i)
     {
         cSubMeshEntity *pSubEnt = mpMeshEntity->GetSubMeshEntity((unsigned int)i);
         mvDefaultSubMeshMatrix[i] = pSubEnt->GetLocalMatrix();
@@ -103,8 +103,8 @@ void cLuxHandObject_LightSource::ImplementedDestroyEntity(cLuxMap *apMap)
 
 void cLuxHandObject_LightSource::ImplementedReset()
 {
-    mfSwayAngle =0;
-    mfSwayVel =0;
+    mfSwayAngle = 0;
+    mfSwayVel = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -114,7 +114,7 @@ void cLuxHandObject_LightSource::Update(double adFixedDelta)
     bool bUpdate = false;
     bool bUpdateDone = false;
 
-    for(size_t i=0; i<mvLights.size(); ++i)
+    for(size_t i = 0; i < mvLights.size(); ++i)
     {
         cMatrixf mtxLight = mvDefaultLightMatrix[i];
 
@@ -137,7 +137,7 @@ void cLuxHandObject_LightSource::Update(double adFixedDelta)
     // Fade out
     if(mpHands->GetState() == eLuxHandsState_Holster)
     {
-        for(size_t i=0; i<mvLights.size(); ++i)
+        for(size_t i = 0; i < mvLights.size(); ++i)
         {
             if(mvDefaultLightFlicker[i])
             {
@@ -172,7 +172,7 @@ void cLuxHandObject_LightSource::Update(double adFixedDelta)
     // Calculate fade out color
     if(mpHands->GetState() != eLuxHandsState_Holster)
     {
-        for(size_t i=0; i<mvLights.size(); ++i)
+        for(size_t i = 0; i < mvLights.size(); ++i)
         {
             mvLightFadeOutColor[i] = mvLights[i]->GetDiffuseColor();
         }
@@ -185,21 +185,21 @@ void cLuxHandObject_LightSource::Update(double adFixedDelta)
     {
         mpMeshEntity->SetIlluminationAmount(mpHands->mfHandObjectAlpha);
 
-        for(size_t i=0; i<mvBillboards.size(); ++i)
+        for(size_t i = 0; i < mvBillboards.size(); ++i)
         {
             cColor col = mvBillboards[i]->GetColor();
             col.a = mpHands->mfHandObjectAlpha;
             mvBillboards[i]->SetColor(col);
         }
 
-        for(size_t i=0; i<mvParticleSystems.size(); ++i)
+        for(size_t i = 0; i < mvParticleSystems.size(); ++i)
         {
             cColor col = mvParticleSystems[i]->GetColor();
             col.a = mpHands->mfHandObjectAlpha;
             mvParticleSystems[i]->SetColor(col);
         }
 
-        for(size_t i=0; i<mvLights.size(); ++i)
+        for(size_t i = 0; i < mvLights.size(); ++i)
         {
             if(mpHands->GetState() == eLuxHandsState_Holster)
             {
@@ -214,7 +214,7 @@ void cLuxHandObject_LightSource::Update(double adFixedDelta)
 
     if(bUpdateDone)
     {
-        for(size_t i=0; i<mvLights.size(); ++i)
+        for(size_t i = 0; i < mvLights.size(); ++i)
         {
             if(mvDefaultLightFlicker[i])
             {
@@ -267,7 +267,7 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(double adFixedDelta)
         // Player velocity
         iCharacterBody *pCharBody = gpBase->mpPlayer->GetCharacterBody();
         float fPlayerSpeed = pCharBody->GetVelocity(gpBase->mpEngine->GetFixedDelta()).Length();
-        if(pCharBody->GetMoveSpeed(eCharDir_Forward)<0)
+        if(pCharBody->GetMoveSpeed(eCharDir_Forward) < 0)
         {
             fPlayerSpeed = -fPlayerSpeed;
         }
@@ -276,11 +276,11 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(double adFixedDelta)
 
         /////////////////////////////
         // Cap and Friction
-        if(mfSwayVel> mfMaxSwayVel)
+        if(mfSwayVel > mfMaxSwayVel)
         {
             mfSwayVel = mfMaxSwayVel;
         }
-        if(mfSwayVel< -mfMaxSwayVel)
+        if(mfSwayVel < -mfMaxSwayVel)
         {
             mfSwayVel = -mfMaxSwayVel;
         }
@@ -295,14 +295,14 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(double adFixedDelta)
     //Min
     if(mfSwayAngle < mvSwayAngleLimits.x)
     {
-        mfSwayVel =0;
+        mfSwayVel = 0;
         mfSwayAngle = mvSwayAngleLimits.x;
     }
 
     //Max
     if(mfSwayAngle > mvSwayAngleLimits.y)
     {
-        mfSwayVel =0;
+        mfSwayVel = 0;
         mfSwayAngle = mvSwayAngleLimits.y;
     }
 
@@ -310,7 +310,7 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(double adFixedDelta)
     // Update Model matrix
     cMatrixf mtxSway = cMath::MatrixRotate(mvSwayPinDir * mfSwayAngle, eEulerRotationOrder_XYZ);
 
-    for(int i=0; i<mpMeshEntity->GetSubMeshEntityNum(); ++i)
+    for(int i = 0; i < mpMeshEntity->GetSubMeshEntityNum(); ++i)
     {
         cSubMeshEntity *pSubEnt = mpMeshEntity->GetSubMeshEntity((unsigned int)i);
         if(pSubEnt->GetSubMesh()->GetName() == msSkipSwaySubMesh)

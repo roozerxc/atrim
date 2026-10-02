@@ -15,23 +15,23 @@
 
 cLuxPropLoader_Object::cLuxPropLoader_Object(const tString& asName) : iLuxPropLoader(asName)
 {
-    mfGrabDefaultMaxFocusDist = gpBase->mpGameCfg->GetFloat("Player_Interaction","Grab_DefaultMaxFocusDist",0);
-    mfPushDefaultMaxFocusDist = gpBase->mpGameCfg->GetFloat("Player_Interaction","Push_DefaultMaxFocusDist",0);
-    mfSlideDefaultMaxFocusDist = gpBase->mpGameCfg->GetFloat("Player_Interaction","Slide_DefaultMaxFocusDist",0);
+    mfGrabDefaultMaxFocusDist = gpBase->mpGameCfg->GetFloat("Player_Interaction", "Grab_DefaultMaxFocusDist", 0);
+    mfPushDefaultMaxFocusDist = gpBase->mpGameCfg->GetFloat("Player_Interaction", "Push_DefaultMaxFocusDist", 0);
+    mfSlideDefaultMaxFocusDist = gpBase->mpGameCfg->GetFloat("Player_Interaction", "Slide_DefaultMaxFocusDist", 0);
 }
 
 //-----------------------------------------------------------------------
 
 iLuxProp *cLuxPropLoader_Object::CreateProp(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxProp_Object, (asName, alID,apMap) );
+    return hplNew(cLuxProp_Object, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPropLoader_Object::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    cLuxProp_Object  *pObject = static_cast<cLuxProp_Object*>(apProp);
+    cLuxProp_Object  *pObject = static_cast<cLuxProp_Object *>(apProp);
 
     ///////////////////////////
     // General
@@ -51,9 +51,9 @@ void cLuxPropLoader_Object::LoadVariables(iLuxProp *apProp, cXmlElement *apRootE
     pObject->mBreakData.msParticleSystem = GetVarString("BreakParticleSystem", "");
     pObject->mBreakData.mfImpulse = GetVarFloat("BreakImpulse", 3);
 
-    pObject->mfHitDamageAmount = GetVarFloat("HitDamageAmount",5);
-    pObject->mlHitDamageStrength = GetVarInt("HitDamageStrength",1);
-    pObject->mfMinHitDamageSpeed = GetVarFloat("MinHitDamageSpeed",3.5f);
+    pObject->mfHitDamageAmount = GetVarFloat("HitDamageAmount", 5);
+    pObject->mlHitDamageStrength = GetVarInt("HitDamageStrength", 1);
+    pObject->mfMinHitDamageSpeed = GetVarFloat("MinHitDamageSpeed", 3.5f);
 
     ///////////////////////////
     // Static specific
@@ -82,7 +82,7 @@ void cLuxPropLoader_Object::LoadVariables(iLuxProp *apProp, cXmlElement *apRootE
         pObject->mbGrabSkipNonOuterBodies = GetVarBool("GrabSkipNonOuterBodies", false);
 
 
-        if(pObject->mfMaxFocusDistance<=0)
+        if(pObject->mfMaxFocusDistance <= 0)
         {
             pObject->mfMaxFocusDistance = mfGrabDefaultMaxFocusDist;
         }
@@ -95,7 +95,7 @@ void cLuxPropLoader_Object::LoadVariables(iLuxProp *apProp, cXmlElement *apRootE
         pObject->mPushData.mfPushForceMul = GetVarFloat("PushForceMul", 1.0f);
         pObject->mPushData.mfPushImpulse = GetVarFloat("PushImpulse", 2.0f);
 
-        if(pObject->mfMaxFocusDistance<=0)
+        if(pObject->mfMaxFocusDistance <= 0)
         {
             pObject->mfMaxFocusDistance = mfPushDefaultMaxFocusDist;
         }
@@ -109,7 +109,7 @@ void cLuxPropLoader_Object::LoadVariables(iLuxProp *apProp, cXmlElement *apRootE
         pObject->mSlideData.mfSlideSpeedFactor = GetVarFloat("SlideSpeedFactor", 1.0f);
         pObject->mSlideData.mfSlideThrowImpulse = GetVarFloat("SlideThrowImpulse", 3.0f);
 
-        if(pObject->mfMaxFocusDistance<=0)
+        if(pObject->mfMaxFocusDistance <= 0)
         {
             pObject->mfMaxFocusDistance = mfSlideDefaultMaxFocusDist;
         }
@@ -120,22 +120,22 @@ void cLuxPropLoader_Object::LoadVariables(iLuxProp *apProp, cXmlElement *apRootE
 
 void cLuxPropLoader_Object::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
-    cLuxProp_Object  *pObject = static_cast<cLuxProp_Object*>(apProp);
+    cLuxProp_Object  *pObject = static_cast<cLuxProp_Object *>(apProp);
 
-    pObject->mbDisableBreakable = apInstanceVars->GetVarBool("DisableBreakable",false);
+    pObject->mbDisableBreakable = apInstanceVars->GetVarBool("DisableBreakable", false);
 
-    pObject->mbIsInsanityVision = apInstanceVars->GetVarBool("IsInsanityVision",false);
-    pObject->mfVisionMaxSanity = apInstanceVars->GetVarFloat("VisionMaxSanity",30);
+    pObject->mbIsInsanityVision = apInstanceVars->GetVarBool("IsInsanityVision", false);
+    pObject->mfVisionMaxSanity = apInstanceVars->GetVarFloat("VisionMaxSanity", 30);
 
     if(pObject->mbIsInsanityVision)
     {
         pObject->SetInsanityVisionVisability(false);
     }
 
-    pObject->msContainedItem = apInstanceVars->GetVarString("ContainedItem","");
+    pObject->msContainedItem = apInstanceVars->GetVarString("ContainedItem", "");
     if(pObject->msContainedItem == "None")
     {
-        pObject->msContainedItem= "";
+        pObject->msContainedItem = "";
     }
 }
 
@@ -198,7 +198,7 @@ static inline cVector3f GetCorrectNormal(const cVector3f& avNormal, const cVecto
     cVector3f vCenterToCollidePoint = avCollidePoint - avBodyACenter;
 
     //Make sure the normal faces the other body
-    if(cMath::Vector3Dot(vCenterToCollidePoint,avNormal)>0)
+    if(cMath::Vector3Dot(vCenterToCollidePoint, avNormal) > 0)
     {
         return avNormal;
     }
@@ -218,17 +218,17 @@ void cLuxProp_Object_BodyCallback::OnBodyCollide(iPhysicsBody *apBody, iPhysicsB
 
         /////////////////////////////
         // Check energy and see if it breaks.
-        float fTotalEnergy =0;
+        float fTotalEnergy = 0;
         iPhysicsBody* vBodies[2] = {apBody, apCollideBody};
-        for(int i=0; i<2; ++i)
+        for(int i = 0; i < 2; ++i)
         {
             iPhysicsBody *pBody = vBodies[i];
-            if(pBody->GetMass()==0)
+            if(pBody->GetMass() == 0)
             {
                 continue;
             }
 
-            cVector3f vBodyCenter = cMath::MatrixMul(pBody->GetLocalMatrix(),pBody->GetMassCentre());
+            cVector3f vBodyCenter = cMath::MatrixMul(pBody->GetLocalMatrix(), pBody->GetMassCentre());
 
             cVector3f vVelAtImpact = pBody->GetVelocityAtPosition(apContactData->mvContactPosition);
             cVector3f vTowardsImpactNormal = GetCorrectNormal(apContactData->mvContactNormal, apContactData->mvContactPosition, vBodyCenter);
@@ -290,14 +290,14 @@ void cLuxProp_Object_BodyCallback::OnBodyCollide(iPhysicsBody *apBody, iPhysicsB
 
 //-----------------------------------------------------------------------
 
-cLuxProp_Object::cLuxProp_Object(const tString &asName,int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_Object)
+cLuxProp_Object::cLuxProp_Object(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName, alID, apMap, eLuxPropType_Object)
 {
     mbBroken = false;
-    mfLifeLengthCount =0;
-    mlStuckState =0;
+    mfLifeLengthCount = 0;
+    mlStuckState = 0;
 
-    mfFoodAttractCount =0;
-    mfInsanityVisionCount =0;
+    mfFoodAttractCount = 0;
+    mfInsanityVisionCount = 0;
     mbInsanityVisionActive = false;
 
     mbIsInsanityVision = false;
@@ -324,13 +324,13 @@ cLuxProp_Object::~cLuxProp_Object()
 
 bool cLuxProp_Object::CanInteract(iPhysicsBody *apBody)
 {
-    if(mObjectType == eLuxObjectType_Grab && mbGrabSkipNonOuterBodies && apBody->GetJointNum()>=2)
+    if(mObjectType == eLuxObjectType_Grab && mbGrabSkipNonOuterBodies && apBody->GetJointNum() >= 2)
     {
         return false;
     }
 
-    if(    (apBody->GetMass()==0 && mpMap->BodyIsInDetachableStickyArea(apBody)==false  && msInteractCallback=="") ||
-            (mObjectType == eLuxObjectType_Static && msInteractCallback=="") )
+    if(    (apBody->GetMass() == 0 && mpMap->BodyIsInDetachableStickyArea(apBody) == false  && msInteractCallback == "") ||
+            (mObjectType == eLuxObjectType_Static && msInteractCallback == "") )
     {
         return false;
     }
@@ -400,7 +400,7 @@ void cLuxProp_Object::OnSetupAfterLoad(cWorld *apWorld)
 
     /////////////////////
     // Setup bodies
-    for(size_t i=0; i<mvBodies.size(); ++i)
+    for(size_t i = 0; i < mvBodies.size(); ++i)
     {
         iPhysicsBody *pBody = mvBodies[i];
 
@@ -410,14 +410,14 @@ void cLuxProp_Object::OnSetupAfterLoad(cWorld *apWorld)
     /////////////////////
     // Setup joints,
     mvJointData.resize(mvJoints.size());
-    for(size_t i=0; i< mvJoints.size(); ++i)
+    for(size_t i = 0; i < mvJoints.size(); ++i)
     {
         iPhysicsJoint *pJoint = mvJoints[i];
         cLuxProp_Object_JointData *pJointData = &mvJointData[i];
 
         if(pJoint->GetType() == ePhysicsJointType_Hinge)
         {
-            iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge*>(pJoint);
+            iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge *>(pJoint);
 
             pJointData->mfMinLimit = pHingeJoint->GetMinAngle();
             pJointData->mfMaxLimit = pHingeJoint->GetMaxAngle();
@@ -425,7 +425,7 @@ void cLuxProp_Object::OnSetupAfterLoad(cWorld *apWorld)
         }
         else if(pJoint->GetType() == ePhysicsJointType_Slider)
         {
-            iPhysicsJointSlider *pSliderJoint = static_cast<iPhysicsJointSlider*>(pJoint);
+            iPhysicsJointSlider *pSliderJoint = static_cast<iPhysicsJointSlider *>(pJoint);
 
             pJointData->mfMinLimit = pSliderJoint->GetMinDistance();
             pJointData->mfMaxLimit = pSliderJoint->GetMaxDistance();
@@ -433,7 +433,7 @@ void cLuxProp_Object::OnSetupAfterLoad(cWorld *apWorld)
         }
         else if(pJoint->GetType() == ePhysicsJointType_Screw)
         {
-            iPhysicsJointScrew *pScrewJoint = static_cast<iPhysicsJointScrew*>(pJoint);
+            iPhysicsJointScrew *pScrewJoint = static_cast<iPhysicsJointScrew *>(pJoint);
 
             pJointData->mfMinLimit = pScrewJoint->GetMinDistance();
             pJointData->mfMaxLimit = pScrewJoint->GetMaxDistance();
@@ -469,7 +469,7 @@ void cLuxProp_Object::UpdatePropSpecific(double adFixedDelta)
     {
         mfLifeLengthCount += (float)adFixedDelta;
 
-        float fDist = cMath::Max(mfLifeLength - mfLifeLengthCount,0.0f);
+        float fDist = cMath::Max(mfLifeLength - mfLifeLengthCount, 0.0f);
         if(fDist < 1.0f)
         {
             mpMeshEntity->SetCoverageAmount(fDist);
@@ -490,7 +490,7 @@ void cLuxProp_Object::BeforePropDestruction()
     //////////////////////////////
     // Check if break should happen and init stuff
 #ifndef LUXPROP_OBJECT_BREAKABLE_WORKAROUND
-    if(mbBroken == false || mBreakData.mbActive==false || mvBodies.empty() || mbDisableBreakable)
+    if(mbBroken == false || mBreakData.mbActive == false || mvBodies.empty() || mbDisableBreakable)
     {
         return;
     }
@@ -521,7 +521,7 @@ void cLuxProp_Object::BeforePropDestruction()
     {
         //////////////////////
         //Iterate and destroy joints
-        for(size_t i=0; i<mvJoints.size(); ++i)
+        for(size_t i = 0; i < mvJoints.size(); ++i)
         {
             mvJoints[i]->Break();
             mvJoints[i] = NULL;
@@ -530,7 +530,7 @@ void cLuxProp_Object::BeforePropDestruction()
         //////////////////////
         //Get center of all bodies
         cVector3f vBodyCenter = 0;
-        for(size_t i=0; i<mvBodies.size(); ++i)
+        for(size_t i = 0; i < mvBodies.size(); ++i)
         {
             vBodyCenter += mvBodies[i]->GetLocalPosition();
         }
@@ -539,7 +539,7 @@ void cLuxProp_Object::BeforePropDestruction()
 
         //////////////////////
         //Add impulse
-        for(size_t i=0; i<mvBodies.size(); ++i)
+        for(size_t i = 0; i < mvBodies.size(); ++i)
         {
             iPhysicsBody *pBody = mvBodies[i];
 
@@ -547,7 +547,7 @@ void cLuxProp_Object::BeforePropDestruction()
 
             cVector3f vImpulseDir = cMath::Vector3Normalize(vBodyCenter - vBodyCenter);
 
-            pBody->AddImpulse(vImpulseDir*mBreakData.mfImpulse);
+            pBody->AddImpulse(vImpulseDir * mBreakData.mfImpulse);
         }
     }
     ///////////////////////
@@ -576,16 +576,16 @@ void cLuxProp_Object::BeforePropDestruction()
                     pEntity->SetFullGameSave(true);
                 }
 
-                iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+                iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
 
-                for(int i=0; i< pProp->GetBodyNum(); ++i)
+                for(int i = 0; i < pProp->GetBodyNum(); ++i)
                 {
                     iPhysicsBody *pNewBody = pProp->GetBody(i);
                     cVector3f vNewBodyCenter = cMath::MatrixMul(pNewBody->GetLocalMatrix(), pNewBody->GetMassCentre());
 
                     cVector3f vImpulseDir = cMath::Vector3Normalize(vNewBodyCenter - mtxEntity.GetTranslation());
 
-                    pNewBody->AddImpulse(vImpulseDir*mBreakData.mfImpulse + pBaseBody->GetLinearVelocity());
+                    pNewBody->AddImpulse(vImpulseDir * mBreakData.mfImpulse + pBaseBody->GetLinearVelocity());
                 }
             }
         }
@@ -593,19 +593,19 @@ void cLuxProp_Object::BeforePropDestruction()
 
     ///////////////////////
     // Enable and move connected props
-    for(size_t i=0; i<mvConnectedProps.size(); ++i)
+    for(size_t i = 0; i < mvConnectedProps.size(); ++i)
     {
         tString sProp = mvConnectedProps[i];
 
         //////////////////////
         //Get Prop
         iLuxEntity *pEntity = mpMap->GetEntityByName(sProp, eLuxEntityType_Prop);
-        if(pEntity==NULL)
+        if(pEntity == NULL)
         {
             Error("Could not find prop '%s' which is connected to '%s'\n", sProp.c_str(), msName.c_str());
             continue;
         }
-        iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+        iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
 
         ///////////////////////
         // Enable prop
@@ -613,14 +613,14 @@ void cLuxProp_Object::BeforePropDestruction()
 
         //////////////////////
         //Move all bodies in pro
-        for(int i=0; i< pProp->GetBodyNum(); ++i)
+        for(int i = 0; i < pProp->GetBodyNum(); ++i)
         {
             iPhysicsBody *pBody = pProp->GetBody(i);
             cVector3f vNewBodyCenter = cMath::MatrixMul(pBody->GetLocalMatrix(), pBody->GetMassCentre());
 
             cVector3f vImpulseDir = cMath::Vector3Normalize(vNewBodyCenter - mtxCenterTransform.GetTranslation());
 
-            pBody->AddImpulse(vImpulseDir*mBreakData.mfImpulse + pBaseBody->GetLinearVelocity());
+            pBody->AddImpulse(vImpulseDir * mBreakData.mfImpulse + pBaseBody->GetLinearVelocity());
         }
     }
 
@@ -628,17 +628,17 @@ void cLuxProp_Object::BeforePropDestruction()
     // Create contained item
     if(msContainedItem != "")
     {
-        tString sFile = "items/"+ msContainedItem;
+        tString sFile = "items/" + msContainedItem;
         mpMap->ResetLatestEntity();
-        mpMap->CreateEntity(msName + "_item", msContainedItem, mtxCenterTransform,1);
+        mpMap->CreateEntity(msName + "_item", msContainedItem, mtxCenterTransform, 1);
 
         iLuxEntity *pEntity = mpMap->GetLatestEntity();
         if(pEntity && pEntity->GetEntityType() == eLuxEntityType_Prop)
         {
-            iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+            iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
             if(pProp->GetPropType() == eLuxPropType_Item)
             {
-                cLuxProp_Item *pItem = static_cast<cLuxProp_Item*>(pProp);
+                cLuxProp_Item *pItem = static_cast<cLuxProp_Item *>(pProp);
                 pItem->SetSpawnContainerID(GetID());
             }
         }
@@ -659,7 +659,7 @@ void cLuxProp_Object::BeforePropDestruction()
     // Create Particle System
     if(mBreakData.msParticleSystem != "")
     {
-        cParticleSystem *pPS = pWorld->CreateParticleSystem(msName + "_BreakPS", mBreakData.msParticleSystem,1);
+        cParticleSystem *pPS = pWorld->CreateParticleSystem(msName + "_BreakPS", mBreakData.msParticleSystem, 1);
         if(pPS)
         {
             pPS->SetMatrix(mtxCenterTransform);
@@ -677,7 +677,7 @@ void cLuxProp_Object::BeforePropDestruction()
 
 eLuxFocusCrosshair cLuxProp_Object::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    if(CanInteract(apBody)==false)
+    if(CanInteract(apBody) == false)
     {
         return eLuxFocusCrosshair_Default;
     }
@@ -685,19 +685,19 @@ eLuxFocusCrosshair cLuxProp_Object::GetFocusCrosshair(iPhysicsBody *apBody, cons
 
     if(mObjectType == eLuxObjectType_Static)
     {
-        return mCustomFocusCrossHair==eLuxFocusCrosshair_Default ? eLuxFocusCrosshair_Grab : mCustomFocusCrossHair;
+        return mCustomFocusCrossHair == eLuxFocusCrosshair_Default ? eLuxFocusCrosshair_Grab : mCustomFocusCrossHair;
     }
     else if(mObjectType == eLuxObjectType_Grab)
     {
-        return mCustomFocusCrossHair==eLuxFocusCrosshair_Default ? eLuxFocusCrosshair_Grab : mCustomFocusCrossHair;
+        return mCustomFocusCrossHair == eLuxFocusCrosshair_Default ? eLuxFocusCrosshair_Grab : mCustomFocusCrossHair;
     }
     else if(mObjectType == eLuxObjectType_Push)
     {
-        return mCustomFocusCrossHair==eLuxFocusCrosshair_Default ? eLuxFocusCrosshair_Push : mCustomFocusCrossHair;
+        return mCustomFocusCrossHair == eLuxFocusCrosshair_Default ? eLuxFocusCrosshair_Push : mCustomFocusCrossHair;
     }
     else if(mObjectType == eLuxObjectType_Slide)
     {
-        return mCustomFocusCrossHair==eLuxFocusCrosshair_Default ? eLuxFocusCrosshair_Grab : mCustomFocusCrossHair;
+        return mCustomFocusCrossHair == eLuxFocusCrosshair_Default ? eLuxFocusCrosshair_Grab : mCustomFocusCrossHair;
     }
 
     return eLuxFocusCrosshair_LastEnum;
@@ -713,20 +713,20 @@ void  cLuxProp_Object::SetStuckState(int alState)
     }
     mlStuckState = alState;
 
-    for(size_t i=0; i< mvJoints.size(); ++i)
+    for(size_t i = 0; i < mvJoints.size(); ++i)
     {
         iPhysicsJoint *pJoint = mvJoints[i];
         cLuxProp_Object_JointData *pJointData = &mvJointData[i];
 
-        if(mlStuckState ==0)
+        if(mlStuckState == 0)
         {
             SetJointMinMax((int)i, pJointData->mfMinLimit, pJointData->mfMaxLimit);
         }
-        else if(mlStuckState ==1)
+        else if(mlStuckState == 1)
         {
             SetJointMinMax((int)i, pJointData->mfMaxLimit - pJointData->mfLockedRange, pJointData->mfMaxLimit);
         }
-        else if(mlStuckState ==-1)
+        else if(mlStuckState == -1)
         {
             SetJointMinMax((int)i, pJointData->mfMinLimit, pJointData->mfMinLimit + pJointData->mfLockedRange);
         }
@@ -734,7 +734,7 @@ void  cLuxProp_Object::SetStuckState(int alState)
         //If sleeping, make sure it moves!
         if(pJoint->GetChildBody())
         {
-            pJoint->GetChildBody()->AddForce(cVector3f(1,1,1));
+            pJoint->GetChildBody()->AddForce(cVector3f(1, 1, 1));
         }
 
     }
@@ -788,7 +788,7 @@ bool cLuxProp_Object::ShowOutlinesOnConnectedBodies()
 
 void cLuxProp_Object::UpdateFoodEnemyAttraction(double adFixedDelta)
 {
-    if(mbIsFood==false)
+    if(mbIsFood == false)
     {
         return;
     }
@@ -806,12 +806,12 @@ void cLuxProp_Object::UpdateFoodEnemyAttraction(double adFixedDelta)
     while(enemyIt.HasNext())
     {
         iLuxEnemy *pEnemy = enemyIt.Next();
-        if(pEnemy->IsActive()==false || pEnemy->GetHealth() <= 0)
+        if(pEnemy->IsActive() == false || pEnemy->GetHealth() <= 0)
         {
             continue;
         }
 
-        if(pEnemy->InRangeOfFood(mvBodies[0])==false)
+        if(pEnemy->InRangeOfFood(mvBodies[0]) == false)
         {
             continue;
         }
@@ -824,11 +824,11 @@ void cLuxProp_Object::UpdateFoodEnemyAttraction(double adFixedDelta)
 
 void cLuxProp_Object::UpdateInsanityVision(double adFixedDelta)
 {
-    if(mbIsInsanityVision==false)
+    if(mbIsInsanityVision == false)
     {
         return;
     }
-    if(mpMeshEntity==NULL)
+    if(mpMeshEntity == NULL)
     {
         return;
     }
@@ -837,7 +837,7 @@ void cLuxProp_Object::UpdateInsanityVision(double adFixedDelta)
     //Check if the object should be disabled or enabled
     float fSanity = gpBase->mpPlayer->GetSanity();
     if( (fSanity <= mfVisionMaxSanity && mbInsanityVisionActive) ||
-            (fSanity > mfVisionMaxSanity && mbInsanityVisionActive==false) )
+            (fSanity > mfVisionMaxSanity && mbInsanityVisionActive == false) )
     {
         return;
     }
@@ -865,13 +865,13 @@ void cLuxProp_Object::UpdateInsanityVision(double adFixedDelta)
 
     ///////////////////////////////
     // Iterate submeshes and see if any is in player FOV
-    if(bInsideFOV==false)
+    if(bInsideFOV == false)
     {
-        for(int i=0; i<mpMeshEntity->GetSubMeshEntityNum(); ++i)
+        for(int i = 0; i < mpMeshEntity->GetSubMeshEntityNum(); ++i)
         {
             cSubMeshEntity *pSubEnt = mpMeshEntity->GetSubMeshEntity(i);
 
-            if(pCam->GetFrustum()->CollideBoundingVolume(pSubEnt->GetBoundingVolume())!=eCollision_Outside)
+            if(pCam->GetFrustum()->CollideBoundingVolume(pSubEnt->GetBoundingVolume()) != eCollision_Outside)
             {
                 bInsideFOV = true;
                 break;
@@ -881,7 +881,7 @@ void cLuxProp_Object::UpdateInsanityVision(double adFixedDelta)
 
     //////////////////////////////////
     //Change visibility
-    if(bInsideFOV==false)
+    if(bInsideFOV == false)
     {
         SetInsanityVisionVisability(!mbInsanityVisionActive);
     }
@@ -895,7 +895,7 @@ void cLuxProp_Object::SetInsanityVisionVisability(bool abX)
 
     ///////////////
     //Set Bodies and mesh visble
-    for(size_t i=0; i<mvBodies.size(); ++i)
+    for(size_t i = 0; i < mvBodies.size(); ++i)
     {
         mvBodies[i]->SetActive(abX);
     }
@@ -918,21 +918,21 @@ void cLuxProp_Object::SetJointMinMax(int alIdx, float afMin, float afMax)
 
     if(pJoint->GetType() == ePhysicsJointType_Hinge)
     {
-        iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge*>(pJoint);
+        iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge *>(pJoint);
 
         pHingeJoint->SetMinAngle(afMin);
         pHingeJoint->SetMaxAngle(afMin);
     }
     else if(pJoint->GetType() == ePhysicsJointType_Slider)
     {
-        iPhysicsJointSlider *pSliderJoint = static_cast<iPhysicsJointSlider*>(pJoint);
+        iPhysicsJointSlider *pSliderJoint = static_cast<iPhysicsJointSlider *>(pJoint);
 
         pSliderJoint->SetMinDistance(afMin);
         pSliderJoint->SetMaxDistance(afMax);
     }
     else if(pJoint->GetType() == ePhysicsJointType_Screw)
     {
-        iPhysicsJointScrew *pScrewJoint = static_cast<iPhysicsJointScrew*>(pJoint);
+        iPhysicsJointScrew *pScrewJoint = static_cast<iPhysicsJointScrew *>(pJoint);
 
         pScrewJoint->SetMinDistance(afMin);
         pScrewJoint->SetMaxDistance(afMax);
@@ -960,7 +960,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxProp_Object::CreateSaveData()
+iLuxEntity_SaveData *cLuxProp_Object::CreateSaveData()
 {
     return hplNew(cLuxProp_Object_SaveData, ());
 }
@@ -972,7 +972,7 @@ void cLuxProp_Object::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxProp_Object_SaveData *pData = static_cast<cLuxProp_Object_SaveData*>(apSaveData);
+    cLuxProp_Object_SaveData *pData = static_cast<cLuxProp_Object_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
@@ -994,7 +994,7 @@ void cLuxProp_Object::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxProp_Object_SaveData *pData = static_cast<cLuxProp_Object_SaveData*>(apSaveData);
+    cLuxProp_Object_SaveData *pData = static_cast<cLuxProp_Object_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables

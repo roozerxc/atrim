@@ -53,36 +53,36 @@ cLuxPlayer::cLuxPlayer() : iLuxUpdateable("LuxPlayer"), iLuxCollideCallbackConta
     //TODO: More setup?
     cVector2f vScreenSize = gpBase->mpEngine->GetGraphics()->GetLowLevel()->GetScreenSizeFloat();
     mfAspect = vScreenSize.x / vScreenSize.y;
-    mfFOV = cMath::ToRad(gpBase->mpGameCfg->GetFloat("Player_General","FOV", 0));
+    mfFOV = cMath::ToRad(gpBase->mpGameCfg->GetFloat("Player_General", "FOV", 0));
 
     mpCamera->SetFOV(mfFOV);
     mpCamera->SetAspect(mfAspect);
-    mpCamera->SetFarClipPlane(gpBase->mpGameCfg->GetFloat("Player_General","FarClipPlane",0));
-    mpCamera->SetNearClipPlane(gpBase->mpGameCfg->GetFloat("Player_General","NearClipPlane",0));
+    mpCamera->SetFarClipPlane(gpBase->mpGameCfg->GetFloat("Player_General", "FarClipPlane", 0));
+    mpCamera->SetNearClipPlane(gpBase->mpGameCfg->GetFloat("Player_General", "NearClipPlane", 0));
     mpCamera->SetPitchLimits(-cMath::ToRad(90), cMath::ToRad(90) );
 
     //////////////////////////////////
     // Init General properties
-    mfHeadSpinDamageSpeed = gpBase->mpGameCfg->GetFloat("Player_General","HeadSpinDamageSpeed",0);
-    mfHeadSpinDeacc = gpBase->mpGameCfg->GetFloat("Player_General","HeadSpinDeacc",0);
+    mfHeadSpinDamageSpeed = gpBase->mpGameCfg->GetFloat("Player_General", "HeadSpinDamageSpeed", 0);
+    mfHeadSpinDeacc = gpBase->mpGameCfg->GetFloat("Player_General", "HeadSpinDeacc", 0);
 
-    msTerrorSound = gpBase->mpGameCfg->GetString("Player_General","TerrorSound","");
+    msTerrorSound = gpBase->mpGameCfg->GetString("Player_General", "TerrorSound", "");
 
-    mfTerrorIncSpeed = gpBase->mpGameCfg->GetFloat("Player_General","TerrorIncSpeed",0);
-    mfTerrorDecSpeed = gpBase->mpGameCfg->GetFloat("Player_General","TerrorDecSpeed",0);
+    mfTerrorIncSpeed = gpBase->mpGameCfg->GetFloat("Player_General", "TerrorIncSpeed", 0);
+    mfTerrorDecSpeed = gpBase->mpGameCfg->GetFloat("Player_General", "TerrorDecSpeed", 0);
 
-    mlMaxPrevSpeeds = gpBase->mpGameCfg->GetInt("Player_General","MaxPrevSpeedsSaved",0);
+    mlMaxPrevSpeeds = gpBase->mpGameCfg->GetInt("Player_General", "MaxPrevSpeedsSaved", 0);
 
-    mfAutoKillYPos = gpBase->mpGameCfg->GetFloat("Player_General","AutoKillYPos",0);
+    mfAutoKillYPos = gpBase->mpGameCfg->GetFloat("Player_General", "AutoKillYPos", 0);
 
     //////////////////////////////////
     // Init body properties
-    mvBodySize = gpBase->mpGameCfg->GetVector3f("Player_Body","Size",0);
-    mvBodyCrouchSize = gpBase->mpGameCfg->GetVector3f("Player_Body","CrouchSize",0);
+    mvBodySize = gpBase->mpGameCfg->GetVector3f("Player_Body", "Size", 0);
+    mvBodyCrouchSize = gpBase->mpGameCfg->GetVector3f("Player_Body", "CrouchSize", 0);
 
-    mvCameraPosAdd = gpBase->mpGameCfg->GetVector3f("Player_Body","CameraPosAdd",0);
+    mvCameraPosAdd = gpBase->mpGameCfg->GetVector3f("Player_Body", "CameraPosAdd", 0);
 
-    mfDefaultMass = gpBase->mpGameCfg->GetFloat("Player_Body","Mass",0);
+    mfDefaultMass = gpBase->mpGameCfg->GetFloat("Player_Body", "Mass", 0);
 
 
     //////////////////////////////////
@@ -186,10 +186,10 @@ cLuxPlayer::~cLuxPlayer()
 
 void cLuxPlayer::LoadFonts()
 {
-    tString sFontFile = gpBase->mpGameCfg->GetString("Player_General","FocusTextFont","");
+    tString sFontFile = gpBase->mpGameCfg->GetString("Player_General", "FocusTextFont", "");
     mpFocusFont = LoadFont(sFontFile);
 
-    RunHelperLuxMessage(eLuxUpdateableMessage_LoadFonts,NULL);
+    RunHelperLuxMessage(eLuxUpdateableMessage_LoadFonts, NULL);
 }
 
 //-----------------------------------------------------------------------
@@ -220,8 +220,8 @@ void cLuxPlayer::Reset()
     msWaterStepSound = "";
     mfWaterSpeedMul = 1.0f;
 
-    mvHeadSpeed =0;
-    mvHeadSpinSpeed =0;
+    mvHeadSpeed = 0;
+    mvHeadSpinSpeed = 0;
 
     mfInteractionMoveSpeedMul = 1.0f;
 
@@ -250,20 +250,20 @@ void cLuxPlayer::Reset()
     mfHealth = 100;
     mfSanity = 100;
     mfLampOil = 100;
-    mlTinderboxes =0;
+    mlTinderboxes = 0;
 
-    mvHeadPosAddSum =0;
+    mvHeadPosAddSum = 0;
 
-    mfTerror =0;
+    mfTerror = 0;
 
-    mlCoins =0;
+    mlCoins = 0;
 
-    mfAvgSpeed =0;
+    mfAvgSpeed = 0;
     mlstPrevSpeeds.clear();
 
     msFocusText = _W("");
     msLastFocusText = _W("");
-    mfFocusTextAlpha =0;
+    mfFocusTextAlpha = 0;
 
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
     if(mpTerrorSound && pSoundHandler->IsValid(mpTerrorSound, mlTerrorSoundID))
@@ -279,26 +279,26 @@ void cLuxPlayer::Reset()
     mfFOVMulGoal = 1.0f;
     mfAspectMulSpeed = 0.0f;
     mfFOVMulSpeed = 0.0f;
-    mfRoll=0;
-    mfRollGoal=0;
-    mfRollSpeedMul=0;
-    mfRollMaxSpeed=0;
+    mfRoll = 0;
+    mfRollGoal = 0;
+    mfRollSpeedMul = 0;
+    mfRollMaxSpeed = 0;
 
-    mfLeanRoll=0;
-    mfLeanRollGoal=0;
-    mfLeanRollSpeedMul=0;
-    mfLeanRollMaxSpeed=0;
+    mfLeanRoll = 0;
+    mfLeanRollGoal = 0;
+    mfLeanRollSpeedMul = 0;
+    mfLeanRollMaxSpeed = 0;
 
-    mvCamAnimPos =0;
-    mvCamAnimPosGoal=0;
-    mfRollSpeedMul=0;
-    mfRollMaxSpeed=0;
+    mvCamAnimPos = 0;
+    mvCamAnimPosGoal = 0;
+    mfRollSpeedMul = 0;
+    mfRollMaxSpeed = 0;
 
     mbNoFallDamage = false;
 
     mbScriptShowFocusIconAndCrossHair = true;
 
-    for(size_t i=0; i<mvHeadPosAdds.size(); ++i)
+    for(size_t i = 0; i < mvHeadPosAdds.size(); ++i)
     {
         mvHeadPosAdds[i].mbMoving = false;
         mvHeadPosAdds[i].mvAdd = 0;
@@ -313,8 +313,8 @@ void cLuxPlayer::Reset()
     mpCamera->SetRoll(0.0f);
     mpCamera->SetPitch(0.0f);
     mpCamera->SetYaw(0.0f);
-    mpCamera->SetFOV(mfFOV*mfFOVMul);
-    mpCamera->SetAspect(mfAspect*mfAspectMul);
+    mpCamera->SetFOV(mfFOV * mfFOVMul);
+    mpCamera->SetAspect(mfAspect * mfAspectMul);
 
     ///////////////
     // Free camera
@@ -323,7 +323,7 @@ void cLuxPlayer::Reset()
 
     ////////////////////////
     // Reset Helpers
-    RunHelperMessage(eUpdateableMessage_Reset,0);
+    RunHelperMessage(eUpdateableMessage_Reset, 0);
 }
 
 //-----------------------------------------------------------------------
@@ -355,7 +355,7 @@ void cLuxPlayer::Update(double adFixedDelta)
 
     ////////////////////////
     // Run Helper message
-    RunHelperMessage(eUpdateableMessage_Update,(float)adFixedDelta);
+    RunHelperMessage(eUpdateableMessage_Update, (float)adFixedDelta);
 
     ////////////////////////
     //Clear some variables
@@ -383,7 +383,7 @@ void cLuxPlayer::PostUpdate(double adFixedDelta)
 {
     ////////////////////////
     // Run Helper message
-    RunHelperMessage(eUpdateableMessage_PostUpdate,(float)adFixedDelta);
+    RunHelperMessage(eUpdateableMessage_PostUpdate, (float)adFixedDelta);
 
     ////////////////////////
     // Post Update current state
@@ -404,7 +404,7 @@ void cLuxPlayer::OnDraw(double adFrameTime)
 
     ////////////////////////
     // Run Helper message
-    RunHelperMessage(eUpdateableMessage_OnDraw,(float)adFrameTime);
+    RunHelperMessage(eUpdateableMessage_OnDraw, (float)adFrameTime);
 
     ////////////////////////
     // Draw player HUD
@@ -419,7 +419,7 @@ void cLuxPlayer::LoadUserConfig()
     mFocusIconStyle = StringToFocusIconStyle(gpBase->mpUserConfig->GetString("Game", "FocusIconStyle", "Default"));
     mHandOrientation = StringToHandOrientation(gpBase->mpUserConfig->GetString("Game", "HandOrientation", "Default"));
 
-    RunHelperLuxMessage(eLuxUpdateableMessage_LoadUserConfig,0);
+    RunHelperLuxMessage(eLuxUpdateableMessage_LoadUserConfig, 0);
 }
 
 void cLuxPlayer::SaveUserConfig()
@@ -428,7 +428,7 @@ void cLuxPlayer::SaveUserConfig()
     gpBase->mpUserConfig->SetString("Game", "FocusIconStyle", FocusIconStyleToString(mFocusIconStyle));
     gpBase->mpUserConfig->SetString("Game", "HandOrientation", HandOrientationToString(mHandOrientation));
 
-    RunHelperLuxMessage(eLuxUpdateableMessage_SaveUserConfig,0);
+    RunHelperLuxMessage(eLuxUpdateableMessage_SaveUserConfig, 0);
 }
 
 //-----------------------------------------------------------------------
@@ -437,7 +437,7 @@ void cLuxPlayer::OnMapEnter(cLuxMap *apMap)
 {
     ////////////////////////////////
     //Init all move states
-    for(int i=0; i<eLuxMoveState_LastEnum; ++i)
+    for(int i = 0; i < eLuxMoveState_LastEnum; ++i)
     {
         mvMoveStates[i]->OnMapEnter();
     }
@@ -459,7 +459,7 @@ void cLuxPlayer::OnMapEnter(cLuxMap *apMap)
     //Reset focus text
     msFocusText = _W("");
     msLastFocusText = _W("");
-    mfFocusTextAlpha =0;
+    mfFocusTextAlpha = 0;
 
     ////////////////////////////////
     //Reset variables
@@ -496,17 +496,17 @@ void cLuxPlayer::OnMapLeave(cLuxMap *apMap)
     mfAspectMul = 1.0f;
     mfFOVMulGoal = 1.0f;
     mfFOVMul = 1.0f;
-    mfRollGoal=0;
-    mfRoll=0;
+    mfRollGoal = 0;
+    mfRoll = 0;
 
-    mfLeanRoll=0;
-    mfLeanRollGoal=0;
-    mfLeanRollSpeedMul=0;
-    mfLeanRollMaxSpeed=0;
+    mfLeanRoll = 0;
+    mfLeanRollGoal = 0;
+    mfLeanRollSpeedMul = 0;
+    mfLeanRollMaxSpeed = 0;
 
     mpCamera->SetRoll(0.0f);
-    mpCamera->SetFOV(mfFOV*mfFOVMul);
-    mpCamera->SetAspect(mfAspect*mfAspectMul);
+    mpCamera->SetFOV(mfFOV * mfFOVMul);
+    mpCamera->SetAspect(mfAspect * mfAspectMul);
 }
 
 //-----------------------------------------------------------------------
@@ -519,7 +519,7 @@ void cLuxPlayer::CreateWorldEntities(cLuxMap *apMap)
 
     ////////////////////////
     // Run Helper message
-    for(size_t i=0; i<mvHelpers.size(); ++i)
+    for(size_t i = 0; i < mvHelpers.size(); ++i)
     {
         mvHelpers[i]->CreateWorldEntities(apMap);
     }
@@ -537,7 +537,7 @@ void cLuxPlayer::DestroyWorldEntities(cLuxMap *apMap)
 
     ////////////////////////
     // Run Helper message
-    for(size_t i=0; i<mvHelpers.size(); ++i)
+    for(size_t i = 0; i < mvHelpers.size(); ++i)
     {
         mvHelpers[i]->DestroyWorldEntities(apMap);
     }
@@ -572,7 +572,7 @@ void cLuxPlayer::RenderSolid(cRendererCallbackFunctions* apFunctions)
 {
     mvStates[mState]->RenderSolid(apFunctions);
 
-    for(size_t i=0; i<mvHelpers.size(); ++i)
+    for(size_t i = 0; i < mvHelpers.size(); ++i)
     {
         mvHelpers[i]->RenderSolid(apFunctions);
     }
@@ -588,7 +588,7 @@ void cLuxPlayer::RenderTrans(cRendererCallbackFunctions* apFunctions)
 
 void cLuxPlayer::GiveDamage(float afAmount, int alStrength, eLuxDamageType aType, bool abSpinHead, bool abLethal)
 {
-    if(mfHealth <=0)
+    if(mfHealth <= 0)
     {
         return;
     }
@@ -596,18 +596,18 @@ void cLuxPlayer::GiveDamage(float afAmount, int alStrength, eLuxDamageType aType
     mfHealth -= afAmount;
 
     mpHudEffect->AddDamageSplash(aType);
-    mpHudEffect->Flash(cColor(0.6f,0,0, 0.5f),eGuiMaterial_Alpha,0,0.25f);
+    mpHudEffect->Flash(cColor(0.6f, 0, 0, 0.5f), eGuiMaterial_Alpha, 0, 0.25f);
     if(abSpinHead)
     {
         SpinHead(mfHeadSpinDamageSpeed);
     }
 
-    if(abLethal==false && mfHealth < 10)
+    if(abLethal == false && mfHealth < 10)
     {
         mfHealth = 10;
     }
 
-    if(mfHealth <=0)
+    if(mfHealth <= 0)
     {
         mpDeath->Start();
     }
@@ -632,7 +632,7 @@ void cLuxPlayer::LowerSanity(float afAmount, bool abUseEffect)
 {
     if(gpBase->mpPlayer->GetGlobalSanityDrainDisabled() == false)
     {
-        if(mfHealth <=0)
+        if(mfHealth <= 0)
         {
             return;
         }
@@ -640,7 +640,7 @@ void cLuxPlayer::LowerSanity(float afAmount, bool abUseEffect)
         mfSanity -= afAmount;
         if(mfSanity < 0)
         {
-            mfSanity =0;
+            mfSanity = 0;
 
 
             mpInsanityCollapse->Start();
@@ -756,7 +756,7 @@ void cLuxPlayer::DoAction(eLuxPlayerAction aAction, bool abPressed)
 {
     if(mvStates[mState]->OnDoAction(aAction, abPressed))
     {
-        if(aAction== eLuxPlayerAction_Lantern && abPressed)
+        if(aAction == eLuxPlayerAction_Lantern && abPressed)
         {
             mpLantern->SetActive(!mpLantern->IsActive(), true);
         }
@@ -874,7 +874,7 @@ void cLuxPlayer::SetHeadPosAdd(eLuxHeadPosAdd aType, const cVector3f& avVector)
     mvHeadPosAdds[aType].mvAdd = avVector;
 }
 
-const cVector3f& cLuxPlayer::GetHeadPosAdd(eLuxHeadPosAdd aType)
+const cVector3f &cLuxPlayer::GetHeadPosAdd(eLuxHeadPosAdd aType)
 {
     return mvHeadPosAdds[aType].mvAdd;
 }
@@ -890,14 +890,14 @@ void cLuxPlayer::SetActive(bool abX)
 
 void cLuxPlayer::SetHealth(float afX)
 {
-    if(mfHealth <=0 && afX <= 0)
+    if(mfHealth <= 0 && afX <= 0)
     {
         return;
     }
 
     mfHealth = afX;
 
-    if(mfHealth <=0)
+    if(mfHealth <= 0)
     {
         mpDeath->Start();
     }
@@ -928,7 +928,7 @@ void cLuxPlayer::SetLampOil(float afX)
 
 void cLuxPlayer::AddHealth(float afX)
 {
-    if( (mfHealth >= 100 && afX>0) || mfHealth<0)
+    if( (mfHealth >= 100 && afX > 0) || mfHealth < 0)
     {
         return;
     }
@@ -939,7 +939,7 @@ void cLuxPlayer::AddHealth(float afX)
         mfHealth = 100;
     }
 
-    if(mfHealth <=0)
+    if(mfHealth <= 0)
     {
         mpDeath->Start();
     }
@@ -947,7 +947,7 @@ void cLuxPlayer::AddHealth(float afX)
 
 void cLuxPlayer::AddSanity(float afX, bool abShowEffect)
 {
-    if(mfSanity >= 100 && afX>0)
+    if(mfSanity >= 100 && afX > 0)
     {
         return;
     }
@@ -970,7 +970,7 @@ void cLuxPlayer::AddSanity(float afX, bool abShowEffect)
         }
     }
 
-    if(afX >0 && abShowEffect)
+    if(afX > 0 && abShowEffect)
     {
         gpBase->mpEffectHandler->GetSanityGainFlash()->Start();
     }
@@ -978,7 +978,7 @@ void cLuxPlayer::AddSanity(float afX, bool abShowEffect)
 
 void cLuxPlayer::AddLampOil(float afX)
 {
-    if(mfLampOil >= 100 && afX>0)
+    if(mfLampOil >= 100 && afX > 0)
     {
         return;
     }
@@ -1106,11 +1106,11 @@ eLuxFocusIconStyle cLuxPlayer::StringToFocusIconStyle(const tString& asX)
 {
     tString sLowCase = cString::ToLowerCase(asX);
 
-    if(sLowCase=="default")
+    if(sLowCase == "default")
     {
         return eLuxFocusIconStyle_Default;
     }
-    else if(sLowCase=="simple")
+    else if(sLowCase == "simple")
     {
         return eLuxFocusIconStyle_Simple;
     }
@@ -1124,11 +1124,11 @@ eLuxFocusIconStyle cLuxPlayer::StringToFocusIconStyle(const tString& asX)
 
 tString cLuxPlayer::FocusIconStyleToString(eLuxFocusIconStyle aX)
 {
-    if(aX==eLuxFocusIconStyle_Default)
+    if(aX == eLuxFocusIconStyle_Default)
     {
         return "Default";
     }
-    else if(aX==eLuxFocusIconStyle_Simple)
+    else if(aX == eLuxFocusIconStyle_Simple)
     {
         return "Simple";
     }
@@ -1142,11 +1142,11 @@ eLuxHandOrientation cLuxPlayer::StringToHandOrientation(const tString& asX)
 {
     tString sLowCase = cString::ToLowerCase(asX);
 
-    if(sLowCase=="left")
+    if(sLowCase == "left")
     {
         return eLuxHandOrientation_Left;
     }
-    else if(sLowCase=="right")
+    else if(sLowCase == "right")
     {
         return eLuxHandOrientation_Right;
     }
@@ -1160,11 +1160,11 @@ eLuxHandOrientation cLuxPlayer::StringToHandOrientation(const tString& asX)
 
 tString cLuxPlayer::HandOrientationToString(eLuxHandOrientation aX)
 {
-    if(aX==eLuxHandOrientation_Left)
+    if(aX == eLuxHandOrientation_Left)
     {
         return "Left";
     }
-    else if(aX==eLuxHandOrientation_Right)
+    else if(aX == eLuxHandOrientation_Right)
     {
         return "Right";
     }
@@ -1215,11 +1215,11 @@ bool cLuxPlayer::CanDrawCrossHair()
     {
         return false;
     }
-    if(mbScriptShowFocusIconAndCrossHair==false)
+    if(mbScriptShowFocusIconAndCrossHair == false)
     {
         return false;
     }
-    if(mbShowCrossHair==false && mState != eLuxPlayerState_UseItem)
+    if(mbShowCrossHair == false && mState != eLuxPlayerState_UseItem)
     {
         if(mpEntityInFocus)
         {
@@ -1256,13 +1256,13 @@ void cLuxPlayer::DrawHud(double adFrameTime)
         if(pCrossGfx)
         {
             cVector2f vGfxSize = pCrossGfx->GetImageSize();
-            cVector2f vPos = (vSetSize - vGfxSize)/2.0f;
-            cVector3f vFinalPos = cVector3f(vPos.x, vPos.y,1);
+            cVector2f vPos = (vSetSize - vGfxSize) / 2.0f;
+            cVector3f vFinalPos = cVector3f(vPos.x, vPos.y, 1);
 
-            if(mvStates[mState]->OnDrawCrossHair(pCrossGfx,vFinalPos, vGfxSize))
+            if(mvStates[mState]->OnDrawCrossHair(pCrossGfx, vFinalPos, vGfxSize))
             {
                 //Log("Drawcrosshair: %p\n", pCrossGfx);
-                gpBase->mpGameHudSet->DrawGfx(pCrossGfx,vFinalPos,vGfxSize,cColor(1,1));
+                gpBase->mpGameHudSet->DrawGfx(pCrossGfx, vFinalPos, vGfxSize, cColor(1, 1));
             }
         }
     }
@@ -1273,21 +1273,21 @@ void cLuxPlayer::DrawHud(double adFrameTime)
     if(msFocusText != _W(""))
     {
         tWStringVec vRows;
-        mpFocusFont->GetWordWrapRows(500, 22, 22, msFocusText,&vRows);
+        mpFocusFont->GetWordWrapRows(500, 22, 22, msFocusText, &vRows);
 
-        for(size_t i=0; i<vRows.size(); ++i)
+        for(size_t i = 0; i < vRows.size(); ++i)
         {
-            gpBase->mpGameHudSet->DrawFont(vRows[i],mpFocusFont,cVector3f(400, fFocusTextY+i*24,1),22,cColor(1,mfFocusTextAlpha),    eFontAlign_Center);
+            gpBase->mpGameHudSet->DrawFont(vRows[i], mpFocusFont, cVector3f(400, fFocusTextY + i * 24, 1), 22, cColor(1, mfFocusTextAlpha),    eFontAlign_Center);
         }
     }
-    else if(mfFocusTextAlpha >0)
+    else if(mfFocusTextAlpha > 0)
     {
         tWStringVec vRows;
-        mpFocusFont->GetWordWrapRows(500, 22, 22, msLastFocusText,&vRows);
+        mpFocusFont->GetWordWrapRows(500, 22, 22, msLastFocusText, &vRows);
 
-        for(size_t i=0; i<vRows.size(); ++i)
+        for(size_t i = 0; i < vRows.size(); ++i)
         {
-            gpBase->mpGameHudSet->DrawFont(vRows[i],mpFocusFont,cVector3f(400, fFocusTextY+i*24,1),22,cColor(1,mfFocusTextAlpha),    eFontAlign_Center);
+            gpBase->mpGameHudSet->DrawFont(vRows[i], mpFocusFont, cVector3f(400, fFocusTextY + i * 24, 1), 22, cColor(1, mfFocusTextAlpha),    eFontAlign_Center);
         }
     }
 }
@@ -1296,7 +1296,7 @@ void cLuxPlayer::DrawHud(double adFrameTime)
 
 void cLuxPlayer::RunHelperMessage(eUpdateableMessage aMessage, double adX)
 {
-    for(size_t i=0; i<mvHelpers.size(); ++i)
+    for(size_t i = 0; i < mvHelpers.size(); ++i)
     {
         iLuxPlayerHelper *pHelper = mvHelpers[i];
         pHelper->RunMessage(aMessage, adX);
@@ -1307,7 +1307,7 @@ void cLuxPlayer::RunHelperMessage(eUpdateableMessage aMessage, double adX)
 
 void cLuxPlayer::RunHelperLuxMessage(eLuxUpdateableMessage aMessage, void *apData)
 {
-    for(size_t i=0; i<mvHelpers.size(); ++i)
+    for(size_t i = 0; i < mvHelpers.size(); ++i)
     {
         iLuxPlayerHelper *pHelper = mvHelpers[i];
         pHelper->LuxRunMessage(aMessage, apData);
@@ -1322,7 +1322,7 @@ void cLuxPlayer::UpdateHeadPosAdd(double adFixedDelta)
 
     /////////////////////////
     // Iterate different head offsets and add
-    for(size_t i=0; i<mvHeadPosAdds.size(); ++i)
+    for(size_t i = 0; i < mvHeadPosAdds.size(); ++i)
     {
         cLuxHeadPosAdd *pPosAdd = &mvHeadPosAdds[i];
 
@@ -1380,7 +1380,7 @@ void cLuxPlayer::UpdateCamera(double adFixedDelta)
             mfFOVMul = mfFOVMulGoal;
         }
 
-        mpCamera->SetFOV(mfFOV*mfFOVMul);
+        mpCamera->SetFOV(mfFOV * mfFOVMul);
     }
 
     ////////////////
@@ -1395,7 +1395,7 @@ void cLuxPlayer::UpdateCamera(double adFixedDelta)
             mfAspectMul = mfAspectMulGoal;
         }
 
-        mpCamera->SetAspect(mfAspect*mfAspectMul);
+        mpCamera->SetAspect(mfAspect * mfAspectMul);
     }
 
     bool bUpdatedRoll = false;
@@ -1478,7 +1478,7 @@ void cLuxPlayer::UpdateTerror(double adFixedDelta)
         mfTerror -= mfTerrorDecSpeed * (float)adFixedDelta;
         if(mfTerror < 0)
         {
-            mfTerror =0;
+            mfTerror = 0;
         }
     }
     else
@@ -1499,7 +1499,7 @@ void cLuxPlayer::UpdateTerror(double adFixedDelta)
     {
         if(mpTerrorSound == NULL)
         {
-            mpTerrorSound = pSoundHandler->PlayGui(msTerrorSound,true,1.0f);
+            mpTerrorSound = pSoundHandler->PlayGui(msTerrorSound, true, 1.0f);
             if(mpTerrorSound)
             {
                 mpTerrorSound->SetVolumeMul(0.0f);
@@ -1523,7 +1523,7 @@ void cLuxPlayer::UpdateTerror(double adFixedDelta)
 
 void cLuxPlayer::SpinHead(float afSpeed)
 {
-    mvHeadSpinSpeed = cVector2f(cMath::RandRectf(-1,1), cMath::RandRectf(0,0.5f));
+    mvHeadSpinSpeed = cVector2f(cMath::RandRectf(-1, 1), cMath::RandRectf(0, 0.5f));
     if(mvHeadSpinSpeed.x == 0 && mvHeadSpinSpeed.y == 0)
     {
         mvHeadSpinSpeed.x = 1;
@@ -1570,18 +1570,18 @@ void cLuxPlayer::UpdateFocusText(double adFixedDelta)
             //gpBase->mpMessageHandler->IsMessageActive() || <- this interfeere with signs and stuff so not a good thing to have!
             msFocusText == _W(""))
     {
-        mfFocusTextAlpha -= (float)adFixedDelta*2.0f;
+        mfFocusTextAlpha -= (float)adFixedDelta * 2.0f;
         if(mfFocusTextAlpha < 0.0f)
         {
-            mfFocusTextAlpha =0;
+            mfFocusTextAlpha = 0;
         }
     }
     else
     {
-        mfFocusTextAlpha += (float)adFixedDelta*2.0f;
+        mfFocusTextAlpha += (float)adFixedDelta * 2.0f;
         if(mfFocusTextAlpha > 1.0f)
         {
-            mfFocusTextAlpha =1;
+            mfFocusTextAlpha = 1;
         }
     }
 }
@@ -1610,26 +1610,26 @@ void cLuxPlayer::UpdateAvgSpeed(double adFixedDelta)
 
 void cLuxPlayer::CreateCharacterBody(iPhysicsWorld *apPhysicsWorld)
 {
-    mpCharBody = apPhysicsWorld->CreateCharacterBody("Player",mvBodySize);
+    mpCharBody = apPhysicsWorld->CreateCharacterBody("Player", mvBodySize);
 
     //TODO: Use config here.
-    mpCharBody->SetCustomGravity(    gpBase->mpGameCfg->GetVector3f("Player_Body","GravityForce",0) );
+    mpCharBody->SetCustomGravity(    gpBase->mpGameCfg->GetVector3f("Player_Body", "GravityForce", 0) );
     mpCharBody->SetCustomGravityActive(true);
     mpCharBody->SetMass(mfDefaultMass);
 
-    mpCharBody->SetAccurateClimbing(    gpBase->mpGameCfg->GetBool("Player_Body","AccurateClimbing",false) );
-    mpCharBody->SetMaxNoSlideSlopeAngle(cMath::ToRad(gpBase->mpGameCfg->GetFloat("Player_Body","MaxNoSlideSlopeAngle",0) ) );
-    mpCharBody->SetMaxPushMass(            gpBase->mpGameCfg->GetFloat("Player_Body","MaxPushMass",0) );
-    mpCharBody->SetPushForce(            gpBase->mpGameCfg->GetFloat("Player_Body","PushForce",0) );
-    mpCharBody->SetCharacterMaxPushMass(gpBase->mpGameCfg->GetFloat("Player_Body","CharacterMaxPushMass",0) );
-    mpCharBody->SetCharacterPushForce(    gpBase->mpGameCfg->GetFloat("Player_Body","CharacterPushForce",0) );
-    mpCharBody->SetMaxStepSize(            gpBase->mpGameCfg->GetFloat("Player_Body","MaxStepSize",0) );
-    mpCharBody->SetMaxStepSizeInAir(    gpBase->mpGameCfg->GetFloat("Player_Body","MaxStepSizeInAir",0) );
-    mpCharBody->SetStepClimbSpeed(        gpBase->mpGameCfg->GetFloat("Player_Body","StepClimbSpeed",0) );
+    mpCharBody->SetAccurateClimbing(    gpBase->mpGameCfg->GetBool("Player_Body", "AccurateClimbing", false) );
+    mpCharBody->SetMaxNoSlideSlopeAngle(cMath::ToRad(gpBase->mpGameCfg->GetFloat("Player_Body", "MaxNoSlideSlopeAngle", 0) ) );
+    mpCharBody->SetMaxPushMass(            gpBase->mpGameCfg->GetFloat("Player_Body", "MaxPushMass", 0) );
+    mpCharBody->SetPushForce(            gpBase->mpGameCfg->GetFloat("Player_Body", "PushForce", 0) );
+    mpCharBody->SetCharacterMaxPushMass(gpBase->mpGameCfg->GetFloat("Player_Body", "CharacterMaxPushMass", 0) );
+    mpCharBody->SetCharacterPushForce(    gpBase->mpGameCfg->GetFloat("Player_Body", "CharacterPushForce", 0) );
+    mpCharBody->SetMaxStepSize(            gpBase->mpGameCfg->GetFloat("Player_Body", "MaxStepSize", 0) );
+    mpCharBody->SetMaxStepSizeInAir(    gpBase->mpGameCfg->GetFloat("Player_Body", "MaxStepSizeInAir", 0) );
+    mpCharBody->SetStepClimbSpeed(        gpBase->mpGameCfg->GetFloat("Player_Body", "StepClimbSpeed", 0) );
 
     mpCharBody->SetCamera(mpCamera);
     mpCharBody->SetCameraPosAdd(mvCameraPosAdd);
-    mpCharBody->SetCameraSmoothPosNum(    gpBase->mpGameCfg->GetInt("Player_Body","CameraSmoothPosNum",0) );
+    mpCharBody->SetCameraSmoothPosNum(    gpBase->mpGameCfg->GetInt("Player_Body", "CameraSmoothPosNum", 0) );
 
     //Create crouch extra
     mpCharBody->AddExtraSize(mvBodyCrouchSize);

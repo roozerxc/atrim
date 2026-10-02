@@ -104,10 +104,10 @@ private:
     bool ChangeDebugText(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(ChangeDebugText);
 
-    bool PressPrinfContDebugInfo(iWidget* apWidget,const cGuiMessageData& aData);
+    bool PressPrinfContDebugInfo(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressPrinfContDebugInfo);
 
-    bool PressRebuildDynCont(iWidget* apWidget,const cGuiMessageData& aData);
+    bool PressRebuildDynCont(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressRebuildDynCont);
 
     bool PressLevelReload(iWidget* apWidget, const cGuiMessageData& aData);
@@ -119,31 +119,31 @@ private:
     bool PressTestChangeMapSave(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressTestChangeMapSave);
 
-    bool PressLoadWorld(iWidget* apWidget,const cGuiMessageData& aData);
+    bool PressLoadWorld(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressLoadWorld);
 
-    bool LoadWorldFromFilePicker(iWidget* apWidget,const cGuiMessageData& aData);
+    bool LoadWorldFromFilePicker(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(LoadWorldFromFilePicker);
 
-    bool PressTelportPlayer(iWidget* apWidget,const cGuiMessageData& aData);
+    bool PressTelportPlayer(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressTelportPlayer);
 
-    bool PressReloadInsanityEffect(iWidget* apWidget,const cGuiMessageData& aData);
+    bool PressReloadInsanityEffect(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressReloadInsanityEffect);
 
-    bool PressStartInsanityEffect(iWidget* apWidget,const cGuiMessageData& aData);
+    bool PressStartInsanityEffect(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressStartInsanityEffect);
 
-    bool PressRecompileScript(iWidget* apWidget,const cGuiMessageData& aData);
+    bool PressRecompileScript(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressRecompileScript);
 
-    bool PressCloseScriptOutput(iWidget* apWidget,const cGuiMessageData& aData);
+    bool PressCloseScriptOutput(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressCloseScriptOutput);
 
-    bool PressBatchLoad(iWidget* apWidget,const cGuiMessageData& aData);
+    bool PressBatchLoad(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressBatchLoad);
 
-    bool PressLoadBatchLoadFile(iWidget* apWidget,const cGuiMessageData& aData);
+    bool PressLoadBatchLoadFile(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressLoadBatchLoadFile);
 
 

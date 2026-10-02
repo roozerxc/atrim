@@ -100,15 +100,15 @@ public:
 
     //////////////////////
     //Properties
-    cLuxInteractData_Grab* GetGrabData()
+    cLuxInteractData_Grab *GetGrabData()
     {
         return &mGrabData;
     }
-    cLuxInteractData_Push* GetPushData()
+    cLuxInteractData_Push *GetPushData()
     {
         return &mPushData;
     }
-    cLuxInteractData_Slide* GetSlideData()
+    cLuxInteractData_Slide *GetSlideData()
     {
         return &mSlideData;
     }
@@ -120,7 +120,7 @@ public:
 
     bool ShowOutlinesOnConnectedBodies();
 
-    const tString& GetContainedItem()
+    const tString &GetContainedItem()
     {
         return msContainedItem;
     }
@@ -135,7 +135,7 @@ public:
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);

@@ -20,8 +20,8 @@ public:
 
     void SetGameNeedsRestart()
     {
-        mbGameNeedsRestart=true;
-        mbRestartDialogShown=false;
+        mbGameNeedsRestart = true;
+        mbRestartDialogShown = false;
     }
 
     // Variables

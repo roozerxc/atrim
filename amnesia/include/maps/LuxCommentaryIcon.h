@@ -21,7 +21,7 @@ public:
     tString msTopic;
     tString msSoundFile;
 
-    iLuxEntity* CreateEntity(cLuxMap *apMap);
+    iLuxEntity *CreateEntity(cLuxMap *apMap);
 };
 
 //----------------------------------------------
@@ -40,7 +40,7 @@ public:
 
     void OnUpdate(double adFixedDelta);
 
-    virtual float OnInteractDebugDraw(cGuiSet *apSet,iFontData *apFont, float afStartY)
+    virtual float OnInteractDebugDraw(cGuiSet *apSet, iFontData *apFont, float afStartY)
     {
         return afStartY;
     }
@@ -59,7 +59,7 @@ public:
     {
         return eLuxFocusCrosshair_Grab;
     }
-    virtual iEntity3D* GetAttachEntity()
+    virtual iEntity3D *GetAttachEntity()
     {
         return mvBodies[0];
     }
@@ -76,11 +76,11 @@ public:
 
     //////////////////////
     //Data
-    cMeshEntity * GetMeshEntity()
+    cMeshEntity *GetMeshEntity()
     {
         return mpMeshEntity;
     }
-    virtual cMeshEntity* GetEffectMeshEntity()
+    virtual cMeshEntity *GetEffectMeshEntity()
     {
         return mpMeshEntity;
     }
@@ -89,12 +89,12 @@ public:
     {
         return (int)mvBodies.size();
     }
-    iPhysicsBody* GetBody(int alIdx)
+    iPhysicsBody *GetBody(int alIdx)
     {
         return mvBodies[alIdx];
     }
 
-    iPhysicsBody* GetMainBody()
+    iPhysicsBody *GetMainBody()
     {
         return mvBodies[0];
     }
@@ -105,7 +105,7 @@ public:
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     virtual void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     virtual void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     virtual void SetupSaveData(iLuxEntity_SaveData *apSaveData);
@@ -127,11 +127,11 @@ protected:
     ////////////////
     //Data
     cMeshEntity *mpMeshEntity;
-    std::vector<iLight*> mvLights;
-    std::vector<cParticleSystem*> mvParticleSystems;
-    std::vector<cBillboard*> mvBillboards;
+    std::vector<iLight *> mvLights;
+    std::vector<cParticleSystem *> mvParticleSystems;
+    std::vector<cBillboard *> mvBillboards;
 
-    std::vector<iPhysicsBody*> mvBodies;
+    std::vector<iPhysicsBody *> mvBodies;
 
     std::vector<cMatrixf> mvSubMeshMatrix;
 
@@ -153,8 +153,8 @@ public:
     cLuxCommentaryIconLoader(const tString& asName);
     virtual ~cLuxCommentaryIconLoader() {}
 
-    void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
-    void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
+    void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars);
+    void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars);
 
 protected:
     float mfDefaultMaxFocusDistance;

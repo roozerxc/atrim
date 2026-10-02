@@ -49,7 +49,7 @@ public:
 
     //////////////////////
     //Properties
-    iLuxInteractData_RotateBase* GetMoveBaseData()
+    iLuxInteractData_RotateBase *GetMoveBaseData()
     {
         return &mLeverData;
     }
@@ -80,7 +80,7 @@ public:
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);

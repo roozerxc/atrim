@@ -68,7 +68,7 @@ void cLuxInsanityHandler_SaveData::FromInsanityHandler(cLuxInsanityHandler *apDa
 
     //Events
     mvEvents.Resize(apData->mvEvents.size());
-    for(size_t i=0; i<mvEvents.Size(); ++i)
+    for(size_t i = 0; i < mvEvents.Size(); ++i)
     {
         mvEvents[i].mbUsed = apData->mvEvents[i]->IsUsed();
     }
@@ -87,7 +87,7 @@ void cLuxInsanityHandler_SaveData::ToInsanityHandler(cLuxMap *apMap, cLuxInsanit
     //Events
     if(mvEvents.Size() == apData->mvEvents.size())
     {
-        for(size_t i=0; i<mvEvents.Size(); ++i)
+        for(size_t i = 0; i < mvEvents.Size(); ++i)
         {
             apData->mvEvents[i]->SetUsed(mvEvents[i].mbUsed);
         }
@@ -95,7 +95,7 @@ void cLuxInsanityHandler_SaveData::ToInsanityHandler(cLuxMap *apMap, cLuxInsanit
 
     //Disabled Events
     apData->m_setDisabledSets.clear();
-    for(size_t i=0; i<mvDisabledSets.Size(); ++i)
+    for(size_t i = 0; i < mvDisabledSets.Size(); ++i)
     {
         apData->m_setDisabledSets.insert(mvDisabledSets[i].msName);
     }
@@ -333,7 +333,7 @@ void cLuxEffectHandler_SaveData::FromEffectHandler(cLuxEffectHandler *apEffects)
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
     mvGlobalSoundVolumeMul.Resize(eLuxGlobalVolumeType_LastEnum);
     mvGlobalSoundSpeedMul.Resize(eLuxGlobalVolumeType_LastEnum);
-    for(size_t i=0; i<eLuxGlobalVolumeType_LastEnum; ++i)
+    for(size_t i = 0; i < eLuxGlobalVolumeType_LastEnum; ++i)
     {
         if(i == eLuxGlobalVolumeType_Commentary || i == eLuxGlobalVolumeType_DebugMenu)
         {
@@ -392,7 +392,7 @@ void cLuxEffectHandler_SaveData::ToEffectHandler(cLuxMap *apMap, cLuxEffectHandl
     apEffects->GetPlayVoice()->mbActive = mbVoiceActive;
     apEffects->GetPlayVoice()->msOverCallback = msVoiceOverCallback;
     apEffects->GetPlayVoice()->mlstVoices.clear();
-    for(size_t i=0; i<mvVoiceData.Size(); ++i)
+    for(size_t i = 0; i < mvVoiceData.Size(); ++i)
     {
         apEffects->GetPlayVoice()->mlstVoices.push_back(mvVoiceData[i]);
     }
@@ -401,7 +401,7 @@ void cLuxEffectHandler_SaveData::ToEffectHandler(cLuxMap *apMap, cLuxEffectHandl
     // Sound volume and speed mul
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
 
-    for(size_t i=0; i<mvGlobalSoundVolumeMul.Size(); ++i)
+    for(size_t i = 0; i < mvGlobalSoundVolumeMul.Size(); ++i)
     {
         if(i == eLuxGlobalVolumeType_Commentary || i == eLuxGlobalVolumeType_DebugMenu)
         {
@@ -411,7 +411,7 @@ void cLuxEffectHandler_SaveData::ToEffectHandler(cLuxMap *apMap, cLuxEffectHandl
         mvGlobalSoundVolumeMul[i].ToEntry((int)i, pSoundHandler->GetGlobalVolumeSettingsHandler() );
     }
 
-    for(size_t i=0; i<mvGlobalSoundSpeedMul.Size(); ++i)
+    for(size_t i = 0; i < mvGlobalSoundSpeedMul.Size(); ++i)
     {
         if(i == eLuxGlobalVolumeType_Commentary || i == eLuxGlobalVolumeType_DebugMenu)
         {
@@ -502,7 +502,7 @@ void cLuxMusicHandler_SaveData::FromMusicHandler(cLuxMusicHandler *apMusic)
     ///////////////////
     // Music
     mvMusic.Resize(apMusic->mvGameMusic.size());
-    for(size_t i=0; i<mvMusic.Size(); ++i)
+    for(size_t i = 0; i < mvMusic.Size(); ++i)
     {
         mvMusic[i].msFile = apMusic->mvGameMusic[i].msFile;
         mvMusic[i].mbLoop = apMusic->mvGameMusic[i].mbLoop;
@@ -539,7 +539,7 @@ void cLuxMusicHandler_SaveData::ToMusicHandler(cLuxMap *apMap, cLuxMusicHandler 
     // Current Music
     if(msCurrentMusic != "")
     {
-        bool bRet = apMusic->mpMusicHandler->Play(msCurrentMusic,mfCurrentMusicMaxVolume,0.1f, mbCurrentMusicLoop, false);
+        bool bRet = apMusic->mpMusicHandler->Play(msCurrentMusic, mfCurrentMusicMaxVolume, 0.1f, mbCurrentMusicLoop, false);
         if(bRet)
         {
             cMusicEntry *pMusicEntry = apMusic->mpMusicHandler->GetCurrentSong();
@@ -564,7 +564,7 @@ void cLuxMusicHandler_SaveData::ToMusicHandler(cLuxMap *apMap, cLuxMusicHandler 
 
     ///////////////////
     // Music
-    for(size_t i=0; i<mvMusic.Size(); ++i)
+    for(size_t i = 0; i < mvMusic.Size(); ++i)
     {
         apMusic->mvGameMusic[i].msFile = mvMusic[i].msFile;
         apMusic->mvGameMusic[i].mbLoop = mvMusic[i].mbLoop;
@@ -577,12 +577,12 @@ void cLuxMusicHandler_SaveData::ToMusicHandler(cLuxMap *apMap, cLuxMusicHandler 
     // Enemies
 
     //Attackers
-    for(size_t i=0; i<mvAttackerIDs.Size(); ++i)
+    for(size_t i = 0; i < mvAttackerIDs.Size(); ++i)
     {
         iLuxEntity *pEntity = apMap->GetEntityByID(mvAttackerIDs[i]);
         if(pEntity && pEntity->GetEntityType() == eLuxEntityType_Enemy)
         {
-            iLuxEnemy *pEnemy = static_cast<iLuxEnemy*>(pEntity);
+            iLuxEnemy *pEnemy = static_cast<iLuxEnemy *>(pEntity);
             apMusic->m_setEnemies[eLuxEnemyMusic_Attack].insert(pEnemy);
         }
         else
@@ -592,12 +592,12 @@ void cLuxMusicHandler_SaveData::ToMusicHandler(cLuxMap *apMap, cLuxMusicHandler 
     }
 
     //Searchers
-    for(size_t i=0; i<mvSearcherIDs.Size(); ++i)
+    for(size_t i = 0; i < mvSearcherIDs.Size(); ++i)
     {
         iLuxEntity *pEntity = apMap->GetEntityByID(mvSearcherIDs[i]);
         if(pEntity && pEntity->GetEntityType() == eLuxEntityType_Enemy)
         {
-            iLuxEnemy *pEnemy = static_cast<iLuxEnemy*>(pEntity);
+            iLuxEnemy *pEnemy = static_cast<iLuxEnemy *>(pEntity);
             apMusic->m_setEnemies[eLuxEnemyMusic_Search].insert(pEnemy);
         }
         else
@@ -633,8 +633,8 @@ kSerializeVar(mbAttackPlaying, eSerializeType_Bool)
 kSerializeVar(mbSearchPlaying, eSerializeType_Bool)
 
 kSerializeClassContainer(mvMusic,  cLuxMusicHandler_Music_SaveData, eSerializeType_Class)
-kSerializeVarContainer(mvAttackerIDs,eSerializeType_Int32)
-kSerializeVarContainer(mvSearcherIDs,eSerializeType_Int32)
+kSerializeVarContainer(mvAttackerIDs, eSerializeType_Int32)
+kSerializeVarContainer(mvSearcherIDs, eSerializeType_Int32)
 kEndSerialize()
 
 //-----------------------------------------------------------------------
@@ -684,7 +684,7 @@ void cLuxJournal_SaveData::FromJournal(cLuxJournal *apJournal)
     /////////////
     //Notes
     mvNotes.Resize(apJournal->mvNotes.size());
-    for(size_t i=0; i<mvNotes.Size(); ++i)
+    for(size_t i = 0; i < mvNotes.Size(); ++i)
     {
         mvNotes[i] = *apJournal->mvNotes[i];
     }
@@ -692,11 +692,11 @@ void cLuxJournal_SaveData::FromJournal(cLuxJournal *apJournal)
     /////////////
     //Diaries
     mvDiaryConts.Resize(apJournal->mvDiaryContainers.size());
-    for(size_t cont=0; cont<mvDiaryConts.Size(); ++cont)
+    for(size_t cont = 0; cont < mvDiaryConts.Size(); ++cont)
     {
         mvDiaryConts[cont].msType = apJournal->mvDiaryContainers[cont]->msType;
         mvDiaryConts[cont].mvDiaries.Resize(apJournal->mvDiaryContainers[cont]->mvDiaries.size());
-        for(size_t i=0; i<mvDiaryConts[cont].mvDiaries.Size(); ++i)
+        for(size_t i = 0; i < mvDiaryConts[cont].mvDiaries.Size(); ++i)
         {
             mvDiaryConts[cont].mvDiaries[i] = *apJournal->mvDiaryContainers[cont]->mvDiaries[i];
         }
@@ -705,7 +705,7 @@ void cLuxJournal_SaveData::FromJournal(cLuxJournal *apJournal)
     /////////////
     //Quest notes
     mvQuestNotes.Resize(apJournal->mvQuestNotes.size());
-    for(size_t i=0; i<mvQuestNotes.Size(); ++i)
+    for(size_t i = 0; i < mvQuestNotes.Size(); ++i)
     {
         mvQuestNotes[i] = *apJournal->mvQuestNotes[i];
     }
@@ -722,7 +722,7 @@ void cLuxJournal_SaveData::ToJournal(cLuxMap *apMap, cLuxJournal *apJournal)
     /////////////
     //Notes
     apJournal->mvNotes.resize(mvNotes.Size());
-    for(size_t i=0; i<mvNotes.Size(); ++i)
+    for(size_t i = 0; i < mvNotes.Size(); ++i)
     {
         apJournal->mvNotes[i] = hplNew(cLuxNote, ());
         *apJournal->mvNotes[i] = mvNotes[i];
@@ -731,12 +731,12 @@ void cLuxJournal_SaveData::ToJournal(cLuxMap *apMap, cLuxJournal *apJournal)
     /////////////
     //Diaries
     apJournal->mvDiaryContainers.resize(mvDiaryConts.Size());
-    for(size_t cont=0; cont<mvDiaryConts.Size(); ++cont)
+    for(size_t cont = 0; cont < mvDiaryConts.Size(); ++cont)
     {
         apJournal->mvDiaryContainers[cont] = hplNew(cLuxDiaryContainer, ());
         apJournal->mvDiaryContainers[cont]->msType = mvDiaryConts[cont].msType;
         apJournal->mvDiaryContainers[cont]->mvDiaries.resize(mvDiaryConts[cont].mvDiaries.Size());
-        for(size_t i=0; i<mvDiaryConts[cont].mvDiaries.Size(); ++i)
+        for(size_t i = 0; i < mvDiaryConts[cont].mvDiaries.Size(); ++i)
         {
             apJournal->mvDiaryContainers[cont]->mvDiaries[i] = hplNew(cLuxDiary, ());
             *apJournal->mvDiaryContainers[cont]->mvDiaries[i] = mvDiaryConts[cont].mvDiaries[i];
@@ -746,7 +746,7 @@ void cLuxJournal_SaveData::ToJournal(cLuxMap *apMap, cLuxJournal *apJournal)
     /////////////
     //QuestNotes
     apJournal->mvQuestNotes.resize(mvQuestNotes.Size());
-    for(size_t i=0; i<mvQuestNotes.Size(); ++i)
+    for(size_t i = 0; i < mvQuestNotes.Size(); ++i)
     {
         apJournal->mvQuestNotes[i] = hplNew(cLuxQuestNote, ());
         *apJournal->mvQuestNotes[i] = mvQuestNotes[i];
@@ -837,7 +837,7 @@ void cLuxInventory_SaveData::FromInventory(cLuxInventory *apInventory)
     ///////////////////////////
     //Items
     mvItems.Resize(apInventory->mvItems.size());
-    for(size_t i=0; i<mvItems.Size(); ++i)
+    for(size_t i = 0; i < mvItems.Size(); ++i)
     {
         mvItems[i].FromItem(apInventory->mvItems[i]);
     }
@@ -861,7 +861,7 @@ void cLuxInventory_SaveData::ToInventory(cLuxMap *apMap, cLuxInventory *apInvent
     ///////////////////////////
     //Variables
     apInventory->mbDisabled = mbDisabled;
-    if(mlEquippedHandItem >0)
+    if(mlEquippedHandItem > 0)
     {
         cLuxInventory_Item *pItem = apInventory->GetItem(mlEquippedHandItem);
         apInventory->SetEquippedHandItem(pItem);
@@ -874,7 +874,7 @@ void cLuxInventory_SaveData::ToInventory(cLuxMap *apMap, cLuxInventory *apInvent
 
     ///////////////////////////
     //Items
-    for(size_t i=0; i<mvItems.Size(); ++i)
+    for(size_t i = 0; i < mvItems.Size(); ++i)
     {
         cLuxInventory_Item_SaveData& saveItem = mvItems[i];
 
@@ -887,7 +887,7 @@ void cLuxInventory_SaveData::ToInventory(cLuxMap *apMap, cLuxInventory *apInvent
 
     ///////////////////////////
     //Combine callbacks
-    for(size_t i=0; i<mvCombineCallbacks.Size(); ++i)
+    for(size_t i = 0; i < mvCombineCallbacks.Size(); ++i)
     {
         cLuxCombineItemsCallback *pCallback = hplNew(cLuxCombineItemsCallback, ());
         *pCallback = mvCombineCallbacks[i];
@@ -962,7 +962,7 @@ void cLuxPlayerHands_SaveData::ToPlayerHands(cLuxMap *apMap, cLuxPlayerHands *ap
     //If hand object is active, set state as idle
     if(apPlayerHands->mHandState == eLuxHandsState_HandObject && apPlayerHands->mpCurrentHandObject)
     {
-        apPlayerHands->PlayAnim(apPlayerHands->mpCurrentHandObject->GetAnimIdle(),true);
+        apPlayerHands->PlayAnim(apPlayerHands->mpCurrentHandObject->GetAnimIdle(), true);
         apPlayerHands->mHandState = eLuxHandsState_Idle;
     }
 }
@@ -1048,7 +1048,7 @@ void cLuxPlayer_SaveData::FromPlayer(cLuxPlayer *apPlayer)
     msDeathHintCat = apPlayer->GetHelperDeath()->GetHintCat();
     msDeathHintEntry = apPlayer->GetHelperDeath()->GetHintEntry();
 
-    cLuxMoveState_Normal *pMoveNormal = static_cast<cLuxMoveState_Normal*>(apPlayer->GetMoveStateData(eLuxMoveState_Normal));
+    cLuxMoveState_Normal *pMoveNormal = static_cast<cLuxMoveState_Normal *>(apPlayer->GetMoveStateData(eLuxMoveState_Normal));
     mbCrouching = pMoveNormal->mbCrouching;
 
     //////////////////////
@@ -1155,7 +1155,7 @@ void cLuxPlayer_SaveData::FromPlayer(cLuxPlayer *apPlayer)
     //////////////////////
     ///Camera
     cCamera *pCam = apPlayer->GetCamera();
-    mvCameraAngles = cVector3f(pCam->GetPitch(),pCam->GetYaw(), pCam->GetRoll());
+    mvCameraAngles = cVector3f(pCam->GetPitch(), pCam->GetYaw(), pCam->GetRoll());
 
     mfPitchMaxLimit = pCam->GetPitchMaxLimit();
     mfPitchMinLimit = pCam->GetPitchMinLimit();
@@ -1163,7 +1163,7 @@ void cLuxPlayer_SaveData::FromPlayer(cLuxPlayer *apPlayer)
     mfYawMinLimit = pCam->GetYawMinLimit();
 
     mvHeadPosAdds.Resize(apPlayer->mvHeadPosAdds.size());
-    for(size_t i=0; i<mvHeadPosAdds.Size(); ++i)
+    for(size_t i = 0; i < mvHeadPosAdds.Size(); ++i)
     {
         mvHeadPosAdds[i] = apPlayer->mvHeadPosAdds[i];
     }
@@ -1195,7 +1195,7 @@ void cLuxPlayer_SaveData::FromPlayer(cLuxPlayer *apPlayer)
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
+void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap, cLuxPlayer *apPlayer)
 {
     //////////////////////
     ///State
@@ -1231,7 +1231,7 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
 
     apPlayer->GetHelperDeath()->SetHint(msDeathHintCat, msDeathHintEntry);
 
-    cLuxMoveState_Normal *pMoveNormal = static_cast<cLuxMoveState_Normal*>(apPlayer->GetMoveStateData(eLuxMoveState_Normal));
+    cLuxMoveState_Normal *pMoveNormal = static_cast<cLuxMoveState_Normal *>(apPlayer->GetMoveStateData(eLuxMoveState_Normal));
     pMoveNormal->mbCrouching = mbCrouching;
 
     //////////////////////
@@ -1254,11 +1254,11 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
     apPlayer->GetHelperFlashback()->msCallback = msFlashbackCallback;
 
     apPlayer->GetHelperFlashback()->mlstFlashbackQueue.clear();
-    cContainerListIterator<cLuxFlashbackData_SaveData> flashIt =mlstFlashbackQueue.GetIterator();
+    cContainerListIterator<cLuxFlashbackData_SaveData> flashIt = mlstFlashbackQueue.GetIterator();
     while(flashIt.HasNext())
     {
         cLuxFlashbackData_SaveData saveData = flashIt.Next();
-        apPlayer->GetHelperFlashback()->mlstFlashbackQueue.push_back(cLuxFlashbackData(saveData.msFile,saveData.msCallback) );
+        apPlayer->GetHelperFlashback()->mlstFlashbackQueue.push_back(cLuxFlashbackData(saveData.msFile, saveData.msCallback) );
     }
 
     //////////////////////
@@ -1352,7 +1352,7 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
 
     if(apPlayer->mvHeadPosAdds.size() == mvHeadPosAdds.Size())
     {
-        for(size_t i=0; i<apPlayer->mvHeadPosAdds.size(); ++i)
+        for(size_t i = 0; i < apPlayer->mvHeadPosAdds.size(); ++i)
         {
             apPlayer->mvHeadPosAdds[i] = mvHeadPosAdds[i];
         }
@@ -1360,12 +1360,12 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
 
     ///////////////////
     // Terror Enemies
-    for(size_t i=0; i<mvTerrorEnemyIDs.Size(); ++i)
+    for(size_t i = 0; i < mvTerrorEnemyIDs.Size(); ++i)
     {
         iLuxEntity *pEntity = apMap->GetEntityByID(mvTerrorEnemyIDs[i]);
         if(pEntity && pEntity->GetEntityType() == eLuxEntityType_Enemy)
         {
-            iLuxEnemy *pEnemy = static_cast<iLuxEnemy*>(pEntity);
+            iLuxEnemy *pEnemy = static_cast<iLuxEnemy *>(pEntity);
             apPlayer->m_setTerrorEnemies.insert(pEnemy);
         }
         else
@@ -1473,7 +1473,7 @@ kSerializeVar(mfFlashbackStartCount, eSerializeType_Float32)
 kSerializeVar(mfFlashDelay, eSerializeType_Float32)
 kSerializeVar(msFlashbackFile, eSerializeType_String)
 kSerializeVar(msFlashbackCallback, eSerializeType_String)
-kSerializeClassContainer(mlstFlashbackQueue,cLuxFlashbackData_SaveData, eSerializeType_Class)
+kSerializeClassContainer(mlstFlashbackQueue, cLuxFlashbackData_SaveData, eSerializeType_Class)
 
 kSerializeVar(mbInsanityCollapse_Active, eSerializeType_Bool)
 kSerializeVar(mlInsanityCollapse_State, eSerializeType_Int32)

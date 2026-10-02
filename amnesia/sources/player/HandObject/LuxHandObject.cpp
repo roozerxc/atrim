@@ -42,18 +42,18 @@ cLuxHandObjectLoader::cLuxHandObjectLoader(const tString& asName) : cEntityLoade
 
 //-----------------------------------------------------------------------
 
-void cLuxHandObjectLoader::BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars)
+void cLuxHandObjectLoader::BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars)
 {
 
 }
 
-void cLuxHandObjectLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars)
+void cLuxHandObjectLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars)
 {
     ///////////////////////////////
     // Load mesh
 
     //If hand object has not saved mesh, save it and increase user count!
-    if(mpHandObject->mpMesh==NULL)
+    if(mpHandObject->mpMesh == NULL)
     {
         mpMesh->IncUserCount();
         mpHandObject->mpMesh = mpMesh;
@@ -72,7 +72,7 @@ void cLuxHandObjectLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_
     {
         cMatrixf mtxInvModel = cMath::MatrixInverse(mpEntity->GetLocalMatrix());
 
-        for(size_t i=0; i<mvBillboards.size(); ++i)
+        for(size_t i = 0; i < mvBillboards.size(); ++i)
         {
             cBillboard *pBB = mvBillboards[i];
             cMatrixf mtxLocal = cMath::MatrixMul(mtxInvModel, pBB->GetLocalMatrix());
@@ -81,7 +81,7 @@ void cLuxHandObjectLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_
             mpEntity->AddChild(pBB);
         }
 
-        for(size_t i=0; i<mvLights.size(); ++i)
+        for(size_t i = 0; i < mvLights.size(); ++i)
         {
             iLight *pLight = mvLights[i];
             cMatrixf mtxLocal = cMath::MatrixMul(mtxInvModel, pLight->GetLocalMatrix());
@@ -116,11 +116,11 @@ void iLuxHandObject::LoadSettings(cXmlElement *apVarsElem)
     //Load base settings
 
     //Offset matrix
-    cVector3f vOffsetScale = apVarsElem->GetAttributeVector3f("OffsetScale",1);
-    cVector3f vOffsetRotation =cMath::Vector3ToRad(apVarsElem->GetAttributeVector3f("OffsetRotation",0));
-    cVector3f vOffsetPos = apVarsElem->GetAttributeVector3f("OffsetPosition",0);
+    cVector3f vOffsetScale = apVarsElem->GetAttributeVector3f("OffsetScale", 1);
+    cVector3f vOffsetRotation = cMath::Vector3ToRad(apVarsElem->GetAttributeVector3f("OffsetRotation", 0));
+    cVector3f vOffsetPos = apVarsElem->GetAttributeVector3f("OffsetPosition", 0);
 
-    m_mtxOffset = cMath::MatrixMul(cMath::MatrixRotate(vOffsetRotation,eEulerRotationOrder_XYZ), cMath::MatrixScale(vOffsetScale));
+    m_mtxOffset = cMath::MatrixMul(cMath::MatrixRotate(vOffsetRotation, eEulerRotationOrder_XYZ), cMath::MatrixScale(vOffsetScale));
     m_mtxOffset.SetTranslation(vOffsetPos);
 
     //Animations
@@ -148,7 +148,7 @@ void iLuxHandObject::CreateEntity(cLuxMap *apMap)
 
     ///////////////////////
     // Load the entity
-    tString sFile = "models/player/"+msName+"/"+ msModelFile;
+    tString sFile = "models/player/" + msName + "/" + msModelFile;
     apMap->GetWorld()->CreateEntity("PlayerHands", cMatrixf::Identity, sFile);
 
     ///////////////////////
@@ -156,8 +156,8 @@ void iLuxHandObject::CreateEntity(cLuxMap *apMap)
     if(mpMeshEntity)
     {
         mpMeshEntity->SetMatrix(m_mtxOffset);
-        mpMeshEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster,false);
-        mpMeshEntity->SetRenderFlagBit(eRenderableFlag_VisibleInReflection,false);
+        mpMeshEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster, false);
+        mpMeshEntity->SetRenderFlagBit(eRenderableFlag_VisibleInReflection, false);
     }
 
     ImplementedCreateEntity(apMap);
@@ -174,19 +174,19 @@ void iLuxHandObject::DestroyEntity(cLuxMap *apMap)
         mpMeshEntity = NULL;
     }
 
-    for(size_t i=0; i<mvBillboards.size(); ++i)
+    for(size_t i = 0; i < mvBillboards.size(); ++i)
     {
         pWorld->DestroyBillboard(mvBillboards[i]);
     }
     mvBillboards.clear();
 
-    for(size_t i=0; i<mvParticleSystems.size(); ++i)
+    for(size_t i = 0; i < mvParticleSystems.size(); ++i)
     {
         pWorld->DestroyParticleSystem(mvParticleSystems[i]);
     }
     mvParticleSystems.clear();
 
-    for(size_t i=0; i<mvLights.size(); ++i)
+    for(size_t i = 0; i < mvLights.size(); ++i)
     {
         pWorld->DestroyLight(mvLights[i]);
     }
@@ -228,18 +228,18 @@ void iLuxHandObject::SetSetEntitiesVisible(bool abVisible)
         mpMeshEntity->SetActive(abVisible);
     }
 
-    for(size_t i=0; i<mvBillboards.size(); ++i)
+    for(size_t i = 0; i < mvBillboards.size(); ++i)
     {
         mvBillboards[i]->SetVisible(abVisible);
     }
 
-    for(size_t i=0; i<mvParticleSystems.size(); ++i)
+    for(size_t i = 0; i < mvParticleSystems.size(); ++i)
     {
         mvParticleSystems[i]->SetVisible(abVisible);
         mvParticleSystems[i]->SetActive(abVisible);
     }
 
-    for(size_t i=0; i<mvLights.size(); ++i)
+    for(size_t i = 0; i < mvLights.size(); ++i)
     {
         mvLights[i]->SetVisible(abVisible);
         mvLights[i]->SetActive(abVisible);

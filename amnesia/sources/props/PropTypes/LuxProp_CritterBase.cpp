@@ -20,7 +20,7 @@ iLuxPropLoader_Critter::iLuxPropLoader_Critter(const tString asName) : iLuxPropL
 
 void iLuxPropLoader_Critter::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    iLuxProp_CritterBase  *pCritter = static_cast<iLuxProp_CritterBase*>(apProp);
+    iLuxProp_CritterBase  *pCritter = static_cast<iLuxProp_CritterBase *>(apProp);
 
     pCritter->msDeathEntity = GetVarString("DeathEntity", "");
     pCritter->msDeathPS = GetVarString("DeathPS", "");
@@ -65,12 +65,12 @@ void cLuxCritterRayCallback::Reset()
 {
     mbIntersected = false;
     mfClosestT = 99999.0f;
-    mpBody=NULL;
+    mpBody = NULL;
 }
 
 bool cLuxCritterRayCallback::BeforeIntersect(iPhysicsBody *pBody)
 {
-    if(pBody->GetCollide()==false || pBody->IsCharacter() || mpCritterBase->mpBody == pBody)
+    if(pBody->GetCollide() == false || pBody->IsCharacter() || mpCritterBase->mpBody == pBody)
     {
         return false;
     }
@@ -100,12 +100,12 @@ bool cLuxCritterRayCallback::OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams 
 
 //-----------------------------------------------------------------------
 
-iLuxProp_CritterBase::iLuxProp_CritterBase(const tString &asName,int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_Critter)
+iLuxProp_CritterBase::iLuxProp_CritterBase(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName, alID, apMap, eLuxPropType_Critter)
 {
     mvVel = 0;
-    mvGravityVel =0;
-    mlAnimState =0;
-    mvGroundNormal =cVector3f(0,1,0);
+    mvGravityVel = 0;
+    mlAnimState = 0;
+    mvGroundNormal = cVector3f(0, 1, 0);
 
     mbUseRayCollision = true;
 
@@ -155,7 +155,7 @@ void iLuxProp_CritterBase::OnSetupAfterLoad(cWorld *apWorld)
     mpBody = mvBodies[0];
 
     mvBaseMatrices.resize(mpMeshEntity->GetSubMeshEntityNum());
-    for(int i=0; i<mpMeshEntity->GetSubMeshEntityNum(); ++i)
+    for(int i = 0; i < mpMeshEntity->GetSubMeshEntityNum(); ++i)
     {
         mvBaseMatrices[i] = mpMeshEntity->GetSubMeshEntity(i)->GetLocalMatrix();
     }
@@ -163,9 +163,9 @@ void iLuxProp_CritterBase::OnSetupAfterLoad(cWorld *apWorld)
 
     mvSwarmPoint = mpBody->GetWorldPosition();
 
-    if(mpMeshEntity->GetAnimationStateNum() >0)
+    if(mpMeshEntity->GetAnimationStateNum() > 0)
     {
-        mpMeshEntity->Play(0, true,true);
+        mpMeshEntity->Play(0, true, true);
     }
 
     if(mfAttackSizeRadius > 0)
@@ -179,7 +179,7 @@ void iLuxProp_CritterBase::OnSetupAfterLoad(cWorld *apWorld)
 
 
     mvGroundNormal = cMath::MatrixMul(mpBody->GetLocalMatrix().GetRotation(), mvGroundNormal);
-    cVector3f vForward = cMath::MatrixMul(mpBody->GetLocalMatrix().GetRotation(), cVector3f(0,0,-1));
+    cVector3f vForward = cMath::MatrixMul(mpBody->GetLocalMatrix().GetRotation(), cVector3f(0, 0, -1));
     cVector3f vRight;
     CreateOrthoVectors(vRight, mvGroundNormal, vForward);
 
@@ -206,7 +206,7 @@ void iLuxProp_CritterBase::UpdatePropSpecific(double adFixedDelta)
     //If pLayer is far away do not update
     cVector3f vPlayerPos = gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition();
     float fPlayerDistanceSqr = cMath::Vector3DistSqr(vPlayerPos, mpBody->GetWorldPosition());
-    if(fPlayerDistanceSqr > 15*15)
+    if(fPlayerDistanceSqr > 15 * 15)
     {
         return;
     }
@@ -238,11 +238,11 @@ void iLuxProp_CritterBase::OnRenderSolid(cRendererCallbackFunctions* apFunctions
     return;
     iPhysicsWorld *pPhysicsWorld = mpWorld->GetPhysicsWorld();
 
-    pPhysicsWorld->RenderShapeDebugGeometry(mpBody->GetShape(), mpBody->GetLocalMatrix(), apFunctions->GetLowLevelGfx(), cColor(1,1));
+    pPhysicsWorld->RenderShapeDebugGeometry(mpBody->GetShape(), mpBody->GetLocalMatrix(), apFunctions->GetLowLevelGfx(), cColor(1, 1));
 
-    apFunctions->GetLowLevelGfx()->DrawLine(mpBody->GetLocalPosition(), mpBody->GetLocalPosition()+mvGroundNormal*0.5f,cColor(1,0,0,1));
-    cVector3f vFwdDir = cMath::Vector3Normalize(mvVel==0 ? mlstFwdDirs.back() : mvVel);
-    apFunctions->GetLowLevelGfx()->DrawLine(mpBody->GetLocalPosition(), mpBody->GetLocalPosition()+vFwdDir*0.5f,cColor(0,1,0,1));
+    apFunctions->GetLowLevelGfx()->DrawLine(mpBody->GetLocalPosition(), mpBody->GetLocalPosition() + mvGroundNormal * 0.5f, cColor(1, 0, 0, 1));
+    cVector3f vFwdDir = cMath::Vector3Normalize(mvVel == 0 ? mlstFwdDirs.back() : mvVel);
+    apFunctions->GetLowLevelGfx()->DrawLine(mpBody->GetLocalPosition(), mpBody->GetLocalPosition() + vFwdDir * 0.5f, cColor(0, 1, 0, 1));
 
     if(mpDamageShape)
     {
@@ -265,18 +265,18 @@ void iLuxProp_CritterBase::OnHealthChange()
 {
     ///////////////
     // Death
-    if(mfHealth <=0)
+    if(mfHealth <= 0)
     {
         cWorld *pWorld = mpMap->GetWorld();
 
         if(msDeathSound != "")
         {
-            PlaySound("CritterDeath",msDeathSound, true, true);
+            PlaySound("CritterDeath", msDeathSound, true, true);
         }
 
         if(msDeathPS != "")
         {
-            cParticleSystem *pPS = pWorld->CreateParticleSystem("CritterDeath", msDeathPS,1);
+            cParticleSystem *pPS = pWorld->CreateParticleSystem("CritterDeath", msDeathPS, 1);
             if(pPS)
             {
                 pPS->SetPosition(mpBody->GetLocalPosition());
@@ -285,7 +285,7 @@ void iLuxProp_CritterBase::OnHealthChange()
 
         if(msDeathEntity != "")
         {
-            pWorld->CreateEntity(msName+"_Dead", mpMeshEntity->GetWorldMatrix(), msDeathEntity);
+            pWorld->CreateEntity(msName + "_Dead", mpMeshEntity->GetWorldMatrix(), msDeathEntity);
         }
 
         OnKillCritter();
@@ -311,7 +311,7 @@ void iLuxProp_CritterBase::OnDamage(float afAmount, int alStrength)
 
 void iLuxProp_CritterBase::CreateOrthoVectors(cVector3f &avRight, cVector3f& avUp, cVector3f &avForward)
 {
-    if(avForward == avUp || avForward == avUp*-1)
+    if(avForward == avUp || avForward == avUp * -1)
     {
         avForward.x = avUp.z;
         avForward.y = -avUp.x;
@@ -326,12 +326,12 @@ void iLuxProp_CritterBase::CreateOrthoVectors(cVector3f &avRight, cVector3f& avU
 
 float iLuxProp_CritterBase::GetDistanceToPlayer()
 {
-    return cMath::Vector3Dist(gpBase->mpPlayer->GetCharacterBody()->GetPosition(),mpBody->GetLocalPosition());
+    return cMath::Vector3Dist(gpBase->mpPlayer->GetCharacterBody()->GetPosition(), mpBody->GetLocalPosition());
 }
 
 float iLuxProp_CritterBase::GetDistanceToPlayer2D()
 {
-    return cMath::Vector2DistXZ(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition(),mpBody->GetLocalPosition());
+    return cMath::Vector2DistXZ(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition(), mpBody->GetLocalPosition());
 }
 
 //-----------------------------------------------------------------------
@@ -370,7 +370,7 @@ cMatrixf iLuxProp_CritterBase::GetAttackMatrix(const cVector3f& avDir)
 
 bool iLuxProp_CritterBase::Attack(const cVector3f& avDir)
 {
-    if(mpDamageShape==NULL)
+    if(mpDamageShape == NULL)
     {
         return false;
     }
@@ -382,7 +382,7 @@ bool iLuxProp_CritterBase::Attack(const cVector3f& avDir)
                 false, true, false, false);
     if(bHit)
     {
-        PlaySound("CritterAttack",msAttackHitSound,true, true);
+        PlaySound("CritterAttack", msAttackHitSound, true, true);
     }
     return bHit;
 }
@@ -392,12 +392,12 @@ bool iLuxProp_CritterBase::Attack(const cVector3f& avDir)
 cVector3f iLuxProp_CritterBase::GetWanderAdd(float afLength, float afRadius, double adFixedDelta)
 {
     cVector3f vDir;
-    if(mvVel==0)
+    if(mvVel == 0)
     {
         if(mlstFwdDirs.empty())
         {
             float fAngle = cMath::RandRectf(0, k2Pif);
-            vDir = cMath::MatrixMul(cMath::MatrixRotateY(fAngle),cVector3f(1,0,0));
+            vDir = cMath::MatrixMul(cMath::MatrixRotateY(fAngle), cVector3f(1, 0, 0));
         }
         else
         {
@@ -415,9 +415,9 @@ cVector3f iLuxProp_CritterBase::GetWanderAdd(float afLength, float afRadius, dou
     cQuaternion qRotation;
     qRotation.FromAngleAxis(fAngle, mvGroundNormal);
 
-    cVector3f vForce = cMath::MatrixMul(cMath::MatrixQuaternion(qRotation),cVector3f(2,0,0));
+    cVector3f vForce = cMath::MatrixMul(cMath::MatrixQuaternion(qRotation), cVector3f(2, 0, 0));
 
-    return (vDir*1 + vForce) * (float)adFixedDelta;
+    return (vDir * 1 + vForce) * (float)adFixedDelta;
 }
 
 //-----------------------------------------------------------------------
@@ -432,7 +432,7 @@ cVector3f iLuxProp_CritterBase::GetTowardPlayerAdd(bool abDependOnDistance, doub
     cVector3f vAdd = vToPlayer * (float)adFixedDelta;
     if(abDependOnDistance)
     {
-        vAdd = vAdd * (1.0f/fToPlayerDist);
+        vAdd = vAdd * (1.0f / fToPlayerDist);
     }
 
     return vAdd;
@@ -442,7 +442,7 @@ cVector3f iLuxProp_CritterBase::GetTowardPlayerAdd(bool abDependOnDistance, doub
 
 void iLuxProp_CritterBase::UpdateMovement(double adFixedDelta)
 {
-    if(mvVel ==0)
+    if(mvVel == 0)
     {
         return;
     }
@@ -466,7 +466,7 @@ void iLuxProp_CritterBase::UpdateMovement(double adFixedDelta)
 
 void iLuxProp_CritterBase::UpdateMesh(double adFixedDelta)
 {
-    if(mvVel!=0)
+    if(mvVel != 0)
     {
         mlstFwdDirs.push_back(cMath::Vector3Normalize(mvVel));
         if(mlstFwdDirs.size() > 20)
@@ -477,10 +477,10 @@ void iLuxProp_CritterBase::UpdateMesh(double adFixedDelta)
 
     ////////////////////////////
     // Get smooth forward
-    cVector3f vForward = cVector3f(0,0,1);
-    if(mlstFwdDirs.empty()==false)
+    cVector3f vForward = cVector3f(0, 0, 1);
+    if(mlstFwdDirs.empty() == false)
     {
-        cVector3f vTotalFwd=0;
+        cVector3f vTotalFwd = 0;
         for(tVector3fListIt it = mlstFwdDirs.begin(); it != mlstFwdDirs.end(); ++it)
         {
             vTotalFwd += *it;
@@ -496,7 +496,7 @@ void iLuxProp_CritterBase::UpdateMesh(double adFixedDelta)
     {
         mlstUpDirs.pop_front();
     }
-    cVector3f vTotalUp=0;
+    cVector3f vTotalUp = 0;
     for(tVector3fListIt it = mlstUpDirs.begin(); it != mlstUpDirs.end(); ++it)
     {
         vTotalUp += *it;
@@ -523,9 +523,9 @@ void iLuxProp_CritterBase::UpdateMesh(double adFixedDelta)
     }
     else
     {
-        for(int i=0; i<mpMeshEntity->GetSubMeshEntityNum(); ++i)
+        for(int i = 0; i < mpMeshEntity->GetSubMeshEntityNum(); ++i)
         {
-            cMatrixf mtxLocal = cMath::MatrixMul(cMath::MatrixMul(mtxRotate.GetTranspose(),m_mtxMeshOffset), mvBaseMatrices[i]);
+            cMatrixf mtxLocal = cMath::MatrixMul(cMath::MatrixMul(mtxRotate.GetTranspose(), m_mtxMeshOffset), mvBaseMatrices[i]);
             //cMatrixf mtxLocal = cMath::MatrixMul(mtxRotate.GetTranspose(),mvBaseMatrices[i]);
 
             mpMeshEntity->GetSubMeshEntity(i)->SetMatrix(mtxLocal);
@@ -534,13 +534,13 @@ void iLuxProp_CritterBase::UpdateMesh(double adFixedDelta)
 
     //////////////////////////////
     //Animation
-    if(mpMeshEntity->GetAnimationStateNum() >0 && mbUpdateAnimation)
+    if(mpMeshEntity->GetAnimationStateNum() > 0 && mbUpdateAnimation)
     {
         float fSpeed = mvVel.Length();
 
         /////////////
         // Idle
-        if(mlAnimState==0)
+        if(mlAnimState == 0)
         {
             if(fSpeed > 0.1)
             {
@@ -550,7 +550,7 @@ void iLuxProp_CritterBase::UpdateMesh(double adFixedDelta)
         }
         /////////////
         // Walk
-        else if(mlAnimState==1)
+        else if(mlAnimState == 1)
         {
             cAnimationState *pAnim = mpMeshEntity->GetAnimationStateFromName("Walk");
             if(pAnim)
@@ -561,7 +561,7 @@ void iLuxProp_CritterBase::UpdateMesh(double adFixedDelta)
             if(fSpeed < 0.05f)
             {
                 mpMeshEntity->PlayFadeToName("Idle", true, 0.3f);
-                mlAnimState =0;
+                mlAnimState = 0;
             }
         }
 
@@ -571,7 +571,7 @@ void iLuxProp_CritterBase::UpdateMesh(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-void iLuxProp_CritterBase::CheckRayCollision(const cVector3f& avVelAdd,const cVector3f& avGravityAdd, double adFixedDelta)
+void iLuxProp_CritterBase::CheckRayCollision(const cVector3f& avVelAdd, const cVector3f& avGravityAdd, double adFixedDelta)
 {
     iPhysicsWorld *pPhysicsWorld = mpWorld->GetPhysicsWorld();
     cVector3f vPos = mpBody->GetWorldPosition();
@@ -585,16 +585,16 @@ void iLuxProp_CritterBase::CheckRayCollision(const cVector3f& avVelAdd,const cVe
         cVector3f vDir = cMath::Vector3Normalize(avVelAdd);
         cVector3f vExtraAdd = vDir * mpBody->GetBoundingVolume()->GetSize().x * 0.5f;
 
-        pPhysicsWorld->CastRay(mpRayCallback, vPos, vPos + avVelAdd + vExtraAdd, false,true,true, true);
+        pPhysicsWorld->CastRay(mpRayCallback, vPos, vPos + avVelAdd + vExtraAdd, false, true, true, true);
         if(mpRayCallback->GetIntersected())
         {
             cVector3f vNormal = mpRayCallback->GetNormal();
-            vNormal.y =0;
+            vNormal.y = 0;
             vNormal.Normalize();
             //vPos = mpRayCallback->GetPos() + vNormal*mpBody->GetShape()->GetRadius();
 
             mvVel = mvVel - vNormal * cMath::Vector3Dot(vNormal, mvVel);
-            mvVel.y =0;
+            mvVel.y = 0;
         }
         else
         {
@@ -606,11 +606,11 @@ void iLuxProp_CritterBase::CheckRayCollision(const cVector3f& avVelAdd,const cVe
     {
         mpRayCallback->Reset();
 
-        cVector3f vDest = vPos + mpBody->GetBoundingVolume()->GetSize().y*0.5f + avGravityAdd;
-        pPhysicsWorld->CastRay(mpRayCallback, vPos, vPos + mpBody->GetBoundingVolume()->GetSize().y*-0.5f + avGravityAdd, false,true,true, true);
+        cVector3f vDest = vPos + mpBody->GetBoundingVolume()->GetSize().y * 0.5f + avGravityAdd;
+        pPhysicsWorld->CastRay(mpRayCallback, vPos, vPos + mpBody->GetBoundingVolume()->GetSize().y * -0.5f + avGravityAdd, false, true, true, true);
         if(mpRayCallback->GetIntersected())
         {
-            mvGravityVel =0;
+            mvGravityVel = 0;
         }
         else
         {
@@ -623,7 +623,7 @@ void iLuxProp_CritterBase::CheckRayCollision(const cVector3f& avVelAdd,const cVe
 
 //-----------------------------------------------------------------------
 
-void iLuxProp_CritterBase::CheckShapeCollision(const cVector3f& avVelAdd,const cVector3f& avGravityAdd, double adFixedDelta)
+void iLuxProp_CritterBase::CheckShapeCollision(const cVector3f& avVelAdd, const cVector3f& avGravityAdd, double adFixedDelta)
 {
     iPhysicsWorld *pPhysicsWorld = mpWorld->GetPhysicsWorld();
     cVector3f vPos = mpBody->GetWorldPosition();
@@ -637,7 +637,7 @@ void iLuxProp_CritterBase::CheckShapeCollision(const cVector3f& avVelAdd,const c
     {
         vPos += avVelAdd;
 
-        cVector3f vPushVec=0;
+        cVector3f vPushVec = 0;
         bool bCollide = pPhysicsWorld->CheckShapeWorldCollision(&vPushVec, mpBody->GetShape(), cMath::MatrixTranslate(vPos), mpBody);
 
         if(bCollide)
@@ -666,7 +666,7 @@ void iLuxProp_CritterBase::CheckShapeCollision(const cVector3f& avVelAdd,const c
     {
         vPos += avGravityAdd;
 
-        cVector3f vPushVec=0;
+        cVector3f vPushVec = 0;
         bool bCollide = pPhysicsWorld->CheckShapeWorldCollision(&vPushVec, mpBody->GetShape(), cMath::MatrixTranslate(vPos), mpBody);
         if(bCollide)
         {
@@ -714,17 +714,17 @@ void iLuxProp_CritterBase::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    iLuxProp_CritterBase_SaveData *pData = static_cast<iLuxProp_CritterBase_SaveData*>(apSaveData);
+    iLuxProp_CritterBase_SaveData *pData = static_cast<iLuxProp_CritterBase_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyToVar(pData,mvVel);
-    kCopyToVar(pData,mvGravityVel);
-    kCopyToVar(pData,mvSwarmPoint);
-    kCopyToVar(pData,mlAnimState);
-    kCopyToVar(pData,mvGroundNormal);
-    kCopyToVar(pData,mbColliding);
-    kCopyToVar(pData,mbUpdateAnimation);
+    kCopyToVar(pData, mvVel);
+    kCopyToVar(pData, mvGravityVel);
+    kCopyToVar(pData, mvSwarmPoint);
+    kCopyToVar(pData, mlAnimState);
+    kCopyToVar(pData, mvGroundNormal);
+    kCopyToVar(pData, mbColliding);
+    kCopyToVar(pData, mbUpdateAnimation);
 
 }
 
@@ -735,17 +735,17 @@ void iLuxProp_CritterBase::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    iLuxProp_CritterBase_SaveData *pData = static_cast<iLuxProp_CritterBase_SaveData*>(apSaveData);
+    iLuxProp_CritterBase_SaveData *pData = static_cast<iLuxProp_CritterBase_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyFromVar(pData,mvVel);
-    kCopyFromVar(pData,mvGravityVel);
-    kCopyFromVar(pData,mvSwarmPoint);
-    kCopyFromVar(pData,mlAnimState);
-    kCopyFromVar(pData,mvGroundNormal);
-    kCopyFromVar(pData,mbColliding);
-    kCopyFromVar(pData,mbUpdateAnimation);
+    kCopyFromVar(pData, mvVel);
+    kCopyFromVar(pData, mvGravityVel);
+    kCopyFromVar(pData, mvSwarmPoint);
+    kCopyFromVar(pData, mlAnimState);
+    kCopyFromVar(pData, mvGroundNormal);
+    kCopyFromVar(pData, mbColliding);
+    kCopyFromVar(pData, mbUpdateAnimation);
 }
 
 //-----------------------------------------------------------------------

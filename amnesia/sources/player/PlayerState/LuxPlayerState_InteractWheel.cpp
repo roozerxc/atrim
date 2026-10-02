@@ -46,7 +46,7 @@ void cLuxPlayerState_InteractWheel::RenderSolid(cRendererCallbackFunctions* apFu
     apFunctions->SetMatrix(NULL);
 
 
-    cVector3f vAxes(1,1,1);
+    cVector3f vAxes(1, 1, 1);
     vAxes = cMath::MatrixMul(mpCurrentBody->GetInertiaMatrix(), vAxes);
 
     cVector3f vPinDir = mpCurrentJoint->GetPinDir();
@@ -57,7 +57,7 @@ void cLuxPlayerState_InteractWheel::RenderSolid(cRendererCallbackFunctions* apFu
     //apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot+cVector3f(0,1,0)*vAxes.y*10, cColor(0,1,0,1));
     //apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot+cVector3f(0,0,1)*vAxes.z*-10, cColor(0,0,1,1));
 
-    apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot+vPinDir*10, cColor(0,0,1,1));
+    apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot + vPinDir * 10, cColor(0, 0, 1, 1));
 
     //apFunctions->GetLowLevelGfx()->DrawLine(vPivot, vPivot+mpCurrentJoint->GetPinDir(), cColor(0,0,1,1));
     //apFunctions->GetLowLevelGfx()->DrawLine(mpCurrentBody->GetLocalPosition(),
@@ -106,11 +106,11 @@ float cLuxPlayerState_InteractWheel::GetSpeedAdd(cCamera *apCam)
 
     ///////////////////////////////
     //Calculate the tangents
-    cVector2f vPrevPos =0;
+    cVector2f vPrevPos = 0;
     bool bFirst = true;
-    float fProperPosCount =0;
+    float fProperPosCount = 0;
 
-    cVector3f vTanCenterVec[2]= {0,0};
+    cVector3f vTanCenterVec[2] = {0, 0};
 
     //Iterate the latest 10 moveadds, get tanget (both dirs) and for each tangent dir calculate
     //prev_pos + tan and add to that tan center vec accu,
@@ -133,7 +133,7 @@ float cLuxPlayerState_InteractWheel::GetSpeedAdd(cCamera *apCam)
         }
 
         cVector2f vTangent[2] = { cVector2f(vDiff.y, -vDiff.x), cVector2f(-vDiff.y, vDiff.x) };
-        for(int i=0; i<2; ++i)
+        for(int i = 0; i < 2; ++i)
         {
             cVector2f vTan = vTangent[i];
             vTan.Normalize();
@@ -145,8 +145,8 @@ float cLuxPlayerState_InteractWheel::GetSpeedAdd(cCamera *apCam)
     }
 
     //The the median tan center vec
-    float fTanCenterDist[2]= {0,0};
-    for(int i=0; i<2; ++i)
+    float fTanCenterDist[2] = {0, 0};
+    for(int i = 0; i < 2; ++i)
     {
         fTanCenterDist[i] = (vTanCenterVec[i] / fProperPosCount).Length();
     }
@@ -183,7 +183,7 @@ float cLuxPlayerState_InteractWheel::GetSpeedAdd(cCamera *apCam)
     //Calculate the speed
     float fLength = mvMouseAdd.Length();
 
-    return fDirMul *fLength* 1.0f;
+    return fDirMul * fLength * 1.0f;
 }
 
 //-----------------------------------------------------------------------
@@ -206,7 +206,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxPlayerState_SaveData* cLuxPlayerState_InteractWheel::CreateSaveData()
+iLuxPlayerState_SaveData *cLuxPlayerState_InteractWheel::CreateSaveData()
 {
     return hplNew(cLuxPlayerState_InteractWheel_SaveData, ());
 }
@@ -219,7 +219,7 @@ void cLuxPlayerState_InteractWheel::SaveToSaveData(iLuxPlayerState_SaveData* apS
     ///////////////////////
     // Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxPlayerState_InteractWheel_SaveData *pData = static_cast<cLuxPlayerState_InteractWheel_SaveData*>(apSaveData);
+    cLuxPlayerState_InteractWheel_SaveData *pData = static_cast<cLuxPlayerState_InteractWheel_SaveData *>(apSaveData);
 
 
     ///////////////////////
@@ -232,8 +232,8 @@ void cLuxPlayerState_InteractWheel::LoadFromSaveDataBeforeEnter(cLuxMap *apMap, 
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataBeforeEnter(apMap,apSaveData);
-    cLuxPlayerState_InteractWheel_SaveData *pData = static_cast<cLuxPlayerState_InteractWheel_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataBeforeEnter(apMap, apSaveData);
+    cLuxPlayerState_InteractWheel_SaveData *pData = static_cast<cLuxPlayerState_InteractWheel_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars
@@ -245,8 +245,8 @@ void cLuxPlayerState_InteractWheel::LoadFromSaveDataAfterEnter(cLuxMap *apMap, i
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataAfterEnter(apMap,apSaveData);
-    cLuxPlayerState_InteractWheel_SaveData *pData = static_cast<cLuxPlayerState_InteractWheel_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataAfterEnter(apMap, apSaveData);
+    cLuxPlayerState_InteractWheel_SaveData *pData = static_cast<cLuxPlayerState_InteractWheel_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars

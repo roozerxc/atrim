@@ -28,7 +28,7 @@ public:
 
     void RunScript(const tString& asCommand);
 
-    cLuxScriptVar* GetVar(const tString &asName);
+    cLuxScriptVar *GetVar(const tString &asName);
 
     /////////////////////////////
     // AI

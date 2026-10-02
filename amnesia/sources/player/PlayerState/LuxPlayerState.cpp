@@ -36,7 +36,7 @@ void cLuxPlayerStateVars::SetupInteraction(iPhysicsBody *apBody, const cVector3f
     iLuxEntity *pEntity = (iLuxEntity*)apBody->GetUserData();
     if(pEntity && pEntity->GetEntityType() == eLuxEntityType_Prop)
     {
-        mpInteractProp = static_cast<iLuxProp*>(pEntity);
+        mpInteractProp = static_cast<iLuxProp *>(pEntity);
     }
 
     mvInteractPos = avInteractPos;
@@ -58,8 +58,8 @@ iLuxPlayerState::iLuxPlayerState(cLuxPlayer *apPlayer, eLuxPlayerState aType)
     mType = aType;
 
     cGui *pGui = gpBase->mpEngine->GetGui();
-    mpDefaultCrosshairGfx = pGui->CreateGfxImage("hud_crosshair_default.tga",eGuiMaterial_Alpha);
-    mpSimpleInteractCrosshairGfx = pGui->CreateGfxImage("hud_crosshair_active.tga",eGuiMaterial_Alpha);
+    mpDefaultCrosshairGfx = pGui->CreateGfxImage("hud_crosshair_default.tga", eGuiMaterial_Alpha);
+    mpSimpleInteractCrosshairGfx = pGui->CreateGfxImage("hud_crosshair_active.tga", eGuiMaterial_Alpha);
 
     mPreviousState = eLuxPlayerState_LastEnum;
 }

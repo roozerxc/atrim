@@ -35,28 +35,28 @@
 
 cLuxPlayerInsanityCollapse::cLuxPlayerInsanityCollapse(cLuxPlayer *apPlayer) : iLuxPlayerHelper(apPlayer, "LuxPlayerInsanityCollapse")
 {
-    mfHeightAddGoal = gpBase->mpGameCfg->GetFloat("Player_General","InsanityCollapse_HeightAddGoal",0);
+    mfHeightAddGoal = gpBase->mpGameCfg->GetFloat("Player_General", "InsanityCollapse_HeightAddGoal", 0);
 
-    mfHeightAddCollapseSpeed = gpBase->mpGameCfg->GetFloat("Player_General","InsanityCollapse_HeightAddCollapseSpeed",0);
-    mfHeightAddAwakeSpeed = gpBase->mpGameCfg->GetFloat("Player_General","InsanityCollapse_HeightAddAwakeSpeed",0);
-    mfRollCollapseSpeed = gpBase->mpGameCfg->GetFloat("Player_General","InsanityCollapse_RollCollapseSpeed",0);
-    mfRollAwakeSpeed = gpBase->mpGameCfg->GetFloat("Player_General","InsanityCollapse_RollAwakeSpeed",0);
+    mfHeightAddCollapseSpeed = gpBase->mpGameCfg->GetFloat("Player_General", "InsanityCollapse_HeightAddCollapseSpeed", 0);
+    mfHeightAddAwakeSpeed = gpBase->mpGameCfg->GetFloat("Player_General", "InsanityCollapse_HeightAddAwakeSpeed", 0);
+    mfRollCollapseSpeed = gpBase->mpGameCfg->GetFloat("Player_General", "InsanityCollapse_RollCollapseSpeed", 0);
+    mfRollAwakeSpeed = gpBase->mpGameCfg->GetFloat("Player_General", "InsanityCollapse_RollAwakeSpeed", 0);
 
-    mfSleepTime = gpBase->mpGameCfg->GetFloat("Player_General","InsanityCollapse_SleepTime",0);
+    mfSleepTime = gpBase->mpGameCfg->GetFloat("Player_General", "InsanityCollapse_SleepTime", 0);
 
-    mfSleepSpeedMul = gpBase->mpGameCfg->GetFloat("Player_General","InsanityCollapse_SleepSpeedMul",0);
-    mfWakeUpSpeedMul = gpBase->mpGameCfg->GetFloat("Player_General","InsanityCollapse_WakeUpSpeedMul",0);
+    mfSleepSpeedMul = gpBase->mpGameCfg->GetFloat("Player_General", "InsanityCollapse_SleepSpeedMul", 0);
+    mfWakeUpSpeedMul = gpBase->mpGameCfg->GetFloat("Player_General", "InsanityCollapse_WakeUpSpeedMul", 0);
 
-    msStartSound = gpBase->mpGameCfg->GetString("Player_General","InsanityCollapse_StartSound", "");
-    msAwakenSound = gpBase->mpGameCfg->GetString("Player_General","InsanityCollapse_AwakenSound", "");
-    msSleepLoopSound = gpBase->mpGameCfg->GetString("Player_General","InsanityCollapse_SleepLoopSound", "");
-    mfSleepLoopSoundVolume = gpBase->mpGameCfg->GetFloat("Player_General","InsanityCollapse_SleepLoopSoundVolume", 0);
+    msStartSound = gpBase->mpGameCfg->GetString("Player_General", "InsanityCollapse_StartSound", "");
+    msAwakenSound = gpBase->mpGameCfg->GetString("Player_General", "InsanityCollapse_AwakenSound", "");
+    msSleepLoopSound = gpBase->mpGameCfg->GetString("Player_General", "InsanityCollapse_SleepLoopSound", "");
+    mfSleepLoopSoundVolume = gpBase->mpGameCfg->GetFloat("Player_General", "InsanityCollapse_SleepLoopSoundVolume", 0);
 
-    msSleepRandomSound = gpBase->mpGameCfg->GetString("Player_General","InsanityCollapse_SleepRandomSound", "");
-    mfSleepRandomMinTime = gpBase->mpGameCfg->GetFloat("Player_General","InsanityCollapse_SleepRandomMinTime", 0);
-    mfSleepRandomMaxTime = gpBase->mpGameCfg->GetFloat("Player_General","InsanityCollapse_SleepRandomMaxTime", 0);
+    msSleepRandomSound = gpBase->mpGameCfg->GetString("Player_General", "InsanityCollapse_SleepRandomSound", "");
+    mfSleepRandomMinTime = gpBase->mpGameCfg->GetFloat("Player_General", "InsanityCollapse_SleepRandomMinTime", 0);
+    mfSleepRandomMaxTime = gpBase->mpGameCfg->GetFloat("Player_General", "InsanityCollapse_SleepRandomMaxTime", 0);
 
-    mfAwakenSanity = gpBase->mpGameCfg->GetFloat("Player_General","InsanityCollapse_AwakenSanity", 0);
+    mfAwakenSanity = gpBase->mpGameCfg->GetFloat("Player_General", "InsanityCollapse_AwakenSanity", 0);
 
     //Init sound var here
     mpLoopSound = NULL;
@@ -72,11 +72,11 @@ cLuxPlayerInsanityCollapse::~cLuxPlayerInsanityCollapse()
 void cLuxPlayerInsanityCollapse::Reset()
 {
     mbActive = false;
-    mlState =0;
-    mfHeightAdd =0;
-    mfRoll =0;
-    mfT=0;
-    mfRandomCount=0;
+    mlState = 0;
+    mfHeightAdd = 0;
+    mfRoll = 0;
+    mfT = 0;
+    mfRandomCount = 0;
 
     if(mpLoopSound && gpBase->mpEngine->GetSound()->GetSoundHandler()->IsValid(mpLoopSound, mlLoopSoundID))
     {
@@ -102,19 +102,19 @@ void cLuxPlayerInsanityCollapse::Start()
     // Setup player
     mpPlayer->ChangeState(eLuxPlayerState_Normal);
     mpPlayer->ChangeMoveState(eLuxMoveState_Normal);
-    mpPlayer->GetHelperLantern()->SetActive(false,false, false);
+    mpPlayer->GetHelperLantern()->SetActive(false, false, false);
     mpPlayer->SetCurrentHandObjectDrawn(false);
     mpPlayer->SetInsanityCollapseSpeedMul(mfSleepSpeedMul);
 
     /////////////////
     //Set up sound
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
-    pSoundHandler->FadeGlobalVolume(0.75f, 0.15f, eSoundEntryType_World,eLuxGlobalVolumeType_InsanityCollapse, false);
-    pSoundHandler->FadeGlobalSpeed(0.5f, 0.125f, eSoundEntryType_World,eLuxGlobalVolumeType_InsanityCollapse, false);
+    pSoundHandler->FadeGlobalVolume(0.75f, 0.15f, eSoundEntryType_World, eLuxGlobalVolumeType_InsanityCollapse, false);
+    pSoundHandler->FadeGlobalSpeed(0.5f, 0.125f, eSoundEntryType_World, eLuxGlobalVolumeType_InsanityCollapse, false);
 
     /////////////////
     //Loop sound
-    mpLoopSound = pSoundHandler->PlayGui(msSleepLoopSound,true,1.0f);
+    mpLoopSound = pSoundHandler->PlayGui(msSleepLoopSound, true, 1.0f);
     if(mpLoopSound)
     {
         mpLoopSound->FadeIn(mfSleepLoopSoundVolume, 0.2f);
@@ -138,25 +138,25 @@ void cLuxPlayerInsanityCollapse::Start()
     //Setup variables.
     mbActive = true;
 
-    mlState =0;
-    mfHeightAdd =0;
-    mfRoll =0;
-    mfT=0;
-    mfRandomCount=0;
+    mlState = 0;
+    mfHeightAdd = 0;
+    mfRoll = 0;
+    mfT = 0;
+    mfRandomCount = 0;
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPlayerInsanityCollapse::Stop()
 {
-    if(mbActive==false)
+    if(mbActive == false)
     {
         return;
     }
 
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
-    pSoundHandler->FadeGlobalVolume(1, 0.3f, eSoundEntryType_World,eLuxGlobalVolumeType_InsanityCollapse, false);
-    pSoundHandler->FadeGlobalSpeed(1, 0.5f, eSoundEntryType_World,eLuxGlobalVolumeType_InsanityCollapse, false);
+    pSoundHandler->FadeGlobalVolume(1, 0.3f, eSoundEntryType_World, eLuxGlobalVolumeType_InsanityCollapse, false);
+    pSoundHandler->FadeGlobalSpeed(1, 0.5f, eSoundEntryType_World, eLuxGlobalVolumeType_InsanityCollapse, false);
 
     mpPlayer->SetInsanityCollapseSpeedMul(1.0f);
 
@@ -167,19 +167,19 @@ void cLuxPlayerInsanityCollapse::Stop()
 
     mbActive = false;
 
-    mlState =0;
-    mfT =0;
-    mfRoll =0;
-    mfHeightAdd=0;
-    mpPlayer->FadeRollTo(0, 10,10);
-    mpPlayer->MoveHeadPosAdd(eLuxHeadPosAdd_InsanityCollapse, cVector3f(0,0,0),1, 0.1f);
+    mlState = 0;
+    mfT = 0;
+    mfRoll = 0;
+    mfHeightAdd = 0;
+    mpPlayer->FadeRollTo(0, 10, 10);
+    mpPlayer->MoveHeadPosAdd(eLuxHeadPosAdd_InsanityCollapse, cVector3f(0, 0, 0), 1, 0.1f);
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPlayerInsanityCollapse::Update(double adFixedDelta)
 {
-    if(mbActive==false)
+    if(mbActive == false)
     {
         return;
     }
@@ -192,13 +192,13 @@ void cLuxPlayerInsanityCollapse::Update(double adFixedDelta)
         // Height add
         if(mfHeightAdd > mfHeightAddGoal)
         {
-            mfHeightAdd-= mfHeightAddCollapseSpeed * (float)adFixedDelta;
+            mfHeightAdd -= mfHeightAddCollapseSpeed * (float)adFixedDelta;
             if(mfHeightAdd < mfHeightAddGoal)
             {
                 mfHeightAdd = mfHeightAddGoal;
                 mlState = 1;
             }
-            mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_InsanityCollapse, cVector3f(0,mfHeightAdd,0));
+            mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_InsanityCollapse, cVector3f(0, mfHeightAdd, 0));
         }
 
         //////////////////////
@@ -209,7 +209,7 @@ void cLuxPlayerInsanityCollapse::Update(double adFixedDelta)
             mfRoll = cMath::ToRad(35.0f);
         }
 
-        mpPlayer->FadeRollTo(mfRoll, 10,10);
+        mpPlayer->FadeRollTo(mfRoll, 10, 10);
     }
     ////////////////////////
     // Sleep
@@ -220,7 +220,7 @@ void cLuxPlayerInsanityCollapse::Update(double adFixedDelta)
         ////////////////////////
         // Random sounds
         mfRandomCount -= (float)adFixedDelta;
-        if(mfRandomCount <0)
+        if(mfRandomCount < 0)
         {
             gpBase->mpHelpFuncs->PlayGuiSoundData(msSleepRandomSound, eSoundEntryType_Gui);
             mfRandomCount = cMath::RandRectf(mfSleepRandomMinTime, mfSleepRandomMaxTime);
@@ -231,8 +231,8 @@ void cLuxPlayerInsanityCollapse::Update(double adFixedDelta)
         if(mfT > mfSleepTime)
         {
             cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
-            pSoundHandler->FadeGlobalVolume(1, 0.2f, eSoundEntryType_World,eLuxGlobalVolumeType_InsanityCollapse, false);
-            pSoundHandler->FadeGlobalSpeed(1, 0.25f, eSoundEntryType_World,eLuxGlobalVolumeType_InsanityCollapse, false);
+            pSoundHandler->FadeGlobalVolume(1, 0.2f, eSoundEntryType_World, eLuxGlobalVolumeType_InsanityCollapse, false);
+            pSoundHandler->FadeGlobalSpeed(1, 0.25f, eSoundEntryType_World, eLuxGlobalVolumeType_InsanityCollapse, false);
 
             mpPlayer->SetInsanityCollapseSpeedMul(mfWakeUpSpeedMul);
 
@@ -246,7 +246,7 @@ void cLuxPlayerInsanityCollapse::Update(double adFixedDelta)
             mpPlayer->SetSanity(mfAwakenSanity);
 
             gpBase->mpHelpFuncs->PlayGuiSoundData(msAwakenSound, eSoundEntryType_World);
-            mlState =2;
+            mlState = 2;
         }
     }
     ////////////////////////
@@ -266,7 +266,7 @@ void cLuxPlayerInsanityCollapse::Update(double adFixedDelta)
                 mpPlayer->SetCrouchDisabled(false);
                 mpPlayer->SetJumpDisabled(false);
             }
-            mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_InsanityCollapse, cVector3f(0,mfHeightAdd,0));
+            mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_InsanityCollapse, cVector3f(0, mfHeightAdd, 0));
         }
     }
 }
@@ -282,8 +282,8 @@ void cLuxPlayerInsanityCollapse::Update(double adFixedDelta)
 
 cLuxPlayerCamDirEffects::cLuxPlayerCamDirEffects(cLuxPlayer *apPlayer) : iLuxPlayerHelper(apPlayer, "LuxPlayerCamDirEffects")
 {
-    mfStartSwayMaxSanity =  gpBase->mpGameCfg->GetFloat("Player_Sanity","StartSwayMaxSanity",0);
-    mlMaxPositions = gpBase->mpGameCfg->GetInt("Player_Sanity","SwayMaxSavedPositions",0);
+    mfStartSwayMaxSanity =  gpBase->mpGameCfg->GetFloat("Player_Sanity", "StartSwayMaxSanity", 0);
+    mlMaxPositions = gpBase->mpGameCfg->GetInt("Player_Sanity", "SwayMaxSavedPositions", 0);
 }
 
 cLuxPlayerCamDirEffects::~cLuxPlayerCamDirEffects()
@@ -302,7 +302,7 @@ void cLuxPlayerCamDirEffects::Reset()
 
     mvNextAdd = 0;
 
-    mfSwayAlpha =0;
+    mfSwayAlpha = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -312,7 +312,7 @@ void cLuxPlayerCamDirEffects::Update(double adFixedDelta)
 {
     ////////////////////
     // Check if insane
-    if(mbSwayActive==false && mpPlayer->GetSanity() <= mfStartSwayMaxSanity)
+    if(mbSwayActive == false && mpPlayer->GetSanity() <= mfStartSwayMaxSanity)
     {
         SetSwayActive(true);
     }
@@ -323,20 +323,20 @@ void cLuxPlayerCamDirEffects::Update(double adFixedDelta)
 
     ////////////////////
     // Alpha
-    if(mbSwayActive && mfSwayAlpha<1)
+    if(mbSwayActive && mfSwayAlpha < 1)
     {
-        mfSwayAlpha += (float)adFixedDelta *0.1f;
+        mfSwayAlpha += (float)adFixedDelta * 0.1f;
         if(mfSwayAlpha > 1)
         {
-            mfSwayAlpha =1;
+            mfSwayAlpha = 1;
         }
     }
-    else if(mbSwayActive==false && mfSwayAlpha>0)
+    else if(mbSwayActive == false && mfSwayAlpha > 0)
     {
-        mfSwayAlpha -= (float)adFixedDelta *0.2f;
+        mfSwayAlpha -= (float)adFixedDelta * 0.2f;
         if(mfSwayAlpha < 0)
         {
-            mfSwayAlpha =0;
+            mfSwayAlpha = 0;
             mlstPrevAdd.clear();
             mvNextAdd = 0;
             mvSwayAdd = 0;
@@ -353,12 +353,12 @@ void cLuxPlayerCamDirEffects::Update(double adFixedDelta)
 float cLuxPlayerCamDirEffects::AddAndGetYawAdd(float afX)
 {
     float fYaw = afX;
-    if(mlstPrevAdd.empty()==false)
+    if(mlstPrevAdd.empty() == false)
     {
-        fYaw = mvSwayAdd.x * mfSwayAlpha + afX *(1-mfSwayAlpha);
+        fYaw = mvSwayAdd.x * mfSwayAlpha + afX * (1 - mfSwayAlpha);
     }
 
-    if(mfSwayAlpha>0)
+    if(mfSwayAlpha > 0)
     {
         mvNextAdd.x  = afX;
     }
@@ -368,12 +368,12 @@ float cLuxPlayerCamDirEffects::AddAndGetYawAdd(float afX)
 float cLuxPlayerCamDirEffects::AddAndGetPitchAdd(float afX)
 {
     float fPitch = afX;
-    if(mlstPrevAdd.empty()==false)
+    if(mlstPrevAdd.empty() == false)
     {
-        fPitch = mvSwayAdd.y*mfSwayAlpha + afX *(1-mfSwayAlpha);
+        fPitch = mvSwayAdd.y * mfSwayAlpha + afX * (1 - mfSwayAlpha);
     }
 
-    if(mfSwayAlpha>0)
+    if(mfSwayAlpha > 0)
     {
         mvNextAdd.y  = afX;
     }
@@ -397,7 +397,7 @@ void cLuxPlayerCamDirEffects::SetSwayActive(bool abX)
 
 void cLuxPlayerCamDirEffects::UpdateSway(double adFixedDelta)
 {
-    if(mbSwayActive==false && mlstPrevAdd.empty() && mfSwayAlpha<=0)
+    if(mbSwayActive == false && mlstPrevAdd.empty() && mfSwayAlpha <= 0)
     {
         return;
     }
@@ -405,7 +405,7 @@ void cLuxPlayerCamDirEffects::UpdateSway(double adFixedDelta)
     //////////////////////////////////
     //Add Yaw and Pitch and pop front is needed
     mlstPrevAdd.push_back(mvNextAdd);
-    mvNextAdd =0;
+    mvNextAdd = 0;
 
     if((int)mlstPrevAdd.size() > mlMaxPositions)
     {
@@ -421,7 +421,7 @@ void cLuxPlayerCamDirEffects::UpdateSway(double adFixedDelta)
         vTotal += *it;
     }
 
-    mvSwayAdd = vTotal/(float)mlstPrevAdd.size();
+    mvSwayAdd = vTotal / (float)mlstPrevAdd.size();
 }
 
 //-----------------------------------------------------------------------
@@ -451,10 +451,10 @@ void cLuxPlayerSpawnPS::Reset()
     msFileName = "";
 
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    if(pMap && mvSpawnPos.empty()==false)
+    if(pMap && mvSpawnPos.empty() == false)
     {
         cWorld *pWorld = pMap->GetWorld();
-        for(size_t i=0; i<mvSpawnPos.size(); ++i)
+        for(size_t i = 0; i < mvSpawnPos.size(); ++i)
         {
             cParticleSystem *pPS = mvSpawnPos[i].mpPS;
 
@@ -472,7 +472,7 @@ void cLuxPlayerSpawnPS::Reset()
 
 void cLuxPlayerSpawnPS::Start(const tString& asFileName)
 {
-    if(LoadSpawnPSFile(asFileName)==false)
+    if(LoadSpawnPSFile(asFileName) == false)
     {
         return;
     }
@@ -502,7 +502,7 @@ void cLuxPlayerSpawnPS::RespawnAll()
 
 void cLuxPlayerSpawnPS::Update(double adFixedDelta)
 {
-    if(mbActive==false)
+    if(mbActive == false)
     {
         return;
     }
@@ -510,7 +510,7 @@ void cLuxPlayerSpawnPS::Update(double adFixedDelta)
     cVector3f vPlayerPos = mpPlayer->GetCharacterBody()->GetFeetPosition();
     cWorld *pWorld = gpBase->mpMapHandler->GetCurrentMap()->GetWorld();
 
-    for(size_t i=0; i<mvSpawnPos.size(); ++i)
+    for(size_t i = 0; i < mvSpawnPos.size(); ++i)
     {
         cLuxPlayerSpawnPS_SpawnPos &spawnPos = mvSpawnPos[i];
 
@@ -535,26 +535,26 @@ void cLuxPlayerSpawnPS::Update(double adFixedDelta)
             if(vCurrentLocal.x > mfRadius)
             {
                 vAdd.x = vCurrentLocal.x - mfRadius;
-                vMul.x=-1;
+                vMul.x = -1;
             }
             else if(vCurrentLocal.x < -mfRadius)
             {
                 vAdd.x = vCurrentLocal.x + mfRadius;
-                vMul.x=-1;
+                vMul.x = -1;
             }
             if(vCurrentLocal.z > mfRadius)
             {
                 vAdd.z = vCurrentLocal.z - mfRadius;
-                vMul.z=-1;
+                vMul.z = -1;
             }
             else if(vCurrentLocal.z < -mfRadius)
             {
                 vAdd.z = vCurrentLocal.z + mfRadius;
-                vMul.z=-1;
+                vMul.z = -1;
             }
 
             cVector3f vTemp = vCurrentLocal;
-            vCurrentLocal = vCurrentLocal*vMul + vAdd*2;//*2=first remove the offset and then put it inside.
+            vCurrentLocal = vCurrentLocal * vMul + vAdd * 2; //*2=first remove the offset and then put it inside.
 
             //Still do random height!
             vCurrentLocal.y = vPlayerPos.y;
@@ -581,8 +581,8 @@ void cLuxPlayerSpawnPS::GenerateAllSpawnPos()
 {
     cVector3f vPlayerPos = mpPlayer->GetCharacterBody()->GetFeetPosition();
 
-    cVector3f vStep = cVector3f(1/mfDensity, 0, 1/mfDensity);
-    cVector3f vLocalStartPos = cVector3f(-mfRadius, 0, -mfRadius) + vStep*0.5f;
+    cVector3f vStep = cVector3f(1 / mfDensity, 0, 1 / mfDensity);
+    cVector3f vLocalStartPos = cVector3f(-mfRadius, 0, -mfRadius) + vStep * 0.5f;
     cVector3f vLocalPos = vLocalStartPos;
 
     for(; vLocalPos.z < mfRadius; vLocalPos.z += vStep.z)
@@ -593,9 +593,9 @@ void cLuxPlayerSpawnPS::GenerateAllSpawnPos()
         {
             cLuxPlayerSpawnPS_SpawnPos spawnPos;
 
-            float fRandRange = (1.0f/mfDensity)*0.2f;
-            cVector3f vFinalLocalPos = vLocalPos +    cMath::RandRectVector3f(cVector3f(-fRandRange,0,-fRandRange),
-                                       cVector3f(fRandRange,0,fRandRange));
+            float fRandRange = (1.0f / mfDensity) * 0.2f;
+            cVector3f vFinalLocalPos = vLocalPos +    cMath::RandRectVector3f(cVector3f(-fRandRange, 0, -fRandRange),
+                                       cVector3f(fRandRange, 0, fRandRange));
             vFinalLocalPos.y += mfHeightFromFeet + cMath::RandRectf(mfHeightAddMin, mfHeightAddMax);
 
             spawnPos.mvLastLocalPos = vFinalLocalPos;
@@ -612,7 +612,7 @@ void cLuxPlayerSpawnPS::GenerateAllSpawnPos()
 
 //-----------------------------------------------------------------------
 
-cParticleSystem* cLuxPlayerSpawnPS::CreatePS(cLuxPlayerSpawnPS_SpawnPos *apSpawnPos)
+cParticleSystem *cLuxPlayerSpawnPS::CreatePS(cLuxPlayerSpawnPS_SpawnPos *apSpawnPos)
 {
     cWorld *pWorld = gpBase->mpMapHandler->GetCurrentMap()->GetWorld();
     cParticleSystem *pPS = pWorld->CreateParticleSystem("SpawnPS", msParticleSystem, 1);
@@ -634,7 +634,7 @@ cParticleSystem* cLuxPlayerSpawnPS::CreatePS(cLuxPlayerSpawnPS_SpawnPos *apSpawn
 void cLuxPlayerSpawnPS::DestroyAllSpawnPoints()
 {
     cWorld *pWorld = gpBase->mpMapHandler->GetCurrentMap()->GetWorld();
-    for(size_t i=0; i<mvSpawnPos.size(); ++i)
+    for(size_t i = 0; i < mvSpawnPos.size(); ++i)
     {
         //Detroy particle system
         cLuxPlayerSpawnPS_SpawnPos &spawnPos = mvSpawnPos[i];
@@ -655,24 +655,24 @@ bool cLuxPlayerSpawnPS::LoadSpawnPSFile(const tString& asFileName)
     cResources *pResources = gpBase->mpEngine->GetResources();
 
     iXmlDocument *pXmlDoc = pResources->LoadXmlDocument(sFile);
-    if(pXmlDoc==NULL)
+    if(pXmlDoc == NULL)
     {
         Error("Could not load sps file: '%s'\n", sFile.c_str());
         return false;
     }
 
-    msParticleSystem = pXmlDoc->GetAttributeString("ParticleSystem","");
-    mfHeightFromFeet = pXmlDoc->GetAttributeFloat("HeightFromFeet",0);
-    mfHeightAddMin = pXmlDoc->GetAttributeFloat("HeightAddMin",0);
-    mfHeightAddMax = pXmlDoc->GetAttributeFloat("HeightAddMax",0);
-    mfDensity = pXmlDoc->GetAttributeFloat("Density",0);
-    mfRadius = pXmlDoc->GetAttributeFloat("Radius",0);
-    mPSColor = pXmlDoc->GetAttributeColor("PSColor",cColor(0));
-    mbFadePS = pXmlDoc->GetAttributeBool("FadePS",true);
-    mfPSMinFadeStart = pXmlDoc->GetAttributeFloat("PSMinFadeStart",0);
-    mfPSMinFadeEnd = pXmlDoc->GetAttributeFloat("PSMinFadeEnd",0);
-    mfPSMaxFadeStart = pXmlDoc->GetAttributeFloat("PSMaxFadeStart",0);
-    mfPSMaxFadeEnd = pXmlDoc->GetAttributeFloat("PSMaxFadeEnd",0);
+    msParticleSystem = pXmlDoc->GetAttributeString("ParticleSystem", "");
+    mfHeightFromFeet = pXmlDoc->GetAttributeFloat("HeightFromFeet", 0);
+    mfHeightAddMin = pXmlDoc->GetAttributeFloat("HeightAddMin", 0);
+    mfHeightAddMax = pXmlDoc->GetAttributeFloat("HeightAddMax", 0);
+    mfDensity = pXmlDoc->GetAttributeFloat("Density", 0);
+    mfRadius = pXmlDoc->GetAttributeFloat("Radius", 0);
+    mPSColor = pXmlDoc->GetAttributeColor("PSColor", cColor(0));
+    mbFadePS = pXmlDoc->GetAttributeBool("FadePS", true);
+    mfPSMinFadeStart = pXmlDoc->GetAttributeFloat("PSMinFadeStart", 0);
+    mfPSMinFadeEnd = pXmlDoc->GetAttributeFloat("PSMinFadeEnd", 0);
+    mfPSMaxFadeStart = pXmlDoc->GetAttributeFloat("PSMaxFadeStart", 0);
+    mfPSMaxFadeEnd = pXmlDoc->GetAttributeFloat("PSMaxFadeEnd", 0);
 
     pResources->DestroyXmlDocument(pXmlDoc);
 
@@ -690,25 +690,25 @@ bool cLuxPlayerSpawnPS::LoadSpawnPSFile(const tString& asFileName)
 
 cLuxPlayerHurt::cLuxPlayerHurt(cLuxPlayer *apPlayer) : iLuxPlayerHelper(apPlayer, "LuxPlayerHurt")
 {
-    mfEffectStartHealth =  gpBase->mpGameCfg->GetFloat("Player_General","Hurt_EffectStartHealth",0);
-    mfMinMoveMul =  gpBase->mpGameCfg->GetFloat("Player_General","Hurt_MinSpeedMul",0);
+    mfEffectStartHealth =  gpBase->mpGameCfg->GetFloat("Player_General", "Hurt_EffectStartHealth", 0);
+    mfMinMoveMul =  gpBase->mpGameCfg->GetFloat("Player_General", "Hurt_MinSpeedMul", 0);
 
-    mfMaxPantCount =  gpBase->mpGameCfg->GetFloat("Player_General","Hurt_MaxPantCount",0);
-    mfPantSpeed =  gpBase->mpGameCfg->GetFloat("Player_General","Hurt_PantSpeed",0);
-    mfPantSize =  gpBase->mpGameCfg->GetFloat("Player_General","Hurt_PantSize",0);
+    mfMaxPantCount =  gpBase->mpGameCfg->GetFloat("Player_General", "Hurt_MaxPantCount", 0);
+    mfPantSpeed =  gpBase->mpGameCfg->GetFloat("Player_General", "Hurt_PantSpeed", 0);
+    mfPantSize =  gpBase->mpGameCfg->GetFloat("Player_General", "Hurt_PantSize", 0);
 
-    mfHealthRegainSpeed =  gpBase->mpGameCfg->GetFloat("Player_General","HealthRegainSpeed",0);
-    mfHealthRegainLimit =  gpBase->mpGameCfg->GetFloat("Player_General","HealthRegainLimit",0);
+    mfHealthRegainSpeed =  gpBase->mpGameCfg->GetFloat("Player_General", "HealthRegainSpeed", 0);
+    mfHealthRegainLimit =  gpBase->mpGameCfg->GetFloat("Player_General", "HealthRegainLimit", 0);
 
-    mfNoiseAlpha =  gpBase->mpGameCfg->GetFloat("Player_General","Hurt_NoiseAlpha",0);
-    mfNoiseFreq =  gpBase->mpGameCfg->GetFloat("Player_General","Hurt_NoiseFreq",0);
-    mNoiseColor =  gpBase->mpGameCfg->GetColor("Player_General","Hurt_NoiseColor",cColor(0));
+    mfNoiseAlpha =  gpBase->mpGameCfg->GetFloat("Player_General", "Hurt_NoiseAlpha", 0);
+    mfNoiseFreq =  gpBase->mpGameCfg->GetFloat("Player_General", "Hurt_NoiseFreq", 0);
+    mNoiseColor =  gpBase->mpGameCfg->GetColor("Player_General", "Hurt_NoiseColor", cColor(0));
 
     cGui *pGui = gpBase->mpEngine->GetGui();
     mvNoiseGfx.resize(8);
-    for(size_t i=0; i<mvNoiseGfx.size(); ++i)
+    for(size_t i = 0; i < mvNoiseGfx.size(); ++i)
     {
-        mvNoiseGfx[i] = pGui->CreateGfxTexture("hud_hurt_noise0"+cString::ToString((int)i)+".dds", eGuiMaterial_Modulative,eTextureType_2D);
+        mvNoiseGfx[i] = pGui->CreateGfxTexture("hud_hurt_noise0" + cString::ToString((int)i) + ".dds", eGuiMaterial_Modulative, eTextureType_2D);
     }
 
     //mpWhiteGfx = gpBase->mpEngine->GetGui()->CreateGfxFilledRect(cColor(1,1),eGuiMaterial_Modulative);
@@ -724,12 +724,12 @@ cLuxPlayerHurt::~cLuxPlayerHurt()
 void cLuxPlayerHurt::Reset()
 {
     mfAlpha = 0;
-    mfPantCount =0;
+    mfPantCount = 0;
     mfPantPosAdd = 0;
     mfPantPosAddVel = 0;
     mfPantPosAddDir = 1.0f;
     mlCurrentNoise = 0;
-    mfNoiseUpdateCount =0;
+    mfNoiseUpdateCount = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -745,7 +745,7 @@ void cLuxPlayerHurt::Update(double adFixedDelta)
 
     ////////////////////////////
     // Check if update is needed
-    if(mfAlpha <=0 && mpPlayer->GetHealth() > mfEffectStartHealth)
+    if(mfAlpha <= 0 && mpPlayer->GetHealth() > mfEffectStartHealth)
     {
         return;
     }
@@ -783,18 +783,18 @@ void cLuxPlayerHurt::Update(double adFixedDelta)
         }
     }
 
-    mpPlayer->SetHurtMoveSpeedMul(mfMinMoveMul*mfAlpha + (1-mfAlpha) );
+    mpPlayer->SetHurtMoveSpeedMul(mfMinMoveMul * mfAlpha + (1 - mfAlpha) );
 
     //////////////////////////////
     // Noise
     mfNoiseUpdateCount -= (float)adFixedDelta;
-    if(mfNoiseUpdateCount<=0)
+    if(mfNoiseUpdateCount <= 0)
     {
-        int lNoiseMax = (int)mvNoiseGfx.size()-1;
+        int lNoiseMax = (int)mvNoiseGfx.size() - 1;
         mlCurrentNoise += cMath::RandRectl(1, lNoiseMax);
-        if(mlCurrentNoise>lNoiseMax)
+        if(mlCurrentNoise > lNoiseMax)
         {
-            mlCurrentNoise -= lNoiseMax+1;
+            mlCurrentNoise -= lNoiseMax + 1;
         }
 
         mfNoiseUpdateCount = 1.0f / mfNoiseFreq;
@@ -802,7 +802,7 @@ void cLuxPlayerHurt::Update(double adFixedDelta)
 
     //////////////////////////////
     // Update pant count
-    iCharacterBody *pCharBody =mpPlayer->GetCharacterBody();
+    iCharacterBody *pCharBody = mpPlayer->GetCharacterBody();
     float fSpeed = pCharBody->GetVelocity(adFixedDelta).Length();
     if(fSpeed < 0.05f)
     {
@@ -836,12 +836,12 @@ void cLuxPlayerHurt::Update(double adFixedDelta)
             if(mfPantPosAdd > mfPantSize)
             {
                 mfPantPosAddDir = -mfPantPosAddDir;
-                gpBase->mpHelpFuncs->PlayGuiSoundData("hurt_pant",eSoundEntryType_Gui, cMath::Min(mfAlpha+0.3f, 1.0f) );
+                gpBase->mpHelpFuncs->PlayGuiSoundData("hurt_pant", eSoundEntryType_Gui, cMath::Min(mfAlpha + 0.3f, 1.0f) );
             }
         }
         else
         {
-            if(mfPantPosAdd < -mfPantSize*0.5f)
+            if(mfPantPosAdd < -mfPantSize * 0.5f)
             {
                 mfPantPosAddDir = -mfPantPosAddDir;
             }
@@ -859,14 +859,14 @@ void cLuxPlayerHurt::Update(double adFixedDelta)
 
         mfPantPosAdd += (float)adFixedDelta * mfPantPosAddVel * mfPantSpeed;
 
-        if( (fDir > 0 && mfPantPosAdd >0) || (fDir < 0 && mfPantPosAdd <0) )
+        if( (fDir > 0 && mfPantPosAdd > 0) || (fDir < 0 && mfPantPosAdd < 0) )
         {
-            mfPantPosAdd =0;
+            mfPantPosAdd = 0;
         }
     }
 
 
-    mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_Hurt, cVector3f(0,mfPantPosAdd,0));
+    mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_Hurt, cVector3f(0, mfPantPosAdd, 0));
 
 }
 
@@ -874,24 +874,24 @@ void cLuxPlayerHurt::Update(double adFixedDelta)
 
 void cLuxPlayerHurt::OnDraw(double adFrameTime)
 {
-    if(mfAlpha <=0)
+    if(mfAlpha <= 0)
     {
         return;
     }
 
     cVector2f vNoiseSize(256, 256);
 
-    cVector2l vCount = cVector2l( (int)(gpBase->mvHudVirtualSize.x / vNoiseSize.x)+1, (int)(gpBase->mvHudVirtualSize.y / vNoiseSize.y)+1);
+    cVector2l vCount = cVector2l( (int)(gpBase->mvHudVirtualSize.x / vNoiseSize.x) +1, (int)(gpBase->mvHudVirtualSize.y / vNoiseSize.y) +1);
 
-    cVector3f vPos = gpBase->mvHudVirtualStartPos + cVector3f(0,0,-1);
+    cVector3f vPos = gpBase->mvHudVirtualStartPos + cVector3f(0, 0, -1);
 
     cColor col = mNoiseColor;
-    col.a = mfAlpha*mfNoiseAlpha;
-    for(int y=0; y<vCount.y; ++y)
+    col.a = mfAlpha * mfNoiseAlpha;
+    for(int y = 0; y < vCount.y; ++y)
     {
-        for(int x=0; x<vCount.x; ++x)
+        for(int x = 0; x < vCount.x; ++x)
         {
-            gpBase->mpGameHudSet->DrawGfx(mvNoiseGfx[mlCurrentNoise], vPos, vNoiseSize, cColor(1,1-mfAlpha, 1-mfAlpha));
+            gpBase->mpGameHudSet->DrawGfx(mvNoiseGfx[mlCurrentNoise], vPos, vNoiseSize, cColor(1, 1 - mfAlpha, 1 - mfAlpha));
             vPos.x += vNoiseSize.x;
         }
         vPos.x = gpBase->mvHudVirtualStartPos.x;
@@ -909,11 +909,11 @@ void cLuxPlayerHurt::OnDraw(double adFrameTime)
 
 cLuxPlayerFlashback::cLuxPlayerFlashback (cLuxPlayer *apPlayer) : iLuxPlayerHelper(apPlayer, "LuxPlayerFlashback")
 {
-    mfRadialBlurSize = gpBase->mpGameCfg->GetFloat("Player_General","FlashbackRadialBlurSize", 0.12f);
-    mfRadialBlurStartDist = gpBase->mpGameCfg->GetFloat("Player_General","FlashbackRadialBlurStartDist", 0.4f);
-    mfWorldSoundVolume = gpBase->mpGameCfg->GetFloat("Player_General","FlashbackWorldSoundVolume", 0.4f);
-    mfMoveSpeedMul = gpBase->mpGameCfg->GetFloat("Player_General","FlashbackMoveSpeedMul", 1.0f);
-    mfRunSpeedMul = gpBase->mpGameCfg->GetFloat("Player_General","FlashbackRunSpeedMul", 1.0f);
+    mfRadialBlurSize = gpBase->mpGameCfg->GetFloat("Player_General", "FlashbackRadialBlurSize", 0.12f);
+    mfRadialBlurStartDist = gpBase->mpGameCfg->GetFloat("Player_General", "FlashbackRadialBlurStartDist", 0.4f);
+    mfWorldSoundVolume = gpBase->mpGameCfg->GetFloat("Player_General", "FlashbackWorldSoundVolume", 0.4f);
+    mfMoveSpeedMul = gpBase->mpGameCfg->GetFloat("Player_General", "FlashbackMoveSpeedMul", 1.0f);
+    mfRunSpeedMul = gpBase->mpGameCfg->GetFloat("Player_General", "FlashbackRunSpeedMul", 1.0f);
 
     Reset();
 
@@ -926,7 +926,7 @@ cLuxPlayerFlashback::~cLuxPlayerFlashback ()
 
 void cLuxPlayerFlashback::Reset()
 {
-    mfFlashDelay =0;
+    mfFlashDelay = 0;
     mbActive = false;
     mlstFlashbackQueue.clear();
 }
@@ -940,7 +940,7 @@ void cLuxPlayerFlashback::Start(const tString &asFlashbackFile, const tString &a
         return;
     }
 
-    ProgLog(eLuxProgressLogLevel_Medium, "Starting flashback "+ asFlashbackFile);
+    ProgLog(eLuxProgressLogLevel_Medium, "Starting flashback " + asFlashbackFile);
 
     if(mbActive)
     {
@@ -949,7 +949,7 @@ void cLuxPlayerFlashback::Start(const tString &asFlashbackFile, const tString &a
     }
 
     //Disable enemies
-    gpBase->mpMapHandler->GetCurrentMap()->BroadcastEnemyMessage(eLuxEnemyMessage_Reset, false,0,0);
+    gpBase->mpMapHandler->GetCurrentMap()->BroadcastEnemyMessage(eLuxEnemyMessage_Reset, false, 0, 0);
 
     mfFlashDelay = 0.5f; //Show flash effect after a little delay
     gpBase->mpHelpFuncs->PlayGuiSoundData("flashback_flash", eSoundEntryType_Gui);
@@ -962,7 +962,7 @@ void cLuxPlayerFlashback::Start(const tString &asFlashbackFile, const tString &a
     msCallback = asCallback;
 
     //World sounds
-    gpBase->mpEngine->GetSound()->GetSoundHandler()->FadeGlobalVolume(mfWorldSoundVolume, (1-mfWorldSoundVolume) / 1.5f,eSoundEntryType_World,eLuxGlobalVolumeType_Flashback,false);
+    gpBase->mpEngine->GetSound()->GetSoundHandler()->FadeGlobalVolume(mfWorldSoundVolume, (1 - mfWorldSoundVolume) / 1.5f, eSoundEntryType_World, eLuxGlobalVolumeType_Flashback, false);
 
     mbActive = true;
 }
@@ -971,9 +971,9 @@ void cLuxPlayerFlashback::Start(const tString &asFlashbackFile, const tString &a
 
 void cLuxPlayerFlashback::Update(double adFixedDelta)
 {
-    if(mbActive==false)
+    if(mbActive == false)
     {
-        if(mlstFlashbackQueue.empty()==false)
+        if(mlstFlashbackQueue.empty() == false)
         {
             mfFlashbackStartCount -= (float)adFixedDelta;
             if(mfFlashbackStartCount < 0)
@@ -1005,7 +1005,7 @@ void cLuxPlayerFlashback::Update(double adFixedDelta)
 
     ////////////////////////////////
     // Start voices and effects
-    if(mfFlashbackStartCount>0)
+    if(mfFlashbackStartCount > 0)
     {
         mfFlashbackStartCount -= (float)adFixedDelta;
         if(mfFlashbackStartCount <= 0)
@@ -1040,7 +1040,7 @@ void cLuxPlayerFlashback::Update(double adFixedDelta)
             gpBase->mpEffectHandler->GetRadialBlur()->FadeTo(0, mfRadialBlurSize / fFadeTime);
 
             //World sounds
-            gpBase->mpEngine->GetSound()->GetSoundHandler()->FadeGlobalVolume(1, 1 / fFadeTime,eSoundEntryType_World,eLuxGlobalVolumeType_Flashback,true);
+            gpBase->mpEngine->GetSound()->GetSoundHandler()->FadeGlobalVolume(1, 1 / fFadeTime, eSoundEntryType_World, eLuxGlobalVolumeType_Flashback, true);
 
             gpBase->mpPlayer->SetEventMoveSpeedMul(1.0f);
             gpBase->mpPlayer->SetEventRunSpeedMul(1.0f);
@@ -1069,18 +1069,18 @@ void cLuxPlayerFlashback::OnDraw(double adFrameTime)
 
 void cLuxPlayerFlashback::LoadAndPlayFlashbackFile(const tString& asFlashbackFile)
 {
-    tString sFile = cString::SetFileExt(asFlashbackFile,"flash");
+    tString sFile = cString::SetFileExt(asFlashbackFile, "flash");
     cResources *pResources = gpBase->mpEngine->GetResources();
 
     iXmlDocument *pXmlDoc = pResources->LoadXmlDocument(sFile);
-    if(pXmlDoc==NULL)
+    if(pXmlDoc == NULL)
     {
         Error("Could not load flashback file: '%s'\n", sFile.c_str());
         return;
     }
 
     cXmlElement *pVoicesElem = pXmlDoc->GetFirstElement("Voices");
-    if(pVoicesElem==NULL)
+    if(pVoicesElem == NULL)
     {
         Error("Could not find voice element in flashback file '%s'\n", sFile.c_str());
         pResources->DestroyXmlDocument(pXmlDoc);
@@ -1092,12 +1092,12 @@ void cLuxPlayerFlashback::LoadAndPlayFlashbackFile(const tString& asFlashbackFil
     {
         cXmlElement *pChildElem = it.Next()->ToElement();
 
-        tString sVoiceFile = pChildElem->GetAttributeString("VoiceSound","");
-        tString sEffectFile = pChildElem->GetAttributeString("EffectSound","");
-        tString sTextCat = pChildElem->GetAttributeString("TextCat","");
-        tString sTextEntry = pChildElem->GetAttributeString("TextEntry","");
+        tString sVoiceFile = pChildElem->GetAttributeString("VoiceSound", "");
+        tString sEffectFile = pChildElem->GetAttributeString("EffectSound", "");
+        tString sTextCat = pChildElem->GetAttributeString("TextCat", "");
+        tString sTextEntry = pChildElem->GetAttributeString("TextEntry", "");
 
-        gpBase->mpEffectHandler->GetPlayVoice()->AddVoice(sVoiceFile, sEffectFile, sTextCat, sTextEntry, false,0,0,0);
+        gpBase->mpEffectHandler->GetPlayVoice()->AddVoice(sVoiceFile, sEffectFile, sTextCat, sTextEntry, false, 0, 0, 0);
     }
 
     pResources->DestroyXmlDocument(pXmlDoc);
@@ -1128,19 +1128,19 @@ cLuxPlayerLookAt::~cLuxPlayerLookAt()
 
 void cLuxPlayerLookAt::Update(double adFixedDelta)
 {
-    if(mbActive==false)
+    if(mbActive == false)
     {
         return;
     }
 
     cCamera *pCam = mpPlayer->GetCamera();
-    cVector3f vGoalAngle = cMath::GetAngleFromPoints3D(pCam->GetPosition(),mvTargetPos);
+    cVector3f vGoalAngle = cMath::GetAngleFromPoints3D(pCam->GetPosition(), mvTargetPos);
 
     ///////////////////////////
     //Get distance to goal
     cVector3f vDist;
-    vDist.x = cMath::GetAngleDistanceRad(pCam->GetPitch(),vGoalAngle.x);
-    vDist.y = cMath::GetAngleDistanceRad(pCam->GetYaw(),vGoalAngle.y);
+    vDist.x = cMath::GetAngleDistanceRad(pCam->GetPitch(), vGoalAngle.x);
+    vDist.y = cMath::GetAngleDistanceRad(pCam->GetYaw(), vGoalAngle.y);
 
     ///////////////////////////
     //Get the Speed
@@ -1158,10 +1158,10 @@ void cLuxPlayerLookAt::Update(double adFixedDelta)
     pCam->AddYaw(mvCurrentSpeed.y * (float)adFixedDelta);
     mpPlayer->GetCharacterBody()->SetYaw(pCam->GetYaw());
 
-    float fTotalDist = vDist.x*vDist.x + vDist.y*vDist.y;
+    float fTotalDist = vDist.x * vDist.x + vDist.y * vDist.y;
     if(fTotalDist < 0.01)
     {
-        gpBase->mpMapHandler->GetCurrentMap()->RunScript(msAtTargetCallback+"()");
+        gpBase->mpMapHandler->GetCurrentMap()->RunScript(msAtTargetCallback + "()");
     }
 }
 
@@ -1172,8 +1172,8 @@ void cLuxPlayerLookAt::Reset()
     mbActive = false;
     mfMaxSpeed = 9999.0f;
     mfSpeedMul = 1.0f;
-    mvTargetPos = cVector3f(0,1,0);
-    mvCurrentSpeed =0;
+    mvTargetPos = cVector3f(0, 1, 0);
+    mvCurrentSpeed = 0;
 
     msAtTargetCallback = "";
 
@@ -1199,9 +1199,9 @@ void cLuxPlayerLookAt::SetTarget(const cVector3f &avTargetPos, float afSpeedMul,
 void cLuxPlayerLookAt::SetActive(bool abX)
 {
     mbActive = abX;
-    if(mbActive==false)
+    if(mbActive == false)
     {
-        mvCurrentSpeed =0;
+        mvCurrentSpeed = 0;
     }
 }
 
@@ -1216,27 +1216,27 @@ void cLuxPlayerLookAt::SetActive(bool abX)
 
 cLuxPlayerSanity::cLuxPlayerSanity(cLuxPlayer *apPlayer) : iLuxPlayerHelper(apPlayer, "LuxPlayerSanity")
 {
-    mfHitZoomInSpeed = gpBase->mpGameCfg->GetFloat("Player_Sanity","HitZoomInSpeed",0);
-    mfHitZoomOutSpeed = gpBase->mpGameCfg->GetFloat("Player_Sanity","HitZoomOutSpeed",0);
-    mfHitZoomInFOVMul = gpBase->mpGameCfg->GetFloat("Player_Sanity","HitZoomInFOVMul",0);
-    mfHitZoomInAspectMul = gpBase->mpGameCfg->GetFloat("Player_Sanity","HitZoomInAspectMul",0);
+    mfHitZoomInSpeed = gpBase->mpGameCfg->GetFloat("Player_Sanity", "HitZoomInSpeed", 0);
+    mfHitZoomOutSpeed = gpBase->mpGameCfg->GetFloat("Player_Sanity", "HitZoomOutSpeed", 0);
+    mfHitZoomInFOVMul = gpBase->mpGameCfg->GetFloat("Player_Sanity", "HitZoomInFOVMul", 0);
+    mfHitZoomInAspectMul = gpBase->mpGameCfg->GetFloat("Player_Sanity", "HitZoomInAspectMul", 0);
 
-    mfSanityRegainSpeed = gpBase->mpGameCfg->GetFloat("Player_Sanity","SanityRegainSpeed",0);
-    mfSanityRegainLimit = gpBase->mpGameCfg->GetFloat("Player_Sanity","SanityRegainLimit",0);
+    mfSanityRegainSpeed = gpBase->mpGameCfg->GetFloat("Player_Sanity", "SanityRegainSpeed", 0);
+    mfSanityRegainLimit = gpBase->mpGameCfg->GetFloat("Player_Sanity", "SanityRegainLimit", 0);
 
-    mfSanityVeryLowLimit = gpBase->mpGameCfg->GetFloat("Player_Sanity","SanityVeryLowLimit",0);
-    mfSanityEffectsStart = gpBase->mpGameCfg->GetFloat("Player_Sanity","SanityEffectsStart",0);
+    mfSanityVeryLowLimit = gpBase->mpGameCfg->GetFloat("Player_Sanity", "SanityVeryLowLimit", 0);
+    mfSanityEffectsStart = gpBase->mpGameCfg->GetFloat("Player_Sanity", "SanityEffectsStart", 0);
 
-    mfSanityWaveAlphaMul = gpBase->mpGameCfg->GetFloat("Player_Sanity","SanityWaveAlphaMul",0);
-    mfSanityWaveSpeedMul = gpBase->mpGameCfg->GetFloat("Player_Sanity","SanityWaveSpeedMul",0);
+    mfSanityWaveAlphaMul = gpBase->mpGameCfg->GetFloat("Player_Sanity", "SanityWaveAlphaMul", 0);
+    mfSanityWaveSpeedMul = gpBase->mpGameCfg->GetFloat("Player_Sanity", "SanityWaveSpeedMul", 0);
 
-    mfSanityLowLimit = gpBase->mpGameCfg->GetFloat("Player_Sanity","SanityLowLimit",0);
-    mfSanityLowLimitMaxTime = gpBase->mpGameCfg->GetFloat("Player_Sanity","SanityLowLimitMaxTime",0);
-    mfSanityLowNewSanityAmount = gpBase->mpGameCfg->GetFloat("Player_Sanity","SanityLowNewSanityAmount",0);
+    mfSanityLowLimit = gpBase->mpGameCfg->GetFloat("Player_Sanity", "SanityLowLimit", 0);
+    mfSanityLowLimitMaxTime = gpBase->mpGameCfg->GetFloat("Player_Sanity", "SanityLowLimitMaxTime", 0);
+    mfSanityLowNewSanityAmount = gpBase->mpGameCfg->GetFloat("Player_Sanity", "SanityLowNewSanityAmount", 0);
 
-    mfCheckNearEnemyInterval = gpBase->mpGameCfg->GetFloat("Player_Sanity","CheckNearEnemyInterval",0);
-    mfNearEnemyDecrease = gpBase->mpGameCfg->GetFloat("Player_Sanity","NearEnemyDecrease",0);
-    mfNearCritterDecrease = gpBase->mpGameCfg->GetFloat("Player_Sanity","NearCritterDecrease",0);
+    mfCheckNearEnemyInterval = gpBase->mpGameCfg->GetFloat("Player_Sanity", "CheckNearEnemyInterval", 0);
+    mfNearEnemyDecrease = gpBase->mpGameCfg->GetFloat("Player_Sanity", "NearEnemyDecrease", 0);
+    mfNearCritterDecrease = gpBase->mpGameCfg->GetFloat("Player_Sanity", "NearCritterDecrease", 0);
 
     Reset();
 }
@@ -1252,27 +1252,27 @@ cLuxPlayerSanity::~cLuxPlayerSanity()
 
 void cLuxPlayerSanity::Reset()
 {
-    mfHitAlpha =0;
+    mfHitAlpha = 0;
     mbHitActive = false;
-    mfSanityLostCount =0;
-    mfPantCount =1;
-    mfCheckEnemySeenCount =0;
+    mfSanityLostCount = 0;
+    mfPantCount = 1;
+    mfCheckEnemySeenCount = 0;
 
-    mfT=0;
-    mfInsaneWaveAlpha =0;
+    mfT = 0;
+    mfInsaneWaveAlpha = 0;
 
-    mfSanityDrainCount =0;
-    mfSanityDrainVolume =0;
-    mfSanityHeartbeatCount =0;
+    mfSanityDrainCount = 0;
+    mfSanityDrainVolume = 0;
+    mfSanityHeartbeatCount = 0;
 
-    mfSeenEnemyCount =0;
+    mfSeenEnemyCount = 0;
     mbEnemyIsSeen = false;
 
     mbSanityEffectUpdated = false;
 
-    mfAtLowSanityCount =0;
+    mfAtLowSanityCount = 0;
 
-    mfShowHintTimer =0;
+    mfShowHintTimer = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -1307,16 +1307,16 @@ void cLuxPlayerSanity::Update(double adFixedDelta)
         mfAtLowSanityCount += (float)adFixedDelta;
         if(mfAtLowSanityCount > mfSanityLowLimitMaxTime)
         {
-            mfAtLowSanityCount =0;
+            mfAtLowSanityCount = 0;
             mpPlayer->SetSanity(mfSanityLowNewSanityAmount);
         }
     }
-    else if(mfAtLowSanityCount >0)
+    else if(mfAtLowSanityCount > 0)
     {
         mfAtLowSanityCount -= (float)adFixedDelta;
-        if(mfAtLowSanityCount <0)
+        if(mfAtLowSanityCount < 0)
         {
-            mfAtLowSanityCount =0;
+            mfAtLowSanityCount = 0;
         }
     }
 
@@ -1339,7 +1339,7 @@ void cLuxPlayerSanity::OnDraw(double adFrameTime)
 
 void cLuxPlayerSanity::UpdateInsanityVisuals(double adFixedDelta)
 {
-    if(mpPlayer->GetSanity() > mfSanityEffectsStart && mfSanityDrainVolume <=0 && mfInsaneWaveAlpha <=0)
+    if(mpPlayer->GetSanity() > mfSanityEffectsStart && mfSanityDrainVolume <= 0 && mfInsaneWaveAlpha <= 0)
     {
         gpBase->mpPostEffectHandler->GetInsanity()->SetActive(false);
         return;
@@ -1351,7 +1351,7 @@ void cLuxPlayerSanity::UpdateInsanityVisuals(double adFixedDelta)
     float fGoalAlpha = 1 - fSanity / mfSanityEffectsStart;
     if(fGoalAlpha < 0)
     {
-        fGoalAlpha =0;
+        fGoalAlpha = 0;
     }
 
     ////////////////////////////////
@@ -1377,7 +1377,7 @@ void cLuxPlayerSanity::UpdateInsanityVisuals(double adFixedDelta)
     //Set up effects
     //Log("Zoom: %f Wave: %f\n", mfSanityDrainVolume, mfInsaneWaveAlpha);
 
-    float fZoomMul = (sin(mfT*2)+1)*0.5f*0.4f + 0.6f;
+    float fZoomMul = (sin(mfT * 2) +1) * 0.5f * 0.4f + 0.6f;
 
     gpBase->mpPostEffectHandler->GetInsanity()->SetWaveAlpha(mfInsaneWaveAlpha * mfSanityWaveAlphaMul);//mfInsaneWaveAlpha);
     gpBase->mpPostEffectHandler->GetInsanity()->SetWaveSpeed(mfInsaneWaveAlpha * mfSanityWaveSpeedMul);//*mfInsaneWaveAlpha);
@@ -1435,7 +1435,7 @@ void cLuxPlayerSanity::UpdateCheckEnemySeen(double adFixedDelta)
 {
     /////////////////////////////////////
     // Check if it is time for a check!
-    if(mfCheckEnemySeenCount >0)
+    if(mfCheckEnemySeenCount > 0)
     {
         mfCheckEnemySeenCount -= (float)adFixedDelta;
         return;
@@ -1463,7 +1463,7 @@ void cLuxPlayerSanity::UpdateCheckEnemySeen(double adFixedDelta)
     while(entIt.HasNext())
     {
         iLuxEntity *pEntity = entIt.Next();
-        if(pEntity->IsActive()==false)
+        if(pEntity->IsActive() == false)
         {
             continue;
         }
@@ -1472,15 +1472,15 @@ void cLuxPlayerSanity::UpdateCheckEnemySeen(double adFixedDelta)
             continue;
         }
 
-        iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+        iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
         if(pProp->GetPropType() != eLuxPropType_Critter)
         {
             continue;
         }
 
-        iLuxProp_CritterBase *pCritter = static_cast<iLuxProp_CritterBase*>(pProp);
+        iLuxProp_CritterBase *pCritter = static_cast<iLuxProp_CritterBase *>(pProp);
 
-        if(pCritter->CausesSanityDecrease()==false)
+        if(pCritter->CausesSanityDecrease() == false)
         {
             continue;
         }
@@ -1508,11 +1508,11 @@ void cLuxPlayerSanity::UpdateCheckEnemySeen(double adFixedDelta)
         iLuxEnemy *pEnemy = it.Next();
         pEnemy->SetIsSeenByPlayer(false);
 
-        if(pEnemy->IsActive()==false)
+        if(pEnemy->IsActive() == false)
         {
             continue;
         }
-        if(pEnemy->CausesSanityDecrease()==false)
+        if(pEnemy->CausesSanityDecrease() == false)
         {
             continue;
         }
@@ -1536,23 +1536,23 @@ void cLuxPlayerSanity::UpdateCheckEnemySeen(double adFixedDelta)
 
         //////////////////////////////
         //Cast rays
-        cVector3f vHalfSize = pCharBody->GetSize()*0.5f;
+        cVector3f vHalfSize = pCharBody->GetSize() * 0.5f;
         cVector3f vPosAdd[5] =
         {
             cVector3f(0),
-            vRight*vHalfSize.x,
-            vRight*vHalfSize.x*-1,
-            vUp*vHalfSize.y*0.8f,
-            vUp*vHalfSize.y*-0.8f,
+            vRight * vHalfSize.x,
+            vRight *vHalfSize.x * -1,
+            vUp *vHalfSize.y * 0.8f,
+            vUp *vHalfSize.y * -0.8f,
         };
 
-        int lCount =0;
-        for(int i=0; i<5; ++i)
+        int lCount = 0;
+        for(int i = 0; i < 5; ++i)
         {
-            if(gpBase->mpMapHelper->CheckLineOfSight(vPlayerHeadPos, pCharBody->GetPosition()+vPosAdd[i], false))
+            if(gpBase->mpMapHelper->CheckLineOfSight(vPlayerHeadPos, pCharBody->GetPosition() + vPosAdd[i], false))
             {
                 lCount++;
-                if(lCount >=2)
+                if(lCount >= 2)
                 {
                     bSeenEnemy = true;
                     pEnemy->SetIsSeenByPlayer(true);
@@ -1568,7 +1568,7 @@ void cLuxPlayerSanity::UpdateCheckEnemySeen(double adFixedDelta)
     // If seen, lower sanity and increase seen count
     if(bSeenEnemy)
     {
-        if(mpPlayer->GetGlobalSanityDrainDisabled()==false)
+        if(mpPlayer->GetGlobalSanityDrainDisabled() == false)
         {
             mpPlayer->LowerSanity(mfNearEnemyDecrease, true);
         }
@@ -1593,7 +1593,7 @@ void cLuxPlayerSanity::UpdateHit(double adFixedDelta)
     {
         return;
     }
-    if(mfHitAlpha<=0 && mbHitActive==false)
+    if(mfHitAlpha <= 0 && mbHitActive == false)
     {
         return;
     }
@@ -1605,7 +1605,7 @@ void cLuxPlayerSanity::UpdateHit(double adFixedDelta)
         mfHitAlpha += (float)adFixedDelta * mfHitZoomInSpeed;
         if(mfHitAlpha >= 1)
         {
-            mfHitAlpha =1;
+            mfHitAlpha = 1;
             mbHitActive = false;
         }
     }
@@ -1614,7 +1614,7 @@ void cLuxPlayerSanity::UpdateHit(double adFixedDelta)
         mfHitAlpha -= (float)adFixedDelta * mfHitZoomOutSpeed;
         if(mfHitAlpha < 0)
         {
-            mfHitAlpha =0;
+            mfHitAlpha = 0;
         }
     }
 
@@ -1631,12 +1631,12 @@ void cLuxPlayerSanity::UpdateEnemySeenEffect(double adFixedDelta)
 {
     if(mbEnemyIsSeen)
     {
-        if(mfSeenEnemyCount <1)
+        if(mfSeenEnemyCount < 1)
         {
             mfSeenEnemyCount += (float)adFixedDelta * 0.3f;
-            if(mfSeenEnemyCount>1)
+            if(mfSeenEnemyCount > 1)
             {
-                mfSeenEnemyCount =1;
+                mfSeenEnemyCount = 1;
 
                 // Only display the message IF global sanity drain is NOT disabled
                 if(mpPlayer->GetGlobalSanityDrainDisabled() == false)
@@ -1646,19 +1646,19 @@ void cLuxPlayerSanity::UpdateEnemySeenEffect(double adFixedDelta)
             }
         }
 
-        float fPulse = 0.5f + (sin(mfT*2.5f)*0.5f + 0.5f)*0.5f;
+        float fPulse = 0.5f + (sin(mfT * 2.5f) * 0.5f + 0.5f) * 0.5f;
 
         gpBase->mpEffectHandler->GetRadialBlur()->SetBlurStartDist(0.2f);
-        gpBase->mpEffectHandler->GetRadialBlur()->FadeTo(0.12f * mfSeenEnemyCount*fPulse, 10.0f);
+        gpBase->mpEffectHandler->GetRadialBlur()->FadeTo(0.12f * mfSeenEnemyCount * fPulse, 10.0f);
     }
     else
     {
         if(mfSeenEnemyCount > 0)
         {
             mfSeenEnemyCount -= (float)adFixedDelta * 0.15f;
-            if(mfSeenEnemyCount<0)
+            if(mfSeenEnemyCount < 0)
             {
-                mfSeenEnemyCount =0;
+                mfSeenEnemyCount = 0;
             }
         }
         gpBase->mpEffectHandler->GetRadialBlur()->FadeTo(0, 0.12f / 2.0f);
@@ -1672,11 +1672,11 @@ void cLuxPlayerSanity::UpdateLosingSanity(double adFixedDelta)
     if(mfSanityLostCount <= 0)
     {
         mfSanityDrainCount = 0;
-        mfSanityHeartbeatCount =0;
-        mfSanityDrainVolume -= (float)adFixedDelta*0.5f;
+        mfSanityHeartbeatCount = 0;
+        mfSanityDrainVolume -= (float)adFixedDelta * 0.5f;
         if(mfSanityDrainVolume < 0)
         {
-            mfSanityDrainVolume =0;
+            mfSanityDrainVolume = 0;
         }
 
         return;
@@ -1691,7 +1691,7 @@ void cLuxPlayerSanity::UpdateLosingSanity(double adFixedDelta)
     mfSanityDrainVolume += (float)adFixedDelta * 0.1f;
     if(mfSanityDrainVolume > 1)
     {
-        mfSanityDrainVolume =1;
+        mfSanityDrainVolume = 1;
     }
 
     float mfSpeedMul = 1 + (1 - fNormalizedSanity) * 2.0f;
@@ -1699,11 +1699,11 @@ void cLuxPlayerSanity::UpdateLosingSanity(double adFixedDelta)
     mfSanityHeartbeatCount += (float)adFixedDelta * mfSpeedMul * 0.1f;
     if(mfSanityHeartbeatCount >= 1)
     {
-        mfSanityHeartbeatCount =0;
+        mfSanityHeartbeatCount = 0;
 
-        float fVol = (1.0f - fNormalizedSanity*0.5f) * mfSanityDrainVolume;
+        float fVol = (1.0f - fNormalizedSanity * 0.5f) * mfSanityDrainVolume;
 
-        if(mpPlayer->IsDead()==false)
+        if(mpPlayer->IsDead() == false)
         {
             gpBase->mpHelpFuncs->PlayGuiSoundData("sanity_heartbeat", eSoundEntryType_Gui, fVol);
         }
@@ -1712,8 +1712,8 @@ void cLuxPlayerSanity::UpdateLosingSanity(double adFixedDelta)
     mfSanityDrainCount += (float)adFixedDelta * mfSpeedMul * 0.33f;
     if(mfSanityDrainCount >= 1)
     {
-        mfSanityDrainCount =0;
-        tString sSoundFile="";
+        mfSanityDrainCount = 0;
+        tString sSoundFile = "";
         if(fSanity > 75)
         {
             sSoundFile = "sanity_drain_low";
@@ -1727,7 +1727,7 @@ void cLuxPlayerSanity::UpdateLosingSanity(double adFixedDelta)
             sSoundFile = "sanity_drain_high";
         }
 
-        if(mpPlayer->IsDead()==false)
+        if(mpPlayer->IsDead() == false)
         {
             gpBase->mpHelpFuncs->PlayGuiSoundData(sSoundFile, eSoundEntryType_Gui, mfSanityDrainVolume);
         }
@@ -1743,7 +1743,7 @@ void cLuxPlayerSanity::UpdateLowSanity(double adFixedDelta)
         return;
     }
 
-    if(mfShowHintTimer<=0)
+    if(mfShowHintTimer <= 0)
     {
         mfShowHintTimer = 3.0f;
         gpBase->mpHintHandler->Add("SanityLow", kTranslate("Hints", "SanityLow"), 0);
@@ -1754,7 +1754,7 @@ void cLuxPlayerSanity::UpdateLowSanity(double adFixedDelta)
     }
 
 
-    if(mbSanityLostIsUpdated==false)
+    if(mbSanityLostIsUpdated == false)
     {
         gpBase->mpEffectHandler->GetImageTrail()->FadeTo(1.6f, 3);
         mbSanityEffectUpdated = true;
@@ -1765,7 +1765,7 @@ void cLuxPlayerSanity::UpdateLowSanity(double adFixedDelta)
         mfPantCount = cMath::RandRectf(0.5f, 5.0f);
 
         //Play pant sound
-        if(mpPlayer->IsDead()==false)
+        if(mpPlayer->IsDead() == false)
         {
             gpBase->mpHelpFuncs->PlayGuiSoundData("sanity_pant", eSoundEntryType_Gui);
         }
@@ -1787,18 +1787,18 @@ void cLuxPlayerSanity::UpdateLowSanity(double adFixedDelta)
 
 cLuxPlayerLantern::cLuxPlayerLantern(cLuxPlayer *apPlayer) : iLuxPlayerHelper(apPlayer, "LuxPlayerLantern")
 {
-    mDefaultColor = gpBase->mpGameCfg->GetColor("Player_Lantern","Color",cColor(0));
-    mfRadius = gpBase->mpGameCfg->GetFloat("Player_Lantern","Radius",0);
-    msGobo = gpBase->mpGameCfg->GetString("Player_Lantern","Gobo","");
-    mvLocalOffset = gpBase->mpGameCfg->GetVector3f("Player_Lantern","LocalOffset",0);
-    mbCastShadows = gpBase->mpGameCfg->GetBool("Player_Lantern","CastShadows",false);
-    mfLowerOilSpeed = gpBase->mpGameCfg->GetFloat("Player_Lantern","LowerOilSpeed",0);
-    mfFadeLightOilAmount = gpBase->mpGameCfg->GetFloat("Player_Lantern","FadeLightOilAmount",0);
+    mDefaultColor = gpBase->mpGameCfg->GetColor("Player_Lantern", "Color", cColor(0));
+    mfRadius = gpBase->mpGameCfg->GetFloat("Player_Lantern", "Radius", 0);
+    msGobo = gpBase->mpGameCfg->GetString("Player_Lantern", "Gobo", "");
+    mvLocalOffset = gpBase->mpGameCfg->GetVector3f("Player_Lantern", "LocalOffset", 0);
+    mbCastShadows = gpBase->mpGameCfg->GetBool("Player_Lantern", "CastShadows", false);
+    mfLowerOilSpeed = gpBase->mpGameCfg->GetFloat("Player_Lantern", "LowerOilSpeed", 0);
+    mfFadeLightOilAmount = gpBase->mpGameCfg->GetFloat("Player_Lantern", "FadeLightOilAmount", 0);
 
-    msOutOfOilSound = gpBase->mpGameCfg->GetString("Player_Lantern","OutOfOilSound","");
-    msDisabledSound = gpBase->mpGameCfg->GetString("Player_Lantern","DisabledSound","");
-    msTurnOnSound = gpBase->mpGameCfg->GetString("Player_Lantern","TurnOnSound","");
-    msTurnOffSound = gpBase->mpGameCfg->GetString("Player_Lantern","TurnOffSound","");
+    msOutOfOilSound = gpBase->mpGameCfg->GetString("Player_Lantern", "OutOfOilSound", "");
+    msDisabledSound = gpBase->mpGameCfg->GetString("Player_Lantern", "DisabledSound", "");
+    msTurnOnSound = gpBase->mpGameCfg->GetString("Player_Lantern", "TurnOnSound", "");
+    msTurnOffSound = gpBase->mpGameCfg->GetString("Player_Lantern", "TurnOffSound", "");
 
     Reset();
 }
@@ -1819,7 +1819,7 @@ void cLuxPlayerLantern::Reset()
     mbDisabled = false;
     mbActive = false;
     mpLight = NULL;
-    mfAlpha =0;
+    mfAlpha = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -1827,7 +1827,7 @@ void cLuxPlayerLantern::Reset()
 
 void cLuxPlayerLantern::Update(double adFixedDelta)
 {
-    if(mbActive ==false && mfAlpha <=0)
+    if(mbActive == false && mfAlpha <= 0)
     {
         return;
     }
@@ -1839,15 +1839,15 @@ void cLuxPlayerLantern::Update(double adFixedDelta)
         mfAlpha += (float)adFixedDelta;
         if(mfAlpha > 1.0f)
         {
-            mfAlpha =1;
+            mfAlpha = 1;
         }
     }
     else if(mfAlpha > 0)
     {
-        mfAlpha -= (float)adFixedDelta*2.0f;
+        mfAlpha -= (float)adFixedDelta * 2.0f;
         if(mfAlpha < 0)
         {
-            mfAlpha =0;
+            mfAlpha = 0;
         }
     }
 
@@ -1862,11 +1862,11 @@ void cLuxPlayerLantern::Update(double adFixedDelta)
 
     ////////////////////////////
     // Lower oil
-    if(mbActive && gpBase->mpEffectHandler->GetEmotionFlash()->IsActive()==false)
+    if(mbActive && gpBase->mpEffectHandler->GetEmotionFlash()->IsActive() == false)
     {
         float fOil = mpPlayer->GetLampOil();
         fOil -= mfLowerOilSpeed * (float)adFixedDelta;
-        if(fOil <=0)
+        if(fOil <= 0)
         {
             fOil = 0;
             gpBase->mpHelpFuncs->PlayGuiSoundData(msOutOfOilSound, eSoundEntryType_Gui);
@@ -1909,15 +1909,15 @@ void cLuxPlayerLantern::CreateWorldEntities(cLuxMap *apMap)
 
     cCamera *pCam = mpPlayer->GetCamera();
 
-    mpLight = pWorld->CreateLightPoint("PlayerLantern",msGobo,false);
-    mpLight->SetDiffuseColor(cColor(0,0));
+    mpLight = pWorld->CreateLightPoint("PlayerLantern", msGobo, false);
+    mpLight->SetDiffuseColor(cColor(0, 0));
     mpLight->SetRadius(mfRadius);
 
     mpLight->SetIsSaved(false);
 
     if(mbActive)
     {
-        mbActive=false;
+        mbActive = false;
         SetActive(true, false);
     }
 }
@@ -1942,14 +1942,14 @@ void cLuxPlayerLantern::SetActive(bool abX, bool abUseEffects, bool abCheckForOi
 
     /////////////////
     // Check so allowed
-    if(abCheckIfAllowed && mpPlayer->GetCurrentStateData()->AllowLantern()==false)
+    if(abCheckIfAllowed && mpPlayer->GetCurrentStateData()->AllowLantern() == false)
     {
         return;
     }
 
     /////////////////
     // Check so player has the lantern item
-    if(abCheckForOilAndItems && gpBase->mpInventory->HasItemOfType(eLuxItemType_Lantern)==false)
+    if(abCheckForOilAndItems && gpBase->mpInventory->HasItemOfType(eLuxItemType_Lantern) == false)
     {
         gpBase->mpHintHandler->Add("LanternNoItem", kTranslate("Hints", "LanternNoItem"), 0);
         return;
@@ -1964,7 +1964,7 @@ void cLuxPlayerLantern::SetActive(bool abX, bool abUseEffects, bool abCheckForOi
 
     /////////////////
     // Check if there is enough oil
-    if(abCheckForOilAndItems && abX && mpPlayer->GetLampOil() <=0)
+    if(abCheckForOilAndItems && abX && mpPlayer->GetLampOil() <= 0)
     {
         if(abUseEffects)
         {
@@ -2008,9 +2008,9 @@ void cLuxPlayerLantern::SetActive(bool abX, bool abUseEffects, bool abCheckForOi
     /////////////////
     // Callback
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    if(pMap->GetLanternLitCallback()!="")
+    if(pMap->GetLanternLitCallback() != "")
     {
-        pMap->RunScript(pMap->GetLanternLitCallback()+"(" + (mbActive ? "true" : "false") + ")" );
+        pMap->RunScript(pMap->GetLanternLitCallback() + "(" + (mbActive ? "true" : "false") + ")" );
     }
 }
 
@@ -2039,27 +2039,27 @@ cLuxPlayerDeath::cLuxPlayerDeath(cLuxPlayer *apPlayer) : iLuxPlayerHelper(apPlay
 {
     cGui *pGui = gpBase->mpEngine->GetGui();
 
-    mpWhiteModGfx = pGui->CreateGfxFilledRect(cColor(1,1),eGuiMaterial_Modulative);
+    mpWhiteModGfx = pGui->CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_Modulative);
 
-    mfHeightAddGoal = gpBase->mpGameCfg->GetFloat("Player_General","Death_HeightAdd",0);
-    mfHeightAddGoalCrouch = gpBase->mpGameCfg->GetFloat("Player_General","Death_HeightAddCrouch",0);
-    mfFadeOutTime = gpBase->mpGameCfg->GetFloat("Player_General","Death_FadeTime",1000);
+    mfHeightAddGoal = gpBase->mpGameCfg->GetFloat("Player_General", "Death_HeightAdd", 0);
+    mfHeightAddGoalCrouch = gpBase->mpGameCfg->GetFloat("Player_General", "Death_HeightAddCrouch", 0);
+    mfFadeOutTime = gpBase->mpGameCfg->GetFloat("Player_General", "Death_FadeTime", 1000);
 
     if(mpPlayer->UsePermaDeath())
     {
         mfFadeOutTime /= 2.0f;
     }
 
-    mfMaxSanityGain = gpBase->mpGameCfg->GetFloat("Player_General","Death_MaxSanityGain",0);
-    mfMaxHealthGain = gpBase->mpGameCfg->GetFloat("Player_General","Death_MaxHealthGain",0);
-    mfMaxOilGain = gpBase->mpGameCfg->GetFloat("Player_General","Death_MaxOilGain",0);
+    mfMaxSanityGain = gpBase->mpGameCfg->GetFloat("Player_General", "Death_MaxSanityGain", 0);
+    mfMaxHealthGain = gpBase->mpGameCfg->GetFloat("Player_General", "Death_MaxHealthGain", 0);
+    mfMaxOilGain = gpBase->mpGameCfg->GetFloat("Player_General", "Death_MaxOilGain", 0);
 
-    mfMinSanityGain = gpBase->mpGameCfg->GetFloat("Player_General","Death_MinSanityGain",0);
-    mfMinHealthGain = gpBase->mpGameCfg->GetFloat("Player_General","Death_MinHealthGain",0);
-    mfMinOilGain = gpBase->mpGameCfg->GetFloat("Player_General","Death_MinOilGain",0);
+    mfMinSanityGain = gpBase->mpGameCfg->GetFloat("Player_General", "Death_MinSanityGain", 0);
+    mfMinHealthGain = gpBase->mpGameCfg->GetFloat("Player_General", "Death_MinHealthGain", 0);
+    mfMinOilGain = gpBase->mpGameCfg->GetFloat("Player_General", "Death_MinOilGain", 0);
 
-    mfHeightAddSpeed = gpBase->mpGameCfg->GetFloat("Player_General","Death_HeightAddSpeed",0);
-    mfRollSpeed = gpBase->mpGameCfg->GetFloat("Player_General","Death_RollSpeed",0);
+    mfHeightAddSpeed = gpBase->mpGameCfg->GetFloat("Player_General", "Death_HeightAddSpeed", 0);
+    mfRollSpeed = gpBase->mpGameCfg->GetFloat("Player_General", "Death_RollSpeed", 0);
 
     if(mpPlayer->UsePermaDeath())
     {
@@ -2070,12 +2070,12 @@ cLuxPlayerDeath::cLuxPlayerDeath(cLuxPlayer *apPlayer) : iLuxPlayerHelper(apPlay
         mfRollSpeed *= 1.2f;
     }
 
-    msStartSound = gpBase->mpGameCfg->GetString("Player_General","Death_StartSound", "");
-    msAwakenSound = gpBase->mpGameCfg->GetString("Player_General","Death_AwakenSound", "");
+    msStartSound = gpBase->mpGameCfg->GetString("Player_General", "Death_StartSound", "");
+    msAwakenSound = gpBase->mpGameCfg->GetString("Player_General", "Death_AwakenSound", "");
 
     mpFont = NULL;
 
-    mFlashOscill.SetUp(0,1,0,0.5,0.5);
+    mFlashOscill.SetUp(0, 1, 0, 0.5, 0.5);
 
     mbToMainMenu = false;
 }
@@ -2107,11 +2107,11 @@ void cLuxPlayerDeath::SaveUserConfig()
 
 void cLuxPlayerDeath::Reset()
 {
-    mfHeightAdd =0;
-    mfRoll =0;
-    mfTextAlpha1 =0;
-    mfTextAlpha2 =0;
-    mfWhiteCount =0;
+    mfHeightAdd = 0;
+    mfRoll = 0;
+    mfTextAlpha1 = 0;
+    mfTextAlpha2 = 0;
+    mfWhiteCount = 0;
 
     mpVoiceEntry = NULL;
 
@@ -2122,12 +2122,12 @@ void cLuxPlayerDeath::Reset()
     msHintCat = "";
     msHintEntry = "";
 
-    mfFadeAlpha =0;
-    mfTextOnScreenCount =0;
+    mfFadeAlpha = 0;
+    mfTextOnScreenCount = 0;
 
-    mlState =0;
+    mlState = 0;
 
-    mfT =0;
+    mfT = 0;
 
     mbActive = false;
 }
@@ -2153,7 +2153,7 @@ void cLuxPlayerDeath::Start()
 
     mpPlayer->ChangeState(eLuxPlayerState_Normal);
     mpPlayer->ChangeMoveState(eLuxMoveState_Normal);
-    mpPlayer->GetHelperLantern()->SetActive(false,false, false);
+    mpPlayer->GetHelperLantern()->SetActive(false, false, false);
     mpPlayer->SetCurrentHandObjectDrawn(false);
     mpPlayer->GetInsanityCollapse()->Stop();
 
@@ -2170,9 +2170,9 @@ void cLuxPlayerDeath::Start()
 
     //////////////////////////////////
     //Sound
-    for(int i=0; i<=gpBase->mpMusicHandler->GetMaxPrio(); ++i)
+    for(int i = 0; i <= gpBase->mpMusicHandler->GetMaxPrio(); ++i)
     {
-        gpBase->mpMusicHandler->Stop(0.2f,i);
+        gpBase->mpMusicHandler->Stop(0.2f, i);
     }
 
     if(mbSkipStartSound == false)
@@ -2182,40 +2182,40 @@ void cLuxPlayerDeath::Start()
     mbSkipStartSound = false;
 
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
-    pSoundHandler->FadeGlobalVolume(0, 0.15f,eSoundEntryType_World,eLuxGlobalVolumeType_Death,false);
-    pSoundHandler->FadeGlobalSpeed(0.5f, 0.125f,eSoundEntryType_World,eLuxGlobalVolumeType_Death,false);
+    pSoundHandler->FadeGlobalVolume(0, 0.15f, eSoundEntryType_World, eLuxGlobalVolumeType_Death, false);
+    pSoundHandler->FadeGlobalSpeed(0.5f, 0.125f, eSoundEntryType_World, eLuxGlobalVolumeType_Death, false);
 
     ///////////////////////////
     // Broadcast to all enemies
-    gpBase->mpMapHandler->GetCurrentMap()->BroadcastEnemyMessage(eLuxEnemyMessage_PlayerDead, false,0,0);
+    gpBase->mpMapHandler->GetCurrentMap()->BroadcastEnemyMessage(eLuxEnemyMessage_PlayerDead, false, 0, 0);
 
     ///////////////////////////
     // Reset variables
-    mfHeightAdd =0;
-    mfRoll =0;
+    mfHeightAdd = 0;
+    mfRoll = 0;
 
     mfMinHeightAdd = mfHeightAddGoal;
 
     if(mpPlayer->GetCurrentMoveState() == eLuxMoveState_Normal)
     {
-        cLuxMoveState_Normal *pNormalMove = static_cast<cLuxMoveState_Normal*>(mpPlayer->GetCurrentMoveStateData());
+        cLuxMoveState_Normal *pNormalMove = static_cast<cLuxMoveState_Normal *>(mpPlayer->GetCurrentMoveStateData());
         if(pNormalMove->IsCrouching())
         {
             mfMinHeightAdd = mfHeightAddGoalCrouch;
         }
     }
 
-    mlState =0;
+    mlState = 0;
 
-    mfFadeAlpha =0;
-    mfWhiteCount =0;
+    mfFadeAlpha = 0;
+    mfWhiteCount = 0;
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPlayerDeath::Update(double adFixedDelta)
 {
-    if(mbActive==false)
+    if(mbActive == false)
     {
         return;
     }
@@ -2225,16 +2225,16 @@ void cLuxPlayerDeath::Update(double adFixedDelta)
 
     //////////////////////
     // Height add
-    if(mlState ==0 || mlState==1)
+    if(mlState == 0 || mlState == 1)
     {
         if(mfHeightAdd > mfMinHeightAdd)
         {
-            mfHeightAdd-= mfHeightAddSpeed * (float)adFixedDelta;
+            mfHeightAdd -= mfHeightAddSpeed * (float)adFixedDelta;
             if(mfHeightAdd < mfMinHeightAdd)
             {
                 mfHeightAdd = mfMinHeightAdd;
             }
-            mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_Death, cVector3f(0,mfHeightAdd,0));
+            mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_Death, cVector3f(0, mfHeightAdd, 0));
             mlState = 1;
         }
 
@@ -2246,13 +2246,13 @@ void cLuxPlayerDeath::Update(double adFixedDelta)
             mfRoll = cMath::ToRad(65.0f);
         }
 
-        mpPlayer->FadeRollTo(mfRoll, 10,10);
+        mpPlayer->FadeRollTo(mfRoll, 10, 10);
     }
     //////////////////////
     // Fade Out
-    if(mlState==1)
+    if(mlState == 1)
     {
-        mfFadeAlpha += (float)adFixedDelta * (1.0f/ mfFadeOutTime);
+        mfFadeAlpha += (float)adFixedDelta * (1.0f / mfFadeOutTime);
         if(mfFadeAlpha > 1)
         {
             mfFadeAlpha = 1;
@@ -2282,15 +2282,15 @@ void cLuxPlayerDeath::Update(double adFixedDelta)
             }
         }
 
-        if(mfTextAlpha1>1)
+        if(mfTextAlpha1 > 1)
         {
             mfTextAlpha1 = 1;
         }
 
-        if(mfTextAlpha1 > 0.9f && mfFadeAlpha==1)
+        if(mfTextAlpha1 > 0.9f && mfFadeAlpha == 1)
         {
             mfTextOnScreenCount += (float)adFixedDelta;
-            if(mfTextOnScreenCount > 5.5f || mbShowHint==false)
+            if(mfTextOnScreenCount > 5.5f || mbShowHint == false)
             {
                 mlState = 2;
 
@@ -2321,8 +2321,8 @@ void cLuxPlayerDeath::Update(double adFixedDelta)
     // Fade In
     if(mlState == 3)
     {
-        mfTextAlpha1 -= (float)adFixedDelta*0.85f;
-        mfFadeAlpha -= (float)adFixedDelta*0.75f;
+        mfTextAlpha1 -= (float)adFixedDelta * 0.85f;
+        mfFadeAlpha -= (float)adFixedDelta * 0.75f;
         if(mfFadeAlpha < 0)
         {
             mfFadeAlpha = 0;
@@ -2357,7 +2357,7 @@ void cLuxPlayerDeath::Update(double adFixedDelta)
     if(mlState == 4)
     {
         cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
-        if(mpVoiceEntry==NULL || pSoundHandler->IsValid(mpVoiceEntry, mlVoiceEntryId)==false)
+        if(mpVoiceEntry == NULL || pSoundHandler->IsValid(mpVoiceEntry, mlVoiceEntryId) == false)
         {
             gpBase->mpEngine->Exit();
         }
@@ -2413,43 +2413,43 @@ void cLuxPlayerDeath::PostUpdate(double adFixedDelta)
 
 void cLuxPlayerDeath::OnDraw(double adFrameTime)
 {
-    if(mbActive==false)
+    if(mbActive == false)
     {
         return;
     }
 
-    gpBase->mpGameHudSet->DrawGfx(mpWhiteModGfx,gpBase->mvHudVirtualStartPos+ cVector3f(0,0,3), gpBase->mvHudVirtualSize,cColor(1-mfFadeAlpha,1));
+    gpBase->mpGameHudSet->DrawGfx(mpWhiteModGfx, gpBase->mvHudVirtualStartPos + cVector3f(0, 0, 3), gpBase->mvHudVirtualSize, cColor(1 - mfFadeAlpha, 1));
 
-    if(mbShowHint==false)
+    if(mbShowHint == false)
     {
         return;    //Skip death hint
     }
 
     cVector2f vFontSize = 32;
     float fSizeMul = 1.5f;
-    float fSizeMulExtra =  (1- mfTextAlpha1)*4;
+    float fSizeMulExtra =  (1 - mfTextAlpha1) * 4;
     float fMul = fSizeMul + fSizeMulExtra;
 
     tWStringVec vRows;
-    mpFont->GetWordWrapRows(550,vFontSize.y, vFontSize,msCurrentHintText,&vRows);
+    mpFont->GetWordWrapRows(550, vFontSize.y, vFontSize, msCurrentHintText, &vRows);
 
     float fY = 300;
-    for(size_t row=0; row<vRows.size(); ++row)
+    for(size_t row = 0; row < vRows.size(); ++row)
     {
         tWString &sStr = vRows[row];
-        float fSize = mpFont->GetLength(vFontSize* fMul, sStr.c_str());
-        float fX = 400 - (fSize/2.0f);
+        float fSize = mpFont->GetLength(vFontSize * fMul, sStr.c_str());
+        float fX = 400 - (fSize / 2.0f);
 
-        for(size_t i=0; i<sStr.length(); ++i)
+        for(size_t i = 0; i < sStr.length(); ++i)
         {
             float fTAdd = 0.3f * (float)i;
-            float fYAdd = sin(mfT*0.5f + fTAdd) * 5.0f + cos(mfT*0.97f - fTAdd*2.73f) * 3.5f;
+            float fYAdd = sin(mfT * 0.5f + fTAdd) * 5.0f + cos(mfT * 0.97f - fTAdd * 2.73f) * 3.5f;
 
             tWString sChar = cString::SubW(sStr, (int)i, 1);
-            cVector3f vPos = cVector3f(fX, fY + fYAdd - vFontSize.y*0.5f*fMul, 6);
-            cVector2f vSize = cVector2f(vFontSize.x, vFontSize.y + fabs(fYAdd)*1.5f) * fMul;
+            cVector3f vPos = cVector3f(fX, fY + fYAdd - vFontSize.y * 0.5f * fMul, 6);
+            cVector2f vSize = cVector2f(vFontSize.x, vFontSize.y + fabs(fYAdd) * 1.5f) * fMul;
 
-            gpBase->mpGameHudSet->DrawFont(sChar, mpFont,vPos,vSize, cColor(1, mfTextAlpha1),eFontAlign_Left);
+            gpBase->mpGameHudSet->DrawFont(sChar, mpFont, vPos, vSize, cColor(1, mfTextAlpha1), eFontAlign_Left);
 
             float fBlurAlpha = 0;
             if(mfTextAlpha1 < 0.5f)
@@ -2458,13 +2458,13 @@ void cLuxPlayerDeath::OnDraw(double adFrameTime)
             }
             else
             {
-                fBlurAlpha = 1 - (mfTextAlpha1-0.5f) / 0.5f;
+                fBlurAlpha = 1 - (mfTextAlpha1 - 0.5f) / 0.5f;
             }
 
-            gpBase->mpGameHudSet->DrawFont(    sChar, mpFont,vPos + cVector3f(vSize.x*0.05f,vSize.y*0.05f, -1), vSize*1.1f, cColor(1, fBlurAlpha * 0.3f ),eFontAlign_Right);
-            gpBase->mpGameHudSet->DrawFont(    sChar, mpFont,vPos + cVector3f(vSize.x*0.15f,vSize.y*0.15f, -2), vSize*1.3f, cColor(1, fBlurAlpha * 0.2f ),eFontAlign_Right);
+            gpBase->mpGameHudSet->DrawFont(    sChar, mpFont, vPos + cVector3f(vSize.x * 0.05f, vSize.y * 0.05f, -1), vSize * 1.1f, cColor(1, fBlurAlpha * 0.3f ), eFontAlign_Right);
+            gpBase->mpGameHudSet->DrawFont(    sChar, mpFont, vPos + cVector3f(vSize.x * 0.15f, vSize.y * 0.15f, -2), vSize * 1.3f, cColor(1, fBlurAlpha * 0.2f ), eFontAlign_Right);
 
-            fX += mpFont->GetLength(vFontSize* fMul, sChar.c_str());
+            fX += mpFont->GetLength(vFontSize * fMul, sChar.c_str());
         }
 
         fY += vFontSize.y * 1.35f;
@@ -2477,7 +2477,7 @@ void cLuxPlayerDeath::OnDraw(double adFrameTime)
 
 void cLuxPlayerDeath::OnPressButton()
 {
-    if(mbActive==false || mfFadeAlpha < 1)
+    if(mbActive == false || mfFadeAlpha < 1)
     {
         return;
     }
@@ -2526,14 +2526,14 @@ void cLuxPlayerDeath::ResetGame()
     mpPlayer->SetRoll(0);
     mpPlayer->GetCamera()->SetRoll(0);
     mpPlayer->GetCamera()->SetPitch(0);
-    mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_Death, cVector3f(0,0,0));
+    mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_Death, cVector3f(0, 0, 0));
     mpPlayer->SetCurrentHandObjectDrawn(true);
     mpPlayer->GetCharacterBody()->SetForceVelocity(0);
-    mpPlayer->GetCharacterBody()->SetMoveSpeed(eCharDir_Forward,0);
-    mpPlayer->GetCharacterBody()->SetMoveSpeed(eCharDir_Right,0);
+    mpPlayer->GetCharacterBody()->SetMoveSpeed(eCharDir_Forward, 0);
+    mpPlayer->GetCharacterBody()->SetMoveSpeed(eCharDir_Right, 0);
 
     mpPlayer->SetHealth(50.0f);
-    if(mpPlayer->GetSanity()<40.0f)
+    if(mpPlayer->GetSanity() < 40.0f)
     {
         mpPlayer->SetSanity(40.0f);
     }
@@ -2541,8 +2541,8 @@ void cLuxPlayerDeath::ResetGame()
     //////////////////////////////////
     //Sound
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
-    pSoundHandler->FadeGlobalVolume(1, 1,eSoundEntryType_World,eLuxGlobalVolumeType_Death,false);
-    pSoundHandler->FadeGlobalSpeed(1, 0.5,eSoundEntryType_World,eLuxGlobalVolumeType_Death,false);
+    pSoundHandler->FadeGlobalVolume(1, 1, eSoundEntryType_World, eLuxGlobalVolumeType_Death, false);
+    pSoundHandler->FadeGlobalSpeed(1, 0.5, eSoundEntryType_World, eLuxGlobalVolumeType_Death, false);
 
     //////////////////////////////////
     //Check point
@@ -2578,7 +2578,7 @@ void cLuxPlayerLean::Reset()
     mfDirAdd = 0;
     mfMaxTime = 0.8f;
     mfMovement = 0;
-    mfRotation =0;
+    mfRotation = 0;
 
     mfMoveSpeed = 0;
 
@@ -2593,14 +2593,14 @@ void cLuxPlayerLean::CreateWorldEntities(cLuxMap *apMap)
 {
     iPhysicsWorld *pPhysicsWorld = apMap->GetPhysicsWorld();
 
-    float fRadius = mpPlayer->GetCharacterBody()->GetSize().x/2 * 0.68f;
+    float fRadius = mpPlayer->GetCharacterBody()->GetSize().x / 2 * 0.68f;
     float fHeight = 0.05f * 2;
     if(fHeight < 0)
     {
         fHeight = fHeight * -1;
     }
     cMatrixf mtxOffset = cMath::MatrixRotateZ(kPi2f);
-    mpHeadShape = pPhysicsWorld->CreateCylinderShape(fRadius,fHeight,&mtxOffset);
+    mpHeadShape = pPhysicsWorld->CreateCylinderShape(fRadius, fHeight, &mtxOffset);
 }
 
 void cLuxPlayerLean::DestroyWorldEntities(cLuxMap *apMap)
@@ -2639,28 +2639,28 @@ void cLuxPlayerLean::Update(double adFixedDelta)
         //Position
         float fPrevMovement = mfMovement;
         float fMoveSpeed = (fGoalPos - mfMovement);
-        if(fabsf(fMoveSpeed) <0.1f)
+        if(fabsf(fMoveSpeed) < 0.1f)
         {
-            fMoveSpeed = 0.1f*fDir;
+            fMoveSpeed = 0.1f * fDir;
         }
         mfMovement += fMoveSpeed * (float)adFixedDelta * 3;
 
         if(fGoalPos < 0 && mfMovement < fGoalPos)
         {
-            mfMovement =fGoalPos;
+            mfMovement = fGoalPos;
         }
         if(fGoalPos > 0 && mfMovement > fGoalPos)
         {
-            mfMovement =fGoalPos;
+            mfMovement = fGoalPos;
         }
 
         //////////////
         //Rotation
         float fPrevRotation = mfRotation;
         float fRotSpeed = fGoalRot - mfRotation;
-        if(fabsf(fRotSpeed) <0.13f)
+        if(fabsf(fRotSpeed) < 0.13f)
         {
-            fRotSpeed = 0.13f*-fDir;
+            fRotSpeed = 0.13f * -fDir;
         }
 
         mfRotation += fRotSpeed * (float)adFixedDelta * 2;
@@ -2685,53 +2685,53 @@ void cLuxPlayerLean::Update(double adFixedDelta)
 
         iCharacterBody *pCharBody = mpPlayer->GetCharacterBody();
         float fHeightAdd = pCharBody->GetSize().y + mpPlayer->GetCameraPosAdd().y;
-        cVector3f vStartPos = pCharBody->GetFeetPosition() + cVector3f(0,fHeightAdd,0);
+        cVector3f vStartPos = pCharBody->GetFeetPosition() + cVector3f(0, fHeightAdd, 0);
 
         cVector3f vPos = vStartPos + pCam->GetRight() * mfMovement;
 
         int lCount = 0;
-        while(pPhysicsWorld->CheckShapeWorldCollision(NULL,mpHeadShape, cMath::MatrixTranslate(vPos),NULL,false,true,NULL,false))
+        while(pPhysicsWorld->CheckShapeWorldCollision(NULL, mpHeadShape, cMath::MatrixTranslate(vPos), NULL, false, true, NULL, false))
         {
             mfMovement += fReverseMov;
             mfRotation += fReverseRot;
 
-            if(fReverseMov < 0 && mfMovement <0)
+            if(fReverseMov < 0 && mfMovement < 0)
             {
-                mfMovement =0;
-                mfRotation =0;
+                mfMovement = 0;
+                mfRotation = 0;
                 break;
             }
-            if(fReverseMov > 0 && mfMovement >0)
+            if(fReverseMov > 0 && mfMovement > 0)
             {
-                mfMovement =0;
-                mfRotation =0;
+                mfMovement = 0;
+                mfRotation = 0;
                 break;
             }
 
             vPos = vStartPos + pCam->GetRight() * mfMovement;
             lCount++;
-            if(lCount >10)
+            if(lCount > 10)
             {
-                mfMovement =0;
-                mfRotation =0;
+                mfMovement = 0;
+                mfRotation = 0;
                 break;
             }
         }
 
-        mpPlayer->FadeLeanRollTo(mfRotation, 5,3);
-        mpPlayer->MoveHeadPosAdd(eLuxHeadPosAdd_Lean, cVector3f(mfMovement,0,0),2,0.05f);
+        mpPlayer->FadeLeanRollTo(mfRotation, 5, 3);
+        mpPlayer->MoveHeadPosAdd(eLuxHeadPosAdd_Lean, cVector3f(mfMovement, 0, 0), 2, 0.05f);
     }
     ////////////////////////////
     // Not pressed move back
-    else if (mfMovement !=0 || mfRotation != 0)
+    else if (mfMovement != 0 || mfRotation != 0)
     {
-        mfRotation =0;
-        mfMovement =0;
+        mfRotation = 0;
+        mfMovement = 0;
         mfDir = 0;
         mfDirAdd = 0;
 
-        mpPlayer->FadeLeanRollTo(0, 4,2);
-        mpPlayer->MoveHeadPosAdd(eLuxHeadPosAdd_Lean, cVector3f(0,0,0), 1.3f, 0.1f);
+        mpPlayer->FadeLeanRollTo(0, 4, 2);
+        mpPlayer->MoveHeadPosAdd(eLuxHeadPosAdd_Lean, cVector3f(0, 0, 0), 1.3f, 0.1f);
     }
 }
 
@@ -2752,7 +2752,7 @@ void cLuxPlayerLean::SetLean(float afMul)
 
 void cLuxPlayerLean::AddLean(float afAdd)
 {
-    mfDirAdd = cMath::Clamp(mfDirAdd+afAdd, -1.0f, 1.0f);
+    mfDirAdd = cMath::Clamp(mfDirAdd + afAdd, -1.0f, 1.0f);
     mbPressed = fabsf(mfDirAdd) > 0;
 }
 
@@ -2779,7 +2779,7 @@ cLuxPlayerHudEffect::cLuxPlayerHudEffect(cLuxPlayer *apPlayer) : iLuxPlayerHelpe
 
     //////////////////////////////////
     // Create flash gfx
-    mpFlashGfx = pGui->CreateGfxFilledRect(cColor(1,1),eGuiMaterial_Alpha);
+    mpFlashGfx = pGui->CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_Alpha);
 }
 
 cLuxPlayerHudEffect::~cLuxPlayerHudEffect()
@@ -2798,15 +2798,15 @@ void cLuxPlayerHudEffect::AddDamageSplash(eLuxDamageType aType)
     {
         return;
     }
-    int lImageNum = cMath::RandRectl(0, (int)pDamageData->mvImages.size()-1);
+    int lImageNum = cMath::RandRectl(0, (int)pDamageData->mvImages.size() - 1);
 
     cGuiGfxElement *pGfxElem = pDamageData->mvImages[lImageNum];
     cVector2f vImageSize = pGfxElem->GetActiveSize();
-    cVector2f vPos = cMath::RandRectVector2f(0, gpBase->mvHudVirtualCenterSize-vImageSize);
+    cVector2f vPos = cMath::RandRectVector2f(0, gpBase->mvHudVirtualCenterSize - vImageSize);
 
     //////////////////////////
     //Set properties
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         cLuxPlayerHudEffect_Splash splash;
 
@@ -2817,16 +2817,16 @@ void cLuxPlayerHudEffect::AddDamageSplash(eLuxDamageType aType)
         splash.mvSize = vImageSize;
         splash.mfAlpha = 1.0f;
 
-        if(i==0)
+        if(i == 0)
         {
             splash.mfAlphaMul = 0.3f;
-            splash.mvPosVel = cVector3f(0,1.0f, 0);
+            splash.mvPosVel = cVector3f(0, 1.0f, 0);
             splash.mvSizeVel = cVector2f(0, 8.0f);
         }
         else
         {
             splash.mfAlphaMul = 0.7f;
-            splash.mvPosVel = cVector3f(0,6.0f, 0);
+            splash.mvPosVel = cVector3f(0, 6.0f, 0);
             splash.mvSizeVel = cVector2f(0, 16.0f);
         }
 
@@ -2844,8 +2844,8 @@ void cLuxPlayerHudEffect::Flash(const cColor& aColor, eGuiMaterial aFlashMateria
     mFlashColor = aColor;
     mFlashMaterial = aFlashMaterial;
     mfFlashAlpha = 0.0f;
-    mfFlashAlphaSpeed = afInTime==0 ? 100000.0f : 1.0f / afInTime;
-    mfFlashAlphaOutSpeed = afOutTime==0 ? -100000.0f : -1.0f / afOutTime;
+    mfFlashAlphaSpeed = afInTime == 0 ? 100000.0f : 1.0f / afInTime;
+    mfFlashAlphaOutSpeed = afOutTime == 0 ? -100000.0f : -1.0f / afOutTime;
     mbFlashActive = true;
 }
 
@@ -2870,7 +2870,7 @@ void cLuxPlayerHudEffect::Update(double adFixedDelta)
 void cLuxPlayerHudEffect::Reset()
 {
     mlstSplashes.clear();
-    mfFlashAlpha =0;
+    mfFlashAlpha = 0;
     mbFlashActive = false;
 }
 
@@ -2883,7 +2883,7 @@ void cLuxPlayerHudEffect::DrawSplashes(double adFrameTime)
     {
         cLuxPlayerHudEffect_Splash *pSplash = &(*it);
 
-        gpBase->mpGameHudSet->DrawGfx(pSplash->mpImage, pSplash->mvPos,pSplash->mvSize, cColor(1, pSplash->mfAlpha * pSplash->mfAlphaMul));
+        gpBase->mpGameHudSet->DrawGfx(pSplash->mpImage, pSplash->mvPos, pSplash->mvSize, cColor(1, pSplash->mfAlpha * pSplash->mfAlphaMul));
     }
 }
 
@@ -2915,7 +2915,7 @@ void cLuxPlayerHudEffect::UpdateSplashes(double adFixedDelta)
 
 void cLuxPlayerHudEffect::DrawFlash(double adFrameTime)
 {
-    if(mfFlashAlpha <=0 || mbFlashActive==false)
+    if(mfFlashAlpha <= 0 || mbFlashActive == false)
     {
         return;
     }
@@ -2924,14 +2924,14 @@ void cLuxPlayerHudEffect::DrawFlash(double adFrameTime)
 
     col.a *= mfFlashAlpha;
 
-    gpBase->mpGameHudSet->DrawGfx(mpFlashGfx,gpBase->mvHudVirtualStartPos +cVector3f(0,0,0), gpBase->mvHudVirtualSize, col, mFlashMaterial);
+    gpBase->mpGameHudSet->DrawGfx(mpFlashGfx, gpBase->mvHudVirtualStartPos + cVector3f(0, 0, 0), gpBase->mvHudVirtualSize, col, mFlashMaterial);
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPlayerHudEffect::UpdateFlash(double adFixedDelta)
 {
-    if(mbFlashActive==false)
+    if(mbFlashActive == false)
     {
         return;
     }
@@ -2957,10 +2957,10 @@ void cLuxPlayerHudEffect::LoadDamageData(cLuxPlayerDamageData *apData, const tSt
     cGui *pGui = gpBase->mpEngine->GetGui();
     cFileSearcher *pFileSearcher = gpBase->mpEngine->GetResources()->GetFileSearcher();
 
-    tString sFileNameBase = "graphics/hud/damage_"+asName;
+    tString sFileNameBase = "graphics/hud/damage_" + asName;
 
     int lCount = 0;
-    tString sFile = sFileNameBase + cString::ToString(lCount)+".tga";
+    tString sFile = sFileNameBase + cString::ToString(lCount) + ".tga";
 
     while(pFileSearcher->GetFilePath(sFile) != _W(""))
     {
@@ -2971,7 +2971,7 @@ void cLuxPlayerHudEffect::LoadDamageData(cLuxPlayerDamageData *apData, const tSt
         }
 
         lCount++;
-        sFile = sFileNameBase + cString::ToString(lCount)+".tga";
+        sFile = sFileNameBase + cString::ToString(lCount) + ".tga";
     }
 }
 
@@ -2986,7 +2986,7 @@ void cLuxPlayerHudEffect::LoadDamageData(cLuxPlayerDamageData *apData, const tSt
 
 cLuxPlayerLightLevel::cLuxPlayerLightLevel(cLuxPlayer *apPlayer) : iLuxPlayerHelper(apPlayer, "LuxPlayerLightLevel")
 {
-    mfRadiusAdd = gpBase->mpGameCfg->GetFloat("Player_Darkness","RadiusAdd",0);
+    mfRadiusAdd = gpBase->mpGameCfg->GetFloat("Player_Darkness", "RadiusAdd", 0);
 }
 
 cLuxPlayerLightLevel::~cLuxPlayerLightLevel()
@@ -3004,7 +3004,7 @@ void cLuxPlayerLightLevel::Reset()
 {
     mfExtendedLightLevel = 1.0f;
     mfNormalLightLevel = 1.0f;
-    mfUpdateCount =0;
+    mfUpdateCount = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -3013,7 +3013,7 @@ void cLuxPlayerLightLevel::Update(double adFixedDelta)
 {
     ///////////////////////////////////////
     //If count reaches 0, update light level
-    if(mfUpdateCount <=0.0f)
+    if(mfUpdateCount <= 0.0f)
     {
         mfUpdateCount = 1.0f / 2.0f;
 
@@ -3026,19 +3026,19 @@ void cLuxPlayerLightLevel::Update(double adFixedDelta)
 
         ////////////////////////////////
         //Set up positions to test light level at.
-        const int lTestPos =5;
+        const int lTestPos = 5;
         cVector3f vTestPos[lTestPos] =
         {
             vPos,     //Center
-            vPos + cVector3f(0,vSize.y-0.1f, 0),    //Above feet
-            vPos - cVector3f(0,vSize.y-0.1f, 0),    //Head
-            vPos + vForward * vSize.z*0.8f,            //In front of center
-            vPos - cVector3f(0,vSize.y-0.1f, 0) + vForward * vSize.z*0.8f //In front of feet.
+            vPos + cVector3f(0, vSize.y - 0.1f, 0), //Above feet
+            vPos - cVector3f(0, vSize.y - 0.1f, 0), //Head
+            vPos + vForward *vSize.z * 0.8f,           //In front of center
+            vPos - cVector3f(0, vSize.y - 0.1f, 0) + vForward * vSize.z * 0.8f //In front of feet.
         };
 
         ////////////////////////////////
         //Get lights to skip
-        std::vector<iLight*> vSkipLights;
+        std::vector<iLight *> vSkipLights;
         vSkipLights.push_back(mpPlayer->GetHelperInDarkness()->GetAmbientLight());
 
         ////////////////////////////////
@@ -3053,7 +3053,7 @@ void cLuxPlayerLightLevel::Update(double adFixedDelta)
             mfNormalLightLevel += 1.0f;
         }
 
-        for(int i=0; i<lTestPos; ++i)
+        for(int i = 0; i < lTestPos; ++i)
         {
             //fTotalLight += gpBase->mpMapHelper->GetLightLevelAtPos(vTestPos[i], &vSkipLights);
             float fExtLight = gpBase->mpMapHelper->GetLightLevelAtPos(vTestPos[i], &vSkipLights, mfRadiusAdd);
@@ -3078,7 +3078,7 @@ void cLuxPlayerLightLevel::Update(double adFixedDelta)
 
 void cLuxPlayerLightLevel::OnMapEnter(cLuxMap *apMap)
 {
-    mfUpdateCount =0;
+    mfUpdateCount = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -3093,22 +3093,22 @@ cLuxPlayerInDarkness::cLuxPlayerInDarkness(cLuxPlayer *apPlayer) : iLuxPlayerHel
 {
     mpSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
 
-    mfMinDarknessLightLevel = gpBase->mpGameCfg->GetFloat("Player_Darkness","MinLightLevel",0);
+    mfMinDarknessLightLevel = gpBase->mpGameCfg->GetFloat("Player_Darkness", "MinLightLevel", 0);
 
-    mfAmbientLightMinLightLevel = gpBase->mpGameCfg->GetFloat("Player_Darkness","AmbientLightMinLightLevel",0);
-    mfAmbientLightRadius = gpBase->mpGameCfg->GetFloat("Player_Darkness","AmbientLightRadius",0);
-    mfAmbientLightIntensity = gpBase->mpGameCfg->GetFloat("Player_Darkness","AmbientLightIntensity",0);
-    mfAmbientLightFadeInTime = gpBase->mpGameCfg->GetFloat("Player_Darkness","AmbientLightFadeInTime",0);
-    mfAmbientLightFadeOutTime = gpBase->mpGameCfg->GetFloat("Player_Darkness","AmbientLightFadeOutTime",0);
-    mAmbientLightColor = gpBase->mpGameCfg->GetColor("Player_Darkness","AmbientLightColor",cColor(0));
+    mfAmbientLightMinLightLevel = gpBase->mpGameCfg->GetFloat("Player_Darkness", "AmbientLightMinLightLevel", 0);
+    mfAmbientLightRadius = gpBase->mpGameCfg->GetFloat("Player_Darkness", "AmbientLightRadius", 0);
+    mfAmbientLightIntensity = gpBase->mpGameCfg->GetFloat("Player_Darkness", "AmbientLightIntensity", 0);
+    mfAmbientLightFadeInTime = gpBase->mpGameCfg->GetFloat("Player_Darkness", "AmbientLightFadeInTime", 0);
+    mfAmbientLightFadeOutTime = gpBase->mpGameCfg->GetFloat("Player_Darkness", "AmbientLightFadeOutTime", 0);
+    mAmbientLightColor = gpBase->mpGameCfg->GetColor("Player_Darkness", "AmbientLightColor", cColor(0));
 
-    msLoopSoundFile  = gpBase->mpGameCfg->GetString("Player_Darkness", "LoopSoundFile","");
-    mfLoopSoundVolume = gpBase->mpGameCfg->GetFloat("Player_Darkness", "LoopSoundVolume",0);
-    mfLoopSoundStartupTime = gpBase->mpGameCfg->GetFloat("Player_Darkness", "LoopSoundStartupTime",0);
-    mfLoopSoundFadeInSpeed = gpBase->mpGameCfg->GetFloat("Player_Darkness", "LoopSoundFadeInSpeed",0);
-    mfLoopSoundFadeOutSpeed = gpBase->mpGameCfg->GetFloat("Player_Darkness", "LoopSoundFadeOutSpeed",0);
+    msLoopSoundFile  = gpBase->mpGameCfg->GetString("Player_Darkness", "LoopSoundFile", "");
+    mfLoopSoundVolume = gpBase->mpGameCfg->GetFloat("Player_Darkness", "LoopSoundVolume", 0);
+    mfLoopSoundStartupTime = gpBase->mpGameCfg->GetFloat("Player_Darkness", "LoopSoundStartupTime", 0);
+    mfLoopSoundFadeInSpeed = gpBase->mpGameCfg->GetFloat("Player_Darkness", "LoopSoundFadeInSpeed", 0);
+    mfLoopSoundFadeOutSpeed = gpBase->mpGameCfg->GetFloat("Player_Darkness", "LoopSoundFadeOutSpeed", 0);
 
-    mfSanityLossPerSecond = gpBase->mpGameCfg->GetFloat("Player_Darkness", "SanityLossPerSecond",0);
+    mfSanityLossPerSecond = gpBase->mpGameCfg->GetFloat("Player_Darkness", "SanityLossPerSecond", 0);
 }
 
 cLuxPlayerInDarkness::~cLuxPlayerInDarkness()
@@ -3126,15 +3126,15 @@ void cLuxPlayerInDarkness::Reset()
 {
     mbActive = true;
 
-    mpAmbientLight =NULL;
+    mpAmbientLight = NULL;
 
     mbAmbientLightIsOn = false;
     mbInDarkness = false;
 
     mpLoopSound = NULL;
-    mfLoopSoundCount =0;
+    mfLoopSoundCount = 0;
 
-    mfSanityLossMul =0;
+    mfSanityLossMul = 0;
 
     mfShowHintTimer = 0;
 }
@@ -3157,7 +3157,7 @@ void cLuxPlayerInDarkness::Update(double adFixedDelta)
     ///////////////////////
     // Update ambient light position.
     cVector3f vCamPos = mpPlayer->GetCamera()->GetPosition();
-    mpAmbientLight->SetPosition(vCamPos - cVector3f(0,0.3f,0));
+    mpAmbientLight->SetPosition(vCamPos - cVector3f(0, 0.3f, 0));
 
 
     ////////////////////////////
@@ -3167,14 +3167,14 @@ void cLuxPlayerInDarkness::Update(double adFixedDelta)
         if(mbAmbientLightIsOn)
         {
             mbAmbientLightIsOn = false;
-            mpAmbientLight->FadeTo(cColor(0.0f, 0.0f),mpAmbientLight->GetRadius(),mfAmbientLightFadeOutTime);
+            mpAmbientLight->FadeTo(cColor(0.0f, 0.0f), mpAmbientLight->GetRadius(), mfAmbientLightFadeOutTime);
         }
     }
     ////////////////////////////
     //Turn on ambient light
     else
     {
-        if(mbAmbientLightIsOn==false)
+        if(mbAmbientLightIsOn == false)
         {
             mbAmbientLightIsOn = true;
 
@@ -3182,11 +3182,11 @@ void cLuxPlayerInDarkness::Update(double adFixedDelta)
             // HARDMODE
             if (gpBase->mbHardMode)
             {
-                mpAmbientLight->FadeTo(mAmbientLightColor*mfAmbientLightIntensity * 0.75f, mpAmbientLight->GetRadius(), mfAmbientLightFadeInTime * 2.5f);
+                mpAmbientLight->FadeTo(mAmbientLightColor * mfAmbientLightIntensity * 0.75f, mpAmbientLight->GetRadius(), mfAmbientLightFadeInTime * 2.5f);
             }
             else
             {
-                mpAmbientLight->FadeTo(mAmbientLightColor*mfAmbientLightIntensity, mpAmbientLight->GetRadius(), mfAmbientLightFadeInTime);
+                mpAmbientLight->FadeTo(mAmbientLightColor * mfAmbientLightIntensity, mpAmbientLight->GetRadius(), mfAmbientLightFadeInTime);
             }
 
         }
@@ -3197,7 +3197,7 @@ void cLuxPlayerInDarkness::Update(double adFixedDelta)
     // Light
     if(fExtLightLevel > mfMinDarknessLightLevel)
     {
-        mfLoopSoundCount-= (float)adFixedDelta;
+        mfLoopSoundCount -= (float)adFixedDelta;
         if(mfLoopSoundCount <= 0)
         {
             mfLoopSoundCount = 0;
@@ -3206,7 +3206,7 @@ void cLuxPlayerInDarkness::Update(double adFixedDelta)
 
         mbInDarkness = false;
 
-        mfSanityLossMul -= (float)adFixedDelta*0.3f;
+        mfSanityLossMul -= (float)adFixedDelta * 0.3f;
         if(mfSanityLossMul < 0)
         {
             mfSanityLossMul = 0;
@@ -3216,7 +3216,7 @@ void cLuxPlayerInDarkness::Update(double adFixedDelta)
     // Darkness
     else
     {
-        mfSanityLossMul += (float)adFixedDelta*0.1f;
+        mfSanityLossMul += (float)adFixedDelta * 0.1f;
         if(mfSanityLossMul > 1)
         {
             mfSanityLossMul = 1;
@@ -3224,13 +3224,13 @@ void cLuxPlayerInDarkness::Update(double adFixedDelta)
 
         ////////////////////////////
         //Lower sanity
-        if(mpPlayer->GetHelperFlashback()->IsActive()==false &&
-                (mpPlayer->GetSanityDrainDisabled()==false && mpPlayer->GetGlobalSanityDrainDisabled()==false) &&
-                gpBase->mpEffectHandler->GetEmotionFlash()->IsActive()==false)
+        if(mpPlayer->GetHelperFlashback()->IsActive() == false &&
+                (mpPlayer->GetSanityDrainDisabled() == false && mpPlayer->GetGlobalSanityDrainDisabled() == false) &&
+                gpBase->mpEffectHandler->GetEmotionFlash()->IsActive() == false)
         {
             mpPlayer->LowerSanity(mfSanityLossPerSecond * (float)adFixedDelta * mfSanityLossMul, true);
 
-            if(mfShowHintTimer<=0 && mfSanityLossMul > 0.05f)
+            if(mfShowHintTimer <= 0 && mfSanityLossMul > 0.05f)
             {
                 mfShowHintTimer = 3.0f;
                 gpBase->mpHintHandler->Add("DarknessDecrease", kTranslate("Hints", "DarknessDecrease"), 0);
@@ -3241,7 +3241,7 @@ void cLuxPlayerInDarkness::Update(double adFixedDelta)
             }
         }
 
-        mfLoopSoundCount+= (float)adFixedDelta;
+        mfLoopSoundCount += (float)adFixedDelta;
         if(mfLoopSoundCount >= mfLoopSoundStartupTime)
         {
             mfLoopSoundCount = mfLoopSoundStartupTime;
@@ -3271,7 +3271,7 @@ void cLuxPlayerInDarkness::CreateWorldEntities(cLuxMap *apMap)
 {
     cWorld *pWorld = apMap->GetWorld();
 
-    mpAmbientLight = pWorld->CreateLightPoint("PlayerDarknessAmbient","",false);
+    mpAmbientLight = pWorld->CreateLightPoint("PlayerDarknessAmbient", "", false);
     mpAmbientLight->SetDiffuseColor(cColor(0.0f, 0.0f));
 
     mpAmbientLight->SetRadius(mfAmbientLightRadius);
@@ -3280,7 +3280,7 @@ void cLuxPlayerInDarkness::CreateWorldEntities(cLuxMap *apMap)
     // HARDMODE
     if(gpBase->mbHardMode)
     {
-        mpAmbientLight->SetRadius(mfAmbientLightRadius*0.5f);
+        mpAmbientLight->SetRadius(mfAmbientLightRadius * 0.5f);
     }
 
 
@@ -3316,7 +3316,7 @@ void cLuxPlayerInDarkness::SetActive(bool abX)
         if(mbAmbientLightIsOn)
         {
             mbAmbientLightIsOn = false;
-            mpAmbientLight->FadeTo(cColor(0.0f, 0.0f),mpAmbientLight->GetRadius(),mfAmbientLightFadeOutTime);
+            mpAmbientLight->FadeTo(cColor(0.0f, 0.0f), mpAmbientLight->GetRadius(), mfAmbientLightFadeOutTime);
         }
 
         mfLoopSoundCount = 0;

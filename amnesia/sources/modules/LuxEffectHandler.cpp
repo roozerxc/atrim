@@ -83,7 +83,7 @@ cLuxEffect_PlayCommentary::~cLuxEffect_PlayCommentary()
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_PlayCommentary::Start(const tString &asTalker,const tString &asTopic, const tString &asFile, int alIconId)
+void cLuxEffect_PlayCommentary::Start(const tString &asTalker, const tString &asTopic, const tString &asFile, int alIconId)
 {
     if(mpSoundEntry)
     {
@@ -95,7 +95,7 @@ void cLuxEffect_PlayCommentary::Start(const tString &asTalker,const tString &asT
             iLuxEntity *pEntity = gpBase->mpMapHandler->GetCurrentMap()->GetEntityByID(mlIconID, eLuxEntityType_CommentaryIcon);
             if(pEntity)
             {
-                cLuxCommentaryIcon *mpIcon = static_cast<cLuxCommentaryIcon*>(pEntity);
+                cLuxCommentaryIcon *mpIcon = static_cast<cLuxCommentaryIcon *>(pEntity);
                 mpIcon->SetPlayingSound(false);
             }
         }
@@ -105,13 +105,13 @@ void cLuxEffect_PlayCommentary::Start(const tString &asTalker,const tString &asT
     msTopic  = asTopic;
     mlIconID = alIconId;
 
-    mpSoundEntry = mpSoundHandler->PlayGuiStream(asFile,false, 1.0f);
+    mpSoundEntry = mpSoundHandler->PlayGuiStream(asFile, false, 1.0f);
     if(mpSoundEntry)
     {
         mlSoundEntryID = mpSoundEntry->GetId();
         SetActive(true);
 
-        mpSoundHandler->FadeGlobalVolume(0.15f,0.5f,  eSoundEntryType_World, eLuxGlobalVolumeType_Commentary, false);
+        mpSoundHandler->FadeGlobalVolume(0.15f, 0.5f,  eSoundEntryType_World, eLuxGlobalVolumeType_Commentary, false);
         mpMusicHandler->FadeVolumeMul(0.15f, 0.5f);
         gpBase->mpEffectHandler->GetPlayVoice()->SetVolumeMul(0.1f);
     }
@@ -122,18 +122,18 @@ void cLuxEffect_PlayCommentary::Start(const tString &asTalker,const tString &asT
 
 void cLuxEffect_PlayCommentary::Stop()
 {
-    if(mbActive==false)
+    if(mbActive == false)
     {
         return;
     }
 
-    if(mpSoundHandler->IsValid(mpSoundEntry,mlSoundEntryID))
+    if(mpSoundHandler->IsValid(mpSoundEntry, mlSoundEntryID))
     {
         mpSoundEntry->FadeOut(1);
     }
     mpSoundEntry = NULL;
 
-    mpSoundHandler->FadeGlobalVolume(1.0f,0.5f,  eSoundEntryType_World, eLuxGlobalVolumeType_Commentary, false);
+    mpSoundHandler->FadeGlobalVolume(1.0f, 0.5f,  eSoundEntryType_World, eLuxGlobalVolumeType_Commentary, false);
     mpMusicHandler->FadeVolumeMul(1.0f, 0.5f);
     gpBase->mpEffectHandler->GetPlayVoice()->SetVolumeMul(1.0f);
 
@@ -156,14 +156,14 @@ void cLuxEffect_PlayCommentary::Update(double adFixedDelta)
         iLuxEntity *pEntity = gpBase->mpMapHandler->GetCurrentMap()->GetEntityByID(mlIconID, eLuxEntityType_CommentaryIcon);
         if(pEntity)
         {
-            cLuxCommentaryIcon *mpIcon = static_cast<cLuxCommentaryIcon*>(pEntity);
+            cLuxCommentaryIcon *mpIcon = static_cast<cLuxCommentaryIcon *>(pEntity);
             mpIcon->SetPlayingSound(false);
         }
     }
 
     mpSoundEntry = NULL;
 
-    mpSoundHandler->FadeGlobalVolume(1.0f,0.5f,  eSoundEntryType_World, eLuxGlobalVolumeType_Commentary, false);
+    mpSoundHandler->FadeGlobalVolume(1.0f, 0.5f,  eSoundEntryType_World, eLuxGlobalVolumeType_Commentary, false);
     mpMusicHandler->FadeVolumeMul(1.0f, 0.5f);
     gpBase->mpEffectHandler->GetPlayVoice()->SetVolumeMul(1.0f);
 
@@ -179,13 +179,13 @@ void cLuxEffect_PlayCommentary::OnDraw(double adFrameTime)
 
 void cLuxEffect_PlayCommentary::Reset()
 {
-    if(mpSoundEntry != NULL && mpSoundHandler->IsValid(mpSoundEntry,mlSoundEntryID))
+    if(mpSoundEntry != NULL && mpSoundHandler->IsValid(mpSoundEntry, mlSoundEntryID))
     {
         mpSoundEntry->Stop();
     }
     mpSoundEntry = NULL;
 
-    mpSoundHandler->SetGlobalVolume(1.0f,eSoundEntryType_World, eLuxGlobalVolumeType_Commentary);
+    mpSoundHandler->SetGlobalVolume(1.0f, eSoundEntryType_World, eLuxGlobalVolumeType_Commentary);
     mpMusicHandler->SetVolumeMul(1.0f);
 
     mlIconID = -1;
@@ -358,7 +358,7 @@ void cLuxEffect_ScreenImage::OnDraw(double adFrameTime)
 
 cLuxEffect_EmotionFlash::cLuxEffect_EmotionFlash()
 {
-    mpWhiteGfx = gpBase->mpEngine->GetGui()->CreateGfxFilledRect(cColor(1,1), eGuiMaterial_Additive);
+    mpWhiteGfx = gpBase->mpEngine->GetGui()->CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_Additive);
 
     mpFont = NULL;
 
@@ -395,7 +395,7 @@ void cLuxEffect_EmotionFlash::Start(const tString &asTextCat, const tString &asT
 
     mlStep = 0;
 
-    mfAlpha =0;
+    mfAlpha = 0;
 
     gpBase->mpHelpFuncs->PlayGuiSoundData(asSound, eSoundEntryType_Gui);
 
@@ -404,7 +404,7 @@ void cLuxEffect_EmotionFlash::Start(const tString &asTextCat, const tString &asT
     mpFont->GetWordWrapRows(500, mvFontSize.y, mvFontSize, sText, &mvTextRows);
 
     mfTextTime = 3.0f + 0.15f * (float)sText.length();
-    mfTextAlpha =0;
+    mfTextAlpha = 0;
 
     gpBase->mpEffectHandler->SetPlayerIsPaused(true);
     gpBase->mpPlayer->FadeFOVMulTo(0.5f, 0.5f);
@@ -412,7 +412,7 @@ void cLuxEffect_EmotionFlash::Start(const tString &asTextCat, const tString &asT
     gpBase->mpEffectHandler->GetRadialBlur()->SetBlurStartDist(0.6f);
 
     //Disable enemies
-    gpBase->mpMapHandler->GetCurrentMap()->BroadcastEnemyMessage(eLuxEnemyMessage_Reset, false,0,0);
+    gpBase->mpMapHandler->GetCurrentMap()->BroadcastEnemyMessage(eLuxEnemyMessage_Reset, false, 0, 0);
 
 }
 
@@ -425,22 +425,22 @@ void cLuxEffect_EmotionFlash::Reset()
 
 void cLuxEffect_EmotionFlash::Update(double adFixedDelta)
 {
-    if(mlStep ==0)
+    if(mlStep == 0)
     {
         mfAlpha += 0.5f * (float)adFixedDelta;
         if(mfAlpha >= 1.0f)
         {
             mfAlpha = 1.0f;
-            mlStep=1;
+            mlStep = 1;
             mfCount = 1;
         }
     }
-    else if(mlStep ==1)
+    else if(mlStep == 1)
     {
         mfTextAlpha += (float)adFixedDelta * 3.0f;
         if(mfTextAlpha > 1)
         {
-            mfTextAlpha =1;
+            mfTextAlpha = 1;
         }
 
         //Check if text has been displayed long enough.
@@ -455,12 +455,12 @@ void cLuxEffect_EmotionFlash::Update(double adFixedDelta)
             mlStep = 2;
         }
     }
-    else if(mlStep ==2)
+    else if(mlStep == 2)
     {
         mfTextAlpha -= (float)adFixedDelta * 1.0f;
         if(mfTextAlpha < 0)
         {
-            mfTextAlpha =0;
+            mfTextAlpha = 0;
         }
 
         mfAlpha -= 0.33f * (float)adFixedDelta;
@@ -476,28 +476,28 @@ void cLuxEffect_EmotionFlash::Update(double adFixedDelta)
 void cLuxEffect_EmotionFlash::OnDraw(double adFrameTime)
 {
     mfFlashIntensity = gpBase->mpUserConfig->GetFloat("Game", "FlashIntensity", 1.0f);
-    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx,gpBase->mvHudVirtualStartPos + cVector3f(0,0,3.2f),gpBase->mvHudVirtualSize,cColor(mfAlpha * mfFlashIntensity, 1 * mfFlashIntensity));
+    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx, gpBase->mvHudVirtualStartPos + cVector3f(0, 0, 3.2f), gpBase->mvHudVirtualSize, cColor(mfAlpha * mfFlashIntensity, 1 * mfFlashIntensity));
 
     if(mfTextAlpha > 0)
     {
-        float fStartY = 300 - (mvFontSize.y+2.0f) * 0.5f * (float)mvTextRows.size();
+        float fStartY = 300 - (mvFontSize.y + 2.0f) * 0.5f * (float)mvTextRows.size();
 
         if(mvTextRows.size() == 1)
         {
-            gpBase->mpGameHudSet->DrawFont(mvTextRows[0], mpFont, cVector3f(400,fStartY, 4), mvFontSize, cColor(0, mfTextAlpha), eFontAlign_Center);
+            gpBase->mpGameHudSet->DrawFont(mvTextRows[0], mpFont, cVector3f(400, fStartY, 4), mvFontSize, cColor(0, mfTextAlpha), eFontAlign_Center);
         }
         else
         {
             float fY = fStartY;
-            for(size_t i=0; i<mvTextRows.size(); ++i)
+            for(size_t i = 0; i < mvTextRows.size(); ++i)
             {
                 if(mfFlashIntensity <= 0.45f)
                 {
-                    gpBase->mpGameHudSet->DrawFont(mvTextRows[i], mpFont, cVector3f(150,fY, 4), mvFontSize, cColor(1, mfTextAlpha), eFontAlign_Left);
+                    gpBase->mpGameHudSet->DrawFont(mvTextRows[i], mpFont, cVector3f(150, fY, 4), mvFontSize, cColor(1, mfTextAlpha), eFontAlign_Left);
                 }
                 else if(mfFlashIntensity >= 0.5f)
                 {
-                    gpBase->mpGameHudSet->DrawFont(mvTextRows[i], mpFont, cVector3f(150,fY, 4), mvFontSize, cColor(0, mfTextAlpha), eFontAlign_Left);
+                    gpBase->mpGameHudSet->DrawFont(mvTextRows[i], mpFont, cVector3f(150, fY, 4), mvFontSize, cColor(0, mfTextAlpha), eFontAlign_Left);
                 }
                 fY += mvFontSize.y + 2.0f;
             }
@@ -509,12 +509,12 @@ void cLuxEffect_EmotionFlash::OnDraw(double adFrameTime)
 
 void cLuxEffect_EmotionFlash::DoAction(eLuxPlayerAction aAction, bool abPressed)
 {
-    if(abPressed==false)
+    if(abPressed == false)
     {
         return;
     }
 
-    if(mlStep==1)
+    if(mlStep == 1)
     {
         mfTextTime = 0;
     }
@@ -531,9 +531,9 @@ void cLuxEffect_EmotionFlash::DoAction(eLuxPlayerAction aAction, bool abPressed)
 
 cLuxEffect_RadialBlur::cLuxEffect_RadialBlur()
 {
-    mfSize =0;
-    mfSizeGoal =0;
-    mfBlurStartDist =0;
+    mfSize = 0;
+    mfSizeGoal = 0;
+    mfBlurStartDist = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -587,7 +587,7 @@ void cLuxEffect_RadialBlur::Update(double adFixedDelta)
     radialBlurParams.mfBlurStartDist = mfBlurStartDist;
     gpBase->mpMapHandler->GetPostEffect_RadialBlur()->SetParams(&radialBlurParams);
 
-    if(mfSize <=0)
+    if(mfSize <= 0)
     {
         gpBase->mpMapHandler->GetPostEffect_RadialBlur()->SetActive(false);
     }
@@ -597,9 +597,9 @@ void cLuxEffect_RadialBlur::Update(double adFixedDelta)
 
 void cLuxEffect_RadialBlur::Reset()
 {
-    mfSize =0;
-    mfSizeGoal =0;
-    mfBlurStartDist =0;
+    mfSize = 0;
+    mfSizeGoal = 0;
+    mfBlurStartDist = 0;
 
     gpBase->mpMapHandler->GetPostEffect_RadialBlur()->Reset();
     gpBase->mpMapHandler->GetPostEffect_RadialBlur()->SetActive(false);
@@ -615,8 +615,8 @@ void cLuxEffect_RadialBlur::Reset()
 
 cLuxEffect_SepiaColor::cLuxEffect_SepiaColor()
 {
-    mfAmount =0;
-    mfAmountGoal =0;
+    mfAmount = 0;
+    mfAmountGoal = 0;
 }
 
 void cLuxEffect_SepiaColor::FadeTo(float afAmount, float afSpeed)
@@ -652,7 +652,7 @@ void cLuxEffect_SepiaColor::Update(double adFixedDelta)
     sepiaParams.mfFadeAlpha = mfAmount;
     gpBase->mpMapHandler->GetPostEffect_Sepia()->SetParams(&sepiaParams);
 
-    if(mfAmount <=0)
+    if(mfAmount <= 0)
     {
         gpBase->mpMapHandler->GetPostEffect_Sepia()->SetActive(false);
     }
@@ -660,8 +660,8 @@ void cLuxEffect_SepiaColor::Update(double adFixedDelta)
 
 void cLuxEffect_SepiaColor::Reset()
 {
-    mfAmount =0;
-    mfAmountGoal =0;
+    mfAmount = 0;
+    mfAmountGoal = 0;
     gpBase->mpMapHandler->GetPostEffect_Sepia()->Reset();
     gpBase->mpMapHandler->GetPostEffect_Sepia()->SetActive(false);
 }
@@ -684,7 +684,7 @@ cLuxEffect_ShakeScreen::~cLuxEffect_ShakeScreen()
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_ShakeScreen::Start(float afAmount, float afTime,float afFadeInTime,float afFadeOutTime)
+void cLuxEffect_ShakeScreen::Start(float afAmount, float afTime, float afFadeInTime, float afFadeOutTime)
 {
     cLuxEffect_ShakeScreen_Shake shake;
     shake.mfSize = afAmount;
@@ -711,31 +711,31 @@ void cLuxEffect_ShakeScreen::Update(double adFixedDelta)
     {
         cLuxEffect_ShakeScreen_Shake &shake = *it;
 
-        if(shake.mfFadeInTime >0)
+        if(shake.mfFadeInTime > 0)
         {
             shake.mfFadeInTime -= (float)adFixedDelta;
-            if(shake.mfFadeInTime<0)
+            if(shake.mfFadeInTime < 0)
             {
-                shake.mfFadeInTime=0;
+                shake.mfFadeInTime = 0;
             }
             float fT = shake.mfFadeInTime / shake.mfMaxFadeInTime;
-            shake.mfSize = (1-fT) * shake.mfMaxSize;
+            shake.mfSize = (1 - fT) * shake.mfMaxSize;
         }
-        else if(shake.mfTime >0)
+        else if(shake.mfTime > 0)
         {
             shake.mfTime -= (float)adFixedDelta;
-            if(shake.mfTime<0)
+            if(shake.mfTime < 0)
             {
-                shake.mfTime=0;
+                shake.mfTime = 0;
             }
             shake.mfSize = shake.mfMaxSize;
         }
         else
         {
             shake.mfFadeOutTime -= (float)adFixedDelta;
-            if(shake.mfFadeOutTime<0)
+            if(shake.mfFadeOutTime < 0)
             {
-                shake.mfFadeOutTime=0;
+                shake.mfFadeOutTime = 0;
             }
             float fT = shake.mfFadeOutTime / shake.mfMaxFadeOutTime;
             shake.mfSize =  fT * shake.mfMaxSize;
@@ -756,7 +756,7 @@ void cLuxEffect_ShakeScreen::Update(double adFixedDelta)
             if(mlstShakes.empty())
             {
                 SetActive(false);
-                gpBase->mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_ScreenShake,0);
+                gpBase->mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_ScreenShake, 0);
                 return;
             }
         }
@@ -767,9 +767,9 @@ void cLuxEffect_ShakeScreen::Update(double adFixedDelta)
     }
 
     cVector3f vAdd(0);
-    vAdd.x = cMath::RandRectf(-fLargest,fLargest);
-    vAdd.y = cMath::RandRectf(-fLargest,fLargest);
-    vAdd.z = cMath::RandRectf(-fLargest,fLargest);
+    vAdd.x = cMath::RandRectf(-fLargest, fLargest);
+    vAdd.y = cMath::RandRectf(-fLargest, fLargest);
+    vAdd.z = cMath::RandRectf(-fLargest, fLargest);
 
     gpBase->mpPlayer->SetHeadPosAdd(eLuxHeadPosAdd_ScreenShake, vAdd);
 }
@@ -793,8 +793,8 @@ void cLuxEffect_ShakeScreen::Reset()
 
 cLuxEffect_ImageTrail::cLuxEffect_ImageTrail()
 {
-    mfAmount =0;
-    mfAmountGoal =0;
+    mfAmount = 0;
+    mfAmountGoal = 0;
 }
 
 void cLuxEffect_ImageTrail::FadeTo(float afAmount, float afSpeed)
@@ -830,7 +830,7 @@ void cLuxEffect_ImageTrail::Update(double adFixedDelta)
     imageTrailParams.mfAmount = mfAmount;
     gpBase->mpMapHandler->GetPostEffect_ImageTrail()->SetParams(&imageTrailParams);
 
-    if(mfAmount <=0)
+    if(mfAmount <= 0)
     {
         gpBase->mpMapHandler->GetPostEffect_ImageTrail()->SetActive(false);
     }
@@ -838,8 +838,8 @@ void cLuxEffect_ImageTrail::Update(double adFixedDelta)
 
 void cLuxEffect_ImageTrail::Reset()
 {
-    mfAmount =0;
-    mfAmountGoal =0;
+    mfAmount = 0;
+    mfAmountGoal = 0;
     gpBase->mpMapHandler->GetPostEffect_ImageTrail()->Reset();
     gpBase->mpMapHandler->GetPostEffect_ImageTrail()->SetActive(false);
 }
@@ -854,7 +854,7 @@ void cLuxEffect_ImageTrail::Reset()
 
 cLuxEffect_Fade::cLuxEffect_Fade()
 {
-    mpWhiteGfx = gpBase->mpEngine->GetGui()->CreateGfxFilledRect(cColor(1,1), eGuiMaterial_Modulative);
+    mpWhiteGfx = gpBase->mpEngine->GetGui()->CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_Modulative);
 
     Reset();
 }
@@ -900,7 +900,7 @@ void cLuxEffect_Fade::FadeOut(float afTime)
 
 void cLuxEffect_Fade::SetDirectAlpha(float afX)
 {
-    if(afX<=0)
+    if(afX <= 0)
     {
         SetActive(false);
     }
@@ -917,11 +917,11 @@ void cLuxEffect_Fade::SetDirectAlpha(float afX)
 
 bool cLuxEffect_Fade::IsFading()
 {
-    if(mfGoalAlpha==0 && mfAlpha>0)
+    if(mfGoalAlpha == 0 && mfAlpha > 0)
     {
         return true;
     }
-    if(mfGoalAlpha==1 && mfAlpha<1)
+    if(mfGoalAlpha == 1 && mfAlpha < 1)
     {
         return true;
     }
@@ -933,21 +933,21 @@ bool cLuxEffect_Fade::IsFading()
 
 void cLuxEffect_Fade::Update(double adFixedDelta)
 {
-    if(mfGoalAlpha==0 && mfAlpha > 0)
+    if(mfGoalAlpha == 0 && mfAlpha > 0)
     {
         mfAlpha -= (float)adFixedDelta * mfFadeSpeed;
-        if(mfAlpha <0)
+        if(mfAlpha < 0)
         {
-            mfAlpha =0;
+            mfAlpha = 0;
             SetActive(false);
         }
     }
-    else if(mfGoalAlpha==1 && mfAlpha < 1)
+    else if(mfGoalAlpha == 1 && mfAlpha < 1)
     {
         mfAlpha += (float)adFixedDelta * mfFadeSpeed;
-        if(mfAlpha >1)
+        if(mfAlpha > 1)
         {
-            mfAlpha =1;
+            mfAlpha = 1;
         }
     }
 }
@@ -956,20 +956,20 @@ void cLuxEffect_Fade::Update(double adFixedDelta)
 
 void cLuxEffect_Fade::OnDraw(double adFrameTime)
 {
-    if(mfAlpha <=0)
+    if(mfAlpha <= 0)
     {
         return;
     }
 
-    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx,gpBase->mvHudVirtualStartPos+cVector3f(0,0,3.2f),gpBase->mvHudVirtualSize,cColor(1-mfAlpha, 1));
+    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx, gpBase->mvHudVirtualStartPos + cVector3f(0, 0, 3.2f), gpBase->mvHudVirtualSize, cColor(1 - mfAlpha, 1));
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxEffect_Fade::Reset()
 {
-    mfGoalAlpha =0;
-    mfAlpha =0;
+    mfGoalAlpha = 0;
+    mfAlpha = 0;
     mfFadeSpeed = 1;
 }
 
@@ -983,12 +983,12 @@ void cLuxEffect_Fade::Reset()
 
 cLuxEffect_SanityGainFlash::cLuxEffect_SanityGainFlash()
 {
-    mpWhiteGfx = gpBase->mpEngine->GetGui()->CreateGfxFilledRect(cColor(1,1), eGuiMaterial_Additive);
+    mpWhiteGfx = gpBase->mpEngine->GetGui()->CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_Additive);
 
-    mColor = gpBase->mpGameCfg->GetColor("Player_General","SanityGain_Color", 0);
-    msSound = gpBase->mpGameCfg->GetString("Player_General","SanityGain_Sound", "");
-    mfFadeInTime = gpBase->mpGameCfg->GetFloat("Player_General","SanityGain_FadeInTime", 0);
-    mfFadeOutTime = gpBase->mpGameCfg->GetFloat("Player_General","SanityGain_FadeOutTime", 0);
+    mColor = gpBase->mpGameCfg->GetColor("Player_General", "SanityGain_Color", 0);
+    msSound = gpBase->mpGameCfg->GetString("Player_General", "SanityGain_Sound", "");
+    mfFadeInTime = gpBase->mpGameCfg->GetFloat("Player_General", "SanityGain_FadeInTime", 0);
+    mfFadeOutTime = gpBase->mpGameCfg->GetFloat("Player_General", "SanityGain_FadeOutTime", 0);
 
     Reset();
 }
@@ -1001,7 +1001,7 @@ cLuxEffect_SanityGainFlash::~cLuxEffect_SanityGainFlash()
 
 void cLuxEffect_SanityGainFlash::Reset()
 {
-    mfAlpha =0;
+    mfAlpha = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -1017,7 +1017,7 @@ void cLuxEffect_SanityGainFlash::Start()
 
     mlStep = 0;
 
-    mfAlpha =0;
+    mfAlpha = 0;
 
     mfFadeInSpeed = 1 / mfFadeInTime;
     mfWhiteSpeed = 1 / 0.05f;
@@ -1028,17 +1028,17 @@ void cLuxEffect_SanityGainFlash::Start()
 
 void cLuxEffect_SanityGainFlash::Update(double adFixedDelta)
 {
-    if(mlStep ==0)
+    if(mlStep == 0)
     {
         mfAlpha += mfFadeInSpeed * (float)adFixedDelta;
         if(mfAlpha >= 1.0f)
         {
             mfAlpha = 1.0f;
-            mlStep=1;
+            mlStep = 1;
             mfCount = 1;
         }
     }
-    else if(mlStep ==1)
+    else if(mlStep == 1)
     {
         mfCount -= mfWhiteSpeed * (float)adFixedDelta;
         if(mfCount <= 0)
@@ -1046,7 +1046,7 @@ void cLuxEffect_SanityGainFlash::Update(double adFixedDelta)
             mlStep = 2;
         }
     }
-    else if(mlStep ==2)
+    else if(mlStep == 2)
     {
         mfAlpha -= mfFadeOutSpeed * (float)adFixedDelta;
         if(mfAlpha <= 0.0f)
@@ -1066,9 +1066,9 @@ void cLuxEffect_SanityGainFlash::OnDraw(double adFrameTime)
 
 //-----------------------------------------------------------------------
 
-void cLuxEffect_SanityGainFlash::DrawFlash(cGuiSet *apSet,double adFixedDelta)
+void cLuxEffect_SanityGainFlash::DrawFlash(cGuiSet *apSet, double adFixedDelta)
 {
-    apSet->DrawGfx(mpWhiteGfx,gpBase->mvHudVirtualStartPos+cVector3f(0,0,3.2f),gpBase->mvHudVirtualSize,mColor*mfAlpha);
+    apSet->DrawGfx(mpWhiteGfx, gpBase->mvHudVirtualStartPos + cVector3f(0, 0, 3.2f), gpBase->mvHudVirtualSize, mColor * mfAlpha);
 }
 
 //-----------------------------------------------------------------------
@@ -1081,7 +1081,7 @@ void cLuxEffect_SanityGainFlash::DrawFlash(cGuiSet *apSet,double adFixedDelta)
 
 cLuxEffect_Flash::cLuxEffect_Flash()
 {
-    mpWhiteGfx = gpBase->mpEngine->GetGui()->CreateGfxFilledRect(cColor(1,1), eGuiMaterial_Additive);
+    mpWhiteGfx = gpBase->mpEngine->GetGui()->CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_Additive);
     Reset();
 }
 cLuxEffect_Flash::~cLuxEffect_Flash()
@@ -1097,17 +1097,17 @@ void cLuxEffect_Flash::Start(float afFadeIn, float afWhite, float afFadeOut)
 
     mlStep = 0;
 
-    mfAlpha =0;
+    mfAlpha = 0;
 
-    if(afFadeIn==0)
+    if(afFadeIn == 0)
     {
         afFadeIn = 0.000001f;
     }
-    if(afWhite==0)
+    if(afWhite == 0)
     {
         afWhite = 0.000001f;
     }
-    if(afFadeOut==0)
+    if(afFadeOut == 0)
     {
         afFadeOut = 0.000001f;
     }
@@ -1124,24 +1124,24 @@ void cLuxEffect_Flash::Reset()
 {
     mlStep = 0;
 
-    mfAlpha =0;
+    mfAlpha = 0;
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxEffect_Flash::Update(double adFixedDelta)
 {
-    if(mlStep ==0)
+    if(mlStep == 0)
     {
         mfAlpha += mfFadeInSpeed * (float)adFixedDelta;
         if(mfAlpha >= 1.0f)
         {
             mfAlpha = 1.0f;
-            mlStep=1;
+            mlStep = 1;
             mfCount = 1;
         }
     }
-    else if(mlStep ==1)
+    else if(mlStep == 1)
     {
         mfCount -= mfWhiteSpeed * (float)adFixedDelta;
         if(mfCount <= 0)
@@ -1149,7 +1149,7 @@ void cLuxEffect_Flash::Update(double adFixedDelta)
             mlStep = 2;
         }
     }
-    else if(mlStep ==2)
+    else if(mlStep == 2)
     {
         mfAlpha -= mfFadeOutSpeed * (float)adFixedDelta;
         if(mfAlpha <= 0.0f)
@@ -1165,7 +1165,7 @@ void cLuxEffect_Flash::Update(double adFixedDelta)
 void cLuxEffect_Flash::OnDraw(double adFrameTime)
 {
     mfFlashIntensity = gpBase->mpUserConfig->GetFloat("Game", "FlashIntensity", 1.0f);
-    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx,gpBase->mvHudVirtualStartPos+cVector3f(0,0,3.2f),gpBase->mvHudVirtualSize,cColor(mfAlpha * mfFlashIntensity, 1 * mfFlashIntensity));
+    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx, gpBase->mvHudVirtualStartPos + cVector3f(0, 0, 3.2f), gpBase->mvHudVirtualSize, cColor(mfAlpha * mfFlashIntensity, 1 * mfFlashIntensity));
 }
 
 //-----------------------------------------------------------------------
@@ -1180,8 +1180,8 @@ cLuxEffect_PlayVoice::cLuxEffect_PlayVoice()
 {
     mpSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
 
-    mvFontSize = gpBase->mpGameCfg->GetVector2f("Effects","VoiceTextFontSize",1);
-    mfRowWidth = gpBase->mpGameCfg->GetFloat("Effects","VoiceTextRowWidth",1);
+    mvFontSize = gpBase->mpGameCfg->GetVector2f("Effects", "VoiceTextFontSize", 1);
+    mfRowWidth = gpBase->mpGameCfg->GetFloat("Effects", "VoiceTextRowWidth", 1);
 
     mpVoiceEntry = NULL;
     mlVoiceEntryID = -1;
@@ -1200,13 +1200,13 @@ cLuxEffect_PlayVoice::~cLuxEffect_PlayVoice()
 
 void cLuxEffect_PlayVoice::StopVoices(float afFadeOutSpeed)
 {
-    if(mpSoundHandler->IsValid(mpVoiceEntry,mlVoiceEntryID))
+    if(mpSoundHandler->IsValid(mpVoiceEntry, mlVoiceEntryID))
     {
         mpVoiceEntry->FadeOut(afFadeOutSpeed);
     }
     mpVoiceEntry = NULL;
 
-    if(mpSoundHandler->IsValid(mpEffectEntry,mlEffectEntryID))
+    if(mpSoundHandler->IsValid(mpEffectEntry, mlEffectEntryID))
     {
         mpEffectEntry->FadeOut(afFadeOutSpeed);
     }
@@ -1250,7 +1250,7 @@ void cLuxEffect_PlayVoice::AddVoice(const tString& asVoiceFile, const tString& a
 
 void cLuxEffect_PlayVoice::PauseCurrentVoices()
 {
-    if(mbActive==false || mbPaused)
+    if(mbActive == false || mbPaused)
     {
         return;
     }
@@ -1274,7 +1274,7 @@ void cLuxEffect_PlayVoice::PauseCurrentVoices()
 
 void cLuxEffect_PlayVoice::UnpauseCurrentVoices()
 {
-    if(mbActive==false || mbPaused==false)
+    if(mbActive == false || mbPaused == false)
     {
         return;
     }
@@ -1302,7 +1302,7 @@ void cLuxEffect_PlayVoice::Update(double adFixedDelta)
     //do not want to have like this, because then loading save when playing last voice + callback will not work and callback will not be called.
     //if(mpVoiceEntry==NULL && mpEffectEntry==NULL && mlstVoices.empty()) return;
 
-    if(mfVolumeMul <1.0f)
+    if(mfVolumeMul < 1.0f)
     {
         if(mpVoiceEntry && mpSoundHandler->IsValid(mpVoiceEntry, mlVoiceEntryID))
         {
@@ -1319,7 +1319,7 @@ void cLuxEffect_PlayVoice::Update(double adFixedDelta)
     {
         return;
     }
-    if(mpVoiceEntry==NULL && mpSoundHandler->IsValid(mpEffectEntry, mlEffectEntryID))
+    if(mpVoiceEntry == NULL && mpSoundHandler->IsValid(mpEffectEntry, mlEffectEntryID))
     {
         return;
     }
@@ -1335,9 +1335,9 @@ void cLuxEffect_PlayVoice::Update(double adFixedDelta)
         mfVolumeMul = fPreVolMul;
         SetActive(false);
 
-        if(sCallback!="")
+        if(sCallback != "")
         {
-            gpBase->mpMapHandler->GetCurrentMap()->RunScript(sCallback+"()");
+            gpBase->mpMapHandler->GetCurrentMap()->RunScript(sCallback + "()");
         }
 
         return;
@@ -1347,17 +1347,17 @@ void cLuxEffect_PlayVoice::Update(double adFixedDelta)
 
     //////////////////////
     //GUI sound
-    if(voiceData.mbUsePosition==false)
+    if(voiceData.mbUsePosition == false)
     {
-        mpVoiceEntry = mpSoundHandler->PlayGuiStream(voiceData.msVoiceFile,false, 1.0f);
+        mpVoiceEntry = mpSoundHandler->PlayGuiStream(voiceData.msVoiceFile, false, 1.0f);
         if(mpVoiceEntry)
         {
             mlVoiceEntryID = mpVoiceEntry->GetId();
         }
 
-        if(voiceData.msEffectFile!="")
+        if(voiceData.msEffectFile != "")
         {
-            mpEffectEntry = mpSoundHandler->PlayGuiStream(voiceData.msEffectFile,false, 1.0f);
+            mpEffectEntry = mpSoundHandler->PlayGuiStream(voiceData.msEffectFile, false, 1.0f);
             if(mpEffectEntry)
             {
                 mlEffectEntryID = mpEffectEntry->GetId();
@@ -1368,17 +1368,17 @@ void cLuxEffect_PlayVoice::Update(double adFixedDelta)
     //3D sound with position
     else
     {
-        mpVoiceEntry = mpSoundHandler->Play(voiceData.msVoiceFile,false, 1.0f, voiceData.mvPosition,voiceData.mfMinDistance, voiceData.mfMaxDistance,
-                                            eSoundEntryType_Gui,false,true,0, true);
+        mpVoiceEntry = mpSoundHandler->Play(voiceData.msVoiceFile, false, 1.0f, voiceData.mvPosition, voiceData.mfMinDistance, voiceData.mfMaxDistance,
+                                            eSoundEntryType_Gui, false, true, 0, true);
         if(mpVoiceEntry)
         {
             mlVoiceEntryID = mpVoiceEntry->GetId();
         }
 
-        if(voiceData.msEffectFile!="")
+        if(voiceData.msEffectFile != "")
         {
-            mpEffectEntry = mpSoundHandler->Play(    voiceData.msEffectFile,false, 1.0f, voiceData.mvPosition,voiceData.mfMinDistance, voiceData.mfMaxDistance,
-                            eSoundEntryType_Gui,false,true,0, true);
+            mpEffectEntry = mpSoundHandler->Play(    voiceData.msEffectFile, false, 1.0f, voiceData.mvPosition, voiceData.mfMinDistance, voiceData.mfMaxDistance,
+                            eSoundEntryType_Gui, false, true, 0, true);
             if(mpEffectEntry)
             {
                 mlEffectEntryID = mpEffectEntry->GetId();
@@ -1391,7 +1391,7 @@ void cLuxEffect_PlayVoice::Update(double adFixedDelta)
     mvCurrentTextRows.clear();
     if(voiceData.msText != _W(""))
     {
-        gpBase->mpDefaultFont->GetWordWrapRows(mfRowWidth,mvFontSize.y+2,mvFontSize, voiceData.msText, &mvCurrentTextRows);
+        gpBase->mpDefaultFont->GetWordWrapRows(mfRowWidth, mvFontSize.y + 2, mvFontSize, voiceData.msText, &mvCurrentTextRows);
     }
 
     //////////////////////
@@ -1400,15 +1400,15 @@ void cLuxEffect_PlayVoice::Update(double adFixedDelta)
 
     //////////////////////
     //Extra check in case the voices does not load.
-    if(mlstVoices.empty() && mpVoiceEntry==NULL && mpEffectEntry==NULL)
+    if(mlstVoices.empty() && mpVoiceEntry == NULL && mpEffectEntry == NULL)
     {
         //Reset before calling so it is possible to start voices from callback!
         Reset();
         SetActive(false);
 
-        if(msOverCallback!="")
+        if(msOverCallback != "")
         {
-            gpBase->mpMapHandler->GetCurrentMap()->RunScript(msOverCallback+"()");
+            gpBase->mpMapHandler->GetCurrentMap()->RunScript(msOverCallback + "()");
         }
     }
 }
@@ -1417,7 +1417,7 @@ void cLuxEffect_PlayVoice::Update(double adFixedDelta)
 
 void cLuxEffect_PlayVoice::OnDraw(double adFrameTime)
 {
-    if(gpBase->mpMessageHandler->ShowSubtitles()==false)
+    if(gpBase->mpMessageHandler->ShowSubtitles() == false)
     {
         return;
     }
@@ -1426,25 +1426,25 @@ void cLuxEffect_PlayVoice::OnDraw(double adFrameTime)
         return;
     }
 
-    cVector3f vStartPos(400-mfRowWidth/2, 580 - (mvCurrentTextRows.size()*(mvFontSize.y+2)), 4);
+    cVector3f vStartPos(400 - mfRowWidth / 2, 580 - (mvCurrentTextRows.size() * (mvFontSize.y + 2)), 4);
 
-    for(size_t i=0; i<mvCurrentTextRows.size(); ++i)
+    for(size_t i = 0; i < mvCurrentTextRows.size(); ++i)
     {
-        gpBase->mpGameHudSet->DrawFont(mvCurrentTextRows[i],gpBase->mpDefaultFont, vStartPos, mvFontSize,cColor(1,1));
-        vStartPos.y+= mvFontSize.y+2;
+        gpBase->mpGameHudSet->DrawFont(mvCurrentTextRows[i], gpBase->mpDefaultFont, vStartPos, mvFontSize, cColor(1, 1));
+        vStartPos.y += mvFontSize.y + 2;
     }
 }
 //-----------------------------------------------------------------------
 
 void cLuxEffect_PlayVoice::Reset()
 {
-    if(mpVoiceEntry != NULL && mpSoundHandler->IsValid(mpVoiceEntry,mlVoiceEntryID))
+    if(mpVoiceEntry != NULL && mpSoundHandler->IsValid(mpVoiceEntry, mlVoiceEntryID))
     {
         mpVoiceEntry->Stop();
     }
     mpVoiceEntry = NULL;
 
-    if(mpEffectEntry != NULL && mpSoundHandler->IsValid(mpEffectEntry,mlEffectEntryID))
+    if(mpEffectEntry != NULL && mpSoundHandler->IsValid(mpEffectEntry, mlEffectEntryID))
     {
         mpEffectEntry->Stop();
     }
@@ -1480,7 +1480,7 @@ void cLuxEffect_PlayVoice::SetVolumeMul(float afMul)
 
 bool cLuxEffect_PlayVoice::VoiceDonePlaying()
 {
-    if(mlstVoices.empty() && mpVoiceEntry==NULL)
+    if(mlstVoices.empty() && mpVoiceEntry == NULL)
     {
         return true;
     }
@@ -1518,7 +1518,7 @@ void cLuxEffectHandler::Reset()
 {
     /////////////////////////
     // Effects
-    for(size_t i=0; i<mvEffects.size(); ++i)
+    for(size_t i = 0; i < mvEffects.size(); ++i)
     {
         iLuxEffect *pEffect = mvEffects[i];
         pEffect->Reset();
@@ -1527,7 +1527,7 @@ void cLuxEffectHandler::Reset()
 
     /////////////////////////
     // World sound mul
-    for(int i=0; i<eLuxGlobalVolumeType_LastEnum; ++i)
+    for(int i = 0; i < eLuxGlobalVolumeType_LastEnum; ++i)
     {
         gpBase->mpEngine->GetSound()->GetSoundHandler()->SetGlobalSpeed(1, eSoundEntryType_World, i);
         gpBase->mpEngine->GetSound()->GetSoundHandler()->SetGlobalVolume(1, eSoundEntryType_World, i);
@@ -1540,19 +1540,19 @@ void cLuxEffectHandler::Reset()
 
 void cLuxEffectHandler::LoadUserConfig()
 {
-    mfFlashIntensity = gpBase->mpUserConfig->GetFloat("Game","FlashIntensity", 1.0f);
+    mfFlashIntensity = gpBase->mpUserConfig->GetFloat("Game", "FlashIntensity", 1.0f);
 }
 
 void cLuxEffectHandler::SaveUserConfig()
 {
-    gpBase->mpUserConfig->SetFloat("Game","FlashIntensity", mfFlashIntensity);
+    gpBase->mpUserConfig->SetFloat("Game", "FlashIntensity", mfFlashIntensity);
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxEffectHandler::Update(double adFixedDelta)
 {
-    for(size_t i=0; i<mvEffects.size(); ++i)
+    for(size_t i = 0; i < mvEffects.size(); ++i)
     {
         iLuxEffect *pEffect = mvEffects[i];
         if(pEffect->IsActive())
@@ -1589,7 +1589,7 @@ void cLuxEffectHandler::OnMapLeave(cLuxMap *apMap)
 
 void cLuxEffectHandler::OnDraw(double adFrameTime)
 {
-    for(size_t i=0; i<mvEffects.size(); ++i)
+    for(size_t i = 0; i < mvEffects.size(); ++i)
     {
         iLuxEffect *pEffect = mvEffects[i];
         if(pEffect->IsActive())
@@ -1603,7 +1603,7 @@ void cLuxEffectHandler::OnDraw(double adFrameTime)
 
 void cLuxEffectHandler::DoAction(eLuxPlayerAction aAction, bool abPressed)
 {
-    for(size_t i=0; i<mvEffects.size(); ++i)
+    for(size_t i = 0; i < mvEffects.size(); ++i)
     {
         iLuxEffect *pEffect = mvEffects[i];
         if(pEffect->IsActive())

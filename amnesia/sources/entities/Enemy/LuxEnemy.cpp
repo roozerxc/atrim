@@ -72,12 +72,12 @@ tWString gsLuxEnemyStates[] =
 
 iLuxEnemyLoader::iLuxEnemyLoader(const tString& asName) : cEntityLoader_Object(asName)
 {
-    mfDefaultMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction", "Default_DefaultMaxFocusDist",0);
+    mfDefaultMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction", "Default_DefaultMaxFocusDist", 0);
 }
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemyLoader::BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars)
+void iLuxEnemyLoader::BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars)
 {
 
 }
@@ -103,15 +103,15 @@ static eLuxEnemyPoseType ToPoseType(const tString& asPose)
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemyLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars)
+void iLuxEnemyLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars)
 {
     cLuxMap *pMap = gpBase->mpCurrentMapLoading;
-    if(pMap==NULL)
+    if(pMap == NULL)
     {
         return;
     }
 
-    iLuxEnemy *pEnemy = CreateEnemy(mpEntity->GetName(), mlID,pMap);
+    iLuxEnemy *pEnemy = CreateEnemy(mpEntity->GetName(), mlID, pMap);
 
     //////////////////////////////
     // Setup mesh entity
@@ -177,20 +177,20 @@ void iLuxEnemyLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTr
     iCharacterBody *pCharBody = apWorld->GetPhysicsWorld()->CreateCharacterBody(msName, GetVarVector3f("Body_Size", 1));
 
     pCharBody->SetMass(                    GetVarFloat("Body_Mass", 1));
-    pCharBody->SetAccurateClimbing(        GetVarBool("Body_AccurateClimbing",false) );
-    pCharBody->SetMaxNoSlideSlopeAngle(cMath::ToRad(GetVarFloat("Body_MaxNoSlideSlopeAngle",0) ) );
-    pCharBody->SetMaxPushMass(            GetVarFloat("Body_MaxPushMass",0) );
-    pCharBody->SetPushForce(            GetVarFloat("Body_PushForce",0) );
-    pCharBody->SetCharacterMaxPushMass(    GetVarFloat("Body_CharacterMaxPushMass",0) );
-    pCharBody->SetCharacterPushForce(    GetVarFloat("Body_CharacterPushForce",0) );
-    pCharBody->SetMaxStepSize(            GetVarFloat("Body_MaxStepSize",0) );
-    pCharBody->SetMaxStepSizeInAir(        GetVarFloat("Body_MaxStepSize",0) );
-    pCharBody->SetStepClimbSpeed(        GetVarFloat("Body_StepClimbSpeed",0) );
+    pCharBody->SetAccurateClimbing(        GetVarBool("Body_AccurateClimbing", false) );
+    pCharBody->SetMaxNoSlideSlopeAngle(cMath::ToRad(GetVarFloat("Body_MaxNoSlideSlopeAngle", 0) ) );
+    pCharBody->SetMaxPushMass(            GetVarFloat("Body_MaxPushMass", 0) );
+    pCharBody->SetPushForce(            GetVarFloat("Body_PushForce", 0) );
+    pCharBody->SetCharacterMaxPushMass(    GetVarFloat("Body_CharacterMaxPushMass", 0) );
+    pCharBody->SetCharacterPushForce(    GetVarFloat("Body_CharacterPushForce", 0) );
+    pCharBody->SetMaxStepSize(            GetVarFloat("Body_MaxStepSize", 0) );
+    pCharBody->SetMaxStepSizeInAir(        GetVarFloat("Body_MaxStepSize", 0) );
+    pCharBody->SetStepClimbSpeed(        GetVarFloat("Body_StepClimbSpeed", 0) );
 
     pCharBody->SetCollideCharacter(true);
 
     pEnemy->m_mtxCharMeshOffset = cMath::MatrixRotate(  cMath::Vector3ToRad(GetVarVector3f("Body_OffsetRot", 0)), eEulerRotationOrder_XYZ);
-    pEnemy->m_mtxCharMeshOffset.SetTranslation( GetVarVector3f("Body_OffsetTrans", 0)- cVector3f(0,pCharBody->GetSize().y/2,0) );
+    pEnemy->m_mtxCharMeshOffset.SetTranslation( GetVarVector3f("Body_OffsetTrans", 0) - cVector3f(0, pCharBody->GetSize().y / 2, 0) );
 
     pCharBody->SetEntity(pEnemy->mpMeshEntity);
     pCharBody->SetEntityOffset(pEnemy->m_mtxCharMeshOffset);
@@ -333,7 +333,7 @@ void iLuxEnemyLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTr
     pEnemy->mfAmbientSoundMinTime[eLuxEnemySoundState_Hunt] = GetVarFloat("AmbientMinTime_Hunt");
     pEnemy->mfAmbientSoundMaxTime[eLuxEnemySoundState_Hunt] = GetVarFloat("AmbientMaxTime_Hunt");
 
-    for(size_t i=0; i<eLuxEnemySoundState_LastEnum; ++i)
+    for(size_t i = 0; i < eLuxEnemySoundState_LastEnum; ++i)
     {
         gpBase->PreloadSound(pEnemy->msAmbientSound[i]);
     }
@@ -395,15 +395,15 @@ eLuxDamageType iLuxEnemyLoader::ToDamageType(const tString& asType)
 
 void iLuxEnemyLoader::LoadAttackDamageData(const tString &asPrefix, cEnemyAttackDamageData *apData)
 {
-    cVector2f vDamageMinMax = GetVarVector2f(asPrefix+"AttackDamage", 0);
-    cVector2f vForceAndMaxImpulse = GetVarVector2f(asPrefix+"AttackForce", 0);
-    apData->msHitSound = GetVarString(asPrefix+"AttackHitSound", "");
-    apData->mlStrength = GetVarInt(asPrefix+"AttackStrength", 0);
+    cVector2f vDamageMinMax = GetVarVector2f(asPrefix + "AttackDamage", 0);
+    cVector2f vForceAndMaxImpulse = GetVarVector2f(asPrefix + "AttackForce", 0);
+    apData->msHitSound = GetVarString(asPrefix + "AttackHitSound", "");
+    apData->mlStrength = GetVarInt(asPrefix + "AttackStrength", 0);
     apData->mfMinDamage = vDamageMinMax.x;
     apData->mfMaxDamage = vDamageMinMax.y;
     apData->mfForce = vForceAndMaxImpulse.x;
     apData->mfMaxImpulse = vForceAndMaxImpulse.y;
-    apData->mDamageType =  ToDamageType(GetVarString(asPrefix+"DamageType","bloodsplat"));
+    apData->mDamageType =  ToDamageType(GetVarString(asPrefix + "DamageType", "bloodsplat"));
     gpBase->PreloadSound(apData->msHitSound);
 
     ///////////////////////
@@ -420,9 +420,9 @@ void iLuxEnemyLoader::LoadAttackDamageData(const tString &asPrefix, cEnemyAttack
 
 void iLuxEnemyLoader::LoadAttackSizeData(const tString &asPrefix, cEnemyAttackSizeData *apData, iLuxEnemy *apEnemy, cWorld *apWorld)
 {
-    cVector3f vSize = GetVarVector3f(asPrefix+"DamageSize", 0);
-    apData->mvOffset = GetVarVector3f(asPrefix+"DamageOffset", 0);
-    apData->mlShapeIdx = apEnemy->CreateAttackShape(apWorld,vSize);
+    cVector3f vSize = GetVarVector3f(asPrefix + "DamageSize", 0);
+    apData->mvOffset = GetVarVector3f(asPrefix + "DamageOffset", 0);
+    apData->mlShapeIdx = apEnemy->CreateAttackShape(apWorld, vSize);
 }
 
 
@@ -434,13 +434,13 @@ void iLuxEnemyLoader::LoadAttackSizeData(const tString &asPrefix, cEnemyAttackSi
 
 //-----------------------------------------------------------------------
 
-iLuxEnemy::iLuxEnemy(const tString &asName, int alID, cLuxMap *apMap, eLuxEnemyType aEnemyType) : iLuxEntity(asName,alID,apMap, eLuxEntityType_Enemy)
+iLuxEnemy::iLuxEnemy(const tString &asName, int alID, cLuxMap *apMap, eLuxEnemyType aEnemyType) : iLuxEntity(asName, alID, apMap, eLuxEntityType_Enemy)
 {
     mEnemyType = aEnemyType;
 
     mbUseAnimations = true;
 
-    mfInLanternLightCount =0;
+    mfInLanternLightCount = 0;
 
     mbCausesSanityDecrease = true;
     mbCausesSanityDecreaseAsDefault = true;
@@ -454,22 +454,22 @@ iLuxEnemy::iLuxEnemy(const tString &asName, int alID, cLuxMap *apMap, eLuxEnemyT
     mpCurrentSound = NULL;
     mfAmbientSoundCount = 0;
 
-    mfLookForPlayerCount =0;
+    mfLookForPlayerCount = 0;
     mbCanSeePlayer = false;
-    mlPlayerInLOSCount =0;
+    mlPlayerInLOSCount = 0;
     mbPlayerDetected = false;
     mbPlayerInRange = false;
 
-    mfCheckAtDoorCount =0;
+    mfCheckAtDoorCount = 0;
     mbStuckAtDoor = false;
 
     mfForwardSpeed = 1;
-    mfBackwardSpeed =1;
-    mfForwardAcc =1;
-    mfForwardDeacc =1;
+    mfBackwardSpeed = 1;
+    mfForwardAcc = 1;
+    mfForwardDeacc = 1;
 
-    mfDarknessGlowAlpha =0;
-    mfDarknessGlowUpdateCount =0;
+    mfDarknessGlowAlpha = 0;
+    mfDarknessGlowUpdateCount = 0;
 
     mfFOVMul = 1.0f;
 
@@ -481,14 +481,14 @@ iLuxEnemy::iLuxEnemy(const tString &asName, int alID, cLuxMap *apMap, eLuxEnemyT
 
     mpLastSearchNode = NULL;
 
-    mfDamageCount =0;
+    mfDamageCount = 0;
 
-    mvLastKnownPlayerPos =0;
-    mfLastPlayerPosCount =0;
+    mvLastKnownPlayerPos = 0;
+    mfLastPlayerPosCount = 0;
 
     mlCurrentPatrolNode = 0;
 
-    mlAttackHitCounter =0;
+    mlAttackHitCounter = 0;
 
     mbIsSeenByPlayer = false;
 
@@ -499,14 +499,14 @@ iLuxEnemy::iLuxEnemy(const tString &asName, int alID, cLuxMap *apMap, eLuxEnemyT
     mbHallucination = false;
     mfHallucinationEndDist = 3.0f;
 
-    mfEnemyDarknessGlowMaxDistance = gpBase->mpGameCfg->GetFloat("Enemy", "EnemyDarknessGlowMaxDistance",0);
+    mfEnemyDarknessGlowMaxDistance = gpBase->mpGameCfg->GetFloat("Enemy", "EnemyDarknessGlowMaxDistance", 0);
 
     mfPlayerInDarknessLightLevel = 0.35f;
     mfCrouchVisibleRangeMul = 0.5f;
 
     m_mtxCharMeshOffset = cMatrixf::Identity;
 
-    mfCheckGroundRayCount =0;
+    mfCheckGroundRayCount = 0;
     mlMaxGroundCheckDists = 3;
     mbAlignEntityWithGroundRay = false;
 
@@ -518,8 +518,8 @@ iLuxEnemy::iLuxEnemy(const tString &asName, int alID, cLuxMap *apMap, eLuxEnemyT
 
     mCurrentPose = eLuxEnemyPoseType_Biped;
 
-    for(int i=0; i<eLuxEnemyPoseType_LastEnum; ++i)
-        for(int j=0; j<eLuxEnemyMoveType_LastEnum; ++j)
+    for(int i = 0; i < eLuxEnemyPoseType_LastEnum; ++i)
+        for(int j = 0; j < eLuxEnemyMoveType_LastEnum; ++j)
         {
             msBackwardAnimationName[j][i] = "Backward";
             msIdleAnimationName[j][i] = "Idle";
@@ -545,13 +545,13 @@ iLuxEnemy::~iLuxEnemy()
         }
 
         //Lights
-        for(size_t i=0; i<mvLights.size(); ++i)
+        for(size_t i = 0; i < mvLights.size(); ++i)
         {
             pWorld->DestroyLight(mvLights[i]);
         }
 
         //Particle systems
-        for(size_t i=0; i<mvParticleSystems.size(); ++i)
+        for(size_t i = 0; i < mvParticleSystems.size(); ++i)
         {
             cParticleSystem *pPS = mvParticleSystems[i];
             if(pPS && pWorld->ParticleSystemExists(pPS))
@@ -561,13 +561,13 @@ iLuxEnemy::~iLuxEnemy()
         }
 
         //Billboards
-        for(size_t i=0; i<mvBillboards.size(); ++i)
+        for(size_t i = 0; i < mvBillboards.size(); ++i)
         {
             pWorld->DestroyBillboard(mvBillboards[i]);
         }
 
         //Beams
-        for(size_t i=0; i<mvBeams.size(); ++i)
+        for(size_t i = 0; i < mvBeams.size(); ++i)
         {
             pWorld->DestroyBeam(mvBeams[i]);
         }
@@ -575,7 +575,7 @@ iLuxEnemy::~iLuxEnemy()
 
     ////////////////////
     // Destroy attack shapes
-    for(size_t i=0; i<mvAttackShapes.size(); ++i)
+    for(size_t i = 0; i < mvAttackShapes.size(); ++i)
     {
         pPhysicsWorld->DestroyShape(mvAttackShapes[i]);
     }
@@ -605,8 +605,8 @@ void iLuxEnemy::SetupAfterLoad(cWorld *apWorld)
 {
     ///////////////////////
     // Create helpers
-    mpMover = hplNew(cLuxEnemyMover, (this,mpCharBody));
-    mpPathfinder = hplNew(cLuxEnemyPathfinder, (this,mpMover));
+    mpMover = hplNew(cLuxEnemyMover, (this, mpCharBody));
+    mpPathfinder = hplNew(cLuxEnemyPathfinder, (this, mpMover));
 
     ///////////////////////
     // Setup implemented
@@ -635,7 +635,7 @@ void iLuxEnemy::AfterWorldLoad()
 
 void iLuxEnemy::OnMapEnter()
 {
-    mvStartPosition = mpCharBody->GetFeetPosition() + cVector3f(0,0.1f, 0);
+    mvStartPosition = mpCharBody->GetFeetPosition() + cVector3f(0, 0.1f, 0);
 }
 
 //-----------------------------------------------------------------------
@@ -743,7 +743,7 @@ void iLuxEnemy::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
 
     mpPathfinder->OnRenderSolid(apFunctions);
 
-    apFunctions->GetLowLevelGfx()->DrawSphere(mvLastKnownPlayerPos, 0.3f, cColor(1,0,0));
+    apFunctions->GetLowLevelGfx()->DrawSphere(mvLastKnownPlayerPos, 0.3f, cColor(1, 0, 0));
 
 
     ////////////////////////////////////////
@@ -758,7 +758,7 @@ void iLuxEnemy::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
     bool bCrouching = false;
     if(pPlayer->GetCurrentMoveState() == eLuxMoveState_Normal)
     {
-        cLuxMoveState_Normal *pNormalMove = static_cast<cLuxMoveState_Normal*>(pPlayer->GetCurrentMoveStateData());
+        cLuxMoveState_Normal *pNormalMove = static_cast<cLuxMoveState_Normal *>(pPlayer->GetCurrentMoveStateData());
         if(pNormalMove->IsCrouching())
         {
             bCrouching = true;
@@ -778,7 +778,7 @@ void iLuxEnemy::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
         fMaxRange = fMaxRange * mfCrouchVisibleRangeMul;
     }
 
-    apFunctions->GetLowLevelGfx()->DrawSphere(mpCharBody->GetPosition(), fMaxRange, cColor(0,1,1));
+    apFunctions->GetLowLevelGfx()->DrawSphere(mpCharBody->GetPosition(), fMaxRange, cColor(0, 1, 1));
 
     OnRenderSolidImplemented(apFunctions);
 }
@@ -811,7 +811,7 @@ eLuxFocusCrosshair iLuxEnemy::GetFocusCrosshair(iPhysicsBody *apBody, const cVec
 
 //-----------------------------------------------------------------------
 
-iEntity3D* iLuxEnemy::GetAttachEntity()
+iEntity3D *iLuxEnemy::GetAttachEntity()
 {
     return mpMeshEntity;
 }
@@ -822,11 +822,11 @@ void iLuxEnemy::GiveDamage(float afAmount, int alStrength)
 {
     if(mfHealth > 0)
     {
-        if(alStrength < mlToughness-1)
+        if(alStrength < mlToughness - 1)
         {
-            afAmount =0;
+            afAmount = 0;
         }
-        else if(alStrength == mlToughness-1)
+        else if(alStrength == mlToughness - 1)
         {
             afAmount *= 0.5;
         }
@@ -838,7 +838,7 @@ void iLuxEnemy::GiveDamage(float afAmount, int alStrength)
 
     gpBase->mpDebugHandler->AddMessage(_W("Enemy damage ") + cString::ToStringW(afAmount), false);
 
-    if(mfHealth <=0)
+    if(mfHealth <= 0)
     {
         ChangeSoundState(eLuxEnemySoundState_Silent);
         ChangeState(eLuxEnemyState_Dead);
@@ -847,7 +847,7 @@ void iLuxEnemy::GiveDamage(float afAmount, int alStrength)
     }
     else
     {
-        SendMessage(eLuxEnemyMessage_TakeHit,0,false,0,afAmount,alStrength);
+        SendMessage(eLuxEnemyMessage_TakeHit, 0, false, 0, afAmount, alStrength);
         OnDamage(afAmount, alStrength);
     }
 }
@@ -894,7 +894,7 @@ void iLuxEnemy::ChangeState(eLuxEnemyState aState)
 
 //-----------------------------------------------------------------------
 
-void iLuxEnemy::SendMessage(eLuxEnemyMessage aType, float afTime, bool abLocalScope, const cVector3f& avX,float afX, int alX)
+void iLuxEnemy::SendMessage(eLuxEnemyMessage aType, float afTime, bool abLocalScope, const cVector3f& avX, float afX, int alX)
 {
     if(mbDisabled)
     {
@@ -911,7 +911,7 @@ void iLuxEnemy::SendMessage(eLuxEnemyMessage aType, float afTime, bool abLocalSc
 
     if(aType == eLuxEnemyMessage_PlayerInRange)
     {
-        gpBase->mpProgressLogHandler->AddLog(eLuxProgressLogLevel_Low, "Enemy '"+msName+"'  is in range");
+        gpBase->mpProgressLogHandler->AddLog(eLuxProgressLogLevel_Low, "Enemy '" + msName + "'  is in range");
     }
 
     cLuxStateMessage message;
@@ -935,7 +935,7 @@ void iLuxEnemy::PlayAnim(    const tString &asName, bool abLoop, float afFadeTim
                              bool abUseMoveAnimWhenCurrentIsOver)
 {
     //if not using animations, then return.
-    if(mbUseAnimations==false)
+    if(mbUseAnimations == false)
     {
         return;
     }
@@ -944,7 +944,7 @@ void iLuxEnemy::PlayAnim(    const tString &asName, bool abLoop, float afFadeTim
     if(    mpCurrentAnimation != NULL &&
             mpCurrentAnimation->GetName() == asName &&
             mpCurrentAnimation->IsActive() &&
-            mpCurrentAnimation->IsOver()== false)
+            mpCurrentAnimation->IsOver() == false)
     {
         return;
     }
@@ -952,9 +952,9 @@ void iLuxEnemy::PlayAnim(    const tString &asName, bool abLoop, float afFadeTim
     //////////////////////////
     //Get animation
     cAnimationState *pNewAnim = mpMeshEntity->GetAnimationStateFromName(asName);
-    if(pNewAnim==NULL)
+    if(pNewAnim == NULL)
     {
-        Warning("Animation '%s' does not exist!\n",asName.c_str());
+        Warning("Animation '%s' does not exist!\n", asName.c_str());
         return;
     }
 
@@ -965,7 +965,7 @@ void iLuxEnemy::PlayAnim(    const tString &asName, bool abLoop, float afFadeTim
     {
         mpCurrentAnimation->FadeOut(afFadeTime);
 
-        if(pNewAnim->IsFading()==false)
+        if(pNewAnim->IsFading() == false)
         {
             pNewAnim->SetWeight(0);
         }
@@ -1002,7 +1002,7 @@ void iLuxEnemy::PlayAnim(    const tString &asName, bool abLoop, float afFadeTim
 
 void iLuxEnemy::FadeOutCurrentAnim(float afFadeTime)
 {
-    if(mpCurrentAnimation==NULL)
+    if(mpCurrentAnimation == NULL)
     {
         return;
     }
@@ -1025,7 +1025,7 @@ void iLuxEnemy::FadeOutCurrentAnim(float afFadeTime)
 
 float iLuxEnemy::ConvertAnimToAbsoluteTime(float afRelativeTimePosition)
 {
-    if(mpCurrentAnimation==NULL)
+    if(mpCurrentAnimation == NULL)
     {
         return 0;
     }
@@ -1035,9 +1035,9 @@ float iLuxEnemy::ConvertAnimToAbsoluteTime(float afRelativeTimePosition)
 
 //-----------------------------------------------------------------------
 
-cSoundEntity* iLuxEnemy::PlaySound(const tString &asName)
+cSoundEntity *iLuxEnemy::PlaySound(const tString &asName)
 {
-    if(asName=="")
+    if(asName == "")
     {
         return NULL;
     }
@@ -1072,28 +1072,28 @@ void iLuxEnemy::ResetProperties()
     mbCausesSanityDecrease = mbCausesSanityDecreaseAsDefault;
 
     mbDisabled = false;
-    mfLookForPlayerCount =0;
+    mfLookForPlayerCount = 0;
     mbCanSeePlayer = false;
-    mlPlayerInLOSCount =0;
+    mlPlayerInLOSCount = 0;
     mbPlayerDetected = false;
     mbPlayerInRange = false;
 
-    mfCheckAtDoorCount =0;
+    mfCheckAtDoorCount = 0;
     mbStuckAtDoor = false;
 
-    mfDarknessGlowAlpha =0;
-    mfDarknessGlowUpdateCount =0;
+    mfDarknessGlowAlpha = 0;
+    mfDarknessGlowUpdateCount = 0;
 
     mfFOVMul = 1.0f;
 
-    mfDamageCount =0;
+    mfDamageCount = 0;
 
-    mvLastKnownPlayerPos =0;
-    mfLastPlayerPosCount =0;
+    mvLastKnownPlayerPos = 0;
+    mfLastPlayerPosCount = 0;
 
     mlCurrentPatrolNode = 0;
 
-    mlAttackHitCounter =0;
+    mlAttackHitCounter = 0;
 
     mbIsSeenByPlayer = false;
 
@@ -1113,7 +1113,7 @@ void iLuxEnemy::FadeToSmoke(bool abPlaySound)
     if(mpMeshEntity->GetMesh()->GetSkeleton())
     {
         cWorld *pWorld = mpMap->GetWorld();
-        for(int i=0; i<mpMeshEntity->GetBoneStateNum(); ++i)
+        for(int i = 0; i < mpMeshEntity->GetBoneStateNum(); ++i)
         {
             cBoneState *pBone = mpMeshEntity->GetBoneState(i);
 
@@ -1128,7 +1128,7 @@ void iLuxEnemy::FadeToSmoke(bool abPlaySound)
                 }
             }
 
-            cParticleSystem *pPS = pWorld->CreateParticleSystem("Disappear",sPSFile,0.3f);
+            cParticleSystem *pPS = pWorld->CreateParticleSystem("Disappear", sPSFile, 0.3f);
             pPS->SetPosition(pBone->GetWorldPosition());
         }
     }
@@ -1167,14 +1167,14 @@ void iLuxEnemy::ClearPatrolNodes()
 {
     mvPatrolNodes.clear();
 
-    mlCurrentPatrolNode =0;
+    mlCurrentPatrolNode = 0;
 }
 
 //-----------------------------------------------------------------------
 
-cLuxEnemyPatrolNode* iLuxEnemy::GetCurrentPatrolNode()
+cLuxEnemyPatrolNode *iLuxEnemy::GetCurrentPatrolNode()
 {
-    if(mlCurrentPatrolNode>= (int)mvPatrolNodes.size() || mlCurrentPatrolNode<0)
+    if(mlCurrentPatrolNode >= (int)mvPatrolNodes.size() || mlCurrentPatrolNode < 0)
     {
         return NULL;
     }
@@ -1184,7 +1184,7 @@ cLuxEnemyPatrolNode* iLuxEnemy::GetCurrentPatrolNode()
 
 bool iLuxEnemy::IsAtLastPatrolNode()
 {
-    return mlCurrentPatrolNode >= (int)mvPatrolNodes.size()-1;
+    return mlCurrentPatrolNode >= (int)mvPatrolNodes.size() - 1;
 }
 
 void iLuxEnemy::IncCurrentPatrolNode(bool abLoopIfAtEnd)
@@ -1194,11 +1194,11 @@ void iLuxEnemy::IncCurrentPatrolNode(bool abLoopIfAtEnd)
     {
         if(abLoopIfAtEnd)
         {
-            mlCurrentPatrolNode =0;
+            mlCurrentPatrolNode = 0;
         }
         else
         {
-            mlCurrentPatrolNode = (int)mvPatrolNodes.size()-1;
+            mlCurrentPatrolNode = (int)mvPatrolNodes.size() - 1;
         }
     }
 }
@@ -1237,7 +1237,7 @@ bool iLuxEnemy::InRangeOfFood(iPhysicsBody *apFoodBody)
 
 //-----------------------------------------------------------------------
 
-string& iLuxEnemy::GetCurrentEnemyStateName()
+string &iLuxEnemy::GetCurrentEnemyStateName()
 {
     msPolledEnemyStateName = cString::To8Char(gsLuxEnemyStates[mCurrentState]);
     return msPolledEnemyStateName;
@@ -1245,31 +1245,31 @@ string& iLuxEnemy::GetCurrentEnemyStateName()
 
 //-----------------------------------------------------------------------
 
-float iLuxEnemy::DrawDebug(cGuiSet *apSet,iFontData *apFont,float afStartY)
+float iLuxEnemy::DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY)
 {
     if(mbDisabled)
     {
         return afStartY;
     }
 
-    apSet->DrawFont(apFont, cVector3f(5,afStartY,10),13,cColor(1,1), _W("Name: '%ls'"),cString::To16Char(msName).c_str());
+    apSet->DrawFont(apFont, cVector3f(5, afStartY, 10), 13, cColor(1, 1), _W("Name: '%ls'"), cString::To16Char(msName).c_str());
     afStartY += 14;
 
-    apSet->DrawFont(apFont, cVector3f(5,afStartY,10),13,cColor(1,1),
+    apSet->DrawFont(apFont, cVector3f(5, afStartY, 10), 13, cColor(1, 1),
                     _W("  State: '%ls' PlayerSeen: %d PlayerDetected: %d PlayerInRange: %d StuckAtDoor: %d FOVMul: %f"),
                     gsLuxEnemyStates[mCurrentState].c_str(), mbCanSeePlayer ? 1 : 0, mbPlayerDetected ? 1 : 0, mbPlayerInRange ? 1 : 0, mbStuckAtDoor ? 1 : 0,
                     mfFOVMul);
     afStartY += 14;
 
 
-    apSet->DrawFont(apFont, cVector3f(5,afStartY,10),13,cColor(1,1),
+    apSet->DrawFont(apFont, cVector3f(5, afStartY, 10), 13, cColor(1, 1),
                     _W("  Health: %f FOVMul: %f DistFromStart: %f StuckCounter: %f Speed: %f SpeedPercent: %f Vel: %f"),
-                    mfHealth, mfFOVMul, cMath::Vector3Dist(mpCharBody->GetFeetPosition(), mvStartPosition), mpMover->GetStuckCounter(),mpMover->GetMoveSpeed(), mpMover->GetWantedSpeedAmount());
+                    mfHealth, mfFOVMul, cMath::Vector3Dist(mpCharBody->GetFeetPosition(), mvStartPosition), mpMover->GetStuckCounter(), mpMover->GetMoveSpeed(), mpMover->GetWantedSpeedAmount());
     afStartY += 14;
 
-    apSet->DrawFont(apFont, cVector3f(5,afStartY,10),13,cColor(1,1),
+    apSet->DrawFont(apFont, cVector3f(5, afStartY, 10), 13, cColor(1, 1),
                     _W("  DistToPlayer: %f PlayerDirAmount: %f CurrentPatrolNode: %d MoverSpeedMul: %f"), DistToPlayer(), GetPlayerMovementTowardEnemyAmount(),
-                    mlCurrentPatrolNode, mpMover->CalculateSpeedMul(1.0f/60.0f));
+                    mlCurrentPatrolNode, mpMover->CalculateSpeedMul(1.0f / 60.0f));
     afStartY += 14;
 
     //apSet->DrawFont(apFont, cVector3f(5,afStartY,10),13,cColor(1,1),
@@ -1307,7 +1307,7 @@ tString iLuxEnemy::GetCurrentPoseSuffix()
 bool iLuxEnemy::StateEvent(int alState, eLuxEnemyStateEvent aEvent, cLuxStateMessage *apMessage)
 {
     bool bRet = StateEventImplement(alState, aEvent, apMessage);
-    if(bRet==false)
+    if(bRet == false)
     {
         bRet = StateEventImplement(-1, aEvent, apMessage);
     }
@@ -1409,7 +1409,7 @@ void iLuxEnemy::UpdateSoundState(double adFixedDelta)
     }
 
     //If sound is playing still do nothing.
-    if(mpCurrentSound && mpMap->GetWorld()->SoundEntityExists(mpCurrentSound,mlCurrentSoundID))
+    if(mpCurrentSound && mpMap->GetWorld()->SoundEntityExists(mpCurrentSound, mlCurrentSoundID))
     {
         return;
     }
@@ -1417,7 +1417,7 @@ void iLuxEnemy::UpdateSoundState(double adFixedDelta)
     mpCurrentSound = NULL;
 
 
-    if(mfAmbientSoundCount <=0)
+    if(mfAmbientSoundCount <= 0)
     {
         mpCurrentSound = PlaySound(msAmbientSound[mSoundState]);
         if(mpCurrentSound )
@@ -1436,11 +1436,11 @@ void iLuxEnemy::UpdateSoundState(double adFixedDelta)
 
 void iLuxEnemy::UpdateAnimation(double adFixedDelta)
 {
-    if(mbUseAnimations==false)
+    if(mbUseAnimations == false)
     {
         return;
     }
-    if(mpMover->GetOverideMoveState()==false || mpCurrentAnimation==NULL)
+    if(mpMover->GetOverideMoveState() == false || mpCurrentAnimation == NULL)
     {
         return;
     }
@@ -1451,7 +1451,7 @@ void iLuxEnemy::UpdateAnimation(double adFixedDelta)
     if(    mpCurrentAnimation->GetPreviousTimePosition() <= mpCurrentAnimation->GetSpecialEventTime() &&
             mpCurrentAnimation->GetTimePosition() > mpCurrentAnimation->GetSpecialEventTime())
     {
-        SendMessage(eLuxEnemyMessage_AnimationSpecialEvent,0,false);
+        SendMessage(eLuxEnemyMessage_AnimationSpecialEvent, 0, false);
     }
 
     //////////////////
@@ -1462,7 +1462,7 @@ void iLuxEnemy::UpdateAnimation(double adFixedDelta)
         {
             mpMover->UseMoveStateAnimations();
         }
-        SendMessage(eLuxEnemyMessage_AnimationOver,0,false);
+        SendMessage(eLuxEnemyMessage_AnimationOver, 0, false);
     }
 
     //////////////////
@@ -1470,7 +1470,7 @@ void iLuxEnemy::UpdateAnimation(double adFixedDelta)
     if(mbAnimationIsSpeedDependant)
     {
         float fSpeed = mpCharBody->GetVelocity(adFixedDelta).Length();
-        if(mpCharBody->GetMoveSpeed(eCharDir_Forward) <0)
+        if(mpCharBody->GetMoveSpeed(eCharDir_Forward) < 0)
         {
             fSpeed = -fSpeed;
         }
@@ -1485,10 +1485,10 @@ void iLuxEnemy::UpdateCharBody(double adFixedDelta)
 {
     float fMul = mpMover->CalculateSpeedMul(adFixedDelta);
 
-    mpCharBody->SetMaxPositiveMoveSpeed(eCharDir_Forward, mfForwardSpeed*fMul);
-    mpCharBody->SetMaxNegativeMoveSpeed(eCharDir_Forward, mfBackwardSpeed*fMul);
-    mpCharBody->SetMoveAcc(eCharDir_Forward,mfForwardAcc);
-    mpCharBody->SetMoveDeacc(eCharDir_Forward,mfForwardDeacc);
+    mpCharBody->SetMaxPositiveMoveSpeed(eCharDir_Forward, mfForwardSpeed * fMul);
+    mpCharBody->SetMaxNegativeMoveSpeed(eCharDir_Forward, mfBackwardSpeed * fMul);
+    mpCharBody->SetMoveAcc(eCharDir_Forward, mfForwardAcc);
+    mpCharBody->SetMoveDeacc(eCharDir_Forward, mfForwardDeacc);
 }
 
 //-----------------------------------------------------------------------
@@ -1510,7 +1510,7 @@ void iLuxEnemy::UpdateCanSeePlayer(double adFixedDelta)
 
     ////////////////////////////////
     //Check if it is time to check for player
-    mfLookForPlayerCount-= (float)adFixedDelta;
+    mfLookForPlayerCount -= (float)adFixedDelta;
     if(mfLookForPlayerCount > 0)
     {
         return;
@@ -1530,7 +1530,7 @@ void iLuxEnemy::UpdateCanSeePlayer(double adFixedDelta)
     bool bCrouching = false;
     if(pPlayer->GetCurrentMoveState() == eLuxMoveState_Normal)
     {
-        cLuxMoveState_Normal *pNormalMove = static_cast<cLuxMoveState_Normal*>(pPlayer->GetCurrentMoveStateData());
+        cLuxMoveState_Normal *pNormalMove = static_cast<cLuxMoveState_Normal *>(pPlayer->GetCurrentMoveStateData());
         if(pNormalMove->IsCrouching())
         {
             bCrouching = true;
@@ -1546,25 +1546,25 @@ void iLuxEnemy::UpdateCanSeePlayer(double adFixedDelta)
         fMaxRange *= 1.5f;
     }
 
-    if(bLanternOn==false && pPlayer->GetHelperLightLevel()->GetNormalLightLevel() < mfPlayerInDarknessLightLevel && pPlayer->GetAvgSpeed() < 0.05f &&
-            mbSkipVisibilityRangeHandicaps==false)
+    if(bLanternOn == false && pPlayer->GetHelperLightLevel()->GetNormalLightLevel() < mfPlayerInDarknessLightLevel && pPlayer->GetAvgSpeed() < 0.05f &&
+            mbSkipVisibilityRangeHandicaps == false)
     {
         fMaxRange = mfDarknessSightRange;
     }
 
-    if(bCrouching && bLanternOn==false && mbSkipVisibilityRangeHandicaps==false)
+    if(bCrouching && bLanternOn == false && mbSkipVisibilityRangeHandicaps == false)
     {
         fMaxRange = fMaxRange * mfCrouchVisibleRangeMul;
     }
 
     if(fMaxRange < fDist)
     {
-        if(mbCanSeePlayer==false)
+        if(mbCanSeePlayer == false)
         {
-            SendMessage(eLuxEnemyMessage_PlayerUnseen,0,false);
+            SendMessage(eLuxEnemyMessage_PlayerUnseen, 0, false);
         }
         mbCanSeePlayer = false;
-        mlPlayerInLOSCount=0;
+        mlPlayerInLOSCount = 0;
         return;
     }
 
@@ -1583,9 +1583,9 @@ void iLuxEnemy::UpdateCanSeePlayer(double adFixedDelta)
     {
         if(mlPlayerInLOSCount >= 2)
         {
-            if(mbCanSeePlayer==false)
+            if(mbCanSeePlayer == false)
             {
-                SendMessage(eLuxEnemyMessage_PlayerSeen,0,false);
+                SendMessage(eLuxEnemyMessage_PlayerSeen, 0, false);
             }
             mbCanSeePlayer = true;
         }
@@ -1598,13 +1598,13 @@ void iLuxEnemy::UpdateCanSeePlayer(double adFixedDelta)
     //Player is NOT in LOS
     else
     {
-        if(mlPlayerInLOSCount>0)
+        if(mlPlayerInLOSCount > 0)
         {
-            mlPlayerInLOSCount=0;
+            mlPlayerInLOSCount = 0;
 
-            if(mbCanSeePlayer==false)
+            if(mbCanSeePlayer == false)
             {
-                SendMessage(eLuxEnemyMessage_PlayerUnseen,0,false);
+                SendMessage(eLuxEnemyMessage_PlayerUnseen, 0, false);
             }
             mbCanSeePlayer = false;
         }
@@ -1623,11 +1623,11 @@ void iLuxEnemy::UpdatePlayerDetected(double adFixedDelta)
 
     bool bDetected = PlayerIsDetected();
 
-    if(bDetected && mbPlayerDetected==false)
+    if(bDetected && mbPlayerDetected == false)
     {
         SendMessage(eLuxEnemyMessage_PlayerDetected, 0, false);
     }
-    else if(bDetected==false && mbPlayerDetected)
+    else if(bDetected == false && mbPlayerDetected)
     {
         SendMessage(eLuxEnemyMessage_PlayerUndetected, 0, false);
     }
@@ -1646,12 +1646,12 @@ void iLuxEnemy::UpdatePlayerInRange(double adFixedDelta)
 
     float fDistance = DistToPlayer();
 
-    if(fDistance <= mfActivationDistance && mbPlayerInRange==false)
+    if(fDistance <= mfActivationDistance && mbPlayerInRange == false)
     {
         mbPlayerInRange = true;
         SendMessage(eLuxEnemyMessage_PlayerInRange);
     }
-    else if(fDistance > mfActivationDistance*1.25f+2.0f && mbPlayerInRange)
+    else if(fDistance > mfActivationDistance * 1.25f+2.0f && mbPlayerInRange)
     {
         mbPlayerInRange = false;
         SendMessage(eLuxEnemyMessage_PlayerOutOfRange);
@@ -1712,23 +1712,23 @@ void iLuxEnemy::UpdateCheckStuckAtDoor(double adFixedDelta)
             continue;
         }
 
-        iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+        iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
         if(pProp->GetPropType() != eLuxPropType_SwingDoor)
         {
             continue;
         }
 
-        for(int i=0; i<pProp->GetBodyNum(); ++i)
+        for(int i = 0; i < pProp->GetBodyNum(); ++i)
         {
             iPhysicsBody *pBody = pProp->GetBody(i);
-            if(pBody->GetMass()==0)
+            if(pBody->GetMass() == 0)
             {
                 continue;
             }
 
             //////////////////////
             //Check BV intersection
-            if(cMath::CheckBVIntersection(*pBV, *pBody->GetBoundingVolume())==false)
+            if(cMath::CheckBVIntersection(*pBV, *pBody->GetBoundingVolume()) == false)
             {
                 continue;
             }
@@ -1756,13 +1756,13 @@ void iLuxEnemy::UpdateCheckStuckAtDoor(double adFixedDelta)
 
     //////////////////////
     // Change state if needed and send message
-    if(bAtDoor && mbStuckAtDoor==false)
+    if(bAtDoor && mbStuckAtDoor == false)
     {
         mbStuckAtDoor = true;
         mpMover->ResetStuckCounter();
-        SendMessage(eLuxEnemyMessage_StuckAtDoor,0,false, pSwingDoor->GetMainBody()->GetWorldPosition());
+        SendMessage(eLuxEnemyMessage_StuckAtDoor, 0, false, pSwingDoor->GetMainBody()->GetWorldPosition());
     }
-    else if(bAtDoor==false && mbStuckAtDoor)
+    else if(bAtDoor == false && mbStuckAtDoor)
     {
         mbStuckAtDoor = false;
     }
@@ -1785,7 +1785,7 @@ void iLuxEnemy::UpdateCheckLastPlayerPos(double adFixedDelta)
         mfLastPlayerPosCount -= (float)adFixedDelta;
         if(mfLastPlayerPosCount < 0)
         {
-            mfLastPlayerPosCount=0;
+            mfLastPlayerPosCount = 0;
         }
     }
 
@@ -1829,28 +1829,28 @@ void iLuxEnemy::UpdateDarknessGlow(double adFixedDelta)
         {
             //Check if in range
             float fDistSqrt = cMath::Vector3DistSqr(pCam->GetPosition(), mpCharBody->GetPosition());
-            if(fDistSqrt < mfEnemyDarknessGlowMaxDistance*mfEnemyDarknessGlowMaxDistance)
+            if(fDistSqrt < mfEnemyDarknessGlowMaxDistance * mfEnemyDarknessGlowMaxDistance)
             {
                 float fDist = sqrtf(fDistSqrt);
 
-                float fDistMul=1.0f;
+                float fDistMul = 1.0f;
                 if(fDist > mfEnemyDarknessGlowMaxDistance * 0.5f)
                 {
-                    fDistMul = 1 - ((fDist-mfEnemyDarknessGlowMaxDistance * 0.5f) / (mfEnemyDarknessGlowMaxDistance * 0.5f));
-                    if(fDistMul<0)
+                    fDistMul = 1 - ((fDist - mfEnemyDarknessGlowMaxDistance * 0.5f) / (mfEnemyDarknessGlowMaxDistance * 0.5f));
+                    if(fDistMul < 0)
                     {
-                        fDistMul =0;
+                        fDistMul = 0;
                     }
                 }
 
-                float fSanityMul =  gpBase->mpPlayer->GetSanity()/100.0f;
+                float fSanityMul =  gpBase->mpPlayer->GetSanity() / 100.0f;
                 fSanityMul = sqrtf(fSanityMul);
 
-                float fAlpha = mfDarknessGlowAlpha*mfDarknessGlowAlpha*fDistMul*fSanityMul;
+                float fAlpha = mfDarknessGlowAlpha * mfDarknessGlowAlpha * fDistMul * fSanityMul;
 
-                for(int i=0; i<mpMeshEntity->GetSubMeshEntityNum(); ++i)
+                for(int i = 0; i < mpMeshEntity->GetSubMeshEntityNum(); ++i)
                 {
-                    gpBase->mpEffectRenderer->AddEnemyGlow(mpMeshEntity->GetSubMeshEntity(i),fAlpha);
+                    gpBase->mpEffectRenderer->AddEnemyGlow(mpMeshEntity->GetSubMeshEntity(i), fAlpha);
                 }
             }
         }
@@ -1859,7 +1859,7 @@ void iLuxEnemy::UpdateDarknessGlow(double adFixedDelta)
 
     ////////////////////////////////
     //Check if darkness level should be updated
-    if(mpMeshEntity->IsVisible()==false)
+    if(mpMeshEntity->IsVisible() == false)
     {
         return;
     }
@@ -1873,11 +1873,11 @@ void iLuxEnemy::UpdateDarknessGlow(double adFixedDelta)
     ////////////////////////////////
     //Update darkness alpha goal
     mfDarknessGlowAlphaGoal = gpBase->mpMapHelper->GetLightLevelAtPos(mpCharBody->GetPosition());
-    mfDarknessGlowAlphaGoal += gpBase->mpMapHelper->GetLightLevelAtPos(mpCharBody->GetFeetPosition()+cVector3f(0,0.1f,0));
+    mfDarknessGlowAlphaGoal += gpBase->mpMapHelper->GetLightLevelAtPos(mpCharBody->GetFeetPosition() + cVector3f(0, 0.1f, 0));
     mfDarknessGlowAlphaGoal /= 2.0f;
 
     mfDarknessGlowAlphaGoal *= 2;
-    if(mfDarknessGlowAlphaGoal>1.0f)
+    if(mfDarknessGlowAlphaGoal > 1.0f)
     {
         mfDarknessGlowAlphaGoal = 1.0f;
     }
@@ -1894,7 +1894,7 @@ void iLuxEnemy::UpdateRegenHealth(double adFixedDelta)
         return;
     }
 
-    if(mfHealth < mfMaxRegenHealth && mfRegenHealthSpeed >0)
+    if(mfHealth < mfMaxRegenHealth && mfRegenHealthSpeed > 0)
     {
         mfHealth += (float)adFixedDelta * mfRegenHealthSpeed;
         if(mfHealth > mfMaxRegenHealth)
@@ -1906,7 +1906,7 @@ void iLuxEnemy::UpdateRegenHealth(double adFixedDelta)
 
 void iLuxEnemy::UpdateHallucination(double adFixedDelta)
 {
-    if(mbHallucination==false || mfHealth <= 0)
+    if(mbHallucination == false || mfHealth <= 0)
     {
         return;
     }
@@ -1922,7 +1922,7 @@ void iLuxEnemy::UpdateHallucination(double adFixedDelta)
 
 void iLuxEnemy::UpdateAlignEntityWithGroundRay(double adFixedDelta)
 {
-    if(mbAlignEntityWithGroundRay==false)
+    if(mbAlignEntityWithGroundRay == false)
     {
         return;
     }
@@ -1938,15 +1938,15 @@ void iLuxEnemy::UpdateAlignEntityWithGroundRay(double adFixedDelta)
     ///////////////////////////////////
     // Get the distance to ground
     float fStartAdd = 0.05f;
-    float fDist=0;
+    float fDist = 0;
     cVector3f vNormal;
 
     //Calculate the start position depending the way that the character faces.
-    cVector3f vMoveDir = cMath::MatrixMul(cMath::MatrixRotateY(mpCharBody->GetYaw()),cVector3f(0,0,-1));
-    cVector3f vStartPos = mpCharBody->GetFeetPosition()+cVector3f(0,fStartAdd,0) + vMoveDir * mpCharBody->GetSize().x*0.5f;
+    cVector3f vMoveDir = cMath::MatrixMul(cMath::MatrixRotateY(mpCharBody->GetYaw()), cVector3f(0, 0, -1));
+    cVector3f vStartPos = mpCharBody->GetFeetPosition() + cVector3f(0, fStartAdd, 0) + vMoveDir * mpCharBody->GetSize().x * 0.5f;
 
-    bool bIntersect = gpBase->mpMapHelper->GetClosestCharCollider(vStartPos, cVector3f(0,-1,0),0.5f,&fDist,&vNormal,NULL);
-    if(bIntersect==false)
+    bool bIntersect = gpBase->mpMapHelper->GetClosestCharCollider(vStartPos, cVector3f(0, -1, 0), 0.5f, &fDist, &vNormal, NULL);
+    if(bIntersect == false)
     {
         return;
     }
@@ -1962,7 +1962,7 @@ void iLuxEnemy::UpdateAlignEntityWithGroundRay(double adFixedDelta)
 
     ///////////////////////////////////
     // Calculate avg dist.
-    float fFinalDist =0;
+    float fFinalDist = 0;
     for(tFloatListIt it = mlstGroundCheckDists.begin(); it != mlstGroundCheckDists.end(); ++it)
     {
         fFinalDist += *it;
@@ -1972,7 +1972,7 @@ void iLuxEnemy::UpdateAlignEntityWithGroundRay(double adFixedDelta)
     ///////////////////////////////////
     // Set the offset matrix
     cMatrixf mtxOffset = m_mtxCharMeshOffset;
-    mtxOffset.SetTranslation(mtxOffset.GetTranslation() + cVector3f(0,-fFinalDist,0));
+    mtxOffset.SetTranslation(mtxOffset.GetTranslation() + cVector3f(0, -fFinalDist, 0));
     mpCharBody->SetEntityOffset(mtxOffset);
 }
 
@@ -1989,7 +1989,7 @@ bool iLuxEnemy::Attack(const cEnemyAttackSizeData &aSizeData, const cEnemyAttack
 {
     bool bHitPlayer = false;
     bool bHit = gpBase->mpMapHelper->ShapeDamage(GetAttackShape(aSizeData.mlShapeIdx), GetDamageShapeMatrix(aSizeData.mvOffset), mpCharBody->GetPosition(),
-                aDamageData.mfMinDamage*afDamageMul, aDamageData.mfMaxDamage*afDamageMul,
+                aDamageData.mfMinDamage * afDamageMul, aDamageData.mfMaxDamage * afDamageMul,
                 aDamageData.mfForce, aDamageData.mfMaxImpulse,
                 aDamageData.mlStrength, aDamageData.mfHitSpeed,
                 aDamageData.mDamageType, aDamageData.mWeaponHitType,
@@ -2023,7 +2023,7 @@ cAINode *iLuxEnemy::GetSearchForPlayerNode(int alMaxIterations, float afMaxAngle
 
     ////////////////////
     //Iterate until a node is found or max iterations is reached.
-    for(int i=0; i<alMaxIterations; ++i)
+    for(int i = 0; i < alMaxIterations; ++i)
     {
         //Get the angle
         float fAngle = cMath::RandRectf(-fMaxAngle, fMaxAngle);
@@ -2037,13 +2037,13 @@ cAINode *iLuxEnemy::GetSearchForPlayerNode(int alMaxIterations, float afMaxAngle
         cVector3f vSearchDir = cMath::MatrixMul(cMath::MatrixRotateY(fAngle), vToPlayer);
 
         //The length to use
-        float fLength = cMath::RandRectf(mfPlayerSearchMinDistMul*afMinDistMul, mfPlayerSearchMaxDistMul*afMaxDistMul) * fToPlayerDist;
+        float fLength = cMath::RandRectf(mfPlayerSearchMinDistMul * afMinDistMul, mfPlayerSearchMaxDistMul * afMaxDistMul) * fToPlayerDist;
 
         //The wanted positon
-        cVector3f vWantedPos = mpCharBody->GetFeetPosition() + vSearchDir*fLength;
+        cVector3f vWantedPos = mpCharBody->GetFeetPosition() + vSearchDir * fLength;
 
         //Find the node closests to the position
-        cAINode * pNode = mpPathfinder->GetNodeAtPos(vWantedPos, 0, fLength,true, false, true, mpLastSearchNode);
+        cAINode * pNode = mpPathfinder->GetNodeAtPos(vWantedPos, 0, fLength, true, false, true, mpLastSearchNode);
         if(pNode)
         {
             mpLastSearchNode = pNode;
@@ -2053,7 +2053,7 @@ cAINode *iLuxEnemy::GetSearchForPlayerNode(int alMaxIterations, float afMaxAngle
 
     ////////////////////
     //Jut pick a random node around the enemy
-    return mpPathfinder->GetNodeAtPos(mpCharBody->GetFeetPosition(), 0, 13.0f,false, false, true, mpLastSearchNode);
+    return mpPathfinder->GetNodeAtPos(mpCharBody->GetFeetPosition(), 0, 13.0f, false, false, true, mpLastSearchNode);
 }
 
 //-----------------------------------------------------------------------
@@ -2066,7 +2066,7 @@ cAINode *iLuxEnemy::GetPatrolAroundPlayerNode(int alMaxIterations, float afMaxAn
 
     ////////////////////
     //Iterate until a node is found or max iterations is reached.
-    for(int i=0; i<alMaxIterations; ++i)
+    for(int i = 0; i < alMaxIterations; ++i)
     {
         //Get the angle
         float fAngle = cMath::RandRectf(-fMaxAngle, fMaxAngle);
@@ -2079,13 +2079,13 @@ cAINode *iLuxEnemy::GetPatrolAroundPlayerNode(int alMaxIterations, float afMaxAn
         cVector3f vSearchDir = cMath::MatrixMul(cMath::MatrixRotateY(fAngle), vToStart);
 
         //The length to use
-        float fLength = cMath::RandRectf(mfPlayerPatrolMinDist*afMinDistMul, mfPlayerPatrolMaxDist*afMaxDistMul);
+        float fLength = cMath::RandRectf(mfPlayerPatrolMinDist * afMinDistMul, mfPlayerPatrolMaxDist * afMaxDistMul);
 
         //The wanted position
-        cVector3f vWantedPos = vPlayerFeetPos + vSearchDir*fLength;
+        cVector3f vWantedPos = vPlayerFeetPos + vSearchDir * fLength;
 
         //Find the node closets to the position
-        cAINode * pNode = mpPathfinder->GetNodeAtPos(vWantedPos, 0, fLength,true, false, true, mpLastSearchNode);
+        cAINode * pNode = mpPathfinder->GetNodeAtPos(vWantedPos, 0, fLength, true, false, true, mpLastSearchNode);
         if(pNode)
         {
             mpLastSearchNode = pNode;
@@ -2095,25 +2095,25 @@ cAINode *iLuxEnemy::GetPatrolAroundPlayerNode(int alMaxIterations, float afMaxAn
 
     ////////////////////
     //Jut pick a random node around the enemy
-    return mpPathfinder->GetNodeAtPos(mpCharBody->GetFeetPosition(), 0, 13.0f,false, false, true, mpLastSearchNode);
+    return mpPathfinder->GetNodeAtPos(mpCharBody->GetFeetPosition(), 0, 13.0f, false, false, true, mpLastSearchNode);
 }
 
 //-----------------------------------------------------------------------
 
-static const cVector2f gvPosAdds[] = {cVector2f(0,0),
-                                      cVector2f(0.75,0),
-                                      cVector2f(-0.75,0),
-                                      cVector2f(0,1),
-                                      cVector2f(0,-1),
-                                      cVector2f(0.5,0.5),
-                                      cVector2f(-0.5,0.5),
-                                      cVector2f(0.25,0),
-                                      cVector2f(-0.25,0)
+static const cVector2f gvPosAdds[] = {cVector2f(0, 0),
+                                      cVector2f(0.75, 0),
+                                      cVector2f(-0.75, 0),
+                                      cVector2f(0, 1),
+                                      cVector2f(0, -1),
+                                      cVector2f(0.5, 0.5),
+                                      cVector2f(-0.5, 0.5),
+                                      cVector2f(0.25, 0),
+                                      cVector2f(-0.25, 0)
                                      };
 
 bool iLuxEnemy::LineOfSight(const cVector3f &avPos, const cVector3f &avSize, bool abCheckFOV)
 {
-    return LineOfSight(avPos, avSize, abCheckFOV, mpCharBody->GetPosition() + cVector3f(0,mpCharBody->GetSize().y/2 - 0.1f, 0));
+    return LineOfSight(avPos, avSize, abCheckFOV, mpCharBody->GetPosition() + cVector3f(0, mpCharBody->GetSize().y / 2 - 0.1f, 0));
 }
 
 bool iLuxEnemy::LineOfSight(const cVector3f &avPos, const cVector3f &avSize, bool abCheckFOV, const cVector3f& avSourcePos)
@@ -2126,14 +2126,14 @@ bool iLuxEnemy::LineOfSight(const cVector3f &avPos, const cVector3f &avSize, boo
     /////////////////////////////
     //Calculate the right vector
     const cVector3f vForward = cMath::Vector3Normalize(vEndCenter - vStartCenter);
-    const cVector3f vUp = cVector3f(0,1.0f,0);
+    const cVector3f vUp = cVector3f(0, 1.0f, 0);
     const cVector3f vRight = cMath::Vector3Cross(vForward, vUp);
 
     ////////////////////////////////////
     //Check if the pos is within FOV
     if(abCheckFOV)
     {
-        if(InFOV(avPos)==false)
+        if(InFOV(avPos) == false)
         {
             return false;
         }
@@ -2147,23 +2147,23 @@ bool iLuxEnemy::LineOfSight(const cVector3f &avPos, const cVector3f &avSize, boo
     ////////////////////////////
     // Init variables
     //Count of 2 is need for a line of sight success.
-    int lCount=0;
+    int lCount = 0;
     const int lMaxAdds = 9;
 
     ///////////////////////////////////
     //Iterate through all the rays.
-    for(int i=0; i< lMaxAdds; ++i)
+    for(int i = 0; i < lMaxAdds; ++i)
     {
-        cVector3f vAdd = vRight * (gvPosAdds[i].x*fHalfWidth) + vUp * (gvPosAdds[i].y*fHalfHeight);
+        cVector3f vAdd = vRight * (gvPosAdds[i].x * fHalfWidth) + vUp * (gvPosAdds[i].y * fHalfHeight);
         cVector3f vStart = vStartCenter + vAdd;
         cVector3f vEnd = vEndCenter + vAdd;
 
-        if(gpBase->mpMapHelper->CheckLineOfSight(vStart, vEnd,false))
+        if(gpBase->mpMapHelper->CheckLineOfSight(vStart, vEnd, false))
         {
             lCount++;
         }
 
-        if(lCount==2)
+        if(lCount == 2)
         {
             return true;
         }
@@ -2198,7 +2198,7 @@ int iLuxEnemy::CreateAttackShape(cWorld *apWorld, cVector3f &avSize, eCollideSha
     if(pShape)
     {
         mvAttackShapes.push_back(pShape);
-        return (int)mvAttackShapes.size() -1;
+        return (int)mvAttackShapes.size() - 1;
     }
     return -1;
 }
@@ -2213,8 +2213,8 @@ cMatrixf iLuxEnemy::GetDamageShapeMatrix(const cVector3f& avOffset)
                         mpCharBody->GetForward() * avOffset.z;
 
 
-    cVector3f vRot = cVector3f(0,mpCharBody->GetYaw(),0);
-    cMatrixf mtxOffset = cMath::MatrixRotate(vRot,eEulerRotationOrder_XYZ);
+    cVector3f vRot = cVector3f(0, mpCharBody->GetYaw(), 0);
+    cMatrixf mtxOffset = cMath::MatrixRotate(vRot, eEulerRotationOrder_XYZ);
     mtxOffset.SetTranslation(vPos);
 
     return mtxOffset;
@@ -2222,10 +2222,10 @@ cMatrixf iLuxEnemy::GetDamageShapeMatrix(const cVector3f& avOffset)
 
 //-----------------------------------------------------------------------
 
-cLuxProp_Object* iLuxEnemy::GetClosestFood(float afMaxDist, float afMaxHeightDist)
+cLuxProp_Object *iLuxEnemy::GetClosestFood(float afMaxDist, float afMaxHeightDist)
 {
-    cLuxProp_Object *pOutputFood=NULL;
-    float fShortestDist=-1;
+    cLuxProp_Object *pOutputFood = NULL;
+    float fShortestDist = -1;
 
     cLuxEntityIterator it = mpMap->GetEntityIterator();
     while(it.HasNext())
@@ -2238,14 +2238,14 @@ cLuxProp_Object* iLuxEnemy::GetClosestFood(float afMaxDist, float afMaxHeightDis
             continue;
         }
 
-        iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+        iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
         if(pProp->GetPropType() != eLuxPropType_Object)
         {
             continue;
         }
 
-        cLuxProp_Object *pObject = static_cast<cLuxProp_Object*>(pProp);
-        if(pObject->IsFood()==false)
+        cLuxProp_Object *pObject = static_cast<cLuxProp_Object *>(pProp);
+        if(pObject->IsFood() == false)
         {
             continue;
         }
@@ -2265,12 +2265,12 @@ cLuxProp_Object* iLuxEnemy::GetClosestFood(float afMaxDist, float afMaxHeightDis
         cVector3f vFoodPos = pObject->GetBody(0)->GetLocalPosition();
 
         float fDistSqr = cMath::Vector3DistSqr(mpCharBody->GetPosition(), vFoodPos);
-        if(fDistSqr > afMaxDist*afMaxDist)
+        if(fDistSqr > afMaxDist * afMaxDist)
         {
             continue;
         }
 
-        if(fShortestDist <0 || fDistSqr < fShortestDist)
+        if(fShortestDist < 0 || fDistSqr < fShortestDist)
         {
             fShortestDist = fDistSqr;
             pOutputFood = pObject;
@@ -2293,10 +2293,10 @@ float iLuxEnemy::Dist2D(const cVector3f &avPos)
 {
     cVector3f vStart = mpCharBody->GetFeetPosition();
     cVector3f vEnd = avPos;
-    vStart.y =0;
-    vEnd.y =0;
+    vStart.y = 0;
+    vEnd.y = 0;
 
-    return cMath::Vector3Dist(vStart,vEnd);
+    return cMath::Vector3Dist(vStart, vEnd);
 }
 
 float iLuxEnemy::DistToChar(iCharacterBody *apBody)
@@ -2308,10 +2308,10 @@ float iLuxEnemy::DistToChar2D(iCharacterBody *apBody)
 {
     cVector3f vStart = mpCharBody->GetFeetPosition();
     cVector3f vEnd = apBody->GetFeetPosition();
-    vStart.y =0;
-    vEnd.y =0;
+    vStart.y = 0;
+    vEnd.y = 0;
 
-    return cMath::Vector3Dist(vStart,vEnd);
+    return cMath::Vector3Dist(vStart, vEnd);
 }
 
 float iLuxEnemy::AbsHeightDistToChar(iCharacterBody *apBody)
@@ -2325,7 +2325,7 @@ float iLuxEnemy::AbsHeightDistToChar(iCharacterBody *apBody)
 cVector3f iLuxEnemy::GetDirection2D(const cVector3f &avPos)
 {
     cVector3f vDiff = avPos - mpCharBody->GetPosition();
-    vDiff.y=0;
+    vDiff.y = 0;
     vDiff.Normalize();
     return vDiff;
 }
@@ -2377,7 +2377,7 @@ bool iLuxEnemy::IsSeenByPlayer()
     ///////////////////////////////
     // Check frustum
     cFrustum *pFrustum = gpBase->mpPlayer->GetCamera()->GetFrustum();
-    if(pFrustum->CollideBoundingVolume(mpCharBody->GetCurrentBody()->GetBoundingVolume())==eCollision_Outside)
+    if(pFrustum->CollideBoundingVolume(mpCharBody->GetCurrentBody()->GetBoundingVolume()) == eCollision_Outside)
     {
         return false;
     }
@@ -2386,7 +2386,7 @@ bool iLuxEnemy::IsSeenByPlayer()
     // Line of sight with rays
     cVector3f vPlayerEyePos = gpBase->mpPlayer->GetCamera()->GetPosition();
 
-    return LineOfSight(mpCharBody->GetPosition(), mpCharBody->GetSize(), false,vPlayerEyePos);
+    return LineOfSight(mpCharBody->GetPosition(), mpCharBody->GetSize(), false, vPlayerEyePos);
 }
 
 //-----------------------------------------------------------------------
@@ -2395,10 +2395,10 @@ bool iLuxEnemy::IsInPlayerFovAtFeetPos(const cVector3f& avFeetPos)
 {
     cBoundingVolume bv;
     bv = *mpCharBody->GetCurrentBody()->GetBoundingVolume();
-    bv.SetPosition(avFeetPos + cVector3f(0, mpCharBody->GetSize().y/2, 0) );
+    bv.SetPosition(avFeetPos + cVector3f(0, mpCharBody->GetSize().y / 2, 0) );
 
     cFrustum *pFrustum = gpBase->mpPlayer->GetCamera()->GetFrustum();
-    return pFrustum->CollideBoundingVolume(&bv)!=eCollision_Outside;
+    return pFrustum->CollideBoundingVolume(&bv) != eCollision_Outside;
 }
 
 //-----------------------------------------------------------------------
@@ -2407,7 +2407,7 @@ bool iLuxEnemy::IsVisibleToPlayerAtFeetPos(const cVector3f& avFeetPos)
 {
     cVector3f vPlayerEyePos = gpBase->mpPlayer->GetCamera()->GetPosition();
     cVector3f vCharPos = avFeetPos;
-    vCharPos.y += mpCharBody->GetSize().y/2;
+    vCharPos.y += mpCharBody->GetSize().y / 2;
 
     return LineOfSight(vCharPos, mpCharBody->GetSize(), false, vPlayerEyePos);
 }
@@ -2419,17 +2419,17 @@ float iLuxEnemy::GetPlayerMovementTowardEnemyAmount()
     iCharacterBody *pPlayerBody = gpBase->mpPlayer->GetCharacterBody();
 
     cVector3f vPlayerDir = pPlayerBody->GetVelocity(gpBase->mpEngine->GetFixedDelta());
-    vPlayerDir.y =0;
+    vPlayerDir.y = 0;
 
     //If not moving much, return lowest amount
-    if(vPlayerDir.SqrLength() < 0.1f*0.1f)
+    if(vPlayerDir.SqrLength() < 0.1f * 0.1f)
     {
         return -1;
     }
     vPlayerDir.Normalize();
 
     cVector3f vPlayerToEnemyDir = mpCharBody->GetPosition() - pPlayerBody->GetPosition();
-    vPlayerToEnemyDir.y =0;
+    vPlayerToEnemyDir.y = 0;
     vPlayerToEnemyDir.Normalize();
 
     return cMath::Vector3Dot(vPlayerDir, vPlayerToEnemyDir);
@@ -2451,22 +2451,22 @@ bool iLuxEnemy::InFOV(const cVector3f &avPos)
     float fFOV = mfFOV * mfFOVMul;
     if(fFOV < k2Pif)
     {
-        cVector3f vStartCenter = mpCharBody->GetPosition() + cVector3f(0,mpCharBody->GetSize().y/2 - 0.2f, 0); //Use eye pos
+        cVector3f vStartCenter = mpCharBody->GetPosition() + cVector3f(0, mpCharBody->GetSize().y / 2 - 0.2f, 0); //Use eye pos
 
         const cVector3f vDirToPos = cMath::Vector3Normalize(avPos - vStartCenter);
         cVector3f vEnemyForward = mpCharBody->GetForward();
 
-        cVector3f vToPlayerAngle = cMath::GetAngleFromPoints3D(0,vDirToPos);
-        cVector3f vEnemyAngle = cMath::GetAngleFromPoints3D(0,vEnemyForward);
+        cVector3f vToPlayerAngle = cMath::GetAngleFromPoints3D(0, vDirToPos);
+        cVector3f vEnemyAngle = cMath::GetAngleFromPoints3D(0, vEnemyForward);
 
-        float fAngleX = cMath::Abs(cMath::GetAngleDistanceRad(vToPlayerAngle.x,vEnemyAngle.x));
-        float fAngleY = cMath::Abs(cMath::GetAngleDistanceRad(vToPlayerAngle.y,vEnemyAngle.y));
+        float fAngleX = cMath::Abs(cMath::GetAngleDistanceRad(vToPlayerAngle.x, vEnemyAngle.x));
+        float fAngleY = cMath::Abs(cMath::GetAngleDistanceRad(vToPlayerAngle.y, vEnemyAngle.y));
 
-        if(fAngleY > fFOV*0.5f)
+        if(fAngleY > fFOV * 0.5f)
         {
             return false;
         }
-        if(fAngleX > fFOV*mfFOVXMul*0.5f)
+        if(fAngleX > fFOV * mfFOVXMul * 0.5f)
         {
             return false;
         }
@@ -2497,10 +2497,10 @@ void iLuxEnemy::OnSetActive(bool abX)
     }
 
     //Remove from attack and search music
-    if(abX==false)
+    if(abX == false)
     {
-        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
-        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
+        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
+        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search, this);
         gpBase->mpPlayer->RemoveTerrorEnemy(this);
 
         ChangeState(eLuxEnemyState_Idle);
@@ -2626,9 +2626,9 @@ iLuxEnemy_SaveData::~iLuxEnemy_SaveData()
 
 //-----------------------------------------------------------------------
 
-cEnginePS_SaveData* iLuxEnemy_SaveData::GetParticleSystem(cParticleSystem* apPS)
+cEnginePS_SaveData *iLuxEnemy_SaveData::GetParticleSystem(cParticleSystem* apPS)
 {
-    for(size_t i=0; i<mvPS.Size(); ++i)
+    for(size_t i = 0; i < mvPS.Size(); ++i)
         if(mvPS[i].msName == apPS->GetName())
         {
             return &mvPS[i];
@@ -2639,11 +2639,11 @@ cEnginePS_SaveData* iLuxEnemy_SaveData::GetParticleSystem(cParticleSystem* apPS)
 
 //-----------------------------------------------------------------------
 
-iLuxEntity* iLuxEnemy_SaveData::CreateEntity(cLuxMap *apMap)
+iLuxEntity *iLuxEnemy_SaveData::CreateEntity(cLuxMap *apMap)
 {
     cWorld *pWorld = apMap->GetWorld();
     apMap->ResetLatestEntity();
-    pWorld->CreateEntity(msName,m_mtxOnLoadTransform, msFileName, mlID, true, mvOnLoadScale);
+    pWorld->CreateEntity(msName, m_mtxOnLoadTransform, msFileName, mlID, true, mvOnLoadScale);
 
     return apMap->GetLatestEntity();
 }
@@ -2655,7 +2655,7 @@ void iLuxEnemy::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     ///////////////////////
     // Init
     super_class::SaveToSaveData(apSaveData);
-    iLuxEnemy_SaveData *pData = static_cast<iLuxEnemy_SaveData*>(apSaveData);
+    iLuxEnemy_SaveData *pData = static_cast<iLuxEnemy_SaveData *>(apSaveData);
 
     cWorld *pWorld = mpMap->GetWorld();
     iPhysicsWorld *pPhysicsWorld = pWorld->GetPhysicsWorld();
@@ -2700,7 +2700,7 @@ void iLuxEnemy::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 
     kCopyToVar(pData, mlAttackHitCounter);
 
-    kCopyToVar(pData,mfFOVMul);
+    kCopyToVar(pData, mfFOVMul);
 
     kCopyToVar(pData, mbAnimationIsSpeedDependant);
     kCopyToVar(pData, mfAnimationSpeedMul);
@@ -2721,7 +2721,7 @@ void iLuxEnemy::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     ///////////////////////
     //Patrol nodes
     pData->mvPatrolNodes.Resize(mvPatrolNodes.size());
-    for(size_t i=0; i<mvPatrolNodes.size(); ++i)
+    for(size_t i = 0; i < mvPatrolNodes.size(); ++i)
     {
         pData->mvPatrolNodes[i].mlNodeId =     mvPatrolNodes[i].mpNode->GetID();
         pData->mvPatrolNodes[i].mfWaitTime =     mvPatrolNodes[i].mfWaitTime;
@@ -2751,12 +2751,12 @@ void iLuxEnemy::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     ///////////////////////
     //Particle Systems
     pData->mvPS.Resize(mvParticleSystems.size());
-    for(size_t i=0; i<mvParticleSystems.size(); ++i)
+    for(size_t i = 0; i < mvParticleSystems.size(); ++i)
     {
-        if(pWorld->ParticleSystemExists(mvParticleSystems[i])==false)
+        if(pWorld->ParticleSystemExists(mvParticleSystems[i]) == false)
         {
             mvParticleSystems[i] = NULL;
-            Warning("particle system %d in %s does not exist anymore!\n",i,GetName().c_str());
+            Warning("particle system %d in %s does not exist anymore!\n", i, GetName().c_str());
         }
 
         pData->mvPS[i].FromPS(mvParticleSystems[i]);
@@ -2765,7 +2765,7 @@ void iLuxEnemy::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     ///////////////////////
     //Lights
     pData->mvLights.Resize(mvLights.size());
-    for(size_t i=0; i<mvLights.size(); ++i)
+    for(size_t i = 0; i < mvLights.size(); ++i)
     {
         pData->mvLights[i].FromLight(mvLights[i]);
     }
@@ -2773,7 +2773,7 @@ void iLuxEnemy::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     ///////////////////////
     //Billboards
     pData->mvBillboards.Resize(mvBillboards.size());
-    for(size_t i=0; i<mvBillboards.size(); ++i)
+    for(size_t i = 0; i < mvBillboards.size(); ++i)
     {
         pData->mvBillboards[i].FromBillboard(mvBillboards[i]);
     }
@@ -2814,7 +2814,7 @@ void iLuxEnemy::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     ///////////////////////
     // Init
     super_class::LoadFromSaveData(apSaveData);
-    iLuxEnemy_SaveData *pData = static_cast<iLuxEnemy_SaveData*>(apSaveData);
+    iLuxEnemy_SaveData *pData = static_cast<iLuxEnemy_SaveData *>(apSaveData);
 
     cWorld *pWorld = mpMap->GetWorld();
     iPhysicsWorld *pPhysicsWorld = pWorld->GetPhysicsWorld();
@@ -2859,7 +2859,7 @@ void iLuxEnemy::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 
     kCopyFromVar(pData, mlAttackHitCounter);
 
-    kCopyFromVar(pData,mfFOVMul);
+    kCopyFromVar(pData, mfFOVMul);
 
     kCopyFromVar(pData, mbAnimationIsSpeedDependant);
     kCopyFromVar(pData, mfAnimationSpeedMul);
@@ -2897,15 +2897,15 @@ void iLuxEnemy::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 
     ///////////////////////
     //Lights
-    for(size_t i=0; i<mvLights.size(); ++i)
+    for(size_t i = 0; i < mvLights.size(); ++i)
     {
         pData->mvLights[i].ToLight(mvLights[i]);
     }
 
     ///////////////////////
     //Particle Systems
-    int lCount=0;
-    for(std::vector<cParticleSystem*>::iterator it = mvParticleSystems.begin(); it != mvParticleSystems.end();)
+    int lCount = 0;
+    for(std::vector<cParticleSystem * >::iterator it = mvParticleSystems.begin(); it != mvParticleSystems.end();)
     {
         cParticleSystem *pPS = *it;
 
@@ -2935,14 +2935,14 @@ void iLuxEnemy::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 
     ///////////////////////
     //Billboards
-    for(size_t i=0; i<mvBillboards.size(); ++i)
+    for(size_t i = 0; i < mvBillboards.size(); ++i)
     {
         pData->mvBillboards[i].ToBillboard(mvBillboards[i]);
     }
 
     ///////////////////////
     //Messages
-    for(size_t i=0; i<pData->mvMessages.Size(); ++i)
+    for(size_t i = 0; i < pData->mvMessages.Size(); ++i)
     {
         cLuxStateMessage message;
         cLuxStateMessage_SaveData& savedMessage = pData->mvMessages[i];
@@ -2974,7 +2974,7 @@ void iLuxEnemy::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 void iLuxEnemy::SetupSaveData(iLuxEntity_SaveData *apSaveData)
 {
     super_class::SetupSaveData(apSaveData);
-    iLuxEnemy_SaveData *pData = static_cast<iLuxEnemy_SaveData*>(apSaveData);
+    iLuxEnemy_SaveData *pData = static_cast<iLuxEnemy_SaveData *>(apSaveData);
 
     cAINodeContainer *pNodeContainer =  mpPathfinder->GetNodeContainer();
 
@@ -2983,12 +2983,12 @@ void iLuxEnemy::SetupSaveData(iLuxEntity_SaveData *apSaveData)
     if(pNodeContainer)
     {
         mvPatrolNodes.reserve(pData->mvPatrolNodes.Size());
-        for(size_t i=0; i<pData->mvPatrolNodes.Size(); ++i)
+        for(size_t i = 0; i < pData->mvPatrolNodes.Size(); ++i)
         {
             cLuxEnemyPatrolNode patrolNode;
 
-            patrolNode.mpNode =pNodeContainer->GetNodeFromID(pData->mvPatrolNodes[i].mlNodeId);
-            if(patrolNode.mpNode==NULL)
+            patrolNode.mpNode = pNodeContainer->GetNodeFromID(pData->mvPatrolNodes[i].mlNodeId);
+            if(patrolNode.mpNode == NULL)
             {
                 Error("Could not find patrol node id: %d for '%s'!\n", pData->mvPatrolNodes[i].mlNodeId, msName.c_str());
                 continue;

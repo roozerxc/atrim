@@ -36,7 +36,7 @@ public:
     void SetMessage(const tWString& asText, float afTime);
     bool IsMessageActive()
     {
-        return mfMessageTime>0;
+        return mfMessageTime > 0;
     }
 
     void OnDraw(double adFrameTime);
@@ -55,7 +55,7 @@ public:
     }
     void SetShowSubtitles(bool abX)
     {
-        mbShowSubtitles=abX;
+        mbShowSubtitles = abX;
     }
 
     bool ShowEffectSubtitles()
@@ -64,7 +64,7 @@ public:
     }
     void SetShowEffectSubtitles(bool abX)
     {
-        mbShowEffectSubtitles=abX;
+        mbShowEffectSubtitles = abX;
     }
 private:
     void DrawQuestAdded();
@@ -103,7 +103,7 @@ private:
 
     tWStringVec mvLines;
     bool mbMessageYesNo;
-    iLuxMessageCallback* mpCallback;
+    iLuxMessageCallback *mpCallback;
 };
 
 //----------------------------------------------

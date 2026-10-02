@@ -32,7 +32,7 @@ public:
     void Update(double adFixedDelta);
     void PostUpdate(double adFixedDelta);
 
-    bool OnDoAction(eLuxPlayerAction aAction,bool abPressed);
+    bool OnDoAction(eLuxPlayerAction aAction, bool abPressed);
 
     void OnScroll(float afAmount);
 
@@ -50,11 +50,11 @@ public:
         return false;
     }
 
-    cGuiGfxElement* GetCrosshair();
+    cGuiGfxElement *GetCrosshair();
 
     void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter) {}
 
-    float DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY);
+    float DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY);
 
     virtual void RenderSolid(cRendererCallbackFunctions* apFunctions);
 
@@ -66,7 +66,7 @@ public:
     }
 
     virtual void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);
-    virtual void LoadFromSaveDataBeforeEnter(cLuxMap *apMap,iLuxPlayerState_SaveData* apSaveData);
+    virtual void LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
     virtual void LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
 
 
@@ -74,8 +74,8 @@ protected:
     virtual void EnterRotateBase(eLuxPlayerState aPrevState) {}
     virtual void LeaveRotateBase(eLuxPlayerState aNewState) {}
 
-    virtual float GetSpeedAdd(cCamera *apCam)=0;
-    virtual void OnThrow()=0;
+    virtual float GetSpeedAdd(cCamera *apCam) = 0;
+    virtual void OnThrow() = 0;
 
     void SetupForceAxes();
 

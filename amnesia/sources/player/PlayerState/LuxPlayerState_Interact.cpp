@@ -44,7 +44,7 @@ void iLuxPlayerState_Interact::OnDestroyEntity(iLuxEntity *apEntity)
 void iLuxPlayerState_Interact::OnAttachBodyToStickyArea(iPhysicsBody *apBody)
 {
     bool bBodyInProp = false;
-    for(int i=0; i<mpCurrentProp->GetBodyNum(); ++i)
+    for(int i = 0; i < mpCurrentProp->GetBodyNum(); ++i)
     {
         if(mpCurrentProp->GetBody(i) == apBody)
         {
@@ -105,7 +105,7 @@ void iLuxPlayerState_Interact::SaveToSaveData(iLuxPlayerState_SaveData* apSaveDa
     ///////////////////////
     // Init
     super_class::SaveToSaveData(apSaveData);
-    iLuxPlayerState_Interact_SaveData *pData = static_cast<iLuxPlayerState_Interact_SaveData*>(apSaveData);
+    iLuxPlayerState_Interact_SaveData *pData = static_cast<iLuxPlayerState_Interact_SaveData *>(apSaveData);
 
     if(mpCurrentProp && mpCurrentBody)
     {
@@ -126,18 +126,18 @@ void iLuxPlayerState_Interact::LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxP
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataBeforeEnter(apMap,apSaveData);
-    iLuxPlayerState_Interact_SaveData *pData = static_cast<iLuxPlayerState_Interact_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataBeforeEnter(apMap, apSaveData);
+    iLuxPlayerState_Interact_SaveData *pData = static_cast<iLuxPlayerState_Interact_SaveData *>(apSaveData);
 
     //////////////////////
     //Setup interaction vars
-    iPhysicsBody* pFoucsBody=NULL;
+    iPhysicsBody* pFoucsBody = NULL;
     iLuxEntity *pEntity = apMap->GetEntityByID(pData->mlCurrentPropId);
     if(pEntity && pEntity->GetEntityType() == eLuxEntityType_Prop)
     {
-        iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+        iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
         pFoucsBody = pProp->GetBodyFromID(pData->mlCurrentBodyId);
-        if(pFoucsBody==NULL)
+        if(pFoucsBody == NULL)
         {
             Error("Could not load body with id %d in prop '%s'\n", pData->mlCurrentBodyId, mpCurrentProp->GetName().c_str());
         }
@@ -160,8 +160,8 @@ void iLuxPlayerState_Interact::LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPl
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataAfterEnter(apMap,apSaveData);
-    iLuxPlayerState_Interact_SaveData *pData = static_cast<iLuxPlayerState_Interact_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataAfterEnter(apMap, apSaveData);
+    iLuxPlayerState_Interact_SaveData *pData = static_cast<iLuxPlayerState_Interact_SaveData *>(apSaveData);
 
 }
 

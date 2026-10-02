@@ -13,21 +13,21 @@
 
 cLuxPropLoader_LevelDoor::cLuxPropLoader_LevelDoor(const tString& asName) : iLuxPropLoader(asName)
 {
-    mfDefaultMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction","LevelDoor_DefaultMaxFocusDist",0);
+    mfDefaultMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction", "LevelDoor_DefaultMaxFocusDist", 0);
 }
 
 //-----------------------------------------------------------------------
 
 iLuxProp *cLuxPropLoader_LevelDoor::CreateProp(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxProp_LevelDoor, (asName, alID,apMap) );
+    return hplNew(cLuxProp_LevelDoor, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPropLoader_LevelDoor::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    cLuxProp_LevelDoor  *pLevelDoor = static_cast<cLuxProp_LevelDoor*>(apProp);
+    cLuxProp_LevelDoor  *pLevelDoor = static_cast<cLuxProp_LevelDoor *>(apProp);
 
     ///////////////////////////
     // General
@@ -39,18 +39,18 @@ void cLuxPropLoader_LevelDoor::LoadVariables(iLuxProp *apProp, cXmlElement *apRo
 
 void cLuxPropLoader_LevelDoor::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
-    cLuxProp_LevelDoor  *pLevelDoor = static_cast<cLuxProp_LevelDoor*>(apProp);
+    cLuxProp_LevelDoor  *pLevelDoor = static_cast<cLuxProp_LevelDoor *>(apProp);
 
-    pLevelDoor->msTextEntry = apInstanceVars->GetVarString("TextEntry","");
-    pLevelDoor->msMapFile = apInstanceVars->GetVarString("MapFile","");
-    pLevelDoor->msStartPos = apInstanceVars->GetVarString("StartPos","");
+    pLevelDoor->msTextEntry = apInstanceVars->GetVarString("TextEntry", "");
+    pLevelDoor->msMapFile = apInstanceVars->GetVarString("MapFile", "");
+    pLevelDoor->msStartPos = apInstanceVars->GetVarString("StartPos", "");
 
-    pLevelDoor->mbLocked = apInstanceVars->GetVarBool("Locked",false);
-    pLevelDoor->msLockedSound = apInstanceVars->GetVarString("LockedSound","");
-    pLevelDoor->msLockedTextCat = apInstanceVars->GetVarString("LockedTextCat","");
-    pLevelDoor->msLockedTextEntry = apInstanceVars->GetVarString("LockedTextEntry","");
+    pLevelDoor->mbLocked = apInstanceVars->GetVarBool("Locked", false);
+    pLevelDoor->msLockedSound = apInstanceVars->GetVarString("LockedSound", "");
+    pLevelDoor->msLockedTextCat = apInstanceVars->GetVarString("LockedTextCat", "");
+    pLevelDoor->msLockedTextEntry = apInstanceVars->GetVarString("LockedTextEntry", "");
 
-    pLevelDoor->mbShowStats = apInstanceVars->GetVarBool("ShowStats",true);
+    pLevelDoor->mbShowStats = apInstanceVars->GetVarBool("ShowStats", true);
 }
 //-----------------------------------------------------------------------
 
@@ -61,9 +61,9 @@ void cLuxPropLoader_LevelDoor::LoadInstanceVariables(iLuxProp *apProp, cResource
 
 //-----------------------------------------------------------------------
 
-cLuxProp_LevelDoor::cLuxProp_LevelDoor(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_LevelDoor)
+cLuxProp_LevelDoor::cLuxProp_LevelDoor(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName, alID, apMap, eLuxPropType_LevelDoor)
 {
-    mfLockedCount =0;
+    mfLockedCount = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -92,9 +92,9 @@ bool cLuxProp_LevelDoor::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
     if(mbLocked)
     {
         //Wait until last locked message until showing a new.
-        if(mfLockedCount <=0)
+        if(mfLockedCount <= 0)
         {
-            gpBase->mpHelpFuncs->PlayGuiSoundData(msLockedSound,eSoundEntryType_World);
+            gpBase->mpHelpFuncs->PlayGuiSoundData(msLockedSound, eSoundEntryType_World);
             if(msLockedTextCat != "" && msLockedTextEntry != "")
             {
                 gpBase->mpMessageHandler->SetMessage(kTranslate(msLockedTextCat, msLockedTextEntry), 0);
@@ -104,7 +104,7 @@ bool cLuxProp_LevelDoor::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
     }
     else
     {
-        gpBase->mpMapHandler->ChangeMap(msMapFile,msStartPos, msEnterSound, msExitSound);
+        gpBase->mpMapHandler->ChangeMap(msMapFile, msStartPos, msEnterSound, msExitSound);
     }
 
     return true;
@@ -127,7 +127,7 @@ void cLuxProp_LevelDoor::OnResetProperties()
 
 void cLuxProp_LevelDoor::UpdatePropSpecific(double adFixedDelta)
 {
-    if(mfLockedCount >0)
+    if(mfLockedCount > 0)
     {
         mfLockedCount -= (float)adFixedDelta;
     }
@@ -211,7 +211,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxProp_LevelDoor::CreateSaveData()
+iLuxEntity_SaveData *cLuxProp_LevelDoor::CreateSaveData()
 {
     return hplNew(cLuxProp_LevelDoor_SaveData, ());
 }
@@ -223,7 +223,7 @@ void cLuxProp_LevelDoor::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxProp_LevelDoor_SaveData *pData = static_cast<cLuxProp_LevelDoor_SaveData*>(apSaveData);
+    cLuxProp_LevelDoor_SaveData *pData = static_cast<cLuxProp_LevelDoor_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
@@ -246,7 +246,7 @@ void cLuxProp_LevelDoor::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxProp_LevelDoor_SaveData *pData = static_cast<cLuxProp_LevelDoor_SaveData*>(apSaveData);
+    cLuxProp_LevelDoor_SaveData *pData = static_cast<cLuxProp_LevelDoor_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables

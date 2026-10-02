@@ -24,19 +24,19 @@ bool LuxIsCorrectType(iLuxEntity *apEntity, eLuxEntityType aType, int alSubType)
         return false;
     }
 
-    if(alSubType<0)
+    if(alSubType < 0)
     {
         return true;
     }
 
     if(entityType == eLuxEntityType_Area)
     {
-        iLuxArea *pArea = static_cast<iLuxArea*>(apEntity);
+        iLuxArea *pArea = static_cast<iLuxArea *>(apEntity);
         return pArea->GetAreaType() == (eLuxAreaType)alSubType;
     }
     else
     {
-        iLuxProp *pProp = static_cast<iLuxProp*>(apEntity);
+        iLuxProp *pProp = static_cast<iLuxProp *>(apEntity);
         return pProp->GetPropType() == (eLuxPropType)alSubType;
     }
 }
@@ -58,7 +58,7 @@ kEndSerialize()
 cLuxIdPair LuxGetIdPairFromBody(iPhysicsBody *apBody)
 {
     cLuxIdPair idPair;
-    if(apBody==NULL)
+    if(apBody == NULL)
     {
         idPair.mlParentId = -1;
         idPair.mlChildId = -1;
@@ -89,7 +89,7 @@ cLuxIdPair LuxGetIdPairFromBody(iPhysicsBody *apBody)
 void iLuxUpdateable::ClearFonts()
 {
     cFontManager* pFontManager = gpBase->mpEngine->GetResources()->GetFontManager();
-    for(int i=0; i<(int)mvFonts.size(); ++i)
+    for(int i = 0; i < (int)mvFonts.size(); ++i)
     {
         pFontManager->Destroy(mvFonts[i]);
     }
@@ -102,7 +102,7 @@ void iLuxUpdateable::ClearFonts()
 //-----------------------------------------------------------------------
 
 
-iFontData* iLuxUpdateable::LoadFont(const tString& asFile)
+iFontData *iLuxUpdateable::LoadFont(const tString& asFile)
 {
     iFontData* pFont = NULL;
     pFont = gpBase->mpEngine->GetResources()->GetFontManager()->CreateFontData(asFile);
@@ -154,13 +154,13 @@ void iLuxCollideCallbackContainer::CheckCollisionCallback(const tString& asName,
     {
         cLuxCollideCallback *pCallback = *it;
         iLuxEntity *pEntity = pCallback->mpCollideEntity;
-        bool bCollide=false;
+        bool bCollide = false;
 
-        if(pEntity==NULL)
+        if(pEntity == NULL)
         {
             continue;
         }
-        if(pEntity->IsActive()==false)
+        if(pEntity->IsActive() == false)
         {
             continue;
         }
@@ -169,13 +169,13 @@ void iLuxCollideCallbackContainer::CheckCollisionCallback(const tString& asName,
 
         /////////////////////
         //Handle collision
-        if( (bCollide && pCallback->mbColliding==false) || (bCollide==false && pCallback->mbColliding) )
+        if( (bCollide && pCallback->mbColliding == false) || (bCollide == false && pCallback->mbColliding) )
         {
             int lState = bCollide ? 1 : -1;
             pCallback->mbColliding = bCollide;
-            if(lState == pCallback->mlStates || pCallback->mlStates==0)
+            if(lState == pCallback->mlStates || pCallback->mlStates == 0)
             {
-                tString sCommand = pCallback->msCallbackFunc+"(\"" + asName + "\", \""+ pEntity->GetName()+"\", "+cString::ToString(lState)+")" ;
+                tString sCommand = pCallback->msCallbackFunc + "(\"" + asName + "\", \"" + pEntity->GetName() + "\", " + cString::ToString(lState) + ")" ;
                 apMap->RunScript(sCommand);
 
                 ///////////////////////
@@ -195,7 +195,7 @@ void iLuxCollideCallbackContainer::CheckCollisionCallback(const tString& asName,
                     }
 
                     // Add to delete list (if not already there)
-                    if(bCallbackExistInDeleteList==false)
+                    if(bCallbackExistInDeleteList == false)
                     {
                         mlstDeleteCallbacks.push_back(pCallback);
                     }
@@ -223,16 +223,16 @@ void iLuxCollideCallbackContainer::CheckCollisionCallback(const tString& asName,
 
 bool iLuxCollideCallbackContainer::CheckEntityCollision(iLuxEntity*apEntity, cLuxMap *apMap)
 {
-    iPhysicsWorld *pPhysicsWorld =apMap->GetPhysicsWorld();
+    iPhysicsWorld *pPhysicsWorld = apMap->GetPhysicsWorld();
 
     cCollideData collideData;
     collideData.SetMaxSize(1);
 
     /////////////////////
     //Iterate bodies and check for collision
-    for(int i=0; i<GetBodyNum(); ++i)
+    for(int i = 0; i < GetBodyNum(); ++i)
     {
-        for(int j=0; j<apEntity->GetBodyNum(); ++j)
+        for(int j = 0; j < apEntity->GetBodyNum(); ++j)
         {
             iPhysicsBody *pBodyA = GetBody(i);
             iPhysicsBody *pBodyB = apEntity->GetBody(i);
@@ -241,7 +241,7 @@ bool iLuxCollideCallbackContainer::CheckEntityCollision(iLuxEntity*apEntity, cLu
             {
                 bool bCollide = pPhysicsWorld->CheckShapeCollision(    pBodyA->GetShape(), pBodyA->GetLocalMatrix(),
                                 pBodyB->GetShape(), pBodyB->GetLocalMatrix(),
-                                collideData,1,false);
+                                collideData, 1, false);
                 if(bCollide)
                 {
                     return true;
@@ -345,7 +345,7 @@ void iLuxCollideCallbackContainer::RemoveCollideCallbackInstantly(iLuxEntity *ap
 void cLuxAlphaFader::Reset()
 {
     mbActive = false;
-    mfAlpha =0;
+    mfAlpha = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -543,7 +543,7 @@ void cLuxCollideCallback_SaveData::ToCallback(cLuxMap *apMap, iLuxCollideCallbac
     apCallback->mbColliding = mbColliding;
 
     apCallback->mpCollideEntity = apMap->GetEntityByID(mlCollideEntity);
-    if(apCallback->mpCollideEntity==NULL)
+    if(apCallback->mpCollideEntity == NULL)
     {
         Error("Could not find entity with ID %d when loading saved collide callback.\n", mlCollideEntity);
     }

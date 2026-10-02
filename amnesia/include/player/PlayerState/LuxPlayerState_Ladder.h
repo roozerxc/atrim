@@ -62,9 +62,9 @@ public:
 
     void Update(double adFixedDelta);
     void PostUpdate(double adFixedDelta);
-    virtual void OnDraw(cGuiSet *apGuiSet,double adFrameTime);
+    virtual void OnDraw(cGuiSet *apGuiSet, double adFrameTime);
 
-    virtual cGuiGfxElement* GetCrosshair();
+    virtual cGuiGfxElement *GetCrosshair();
 
     bool OnMove(eCharDir aDir, float afMul);
 
@@ -75,11 +75,11 @@ public:
     bool OnJump(bool abPressed);
     bool OnCrouch(bool abPressed);
 
-    bool OnDoAction(eLuxPlayerAction aAction,bool abPressed);
+    bool OnDoAction(eLuxPlayerAction aAction, bool abPressed);
 
     void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter) {}
 
-    float DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY);
+    float DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY);
 
     bool AllowPlayerMenus()
     {
@@ -97,10 +97,10 @@ public:
     {
         return true;
     }
-    iLuxPlayerState_SaveData* CreateSaveData();
+    iLuxPlayerState_SaveData *CreateSaveData();
 
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);
-    void LoadFromSaveDataBeforeEnter(cLuxMap *apMap,iLuxPlayerState_SaveData* apSaveData);
+    void LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
     void LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
 
 private:
@@ -108,7 +108,7 @@ private:
     void PlaySound(const tString &asType);
 
     int mlState;
-    cLuxArea_Ladder* mpLadder;
+    cLuxArea_Ladder *mpLadder;
     cVector3f mvStartPosition;
 
     float mfTimeCount;

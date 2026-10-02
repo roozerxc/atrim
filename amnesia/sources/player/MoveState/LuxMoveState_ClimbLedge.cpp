@@ -11,13 +11,13 @@
 
 cLuxMoveState_ClimbLedge::cLuxMoveState_ClimbLedge(cLuxPlayer *apPlayer) : iLuxMoveState(apPlayer)
 {
-    mfHeadMoveSpeed = gpBase->mpGameCfg->GetFloat("Player_Movement_ClimbLedge","HeadMoveSpeed",0);
-    mfHeadMoveSlowdownDist = gpBase->mpGameCfg->GetFloat("Player_Movement_ClimbLedge","HeadMoveSlowdownDist",0);
+    mfHeadMoveSpeed = gpBase->mpGameCfg->GetFloat("Player_Movement_ClimbLedge", "HeadMoveSpeed", 0);
+    mfHeadMoveSlowdownDist = gpBase->mpGameCfg->GetFloat("Player_Movement_ClimbLedge", "HeadMoveSlowdownDist", 0);
 
-    mfGivePlayerControlDist = gpBase->mpGameCfg->GetFloat("Player_Movement_ClimbLedge","GivePlayerControlDist",0);
+    mfGivePlayerControlDist = gpBase->mpGameCfg->GetFloat("Player_Movement_ClimbLedge", "GivePlayerControlDist", 0);
 
-    mfMovePitchFactor = gpBase->mpGameCfg->GetFloat("Player_Movement_ClimbLedge","MovePitchFactor",0);
-    mfMaxMovePitchSpeed = gpBase->mpGameCfg->GetFloat("Player_Movement_ClimbLedge","MaxMovePitchSpeed",0);
+    mfMovePitchFactor = gpBase->mpGameCfg->GetFloat("Player_Movement_ClimbLedge", "MovePitchFactor", 0);
+    mfMaxMovePitchSpeed = gpBase->mpGameCfg->GetFloat("Player_Movement_ClimbLedge", "MaxMovePitchSpeed", 0);
 }
 
 //-----------------------------------------------------------------------
@@ -51,7 +51,7 @@ void cLuxMoveState_ClimbLedge::OnEnterState(eLuxMoveState aPrevState)
 
     //These values must go in config!
     pCharBody->SetForceVelocity(0);
-    mpPlayer->MoveHeadPosAdd(eLuxHeadPosAdd_ClimbLedge,0, mfHeadMoveSpeed, mfHeadMoveSlowdownDist);
+    mpPlayer->MoveHeadPosAdd(eLuxHeadPosAdd_ClimbLedge, 0, mfHeadMoveSpeed, mfHeadMoveSlowdownDist);
 
 
     ////////////////////////////

@@ -26,9 +26,9 @@ cMapHandlerSoundCallback::cMapHandlerSoundCallback()
     //Load document
     tString sFile = "sounds/EnemySounds.dat";
     iXmlDocument* pXmlDoc = gpBase->mpEngine->GetResources()->LoadXmlDocument(sFile);
-    if(pXmlDoc ==NULL)
+    if(pXmlDoc == NULL)
     {
-        Error("Couldn't load XML file '%s'!\n",sFile.c_str());
+        Error("Couldn't load XML file '%s'!\n", sFile.c_str());
         return;
     }
 
@@ -51,7 +51,7 @@ cMapHandlerSoundCallback::cMapHandlerSoundCallback()
 void cMapHandlerSoundCallback::OnStart(cSoundEntity *apSoundEntity)
 {
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    if(pMap==NULL)
+    if(pMap == NULL)
     {
         return;
     }
@@ -60,11 +60,11 @@ void cMapHandlerSoundCallback::OnStart(cSoundEntity *apSoundEntity)
     //Check if the sound is something to worry bout
     tString sTypeName = apSoundEntity->GetData()->GetName();
 
-    bool bUsed=false;
-    for(size_t i=0; i< mvEnemyHearableSounds.size(); ++i)
+    bool bUsed = false;
+    for(size_t i = 0; i < mvEnemyHearableSounds.size(); ++i)
     {
         tString &sName = mvEnemyHearableSounds[i];
-        if(sTypeName.size() >= sName.size() && sName == sTypeName.substr(0,sName.size()))
+        if(sTypeName.size() >= sName.size() && sName == sTypeName.substr(0, sName.size()))
         {
             bUsed = true;
             break;
@@ -106,7 +106,7 @@ void cLuxDebugRenderCallback::OnPostSolidDraw(cRendererCallbackFunctions* apFunc
     {
         apFunctions->SetMatrix(NULL);
         apFunctions->SetBlendMode(eMaterialBlendMode_Alpha);
-        apFunctions->SetTextureRange(NULL,0);
+        apFunctions->SetTextureRange(NULL, 0);
         apFunctions->SetProgram(NULL);
 
         apFunctions->SetDepthTest(true);
@@ -196,7 +196,7 @@ cLuxMapHandler::cLuxMapHandler() : iLuxUpdateable("LuxMapHandler")
     //////////////////////////
     //Variables
     mbPausedSoundsAndMusic = false;
-    mpDataCache =NULL;
+    mpDataCache = NULL;
 
     Reset();
 }
@@ -251,7 +251,7 @@ void cLuxMapHandler::Update(double adFixedDelta)
 
     CheckMapChange(adFixedDelta);
 
-    if(mpCurrentMap && mMapChangeData.mbActive==false)
+    if(mpCurrentMap && mMapChangeData.mbActive == false)
     {
         mpCurrentMap->Update(adFixedDelta);
     }
@@ -298,7 +298,7 @@ void cLuxMapHandler::OnQuit()
         //Save
         gpBase->mpSaveHandler->AutoSave();
 
-        mpMapHandler->DestroyMap(mpMapHandler->GetCurrentMap(),false);
+        mpMapHandler->DestroyMap(mpMapHandler->GetCurrentMap(), false);
 
         //Reset game
         gpBase->mpEngine->GetUpdater()->BroadcastMessageToAll(eUpdateableMessage_Reset);
@@ -315,12 +315,12 @@ void cLuxMapHandler::OnQuit()
 
 void cLuxMapHandler::LoadUserConfig()
 {
-    mbShowCommentary = gpBase->mpUserConfig->GetBool("Game","ShowCommentary", false);
+    mbShowCommentary = gpBase->mpUserConfig->GetBool("Game", "ShowCommentary", false);
 }
 
 void cLuxMapHandler::SaveUserConfig()
 {
-    gpBase->mpUserConfig->SetBool("Game","ShowCommentary", mbShowCommentary);
+    gpBase->mpUserConfig->SetBool("Game", "ShowCommentary", mbShowCommentary);
 }
 
 //-----------------------------------------------------------------------
@@ -338,7 +338,7 @@ void cLuxMapHandler::CreateDataCache()
 
 void cLuxMapHandler::DestroyDataCache()
 {
-    if(mpDataCache==NULL)
+    if(mpDataCache == NULL)
     {
         return;
     }
@@ -414,11 +414,11 @@ void cLuxMapHandler::ChangeMap(const tString& asMapName, const tString& asStartP
 
 //-----------------------------------------------------------------------
 
-cLuxMap* cLuxMapHandler::LoadMap(const tString& asFileName, bool abLoadEntities)
+cLuxMap *cLuxMapHandler::LoadMap(const tString& asFileName, bool abLoadEntities)
 {
     cLuxMap *pMap = hplNew( cLuxMap, ( FileToMapName(asFileName)) );
 
-    pMap->LoadFromFile(msMapFolder+asFileName, abLoadEntities);
+    pMap->LoadFromFile(msMapFolder + asFileName, abLoadEntities);
 
     mlstMaps.push_back(pMap);
 
@@ -432,10 +432,10 @@ void cLuxMapHandler::DestroyMap(cLuxMap* apMap, bool abLoadingSaveGame)
     //If the map do me destroyed is current, make sure it is not current
     if(mpCurrentMap == apMap)
     {
-        SetCurrentMap(NULL, abLoadingSaveGame, false,"");
+        SetCurrentMap(NULL, abLoadingSaveGame, false, "");
     }
 
-    STLFindAndDelete(mlstMaps,apMap);
+    STLFindAndDelete(mlstMaps, apMap);
 }
 
 //-----------------------------------------------------------------------
@@ -562,20 +562,20 @@ void cLuxMapHandler::AppGotInputFocus()
 
 void cLuxMapHandler::LoadMainConfig()
 {
-    mpPostEffect_Bloom->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectBloom", true)==false);
-    mpPostEffect_ImageTrail->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectImageTrail", true)==false);
-    mpPostEffect_Sepia->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectSepia", true)==false);
-    mpPostEffect_RadialBlur->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectRadialBlur", true)==false);
+    mpPostEffect_Bloom->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectBloom", true) == false);
+    mpPostEffect_ImageTrail->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectImageTrail", true) == false);
+    mpPostEffect_Sepia->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectSepia", true) == false);
+    mpPostEffect_RadialBlur->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectRadialBlur", true) == false);
 
     cRenderSettings *pRenderSettings = mpViewport->GetRenderSettings();
 }
 
 void cLuxMapHandler::SaveMainConfig()
 {
-    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectBloom", mpPostEffect_Bloom->IsDisabled()==false);
-    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectImageTrail", mpPostEffect_ImageTrail->IsDisabled()==false);
-    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectSepia", mpPostEffect_Sepia->IsDisabled()==false);
-    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectRadialBlur", mpPostEffect_RadialBlur->IsDisabled()==false);
+    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectBloom", mpPostEffect_Bloom->IsDisabled() == false);
+    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectImageTrail", mpPostEffect_ImageTrail->IsDisabled() == false);
+    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectSepia", mpPostEffect_Sepia->IsDisabled() == false);
+    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectRadialBlur", mpPostEffect_RadialBlur->IsDisabled() == false);
 }
 
 //-----------------------------------------------------------------------
@@ -591,7 +591,7 @@ void cLuxMapHandler::SetShowCommentary(bool abX)
 {
     mbShowCommentary = abX;
 
-    if(mbShowCommentary==false)
+    if(mbShowCommentary == false)
     {
         gpBase->mpEffectHandler->GetPlayCommentary()->Stop();
     }
@@ -601,7 +601,7 @@ void cLuxMapHandler::SetShowCommentary(bool abX)
 
 void cLuxMapHandler::CheckMapChange(double adFixedDelta)
 {
-    if(mMapChangeData.mbActive==false)
+    if(mMapChangeData.mbActive == false)
     {
         return;
     }
@@ -612,7 +612,7 @@ void cLuxMapHandler::CheckMapChange(double adFixedDelta)
 
     ///////////////////////////////////////
     // Setup variables
-    float fTimeTaken =0;
+    float fTimeTaken = 0;
 
     ///////////////////////////////////////
     // Fade out and disable player
@@ -660,7 +660,7 @@ void cLuxMapHandler::CheckMapChange(double adFixedDelta)
         //////////////////////
         // Load new map
         cLuxMap *pLastMap = mpCurrentMap;
-        cLuxMap *pMap = LoadMap(mMapChangeData.msMapFile,true);
+        cLuxMap *pMap = LoadMap(mMapChangeData.msMapFile, true);
         if(pMap == NULL)
         {
             Error("Could not load map '%s'!\n", mMapChangeData.msMapFile.c_str());
@@ -680,7 +680,7 @@ void cLuxMapHandler::CheckMapChange(double adFixedDelta)
 
         //////////////////////
         // Set new and destroy old
-        bool bFirstTime = mpSavedGame->MapExists(sNewMapName)==false;
+        bool bFirstTime = mpSavedGame->MapExists(sNewMapName) == false;
 
         SetCurrentMap(pMap, false, bFirstTime, mMapChangeData.msStartPos);
         DestroyMap(pLastMap, false);
@@ -702,9 +702,9 @@ void cLuxMapHandler::CheckMapChange(double adFixedDelta)
 
         //////////////////////////////////
         //Check if any more load time needed
-        fTimeTaken = (float)(cPlatform::GetApplicationTime() - lLoadStartTime)/1000.0f;
+        fTimeTaken = (float)(cPlatform::GetApplicationTime() - lLoadStartTime) / 1000.0f;
 
-        ProgLog(eLuxProgressLogLevel_High, "Entering map "+ mpCurrentMap->GetName());
+        ProgLog(eLuxProgressLogLevel_High, "Entering map " + mpCurrentMap->GetName());
     }
     ///////////////////////
     // Map already loaded.
@@ -715,7 +715,7 @@ void cLuxMapHandler::CheckMapChange(double adFixedDelta)
 
     //////////////////////////////////
     // Check if text should be left on a bit longer
-    if(fTimeTaken>0)
+    if(fTimeTaken > 0)
     {
         gpBase->mpLoadScreenHandler->GameScreenLoadDone(mMapChangeData.msSound, fTimeTaken);
     }

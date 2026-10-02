@@ -20,9 +20,9 @@
 cLuxPlayerState_UseItem::cLuxPlayerState_UseItem(cLuxPlayer *apPlayer) : iLuxPlayerState_DefaultBase(apPlayer, eLuxPlayerState_UseItem)
 {
     mpCurrentItem = NULL;
-    mFlashOscill.SetUp(0,1,0,1.5f,1.5f);
+    mFlashOscill.SetUp(0, 1, 0, 1.5f, 1.5f);
 
-    mfMinUseItemDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction", "MinUseItemDistance",0);
+    mfMinUseItemDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction", "MinUseItemDistance", 0);
 }
 
 //-----------------------------------------------------------------------
@@ -47,7 +47,7 @@ void cLuxPlayerState_UseItem::ImplementedOnEnterState(eLuxPlayerState aPrevState
 
 //-----------------------------------------------------------------------
 
-bool cLuxPlayerState_UseItem::ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed)
+bool cLuxPlayerState_UseItem::ImplementedDoAction(eLuxPlayerAction aAction, bool abPressed)
 {
     ////////////////////////////
     // Interact
@@ -76,9 +76,9 @@ void cLuxPlayerState_UseItem::ImplementedUpdate(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-cGuiGfxElement* cLuxPlayerState_UseItem::GetCrosshair()
+cGuiGfxElement *cLuxPlayerState_UseItem::GetCrosshair()
 {
-    if(mpCurrentItem==NULL)
+    if(mpCurrentItem == NULL)
     {
         return NULL;
     }
@@ -90,7 +90,7 @@ cGuiGfxElement* cLuxPlayerState_UseItem::GetCrosshair()
 
 bool cLuxPlayerState_UseItem::OnDrawCrossHair(cGuiGfxElement *apGfx, const cVector3f& avPos, const cVector2f &avSize)
 {
-    if(mpEntityInFocus==NULL)
+    if(mpEntityInFocus == NULL)
     {
         return true;
     }
@@ -104,7 +104,7 @@ bool cLuxPlayerState_UseItem::OnDrawCrossHair(cGuiGfxElement *apGfx, const cVect
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
     if(    mpEntityInFocus->GetEntityType() == eLuxEntityType_Prop)
     {
-        iLuxProp *pProp = static_cast<iLuxProp*>(mpEntityInFocus);
+        iLuxProp *pProp = static_cast<iLuxProp *>(mpEntityInFocus);
         if(pProp->GetPropType() == eLuxPropType_Item)
         {
             return true;
@@ -112,7 +112,7 @@ bool cLuxPlayerState_UseItem::OnDrawCrossHair(cGuiGfxElement *apGfx, const cVect
     }
     else
     {
-        if(pMap->GetUseItemCallback(mpCurrentItem->GetName(), mpEntityInFocus->GetName())==NULL)
+        if(pMap->GetUseItemCallback(mpCurrentItem->GetName(), mpEntityInFocus->GetName()) == NULL)
         {
             return true;
         }
@@ -121,7 +121,7 @@ bool cLuxPlayerState_UseItem::OnDrawCrossHair(cGuiGfxElement *apGfx, const cVect
     cVector3f vNewPos = avPos;
     vNewPos.z += 1;
 
-    for(int i=0; i<3; ++i)
+    for(int i = 0; i < 3; ++i)
     {
         gpBase->mpGameHudSet->DrawGfx(apGfx, vNewPos, avSize, cColor(mFlashOscill.val), eGuiMaterial_Additive);
     }
@@ -181,7 +181,7 @@ bool cLuxPlayerState_UseItem::ShowOutlineOnEntity(iLuxEntity *apEntity, iPhysics
 
 void cLuxPlayerState_UseItem::UseItem()
 {
-    if(mpCurrentItem==NULL)
+    if(mpCurrentItem == NULL)
     {
         return;
     }
@@ -199,7 +199,7 @@ void cLuxPlayerState_UseItem::UseItem()
             // Running the script MAY destroy this item so "Backup" the check flag.
             bool bAutoDestroy = pCallback->mbAutoDestroy;
             tString sName = pCallback->msName;
-            pMap->RunScript(pCallback->msFunction+ "(\"" + pCallback->msItem + "\", \"" + pCallback->msEntity + "\")" );
+            pMap->RunScript(pCallback->msFunction + "(\"" + pCallback->msItem + "\", \"" + pCallback->msEntity + "\")" );
 
             if(bAutoDestroy)
             {
@@ -208,14 +208,14 @@ void cLuxPlayerState_UseItem::UseItem()
         }
         else
         {
-            gpBase->mpMessageHandler->SetMessage(kTranslate("Inventory","UseItemDoesNotWork"), 0);
+            gpBase->mpMessageHandler->SetMessage(kTranslate("Inventory", "UseItemDoesNotWork"), 0);
         }
     }
     /////////////////////////
     //No object in focus
     else
     {
-        gpBase->mpMessageHandler->SetMessage(kTranslate("Inventory","UseItemHasNoObject"), 0);
+        gpBase->mpMessageHandler->SetMessage(kTranslate("Inventory", "UseItemHasNoObject"), 0);
     }
 }
 
@@ -232,7 +232,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxPlayerState_SaveData* cLuxPlayerState_UseItem::CreateSaveData()
+iLuxPlayerState_SaveData *cLuxPlayerState_UseItem::CreateSaveData()
 {
     return hplNew(cLuxPlayerState_UseItem_SaveData, ());
 }
@@ -245,7 +245,7 @@ void cLuxPlayerState_UseItem::SaveToSaveData(iLuxPlayerState_SaveData* apSaveDat
     ///////////////////////
     // Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxPlayerState_UseItem_SaveData *pData = static_cast<cLuxPlayerState_UseItem_SaveData*>(apSaveData);
+    cLuxPlayerState_UseItem_SaveData *pData = static_cast<cLuxPlayerState_UseItem_SaveData *>(apSaveData);
 
 
     ///////////////////////
@@ -258,8 +258,8 @@ void cLuxPlayerState_UseItem::LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxPl
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataBeforeEnter(apMap,apSaveData);
-    cLuxPlayerState_UseItem_SaveData *pData = static_cast<cLuxPlayerState_UseItem_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataBeforeEnter(apMap, apSaveData);
+    cLuxPlayerState_UseItem_SaveData *pData = static_cast<cLuxPlayerState_UseItem_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars
@@ -271,8 +271,8 @@ void cLuxPlayerState_UseItem::LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPla
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataAfterEnter(apMap,apSaveData);
-    cLuxPlayerState_UseItem_SaveData *pData = static_cast<cLuxPlayerState_UseItem_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataAfterEnter(apMap, apSaveData);
+    cLuxPlayerState_UseItem_SaveData *pData = static_cast<cLuxPlayerState_UseItem_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars

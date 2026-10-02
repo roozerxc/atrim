@@ -17,7 +17,7 @@ public:
     iLuxItemType(const tString& asName, eLuxItemType aType);
     ~iLuxItemType();
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -39,7 +39,7 @@ public:
         return mbShowPickUpMessage;
     }
 
-    virtual void OnUse(cLuxInventory_Item *apItem, int alSlotIndex)=0;
+    virtual void OnUse(cLuxInventory_Item *apItem, int alSlotIndex) = 0;
     virtual tWString GetDisplayedNameAdd(cLuxInventory_Item *apItem)
     {
         return _W("");

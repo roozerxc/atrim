@@ -104,13 +104,13 @@ public:
 
     void SetColor(eInputMenuEntryPos aPos, const cColor& aCol);
 
-    cWidgetLabel* mpLAction;
-    std::vector<cWidgetLabel*> mvLKeyInputs;
+    cWidgetLabel *mpLAction;
+    std::vector<cWidgetLabel *> mvLKeyInputs;
 
     int mlActionId;
     std::vector<cSubActionWrapper> mvSubActions;
 private:
-    cLuxMainMenu_KeyConfig* mpWindow;
+    cLuxMainMenu_KeyConfig *mpWindow;
     std::vector<cColor> mvInputColors;
     bool mbChanged;
 
@@ -181,7 +181,7 @@ private:
 #endif
 };
 
-typedef std::vector<cLuxInputMenuEntry*> tInputEntryVec;
+typedef std::vector<cLuxInputMenuEntry *> tInputEntryVec;
 typedef tInputEntryVec::iterator tInputEntryVecIt;
 
 //----------------------------------------------
@@ -197,7 +197,7 @@ public:
 
     void ExitPressed();
 
-    iWidget* GetWaitingInput()
+    iWidget *GetWaitingInput()
     {
         return mpWaitingInput;
     }
@@ -210,10 +210,10 @@ public:
 private:
     void OnSetActive(bool abX);
 
-    cLuxInputMenuEntry* CreateInputEntry(cLuxAction* apAction, iWidget* apParent, const cVector3f& avPos);
+    cLuxInputMenuEntry *CreateInputEntry(cLuxAction* apAction, iWidget* apParent, const cVector3f& avPos);
 
     void SetCurrentToolTipEntry(cLuxInputMenuEntry* apEntry);
-    cLuxInputMenuEntry* GetCurrentToolTipEntry()
+    cLuxInputMenuEntry *GetCurrentToolTipEntry()
     {
         return mpCurrentTipEntry;
     }
@@ -231,7 +231,7 @@ private:
 
     bool mbInputSettingCancelled;
 
-    iWidget* mpWaitingInput;
+    iWidget *mpWaitingInput;
     bool mbInvalidInputs;
 
     ////////////////////////
@@ -246,20 +246,20 @@ private:
     bool mbTipFadeRestore;
     bool mbTipWidgetUpdated;
     //iWidget* mpCurrentTipWidget;
-    cLuxInputMenuEntry* mpCurrentTipEntry;
+    cLuxInputMenuEntry *mpCurrentTipEntry;
     tWString msTip;
 
     bool mbWasWaitingOnInput;
 
     // Inputs
-    std::vector<cWidgetDummy*> mvDKeyGroups;
+    std::vector<cWidgetDummy *> mvDKeyGroups;
     std::vector<tInputEntryVec> mvInputs;
 
-    cWidgetComboBox* mpCBCategory;
+    cWidgetComboBox *mpCBCategory;
 
-    cWidgetButton* mpBDefaultKeys;
-    cWidgetButton* mpBOK;
-    cWidgetButton* mpBCancel;
+    cWidgetButton *mpBDefaultKeys;
+    cWidgetButton *mpBOK;
+    cWidgetButton *mpBCancel;
 
     ////////////////////////
     // Callbacks

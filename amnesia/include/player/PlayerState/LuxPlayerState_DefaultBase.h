@@ -36,15 +36,15 @@ public:
 
     void Update(double adFixedDelta);
     void PostUpdate(double adFixedDelta);
-    virtual void OnDraw(cGuiSet *apGuiSet,double adFrameTime);
+    virtual void OnDraw(cGuiSet *apGuiSet, double adFrameTime);
 
-    virtual cGuiGfxElement* GetCrosshair();
+    virtual cGuiGfxElement *GetCrosshair();
 
-    bool OnDoAction(eLuxPlayerAction aAction,bool abPressed);
+    bool OnDoAction(eLuxPlayerAction aAction, bool abPressed);
 
     void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter) {}
 
-    float DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY);
+    float DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY);
 
     /////////////////////////////////
     //Save data stuff
@@ -54,14 +54,14 @@ public:
     }
 
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);
-    void LoadFromSaveDataBeforeEnter(cLuxMap *apMap,iLuxPlayerState_SaveData* apSaveData);
+    void LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
     void LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
 
 protected:
     virtual bool ShowOutlineOnEntity(iLuxEntity *apEntity, iPhysicsBody *apBody, const cVector3f &avFocusPos);
 
     virtual void ImplementedUpdate(double adFixedDelta) {}
-    virtual bool ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed)
+    virtual bool ImplementedDoAction(eLuxPlayerAction aAction, bool abPressed)
     {
         return true;
     }

@@ -32,7 +32,7 @@ public:
 
     //Prop specfics:
     cContainerVec<cLuxProp_AttachedProp> mvAttachedProps;
-    cContainerVec<iLuxInteractConnection_SaveData*> mvInteractConnections;
+    cContainerVec<iLuxInteractConnection_SaveData *> mvInteractConnections;
 
     //General
     cContainerVec<cLuxEntityConnection_SaveData> mvConnections;
@@ -101,10 +101,10 @@ public:
     float mfFogFalloffExp;
     cColor mFogColor;
 
-    cContainerList<iLuxEntity_SaveData*> mlstFullEntities;
+    cContainerList<iLuxEntity_SaveData *> mlstFullEntities;
 
-    cContainerList<cLuxSavedGameEntity*> mlstCollideAndConnectEntities;
-    cContainerList<cLuxSavedGameEnemy*> mlstEnemies;
+    cContainerList<cLuxSavedGameEntity *> mlstCollideAndConnectEntities;
+    cContainerList<cLuxSavedGameEnemy *> mlstEnemies;
 
     cContainerList<cEngineLight_SaveData> mlstLights;
     cContainerList<cEngineSound_SaveData> mlstSounds;
@@ -150,10 +150,10 @@ public:
 
     bool MapExists(const tString& asName);
 
-    cLuxSavedGameMap* GetSavedMap(const tString& asName, bool abCreateNew);
+    cLuxSavedGameMap *GetSavedMap(const tString& asName, bool abCreateNew);
 
 public:
-    cContainerList<cLuxSavedGameMap*> mlstMaps;
+    cContainerList<cLuxSavedGameMap *> mlstMaps;
 };
 
 //----------------------------------------------

@@ -58,7 +58,7 @@ public:
     cContainerVec<cLuxEntityConnection_SaveData> mvConnections;
     cContainerList<cLuxCollideCallback_SaveData> mlstCollideCallbacks;
 
-    virtual iLuxEntity* CreateEntity(cLuxMap *apMap)=0;
+    virtual iLuxEntity *CreateEntity(cLuxMap *apMap) = 0;
 };
 
 //----------------------------------------------
@@ -71,12 +71,12 @@ public:
     cLuxEntityConnection(const tString& asName, iLuxEntity *apEntity, bool abInvertStateSent, int alStatesUsed, const tString& asCallbackFunc)
         : msName(asName), mpEntity(apEntity), mbInvertStateSent(abInvertStateSent), mlStatesUsed(alStatesUsed), msCallbackFunc(asCallbackFunc) {}
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
 
-    iLuxEntity* GetEntity()
+    iLuxEntity *GetEntity()
     {
         return mpEntity;
     }
@@ -90,7 +90,7 @@ public:
         return mlStatesUsed;
     }
 
-    const tString& GetCallbackFunc()
+    const tString &GetCallbackFunc()
     {
         return msCallbackFunc;
     }
@@ -113,7 +113,7 @@ class iLuxEntity : public iLuxCollideCallbackContainer
     friend class cLuxSavedGameEntity;
     friend class cLuxSavedGameMap;
 public:
-    iLuxEntity(const tString &asName, int alID, cLuxMap *apMap,eLuxEntityType aEntityType);
+    iLuxEntity(const tString &asName, int alID, cLuxMap *apMap, eLuxEntityType aEntityType);
     virtual ~iLuxEntity();
 
     //////////////////
@@ -122,22 +122,22 @@ public:
 
     virtual void OnRenderSolid(cRendererCallbackFunctions* apFunctions) {}
 
-    virtual bool CanInteract(iPhysicsBody *apBody)=0;
-    virtual bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)=0;
+    virtual bool CanInteract(iPhysicsBody *apBody) = 0;
+    virtual bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos) = 0;
 
     virtual void AfterWorldLoad() {}
     virtual void OnMapEnter() {}
 
-    virtual void InFocusDraw(cGuiSet *apGuiSet,double adFrameTime) {}
+    virtual void InFocusDraw(cGuiSet *apGuiSet, double adFrameTime) {}
 
     //////////////////
     // Action
-    cSoundEntity* PlaySound(const tString& asName, const tString& asFile, bool abRemoveWhenDone, bool abAttach);
+    cSoundEntity *PlaySound(const tString& asName, const tString& asFile, bool abRemoveWhenDone, bool abAttach);
 
     void RunCallbackFunc(const tString& asType);
     void RunInteractCallbackFunc();
 
-    virtual void GiveDamage(float afAmount, int alStrength)=0;
+    virtual void GiveDamage(float afAmount, int alStrength) = 0;
 
     //////////////////
     // Properties
@@ -146,7 +146,7 @@ public:
         return mEntityType;
     }
 
-    const tString& GetName()const
+    const tString &GetName()const
     {
         return msName;
     }
@@ -168,7 +168,7 @@ public:
 
     void SetFullGameSave(bool abX)
     {
-        mbFullGameSave=abX;
+        mbFullGameSave = abX;
     }
     bool GetFullGameSave()
     {
@@ -201,7 +201,7 @@ public:
     {
         return mfMaxFocusDistance;
     }
-    virtual eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)=0;
+    virtual eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos) = 0;
 
     void SetCustomFocusCrossHair(eLuxFocusCrosshair aX)
     {
@@ -213,9 +213,9 @@ public:
         return _W("");
     }
 
-    virtual iEntity3D* GetAttachEntity()=0;
+    virtual iEntity3D *GetAttachEntity() = 0;
 
-    virtual cMeshEntity* GetMeshEntity()
+    virtual cMeshEntity *GetMeshEntity()
     {
         return NULL;
     }
@@ -253,7 +253,7 @@ public:
 
     ////////////////
     // Debug
-    virtual float DrawDebug(cGuiSet *apSet,iFontData *apFont,float afStartY)
+    virtual float DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY)
     {
         return afStartY;
     }
@@ -270,7 +270,7 @@ public:
         return mpSaveData;
     }
 
-    virtual iLuxEntity_SaveData* CreateSaveData()=0;
+    virtual iLuxEntity_SaveData *CreateSaveData() = 0;
     virtual void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     virtual void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     virtual void SetupSaveData(iLuxEntity_SaveData *apSaveData);
@@ -282,8 +282,8 @@ protected:
 
     /////////////////
     //Virtual methods
-    virtual void OnConnectionStateChange(iLuxEntity *apEntity, int alState)=0;
-    virtual void OnUpdate(double adFixedDelta)=0;
+    virtual void OnConnectionStateChange(iLuxEntity *apEntity, int alState) = 0;
+    virtual void OnUpdate(double adFixedDelta) = 0;
     virtual void BeforeEntityDestruction() {}
     virtual void OnSetActive(bool abX) {}
 
@@ -323,8 +323,8 @@ protected:
 
     iLuxEntity_SaveData *mpSaveData;
 
-    std::vector<cMesh*> mvPreloadedMeshes;
-    std::vector<cLuxEntityConnection*> mvConnections;
+    std::vector<cMesh *> mvPreloadedMeshes;
+    std::vector<cLuxEntityConnection *> mvConnections;
 
 private:
     eLuxEntityType mEntityType;

@@ -18,14 +18,14 @@ cLuxPropLoader_Button::cLuxPropLoader_Button(const tString& asName) : iLuxPropLo
 
 iLuxProp *cLuxPropLoader_Button::CreateProp(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxProp_Button, (asName, alID,apMap) );
+    return hplNew(cLuxProp_Button, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPropLoader_Button::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    cLuxProp_Button  *pButton = static_cast<cLuxProp_Button*>(apProp);
+    cLuxProp_Button  *pButton = static_cast<cLuxProp_Button *>(apProp);
 
     ///////////////////////////
     // General
@@ -36,11 +36,11 @@ void cLuxPropLoader_Button::LoadVariables(iLuxProp *apProp, cXmlElement *apRootE
 
 void cLuxPropLoader_Button::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
-    cLuxProp_Button  *pButton = static_cast<cLuxProp_Button*>(apProp);
+    cLuxProp_Button  *pButton = static_cast<cLuxProp_Button *>(apProp);
 
-    pButton->SetSwitchedOn(apInstanceVars->GetVarBool("SwitchedOn",false), false);
-    pButton->mbCanBeSwitchedOn = apInstanceVars->GetVarBool("CanBeSwitchedOn",true);
-    pButton->mbCanBeSwitchedOff = apInstanceVars->GetVarBool("CanBeSwitchedOff",true);
+    pButton->SetSwitchedOn(apInstanceVars->GetVarBool("SwitchedOn", false), false);
+    pButton->mbCanBeSwitchedOn = apInstanceVars->GetVarBool("CanBeSwitchedOn", true);
+    pButton->mbCanBeSwitchedOff = apInstanceVars->GetVarBool("CanBeSwitchedOff", true);
 }
 //-----------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ void cLuxPropLoader_Button::LoadInstanceVariables(iLuxProp *apProp, cResourceVar
 
 //-----------------------------------------------------------------------
 
-cLuxProp_Button::cLuxProp_Button(const tString &asName,int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_Button)
+cLuxProp_Button::cLuxProp_Button(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName, alID, apMap, eLuxPropType_Button)
 {
     mbSwitchedOn = true;
 }
@@ -75,7 +75,7 @@ bool cLuxProp_Button::CanInteract(iPhysicsBody *apBody)
     {
         return true;
     }
-    if(mbCanBeSwitchedOn && mbSwitchedOn==false)
+    if(mbCanBeSwitchedOn && mbSwitchedOn == false)
     {
         return true;
     }
@@ -183,7 +183,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxProp_Button::CreateSaveData()
+iLuxEntity_SaveData *cLuxProp_Button::CreateSaveData()
 {
     return hplNew(cLuxProp_Button_SaveData, ());
 }
@@ -195,13 +195,13 @@ void cLuxProp_Button::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxProp_Button_SaveData *pData = static_cast<cLuxProp_Button_SaveData*>(apSaveData);
+    cLuxProp_Button_SaveData *pData = static_cast<cLuxProp_Button_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyToVar(pData,mbSwitchedOn);
-    kCopyToVar(pData,mbCanBeSwitchedOn);
-    kCopyToVar(pData,mbCanBeSwitchedOff);
+    kCopyToVar(pData, mbSwitchedOn);
+    kCopyToVar(pData, mbCanBeSwitchedOn);
+    kCopyToVar(pData, mbCanBeSwitchedOff);
 }
 
 //-----------------------------------------------------------------------
@@ -211,13 +211,13 @@ void cLuxProp_Button::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxProp_Button_SaveData *pData = static_cast<cLuxProp_Button_SaveData*>(apSaveData);
+    cLuxProp_Button_SaveData *pData = static_cast<cLuxProp_Button_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyFromVar(pData,mbSwitchedOn);
-    kCopyFromVar(pData,mbCanBeSwitchedOn);
-    kCopyFromVar(pData,mbCanBeSwitchedOff);
+    kCopyFromVar(pData, mbSwitchedOn);
+    kCopyFromVar(pData, mbCanBeSwitchedOn);
+    kCopyFromVar(pData, mbCanBeSwitchedOff);
 }
 
 //-----------------------------------------------------------------------

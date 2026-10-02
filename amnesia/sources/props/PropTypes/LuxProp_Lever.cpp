@@ -13,14 +13,14 @@
 
 cLuxPropLoader_Lever::cLuxPropLoader_Lever(const tString& asName) : iLuxPropLoader(asName)
 {
-    mfDefaultMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction","Lever_DefaultMaxFocusDist",0);
+    mfDefaultMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction", "Lever_DefaultMaxFocusDist", 0);
 }
 
 //-----------------------------------------------------------------------
 
 iLuxProp *cLuxPropLoader_Lever::CreateProp(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxProp_Lever, (asName, alID,apMap) );
+    return hplNew(cLuxProp_Lever, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
@@ -45,7 +45,7 @@ static int ToAutoMoveGoal(const tString& asType)
 
 void cLuxPropLoader_Lever::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    cLuxProp_Lever  *pLever = static_cast<cLuxProp_Lever*>(apProp);
+    cLuxProp_Lever  *pLever = static_cast<cLuxProp_Lever *>(apProp);
 
     ///////////////////////////
     // General
@@ -94,7 +94,7 @@ static int ToStuckState(const tString& asType)
 
 void cLuxPropLoader_Lever::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
-    cLuxProp_Lever  *pLever = static_cast<cLuxProp_Lever*>(apProp);
+    cLuxProp_Lever  *pLever = static_cast<cLuxProp_Lever *>(apProp);
 
     int lStuckState = ToStuckState(apInstanceVars-> GetVarString("StuckState", ""));
     pLever->SetStuckState(lStuckState, false);
@@ -122,13 +122,13 @@ void cLuxPropLoader_Lever::LoadInstanceVariables(iLuxProp *apProp, cResourceVars
 
 //-----------------------------------------------------------------------
 
-cLuxProp_Lever::cLuxProp_Lever(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_Lever)
+cLuxProp_Lever::cLuxProp_Lever(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName, alID, apMap, eLuxPropType_Lever)
 {
     mlCurrentState  = 0; //-1 = min, 1=max, 0= middle
     mlStuckState = 0;//-1 = min, 1=max, 0= not stuck
     mbInteractionDisablesStuck = false;
 
-    mfStuckSoundTimer =0;
+    mfStuckSoundTimer = 0;
 
     mRotatePid.SetErrorNum(10);
     mRotatePid.p = 10.0f;
@@ -153,7 +153,7 @@ cLuxProp_Lever::~cLuxProp_Lever()
 
 bool cLuxProp_Lever::CanInteract(iPhysicsBody *apBody)
 {
-    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false)
+    if(apBody->GetMass() == 0 && mbCanInteractWithStaticBody == false)
     {
         return false;
     }
@@ -165,9 +165,9 @@ bool cLuxProp_Lever::CanInteract(iPhysicsBody *apBody)
 
 bool cLuxProp_Lever::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody)
+    if(apBody->GetMass() == 0 && mbCanInteractWithStaticBody)
     {
-        for(size_t i=0; i<mvBodies.size(); ++i)
+        for(size_t i = 0; i < mvBodies.size(); ++i)
         {
             if(mvBodies[i]->GetMass() > 0)
             {
@@ -177,12 +177,12 @@ bool cLuxProp_Lever::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
         }
     }
 
-    if(mlStuckState !=0 && mbInteractionDisablesStuck)
+    if(mlStuckState != 0 && mbInteractionDisablesStuck)
     {
         SetStuckState(0, true);
     }
 
-    if(mlStuckState ==0 && mbShowHints)
+    if(mlStuckState == 0 && mbShowHints)
     {
         gpBase->mpHintHandler->Add("EntityLever", kTranslate("Hints", "EntityLever"), 0);
     }
@@ -199,7 +199,7 @@ bool cLuxProp_Lever::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 
 void cLuxProp_Lever::OnSetupAfterLoad(cWorld *apWorld)
 {
-    int lNum=0;
+    int lNum = 0;
     iPhysicsJoint *pJoint = mvJoints[0];
     if(pJoint->GetType() != ePhysicsJointType_Hinge)
     {
@@ -207,7 +207,7 @@ void cLuxProp_Lever::OnSetupAfterLoad(cWorld *apWorld)
         return;
     }
 
-    mpHingeJoint = static_cast<iPhysicsJointHinge*>(pJoint);
+    mpHingeJoint = static_cast<iPhysicsJointHinge *>(pJoint);
 
     mpLeverBody = mpHingeJoint->GetChildBody();
 
@@ -259,7 +259,7 @@ void cLuxProp_Lever::BeforePropDestruction()
 
 eLuxFocusCrosshair cLuxProp_Lever::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false)
+    if(apBody->GetMass() == 0 && mbCanInteractWithStaticBody == false)
     {
         return eLuxFocusCrosshair_Default;
     }
@@ -278,7 +278,7 @@ void cLuxProp_Lever::SetStuckState(int alState, bool abEffects)
 
     mlStuckState = alState;
 
-    mfStuckSoundTimer =0; //Reset the stuck timer!
+    mfStuckSoundTimer = 0; //Reset the stuck timer!
 
     //Max
     if(mlStuckState == 1)
@@ -308,7 +308,7 @@ void cLuxProp_Lever::SetStuckState(int alState, bool abEffects)
 
 void cLuxProp_Lever::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 {
-    if(alState >0)
+    if(alState > 0)
     {
         SetStuckState(-1, true);
     }
@@ -329,20 +329,20 @@ void cLuxProp_Lever::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 
 void cLuxProp_Lever::CalculateMiddleAngle()
 {
-    float fAngleT = (mfMiddleAngleAmount+1)/2; //be between 0 and 1
-    mfMiddleAngle = mfDefaultMinAngle + (mfDefaultMaxAngle - mfDefaultMinAngle)*fAngleT;
+    float fAngleT = (mfMiddleAngleAmount + 1) / 2; //be between 0 and 1
+    mfMiddleAngle = mfDefaultMinAngle + (mfDefaultMaxAngle - mfDefaultMinAngle) * fAngleT;
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxProp_Lever::UpdateCheckStuckSound(double adFixedDelta)
 {
-    if(mlStuckState == 0 || mbIsInteractedWith==false)
+    if(mlStuckState == 0 || mbIsInteractedWith == false)
     {
         return;
     }
 
-    if(mfStuckSoundTimer >0)
+    if(mfStuckSoundTimer > 0)
     {
         mfStuckSoundTimer -= (float)adFixedDelta;
         return;
@@ -360,7 +360,7 @@ void cLuxProp_Lever::UpdateCheckStuckSound(double adFixedDelta)
 
 void cLuxProp_Lever::UpdateCheckLimit(float afAngle, double adFixedDelta)
 {
-    if(mlStuckState !=0)
+    if(mlStuckState != 0)
     {
         return;
     }
@@ -387,8 +387,8 @@ void cLuxProp_Lever::UpdateCheckLimit(float afAngle, double adFixedDelta)
     }
     ///////////////////////
     //Middle
-    else if(afAngle < (mfDefaultMaxAngle - mfMaxLimitRange)-cMath::ToRad(5) ||
-            afAngle > (mfDefaultMinAngle + mfMinLimitRange)+cMath::ToRad(5))
+    else if(afAngle < (mfDefaultMaxAngle - mfMaxLimitRange) - cMath::ToRad(5) ||
+            afAngle > (mfDefaultMinAngle + mfMinLimitRange) + cMath::ToRad(5))
     {
         ChangeState(0, true);
     }
@@ -398,7 +398,7 @@ void cLuxProp_Lever::UpdateCheckLimit(float afAngle, double adFixedDelta)
 
 void cLuxProp_Lever::UpdateAutoMove(float afAngle, double adFixedDelta)
 {
-    if(IsInteractedWith() || mbAutoMoveToAngle==false || mlStuckState!=0)
+    if(IsInteractedWith() || mbAutoMoveToAngle == false || mlStuckState != 0)
     {
         return;
     }
@@ -412,11 +412,11 @@ void cLuxProp_Lever::UpdateAutoMove(float afAngle, double adFixedDelta)
     }
     else if(mlAutoMoveGoal == -1)
     {
-        fGoalAngle = mfDefaultMinAngle + mfMinLimitRange/2.0f;
+        fGoalAngle = mfDefaultMinAngle + mfMinLimitRange / 2.0f;
     }
     else if(mlAutoMoveGoal == 1)
     {
-        fGoalAngle = mfDefaultMaxAngle - mfMaxLimitRange/2.0f;
+        fGoalAngle = mfDefaultMaxAngle - mfMaxLimitRange / 2.0f;
     }
 
     float fWantedSpeed = mfAutoMoveSpeedFactor * (afAngle - fGoalAngle);
@@ -516,7 +516,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxProp_Lever::CreateSaveData()
+iLuxEntity_SaveData *cLuxProp_Lever::CreateSaveData()
 {
     return hplNew(cLuxProp_Lever_SaveData, ());
 }
@@ -528,16 +528,16 @@ void cLuxProp_Lever::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxProp_Lever_SaveData *pData = static_cast<cLuxProp_Lever_SaveData*>(apSaveData);
+    cLuxProp_Lever_SaveData *pData = static_cast<cLuxProp_Lever_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyToVar(pData,mlCurrentState);
-    kCopyToVar(pData,mlStuckState);
-    kCopyToVar(pData,mbInteractionDisablesStuck);
-    kCopyToVar(pData,mfMiddleAngleAmount);
-    kCopyToVar(pData,mbAutoMoveToAngle);
-    kCopyToVar(pData,mlAutoMoveGoal);
+    kCopyToVar(pData, mlCurrentState);
+    kCopyToVar(pData, mlStuckState);
+    kCopyToVar(pData, mbInteractionDisablesStuck);
+    kCopyToVar(pData, mfMiddleAngleAmount);
+    kCopyToVar(pData, mbAutoMoveToAngle);
+    kCopyToVar(pData, mlAutoMoveGoal);
 }
 
 //-----------------------------------------------------------------------
@@ -547,16 +547,16 @@ void cLuxProp_Lever::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxProp_Lever_SaveData *pData = static_cast<cLuxProp_Lever_SaveData*>(apSaveData);
+    cLuxProp_Lever_SaveData *pData = static_cast<cLuxProp_Lever_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyFromVar(pData,mlCurrentState);
+    kCopyFromVar(pData, mlCurrentState);
     SetStuckState(pData->mlStuckState, false);
-    kCopyFromVar(pData,mbInteractionDisablesStuck);
-    kCopyFromVar(pData,mfMiddleAngleAmount);
-    kCopyFromVar(pData,mbAutoMoveToAngle);
-    kCopyFromVar(pData,mlAutoMoveGoal);
+    kCopyFromVar(pData, mbInteractionDisablesStuck);
+    kCopyFromVar(pData, mfMiddleAngleAmount);
+    kCopyFromVar(pData, mbAutoMoveToAngle);
+    kCopyFromVar(pData, mlAutoMoveGoal);
 }
 
 //-----------------------------------------------------------------------

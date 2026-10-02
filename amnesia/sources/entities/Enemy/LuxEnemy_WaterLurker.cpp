@@ -27,14 +27,14 @@ cLuxEnemyLoader_WaterLurker::cLuxEnemyLoader_WaterLurker(const tString& asName) 
 
 iLuxEnemy *cLuxEnemyLoader_WaterLurker::CreateEnemy(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxEnemy_WaterLurker, (asName, alID,apMap) );
+    return hplNew(cLuxEnemy_WaterLurker, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxEnemyLoader_WaterLurker::LoadVariables(iLuxEnemy *apEnemy, cXmlElement *apRootElem)
 {
-    cLuxEnemy_WaterLurker *pWaterLurker = static_cast<cLuxEnemy_WaterLurker*>(apEnemy);
+    cLuxEnemy_WaterLurker *pWaterLurker = static_cast<cLuxEnemy_WaterLurker *>(apEnemy);
 
     pWaterLurker->mfPlayerDetectionHeight = GetVarFloat("PlayerDetectionHeight", 0.6f);
     pWaterLurker->mfEatDamage = GetVarFloat("EatDamage", 0);
@@ -65,10 +65,10 @@ void cLuxEnemyLoader_WaterLurker::LoadVariables(iLuxEnemy *apEnemy, cXmlElement 
 
 void cLuxEnemyLoader_WaterLurker::LoadInstanceVariables(iLuxEnemy *apEnemy, cResourceVarsObject *apInstanceVars)
 {
-    cLuxEnemy_WaterLurker *pWaterLurker = static_cast<cLuxEnemy_WaterLurker*>(apEnemy);
+    cLuxEnemy_WaterLurker *pWaterLurker = static_cast<cLuxEnemy_WaterLurker *>(apEnemy);
 
     float fHeight = apInstanceVars->GetVarFloat("PlayerDetectionHeight", 0);
-    if(fHeight >0)
+    if(fHeight > 0)
     {
         pWaterLurker->mfPlayerDetectionHeight = fHeight;
     }
@@ -82,7 +82,7 @@ void cLuxEnemyLoader_WaterLurker::LoadInstanceVariables(iLuxEnemy *apEnemy, cRes
 
 //-----------------------------------------------------------------------
 
-cLuxEnemy_WaterLurker::cLuxEnemy_WaterLurker(const tString &asName, int alID, cLuxMap *apMap) : iLuxEnemy(asName,alID,apMap, eLuxEnemyType_WaterLurker)
+cLuxEnemy_WaterLurker::cLuxEnemy_WaterLurker(const tString &asName, int alID, cLuxMap *apMap) : iLuxEnemy(asName, alID, apMap, eLuxEnemyType_WaterLurker)
 {
     mbUseAnimations = false;
     mbCausesSanityDecrease = false;
@@ -145,15 +145,15 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     cAINode *pNode = mpPathfinder->GetNodeAtPos(apMessage->mvCustomValue, 0, 1.5f, true, true, true, NULL);
     if(pNode)
     {
-        gpBase->mpDebugHandler->AddMessage(_W("Found food!"),false);
+        gpBase->mpDebugHandler->AddMessage(_W("Found food!"), false);
 
         mvTempPos = pNode->GetPosition();
         ChangeState(eLuxEnemyState_Search);
-        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
+        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
     }
     else
     {
-        gpBase->mpDebugHandler->AddMessage(_W("Found food but no node.."),false);
+        gpBase->mpDebugHandler->AddMessage(_W("Found food but no node.."), false);
     }
 
     ////////////////////////////////
@@ -195,10 +195,10 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     ///////////////////////
     // Update
     kLuxOnUpdate
-    if(mpMover->GetStuckCounter()>0.9f)
+    if(mpMover->GetStuckCounter() > 0.9f)
     {
         ChangeState(eLuxEnemyState_Idle);
-        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
+        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
     }
 
     ///////////////////////
@@ -220,23 +220,23 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 
     kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
     ChangeState(eLuxEnemyState_Idle);
-    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
+    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
 
 
     ////////////////////////////////
     // Investigate (heard a sound)
     kLuxState(eLuxEnemyState_Investigate)
     kLuxOnEnter
-    gpBase->mpDebugHandler->AddMessage(_W("Sound Heard! Vol: ")+cString::ToStringW(mfTempVal),false);
+    gpBase->mpDebugHandler->AddMessage(_W("Sound Heard! Vol: ") + cString::ToStringW(mfTempVal), false);
 
-    cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true,NULL,1);
+    cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true, NULL, 1);
     if(pNode)
     {
         mpPathfinder->MoveTo(pNode->GetPosition());
     }
     else
     {
-        gpBase->mpDebugHandler->AddMessage(_W("Could not find node near sound!"),false);
+        gpBase->mpDebugHandler->AddMessage(_W("Could not find node near sound!"), false);
         mpPathfinder->MoveTo(mvTempPos);
     }
     SendMessage(eLuxEnemyMessage_TimeOut_2, 0.1f, true);
@@ -246,7 +246,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     ChangeState(eLuxEnemyState_Idle);
 
     kLuxOnUpdate
-    if(mpMover->GetStuckCounter()>0.9f)
+    if(mpMover->GetStuckCounter() > 0.9f)
     {
         ChangeState(eLuxEnemyState_Idle);
     }
@@ -263,7 +263,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     //If a new sound is loader than the previous go for that instead!
     if(mpPathfinder->IsMoving() && apMessage->mfCustomValue > mfTempVal)
     {
-        cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true,NULL,1);
+        cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true, NULL, 1);
         if(pNode)
         {
             mpPathfinder->MoveTo(pNode->GetPosition());
@@ -291,7 +291,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 
 
     kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
-    gpBase->mpDebugHandler->AddMessage(_W("to eat state!\n"),false);
+    gpBase->mpDebugHandler->AddMessage(_W("to eat state!\n"), false);
     ChangeState(eLuxEnemyState_Eat);
 
     ////////////////////////
@@ -311,33 +311,33 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     ////////////////////////////////
     //Search for food and eat it!
     kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-    cLuxProp_Object *pFood = GetClosestFood(3.5f,mfPlayerDetectionHeight);
+    cLuxProp_Object *pFood = GetClosestFood(3.5f, mfPlayerDetectionHeight);
     if(pFood)
     {
         iPhysicsBody *pFoodBody = pFood->GetBody(0);
         cVector3f vToFeet(mpCharBody->GetFeetPosition() - pFoodBody->GetLocalPosition());
         vToFeet.Normalize();
 
-        pFoodBody->AddImpulse(vToFeet*2.5f);
+        pFoodBody->AddImpulse(vToFeet * 2.5f);
 
         SplashWater(eWaterLurkerSplash_Eat);
         pFood->GiveDamage(mfEatDamage, 10);
-        gpBase->mpDebugHandler->AddMessage(_W("took bite!!"),false);
-        gpBase->mpDebugHandler->AddMessage(_W("Health: ")+cString::ToStringW(pFood->GetHealth()),false);
+        gpBase->mpDebugHandler->AddMessage(_W("took bite!!"), false);
+        gpBase->mpDebugHandler->AddMessage(_W("Health: ") + cString::ToStringW(pFood->GetHealth()), false);
 
         SendMessage(eLuxEnemyMessage_TimeOut, 1.2f, true);
         mvTempPos = pFood->GetBody(0)->GetLocalPosition();
     }
     else
     {
-        gpBase->mpDebugHandler->AddMessage(_W("No more food!!"),false);
+        gpBase->mpDebugHandler->AddMessage(_W("No more food!!"), false);
         ChangeState(eLuxEnemyState_GoHome);
     }
 
     ////////////////////////////////
     //Move forward
     kLuxOnUpdate
-    if(Dist2D(mvTempPos) > mpCharBody->GetSize().x*0.75f)
+    if(Dist2D(mvTempPos) > mpCharBody->GetSize().x * 0.75f)
     {
         mpMover->MoveToPos(mvTempPos);
     }
@@ -366,7 +366,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     ///////////////////////
     // Enter
     kLuxOnEnter
-    if(PlayerIsDetected()==false)
+    if(PlayerIsDetected() == false)
     {
         ChangeState(eLuxEnemyState_GoHome);
         mbCausesSanityDecrease = false;
@@ -382,7 +382,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
         SetMoveSpeed(eLuxEnemyMoveSpeed_Run);
         SendMessage(eLuxEnemyMessage_TimeOut, 0.1f, true);
         SendMessage(eLuxEnemyMessage_TimeOut_2, 0.1f, true);
-        gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Attack,this);
+        gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Attack, this);
         mbCausesSanityDecrease = true;
     }
 
@@ -405,7 +405,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     kLuxOnMessage(eLuxEnemyMessage_TimeOut)
     mpPathfinder->MoveTo(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition());
     SendMessage(eLuxEnemyMessage_TimeOut, 0.4f, true);
-    if(PlayerIsDetected()==false)
+    if(PlayerIsDetected() == false)
     {
         ChangeState(eLuxEnemyState_GoHome);
         mbCausesSanityDecrease = false;
@@ -458,7 +458,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     kLuxOnMessage(eLuxEnemyMessage_TimeOut)
     //SplashWater(eWaterLurkerSplash_Attack);
     Attack(mNormalAttackSize, mBreakDoorAttackDamage);
-    SendMessage(eLuxEnemyMessage_TimeOut_2, cMath::RandRectf(0.5,1.5f), true);
+    SendMessage(eLuxEnemyMessage_TimeOut_2, cMath::RandRectf(0.5, 1.5f), true);
 
     ///////////////////
     //Check if door is destroyed
@@ -514,7 +514,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
     //PlayAnim("Dead",false, 0.4f);
     //PlayAnim("Dead",false, 0.3f,false,1.0f,false,true,false);
     gpBase->mpPlayer->RemoveTerrorEnemy(this);
-    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
+    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
     mpCharBody->SetActive(false);
 
 
@@ -546,12 +546,12 @@ void cLuxEnemy_WaterLurker::OnRenderSolidImplemented(cRendererCallbackFunctions*
 {
     iPhysicsWorld *pPhysicsWorld = mpMap->GetPhysicsWorld();
 
-    mpCharBody->GetCurrentBody()->RenderDebugGeometry(apFunctions->GetLowLevelGfx(), cColor(1,1));
+    mpCharBody->GetCurrentBody()->RenderDebugGeometry(apFunctions->GetLowLevelGfx(), cColor(1, 1));
 
-    if(mCurrentState == eLuxEnemyState_AttackMeleeShort || mCurrentState== eLuxEnemyState_BreakDoor)
+    if(mCurrentState == eLuxEnemyState_AttackMeleeShort || mCurrentState == eLuxEnemyState_BreakDoor)
     {
-        pPhysicsWorld->RenderShapeDebugGeometry(GetAttackShape(0), GetDamageShapeMatrix(cVector3f(0,0,1)), apFunctions->GetLowLevelGfx(),
-                                                cColor(1,0,0,1));
+        pPhysicsWorld->RenderShapeDebugGeometry(GetAttackShape(0), GetDamageShapeMatrix(cVector3f(0, 0, 1)), apFunctions->GetLowLevelGfx(),
+                                                cColor(1, 0, 0, 1));
     }
 }
 
@@ -583,9 +583,9 @@ void cLuxEnemy_WaterLurker::SplashWater(eWaterLurkerSplash aType)
         sPS = msSplashPS_Attack;
     }
 
-    if(sPS!="")
+    if(sPS != "")
     {
-        cParticleSystem *pPS = mpMap->GetWorld()->CreateParticleSystem("LurkerSplash", sPS,1);
+        cParticleSystem *pPS = mpMap->GetWorld()->CreateParticleSystem("LurkerSplash", sPS, 1);
         if(pPS)
         {
             pPS->SetPosition(mpCharBody->GetFeetPosition() + cVector3f(0, 0.7f, 0));
@@ -679,7 +679,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxEnemy_WaterLurker::CreateSaveData()
+iLuxEntity_SaveData *cLuxEnemy_WaterLurker::CreateSaveData()
 {
     return hplNew(cLuxEnemy_WaterLurker_SaveData, ());
 }
@@ -691,11 +691,11 @@ void cLuxEnemy_WaterLurker::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxEnemy_WaterLurker_SaveData *pData = static_cast<cLuxEnemy_WaterLurker_SaveData*>(apSaveData);
+    cLuxEnemy_WaterLurker_SaveData *pData = static_cast<cLuxEnemy_WaterLurker_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyToVar(pData,mfPlayerDetectionHeight);
+    kCopyToVar(pData, mfPlayerDetectionHeight);
 }
 
 //-----------------------------------------------------------------------
@@ -705,11 +705,11 @@ void cLuxEnemy_WaterLurker::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxEnemy_WaterLurker_SaveData *pData = static_cast<cLuxEnemy_WaterLurker_SaveData*>(apSaveData);
+    cLuxEnemy_WaterLurker_SaveData *pData = static_cast<cLuxEnemy_WaterLurker_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyFromVar(pData,mfPlayerDetectionHeight);
+    kCopyFromVar(pData, mfPlayerDetectionHeight);
 
     ////////////////////////
     // Handle changed enums

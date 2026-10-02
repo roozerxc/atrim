@@ -22,13 +22,13 @@ cLuxLoadScreenHandler::cLuxLoadScreenHandler() : iLuxUpdateable("LuxLoadScreenHa
     ///////////////////////////////
     //Setup GUI stuff
     mpGuiSkin = mpGui->CreateSkin("gui_main_menu.skin");
-    mpGuiSet = mpGui->CreateSet("LoadScreen",mpGuiSkin);
+    mpGuiSet = mpGui->CreateSet("LoadScreen", mpGuiSkin);
 
     mvGuiSetCenterSize = cVector2f(800, 600);
     LuxCalcGuiSetScreenOffset(mvGuiSetCenterSize, mvGuiSetSize, mvGuiSetOffset);
-    mvGuiSetStartPos = cVector3f(-mvGuiSetOffset.x,-mvGuiSetOffset.y,0);
+    mvGuiSetStartPos = cVector3f(-mvGuiSetOffset.x, -mvGuiSetOffset.y, 0);
 
-    mpGuiSet->SetVirtualSize(mvGuiSetSize, -1000,1000, mvGuiSetOffset);
+    mpGuiSet->SetVirtualSize(mvGuiSetSize, -1000, 1000, mvGuiSetOffset);
     mpGuiSet->SetActive(false);
 
     ///////////////////////////////
@@ -41,7 +41,7 @@ cLuxLoadScreenHandler::cLuxLoadScreenHandler() : iLuxUpdateable("LuxLoadScreenHa
 
     ///////////////////////////////
     //Load graphics
-    mpWhiteGfx = mpGui->CreateGfxFilledRect(cColor(1,1), eGuiMaterial_Alpha);
+    mpWhiteGfx = mpGui->CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_Alpha);
     mpCurrentImage = NULL;
 
     ///////////////////////////////
@@ -50,16 +50,16 @@ cLuxLoadScreenHandler::cLuxLoadScreenHandler() : iLuxUpdateable("LuxLoadScreenHa
 
     mpFontDefault = NULL;
 
-    mvLoadingFontSize = gpBase->mpMenuCfg->GetVector2f("LoadScreen","LoadingFontSize", 0);
-    mvTextFontSize = gpBase->mpMenuCfg->GetVector2f("LoadScreen","TextFontSize", 0);
-    mfLoadingY = gpBase->mpMenuCfg->GetFloat("LoadScreen","LoadingY", 0);
-    mfTextWithImageY = gpBase->mpMenuCfg->GetFloat("LoadScreen","TextWithImageY", 0);
-    mfTextAloneY = gpBase->mpMenuCfg->GetFloat("LoadScreen","TextAloneY", 0);
-    mfImageY = gpBase->mpMenuCfg->GetFloat("LoadScreen","ImageY", 0);
-    mfTextMaxWidth = gpBase->mpMenuCfg->GetFloat("LoadScreen","TextMaxWidth", 0);
+    mvLoadingFontSize = gpBase->mpMenuCfg->GetVector2f("LoadScreen", "LoadingFontSize", 0);
+    mvTextFontSize = gpBase->mpMenuCfg->GetVector2f("LoadScreen", "TextFontSize", 0);
+    mfLoadingY = gpBase->mpMenuCfg->GetFloat("LoadScreen", "LoadingY", 0);
+    mfTextWithImageY = gpBase->mpMenuCfg->GetFloat("LoadScreen", "TextWithImageY", 0);
+    mfTextAloneY = gpBase->mpMenuCfg->GetFloat("LoadScreen", "TextAloneY", 0);
+    mfImageY = gpBase->mpMenuCfg->GetFloat("LoadScreen", "ImageY", 0);
+    mfTextMaxWidth = gpBase->mpMenuCfg->GetFloat("LoadScreen", "TextMaxWidth", 0);
 
-    mfFadeOutTime = gpBase->mpMenuCfg->GetFloat("LoadScreen","FadeOutTime", 0);
-    mfTextDurationMul = gpBase->mpMenuCfg->GetFloat("LoadScreen","TextDurationMul", 0);
+    mfFadeOutTime = gpBase->mpMenuCfg->GetFloat("LoadScreen", "FadeOutTime", 0);
+    mfTextDurationMul = gpBase->mpMenuCfg->GetFloat("LoadScreen", "TextDurationMul", 0);
 
     mpLoadingTextColor     = gpBase->mpMenuCfg->GetColor("LoadScreen", "LoadingTextColor",     cColor(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f));
     mpBaseLoadingTextColor = gpBase->mpMenuCfg->GetColor("LoadScreen", "BaseLoadingTextColor", cColor(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f));
@@ -82,7 +82,7 @@ cLuxLoadScreenHandler::~cLuxLoadScreenHandler()
 
 void cLuxLoadScreenHandler::LoadFonts()
 {
-    tString sFontFile = gpBase->mpMenuCfg->GetString("LoadScreen","DefaultFont","");
+    tString sFontFile = gpBase->mpMenuCfg->GetString("LoadScreen", "DefaultFont", "");
     mpFontDefault = LoadFont(sFontFile);
 }
 
@@ -104,8 +104,8 @@ void cLuxLoadScreenHandler::Reset()
     mlPrevTextNumBitFlags = 0;
 
     mfLoadingAlpha = 1.0f;
-    mfAlpha =0;
-    mfExtraTime=0;
+    mfAlpha = 0;
+    mfExtraTime = 0;
     mState = eLuxLoadScreenState_LastEnum;
 
     msCurrentGameScreenTextEntry = "";
@@ -166,11 +166,11 @@ void cLuxLoadScreenHandler::OnDraw(double adFrameTime)
 
 //-----------------------------------------------------------------------
 
-void cLuxLoadScreenHandler::GameScreenLoadDone(const tString& asEndSound,float afLoadTime)
+void cLuxLoadScreenHandler::GameScreenLoadDone(const tString& asEndSound, float afLoadTime)
 {
     /////////////////////////////
     // Init variables
-    mfAlpha =1;
+    mfAlpha = 1;
     mfExtraTime = 0;
     mfLoadingAlpha = 1.0f;
     mState = eLuxLoadScreenState_Game;
@@ -178,10 +178,10 @@ void cLuxLoadScreenHandler::GameScreenLoadDone(const tString& asEndSound,float a
 
     /////////////////////////////
     // Calculate extra time
-    if(msCurrentGameScreenTextEntry!="")
+    if(msCurrentGameScreenTextEntry != "")
     {
         tWString sLoadText = kTranslate(msLoadTextCat, msCurrentGameScreenTextEntry);
-        float fTimeWanted = gpBase->mpHelpFuncs->GetStringDuration(sLoadText)*mfTextDurationMul;
+        float fTimeWanted = gpBase->mpHelpFuncs->GetStringDuration(sLoadText) * mfTextDurationMul;
         if(fTimeWanted > afLoadTime)
         {
             mfExtraTime = fTimeWanted - afLoadTime;
@@ -201,7 +201,7 @@ void cLuxLoadScreenHandler::GameScreenLoadDone(const tString& asEndSound,float a
 
 void cLuxLoadScreenHandler::SetupLoadText(const tString& asCat, const tString& asEntry, int alRandomNum, const tString& asImage)
 {
-    if(msLoadTextCat == asCat && msLoadTextEntry==asEntry && msLoadTextImage == asImage && mlTextRandomNum == alRandomNum)
+    if(msLoadTextCat == asCat && msLoadTextEntry == asEntry && msLoadTextImage == asImage && mlTextRandomNum == alRandomNum)
     {
         return;
     }
@@ -245,12 +245,12 @@ void cLuxLoadScreenHandler::DrawMenuScreen()
     float fRatio = vImageSize.x / vImageSize.y;
     float fRatioMul = fRatio / (4.0f / 3.0f);
 
-    pSet->DrawGfx(pImage, cVector3f(400*(1-fRatioMul),0,0), cVector2f(800*fRatioMul, 600), cColor(1,1));
+    pSet->DrawGfx(pImage, cVector3f(400 * (1 - fRatioMul), 0, 0), cVector2f(800 * fRatioMul, 600), cColor(1, 1));
 
     //////////////////////
     //Draw Text
     cVector2f vSize(20);
-    cVector3f vPos(400, 530,1);
+    cVector3f vPos(400, 530, 1);
     pSet->DrawFont(sLoading, mpFontDefault, vPos, vSize, cColor(mpBaseLoadingTextColor.r, mpBaseLoadingTextColor.g, mpBaseLoadingTextColor.b, 1.0f), eFontAlign_Center);
 
     gpBase->mpHelpFuncs->DrawSetToScreen();
@@ -273,7 +273,7 @@ void cLuxLoadScreenHandler::ExitPressed()
 {
     if(mState == eLuxLoadScreenState_Game)
     {
-        mfExtraTime =0;
+        mfExtraTime = 0;
     }
     //Exit();
 }
@@ -317,10 +317,10 @@ tString cLuxLoadScreenHandler::GetGameScreenTextEntry()
     if(mlTextRandomNum > 1)
     {
         int lNum = -1;
-        int lIdx = cMath::RandRectl(0, mlTextRandomNum-1);
-        for(int i=0; i<mlTextRandomNum; ++i)
+        int lIdx = cMath::RandRectl(0, mlTextRandomNum - 1);
+        for(int i = 0; i < mlTextRandomNum; ++i)
         {
-            if((cMath::GetFlagBit(lIdx) & mlPrevTextNumBitFlags)==0)
+            if((cMath::GetFlagBit(lIdx) & mlPrevTextNumBitFlags) == 0)
             {
                 lNum = lIdx;
                 break;
@@ -328,26 +328,26 @@ tString cLuxLoadScreenHandler::GetGameScreenTextEntry()
             ++lIdx;
             if(lIdx >= mlTextRandomNum)
             {
-                lIdx =0;
+                lIdx = 0;
             }
         }
 
         //All area taken, just take random.
-        if(lNum <0)
+        if(lNum < 0)
         {
-            mlPrevTextNumBitFlags =0;
-            lNum = cMath::RandRectl(0, mlTextRandomNum-1);
+            mlPrevTextNumBitFlags = 0;
+            lNum = cMath::RandRectl(0, mlTextRandomNum - 1);
         }
 
         mlPrevTextNumBitFlags |= cMath::GetFlagBit(lNum);
 
-        if(lNum <10)
+        if(lNum < 10)
         {
-            sEntry += '0'+cString::ToString(lNum+1);
+            sEntry += '0' + cString::ToString(lNum + 1);
         }
         else
         {
-            sEntry += cString::ToString(lNum+1);
+            sEntry += cString::ToString(lNum + 1);
         }
     }
     return sEntry;
@@ -373,12 +373,12 @@ void cLuxLoadScreenHandler::UpdateGameState(double adFixedDelta)
 {
     ////////////////////////////
     // LoadAlpha
-    if(mfLoadingAlpha >0)
+    if(mfLoadingAlpha > 0)
     {
-        mfLoadingAlpha -= (float)adFixedDelta*0.33f;
-        if(mfLoadingAlpha<0)
+        mfLoadingAlpha -= (float)adFixedDelta * 0.33f;
+        if(mfLoadingAlpha < 0)
         {
-            mfLoadingAlpha =0;
+            mfLoadingAlpha = 0;
         }
     }
 
@@ -392,10 +392,10 @@ void cLuxLoadScreenHandler::UpdateGameState(double adFixedDelta)
 
     ////////////////////////////
     // Alpha
-    mfAlpha -= (float)adFixedDelta * (1.0f/mfFadeOutTime);
-    if(mfAlpha<0)
+    mfAlpha -= (float)adFixedDelta * (1.0f / mfFadeOutTime);
+    if(mfAlpha < 0)
     {
-        mfAlpha =0;
+        mfAlpha = 0;
         Exit();
     }
 }
@@ -404,11 +404,11 @@ void cLuxLoadScreenHandler::UpdateGameState(double adFixedDelta)
 
 void cLuxLoadScreenHandler::DrawGameState(double adFrameTime)
 {
-    mpGuiSet->DrawGfx(mpWhiteGfx, cVector3f(mvGuiSetStartPos.x,mvGuiSetStartPos.y,-1), mvGuiSetSize, cColor(0, 1));
+    mpGuiSet->DrawGfx(mpWhiteGfx, cVector3f(mvGuiSetStartPos.x, mvGuiSetStartPos.y, -1), mvGuiSetSize, cColor(0, 1));
 
     DrawGameScreen(mpGuiSet);
 
-    mpGuiSet->DrawGfx(mpWhiteGfx, cVector3f(mvGuiSetStartPos.x,mvGuiSetStartPos.y,40), mvGuiSetSize, cColor(0, 1.0f-mfAlpha));
+    mpGuiSet->DrawGfx(mpWhiteGfx, cVector3f(mvGuiSetStartPos.x, mvGuiSetStartPos.y, 40), mvGuiSetSize, cColor(0, 1.0f-mfAlpha));
 }
 
 //-----------------------------------------------------------------------
@@ -423,10 +423,10 @@ void cLuxLoadScreenHandler::DrawGameScreen(cGuiSet *apSet)
     //Draw Image
     if(mpCurrentImage)
     {
-        cVector3f vPos(0,mfImageY, 0.5f);
-        vPos.x = 400 - mpCurrentImage->GetImageSize().x/2.0f;
+        cVector3f vPos(0, mfImageY, 0.5f);
+        vPos.x = 400 - mpCurrentImage->GetImageSize().x / 2.0f;
 
-        apSet->DrawGfx(mpCurrentImage, vPos,-1, cColor(1,1,1,mfLoadingAlpha));
+        apSet->DrawGfx(mpCurrentImage, vPos, -1, cColor(1, 1, 1, mfLoadingAlpha));
     }
 
     //////////////////////
@@ -436,23 +436,23 @@ void cLuxLoadScreenHandler::DrawGameScreen(cGuiSet *apSet)
         ///////////////////
         //Text
         tWStringVec vTextRows;
-        mpFontDefault->GetWordWrapRows(mfTextMaxWidth, mvTextFontSize.y, mvTextFontSize, kTranslate(msLoadTextCat, msCurrentGameScreenTextEntry),&vTextRows);
+        mpFontDefault->GetWordWrapRows(mfTextMaxWidth, mvTextFontSize.y, mvTextFontSize, kTranslate(msLoadTextCat, msCurrentGameScreenTextEntry), &vTextRows);
 
         float fT = cMath::SmoothCurve(mfLoadingAlpha);
-        float fY = mfTextWithImageY*fT + mfTextAloneY*(1.0f-fT);
-        cVector3f vTextPos(400-mfTextMaxWidth/2,fY,1);
-        for(size_t i=0; i<vTextRows.size(); ++i)
+        float fY = mfTextWithImageY * fT + mfTextAloneY * (1.0f-fT);
+        cVector3f vTextPos(400 - mfTextMaxWidth / 2, fY, 1);
+        for(size_t i = 0; i < vTextRows.size(); ++i)
         {
             apSet->DrawFont(vTextRows[i], mpFontDefault, vTextPos, mvTextFontSize,
                             cColor(mpLoadingTextColor.r, mpLoadingTextColor.g, mpLoadingTextColor.b, 1.0f));
 
-            vTextPos.y += mvTextFontSize.y+2;
+            vTextPos.y += mvTextFontSize.y + 2;
         }
 
         ///////////////////
         //Loading
         tWString sLoading = kTranslate("General", "Loading");
-        cVector3f vPos(400, mfLoadingY,1);
+        cVector3f vPos(400, mfLoadingY, 1);
 
         apSet->DrawFont(sLoading, mpFontDefault, vPos, mvLoadingFontSize,
                         cColor(mpGameLoadingTextColor.r, mpGameLoadingTextColor.g, mpGameLoadingTextColor.b, mfLoadingAlpha),
@@ -463,7 +463,7 @@ void cLuxLoadScreenHandler::DrawGameScreen(cGuiSet *apSet)
     else
     {
         tWString sLoading = kTranslate("General", "Loading");
-        cVector3f vPos(400, 300-mvLoadingFontSize.y/2,1);
+        cVector3f vPos(400, 300 - mvLoadingFontSize.y / 2, 1);
 
         apSet->DrawFont(sLoading, mpFontDefault, vPos, mvLoadingFontSize,
                         cColor(mpBaseLoadingTextColor.r, mpBaseLoadingTextColor.g, mpBaseLoadingTextColor.b, 1.0f),

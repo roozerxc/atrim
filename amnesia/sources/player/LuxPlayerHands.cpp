@@ -40,7 +40,7 @@ cLuxPlayerHands::~cLuxPlayerHands()
         gpBase->mpEngine->GetResources()->GetMeshManager()->Destroy(mpHandsMesh);
     }
 
-    for(size_t i=0; i<mvHandAnimations.size(); ++i)
+    for(size_t i = 0; i < mvHandAnimations.size(); ++i)
     {
         gpBase->mpEngine->GetResources()->GetAnimationManager()->Destroy(mvHandAnimations[i]);
     }
@@ -65,22 +65,22 @@ cLuxPlayerHandsLoader::cLuxPlayerHandsLoader(const tString& asName, cLuxPlayerHa
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerHandsLoader::BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars)
+void cLuxPlayerHandsLoader::BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars)
 {
 
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxPlayerHandsLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars)
+void cLuxPlayerHandsLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars)
 {
     mpPlayerHands->mpHandsEntity = mpEntity;
     if(mpEntity)
     {
-        mpEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster,false);
+        mpEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster, false);
     }
 
-    if(mpMesh && mpPlayerHands->mpHandsMesh==NULL)
+    if(mpMesh && mpPlayerHands->mpHandsMesh == NULL)
     {
         mpMesh->IncUserCount();
         mpPlayerHands->mpHandsMesh = mpMesh;
@@ -88,7 +88,7 @@ void cLuxPlayerHandsLoader::AfterLoad(cXmlElement *apRootElem, const cMatrixf &a
 
     if(mpPlayerHands->mvHandAnimations.empty() && mpEntity)
     {
-        for(int i=0; i<mpEntity->GetAnimationStateNum(); ++i)
+        for(int i = 0; i < mpEntity->GetAnimationStateNum(); ++i)
         {
             cAnimationState *pAnimState = mpEntity->GetAnimationState(i);
             cAnimation *pAnim = pAnimState->GetAnimation();
@@ -120,13 +120,13 @@ void cLuxPlayerHands::Reset()
     mpHandsEntity = NULL;
 
     mHandState = eLuxHandsState_Disabled;
-    mfHandObjectAlpha =0;
+    mfHandObjectAlpha = 0;
 
     msCurrentAnim = "";
 
     mlstCamRotations.clear();
 
-    for(size_t i=0; i<mvHandObjects.size(); ++i)
+    for(size_t i = 0; i < mvHandObjects.size(); ++i)
     {
         iLuxHandObject *pHandObject = mvHandObjects[i];
         pHandObject->Reset();
@@ -141,7 +141,7 @@ void cLuxPlayerHands::Reset()
 
 void cLuxPlayerHands::Update(double adFixedDelta)
 {
-    for(int i=0; i<mpHandsEntity->GetAnimationStateNum(); ++i)
+    for(int i = 0; i < mpHandsEntity->GetAnimationStateNum(); ++i)
     {
         cAnimationState *pAnim = mpHandsEntity->GetAnimationState(i);
     }
@@ -165,7 +165,7 @@ void cLuxPlayerHands::Update(double adFixedDelta)
                 cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
 
                 CreateAndAttachHandObject(pMap, mpCurrentHandObject);
-                PlayAnim(mpCurrentHandObject->GetAnimDraw(),false);
+                PlayAnim(mpCurrentHandObject->GetAnimDraw(), false);
 
                 mHandState = eLuxHandsState_Draw;
             }
@@ -185,7 +185,7 @@ void cLuxPlayerHands::Update(double adFixedDelta)
     {
         if(AnimOver())
         {
-            PlayAnim(mpCurrentHandObject->GetAnimIdle(),true);
+            PlayAnim(mpCurrentHandObject->GetAnimIdle(), true);
             mHandState = eLuxHandsState_Idle;
         }
 
@@ -208,7 +208,7 @@ void cLuxPlayerHands::Update(double adFixedDelta)
             {
                 if(mpCurrentHandObject->AnimationIsOver())
                 {
-                    PlayAnim(mpCurrentHandObject->GetAnimIdle(),true);
+                    PlayAnim(mpCurrentHandObject->GetAnimIdle(), true);
                     mHandState = eLuxHandsState_Idle;
                     return;
                 }
@@ -218,7 +218,7 @@ void cLuxPlayerHands::Update(double adFixedDelta)
 
     ////////////////////
     // Update Hand Object (need to do like this, since current might not be drawn yet!)
-    for(size_t i=0; i<mvHandObjects.size(); ++i)
+    for(size_t i = 0; i < mvHandObjects.size(); ++i)
     {
         iLuxHandObject *pHandObject = mvHandObjects[i];
         if(pHandObject->GetMeshEntity() && pHandObject->GetMeshEntity()->IsActive())
@@ -247,7 +247,7 @@ void cLuxPlayerHands::OnMapEnter(cLuxMap *apMap)
         CreateAndAttachHandObject(apMap, mpCurrentHandObject);
 
         mpHandsEntity->SetVisible(true);
-        mpHandsEntity->PlayName(mpCurrentHandObject->GetAnimIdle(),true, true);
+        mpHandsEntity->PlayName(mpCurrentHandObject->GetAnimIdle(), true, true);
     }
 
     mlstCamRotations.clear();
@@ -258,7 +258,7 @@ void cLuxPlayerHands::OnMapEnter(cLuxMap *apMap)
 void cLuxPlayerHands::OnMapLeave(cLuxMap *apMap)
 {
     mpHandsEntity = NULL;
-    for(size_t i=0; i<mvHandObjects.size(); ++i)
+    for(size_t i = 0; i < mvHandObjects.size(); ++i)
     {
         iLuxHandObject *pHandObject = mvHandObjects[i];
         pHandObject->ResetEntityContainers();
@@ -282,7 +282,7 @@ void cLuxPlayerHands::DestroyWorldEntities(cLuxMap *apMap)
 
     ///////////////////////////////////
     // Destroy all hand object entities
-    for(size_t i=0; i<mvHandObjects.size(); ++i)
+    for(size_t i = 0; i < mvHandObjects.size(); ++i)
     {
         iLuxHandObject *pHandObject = mvHandObjects[i];
         pHandObject->DestroyEntity(apMap);
@@ -340,7 +340,7 @@ bool cLuxPlayerHands::CheckAnimationEvent(float afRelTime)
 
 void cLuxPlayerHands::DoAction(eLuxPlayerAction aAction, bool abPressed)
 {
-    if(mpCurrentHandObject==NULL)
+    if(mpCurrentHandObject == NULL)
     {
         return;
     }
@@ -359,7 +359,7 @@ void cLuxPlayerHands::DoAction(eLuxPlayerAction aAction, bool abPressed)
 
 void cLuxPlayerHands::SetActiveHandObject(const tString& asName)
 {
-    if(mpHandsEntity==NULL)
+    if(mpHandsEntity == NULL)
     {
         return;    //Make sure the
     }
@@ -380,11 +380,11 @@ void cLuxPlayerHands::SetActiveHandObject(const tString& asName)
 
 //-----------------------------------------------------------------------
 
-iLuxHandObject* cLuxPlayerHands::GetHandObject(const tString& asName)
+iLuxHandObject *cLuxPlayerHands::GetHandObject(const tString& asName)
 {
     //////////////////////////////////////
     // Search in already loaded objects
-    for(size_t i=0; i<mvHandObjects.size(); ++i)
+    for(size_t i = 0; i < mvHandObjects.size(); ++i)
     {
         iLuxHandObject *apObject = mvHandObjects[i];
         if(asName == apObject->GetName())
@@ -416,7 +416,7 @@ void cLuxPlayerHands::SetCurrentHandObject(iLuxHandObject *apObject)
     // Previous hand set
     if(mpCurrentHandObject)
     {
-        PlayAnim(mpCurrentHandObject->GetAnimHolster(),false);
+        PlayAnim(mpCurrentHandObject->GetAnimHolster(), false);
 
         mHandState = eLuxHandsState_Holster;
     }
@@ -425,7 +425,7 @@ void cLuxPlayerHands::SetCurrentHandObject(iLuxHandObject *apObject)
     else if(apObject)
     {
         CreateAndAttachHandObject(pMap, apObject);
-        PlayAnim(apObject->GetAnimDraw(),false);
+        PlayAnim(apObject->GetAnimDraw(), false);
         mpHandsEntity->SetVisible(true);
 
         mHandState = eLuxHandsState_Draw;
@@ -452,8 +452,8 @@ void cLuxPlayerHands::SetState(eLuxHandsState aState)
 
 void cLuxPlayerHands::ResetHandObjectVars()
 {
-    mfHandObjectChargeCount =0;
-    mlHandObjectState =0;
+    mfHandObjectChargeCount = 0;
+    mlHandObjectState = 0;
     mbHandObjectAttackDown = false;
     mbHandObjectInteractDown = false;
 
@@ -472,8 +472,8 @@ void cLuxPlayerHands::CreateHandEntity(cLuxMap *apMap)
     apMap->GetWorld()->CreateEntity("PlayerHands", cMatrixf::Identity, "models/player/hands/hands.ent");
     mpHandsEntity->SetVisible(false);
     mpHandsEntity->Stop();
-    mpHandsEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster,false);
-    mpHandsEntity->SetRenderFlagBit(eRenderableFlag_VisibleInReflection,false);
+    mpHandsEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster, false);
+    mpHandsEntity->SetRenderFlagBit(eRenderableFlag_VisibleInReflection, false);
 }
 
 void cLuxPlayerHands::DestroyHandEntity(cLuxMap *apMap)
@@ -502,7 +502,7 @@ void cLuxPlayerHands::CreateAndAttachHandObject(cLuxMap *apMap, iLuxHandObject *
     if(pMeshEntity)
     {
         cBoneState *pBone = mpHandsEntity->GetBoneStateFromName(apHandObject->GetAttachBoneName());
-        if(pBone==NULL)
+        if(pBone == NULL)
         {
             Error("Could not find bone '%s' in player hands model!\n", apHandObject->GetAttachBoneName().c_str());
             return;
@@ -512,14 +512,14 @@ void cLuxPlayerHands::CreateAndAttachHandObject(cLuxMap *apMap, iLuxHandObject *
     }
     apHandObject->SetSetEntitiesVisible(true);
 
-    mfHandObjectAlpha =0;
+    mfHandObjectAlpha = 0;
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPlayerHands::HideAllHandObjects()
 {
-    for(size_t i=0; i<mvHandObjects.size(); ++i)
+    for(size_t i = 0; i < mvHandObjects.size(); ++i)
     {
         iLuxHandObject *pHandObject = mvHandObjects[i];
         pHandObject->SetSetEntitiesVisible(false);
@@ -530,7 +530,7 @@ void cLuxPlayerHands::HideAllHandObjects()
 
 void cLuxPlayerHands::UpdatePlayerHandsPos(double adFixedDelta)
 {
-    if(mpHandsEntity==NULL)
+    if(mpHandsEntity == NULL)
     {
         return;
     }
@@ -547,7 +547,7 @@ void cLuxPlayerHands::UpdatePlayerHandsPos(double adFixedDelta)
     ////////////////////////////////////////
     // Iterate all of the saved rotations and calculate a new
     cVector3f vFinalRot = 0;
-    float fWeightTotal =0;
+    float fWeightTotal = 0;
     float fCount = 1.0f;
 
     tVector3fListIt it = mlstCamRotations.begin();
@@ -591,14 +591,14 @@ void cLuxPlayerHands::UpdatePlayerHandsPos(double adFixedDelta)
 
     vHandPosAdd = vRight * vHandPosAdd.x + vUp * vHandPosAdd.y + vFwd * vHandPosAdd.z;
 
-    mtxHands.SetTranslation(pCam->GetPosition() - vHandPosAdd *mfPosAddMul);
+    mtxHands.SetTranslation(pCam->GetPosition() - vHandPosAdd * mfPosAddMul);
 
     mpHandsEntity->SetMatrix(mtxHands);
 }
 
 //-----------------------------------------------------------------------
 
-iLuxHandObject* cLuxPlayerHands::LoadHandObject(const tString& asName)
+iLuxHandObject *cLuxPlayerHands::LoadHandObject(const tString& asName)
 {
     /////////////////////
     // Init variables
@@ -607,12 +607,12 @@ iLuxHandObject* cLuxPlayerHands::LoadHandObject(const tString& asName)
     /////////////////////
     // Get file name
     tString sFile = cString::SetFileExt(asName, "ho");
-    sFile = "/models/hand_objects/"+asName+"/"+sFile;
+    sFile = "/models/hand_objects/" + asName + "/" + sFile;
 
     /////////////////////
     // Load XML document
     iXmlDocument *pDoc = pResources->LoadXmlDocument(sFile);
-    if(pDoc==NULL)
+    if(pDoc == NULL)
     {
         Error("Could not load hand object file: '%s'\n", sFile.c_str());
         return NULL;
@@ -641,7 +641,7 @@ iLuxHandObject* cLuxPlayerHands::LoadHandObject(const tString& asName)
     // Create the object
 
     //Get the type
-    eLuxHandObjectType aType = ToHandObjectType(pMainElem->GetAttributeString("Type",""));
+    eLuxHandObjectType aType = ToHandObjectType(pMainElem->GetAttributeString("Type", ""));
     if(aType == eLuxHandObjectType_LastEnum)
     {
         pResources->DestroyXmlDocument(pDoc);
@@ -649,7 +649,7 @@ iLuxHandObject* cLuxPlayerHands::LoadHandObject(const tString& asName)
     }
 
     //Create object and load data
-    iLuxHandObject *pObject = CreateObjectFromType(asName,aType);
+    iLuxHandObject *pObject = CreateObjectFromType(asName, aType);
     if(aType == eLuxHandObjectType_LastEnum)
     {
         pResources->DestroyXmlDocument(pDoc);
@@ -657,7 +657,7 @@ iLuxHandObject* cLuxPlayerHands::LoadHandObject(const tString& asName)
     }
 
     //Load the main data (model file name, etc)
-    if(pObject->LoadMainData(pMainElem)==false)
+    if(pObject->LoadMainData(pMainElem) == false)
     {
         pResources->DestroyXmlDocument(pDoc);
         return NULL;
@@ -677,7 +677,7 @@ iLuxHandObject* cLuxPlayerHands::LoadHandObject(const tString& asName)
 
 //-----------------------------------------------------------------------
 
-iLuxHandObject* cLuxPlayerHands::CreateObjectFromType(const tString& asName, eLuxHandObjectType aType)
+iLuxHandObject *cLuxPlayerHands::CreateObjectFromType(const tString& asName, eLuxHandObjectType aType)
 {
     switch(aType)
     {
@@ -691,7 +691,7 @@ iLuxHandObject* cLuxPlayerHands::CreateObjectFromType(const tString& asName, eLu
         return hplNew(cLuxHandObject_LightSource, (asName, this));
     }
 
-    Error("HandObject '%s' of type %d could not be created! Type is not implemented in code!",asName.c_str(), aType);
+    Error("HandObject '%s' of type %d could not be created! Type is not implemented in code!", asName.c_str(), aType);
 
     return NULL;
 }

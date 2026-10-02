@@ -8,7 +8,7 @@
 
 //---------------------------------------
 
-cLuxBase* gpBase = NULL;
+cLuxBase *gpBase = NULL;
 
 //---------------------------------------
 
@@ -27,12 +27,12 @@ int hplMain(const tString &asCommandline)
     //Error occurred
     else
     {
-        if(gpBase->msErrorMessage==_W(""))
+        if(gpBase->msErrorMessage == _W(""))
         {
             gpBase->msErrorMessage = _W("Failed to initialize base engine!");
         }
 
-        cPlatform::CreateMessageBox(_W("Error!"),gpBase->msErrorMessage.c_str());
+        cPlatform::CreateMessageBox(_W("Error!"), gpBase->msErrorMessage.c_str());
         //No Exit, since it was not sure everything was created as it should.
     }
 

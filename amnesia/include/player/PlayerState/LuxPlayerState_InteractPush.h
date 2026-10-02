@@ -33,7 +33,7 @@ public:
     void Update(double adFixedDelta);
     void PostUpdate(double adFixedDelta);
 
-    bool OnDoAction(eLuxPlayerAction aAction,bool abPressed);
+    bool OnDoAction(eLuxPlayerAction aAction, bool abPressed);
 
     void OnScroll(float afAmount);
 
@@ -51,11 +51,11 @@ public:
         return false;
     }
 
-    cGuiGfxElement* GetCrosshair();
+    cGuiGfxElement *GetCrosshair();
 
     void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter) {}
 
-    float DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY);
+    float DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY);
 
     /////////////////////////////////
     //Save data stuff
@@ -63,10 +63,10 @@ public:
     {
         return false;
     }
-    iLuxPlayerState_SaveData* CreateSaveData();
+    iLuxPlayerState_SaveData *CreateSaveData();
 
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);
-    void LoadFromSaveDataBeforeEnter(cLuxMap *apMap,iLuxPlayerState_SaveData* apSaveData);
+    void LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
     void LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
 
 protected:

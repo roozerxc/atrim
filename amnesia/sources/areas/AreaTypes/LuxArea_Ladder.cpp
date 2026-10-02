@@ -39,9 +39,9 @@ iLuxArea *cLuxAreaLoader_Ladder::CreateArea(const tString& asName, int alID, cLu
 
 void cLuxAreaLoader_Ladder::LoadVariables(iLuxArea *apArea, cWorld *apWorld)
 {
-    cLuxArea_Ladder *pLadderArea = static_cast<cLuxArea_Ladder*>(apArea);
+    cLuxArea_Ladder *pLadderArea = static_cast<cLuxArea_Ladder *>(apArea);
 
-    pLadderArea->msMaterial = GetVarString("Material","metal");
+    pLadderArea->msMaterial = GetVarString("Material", "metal");
 }
 
 void cLuxAreaLoader_Ladder::SetupArea(iLuxArea *apArea, cWorld *apWorld)
@@ -57,9 +57,9 @@ void cLuxAreaLoader_Ladder::SetupArea(iLuxArea *apArea, cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-cLuxArea_Ladder::cLuxArea_Ladder(const tString &asName, int alID, cLuxMap *apMap)  : iLuxArea(asName,alID,apMap, eLuxAreaType_Ladder)
+cLuxArea_Ladder::cLuxArea_Ladder(const tString &asName, int alID, cLuxMap *apMap)  : iLuxArea(asName, alID, apMap, eLuxAreaType_Ladder)
 {
-    mfMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction","Ladder_MaxFocusDist",0);
+    mfMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction", "Ladder_MaxFocusDist", 0);
 }
 
 //-----------------------------------------------------------------------
@@ -84,8 +84,8 @@ void cLuxArea_Ladder::SetupAfterLoad(cWorld *apWorld)
 
     mvForward = mtxInv.GetForward();
 
-    mfMaxY = mpBody->GetWorldPosition().y + mpBody->GetShape()->GetSize().y/2.0f;
-    mfMinY = mpBody->GetWorldPosition().y - mpBody->GetShape()->GetSize().y/2.0f;
+    mfMaxY = mpBody->GetWorldPosition().y + mpBody->GetShape()->GetSize().y / 2.0f;
+    mfMinY = mpBody->GetWorldPosition().y - mpBody->GetShape()->GetSize().y / 2.0f;
 }
 
 //-----------------------------------------------------------------------
@@ -116,11 +116,11 @@ bool cLuxArea_Ladder::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
     //Check higher and higher positions until a free is found.
     do
     {
-        if(pCharBody->CheckCharacterFits(vStartPos, false,0,NULL,kEpsilonf))
+        if(pCharBody->CheckCharacterFits(vStartPos, false, 0, NULL, kEpsilonf))
         {
-            if(bFirstTry==false)
+            if(bFirstTry == false)
             {
-                vStartPos+=cVector3f(0,0.1f,0);
+                vStartPos += cVector3f(0, 0.1f, 0);
             }
 
             bFound = true;
@@ -128,12 +128,12 @@ bool cLuxArea_Ladder::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
         }
 
         bFirstTry = false;
-        vStartPos += cVector3f(0,0.1f,0);
+        vStartPos += cVector3f(0, 0.1f, 0);
     }
-    while(vStartPos.y <= mfMaxY-0.2f);
+    while(vStartPos.y <= mfMaxY - 0.2f);
 
     //If not found, the skip
-    if(bFound==false)
+    if(bFound == false)
     {
         //TODO: Message?
         return false;
@@ -158,7 +158,7 @@ eLuxFocusCrosshair cLuxArea_Ladder::GetFocusCrosshair(iPhysicsBody *apBody, cons
 
 cVector3f cLuxArea_Ladder::GetStartRotation()
 {
-    return cMath::GetAngleFromPoints3D(cVector3f(0,0,0), GetForward()*-1);
+    return cMath::GetAngleFromPoints3D(cVector3f(0, 0, 0), GetForward() * -1);
 }
 
 //-----------------------------------------------------------------------
@@ -170,17 +170,17 @@ cVector3f cLuxArea_Ladder::GetStartPosition()
     cVector3f vCharSize = pCharBody->GetShape(0)->GetSize();
 
     cVector3f vPos = pCharBody->GetPosition();
-    cVector3f vLadderPos =    mpBody->GetWorldPosition() + GetForward()*vCharSize.x *0.6f;
-    vLadderPos.y = vPos.y+0.05f;
+    cVector3f vLadderPos =    mpBody->GetWorldPosition() + GetForward() * vCharSize.x * 0.6f;
+    vLadderPos.y = vPos.y + 0.05f;
 
-    if(vLadderPos.y > mfMaxY - vCharSize.y*0.3f)
+    if(vLadderPos.y > mfMaxY - vCharSize.y * 0.3f)
     {
-        vLadderPos.y = mfMaxY - vCharSize.y*0.3f;
+        vLadderPos.y = mfMaxY - vCharSize.y * 0.3f;
     }
 
-    if(vLadderPos.y - vCharSize.y/2 < mfMinY)
+    if(vLadderPos.y - vCharSize.y / 2 < mfMinY)
     {
-        vLadderPos.y = mfMinY + vCharSize.y/2+0.1f;
+        vLadderPos.y = mfMinY + vCharSize.y / 2 + 0.1f;
     }
 
     return vLadderPos;
@@ -210,14 +210,14 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxArea* cLuxArea_Ladder_SaveData::CreateArea(cLuxMap *apMap)
+iLuxArea *cLuxArea_Ladder_SaveData::CreateArea(cLuxMap *apMap)
 {
     return hplNew(cLuxArea_Ladder, (msName, mlID, apMap));
 }
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxArea_Ladder::CreateSaveData()
+iLuxEntity_SaveData *cLuxArea_Ladder::CreateSaveData()
 {
     return hplNew(cLuxArea_Ladder_SaveData, ());
 }
@@ -227,7 +227,7 @@ iLuxEntity_SaveData* cLuxArea_Ladder::CreateSaveData()
 void cLuxArea_Ladder::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 {
     super_class::SaveToSaveData(apSaveData);
-    cLuxArea_Ladder_SaveData *pData = static_cast<cLuxArea_Ladder_SaveData*>(apSaveData);
+    cLuxArea_Ladder_SaveData *pData = static_cast<cLuxArea_Ladder_SaveData *>(apSaveData);
 
     kCopyToVar(pData, msMaterial);
 }
@@ -237,7 +237,7 @@ void cLuxArea_Ladder::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 void cLuxArea_Ladder::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 {
     super_class::LoadFromSaveData(apSaveData);
-    cLuxArea_Ladder_SaveData *pData = static_cast<cLuxArea_Ladder_SaveData*>(apSaveData);
+    cLuxArea_Ladder_SaveData *pData = static_cast<cLuxArea_Ladder_SaveData *>(apSaveData);
 
     kCopyFromVar(pData, msMaterial);
 }

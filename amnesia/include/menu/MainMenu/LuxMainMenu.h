@@ -45,9 +45,9 @@ public:
     iLuxMainMenuWindow(cGuiSet *apGuiSet, cGuiSkin *apGuiSkin);
     virtual ~iLuxMainMenuWindow() {}
 
-    virtual void CreateGui()=0;
+    virtual void CreateGui() = 0;
 
-    virtual void ExitPressed()=0;
+    virtual void ExitPressed() = 0;
 
     void SetActive(bool abX);
 
@@ -90,7 +90,7 @@ public:
 
     void OnDraw(double adFrameTime);
 
-    cGuiSet* GetSet()
+    cGuiSet *GetSet()
     {
         return mpGuiSet;
     }
@@ -219,8 +219,8 @@ private:
     float mfDescriptionAlpha;
     bool mbFadeInDescription;
 
-    cWidgetLabel * mpSaveCost;
-    cWidgetLabel * mpNumTinderboxes;
+    cWidgetLabel *mpSaveCost;
+    cWidgetLabel *mpNumTinderboxes;
 
     ///////////////////////
     // Settings
@@ -269,10 +269,10 @@ private:
 
     cGuiGfxElement *mpLogoGfx;
 
-    std::vector<iLuxMainMenuWindow*> mvWindows;
+    std::vector<iLuxMainMenuWindow *> mvWindows;
     eLuxMainMenuWindow mCurrentWindow;
 
-    iWidget* mpLastFocusedItem;
+    iWidget *mpLastFocusedItem;
 
     cWorld *mpBgWorld;
     cCamera *mpBgCamera;
@@ -280,7 +280,7 @@ private:
     bool mbGuiCreated;
     cVector2f mvScreenSize;
 
-    std::vector<cWidgetLabel*> mvTopMenuLabels;
+    std::vector<cWidgetLabel *> mvTopMenuLabels;
     bool mbTopMenuVisible;
     float mfTopMenuAlpha;
 

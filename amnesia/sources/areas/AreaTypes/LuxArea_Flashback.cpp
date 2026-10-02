@@ -35,10 +35,10 @@ iLuxArea *cLuxAreaLoader_Flashback::CreateArea(const tString& asName, int alID, 
 
 void cLuxAreaLoader_Flashback::LoadVariables(iLuxArea *apArea, cWorld *apWorld)
 {
-    cLuxArea_Flashback *pFlashArea = static_cast<cLuxArea_Flashback*>(apArea);
+    cLuxArea_Flashback *pFlashArea = static_cast<cLuxArea_Flashback *>(apArea);
 
-    pFlashArea->msFlashbackFile = GetVarString("FlashbackFile","");
-    pFlashArea->msCallback = GetVarString("Callback","");
+    pFlashArea->msFlashbackFile = GetVarString("FlashbackFile", "");
+    pFlashArea->msCallback = GetVarString("Callback", "");
 }
 
 void cLuxAreaLoader_Flashback::SetupArea(iLuxArea *apArea, cWorld *apWorld)
@@ -54,9 +54,9 @@ void cLuxAreaLoader_Flashback::SetupArea(iLuxArea *apArea, cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-cLuxArea_Flashback::cLuxArea_Flashback(const tString &asName, int alID, cLuxMap *apMap)  : iLuxArea(asName,alID,apMap, eLuxAreaType_Flashback)
+cLuxArea_Flashback::cLuxArea_Flashback(const tString &asName, int alID, cLuxMap *apMap)  : iLuxArea(asName, alID, apMap, eLuxAreaType_Flashback)
 {
-    mfCheckCollisionCount =0;
+    mfCheckCollisionCount = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -84,7 +84,7 @@ void cLuxArea_Flashback::OnUpdate(double adFixedDelta)
     //////////////////////////
     // Check update count
     mfCheckCollisionCount -= (float)adFixedDelta;
-    if(mfCheckCollisionCount>0)
+    if(mfCheckCollisionCount > 0)
     {
         return;
     }
@@ -124,14 +124,14 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxArea* cLuxArea_Flashback_SaveData::CreateArea(cLuxMap *apMap)
+iLuxArea *cLuxArea_Flashback_SaveData::CreateArea(cLuxMap *apMap)
 {
     return hplNew(cLuxArea_Flashback, (msName, mlID, apMap));
 }
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxArea_Flashback::CreateSaveData()
+iLuxEntity_SaveData *cLuxArea_Flashback::CreateSaveData()
 {
     return hplNew(cLuxArea_Flashback_SaveData, ());
 }
@@ -141,7 +141,7 @@ iLuxEntity_SaveData* cLuxArea_Flashback::CreateSaveData()
 void cLuxArea_Flashback::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 {
     super_class::SaveToSaveData(apSaveData);
-    cLuxArea_Flashback_SaveData *pData = static_cast<cLuxArea_Flashback_SaveData*>(apSaveData);
+    cLuxArea_Flashback_SaveData *pData = static_cast<cLuxArea_Flashback_SaveData *>(apSaveData);
 
     kCopyToVar(pData, msFlashbackFile);
     kCopyToVar(pData, msCallback);
@@ -152,7 +152,7 @@ void cLuxArea_Flashback::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 void cLuxArea_Flashback::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 {
     super_class::LoadFromSaveData(apSaveData);
-    cLuxArea_Flashback_SaveData *pData = static_cast<cLuxArea_Flashback_SaveData*>(apSaveData);
+    cLuxArea_Flashback_SaveData *pData = static_cast<cLuxArea_Flashback_SaveData *>(apSaveData);
 
     kCopyFromVar(pData, msFlashbackFile);
     kCopyFromVar(pData, msCallback);

@@ -75,11 +75,11 @@ public:
 
     void OnDamage(float afAmount, int alStrength);
 
-    void InFocusDraw(cGuiSet *apGuiSet,double adFrameTime);
+    void InFocusDraw(cGuiSet *apGuiSet, double adFrameTime);
 
     //////////////////////
     //Properties
-    iLuxInteractData_RotateBase* GetMoveBaseData()
+    iLuxInteractData_RotateBase *GetMoveBaseData()
     {
         return &mSwingDoorData;
     }
@@ -97,14 +97,14 @@ public:
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);
 
 private:
-    cLuxChestJointData* GetJointDataFromBody(iPhysicsBody *apBody);
-    cLuxChestJointData* GetJointDataFromJoint(iPhysicsJoint *apJoint);
+    cLuxChestJointData *GetJointDataFromBody(iPhysicsBody *apBody);
+    cLuxChestJointData *GetJointDataFromJoint(iPhysicsJoint *apJoint);
 
     //////////////////////
     // Data

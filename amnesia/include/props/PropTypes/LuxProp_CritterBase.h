@@ -16,21 +16,21 @@ public:
     void Reset();
 
     bool BeforeIntersect(iPhysicsBody *pBody);
-    bool OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams);
+    bool OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams);
 
     bool GetIntersected()
     {
         return mbIntersected;
     }
-    const cVector3f& GetNormal()
+    const cVector3f &GetNormal()
     {
         return mvNormal;
     }
-    const cVector3f& GetPos()
+    const cVector3f &GetPos()
     {
         return mvPos;
     }
-    iPhysicsBody * GetBody()
+    iPhysicsBody *GetBody()
     {
         return mpBody;
     }
@@ -132,7 +132,7 @@ protected:
     virtual void OnDamageCritter(float afAmount) {}
     virtual void OnKillCritter() {}
 
-    virtual void UpdateCritterSpecific(double adFixedDelta)=0;
+    virtual void UpdateCritterSpecific(double adFixedDelta) = 0;
     virtual void OnShapeCollision(const cVector3f& avPushVec, double adFixedDelta) {}
 
     void CreateOrthoVectors(cVector3f &avRight, cVector3f& avUp, cVector3f &avForward);
@@ -148,8 +148,8 @@ protected:
     void UpdateMesh(double adFixedDelta);
     void UpdateMovement(double adFixedDelta);
 
-    void CheckRayCollision(const cVector3f& avVelAdd,const cVector3f& avGravityAdd, double adFixedDelta);
-    void CheckShapeCollision(const cVector3f& avVelAdd,const cVector3f& avGravityAdd, double adFixedDelta);
+    void CheckRayCollision(const cVector3f& avVelAdd, const cVector3f& avGravityAdd, double adFixedDelta);
+    void CheckShapeCollision(const cVector3f& avVelAdd, const cVector3f& avGravityAdd, double adFixedDelta);
 
     //Data
     bool mbUseRayCollision;
@@ -201,8 +201,8 @@ public:
     void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem);
     void LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars);
 
-    virtual void LoadCritterVariables(iLuxProp *apProp, cXmlElement *apRootElem)=0;
-    virtual void LoadCritterInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)=0;
+    virtual void LoadCritterVariables(iLuxProp *apProp, cXmlElement *apRootElem) = 0;
+    virtual void LoadCritterInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars) = 0;
 };
 
 //----------------------------------------------

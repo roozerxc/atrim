@@ -21,14 +21,14 @@ cLuxPropLoader_OilBarrel::cLuxPropLoader_OilBarrel(const tString& asName) : iLux
 
 iLuxProp *cLuxPropLoader_OilBarrel::CreateProp(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxProp_OilBarrel, (asName, alID,apMap) );
+    return hplNew(cLuxProp_OilBarrel, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPropLoader_OilBarrel::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    cLuxProp_OilBarrel  *pOilBarrel = static_cast<cLuxProp_OilBarrel*>(apProp);
+    cLuxProp_OilBarrel  *pOilBarrel = static_cast<cLuxProp_OilBarrel *>(apProp);
 
     ///////////////////////////
     // General
@@ -41,7 +41,7 @@ void cLuxPropLoader_OilBarrel::LoadVariables(iLuxProp *apProp, cXmlElement *apRo
 
 void cLuxPropLoader_OilBarrel::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
-    cLuxProp_OilBarrel  *pOilBarrel = static_cast<cLuxProp_OilBarrel*>(apProp);
+    cLuxProp_OilBarrel  *pOilBarrel = static_cast<cLuxProp_OilBarrel *>(apProp);
 
     //pOilBarrel->mlCoinsNeeded = apInstanceVars->GetVarInt("CoinsNeeded",0);
 }
@@ -54,7 +54,7 @@ void cLuxPropLoader_OilBarrel::LoadInstanceVariables(iLuxProp *apProp, cResource
 
 //-----------------------------------------------------------------------
 
-cLuxProp_OilBarrel::cLuxProp_OilBarrel(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_OilBarrel)
+cLuxProp_OilBarrel::cLuxProp_OilBarrel(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName, alID, apMap, eLuxPropType_OilBarrel)
 {
     mbAmountCalculated = false;
 }
@@ -90,7 +90,7 @@ bool cLuxProp_OilBarrel::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
     // Check if barrel is empty or lantern is full
     if(mfOilAmount <= 0)
     {
-        PlaySound("EmptyBarell",msEmptySound, true, false);
+        PlaySound("EmptyBarell", msEmptySound, true, false);
         gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "OilBarrel_Empty"), 0);
         return false;
     }
@@ -110,7 +110,7 @@ bool cLuxProp_OilBarrel::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
         mfOilAmount = fOil - 100.0f;
         if(mfOilAmount < 1.0f)
         {
-            mfOilAmount =0;    //If very little oil left, just let it be empty.
+            mfOilAmount = 0;   //If very little oil left, just let it be empty.
         }
         fOil = 100;
     }
@@ -121,7 +121,7 @@ bool cLuxProp_OilBarrel::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
     }
 
     gpBase->mpPlayer->SetLampOil(fOil);
-    PlaySound("FillLantern",msFillSound, true, false);
+    PlaySound("FillLantern", msFillSound, true, false);
 
     ///////////////////////////////////
     // Display fill message
@@ -133,19 +133,19 @@ bool cLuxProp_OilBarrel::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos
     {
         if(fFillAmount < 25)
         {
-            gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "OilBarrel_Refill_Amount_025"),0);
+            gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "OilBarrel_Refill_Amount_025"), 0);
         }
         else if(fFillAmount < 50)
         {
-            gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "OilBarrel_Refill_Amount_050"),0);
+            gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "OilBarrel_Refill_Amount_050"), 0);
         }
         else if(fFillAmount < 75)
         {
-            gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "OilBarrel_Refill_Amount_075"),0);
+            gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "OilBarrel_Refill_Amount_075"), 0);
         }
         else
         {
-            gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "OilBarrel_Refill_Amount_100"),0);
+            gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "OilBarrel_Refill_Amount_100"), 0);
         }
     }
 
@@ -195,7 +195,7 @@ tWString cLuxProp_OilBarrel::GetFocusText()
     CalculateOilAmount();
 
     tWString sText;
-    if(mfOilAmount <=0)
+    if(mfOilAmount <= 0)
     {
         sText = kTranslate("Game", "OilBarrel_FocusText_Empty");
     }
@@ -259,7 +259,7 @@ void cLuxProp_OilBarrel::CalculateOilAmount()
     float fTotalOil = gpBase->mpPlayer->GetLampOil();
 
     //Iterate items and add amount and count to total
-    for(int i=0; i<gpBase->mpInventory->GetItemNum(); ++i)
+    for(int i = 0; i < gpBase->mpInventory->GetItemNum(); ++i)
     {
         cLuxInventory_Item *pItem = gpBase->mpInventory->GetItem(i);
         if(pItem->GetType() != eLuxItemType_LampOil)
@@ -302,7 +302,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxProp_OilBarrel::CreateSaveData()
+iLuxEntity_SaveData *cLuxProp_OilBarrel::CreateSaveData()
 {
     return hplNew(cLuxProp_OilBarrel_SaveData, ());
 }
@@ -314,7 +314,7 @@ void cLuxProp_OilBarrel::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxProp_OilBarrel_SaveData *pData = static_cast<cLuxProp_OilBarrel_SaveData*>(apSaveData);
+    cLuxProp_OilBarrel_SaveData *pData = static_cast<cLuxProp_OilBarrel_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
@@ -330,7 +330,7 @@ void cLuxProp_OilBarrel::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxProp_OilBarrel_SaveData *pData = static_cast<cLuxProp_OilBarrel_SaveData*>(apSaveData);
+    cLuxProp_OilBarrel_SaveData *pData = static_cast<cLuxProp_OilBarrel_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables

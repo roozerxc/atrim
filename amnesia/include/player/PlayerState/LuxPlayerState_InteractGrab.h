@@ -56,19 +56,19 @@ public:
     void Update(double adFixedDelta);
     void PostUpdate(double adFixedDelta);
 
-    bool OnDoAction(eLuxPlayerAction aAction,bool abPressed);
+    bool OnDoAction(eLuxPlayerAction aAction, bool abPressed);
 
     void OnScroll(float afAmount);
 
     bool OnAddYaw(float afAmount);
     bool OnAddPitch(float afAmount);
 
-    cGuiGfxElement* GetCrosshair();
+    cGuiGfxElement *GetCrosshair();
 
     void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter);
     bool AllowBuoyancy(iPhysicsBody *apBody);
 
-    float DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY);
+    float DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY);
 
     void RenderSolid(cRendererCallbackFunctions* apFunctions);
 
@@ -78,10 +78,10 @@ public:
     {
         return true;
     }
-    iLuxPlayerState_SaveData* CreateSaveData();
+    iLuxPlayerState_SaveData *CreateSaveData();
 
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);
-    void LoadFromSaveDataBeforeEnter(cLuxMap *apMap,iLuxPlayerState_SaveData* apSaveData);
+    void LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
     void LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
 
 protected:

@@ -39,7 +39,7 @@ public:
     void OnDamageCritter(float afAmount);
     void OnKillCritter();
 
-    float DrawDebug(cGuiSet *apSet,iFontData *apFont,float afStartY);
+    float DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY);
 
 
     //////////////////////
@@ -51,7 +51,7 @@ public:
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);

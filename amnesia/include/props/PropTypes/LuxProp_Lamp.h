@@ -34,7 +34,7 @@ public:
     bool mbUseLightSpec;
 };
 
-typedef std::list<cLuxLampLightConnection_Lamp*> tLuxLampLightConnection_LampList;
+typedef std::list<cLuxLampLightConnection_Lamp *> tLuxLampLightConnection_LampList;
 typedef tLuxLampLightConnection_LampList::iterator tLuxLampLightConnection_LampListIt;
 
 class cLuxLampLightConnection
@@ -45,7 +45,7 @@ public:
 
     void Update(double adFixedDelta);
 
-    iLight* GetLight()
+    iLight *GetLight()
     {
         return mpLight;
     }
@@ -87,7 +87,7 @@ public:
 
     //////////////////////
     //Properties
-    cLuxInteractData_Grab* GetGrabData()
+    cLuxInteractData_Grab *GetGrabData()
     {
         return &mGrabData;
     }
@@ -106,7 +106,7 @@ public:
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);

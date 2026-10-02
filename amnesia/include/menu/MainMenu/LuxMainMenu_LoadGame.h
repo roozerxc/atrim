@@ -31,8 +31,8 @@ private:
 
     ////////////////////////
     // Layout
-    cWidgetListBox* mpLBSavedGames;
-    cWidgetImage* mpISavedGameSnapShot;
+    cWidgetListBox *mpLBSavedGames;
+    cWidgetImage *mpISavedGameSnapShot;
     iWidget *mpLoadButton;
 
     ////////////////////////

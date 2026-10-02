@@ -17,16 +17,16 @@
 
 cLuxPlayerState_InteractGrab::cLuxPlayerState_InteractGrab(cLuxPlayer *apPlayer) : iLuxPlayerState_Interact(apPlayer, eLuxPlayerState_InteractGrab)
 {
-    mfMaxForce = gpBase->mpGameCfg->GetFloat("Player_Interaction","GrabMaxForce",0);
-    mfMaxTorque = gpBase->mpGameCfg->GetFloat("Player_Interaction","GrabMaxTorque",0);
-    mfMaxAngularSpeed = gpBase->mpGameCfg->GetFloat("Player_Interaction","GrabMaxAngularSpeed",0);
+    mfMaxForce = gpBase->mpGameCfg->GetFloat("Player_Interaction", "GrabMaxForce", 0);
+    mfMaxTorque = gpBase->mpGameCfg->GetFloat("Player_Interaction", "GrabMaxTorque", 0);
+    mfMaxAngularSpeed = gpBase->mpGameCfg->GetFloat("Player_Interaction", "GrabMaxAngularSpeed", 0);
 
-    mfMaxLeaveAngularSpeed = gpBase->mpGameCfg->GetFloat("Player_Interaction","GrabMaxLeaveAngularSpeed",0);
-    mfMaxLeaveLinearSpeed = gpBase->mpGameCfg->GetFloat("Player_Interaction","GrabMaxLeaveLinearSpeed",0);
+    mfMaxLeaveAngularSpeed = gpBase->mpGameCfg->GetFloat("Player_Interaction", "GrabMaxLeaveAngularSpeed", 0);
+    mfMaxLeaveLinearSpeed = gpBase->mpGameCfg->GetFloat("Player_Interaction", "GrabMaxLeaveLinearSpeed", 0);
 
-    mfMinSlowPlayerMass = gpBase->mpGameCfg->GetFloat("Player_Interaction","GrabMinSlowPlayerMass",0);
-    mfMaxSlowPlayerMass = gpBase->mpGameCfg->GetFloat("Player_Interaction","GrabMaxSlowPlayerMass",0);
-    mfMinSlowPlayerMul = gpBase->mpGameCfg->GetFloat("Player_Interaction","GrabMinSlowPlayerMul",0);
+    mfMinSlowPlayerMass = gpBase->mpGameCfg->GetFloat("Player_Interaction", "GrabMinSlowPlayerMass", 0);
+    mfMaxSlowPlayerMass = gpBase->mpGameCfg->GetFloat("Player_Interaction", "GrabMaxSlowPlayerMass", 0);
+    mfMinSlowPlayerMul = gpBase->mpGameCfg->GetFloat("Player_Interaction", "GrabMinSlowPlayerMul", 0);
 
     mForcePid.SetErrorNum(20);;
     mSpeedTorquePid.SetErrorNum(20);
@@ -96,7 +96,7 @@ void cLuxPlayerState_InteractGrab::OnEnterState(eLuxPlayerState aPrevState)
     }
     else
     {
-        mfDepth = cMath::Vector3Dist(mvCurrentFocusPos, pCam->GetPosition())-0.08f;
+        mfDepth = cMath::Vector3Dist(mvCurrentFocusPos, pCam->GetPosition()) - 0.08f;
     }
 
 
@@ -109,18 +109,18 @@ void cLuxPlayerState_InteractGrab::OnEnterState(eLuxPlayerState aPrevState)
     //////////////////////////////
     //Set up properties for all bodies and calculate total mass
     mfMassSum = 0;
-    float fProperMassSum=0;
-    for(size_t i=0; i<mvBodyProperties.size(); ++i)
+    float fProperMassSum = 0;
+    for(size_t i = 0; i < mvBodyProperties.size(); ++i)
     {
         iPhysicsBody *pBody = mvBodyProperties[i].mpBody;
 
         fProperMassSum += pBody->GetMass();
 
-        if(pBody==mpCurrentBody)
+        if(pBody == mpCurrentBody)
         {
             pBody->SetGravity(false);
         }
-        if(pBody==mpCurrentBody)
+        if(pBody == mpCurrentBody)
         {
             pBody->SetCollideCharacter(false);
         }
@@ -144,8 +144,8 @@ void cLuxPlayerState_InteractGrab::OnEnterState(eLuxPlayerState aPrevState)
         }
         else
         {
-            float fMul = (fProperMassSum-mfMinSlowPlayerMass)/(mfMaxSlowPlayerMass-mfMinSlowPlayerMass);
-            fMul = fMul*mfMinSlowPlayerMul + (1.0f-fMul);
+            float fMul = (fProperMassSum - mfMinSlowPlayerMass) / (mfMaxSlowPlayerMass - mfMinSlowPlayerMass);
+            fMul = fMul * mfMinSlowPlayerMul + (1.0f-fMul);
             mpPlayer->SetInteractionMoveSpeedMul(fMul);
         }
     }
@@ -235,7 +235,7 @@ void cLuxPlayerState_InteractGrab::OnLeaveState(eLuxPlayerState aNewState)
 
     ///////////////////////
     //Reset body
-    for(size_t i=0; i<mvBodyProperties.size(); ++i)
+    for(size_t i = 0; i < mvBodyProperties.size(); ++i)
     {
         iPhysicsBody *pBody = mvBodyProperties[i].mpBody;
 
@@ -296,16 +296,16 @@ void cLuxPlayerState_InteractGrab::PostUpdate(double adFixedDelta)
     cVector3f vBasePos;
     if(mpGrabData->mbGrabUseOffset)
     {
-        vBasePos = mpGrabData->mvGrabPositionOffset + cVector3f(0,0,-mfDepth);
+        vBasePos = mpGrabData->mvGrabPositionOffset + cVector3f(0, 0, -mfDepth);
     }
     else
     {
-        vBasePos = cVector3f(0,0,-mfDepth) + mvLocalBodyOffset;
+        vBasePos = cVector3f(0, 0, -mfDepth) + mvLocalBodyOffset;
     }
 
     //The final body matrix.
     cMatrixf mtxGoal = cMath::MatrixMul(cMath::MatrixTranslate(vBasePos), m_mtxBodyRotation);
-    mtxGoal = cMath::MatrixMul(mtxCamTransform,mtxGoal);
+    mtxGoal = cMath::MatrixMul(mtxCamTransform, mtxGoal);
 
     ///////////////////////
     //Force
@@ -320,13 +320,13 @@ void cLuxPlayerState_InteractGrab::PostUpdate(double adFixedDelta)
     mpCurrentBody->AddForce(vForce * mpGrabData->mfForceMul);
 
 
-    if(mpGrabData->mbUseRotation==false)
+    if(mpGrabData->mbUseRotation == false)
     {
         return;
     }
     /////////////////////////
     // Get the wanted speed
-    cVector3f vWantedRotSpeed=0;
+    cVector3f vWantedRotSpeed = 0;
 
     cMatrixf mtxGoalInv = cMath::MatrixInverse(mtxGoal);
 
@@ -338,16 +338,16 @@ void cLuxPlayerState_InteractGrab::PostUpdate(double adFixedDelta)
     cVector3f vRight = mtxBodyInv.GetRight();
 
     //Up alignment
-    cVector3f vRotateAxis = cMath::Vector3Cross(vUp,vWantedUp);
+    cVector3f vRotateAxis = cMath::Vector3Cross(vUp, vWantedUp);
 
-    float fError = cMath::Vector3Angle(vWantedUp,vUp);
+    float fError = cMath::Vector3Angle(vWantedUp, vUp);
     vWantedRotSpeed += vRotateAxis * fError * 100;
 
     //Right alignment
-    vRotateAxis = cMath::Vector3Cross(vRight,vWantedRight);
+    vRotateAxis = cMath::Vector3Cross(vRight, vWantedRight);
 
-    fError = cMath::Vector3Angle(vWantedRight,vRight);
-    vWantedRotSpeed += vRotateAxis * fError *100;
+    fError = cMath::Vector3Angle(vWantedRight, vRight);
+    vWantedRotSpeed += vRotateAxis * fError * 100;
 
     //Make sure wanted speed is not too large
     float fSpeed = vWantedRotSpeed.Length();
@@ -360,7 +360,7 @@ void cLuxPlayerState_InteractGrab::PostUpdate(double adFixedDelta)
     // Set speed by torque
     cVector3f vRotError = vWantedRotSpeed - mpCurrentBody->GetAngularVelocity();
 
-    cVector3f vTorque =  mSpeedTorquePid.Output(vRotError,adFixedDelta);
+    cVector3f vTorque =  mSpeedTorquePid.Output(vRotError, adFixedDelta);
     vTorque = cMath::MatrixMul(mpCurrentBody->GetInertiaMatrix(), vTorque);
 
     //Make sure force is not too large
@@ -371,31 +371,31 @@ void cLuxPlayerState_InteractGrab::PostUpdate(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-bool cLuxPlayerState_InteractGrab::OnDoAction(eLuxPlayerAction aAction,bool abPressed)
+bool cLuxPlayerState_InteractGrab::OnDoAction(eLuxPlayerAction aAction, bool abPressed)
 {
     ////////////////////////////
     // Interact
     if(aAction == eLuxPlayerAction_Interact)
     {
         // Pressed
-        if(abPressed==false)
+        if(abPressed == false)
         {
             ///////////////////////
             //Limit the body speed
-            for(size_t i=0; i<mvBodyProperties.size(); ++i)
+            for(size_t i = 0; i < mvBodyProperties.size(); ++i)
             {
                 iPhysicsBody *pBody = mvBodyProperties[i].mpBody;
 
                 float fLinearSpeed = pBody->GetLinearVelocity().Length();
                 if(fLinearSpeed > mfMaxLeaveLinearSpeed)
                 {
-                    pBody->SetLinearVelocity( (pBody->GetLinearVelocity()/fLinearSpeed)*mfMaxLeaveLinearSpeed );
+                    pBody->SetLinearVelocity( (pBody->GetLinearVelocity() / fLinearSpeed)*mfMaxLeaveLinearSpeed );
                 }
 
                 float fAngularSpeed = pBody->GetAngularVelocity().Length();
                 if(fAngularSpeed > mfMaxLeaveAngularSpeed)
                 {
-                    pBody->SetAngularVelocity( (pBody->GetAngularVelocity()/fAngularSpeed)*mfMaxLeaveAngularSpeed );
+                    pBody->SetAngularVelocity( (pBody->GetAngularVelocity() / fAngularSpeed)*mfMaxLeaveAngularSpeed );
                 }
             }
 
@@ -450,7 +450,7 @@ void cLuxPlayerState_InteractGrab::OnScroll(float afAmount)
     {
         mfDepth = mpGrabData->mfGrabMinDepth;
     }
-    if(mfDepth >mpGrabData-> mfGrabMaxDepth)
+    if(mfDepth > mpGrabData-> mfGrabMaxDepth)
     {
         mfDepth = mpGrabData->mfGrabMaxDepth;
     }
@@ -463,7 +463,7 @@ bool cLuxPlayerState_InteractGrab::OnAddYaw(float afAmount)
     cInput* pInput = gpBase->mpEngine->GetInput();
     if(pInput->IsTriggerd(eLuxAction_Rotate) && mpGrabData->mbUseRotation)
     {
-        m_mtxBodyRotation = cMath::MatrixMul(cMath::MatrixRotateY(afAmount * -3.2f),m_mtxBodyRotation);
+        m_mtxBodyRotation = cMath::MatrixMul(cMath::MatrixRotateY(afAmount * -3.2f), m_mtxBodyRotation);
         return false;
     }
 
@@ -505,7 +505,7 @@ bool cLuxPlayerState_InteractGrab::OnAddPitch(float afAmount)
             afAmount = -afAmount;
         }
 #endif
-        m_mtxBodyRotation = cMath::MatrixMul(cMath::MatrixRotateX(afAmount * -3.2f),m_mtxBodyRotation);
+        m_mtxBodyRotation = cMath::MatrixMul(cMath::MatrixRotateX(afAmount * -3.2f), m_mtxBodyRotation);
         return false;
     }
 
@@ -514,7 +514,7 @@ bool cLuxPlayerState_InteractGrab::OnAddPitch(float afAmount)
 
 //-----------------------------------------------------------------------
 
-cGuiGfxElement* cLuxPlayerState_InteractGrab::GetCrosshair()
+cGuiGfxElement *cLuxPlayerState_InteractGrab::GetCrosshair()
 {
     return NULL;
 }
@@ -523,7 +523,7 @@ cGuiGfxElement* cLuxPlayerState_InteractGrab::GetCrosshair()
 
 void cLuxPlayerState_InteractGrab::OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter)
 {
-    for(size_t i=0; i<mvBodyProperties.size(); ++i)
+    for(size_t i = 0; i < mvBodyProperties.size(); ++i)
     {
         if(mvBodyProperties[i].mpBody == apBody)
         {
@@ -538,9 +538,9 @@ void cLuxPlayerState_InteractGrab::OnSaveBody(iPhysicsBody *apBody, float &afMas
 
 bool cLuxPlayerState_InteractGrab::AllowBuoyancy(iPhysicsBody *apBody)
 {
-    iLuxEntity *pBodyEntity = static_cast<iLuxEntity*>(apBody->GetUserData());
+    iLuxEntity *pBodyEntity = static_cast<iLuxEntity *>(apBody->GetUserData());
 
-    if(pBodyEntity == (iLuxEntity*)mpCurrentProp)
+    if(pBodyEntity == (iLuxEntity * )mpCurrentProp)
     {
         return false;
     }
@@ -550,7 +550,7 @@ bool cLuxPlayerState_InteractGrab::AllowBuoyancy(iPhysicsBody *apBody)
 
 //-----------------------------------------------------------------------
 
-float cLuxPlayerState_InteractGrab::DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY)
+float cLuxPlayerState_InteractGrab::DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY)
 {
     cVector3f vCurrentRot = cMath::MatrixToEulerAngles(mpCurrentBody->GetLocalMatrix().GetRotation(), eEulerRotationOrder_XYZ);
     cVector3f vWantedRot = cMath::MatrixToEulerAngles(m_mtxBodyRotation, eEulerRotationOrder_XYZ);
@@ -585,9 +585,9 @@ void cLuxPlayerState_InteractGrab::RenderSolid(cRendererCallbackFunctions* apFun
     cMatrixf mtxCamTransform = cMath::MatrixRotate(vCamRotation, eEulerRotationOrder_XYZ);
     mtxCamTransform.SetTranslation(pCam->GetPosition());
 
-    cVector3f vBasePos = mpGrabData->mvGrabPositionOffset + cVector3f(0,0,-mfDepth);
+    cVector3f vBasePos = mpGrabData->mvGrabPositionOffset + cVector3f(0, 0, -mfDepth);
     cMatrixf mtxGoal = cMath::MatrixMul(cMath::MatrixTranslate(vBasePos), m_mtxBodyRotation);
-    mtxGoal = cMath::MatrixMul(mtxCamTransform,mtxGoal);
+    mtxGoal = cMath::MatrixMul(mtxCamTransform, mtxGoal);
 
     cMatrixf mtxGoalInv = cMath::MatrixInverse(mtxGoal);
 
@@ -599,11 +599,11 @@ void cLuxPlayerState_InteractGrab::RenderSolid(cRendererCallbackFunctions* apFun
     cVector3f vRight = mtxBodyInv.GetRight();
 
     cVector3f vPos = mpCurrentBody->GetLocalPosition();
-    apFunctions->GetLowLevelGfx()->DrawLine(vPos, vPos+vWantedUp, cColor(0,1,0,1));
-    apFunctions->GetLowLevelGfx()->DrawLine(vPos, vPos+vUp, cColor(0,1,1,1));
+    apFunctions->GetLowLevelGfx()->DrawLine(vPos, vPos + vWantedUp, cColor(0, 1, 0, 1));
+    apFunctions->GetLowLevelGfx()->DrawLine(vPos, vPos + vUp, cColor(0, 1, 1, 1));
 
-    apFunctions->GetLowLevelGfx()->DrawLine(vPos, vPos+vWantedRight, cColor(1,0,0,1));
-    apFunctions->GetLowLevelGfx()->DrawLine(vPos, vPos+vRight, cColor(1,0,1,1));
+    apFunctions->GetLowLevelGfx()->DrawLine(vPos, vPos + vWantedRight, cColor(1, 0, 0, 1));
+    apFunctions->GetLowLevelGfx()->DrawLine(vPos, vPos + vRight, cColor(1, 0, 1, 1));
 
 }
 
@@ -627,16 +627,16 @@ void cLuxPlayerState_InteractGrab::SaveBodyProperties(iPhysicsBody *apBody)
 
     mvBodyProperties.push_back(bodyData);
 
-    for(int i=0; i<apBody->GetJointNum(); ++i)
+    for(int i = 0; i < apBody->GetJointNum(); ++i)
     {
         iPhysicsJoint *pJoint = apBody->GetJoint(i);
         iPhysicsBody *pChild = pJoint->GetChildBody();
         iPhysicsBody *pParent = pJoint->GetParentBody();
-        if(pChild && BodyIsAdded(pChild)==false)
+        if(pChild && BodyIsAdded(pChild) == false)
         {
             SaveBodyProperties(pChild);
         }
-        if(pParent && BodyIsAdded(pParent)==false)
+        if(pParent && BodyIsAdded(pParent) == false)
         {
             SaveBodyProperties(pParent);
         }
@@ -648,7 +648,7 @@ void cLuxPlayerState_InteractGrab::SaveBodyProperties(iPhysicsBody *apBody)
 
 bool cLuxPlayerState_InteractGrab::BodyIsAdded(iPhysicsBody *apBody)
 {
-    for(size_t i=0; i<mvBodyProperties.size(); ++i)
+    for(size_t i = 0; i < mvBodyProperties.size(); ++i)
     {
         if(mvBodyProperties[i].mpBody == apBody)
         {
@@ -676,7 +676,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxPlayerState_SaveData* cLuxPlayerState_InteractGrab::CreateSaveData()
+iLuxPlayerState_SaveData *cLuxPlayerState_InteractGrab::CreateSaveData()
 {
     return hplNew(cLuxPlayerState_InteractGrab_SaveData, ());
 }
@@ -689,7 +689,7 @@ void cLuxPlayerState_InteractGrab::SaveToSaveData(iLuxPlayerState_SaveData* apSa
     ///////////////////////
     // Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxPlayerState_InteractGrab_SaveData *pData = static_cast<cLuxPlayerState_InteractGrab_SaveData*>(apSaveData);
+    cLuxPlayerState_InteractGrab_SaveData *pData = static_cast<cLuxPlayerState_InteractGrab_SaveData *>(apSaveData);
 
 
     ///////////////////////
@@ -706,8 +706,8 @@ void cLuxPlayerState_InteractGrab::LoadFromSaveDataBeforeEnter(cLuxMap *apMap, i
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataBeforeEnter(apMap,apSaveData);
-    cLuxPlayerState_InteractGrab_SaveData *pData = static_cast<cLuxPlayerState_InteractGrab_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataBeforeEnter(apMap, apSaveData);
+    cLuxPlayerState_InteractGrab_SaveData *pData = static_cast<cLuxPlayerState_InteractGrab_SaveData *>(apSaveData);
 
     ///////////////////////
     // Setup before entering
@@ -720,8 +720,8 @@ void cLuxPlayerState_InteractGrab::LoadFromSaveDataAfterEnter(cLuxMap *apMap, iL
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataAfterEnter(apMap,apSaveData);
-    cLuxPlayerState_InteractGrab_SaveData *pData = static_cast<cLuxPlayerState_InteractGrab_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataAfterEnter(apMap, apSaveData);
+    cLuxPlayerState_InteractGrab_SaveData *pData = static_cast<cLuxPlayerState_InteractGrab_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars

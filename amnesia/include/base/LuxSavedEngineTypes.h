@@ -48,7 +48,7 @@ class cEngineRope_SaveData : public iSerializable
 {
     kSerializableClassInit(cEngineRope_SaveData)
 public:
-    cRopeEntity* CreateRope(cLuxMap *apMap);
+    cRopeEntity *CreateRope(cLuxMap *apMap);
 
     void FromRope(cRopeEntity *apRope);
     void ToRope(cRopeEntity *apRope, cLuxMap *apMap);

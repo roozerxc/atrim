@@ -72,7 +72,7 @@ public:
 
     //////////////////////
     //Properties
-    iLuxInteractData_RotateBase* GetMoveBaseData()
+    iLuxInteractData_RotateBase *GetMoveBaseData()
     {
         return &mSwingDoorData;
     }
@@ -96,7 +96,7 @@ public:
 
     void SetDisableAutoClose(bool abX)
     {
-        mbDisableAutoClose=abX;
+        mbDisableAutoClose = abX;
     }
     bool GetDisableAutoClose()
     {
@@ -105,7 +105,7 @@ public:
 
     void SetCurrentDamageLevel(int alX);
 
-    cMeshEntity* GetEffectMeshEntity();
+    cMeshEntity *GetEffectMeshEntity();
 
     bool IsBroken()
     {
@@ -119,7 +119,7 @@ public:
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);
@@ -127,8 +127,8 @@ public:
 private:
     void SetupDoorPhysics(float afOpenAmount);
 
-    cLuxSwingDoorJointData* GetJointDataFromBody(iPhysicsBody *apBody);
-    cLuxSwingDoorJointData* GetJointDataFromJoint(iPhysicsJoint *apJoint);
+    cLuxSwingDoorJointData *GetJointDataFromBody(iPhysicsBody *apBody);
+    cLuxSwingDoorJointData *GetJointDataFromJoint(iPhysicsJoint *apJoint);
 
     //////////////////////
     // Data
@@ -158,7 +158,7 @@ private:
 
     float mfHealthDamage[2];
 
-    cMeshEntity* mpDamageMeshEntity[3];
+    cMeshEntity *mpDamageMeshEntity[3];
 
     //////////////////////
     // Variables

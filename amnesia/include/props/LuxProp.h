@@ -152,15 +152,15 @@ public:
     cContainerVec<cEngineSound_SaveData> mvSounds;
     cContainerVec<cEngineBillboard_SaveData> mvBillboards;
 
-    cContainerVec<iLuxInteractConnection_SaveData*> mvInteractConnections;
+    cContainerVec<iLuxInteractConnection_SaveData *> mvInteractConnections;
 
     ////////////////
     //Methods
-    cEnginePS_SaveData* GetParticleSystem(cParticleSystem* apPS);
-    cEngineSound_SaveData* GetSoundEntity(cSoundEntity* apSound);
-    cEngineJoint_SaveData* GetJoint(iPhysicsJoint* apJoint);
+    cEnginePS_SaveData *GetParticleSystem(cParticleSystem* apPS);
+    cEngineSound_SaveData *GetSoundEntity(cSoundEntity* apSound);
+    cEngineJoint_SaveData *GetJoint(iPhysicsJoint* apJoint);
 
-    iLuxEntity* CreateEntity(cLuxMap *apMap);
+    iLuxEntity *CreateEntity(cLuxMap *apMap);
 };
 
 //----------------------------------------------
@@ -221,7 +221,7 @@ public:
 
     void OnUpdate(double adFixedDelta);
 
-    virtual float OnInteractDebugDraw(cGuiSet *apSet,iFontData *apFont, float afStartY)
+    virtual float OnInteractDebugDraw(cGuiSet *apSet, iFontData *apFont, float afStartY)
     {
         return afStartY;
     }
@@ -286,31 +286,31 @@ public:
         return mbMoving;
     }
 
-    virtual cLuxInteractData_Grab* GetGrabData()
+    virtual cLuxInteractData_Grab *GetGrabData()
     {
         return NULL;
     }
-    virtual cLuxInteractData_Push* GetPushData()
+    virtual cLuxInteractData_Push *GetPushData()
     {
         return NULL;
     }
-    virtual cLuxInteractData_Slide* GetSlideData()
+    virtual cLuxInteractData_Slide *GetSlideData()
     {
         return NULL;
     }
-    virtual iLuxInteractData_RotateBase* GetMoveBaseData()
+    virtual iLuxInteractData_RotateBase *GetMoveBaseData()
     {
         return NULL;
     }
 
-    virtual iEntity3D* GetAttachEntity();
+    virtual iEntity3D *GetAttachEntity();
 
     virtual bool ShowOutlinesOnConnectedBodies()
     {
         return true;
     }
 
-    const cMatrixf& GetOnLoadTransform()
+    const cMatrixf &GetOnLoadTransform()
     {
         return m_mtxOnLoadTransform;
     }
@@ -323,7 +323,7 @@ public:
 
     //////////////////////
     //Attached Prop
-    iLuxProp* GetAttachmentParent()
+    iLuxProp *GetAttachmentParent()
     {
         return mpAttachmentParent;
     }
@@ -338,15 +338,15 @@ public:
     bool RemoveAttachedProp(iLuxProp *apProp);
     bool HasAttachedProp()
     {
-        return mlstAttachedProps.empty()==false;
+        return mlstAttachedProps.empty() == false;
     }
 
 
     //////////////////////
     //Connections
     int AddInteractConnection(iLuxInteractConnection *apConnection);
-    iLuxInteractConnection* GetInteractionConnectionFromIndex(int alIndex);
-    iLuxInteractConnection* GetInteractionConnectionFromName(const tString& asName);
+    iLuxInteractConnection *GetInteractionConnectionFromIndex(int alIndex);
+    iLuxInteractConnection *GetInteractionConnectionFromName(const tString& asName);
     void DestroyInteractConnection(iLuxInteractConnection *apConnection);
     int GetInteractionConnectionNum()
     {
@@ -358,11 +358,11 @@ public:
 
     //////////////////////
     //Data
-    cMeshEntity * GetMeshEntity()
+    cMeshEntity *GetMeshEntity()
     {
         return mpMeshEntity;
     }
-    virtual cMeshEntity* GetEffectMeshEntity()
+    virtual cMeshEntity *GetEffectMeshEntity()
     {
         return mpMeshEntity;
     }
@@ -371,14 +371,14 @@ public:
     {
         return (int)mvBodies.size();
     }
-    iPhysicsBody* GetBody(int alIdx)
+    iPhysicsBody *GetBody(int alIdx)
     {
         return mvBodies[alIdx];
     }
-    iPhysicsBody* GetBodyFromID(int alID);
+    iPhysicsBody *GetBodyFromID(int alID);
     int GetBodyIndexFromName(const tString& asName);
 
-    iPhysicsBody* GetMainBody()
+    iPhysicsBody *GetMainBody()
     {
         return mpMainBody ? mpMainBody : mvBodies[0];
     }
@@ -395,10 +395,10 @@ protected:
     virtual void OnHealthChange() {}
     virtual void OnDamage(float afAmount, int alStrength) {}
 
-    virtual void OnResetProperties()=0;
+    virtual void OnResetProperties() = 0;
 
-    virtual void OnSetupAfterLoad(cWorld *apWorld)=0;
-    virtual void UpdatePropSpecific(double adFixedDelta)=0;
+    virtual void OnSetupAfterLoad(cWorld *apWorld) = 0;
+    virtual void UpdatePropSpecific(double adFixedDelta) = 0;
     virtual void ImplementedOnSetActive(bool abX) {}
     virtual void BeforePropDestruction() {}
 
@@ -490,20 +490,20 @@ protected:
     bool mbShowMesh;
 
     cWorld *mpWorld;
-    std::vector<iPhysicsBody*> mvBodies;
-    std::vector<iPhysicsJoint*> mvJoints;
+    std::vector<iPhysicsBody *> mvBodies;
+    std::vector<iPhysicsJoint *> mvJoints;
 
     std::vector<cEntityBodyExtraData> mvBodyExtraData;
 
     std::vector<LuxPropDefaultBodySettings> mvDefaultBodySettings;
 
-    std::vector<iLight*> mvLights;
-    std::vector<cParticleSystem*> mvParticleSystems;
-    std::vector<cBillboard*> mvBillboards;
-    std::vector<cBeam*> mvBeams;
-    std::vector<cSoundEntity*> mvSoundEntities;
+    std::vector<iLight *> mvLights;
+    std::vector<cParticleSystem *> mvParticleSystems;
+    std::vector<cBillboard *> mvBillboards;
+    std::vector<cBeam *> mvBeams;
+    std::vector<cSoundEntity *> mvSoundEntities;
 
-    std::vector<iLuxInteractConnection*> mvInteractConnections;
+    std::vector<iLuxInteractConnection *> mvInteractConnections;
 
     std::vector<cLuxProp_BodyData> mvBodyData;
     std::vector<cLuxProp_PSData> mvEffectPSData;
@@ -520,7 +520,7 @@ protected:
     tString msMoveStopSound;
     tString msMoveLoopSound;
 
-    cSoundEntity* mpMoveLoopSound;
+    cSoundEntity *mpMoveLoopSound;
     int mlMoveLoopSoundID;
 
     tString msEffectsOnSound;
@@ -550,12 +550,12 @@ public:
     iLuxPropLoader(const tString& asName);
     virtual ~iLuxPropLoader() {}
 
-    void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
-    void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
+    void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars);
+    void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars);
 
-    virtual iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap)=0;
-    virtual void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)=0;
-    virtual void LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)=0;
+    virtual iLuxProp *CreateProp(const tString& asName, int alID, cLuxMap *apMap) = 0;
+    virtual void LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem) = 0;
+    virtual void LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars) = 0;
 
 protected:
     float mfDefaultMaxFocusDistance;

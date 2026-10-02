@@ -48,11 +48,11 @@ public:
     }
 
 private:
-    iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
+    iTexture *RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
 
     iGpuProgram *mpProgram;
-    std::vector<iTexture*> mvAmpMaps;
-    iTexture* mpZoomMap;
+    std::vector<iTexture *> mvAmpMaps;
+    iTexture *mpZoomMap;
 
     float mfT;
     float mfAnimCount;
@@ -71,7 +71,7 @@ public:
     ~cLuxPostEffect_Gamma();
 
 private:
-    iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
+    iTexture *RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
 
     iGpuProgram *mpProgram;
 };
@@ -90,7 +90,7 @@ public:
     void Update(double adFixedDelta);
     void Reset();
 
-    cLuxPostEffect_Insanity* GetInsanity()
+    cLuxPostEffect_Insanity *GetInsanity()
     {
         return mpInsanity;
     }
@@ -104,7 +104,7 @@ private:
     cLuxPostEffect_Insanity *mpInsanity;
     cLuxPostEffect_Gamma *mpGamma;
 
-    std::vector<iLuxPostEffect*> mvPostEffects;
+    std::vector<iLuxPostEffect *> mvPostEffects;
 
 };
 

@@ -27,9 +27,9 @@ public:
     void UpdateThread();
 
 protected:
-    iMutex* mpSaveMutex;
-    iThread* mpThread;
-    std::vector<cLuxSaveGame_SaveData*> mvSaveData;
+    iMutex *mpSaveMutex;
+    iThread *mpThread;
+    std::vector<cLuxSaveGame_SaveData *> mvSaveData;
     tWStringVec mvSaveFileNames;
 };
 
@@ -45,7 +45,7 @@ public:
     void Update(double adFixedDelta);
     void Reset();
 
-    void SaveGameToFile(const tWString& asFile, bool abSaveSnapshot=false);
+    void SaveGameToFile(const tWString& asFile, bool abSaveSnapshot = false);
     bool LoadGameFromFile(const tWString& asFile);
 
     bool AutoSave();
@@ -65,7 +65,7 @@ public:
 
     tWString GetProperSaveName(const tWString& asFile);
 
-    cLuxSaveHandlerThreadClass* GetThreadClass()
+    cLuxSaveHandlerThreadClass *GetThreadClass()
     {
         return &mSaveHandlerThreadClass;
     }

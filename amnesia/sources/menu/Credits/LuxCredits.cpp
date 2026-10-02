@@ -29,9 +29,9 @@ cLuxCredits::cLuxCredits() : iLuxUpdateable("LuxCredits")
     mvGuiSetCenterSize = cVector2f(800, 600);
 
     LuxCalcGuiSetScreenOffset(mvGuiSetCenterSize, mvGuiSetSize, mvGuiSetOffset);
-    mvGuiSetStartPos = cVector3f(-mvGuiSetOffset.x,-mvGuiSetOffset.y,0);
+    mvGuiSetStartPos = cVector3f(-mvGuiSetOffset.x, -mvGuiSetOffset.y, 0);
 
-    mpGuiSet->SetVirtualSize(mvGuiSetSize, -1000,1000, mvGuiSetOffset);
+    mpGuiSet->SetVirtualSize(mvGuiSetSize, -1000, 1000, mvGuiSetOffset);
 
     ///////////////////////////////
     //Create Viewport
@@ -48,14 +48,14 @@ cLuxCredits::cLuxCredits() : iLuxUpdateable("LuxCredits")
 
     ///////////////////////////////
     //Load Data
-    mvNormalFontSize = gpBase->mpMenuCfg->GetVector2f("Credits","NormalFontSize",0);
-    mvHeaderFontSize = gpBase->mpMenuCfg->GetVector2f("Credits","HeaderFontSize",0);
-    mvTheEndFontSize = gpBase->mpMenuCfg->GetVector2f("Credits","TheEndFontSize",0);
+    mvNormalFontSize = gpBase->mpMenuCfg->GetVector2f("Credits", "NormalFontSize", 0);
+    mvHeaderFontSize = gpBase->mpMenuCfg->GetVector2f("Credits", "HeaderFontSize", 0);
+    mvTheEndFontSize = gpBase->mpMenuCfg->GetVector2f("Credits", "TheEndFontSize", 0);
 
-    mpBlackGfx = mpGui->CreateGfxFilledRect(cColor(0,1), eGuiMaterial_Alpha);
+    mpBlackGfx = mpGui->CreateGfxFilledRect(cColor(0, 1), eGuiMaterial_Alpha);
 
-    mfScrollSpeed = gpBase->mpMenuCfg->GetFloat("Credits","ScrollSpeed",0);
-    mfFadeSpeed = gpBase->mpMenuCfg->GetFloat("Credits","FadeSpeed",0);
+    mfScrollSpeed = gpBase->mpMenuCfg->GetFloat("Credits", "ScrollSpeed", 0);
+    mfFadeSpeed = gpBase->mpMenuCfg->GetFloat("Credits", "FadeSpeed", 0);
 
     ///////////////////////////////
     //Setup variables
@@ -78,8 +78,8 @@ cLuxCredits::~cLuxCredits()
 
 void cLuxCredits::LoadFonts()
 {
-    tString sFontNormal = gpBase->mpMenuCfg->GetString("Credits","NormalFont","");
-    tString sFontHeader = gpBase->mpMenuCfg->GetString("Credits","HeaderFont","");
+    tString sFontNormal = gpBase->mpMenuCfg->GetString("Credits", "NormalFont", "");
+    tString sFontHeader = gpBase->mpMenuCfg->GetString("Credits", "HeaderFont", "");
     mpFontNormal = LoadFont(sFontNormal);
     mpFontHeader = LoadFont(sFontHeader);
 }
@@ -94,10 +94,10 @@ void cLuxCredits::Reset()
 
     mbActive = false;
 
-    mfYPos =600;
-    mlState =0;
-    mfTime =0;
-    mfFadeAlpha =0;
+    mfYPos = 600;
+    mlState = 0;
+    mfTime = 0;
+    mfFadeAlpha = 0;
 
     mKeyBuffer.Clear();
 }
@@ -144,24 +144,24 @@ void cLuxCredits::Update(double adFixedDelta)
 
     //////////////////////////////////////////////
     // STATE 0
-    if(mlState ==0 || mlState ==1)
+    if(mlState == 0 || mlState == 1)
     {
         mfYPos -= (float)adFixedDelta * mfScrollSpeed;
 
         ////////////////////////////////
         //Check if the credits are over.
-        float fSize[2] = {17,19};
+        float fSize[2] = {17, 19};
         float fY = mfYPos;
 
         //Calculate Y
-        for(size_t i=0; i< mvTextRows.size(); ++i)
+        for(size_t i = 0; i < mvTextRows.size(); ++i)
         {
-            int lSize =0;
+            int lSize = 0;
             if(mvTextRows[i][0] == _W('*'))
             {
-                lSize=1;
+                lSize = 1;
             }
-            if(mvTextRows[i].size()<=1)
+            if(mvTextRows[i].size() <= 1)
             {
                 fY += fSize[lSize];
             }
@@ -175,19 +175,19 @@ void cLuxCredits::Update(double adFixedDelta)
         }
 
         //Finished, fade out!
-        if(fY < -280 && mlState==0)
+        if(fY < -280 && mlState == 0)
         {
-            mfTime =0;
+            mfTime = 0;
             mlState++;
         }
-        if(mlState ==0)
+        if(mlState == 0)
         {
             return;
         }
     }
     //////////////////////////////////////////////
     // STATE 1/4 - FADE OUT
-    if(mlState ==1 || mlState==4)
+    if(mlState == 1 || mlState == 4)
     {
         mfFadeAlpha += (float)adFixedDelta * mfFadeSpeed;
         if(mfFadeAlpha > 1)
@@ -195,7 +195,7 @@ void cLuxCredits::Update(double adFixedDelta)
             mfFadeAlpha = 1;
 
             //Last fae out, end game
-            if(mlState==4)
+            if(mlState == 4)
             {
                 gpBase->mpEngine->GetUpdater()->BroadcastMessageToAll(eUpdateableMessage_Reset);
 
@@ -212,7 +212,7 @@ void cLuxCredits::Update(double adFixedDelta)
     }
     //////////////////////////////////////////////
     // STATE 2 - FADE IN
-    if(mlState ==2)
+    if(mlState == 2)
     {
         mfFadeAlpha -= (float)adFixedDelta * mfFadeSpeed;
         if(mfFadeAlpha < 0)
@@ -243,7 +243,7 @@ void cLuxCredits::Setup(const tString& asMusic, bool abLoopMusic, const tString&
 
 
     tWString sText = kTranslate(asTextCat, asTextEntry);
-    mpFontNormal->GetWordWrapRows(750, 19,17,sText,&mvTextRows);
+    mpFontNormal->GetWordWrapRows(750, 19, 17, sText, &mvTextRows);
 }
 
 //-----------------------------------------------------------------------
@@ -251,22 +251,22 @@ void cLuxCredits::Setup(const tString& asMusic, bool abLoopMusic, const tString&
 void cLuxCredits::ExitPressed()
 {
     //Only skip forward during text roll or The End
-    if(mlState!=0 && mlState!=3)
+    if(mlState != 0 && mlState != 3)
     {
         return;
     }
 
     //Always show for at least 3 sec
-    if(mfTime <3)
+    if(mfTime < 3)
     {
         return;
     }
 
     mlState++;
-    mfTime =0;
+    mfTime = 0;
 
     //If start scroll fade out, stop music.
-    if(mlState==1)
+    if(mlState == 1)
     {
         cMusicHandler *pMusicHandler = gpBase->mpEngine->GetSound()->GetMusicHandler();
         pMusicHandler->Stop(0.1f);
@@ -286,22 +286,22 @@ void cLuxCredits::OnDraw(double adFrameTime)
     // Fade
     if(mfFadeAlpha > 0)
     {
-        mpGuiSet->DrawGfx(mpBlackGfx, mvGuiSetStartPos+cVector3f(0,0,20), mvGuiSetSize, cColor(1, mfFadeAlpha));
+        mpGuiSet->DrawGfx(mpBlackGfx, mvGuiSetStartPos + cVector3f(0, 0, 20), mvGuiSetSize, cColor(1, mfFadeAlpha));
     }
 
     //////////////////////////////////////////////
     // STATE 0 - CREDITS
-    if(mlState == 0 || mlState==1)
+    if(mlState == 0 || mlState == 1)
     {
-        float fRowAdd[2] = {mvNormalFontSize.y+2, mvHeaderFontSize.y+2};
+        float fRowAdd[2] = {mvNormalFontSize.y + 2, mvHeaderFontSize.y + 2};
         float fY = mfYPos;
-        for(size_t i=0; i< mvTextRows.size(); ++i)
+        for(size_t i = 0; i < mvTextRows.size(); ++i)
         {
-            int lSize =0;
+            int lSize = 0;
 
             ////////////////////////
             // String is empty row
-            if(mvTextRows[i].size()<=1)
+            if(mvTextRows[i].size() <= 1)
             {
                 fY += fRowAdd[lSize];
             }
@@ -312,7 +312,7 @@ void cLuxCredits::OnDraw(double adFrameTime)
                 //Check if header
                 if(mvTextRows[i][0] == _W('*'))
                 {
-                    lSize=1;
+                    lSize = 1;
                 }
 
                 ////////////////////////
@@ -324,21 +324,21 @@ void cLuxCredits::OnDraw(double adFrameTime)
                         continue;
                     }
 
-                    float fAlpha = fY/300;
+                    float fAlpha = fY / 300;
                     if(fAlpha > 1)
                     {
                         fAlpha = (2 - fAlpha);
                     }
 
                     //Normal
-                    if(lSize==0)
+                    if(lSize == 0)
                     {
-                        mpGuiSet->DrawFont(mvTextRows[i], mpFontNormal, cVector3f(400,fY,10), mvNormalFontSize, cColor(1,fAlpha),eFontAlign_Center);
+                        mpGuiSet->DrawFont(mvTextRows[i], mpFontNormal, cVector3f(400, fY, 10), mvNormalFontSize, cColor(1, fAlpha), eFontAlign_Center);
                     }
                     //Header
                     else
                     {
-                        mpGuiSet->DrawFont(cString::SubW(mvTextRows[i],1), mpFontHeader, cVector3f(400,fY,10), mvHeaderFontSize, cColor(0.8f,fAlpha),eFontAlign_Center);
+                        mpGuiSet->DrawFont(cString::SubW(mvTextRows[i], 1), mpFontHeader, cVector3f(400, fY, 10), mvHeaderFontSize, cColor(0.8f, fAlpha), eFontAlign_Center);
                     }
                 }
             }
@@ -349,28 +349,28 @@ void cLuxCredits::OnDraw(double adFrameTime)
     }
     //////////////////////////////////////////////
     // STATE 1 - SECRET CODE
-    else if(mlState >=2)
+    else if(mlState >= 2)
     {
-        mpGuiSet->DrawFont(kTranslate("General", "TheEnd"), mpFontHeader, cVector3f(400,290,10),mvTheEndFontSize,cColor(1,1),eFontAlign_Center);
+        mpGuiSet->DrawFont(kTranslate("General", "TheEnd"), mpFontHeader, cVector3f(400, 290, 10), mvTheEndFontSize, cColor(1, 1), eFontAlign_Center);
 
         //Secret code
-        if(mlEndNum >=0 && mlEndNum<=2 && gpBase->mbPTestActivated==false)
+        if(mlEndNum >= 0 && mlEndNum <= 2 && gpBase->mbPTestActivated == false)
         {
             tWString sCode = _W("");
-            if(mlEndNum==0)
+            if(mlEndNum == 0)
             {
                 sCode = kTranslate("SecretCodes", "CodeA");
             }
-            if(mlEndNum==1)
+            if(mlEndNum == 1)
             {
                 sCode = kTranslate("SecretCodes", "CodeB");
             }
-            if(mlEndNum==2)
+            if(mlEndNum == 2)
             {
                 sCode = kTranslate("SecretCodes", "CodeC");
             }
 
-            mpGuiSet->DrawFont(sCode, mpFontNormal, cVector3f(400,560,10),15,cColor(0.65f,1),eFontAlign_Center);
+            mpGuiSet->DrawFont(sCode, mpFontNormal, cVector3f(400, 560, 10), 15, cColor(0.65f, 1), eFontAlign_Center);
         }
     }
 }

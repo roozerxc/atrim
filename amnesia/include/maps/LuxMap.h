@@ -13,16 +13,16 @@ class cLuxArea_Sticky;
 class cLuxLampLightConnection;
 class cLuxProp_Lamp;
 
-typedef std::multimap<tString,cLuxNode_Pos*> tLuxPosNodeMap;
+typedef std::multimap<tString, cLuxNode_Pos *> tLuxPosNodeMap;
 typedef tLuxPosNodeMap::iterator tLuxPosNodeMapIt;
 
-typedef std::multimap<tString,cLuxNode_PlayerStart*> tLuxPlayerStartMap;
+typedef std::multimap<tString, cLuxNode_PlayerStart *> tLuxPlayerStartMap;
 typedef tLuxPlayerStartMap::iterator tLuxPlayerStartMapIt;
 
-typedef std::list<cLuxArea_Sticky*> tLuxArea_StickyList;
+typedef std::list<cLuxArea_Sticky *> tLuxArea_StickyList;
 typedef tLuxArea_StickyList::iterator tLuxArea_StickyListIt;
 
-typedef std::list<cLuxLampLightConnection*> tLuxLampLightConnectionList;
+typedef std::list<cLuxLampLightConnection *> tLuxLampLightConnectionList;
 typedef tLuxLampLightConnectionList::iterator tLuxLampLightConnectionListIt;
 
 //----------------------------------------------
@@ -40,7 +40,7 @@ public:
     float mfAlpha;
 };
 
-typedef std::list<cLuxDissolveEntity*> tLuxDissolveEntityList;
+typedef std::list<cLuxDissolveEntity *> tLuxDissolveEntityList;
 typedef tLuxDissolveEntityList::iterator tLuxDissolveEntityListIt;
 
 //----------------------------------------------
@@ -54,11 +54,11 @@ public:
     cLuxMap(const tString& asName);
     ~cLuxMap();
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
-    const tString& GetFileName()
+    const tString &GetFileName()
     {
         return msFileName;
     }
@@ -67,7 +67,7 @@ public:
     {
         msDisplayNameEntry = asEntry;
     }
-    const tString& GetDisplayNameEntry()
+    const tString &GetDisplayNameEntry()
     {
         return msDisplayNameEntry;
     }
@@ -88,11 +88,11 @@ public:
 
     void OnRenderSolid(cRendererCallbackFunctions* apFunctions);
 
-    cWorld* GetWorld()
+    cWorld *GetWorld()
     {
         return mpWorld;
     }
-    iPhysicsWorld* GetPhysicsWorld()
+    iPhysicsWorld *GetPhysicsWorld()
     {
         return mpPhysicsWorld;
     }
@@ -112,23 +112,23 @@ public:
      * Do not call this when IsDeletingAllWorldEntities is true!
      */
     void DestroyEntity(iLuxEntity *apEntity);
-    iLuxEntity *GetEntityByName(const tString& asName, eLuxEntityType aType=eLuxEntityType_LastEnum, int alSubType=-1);
-    iLuxEntity *GetEntityByID(int alID, eLuxEntityType aType=eLuxEntityType_LastEnum, int alSubType=-1);
+    iLuxEntity *GetEntityByName(const tString& asName, eLuxEntityType aType = eLuxEntityType_LastEnum, int alSubType = -1);
+    iLuxEntity *GetEntityByID(int alID, eLuxEntityType aType = eLuxEntityType_LastEnum, int alSubType = -1);
     iLuxEntity *GetLatestEntity()
     {
         return mpLatestAddedEntity;
     }
     void ResetLatestEntity()
     {
-        mpLatestAddedEntity=NULL;
+        mpLatestAddedEntity = NULL;
     }
     bool EntityExists(iLuxEntity *apEntity);
     cLuxEntityIterator GetEntityIterator();
     cLuxEnemyIterator GetEnemyIterator();
 
     void BroadcastEnemyMessage(eLuxEnemyMessage aType, bool abHasPosition, const cVector3f& avPos, float afRadius,
-                               float afTime=0, bool abLocalScope=false, const cVector3f& avX=0,float afX=0, int alX=0);
-    void BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume,float afMinDist, float afMaxDist);
+                               float afTime = 0, bool abLocalScope = false, const cVector3f& avX = 0, float afX = 0, int alX = 0);
+    void BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume, float afMinDist, float afMaxDist);
     /**
      * Gets number of enemies that are in range of player
      */
@@ -147,7 +147,7 @@ public:
 
     void DestroyAllRopes();
 
-    iPhysicsBody* GetBodyFromEntityBodyIdPair(const cLuxIdPair &aIdPair);
+    iPhysicsBody *GetBodyFromEntityBodyIdPair(const cLuxIdPair &aIdPair);
 
     bool CheckCollision(iLuxCollideCallbackContainer *apCollider1, iLuxCollideCallbackContainer* apCollider2);
 
@@ -176,19 +176,19 @@ public:
     /**
      * if asName is not "" it can be used as a safty check so it really is the correct callback that is destroyed!
      */
-    void RemoveUseItemCallback( cLuxUseItemCallback * apCallback, const tString& asName="");
-    cLuxUseItemCallback* GetUseItemCallback(const tString& asItem, const tString& asEntity);
+    void RemoveUseItemCallback( cLuxUseItemCallback * apCallback, const tString& asName = "");
+    cLuxUseItemCallback *GetUseItemCallback(const tString& asItem, const tString& asEntity);
 
     void AddTimer(const tString& asName, float afTime, const tString& asFunction);
     void RemoveTimer(const tString& asName);
-    cLuxEventTimer* GetTimer(const tString& asName);
+    cLuxEventTimer *GetTimer(const tString& asName);
 
     void AddDissolveEntity(cMeshEntity *apMeshEntity, float afTime);
 
-    cLuxLampLightConnection* AddLampLightConnection(cLuxProp_Lamp *apLamp, iLight *apLight, float afAmount, bool abUseOnColor, bool abUseSpec);
-    cLuxLampLightConnection* GetLampLightConnection(iLight *apLight);
+    cLuxLampLightConnection *AddLampLightConnection(cLuxProp_Lamp *apLamp, iLight *apLight, float afAmount, bool abUseOnColor, bool abUseSpec);
+    cLuxLampLightConnection *GetLampLightConnection(iLight *apLight);
 
-    cLuxScriptVar* GetVar(const tString &asName);
+    cLuxScriptVar *GetVar(const tString &asName);
 
     bool IsDeletingAllWorldEntities()
     {
@@ -205,13 +205,13 @@ public:
     {
         return mlNumberOfQuests;
     }
-    void AddCompletionAmount(int alAmount, float afDelay=0.0f);
+    void AddCompletionAmount(int alAmount, float afDelay = 0.0f);
 
     void SetLanternLitCallback(const tString& asCallback)
     {
         msLanternLitCallback = asCallback;
     }
-    const tString& GetLanternLitCallback()
+    const tString &GetLanternLitCallback()
     {
         return msLanternLitCallback;
     }
@@ -273,7 +273,7 @@ private:
     tLuxArea_StickyList mlstStickyAreas;
 
     tLuxPlayerStartMap m_mapPlayerStartNodes;
-    std::vector<cLuxNode_PlayerStart*> mvPlayerStartNodes;
+    std::vector<cLuxNode_PlayerStart *> mvPlayerStartNodes;
 
     tLuxPosNodeMap m_mapPosNodes;
 

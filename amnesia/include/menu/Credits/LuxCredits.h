@@ -37,8 +37,8 @@ private:
     // Data
     cGraphics *mpGraphics;
 
-    cGui* mpGui;
-    cGuiSet* mpGuiSet;
+    cGui *mpGui;
+    cGuiSet *mpGuiSet;
 
     iFontData *mpFontNormal;
     iFontData *mpFontHeader;

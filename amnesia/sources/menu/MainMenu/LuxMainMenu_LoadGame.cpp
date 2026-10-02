@@ -17,7 +17,7 @@
 
 cLuxMainMenu_LoadGame::cLuxMainMenu_LoadGame(cGuiSet *apGuiSet, cGuiSkin *apGuiSkin) : iLuxMainMenuWindow(apGuiSet, apGuiSkin)
 {
-    mvWindowSize = cVector2f(600,440);
+    mvWindowSize = cVector2f(600, 440);
 }
 
 //-----------------------------------------------------------------------
@@ -38,15 +38,15 @@ void cLuxMainMenu_LoadGame::CreateGui()
 {
     //////////////////////////
     //Window
-    mpWindow = mpGuiSet->CreateWidgetWindow(eWidgetWindowButtonFlag_None,cVector3f(0,0,5),mvWindowSize,kTranslate("LoadGame","LoadGameTitle"));
+    mpWindow = mpGuiSet->CreateWidgetWindow(eWidgetWindowButtonFlag_None, cVector3f(0, 0, 5), mvWindowSize, kTranslate("LoadGame", "LoadGameTitle"));
     mpWindow->AddCallback(eGuiMessage_OnUpdate, this, kGuiCallback(WindowOnUpdate));
 
     float fBorderSize = 15;
-    cVector3f vPos = cVector3f(fBorderSize, 60+fBorderSize, 0.1f);
+    cVector3f vPos = cVector3f(fBorderSize, 60 + fBorderSize, 0.1f);
 
     //////////////////////////
     //Saved game list
-    mpLBSavedGames = mpGuiSet->CreateWidgetListBox(vPos+cVector3f(0,0,1), cVector2f(mvWindowSize.x-fBorderSize*2,300), mpWindow);
+    mpLBSavedGames = mpGuiSet->CreateWidgetListBox(vPos + cVector3f(0, 0, 1), cVector2f(mvWindowSize.x - fBorderSize * 2, 300), mpWindow);
     mpLBSavedGames->AddCallback(eGuiMessage_SelectionDoubleClick, this, kGuiCallback(PressOK));
     mpLBSavedGames->AddCallback(eGuiMessage_CheckChange, this, kGuiCallback(LoadSelectionClickChange));
     mpLBSavedGames->AddCallback(eGuiMessage_GetUINavFocus, this, kGuiCallback(LockLoadList));
@@ -55,30 +55,30 @@ void cLuxMainMenu_LoadGame::CreateGui()
 
     ////////////////////////////////
     //Saved game snapshot container
-    mpISavedGameSnapShot = mpGuiSet->CreateWidgetImage("", mpLBSavedGames->GetSize().x+10, cVector2f(200), eGuiMaterial_Alpha, false, mpLBSavedGames);
+    mpISavedGameSnapShot = mpGuiSet->CreateWidgetImage("", mpLBSavedGames->GetSize().x + 10, cVector2f(200), eGuiMaterial_Alpha, false, mpLBSavedGames);
 
     //////////////////////////
     //Buttons
     float fButtonWidth = 80;
     float fButtonSepp = 3;
 
-    vPos.x = mpWindow->GetSize().x - fButtonWidth*2-fButtonSepp-5;
+    vPos.x = mpWindow->GetSize().x - fButtonWidth * 2 - fButtonSepp - 5;
     vPos.y = mpWindow->GetSize().y - 25 - 10;
 
-    std::vector<iWidget*> vButtons;
+    std::vector<iWidget *> vButtons;
 
     // Load Game
-    cWidgetButton* pButton  = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),kTranslate("Global","OK"),mpWindow);
-    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressOK));
-    pButton->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(UIPress));
+    cWidgetButton* pButton  = mpGuiSet->CreateWidgetButton(vPos, cVector2f(fButtonWidth, 30), kTranslate("Global", "OK"), mpWindow);
+    pButton->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(PressOK));
+    pButton->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(UIPress));
     mpLoadButton = pButton;
     vButtons.push_back(pButton);
 
     //Cancel
     vPos.x += fButtonWidth + fButtonSepp;
-    pButton = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonWidth,30),kTranslate("Global","Cancel"),mpWindow);
-    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressCancel));
-    pButton->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(UIPressCancel));
+    pButton = mpGuiSet->CreateWidgetButton(vPos, cVector2f(fButtonWidth, 30), kTranslate("Global", "Cancel"), mpWindow);
+    pButton->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(PressCancel));
+    pButton->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(UIPressCancel));
     vButtons.push_back(pButton);
 
     ////////////////////////////////////////
@@ -87,7 +87,7 @@ void cLuxMainMenu_LoadGame::CreateGui()
 
     vButtons[0]->SetFocusNavigation(eUIArrow_Right, vButtons[1]);
     vButtons[1]->SetFocusNavigation(eUIArrow_Left, vButtons[0]);
-    for(size_t i=0; i<vButtons.size(); ++i)
+    for(size_t i = 0; i < vButtons.size(); ++i)
     {
         vButtons[i]->SetFocusNavigation(eUIArrow_Up, mpLBSavedGames);
     }
@@ -122,7 +122,7 @@ void cLuxMainMenu_LoadGame::OnSetActive(bool abX)
         mpGuiSet->SetDefaultFocusNavWidget(mpLBSavedGames);
         mpGuiSet->SetFocusedWidget(mpLBSavedGames);
 
-        if(mpLBSavedGames->GetItemNum()>0)
+        if(mpLBSavedGames->GetItemNum() > 0)
         {
             mpLBSavedGames->SetIsLocked(true);
         }
@@ -149,7 +149,7 @@ void cLuxMainMenu_LoadGame::PopulateSavedGameList()
     cPlatform::FindFilesInDir(lstSavedGameFiles, gpBase->msProfileSavePath, _W("*.sav"));
 
     tWStringListIt it = lstSavedGameFiles.begin();
-    for(; it!=lstSavedGameFiles.end(); ++it)
+    for(; it != lstSavedGameFiles.end(); ++it)
     {
         const tWString& sSavedGameFile = *it;
         tWString sPath = gpBase->msProfileSavePath + sSavedGameFile;
@@ -182,7 +182,7 @@ void cLuxMainMenu_LoadGame::LoadGame(int alIdx)
 
     gpBase->mpProgressLogHandler->CreateAndResetLogFile();
 
-    if(gpBase->mpSaveHandler->LoadGameFromFile(gpBase->msProfileSavePath+mvSavedGameFileNames[alIdx])==false)
+    if(gpBase->mpSaveHandler->LoadGameFromFile(gpBase->msProfileSavePath + mvSavedGameFileNames[alIdx]) == false)
     {
         gpBase->mpEngine->GetUpdater()->SetContainer("MainMenu");
         gpBase->mpMainMenu->OnLeaveContainer("");
@@ -204,15 +204,15 @@ bool cLuxMainMenu_LoadGame::PressOK(iWidget* apWidget, const cGuiMessageData& aD
 {
     /////////////////////////////////////////////////////////////
     // Check if the list has a valid selection, and warn if not
-    if(mpLBSavedGames->GetSelectedItem()<0)
+    if(mpLBSavedGames->GetSelectedItem() < 0)
         mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"),
                                         kTranslate("LoadGame", "NoGame"),
-                                        kTranslate("Global","OK"), _W(""),
+                                        kTranslate("Global", "OK"), _W(""),
                                         NULL, NULL);
     else
         mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"),
                                         kTranslate("LoadGame", "LoadGameMessage"),
-                                        kTranslate("Global","OK"), kTranslate("Global","Cancel"),
+                                        kTranslate("Global", "OK"), kTranslate("Global", "Cancel"),
                                         this, kGuiCallback(LoadGameCallback));
 
     return true;
@@ -275,8 +275,8 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_LoadGame, UIPressCancel);
 
 bool cLuxMainMenu_LoadGame::LoadGameCallback(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    bool bOkPressed = aData.mlVal==0? true : false;
-    if(bOkPressed==false)
+    bool bOkPressed = aData.mlVal == 0 ? true : false;
+    if(bOkPressed == false)
     {
         return true;
     }
@@ -291,13 +291,13 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_LoadGame, LoadGameCallback);
 
 bool cLuxMainMenu_LoadGame::ExitCallback(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    bool bOkPressed = aData.mlVal==0? true : false;
-    if(bOkPressed==false)
+    bool bOkPressed = aData.mlVal == 0 ? true : false;
+    if(bOkPressed == false)
     {
         return true;
     }
 
-    if(gpBase->mpCustomStory==NULL)
+    if(gpBase->mpCustomStory == NULL)
     {
         gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_LastEnum);
     }

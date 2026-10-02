@@ -39,26 +39,26 @@ void cLuxMainMenu_StartGame::CreateGui()
 {
     //////////////////////////
     //Window
-    mpWindow = mpGuiSet->CreateWidgetWindow(eWidgetWindowButtonFlag_None,cVector3f(0,0,5),mvWindowSize, kTranslate("MainMenu", "Start Game"));
+    mpWindow = mpGuiSet->CreateWidgetWindow(eWidgetWindowButtonFlag_None, cVector3f(0, 0, 5), mvWindowSize, kTranslate("MainMenu", "Start Game"));
     mpWindow->AddCallback(eGuiMessage_OnUpdate, this, kGuiCallback(WindowOnUpdate));
 
     float fBorderSize = 15;
-    cVector3f vPos = cVector3f(fBorderSize, 60+fBorderSize, 0.1f);
+    cVector3f vPos = cVector3f(fBorderSize, 60 + fBorderSize, 0.1f);
 
     //////////////////////////
     //Buttons
     float fButtonWidth = 120;
     float fButtonSepp = 3;
 
-    std::vector<iWidget*> vButtons;
+    std::vector<iWidget *> vButtons;
 
     vPos.x = (mvWindowSize.x ) - ((fButtonWidth * 2.0f) + fButtonSepp * 4);
     vPos.y = mpWindow->GetSize().y - 35;
 
     // Start Game
     cWidgetButton* pButton = mpGuiSet->CreateWidgetButton(vPos, cVector2f(fButtonWidth * 2.0f + fButtonSepp, 30), kTranslate("MainMenu", "Start Game"), mpWindow);
-    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressStartGame));
-    pButton->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(UIPressStart));
+    pButton->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(PressStartGame));
+    pButton->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(UIPressStart));
     mpStartButton = pButton;
     vButtons.push_back(mpStartButton);
 
@@ -82,7 +82,7 @@ void cLuxMainMenu_StartGame::CreateGui()
     vButtonPosition.z = 0.1f;
 
     // Normal mode
-    mpNormalModeButton = mpGuiSet->CreateWidgetButton(vButtonPosition, cVector2f(fButtonWidth, 30), kTranslate("MainMenu","NormalMode"), mpWindow);// Translate This
+    mpNormalModeButton = mpGuiSet->CreateWidgetButton(vButtonPosition, cVector2f(fButtonWidth, 30), kTranslate("MainMenu", "NormalMode"), mpWindow); // Translate This
     mpNormalModeButton->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(PressNormalMode));
     mpNormalModeButton->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(UIPressNormalMode));
     mpNormalModeButton->SetDefaultFontColor(cColor(232.0f / 255.0f, 201.0f / 255.0f, 28.0f / 255.0f, 1.0f));

@@ -27,18 +27,18 @@
 
 static cLuxAction gvLuxActions[] =
 {
-    cLuxAction("Exit",eLuxAction_Exit,                false, eLuxActionCategory_System),
-    cLuxAction("ScreenShot",eLuxAction_ScreenShot,    false, eLuxActionCategory_System),
+    cLuxAction("Exit", eLuxAction_Exit,                false, eLuxActionCategory_System),
+    cLuxAction("ScreenShot", eLuxAction_ScreenShot,    false, eLuxActionCategory_System),
 
-    cLuxAction("LeftClick",eLuxAction_LeftClick,    false, eLuxActionCategory_System),
-    cLuxAction("MiddleClick",eLuxAction_MiddleClick,false, eLuxActionCategory_System),
-    cLuxAction("RightClick",eLuxAction_RightClick,    false, eLuxActionCategory_System),
-    cLuxAction("ScrollUp",eLuxAction_ScrollUp,    false, eLuxActionCategory_System),
-    cLuxAction("ScrollDown",eLuxAction_ScrollDown,    false, eLuxActionCategory_System),
-    cLuxAction("MouseButton6",eLuxAction_MouseButton6Click,    false, eLuxActionCategory_System),
-    cLuxAction("MouseButton7",eLuxAction_MouseButton7Click,    false, eLuxActionCategory_System),
-    cLuxAction("MouseButton8",eLuxAction_MouseButton8Click,    false, eLuxActionCategory_System),
-    cLuxAction("MouseButton9",eLuxAction_MouseButton9Click,    false, eLuxActionCategory_System),
+    cLuxAction("LeftClick", eLuxAction_LeftClick,    false, eLuxActionCategory_System),
+    cLuxAction("MiddleClick", eLuxAction_MiddleClick, false, eLuxActionCategory_System),
+    cLuxAction("RightClick", eLuxAction_RightClick,    false, eLuxActionCategory_System),
+    cLuxAction("ScrollUp", eLuxAction_ScrollUp,    false, eLuxActionCategory_System),
+    cLuxAction("ScrollDown", eLuxAction_ScrollDown,    false, eLuxActionCategory_System),
+    cLuxAction("MouseButton6", eLuxAction_MouseButton6Click,    false, eLuxActionCategory_System),
+    cLuxAction("MouseButton7", eLuxAction_MouseButton7Click,    false, eLuxActionCategory_System),
+    cLuxAction("MouseButton8", eLuxAction_MouseButton8Click,    false, eLuxActionCategory_System),
+    cLuxAction("MouseButton9", eLuxAction_MouseButton9Click,    false, eLuxActionCategory_System),
 
     cLuxAction("UIArrowUp", eLuxAction_UIArrowUp,        false, eLuxActionCategory_System),
     cLuxAction("UIArrowLeft", eLuxAction_UIArrowLeft,        false, eLuxActionCategory_System),
@@ -52,40 +52,40 @@ static cLuxAction gvLuxActions[] =
     cLuxAction("UIDelete", eLuxAction_UIDelete,        false, eLuxActionCategory_System),
     cLuxAction("UIClear", eLuxAction_UIClear,        false, eLuxActionCategory_System),
 
-    cLuxAction("OpenDebug",eLuxAction_OpenDebug,    false, eLuxActionCategory_System),
-    cLuxAction("ReloadMap",eLuxAction_ReloadMap,    false, eLuxActionCategory_System),
-    cLuxAction("QuickSave",eLuxAction_QuickSave,    false, eLuxActionCategory_System),
-    cLuxAction("QuickLoad",eLuxAction_QuickLoad,    false, eLuxActionCategory_System),
-    cLuxAction("FastForward",eLuxAction_FastForward,    false, eLuxActionCategory_System),
+    cLuxAction("OpenDebug", eLuxAction_OpenDebug,    false, eLuxActionCategory_System),
+    cLuxAction("ReloadMap", eLuxAction_ReloadMap,    false, eLuxActionCategory_System),
+    cLuxAction("QuickSave", eLuxAction_QuickSave,    false, eLuxActionCategory_System),
+    cLuxAction("QuickLoad", eLuxAction_QuickLoad,    false, eLuxActionCategory_System),
+    cLuxAction("FastForward", eLuxAction_FastForward,    false, eLuxActionCategory_System),
 
-    cLuxAction("Inventory",eLuxAction_Inventory,    true, eLuxActionCategory_Misc),
-    cLuxAction("Journal",eLuxAction_Journal,        true, eLuxActionCategory_Misc),
-    cLuxAction("QuestLog",eLuxAction_QuestLog,        true, eLuxActionCategory_Misc),
+    cLuxAction("Inventory", eLuxAction_Inventory,    true, eLuxActionCategory_Misc),
+    cLuxAction("Journal", eLuxAction_Journal,        true, eLuxActionCategory_Misc),
+    cLuxAction("QuestLog", eLuxAction_QuestLog,        true, eLuxActionCategory_Misc),
     cLuxAction("RecentText", eLuxAction_RecentText, true, eLuxActionCategory_Misc),
 
-    cLuxAction("Forward",eLuxAction_Forward,    true, eLuxActionCategory_Movement),
-    cLuxAction("Backward",eLuxAction_Backward,    true, eLuxActionCategory_Movement),
-    cLuxAction("Right",eLuxAction_Right,        true, eLuxActionCategory_Movement),
-    cLuxAction("Left",eLuxAction_Left,            true, eLuxActionCategory_Movement),
+    cLuxAction("Forward", eLuxAction_Forward,    true, eLuxActionCategory_Movement),
+    cLuxAction("Backward", eLuxAction_Backward,    true, eLuxActionCategory_Movement),
+    cLuxAction("Right", eLuxAction_Right,        true, eLuxActionCategory_Movement),
+    cLuxAction("Left", eLuxAction_Left,            true, eLuxActionCategory_Movement),
 
-    cLuxAction("LeanRight",eLuxAction_LeanRight,true, eLuxActionCategory_Movement),
-    cLuxAction("LeanLeft",eLuxAction_LeanLeft,    true, eLuxActionCategory_Movement),
+    cLuxAction("LeanRight", eLuxAction_LeanRight, true, eLuxActionCategory_Movement),
+    cLuxAction("LeanLeft", eLuxAction_LeanLeft,    true, eLuxActionCategory_Movement),
 
 #if USE_GAMEPAD
-    cLuxAction("Lean",eLuxAction_Lean,    true, eLuxActionCategory_Movement),
+    cLuxAction("Lean", eLuxAction_Lean,    true, eLuxActionCategory_Movement),
     cLuxAction("ZoomOut", eLuxAction_ZoomOut, false, eLuxActionCategory_Action),
     cLuxAction("ZoomIn", eLuxAction_ZoomIn, false, eLuxActionCategory_Action),
 #endif
 
-    cLuxAction("Attack",eLuxAction_Attack,        true, eLuxActionCategory_Action),
-    cLuxAction("Interact",eLuxAction_Interact,    true, eLuxActionCategory_Action),
-    cLuxAction("Ignite",eLuxAction_Ignite,        false, eLuxActionCategory_Action),
-    cLuxAction("Rotate",eLuxAction_Rotate,        true, eLuxActionCategory_Action),
-    cLuxAction("Lantern",eLuxAction_Lantern,    true, eLuxActionCategory_Action),
+    cLuxAction("Attack", eLuxAction_Attack,        true, eLuxActionCategory_Action),
+    cLuxAction("Interact", eLuxAction_Interact,    true, eLuxActionCategory_Action),
+    cLuxAction("Ignite", eLuxAction_Ignite,        false, eLuxActionCategory_Action),
+    cLuxAction("Rotate", eLuxAction_Rotate,        true, eLuxActionCategory_Action),
+    cLuxAction("Lantern", eLuxAction_Lantern,    true, eLuxActionCategory_Action),
 
-    cLuxAction("Run",eLuxAction_Run,            true, eLuxActionCategory_Movement),
-    cLuxAction("Crouch",eLuxAction_Crouch,        true, eLuxActionCategory_Movement),
-    cLuxAction("Jump",eLuxAction_Jump,            true, eLuxActionCategory_Movement),
+    cLuxAction("Run", eLuxAction_Run,            true, eLuxActionCategory_Movement),
+    cLuxAction("Crouch", eLuxAction_Crouch,        true, eLuxActionCategory_Movement),
+    cLuxAction("Jump", eLuxAction_Jump,            true, eLuxActionCategory_Movement),
 
 
     cLuxAction()
@@ -247,8 +247,8 @@ cLuxInputHandler::cLuxInputHandler() : iLuxUpdateable("LuxInputHandler")
 
     ////////////////////////////////////
     // Game settings init
-    mlMaxSmoothMousePos = gpBase->mpGameCfg->GetInt("Input","MaxSmoothMousePos",0);
-    mfPrevSmoothMousePosMul = gpBase->mpGameCfg->GetFloat("Input","PrevSmoothMousePosMul",0);
+    mlMaxSmoothMousePos = gpBase->mpGameCfg->GetInt("Input", "MaxSmoothMousePos", 0);
+    mfPrevSmoothMousePosMul = gpBase->mpGameCfg->GetFloat("Input", "PrevSmoothMousePosMul", 0);
 
 #if USE_GAMEPAD
     ////////////////////////////////////
@@ -299,10 +299,10 @@ void cLuxInputHandler::LoadUserConfig()
     tString sSep = ".";
     ///////////////////////////////////////////////////////////
     // Load user key config, clear configurable keys first
-    for(int i=0; gvLuxActions[i].msName!=""; ++i)
+    for(int i = 0; gvLuxActions[i].msName != ""; ++i)
     {
         cLuxAction* pLuxAction = &gvLuxActions[i];
-        if(pLuxAction->mbConfigurable==false)
+        if(pLuxAction->mbConfigurable == false)
         {
             continue;
         }
@@ -314,7 +314,7 @@ void cLuxInputHandler::LoadUserConfig()
         // Get user key for primary and secondary
         bool bHasUserDefinedInputs = false;
 
-        for(size_t j=0; gvLuxInputPos[j]!=""; ++j)
+        for(size_t j = 0; gvLuxInputPos[j] != ""; ++j)
         {
             tString sInput = gpBase->mpUserKeyConfig->GetString(pAction->GetName(), gvLuxInputPos[j], "");
             if(sInput.empty())
@@ -327,11 +327,11 @@ void cLuxInputHandler::LoadUserConfig()
         }
 
         // If no valid inputs were loaded, load default
-        if(bHasUserDefinedInputs==false)
+        if(bHasUserDefinedInputs == false)
         {
             tLuxInputVec vDefaultInputs = GetDefaultInputsByActionId(pLuxAction->mlId);
 
-            for(size_t i=0; i<vDefaultInputs.size(); ++i)
+            for(size_t i = 0; i < vDefaultInputs.size(); ++i)
             {
                 cLuxInput* pDefaultInput = vDefaultInputs[i];
                 tStringVec vInputParts;
@@ -361,25 +361,25 @@ void cLuxInputHandler::SaveUserConfig()
     //////////////////////////////////////////////////
     // Save key config
     tStringVec vInputStringFields;
-    for(int i=0; gvLuxInputPos[i]!=""; ++i)
+    for(int i = 0; gvLuxInputPos[i] != ""; ++i)
     {
         vInputStringFields.push_back(gvLuxInputPos[i]);
     }
 
     // Go through all actions and save configurable ones
-    for(int i=0; gvLuxActions[i].msName!=""; ++i)
+    for(int i = 0; gvLuxActions[i].msName != ""; ++i)
     {
         cLuxAction* pLuxAction = &gvLuxActions[i];
-        if(pLuxAction->mbConfigurable==false)
+        if(pLuxAction->mbConfigurable == false)
         {
             continue;
         }
 
         cAction* pAction = mpInput->GetAction(pLuxAction->mlId);
-        size_t j=0;
+        size_t j = 0;
         ////////////////////////////////////////////
         // Save sub actions in action
-        for(; j<pAction->GetSubActionNum() && j<vInputStringFields.size(); ++j)
+        for(; j < pAction->GetSubActionNum() && j < vInputStringFields.size(); ++j)
         {
             iSubAction* pSubAction = pAction->GetSubAction(j);
             const tString& sInputPos = vInputStringFields[j];
@@ -390,7 +390,7 @@ void cLuxInputHandler::SaveUserConfig()
         }
         ///////////////////////////////////////////////////////////////////
         // Fill up with empty sub actions to fill up
-        for(; j<vInputStringFields.size(); ++j)
+        for(; j < vInputStringFields.size(); ++j)
         {
             gpBase->mpUserKeyConfig->SetString(pAction->GetName(), vInputStringFields[j], "");
         }
@@ -493,7 +493,7 @@ void cLuxInputHandler::ChangeState(eLuxInputState aState)
 
 void cLuxInputHandler::SetMouseSensitivity(float afX)
 {
-    if(mfMouseSensitivity==afX)
+    if(mfMouseSensitivity == afX)
     {
         return;
     }
@@ -506,7 +506,7 @@ void cLuxInputHandler::SetMouseSensitivity(float afX)
 #if USE_GAMEPAD
 void cLuxInputHandler::SetGamepadLookSensitivity(float afX)
 {
-    if(mfGamepadLookSensitivity==afX)
+    if(mfGamepadLookSensitivity == afX)
     {
         return;
     }
@@ -517,9 +517,9 @@ void cLuxInputHandler::SetGamepadLookSensitivity(float afX)
 
 //-----------------------------------------------------------------------
 
-cLuxAction* cLuxInputHandler::GetActionByName(const tString& asName)
+cLuxAction *cLuxInputHandler::GetActionByName(const tString& asName)
 {
-    for(int i=0; gvLuxActions[i].msName!=""; ++i)
+    for(int i = 0; gvLuxActions[i].msName != ""; ++i)
     {
         cLuxAction* pAction = &gvLuxActions[i];
 
@@ -534,13 +534,13 @@ cLuxAction* cLuxInputHandler::GetActionByName(const tString& asName)
 
 //-----------------------------------------------------------------------
 
-cLuxAction* cLuxInputHandler::GetActionById(int alId)
+cLuxAction *cLuxInputHandler::GetActionById(int alId)
 {
-    for(int i=0; gvLuxActions[i].msName!=""; ++i)
+    for(int i = 0; gvLuxActions[i].msName != ""; ++i)
     {
         cLuxAction* pAction = &gvLuxActions[i];
 
-        if(pAction->mlId==alId)
+        if(pAction->mlId == alId)
         {
             return pAction;
         }
@@ -553,14 +553,14 @@ cLuxAction* cLuxInputHandler::GetActionById(int alId)
 
 tLuxActionVec cLuxInputHandler::GetActionsByCategory(eLuxActionCategory aCat)
 {
-    bool bAddAll = (aCat==eLuxActionCategory_LastEnum);
+    bool bAddAll = (aCat == eLuxActionCategory_LastEnum);
 
     tLuxActionVec vActions;
-    for(int i=0; gvLuxActions[i].msName!=""; ++i)
+    for(int i = 0; gvLuxActions[i].msName != ""; ++i)
     {
         cLuxAction* pAction = &gvLuxActions[i];
 
-        if(bAddAll || pAction->mCat==aCat)
+        if(bAddAll || pAction->mCat == aCat)
         {
             vActions.push_back(pAction);
         }
@@ -574,11 +574,11 @@ tLuxActionVec cLuxInputHandler::GetActionsByCategory(eLuxActionCategory aCat)
 tLuxInputVec cLuxInputHandler::GetDefaultInputsByActionId(int alId)
 {
     tLuxInputVec vInputs;
-    for(int i=0; gvLuxInputs[i].msInputType!=""; ++i)
+    for(int i = 0; gvLuxInputs[i].msInputType != ""; ++i)
     {
         cLuxInput* pInput = &gvLuxInputs[i];
 
-        if(pInput->mlActionId==alId)
+        if(pInput->mlActionId == alId)
         {
             vInputs.push_back(pInput);
         }
@@ -605,8 +605,8 @@ cVector2f cLuxInputHandler::GetSmoothMousePos(const cVector2f& avRelPosMouse)
     }
 
     float fWeight = 1.0f;
-    float fWeightSum =0;
-    cVector2f vPosSum=0;
+    float fWeightSum = 0;
+    cVector2f vPosSum = 0;
     for(tVector2fListIt it = mlstSmoothMousePos.begin(); it != mlstSmoothMousePos.end(); ++it)
     {
         vPosSum += *it * fWeight;
@@ -622,7 +622,7 @@ cVector2f cLuxInputHandler::GetSmoothMousePos(const cVector2f& avRelPosMouse)
 #if USE_GAMEPAD
 bool cLuxInputHandler::IsGamepadPresent()
 {
-    return mpPad!=NULL;
+    return mpPad != NULL;
 }
 #endif
 
@@ -668,15 +668,15 @@ void cLuxInputHandler::UpdateGlobalInput()
 
         do
         {
-            sFileName = sBaseName+cString::To16Char("Screenshot")+_W("_");
-            sFileName += cString::ToStringW(lCount,3);
+            sFileName = sBaseName + cString::To16Char("Screenshot") + _W("_");
+            sFileName += cString::ToStringW(lCount, 3);
             /*
             if(lCount >= 100)        sFileName += _W("")+cString::ToStringW(lCount);
             else if(lCount >= 10)    sFileName += _W("0")+cString::ToStringW(lCount);
             else                    sFileName += _W("00")+cString::ToStringW(lCount);
             */
 
-            sFileName += _W(".")+cString::To16Char(gpBase->mpConfigHandler->msScreenShotExt);
+            sFileName += _W(".") + cString::To16Char(gpBase->mpConfigHandler->msScreenShotExt);
             ++lCount;
 
         }
@@ -685,7 +685,7 @@ void cLuxInputHandler::UpdateGlobalInput()
         cEngine *pEngine = gpBase->mpEngine;
 
         cBitmap *pBmp = pEngine->GetGraphics()->GetLowLevel()->CopyFrameBufferToBitmap();
-        pEngine->GetResources()->GetBitmapLoaderHandler()->SaveBitmap(pBmp,sFileName,0);
+        pEngine->GetResources()->GetBitmapLoaderHandler()->SaveBitmap(pBmp, sFileName, 0);
         hplDelete(pBmp);
     }
 
@@ -877,8 +877,8 @@ bool cLuxInputHandler::UpdateGamepadUIInput()
         -1
     };
 
-    int i=0;
-    for(; vActionIDs[i]!=-1; ++i)
+    int i = 0;
+    for(; vActionIDs[i] != -1; ++i)
     {
         int lAction = vActionIDs[i];
         int lInput = vInputIDs[i];
@@ -897,7 +897,7 @@ bool cLuxInputHandler::UpdateGamepadUIInput()
 
     ++i;
 
-    for(; vActionIDs[i]!=-1; ++i)
+    for(; vActionIDs[i] != -1; ++i)
     {
         int lAction = vActionIDs[i];
         int lInput = vInputIDs[i];
@@ -944,7 +944,7 @@ void cLuxInputHandler::UpdateGameInput()
         gpBase->mpDebugHandler->SetFastForward(bActivate);
     }
 
-    if(mpPlayer->IsDead()==false && gpBase->mpDebugHandler->GetAllowQuickSave() && gpBase->mbPTestActivated==false)
+    if(mpPlayer->IsDead() == false && gpBase->mpDebugHandler->GetAllowQuickSave() && gpBase->mbPTestActivated == false)
     {
         if(mpInput->BecameTriggerd(eLuxAction_QuickSave))
         {
@@ -997,7 +997,7 @@ void cLuxInputHandler::UpdateGamePlayerInput()
         }
         return;
     }
-    if(mpPlayer->IsActive()==false)
+    if(mpPlayer->IsActive() == false)
     {
         return;
     }
@@ -1008,21 +1008,21 @@ void cLuxInputHandler::UpdateGamePlayerInput()
     {
         if(mpInput->BecameTriggerd(eLuxAction_Inventory))
         {
-            if(gpBase->mpInventory->GetDisabled()==false)
+            if(gpBase->mpInventory->GetDisabled() == false)
             {
                 gpBase->mpEngine->GetUpdater()->SetContainer("Inventory");
             }
         }
         if(mpInput->BecameTriggerd(eLuxAction_Journal))
         {
-            if(gpBase->mpInventory->GetDisabled()==false)
+            if(gpBase->mpInventory->GetDisabled() == false)
             {
                 gpBase->mpEngine->GetUpdater()->SetContainer("Journal");
             }
         }
         if(mpInput->BecameTriggerd(eLuxAction_QuestLog))
         {
-            if(gpBase->mpInventory->GetDisabled()==false)
+            if(gpBase->mpInventory->GetDisabled() == false)
             {
                 gpBase->mpJournal->SetForceInstantExit(true);
                 gpBase->mpEngine->GetUpdater()->SetContainer("Journal");
@@ -1031,7 +1031,7 @@ void cLuxInputHandler::UpdateGamePlayerInput()
         }
         if(mpInput->BecameTriggerd(eLuxAction_RecentText))
         {
-            if(gpBase->mpInventory->GetDisabled()==false)
+            if(gpBase->mpInventory->GetDisabled() == false)
             {
                 gpBase->mpJournal->OpenLastReadText();
             }
@@ -1085,7 +1085,7 @@ void cLuxInputHandler::UpdateGamePlayerInput()
     if(mpInput->BecameTriggerd(eLuxAction_Interact))
     {
         mpInput->BecameTriggerd(eLuxAction_LeftClick);
-        mpPlayer->DoAction(eLuxPlayerAction_Interact,true);
+        mpPlayer->DoAction(eLuxPlayerAction_Interact, true);
     }
     if(mpInput->WasTriggerd(eLuxAction_Interact))
     {
@@ -1096,7 +1096,7 @@ void cLuxInputHandler::UpdateGamePlayerInput()
     //Ignite
     if(mpInput->BecameTriggerd(eLuxAction_Ignite))
     {
-        mpPlayer->DoAction(eLuxPlayerAction_Ignite,true);
+        mpPlayer->DoAction(eLuxPlayerAction_Ignite, true);
     }
     if(mpInput->WasTriggerd(eLuxAction_Ignite))
     {
@@ -1106,7 +1106,7 @@ void cLuxInputHandler::UpdateGamePlayerInput()
     //Lantern
     if(mpInput->BecameTriggerd(eLuxAction_Lantern))
     {
-        mpPlayer->DoAction(eLuxPlayerAction_Lantern,true);
+        mpPlayer->DoAction(eLuxPlayerAction_Lantern, true);
     }
     if(mpInput->WasTriggerd(eLuxAction_Lantern))
     {
@@ -1163,9 +1163,9 @@ void cLuxInputHandler::UpdateGamePlayerInput()
 
     // Mouse
     cVector2l vMouseRelPos = mpInput->GetMouse()->GetRelPosition();
-    cVector2f vMouseRelPosFloat = cVector2f((float)vMouseRelPos.x, (float)vMouseRelPos.y)*mfMouseSensitivity;
+    cVector2f vMouseRelPosFloat = cVector2f((float)vMouseRelPos.x, (float)vMouseRelPos.y) * mfMouseSensitivity;
     cVector2l vAbsRel = cMath::RoundToInt(vMouseRelPosFloat);
-    cVector2f vRelPos = cVector2f((float)vAbsRel.x,(float)vAbsRel.y) / (1.7f * mpGraphics->GetLowLevel()->GetScreenSizeFloat().y);
+    cVector2f vRelPos = cVector2f((float)vAbsRel.x, (float)vAbsRel.y) / (1.7f * mpGraphics->GetLowLevel()->GetScreenSizeFloat().y);
     cVector2f vFinalPos;
 
     //Check if position should be smoothed.
@@ -1240,7 +1240,7 @@ void cLuxInputHandler::UpdateGamePlayerInput()
             cVector2f vExponent = cMath::Vector2Abs(vAnalogLookAxis);
             vExponent.x = sqrtf(vExponent.x);
             vExponent.y = sqrtf(vExponent.y);
-            cVector2f vGamepadPos = (vAnalogLookAxis * vExponent) * mfGamepadLookSensitivity* (float)gpBase->mpEngine->GetFixedDelta();
+            cVector2f vGamepadPos = (vAnalogLookAxis * vExponent) * mfGamepadLookSensitivity * (float)gpBase->mpEngine->GetFixedDelta();
 
             //Invert the Y-axis
             if(mbGamepadLookInvert)
@@ -1286,7 +1286,7 @@ void cLuxInputHandler::UpdateGameMessageInput()
     //Interact
     if(mpInput->BecameTriggerd(eLuxAction_Interact))
     {
-        gpBase->mpMessageHandler->DoAction(eLuxPlayerAction_Interact,true);
+        gpBase->mpMessageHandler->DoAction(eLuxPlayerAction_Interact, true);
     }
     if(mpInput->WasTriggerd(eLuxAction_Interact))
     {
@@ -1334,7 +1334,7 @@ void cLuxInputHandler:: UpdateGameEffectInput()
     //Interact
     if(mpInput->BecameTriggerd(eLuxAction_Interact))
     {
-        gpBase->mpEffectHandler->DoAction(eLuxPlayerAction_Interact,true);
+        gpBase->mpEffectHandler->DoAction(eLuxPlayerAction_Interact, true);
     }
     if(mpInput->WasTriggerd(eLuxAction_Interact))
     {
@@ -1465,7 +1465,7 @@ void cLuxInputHandler::UpdateJournalInput()
             mpInput->BecameTriggerd(eLuxAction_RecentText))
     {
 #if USE_GAMEPAD
-        if(mbGamepadUIInput==false)
+        if(mbGamepadUIInput == false)
         {
             gpBase->mpJournal->ExitPressed(true);
         }
@@ -1544,7 +1544,7 @@ void cLuxInputHandler::CreateActions()
 {
     //////////////////////////////////
     // Loop through all defined actions and create them
-    for(int i=0; gvLuxActions[i].msName != ""; ++i)
+    for(int i = 0; gvLuxActions[i].msName != ""; ++i)
     {
         cLuxAction *pLuxAction = &gvLuxActions[i];
 
@@ -1554,16 +1554,16 @@ void cLuxInputHandler::CreateActions()
     tString sSep = ".";
     //////////////////////////////////
     // Loop through all defined inputs and bind them to actions
-    for(int i=0; gvLuxInputs[i].msInputType != ""; ++i)
+    for(int i = 0; gvLuxInputs[i].msInputType != ""; ++i)
     {
         cLuxInput *pLuxInput = &gvLuxInputs[i];
 
         cAction *pAction = mpInput->GetAction(pLuxInput->mlActionId);
 
         int lPara = 0;
-        if(pLuxInput->mlActionId==eLuxAction_Forward)
+        if(pLuxInput->mlActionId == eLuxAction_Forward)
         {
-            lPara=1;
+            lPara = 1;
         }
 
         tStringVec vInputParts;
@@ -1591,9 +1591,9 @@ void cLuxInputHandler::CreateSubAction(cAction *apAction, const tStringVec& avTy
     }
 #if USE_GAMEPAD
     //Gamepad
-    else if(cString::GetFirstStringPos(sType, "gamepad")==0)
+    else if(cString::GetFirstStringPos(sType, "gamepad") == 0)
     {
-        if(avType[0]=="GamepadButton")
+        if(avType[0] == "GamepadButton")
         {
             apAction->AddGamepadButton(0, (eGamepadButton)alValue);
         }
@@ -1604,11 +1604,11 @@ void cLuxInputHandler::CreateSubAction(cAction *apAction, const tStringVec& avTy
 
             //////////////////////////////////////////////////
             // Gamepad elements
-            if(hat!=eGamepadHat_LastEnum)
+            if(hat != eGamepadHat_LastEnum)
             {
                 apAction->AddGamepadHat(0, hat, (eGamepadHatState)alValue);
             }
-            else if(axis!=eGamepadAxis_LastEnum)
+            else if(axis != eGamepadAxis_LastEnum)
             {
                 apAction->AddGamepadAxis(0, axis, (eGamepadAxisRange)alValue, 0.25f);
             }
@@ -1635,39 +1635,39 @@ bool cLuxInputHandler::CreateSubActionFromInputString(cAction* apAction, const t
     tStringVec vInputParts;
     cString::GetStringVec(asInputString, vInputParts, &sSep);
 
-    if(vInputParts.empty()==false)
+    if(vInputParts.empty() == false)
     {
         int lInputValue = -1;
         tString sInputType = cString::ToLowerCase(vInputParts[0]);
 
         ///////////////////////////////////////////////////
         // Now check if the input type - value combo is valid
-        if(sInputType=="keyboard")
+        if(sInputType == "keyboard")
         {
             lInputValue = mpInput->GetKeyboard()->StringToKey(vInputParts[1]);
-            if(lInputValue==eKey_LastEnum)
+            if(lInputValue == eKey_LastEnum)
             {
-                lInputValue=-1;
+                lInputValue = -1;
             }
         }
-        else if(sInputType=="mousebutton")
+        else if(sInputType == "mousebutton")
         {
             lInputValue = mpInput->GetMouse()->StringToButton(vInputParts[1]);
-            if(lInputValue==eMouseButton_LastEnum)
+            if(lInputValue == eMouseButton_LastEnum)
             {
-                lInputValue=-1;
+                lInputValue = -1;
             }
         }
 #if USE_GAMEPAD
-        else if(cString::GetFirstStringPos(sInputType,"gamepad")!=-1)
+        else if(cString::GetFirstStringPos(sInputType, "gamepad") != -1)
         {
 
-            if(vInputParts[0]=="GamepadButton")
+            if(vInputParts[0] == "GamepadButton")
             {
                 lInputValue = iGamepad::StringToButton(vInputParts[1]);
-                if(lInputValue==eGamepadButton_LastEnum)
+                if(lInputValue == eGamepadButton_LastEnum)
                 {
-                    lInputValue=-1;
+                    lInputValue = -1;
                 }
             }
             else
@@ -1675,20 +1675,20 @@ bool cLuxInputHandler::CreateSubActionFromInputString(cAction* apAction, const t
                 eGamepadHat hat = iGamepad::StringToHat(vInputParts[1]);
                 eGamepadAxis axis = iGamepad::StringToAxis(vInputParts[1]);
 
-                if(hat!=eGamepadHat_LastEnum)
+                if(hat != eGamepadHat_LastEnum)
                 {
                     lInputValue = iGamepad::StringToHatState(vInputParts[2]);
-                    if(lInputValue==eGamepadHat_LastEnum)
+                    if(lInputValue == eGamepadHat_LastEnum)
                     {
-                        lInputValue=-1;
+                        lInputValue = -1;
                     }
                 }
-                else if(axis!=eGamepadAxis_LastEnum)
+                else if(axis != eGamepadAxis_LastEnum)
                 {
                     lInputValue = iGamepad::StringToAxisRange(vInputParts[2]);
-                    if(lInputValue==eGamepadAxisRange_LastEnum)
+                    if(lInputValue == eGamepadAxisRange_LastEnum)
                     {
-                        lInputValue=-1;
+                        lInputValue = -1;
                     }
                 }
             }
@@ -1702,7 +1702,7 @@ bool cLuxInputHandler::CreateSubActionFromInputString(cAction* apAction, const t
 
         ////////////////////////////////////////
         // If input is valid, create sub action
-        if(vInputParts.empty()==false && lInputValue!=-1)
+        if(vInputParts.empty() == false && lInputValue != -1)
         {
             CreateSubAction(apAction, vInputParts, lInputValue);
 

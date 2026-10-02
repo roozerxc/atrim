@@ -46,14 +46,14 @@ private:
 
     cMeshEntity *mpMeshEntity;
 
-    std::vector<iPhysicsBody*> mvBodies;
-    std::vector<iPhysicsJoint*> mvJoints;
+    std::vector<iPhysicsBody *> mvBodies;
+    std::vector<iPhysicsJoint *> mvJoints;
 
-    std::vector<iLight*> mvLights;
-    std::vector<cParticleSystem*> mvParticleSystems;
-    std::vector<cBillboard*> mvBillboards;
-    std::vector<cBeam*> mvBeams;
-    std::vector<cSoundEntity*> mvSoundEntities;
+    std::vector<iLight *> mvLights;
+    std::vector<cParticleSystem *> mvParticleSystems;
+    std::vector<cBillboard *> mvBillboards;
+    std::vector<cBeam *> mvBeams;
+    std::vector<cSoundEntity *> mvSoundEntities;
 };
 
 
@@ -65,8 +65,8 @@ public:
     cLuxStaticPropLoader(const tString& asName);
     virtual ~cLuxStaticPropLoader() {}
 
-    void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
-    void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
+    void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars);
+    void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars);
 };
 
 //----------------------------------------------

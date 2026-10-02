@@ -16,14 +16,14 @@
 cLuxMainMenu_Profile::cLuxMainMenu_Profile(cGuiSet *apGuiSet, cGuiSkin *apGuiSkin) : iLuxMainMenuWindow(apGuiSet, apGuiSkin)
 {
     mlLastPickedProfile = -1;
-    msDefaultProfileName = kTranslate("MainMenu","New Player");
+    msDefaultProfileName = kTranslate("MainMenu", "New Player");
 
-    mvWindowSize = gpBase->mpMenuCfg->GetVector2f("Profiles","WindowSize",0);
-    mfInformationWidth = gpBase->mpMenuCfg->GetFloat("Profiles","InformationWidth",0);
-    mvListFontSize = gpBase->mpMenuCfg->GetVector2f("Profiles","ListFontSize",0);
+    mvWindowSize = gpBase->mpMenuCfg->GetVector2f("Profiles", "WindowSize", 0);
+    mfInformationWidth = gpBase->mpMenuCfg->GetFloat("Profiles", "InformationWidth", 0);
+    mvListFontSize = gpBase->mpMenuCfg->GetVector2f("Profiles", "ListFontSize", 0);
 
-    mvEnterNameWindowSize = gpBase->mpMenuCfg->GetVector2f("Profiles","EnterNameWindowSize",0);
-    mfEnterNameButtonLength = gpBase->mpMenuCfg->GetFloat("Profiles","EnterNameButtonLength",0);
+    mvEnterNameWindowSize = gpBase->mpMenuCfg->GetVector2f("Profiles", "EnterNameWindowSize", 0);
+    mfEnterNameButtonLength = gpBase->mpMenuCfg->GetFloat("Profiles", "EnterNameButtonLength", 0);
 }
 
 //-----------------------------------------------------------------------
@@ -77,7 +77,7 @@ void cLuxMainMenu_Profile::OnSetActive(bool abX)
 
         ////////////////////////////////////////////////////////////
         // If no profiles found, start the Create Profile window
-        if(mpListProfiles->GetItemNum()==0)
+        if(mpListProfiles->GetItemNum() == 0)
         {
             PressCreateProfile(NULL, cGuiMessageData());
         }
@@ -97,26 +97,26 @@ void cLuxMainMenu_Profile::CreateMainGui()
     float fWindowHeaderSize = 40;
     float fBorderSize = 35;
 
-    cVector3f vPos(fBorderSize, fWindowHeaderSize+fBorderSize,1);
+    cVector3f vPos(fBorderSize, fWindowHeaderSize + fBorderSize, 1);
 
     //////////////////////////
     //Window
     //TODO: If a game is running, then add close button.
-    mpWindow = mpGuiSet->CreateWidgetWindow(eWidgetWindowButtonFlag_ButtonClose,cVector3f(0,0,5),mvWindowSize,kTranslate("MainMenu","Profiles"));
+    mpWindow = mpGuiSet->CreateWidgetWindow(eWidgetWindowButtonFlag_ButtonClose, cVector3f(0, 0, 5), mvWindowSize, kTranslate("MainMenu", "Profiles"));
     mpWindow->SetCloseButtonDisablesWindow(false);
-    mpWindow->AddCallback(eGuiMessage_WindowClose,this, kGuiCallback(WindowCloses));
-    mpWindow->AddCallback(eGuiMessage_UIButtonPress,this,kGuiCallback(WindowUIPress));
+    mpWindow->AddCallback(eGuiMessage_WindowClose, this, kGuiCallback(WindowCloses));
+    mpWindow->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(WindowUIPress));
     mpWindow->SetGlobalUIInputListener(true);
 
 
     //////////////////////////
     //List box
-    mpListProfiles = mpGuiSet->CreateWidgetListBox(vPos,cVector2f(mvWindowSize.x - mfInformationWidth - fBorderSize*2,
-                     mvWindowSize.y-vPos.y-40-fBorderSize*2),
+    mpListProfiles = mpGuiSet->CreateWidgetListBox(vPos, cVector2f(mvWindowSize.x - mfInformationWidth - fBorderSize * 2,
+                     mvWindowSize.y - vPos.y - 40 - fBorderSize * 2),
                      mpWindow);
-    mpListProfiles->AddCallback(eGuiMessage_SelectionChange,this, kGuiCallback(SelectedProfileChange));
-    mpListProfiles->AddCallback(eGuiMessage_SelectionDoubleClick,this, kGuiCallback(DoubleClickSelection));
-    mpListProfiles->AddCallback(eGuiMessage_CheckChange,this,kGuiCallback(ProfileSelectionClickChange));
+    mpListProfiles->AddCallback(eGuiMessage_SelectionChange, this, kGuiCallback(SelectedProfileChange));
+    mpListProfiles->AddCallback(eGuiMessage_SelectionDoubleClick, this, kGuiCallback(DoubleClickSelection));
+    mpListProfiles->AddCallback(eGuiMessage_CheckChange, this, kGuiCallback(ProfileSelectionClickChange));
     mpListProfiles->AddCallback(eGuiMessage_GetUINavFocus, this, kGuiCallback(LockProfileList));
     mpListProfiles->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(UIPressList));
     mpListProfiles->SetDefaultFontSize(mvListFontSize);
@@ -124,10 +124,10 @@ void cLuxMainMenu_Profile::CreateMainGui()
 
     AddProfilesInListBox();
 
-    if(mpListProfiles->GetItemNum()>0)
+    if(mpListProfiles->GetItemNum() > 0)
     {
         mpListProfiles->SetSelectedItem(mlLastPickedProfile);
-        if(mpListProfiles->GetSelectedItem()==-1)
+        if(mpListProfiles->GetSelectedItem() == -1)
         {
             mpListProfiles->SetSelectedItem(0);
         }
@@ -136,28 +136,28 @@ void cLuxMainMenu_Profile::CreateMainGui()
 
     //////////////////////////
     //Buttons
-    std::vector<iWidget*> vButtons;
+    std::vector<iWidget *> vButtons;
     float fButtonSepp = 3.0f;
     float fButtonLength = mpListProfiles->GetSize().x / 3.0f- fButtonSepp;
     //Select
-    pButton = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonLength,30),kTranslate("MainMenu","Select"),mpWindow);
-    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressSelectProfile));
+    pButton = mpGuiSet->CreateWidgetButton(vPos, cVector2f(fButtonLength, 30), kTranslate("MainMenu", "Select"), mpWindow);
+    pButton->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(PressSelectProfile));
     mpSelectButton = pButton;
     vPos.x += fButtonLength + fButtonSepp;
 
     vButtons.push_back(pButton);
 
     //Create
-    pButton = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonLength,30),kTranslate("MainMenu","Create"),mpWindow);
-    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressCreateProfile));
+    pButton = mpGuiSet->CreateWidgetButton(vPos, cVector2f(fButtonLength, 30), kTranslate("MainMenu", "Create"), mpWindow);
+    pButton->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(PressCreateProfile));
 
     vPos.x += fButtonLength + fButtonSepp;
 
     vButtons.push_back(pButton);
 
     //Delete
-    pButton = mpGuiSet->CreateWidgetButton(vPos,cVector2f(fButtonLength,30),kTranslate("MainMenu","Delete"),mpWindow);
-    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressDeleteProfile));
+    pButton = mpGuiSet->CreateWidgetButton(vPos, cVector2f(fButtonLength, 30), kTranslate("MainMenu", "Delete"), mpWindow);
+    pButton->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(PressDeleteProfile));
     vPos.x += fButtonLength + fButtonSepp;
 
     vButtons.push_back(pButton);
@@ -171,18 +171,18 @@ void cLuxMainMenu_Profile::CreateMainGui()
     /////////////////////////////////////////////
     // Set focus navigation
     mpListProfiles->SetFocusNavigation(eUIArrow_Down, vButtons[0]);
-    for(size_t i=0; i<vButtons.size(); ++i)
+    for(size_t i = 0; i < vButtons.size(); ++i)
     {
-        int lPrev = (int)i-1;
-        int lNext = (int)i+1;
+        int lPrev = (int)i - 1;
+        int lNext = (int)i + 1;
         iWidget* pWidget = vButtons[i];
 
         pWidget->SetFocusNavigation(eUIArrow_Up, mpListProfiles);
-        if(lPrev>=0)
+        if(lPrev >= 0)
         {
             pWidget->SetFocusNavigation(eUIArrow_Left, vButtons[lPrev]);
         }
-        if(lNext<static_cast<int>(vButtons.size()))
+        if(lNext < static_cast<int>(vButtons.size()))
         {
             pWidget->SetFocusNavigation(eUIArrow_Right, vButtons[lNext]);
         }
@@ -197,13 +197,13 @@ void cLuxMainMenu_Profile::CreateEnterNameGui()
 
     float fBorderSize = 5;
 
-    cVector3f vPos(fBorderSize, 25+fBorderSize,1);
+    cVector3f vPos(fBorderSize, 25 + fBorderSize, 1);
 
     //////////////////////////
     //Window
     vPos.y += 5;
-    mpWindowEnterName = mpGuiSet->CreateWidgetWindow(eWidgetWindowButtonFlag_ButtonClose,cVector3f(0,0,10),mvEnterNameWindowSize,
-                        kTranslate("MainMenu","Create Profile"));
+    mpWindowEnterName = mpGuiSet->CreateWidgetWindow(eWidgetWindowButtonFlag_ButtonClose, cVector3f(0, 0, 10), mvEnterNameWindowSize,
+                        kTranslate("MainMenu", "Create Profile"));
     //mpWindowEnterName->AddCallback(eGuiMessage_WindowClose,this, kGuiCallback(WindowCloses));
 
     //////////////////////////
@@ -214,7 +214,7 @@ void cLuxMainMenu_Profile::CreateEnterNameGui()
     //////////////////////////
     //Text Box
     tWString sIllegalChars = _W("*/\\:<>|\"?");
-    mpTextEnterName = mpGuiSet->CreateWidgetTextBox(vPos,cVector2f(mvEnterNameWindowSize.x-fBorderSize*2, 20), _W(""),mpWindowEnterName);
+    mpTextEnterName = mpGuiSet->CreateWidgetTextBox(vPos, cVector2f(mvEnterNameWindowSize.x - fBorderSize * 2, 20), _W(""), mpWindowEnterName);
     mpTextEnterName->SetForceCallBackOnEnter(true);
     mpTextEnterName->SetCallbackOnLostFocus(false);
     mpTextEnterName->SetIllegalChars(sIllegalChars);
@@ -226,23 +226,23 @@ void cLuxMainMenu_Profile::CreateEnterNameGui()
 
     //////////////////////////
     //Buttons
-    float fButtonSepp = mvEnterNameWindowSize.x - mfEnterNameButtonLength*2 - fBorderSize*2;
+    float fButtonSepp = mvEnterNameWindowSize.x - mfEnterNameButtonLength * 2 - fBorderSize * 2;
 
-    std::vector<iWidget*> vButtons;
+    std::vector<iWidget *> vButtons;
     //Create
     //vPos.x += mpTextEnterName->GetSize().x - fButtonLength*2 - fButtonSepp; //right align buttons!
     vPos.y =  mvEnterNameWindowSize.y - 30 - fBorderSize;
-    pButton = mpGuiSet->CreateWidgetButton(vPos,cVector2f(mfEnterNameButtonLength, 30),kTranslate("MainMenu","Create"),mpWindowEnterName);
-    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressEnterNameCreate));
+    pButton = mpGuiSet->CreateWidgetButton(vPos, cVector2f(mfEnterNameButtonLength, 30), kTranslate("MainMenu", "Create"), mpWindowEnterName);
+    pButton->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(PressEnterNameCreate));
     mpCreateButton = pButton;
     mpTextEnterName->SetUserData(mpCreateButton);
     vButtons.push_back(pButton);
 
     //Cancel
     vPos.x += mfEnterNameButtonLength + fButtonSepp;
-    pButton = mpGuiSet->CreateWidgetButton(vPos,cVector2f(mfEnterNameButtonLength, 30),kTranslate("MainMenu","Cancel"),mpWindowEnterName);
-    pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressEnterNameCancel));
-    pButton->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(UIPressEnterNameCancel));
+    pButton = mpGuiSet->CreateWidgetButton(vPos, cVector2f(mfEnterNameButtonLength, 30), kTranslate("MainMenu", "Cancel"), mpWindowEnterName);
+    pButton->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(PressEnterNameCancel));
+    pButton->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(UIPressEnterNameCancel));
     pButton->SetGlobalUIInputListener(true);
     vButtons.push_back(pButton);
 
@@ -259,7 +259,7 @@ void cLuxMainMenu_Profile::CreateEnterNameGui()
     mpTextEnterName->SetFocusNavigation(eUIArrow_Down, vButtons[0]);
     vButtons[0]->SetFocusNavigation(eUIArrow_Right, vButtons[1]);
     vButtons[1]->SetFocusNavigation(eUIArrow_Left, vButtons[0]);
-    for(size_t i=0; i<vButtons.size(); ++i)
+    for(size_t i = 0; i < vButtons.size(); ++i)
     {
         vButtons[i]->SetFocusNavigation(eUIArrow_Up, mpTextEnterName);
     }
@@ -267,7 +267,7 @@ void cLuxMainMenu_Profile::CreateEnterNameGui()
 
 //-----------------------------------------------------------------------
 
-static bool ProfileSort(cLuxGameProfile* apProfileA,const cLuxGameProfile* apProfileB)
+static bool ProfileSort(cLuxGameProfile* apProfileA, const cLuxGameProfile* apProfileB)
 {
     return apProfileA->mCreationDate < apProfileB->mCreationDate;
 }
@@ -279,7 +279,7 @@ void cLuxMainMenu_Profile::AddProfilesInListBox()
 
     tWStringList lstFolders;
 
-    cPlatform::FindFoldersInDir(lstFolders,gpBase->msBaseSavePath,false,false);
+    cPlatform::FindFoldersInDir(lstFolders, gpBase->msBaseSavePath, false, false);
 
     //Add the profile combos to list
     tWStringListIt it = lstFolders.begin();
@@ -287,7 +287,7 @@ void cLuxMainMenu_Profile::AddProfilesInListBox()
     {
         cLuxGameProfile* pProfile = hplNew(cLuxGameProfile, ());
         pProfile->msName = *it;
-        pProfile->mCreationDate = cPlatform::FileCreationDate(gpBase->msBaseSavePath+pProfile->msName);
+        pProfile->mCreationDate = cPlatform::FileCreationDate(gpBase->msBaseSavePath + pProfile->msName);
         //Log("%s: %d:%d:%d %d/%d-%d\n",cString::To8Char(combo.msFolder).c_str(),
         //                            combo.mCreationDate.hours,combo.mCreationDate.minutes,combo.mCreationDate.seconds,
         //                            combo.mCreationDate.month_day,combo.mCreationDate.month,combo.mCreationDate.year);
@@ -296,8 +296,8 @@ void cLuxMainMenu_Profile::AddProfilesInListBox()
     }
 
     //Sort by date and add
-    std::sort(mvProfiles.begin(), mvProfiles.end(),ProfileSort);
-    for(size_t i=0; i<mvProfiles.size(); ++i)
+    std::sort(mvProfiles.begin(), mvProfiles.end(), ProfileSort);
+    for(size_t i = 0; i < mvProfiles.size(); ++i)
     {
         cLuxGameProfile *pProfile = mvProfiles[i];
 
@@ -335,7 +335,7 @@ bool cLuxMainMenu_Profile::WindowCloses(iWidget* apWidget, const cGuiMessageData
     //User config not loaded, pop up quit game message box
     else
     {
-        cGuiPopUpMessageBox* pPopUp =  mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu", "Sure you want to quit?"),
+        cGuiPopUpMessageBox* pPopUp =  mpGuiSet->CreatePopUpMessageBox(_W(""), kTranslate("MainMenu", "Sure you want to quit?"),
                                        kTranslate("MainMenu", "Yes"), kTranslate("MainMenu", "No"),
                                        this,
                                        kGuiCallback(ClickedExitPopup));
@@ -382,7 +382,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Profile, WindowUIPress);
 
 bool cLuxMainMenu_Profile::ClickedExitPopup(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    bool bExit = aData.mlVal ==0 ? true : false;
+    bool bExit = aData.mlVal == 0 ? true : false;
 
     if(bExit)
     {
@@ -476,15 +476,15 @@ bool cLuxMainMenu_Profile::PressDeleteProfile(iWidget* apWidget, const cGuiMessa
 {
     cGuiPopUpMessageBox* pPopUp;
 
-    if(mpListProfiles->GetSelectedItem()<0)
+    if(mpListProfiles->GetSelectedItem() < 0)
     {
-        pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu","No profile to be deleted!"), kTranslate("MainMenu", "OK"),_W(""),NULL,NULL);
+        pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""), kTranslate("MainMenu", "No profile to be deleted!"), kTranslate("MainMenu", "OK"), _W(""), NULL, NULL);
         pPopUp->GetGuiSet()->SetDrawFocus(mpGuiSet->GetDrawFocus());
         return true;
     }
 
-    pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu","Sure you want to delete profile"),
-             kTranslate("MainMenu","Yes"),kTranslate("MainMenu","No"),this,kGuiCallback(PressDeleteProfilePopupClose));
+    pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""), kTranslate("MainMenu", "Sure you want to delete profile"),
+             kTranslate("MainMenu", "Yes"), kTranslate("MainMenu", "No"), this, kGuiCallback(PressDeleteProfilePopupClose));
     pPopUp->GetGuiSet()->SetDrawFocus(mpGuiSet->GetDrawFocus());
 
     return true;
@@ -494,8 +494,8 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Profile, PressDeleteProfile);
 
 bool cLuxMainMenu_Profile::PressDeleteProfilePopupClose(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    bool bDeleteProfile = aData.mlVal ==0 ? true : false;
-    if(bDeleteProfile==false)
+    bool bDeleteProfile = aData.mlVal == 0 ? true : false;
+    if(bDeleteProfile == false)
     {
         return true;
     }
@@ -515,7 +515,7 @@ bool cLuxMainMenu_Profile::PressDeleteProfilePopupClose(iWidget* apWidget, const
 
         ////////////////////////////////////////////////
         // If folders are the same, profile is in use!
-        if(vCurrentProfilePath[0]==sFolder)
+        if(vCurrentProfilePath[0] == sFolder)
         {
             // Set a blank profile and config
             gpBase->SetProfile(_W(""));
@@ -524,11 +524,11 @@ bool cLuxMainMenu_Profile::PressDeleteProfilePopupClose(iWidget* apWidget, const
         }
     }
 
-    int lNewSelection = mpListProfiles->GetSelectedItem()-1;
+    int lNewSelection = mpListProfiles->GetSelectedItem() - 1;
 
-    if(cPlatform::RemoveFolder(gpBase->msBaseSavePath+sFolder, true,true)==false)
+    if(cPlatform::RemoveFolder(gpBase->msBaseSavePath + sFolder, true, true) == false)
     {
-        cGuiPopUpMessageBox* pPopUp =  mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu","Could not remove profile"), kTranslate("MainMenu", "OK"),_W(""),NULL,NULL);
+        cGuiPopUpMessageBox* pPopUp =  mpGuiSet->CreatePopUpMessageBox(_W(""), kTranslate("MainMenu", "Could not remove profile"), kTranslate("MainMenu", "OK"), _W(""), NULL, NULL);
         pPopUp->GetGuiSet()->SetDrawFocus(mpGuiSet->GetDrawFocus());
         return true;
     }
@@ -554,21 +554,21 @@ bool cLuxMainMenu_Profile::PressEnterNameCreate(iWidget* apWidget, const cGuiMes
     {
         sProfileName = sProfileName.substr(1);
     }
-    while(sProfileName.size() && sProfileName[sProfileName.size()-1] == ' ')
+    while(sProfileName.size() && sProfileName[sProfileName.size() - 1] == ' ')
     {
-        sProfileName = sProfileName.substr(0, sProfileName.size()-1);
+        sProfileName = sProfileName.substr(0, sProfileName.size() - 1);
     }
 
     if(sProfileName.empty())
     {
-        cGuiPopUpMessageBox* pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu","The profile name already exists"), kTranslate("MainMenu","OK"),_W(""),NULL,NULL);
+        cGuiPopUpMessageBox* pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""), kTranslate("MainMenu", "The profile name already exists"), kTranslate("MainMenu", "OK"), _W(""), NULL, NULL);
         pPopUp->GetGuiSet()->SetDrawFocus(mpGuiSet->GetDrawFocus());
         return true;
     }
 
-    if(gpBase->CreateProfile(sProfileName)==false)
+    if(gpBase->CreateProfile(sProfileName) == false)
     {
-        cGuiPopUpMessageBox* pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu","The profile name already exists"), kTranslate("MainMenu", "OK"),_W(""),NULL,NULL);
+        cGuiPopUpMessageBox* pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""), kTranslate("MainMenu", "The profile name already exists"), kTranslate("MainMenu", "OK"), _W(""), NULL, NULL);
         pPopUp->GetGuiSet()->SetDrawFocus(mpGuiSet->GetDrawFocus());
         return true;
     }
@@ -584,7 +584,7 @@ bool cLuxMainMenu_Profile::PressEnterNameCreate(iWidget* apWidget, const cGuiMes
 
     AddProfilesInListBox();
 
-    mpListProfiles->SetSelectedItem(mpListProfiles->GetItemNum()-1);
+    mpListProfiles->SetSelectedItem(mpListProfiles->GetItemNum() - 1);
 
     mpGuiSet->SetFocusedWidget(mpSelectButton);
 

@@ -43,27 +43,27 @@ void cLuxConfigHandler::LoadMainConfig()
 
     /////////////////////
     // Main
-    mbLoadDebugMenu = gpBase->mpMainConfig->GetBool("Main","LoadDebugMenu", false);
-    mbFirstStart = gpBase->CheckFirstStartFlag()==false;
+    mbLoadDebugMenu = gpBase->mpMainConfig->GetBool("Main", "LoadDebugMenu", false);
+    mbFirstStart = gpBase->CheckFirstStartFlag() == false;
     //mbFirstStart = gpBase->mpMainConfig->GetBool("Main","FirstStart", true);
 
     msLangFile = gpBase->mpMainConfig->GetString("Main", "StartLanguage", gpBase->msDefaultGameLanguage);
 
-    msScreenShotExt = gpBase->mpMainConfig->GetString("Main","ScreenShotExt", "jpg");
+    msScreenShotExt = gpBase->mpMainConfig->GetString("Main", "ScreenShotExt", "jpg");
 
-    mbForceCacheLoadingAndSkipSaving = gpBase->mpMainConfig->GetBool("Main","ForceCacheLoadingAndSkipSaving", true);
+    mbForceCacheLoadingAndSkipSaving = gpBase->mpMainConfig->GetBool("Main", "ForceCacheLoadingAndSkipSaving", true);
     //mbCreateAndLoadCompressedMaps = gpBase->mpMainConfig->GetBool("Main","CreateAndLoadCompressedMaps", false);
 
     /////////////////////
     // Engine init variables
-    mvScreenSize.x =    gpBase->mpMainConfig->GetInt("Screen","Width", 800);
-    mvScreenSize.y =    gpBase->mpMainConfig->GetInt("Screen","Height", 600);
-    mbFullscreen =        gpBase->mpMainConfig->GetBool("Screen","FullScreen", false);
-    mbVSync =            gpBase->mpMainConfig->GetBool("Screen","Vsync", false);
+    mvScreenSize.x =    gpBase->mpMainConfig->GetInt("Screen", "Width", 800);
+    mvScreenSize.y =    gpBase->mpMainConfig->GetInt("Screen", "Height", 600);
+    mbFullscreen =        gpBase->mpMainConfig->GetBool("Screen", "FullScreen", false);
+    mbVSync =            gpBase->mpMainConfig->GetBool("Screen", "Vsync", false);
 
-    mbFastPhysicsLoad=    gpBase->mpMainConfig->GetBool("MapLoad","FastPhysicsLoad", false);
-    mbFastStaticLoad=    gpBase->mpMainConfig->GetBool("MapLoad","FastStaticLoad", false);
-    mbFastEntityLoad =    gpBase->mpMainConfig->GetBool("MapLoad","FastEntityLoad", false);
+    mbFastPhysicsLoad =    gpBase->mpMainConfig->GetBool("MapLoad", "FastPhysicsLoad", false);
+    mbFastStaticLoad =    gpBase->mpMainConfig->GetBool("MapLoad", "FastStaticLoad", false);
+    mbFastEntityLoad =    gpBase->mpMainConfig->GetBool("MapLoad", "FastEntityLoad", false);
 
     /////////////////////
     // Graphics variables
@@ -81,9 +81,9 @@ void cLuxConfigHandler::LoadMainConfig()
     mbRefraction =        gpBase->mpMainConfig->GetBool("Graphics", "Refraction", true);
 
     // SSAO
-    mbSSAOActive =        gpBase->mpMainConfig->GetBool("Graphics","SSAOActive", true);
-    mlSSAOSamples =        gpBase->mpMainConfig->GetInt("Graphics","SSAOSamples", 8);
-    mlSSAOResolution =    gpBase->mpMainConfig->GetInt("Graphics","SSAOResolution", 0);
+    mbSSAOActive =        gpBase->mpMainConfig->GetBool("Graphics", "SSAOActive", true);
+    mlSSAOSamples =        gpBase->mpMainConfig->GetInt("Graphics", "SSAOSamples", 8);
+    mlSSAOResolution =    gpBase->mpMainConfig->GetInt("Graphics", "SSAOResolution", 0);
 
     // Parallax
     mlParallaxQuality = gpBase->mpMainConfig->GetInt("Graphics", "ParallaxQuality", 0);
@@ -110,7 +110,7 @@ void cLuxConfigHandler::SaveMainConfig()
 {
     /////////////////////
     // Main
-    gpBase->mpMainConfig->SetBool("Main","LoadDebugMenu", mbLoadDebugMenu);
+    gpBase->mpMainConfig->SetBool("Main", "LoadDebugMenu", mbLoadDebugMenu);
     if(mbFirstStart)
     {
         gpBase->RaiseFirstStartFlag();
@@ -120,48 +120,48 @@ void cLuxConfigHandler::SaveMainConfig()
 
     gpBase->mpMainConfig->SetString("Main", "StartLanguage", msLangFile);
 
-    gpBase->mpMainConfig->SetString("Main","ScreenShotExt", msScreenShotExt);
+    gpBase->mpMainConfig->SetString("Main", "ScreenShotExt", msScreenShotExt);
 
-    gpBase->mpMainConfig->SetBool("Main","ForceCacheLoadingAndSkipSaving", mbForceCacheLoadingAndSkipSaving);
+    gpBase->mpMainConfig->SetBool("Main", "ForceCacheLoadingAndSkipSaving", mbForceCacheLoadingAndSkipSaving);
 
     /////////////////////
     // Engine init variables
-    gpBase->mpMainConfig->SetInt("Screen","Width", mvScreenSize.x);
-    gpBase->mpMainConfig->SetInt("Screen","Height", mvScreenSize.y);
-    gpBase->mpMainConfig->SetBool("Screen","FullScreen", mbFullscreen);
-    gpBase->mpMainConfig->SetBool("Screen","Vsync", mbVSync);
+    gpBase->mpMainConfig->SetInt("Screen", "Width", mvScreenSize.x);
+    gpBase->mpMainConfig->SetInt("Screen", "Height", mvScreenSize.y);
+    gpBase->mpMainConfig->SetBool("Screen", "FullScreen", mbFullscreen);
+    gpBase->mpMainConfig->SetBool("Screen", "Vsync", mbVSync);
 
-    gpBase->mpMainConfig->SetBool("MapLoad","FastPhysicsLoad", mbFastPhysicsLoad);
-    gpBase->mpMainConfig->SetBool("MapLoad","FastStaticLoad", mbFastStaticLoad);
-    gpBase->mpMainConfig->SetBool("MapLoad","FastEntityLoad", mbFastEntityLoad);
+    gpBase->mpMainConfig->SetBool("MapLoad", "FastPhysicsLoad", mbFastPhysicsLoad);
+    gpBase->mpMainConfig->SetBool("MapLoad", "FastStaticLoad", mbFastStaticLoad);
+    gpBase->mpMainConfig->SetBool("MapLoad", "FastEntityLoad", mbFastEntityLoad);
 
     /////////////////////
     // Graphics variables
     cMaterialManager* pMatMgr = gpBase->mpEngine->GetResources()->GetMaterialManager();
     cRenderSettings* pRenderSettings = gpBase->mpMapHandler->GetViewport()->GetRenderSettings();
 
-    gpBase->mpMainConfig->SetFloat("Graphics","Gamma",gpBase->mpEngine->GetGraphics()->GetLowLevel()->GetGammaCorrection());
-    gpBase->mpMainConfig->SetInt("Graphics","GBufferType", cRendererDeferred::GetGBufferType());
-    gpBase->mpMainConfig->SetInt("Graphics","NumOfGBufferTextures", cRendererDeferred::GetNumOfGBufferTextures());
+    gpBase->mpMainConfig->SetFloat("Graphics", "Gamma", gpBase->mpEngine->GetGraphics()->GetLowLevel()->GetGammaCorrection());
+    gpBase->mpMainConfig->SetInt("Graphics", "GBufferType", cRendererDeferred::GetGBufferType());
+    gpBase->mpMainConfig->SetInt("Graphics", "NumOfGBufferTextures", cRendererDeferred::GetNumOfGBufferTextures());
 
     gpBase->mpMainConfig->SetBool("Graphics", "OcclusionTestLights", mbOcclusionTestLights);
 
-    gpBase->mpMainConfig->SetInt("Graphics","TextureQuality", mlTextureQuality);
-    gpBase->mpMainConfig->SetInt("Graphics","TextureFilter", mlTextureFilter);
-    gpBase->mpMainConfig->SetFloat("Graphics","TextureAnisotropy", mfTextureAnisotropy);
+    gpBase->mpMainConfig->SetInt("Graphics", "TextureQuality", mlTextureQuality);
+    gpBase->mpMainConfig->SetInt("Graphics", "TextureFilter", mlTextureFilter);
+    gpBase->mpMainConfig->SetFloat("Graphics", "TextureAnisotropy", mfTextureAnisotropy);
 
-    gpBase->mpMainConfig->SetBool("Graphics","SSAOActive",mbSSAOActive);
-    gpBase->mpMainConfig->SetInt("Graphics","SSAOResolution",mlSSAOResolution);
-    gpBase->mpMainConfig->SetInt("Graphics","SSAOSamples",mlSSAOSamples);
+    gpBase->mpMainConfig->SetBool("Graphics", "SSAOActive", mbSSAOActive);
+    gpBase->mpMainConfig->SetInt("Graphics", "SSAOResolution", mlSSAOResolution);
+    gpBase->mpMainConfig->SetInt("Graphics", "SSAOSamples", mlSSAOSamples);
 
     gpBase->mpMainConfig->SetBool("Graphics", "WorldReflection", mbWorldReflection);
     gpBase->mpMainConfig->SetBool("Graphics", "Refraction", mbRefraction);
 
     gpBase->mpMainConfig->SetBool("Graphics", "ShadowsActive", mbShadowsActive);
-    gpBase->mpMainConfig->SetInt("Graphics","ShadowQuality", mlShadowQuality);
-    gpBase->mpMainConfig->SetInt("Graphics","ShadowResolution", mlShadowRes);
+    gpBase->mpMainConfig->SetInt("Graphics", "ShadowQuality", mlShadowQuality);
+    gpBase->mpMainConfig->SetInt("Graphics", "ShadowResolution", mlShadowRes);
 
-    gpBase->mpMainConfig->SetInt("Graphics","ParallaxQuality", mlParallaxQuality);
+    gpBase->mpMainConfig->SetInt("Graphics", "ParallaxQuality", mlParallaxQuality);
     gpBase->mpMainConfig->SetBool("Graphics", "ParallaxEnabled", mbParallaxEnabled);
 
     gpBase->mpMainConfig->SetBool("Graphics", "ForceShaderModel3And4Off", mbForceShaderModel3And4Off);
@@ -170,7 +170,7 @@ void cLuxConfigHandler::SaveMainConfig()
     // Sound variables
     cSound *pSound = gpBase->mpEngine->GetSound();
     gpBase->mpMainConfig->SetInt("Sound", "Device", mlSoundDevID);
-    gpBase->mpMainConfig->SetFloat("Sound","Volume", pSound->GetLowLevel()->GetVolume());
+    gpBase->mpMainConfig->SetFloat("Sound", "Volume", pSound->GetLowLevel()->GetVolume());
     gpBase->mpMainConfig->SetInt("Sound", "MaxChannels", mlMaxSoundChannels);
     gpBase->mpMainConfig->SetInt("Sound", "StreamBuffers", mlSoundStreamBuffers);
     gpBase->mpMainConfig->SetInt("Sound", "StreamBufferSize", mlSoundStreamBufferSize);
@@ -183,12 +183,12 @@ bool cLuxConfigHandler::ShowRestartWarning(cGuiSet* apSet, void* apObject, tGuiC
     ///////////////////////////////////////////////////////////////////////////////////
     // This will show a popup if really needed, once per "restarting" setting changed.
     // Also, will return true if the popup was actually shown.
-    if(mbGameNeedsRestart && mbRestartDialogShown==false)
+    if(mbGameNeedsRestart && mbRestartDialogShown == false)
     {
         mbRestartDialogShown = true;
         cGuiPopUpMessageBox* pPopUp = apSet->CreatePopUpMessageBox(kTranslate("OptionsMenu", "ReqRestartLabel"),
                                       kTranslate("OptionsMenu", "ReqRestartMessage"),
-                                      kTranslate("MainMenu","OK"), _W(""),
+                                      kTranslate("MainMenu", "OK"), _W(""),
                                       apObject, apCallback);
 #if USE_GAMEPAD
         pPopUp->GetGuiSet()->SetDrawFocus(true);

@@ -16,12 +16,12 @@ cLuxMessageHandler::cLuxMessageHandler() : iLuxUpdateable("LuxMusicHandler")
 {
     cGui *pGui = gpBase->mpEngine->GetGui();
 
-    mpBlackGfx     = pGui->CreateGfxFilledRect(cColor(0,1),eGuiMaterial_Alpha);
+    mpBlackGfx     = pGui->CreateGfxFilledRect(cColor(0, 1), eGuiMaterial_Alpha);
 
     mpFont = NULL;
 
-    msQuestAddedSound = gpBase->mpMenuCfg->GetString("Messages", "QuestAddedSound","");
-    tString sQuestAddedImage = gpBase->mpMenuCfg->GetString("Messages", "QuestAddedIcon","");
+    msQuestAddedSound = gpBase->mpMenuCfg->GetString("Messages", "QuestAddedSound", "");
+    tString sQuestAddedImage = gpBase->mpMenuCfg->GetString("Messages", "QuestAddedIcon", "");
     if(sQuestAddedImage != "")
     {
         mpQuestAddedIcon = pGui->CreateGfxImage(sQuestAddedImage, eGuiMaterial_Alpha);
@@ -31,7 +31,7 @@ cLuxMessageHandler::cLuxMessageHandler() : iLuxUpdateable("LuxMusicHandler")
         mpQuestAddedIcon = NULL;
     }
 
-    mvFontSize = gpBase->mpMenuCfg->GetVector2f("Messages", "GameMessageFontSize",0);
+    mvFontSize = gpBase->mpMenuCfg->GetVector2f("Messages", "GameMessageFontSize", 0);
 }
 
 //-----------------------------------------------------------------------
@@ -64,19 +64,19 @@ void cLuxMessageHandler::OnStart()
 void cLuxMessageHandler::Reset()
 {
     mbPauseMessageActive = false;
-    mfPauseMessageAlpha =0;
+    mfPauseMessageAlpha = 0;
 
     mbQuestMessageActive = false;
     mfQuestMessageAlpha = 0;
     mfQuestMessageTime = 0;
 
-    mQuestOscill.SetUp(0,1,0, 1,1);
+    mQuestOscill.SetUp(0, 1, 0, 1, 1);
 
     mvLines.clear();
     mpCallback = NULL;
     mbMessageYesNo = false;
 
-    mfMessageAlpha =0;
+    mfMessageAlpha = 0;
     mfMessageTime = 0;
 }
 
@@ -118,8 +118,8 @@ void cLuxMessageHandler::StarQuestAddedMessage()
     }
 
     mbQuestMessageActive = true;
-    mfQuestMessageAlpha =0;
-    mfQuestMessageTime =0;
+    mfQuestMessageAlpha = 0;
+    mfQuestMessageTime = 0;
 }
 
 
@@ -129,7 +129,7 @@ void cLuxMessageHandler::StartPauseMessage(const tWString& asText, bool abYesNo,
 {
     mvLines.clear();
 
-    mpFont->GetWordWrapRows(500,mvFontSize.y+2,mvFontSize, gpBase->mpHelpFuncs->ParseString(asText),&mvLines);
+    mpFont->GetWordWrapRows(500, mvFontSize.y + 2, mvFontSize, gpBase->mpHelpFuncs->ParseString(asText), &mvLines);
     mbMessageYesNo = abYesNo;
     mpCallback = apCallback;
 
@@ -141,12 +141,12 @@ void cLuxMessageHandler::StartPauseMessage(const tWString& asText, bool abYesNo,
 void cLuxMessageHandler::SetMessage(const tWString& asText, float afTime)
 {
     tWString sParsedText = gpBase->mpHelpFuncs->ParseString(asText);
-    mfMessageAlpha =0.0f;
-    mfMessageTime = afTime <=0 ? gpBase->mpHelpFuncs->GetStringDuration(sParsedText) : afTime;
+    mfMessageAlpha = 0.0f;
+    mfMessageTime = afTime <= 0 ? gpBase->mpHelpFuncs->GetStringDuration(sParsedText) : afTime;
 
     mvMessageRows.clear();
 
-    mpFont->GetWordWrapRows(700,mvFontSize.y+2,mvFontSize, sParsedText, &mvMessageRows);
+    mpFont->GetWordWrapRows(700, mvFontSize.y + 2, mvFontSize, sParsedText, &mvMessageRows);
 }
 
 //-----------------------------------------------------------------------
@@ -159,10 +159,10 @@ void cLuxMessageHandler::Update(double adFixedDelta)
     {
         mfMessageTime -= (float)adFixedDelta;
 
-        mfMessageAlpha += (float)adFixedDelta*1;
+        mfMessageAlpha += (float)adFixedDelta * 1;
         if(mfMessageAlpha > 1)
         {
-            mfMessageAlpha =1;
+            mfMessageAlpha = 1;
         }
     }
     else if(mfMessageAlpha > 0)
@@ -170,7 +170,7 @@ void cLuxMessageHandler::Update(double adFixedDelta)
         mfMessageAlpha -= (float)adFixedDelta * 1.5f;
         if(mfMessageAlpha < 0)
         {
-            mfMessageAlpha =0;
+            mfMessageAlpha = 0;
         }
     }
 
@@ -191,7 +191,7 @@ void cLuxMessageHandler::Update(double adFixedDelta)
             mfQuestMessageAlpha += (float)adFixedDelta;
             if(mfQuestMessageAlpha > 1)
             {
-                mfQuestMessageAlpha =1;
+                mfQuestMessageAlpha = 1;
             }
         }
         else
@@ -206,13 +206,13 @@ void cLuxMessageHandler::Update(double adFixedDelta)
     else if(mfQuestMessageAlpha > 0)
     {
         mfQuestMessageAlpha -= (float)adFixedDelta;
-        if(mfQuestMessageAlpha <0)
+        if(mfQuestMessageAlpha < 0)
         {
-            mfQuestMessageAlpha =0;
+            mfQuestMessageAlpha = 0;
         }
     }
 
-    if(mfQuestMessageAlpha >0)
+    if(mfQuestMessageAlpha > 0)
     {
         mQuestOscill.Update(adFixedDelta);
     }
@@ -233,7 +233,7 @@ void cLuxMessageHandler::Update(double adFixedDelta)
         mfPauseMessageAlpha -= (float)adFixedDelta * 2.0f;
         if(mfPauseMessageAlpha < 0)
         {
-            mfPauseMessageAlpha =0;
+            mfPauseMessageAlpha = 0;
         }
     }
 }
@@ -285,7 +285,7 @@ void cLuxMessageHandler::SetPauseMessageActive(bool abX)
 
     mbPauseMessageActive = abX;
 
-    gpBase->mpMapHandler->SetUpdateActive(mbPauseMessageActive? false : true);
+    gpBase->mpMapHandler->SetUpdateActive(mbPauseMessageActive ? false : true);
 }
 
 //-----------------------------------------------------------------------
@@ -298,20 +298,20 @@ void cLuxMessageHandler::SetPauseMessageActive(bool abX)
 
 void cLuxMessageHandler::DrawQuestAdded()
 {
-    if(mfQuestMessageAlpha <= 0 || mpQuestAddedIcon==NULL)
+    if(mfQuestMessageAlpha <= 0 || mpQuestAddedIcon == NULL)
     {
         return;
     }
 
-    cVector2f vPos2D = gpBase->mvHudVirtualCenterSize - mpQuestAddedIcon->GetActiveSize() - cVector2f(20,20);
+    cVector2f vPos2D = gpBase->mvHudVirtualCenterSize - mpQuestAddedIcon->GetActiveSize() - cVector2f(20, 20);
     cVector3f vPos(vPos2D.x, vPos2D.y, 10);
     vPos -= gpBase->mvHudVirtualStartPos;//minus since coordinates are negative!
 
     gpBase->mpGameHudSet->DrawGfx(mpQuestAddedIcon, vPos, -1, cColor(1, mfQuestMessageAlpha));
 
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
-        gpBase->mpGameHudSet->DrawGfx(mpQuestAddedIcon, vPos+cVector3f(0,0,1), -1, cColor(mfQuestMessageAlpha*mQuestOscill.val, 1), eGuiMaterial_Additive);
+        gpBase->mpGameHudSet->DrawGfx(mpQuestAddedIcon, vPos + cVector3f(0, 0, 1), -1, cColor(mfQuestMessageAlpha * mQuestOscill.val, 1), eGuiMaterial_Additive);
     }
 }
 
@@ -327,14 +327,14 @@ void cLuxMessageHandler::DrawMessage()
     float fAlpha = mfMessageAlpha;
     if(mfPauseMessageAlpha > 0)
     {
-        fAlpha = mfMessageAlpha * (1-mfPauseMessageAlpha);
+        fAlpha = mfMessageAlpha * (1 - mfPauseMessageAlpha);
     }
 
     cVector3f vTextPos = cVector3f(400, 345, 4);
-    for(size_t i=0; i<mvMessageRows.size(); ++i)
+    for(size_t i = 0; i < mvMessageRows.size(); ++i)
     {
-        gpBase->mpGameHudSet->DrawFont(mvMessageRows[i], mpFont,vTextPos,mvFontSize, cColor(1, fAlpha),eFontAlign_Center);
-        vTextPos.y += mvFontSize.y+2;
+        gpBase->mpGameHudSet->DrawFont(mvMessageRows[i], mpFont, vTextPos, mvFontSize, cColor(1, fAlpha), eFontAlign_Center);
+        vTextPos.y += mvFontSize.y + 2;
     }
 
 }
@@ -350,16 +350,16 @@ void cLuxMessageHandler::DrawPauseMessage()
 
     ////////////////////////
     // Black background
-    gpBase->mpGameHudSet->DrawGfx(mpBlackGfx,cVector3f(0,0,3),cVector2f(800,600),cColor(1, mfPauseMessageAlpha*0.5f));
+    gpBase->mpGameHudSet->DrawGfx(mpBlackGfx, cVector3f(0, 0, 3), cVector2f(800, 600), cColor(1, mfPauseMessageAlpha * 0.5f));
 
     ////////////////////////
     // Text
     cVector3f vTextPos = cVector3f(150, 200, 4);
-    for(size_t i=0; i< mvLines.size(); ++i)
+    for(size_t i = 0; i < mvLines.size(); ++i)
     {
-        gpBase->mpGameHudSet->DrawFont(mvLines[i], mpFont,vTextPos,mvFontSize, cColor(1, mfPauseMessageAlpha));
+        gpBase->mpGameHudSet->DrawFont(mvLines[i], mpFont, vTextPos, mvFontSize, cColor(1, mfPauseMessageAlpha));
 
-        vTextPos.y += mvFontSize.y+2;
+        vTextPos.y += mvFontSize.y + 2;
     }
 
     ////////////////////////
@@ -369,18 +369,18 @@ void cLuxMessageHandler::DrawPauseMessage()
         vTextPos.y += 10.0f;
         vTextPos.x = 170;
 
-        gpBase->mpGameHudSet->DrawFont(mpFont,vTextPos,mvFontSize, cColor(1, mfPauseMessageAlpha),_W("Yes"));
+        gpBase->mpGameHudSet->DrawFont(mpFont, vTextPos, mvFontSize, cColor(1, mfPauseMessageAlpha), _W("Yes"));
 
         vTextPos.x += 80;
-        gpBase->mpGameHudSet->DrawFont(mpFont,vTextPos,mvFontSize-cVector2f(1), cColor(1, mfPauseMessageAlpha),_W("(%ls)"), gpBase->mpInputHandler->GetInputName("Interact").c_str());
+        gpBase->mpGameHudSet->DrawFont(mpFont, vTextPos, mvFontSize - cVector2f(1), cColor(1, mfPauseMessageAlpha), _W("(%ls)"), gpBase->mpInputHandler->GetInputName("Interact").c_str());
 
 
         vTextPos.x = 170;
-        vTextPos.y += mvFontSize.y+4;
-        gpBase->mpGameHudSet->DrawFont(mpFont,vTextPos,mvFontSize, cColor(1, mfPauseMessageAlpha),_W("No"));
+        vTextPos.y += mvFontSize.y + 4;
+        gpBase->mpGameHudSet->DrawFont(mpFont, vTextPos, mvFontSize, cColor(1, mfPauseMessageAlpha), _W("No"));
 
         vTextPos.x += 80;
-        gpBase->mpGameHudSet->DrawFont(mpFont,vTextPos,mvFontSize-cVector2f(1), cColor(1, mfPauseMessageAlpha),_W("(%ls)"), gpBase->mpInputHandler->GetInputName("Attack").c_str());
+        gpBase->mpGameHudSet->DrawFont(mpFont, vTextPos, mvFontSize - cVector2f(1), cColor(1, mfPauseMessageAlpha), _W("(%ls)"), gpBase->mpInputHandler->GetInputName("Attack").c_str());
 
     }
 }

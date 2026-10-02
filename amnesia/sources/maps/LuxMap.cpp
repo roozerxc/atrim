@@ -113,9 +113,9 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
 
     gpBase->mpCurrentMapLoading = this;
 
-    tWorldLoadFlag lFlags =0;
+    tWorldLoadFlag lFlags = 0;
     //if(abLoadEntities==false) lFlags |= eWorldLoadFlag_NoGameEntities;
-    if(abLoadEntities==false)
+    if(abLoadEntities == false)
     {
         lFlags |= eWorldLoadFlag_NoDynamicGameEntities;
     }
@@ -134,15 +134,15 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
 
     //Script file
     bool bScriptExists = false;
-    tString sScriptFile = cString::SetFileExt(asFile,"hps");
-    if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sScriptFile)!=_W(""))
+    tString sScriptFile = cString::SetFileExt(asFile, "hps");
+    if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sScriptFile) != _W(""))
     {
         bScriptExists = true;
     }
     else if(cResources::GetCreateAndLoadCompressedMaps())
     {
-        sScriptFile = cString::SetFileExt(asFile,"chps");
-        if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sScriptFile)!=_W(""))
+        sScriptFile = cString::SetFileExt(asFile, "chps");
+        if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sScriptFile) != _W(""))
         {
             bScriptExists = true;
         }
@@ -152,19 +152,19 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
     {
         tString sCompileMessages = "";
         mpScript = mpEngine->GetResources()->GetScriptManager()->CreateScript(sScriptFile, &sCompileMessages);
-        if(mpScript==NULL)
+        if(mpScript == NULL)
         {
             //Only get errors!
             tStringVec sMessRows;
             tString sSepp = "\n";
             cString::GetStringVec(sCompileMessages, sMessRows, &sSepp);
 
-            tString sErrorMess="";
-            for(size_t i=0; i<sMessRows.size(); ++i)
+            tString sErrorMess = "";
+            for(size_t i = 0; i < sMessRows.size(); ++i)
             {
                 if(cString::GetFirstStringPos(sMessRows[i], "ERR") >= 0)
                 {
-                    sErrorMess += " "+sMessRows[i]+"\n";
+                    sErrorMess += " " + sMessRows[i] + "\n";
                 }
             }
 
@@ -177,8 +177,8 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
     }
 
     //Load the world
-    mpWorld = mpEngine->GetScene()->LoadWorld(asFile,lFlags);
-    if(mpWorld==NULL)
+    mpWorld = mpEngine->GetScene()->LoadWorld(asFile, lFlags);
+    if(mpWorld == NULL)
     {
         FatalError("Could not load world file '%s'\n", asFile.c_str());
     }
@@ -197,7 +197,7 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
     // HARDMODE
     if (gpBase->mbHardMode)
     {
-        std::vector<iLuxEntity*> vEntitiesToDestroy;
+        std::vector<iLuxEntity *> vEntitiesToDestroy;
 
         int lNumTotalTinderboxes = 0;
         int lNumRemovedTinderboxes = 0;
@@ -211,7 +211,7 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
 
         float fT = fCurrentNumTinderBoxes / fMaxNumTinderboxes;
 
-        float fTinderBoxRemoveEvery = (1.0f - fT)*fMin + fT*fMax;
+        float fTinderBoxRemoveEvery = (1.0f - fT) * fMin + fT * fMax;
 
         float fTinderBoxCounter = 0.0f;
         //float fTinderBoxRemoveEvery = 8.5f / 10.0f;
@@ -234,13 +234,13 @@ bool cLuxMap::LoadFromFile(const tString & asFile, bool abLoadEntities)
             // Check if entity is right type
             if (entityType == eLuxEntityType_Prop)
             {
-                iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+                iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
                 eLuxPropType propType = pProp->GetPropType();
 
 
                 if (propType == eLuxPropType_Item)
                 {
-                    cLuxProp_Item *pItem = static_cast<cLuxProp_Item*>(pProp);
+                    cLuxProp_Item *pItem = static_cast<cLuxProp_Item *>(pProp);
                     eLuxItemType itemType = pItem->GetItemType();
 
                     /////////////////////
@@ -387,7 +387,7 @@ void cLuxMap::Update(double adFixedDelta)
 
 void cLuxMap::RunScript(const tString& asCommand)
 {
-    if(mpScript==NULL)
+    if(mpScript == NULL)
     {
         return;
     }
@@ -401,7 +401,7 @@ void cLuxMap::RunScript(const tString& asCommand)
 
 void cLuxMap::RunTimer(const tString& asTimerFunc, tString& asTimerName)
 {
-    if(mpScript==NULL)
+    if(mpScript == NULL)
     {
         return;
     }
@@ -415,7 +415,7 @@ void cLuxMap::RunTimer(const tString& asTimerFunc, tString& asTimerName)
 
 void cLuxMap::RunUpdateCallback(double adFixedDelta)
 {
-    if(mpScript==NULL)
+    if(mpScript == NULL)
     {
         return;
     }
@@ -436,8 +436,8 @@ bool cLuxMap::RecompileScript(tString *apOutput)
     }
     mpScript = NULL;
 
-    tString sScriptFile = cString::SetFileExt(msFileName,"hps");
-    if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sScriptFile)!=_W(""))
+    tString sScriptFile = cString::SetFileExt(msFileName, "hps");
+    if(gpBase->mpEngine->GetResources()->GetFileSearcher()->GetFilePath(sScriptFile) != _W(""))
     {
         mpScript = mpEngine->GetResources()->GetScriptManager()->CreateScript(sScriptFile, apOutput);
 
@@ -454,7 +454,7 @@ bool cLuxMap::RecompileScript(tString *apOutput)
 
 void cLuxMap::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
 {
-    if(gpBase->mpDebugHandler->GetShowEntityInfo()==false)
+    if(gpBase->mpDebugHandler->GetShowEntityInfo() == false)
     {
         return;
     }
@@ -500,15 +500,15 @@ void cLuxMap::SetCheckPoint(const tString& asName, const tString& asStartPos, co
     msCheckPointName = asName;
     msCheckPointStartPos = asStartPos;
     msCheckPointCallback = asCallback;
-    mlCheckPointCount =0;
+    mlCheckPointCount = 0;
 
     ////////////////////////////////////
     // Get the highest prio looping music playing
     msCheckPointMusic = "";
-    for(int i= gpBase->mpMusicHandler->GetMaxPrio(); i>=0; --i)
+    for(int i = gpBase->mpMusicHandler->GetMaxPrio(); i >= 0; --i)
     {
         cLuxMusic *pMusic = gpBase->mpMusicHandler->GetMusic(i);
-        if(pMusic->msFile != "" && pMusic->mbLoop && pMusic->mbSpecialEffect==false)
+        if(pMusic->msFile != "" && pMusic->mbLoop && pMusic->mbSpecialEffect == false)
         {
             msCheckPointMusic = pMusic->msFile;
             mlCheckPointMusicPrio = i;
@@ -517,8 +517,8 @@ void cLuxMap::SetCheckPoint(const tString& asName, const tString& asStartPos, co
             mfCheckPointMusicVolume = pMusic->mfVolume;
 
             //When music handler plays music, it multiplies it to get a new volume. Need to change that back when storing.
-            float fMusicVolumeMul =gpBase->mpMusicHandler->GetVolumeMul();
-            if(fMusicVolumeMul>0)
+            float fMusicVolumeMul = gpBase->mpMusicHandler->GetVolumeMul();
+            if(fMusicVolumeMul > 0)
             {
                 mfCheckPointMusicVolume /= fMusicVolumeMul;
             }
@@ -528,7 +528,7 @@ void cLuxMap::SetCheckPoint(const tString& asName, const tString& asStartPos, co
     }
 
     gpBase->mpDebugHandler->AddMessage(    _W("Setting check point ") + cString::To16Char(msCheckPointName) +
-                                           _W(" Music: '") + cString::To16Char(msCheckPointMusic)+_W("'"),
+                                           _W(" Music: '") + cString::To16Char(msCheckPointMusic) + _W("'"),
                                            false);
 
 }
@@ -538,8 +538,8 @@ void cLuxMap::SetCheckPoint(const tString& asName, const tString& asStartPos, co
 
 void cLuxMap::LoadCheckPoint()
 {
-    gpBase->mpDebugHandler->AddMessage(_W("Loading check point ") + cString::To16Char(msCheckPointName) +_W(" Count: ") + cString::ToStringW(mlCheckPointCount), false);
-    gpBase->mpProgressLogHandler->AddLog(eLuxProgressLogLevel_High, "Loading checkpoint "+msCheckPointName+" count: "+cString::ToString(mlCheckPointCount));
+    gpBase->mpDebugHandler->AddMessage(_W("Loading check point ") + cString::To16Char(msCheckPointName) + _W(" Count: ") + cString::ToStringW(mlCheckPointCount), false);
+    gpBase->mpProgressLogHandler->AddLog(eLuxProgressLogLevel_High, "Loading checkpoint " + msCheckPointName + " count: " + cString::ToString(mlCheckPointCount));
 
     //////////////////////////////
     // Place player
@@ -568,30 +568,30 @@ void cLuxMap::LoadCheckPoint()
     gpBase->mpMusicHandler->Reset();
     if(msCheckPointMusic != "")
     {
-        gpBase->mpMusicHandler->Play(msCheckPointMusic, true, mfCheckPointMusicVolume, 1, mlCheckPointMusicPrio,mbCheckPointMusicResume, false);
+        gpBase->mpMusicHandler->Play(msCheckPointMusic, true, mfCheckPointMusicVolume, 1, mlCheckPointMusicPrio, mbCheckPointMusicResume, false);
     }
 
 
     //////////////////////////////
     // Run script (last thing done!)
-    RunScript(msCheckPointCallback + "(\""+ msCheckPointName + "\", "+cString::ToString(mlCheckPointCount)+")"  );
+    RunScript(msCheckPointCallback + "(\"" + msCheckPointName + "\", " + cString::ToString(mlCheckPointCount) + ")"  );
 
     mlCheckPointCount++;
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxMap::CreateEntity(const tString& asName, const tString& asFile, const cMatrixf& a_mtxTransform,const cVector3f& avScale)
+void cLuxMap::CreateEntity(const tString& asName, const tString& asFile, const cMatrixf& a_mtxTransform, const cVector3f& avScale)
 {
     //Only set var if not already set!
-    bool bSetCurrentMapLoading = gpBase->mpCurrentMapLoading==NULL;
+    bool bSetCurrentMapLoading = gpBase->mpCurrentMapLoading == NULL;
 
     if(bSetCurrentMapLoading)
     {
         gpBase->mpCurrentMapLoading = this;
     }
 
-    mpWorld->CreateEntity(asName, a_mtxTransform, asFile,GetFreeEntityID(), true, avScale);
+    mpWorld->CreateEntity(asName, a_mtxTransform, asFile, GetFreeEntityID(), true, avScale);
 
     if(bSetCurrentMapLoading)
     {
@@ -632,12 +632,12 @@ void cLuxMap::AddEntity(iLuxEntity *apEntity)
 
     if(apEntity->GetEntityType() == eLuxEntityType_Enemy)
     {
-        iLuxEnemy *pEnemy = static_cast<iLuxEnemy*>(apEntity);
+        iLuxEnemy *pEnemy = static_cast<iLuxEnemy *>(apEntity);
         mlstEnemies.push_back(pEnemy);
     }
     else if(apEntity->GetEntityType() == eLuxEntityType_Area)
     {
-        iLuxArea *pArea = static_cast<iLuxArea*>(apEntity);
+        iLuxArea *pArea = static_cast<iLuxArea *>(apEntity);
         if(pArea->GetAreaType() == eLuxAreaType_Sticky)
         {
             mlstStickyAreas.push_back(static_cast<cLuxArea_Sticky*>(pArea));
@@ -672,7 +672,7 @@ iLuxEntity *cLuxMap::GetEntityByName(const tString& asName, eLuxEntityType aType
     }
 
     iLuxEntity *pEntity = it->second;
-    if(LuxIsCorrectType(pEntity, aType, alSubType)== false)
+    if(LuxIsCorrectType(pEntity, aType, alSubType) == false)
     {
         return NULL;
     }
@@ -690,7 +690,7 @@ iLuxEntity *cLuxMap::GetEntityByID(int alID, eLuxEntityType aType, int alSubType
 
     iLuxEntity *pEntity = it->second;
 
-    if(LuxIsCorrectType(pEntity, aType, alSubType)== false)
+    if(LuxIsCorrectType(pEntity, aType, alSubType) == false)
     {
         return NULL;
     }
@@ -732,13 +732,13 @@ cLuxEnemyIterator cLuxMap::GetEnemyIterator()
 //-----------------------------------------------------------------------
 
 void cLuxMap::BroadcastEnemyMessage(eLuxEnemyMessage aType, bool abHasPosition, const cVector3f& avPos, float afRadius,
-                                    float afTime, bool abLocalScope, const cVector3f& avX,float afX, int alX)
+                                    float afTime, bool abLocalScope, const cVector3f& avX, float afX, int alX)
 {
     tLuxEnemyListIt it = mlstEnemies.begin();
     for(; it != mlstEnemies.end(); ++it)
     {
         iLuxEnemy *pEnemy = *it;
-        if(pEnemy->IsActive()==false)
+        if(pEnemy->IsActive() == false)
         {
             continue;
         }
@@ -748,7 +748,7 @@ void cLuxMap::BroadcastEnemyMessage(eLuxEnemyMessage aType, bool abHasPosition, 
         if(abHasPosition)
         {
             cBoundingVolume *pBv = pEnemy->GetCharacterBody()->GetCurrentBody()->GetBoundingVolume();
-            if(cMath::CheckSphereIntersection(avPos, afRadius, pBv->GetWorldCenter(), pBv->GetRadius())==false)
+            if(cMath::CheckSphereIntersection(avPos, afRadius, pBv->GetWorldCenter(), pBv->GetRadius()) == false)
             {
                 continue;
             }
@@ -756,19 +756,19 @@ void cLuxMap::BroadcastEnemyMessage(eLuxEnemyMessage aType, bool abHasPosition, 
 
         ////////////////////////////////
         // Send message
-        pEnemy->SendMessage(aType, afTime,abLocalScope,avX, afX, alX);
+        pEnemy->SendMessage(aType, afTime, abLocalScope, avX, afX, alX);
     }
 }
 
 //-----------------------------------------------------------------------
 
-void cLuxMap::BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume,float afMinDist, float afMaxDist)
+void cLuxMap::BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume, float afMinDist, float afMaxDist)
 {
-    cLuxEnemyIterator it =GetEnemyIterator();
+    cLuxEnemyIterator it = GetEnemyIterator();
     while(it.HasNext())
     {
         iLuxEnemy *pEnemy = it.Next();
-        if(pEnemy->IsActive()==false)
+        if(pEnemy->IsActive() == false)
         {
             continue;
         }
@@ -776,7 +776,7 @@ void cLuxMap::BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume,
         /////////////////////////
         //Check intersection
         cBoundingVolume *pBv = pEnemy->GetCharacterBody()->GetCurrentBody()->GetBoundingVolume();
-        if(cMath::CheckSphereIntersection(avPos, afMaxDist, pBv->GetWorldCenter(), pBv->GetRadius())==false)
+        if(cMath::CheckSphereIntersection(avPos, afMaxDist, pBv->GetWorldCenter(), pBv->GetRadius()) == false)
         {
             continue;
         }
@@ -789,12 +789,12 @@ void cLuxMap::BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume,
             continue;    //Skip sounds that are too close!
         }
 
-        float fHearVolume = 1.0f - cMath::Clamp( (fDistance - afMinDist)/(afMaxDist - afMinDist), 0.0f,1.0f);
+        float fHearVolume = 1.0f - cMath::Clamp( (fDistance - afMinDist) / (afMaxDist - afMinDist), 0.0f, 1.0f);
         fHearVolume *= afVolume;
 
         /////////////////////////
         //Send message
-        pEnemy->SendMessage(eLuxEnemyMessage_SoundHeard, 0, false, avPos, fHearVolume,0);
+        pEnemy->SendMessage(eLuxEnemyMessage_SoundHeard, 0, false, avPos, fHearVolume, 0);
     }
 }
 
@@ -803,16 +803,16 @@ void cLuxMap::BroadcastEnemySoundMessage(const cVector3f& avPos, float afVolume,
 
 int cLuxMap::GetInRangeEnemyNum()
 {
-    int lNum =0;
-    cLuxEnemyIterator it =GetEnemyIterator();
+    int lNum = 0;
+    cLuxEnemyIterator it = GetEnemyIterator();
     while(it.HasNext())
     {
         iLuxEnemy *pEnemy = it.Next();
-        if(pEnemy->IsActive()==false)
+        if(pEnemy->IsActive() == false)
         {
             continue;
         }
-        if(pEnemy->GetPlayerInRange()==false)
+        if(pEnemy->GetPlayerInRange() == false)
         {
             continue;
         }
@@ -827,7 +827,7 @@ int cLuxMap::GetInRangeEnemyNum()
 
 bool cLuxMap::AINodeIsUsedAsGoal(cAINode *apNode)
 {
-    cLuxEnemyIterator it =GetEnemyIterator();
+    cLuxEnemyIterator it = GetEnemyIterator();
     while(it.HasNext())
     {
         iLuxEnemy *pEnemy = it.Next();
@@ -851,7 +851,7 @@ bool cLuxMap::AINodeIsUsedAsGoal(cAINode *apNode)
 bool cLuxMap::DoorIsBroken(int alID)
 {
     iLuxEntity *pEntity = GetEntityByID(alID);
-    if(pEntity==NULL)
+    if(pEntity == NULL)
     {
         return false;
     }
@@ -860,20 +860,20 @@ bool cLuxMap::DoorIsBroken(int alID)
         return false;
     }
 
-    iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+    iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
     if(pProp->GetPropType() != eLuxPropType_SwingDoor)
     {
         return false;
     }
 
-    cLuxProp_SwingDoor *pDoor = static_cast<cLuxProp_SwingDoor*>(pProp);
+    cLuxProp_SwingDoor *pDoor = static_cast<cLuxProp_SwingDoor *>(pProp);
     return pDoor->IsBroken();
 }
 
 bool cLuxMap::DoorIsClosed(int alID)
 {
     iLuxEntity *pEntity = GetEntityByID(alID);
-    if(pEntity==NULL)
+    if(pEntity == NULL)
     {
         return false;
     }
@@ -882,20 +882,20 @@ bool cLuxMap::DoorIsClosed(int alID)
         return false;
     }
 
-    iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+    iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
     if(pProp->GetPropType() != eLuxPropType_SwingDoor)
     {
         return false;
     }
 
-    cLuxProp_SwingDoor *pDoor = static_cast<cLuxProp_SwingDoor*>(pProp);
+    cLuxProp_SwingDoor *pDoor = static_cast<cLuxProp_SwingDoor *>(pProp);
     return pDoor->GetClosed();
 }
 
 int cLuxMap::GetDoorState(int alID)
 {
     iLuxEntity *pEntity = GetEntityByID(alID);
-    if(pEntity==NULL)
+    if(pEntity == NULL)
     {
         return false;
     }
@@ -904,13 +904,13 @@ int cLuxMap::GetDoorState(int alID)
         return false;
     }
 
-    iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+    iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
     if(pProp->GetPropType() != eLuxPropType_SwingDoor)
     {
         return false;
     }
 
-    cLuxProp_SwingDoor *pDoor = static_cast<cLuxProp_SwingDoor*>(pProp);
+    cLuxProp_SwingDoor *pDoor = static_cast<cLuxProp_SwingDoor *>(pProp);
     return pDoor->GetDoorState();
 }
 
@@ -979,17 +979,17 @@ void cLuxMap::DestroyAllRopes()
 
 //-----------------------------------------------------------------------
 
-iPhysicsBody* cLuxMap::GetBodyFromEntityBodyIdPair(const cLuxIdPair &aIdPair)
+iPhysicsBody *cLuxMap::GetBodyFromEntityBodyIdPair(const cLuxIdPair &aIdPair)
 {
     iLuxEntity *pEntity = GetEntityByID(aIdPair.mlParentId);
-    if(pEntity==NULL)
+    if(pEntity == NULL)
     {
         return NULL;
     }
 
     if(pEntity->GetEntityType() == eLuxEntityType_Prop)
     {
-        iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+        iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
 
         return pProp->GetBodyFromID(aIdPair.mlChildId);
     }
@@ -1006,20 +1006,20 @@ bool cLuxMap::CheckCollision(iLuxCollideCallbackContainer *apCollider1, iLuxColl
     cCollideData collideData;
     collideData.SetMaxSize(1);
 
-    for(int body1=0; body1<apCollider1->GetBodyNum(); ++body1)
-        for(int body2=0; body2<apCollider2->GetBodyNum(); ++body2)
+    for(int body1 = 0; body1 < apCollider1->GetBodyNum(); ++body1)
+        for(int body2 = 0; body2 < apCollider2->GetBodyNum(); ++body2)
         {
             iPhysicsBody *pBody1 = apCollider1->GetBody(body1);
             iPhysicsBody *pBody2 = apCollider2->GetBody(body2);
 
-            if(cMath::CheckBVIntersection(*pBody1->GetBoundingVolume(), *pBody2->GetBoundingVolume())==false)
+            if(cMath::CheckBVIntersection(*pBody1->GetBoundingVolume(), *pBody2->GetBoundingVolume()) == false)
             {
                 continue;
             }
 
             if(mpPhysicsWorld->CheckShapeCollision(pBody1->GetShape(), pBody1->GetLocalMatrix(),
                                                    pBody2->GetShape(), pBody2->GetLocalMatrix(),
-                                                   collideData,1,false))
+                                                   collideData, 1, false))
             {
                 return true;
             }
@@ -1035,7 +1035,7 @@ void cLuxMap::AddPlayerStart(cLuxNode_PlayerStart *apNode)
     mvPlayerStartNodes.push_back(apNode);
 }
 
-cLuxNode_PlayerStart * cLuxMap::GetPlayerStart(const tString & asName)
+cLuxNode_PlayerStart *cLuxMap::GetPlayerStart(const tString & asName)
 {
     tLuxPlayerStartMapIt it = m_mapPlayerStartNodes.find(asName);
     if(it == m_mapPlayerStartNodes.end())
@@ -1135,7 +1135,7 @@ void cLuxMap::RemoveUseItemCallback(cLuxUseItemCallback * apCallback, const tStr
     }
 }
 
-cLuxUseItemCallback* cLuxMap::GetUseItemCallback(const tString& asItem, const tString& asEntity)
+cLuxUseItemCallback *cLuxMap::GetUseItemCallback(const tString& asItem, const tString& asEntity)
 {
     tLuxUseItemCallbackListIt it = mlstUseItemCallbacks.begin();
     for(; it != mlstUseItemCallbacks.end(); ++it)
@@ -1172,7 +1172,7 @@ void cLuxMap::AddTimer(const tString& asName, float afTime, const tString& asFun
 
 void cLuxMap::RemoveTimer(const tString& asName)
 {
-    for(tLuxEventTimerListIt it= mlstTimers.begin(); it != mlstTimers.end(); )
+    for(tLuxEventTimerListIt it = mlstTimers.begin(); it != mlstTimers.end(); )
     {
         cLuxEventTimer *pTimer = *it;
         if(pTimer->msName == asName)
@@ -1199,9 +1199,9 @@ void cLuxMap::RemoveTimer(const tString& asName)
 
 //-----------------------------------------------------------------------
 
-cLuxEventTimer* cLuxMap::GetTimer(const tString& asName)
+cLuxEventTimer *cLuxMap::GetTimer(const tString& asName)
 {
-    for(tLuxEventTimerListIt it= mlstTimers.begin(); it != mlstTimers.end(); ++it)
+    for(tLuxEventTimerListIt it = mlstTimers.begin(); it != mlstTimers.end(); ++it)
     {
         cLuxEventTimer *pTimer = *it;
         if(pTimer->msName == asName)
@@ -1217,9 +1217,9 @@ cLuxEventTimer* cLuxMap::GetTimer(const tString& asName)
 
 void cLuxMap::AddCompletionAmount(int alAmount, float afDelay)
 {
-    float fPrevious = mlTotalCompletionAmount==0 ? 0 : (float)mlCurrentCompletionAmount/(float)mlTotalCompletionAmount;
+    float fPrevious = mlTotalCompletionAmount == 0 ? 0 : (float)mlCurrentCompletionAmount / (float)mlTotalCompletionAmount;
     mlCurrentCompletionAmount += alAmount;
-    float fNew = mlTotalCompletionAmount==0 ? 0 : (float)mlCurrentCompletionAmount/(float)mlTotalCompletionAmount;
+    float fNew = mlTotalCompletionAmount == 0 ? 0 : (float)mlCurrentCompletionAmount / (float)mlTotalCompletionAmount;
 
     gpBase->mpCompletionCountHandler->ShowCompletionIncrease(fPrevious, fNew, afDelay);
 
@@ -1237,15 +1237,15 @@ void cLuxMap::AddDissolveEntity(cMeshEntity *apMeshEntity, float afTime)
     cMesh *pMesh = apMeshEntity->GetMesh();
     pMesh->IncUserCount();
 
-    cMeshEntity *pNewEntity = mpWorld->CreateMeshEntity(apMeshEntity->GetName()+"_Dissolve", pMesh);
+    cMeshEntity *pNewEntity = mpWorld->CreateMeshEntity(apMeshEntity->GetName() + "_Dissolve", pMesh);
     pNewEntity->SetIlluminationAmount(apMeshEntity->GetIlluminationAmount());
 
     pNewEntity->Stop();
 
     cLuxDissolveEntity *pDissolveEnt = hplNew(cLuxDissolveEntity, (this));
     pDissolveEnt->mpEntity = pNewEntity;
-    pDissolveEnt->mfFadeSpeed = 1.0f/afTime;
-    pDissolveEnt->mfAlpha =1;
+    pDissolveEnt->mfFadeSpeed = 1.0f / afTime;
+    pDissolveEnt->mfAlpha = 1;
 
     //////////////////////
     //Set up transform
@@ -1253,7 +1253,7 @@ void cLuxMap::AddDissolveEntity(cMeshEntity *apMeshEntity, float afTime)
     {
         pNewEntity->SetMatrix(apMeshEntity->GetWorldMatrix());
 
-        for(int i=0; i<pNewEntity->GetBoneStateNum(); ++i)
+        for(int i = 0; i < pNewEntity->GetBoneStateNum(); ++i)
         {
             cBoneState *pOldBone = apMeshEntity->GetBoneState(i);
             cBoneState *pNewBone = pNewEntity->GetBoneState(i);
@@ -1264,7 +1264,7 @@ void cLuxMap::AddDissolveEntity(cMeshEntity *apMeshEntity, float afTime)
     }
     else
     {
-        for(int i=0; i<pNewEntity->GetSubMeshEntityNum(); ++i)
+        for(int i = 0; i < pNewEntity->GetSubMeshEntityNum(); ++i)
         {
             cSubMeshEntity *pOldEnt = apMeshEntity->GetSubMeshEntity(i);
             cSubMeshEntity *pSubEnt = pNewEntity->GetSubMeshEntity(i);
@@ -1278,7 +1278,7 @@ void cLuxMap::AddDissolveEntity(cMeshEntity *apMeshEntity, float afTime)
 
 //-----------------------------------------------------------------------
 
-cLuxLampLightConnection* cLuxMap::AddLampLightConnection(cLuxProp_Lamp *apLamp, iLight *apLight, float afAmount, bool abUseOnColor, bool abUseSpec)
+cLuxLampLightConnection *cLuxMap::AddLampLightConnection(cLuxProp_Lamp *apLamp, iLight *apLight, float afAmount, bool abUseOnColor, bool abUseSpec)
 {
     cLuxLampLightConnection *pConnection = GetLampLightConnection(apLight);
     if(pConnection == NULL)
@@ -1294,13 +1294,13 @@ cLuxLampLightConnection* cLuxMap::AddLampLightConnection(cLuxProp_Lamp *apLamp, 
 
 //-----------------------------------------------------------------------
 
-cLuxLampLightConnection* cLuxMap::GetLampLightConnection(iLight *apLight)
+cLuxLampLightConnection *cLuxMap::GetLampLightConnection(iLight *apLight)
 {
     tLuxLampLightConnectionListIt it = mlstLampLightConnections.begin();
     for(; it != mlstLampLightConnections.end(); ++it)
     {
         cLuxLampLightConnection* pConnection = *it;
-        if(pConnection->GetLight() ==apLight)
+        if(pConnection->GetLight() == apLight)
         {
             return pConnection;
         }
@@ -1310,7 +1310,7 @@ cLuxLampLightConnection* cLuxMap::GetLampLightConnection(iLight *apLight)
 
 //-----------------------------------------------------------------------
 
-cLuxScriptVar* cLuxMap::GetVar(const tString &asName)
+cLuxScriptVar *cLuxMap::GetVar(const tString &asName)
 {
     tLuxScriptVarMapIt it = m_mapVars.find(asName);
     if(it != m_mapVars.end())
@@ -1350,14 +1350,14 @@ void cLuxMap::CalculateTotalCompletionAmount()
         // Prop
         if(entityType == eLuxEntityType_Prop)
         {
-            iLuxProp *pProp = static_cast<iLuxProp*>(pEntity);
+            iLuxProp *pProp = static_cast<iLuxProp *>(pEntity);
             eLuxPropType propType = pProp->GetPropType();
 
             /////////////////////////
             // Item
             if(propType == eLuxPropType_Item)
             {
-                cLuxProp_Item *pItem = static_cast<cLuxProp_Item*>(pProp);
+                cLuxProp_Item *pItem = static_cast<cLuxProp_Item *>(pProp);
                 eLuxItemType itemType = pItem->GetItemType();
 
                 if(itemType == eLuxItemType_Puzzle)
@@ -1384,7 +1384,7 @@ void cLuxMap::CalculateTotalCompletionAmount()
         // Area
         else if(entityType == eLuxEntityType_Area)
         {
-            iLuxArea *pArea = static_cast<iLuxArea*>(pEntity);
+            iLuxArea *pArea = static_cast<iLuxArea *>(pEntity);
             eLuxAreaType areaType = pArea->GetAreaType();
 
             if(areaType == eLuxAreaType_Flashback)
@@ -1394,14 +1394,14 @@ void cLuxMap::CalculateTotalCompletionAmount()
         }
     }
 
-    gpBase->mpDebugHandler->AddMessage(_W("Total completion value: ")+cString::ToStringW(mlTotalCompletionAmount), false);
+    gpBase->mpDebugHandler->AddMessage(_W("Total completion value: ") + cString::ToStringW(mlTotalCompletionAmount), false);
 }
 
 //-----------------------------------------------------------------------
 
 int cLuxMap::GetFreeEntityID()
 {
-    int lEntId =0;
+    int lEntId = 0;
 
     //Iterate the IDs until a free is found
     tLuxEntityIDMapIt it = m_mapEntitiesByID.begin();
@@ -1441,13 +1441,13 @@ void cLuxMap::UpdateToBeDestroyedEntities(bool abUseCallbacks)
         //Extra remove for enemies
         if(pEntity->GetEntityType() == eLuxEntityType_Enemy)
         {
-            iLuxEnemy *pEnemy = static_cast<iLuxEnemy*>(pEntity);
+            iLuxEnemy *pEnemy = static_cast<iLuxEnemy *>(pEntity);
             STLFindAndRemove(mlstEnemies, pEnemy);
         }
         //Extra remove for sticky areas
         else if(pEntity->GetEntityType() == eLuxEntityType_Area)
         {
-            iLuxArea *pArea = static_cast<iLuxArea*>(pEntity);
+            iLuxArea *pArea = static_cast<iLuxArea *>(pEntity);
             if(pArea->GetAreaType() == eLuxAreaType_Sticky)
             {
                 STLFindAndRemove(mlstStickyAreas, static_cast<cLuxArea_Sticky*>(pArea));
@@ -1467,7 +1467,7 @@ void cLuxMap::UpdateTimers(double adFixedDelta)
 
     //////////////////////
     // Update time (do this here so a timer callback is not called in the same loop as it is created)
-    for(tLuxEventTimerListIt it= mlstTimers.begin(); it != mlstTimers.end(); ++it)
+    for(tLuxEventTimerListIt it = mlstTimers.begin(); it != mlstTimers.end(); ++it)
     {
         cLuxEventTimer *pTimer = *it;
         pTimer->mfCount -= (float)adFixedDelta;
@@ -1475,11 +1475,11 @@ void cLuxMap::UpdateTimers(double adFixedDelta)
 
     //////////////////////
     // See if any timers should be deleted / called
-    for(tLuxEventTimerListIt it= mlstTimers.begin(); it != mlstTimers.end(); )
+    for(tLuxEventTimerListIt it = mlstTimers.begin(); it != mlstTimers.end(); )
     {
         cLuxEventTimer *pTimer = *it;
 
-        if(pTimer->mfCount <=0 && pTimer->mbDestroyMe==false)
+        if(pTimer->mfCount <= 0 && pTimer->mbDestroyMe == false)
         {
             RunTimer(pTimer->msFunction, pTimer->msName);
             it = mlstTimers.erase(it);
@@ -1491,7 +1491,7 @@ void cLuxMap::UpdateTimers(double adFixedDelta)
         }
     }
 
-    for(tLuxEventTimerListIt it= mlstTimers.begin(); it != mlstTimers.end(); )
+    for(tLuxEventTimerListIt it = mlstTimers.begin(); it != mlstTimers.end(); )
     {
         cLuxEventTimer *pTimer = *it;
         if(pTimer->mbDestroyMe)
@@ -1518,9 +1518,9 @@ void cLuxMap::UpdateDissolveEntities(double adFixedDelta)
     {
         cLuxDissolveEntity *pEntity = *it;
 
-        pEntity->mfAlpha-= pEntity->mfFadeSpeed * (float)adFixedDelta;
+        pEntity->mfAlpha -= pEntity->mfFadeSpeed * (float)adFixedDelta;
         pEntity->mpEntity->SetCoverageAmount(pEntity->mfAlpha);
-        if(pEntity->mfAlpha<=0)
+        if(pEntity->mfAlpha <= 0)
         {
             it = mlstDissolveEntities.erase(it);
             hplDelete(pEntity);

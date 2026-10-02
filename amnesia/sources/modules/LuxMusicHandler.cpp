@@ -35,9 +35,9 @@ cLuxMusicHandler::cLuxMusicHandler() : iLuxUpdateable("LuxMusicHandler")
     mpMusicHandler = gpBase->mpEngine->GetSound()->GetMusicHandler();
 
     mlMaxPrio = 8 + eLuxEnemyMusic_LastEnum;
-    mfVolumeMul = gpBase->mpGameCfg->GetFloat("Sound","InGameMusicVolume",1.0f);
+    mfVolumeMul = gpBase->mpGameCfg->GetFloat("Sound", "InGameMusicVolume", 1.0f);
 
-    mvGameMusic.resize(mlMaxPrio+1);
+    mvGameMusic.resize(mlMaxPrio + 1);
 
 }
 
@@ -64,14 +64,14 @@ void cLuxMusicHandler::OnStart()
 
 void cLuxMusicHandler::Reset()
 {
-    for(size_t i=0; i< mvGameMusic.size(); ++i)
+    for(size_t i = 0; i < mvGameMusic.size(); ++i)
     {
         mvGameMusic[i].Reset();
     }
 
     mlCurrentMaxPrio = -1;
 
-    for(int i=0; i<eLuxEnemyMusic_LastEnum; ++i)
+    for(int i = 0; i < eLuxEnemyMusic_LastEnum; ++i)
     {
         m_setEnemies[i].clear();
 
@@ -83,8 +83,8 @@ void cLuxMusicHandler::Reset()
     gpBase->mpEngine->GetSound()->GetMusicHandler()->ResetResumeData();
 
     mbEnemyClosePlaying = false;
-    mfEnemyCloseCount =0;
-    mfEnemyGoneCount =0;
+    mfEnemyCloseCount = 0;
+    mfEnemyGoneCount = 0;
 
     mfUpdateDangerCount = 0;
     mfUpdateAttackCount = 0;
@@ -110,9 +110,9 @@ void cLuxMusicHandler::Update(double adFixedDelta)
 
     ///////////////////////////////////
     //Check if current song is over
-    if(mlCurrentMaxPrio >=0)
+    if(mlCurrentMaxPrio >= 0)
     {
-        if(mpMusicHandler->GetCurrentSong()==NULL)
+        if(mpMusicHandler->GetCurrentSong() == NULL)
         {
             mvGameMusic[mlCurrentMaxPrio].msFile = "";
             mlCurrentMaxPrio = -1;
@@ -124,9 +124,9 @@ void cLuxMusicHandler::Update(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-void cLuxMusicHandler::Play(const tString &asFile, bool abLoop,float afVolume, float afFadeTime, int alPrio, bool abResume, bool abSpecialEffect)
+void cLuxMusicHandler::Play(const tString &asFile, bool abLoop, float afVolume, float afFadeTime, int alPrio, bool abResume, bool abSpecialEffect)
 {
-    if(alPrio> mlMaxPrio)
+    if(alPrio > mlMaxPrio)
     {
         alPrio = mlMaxPrio;
     }
@@ -142,7 +142,7 @@ void cLuxMusicHandler::Play(const tString &asFile, bool abLoop,float afVolume, f
     if(mlCurrentMaxPrio <= alPrio)
     {
         float fFadeSpeed = fVolume / afFadeTime;
-        mpMusicHandler->Play(asFile,fVolume,fFadeSpeed,abLoop, abResume);
+        mpMusicHandler->Play(asFile, fVolume, fFadeSpeed, abLoop, abResume);
         mlCurrentMaxPrio = alPrio;
     }
 
@@ -158,7 +158,7 @@ void cLuxMusicHandler::Play(const tString &asFile, bool abLoop,float afVolume, f
 
 void cLuxMusicHandler::Stop(float afFadeTime, int alPrio)
 {
-    if(alPrio> mlMaxPrio)
+    if(alPrio > mlMaxPrio)
     {
         alPrio = mlMaxPrio;
     }
@@ -210,10 +210,10 @@ bool cLuxMusicHandler::EnemyExist(eLuxEnemyMusic aType, iLuxEnemy *apEntity)
 
 void cLuxMusicHandler::OnMapEnter(cLuxMap *apMap)
 {
-    for(int i=0; i<eLuxEnemyMusic_LastEnum; ++i)
+    for(int i = 0; i < eLuxEnemyMusic_LastEnum; ++i)
     {
         m_setEnemies[i].clear();
-        Stop(2.0f, 8+i);
+        Stop(2.0f, 8 + i);
     }
 
     //Update(2.0f);
@@ -221,14 +221,14 @@ void cLuxMusicHandler::OnMapEnter(cLuxMap *apMap)
 
 void cLuxMusicHandler::OnMapLeave(cLuxMap *apMap)
 {
-    for(int i=0; i<eLuxEnemyMusic_LastEnum; ++i)
+    for(int i = 0; i < eLuxEnemyMusic_LastEnum; ++i)
     {
         m_setEnemies[i].clear();
-        Stop(2.0f, 8+i);
+        Stop(2.0f, 8 + i);
     }
 
 
-    for(int i=0; i<60; ++i)
+    for(int i = 0; i < 60; ++i)
     {
         Update(0.1f);
     }
@@ -251,7 +251,7 @@ void cLuxMusicHandler::UpdateDangerMusic(double adFixedDelta)
         return;
     }
 
-    for(int i=0; i<eLuxEnemyMusic_LastEnum; ++i)
+    for(int i = 0; i < eLuxEnemyMusic_LastEnum; ++i)
     {
         if(mbEnemyPlaying[i])
         {
@@ -260,30 +260,30 @@ void cLuxMusicHandler::UpdateDangerMusic(double adFixedDelta)
     }
 
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    if(pMap==NULL)
+    if(pMap == NULL)
     {
         return;
     }
 
     ////////////////////////////
     //Music not playing
-    if(mbEnemyClosePlaying==false)
+    if(mbEnemyClosePlaying == false)
     {
-        tString sMusic ="";
-        int lHighestPrio =-1;
+        tString sMusic = "";
+        int lHighestPrio = -1;
         cLuxEnemyIterator enemyIt = pMap->GetEnemyIterator();
         while(enemyIt.HasNext())
         {
             iLuxEnemy *pEnemy = enemyIt.Next();
 
-            if(pEnemy->GetHealth() <= 0 || pEnemy->IsActive()==false)
+            if(pEnemy->GetHealth() <= 0 || pEnemy->IsActive() == false)
             {
                 continue;
             }
 
             if(pEnemy->GetPlayerInRange())
             {
-                if(pEnemy->GetDangerMusic()!= "" && (sMusic=="" || lHighestPrio < pEnemy->GetDangerMusicPrio()))
+                if(pEnemy->GetDangerMusic() != "" && (sMusic == "" || lHighestPrio < pEnemy->GetDangerMusicPrio()))
                 {
                     sMusic = pEnemy->GetDangerMusic();
                     lHighestPrio = pEnemy->GetDangerMusicPrio();
@@ -293,11 +293,11 @@ void cLuxMusicHandler::UpdateDangerMusic(double adFixedDelta)
 
         if(sMusic != "")
         {
-            mfEnemyGoneCount =0;
+            mfEnemyGoneCount = 0;
             mfEnemyCloseCount += (float)adFixedDelta;
             if(mfEnemyCloseCount > 2.0f)
             {
-                Play(sMusic,true,1.0f, 6.0f, 5, true, true);
+                Play(sMusic, true, 1.0f, 6.0f, 5, true, true);
                 mbEnemyClosePlaying = true;
             }
         }
@@ -306,13 +306,13 @@ void cLuxMusicHandler::UpdateDangerMusic(double adFixedDelta)
     //Music playing
     else
     {
-        bool bFound=false;
+        bool bFound = false;
         cLuxEnemyIterator enemyIt = pMap->GetEnemyIterator();
         while(enemyIt.HasNext())
         {
             iLuxEnemy *pEnemy = enemyIt.Next();
 
-            if(pEnemy->GetHealth() <= 0 || pEnemy->IsActive()==false)
+            if(pEnemy->GetHealth() <= 0 || pEnemy->IsActive() == false)
             {
                 continue;
             }
@@ -325,7 +325,7 @@ void cLuxMusicHandler::UpdateDangerMusic(double adFixedDelta)
 
         if(bFound == false)
         {
-            mfEnemyCloseCount =0;
+            mfEnemyCloseCount = 0;
             mfEnemyGoneCount += (float)adFixedDelta;
             if(mfEnemyGoneCount > 6.0f)
             {
@@ -341,12 +341,12 @@ void cLuxMusicHandler::UpdateDangerMusic(double adFixedDelta)
 void cLuxMusicHandler::UpdateEnemyMusic(double adFixedDelta, eLuxEnemyMusic aType)
 {
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    if(pMap==NULL)
+    if(pMap == NULL)
     {
         return;
     }
 
-    for(int i=aType+1; i<eLuxEnemyMusic_LastEnum; ++i)
+    for(int i = aType + 1; i < eLuxEnemyMusic_LastEnum; ++i)
     {
         if(mbEnemyPlaying[i])
         {
@@ -356,9 +356,9 @@ void cLuxMusicHandler::UpdateEnemyMusic(double adFixedDelta, eLuxEnemyMusic aTyp
 
     ////////////////////////////////////////
     //Attack not playing and attackers active
-    if(mbEnemyPlaying[aType]==false && m_setEnemies[aType].empty()==false)
+    if(mbEnemyPlaying[aType] == false && m_setEnemies[aType].empty() == false)
     {
-        mfEnemyStopCount[aType] =0;
+        mfEnemyStopCount[aType] = 0;
         mfEnemyPlayCount[aType] += (float)adFixedDelta;
         if(mfEnemyPlayCount[aType] > 0.1f)
         {
@@ -391,16 +391,16 @@ void cLuxMusicHandler::UpdateEnemyMusic(double adFixedDelta, eLuxEnemyMusic aTyp
                 }
 
                 //Stop lower prio
-                for(int i=0; i<aType; ++i)
+                for(int i = 0; i < aType; ++i)
                 {
                     mbEnemyPlaying[i] = false;
-                    Stop(2.0f, 8+aType);
+                    Stop(2.0f, 8 + aType);
                 }
 
-                Play(sMusic, true, 1.0f, 1.5f, 8+aType, true, true);
+                Play(sMusic, true, 1.0f, 1.5f, 8 + aType, true, true);
                 mbEnemyPlaying[aType] = true;
                 //Log("Play!");
-                mfEnemyPlayCount[aType] =0;
+                mfEnemyPlayCount[aType] = 0;
             }
         }
     }
@@ -408,15 +408,15 @@ void cLuxMusicHandler::UpdateEnemyMusic(double adFixedDelta, eLuxEnemyMusic aTyp
     //Attack playing and no attackers active
     else if(mbEnemyPlaying[aType] && m_setEnemies[aType].empty())
     {
-        mfEnemyPlayCount[aType] =0;
+        mfEnemyPlayCount[aType] = 0;
         mfEnemyStopCount[aType] += (float)adFixedDelta;
 
         if(mfEnemyStopCount[aType] > 1.2f)
         {
             mbEnemyPlaying[aType] = false;
-            Stop(5.0f, 8+aType);
+            Stop(5.0f, 8 + aType);
             //Log("Stop!");
-            mfEnemyStopCount[aType] =0;
+            mfEnemyStopCount[aType] = 0;
         }
     }
 }
@@ -425,14 +425,14 @@ void cLuxMusicHandler::UpdateEnemyMusic(double adFixedDelta, eLuxEnemyMusic aTyp
 
 void cLuxMusicHandler::PlayHighestPriority()
 {
-    for(int i= mlMaxPrio; i>=0; --i)
+    for(int i = mlMaxPrio; i >= 0; --i)
     {
         if(mvGameMusic[i].msFile != "")
         {
             //If looped, play
             if(mvGameMusic[i].mbLoop)
             {
-                mpMusicHandler->Play(    mvGameMusic[i].msFile, mvGameMusic[i].mfVolume,    0.3f,true, mvGameMusic[i].mbResume);
+                mpMusicHandler->Play(    mvGameMusic[i].msFile, mvGameMusic[i].mfVolume,    0.3f, true, mvGameMusic[i].mbResume);
                 mlCurrentMaxPrio = (int)i;
                 break;
             }

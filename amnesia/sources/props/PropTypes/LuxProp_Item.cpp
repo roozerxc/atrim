@@ -17,21 +17,21 @@
 
 cLuxPropLoader_Item::cLuxPropLoader_Item(const tString& asName) : iLuxPropLoader(asName)
 {
-    mfDefaultMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction","Item_DefaultMaxFocusDist",0);
+    mfDefaultMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction", "Item_DefaultMaxFocusDist", 0);
 }
 
 //-----------------------------------------------------------------------
 
 iLuxProp *cLuxPropLoader_Item::CreateProp(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxProp_Item, (asName, alID,apMap) );
+    return hplNew(cLuxProp_Item, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPropLoader_Item::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    cLuxProp_Item  *pItem = static_cast<cLuxProp_Item*>(apProp);
+    cLuxProp_Item  *pItem = static_cast<cLuxProp_Item *>(apProp);
 
     ///////////////////////////
     // General
@@ -71,11 +71,11 @@ void cLuxPropLoader_Item::LoadVariables(iLuxProp *apProp, cXmlElement *apRootEle
 
 void cLuxPropLoader_Item::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
-    cLuxProp_Item  *pItem = static_cast<cLuxProp_Item*>(apProp);
+    cLuxProp_Item  *pItem = static_cast<cLuxProp_Item *>(apProp);
 
     ///////////////////////////
     // All
-    tString sCustomSubItemTypeName = apInstanceVars->GetVarString("CustomSubItemTypeName","");
+    tString sCustomSubItemTypeName = apInstanceVars->GetVarString("CustomSubItemTypeName", "");
 
     if(sCustomSubItemTypeName != "")
     {
@@ -106,11 +106,11 @@ void cLuxPropLoader_Item::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsO
 
 //-----------------------------------------------------------------------
 
-cLuxProp_Item::cLuxProp_Item(const tString &asName,int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_Item)
+cLuxProp_Item::cLuxProp_Item(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName, alID, apMap, eLuxPropType_Item)
 {
     mfAmount = 1.0f;
-    mlSpawnContainerID =-1;
-    mfFlashAlpha =0;
+    mlSpawnContainerID = -1;
+    mfFlashAlpha = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -140,21 +140,21 @@ bool cLuxProp_Item::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 {
     ////////////////////
     //Picked up item
-    bool bRemoveProp=true;
+    bool bRemoveProp = true;
 
-    gpBase->mpInventory->AddItem(msName, mItemType, msSubItemTypeName, msImageFile, mfAmount, msVal,msExtraVal,&bRemoveProp);
+    gpBase->mpInventory->AddItem(msName, mItemType, msSubItemTypeName, msImageFile, mfAmount, msVal, msExtraVal, &bRemoveProp);
 
     if(bRemoveProp)
     {
         mpMap->DestroyEntity(this);
 
-        gpBase->mpHelpFuncs->PlayGuiSoundData("ui/pick_"+msPickSound, eSoundEntryType_World);
+        gpBase->mpHelpFuncs->PlayGuiSoundData("ui/pick_" + msPickSound, eSoundEntryType_World);
 
         iLuxItemType *pType = gpBase->mpInventory->GetItemTypeData(mItemType);
         if(pType->ShowPickUpMessage())
         {
-            tString sEntry = "ItemName_"+msSubItemTypeName;
-            gpBase->mpMessageHandler->SetMessage(kTranslate("Inventory", "PickedUp")+_W(" ")+kTranslate("Inventory",sEntry), 0);
+            tString sEntry = "ItemName_" + msSubItemTypeName;
+            gpBase->mpMessageHandler->SetMessage(kTranslate("Inventory", "PickedUp") + _W(" ") + kTranslate("Inventory", sEntry), 0);
         }
 
         RunCallbackFunc("OnPickup");
@@ -197,30 +197,30 @@ void cLuxProp_Item::UpdatePropSpecific(double adFixedDelta)
     cCamera *pCam =  gpBase->mpPlayer->GetCamera();
     cVector3f vCameraPos = pCam->GetPosition();
     cVector3f vBodyPos = mvBodies[0]->GetLocalPosition();
-    vCameraPos.y=0;
-    vBodyPos.y =0;
+    vCameraPos.y = 0;
+    vBodyPos.y = 0;
 
     float fDistSqrt = cMath::Vector3DistSqr(vCameraPos, vBodyPos);
     if(fDistSqrt < 4.0f * 4.0f)
     {
         mfFlashAlpha += (float)adFixedDelta;
-        if(mfFlashAlpha >1)
+        if(mfFlashAlpha > 1)
         {
-            mfFlashAlpha =1;
+            mfFlashAlpha = 1;
         }
     }
     else
     {
         mfFlashAlpha  -= (float)adFixedDelta;
-        if(mfFlashAlpha <0)
+        if(mfFlashAlpha < 0)
         {
-            mfFlashAlpha =0;
+            mfFlashAlpha = 0;
         }
     }
 
-    if(mfFlashAlpha> 0)
+    if(mfFlashAlpha > 0)
     {
-        for(int i=0; i<mpMeshEntity->GetSubMeshEntityNum(); ++i)
+        for(int i = 0; i < mpMeshEntity->GetSubMeshEntityNum(); ++i)
         {
             cSubMeshEntity *pSubEnt = mpMeshEntity->GetSubMeshEntity(i);
 
@@ -278,7 +278,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxProp_Item::CreateSaveData()
+iLuxEntity_SaveData *cLuxProp_Item::CreateSaveData()
 {
     return hplNew(cLuxProp_Item_SaveData, ());
 }
@@ -290,15 +290,15 @@ void cLuxProp_Item::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxProp_Item_SaveData *pData = static_cast<cLuxProp_Item_SaveData*>(apSaveData);
+    cLuxProp_Item_SaveData *pData = static_cast<cLuxProp_Item_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyToVar(pData,msVal);
-    kCopyToVar(pData,msExtraVal);
-    kCopyToVar(pData,mlSpawnContainerID);
-    kCopyToVar(pData,mfAmount);
-    kCopyToVar(pData,msSubItemTypeName);
+    kCopyToVar(pData, msVal);
+    kCopyToVar(pData, msExtraVal);
+    kCopyToVar(pData, mlSpawnContainerID);
+    kCopyToVar(pData, mfAmount);
+    kCopyToVar(pData, msSubItemTypeName);
 }
 
 //-----------------------------------------------------------------------
@@ -308,15 +308,15 @@ void cLuxProp_Item::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxProp_Item_SaveData *pData = static_cast<cLuxProp_Item_SaveData*>(apSaveData);
+    cLuxProp_Item_SaveData *pData = static_cast<cLuxProp_Item_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyFromVar(pData,msVal);
-    kCopyFromVar(pData,msExtraVal);
-    kCopyFromVar(pData,mlSpawnContainerID);
-    kCopyFromVar(pData,mfAmount);
-    kCopyFromVar(pData,msSubItemTypeName);
+    kCopyFromVar(pData, msVal);
+    kCopyFromVar(pData, msExtraVal);
+    kCopyFromVar(pData, mlSpawnContainerID);
+    kCopyFromVar(pData, mfAmount);
+    kCopyFromVar(pData, msSubItemTypeName);
 }
 
 //-----------------------------------------------------------------------

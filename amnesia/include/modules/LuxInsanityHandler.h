@@ -19,19 +19,19 @@ public:
     virtual void OnDraw(double adFrameTime) {}
 
     void LoadData(cXmlElement * apVarElem);
-    virtual void OnLoadData(cXmlElement * apVarElem)=0;
+    virtual void OnLoadData(cXmlElement * apVarElem) = 0;
 
     void Start();
-    virtual void OnStart()=0;
-    virtual void OnExit()=0;
+    virtual void OnStart() = 0;
+    virtual void OnExit() = 0;
 
     /////////////////
     // Properties
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
-    const tString& GetSet()
+    const tString &GetSet()
     {
         return msSet;
     }
@@ -286,7 +286,7 @@ public:
 
 
 private:
-    iLuxInsanityEvent* EventTypeToData(const tString& asType);
+    iLuxInsanityEvent *EventTypeToData(const tString& asType);
     void LoadEvents(const tString& asFile);
 
     bool SetIsDisabled(const tString& asSet);
@@ -303,7 +303,7 @@ private:
 
 
 
-    std::vector<iLuxInsanityEvent*> mvEvents;
+    std::vector<iLuxInsanityEvent *> mvEvents;
 
     //////////////////
     // Variables

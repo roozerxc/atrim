@@ -34,9 +34,9 @@ private:
     void InitScriptFunctions();
     void AddFunc(const tString& asFunc, void *apFuncPtr);
 
-    static bool GetEntities(const tString& asName,tLuxEntityList &alstEntities, eLuxEntityType aType, int alSubType);
-    static iLuxEntity* GetEntity(const tString& asName, eLuxEntityType aType, int alSubType);
-    static iPhysicsBody* GetBodyInEntity(iLuxEntity* apEntity, const tString& asName);
+    static bool GetEntities(const tString& asName, tLuxEntityList &alstEntities, eLuxEntityType aType, int alSubType);
+    static iLuxEntity *GetEntity(const tString& asName, eLuxEntityType aType, int alSubType);
+    static iPhysicsBody *GetBodyInEntity(iLuxEntity* apEntity, const tString& asName);
 
     // Debug
     static void __stdcall Print(string& asString);
@@ -53,7 +53,7 @@ private:
     static int __stdcall RandInt(int alMin, int alMax);
 
     static bool __stdcall StringContains(string& asString, string& asSubString);
-    static string& __stdcall StringSub(string& asString, int alStart, int alCount);
+    static string &__stdcall StringSub(string& asString, int alStart, int alCount);
 
     //Function syntax: Func(string &in asTimer)
     static void __stdcall AddTimer(string& asName, float afTime, string& asFunction);
@@ -70,7 +70,7 @@ private:
 
     static int __stdcall GetLocalVarInt(string& asName);
     static float __stdcall GetLocalVarFloat(string& asName);
-    static string& __stdcall GetLocalVarString(string& asName);
+    static string &__stdcall GetLocalVarString(string& asName);
 
     static void __stdcall SetGlobalVarInt(string& asName, int alVal);
     static void __stdcall SetGlobalVarFloat(string& asName, float afVal);
@@ -82,7 +82,7 @@ private:
 
     static int __stdcall GetGlobalVarInt(string& asName);
     static float __stdcall GetGlobalVarFloat(string& asName);
-    static string& __stdcall GetGlobalVarString(string& asName);
+    static string &__stdcall GetGlobalVarString(string& asName);
 
     // Game
     static void __stdcall StartCredits(string& asMusic, bool abLoopMusic, string& asTextCat, string& asTextEntry, int alEndNum);
@@ -93,7 +93,7 @@ private:
     /**
      * Callback syntax: MyFunc(string &in asName, int alCount), Count is 0 on first checkpoint load!
      */
-    static void __stdcall CheckPoint(string& asName,string& asStartPos,string& asCallback, string &asDeathHintCat, string &asDeathHintEntry);
+    static void __stdcall CheckPoint(string& asName, string& asStartPos, string& asCallback, string &asDeathHintCat, string &asDeathHintEntry);
 
     // Map
     static void __stdcall ChangeMap(string& asMapName, string& asStartPos, string& asStartSound, string& asEndSound);
@@ -157,7 +157,7 @@ private:
 
     static void __stdcall PlayGuiSound(string& asSoundFile, float afVolume);
 
-    static void __stdcall StartScreenShake(float afAmount, float afTime, float afFadeInTime,float afFadeOutTime);
+    static void __stdcall StartScreenShake(float afAmount, float afTime, float afFadeInTime, float afFadeOutTime);
 
 
     // Insanity
@@ -443,7 +443,7 @@ private:
     static void __stdcall ForceTeslaPigSighting(string& asName);
 #endif
 
-    static string& __stdcall GetEnemyStateName(string& asName);
+    static string &__stdcall GetEnemyStateName(string& asName);
 
     static void __stdcall SetPropHealth(string& asName, float afHealth);
     static void __stdcall AddPropHealth(string& asName, float afHealth);

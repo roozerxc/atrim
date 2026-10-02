@@ -20,9 +20,9 @@ public:
 
     ////////////////
     //Methods
-    iLuxEntity* CreateEntity(cLuxMap *apMap);
+    iLuxEntity *CreateEntity(cLuxMap *apMap);
 
-    virtual iLuxArea* CreateArea(cLuxMap *apMap)=0;
+    virtual iLuxArea *CreateArea(cLuxMap *apMap) = 0;
 };
 
 //----------------------------------------------
@@ -52,7 +52,7 @@ public:
         return mAreaType;
     }
 
-    iPhysicsBody* GetBody()
+    iPhysicsBody *GetBody()
     {
         return mpBody;
     }
@@ -65,14 +65,14 @@ public:
     {
         return 1;
     }
-    iPhysicsBody* GetBody(int alIdx)
+    iPhysicsBody *GetBody(int alIdx)
     {
         return mpBody;
     }
 
     eLuxFocusCrosshair GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos);
 
-    virtual iEntity3D* GetAttachEntity();
+    virtual iEntity3D *GetAttachEntity();
 
     //////////////////////
     //Save data stuff
@@ -99,11 +99,11 @@ public:
     iLuxAreaLoader(const tString& asName) : iAreaLoader(asName) {}
     virtual ~iLuxAreaLoader() {}
 
-    void Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform,cWorld *apWorld);
+    void Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform, cWorld *apWorld);
 
-    virtual iLuxArea *CreateArea(const tString& asName, int alID, cLuxMap *apMap)=0;
-    virtual void LoadVariables(iLuxArea *apArea, cWorld *apWorld)=0;
-    virtual void SetupArea(iLuxArea *apAre, cWorld *apWorld)=0;
+    virtual iLuxArea *CreateArea(const tString& asName, int alID, cLuxMap *apMap) = 0;
+    virtual void LoadVariables(iLuxArea *apArea, cWorld *apWorld) = 0;
+    virtual void SetupArea(iLuxArea *apAre, cWorld *apWorld) = 0;
 };
 
 //----------------------------------------------

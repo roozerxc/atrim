@@ -17,7 +17,7 @@ public:
     void Reset();
 
     bool BeforeIntersect(iPhysicsBody *pBody);
-    bool OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams);
+    bool OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams);
 
     bool GetIntersected()
     {
@@ -41,7 +41,7 @@ public:
     void Reset();
 
     bool BeforeIntersect(iPhysicsBody *apBody);
-    bool OnIntersect(iPhysicsBody *apBody,cPhysicsRayParams *apParams);
+    bool OnIntersect(iPhysicsBody *apBody, cPhysicsRayParams *apParams);
 
     float mfClosestDist;
     iPhysicsBody *mpClosestBody;
@@ -56,7 +56,7 @@ public:
     void Reset();
 
     bool BeforeIntersect(iPhysicsBody *apBody);
-    bool OnIntersect(iPhysicsBody *apBody,cPhysicsRayParams *apParams);
+    bool OnIntersect(iPhysicsBody *apBody, cPhysicsRayParams *apParams);
 
     float mfClosestDist;
     cVector3f mvClosestNormal;
@@ -72,7 +72,7 @@ public:
     void Setup(iPhysicsBody *apSkipBody);
 
     bool BeforeIntersect(iPhysicsBody *apBody);
-    bool OnIntersect(iPhysicsBody *apBody,cPhysicsRayParams *apParams);
+    bool OnIntersect(iPhysicsBody *apBody, cPhysicsRayParams *apParams);
 
     iPhysicsBody *mpSkipBody;
     bool mbIntersection;
@@ -92,19 +92,19 @@ public:
 
     bool ShapeDamage(    iCollideShape *apShape, const cMatrixf& a_mtxTransform, const cVector3f &avOrigin,
                          float afMinDamage, float afMaxDamage, float afForce, float afMaxImpulse,
-                         int alStrength, float afHitSpeed, eLuxDamageType aDamageType,eLuxWeaponHitType aWeaponHitType,
+                         int alStrength, float afHitSpeed, eLuxDamageType aDamageType, eLuxWeaponHitType aWeaponHitType,
                          bool abCheckEnemies, bool abCheckPlayer, bool abCheckProps, bool abLethalForPlayer,
-                         bool *apHitPlayer=NULL);
+                         bool *apHitPlayer = NULL);
 
     bool CheckLineOfSight(const cVector3f& avStart, const cVector3f& avEnd, bool abCheckShadows);
 
-    bool GetClosestEntity(    const cVector3f& avStart,const cVector3f& avDir, float afRayLength,
-                              float *afDistance, iPhysicsBody** apBody, iLuxEntity **apEntity);
+    bool GetClosestEntity(    const cVector3f& avStart, const cVector3f& avDir, float afRayLength,
+                              float *afDistance, iPhysicsBody **apBody, iLuxEntity **apEntity);
 
-    bool GetClosestCharCollider(const cVector3f& avStart,const cVector3f& avDir, float afRayLength,
-                                float *afDistance, cVector3f *avNormal, iPhysicsBody** apBody);
+    bool GetClosestCharCollider(const cVector3f& avStart, const cVector3f& avDir, float afRayLength,
+                                float *afDistance, cVector3f *avNormal, iPhysicsBody **apBody);
 
-    float GetLightLevelAtPos(const cVector3f& avPos, std::vector<iLight*>* apSkipLightsVec=NULL, float afRadiusAdd=0);
+    float GetLightLevelAtPos(const cVector3f& avPos, std::vector<iLight*> *apSkipLightsVec = NULL, float afRadiusAdd = 0);
 
 private:
     void GetLightsAtNode(iRenderableContainerNode *apNode, tLightList &alstLights, const cVector3f& avPos);

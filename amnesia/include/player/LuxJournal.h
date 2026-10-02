@@ -28,7 +28,7 @@ public:
     ~cLuxDiaryContainer();
 
     tString msType;
-    std::vector<cLuxDiary*> mvDiaries;
+    std::vector<cLuxDiary *> mvDiaries;
 };
 //----------------------------------------
 
@@ -47,13 +47,13 @@ public:
     iLuxJournalWidgetData(iWidget *apWidget) : mpWidget(apWidget) {}
     virtual ~iLuxJournalWidgetData() {}
 
-    virtual void Update(double adFixedDelta)=0;
+    virtual void Update(double adFixedDelta) = 0;
 
     iWidget *mpWidget;
     void *mpExtraData;
 };
 
-typedef std::list<iLuxJournalWidgetData*> tLuxJournalWidgetData;
+typedef std::list<iLuxJournalWidgetData *> tLuxJournalWidgetData;
 typedef tLuxJournalWidgetData::iterator tLuxJournalWidgetDataIt;
 
 //----------------------------------------
@@ -85,7 +85,7 @@ public:
     void OnDraw(double adFrameTime);
 
     tWidgetList mlstSessionWidgets;
-    cWidgetDummy* mpRootWidget;
+    cWidgetDummy *mpRootWidget;
     float mfAlpha;
 
 private:
@@ -138,7 +138,7 @@ public:
 
     void OnDraw(double adFrameTime);
 
-    cGuiSet* GetSet()
+    cGuiSet *GetSet()
     {
         return mpGuiSet;
     }
@@ -156,17 +156,17 @@ public:
         mbOpenedFromInventory = abX;
     }
 
-    cLuxNote* AddNote(const tString& asNameAndTextEntry, const tString& asImage);
-    cLuxDiary* AddDiary(const tString& asNameAndTextEntry, const tString& asImage, int &alCurrentEntryIdx);
+    cLuxNote *AddNote(const tString& asNameAndTextEntry, const tString& asImage);
+    cLuxDiary *AddDiary(const tString& asNameAndTextEntry, const tString& asImage, int &alCurrentEntryIdx);
 
     bool AddQuestNote(const tString& asName, const tString& asNameAndTextEntry);
     bool DisableQuestNote(const tString& asName);
-    cLuxQuestNote* GetQuestNote(const tString& asName);
+    cLuxQuestNote *GetQuestNote(const tString& asName);
 
     void ChangeState(eLuxJournalState aState);
 
     void OpenNote(cLuxNote *apNote, bool abNarration);
-    cLuxNote* GetNote(int alIdx)
+    cLuxNote *GetNote(int alIdx)
     {
         return mvNotes[alIdx];
     }
@@ -177,9 +177,9 @@ public:
     void OpenLastReadText();
 
 private:
-    cLuxDiaryContainer* CreateDiaryContainer(const tString& asType);
+    cLuxDiaryContainer *CreateDiaryContainer(const tString& asType);
 
-    void SetupLabel(cWidgetLabel *apLabel, const cVector2f& avSize, int alIdx, eLuxJournalState aState, iFontData *apFont=NULL, eFontAlign aFontAlign=eFontAlign_Center);
+    void SetupLabel(cWidgetLabel *apLabel, const cVector2f& avSize, int alIdx, eLuxJournalState aState, iFontData *apFont = NULL, eFontAlign aFontAlign = eFontAlign_Center);
     void SetupImage(cWidgetImage *apImage, int alIdx, eLuxJournalState aState);
     void SetupNavigationWidgets(eLuxJournalState aState, int alListIndex, int alForwardIndex, int alBackwardIndex, cWidgetDummy *apRoot);
 
@@ -188,8 +188,8 @@ private:
 
     void SetStateBackgroundGfx(const tString& asFile);
 
-    void LoadText(const tWString &asName,const tWString &asText);
-    void LoadNarrationText(const tWString &asName,const tWString &asText);
+    void LoadText(const tWString &asName, const tWString &asText);
+    void LoadNarrationText(const tWString &asName, const tWString &asText);
     void SetNotePage(int alPageNum);
 
     int GetNoteListIndex(eLuxJournalState aState);//Return values: 0=notes, 1=diaries, 2=quests
@@ -268,9 +268,9 @@ private:
     int mlLastReadTextEntry;
     int mlLastReadTextType;    //0=note 1=diary
 
-    std::vector<cLuxNote*> mvNotes;
-    std::vector<cLuxDiaryContainer*> mvDiaryContainers;
-    std::vector<cLuxQuestNote*> mvQuestNotes;
+    std::vector<cLuxNote *> mvNotes;
+    std::vector<cLuxDiaryContainer *> mvDiaryContainers;
+    std::vector<cLuxQuestNote *> mvQuestNotes;
 
     cGuiGfxElement *mpStateBackgroundGfx;
 
@@ -297,7 +297,7 @@ private:
     cGuiSet *mpGuiSet;
 
     eLuxJournalState mCurrentState;
-    std::vector<cLuxJournalStateData*> mvStateData;
+    std::vector<cLuxJournalStateData *> mvStateData;
 
     tLuxJournalWidgetData mlstSessionWidgetData;
 

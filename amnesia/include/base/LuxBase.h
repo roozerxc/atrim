@@ -100,7 +100,7 @@ public:
     tString msDefaultExtraLanguage;
 };
 
-typedef std::vector<cLuxCustomStorySettings*> tCustomStorySettingsVec;
+typedef std::vector<cLuxCustomStorySettings *> tCustomStorySettingsVec;
 
 //----------------------------------------------
 
@@ -117,7 +117,7 @@ public:
 
     void Reset();
 
-    void RunModuleMessage(eLuxUpdateableMessage aMessage, void * apData=NULL);
+    void RunModuleMessage(eLuxUpdateableMessage aMessage, void * apData = NULL);
 
     bool StartGame(const tString& asFile, const tString& asFolder, const tString& asStartPos);
     bool StartCustomStory();
@@ -143,7 +143,7 @@ public:
     bool InitMainConfig();
     void ExitConfig();
 
-    cConfigFile* LoadConfigFile(const tWString& asDefaultPath, const tWString& asWantedPath, bool abForceLoadDefault=false, bool *abDidLoadDefault = NULL);
+    cConfigFile *LoadConfigFile(const tWString& asDefaultPath, const tWString& asWantedPath, bool abForceLoadDefault = false, bool *abDidLoadDefault = NULL);
 
     bool InitEngine();
     void ExitEngine();
@@ -154,7 +154,7 @@ public:
     void InitOver();
 
 
-    bool LoadLanguage(const tString& asName, bool abForceReload=false);
+    bool LoadLanguage(const tString& asName, bool abForceReload = false);
 
     iLuxUpdateable *AddModule(iLuxUpdateable *apModule, const tString& asContainer);
     iLuxUpdateable *AddGlobalModule(iLuxUpdateable *apModule);
@@ -173,12 +173,12 @@ public:
 public:
     cEngine *mpEngine;
 
-    cConfigFile* mpMainConfig;
-    cConfigFile* mpUserConfig;
-    cConfigFile* mpUserKeyConfig;
+    cConfigFile *mpMainConfig;
+    cConfigFile *mpUserConfig;
+    cConfigFile *mpUserKeyConfig;
 
-    cConfigFile* mpGameCfg;
-    cConfigFile* mpMenuCfg;
+    cConfigFile *mpGameCfg;
+    cConfigFile *mpMenuCfg;
     cGuiSet *mpGameDebugSet;
     cGuiSet *mpGameHudSet;
     iFontData *mpDefaultFont;
@@ -187,7 +187,7 @@ public:
     cVector2f mvHudVirtualOffset;
     cVector3f mvHudVirtualStartPos;
 
-    cLuxCustomStorySettings* mpCustomStory;
+    cLuxCustomStorySettings *mpCustomStory;
 
     cLuxConfigHandler *mpConfigHandler;
     cLuxInputHandler *mpInputHandler;
@@ -276,13 +276,13 @@ public:
 
     bool mbSaveConfigAtExit;
 
-    std::vector<iLuxUpdateable*> mvModules;
+    std::vector<iLuxUpdateable *> mvModules;
 
 };
 
 //----------------------------------------------
 
-extern cLuxBase* gpBase;
+extern cLuxBase *gpBase;
 
 //----------------------------------------------
 

@@ -50,15 +50,15 @@ public:
     */
     void SetupLoadText(const tString& asCat, const tString& asEntry, int alRandomNum, const tString& asImage);
 
-    const tString& GetLoadTextCat()
+    const tString &GetLoadTextCat()
     {
         return msLoadTextCat;
     }
-    const tString& GetLoadTextEntry()
+    const tString &GetLoadTextEntry()
     {
         return msLoadTextEntry;
     }
-    const tString& GetLoadTextImage()
+    const tString &GetLoadTextImage()
     {
         return msLoadTextImage;
     }
@@ -86,7 +86,7 @@ private:
     cGuiSkin *mpGuiSkin;
     cGuiSet *mpGuiSet;
 
-    cGuiGfxElement* mpWhiteGfx;
+    cGuiGfxElement *mpWhiteGfx;
 
     cVector2f mvScreenSize;
     cVector2f mvGuiSetCenterSize;//Size of the part that is inside a 4:3 ratio!
@@ -113,7 +113,7 @@ private:
 
     //////////////////
     // Variables
-    cGuiGfxElement* mpCurrentImage;
+    cGuiGfxElement *mpCurrentImage;
     tString msCurrentImage;
 
     tString msLoadTextCat;

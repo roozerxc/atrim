@@ -20,7 +20,7 @@ public:
     tWString msMessage;
 };
 
-typedef std::vector<cLuxOption_ExtData*> tOptionDataVec;
+typedef std::vector<cLuxOption_ExtData *> tOptionDataVec;
 typedef tOptionDataVec::iterator         tOptionDataVecIt;
 
 //----------------------------------------------
@@ -51,7 +51,7 @@ private:
     void SetInputValues(cResourceVarsObject& pObj);
 
     void SetUpInput(cWidgetLabel* apLabel, iWidget* apInput, bool abNeedsRestart, const tWString& asMessage);
-    cLuxOption_ExtData* AddOptionData(bool abNeedsRestart, const tWString& asMessage);
+    cLuxOption_ExtData *AddOptionData(bool abNeedsRestart, const tWString& asMessage);
     void SetCurrentTipWidget(iWidget* apWidget);
 
     void ApplyChanges();
@@ -97,13 +97,13 @@ private:
     ////////////////////////
     // Slider value helpers
     void SetUpSlider(cWidgetSlider* apSlider, float afMinValue, float afMaxValue, float afStepValue,
-                     tGuiCallbackFunc apCallback=NULL, cWidgetLabel** apValueDisplay=NULL);
+                     tGuiCallbackFunc apCallback = NULL, cWidgetLabel **apValueDisplay = NULL);
     void SetSliderValue(cWidgetSlider* apSlider, float afValue, bool abGenCallback, float afMinValue, float afMaxValue);
     float GetSliderValue(cWidgetSlider* apSlider, float afMinValue, float afMaxValue);
 
     void SetSliderLabelString(cWidgetLabel* apLabel, float afValue,
                               float afMinValue, float afMaxValue,
-                              const tWString& asMin=_W(""), const tWString& asMax=_W(""));
+                              const tWString& asMin = _W(""), const tWString& asMax = _W(""));
 
     ////////////////////////
     // Persistence of vars
@@ -134,8 +134,8 @@ private:
     cWidgetTab *mpTabInput;
     cWidgetTab *mpTabSound;
 
-    cWidgetButton* mpBOK;
-    cWidgetButton* mpBCancel;
+    cWidgetButton *mpBOK;
+    cWidgetButton *mpBCancel;
 
     // Tip Label
     cWidgetLabel *mpLTip;
@@ -194,7 +194,7 @@ private:
     cWidgetLabel    *mpLGamma;
     cWidgetSlider    *mpSGamma;
 
-    iWidget* mpLastFocusedWidget;
+    iWidget *mpLastFocusedWidget;
     bool mbHideWindow;
 
     // Input
@@ -246,7 +246,7 @@ private:
     bool mbTipFadeRestart;
     bool mbTipWidgetUpdated;
     bool mbTipTextReset;
-    iWidget* mpCurrentTipWidget;
+    iWidget *mpCurrentTipWidget;
     tOptionDataVec mvOptionData;
 
     bool mbSettingInitialValues;

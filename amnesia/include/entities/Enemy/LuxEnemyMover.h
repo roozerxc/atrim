@@ -87,7 +87,7 @@ public:
     }
     void ResetStuckCounter()
     {
-        mfStuckCounter =0;
+        mfStuckCounter = 0;
     }
 
 

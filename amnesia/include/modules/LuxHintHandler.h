@@ -84,9 +84,9 @@ private:
     tWString msCurrentText;
 
 #if USE_GAMEPAD
-    cGuiGfxElement* mpGamepadButtonIcon[eGamepadButton_LastEnum];
-    cGuiGfxElement* mpGamepadHatIcon[4];
-    cGuiGfxElement* mpGampadAxisIcon[eGamepadAxis_LastEnum * 2];
+    cGuiGfxElement *mpGamepadButtonIcon[eGamepadButton_LastEnum];
+    cGuiGfxElement *mpGamepadHatIcon[4];
+    cGuiGfxElement *mpGampadAxisIcon[eGamepadAxis_LastEnum * 2];
 
     std::vector<cLuxHintIcon> mvHintIcons;
 #endif

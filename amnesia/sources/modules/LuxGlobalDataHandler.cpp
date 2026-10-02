@@ -16,8 +16,8 @@ cLuxGlobalDataHandler::cLuxGlobalDataHandler() : iLuxUpdateable("LuxGlobalDataHa
 {
     mpScript = NULL;
 
-    mfLightLampMinSanityIncrease = gpBase->mpGameCfg->GetFloat("Player_Sanity", "LightLampMinSanityIncrease",0);
-    mfLightLampMaxSanityIncrease = gpBase->mpGameCfg->GetFloat("Player_Sanity", "LightLampMaxSanityIncrease",0);
+    mfLightLampMinSanityIncrease = gpBase->mpGameCfg->GetFloat("Player_Sanity", "LightLampMinSanityIncrease", 0);
+    mfLightLampMaxSanityIncrease = gpBase->mpGameCfg->GetFloat("Player_Sanity", "LightLampMaxSanityIncrease", 0);
 }
 
 //-----------------------------------------------------------------------
@@ -71,14 +71,14 @@ void cLuxGlobalDataHandler::Reset()
     }
     mpScript = NULL;
 
-    mfEnemyActivateSoundCount =0;
+    mfEnemyActivateSoundCount = 0;
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxGlobalDataHandler::Update(double adFixedDelta)
 {
-    if(mfEnemyActivateSoundCount>0)
+    if(mfEnemyActivateSoundCount > 0)
     {
         mfEnemyActivateSoundCount -= (float)adFixedDelta;
     }
@@ -113,7 +113,7 @@ void cLuxGlobalDataHandler::LoadScript()
     // Load script
     tString sFile = gpBase->mpMapHandler->GetMapFolder() + "global.hps";
     mpScript  = gpBase->mpEngine->GetResources()->GetScriptManager()->CreateScript(sFile);
-    if(mpScript==NULL)
+    if(mpScript == NULL)
     {
         Error("Global script '%s' could not be created!\n", sFile.c_str());
     }
@@ -136,7 +136,7 @@ bool cLuxGlobalDataHandler::RecompileScript(tString *apOutput)
 
 void cLuxGlobalDataHandler::RunScript(const tString& asCommand)
 {
-    if(mpScript==NULL)
+    if(mpScript == NULL)
     {
         return;
     }
@@ -146,7 +146,7 @@ void cLuxGlobalDataHandler::RunScript(const tString& asCommand)
 
 //-----------------------------------------------------------------------
 
-cLuxScriptVar* cLuxGlobalDataHandler::GetVar(const tString &asName)
+cLuxScriptVar *cLuxGlobalDataHandler::GetVar(const tString &asName)
 {
     tLuxScriptVarMapIt it = m_mapVars.find(asName);
     if(it != m_mapVars.end())
@@ -163,7 +163,7 @@ cLuxScriptVar* cLuxGlobalDataHandler::GetVar(const tString &asName)
 
 bool cLuxGlobalDataHandler::GetEnemyActivateSoundAllowed()
 {
-    return mfEnemyActivateSoundCount<=0;
+    return mfEnemyActivateSoundCount <= 0;
 }
 
 void cLuxGlobalDataHandler::SetEnemyActivateSoundMade()

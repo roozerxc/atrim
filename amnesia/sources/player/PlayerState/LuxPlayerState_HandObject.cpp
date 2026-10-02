@@ -33,7 +33,7 @@ cLuxPlayerState_HandObject::~cLuxPlayerState_HandObject()
 
 //-----------------------------------------------------------------------
 
-bool cLuxPlayerState_HandObject::ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed)
+bool cLuxPlayerState_HandObject::ImplementedDoAction(eLuxPlayerAction aAction, bool abPressed)
 {
     ////////////////////
     // Attack
@@ -90,7 +90,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxPlayerState_SaveData* cLuxPlayerState_HandObject::CreateSaveData()
+iLuxPlayerState_SaveData *cLuxPlayerState_HandObject::CreateSaveData()
 {
     return hplNew(cLuxPlayerState_HandObject_SaveData, ());
 }
@@ -103,7 +103,7 @@ void cLuxPlayerState_HandObject::SaveToSaveData(iLuxPlayerState_SaveData* apSave
     ///////////////////////
     // Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxPlayerState_HandObject_SaveData *pData = static_cast<cLuxPlayerState_HandObject_SaveData*>(apSaveData);
+    cLuxPlayerState_HandObject_SaveData *pData = static_cast<cLuxPlayerState_HandObject_SaveData *>(apSaveData);
 
 
     ///////////////////////
@@ -116,8 +116,8 @@ void cLuxPlayerState_HandObject::LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLu
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataBeforeEnter(apMap,apSaveData);
-    cLuxPlayerState_HandObject_SaveData *pData = static_cast<cLuxPlayerState_HandObject_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataBeforeEnter(apMap, apSaveData);
+    cLuxPlayerState_HandObject_SaveData *pData = static_cast<cLuxPlayerState_HandObject_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars
@@ -129,8 +129,8 @@ void cLuxPlayerState_HandObject::LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLux
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataAfterEnter(apMap,apSaveData);
-    cLuxPlayerState_HandObject_SaveData *pData = static_cast<cLuxPlayerState_HandObject_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataAfterEnter(apMap, apSaveData);
+    cLuxPlayerState_HandObject_SaveData *pData = static_cast<cLuxPlayerState_HandObject_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars

@@ -10,12 +10,12 @@
 
 cLuxCompletionCountHandler::cLuxCompletionCountHandler() : iLuxUpdateable("LuxCompletionCountHandler")
 {
-    mlQuestCompletionValue = gpBase->mpGameCfg->GetInt("Quest", "QuestCompletionValue",0);
-    mlItemCompletionValue = gpBase->mpGameCfg->GetInt("Quest", "ItemCompletionValue",0);
-    mlNoteCompletionValue = gpBase->mpGameCfg->GetInt("Quest", "NoteCompletionValue",0);
-    mlDiaryCompletionValue = gpBase->mpGameCfg->GetInt("Quest", "DiaryCompletionValue",0);
-    mlFlashbackCompletionValue = gpBase->mpGameCfg->GetInt("Quest", "FlashbackCompletionValue",0);
-    mlChestCompletionValue = gpBase->mpGameCfg->GetInt("Quest", "ChestCompletionValue",0);
+    mlQuestCompletionValue = gpBase->mpGameCfg->GetInt("Quest", "QuestCompletionValue", 0);
+    mlItemCompletionValue = gpBase->mpGameCfg->GetInt("Quest", "ItemCompletionValue", 0);
+    mlNoteCompletionValue = gpBase->mpGameCfg->GetInt("Quest", "NoteCompletionValue", 0);
+    mlDiaryCompletionValue = gpBase->mpGameCfg->GetInt("Quest", "DiaryCompletionValue", 0);
+    mlFlashbackCompletionValue = gpBase->mpGameCfg->GetInt("Quest", "FlashbackCompletionValue", 0);
+    mlChestCompletionValue = gpBase->mpGameCfg->GetInt("Quest", "ChestCompletionValue", 0);
 
     mpFont = NULL;
 }
@@ -36,7 +36,7 @@ cLuxCompletionCountHandler::~cLuxCompletionCountHandler()
 
 void cLuxCompletionCountHandler::LoadFonts()
 {
-    tString sFontFile = gpBase->mpMenuCfg->GetString("CompletionCounter","DefaultFont","");
+    tString sFontFile = gpBase->mpMenuCfg->GetString("CompletionCounter", "DefaultFont", "");
     mpFont = LoadFont(sFontFile);
 }
 
@@ -50,11 +50,11 @@ void cLuxCompletionCountHandler::OnStart()
 void cLuxCompletionCountHandler::Reset()
 {
     mbActive = false;
-    mfAlpha=0;
-    mfDelay =0;
+    mfAlpha = 0;
+    mfDelay = 0;
 
-    mfNewAmount =0;
-    mfDisplayedAmount =0;
+    mfNewAmount = 0;
+    mfDisplayedAmount = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -65,12 +65,12 @@ void cLuxCompletionCountHandler::Update(double adFixedDelta)
 
     /////////////////////
     //Decrease alpha
-    if(mbActive==false)
+    if(mbActive == false)
     {
         mfAlpha -= 0.5f * (float)adFixedDelta;
-        if(mfAlpha <0)
+        if(mfAlpha < 0)
         {
-            mfAlpha =0;
+            mfAlpha = 0;
         }
         return;
     }
@@ -84,9 +84,9 @@ void cLuxCompletionCountHandler::Update(double adFixedDelta)
     /////////////////////
     //Increase alpha
     mfAlpha += 1.2f * (float)adFixedDelta;
-    if(mfAlpha >1)
+    if(mfAlpha > 1)
     {
-        mfAlpha =1;
+        mfAlpha = 1;
     }
 
     /////////////////////
@@ -96,7 +96,7 @@ void cLuxCompletionCountHandler::Update(double adFixedDelta)
         if(mfDisplayedAmount < mfNewAmount)
         {
             float fDistance = 0;//(mfNewAmount - mfDisplayedAmount);
-            mfDisplayedAmount += (fDistance+0.001f) * 30 * (float)adFixedDelta;
+            mfDisplayedAmount += (fDistance + 0.001f) * 30 * (float)adFixedDelta;
             if(mfDisplayedAmount > mfNewAmount)
             {
                 mfDisplayedAmount = mfNewAmount;
@@ -105,7 +105,7 @@ void cLuxCompletionCountHandler::Update(double adFixedDelta)
         else
         {
             mfDisableDelay  -= (float)adFixedDelta;
-            if(mfDisableDelay <=0)
+            if(mfDisableDelay <= 0)
             {
                 mbActive = false;
             }
@@ -120,9 +120,9 @@ void cLuxCompletionCountHandler::OnDraw(double adFrameTime)
     return;
 
     float fPrecent = mfDisplayedAmount * 100;
-    gpBase->mpGameHudSet->DrawFont(mpFont, cVector3f(400,20,1),21,cColor(1,mfAlpha), eFontAlign_Right,eGuiMaterial_FontNormal,
+    gpBase->mpGameHudSet->DrawFont(mpFont, cVector3f(400, 20, 1), 21, cColor(1, mfAlpha), eFontAlign_Right, eGuiMaterial_FontNormal,
                                    _W("%.1f%%"), fPrecent);
-    gpBase->mpGameHudSet->DrawFont(mpFont, cVector3f(400,20,1),21,cColor(1,mfAlpha), eFontAlign_Left,eGuiMaterial_FontNormal,
+    gpBase->mpGameHudSet->DrawFont(mpFont, cVector3f(400, 20, 1), 21, cColor(1, mfAlpha), eFontAlign_Left, eGuiMaterial_FontNormal,
                                    _W(" %ls"), kTranslate("CompletionCount", "Completed").c_str());
 
 }
@@ -148,7 +148,7 @@ void cLuxCompletionCountHandler::ShowCompletionIncrease(float afPrevius, float a
     mbActive = true;
 
     //If the count is already shown then do not set a new value.
-    if(mfAlpha <=0)
+    if(mfAlpha <= 0)
     {
         mfDelay = afDelay;
         mfDisplayedAmount = afPrevius;

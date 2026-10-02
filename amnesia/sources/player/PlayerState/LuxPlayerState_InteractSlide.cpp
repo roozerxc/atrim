@@ -17,8 +17,8 @@
 
 cLuxPlayerState_InteractSlide::cLuxPlayerState_InteractSlide(cLuxPlayer *apPlayer) : iLuxPlayerState_Interact(apPlayer, eLuxPlayerState_InteractSlide)
 {
-    mfMoveToMouseAddFactor = gpBase->mpGameCfg->GetFloat("Player_Interaction","MoveToMouseAddFactor", 0.01f);
-    mfMaxForce = gpBase->mpGameCfg->GetFloat("Player_Interaction","SlideMaxForce", 1000.0f);
+    mfMoveToMouseAddFactor = gpBase->mpGameCfg->GetFloat("Player_Interaction", "MoveToMouseAddFactor", 0.01f);
+    mfMaxForce = gpBase->mpGameCfg->GetFloat("Player_Interaction", "SlideMaxForce", 1000.0f);
 
     mForcePid.SetErrorNum(10);;
     mForcePid.p = 6;
@@ -55,10 +55,10 @@ void cLuxPlayerState_InteractSlide::OnEnterState(eLuxPlayerState aPrevState)
     //Reset variables
     mForcePid.Reset();
 
-    mvMouseAdd =0;
-    mvLastMouseAdd =0;
+    mvMouseAdd = 0;
+    mvLastMouseAdd = 0;
 
-    mfSlideSpeed =0;
+    mfSlideSpeed = 0;
 
     /////////////////////////////////
     //Setup body
@@ -72,12 +72,12 @@ void cLuxPlayerState_InteractSlide::OnEnterState(eLuxPlayerState aPrevState)
 
     //Get the local position
     cMatrixf mtxTransformInv = cMath::MatrixInverse(mpCurrentBody->GetLocalMatrix());
-    mvLocalInteractPos = cMath::MatrixMul(mtxTransformInv,mvCurrentFocusPos);
+    mvLocalInteractPos = cMath::MatrixMul(mtxTransformInv, mvCurrentFocusPos);
 
 
     ///////////////////////
     //Calculate the max distance
-    mfMaxDistance = cMath::Vector3Dist(mpPlayer->GetCamera()->GetPosition(), mvCurrentFocusPos)*1.4f;
+    mfMaxDistance = cMath::Vector3Dist(mpPlayer->GetCamera()->GetPosition(), mvCurrentFocusPos) * 1.4f;
 }
 
 //-----------------------------------------------------------------------
@@ -181,14 +181,14 @@ void cLuxPlayerState_InteractSlide::PostUpdate(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-bool cLuxPlayerState_InteractSlide::OnDoAction(eLuxPlayerAction aAction,bool abPressed)
+bool cLuxPlayerState_InteractSlide::OnDoAction(eLuxPlayerAction aAction, bool abPressed)
 {
     ////////////////////////////
     // Interact
     if(aAction == eLuxPlayerAction_Interact)
     {
         // Not Pressed
-        if(abPressed==false)
+        if(abPressed == false)
         {
             mpPlayer->ChangeState(mPreviousState);
 
@@ -279,7 +279,7 @@ bool cLuxPlayerState_InteractSlide::OnMove(eCharDir aDir, float afMul)
 
 //-----------------------------------------------------------------------
 
-cGuiGfxElement* cLuxPlayerState_InteractSlide::GetCrosshair()
+cGuiGfxElement *cLuxPlayerState_InteractSlide::GetCrosshair()
 {
     return NULL;
 }
@@ -293,10 +293,10 @@ void cLuxPlayerState_InteractSlide::OnSaveBody(iPhysicsBody *apBody, float &afMa
 
 //-----------------------------------------------------------------------
 
-float cLuxPlayerState_InteractSlide::DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY)
+float cLuxPlayerState_InteractSlide::DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY)
 {
 
-    apSet->DrawFont(apFont, cVector3f(5,afStartY,0),12,cColor(1,1),_W("SideSpeed: %f Force: %ls"), mfSlideSpeed, cString::To16Char(mvLastForce.ToString()).c_str());
+    apSet->DrawFont(apFont, cVector3f(5, afStartY, 0), 12, cColor(1, 1), _W("SideSpeed: %f Force: %ls"), mfSlideSpeed, cString::To16Char(mvLastForce.ToString()).c_str());
     afStartY += 13;
 
 
@@ -320,15 +320,15 @@ void cLuxPlayerState_InteractSlide::RenderSolid(cRendererCallbackFunctions* apFu
 
     cVector3f vWorldInteractPos = cMath::MatrixMul(mpCurrentBody->GetLocalMatrix(), mvLocalInteractPos);
 
-    apFunctions->GetLowLevelGfx()->DrawSphere(vWorldInteractPos, 0.1f, cColor(0,1,0,1));
+    apFunctions->GetLowLevelGfx()->DrawSphere(vWorldInteractPos, 0.1f, cColor(0, 1, 0, 1));
 
     cVector3f vMouseCamDir = vUp * mvLastMouseAdd.y + vRight * -mvLastMouseAdd.x;
     float fSpeedAdd = cMath::Vector3Dot(vMouseCamDir, mpCurrentJoint->GetPinDir());
 
-    apFunctions->GetLowLevelGfx()->DrawLine(vWorldInteractPos, vWorldInteractPos+vMouseCamDir*50, cColor(1,0,0,1));
+    apFunctions->GetLowLevelGfx()->DrawLine(vWorldInteractPos, vWorldInteractPos + vMouseCamDir * 50, cColor(1, 0, 0, 1));
 
-    apFunctions->GetLowLevelGfx()->DrawLine(vWorldInteractPos, vWorldInteractPos+mpCurrentJoint->GetPinDir(),cColor(0,0,0.3f,1));
-    apFunctions->GetLowLevelGfx()->DrawLine(vWorldInteractPos, vWorldInteractPos+mpCurrentJoint->GetPinDir()*fSpeedAdd*50,cColor(0,0,1,1));
+    apFunctions->GetLowLevelGfx()->DrawLine(vWorldInteractPos, vWorldInteractPos + mpCurrentJoint->GetPinDir(), cColor(0, 0, 0.3f, 1));
+    apFunctions->GetLowLevelGfx()->DrawLine(vWorldInteractPos, vWorldInteractPos + mpCurrentJoint->GetPinDir()*fSpeedAdd * 50, cColor(0, 0, 1, 1));
 
 
     //apFunctions->GetLowLevelGfx()->DrawLine(vPos, vPos+vRight, cColor(1,0,1,1));
@@ -356,7 +356,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxPlayerState_SaveData* cLuxPlayerState_InteractSlide::CreateSaveData()
+iLuxPlayerState_SaveData *cLuxPlayerState_InteractSlide::CreateSaveData()
 {
     return hplNew(cLuxPlayerState_InteractSlide_SaveData, ());
 }
@@ -369,7 +369,7 @@ void cLuxPlayerState_InteractSlide::SaveToSaveData(iLuxPlayerState_SaveData* apS
     ///////////////////////
     // Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxPlayerState_InteractSlide_SaveData *pData = static_cast<cLuxPlayerState_InteractSlide_SaveData*>(apSaveData);
+    cLuxPlayerState_InteractSlide_SaveData *pData = static_cast<cLuxPlayerState_InteractSlide_SaveData *>(apSaveData);
 
 
     ///////////////////////
@@ -382,8 +382,8 @@ void cLuxPlayerState_InteractSlide::LoadFromSaveDataBeforeEnter(cLuxMap *apMap, 
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataBeforeEnter(apMap,apSaveData);
-    cLuxPlayerState_InteractSlide_SaveData *pData = static_cast<cLuxPlayerState_InteractSlide_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataBeforeEnter(apMap, apSaveData);
+    cLuxPlayerState_InteractSlide_SaveData *pData = static_cast<cLuxPlayerState_InteractSlide_SaveData *>(apSaveData);
 
     ///////////////////////
     // Setup before entering
@@ -396,8 +396,8 @@ void cLuxPlayerState_InteractSlide::LoadFromSaveDataAfterEnter(cLuxMap *apMap, i
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataAfterEnter(apMap,apSaveData);
-    cLuxPlayerState_InteractSlide_SaveData *pData = static_cast<cLuxPlayerState_InteractSlide_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataAfterEnter(apMap, apSaveData);
+    cLuxPlayerState_InteractSlide_SaveData *pData = static_cast<cLuxPlayerState_InteractSlide_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars

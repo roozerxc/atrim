@@ -28,7 +28,7 @@ public:
     virtual ~cLuxPlayerState_HandObject();
 
 
-    bool ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed);
+    bool ImplementedDoAction(eLuxPlayerAction aAction, bool abPressed);
     void ImplementedOnEnterState(eLuxPlayerState aPrevState);
     void ImplementedOnLeaveState(eLuxPlayerState aNewState);
 
@@ -38,10 +38,10 @@ public:
     {
         return true;
     }
-    iLuxPlayerState_SaveData* CreateSaveData();
+    iLuxPlayerState_SaveData *CreateSaveData();
 
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);
-    void LoadFromSaveDataBeforeEnter(cLuxMap *apMap,iLuxPlayerState_SaveData* apSaveData);
+    void LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
     void LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
 
 protected:

@@ -26,14 +26,14 @@ cLuxEnemyLoader_Grunt::cLuxEnemyLoader_Grunt(const tString& asName) : iLuxEnemyL
 
 iLuxEnemy *cLuxEnemyLoader_Grunt::CreateEnemy(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxEnemy_Grunt, (asName, alID,apMap) );
+    return hplNew(cLuxEnemy_Grunt, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxEnemyLoader_Grunt::LoadVariables(iLuxEnemy *apEnemy, cXmlElement *apRootElem)
 {
-    cLuxEnemy_Grunt *pGrunt = static_cast<cLuxEnemy_Grunt*>(apEnemy);
+    cLuxEnemy_Grunt *pGrunt = static_cast<cLuxEnemy_Grunt *>(apEnemy);
 
     pGrunt->msNoticeSound = GetVarString("NoticeSound");
     pGrunt->msGiveUpNoticeSound = GetVarString("GiveUpNoticeSound");
@@ -72,9 +72,9 @@ void cLuxEnemyLoader_Grunt::LoadInstanceVariables(iLuxEnemy *apEnemy, cResourceV
 
 //-----------------------------------------------------------------------
 
-cLuxEnemy_Grunt::cLuxEnemy_Grunt(const tString &asName, int alID, cLuxMap *apMap) : iLuxEnemy(asName,alID,apMap, eLuxEnemyType_Grunt)
+cLuxEnemy_Grunt::cLuxEnemy_Grunt(const tString &asName, int alID, cLuxMap *apMap) : iLuxEnemy(asName, alID, apMap, eLuxEnemyType_Grunt)
 {
-    mfWaitTime =0;
+    mfWaitTime = 0;
     mfAlertRunTowardsCount = 0;
 
     mbAlignEntityWithGroundRay = true;
@@ -124,7 +124,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     // Default
     kLuxOnMessage(eLuxEnemyMessage_Reset)
 
-    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
+    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
     gpBase->mpPlayer->RemoveTerrorEnemy(this);
 
 
@@ -138,7 +138,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     if(mfDamageCount > mfGroggyDamageCount)
     {
         ChangeState(eLuxEnemyState_Hurt);
-        mfDamageCount =0;
+        mfDamageCount = 0;
     }
 
     //If enemy is out of range (having been in, then turn him off)
@@ -160,7 +160,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
 
     kLuxOnMessage(eLuxEnemyMessage_PlayerInRange)
-    gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName)+_W(" enabled!"), false );
+    gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName) + _W(" enabled!"), false );
 
     if(gpBase->mpGlobalDataHandler->GetEnemyActivateSoundAllowed())
     {
@@ -216,7 +216,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     {
         SendMessage(eLuxEnemyMessage_TimeOut, mfWaitTime, true);
     }
-    mfWaitTime =0;
+    mfWaitTime = 0;
 
     SendMessage(eLuxEnemyMessage_TimeOut_2, cMath::RandRectf(mfIdleExtraTimeMin, mfIdleExtraTimeMax), true);
 
@@ -231,7 +231,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     }
     else
     {
-        if(GetPatrolNodeNum()>0)
+        if(GetPatrolNodeNum() > 0)
         {
             FadeOutCurrentAnim(0.2f);
             ChangeState(eLuxEnemyState_Patrol);
@@ -243,7 +243,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     }
 
     kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
-    PlayAnim("IdleExtra"+cString::ToString(cMath::RandRectl(1,mlIdleExtraNum)),false, 0.3f);
+    PlayAnim("IdleExtra" + cString::ToString(cMath::RandRectl(1, mlIdleExtraNum)), false, 0.3f);
 
     kLuxOnMessage(eLuxEnemyMessage_AnimationOver)
     SendMessage(eLuxEnemyMessage_TimeOut_2, cMath::RandRectf(2, 6), true);
@@ -293,26 +293,26 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
 
     mpPathfinder->Stop();
-    PlayAnim("Notice"+cString::ToString(cMath::RandRectl(1,2)), false, 0.3f);
+    PlayAnim("Notice" + cString::ToString(cMath::RandRectl(1, 2)), false, 0.3f);
 
     //mfForwardSpeed *= 1.5f;
     PlaySound(msNoticeSound);
 
     mfFOVMul = 4.0f; //When hearing a sound, enemy gets extra alert.
 
-    gpBase->mpDebugHandler->AddMessage(_W("Sound Heard! Vol: ")+cString::ToStringW(mfTempVal),false);
+    gpBase->mpDebugHandler->AddMessage(_W("Sound Heard! Vol: ") + cString::ToStringW(mfTempVal), false);
 
     kLuxOnMessage(eLuxEnemyMessage_AnimationOver)
     SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
 
-    cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true,NULL,1);
+    cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true, NULL, 1);
     if(pNode)
     {
         mpPathfinder->MoveTo(pNode->GetPosition());
     }
     else
     {
-        gpBase->mpDebugHandler->AddMessage(_W("Could not find node near sound!"),false);
+        gpBase->mpDebugHandler->AddMessage(_W("Could not find node near sound!"), false);
         mpPathfinder->MoveTo(mvTempPos);
     }
 
@@ -347,7 +347,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     //If a new sound is loader than the previous go for that instead!
     if(mpPathfinder->IsMoving() && apMessage->mfCustomValue > mfTempVal)
     {
-        cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true,NULL,1);
+        cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true, NULL, 1);
         if(pNode)
         {
             mpPathfinder->MoveTo(pNode->GetPosition());
@@ -372,7 +372,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     mfForwardSpeed *= 1.2f;
     mfFOVMul = 4.0f;
 
-    mfAlertRunTowardsCount =0;
+    mfAlertRunTowardsCount = 0;
 
     kLuxOnLeave
     mfFOVMul = 1.0f;
@@ -393,11 +393,11 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     }
     else
     {
-        mfAlertRunTowardsCount-=1;
+        mfAlertRunTowardsCount -= 1;
     }
-    if(mfAlertRunTowardsCount<0)
+    if(mfAlertRunTowardsCount < 0)
     {
-        mfAlertRunTowardsCount=0;
+        mfAlertRunTowardsCount = 0;
     }
 
     //Update the speed of movement.
@@ -421,7 +421,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
         ChangeState(eLuxEnemyState_BreakDoor);
     }
     //Player is no longer seen, see if time to search
-    else if(PlayerIsDetected()==false)
+    else if(PlayerIsDetected() == false)
     {
         if(gpBase->mpPlayer->GetTerror() < 1)
         {
@@ -431,7 +431,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     //Player is seen, see if close enough for hunt
     else
     {
-        if(    (gpBase->mpPlayer->GetTerror() >= 1 && (fDistToPlayer > mfAlertToHuntDistance || mfAlertRunTowardsCount>mfAlertRunTowardsToHuntLimit) ) ||
+        if(    (gpBase->mpPlayer->GetTerror() >= 1 && (fDistToPlayer > mfAlertToHuntDistance || mfAlertRunTowardsCount > mfAlertRunTowardsToHuntLimit) ) ||
                 fDistToPlayer < mfAlertToInstantHuntDistance)
         {
             gpBase->mpPlayer->SetTerror(1.0f);
@@ -444,11 +444,11 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     float fDistToPlayer = DistToPlayer();
 
     //Path ended and player is not seen or enemy is stuck (this should only happen when at a distance!
-    if(PlayerIsDetected()==false || (apMessage->mlCustomValue == 1 && fDistToPlayer>5))
+    if(PlayerIsDetected() == false || (apMessage->mlCustomValue == 1 && fDistToPlayer > 5))
     {
         ChangeState(eLuxEnemyState_Search);
     }
-    else if(apMessage->mlCustomValue==1 && PlayerIsDetected())
+    else if(apMessage->mlCustomValue == 1 && PlayerIsDetected())
     {
         //This is when the enemy should just stnad still but I think nothing is really needed
     }
@@ -466,7 +466,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     kLuxOnMessage(eLuxEnemyMessage_TakeHit)
     //ChangeState(eLuxEnemyState_Hunt);
     ChangeState(eLuxEnemyState_Hurt);
-    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
+    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search, this);
 
     ////////////////////////////////
     // Search
@@ -476,10 +476,10 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 
     SendMessage(eLuxEnemyMessage_TimeOut, mfPlayerSearchTime, true);
 
-    SendMessage(eLuxEnemyMessage_TimeOut_2,cMath::RandRectf(0,1), true);
+    SendMessage(eLuxEnemyMessage_TimeOut_2, cMath::RandRectf(0, 1), true);
 
-    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
-    gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Search,this);
+    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
+    gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Search, this);
 
     SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
     mfForwardSpeed *= 1.0f;
@@ -498,12 +498,12 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     //At node
     kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
     mpPathfinder->Stop();
-    SendMessage(eLuxEnemyMessage_TimeOut_2,cMath::RandRectf(1,3), true);
+    SendMessage(eLuxEnemyMessage_TimeOut_2, cMath::RandRectf(1, 3), true);
 
     //Wait a few secs
     kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
     //cAINode * pNode = GetSearchForPlayerNode();
-    cAINode * pNode = mpPathfinder->GetNodeAtPos(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition(), 4, 12,false, false, true, NULL);
+    cAINode * pNode = mpPathfinder->GetNodeAtPos(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition(), 4, 12, false, false, true, NULL);
     if(pNode)
     {
         mpPathfinder->MoveTo(pNode->GetPosition());
@@ -516,7 +516,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     //End of searching
     kLuxOnMessage(eLuxEnemyMessage_TimeOut)
     ChangeState(eLuxEnemyState_Patrol);
-    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
+    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search, this);
 
     //Hear sound
     kLuxOnMessage(eLuxEnemyMessage_SoundHeard)
@@ -536,9 +536,9 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     kLuxOnEnter
     if(mlAttackHitCounter >= 1)
     {
-        mlAttackHitCounter =0;
+        mlAttackHitCounter = 0;
 
-        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
+        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search, this);
 
         ChangeState(eLuxEnemyState_HuntPause);
     }
@@ -549,8 +549,8 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
         SendMessage(eLuxEnemyMessage_TimeOut, 0.1f, true);
         mfFOVMul = 4.0f;
 
-        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
-        gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Attack,this);
+        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search, this);
+        gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Attack, this);
         gpBase->mpPlayer->AddTerrorEnemy(this);
 
         mpPathfinder->MoveTo(mvLastKnownPlayerPos);
@@ -588,7 +588,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     //////////////////////////
     //Launch attack
     float fDist = DistToPlayer();
-    if(CanSeePlayer() && fDist > mfNormalAttackDistance && fDist < mfNormalAttackDistance*2 && mpMover->GetStuckCounter()<0.5f)
+    if(CanSeePlayer() && fDist > mfNormalAttackDistance && fDist < mfNormalAttackDistance * 2 && mpMover->GetStuckCounter() < 0.5f)
     {
         ChangeState(eLuxEnemyState_AttackMeleeLong);
     }
@@ -600,7 +600,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     float fDistToPlayer = DistToPlayer();
 
     //Check if was end of path because of stuck.,
-    if(apMessage->mlCustomValue==1 && fDistToPlayer >= mfNormalAttackDistance)
+    if(apMessage->mlCustomValue == 1 && fDistToPlayer >= mfNormalAttackDistance)
     {
         if(PlayerIsDetected() == false)
         {
@@ -629,8 +629,8 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     // Update path and call for help!
     kLuxOnMessage(eLuxEnemyMessage_TimeOut)
 
-    mpMap->BroadcastEnemyMessage(eLuxEnemyMessage_HelpMe, true, mpCharBody->GetPosition(), mfActivationDistance*0.5f,
-                                 0,false, mpCharBody->GetFeetPosition());
+    mpMap->BroadcastEnemyMessage(eLuxEnemyMessage_HelpMe, true, mpCharBody->GetPosition(), mfActivationDistance * 0.5f,
+                                 0, false, mpCharBody->GetFeetPosition());
 
     mpPathfinder->MoveTo(mvLastKnownPlayerPos);
 
@@ -642,7 +642,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     if(PlayerIsDetected() == false)
     {
         gpBase->mpPlayer->RemoveTerrorEnemy(this);
-        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
+        gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
         ChangeState(eLuxEnemyState_Search);
     }
     else
@@ -742,11 +742,11 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     kLuxState(eLuxEnemyState_BreakDoor)
     kLuxOnEnter
     mpPathfinder->Stop();
-    PlayAnim("BreakDoor",false, 0.3f);
+    PlayAnim("BreakDoor", false, 0.3f);
     mfFOVMul = 4.0f;
 
     kLuxOnLeave
-    mlAttackHitCounter =0; //When returning from door breakage there should be no pause!
+    mlAttackHitCounter = 0; //When returning from door breakage there should be no pause!
     mfFOVMul = 1.0f;
 
     kLuxOnUpdate
@@ -771,7 +771,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     }
     else
     {
-        PlayAnim("BreakDoor",false, 0.3f);
+        PlayAnim("BreakDoor", false, 0.3f);
     }
 
 
@@ -791,7 +791,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     kLuxOnEnter
     mpPathfinder->Stop();
     int lNum = cMath::RandRectl(1, 2);
-    PlayAnim("SwingClaws0"+cString::ToString(lNum),false, 0.3f);
+    PlayAnim("SwingClaws0" + cString::ToString(lNum), false, 0.3f);
     mfFOVMul = 4.0f;
 
     kLuxOnLeave
@@ -822,7 +822,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     mpPathfinder->Stop();
     SetMoveSpeed(eLuxEnemyMoveSpeed_Run);
     mfForwardSpeed *= 1.5f;
-    PlayAnim("SwingLaunch",false, 0.3f);
+    PlayAnim("SwingLaunch", false, 0.3f);
     mlTempVal = 0;
     mfFOVMul = 4.0f;
 
@@ -831,7 +831,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     SetMoveSpeed(eLuxEnemyMoveSpeed_Run);
 
     kLuxOnUpdate
-    if(mlTempVal==0)
+    if(mlTempVal == 0)
     {
         mpMover->MoveToPos(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition());
     }
@@ -855,7 +855,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     kLuxState(eLuxEnemyState_Hurt)
     kLuxOnEnter
     mpPathfinder->Stop();
-    PlayAnim("Flinch",false, 0.5f);
+    PlayAnim("Flinch", false, 0.5f);
     SendMessage(eLuxEnemyMessage_TimeOut, 0.2f, true);
     mfFOVMul = 4.0f;
 
@@ -873,7 +873,7 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     }
 
     kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-    if(cMath::RandRectl(0,1)==0 && DistToPlayer() < mfNormalAttackDistance*1.3f)
+    if(cMath::RandRectl(0, 1) == 0 && DistToPlayer() < mfNormalAttackDistance * 1.3f)
     {
         ChangeState(eLuxEnemyState_AttackMeleeShort);
     }
@@ -889,9 +889,9 @@ bool cLuxEnemy_Grunt::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
     kLuxOnEnter
     mpPathfinder->Stop();
     //PlayAnim("Dead",false, 0.4f);
-    PlayAnim("Dead",false, 0.3f,false,1.0f,false,true,false);
+    PlayAnim("Dead", false, 0.3f, false, 1.0f, false, true, false);
     gpBase->mpPlayer->RemoveTerrorEnemy(this);
-    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
+    gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack, this);
     mpCharBody->SetActive(false);
 
 
@@ -915,8 +915,8 @@ void cLuxEnemy_Grunt::OnRenderSolidImplemented(cRendererCallbackFunctions* apFun
 
     if(mCurrentState == eLuxEnemyState_AttackMeleeShort)
     {
-        pPhysicsWorld->RenderShapeDebugGeometry(GetAttackShape(0), GetDamageShapeMatrix(cVector3f(0,0,1)), apFunctions->GetLowLevelGfx(),
-                                                cColor(1,0,0,1));
+        pPhysicsWorld->RenderShapeDebugGeometry(GetAttackShape(0), GetDamageShapeMatrix(cVector3f(0, 0, 1)), apFunctions->GetLowLevelGfx(),
+                                                cColor(1, 0, 0, 1));
     }
 }
 
@@ -1005,7 +1005,7 @@ void cLuxEnemy_Grunt::PatrolEndOfPath()
 {
     if(IsAtLastPatrolNode())
     {
-        if(mbIsSeenByPlayer==false && DistToPlayer() > 10 && mbAutoRemoveAtPathEnd)
+        if(mbIsSeenByPlayer == false && DistToPlayer() > 10 && mbAutoRemoveAtPathEnd)
         {
             SetActive(false);
 
@@ -1024,7 +1024,7 @@ void cLuxEnemy_Grunt::PatrolEndOfPath()
     }
     else
     {
-        mfWaitTime =0;
+        mfWaitTime = 0;
     }
 
     ChangeState(eLuxEnemyState_Wait);
@@ -1046,7 +1046,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxEnemy_Grunt::CreateSaveData()
+iLuxEntity_SaveData *cLuxEnemy_Grunt::CreateSaveData()
 {
     return hplNew(cLuxEnemy_Grunt_SaveData, ());
 }
@@ -1058,7 +1058,7 @@ void cLuxEnemy_Grunt::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxEnemy_Grunt_SaveData *pData = static_cast<cLuxEnemy_Grunt_SaveData*>(apSaveData);
+    cLuxEnemy_Grunt_SaveData *pData = static_cast<cLuxEnemy_Grunt_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
@@ -1072,7 +1072,7 @@ void cLuxEnemy_Grunt::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxEnemy_Grunt_SaveData *pData = static_cast<cLuxEnemy_Grunt_SaveData*>(apSaveData);
+    cLuxEnemy_Grunt_SaveData *pData = static_cast<cLuxEnemy_Grunt_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables

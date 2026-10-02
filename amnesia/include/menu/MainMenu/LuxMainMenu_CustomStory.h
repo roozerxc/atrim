@@ -42,14 +42,14 @@ private:
 
     cVector2f mvWindowSize;
 
-    cLuxCustomStorySettings* mpStory;
+    cLuxCustomStorySettings *mpStory;
 
-    cWidgetImage* mpIPicture;
+    cWidgetImage *mpIPicture;
 
-    cWidgetLabel* mpLAuthor;
-    cWidgetLabel* mpLDesc;
+    cWidgetLabel *mpLAuthor;
+    cWidgetLabel *mpLDesc;
 
-    std::vector<cWidgetButton*> mvButtons;
+    std::vector<cWidgetButton *> mvButtons;
 };
 
 //----------------------------------------------
@@ -74,11 +74,11 @@ private:
     // Properties
     cVector2f mvWindowSize;
 
-    cLuxMainMenu_CustomStory* mpStoryWindow;
+    cLuxMainMenu_CustomStory *mpStoryWindow;
 
     ////////////////////////
     // Layout
-    cWidgetListBox* mpLBStories;
+    cWidgetListBox *mpLBStories;
 
     ////////////////////////
     // Callbacks

@@ -51,11 +51,11 @@ public:
     //Properties
     void SetAngularOffsetPos(const cVector3f& avWorldPos);
 
-    const cMatrixf& GetClosedTransform()
+    const cMatrixf &GetClosedTransform()
     {
         return m_mtxClosedTransform;
     }
-    const cMatrixf& GetOpenTransform()
+    const cMatrixf &GetOpenTransform()
     {
         return m_mtxOpenTransform;
     }
@@ -68,7 +68,7 @@ public:
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);

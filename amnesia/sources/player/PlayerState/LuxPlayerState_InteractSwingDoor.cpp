@@ -90,7 +90,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxPlayerState_SaveData* cLuxPlayerState_InteractSwingDoor::CreateSaveData()
+iLuxPlayerState_SaveData *cLuxPlayerState_InteractSwingDoor::CreateSaveData()
 {
     return hplNew(cLuxPlayerState_InteractSwingDoor_SaveData, ());
 }
@@ -103,7 +103,7 @@ void cLuxPlayerState_InteractSwingDoor::SaveToSaveData(iLuxPlayerState_SaveData*
     ///////////////////////
     // Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxPlayerState_InteractSwingDoor_SaveData *pData = static_cast<cLuxPlayerState_InteractSwingDoor_SaveData*>(apSaveData);
+    cLuxPlayerState_InteractSwingDoor_SaveData *pData = static_cast<cLuxPlayerState_InteractSwingDoor_SaveData *>(apSaveData);
 
 
     ///////////////////////
@@ -116,8 +116,8 @@ void cLuxPlayerState_InteractSwingDoor::LoadFromSaveDataBeforeEnter(cLuxMap *apM
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataBeforeEnter(apMap,apSaveData);
-    cLuxPlayerState_InteractSwingDoor_SaveData *pData = static_cast<cLuxPlayerState_InteractSwingDoor_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataBeforeEnter(apMap, apSaveData);
+    cLuxPlayerState_InteractSwingDoor_SaveData *pData = static_cast<cLuxPlayerState_InteractSwingDoor_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars
@@ -129,8 +129,8 @@ void cLuxPlayerState_InteractSwingDoor::LoadFromSaveDataAfterEnter(cLuxMap *apMa
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataAfterEnter(apMap,apSaveData);
-    cLuxPlayerState_InteractSwingDoor_SaveData *pData = static_cast<cLuxPlayerState_InteractSwingDoor_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataAfterEnter(apMap, apSaveData);
+    cLuxPlayerState_InteractSwingDoor_SaveData *pData = static_cast<cLuxPlayerState_InteractSwingDoor_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars

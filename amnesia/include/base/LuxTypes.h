@@ -442,28 +442,28 @@ enum eLuxProgressLogLevel
 
 class iLuxEntity;
 
-typedef std::multimap<tString,iLuxEntity*> tLuxEntityNameMap;
+typedef std::multimap<tString, iLuxEntity *> tLuxEntityNameMap;
 typedef tLuxEntityNameMap::iterator tLuxEntityNameMapIt;
 
-typedef std::multimap<int,iLuxEntity*> tLuxEntityIDMap;
+typedef std::multimap<int, iLuxEntity *> tLuxEntityIDMap;
 typedef tLuxEntityIDMap::iterator tLuxEntityIDMapIt;
 
-typedef std::list<iLuxEntity*> tLuxEntityList;
+typedef std::list<iLuxEntity *> tLuxEntityList;
 typedef tLuxEntityList::iterator tLuxEntityListIt;
 
-typedef cSTLIterator<iLuxEntity*, tLuxEntityList, tLuxEntityListIt> cLuxEntityIterator;
+typedef cSTLIterator<iLuxEntity *, tLuxEntityList, tLuxEntityListIt> cLuxEntityIterator;
 
 //----------------------------------------------
 
 class iLuxEnemy;
 
-typedef std::list<iLuxEnemy*> tLuxEnemyList;
+typedef std::list<iLuxEnemy *> tLuxEnemyList;
 typedef tLuxEnemyList::iterator tLuxEnemyListIt;
 
-typedef std::set<iLuxEnemy*> tLuxEnemySet;
+typedef std::set<iLuxEnemy *> tLuxEnemySet;
 typedef tLuxEnemySet::iterator tLuxEnemySetIt;
 
-typedef cSTLIterator<iLuxEnemy*, tLuxEnemyList, tLuxEnemyListIt> cLuxEnemyIterator;
+typedef cSTLIterator<iLuxEnemy *, tLuxEnemyList, tLuxEnemyListIt> cLuxEnemyIterator;
 
 //----------------------------------------------
 
@@ -502,7 +502,7 @@ public:
     virtual void LoadFonts() {}
     void ClearFonts();
     virtual void OnClearFonts() {}
-    iFontData* LoadFont(const tString& asFile);
+    iFontData *LoadFont(const tString& asFile);
 
     virtual void OnGameStart() {}
 
@@ -557,7 +557,7 @@ public:
         };
     }
 
-    std::vector<iFontData*> mvFonts;
+    std::vector<iFontData *> mvFonts;
 };
 
 //----------------------------------------------
@@ -565,7 +565,7 @@ public:
 class iLuxMessageCallback
 {
 public:
-    virtual void OnPress(bool abYes)=0;
+    virtual void OnPress(bool abYes) = 0;
 };
 
 //----------------------------------------------
@@ -575,7 +575,7 @@ class cLuxPlayer;
 class iLuxPlayerHelper : public iLuxUpdateable
 {
 public:
-    iLuxPlayerHelper(cLuxPlayer *apPlayer, const tString& asName) : mpPlayer(apPlayer),iLuxUpdateable(asName) {}
+    iLuxPlayerHelper(cLuxPlayer *apPlayer, const tString& asName) : mpPlayer(apPlayer), iLuxUpdateable(asName) {}
     virtual ~iLuxPlayerHelper() {}
 
     virtual void RenderSolid(cRendererCallbackFunctions* apFunctions) {}
@@ -593,7 +593,7 @@ class cLuxMap;
 class cLuxCollideCallback
 {
 public:
-    iLuxEntity* mpCollideEntity;
+    iLuxEntity *mpCollideEntity;
     tString msCallbackFunc;
     bool mbDeleteWhenColliding;
     int mlStates;
@@ -601,7 +601,7 @@ public:
     bool mbColliding;
 };
 
-typedef std::list<cLuxCollideCallback*> tLuxCollideCallbackList;
+typedef std::list<cLuxCollideCallback *> tLuxCollideCallbackList;
 typedef tLuxCollideCallbackList::iterator tLuxCollideCallbackListIt;
 
 class iLuxCollideCallbackContainer
@@ -611,8 +611,8 @@ public:
 
     void DestroyCollideCallbacks();
 
-    virtual int GetBodyNum()=0;
-    virtual iPhysicsBody* GetBody(int alIdx)=0;
+    virtual int GetBodyNum() = 0;
+    virtual iPhysicsBody *GetBody(int alIdx) = 0;
 
     void CheckCollisionCallback(const tString& asName, cLuxMap *apMap);
     bool CheckEntityCollision(iLuxEntity*apEntity, cLuxMap *apMap);
@@ -621,7 +621,7 @@ public:
     {
         return mlstCollideCallbacks.empty() == false;
     }
-    tLuxCollideCallbackList* GetCollideCallbackList()
+    tLuxCollideCallbackList *GetCollideCallbackList()
     {
         return &mlstCollideCallbacks;
     }
@@ -636,7 +636,7 @@ protected:
     bool mbUpdatingCollideCallbacks;
 };
 
-typedef std::list<iLuxCollideCallbackContainer*> tLuxCollideCallbackContainerList;
+typedef std::list<iLuxCollideCallbackContainer *> tLuxCollideCallbackContainerList;
 typedef tLuxCollideCallbackContainerList::iterator tLuxCollideCallbackContainerListIt;
 
 //----------------------------------------------
@@ -683,7 +683,7 @@ public:
     bool mbDestroyMe;
 };
 
-typedef std::list<cLuxEventTimer*> tLuxEventTimerList;
+typedef std::list<cLuxEventTimer *> tLuxEventTimerList;
 typedef tLuxEventTimerList::iterator tLuxEventTimerListIt;
 
 //----------------------------------------
@@ -699,7 +699,7 @@ public:
     bool mbAutoDestroy;
 };
 
-typedef std::list<cLuxCombineItemsCallback*> tLuxCombineItemsCallbackList;
+typedef std::list<cLuxCombineItemsCallback *> tLuxCombineItemsCallbackList;
 typedef tLuxCombineItemsCallbackList::iterator tLuxCombineItemsCallbackListIt;
 
 //----------------------------------------------
@@ -715,7 +715,7 @@ public:
     bool mbAutoDestroy;
 };
 
-typedef std::list<cLuxUseItemCallback*> tLuxUseItemCallbackList;
+typedef std::list<cLuxUseItemCallback *> tLuxUseItemCallbackList;
 typedef tLuxUseItemCallbackList::iterator tLuxUseItemCallbackListIt;
 
 //----------------------------------------------
@@ -821,7 +821,7 @@ public:
     iLuxProp *mpProp;
 };
 
-typedef std::list<cLuxProp_AttachedProp*> tLuxProp_AttachedPropList;
+typedef std::list<cLuxProp_AttachedProp *> tLuxProp_AttachedPropList;
 typedef tLuxProp_AttachedPropList::iterator tLuxProp_AttachedPropListIt;
 
 //----------------------------------------
@@ -832,12 +832,12 @@ class cLuxNode_Pos
 public:
     cLuxNode_Pos(const tString& asName) : msName(asName) {}
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
 
-    const cVector3f& GetPosition()
+    const cVector3f &GetPosition()
     {
         return mvPos;
     }

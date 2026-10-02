@@ -14,9 +14,9 @@ public:
     iLuxEffect() : mbActive(false) {}
     ~iLuxEffect() {}
 
-    virtual void Update(double adFixedDelta)=0;
-    virtual void OnDraw(double adFrameTime)=0;
-    virtual void Reset()=0;
+    virtual void Update(double adFixedDelta) = 0;
+    virtual void OnDraw(double adFrameTime) = 0;
+    virtual void Reset() = 0;
 
     virtual void DoAction(eLuxPlayerAction aAction, bool abPressed) {}
 
@@ -43,7 +43,7 @@ public:
     cLuxEffect_PlayCommentary();
     ~cLuxEffect_PlayCommentary();
 
-    void Start(const tString &asTalker,const tString &asTopic, const tString &asFile, int alIconId);
+    void Start(const tString &asTalker, const tString &asTopic, const tString &asFile, int alIconId);
     void Stop();
 
     void Update(double adFixedDelta);
@@ -201,7 +201,7 @@ public:
     cLuxEffect_ShakeScreen();
     ~cLuxEffect_ShakeScreen();
 
-    void Start(float afAmount, float afTime, float afFadeInTime,float afFadeOutTime);
+    void Start(float afAmount, float afTime, float afFadeInTime, float afFadeOutTime);
 
     void Update(double adFixedDelta);
     void OnDraw(double adFrameTime) {}
@@ -275,7 +275,7 @@ public:
     void OnDraw(double adFrameTime);
     void Reset();
 
-    void DrawFlash(cGuiSet *apSet,double adFixedDelta);
+    void DrawFlash(cGuiSet *apSet, double adFixedDelta);
 
 private:
     cGuiGfxElement *mpWhiteGfx;
@@ -485,7 +485,7 @@ private:
     cLuxEffect_PlayCommentary *mpPlayCommentary;
     cLuxEffect_ScreenImage *mpScreenImage;
 
-    std::vector<iLuxEffect*> mvEffects;
+    std::vector<iLuxEffect *> mvEffects;
 
     bool mbPlayerIsPaused;
     float mfFlashIntensity;

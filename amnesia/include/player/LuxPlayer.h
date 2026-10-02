@@ -107,11 +107,11 @@ public:
     {
         return mState;
     }
-    iLuxPlayerState* GetStateData(eLuxPlayerState aState)
+    iLuxPlayerState *GetStateData(eLuxPlayerState aState)
     {
         return mvStates[aState];
     }
-    iLuxPlayerState* GetCurrentStateData()
+    iLuxPlayerState *GetCurrentStateData()
     {
         return mvStates[mState];
     }
@@ -121,11 +121,11 @@ public:
     {
         return mMoveState;
     }
-    iLuxMoveState* GetMoveStateData(eLuxMoveState aState)
+    iLuxMoveState *GetMoveStateData(eLuxMoveState aState)
     {
         return mvMoveStates[aState];
     }
-    iLuxMoveState* GetCurrentMoveStateData()
+    iLuxMoveState *GetCurrentMoveStateData()
     {
         return mvMoveStates[mMoveState];
     }
@@ -136,11 +136,11 @@ public:
 
     ////////////////////
     // Data
-    cCamera* GetCamera()
+    cCamera *GetCamera()
     {
         return mpCamera;
     }
-    iCharacterBody* GetCharacterBody()
+    iCharacterBody *GetCharacterBody()
     {
         return mpCharBody;
     }
@@ -148,8 +148,8 @@ public:
     ////////////////////
     // Variables Properties
     void SetHeadPosAdd(eLuxHeadPosAdd aType, const cVector3f& avVector);
-    const cVector3f& GetHeadPosAdd(eLuxHeadPosAdd aType);
-    const cVector3f& GetHeadPosAddSum()
+    const cVector3f &GetHeadPosAdd(eLuxHeadPosAdd aType);
+    const cVector3f &GetHeadPosAddSum()
     {
         return mvHeadPosAddSum;
     }
@@ -175,7 +175,7 @@ public:
     {
         msCurrentPermaDeathSound = asSound;
     }
-    const tString& GetCurrentPermaDeathSound()
+    const tString &GetCurrentPermaDeathSound()
     {
         return msCurrentPermaDeathSound;
     }
@@ -185,7 +185,7 @@ public:
     void SetLampOil(float afX);
 
     void AddHealth(float afX);
-    void AddSanity(float afX, bool abShowEffect=true);
+    void AddSanity(float afX, bool abShowEffect = true);
     void AddLampOil(float afX);
 
     float GetHealth()
@@ -208,7 +208,7 @@ public:
 
     void SetTerror(float afX)
     {
-        mfTerror=afX;
+        mfTerror = afX;
     }
     void AddTerrorEnemy(iLuxEnemy *apEnemy);
     void RemoveTerrorEnemy(iLuxEnemy *apEnemy);
@@ -219,7 +219,7 @@ public:
     {
         return 1;
     }
-    iPhysicsBody* GetBody(int alIdx)
+    iPhysicsBody *GetBody(int alIdx)
     {
         return mpCharBody->GetCurrentBody();
     };
@@ -236,7 +236,7 @@ public:
     {
         msWaterStepSound = asStepSound;
     }
-    const tString& GetWaterStepSound()
+    const tString &GetWaterStepSound()
     {
         return msWaterStepSound;
     }
@@ -285,7 +285,7 @@ public:
 
     bool IsDead()
     {
-        return mfHealth <=0;
+        return mfHealth <= 0;
     }
 
     float GetDefaultMass()
@@ -293,16 +293,16 @@ public:
         return mfDefaultMass;
     }
 
-    const cVector3f& GetCameraPosAdd()
+    const cVector3f &GetCameraPosAdd()
     {
         return mvCameraPosAdd;
     }
 
-    const cVector3f& GetBodySize()
+    const cVector3f &GetBodySize()
     {
         return mvBodySize;
     }
-    const cVector3f& GetBodyCrouchSize()
+    const cVector3f &GetBodyCrouchSize()
     {
         return mvBodyCrouchSize;
     }
@@ -433,9 +433,9 @@ public:
 
     void SetEntityInFocus(iLuxEntity *apEntity)
     {
-        mpEntityInFocus =apEntity;
+        mpEntityInFocus = apEntity;
     }
-    iLuxEntity* GetEntityInFocus()
+    iLuxEntity *GetEntityInFocus()
     {
         return mpEntityInFocus;
     }
@@ -443,9 +443,9 @@ public:
 
     void SetBodyInFocus(iPhysicsBody *apBody)
     {
-        mpBodyInFocus =apBody;
+        mpBodyInFocus = apBody;
     }
-    iPhysicsBody* GetBodyInFocus()
+    iPhysicsBody *GetBodyInFocus()
     {
         return mpBodyInFocus;
     }
@@ -549,20 +549,20 @@ public:
     {
         return mpFlashback;
     }
-    cLuxPlayerSpawnPS* GetHelperSpawnPS()
+    cLuxPlayerSpawnPS *GetHelperSpawnPS()
     {
         return mpSpawnPS;
     }
-    cLuxPlayerCamDirEffects* GetCamDirEffects()
+    cLuxPlayerCamDirEffects *GetCamDirEffects()
     {
         return mpCamDirEffects;
     }
-    cLuxPlayerInsanityCollapse* GetInsanityCollapse()
+    cLuxPlayerInsanityCollapse *GetInsanityCollapse()
     {
         return mpInsanityCollapse;
     }
 
-    cLuxPlayerHands* GetHands()
+    cLuxPlayerHands *GetHands()
     {
         return mpHands;
     }
@@ -653,7 +653,7 @@ private:
 
     float mfCurrentFocusDistance;
     iLuxEntity *mpEntityInFocus;
-    iPhysicsBody* mpBodyInFocus;
+    iPhysicsBody *mpBodyInFocus;
 
     tLuxEnemySet m_setTerrorEnemies;
 
@@ -740,9 +740,9 @@ private:
 
     cLuxPlayerHands *mpHands;
 
-    std::vector<iLuxPlayerHelper*> mvHelpers;
-    std::vector<iLuxMoveState*> mvMoveStates;
-    std::vector<iLuxPlayerState*> mvStates;
+    std::vector<iLuxPlayerHelper *> mvHelpers;
+    std::vector<iLuxMoveState *> mvMoveStates;
+    std::vector<iLuxPlayerState *> mvStates;
 
 
     //////////////////////

@@ -22,14 +22,14 @@ cLuxPropLoader_Lamp::cLuxPropLoader_Lamp(const tString& asName) : iLuxPropLoader
 
 iLuxProp *cLuxPropLoader_Lamp::CreateProp(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxProp_Lamp, (asName, alID,apMap) );
+    return hplNew(cLuxProp_Lamp, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPropLoader_Lamp::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    cLuxProp_Lamp  *pLamp = static_cast<cLuxProp_Lamp*>(apProp);
+    cLuxProp_Lamp  *pLamp = static_cast<cLuxProp_Lamp *>(apProp);
 
     ///////////////////////////
     // General
@@ -58,16 +58,16 @@ void cLuxPropLoader_Lamp::LoadVariables(iLuxProp *apProp, cXmlElement *apRootEle
 
 void cLuxPropLoader_Lamp::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
-    cLuxProp_Lamp  *pLamp = static_cast<cLuxProp_Lamp*>(apProp);
+    cLuxProp_Lamp  *pLamp = static_cast<cLuxProp_Lamp *>(apProp);
 
-    pLamp->SetLit(apInstanceVars->GetVarBool("Lit",true), false);
+    pLamp->SetLit(apInstanceVars->GetVarBool("Lit", true), false);
 
     /////////////////////////////////
     //Connect a light to the lamp
-    pLamp->msConnectionLight = apInstanceVars->GetVarString("ConnectedLight","");
-    pLamp->mfConnectionLightAmount = apInstanceVars->GetVarFloat("ConnectionLightAmount",0);
-    pLamp->mbConnectionLightUseOnColor = apInstanceVars->GetVarBool("ConnectionLightUseOnColor",false);
-    pLamp->mbConnectionLightUseSpec = apInstanceVars->GetVarBool("ConnectionLightUseSpec",false);
+    pLamp->msConnectionLight = apInstanceVars->GetVarString("ConnectedLight", "");
+    pLamp->mfConnectionLightAmount = apInstanceVars->GetVarFloat("ConnectionLightAmount", 0);
+    pLamp->mbConnectionLightUseOnColor = apInstanceVars->GetVarBool("ConnectionLightUseOnColor", false);
+    pLamp->mbConnectionLightUseSpec = apInstanceVars->GetVarBool("ConnectionLightUseSpec", false);
 }
 //-----------------------------------------------------------------------
 
@@ -112,7 +112,7 @@ void cLuxLampLightConnection::Update(double adFixedDelta)
 
         cColor lightColor = pLampConnection->mbUseLightOnColor ?    pLamp->mvEffectLightData[0].mOnColor :
                             pLamp->mvLights[0]->GetDiffuseColor();
-        if(pLampConnection->mbUseLightSpec==false)
+        if(pLampConnection->mbUseLightSpec == false)
         {
             lightColor.a = 0;
         }
@@ -128,7 +128,7 @@ void cLuxLampLightConnection::Update(double adFixedDelta)
 void cLuxLampLightConnection::AddLamp(cLuxProp_Lamp *apLamp, float afAmount, bool abUseOnColor, bool abUseSpec)
 {
     cLuxLampLightConnection_Lamp *pLampConnection = hplNew( cLuxLampLightConnection_Lamp, () );
-    pLampConnection->mpLamp =apLamp;
+    pLampConnection->mpLamp = apLamp;
     pLampConnection->mfAmount = afAmount;
     pLampConnection->mbUseLightOnColor = abUseOnColor;
     pLampConnection->mbUseLightSpec = abUseSpec;
@@ -164,7 +164,7 @@ void cLuxLampLightConnection::RemoveLamp(cLuxProp_Lamp *apLamp)
 
 //-----------------------------------------------------------------------
 
-cLuxProp_Lamp::cLuxProp_Lamp(const tString &asName,int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_Lamp)
+cLuxProp_Lamp::cLuxProp_Lamp(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName, alID, apMap, eLuxPropType_Lamp)
 {
     mbLit = true;
     mpLightConnection = NULL;
@@ -191,7 +191,7 @@ cLuxProp_Lamp::~cLuxProp_Lamp()
 
 bool cLuxProp_Lamp::CanInteract(iPhysicsBody *apBody)
 {
-    if(CanBeIgnitByPlayer() && mbLit==false)
+    if(CanBeIgnitByPlayer() && mbLit == false)
     {
         return true;
     }
@@ -220,18 +220,18 @@ bool cLuxProp_Lamp::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
     {
         /////////////////////
         // Check so has enough tinderboxes
-        if(gpBase->mpPlayer->GetTinderboxes()<=0)
+        if(gpBase->mpPlayer->GetTinderboxes() <= 0)
         {
-            gpBase->mpMessageHandler->SetMessage(kTranslate("Game","NoMoreTinderboxes"), 0);
+            gpBase->mpMessageHandler->SetMessage(kTranslate("Game", "NoMoreTinderboxes"), 0);
             return false;
         }
 
         /////////////////////
         // Add sanity
         float fIncreaseAmount = 1.0f - gpBase->mpPlayer->GetSanity() / 100.0f;
-        fIncreaseAmount = fIncreaseAmount*fIncreaseAmount; //Want exp curve
-        float fSanityAdd =    gpBase->mpGlobalDataHandler->GetLightLampMinSanityIncrease() * (1-fIncreaseAmount) +
-                              gpBase->mpGlobalDataHandler->GetLightLampMaxSanityIncrease()*fIncreaseAmount;
+        fIncreaseAmount = fIncreaseAmount * fIncreaseAmount; //Want exp curve
+        float fSanityAdd =    gpBase->mpGlobalDataHandler->GetLightLampMinSanityIncrease() * (1 - fIncreaseAmount) +
+                              gpBase->mpGlobalDataHandler->GetLightLampMaxSanityIncrease() * fIncreaseAmount;
         gpBase->mpPlayer->AddSanity(fSanityAdd, false);
 
         ////////////////////
@@ -283,7 +283,7 @@ void cLuxProp_Lamp::BeforePropDestruction()
 eLuxFocusCrosshair cLuxProp_Lamp::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
     //if(CanBeIgnitByPlayer())    return eLuxFocusCrosshair_Ignite;
-    if(mCustomFocusCrossHair != eLuxFocusCrosshair_Default && mbLit==true)
+    if(mCustomFocusCrossHair != eLuxFocusCrosshair_Default && mbLit == true)
     {
         return mCustomFocusCrossHair;
     }
@@ -298,7 +298,7 @@ eLuxFocusCrosshair cLuxProp_Lamp::GetFocusCrosshair(iPhysicsBody *apBody, const 
 
 tWString cLuxProp_Lamp::GetFocusText()
 {
-    if(CanInteract(GetMainBody()) && mbLit==false)
+    if(CanInteract(GetMainBody()) && mbLit == false)
     {
         return _W("x ") + cString::ToStringW(gpBase->mpPlayer->GetTinderboxes());
     }
@@ -375,7 +375,7 @@ void cLuxProp_Lamp::SetupLampLightConnection()
 
 bool cLuxProp_Lamp::CanBeIgnitByPlayer()
 {
-    if(mbLit || mbCanBeLitByPlayer==false)
+    if(mbLit || mbCanBeLitByPlayer == false)
     {
         return false;
     }
@@ -401,7 +401,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxProp_Lamp::CreateSaveData()
+iLuxEntity_SaveData *cLuxProp_Lamp::CreateSaveData()
 {
     return hplNew(cLuxProp_Lamp_SaveData, ());
 }
@@ -413,16 +413,16 @@ void cLuxProp_Lamp::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxProp_Lamp_SaveData *pData = static_cast<cLuxProp_Lamp_SaveData*>(apSaveData);
+    cLuxProp_Lamp_SaveData *pData = static_cast<cLuxProp_Lamp_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyToVar(pData,mbLit);
-    kCopyToVar(pData,mbLightConnectionSetup);
-    kCopyToVar(pData,msConnectionLight);
-    kCopyToVar(pData,mfConnectionLightAmount);
-    kCopyToVar(pData,mbConnectionLightUseOnColor);
-    kCopyToVar(pData,mbConnectionLightUseSpec);
+    kCopyToVar(pData, mbLit);
+    kCopyToVar(pData, mbLightConnectionSetup);
+    kCopyToVar(pData, msConnectionLight);
+    kCopyToVar(pData, mfConnectionLightAmount);
+    kCopyToVar(pData, mbConnectionLightUseOnColor);
+    kCopyToVar(pData, mbConnectionLightUseSpec);
 }
 
 //-----------------------------------------------------------------------
@@ -432,16 +432,16 @@ void cLuxProp_Lamp::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxProp_Lamp_SaveData *pData = static_cast<cLuxProp_Lamp_SaveData*>(apSaveData);
+    cLuxProp_Lamp_SaveData *pData = static_cast<cLuxProp_Lamp_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
     kCopyFromVar(pData,    mbLit);
-    kCopyFromVar(pData,mbLightConnectionSetup);
-    kCopyFromVar(pData,msConnectionLight);
-    kCopyFromVar(pData,mfConnectionLightAmount);
-    kCopyFromVar(pData,mbConnectionLightUseOnColor);
-    kCopyFromVar(pData,mbConnectionLightUseSpec);
+    kCopyFromVar(pData, mbLightConnectionSetup);
+    kCopyFromVar(pData, msConnectionLight);
+    kCopyFromVar(pData, mfConnectionLightAmount);
+    kCopyFromVar(pData, mbConnectionLightUseOnColor);
+    kCopyFromVar(pData, mbConnectionLightUseSpec);
 }
 
 //-----------------------------------------------------------------------

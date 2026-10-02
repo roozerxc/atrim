@@ -126,7 +126,7 @@ public:
     {
         return mbActive;
     }
-    const tString& GetFileName()
+    const tString &GetFileName()
     {
         return msFileName;
     }
@@ -134,7 +134,7 @@ public:
     void Update(double adFixedDelta);
 private:
     void GenerateAllSpawnPos();
-    cParticleSystem* CreatePS(cLuxPlayerSpawnPS_SpawnPos *apSpawnPos);
+    cParticleSystem *CreatePS(cLuxPlayerSpawnPS_SpawnPos *apSpawnPos);
 
     void DestroyAllSpawnPoints();
 
@@ -174,7 +174,7 @@ public:
     void OnDraw(double adFrameTime);
 
 private:
-    std::vector<cGuiGfxElement*> mvNoiseGfx;
+    std::vector<cGuiGfxElement *> mvNoiseGfx;
     float mfEffectStartHealth;
     float mfMinMoveMul;
     float mfMaxPantCount;
@@ -396,7 +396,7 @@ public:
     void CreateWorldEntities(cLuxMap *apMap);
     void DestroyWorldEntities(cLuxMap *apMap);
 
-    void SetActive(bool abX, bool abUseEffects, bool abCheckForOilAndItems=true, bool abCheckIfAllowed=true);
+    void SetActive(bool abX, bool abUseEffects, bool abCheckForOilAndItems = true, bool abCheckIfAllowed = true);
     bool IsActive()
     {
         return mbActive;
@@ -408,7 +408,7 @@ public:
         return mbDisabled;
     }
 
-    iLight* GetLight()
+    iLight *GetLight()
     {
         return mpLight;
     }
@@ -473,15 +473,15 @@ public:
     }
     void SetShowHint(bool abX)
     {
-        mbShowHint=abX;
+        mbShowHint = abX;
     }
 
     void SetHint(const tString& asCat, const tString& asEntry);
-    const tString& GetHintCat()
+    const tString &GetHintCat()
     {
         return msHintCat;
     }
-    const tString& GetHintEntry()
+    const tString &GetHintEntry()
     {
         return msHintEntry;
     }
@@ -587,7 +587,7 @@ private:
 class cLuxPlayerDamageData
 {
 public:
-    std::vector<cGuiGfxElement*> mvImages;
+    std::vector<cGuiGfxElement *> mvImages;
 };
 
 class cLuxPlayerHudEffect_Splash
@@ -693,7 +693,7 @@ public:
     void CreateWorldEntities(cLuxMap *apMap);
     void DestroyWorldEntities(cLuxMap *apMap);
 
-    cLightPoint* GetAmbientLight()
+    cLightPoint *GetAmbientLight()
     {
         return mpAmbientLight;
     }

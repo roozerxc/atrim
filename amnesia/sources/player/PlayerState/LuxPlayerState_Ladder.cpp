@@ -19,14 +19,14 @@ cLuxPlayerState_Ladder::cLuxPlayerState_Ladder(cLuxPlayer *apPlayer) : iLuxPlaye
 {
     mpLadder = NULL;
 
-    mfUpSpeed = gpBase->mpGameCfg->GetFloat("Player_Ladder","UpSpeed",0);
-    mfDownSpeed = gpBase->mpGameCfg->GetFloat("Player_Ladder","DownSpeed",0);
+    mfUpSpeed = gpBase->mpGameCfg->GetFloat("Player_Ladder", "UpSpeed", 0);
+    mfDownSpeed = gpBase->mpGameCfg->GetFloat("Player_Ladder", "DownSpeed", 0);
 
-    mfStepLength = gpBase->mpGameCfg->GetFloat("Player_Ladder","StepLength",0);
+    mfStepLength = gpBase->mpGameCfg->GetFloat("Player_Ladder", "StepLength", 0);
 
-    mfStepCount =0;
+    mfStepCount = 0;
 
-    mlState =0;
+    mlState = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -63,21 +63,21 @@ void cLuxPlayerState_Ladder::OnEnterState(eLuxPlayerState aPrevState)
     pCharBody->StopMovement();
     pCharBody->ResetClimbing();
 
-    cLuxMoveState_Normal *pMoveState = static_cast<cLuxMoveState_Normal*>(mpPlayer->GetMoveStateData(eLuxMoveState_Normal));
+    cLuxMoveState_Normal *pMoveState = static_cast<cLuxMoveState_Normal *>(mpPlayer->GetMoveStateData(eLuxMoveState_Normal));
     pMoveState->SetCrouch(false);
     pMoveState->ResetJumping();
 
     /////////////////////////////////////
     // Holster lantern
     mbLanternDrawn = mpPlayer->GetHelperLantern()->IsActive();
-    mpPlayer->GetHelperLantern()->SetActive(false,true,true, false);
+    mpPlayer->GetHelperLantern()->SetActive(false, true, true, false);
 
     ///////////////////////////////////////
     // Set up variables
-    mlState =0;
-    mfStepCount =0;
+    mlState = 0;
+    mfStepCount = 0;
     mbPlayedSound = false;
-    mfMoveMul =0;
+    mfMoveMul = 0;
 
     ///////////////////////////////////////
     // Save pitch limits
@@ -110,8 +110,8 @@ void cLuxPlayerState_Ladder::OnEnterState(eLuxPlayerState aPrevState)
     vStartRot.x = mpPlayer->GetCamera()->GetPitch();
     vStartRot.y = mpPlayer->GetCamera()->GetYaw();
 
-    mvRotAdd.x = cMath::GetAngleDistance(vStartRot.x, mvGoalRot.x,k2Pif) / fTime;
-    mvRotAdd.y = cMath::GetAngleDistance(vStartRot.y, mvGoalRot.y,k2Pif) / fTime;
+    mvRotAdd.x = cMath::GetAngleDistance(vStartRot.x, mvGoalRot.x, k2Pif) / fTime;
+    mvRotAdd.y = cMath::GetAngleDistance(vStartRot.y, mvGoalRot.y, k2Pif) / fTime;
 
     /////////////////////////////////////
     // Play attach sound
@@ -151,7 +151,7 @@ void cLuxPlayerState_Ladder::Update(double adFixedDelta)
 
     //////////////////////////////////
     // Attach To Ladder
-    if(mlState ==0)
+    if(mlState == 0)
     {
         mfTimeCount -= (float)adFixedDelta;
 
@@ -163,7 +163,7 @@ void cLuxPlayerState_Ladder::Update(double adFixedDelta)
         pCam->AddYaw(mvRotAdd.y * (float)adFixedDelta);
         pCharBody->SetYaw(pCam->GetYaw());
 
-        if(mfTimeCount<=0)
+        if(mfTimeCount <= 0)
         {
             mpPlayer->GetCharacterBody()->SetTestCollision(true);
 
@@ -185,11 +185,11 @@ void cLuxPlayerState_Ladder::Update(double adFixedDelta)
         //Up
         if(mfMoveMul > 0)
         {
-            mvCharPosition.y += mfMoveMul*mfUpSpeed* (float)adFixedDelta;
+            mvCharPosition.y += mfMoveMul * mfUpSpeed * (float)adFixedDelta;
 
-            if(mfStepCount<0)
+            if(mfStepCount < 0)
             {
-                mfStepCount=0;
+                mfStepCount = 0;
             }
         }
         //Down
@@ -197,9 +197,9 @@ void cLuxPlayerState_Ladder::Update(double adFixedDelta)
         {
             mvCharPosition.y += mfMoveMul * mfDownSpeed * (float)adFixedDelta;
 
-            if(mfStepCount>0)
+            if(mfStepCount > 0)
             {
-                mfStepCount=0;
+                mfStepCount = 0;
             }
         }
         //Still
@@ -207,25 +207,25 @@ void cLuxPlayerState_Ladder::Update(double adFixedDelta)
         {
             if(!mbPlayedSound)
             {
-                if(mfStepCount>0)
+                if(mfStepCount > 0)
                 {
                     PlaySound("up");
                 }
-                if(mfStepCount<0)
+                if(mfStepCount < 0)
                 {
                     PlaySound("down");
                 }
             }
 
-            mfStepCount =0;
+            mfStepCount = 0;
             mbPlayedSound = false;
         }
 
         /////////////////////////////////
         //Check collision
-        if(pCharBody->CheckCharacterFits(mvCharPosition,false,0,NULL,kEpsilonf)==false)
+        if(pCharBody->CheckCharacterFits(mvCharPosition, false, 0, NULL, kEpsilonf) == false)
         {
-            mfMoveMul =0;
+            mfMoveMul = 0;
             return;
         }
 
@@ -236,7 +236,7 @@ void cLuxPlayerState_Ladder::Update(double adFixedDelta)
             mfStepCount += mfMoveMul * mfUpSpeed * (float)adFixedDelta;
             if(mfStepCount >= mfStepLength)
             {
-                mfStepCount =0;
+                mfStepCount = 0;
                 PlaySound("up");
                 mbPlayedSound = true;
             }
@@ -246,7 +246,7 @@ void cLuxPlayerState_Ladder::Update(double adFixedDelta)
             mfStepCount += mfMoveMul * mfDownSpeed * (float)adFixedDelta;
             if(mfStepCount <= -mfStepLength)
             {
-                mfStepCount =0;
+                mfStepCount = 0;
                 PlaySound("down");
                 mbPlayedSound = true;
             }
@@ -259,16 +259,16 @@ void cLuxPlayerState_Ladder::Update(double adFixedDelta)
 
         /////////////////////////////////
         //Get the rays that will be tested to see if something solid was hit when clibming down.
-        cVector3f vGroundRayStart1 = pCharBody->GetFeetPosition() + cVector3f(0,0.05f,0) +
-                                     mpLadder->GetForward()*pCharBody->GetSize().x*0.7f;
-        cVector3f vGroundRayEnd1 = vGroundRayStart1 - cVector3f(0,0.1f,0);
+        cVector3f vGroundRayStart1 = pCharBody->GetFeetPosition() + cVector3f(0, 0.05f, 0) +
+                                     mpLadder->GetForward() * pCharBody->GetSize().x * 0.7f;
+        cVector3f vGroundRayEnd1 = vGroundRayStart1 - cVector3f(0, 0.1f, 0);
 
-        cVector3f vGroundRayStart2 = pCharBody->GetFeetPosition() + cVector3f(0,0.05f,0);
-        cVector3f vGroundRayEnd2 = vGroundRayStart2 - cVector3f(0,0.1f,0);
+        cVector3f vGroundRayStart2 = pCharBody->GetFeetPosition() + cVector3f(0, 0.05f, 0);
+        cVector3f vGroundRayEnd2 = vGroundRayStart2 - cVector3f(0, 0.1f, 0);
 
         ///////////////////////////
         //Check if at top
-        if(mfMoveMul > 0 && (mvCharPosition.y - pCharBody->GetSize().y*0.5f) > mpLadder->GetMaxY())
+        if(mfMoveMul > 0 && (mvCharPosition.y - pCharBody->GetSize().y * 0.5f) > mpLadder->GetMaxY())
         {
             mlState = 2;
             mfLeaveAtTopCount = 2;
@@ -277,33 +277,33 @@ void cLuxPlayerState_Ladder::Update(double adFixedDelta)
         ///////////////////////////
         //Check if at bottom
         else if(    mfMoveMul < 0 &&
-                    (  (mvCharPosition.y - pCharBody->GetSize().y/2) < mpLadder->GetMinY() ||
-                       pCharBody->CheckRayIntersection(vGroundRayStart1, vGroundRayEnd1,NULL,NULL) ||
-                       pCharBody->CheckRayIntersection(vGroundRayStart2, vGroundRayEnd2,NULL,NULL)
+                    (  (mvCharPosition.y - pCharBody->GetSize().y / 2) < mpLadder->GetMinY() ||
+                       pCharBody->CheckRayIntersection(vGroundRayStart1, vGroundRayEnd1, NULL, NULL) ||
+                       pCharBody->CheckRayIntersection(vGroundRayStart2, vGroundRayEnd2, NULL, NULL)
                     )
                )
         {
             mpPlayer->ChangeState(eLuxPlayerState_Normal);
         }
 
-        mfMoveMul =0;
+        mfMoveMul = 0;
     }
     //////////////////////////////////
     // On the top of the ladder
     else if(mlState == 2)
     {
         //mfLeaveAtTopCount -= (float)adFixedDelta;
-        pCharBody->Move(eCharDir_Forward,1);
+        pCharBody->Move(eCharDir_Forward, 1);
 
-        cVector3f vRayStart = pCharBody->GetFeetPosition() + cVector3f(0,0.1f,0);
-        cVector3f vRayEnd = pCharBody->GetFeetPosition() - cVector3f(0,0.3f,0);
+        cVector3f vRayStart = pCharBody->GetFeetPosition() + cVector3f(0, 0.1f, 0);
+        cVector3f vRayEnd = pCharBody->GetFeetPosition() - cVector3f(0, 0.3f, 0);
 
         mfLeaveAtTopCount -= (float)adFixedDelta;
-        if( pCharBody->CheckRayIntersection(vRayStart, vRayEnd,NULL,NULL))
+        if( pCharBody->CheckRayIntersection(vRayStart, vRayEnd, NULL, NULL))
         {
             mpPlayer->ChangeState(eLuxPlayerState_Normal);
         }
-        else if(mfLeaveAtTopCount <=0)
+        else if(mfLeaveAtTopCount <= 0)
         {
             mpPlayer->ChangeState(eLuxPlayerState_Normal);
         }
@@ -320,7 +320,7 @@ void cLuxPlayerState_Ladder::PostUpdate(double adFixedDelta)
 //-----------------------------------------------------------------------
 
 
-void cLuxPlayerState_Ladder::OnDraw(cGuiSet *apGuiSet,double adFrameTime)
+void cLuxPlayerState_Ladder::OnDraw(cGuiSet *apGuiSet, double adFrameTime)
 {
 
 }
@@ -328,7 +328,7 @@ void cLuxPlayerState_Ladder::OnDraw(cGuiSet *apGuiSet,double adFrameTime)
 //-----------------------------------------------------------------------
 
 
-cGuiGfxElement* cLuxPlayerState_Ladder::GetCrosshair()
+cGuiGfxElement *cLuxPlayerState_Ladder::GetCrosshair()
 {
     return NULL;
 }
@@ -339,7 +339,7 @@ bool cLuxPlayerState_Ladder::OnMove(eCharDir aDir, float afMul)
 {
     ////////////////////////////////////
     //If in final states, do not move.
-    if(mlState==0 || mlState==2)
+    if(mlState == 0 || mlState == 2)
     {
         return false;
     }
@@ -358,7 +358,7 @@ bool cLuxPlayerState_Ladder::OnMove(eCharDir aDir, float afMul)
 bool cLuxPlayerState_Ladder::OnAddYaw(float afAmount)
 {
     //Do not move camera when attaching
-    if(mlState==0)
+    if(mlState == 0)
     {
         return false;
     }
@@ -373,7 +373,7 @@ bool cLuxPlayerState_Ladder::OnAddYaw(float afAmount)
 bool cLuxPlayerState_Ladder::OnAddPitch(float afAmount)
 {
     //Do not move camera when attaching
-    if(mlState==0)
+    if(mlState == 0)
     {
         return false;
     }
@@ -397,7 +397,7 @@ bool cLuxPlayerState_Ladder::OnJump(bool abPressed)
     if(abPressed)
     {
         mpPlayer->ChangeState(eLuxPlayerState_Normal);
-        cLuxMoveState_Normal *pMoveState = static_cast<cLuxMoveState_Normal*>(mpPlayer->GetMoveStateData(eLuxMoveState_Normal));
+        cLuxMoveState_Normal *pMoveState = static_cast<cLuxMoveState_Normal *>(mpPlayer->GetMoveStateData(eLuxMoveState_Normal));
         pMoveState->Jump();
     }
 
@@ -413,7 +413,7 @@ bool cLuxPlayerState_Ladder::OnCrouch(bool abPressed)
 
 //-----------------------------------------------------------------------
 
-bool cLuxPlayerState_Ladder::OnDoAction(eLuxPlayerAction aAction,bool abPressed)
+bool cLuxPlayerState_Ladder::OnDoAction(eLuxPlayerAction aAction, bool abPressed)
 {
     if(abPressed)
     {
@@ -439,7 +439,7 @@ bool cLuxPlayerState_Ladder::OnDoAction(eLuxPlayerAction aAction,bool abPressed)
 //-----------------------------------------------------------------------
 
 
-float cLuxPlayerState_Ladder::DrawDebug(cGuiSet *apSet,iFontData *apFont, float afStartY)
+float cLuxPlayerState_Ladder::DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY)
 {
     return afStartY;
 }
@@ -455,8 +455,8 @@ float cLuxPlayerState_Ladder::DrawDebug(cGuiSet *apSet,iFontData *apFont, float 
 
 void cLuxPlayerState_Ladder::PlaySound(const tString &asType)
 {
-    tString sSound = "player_ladder_"+mpLadder->GetMaterial()+"_"+asType;
-    gpBase->mpHelpFuncs->PlayGuiSoundData(sSound,eSoundEntryType_World);
+    tString sSound = "player_ladder_" + mpLadder->GetMaterial() + "_" + asType;
+    gpBase->mpHelpFuncs->PlayGuiSoundData(sSound, eSoundEntryType_World);
 }
 
 //-----------------------------------------------------------------------
@@ -465,8 +465,8 @@ void cLuxPlayerState_Ladder::SetupHeadTurnLimits()
 {
     cCamera *pCam = mpPlayer->GetCamera();
 
-    cVector2f vMaxHeadLimits = cVector2f(cMath::ToRad(120),cMath::ToRad(79));
-    cVector2f vMinHeadLimits = cVector2f(cMath::ToRad(-120),cMath::ToRad(-60));
+    cVector2f vMaxHeadLimits = cVector2f(cMath::ToRad(120), cMath::ToRad(79));
+    cVector2f vMinHeadLimits = cVector2f(cMath::ToRad(-120), cMath::ToRad(-60));
     float fXmax = pCam->GetYaw() + vMaxHeadLimits.x;
     float fYmax = pCam->GetPitch() + vMaxHeadLimits.y;
 
@@ -519,7 +519,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxPlayerState_SaveData* cLuxPlayerState_Ladder::CreateSaveData()
+iLuxPlayerState_SaveData *cLuxPlayerState_Ladder::CreateSaveData()
 {
     return hplNew(cLuxPlayerState_Ladder_SaveData, ());
 }
@@ -532,7 +532,7 @@ void cLuxPlayerState_Ladder::SaveToSaveData(iLuxPlayerState_SaveData* apSaveData
     ///////////////////////
     // Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxPlayerState_Ladder_SaveData *pData = static_cast<cLuxPlayerState_Ladder_SaveData*>(apSaveData);
+    cLuxPlayerState_Ladder_SaveData *pData = static_cast<cLuxPlayerState_Ladder_SaveData *>(apSaveData);
 
 
     ///////////////////////
@@ -582,15 +582,15 @@ void cLuxPlayerState_Ladder::LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxPla
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataBeforeEnter(apMap,apSaveData);
-    cLuxPlayerState_Ladder_SaveData *pData = static_cast<cLuxPlayerState_Ladder_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataBeforeEnter(apMap, apSaveData);
+    cLuxPlayerState_Ladder_SaveData *pData = static_cast<cLuxPlayerState_Ladder_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars
-    iLuxEntity *pEntity = gpBase->mpMapHandler->GetCurrentMap()->GetEntityByID(pData->mlLadderID,eLuxEntityType_Area, eLuxAreaType_Ladder);
+    iLuxEntity *pEntity = gpBase->mpMapHandler->GetCurrentMap()->GetEntityByID(pData->mlLadderID, eLuxEntityType_Area, eLuxAreaType_Ladder);
     if(pEntity)
     {
-        mpLadder = static_cast<cLuxArea_Ladder*>(pEntity);
+        mpLadder = static_cast<cLuxArea_Ladder *>(pEntity);
     }
 
     kCopyFromVar(pData, mvStartPosition);
@@ -604,8 +604,8 @@ void cLuxPlayerState_Ladder::LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlay
 {
     ///////////////////////
     // Init
-    super_class::LoadFromSaveDataAfterEnter(apMap,apSaveData);
-    cLuxPlayerState_Ladder_SaveData *pData = static_cast<cLuxPlayerState_Ladder_SaveData*>(apSaveData);
+    super_class::LoadFromSaveDataAfterEnter(apMap, apSaveData);
+    cLuxPlayerState_Ladder_SaveData *pData = static_cast<cLuxPlayerState_Ladder_SaveData *>(apSaveData);
 
     ///////////////////////
     // Load vars
@@ -637,7 +637,7 @@ void cLuxPlayerState_Ladder::LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlay
 
     kCopyFromVar(pData, mbLanternDrawn);
 
-    if(mlState>0)
+    if(mlState > 0)
     {
         SetupHeadTurnLimits();
     }

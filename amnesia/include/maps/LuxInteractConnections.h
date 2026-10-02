@@ -21,7 +21,7 @@ class iLuxInteractConnection_SaveData : public iSerializable
 {
     kSerializableClassInit(iLuxInteractConnection_SaveData)
 public:
-    virtual iLuxInteractConnection* CreateConnection(cLuxMap *apMap)=0;
+    virtual iLuxInteractConnection *CreateConnection(cLuxMap *apMap) = 0;
     virtual void FromConnection(iLuxInteractConnection* apConnection);
 
     tString msName;
@@ -40,23 +40,23 @@ class iLuxInteractConnection
 {
     friend class iLuxInteractConnection_SaveData;
 public:
-    iLuxInteractConnection(const tString& asName, iLuxProp *apProp,bool abInvert, int alStatesUsed)
+    iLuxInteractConnection(const tString& asName, iLuxProp *apProp, bool abInvert, int alStatesUsed)
         : msName(asName), mpProp(apProp), mbInteractionOnly(true), mbInvert(abInvert), mlStateUsed(alStatesUsed) {}
     virtual ~iLuxInteractConnection() {}
 
     ///////////////
     //General
-    virtual void Update(double adFixedDelta)=0;
-    virtual void UpdateProp(double adFixedDelta)=0;
+    virtual void Update(double adFixedDelta) = 0;
+    virtual void UpdateProp(double adFixedDelta) = 0;
 
     ///////////////
     //Callbacks
-    virtual void OnTurn(float afAngleAdd, float afT)=0;
-    virtual void OnLimit(int alState)=0;
+    virtual void OnTurn(float afAngleAdd, float afT) = 0;
+    virtual void OnLimit(int alState) = 0;
 
     ///////////////
     //Properties
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -72,12 +72,12 @@ public:
 
     ///////////////
     //Save
-    virtual iLuxInteractConnection_SaveData* CreateSaveData()=0;
+    virtual iLuxInteractConnection_SaveData *CreateSaveData() = 0;
 
 protected:
     tString msName;
     bool mbInteractionOnly;
-    iLuxProp* mpProp;
+    iLuxProp *mpProp;
 
     bool mbInvert;
     int mlStateUsed;
@@ -89,7 +89,7 @@ class cLuxInteractConnection_Rope_SaveData :  public iLuxInteractConnection_Save
 {
     kSerializableClassInit(cLuxInteractConnection_Rope_SaveData)
 public:
-    iLuxInteractConnection* CreateConnection(cLuxMap *apMap);
+    iLuxInteractConnection *CreateConnection(cLuxMap *apMap);
     void FromConnection(iLuxInteractConnection* apConnection);
 
     int mlRopeId;
@@ -121,7 +121,7 @@ public:
 
     ///////////////
     //Script
-    iLuxInteractConnection_SaveData* CreateSaveData();
+    iLuxInteractConnection_SaveData *CreateSaveData();
 
 private:
     iPhysicsRope *mpRope;
@@ -138,7 +138,7 @@ class cLuxInteractConnection_MoveObject_SaveData :  public iLuxInteractConnectio
 {
     kSerializableClassInit(cLuxInteractConnection_MoveObject_SaveData)
 public:
-    iLuxInteractConnection* CreateConnection(cLuxMap *apMap);
+    iLuxInteractConnection *CreateConnection(cLuxMap *apMap);
     void FromConnection(iLuxInteractConnection* apConnection);
 
     int mlMoveObjectId;
@@ -168,7 +168,7 @@ public:
 
     ///////////////
     //Script
-    iLuxInteractConnection_SaveData* CreateSaveData();
+    iLuxInteractConnection_SaveData *CreateSaveData();
 
 private:
     cLuxProp_MoveObject *mpMoveObject;

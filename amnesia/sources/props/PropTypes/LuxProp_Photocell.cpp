@@ -19,14 +19,14 @@ cLuxPropLoader_Photocell::cLuxPropLoader_Photocell(const tString& asName) : iLux
 
 iLuxProp *cLuxPropLoader_Photocell::CreateProp(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxProp_Photocell, (asName, alID,apMap) );
+    return hplNew(cLuxProp_Photocell, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPropLoader_Photocell::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    cLuxProp_Photocell  *pPhotocell = static_cast<cLuxProp_Photocell*>(apProp);
+    cLuxProp_Photocell  *pPhotocell = static_cast<cLuxProp_Photocell *>(apProp);
 
 
 }
@@ -35,7 +35,7 @@ void cLuxPropLoader_Photocell::LoadVariables(iLuxProp *apProp, cXmlElement *apRo
 
 void cLuxPropLoader_Photocell::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
-    cLuxProp_Photocell  *pPhotocell = static_cast<cLuxProp_Photocell*>(apProp);
+    cLuxProp_Photocell  *pPhotocell = static_cast<cLuxProp_Photocell *>(apProp);
 
     pPhotocell->mfLightLevelOnLimit = apInstanceVars->GetVarFloat("LightLevelOnLimit", 0);
     pPhotocell->mfLightLevelOffLimit = apInstanceVars->GetVarFloat("LightLevelOffLimit", 0);
@@ -48,7 +48,7 @@ void cLuxPropLoader_Photocell::LoadInstanceVariables(iLuxProp *apProp, cResource
 
 //-----------------------------------------------------------------------
 
-cLuxProp_Photocell::cLuxProp_Photocell(const tString &asName,int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_Photocell)
+cLuxProp_Photocell::cLuxProp_Photocell(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName, alID, apMap, eLuxPropType_Photocell)
 {
     mfLightLevel = 0;
     mfLightLevelCheckCount = 0;
@@ -170,18 +170,18 @@ void cLuxProp_Photocell::UpdateLightLevel(double adFixedDelta)
 
     mfLightLevel = 0;
     cBoundingVolume *pBV = mpMeshEntity->GetBoundingVolume();
-    cVector3f vAxisAdd = pBV->GetSize()*0.5f + cVector3f(0.02f);
+    cVector3f vAxisAdd = pBV->GetSize() * 0.5f + cVector3f(0.02f);
     cVector3f vSamplePos[6] =
     {
-        pBV->GetWorldCenter() + cVector3f(vAxisAdd.x,0,0),
-        pBV->GetWorldCenter() - cVector3f(vAxisAdd.x,0,0),
-        pBV->GetWorldCenter() + cVector3f(0,vAxisAdd.y,0),
-        pBV->GetWorldCenter() - cVector3f(0,vAxisAdd.y,0),
-        pBV->GetWorldCenter() + cVector3f(0,0,vAxisAdd.z),
-        pBV->GetWorldCenter() - cVector3f(0,0,vAxisAdd.z)
+        pBV->GetWorldCenter() + cVector3f(vAxisAdd.x, 0, 0),
+        pBV->GetWorldCenter() - cVector3f(vAxisAdd.x, 0, 0),
+        pBV->GetWorldCenter() + cVector3f(0, vAxisAdd.y, 0),
+        pBV->GetWorldCenter() - cVector3f(0, vAxisAdd.y, 0),
+        pBV->GetWorldCenter() + cVector3f(0, 0, vAxisAdd.z),
+        pBV->GetWorldCenter() - cVector3f(0, 0, vAxisAdd.z)
     };
 
-    for(int i=0; i<6; ++i)
+    for(int i = 0; i < 6; ++i)
     {
         float fLight = gpBase->mpMapHelper->GetLightLevelAtPos(vSamplePos[i]);
         if(fLight > mfLightLevel)
@@ -232,7 +232,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxProp_Photocell::CreateSaveData()
+iLuxEntity_SaveData *cLuxProp_Photocell::CreateSaveData()
 {
     return hplNew(cLuxProp_Photocell_SaveData, ());
 }
@@ -244,15 +244,15 @@ void cLuxProp_Photocell::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxProp_Photocell_SaveData *pData = static_cast<cLuxProp_Photocell_SaveData*>(apSaveData);
+    cLuxProp_Photocell_SaveData *pData = static_cast<cLuxProp_Photocell_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyToVar(pData,mbLit);
-    kCopyToVar(pData,mfLightLevel);
-    kCopyToVar(pData,mfLightLevelCheckCount);
-    kCopyToVar(pData,mfLightLevelOnLimit);
-    kCopyToVar(pData,mfLightLevelOffLimit);
+    kCopyToVar(pData, mbLit);
+    kCopyToVar(pData, mfLightLevel);
+    kCopyToVar(pData, mfLightLevelCheckCount);
+    kCopyToVar(pData, mfLightLevelOnLimit);
+    kCopyToVar(pData, mfLightLevelOffLimit);
 }
 
 //-----------------------------------------------------------------------
@@ -262,15 +262,15 @@ void cLuxProp_Photocell::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxProp_Photocell_SaveData *pData = static_cast<cLuxProp_Photocell_SaveData*>(apSaveData);
+    cLuxProp_Photocell_SaveData *pData = static_cast<cLuxProp_Photocell_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyFromVar(pData,mbLit);
-    kCopyFromVar(pData,mfLightLevel);
-    kCopyFromVar(pData,mfLightLevelCheckCount);
-    kCopyFromVar(pData,mfLightLevelOnLimit);
-    kCopyFromVar(pData,mfLightLevelOffLimit);
+    kCopyFromVar(pData, mbLit);
+    kCopyFromVar(pData, mfLightLevel);
+    kCopyFromVar(pData, mfLightLevelCheckCount);
+    kCopyFromVar(pData, mfLightLevelOnLimit);
+    kCopyFromVar(pData, mfLightLevelOffLimit);
 }
 
 //-----------------------------------------------------------------------

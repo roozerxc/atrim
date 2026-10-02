@@ -18,27 +18,27 @@ public:
     iLuxMoveState(cLuxPlayer *apPlayer);
     virtual ~iLuxMoveState();
 
-    virtual void OnMapEnter()=0;
+    virtual void OnMapEnter() = 0;
 
-    virtual void OnEnterState(eLuxMoveState aPrevState)=0;
-    virtual void OnLeaveState(eLuxMoveState aNewState)=0;
+    virtual void OnEnterState(eLuxMoveState aPrevState) = 0;
+    virtual void OnLeaveState(eLuxMoveState aNewState) = 0;
 
     void Update(double adFixedDelta);
 
-    virtual bool GetAllowsInteraction()=0;
+    virtual bool GetAllowsInteraction() = 0;
 
-    virtual bool OnMove(eCharDir aDir, float afMul)=0;
-    virtual bool OnAddYaw(float afAmount)=0;
-    virtual bool OnAddPitch(float afAmount)=0;
+    virtual bool OnMove(eCharDir aDir, float afMul) = 0;
+    virtual bool OnAddYaw(float afAmount) = 0;
+    virtual bool OnAddPitch(float afAmount) = 0;
 
-    virtual void OnRun(bool abActive)=0;
-    virtual void OnCrouch(bool abActive)=0;
-    virtual void OnJump(bool abActive)=0;
+    virtual void OnRun(bool abActive) = 0;
+    virtual void OnCrouch(bool abActive) = 0;
+    virtual void OnJump(bool abActive) = 0;
 
-    virtual void OnDraw(double adFrameTime)=0;
+    virtual void OnDraw(double adFrameTime) = 0;
 
 protected:
-    virtual void OnUpdate(double adFixedDelta)=0;
+    virtual void OnUpdate(double adFixedDelta) = 0;
 
     cLuxPlayer *mpPlayer;
 

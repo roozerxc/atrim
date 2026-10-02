@@ -23,7 +23,7 @@ public:
     eLuxActionCategory mCat;
 };
 
-typedef std::vector<cLuxAction*> tLuxActionVec;
+typedef std::vector<cLuxAction *> tLuxActionVec;
 typedef tLuxActionVec::iterator tLuxActionVecIt;
 
 //----------------------------------------------
@@ -41,7 +41,7 @@ public:
     int mlActionId;
 };
 
-typedef std::vector<cLuxInput*> tLuxInputVec;
+typedef std::vector<cLuxInput *> tLuxInputVec;
 typedef tLuxInputVec::iterator    tLuxInputVecIt;
 
 //----------------------------------------------
@@ -112,14 +112,14 @@ public:
     }
     void SetGamepadLookSensitivity(float afX);
 
-    iGamepad* GetGamepad()
+    iGamepad *GetGamepad()
     {
         return mpPad;
     }
 #endif
 
-    cLuxAction*   GetActionByName(const tString& asName);
-    cLuxAction*      GetActionById(int alId);
+    cLuxAction   *GetActionByName(const tString& asName);
+    cLuxAction      *GetActionById(int alId);
     tLuxActionVec GetActionsByCategory(eLuxActionCategory aCat);
 
     tLuxInputVec GetDefaultInputsByActionId(int alId);
@@ -157,7 +157,7 @@ private:
 
     void CreateActions();
 
-    void CreateSubAction(cAction *apAction,const tStringVec& avType, int alValue);
+    void CreateSubAction(cAction *apAction, const tStringVec& avType, int alValue);
 
     tStringVec GetInputValueStrings(const tString& asX);
 
@@ -193,7 +193,7 @@ private:
     float mfGamepadWalkSensitivity;
     float mfGamepadLookSensitivity;
     bool mbGamepadLookInvert;
-    iGamepad* mpPad;
+    iGamepad *mpPad;
     bool mbGamepadUIInput;
 #endif
 };

@@ -55,7 +55,7 @@ public:
 
     //////////////////////
     //Properties
-    cLuxInteractData_Slide* GetSlideData()
+    cLuxInteractData_Slide *GetSlideData()
     {
         return &mSlideData;
     }
@@ -82,7 +82,7 @@ public:
 
     void SetChangeStateCallback(const tString &asCallback)
     {
-        msChangeStateCallback=asCallback;
+        msChangeStateCallback = asCallback;
     }
 
     //////////////////////
@@ -91,7 +91,7 @@ public:
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);

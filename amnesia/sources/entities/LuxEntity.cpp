@@ -34,7 +34,7 @@ iLuxEntity::iLuxEntity(const tString &asName, int alID, cLuxMap *apMap, eLuxEnti
 
     msLookAtCallback = "";
     mbLookAtCallbackRemove = true;
-    mfLookAtCount =0;
+    mfLookAtCount = 0;
     mbIsLookedAt = false;
 
     mbInteractionDisabled = false;
@@ -44,7 +44,7 @@ iLuxEntity::iLuxEntity(const tString &asName, int alID, cLuxMap *apMap, eLuxEnti
 
 iLuxEntity::~iLuxEntity()
 {
-    for(size_t i=0; i<mvPreloadedMeshes.size(); ++i)
+    for(size_t i = 0; i < mvPreloadedMeshes.size(); ++i)
     {
         gpBase->mpEngine->GetResources()->GetMeshManager()->Destroy(mvPreloadedMeshes[i]);
     }
@@ -84,14 +84,14 @@ void iLuxEntity::UpdateLogic(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-cSoundEntity* iLuxEntity::PlaySound(const tString& asName, const tString& asFile, bool abRemoveWhenDone, bool abAttach)
+cSoundEntity *iLuxEntity::PlaySound(const tString& asName, const tString& asFile, bool abRemoveWhenDone, bool abAttach)
 {
     if(asFile == "")
     {
         return NULL;
     }
 
-    cSoundEntity *pSound = mpMap->GetWorld()->CreateSoundEntity(msName + "_" + asName,asFile,abRemoveWhenDone);
+    cSoundEntity *pSound = mpMap->GetWorld()->CreateSoundEntity(msName + "_" + asName, asFile, abRemoveWhenDone);
     iEntity3D *pAttachEnt = GetAttachEntity();
     if(pSound && pAttachEnt)
     {
@@ -112,24 +112,24 @@ cSoundEntity* iLuxEntity::PlaySound(const tString& asName, const tString& asFile
 
 void iLuxEntity::RunCallbackFunc(const tString& asType)
 {
-    if(msCallbackFunc=="")
+    if(msCallbackFunc == "")
     {
         return;
     }
 
-    mpMap->RunScript(msCallbackFunc + "(\""+msName+"\", \""+asType+"\")" );
+    mpMap->RunScript(msCallbackFunc + "(\"" + msName + "\", \"" + asType + "\")" );
 }
 
 //-----------------------------------------------------------------------
 
 void iLuxEntity::RunInteractCallbackFunc()
 {
-    if(msInteractCallback=="")
+    if(msInteractCallback == "")
     {
         return;
     }
 
-    mpMap->RunScript(msInteractCallback + "(\""+msName+"\")");
+    mpMap->RunScript(msInteractCallback + "(\"" + msName + "\")");
 
     if(mbInteractCallbackRemove)
     {
@@ -183,7 +183,7 @@ void iLuxEntity::SetPlayerLookAtCallback(const tString &asCallbackFunc, bool abR
 
 void iLuxEntity::AddConnection(const tString& asName, iLuxEntity *apEntity, bool abInvertStateSent, int alStatesUsed, const tString &asCallbackFunc)
 {
-    cLuxEntityConnection *pConnection = hplNew(cLuxEntityConnection, (asName, apEntity,abInvertStateSent, alStatesUsed, asCallbackFunc));
+    cLuxEntityConnection *pConnection = hplNew(cLuxEntityConnection, (asName, apEntity, abInvertStateSent, alStatesUsed, asCallbackFunc));
 
     mvConnections.push_back(pConnection);
 }
@@ -221,7 +221,7 @@ void iLuxEntity::UpdatePlayerLookAt(double adFixedDelta)
 
     //////////////////////////////////////
     // Iterate bodies and check frustum and then line of sight
-    bool bLookingAt=false;
+    bool bLookingAt = false;
     cCamera *pCamera = gpBase->mpPlayer->GetCamera();
     cFrustum *pFrustum = pCamera->GetFrustum();
     for(int i = 0; i < GetBodyNum(); i++)
@@ -244,7 +244,7 @@ void iLuxEntity::UpdatePlayerLookAt(double adFixedDelta)
         cVector3f vDir = vEnd - vStart;
         float fSqrDist = vDir.SqrLength();
 
-        if(fSqrDist > 50*50)
+        if(fSqrDist > 50 * 50)
         {
             continue;
         }
@@ -253,14 +253,14 @@ void iLuxEntity::UpdatePlayerLookAt(double adFixedDelta)
         // Check if center of screen is over object
         cVector3f vIntersection;
         cVector3f vCentreLineEnd = vStart + pCamera->GetForward() * 50;
-        if(cMath::CheckAABBLineIntersection(pBV->GetMin(), pBV->GetMax(), vStart, vCentreLineEnd,&vIntersection, NULL)==false)
+        if(cMath::CheckAABBLineIntersection(pBV->GetMin(), pBV->GetMax(), vStart, vCentreLineEnd, &vIntersection, NULL) == false)
         {
             continue;
         }
 
         /////////////////////////
         // If close enough then it is visible
-        float fSqrRadius = pBV->GetRadius()*pBV->GetRadius()+0.05f;
+        float fSqrRadius = pBV->GetRadius() * pBV->GetRadius() + 0.05f;
         if(fSqrDist < fSqrRadius)
         {
             bLookingAt = true;
@@ -273,13 +273,13 @@ void iLuxEntity::UpdatePlayerLookAt(double adFixedDelta)
         cVector3f vLineOfSightTestPos[5];
         float fHalfRadius = pBV->GetRadius() * 0.5f;
 
-        vLineOfSightTestPos[0] = vEnd - vDir*pBV->GetRadius();
+        vLineOfSightTestPos[0] = vEnd - vDir * pBV->GetRadius();
         vLineOfSightTestPos[1] = vLineOfSightTestPos[0] + pCamera->GetUp() * fHalfRadius;
         vLineOfSightTestPos[2] = vLineOfSightTestPos[0] - pCamera->GetUp() * fHalfRadius;
         vLineOfSightTestPos[3] = vLineOfSightTestPos[0] + pCamera->GetRight() * fHalfRadius;
         vLineOfSightTestPos[4] = vLineOfSightTestPos[0] - pCamera->GetRight() * fHalfRadius;
 
-        for(int i=0; i<5; ++i)
+        for(int i = 0; i < 5; ++i)
         {
             if(gpBase->mpMapHelper->CheckLineOfSight(vStart, vLineOfSightTestPos[i], false))
             {
@@ -303,11 +303,11 @@ void iLuxEntity::UpdatePlayerLookAt(double adFixedDelta)
             msLookAtCallback = "";
         }
 
-        mpMap->RunScript(sTempCallback + "(\""+msName+"\", 1)" );
+        mpMap->RunScript(sTempCallback + "(\"" + msName + "\", 1)" );
     }
-    else if(bLookingAt==false && mbIsLookedAt)
+    else if(bLookingAt == false && mbIsLookedAt)
     {
-        mpMap->RunScript(msLookAtCallback + "(\""+msName+"\", -1)" );
+        mpMap->RunScript(msLookAtCallback + "(\"" + msName + "\", -1)" );
     }
 
     mbIsLookedAt = bLookingAt;
@@ -322,17 +322,17 @@ void iLuxEntity::ConnectionStateChange(int alState)
     if(msConnectionStateChangeCallback != "")
     {
         mpMap->RunScript(    msConnectionStateChangeCallback +
-                             "(\""+msName+"\", "+ cString::ToString(alState) + ")");
+                             "(\"" + msName + "\", " + cString::ToString(alState) + ")");
     }
 
     //////////////////////////////////
     // Iterate connections
-    for(size_t i=0; i< mvConnections.size(); ++i)
+    for(size_t i = 0; i < mvConnections.size(); ++i)
     {
         cLuxEntityConnection *pConn = mvConnections[i];
 
         //See if this state will send a message.
-        if(pConn->GetStateUsed()!=0)
+        if(pConn->GetStateUsed() != 0)
         {
             if(alState != pConn->GetStateUsed())
             {
@@ -345,9 +345,9 @@ void iLuxEntity::ConnectionStateChange(int alState)
 
         //Log("Send state '%s'%d to '%s'as %d\n", msName.c_str(), alState, pConn->GetEntity()->GetName().c_str(), lState);
 
-        pConn->GetEntity()->OnConnectionStateChange(this,lState);
+        pConn->GetEntity()->OnConnectionStateChange(this, lState);
 
-        if(pConn->GetCallbackFunc()!="")
+        if(pConn->GetCallbackFunc() != "")
         {
             //Syntax: ConnectionName,ParentEnt, ChildEnt, state
             tString sCommand = pConn->GetCallbackFunc() + "(\"" + pConn->GetName() + "\"," +
@@ -365,12 +365,12 @@ void iLuxEntity::PreloadEntityModel(const tString &asFile)
 {
     cResources *pResources = gpBase->mpEngine->GetResources();
 
-    tString sFileName = cString::SetFileExt(asFile,"ent");
+    tString sFileName = cString::SetFileExt(asFile, "ent");
 
     //////////////////////
     // Load XML document
     iXmlDocument *pEntityDoc = pResources->LoadXmlDocument(sFileName);
-    if(pEntityDoc==NULL)
+    if(pEntityDoc == NULL)
     {
         Error("Could not load xml file '%s'\n", sFileName.c_str());
         return;
@@ -381,7 +381,7 @@ void iLuxEntity::PreloadEntityModel(const tString &asFile)
     cXmlElement *pModelDataElem = pEntityDoc->GetFirstElement("ModelData");
     cXmlElement *pMeshElem = pModelDataElem->GetFirstElement("Mesh");
 
-    tString sModelFile = pMeshElem->GetAttributeString("Filename","");
+    tString sModelFile = pMeshElem->GetAttributeString("Filename", "");
 
     //////////////////////
     // Load Mesh
@@ -392,7 +392,7 @@ void iLuxEntity::PreloadEntityModel(const tString &asFile)
     }
     else
     {
-        Error("Could not load mesh '%s' when preloading!\n",sModelFile.c_str());
+        Error("Could not load mesh '%s' when preloading!\n", sModelFile.c_str());
     }
 
     pResources->DestroyXmlDocument(pEntityDoc);
@@ -408,16 +408,16 @@ bool iLuxEntity::CollidesWithPlayer()
 
     iPhysicsBody *pPlayerBody = gpBase->mpPlayer->GetCharacterBody()->GetCurrentBody();
 
-    for(int i=0; i<GetBodyNum(); ++i)
+    for(int i = 0; i < GetBodyNum(); ++i)
     {
         iPhysicsBody *pBody = GetBody(i);
 
-        if(cMath::CheckBVIntersection(*pPlayerBody->GetBoundingVolume(), *pBody->GetBoundingVolume())==false)
+        if(cMath::CheckBVIntersection(*pPlayerBody->GetBoundingVolume(), *pBody->GetBoundingVolume()) == false)
         {
             continue;
         }
 
-        if(pPhysicsWorld->CheckShapeCollision(pBody->GetShape(), pBody->GetLocalMatrix(), pPlayerBody->GetShape(), pPlayerBody->GetLocalMatrix(), collideData,1, false))
+        if(pPhysicsWorld->CheckShapeCollision(pBody->GetShape(), pBody->GetLocalMatrix(), pPlayerBody->GetShape(), pPlayerBody->GetLocalMatrix(), collideData, 1, false))
         {
             return true;
         }
@@ -435,11 +435,11 @@ bool iLuxEntity::CollidesWithPlayer()
 //-----------------------------------------------------------------------
 
 kBeginSerializeBase(cLuxEntityConnection_SaveData)
-kSerializeVar(msName,eSerializeType_String)
-kSerializeVar(mlEntityId,eSerializeType_Int32)
-kSerializeVar(mbInvertStateSent,eSerializeType_Bool)
-kSerializeVar(mlStatesUsed,eSerializeType_Int32)
-kSerializeVar(msCallbackFunc,eSerializeType_String)
+kSerializeVar(msName, eSerializeType_String)
+kSerializeVar(mlEntityId, eSerializeType_Int32)
+kSerializeVar(mbInvertStateSent, eSerializeType_Bool)
+kSerializeVar(mlStatesUsed, eSerializeType_Int32)
+kSerializeVar(msCallbackFunc, eSerializeType_String)
 kEndSerialize()
 
 void cLuxEntityConnection_SaveData::FromConnection(cLuxEntityConnection *apConnection)
@@ -455,7 +455,7 @@ void cLuxEntityConnection_SaveData::FromConnection(cLuxEntityConnection *apConne
 void cLuxEntityConnection_SaveData::ToConnection(cLuxEntityConnection *apConnection, cLuxMap *apMap)
 {
     apConnection->mpEntity = apMap->GetEntityByID(mlEntityId);
-    if(apConnection->mpEntity ==NULL)
+    if(apConnection->mpEntity == NULL)
     {
         Error("Could not find entity  with id %d for connection '%s'\n", mlEntityId, msName.c_str());
     }
@@ -469,11 +469,11 @@ void cLuxEntityConnection_SaveData::ToConnection(cLuxEntityConnection *apConnect
 //-----------------------------------------------------------------------
 
 kBeginSerializeBaseVirtual(iLuxEntity_SaveData)
-kSerializeVar(msName,eSerializeType_String)
-kSerializeVar(mbFullGameSave,eSerializeType_Bool)
-kSerializeVar(mbActive,eSerializeType_Bool)
-kSerializeVar(mlEntityType,eSerializeType_Int32)
-kSerializeVar(mlID,eSerializeType_Int32)
+kSerializeVar(msName, eSerializeType_String)
+kSerializeVar(mbFullGameSave, eSerializeType_Bool)
+kSerializeVar(mbActive, eSerializeType_Bool)
+kSerializeVar(mlEntityType, eSerializeType_Int32)
+kSerializeVar(mlID, eSerializeType_Int32)
 
 kSerializeVar(mfMaxFocusDistance, eSerializeType_Float32)
 
@@ -482,12 +482,12 @@ kSerializeVar(mbInteractionDisabled, eSerializeType_Bool)
 kSerializeVar(msCallbackFunc, eSerializeType_String)
 kSerializeVar(msConnectionStateChangeCallback, eSerializeType_String)
 
-kSerializeVar(msInteractCallback,eSerializeType_String)
-kSerializeVar(mbInteractCallbackRemove,eSerializeType_Bool)
+kSerializeVar(msInteractCallback, eSerializeType_String)
+kSerializeVar(mbInteractCallbackRemove, eSerializeType_Bool)
 
-kSerializeVar(msLookAtCallback,eSerializeType_String)
-kSerializeVar(mbLookAtCallbackRemove,eSerializeType_Bool)
-kSerializeVar(mbIsLookedAt,eSerializeType_Bool)
+kSerializeVar(msLookAtCallback, eSerializeType_String)
+kSerializeVar(mbLookAtCallbackRemove, eSerializeType_Bool)
+kSerializeVar(mbIsLookedAt, eSerializeType_Bool)
 
 kSerializeClassContainer(mvConnections, cLuxEntityConnection_SaveData, eSerializeType_Class)
 kSerializeClassContainer(mlstCollideCallbacks, cLuxCollideCallback_SaveData, eSerializeType_Class)
@@ -519,7 +519,7 @@ void iLuxEntity::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     kCopyToVar(apSaveData, mbIsLookedAt);
 
     apSaveData->mvConnections.Resize(mvConnections.size());
-    for(size_t i=0; i<mvConnections.size(); ++i)
+    for(size_t i = 0; i < mvConnections.size(); ++i)
     {
         apSaveData->mvConnections[i].FromConnection(mvConnections[i]);
     }
@@ -562,7 +562,7 @@ void iLuxEntity::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 void iLuxEntity::SetupSaveData(iLuxEntity_SaveData *apSaveData)
 {
     mvConnections.resize(apSaveData->mvConnections.Size());
-    for(size_t i=0; i<apSaveData->mvConnections.Size(); ++i)
+    for(size_t i = 0; i < apSaveData->mvConnections.Size(); ++i)
     {
         mvConnections[i] = hplNew( cLuxEntityConnection, () );
         apSaveData->mvConnections[i].ToConnection(mvConnections[i], mpMap);

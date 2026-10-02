@@ -29,15 +29,15 @@ public:
     cLuxPlayerState_UseItem(cLuxPlayer *apPlayer);
     virtual ~cLuxPlayerState_UseItem();
 
-    void OnDraw(cGuiSet *apGuiSet,double adFrameTime) {}//Skip any special drawing.
+    void OnDraw(cGuiSet *apGuiSet, double adFrameTime) {} //Skip any special drawing.
 
     void ImplementedOnEnterState(eLuxPlayerState aPrevState);
 
-    bool ImplementedDoAction(eLuxPlayerAction aAction,bool abPressed);
+    bool ImplementedDoAction(eLuxPlayerAction aAction, bool abPressed);
 
     void ImplementedUpdate(double adFixedDelta);
 
-    cGuiGfxElement* GetCrosshair();
+    cGuiGfxElement *GetCrosshair();
     bool OnDrawCrossHair(cGuiGfxElement *apGfx, const cVector3f& avPos, const cVector2f &avSize);
 
     /////////////////////////////////
@@ -46,10 +46,10 @@ public:
     {
         return true;
     }
-    iLuxPlayerState_SaveData* CreateSaveData();
+    iLuxPlayerState_SaveData *CreateSaveData();
 
     void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);
-    void LoadFromSaveDataBeforeEnter(cLuxMap *apMap,iLuxPlayerState_SaveData* apSaveData);
+    void LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
     void LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
 
 protected:

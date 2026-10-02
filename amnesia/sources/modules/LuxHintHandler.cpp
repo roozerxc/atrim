@@ -20,10 +20,10 @@ cLuxHintHandler::cLuxHintHandler() : iLuxUpdateable("LuxHintHandler")
 {
     mpFont = NULL;
 
-    mfYPos = gpBase->mpMenuCfg->GetFloat("Hints","YPos",0);
-    mvFontSize = gpBase->mpMenuCfg->GetVector2f("Hints","FontSize",0);
+    mfYPos = gpBase->mpMenuCfg->GetFloat("Hints", "YPos", 0);
+    mvFontSize = gpBase->mpMenuCfg->GetVector2f("Hints", "FontSize", 0);
 
-    mfTextDurationMul = gpBase->mpMenuCfg->GetFloat("Hints","TextDurationMul",0);
+    mfTextDurationMul = gpBase->mpMenuCfg->GetFloat("Hints", "TextDurationMul", 0);
 
     mHintOscill.SetUp(0, 1, 0, 1, 1);
 
@@ -41,23 +41,23 @@ cLuxHintHandler::cLuxHintHandler() : iLuxUpdateable("LuxHintHandler")
 
     //////////////
     // Set up the buttons
-    mpGamepadButtonIcon[eGamepadButton_0] = pGui->CreateGfxTexture("gamepad_a.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
-    mpGamepadButtonIcon[eGamepadButton_1] = pGui->CreateGfxTexture("gamepad_b.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
-    mpGamepadButtonIcon[eGamepadButton_2] = pGui->CreateGfxTexture("gamepad_x.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
-    mpGamepadButtonIcon[eGamepadButton_3] = pGui->CreateGfxTexture("gamepad_y.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
-    mpGamepadButtonIcon[eGamepadButton_4] = pGui->CreateGfxTexture("gamepad_lb.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
-    mpGamepadButtonIcon[eGamepadButton_5] = pGui->CreateGfxTexture("gamepad_rb.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
-    mpGamepadButtonIcon[eGamepadButton_6] = pGui->CreateGfxTexture("gamepad_select.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
-    mpGamepadButtonIcon[eGamepadButton_7] = pGui->CreateGfxTexture("gamepad_start.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
-    mpGamepadButtonIcon[eGamepadButton_8] = pGui->CreateGfxTexture("gamepad_ls.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
-    mpGamepadButtonIcon[eGamepadButton_9] = pGui->CreateGfxTexture("gamepad_rs.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
+    mpGamepadButtonIcon[eGamepadButton_0] = pGui->CreateGfxTexture("gamepad_a.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
+    mpGamepadButtonIcon[eGamepadButton_1] = pGui->CreateGfxTexture("gamepad_b.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
+    mpGamepadButtonIcon[eGamepadButton_2] = pGui->CreateGfxTexture("gamepad_x.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
+    mpGamepadButtonIcon[eGamepadButton_3] = pGui->CreateGfxTexture("gamepad_y.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
+    mpGamepadButtonIcon[eGamepadButton_4] = pGui->CreateGfxTexture("gamepad_lb.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
+    mpGamepadButtonIcon[eGamepadButton_5] = pGui->CreateGfxTexture("gamepad_rb.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
+    mpGamepadButtonIcon[eGamepadButton_6] = pGui->CreateGfxTexture("gamepad_select.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
+    mpGamepadButtonIcon[eGamepadButton_7] = pGui->CreateGfxTexture("gamepad_start.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
+    mpGamepadButtonIcon[eGamepadButton_8] = pGui->CreateGfxTexture("gamepad_ls.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
+    mpGamepadButtonIcon[eGamepadButton_9] = pGui->CreateGfxTexture("gamepad_rs.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
 
     //////////
     // Dpad
-    mpGamepadHatIcon[cMath::Log2ToInt(eGamepadHatState_Up)]    = pGui->CreateGfxTexture("gamepad_dpad_u.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
-    mpGamepadHatIcon[cMath::Log2ToInt(eGamepadHatState_Right)] = pGui->CreateGfxTexture("gamepad_dpad_r.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
-    mpGamepadHatIcon[cMath::Log2ToInt(eGamepadHatState_Left)]  = pGui->CreateGfxTexture("gamepad_dpad_l.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
-    mpGamepadHatIcon[cMath::Log2ToInt(eGamepadHatState_Down)]  = pGui->CreateGfxTexture("gamepad_dpad_d.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
+    mpGamepadHatIcon[cMath::Log2ToInt(eGamepadHatState_Up)]    = pGui->CreateGfxTexture("gamepad_dpad_u.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
+    mpGamepadHatIcon[cMath::Log2ToInt(eGamepadHatState_Right)] = pGui->CreateGfxTexture("gamepad_dpad_r.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
+    mpGamepadHatIcon[cMath::Log2ToInt(eGamepadHatState_Left)]  = pGui->CreateGfxTexture("gamepad_dpad_l.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
+    mpGamepadHatIcon[cMath::Log2ToInt(eGamepadHatState_Down)]  = pGui->CreateGfxTexture("gamepad_dpad_d.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
 
     ////////
     // Triggers
@@ -69,8 +69,8 @@ cLuxHintHandler::cLuxHintHandler() : iLuxUpdateable("LuxHintHandler")
         mpGampadAxisIcon[i * 2 + 1] = NULL;
     }
 
-    mpGampadAxisIcon[eGamepadAxis_2 * 2 + eGamepadAxisRange_Positive - 1] = pGui->CreateGfxTexture("gamepad_lt.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
-    mpGampadAxisIcon[eGamepadAxis_2 * 2 + eGamepadAxisRange_Negative - 1] = pGui->CreateGfxTexture("gamepad_rt.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1,1), false);
+    mpGampadAxisIcon[eGamepadAxis_2 * 2 + eGamepadAxisRange_Positive - 1] = pGui->CreateGfxTexture("gamepad_lt.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
+    mpGampadAxisIcon[eGamepadAxis_2 * 2 + eGamepadAxisRange_Negative - 1] = pGui->CreateGfxTexture("gamepad_rt.tga", eGuiMaterial_Alpha, eTextureType_2D, cColor(1, 1), false);
 #endif
 }
 
@@ -90,7 +90,7 @@ cLuxHintHandler::~cLuxHintHandler()
 
 void cLuxHintHandler::LoadFonts()
 {
-    tString sFontFile = gpBase->mpMenuCfg->GetString("Hints","DefaultFont","");
+    tString sFontFile = gpBase->mpMenuCfg->GetString("Hints", "DefaultFont", "");
     mpFont = LoadFont(sFontFile);
 }
 
@@ -105,8 +105,8 @@ void cLuxHintHandler::OnStart()
 
 void cLuxHintHandler::Reset()
 {
-    mfAlpha =0;
-    mfShowTextCount =0;
+    mfAlpha = 0;
+    mfShowTextCount = 0;
     msCurrentText = _W("");
     m_setHintsGiven.clear();
     m_setHintsBlocked.clear();
@@ -149,30 +149,30 @@ void cLuxHintHandler::DrawHintText(double adFrameTime, cGuiSet *apGuiSet)
         return;
     }
 
-    if(mbActive==false || mfAlpha<=0)
+    if(mbActive == false || mfAlpha <= 0)
     {
         return;
     }
 
-    float fX = mHintOscill.val*0.5f;
-    cColor hintCol(1,fX,fX, mfAlpha);
-    apGuiSet->DrawFont(mpFont, cVector3f(400,mfYPos,20),mvFontSize,hintCol, eFontAlign_Center, eGuiMaterial_FontNormal,
+    float fX = mHintOscill.val * 0.5f;
+    cColor hintCol(1, fX, fX, mfAlpha);
+    apGuiSet->DrawFont(mpFont, cVector3f(400, mfYPos, 20), mvFontSize, hintCol, eFontAlign_Center, eGuiMaterial_FontNormal,
                        _W(" %ls"), kTranslate("Hints", "HINT:").c_str());
 
     tWStringVec vRows;
     float fMaxWidth = 680;
     float fStartY = mfYPos + mvFontSize.y + 3.0f;
-    mpFont->GetWordWrapRows(fMaxWidth,15, mvFontSize, msCurrentText, &vRows);
-    if(vRows.size()==1)
+    mpFont->GetWordWrapRows(fMaxWidth, 15, mvFontSize, msCurrentText, &vRows);
+    if(vRows.size() == 1)
     {
-        apGuiSet->DrawFont(mpFont, cVector3f(400,fStartY,20),mvFontSize,cColor(1,mfAlpha), eFontAlign_Center, eGuiMaterial_FontNormal,
+        apGuiSet->DrawFont(mpFont, cVector3f(400, fStartY, 20), mvFontSize, cColor(1, mfAlpha), eFontAlign_Center, eGuiMaterial_FontNormal,
                            _W(" %ls"), msCurrentText.c_str());
     }
     else
     {
-        for(size_t i=0; i<vRows.size(); ++i)
+        for(size_t i = 0; i < vRows.size(); ++i)
         {
-            apGuiSet->DrawFont(mpFont, cVector3f(400-fMaxWidth*0.5f, fStartY + (float)i* (mvFontSize.y+2.0f), 20),mvFontSize,cColor(1,mfAlpha), eFontAlign_Left, eGuiMaterial_FontNormal,
+            apGuiSet->DrawFont(mpFont, cVector3f(400 - fMaxWidth * 0.5f, fStartY + (float)i * (mvFontSize.y + 2.0f), 20), mvFontSize, cColor(1, mfAlpha), eFontAlign_Left, eGuiMaterial_FontNormal,
                                _W(" %ls"), vRows[i].c_str());
         }
     }
@@ -182,31 +182,31 @@ void cLuxHintHandler::DrawHintText(double adFrameTime, cGuiSet *apGuiSet)
     // Draw all the icons
     for(size_t i = 0; i < mvHintIcons.size(); ++i)
     {
-        apGuiSet->DrawGfx(mvHintIcons[i].mpGuiIcon, mvHintIcons[i].mvPosition, mvHintIcons[i].mvSize, cColor(1,mfAlpha), eGuiMaterial_Alpha);
+        apGuiSet->DrawGfx(mvHintIcons[i].mpGuiIcon, mvHintIcons[i].mvPosition, mvHintIcons[i].mvSize, cColor(1, mfAlpha), eGuiMaterial_Alpha);
     }
 #endif
 }
 
 void cLuxHintHandler::UpdateHintText(double adFixedDelta)
 {
-    if(mbActive==false)
+    if(mbActive == false)
     {
         return;
     }
 
-    if(mfAlpha>0)
+    if(mfAlpha > 0)
     {
         mHintOscill.Update(adFixedDelta);
     }
 
     /////////////////////
     //Decrease alpha
-    if(mfShowTextCount<=0 && mfAlpha>0)
+    if(mfShowTextCount <= 0 && mfAlpha > 0)
     {
         mfAlpha -= 0.5f * (float)adFixedDelta;
-        if(mfAlpha <0)
+        if(mfAlpha < 0)
         {
-            mfAlpha =0;
+            mfAlpha = 0;
         }
         return;
     }
@@ -215,9 +215,9 @@ void cLuxHintHandler::UpdateHintText(double adFixedDelta)
     if(mfShowTextCount > 0)
     {
         mfAlpha += 1.2f * (float)adFixedDelta;
-        if(mfAlpha >1)
+        if(mfAlpha > 1)
         {
-            mfAlpha =1;
+            mfAlpha = 1;
         }
 
         mfShowTextCount -= (float)adFixedDelta;
@@ -230,10 +230,10 @@ void cLuxHintHandler::SetActive(bool abX)
 {
     mbActive = abX;
 
-    if(mbActive==false)
+    if(mbActive == false)
     {
-        mfAlpha =0;
-        mfShowTextCount =0;
+        mfAlpha = 0;
+        mfShowTextCount = 0;
         msCurrentText = _W("");
     }
 }
@@ -242,12 +242,12 @@ void cLuxHintHandler::SetActive(bool abX)
 
 bool cLuxHintHandler::Add(const tString &asName, const tWString &asMessage, float afTimeShown)
 {
-    if(mfShowTextCount >0)
+    if(mfShowTextCount > 0)
     {
         return false;
     }
 
-    if(m_setHintsBlocked.count(asName)>0)
+    if(m_setHintsBlocked.count(asName) > 0)
     {
         return false;
     }
@@ -261,8 +261,8 @@ bool cLuxHintHandler::Add(const tString &asName, const tWString &asMessage, floa
     m_setHintsGiven.insert(asName);
 
     msCurrentText = gpBase->mpHelpFuncs->ParseString(asMessage);
-    mfShowTextCount = afTimeShown <=0 ? gpBase->mpHelpFuncs->GetStringDuration(msCurrentText)*mfTextDurationMul : afTimeShown;
-    mfAlpha =0;
+    mfShowTextCount = afTimeShown <= 0 ? gpBase->mpHelpFuncs->GetStringDuration(msCurrentText) * mfTextDurationMul : afTimeShown;
+    mfAlpha = 0;
 
 #if USE_GAMEPAD
     ParseStringForGamepadIcons();
@@ -310,15 +310,15 @@ void cLuxHintHandler::ParseStringForGamepadIcons()
 {
     mvHintIcons.clear();
 
-    tWString sOutput=_W("");
-    tWString sCommand =_W("");
+    tWString sOutput = _W("");
+    tWString sCommand = _W("");
     bool bParseVar = false;
 
     int lPosition = 0;
 
     /////////////////
     // Find all the icons
-    for(size_t i=0; i<msCurrentText.size(); ++i)
+    for(size_t i = 0; i < msCurrentText.size(); ++i)
     {
         wchar_t lChar = msCurrentText[i];
 
@@ -376,10 +376,10 @@ void cLuxHintHandler::ParseStringForGamepadIcons()
         tWStringVec vRows;
         float fMaxWidth = 680;
         float fStartY = mfYPos + mvFontSize.y + 3.0f;
-        mpFont->GetWordWrapRows(fMaxWidth,15, mvFontSize, msCurrentText, &vRows);
+        mpFont->GetWordWrapRows(fMaxWidth, 15, mvFontSize, msCurrentText, &vRows);
         wchar_t sRowText[1024];
 
-        for(size_t i=0; i<vRows.size(); ++i)
+        for(size_t i = 0; i < vRows.size(); ++i)
         {
             ///////////////
             // Convert the string
@@ -388,14 +388,14 @@ void cLuxHintHandler::ParseStringForGamepadIcons()
             int lCount = 0;
             cVector3f vPos;
 
-            if(vRows.size()==1)
+            if(vRows.size() == 1)
             {
-                vPos = cVector3f(400,fStartY,20);
-                vPos.x -= mpFont->GetLength(mvFontSize, sRowText)/2;
+                vPos = cVector3f(400, fStartY, 20);
+                vPos.x -= mpFont->GetLength(mvFontSize, sRowText) / 2;
             }
             else
             {
-                vPos = cVector3f(400-fMaxWidth*0.5f, fStartY + (float)i* (mvFontSize.y+2.0f), 20);
+                vPos = cVector3f(400 - fMaxWidth * 0.5f, fStartY + (float)i * (mvFontSize.y + 2.0f), 20);
             }
 
             //////////////////////////////////////////////////////
@@ -420,7 +420,7 @@ void cLuxHintHandler::ParseStringForGamepadIcons()
                 if(pGlyph)
                 {
                     cVector2f vSize(pGlyph->mvSize * mvFontSize);
-                    vPos.x += pGlyph->mfAdvance*mvFontSize.x;
+                    vPos.x += pGlyph->mfAdvance * mvFontSize.x;
                 }
 
                 if(lPosition == mvHintIcons[lIconIdx].mlCharacterPosition)
@@ -506,7 +506,7 @@ tWString cLuxHintHandler::AddGamepadIconAtPosition(const tWString& asCommand, in
         eGamepadHat hat = iGamepad::StringToHat(vInputParts[1]);
         eGamepadAxis axis = iGamepad::StringToAxis(vInputParts[1]);
 
-        if(hat!=eGamepadHat_LastEnum)
+        if(hat != eGamepadHat_LastEnum)
         {
             eGamepadHatState state = iGamepad::StringToHatState(vInputParts[2]);
 
@@ -520,10 +520,10 @@ tWString cLuxHintHandler::AddGamepadIconAtPosition(const tWString& asCommand, in
             {
                 /////////////
                 // Return the translated command for hats with no icon
-                return kTranslate("ButtonNames", vInputParts[1]+"."+vInputParts[2]);
+                return kTranslate("ButtonNames", vInputParts[1] + "." + vInputParts[2]);
             }
         }
-        else if(axis!=eGamepadAxis_LastEnum)
+        else if(axis != eGamepadAxis_LastEnum)
         {
             eGamepadAxisRange range = iGamepad::StringToAxisRange(vInputParts[2]);
 
@@ -537,7 +537,7 @@ tWString cLuxHintHandler::AddGamepadIconAtPosition(const tWString& asCommand, in
             {
                 /////////////
                 // Return the translated command for hats with no icon
-                return kTranslate("ButtonNames", vInputParts[1]+"."+vInputParts[2]);
+                return kTranslate("ButtonNames", vInputParts[1] + "." + vInputParts[2]);
             }
         }
         else

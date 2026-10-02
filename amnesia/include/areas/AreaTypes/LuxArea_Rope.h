@@ -43,7 +43,7 @@ public:
 
     ////////////////
     //Methods
-    iLuxEntity* CreateEntity(cLuxMap *apMap);
+    iLuxEntity *CreateEntity(cLuxMap *apMap);
 };
 
 //----------------------------------------------
@@ -71,7 +71,7 @@ public:
     {
         return eLuxFocusCrosshair_Default;
     }
-    iEntity3D* GetAttachEntity()
+    iEntity3D *GetAttachEntity()
     {
         return NULL;
     }
@@ -88,20 +88,20 @@ public:
     {
         return 0;
     }
-    iPhysicsBody* GetBody(int alIdx)
+    iPhysicsBody *GetBody(int alIdx)
     {
         return NULL;
     }
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     void SetupSaveData(iLuxEntity_SaveData *apSaveData);
 private:
     //First tries to find a body by name, if failed, searches for entity.
-    iPhysicsBody* GetBody(const tString& asName);
+    iPhysicsBody *GetBody(const tString& asName);
 
     //////////////////////////////
     // Variables
@@ -145,7 +145,7 @@ public:
     cLuxAreaRopeLoader(const tString& asName) : iAreaLoader(asName) {}
     virtual ~cLuxAreaRopeLoader() {}
 
-    void Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform,cWorld *apWorld);
+    void Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform, cWorld *apWorld);
 };
 
 //----------------------------------------------

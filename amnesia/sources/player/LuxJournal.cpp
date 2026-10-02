@@ -95,7 +95,7 @@ void cLuxJournal_ListEntry::SetVisible(bool abX)
 
 void cLuxJournal_ListPage::SetVisible(bool abX)
 {
-    for(size_t i=0; i<mvEntries.size(); ++i)
+    for(size_t i = 0; i < mvEntries.size(); ++i)
     {
         mvEntries[i].SetVisible(abX);
     }
@@ -122,7 +122,7 @@ cLuxJournalStateData::cLuxJournalStateData(cLuxJournal *apJournal, eLuxJournalSt
 
 void cLuxJournalStateData::Reset()
 {
-    mfAlpha =0;
+    mfAlpha = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -160,7 +160,7 @@ void cLuxJournalStateData::Update(double adFixedDelta)
     if(mState == mpJournal->mCurrentState)
     {
         mfAlpha += (float)adFixedDelta * 2.0f;
-        if(mfAlpha>1)
+        if(mfAlpha > 1)
         {
             mfAlpha = 1;
         }
@@ -168,7 +168,7 @@ void cLuxJournalStateData::Update(double adFixedDelta)
     else
     {
         mfAlpha -= (float)adFixedDelta * 5.0f;
-        if(mfAlpha<0)
+        if(mfAlpha < 0)
         {
             mfAlpha = 0;
         }
@@ -193,7 +193,7 @@ void cLuxJournalStateData::OnDraw(double adFrameTime)
 
     ///////////////////////
     //Note open
-    if(    mState==eLuxJournalState_OpenNote ||
+    if(    mState == eLuxJournalState_OpenNote ||
             mState == eLuxJournalState_OpenDiary  ||
             mState == eLuxJournalState_OpenNarratedDiary)
     {
@@ -206,23 +206,23 @@ void cLuxJournalStateData::OnDraw(double adFrameTime)
         // Header
         cVector3f vHeaderPos(400, mpJournal->mfNoteHeaderStartY, 3);
 
-        mpJournal->mpGuiSet->DrawFont(mpJournal->msHeader, mpJournal->mpFontMenu,vHeaderPos, mpJournal->mfNoteHeaderFontSize, cColor(1,fAlpha),eFontAlign_Center);
+        mpJournal->mpGuiSet->DrawFont(mpJournal->msHeader, mpJournal->mpFontMenu, vHeaderPos, mpJournal->mfNoteHeaderFontSize, cColor(1, fAlpha), eFontAlign_Center);
 
         /////////////////////////
         // Text
         cLuxNotePage *pPage = &mpJournal->mvPages[mpJournal->mlCurrentNotePage];
 
-        cVector3f vPos(400 - mpJournal->mfNoteTextWidth/2, mpJournal->mfNoteTextStartY, 3);
+        cVector3f vPos(400 - mpJournal->mfNoteTextWidth / 2, mpJournal->mfNoteTextStartY, 3);
 
         //if(    mpJournal->mlCurrentNotePage == 0 && mpJournal->mvPages.size()==1) //Should be good to center all pages!
         {
-            float fHalfRowNum = ((float)pPage->mvRows.size())*0.5f;
+            float fHalfRowNum = ((float)pPage->mvRows.size()) * 0.5f;
             vPos.y = 300 - (mpJournal->mfNoteRowDist * fHalfRowNum);
         }
 
-        for(size_t i=0; i<pPage->mvRows.size(); ++i)
+        for(size_t i = 0; i < pPage->mvRows.size(); ++i)
         {
-            mpJournal->mpGuiSet->DrawFont(pPage->mvRows[i], mpJournal->mpFontDefault, vPos, mpJournal->mvNoteFontSize, cColor(1,fAlpha));
+            mpJournal->mpGuiSet->DrawFont(pPage->mvRows[i], mpJournal->mpFontDefault, vPos, mpJournal->mvNoteFontSize, cColor(1, fAlpha));
             vPos.y += mpJournal->mfNoteRowDist;
         }
     }
@@ -233,7 +233,7 @@ void cLuxJournalStateData::OnDraw(double adFrameTime)
     {
         cVector2f vSize = mpJournal->mpStateBackgroundGfx->GetActiveSize();
 
-        mpJournal->mpGuiSet->DrawGfx(mpJournal->mpStateBackgroundGfx, cVector3f(400-vSize.x/2, 300-vSize.y/2, 1), -1, cColor(1, fAlpha));
+        mpJournal->mpGuiSet->DrawGfx(mpJournal->mpStateBackgroundGfx, cVector3f(400 - vSize.x / 2, 300 - vSize.y / 2, 1), -1, cColor(1, fAlpha));
     }
 }
 
@@ -274,9 +274,9 @@ cLuxJournal::cLuxJournal() : iLuxUpdateable("LuxJournal")
 
     mvGuiSetCenterSize = cVector2f(800, 600);
     LuxCalcGuiSetScreenOffset(mvGuiSetCenterSize, mvGuiSetSize, mvGuiSetOffset);
-    mvGuiSetStartPos = cVector3f(-mvGuiSetOffset.x,-mvGuiSetOffset.y,0);
+    mvGuiSetStartPos = cVector3f(-mvGuiSetOffset.x, -mvGuiSetOffset.y, 0);
 
-    mpGuiSet->SetVirtualSize(mvGuiSetSize, -1000,1000, mvGuiSetOffset);
+    mpGuiSet->SetVirtualSize(mvGuiSetSize, -1000, 1000, mvGuiSetOffset);
     mpGuiSet->SetActive(false);
 
     ///////////////////////////////
@@ -292,13 +292,13 @@ cLuxJournal::cLuxJournal() : iLuxUpdateable("LuxJournal")
     //Load settings
     mvScreenSize = gpBase->mpEngine->GetGraphics()->GetLowLevel()->GetScreenSizeFloat();
 
-    mfNoteTextWidth = gpBase->mpMenuCfg->GetFloat("Journal","NoteTextWidth",0);
-    mlNoteMaxPageRows = gpBase->mpMenuCfg->GetInt("Journal","NoteMaxPageRows",0);
-    mvNoteFontSize = gpBase->mpMenuCfg->GetVector2f("Journal","NoteFontSize",0);
-    mfNoteRowDist = gpBase->mpMenuCfg->GetFloat("Journal","NoteRowDist",0);
-    mfNoteHeaderFontSize = gpBase->mpMenuCfg->GetVector2f("Journal","NoteHeaderFontSize",0);
-    mfNoteHeaderStartY = gpBase->mpMenuCfg->GetFloat("Journal","NoteHeaderStartY",0);
-    mfNoteTextStartY = gpBase->mpMenuCfg->GetFloat("Journal","NoteTextStartY",0);
+    mfNoteTextWidth = gpBase->mpMenuCfg->GetFloat("Journal", "NoteTextWidth", 0);
+    mlNoteMaxPageRows = gpBase->mpMenuCfg->GetInt("Journal", "NoteMaxPageRows", 0);
+    mvNoteFontSize = gpBase->mpMenuCfg->GetVector2f("Journal", "NoteFontSize", 0);
+    mfNoteRowDist = gpBase->mpMenuCfg->GetFloat("Journal", "NoteRowDist", 0);
+    mfNoteHeaderFontSize = gpBase->mpMenuCfg->GetVector2f("Journal", "NoteHeaderFontSize", 0);
+    mfNoteHeaderStartY = gpBase->mpMenuCfg->GetFloat("Journal", "NoteHeaderStartY", 0);
+    mfNoteTextStartY = gpBase->mpMenuCfg->GetFloat("Journal", "NoteTextStartY", 0);
 
     mfBackTextY = 530;
     mvBackTextFontSize = 28;
@@ -311,17 +311,17 @@ cLuxJournal::cLuxJournal() : iLuxUpdateable("LuxJournal")
     ///////////////////////////////
     //Load state data
     mvStateData.resize(eLuxJournalState_LastEnum);
-    for(size_t i=0; i<mvStateData.size(); ++i)
+    for(size_t i = 0; i < mvStateData.size(); ++i)
     {
         mvStateData[i] = hplNew(cLuxJournalStateData, (this, (eLuxJournalState)i) );
     }
 
     ///////////////////////////////
     //Load Data
-    mpWhiteGfx = mpGui->CreateGfxFilledRect(cColor(1,1), eGuiMaterial_Alpha);
+    mpWhiteGfx = mpGui->CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_Alpha);
 
     cParserVarContainer programVars;
-    mpEffectProgram = mpGraphics->CreateGpuProgramFromShaders("InventoryEffect","inventory_screen_effect_vtx.glsl", "inventory_screen_effect_frag.glsl", &programVars);
+    mpEffectProgram = mpGraphics->CreateGpuProgramFromShaders("InventoryEffect", "inventory_screen_effect_vtx.glsl", "inventory_screen_effect_frag.glsl", &programVars);
 
     mpFontDefault = NULL;
     mpFontMenu = NULL;
@@ -351,8 +351,8 @@ void cLuxJournal::OnClearFonts()
 
 void cLuxJournal::LoadFonts()
 {
-    tString sFontFile = gpBase->mpMenuCfg->GetString("Journal","DefaultFont","");
-    tString sFontMenu = gpBase->mpMenuCfg->GetString("Journal","MenuFont","");
+    tString sFontFile = gpBase->mpMenuCfg->GetString("Journal", "DefaultFont", "");
+    tString sFontMenu = gpBase->mpMenuCfg->GetString("Journal", "MenuFont", "");
     mpFontDefault = LoadFont(sFontFile);
     mpFontMenu = LoadFont(sFontMenu);
 }
@@ -370,11 +370,11 @@ void cLuxJournal::Reset()
 {
     ///////////////////////////////
     //Reset variables
-    mfAlpha =0;
+    mfAlpha = 0;
 
     mbActive = false;
 
-    mfMouseOverPulse =0;
+    mfMouseOverPulse = 0;
 
     mpStateBackgroundGfx = NULL;
 
@@ -386,15 +386,15 @@ void cLuxJournal::Reset()
 
     mpVoiceEntry = NULL;
 
-    for(int i=0; i<eLuxJournalState_LastEnum; ++i)
+    for(int i = 0; i < eLuxJournalState_LastEnum; ++i)
     {
         mpImageForward[i] = NULL;
         mpImageBackward[i] = NULL;
     }
 
-    for(int i=0; i<3; ++i)
+    for(int i = 0; i < 3; ++i)
     {
-        mlCurrentNoteListPage[i] =0;
+        mlCurrentNoteListPage[i] = 0;
     }
 
 
@@ -420,18 +420,18 @@ void cLuxJournal::Update(double adFixedDelta)
     // Update alpha
     if(mbActive)
     {
-        mfAlpha += (float)adFixedDelta*2;
-        if(mfAlpha >1)
+        mfAlpha += (float)adFixedDelta * 2;
+        if(mfAlpha > 1)
         {
-            mfAlpha =1;
+            mfAlpha = 1;
         }
     }
     else
     {
-        mfAlpha -= (float)adFixedDelta*3;
-        if(mfAlpha<0)
+        mfAlpha -= (float)adFixedDelta * 3;
+        if(mfAlpha < 0)
         {
-            mfAlpha =0;
+            mfAlpha = 0;
 
             if(mbOpenedFromInventory)
             {
@@ -453,7 +453,7 @@ void cLuxJournal::Update(double adFixedDelta)
 
     /////////////////////////
     // Update state data
-    for(size_t i=0; i<mvStateData.size(); ++i)
+    for(size_t i = 0; i < mvStateData.size(); ++i)
     {
         mvStateData[i]->Update(adFixedDelta);
     }
@@ -472,7 +472,7 @@ void cLuxJournal::Update(double adFixedDelta)
     if(mCurrentState == eLuxJournalState_OpenNarratedDiary && mbActive)
     {
         cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
-        if(mpVoiceEntry==NULL || pSoundHandler->IsValid(mpVoiceEntry,mlVoiceEntryID)==false)
+        if(mpVoiceEntry == NULL || pSoundHandler->IsValid(mpVoiceEntry, mlVoiceEntryID) == false)
         {
             mpVoiceEntry = NULL;
 
@@ -543,7 +543,7 @@ void cLuxJournal::OnEnterContainer(const tString& asOldContainer)
         gpBase->mpEffectHandler->GetPlayVoice()->PauseCurrentVoices();
 
         cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
-        pSoundHandler->FadeGlobalVolume(0.5f, 0.5f,eSoundEntryType_World,eLuxGlobalVolumeType_GameMenu, false);
+        pSoundHandler->FadeGlobalVolume(0.5f, 0.5f, eSoundEntryType_World, eLuxGlobalVolumeType_GameMenu, false);
     }
 
     /////////////////////
@@ -552,7 +552,7 @@ void cLuxJournal::OnEnterContainer(const tString& asOldContainer)
 
     /////////////////////
     //Load main background
-    if(gsBackgroundImage[mCurrentState]!="")
+    if(gsBackgroundImage[mCurrentState] != "")
     {
         SetStateBackgroundGfx(gsBackgroundImage[mCurrentState]);
     }
@@ -569,7 +569,7 @@ void cLuxJournal::OnLeaveContainer(const tString& asNewContainer)
         gpBase->mpEffectHandler->GetPlayVoice()->UnpauseCurrentVoices();
 
         cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
-        pSoundHandler->FadeGlobalVolume(1.0f, 0.5f,eSoundEntryType_World,eLuxGlobalVolumeType_GameMenu, false);
+        pSoundHandler->FadeGlobalVolume(1.0f, 0.5f, eSoundEntryType_World, eLuxGlobalVolumeType_GameMenu, false);
     }
 
     ////////////////////////////
@@ -592,18 +592,18 @@ void cLuxJournal::OnDraw(double adFrameTime)
 {
     ////////////////////////
     //Draw background
-    if(mpScreenGfx && mfAlpha<1)
+    if(mpScreenGfx && mfAlpha < 1)
     {
-        mpGuiSet->DrawGfx(mpScreenGfx,mvGuiSetStartPos,mvGuiSetSize);
+        mpGuiSet->DrawGfx(mpScreenGfx, mvGuiSetStartPos, mvGuiSetSize);
     }
 
     if(mpScreenBgGfx)
     {
-        mpGuiSet->DrawGfx(mpScreenBgGfx,mvGuiSetStartPos+cVector3f(0,0,0.2f),mvGuiSetSize,cColor(1, mfAlpha));
+        mpGuiSet->DrawGfx(mpScreenBgGfx, mvGuiSetStartPos + cVector3f(0, 0, 0.2f), mvGuiSetSize, cColor(1, mfAlpha));
     }
 
 
-    for(size_t i=0; i<mvStateData.size(); ++i)
+    for(size_t i = 0; i < mvStateData.size(); ++i)
     {
         if(mvStateData[i]->mfAlpha > 0)
         {
@@ -615,7 +615,7 @@ void cLuxJournal::OnDraw(double adFrameTime)
     //Fade
     if(mbOpenedFromInventory)
     {
-        mpGuiSet->DrawGfx(mpWhiteGfx,mvGuiSetStartPos+cVector3f(0,0,20),mvGuiSetSize,cColor(0, 1.0f - mfAlpha*mfAlpha));
+        mpGuiSet->DrawGfx(mpWhiteGfx, mvGuiSetStartPos + cVector3f(0, 0, 20), mvGuiSetSize, cColor(0, 1.0f - mfAlpha * mfAlpha));
     }
 
     ////////////////////////
@@ -631,7 +631,7 @@ void cLuxJournal::OnDraw(double adFrameTime)
 
 void cLuxJournal::ExitPressed(bool abInstantExit)
 {
-    if(mbActive==false)
+    if(mbActive == false)
     {
         return;
     }
@@ -639,9 +639,9 @@ void cLuxJournal::ExitPressed(bool abInstantExit)
     ////////////////////
     //Narrated diary open
     if(    mCurrentState == eLuxJournalState_OpenNarratedDiary &&
-            mlCurrentNotePage < (int)mvPages.size()-1)
+            mlCurrentNotePage < (int)mvPages.size() - 1)
     {
-        SetNotePage(mlCurrentNotePage+1);
+        SetNotePage(mlCurrentNotePage + 1);
     }
     ////////////////////
     //Exit the journal directly
@@ -674,7 +674,7 @@ void cLuxJournal::ExitPressed(bool abInstantExit)
 
 void cLuxJournal::Exit()
 {
-    if(mbActive==false)
+    if(mbActive == false)
     {
         return;
     }
@@ -685,7 +685,7 @@ void cLuxJournal::Exit()
     }
 
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
-    if(mpVoiceEntry && pSoundHandler->IsValid(mpVoiceEntry,mlVoiceEntryID))
+    if(mpVoiceEntry && pSoundHandler->IsValid(mpVoiceEntry, mlVoiceEntryID))
     {
         mpVoiceEntry->FadeOut(3.0f);
     }
@@ -702,16 +702,16 @@ void cLuxJournal::Exit()
 
 //-----------------------------------------------------------------------
 
-cLuxNote* cLuxJournal::AddNote(const tString& asNameAndTextEntry, const tString& asImage)
+cLuxNote *cLuxJournal::AddNote(const tString& asNameAndTextEntry, const tString& asImage)
 {
     cLuxNote *pNote = hplNew( cLuxNote, () );
 
-    pNote->msNameEntry = "Note_"+asNameAndTextEntry+"_Name";
-    pNote->msTextEntry = "Note_"+asNameAndTextEntry+"_Text";
+    pNote->msNameEntry = "Note_" + asNameAndTextEntry + "_Name";
+    pNote->msTextEntry = "Note_" + asNameAndTextEntry + "_Text";
 
     tString sExt = cString::GetFileExt(asImage);
-    pNote->msImageFile = cString::SetFileExt( cString::SetFileExt(asImage,"")+"_large",sExt);
-    pNote->msIconFile = cString::SetFileExt( cString::SetFileExt(asImage,"")+"_icon",sExt);
+    pNote->msImageFile = cString::SetFileExt( cString::SetFileExt(asImage, "") + "_large", sExt);
+    pNote->msIconFile = cString::SetFileExt( cString::SetFileExt(asImage, "") + "_icon", sExt);
 
     mvNotes.push_back(pNote);
 
@@ -720,21 +720,21 @@ cLuxNote* cLuxJournal::AddNote(const tString& asNameAndTextEntry, const tString&
 
 //-----------------------------------------------------------------------
 
-cLuxDiary* cLuxJournal::AddDiary(const tString& asNameAndTextEntry, const tString& asImage, int &alCurrentEntryIdx)
+cLuxDiary *cLuxJournal::AddDiary(const tString& asNameAndTextEntry, const tString& asImage, int &alCurrentEntryIdx)
 {
     cLuxDiary *pDiary = hplNew( cLuxDiary, () );
 
     cLuxDiaryContainer *pContainer = CreateDiaryContainer(asNameAndTextEntry);
-    int lNum = (int)pContainer->mvDiaries.size()+1;
+    int lNum = (int)pContainer->mvDiaries.size() + 1;
 
     alCurrentEntryIdx = lNum;
 
-    pDiary->msNameEntry = "Diary_"+asNameAndTextEntry+"_Name"+cString::ToString(lNum);
-    pDiary->msTextEntry = "Diary_"+asNameAndTextEntry+"_Text"+cString::ToString(lNum);
+    pDiary->msNameEntry = "Diary_" + asNameAndTextEntry + "_Name" + cString::ToString(lNum);
+    pDiary->msTextEntry = "Diary_" + asNameAndTextEntry + "_Text" + cString::ToString(lNum);
 
     tString sExt = cString::GetFileExt(asImage);
-    pDiary->msImageFile = cString::SetFileExt( cString::SetFileExt(asImage,"")+"_large",sExt);
-    pDiary->msIconFile = cString::SetFileExt( cString::SetFileExt(asImage,"")+"_icon",sExt);
+    pDiary->msImageFile = cString::SetFileExt( cString::SetFileExt(asImage, "") + "_large", sExt);
+    pDiary->msIconFile = cString::SetFileExt( cString::SetFileExt(asImage, "") + "_icon", sExt);
 
     pContainer->mvDiaries.push_back(pDiary);
 
@@ -745,7 +745,7 @@ cLuxDiary* cLuxJournal::AddDiary(const tString& asNameAndTextEntry, const tStrin
 
 bool cLuxJournal::AddQuestNote(const tString& asName, const tString& asNameAndTextEntry)
 {
-    for(size_t i=0; i<mvQuestNotes.size(); ++i)
+    for(size_t i = 0; i < mvQuestNotes.size(); ++i)
     {
         if(mvQuestNotes[i]->msName == asName)
         {
@@ -756,8 +756,8 @@ bool cLuxJournal::AddQuestNote(const tString& asName, const tString& asNameAndTe
     cLuxQuestNote *pQuestNote = hplNew( cLuxQuestNote, () );
 
     pQuestNote->msName = asName;
-    pQuestNote->msNameEntry = "Quest_"+asNameAndTextEntry+"_Name";
-    pQuestNote->msTextEntry = "Quest_"+asNameAndTextEntry+"_Text";
+    pQuestNote->msNameEntry = "Quest_" + asNameAndTextEntry + "_Name";
+    pQuestNote->msTextEntry = "Quest_" + asNameAndTextEntry + "_Text";
     pQuestNote->mbActive = true;
 
     mvQuestNotes.push_back(pQuestNote);
@@ -769,7 +769,7 @@ bool cLuxJournal::AddQuestNote(const tString& asName, const tString& asNameAndTe
 
 bool cLuxJournal::DisableQuestNote(const tString& asName)
 {
-    for(size_t i=0; i<mvQuestNotes.size(); ++i)
+    for(size_t i = 0; i < mvQuestNotes.size(); ++i)
     {
         if(mvQuestNotes[i]->msName == asName)
         {
@@ -804,9 +804,9 @@ bool cLuxJournal::DisableQuestNote(const tString& asName)
 
 //-----------------------------------------------------------------------
 
-cLuxQuestNote* cLuxJournal::GetQuestNote(const tString& asName)
+cLuxQuestNote *cLuxJournal::GetQuestNote(const tString& asName)
 {
-    for(size_t i=0; i<mvQuestNotes.size(); ++i)
+    for(size_t i = 0; i < mvQuestNotes.size(); ++i)
     {
         if(mvQuestNotes[i]->msName == asName)
         {
@@ -827,7 +827,7 @@ void cLuxJournal::ChangeState(eLuxJournalState aState)
         SetStateBackgroundGfx(gsBackgroundImage[aState]);
     }
 
-    for(size_t i=0; i<mvStateData.size(); ++i)
+    for(size_t i = 0; i < mvStateData.size(); ++i)
     {
         cWidgetDummy *pRoot = mvStateData[i]->mpRootWidget;
         if(i == mCurrentState)
@@ -849,10 +849,10 @@ void cLuxJournal::OpenNote(cLuxNote *apNote, bool abNarration)
 {
     ///////////////////////////
     // Get the entry number of the diary
-    mlLastReadTextType =0;
-    mlLastReadTextCat =-1;
-    mlLastReadTextEntry =-1;
-    for(size_t i=0; i<mvNotes.size(); ++i)
+    mlLastReadTextType = 0;
+    mlLastReadTextCat = -1;
+    mlLastReadTextEntry = -1;
+    for(size_t i = 0; i < mvNotes.size(); ++i)
     {
         if(mvNotes[i] == apNote)
         {
@@ -908,10 +908,10 @@ void cLuxJournal::SetDiaryAsLastRead(cLuxDiary *apDiary)
     mlLastReadTextType = 1;
     mlLastReadTextCat = -1;
     mlLastReadTextEntry = -1;
-    for(size_t cat=0; cat<mvDiaryContainers.size(); ++cat)
+    for(size_t cat = 0; cat < mvDiaryContainers.size(); ++cat)
     {
         cLuxDiaryContainer* pCont = mvDiaryContainers[cat];
-        for(size_t entry=0; entry<pCont->mvDiaries.size(); ++entry)
+        for(size_t entry = 0; entry < pCont->mvDiaries.size(); ++entry)
         {
             if(apDiary == pCont->mvDiaries[entry])
             {
@@ -920,7 +920,7 @@ void cLuxJournal::SetDiaryAsLastRead(cLuxDiary *apDiary)
                 break;
             }
         }
-        if(mlLastReadTextCat >=0)
+        if(mlLastReadTextCat >= 0)
         {
             break;
         }
@@ -931,14 +931,14 @@ void cLuxJournal::SetDiaryAsLastRead(cLuxDiary *apDiary)
 
 void cLuxJournal::OpenLastReadText()
 {
-    if(mlLastReadTextEntry<0 || mlLastReadTextType<0)
+    if(mlLastReadTextEntry < 0 || mlLastReadTextType < 0)
     {
         return;
     }
 
     ///////////////////
     //Note
-    if(mlLastReadTextType ==0)
+    if(mlLastReadTextType == 0)
     {
         if(mlLastReadTextEntry >= (int)mvNotes.size())
         {
@@ -953,7 +953,7 @@ void cLuxJournal::OpenLastReadText()
     //Diary
     else
     {
-        if(mlLastReadTextCat<0)
+        if(mlLastReadTextCat < 0)
         {
             return;
         }
@@ -980,12 +980,12 @@ void cLuxJournal::OpenLastReadText()
 
 //-----------------------------------------------------------------------
 
-cLuxDiaryContainer* cLuxJournal::CreateDiaryContainer(const tString& asType)
+cLuxDiaryContainer *cLuxJournal::CreateDiaryContainer(const tString& asType)
 {
-    for(size_t i=0; i<mvDiaryContainers.size(); ++i)
+    for(size_t i = 0; i < mvDiaryContainers.size(); ++i)
     {
         cLuxDiaryContainer *pCont = mvDiaryContainers[i];
-        if(pCont->msType==asType)
+        if(pCont->msType == asType)
         {
             return pCont;
         }
@@ -1001,12 +1001,12 @@ cLuxDiaryContainer* cLuxJournal::CreateDiaryContainer(const tString& asType)
 
 void cLuxJournal::SetupLabel(cWidgetLabel *apLabel, const cVector2f& avSize, int alIdx, eLuxJournalState aState, iFontData *apFont, eFontAlign aFontAlign)
 {
-    if(apFont==NULL)
+    if(apFont == NULL)
     {
         apFont = mpFontMenu;
     }
 
-    apLabel->SetDefaultFontColor(cColor(1,1));
+    apLabel->SetDefaultFontColor(cColor(1, 1));
     apLabel->SetDefaultFontSize(avSize);
     apLabel->SetTextAlign(aFontAlign);
     apLabel->SetUserValue(alIdx);
@@ -1034,40 +1034,40 @@ void cLuxJournal::SetupImage(cWidgetImage *apImage, int alIdx, eLuxJournalState 
 
 void cLuxJournal::SetupNavigationWidgets(eLuxJournalState aState, int alListIndex, int alForwardIndex, int alBackwardIndex, cWidgetDummy *apRoot)
 {
-    cVector2f vSize(65,46);
-    cVector3f vPos = cVector3f(400 + mfNoteTextWidth/2 - vSize.x-80, mfNoteTextStartY + ((float)mlNoteMaxPageRows+1) * mfNoteRowDist, 3);
+    cVector2f vSize(65, 46);
+    cVector3f vPos = cVector3f(400 + mfNoteTextWidth / 2 - vSize.x - 80, mfNoteTextStartY + ((float)mlNoteMaxPageRows + 1) * mfNoteRowDist, 3);
 
     iWidget* pFwd = NULL;
     iWidget* pRet = NULL;
     iWidget* pBck = NULL;
 
     //Forward
-    mpImageForward[aState] = mpGuiSet->CreateWidgetImage("journal/note_forward.tga",vPos,vSize,eGuiMaterial_Alpha,false,apRoot);
-    mpImageForward[aState]->AddCallback(eGuiMessage_OnDraw,this, kGuiCallback(ImageButtonOnDraw));
-    mpImageForward[aState]->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(NoteArrowClick));
+    mpImageForward[aState] = mpGuiSet->CreateWidgetImage("journal/note_forward.tga", vPos, vSize, eGuiMaterial_Alpha, false, apRoot);
+    mpImageForward[aState]->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(ImageButtonOnDraw));
+    mpImageForward[aState]->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(NoteArrowClick));
     SetupImage(mpImageForward[aState], alForwardIndex, aState);
     pFwd = mpImageForward[aState];
 
     //Return
     if(aState == eLuxJournalState_Diaries || aState == eLuxJournalState_Notes || aState == eLuxJournalState_QuestLog)
     {
-        cWidgetLabel* pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(350,mfBackTextY,3), cVector2f(100, 24),kTranslate("Journal","MainBack"), apRoot);
-        SetupLabel(pLabel,mvBackTextFontSize, aState, aState, mpFontMenu);
-        pLabel->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(NoteBackClick));
-        pLabel->AddCallback(eGuiMessage_OnDraw,this, kGuiCallback(ListTextOnDraw));
+        cWidgetLabel* pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(350, mfBackTextY, 3), cVector2f(100, 24), kTranslate("Journal", "MainBack"), apRoot);
+        SetupLabel(pLabel, mvBackTextFontSize, aState, aState, mpFontMenu);
+        pLabel->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(NoteBackClick));
+        pLabel->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(ListTextOnDraw));
         pLabel->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(UIListenerJournalPress));
 
         pRet = pLabel;
     }
     else
     {
-        cWidgetImage* pImage = mpGuiSet->CreateWidgetImage("journal/note_return.tga",0,-1,eGuiMaterial_Alpha,false,apRoot);
+        cWidgetImage* pImage = mpGuiSet->CreateWidgetImage("journal/note_return.tga", 0, -1, eGuiMaterial_Alpha, false, apRoot);
 
         if(aState != eLuxJournalState_OpenNarratedDiary)
         {
-            pImage->SetPosition(cVector3f(400 - pImage->GetSize().x/2.0f, mfBackTextY, 3));
-            pImage->AddCallback(eGuiMessage_OnDraw,this, kGuiCallback(ImageButtonOnDraw));
-            pImage->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(NoteBackClick));
+            pImage->SetPosition(cVector3f(400 - pImage->GetSize().x / 2.0f, mfBackTextY, 3));
+            pImage->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(ImageButtonOnDraw));
+            pImage->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(NoteBackClick));
             pImage->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(UIListenerJournalPress));
             SetupImage(pImage, aState, aState);
         }
@@ -1085,10 +1085,10 @@ void cLuxJournal::SetupNavigationWidgets(eLuxJournalState aState, int alListInde
 
 
     //Backward
-    vPos.x = 400 - mfNoteTextWidth/2 + 80;
-    mpImageBackward[aState] = mpGuiSet->CreateWidgetImage("journal/note_backward.tga",vPos,vSize,eGuiMaterial_Alpha,false,apRoot);
-    mpImageBackward[aState]->AddCallback(eGuiMessage_OnDraw,this, kGuiCallback(ImageButtonOnDraw));
-    mpImageBackward[aState]->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(NoteArrowClick));
+    vPos.x = 400 - mfNoteTextWidth / 2 + 80;
+    mpImageBackward[aState] = mpGuiSet->CreateWidgetImage("journal/note_backward.tga", vPos, vSize, eGuiMaterial_Alpha, false, apRoot);
+    mpImageBackward[aState]->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(ImageButtonOnDraw));
+    mpImageBackward[aState]->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(NoteArrowClick));
     SetupImage(mpImageBackward[aState], alBackwardIndex, aState);
 
     pBck = mpImageBackward[aState];
@@ -1138,9 +1138,9 @@ void cLuxJournal::ResetSessionVars()
     SetStateBackgroundGfx("");
     mCurrentState = eLuxJournalState_Main;
 
-    mlCurrentNotePage =0;
+    mlCurrentNotePage = 0;
 
-    for(size_t i=0; i<mvStateData.size(); ++i)
+    for(size_t i = 0; i < mvStateData.size(); ++i)
     {
         mvStateData[i]->Reset();
     }
@@ -1158,7 +1158,7 @@ void cLuxJournal::SetStateBackgroundGfx(const tString& asFile)
 
     if(asFile != "")
     {
-        mpStateBackgroundGfx = mpGui->CreateGfxTexture(asFile,eGuiMaterial_Alpha, eTextureType_Rect);
+        mpStateBackgroundGfx = mpGui->CreateGfxTexture(asFile, eGuiMaterial_Alpha, eTextureType_Rect);
     }
 }
 
@@ -1171,17 +1171,17 @@ void cLuxJournal::LoadText(const tWString &asName, const tWString &asText)
     mvPages.clear();
 
     tWStringVec sTempRows;
-    mpFontDefault->GetWordWrapRows(mfNoteTextWidth, 20, 20,asText, &sTempRows);
+    mpFontDefault->GetWordWrapRows(mfNoteTextWidth, 20, 20, asText, &sTempRows);
 
-    int lRowCount =0;
+    int lRowCount = 0;
     ///////////////////////////////
     // Iterate rows
-    for(size_t i=0; i<sTempRows.size(); ++i)
+    for(size_t i = 0; i < sTempRows.size(); ++i)
     {
         //Insert empty row for voice tags
-        if(cString::SubW(sTempRows[i],0,6)  == _W("[voice"))
+        if(cString::SubW(sTempRows[i], 0, 6)  == _W("[voice"))
         {
-            if(mvPages.empty()==false)
+            if(mvPages.empty() == false)
             {
                 mvPages.back().mvRows.push_back(_W(""));
                 lRowCount++;
@@ -1193,7 +1193,7 @@ void cLuxJournal::LoadText(const tWString &asName, const tWString &asText)
         if(mvPages.empty() || lRowCount >= mlNoteMaxPageRows || sTempRows[i] == _W("[new_page]") )
         {
             mvPages.push_back(cLuxNotePage());
-            lRowCount =0;
+            lRowCount = 0;
             if(sTempRows[i] == _W("[new_page]"))
             {
                 continue;
@@ -1209,29 +1209,29 @@ void cLuxJournal::LoadText(const tWString &asName, const tWString &asText)
 
 //-----------------------------------------------------------------------
 
-void cLuxJournal::LoadNarrationText(const tWString &asName,const tWString &asText)
+void cLuxJournal::LoadNarrationText(const tWString &asName, const tWString &asText)
 {
     msHeader = asName;
 
     mvPages.clear();
 
     tWStringVec sDraftRows;
-    mpFontDefault->GetWordWrapRows(mfNoteTextWidth, 20, 20,asText, &sDraftRows);
+    mpFontDefault->GetWordWrapRows(mfNoteTextWidth, 20, 20, asText, &sDraftRows);
 
     tWStringVec sTempRows;
     /////////////////////////////////
     //Make sure command rows (begining with [ is on the same line!)
-    for(size_t i=0; i<sDraftRows.size(); ++i)
+    for(size_t i = 0; i < sDraftRows.size(); ++i)
     {
-        if(sDraftRows[i].length()==0)
+        if(sDraftRows[i].length() == 0)
         {
             sTempRows.push_back(sDraftRows[i]);
         }
-        else if(sDraftRows[i][0] == _W('[') && sDraftRows[i][sDraftRows[i].length()-1] != _W(']') )
+        else if(sDraftRows[i][0] == _W('[') && sDraftRows[i][sDraftRows[i].length() - 1] != _W(']') )
         {
             sTempRows.push_back(sDraftRows[i]);
             ++i;
-            if(i<sDraftRows.size())
+            if(i < sDraftRows.size())
             {
                 sTempRows.back() += sDraftRows[i];
             }
@@ -1243,13 +1243,13 @@ void cLuxJournal::LoadNarrationText(const tWString &asName,const tWString &asTex
     }
 
 
-    int lRowCount =0;
+    int lRowCount = 0;
     ///////////////////////////////
     // Iterate rows
-    for(size_t i=0; i<sTempRows.size(); ++i)
+    for(size_t i = 0; i < sTempRows.size(); ++i)
     {
         bool bIsVoiceRow = false;
-        if(sTempRows[i].length()>6 && cString::SubW(sTempRows[i],0,6)  == _W("[voice"))
+        if(sTempRows[i].length() > 6 && cString::SubW(sTempRows[i], 0, 6)  == _W("[voice"))
         {
             bIsVoiceRow = true;
         }
@@ -1265,7 +1265,7 @@ void cLuxJournal::LoadNarrationText(const tWString &asName,const tWString &asTex
         if(    mvPages.empty() || bIsVoiceRow)
         {
             mvPages.push_back(cLuxNotePage());
-            lRowCount =0;
+            lRowCount = 0;
 
             ////////////////////////////////////////
             // Get the filename and add to page.
@@ -1273,11 +1273,11 @@ void cLuxJournal::LoadNarrationText(const tWString &asName,const tWString &asTex
             {
                 tWString sSep = _W(" []");//Get voice and filename as seperate strings.
                 tWStringVec vArgs;
-                cString::GetStringVecW(sTempRows[i],vArgs, &sSep);
+                cString::GetStringVecW(sTempRows[i], vArgs, &sSep);
 
-                if(vArgs.size()!=2)
+                if(vArgs.size() != 2)
                 {
-                    Error("Voice lines '%s' has bad syntax! Found %d arguments!\n",cString::To8Char(sTempRows[i]).c_str(),vArgs.size());
+                    Error("Voice lines '%s' has bad syntax! Found %d arguments!\n", cString::To8Char(sTempRows[i]).c_str(), vArgs.size());
                 }
                 else
                 {
@@ -1315,7 +1315,7 @@ void cLuxJournal::SetNotePage(int alPageNum)
     //Play voice instead!
     if(mCurrentState == eLuxJournalState_OpenNarratedDiary)
     {
-        if(alPageNum >=0)
+        if(alPageNum >= 0)
         {
             cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
             if(mpVoiceEntry && pSoundHandler->IsValid(mpVoiceEntry, mlVoiceEntryID))
@@ -1323,7 +1323,7 @@ void cLuxJournal::SetNotePage(int alPageNum)
                 mpVoiceEntry->FadeOut(3.0f);
             }
 
-            mpVoiceEntry = pSoundHandler->PlayGuiStream(mvPages[alPageNum].msVoice,false, 1.0f);
+            mpVoiceEntry = pSoundHandler->PlayGuiStream(mvPages[alPageNum].msVoice, false, 1.0f);
             if(mpVoiceEntry)
             {
                 mlVoiceEntryID = mpVoiceEntry->GetId();
@@ -1347,7 +1347,7 @@ void cLuxJournal::SetNotePage(int alPageNum)
         mpImageBackward[lX]->SetVisible(true);
     }
 
-    if(mlCurrentNotePage >= (int)mvPages.size()-1)
+    if(mlCurrentNotePage >= (int)mvPages.size() - 1)
     {
         mpImageForward[lX]->SetEnabled(false);
         mpImageForward[lX]->SetVisible(false);
@@ -1404,7 +1404,7 @@ void cLuxJournal::SetNoteListPage(int alPageNum, eLuxJournalState aState)
 
     ///////////////////////////////
     //Set only current page visible
-    for(size_t i=0; i<vPages.size(); ++i)
+    for(size_t i = 0; i < vPages.size(); ++i)
     {
         vPages[i].SetVisible(mlCurrentNoteListPage[lIdx] == i);
     }
@@ -1443,7 +1443,7 @@ void cLuxJournal::SetNoteListPage(int alPageNum, eLuxJournalState aState)
         mpImageBackward[aState]->SetVisible(true);
     }
 
-    if(vPages.empty() || mlCurrentNoteListPage[lIdx] >= (int)vPages.size()-1)
+    if(vPages.empty() || mlCurrentNoteListPage[lIdx] >= (int)vPages.size() - 1)
     {
         mpImageForward[aState]->SetEnabled(false);
         mpImageForward[aState]->SetVisible(false);
@@ -1474,7 +1474,7 @@ void cLuxJournal::CreateGui()
 
 void cLuxJournal::DestroyGui()
 {
-    for(size_t i=0; i<mvStateData.size(); ++i)
+    for(size_t i = 0; i < mvStateData.size(); ++i)
     {
         mvStateData[i]->DestroySessionWidgets();
     }
@@ -1496,62 +1496,62 @@ void cLuxJournal::CreateMainGui()
     cWidgetLabel *pLabel = NULL;
     float fSize = 30;
 
-    std::vector<iWidget*> vLabels;
+    std::vector<iWidget *> vLabels;
 
     //Notes
-    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(300, 200, 3),cVector2f(200, 25),kTranslate("Journal","Notes"), pState);
-    SetupLabel(pLabel,fSize,0, eLuxJournalState_Main);
-    pLabel->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(MainMenuTextClick));
-    pLabel->AddCallback(eGuiMessage_OnDraw,this, kGuiCallback(MainMenuTextOnDraw));
+    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(300, 200, 3), cVector2f(200, 25), kTranslate("Journal", "Notes"), pState);
+    SetupLabel(pLabel, fSize, 0, eLuxJournalState_Main);
+    pLabel->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(MainMenuTextClick));
+    pLabel->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(MainMenuTextOnDraw));
     vLabels.push_back(pLabel);
 
     mpWidgetDefaultNav[eLuxJournalState_Main] = pLabel;
 
     //Diaries
-    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(300, 250, 3),cVector2f(200, 25),kTranslate("Journal","Diaries"), pState);
-    SetupLabel(pLabel,fSize,1, eLuxJournalState_Main);
-    pLabel->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(MainMenuTextClick));
-    pLabel->AddCallback(eGuiMessage_OnDraw,this, kGuiCallback(MainMenuTextOnDraw));
+    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(300, 250, 3), cVector2f(200, 25), kTranslate("Journal", "Diaries"), pState);
+    SetupLabel(pLabel, fSize, 1, eLuxJournalState_Main);
+    pLabel->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(MainMenuTextClick));
+    pLabel->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(MainMenuTextOnDraw));
     vLabels.push_back(pLabel);
 
     //Quest Log
-    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(300, 300, 3),cVector2f(200, 25),kTranslate("Journal","Quest Log"), pState);
-    SetupLabel(pLabel,fSize,2, eLuxJournalState_Main);
-    pLabel->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(MainMenuTextClick));
-    pLabel->AddCallback(eGuiMessage_OnDraw,this, kGuiCallback(MainMenuTextOnDraw));
+    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(300, 300, 3), cVector2f(200, 25), kTranslate("Journal", "Quest Log"), pState);
+    SetupLabel(pLabel, fSize, 2, eLuxJournalState_Main);
+    pLabel->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(MainMenuTextClick));
+    pLabel->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(MainMenuTextOnDraw));
     vLabels.push_back(pLabel);
 
     //Back
-    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(300, mfBackTextY, 3),cVector2f(200, 25),kTranslate("Journal","MainBack"), pState);
-    SetupLabel(pLabel,mvBackTextFontSize, 3, eLuxJournalState_Main);
-    pLabel->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(MainMenuTextClick));
-    pLabel->AddCallback(eGuiMessage_OnDraw,this, kGuiCallback(MainMenuTextOnDraw));
+    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(300, mfBackTextY, 3), cVector2f(200, 25), kTranslate("Journal", "MainBack"), pState);
+    SetupLabel(pLabel, mvBackTextFontSize, 3, eLuxJournalState_Main);
+    pLabel->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(MainMenuTextClick));
+    pLabel->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(MainMenuTextOnDraw));
     vLabels.push_back(pLabel);
 
 
     //////////////////////////////////////////////////////////////////////
     // Set up navigation / Label callbacks
     {
-        for(size_t i=0; i<vLabels.size(); ++i)
+        for(size_t i = 0; i < vLabels.size(); ++i)
         {
             iWidget* pWidget = vLabels[i];
 
-            pWidget->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(MainMenuTextClick));
-            pWidget->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(MainMenuUIButtonPress));
-            pWidget->AddCallback(eGuiMessage_OnDraw,this, kGuiCallback(MainMenuTextOnDraw));
+            pWidget->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(MainMenuTextClick));
+            pWidget->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(MainMenuUIButtonPress));
+            pWidget->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(MainMenuTextOnDraw));
 
 
 
-            int lPrev = (int)i-1;
-            int lNext = (int)i+1;
+            int lPrev = (int)i - 1;
+            int lNext = (int)i + 1;
 
-            if(lPrev>=0)
+            if(lPrev >= 0)
             {
                 pWidget->SetFocusNavigation(eUIArrow_Up, vLabels[lPrev]);
             }
-            if(lNext<(int)vLabels.size())
+            if(lNext < (int)vLabels.size())
             {
-                pWidget->SetFocusNavigation(eUIArrow_Down,vLabels[lNext]);
+                pWidget->SetFocusNavigation(eUIArrow_Down, vLabels[lNext]);
             }
         }
 
@@ -1579,8 +1579,8 @@ void cLuxJournal::CreateNotesGui()
 
     /////////////////////////////
     // Header
-    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(250, mfNoteListHeaderY, 3),cVector2f(300, 32),kTranslate("Journal","Notes"), pRoot);
-    SetupLabel(pLabel,28, 0, eLuxJournalState_Notes);
+    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(250, mfNoteListHeaderY, 3), cVector2f(300, 32), kTranslate("Journal", "Notes"), pRoot);
+    SetupLabel(pLabel, 28, 0, eLuxJournalState_Notes);
 
 
     /////////////////////////////
@@ -1588,8 +1588,8 @@ void cLuxJournal::CreateNotesGui()
     if(mvNotes.empty())
     {
         vStartPos.y = 270;
-        pLabel = mpGuiSet->CreateWidgetLabel(vStartPos,cVector2f(300, 24),kTranslate("Journal","NotesEmpty"), pRoot);
-        SetupLabel(pLabel,24, 0, eLuxJournalState_Notes,mpFontDefault);
+        pLabel = mpGuiSet->CreateWidgetLabel(vStartPos, cVector2f(300, 24), kTranslate("Journal", "NotesEmpty"), pRoot);
+        SetupLabel(pLabel, 24, 0, eLuxJournalState_Notes, mpFontDefault);
     }
     /////////////////////////////
     // Has notes
@@ -1598,7 +1598,7 @@ void cLuxJournal::CreateNotesGui()
         mvNoteListPages[lListIdx].push_back(cLuxJournal_ListPage());
         cLuxJournal_ListPage *pListPage = &mvNoteListPages[lListIdx].back();
 
-        for(size_t i=0; i<mvNotes.size(); ++i)
+        for(size_t i = 0; i < mvNotes.size(); ++i)
         {
             cLuxNote *pNote = mvNotes[i];
 
@@ -1611,16 +1611,16 @@ void cLuxJournal::CreateNotesGui()
             }
 
             //Add label
-            pLabel = mpGuiSet->CreateWidgetLabel(vStartPos,cVector2f(300, 24),kTranslate("Journal",pNote->msNameEntry), pRoot);
-            SetupLabel(pLabel,24, (int)i, eLuxJournalState_Notes, mpFontDefault, eFontAlign_Left);
-            pLabel->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(NoteTextClick));
-            pLabel->AddCallback(eGuiMessage_OnDraw,this, kGuiCallback(ListTextOnDraw));
+            pLabel = mpGuiSet->CreateWidgetLabel(vStartPos, cVector2f(300, 24), kTranslate("Journal", pNote->msNameEntry), pRoot);
+            SetupLabel(pLabel, 24, (int)i, eLuxJournalState_Notes, mpFontDefault, eFontAlign_Left);
+            pLabel->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(NoteTextClick));
+            pLabel->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(ListTextOnDraw));
 
-            pLabel->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(JournalItemUIButtonPress));
+            pLabel->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(JournalItemUIButtonPress));
 
             //Add icon
-            pImage = mpGuiSet->CreateWidgetImage(pNote->msIconFile, vStartPos + cVector3f(-25,2,-0.05f), cVector2f(20, 20),eGuiMaterial_Alpha, false, pRoot);
-            SetupImage(pImage,(int)i,eLuxJournalState_Notes);
+            pImage = mpGuiSet->CreateWidgetImage(pNote->msIconFile, vStartPos + cVector3f(-25, 2, -0.05f), cVector2f(20, 20), eGuiMaterial_Alpha, false, pRoot);
+            SetupImage(pImage, (int)i, eLuxJournalState_Notes);
 
             //Add list entry
             pListPage->mvEntries.push_back(cLuxJournal_ListEntry());
@@ -1631,22 +1631,22 @@ void cLuxJournal::CreateNotesGui()
         }
     }
 
-    for(size_t i=0; i<mvNoteListPages[lListIdx].size(); ++i)
+    for(size_t i = 0; i < mvNoteListPages[lListIdx].size(); ++i)
     {
         cLuxJournal_ListPage *pListPage = &mvNoteListPages[lListIdx][i];
-        for(size_t j=0; j<pListPage->mvEntries.size(); ++j)
+        for(size_t j = 0; j < pListPage->mvEntries.size(); ++j)
         {
             cLuxJournal_ListEntry* pListEntry = &pListPage->mvEntries[j];
-            int lPrev = (int)j-1;
-            int lNext = (int)j+1;
+            int lPrev = (int)j - 1;
+            int lNext = (int)j + 1;
 
             iWidget* pLabel = pListEntry->mlstWidgets.front();
 
-            if(lPrev>=0)
+            if(lPrev >= 0)
             {
                 pLabel->SetFocusNavigation(eUIArrow_Up, pListPage->mvEntries[lPrev].mlstWidgets.front());
             }
-            if(lNext<(int)pListPage->mvEntries.size())
+            if(lNext < (int)pListPage->mvEntries.size())
             {
                 pLabel->SetFocusNavigation(eUIArrow_Down, pListPage->mvEntries[lNext].mlstWidgets.front());
             }
@@ -1660,7 +1660,7 @@ void cLuxJournal::CreateNotesGui()
 
     ////////////////////////
     // Set start page
-    mlCurrentNoteListPage[lListIdx] = (int)mvNoteListPages[lListIdx].size()-1;
+    mlCurrentNoteListPage[lListIdx] = (int)mvNoteListPages[lListIdx].size() - 1;
 }
 
 //-----------------------------------------------------------------------
@@ -1681,8 +1681,8 @@ void cLuxJournal::CreateDiariesGui()
 
     /////////////////////////////
     // Header
-    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(250, mfNoteListHeaderY, 3),cVector2f(300, 32),kTranslate("Journal","Diaries"), pRoot);
-    SetupLabel(pLabel,28, 0, eLuxJournalState_Diaries);
+    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(250, mfNoteListHeaderY, 3), cVector2f(300, 32), kTranslate("Journal", "Diaries"), pRoot);
+    SetupLabel(pLabel, 28, 0, eLuxJournalState_Diaries);
 
 
     /////////////////////////////
@@ -1690,8 +1690,8 @@ void cLuxJournal::CreateDiariesGui()
     if(mvDiaryContainers.empty())
     {
         vStartPos.y = 270;
-        pLabel = mpGuiSet->CreateWidgetLabel(vStartPos,cVector2f(300, 24),kTranslate("Journal","DiariesEmpty"), pRoot);
-        SetupLabel(pLabel,24, 0, eLuxJournalState_Diaries,mpFontDefault);
+        pLabel = mpGuiSet->CreateWidgetLabel(vStartPos, cVector2f(300, 24), kTranslate("Journal", "DiariesEmpty"), pRoot);
+        SetupLabel(pLabel, 24, 0, eLuxJournalState_Diaries, mpFontDefault);
     }
     /////////////////////////////
     // Has Diaries
@@ -1700,11 +1700,11 @@ void cLuxJournal::CreateDiariesGui()
         mvNoteListPages[lListIdx].push_back(cLuxJournal_ListPage());
         cLuxJournal_ListPage *pListPage = &mvNoteListPages[lListIdx].back();
 
-        for(size_t cont=0; cont<mvDiaryContainers.size(); ++cont)
+        for(size_t cont = 0; cont < mvDiaryContainers.size(); ++cont)
         {
             cLuxDiaryContainer *pCont = mvDiaryContainers[cont];
 
-            for(size_t i=0; i<pCont->mvDiaries.size(); ++i)
+            for(size_t i = 0; i < pCont->mvDiaries.size(); ++i)
             {
                 cLuxDiary *pDiary = pCont->mvDiaries[i];
 
@@ -1716,19 +1716,19 @@ void cLuxJournal::CreateDiariesGui()
                     pListPage = &mvNoteListPages[lListIdx].back();
                 }
 
-                pLabel = mpGuiSet->CreateWidgetLabel(vStartPos,cVector2f(300, 24),kTranslate("Journal",pDiary->msNameEntry), pRoot);
-                SetupLabel(pLabel,24, (int)i, eLuxJournalState_Diaries, mpFontDefault, eFontAlign_Left);
-                pLabel->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(DiaryTextClick));
+                pLabel = mpGuiSet->CreateWidgetLabel(vStartPos, cVector2f(300, 24), kTranslate("Journal", pDiary->msNameEntry), pRoot);
+                SetupLabel(pLabel, 24, (int)i, eLuxJournalState_Diaries, mpFontDefault, eFontAlign_Left);
+                pLabel->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(DiaryTextClick));
 
-                pLabel->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(JournalItemUIButtonPress));
+                pLabel->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(JournalItemUIButtonPress));
 
-                pLabel->AddCallback(eGuiMessage_OnDraw,this, kGuiCallback(ListTextOnDraw));
+                pLabel->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(ListTextOnDraw));
 
                 cLuxJournalTextData* pData =  (cLuxJournalTextData*)pLabel->GetUserData();
                 pData->mpExtraData = pDiary;
 
-                pImage = mpGuiSet->CreateWidgetImage(pDiary->msIconFile, vStartPos - cVector3f(23,0,1), cVector2f(20, 20),eGuiMaterial_Alpha, false, pRoot);
-                SetupImage(pImage,(int)i,eLuxJournalState_Diaries);
+                pImage = mpGuiSet->CreateWidgetImage(pDiary->msIconFile, vStartPos - cVector3f(23, 0, 1), cVector2f(20, 20), eGuiMaterial_Alpha, false, pRoot);
+                SetupImage(pImage, (int)i, eLuxJournalState_Diaries);
 
                 //Add list entry
                 pListPage->mvEntries.push_back(cLuxJournal_ListEntry());
@@ -1740,22 +1740,22 @@ void cLuxJournal::CreateDiariesGui()
         }
     }
 
-    for(size_t i=0; i<mvNoteListPages[lListIdx].size(); ++i)
+    for(size_t i = 0; i < mvNoteListPages[lListIdx].size(); ++i)
     {
         cLuxJournal_ListPage *pListPage = &mvNoteListPages[lListIdx][i];
-        for(size_t j=0; j<pListPage->mvEntries.size(); ++j)
+        for(size_t j = 0; j < pListPage->mvEntries.size(); ++j)
         {
             cLuxJournal_ListEntry* pListEntry = &pListPage->mvEntries[j];
-            int lPrev = (int)j-1;
-            int lNext = (int)j+1;
+            int lPrev = (int)j - 1;
+            int lNext = (int)j + 1;
 
             iWidget* pLabel = pListEntry->mlstWidgets.front();
 
-            if(lPrev>=0)
+            if(lPrev >= 0)
             {
                 pLabel->SetFocusNavigation(eUIArrow_Up, pListPage->mvEntries[lPrev].mlstWidgets.front());
             }
-            if(lNext<(int)pListPage->mvEntries.size())
+            if(lNext < (int)pListPage->mvEntries.size())
             {
                 pLabel->SetFocusNavigation(eUIArrow_Down, pListPage->mvEntries[lNext].mlstWidgets.front());
             }
@@ -1769,7 +1769,7 @@ void cLuxJournal::CreateDiariesGui()
 
     ////////////////////////
     // Set start page
-    mlCurrentNoteListPage[lListIdx] = (int)mvNoteListPages[lListIdx].size()-1;
+    mlCurrentNoteListPage[lListIdx] = (int)mvNoteListPages[lListIdx].size() - 1;
 }
 
 //-----------------------------------------------------------------------
@@ -1789,14 +1789,14 @@ void cLuxJournal::CreateQuestNotesGui()
 
     /////////////////////////////
     // Header
-    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(250, mfNoteListHeaderY, 3),cVector2f(300, 32),kTranslate("Journal","Quest Log"), pRoot);
-    SetupLabel(pLabel,28, 0, eLuxJournalState_QuestLog);
+    pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(250, mfNoteListHeaderY, 3), cVector2f(300, 32), kTranslate("Journal", "Quest Log"), pRoot);
+    SetupLabel(pLabel, 28, 0, eLuxJournalState_QuestLog);
 
 
     /////////////////////////////
     // Check if there are any active quests
     bool bHasActiveQuests = false;
-    for(size_t i=0; i<mvQuestNotes.size(); ++i)
+    for(size_t i = 0; i < mvQuestNotes.size(); ++i)
     {
         cLuxQuestNote *pQuest = mvQuestNotes[i];
         if(pQuest->mbActive)
@@ -1808,11 +1808,11 @@ void cLuxJournal::CreateQuestNotesGui()
 
     /////////////////////////////
     // No Quests
-    if(bHasActiveQuests==false)
+    if(bHasActiveQuests == false)
     {
         vStartPos.y = 270;
-        pLabel = mpGuiSet->CreateWidgetLabel(vStartPos,cVector2f(300, 24),kTranslate("Journal","QuestsEmpty"), pRoot);
-        SetupLabel(pLabel,24, 0, eLuxJournalState_QuestLog,mpFontDefault);
+        pLabel = mpGuiSet->CreateWidgetLabel(vStartPos, cVector2f(300, 24), kTranslate("Journal", "QuestsEmpty"), pRoot);
+        SetupLabel(pLabel, 24, 0, eLuxJournalState_QuestLog, mpFontDefault);
     }
     /////////////////////////////
     // Has Quests
@@ -1821,19 +1821,19 @@ void cLuxJournal::CreateQuestNotesGui()
         mvNoteListPages[lListIdx].push_back(cLuxJournal_ListPage());
         cLuxJournal_ListPage *pListPage = &mvNoteListPages[lListIdx].back();
 
-        for(int i=(int)mvQuestNotes.size()-1; i>=0; --i)
+        for(int i = (int)mvQuestNotes.size() - 1; i >= 0; --i)
         {
             cLuxQuestNote *pQuest = mvQuestNotes[i];
-            if(pQuest->mbActive==false)
+            if(pQuest->mbActive == false)
             {
                 continue;
             }
 
             tWStringVec vRows;
-            mpFontDefault->GetWordWrapRows(500, 21, 19, kTranslate("Journal",pQuest->msTextEntry),&vRows);
+            mpFontDefault->GetWordWrapRows(500, 21, 19, kTranslate("Journal", pQuest->msTextEntry), &vRows);
 
             //Check if new page is needed! make sure to check so all rows fit
-            if(vStartPos.y > 200 && (vStartPos.y + (vRows.size()-1)*21 ) > mfMaxNoteListY)
+            if(vStartPos.y > 200 && (vStartPos.y + (vRows.size() - 1) * 21 ) > mfMaxNoteListY)
             {
                 vStartPos.y = 100;
                 mvNoteListPages[lListIdx].push_back(cLuxJournal_ListPage());
@@ -1844,15 +1844,15 @@ void cLuxJournal::CreateQuestNotesGui()
             pListPage->mvEntries.push_back(cLuxJournal_ListEntry());
 
             //Start sign ("-")
-            pLabel = mpGuiSet->CreateWidgetLabel(vStartPos - cVector3f(15,0,1),cVector2f(12, 24),_W("-"), pRoot);
-            SetupLabel(pLabel,19, (int)i, eLuxJournalState_QuestLog, mpFontDefault, eFontAlign_Left);
+            pLabel = mpGuiSet->CreateWidgetLabel(vStartPos - cVector3f(15, 0, 1), cVector2f(12, 24), _W("-"), pRoot);
+            SetupLabel(pLabel, 19, (int)i, eLuxJournalState_QuestLog, mpFontDefault, eFontAlign_Left);
             pListPage->mvEntries.back().AddWidget(pLabel);
 
             //Text
-            for(size_t j=0; j<vRows.size(); ++j)
+            for(size_t j = 0; j < vRows.size(); ++j)
             {
-                pLabel = mpGuiSet->CreateWidgetLabel(vStartPos,cVector2f(500, 24),vRows[j], pRoot);
-                SetupLabel(pLabel,19, (int)i, eLuxJournalState_QuestLog, mpFontDefault, eFontAlign_Left);
+                pLabel = mpGuiSet->CreateWidgetLabel(vStartPos, cVector2f(500, 24), vRows[j], pRoot);
+                SetupLabel(pLabel, 19, (int)i, eLuxJournalState_QuestLog, mpFontDefault, eFontAlign_Left);
                 pListPage->mvEntries.back().AddWidget(pLabel);
                 vStartPos.y += 21;
             }
@@ -1869,7 +1869,7 @@ void cLuxJournal::CreateQuestNotesGui()
 
     ////////////////////////
     // Set start page
-    mlCurrentNoteListPage[lListIdx] = (int)mvNoteListPages[lListIdx].size()-1;
+    mlCurrentNoteListPage[lListIdx] = (int)mvNoteListPages[lListIdx].size() - 1;
 }
 
 //-----------------------------------------------------------------------
@@ -1878,9 +1878,9 @@ void cLuxJournal::CreateOpenNoteGui()
 {
     ////////////////////////////////
     // Diary and note
-    for(int i=0; i<3; ++i)
+    for(int i = 0; i < 3; ++i)
     {
-        eLuxJournalState state = i==0 ? eLuxJournalState_OpenNote : (i == 1 ? eLuxJournalState_OpenDiary : eLuxJournalState_OpenNarratedDiary);
+        eLuxJournalState state = i == 0 ? eLuxJournalState_OpenNote : (i == 1 ? eLuxJournalState_OpenDiary : eLuxJournalState_OpenNarratedDiary);
 
         cWidgetDummy *pRoot = mvStateData[state]->mpRootWidget;
 
@@ -1889,7 +1889,7 @@ void cLuxJournal::CreateOpenNoteGui()
 
         ////////////////////////
         // Navigation
-        SetupNavigationWidgets(state, -1, 0,1, pRoot);
+        SetupNavigationWidgets(state, -1, 0, 1, pRoot);
 
         mpWidgetDefaultNav[state] = mpWidgetReturn[state];
     }
@@ -1900,7 +1900,7 @@ void cLuxJournal::CreateOpenNoteGui()
 
     cWidgetFrame *pClickFrame = mpGuiSet->CreateWidgetFrame(mvGuiSetStartPos, mvGuiSetSize, false, pRoot);
     //pClickFrame->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(NoteClickFrameClick));
-    pClickFrame->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(NoteClickFrameClick));
+    pClickFrame->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(NoteClickFrameClick));
     pClickFrame->SetGlobalUIInputListener(true);
 
     mpImageBackward[eLuxJournalState_OpenNarratedDiary]->SetVisible(false);
@@ -1925,15 +1925,15 @@ void cLuxJournal::CreateScreenTextures()
     cVector3l vTexSize = pLowGfx->GetScreenSizeInt();
     vTexSize.z = 0;
 
-    mpScreenTexture = mpGraphics->CreateTexture("Screen",eTextureType_Rect,eTextureUsage_RenderTarget);
-    mpScreenTexture->CreateFromRawData(vTexSize,ePixelFormat_RGBA,NULL);
+    mpScreenTexture = mpGraphics->CreateTexture("Screen", eTextureType_Rect, eTextureUsage_RenderTarget);
+    mpScreenTexture->CreateFromRawData(vTexSize, ePixelFormat_RGBA, NULL);
     mpScreenTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
 
-    mpScreenBgTexture = mpGraphics->CreateTexture("ScreenBlur",eTextureType_Rect,eTextureUsage_RenderTarget);
-    mpScreenBgTexture->CreateFromRawData(vTexSize,ePixelFormat_RGBA,NULL);
+    mpScreenBgTexture = mpGraphics->CreateTexture("ScreenBlur", eTextureType_Rect, eTextureUsage_RenderTarget);
+    mpScreenBgTexture->CreateFromRawData(vTexSize, ePixelFormat_RGBA, NULL);
 
-    mpScreenGfx = mpGui->CreateGfxTexture(mpScreenTexture,false,eGuiMaterial_Diffuse);
-    mpScreenBgGfx = mpGui->CreateGfxTexture(mpScreenBgTexture,false,eGuiMaterial_Alpha);
+    mpScreenGfx = mpGui->CreateGfxTexture(mpScreenTexture, false, eGuiMaterial_Diffuse);
+    mpScreenBgGfx = mpGui->CreateGfxTexture(mpScreenBgTexture, false, eGuiMaterial_Alpha);
 }
 
 //-----------------------------------------------------------------------
@@ -1945,7 +1945,7 @@ void cLuxJournal::RenderBackgroundImage()
     //////////////////////////////
     // Create frame buffers
     iFrameBuffer *pEffectBuffer  = mpGraphics->CreateFrameBuffer("InventoryEffectbuffer");
-    pEffectBuffer->SetTexture2D(0,mpScreenBgTexture);
+    pEffectBuffer->SetTexture2D(0, mpScreenBgTexture);
     pEffectBuffer->CompileAndValidate();
 
     //////////////////////////////
@@ -1960,27 +1960,27 @@ void cLuxJournal::RenderBackgroundImage()
     pLowGfx->SetDepthTestActive(false);
     pLowGfx->SetDepthWriteActive(false);
 
-    pLowGfx->SetOrthoProjection(mvScreenSize,-1000,1000);
+    pLowGfx->SetOrthoProjection(mvScreenSize, -1000, 1000);
     pLowGfx->SetIdentityMatrix(eMatrix_ModelView);
 
     //Copy screen to screen texture
-    pLowGfx->CopyFrameBufferToTexure(mpScreenTexture,0,pLowGfx->GetScreenSizeInt(),0);
+    pLowGfx->CopyFrameBufferToTexure(mpScreenTexture, 0, pLowGfx->GetScreenSizeInt(), 0);
 
     //Bind shader and draw
     mpEffectProgram->Bind();
     pLowGfx->SetCurrentFrameBuffer(pEffectBuffer);
 
-    pLowGfx->SetTexture(0,mpScreenTexture);
+    pLowGfx->SetTexture(0, mpScreenTexture);
 
-    pLowGfx->DrawQuad(0,mvScreenSize,cVector2f(0, mvScreenSize.y),cVector2f(mvScreenSize.x,0),cColor(1,1));
+    pLowGfx->DrawQuad(0, mvScreenSize, cVector2f(0, mvScreenSize.y), cVector2f(mvScreenSize.x, 0), cColor(1, 1));
     mpEffectProgram->UnBind();
 
     //Copy a copy of the full gui with all HUD!
     pLowGfx->SetCurrentFrameBuffer(NULL);
-    pLowGfx->SetTexture(0,NULL);
+    pLowGfx->SetTexture(0, NULL);
 
     gpBase->mpHelpFuncs->RenderBackgroundScreen(true);
-    pLowGfx->CopyFrameBufferToTexure(mpScreenTexture,0,pLowGfx->GetScreenSizeInt(),0);
+    pLowGfx->CopyFrameBufferToTexure(mpScreenTexture, 0, pLowGfx->GetScreenSizeInt(), 0);
 
 
 
@@ -1988,7 +1988,7 @@ void cLuxJournal::RenderBackgroundImage()
     // Exit
 
     //Render states
-    pLowGfx->SetTexture(0,NULL);
+    pLowGfx->SetTexture(0, NULL);
     pLowGfx->SetCurrentFrameBuffer(NULL);
     pLowGfx->SetDepthTestActive(true);
 
@@ -2036,25 +2036,25 @@ void cLuxJournal::DestroyBackground()
 bool cLuxJournal::MainMenuTextClick(iWidget* apWidget, const cGuiMessageData& aData)
 {
     //Notes
-    if(apWidget->GetUserValue()==0)
+    if(apWidget->GetUserValue() == 0)
     {
         ChangeState(eLuxJournalState_Notes);
         mpWidgetDefaultNav[eLuxJournalState_Main] = apWidget;
     }
     //Diaries
-    else if(apWidget->GetUserValue()==1)
+    else if(apWidget->GetUserValue() == 1)
     {
         ChangeState(eLuxJournalState_Diaries);
         mpWidgetDefaultNav[eLuxJournalState_Main] = apWidget;
     }
     //Quest Log
-    else if(apWidget->GetUserValue()==2)
+    else if(apWidget->GetUserValue() == 2)
     {
         ChangeState(eLuxJournalState_QuestLog);
         mpWidgetDefaultNav[eLuxJournalState_Main] = apWidget;
     }
     //Back
-    else if(apWidget->GetUserValue()==3)
+    else if(apWidget->GetUserValue() == 3)
     {
         ExitPressed(false);
     }
@@ -2066,7 +2066,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxJournal, MainMenuTextClick);
 
 bool cLuxJournal::MainMenuUIButtonPress(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(aData.mlVal==eUIButton_Secondary)
+    if(aData.mlVal == eUIButton_Secondary)
     {
         if(UIListenerButtonPress(apWidget, aData) == false)
         {
@@ -2076,7 +2076,7 @@ bool cLuxJournal::MainMenuUIButtonPress(iWidget* apWidget, const cGuiMessageData
         return true;
     }
 
-    if(aData.mlVal==eUIButton_Primary)
+    if(aData.mlVal == eUIButton_Primary)
     {
         return MainMenuTextClick(apWidget, aData);
     }
@@ -2091,18 +2091,18 @@ bool cLuxJournal::MainMenuTextOnDraw(iWidget* apWidget, const cGuiMessageData& a
 {
     cLuxJournalTextData *pData = (cLuxJournalTextData*)apWidget->GetUserData();
 
-    if(pData->mfEffectfAlpha >0)
+    if(pData->mfEffectfAlpha > 0)
     {
-        float fT = 0.3f + (sin(mfMouseOverPulse*2.5f)+1)*0.7f*0.5f;
-        float fXAdd = 1 + (1-fT)*5.0f;
+        float fT = 0.3f + (sin(mfMouseOverPulse * 2.5f) +1) * 0.7f * 0.5f;
+        float fXAdd = 1 + (1 - fT) * 5.0f;
 
-        cVector3f vPos = apWidget->GetGlobalPosition() - cVector3f(fXAdd/2,2,1);
-        vPos.x += apWidget->GetSize().x/2;
+        cVector3f vPos = apWidget->GetGlobalPosition() - cVector3f(fXAdd / 2, 2, 1);
+        vPos.x += apWidget->GetSize().x / 2;
 
-        cVector2f vSize = apWidget->GetDefaultFontSize() + cVector2f(fXAdd,4);
+        cVector2f vSize = apWidget->GetDefaultFontSize() + cVector2f(fXAdd, 4);
 
-        float fAlpha = apWidget->GetColorMul().a*fT *pData->mfEffectfAlpha;
-        mpGuiSet->DrawFont(    apWidget->GetText(), mpFontMenu, vPos, vSize, cColor(1,0,0, fAlpha),
+        float fAlpha = apWidget->GetColorMul().a * fT * pData->mfEffectfAlpha;
+        mpGuiSet->DrawFont(    apWidget->GetText(), mpFontMenu, vPos, vSize, cColor(1, 0, 0, fAlpha),
                                eFontAlign_Center);
     }
 
@@ -2115,24 +2115,24 @@ kGuiCallbackDeclaredFuncEnd(cLuxJournal, MainMenuTextOnDraw);
 bool cLuxJournal::ListTextOnDraw(iWidget* apWidget, const cGuiMessageData& aData)
 {
     cLuxJournalTextData *pData = (cLuxJournalTextData*)apWidget->GetUserData();
-    cWidgetLabel *pLabel = static_cast<cWidgetLabel*>(apWidget);
+    cWidgetLabel *pLabel = static_cast<cWidgetLabel *>(apWidget);
 
-    if(pData->mfEffectfAlpha >0)
+    if(pData->mfEffectfAlpha > 0)
     {
-        float fT = 0.3f + (sin(mfMouseOverPulse*2.5f)+1)*0.7f*0.5f;
-        float fXAdd = 1 + (1-fT)*5.0f;
+        float fT = 0.3f + (sin(mfMouseOverPulse * 2.5f) +1) * 0.7f * 0.5f;
+        float fXAdd = 1 + (1 - fT) * 5.0f;
 
-        cVector2f vSize = apWidget->GetDefaultFontSize() + cVector2f(fXAdd,4);
-        float fAlpha = apWidget->GetColorMul().a*fT *pData->mfEffectfAlpha;
+        cVector2f vSize = apWidget->GetDefaultFontSize() + cVector2f(fXAdd, 4);
+        float fAlpha = apWidget->GetColorMul().a * fT * pData->mfEffectfAlpha;
 
         //////////////////////
         //Centered text
         if(pLabel->GetTextAlign() == eFontAlign_Center)
         {
-            cVector3f vPos = apWidget->GetGlobalPosition() - cVector3f(fXAdd/2,2,1);
-            vPos.x += apWidget->GetSize().x/2;
+            cVector3f vPos = apWidget->GetGlobalPosition() - cVector3f(fXAdd / 2, 2, 1);
+            vPos.x += apWidget->GetSize().x / 2;
 
-            mpGuiSet->DrawFont(    apWidget->GetText(), apWidget->GetDefaultFontType(), vPos, vSize, cColor(1,0,0, fAlpha), eFontAlign_Center);
+            mpGuiSet->DrawFont(    apWidget->GetText(), apWidget->GetDefaultFontType(), vPos, vSize, cColor(1, 0, 0, fAlpha), eFontAlign_Center);
         }
         //////////////////////
         //Left Aligned
@@ -2141,9 +2141,9 @@ bool cLuxJournal::ListTextOnDraw(iWidget* apWidget, const cGuiMessageData& aData
             float fSizeAdd =    apWidget->GetDefaultFontType()->GetLength(vSize, apWidget->GetText().c_str()) -
                                 apWidget->GetDefaultFontType()->GetLength(apWidget->GetDefaultFontSize(), apWidget->GetText().c_str());
 
-            cVector3f vPos = apWidget->GetGlobalPosition() - cVector3f(fSizeAdd/2,2,1);
+            cVector3f vPos = apWidget->GetGlobalPosition() - cVector3f(fSizeAdd / 2, 2, 1);
 
-            mpGuiSet->DrawFont(    apWidget->GetText(), apWidget->GetDefaultFontType(), vPos, vSize, cColor(1,0,0, fAlpha), eFontAlign_Left);
+            mpGuiSet->DrawFont(    apWidget->GetText(), apWidget->GetDefaultFontType(), vPos, vSize, cColor(1, 0, 0, fAlpha), eFontAlign_Left);
         }
 
 
@@ -2218,9 +2218,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxJournal, DiaryTextClick);
 bool cLuxJournal::ImageButtonOnDraw(iWidget* apWidget, const cGuiMessageData& aData)
 {
     cLuxJournalTextData *pData = (cLuxJournalTextData*)apWidget->GetUserData();
-    cWidgetImage *pImage = static_cast<cWidgetImage*>(apWidget);
+    cWidgetImage *pImage = static_cast<cWidgetImage *>(apWidget);
 
-    if(pData->mfEffectfAlpha >0)
+    if(pData->mfEffectfAlpha > 0)
     {
         /*float fT = 0.3f + (sin(mfMouseOverPulse*2.5f)+1)*0.7f*0.5f;
         float fAdd = 1 + (1-fT)*16.0f;
@@ -2245,27 +2245,27 @@ bool cLuxJournal::NoteArrowClick(iWidget* apWidget, const cGuiMessageData& aData
     // Open Note
 
     //Forward
-    if(apWidget->GetUserValue()==0)
+    if(apWidget->GetUserValue() == 0)
     {
-        SetNotePage(mlCurrentNotePage+1);
+        SetNotePage(mlCurrentNotePage + 1);
     }
     //Backward
-    else if(apWidget->GetUserValue()==1)
+    else if(apWidget->GetUserValue() == 1)
     {
-        SetNotePage(mlCurrentNotePage-1);
+        SetNotePage(mlCurrentNotePage - 1);
     }
     ///////////////////////////7
     // Note List
 
     //Forward
-    else if(apWidget->GetUserValue()==2)
+    else if(apWidget->GetUserValue() == 2)
     {
-        SetNoteListPage(mlCurrentNoteListPage[GetNoteListIndex(mCurrentState)]+1, mCurrentState);
+        SetNoteListPage(mlCurrentNoteListPage[GetNoteListIndex(mCurrentState)] + 1, mCurrentState);
     }
     //Backward
-    else if(apWidget->GetUserValue()==3)
+    else if(apWidget->GetUserValue() == 3)
     {
-        SetNoteListPage(mlCurrentNoteListPage[GetNoteListIndex(mCurrentState)]-1, mCurrentState);
+        SetNoteListPage(mlCurrentNoteListPage[GetNoteListIndex(mCurrentState)] - 1, mCurrentState);
     }
 
     ///////////////////////////7
@@ -2288,9 +2288,9 @@ kGuiCallbackDeclaredFuncEnd(cLuxJournal, NoteClickFrameClick);
 
 bool cLuxJournal::JournalItemUIButtonPress(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(aData.mlVal==eUIButton_Primary)
+    if(aData.mlVal == eUIButton_Primary)
     {
-        cLuxJournalTextData* pData = static_cast<cLuxJournalTextData*>(apWidget->GetUserData());
+        cLuxJournalTextData* pData = static_cast<cLuxJournalTextData *>(apWidget->GetUserData());
         eLuxJournalState type = pData->mType;
 
         switch(type)

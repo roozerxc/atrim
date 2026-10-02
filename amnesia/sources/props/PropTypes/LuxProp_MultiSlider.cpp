@@ -13,21 +13,21 @@
 
 cLuxPropLoader_MultiSlider::cLuxPropLoader_MultiSlider(const tString& asName) : iLuxPropLoader(asName)
 {
-    mfDefaultMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction","MultiSlider_DefaultMaxFocusDist",0);
+    mfDefaultMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction", "MultiSlider_DefaultMaxFocusDist", 0);
 }
 
 //-----------------------------------------------------------------------
 
 iLuxProp *cLuxPropLoader_MultiSlider::CreateProp(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxProp_MultiSlider, (asName, alID,apMap) );
+    return hplNew(cLuxProp_MultiSlider, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPropLoader_MultiSlider::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    cLuxProp_MultiSlider  *pMultiSlider = static_cast<cLuxProp_MultiSlider*>(apProp);
+    cLuxProp_MultiSlider  *pMultiSlider = static_cast<cLuxProp_MultiSlider *>(apProp);
 
     ///////////////////////////
     // General
@@ -57,7 +57,7 @@ void cLuxPropLoader_MultiSlider::LoadVariables(iLuxProp *apProp, cXmlElement *ap
 
 void cLuxPropLoader_MultiSlider::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
-    cLuxProp_MultiSlider  *pMultiSlider = static_cast<cLuxProp_MultiSlider*>(apProp);
+    cLuxProp_MultiSlider  *pMultiSlider = static_cast<cLuxProp_MultiSlider *>(apProp);
 
     int lStuckState = apInstanceVars->GetVarInt("StuckState", -1);
     pMultiSlider->SetStuckState(lStuckState, false);
@@ -76,7 +76,7 @@ void cLuxPropLoader_MultiSlider::LoadInstanceVariables(iLuxProp *apProp, cResour
 
 //-----------------------------------------------------------------------
 
-cLuxProp_MultiSlider::cLuxProp_MultiSlider(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_MultiSlider)
+cLuxProp_MultiSlider::cLuxProp_MultiSlider(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName, alID, apMap, eLuxPropType_MultiSlider)
 {
     mlCurrentState  = -1;
     mlStuckState = -1;
@@ -87,7 +87,7 @@ cLuxProp_MultiSlider::cLuxProp_MultiSlider(const tString &asName, int alID, cLux
     mAutoMovePid.i = 0.0f;
     mAutoMovePid.d = 0.0f;//Derative fucks up big time.. so skip!
 
-    mfStuckSoundTimer =0;
+    mfStuckSoundTimer = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -107,7 +107,7 @@ cLuxProp_MultiSlider::~cLuxProp_MultiSlider()
 
 bool cLuxProp_MultiSlider::CanInteract(iPhysicsBody *apBody)
 {
-    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false)
+    if(apBody->GetMass() == 0 && mbCanInteractWithStaticBody == false)
     {
         return false;
     }
@@ -119,9 +119,9 @@ bool cLuxProp_MultiSlider::CanInteract(iPhysicsBody *apBody)
 
 bool cLuxProp_MultiSlider::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody)
+    if(apBody->GetMass() == 0 && mbCanInteractWithStaticBody)
     {
-        for(size_t i=0; i<mvBodies.size(); ++i)
+        for(size_t i = 0; i < mvBodies.size(); ++i)
         {
             if(mvBodies[i]->GetMass() > 0)
             {
@@ -131,7 +131,7 @@ bool cLuxProp_MultiSlider::OnInteract(iPhysicsBody *apBody, const cVector3f &avP
         }
     }
 
-    if(mlStuckState !=0 && mbInteractionDisablesStuck)
+    if(mlStuckState != 0 && mbInteractionDisablesStuck)
     {
         SetStuckState(-1, true);
     }
@@ -157,7 +157,7 @@ void cLuxProp_MultiSlider::OnSetupAfterLoad(cWorld *apWorld)
         return;
     }
 
-    mpSliderJoint = static_cast<iPhysicsJointSlider*>(pJoint);
+    mpSliderJoint = static_cast<iPhysicsJointSlider *>(pJoint);
 
     mpSliderBody = mpSliderJoint->GetChildBody();
 
@@ -170,9 +170,9 @@ void cLuxProp_MultiSlider::OnSetupAfterLoad(cWorld *apWorld)
     //Set up limits
     mvStates.resize(mlNumOfStates);
     float fTotalDist = mfDefaultMaxDist - mfDefaultMinDist;
-    float fStatePosAdd = fTotalDist / (float)(mlNumOfStates-1);
+    float fStatePosAdd = fTotalDist / (float)(mlNumOfStates - 1);
     float fStatePos = mfDefaultMinDist;
-    for(size_t i=0; i<mvStates.size(); ++i)
+    for(size_t i = 0; i < mvStates.size(); ++i)
     {
         cLuxProp_MultiSlider_State *pState = &mvStates[i];
         pState->mfPos = fStatePos;
@@ -208,7 +208,7 @@ void cLuxProp_MultiSlider::BeforePropDestruction()
 
 eLuxFocusCrosshair cLuxProp_MultiSlider::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    if(apBody->GetMass()==0 && mbCanInteractWithStaticBody==false)
+    if(apBody->GetMass() == 0 && mbCanInteractWithStaticBody == false)
     {
         return eLuxFocusCrosshair_Default;
     }
@@ -227,7 +227,7 @@ void cLuxProp_MultiSlider::SetStuckState(int alState, bool abEffects)
 
     mlStuckState = alState;
 
-    mfStuckSoundTimer =0; //Reset the stuck timer!
+    mfStuckSoundTimer = 0; //Reset the stuck timer!
 
     //////////////////////////
     //Stuck on
@@ -236,8 +236,8 @@ void cLuxProp_MultiSlider::SetStuckState(int alState, bool abEffects)
         ChangeState(alState, abEffects);
 
         float fPos = mvStates[mlStuckState].mfPos;
-        float fMin = mlStuckState==0 ? fPos : fPos - 0.05f;
-        float fMax = mlStuckState==(int)mvStates.size()-1 ? fPos : fPos + 0.05f;
+        float fMin = mlStuckState == 0 ? fPos : fPos - 0.05f;
+        float fMax = mlStuckState == (int)mvStates.size() - 1 ? fPos : fPos + 0.05f;
 
         mpSliderJoint->SetMinDistance(fMin);
         mpSliderJoint->SetMaxDistance(fMax);
@@ -271,12 +271,12 @@ void cLuxProp_MultiSlider::OnConnectionStateChange(iLuxEntity *apEntity, int alS
 
 void cLuxProp_MultiSlider::UpdateCheckStuckSound(double adFixedDelta)
 {
-    if(mlStuckState <0 || mbIsInteractedWith==false)
+    if(mlStuckState < 0 || mbIsInteractedWith == false)
     {
         return;
     }
 
-    if(mfStuckSoundTimer >0)
+    if(mfStuckSoundTimer > 0)
     {
         mfStuckSoundTimer -= (float)adFixedDelta;
         return;
@@ -294,20 +294,20 @@ void cLuxProp_MultiSlider::UpdateCheckStuckSound(double adFixedDelta)
 
 void cLuxProp_MultiSlider::UpdateCheckNewState(float afPos, double adFixedDelta)
 {
-    if(mlStuckState >=0)
+    if(mlStuckState >= 0)
     {
         return;
     }
 
-    for(size_t i=0; i<mvStates.size(); ++i)
+    for(size_t i = 0; i < mvStates.size(); ++i)
     {
         cLuxProp_MultiSlider_State *pState = &mvStates[i];
-        if(i==mlCurrentState)
+        if(i == mlCurrentState)
         {
             continue;
         }
 
-        float fDistToState = cMath::Abs(afPos-pState->mfPos);
+        float fDistToState = cMath::Abs(afPos - pState->mfPos);
         if(fDistToState <= mfStickToStateMaxDist)
         {
             //TODO: Move lever to state ??
@@ -321,7 +321,7 @@ void cLuxProp_MultiSlider::UpdateCheckNewState(float afPos, double adFixedDelta)
 
 void cLuxProp_MultiSlider::UpdateAutoMove(float afPos, double adFixedDelta)
 {
-    if(IsInteractedWith() || mbAutoMoveToCurrentState==false || mlStuckState!=-1 || mlCurrentState==-1)
+    if(IsInteractedWith() || mbAutoMoveToCurrentState == false || mlStuckState != -1 || mlCurrentState == -1)
     {
         return;
     }
@@ -331,7 +331,7 @@ void cLuxProp_MultiSlider::UpdateAutoMove(float afPos, double adFixedDelta)
     float fGoalPos = mvStates[mlCurrentState].mfPos;
 
     float fWantedSpeed = mfAutoMoveSpeedFactor * (fGoalPos - afPos);
-    if(cMath::Abs(fWantedSpeed)<0.003f)
+    if(cMath::Abs(fWantedSpeed) < 0.003f)
     {
         return;
     }
@@ -358,7 +358,7 @@ void cLuxProp_MultiSlider::UpdateAutoMove(float afPos, double adFixedDelta)
 
     //Log("Pos: %f Goal: %f Wanted: %f current: %f Force: %f\n", afPos,fGoalPos, fWantedSpeed, fSliderSpeed, fForceSize);
 
-    mpSliderBody->AddForce(vMoveDir*fForceSize);
+    mpSliderBody->AddForce(vMoveDir * fForceSize);
 }
 
 //-----------------------------------------------------------------------
@@ -385,9 +385,9 @@ void cLuxProp_MultiSlider::ChangeState(int alState, bool abEffects)
 
     ///////////////////////
     //Callback
-    if(msChangeStateCallback!="")
+    if(msChangeStateCallback != "")
     {
-        mpMap->RunScript(msChangeStateCallback + "(\""+msName+"\", "+cString::ToString(mlCurrentState)+")");
+        mpMap->RunScript(msChangeStateCallback + "(\"" + msName + "\", " + cString::ToString(mlCurrentState) + ")");
     }
 }
 
@@ -408,7 +408,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxProp_MultiSlider::CreateSaveData()
+iLuxEntity_SaveData *cLuxProp_MultiSlider::CreateSaveData()
 {
     return hplNew(cLuxProp_MultiSlider_SaveData, ());
 }
@@ -420,14 +420,14 @@ void cLuxProp_MultiSlider::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxProp_MultiSlider_SaveData *pData = static_cast<cLuxProp_MultiSlider_SaveData*>(apSaveData);
+    cLuxProp_MultiSlider_SaveData *pData = static_cast<cLuxProp_MultiSlider_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyToVar(pData,mlCurrentState);
-    kCopyToVar(pData,mlStuckState);
-    kCopyToVar(pData,mbInteractionDisablesStuck);
-    kCopyToVar(pData,msChangeStateCallback);
+    kCopyToVar(pData, mlCurrentState);
+    kCopyToVar(pData, mlStuckState);
+    kCopyToVar(pData, mbInteractionDisablesStuck);
+    kCopyToVar(pData, msChangeStateCallback);
 }
 
 //-----------------------------------------------------------------------
@@ -437,14 +437,14 @@ void cLuxProp_MultiSlider::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxProp_MultiSlider_SaveData *pData = static_cast<cLuxProp_MultiSlider_SaveData*>(apSaveData);
+    cLuxProp_MultiSlider_SaveData *pData = static_cast<cLuxProp_MultiSlider_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
-    kCopyFromVar(pData,mlCurrentState);
+    kCopyFromVar(pData, mlCurrentState);
     SetStuckState(pData->mlStuckState, false);
-    kCopyFromVar(pData,mbInteractionDisablesStuck);
-    kCopyFromVar(pData,msChangeStateCallback);
+    kCopyFromVar(pData, mbInteractionDisablesStuck);
+    kCopyFromVar(pData, msChangeStateCallback);
 }
 
 //-----------------------------------------------------------------------

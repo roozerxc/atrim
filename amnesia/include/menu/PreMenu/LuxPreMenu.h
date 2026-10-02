@@ -24,7 +24,7 @@ class cLuxPreMenuTextElement
 public:
     bool Load(cXmlElement* apElement, const cVector2f& avGuiSetSize);
 
-    cWidgetLabel* CreateLabel(cGuiSet* apSet);
+    cWidgetLabel *CreateLabel(cGuiSet* apSet);
 
 public:
     cVector2f mvFrameSize;
@@ -41,7 +41,7 @@ public:
 
 //----------------------------------------------
 
-typedef std::list<cLuxPreMenuTextElement*>    tPreMenuTextList;
+typedef std::list<cLuxPreMenuTextElement *>    tPreMenuTextList;
 typedef tPreMenuTextList::iterator            tPreMenuTextListIt;
 
 //----------------------------------------------
@@ -57,12 +57,12 @@ public:
     void AddTextElement(cLuxPreMenuTextElement* apText);
     bool HasTextElements();
 
-    const tPreMenuTextList& GetTextElements()
+    const tPreMenuTextList &GetTextElements()
     {
         return mlstTextElements;
     }
 
-    cGuiGfxElement* CreateBackground(cGui* apGui, cTextureManager* apTexMgr);
+    cGuiGfxElement *CreateBackground(cGui* apGui, cTextureManager* apTexMgr);
     float GetTime()
     {
         return mfTime;
@@ -116,7 +116,7 @@ public:
 
     void AppLostInputFocus();
     void AppGotInputFocus();
-    cGuiSet* GetSet()
+    cGuiSet *GetSet()
     {
         return mpGuiSet;
     }
@@ -135,7 +135,7 @@ private:
 
     void LoadPreMenuSections();
 
-    void SetGammaValueToInput(float afGamma, bool abGenCallback=false);
+    void SetGammaValueToInput(float afGamma, bool abGenCallback = false);
 
     bool Gamma_ChangeValue(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(Gamma_ChangeValue);
@@ -155,8 +155,8 @@ private:
     // Variables
     cGraphics *mpGraphics;
 
-    cGui* mpGui;
-    cGuiSet* mpGuiSet;
+    cGui *mpGui;
+    cGuiSet *mpGuiSet;
 
     cViewport *mpViewport;
 
@@ -175,20 +175,20 @@ private:
 
     bool mbQuickTransition;
 
-    cGuiGfxElement* mpBlackFade;
+    cGuiGfxElement *mpBlackFade;
 
-    std::vector<cLuxPreMenuSection*> mvSections;
+    std::vector<cLuxPreMenuSection *> mvSections;
 
-    cLuxPreMenuSection* mpCurrentSection;
-    cGuiGfxElement* mpCurrentBackground;
-    std::vector<cWidgetLabel*> mvCurrentLabels;
+    cLuxPreMenuSection *mpCurrentSection;
+    cGuiGfxElement *mpCurrentBackground;
+    std::vector<cWidgetLabel *> mvCurrentLabels;
 
-    cWidgetButton* mpBContinue;
+    cWidgetButton *mpBContinue;
 
-    cWidgetDummy* mpGGamma;
-    cWidgetImage* mpIGammaPreview;
-    cWidgetLabel* mpLGamma;
-    cWidgetSlider* mpSGamma;
+    cWidgetDummy *mpGGamma;
+    cWidgetImage *mpIGammaPreview;
+    cWidgetLabel *mpLGamma;
+    cWidgetSlider *mpSGamma;
     float mfGammaMinValue;
     float mfGammaMaxValue;
     float mfGammaStep;

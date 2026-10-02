@@ -97,7 +97,7 @@ void cLuxHandObject_Melee::ImplementedCreateEntity(cLuxMap *apMap)
 
 void cLuxHandObject_Melee::ImplementedDestroyEntity(cLuxMap *apMap)
 {
-    if(mpCollideShape==NULL)
+    if(mpCollideShape == NULL)
     {
         return;
     }
@@ -118,11 +118,11 @@ void cLuxHandObject_Melee::ImplementedReset()
 
 void cLuxHandObject_Melee::Update(double adFixedDelta)
 {
-    if(mpHands->mlHandObjectState ==1)
+    if(mpHands->mlHandObjectState == 1)
     {
         UpdateCharge(adFixedDelta);
     }
-    else if(mpHands->mlHandObjectState ==2)
+    else if(mpHands->mlHandObjectState == 2)
     {
         UpdateCheckDamageEvent(adFixedDelta);
     }
@@ -136,7 +136,7 @@ bool cLuxHandObject_Melee::DoAction(eLuxPlayerAction aAction, bool abPressed)
     // Attack
     if(aAction == eLuxPlayerAction_Attack)
     {
-        if(mpHands->GetState()== eLuxHandsState_Idle)
+        if(mpHands->GetState() == eLuxHandsState_Idle)
         {
             if(abPressed)
             {
@@ -144,12 +144,12 @@ bool cLuxHandObject_Melee::DoAction(eLuxPlayerAction aAction, bool abPressed)
                 return true;
             }
         }
-        else if(mpHands->GetState()== eLuxHandsState_HandObject)
+        else if(mpHands->GetState() == eLuxHandsState_HandObject)
         {
-            if(abPressed ==false && mpHands->mlHandObjectState != 2)
+            if(abPressed == false && mpHands->mlHandObjectState != 2)
             {
                 mpHands->mbHandObjectAttackDown = false;
-                if(mpHands->mlHandObjectState !=0)
+                if(mpHands->mlHandObjectState != 0)
                 {
                     Swing();
                 }
@@ -167,7 +167,7 @@ bool cLuxHandObject_Melee::AnimationIsOver()
     //Going to charge
     if(mpHands->mlHandObjectState == 0)
     {
-        if(mpHands->mbHandObjectAttackDown==false)
+        if(mpHands->mbHandObjectAttackDown == false)
         {
             Swing();
         }
@@ -189,7 +189,7 @@ bool cLuxHandObject_Melee::AnimationIsOver()
     //Swing
     else if(mpHands->mlHandObjectState == 2)
     {
-        mpHands->mlHandObjectState =0;
+        mpHands->mlHandObjectState = 0;
         return true;
 
     }
@@ -206,20 +206,20 @@ bool cLuxHandObject_Melee::AnimationIsOver()
 
 void cLuxHandObject_Melee::UpdateCharge(double adFixedDelta)
 {
-    if(mpHands->mbHandObjectAttackDown==false)
+    if(mpHands->mbHandObjectAttackDown == false)
     {
         return;
     }
 
     if(mpHands->mfHandObjectChargeCount < 1)
     {
-        mpHands->mfHandObjectChargeCount += (float)adFixedDelta * (1.0f/mfChargeTime);
+        mpHands->mfHandObjectChargeCount += (float)adFixedDelta * (1.0f / mfChargeTime);
         if(mpHands->mfHandObjectChargeCount >= 1.0f)
         {
             mpHands->mfHandObjectChargeCount = 1;
             gpBase->mpPlayer->FadeAspectMulTo(0.9f, 4);
             gpBase->mpPlayer->FadeFOVMulTo(0.95f, 2);
-            gpBase->mpHelpFuncs->PlayGuiSoundData(msChargeDoneSound,eSoundEntryType_World);
+            gpBase->mpHelpFuncs->PlayGuiSoundData(msChargeDoneSound, eSoundEntryType_World);
         }
     }
 }
@@ -236,18 +236,18 @@ void cLuxHandObject_Melee::UpdateCheckDamageEvent(double adFixedDelta)
         cMatrixf mtxHands = cMath::MatrixRotate(vRotation, eEulerRotationOrder_XYZ);
         mtxHands.SetTranslation(pCam->GetPosition());
 
-        float fDamageMul = mpHands->mfHandObjectChargeCount>=1 ? 2.0f : 1.0f;
+        float fDamageMul = mpHands->mfHandObjectChargeCount >= 1 ? 2.0f : 1.0f;
 
         bool bHit = gpBase->mpMapHelper->ShapeDamage(    mpCollideShape, mtxHands, pCam->GetPosition(),
-                    mfAttackMinDamage*fDamageMul, mfAttackMaxDamage*fDamageMul,
+                    mfAttackMinDamage * fDamageMul, mfAttackMaxDamage * fDamageMul,
                     mfAttackForce, mfMaxAttackForce,
                     mlAttackStrength, mfAttackHitSpeed,
                     eLuxDamageType_BloodSplat, eLuxWeaponHitType_Sword,
-                    true,false, true, false);
+                    true, false, true, false);
 
         if(bHit)
         {
-            gpBase->mpHelpFuncs->PlayGuiSoundData(msHitSound,eSoundEntryType_World);
+            gpBase->mpHelpFuncs->PlayGuiSoundData(msHitSound, eSoundEntryType_World);
         }
     }
 }
@@ -261,16 +261,16 @@ void cLuxHandObject_Melee::Swing()
     gpBase->mpPlayer->FadeAspectMulTo(1.0f, 7.0f);
     gpBase->mpPlayer->FadeFOVMulTo(1.0f, 3.5f);
 
-    mpHands->mlHandObjectState=2;
+    mpHands->mlHandObjectState = 2;
     if(mpHands->mfHandObjectChargeCount >= 1)
     {
         mpHands->PlayAnim(msHandsAnim_SwingCharge, false);
-        gpBase->mpHelpFuncs->PlayGuiSoundData(msSwingChargeSound,eSoundEntryType_World);
+        gpBase->mpHelpFuncs->PlayGuiSoundData(msSwingChargeSound, eSoundEntryType_World);
     }
     else
     {
         mpHands->PlayAnim(msHandsAnim_Swing, false);
-        gpBase->mpHelpFuncs->PlayGuiSoundData(msSwingSound,eSoundEntryType_World);
+        gpBase->mpHelpFuncs->PlayGuiSoundData(msSwingSound, eSoundEntryType_World);
     }
 
 }
@@ -280,11 +280,11 @@ void cLuxHandObject_Melee::Swing()
 void cLuxHandObject_Melee::Charge()
 {
     mpHands->mbHandObjectAttackDown = true;
-    mpHands->mfHandObjectChargeCount =0;
-    mpHands->mlHandObjectState =0;
+    mpHands->mfHandObjectChargeCount = 0;
+    mpHands->mlHandObjectState = 0;
 
     mpHands->PlayAnim(msHandsAnim_Charge, false);
-    gpBase->mpHelpFuncs->PlayGuiSoundData(msChargeSound,eSoundEntryType_World);
+    gpBase->mpHelpFuncs->PlayGuiSoundData(msChargeSound, eSoundEntryType_World);
 }
 
 //-----------------------------------------------------------------------

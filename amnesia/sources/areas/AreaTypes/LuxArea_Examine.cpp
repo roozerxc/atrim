@@ -39,16 +39,16 @@ iLuxArea *cLuxAreaLoader_Examine::CreateArea(const tString& asName, int alID, cL
 
 void cLuxAreaLoader_Examine::LoadVariables(iLuxArea *apArea, cWorld *apWorld)
 {
-    cLuxArea_Examine *pExamineArea = static_cast<cLuxArea_Examine*>(apArea);
+    cLuxArea_Examine *pExamineArea = static_cast<cLuxArea_Examine *>(apArea);
 
-    pExamineArea->msDescCat = GetVarString("DescCat","");
-    pExamineArea->msDescEntry = GetVarString("DescEntry","");
+    pExamineArea->msDescCat = GetVarString("DescCat", "");
+    pExamineArea->msDescEntry = GetVarString("DescEntry", "");
 
-    pExamineArea->msDescInsaneCat = GetVarString("DescInsaneCat","");
-    pExamineArea->msDescInsaneEntry = GetVarString("DescInsaneEntry","");
+    pExamineArea->msDescInsaneCat = GetVarString("DescInsaneCat", "");
+    pExamineArea->msDescInsaneEntry = GetVarString("DescInsaneEntry", "");
 
-    pExamineArea->msSound = GetVarString("Sound","");
-    pExamineArea->msInsaneSound = GetVarString("InsaneSound","");
+    pExamineArea->msSound = GetVarString("Sound", "");
+    pExamineArea->msInsaneSound = GetVarString("InsaneSound", "");
 }
 
 void cLuxAreaLoader_Examine::SetupArea(iLuxArea *apArea, cWorld *apWorld)
@@ -64,12 +64,12 @@ void cLuxAreaLoader_Examine::SetupArea(iLuxArea *apArea, cWorld *apWorld)
 
 //-----------------------------------------------------------------------
 
-cLuxArea_Examine::cLuxArea_Examine(const tString &asName, int alID, cLuxMap *apMap)  : iLuxArea(asName,alID,apMap, eLuxAreaType_Examine)
+cLuxArea_Examine::cLuxArea_Examine(const tString &asName, int alID, cLuxMap *apMap)  : iLuxArea(asName, alID, apMap, eLuxAreaType_Examine)
 {
-    mfMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction","Examine_MaxFocusDist",0);
-    mfInsaneLimit = gpBase->mpGameCfg->GetFloat("Insanity","MaxExamineSanity",0);
+    mfMaxFocusDistance = gpBase->mpGameCfg->GetFloat("Player_Interaction", "Examine_MaxFocusDist", 0);
+    mfInsaneLimit = gpBase->mpGameCfg->GetFloat("Insanity", "MaxExamineSanity", 0);
 
-    mfPlaySoundCount =0;
+    mfPlaySoundCount = 0;
 
 }
 
@@ -96,7 +96,7 @@ void cLuxArea_Examine::SetupAfterLoad(cWorld *apWorld)
 
 void cLuxArea_Examine::OnUpdate(double adFixedDelta)
 {
-    if(mfPlaySoundCount>0)
+    if(mfPlaySoundCount > 0)
     {
         mfPlaySoundCount -= (float)adFixedDelta;
     }
@@ -132,7 +132,7 @@ bool cLuxArea_Examine::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 
     ////////////////////////////////
     // Play sound
-    if(mfPlaySoundCount <=0 && msSound != "")
+    if(mfPlaySoundCount <= 0 && msSound != "")
     {
         tString sSound = msSound;
         if(fSanity < mfInsaneLimit && msInsaneSound != "")
@@ -189,14 +189,14 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxArea* cLuxArea_Examine_SaveData::CreateArea(cLuxMap *apMap)
+iLuxArea *cLuxArea_Examine_SaveData::CreateArea(cLuxMap *apMap)
 {
     return hplNew(cLuxArea_Examine, (msName, mlID, apMap));
 }
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxArea_Examine::CreateSaveData()
+iLuxEntity_SaveData *cLuxArea_Examine::CreateSaveData()
 {
     return hplNew(cLuxArea_Examine_SaveData, ());
 }
@@ -206,7 +206,7 @@ iLuxEntity_SaveData* cLuxArea_Examine::CreateSaveData()
 void cLuxArea_Examine::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 {
     super_class::SaveToSaveData(apSaveData);
-    cLuxArea_Examine_SaveData *pData = static_cast<cLuxArea_Examine_SaveData*>(apSaveData);
+    cLuxArea_Examine_SaveData *pData = static_cast<cLuxArea_Examine_SaveData *>(apSaveData);
 
     kCopyToVar(pData, msDescCat);
     kCopyToVar(pData, msDescEntry);
@@ -223,7 +223,7 @@ void cLuxArea_Examine::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 void cLuxArea_Examine::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 {
     super_class::LoadFromSaveData(apSaveData);
-    cLuxArea_Examine_SaveData *pData = static_cast<cLuxArea_Examine_SaveData*>(apSaveData);
+    cLuxArea_Examine_SaveData *pData = static_cast<cLuxArea_Examine_SaveData *>(apSaveData);
 
     kCopyFromVar(pData, msDescCat);
     kCopyFromVar(pData, msDescEntry);

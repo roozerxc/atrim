@@ -15,7 +15,7 @@ public:
     cLuxMoveState_Normal_Callback(cLuxMoveState_Normal *apMoveState);
 
     void OnGravityCollide(iCharacterBody *apCharBody, iPhysicsBody *apBody, cCollideData *apCollideData);
-    void OnHitGround(iCharacterBody *apCharBody,const cVector3f &avVel) {}
+    void OnHitGround(iCharacterBody *apCharBody, const cVector3f &avVel) {}
 
 private:
     cLuxMoveState_Normal *mpMoveState;

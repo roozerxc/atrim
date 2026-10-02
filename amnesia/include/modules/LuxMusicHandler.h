@@ -50,7 +50,7 @@ public:
         return mlCurrentMaxPrio;
     }
 
-    cLuxMusic* GetMusic(int alPrio)
+    cLuxMusic *GetMusic(int alPrio)
     {
         return &mvGameMusic[alPrio];
     }
@@ -58,7 +58,7 @@ public:
     void OnMapEnter(cLuxMap *apMap);
     void OnMapLeave(cLuxMap *apMap);
 
-    void Play(const tString &asFile, bool abLoop,float afVolume, float afFadeTime, int alPrio, bool abResume, bool abSpecialEffect);
+    void Play(const tString &asFile, bool abLoop, float afVolume, float afFadeTime, int alPrio, bool abResume, bool abSpecialEffect);
     void Stop(float afFadeTime, int alPrio);
 
     void AddEnemy(eLuxEnemyMusic aType, iLuxEnemy *apEnemy);

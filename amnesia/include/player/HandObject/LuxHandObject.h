@@ -23,8 +23,8 @@ public:
         mpHandObject = apHandObject;
     }
 
-    void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
-    void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
+    void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars);
+    void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars);
 
 private:
     iLuxHandObject *mpHandObject;
@@ -41,7 +41,7 @@ public:
 
     ////////////////////////
     //General
-    virtual void Update(double adFixedDelta)=0;
+    virtual void Update(double adFixedDelta) = 0;
 
     bool LoadMainData(cXmlElement *apMainElem);
     void LoadSettings(cXmlElement *apVarsElem);
@@ -61,14 +61,14 @@ public:
     //Callbacks
 
     //Returning true, means go to hand mode
-    virtual bool DoAction(eLuxPlayerAction aAction, bool abPressed)=0;
+    virtual bool DoAction(eLuxPlayerAction aAction, bool abPressed) = 0;
 
     //Returning true, means go to idle mode
-    virtual bool AnimationIsOver()=0;
+    virtual bool AnimationIsOver() = 0;
 
     ////////////////////////
     //Properties
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -78,31 +78,31 @@ public:
         return mpMeshEntity;
     }
 
-    const tString& GetAttachBoneName()
+    const tString &GetAttachBoneName()
     {
         return msAttachBoneName;
     }
 
-    const tString& GetAnimIdle()
+    const tString &GetAnimIdle()
     {
         return msHandsAnim_Idle;
     }
-    const tString& GetAnimDraw()
+    const tString &GetAnimDraw()
     {
         return msHandsAnim_Draw;
     }
-    const tString& GetAnimHolster()
+    const tString &GetAnimHolster()
     {
         return msHandsAnim_Holster;
     }
 
 protected:
-    virtual void LoadImplementedVars(cXmlElement *apVarsElem)=0;
+    virtual void LoadImplementedVars(cXmlElement *apVarsElem) = 0;
 
-    virtual void ImplementedCreateEntity(cLuxMap *apMap)=0;
-    virtual void ImplementedDestroyEntity(cLuxMap *apMap)=0;
+    virtual void ImplementedCreateEntity(cLuxMap *apMap) = 0;
+    virtual void ImplementedDestroyEntity(cLuxMap *apMap) = 0;
 
-    virtual void ImplementedReset()=0;
+    virtual void ImplementedReset() = 0;
 
     /////////////////////////
     // Data
@@ -123,10 +123,10 @@ protected:
     /////////////////////////
     // Variables
     cMesh *mpMesh;
-    cMeshEntity* mpMeshEntity;
-    std::vector<cBillboard*> mvBillboards;
-    std::vector<cParticleSystem*> mvParticleSystems;
-    std::vector<iLight*> mvLights;
+    cMeshEntity *mpMeshEntity;
+    std::vector<cBillboard *> mvBillboards;
+    std::vector<cParticleSystem *> mvParticleSystems;
+    std::vector<iLight *> mvLights;
 };
 
 //----------------------------------------------

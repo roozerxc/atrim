@@ -21,14 +21,14 @@ cLuxPropLoader_NPC::cLuxPropLoader_NPC(const tString& asName) : iLuxPropLoader(a
 
 iLuxProp *cLuxPropLoader_NPC::CreateProp(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxProp_NPC, (asName, alID,apMap) );
+    return hplNew(cLuxProp_NPC, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPropLoader_NPC::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    cLuxProp_NPC  *pNPC = static_cast<cLuxProp_NPC*>(apProp);
+    cLuxProp_NPC  *pNPC = static_cast<cLuxProp_NPC *>(apProp);
 
     ///////////////////////////
     // Get the move head bone data
@@ -39,12 +39,12 @@ void cLuxPropLoader_NPC::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem
     cString::GetFloatVec(GetVarString("MoveHeadBoneMuls", ""), vBoneMulVec);
 
     //Check so there is a skeleton
-    if(mpMesh->GetSkeleton()==NULL)
+    if(mpMesh->GetSkeleton() == NULL)
     {
         Error("NPC '%s' is missing skeleton!\n", msFileName.c_str());
     }
     // Check so input is correct
-    else if(vBoneNameVec.size()==0 || vBoneNameVec.size() != vBoneMulVec.size())
+    else if(vBoneNameVec.size() == 0 || vBoneNameVec.size() != vBoneMulVec.size())
     {
         Error("MoveHeadBones array is emtpy or do not match size of MoveHeadBoneMuls for NPC '%s'\n", msFileName.c_str());
     }
@@ -52,14 +52,14 @@ void cLuxPropLoader_NPC::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem
     else
     {
         pNPC->mvHeadMoveBones.resize(vBoneNameVec.size());
-        for(size_t i=0; i<vBoneNameVec.size(); ++i)
+        for(size_t i = 0; i < vBoneNameVec.size(); ++i)
         {
             cLuxProp_NPC_HeadMoveBone& boneData = pNPC->mvHeadMoveBones[i];
 
             //////////////////
             //Bone index
             boneData.mlBoneIdx = mpMesh->GetSkeleton()->GetBoneIndexByName(vBoneNameVec[i]);
-            if(boneData.mlBoneIdx <-1)
+            if(boneData.mlBoneIdx < -1)
             {
                 Error("Move head Bone '%s' does not exist in '%s'!\n", vBoneNameVec[i].c_str(), msFileName.c_str());
                 continue;
@@ -73,7 +73,7 @@ void cLuxPropLoader_NPC::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem
             //Rotation vector (figure out what local coord becomes up (0,1,0) in bone
             cBone *pBone = mpMesh->GetSkeleton()->GetBoneByIndex(boneData.mlBoneIdx);
             cMatrixf mtxInvWorldBone = cMath::MatrixInverse(pBone->GetWorldTransform());
-            boneData.mvRotVec = cMath::Vector3Normalize(cMath::MatrixMul(mtxInvWorldBone, cVector3f(0,1,0))); //Make sure to normalize since matrix might have scale!
+            boneData.mvRotVec = cMath::Vector3Normalize(cMath::MatrixMul(mtxInvWorldBone, cVector3f(0, 1, 0))); //Make sure to normalize since matrix might have scale!
         }
     }
 
@@ -89,9 +89,9 @@ void cLuxPropLoader_NPC::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem
 
 void cLuxPropLoader_NPC::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
-    cLuxProp_NPC  *pNPC = static_cast<cLuxProp_NPC*>(apProp);
+    cLuxProp_NPC  *pNPC = static_cast<cLuxProp_NPC *>(apProp);
 
-    pNPC->msFollowPlayerArea = apInstanceVars->GetVarString("FollowPlayerArea","");
+    pNPC->msFollowPlayerArea = apInstanceVars->GetVarString("FollowPlayerArea", "");
     pNPC->SetAwake(apInstanceVars->GetVarBool("Awake", true), false);
 }
 
@@ -103,10 +103,10 @@ void cLuxPropLoader_NPC::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsOb
 
 //-----------------------------------------------------------------------
 
-cLuxProp_NPC::cLuxProp_NPC(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_NPC)
+cLuxProp_NPC::cLuxProp_NPC(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName, alID, apMap, eLuxPropType_NPC)
 {
     mfHeadAngle = 0;
-    mfInAreaCount =0;
+    mfInAreaCount = 0;
     mpFollowPlayerArea = NULL;
     mbPlayerIsInArea = false;
     mbAwake = true;
@@ -137,9 +137,9 @@ void cLuxProp_NPC::AfterWorldLoad()
     }
 
     mpFollowPlayerArea = mpMap->GetEntityByName(msFollowPlayerArea);
-    if(mpFollowPlayerArea==NULL)
+    if(mpFollowPlayerArea == NULL)
     {
-        Error("Could not find follow area '%s' for NPC '%s'!\n",msFollowPlayerArea.c_str(), msName.c_str());
+        Error("Could not find follow area '%s' for NPC '%s'!\n", msFollowPlayerArea.c_str(), msName.c_str());
     }
 }
 
@@ -250,12 +250,12 @@ void cLuxProp_NPC::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 
 void cLuxProp_NPC::UpdateWakeState(double adFixedDelta)
 {
-    if(mbPlayingWakeAnim==false)
+    if(mbPlayingWakeAnim == false)
     {
         return;
     }
 
-    if(mlCurrentNonLoopAnimIndex <0)
+    if(mlCurrentNonLoopAnimIndex < 0)
     {
         mbPlayingWakeAnim = false;
 
@@ -274,7 +274,7 @@ void cLuxProp_NPC::UpdateWakeState(double adFixedDelta)
 
 void cLuxProp_NPC::UpdateCheckPlayerIsInArea(double adFixedDelta)
 {
-    if(mpFollowPlayerArea==NULL)
+    if(mpFollowPlayerArea == NULL)
     {
         return;
     }
@@ -310,16 +310,16 @@ void cLuxProp_NPC::UpdateHeadMovement(double adFixedDelta)
         cVector3f vRight = mtxMeshInv.GetRight();
         cVector3f vFwd = mtxMeshInv.GetForward();
         cVector3f vToPlayer = gpBase->mpPlayer->GetCharacterBody()->GetPosition() - mpMeshEntity->GetWorldPosition();
-        vFwd.y =0;
+        vFwd.y = 0;
         vFwd.Normalize();
-        vRight.y =0;
+        vRight.y = 0;
         vRight.Normalize();
-        vToPlayer.y=0;
+        vToPlayer.y = 0;
         vToPlayer.Normalize();
 
         //Calculate angle and get correct sign.
         fWantedAngle = cMath::Vector3Angle(vFwd, vToPlayer);
-        if(cMath::Vector3Dot(vRight, vToPlayer)<0)
+        if(cMath::Vector3Dot(vRight, vToPlayer) < 0)
         {
             fWantedAngle = -fWantedAngle;
         }
@@ -329,7 +329,7 @@ void cLuxProp_NPC::UpdateHeadMovement(double adFixedDelta)
 
     ////////////////////////////////
     // Move the head angle (if angle is not very close to wanted.
-    if(fabs(mfHeadAngle - fWantedAngle)> 0.0001f)
+    if(fabs(mfHeadAngle - fWantedAngle) > 0.0001f)
     {
         float fAngleDist = cMath::GetAngleDistanceRad(mfHeadAngle, fWantedAngle);
 
@@ -341,10 +341,10 @@ void cLuxProp_NPC::UpdateHeadMovement(double adFixedDelta)
 
     ////////////////////////////////
     // Set the bones for head movement
-    for(size_t i=0; i<mvHeadMoveBones.size(); ++i)
+    for(size_t i = 0; i < mvHeadMoveBones.size(); ++i)
     {
         cLuxProp_NPC_HeadMoveBone& boneData = mvHeadMoveBones[i];
-        if(boneData.mlBoneIdx<0)
+        if(boneData.mlBoneIdx < 0)
         {
             continue;
         }
@@ -353,7 +353,7 @@ void cLuxProp_NPC::UpdateHeadMovement(double adFixedDelta)
 
         pBoneState->SetUsePreTransform(true);
 
-        cQuaternion qHeadRotate(mfHeadAngle*boneData.mfMul, boneData.mvRotVec);
+        cQuaternion qHeadRotate(mfHeadAngle * boneData.mfMul, boneData.mvRotVec);
         pBoneState->SetPreTransform(cMath::MatrixQuaternion(qHeadRotate));
     }
 }
@@ -366,7 +366,7 @@ void cLuxProp_NPC::UpdateHeadMovement(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-float cLuxProp_NPC::DrawDebug(cGuiSet *apSet,iFontData *apFont,float afStartY)
+float cLuxProp_NPC::DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY)
 {
     //apSet->DrawFont(apFont, cVector3f(5,afStartY,1), 13,cColor(1,1),_W("Angle: %f"), cMath::ToDeg(mfHeadAngle));
     //afStartY +=14;
@@ -395,7 +395,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxProp_NPC::CreateSaveData()
+iLuxEntity_SaveData *cLuxProp_NPC::CreateSaveData()
 {
     return hplNew(cLuxProp_NPC_SaveData, ());
 }
@@ -407,7 +407,7 @@ void cLuxProp_NPC::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxProp_NPC_SaveData *pData = static_cast<cLuxProp_NPC_SaveData*>(apSaveData);
+    cLuxProp_NPC_SaveData *pData = static_cast<cLuxProp_NPC_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
@@ -426,7 +426,7 @@ void cLuxProp_NPC::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxProp_NPC_SaveData *pData = static_cast<cLuxProp_NPC_SaveData*>(apSaveData);
+    cLuxProp_NPC_SaveData *pData = static_cast<cLuxProp_NPC_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables

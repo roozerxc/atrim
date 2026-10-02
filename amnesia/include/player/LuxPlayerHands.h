@@ -20,8 +20,8 @@ class cLuxPlayerHandsLoader : public cEntityLoader_Object
 public:
     cLuxPlayerHandsLoader(const tString& asName, cLuxPlayerHands *apPlayerHands);
 
-    void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
-    void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform,cWorld *apWorld, cResourceVarsObject *apInstanceVars);
+    void BeforeLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars);
+    void AfterLoad(cXmlElement *apRootElem, const cMatrixf &a_mtxTransform, cWorld *apWorld, cResourceVarsObject *apInstanceVars);
 
 private:
     cLuxPlayerHands *mpPlayerHands;
@@ -75,10 +75,10 @@ public:
     ///////////////////////////////
     // Properties
     void SetActiveHandObject(const tString& asName);
-    iLuxHandObject* GetHandObject(const tString& asName);
+    iLuxHandObject *GetHandObject(const tString& asName);
 
     void SetCurrentHandObject(iLuxHandObject *apObject);
-    iLuxHandObject* GetCurrentHandObject()
+    iLuxHandObject *GetCurrentHandObject()
     {
         return mpCurrentHandObject;
     }
@@ -89,7 +89,7 @@ public:
         return mHandState;
     }
 
-    const tString& GetCurrentAnimation()
+    const tString &GetCurrentAnimation()
     {
         return msCurrentAnim;
     }
@@ -116,16 +116,16 @@ private:
 
     void UpdatePlayerHandsPos(double adFixedDelta);
 
-    iLuxHandObject* LoadHandObject(const tString& asName);
-    iLuxHandObject* CreateObjectFromType(const tString& asName, eLuxHandObjectType aType);
+    iLuxHandObject *LoadHandObject(const tString& asName);
+    iLuxHandObject *CreateObjectFromType(const tString& asName, eLuxHandObjectType aType);
     eLuxHandObjectType ToHandObjectType(const tString& asType);
 
     cMeshEntity *mpHandsEntity;
     cMesh *mpHandsMesh;
-    std::vector<cAnimation*> mvHandAnimations;
+    std::vector<cAnimation *> mvHandAnimations;
 
     iLuxHandObject *mpCurrentHandObject;
-    std::vector<iLuxHandObject*> mvHandObjects;
+    std::vector<iLuxHandObject *> mvHandObjects;
 
     cLuxHandObjectLoader *mpHandObjectLoader;
 

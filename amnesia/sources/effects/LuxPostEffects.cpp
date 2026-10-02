@@ -29,15 +29,15 @@ cLuxPostEffect_Insanity::cLuxPostEffect_Insanity(cGraphics *apGraphics, cResourc
     // Create program
     cParserVarContainer vars;
     vars.Add("UseUv");
-    mpProgram = mpGraphics->CreateGpuProgramFromShaders("LuxInsanity","deferred_base_vtx.glsl", "posteffect_insanity_frag.glsl", &vars);
+    mpProgram = mpGraphics->CreateGpuProgramFromShaders("LuxInsanity", "deferred_base_vtx.glsl", "posteffect_insanity_frag.glsl", &vars);
     if(mpProgram)
     {
-        mpProgram->GetVariableAsId("afAlpha",kVar_afAlpha);
-        mpProgram->GetVariableAsId("afT",kVar_afT);
-        mpProgram->GetVariableAsId("avScreenSize",kVar_avScreenSize);
-        mpProgram->GetVariableAsId("afAmpT",kVar_afAmpT);
-        mpProgram->GetVariableAsId("afWaveAlpha",kVar_afWaveAlpha);
-        mpProgram->GetVariableAsId("afZoomAlpha",kVar_afZoomAlpha);
+        mpProgram->GetVariableAsId("afAlpha", kVar_afAlpha);
+        mpProgram->GetVariableAsId("afT", kVar_afT);
+        mpProgram->GetVariableAsId("avScreenSize", kVar_avScreenSize);
+        mpProgram->GetVariableAsId("afAmpT", kVar_afAmpT);
+        mpProgram->GetVariableAsId("afWaveAlpha", kVar_afWaveAlpha);
+        mpProgram->GetVariableAsId("afZoomAlpha", kVar_afZoomAlpha);
     }
 
 
@@ -45,20 +45,20 @@ cLuxPostEffect_Insanity::cLuxPostEffect_Insanity(cGraphics *apGraphics, cResourc
     // Textures
     mvAmpMaps.resize(3);
 
-    for(size_t i=0; i<mvAmpMaps.size(); ++i)
+    for(size_t i = 0; i < mvAmpMaps.size(); ++i)
     {
-        mvAmpMaps[i] = mpResources->GetTextureManager()->Create2D("posteffect_insanity_ampmap"+cString::ToString((int)i), false);
+        mvAmpMaps[i] = mpResources->GetTextureManager()->Create2D("posteffect_insanity_ampmap" + cString::ToString((int)i), false);
     }
 
     mpZoomMap = mpResources->GetTextureManager()->Create2D("posteffect_insanity_zoom.jpg", false);
 
     //////////////////////////////
     // Init vars
-    mfT =0;
-    mfAnimCount =0;
+    mfT = 0;
+    mfAnimCount = 0;
     mfWaveAlpha = 0.0f;
     mfZoomAlpha = 0.0f;
-    mfWaveSpeed =0.0f;
+    mfWaveSpeed = 0.0f;
 }
 
 //-----------------------------------------------------------------------
@@ -79,14 +79,14 @@ void cLuxPostEffect_Insanity::Update(double adFixedDelta)
     float fMaxAnim = (float)mvAmpMaps.size();
     if(mfAnimCount >= fMaxAnim)
     {
-        mfAnimCount = mfAnimCount-fMaxAnim;
+        mfAnimCount = mfAnimCount - fMaxAnim;
     }
 }
 
 //-----------------------------------------------------------------------
 
 
-iTexture* cLuxPostEffect_Insanity::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
+iTexture *cLuxPostEffect_Insanity::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
 {
     /////////////////////////
     // Init render states
@@ -102,7 +102,7 @@ iTexture* cLuxPostEffect_Insanity::RenderEffect(iTexture *apInputTexture, iFrame
     mpCurrentComposite->SetTexture(0, apInputTexture);
 
     int lAmp0 = (int)mfAnimCount;
-    int lAmp1 = (int)(mfAnimCount+1);
+    int lAmp1 = (int)(mfAnimCount + 1);
     if(lAmp1 >= (int) mvAmpMaps.size())
     {
         lAmp1 = 0;
@@ -127,7 +127,7 @@ iTexture* cLuxPostEffect_Insanity::RenderEffect(iTexture *apInputTexture, iFrame
     }
 
 
-    DrawQuad(0,1,apInputTexture, true);
+    DrawQuad(0, 1, apInputTexture, true);
 
     mpCurrentComposite->SetTextureRange(NULL, 1);
 
@@ -167,7 +167,7 @@ cLuxPostEffect_Gamma::~cLuxPostEffect_Gamma()
 
 //-----------------------------------------------------------------------
 
-iTexture* cLuxPostEffect_Gamma::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
+iTexture *cLuxPostEffect_Gamma::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
 {
     /////////////////////////
     // Init render states
@@ -240,7 +240,7 @@ void cLuxPostEffectHandler::OnStart()
 
 void cLuxPostEffectHandler::Update(double adFixedDelta)
 {
-    for(size_t i=0; i<mvPostEffects.size(); ++i)
+    for(size_t i = 0; i < mvPostEffects.size(); ++i)
     {
         iLuxPostEffect *pPostEffect = mvPostEffects[i];
 
@@ -264,7 +264,7 @@ void cLuxPostEffectHandler::LoadMainConfig()
 {
     cConfigFile *pMainCfg = gpBase->mpMainConfig;
 
-    mpInsanity->SetDisabled(pMainCfg->GetBool("Graphics", "PostEffectInsanity", true)==false);
+    mpInsanity->SetDisabled(pMainCfg->GetBool("Graphics", "PostEffectInsanity", true) == false);
 
 }
 
@@ -274,7 +274,7 @@ void cLuxPostEffectHandler::SaveMainConfig()
 {
     cConfigFile *pMainCfg = gpBase->mpMainConfig;
 
-    pMainCfg->SetBool("Graphics", "PostEffectInsanity", mpInsanity->IsDisabled()==false);
+    pMainCfg->SetBool("Graphics", "PostEffectInsanity", mpInsanity->IsDisabled() == false);
 }
 
 //-----------------------------------------------------------------------

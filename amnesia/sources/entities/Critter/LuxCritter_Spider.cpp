@@ -21,14 +21,14 @@ cLuxPropLoader_Critter_Spider::cLuxPropLoader_Critter_Spider(const tString& asNa
 
 iLuxProp *cLuxPropLoader_Critter_Spider::CreateProp(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxCritter_Spider, (asName, alID,apMap) );
+    return hplNew(cLuxCritter_Spider, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPropLoader_Critter_Spider::LoadCritterVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    cLuxCritter_Spider  *pCritter_Spider = static_cast<cLuxCritter_Spider*>(apProp);
+    cLuxCritter_Spider  *pCritter_Spider = static_cast<cLuxCritter_Spider *>(apProp);
 
     ///////////////////////////
     // General
@@ -62,14 +62,14 @@ void cLuxPropLoader_Critter_Spider::LoadCritterInstanceVariables(iLuxProp *apPro
 
 //-----------------------------------------------------------------------
 
-cLuxCritter_Spider::cLuxCritter_Spider(const tString &asName,int alID, cLuxMap *apMap) : iLuxProp_CritterBase(asName,alID,apMap)
+cLuxCritter_Spider::cLuxCritter_Spider(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp_CritterBase(asName, alID, apMap)
 {
     mbUseRayCollision = false;
-    mfFallingCount =0;
-    mfNewGroundNormalCount =0;
-    mfMaxSpeed =0.5;
+    mfFallingCount = 0;
+    mfNewGroundNormalCount = 0;
+    mfMaxSpeed = 0.5;
     mState = eLuxCritterState_Idle;
-    mfCount =0;
+    mfCount = 0;
     mfPlaySoundCount = cMath::RandRectf(1, 5);
     mbCausesSanityDecrease = true;
 }
@@ -107,9 +107,9 @@ void cLuxCritter_Spider::OnDamageCritter(float afAmount)
     mState = eLuxCritterState_Hit;
     //mvVel += mvGroundNormal * 1;
     mfMaxSpeed = 0.1f;
-    mvGroundNormal = cVector3f(0,1,0);
+    mvGroundNormal = cVector3f(0, 1, 0);
 
-    PlaySound("Critter_SpiderHitSound",msHitSound,true, true);
+    PlaySound("Critter_SpiderHitSound", msHitSound, true, true);
 
     //gpBase->mpDebugHandler->AddMessage(_W("Damage!"), false);
 }
@@ -122,12 +122,12 @@ void cLuxCritter_Spider::OnKillCritter()
 
 //-----------------------------------------------------------------------
 
-float cLuxCritter_Spider::DrawDebug(cGuiSet *apSet,iFontData *apFont,float afStartY)
+float cLuxCritter_Spider::DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY)
 {
     return afStartY;
-    apSet->DrawFont(apFont, cVector3f(5,afStartY,1),12,cColor(1,1),_W("OnGround: %d Colliding: %d Health: %f"), mbOnGround, mbColliding, mfHealth);
+    apSet->DrawFont(apFont, cVector3f(5, afStartY, 1), 12, cColor(1, 1), _W("OnGround: %d Colliding: %d Health: %f"), mbOnGround, mbColliding, mfHealth);
     afStartY += 13;
-    apSet->DrawFont(apFont, cVector3f(5,afStartY,1),12,cColor(1,1),_W("State: %d"), mState);
+    apSet->DrawFont(apFont, cVector3f(5, afStartY, 1), 12, cColor(1, 1), _W("State: %d"), mState);
     afStartY += 13;
 
     return afStartY;
@@ -144,11 +144,11 @@ float cLuxCritter_Spider::DrawDebug(cGuiSet *apSet,iFontData *apFont,float afSta
 
 void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
 {
-    cVector3f vMoveVelAdd =0;
+    cVector3f vMoveVelAdd = 0;
 
-    if(mfCount>0)
+    if(mfCount > 0)
     {
-        mfCount-= (float)adFixedDelta;
+        mfCount -= (float)adFixedDelta;
     }
 
     //If lantern is on, flee!
@@ -167,8 +167,8 @@ void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
     // Idle
     if(mState == eLuxCritterState_Idle)
     {
-        mfMaxSpeed=0.0f;
-        if(mfCount<=0)
+        mfMaxSpeed = 0.0f;
+        if(mfCount <= 0)
         {
             mState = eLuxCritterState_Move;
             mfCount = cMath::RandRectf(mvMoveTimeMinMax.x, mvMoveTimeMinMax.y);
@@ -182,9 +182,9 @@ void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
 
         vMoveVelAdd -= GetTowardPlayerAdd(false, adFixedDelta);
 
-        vMoveVelAdd += GetWanderAdd(1,2, adFixedDelta);
+        vMoveVelAdd += GetWanderAdd(1, 2, adFixedDelta);
 
-        if(mfCount<=0)
+        if(mfCount <= 0)
         {
             mState = eLuxCritterState_Idle;
             mfCount = cMath::RandRectf(mvIdleTimeMinMax.x, mvIdleTimeMinMax.y);
@@ -198,7 +198,7 @@ void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
 
         ///////////////////
         // Wandering
-        vMoveVelAdd += GetWanderAdd(1,2, adFixedDelta);
+        vMoveVelAdd += GetWanderAdd(1, 2, adFixedDelta);
 
         ///////////////////
         // Swarm around point
@@ -207,7 +207,7 @@ void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
 
             cVector3f vSwarmPos = cVector3f(mvSwarmPoint.x, mpBody->GetWorldPosition().x, mvSwarmPoint.z);
             cVector3f vWantedVel = cMath::Vector3Normalize(vSwarmPos - mpBody->GetWorldPosition()) * mfMaxSpeed;
-            vWantedVel.y=0;
+            vWantedVel.y = 0;
 
             cVector3f vForce = (vWantedVel - mvVel) * 0.01f * fSwarmPointDist;
             vMoveVelAdd += vForce * (float)adFixedDelta;
@@ -215,7 +215,7 @@ void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
 
         ///////////////////
         // Pause or Hunt
-        if(mfCount<=0)
+        if(mfCount <= 0)
         {
             //Hunt
             /*if(GetDistanceToPlayer() < mfHuntPlayerDist)
@@ -229,20 +229,20 @@ void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
             ///////////////////
             // Check attack
             float fDistToPlayer = GetDistanceToPlayer2D();
-            if(    gpBase->mpPlayer->IsDead()==false &&
+            if(    gpBase->mpPlayer->IsDead() == false &&
                     fDistToPlayer < mvAttackPlayerDistMinMax.y &&
                     fDistToPlayer > mvAttackPlayerDistMinMax.x)
             {
                 mState = eLuxCritterState_Attack_1;
                 PlaySound("CritterAttack", msAttackSound, true, true);
-                cVector3f vDir = cMath::Vector3Normalize(gpBase->mpPlayer->GetCharacterBody()->GetPosition()+cVector3f(0,0.5f,0) - mpBody->GetLocalPosition() );
+                cVector3f vDir = cMath::Vector3Normalize(gpBase->mpPlayer->GetCharacterBody()->GetPosition() + cVector3f(0, 0.5f, 0) - mpBody->GetLocalPosition() );
                 mvGravityVel += vDir * 25.0f;
                 mfMaxSpeed = 3.0f;
                 mbUpdateAnimation = false;
                 mpMeshEntity->PlayFadeToName("Attack", false, 0.3f);
                 mlAnimState = 0;
                 mfCount = 0.8f;
-                mvGroundNormal = cVector3f(0,1,0);
+                mvGroundNormal = cVector3f(0, 1, 0);
             }
             ///////////////////
             // Paus
@@ -261,9 +261,9 @@ void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
 
         ///////////////////
         // Move toward player
-        vMoveVelAdd += GetTowardPlayerAdd(false, adFixedDelta)*3;
+        vMoveVelAdd += GetTowardPlayerAdd(false, adFixedDelta) * 3;
 
-        vMoveVelAdd += GetWanderAdd(1,2, adFixedDelta);
+        vMoveVelAdd += GetWanderAdd(1, 2, adFixedDelta);
 
         ///////////////////
         // Check attack
@@ -272,19 +272,19 @@ void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
         {
             mState = eLuxCritterState_Attack_1;
             PlaySound("CritterAttack", msAttackSound, true, true);
-            cVector3f vDir = cMath::Vector3Normalize(gpBase->mpPlayer->GetCharacterBody()->GetPosition()+cVector3f(0,0.5f,0) - mpBody->GetLocalPosition() );
+            cVector3f vDir = cMath::Vector3Normalize(gpBase->mpPlayer->GetCharacterBody()->GetPosition() + cVector3f(0, 0.5f, 0) - mpBody->GetLocalPosition() );
             mvGravityVel += vDir * 25.0f;
             mfMaxSpeed = 3.0f;
             mbUpdateAnimation = false;
             mpMeshEntity->PlayFadeToName("Attack", false, 0.3f);
             mlAnimState = 0;
             mfCount = 0.8f;
-            mvGroundNormal = cVector3f(0,1,0);
+            mvGroundNormal = cVector3f(0, 1, 0);
         }
 
         ///////////////////
         // Give up
-        if(mfCount<=0)
+        if(mfCount <= 0)
         {
             mState = eLuxCritterState_Idle;
             mfCount = cMath::RandRectf(1, 3);
@@ -294,7 +294,7 @@ void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
     // Hit
     else if(mState == eLuxCritterState_Hit)
     {
-        if(mfCount<=0)
+        if(mfCount <= 0)
         {
             mState = eLuxCritterState_Idle;
         }
@@ -306,7 +306,7 @@ void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
         mfMaxSpeed = mfMaxHuntSpeed;
         vMoveVelAdd += GetTowardPlayerAdd(false, adFixedDelta);
 
-        if(mfCount<=0 || GetDistanceToPlayer2D() < 1.5f)
+        if(mfCount <= 0 || GetDistanceToPlayer2D() < 1.5f)
         {
             mState = eLuxCritterState_Attack_2;
             mbUpdateAnimation = true;
@@ -321,9 +321,9 @@ void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
     {
         mfMaxSpeed = mfMaxHuntSpeed;
         vMoveVelAdd += GetTowardPlayerAdd(false, adFixedDelta);
-        if(mfCount<=0)
+        if(mfCount <= 0)
         {
-            mState= eLuxCritterState_Idle;
+            mState = eLuxCritterState_Idle;
         }
     }
 
@@ -339,7 +339,7 @@ void cLuxCritter_Spider::UpdateVelocity(double adFixedDelta)
         if(mfPlaySoundCount < 0)
         {
             mfPlaySoundCount = cMath::RandRectf(mvIdleSoundRandMinMax.x, mvIdleSoundRandMinMax.y);
-            PlaySound("Critter_SpiderSound",msIdleSound,true, true);
+            PlaySound("Critter_SpiderSound", msIdleSound, true, true);
         }
     }
 
@@ -357,20 +357,20 @@ void cLuxCritter_Spider::UpdateGroundCheck(double adFixedDelta)
 
     ////////////////////////
     // Fix ground normal
-    mbOnGround=false;
+    mbOnGround = false;
     {
-        cVector3f vStartPos = mpBody->GetLocalPosition() - mvGroundNormal * (mpBody->GetShape()->GetRadius()-0.05f);
-        cVector3f vEndPos = vStartPos - mvGroundNormal*0.25f;
+        cVector3f vStartPos = mpBody->GetLocalPosition() - mvGroundNormal * (mpBody->GetShape()->GetRadius() - 0.05f);
+        cVector3f vEndPos = vStartPos - mvGroundNormal * 0.25f;
 
         mpRayCallback->Reset();
-        pPhysicsWorld->CastRay(mpRayCallback, vStartPos, vEndPos, false,true,true, true);
+        pPhysicsWorld->CastRay(mpRayCallback, vStartPos, vEndPos, false, true, true, true);
         if(mpRayCallback->GetIntersected())
         {
             mvGroundNormal = mpRayCallback->GetNormal();
             mbOnGround = true;
         }
 
-        if(mbOnGround ==false)
+        if(mbOnGround == false)
         {
             //Look for ground elsewhere! Ledge climbing done here?
         }
@@ -378,21 +378,21 @@ void cLuxCritter_Spider::UpdateGroundCheck(double adFixedDelta)
 
     ////////////////////////
     // Gravity
-    if(mbOnGround==false || mbColliding==false)
+    if(mbOnGround == false || mbColliding == false)
     {
         mvGravityVel -= mvGroundNormal * 9.8f * (float)adFixedDelta;
-        mfFallingCount+= (float)adFixedDelta;
+        mfFallingCount += (float)adFixedDelta;
         if(mfFallingCount > 0.3f)
         {
-            mvGroundNormal = cVector3f(0,1,0);
-            mvGravityVel = mvGroundNormal * mvGravityVel.Length()*-1;
+            mvGroundNormal = cVector3f(0, 1, 0);
+            mvGravityVel = mvGroundNormal * mvGravityVel.Length() * -1;
         }
 
         mvGravityVel = cMath::Vector3MaxLength(mvGravityVel, 10.0f);
     }
     else
     {
-        mfFallingCount =0;
+        mfFallingCount = 0;
     }
 }
 
@@ -427,24 +427,24 @@ void cLuxCritter_Spider::OnShapeCollision(const cVector3f& avPushVec, double adF
 
     //////////////////////////////////
     // Check wall intersection
-    cVector3f vStartPos = mpBody->GetLocalPosition() + vPushDir * (mpBody->GetShape()->GetRadius()-0.05f);
-    cVector3f vEndPos = vStartPos + vPushDir*0.1f;
+    cVector3f vStartPos = mpBody->GetLocalPosition() + vPushDir * (mpBody->GetShape()->GetRadius() - 0.05f);
+    cVector3f vEndPos = vStartPos + vPushDir * 0.1f;
 
     cVector3f mvIntersectNormal(0);
 
     mpRayCallback->Reset();
-    pPhysicsWorld->CastRay(mpRayCallback, vStartPos, vEndPos, false,true,true, true);
+    pPhysicsWorld->CastRay(mpRayCallback, vStartPos, vEndPos, false, true, true, true);
     if(mpRayCallback->GetIntersected())
     {
         //No climbing on dynamic bodies allowed
-        if(mpRayCallback->GetBody()->GetMass()!=0)
+        if(mpRayCallback->GetBody()->GetMass() != 0)
         {
             return;
         }
 
         mvIntersectNormal = mpRayCallback->GetNormal();
 
-        if(mvIntersectNormal ==0)
+        if(mvIntersectNormal == 0)
         {
             return;
         }
@@ -470,7 +470,7 @@ void cLuxCritter_Spider::OnShapeCollision(const cVector3f& avPushVec, double adF
 
     mpRayCallback->Reset();
 
-    pPhysicsWorld->CastRay(mpRayCallback, vStartPos, vEndPos, false,false,false, true);
+    pPhysicsWorld->CastRay(mpRayCallback, vStartPos, vEndPos, false, false, false, true);
     if(mpRayCallback->GetIntersected())
     {
         //gpBase->mpDebugHandler->AddMessage(_W("Space above not free!"), false);
@@ -480,14 +480,14 @@ void cLuxCritter_Spider::OnShapeCollision(const cVector3f& avPushVec, double adF
     //////////////////////////////////
     // Check so that there is something to climb on
     int lTestPoints = 5;
-    int lClimbPointCount =0;
-    for(int i=1; i<=5; ++i)
+    int lClimbPointCount = 0;
+    for(int i = 1; i <= 5; ++i)
     {
-        float fHeightAmount = (fTestHeight/ (float)lTestPoints)*(float)i;
+        float fHeightAmount = (fTestHeight / (float)lTestPoints) * (float)i;
         vStartPos = mpBody->GetLocalPosition() + mvGroundNormal * fHeightAmount;
-        vEndPos = vStartPos + vPushDir * (mpBody->GetShape()->GetRadius()+0.25f);
+        vEndPos = vStartPos + vPushDir * (mpBody->GetShape()->GetRadius() + 0.25f);
 
-        pPhysicsWorld->CastRay(mpRayCallback, vStartPos, vEndPos, false,false,false, true);
+        pPhysicsWorld->CastRay(mpRayCallback, vStartPos, vEndPos, false, false, false, true);
         if(mpRayCallback->GetIntersected())
         {
             lClimbPointCount++;
@@ -543,7 +543,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxCritter_Spider::CreateSaveData()
+iLuxEntity_SaveData *cLuxCritter_Spider::CreateSaveData()
 {
     return hplNew(cLuxCritter_Spider_SaveData, ());
 }
@@ -555,17 +555,17 @@ void cLuxCritter_Spider::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxCritter_Spider_SaveData *pData = static_cast<cLuxCritter_Spider_SaveData*>(apSaveData);
+    cLuxCritter_Spider_SaveData *pData = static_cast<cLuxCritter_Spider_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
     pData->mlState = mState;
-    kCopyToVar(pData,mfFallingCount);
-    kCopyToVar(pData,mfNewGroundNormalCount);
-    kCopyToVar(pData,mbOnGround);
-    kCopyToVar(pData,mfMaxSpeed);
-    kCopyToVar(pData,mfCount);
-    kCopyToVar(pData,mfPlaySoundCount);
+    kCopyToVar(pData, mfFallingCount);
+    kCopyToVar(pData, mfNewGroundNormalCount);
+    kCopyToVar(pData, mbOnGround);
+    kCopyToVar(pData, mfMaxSpeed);
+    kCopyToVar(pData, mfCount);
+    kCopyToVar(pData, mfPlaySoundCount);
 }
 
 //-----------------------------------------------------------------------
@@ -575,17 +575,17 @@ void cLuxCritter_Spider::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxCritter_Spider_SaveData *pData = static_cast<cLuxCritter_Spider_SaveData*>(apSaveData);
+    cLuxCritter_Spider_SaveData *pData = static_cast<cLuxCritter_Spider_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
     mState = (eLuxCritterState)pData->mlState;
-    kCopyFromVar(pData,mfFallingCount);
-    kCopyFromVar(pData,mfNewGroundNormalCount);
-    kCopyFromVar(pData,mbOnGround);
-    kCopyFromVar(pData,mfMaxSpeed);
-    kCopyFromVar(pData,mfCount);
-    kCopyFromVar(pData,mfPlaySoundCount);
+    kCopyFromVar(pData, mfFallingCount);
+    kCopyFromVar(pData, mfNewGroundNormalCount);
+    kCopyFromVar(pData, mbOnGround);
+    kCopyFromVar(pData, mfMaxSpeed);
+    kCopyFromVar(pData, mfCount);
+    kCopyFromVar(pData, mfPlaySoundCount);
 }
 
 //-----------------------------------------------------------------------

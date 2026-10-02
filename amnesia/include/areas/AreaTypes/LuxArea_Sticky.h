@@ -11,7 +11,7 @@ class cLuxArea_Sticky_SaveData : public iLuxArea_SaveData
 {
     kSerializableClassInit(cLuxArea_Sticky_SaveData)
 public:
-    iLuxArea* CreateArea(cLuxMap *apMap);
+    iLuxArea *CreateArea(cLuxMap *apMap);
 
     tString msAttachFunction;
     tString msDetachFunction;
@@ -73,7 +73,7 @@ public:
     }
     bool CanDetach()
     {
-        return mbCanDetach && mfSetMtxTime>=1;
+        return mbCanDetach && mfSetMtxTime >= 1;
     }
 
     //////////////////////
@@ -82,7 +82,7 @@ public:
 
     //////////////////////
     //Save data stuff
-    iLuxEntity_SaveData* CreateSaveData();
+    iLuxEntity_SaveData *CreateSaveData();
     virtual void SaveToSaveData(iLuxEntity_SaveData* apSaveData);
     virtual void LoadFromSaveData(iLuxEntity_SaveData* apSaveData);
     virtual void SetupSaveData(iLuxEntity_SaveData *apSaveData);
@@ -92,7 +92,7 @@ private:
     void UpdateCollision(double adFixedDelta);
 
 
-    tString GetCallbackFunc(const tString &asFunc,iPhysicsBody *apBody);
+    tString GetCallbackFunc(const tString &asFunc, iPhysicsBody *apBody);
 
     /////////////////////////
     // Data

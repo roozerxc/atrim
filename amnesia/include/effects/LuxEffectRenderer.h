@@ -11,7 +11,7 @@ public:
     cGlowObject() {}
     cGlowObject(iRenderable* apObject, float afAlpha) : mpObject(apObject), mfAlpha(afAlpha) {}
 
-    iRenderable* mpObject;
+    iRenderable *mpObject;
     float mfAlpha;
 };
 
@@ -48,7 +48,7 @@ private:
     std::vector<cGlowObject> mvFlashObjects;
     std::vector<cGlowObject> mvEnemyGlowObjects;
 
-    std::vector<iRenderable*> mvOutlineObjects;
+    std::vector<iRenderable *> mvOutlineObjects;
 
     iFrameBuffer *mpDeferredAccumBuffer;
     iFrameBuffer *mpFrameBufferColor;

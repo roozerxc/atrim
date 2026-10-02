@@ -22,14 +22,14 @@ cLuxPropLoader_Chest::cLuxPropLoader_Chest(const tString& asName) : iLuxPropLoad
 
 iLuxProp *cLuxPropLoader_Chest::CreateProp(const tString& asName, int alID, cLuxMap *apMap)
 {
-    return hplNew(cLuxProp_Chest, (asName, alID,apMap) );
+    return hplNew(cLuxProp_Chest, (asName, alID, apMap) );
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxPropLoader_Chest::LoadVariables(iLuxProp *apProp, cXmlElement *apRootElem)
 {
-    cLuxProp_Chest  *pChest = static_cast<cLuxProp_Chest*>(apProp);
+    cLuxProp_Chest  *pChest = static_cast<cLuxProp_Chest *>(apProp);
 
     ///////////////////////////
     // General
@@ -43,9 +43,9 @@ void cLuxPropLoader_Chest::LoadVariables(iLuxProp *apProp, cXmlElement *apRootEl
 
 void cLuxPropLoader_Chest::LoadInstanceVariables(iLuxProp *apProp, cResourceVarsObject *apInstanceVars)
 {
-    cLuxProp_Chest  *pChest = static_cast<cLuxProp_Chest*>(apProp);
+    cLuxProp_Chest  *pChest = static_cast<cLuxProp_Chest *>(apProp);
 
-    pChest->mlCoinsNeeded = apInstanceVars->GetVarInt("CoinsNeeded",0);
+    pChest->mlCoinsNeeded = apInstanceVars->GetVarInt("CoinsNeeded", 0);
 }
 //-----------------------------------------------------------------------
 
@@ -69,7 +69,7 @@ void cLuxChestMessageCallback::OnPress(bool abYes)
         gpBase->mpPlayer->AddCoins(-mpChest->mlCoinsNeeded);
         mpChest->SetLocked(false, true);
 
-        ProgLog(eLuxProgressLogLevel_Medium, "Opened chest "+ mpChest->msName);
+        ProgLog(eLuxProgressLogLevel_Medium, "Opened chest " + mpChest->msName);
 
         mpChest->mpMap->AddCompletionAmount(gpBase->mpCompletionCountHandler->mlChestCompletionValue);
 
@@ -85,7 +85,7 @@ void cLuxChestMessageCallback::OnPress(bool abYes)
 
 //-----------------------------------------------------------------------
 
-cLuxProp_Chest::cLuxProp_Chest(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName,alID,apMap, eLuxPropType_Chest)
+cLuxProp_Chest::cLuxProp_Chest(const tString &asName, int alID, cLuxMap *apMap) : iLuxProp(asName, alID, apMap, eLuxPropType_Chest)
 {
     mbLocked = false;
 
@@ -116,23 +116,23 @@ bool cLuxProp_Chest::CanInteract(iPhysicsBody *apBody)
 
 bool cLuxProp_Chest::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-    if(mbLocked==false)
+    if(mbLocked == false)
     {
         return false;
     }
 
-    tWString sText = kTranslate("Game", "InteractChest01")+_W(" ")+cString::ToStringW(mlCoinsNeeded)+_W(" ")+kTranslate("Game", "InteractChest02")+_W("\n");
-    sText += kTranslate("Game", "InteractChest03")+_W(" ")+cString::ToStringW(gpBase->mpPlayer->GetCoins())+_W("\n");
+    tWString sText = kTranslate("Game", "InteractChest01") + _W(" ") + cString::ToStringW(mlCoinsNeeded) + _W(" ") + kTranslate("Game", "InteractChest02") + _W("\n");
+    sText += kTranslate("Game", "InteractChest03") + _W(" ") + cString::ToStringW(gpBase->mpPlayer->GetCoins()) + _W("\n");
 
     if(gpBase->mpPlayer->GetCoins() < mlCoinsNeeded)
     {
-        sText += kTranslate("Game", "InteractChest03_NoCoins")+_W("\n");
-        gpBase->mpMessageHandler->StartPauseMessage(sText,false, NULL);
+        sText += kTranslate("Game", "InteractChest03_NoCoins") + _W("\n");
+        gpBase->mpMessageHandler->StartPauseMessage(sText, false, NULL);
     }
     else
     {
-        sText += kTranslate("Game", "InteractChest03_Question")+_W("\n");
-        gpBase->mpMessageHandler->StartPauseMessage(sText,true, mpMessageCallback);
+        sText += kTranslate("Game", "InteractChest03_Question") + _W("\n");
+        gpBase->mpMessageHandler->StartPauseMessage(sText, true, mpMessageCallback);
     }
 
 
@@ -145,8 +145,8 @@ void cLuxProp_Chest::OnSetupAfterLoad(cWorld *apWorld)
 {
     ////////////////////////////////////
     // Set up joints
-    int lNum=0;
-    for(size_t i=0; i< mvJoints.size(); ++i)
+    int lNum = 0;
+    for(size_t i = 0; i < mvJoints.size(); ++i)
     {
         iPhysicsJoint *pJoint = mvJoints[i];
         if(pJoint->GetType() != ePhysicsJointType_Hinge)
@@ -154,7 +154,7 @@ void cLuxProp_Chest::OnSetupAfterLoad(cWorld *apWorld)
             continue;
         }
 
-        iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge*>(pJoint);
+        iPhysicsJointHinge *pHingeJoint = static_cast<iPhysicsJointHinge *>(pJoint);
         mvJointData.push_back(cLuxChestJointData());
 
         iPhysicsBody *pChildBody = pJoint->GetChildBody();
@@ -175,7 +175,7 @@ void cLuxProp_Chest::OnSetupAfterLoad(cWorld *apWorld)
     }
 
 
-    SetLocked(true,false);
+    SetLocked(true, false);
 }
 
 //-----------------------------------------------------------------------
@@ -219,7 +219,7 @@ tWString cLuxProp_Chest::GetFocusText()
 {
     if(mbLocked)
     {
-        return    _W("Locked. Costs ")+cString::ToStringW(mlCoinsNeeded)+_W(" Thalers to open.");
+        return    _W("Locked. Costs ") + cString::ToStringW(mlCoinsNeeded) + _W(" Thalers to open.");
     }
     else
     {
@@ -259,7 +259,7 @@ void cLuxProp_Chest::SetLocked(bool abLocked, bool abEffects)
 
     mbLocked = abLocked;
 
-    for(size_t i=0; i<mvJointData.size(); ++i)
+    for(size_t i = 0; i < mvJointData.size(); ++i)
     {
         iPhysicsJointHinge *pHingeJoint = mvJointData[i].mpHingeJoint;
 
@@ -273,11 +273,11 @@ void cLuxProp_Chest::SetLocked(bool abLocked, bool abEffects)
         else
         {
             pHingeJoint->SetMaxAngle(mvJointData[i].mfMaxAngle);
-            pHingeJoint->SetMinAngle(mvJointData[i].mfMaxAngle-cMath::ToRad(2.0f));
+            pHingeJoint->SetMinAngle(mvJointData[i].mfMaxAngle - cMath::ToRad(2.0f));
             pHingeJoint->SetStickyMinLimit(false);
             pHingeJoint->SetStickyMaxLimit(false);
         }
-        mvJointData[i].mpChildBody->AddForce(cVector3f(0,1,0));
+        mvJointData[i].mpChildBody->AddForce(cVector3f(0, 1, 0));
     }
 }
 
@@ -304,9 +304,9 @@ void cLuxProp_Chest::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 
 //-----------------------------------------------------------------------
 
-cLuxChestJointData* cLuxProp_Chest::GetJointDataFromBody(iPhysicsBody *apBody)
+cLuxChestJointData *cLuxProp_Chest::GetJointDataFromBody(iPhysicsBody *apBody)
 {
-    for(size_t i=0; i<mvJointData.size(); ++i)
+    for(size_t i = 0; i < mvJointData.size(); ++i)
     {
         if(mvJointData[i].mpChildBody == apBody)
         {
@@ -318,9 +318,9 @@ cLuxChestJointData* cLuxProp_Chest::GetJointDataFromBody(iPhysicsBody *apBody)
 
 //-----------------------------------------------------------------------
 
-cLuxChestJointData* cLuxProp_Chest::GetJointDataFromJoint(iPhysicsJoint *apJoint)
+cLuxChestJointData *cLuxProp_Chest::GetJointDataFromJoint(iPhysicsJoint *apJoint)
 {
-    for(size_t i=0; i<mvJointData.size(); ++i)
+    for(size_t i = 0; i < mvJointData.size(); ++i)
     {
         if(mvJointData[i].mpHingeJoint == apJoint)
         {
@@ -348,7 +348,7 @@ kEndSerialize()
 
 //-----------------------------------------------------------------------
 
-iLuxEntity_SaveData* cLuxProp_Chest::CreateSaveData()
+iLuxEntity_SaveData *cLuxProp_Chest::CreateSaveData()
 {
     return hplNew(cLuxProp_Chest_SaveData, ());
 }
@@ -360,7 +360,7 @@ void cLuxProp_Chest::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::SaveToSaveData(apSaveData);
-    cLuxProp_Chest_SaveData *pData = static_cast<cLuxProp_Chest_SaveData*>(apSaveData);
+    cLuxProp_Chest_SaveData *pData = static_cast<cLuxProp_Chest_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables
@@ -376,7 +376,7 @@ void cLuxProp_Chest::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     //////////////////
     //Init
     super_class::LoadFromSaveData(apSaveData);
-    cLuxProp_Chest_SaveData *pData = static_cast<cLuxProp_Chest_SaveData*>(apSaveData);
+    cLuxProp_Chest_SaveData *pData = static_cast<cLuxProp_Chest_SaveData *>(apSaveData);
 
     //////////////////
     //Set variables

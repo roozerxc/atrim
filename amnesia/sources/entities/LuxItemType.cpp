@@ -39,7 +39,7 @@ iLuxItemType::~iLuxItemType()
 void iLuxItemType::AddCompletionAmount(int alAmount)
 {
     cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    if(pMap==NULL)
+    if(pMap == NULL)
     {
         return;
     }
@@ -65,7 +65,7 @@ cLuxItemType_Puzzle::cLuxItemType_Puzzle() : iLuxItemType("Puzzle", eLuxItemType
 
 bool cLuxItemType_Puzzle::BeforeAddItem(cLuxInventory_Item *apItem)
 {
-    ProgLog(eLuxProgressLogLevel_Medium, "Picked up puzzle item "+ apItem->GetName());
+    ProgLog(eLuxProgressLogLevel_Medium, "Picked up puzzle item " + apItem->GetName());
 
     AddCompletionAmount(gpBase->mpCompletionCountHandler->mlItemCompletionValue);
     return false;
@@ -73,7 +73,7 @@ bool cLuxItemType_Puzzle::BeforeAddItem(cLuxInventory_Item *apItem)
 
 void cLuxItemType_Puzzle::OnUse(cLuxInventory_Item *apItem, int alSlotIndex)
 {
-    if(gpBase->mpPlayer->GetCurrentState()==eLuxPlayerState_UseItem)
+    if(gpBase->mpPlayer->GetCurrentState() == eLuxPlayerState_UseItem)
     {
         gpBase->mpPlayer->ChangeState(eLuxPlayerState_Normal);
     }
@@ -135,12 +135,12 @@ cLuxItemType_Note::cLuxItemType_Note() : iLuxItemType("Note", eLuxItemType_Note)
 bool cLuxItemType_Note::BeforeAddItem(cLuxInventory_Item *apItem)
 {
     cLuxNote *pNote = gpBase->mpJournal->AddNote(apItem->GetStringVal(), apItem->GetImageName());
-    if(pNote==NULL)
+    if(pNote == NULL)
     {
         return true;
     }
 
-    ProgLog(eLuxProgressLogLevel_Medium, "Picked up note "+ apItem->GetStringVal());
+    ProgLog(eLuxProgressLogLevel_Medium, "Picked up note " + apItem->GetStringVal());
 
     if(apItem->GetAmount() > 0)
     {
@@ -191,12 +191,12 @@ bool cLuxItemType_Diary::BeforeAddItem(cLuxInventory_Item *apItem)
 {
     int lDiaryIdx;
     cLuxDiary *pDiary = gpBase->mpJournal->AddDiary(apItem->GetStringVal(), apItem->GetImageName(), lDiaryIdx);
-    if(pDiary==NULL)
+    if(pDiary == NULL)
     {
         return true;
     }
 
-    ProgLog(eLuxProgressLogLevel_Medium, "Picked up diary "+ apItem->GetStringVal());
+    ProgLog(eLuxProgressLogLevel_Medium, "Picked up diary " + apItem->GetStringVal());
 
     mbShowJournalOnPickup = true;
     const tString &sCallbackFunc = apItem->GetExtraStringVal();
@@ -204,7 +204,7 @@ bool cLuxItemType_Diary::BeforeAddItem(cLuxInventory_Item *apItem)
     {
         cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
 
-        pMap->RunScript(sCallbackFunc+"(\""+apItem->GetName()+ "\","+ cString::ToString(lDiaryIdx)+")" );
+        pMap->RunScript(sCallbackFunc + "(\"" + apItem->GetName() + "\"," + cString::ToString(lDiaryIdx) + ")" );
     }
 
     if(mbShowJournalOnPickup)
@@ -267,8 +267,8 @@ void cLuxItemType_Lantern::OnUse(cLuxInventory_Item *apItem, int alSlotIndex)
 tWString cLuxItemType_Lantern::GetDisplayedNameAdd(cLuxInventory_Item *apItem)
 {
     cLuxPlayerLantern *pLantern = gpBase->mpPlayer->GetHelperLantern();
-    tWString sStr = pLantern->IsActive() ? kTranslate("Inventory", "LanternOn"): kTranslate("Inventory", "LanternOff");
-    return _W(" (") +sStr + _W(")");
+    tWString sStr = pLantern->IsActive() ? kTranslate("Inventory", "LanternOn") : kTranslate("Inventory", "LanternOff");
+    return _W(" (") + sStr + _W(")");
 }
 
 //-----------------------------------------------------------------------
@@ -371,9 +371,9 @@ bool cLuxItemType_LampOil::BeforeAddItem(cLuxInventory_Item *apItem)
 void cLuxItemType_LampOil::OnUse(cLuxInventory_Item *apItem, int alSlotIndex)
 {
     cLuxInventory *pInventory = gpBase->mpInventory;
-    if(pInventory->HasItemOfType(eLuxItemType_Lantern)==false)
+    if(pInventory->HasItemOfType(eLuxItemType_Lantern) == false)
     {
-        pInventory->SetMessageText(kTranslate("Inventory","OilNeedsLantern"),0);
+        pInventory->SetMessageText(kTranslate("Inventory", "OilNeedsLantern"), 0);
         return;
     }
 

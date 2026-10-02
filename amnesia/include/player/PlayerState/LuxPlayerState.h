@@ -73,17 +73,17 @@ public:
     iLuxPlayerState(cLuxPlayer *apPlayer, eLuxPlayerState aType);
     virtual ~iLuxPlayerState();
 
-    virtual void OnEnterState(eLuxPlayerState aPrevState)=0;
-    virtual void OnLeaveState(eLuxPlayerState aNewState)=0;
+    virtual void OnEnterState(eLuxPlayerState aPrevState) = 0;
+    virtual void OnLeaveState(eLuxPlayerState aNewState) = 0;
 
     virtual void OnMapEnter(cLuxMap *apMap) {}
     virtual void OnMapLeave(cLuxMap *apMap) {}
 
-    virtual void Update(double adFixedDelta)=0;
-    virtual void PostUpdate(double adFixedDelta)=0;
-    virtual void OnDraw(cGuiSet *apGuiSet,double adFrameTime) {}
+    virtual void Update(double adFixedDelta) = 0;
+    virtual void PostUpdate(double adFixedDelta) = 0;
+    virtual void OnDraw(cGuiSet *apGuiSet, double adFrameTime) {}
 
-    virtual bool OnDoAction(eLuxPlayerAction aAction,bool abPressed)=0;
+    virtual bool OnDoAction(eLuxPlayerAction aAction, bool abPressed) = 0;
 
     virtual void OnScroll(float afAmount) {}
 
@@ -114,7 +114,7 @@ public:
         return true;
     }
 
-    virtual cGuiGfxElement* GetCrosshair()
+    virtual cGuiGfxElement *GetCrosshair()
     {
         return mpDefaultCrosshairGfx;
     }
@@ -123,7 +123,7 @@ public:
         return true;
     }
 
-    virtual void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter)=0;
+    virtual void OnSaveBody(iPhysicsBody *apBody, float &afMass, bool &abCollideCharacter) = 0;
     virtual bool AllowBuoyancy(iPhysicsBody *apBody)
     {
         return true;
@@ -131,7 +131,7 @@ public:
     virtual void OnDestroyEntity(iLuxEntity *apEntity) {}
     virtual void OnAttachBodyToStickyArea(iPhysicsBody *apBody) {}
 
-    virtual float DrawDebug(cGuiSet *apSet,iFontData *apFont,float afStartY)=0;
+    virtual float DrawDebug(cGuiSet *apSet, iFontData *apFont, float afStartY) = 0;
 
     virtual bool AllowPlayerMenus()
     {
@@ -152,20 +152,20 @@ public:
 
     /////////////////////////////////
     //Save data stuff
-    virtual bool IsSaved()=0;
-    virtual iLuxPlayerState_SaveData* CreateSaveData()=0;
+    virtual bool IsSaved() = 0;
+    virtual iLuxPlayerState_SaveData *CreateSaveData() = 0;
 
     virtual void SaveToSaveData(iLuxPlayerState_SaveData* apSaveData);
-    virtual void LoadFromSaveDataBeforeEnter(cLuxMap *apMap,iLuxPlayerState_SaveData* apSaveData);
+    virtual void LoadFromSaveDataBeforeEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
     virtual void LoadFromSaveDataAfterEnter(cLuxMap *apMap, iLuxPlayerState_SaveData* apSaveData);
 
 protected:
     eLuxPlayerState mType;
     cLuxPlayer *mpPlayer;
 
-    cGuiGfxElement* mpDefaultCrosshairGfx;
-    cGuiGfxElement* mpSimpleInteractCrosshairGfx;
-    std::vector<cGuiGfxElement*> mvFocusCrosshairGfx;
+    cGuiGfxElement *mpDefaultCrosshairGfx;
+    cGuiGfxElement *mpSimpleInteractCrosshairGfx;
+    std::vector<cGuiGfxElement *> mvFocusCrosshairGfx;
 
     eLuxPlayerState mPreviousState;
 };

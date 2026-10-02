@@ -31,7 +31,7 @@ public:
     cLuxInventory_Item(const tString& asName, eLuxItemType aType, const tString& asSubType, cLuxInventory *apInventory);
     ~cLuxInventory_Item();
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -39,7 +39,7 @@ public:
     {
         return mType;
     }
-    const tString& GetSubType()
+    const tString &GetSubType()
     {
         return msSubType;
     }
@@ -48,7 +48,7 @@ public:
     {
         mpImage = apImage;
     }
-    cGuiGfxElement* GetImage()
+    cGuiGfxElement *GetImage()
     {
         return mpImage;
     }
@@ -57,7 +57,7 @@ public:
     {
         msImageName = asName;
     }
-    const tString& GetImageName()
+    const tString &GetImageName()
     {
         return msImageName;
     }
@@ -66,7 +66,7 @@ public:
     {
         msVal = asVal;
     }
-    const tString& GetStringVal()
+    const tString &GetStringVal()
     {
         return msVal;
     }
@@ -75,7 +75,7 @@ public:
     {
         msExtraVal = asExtraVal;
     }
-    const tString& GetExtraStringVal()
+    const tString &GetExtraStringVal()
     {
         return msExtraVal;
     }
@@ -90,11 +90,11 @@ public:
     {
         return mlCount;
     }
-    const tString& GetGameNameEntry()
+    const tString &GetGameNameEntry()
     {
         return msGameNameEntry;
     }
-    const tString& GetGameDescEntry()
+    const tString &GetGameDescEntry()
     {
         return msGameDescEntry;
     }
@@ -147,7 +147,7 @@ public:
     cLuxInventory_Slot(cLuxInventory *apInventory, cWidgetImage* apImage, int alIdx);
     ~cLuxInventory_Slot();
 
-    cWidgetImage* GetImageWidget()
+    cWidgetImage *GetImageWidget()
     {
         return mpImage;
     }
@@ -155,7 +155,7 @@ public:
 private:
     ////////////////////////
     //Helper
-    cLuxInventory_Item* GetItem();
+    cLuxInventory_Item *GetItem();
 
     ////////////////////////
     //Callbacks
@@ -238,7 +238,7 @@ public:
 
     void OnDraw(double adFrameTime);
 
-    cGuiSet* GetSet()
+    cGuiSet *GetSet()
     {
         return mpGuiSet;
     }
@@ -249,10 +249,10 @@ public:
     // Actions
     void LoadScript();
 
-    cLuxInventory_Item* AddItem(const tString& asName, eLuxItemType aType,
+    cLuxInventory_Item *AddItem(const tString& asName, eLuxItemType aType,
                                 const tString& asSubTypeName, const tString& asImageName,
-                                float afAmount, const tString & asVal,const tString& asExtraVal,
-                                bool* apRemoveItemProp=NULL);
+                                float afAmount, const tString & asVal, const tString& asExtraVal,
+                                bool* apRemoveItemProp = NULL);
     void RemoveItem(const tString& asName);
     void RemoveItem(cLuxInventory_Item *apItem);
     void RemoveItemOfType(eLuxItemType aType);
@@ -261,15 +261,15 @@ public:
     {
         return GetItemIndex(apItem) >= 0;
     }
-    cLuxInventory_Item* GetItem(const tString& asName);
-    cLuxInventory_Item* GetItemFromSubType(const tString& asSubType);
+    cLuxInventory_Item *GetItem(const tString& asName);
+    cLuxInventory_Item *GetItemFromSubType(const tString& asSubType);
     bool HasItemOfType(eLuxItemType aType);
 
     void AddCombineCallback(const tString& asName,
                             const tString& asItemA, const tString& asItemB,
                             const tString& asFunction, bool abAutoDestroy);
     void RemoveCombineCallback(const tString& asName);
-    cLuxCombineItemsCallback* GetCombineCallback(const tString& asItemA, const tString& asItemB);
+    cLuxCombineItemsCallback *GetCombineCallback(const tString& asItemA, const tString& asItemB);
 
     void RunScript(const tString& asCommand);
     bool RecompileScript(tString *apOutput);
@@ -300,13 +300,13 @@ public:
     }
 
     void SetPickedItem(cLuxInventory_Item *apItem, const cVector2f& avOffset);
-    cLuxInventory_Item* GetPickedItem()
+    cLuxInventory_Item *GetPickedItem()
     {
         return mpPickedItem;
     }
 
     void SetCurrentWidget(iWidget *apWidget);
-    iWidget* GetCurrentWidget()
+    iWidget *GetCurrentWidget()
     {
         return mpCurrentWidget;
     }
@@ -316,7 +316,7 @@ public:
         mbEnterFromJournal = abX;
     }
 
-    cLuxInventory_Item* GetItem(int alIdx)
+    cLuxInventory_Item *GetItem(int alIdx)
     {
         return mvItems[alIdx];
     }
@@ -326,13 +326,13 @@ public:
     }
 
     void SetEquippedHandItem(cLuxInventory_Item *apItem);
-    cLuxInventory_Item* GetEquippedHandItem()
+    cLuxInventory_Item *GetEquippedHandItem()
     {
         return mpEquippedItem;
     }
 
     eLuxItemType GetItemTypeFromString(const tString& asType);
-    iLuxItemType * GetItemTypeData(eLuxItemType aType)
+    iLuxItemType *GetItemTypeData(eLuxItemType aType)
     {
         return mvItemTypes[aType];
     }
@@ -368,7 +368,7 @@ private:
 
     void CreateGui();
 
-    void DrawElementAtCenter(const cVector3f& avCenter, cGuiGfxElement* apGfx, float afAlpha, const cVector2f& avSize=-1, bool abMulColWithAlpha=false);
+    void DrawElementAtCenter(const cVector3f& avCenter, cGuiGfxElement* apGfx, float afAlpha, const cVector2f& avSize = -1, bool abMulColWithAlpha = false);
 
 #if USE_GAMEPAD
     tWString ParseStringForGamepadIconsRemoval(const tWString & asCurrentText);
@@ -466,8 +466,8 @@ private:
      */
     void DrawFrameAroundWidget(cGuiGfxElement** apGfxCorners, cGuiGfxElement** apGfxBorders,
                                iWidget* apWidget,
-                               const cVector2f& avHPadding=0, const cVector2f& avVPadding=0,
-                               const cVector3f& avOffset=0, const cVector2f& avSize=-1);
+                               const cVector2f& avHPadding = 0, const cVector2f& avVPadding = 0,
+                               const cVector3f& avOffset = 0, const cVector2f& avSize = -1);
 
     /**
      * Draws a frame around a rectangle given by a position and size
@@ -499,12 +499,12 @@ private:
 
     cViewport *mpViewport;
 
-    std::vector<iLuxItemType*> mvItemTypes;
+    std::vector<iLuxItemType *> mvItemTypes;
 
-    std::vector<cLuxInventory_Slot*> mvSlots;
-    std::vector<cLuxInventory_Item*> mvItems;
+    std::vector<cLuxInventory_Slot *> mvSlots;
+    std::vector<cLuxInventory_Item *> mvItems;
 
-    std::vector<cWidgetImage*> mvImageWidgets;
+    std::vector<cWidgetImage *> mvImageWidgets;
 
     cVector2f mvScreenSize;
     cVector2f mvGuiSetCenterSize;
@@ -517,14 +517,14 @@ private:
     iTexture *mpScreenBgTexture;
     cGuiGfxElement *mpScreenBgGfx;
 
-    cGuiGfxElement* mpFrameHealthCorners[4];
-    cGuiGfxElement* mpFrameHealthBorders[4];
+    cGuiGfxElement *mpFrameHealthCorners[4];
+    cGuiGfxElement *mpFrameHealthBorders[4];
 
-    cGuiGfxElement* mpFrameSanityCorners[4];
-    cGuiGfxElement* mpFrameSanityBorders[4];
+    cGuiGfxElement *mpFrameSanityCorners[4];
+    cGuiGfxElement *mpFrameSanityBorders[4];
 
-    cGuiGfxElement* mpFrameGenericCorners[4];
-    cGuiGfxElement* mpFrameGenericBorders[4];
+    cGuiGfxElement *mpFrameGenericCorners[4];
+    cGuiGfxElement *mpFrameGenericBorders[4];
 
     cGuiGfxElement *mpSanityStatus[4];
     cGuiGfxElement *mpSanityGlow[4];
@@ -533,8 +533,8 @@ private:
 
     cGuiGfxElement *mpRemainingOilFG;
     cGuiGfxElement *mpRemainingOilBG;
-    cGuiGfxElement* mpOilBubble[3];
-    cGuiGfxElement* mpOilLiquid;
+    cGuiGfxElement *mpOilBubble[3];
+    cGuiGfxElement *mpOilLiquid;
     cVector3f mvOilBubblePos[3];
     float mvOilBubbleSpeed[3];
     float mfOilMovementT;
@@ -547,11 +547,11 @@ private:
 
     iGpuProgram *mpEffectProgram;
 
-    iWidget * mpHealthWidget;
-    iWidget * mpSanityWidget;
-    iWidget * mpTinderboxWidget;
-    iWidget * mpOilWidget;
-    iWidget * mpJournalWidget;
+    iWidget *mpHealthWidget;
+    iWidget *mpSanityWidget;
+    iWidget *mpTinderboxWidget;
+    iWidget *mpOilWidget;
+    iWidget *mpJournalWidget;
 
     ////////////////////////
     // Layout properties
@@ -676,7 +676,7 @@ private:
 
     cLuxInventory_Item *mpEquippedItem;
 
-    std::vector<cGuiGfxElement*> mvGridLines;
+    std::vector<cGuiGfxElement *> mvGridLines;
 
     float mfTimer;
     tFloatVec mvPulseMiddle;

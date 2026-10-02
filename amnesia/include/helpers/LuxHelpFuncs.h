@@ -28,9 +28,9 @@ public:
     void Destroy();
 
 private:
-    std::list<cMesh*> mlstMeshCache;
-    std::list<cAnimation*> mlstAnimationCache;
-    std::list<iTexture*> mlstTextureCache;
+    std::list<cMesh *> mlstMeshCache;
+    std::list<cAnimation *> mlstAnimationCache;
+    std::list<iTexture *> mlstTextureCache;
 };
 
 //-------------------------------------
@@ -44,11 +44,11 @@ public:
     void LoadFonts();
 
 
-    bool PlayGuiSoundData(    const tString& asName, eSoundEntryType aDestType, float afVolMul=1.0f,
-                              eSoundEntityType aSoundType= eSoundEntityType_Main, bool abSkipPreviousRandom=true,
-                              cLuxSoundExtraData *apOutputData= NULL);
+    bool PlayGuiSoundData(    const tString& asName, eSoundEntryType aDestType, float afVolMul = 1.0f,
+                              eSoundEntityType aSoundType = eSoundEntityType_Main, bool abSkipPreviousRandom = true,
+                              cLuxSoundExtraData *apOutputData = NULL);
 
-    void DrawSetToScreen(bool abClearScreen=true, const cColor& aCol = cColor(0,0), cGuiSet* apSet=NULL);
+    void DrawSetToScreen(bool abClearScreen = true, const cColor& aCol = cColor(0, 0), cGuiSet* apSet = NULL);
 
     void CleanupData();
 
@@ -62,7 +62,7 @@ public:
     void RenderBackgroundScreen(bool abDrawFullHUD);
 
 
-    cGuiSet* GetSet()
+    cGuiSet *GetSet()
     {
         return mpSet;
     }

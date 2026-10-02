@@ -31,15 +31,15 @@ public:
     bool MoveTo(const cVector3f& avPos);
     void Stop();
 
-    cAINode* GetNodeAtPos(    const cVector3f &avPos,float afMinDistance,float afMaxDistance, bool abGetClosest,
-                              bool abPosToNodeFreePathCheck,bool abEnemyToNodeFreePathCheck,
-                              cAINode *apSkipNode, int alFreePathRayNum=-1,
-                              tAIFreePathFlag alFreePathFlags=eAIFreePathFlag_SkipDynamic,
-                              bool abSkipUsedNodes=true);
+    cAINode *GetNodeAtPos(    const cVector3f &avPos, float afMinDistance, float afMaxDistance, bool abGetClosest,
+                              bool abPosToNodeFreePathCheck, bool abEnemyToNodeFreePathCheck,
+                              cAINode *apSkipNode, int alFreePathRayNum = -1,
+                              tAIFreePathFlag alFreePathFlags = eAIFreePathFlag_SkipDynamic,
+                              bool abSkipUsedNodes = true);
 
     //////////////////////
     //Properties
-    tAINodeList* GetNodeList()
+    tAINodeList *GetNodeList()
     {
         return &mlstPathNodes;
     }
@@ -49,9 +49,9 @@ public:
         return mbMoving;
     }
     cVector3f GetNextGoalPos();
-    const cVector3f& GetFinalGoalPos();
+    const cVector3f &GetFinalGoalPos();
 
-    cAINodeContainer* GetNodeContainer()
+    cAINodeContainer *GetNodeContainer()
     {
         return mpNodeContainer;
     }

@@ -56,10 +56,10 @@ private:
     cWidgetWindow *mpWindowEnterName;
     cWidgetTextBox *mpTextEnterName;
 
-    cWidgetButton* mpSelectButton;
-    cWidgetButton* mpCreateButton;
+    cWidgetButton *mpSelectButton;
+    cWidgetButton *mpCreateButton;
 
-    std::vector<cLuxGameProfile*> mvProfiles;
+    std::vector<cLuxGameProfile *> mvProfiles;
 
     ///////////////////////
     // Widget callbacks
