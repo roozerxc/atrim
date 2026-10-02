@@ -36,14 +36,14 @@ public:
         mfVolume(0), mfVolumeAdd(0.01f) {}
 
     tString msFileName;
-    iSoundChannel* mpStream;
+    iSoundChannel *mpStream;
     float mfMaxVolume;
     float mfVolume;
     float mfVolumeAdd;
     bool mbLoop;
 };
 
-typedef std::list<cMusicEntry*> tMusicEntryList;
+typedef std::list<cMusicEntry *> tMusicEntryList;
 typedef tMusicEntryList::iterator tMusicEntryListIt;
 
 ////////////////////////////////////////////////////
@@ -57,7 +57,7 @@ public:
     double mfCurrentPos;
 };
 
-typedef std::list<cMusicResumeEntry*> tMusicResumeEntryList;
+typedef std::list<cMusicResumeEntry *> tMusicResumeEntryList;
 typedef tMusicResumeEntryList::iterator tMusicResumeEntryListIt;
 
 ////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ public:
      * \param abLoop If the music should be looped or not.
      * \return
      */
-    bool Play(const tString& asFileName,float afVolume, float afFadeStepSize, bool abLoop, bool abResume);
+    bool Play(const tString& asFileName, float afVolume, float afFadeStepSize, bool abLoop, bool abResume);
 
     /**
      * Stop playing the current music.
@@ -110,19 +110,19 @@ public:
     tString GetCurrentSongName();
     float GetCurrentSongVolume();
 
-    cMusicEntry* GetCurrentSong();
+    cMusicEntry *GetCurrentSong();
 
     void Update(double adFixedDelta);
 
     void ResetResumeData();
 
 private:
-    iLowLevelSound* mpLowLevelSound;
-    cResources* mpResources;
+    iLowLevelSound *mpLowLevelSound;
+    cResources *mpResources;
 
     tMusicEntryList mlstFadingSongs;
-    cMusicEntry* mpMainSong;
-    cMusicLock* mpLock;
+    cMusicEntry *mpMainSong;
+    cMusicLock *mpLock;
     bool mbIsPaused;
 
     float mfVolumeMul;
@@ -131,9 +131,9 @@ private:
 
     tMusicResumeEntryList mlstResumeEntries;
 
-    cMusicResumeEntry* GetResumeEntry(const tString& asFileName);
+    cMusicResumeEntry *GetResumeEntry(const tString& asFileName);
     void UpdateResumeEntry(cMusicEntry* apSong, float afFadeStepSize);
-    bool LoadAndStart(const tString& asFileName,cMusicEntry* apSong,float afVolume, bool abLoop, bool abResume);
+    bool LoadAndStart(const tString& asFileName, cMusicEntry* apSong, float afVolume, bool abLoop, bool abResume);
 };
 
 };

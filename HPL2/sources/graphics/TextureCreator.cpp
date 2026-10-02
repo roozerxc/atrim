@@ -48,42 +48,42 @@ void cTextureCreator::GenerateScatterDiskMap3D(iTexture *apOffsetTexture, int al
     {
         FatalError("Both the OffsetTexture 2D size and sample size must be greater than zero!\n");
     }
-    if(cMath::IsPow2(alSize)==false)
+    if(cMath::IsPow2(alSize) == false)
     {
         FatalError("OffsetTexture 2D size is non-pow2!\n");
     }
-    if(cMath::IsPow2(alSamples)==false)
+    if(cMath::IsPow2(alSamples) == false)
     {
         FatalError("OffsetTexture 2D sample size is non-pow2!\n");
     }
 
     ////////////////////
     // Calculate size of grid
-    int lGridSize = (int)(sqrt((float)alSamples)+0.5f);
+    int lGridSize = (int)(sqrt((float)alSamples) +0.5f);
     std::vector<tVector2fVec> vOffsetsVec;
-    vOffsetsVec.resize(alSize*alSize);
+    vOffsetsVec.resize(alSize * alSize);
     tVector2fVec vTempGridArray;
     vTempGridArray.resize(lGridSize * lGridSize);
 
     ////////////////////////////
     //Setup texture data
     std::vector<unsigned char> vTextureData;
-    cVector3l vTextureSize(alSize, alSize, alSamples/2);
-    vTextureData.resize(4*vTextureSize.x*vTextureSize.y*vTextureSize.z,0);
+    cVector3l vTextureSize(alSize, alSize, alSamples / 2);
+    vTextureData.resize(4 * vTextureSize.x * vTextureSize.y * vTextureSize.z, 0);
 
     //Log("GRIDSIZE: %d\n",lGridSize);
 
     ////////////////////////////
     //Generate all the different sample collections
-    for(size_t sample_num=0; sample_num<vOffsetsVec.size(); ++sample_num)
+    for(size_t sample_num = 0; sample_num < vOffsetsVec.size(); ++sample_num)
     {
         ////////////////////////////
         // Fills a square "grid" size, and then normalizes each pos to be 0 - 1
-        for(int y=0; y<lGridSize; ++y)
-            for(int x=0; x<lGridSize; ++x)
+        for(int y = 0; y < lGridSize; ++y)
+            for(int x = 0; x < lGridSize; ++x)
             {
                 //+0.5, because we want center
-                cVector2f vPos((float)x + 0.5f, (float) y+0.5f);
+                cVector2f vPos((float)x + 0.5f, (float) y + 0.5f);
 
                 //Randomize point from, but let it never leave the grid square.
                 vPos += cMath::RandRectVector2f(-0.5f, 0.5f);
@@ -92,7 +92,7 @@ void cTextureCreator::GenerateScatterDiskMap3D(iTexture *apOffsetTexture, int al
                 vPos *= 1.0f / (float)lGridSize;
 
                 //Add to array
-                vTempGridArray[y*lGridSize + x] = vPos;
+                vTempGridArray[y * lGridSize + x] = vPos;
             }
 
         ////////////////////////////
@@ -112,21 +112,21 @@ void cTextureCreator::GenerateScatterDiskMap3D(iTexture *apOffsetTexture, int al
         vOffsets.resize(alSamples);
 
         float fSampleAdd = ((float)vTempGridArray.size()) / ((float)alSamples);
-        float fCurrentSample =0;
+        float fCurrentSample = 0;
 
-        for(size_t i=0; i<vOffsets.size(); ++i)
+        for(size_t i = 0; i < vOffsets.size(); ++i)
         {
             int lIdx = (int)fCurrentSample;
 
             vOffsets[i] = vTempGridArray[lIdx];
 
-            fCurrentSample+= fSampleAdd;
+            fCurrentSample += fSampleAdd;
         }
 
 
         ////////////////////////////
         // Warp grid so coordinates become spherical
-        for(size_t i=0; i<vOffsets.size(); ++i)
+        for(size_t i = 0; i < vOffsets.size(); ++i)
         {
             cVector2f vPos = vOffsets[i];
 
@@ -138,7 +138,7 @@ void cTextureCreator::GenerateScatterDiskMap3D(iTexture *apOffsetTexture, int al
         // Sort by length (if set)
         if(abSortSamples)
         {
-            std::random_shuffle(vOffsets.begin(),vOffsets.end());
+            std::random_shuffle(vOffsets.begin(), vOffsets.end());
         }
 
         //Debug:
@@ -158,34 +158,34 @@ void cTextureCreator::GenerateScatterDiskMap3D(iTexture *apOffsetTexture, int al
 
 
         //Set all samples between 0 and 1
-        for(size_t i=0; i<vOffsets.size(); ++i)
+        for(size_t i = 0; i < vOffsets.size(); ++i)
         {
-            vOffsets[i].x = (vOffsets[i].x+1)*0.5f;
-            vOffsets[i].y = (vOffsets[i].y+1)*0.5f;
+            vOffsets[i].x = (vOffsets[i].x + 1) * 0.5f;
+            vOffsets[i].y = (vOffsets[i].y + 1) * 0.5f;
         }
 
         ///////////////////////////////
         // Add the samples to the texture data
-        for(int depth=0; depth<vTextureSize.z; ++depth)
+        for(int depth = 0; depth < vTextureSize.z; ++depth)
         {
-            int lOffset = depth*vTextureSize.x*vTextureSize.y*4 + (int)sample_num*4;
-            unsigned char* pPixelData = &vTextureData[lOffset];
+            int lOffset = depth * vTextureSize.x * vTextureSize.y * 4 + (int)sample_num * 4;
+            unsigned char *pPixelData = &vTextureData[lOffset];
 
-            int lSample = depth*2;
+            int lSample = depth * 2;
 
             //RG
             pPixelData[0] = (int)(vOffsets[lSample].x * 255.0f + 0.5f);
             pPixelData[1] = (int)(vOffsets[lSample].y * 255.0f + 0.5f);
 
             //BA
-            pPixelData[2] = (int)(vOffsets[lSample+1].x * 255.0f + 0.5f);
-            pPixelData[3] = (int)(vOffsets[lSample+1].y * 255.0f + 0.5f);
+            pPixelData[2] = (int)(vOffsets[lSample + 1].x * 255.0f + 0.5f);
+            pPixelData[3] = (int)(vOffsets[lSample + 1].y * 255.0f + 0.5f);
         }
     }
 
     ////////////////////////////
     //Create texture data
-    apOffsetTexture->CreateFromRawData(vTextureSize,ePixelFormat_RGBA, &vTextureData[0]);
+    apOffsetTexture->CreateFromRawData(vTextureSize, ePixelFormat_RGBA, &vTextureData[0]);
     apOffsetTexture->SetWrapSTR(eTextureWrap_Repeat);
     apOffsetTexture->SetFilter(eTextureFilter_Nearest); //Do not use when using lightspace as lookup
 
@@ -220,40 +220,40 @@ void cTextureCreator::GenerateScatterDiskMap2D(iTexture *apOffsetTexture, int al
     {
         FatalError("Both the OffsetTexture 2D size and sample size must be greater than zero!\n");
     }
-    if(cMath::IsPow2(alSize)==false)
+    if(cMath::IsPow2(alSize) == false)
     {
         FatalError("OffsetTexture 2D size is non-pow2!\n");
     }
-    if(cMath::IsPow2(alSamples)==false)
+    if(cMath::IsPow2(alSamples) == false)
     {
         FatalError("OffsetTexture 2D sample size is non-pow2!\n");
     }
 
     ////////////////////
     // Calculate size of grid
-    int lGridSize = (int)(sqrt((float)alSamples)+0.5f);
+    int lGridSize = (int)(sqrt((float)alSamples) +0.5f);
     std::vector<tVector2fVec> vOffsetsVec;
-    vOffsetsVec.resize(alSize*alSize);
+    vOffsetsVec.resize(alSize * alSize);
     tVector2fVec vTempGridArray;
     vTempGridArray.resize(lGridSize * lGridSize);
 
     ////////////////////////////
     //Setup texture data
     std::vector<unsigned char> vTextureData;
-    cVector3l vTextureSize(alSize, alSize, alSamples/2);
-    vTextureData.resize(4*vTextureSize.x*vTextureSize.y*vTextureSize.z,0);
+    cVector3l vTextureSize(alSize, alSize, alSamples / 2);
+    vTextureData.resize(4 * vTextureSize.x * vTextureSize.y * vTextureSize.z, 0);
 
     ////////////////////////////
     //Generate all the different sample collections
-    for(size_t sample_num=0; sample_num<vOffsetsVec.size(); ++sample_num)
+    for(size_t sample_num = 0; sample_num < vOffsetsVec.size(); ++sample_num)
     {
         ////////////////////////////
         // Fills a square "grid" size, and then normalizes each pos to be 0 - 1
-        for(int y=0; y<lGridSize; ++y)
-            for(int x=0; x<lGridSize; ++x)
+        for(int y = 0; y < lGridSize; ++y)
+            for(int x = 0; x < lGridSize; ++x)
             {
                 //+0.5, because we want center
-                cVector2f vPos((float)x + 0.5f, (float) y+0.5f);
+                cVector2f vPos((float)x + 0.5f, (float) y + 0.5f);
 
                 //Randomize point from, but let it never leave the grid square.
                 vPos += cMath::RandRectVector2f(-0.5f, 0.5f);
@@ -262,7 +262,7 @@ void cTextureCreator::GenerateScatterDiskMap2D(iTexture *apOffsetTexture, int al
                 vPos *= 1.0f / (float)lGridSize;
 
                 //Add to array
-                vTempGridArray[y*lGridSize + x] = vPos;
+                vTempGridArray[y * lGridSize + x] = vPos;
             }
 
         //Get the offsets and put the once we want from the grid here.
@@ -270,21 +270,21 @@ void cTextureCreator::GenerateScatterDiskMap2D(iTexture *apOffsetTexture, int al
         vOffsets.resize(alSamples);
 
         float fSampleAdd = ((float)vTempGridArray.size()) / ((float)alSamples);
-        float fCurrentSample =0;
+        float fCurrentSample = 0;
 
-        for(size_t i=0; i<vOffsets.size(); ++i)
+        for(size_t i = 0; i < vOffsets.size(); ++i)
         {
             int lIdx = (int)fCurrentSample;
 
             vOffsets[i] = vTempGridArray[lIdx];
 
-            fCurrentSample+= fSampleAdd;
+            fCurrentSample += fSampleAdd;
         }
 
 
         ////////////////////////////
         // Warp grid so coordinates become spherical
-        for(size_t i=0; i<vOffsets.size(); ++i)
+        for(size_t i = 0; i < vOffsets.size(); ++i)
         {
             cVector2f vPos = vOffsets[i];
 
@@ -296,34 +296,34 @@ void cTextureCreator::GenerateScatterDiskMap2D(iTexture *apOffsetTexture, int al
         // Sort by length (if set)
         if(abSortSamples)
         {
-            std::random_shuffle(vOffsets.begin(),vOffsets.end());
+            std::random_shuffle(vOffsets.begin(), vOffsets.end());
         }
 
 
         //Set all samples between 0 and 1
-        for(size_t i=0; i<vOffsets.size(); ++i)
+        for(size_t i = 0; i < vOffsets.size(); ++i)
         {
-            vOffsets[i].x = (vOffsets[i].x+1)*0.5f;
-            vOffsets[i].y = (vOffsets[i].y+1)*0.5f;
+            vOffsets[i].x = (vOffsets[i].x + 1) * 0.5f;
+            vOffsets[i].y = (vOffsets[i].y + 1) * 0.5f;
         }
 
         ///////////////////////////////
         // Add the samples to the texture data
-        for(int depth=0; depth<vTextureSize.z; ++depth)
+        for(int depth = 0; depth < vTextureSize.z; ++depth)
         {
-            int lOffset = depth*vTextureSize.x*vTextureSize.y*4 + (int)sample_num*4;
+            int lOffset = depth * vTextureSize.x * vTextureSize.y * 4 + (int)sample_num * 4;
 
-            unsigned char* pPixelData = &vTextureData[lOffset];
+            unsigned char *pPixelData = &vTextureData[lOffset];
 
-            int lSample = depth*2;
+            int lSample = depth * 2;
 
             //RG
-            pPixelData[0] = (int)(vOffsets[lSample].x*255.0f);
-            pPixelData[1] = (int)(vOffsets[lSample].y*255.0f);
+            pPixelData[0] = (int)(vOffsets[lSample].x * 255.0f);
+            pPixelData[1] = (int)(vOffsets[lSample].y * 255.0f);
 
             //BA
-            pPixelData[2] = (int)(vOffsets[lSample+1].x*255.0f);
-            pPixelData[3] = (int)(vOffsets[lSample+1].y*255.0f);
+            pPixelData[2] = (int)(vOffsets[lSample + 1].x * 255.0f);
+            pPixelData[3] = (int)(vOffsets[lSample + 1].y * 255.0f);
         }
 
 
@@ -331,7 +331,7 @@ void cTextureCreator::GenerateScatterDiskMap2D(iTexture *apOffsetTexture, int al
 
     ////////////////////////////
     //Create texture data
-    apOffsetTexture->CreateFromRawData(cVector3l(vTextureSize.x, vTextureSize.y*vTextureSize.z,1),ePixelFormat_RGBA, &vTextureData[0]);
+    apOffsetTexture->CreateFromRawData(cVector3l(vTextureSize.x, vTextureSize.y * vTextureSize.z, 1), ePixelFormat_RGBA, &vTextureData[0]);
     apOffsetTexture->SetWrapSTR(eTextureWrap_Repeat);
     apOffsetTexture->SetFilter(eTextureFilter_Nearest); //Do not use when using lightspace as lookup
 }

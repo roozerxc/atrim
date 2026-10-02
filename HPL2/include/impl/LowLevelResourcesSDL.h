@@ -22,7 +22,7 @@ public:
     void AddBitmapLoaders(cBitmapLoaderHandler* apHandler);
     void AddMeshLoaders(cMeshLoaderHandler* apHandler);
 
-    iXmlDocument* CreateXmlDocument(const tString& asName="");
+    iXmlDocument *CreateXmlDocument(const tString& asName = "");
 
 private:
     iLowLevelGraphics *mpLowLevelGraphics;

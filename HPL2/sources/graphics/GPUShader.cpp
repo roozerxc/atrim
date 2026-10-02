@@ -3,7 +3,7 @@
 namespace hpl
 {
 
-bool iGpuShader::mbDebugInfo=false;
+bool iGpuShader::mbDebugInfo = false;
 
 //////////////////////////////////////////////////////////////////////////
 // CONSTRUCTORS

@@ -9,35 +9,35 @@ namespace hpl
 
 static const cTriEdge kvBVEdges[12] =
 {
-    cTriEdge(1,0, 0,2),
-    cTriEdge(3,1, 0,5),
-    cTriEdge(2,3, 0,3),
-    cTriEdge(0,2, 0,4),
+    cTriEdge(1, 0, 0, 2),
+    cTriEdge(3, 1, 0, 5),
+    cTriEdge(2, 3, 0, 3),
+    cTriEdge(0, 2, 0, 4),
 
-    cTriEdge(0,4, 4,2),
-    cTriEdge(4,6, 4,1),
-    cTriEdge(6,2, 4,3),
-    cTriEdge(4,5, 1,2),
+    cTriEdge(0, 4, 4, 2),
+    cTriEdge(4, 6, 4, 1),
+    cTriEdge(6, 2, 4, 3),
+    cTriEdge(4, 5, 1, 2),
 
-    cTriEdge(5,7, 1,5),
-    cTriEdge(7,6, 1,3),
-    cTriEdge(1,5, 2,5),
-    cTriEdge(3,7, 5,3)
+    cTriEdge(5, 7, 1, 5),
+    cTriEdge(7, 6, 1, 3),
+    cTriEdge(1, 5, 2, 5),
+    cTriEdge(3, 7, 5, 3)
 };
 
 static cTriangleData gvFaces[6] =
 {
-    cVector3f(1,0,0),
-    cVector3f(-1,0,0),
+    cVector3f(1, 0, 0),
+    cVector3f(-1, 0, 0),
 
-    cVector3f(0,1,0),
-    cVector3f(0,-1,0),
+    cVector3f(0, 1, 0),
+    cVector3f(0, -1, 0),
 
-    cVector3f(0,0,1),
-    cVector3f(0,0,-1)
+    cVector3f(0, 0, 1),
+    cVector3f(0, 0, -1)
 };
 
-static const int kvFacePoints[6] = {0,5,5,6,4,7};
+static const int kvFacePoints[6] = {0, 5, 5, 6, 4, 7};
 
 //////////////////////////////////////////////////////////////////////////
 // SHADOW VOLUME
@@ -48,7 +48,7 @@ static const int kvFacePoints[6] = {0,5,5,6,4,7};
 bool cShadowVolumeBV::CollideBoundingVolume(cBoundingVolume* aBV)
 {
     //Do a simple sphere collide test
-    if(CollideBVSphere(aBV)==false)
+    if(CollideBVSphere(aBV) == false)
     {
         return false;
     }
@@ -60,9 +60,9 @@ bool cShadowVolumeBV::CollideBoundingVolume(cBoundingVolume* aBV)
 
 bool cShadowVolumeBV::CollideBVSphere(cBoundingVolume* aBV)
 {
-    for(int i=0; i<mlPlaneCount; ++i)
+    for(int i = 0; i < mlPlaneCount; ++i)
     {
-        float fDist = cMath::PlaneToPointDist(mvPlanes[i],aBV->GetWorldCenter());
+        float fDist = cMath::PlaneToPointDist(mvPlanes[i], aBV->GetWorldCenter());
 
         if(fDist < -aBV->GetRadius())
         {
@@ -83,29 +83,29 @@ bool cShadowVolumeBV::CollideBVAABB(cBoundingVolume* aBV)
     //Get the corners from the AAB
     cVector3f vCorners[9] =
     {
-        cVector3f(vMax.x,vMax.y,vMax.z),
-        cVector3f(vMax.x,vMax.y,vMin.z),
-        cVector3f(vMax.x,vMin.y,vMax.z),
-        cVector3f(vMax.x,vMin.y,vMin.z),
+        cVector3f(vMax.x, vMax.y, vMax.z),
+        cVector3f(vMax.x, vMax.y, vMin.z),
+        cVector3f(vMax.x, vMin.y, vMax.z),
+        cVector3f(vMax.x, vMin.y, vMin.z),
 
-        cVector3f(vMin.x,vMax.y,vMax.z),
-        cVector3f(vMin.x,vMax.y,vMin.z),
-        cVector3f(vMin.x,vMin.y,vMax.z),
-        cVector3f(vMin.x,vMin.y,vMin.z),
+        cVector3f(vMin.x, vMax.y, vMax.z),
+        cVector3f(vMin.x, vMax.y, vMin.z),
+        cVector3f(vMin.x, vMin.y, vMax.z),
+        cVector3f(vMin.x, vMin.y, vMin.z),
 
         //The "fuling", add center as well...
         aBV->GetPosition()
     };
 
     //Go through all the planes
-    for(int i=0; i<mlPlaneCount; i++)
+    for(int i = 0; i < mlPlaneCount; i++)
     {
-        int lInCount=9;
+        int lInCount = 9;
         bool bIsIn = true;
 
-        for(int j=0; j<9; j++)
+        for(int j = 0; j < 9; j++)
         {
-            float fDist = cMath::PlaneToPointDist(mvPlanes[i],vCorners[j]);
+            float fDist = cMath::PlaneToPointDist(mvPlanes[i], vCorners[j]);
             if(fDist < 0)
             {
                 lInCount--;
@@ -113,7 +113,7 @@ bool cShadowVolumeBV::CollideBVAABB(cBoundingVolume* aBV)
             }
         }
 
-        if(lInCount==0)
+        if(lInCount == 0)
         {
             return false;
         }
@@ -145,7 +145,7 @@ cBoundingVolume::cBoundingVolume()
     mbPositionUpdated = true;
     mbSizeUpdated = true;
 
-    mShadowVolume.mvPoints.reserve(8*4);
+    mShadowVolume.mvPoints.reserve(8 * 4);
     mbShadowPlanesNeedUpdate = true;
 }
 
@@ -157,13 +157,13 @@ cBoundingVolume::cBoundingVolume()
 
 //-----------------------------------------------------------------------
 
-const cVector3f& cBoundingVolume::GetMax()
+const cVector3f &cBoundingVolume::GetMax()
 {
     UpdateSize();
     return mvWorldMax;
 }
 
-const cVector3f& cBoundingVolume::GetMin()
+const cVector3f &cBoundingVolume::GetMin()
 {
     UpdateSize();
     return mvWorldMin;
@@ -171,19 +171,19 @@ const cVector3f& cBoundingVolume::GetMin()
 
 //-----------------------------------------------------------------------
 
-const cVector3f& cBoundingVolume::GetLocalMax()
+const cVector3f &cBoundingVolume::GetLocalMax()
 {
     return mvLocalMax;
 }
 
-const cVector3f& cBoundingVolume::GetLocalMin()
+const cVector3f &cBoundingVolume::GetLocalMin()
 {
     return mvLocalMin;
 }
 
 //-----------------------------------------------------------------------
 
-void cBoundingVolume::SetLocalMinMax(const cVector3f& mvMin,const cVector3f& mvMax)
+void cBoundingVolume::SetLocalMinMax(const cVector3f& mvMin, const cVector3f& mvMax)
 {
     mvLocalMax = mvMax;
     mvLocalMin = mvMin;
@@ -195,7 +195,7 @@ void cBoundingVolume::SetLocalMinMax(const cVector3f& mvMin,const cVector3f& mvM
 
 cVector3f cBoundingVolume::GetLocalCenter()
 {
-    return (mvLocalMin + mvLocalMax)/2.0f;
+    return (mvLocalMin + mvLocalMax) / 2.0f;
 }
 
 //-----------------------------------------------------------------------
@@ -232,7 +232,7 @@ void cBoundingVolume::SetTransform(const cMatrixf &a_mtxTransform)
     mbSizeUpdated = true;
 }
 
-const cMatrixf& cBoundingVolume::GetTransform()
+const cMatrixf &cBoundingVolume::GetTransform()
 {
     return m_mtxTransform;
 }
@@ -267,8 +267,8 @@ float cBoundingVolume::GetRadius()
 
 //-----------------------------------------------------------------------
 
-cShadowVolumeBV* cBoundingVolume::GetShadowVolume(const cVector3f& avLightPos,
-        float afLightRange,bool abForceUpdate)
+cShadowVolumeBV *cBoundingVolume::GetShadowVolume(const cVector3f& avLightPos,
+        float afLightRange, bool abForceUpdate)
 {
     if(cMath::CheckPointInBVIntersection(avLightPos, *this))
     {
@@ -287,30 +287,30 @@ cShadowVolumeBV* cBoundingVolume::GetShadowVolume(const cVector3f& avLightPos,
     cVector3f vMax = GetMax();
     cVector3f vMin = GetMin();
     cVector3f vCorners[8];
-    vCorners[0] = cVector3f(vMax.x,vMax.y,vMax.z);
-    vCorners[1] = cVector3f(vMax.x,vMax.y,vMin.z);
-    vCorners[2] = cVector3f(vMax.x,vMin.y,vMax.z);
-    vCorners[3] = cVector3f(vMax.x,vMin.y,vMin.z);
+    vCorners[0] = cVector3f(vMax.x, vMax.y, vMax.z);
+    vCorners[1] = cVector3f(vMax.x, vMax.y, vMin.z);
+    vCorners[2] = cVector3f(vMax.x, vMin.y, vMax.z);
+    vCorners[3] = cVector3f(vMax.x, vMin.y, vMin.z);
 
-    vCorners[4] = cVector3f(vMin.x,vMax.y,vMax.z);
-    vCorners[5] = cVector3f(vMin.x,vMax.y,vMin.z);
-    vCorners[6] = cVector3f(vMin.x,vMin.y,vMax.z);
-    vCorners[7] = cVector3f(vMin.x,vMin.y,vMin.z);
+    vCorners[4] = cVector3f(vMin.x, vMax.y, vMax.z);
+    vCorners[5] = cVector3f(vMin.x, vMax.y, vMin.z);
+    vCorners[6] = cVector3f(vMin.x, vMin.y, vMax.z);
+    vCorners[7] = cVector3f(vMin.x, vMin.y, vMin.z);
 
     /////////////////////////////////////////////////////////////////////
     //Iterate the faces and check which ones are facing the light.
-    int lNearPoint =-1;
-    mShadowVolume.mlPlaneCount=0;
-    for(int face=0; face< 6; face++)
+    int lNearPoint = -1;
+    mShadowVolume.mlPlaneCount = 0;
+    for(int face = 0; face < 6; face++)
     {
         gvFaces[face].facingLight = cMath::Vector3Dot(gvFaces[face].normal,
-                                    vCorners[kvFacePoints[face]] - avLightPos)<0;
+                                    vCorners[kvFacePoints[face]] - avLightPos) < 0;
 
         //Get a point for the near plane. (any edge point will do)
         if(gvFaces[face].facingLight)
         {
             mShadowVolume.mvPlanes[mShadowVolume.mlPlaneCount] = cPlanef(
-                    gvFaces[face].normal*-1.0f,vCorners[kvFacePoints[face]]);
+                    gvFaces[face].normal * -1.0f, vCorners[kvFacePoints[face]]);
             mShadowVolume.mlPlaneCount++;
         }
     }
@@ -321,11 +321,11 @@ cShadowVolumeBV* cBoundingVolume::GetShadowVolume(const cVector3f& avLightPos,
     cVector3f vDir;
 
     //The length to push the shadow points.
-    float fPushLength = afLightRange*kSqrt2f;
+    float fPushLength = afLightRange * kSqrt2f;
 
     //////////////////////////////////////////////////////////
     //Iterate the edges and build quads from the silhouette
-    for(int edge=0; edge< 12; edge++)
+    for(int edge = 0; edge < 12; edge++)
     {
         const cTriEdge& Edge = kvBVEdges[edge];
 
@@ -339,26 +339,26 @@ cShadowVolumeBV* cBoundingVolume::GetShadowVolume(const cVector3f& avLightPos,
                 mShadowVolume.mvPoints.push_back(vCorners[Edge.point1]);
                 mShadowVolume.mvPoints.push_back(vCorners[Edge.point2]);
 
-                vDir = (vCorners[Edge.point2]-avLightPos);
+                vDir = (vCorners[Edge.point2] - avLightPos);
                 vDir.Normalize();
-                mShadowVolume.mvPoints.push_back(vCorners[Edge.point2] + vDir*fPushLength);
+                mShadowVolume.mvPoints.push_back(vCorners[Edge.point2] + vDir * fPushLength);
 
-                vDir = (vCorners[Edge.point1]-avLightPos);
+                vDir = (vCorners[Edge.point1] - avLightPos);
                 vDir.Normalize();
-                mShadowVolume.mvPoints.push_back(vCorners[Edge.point1] + vDir*fPushLength);
+                mShadowVolume.mvPoints.push_back(vCorners[Edge.point1] + vDir * fPushLength);
             }
             else
             {
                 mShadowVolume.mvPoints.push_back(vCorners[Edge.point2]);
                 mShadowVolume.mvPoints.push_back(vCorners[Edge.point1]);
 
-                vDir = (vCorners[Edge.point1]-avLightPos);
+                vDir = (vCorners[Edge.point1] - avLightPos);
                 vDir.Normalize();
-                mShadowVolume.mvPoints.push_back(vCorners[Edge.point1] + vDir*fPushLength);
+                mShadowVolume.mvPoints.push_back(vCorners[Edge.point1] + vDir * fPushLength);
 
-                vDir = (vCorners[Edge.point2]-avLightPos);
+                vDir = (vCorners[Edge.point2] - avLightPos);
                 vDir.Normalize();
-                mShadowVolume.mvPoints.push_back(vCorners[Edge.point2] + vDir*fPushLength);
+                mShadowVolume.mvPoints.push_back(vCorners[Edge.point2] + vDir * fPushLength);
             }
         }
     }
@@ -366,14 +366,14 @@ cShadowVolumeBV* cBoundingVolume::GetShadowVolume(const cVector3f& avLightPos,
     /////////////////////////////////////
     //Create the side planes:
 
-    for(int i=0; i< (int)mShadowVolume.mvPoints.size(); i+=4)
+    for(int i = 0; i < (int)mShadowVolume.mvPoints.size(); i += 4)
     {
         //Normal should point inwards
         cVector3f vNormal = cMath::Vector3Cross(
-                                mShadowVolume.mvPoints[i+1] - mShadowVolume.mvPoints[i+0],
-                                mShadowVolume.mvPoints[i+2] - mShadowVolume.mvPoints[i+0]);
+                                mShadowVolume.mvPoints[i + 1] - mShadowVolume.mvPoints[i + 0],
+                                mShadowVolume.mvPoints[i + 2] - mShadowVolume.mvPoints[i + 0]);
         mShadowVolume.mvPlanes[mShadowVolume.mlPlaneCount].FromNormalPoint(vNormal,
-                mShadowVolume.mvPoints[i+0]);
+                mShadowVolume.mvPoints[i + 0]);
         mShadowVolume.mvPlanes[mShadowVolume.mlPlaneCount].Normalize();
 
         mShadowVolume.mlPlaneCount++;
@@ -384,34 +384,34 @@ cShadowVolumeBV* cBoundingVolume::GetShadowVolume(const cVector3f& avLightPos,
 
 //-----------------------------------------------------------------------
 
-void cBoundingVolume::DrawEdges(const cVector3f& avLightPos,float afLightRange, iLowLevelGraphics *apLowLevelGraphics)
+void cBoundingVolume::DrawEdges(const cVector3f& avLightPos, float afLightRange, iLowLevelGraphics *apLowLevelGraphics)
 {
     cShadowVolumeBV *pVolume = GetShadowVolume(avLightPos, afLightRange, false);
 
     apLowLevelGraphics->SetBlendActive(true);
-    apLowLevelGraphics->SetBlendFunc(eBlendFunc_One,eBlendFunc_One);
+    apLowLevelGraphics->SetBlendFunc(eBlendFunc_One, eBlendFunc_One);
     apLowLevelGraphics->SetDepthWriteActive(false);
     tVertexVec vVtx;
     vVtx.resize(4);
 
-    for(int capplane=0; capplane<mShadowVolume.mlCapPlanes; capplane++)
+    for(int capplane = 0; capplane < mShadowVolume.mlCapPlanes; capplane++)
     {
-        apLowLevelGraphics->DrawLine(GetWorldCenter(),GetWorldCenter() + mShadowVolume.mvPlanes[capplane].GetNormal()*-0.5f, cColor(1,1,1,1));
+        apLowLevelGraphics->DrawLine(GetWorldCenter(), GetWorldCenter() + mShadowVolume.mvPlanes[capplane].GetNormal() * -0.5f, cColor(1, 1, 1, 1));
     }
 
     int lPlane = mShadowVolume.mlCapPlanes;
-    for(int quad = 0; quad < (int)pVolume->mvPoints.size(); quad+=4)
+    for(int quad = 0; quad < (int)pVolume->mvPoints.size(); quad += 4)
     {
 
-        for(int i=0; i<4; i++)
+        for(int i = 0; i < 4; i++)
         {
-            vVtx[i].pos = pVolume->mvPoints[quad+i];
+            vVtx[i].pos = pVolume->mvPoints[quad + i];
         }
 
-        apLowLevelGraphics->DrawQuad(vVtx,cColor(0.2f,0,0.2f));
+        apLowLevelGraphics->DrawQuad(vVtx, cColor(0.2f, 0, 0.2f));
 
-        cVector3f vCenter = (vVtx[1].pos + vVtx[0].pos)*0.5f;
-        apLowLevelGraphics->DrawLine(vCenter,vCenter + mShadowVolume.mvPlanes[lPlane].GetNormal()*-0.5f, cColor(1,1,1,1));
+        cVector3f vCenter = (vVtx[1].pos + vVtx[0].pos) * 0.5f;
+        apLowLevelGraphics->DrawLine(vCenter, vCenter + mShadowVolume.mvPlanes[lPlane].GetNormal() * -0.5f, cColor(1, 1, 1, 1));
         lPlane++;
     }
 
@@ -437,7 +437,7 @@ void cBoundingVolume::CreateFromPoints(int alStride)
     mvLocalMax = cVector3f(-100000, -100000, -100000);
     mvLocalMin = cVector3f(100000, 100000, 100000);
 
-    for(tBVTempArrayListIt it= mlstArrays.begin(); it != mlstArrays.end(); it++)
+    for(tBVTempArrayListIt it = mlstArrays.begin(); it != mlstArrays.end(); it++)
     {
         //Loop through all the vectors and find min and max
         const float *apVec = it->mpArray;
@@ -502,21 +502,21 @@ void cBoundingVolume::UpdateSize()
 
         //Transform the local corners
         cVector3f vCorners[8];
-        vCorners[0] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMax.x,mvLocalMax.y,mvLocalMax.z));
-        vCorners[1] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMax.x,mvLocalMax.y,mvLocalMin.z));
-        vCorners[2] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMax.x,mvLocalMin.y,mvLocalMax.z));
-        vCorners[3] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMax.x,mvLocalMin.y,mvLocalMin.z));
+        vCorners[0] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMax.x, mvLocalMax.y, mvLocalMax.z));
+        vCorners[1] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMax.x, mvLocalMax.y, mvLocalMin.z));
+        vCorners[2] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMax.x, mvLocalMin.y, mvLocalMax.z));
+        vCorners[3] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMax.x, mvLocalMin.y, mvLocalMin.z));
 
-        vCorners[4] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMin.x,mvLocalMax.y,mvLocalMax.z));
-        vCorners[5] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMin.x,mvLocalMax.y,mvLocalMin.z));
-        vCorners[6] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMin.x,mvLocalMin.y,mvLocalMax.z));
-        vCorners[7] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMin.x,mvLocalMin.y,mvLocalMin.z));
+        vCorners[4] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMin.x, mvLocalMax.y, mvLocalMax.z));
+        vCorners[5] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMin.x, mvLocalMax.y, mvLocalMin.z));
+        vCorners[6] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMin.x, mvLocalMin.y, mvLocalMax.z));
+        vCorners[7] = cMath::MatrixMul(mtxRot, cVector3f(mvLocalMin.x, mvLocalMin.y, mvLocalMin.z));
 
         mvMax = vCorners[0];
         mvMin = vCorners[0];
 
         //Calculate the transformed min and max
-        for(int i=1; i<8; i++)
+        for(int i = 1; i < 8; i++)
         {
             //X
             if(vCorners[i].x < mvMin.x)
@@ -553,7 +553,7 @@ void cBoundingVolume::UpdateSize()
         mvSize = mvMax - mvMin;
 
         //Get the local pivot (or offset from origo).
-        mvPivot = mvMax - (mvSize*0.5f);
+        mvPivot = mvMax - (mvSize * 0.5f);
 
         //Get radius as pivot to localmax
         mfRadius = cMath::Vector3Dist(mvPivot, mvMax);

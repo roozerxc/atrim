@@ -18,7 +18,7 @@ namespace hpl
 cBitmapData::cBitmapData()
 {
     mpData = NULL;
-    mlSize =0;
+    mlSize = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -65,12 +65,12 @@ cBitmap::cBitmap()
     mvSize = 0;
     mPixelFormat = ePixelFormat_Unknown;
 
-    mlBytesPerPixel =0;
+    mlBytesPerPixel = 0;
 
     msFileName = _W("");
 
-    mlNumOfMipMaps =1;
-    mlNumOfImages =1;
+    mlNumOfMipMaps = 1;
+    mlNumOfImages = 1;
 }
 
 //-----------------------------------------------------------------------
@@ -87,7 +87,7 @@ cBitmap::~cBitmap()
 
 //-----------------------------------------------------------------------
 
-cBitmapData* cBitmap::GetData(int alImage, int alMipMapLevel)
+cBitmapData *cBitmap::GetData(int alImage, int alMipMapLevel)
 {
     if(alImage >= mlNumOfImages)
     {
@@ -116,17 +116,17 @@ void cBitmap::SetUpData(int alNumOfImages, int alNumOfMipmaps)
 void cBitmap::CreateData(const cVector3l& avSize, ePixelFormat aFormat, int alImage, int alMipMap)
 {
     mvSize = avSize;
-    if(mvSize.x<=0)
+    if(mvSize.x <= 0)
     {
-        mvSize.x =1;
+        mvSize.x = 1;
     }
-    if(mvSize.y<=0)
+    if(mvSize.y <= 0)
     {
-        mvSize.y =1;
+        mvSize.y = 1;
     }
-    if(mvSize.z<=0)
+    if(mvSize.z <= 0)
     {
-        mvSize.z =1;
+        mvSize.z = 1;
     }
 
     mPixelFormat = aFormat;
@@ -141,7 +141,7 @@ void cBitmap::CreateData(const cVector3l& avSize, ePixelFormat aFormat, int alIm
 
 //-----------------------------------------------------------------------
 
-void cBitmap::Clear( const cColor& aColor,int alImage, int alMipMap)
+void cBitmap::Clear( const cColor& aColor, int alImage, int alMipMap)
 {
     if(mbDataIsCompressed)
     {
@@ -157,11 +157,11 @@ void cBitmap::Clear( const cColor& aColor,int alImage, int alMipMap)
                                        FloatColorToUChar(aColor.b),
                                        FloatColorToUChar(aColor.a)
                                   };
-    unsigned char *pClearData = ConvertDataToFormat(vClearColor,ePixelFormat_RGBA,mPixelFormat);
+    unsigned char *pClearData = ConvertDataToFormat(vClearColor, ePixelFormat_RGBA, mPixelFormat);
 
     while(lDataCount)
     {
-        memcpy(pPixelData,pClearData,mlBytesPerPixel);
+        memcpy(pPixelData, pClearData, mlBytesPerPixel);
         pPixelData += mlBytesPerPixel;
 
         --lDataCount;
@@ -171,7 +171,7 @@ void cBitmap::Clear( const cColor& aColor,int alImage, int alMipMap)
 //-----------------------------------------------------------------------
 
 
-void cBitmap::Blit(    cBitmap *apSrcBmp, const cVector3l& avDestPosition,const cVector3l& avSrcSize,
+void cBitmap::Blit(    cBitmap *apSrcBmp, const cVector3l& avDestPosition, const cVector3l& avSrcSize,
                        const cVector3l& avSrcPosition,
                        int alDestImage, int alDestMipMap,
                        int alSrcImage, int alSrcMipMap)
@@ -205,15 +205,15 @@ void cBitmap::Blit(    cBitmap *apSrcBmp, const cVector3l& avDestPosition,const 
 
     if(lSrcWidth <= 0)
     {
-        lSrcWidth =1;
+        lSrcWidth = 1;
     }
     if(lSrcHeight <= 0)
     {
-        lSrcHeight =1;
+        lSrcHeight = 1;
     }
     if(lSrcDepth <= 0)
     {
-        lSrcDepth =1;
+        lSrcDepth = 1;
     }
 
     // Get coordinates and check for negative source coordinates
@@ -221,17 +221,17 @@ void cBitmap::Blit(    cBitmap *apSrcBmp, const cVector3l& avDestPosition,const 
     if(vSrcPos.x < 0)
     {
         lSrcWidth += vSrcPos.x;
-        vSrcPos.x =0;
+        vSrcPos.x = 0;
     }
     if(vSrcPos.y < 0)
     {
         lSrcHeight += vSrcPos.y;
-        vSrcPos.y =0;
+        vSrcPos.y = 0;
     }
     if(vSrcPos.z < 0)
     {
         lSrcDepth += vSrcPos.z;
-        vSrcPos.z =0;
+        vSrcPos.z = 0;
     }
 
     // Check if image is outside of bounds in source
@@ -257,19 +257,19 @@ void cBitmap::Blit(    cBitmap *apSrcBmp, const cVector3l& avDestPosition,const 
     {
         lSrcWidth += vDestPos.x;
         vSrcPos.x -= vDestPos.x;
-        vDestPos.x =0;
+        vDestPos.x = 0;
     }
     if(vDestPos.y < 0)
     {
         lSrcHeight += vDestPos.y;
         vSrcPos.y -= vDestPos.y;
-        vDestPos.y =0;
+        vDestPos.y = 0;
     }
     if(vDestPos.z < 0)
     {
         lSrcDepth += vDestPos.z;
         vSrcPos.z -= vDestPos.z;
-        vDestPos.z =0;
+        vDestPos.z = 0;
     }
 
     // Check if image is outside of bounds in destination
@@ -287,7 +287,7 @@ void cBitmap::Blit(    cBitmap *apSrcBmp, const cVector3l& avDestPosition,const 
     }
 
     //If any size dimension is zero, then we skip drawing
-    if(lSrcWidth <=0 || lSrcHeight <=0 || lSrcDepth <=0)
+    if(lSrcWidth <= 0 || lSrcHeight <= 0 || lSrcDepth <= 0)
     {
         return;
     }
@@ -307,8 +307,8 @@ void cBitmap::Blit(    cBitmap *apSrcBmp, const cVector3l& avDestPosition,const 
     int lDestAdress =  vDestPos.x + (vDestPos.y * mvSize.x) + (vDestPos.z * mvSize.x * mvSize.y);
     lDestAdress *= lDestPixelSize;
 
-    unsigned char* pSrcPixel = &pSrcData[lSrcAdress];
-    unsigned char* pDestPixel = &pDestData[lDestAdress];
+    unsigned char *pSrcPixel = &pSrcData[lSrcAdress];
+    unsigned char *pDestPixel = &pDestData[lDestAdress];
 
     int lWidthCount = lSrcWidth;
     int lHeightCount = lSrcHeight;
@@ -369,9 +369,9 @@ void cBitmap::SetPixel(int alImage, int alMipMap, const cVector3l& avPixelPos, u
 {
     cBitmapData* pData = GetData(alImage, alMipMap);
 
-    unsigned char* pPixelData = &pData->mpData[avPixelPos.z*mvSize.x*mvSize.y*mlBytesPerPixel + avPixelPos.y*mvSize.x*mlBytesPerPixel + avPixelPos.x*mlBytesPerPixel];
+    unsigned char *pPixelData = &pData->mpData[avPixelPos.z * mvSize.x * mvSize.y * mlBytesPerPixel + avPixelPos.y * mvSize.x * mlBytesPerPixel + avPixelPos.x * mlBytesPerPixel];
 
-    for(int i=0; i<mlBytesPerPixel; ++i)
+    for(int i = 0; i < mlBytesPerPixel; ++i)
     {
         *pPixelData = *apPixelData;
 
@@ -384,9 +384,9 @@ void cBitmap::GetPixel(int alImage, int alMipMap, const cVector3l& avPixelPos, u
 {
     cBitmapData* pData = GetData(alImage, alMipMap);
 
-    unsigned char* pPixelData = &pData->mpData[avPixelPos.z*mvSize.x*mvSize.y*mlBytesPerPixel + avPixelPos.y*mvSize.x*mlBytesPerPixel + avPixelPos.x*mlBytesPerPixel];
+    unsigned char *pPixelData = &pData->mpData[avPixelPos.z * mvSize.x * mvSize.y * mlBytesPerPixel + avPixelPos.y * mvSize.x * mlBytesPerPixel + avPixelPos.x * mlBytesPerPixel];
 
-    for(int i=0; i<mlBytesPerPixel; ++i)
+    for(int i = 0; i < mlBytesPerPixel; ++i)
     {
         *apPixelData = *pPixelData;
 
@@ -406,10 +406,10 @@ void cBitmap::GetPixel(int alImage, int alMipMap, const cVector3l& avPixelPos, u
 
 //TODO: Make this inline? If so, at top off cpp and not in header
 void cBitmap::CopyPixel(    unsigned char* apDest, ePixelFormat aDestFormat,
-                            unsigned char* apSrc, ePixelFormat aSrcFormat)
+                            unsigned char *apSrc, ePixelFormat aSrcFormat)
 {
     int lChannels = GetChannelsInPixelFormat(aDestFormat);
-    memcpy(apDest, ConvertDataToFormat(apSrc,aSrcFormat, aDestFormat), lChannels);
+    memcpy(apDest, ConvertDataToFormat(apSrc, aSrcFormat, aDestFormat), lChannels);
 }
 
 //-------------------------------------------------------------------------
@@ -417,7 +417,7 @@ void cBitmap::CopyPixel(    unsigned char* apDest, ePixelFormat aDestFormat,
 //TODO: Make this inline?
 static unsigned char gvTempPixelData1[4];
 static unsigned char gvTempPixelData2[4];
-unsigned char* cBitmap::ConvertDataToFormat(unsigned char* apPixelData, ePixelFormat aSrcFormat, ePixelFormat aDestFormat)
+unsigned char *cBitmap::ConvertDataToFormat(unsigned char* apPixelData, ePixelFormat aSrcFormat, ePixelFormat aDestFormat)
 {
     if(aSrcFormat == aDestFormat)
     {
@@ -470,7 +470,7 @@ unsigned char* cBitmap::ConvertDataToFormat(unsigned char* apPixelData, ePixelFo
 }
 
 //-----------------------------------------------------------------------
-unsigned char* cBitmap::ConvertDataToRGBA(unsigned char* apPixelData, ePixelFormat aFormat)
+unsigned char *cBitmap::ConvertDataToRGBA(unsigned char* apPixelData, ePixelFormat aFormat)
 {
     unsigned char *pTempPixel = gvTempPixelData1;
     switch(aFormat)

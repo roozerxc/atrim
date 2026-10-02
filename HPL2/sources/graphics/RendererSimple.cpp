@@ -35,8 +35,8 @@ bool cRendererSimple::mbUseShaders = true;
 
 //-----------------------------------------------------------------------
 
-cRendererSimple::cRendererSimple(cGraphics *apGraphics,cResources* apResources)
-    : iRenderer("Simple",apGraphics, apResources,0)
+cRendererSimple::cRendererSimple(cGraphics *apGraphics, cResources* apResources)
+    : iRenderer("Simple", apGraphics, apResources, 0)
 {
     ////////////////////////////////////
     // Set up render specific things
@@ -67,7 +67,7 @@ bool cRendererSimple::LoadData()
     programVars.Clear();
     programVars.Add("UseUv");
 
-    mpFlatProgram = mpGraphics->CreateGpuProgramFromShaders("DiffuseShader","deferred_base_vtx.glsl", "deferred_base_frag.glsl",  &programVars);
+    mpFlatProgram = mpGraphics->CreateGpuProgramFromShaders("DiffuseShader", "deferred_base_vtx.glsl", "deferred_base_frag.glsl",  &programVars);
 
     ////////////////////////
     // Diffuse shader
@@ -77,7 +77,7 @@ bool cRendererSimple::LoadData()
     programVars.Add("UseColor");
     programVars.Add("UseDiffuse");
 
-    mpDiffuseProgram = mpGraphics->CreateGpuProgramFromShaders("DiffuseShader","deferred_base_vtx.glsl", "deferred_base_frag.glsl",  &programVars);
+    mpDiffuseProgram = mpGraphics->CreateGpuProgramFromShaders("DiffuseShader", "deferred_base_vtx.glsl", "deferred_base_frag.glsl",  &programVars);
 
 
     return true;
@@ -110,10 +110,10 @@ void cRendererSimple::CopyToFrameBuffer()
 
 void cRendererSimple::SetupRenderList()
 {
-    mpCurrentRenderList->Setup(dCurrentFrameTime,mpCurrentFrustum);
+    mpCurrentRenderList->Setup(dCurrentFrameTime, mpCurrentFrustum);
 
-    CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Static),0);
-    CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Dynamic),0);
+    CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Static), 0);
+    CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Dynamic), 0);
 
     mpCurrentRenderList->Compile(    eRenderListCompileFlag_Z |
                                      eRenderListCompileFlag_Diffuse |
@@ -137,7 +137,7 @@ void cRendererSimple::RenderObjects()
         SetBlendMode(eMaterialBlendMode_None);
         SetAlphaMode(eMaterialAlphaMode_Trans);
         SetChannelMode(eMaterialChannelMode_None); //This turns of all color writing
-        SetTextureRange(NULL,0);
+        SetTextureRange(NULL, 0);
 
         cRenderableVecIterator diffIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Z);
         while(diffIt.HasNext())
@@ -159,7 +159,7 @@ void cRendererSimple::RenderObjects()
                 }
             }
 
-            SetTexture(0,pTex);
+            SetTexture(0, pTex);
 
             SetMatrix(pObject->GetModelMatrixPtr());
 
@@ -177,7 +177,7 @@ void cRendererSimple::RenderObjects()
         SetDepthWrite(false);
         SetChannelMode(eMaterialChannelMode_RGBA);
         SetAlphaMode(eMaterialAlphaMode_Solid);
-        SetTextureRange(NULL,0);
+        SetTextureRange(NULL, 0);
 
         if(mbUseShaders)
         {
@@ -190,7 +190,7 @@ void cRendererSimple::RenderObjects()
             iRenderable *pObject = diffIt.Next();
             cMaterial *pMaterial = pObject->GetMaterial();
 
-            SetTexture(0,pMaterial->GetTexture(eMaterialTexture_Diffuse));
+            SetTexture(0, pMaterial->GetTexture(eMaterialTexture_Diffuse));
 
             SetMatrix(pObject->GetModelMatrixPtr());
 
@@ -219,7 +219,7 @@ void cRendererSimple::RenderObjects()
 
             SetBlendMode(pMaterial->GetBlendMode());
 
-            SetTexture(0,pMaterial->GetTexture(eMaterialTexture_Diffuse));
+            SetTexture(0, pMaterial->GetTexture(eMaterialTexture_Diffuse));
 
             SetMatrix(pObject->GetModelMatrixPtr());
 
@@ -253,7 +253,7 @@ void cRendererSimple::RenderObjects()
 
             SetBlendMode(pMaterial->GetBlendMode());
 
-            SetTexture(0,pMaterial->GetTexture(eMaterialTexture_Diffuse));
+            SetTexture(0, pMaterial->GetTexture(eMaterialTexture_Diffuse));
 
             SetMatrix(pObject->GetModelMatrix(mpCurrentFrustum));
 

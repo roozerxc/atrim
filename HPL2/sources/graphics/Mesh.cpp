@@ -33,7 +33,7 @@ namespace hpl
 //-----------------------------------------------------------------------
 
 cMesh::cMesh(const tString& asName, const tWString& asFullPath, cMaterialManager* apMaterialManager,    cAnimationManager * apAnimationManager) :
-    iResourceBase(asName, asFullPath,0)
+    iResourceBase(asName, asFullPath, 0)
 {
     mpMaterialManager = apMaterialManager;
     mpAnimationManager = apAnimationManager;
@@ -46,7 +46,7 @@ cMesh::cMesh(const tString& asName, const tWString& asFullPath, cMaterialManager
 
 cMesh::~cMesh()
 {
-    for(int i=0; i<(int)mvSubMeshes.size(); i++)
+    for(int i = 0; i < (int)mvSubMeshes.size(); i++)
     {
         hplDelete(mvSubMeshes[i]);
     }
@@ -55,7 +55,7 @@ cMesh::~cMesh()
         hplDelete(mpSkeleton);
     }
 
-    for(int i=0; i< (int)mvAnimations.size(); i++)
+    for(int i = 0; i < (int)mvAnimations.size(); i++)
     {
         //mpAnimationManager->Destroy(mvAnimations[i]);
         hplDelete(mvAnimations[i]);
@@ -82,9 +82,9 @@ bool cMesh::CreateFromFile(const tString asFile)
 
 //-----------------------------------------------------------------------
 
-cSubMesh* cMesh::CreateSubMesh(const tString &asName)
+cSubMesh *cMesh::CreateSubMesh(const tString &asName)
 {
-    cSubMesh* pSubMesh = hplNew( cSubMesh, (asName,mpMaterialManager) );
+    cSubMesh* pSubMesh = hplNew( cSubMesh, (asName, mpMaterialManager) );
 
     pSubMesh->mpParent = this;
 
@@ -96,7 +96,7 @@ cSubMesh* cMesh::CreateSubMesh(const tString &asName)
 
 //-----------------------------------------------------------------------
 
-cSubMesh* cMesh::GetSubMesh(unsigned int alIdx)
+cSubMesh *cMesh::GetSubMesh(unsigned int alIdx)
 {
     if(alIdx >= mvSubMeshes.size())
     {
@@ -108,7 +108,7 @@ cSubMesh* cMesh::GetSubMesh(unsigned int alIdx)
 
 int cMesh::GetSubMeshIndex(const tString &asName)
 {
-    for(size_t i=0; i<mvSubMeshes.size(); ++i)
+    for(size_t i = 0; i < mvSubMeshes.size(); ++i)
     {
         if(mvSubMeshes[i]->GetName() == asName)
         {
@@ -119,7 +119,7 @@ int cMesh::GetSubMeshIndex(const tString &asName)
     return -1;
 }
 
-cSubMesh* cMesh::GetSubMeshName(const tString &asName)
+cSubMesh *cMesh::GetSubMeshName(const tString &asName)
 {
     tSubMeshMapIt it = m_mapSubMeshes.find(asName);
     if(it == m_mapSubMeshes.end())
@@ -143,13 +143,13 @@ int cMesh::GetTriangleCount()
 
     int lTriangleCount = 0;
 
-    for(; it!=mvSubMeshes.end(); ++it)
+    for(; it != mvSubMeshes.end(); ++it)
     {
         iVertexBuffer* pVB = (*it)->GetVertexBuffer();
 
         if(pVB)
         {
-            lTriangleCount += (int)pVB->GetIndexNum()/3;
+            lTriangleCount += (int)pVB->GetIndexNum() / 3;
         }
     }
 
@@ -163,7 +163,7 @@ void cMesh::SetSkeleton(cSkeleton* apSkeleton)
     mpSkeleton = apSkeleton;
 }
 
-cSkeleton* cMesh::GetSkeleton()
+cSkeleton *cMesh::GetSkeleton()
 {
     return mpSkeleton;
 }
@@ -177,12 +177,12 @@ void cMesh::AddAnimation(cAnimation *apAnimation)
     m_mapAnimIndices.insert(value);
 }
 
-cAnimation* cMesh::GetAnimation(int alIndex)
+cAnimation *cMesh::GetAnimation(int alIndex)
 {
     return mvAnimations[alIndex];
 }
 
-cAnimation* cMesh::GetAnimationFromName(const tString& asName)
+cAnimation *cMesh::GetAnimationFromName(const tString& asName)
 {
     int lIdx = GetAnimationIndex(asName);
     if(lIdx >= 0)
@@ -212,7 +212,7 @@ void  cMesh::ClearAnimations(bool abDeleteAll)
 {
     if(abDeleteAll)
     {
-        for(int i=0; i< (int)mvAnimations.size(); i++)
+        for(int i = 0; i < (int)mvAnimations.size(); i++)
         {
             //mpAnimationManager->Destroy(mvAnimations[i]);
             hplDelete(mvAnimations[i]);
@@ -242,29 +242,29 @@ void cMesh::CompileBonesAndSubMeshes()
     // - this based on the greatest distance to an attached node.
     mvBoneBoundingRadii.resize(mpSkeleton->GetBoneNum(), 0);
 
-    for(size_t i=0; i<mvSubMeshes.size(); ++i)
+    for(size_t i = 0; i < mvSubMeshes.size(); ++i)
     {
         ////////////////////////////
         //Get the variables
         cSubMesh *pSubMesh = mvSubMeshes[i];
         iVertexBuffer *pVtxBuffer = pSubMesh->GetVertexBuffer();
-        float* pPosArray = pVtxBuffer->GetFloatArray(eVertexBufferElement_Position);
+        float *pPosArray = pVtxBuffer->GetFloatArray(eVertexBufferElement_Position);
         const int lVtxStride = pVtxBuffer->GetElementNum(eVertexBufferElement_Position);
 
         ////////////////////////////
         //Iterate pairs and update the radii
-        for(size_t i=0; i < pSubMesh->mvVtxBonePairs.size(); i++)
+        for(size_t i = 0; i < pSubMesh->mvVtxBonePairs.size(); i++)
         {
             cVertexBonePair &Pair = pSubMesh->mvVtxBonePairs[i];
 
             float *pPos = &pPosArray[Pair.vtxIdx * lVtxStride];
-            cVector3f vPos(pPos[0], pPos[1],pPos[2]);
+            cVector3f vPos(pPos[0], pPos[1], pPos[2]);
 
             cBone *pBone = mpSkeleton->GetBoneByIndex(Pair.boneIdx);
 
             float fDistSqr = cMath::Vector3DistSqr(vPos, pBone->GetWorldTransform().GetTranslation() );
             float fRadius = mvBoneBoundingRadii[Pair.boneIdx];
-            if(fDistSqr > fRadius*fRadius)
+            if(fDistSqr > fRadius * fRadius)
             {
                 mvBoneBoundingRadii[Pair.boneIdx] = sqrtf(fDistSqr);
             }
@@ -274,7 +274,7 @@ void cMesh::CompileBonesAndSubMeshes()
 
 //-----------------------------------------------------------------------
 
-cNode3D* cMesh::GetRootNode()
+cNode3D *cMesh::GetRootNode()
 {
     return mpRootNode;
 }
@@ -289,14 +289,14 @@ int cMesh::GetNodeNum()
     return (int)mvNodes.size();
 }
 
-cNode3D* cMesh::GetNodeByName(const tString &asName)
+cNode3D *cMesh::GetNodeByName(const tString &asName)
 {
-    cNode3D *pNode = (cNode3D*)STLFindByName(mvNodes,asName);
+    cNode3D *pNode = (cNode3D*)STLFindByName(mvNodes, asName);
 
     return pNode;
 }
 
-cNode3D* cMesh::GetNode(int alIdx)
+cNode3D *cMesh::GetNode(int alIdx)
 {
     return mvNodes[alIdx];
 }

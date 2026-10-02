@@ -26,7 +26,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cSoundEntityData::cSoundEntityData(const tString& asName, cResources *apResources, cSound *apSound) : iResourceBase(asName, _W(""),0)
+cSoundEntityData::cSoundEntityData(const tString& asName, cResources *apResources, cSound *apSound) : iResourceBase(asName, _W(""), 0)
 {
     mpResources = apResources;
     mpSound = apSound;
@@ -36,8 +36,8 @@ cSoundEntityData::cSoundEntityData(const tString& asName, cResources *apResource
 
     mfAIVolume = 1;
     mfVolume = 1;
-    mfMaxDistance =0;
-    mfMinDistance=0;
+    mfMaxDistance = 0;
+    mfMinDistance = 0;
 
     mbStream  = false;
     mbLoop = false;
@@ -46,9 +46,9 @@ cSoundEntityData::cSoundEntityData(const tString& asName, cResources *apResource
     mbKeepPlayingOutOfRange = false;
 
     mfRandom = 1;
-    mfInterval =0;
+    mfInterval = 0;
 
-    for(int i=0; i<3; i++)
+    for(int i = 0; i < 3; i++)
     {
         mlPrevious[i] = -1;
     }
@@ -71,7 +71,7 @@ cSoundEntityData::~cSoundEntityData()
 
 static tString gsEmptyString = "";
 
-const tString& cSoundEntityData::GetSoundName(eSoundEntityType aType, int alIdx)
+const tString &cSoundEntityData::GetSoundName(eSoundEntityType aType, int alIdx)
 {
     if((int)mvSoundNameVecs[aType].size() <= alIdx)
     {
@@ -81,14 +81,14 @@ const tString& cSoundEntityData::GetSoundName(eSoundEntityType aType, int alIdx)
     return mvSoundNameVecs[aType][alIdx];
 }
 
-const tString& cSoundEntityData::GetRandomSoundName(eSoundEntityType aType, bool abSkipPrevious)
+const tString &cSoundEntityData::GetRandomSoundName(eSoundEntityType aType, bool abSkipPrevious)
 {
     if(mvSoundNameVecs[aType].empty())
     {
         return gsEmptyString;
     }
     int lSize = (int)mvSoundNameVecs[aType].size();
-    if(lSize==1)
+    if(lSize == 1)
     {
         return mvSoundNameVecs[aType][0];
     }
@@ -133,7 +133,7 @@ void cSoundEntityData::AddSoundName(const tString& asName, eSoundEntityType aTyp
 
 void cSoundEntityData::PreloadSoundsOfType(eSoundEntityType aType)
 {
-    for(size_t i=0; i<mvSoundNameVecs[aType].size(); ++i)
+    for(size_t i = 0; i < mvSoundNameVecs[aType].size(); ++i)
     {
         tString& sName = mvSoundNameVecs[aType][i];
 
@@ -149,7 +149,7 @@ void cSoundEntityData::PreloadSounds()
         return;
     }
 
-    for(int i=0; i<3; ++i)
+    for(int i = 0; i < 3; ++i)
     {
         PreloadSoundsOfType( (eSoundEntityType)i );
     }
@@ -178,9 +178,9 @@ bool cSoundEntityData::CreateFromFile(const tWString &asFile)
     SetFullPath(asFile);
 
     iXmlDocument *pDoc = mpResources->GetLowLevel()->CreateXmlDocument();
-    if(pDoc->CreateFromFile(asFile.c_str())==false)
+    if(pDoc->CreateFromFile(asFile.c_str()) == false)
     {
-        Error("Couldn't load sound entity data '%s'!\n",cString::To8Char(asFile).c_str());
+        Error("Couldn't load sound entity data '%s'!\n", cString::To8Char(asFile).c_str());
         hplDelete( pDoc );
         return false;
     }
@@ -188,9 +188,9 @@ bool cSoundEntityData::CreateFromFile(const tWString &asFile)
     ////////////////////////////////////////////////
     // SOUNDS
     cXmlElement *pSoundsElem = pDoc->GetFirstElement("SOUNDS");
-    if(pSoundsElem==NULL)
+    if(pSoundsElem == NULL)
     {
-        Error("Couldn't find SOUNDS element in '%s'!\n",asFile.c_str());
+        Error("Couldn't find SOUNDS element in '%s'!\n", asFile.c_str());
         hplDelete( pDoc );
         return false;
     }
@@ -203,35 +203,35 @@ bool cSoundEntityData::CreateFromFile(const tWString &asFile)
     ////////////////////////////////////////////////
     // PROPERTIES
     cXmlElement *pPropElem = pDoc->GetFirstElement("PROPERTIES");
-    if(pPropElem==NULL)
+    if(pPropElem == NULL)
     {
-        Error("Couldn't find PROPERTIES element in '%s'!\n",asFile.c_str());
+        Error("Couldn't find PROPERTIES element in '%s'!\n", asFile.c_str());
         hplDelete( pDoc );
         return false;
     }
 
-    mbUse3D = pPropElem->GetAttributeBool("Use3D",true);
-    mbLoop = pPropElem->GetAttributeBool("Loop",true);
-    mbStream = pPropElem->GetAttributeBool("Stream",true);
+    mbUse3D = pPropElem->GetAttributeBool("Use3D", true);
+    mbLoop = pPropElem->GetAttributeBool("Loop", true);
+    mbStream = pPropElem->GetAttributeBool("Stream", true);
 
-    mbBlockable = pPropElem->GetAttributeBool("Blockable",false);
-    mfBlockVolumeMul = pPropElem->GetAttributeFloat("BlockVolumeMul",0.6f);
+    mbBlockable = pPropElem->GetAttributeBool("Blockable", false);
+    mfBlockVolumeMul = pPropElem->GetAttributeFloat("BlockVolumeMul", 0.6f);
 
-    mfVolume = pPropElem->GetAttributeFloat("Volume",1);
-    mfMaxDistance = pPropElem->GetAttributeFloat("MaxDistance",1);
-    mfMinDistance = pPropElem->GetAttributeFloat("MinDistance",1);
+    mfVolume = pPropElem->GetAttributeFloat("Volume", 1);
+    mfMaxDistance = pPropElem->GetAttributeFloat("MaxDistance", 1);
+    mfMinDistance = pPropElem->GetAttributeFloat("MinDistance", 1);
 
     mfAIVolume = pPropElem->GetAttributeFloat("AIVolume", mfVolume);
 
-    mbFadeStart = pPropElem->GetAttributeBool("FadeStart",true);
-    mbFadeStop = pPropElem->GetAttributeBool("FadeStop",true);
+    mbFadeStart = pPropElem->GetAttributeBool("FadeStart", true);
+    mbFadeStop = pPropElem->GetAttributeBool("FadeStop", true);
 
-    mfRandom = pPropElem->GetAttributeFloat("Random",1);
-    mfInterval = pPropElem->GetAttributeFloat("Interval",0);
+    mfRandom = pPropElem->GetAttributeFloat("Random", 1);
+    mfInterval = pPropElem->GetAttributeFloat("Interval", 0);
 
-    mlPriority = pPropElem->GetAttributeInt("Priority",0);
+    mlPriority = pPropElem->GetAttributeInt("Priority", 0);
 
-    mbKeepPlayingOutOfRange = pPropElem->GetAttributeBool("KeepPlayingOutOfRange",false);
+    mbKeepPlayingOutOfRange = pPropElem->GetAttributeBool("KeepPlayingOutOfRange", false);
 
     hplDelete( pDoc );
 

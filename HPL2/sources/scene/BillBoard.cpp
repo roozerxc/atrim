@@ -29,17 +29,17 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cBillboard::cBillboard(const tString asName,const cVector2f& avSize,eBillboardType aType, cResources *apResources,cGraphics *apGraphics) :
+cBillboard::cBillboard(const tString asName, const cVector2f& avSize, eBillboardType aType, cResources *apResources, cGraphics *apGraphics) :
     iRenderable(asName)
 {
     mpMaterialManager = apResources->GetMaterialManager();
     mpLowLevelGraphics = apGraphics->GetLowLevel();
 
     mvSize = avSize;
-    mvAxis = cVector3f(0,1,0);
+    mvAxis = cVector3f(0, 1, 0);
 
-    mColor = cColor(1,1,1,1);
-    mfForwardOffset =0;
+    mColor = cColor(1, 1, 1, 1);
+    mfForwardOffset = 0;
     mfHaloAlpha = 1.0f;
 
     mType = aType;
@@ -48,52 +48,52 @@ cBillboard::cBillboard(const tString asName,const cVector2f& avSize,eBillboardTy
 
     mlLastRenderCount = -1;
 
-    mpVtxBuffer = mpLowLevelGraphics->CreateVertexBuffer(eVertexBufferType_Hardware,eVertexBufferDrawType_Tri, eVertexBufferUsageType_Dynamic,4,6);
+    mpVtxBuffer = mpLowLevelGraphics->CreateVertexBuffer(eVertexBufferType_Hardware, eVertexBufferDrawType_Tri, eVertexBufferUsageType_Dynamic, 4, 6);
 
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Position,eVertexBufferElementFormat_Float,4);
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Normal,eVertexBufferElementFormat_Float,3);
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Color0,eVertexBufferElementFormat_Float,4);
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Texture0,eVertexBufferElementFormat_Float,3);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Position, eVertexBufferElementFormat_Float, 4);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Normal, eVertexBufferElementFormat_Float, 3);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Color0, eVertexBufferElementFormat_Float, 4);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Texture0, eVertexBufferElementFormat_Float, 3);
 
-    cVector3f vCoords[4] = {cVector3f((mvSize.x/2),-(mvSize.y/2),0),
-                            cVector3f(-(mvSize.x/2),-(mvSize.y/2),0),
-                            cVector3f(-(mvSize.x/2),(mvSize.y/2),0),
-                            cVector3f((mvSize.x/2),(mvSize.y/2),0)
+    cVector3f vCoords[4] = {cVector3f((mvSize.x / 2), -(mvSize.y / 2), 0),
+                            cVector3f(-(mvSize.x / 2), -(mvSize.y / 2), 0),
+                            cVector3f(-(mvSize.x / 2), (mvSize.y / 2), 0),
+                            cVector3f((mvSize.x / 2), (mvSize.y / 2), 0)
                            };
 
-    cVector3f vTexCoords[4] = {cVector3f(1,-1,0),
-                               cVector3f(-1,-1,0),
-                               cVector3f(-1,1,0),
-                               cVector3f(1,1,0)
+    cVector3f vTexCoords[4] = {cVector3f(1, -1, 0),
+                               cVector3f(-1, -1, 0),
+                               cVector3f(-1, 1, 0),
+                               cVector3f(1, 1, 0)
                               };
-    for(int i=0; i<4; i++)
+    for(int i = 0; i < 4; i++)
     {
         mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position, vCoords[i]);
-        mpVtxBuffer->AddVertexColor(eVertexBufferElement_Color0, cColor(1,1,1,1));
-        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, (vTexCoords[i] + cVector2f(1,1))/2 );
-        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Normal,cVector3f(0,0,1));
+        mpVtxBuffer->AddVertexColor(eVertexBufferElement_Color0, cColor(1, 1, 1, 1));
+        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, (vTexCoords[i] + cVector2f(1, 1)) / 2 );
+        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Normal, cVector3f(0, 0, 1));
     }
 
-    for(int i=0; i<3; i++)
+    for(int i = 0; i < 3; i++)
     {
         mpVtxBuffer->AddIndex(i);
     }
-    for(int i=2; i<5; i++)
+    for(int i = 2; i < 5; i++)
     {
-        mpVtxBuffer->AddIndex(i==4?0:i);
+        mpVtxBuffer->AddIndex(i == 4 ? 0 : i);
     }
 
     //If the type is fixed, then we need a backside too
     //To do this, just all all the same indices in reversed order.
     if(mType == eBillboardType_FixedAxis)
     {
-        for(int i=2; i>=0; i--)
+        for(int i = 2; i >= 0; i--)
         {
             mpVtxBuffer->AddIndex(i);
         }
-        for(int i=4; i>=2; i--)
+        for(int i = 4; i >= 2; i--)
         {
-            mpVtxBuffer->AddIndex(i==4?0:i);
+            mpVtxBuffer->AddIndex(i == 4 ? 0 : i);
         }
     }
 
@@ -141,21 +141,21 @@ void cBillboard::SetSize(const cVector2f& avSize)
 
     float *pPos = mpVtxBuffer->GetFloatArray(eVertexBufferElement_Position);
 
-    cVector3f vCoords[4] = {cVector3f((mvSize.x/2),-(mvSize.y/2),0),
-                            cVector3f(-(mvSize.x/2),-(mvSize.y/2),0),
-                            cVector3f(-(mvSize.x/2),(mvSize.y/2),0),
-                            cVector3f((mvSize.x/2),(mvSize.y/2),0)
+    cVector3f vCoords[4] = {cVector3f((mvSize.x / 2), -(mvSize.y / 2), 0),
+                            cVector3f(-(mvSize.x / 2), -(mvSize.y / 2), 0),
+                            cVector3f(-(mvSize.x / 2), (mvSize.y / 2), 0),
+                            cVector3f((mvSize.x / 2), (mvSize.y / 2), 0)
                            };
 
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
         pPos[0] = vCoords[i].x;
         pPos[1] = vCoords[i].y;
         pPos[2] = vCoords[i].z;
-        pPos+=4;
+        pPos += 4;
     }
 
-    mpVtxBuffer->UpdateData(eVertexElementFlag_Position,false);
+    mpVtxBuffer->UpdateData(eVertexElementFlag_Position, false);
 
     if(mType == eBillboardType_Axis)
     {
@@ -173,7 +173,7 @@ void cBillboard::SetAxis(const cVector3f& avAxis)
     mvAxis.Normalize();
 
     //This is a quick fix so the bounding box is correct for non up-pointing axises
-    if(mType == eBillboardType_Axis && mvAxis != cVector3f(0,1,0))
+    if(mType == eBillboardType_Axis && mvAxis != cVector3f(0, 1, 0))
     {
         float fMax = mvSize.x;
         if(fMax < mvSize.y)
@@ -202,16 +202,16 @@ void cBillboard::SetColor(const cColor &aColor)
 
     float *pColors = mpVtxBuffer->GetFloatArray(eVertexBufferElement_Color0);
 
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
         pColors[0] = mColor.r * mfHaloAlpha;
         pColors[1] = mColor.g * mfHaloAlpha;
         pColors[2] = mColor.b * mfHaloAlpha;
         pColors[3] = mColor.a * mfHaloAlpha;
-        pColors+=4;
+        pColors += 4;
     }
 
-    mpVtxBuffer->UpdateData(eVertexElementFlag_Color0,false);
+    mpVtxBuffer->UpdateData(eVertexElementFlag_Color0, false);
 }
 
 //-----------------------------------------------------------------------
@@ -227,16 +227,16 @@ void cBillboard::SetHaloAlpha(float afX)
 
     float *pColors = mpVtxBuffer->GetFloatArray(eVertexBufferElement_Color0);
 
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
         pColors[0] = mColor.r * mfHaloAlpha;
         pColors[1] = mColor.g * mfHaloAlpha;
         pColors[2] = mColor.b * mfHaloAlpha;
         pColors[3] = mColor.a * mfHaloAlpha;
-        pColors+=4;
+        pColors += 4;
     }
 
-    mpVtxBuffer->UpdateData(eVertexElementFlag_Color0,false);
+    mpVtxBuffer->UpdateData(eVertexElementFlag_Color0, false);
 }
 
 //-----------------------------------------------------------------------
@@ -255,9 +255,9 @@ void cBillboard::SetMaterial(cMaterial * apMaterial)
 
 //-----------------------------------------------------------------------
 
-cMatrixf* cBillboard::GetModelMatrix(cFrustum *apFrustum)
+cMatrixf *cBillboard::GetModelMatrix(cFrustum *apFrustum)
 {
-    if(apFrustum==NULL)
+    if(apFrustum == NULL)
     {
         return &GetWorldMatrix();
     }
@@ -283,13 +283,13 @@ cMatrixf* cBillboard::GetModelMatrix(cFrustum *apFrustum)
     {
         vForward = vCameraForward;
         vRight = cMath::Vector3Cross(apFrustum->GetViewMatrix().GetUp(), vForward);
-        vUp = cMath::Vector3Cross(vForward,vRight);
+        vUp = cMath::Vector3Cross(vForward, vRight);
     }
     //////////////////////
     // Axis
     else if(mType == eBillboardType_Axis)
     {
-        vUp = cMath::MatrixMul(GetWorldMatrix().GetRotation(),mvAxis);
+        vUp = cMath::MatrixMul(GetWorldMatrix().GetRotation(), mvAxis);
         vUp.Normalize();
 
         if(vUp == vCameraForward)
@@ -309,7 +309,7 @@ cMatrixf* cBillboard::GetModelMatrix(cFrustum *apFrustum)
         //vUp.Normalize();
     }
 
-    if(mfForwardOffset!=0)
+    if(mfForwardOffset != 0)
     {
         cVector3f vPos = m_mtxTempTransform.GetTranslation();
         vPos +=  vCameraForward * mfForwardOffset;
@@ -414,7 +414,7 @@ bool cBillboard::UsesOcclusionQuery()
 
 void cBillboard::AssignOcclusionQuery(iRenderer *apRenderer)
 {
-    if(mbIsHalo==false)
+    if(mbIsHalo == false)
     {
         return;
     }
@@ -424,15 +424,15 @@ void cBillboard::AssignOcclusionQuery(iRenderer *apRenderer)
 
     iVertexBuffer *pShapeVtx = apRenderer->GetShapeBoxVertexBuffer();
 
-    apRenderer->AssignOcclusionObject(this,0, pShapeVtx, &m_mtxHaloOcclusionMatrix, true);
-    apRenderer->AssignOcclusionObject(this,1, pShapeVtx, &m_mtxHaloOcclusionMatrix, false);
+    apRenderer->AssignOcclusionObject(this, 0, pShapeVtx, &m_mtxHaloOcclusionMatrix, true);
+    apRenderer->AssignOcclusionObject(this, 1, pShapeVtx, &m_mtxHaloOcclusionMatrix, false);
 }
 
 //-----------------------------------------------------------------------
 
 bool cBillboard::RetrieveOcculsionQuery(iRenderer *apRenderer)
 {
-    if(mbIsHalo==false)
+    if(mbIsHalo == false)
     {
         return  true;
     }
@@ -442,7 +442,7 @@ bool cBillboard::RetrieveOcculsionQuery(iRenderer *apRenderer)
 
     ////////////////////////////
     // Samples are visible
-    if(lMaxSamples >0)
+    if(lMaxSamples > 0)
     {
         ///////////////////////
         //Calculate the alpha
@@ -468,10 +468,10 @@ bool cBillboard::RetrieveOcculsionQuery(iRenderer *apRenderer)
 
 
         //Get the screen clip rect and see how much is inside screen.
-        cVector3f vMin,vMax;
-        if(cMath::GetNormalizedClipRectFromBV(vMin,vMax, *mpHaloSourceBV,pFrustum,0))
+        cVector3f vMin, vMax;
+        if(cMath::GetNormalizedClipRectFromBV(vMin, vMax, *mpHaloSourceBV, pFrustum, 0))
         {
-            cVector3f vTotalSize = vMax -vMin;
+            cVector3f vTotalSize = vMax - vMin;
 
             if(vMin.x < -1)
             {
@@ -490,10 +490,10 @@ bool cBillboard::RetrieveOcculsionQuery(iRenderer *apRenderer)
                 vMax.y = 1;
             }
 
-            cVector3f vInsideSize = vMax -vMin;
+            cVector3f vInsideSize = vMax - vMin;
 
-            float fInsideArea = vInsideSize.x*vInsideSize.y;
-            float fTotalArea = vTotalSize.x*vTotalSize.y;
+            float fInsideArea = vInsideSize.x * vInsideSize.y;
+            float fTotalArea = vTotalSize.x * vTotalSize.y;
 
             if(fTotalArea > 0)
             {

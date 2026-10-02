@@ -17,7 +17,7 @@ public:
     {
         return mlID;
     }
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -39,13 +39,13 @@ public:
 
     void GetSupportedFormats(tStringList &alstFormats);
 
-    iSoundData* LoadSoundData(const tString& asName,const tWString& asFilePath,
-                              const tString& asType, bool abStream,bool abLoopStream);
+    iSoundData *LoadSoundData(const tString& asName, const tWString& asFilePath,
+                              const tString& asType, bool abStream, bool abLoopStream);
 
     void UpdateSound(double adFixedDelta);
 
-    void SetListenerAttributes (const cVector3f &avPos,const cVector3f &avVel,
-                                const cVector3f &avForward,const cVector3f &avUp);
+    void SetListenerAttributes (const cVector3f &avPos, const cVector3f &avVel,
+                                const cVector3f &avForward, const cVector3f &avUp);
     void SetListenerPosition(const cVector3f &avPos);
 
     void SetSetRolloffFactor(float afFactor);
@@ -54,7 +54,7 @@ public:
 
 //        void LogSoundStatus();
 
-    void Init(int alSoundDeviceID, bool abUseEnvAudio,int alMaxChannels,
+    void Init(int alSoundDeviceID, bool abUseEnvAudio, int alMaxChannels,
               int alStreamUpdateFreq, bool abUseThreading, bool abUseVoiceManagement,
               int alMaxMonoSourceHint, int alMaxStereoSourceHint,
               int alStreamingBufferSize, int alStreamingBufferCount, bool abEnableLowLevelLog);
@@ -63,15 +63,15 @@ public:
 
     void SetEnvVolume( float afEnvVolume );
 
-    iSoundEnvironment* LoadSoundEnvironment (const tString& asFilePath);
+    iSoundEnvironment *LoadSoundEnvironment (const tString& asFilePath);
     void SetSoundEnvironment ( iSoundEnvironment* apSoundEnv );
     void FadeSoundEnvironment( iSoundEnvironment* apSourceSoundEnv, iSoundEnvironment* apDestSoundEnv, float afT );
 
-    iSoundDeviceIdentifier* GetCurrentSoundDevice();
+    iSoundDeviceIdentifier *GetCurrentSoundDevice();
 
 private:
-    iSoundDeviceIdentifier* GetFirstValidDefaultDevice();
-    iSoundDeviceIdentifier* GetFirstDefaultDevice();
+    iSoundDeviceIdentifier *GetFirstValidDefaultDevice();
+    iSoundDeviceIdentifier *GetFirstDefaultDevice();
 
     tString mvFormats[30];
     bool    mbLogSounds;
@@ -79,7 +79,7 @@ private:
     int        mlEffectSlotId;
     bool    mbNullEffectAttached;
 
-    cOAL_Effect_Reverb* mpEffect;
+    cOAL_Effect_Reverb *mpEffect;
     int mlCurrentSoundDevID;
 };
 };

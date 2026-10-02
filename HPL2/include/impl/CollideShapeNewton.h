@@ -17,18 +17,18 @@ class iVertexBuffer;
 class iCollideShape;
 class cBinaryBuffer;
 
-typedef std::vector<iCollideShape*> tCollideShapeVec;
+typedef std::vector<iCollideShape *> tCollideShapeVec;
 typedef tCollideShapeVec::iterator tCollideShapeVecIt;
 
 class cCollideShapeNewton : public iCollideShape
 {
 public:
     cCollideShapeNewton(eCollideShapeType aType, const cVector3f &avSize,
-                        cMatrixf* apOffsetMtx,NewtonWorld* apNewtonWorld,
+                        cMatrixf* apOffsetMtx, NewtonWorld* apNewtonWorld,
                         iPhysicsWorld *apWorld);
     ~cCollideShapeNewton();
 
-    iCollideShape* GetSubShape(int alIdx);
+    iCollideShape *GetSubShape(int alIdx);
     int GetSubShapeNum();
 
     cVector3f GetInertia(float afMass);
@@ -41,13 +41,13 @@ public:
     void SaveToSerializedData(cBinaryBuffer* apBinBuffer);
     void CreateFromSerializedData(cBinaryBuffer* apBinBuffer);
 
-    NewtonCollision* GetNewtonCollision()
+    NewtonCollision *GetNewtonCollision()
     {
         return mpNewtonCollision;
     }
 
 private:
-    NewtonCollision* mpNewtonCollision;
+    NewtonCollision *mpNewtonCollision;
     NewtonWorld *mpNewtonWorld;
 
     tCollideShapeVec mvSubShapes;

@@ -33,7 +33,7 @@ iEntity3D::iEntity3D(tString asName)
 
     mpParent = NULL;
 
-    mlIteratorCount =-1;
+    mlIteratorCount = -1;
 
     mbIsSaved = true;
     mlUniqueID = -1;
@@ -78,7 +78,7 @@ cVector3f iEntity3D::GetLocalPosition()
 
 //-----------------------------------------------------------------------
 
-cMatrixf& iEntity3D::GetLocalMatrix()
+cMatrixf &iEntity3D::GetLocalMatrix()
 {
     return m_mtxLocalTransform;
 }
@@ -94,7 +94,7 @@ cVector3f iEntity3D::GetWorldPosition()
 
 //-----------------------------------------------------------------------
 
-cMatrixf& iEntity3D::GetWorldMatrix()
+cMatrixf &iEntity3D::GetWorldMatrix()
 {
     UpdateWorldTransform();
 
@@ -176,13 +176,13 @@ void iEntity3D::SetTransformUpdated(bool abUpdateCallbacks)
     }
 
     //Update callbacks
-    if(mlstCallbacks.empty() || abUpdateCallbacks==false)
+    if(mlstCallbacks.empty() || abUpdateCallbacks == false)
     {
         return;
     }
 
     tEntityCallbackListIt it = mlstCallbacks.begin();
-    for(; it!= mlstCallbacks.end(); ++it)
+    for(; it != mlstCallbacks.end(); ++it)
     {
         iEntityCallback* pCallback = *it;
         pCallback->OnTransformUpdate(this);
@@ -205,7 +205,7 @@ int iEntity3D::GetTransformUpdateCount()
 
 //-----------------------------------------------------------------------
 
-cBoundingVolume* iEntity3D::GetBoundingVolume()
+cBoundingVolume *iEntity3D::GetBoundingVolume()
 {
     if(mbApplyTransformToBV && mbUpdateBoundingVolume)
     {
@@ -234,7 +234,7 @@ void iEntity3D::RemoveCallback(iEntityCallback *apCallback)
 
 void iEntity3D::AddChild(iEntity3D *apEntity)
 {
-    if(apEntity==NULL)
+    if(apEntity == NULL)
     {
         return;
     }
@@ -279,7 +279,7 @@ bool iEntity3D::IsChild(iEntity3D *apEntity)
     return false;
 }
 
-iEntity3D * iEntity3D::GetEntityParent()
+iEntity3D *iEntity3D::GetEntityParent()
 {
     return mpParent;
 }
@@ -352,7 +352,7 @@ void iEntity3D::UpdateWorldTransform()
         //first check if there is a node parent
         if(mpParentNode)
         {
-            cNode3D* pNode3D = static_cast<cNode3D*>(mpParentNode);
+            cNode3D* pNode3D = static_cast<cNode3D *>(mpParentNode);
 
             m_mtxWorldTransform = cMath::MatrixMul(pNode3D->GetWorldMatrix(), m_mtxLocalTransform);
         }

@@ -46,8 +46,8 @@ public:
     * \param alCount The number of character to copy to the sub. -1 = all til end.
     * \return
     */
-    static tString Sub(const tString& asString,int alStart,int alCount=-1);
-    static tWString SubW(const tWString& asString,int alStart,int alCount=-1);
+    static tString Sub(const tString& asString, int alStart, int alCount = -1);
+    static tWString SubW(const tWString& asString, int alStart, int alCount = -1);
     /**
      * Get the file extension of a string
      * \param aString extension (for example ".exe"). If none "" is returned.
@@ -61,8 +61,8 @@ public:
      * \param aExt Extension, both ".exe" and "exe" works
      * \return
      */
-    static tString SetFileExt(const tString&  aString,const tString&  aExt);
-    static tWString SetFileExtW(const tWString&  aString,const tWString&  aExt);
+    static tString SetFileExt(const tString&  aString, const tString&  aExt);
+    static tWString SetFileExtW(const tWString&  aString, const tWString&  aExt);
 
     /**
      * Gets the file filename in for example: "/files/test/this.txt"
@@ -84,8 +84,8 @@ public:
      * \param aPath New path
      * \return
      */
-    static tString SetFilePath(const tString& aString,const tString& aPath);
-    static tWString SetFilePathW(const tWString& aString,const tWString& aPath);
+    static tString SetFilePath(const tString& aString, const tString& aPath);
+    static tWString SetFilePathW(const tWString& aString, const tWString& aPath);
     /**
      * Gets the relative path from the base path to the target path
      * \param aPath Target path
@@ -98,8 +98,8 @@ public:
     /**
     * If string does not have a slash at the end. Add one.
     */
-    static tString AddSlashAtEnd(const tString& asPath,char alSlash='/');
-    static tWString AddSlashAtEndW(const tWString& asPath,wchar_t alSlash=_W('/'));
+    static tString AddSlashAtEnd(const tString& asPath, char alSlash = '/');
+    static tWString AddSlashAtEndW(const tWString& asPath, wchar_t alSlash = _W('/'));
 
     /**
     * Remove slash from end of string if any.
@@ -130,8 +130,8 @@ public:
      * \param asNewChar The char to replace with (one character only!)
      * \return
      */
-    static tString ReplaceCharTo(const tString& aString, const tString& asOldChar,const tString& asNewChar);
-    static tWString ReplaceCharToW(const tWString& aString, const tWString& asOldChar,const tWString& asNewChar);
+    static tString ReplaceCharTo(const tString& aString, const tString& asOldChar, const tString& asNewChar);
+    static tWString ReplaceCharToW(const tWString& aString, const tWString& asOldChar, const tWString& asNewChar);
 
     /**
     *
@@ -140,10 +140,10 @@ public:
     * \param asNewString The char to replace with
     * \return
     */
-    static tString ReplaceStringTo(const tString& aString, const tString& asOldString,const tString& asNewString);
+    static tString ReplaceStringTo(const tString& aString, const tString& asOldString, const tString& asNewString);
 
-    static tString ToString(const char* asString,tString asDefault);
-    static int ToInt(const char* asString,int alDefault);
+    static tString ToString(const char* asString, tString asDefault);
+    static int ToInt(const char* asString, int alDefault);
     static bool ToBool(const char* asString, bool abDefault);
     static float ToFloat(const char* asString, float afDefault);
     static cColor ToColor(const char* asString, const cColor& aDefault);
@@ -154,14 +154,14 @@ public:
     static cMatrixf ToMatrixf(const char* asString, const cMatrixf& a_mtxDefault);
 
 
-    static tString ToString(int alX, int alPaddingZeros=0);
-    static tString ToString(unsigned int alX, int alPaddingZeros=0);
-    static tString ToString(unsigned long alX, int alPaddingZeros=0);
-    static tString ToString(float afX, int alNumDecimals=20, bool abRemoveZeroes=false);
+    static tString ToString(int alX, int alPaddingZeros = 0);
+    static tString ToString(unsigned int alX, int alPaddingZeros = 0);
+    static tString ToString(unsigned long alX, int alPaddingZeros = 0);
+    static tString ToString(float afX, int alNumDecimals = 20, bool abRemoveZeroes = false);
 
-    static tWString ToStringW(int alX, int alPaddingZeros=0);
-    static tWString ToStringW(unsigned long alX, int alPaddingZeros=0);
-    static tWString ToStringW(float afX, int alNumDecimals=20, bool abRemoveZeroes=false);
+    static tWString ToStringW(int alX, int alPaddingZeros = 0);
+    static tWString ToStringW(unsigned long alX, int alPaddingZeros = 0);
+    static tWString ToStringW(float afX, int alNumDecimals = 20, bool abRemoveZeroes = false);
 
     /**
      * Get a vector of ints from a string such as "1, 2, 3".
@@ -170,7 +170,7 @@ public:
      * \param avVec a vector the values will be appended to.
      * \param apSeparators a pointer to a string with chars to override the default separators
      */
-    static tIntVec& GetIntVec(const tString &asData, tIntVec& avVec, tString *apSeparators=NULL);
+    static tIntVec &GetIntVec(const tString &asData, tIntVec& avVec, tString *apSeparators = NULL);
 
     /**
     * Get a vector of ints from a string such as "1, 2, 3".
@@ -179,7 +179,7 @@ public:
     * \param avVec a vector the values will be appended to.
     * \param apSeparators a pointer to a string with chars to override the default separators
     */
-    static tUIntVec& GetUIntVec(const tString &asData, tUIntVec& avVec, tString *apSeparators=NULL);
+    static tUIntVec &GetUIntVec(const tString &asData, tUIntVec& avVec, tString *apSeparators = NULL);
 
     /**
     * Get a vector of floats from a string such as "1, 2, 3".
@@ -188,7 +188,7 @@ public:
     * \param avVec a vector the values will be appended to.
     * \param apSeparators a pointer to a string with chars to override the default separators
     */
-    static tFloatVec& GetFloatVec(const tString &asData, tFloatVec& avVec,tString *apSeparators=NULL);
+    static tFloatVec &GetFloatVec(const tString &asData, tFloatVec& avVec, tString *apSeparators = NULL);
 
     /**
      * Get a vector of strings from a string such as "one, two, three".
@@ -197,8 +197,8 @@ public:
      * \param avVec
      * \param apSeparators a pointer to a string with chars to override the default separators
      */
-    static tStringVec& GetStringVec(const tString &asData, tStringVec& avVec,tString *apSeparators=NULL);
-    static tWStringVec& GetStringVecW(const tWString &asData, tWStringVec& avVec,tWString *apSeparators=NULL);
+    static tStringVec &GetStringVec(const tString &asData, tStringVec& avVec, tString *apSeparators = NULL);
+    static tWStringVec &GetStringVecW(const tWString &asData, tWStringVec& avVec, tWString *apSeparators = NULL);
 
     /**
      * Get a vector of Wstrings from a string such as "one, two, three".
@@ -207,7 +207,7 @@ public:
      * \param avVec
      * \param apSeparators a pointer to a string with chars to override the default separators
      */
-    static tWStringVec& GetStringWVec(const tWString &asData, tWStringVec& avVec,tWString *apSeparators=NULL);
+    static tWStringVec &GetStringWVec(const tWString &asData, tWStringVec& avVec, tWString *apSeparators = NULL);
 
     /**
      * Gets the last character of the string.
@@ -234,8 +234,8 @@ public:
     static int GetLastStringPos(const tString& aString, const tString&  aChar);
     static int GetLastStringPosW(const tWString& aString, const tWString&  aChar);
 
-    static void UIntStringToArray(unsigned int *apArray, const char* apString,int alSize);
-    static void FloatStringToArray(float *apArray, const char* apString,int alSize);
+    static void UIntStringToArray(unsigned int *apArray, const char* apString, int alSize);
+    static void FloatStringToArray(float *apArray, const char* apString, int alSize);
 
     static int CountCharsInString(const tString& aString, const tString& aChar);
     static int CountCharsInStringW(const tWString& aString, const tWString& aChar);
@@ -257,8 +257,8 @@ public:
 
 
 private:
-    static tString GetFormatOptions(const tString& asDataType,int alZeroesOnLeft=0, int alNumDecimals=-1);
-    static tWString GetFormatOptionsW(const tString& asDataType, int alZeroesOnLeft=0, int alNumDecimals=-1);
+    static tString GetFormatOptions(const tString& asDataType, int alZeroesOnLeft = 0, int alNumDecimals = -1);
+    static tWString GetFormatOptionsW(const tString& asDataType, int alZeroesOnLeft = 0, int alNumDecimals = -1);
 
 };
 

@@ -26,16 +26,16 @@ public:
     cMeshLoaderHandler(cResources* apResources, cScene *apScene);
     ~cMeshLoaderHandler();
 
-    cMesh* LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags);
-    bool SaveMesh(cMesh* apMesh,const tWString& asFile);
+    cMesh *LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags);
+    bool SaveMesh(cMesh* apMesh, const tWString& asFile);
 
     cAnimation *LoadAnimation(const tWString& asFile);
 
 private:
     void SetupLoader(iResourceLoader *apLoader);
 
-    cResources* mpResources;
-    cScene* mpScene;
+    cResources *mpResources;
+    cScene *mpScene;
 };
 
 };

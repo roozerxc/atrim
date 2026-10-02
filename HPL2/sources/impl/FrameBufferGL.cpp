@@ -18,13 +18,13 @@ namespace hpl
 //-----------------------------------------------------------------------
 
 cDepthStencilBufferGL::cDepthStencilBufferGL(const cVector2l& avSize, int alDepthBits, int alStencilBits)
-    : iDepthStencilBuffer(avSize,alDepthBits,alStencilBits)
+    : iDepthStencilBuffer(avSize, alDepthBits, alStencilBits)
 {
-    mlHandle =0;
+    mlHandle = 0;
 
     ///////////////////////////////////
     // Create packed depth and stencil
-    if(alDepthBits>0 && alStencilBits>0)
+    if(alDepthBits > 0 && alStencilBits > 0)
     {
         ///////
         //Check so extension is supported!
@@ -48,7 +48,7 @@ cDepthStencilBufferGL::cDepthStencilBufferGL(const cVector2l& avSize, int alDept
     }
     ///////////////////////////////////
     // Create depth buffer
-    else if(alDepthBits >0)
+    else if(alDepthBits > 0)
     {
         GLenum depthType = 0;
         switch(alDepthBits)
@@ -66,7 +66,7 @@ cDepthStencilBufferGL::cDepthStencilBufferGL(const cVector2l& avSize, int alDept
 
         if(depthType == 0)
         {
-            Error("Invalid depth format: %d bits! Could not create depth buffer\n",alDepthBits);
+            Error("Invalid depth format: %d bits! Could not create depth buffer\n", alDepthBits);
         }
         else
         {
@@ -77,7 +77,7 @@ cDepthStencilBufferGL::cDepthStencilBufferGL(const cVector2l& avSize, int alDept
     }
     ///////////////////////////////////
     // Create stencil buffer
-    else if(alStencilBits >0)
+    else if(alStencilBits > 0)
     {
         GLenum stencilType = 0;
         switch(alStencilBits)
@@ -98,7 +98,7 @@ cDepthStencilBufferGL::cDepthStencilBufferGL(const cVector2l& avSize, int alDept
 
         if(stencilType == 0)
         {
-            Error("Invalid stencil format: %d bits! Could not create stencil buffer\n",alStencilBits);
+            Error("Invalid stencil format: %d bits! Could not create stencil buffer\n", alStencilBits);
         }
         else
         {
@@ -154,7 +154,7 @@ cFrameBufferGL::~cFrameBufferGL()
 
 void cFrameBufferGL::SetTexture2D(int alColorIdx, iTexture *apTexture, int alMipmapLevel)
 {
-    if(CheckIfNullTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture))
+    if(CheckIfNullTexture(GL_COLOR_ATTACHMENT0_EXT, alColorIdx, apTexture))
     {
         return;
     }
@@ -164,14 +164,14 @@ void cFrameBufferGL::SetTexture2D(int alColorIdx, iTexture *apTexture, int alMip
         return;
     }
 
-    AttachTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture,alMipmapLevel,0);
+    AttachTexture(GL_COLOR_ATTACHMENT0_EXT, alColorIdx, apTexture, alMipmapLevel, 0);
 }
 
 //-----------------------------------------------------------------------
 
 void cFrameBufferGL::SetTexture3D(int alColorIdx, iTexture *apTexture, int alZ, int alMipmapLevel)
 {
-    if(CheckIfNullTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture))
+    if(CheckIfNullTexture(GL_COLOR_ATTACHMENT0_EXT, alColorIdx, apTexture))
     {
         return;
     }
@@ -181,14 +181,14 @@ void cFrameBufferGL::SetTexture3D(int alColorIdx, iTexture *apTexture, int alZ, 
         return;
     }
 
-    AttachTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture,alMipmapLevel,alZ);
+    AttachTexture(GL_COLOR_ATTACHMENT0_EXT, alColorIdx, apTexture, alMipmapLevel, alZ);
 }
 
 //-----------------------------------------------------------------------
 
 void cFrameBufferGL::SetTextureCubeMap(int alColorIdx, iTexture *apTexture, int alFace, int alMipmapLevel)
 {
-    if(CheckIfNullTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture))
+    if(CheckIfNullTexture(GL_COLOR_ATTACHMENT0_EXT, alColorIdx, apTexture))
     {
         return;
     }
@@ -198,14 +198,14 @@ void cFrameBufferGL::SetTextureCubeMap(int alColorIdx, iTexture *apTexture, int 
         return;
     }
 
-    AttachTexture(GL_COLOR_ATTACHMENT0_EXT,alColorIdx,apTexture,alMipmapLevel,alFace);
+    AttachTexture(GL_COLOR_ATTACHMENT0_EXT, alColorIdx, apTexture, alMipmapLevel, alFace);
 }
 
 //-----------------------------------------------------------------------
 
 void cFrameBufferGL::SetDepthTexture2D(iTexture *apTexture, int alMipmapLevel)
 {
-    if(CheckIfNullTexture(GL_DEPTH_ATTACHMENT_EXT,0,apTexture))
+    if(CheckIfNullTexture(GL_DEPTH_ATTACHMENT_EXT, 0, apTexture))
     {
         return;
     }
@@ -216,12 +216,12 @@ void cFrameBufferGL::SetDepthTexture2D(iTexture *apTexture, int alMipmapLevel)
     }
     //TODO: Check so it is a depth texture.
 
-    AttachTexture(GL_DEPTH_ATTACHMENT_EXT,0,apTexture,alMipmapLevel,0);
+    AttachTexture(GL_DEPTH_ATTACHMENT_EXT, 0, apTexture, alMipmapLevel, 0);
 }
 
 void cFrameBufferGL::SetDepthTextureCubeMap(iTexture *apTexture, int alFace, int alMipmapLevel)
 {
-    if(CheckIfNullTexture(GL_DEPTH_ATTACHMENT_EXT,0,apTexture))
+    if(CheckIfNullTexture(GL_DEPTH_ATTACHMENT_EXT, 0, apTexture))
     {
         return;
     }
@@ -232,7 +232,7 @@ void cFrameBufferGL::SetDepthTextureCubeMap(iTexture *apTexture, int alFace, int
     }
     //TODO: Check so it is a depth texture.
 
-    AttachTexture(GL_DEPTH_ATTACHMENT_EXT,0,apTexture,alMipmapLevel,alFace);
+    AttachTexture(GL_DEPTH_ATTACHMENT_EXT, 0, apTexture, alMipmapLevel, alFace);
 }
 
 //-----------------------------------------------------------------------
@@ -245,12 +245,12 @@ void cFrameBufferGL::SetDepthStencilBuffer(iDepthStencilBuffer* apBuffer)
     //Check if a NULL value was passed, if so remove attachments
     if(apBuffer == NULL)
     {
-        glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT,0);
-        glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT,0);
+        glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, 0);
+        glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, 0);
         return;
     }
 
-    cDepthStencilBufferGL *pBufferSDL = static_cast<cDepthStencilBufferGL*>(apBuffer);
+    cDepthStencilBufferGL *pBufferSDL = static_cast<cDepthStencilBufferGL *>(apBuffer);
 
     //////////////////////////////////
     //Attach depth buffer
@@ -291,8 +291,8 @@ bool cFrameBufferGL::CompileAndValidate()
     /////////////////////////////////////////
     //Check color buffers
     std::vector<GLenum> vColorBuffers;
-    int lNumOfColorBuffers =0;
-    for(int i=0; i<kMaxDrawColorBuffers; ++i)
+    int lNumOfColorBuffers = 0;
+    for(int i = 0; i < kMaxDrawColorBuffers; ++i)
     {
         if(mpColorBuffer[i] != NULL)
         {
@@ -301,13 +301,13 @@ bool cFrameBufferGL::CompileAndValidate()
         }
     }
     //If no color buffers, turn of read and draw buffers.
-    if(lNumOfColorBuffers ==0)
+    if(lNumOfColorBuffers == 0)
     {
         glDrawBuffer(GL_NONE);
         glReadBuffer(GL_NONE);
     }
     //One color buffer is active
-    else if(lNumOfColorBuffers ==1)
+    else if(lNumOfColorBuffers == 1)
     {
         glDrawBuffer(vColorBuffers[0]);
         glReadBuffer(vColorBuffers[0]);
@@ -368,7 +368,7 @@ bool cFrameBufferGL::CompileAndValidate()
 
 void cFrameBufferGL::PostBindUpdate()
 {
-    for(int i=0; i<kMaxDrawColorBuffers; ++i)
+    for(int i = 0; i < kMaxDrawColorBuffers; ++i)
     {
         if(mpColorBuffer[i])
         {
@@ -400,7 +400,7 @@ void cFrameBufferGL::PostBindUpdateAttachment(iFrameBufferAttachment *apAttachme
         return;
     }
 
-    iTexture *pTexture = static_cast<iTexture*>(apAttachment);
+    iTexture *pTexture = static_cast<iTexture *>(apAttachment);
     if(pTexture->UsesMipMaps())
     {
         pTexture->AutoGenerateMipmaps();
@@ -409,7 +409,7 @@ void cFrameBufferGL::PostBindUpdateAttachment(iFrameBufferAttachment *apAttachme
 
 //-----------------------------------------------------------------------
 
-bool cFrameBufferGL::CheckIfNullTexture(int alAttachmentType, int alAttachmentIdx,iTexture *apTexture)
+bool cFrameBufferGL::CheckIfNullTexture(int alAttachmentType, int alAttachmentIdx, iTexture *apTexture)
 {
     if(apTexture)
     {
@@ -417,19 +417,19 @@ bool cFrameBufferGL::CheckIfNullTexture(int alAttachmentType, int alAttachmentId
     }
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, mlHandle);
-    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, alAttachmentType + alAttachmentIdx,GL_TEXTURE_2D, 0,0);
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, alAttachmentType + alAttachmentIdx, GL_TEXTURE_2D, 0, 0);
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
     return true;
 }
 
 //-----------------------------------------------------------------------
-void cFrameBufferGL::AttachTexture(int alAttachmentType,int alAttachmentIdx,iTexture *apTexture, int alMipmapLevel, int alExtra)
+void cFrameBufferGL::AttachTexture(int alAttachmentType, int alAttachmentIdx, iTexture *apTexture, int alMipmapLevel, int alExtra)
 {
     eTextureType texType = apTexture->GetType();
     GLenum GLTarget = TextureTypeToGLTarget(texType);
 
-    cSDLTexture *pTextureSDL = static_cast<cSDLTexture*>(apTexture);
+    cSDLTexture *pTextureSDL = static_cast<cSDLTexture *>(apTexture);
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, mlHandle);
 
@@ -443,7 +443,7 @@ void cFrameBufferGL::AttachTexture(int alAttachmentType,int alAttachmentIdx,iTex
         glFramebufferTexture2DEXT(    GL_FRAMEBUFFER_EXT, alAttachmentType + alAttachmentIdx,
                                       texType == eTextureType_CubeMap ?
                                       GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB + alExtra : GLTarget,
-                                      pTextureSDL->GetTextureHandle(),alMipmapLevel);
+                                      pTextureSDL->GetTextureHandle(), alMipmapLevel);
 
     }
     /////////////////////////////////////////////////
@@ -452,7 +452,7 @@ void cFrameBufferGL::AttachTexture(int alAttachmentType,int alAttachmentIdx,iTex
     {
         glFramebufferTexture3DEXT(    GL_FRAMEBUFFER_EXT, alAttachmentType + alAttachmentIdx,
                                       GLTarget,
-                                      pTextureSDL->GetTextureHandle(),alMipmapLevel,
+                                      pTextureSDL->GetTextureHandle(), alMipmapLevel,
                                       alExtra);
     }
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
@@ -474,7 +474,7 @@ void cFrameBufferGL::AttachTexture(int alAttachmentType,int alAttachmentIdx,iTex
 
     //////////////////////////////////////
     //If this is the first thing set to the frame buffer, use that size.
-    SetFirstSize(cVector2l(apTexture->GetSize().x,apTexture->GetSize().y));
+    SetFirstSize(cVector2l(apTexture->GetSize().x, apTexture->GetSize().y));
 
     mbIsUpdated = true;
 }

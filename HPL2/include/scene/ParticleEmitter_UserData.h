@@ -58,9 +58,9 @@ class cParticleEmitterData_UserData : public iParticleEmitterData, public iPhysi
 {
     friend class cParticleEmitter_UserData;
 public:
-    cParticleEmitterData_UserData(const tString &asName,cResources* apResources,cGraphics *apGraphics);
+    cParticleEmitterData_UserData(const tString &asName, cResources* apResources, cGraphics *apGraphics);
 
-    iParticleEmitter* Create(tString asName, cVector3f avSize);
+    iParticleEmitter *Create(tString asName, cVector3f avSize);
 
     void LoadFromElement(cXmlElement *apElement);
 
@@ -70,7 +70,7 @@ public:
                         cVector3f *apPosVec);
 
 private:
-    bool OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams);
+    bool OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams);
     float mfShortestDist;
     bool mbIntersected;
     cVector3f *mpIntersectNormal;
@@ -235,8 +235,8 @@ private:
 class cParticleEmitter_UserData : public iParticleEmitter
 {
 public:
-    cParticleEmitter_UserData(    tString asName,tMaterialVec* avMaterials,
-                                  cVector3f avSize, cGraphics* apGraphics,cResources *apResources,
+    cParticleEmitter_UserData(    tString asName, tMaterialVec* avMaterials,
+                                  cVector3f avSize, cGraphics* apGraphics, cResources *apResources,
                                   cParticleEmitterData_UserData *apData
                              );
     ~cParticleEmitter_UserData(void);

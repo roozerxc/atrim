@@ -14,7 +14,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-int cGLSLProgram::mlCurrentProgram =0;
+int cGLSLProgram::mlCurrentProgram = 0;
 
 //-----------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ int cGLSLProgram::mlCurrentProgram =0;
 
 //-----------------------------------------------------------------------
 
-cGLSLProgram::cGLSLProgram(const tString& asName) : iGpuProgram(asName,eGpuProgramFormat_GLSL)
+cGLSLProgram::cGLSLProgram(const tString& asName) : iGpuProgram(asName, eGpuProgramFormat_GLSL)
 {
     mlHandle = glCreateProgram();
 
@@ -34,12 +34,12 @@ cGLSLProgram::cGLSLProgram(const tString& asName) : iGpuProgram(asName,eGpuProgr
 
 cGLSLProgram::~cGLSLProgram()
 {
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
-        cGLSLShader* pGLSLShader = static_cast<cGLSLShader*>(mpShader[i]);
+        cGLSLShader* pGLSLShader = static_cast<cGLSLShader *>(mpShader[i]);
         if(pGLSLShader)
         {
-            glDetachShader(mlHandle,pGLSLShader->GetHandle());
+            glDetachShader(mlHandle, pGLSLShader->GetHandle());
         }
     }
     glDeleteProgram(mlHandle);
@@ -57,12 +57,12 @@ bool cGLSLProgram::Link()
 {
     ///////////////////////////////////////
     //Attach shaders
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
-        cGLSLShader* pGLSLShader = static_cast<cGLSLShader*>(mpShader[i]);
+        cGLSLShader* pGLSLShader = static_cast<cGLSLShader *>(mpShader[i]);
         if(pGLSLShader)
         {
-            glAttachShader(mlHandle,pGLSLShader->GetHandle());
+            glAttachShader(mlHandle, pGLSLShader->GetHandle());
         }
     }
 
@@ -76,7 +76,7 @@ bool cGLSLProgram::Link()
     glGetProgramiv(mlHandle, GL_LINK_STATUS, &lStatus);
     if(lStatus == GL_FALSE)
     {
-        Error("Failed to link GLSL program %s\n",msName.c_str());
+        Error("Failed to link GLSL program %s\n", msName.c_str());
         LogProgramInfoLog();
         return false;
     }
@@ -84,22 +84,22 @@ bool cGLSLProgram::Link()
     ///////////////////////////////////////
     //Set up sampler units
     iGpuShader* pFragShader = mpShader[eGpuShaderType_Fragment];
-    if(pFragShader && pFragShader->GetSamplerUnitNum()>0)
+    if(pFragShader && pFragShader->GetSamplerUnitNum() > 0)
     {
 
         //Log("Setting up samplers in '%s'\n", msName.c_str());
         glUseProgram(mlHandle);
 
-        for(int i=0; i<pFragShader->GetSamplerUnitNum(); ++i)
+        for(int i = 0; i < pFragShader->GetSamplerUnitNum(); ++i)
         {
             tString &sSamplerName = pFragShader->GetSamplerUnit(i)->msName;
             int lUnit = pFragShader->GetSamplerUnit(i)->mlUnit;
 
             //Log("Setting %s to %d\n",sSamplerName.c_str(), lUnit);
-            GLint lVarHandle = glGetUniformLocation(mlHandle,sSamplerName.c_str());
-            if(lVarHandle<0)
+            GLint lVarHandle = glGetUniformLocation(mlHandle, sSamplerName.c_str());
+            if(lVarHandle < 0)
             {
-                Error("Sampler %s does not exist, could not bind it to unit %d\n",sSamplerName.c_str(),lUnit);
+                Error("Sampler %s does not exist, could not bind it to unit %d\n", sSamplerName.c_str(), lUnit);
                 continue;
             }
 
@@ -143,8 +143,8 @@ void cGLSLProgram::UnBind()
 
 bool cGLSLProgram::SetSamplerToUnit(const tString& asSamplerName, int alUnit)
 {
-    GLint lVarHandle = glGetUniformLocation(mlHandle,asSamplerName.c_str());
-    if(lVarHandle <0)
+    GLint lVarHandle = glGetUniformLocation(mlHandle, asSamplerName.c_str());
+    if(lVarHandle < 0)
     {
         return false;
     }
@@ -160,7 +160,7 @@ bool cGLSLProgram::SetSamplerToUnit(const tString& asSamplerName, int alUnit)
 
 int cGLSLProgram::GetVariableId(const tString& asName)
 {
-    for(size_t i=0; i<mvParameters.size(); ++i)
+    for(size_t i = 0; i < mvParameters.size(); ++i)
     {
         if(mvParameters[i].msName == asName)
         {
@@ -168,29 +168,29 @@ int cGLSLProgram::GetVariableId(const tString& asName)
         }
     }
 
-    GLint lId = glGetUniformLocation(mlHandle,asName.c_str());
-    if(lId <0)
+    GLint lId = glGetUniformLocation(mlHandle, asName.c_str());
+    if(lId < 0)
     {
         return -1;
     }
 
-    mvParameters.push_back(cGLSLParam(lId,asName));
+    mvParameters.push_back(cGLSLParam(lId, asName));
 
-    return (int)mvParameters.size()-1;
+    return (int)mvParameters.size() - 1;
 }
 
 //-----------------------------------------------------------------------
 
 bool cGLSLProgram::GetVariableAsId(const tString& asName, int alId)
 {
-    if(alId<0)
+    if(alId < 0)
     {
         return false;
     }
 
     ////////////////////////
     // Check if id is already set to variable
-    for(size_t i=0; i<mvParameters.size(); ++i)
+    for(size_t i = 0; i < mvParameters.size(); ++i)
     {
         if(mvParameters[i].msName == asName)
         {
@@ -206,8 +206,8 @@ bool cGLSLProgram::GetVariableAsId(const tString& asName, int alId)
     }
     ////////////////////////
     // Check if variable exits
-    GLint lHandle = glGetUniformLocation(mlHandle,asName.c_str());
-    if(lHandle <0)
+    GLint lHandle = glGetUniformLocation(mlHandle, asName.c_str());
+    if(lHandle < 0)
     {
         return false;
     }
@@ -216,7 +216,7 @@ bool cGLSLProgram::GetVariableAsId(const tString& asName, int alId)
     // Check if the id is taken
     if(alId < (int)mvParameters.size())
     {
-        if(mvParameters[alId].mlId >=0)
+        if(mvParameters[alId].mlId >= 0)
         {
             if(mvParameters[alId].mlId == lHandle)
             {
@@ -232,7 +232,7 @@ bool cGLSLProgram::GetVariableAsId(const tString& asName, int alId)
     // Resize vector so id fits
     else
     {
-        mvParameters.resize(alId+1);
+        mvParameters.resize(alId + 1);
     }
 
     ////////////////////////
@@ -248,7 +248,7 @@ bool cGLSLProgram::GetVariableAsId(const tString& asName, int alId)
 
 bool cGLSLProgram::SetInt(int alVarId, int alX)
 {
-    if(alVarId<0 || alVarId >= (int)mvParameters.size())
+    if(alVarId < 0 || alVarId >= (int)mvParameters.size())
     {
         return false;
     }
@@ -268,7 +268,7 @@ bool cGLSLProgram::SetInt(int alVarId, int alX)
 
 bool  cGLSLProgram::SetFloat(int alVarId, float afX)
 {
-    if(alVarId<0 || alVarId >= (int)mvParameters.size())
+    if(alVarId < 0 || alVarId >= (int)mvParameters.size())
     {
         return false;
     }
@@ -285,9 +285,9 @@ bool  cGLSLProgram::SetFloat(int alVarId, float afX)
 
 //-----------------------------------------------------------------------
 
-bool  cGLSLProgram::SetVec2f(int alVarId, float afX,float afY)
+bool  cGLSLProgram::SetVec2f(int alVarId, float afX, float afY)
 {
-    if(alVarId<0 || alVarId >= (int)mvParameters.size())
+    if(alVarId < 0 || alVarId >= (int)mvParameters.size())
     {
         return false;
     }
@@ -304,9 +304,9 @@ bool  cGLSLProgram::SetVec2f(int alVarId, float afX,float afY)
 
 //-----------------------------------------------------------------------
 
-bool  cGLSLProgram::SetVec3f(int alVarId, float afX,float afY,float afZ)
+bool  cGLSLProgram::SetVec3f(int alVarId, float afX, float afY, float afZ)
 {
-    if(alVarId<0 || alVarId >= (int)mvParameters.size())
+    if(alVarId < 0 || alVarId >= (int)mvParameters.size())
     {
         return false;
     }
@@ -323,9 +323,9 @@ bool  cGLSLProgram::SetVec3f(int alVarId, float afX,float afY,float afZ)
 
 //-----------------------------------------------------------------------
 
-bool  cGLSLProgram::SetVec4f(int alVarId, float afX,float afY,float afZ, float afW)
+bool  cGLSLProgram::SetVec4f(int alVarId, float afX, float afY, float afZ, float afW)
 {
-    if(alVarId<0 || alVarId >= (int)mvParameters.size())
+    if(alVarId < 0 || alVarId >= (int)mvParameters.size())
     {
         return false;
     }
@@ -335,7 +335,7 @@ bool  cGLSLProgram::SetVec4f(int alVarId, float afX,float afY,float afZ, float a
         Bind();
     }
 
-    glUniform4f(mvParameters[alVarId].mlId, afX, afY, afZ,afW);
+    glUniform4f(mvParameters[alVarId].mlId, afX, afY, afZ, afW);
 
     return true;
 }
@@ -344,7 +344,7 @@ bool  cGLSLProgram::SetVec4f(int alVarId, float afX,float afY,float afZ, float a
 
 bool cGLSLProgram::SetMatrixf(int alVarId, const cMatrixf& aMtx)
 {
-    if(alVarId<0 || alVarId >= (int)mvParameters.size())
+    if(alVarId < 0 || alVarId >= (int)mvParameters.size())
     {
         return false;
     }
@@ -383,14 +383,14 @@ void cGLSLProgram::LogProgramInfoLog()
     GLsizei charsWritten  = 0;
     char *infoLog;
 
-    glGetProgramiv(mlHandle, GL_INFO_LOG_LENGTH,&infologLength);
+    glGetProgramiv(mlHandle, GL_INFO_LOG_LENGTH, &infologLength);
 
     if (infologLength > 0)
     {
         infoLog = (char *)hplMalloc(infologLength);
         glGetProgramInfoLog(mlHandle, infologLength, &charsWritten, infoLog);
         Log("-------------\n");
-        Log("%s\n",infoLog);
+        Log("%s\n", infoLog);
         Log("-------------\n");
         hplFree(infoLog);
     }

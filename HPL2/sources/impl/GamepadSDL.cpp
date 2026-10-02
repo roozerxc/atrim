@@ -19,8 +19,8 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-float cGamepadSDL::mfInvAxisMax = 1.0f/(float)cMath::Min(cMath::Abs(std::numeric_limits<Sint16>::min()), std::numeric_limits<Sint16>::max());
-float cGamepadSDL::mfDeadZoneRadius = 3200.0f*cGamepadSDL::mfInvAxisMax;
+float cGamepadSDL::mfInvAxisMax = 1.0f / (float)cMath::Min(cMath::Abs(std::numeric_limits<Sint16>::min()), std::numeric_limits<Sint16>::max());
+float cGamepadSDL::mfDeadZoneRadius = 3200.0f * cGamepadSDL::mfInvAxisMax;
 
 //-----------------------------------------------------------------------
 
@@ -44,9 +44,9 @@ cGamepadSDL::cGamepadSDL(cLowLevelInputSDL *apLowLevelInputSDL, int alIndex) : i
         mvHatArray.assign(mvHatArray.size(), eGamepadHatState_Centered);
 
         mvBallAbsPosArray.resize(SDL_JoystickNumBalls(mpHandle));
-        mvBallAbsPosArray.assign(mvBallAbsPosArray.size(), cVector2l(0,0));
+        mvBallAbsPosArray.assign(mvBallAbsPosArray.size(), cVector2l(0, 0));
         mvBallRelPosArray.resize(SDL_JoystickNumBalls(mpHandle));
-        mvBallRelPosArray.assign(mvBallRelPosArray.size(), cVector2l(0,0));
+        mvBallRelPosArray.assign(mvBallRelPosArray.size(), cVector2l(0, 0));
     }
     //ClearKeyList();
 }
@@ -109,7 +109,7 @@ void cGamepadSDL::Update()
             continue;
         }
 
-        if(pEvent->type==SDL_JOYAXISMOTION)
+        if(pEvent->type == SDL_JOYAXISMOTION)
         {
             eGamepadAxis axis = SDLToAxis(pEvent->jaxis.axis);
             float fAxisValue = SDLToAxisValue(pEvent->jaxis.value);
@@ -124,7 +124,7 @@ void cGamepadSDL::Update()
                 fAxisValue = 0.0f;
             }
 
-            if(fAxisValue!=mvAxisArray[axis])
+            if(fAxisValue != mvAxisArray[axis])
             {
                 inputUpdate = cGamepadInputData(mlIndex, eGamepadInputType_Axis, axis, fAxisValue);
 
@@ -133,7 +133,7 @@ void cGamepadSDL::Update()
             }
             mvAxisArray[axis] = fAxisValue;
         }
-        else if(pEvent->type==SDL_JOYHATMOTION)
+        else if(pEvent->type == SDL_JOYHATMOTION)
         {
             eGamepadHat hat = SDLToHat(pEvent->jhat.hat);
             eGamepadHatState state = SDLToHatState(pEvent->jhat.value);
@@ -150,7 +150,7 @@ void cGamepadSDL::Update()
 
             mvHatArray[hat] = state;
         }
-        else if(pEvent->type==SDL_JOYBALLMOTION)
+        else if(pEvent->type == SDL_JOYBALLMOTION)
         {
             eGamepadBall ball = SDLToBall(pEvent->jball.ball);
 
@@ -174,7 +174,7 @@ void cGamepadSDL::Update()
             }
 
             bool bPressed;
-            if(pEvent->type==SDL_JOYBUTTONUP)
+            if(pEvent->type == SDL_JOYBUTTONUP)
             {
                 inputUpdate.mfInputValue = 0.0f;
                 mlstButtonsReleased.push_back(inputUpdate);
@@ -197,7 +197,7 @@ void cGamepadSDL::Update()
 
 bool cGamepadSDL::HasInputUpdates()
 {
-    return mlstInputUpdates.empty()==false;
+    return mlstInputUpdates.empty() == false;
 }
 
 cGamepadInputData cGamepadSDL::GetInputUpdate()
@@ -209,7 +209,7 @@ cGamepadInputData cGamepadSDL::GetInputUpdate()
     {
     case eGamepadInputType_Button:
     {
-        if(input.mfInputValue==0.0f)
+        if(input.mfInputValue == 0.0f)
         {
             mlstButtonsReleased.remove(input);
         }
@@ -258,7 +258,7 @@ cGamepadInputData cGamepadSDL::GetButton()
 
 bool cGamepadSDL::ButtonIsPressed()
 {
-    return mlstButtonsPressed.empty()==false;
+    return mlstButtonsPressed.empty() == false;
 }
 
 //-----------------------------------------------------------------------
@@ -276,7 +276,7 @@ cGamepadInputData cGamepadSDL::GetReleasedButton()
 
 bool cGamepadSDL::ButtonIsReleased()
 {
-    return mlstButtonsReleased.empty()==false;
+    return mlstButtonsReleased.empty() == false;
 }
 
 //-----------------------------------------------------------------------
@@ -312,7 +312,7 @@ cGamepadInputData cGamepadSDL::GetUpdatedAxis()
 
 bool cGamepadSDL::AxesUpdated()
 {
-    return mlstAxisChanges.empty()==false;
+    return mlstAxisChanges.empty() == false;
 }
 
 //-----------------------------------------------------------------------
@@ -329,12 +329,12 @@ eGamepadHatState cGamepadSDL::GetHatCurrentState(eGamepadHat aHat)
 
 bool cGamepadSDL::HatIsInState(eGamepadHat aHat, eGamepadHatState aState)
 {
-    return (GetHatCurrentState(aHat)&aState)!=0;
+    return (GetHatCurrentState(aHat)&aState) != 0;
 }
 
 bool cGamepadSDL::HatsChanged()
 {
-    return mlstHatStateChanges.empty()==false;
+    return mlstHatStateChanges.empty() == false;
 }
 
 cGamepadInputData cGamepadSDL::GetHatState()
@@ -386,7 +386,7 @@ eGamepadAxis    cGamepadSDL::SDLToAxis(Uint8 alAxis)
 
 float cGamepadSDL::SDLToAxisValue(Sint16 alAxisValue)
 {
-    return cMath::Clamp((float)alAxisValue*mfInvAxisMax, -1.0f, 1.0f);
+    return cMath::Clamp((float)alAxisValue * mfInvAxisMax, -1.0f, 1.0f);
 }
 
 eGamepadHat cGamepadSDL::SDLToHat(Uint8 alHat)

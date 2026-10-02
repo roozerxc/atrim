@@ -31,13 +31,13 @@ public:
     int GetPluggedGamepadNum();
 #endif
 
-    iMouse* CreateMouse();
-    iKeyboard* CreateKeyboard();
+    iMouse *CreateMouse();
+    iKeyboard *CreateKeyboard();
 #if USE_GAMEPAD
-    iGamepad* CreateGamepad(int alIndex);
+    iGamepad *CreateGamepad(int alIndex);
 #endif
 
-    iLowLevelGraphics* GetLowLevelGraphics()
+    iLowLevelGraphics *GetLowLevelGraphics()
     {
         return mpLowLevelGraphics;
     }

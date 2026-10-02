@@ -13,7 +13,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cOpenALSoundData::cOpenALSoundData(const tString& asName, bool abStream) : iSoundData(asName,_W(""), abStream)
+cOpenALSoundData::cOpenALSoundData(const tString& asName, bool abStream) : iSoundData(asName, _W(""), abStream)
 {
     mpSample = NULL;
     mpStream = NULL;
@@ -52,7 +52,7 @@ bool cOpenALSoundData::CreateFromFile(const tWString &asFile)
 {
     SetFullPath(asFile);
 
-    int lFlags=0;
+    int lFlags = 0;
     unsigned int lCaps = 0;
 //        FSOUND_GetDriverCaps(0, &lCaps);//Current driver here instead of 0
 
@@ -74,7 +74,7 @@ bool cOpenALSoundData::CreateFromFile(const tWString &asFile)
         }
         else
         {
-            OAL_Stream_SetLoop(mpStream,mbLoopStream);
+            OAL_Stream_SetLoop(mpStream, mbLoopStream);
         }
         //mpStream->SetLoop(mbLoopStream);
         //mpSoundData->SetLoop(mbLoopStream);
@@ -91,7 +91,7 @@ bool cOpenALSoundData::CreateFromFile(const tWString &asFile)
         }
         else
         {
-            OAL_Sample_SetLoop(mpSample,true);
+            OAL_Sample_SetLoop(mpSample, true);
         }
         //mpSample->SetLoop ( true );
 
@@ -102,7 +102,7 @@ bool cOpenALSoundData::CreateFromFile(const tWString &asFile)
 
 //-----------------------------------------------------------------------
 
-iSoundChannel* cOpenALSoundData::CreateChannel(int alPriority)
+iSoundChannel *cOpenALSoundData::CreateChannel(int alPriority)
 {
     //if(mpSoundData==NULL)return NULL;
     if ( (mpSample == NULL) && (mpStream == NULL) )
@@ -111,26 +111,26 @@ iSoundChannel* cOpenALSoundData::CreateChannel(int alPriority)
     }
 
     int lHandle;
-    iSoundChannel *pSoundChannel=NULL;
+    iSoundChannel *pSoundChannel = NULL;
     if(mbStream)
     {
         lHandle = OAL_Stream_Play ( OAL_FREE, GetStream(), 1.0f, true );
-        if(lHandle==-1)
+        if(lHandle == -1)
         {
             return NULL;
         }
 
-        pSoundChannel = hplNew( cOpenALSoundChannel, (this,lHandle, mpSoundManger) );
+        pSoundChannel = hplNew( cOpenALSoundChannel, (this, lHandle, mpSoundManger) );
     }
     else
     {
         lHandle = OAL_Sample_Play ( OAL_FREE, GetSample(), 1.0f, true, alPriority);
-        if(lHandle==-1)
+        if(lHandle == -1)
         {
             return NULL;
         }
 
-        pSoundChannel = hplNew( cOpenALSoundChannel, (this,lHandle, mpSoundManger) );
+        pSoundChannel = hplNew( cOpenALSoundChannel, (this, lHandle, mpSoundManger) );
     }
 
     return pSoundChannel;
@@ -142,11 +142,11 @@ bool cOpenALSoundData::IsStereo()
 {
     if (mbStream)
     {
-        return (OAL_Stream_GetChannels(mpStream)==2);
+        return (OAL_Stream_GetChannels(mpStream) == 2);
     }
     if (mpSample)
     {
-        return (OAL_Sample_GetChannels(mpSample)==2);
+        return (OAL_Sample_GetChannels(mpSample) == 2);
     }
 
     return false;

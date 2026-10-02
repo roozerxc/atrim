@@ -37,7 +37,7 @@ public:
     float mfFPS;
     float mfUpdateRate;
 private:
-    iLowLevelSystem* mpLowLevelSystem;
+    iLowLevelSystem *mpLowLevelSystem;
     int mlFramecounter;
     float mfFrametimestart;
     float mfFrametime;
@@ -56,10 +56,10 @@ public:
     void AddFloat(const tString& asName, float afValue);
     void AddBool(const tString& asName, bool abValue);
 
-    const tString& GetString(const tString& asName);
+    const tString &GetString(const tString& asName);
 
     float GetFloat(const tString& asName, float afDefault);
-    int GetInt(const tString& asName,int alDefault);
+    int GetInt(const tString& asName, int alDefault);
     bool GetBool(const tString& asName, bool abDefault);
 private:
     std::map<tString, tString>  m_mapVars;
@@ -68,7 +68,7 @@ private:
 
 //---------------------------------------------------
 
-extern cEngine* CreateHPLEngine(eHplAPI aApi, tFlag alHplModuleFlags, cEngineInitVars *apVars);
+extern cEngine *CreateHPLEngine(eHplAPI aApi, tFlag alHplModuleFlags, cEngineInitVars *apVars);
 extern void DestroyHPLEngine(cEngine* apGame);
 
 //---------------------------------------------------
@@ -76,10 +76,10 @@ extern void DestroyHPLEngine(cEngine* apGame);
 class cEngine
 {
 public:
-    cEngine(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, cEngineInitVars *apVars);
+    cEngine(iLowLevelEngineSetup *apGameSetup, tFlag alHplSetupFlags, cEngineInitVars *apVars);
     ~cEngine();
 private:
-    void GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, cEngineInitVars *apVars);
+    void GameInit(iLowLevelEngineSetup *apGameSetup, tFlag alHplSetupFlags, cEngineInitVars *apVars);
 
 public:
 
@@ -94,43 +94,43 @@ public:
     void Exit();
     bool GetGameIsDone();
 
-    cScene* GetScene()
+    cScene *GetScene()
     {
         return mpScene;
     }
-    cResources* GetResources()
+    cResources *GetResources()
     {
         return mpResources;
     }
-    cUpdater* GetUpdater()
+    cUpdater *GetUpdater()
     {
         return mpUpdater;
     }
-    cSystem* GetSystem()
+    cSystem *GetSystem()
     {
         return mpSystem;
     }
-    cInput* GetInput()
+    cInput *GetInput()
     {
         return mpInput;
     }
-    cGraphics* GetGraphics()
+    cGraphics *GetGraphics()
     {
         return mpGraphics;
     }
-    cSound* GetSound()
+    cSound *GetSound()
     {
         return mpSound;
     }
-    cPhysics* GetPhysics()
+    cPhysics *GetPhysics()
     {
         return mpPhysics;
     }
-    cAI* GetAI()
+    cAI *GetAI()
     {
         return mpAI;
     }
-    cGui* GetGui()
+    cGui *GetGui()
     {
         return mpGui;
     }
@@ -181,12 +181,12 @@ public:
 
     ///// SCRIPT VAR METHODS ////////////////////
 
-    cScriptVar* CreateLocalVar(const tString& asName);
-    cScriptVar* GetLocalVar(const tString& asName);
-    tScriptVarMap* GetLocalVarMap();
-    cScriptVar* CreateGlobalVar(const tString& asName);
-    cScriptVar* GetGlobalVar(const tString& asName);
-    tScriptVarMap* GetGlobalVarMap();
+    cScriptVar *CreateLocalVar(const tString& asName);
+    cScriptVar *GetLocalVar(const tString& asName);
+    tScriptVarMap *GetLocalVarMap();
+    cScriptVar *CreateGlobalVar(const tString& asName);
+    cScriptVar *GetGlobalVar(const tString& asName);
+    tScriptVarMap *GetGlobalVarMap();
 
     void ClearAllVariables();
 
@@ -194,7 +194,7 @@ public:
 
     eVariableType GetEngineTypeFromString(const tString& asType);
     eVariableType GetEngineTypeFromStringW(const tWString& asType);
-    const tString& GetEngineTypeString(eVariableType aType)
+    const tString &GetEngineTypeString(eVariableType aType)
     {
         return mvEngineTypeStrings[aType];
     }
@@ -222,7 +222,7 @@ private:
 
     iMutex *mpMutex;
 
-    cFPSCounter* mpFPSCounter;
+    cFPSCounter *mpFPSCounter;
 
     iTimer *mpFrameTimer;
 

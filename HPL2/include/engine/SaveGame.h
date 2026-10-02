@@ -97,12 +97,12 @@ public:
     /**
       * Creates the SaveObject using previously saved objects and the data in this class.
       */
-    virtual iSaveObject* CreateSaveObject(cSaveObjectHandler *apSaveObjectHandler,cEngine *apGame)=0;
+    virtual iSaveObject *CreateSaveObject(cSaveObjectHandler *apSaveObjectHandler, cEngine *apGame) = 0;
 
     /**
       * The lower number the earlier it will be created.
       */
-    virtual int GetSaveCreatePrio()=0;
+    virtual int GetSaveCreatePrio() = 0;
 };
 
 
@@ -139,7 +139,7 @@ public:
     /**
     * Creates the SaveData that this class uses.
     */
-    virtual iSaveData* CreateSaveData()=0;
+    virtual iSaveData *CreateSaveData() = 0;
 
     /**
     * After all objects have been created, this function is called to enable setup.
@@ -165,10 +165,10 @@ private:
 
 //---------------------------------------------------------
 
-typedef std::multimap<int, iSaveObject*> tSaveObjectMap;
+typedef std::multimap<int, iSaveObject *> tSaveObjectMap;
 typedef tSaveObjectMap::iterator tSaveObjectMapIt;
 
-typedef cSTLMapIterator<iSaveObject*,tSaveObjectMap,tSaveObjectMapIt> cSaveObjectIterator;
+typedef cSTLMapIterator<iSaveObject *, tSaveObjectMap, tSaveObjectMapIt> cSaveObjectIterator;
 
 /**
 * This store all the SaveObjects created at load time.
@@ -182,7 +182,7 @@ public:
 public:
     void Add(iSaveObject *pObject);
 
-    iSaveObject* Get(int alId);
+    iSaveObject *Get(int alId);
 
     cSaveObjectIterator GetIterator();
 
@@ -198,10 +198,10 @@ private:
 
 //---------------------------------------------------------
 
-typedef std::multimap<int, iSaveData*> tSaveDataMap;
+typedef std::multimap<int, iSaveData *> tSaveDataMap;
 typedef tSaveDataMap::iterator tSaveDataMapIt;
 
-typedef cSTLMapIterator<iSaveData*,tSaveDataMap,tSaveDataMapIt> cSaveDataIterator;
+typedef cSTLMapIterator<iSaveData *, tSaveDataMap, tSaveDataMapIt> cSaveDataIterator;
 
 /**
 * Used to keep track of save data.
@@ -223,7 +223,7 @@ private:
     void AddVoidPtr(void **apPtr);
     void AddVoidClass(void *apClass);
 
-    iContainerIterator* CreateIteratorPtr();
+    iContainerIterator *CreateIteratorPtr();
 
     tSaveDataMap m_mapSaveData;
 };

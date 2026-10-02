@@ -21,7 +21,7 @@ public:
     cWidgetComboBox(cGuiSet *apSet, cGuiSkin *apSkin);
     virtual ~cWidgetComboBox();
 
-    void SetSelectedItem(int alX,bool abMoveList=false, bool abGenCallback=true);
+    void SetSelectedItem(int alX, bool abMoveList = false, bool abGenCallback = true);
     int GetSelectedItem()
     {
         return mlSelectedItem;

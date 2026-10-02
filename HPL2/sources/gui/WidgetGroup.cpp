@@ -33,7 +33,7 @@ cWidgetGroup::cWidgetGroup(cGuiSet* apSet, cGuiSkin *apSkin) : iWidget(eWidgetTy
 
 cWidgetGroup::~cWidgetGroup()
 {
-    if(mpSet->IsDestroyingSet()==false)
+    if(mpSet->IsDestroyingSet() == false)
     {
         mpSet->DestroyWidget(mpHeader);
     }
@@ -65,7 +65,7 @@ void cWidgetGroup::SetDefaultFontSize(const cVector2f& avSize)
 
 void cWidgetGroup::OnInit()
 {
-    mpHeader = mpSet->CreateWidgetLabel(cVector3f(mfHeaderOffset,-mpDefaultFont->mvSize.y*0.5f,0.1f),0, msText, this);
+    mpHeader = mpSet->CreateWidgetLabel(cVector3f(mfHeaderOffset, -mpDefaultFont->mvSize.y * 0.5f, 0.1f), 0, msText, this);
     mpHeader->SetTextAlign(eFontAlign_Left);
     mpHeader->SetAutogenerateSize(true);
 
@@ -89,7 +89,7 @@ void cWidgetGroup::OnLoadGraphics()
     mvGfxCorners[3] = mpSkin->GetGfx(eGuiSkinGfx_GroupCornerLD);
 
     mfHeaderOffset = mpSkin->GetAttribute(eGuiSkinAttribute_GroupHeaderOffset).x;
-    mbHeaderBreaksUpperBorder = (mpSkin->GetAttribute(eGuiSkinAttribute_GroupHeaderOverUpperBorder).x==0);
+    mbHeaderBreaksUpperBorder = (mpSkin->GetAttribute(eGuiSkinAttribute_GroupHeaderOverUpperBorder).x == 0);
 }
 
 //-----------------------------------------------------------------------
@@ -110,7 +110,7 @@ void cWidgetGroup::OnDraw(double adFixedDelta, cGuiClipRegion* apClipRegion)
     if(mbHeaderBreaksUpperBorder)
     {
         const cVector3f& vHeaderPos = mpHeader->GetLocalPosition();
-        cVector3f vPostHeaderPos = cVector3f(vHeaderPos.x + mpHeader->GetSize().x,0,0);
+        cVector3f vPostHeaderPos = cVector3f(vHeaderPos.x + mpHeader->GetSize().x, 0, 0);
 
         float fPreHeaderWidth = vHeaderPos.x;
         float fPostHeaderWidth = mvSize.x - fPreHeaderWidth - mpHeader->GetSize().x;
@@ -129,11 +129,11 @@ void cWidgetGroup::OnDraw(double adFixedDelta, cGuiClipRegion* apClipRegion)
             vOffset.x = mvGfxCorners[0]->GetActiveSize().x;
             vOffset.y = mvGfxCorners[0]->GetActiveSize().y;
 
-            vSize = mvSize - mvGfxCorners[2]->GetActiveSize()-mvGfxCorners[0]->GetActiveSize();
+            vSize = mvSize - mvGfxCorners[2]->GetActiveSize() - mvGfxCorners[0]->GetActiveSize();
 
-            mpSet->DrawGfx(mpGfxBackground,vOffset,
+            mpSet->DrawGfx(mpGfxBackground, vOffset,
                            vSize,
-                           cColor(1,1));
+                           cColor(1, 1));
         }
 
         {
@@ -142,30 +142,30 @@ void cWidgetGroup::OnDraw(double adFixedDelta, cGuiClipRegion* apClipRegion)
             //Right
             mpSet->DrawGfx(    mvGfxBorders[0],
                                cVector3f(    mvSize.x - mvGfxBorders[0]->GetActiveSize().x,
-                                             mvGfxCorners[1]->GetActiveSize().y,0),
+                                             mvGfxCorners[1]->GetActiveSize().y, 0),
                                cVector2f(    mvGfxBorders[0]->GetImageSize().x,
                                              mvSize.y - (mvGfxCorners[2]->GetActiveSize().y +
                                                      mvGfxCorners[1]->GetActiveSize().y)));
             //Left
             mpSet->DrawGfx(    mvGfxBorders[1],
-                               cVector3f(    0,mvGfxCorners[0]->GetActiveSize().y,0),
+                               cVector3f(    0, mvGfxCorners[0]->GetActiveSize().y, 0),
                                cVector2f(    mvGfxBorders[1]->GetImageSize().x,
                                              mvSize.y - (mvGfxCorners[3]->GetActiveSize().y +
                                                      mvGfxCorners[0]->GetActiveSize().y)));
 
             //Up
             mpSet->DrawGfx(mvGfxBorders[2],
-                           cVector3f(mvGfxCorners[0]->GetActiveSize().x,0,0),
-                           cVector2f(fPreHeaderWidth-4, mvGfxBorders[2]->GetActiveSize().y));
+                           cVector3f(mvGfxCorners[0]->GetActiveSize().x, 0, 0),
+                           cVector2f(fPreHeaderWidth - 4, mvGfxBorders[2]->GetActiveSize().y));
             mpSet->DrawGfx(mvGfxBorders[2],
-                           vPostHeaderPos+cVector3f(4,0,0),
-                           cVector2f(fPostHeaderWidth-mvGfxCorners[1]->GetActiveSize().x-4, mvGfxBorders[2]->GetActiveSize().y));
+                           vPostHeaderPos + cVector3f(4, 0, 0),
+                           cVector2f(fPostHeaderWidth - mvGfxCorners[1]->GetActiveSize().x - 4, mvGfxBorders[2]->GetActiveSize().y));
 
             //Down
             mpSet->DrawGfx(    mvGfxBorders[3],
                                cVector3f(    mvGfxCorners[3]->GetActiveSize().x,
-                                             mvSize.y - mvGfxCorners[3]->GetActiveSize().y,0),
-                               cVector2f(    mvSize.x - (mvGfxCorners[2]->GetActiveSize().x+
+                                             mvSize.y - mvGfxCorners[3]->GetActiveSize().y, 0),
+                               cVector2f(    mvSize.x - (mvGfxCorners[2]->GetActiveSize().x +
                                              mvGfxCorners[3]->GetActiveSize().x),
                                              mvGfxBorders[3]->GetImageSize().y));
 
@@ -173,15 +173,15 @@ void cWidgetGroup::OnDraw(double adFixedDelta, cGuiClipRegion* apClipRegion)
             ///////////////////////
             // Corners
             //Left Up
-            mpSet->DrawGfx(mvGfxCorners[0], cVector3f(0,0,0));
+            mpSet->DrawGfx(mvGfxCorners[0], cVector3f(0, 0, 0));
             //Right Up
-            mpSet->DrawGfx(mvGfxCorners[1], cVector3f(    mvSize.x - mvGfxCorners[1]->GetActiveSize().x,0,0));
+            mpSet->DrawGfx(mvGfxCorners[1], cVector3f(    mvSize.x - mvGfxCorners[1]->GetActiveSize().x, 0, 0));
 
             //Right Down
             mpSet->DrawGfx(mvGfxCorners[2], cVector3f(    mvSize.x -  mvGfxCorners[2]->GetActiveSize().x,
-                           mvSize.y -  mvGfxCorners[2]->GetActiveSize().y,0));
+                           mvSize.y -  mvGfxCorners[2]->GetActiveSize().y, 0));
             //Left Down
-            mpSet->DrawGfx(mvGfxCorners[3], cVector3f(    0,mvSize.y - mvGfxCorners[3]->GetActiveSize().y,0));
+            mpSet->DrawGfx(mvGfxCorners[3], cVector3f(    0, mvSize.y - mvGfxCorners[3]->GetActiveSize().y, 0));
         }
 
         mpSet->SetDrawOffset(0);

@@ -21,17 +21,17 @@ class iInputDevice;
 class cAction;
 class iSubAction;
 
-typedef std::map<tString, cAction*> tActionMap;
+typedef std::map<tString, cAction *> tActionMap;
 typedef tActionMap::iterator tActionMapIt;
 
-typedef std::multimap<int, cAction*> tActionIdMap;
+typedef std::multimap<int, cAction *> tActionIdMap;
 typedef tActionIdMap::iterator tActionIdMapIt;
 
-typedef std::list<iInputDevice*> tInputDeviceList;
+typedef std::list<iInputDevice *> tInputDeviceList;
 typedef tInputDeviceList::iterator tInputDeviceListIt;
 
 #if USE_GAMEPAD
-typedef std::list<iGamepad*> tGamepadList;
+typedef std::list<iGamepad *> tGamepadList;
 typedef tGamepadList::iterator tGamepadListIt;
 #endif
 
@@ -49,7 +49,7 @@ public:
     /**
      * Create and add a new action. The Name must be unique, and the Id is optional
      */
-    cAction* CreateAction(const tString& asName, int alId=-1);
+    cAction *CreateAction(const tString& asName, int alId = -1);
 
     /**
      * Check if an action is triggered.
@@ -86,13 +86,13 @@ public:
      *
      * \return currently used keyboard
      */
-    iKeyboard * GetKeyboard();
+    iKeyboard *GetKeyboard();
 
     /**
     *
     * \return currently used mouse
     */
-    iMouse * GetMouse();
+    iMouse *GetMouse();
 
 #if USE_GAMEPAD
     /**
@@ -111,7 +111,7 @@ public:
     *
     * \return gamepad in list
     */
-    iGamepad* GetGamepad(int i);
+    iGamepad *GetGamepad(int i);
 #endif
 
     /**
@@ -119,8 +119,8 @@ public:
     * \param asName name of action.
     * \return Pointer to action, if not found NULL.
     */
-    cAction* GetAction(const tString& asName);
-    cAction* GetAction(int alId);
+    cAction *GetAction(const tString& asName);
+    cAction *GetAction(int alId);
 
     /**
      * Destroys an action if it exists.
@@ -143,12 +143,12 @@ public:
      * \param &asName Name of action be be created.
      * \return NULL if no input was given.
      */
-    iSubAction* InputToSubAction();
+    iSubAction *InputToSubAction();
 
     bool isQuitMessagePosted();
     void resetQuitMessagePosted();
 
-    iLowLevelInput* GetLowLevel()
+    iLowLevelInput *GetLowLevel()
     {
         return mpLowLevelInput;
     }
@@ -164,8 +164,8 @@ private:
 
     iLowLevelInput *mpLowLevelInput;
 
-    iMouse* mpMouse;
-    iKeyboard* mpKeyboard;
+    iMouse *mpMouse;
+    iKeyboard *mpKeyboard;
 #if USE_GAMEPAD
     tGamepadList mlstGamepads;
 #endif

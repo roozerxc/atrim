@@ -20,7 +20,7 @@ cFileSearcherEntry::cFileSearcherEntry(const tWString& asPath)
     msPath = asPath;
 
     tWString sSepp = _W("/\\");
-    cString::GetStringVecW(msPath,mvPathDirs,&sSepp);
+    cString::GetStringVecW(msPath, mvPathDirs, &sSepp);
 }
 
 //-----------------------------------------------------------------------
@@ -54,19 +54,19 @@ cFileSearcher::~cFileSearcher()
 void cFileSearcher::AddDirectory(const tWString& asSearchPath, const tString &asMask, bool abAddSubDirectories)
 {
     //Make the path with only "/" and lower case.
-    tWString sPath = cString::ReplaceCharToW(asSearchPath,_W("\\"),_W("/"));
+    tWString sPath = cString::ReplaceCharToW(asSearchPath, _W("\\"), _W("/"));
 
     ///////////////////////////////
     //Add all files in directory
     tWStringList lstFileNames;
 
-    cPlatform::FindFilesInDir(lstFileNames,sPath, cString::To16Char(asMask));
+    cPlatform::FindFilesInDir(lstFileNames, sPath, cString::To16Char(asMask));
 
-    for(tWStringListIt it = lstFileNames.begin(); it!=lstFileNames.end(); it++)
+    for(tWStringListIt it = lstFileNames.begin(); it != lstFileNames.end(); it++)
     {
         tWString& sFile = *it;
         tString sLowFile = cString::ToLowerCase(cString::To8Char(sFile));
-        tWString sFilePath = cString::ReplaceCharToW( cPlatform::GetFullFilePath( cString::SetFilePathW(sFile,sPath)), _W("\\"),_W("/"));;
+        tWString sFilePath = cString::ReplaceCharToW( cPlatform::GetFullFilePath( cString::SetFilePathW(sFile, sPath)), _W("\\"), _W("/"));;
 
         //Check if file and path already exist
         tFilePathMapIt pathIt = m_mapFiles.find(sLowFile);
@@ -86,13 +86,13 @@ void cFileSearcher::AddDirectory(const tWString& asSearchPath, const tString &as
     if(abAddSubDirectories)
     {
         tWStringList lstDirNames;
-        cPlatform::FindFoldersInDir(lstDirNames,sPath,false);
+        cPlatform::FindFoldersInDir(lstDirNames, sPath, false);
 
-        for(tWStringListIt it = lstDirNames.begin(); it!=lstDirNames.end(); it++)
+        for(tWStringListIt it = lstDirNames.begin(); it != lstDirNames.end(); it++)
         {
             tWString sNewPath = cString::SetFilePathW(*it, sPath);
 
-            AddDirectory(sNewPath,asMask,true);
+            AddDirectory(sNewPath, asMask, true);
         }
     }
 }
@@ -107,7 +107,7 @@ void cFileSearcher::ClearDirectories()
 
 //-----------------------------------------------------------------------
 
-const tWString& cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int *apEqualCount)
+const tWString &cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int *apEqualCount)
 {
     tString sFile = cString::GetFileName(asFileNameAndPath);
     tString sLowName = cString::ToLowerCase(sFile);
@@ -128,7 +128,7 @@ const tWString& cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
     //Count the number of files with same name
     //if 1, just return it.
     size_t lCount = m_mapFiles.count(sLowName);
-    if(lCount==1 && apEqualCount==NULL)
+    if(lCount == 1 && apEqualCount == NULL)
     {
         return it->second.msPath;
     }
@@ -148,23 +148,23 @@ const tWString& cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
     }
 
     tWStringVec vWantedDirs;
-    tWString sSepp =_W("/\\");
+    tWString sSepp = _W("/\\");
 
     int lBestEqualCount = 0;
     tFilePathMapIt bestEqualIt = it;
 
-    cString::GetStringVecW(sWantedPath, vWantedDirs,&sSepp);
+    cString::GetStringVecW(sWantedPath, vWantedDirs, &sSepp);
 
     //Iterate according to count and compare
-    for(size_t itcount=0; itcount<lCount; ++itcount, ++it)
+    for(size_t itcount = 0; itcount < lCount; ++itcount, ++it)
     {
         ///////////////////////////////
         //Compare the wanted path with current, seeing how many directories are in common
 
         //Start with the wanted path dir
-        int lEqualCount1 =0;
-        int j = (int)it->second.mvPathDirs.size()-1;
-        for(int i= (int)vWantedDirs.size()-1; (i>=0 && j>=0); --j)
+        int lEqualCount1 = 0;
+        int j = (int)it->second.mvPathDirs.size() - 1;
+        for(int i = (int)vWantedDirs.size() - 1; (i >= 0 && j >= 0); --j)
         {
             //if equal, increase equal count and go to next wanted dir
             if(vWantedDirs[i] == it->second.mvPathDirs[j])
@@ -175,9 +175,9 @@ const tWString& cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
         }
 
         //Start with the available path dir
-        int lEqualCount2 =0;
-        j = (int)vWantedDirs.size()-1;
-        for(int i= (int)it->second.mvPathDirs.size()-1; (i>=0 && j>=0); --j)
+        int lEqualCount2 = 0;
+        j = (int)vWantedDirs.size() - 1;
+        for(int i = (int)it->second.mvPathDirs.size() - 1; (i >= 0 && j >= 0); --j)
         {
             //if equal, increase equal count and go to next wanted dir
             if(it->second.mvPathDirs[i] == vWantedDirs[j])

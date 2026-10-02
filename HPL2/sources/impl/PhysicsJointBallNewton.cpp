@@ -15,12 +15,12 @@ namespace hpl
 cPhysicsJointBallNewton::cPhysicsJointBallNewton(const tString &asName,
         iPhysicsBody *apParentBody, iPhysicsBody *apChildBody,
         iPhysicsWorld *apWorld, const cVector3f &avPivotPoint, const cVector3f &avPinDir)
-    : iPhysicsJointNewton<iPhysicsJointBall>(asName,apParentBody,apChildBody,apWorld,avPivotPoint,avPinDir)
+    : iPhysicsJointNewton<iPhysicsJointBall>(asName, apParentBody, apChildBody, apWorld, avPivotPoint, avPinDir)
 {
-    mpNewtonJoint = NewtonConstraintCreateBall(mpNewtonWorld,avPivotPoint.v,
+    mpNewtonJoint = NewtonConstraintCreateBall(mpNewtonWorld, avPivotPoint.v,
                     mpNewtonChildBody, mpNewtonParentBody);
 
-    mfMaxConeAngle =0;
+    mfMaxConeAngle = 0;
     mfMaxTwistAngle = 0;
 }
 
@@ -40,7 +40,7 @@ cPhysicsJointBallNewton::~cPhysicsJointBallNewton()
 
 void cPhysicsJointBallNewton::SetConeLimits(float afMaxConeAngle, float afMaxTwistAngle)
 {
-    NewtonBallSetConeLimits(mpNewtonJoint, mvStartPinDir.v,afMaxConeAngle,afMaxTwistAngle);
+    NewtonBallSetConeLimits(mpNewtonJoint, mvStartPinDir.v, afMaxConeAngle, afMaxTwistAngle);
     mfMaxConeAngle = afMaxConeAngle;
     mfMaxTwistAngle = afMaxTwistAngle;
 }
@@ -48,7 +48,7 @@ void cPhysicsJointBallNewton::SetConeLimits(float afMaxConeAngle, float afMaxTwi
 cVector3f cPhysicsJointBallNewton::GetAngles()
 {
     cVector3f vAngles;
-    NewtonBallGetJointAngle(mpNewtonJoint,&vAngles.v[0]);
+    NewtonBallGetJointAngle(mpNewtonJoint, &vAngles.v[0]);
     return vAngles;
 }
 
@@ -56,18 +56,18 @@ cVector3f cPhysicsJointBallNewton::GetAngles()
 
 cVector3f cPhysicsJointBallNewton::GetVelocity()
 {
-    return cVector3f(0,0,0);
+    return cVector3f(0, 0, 0);
 }
 cVector3f cPhysicsJointBallNewton::GetAngularVelocity()
 {
     cVector3f vVel;
-    NewtonBallGetJointOmega(mpNewtonJoint,&vVel.v[0]);
+    NewtonBallGetJointOmega(mpNewtonJoint, &vVel.v[0]);
     return vVel;
 }
 float cPhysicsJointBallNewton::GetForceSize()
 {
     cVector3f vForce;
-    NewtonBallGetJointForce(mpNewtonJoint,&vForce.v[0]);
+    NewtonBallGetJointForce(mpNewtonJoint, &vForce.v[0]);
     return vForce.Length();
 }
 

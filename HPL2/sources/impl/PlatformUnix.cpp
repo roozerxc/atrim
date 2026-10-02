@@ -48,7 +48,7 @@ unsigned long cPlatform::GetFileSize(const tWString& asFileName)
 bool cPlatform::CopyFileToBuffer(const tWString& asFileName, void *apBuffer, unsigned long alSize)
 {
     FILE *pFile = OpenFile(asFileName, _W("r"));
-    if (pFile==NULL)
+    if (pFile == NULL)
     {
         return false;
     }
@@ -76,7 +76,7 @@ void cPlatform::RemoveFile(const tWString& asFilePath)
 //-----------------------------------------------------------------------
 #define COPY_BUFFSIZE 8192
 
-bool cPlatform::CloneFile(    const tWString& asSrcFileName,const tWString& asDestFileName,
+bool cPlatform::CloneFile(    const tWString& asSrcFileName, const tWString& asDestFileName,
                               bool abFailIfExists)
 {
     std::ifstream IN (cString::To8Char(asSrcFileName).c_str(), std::ios::binary);
@@ -90,7 +90,7 @@ bool cPlatform::CloneFile(    const tWString& asSrcFileName,const tWString& asDe
 
 bool cPlatform::CreateFolder(const tWString& asPath)
 {
-    return mkdir(cString::To8Char(asPath).c_str(),0755) == 0;
+    return mkdir(cString::To8Char(asPath).c_str(), 0755) == 0;
 }
 
 //-----------------------------------------------------------------------
@@ -102,7 +102,7 @@ bool cPlatform::RemoveFolder(const tWString& asPath, bool abDeleteAllFiles, bool
     if(abDeleteAllFiles)
     {
         tWStringList lstFiles;
-        FindFilesInDir(lstFiles,asPath,_W("*"), true);
+        FindFilesInDir(lstFiles, asPath, _W("*"), true);
         for(tWStringListIt it = lstFiles.begin(); it != lstFiles.end(); ++it)
         {
             tWString sFilePath = cString::SetFilePathW(*it, asPath);
@@ -115,15 +115,15 @@ bool cPlatform::RemoveFolder(const tWString& asPath, bool abDeleteAllFiles, bool
     if(abDeleteAllSubFolders)
     {
         tWStringList lstFolders;
-        FindFoldersInDir(lstFolders, asPath,true, false);
+        FindFoldersInDir(lstFolders, asPath, true, false);
         for(tWStringListIt it = lstFolders.begin(); it != lstFolders.end(); ++it)
         {
             tWString sFolderPath = cString::SetFilePathW(*it, asPath);
-            RemoveFolder(sFolderPath, abDeleteAllFiles,abDeleteAllSubFolders);
+            RemoveFolder(sFolderPath, abDeleteAllFiles, abDeleteAllSubFolders);
         }
     }
 
-    if(rmdir(cString::To8Char(asPath).c_str())!=0)
+    if(rmdir(cString::To8Char(asPath).c_str()) != 0)
     {
 //            wchar_t sTempString[2048];
 //            FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,0,GetLastError(),0,sTempString,2048,NULL);
@@ -138,7 +138,7 @@ bool cPlatform::RemoveFolder(const tWString& asPath, bool abDeleteAllFiles, bool
 bool cPlatform::FolderExists(const tWString& asPath)
 {
     struct stat statbuf;
-    if (stat(cString::To8Char(asPath).c_str(), &statbuf)!=0)
+    if (stat(cString::To8Char(asPath).c_str(), &statbuf) != 0)
     {
         return false;
     }
@@ -221,44 +221,44 @@ static inline int patiMatch (const wchar_t *pattern, const wchar_t *string)
         return !string[0];
 
     case _W('*') :
-        return patiMatch(pattern+1, string) || (string[0] && patiMatch(pattern, string+1));
+        return patiMatch(pattern + 1, string) || (string[0] && patiMatch(pattern, string + 1));
 
     case _W('?') :
-        return string[0] && patiMatch(pattern+1, string+1);
+        return string[0] && patiMatch(pattern + 1, string + 1);
 
     default  :
-        return (towupper(pattern[0]) == towupper(string[0])) && patiMatch(pattern+1, string+1);
+        return (towupper(pattern[0]) == towupper(string[0])) && patiMatch(pattern + 1, string + 1);
     }
 }
-void cPlatform::FindFilesInDir(tWStringList &alstStrings,const tWString& asDir, const tWString& asMask, bool abAddHidden)
+void cPlatform::FindFilesInDir(tWStringList &alstStrings, const tWString& asDir, const tWString& asMask, bool abAddHidden)
 {
     //Get the search string
     wchar_t sSpec[256];
-    wchar_t end = asDir[asDir.size()-1];
+    wchar_t end = asDir[asDir.size() - 1];
     //The needed structs
     DIR *dirhandle;
     dirent *_entry;
     struct stat statbuff;
     tWString fileentry;
 
-    if ((dirhandle = opendir(cString::To8Char(asDir).c_str()))==NULL)
+    if ((dirhandle = opendir(cString::To8Char(asDir).c_str())) == NULL)
     {
         return;
     }
 
     while ((_entry = readdir(dirhandle)) != NULL)
     {
-        if (end==_W('/'))
+        if (end == _W('/'))
         {
-            swprintf(sSpec,256,_W("%ls%s"),asDir.c_str(),_entry->d_name);
+            swprintf(sSpec, 256, _W("%ls%s"), asDir.c_str(), _entry->d_name);
         }
         else
         {
-            swprintf(sSpec,256,_W("%ls/%s"),asDir.c_str(),_entry->d_name);
+            swprintf(sSpec, 256, _W("%ls/%s"), asDir.c_str(), _entry->d_name);
         }
 
         // skip unreadable
-        if (stat(cString::To8Char(sSpec).c_str(),&statbuff) ==-1)
+        if (stat(cString::To8Char(sSpec).c_str(), &statbuff) == -1)
         {
             continue;
         }
@@ -270,7 +270,7 @@ void cPlatform::FindFilesInDir(tWStringList &alstStrings,const tWString& asDir, 
 
         fileentry.assign(cString::To16Char(_entry->d_name));
 
-        if (!patiMatch(asMask.c_str(),fileentry.c_str()))
+        if (!patiMatch(asMask.c_str(), fileentry.c_str()))
         {
             continue;
         }
@@ -281,12 +281,12 @@ void cPlatform::FindFilesInDir(tWStringList &alstStrings,const tWString& asDir, 
 }
 
 //-----------------------------------------------------------------------
-void cPlatform::FindFoldersInDir(tWStringList &alstStrings,const tWString& asDir, bool abAddHidden, bool abAddUpFolder)
+void cPlatform::FindFoldersInDir(tWStringList &alstStrings, const tWString& asDir, bool abAddHidden, bool abAddUpFolder)
 {
     //Get the search string
     char sSpec[256];
     tString sDir8 = cString::To8Char(asDir);
-    char end = sDir8[sDir8.size()-1];
+    char end = sDir8[sDir8.size() - 1];
 
     if (end != '/')
     {
@@ -299,17 +299,17 @@ void cPlatform::FindFoldersInDir(tWStringList &alstStrings,const tWString& asDir
     struct stat statbuff;
     tWString fileentry;
 
-    if ((dirhandle = opendir(cString::To8Char(asDir).c_str()))==NULL)
+    if ((dirhandle = opendir(cString::To8Char(asDir).c_str())) == NULL)
     {
         return;
     }
 
     while ((_entry = readdir(dirhandle)) != NULL)
     {
-        snprintf(sSpec,256,"%s%s",sDir8.c_str(),_entry->d_name);
+        snprintf(sSpec, 256, "%s%s", sDir8.c_str(), _entry->d_name);
 
         // skip unreadable
-        if (stat(sSpec,&statbuff) ==-1)
+        if (stat(sSpec, &statbuff) == -1)
         {
             continue;
         }
@@ -330,7 +330,7 @@ void cPlatform::FindFoldersInDir(tWStringList &alstStrings,const tWString& asDir
             continue;
         }
         // Skip self
-        if (_entry->d_name[0] == '.' && _entry->d_name[1]=='\0')
+        if (_entry->d_name[0] == '.' && _entry->d_name[1] == '\0')
         {
             continue;
         }

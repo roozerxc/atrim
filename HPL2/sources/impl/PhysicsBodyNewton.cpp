@@ -19,11 +19,11 @@ bool cPhysicsBodyNewton::mbUseCallback = true;
 
 //-----------------------------------------------------------------------
 
-cPhysicsBodyNewton::cPhysicsBodyNewton(const tString &asName,iPhysicsWorld *apWorld,iCollideShape *apShape)
-    : iPhysicsBody(asName,apWorld, apShape)
+cPhysicsBodyNewton::cPhysicsBodyNewton(const tString &asName, iPhysicsWorld *apWorld, iCollideShape *apShape)
+    : iPhysicsBody(asName, apWorld, apShape)
 {
-    cPhysicsWorldNewton *pWorldNewton = static_cast<cPhysicsWorldNewton*>(apWorld);
-    cCollideShapeNewton *pShapeNewton = static_cast<cCollideShapeNewton*>(apShape);
+    cPhysicsWorldNewton *pWorldNewton = static_cast<cPhysicsWorldNewton *>(apWorld);
+    cCollideShapeNewton *pShapeNewton = static_cast<cCollideShapeNewton *>(apShape);
 
     mpNewtonWorld = pWorldNewton->GetNewtonWorld();
     mpNewtonBody = NewtonCreateBody(pWorldNewton->GetNewtonWorld(),
@@ -36,24 +36,24 @@ cPhysicsBodyNewton::cPhysicsBodyNewton(const tString &asName,iPhysicsWorld *apWo
     // Setup the callbacks and set this body as user data
     // This is so that the transform gets updated and
     // to add gravity, forces and user sink.
-    NewtonBodySetForceAndTorqueCallback(mpNewtonBody,OnUpdateCallback);
+    NewtonBodySetForceAndTorqueCallback(mpNewtonBody, OnUpdateCallback);
     NewtonBodySetTransformCallback(mpNewtonBody, OnTransformCallback);
     NewtonBodySetUserData(mpNewtonBody, this);
 
     //Set default property settings
     mbGravity = true;
 
-    mfMaxLinearSpeed =0;
-    mfMaxAngularSpeed =0;
-    mfMass =0;
+    mfMaxLinearSpeed = 0;
+    mfMaxAngularSpeed = 0;
+    mfMass = 0;
 
     mfAutoDisableLinearThreshold = 0.01f;
     mfAutoDisableAngularThreshold = 0.01f;
     mlAutoDisableNumSteps = 10;
 
     //Clear the force accumulators
-    mvTotalForce = cVector3f(0,0,0);
-    mvTotalTorque = cVector3f(0,0,0);
+    mvTotalForce = cVector3f(0, 0, 0);
+    mvTotalTorque = cVector3f(0, 0, 0);
 
     //Log("Creating newton body '%s' %d\n",msName.c_str(),(size_t)this);
 }
@@ -70,7 +70,7 @@ cPhysicsBodyNewton::~cPhysicsBodyNewton()
 void cPhysicsBodyNewton::DeleteLowLevel()
 {
     //Log(" Newton body %d\n", (size_t)mpNewtonBody);
-    NewtonDestroyBody(mpNewtonWorld,mpNewtonBody);
+    NewtonDestroyBody(mpNewtonWorld, mpNewtonBody);
     //Log(" Callback\n");
     hplDelete(mpCallback);
 }
@@ -85,12 +85,12 @@ void cPhysicsBodyNewton::DeleteLowLevel()
 
 void cPhysicsBodyNewtonCallback::OnTransformUpdate(iEntity3D * apEntity)
 {
-    if(cPhysicsBodyNewton::mbUseCallback==false)
+    if(cPhysicsBodyNewton::mbUseCallback == false)
     {
         return;
     }
 
-    cPhysicsBodyNewton *pRigidBody = static_cast<cPhysicsBodyNewton*>(apEntity);
+    cPhysicsBodyNewton *pRigidBody = static_cast<cPhysicsBodyNewton *>(apEntity);
     NewtonBodySetMatrix(pRigidBody->mpNewtonBody, &apEntity->GetLocalMatrix().GetTranspose().m[0][0]);
 }
 
@@ -111,7 +111,7 @@ void cPhysicsBodyNewton::SetMaterial(iPhysicsMaterial* apMaterial)
         return;
     }
 
-    cPhysicsMaterialNewton* pNewtonMat = static_cast<cPhysicsMaterialNewton*>(mpMaterial);
+    cPhysicsMaterialNewton* pNewtonMat = static_cast<cPhysicsMaterialNewton *>(mpMaterial);
 
     NewtonBodySetMaterialGroupID(mpNewtonBody, pNewtonMat->GetId());
 }
@@ -151,7 +151,7 @@ void cPhysicsBodyNewton::SetLinearDamping(float afDamping)
         afDamping = 0.001f;
     }
 
-    NewtonBodySetLinearDamping(mpNewtonBody,afDamping);
+    NewtonBodySetLinearDamping(mpNewtonBody, afDamping);
 }
 float cPhysicsBodyNewton::GetLinearDamping() const
 {
@@ -167,13 +167,13 @@ void cPhysicsBodyNewton::SetAngularDamping(float afDamping)
         afDamping = 0.001f;
     }
 
-    float fDamp[3] = {afDamping,afDamping,afDamping};
-    NewtonBodySetAngularDamping(mpNewtonBody,fDamp);
+    float fDamp[3] = {afDamping, afDamping, afDamping};
+    NewtonBodySetAngularDamping(mpNewtonBody, fDamp);
 }
 float cPhysicsBodyNewton::GetAngularDamping() const
 {
     float fDamp[3];
-    NewtonBodyGetAngularDamping(mpNewtonBody,fDamp);
+    NewtonBodyGetAngularDamping(mpNewtonBody, fDamp);
     return fDamp[0];
 }
 
@@ -205,7 +205,7 @@ cVector3f cPhysicsBodyNewton::GetInertiaVector()
 {
     float fIxx, fIyy, fIzz, fMass;
 
-    NewtonBodyGetMassMatrix(mpNewtonBody,&fMass, &fIxx, &fIyy, &fIzz);
+    NewtonBodyGetMassMatrix(mpNewtonBody, &fMass, &fIxx, &fIyy, &fIzz);
 
     return cVector3f(fIxx, fIyy, fIzz);
 }
@@ -216,23 +216,23 @@ cMatrixf cPhysicsBodyNewton::GetInertiaMatrix()
 {
     float fIxx, fIyy, fIzz, fMass;
 
-    NewtonBodyGetMassMatrix(mpNewtonBody,&fMass, &fIxx, &fIyy, &fIzz);
+    NewtonBodyGetMassMatrix(mpNewtonBody, &fMass, &fIxx, &fIyy, &fIzz);
 
     cMatrixf mtxRot = GetLocalMatrix().GetRotation();
     cMatrixf mtxTransRot = mtxRot.GetTranspose();
-    cMatrixf mtxI(    fIxx,0,      0,    0,
-                      0,     fIyy,0,    0,
+    cMatrixf mtxI(    fIxx, 0,      0,    0,
+                      0,     fIyy, 0,    0,
                       0,     0,      fIzz,    0,
                       0,     0,      0,    1);
 
-    return cMath::MatrixMul(cMath::MatrixMul(mtxRot,mtxI), mtxTransRot);
+    return cMath::MatrixMul(cMath::MatrixMul(mtxRot, mtxI), mtxTransRot);
 }
 
 //-----------------------------------------------------------------------
 
 void  cPhysicsBodyNewton::SetMass(float afMass)
 {
-    cCollideShapeNewton *pShapeNewton = static_cast<cCollideShapeNewton*>(mpShape);
+    cCollideShapeNewton *pShapeNewton = static_cast<cCollideShapeNewton *>(mpShape);
 
     cVector3f vInertia;// = pShapeNewton->GetInertia(afMass);
     cVector3f vOffset;
@@ -241,7 +241,7 @@ void  cPhysicsBodyNewton::SetMass(float afMass)
             vInertia.v, vOffset.v);
     vInertia = vInertia * afMass;
 
-    NewtonBodySetCentreOfMass(mpNewtonBody,vOffset.v);
+    NewtonBodySetCentreOfMass(mpNewtonBody, vOffset.v);
 
     NewtonBodySetMassMatrix(mpNewtonBody, afMass, vInertia.x, vInertia.y, vInertia.z);
     mfMass = afMass;
@@ -253,13 +253,13 @@ float cPhysicsBodyNewton::GetMass() const
 
 void  cPhysicsBodyNewton::SetMassCentre(const cVector3f& avCentre)
 {
-    NewtonBodySetCentreOfMass(mpNewtonBody,avCentre.v);
+    NewtonBodySetCentreOfMass(mpNewtonBody, avCentre.v);
 }
 
 cVector3f cPhysicsBodyNewton::GetMassCentre() const
 {
     cVector3f vCentre;
-    NewtonBodyGetCentreOfMass(mpNewtonBody,vCentre.v);
+    NewtonBodyGetCentreOfMass(mpNewtonBody, vCentre.v);
     return vCentre;
 }
 
@@ -279,9 +279,9 @@ void cPhysicsBodyNewton::AddForceAtPosition(const cVector3f &avForce, const cVec
 
     cVector3f vLocalPos = avPos - GetLocalPosition();
     cVector3f vMassCentre = GetMassCentre();
-    if(vMassCentre != cVector3f(0,0,0))
+    if(vMassCentre != cVector3f(0, 0, 0))
     {
-        vMassCentre = cMath::MatrixMul(GetLocalMatrix().GetRotation(),vMassCentre);
+        vMassCentre = cMath::MatrixMul(GetLocalMatrix().GetRotation(), vMassCentre);
         vLocalPos -= vMassCentre;
     }
 
@@ -306,7 +306,7 @@ void cPhysicsBodyNewton::AddTorque(const cVector3f &avTorque)
 void cPhysicsBodyNewton::AddImpulse(const cVector3f &avImpulse)
 {
     cVector3f vMassCentre = GetMassCentre();
-    if(vMassCentre != cVector3f(0,0,0))
+    if(vMassCentre != cVector3f(0, 0, 0))
     {
         cVector3f vCentreOffset = cMath::MatrixMul( GetWorldMatrix().GetRotation(),
                                   vMassCentre);
@@ -332,7 +332,7 @@ void cPhysicsBodyNewton::Enable()
 }
 bool cPhysicsBodyNewton::GetEnabled() const
 {
-    return NewtonBodyGetSleepState(mpNewtonBody) ==0?true: false;
+    return NewtonBodyGetSleepState(mpNewtonBody) == 0 ? true : false;
 }
 
 //-----------------------------------------------------------------------
@@ -390,12 +390,12 @@ int cPhysicsBodyNewton::GetAutoDisableNumSteps() const
 
 void cPhysicsBodyNewton::SetContinuousCollision(bool abOn)
 {
-    NewtonBodySetContinuousCollisionMode(mpNewtonBody,abOn ? 1 : 0);
+    NewtonBodySetContinuousCollisionMode(mpNewtonBody, abOn ? 1 : 0);
 }
 
 bool cPhysicsBodyNewton::GetContinuousCollision()
 {
-    return NewtonBodyGetContinuousCollisionMode(mpNewtonBody)==1 ? true : false;
+    return NewtonBodyGetContinuousCollisionMode(mpNewtonBody) == 1 ? true : false;
 }
 
 //-----------------------------------------------------------------------
@@ -414,17 +414,17 @@ bool cPhysicsBodyNewton::GetGravity() const
 
 ////////////////////////////////////////////
 
-void cPhysicsBodyNewton::RenderDebugGeometry(iLowLevelGraphics *apLowLevel,const cColor &aColor)
+void cPhysicsBodyNewton::RenderDebugGeometry(iLowLevelGraphics *apLowLevel, const cColor &aColor)
 {
-    mpWorld->RenderShapeDebugGeometry(mpShape,GetLocalMatrix(),apLowLevel, aColor);
+    mpWorld->RenderShapeDebugGeometry(mpShape, GetLocalMatrix(), apLowLevel, aColor);
 }
 
 //-----------------------------------------------------------------------
 
 void cPhysicsBodyNewton::ClearForces()
 {
-    mvTotalForce = cVector3f(0,0,0);
-    mvTotalTorque = cVector3f(0,0,0);
+    mvTotalForce = cVector3f(0, 0, 0);
+    mvTotalTorque = cVector3f(0, 0, 0);
 }
 
 //-----------------------------------------------------------------------
@@ -453,7 +453,7 @@ void cPhysicsBodyNewton::OnTransformCallback(const NewtonBody* apBody, const dFl
 //callback for buoyancy
 static cPlanef gSurfacePlane;
 static int BuoyancyPlaneCallback (const int alCollisionID, void *apContext,
-                                  const float* afGlobalSpaceMatrix, float* afGlobalSpacePlane)
+                                  const float *afGlobalSpaceMatrix, float *afGlobalSpacePlane)
 {
     afGlobalSpacePlane[0] = gSurfacePlane.a;
     afGlobalSpacePlane[1] = gSurfacePlane.b;
@@ -469,7 +469,7 @@ void cPhysicsBodyNewton::OnUpdateCallback(const NewtonBody* apBody, dFloat afTim
 
     cPhysicsBodyNewton* pRigidBody = (cPhysicsBodyNewton*) NewtonBodyGetUserData(apBody);
 
-    if(pRigidBody->IsActive()==false)
+    if(pRigidBody->IsActive() == false)
     {
         return;
     }
@@ -479,7 +479,7 @@ void cPhysicsBodyNewton::OnUpdateCallback(const NewtonBody* apBody, dFloat afTim
     if(pRigidBody->GetEnabled())
     {
         //If not in update list, add body.
-        if(pRigidBody->IsInUpdateList()==false)
+        if(pRigidBody->IsInUpdateList() == false)
         {
             pRigidBody->GetWorld()->AddBodyToUpdateList(pRigidBody);
         }
@@ -498,7 +498,7 @@ void cPhysicsBodyNewton::OnUpdateCallback(const NewtonBody* apBody, dFloat afTim
 
     ////////////////////////////
     // Create Buoyancy
-    if (pRigidBody->mBuoyancy.mbActive && pRigidBody->mfBuoyancyDensityMul>0)
+    if (pRigidBody->mBuoyancy.mbActive && pRigidBody->mfBuoyancyDensityMul > 0)
     {
         cVector3f vGravity = pRigidBody->mpWorld->GetGravity();
 

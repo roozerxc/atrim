@@ -20,7 +20,7 @@ class cGpuShaderManager : public iResourceManager
 {
 public:
     cGpuShaderManager(cFileSearcher *apFileSearcher, iLowLevelGraphics *apLowLevelGraphics,
-                      iLowLevelResources *apLowLevelResources,iLowLevelSystem *apLowLevelSystem);
+                      iLowLevelResources *apLowLevelResources, iLowLevelSystem *apLowLevelSystem);
     ~cGpuShaderManager();
 
     void CheckFeatureSupport();
@@ -32,7 +32,7 @@ public:
      * \param aType type of the program
      * \return
      */
-    iGpuShader* CreateShader(const tString& asName,eGpuShaderType aType, cParserVarContainer *apVarContainer);
+    iGpuShader *CreateShader(const tString& asName, eGpuShaderType aType, cParserVarContainer *apVarContainer);
 
     void Destroy(iResourceBase* apResource);
     void Unload(iResourceBase* apResource);
@@ -41,7 +41,7 @@ private:
     bool IsShaderSupported(const tString& asName, eGpuShaderType aType);
 
     iLowLevelGraphics *mpLowLevelGraphics;
-    cPreprocessParser* mpPreprocessParser;
+    cPreprocessParser *mpPreprocessParser;
 };
 
 };

@@ -38,7 +38,7 @@ void cThreadWin32::Start()
 void cThreadWin32::Stop()
 {
     mbThreadActive = false;
-    WaitForSingleObject(mpThreadHandle,INFINITE);
+    WaitForSingleObject(mpThreadHandle, INFINITE);
     mpThreadHandle = NULL;
 }
 

@@ -17,7 +17,7 @@ public:
     tWString mwsText;
 };
 
-typedef std::map<tString, cLanguageEntry*> tLanguageEntryMap;
+typedef std::map<tString, cLanguageEntry *> tLanguageEntryMap;
 typedef tLanguageEntryMap::iterator tLanguageEntryMapIt;
 
 //--------------------------------
@@ -33,7 +33,7 @@ public:
     tLanguageEntryMap m_mapEntries;
 };
 
-typedef std::map<tString, cLanguageCategory*> tLanguageCategoryMap;
+typedef std::map<tString, cLanguageCategory *> tLanguageCategoryMap;
 typedef tLanguageCategoryMap::iterator tLanguageCategoryMapIt;
 
 //--------------------------------
@@ -46,9 +46,9 @@ public:
 
     bool AddFromFile(const tWString& asFile, bool abAddResourceDirs, const tWString& asAltPath = _W(""));
 
-    const tWString& Translate(const tString& asCat, const tString& asName);
+    const tWString &Translate(const tString& asCat, const tString& asName);
 
-    tLanguageCategoryMap* GetCategoryMap()
+    tLanguageCategoryMap *GetCategoryMap()
     {
         return &m_mapCategories;
     }

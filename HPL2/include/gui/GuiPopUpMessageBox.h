@@ -30,7 +30,7 @@ protected:
     cWidgetButton *mvButtons[2];
     cWidgetLabel *mpLabel;
 
-    void * mpCallbackObject;
+    void *mpCallbackObject;
     tGuiCallbackFunc mpCallback;
 };
 

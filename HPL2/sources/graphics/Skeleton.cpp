@@ -15,7 +15,7 @@ namespace hpl
 
 cSkeleton::cSkeleton()
 {
-    mpRootBone = hplNew( cBone, ("__root_bone","",this) );
+    mpRootBone = hplNew( cBone, ("__root_bone", "", this) );
     mpRootBone->SetTransform(cMatrixf::Identity);
     mpRootBone->SetTransformUnscaled(cMatrixf::Identity);
 }
@@ -41,7 +41,7 @@ void cSkeleton::AddBone(cBone* apBone)
 {
     mvBones.push_back(apBone);
 
-    m_mapBonesIdxByName.insert(tBoneIdxNameMap::value_type(apBone->GetName(), (int)mvBones.size()-1));
+    m_mapBonesIdxByName.insert(tBoneIdxNameMap::value_type(apBone->GetName(), (int)mvBones.size() - 1));
 }
 
 void cSkeleton::RemoveBone(cBone* apBone)
@@ -59,40 +59,40 @@ void cSkeleton::RemoveBone(cBone* apBone)
     //Rebuild the map
     m_mapBonesIdxByName.clear();
 
-    for(int i=0; i< (int) mvBones.size(); i++)
+    for(int i = 0; i < (int) mvBones.size(); i++)
     {
         m_mapBonesIdxByName.insert(tBoneIdxNameMap::value_type(
-                                       mvBones[i]->GetName(),i));
+                                       mvBones[i]->GetName(), i));
     }
 }
 
 //-----------------------------------------------------------------------
 
-cBone* cSkeleton::GetRootBone()
+cBone *cSkeleton::GetRootBone()
 {
     return mpRootBone;
 }
 
 //-----------------------------------------------------------------------
 
-cBone* cSkeleton::GetBoneByIndex(int alIndex)
+cBone *cSkeleton::GetBoneByIndex(int alIndex)
 {
     return mvBones[alIndex];
 }
 
-cBone* cSkeleton::GetBoneByName(const tString &asName)
+cBone *cSkeleton::GetBoneByName(const tString &asName)
 {
     int alIdx = GetBoneIndexByName(asName);
-    if(alIdx <0)
+    if(alIdx < 0)
     {
         return NULL;
     }
 
     return mvBones[alIdx];
 }
-cBone* cSkeleton::GetBoneBySid(const tString &asSid)
+cBone *cSkeleton::GetBoneBySid(const tString &asSid)
 {
-    for(size_t i=0; i<mvBones.size(); ++i)
+    for(size_t i = 0; i < mvBones.size(); ++i)
     {
         if(mvBones[i]->GetSid() == asSid)
         {
@@ -114,14 +114,14 @@ int cSkeleton::GetBoneIndexByName(const tString &asName)
 }
 int cSkeleton::GetBoneIndexBySid(const tString &asSid)
 {
-    for(size_t i=0; i<mvBones.size(); ++i)
+    for(size_t i = 0; i < mvBones.size(); ++i)
     {
         if(mvBones[i]->GetSid() == asSid)
         {
             return (int)i;
         }
     }
-    return-1;
+    return -1;
 }
 int cSkeleton::GetBoneNum()
 {

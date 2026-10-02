@@ -22,7 +22,7 @@ public:
     cNewtonLockBodyUntilReturn(const NewtonBody* apNewtonBody);
     ~cNewtonLockBodyUntilReturn();
 private:
-    const NewtonBody* mpNewtonBody;
+    const NewtonBody *mpNewtonBody;
 };
 
 
@@ -31,7 +31,7 @@ private:
 class cPhysicsMaterialNewton : public iPhysicsMaterial
 {
 public:
-    cPhysicsMaterialNewton(const tString &asName, iPhysicsWorld *apWorld, int alMatId=-1);
+    cPhysicsMaterialNewton(const tString &asName, iPhysicsWorld *apWorld, int alMatId = -1);
     ~cPhysicsMaterialNewton();
 
     void SetElasticity(float afElasticity);

@@ -16,7 +16,7 @@ namespace hpl
 void cMultipleSettingsHandler::cGSEntry::FadeTo(float afDest, float afSpeed, bool abDestroyAtDest)
 {
     mfDest = afDest;
-    mfSpeed = cMath::GetCorrectSignOfSpeed(mfVal, mfDest,afSpeed);
+    mfSpeed = cMath::GetCorrectSignOfSpeed(mfVal, mfDest, afSpeed);
     mbDestroyAtDest = abDestroyAtDest;
 }
 
@@ -35,7 +35,7 @@ cMultipleSettingsHandler::cMultipleSettingsHandler()
 
 cMultipleSettingsHandler::~cMultipleSettingsHandler()
 {
-    for(size_t i=0; i<mvEntries.size(); ++i)
+    for(size_t i = 0; i < mvEntries.size(); ++i)
     {
         if(mvEntries[i])
         {
@@ -46,13 +46,13 @@ cMultipleSettingsHandler::~cMultipleSettingsHandler()
 
 //-----------------------------------------------------------------------
 
-cMultipleSettingsHandler::cGSEntry* cMultipleSettingsHandler::GetEntry(int alIdx, bool abForceCreation)
+cMultipleSettingsHandler::cGSEntry *cMultipleSettingsHandler::GetEntry(int alIdx, bool abForceCreation)
 {
     if(alIdx >= (int)mvEntries.size())
     {
         if(abForceCreation)
         {
-            mvEntries.resize(alIdx+1, NULL);
+            mvEntries.resize(alIdx + 1, NULL);
             mvEntries[alIdx] = hplNew( cMultipleSettingsHandler::cGSEntry, () );
         }
         else
@@ -60,7 +60,7 @@ cMultipleSettingsHandler::cGSEntry* cMultipleSettingsHandler::GetEntry(int alIdx
             return NULL;
         }
     }
-    else if(mvEntries[alIdx]==NULL && abForceCreation)
+    else if(mvEntries[alIdx] == NULL && abForceCreation)
     {
         mvEntries[alIdx] = hplNew( cMultipleSettingsHandler::cGSEntry, () );
     }
@@ -72,7 +72,7 @@ cMultipleSettingsHandler::cGSEntry* cMultipleSettingsHandler::GetEntry(int alIdx
 
 int cMultipleSettingsHandler::CreateEntry()
 {
-    for(size_t i=0; i< mvEntries.size(); ++i)
+    for(size_t i = 0; i < mvEntries.size(); ++i)
     {
         if(mvEntries[i] == NULL)
         {
@@ -103,14 +103,14 @@ float cMultipleSettingsHandler::CalcResults(tFlag aTypes, eMultipleSettingsCalcT
         return afDefault;
     }
 
-    float fFinal= 0;
+    float fFinal = 0;
     bool bFirst = true;
-    bool bUsedEntry=false;
+    bool bUsedEntry = false;
 
-    for(size_t i=0; i<mvEntries.size(); ++i)
+    for(size_t i = 0; i < mvEntries.size(); ++i)
     {
         cMultipleSettingsHandler::cGSEntry *pEntry = mvEntries[i];
-        if(pEntry==NULL)
+        if(pEntry == NULL)
         {
             continue;
         }
@@ -127,7 +127,7 @@ float cMultipleSettingsHandler::CalcResults(tFlag aTypes, eMultipleSettingsCalcT
         case eMultipleSettingsCalcType_Mul:
             if(bFirst)
             {
-                fFinal =1;
+                fFinal = 1;
             }
             fFinal *= pEntry->mfVal;
             break;
@@ -149,7 +149,7 @@ float cMultipleSettingsHandler::CalcResults(tFlag aTypes, eMultipleSettingsCalcT
         case eMultipleSettingsCalcType_Avg:
             if(bFirst)
             {
-                fFinal =0;
+                fFinal = 0;
             }
             fFinal += pEntry->mfVal;
             break;
@@ -159,7 +159,7 @@ float cMultipleSettingsHandler::CalcResults(tFlag aTypes, eMultipleSettingsCalcT
         bFirst = false;
     }
 
-    if(bUsedEntry==false)
+    if(bUsedEntry == false)
     {
         return afDefault;
     }
@@ -176,10 +176,10 @@ float cMultipleSettingsHandler::CalcResults(tFlag aTypes, eMultipleSettingsCalcT
 
 void cMultipleSettingsHandler::Update(double adFixedDelta)
 {
-    for(size_t i=0; i<mvEntries.size(); ++i)
+    for(size_t i = 0; i < mvEntries.size(); ++i)
     {
         cMultipleSettingsHandler::cGSEntry *pEntry = mvEntries[i];
-        if(pEntry==NULL)
+        if(pEntry == NULL)
         {
             continue;
         }

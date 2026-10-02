@@ -44,7 +44,7 @@ class iWidget
 {
     friend class cGuiSet;
 public:
-    iWidget(eWidgetType aType,cGuiSet *apSet, cGuiSkin *apSkin);
+    iWidget(eWidgetType aType, cGuiSet *apSet, cGuiSkin *apSkin);
     virtual ~iWidget();
 
     /////////////////////////
@@ -53,9 +53,9 @@ public:
 
     void Draw(double adFixedDelta, cGuiClipRegion *apClipRegion);
 
-    bool ProcessMessage(eGuiMessage aMessage, const cGuiMessageData& aData, bool abSkipVisCheck=false, bool abSkipEnabledCheck=false);
+    bool ProcessMessage(eGuiMessage aMessage, const cGuiMessageData& aData, bool abSkipVisCheck = false, bool abSkipEnabledCheck = false);
 
-    void AddCallback(eGuiMessage aMessage,void *apObject,tGuiCallbackFunc apFunc);
+    void AddCallback(eGuiMessage aMessage, void *apObject, tGuiCallbackFunc apFunc);
 
     eWidgetType GetType()
     {
@@ -64,12 +64,12 @@ public:
 
     void Init();
 
-    virtual cGuiGlobalShortcut* AddShortcut(int alKeyModifiers, eKey aKey, eGuiMessage aMsg=eGuiMessage_ButtonPressed, bool abBypassVisibility=true, bool abBypassEnabled=true);
+    virtual cGuiGlobalShortcut *AddShortcut(int alKeyModifiers, eKey aKey, eGuiMessage aMsg = eGuiMessage_ButtonPressed, bool abBypassVisibility = true, bool abBypassEnabled = true);
 
     /////////////////////////
     // ToolTip functions
     void SetToolTip(const tWString& asToolTip);
-    const tWString& GetToolTip()
+    const tWString &GetToolTip()
     {
         return msToolTip;
     }
@@ -90,7 +90,7 @@ public:
     //Hierarchy
     virtual void AttachChild(iWidget *apChild);
     virtual void RemoveChild(iWidget *apChild);
-    tWidgetList& GetChildren()
+    tWidgetList &GetChildren()
     {
         return mlstChildren;
     }
@@ -100,7 +100,7 @@ public:
 
     /////////////////////////
     //Properties
-    cGuiSet* GetSet()
+    cGuiSet *GetSet()
     {
         return mpSet;
     }
@@ -121,13 +121,13 @@ public:
     {
         msName = asName;
     }
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
 
     void SetText(const tWString& asText);
-    const tWString& GetText()const
+    const tWString &GetText()const
     {
         return msText;
     }
@@ -141,7 +141,7 @@ public:
         mpDefaultFontType = apFont;
     }
 
-    const cColor& GetDefaultFontColor()
+    const cColor &GetDefaultFontColor()
     {
         return mDefaultFontColor;
     }
@@ -150,7 +150,7 @@ public:
         mDefaultFontColor = aColor;
     }
 
-    const cVector2f& GetDefaultFontSize()
+    const cVector2f &GetDefaultFontSize()
     {
         return mvDefaultFontSize;
     }
@@ -170,18 +170,18 @@ public:
 
     void SetPosition(const cVector3f &avPos);
     void SetGlobalPosition(const cVector3f &avPos);
-    const cVector3f& GetLocalPosition();
-    const cVector3f& GetGlobalPosition();
+    const cVector3f &GetLocalPosition();
+    const cVector3f &GetGlobalPosition();
 
-    void SetChildrenOffset(const cVector3f&);
-    const cVector3f& GetChildrenOffset()
+    void SetChildrenOffset(const cVector3f &);
+    const cVector3f &GetChildrenOffset()
     {
         return mvChildrenOffset;
     }
 
     void SetAffectedByScroll(bool abX);
     void SetScrollAmount(const cVector3f& avX);
-    const cVector3f& GetScrollAmount()
+    const cVector3f &GetScrollAmount()
     {
         return mvScrollAmount;
     }
@@ -198,7 +198,7 @@ public:
     {
         mColorMul = aColor;
     }
-    const cColor& GetColorMul()
+    const cColor &GetColorMul()
     {
         return mColorMul;
     }
@@ -210,7 +210,7 @@ public:
         return mbMouseIsOver;
     }
 
-    bool IsConnectedTo(iWidget *apWidget, bool abIsStartWidget=true);
+    bool IsConnectedTo(iWidget *apWidget, bool abIsStartWidget = true);
     bool IsConnectedToChildren()
     {
         return mbConnectedToChildren;
@@ -220,7 +220,7 @@ public:
         mbConnectedToChildren = abX;
     }
 
-    cGuiGfxElement* GetPointerGfx();
+    cGuiGfxElement *GetPointerGfx();
 
     void SetGlobalKeyPressListener(bool abX)
     {
@@ -235,7 +235,7 @@ public:
     {
         mpUserData = apData;
     }
-    void * GetUserData()
+    void *GetUserData()
     {
         return mpUserData;
     }
@@ -259,7 +259,7 @@ public:
     }
 
     void SetFocusNavigation(eUIArrow aDir, iWidget* apWidget);
-    iWidget* GetFocusNavigation(eUIArrow aDir);
+    iWidget *GetFocusNavigation(eUIArrow aDir);
 
     bool HasFocusNavigation();
 
@@ -386,17 +386,17 @@ protected:
     //Borders: Right, Left, Up and Down
     //Corners: LEftUp, RightUp, RightDown and LEftDown.
     void DrawBordersAndCorners(cGuiGfxElement *apBackground,
-                               cGuiGfxElement **apBorderVec,cGuiGfxElement **apCornerVec,
-                               const cVector3f &avPosition, const cVector2f &avSize, bool abBordersOutside=false);
+                               cGuiGfxElement **apBorderVec, cGuiGfxElement **apCornerVec,
+                               const cVector3f &avPosition, const cVector2f &avSize, bool abBordersOutside = false);
 
-    void DrawSkinText(const tWString& asText,eGuiSkinFont aFont,const cVector3f& avPosition,
+    void DrawSkinText(const tWString& asText, eGuiSkinFont aFont, const cVector3f& avPosition,
                       eFontAlign aAlign = eFontAlign_Left);
 
     void DrawDefaultText(    const tWString& asText,
-                             const cVector3f& avPosition,eFontAlign aAlign);
+                             const cVector3f& avPosition, eFontAlign aAlign);
 
     void DrawDefaultText(    const tWString& asText,
-                             const cVector3f& avPosition,eFontAlign aAlign, const cColor& aCol);
+                             const cVector3f& avPosition, eFontAlign aAlign, const cColor& aCol);
 
     void DrawDefaultTextHighlight(    const tWString& asText,
                                       const cVector3f& avPosition, eFontAlign aAlign); //, int alFirstVisibleChar, int alHighlightStart, int alHighlightSize);
@@ -444,14 +444,14 @@ protected:
 
     bool mbClipsGraphics;
 
-    cGuiGfxElement* mpPointerGfx;
+    cGuiGfxElement *mpPointerGfx;
 
     bool mbConnectedToChildren;
 
     bool mbToolTipEnabled;
     tWString msToolTip;
 
-    std::vector<cGuiGlobalShortcut*> mvShortcuts;
+    std::vector<cGuiGlobalShortcut *> mvShortcuts;
 
     bool mbGlobalKeyPressListener;
     bool mbGlobalUIInputListener;
@@ -475,7 +475,7 @@ private:
     void *mpUserData;
     int mlUserValue;
 
-    std::vector<iWidget*>            mvFocusNavWidgets;
+    std::vector<iWidget *>            mvFocusNavWidgets;
 };
 
 };

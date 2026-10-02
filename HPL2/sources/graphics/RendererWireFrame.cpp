@@ -33,8 +33,8 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cRendererWireFrame::cRendererWireFrame(cGraphics *apGraphics,cResources* apResources)
-    : iRenderer("WireFrame",apGraphics, apResources,0)
+cRendererWireFrame::cRendererWireFrame(cGraphics *apGraphics, cResources* apResources)
+    : iRenderer("WireFrame", apGraphics, apResources, 0)
 {
     ////////////////////////////////////
     // Set up render specific things
@@ -86,10 +86,10 @@ void cRendererWireFrame::CopyToFrameBuffer()
 
 void cRendererWireFrame::SetupRenderList()
 {
-    mpCurrentRenderList->Setup(dCurrentFrameTime,mpCurrentFrustum);
+    mpCurrentRenderList->Setup(dCurrentFrameTime, mpCurrentFrustum);
 
-    CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Static),0);
-    CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Dynamic),0);
+    CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Static), 0);
+    CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Dynamic), 0);
 
     mpCurrentRenderList->Compile(    eRenderListCompileFlag_Diffuse |
                                      eRenderListCompileFlag_Decal |
@@ -111,16 +111,16 @@ void cRendererWireFrame::RenderObjects()
     SetAlphaMode(eMaterialAlphaMode_Solid);
     SetChannelMode(eMaterialChannelMode_RGBA);
 
-    SetTextureRange(NULL,0);
+    SetTextureRange(NULL, 0);
 
-    int lCount =0;
+    int lCount = 0;
     cRenderableVecIterator diffIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Diffuse);
     while(diffIt.HasNext())
     {
         iRenderable *pObject = diffIt.Next();
         cMaterial *pMaterial = pObject->GetMaterial();
 
-        SetTexture(0,pMaterial->GetTexture(eMaterialTexture_Diffuse));
+        SetTexture(0, pMaterial->GetTexture(eMaterialTexture_Diffuse));
 
         SetMatrix(pObject->GetModelMatrixPtr());
 
@@ -142,7 +142,7 @@ void cRendererWireFrame::RenderObjects()
 
         SetBlendMode(pMaterial->GetBlendMode());
 
-        SetTexture(0,pMaterial->GetTexture(eMaterialTexture_Diffuse));
+        SetTexture(0, pMaterial->GetTexture(eMaterialTexture_Diffuse));
 
         SetMatrix(pObject->GetModelMatrixPtr());
 
@@ -168,7 +168,7 @@ void cRendererWireFrame::RenderObjects()
 
         SetBlendMode(pMaterial->GetBlendMode());
 
-        SetTexture(0,pMaterial->GetTexture(eMaterialTexture_Diffuse));
+        SetTexture(0, pMaterial->GetTexture(eMaterialTexture_Diffuse));
 
         SetMatrix(pObject->GetModelMatrix(mpCurrentFrustum));
 

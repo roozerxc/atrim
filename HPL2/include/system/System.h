@@ -12,7 +12,7 @@ public:
     cSystem(iLowLevelSystem *apLowLevelSystem);
     ~cSystem();
 
-    iLowLevelSystem* GetLowLevel();
+    iLowLevelSystem *GetLowLevel();
 
 private:
     iLowLevelSystem *mpLowLevelSystem;

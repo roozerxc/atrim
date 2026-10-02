@@ -107,19 +107,19 @@ public:
 class cRendererDeferred : public  iRenderer
 {
 public:
-    cRendererDeferred(cGraphics *apGraphics,cResources* apResources);
+    cRendererDeferred(cGraphics *apGraphics, cResources* apResources);
     ~cRendererDeferred();
 
     bool LoadData();
     void DestroyData();
 
-    iTexture* GetPostEffectTexture();
+    iTexture *GetPostEffectTexture();
 
-    iTexture* GetGbufferTexture(int alIdx);
-    iFrameBuffer* GetGBufferFrameBuffer(eGBufferComponents aComponents);
+    iTexture *GetGbufferTexture(int alIdx);
+    iFrameBuffer *GetGBufferFrameBuffer(eGBufferComponents aComponents);
     //iTexture *GetShadowTexture(eShadowMapResolution aQuality){ return mpShadowTexture[aQuality]; }
 
-    iDepthStencilBuffer* GetDepthStencilBuffer()
+    iDepthStencilBuffer *GetDepthStencilBuffer()
     {
         return mpDepthStencil[0];
     }
@@ -133,16 +133,16 @@ public:
         return mpAccumLightBuffer;
     }
 
-    iTexture* GetRefractionTexture()
+    iTexture *GetRefractionTexture()
     {
         return mpRefractionTexture;
     }
-    iTexture* GetReflectionTexture()
+    iTexture *GetReflectionTexture()
     {
         return mpReflectionTexture;
     }
 
-    cDeferredLight* GetDeferredLight(int alID);
+    cDeferredLight *GetDeferredLight(int alID);
     int GetDeferredLightNum();
     float GetLightComplexity(cDeferredLight* apLightData);
 
@@ -355,7 +355,7 @@ private:
     void SetAccumulationBuffer();
     void SetAccumulationLightBuffer();
     void SetGBuffer(eGBufferComponents aComponents);
-    iTexture* GetBufferTexture(int alIdx);
+    iTexture *GetBufferTexture(int alIdx);
 
 
     void RenderGbufferContent();
@@ -372,8 +372,8 @@ private:
     //Misc Helpers
     void RenderLightShadowMap(cDeferredLight* apLightData);
     void SetupLightProgramVariables(iGpuProgram *apProgram, cDeferredLight* apLightData);
-    iGpuProgram* SetupProgramAndTextures(cDeferredLight* apLightData, tFlag alExtraFlags);
-    iVertexBuffer* GetLightShape(iLight *apLight, eDeferredShapeQuality aQuality);
+    iGpuProgram *SetupProgramAndTextures(cDeferredLight* apLightData, tFlag alExtraFlags);
+    iVertexBuffer *GetLightShape(iLight *apLight, eDeferredShapeQuality aQuality);
 
 
     iVertexBuffer *mpShapeSphere[eDeferredShapeQuality_LastEnum];
@@ -420,7 +420,7 @@ private:
     iTexture *mpLightBufferTexture;
     iTexture *mpRefractionTexture;
     iTexture *mpReflectionTexture;
-    iDepthStencilBuffer* mpDepthStencil[2];    //[2] = reflection or not
+    iDepthStencilBuffer *mpDepthStencil[2];    //[2] = reflection or not
 
 
     bool mbReflectionTextureCleared;
@@ -449,14 +449,14 @@ private:
     iGpuProgram *mpOverdrawProgram;
     iGpuProgram *mpHeatMapProgram;
 
-    std::vector<cDeferredLight*> mvTempDeferredLights;
-    std::vector<cDeferredLight*> mvSortedLights[eDeferredLightList_LastEnum];
+    std::vector<cDeferredLight *> mvTempDeferredLights;
+    std::vector<cDeferredLight *> mvSortedLights[eDeferredLightList_LastEnum];
 
     iGpuProgram *mpSkyBoxProgram;
     iGpuProgram *mpLightStencilProgram;
     iGpuProgram *mpLightBoxProgram[3];//0=no SSAO, 1=SSAO used, 2=light debug
 
-    cProgramComboManager* mpFogProgramManager;
+    cProgramComboManager *mpFogProgramManager;
 
     cMatrixf m_mtxTempLight;
 

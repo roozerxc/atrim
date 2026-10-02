@@ -19,7 +19,7 @@ public:
     bool Unlock();
 
 private:
-    SDL_mutex* mpMutexHandle;
+    SDL_mutex *mpMutexHandle;
 
 };
 

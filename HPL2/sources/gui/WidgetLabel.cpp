@@ -21,7 +21,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cWidgetLabel::cWidgetLabel(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_Label,apSet, apSkin)
+cWidgetLabel::cWidgetLabel(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_Label, apSet, apSkin)
 {
     mfScrollTimer = 0.0f;
     mfWaitToScrollTime = 1.0f;
@@ -39,7 +39,7 @@ cWidgetLabel::cWidgetLabel(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetTy
     mbAutogenerateSize = false;
 
     mbDrawBackGround = false;
-    mBackGroundColor = cColor(1,1);
+    mBackGroundColor = cColor(1, 1);
 
     LoadGraphics();
 }
@@ -110,7 +110,7 @@ void cWidgetLabel::DrawText(double adFixedDelta, cGuiClipRegion *apClipRegion)
     cVector3f vOffset = 0;
     if(mTextAlign == eFontAlign_Center)
     {
-        vOffset.x += mvSize.x/2;
+        vOffset.x += mvSize.x / 2;
     }
     else if(mTextAlign == eFontAlign_Right)
     {
@@ -119,24 +119,24 @@ void cWidgetLabel::DrawText(double adFixedDelta, cGuiClipRegion *apClipRegion)
 
     if(mbWordWrap)
     {
-        int lChars =0;
+        int lChars = 0;
         bool bEnabled = IsEnabled();
-        float fHeight = mvDefaultFontSize.y+2;
+        float fHeight = mvDefaultFontSize.y + 2;
         tWStringVec vRows;
-        mpDefaultFontType->GetWordWrapRows(mvSize.x,fHeight,
+        mpDefaultFontType->GetWordWrapRows(mvSize.x, fHeight,
                                            mvDefaultFontSize, msText,
                                            &vRows);
 
-        mfWordWrapRowsHeight = (fHeight-1) * (int)vRows.size();
+        mfWordWrapRowsHeight = (fHeight - 1) * (int)vRows.size();
 
-        for(size_t i=0; i< vRows.size(); ++i)
+        for(size_t i = 0; i < vRows.size(); ++i)
         {
             bool bBreak = false;
-            if(mlMaxCharacters>=0)
+            if(mlMaxCharacters >= 0)
             {
                 if(lChars + (int)vRows[i].length() > mlMaxCharacters)
                 {
-                    vRows[i] = cString::SubW(vRows[i],0, mlMaxCharacters - lChars);
+                    vRows[i] = cString::SubW(vRows[i], 0, mlMaxCharacters - lChars);
                     bBreak = true;
                 }
                 lChars += (int)vRows[i].length();
@@ -144,11 +144,11 @@ void cWidgetLabel::DrawText(double adFixedDelta, cGuiClipRegion *apClipRegion)
 
             if(bEnabled)
             {
-                DrawDefaultText(vRows[i], GetGlobalPosition()+vOffset-cVector3f(0,mfWordWrapOffset,0),mTextAlign);
+                DrawDefaultText(vRows[i], GetGlobalPosition() + vOffset - cVector3f(0, mfWordWrapOffset, 0), mTextAlign);
             }
             else
             {
-                DrawDefaultText(vRows[i], GetGlobalPosition()+vOffset-cVector3f(0,mfWordWrapOffset,0),mTextAlign, cColor(0.5f, mDefaultFontColor.a));
+                DrawDefaultText(vRows[i], GetGlobalPosition() + vOffset - cVector3f(0, mfWordWrapOffset, 0), mTextAlign, cColor(0.5f, mDefaultFontColor.a));
             }
             vOffset.y += fHeight;
 
@@ -160,26 +160,26 @@ void cWidgetLabel::DrawText(double adFixedDelta, cGuiClipRegion *apClipRegion)
     }
     else
     {
-        if(mlMaxCharacters>=0 && (int)msText.length() > mlMaxCharacters)
+        if(mlMaxCharacters >= 0 && (int)msText.length() > mlMaxCharacters)
         {
             if(IsEnabled())
             {
-                DrawDefaultText(cString::SubW(msText,0,mlMaxCharacters), GetGlobalPosition()+vOffset,mTextAlign);
+                DrawDefaultText(cString::SubW(msText, 0, mlMaxCharacters), GetGlobalPosition() + vOffset, mTextAlign);
             }
             else
             {
-                DrawDefaultText(cString::SubW(msText,0,mlMaxCharacters), GetGlobalPosition()+vOffset,mTextAlign, cColor(0.5f, mDefaultFontColor.a));
+                DrawDefaultText(cString::SubW(msText, 0, mlMaxCharacters), GetGlobalPosition() + vOffset, mTextAlign, cColor(0.5f, mDefaultFontColor.a));
             }
         }
         else
         {
             if(IsEnabled())
             {
-                DrawDefaultText(msText, GetGlobalPosition()+vOffset,mTextAlign);
+                DrawDefaultText(msText, GetGlobalPosition() + vOffset, mTextAlign);
             }
             else
             {
-                DrawDefaultText(msText, GetGlobalPosition()+vOffset, mTextAlign, cColor(0.5f, mDefaultFontColor.a));
+                DrawDefaultText(msText, GetGlobalPosition() + vOffset, mTextAlign, cColor(0.5f, mDefaultFontColor.a));
             }
         }
     }
@@ -196,7 +196,7 @@ void cWidgetLabel::OnLoadGraphics()
 
 void cWidgetLabel::OnUpdate(double adFixedDelta)
 {
-    if(mbWordWrap==false)
+    if(mbWordWrap == false)
     {
         return;
     }
@@ -214,7 +214,7 @@ void cWidgetLabel::OnUpdate(double adFixedDelta)
     // Scroll down
     if(mbScrollingDown)
     {
-        if(mfWordWrapOffset+mvSize.y+fAdvance > mfWordWrapRowsHeight)
+        if(mfWordWrapOffset + mvSize.y + fAdvance > mfWordWrapRowsHeight)
         {
             mbScrollingDown = false;
         }
@@ -226,7 +226,7 @@ void cWidgetLabel::OnUpdate(double adFixedDelta)
     // Scroll up
     else
     {
-        if(mfWordWrapOffset-fAdvance < 0)
+        if(mfWordWrapOffset - fAdvance < 0)
         {
             mbScrollingDown = true;
         }
@@ -245,7 +245,7 @@ void cWidgetLabel::OnChangeText()
     mfWordWrapOffset = 0;
     mbScrollingDown = true;
 
-    if(mbAutogenerateSize==false)
+    if(mbAutogenerateSize == false)
     {
         return;
     }
@@ -263,8 +263,8 @@ void cWidgetLabel::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
     // Background
     if(mbDrawBackGround)
     {
-        mpSet->DrawGfx(    mpGfxBackground,GetGlobalPosition() - cVector3f(2,2,0.001f),
-                           mvSize+4,mBackGroundColor);
+        mpSet->DrawGfx(    mpGfxBackground, GetGlobalPosition() - cVector3f(2, 2, 0.001f),
+                           mvSize + 4, mBackGroundColor);
     }
 
     if(mbClipsGraphics)

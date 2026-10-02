@@ -63,7 +63,7 @@ bool cPlatformWin32::DWMCompositorActive()
         return false;
     }
 
-    typedef HRESULT(WINAPI *DwmIsCompositionEnabledFunc)(BOOL*);
+    typedef HRESULT(WINAPI * DwmIsCompositionEnabledFunc)(BOOL*);
 
     DwmIsCompositionEnabledFunc pDwmIsCompositionEnabled =
         (DwmIsCompositionEnabledFunc)GetProcAddress(
@@ -120,8 +120,8 @@ void LockApplicationThread()
         return;
     }
 
-    typedef DWORD_PTR (WINAPI *SetThreadAffMaskFunc)(HANDLE, DWORD_PTR);
-    typedef BOOL (WINAPI *GetProcAffMaskFunc)(HANDLE, PDWORD_PTR, PDWORD_PTR);
+    typedef DWORD_PTR (WINAPI * SetThreadAffMaskFunc)(HANDLE, DWORD_PTR);
+    typedef BOOL (WINAPI * GetProcAffMaskFunc)(HANDLE, PDWORD_PTR, PDWORD_PTR);
 
     SetThreadAffMaskFunc pSetThreadAffinity =
         (SetThreadAffMaskFunc)GetProcAddress(hKernel32, "SetThreadAffinityMask");
@@ -166,13 +166,13 @@ unsigned long cPlatform::GetFileSize(const tWString& asFileName)
     if (lErr != 0) return 0;
     return (unsigned long)fileStat.st_size; */
 
-    FILE *pFile = _wfopen(asFileName.c_str(),_W("rb"));
-    if(pFile==NULL)
+    FILE *pFile = _wfopen(asFileName.c_str(), _W("rb"));
+    if(pFile == NULL)
     {
         return 0;
     }
 
-    fseek(pFile,0,SEEK_END);
+    fseek(pFile, 0, SEEK_END);
     long lFileSize = ftell(pFile);
     rewind(pFile);
 
@@ -184,8 +184,8 @@ unsigned long cPlatform::GetFileSize(const tWString& asFileName)
 
 bool cPlatform::CopyFileToBuffer(const tWString& asFileName, void *apBuffer, unsigned long alSize)
 {
-    FILE *pFile = _wfopen(asFileName.c_str(),_W("rb"));
-    if(pFile==NULL)
+    FILE *pFile = _wfopen(asFileName.c_str(), _W("rb"));
+    if(pFile == NULL)
     {
         return false;
     }
@@ -200,8 +200,8 @@ bool cPlatform::CopyFileToBuffer(const tWString& asFileName, void *apBuffer, uns
 
 bool cPlatform::FileExists(const tWString& asFileName)
 {
-    FILE *f = _wfopen(asFileName.c_str(),_W("rb"));
-    if(f==NULL)
+    FILE *f = _wfopen(asFileName.c_str(), _W("rb"));
+    if(f == NULL)
     {
         return false;
     }
@@ -219,33 +219,33 @@ void cPlatform::RemoveFile(const tWString& asFilePath)
 
 //-----------------------------------------------------------------------
 
-bool cPlatform::CloneFile(    const tWString& asSrcFileName,const tWString& asDestFileName,
+bool cPlatform::CloneFile(    const tWString& asSrcFileName, const tWString& asDestFileName,
                               bool abFailIfExists)
 {
-    return CopyFile(asSrcFileName.c_str(),asDestFileName.c_str(),abFailIfExists)==TRUE;
+    return CopyFile(asSrcFileName.c_str(), asDestFileName.c_str(), abFailIfExists) == TRUE;
 }
 
 //-----------------------------------------------------------------------
 
 bool cPlatform::CreateFolder(const tWString& asPath)
 {
-    tWString sPath = cString::ReplaceCharToW(asPath,_W("/"), _W("\\"));
+    tWString sPath = cString::ReplaceCharToW(asPath, _W("/"), _W("\\"));
 
-    return CreateDirectory(sPath.c_str(),NULL)==TRUE;
+    return CreateDirectory(sPath.c_str(), NULL) == TRUE;
 }
 
 //-----------------------------------------------------------------------
 
 bool cPlatform::RemoveFolder(const tWString& asPath, bool abDeleteAllFiles, bool abDeleteAllSubFolders)
 {
-    tWString sPath = cString::ReplaceCharToW(asPath,_W("/"), _W("\\"));
+    tWString sPath = cString::ReplaceCharToW(asPath, _W("/"), _W("\\"));
 
     ////////////////////
     // Remove any files in the directory
     if(abDeleteAllFiles)
     {
         tWStringList lstFiles;
-        FindFilesInDir(lstFiles,sPath,_W("*.*"), true);
+        FindFilesInDir(lstFiles, sPath, _W("*.*"), true);
         for(tWStringListIt it = lstFiles.begin(); it != lstFiles.end(); ++it)
         {
             tWString sFilePath = cString::SetFilePathW(*it, sPath);
@@ -258,7 +258,7 @@ bool cPlatform::RemoveFolder(const tWString& asPath, bool abDeleteAllFiles, bool
     if(abDeleteAllSubFolders)
     {
         tWStringList lstFolders;
-        FindFoldersInDir(lstFolders, sPath,true, false);
+        FindFoldersInDir(lstFolders, sPath, true, false);
         for(tWStringListIt it = lstFolders.begin(); it != lstFolders.end(); ++it)
         {
             tWString sFolderPath = cString::SetFilePathW(*it, sPath);
@@ -295,8 +295,8 @@ bool cPlatform::RemoveFolder(const tWString& asPath, bool abDeleteAllFiles, bool
     if(RemoveDirectoryW(sPath.c_str()) != TRUE)
     {
         wchar_t sTempString[2048];
-        FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM,0,GetLastError(),0,sTempString,sizeof(sTempString),NULL);
-        Error("Could not remove folder: '%s': %s",cString::To8Char(sPath).c_str(), cString::To8Char(sTempString).c_str());
+        FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM, 0, GetLastError(), 0, sTempString, sizeof(sTempString), NULL);
+        Error("Could not remove folder: '%s': %s", cString::To8Char(sPath).c_str(), cString::To8Char(sTempString).c_str());
         return false;
     }
     return true;
@@ -309,7 +309,7 @@ bool cPlatform::FolderExists(const tWString& asPath)
     tWString sDir = cString::ReplaceCharToW(asPath, _W("/"), _W("\\"));
     DWORD lFileAttributes = GetFileAttributes(sDir.c_str());
 
-    return (lFileAttributes != INVALID_FILE_ATTRIBUTES && (lFileAttributes & FILE_ATTRIBUTE_DIRECTORY) !=0);
+    return (lFileAttributes != INVALID_FILE_ATTRIBUTES && (lFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0);
 }
 
 //-----------------------------------------------------------------------
@@ -317,7 +317,7 @@ bool cPlatform::FolderExists(const tWString& asPath)
 tWString cPlatform::GetFullFilePath(const tWString& asFilePath)
 {
     wchar_t sOutFilePath[2048];
-    int x = GetFullPathNameW(asFilePath.c_str(),2048,sOutFilePath,NULL);
+    int x = GetFullPathNameW(asFilePath.c_str(), 2048, sOutFilePath, NULL);
 
     return sOutFilePath;
 }
@@ -416,14 +416,14 @@ cDate cPlatform::FileCreationDate(const tWString& asFilePath)
 
 //-----------------------------------------------------------------------
 
-void cPlatform::FindFilesInDir(tWStringList &alstStrings,const tWString& asDir, const tWString& asMask, bool abAddHidden)
+void cPlatform::FindFilesInDir(tWStringList &alstStrings, const tWString& asDir, const tWString& asMask, bool abAddHidden)
 {
     //these windows functions only works with "\".. sucks ...
-    tWString sDir = cString::ReplaceCharToW(asDir,_W("/"),_W("\\"));
+    tWString sDir = cString::ReplaceCharToW(asDir, _W("/"), _W("\\"));
 
     int lLastMaskAsteriskPos = cString::GetLastStringPosW(asMask, _W("*"));
-    tWString sMaskExt = cString::ToLowerCaseW(cString::SubW(asMask,lLastMaskAsteriskPos+2));
-    bool bMaskNotNull = (sMaskExt!=_W(""));
+    tWString sMaskExt = cString::ToLowerCaseW(cString::SubW(asMask, lLastMaskAsteriskPos + 2));
+    bool bMaskNotNull = (sMaskExt != _W(""));
 
     //Get the search string
     wchar_t sSpec[256];
@@ -453,17 +453,17 @@ void cPlatform::FindFilesInDir(tWStringList &alstStrings,const tWString& asDir, 
 
     //Find the first file:
     lHandle = _wfindfirst(sSpec, &FileInfo );
-    if(lHandle==-1L)
+    if(lHandle == -1L)
     {
         return;
     }
 
     //Check so it is not a subdir
-    if((FileInfo.attrib & _A_SUBDIR)==0 && (abAddHidden || (FileInfo.attrib & _A_HIDDEN)==0) )
+    if((FileInfo.attrib & _A_SUBDIR) == 0 && (abAddHidden || (FileInfo.attrib & _A_HIDDEN) == 0) )
     {
         if(bMaskNotNull)
         {
-            if(cString::ToLowerCaseW(cString::GetFileExtW(FileInfo.name))==sMaskExt)
+            if(cString::ToLowerCaseW(cString::GetFileExtW(FileInfo.name)) == sMaskExt)
             {
                 alstStrings.push_back(FileInfo.name);
             }
@@ -477,11 +477,11 @@ void cPlatform::FindFilesInDir(tWStringList &alstStrings,const tWString& asDir, 
     //Get the other files.
     while( _wfindnext( lHandle, &FileInfo ) == 0 )
     {
-        if((FileInfo.attrib & _A_SUBDIR)==0 && (abAddHidden || (FileInfo.attrib & _A_HIDDEN)==0) )
+        if((FileInfo.attrib & _A_SUBDIR) == 0 && (abAddHidden || (FileInfo.attrib & _A_HIDDEN) == 0) )
         {
             if(bMaskNotNull)
             {
-                if(cString::ToLowerCaseW(cString::GetFileExtW(FileInfo.name))==sMaskExt)
+                if(cString::ToLowerCaseW(cString::GetFileExtW(FileInfo.name)) == sMaskExt)
                 {
                     alstStrings.push_back(FileInfo.name);
                 }
@@ -501,11 +501,11 @@ void cPlatform::FindFilesInDir(tWStringList &alstStrings,const tWString& asDir, 
 
 static bool IsGoodFolder(struct _wfinddata_t* pFileInfo, bool abAddHidden, bool abAddUpFolder)
 {
-    if( (pFileInfo->attrib & _A_SUBDIR) ==0)
+    if( (pFileInfo->attrib & _A_SUBDIR) == 0)
     {
         return false;
     }
-    if( abAddHidden==false && (pFileInfo->attrib & _A_HIDDEN))
+    if( abAddHidden == false && (pFileInfo->attrib & _A_HIDDEN))
     {
         return false;
     }
@@ -523,23 +523,23 @@ static bool IsGoodFolder(struct _wfinddata_t* pFileInfo, bool abAddHidden, bool 
     return true;
 }
 
-void cPlatform::FindFoldersInDir(tWStringList &alstStrings,const tWString& asDir, bool abAddHidden, bool abAddUpFolder)
+void cPlatform::FindFoldersInDir(tWStringList &alstStrings, const tWString& asDir, bool abAddHidden, bool abAddUpFolder)
 {
     //these windows functions only works with "\".. sucks ...
-    tWString sDir = cString::ReplaceCharToW(asDir,_W("/"),_W("\\"));
+    tWString sDir = cString::ReplaceCharToW(asDir, _W("/"), _W("\\"));
 
     //Get the search string
     wchar_t sSpec[256];
-    wchar_t end = sDir[sDir.size()-1];
+    wchar_t end = sDir[sDir.size() - 1];
 
-    if(end == _W('\\') || end== _W('/'))
+    if(end == _W('\\') || end == _W('/'))
     {
-        swprintf(sSpec,256,_W("%s%s"),sDir.c_str(),_W("*.*"));
+        swprintf(sSpec, 256, _W("%s%s"), sDir.c_str(), _W("*.*"));
     }
     else
     {
         //these windows functions only works with "\".. sucks ...
-        swprintf(sSpec,256,_W("%s\\%s"),sDir.c_str(),_W("*.*"));
+        swprintf(sSpec, 256, _W("%s\\%s"), sDir.c_str(), _W("*.*"));
     }
 
     //The needed structs
@@ -548,7 +548,7 @@ void cPlatform::FindFoldersInDir(tWStringList &alstStrings,const tWString& asDir
 
     //Find the first file:
     lHandle = _wfindfirst(sSpec, &FileInfo );
-    if(lHandle==-1L)
+    if(lHandle == -1L)
     {
         return;
     }
@@ -577,7 +577,7 @@ void cPlatform::FindFoldersInDir(tWStringList &alstStrings,const tWString& asDir
 
 tWString cPlatform::GetWorkingDir()
 {
-    tWString sDir = tWString( _wgetcwd(NULL,0));
+    tWString sDir = tWString( _wgetcwd(NULL, 0));
 
     return sDir;
 }
@@ -683,7 +683,7 @@ tString cPlatform::msName = "Win32";
 
 //-----------------------------------------------------------------------
 
-iTimer * cPlatform::CreateTimer()
+iTimer *cPlatform::CreateTimer()
 {
     return hplNew(cTimerSDL, () );
 }
@@ -712,10 +712,10 @@ void cPlatform::CopyTextToClipboard(const tWString &asText)
 
     EmptyClipboard();
 
-    HGLOBAL clipbuffer = GlobalAlloc(GMEM_MOVEABLE, (asText.size()+1) * sizeof(wchar_t));
+    HGLOBAL clipbuffer = GlobalAlloc(GMEM_MOVEABLE, (asText.size() + 1) * sizeof(wchar_t));
     if(clipbuffer)
     {
-        wchar_t* pBuffer = (wchar_t*)GlobalLock(clipbuffer);
+        wchar_t *pBuffer = (wchar_t*)GlobalLock(clipbuffer);
         if(pBuffer)
         {
             wcscpy(pBuffer, asText.c_str());
@@ -731,7 +731,7 @@ void cPlatform::CopyTextToClipboard(const tWString &asText)
 
 tWString cPlatform::LoadTextFromClipboard()
 {
-    tWString sText=_W("");
+    tWString sText = _W("");
     OpenClipboard(NULL);
 
     HGLOBAL clipbuffer = GetClipboardData(CF_UNICODETEXT);
@@ -761,18 +761,18 @@ unsigned long cPlatform::GetSystemAvailableDrives()
 
 void cPlatform::GetAvailableVideoModes(tVideoModeVec &avDestVidModes, int alMinBpp, int alMinRefreshRate)
 {
-    bool bSkipBppCheck = (alMinBpp==-1);
-    bool bSkipRateCheck = (alMinRefreshRate==-1);
+    bool bSkipBppCheck = (alMinBpp == -1);
+    bool bSkipRateCheck = (alMinRefreshRate == -1);
 
     avDestVidModes.clear();
 
     DEVMODE mode = {};
     mode.dmSize = sizeof(DEVMODE);
-    int lModeCounter=0;
+    int lModeCounter = 0;
     while(EnumDisplaySettings(NULL, lModeCounter, &mode))
     {
-        if((bSkipBppCheck || alMinBpp<=(int)mode.dmBitsPerPel) &&
-                (bSkipRateCheck || alMinRefreshRate<=(int)mode.dmDisplayFrequency))
+        if((bSkipBppCheck || alMinBpp <= (int)mode.dmBitsPerPel) &&
+                (bSkipRateCheck || alMinRefreshRate <= (int)mode.dmDisplayFrequency))
         {
             avDestVidModes.push_back(cVideoMode(cVector2l(mode.dmPelsWidth, mode.dmPelsHeight),
                                                 mode.dmBitsPerPel,
@@ -793,7 +793,7 @@ void cPlatform::GetAvailableVideoModes(tVideoModeVec &avDestVidModes, int alMinB
 
 //-----------------------------------------------------------------------
 
-iThread* cPlatform::CreateThread(iThreadClass* apThreadClass)
+iThread *cPlatform::CreateThread(iThreadClass* apThreadClass)
 {
     iThread* pThread = hplNew(cThreadWin32, ());
     pThread->SetThreadClass(apThreadClass);
@@ -803,7 +803,7 @@ iThread* cPlatform::CreateThread(iThreadClass* apThreadClass)
 
 //-----------------------------------------------------------------------
 
-iMutex* cPlatform::CreateMutEx()
+iMutex *cPlatform::CreateMutEx()
 {
     return hplNew(cMutexWin32, ());
 }

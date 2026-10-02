@@ -44,7 +44,7 @@ private:
 class cPostEffect_RadialBlur : public iPostEffect
 {
 public:
-    cPostEffect_RadialBlur(cGraphics *apGraphics,cResources *apResources, iPostEffectType *apType);
+    cPostEffect_RadialBlur(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType);
     ~cPostEffect_RadialBlur();
 
     void Reset();
@@ -56,7 +56,7 @@ private:
         return &mParams;
     }
 
-    iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
+    iTexture *RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
 
     void RenderBlur(iTexture *apInputTex);
 

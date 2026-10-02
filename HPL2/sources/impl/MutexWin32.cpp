@@ -35,12 +35,12 @@ cMutexWin32::~cMutexWin32()
 
 bool cMutexWin32::Lock()
 {
-    return WaitForSingleObject(mpMutexHandle, INFINITE)==WAIT_OBJECT_0;
+    return WaitForSingleObject(mpMutexHandle, INFINITE) == WAIT_OBJECT_0;
 }
 
 bool cMutexWin32::Unlock()
 {
-    return ReleaseMutex(mpMutexHandle)==TRUE;
+    return ReleaseMutex(mpMutexHandle) == TRUE;
 }
 
 //-----------------------------------------------------------------------

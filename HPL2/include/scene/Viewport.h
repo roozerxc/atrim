@@ -60,13 +60,13 @@ public:
     {
         mpCamera = apCamera;
     }
-    cCamera* GetCamera()
+    cCamera *GetCamera()
     {
         return mpCamera;
     }
 
     void SetWorld(cWorld *apWorld);
-    cWorld* GetWorld()
+    cWorld *GetWorld()
     {
         return mpWorld;
     }
@@ -75,12 +75,12 @@ public:
     {
         mpRenderer = apRenderer;
     }
-    iRenderer* GetRenderer()
+    iRenderer *GetRenderer()
     {
         return mpRenderer;
     }
 
-    cRenderSettings* GetRenderSettings()
+    cRenderSettings *GetRenderSettings()
     {
         return mpRenderSettings;
     }
@@ -89,7 +89,7 @@ public:
     {
         mRenderTarget.mpFrameBuffer = apFrameBuffer;
     }
-    iFrameBuffer* GetFrameBuffer()
+    iFrameBuffer *GetFrameBuffer()
     {
         return mRenderTarget.mpFrameBuffer;
     }
@@ -98,7 +98,7 @@ public:
     {
         mpPostEffectComposite = apPostEffectComposite;
     }
-    cPostEffectComposite* GetPostEffectComposite()
+    cPostEffectComposite *GetPostEffectComposite()
     {
         return mpPostEffectComposite;
     }
@@ -116,16 +116,16 @@ public:
         mRenderTarget.mvSize = avSize;
     }
 
-    const cVector2l& GetPosition()
+    const cVector2l &GetPosition()
     {
         return  mRenderTarget.mvPos;
     }
-    const cVector2l& GetSize()
+    const cVector2l &GetSize()
     {
         return mRenderTarget.mvSize;
     }
 
-    cRenderTarget* GetRenderTarget()
+    cRenderTarget *GetRenderTarget()
     {
         return &mRenderTarget;
     }
@@ -136,7 +136,7 @@ public:
 
     void AddRendererCallback(iRendererCallback *apCallback);
     void RemoveRendererCallback(iRendererCallback *apCallback);
-    tRendererCallbackList* GetRendererCallbackList()
+    tRendererCallbackList *GetRendererCallbackList()
     {
         return &mlstRendererCallbacks;
     }

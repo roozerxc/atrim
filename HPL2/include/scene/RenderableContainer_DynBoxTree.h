@@ -79,7 +79,7 @@ public:
     void Add(iRenderable *apRenderable);
     void Remove(iRenderable *apRenderable);
 
-    iRenderableContainerNode* GetRoot();
+    iRenderableContainerNode *GetRoot();
 
     void Compile();
 

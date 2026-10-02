@@ -45,7 +45,7 @@ typedef tNodeOcclusionPairList::iterator tNodeOcclusionPairListIt;
 
 //---------------------------------------------
 
-typedef std::multimap<void*, cOcclusionQueryObject*> tOcclusionQueryObjectMap;
+typedef std::multimap<void *, cOcclusionQueryObject *> tOcclusionQueryObjectMap;
 typedef tOcclusionQueryObjectMap::iterator tOcclusionQueryObjectMapIt;
 
 //---------------------------------------------
@@ -75,7 +75,7 @@ public:
 
 class iRenderer;
 
-typedef bool (*tRenderCHCObjectCallbackFunc)(iRenderer *,iRenderable *apObject);
+typedef bool (*tRenderCHCObjectCallbackFunc)(iRenderer *, iRenderable *apObject);
 
 //---------------------------------------------
 
@@ -121,7 +121,7 @@ public:
     cRenderSettings *mpReflectionSettings;
 
     int mlCurrentOcclusionObject;
-    std::vector<cOcclusionQueryObject*> mvOcclusionObjectPool;
+    std::vector<cOcclusionQueryObject *> mvOcclusionObjectPool;
     tOcclusionQueryObjectMap m_setOcclusionObjects;
 
     std::vector<cFogAreaRenderData> mvFogRenderData;
@@ -185,7 +185,7 @@ public:
 };
 
 
-typedef std::multiset<iRenderableContainerNode*, cRendererNodeSortFunc> tRendererSortedNodeSet;
+typedef std::multiset<iRenderableContainerNode *, cRendererNodeSortFunc> tRendererSortedNodeSet;
 typedef tRendererSortedNodeSet::iterator tRendererSortedNodeSetIt;
 
 //---------------------------------------------
@@ -193,7 +193,7 @@ typedef tRendererSortedNodeSet::iterator tRendererSortedNodeSetIt;
 class cShadowMapLightCache
 {
 public:
-    cShadowMapLightCache() : mpLight(NULL), mlTransformCount(-1), mfRadius(0),mfFOV(0), mfAspect(0) {}
+    cShadowMapLightCache() : mpLight(NULL), mlTransformCount(-1), mfRadius(0), mfFOV(0), mfAspect(0) {}
 
     void SetFromLight(iLight* apLight);
 
@@ -226,7 +226,7 @@ class iRenderer : public iRenderFunctions
     friend class cRendererCallbackFunctions;
     friend class cRenderSettings;
 public:
-    iRenderer(const tString& asName, cGraphics *apGraphics,cResources* apResources, int alNumOfProgramComboModes);
+    iRenderer(const tString& asName, cGraphics *apGraphics, cResources* apResources, int alNumOfProgramComboModes);
     virtual ~iRenderer();
 
     void Render(double adFrameTime, cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
@@ -248,16 +248,16 @@ public:
         return mfTimeCount;
     }
 
-    virtual bool LoadData()=0;
-    virtual void DestroyData()=0;
+    virtual bool LoadData() = 0;
+    virtual void DestroyData() = 0;
 
-    virtual iTexture* GetPostEffectTexture();
+    virtual iTexture *GetPostEffectTexture();
 
-    virtual iTexture* GetRefractionTexture()
+    virtual iTexture *GetRefractionTexture()
     {
         return NULL;
     }
-    virtual iTexture* GetReflectionTexture()
+    virtual iTexture *GetReflectionTexture()
     {
         return NULL;
     }
@@ -280,7 +280,7 @@ public:
         return dCurrentFrameTime;
     }
 
-    iVertexBuffer* GetShapeBoxVertexBuffer()
+    iVertexBuffer *GetShapeBoxVertexBuffer()
     {
         return mpShapeBox;
     }
@@ -374,16 +374,16 @@ protected:
     * In case some intermediate format is used then make sure it is at the correct buffer before ending rendering.
     * When sending to a frame buffer at the end, then this method is never called and the intermediate can be returned with GetPostEffectFrameBuffer
     */
-    virtual void CopyToFrameBuffer()=0;
-    virtual void SetupRenderList()=0;
-    virtual void RenderObjects()=0;
+    virtual void CopyToFrameBuffer() = 0;
+    virtual void SetupRenderList() = 0;
+    virtual void RenderObjects() = 0;
 
-    void BeginRendering(double adFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
-                        bool abSendFrameBufferToPostEffects, tRendererCallbackList *apCallbackList, bool abAtStartOfRendering=true);
-    void EndRendering(bool abAtEndOfRendering=true);
+    void BeginRendering(double adFrameTime, cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
+                        bool abSendFrameBufferToPostEffects, tRendererCallbackList *apCallbackList, bool abAtStartOfRendering = true);
+    void EndRendering(bool abAtEndOfRendering = true);
 
     void CreateAndAddShadowMap(eShadowMapResolution aResolution, const cVector3l &avSize, ePixelFormat aFormat);
-    cShadowMapData* GetShadowMapData(eShadowMapResolution aResolution, iLight *apLight);
+    cShadowMapData *GetShadowMapData(eShadowMapResolution aResolution, iLight *apLight);
     bool ShadowMapNeedsUpdate(iLight *apLight, cShadowMapData *apShadowData);
     void DestroyShadowMaps();
 
@@ -477,12 +477,12 @@ protected:
     void SetOcclusionPlanesActive(bool abX);
 
 
-    iVertexBuffer* CreateQuadVertexBuffer(    eVertexBufferType aType,
+    iVertexBuffer *CreateQuadVertexBuffer(    eVertexBufferType aType,
             const cVector3f& avPos, const cVector2f& avSize,
-            const cVector2f& avMinUV=0, const cVector2f& avMaxUV=1,
-            bool abInvertY=false);
-    iVertexBuffer* LoadVertexBufferFromMesh(const tString& asMeshName, tVertexElementFlag alVtxToCopy);
-    void UpdateqQuadVertexPosition(iVertexBuffer *apVtxBuffer,const cVector3f& avPos, const cVector2f& avSize, bool abCallUpdate);
+            const cVector2f& avMinUV = 0, const cVector2f& avMaxUV = 1,
+            bool abInvertY = false);
+    iVertexBuffer *LoadVertexBufferFromMesh(const tString& asMeshName, tVertexElementFlag alVtxToCopy);
+    void UpdateqQuadVertexPosition(iVertexBuffer *apVtxBuffer, const cVector3f& avPos, const cVector2f& avSize, bool abCallUpdate);
 
     void RunCallback(eRendererMessage aMessage);
 
@@ -491,10 +491,10 @@ protected:
     iOcclusionQuery *GetOcclusionQuery();
     void ReleaseOcclusionQuery(iOcclusionQuery * apQuery);
 
-    cResources* mpResources;
+    cResources *mpResources;
     cGpuShaderManager *mpShaderManager;
 
-    cProgramComboManager* mpProgramManager;
+    cProgramComboManager *mpProgramManager;
 
     tString msName;
 
@@ -539,10 +539,10 @@ protected:
     cRendererCallbackFunctions *mpCallbackFunctions;
 
     int mlActiveOcclusionQueryNum;
-    std::vector<iOcclusionQuery*> mvOcclusionQueryPool;
-    std::vector<cOcclusionQueryObject*> mvSortedOcclusionObjects;
+    std::vector<iOcclusionQuery *> mvOcclusionQueryPool;
+    std::vector<cOcclusionQueryObject *> mvSortedOcclusionObjects;
 
-    std::vector<cShadowMapData*> mvShadowMapData[eShadowMapResolution_LastEnum];
+    std::vector<cShadowMapData *> mvShadowMapData[eShadowMapResolution_LastEnum];
 
     float mfTempAlpha;
 
@@ -563,41 +563,41 @@ class cRendererCallbackFunctions
 public:
     cRendererCallbackFunctions(iRenderer *apRenderer) : mpRenderer(apRenderer) {}
 
-    cRenderSettings* GetSettings()
+    cRenderSettings *GetSettings()
     {
         return mpRenderer->mpCurrentSettings;
     }
-    cFrustum* GetFrustum()
+    cFrustum *GetFrustum()
     {
         return mpRenderer->mpCurrentFrustum;
     }
 
-    inline void SetFlatProjection(const cVector2f &avSize=1,float afMin=-100,float afMax=100)
+    inline void SetFlatProjection(const cVector2f &avSize = 1, float afMin = -100, float afMax = 100)
     {
-        mpRenderer->SetFlatProjection(avSize, afMin,afMax);
+        mpRenderer->SetFlatProjection(avSize, afMin, afMax);
     }
-    inline void SetFlatProjectionMinMax(const cVector3f &avMin,const cVector3f &avMax)
+    inline void SetFlatProjectionMinMax(const cVector3f &avMin, const cVector3f &avMax)
     {
-        mpRenderer->SetFlatProjectionMinMax(avMin,avMax);
+        mpRenderer->SetFlatProjectionMinMax(avMin, avMax);
     }
     inline void SetNormalFrustumProjection()
     {
         mpRenderer->SetNormalFrustumProjection();
     }
 
-    inline void SetFrameBuffer(iFrameBuffer *apFrameBuffer, bool abUsePosAndSize=false)
+    inline void SetFrameBuffer(iFrameBuffer *apFrameBuffer, bool abUsePosAndSize = false)
     {
-        mpRenderer->SetFrameBuffer(apFrameBuffer,abUsePosAndSize);
+        mpRenderer->SetFrameBuffer(apFrameBuffer, abUsePosAndSize);
     }
     inline void ClearFrameBuffer(tClearFrameBufferFlag aFlags, bool abUsePosAndSize)
     {
         mpRenderer->ClearFrameBuffer(aFlags, abUsePosAndSize);
     }
 
-    inline void DrawQuad(    const cVector3f& aPos, const cVector2f& avSize, const cVector2f& avMinUV=0, const cVector2f& avMaxUV=1,
-                             bool abInvertY=false, const cColor& aColor=cColor(1,1) )
+    inline void DrawQuad(    const cVector3f& aPos, const cVector2f& avSize, const cVector2f& avMinUV = 0, const cVector2f& avMaxUV = 1,
+                             bool abInvertY = false, const cColor& aColor = cColor(1, 1) )
     {
-        mpRenderer->DrawQuad(aPos,avSize,avMinUV,avMaxUV,abInvertY,aColor);
+        mpRenderer->DrawQuad(aPos, avSize, avMinUV, avMaxUV, abInvertY, aColor);
     }
 
     inline bool SetDepthTest(bool abX)
@@ -634,7 +634,7 @@ public:
     }
     inline bool SetScissorRect(const cRect2l& aClipRect, bool abAutoEnabling)
     {
-        return mpRenderer->SetScissorRect(aClipRect,abAutoEnabling);
+        return mpRenderer->SetScissorRect(aClipRect, abAutoEnabling);
     }
     inline bool SetChannelMode(eMaterialChannelMode aMode)
     {
@@ -656,9 +656,9 @@ public:
     {
         mpRenderer->SetTexture(alUnit, apTexture);
     }
-    inline void SetTextureRange(iTexture *apTexture, int alFirstUnit, int alLastUnit = kMaxTextureUnits-1)
+    inline void SetTextureRange(iTexture *apTexture, int alFirstUnit, int alLastUnit = kMaxTextureUnits - 1)
     {
-        mpRenderer->SetTextureRange(apTexture,alFirstUnit,alLastUnit);
+        mpRenderer->SetTextureRange(apTexture, alFirstUnit, alLastUnit);
     }
     inline void SetVertexBuffer(iVertexBuffer *apVtxBuffer)
     {

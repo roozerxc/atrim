@@ -25,11 +25,11 @@ class iPhysicsBody;
 class iPhysicsBodyCallback
 {
 public:
-    virtual bool OnAABBCollide(iPhysicsBody *apBody, iPhysicsBody *apCollideBody)=0;
-    virtual void OnBodyCollide(iPhysicsBody *apBody, iPhysicsBody *apCollideBody,cPhysicsContactData* apContactData)=0;
+    virtual bool OnAABBCollide(iPhysicsBody *apBody, iPhysicsBody *apCollideBody) = 0;
+    virtual void OnBodyCollide(iPhysicsBody *apBody, iPhysicsBody *apCollideBody, cPhysicsContactData* apContactData) = 0;
 };
 
-typedef std::list<iPhysicsBodyCallback*> tPhysicsBodyCallbackList;
+typedef std::list<iPhysicsBodyCallback *> tPhysicsBodyCallbackList;
 typedef tPhysicsBodyCallbackList::iterator tPhysicsBodyCallbackListIt;
 
 //------------------------------------------
@@ -56,67 +56,67 @@ class iPhysicsBody : public iEntity3D
     typedef iEntity3D __super;
 #endif
 public:
-    iPhysicsBody(const tString &asName, iPhysicsWorld *apWorld,iCollideShape *apShape);
+    iPhysicsBody(const tString &asName, iPhysicsWorld *apWorld, iCollideShape *apShape);
     virtual ~iPhysicsBody();
 
     void Destroy();
 
-    virtual void SetMaterial(iPhysicsMaterial* apMaterial)=0;
-    iPhysicsMaterial* GetMaterial();
+    virtual void SetMaterial(iPhysicsMaterial* apMaterial) = 0;
+    iPhysicsMaterial *GetMaterial();
 
-    iCollideShape* GetShape();
+    iCollideShape *GetShape();
 
     void AddJoint(iPhysicsJoint *apJoint);
-    iPhysicsJoint* GetJoint(int alIndex);
+    iPhysicsJoint *GetJoint(int alIndex);
     int GetJointNum();
     void RemoveJoint(iPhysicsJoint *apJoint);
 
-    virtual void SetLinearVelocity(const cVector3f &avVel)=0;
-    virtual cVector3f GetLinearVelocity() const=0;
-    virtual void SetAngularVelocity(const cVector3f &avVel)=0;
-    virtual cVector3f GetAngularVelocity() const=0;
-    virtual void SetLinearDamping(float afDamping)=0;
-    virtual float GetLinearDamping() const=0;
-    virtual void SetAngularDamping(float afDamping)=0;
-    virtual float GetAngularDamping() const=0;
-    virtual void SetMaxLinearSpeed(float afSpeed)=0;
-    virtual float GetMaxLinearSpeed() const=0;
-    virtual void SetMaxAngularSpeed(float afDamping)=0;
-    virtual float GetMaxAngularSpeed() const=0;
-    virtual cVector3f GetInertiaVector() =0;
-    virtual cMatrixf GetInertiaMatrix() =0;
+    virtual void SetLinearVelocity(const cVector3f &avVel) = 0;
+    virtual cVector3f GetLinearVelocity() const = 0;
+    virtual void SetAngularVelocity(const cVector3f &avVel) = 0;
+    virtual cVector3f GetAngularVelocity() const = 0;
+    virtual void SetLinearDamping(float afDamping) = 0;
+    virtual float GetLinearDamping() const = 0;
+    virtual void SetAngularDamping(float afDamping) = 0;
+    virtual float GetAngularDamping() const = 0;
+    virtual void SetMaxLinearSpeed(float afSpeed) = 0;
+    virtual float GetMaxLinearSpeed() const = 0;
+    virtual void SetMaxAngularSpeed(float afDamping) = 0;
+    virtual float GetMaxAngularSpeed() const = 0;
+    virtual cVector3f GetInertiaVector() = 0;
+    virtual cMatrixf GetInertiaMatrix() = 0;
 
     cVector3f GetVelocityAtPosition(const cVector3f& avPos);
     cVector3f GetTorqueFromForceAtPosition(const cVector3f& avForce, const cVector3f& avPos);
 
-    virtual void  SetMass(float afMass)=0;
-    virtual float GetMass() const=0;
-    virtual void  SetMassCentre(const cVector3f& avCentre)=0;
-    virtual cVector3f GetMassCentre() const=0;
+    virtual void  SetMass(float afMass) = 0;
+    virtual float GetMass() const = 0;
+    virtual void  SetMassCentre(const cVector3f& avCentre) = 0;
+    virtual cVector3f GetMassCentre() const = 0;
 
-    virtual void AddForce(const cVector3f &avForce)=0;
-    virtual void AddForceAtPosition(const cVector3f &avForce, const cVector3f &avPos)=0;
-    virtual void AddTorque(const cVector3f &avTorque)=0;
-    virtual void AddImpulse(const cVector3f &avImpulse)=0;
-    virtual void AddImpulseAtPosition(const cVector3f &avImpulse, const cVector3f &avPos)=0;
+    virtual void AddForce(const cVector3f &avForce) = 0;
+    virtual void AddForceAtPosition(const cVector3f &avForce, const cVector3f &avPos) = 0;
+    virtual void AddTorque(const cVector3f &avTorque) = 0;
+    virtual void AddImpulse(const cVector3f &avImpulse) = 0;
+    virtual void AddImpulseAtPosition(const cVector3f &avImpulse, const cVector3f &avPos) = 0;
 
-    virtual void Enable()=0;
-    virtual bool GetEnabled() const=0;
-    virtual void SetAutoDisable(bool abEnabled)=0;
-    virtual bool GetAutoDisable() const=0;
-    virtual void SetAutoDisableLinearThreshold(float afThresold)=0;
-    virtual float GetAutoDisableLinearThreshold() const=0;
-    virtual void SetAutoDisableAngularThreshold(float afThresold)=0;
-    virtual float GetAutoDisableAngularThreshold() const=0;
-    virtual void SetAutoDisableNumSteps(int alNum)=0;
-    virtual int GetAutoDisableNumSteps() const=0;
-    virtual void SetContinuousCollision(bool abOn)=0;
-    virtual bool GetContinuousCollision()=0;
+    virtual void Enable() = 0;
+    virtual bool GetEnabled() const = 0;
+    virtual void SetAutoDisable(bool abEnabled) = 0;
+    virtual bool GetAutoDisable() const = 0;
+    virtual void SetAutoDisableLinearThreshold(float afThresold) = 0;
+    virtual float GetAutoDisableLinearThreshold() const = 0;
+    virtual void SetAutoDisableAngularThreshold(float afThresold) = 0;
+    virtual float GetAutoDisableAngularThreshold() const = 0;
+    virtual void SetAutoDisableNumSteps(int alNum) = 0;
+    virtual int GetAutoDisableNumSteps() const = 0;
+    virtual void SetContinuousCollision(bool abOn) = 0;
+    virtual bool GetContinuousCollision() = 0;
 
-    virtual void SetGravity(bool abEnabled)=0;
-    virtual bool GetGravity() const=0;
+    virtual void SetGravity(bool abEnabled) = 0;
+    virtual bool GetGravity() const = 0;
 
-    virtual void RenderDebugGeometry(iLowLevelGraphics *apLowLevel,const cColor &aColor)=0;
+    virtual void RenderDebugGeometry(iLowLevelGraphics *apLowLevel, const cColor &aColor) = 0;
 
     bool UpdateBeforeSimulate(double adFixedDelta);
     void UpdateAfterSimulate(double adFixedDelta);
@@ -156,7 +156,7 @@ public:
 
 
     void SetScrapeSoundEntity(cSoundEntity *apEntity);
-    cSoundEntity* GetScrapeSoundEntity()
+    cSoundEntity *GetScrapeSoundEntity()
     {
         return mpScrapeSoundEntity;
     }
@@ -170,13 +170,13 @@ public:
     }
     void SetScrapeBody(iPhysicsBody *apBody)
     {
-        mpScrapeBody =apBody;
+        mpScrapeBody = apBody;
     }
-    iPhysicsBody * GetScrapeBody()
+    iPhysicsBody *GetScrapeBody()
     {
         return mpScrapeBody;
     }
-    const cMatrixf& GetPreveScrapeMatrix()
+    const cMatrixf &GetPreveScrapeMatrix()
     {
         return m_mtxPrevScrapeMatrix;
     }
@@ -186,7 +186,7 @@ public:
     }
 
     void SetRollSoundEntity(cSoundEntity *apEntity);
-    cSoundEntity* GetRollSoundEntity()
+    cSoundEntity *GetRollSoundEntity()
     {
         return mpRollSoundEntity;
     }
@@ -213,7 +213,7 @@ public:
     {
         mpUserData = apUserData;
     }
-    void* GetUserData()
+    void *GetUserData()
     {
         return mpUserData;
     }
@@ -222,7 +222,7 @@ public:
     void RemoveBodyCallback(iPhysicsBodyCallback *apCallback);
 
     bool OnAABBCollision(iPhysicsBody *apBody);
-    void OnCollide(iPhysicsBody *apBody,cPhysicsContactData* apContactData);
+    void OnCollide(iPhysicsBody *apBody, cPhysicsContactData* apContactData);
 
     void SetCollide(bool abX)
     {
@@ -264,7 +264,7 @@ public:
     {
         mpCharacterBody = apCharBody;
     }
-    iCharacterBody* GetCharacterBody()
+    iCharacterBody *GetCharacterBody()
     {
         return mpCharacterBody;
     }
@@ -439,7 +439,7 @@ public:
         return "Body";
     }
 
-    virtual void DeleteLowLevel()=0;
+    virtual void DeleteLowLevel() = 0;
 protected:
     iPhysicsWorld *mpWorld;
     iCollideShape *mpShape;
@@ -447,11 +447,11 @@ protected:
 
     iCharacterBody *mpCharacterBody;
 
-    std::vector<iPhysicsJoint*> mvJoints;
+    std::vector<iPhysicsJoint *> mvJoints;
 
     bool mbDestroying;
 
-    std::list<iCharacterBody*> mlstConnectedCharBodies;
+    std::list<iCharacterBody *> mlstConnectedCharBodies;
 
     iPhysicsBody *mpScrapeBody;
     cSoundEntity *mpScrapeSoundEntity;

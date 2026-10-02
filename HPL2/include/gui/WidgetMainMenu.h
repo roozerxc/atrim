@@ -45,7 +45,7 @@ protected:
     float mfItemVPadding;
     float mfItemTextPadding;
 
-    cGuiGfxElement* mpGfxBackground;
+    cGuiGfxElement *mpGfxBackground;
 
 };
 };

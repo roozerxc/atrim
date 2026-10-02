@@ -31,18 +31,18 @@ void iLowLevelSound::PopulateAvailableSoundDevices(tSoundDeviceVec& avSoundDevic
 
     bool bDefaultFound = false;
     tStringVec vDeviceNames = OAL_Info_GetOutputDevices();
-    for(int i=0; i<(int)vDeviceNames.size(); ++i)
+    for(int i = 0; i < (int)vDeviceNames.size(); ++i)
     {
         const tString& sDev = vDeviceNames[i];
         bool bIsDefault = false;
 
-        if(bDefaultFound==false && cString::GetFirstStringPos(sDev, OAL_Info_GetDefaultOutputDevice())!=-1)
+        if(bDefaultFound == false && cString::GetFirstStringPos(sDev, OAL_Info_GetDefaultOutputDevice()) != -1)
         {
             bDefaultFound = true;
             bIsDefault = true;
         }
 
-        iSoundDeviceIdentifier* pSndDev = hplNew(cSoundDeviceIdentifierOpenAL,(i, sDev, bIsDefault));
+        iSoundDeviceIdentifier* pSndDev = hplNew(cSoundDeviceIdentifierOpenAL, (i, sDev, bIsDefault));
         avSoundDeviceVec.push_back(pSndDev);
     }
 }
@@ -83,13 +83,13 @@ cLowLevelSoundOpenAL::~cLowLevelSoundOpenAL()
 
 //-----------------------------------------------------------------------
 
-iSoundData* cLowLevelSoundOpenAL::LoadSoundData(const tString& asName, const tWString& asFilePath,
-        const tString& asType, bool abStream,bool abLoopStream)
+iSoundData *cLowLevelSoundOpenAL::LoadSoundData(const tString& asName, const tWString& asFilePath,
+        const tString& asType, bool abStream, bool abLoopStream)
 {
-    cOpenALSoundData* pSoundData = hplNew( cOpenALSoundData, (asName,abStream) );
+    cOpenALSoundData* pSoundData = hplNew( cOpenALSoundData, (asName, abStream) );
     pSoundData->SetLoopStream(abLoopStream);
 
-    if(pSoundData->CreateFromFile(asFilePath)==false)
+    if(pSoundData->CreateFromFile(asFilePath) == false)
     {
         hplDelete(pSoundData);
         return NULL;
@@ -104,7 +104,7 @@ void cLowLevelSoundOpenAL::GetSupportedFormats(tStringList &alstFormats)
 {
     int lPos = 0;
 
-    while(mvFormats[lPos]!="")
+    while(mvFormats[lPos] != "")
     {
         alstFormats.push_back(mvFormats[lPos]);
         lPos++;
@@ -119,15 +119,15 @@ void cLowLevelSoundOpenAL::UpdateSound(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-void cLowLevelSoundOpenAL::SetListenerAttributes(const cVector3f &avPos,const cVector3f &avVel,
-        const cVector3f &avForward,const cVector3f &avUp)
+void cLowLevelSoundOpenAL::SetListenerAttributes(const cVector3f &avPos, const cVector3f &avVel,
+        const cVector3f &avForward, const cVector3f &avUp)
 {
     mvListenerPosition = avPos;
     mvListenerVelocity = avVel;
     mvListenerForward = avForward;
     mvListenerUp = avUp;
 
-    mvListenerRight = cMath::Vector3Cross(mvListenerForward,mvListenerUp);
+    mvListenerRight = cMath::Vector3Cross(mvListenerForward, mvListenerUp);
 
 //        m_mtxListener = cMatrixf(
 //                -mvListenerRight.x, -mvListenerRight.y,-mvListenerRight.z, avPos.x,
@@ -138,12 +138,12 @@ void cLowLevelSoundOpenAL::SetListenerAttributes(const cVector3f &avPos,const cV
     m_mtxListener = cMatrixf::Identity;
     m_mtxListener.SetRight(mvListenerRight);
     m_mtxListener.SetUp(mvListenerUp);
-    m_mtxListener.SetForward(mvListenerForward*-1);
+    m_mtxListener.SetForward(mvListenerForward * -1);
     m_mtxListener = cMath::MatrixInverse(m_mtxListener);
     m_mtxListener.SetTranslation(mvListenerPosition);
 
-    float fVel[3]= {0,0,0};
-    OAL_Listener_SetAttributes ( avPos.v, avVel.v, (avForward*(-1)).v, avUp.v );
+    float fVel[3] = {0, 0, 0};
+    OAL_Listener_SetAttributes ( avPos.v, avVel.v, (avForward * (-1)).v, avUp.v );
 }
 
 //-----------------------------------------------------------------------
@@ -152,7 +152,7 @@ void cLowLevelSoundOpenAL::SetListenerPosition(const cVector3f &avPos)
 {
     mvListenerPosition = avPos;
 
-    OAL_Listener_SetAttributes ( avPos.v, mvListenerVelocity.v, (mvListenerForward*(-1)).v, mvListenerUp.v );
+    OAL_Listener_SetAttributes ( avPos.v, mvListenerVelocity.v, (mvListenerForward * (-1)).v, mvListenerUp.v );
 }
 
 //-----------------------------------------------------------------------
@@ -188,7 +188,7 @@ void cLowLevelSoundOpenAL::SetVolume(float afVolume)
 */
 //-----------------------------------------------------------------------
 
-void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMaxChannels,
+void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio, int alMaxChannels,
                                 int alStreamUpdateFreq, bool abUseThreading, bool abUseVoiceManagement,
                                 int alMaxMonoSourceHint, int alMaxStereoSourceHint,
                                 int alStreamingBufferSize, int alStreamingBufferCount, bool abEnableLowLevelLog)
@@ -228,11 +228,11 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
         FatalError("   No sound devices available! Check your OpenAL installation\n");
     }
 
-    for(int i=0; i<(int)vSndDevices.size(); ++i)
+    for(int i = 0; i < (int)vSndDevices.size(); ++i)
     {
         iSoundDeviceIdentifier* pSndDev = vSndDevices[i];
         Log("   %i. %s", pSndDev->GetID(), pSndDev->GetName().c_str());
-        Log("%s\n", pSndDev->IsDefault()?"(OpenAL default)":"");
+        Log("%s\n", pSndDev->IsDefault() ? "(OpenAL default)" : "");
     }
 
     /////////////////////////////////////////////////////////
@@ -246,7 +246,7 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
 
     /////////////////////////////////////////////////////////
     // Check if demanded ID is inside bounds
-    if(alSoundDeviceID>=0 && alSoundDeviceID<(int)vSndDevices.size())
+    if(alSoundDeviceID >= 0 && alSoundDeviceID < (int)vSndDevices.size())
     {
         iSoundDeviceIdentifier* pDev = vSndDevices[alSoundDeviceID];
 
@@ -261,7 +261,7 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
         //  - ID == -2 : pick first default device, meaning first default in the full
         //                  available device list
         //    Any other value will force driver preferred picking
-        if(alSoundDeviceID==-1)
+        if(alSoundDeviceID == -1)
         {
             iSoundDeviceIdentifier* pValidDefaultDev = GetFirstValidDefaultDevice();
 
@@ -276,7 +276,7 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
             }
         }
 
-        if(alSoundDeviceID==-2)
+        if(alSoundDeviceID == -2)
         {
             iSoundDeviceIdentifier* pDefaultDev = GetFirstDefaultDevice();
 
@@ -293,11 +293,11 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
 
     //////////////////////////////////////////////////////////////////////
     // If the above failed, try to get first valid device that works
-    if(mbInitialized==false)
+    if(mbInitialized == false)
     {
         Log("Failed\n  Finding first device matching filter that works... ");
 
-        for(int i=0; i<(int)vValidSndDevices.size(); ++i)
+        for(int i = 0; i < (int)vValidSndDevices.size(); ++i)
         {
             iSoundDeviceIdentifier* pDev = vValidSndDevices[i];
 
@@ -316,14 +316,14 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
 
     ///////////////////////////////////////////////////////////////
     // If all the above fails, try default device out of all available
-    if(mbInitialized==false)
+    if(mbInitialized == false)
     {
         Log("Failed\n  Trying with default device... ");
 
-        for(int i=0; i<(int)vSndDevices.size(); ++i)
+        for(int i = 0; i < (int)vSndDevices.size(); ++i)
         {
             iSoundDeviceIdentifier* pDev = vSndDevices[i];
-            if(pDev->IsDefault()==false)
+            if(pDev->IsDefault() == false)
             {
                 continue;
             }
@@ -343,7 +343,7 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
 
     /////////////////////////////////////////////////
     // If the above fails, let OpenAL choose
-    if(mbInitialized==false)
+    if(mbInitialized == false)
     {
         Log("Failed\n  Trying to let your OpenAL driver pick the device... ");
 
@@ -352,12 +352,12 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
         if (mbInitialized)
         {
             tString sDeviceName = tString(OAL_Info_GetDeviceName());
-            for(int i=0; i<(int)vSndDevices.size(); ++i)
+            for(int i = 0; i < (int)vSndDevices.size(); ++i)
             {
                 /////////////////////////////////////////////////////////////////////////////////////
                 // There is chance the picked device name doesn't match any of the enumerated ones
                 // but should be the first that has it as substring (not 100% sure about this though)
-                if(cString::GetFirstStringPos(vSndDevices[i]->GetName(), sDeviceName)!=-1)
+                if(cString::GetFirstStringPos(vSndDevices[i]->GetName(), sDeviceName) != -1)
                 {
                     alSoundDeviceID = vSndDevices[i]->GetID();
                     break;
@@ -369,7 +369,7 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
 
     //////////////////////////////////////////////////////////////////////
     // If none of the above worked, then we are pretty much screwed
-    if(mbInitialized==false)
+    if(mbInitialized == false)
     {
         FatalError("Failed! Check your OpenAL installation\n");
         return;
@@ -416,11 +416,11 @@ void cLowLevelSoundOpenAL::Init(int alSoundDeviceID, bool abUseEnvAudio,int alMa
 
 
     //Default listener settings.
-    float Pos[3] = {0,0,0};
-    float Vel[3] = {0,0,0};
+    float Pos[3] = {0, 0, 0};
+    float Vel[3] = {0, 0, 0};
 
-    mvListenerForward = cVector3f(0,0,1);
-    mvListenerUp = cVector3f(0,1,0);
+    mvListenerForward = cVector3f(0, 0, 1);
+    mvListenerUp = cVector3f(0, 1, 0);
 
     OAL_Listener_SetAttributes ( Pos, Vel, mvListenerForward.v, mvListenerUp.v );
 
@@ -438,11 +438,11 @@ void cLowLevelSoundOpenAL::SetEnvVolume( float afEnvVolume )
         return;
     }
 
-    if (afEnvVolume <0)
+    if (afEnvVolume < 0)
     {
         afEnvVolume = 0;
     }
-    if (afEnvVolume >1)
+    if (afEnvVolume > 1)
     {
         afEnvVolume = 1;
     }
@@ -452,9 +452,9 @@ void cLowLevelSoundOpenAL::SetEnvVolume( float afEnvVolume )
 
 //-----------------------------------------------------------------------
 
-iSoundDeviceIdentifier* cLowLevelSoundOpenAL::GetCurrentSoundDevice()
+iSoundDeviceIdentifier *cLowLevelSoundOpenAL::GetCurrentSoundDevice()
 {
-    if(mlCurrentSoundDevID<0 || mlCurrentSoundDevID>=(int)mvSoundDevices.size())
+    if(mlCurrentSoundDevID < 0 || mlCurrentSoundDevID >= (int)mvSoundDevices.size())
     {
         return GetFirstDefaultDevice();
     }
@@ -464,7 +464,7 @@ iSoundDeviceIdentifier* cLowLevelSoundOpenAL::GetCurrentSoundDevice()
 
 //-----------------------------------------------------------------------
 
-iSoundEnvironment* cLowLevelSoundOpenAL::LoadSoundEnvironment(const tString &asFilePath)
+iSoundEnvironment *cLowLevelSoundOpenAL::LoadSoundEnvironment(const tString &asFilePath)
 {
     if (!mbEnvAudioEnabled)
     {
@@ -481,9 +481,9 @@ iSoundEnvironment* cLowLevelSoundOpenAL::LoadSoundEnvironment(const tString &asF
 
     /////////////////////////////////////////////
     ///Create new and load from file
-    cOpenALSoundEnvironment* pSoundEnv = hplNew(cOpenALSoundEnvironment,());
+    cOpenALSoundEnvironment* pSoundEnv = hplNew(cOpenALSoundEnvironment, ());
 
-    if (pSoundEnv->CreateFromFile(asFilePath)==false)
+    if (pSoundEnv->CreateFromFile(asFilePath) == false)
     {
         hplDelete(pSoundEnv);
         return NULL;
@@ -518,20 +518,20 @@ void cLowLevelSoundOpenAL::SetSoundEnvironment ( iSoundEnvironment* apSoundEnv )
         OAL_Effect_Reverb_SetDensity(mpEffect, 0);
         OAL_Effect_Reverb_SetDiffusion(mpEffect, 0);
         OAL_Effect_Reverb_SetEchoTime (mpEffect, 0);
-        OAL_Effect_Reverb_SetEchoDepth (mpEffect,0);
-        OAL_Effect_Reverb_SetModulationTime(mpEffect,0);
-        OAL_Effect_Reverb_SetModulationDepth(mpEffect,0);
-        OAL_Effect_Reverb_SetGain(mpEffect,0);
-        OAL_Effect_Reverb_SetGainHF(mpEffect,0);
-        OAL_Effect_Reverb_SetGainLF(mpEffect,0);
-        OAL_Effect_Reverb_SetReflectionsDelay(mpEffect,0);
+        OAL_Effect_Reverb_SetEchoDepth (mpEffect, 0);
+        OAL_Effect_Reverb_SetModulationTime(mpEffect, 0);
+        OAL_Effect_Reverb_SetModulationDepth(mpEffect, 0);
+        OAL_Effect_Reverb_SetGain(mpEffect, 0);
+        OAL_Effect_Reverb_SetGainHF(mpEffect, 0);
+        OAL_Effect_Reverb_SetGainLF(mpEffect, 0);
+        OAL_Effect_Reverb_SetReflectionsDelay(mpEffect, 0);
         OAL_Effect_Reverb_SetReflectionsGain(mpEffect, 0);
         OAL_Effect_Reverb_SetLateReverbGain(mpEffect, 0);
         OAL_Effect_Reverb_SetLateReverbDelay( mpEffect, 0);
         OAL_Effect_Reverb_SetHFReference(mpEffect, 0);
         OAL_Effect_Reverb_SetLFReference(mpEffect, 0);
         OAL_Effect_Reverb_SetAirAbsorptionGainHF(mpEffect, 0);
-        OAL_Effect_Reverb_SetDecayTime( mpEffect,0);
+        OAL_Effect_Reverb_SetDecayTime( mpEffect, 0);
         OAL_Effect_Reverb_SetDecayHFRatio (mpEffect, 0);
         OAL_Effect_Reverb_SetDecayLFRatio (mpEffect, 0);
         OAL_Effect_Reverb_SetDecayHFLimit(mpEffect, 0);
@@ -547,11 +547,11 @@ void cLowLevelSoundOpenAL::SetSoundEnvironment ( iSoundEnvironment* apSoundEnv )
     OAL_Effect_Reverb_SetDiffusion(mpEffect, pEnv->GetDiffusion());
     OAL_Effect_Reverb_SetEchoTime (mpEffect, pEnv->GetEchoTime());
     OAL_Effect_Reverb_SetEchoDepth (mpEffect, pEnv->GetEchoDepth());
-    OAL_Effect_Reverb_SetModulationTime(mpEffect,pEnv->GetModulationTime());
-    OAL_Effect_Reverb_SetModulationDepth(mpEffect,pEnv->GetModulationDepth());
-    OAL_Effect_Reverb_SetGain(mpEffect,pEnv->GetGain());
-    OAL_Effect_Reverb_SetGainHF(mpEffect,pEnv->GetGainHF());
-    OAL_Effect_Reverb_SetGainLF(mpEffect,pEnv->GetGainLF());
+    OAL_Effect_Reverb_SetModulationTime(mpEffect, pEnv->GetModulationTime());
+    OAL_Effect_Reverb_SetModulationDepth(mpEffect, pEnv->GetModulationDepth());
+    OAL_Effect_Reverb_SetGain(mpEffect, pEnv->GetGain());
+    OAL_Effect_Reverb_SetGainHF(mpEffect, pEnv->GetGainHF());
+    OAL_Effect_Reverb_SetGainLF(mpEffect, pEnv->GetGainLF());
     OAL_Effect_Reverb_SetReflectionsDelay(mpEffect, pEnv->GetReflectionsDelay());
     OAL_Effect_Reverb_SetReflectionsGain(mpEffect, pEnv->GetReflectionsGain());
     OAL_Effect_Reverb_SetLateReverbGain(mpEffect, pEnv->GetLateReverbGain());
@@ -604,18 +604,18 @@ void cLowLevelSoundOpenAL::FadeSoundEnvironment( iSoundEnvironment* apSourceSoun
         return;
     }
 
-    if (afT<0)
+    if (afT < 0)
     {
         afT = 0;
     }
-    if (afT>1)
+    if (afT > 1)
     {
         afT = 1;
     }
 
-    float fOneMinusT = 1-afT;
+    float fOneMinusT = 1 - afT;
 
-    if ((apSourceSoundEnv == NULL) && (apDestSoundEnv==NULL))
+    if ((apSourceSoundEnv == NULL) && (apDestSoundEnv == NULL))
     {
         return;
     }
@@ -717,13 +717,13 @@ void cLowLevelSoundOpenAL::FadeSoundEnvironment( iSoundEnvironment* apSourceSoun
 
 //-----------------------------------------------------------------------
 
-iSoundDeviceIdentifier* cLowLevelSoundOpenAL::GetFirstValidDefaultDevice()
+iSoundDeviceIdentifier *cLowLevelSoundOpenAL::GetFirstValidDefaultDevice()
 {
     const tSoundDeviceVec& vValidSndDevices = GetFilteredSoundDevices();
 
     /////////////////////////////////
     // Return first default device
-    for(int i=0; i<(int)vValidSndDevices.size(); ++i)
+    for(int i = 0; i < (int)vValidSndDevices.size(); ++i)
     {
         iSoundDeviceIdentifier* pSndDev = vValidSndDevices[i];
         if(pSndDev->IsDefault())
@@ -733,7 +733,7 @@ iSoundDeviceIdentifier* cLowLevelSoundOpenAL::GetFirstValidDefaultDevice()
     }
     /////////////////////////////////
     // If no default device found in valid list, return 1st
-    if(vValidSndDevices.empty()==false)
+    if(vValidSndDevices.empty() == false)
     {
         return vValidSndDevices[0];
     }
@@ -744,7 +744,7 @@ iSoundDeviceIdentifier* cLowLevelSoundOpenAL::GetFirstValidDefaultDevice()
 
 //-----------------------------------------------------------------------
 
-iSoundDeviceIdentifier* cLowLevelSoundOpenAL::GetFirstDefaultDevice()
+iSoundDeviceIdentifier *cLowLevelSoundOpenAL::GetFirstDefaultDevice()
 {
     iSoundDeviceIdentifier* pSndDev = GetFirstValidDefaultDevice();
 
@@ -759,7 +759,7 @@ iSoundDeviceIdentifier* cLowLevelSoundOpenAL::GetFirstDefaultDevice()
 
     /////////////////////////////////
     // Return first default device in all devices
-    for(int i=0; i<(int)vSndDevices.size(); ++i)
+    for(int i = 0; i < (int)vSndDevices.size(); ++i)
     {
         iSoundDeviceIdentifier* pSndDev = vSndDevices[i];
         if(pSndDev->IsDefault())

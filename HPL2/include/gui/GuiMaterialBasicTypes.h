@@ -11,7 +11,7 @@ namespace hpl
 class cGuiMaterial_Diffuse : public iGuiMaterial
 {
 public:
-    cGuiMaterial_Diffuse(iLowLevelGraphics *apLowLevelGraphics):iGuiMaterial("Diffuse",apLowLevelGraphics) {}
+    cGuiMaterial_Diffuse(iLowLevelGraphics *apLowLevelGraphics): iGuiMaterial("Diffuse", apLowLevelGraphics) {}
     ~cGuiMaterial_Diffuse() {}
 
     void BeforeRender();
@@ -23,7 +23,7 @@ public:
 class cGuiMaterial_Alpha : public iGuiMaterial
 {
 public:
-    cGuiMaterial_Alpha(iLowLevelGraphics *apLowLevelGraphics):iGuiMaterial("Alpha",apLowLevelGraphics) {}
+    cGuiMaterial_Alpha(iLowLevelGraphics *apLowLevelGraphics): iGuiMaterial("Alpha", apLowLevelGraphics) {}
     ~cGuiMaterial_Alpha() {}
 
     void BeforeRender();
@@ -35,7 +35,7 @@ public:
 class cGuiMaterial_FontNormal : public iGuiMaterial
 {
 public:
-    cGuiMaterial_FontNormal(iLowLevelGraphics *apLowLevelGraphics):iGuiMaterial("FontNormal",apLowLevelGraphics) {}
+    cGuiMaterial_FontNormal(iLowLevelGraphics *apLowLevelGraphics): iGuiMaterial("FontNormal", apLowLevelGraphics) {}
     ~cGuiMaterial_FontNormal() {}
 
     void BeforeRender();
@@ -47,7 +47,7 @@ public:
 class cGuiMaterial_Additive : public iGuiMaterial
 {
 public:
-    cGuiMaterial_Additive(iLowLevelGraphics *apLowLevelGraphics):iGuiMaterial("Additive",apLowLevelGraphics) {}
+    cGuiMaterial_Additive(iLowLevelGraphics *apLowLevelGraphics): iGuiMaterial("Additive", apLowLevelGraphics) {}
     ~cGuiMaterial_Additive() {}
 
     void BeforeRender();
@@ -59,7 +59,7 @@ public:
 class cGuiMaterial_Modulative : public iGuiMaterial
 {
 public:
-    cGuiMaterial_Modulative(iLowLevelGraphics *apLowLevelGraphics):iGuiMaterial("Modulative",apLowLevelGraphics) {}
+    cGuiMaterial_Modulative(iLowLevelGraphics *apLowLevelGraphics): iGuiMaterial("Modulative", apLowLevelGraphics) {}
     ~cGuiMaterial_Modulative() {}
 
     void BeforeRender();
@@ -71,7 +71,7 @@ public:
 class cGuiMaterial_PremulAlpha : public iGuiMaterial
 {
 public:
-    cGuiMaterial_PremulAlpha(iLowLevelGraphics *apLowLevelGraphics):iGuiMaterial("Alpha",apLowLevelGraphics) {}
+    cGuiMaterial_PremulAlpha(iLowLevelGraphics *apLowLevelGraphics): iGuiMaterial("Alpha", apLowLevelGraphics) {}
     ~cGuiMaterial_PremulAlpha() {}
 
     void BeforeRender();

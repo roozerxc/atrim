@@ -33,19 +33,19 @@ namespace hpl
 //-----------------------------------------------------------------------
 
 cParticleEmitterData_UserData::cParticleEmitterData_UserData(
-    const tString &asName,cResources* apResources,cGraphics *apGraphics)
-    : iParticleEmitterData(asName,apResources,apGraphics)
+    const tString &asName, cResources* apResources, cGraphics *apGraphics)
+    : iParticleEmitterData(asName, apResources, apGraphics)
 {
 }
 
 //-----------------------------------------------------------------------
 
-iParticleEmitter* cParticleEmitterData_UserData::Create(tString asName, cVector3f avSize)
+iParticleEmitter *cParticleEmitterData_UserData::Create(tString asName, cVector3f avSize)
 {
-    iParticleEmitter *pPE = hplNew( cParticleEmitter_UserData, (asName,&mvMaterials,avSize,
-                                    mpGraphics,mpResources,this) );
+    iParticleEmitter *pPE = hplNew( cParticleEmitter_UserData, (asName, &mvMaterials, avSize,
+                                    mpGraphics, mpResources, this) );
 
-    cMatrixf mtxOffset = cMath::MatrixRotate(mvAngleOffset,eEulerRotationOrder_XYZ);
+    cMatrixf mtxOffset = cMath::MatrixRotate(mvAngleOffset, eEulerRotationOrder_XYZ);
     mtxOffset.SetTranslation(mvPosOffset);
     pPE->SetMatrix(mtxOffset);
 
@@ -57,7 +57,7 @@ iParticleEmitter* cParticleEmitterData_UserData::Create(tString asName, cVector3
 // NEW
 static ePEType GetPEType(const char *apString)
 {
-    if(apString==NULL)
+    if(apString == NULL)
     {
         return ePEType_Normal;
     }
@@ -81,7 +81,7 @@ static ePEType GetPEType(const char *apString)
 
 static ePEStartPosType GetStartPosType(const char *apString)
 {
-    if(apString==NULL)
+    if(apString == NULL)
     {
         return ePEStartPosType_Box;
     }
@@ -104,18 +104,18 @@ static ePEStartPosType GetStartPosType(const char *apString)
 
 static eParticleEmitterCoordSystem GetCoordSystem(const char *apString)
 {
-    if(apString==NULL)
+    if(apString == NULL)
     {
         return eParticleEmitterCoordSystem_World;
     }
 
     tString sType = cString::ToLowerCase(apString);
 
-    if(sType=="world")
+    if(sType == "world")
     {
         return eParticleEmitterCoordSystem_World;
     }
-    else if(sType=="local")
+    else if(sType == "local")
     {
         return eParticleEmitterCoordSystem_Local;
     }
@@ -127,14 +127,14 @@ static eParticleEmitterCoordSystem GetCoordSystem(const char *apString)
 
 static ePEDeathType GetDeathType(const char *apString)
 {
-    if(apString==NULL)
+    if(apString == NULL)
     {
         return ePEDeathType_Age;
     }
 
     tString sType = cString::ToLowerCase(apString);
 
-    if(sType=="age")
+    if(sType == "age")
     {
         return ePEDeathType_Age;
     }
@@ -146,7 +146,7 @@ static ePEDeathType GetDeathType(const char *apString)
 
 static eParticleEmitterType GetDrawType(const char *apString)
 {
-    if(apString==NULL)
+    if(apString == NULL)
     {
         return eParticleEmitterType_DynamicPoint;
     }
@@ -173,7 +173,7 @@ static eParticleEmitterType GetDrawType(const char *apString)
 
 static ePEGravityType GetGravityType(const char *apString)
 {
-    if(apString==NULL)
+    if(apString == NULL)
     {
         return ePEGravityType_None;
     }
@@ -200,7 +200,7 @@ static ePEGravityType GetGravityType(const char *apString)
 
 static ePESubDivType GetSubDivType(const char *apString)
 {
-    if(apString==NULL)
+    if(apString == NULL)
     {
         return ePESubDivType_Random;
     }
@@ -224,7 +224,7 @@ static ePESubDivType GetSubDivType(const char *apString)
 
 static ePEPartSpinType GetPartSpinType(const char *apString)
 {
-    if (apString==NULL)
+    if (apString == NULL)
     {
         return ePEPartSpinType_Constant;
     }
@@ -250,7 +250,7 @@ static ePEPartSpinType GetPartSpinType(const char *apString)
 void cParticleEmitterData_UserData::LoadFromElement(cXmlElement *apElement)
 {
     ///////// GENERAL /////////////
-    msName =  cString::ToString(apElement->GetAttribute("Name"),"");
+    msName =  cString::ToString(apElement->GetAttribute("Name"), "");
 
     // NEW
 
@@ -258,39 +258,39 @@ void cParticleEmitterData_UserData::LoadFromElement(cXmlElement *apElement)
 
     // ---
 
-    mlMaxParticleNum = cString::ToInt(apElement->GetAttribute("MaxParticleNum"),1);
+    mlMaxParticleNum = cString::ToInt(apElement->GetAttribute("MaxParticleNum"), 1);
 
-    mbRespawn = cString::ToBool(apElement->GetAttribute("Respawn"),false);
+    mbRespawn = cString::ToBool(apElement->GetAttribute("Respawn"), false);
 
-    mfParticlesPerSecond = cString::ToFloat(apElement->GetAttribute("ParticlesPerSecond"),1);
-    mfStartTimeOffset = cString::ToFloat(apElement->GetAttribute("StartTimeOffset"),0);
+    mfParticlesPerSecond = cString::ToFloat(apElement->GetAttribute("ParticlesPerSecond"), 1);
+    mfStartTimeOffset = cString::ToFloat(apElement->GetAttribute("StartTimeOffset"), 0);
 
-    mfWarmUpTime = cString::ToFloat(apElement->GetAttribute("WarmUpTime"),0);
-    mfWarmUpStepsPerSec = cString::ToFloat(apElement->GetAttribute("WarmUpStepsPerSec"),60);
+    mfWarmUpTime = cString::ToFloat(apElement->GetAttribute("WarmUpTime"), 0);
+    mfWarmUpStepsPerSec = cString::ToFloat(apElement->GetAttribute("WarmUpStepsPerSec"), 60);
 
-    mfMinPauseLength = cString::ToFloat(apElement->GetAttribute("MinPauseLength"),0);
-    mfMaxPauseLength = cString::ToFloat(apElement->GetAttribute("MaxPauseLength"),0);
+    mfMinPauseLength = cString::ToFloat(apElement->GetAttribute("MinPauseLength"), 0);
+    mfMaxPauseLength = cString::ToFloat(apElement->GetAttribute("MaxPauseLength"), 0);
 
-    mfMinPauseInterval = cString::ToFloat(apElement->GetAttribute("MinPauseInterval"),0);
-    mfMaxPauseInterval = cString::ToFloat(apElement->GetAttribute("MaxPauseInterval"),0);
+    mfMinPauseInterval = cString::ToFloat(apElement->GetAttribute("MinPauseInterval"), 0);
+    mfMaxPauseInterval = cString::ToFloat(apElement->GetAttribute("MaxPauseInterval"), 0);
 
-    mvPosOffset = cString::ToVector3f(apElement->GetAttribute("PosOffset"),0);
-    mvAngleOffset = cString::ToVector3f(apElement->GetAttribute("AngleOffset"),0);
+    mvPosOffset = cString::ToVector3f(apElement->GetAttribute("PosOffset"), 0);
+    mvAngleOffset = cString::ToVector3f(apElement->GetAttribute("AngleOffset"), 0);
     mvAngleOffset.x = cMath::ToRad(mvAngleOffset.x);
     mvAngleOffset.y = cMath::ToRad(mvAngleOffset.y);
     mvAngleOffset.z = cMath::ToRad(mvAngleOffset.z);
 
     /////////// MATERIAL  ////////
-    int lMaterialNum = cString::ToInt(apElement->GetAttribute("MaterialNum"),1);
-    float fAnimationLength = cString::ToFloat(apElement->GetAttribute("AnimationLength"),1);
-    tString sMaterial = cString::ToString(apElement->GetAttribute("Material"),"");
+    int lMaterialNum = cString::ToInt(apElement->GetAttribute("MaterialNum"), 1);
+    float fAnimationLength = cString::ToFloat(apElement->GetAttribute("AnimationLength"), 1);
+    tString sMaterial = cString::ToString(apElement->GetAttribute("Material"), "");
 
-    mvSubDiv = cString::ToVector2l(apElement->GetAttribute("SubDiv"),1);
+    mvSubDiv = cString::ToVector2l(apElement->GetAttribute("SubDiv"), 1);
     mSubDivType = GetSubDivType(apElement->GetAttribute("SubDivType"));
 
     if(lMaterialNum <= 1)
     {
-        sMaterial = cString::SetFileExt(sMaterial,"mat");
+        sMaterial = cString::SetFileExt(sMaterial, "mat");
         cMaterial *pMaterial = mpResources->GetMaterialManager()->CreateMaterial(sMaterial);
 
         if(pMaterial)
@@ -300,19 +300,19 @@ void cParticleEmitterData_UserData::LoadFromElement(cXmlElement *apElement)
     }
     else
     {
-        for(int i=1; i<lMaterialNum+1; ++i)
+        for(int i = 1; i < lMaterialNum + 1; ++i)
         {
             tString sFileName;
-            if(i>9)
+            if(i > 9)
             {
                 sFileName = sMaterial + cString::ToString(i);
             }
             else
             {
-                sFileName = sMaterial + "0"+cString::ToString(i);
+                sFileName = sMaterial + "0" + cString::ToString(i);
             }
 
-            sFileName = cString::SetFileExt(sFileName,"mat");
+            sFileName = cString::SetFileExt(sFileName, "mat");
 
             cMaterial *pMaterial = mpResources->GetMaterialManager()->CreateMaterial(sFileName);
             if(pMaterial)
@@ -322,24 +322,24 @@ void cParticleEmitterData_UserData::LoadFromElement(cXmlElement *apElement)
         }
     }
 
-    mfFrameStep = 1/(fAnimationLength/(float)mvMaterials.size());
-    mfMaxFrameTime = ((float)mvMaterials.size())-0.0001f;
+    mfFrameStep = 1 / (fAnimationLength / (float)mvMaterials.size());
+    mfMaxFrameTime = ((float)mvMaterials.size()) - 0.0001f;
 
     ///////// START POS //////////
     mStartPosType = GetStartPosType(apElement->GetAttribute("StartPosType"));
 
-    mvMinStartPos = cString::ToVector3f(apElement->GetAttribute("MinStartPos"),0);
-    mvMaxStartPos = cString::ToVector3f(apElement->GetAttribute("MaxStartPos"),0);
+    mvMinStartPos = cString::ToVector3f(apElement->GetAttribute("MinStartPos"), 0);
+    mvMaxStartPos = cString::ToVector3f(apElement->GetAttribute("MaxStartPos"), 0);
 
-    mvMinStartAngles = cString::ToVector2f(apElement->GetAttribute("MinStartAngles"),0);
-    mvMaxStartAngles = cString::ToVector2f(apElement->GetAttribute("MaxStartAngles"),0);
+    mvMinStartAngles = cString::ToVector2f(apElement->GetAttribute("MinStartAngles"), 0);
+    mvMaxStartAngles = cString::ToVector2f(apElement->GetAttribute("MaxStartAngles"), 0);
     mvMinStartAngles.x = cMath::ToRad(mvMinStartAngles.x);
     mvMinStartAngles.y = cMath::ToRad(mvMinStartAngles.y);
     mvMaxStartAngles.x = cMath::ToRad(mvMaxStartAngles.x);
     mvMaxStartAngles.y = cMath::ToRad(mvMaxStartAngles.y);
 
-    mfMinStartRadius = cString::ToFloat(apElement->GetAttribute("MinStartRadius"),0);
-    mfMaxStartRadius = cString::ToFloat(apElement->GetAttribute("MaxStartRadius"),0);
+    mfMinStartRadius = cString::ToFloat(apElement->GetAttribute("MinStartRadius"), 0);
+    mfMaxStartRadius = cString::ToFloat(apElement->GetAttribute("MaxStartRadius"), 0);
 
 // NEW
 //        cMesh *mshTempMesh = mpResources->GetMeshManager()->CreateMesh("character_roach.dae");
@@ -353,57 +353,57 @@ void cParticleEmitterData_UserData::LoadFromElement(cXmlElement *apElement)
     /////////// MOVEMENT ////////
     mStartVelType = GetStartPosType(apElement->GetAttribute("StartVelType"));
 
-    mvMinStartVel = cString::ToVector3f(apElement->GetAttribute("MinStartVel"),0);
-    mvMaxStartVel = cString::ToVector3f(apElement->GetAttribute("MaxStartVel"),0);
+    mvMinStartVel = cString::ToVector3f(apElement->GetAttribute("MinStartVel"), 0);
+    mvMaxStartVel = cString::ToVector3f(apElement->GetAttribute("MaxStartVel"), 0);
 
-    mvMinStartVelAngles = cString::ToVector2f(apElement->GetAttribute("MinStartVelAngles"),0);
-    mvMaxStartVelAngles = cString::ToVector2f(apElement->GetAttribute("MaxStartVelAngles"),0);
+    mvMinStartVelAngles = cString::ToVector2f(apElement->GetAttribute("MinStartVelAngles"), 0);
+    mvMaxStartVelAngles = cString::ToVector2f(apElement->GetAttribute("MaxStartVelAngles"), 0);
     mvMinStartVelAngles.x = cMath::ToRad(mvMinStartVelAngles.x);
     mvMinStartVelAngles.y = cMath::ToRad(mvMinStartVelAngles.y);
     mvMaxStartVelAngles.x = cMath::ToRad(mvMaxStartVelAngles.x);
     mvMaxStartVelAngles.y = cMath::ToRad(mvMaxStartVelAngles.y);
 
-    mfMinStartVelSpeed = cString::ToFloat(apElement->GetAttribute("MinStartVelSpeed"),0);
-    mfMaxStartVelSpeed = cString::ToFloat(apElement->GetAttribute("MaxStartVelSpeed"),0);
+    mfMinStartVelSpeed = cString::ToFloat(apElement->GetAttribute("MinStartVelSpeed"), 0);
+    mfMaxStartVelSpeed = cString::ToFloat(apElement->GetAttribute("MaxStartVelSpeed"), 0);
 
-    mfMinSpeedMultiply = cString::ToFloat(apElement->GetAttribute("MinSpeedMultiply"),0);
-    mfMaxSpeedMultiply = cString::ToFloat(apElement->GetAttribute("MaxSpeedMultiply"),0);
+    mfMinSpeedMultiply = cString::ToFloat(apElement->GetAttribute("MinSpeedMultiply"), 0);
+    mfMaxSpeedMultiply = cString::ToFloat(apElement->GetAttribute("MaxSpeedMultiply"), 0);
 
-    mvMinStartAcc = cString::ToVector3f(apElement->GetAttribute("MinStartAcc"),0);
-    mvMaxStartAcc = cString::ToVector3f(apElement->GetAttribute("MaxStartAcc"),0);
+    mvMinStartAcc = cString::ToVector3f(apElement->GetAttribute("MinStartAcc"), 0);
+    mvMaxStartAcc = cString::ToVector3f(apElement->GetAttribute("MaxStartAcc"), 0);
 
-    mfMinVelMaximum = cString::ToFloat(apElement->GetAttribute("MinVelMaximum"),0);
-    mfMaxVelMaximum = cString::ToFloat(apElement->GetAttribute("MaxVelMaximum"),0);
+    mfMinVelMaximum = cString::ToFloat(apElement->GetAttribute("MinVelMaximum"), 0);
+    mfMaxVelMaximum = cString::ToFloat(apElement->GetAttribute("MaxVelMaximum"), 0);
 
-    mbUsesDirection = cString::ToBool(apElement->GetAttribute("UsesDirection"),false);
+    mbUsesDirection = cString::ToBool(apElement->GetAttribute("UsesDirection"), false);
 
     mGravityType = GetGravityType(apElement->GetAttribute("GravityType"));
 
-    mvGravityAcc = cString::ToVector3f(apElement->GetAttribute("GravityAcc"),0);
+    mvGravityAcc = cString::ToVector3f(apElement->GetAttribute("GravityAcc"), 0);
 
     mCoordSystem = GetCoordSystem(apElement->GetAttribute("CoordSystem"));
 
     // NEW
 
-    mbUsePartSpin = cString::ToBool(apElement->GetAttribute("UsePartSpin"),false);
+    mbUsePartSpin = cString::ToBool(apElement->GetAttribute("UsePartSpin"), false);
     mPartSpinType = GetPartSpinType(apElement->GetAttribute("PartSpinType"));
-    mfMinSpinRange = cString::ToFloat(apElement->GetAttribute("MinSpinRange"),0);
-    mfMaxSpinRange = cString::ToFloat(apElement->GetAttribute("MaxSpinRange"),0);
+    mfMinSpinRange = cString::ToFloat(apElement->GetAttribute("MinSpinRange"), 0);
+    mfMaxSpinRange = cString::ToFloat(apElement->GetAttribute("MaxSpinRange"), 0);
 
-    mbUseRevolution = cString::ToBool(apElement->GetAttribute("UseRevolution"),false);
-    mvMinRevVel = cString::ToVector3f(apElement->GetAttribute("MinRevVel"),0);
-    mvMaxRevVel = cString::ToVector3f(apElement->GetAttribute("MaxRevVel"),0);
+    mbUseRevolution = cString::ToBool(apElement->GetAttribute("UseRevolution"), false);
+    mvMinRevVel = cString::ToVector3f(apElement->GetAttribute("MinRevVel"), 0);
+    mvMaxRevVel = cString::ToVector3f(apElement->GetAttribute("MaxRevVel"), 0);
 
     // ---
 
 
     /////////// LIFESPAN ////////
-    mfMinLifeSpan = cString::ToFloat(apElement->GetAttribute("MinLifeSpan"),0);
-    mfMaxLifeSpan = cString::ToFloat(apElement->GetAttribute("MaxLifeSpan"),0);
+    mfMinLifeSpan = cString::ToFloat(apElement->GetAttribute("MinLifeSpan"), 0);
+    mfMaxLifeSpan = cString::ToFloat(apElement->GetAttribute("MaxLifeSpan"), 0);
 
     mDeathType = GetDeathType(apElement->GetAttribute("DeathType"));
 
-    msDeathPS = cString::ToString(apElement->GetAttribute("DeathPS"),"");
+    msDeathPS = cString::ToString(apElement->GetAttribute("DeathPS"), "");
 
     /////////// RENDERING ////////
     mDrawType = GetDrawType(apElement->GetAttribute("DrawType"));
@@ -411,62 +411,62 @@ void cParticleEmitterData_UserData::LoadFromElement(cXmlElement *apElement)
     //eParticleEmitterType Heading
     //cVector2l subdivisions.
 
-    mvMinStartSize = cString::ToVector2f(apElement->GetAttribute("MinStartSize"),1);
-    mvMaxStartSize = cString::ToVector2f(apElement->GetAttribute("MaxStartSize"),1);
+    mvMinStartSize = cString::ToVector2f(apElement->GetAttribute("MinStartSize"), 1);
+    mvMaxStartSize = cString::ToVector2f(apElement->GetAttribute("MaxStartSize"), 1);
 
-    mfStartRelSize = cString::ToFloat(apElement->GetAttribute("StartRelSize"),0);
-    mfMiddleRelSize = cString::ToFloat(apElement->GetAttribute("MiddleRelSize"),0);
-    mfMiddleRelSizeTime = cString::ToFloat(apElement->GetAttribute("MiddleRelSizeTime"),0);
-    mfMiddleRelSizeLength = cString::ToFloat(apElement->GetAttribute("MiddleRelSizeLength"),0);
-    mfEndRelSize = cString::ToFloat(apElement->GetAttribute("EndRelSize"),0);
+    mfStartRelSize = cString::ToFloat(apElement->GetAttribute("StartRelSize"), 0);
+    mfMiddleRelSize = cString::ToFloat(apElement->GetAttribute("MiddleRelSize"), 0);
+    mfMiddleRelSizeTime = cString::ToFloat(apElement->GetAttribute("MiddleRelSizeTime"), 0);
+    mfMiddleRelSizeLength = cString::ToFloat(apElement->GetAttribute("MiddleRelSizeLength"), 0);
+    mfEndRelSize = cString::ToFloat(apElement->GetAttribute("EndRelSize"), 0);
 
-    mbMultiplyRGBWithAlpha = cString::ToBool(apElement->GetAttribute("MultiplyRGBWithAlpha"),false);
+    mbMultiplyRGBWithAlpha = cString::ToBool(apElement->GetAttribute("MultiplyRGBWithAlpha"), false);
 
     /////////// COLOR  ////////
 
-    mMinStartColor = cString::ToColor(apElement->GetAttribute("MinStartColor"),cColor(1,1));
-    mMaxStartColor = cString::ToColor(apElement->GetAttribute("MaxStartColor"),cColor(1,1));
+    mMinStartColor = cString::ToColor(apElement->GetAttribute("MinStartColor"), cColor(1, 1));
+    mMaxStartColor = cString::ToColor(apElement->GetAttribute("MaxStartColor"), cColor(1, 1));
 
-    mStartRelColor = cString::ToColor(apElement->GetAttribute("StartRelColor"),cColor(1,1));
-    mMiddleRelColor = cString::ToColor(apElement->GetAttribute("MiddleRelColor"),cColor(1,1));
-    mfMiddleRelColorTime = cString::ToFloat(apElement->GetAttribute("MiddleRelColorTime"),0);
-    mfMiddleRelColorLength = cString::ToFloat(apElement->GetAttribute("MiddleRelColorLength"),0);
-    mEndRelColor = cString::ToColor(apElement->GetAttribute("EndRelColor"),cColor(1,1));
+    mStartRelColor = cString::ToColor(apElement->GetAttribute("StartRelColor"), cColor(1, 1));
+    mMiddleRelColor = cString::ToColor(apElement->GetAttribute("MiddleRelColor"), cColor(1, 1));
+    mfMiddleRelColorTime = cString::ToFloat(apElement->GetAttribute("MiddleRelColorTime"), 0);
+    mfMiddleRelColorLength = cString::ToFloat(apElement->GetAttribute("MiddleRelColorLength"), 0);
+    mEndRelColor = cString::ToColor(apElement->GetAttribute("EndRelColor"), cColor(1, 1));
 
     /////////// COLLISION  ////////
-    mbCollides = cString::ToBool(apElement->GetAttribute("Collides"),false);
+    mbCollides = cString::ToBool(apElement->GetAttribute("Collides"), false);
 
-    mfMinBounceAmount = cString::ToFloat(apElement->GetAttribute("MinBounceAmount"),0);
-    mfMaxBounceAmount = cString::ToFloat(apElement->GetAttribute("MaxBounceAmount"),0);
+    mfMinBounceAmount = cString::ToFloat(apElement->GetAttribute("MinBounceAmount"), 0);
+    mfMaxBounceAmount = cString::ToFloat(apElement->GetAttribute("MaxBounceAmount"), 0);
 
-    mlMinCollisionMax = cString::ToInt(apElement->GetAttribute("MinCollisionMax"),0);
-    mlMaxCollisionMax = cString::ToInt(apElement->GetAttribute("MaxCollisionMax"),0);
+    mlMinCollisionMax = cString::ToInt(apElement->GetAttribute("MinCollisionMax"), 0);
+    mlMaxCollisionMax = cString::ToInt(apElement->GetAttribute("MaxCollisionMax"), 0);
 
-    mlCollisionUpdateRate = cString::ToInt(apElement->GetAttribute("CollisionUpdateRate"),0);
+    mlCollisionUpdateRate = cString::ToInt(apElement->GetAttribute("CollisionUpdateRate"), 0);
 
 
     // NEW
     ////////// BEAM SPECIFIC //////////
 
-    mbUseBeamNoise = cString::ToBool(apElement->GetAttribute("UseBeamNoise"),false);
+    mbUseBeamNoise = cString::ToBool(apElement->GetAttribute("UseBeamNoise"), false);
 
-    mlLowFreqPoints = cString::ToInt(apElement->GetAttribute("LowFreqPoints"),4);
-    mlHighFreqPoints = cString::ToInt(apElement->GetAttribute("HighFreqPoints"),5);
+    mlLowFreqPoints = cString::ToInt(apElement->GetAttribute("LowFreqPoints"), 4);
+    mlHighFreqPoints = cString::ToInt(apElement->GetAttribute("HighFreqPoints"), 5);
 
-    mvMinLowFreqNoise = cString::ToVector3f(apElement->GetAttribute("MinLowFreqNoise"),0);
-    mvMaxLowFreqNoise = cString::ToVector3f(apElement->GetAttribute("MaxLowFreqNoise"),0);
+    mvMinLowFreqNoise = cString::ToVector3f(apElement->GetAttribute("MinLowFreqNoise"), 0);
+    mvMaxLowFreqNoise = cString::ToVector3f(apElement->GetAttribute("MaxLowFreqNoise"), 0);
 
-    mvMinHighFreqNoise = cString::ToVector3f(apElement->GetAttribute("MinHighFreqNoise"),0);
-    mvMaxHighFreqNoise = cString::ToVector3f(apElement->GetAttribute("MaxHighFreqNoise"),0);
+    mvMinHighFreqNoise = cString::ToVector3f(apElement->GetAttribute("MinHighFreqNoise"), 0);
+    mvMaxHighFreqNoise = cString::ToVector3f(apElement->GetAttribute("MaxHighFreqNoise"), 0);
 
     // ---
 }
 
 //-----------------------------------------------------------------------
 
-bool cParticleEmitterData_UserData::OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams)
+bool cParticleEmitterData_UserData::OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams)
 {
-    if(pBody->IsActive()==false || pBody->GetCollide()==false || pBody->IsCharacter())
+    if(pBody->IsActive() == false || pBody->GetCollide() == false || pBody->IsCharacter())
     {
         return true;
     }
@@ -495,7 +495,7 @@ bool cParticleEmitterData_UserData::CheckCollision(    const cVector3f& avStart,
     mpIntersectPos = apPosVec;
     mpIntersectNormal = apNormalVec;
 
-    apPhysicsWorld->CastRay(this,avStart,avEnd,true,true,true);
+    apPhysicsWorld->CastRay(this, avStart, avEnd, true, true, true);
 
     return mbIntersected;
 }
@@ -509,25 +509,25 @@ bool cParticleEmitterData_UserData::CheckCollision(    const cVector3f& avStart,
 //-----------------------------------------------------------------------
 
 cParticleEmitter_UserData::cParticleEmitter_UserData(
-    tString asName,tMaterialVec* apMaterials,
-    cVector3f avSize, cGraphics* apGraphics,cResources *apResources,
+    tString asName, tMaterialVec* apMaterials,
+    cVector3f avSize, cGraphics* apGraphics, cResources *apResources,
     cParticleEmitterData_UserData *apData)
-    : iParticleEmitter(    asName,apMaterials,apData->mlMaxParticleNum,
-                           avSize,apGraphics,apResources)
+    : iParticleEmitter(    asName, apMaterials, apData->mlMaxParticleNum,
+                           avSize, apGraphics, apResources)
 {
     mpData = apData;
 
     mvDrawSize = 1;
 
-    mfTime =0;
+    mfTime = 0;
 
     mfCreateCount = 0;
 
-    mfPauseCount=0;
-    mfPauseWaitCount =0;
+    mfPauseCount = 0;
+    mfPauseWaitCount = 0;
     mbPaused = false;
 
-    mfCollideCount = 1.0f/(float)mpData->mlCollisionUpdateRate;
+    mfCollideCount = 1.0f / (float)mpData->mlCollisionUpdateRate;
 
     mCoordSystem = apData->mCoordSystem;
 
@@ -708,7 +708,7 @@ cParticleEmitter_UserData::~cParticleEmitter_UserData()
 
 bool cParticleEmitter_UserData::IsDying()
 {
-    if(mbRespawn==false || mbDying)
+    if(mbRespawn == false || mbDying)
     {
         return true;
     }
@@ -736,19 +736,19 @@ void cParticleEmitter_UserData::SetParticleDefaults(cParticle *apParticle)
 {
     ///////////////////////////////////
     //Start Color
-    apParticle->mStartColor = cMath::RandRectColor(mpData->mMinStartColor,mpData->mMaxStartColor);
+    apParticle->mStartColor = cMath::RandRectColor(mpData->mMinStartColor, mpData->mMaxStartColor);
     apParticle->mColor = apParticle->mStartColor * mpData->mStartRelColor;
 
 
     ///////////////////////////////////
     //Start Size
-    if(mpData->mvMinStartSize.y == 0 && mpData->mvMaxStartSize.y==0)
+    if(mpData->mvMinStartSize.y == 0 && mpData->mvMaxStartSize.y == 0)
     {
-        apParticle->mvStartSize = cMath::RandRectf(mpData->mvMinStartSize.x,mpData->mvMaxStartSize.x);
+        apParticle->mvStartSize = cMath::RandRectf(mpData->mvMinStartSize.x, mpData->mvMaxStartSize.x);
     }
     else
     {
-        apParticle->mvStartSize = cMath::RandRectVector2f(mpData->mvMinStartSize,mpData->mvMaxStartSize);
+        apParticle->mvStartSize = cMath::RandRectVector2f(mpData->mvMinStartSize, mpData->mvMaxStartSize);
     }
     apParticle->mvSize = apParticle->mvStartSize * mpData->mfStartRelSize;
 
@@ -762,7 +762,7 @@ void cParticleEmitter_UserData::SetParticleDefaults(cParticle *apParticle)
         }
         else
         {
-            apParticle->mlSubDivNum = cMath::RandRectl(0,(int)mvSubDivUV.size()-1);
+            apParticle->mlSubDivNum = cMath::RandRectl(0, (int)mvSubDivUV.size() - 1);
         }
     }
 
@@ -791,16 +791,16 @@ void cParticleEmitter_UserData::SetParticleDefaults(cParticle *apParticle)
     if(mpData->mStartPosType == ePEStartPosType_Box)
     {
         apParticle->mvPos = mtxStart.GetTranslation() +
-                            cMath::RandRectVector3f(mpData->mvMinStartPos,mpData->mvMaxStartPos);
+                            cMath::RandRectVector3f(mpData->mvMinStartPos, mpData->mvMaxStartPos);
     }
     else if(mpData->mStartPosType == ePEStartPosType_Sphere)
     {
         cVector2f vRot = cMath::RandRectVector2f(    mpData->mvMinStartAngles,
                          mpData->mvMaxStartAngles);
-        cMatrixf mtxRot = cMath::MatrixRotate(vRot,eEulerRotationOrder_XYZ);
-        cVector3f vPos = cVector3f(0,cMath::RandRectf(mpData->mfMinStartRadius,mpData->mfMaxStartRadius),0);
+        cMatrixf mtxRot = cMath::MatrixRotate(vRot, eEulerRotationOrder_XYZ);
+        cVector3f vPos = cVector3f(0, cMath::RandRectf(mpData->mfMinStartRadius, mpData->mfMaxStartRadius), 0);
 
-        apParticle->mvPos = mtxStart.GetTranslation() + cMath::MatrixMul(mtxRot,vPos);
+        apParticle->mvPos = mtxStart.GetTranslation() + cMath::MatrixMul(mtxRot, vPos);
     }
 
 // NEW
@@ -835,16 +835,16 @@ void cParticleEmitter_UserData::SetParticleDefaults(cParticle *apParticle)
     //Sphere or box start
     if(mpData->mStartVelType == ePEStartPosType_Box)
     {
-        apParticle->mvVel = cMath::RandRectVector3f(mpData->mvMinStartVel,mpData->mvMaxStartVel);
+        apParticle->mvVel = cMath::RandRectVector3f(mpData->mvMinStartVel, mpData->mvMaxStartVel);
     }
     else if(mpData->mStartVelType == ePEStartPosType_Sphere)
     {
         cVector2f vRot = cMath::RandRectVector2f(    mpData->mvMinStartVelAngles,
                          mpData->mvMaxStartVelAngles);
-        cMatrixf mtxRot = cMath::MatrixRotate(vRot,eEulerRotationOrder_XYZ);
-        cVector3f vPos = cVector3f(0,cMath::RandRectf(mpData->mfMinStartVelSpeed,mpData->mfMaxStartVelSpeed),0);
+        cMatrixf mtxRot = cMath::MatrixRotate(vRot, eEulerRotationOrder_XYZ);
+        cVector3f vPos = cVector3f(0, cMath::RandRectf(mpData->mfMinStartVelSpeed, mpData->mfMaxStartVelSpeed), 0);
 
-        apParticle->mvVel = cMath::MatrixMul(mtxRot,vPos);
+        apParticle->mvVel = cMath::MatrixMul(mtxRot, vPos);
     }
 
     //If it uses the direction,
@@ -853,13 +853,13 @@ void cParticleEmitter_UserData::SetParticleDefaults(cParticle *apParticle)
         apParticle->mvVel = cMath::MatrixMul(mtxStart.GetRotation(), apParticle->mvVel);
     }
 
-    apParticle->mfMaxSpeed = cMath::RandRectf(mpData->mfMinVelMaximum,mpData->mfMaxVelMaximum);
+    apParticle->mfMaxSpeed = cMath::RandRectf(mpData->mfMinVelMaximum, mpData->mfMaxVelMaximum);
 
-    apParticle->mfSpeedMul = cMath::RandRectf(mpData->mfMinSpeedMultiply,mpData->mfMaxSpeedMultiply);
+    apParticle->mfSpeedMul = cMath::RandRectf(mpData->mfMinSpeedMultiply, mpData->mfMaxSpeedMultiply);
 
     ////////////////////////////////////
     //Start Acceleration
-    apParticle->mvAcc = cMath::RandRectVector3f(mpData->mvMinStartAcc,mpData->mvMaxStartAcc);
+    apParticle->mvAcc = cMath::RandRectVector3f(mpData->mvMinStartAcc, mpData->mvMaxStartAcc);
 
     // NEW
     ////////////////////////////////////
@@ -885,7 +885,7 @@ void cParticleEmitter_UserData::SetParticleDefaults(cParticle *apParticle)
 
     ///////////////////////////////////
     //Life Span
-    apParticle->mfStartLife = cMath::RandRectf(mpData->mfMinLifeSpan,mpData->mfMaxLifeSpan );
+    apParticle->mfStartLife = cMath::RandRectf(mpData->mfMinLifeSpan, mpData->mfMaxLifeSpan );
     apParticle->mfLife = apParticle->mfStartLife;
 
     apParticle->mfLifeSize_MiddleStart = apParticle->mfLife * (1 - mpData->mfMiddleRelSizeTime);
@@ -977,7 +977,7 @@ void cParticleEmitter_UserData::UpdateMotion(double adFixedDelta)
         {
             mbPaused = false;
 
-            mfPauseWaitCount = cMath::RandRectf(mpData->mfMinPauseInterval,mpData->mfMaxPauseInterval);
+            mfPauseWaitCount = cMath::RandRectf(mpData->mfMinPauseInterval, mpData->mfMaxPauseInterval);
         }
     }
     else if(mpData->mfMinPauseLength > 0 && mpData->mfMinPauseInterval > 0)
@@ -985,14 +985,14 @@ void cParticleEmitter_UserData::UpdateMotion(double adFixedDelta)
         mfPauseWaitCount -= (float)adFixedDelta;
         if(mfPauseWaitCount <= 0)
         {
-            mfPauseCount = cMath::RandRectf(mpData->mfMinPauseLength,mpData->mfMaxPauseLength);
+            mfPauseCount = cMath::RandRectf(mpData->mfMinPauseLength, mpData->mfMaxPauseLength);
             mbPaused = true;
         }
     }
 
     ///////////////////////////////////////////
     //Particle creation
-    if(mbPaused==false && mlNumOfParticles < mlMaxParticles)
+    if(mbPaused == false && mlNumOfParticles < mlMaxParticles)
     {
         mfCreateCount += mpData->mfParticlesPerSecond * (float)adFixedDelta;
 
@@ -1005,20 +1005,20 @@ void cParticleEmitter_UserData::UpdateMotion(double adFixedDelta)
 
     ///////////////////////////////////////////
     //Collision Update
-    bool bColliding=false;
+    bool bColliding = false;
     if(mpData->mbCollides)
     {
         mfCollideCount -= (float)adFixedDelta;
         if(mfCollideCount <= 0)
         {
-            mfCollideCount = 1.0f/(float)mpData->mlCollisionUpdateRate;
+            mfCollideCount = 1.0f / (float)mpData->mlCollisionUpdateRate;
             bColliding = true;
         }
     }
 
     ///////////////////////////////////////////
     //Particle update
-    for(unsigned int i=0; i< mlNumOfParticles; ++i)
+    for(unsigned int i = 0; i < mlNumOfParticles; ++i)
     {
         cParticle *pParticle = mvParticles[i];
 
@@ -1076,9 +1076,9 @@ void cParticleEmitter_UserData::UpdateMotion(double adFixedDelta)
             }
         }
 
-        if(pParticle->mfSpeedMul!=0 && pParticle->mfSpeedMul!=1)
+        if(pParticle->mfSpeedMul != 0 && pParticle->mfSpeedMul != 1)
         {
-            pParticle->mvVel = pParticle->mvVel * pow(pParticle->mfSpeedMul,(float)adFixedDelta);
+            pParticle->mvVel = pParticle->mvVel * pow(pParticle->mfSpeedMul, (float)adFixedDelta);
         }
 
         // NEW
@@ -1137,15 +1137,15 @@ void cParticleEmitter_UserData::UpdateMotion(double adFixedDelta)
                 float fSpeed = pParticle->mvVel.Length();
 
                 cVector3f vReflection = pParticle->mvVel -
-                                        (vNormal * 2* cMath::Vector3Dot(pParticle->mvVel,vNormal));
+                                        (vNormal * 2 * cMath::Vector3Dot(pParticle->mvVel, vNormal));
                 vReflection.Normalize();
 
                 pParticle->mvVel = vReflection * (fSpeed * pParticle->mfBounceAmount);
 
                 pParticle->mlBounceCount--;
-                if(pParticle->mlBounceCount<=0)
+                if(pParticle->mlBounceCount <= 0)
                 {
-                    pParticle->mfLife =0;
+                    pParticle->mfLife = 0;
                 }
             }
 
@@ -1156,7 +1156,7 @@ void cParticleEmitter_UserData::UpdateMotion(double adFixedDelta)
         //Life Update
         pParticle->mfLife -= (float)adFixedDelta;
 
-        if(pParticle->mfLife <=0)
+        if(pParticle->mfLife <= 0)
         {
             if(mbRespawn)
             {
@@ -1174,7 +1174,7 @@ void cParticleEmitter_UserData::UpdateMotion(double adFixedDelta)
                 SwapRemove(i);
                 mlMaxParticles--;
 
-                if(mlMaxParticles <=0)
+                if(mlMaxParticles <= 0)
                 {
                     mbDying = true;
                 }
@@ -1200,7 +1200,7 @@ void cParticleEmitter_UserData::UpdateMotion(double adFixedDelta)
                        (pParticle->mfStartLife - pParticle->mfLifeColor_MiddleStart);
 
             pParticle->mColor = (pParticle->mStartColor * mpData->mStartRelColor * fT) +
-                                (pParticle->mStartColor * mpData->mMiddleRelColor * (1-fT));
+                                (pParticle->mStartColor * mpData->mMiddleRelColor * (1 - fT));
         }
         //Middle
         else if(pParticle->mfLife > pParticle->mfLifeColor_MiddleEnd)
@@ -1213,7 +1213,7 @@ void cParticleEmitter_UserData::UpdateMotion(double adFixedDelta)
             float fT =    pParticle->mfLife / pParticle->mfLifeColor_MiddleEnd;
 
             pParticle->mColor = (pParticle->mStartColor * mpData->mMiddleRelColor * fT) +
-                                (pParticle->mStartColor * mpData->mEndRelColor * (1-fT));
+                                (pParticle->mStartColor * mpData->mEndRelColor * (1 - fT));
         }
 
         if(mpData->mbMultiplyRGBWithAlpha)
@@ -1233,7 +1233,7 @@ void cParticleEmitter_UserData::UpdateMotion(double adFixedDelta)
                        (pParticle->mfStartLife - pParticle->mfLifeSize_MiddleStart);
 
             pParticle->mvSize = (pParticle->mvStartSize * mpData->mfStartRelSize * fT) +
-                                (pParticle->mvStartSize * mpData->mfMiddleRelSize * (1-fT));
+                                (pParticle->mvStartSize * mpData->mfMiddleRelSize * (1 - fT));
         }
         //Middle
         else if(pParticle->mfLife > pParticle->mfLifeSize_MiddleEnd)
@@ -1246,18 +1246,18 @@ void cParticleEmitter_UserData::UpdateMotion(double adFixedDelta)
             float fT =    pParticle->mfLife / pParticle->mfLifeSize_MiddleEnd;
 
             pParticle->mvSize = (pParticle->mvStartSize * mpData->mfMiddleRelSize * fT) +
-                                (pParticle->mvStartSize * mpData->mfEndRelSize * (1-fT));
+                                (pParticle->mvStartSize * mpData->mfEndRelSize * (1 - fT));
         }
     }
 
     ///////////////////////////////////////////
     //Frame Update
-    if(mvMaterials->size()> 1)
+    if(mvMaterials->size() > 1)
     {
-        mfFrame +=mpData->mfFrameStep * (float)adFixedDelta;
+        mfFrame += mpData->mfFrameStep * (float)adFixedDelta;
         if(mfFrame >= mpData->mfMaxFrameTime)
         {
-            mfFrame =0;
+            mfFrame = 0;
         }
     }
 }

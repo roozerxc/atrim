@@ -19,17 +19,17 @@ class iPhysicsJointNewton : public T
 {
 public:
     iPhysicsJointNewton(const tString &asName, iPhysicsBody *apParentBody, iPhysicsBody *apChildBody,
-                        iPhysicsWorld *apWorld,const cVector3f &avPivotPoint,const cVector3f &avPinDir)
-        : T(asName, apParentBody, apChildBody, apWorld,avPivotPoint,avPinDir)
+                        iPhysicsWorld *apWorld, const cVector3f &avPivotPoint, const cVector3f &avPinDir)
+        : T(asName, apParentBody, apChildBody, apWorld, avPivotPoint, avPinDir)
     {
-        cPhysicsWorldNewton *pNWorld = static_cast<cPhysicsWorldNewton*>(apWorld);
+        cPhysicsWorldNewton *pNWorld = static_cast<cPhysicsWorldNewton *>(apWorld);
 
         mpNewtonWorld = pNWorld->GetNewtonWorld();
 
-        cPhysicsBodyNewton *pNParent = static_cast<cPhysicsBodyNewton*>(apParentBody);
-        cPhysicsBodyNewton *pNChild = static_cast<cPhysicsBodyNewton*>(apChildBody);
+        cPhysicsBodyNewton *pNParent = static_cast<cPhysicsBodyNewton *>(apParentBody);
+        cPhysicsBodyNewton *pNChild = static_cast<cPhysicsBodyNewton *>(apChildBody);
 
-        if(apParentBody==NULL)
+        if(apParentBody == NULL)
         {
             mpNewtonParentBody = NULL;
         }
@@ -47,7 +47,7 @@ public:
         //Log("Destroying newton joint!\n");
         if(this->mpChildBody || this->mpParentBody)
         {
-            NewtonDestroyJoint(mpNewtonWorld,mpNewtonJoint);
+            NewtonDestroyJoint(mpNewtonWorld, mpNewtonJoint);
         }
     }
 
@@ -55,12 +55,12 @@ public:
 
     void SetCollideBodies(bool abX)
     {
-        NewtonJointSetCollisionState(mpNewtonJoint,abX ? 1: 0);
+        NewtonJointSetCollisionState(mpNewtonJoint, abX ? 1 : 0);
     }
 
     bool GetCollideBodies()
     {
-        return NewtonJointGetCollisionState(mpNewtonJoint)==0 ? false : true;
+        return NewtonJointGetCollisionState(mpNewtonJoint) == 0 ? false : true;
     }
 
     //-------------------------------------------
@@ -79,7 +79,7 @@ public:
 protected:
     //-------------------------------------------
 
-    cMatrixf GetMatrixFromPinAndPivot(const cVector3f& avPinDir,const cVector3f& avPivot)
+    cMatrixf GetMatrixFromPinAndPivot(const cVector3f& avPinDir, const cVector3f& avPivot)
     {
         cMatrixf mtxPinAndPivot = cMatrixf::Identity;
         cVector3f vUp = cMath::Vector3Normalize(avPinDir);
@@ -145,24 +145,24 @@ protected:
 
     static void StaticSubmitConstraints (const NewtonJoint* apJoint, dFloat afTimestep, int alThreadIndex)
     {
-        iPhysicsJointNewton<T> *pJointData = (iPhysicsJointNewton<T>*)NewtonJointGetUserData(apJoint);
+        iPhysicsJointNewton<T> *pJointData = (iPhysicsJointNewton<T> *)NewtonJointGetUserData(apJoint);
 
         pJointData->SubmitConstraints(afTimestep, alThreadIndex);
     }
 
     static void StaticGetInfo (const NewtonJoint* apJoint, NewtonJointRecord* apInfo)
     {
-        iPhysicsJointNewton<T> *pJointData = (iPhysicsJointNewton<T>*)NewtonJointGetUserData(apJoint);
+        iPhysicsJointNewton<T> *pJointData = (iPhysicsJointNewton<T> *)NewtonJointGetUserData(apJoint);
 
         pJointData->GetInfo(apInfo);
     }
 
     //-------------------------------------------
 
-    NewtonJoint* mpNewtonJoint;
-    NewtonWorld* mpNewtonWorld;
-    NewtonBody* mpNewtonParentBody;
-    NewtonBody* mpNewtonChildBody;
+    NewtonJoint *mpNewtonJoint;
+    NewtonWorld *mpNewtonWorld;
+    NewtonBody *mpNewtonParentBody;
+    NewtonBody *mpNewtonChildBody;
 
     int mlMaxDOF;
 };

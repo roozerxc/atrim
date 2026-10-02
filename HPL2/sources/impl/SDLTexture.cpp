@@ -19,28 +19,28 @@ namespace hpl
 //-----------------------------------------------------------------------
 
 cSDLTexture::cSDLTexture(const tString& asName, eTextureType aType, eTextureUsage aUsage, iLowLevelGraphics* apLowLevelGraphics)
-    : iTexture(asName,_W(""),aType, aUsage, apLowLevelGraphics)
+    : iTexture(asName, _W(""), aType, aUsage, apLowLevelGraphics)
 {
     mbContainsData = false;
 
-    mpGfxSDL = static_cast<cLowLevelGraphicsSDL*>(mpLowLevelGraphics);
+    mpGfxSDL = static_cast<cLowLevelGraphicsSDL *>(mpLowLevelGraphics);
 
     mlTextureIndex = 0;
-    mfTimeCount =0;
+    mfTimeCount = 0;
 
     mfTimeDir = 1;
 }
 
 cSDLTexture::~cSDLTexture()
 {
-    for(size_t i=0; i<mvTextureHandles.size(); ++i)
+    for(size_t i = 0; i < mvTextureHandles.size(); ++i)
     {
         mpGfxSDL->ClearTextureHandle(mvTextureHandles[i]);
     }
 
-    for(size_t i=0; i<mvTextureHandles.size(); ++i)
+    for(size_t i = 0; i < mvTextureHandles.size(); ++i)
     {
-        glDeleteTextures(1,(GLuint *)&mvTextureHandles[i]);
+        glDeleteTextures(1, (GLuint *)&mvTextureHandles[i]);
     }
 }
 
@@ -57,7 +57,7 @@ bool cSDLTexture::CreateFromBitmap(cBitmap* apBmp)
 {
     GenerateHandles(1);
 
-    return CreateFromBitmapToIndex(apBmp,0);
+    return CreateFromBitmapToIndex(apBmp, 0);
 }
 
 //-----------------------------------------------------------------------
@@ -68,9 +68,9 @@ bool cSDLTexture::CreateAnimFromBitmapVec(std::vector<cBitmap*> *avBitmaps)
 
     //////////////////////////////////
     //Create textures
-    for(size_t i=0; i< mvTextureHandles.size(); ++i)
+    for(size_t i = 0; i < mvTextureHandles.size(); ++i)
     {
-        if(CreateFromBitmapToIndex( (*avBitmaps)[i], (int)i)==false)
+        if(CreateFromBitmapToIndex( (*avBitmaps)[i], (int)i) == false)
         {
             return false;
         }
@@ -90,9 +90,9 @@ bool cSDLTexture::CreateCubeFromBitmapVec(std::vector<cBitmap*> *avBitmaps)
         return false;
     }
 
-    if(avBitmaps->size()<6)
+    if(avBitmaps->size() < 6)
     {
-        Error("Only %d bitmaps supplied for creation of cube map, 6 needed.",avBitmaps->size());
+        Error("Only %d bitmaps supplied for creation of cube map, 6 needed.", avBitmaps->size());
         return false;
     }
 
@@ -100,15 +100,15 @@ bool cSDLTexture::CreateCubeFromBitmapVec(std::vector<cBitmap*> *avBitmaps)
 
     /////////////////////////////
     //Create the faces on the cube
-    for(int i=0; i< 6; i++)
+    for(int i = 0; i < 6; i++)
     {
         cBitmap *pBmp = (*avBitmaps)[i];
 
         bool bRet = CreateTexture(    mvTextureHandles[0],
-                                      pBmp->GetData(0,0), pBmp->GetNumOfMipMaps(),
-                                      pBmp->GetSize(), pBmp->GetPixelFormat(),i,
-                                      mbUseMipMaps,true);
-        if(bRet==false)
+                                      pBmp->GetData(0, 0), pBmp->GetNumOfMipMaps(),
+                                      pBmp->GetSize(), pBmp->GetPixelFormat(), i,
+                                      mbUseMipMaps, true);
+        if(bRet == false)
         {
             return false;
         }
@@ -122,7 +122,7 @@ bool cSDLTexture::CreateCubeFromBitmapVec(std::vector<cBitmap*> *avBitmaps)
 
 //-----------------------------------------------------------------------
 
-bool cSDLTexture::CreateFromRawData(const cVector3l &avSize,ePixelFormat aPixelFormat, unsigned char *apData)
+bool cSDLTexture::CreateFromRawData(const cVector3l &avSize, ePixelFormat aPixelFormat, unsigned char *apData)
 {
     GenerateHandles(1);
 
@@ -130,17 +130,17 @@ bool cSDLTexture::CreateFromRawData(const cVector3l &avSize,ePixelFormat aPixelF
     mPixelFormat = aPixelFormat;
 
     //Make sure size is now below 0
-    if(mvSize.x<1)
+    if(mvSize.x < 1)
     {
-        mvSize.x=1;
+        mvSize.x = 1;
     }
-    if(mvSize.y<1)
+    if(mvSize.y < 1)
     {
-        mvSize.y=1;
+        mvSize.y = 1;
     }
-    if(mvSize.z<1)
+    if(mvSize.z < 1)
     {
-        mvSize.z=1;
+        mvSize.z = 1;
     }
 
     //////////////////////////////
@@ -153,8 +153,8 @@ bool cSDLTexture::CreateFromRawData(const cVector3l &avSize,ePixelFormat aPixelF
     glBindTexture(GLTarget, mvTextureHandles[0]);
 
     int lDataSize = avSize.x * avSize.y * avSize.z * GetBytesPerPixel(aPixelFormat);
-    bool bRet = CopyTextureDataToGL(mvTextureHandles[0],0,apData, lDataSize, avSize, aPixelFormat,0);
-    if(bRet==false)
+    bool bRet = CopyTextureDataToGL(mvTextureHandles[0], 0, apData, lDataSize, avSize, aPixelFormat, 0);
+    if(bRet == false)
     {
         glDisable(GLTarget);
         return false;
@@ -164,7 +164,7 @@ bool cSDLTexture::CreateFromRawData(const cVector3l &avSize,ePixelFormat aPixelF
 
     if(mbUseMipMaps)
     {
-        GenerateMipMaps(GLTarget,aPixelFormat,avSize,apData,lDataSize,0);
+        GenerateMipMaps(GLTarget, aPixelFormat, avSize, apData, lDataSize, 0);
     }
 
 
@@ -180,11 +180,11 @@ bool cSDLTexture::CreateFromRawData(const cVector3l &avSize,ePixelFormat aPixelF
 void cSDLTexture::SetRawData(    int alLevel, const cVector3l& avOffset, const cVector3l& avSize,
                                  ePixelFormat aPixelFormat, void *apData)
 {
-    if(mbContainsData==false)
+    if(mbContainsData == false)
     {
         return;
     }
-    if(apData==NULL)
+    if(apData == NULL)
     {
         return;
     }
@@ -197,19 +197,19 @@ void cSDLTexture::SetRawData(    int alLevel, const cVector3l& avOffset, const c
 
     if(mType == eTextureType_1D)
     {
-        glTexSubImage1D(GLTarget,alLevel,avOffset.x, avSize.x,
-                        GLFormat,GL_UNSIGNED_BYTE,apData);
+        glTexSubImage1D(GLTarget, alLevel, avOffset.x, avSize.x,
+                        GLFormat, GL_UNSIGNED_BYTE, apData);
     }
     else if(mType == eTextureType_2D || mType == eTextureType_Rect)
     {
-        glTexSubImage2D(GLTarget,alLevel,avOffset.x,avOffset.y, avSize.x,avSize.y,
-                        GLFormat,GL_UNSIGNED_BYTE,apData);
+        glTexSubImage2D(GLTarget, alLevel, avOffset.x, avOffset.y, avSize.x, avSize.y,
+                        GLFormat, GL_UNSIGNED_BYTE, apData);
     }
     else if(mType == eTextureType_3D)
     {
-        glTexSubImage3D(GLTarget,alLevel,avOffset.x,avOffset.y,avOffset.z,
-                        avSize.x,avSize.y,avSize.z,
-                        GLFormat,GL_UNSIGNED_BYTE,apData);
+        glTexSubImage3D(GLTarget, alLevel, avOffset.x, avOffset.y, avOffset.z,
+                        avSize.x, avSize.y, avSize.z,
+                        GLFormat, GL_UNSIGNED_BYTE, apData);
     }
 
     glDisable(GLTarget);
@@ -222,7 +222,7 @@ void cSDLTexture::Update(double adFixedDelta)
     if(mvTextureHandles.size() > 1)
     {
         float fMax = (float)(mvTextureHandles.size());
-        mfTimeCount += (float)adFixedDelta * (1.0f/(float)dFrameTime) * mfTimeDir;
+        mfTimeCount += (float)adFixedDelta * (1.0f / (float)dFrameTime) * mfTimeDir;
 
         if(mfTimeDir > 0)
         {
@@ -230,7 +230,7 @@ void cSDLTexture::Update(double adFixedDelta)
             {
                 if(mAnimMode == eTextureAnimMode_Loop)
                 {
-                    mfTimeCount =0;
+                    mfTimeCount = 0;
                 }
                 else
                 {
@@ -243,7 +243,7 @@ void cSDLTexture::Update(double adFixedDelta)
         {
             if(mfTimeCount < 0)
             {
-                mfTimeCount =1;
+                mfTimeCount = 1;
                 mfTimeDir = 1.0f;
             }
         }
@@ -268,7 +268,7 @@ void cSDLTexture::NextFrame()
         {
             if(mAnimMode == eTextureAnimMode_Loop)
             {
-                mfTimeCount =0;
+                mfTimeCount = 0;
             }
             else
             {
@@ -281,7 +281,7 @@ void cSDLTexture::NextFrame()
     {
         if(mfTimeCount < 0)
         {
-            mfTimeCount =1;
+            mfTimeCount = 1;
             mfTimeDir = 1.0f;
         }
     }
@@ -298,7 +298,7 @@ void cSDLTexture::PrevFrame()
         {
             if(mAnimMode == eTextureAnimMode_Loop)
             {
-                mfTimeCount =0;
+                mfTimeCount = 0;
             }
             else
             {
@@ -311,7 +311,7 @@ void cSDLTexture::PrevFrame()
     {
         if(mfTimeCount < 0)
         {
-            mfTimeCount =1;
+            mfTimeCount = 1;
             mfTimeDir = 1.0f;
         }
     }
@@ -319,7 +319,7 @@ void cSDLTexture::PrevFrame()
 
 float cSDLTexture::GetT()
 {
-    return cMath::Modulus(mfTimeCount,1.0f);
+    return cMath::Modulus(mfTimeCount, 1.0f);
 }
 
 float cSDLTexture::GetTimeCount()
@@ -350,7 +350,7 @@ void cSDLTexture::SetFilter(eTextureFilter aFilter)
         GLenum GLTarget = GetGLTextureTargetEnum(mType);
 
         glEnable(GLTarget);
-        for(size_t i=0; i < mvTextureHandles.size(); ++i)
+        for(size_t i = 0; i < mvTextureHandles.size(); ++i)
         {
             glBindTexture(GLTarget, mvTextureHandles[i]);
 
@@ -395,7 +395,7 @@ void cSDLTexture::SetFilter(eTextureFilter aFilter)
 
 void cSDLTexture::SetAnisotropyDegree(float afX)
 {
-    if(mbContainsData==false)
+    if(mbContainsData == false)
     {
         return;
     }
@@ -422,11 +422,11 @@ void cSDLTexture::SetAnisotropyDegree(float afX)
     GLenum GLTarget = GetGLTextureTargetEnum(mType);
 
     glEnable(GLTarget);
-    for(size_t i=0; i < mvTextureHandles.size(); ++i)
+    for(size_t i = 0; i < mvTextureHandles.size(); ++i)
     {
         glBindTexture(GLTarget, mvTextureHandles[i]);
 
-        glTexParameterf(GLTarget,GL_TEXTURE_MAX_ANISOTROPY_EXT,mfAnisotropyDegree);
+        glTexParameterf(GLTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT, mfAnisotropyDegree);
     }
 
     glDisable(GLTarget);
@@ -443,7 +443,7 @@ void cSDLTexture::SetWrapS(eTextureWrap aMode)
 
     mWrapS = aMode;
 
-    if(mbContainsData==false)
+    if(mbContainsData == false)
     {
         return;
     }
@@ -451,11 +451,11 @@ void cSDLTexture::SetWrapS(eTextureWrap aMode)
     GLenum GLTarget = GetGLTextureTargetEnum(mType);
 
     glEnable(GLTarget);
-    for(size_t i=0; i < mvTextureHandles.size(); ++i)
+    for(size_t i = 0; i < mvTextureHandles.size(); ++i)
     {
         glBindTexture(GLTarget, mvTextureHandles[i]);
 
-        glTexParameteri(GLTarget,GL_TEXTURE_WRAP_S,GetGLWrapEnum(aMode));
+        glTexParameteri(GLTarget, GL_TEXTURE_WRAP_S, GetGLWrapEnum(aMode));
     }
 
     glDisable(GLTarget);
@@ -472,7 +472,7 @@ void cSDLTexture::SetWrapT(eTextureWrap aMode)
 
     mWrapT = aMode;
 
-    if(mbContainsData==false)
+    if(mbContainsData == false)
     {
         return;
     }
@@ -480,11 +480,11 @@ void cSDLTexture::SetWrapT(eTextureWrap aMode)
     GLenum GLTarget = GetGLTextureTargetEnum(mType);
 
     glEnable(GLTarget);
-    for(size_t i=0; i < mvTextureHandles.size(); ++i)
+    for(size_t i = 0; i < mvTextureHandles.size(); ++i)
     {
         glBindTexture(GLTarget, mvTextureHandles[i]);
 
-        glTexParameteri(GLTarget,GL_TEXTURE_WRAP_T,GetGLWrapEnum(aMode));
+        glTexParameteri(GLTarget, GL_TEXTURE_WRAP_T, GetGLWrapEnum(aMode));
     }
 
     glDisable(GLTarget);
@@ -501,7 +501,7 @@ void cSDLTexture::SetWrapR(eTextureWrap aMode)
 
     mWrapR = aMode;
 
-    if(mbContainsData==false)
+    if(mbContainsData == false)
     {
         return;
     }
@@ -509,11 +509,11 @@ void cSDLTexture::SetWrapR(eTextureWrap aMode)
     GLenum GLTarget = GetGLTextureTargetEnum(mType);
 
     glEnable(GLTarget);
-    for(size_t i=0; i < mvTextureHandles.size(); ++i)
+    for(size_t i = 0; i < mvTextureHandles.size(); ++i)
     {
         glBindTexture(GLTarget, mvTextureHandles[i]);
 
-        glTexParameteri(GLTarget,GL_TEXTURE_WRAP_R,GetGLWrapEnum(aMode));
+        glTexParameteri(GLTarget, GL_TEXTURE_WRAP_R, GetGLWrapEnum(aMode));
     }
 
     glDisable(GLTarget);
@@ -532,7 +532,7 @@ void cSDLTexture::SetWrapSTR(eTextureWrap aMode)
     mWrapT = aMode;
     mWrapR = aMode;
 
-    if(mbContainsData==false)
+    if(mbContainsData == false)
     {
         return;
     }
@@ -540,13 +540,13 @@ void cSDLTexture::SetWrapSTR(eTextureWrap aMode)
     GLenum GLTarget = GetGLTextureTargetEnum(mType);
 
     glEnable(GLTarget);
-    for(size_t i=0; i < mvTextureHandles.size(); ++i)
+    for(size_t i = 0; i < mvTextureHandles.size(); ++i)
     {
         glBindTexture(GLTarget, mvTextureHandles[i]);
 
-        glTexParameteri(GLTarget,GL_TEXTURE_WRAP_S,GetGLWrapEnum(aMode));
-        glTexParameteri(GLTarget,GL_TEXTURE_WRAP_T,GetGLWrapEnum(aMode));
-        glTexParameteri(GLTarget,GL_TEXTURE_WRAP_R,GetGLWrapEnum(aMode));
+        glTexParameteri(GLTarget, GL_TEXTURE_WRAP_S, GetGLWrapEnum(aMode));
+        glTexParameteri(GLTarget, GL_TEXTURE_WRAP_T, GetGLWrapEnum(aMode));
+        glTexParameteri(GLTarget, GL_TEXTURE_WRAP_R, GetGLWrapEnum(aMode));
     }
 
     glDisable(GLTarget);
@@ -558,7 +558,7 @@ void cSDLTexture::SetCompareMode(eTextureCompareMode aMode)
 {
     mCompareMode = aMode;
 
-    if(mbContainsData==false)
+    if(mbContainsData == false)
     {
         return;
     }
@@ -567,11 +567,11 @@ void cSDLTexture::SetCompareMode(eTextureCompareMode aMode)
     GLenum GLCompareMode = GetGLTextureCompareMode(mCompareMode);
 
     glEnable(GLTarget);
-    for(size_t i=0; i < mvTextureHandles.size(); ++i)
+    for(size_t i = 0; i < mvTextureHandles.size(); ++i)
     {
         glBindTexture(GLTarget, mvTextureHandles[i]);
 
-        glTexParameteri(GLTarget,GL_TEXTURE_COMPARE_MODE,GLCompareMode);
+        glTexParameteri(GLTarget, GL_TEXTURE_COMPARE_MODE, GLCompareMode);
     }
     glDisable(GLTarget);
 }
@@ -581,7 +581,7 @@ void cSDLTexture::SetCompareFunc(eTextureCompareFunc aFunc)
 {
     mCompareFunc = aFunc;
 
-    if(mbContainsData==false)
+    if(mbContainsData == false)
     {
         return;
     }
@@ -590,11 +590,11 @@ void cSDLTexture::SetCompareFunc(eTextureCompareFunc aFunc)
     GLenum GLCompareFunc = GetGLTextureCompareFunc(mCompareFunc);
 
     glEnable(GLTarget);
-    for(size_t i=0; i < mvTextureHandles.size(); ++i)
+    for(size_t i = 0; i < mvTextureHandles.size(); ++i)
     {
         glBindTexture(GLTarget, mvTextureHandles[i]);
 
-        glTexParameteri(GLTarget,GL_TEXTURE_COMPARE_FUNC,GLCompareFunc);
+        glTexParameteri(GLTarget, GL_TEXTURE_COMPARE_FUNC, GLCompareFunc);
     }
     glDisable(GLTarget);
 }
@@ -603,7 +603,7 @@ void cSDLTexture::SetCompareFunc(eTextureCompareFunc aFunc)
 
 void cSDLTexture::AutoGenerateMipmaps()
 {
-    if(mbUseMipMaps==false)
+    if(mbUseMipMaps == false)
     {
         return;
     }
@@ -613,7 +613,7 @@ void cSDLTexture::AutoGenerateMipmaps()
         GLenum GLTarget = GetGLTextureTargetEnum(mType);
 
         glEnable(GLTarget);
-        for(size_t i=0; i < mvTextureHandles.size(); ++i)
+        for(size_t i = 0; i < mvTextureHandles.size(); ++i)
         {
             glBindTexture(GLTarget, mvTextureHandles[i]);
             glTexParameteri(GLTarget, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
@@ -627,7 +627,7 @@ void cSDLTexture::AutoGenerateMipmaps()
 
 unsigned int cSDLTexture::GetTextureHandle()
 {
-    if(mbContainsData==false)
+    if(mbContainsData == false)
     {
         return 0;
     }
@@ -639,7 +639,7 @@ unsigned int cSDLTexture::GetTextureHandle()
         int lFrame = (int) mfTimeCount;
         return mvTextureHandles[lFrame];
     }
-    else if(lTexHandleNum==0)
+    else if(lTexHandleNum == 0)
     {
         return 0;
     }
@@ -663,7 +663,7 @@ void cSDLTexture::GenerateHandles(int alNumOfHandles)
     {
         int lNewHandles = alNumOfHandles - (int)mvTextureHandles.size();
         mvTextureHandles.resize(alNumOfHandles);
-        glGenTextures(lNewHandles,(GLuint *)&mvTextureHandles[alNumOfHandles-lNewHandles]);
+        glGenTextures(lNewHandles, (GLuint *)&mvTextureHandles[alNumOfHandles - lNewHandles]);
     }
 }
 
@@ -676,18 +676,18 @@ bool cSDLTexture::CreateFromBitmapToIndex(cBitmap* apBmp, int alIdx)
     if(mType == eTextureType_CubeMap)
     {
         //Check so there are at least 6 images.
-        if(apBmp->GetNumOfImages()<6)
+        if(apBmp->GetNumOfImages() < 6)
         {
-            Error("Bitmap has to few images (%d) to create cubmap texture '%s'\n", apBmp->GetNumOfImages(),msName.c_str());
+            Error("Bitmap has to few images (%d) to create cubmap texture '%s'\n", apBmp->GetNumOfImages(), msName.c_str());
             return false;
         }
 
-        for(int i=0; i<6; ++i)
+        for(int i = 0; i < 6; ++i)
         {
             bool bRet = CreateTexture(    mvTextureHandles[alIdx],
-                                          apBmp->GetData(i,0),apBmp->GetNumOfMipMaps(),
+                                          apBmp->GetData(i, 0), apBmp->GetNumOfMipMaps(),
                                           apBmp->GetSize(), apBmp->GetPixelFormat(),
-                                          i,mbUseMipMaps,    true);
+                                          i, mbUseMipMaps,    true);
             if(bRet == false)
             {
                 return false;
@@ -701,9 +701,9 @@ bool cSDLTexture::CreateFromBitmapToIndex(cBitmap* apBmp, int alIdx)
     else
     {
         bool bRet = CreateTexture(    mvTextureHandles[alIdx],
-                                      apBmp->GetData(0,0),apBmp->GetNumOfMipMaps(),
+                                      apBmp->GetData(0, 0), apBmp->GetNumOfMipMaps(),
                                       apBmp->GetSize(), apBmp->GetPixelFormat(),
-                                      0,mbUseMipMaps,true);
+                                      0, mbUseMipMaps, true);
         if(bRet == false)
         {
             return false;
@@ -721,14 +721,14 @@ bool cSDLTexture::CreateFromBitmapToIndex(cBitmap* apBmp, int alIdx)
 bool cSDLTexture::CreateTexture(    int alTextureHandle,
                                     cBitmapData* apBitmapImage, int alNumOfMipMaps,
                                     const cVector3l avSize, ePixelFormat aPixelFormat,
-                                    int alFaceNum,bool abGenerateMipMaps,
+                                    int alFaceNum, bool abGenerateMipMaps,
                                     bool abCheckForResize)
 {
     /////////////////////////////
     //Check so size is power of 2
     if((!cMath::IsPow2(avSize.x) || !cMath::IsPow2(avSize.y)) && mType != eTextureType_Rect)
     {
-        Warning("Texture '%s' does not have a pow2 size!\n",msName.c_str());
+        Warning("Texture '%s' does not have a pow2 size!\n", msName.c_str());
     }
 
     //////////////////////////////
@@ -751,16 +751,16 @@ bool cSDLTexture::CreateTexture(    int alTextureHandle,
     unsigned char *pResizeData = NULL;
     int lResizeDataSize = 0;
     if(    mlSizeDownScaleLevel > 0 && abCheckForResize &&
-            (mbIsCompressed==false || alNumOfMipMaps>1) &&
+            (mbIsCompressed == false || alNumOfMipMaps > 1) &&
             PixelFormatIsDepth(aPixelFormat) == false)
     {
         //////////////////////
         //Resize by using a higher level mipmap as start
         if(alNumOfMipMaps > 1)
         {
-            if(alNumOfMipMaps-1 < (int)mlSizeDownScaleLevel)
+            if(alNumOfMipMaps - 1 < (int)mlSizeDownScaleLevel)
             {
-                lStartMipMapLevel = alNumOfMipMaps-1;
+                lStartMipMapLevel = alNumOfMipMaps - 1;
             }
             else
             {
@@ -772,17 +772,17 @@ bool cSDLTexture::CreateTexture(    int alTextureHandle,
             mvSize.y >>= lStartMipMapLevel;
             mvSize.z >>= lStartMipMapLevel;
 
-            if(mvSize.x==0)
+            if(mvSize.x == 0)
             {
-                mvSize.x =1;
+                mvSize.x = 1;
             }
-            if(mvSize.y==0)
+            if(mvSize.y == 0)
             {
-                mvSize.y =1;
+                mvSize.y = 1;
             }
-            if(mvSize.z==0)
+            if(mvSize.z == 0)
             {
-                mvSize.z =1;
+                mvSize.z = 1;
             }
         }
         //////////////////////
@@ -792,7 +792,7 @@ bool cSDLTexture::CreateTexture(    int alTextureHandle,
         {
             //Shrink the size as much as possible until minimum is reached
             cVector3l vNewSize = mvSize;
-            for(int i=0; i<(int)mlSizeDownScaleLevel; ++i)
+            for(int i = 0; i < (int)mlSizeDownScaleLevel; ++i)
             {
                 vNewSize.x >>= 1;
                 vNewSize.y >>= 1;
@@ -809,8 +809,8 @@ bool cSDLTexture::CreateTexture(    int alTextureHandle,
             pResizeData = hplNewArray(unsigned char, lResizeDataSize);
 
 
-            gluScaleImage(    GLFormat,mvSize.x, mvSize.y, GL_UNSIGNED_BYTE, apBitmapImage->mpData,
-                              vNewSize.x, vNewSize.y,GL_UNSIGNED_BYTE,pResizeData);
+            gluScaleImage(    GLFormat, mvSize.x, mvSize.y, GL_UNSIGNED_BYTE, apBitmapImage->mpData,
+                              vNewSize.x, vNewSize.y, GL_UNSIGNED_BYTE, pResizeData);
 
             mvSize = vNewSize;
         }
@@ -826,25 +826,25 @@ bool cSDLTexture::CreateTexture(    int alTextureHandle,
     /////////////////////////////
     //Create texture, including mipmaps if generating.
     bool bRet = true;
-    int lMipMapCount = abGenerateMipMaps ? alNumOfMipMaps : lStartMipMapLevel+1;
+    int lMipMapCount = abGenerateMipMaps ? alNumOfMipMaps : lStartMipMapLevel + 1;
     cVector3l vSize = mvSize;
-    for(int i=lStartMipMapLevel; i<lMipMapCount; ++i)
+    for(int i = lStartMipMapLevel; i < lMipMapCount; ++i)
     {
-        if(vSize.x==0)
+        if(vSize.x == 0)
         {
-            vSize.x =1;
+            vSize.x = 1;
         }
-        if(vSize.y==0)
+        if(vSize.y == 0)
         {
-            vSize.y =1;
+            vSize.y = 1;
         }
-        if(vSize.z==0)
+        if(vSize.z == 0)
         {
-            vSize.z =1;
+            vSize.z = 1;
         }
 
         int lImageMipMap = i;
-        int lCount = i-lStartMipMapLevel;
+        int lCount = i - lStartMipMapLevel;
 
         //Log(" %d, %d\n", lCount, lImageMipMap);
 
@@ -853,14 +853,14 @@ bool cSDLTexture::CreateTexture(    int alTextureHandle,
         int lSize = apBitmapImage[lImageMipMap].mlSize;
 
         //Use resized data if available
-        if(lCount==0 && pResizeData)
+        if(lCount == 0 && pResizeData)
         {
             //Log("Using new data! Size: %dx%d data: %d\n",vSize.x, vSize.y,pResizeData);
             pData = pResizeData;
             lSize = lResizeDataSize;
         }
 
-        if(CopyTextureDataToGL(    alTextureHandle,lCount,pData,lSize, vSize,aPixelFormat,alFaceNum) == false)
+        if(CopyTextureDataToGL(    alTextureHandle, lCount, pData, lSize, vSize, aPixelFormat, alFaceNum) == false)
         {
             bRet = false;
             break;
@@ -872,10 +872,10 @@ bool cSDLTexture::CreateTexture(    int alTextureHandle,
     }
 
     //Check for errors
-    if(bRet==false)
+    if(bRet == false)
     {
         glDisable(GLTarget);
-        Error("Could not create GL texture %s\n",msName.c_str());
+        Error("Could not create GL texture %s\n", msName.c_str());
         return false;
     }
 
@@ -888,11 +888,11 @@ bool cSDLTexture::CreateTexture(    int alTextureHandle,
     {
         if(pResizeData)
         {
-            GenerateMipMaps(GLTarget,aPixelFormat,mvSize,pResizeData,lResizeDataSize,alFaceNum);
+            GenerateMipMaps(GLTarget, aPixelFormat, mvSize, pResizeData, lResizeDataSize, alFaceNum);
         }
         else
         {
-            GenerateMipMaps(GLTarget,aPixelFormat,mvSize,apBitmapImage->mpData,apBitmapImage->mlSize,alFaceNum);
+            GenerateMipMaps(GLTarget, aPixelFormat, mvSize, apBitmapImage->mpData, apBitmapImage->mlSize, alFaceNum);
         }
     }
 
@@ -910,8 +910,8 @@ bool cSDLTexture::CreateTexture(    int alTextureHandle,
 
 //-----------------------------------------------------------------------
 
-void cSDLTexture::GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelFormat,const cVector3l avSize,
-                                      unsigned char *apData,int alDataSize, int alFaceNum)
+void cSDLTexture::GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelFormat, const cVector3l avSize,
+                                      unsigned char *apData, int alDataSize, int alFaceNum)
 {
     GLenum GLFormat = PixelFormatToGLFormat(aPixelFormat);
     GLenum GLInternalFormat = PixelFormatToGLInternalFormat(aPixelFormat);
@@ -930,11 +930,11 @@ void cSDLTexture::GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelForma
             mbUseMipMaps = false;
         }
     }
-    else if(PixelFormatIsCompressed(aPixelFormat)==false)
+    else if(PixelFormatIsCompressed(aPixelFormat) == false)
     {
         if(mType == eTextureType_1D)
         {
-            gluBuild1DMipmaps(    aGLTarget,GLInternalFormat,avSize.x,
+            gluBuild1DMipmaps(    aGLTarget, GLInternalFormat, avSize.x,
                                   GLFormat, GL_UNSIGNED_BYTE,
                                   apData);
         }
@@ -942,7 +942,7 @@ void cSDLTexture::GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelForma
         {
             gluBuild2DMipmaps(    mType == eTextureType_CubeMap ?
                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB + alFaceNum : aGLTarget,
-                                  GLInternalFormat,avSize.x,avSize.y,
+                                  GLInternalFormat, avSize.x, avSize.y,
                                   GLFormat, GL_UNSIGNED_BYTE,
                                   apData);
         }
@@ -950,22 +950,22 @@ void cSDLTexture::GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelForma
 
         //Calculate memory taken by mipmaps
         cVector3l vTempSize = avSize;
-        while(vTempSize.x>1 || vTempSize.y>1 || vTempSize.z>1)
+        while(vTempSize.x > 1 || vTempSize.y > 1 || vTempSize.z > 1)
         {
             vTempSize.x >>= 1;
             vTempSize.y >>= 1;
             vTempSize.z >>= 1;
-            if(vTempSize.x==0)
+            if(vTempSize.x == 0)
             {
-                vTempSize.x=1;
+                vTempSize.x = 1;
             }
-            if(vTempSize.y==0)
+            if(vTempSize.y == 0)
             {
-                vTempSize.y=1;
+                vTempSize.y = 1;
             }
-            if(vTempSize.z==0)
+            if(vTempSize.z == 0)
             {
-                vTempSize.z=1;
+                vTempSize.z = 1;
             }
 
             mlMemorySize += vTempSize.x * vTempSize.y * vTempSize.z * lBytesPerPixel;
@@ -981,8 +981,8 @@ void cSDLTexture::GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelForma
 
 //-----------------------------------------------------------------------
 
-bool cSDLTexture::CopyTextureDataToGL(    int alTextureHandle, int alLevel,unsigned char *apData,int alDataSize,
-        const cVector3l avSize, ePixelFormat aPixelFormat,int alFaceNum)
+bool cSDLTexture::CopyTextureDataToGL(    int alTextureHandle, int alLevel, unsigned char *apData, int alDataSize,
+        const cVector3l avSize, ePixelFormat aPixelFormat, int alFaceNum)
 {
     GLenum GLTarget = TextureTypeToGLTarget(mType);
     GLenum GLFormat = PixelFormatToGLFormat(aPixelFormat);
@@ -990,7 +990,7 @@ bool cSDLTexture::CopyTextureDataToGL(    int alTextureHandle, int alLevel,unsig
 
 
     //Clear gl errors.
-    while(glGetError()!=GL_NO_ERROR);
+    while(glGetError() != GL_NO_ERROR);
 
     //Update memory size
     mlMemorySize += alDataSize;
@@ -1021,7 +1021,7 @@ bool cSDLTexture::CopyTextureDataToGL(    int alTextureHandle, int alLevel,unsig
         {
             glCompressedTexImage3DARB(    GLTarget, alLevel,
                                           GLCompressionFormat,
-                                          avSize.x, avSize.y,avSize.z,
+                                          avSize.x, avSize.y, avSize.z,
                                           0, alDataSize, apData);
         }
     }
@@ -1034,7 +1034,7 @@ bool cSDLTexture::CopyTextureDataToGL(    int alTextureHandle, int alLevel,unsig
         if(mType == eTextureType_1D)
         {
             glTexImage1D(    GLTarget, alLevel, GLInternalFormat,
-                             avSize.x,0,GLFormat,
+                             avSize.x, 0, GLFormat,
                              glType, apData);
         }
         else if(mType == eTextureType_2D || mType == eTextureType_Rect ||
@@ -1049,13 +1049,13 @@ bool cSDLTexture::CopyTextureDataToGL(    int alTextureHandle, int alLevel,unsig
         else if(mType == eTextureType_3D)
         {
             glTexImage3D(    GLTarget, alLevel,
-                             GLInternalFormat, avSize.x, avSize.y,avSize.z,
+                             GLInternalFormat, avSize.x, avSize.y, avSize.z,
                              0, GLFormat, glType, apData);
         }
     }
 
     //Check if something went wrong
-    if(glGetError()!=GL_NO_ERROR)
+    if(glGetError() != GL_NO_ERROR)
     {
         return false;
     }
@@ -1067,7 +1067,7 @@ bool cSDLTexture::CopyTextureDataToGL(    int alTextureHandle, int alLevel,unsig
 
 void cSDLTexture::SetupProperties(int alTextureHandle)
 {
-    if(mbContainsData==false)
+    if(mbContainsData == false)
     {
         return;
     }
@@ -1124,9 +1124,9 @@ void cSDLTexture::SetupProperties(int alTextureHandle)
         mWrapT = eTextureWrap_ClampToEdge;
         mWrapR = eTextureWrap_ClampToEdge;
 
-        glTexParameteri(GLTarget,GL_TEXTURE_WRAP_S,GetGLWrapEnum(mWrapS));
-        glTexParameteri(GLTarget,GL_TEXTURE_WRAP_T,GetGLWrapEnum(mWrapT));
-        glTexParameteri(GLTarget,GL_TEXTURE_WRAP_R,GetGLWrapEnum(mWrapR));
+        glTexParameteri(GLTarget, GL_TEXTURE_WRAP_S, GetGLWrapEnum(mWrapS));
+        glTexParameteri(GLTarget, GL_TEXTURE_WRAP_T, GetGLWrapEnum(mWrapT));
+        glTexParameteri(GLTarget, GL_TEXTURE_WRAP_R, GetGLWrapEnum(mWrapR));
     }
     /////////////////////
     // Normal
@@ -1134,16 +1134,16 @@ void cSDLTexture::SetupProperties(int alTextureHandle)
     {
         /////////////////////////////////////////
         //Wrapping
-        glTexParameteri(GLTarget,GL_TEXTURE_WRAP_S,GetGLWrapEnum(mWrapS));
-        glTexParameteri(GLTarget,GL_TEXTURE_WRAP_T,GetGLWrapEnum(mWrapT));
-        glTexParameteri(GLTarget,GL_TEXTURE_WRAP_R,GetGLWrapEnum(mWrapR));
+        glTexParameteri(GLTarget, GL_TEXTURE_WRAP_S, GetGLWrapEnum(mWrapS));
+        glTexParameteri(GLTarget, GL_TEXTURE_WRAP_T, GetGLWrapEnum(mWrapT));
+        glTexParameteri(GLTarget, GL_TEXTURE_WRAP_R, GetGLWrapEnum(mWrapR));
 
         /////////////////////////////////////////
         //Anisotropic filtering
         if(    mpLowLevelGraphics->GetCaps(eGraphicCaps_AnisotropicFiltering) &&
                 (float) mpLowLevelGraphics->GetCaps(eGraphicCaps_MaxAnisotropicFiltering) >= mfAnisotropyDegree)
         {
-            glTexParameterf(GLTarget,GL_TEXTURE_MAX_ANISOTROPY_EXT,mfAnisotropyDegree);
+            glTexParameterf(GLTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT, mfAnisotropyDegree);
         }
     }
 
@@ -1152,9 +1152,9 @@ void cSDLTexture::SetupProperties(int alTextureHandle)
 
 //-----------------------------------------------------------------------
 
-unsigned char* cSDLTexture::ResizePixelData(unsigned char *apData, int alBytesPerPixel)
+unsigned char *cSDLTexture::ResizePixelData(unsigned char *apData, int alBytesPerPixel)
 {
-    if(mlSizeDownScaleLevel<=0 || mvSize.x <= mvMinDownScaleSize.x)
+    if(mlSizeDownScaleLevel <= 0 || mvSize.x <= mvMinDownScaleSize.x)
     {
         return NULL;
     }
@@ -1171,24 +1171,24 @@ unsigned char* cSDLTexture::ResizePixelData(unsigned char *apData, int alBytesPe
 
     while(mvSize.x < mvMinDownScaleSize.x)
     {
-        mvSize.x*=2;
-        mvSize.y*=2;
-        lSizeDiv/=2;
+        mvSize.x *= 2;
+        mvSize.y *= 2;
+        lSizeDiv /= 2;
     }
 
     pNewSrc = hplNewArray( unsigned char, alBytesPerPixel * mvSize.x * mvSize.y);
 
     int lWidthCount = mvSize.x;
     int lHeightCount = mvSize.y;
-    int lOldAdd = alBytesPerPixel*lSizeDiv;
-    int lOldHeightAdd = alBytesPerPixel*lOldW*(lSizeDiv-1);
+    int lOldAdd = alBytesPerPixel * lSizeDiv;
+    int lOldHeightAdd = alBytesPerPixel * lOldW * (lSizeDiv - 1);
 
     unsigned char *pOldPixel = apData;
     unsigned char *pNewPixel = pNewSrc;
 
     while(lHeightCount)
     {
-        memcpy(pNewPixel, pOldPixel,alBytesPerPixel);
+        memcpy(pNewPixel, pOldPixel, alBytesPerPixel);
 
         pOldPixel += lOldAdd;
         pNewPixel += alBytesPerPixel;

@@ -19,16 +19,16 @@ public:
     iAIState();
     virtual ~iAIState() {}
 
-    virtual void OnUpdate(float afTime)=0;
+    virtual void OnUpdate(float afTime) = 0;
 
-    virtual void OnEnterState(int alLastState)=0;
-    virtual void OnLeaveState(int alNextState)=0;
+    virtual void OnEnterState(int alLastState) = 0;
+    virtual void OnLeaveState(int alNextState) = 0;
 
     int GetId()
     {
         return mlId;
     }
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -55,7 +55,7 @@ private:
     float mfTimeCount;
 };
 
-typedef std::map<int, iAIState*> tAIStateMap;
+typedef std::map<int, iAIState *> tAIStateMap;
 typedef tAIStateMap::iterator tAIStateMapIt;
 
 //-----------------------------------------
@@ -84,9 +84,9 @@ public:
         return mbActive;
     }
 
-    iAIState* GetState(int alId);
+    iAIState *GetState(int alId);
 
-    iAIState* CurrentState();
+    iAIState *CurrentState();
 
 private:
     bool mbActive;

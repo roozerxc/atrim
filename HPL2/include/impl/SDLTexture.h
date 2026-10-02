@@ -25,7 +25,7 @@ public:
     bool CreateFromBitmap(cBitmap* pBmp);
     bool CreateAnimFromBitmapVec(std::vector<cBitmap*> *avBitmaps);
     bool CreateCubeFromBitmapVec(std::vector<cBitmap*> *avBitmaps);
-    bool CreateFromRawData(const cVector3l &avSize,ePixelFormat aPixelFormat, unsigned char *apData);
+    bool CreateFromRawData(const cVector3l &avSize, ePixelFormat aPixelFormat, unsigned char *apData);
 
     virtual void SetRawData(    int alLevel, const cVector3l& avOffset, const cVector3l& avSize,
                                 ePixelFormat aPixelFormat, void *apData);
@@ -64,24 +64,24 @@ private:
     bool CreateTexture(    int alTextureHandle,
                            cBitmapData* apBitmapImage, int alNumOfMipMaps,
                            const cVector3l avSize, ePixelFormat aPixelFormat,
-                           int alFaceNum,bool abGenerateMipMaps,
+                           int alFaceNum, bool abGenerateMipMaps,
                            bool abCheckForResize);
 
-    bool CopyTextureDataToGL(    int alTextureHandle, int alLevel,unsigned char *apData,int alDataSize,
-                                 const cVector3l avSize, ePixelFormat aPixelFormat,int alFaceNum);
+    bool CopyTextureDataToGL(    int alTextureHandle, int alLevel, unsigned char *apData, int alDataSize,
+                                 const cVector3l avSize, ePixelFormat aPixelFormat, int alFaceNum);
 
-    void GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelFormat,const cVector3l avSize,
-                             unsigned char *apData,int alDataSize, int alFaceNum);
+    void GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelFormat, const cVector3l avSize,
+                             unsigned char *apData, int alDataSize, int alFaceNum);
 
     void SetupProperties(int alTextureHandle);
 
 
-    unsigned char* ResizePixelData(unsigned char *apData, int alBytesPerPixel);
+    unsigned char *ResizePixelData(unsigned char *apData, int alBytesPerPixel);
 
 
     tUIntVec mvTextureHandles;
     bool mbContainsData;
-    cLowLevelGraphicsSDL* mpGfxSDL;
+    cLowLevelGraphicsSDL *mpGfxSDL;
 
     float mfTimeCount;
     int mlTextureIndex;

@@ -15,7 +15,7 @@ public:
     cWidgetCheckBox(cGuiSet *apSet, cGuiSkin *apSkin);
     virtual ~cWidgetCheckBox();
 
-    void SetChecked(bool abX, bool abGenCallback=true);
+    void SetChecked(bool abX, bool abGenCallback = true);
     bool IsChecked()
     {
         return mbChecked;

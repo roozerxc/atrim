@@ -32,26 +32,26 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cPostEffectType_ColorConvTex::cPostEffectType_ColorConvTex(cGraphics *apGraphics, cResources *apResources) : iPostEffectType("ColorConvTex",apGraphics,apResources)
+cPostEffectType_ColorConvTex::cPostEffectType_ColorConvTex(cGraphics *apGraphics, cResources *apResources) : iPostEffectType("ColorConvTex", apGraphics, apResources)
 {
     ///////////////////////////
     // Load programs
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         cParserVarContainer vars;
         vars.Add("UseUv");
-        if(i==1)
+        if(i == 1)
         {
             vars.Add("UseFadeAlpha");
         }
 
-        mpProgram[i] = mpGraphics->CreateGpuProgramFromShaders("BloomBlur"+cString::ToString(i),"deferred_base_vtx.glsl",
+        mpProgram[i] = mpGraphics->CreateGpuProgramFromShaders("BloomBlur" + cString::ToString(i), "deferred_base_vtx.glsl",
                        "posteffect_color_conv_tex_frag.glsl", &vars);
-        if(i==1)
+        if(i == 1)
         {
             if(mpProgram[i])
             {
-                mpProgram[i]->GetVariableAsId("afFadeAlpha",kVar_afFadeAlpha);
+                mpProgram[i]->GetVariableAsId("afFadeAlpha", kVar_afFadeAlpha);
             }
         }
     }
@@ -66,10 +66,10 @@ cPostEffectType_ColorConvTex::~cPostEffectType_ColorConvTex()
 
 //-----------------------------------------------------------------------
 
-iPostEffect * cPostEffectType_ColorConvTex::CreatePostEffect(iPostEffectParams *apParams)
+iPostEffect *cPostEffectType_ColorConvTex::CreatePostEffect(iPostEffectParams *apParams)
 {
-    cPostEffect_ColorConvTex *pEffect = hplNew(cPostEffect_ColorConvTex, (mpGraphics,mpResources,this));
-    cPostEffectParams_ColorConvTex *pBloomParams = static_cast<cPostEffectParams_ColorConvTex*>(apParams);
+    cPostEffect_ColorConvTex *pEffect = hplNew(cPostEffect_ColorConvTex, (mpGraphics, mpResources, this));
+    cPostEffectParams_ColorConvTex *pBloomParams = static_cast<cPostEffectParams_ColorConvTex *>(apParams);
 
     return pEffect;
 }
@@ -82,9 +82,9 @@ iPostEffect * cPostEffectType_ColorConvTex::CreatePostEffect(iPostEffectParams *
 
 //-----------------------------------------------------------------------
 
-cPostEffect_ColorConvTex::cPostEffect_ColorConvTex(cGraphics *apGraphics,cResources *apResources, iPostEffectType *apType) : iPostEffect(apGraphics,apResources,apType)
+cPostEffect_ColorConvTex::cPostEffect_ColorConvTex(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType) : iPostEffect(apGraphics, apResources, apType)
 {
-    mpSpecificType = static_cast<cPostEffectType_ColorConvTex*>(mpType);
+    mpSpecificType = static_cast<cPostEffectType_ColorConvTex *>(mpType);
 
     mpColorConvTex = NULL;
 }
@@ -110,14 +110,14 @@ void cPostEffect_ColorConvTex::OnSetParams()
         mpResources->GetTextureManager()->Destroy(mpColorConvTex);
     }
 
-    mpColorConvTex = mpResources->GetTextureManager()->Create1D(mParams.msTextureFile,false);
+    mpColorConvTex = mpResources->GetTextureManager()->Create1D(mParams.msTextureFile, false);
     mpColorConvTex->SetWrapSTR(eTextureWrap_ClampToEdge);
 }
 
 //-----------------------------------------------------------------------
 
 
-iTexture* cPostEffect_ColorConvTex::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
+iTexture *cPostEffect_ColorConvTex::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
 {
     /////////////////////////
     // Init render states
@@ -139,16 +139,16 @@ iTexture* cPostEffect_ColorConvTex::RenderEffect(iTexture *apInputTexture, iFram
     }
     else
     {
-        float fAlpha = cMath::Max(mParams.mfFadeAlpha,0.0f);
+        float fAlpha = cMath::Max(mParams.mfFadeAlpha, 0.0f);
         mpCurrentComposite->SetProgram(mpSpecificType->mpProgram[1]);
         if(mpSpecificType->mpProgram[1])
         {
-            mpSpecificType->mpProgram[1]->SetFloat(kVar_afFadeAlpha,fAlpha);
+            mpSpecificType->mpProgram[1]->SetFloat(kVar_afFadeAlpha, fAlpha);
         }
     }
 
 
-    DrawQuad(0,1,apInputTexture, true);
+    DrawQuad(0, 1, apInputTexture, true);
 
     return apFinalTempBuffer->GetColorBuffer(0)->ToTexture();
 }

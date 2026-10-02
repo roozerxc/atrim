@@ -13,8 +13,8 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cCharacterBodyNewton::cCharacterBodyNewton(const tString &asName,iPhysicsWorld *apWorld, const cVector3f avSize)
-    : iCharacterBody(asName,apWorld, avSize)
+cCharacterBodyNewton::cCharacterBodyNewton(const tString &asName, iPhysicsWorld *apWorld, const cVector3f avSize)
+    : iCharacterBody(asName, apWorld, avSize)
 {
 }
 

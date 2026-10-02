@@ -15,7 +15,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cBoneState::cBoneState(const tString &asName,bool abAutoDeleteChildren) : cNode3D(asName,abAutoDeleteChildren)
+cBoneState::cBoneState(const tString &asName, bool abAutoDeleteChildren) : cNode3D(asName, abAutoDeleteChildren)
 {
     mpBody = NULL;
     mpColliderBody = NULL;
@@ -33,7 +33,7 @@ void cBoneState::SetBody(iPhysicsBody *apBody)
 {
     mpBody = apBody;
 }
-iPhysicsBody* cBoneState::GetBody()
+iPhysicsBody *cBoneState::GetBody()
 {
     return mpBody;
 }
@@ -44,7 +44,7 @@ void cBoneState::SetColliderBody(iPhysicsBody *apBody)
 {
     mpColliderBody = apBody;
 }
-iPhysicsBody* cBoneState::GetColliderBody()
+iPhysicsBody *cBoneState::GetColliderBody()
 {
     return mpColliderBody;
 }
@@ -57,12 +57,12 @@ void cBoneState::SetBodyMatrix(const cMatrixf &a_mtxBody)
     m_mtxInvBody = cMath::MatrixInverse(m_mtxBody);
 }
 
-const cMatrixf& cBoneState::GetBodyMatrix()
+const cMatrixf &cBoneState::GetBodyMatrix()
 {
     return m_mtxBody;
 }
 
-const cMatrixf& cBoneState::GetInvBodyMatrix()
+const cMatrixf &cBoneState::GetInvBodyMatrix()
 {
     return m_mtxInvBody;
 }

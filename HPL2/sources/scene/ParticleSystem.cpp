@@ -26,8 +26,8 @@ namespace hpl
 //-----------------------------------------------------------------------
 
 cParticleSystemData::cParticleSystemData(const tString &asName,
-        cResources* apResources,cGraphics *apGraphics)
-    : iResourceBase(asName, _W(""),0)
+        cResources* apResources, cGraphics *apGraphics)
+    : iResourceBase(asName, _W(""), 0)
 {
     mpResources = apResources;
     mpGraphics = apGraphics;
@@ -49,21 +49,21 @@ void cParticleSystemData::AddEmitterData(iParticleEmitterData *apData)
 
 //-----------------------------------------------------------------------
 
-cParticleSystem* cParticleSystemData::Create(tString asName, cVector3f avSize)
+cParticleSystem *cParticleSystemData::Create(tString asName, cVector3f avSize)
 {
     if(mvEmitterData.empty())
     {
-        Warning("Particle system '%s' has no emitters.\n",msName.c_str());
+        Warning("Particle system '%s' has no emitters.\n", msName.c_str());
         return NULL;
     }
 
-    cParticleSystem *pPS = hplNew( cParticleSystem, (asName,this,mpResources,mpGraphics) );
+    cParticleSystem *pPS = hplNew( cParticleSystem, (asName, this, mpResources, mpGraphics) );
 
-    for(size_t i=0; i<mvEmitterData.size(); ++i)
+    for(size_t i = 0; i < mvEmitterData.size(); ++i)
     {
         ///////////////////////////
         // Create and add
-        iParticleEmitter *pPE = static_cast<iParticleEmitter*>(mvEmitterData[i]->Create(asName, avSize));
+        iParticleEmitter *pPE = static_cast<iParticleEmitter *>(mvEmitterData[i]->Create(asName, avSize));
         pPS->AddEmitter(pPE);
         pPE->SetSystem(pPS);
     }
@@ -78,7 +78,7 @@ bool cParticleSystemData::LoadFromFile(const tWString &asFile)
     SetFullPath(asFile);
 
     iXmlDocument* pXmlDoc = mpResources->GetLowLevel()->CreateXmlDocument();
-    if(pXmlDoc->CreateFromFile(asFile)==false)
+    if(pXmlDoc->CreateFromFile(asFile) == false)
     {
         hplDelete(pXmlDoc);
         return false;
@@ -116,7 +116,7 @@ bool cParticleSystemData::LoadFromFile(const tWString &asFile)
 
 bool cParticleSystemData::LoadFromElement(cXmlElement* apElement)
 {
-    if(apElement->GetValue()!="ParticleSystem")
+    if(apElement->GetValue() != "ParticleSystem")
     {
         return false;
     }
@@ -125,12 +125,12 @@ bool cParticleSystemData::LoadFromElement(cXmlElement* apElement)
     while(it.HasNext())
     {
         cXmlElement* pElem = it.Next()->ToElement();
-        if(pElem->GetValue()!="ParticleEmitter")
+        if(pElem->GetValue() != "ParticleEmitter")
         {
             continue;
         }
 
-        cParticleEmitterData_UserData *pPE = hplNew( cParticleEmitterData_UserData,("",    mpResources,mpGraphics) );
+        cParticleEmitterData_UserData *pPE = hplNew( cParticleEmitterData_UserData, ("",    mpResources, mpGraphics) );
         pPE->LoadFromElement(pElem);
 
         mvEmitterData.push_back(pPE);
@@ -147,7 +147,7 @@ bool cParticleSystemData::LoadFromElement(cXmlElement* apElement)
         mvEmitterData.push_back(pPE);
     }*/
 
-    return (mvEmitterData.empty()==false);
+    return (mvEmitterData.empty() == false);
 }
 
 //-----------------------------------------------------------------------
@@ -175,7 +175,7 @@ cParticleSystem::cParticleSystem(const tString asName,
 
     mbFirstUpdate = true;
 
-    mColor = cColor(1,1);
+    mColor = cColor(1, 1);
     mbFadeAtDistance = false;
     mfMinFadeDistanceStart = 2;
     mfMinFadeDistanceEnd = 1;
@@ -189,7 +189,7 @@ cParticleSystem::cParticleSystem(const tString asName,
 
 cParticleSystem::~cParticleSystem()
 {
-    for(size_t i=0; i< mvEmitters.size(); ++i)
+    for(size_t i = 0; i < mvEmitters.size(); ++i)
     {
         hplDelete(mvEmitters[i]);
     }
@@ -216,7 +216,7 @@ void cParticleSystem::SetVisible(bool abVisible)
 
     mbIsVisible = abVisible;
 
-    for(size_t i=0; i< mvEmitters.size(); ++i)
+    for(size_t i = 0; i < mvEmitters.size(); ++i)
     {
         mvEmitters[i]->SetVisible(mbIsVisible);
     }
@@ -227,9 +227,9 @@ void cParticleSystem::SetVisible(bool abVisible)
 
 bool cParticleSystem::IsDead()
 {
-    size_t lCount =0;
+    size_t lCount = 0;
 
-    for(size_t i=0; i< mvEmitters.size(); ++i)
+    for(size_t i = 0; i < mvEmitters.size(); ++i)
     {
         iParticleEmitter *pPE = mvEmitters[i];
 
@@ -249,9 +249,9 @@ bool cParticleSystem::IsDead()
 
 bool cParticleSystem::IsDying()
 {
-    size_t lCount =0;
+    size_t lCount = 0;
 
-    for(size_t i=0; i< mvEmitters.size(); ++i)
+    for(size_t i = 0; i < mvEmitters.size(); ++i)
     {
         iParticleEmitter *pPE = mvEmitters[i];
 
@@ -274,7 +274,7 @@ bool cParticleSystem::IsDying()
 void cParticleSystem::Kill()
 {
     //SetIsSaved(false);
-    for(size_t i=0; i< mvEmitters.size(); ++i)
+    for(size_t i = 0; i < mvEmitters.size(); ++i)
     {
         iParticleEmitter *pPE = mvEmitters[i];
 
@@ -287,7 +287,7 @@ void cParticleSystem::Kill()
 void cParticleSystem::KillInstantly()
 {
     //SetIsSaved(false);
-    for(size_t i=0; i< mvEmitters.size(); ++i)
+    for(size_t i = 0; i < mvEmitters.size(); ++i)
     {
         iParticleEmitter *pPE = mvEmitters[i];
 
@@ -299,12 +299,12 @@ void cParticleSystem::KillInstantly()
 
 void cParticleSystem::UpdateLogic(double adFixedDelta)
 {
-    if(IsActive()==false)
+    if(IsActive() == false)
     {
         return;
     }
 
-    for(size_t i=0; i< mvEmitters.size(); ++i)
+    for(size_t i = 0; i < mvEmitters.size(); ++i)
     {
         iParticleEmitter *pPE = mvEmitters[i];
 
@@ -314,12 +314,12 @@ void cParticleSystem::UpdateLogic(double adFixedDelta)
         {
             iParticleEmitterData *pData =  mpData->GetEmitterData((int)i);
 
-            if(pData->GetWarmUpTime() >0)
+            if(pData->GetWarmUpTime() > 0)
             {
                 float fTime = pData->GetWarmUpTime();
-                float fStepSize = 1.0f /pData->GetWarmUpStepsPerSec();
+                float fStepSize = 1.0f / pData->GetWarmUpStepsPerSec();
 
-                while(fTime >0)
+                while(fTime > 0)
                 {
                     pPE->UpdateLogic(fStepSize);
                     fTime -= fStepSize;
@@ -347,7 +347,7 @@ void cParticleSystem::AddEmitter(iParticleEmitter* apEmitter)
 
 //-----------------------------------------------------------------------
 
-iParticleEmitter* cParticleSystem::GetEmitter(int alIdx)
+iParticleEmitter *cParticleSystem::GetEmitter(int alIdx)
 {
     return mvEmitters[alIdx];
 }

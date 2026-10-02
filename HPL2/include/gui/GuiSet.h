@@ -52,7 +52,7 @@ class cGuiPopUpUIKeyboard;
 
 //---------------------------------------------
 
-typedef std::list<iGuiPopUp*> tGuiPopUpList;
+typedef std::list<iGuiPopUp *> tGuiPopUpList;
 typedef tGuiPopUpList::iterator tGuiPopUpListIt;
 
 //---------------------------------------------
@@ -61,7 +61,7 @@ class cGuiClipRegion;
 class cGuiRenderObject
 {
 public:
-    cGuiRenderObject() : mpGfx(NULL), mvPos(0), mvSize(0), mColor(0,0), mpCustomMaterial(NULL), mpClipRegion(NULL), mbRotated(false), mfAngle(0.0f), mvPivot(0.0f)
+    cGuiRenderObject() : mpGfx(NULL), mvPos(0), mvSize(0), mColor(0, 0), mpCustomMaterial(NULL), mpClipRegion(NULL), mbRotated(false), mfAngle(0.0f), mvPivot(0.0f)
     {}
 
     cGuiGfxElement *mpGfx;
@@ -82,22 +82,22 @@ public:
     bool operator()(const cGuiRenderObject& aObjectA, const cGuiRenderObject& aObjectB) const;
 };
 
-typedef std::multiset<cGuiRenderObject,cGuiRenderObjectCompare> tGuiRenderObjectSet;
+typedef std::multiset<cGuiRenderObject, cGuiRenderObjectCompare> tGuiRenderObjectSet;
 typedef tGuiRenderObjectSet::iterator tGuiRenderObjectSetIt;
 
 //-----------------------------------------------
 
-typedef std::list<cGuiClipRegion*> tGuiClipRegionList;
+typedef std::list<cGuiClipRegion *> tGuiClipRegionList;
 typedef tGuiClipRegionList::iterator tGuiClipRegionListIt;
 
 class cGuiClipRegion
 {
 public:
-    cGuiClipRegion() : mRect(0,0,-1,-1) {}
+    cGuiClipRegion() : mRect(0, 0, -1, -1) {}
     ~cGuiClipRegion();
 
     void Clear();
-    cGuiClipRegion* CreateChild(const cVector3f &avPos, const cVector2f &avSize);
+    cGuiClipRegion *CreateChild(const cVector3f &avPos, const cVector2f &avSize);
 
     //tGuiRenderObjectSet m_setObjects;
     cRect2f mRect;
@@ -112,7 +112,7 @@ class cGuiGlobalShortcut
 public:
     cGuiGlobalShortcut(int alKeyModifiers, eKey aKey, iWidget* apWidget, eGuiMessage aMessage, bool abBypassVisiblity, bool abBypassEnabled);
 
-    const cKeyPress& GetKey()
+    const cKeyPress &GetKey()
     {
         return mKey;
     }
@@ -136,14 +136,14 @@ protected:
     bool mbBypassEnabled;
 
     cKeyPress mKey;
-    iWidget* mpWidget;
+    iWidget *mpWidget;
     eGuiMessage mMessage;
 };
 
-typedef std::vector<cGuiGlobalShortcut*> tShortcutVec;
+typedef std::vector<cGuiGlobalShortcut *> tShortcutVec;
 typedef tShortcutVec::iterator tShortcutVecIt;
 
-typedef std::list<cGuiGlobalShortcut*> tShortcutList;
+typedef std::list<cGuiGlobalShortcut *> tShortcutList;
 typedef tShortcutList::iterator tShortcutListIt;
 
 //-----------------------------------------------
@@ -152,7 +152,7 @@ class cGuiSet
 {
     friend class iGuiPopUp;
 public:
-    cGuiSet(const tString &asName, cGui *apGui,cGuiSkin *apSkin,
+    cGuiSet(const tString &asName, cGui *apGui, cGuiSkin *apSkin,
             cResources *apResources, cGraphics* apGraphics,
             cSound *apSound, cScene *apScene);
     ~cGuiSet();
@@ -166,7 +166,7 @@ public:
 
     bool SendMessage(eGuiMessage aMessage, const cGuiMessageData& aData);
 
-    cGuiGlobalShortcut* AddGlobalShortcut(int alKeyModifiers, eKey aKey,  iWidget* apWidget, eGuiMessage aMessage, bool abBypassVisibility=true, bool abBypassEnabled=true);
+    cGuiGlobalShortcut *AddGlobalShortcut(int alKeyModifiers, eKey aKey,  iWidget* apWidget, eGuiMessage aMessage, bool abBypassVisibility = true, bool abBypassEnabled = true);
     void RemoveGlobalShortcut(cGuiGlobalShortcut* apShortcut);
 
     void ClearGlobalShortcuts();
@@ -189,22 +189,22 @@ public:
     {
         mpCurrentClipRegion = apRegion;
     }
-    cGuiClipRegion* GetCurrentClipRegion()
+    cGuiClipRegion *GetCurrentClipRegion()
     {
         return mpCurrentClipRegion;
     }
-    cGuiClipRegion* GetBaseClipRegion()
+    cGuiClipRegion *GetBaseClipRegion()
     {
         return &mBaseClipRegion;
     }
 
     void DrawGfx(    cGuiGfxElement* apGfx,
                      const cVector3f &avPos,
-                     const cVector2f &avSize=-1,
-                     const cColor& aColor=cColor(1,1),
+                     const cVector2f &avSize = -1,
+                     const cColor& aColor = cColor(1, 1),
                      eGuiMaterial aMaterial = eGuiMaterial_LastEnum,
-                     float afRotationAngle=0,
-                     bool abUseCustomPivot=false, const cVector3f& avCustomPivot=0);
+                     float afRotationAngle = 0,
+                     bool abUseCustomPivot = false, const cVector3f& avCustomPivot = 0);
 
     void DrawFont (    const tWString &asText,
                        iFontData *apFont, const cVector3f &avPos,
@@ -214,158 +214,158 @@ public:
 
     void DrawFont (    iFontData *apFont, const cVector3f &avPos,
                        const cVector2f &avSize, const cColor& aColor,
-                       eFontAlign aAlign,eGuiMaterial aMaterial,
-                       const wchar_t* fmt,...);
+                       eFontAlign aAlign, eGuiMaterial aMaterial,
+                       const wchar_t *fmt, ...);
 
     void DrawFont (    iFontData *apFont, const cVector3f &avPos,
                        const cVector2f &avSize, const cColor& aColor,
-                       const wchar_t* fmt,...);
+                       const wchar_t *fmt, ...);
 
     ////////////////////////////////////
     // Widget Creation
-    cWidgetWindow* CreateWidgetWindow(    tWidgetWindowButtonFlag alFlags=eWidgetWindowButtonFlag_None,
-                                          const cVector3f &avLocalPos=0,
-                                          const cVector2f &avSize=0,
-                                          const tWString &asText=_W(""),
-                                          iWidget *apParent=NULL,
+    cWidgetWindow *CreateWidgetWindow(    tWidgetWindowButtonFlag alFlags = eWidgetWindowButtonFlag_None,
+                                          const cVector3f &avLocalPos = 0,
+                                          const cVector2f &avSize = 0,
+                                          const tWString &asText = _W(""),
+                                          iWidget *apParent = NULL,
                                           const tString& asName = "" );
 
-    cWidgetFrame* CreateWidgetFrame(    const cVector3f &avLocalPos=0,
-                                        const cVector2f &avSize=0,
-                                        bool abDrawFrame=false,
-                                        iWidget *apParent=NULL,
-                                        bool abHScrollBar=false,
-                                        bool abVScrollBar=false,
+    cWidgetFrame *CreateWidgetFrame(    const cVector3f &avLocalPos = 0,
+                                        const cVector2f &avSize = 0,
+                                        bool abDrawFrame = false,
+                                        iWidget *apParent = NULL,
+                                        bool abHScrollBar = false,
+                                        bool abVScrollBar = false,
                                         const tString& asName = "" );
 
-    cWidgetButton* CreateWidgetButton(    const cVector3f &avLocalPos=0,
-                                          const cVector2f &avSize=0,
-                                          const tWString &asText=_W(""),
-                                          iWidget *apParent=NULL,
-                                          bool abToggleable=false,
+    cWidgetButton *CreateWidgetButton(    const cVector3f &avLocalPos = 0,
+                                          const cVector2f &avSize = 0,
+                                          const tWString &asText = _W(""),
+                                          iWidget *apParent = NULL,
+                                          bool abToggleable = false,
                                           const tString& asName = "");
 
-    cWidgetLabel* CreateWidgetLabel(    const cVector3f &avLocalPos=0,
-                                        const cVector2f &avSize=0,
-                                        const tWString &asText=_W(""),
-                                        iWidget *apParent=NULL,
+    cWidgetLabel *CreateWidgetLabel(    const cVector3f &avLocalPos = 0,
+                                        const cVector2f &avSize = 0,
+                                        const tWString &asText = _W(""),
+                                        iWidget *apParent = NULL,
                                         const tString& asName = "" );
 
-    cWidgetSlider* CreateWidgetSlider(    eWidgetSliderOrientation aOrientation,
-                                          const cVector3f &avLocalPos=0,
-                                          const cVector2f &avSize=0,
-                                          int alMaxValue=10,
-                                          iWidget *apParent=NULL,
+    cWidgetSlider *CreateWidgetSlider(    eWidgetSliderOrientation aOrientation,
+                                          const cVector3f &avLocalPos = 0,
+                                          const cVector2f &avSize = 0,
+                                          int alMaxValue = 10,
+                                          iWidget *apParent = NULL,
                                           const tString& asName = "" );
 
-    cWidgetTextBox* CreateWidgetTextBox(const cVector3f &avLocalPos=0,
-                                        const cVector2f &avSize=0,
-                                        const tWString &asText=_W(""),
-                                        iWidget *apParent=NULL,
+    cWidgetTextBox *CreateWidgetTextBox(const cVector3f &avLocalPos = 0,
+                                        const cVector2f &avSize = 0,
+                                        const tWString &asText = _W(""),
+                                        iWidget *apParent = NULL,
                                         eWidgetTextBoxInputType aType = eWidgetTextBoxInputType_Normal,
-                                        float afNumericAdd=1.0f,
-                                        bool abShowButtons=true,
+                                        float afNumericAdd = 1.0f,
+                                        bool abShowButtons = true,
                                         const tString& asName = "" );
 
-    cWidgetCheckBox* CreateWidgetCheckBox(const cVector3f &avLocalPos=0,
-                                          const cVector2f &avSize=0,
-                                          const tWString &asText=_W(""),
-                                          iWidget *apParent=NULL,
+    cWidgetCheckBox *CreateWidgetCheckBox(const cVector3f &avLocalPos = 0,
+                                          const cVector2f &avSize = 0,
+                                          const tWString &asText = _W(""),
+                                          iWidget *apParent = NULL,
                                           const tString& asName = "" );
 
-    cWidgetImage* CreateWidgetImage(const tString &asFile="",
-                                    const cVector3f &avLocalPos=0,
-                                    const cVector2f &avSize=-1,
+    cWidgetImage *CreateWidgetImage(const tString &asFile = "",
+                                    const cVector3f &avLocalPos = 0,
+                                    const cVector2f &avSize = -1,
                                     eGuiMaterial aMaterial = eGuiMaterial_Alpha,
-                                    bool abAnimate=false,
-                                    iWidget *apParent=NULL,
+                                    bool abAnimate = false,
+                                    iWidget *apParent = NULL,
                                     const tString& asName = "" );
 
-    cWidgetListBox* CreateWidgetListBox(const cVector3f &avLocalPos=0,
-                                        const cVector2f &avSize=0,
-                                        iWidget *apParent=NULL,
+    cWidgetListBox *CreateWidgetListBox(const cVector3f &avLocalPos = 0,
+                                        const cVector2f &avSize = 0,
+                                        iWidget *apParent = NULL,
                                         const tString& asName = "" );
 
-    cWidgetMultiPropertyListBox* CreateWidgetMultiPropertyListBox(    const cVector3f& avLocalPos=0,
-            const cVector2f& avSize=0,
-            iWidget* apParent=NULL,
+    cWidgetMultiPropertyListBox *CreateWidgetMultiPropertyListBox(    const cVector3f& avLocalPos = 0,
+            const cVector2f& avSize = 0,
+            iWidget* apParent = NULL,
             const tString& asName = "");
 
-    cWidgetComboBox* CreateWidgetComboBox(const cVector3f &avLocalPos=0,
-                                          const cVector2f &avSize=0,
-                                          const tWString &asText=_W(""),
-                                          iWidget *apParent=NULL,
+    cWidgetComboBox *CreateWidgetComboBox(const cVector3f &avLocalPos = 0,
+                                          const cVector2f &avSize = 0,
+                                          const tWString &asText = _W(""),
+                                          iWidget *apParent = NULL,
                                           const tString& asName = "");
 
-    cWidgetMenuItem* CreateWidgetMenuItem(const cVector3f &avLocalPos=0,
-                                          const cVector2f &avSize=0,
-                                          const tWString &asText=_W(""),
-                                          iWidget *apParent=NULL,
+    cWidgetMenuItem *CreateWidgetMenuItem(const cVector3f &avLocalPos = 0,
+                                          const cVector2f &avSize = 0,
+                                          const tWString &asText = _W(""),
+                                          iWidget *apParent = NULL,
                                           const tString& asName = "");
 
-    cWidgetContextMenu* CreateWidgetContextMenu(const cVector3f &avLocalPos=0,
-            const cVector2f &avSize=0,
-            const tWString &asText=_W(""),
-            iWidget *apParent=NULL,
+    cWidgetContextMenu *CreateWidgetContextMenu(const cVector3f &avLocalPos = 0,
+            const cVector2f &avSize = 0,
+            const tWString &asText = _W(""),
+            iWidget *apParent = NULL,
             const tString& asName = "");
 
-    cWidgetMainMenu* CreateWidgetMainMenu(iWidget *apParent=NULL,
+    cWidgetMainMenu *CreateWidgetMainMenu(iWidget *apParent = NULL,
                                           const tString& asName = "");
 
-    cWidgetTabLabel* CreateWidgetTabLabel(const cVector3f &avLocalPos=0,
-                                          const cVector2f &avSize=0,
-                                          const tWString &asText=_W(""),
-                                          iWidget *apParent=NULL,
+    cWidgetTabLabel *CreateWidgetTabLabel(const cVector3f &avLocalPos = 0,
+                                          const cVector2f &avSize = 0,
+                                          const tWString &asText = _W(""),
+                                          iWidget *apParent = NULL,
                                           const tString& asName = "");
 
-    cWidgetTab* CreateWidgetTab(const cVector3f &avLocalPos=0,
-                                const cVector2f &avSize=0,
-                                const tWString &asText=_W(""),
-                                iWidget *apParent=NULL,
+    cWidgetTab *CreateWidgetTab(const cVector3f &avLocalPos = 0,
+                                const cVector2f &avSize = 0,
+                                const tWString &asText = _W(""),
+                                iWidget *apParent = NULL,
                                 const tString& asName = "");
 
-    cWidgetTabFrame* CreateWidgetTabFrame(const cVector3f &avLocalPos=0,
-                                          const cVector2f &avSize=0,
-                                          const tWString &asText=_W(""),
-                                          iWidget *apParent=NULL,
+    cWidgetTabFrame *CreateWidgetTabFrame(const cVector3f &avLocalPos = 0,
+                                          const cVector2f &avSize = 0,
+                                          const tWString &asText = _W(""),
+                                          iWidget *apParent = NULL,
                                           bool abAllowHScroll = true,
                                           bool abAllowVScroll = true,
                                           const tString& asName = "");
 
-    cWidgetGroup* CreateWidgetGroup(const cVector3f &avLocalPos=0,
-                                    const cVector2f &avSize=0,
-                                    const tWString &asText=_W(""),
-                                    iWidget *apParent=NULL,
+    cWidgetGroup *CreateWidgetGroup(const cVector3f &avLocalPos = 0,
+                                    const cVector2f &avSize = 0,
+                                    const tWString &asText = _W(""),
+                                    iWidget *apParent = NULL,
                                     const tString& asName = "");
 
-    cWidgetDummy* CreateWidgetDummy(const cVector3f &avLocalPos=0,
-                                    iWidget *apParent=NULL,
+    cWidgetDummy *CreateWidgetDummy(const cVector3f &avLocalPos = 0,
+                                    iWidget *apParent = NULL,
                                     const tString& asName = "");
 
 
     iWidget *GetWidgetFromName(const tString& asName);
 
-    void DestroyWidget(iWidget *apWidget, bool abDestroyChildren=false);
+    void DestroyWidget(iWidget *apWidget, bool abDestroyChildren = false);
 
     bool IsValidWidget(iWidget *apWidget);
 
     ////////////////////////////////////
     // Popup
-    cGuiPopUpMessageBox* CreatePopUpMessageBox(    const tWString& asLabel, const tWString& asText,
+    cGuiPopUpMessageBox *CreatePopUpMessageBox(    const tWString& asLabel, const tWString& asText,
             const tWString& asButton1, const tWString& asButton2,
             void *apCallbackObject, tGuiCallbackFunc apCallback);
 
-    cGuiPopUpFilePicker* CreatePopUpSaveFilePicker( tWString &asFileName, const tWString &asCategory,
+    cGuiPopUpFilePicker *CreatePopUpSaveFilePicker( tWString &asFileName, const tWString &asCategory,
             const tWString &asFilter, const tWString &asStartPath, bool abShowHidden,
-            void *apCallbackObject, tGuiCallbackFunc apCallback, const tWString& asStartFilename=_W(""));
+            void *apCallbackObject, tGuiCallbackFunc apCallback, const tWString& asStartFilename = _W(""));
 
-    cGuiPopUpFilePicker* CreatePopUpLoadFilePicker( tWStringVec &avFileList, bool abAddAllFilesFilter,
+    cGuiPopUpFilePicker *CreatePopUpLoadFilePicker( tWStringVec &avFileList, bool abAddAllFilesFilter,
             const tWString &asStartPath, bool abShowHidden,
             void *apCallbackObject, tGuiCallbackFunc apCallback);
 
-    cGuiPopUpColorPicker* CreatePopUpColorPicker(cColor* apDestColor, const cVector3f& avPos, void *apCallbackObject, tGuiCallbackFunc apCallback);
+    cGuiPopUpColorPicker *CreatePopUpColorPicker(cColor* apDestColor, const cVector3f& avPos, void *apCallbackObject, tGuiCallbackFunc apCallback);
 
-    cGuiPopUpUIKeyboard* CreatePopUpUIKeyboard(cWidgetTextBox* apTarget);
+    cGuiPopUpUIKeyboard *CreatePopUpUIKeyboard(cWidgetTextBox* apTarget);
 
 
     void DestroyPopUp(iGuiPopUp *apPopUp);
@@ -390,12 +390,12 @@ public:
         return mbActive;
     }
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
 
-    cGui* GetGui()
+    cGui *GetGui()
     {
         return mpGui;
     }
@@ -433,7 +433,7 @@ public:
         return mbMouseMovementEnabled;
     }
 
-    const cVector2f& GetMousePos()
+    const cVector2f &GetMousePos()
     {
         return mvMousePos;
     }
@@ -441,18 +441,18 @@ public:
     void SetRootWidgetClips(bool abX);
     bool GetRootWidgetClips();
 
-    void SetVirtualSize(const cVector2f& avSize, float afMinZ, float afMaxZ, const cVector2f& avOffset=0);
-    const cVector2f& GetVirtualSize()
+    void SetVirtualSize(const cVector2f& avSize, float afMinZ, float afMaxZ, const cVector2f& avOffset = 0);
+    const cVector2f &GetVirtualSize()
     {
         return mvVirtualSize;
     }
-    const cVector2f& GetVirtualSizeOffset()
+    const cVector2f &GetVirtualSizeOffset()
     {
         return mvVirtualSizeOffset;
     }
 
-    void SetFocusedWidget(iWidget* apWidget, bool abCheckForValidity=false);
-    iWidget* GetFocusedWidget()
+    void SetFocusedWidget(iWidget* apWidget, bool abCheckForValidity = false);
+    iWidget *GetFocusedWidget()
     {
         return mpFocusedWidget;
     }
@@ -461,13 +461,13 @@ public:
     void PopFocusedWidget();
 
     void SetAttentionWidget(iWidget *apWidget, bool abClearFocus = true, bool abCheckForValidity = false);
-    iWidget* GetAttentionWidget()
+    iWidget *GetAttentionWidget()
     {
         return mpAttentionWidget;
     }
 
     void PushAttentionWidget();
-    void PopAttentionWidget(bool abClearFocus=true);
+    void PopAttentionWidget(bool abClearFocus = true);
 
     void SetIs3D(bool abX);
     bool Is3D()
@@ -491,13 +491,13 @@ public:
     }
 
     void SetCurrentPointer(cGuiGfxElement *apGfx);
-    cGuiGfxElement* GetCurrentPointer()
+    cGuiGfxElement *GetCurrentPointer()
     {
         return mpGfxCurrentPointer;
     }
 
     void Set3DSize(const cVector3f& avSize);
-    const cVector3f& Get3DSize()
+    const cVector3f &Get3DSize()
     {
         return mv3DSize;
     }
@@ -512,7 +512,7 @@ public:
     }
 
     void Set3DTransform(const cMatrixf& a_mtxTransform);
-    const cMatrixf& Get3DTransform()
+    const cMatrixf &Get3DTransform()
     {
         return m_mtx3DTransform;
     }
@@ -523,12 +523,12 @@ public:
 
 
     void SetSkin(cGuiSkin* apSkin);
-    cGuiSkin* GetSkin()
+    cGuiSkin *GetSkin()
     {
         return mpSkin;
     }
 
-    cResources* GetResources()
+    cResources *GetResources()
     {
         return mpResources;
     }
@@ -540,11 +540,11 @@ public:
 
     void IncContextMenuZ()
     {
-        mfContextMenuZ+=5;
+        mfContextMenuZ += 5;
     }
     void DecContextMenuZ()
     {
-        mfContextMenuZ-=5;
+        mfContextMenuZ -= 5;
     }
 
     float GetPopUpZ()
@@ -556,7 +556,7 @@ public:
     void AddToTabOrder(iWidget* apWidget);
     void ClearTabOrder();
 
-    iWidget* GetToolTipWidget()
+    iWidget *GetToolTipWidget()
     {
         return mpCurrentToolTipWidget;
     }
@@ -570,8 +570,8 @@ public:
         mbSortWidgets = true;
     }
 
-    void SetDefaultFocusNavWidget(iWidget* apWidget, bool abCheckForValidity=false);
-    iWidget* GetDefaultFocusNavWidget()
+    void SetDefaultFocusNavWidget(iWidget* apWidget, bool abCheckForValidity = false);
+    iWidget *GetDefaultFocusNavWidget()
     {
         return mpDefaultFocusNavWidget;
     }
@@ -603,7 +603,7 @@ private:
 
     void RenderClipRegion();
 
-    void AddWidget(iWidget *apWidget,iWidget *apParent);
+    void AddWidget(iWidget *apWidget, iWidget *apParent);
 
     bool OnMouseMove(const cGuiMessageData &aData);
     bool OnMouseDown(const cGuiMessageData& aData);
@@ -630,7 +630,7 @@ private:
     bool DrawFocus(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(DrawFocus);
 
-    cGuiGlobalShortcut* FindShortcut(const cKeyPress& aKeyPress);
+    cGuiGlobalShortcut *FindShortcut(const cKeyPress& aKeyPress);
 
     void UpdateToolTip(double adFixedDelta);
 
@@ -644,7 +644,7 @@ private:
     tString msName;
 
     cResources *mpResources;
-    cGraphics* mpGraphics;
+    cGraphics *mpGraphics;
     cSound *mpSound;
     cScene *mpScene;
 
@@ -654,7 +654,7 @@ private:
     iWidget *mpFocusedWidget;
     tWidgetList mlstFocusedStack;
 
-    iWidget* mpWidgetRoot;
+    iWidget *mpWidgetRoot;
     tWidgetList mlstWidgets;
 
     tGuiRenderObjectSet m_setRenderObjects;
@@ -692,7 +692,7 @@ private:
     tGuiPopUpList mlstPopUps;
 
     cGuiClipRegion mBaseClipRegion;
-    cGuiClipRegion* mpCurrentClipRegion;
+    cGuiClipRegion *mpCurrentClipRegion;
 
     tShortcutList mlstShortcuts;
 
@@ -704,29 +704,29 @@ private:
     // Tool tips
     float mfToolTipTimer;
     float mfToolTipTimeToPopUp;
-    iWidget* mpCurrentToolTipWidget;
+    iWidget *mpCurrentToolTipWidget;
     bool mbToolTipUpdated;
 
-    cWidgetFrame* mpFrameToolTip;
-    cWidgetFrame* mpFrameBGToolTip;
-    cWidgetLabel* mpLabelToolTip;
+    cWidgetFrame *mpFrameToolTip;
+    cWidgetFrame *mpFrameBGToolTip;
+    cWidgetLabel *mpLabelToolTip;
 
     ////////////////////////////////////
     // Tab Order
     tWidgetList mlstTabOrderWidgets;
-    iWidget* mpTabOrderWidget;
+    iWidget *mpTabOrderWidget;
 
     bool mbDestroyingSet;
 
     bool mbOldDestroyingSet;
-    iWidget* mpTopMostDestroyingWidget;
+    iWidget *mpTopMostDestroyingWidget;
 
-    iWidget*    mpDefaultFocusNavWidget;
+    iWidget    *mpDefaultFocusNavWidget;
     tWidgetList    mlstDefaultFocusStack;
     cColor mvFocusColor;
 
     bool                mbDrawFocus;
-    void*                mpFocusDrawObject;
+    void                *mpFocusDrawObject;
     tGuiCallbackFunc    mpFocusDrawCallback;
 };
 

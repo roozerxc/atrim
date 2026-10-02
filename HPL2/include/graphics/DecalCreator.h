@@ -34,9 +34,9 @@ public:
     }
 
     void SetDecalPosition(const cVector3f& avPosition);
-    void SetDecalUp(const cVector3f& avUp, bool abComputeBasis=true);
-    void SetDecalRight(const cVector3f& avRight, bool abComputeBasis=true);
-    void SetDecalForward(const cVector3f& avForward, bool abComputeBasis=true);
+    void SetDecalUp(const cVector3f& avUp, bool abComputeBasis = true);
+    void SetDecalRight(const cVector3f& avRight, bool abComputeBasis = true);
+    void SetDecalForward(const cVector3f& avForward, bool abComputeBasis = true);
     void SetDecalOffset(float afOffset);
     void SetDecalSize(const cVector3f& avSize);
     void SetMaterial(const tString& asMat);
@@ -52,27 +52,27 @@ public:
     bool CanCreateDecal();
 
 
-    cMesh* CreateDecalMesh();
+    cMesh *CreateDecalMesh();
 
     ////////////////////////////////////////////////////////////
     // Debug
-    const cVector3f& GetPosition()
+    const cVector3f &GetPosition()
     {
         return mvDecalPosition;
     }
-    const cVector3f& GetUp()
+    const cVector3f &GetUp()
     {
         return mvDecalUp;
     }
-    const cVector3f& GetRight()
+    const cVector3f &GetRight()
     {
         return mvDecalRight;
     }
-    const cVector3f& GetForward()
+    const cVector3f &GetForward()
     {
         return mvDecalForward;
     }
-    const cVector3f& GetSize()
+    const cVector3f &GetSize()
     {
         return mvDecalSize;
     }
@@ -81,27 +81,27 @@ public:
         return mlCurrentSubDiv;
     }
 
-    iVertexBuffer* GetVB()
+    iVertexBuffer *GetVB()
     {
         return mpDecalVB;
     }
-    cMaterial* GetMaterial()
+    cMaterial *GetMaterial()
     {
         return mpDecalMaterial;
     }
 
     void DrawDebug(cRendererCallbackFunctions* apFunctions, bool abDrawAxes, bool abDrawWireframe);
 
-    cBoundingVolume* GetDecalBoundingVolume();
+    cBoundingVolume *GetDecalBoundingVolume();
 
 private:
     void ComputeBasis();
 
     bool AddPolygon(int alVertexCount, const cVector3f* apVertices, const cVector3f* apNormals, iVertexBuffer* apDecalVB,
-                    const cMatrixf& amtxWorldMatrix,const cMatrixf& amtxWorldNormalRot);
+                    const cMatrixf& amtxWorldMatrix, const cMatrixf& amtxWorldNormalRot);
     void ClipMesh(cSubMeshEntity* apMesh, iVertexBuffer* apDecalVB);
     int ClipPolygon(int alVertexCount, const cVector3f* apVertices, const cVector3f* apNormals,
-                    cVector3f* apNewVertices, cVector3f* apNewNormals, const std::vector<cPlanef>& avPlanes);
+                    cVector3f* apNewVertices, cVector3f* apNewNormals, const std::vector<cPlanef> &avPlanes);
     int ClipPolygonAgainstPlane(const cPlanef& aPlane, int alVertexCount,
                                 const cVector3f* apVertices, const cVector3f* apNormals,
                                 cVector3f* apNewVertices, cVector3f* apNewNormals);
@@ -110,7 +110,7 @@ private:
     iLowLevelGraphics *mpLowLevelGraphics;
     cResources *mpResources;
 
-    std::vector<cSubMeshEntity*> mvMeshes;
+    std::vector<cSubMeshEntity *> mvMeshes;
 
     bool mbCompiled;
     bool mbUpdated;
@@ -142,8 +142,8 @@ private:
     int        mlCurrentSubDiv;
     cColor mColor;
 
-    cMaterial* mpDecalMaterial;
-    iVertexBuffer* mpDecalVB;
+    cMaterial *mpDecalMaterial;
+    iVertexBuffer *mpDecalVB;
 
     tVector3fVec mvTransformedBases;
     tMatrixfVec mvMatrices;

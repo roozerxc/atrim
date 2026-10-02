@@ -22,45 +22,45 @@ enum eBinTreeNode
 template<class T> class BinTreeNode
 {
 public:
-    T* GetData()
+    T *GetData()
     {
         return &mData;
     }
 
     BinTreeNode(T aData, BinTreeNode<T> *aParent, eBinTreeNode aParentDir)
     {
-        for(int i=0; i<2; i++)
+        for(int i = 0; i < 2; i++)
         {
-            mChild[i]=NULL;
+            mChild[i] = NULL;
         }
         mData = aData;
         mParent = aParent;
         mParentDir = aParentDir;
     }
 
-    BinTreeNode<T>* AddChild(eBinTreeNode i, T aData)
+    BinTreeNode<T> *AddChild(eBinTreeNode i, T aData)
     {
-        if(mChild[i]==NULL)
+        if(mChild[i] == NULL)
         {
-            mChild[i] = hplNew( BinTreeNode<T>, (aData, this,i) );
+            mChild[i] = hplNew( BinTreeNode<T>, (aData, this, i) );
             return mChild[i];
         }
         return NULL;
     }
 
-    BinTreeNode<T>* GetChild(eBinTreeNode i)
+    BinTreeNode<T> *GetChild(eBinTreeNode i)
     {
         return mChild[i];
     }
 
-    BinTreeNode<T>* GetParent()
+    BinTreeNode<T> *GetParent()
     {
         return mParent;
     }
 
 private:
-    BinTreeNode<T>* mChild[2];
-    BinTreeNode<T>* mParent;
+    BinTreeNode<T> *mChild[2];
+    BinTreeNode<T> *mParent;
     T mData;
     eBinTreeNode mParentDir;
 };
@@ -75,7 +75,7 @@ template<class T> class BinTree
 public:
     BinTree()
     {
-        mlNumOfNodes =0;
+        mlNumOfNodes = 0;
         mFirstNode = NULL;
     }
 
@@ -90,7 +90,7 @@ public:
      */
     int Clear()
     {
-        mlNum=0;
+        mlNum = 0;
         DeleteNode(mFirstNode);
         mFirstNode = NULL;
         return mlNum;
@@ -102,18 +102,18 @@ public:
      * \param aData the data to insert
      * \return
      */
-    BinTreeNode<T>* Insert(T aData)
+    BinTreeNode<T> *Insert(T aData)
     {
-        if(mFirstNode==NULL)
+        if(mFirstNode == NULL)
         {
-            mFirstNode = hplNew( BinTreeNode<T>, (aData, NULL,eBinTreeNode_Left) );
+            mFirstNode = hplNew( BinTreeNode<T>, (aData, NULL, eBinTreeNode_Left) );
             mlNumOfNodes++;
 
             return mFirstNode;
         }
 
         //Insertion other then at the root is not supported!
-        BinTreeNode<T>* Node = mFirstNode;
+        BinTreeNode<T> *Node = mFirstNode;
         eBinTreeNode c;
         while(true)
         {
@@ -122,7 +122,7 @@ public:
             //else
             //    c = eBinTreeNode_Right;
 
-            if(Node->GetChild(c)==NULL)
+            if(Node->GetChild(c) == NULL)
             {
                 Node = Node->AddChild(c, aData);
                 break;
@@ -144,17 +144,17 @@ public:
      * \param aChild what child to insert at
      * \return
      */
-    BinTreeNode<T>* InsertAt(T aData,BinTreeNode<T>* aNode, eBinTreeNode aChild=eBinTreeNode_Left)
+    BinTreeNode<T> *InsertAt(T aData, BinTreeNode<T> *aNode, eBinTreeNode aChild = eBinTreeNode_Left)
     {
         if(aNode == NULL)
         {
             return NULL;
         }
 
-        if(aNode->GetChild(aChild)!=NULL)
+        if(aNode->GetChild(aChild) != NULL)
         {
-            aChild = aChild==eBinTreeNode_Left ? eBinTreeNode_Right : eBinTreeNode_Left;
-            if(aNode->GetChild(aChild)!=NULL)
+            aChild = aChild == eBinTreeNode_Left ? eBinTreeNode_Right : eBinTreeNode_Left;
+            if(aNode->GetChild(aChild) != NULL)
             {
                 return NULL;
             }
@@ -172,7 +172,7 @@ public:
         return mlNumOfNodes;
     }
 
-    const std::vector<BinTreeNode<T>*>& GetLeafList()
+    const std::vector<BinTreeNode<T>*> &GetLeafList()
     {
         mvNodes.clear();
         mvNodes.reserve(mlNumOfNodes);
@@ -184,7 +184,7 @@ public:
      * Get a list of all the nodes in the tree
      * \return
      */
-    const std::vector<BinTreeNode<T>*>& GetNodeList()
+    const std::vector<BinTreeNode<T>*> &GetNodeList()
     {
         mvNodes.clear();
         mvNodes.reserve(mlNumOfNodes);
@@ -194,14 +194,14 @@ public:
 
 private:
     int mlNumOfNodes;
-    BinTreeNode<T>* mFirstNode;
+    BinTreeNode<T> *mFirstNode;
     int mlNum;
 
     std::vector<BinTreeNode<T>*> mvNodes;
 
-    void DeleteNode(BinTreeNode<T>* aNode)
+    void DeleteNode(BinTreeNode<T> *aNode)
     {
-        if(aNode==NULL)
+        if(aNode == NULL)
         {
             return;
         }
@@ -213,9 +213,9 @@ private:
         mlNum++;
     }
 
-    void PopulateNodeList(BinTreeNode<T>* aNode)
+    void PopulateNodeList(BinTreeNode<T> *aNode)
     {
-        if(aNode==NULL)
+        if(aNode == NULL)
         {
             return;
         }
@@ -225,15 +225,15 @@ private:
         PopulateNodeList(aNode->GetChild(eBinTreeNode_Right));
     }
 
-    void PopulateLeafList(BinTreeNode<T>* aNode)
+    void PopulateLeafList(BinTreeNode<T> *aNode)
     {
-        if(aNode==NULL)
+        if(aNode == NULL)
         {
             return;
         }
 
-        if(aNode->GetChild(eBinTreeNode_Left)==NULL &&
-                aNode->GetChild(eBinTreeNode_Right)==NULL)
+        if(aNode->GetChild(eBinTreeNode_Left) == NULL &&
+                aNode->GetChild(eBinTreeNode_Right) == NULL)
         {
             mvNodes.push_back(aNode);
         }

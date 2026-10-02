@@ -26,14 +26,14 @@ public:
     cBitmapLoaderHandler(cResources* apResources, cGraphics* apGraphics);
     ~cBitmapLoaderHandler();
 
-    cBitmap* LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags);
+    cBitmap *LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags);
     bool SaveBitmap(cBitmap* apBitmap, const tWString& asFile, tBitmapSaveFlag aFlags);
 
 private:
     void SetupLoader(iResourceLoader *apLoader);
 
-    cResources* mpResources;
-    cGraphics* mpGraphics;
+    cResources *mpResources;
+    cGraphics *mpGraphics;
 };
 
 };

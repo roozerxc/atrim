@@ -41,7 +41,7 @@ cGuiSkinFont::~cGuiSkinFont()
 
 //-----------------------------------------------------------------------
 
-cGuiSkin::cGuiSkin(const tString & asName,cGui *apGui)
+cGuiSkin::cGuiSkin(const tString & asName, cGui *apGui)
 {
     mpGui = apGui;
     msName = asName;
@@ -55,7 +55,7 @@ cGuiSkin::cGuiSkin(const tString & asName,cGui *apGui)
 
 cGuiSkin::~cGuiSkin()
 {
-    for(size_t i=0; i< mvGfxElements.size(); ++i)
+    for(size_t i = 0; i < mvGfxElements.size(); ++i)
     {
         if(mvGfxElements[i])
         {
@@ -76,7 +76,7 @@ cGuiSkin::~cGuiSkin()
 
 static eGuiGfxAnimationType ToAnimType(const char* apString)
 {
-    if(apString==NULL)
+    if(apString == NULL)
     {
         return eGuiGfxAnimationType_Loop;
     }
@@ -100,46 +100,46 @@ static eGuiGfxAnimationType ToAnimType(const char* apString)
         return eGuiGfxAnimationType_StopAtEnd;
     }
 
-    Warning("Animation type '%s' does not exist!\n",sLow.c_str());
+    Warning("Animation type '%s' does not exist!\n", sLow.c_str());
 
     return eGuiGfxAnimationType_Loop;
 }
 
 static eGuiMaterial ToMaterial(const char* apString)
 {
-    if(apString==NULL)
+    if(apString == NULL)
     {
         return eGuiMaterial_Alpha;
     }
 
     tString sLow = cString::ToLowerCase(apString);
 
-    if(sLow=="alpha")
+    if(sLow == "alpha")
     {
         return eGuiMaterial_Alpha;
     }
-    if(sLow=="diffuse")
+    if(sLow == "diffuse")
     {
         return eGuiMaterial_Diffuse;
     }
-    if(sLow=="font_normal")
+    if(sLow == "font_normal")
     {
         return eGuiMaterial_FontNormal;
     }
-    if(sLow=="additive")
+    if(sLow == "additive")
     {
         return eGuiMaterial_Additive;
     }
-    if(sLow=="modulative")
+    if(sLow == "modulative")
     {
         return eGuiMaterial_Modulative;
     }
-    if(sLow=="premulalpha")
+    if(sLow == "premulalpha")
     {
         return eGuiMaterial_PremulAlpha;
     }
 
-    Warning("Material type '%s' does not exist!\n",sLow.c_str());
+    Warning("Material type '%s' does not exist!\n", sLow.c_str());
 
     return eGuiMaterial_Alpha;
 }
@@ -151,13 +151,13 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
     FILE *pFile = cPlatform::OpenFile(asFile, _W("rb"));
     if (!pFile)
     {
-        Error("Couldn't load skin file '%s'!\n",asFile.c_str());
+        Error("Couldn't load skin file '%s'!\n", asFile.c_str());
         return false;
     }
     TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
-    if(pXmlDoc->LoadFile(pFile)==false)
+    if(pXmlDoc->LoadFile(pFile) == false)
     {
-        Error("Couldn't load skin file '%s'!\n",asFile.c_str());
+        Error("Couldn't load skin file '%s'!\n", asFile.c_str());
         fclose(pFile);
         hplDelete(pXmlDoc);
         return false;
@@ -180,7 +180,7 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
     TiXmlElement* pAttributeElem = pAttributesElement->FirstChildElement();
     for(; pAttributeElem != NULL; pAttributeElem = pAttributeElem->NextSiblingElement())
     {
-        tString sType = cString::ToString(pAttributeElem->Attribute("type"),"");
+        tString sType = cString::ToString(pAttributeElem->Attribute("type"), "");
 
         eGuiSkinAttribute type = mpGui->GetSkinAttributeFromString(sType);
         if(type == eGuiSkinAttribute_LastEnum)
@@ -188,22 +188,22 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
             continue;
         }
 
-        tString sValue = cString::ToString(pAttributeElem->Attribute("value"),"");
+        tString sValue = cString::ToString(pAttributeElem->Attribute("value"), "");
 
         cVector3f vVal(0);
         tFloatVec vValues;
-        tString sSepp=" ";
-        cString::GetFloatVec(sValue,vValues,&sSepp);
+        tString sSepp = " ";
+        cString::GetFloatVec(sValue, vValues, &sSepp);
 
-        if(vValues.size()>0)
+        if(vValues.size() > 0)
         {
             vVal.x = vValues[0];
         }
-        if(vValues.size()>1)
+        if(vValues.size() > 1)
         {
             vVal.y = vValues[1];
         }
-        if(vValues.size()>2)
+        if(vValues.size() > 2)
         {
             vVal.z = vValues[2];
         }
@@ -213,11 +213,11 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
     }
 
     // Error checking, see so all elements are there
-    for(int i=0; i<eGuiSkinAttribute_LastEnum; ++i)
+    for(int i = 0; i < eGuiSkinAttribute_LastEnum; ++i)
     {
-        if(vAttribLoaded[i]==false)
+        if(vAttribLoaded[i] == false)
         {
-            Error("Could not find gui skin '%s' attribute %s!\n", msName.c_str(),mpGui->GetSkinAttributeString((eGuiSkinAttribute)i).c_str());
+            Error("Could not find gui skin '%s' attribute %s!\n", msName.c_str(), mpGui->GetSkinAttributeString((eGuiSkinAttribute)i).c_str());
         }
     }
 
@@ -231,7 +231,7 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
     TiXmlElement* pFontElem = pFontsElement->FirstChildElement();
     for(; pFontElem != NULL; pFontElem = pFontElem->NextSiblingElement())
     {
-        tString sType = cString::ToString(pFontElem->Attribute("type"),"");
+        tString sType = cString::ToString(pFontElem->Attribute("type"), "");
 
         eGuiSkinFont type = mpGui->GetSkinFontFromString(sType);
         if(type == eGuiSkinFont_LastEnum)
@@ -239,9 +239,9 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
             continue;
         }
 
-        tString sFontFile = cString::ToString(pFontElem->Attribute("file"),"");
-        cVector2f vSize = cString::ToVector2f(pFontElem->Attribute("size"),1);
-        cColor color = cString::ToColor(pFontElem->Attribute("color"),cColor(1,1));
+        tString sFontFile = cString::ToString(pFontElem->Attribute("file"), "");
+        cVector2f vSize = cString::ToVector2f(pFontElem->Attribute("size"), 1);
+        cColor color = cString::ToColor(pFontElem->Attribute("color"), cColor(1, 1));
 
         cGuiSkinFont *pFont = hplNew( cGuiSkinFont, (mpGui) );
 
@@ -254,11 +254,11 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
     }
 
     // Error checking, see so all elements are there
-    for(int i=0; i<eGuiSkinFont_LastEnum; ++i)
+    for(int i = 0; i < eGuiSkinFont_LastEnum; ++i)
     {
-        if(mvFonts[i]==NULL)
+        if(mvFonts[i] == NULL)
         {
-            Error("Could not find gui skin '%s' font %s!\n", msName.c_str(),mpGui->GetSkinFontString((eGuiSkinFont)i).c_str());
+            Error("Could not find gui skin '%s' font %s!\n", msName.c_str(), mpGui->GetSkinFontString((eGuiSkinFont)i).c_str());
         }
     }
 
@@ -273,7 +273,7 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
     TiXmlElement* pGfxElem = pGfxElementsElement->FirstChildElement();
     for(; pGfxElem != NULL; pGfxElem = pGfxElem->NextSiblingElement())
     {
-        tString sType = cString::ToString(pGfxElem->Attribute("type"),"");
+        tString sType = cString::ToString(pGfxElem->Attribute("type"), "");
 
         eGuiSkinGfx type = mpGui->GetSkinGfxFromString(sType);
         if(type == eGuiSkinGfx_LastEnum)
@@ -281,14 +281,14 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
             continue;
         }
 
-        tString sFile = cString::ToString(pGfxElem->Attribute("file"),"");
-        cVector2f vOffset = cString::ToVector2f(pGfxElem->Attribute("offset"),0);
-        cVector2f vSize = cString::ToVector2f(pGfxElem->Attribute("active_size"),-1);
-        cColor color = cString::ToColor(pGfxElem->Attribute("color"),cColor(1,1));
+        tString sFile = cString::ToString(pGfxElem->Attribute("file"), "");
+        cVector2f vOffset = cString::ToVector2f(pGfxElem->Attribute("offset"), 0);
+        cVector2f vSize = cString::ToVector2f(pGfxElem->Attribute("active_size"), -1);
+        cColor color = cString::ToColor(pGfxElem->Attribute("color"), cColor(1, 1));
         eGuiMaterial material = ToMaterial(pGfxElem->Attribute("material"));
 
-        bool bAnimated = cString::ToBool(pGfxElem->Attribute("animated"),false);
-        float fAnimFrameTime = cString::ToFloat(pGfxElem->Attribute("anim_frame_time"),1);
+        bool bAnimated = cString::ToBool(pGfxElem->Attribute("animated"), false);
+        float fAnimFrameTime = cString::ToFloat(pGfxElem->Attribute("anim_frame_time"), 1);
         eGuiGfxAnimationType animType = ToAnimType(pGfxElem->Attribute("anim_mode"));
 
         cGuiGfxElement *pGfx = NULL;
@@ -296,16 +296,16 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
         {
             if(bAnimated)
             {
-                pGfx = mpGui->CreateGfxImageBuffer(sFile, material,true,color);
+                pGfx = mpGui->CreateGfxImageBuffer(sFile, material, true, color);
             }
             else
             {
-                pGfx = mpGui->CreateGfxImage(sFile, material,color);
+                pGfx = mpGui->CreateGfxImage(sFile, material, color);
             }
         }
         else
         {
-            pGfx = mpGui->CreateGfxFilledRect(color,material);
+            pGfx = mpGui->CreateGfxFilledRect(color, material);
         }
 
         if(pGfx)
@@ -317,22 +317,22 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
                 pAnim->SetType(animType);
             }
 
-            if(vSize.x >=0)
+            if(vSize.x >= 0)
             {
                 pGfx->SetActiveSize(vSize);
             }
-            pGfx->SetOffset(cVector3f(vOffset.x, vOffset.y,0));
+            pGfx->SetOffset(cVector3f(vOffset.x, vOffset.y, 0));
 
             mvGfxElements[type] = pGfx;
         }
     }
 
     // Error checking, see so all elements are there
-    for(int i=0; i<eGuiSkinGfx_LastEnum; ++i)
+    for(int i = 0; i < eGuiSkinGfx_LastEnum; ++i)
     {
-        if(mvGfxElements[i]==NULL)
+        if(mvGfxElements[i] == NULL)
         {
-            Error("Could not find gui skin '%s' gfx %s!\n", msName.c_str(),mpGui->GetSkinGfxString((eGuiSkinGfx)i).c_str());
+            Error("Could not find gui skin '%s' gfx %s!\n", msName.c_str(), mpGui->GetSkinGfxString((eGuiSkinGfx)i).c_str());
         }
     }
 
@@ -343,17 +343,17 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
 
 //-----------------------------------------------------------------------
 
-cGuiGfxElement* cGuiSkin::GetGfx(eGuiSkinGfx aType)
+cGuiGfxElement *cGuiSkin::GetGfx(eGuiSkinGfx aType)
 {
     return mvGfxElements[aType];
 }
 
-cGuiSkinFont* cGuiSkin::GetFont(eGuiSkinFont aType)
+cGuiSkinFont *cGuiSkin::GetFont(eGuiSkinFont aType)
 {
     return mvFonts[aType];
 }
 
-const cVector3f& cGuiSkin::GetAttribute(eGuiSkinAttribute aType)
+const cVector3f &cGuiSkin::GetAttribute(eGuiSkinAttribute aType)
 {
     return mvAttributes[aType];
 }

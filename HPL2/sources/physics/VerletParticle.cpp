@@ -20,8 +20,8 @@ cVerletParticleRayCallback::cVerletParticleRayCallback(iVerletParticleContainer 
 {
     mpContainer = apContainer;
 
-    mvIntersectPos =0;
-    mvIntersectNormal =0;
+    mvIntersectPos = 0;
+    mvIntersectNormal = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -36,7 +36,7 @@ void cVerletParticleRayCallback::Reset()
 
 bool cVerletParticleRayCallback::BeforeIntersect(iPhysicsBody *pBody)
 {
-    if(pBody->GetCollide()==false)
+    if(pBody->GetCollide() == false)
     {
         return false;
     }
@@ -46,7 +46,7 @@ bool cVerletParticleRayCallback::BeforeIntersect(iPhysicsBody *pBody)
 
 //-----------------------------------------------------------------------
 
-bool cVerletParticleRayCallback::OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams)
+bool cVerletParticleRayCallback::OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams)
 {
     mbIntersected = true;
 
@@ -110,7 +110,7 @@ void cVerletParticle::UpdateMovement(double adFixedDelta)
     cVector3f vAcc = mfInvMass == 0 ? 0 : mpContainer->mvGravityForce;
 
     cVector3f vTemp = mvPosition;
-    mvPosition += (mvPosition*mpContainer->mfDampingMul - mvPrevPosition*mpContainer->mfDampingMul) + vAcc * (float)adFixedDelta * (float)adFixedDelta;
+    mvPosition += (mvPosition * mpContainer->mfDampingMul - mvPrevPosition * mpContainer->mfDampingMul) + vAcc * (float)adFixedDelta * (float)adFixedDelta;
 
     mvPrevPosition = vTemp;
 }
@@ -145,13 +145,13 @@ iVerletParticleContainer::iVerletParticleContainer(const tString &asName, iPhysi
     mfParticleRadius = 0.05f;
 
     mbSleeping = false;
-    mfSleepCheckCount =0;
+    mfSleepCheckCount = 0;
     mfSleepCheckTime = 1.0f / 3.0f;
-    mlSleepCount =0;
+    mlSleepCount = 0;
     mlSleepMaxCount = 3;
     mfSleepCheckSqrLimit = 0.0015f * 0.0015f;
 
-    mlUpdateCount =0;
+    mlUpdateCount = 0;
 }
 
 iVerletParticleContainer::~iVerletParticleContainer()
@@ -163,7 +163,7 @@ iVerletParticleContainer::~iVerletParticleContainer()
 
 void iVerletParticleContainer::SetDamping(float afX)
 {
-    afX = cMath::Clamp(afX,0,1);
+    afX = cMath::Clamp(afX, 0, 1);
 
     mfDamping = afX;
     mfDampingMul = 1 - mfDamping;
@@ -215,13 +215,13 @@ void iVerletParticleContainer::PreUpdate(double adFixedDelta)
     }
     ///////////////////////////
     //NOT Sleeping
-    if(mbSleeping==false)
+    if(mbSleeping == false)
     {
         mlUpdateCount++;
 
         //////////////////////////
         //Update counter and see if time for check
-        mfSleepCheckCount+= (float)adFixedDelta;
+        mfSleepCheckCount += (float)adFixedDelta;
         if(mfSleepCheckCount < mfSleepCheckTime)
         {
             return;
@@ -229,7 +229,7 @@ void iVerletParticleContainer::PreUpdate(double adFixedDelta)
 
         //////////////////////////
         //Iterate particles and see if all are sleeping
-        bool bAllSleeping=true;
+        bool bAllSleeping = true;
         for(tVerletParticleListIt it = mlstParticles.begin(); it != mlstParticles.end(); ++it)
         {
             cVerletParticle *pPart = *it;
@@ -237,7 +237,7 @@ void iVerletParticleContainer::PreUpdate(double adFixedDelta)
             float fSqrSpeed = cMath::Vector3DistSqr(pPart->GetPosition(), pPart->GetPrevPosition());
             if(fSqrSpeed > mfSleepCheckSqrLimit)
             {
-                bAllSleeping= false;
+                bAllSleeping = false;
                 break;
             }
         }
@@ -261,7 +261,7 @@ void iVerletParticleContainer::PreUpdate(double adFixedDelta)
         }
         else
         {
-            mlSleepCount =0;
+            mlSleepCount = 0;
         }
     }
 }
@@ -273,7 +273,7 @@ void iVerletParticleContainer::UpdateLengthConstraint(cVerletParticle *apP1, cVe
     cVector3f vDelta =  apP2->mvPosition - apP1->mvPosition;
     float fDist = vDelta.Length();
 
-    float fDiff = (fDist- afLength)/(fDist*(apP1->mfInvMass + apP2->mfInvMass));
+    float fDiff = (fDist - afLength) / (fDist * (apP1->mfInvMass + apP2->mfInvMass));
 
     apP1->mvPosition += vDelta * fDiff * apP1->mfInvMass;
     apP2->mvPosition -= vDelta * fDiff * apP2->mfInvMass;
@@ -283,13 +283,13 @@ void iVerletParticleContainer::UpdateLengthConstraint(cVerletParticle *apP1, cVe
 
 void iVerletParticleContainer::UpdateParticleCollisionConstraint(cVerletParticle *apPart, const cVector3f &avPrevPos, float afRadius)
 {
-    if(mbCollide==false)
+    if(mbCollide == false)
     {
         return;
     }
 
     cVector3f vDiff = apPart->mvPosition - avPrevPos;
-    if(vDiff == cVector3f(0,0,0))
+    if(vDiff == cVector3f(0, 0, 0))
     {
         return;
     }
@@ -299,14 +299,14 @@ void iVerletParticleContainer::UpdateParticleCollisionConstraint(cVerletParticle
 
     mpRayParticleCallback->Reset();
 
-    cVector3f vStart = avPrevPos - vDir*afRadius;
-    cVector3f vEnd = apPart->mvPosition + vDir*afRadius;
+    cVector3f vStart = avPrevPos - vDir * afRadius;
+    cVector3f vEnd = apPart->mvPosition + vDir * afRadius;
 
-    mpWorld->CastRay(mpRayParticleCallback, vStart, vEnd, true,true,true, true);
+    mpWorld->CastRay(mpRayParticleCallback, vStart, vEnd, true, true, true, true);
 
     if(mpRayParticleCallback->mbIntersected)
     {
-        apPart->mvPosition = mpRayParticleCallback->mvIntersectPos - vDir*afRadius;
+        apPart->mvPosition = mpRayParticleCallback->mvIntersectPos - vDir * afRadius;
         apPart->mvPrevPosition = apPart->mvPosition + mpRayParticleCallback->mvIntersectNormal * (fLength * mfSlideAmount);
     }
 }

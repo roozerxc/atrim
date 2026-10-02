@@ -17,7 +17,7 @@ class cFogArea;
 
 //---------------------------------------------
 
-typedef cSTLIterator<iRenderable*, tRenderableVec, tRenderableVecIt> cRenderableVecIterator;
+typedef cSTLIterator<iRenderable *, tRenderableVec, tRenderableVecIt> cRenderableVecIterator;
 
 //---------------------------------------------
 
@@ -40,7 +40,7 @@ public:
 
     void Clear();
 
-    iLight* GetLight(int alIdx)
+    iLight *GetLight(int alIdx)
     {
         return mvLights[alIdx];
     }
@@ -49,7 +49,7 @@ public:
         return(int)mvLights.size();
     }
 
-    cFogArea* GetFogArea(int alIdx)
+    cFogArea *GetFogArea(int alIdx)
     {
         return mvFogAreas[alIdx];
     }
@@ -65,7 +65,7 @@ public:
     {
         return (int)mvSolidObjects.size();
     }
-    iRenderable* GetSolidObject(int alIdx)
+    iRenderable *GetSolidObject(int alIdx)
     {
         return mvSolidObjects[alIdx];
     }
@@ -74,7 +74,7 @@ public:
     {
         return (int)mvTransObjects.size();
     }
-    iRenderable* GetTransObject(int alIdx)
+    iRenderable *GetTransObject(int alIdx)
     {
         return mvTransObjects[alIdx];
     }
@@ -92,8 +92,8 @@ private:
     tRenderableVec mvTransObjects;
     tRenderableVec mvDecalObjects;
     tRenderableVec mvIllumObjects;
-    std::vector<iLight*> mvLights;
-    std::vector<cFogArea*> mvFogAreas;
+    std::vector<iLight *> mvLights;
+    std::vector<cFogArea *> mvFogAreas;
 
     tRenderableVec mvSortedArrays[eRenderListType_LastEnum];
 };

@@ -59,7 +59,7 @@ class cDummyRenderable;
 
 //-------------------------------------------------------------------
 
-typedef std::list<cEntFile*> tEntFileList;
+typedef std::list<cEntFile *> tEntFileList;
 typedef tEntFileList::iterator tEntFileListIt;
 
 //-------------------------------------------------------------------
@@ -67,7 +67,7 @@ typedef tEntFileList::iterator tEntFileListIt;
 class cTempAiNode
 {
 public:
-    cTempAiNode(const cVector3f& avPos, const tString& asName, int alID) : mvPos(avPos),msName(asName), mlID(alID) {}
+    cTempAiNode(const cVector3f& avPos, const tString& asName, int alID) : mvPos(avPos), msName(asName), mlID(alID) {}
     cVector3f mvPos;
     tString msName;
     int mlID;
@@ -86,12 +86,12 @@ public:
     tTempAiNodeList mlstNodes;
 };
 
-typedef std::map<tString,cTempNodeContainer*> tTempNodeContainerMap;
-typedef std::map<tString,cTempNodeContainer*>::iterator tTempNodeContainerMapIt;
+typedef std::map<tString, cTempNodeContainer *> tTempNodeContainerMap;
+typedef std::map<tString, cTempNodeContainer *>::iterator tTempNodeContainerMapIt;
 
 //-------------------------------------------------------------------
 
-class cAreaEntity :public iSerializable
+class cAreaEntity : public iSerializable
 {
     kSerializableClassInit(cAreaEntity)
 public:
@@ -101,7 +101,7 @@ public:
     cVector3f mvSize;
 };
 
-typedef std::map<tString, cAreaEntity*> tAreaEntityMap;
+typedef std::map<tString, cAreaEntity *> tAreaEntityMap;
 typedef tAreaEntityMap::iterator tAreaEntityMapIt;
 
 //-------------------------------------------------------------------
@@ -113,11 +113,11 @@ public:
     cStartPosEntity() {}
     cStartPosEntity(const tString& asName) : msName(asName) {}
 
-    cMatrixf& GetWorldMatrix()
+    cMatrixf &GetWorldMatrix()
     {
         return m_mtxTransform;
     }
-    cMatrixf& GetLocalMatrix()
+    cMatrixf &GetLocalMatrix()
     {
         return m_mtxTransform;
     }
@@ -126,7 +126,7 @@ public:
         m_mtxTransform = a_mtxTrans;
     }
 
-    tString& GetName()
+    tString &GetName()
     {
         return msName;
     }
@@ -135,16 +135,16 @@ public:
     tString msName;
 };
 
-typedef std::list<cStartPosEntity*> tStartPosEntityList;
-typedef std::list<cStartPosEntity*>::iterator tStartPosEntityListIt;
+typedef std::list<cStartPosEntity *> tStartPosEntityList;
+typedef std::list<cStartPosEntity *>::iterator tStartPosEntityListIt;
 
 //-------------------------------------------------------------------
 
 class cWorld
 {
 public:
-    cWorld(tString asName,cGraphics *apGraphics,cResources *apResources,cSound* apSound,
-           cPhysics *apPhysics, cScene *apScene,cSystem *apSystem, cAI *apAI);
+    cWorld(tString asName, cGraphics *apGraphics, cResources *apResources, cSound* apSound,
+           cPhysics *apPhysics, cScene *apScene, cSystem *apSystem, cAI *apAI);
     ~cWorld();
 
     void DestroyAllEntities(tWorldDestroyAllFlag aFlags);
@@ -160,7 +160,7 @@ public:
     {
         msFilePath = asFile;
     }
-    const tWString& GetFilePath()
+    const tWString &GetFilePath()
     {
         return msFilePath;
     }
@@ -192,30 +192,30 @@ public:
         return mbIsSoundEmitter;
     }
 
-    iRenderableContainer* GetRenderableContainer(eWorldContainerType aType);
+    iRenderableContainer *GetRenderableContainer(eWorldContainerType aType);
 
-    cPhysics* GetPhysics()
+    cPhysics *GetPhysics()
     {
         return mpPhysics;
     }
-    cResources* GetResources()
+    cResources *GetResources()
     {
         return mpResources;
     }
-    cSound* GetSound()
+    cSound *GetSound()
     {
         return mpSound;
     }
-    cSystem* GetSystem()
+    cSystem *GetSystem()
     {
         return mpSystem;
     }
 
-    iEntity3D* CreateEntity(const tString& asName, const cMatrixf &a_mtxTransform,
-                            const tString& asFile, int alID = -1, bool abActive=true,
-                            const cVector3f &avScale=cVector3f(1),
-                            cResourceVarsObject *apInstanceVars=NULL,
-                            bool abSkipNonStaticEntity=false);
+    iEntity3D *CreateEntity(const tString& asName, const cMatrixf &a_mtxTransform,
+                            const tString& asFile, int alID = -1, bool abActive = true,
+                            const cVector3f &avScale = cVector3f(1),
+                            cResourceVarsObject *apInstanceVars = NULL,
+                            bool abSkipNonStaticEntity = false);
 
     /**
      * Call this when all things have been added to set up things like physics world size.
@@ -225,8 +225,8 @@ public:
 
     ///// PHYSICS ////////////////////////////////
 
-    void SetPhysicsWorld(iPhysicsWorld *apWorld, bool abAutoDelete=true);
-    iPhysicsWorld* GetPhysicsWorld();
+    void SetPhysicsWorld(iPhysicsWorld *apWorld, bool abAutoDelete = true);
+    iPhysicsWorld *GetPhysicsWorld();
 
     ///// SKYBOX ////////////////////////////////
 
@@ -234,7 +234,7 @@ public:
     void SetSkyBoxActive(bool abX);
     void SetSkyBoxColor(const cColor& aColor);
 
-    iTexture* GetSkyBoxTexture()
+    iTexture *GetSkyBoxTexture()
     {
         return mpSkyBoxTexture;
     }
@@ -275,7 +275,7 @@ public:
     }
     void SetFogCulling(bool abX)
     {
-        mbFogCulling=abX;
+        mbFogCulling = abX;
     }
 
     bool GetFogActive()
@@ -294,7 +294,7 @@ public:
     {
         return mfFogFalloffExp;
     }
-    const cColor& GetFogColor()
+    const cColor &GetFogColor()
     {
         return mFogColor;
     }
@@ -305,18 +305,18 @@ public:
 
     ///// AREA ////////////////////////////////
 
-    cAreaEntity* CreateAreaEntity(const tString &asName);
-    cAreaEntity* GetAreaEntity(const tString &asName);
-    tAreaEntityMap* GetAreaEntityMap()
+    cAreaEntity *CreateAreaEntity(const tString &asName);
+    cAreaEntity *GetAreaEntity(const tString &asName);
+    tAreaEntityMap *GetAreaEntityMap()
     {
         return &m_mapAreaEntities;
     }
 
     ///// MESH ENTITY METHODS ////////////////////
 
-    cMeshEntity* CreateMeshEntity(const tString &asName,cMesh *apMesh, bool abStatic=false);
+    cMeshEntity *CreateMeshEntity(const tString &asName, cMesh *apMesh, bool abStatic = false);
     void DestroyMeshEntity(cMeshEntity* apMesh);
-    cMeshEntity* GetDynamicMeshEntity(const tString& asName);
+    cMeshEntity *GetDynamicMeshEntity(const tString& asName);
 
     cMeshEntityIterator GetDynamicMeshEntityIterator();
     cMeshEntityIterator GetStaticMeshEntityIterator();
@@ -325,14 +325,14 @@ public:
 
     ///// LIGHT METHODS ////////////////////
 
-    cLightPoint* CreateLightPoint(const tString &asName="",const tString &asGobo="", bool abStatic=false);
-    cLightSpot* CreateLightSpot(const tString &asName="", const tString &asGobo="", bool abStatic=false);
-    cLightBox* CreateLightBox(const tString &asName="", bool abStatic=false);
+    cLightPoint *CreateLightPoint(const tString &asName = "", const tString &asGobo = "", bool abStatic = false);
+    cLightSpot *CreateLightSpot(const tString &asName = "", const tString &asGobo = "", bool abStatic = false);
+    cLightBox *CreateLightBox(const tString &asName = "", bool abStatic = false);
     void DestroyLight(iLight* apLight);
-    iLight* GetLight(const tString& asName);
-    iLight* GetLightFromUniqueID(int alID);
+    iLight *GetLight(const tString& asName);
+    iLight *GetLightFromUniqueID(int alID);
 
-    tLightList * GetLightList()
+    tLightList *GetLightList()
     {
         return &mlstLights;
     }
@@ -344,27 +344,27 @@ public:
 
     ///// BILLBOARD METHODS ////////////////////
 
-    cBillboard* CreateBillboard(const tString& asName, const cVector2f& avSize,eBillboardType aType,const tString& asMaterial="",bool abStatic=false);
+    cBillboard *CreateBillboard(const tString& asName, const cVector2f& avSize, eBillboardType aType, const tString& asMaterial = "", bool abStatic = false);
     void DestroyBillboard(cBillboard* apObject);
-    cBillboard* GetBillboard(const tString& asName);
-    cBillboard* GetBillboardFromUniqueID(int alID);
+    cBillboard *GetBillboard(const tString& asName);
+    cBillboard *GetBillboardFromUniqueID(int alID);
     cBillboardIterator GetBillboardIterator();
 
     ///// BEAM METHODS ////////////////////
 
-    cBeam* CreateBeam(const tString& asName, bool abStatic=false);
+    cBeam *CreateBeam(const tString& asName, bool abStatic = false);
     void DestroyBeam(cBeam* apObject);
-    cBeam* GetBeam(const tString& asName);
-    cBeam* GetBeamFromUniqueID(int alID);
+    cBeam *GetBeam(const tString& asName);
+    cBeam *GetBeamFromUniqueID(int alID);
     cBeamIterator GetBeamIterator();
 
     ///// PARTICLE METHODS ////////////////////
 
-    cParticleSystem* CreateParticleSystem(    const tString& asName,const tString& asType, const cVector3f& avSize, bool abRemoveWhenDead=true);
-    cParticleSystem* CreateParticleSystem(    const tString& asName,const tString& asDataName, cXmlElement* apElement, const cVector3f& avSize);
+    cParticleSystem *CreateParticleSystem(    const tString& asName, const tString& asType, const cVector3f& avSize, bool abRemoveWhenDead = true);
+    cParticleSystem *CreateParticleSystem(    const tString& asName, const tString& asDataName, cXmlElement* apElement, const cVector3f& avSize);
     void DestroyParticleSystem(cParticleSystem* apPS);
-    cParticleSystem* GetParticleSystem(const tString& asName);
-    cParticleSystem* GetParticleSystemFromUniqueID(int alID);
+    cParticleSystem *GetParticleSystem(const tString& asName);
+    cParticleSystem *GetParticleSystemFromUniqueID(int alID);
     bool ParticleSystemExists(cParticleSystem* apPS);
 
     void DestroyAllParticleSystems();
@@ -376,34 +376,34 @@ public:
 
     ///// GUISET ENTITY METHODS ////////////////////
 
-    cGuiSetEntity* CreateGuiSetEntity(const tString& asName, cGuiSet *apSet, bool abStatic=false);
+    cGuiSetEntity *CreateGuiSetEntity(const tString& asName, cGuiSet *apSet, bool abStatic = false);
     void DestroyGuiSetEntity(cGuiSetEntity* apObject);
-    cGuiSetEntity* GetGuiSetEntity(const tString& asName);
-    cGuiSetEntity* GetGuiSetEntityFromUniqueID(int alID);
+    cGuiSetEntity *GetGuiSetEntity(const tString& asName);
+    cGuiSetEntity *GetGuiSetEntityFromUniqueID(int alID);
     cGuiSetEntityIterator GetGuiSetEntityIterator();
 
     ///// ROPE ENTITY METHODS ////////////////////
 
-    cRopeEntity* CreateRopeEntity(const tString& asName, iPhysicsRope *apRope, int alMaxSegments);
+    cRopeEntity *CreateRopeEntity(const tString& asName, iPhysicsRope *apRope, int alMaxSegments);
     void DestroyRopeEntity(cRopeEntity* apRope);
-    cRopeEntity* GetRopeEntity(const tString& asName);
-    cRopeEntity* GetRopeEntityFromUniqueID(int alID);
+    cRopeEntity *GetRopeEntity(const tString& asName);
+    cRopeEntity *GetRopeEntityFromUniqueID(int alID);
     cRopeEntityIterator GetRopeEntityIterator();
 
     ///// FOG AREA METHODS ////////////////////
-    cFogArea* CreateFogArea(const tString& asName, bool abStatic=false);
+    cFogArea *CreateFogArea(const tString& asName, bool abStatic = false);
     void DestroyFogArea(cFogArea* apRope);
-    cFogArea* GetFogArea(const tString& asName);
-    cFogArea* GetFogAreaFromUniqueID(int alID);
+    cFogArea *GetFogArea(const tString& asName);
+    cFogArea *GetFogAreaFromUniqueID(int alID);
     cFogAreaIterator GetFogAreaIterator();
 
     ///// SOUND ENTITY METHODS ////////////////////
 
-    cSoundEntity* CreateSoundEntity(const tString &asName,const tString &asSoundEntity,
+    cSoundEntity *CreateSoundEntity(const tString &asName, const tString &asSoundEntity,
                                     bool abRemoveWhenOver);
     void DestroySoundEntity(cSoundEntity* apEntity);
-    cSoundEntity* GetSoundEntity(const tString& asName);
-    cSoundEntity* GetSoundEntityFromUniqueID(int alID);
+    cSoundEntity *GetSoundEntity(const tString& asName);
+    cSoundEntity *GetSoundEntityFromUniqueID(int alID);
     void DestroyAllSoundEntities();
     bool SoundEntityExists(cSoundEntity* apEntity, int alCreationID);
 
@@ -414,26 +414,26 @@ public:
 
     ///// START POS ENTITY METHODS ////////////////
 
-    cStartPosEntity* CreateStartPos(const tString &asName);
-    cStartPosEntity* GetStartPosEntity(const tString &asName);
-    cStartPosEntity* GetFirstStartPosEntity();
+    cStartPosEntity *CreateStartPos(const tString &asName);
+    cStartPosEntity *GetStartPosEntity(const tString &asName);
+    cStartPosEntity *GetFirstStartPosEntity();
 
     ///// AI NODE METHODS ////////////////
 
     void GenerateAINodes(cAINodeGeneratorParams *apParams);
 
-    cAINodeContainer* CreateAINodeContainer(const tString &asName,
+    cAINodeContainer *CreateAINodeContainer(const tString &asName,
                                             const tString &asNodeName,
                                             const cVector3f &avSize,
                                             bool abNodeIsAtCenter,
                                             int alMinEdges, int alMaxEdges, float afMaxEdgeDistance,
                                             float afMaxHeight);
 
-    cAStarHandler* CreateAStarHandler(cAINodeContainer* apContainer);
+    cAStarHandler *CreateAStarHandler(cAINodeContainer* apContainer);
     void DestroyAStarHandler(cAStarHandler* apHandler);
 
     void AddAINode(const tString &asName, int alID, const tString &asType, const cVector3f &avPosition);
-    tTempAiNodeList* GetAINodeList(const tString &asType);
+    tTempAiNodeList *GetAINodeList(const tString &asType);
 
 
     /// NODE METHODS //////////////////////
@@ -441,10 +441,10 @@ public:
     //cNode3D* GetRootNode(){ return mpRootNode; }
 
     ///// DUMMY RENDERABLE METHODS ////////////////////
-    cDummyRenderable* CreateDummyRenderable(const tString& asName, bool abStatic=false);
+    cDummyRenderable *CreateDummyRenderable(const tString& asName, bool abStatic = false);
     void DestroyDummyRenderable(cDummyRenderable* apDummy);
-    cDummyRenderable* GetDummyRenderable(const tString& asName);
-    cDummyRenderable* GetDummyRenderableFromUniqueID(int alID);
+    cDummyRenderable *GetDummyRenderable(const tString& asName);
+    cDummyRenderable *GetDummyRenderableFromUniqueID(int alID);
     cDummyRenderableIterator GetDummyRenderableIterator();
 
 
@@ -462,7 +462,7 @@ private:
     bool mbActive;
 
     cGraphics *mpGraphics;
-    cSound* mpSound;
+    cSound *mpSound;
     cResources *mpResources;
     cPhysics *mpPhysics;
     cScene *mpScene;
@@ -476,10 +476,10 @@ private:
 
     cVector3f mvWorldSize;
 
-    iRenderableContainer* mpRenderableContainer[2];
+    iRenderableContainer *mpRenderableContainer[2];
 
-    iVertexBuffer* mpSkyBoxVtxBuffer;
-    iTexture* mpSkyBoxTexture;
+    iVertexBuffer *mpSkyBoxVtxBuffer;
+    iTexture *mpSkyBoxTexture;
     bool mbAutoDestroySkybox;
     bool mbSkyBoxActive;
     cColor mSkyBoxColor;
@@ -515,7 +515,7 @@ private:
     tAStarHandlerList mlstAStarHandlers;
     tTempNodeContainerMap m_mapTempNodes;
 
-    cNode3D* mpRootNode;
+    cNode3D *mpRootNode;
 
     tString msMapName;
     cColor mAmbientColor;

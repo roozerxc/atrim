@@ -25,9 +25,9 @@ cPostEffectComposite::cPostEffectComposite(cGraphics *apGraphics)
     SetupRenderFunctions(mpGraphics->GetLowLevel());
 
     cVector2l vSize = mpLowLevelGraphics->GetScreenSizeInt();
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
-        mpFinalTempBuffer[i] = mpGraphics->GetTempFrameBuffer(vSize,ePixelFormat_RGBA,i);
+        mpFinalTempBuffer[i] = mpGraphics->GetTempFrameBuffer(vSize, ePixelFormat_RGBA, i);
     }
 }
 
@@ -55,10 +55,10 @@ void cPostEffectComposite::Render(double adFrameTime, cFrustum *apFrustum, iText
     //Iterate post effects and find the last one.
     iPostEffect *pLastEffect = NULL;
     tPostEffectMapIt it = m_mapPostEffects.begin();
-    for(; it!= m_mapPostEffects.end(); ++it)
+    for(; it != m_mapPostEffects.end(); ++it)
     {
         iPostEffect *pPostEffect = it->second;
-        if(pPostEffect->IsActive()==false)
+        if(pPostEffect->IsActive() == false)
         {
             continue;
         }
@@ -68,22 +68,22 @@ void cPostEffectComposite::Render(double adFrameTime, cFrustum *apFrustum, iText
 
     ////////////////////////////////
     //Iterate post effects and render them
-    int lCurrentTempBuffer =0;
+    int lCurrentTempBuffer = 0;
     iTexture *pInputTex = apInputTexture;
     it = m_mapPostEffects.begin();
-    for(; it!= m_mapPostEffects.end(); ++it)
+    for(; it != m_mapPostEffects.end(); ++it)
     {
-        iPostEffect *pPostEffect =it->second;
-        if(pPostEffect->IsActive()==false)
+        iPostEffect *pPostEffect = it->second;
+        if(pPostEffect->IsActive() == false)
         {
             continue;
         }
 
         bool bLastEffect = pPostEffect == pLastEffect;
 
-        pInputTex = pPostEffect->Render(this,pInputTex,mpFinalTempBuffer[lCurrentTempBuffer],bLastEffect);
+        pInputTex = pPostEffect->Render(this, pInputTex, mpFinalTempBuffer[lCurrentTempBuffer], bLastEffect);
 
-        lCurrentTempBuffer = lCurrentTempBuffer==0 ? 1 : 0;
+        lCurrentTempBuffer = lCurrentTempBuffer == 0 ? 1 : 0;
     }
 
     ///////////////////////////////
@@ -95,7 +95,7 @@ void cPostEffectComposite::Render(double adFrameTime, cFrustum *apFrustum, iText
 
 void cPostEffectComposite::AddPostEffect(iPostEffect *apPostEffect, int alPrio)
 {
-    if(apPostEffect==NULL)
+    if(apPostEffect == NULL)
     {
         return;
     }
@@ -114,7 +114,7 @@ bool  cPostEffectComposite::HasActiveEffects()
     }
 
     bool bActiveEffect = false;
-    for(size_t i=0; i<mvPostEffects.size(); ++i)
+    for(size_t i = 0; i < mvPostEffects.size(); ++i)
     {
         if(mvPostEffects[i]->IsActive())
         {
@@ -154,9 +154,9 @@ void cPostEffectComposite::BeginRendering(double adFrameTime, cFrustum *apFrustu
     SetDepthWrite(false);
     mpLowLevelGraphics->SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
 
-    mpLowLevelGraphics->SetColor(cColor(1,1,1,1));
+    mpLowLevelGraphics->SetColor(cColor(1, 1, 1, 1));
 
-    for(int i=0; i<kMaxTextureUnits; ++i)
+    for(int i = 0; i < kMaxTextureUnits; ++i)
     {
         mpLowLevelGraphics->SetTexture(i, NULL);
     }
@@ -174,7 +174,7 @@ void cPostEffectComposite::EndRendering()
 
     /////////////////////////////////////////////
     // Unbind all rendering data
-    for(int i=0; i<kMaxTextureUnits; ++i)
+    for(int i = 0; i < kMaxTextureUnits; ++i)
     {
         if(mvCurrentTexture[i])
         {

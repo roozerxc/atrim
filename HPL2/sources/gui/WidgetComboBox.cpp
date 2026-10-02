@@ -22,7 +22,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cWidgetComboBox::cWidgetComboBox(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_ComboBox,apSet, apSkin)
+cWidgetComboBox::cWidgetComboBox(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_ComboBox, apSet, apSkin)
 {
     mfButtonWidth = mpSkin->GetAttribute(eGuiSkinAttribute_ComboBoxButtonWidth).x;
     mfSliderWidth = mpSkin->GetAttribute(eGuiSkinAttribute_ComboBoxSliderWidth).x;
@@ -40,10 +40,10 @@ cWidgetComboBox::cWidgetComboBox(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWi
     mfMenuHeight = 0;
 
     mlSelectedItem = -1;
-    mlMouseOverSelection =-1;
+    mlMouseOverSelection = -1;
 
-    mlFirstItem =0;
-    mlMaxItems =12;
+    mlFirstItem = 0;
+    mlMaxItems = 12;
     mlItemsShown = 0;
 }
 
@@ -51,7 +51,7 @@ cWidgetComboBox::cWidgetComboBox(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWi
 
 cWidgetComboBox::~cWidgetComboBox()
 {
-    if(mpSet->IsDestroyingSet()==false)
+    if(mpSet->IsDestroyingSet() == false)
     {
         mpSet->DestroyWidget(mpText);
         mpSet->DestroyWidget(mpButton);
@@ -85,7 +85,7 @@ void cWidgetComboBox::SetSelectedItem(int alX, bool abMoveList, bool abGenCallba
         }
         mpSlider->SetValue(mlFirstItem);
     }
-    if(abMoveList && mlSelectedItem < mlFirstItem && mlSelectedItem >=0)
+    if(abMoveList && mlSelectedItem < mlFirstItem && mlSelectedItem >= 0)
     {
         while(mlSelectedItem < mlFirstItem)
         {
@@ -94,7 +94,7 @@ void cWidgetComboBox::SetSelectedItem(int alX, bool abMoveList, bool abGenCallba
         mpSlider->SetValue(mlSelectedItem);
     }
 
-    if(mlSelectedItem >=0 && mlSelectedItem < GetItemNum())
+    if(mlSelectedItem >= 0 && mlSelectedItem < GetItemNum())
     {
         SetText(mvItems[mlSelectedItem]->GetText());
     }
@@ -157,11 +157,11 @@ void cWidgetComboBox::UpdateProperties()
         mlItemsShown = mlMaxItems;
     }
 
-    mfMenuHeight = 2 + (mvDefaultFontSize.y+2)* (float)mlItemsShown + 2;
+    mfMenuHeight = 2 + (mvDefaultFontSize.y + 2) * (float)mlItemsShown + 2;
 
-    if(mlSelectedItem>=(int)mvItems.size())
+    if(mlSelectedItem >= (int)mvItems.size())
     {
-        SetSelectedItem((int)mvItems.size()-1);
+        SetSelectedItem((int)mvItems.size() - 1);
     }
 
     OnChangeSize();
@@ -191,13 +191,13 @@ void cWidgetComboBox::OpenMenu()
     mlMouseOverSelection = mlSelectedItem;
 
     mvMenuPos = cVector3f(0,
-                          mvSize.y+mvGfxBorders[1]->GetActiveSize().y,
-                          mpSet->GetPopUpZ()+1);
+                          mvSize.y + mvGfxBorders[1]->GetActiveSize().y,
+                          mpSet->GetPopUpZ() + 1);
 
-    if(GetGlobalPosition().y+mvMenuPos.y+mfMenuHeight>mpSet->GetVirtualSize().y)
+    if(GetGlobalPosition().y + mvMenuPos.y + mfMenuHeight > mpSet->GetVirtualSize().y)
     {
-        float fDiff = GetGlobalPosition().y+mvMenuPos.y+mfMenuHeight-mpSet->GetVirtualSize().y;
-        mvMenuPos.y-=fDiff;
+        float fDiff = GetGlobalPosition().y + mvMenuPos.y + mfMenuHeight - mpSet->GetVirtualSize().y;
+        mvMenuPos.y -= fDiff;
     }
 
     if((int)mvItems.size() > mlMaxItems)
@@ -205,8 +205,8 @@ void cWidgetComboBox::OpenMenu()
         mpSlider->SetEnabled(true);
         mpSlider->SetVisible(true);
 
-        mpSlider->SetPosition(mvMenuPos + cVector3f(mvSize.x - 20 - mvGfxBorders[1]->GetActiveSize().x,1,0.2f));
-        mpSlider->SetSize(cVector2f(20,mfMenuHeight - mvGfxBorders[1]->GetActiveSize().y -
+        mpSlider->SetPosition(mvMenuPos + cVector3f(mvSize.x - 20 - mvGfxBorders[1]->GetActiveSize().x, 1, 0.2f));
+        mpSlider->SetSize(cVector2f(20, mfMenuHeight - mvGfxBorders[1]->GetActiveSize().y -
                                     mvGfxBorders[2]->GetActiveSize().y));
 
         //mpSlider->SetMaxValue(GetItemNum());
@@ -227,7 +227,7 @@ void cWidgetComboBox::OpenMenu()
 
 void cWidgetComboBox::CloseMenu()
 {
-    if(mbMenuOpen==false)
+    if(mbMenuOpen == false)
     {
         return;
     }
@@ -248,7 +248,7 @@ void cWidgetComboBox::CloseMenu()
 
 bool cWidgetComboBox::ButtonPress(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(aData.mlVal==eGuiMouseButton_Left)
+    if(aData.mlVal == eGuiMouseButton_Left)
     {
         if(mbMenuOpen)
         {
@@ -272,7 +272,7 @@ bool cWidgetComboBox::ButtonPress(iWidget* apWidget, const cGuiMessageData& aDat
     }
     return false;
 }
-kGuiCallbackDeclaredFuncEnd(cWidgetComboBox,ButtonPress)
+kGuiCallbackDeclaredFuncEnd(cWidgetComboBox, ButtonPress)
 
 //-----------------------------------------------------------------------
 
@@ -282,34 +282,34 @@ bool cWidgetComboBox::SliderMove(iWidget* apWidget, const cGuiMessageData& aData
 
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cWidgetComboBox,SliderMove)
+kGuiCallbackDeclaredFuncEnd(cWidgetComboBox, SliderMove)
 
 bool cWidgetComboBox::SliderLostFocus(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(mbMenuOpen && GetMouseIsOver()==false)
+    if(mbMenuOpen && GetMouseIsOver() == false)
     {
         CloseMenu();
     }
 
     return false;
 }
-kGuiCallbackDeclaredFuncEnd(cWidgetComboBox,SliderLostFocus)
+kGuiCallbackDeclaredFuncEnd(cWidgetComboBox, SliderLostFocus)
 
 //-----------------------------------------------------------------------
 
 void cWidgetComboBox::OnInit()
 {
-    mpText = mpSet->CreateWidgetTextBox(0,mvSize,_W(""),this);
+    mpText = mpSet->CreateWidgetTextBox(0, mvSize, _W(""), this);
     mpText->SetText(msText);
     mpText->SetCanEdit(false);
 
-    mpButton = mpSet->CreateWidgetButton(0,0,_W(""),this);
+    mpButton = mpSet->CreateWidgetButton(0, 0, _W(""), this);
     mpButton->SetImage(mpSkin->GetGfx(eGuiSkinGfx_ComboBoxButtonIcon), false);
     mpButton->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(ButtonPress));
 
-    mpSlider = mpSet->CreateWidgetSlider(eWidgetSliderOrientation_Vertical,0,0,0,this);
-    mpSlider->AddCallback(eGuiMessage_SliderMove,this,kGuiCallback(SliderMove));
-    mpSlider->AddCallback(eGuiMessage_LostFocus,this,kGuiCallback(SliderLostFocus));
+    mpSlider = mpSet->CreateWidgetSlider(eWidgetSliderOrientation_Vertical, 0, 0, 0, this);
+    mpSlider->AddCallback(eGuiMessage_SliderMove, this, kGuiCallback(SliderMove));
+    mpSlider->AddCallback(eGuiMessage_LostFocus, this, kGuiCallback(SliderLostFocus));
     mpSlider->AddCallback(eGuiMessage_UIArrowPress, this, kGuiCallback(SliderOnUIArrowPress));
     mpSlider->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(SliderOnUIButtonPress));
     mpSlider->AddCallback(eGuiMessage_UIButtonRelease, this, kGuiCallback(SliderOnUIButtonRelease));
@@ -318,7 +318,7 @@ void cWidgetComboBox::OnInit()
 
 
 
-    AddCallback(eGuiMessage_OnDraw,this, kGuiCallback(DrawText));
+    AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(DrawText));
 
     OnChangeSize();
 }
@@ -334,9 +334,9 @@ void cWidgetComboBox::OnChangeSize()
 
         cVector2f vBackSize = mpText->GetBackgroundSize();
 
-        mpButton->SetSize(cVector2f(mfButtonWidth,vBackSize.y));
-        mpButton->SetPosition(cVector3f( mvSize.x - (mvSize.x - vBackSize.x)/2 - mfButtonWidth,
-                                         (mvSize.y - vBackSize.y)/2, 0.3f));
+        mpButton->SetSize(cVector2f(mfButtonWidth, vBackSize.y));
+        mpButton->SetPosition(cVector3f( mvSize.x - (mvSize.x - vBackSize.x) / 2 - mfButtonWidth,
+                                         (mvSize.y - vBackSize.y) / 2, 0.3f));
 
         mpSlider->SetBarValueSize(mlMaxItems);
         mpSlider->SetMaxValue((int)mvItems.size() - mlMaxItems);
@@ -385,13 +385,13 @@ void cWidgetComboBox::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 
         ////////////////////////////
         //Draw background
-        mpSet->DrawGfx(mpGfxBackground,GetGlobalPosition() + mvMenuPos,
+        mpSet->DrawGfx(mpGfxBackground, GetGlobalPosition() + mvMenuPos,
                        cVector2f(mvSize.x, mfMenuHeight));
 
         ////////////////////////////////
         // Draw borders
         DrawBordersAndCorners(    NULL, mvGfxBorders, mvGfxCorners,
-                                  GetGlobalPosition() + mvMenuPos + cVector3f(0,0,0.2f),
+                                  GetGlobalPosition() + mvMenuPos + cVector3f(0, 0, 0.2f),
                                   cVector2f(mvSize.x, mfMenuHeight));
 
         ///////////////////////////////
@@ -404,7 +404,7 @@ void cWidgetComboBox::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 
 bool cWidgetComboBox::DrawText(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(mbMenuOpen==false)
+    if(mbMenuOpen == false)
     {
         return false;
     }
@@ -417,26 +417,26 @@ bool cWidgetComboBox::DrawText(iWidget* apWidget, const cGuiMessageData& aData)
     ///////////////////////////////
     // Draw text entries
     cVector3f vPos = GetGlobalPosition() +
-                     mvMenuPos + cVector3f(3,2,0.2f);
+                     mvMenuPos + cVector3f(3, 2, 0.2f);
 
-    for(int i=mlFirstItem; i<(int)mvItems.size(); ++i)
+    for(int i = mlFirstItem; i < (int)mvItems.size(); ++i)
     {
-        if(i-mlFirstItem >= mlMaxItems)
+        if(i - mlFirstItem >= mlMaxItems)
         {
             break;
         }
 
         if(i == mlMouseOverSelection)
         {
-            mpSet->DrawGfx(mpGfxSelection,vPos - cVector3f(3,0,0.1f),
-                           cVector2f(mvSize.x,mvDefaultFontSize.y));
-            DrawDefaultTextHighlight(mvItems[i]->GetText(),vPos,eFontAlign_Left);
+            mpSet->DrawGfx(mpGfxSelection, vPos - cVector3f(3, 0, 0.1f),
+                           cVector2f(mvSize.x, mvDefaultFontSize.y));
+            DrawDefaultTextHighlight(mvItems[i]->GetText(), vPos, eFontAlign_Left);
         }
         else
         {
-            DrawDefaultText(mvItems[i]->GetText(),vPos,eFontAlign_Left);
+            DrawDefaultText(mvItems[i]->GetText(), vPos, eFontAlign_Left);
         }
-        vPos.y += mvDefaultFontSize.y +2;
+        vPos.y += mvDefaultFontSize.y + 2;
     }
 
     ///////////////////////////////
@@ -446,18 +446,18 @@ bool cWidgetComboBox::DrawText(iWidget* apWidget, const cGuiMessageData& aData)
 
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cWidgetComboBox,DrawText)
+kGuiCallbackDeclaredFuncEnd(cWidgetComboBox, DrawText)
 
 //-----------------------------------------------------------------------
 
 bool cWidgetComboBox::OnMouseMove(const cGuiMessageData& aData)
 {
-    if(mbMenuOpen==false)
+    if(mbMenuOpen == false)
     {
         return false;
     }
 
-    if(GetMouseIsOver()==false)
+    if(GetMouseIsOver() == false)
     {
         return false;
     }
@@ -474,17 +474,17 @@ bool cWidgetComboBox::OnMouseMove(const cGuiMessageData& aData)
     }
 
     float fToTextStart = 2 + mvMenuPos.y + mvGfxCorners[0]->GetActiveSize().y;
-    int lSelection = (int)(( vLocalPos.y - fToTextStart) / (mvDefaultFontSize.y+2));
-    if(lSelection <0)
+    int lSelection = (int)(( vLocalPos.y - fToTextStart) / (mvDefaultFontSize.y + 2));
+    if(lSelection < 0)
     {
-        lSelection =0;
+        lSelection = 0;
     }
 
     lSelection = lSelection + mlFirstItem;
 
     if(lSelection >= (int)mvItems.size())
     {
-        lSelection = (int)mvItems.size()-1;
+        lSelection = (int)mvItems.size() - 1;
     }
 
     mlMouseOverSelection = lSelection;
@@ -508,11 +508,11 @@ bool cWidgetComboBox::OnMouseDown(const cGuiMessageData& aData)
 
     if(aData.mlVal & eGuiMouseButton_WheelUp)
     {
-        mpSlider->SetValue(lSliderValue-lValueAdd);
+        mpSlider->SetValue(lSliderValue - lValueAdd);
     }
     else if(aData.mlVal & eGuiMouseButton_WheelDown)
     {
-        mpSlider->SetValue(lSliderValue+lValueAdd);
+        mpSlider->SetValue(lSliderValue + lValueAdd);
     }
     else
     {
@@ -535,7 +535,7 @@ bool cWidgetComboBox::OnMouseUp(const cGuiMessageData& aData)
     {
         return false;
     }
-    if((aData.mlVal&eGuiMouseButton_WheelUp) || (aData.mlVal & eGuiMouseButton_WheelDown))
+    if((aData.mlVal & eGuiMouseButton_WheelUp) || (aData.mlVal & eGuiMouseButton_WheelDown))
     {
         return false;
     }
@@ -571,16 +571,16 @@ bool cWidgetComboBox::OnUIArrowPress(const cGuiMessageData& aData)
 {
     if(mbMenuOpen)
     {
-        if(aData.mlVal==eUIArrow_Down)
+        if(aData.mlVal == eUIArrow_Down)
         {
-            if(mlMouseOverSelection+1 <= GetItemNum()-1)
+            if(mlMouseOverSelection + 1 <= GetItemNum() - 1)
             {
                 mlMouseOverSelection++;
             }
         }
-        else if(aData.mlVal==eUIArrow_Up)
+        else if(aData.mlVal == eUIArrow_Up)
         {
-            if(mlMouseOverSelection-1 >= 0)
+            if(mlMouseOverSelection - 1 >= 0)
             {
                 mlMouseOverSelection--;
             }
@@ -607,7 +607,7 @@ bool cWidgetComboBox::OnUIButtonPress(const cGuiMessageData& aData)
 {
     if(HasFocus())
     {
-        if(aData.mlVal&eUIButton_Secondary)
+        if(aData.mlVal & eUIButton_Secondary)
         {
             if(mbMenuOpen)
             {
@@ -621,14 +621,14 @@ bool cWidgetComboBox::OnUIButtonPress(const cGuiMessageData& aData)
                 return false;
             }
         }
-        else if((aData.mlVal&eUIButton_Primary)==0)
+        else if((aData.mlVal & eUIButton_Primary) == 0)
         {
             return false;
         }
 
-        if(mbOpenByUIButton==false)
+        if(mbOpenByUIButton == false)
         {
-            if(mbMenuOpen==false)
+            if(mbMenuOpen == false)
             {
                 mbOpenByUIButton = true;
                 OpenMenu();
@@ -649,7 +649,7 @@ bool cWidgetComboBox::OnUIButtonPress(const cGuiMessageData& aData)
             }
         }
 
-        return aData.mlVal==eUIButton_Primary;
+        return aData.mlVal == eUIButton_Primary;
     }
 
     return false;
@@ -659,7 +659,7 @@ bool cWidgetComboBox::OnUIButtonRelease(const cGuiMessageData& aData)
 {
     if(HasFocus())
     {
-        return aData.mlVal==eUIButton_Primary;
+        return aData.mlVal == eUIButton_Primary;
     }
 
     return false;
@@ -669,7 +669,7 @@ bool cWidgetComboBox::OnUIButtonRelease(const cGuiMessageData& aData)
 
 bool cWidgetComboBox::OnLostFocus(const cGuiMessageData& aData)
 {
-    if(mbMenuOpen && mbOpenByUIButton==false)
+    if(mbMenuOpen && mbOpenByUIButton == false)
     {
         cVector3f vLocal = WorldToLocalPosition(aData.mvPos);
         if(vLocal.x < mvMenuPos.x || vLocal.x > mvMenuPos.x + mvSize.x
@@ -686,12 +686,12 @@ bool cWidgetComboBox::OnLostFocus(const cGuiMessageData& aData)
 
 bool cWidgetComboBox::PointIsInside(const cVector2f& avPoint, bool abOnlyClipped)
 {
-    if(mbMenuOpen==false && CheckPointInsideClippingParent(avPoint)==false)
+    if(mbMenuOpen == false && CheckPointInsideClippingParent(avPoint) == false)
     {
         return false;
     }
 
-    if(abOnlyClipped && mbClipsGraphics==false)
+    if(abOnlyClipped && mbClipsGraphics == false)
     {
         return true;
     }
@@ -709,7 +709,7 @@ bool cWidgetComboBox::PointIsInside(const cVector2f& avPoint, bool abOnlyClipped
         bInside = true;
     }
 
-    if(bInside==false)
+    if(bInside == false)
     {
         if(mbMenuOpen)
         {
@@ -728,34 +728,34 @@ bool cWidgetComboBox::PointIsInside(const cVector2f& avPoint, bool abOnlyClipped
 
 bool cWidgetComboBox::SliderOnUIArrowPress(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(aData.mlVal==eUIArrow_Up)
+    if(aData.mlVal == eUIArrow_Up)
     {
         mlMouseOverSelection--;
-        if(mlMouseOverSelection<0)
+        if(mlMouseOverSelection < 0)
         {
-            mlMouseOverSelection = GetItemNum()-1;
+            mlMouseOverSelection = GetItemNum() - 1;
 
-            mlFirstItem = mlMouseOverSelection-mlItemsShown+1;
+            mlFirstItem = mlMouseOverSelection - mlItemsShown + 1;
         }
 
-        if(mlMouseOverSelection<mlFirstItem)
+        if(mlMouseOverSelection < mlFirstItem)
         {
             mlFirstItem = mlMouseOverSelection;
         }
     }
-    else if(aData.mlVal==eUIArrow_Down)
+    else if(aData.mlVal == eUIArrow_Down)
     {
         mlMouseOverSelection++;
-        if(mlMouseOverSelection>GetItemNum()-1)
+        if(mlMouseOverSelection > GetItemNum() - 1)
         {
             mlMouseOverSelection = 0;
 
             mlFirstItem = 0;
         }
 
-        if(mlMouseOverSelection>mlFirstItem+mlItemsShown-1)
+        if(mlMouseOverSelection > mlFirstItem + mlItemsShown - 1)
         {
-            mlFirstItem = mlMouseOverSelection-mlItemsShown+1;
+            mlFirstItem = mlMouseOverSelection - mlItemsShown + 1;
         }
     }
     else
@@ -769,7 +769,7 @@ kGuiCallbackDeclaredFuncEnd(cWidgetComboBox, SliderOnUIArrowPress);
 
 bool cWidgetComboBox::SliderOnUIButtonPress(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(aData.mlVal==eUIButton_Primary)
+    if(aData.mlVal == eUIButton_Primary)
     {
         SetSelectedItem(mlMouseOverSelection);
         CloseMenu();

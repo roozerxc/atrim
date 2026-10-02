@@ -18,7 +18,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cParticleManager::cParticleManager(cGraphics* apGraphics,cResources *apResources)
+cParticleManager::cParticleManager(cGraphics* apGraphics, cResources *apResources)
     : iResourceManager(apResources->GetFileSearcher(), apResources->GetLowLevel(),
                        apResources->GetLowLevelSystem())
 {
@@ -53,30 +53,30 @@ cParticleManager::~cParticleManager()
 
 //-----------------------------------------------------------------------
 
-cParticleSystem* cParticleManager::CreatePS(const tString& asName,const tString& asType, cVector3f avSize)
+cParticleSystem *cParticleManager::CreatePS(const tString& asName, const tString& asType, cVector3f avSize)
 {
     cParticleSystemData *pData = NULL;
 
-    tString sFile = cString::SetFileExt(asType,"ps");
+    tString sFile = cString::SetFileExt(asType, "ps");
     tWString sPath = mpFileSearcher->GetFilePath(sFile);
 
     BeginLoad(asName);
 
-    pData = static_cast<cParticleSystemData*>(GetResource(sPath));
+    pData = static_cast<cParticleSystemData *>(GetResource(sPath));
     if(pData == NULL)
     {
         if(sPath == _W(""))
         {
-            Error("Couldn't find particle system file '%s'\n",sFile.c_str());
+            Error("Couldn't find particle system file '%s'\n", sFile.c_str());
             EndLoad();
             return NULL;
         }
 
-        cParticleSystemData *pPSData = hplNew( cParticleSystemData, (sFile,    mpResources,mpGraphics) );
+        cParticleSystemData *pPSData = hplNew( cParticleSystemData, (sFile,    mpResources, mpGraphics) );
 
-        if(pPSData->LoadFromFile(sPath)==false)
+        if(pPSData->LoadFromFile(sPath) == false)
         {
-            Error("Can't load data from particle system file '%s'\n",cString::To8Char(sPath).c_str());
+            Error("Can't load data from particle system file '%s'\n", cString::To8Char(sPath).c_str());
             hplDelete(pPSData);
             EndLoad();
             return NULL;
@@ -89,7 +89,7 @@ cParticleSystem* cParticleManager::CreatePS(const tString& asName,const tString&
 
 
     pData->IncUserCount();
-    cParticleSystem* pPS = pData->Create(asName,avSize);
+    cParticleSystem* pPS = pData->Create(asName, avSize);
     pPS->SetDataName(asType);
     pPS->SetDataSize(avSize);
     pPS->SetParticleManager(this);
@@ -101,20 +101,20 @@ cParticleSystem* cParticleManager::CreatePS(const tString& asName,const tString&
 
 //-----------------------------------------------------------------------
 
-cParticleSystem* cParticleManager::CreatePS(const tString& asName, const tString& asDataName, cXmlElement* apElement, cVector3f avSize)
+cParticleSystem *cParticleManager::CreatePS(const tString& asName, const tString& asDataName, cXmlElement* apElement, cVector3f avSize)
 {
     cParticleSystemData *pPSData = NULL;
 
     BeginLoad(asName);
 
-    pPSData = static_cast<cParticleSystemData*>(GetResource(cString::To16Char(asDataName)));
+    pPSData = static_cast<cParticleSystemData *>(GetResource(cString::To16Char(asDataName)));
 
-    if(pPSData==NULL)
+    if(pPSData == NULL)
     {
-        pPSData = hplNew( cParticleSystemData,(asDataName,mpResources,mpGraphics) );
-        if(pPSData->LoadFromElement(apElement)==false)
+        pPSData = hplNew( cParticleSystemData, (asDataName, mpResources, mpGraphics) );
+        if(pPSData->LoadFromElement(apElement) == false)
         {
-            Error("Can't load particle system data '%s'\n",asDataName.c_str());
+            Error("Can't load particle system data '%s'\n", asDataName.c_str());
             hplDelete(pPSData);
             EndLoad();
             return NULL;
@@ -124,7 +124,7 @@ cParticleSystem* cParticleManager::CreatePS(const tString& asName, const tString
     }
 
     pPSData->IncUserCount();
-    cParticleSystem* pPS = pPSData->Create(asName,avSize);
+    cParticleSystem* pPS = pPSData->Create(asName, avSize);
     pPS->SetDataName(asDataName);
     pPS->SetDataSize(avSize);
     pPS->SetParticleManager(this);
@@ -145,23 +145,23 @@ void cParticleManager::AddData(cParticleSystemData *apData)
 
 void cParticleManager::Preload(const tString& asFile)
 {
-    tString sFile = cString::SetFileExt(asFile,"ps");
+    tString sFile = cString::SetFileExt(asFile, "ps");
     tWString sPath = mpFileSearcher->GetFilePath(sFile);
 
-    cParticleSystemData *pData = static_cast<cParticleSystemData*>(GetResource(sPath));
+    cParticleSystemData *pData = static_cast<cParticleSystemData *>(GetResource(sPath));
     if(pData == NULL)
     {
         if(sPath == _W(""))
         {
-            Error("Couldn't find particle system file '%s'\n",sFile.c_str());
+            Error("Couldn't find particle system file '%s'\n", sFile.c_str());
             return;
         }
 
-        cParticleSystemData *pPSData = hplNew( cParticleSystemData, (sFile, mpResources,mpGraphics) );
+        cParticleSystemData *pPSData = hplNew( cParticleSystemData, (sFile, mpResources, mpGraphics) );
 
-        if(pPSData->LoadFromFile(sPath)==false)
+        if(pPSData->LoadFromFile(sPath) == false)
         {
-            Error("Can't load data from particle system file '%s'\n",cString::To8Char(sPath).c_str());
+            Error("Can't load data from particle system file '%s'\n", cString::To8Char(sPath).c_str());
             hplDelete(pPSData);
             return;
         }

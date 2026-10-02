@@ -19,7 +19,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-std::vector<iPhysicsBody*> iCharacterBody::mvTempBodies;
+std::vector<iPhysicsBody *> iCharacterBody::mvTempBodies;
 
 //-----------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ void cCharacterBodyCollideGravity::OnCollision(iPhysicsBody *apBody, cCollideDat
 
     /////////////////////////////////////
     //Check if body allow character attachment, if so attach character to it
-    if(    apBody->GetGravityCanAttachCharacter() && apBody->IsCharacter()==false &&
+    if(    apBody->GetGravityCanAttachCharacter() && apBody->IsCharacter() == false &&
             apCollideData->mvContactPoints[0].mvNormal.y > 0.001f)    //Quick check to make sure that character is just not sliding against the body.
     {
         //Choose the body that has the most contacts.
@@ -55,10 +55,10 @@ void cCharacterBodyCollideGravity::OnCollision(iPhysicsBody *apBody, cCollideDat
 
     if(mpCharBody->mpCallback)
     {
-        mpCharBody->mpCallback->OnGravityCollide(mpCharBody,apBody,apCollideData);
+        mpCharBody->mpCallback->OnGravityCollide(mpCharBody, apBody, apCollideData);
     }
 
-    if(apBody->GetMass()==0 || apBody->GetPushedByCharacterGravity()==false)
+    if(apBody->GetMass() == 0 || apBody->GetPushedByCharacterGravity() == false)
     {
         return;
     }
@@ -66,17 +66,17 @@ void cCharacterBodyCollideGravity::OnCollision(iPhysicsBody *apBody, cCollideDat
     //////////////////////////////////////
     //Go through all of the contact points and check if any is a movement up.
     //This means the body is below the character and should be pushed down.
-    bool bPushDown=false;
-    cVector3f vMedianPoint(0,0,0);
-    float fNumPoints=0;
-    for(int i=0; i< apCollideData->mlNumOfPoints; i++)
+    bool bPushDown = false;
+    cVector3f vMedianPoint(0, 0, 0);
+    float fNumPoints = 0;
+    for(int i = 0; i < apCollideData->mlNumOfPoints; i++)
     {
         //TODO: Get the point at which to apply the force.
         cCollidePoint &point = apCollideData->mvContactPoints[i];
         if(point.mvNormal.y > 0.001f)
         {
             bPushDown = true;
-            fNumPoints+=1;
+            fNumPoints += 1;
             vMedianPoint += point.mvPoint;
         }
     }
@@ -96,7 +96,7 @@ void cCharacterBodyCollideGravity::OnCollision(iPhysicsBody *apBody, cCollideDat
         float fForceMul = mpCharBody->mbCustomGravity ? mpCharBody->mvCustomGravity.y : mpCharBody->mpWorld->GetGravity().y;
         if(fForceMul < 0)
         {
-            apBody->AddForceAtPosition(cVector3f(0,mpCharBody->GetMass() * fForceMul,0), vMedianPoint);
+            apBody->AddForceAtPosition(cVector3f(0, mpCharBody->GetMass() * fForceMul, 0), vMedianPoint);
         }
     }
 }
@@ -120,7 +120,7 @@ void cCharacterBodyCollidePush::OnCollision(iPhysicsBody *apBody, cCollideData *
 {
     ///////////////////////////////////
     //Check what bodies not to push.
-    if(apBody->GetMass()==0 && apBody->IsCharacter()==false)
+    if(apBody->GetMass() == 0 && apBody->IsCharacter() == false)
     {
         return;
     }
@@ -140,9 +140,9 @@ void cCharacterBodyCollidePush::OnCollision(iPhysicsBody *apBody, cCollideData *
         }
 
 
-        float fHitTop = pHitCharBody->GetPosition().y + pHitCharBody->GetSize().y/2;
+        float fHitTop = pHitCharBody->GetPosition().y + pHitCharBody->GetSize().y / 2;
         //Make bottom 10% of size longer up to remove uneeded pushing.
-        float fBottom = mpCharBody->GetPosition().y - (mpCharBody->GetSize().y/2 - mpCharBody->GetSize().y*0.1f);
+        float fBottom = mpCharBody->GetPosition().y - (mpCharBody->GetSize().y / 2 - mpCharBody->GetSize().y * 0.1f);
 
         //Log("Top: %f Bottom: %f. HitSize: %f Size: %f. HitPos: %f Pos: %f\n",fHitTop, fBottom,pHitCharBody->GetSize().y,mpCharBody->GetSize().y,
         //                                                                        pHitCharBody->GetPosition().y,mpCharBody->GetPosition().y);
@@ -156,7 +156,7 @@ void cCharacterBodyCollidePush::OnCollision(iPhysicsBody *apBody, cCollideData *
         cVector3f vDir = pHitCharBody->GetPosition() - mpCharBody->GetPosition();
         if(mpCharBody->GetCharacterPushIn2D())
         {
-            vDir.y =0;
+            vDir.y = 0;
         }
         vDir.Normalize();
 
@@ -168,14 +168,14 @@ void cCharacterBodyCollidePush::OnCollision(iPhysicsBody *apBody, cCollideData *
     {
         /////////////////////////////////////////
         //Go through all of the contact points and find median
-        cVector3f vMedianPoint(0,0,0);
-        float fNumPoints=0;
+        cVector3f vMedianPoint(0, 0, 0);
+        float fNumPoints = 0;
 
-        for(int i=0; i< apCollideData->mlNumOfPoints; i++)
+        for(int i = 0; i < apCollideData->mlNumOfPoints; i++)
         {
             cCollidePoint &point = apCollideData->mvContactPoints[i];
 
-            fNumPoints+=1;
+            fNumPoints += 1;
             vMedianPoint += point.mvPoint;
         }
         vMedianPoint = vMedianPoint / fNumPoints;
@@ -191,7 +191,7 @@ void cCharacterBodyCollidePush::OnCollision(iPhysicsBody *apBody, cCollideData *
         if(mpCharBody->GetPushIn2D())
         {
             cVector3f vDir = vMedianPoint - mpCharBody->GetPosition();
-            vDir.y =0;
+            vDir.y = 0;
             vDir.Normalize();
 
             apBody->AddForceAtPosition(vDir * mpCharBody->GetPushForce(), vMedianPoint);
@@ -228,9 +228,9 @@ void cCharacterBodyRay::Clear()
 
 //-----------------------------------------------------------------------
 
-bool cCharacterBodyRay::OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams)
+bool cCharacterBodyRay::OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams)
 {
-    if(    pBody->IsCharacter()==false && pBody->GetCollideCharacter() &&
+    if(    pBody->IsCharacter() == false && pBody->GetCollideCharacter() &&
             apParams->mfDist < mfMinDist)
     {
         mfMinDist = apParams->mfDist;
@@ -265,18 +265,18 @@ iCharacterBody::iCharacterBody(const tString &asName, iPhysicsWorld *apWorld, co
 
     /////////////////////////////
     // Create Shape
-    float fRadius = cMath::Max(avSize.x, avSize.z)*0.5f;
+    float fRadius = cMath::Max(avSize.x, avSize.z) * 0.5f;
     cMatrixf mtxOffset = cMath::MatrixRotateZ(kPi2f);
     iCollideShape *pCollider = NULL;
 
     float fForceAdd = 0.2f;
-    if(fabs(fRadius*2.0f - avSize.y)<0.01)
+    if(fabs(fRadius * 2.0f - avSize.y) < 0.01)
     {
-        mpCurrentShape = mpWorld->CreateSphereShape(fRadius,NULL);
+        mpCurrentShape = mpWorld->CreateSphereShape(fRadius, NULL);
     }
     else
     {
-        mpCurrentShape = mpWorld->CreateCylinderShape(fRadius, avSize.y,&mtxOffset);
+        mpCurrentShape = mpWorld->CreateCylinderShape(fRadius, avSize.y, &mtxOffset);
     }
     mpCurrentBody = mpWorld->CreateBody(asName, mpCurrentShape);
 
@@ -309,10 +309,10 @@ iCharacterBody::iCharacterBody(const tString &asName, iPhysicsWorld *apWorld, co
 
     mbDisableDiagSpeedBoost = true;
 
-    mlCurrentShapeIdx =0;
+    mlCurrentShapeIdx = 0;
 
-    mfYaw =0;
-    mfPitch =0;
+    mfYaw = 0;
+    mfPitch = 0;
 
     mlCollideFlags = eFlagBit_All;
 
@@ -320,15 +320,15 @@ iCharacterBody::iCharacterBody(const tString &asName, iPhysicsWorld *apWorld, co
     mfMaxNoSlideSlopeAngleCos = cos(cMath::ToRad(45.0f));
 
     //Set move properties
-    for(int i=0; i<eCharDir_LastEnum; i++)
+    for(int i = 0; i < eCharDir_LastEnum; i++)
     {
-        mfMaxPosMoveSpeed[i]=10;
-        mfMaxNegMoveSpeed[i]=-10;
-        mfMoveSpeed[i]=0;
-        mfMoveAcc[i]=20;
-        mfMoveDeacc[i]=20;
-        mbMoving[i]=false;
-        mfCurrentMoveAcc[i] =0;
+        mfMaxPosMoveSpeed[i] = 10;
+        mfMaxNegMoveSpeed[i] = -10;
+        mfMoveSpeed[i] = 0;
+        mfMoveAcc[i] = 20;
+        mfMoveDeacc[i] = 20;
+        mbMoving[i] = false;
+        mfCurrentMoveAcc[i] = 0;
         mfMoveOppositeDirAccMul[i] = 1;
     }
 
@@ -336,10 +336,10 @@ iCharacterBody::iCharacterBody(const tString &asName, iPhysicsWorld *apWorld, co
 
     mbDeaccelerateMoveSpeedInAir = false;
 
-    mvForce = cVector3f(0,0,0);
-    mvVelocity = cVector3f(0,0,0);
+    mvForce = cVector3f(0, 0, 0);
+    mvVelocity = cVector3f(0, 0, 0);
 
-    mvLastGroundNormal = cVector3f(0,0,0);
+    mvLastGroundNormal = cVector3f(0, 0, 0);
 
     mbGravityActive = true;
 
@@ -350,7 +350,7 @@ iCharacterBody::iCharacterBody(const tString &asName, iPhysicsWorld *apWorld, co
     mfMaxContactForcePerMassUnit = 250.0f;
 
     mpCamera = NULL;
-    mvCameraPosAdd = cVector3f(0,0,0);
+    mvCameraPosAdd = cVector3f(0, 0, 0);
 
     mpEntity = NULL;
     m_mtxEntityOffset = cMatrixf::Identity;
@@ -358,13 +358,13 @@ iCharacterBody::iCharacterBody(const tString &asName, iPhysicsWorld *apWorld, co
 
     mpUserData = NULL;
 
-    mlCameraSmoothPosNum =0;
-    mlEntitySmoothPosNum =0;
+    mlCameraSmoothPosNum = 0;
+    mlEntitySmoothPosNum = 0;
 
     mlOnGroundCount = 0;
     mlMaxOnGroundCount = 12;
 
-    mfMaxStepHeight = mvSize.y *0.2f;
+    mfMaxStepHeight = mvSize.y * 0.2f;
     mfMaxStepHeightInAir = mfMaxStepHeight;
     mfStepClimbSpeed = 1.0f;
     mfClimbForwardMul = 1.0f;
@@ -373,7 +373,7 @@ iCharacterBody::iCharacterBody(const tString &asName, iPhysicsWorld *apWorld, co
     mbAccurateClimbing = false;
 
     mfCheckStepClimbCount = 0;
-    mfCheckStepClimbInterval = 1/20.0f;
+    mfCheckStepClimbInterval = 1 / 20.0f;
 
     mfGroundFriction = 6.0f;
     mfAirFriction = 0.3f;
@@ -386,14 +386,14 @@ iCharacterBody::iCharacterBody(const tString &asName, iPhysicsWorld *apWorld, co
     mfPushForce = 0;
     mbPushIn2D = true;
 
-    mfCharacterMaxPushMass =0;
-    mfCharacterPushForce =0;
+    mfCharacterMaxPushMass = 0;
+    mfCharacterPushForce = 0;
     mbCharacterPushIn2D = true;
 
     mlMinBodyPushStrength = 0;
 
-    mfMaxConnectionTorque =0;
-    mfMaxConnectionForce =0;
+    mfMaxConnectionTorque = 0;
+    mfMaxConnectionForce = 0;
     mpConnectedBody = NULL;
     mBodyConnectionPointPid.SetErrorNum(10);
     mBodyCenterPid.SetErrorNum(10);
@@ -404,16 +404,16 @@ iCharacterBody::iCharacterBody(const tString &asName, iPhysicsWorld *apWorld, co
 
     mbRotateYawWhenGravityAttached = true;
     mpGravityAttachedBody = NULL;
-    mlGravityAttachmentContacts =0;
+    mlGravityAttachmentContacts = 0;
     mpGravityLastAttachedBody = NULL;
-    mvGravityAttachmentVelocity =0;
+    mvGravityAttachmentVelocity = 0;
 
     mbCustomGravity = false;
-    mvCustomGravity = cVector3f(0,9.8f,0);
+    mvCustomGravity = cVector3f(0, 9.8f, 0);
 
     mpGravityCollideMaterial = NULL;
 
-    mfMoveDelayCount=0;
+    mfMoveDelayCount = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -422,7 +422,7 @@ iCharacterBody::~iCharacterBody()
 {
     DisconnectBody();
 
-    for(size_t i=0; i< mvBodies.size(); i++)
+    for(size_t i = 0; i < mvBodies.size(); i++)
     {
         mpWorld->DestroyBody(mvBodies[i]);
     }
@@ -455,7 +455,7 @@ void iCharacterBody::SetActive(bool abX)
 {
     mbActive = abX;
 
-    if(mbActive==false)
+    if(mbActive == false)
     {
         mpCurrentBody->SetActive(false);
     }
@@ -478,7 +478,7 @@ void iCharacterBody::SetTestCollision(bool abX)
 {
     mbTestCollision = abX;
 
-    if(mbTestCollision==false)
+    if(mbTestCollision == false)
     {
         mpCurrentBody->SetActive(false);
     }
@@ -500,9 +500,9 @@ cVector3f iCharacterBody::GetSize()
 
 int iCharacterBody::AddExtraSize(const cVector3f& avSize)
 {
-    float fRadius = cMath::Max(avSize.x, avSize.z)*0.5f;
+    float fRadius = cMath::Max(avSize.x, avSize.z) * 0.5f;
     cMatrixf mtxOffset = cMath::MatrixRotateZ(kPi2f);
-    iCollideShape *pCollider = mpWorld->CreateCylinderShape(fRadius, avSize.y,&mtxOffset);
+    iCollideShape *pCollider = mpWorld->CreateCylinderShape(fRadius, avSize.y, &mtxOffset);
     iPhysicsBody *pBody = mpWorld->CreateBody(msName, pCollider);
 
     pBody->SetMass(0);
@@ -516,7 +516,7 @@ int iCharacterBody::AddExtraSize(const cVector3f& avSize)
     mvBodies.push_back(pBody);
     mvShapes.push_back(pCollider);
 
-    return (int)mvShapes.size() -1;
+    return (int)mvShapes.size() - 1;
 }
 
 //-----------------------------------------------------------------------
@@ -536,7 +536,7 @@ void iCharacterBody::SetActiveSize(int alNum)
     mpCurrentShape = mvShapes[alNum];
     mpCurrentBody = mvBodies[alNum];
 
-    SetPosition(vFeetPosition + cVector3f(0,mpCurrentShape->GetSize().y/2.0f,0), true);
+    SetPosition(vFeetPosition + cVector3f(0, mpCurrentShape->GetSize().y / 2.0f, 0), true);
 
     if(mbActive && mbTestCollision)
     {
@@ -605,7 +605,7 @@ float iCharacterBody::GetMoveDeacc(eCharDir aDir)
 
 cVector3f iCharacterBody::GetVelocity(double adFrameTime)
 {
-    if(adFrameTime <=0)
+    if(adFrameTime <= 0)
     {
         return 0;
     }
@@ -631,11 +631,11 @@ void iCharacterBody::SetPosition(const cVector3f& avPos, bool abSmooth)
         mlstEntityYPositions.clear();
     }
 }
-const cVector3f& iCharacterBody::GetPosition()
+const cVector3f &iCharacterBody::GetPosition()
 {
     return mvPosition;
 }
-const cVector3f& iCharacterBody::GetLastPosition()
+const cVector3f &iCharacterBody::GetLastPosition()
 {
     return mvLastPosition;
 }
@@ -644,12 +644,12 @@ const cVector3f& iCharacterBody::GetLastPosition()
 
 void iCharacterBody::SetFeetPosition(const cVector3f& avPos, bool abSmooth)
 {
-    SetPosition(avPos + cVector3f(0,mvSize.y/2,0),abSmooth);
+    SetPosition(avPos + cVector3f(0, mvSize.y / 2, 0), abSmooth);
 }
 
 cVector3f iCharacterBody::GetFeetPosition()
 {
-    return mvPosition - cVector3f(0,mvSize.y/2,0);
+    return mvPosition - cVector3f(0, mvSize.y / 2, 0);
 }
 
 //-----------------------------------------------------------------------
@@ -698,15 +698,15 @@ float iCharacterBody::GetPitch()
 
 //-----------------------------------------------------------------------
 
-const cVector3f& iCharacterBody::GetForward()
+const cVector3f &iCharacterBody::GetForward()
 {
     return mvForward;
 }
-const cVector3f& iCharacterBody::GetRight()
+const cVector3f &iCharacterBody::GetRight()
 {
     return mvRight;
 }
-const cVector3f& iCharacterBody::GetUp()
+const cVector3f &iCharacterBody::GetUp()
 {
     return mvUp;
 }
@@ -760,7 +760,7 @@ void iCharacterBody::SetCollideFlags(tFlag alX)
 {
     mlCollideFlags = alX;
 
-    for(size_t i=0; i<mvBodies.size(); ++i)
+    for(size_t i = 0; i < mvBodies.size(); ++i)
     {
         iPhysicsBody *pBody = mvBodies[i];
         pBody->SetCollideFlags(mlCollideFlags);
@@ -807,7 +807,7 @@ cVector3f iCharacterBody::GetForce()
 
 void iCharacterBody::Move(eCharDir aDir, float afMul)
 {
-    if(mfMoveDelayCount>0)
+    if(mfMoveDelayCount > 0)
     {
         return;    //Just skip any movement.
     }
@@ -823,12 +823,12 @@ void iCharacterBody::StopMovement()
 {
     SetForceVelocity(0);
 
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         mfCurrentMoveAcc[i] = 0;
         mbMoving[i] = false;
-        mfMoveAcc[i] =0;
-        mfMoveSpeed[i]=0;
+        mfMoveAcc[i] = 0;
+        mfMoveSpeed[i] = 0;
     }
 }
 
@@ -987,9 +987,9 @@ void iCharacterBody::Update(double adFixedDelta)
 {
     /////////////////////////
     // Move delay
-    if(mfMoveDelayCount>0)
+    if(mfMoveDelayCount > 0)
     {
-        mfMoveDelayCount-=(float)adFixedDelta;
+        mfMoveDelayCount -= (float)adFixedDelta;
     }
 
     //////////////////////////
@@ -1071,7 +1071,7 @@ void iCharacterBody::SetCamera(cCamera *apCam)
     mpCamera = apCam;
 }
 
-cCamera* iCharacterBody::GetCamera()
+cCamera *iCharacterBody::GetCamera()
 {
     return mpCamera;
 }
@@ -1087,12 +1087,12 @@ cVector3f iCharacterBody::GetCameraPosAdd()
 
 //-----------------------------------------------------------------------
 
-iCollideShape * iCharacterBody::GetCurrentShape()
+iCollideShape *iCharacterBody::GetCurrentShape()
 {
     return mpCurrentShape;
 }
 
-iPhysicsBody* iCharacterBody::GetCurrentBody()
+iPhysicsBody *iCharacterBody::GetCurrentBody()
 {
     return mpCurrentBody;
 }
@@ -1104,14 +1104,14 @@ iCollideShape *iCharacterBody::GetShape(int alIdx)
 
 bool iCharacterBody::IsOnGround()
 {
-    return mlOnGroundCount >0;
+    return mlOnGroundCount > 0;
 }
 
 //-----------------------------------------------------------------------
 
 bool iCharacterBody::CheckCharacterFits(const cVector3f &avPosition, bool abFeetPosition, int alSizeIdx, cVector3f *apPushBackVec, float afEpsilon)
 {
-    if(alSizeIdx <0)
+    if(alSizeIdx < 0)
     {
         alSizeIdx = mlCurrentShapeIdx;
     }
@@ -1120,11 +1120,11 @@ bool iCharacterBody::CheckCharacterFits(const cVector3f &avPosition, bool abFeet
     cVector3f vPos = avPosition;
     if(abFeetPosition)
     {
-        vPos += cVector3f(0,pShape->GetSize().y/2.0f,0);
+        vPos += cVector3f(0, pShape->GetSize().y / 2.0f, 0);
     }
 
     cVector3f vPushBack(0);
-    CheckCollision(&vPushBack,vPos, NULL, alSizeIdx);
+    CheckCollision(&vPushBack, vPos, NULL, alSizeIdx);
 
     if(apPushBackVec)
     {
@@ -1146,7 +1146,7 @@ bool iCharacterBody::CheckCharacterFits(const cVector3f &avPosition, bool abFeet
 bool iCharacterBody::CheckRayIntersection(const cVector3f &avStart, const cVector3f &avEnd, float *apDistance, cVector3f *apNormalVec)
 {
     mpRayCallback->Clear();
-    mpWorld->CastRay(mpRayCallback,avStart,avEnd,apDistance!=NULL,apNormalVec!=NULL,false);
+    mpWorld->CastRay(mpRayCallback, avStart, avEnd, apDistance != NULL, apNormalVec != NULL, false);
     bool bCollide = mpRayCallback->mbCollide;
     if(bCollide)
     {
@@ -1168,7 +1168,7 @@ void iCharacterBody::SetEntity(iEntity3D *apEntity)
 {
     mpEntity = apEntity;
 }
-iEntity3D* iCharacterBody::GetEntity()
+iEntity3D *iCharacterBody::GetEntity()
 {
     return mpEntity;
 }
@@ -1176,7 +1176,7 @@ void iCharacterBody::SetEntityOffset(const cMatrixf &a_mtxOffset)
 {
     m_mtxEntityOffset = a_mtxOffset;
 }
-const cMatrixf& iCharacterBody::GetEntityOffset()
+const cMatrixf &iCharacterBody::GetEntityOffset()
 {
     return m_mtxEntityOffset;
 }
@@ -1185,14 +1185,14 @@ void iCharacterBody::SetEntityPostOffset(const cMatrixf &a_mtxOffset)
 {
     m_mtxEntityPostOffset = a_mtxOffset;
 }
-const cMatrixf& iCharacterBody::GetEntityPostOffset()
+const cMatrixf &iCharacterBody::GetEntityPostOffset()
 {
     return m_mtxEntityPostOffset;
 }
 
 //-----------------------------------------------------------------------
 
-iPhysicsBody * iCharacterBody::GetConnectedBody()
+iPhysicsBody *iCharacterBody::GetConnectedBody()
 {
     return mpConnectedBody;
 }
@@ -1242,12 +1242,12 @@ cVector3f iCharacterBody::GetCharConnectionPos()
 
 void iCharacterBody::UpdateMoveMatrix()
 {
-    m_mtxMove = cMath::MatrixRotate(cVector3f(mfPitch,mfYaw,0),eEulerRotationOrder_XYZ);
+    m_mtxMove = cMath::MatrixRotate(cVector3f(mfPitch, mfYaw, 0), eEulerRotationOrder_XYZ);
     m_mtxMove.SetTranslation(mvPosition);
 
-    mvForward = cMath::MatrixMul3x3(m_mtxMove,cVector3f(0,0,-1));
-    mvRight = cMath::MatrixMul3x3(m_mtxMove,cVector3f(1,0,0));
-    mvUp = cMath::MatrixMul3x3(m_mtxMove,cVector3f(0,1,0));
+    mvForward = cMath::MatrixMul3x3(m_mtxMove, cVector3f(0, 0, -1));
+    mvRight = cMath::MatrixMul3x3(m_mtxMove, cVector3f(1, 0, 0));
+    mvUp = cMath::MatrixMul3x3(m_mtxMove, cVector3f(0, 1, 0));
 }
 
 //-----------------------------------------------------------------------
@@ -1259,7 +1259,7 @@ void iCharacterBody::PreUpdateConnection(double adFixedDelta)
         return;
     }
 
-    if(mbConnectionCollision==false)
+    if(mbConnectionCollision == false)
     {
         mbConnectedBodyIsActive = mpConnectedBody->IsActive();
         if(mbConnectedBodyIsActive)
@@ -1276,7 +1276,7 @@ void iCharacterBody::PostUpdateConnection(double adFixedDelta)
         return;
     }
 
-    if(mbConnectionCollision==false)
+    if(mbConnectionCollision == false)
     {
         if(mbConnectedBodyIsActive)
         {
@@ -1301,12 +1301,12 @@ void iCharacterBody::UpdateBodyConnection(double adFixedDelta)
         return;
     }
 
-    cVector3f vTotalTorque=0;
-    cVector3f vTotalForce=0;
+    cVector3f vTotalTorque = 0;
+    cVector3f vTotalForce = 0;
 
     //Get the maximum force can be made by the character
     float fMaxTotalCharForce = mfMaxConnectionForce;
-    if(IsOnGround()==false)
+    if(IsOnGround() == false)
     {
         float fGravitySize = mbCustomGravity ? mvCustomGravity.Length() : mpWorld->GetGravity().Length();
         fMaxTotalCharForce = fGravitySize * GetMass();
@@ -1392,7 +1392,7 @@ void iCharacterBody::UpdateBodyConnection(double adFixedDelta)
 
             //Get by checking how the up is compared to right, we can get the sign of the rotation.
             // ">" since the error is in the opposite direction, ie the way want to rotate in!
-            if(cMath::Vector3Dot(vBodyRight, vBodyUp)>0)
+            if(cMath::Vector3Dot(vBodyRight, vBodyUp) > 0)
             {
                 fError = -fError;
             }
@@ -1430,8 +1430,8 @@ void iCharacterBody::UpdateBodyConnection(double adFixedDelta)
     const float fMaxForce = 100.0f;
 
     //Make sure that the force is not too large before multiplying with mass
-    cMath::Vector3ClampToLength(vTotalForce,fMaxForce);
-    cMath::Vector3ClampToLength(vTotalForce,fMaxTotalCharForce);
+    cMath::Vector3ClampToLength(vTotalForce, fMaxForce);
+    cMath::Vector3ClampToLength(vTotalForce, fMaxTotalCharForce);
 
     vTotalForce = vTotalForce * mpConnectedBody->GetMass();
     mpConnectedBody->AddForce(vTotalForce);
@@ -1439,7 +1439,7 @@ void iCharacterBody::UpdateBodyConnection(double adFixedDelta)
     //Make sure that the force is not too large before multiplying with intertia and mass
     cMath::Vector3ClampToLength(vTotalTorque, fMaxTorque);
 
-    vTotalTorque =  cMath::MatrixMul(mpConnectedBody->GetInertiaMatrix(),vTotalTorque);
+    vTotalTorque =  cMath::MatrixMul(mpConnectedBody->GetInertiaMatrix(), vTotalTorque);
     mpConnectedBody->AddTorque(vTotalTorque);
 }
 
@@ -1454,7 +1454,7 @@ void iCharacterBody::UpdateCharacterConnection(double adFixedDelta)
     }
 
     //Check if character is affected.
-    if(mbConnectionAffectChar==false)
+    if(mbConnectionAffectChar == false)
     {
         return;
     }
@@ -1469,8 +1469,8 @@ void iCharacterBody::UpdateCharacterConnection(double adFixedDelta)
         cVector3f vWantedForwardXZ = cMath::Vector3Normalize(cVector3f(vWantedForward.x, 0, vWantedForward.z));
 
         //Get the angle from character to the body connection point.
-        float fWantedYaw = cMath::Vector3Angle(cVector3f(0,0,-1), vWantedForwardXZ);
-        if(vWantedForwardXZ.x >0)
+        float fWantedYaw = cMath::Vector3Angle(cVector3f(0, 0, -1), vWantedForwardXZ);
+        if(vWantedForwardXZ.x > 0)
         {
             fWantedYaw = -fWantedYaw;
         }
@@ -1515,29 +1515,29 @@ cVector3f iCharacterBody::UpdatePositionFromCharSpeed(double adFixedDelta)
     /////////////////////////////////////////////////////
     // If the character is not moving in a direction and not on ground, apply deacceleration.
     mbMovedLastUpdate = false;
-    for(int i=0; i < eCharDir_LastEnum; i++)
+    for(int i = 0; i < eCharDir_LastEnum; i++)
     {
         ////////////////////////////
         // If not moving, then lower the speed to zero
-        if(mbMoving[i]==false)
+        if(mbMoving[i] == false)
         {
             //see if we want to lower speed
             if(IsOnGround() || mbDeaccelerateMoveSpeedInAir)
             {
-                if(mfMoveSpeed[i]>0)
+                if(mfMoveSpeed[i] > 0)
                 {
                     mfMoveSpeed[i] -= mfMoveDeacc[i] * (float)adFixedDelta;
-                    if(mfMoveSpeed[i]<0)
+                    if(mfMoveSpeed[i] < 0)
                     {
-                        mfMoveSpeed[i] =0;
+                        mfMoveSpeed[i] = 0;
                     }
                 }
                 else
                 {
                     mfMoveSpeed[i] += mfMoveDeacc[i] * (float)adFixedDelta;
-                    if(mfMoveSpeed[i]>0)
+                    if(mfMoveSpeed[i] > 0)
                     {
-                        mfMoveSpeed[i] =0;
+                        mfMoveSpeed[i] = 0;
                     }
                 }
             }
@@ -1580,14 +1580,14 @@ cVector3f iCharacterBody::UpdatePositionFromCharSpeed(double adFixedDelta)
     //Update speed and position
 
     //Update speed
-    for(int i=0; i < eCharDir_LastEnum; i++)
+    for(int i = 0; i < eCharDir_LastEnum; i++)
     {
         float fMaxPosSpeed = mfMaxPosMoveSpeed[i] * fDiagMul;
         float fMaxNegSpeed = mfMaxNegMoveSpeed[i] * fDiagMul;
 
         //If on ground and moving in opposite direction of the current speed, add a acc multiplier.
-        float fAccMul=1.0f;
-        if(IsOnGround() && ( (mfCurrentMoveAcc[i] > 0 && mfMoveSpeed[i]<0) || (mfCurrentMoveAcc[i] < 0 && mfMoveSpeed[i]>0) ) )
+        float fAccMul = 1.0f;
+        if(IsOnGround() && ( (mfCurrentMoveAcc[i] > 0 && mfMoveSpeed[i] < 0) || (mfCurrentMoveAcc[i] < 0 && mfMoveSpeed[i] > 0) ) )
         {
             fAccMul = mfMoveOppositeDirAccMul[i];
         }
@@ -1619,7 +1619,7 @@ cVector3f iCharacterBody::UpdatePositionFromCharSpeed(double adFixedDelta)
     }
 
     //Init variables
-    cVector3f vPosAdd =0;
+    cVector3f vPosAdd = 0;
 
     //Movement velocity
     vPosAdd += mvForward * mfMoveSpeed[eCharDir_Forward] * (float)adFixedDelta;
@@ -1648,7 +1648,7 @@ cVector3f iCharacterBody::UpdatePositionFromCharSpeed(double adFixedDelta)
 void iCharacterBody::AlignPosAddAccordingToGroundNormal(cVector3f &avPosAdd)
 {
     //Do not do any alignment if body is not on ground or on its way up.
-    if(IsOnGround()==false || mvVelocity.y > 0)
+    if(IsOnGround() == false || mvVelocity.y > 0)
     {
         return;
     }
@@ -1694,7 +1694,7 @@ void iCharacterBody::CheckMoveCollision(const cVector3f &avPosAdd, double adFixe
 
         ////////////////////////
         //If the body is in the air, then deduct the speed when hitting an obstacle.
-        if(IsOnGround()==false && vPushBack.SqrLength() != 0)
+        if(IsOnGround() == false && vPushBack.SqrLength() != 0)
         {
             cVector3f vNormal = cMath::Vector3Normalize(vPushBack);
             cVector3f vForwardVel = mvForward * mfMoveSpeed[eCharDir_Forward];
@@ -1741,7 +1741,7 @@ void iCharacterBody::CheckMoveCollision(const cVector3f &avPosAdd, double adFixe
 
     /////////////////////////////
     //Always check climbing!
-    CheckStepClimbing(avPosAdd,adFixedDelta);
+    CheckStepClimbing(avPosAdd, adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
@@ -1781,55 +1781,55 @@ void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, double adFixed
     cVector3f vNormal[3];
     bool bCollided[3];
     float fMinDist[3];
-    int lNumRays= mbAccurateClimbing ? 3 : 1;
+    int lNumRays = mbAccurateClimbing ? 3 : 1;
 
     /////////////////////////////////
     //Calculate the different movements
-    vStepAdd[0] = vMoveDir*(fRadius+fForwadAdd);
+    vStepAdd[0] = vMoveDir * (fRadius + fForwadAdd);
 
     if(mbAccurateClimbing)
     {
-        cVector3f vRightDir = cMath::MatrixMul(cMath::MatrixRotateY(kPi4f),vMoveDir);
-        vStepAdd[1] = (vRightDir*fRadius)+(vMoveDir*fForwadAdd);
+        cVector3f vRightDir = cMath::MatrixMul(cMath::MatrixRotateY(kPi4f), vMoveDir);
+        vStepAdd[1] = (vRightDir * fRadius) + (vMoveDir * fForwadAdd);
 
-        cVector3f vLeftDir = cMath::MatrixMul(cMath::MatrixRotateY(-kPi4f),vMoveDir);
-        vStepAdd[2] = (vLeftDir*fRadius)+(vMoveDir*fForwadAdd);
+        cVector3f vLeftDir = cMath::MatrixMul(cMath::MatrixRotateY(-kPi4f), vMoveDir);
+        vStepAdd[2] = (vLeftDir * fRadius) + (vMoveDir * fForwadAdd);
     }
 
     /////////////////////////////////
     //Shot the rays
     // Shoot from middle of body, making max climb height no higher than that!
-    for(int i=0; i< lNumRays; ++i)
+    for(int i = 0; i < lNumRays; ++i)
     {
-        vStart[i] = mvPosition+ vStepAdd[i];//mvPosition + cVector3f(0,mvSize.y/2,0)+ vStepAdd[i];
-        vEnd[i] = vStart[i] - cVector3f(0,mvSize.y/2.0f,0);//cVector3f(0,mvSize.y,0);
+        vStart[i] = mvPosition + vStepAdd[i]; //mvPosition + cVector3f(0,mvSize.y/2,0)+ vStepAdd[i];
+        vEnd[i] = vStart[i] - cVector3f(0, mvSize.y / 2.0f, 0); //cVector3f(0,mvSize.y,0);
 
 #if HPL_CHARACTERBODY_BROKEN
-        bCollided[i] = CheckRayIntersection(vStart[i],vEnd[i],&fMinDist[i], NULL);
+        bCollided[i] = CheckRayIntersection(vStart[i], vEnd[i], &fMinDist[i], NULL);
 #else
-        bCollided[i] = CheckRayIntersection(vStart[i],vEnd[i],&fMinDist[i], &vNormal[i]);
+        bCollided[i] = CheckRayIntersection(vStart[i], vEnd[i], &fMinDist[i], &vNormal[i]);
 #endif
     }
 
-    bool bFirmlyOnGround = mlOnGroundCount > mlMaxOnGroundCount-4;
+    bool bFirmlyOnGround = mlOnGroundCount > mlMaxOnGroundCount - 4;
     float fMaxHeight = (bFirmlyOnGround || mbClimbing) ? mfMaxStepHeight : mfMaxStepHeightInAir;
 
     /////////////////////////////////
     // Check if the step can be climbed.
-    for(int i=0; i< lNumRays; ++i)
+    for(int i = 0; i < lNumRays; ++i)
     {
-        if(bCollided[i]==false)
+        if(bCollided[i] == false)
         {
             continue;
         }
 
-        float fHeight = mvSize.y/2.0f - fMinDist[i];
+        float fHeight = mvSize.y / 2.0f - fMinDist[i];
 
 #if HPL_CHARACTERBODY_BROKEN
         if(fHeight <= fMaxHeight && fHeight > 0.025f)
         {
             //Check if there is any collision on the new pos
-            cVector3f vStepPos = mvPosition + cVector3f(0,fHeight+mfClimbHeightAdd,0)+ (vMoveDir*fForwadAdd*mfClimbForwardMul);
+            cVector3f vStepPos = mvPosition + cVector3f(0, fHeight + mfClimbHeightAdd, 0) + (vMoveDir * fForwadAdd * mfClimbForwardMul);
 
             if(CheckCharacterFits(vStepPos))
             {
@@ -1849,7 +1849,7 @@ void iCharacterBody::CheckStepClimbing(const cVector3f &avPosAdd, double adFixed
         if(fHeight <= fMaxHeight && fHeight > 0.01f)
         {
             //Check if there is any collision on the new pos
-            cVector3f vStepPos = mvPosition + cVector3f(0,fHeight+mfClimbHeightAdd,0)+ (vMoveDir*fForwadAdd*mfClimbForwardMul);
+            cVector3f vStepPos = mvPosition + cVector3f(0, fHeight + mfClimbHeightAdd, 0) + (vMoveDir * fForwadAdd * mfClimbForwardMul);
 
             if(CheckCharacterFits(vStepPos))
             {
@@ -1877,7 +1877,7 @@ void iCharacterBody::UpdateStepClimbing(double adFixedDelta)
 {
     if(mbClimbing)
     {
-        mfCheckStepClimbCount =0;    //If climbing, we always check
+        mfCheckStepClimbCount = 0;   //If climbing, we always check
         mlOnGroundCount = mlMaxOnGroundCount;
     }
     else
@@ -1895,7 +1895,7 @@ void iCharacterBody::UpdateForces(double adFixedDelta)
 
     ////////////////////
     // Gravity
-    if(mbGravityActive && mbClimbing==false)
+    if(mbGravityActive && mbClimbing == false)
     {
         if(mbCustomGravity)
         {
@@ -1907,17 +1907,17 @@ void iCharacterBody::UpdateForces(double adFixedDelta)
         }
 
         float fLength = mvVelocity.Length();
-        if(fLength> mfMaxGravitySpeed)
+        if(fLength > mfMaxGravitySpeed)
         {
-            mvVelocity = (mvVelocity /fLength) * mfMaxGravitySpeed;
+            mvVelocity = (mvVelocity / fLength) * mfMaxGravitySpeed;
         }
     }
 
 
     //////////////////
     // Normal force
-    mvVelocity += mvForce * ((float)adFixedDelta * (1.0f/mfMass));
-    mvForce =0;
+    mvVelocity += mvForce * ((float)adFixedDelta * (1.0f / mfMass));
+    mvForce = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -1928,14 +1928,14 @@ void iCharacterBody::UpdateFriction(double adFixedDelta)
     // Friction (only do for x and z? Really good idea? I think so!)
     float fFriction = IsOnGround() ? mfGroundFriction : mfAirFriction;
 
-    cVector3f vVelXZ(mvVelocity.x, 0,mvVelocity.z);
+    cVector3f vVelXZ(mvVelocity.x, 0, mvVelocity.z);
     float fSpeed = vVelXZ.Length();
     vVelXZ.Normalize();
 
     fSpeed -= fFriction * (float)adFixedDelta;
-    if(fSpeed<0)
+    if(fSpeed < 0)
     {
-        fSpeed=0;
+        fSpeed = 0;
     }
 
     mvVelocity.x = vVelXZ.x * fSpeed;
@@ -1944,14 +1944,14 @@ void iCharacterBody::UpdateFriction(double adFixedDelta)
     ////////////////////
     // Attachment friction
     fSpeed = mvGravityAttachmentVelocity.Length();
-    if(fSpeed >0)
+    if(fSpeed > 0)
     {
         cVector3f vDir = mvGravityAttachmentVelocity / fSpeed;
 
         fSpeed -= mfAirFriction * (float)adFixedDelta;
-        if(fSpeed<0)
+        if(fSpeed < 0)
         {
-            fSpeed =0;
+            fSpeed = 0;
         }
 
         mvGravityAttachmentVelocity = vDir * fSpeed;
@@ -1996,8 +1996,8 @@ void iCharacterBody::CheckForceCollision(double adFixedDelta)
             vNewVelocity += vNewVelAdd;
 
             //Reset attachment velocity (correct?)
-            mvGravityAttachmentVelocity.x =0;
-            mvGravityAttachmentVelocity.z =0;
+            mvGravityAttachmentVelocity.x = 0;
+            mvGravityAttachmentVelocity.z = 0;
         }
         else
         {
@@ -2031,11 +2031,11 @@ void iCharacterBody::CheckForceCollision(double adFixedDelta)
             mvLastGroundNormal = cMath::Vector3Normalize(vPushBack);
             if(mvLastGroundNormal.y <= 0.2f)
             {
-                mvLastGroundNormal = cVector3f(0,1,0);
+                mvLastGroundNormal = cVector3f(0, 1, 0);
             }
 
             //Reset attachment velocity (correct?)
-            mvGravityAttachmentVelocity.y =0;
+            mvGravityAttachmentVelocity.y = 0;
 
             //Check if the push back is mostly up and velocity points down, else decrement, ie signal that the player is not on ground.
             if(mvVelocity.y && cMath::Vector3Normalize(vPushBack).y >= 0.001f)
@@ -2045,9 +2045,9 @@ void iCharacterBody::CheckForceCollision(double adFixedDelta)
             else
             {
                 mlOnGroundCount--;
-                if(mlOnGroundCount<0)
+                if(mlOnGroundCount < 0)
                 {
-                    mlOnGroundCount =0;
+                    mlOnGroundCount = 0;
                 }
             }
 
@@ -2060,13 +2060,13 @@ void iCharacterBody::CheckForceCollision(double adFixedDelta)
 
             //If the slope is less than a certain angle, then we treat it like a flat (according to gravity dir) surface.
             // >= because cos gets large as angle gets closer to 0.
-            cVector3f vInvGravityNormal = mbCustomGravity ? cMath::Vector3Normalize(mvCustomGravity*-1) : cVector3f(0,1,0);
+            cVector3f vInvGravityNormal = mbCustomGravity ? cMath::Vector3Normalize(mvCustomGravity * -1) : cVector3f(0, 1, 0);
             if(cMath::Vector3Dot(vNormal, vInvGravityNormal) >= mfMaxNoSlideSlopeAngleCos)
             {
                 vNormal = vInvGravityNormal;
             }
 
-            cVector3f vYVel = cVector3f(0,mvVelocity.y, 0);
+            cVector3f vYVel = cVector3f(0, mvVelocity.y, 0);
 
             //float fDot = cMath::Vector3Dot(vNormal, vInvGravityNormal);
             //float fAngle = cMath::ToDeg(acos(fDot));
@@ -2085,9 +2085,9 @@ void iCharacterBody::CheckForceCollision(double adFixedDelta)
         {
             //Decerement the ground count,
             mlOnGroundCount--;
-            if(mlOnGroundCount<0)
+            if(mlOnGroundCount < 0)
             {
-                mlOnGroundCount =0;
+                mlOnGroundCount = 0;
             }
 
             //Calculate the new velocity
@@ -2095,12 +2095,12 @@ void iCharacterBody::CheckForceCollision(double adFixedDelta)
 
             ///////////////////////////
             //If no collision and on ground and not climbing then cast ray to get ground normal
-            if(mlOnGroundCount > 0 && mbClimbing==false)
+            if(mlOnGroundCount > 0 && mbClimbing == false)
             {
                 mpRayCallback->Clear();
-                cVector3f vStart = GetFeetPosition() + cVector3f(0,0.001f,0);
-                cVector3f vEnd = vStart - cVector3f(0,mvSize.x*2.0001f,0);
-                mpWorld->CastRay(mpRayCallback,vStart,vEnd,true,true,false);
+                cVector3f vStart = GetFeetPosition() + cVector3f(0, 0.001f, 0);
+                cVector3f vEnd = vStart - cVector3f(0, mvSize.x * 2.0001f, 0);
+                mpWorld->CastRay(mpRayCallback, vStart, vEnd, true, true, false);
 
                 //Check if there was a collision and also check so normal is not too steep
                 if(mpRayCallback->mbCollide && mpRayCallback->mvNormal.y > 0.2f)
@@ -2109,7 +2109,7 @@ void iCharacterBody::CheckForceCollision(double adFixedDelta)
                 }
                 else
                 {
-                    mvLastGroundNormal = cVector3f(0,1,0);
+                    mvLastGroundNormal = cVector3f(0, 1, 0);
                 }
             }
         }
@@ -2142,11 +2142,11 @@ void iCharacterBody::UpdateForcePushing(double adFixedDelta)
     mvTempBodies.resize(0);
     mpWorld->GetBodiesInBV(&boundingVolume, &mvTempBodies);
 
-    for(size_t i=0; i<mvTempBodies.size(); ++i)
+    for(size_t i = 0; i < mvTempBodies.size(); ++i)
     {
         iPhysicsBody *pBody = mvTempBodies[i];
 
-        if(pBody->IsActive()==false)
+        if(pBody->IsActive() == false)
         {
             continue;
         }
@@ -2154,23 +2154,23 @@ void iCharacterBody::UpdateForcePushing(double adFixedDelta)
         {
             continue;
         }
-        if(pBody->IsCharacter() && mbCollideCharacter==false)
+        if(pBody->IsCharacter() && mbCollideCharacter == false)
         {
             continue;
         }
-        if(pBody->GetCollideCharacter()==false)
+        if(pBody->GetCollideCharacter() == false)
         {
             continue;
         }
 
-        if(cMath::CheckBVIntersection(boundingVolume,*pBody->GetBoundingVolume())==false)
+        if(cMath::CheckBVIntersection(boundingVolume, *pBody->GetBoundingVolume()) == false)
         {
             continue;
         }
 
         collideData.SetMaxSize(32);
-        bool bRet = mpWorld->CheckShapeCollision(pBody->GetShape(),pBody->GetLocalMatrix(),
-                    mpCurrentShape,mtxTransform,
+        bool bRet = mpWorld->CheckShapeCollision(pBody->GetShape(), pBody->GetLocalMatrix(),
+                    mpCurrentShape, mtxTransform,
                     collideData, 32, true);
 
         if(bRet)
@@ -2184,14 +2184,14 @@ void iCharacterBody::UpdateForcePushing(double adFixedDelta)
 
             ////////////////////////
             //Iterate contact points and add a spring force.
-            for(int i=0; i< collideData.mlNumOfPoints; i++)
+            for(int i = 0; i < collideData.mlNumOfPoints; i++)
             {
                 cCollidePoint &point = collideData.mvContactPoints[i];
 
                 cVector3f vBodyVelocityAtPos = pBody->GetVelocityAtPosition(point.mvPoint);
 
                 cVector3f vForce = point.mvNormal * point.mfDepth * fC -
-                                   point.mvNormal * cMath::Vector3Dot(vBodyVelocityAtPos,point.mvNormal)  * fV;
+                                   point.mvNormal * cMath::Vector3Dot(vBodyVelocityAtPos, point.mvNormal)  * fV;
 
                 float fLength = vForce.Length();
                 if(fLength > fMaxForce)
@@ -2210,14 +2210,14 @@ void iCharacterBody::UpdateForcePushing(double adFixedDelta)
 
 void iCharacterBody::UpdateCamera()
 {
-    if(mpCamera==NULL)
+    if(mpCamera == NULL)
     {
         return;
     }
 
     //////////////////
     //Get the camera pos add.
-    cVector3f vAdd=0;
+    cVector3f vAdd = 0;
     vAdd.y += mvCameraPosAdd.y;
     vAdd += mvRight * mvCameraPosAdd.x;
     vAdd += mvForward * mvCameraPosAdd.z;
@@ -2226,9 +2226,9 @@ void iCharacterBody::UpdateCamera()
 
     ///////////////////////////////
     //Do NOT do any smoothing
-    if(mlCameraSmoothPosNum <=0)
+    if(mlCameraSmoothPosNum <= 0)
     {
-        cVector3f vPos = mvPosition + cVector3f(0,fMainHeight - mvSize.y/2.0f,0);
+        cVector3f vPos = mvPosition + cVector3f(0, fMainHeight - mvSize.y / 2.0f, 0);
         mpCamera->SetPosition(vPos + vAdd);
     }
     ///////////////////////////////
@@ -2237,7 +2237,7 @@ void iCharacterBody::UpdateCamera()
     {
         //////////////////////////////
         //Add the newest position.
-        cVector3f vHeadPos = mvPosition + cVector3f(0,fMainHeight - mvSize.y/2.0f,0);
+        cVector3f vHeadPos = mvPosition + cVector3f(0, fMainHeight - mvSize.y / 2.0f, 0);
         mlstCameraPos.push_back(vHeadPos);
 
         //If to too large remove the oldest.
@@ -2251,9 +2251,9 @@ void iCharacterBody::UpdateCamera()
         /////////////////////////////////////////
         //Add all positions and devide by the number of em.
         //that way we get the average
-        cVector3f vTotalPos(0,0,0);
-        tVector3fListIt it=mlstCameraPos.begin();
-        for(; it!= mlstCameraPos.end(); ++it)
+        cVector3f vTotalPos(0, 0, 0);
+        tVector3fListIt it = mlstCameraPos.begin();
+        for(; it != mlstCameraPos.end(); ++it)
         {
             vTotalPos += *it;
         }
@@ -2278,7 +2278,7 @@ void iCharacterBody::UpdateCamera()
 
 void iCharacterBody::UpdateEntity()
 {
-    if(mpEntity==NULL)
+    if(mpEntity == NULL)
     {
         return;
     }
@@ -2288,7 +2288,7 @@ void iCharacterBody::UpdateEntity()
     float fSmoothY = mvPosition.y;
     if(mbEntitySmoothYPos)
     {
-        fSmoothY =0.0f;
+        fSmoothY = 0.0f;
         mlstEntityYPositions.push_back(mvPosition.y);
         if((int)mlstEntityYPositions.size() > mlEntitySmoothYPosNum)
         {
@@ -2305,12 +2305,12 @@ void iCharacterBody::UpdateEntity()
 
     ///////////////////////////////
     //Do NOT do any smoothing
-    if(mlEntitySmoothPosNum <=0)
+    if(mlEntitySmoothPosNum <= 0)
     {
         cMatrixf mtxEntity = cMath::MatrixRotateY(mfYaw);
         mtxEntity.SetTranslation(cVector3f(mvPosition.x, fSmoothY, mvPosition.z));
 
-        mpEntity->SetMatrix(cMath::MatrixMul(mtxEntity,m_mtxEntityOffset));
+        mpEntity->SetMatrix(cMath::MatrixMul(mtxEntity, m_mtxEntityOffset));
     }
     //Smooth the entity position
     else
@@ -2330,9 +2330,9 @@ void iCharacterBody::UpdateEntity()
         //////////////////////////////////
         //Add all positions and devide by the number of em.
         //that way we get the average
-        cVector3f vTotalPos(0,0,0);
-        tVector3fListIt it=mlstEntityPos.begin();
-        for(; it!= mlstEntityPos.end(); ++it)
+        cVector3f vTotalPos(0, 0, 0);
+        tVector3fListIt it = mlstEntityPos.begin();
+        for(; it != mlstEntityPos.end(); ++it)
         {
             vTotalPos += *it;
         }
@@ -2348,10 +2348,10 @@ void iCharacterBody::UpdateEntity()
         cMatrixf mtxEntity = m_mtxMove;
         mtxEntity.SetTranslation(0);
 
-        mtxEntity = cMath::MatrixMul(m_mtxEntityPostOffset,mtxEntity);
+        mtxEntity = cMath::MatrixMul(m_mtxEntityPostOffset, mtxEntity);
         mtxEntity.SetTranslation(mtxEntity.GetTranslation() + vPos);
 
-        mtxEntity = cMath::MatrixMul(mtxEntity,m_mtxEntityOffset);
+        mtxEntity = cMath::MatrixMul(mtxEntity, m_mtxEntityOffset);
 
         mpEntity->SetMatrix(mtxEntity);
     }
@@ -2378,7 +2378,7 @@ void iCharacterBody::ClearGravityAttachment()
 
 void iCharacterBody::UpdateGravityAttachment()
 {
-    if(mpGravityAttachedBody==NULL)
+    if(mpGravityAttachedBody == NULL)
     {
         ////////////////////////
         //If the character was just attached, do somethings
@@ -2390,7 +2390,7 @@ void iCharacterBody::UpdateGravityAttachment()
         return;
     }
 
-    mvGravityAttachmentVelocity =0;
+    mvGravityAttachmentVelocity = 0;
 
     //Log("Attched body: %s\n", mpGravityAttachedBody->GetName().c_str());
 
@@ -2404,7 +2404,7 @@ void iCharacterBody::UpdateGravityAttachment()
         {
             //Transform the position
             cMatrixf mtxInvPrevWorld = cMath::MatrixInverse(m_mtxGravityAttachedPrevMatrix);
-            cMatrixf mtxDelta = cMath::MatrixMul(mpGravityAttachedBody->GetWorldMatrix(),mtxInvPrevWorld);
+            cMatrixf mtxDelta = cMath::MatrixMul(mpGravityAttachedBody->GetWorldMatrix(), mtxInvPrevWorld);
 
             mvPosition = cMath::MatrixMul(mtxDelta, mvPosition);
 
@@ -2414,8 +2414,8 @@ void iCharacterBody::UpdateGravityAttachment()
                 cMatrixf mtxRotDelta = cMath::MatrixMul(mpGravityAttachedBody->GetWorldMatrix().GetRotation(),
                                                         mtxInvPrevWorld.GetRotation());
 
-                cVector3f vForward = cMath::MatrixMul(mtxRotDelta, cVector3f(0,0,-1));
-                vForward.y =0; //only get x,z part.
+                cVector3f vForward = cMath::MatrixMul(mtxRotDelta, cVector3f(0, 0, -1));
+                vForward.y = 0; //only get x,z part.
                 float fLength = vForward.Length();
                 if(fLength > 0.0001f)
                 {
@@ -2500,7 +2500,7 @@ void iCharacterBody::EnableBodiesAroundCharacter()
 bool iCharacterBody::CheckCollision(cVector3f *apPushBackVector, const cVector3f& avPos, iPhysicsWorldCollisionCallback *apCallback,
                                     int alShapeIdx)
 {
-    if(alShapeIdx <0)
+    if(alShapeIdx < 0)
     {
         alShapeIdx = mlCurrentShapeIdx;
     }
@@ -2508,7 +2508,7 @@ bool iCharacterBody::CheckCollision(cVector3f *apPushBackVector, const cVector3f
 
     return mpWorld->CheckShapeWorldCollision(apPushBackVector, pShape, cMath::MatrixTranslate(avPos),
             mpCurrentBody, false, true,
-            apCallback, true,mlMinBodyPushStrength,
+            apCallback, true, mlMinBodyPushStrength,
             mlCollideFlags, false);
 }
 

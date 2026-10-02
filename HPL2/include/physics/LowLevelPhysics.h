@@ -15,7 +15,7 @@ class iLowLevelPhysics
 public:
     virtual ~iLowLevelPhysics() {}
 
-    virtual iPhysicsWorld* CreateWorld()=0;
+    virtual iPhysicsWorld *CreateWorld() = 0;
 };
 };
 #endif // HPL_LOWLEVELPHYSICS_H

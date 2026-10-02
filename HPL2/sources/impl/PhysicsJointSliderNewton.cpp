@@ -16,19 +16,19 @@ namespace hpl
 
 cPhysicsJointSliderNewton::cPhysicsJointSliderNewton(const tString &asName,
         iPhysicsBody *apParentBody, iPhysicsBody *apChildBody,
-        iPhysicsWorld *apWorld,const cVector3f &avPivotPoint, const cVector3f& avPinDir)
-    : iPhysicsJointNewton<iPhysicsJointSlider>(asName,apParentBody,apChildBody,apWorld,avPivotPoint,avPinDir)
+        iPhysicsWorld *apWorld, const cVector3f &avPivotPoint, const cVector3f& avPinDir)
+    : iPhysicsJointNewton<iPhysicsJointSlider>(asName, apParentBody, apChildBody, apWorld, avPivotPoint, avPinDir)
 {
     mpNewtonJoint = NewtonConstraintCreateSlider(mpNewtonWorld, avPivotPoint.v, avPinDir.v, mpNewtonChildBody,
                     mpNewtonParentBody);
 
     NewtonJointSetUserData(mpNewtonJoint, (void*) this);
-    NewtonSliderSetUserCallback(mpNewtonJoint,LimitCallback);
+    NewtonSliderSetUserCallback(mpNewtonJoint, LimitCallback);
 
-    mfMaxDistance =0;
-    mfMinDistance =0;
+    mfMaxDistance = 0;
+    mfMinDistance = 0;
 
-    mfPreviousDist =0;
+    mfPreviousDist = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -72,12 +72,12 @@ cVector3f cPhysicsJointSliderNewton::GetVelocity()
 }
 cVector3f cPhysicsJointSliderNewton::GetAngularVelocity()
 {
-    return cVector3f(0,0,0);
+    return cVector3f(0, 0, 0);
 }
 float cPhysicsJointSliderNewton::GetForceSize()
 {
     cVector3f vForce;
-    NewtonSliderGetJointForce(mpNewtonJoint,&vForce.v[0]);
+    NewtonSliderGetJointForce(mpNewtonJoint, &vForce.v[0]);
     return vForce.Length();
 }
 
@@ -116,14 +116,14 @@ unsigned cPhysicsJointSliderNewton::LimitCallback(const NewtonJoint* pSlider, Ne
     }
 
     //Avoid oscillation
-    CheckLimitAutoSleep(pSliderJoint, pSliderJoint->mfMinDistance,pSliderJoint->mfMaxDistance,fDistance);
+    CheckLimitAutoSleep(pSliderJoint, pSliderJoint->mfMinDistance, pSliderJoint->mfMaxDistance, fDistance);
 
     if (fDistance < pSliderJoint->mfMinDistance)
     {
         pSliderJoint->OnMinLimit();
 
         pDesc->m_accel = NewtonSliderCalculateStopAccel (pSlider, pDesc, pSliderJoint->mfMinDistance);
-        pDesc->m_minFriction =0;
+        pDesc->m_minFriction = 0;
 
         //Log("Under Min. Acc: %f Dist %f\n",pDesc->m_accel,fDistance);
 
@@ -136,7 +136,7 @@ unsigned cPhysicsJointSliderNewton::LimitCallback(const NewtonJoint* pSlider, Ne
         pSliderJoint->OnMaxLimit();
 
         pDesc->m_accel = NewtonSliderCalculateStopAccel (pSlider, pDesc, pSliderJoint->mfMaxDistance);
-        pDesc->m_maxFriction =0;
+        pDesc->m_maxFriction = 0;
 
         pSliderJoint->mfPreviousDist = fDistance;
 
@@ -145,7 +145,7 @@ unsigned cPhysicsJointSliderNewton::LimitCallback(const NewtonJoint* pSlider, Ne
     }
     else
     {
-        if(pSliderJoint->mpParentBody ==NULL || pSliderJoint->mpParentBody->GetMass()==0)
+        if(pSliderJoint->mpParentBody == NULL || pSliderJoint->mpParentBody->GetMass() == 0)
         {
             if( (pSliderJoint->mbStickyMaxLimit && pSliderJoint->mfPreviousDist > pSliderJoint->mfMaxDistance) ||
                     (pSliderJoint->mbStickyMinLimit && pSliderJoint->mfPreviousDist < pSliderJoint->mfMinDistance) )

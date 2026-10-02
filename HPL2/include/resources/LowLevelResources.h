@@ -15,10 +15,10 @@ class iLowLevelResources
 public:
     virtual ~iLowLevelResources() {}
 
-    virtual void AddBitmapLoaders(cBitmapLoaderHandler* apHandler)=0;
-    virtual void AddMeshLoaders(cMeshLoaderHandler* apHandler)=0;
+    virtual void AddBitmapLoaders(cBitmapLoaderHandler* apHandler) = 0;
+    virtual void AddMeshLoaders(cMeshLoaderHandler* apHandler) = 0;
 
-    virtual iXmlDocument* CreateXmlDocument(const tString& asName="")=0;
+    virtual iXmlDocument *CreateXmlDocument(const tString& asName = "") = 0;
 };
 };
 #endif // HPL_LOWLEVELRESOURCES_H

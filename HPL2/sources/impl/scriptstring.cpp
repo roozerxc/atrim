@@ -675,13 +675,13 @@ void RegisterScriptString_Native(asIScriptEngine *engine)
     assert( r >= 0 );
     r = engine->RegisterObjectBehaviour("string", asBEHAVE_FACTORY,    "string @f(const string &in)", asFUNCTION(StringCopyFactory), asCALL_CDECL);
     assert( r >= 0 );
-    r = engine->RegisterObjectBehaviour("string", asBEHAVE_ADDREF,     "void f()",                    asMETHOD(CScriptString,AddRef), asCALL_THISCALL);
+    r = engine->RegisterObjectBehaviour("string", asBEHAVE_ADDREF,     "void f()",                    asMETHOD(CScriptString, AddRef), asCALL_THISCALL);
     assert( r >= 0 );
-    r = engine->RegisterObjectBehaviour("string", asBEHAVE_RELEASE,    "void f()",                    asMETHOD(CScriptString,Release), asCALL_THISCALL);
+    r = engine->RegisterObjectBehaviour("string", asBEHAVE_RELEASE,    "void f()",                    asMETHOD(CScriptString, Release), asCALL_THISCALL);
     assert( r >= 0 );
-    r = engine->RegisterObjectMethod("string", "string &opAssign(const string &in)", asMETHODPR(CScriptString, operator =, (const CScriptString&), CScriptString&), asCALL_THISCALL);
+    r = engine->RegisterObjectMethod("string", "string &opAssign(const string &in)", asMETHODPR(CScriptString, operator =, (const CScriptString &), CScriptString &), asCALL_THISCALL);
     assert( r >= 0 );
-    r = engine->RegisterObjectMethod("string", "string &opAddAssign(const string &in)", asMETHODPR(CScriptString, operator+=, (const CScriptString&), CScriptString&), asCALL_THISCALL);
+    r = engine->RegisterObjectMethod("string", "string &opAddAssign(const string &in)", asMETHODPR(CScriptString, operator+=, (const CScriptString &), CScriptString &), asCALL_THISCALL);
     assert( r >= 0 );
 
     // Register the factory to return a handle to a new string

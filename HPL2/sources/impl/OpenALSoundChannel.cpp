@@ -13,12 +13,12 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cOpenALSoundChannel::cOpenALSoundChannel(iSoundData* apData, int alChannel,cSoundManager* apSoundManger)
+cOpenALSoundChannel::cOpenALSoundChannel(iSoundData* apData, int alChannel, cSoundManager* apSoundManger)
     : iSoundChannel(apData, apSoundManger)
 {
     mlChannel = alChannel;
 
-    for(int i=0; i<3; i++)
+    for(int i = 0; i < 3; i++)
     {
         mfPosition[i] = 0;
         mfVelocity[i] = 0;
@@ -37,7 +37,7 @@ cOpenALSoundChannel::cOpenALSoundChannel(iSoundData* apData, int alChannel,cSoun
 
 cOpenALSoundChannel::~cOpenALSoundChannel()
 {
-    if(mlChannel>=0)
+    if(mlChannel >= 0)
     {
         OAL_Source_Stop ( mlChannel );
     }
@@ -198,7 +198,7 @@ void cOpenALSoundChannel::SetElapsedTime(double afTime)
 {
     if(afTime < 0)
     {
-        afTime =0;
+        afTime = 0;
     }
     if(afTime > GetTotalTime())
     {
@@ -212,8 +212,8 @@ void cOpenALSoundChannel::SetElapsedTime(double afTime)
 
 void cOpenALSoundChannel::SetPriority(int alX)
 {
-    int lPrio = alX+mlPriorityModifier;
-    if(lPrio>255)
+    int lPrio = alX + mlPriorityModifier;
+    if(lPrio > 255)
     {
         lPrio = 255;
     }
@@ -239,11 +239,11 @@ void cOpenALSoundChannel::SetAffectedByEnv(bool abAffected)
 
     if (mbAffectedByEnv)
     {
-        OAL_Source_SetAuxSendSlot(mlChannel,0,0);
+        OAL_Source_SetAuxSendSlot(mlChannel, 0, 0);
     }
     else
     {
-        OAL_Source_SetAuxSendSlot(mlChannel,0,-1);
+        OAL_Source_SetAuxSendSlot(mlChannel, 0, -1);
     }
 }
 
@@ -252,7 +252,7 @@ void cOpenALSoundChannel::SetFiltering(bool abEnabled, int alFlags)
 //        if (!(gpGame->GetSound()->GetLowLevel()->IsEnvAudioAvailable()))
 //            return;
 
-    OAL_Source_SetFiltering(mlChannel,abEnabled, alFlags);
+    OAL_Source_SetFiltering(mlChannel, abEnabled, alFlags);
 }
 
 void cOpenALSoundChannel::SetFilterGain(float afGain)

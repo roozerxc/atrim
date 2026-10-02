@@ -13,19 +13,19 @@ class cSoundEntityData;
 class cSoundEntityManager : public iResourceManager
 {
 public:
-    cSoundEntityManager(cSound* apSound,cResources *apResources);
+    cSoundEntityManager(cSound* apSound, cResources *apResources);
     ~cSoundEntityManager();
 
     void Preload(const tString& asFile);
 
-    cSoundEntityData* CreateSoundEntity(const tString& asName);
+    cSoundEntityData *CreateSoundEntity(const tString& asName);
 
     void Destroy(iResourceBase* apResource);
     void Unload(iResourceBase* apResource);
 
 private:
-    cSound* mpSound;
-    cResources* mpResources;
+    cSound *mpSound;
+    cResources *mpResources;
 };
 
 };

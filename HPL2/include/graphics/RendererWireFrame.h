@@ -18,7 +18,7 @@ class iLight;
 class cRendererWireFrame : public  iRenderer
 {
 public:
-    cRendererWireFrame(cGraphics *apGraphics,cResources* apResources);
+    cRendererWireFrame(cGraphics *apGraphics, cResources* apResources);
     ~cRendererWireFrame();
 
     bool LoadData();

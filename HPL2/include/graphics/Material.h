@@ -52,7 +52,7 @@ public:
     virtual ~cMaterial();
 
     void SetType(iMaterialType* apType);
-    iMaterialType * GetType()
+    iMaterialType *GetType()
     {
         return mpType;
     }
@@ -66,11 +66,11 @@ public:
     {
         mpVars = apVars;
     }
-    iMaterialVars* GetVars()
+    iMaterialVars *GetVars()
     {
         return mpVars;
     }
-    cResourceVarsObject* GetVarsObject();
+    cResourceVarsObject *GetVarsObject();
     void LoadVariablesFromVarsObject(cResourceVarsObject* apVarsObject);
 
     void SetAutoDestroyTextures(bool abX)
@@ -109,7 +109,7 @@ public:
     }
     void  SetWorldReflectionOcclusionTest(bool abX)
     {
-        mbWorldReflectionOcclusionTest=abX;
+        mbWorldReflectionOcclusionTest = abX;
     }
     void SetMaxReflectionDistance(float afX)
     {
@@ -160,11 +160,11 @@ public:
         return mbAffectedByFog;
     }
 
-    inline iTexture* GetTextureInUnit(eMaterialRenderMode aRenderMode, int alUnit) const
+    inline iTexture *GetTextureInUnit(eMaterialRenderMode aRenderMode, int alUnit) const
     {
         return mvTextureInUnit[aRenderMode][alUnit];
     }
-    inline iGpuProgram* GetProgram(char alSkeleton,eMaterialRenderMode aRenderMode) const
+    inline iGpuProgram *GetProgram(char alSkeleton, eMaterialRenderMode aRenderMode) const
     {
         return mvPrograms[alSkeleton][aRenderMode];
     }
@@ -185,7 +185,7 @@ public:
     {
         msPhysicsMaterial = asPhysicsMaterial;
     }
-    const tString& GetPhysicsMaterial()
+    const tString &GetPhysicsMaterial()
     {
         return msPhysicsMaterial;
     }
@@ -205,7 +205,7 @@ public:
     {
         return mbHasSpecificSettings[aMode];
     }
-    void SetHasSpecificSettings(eMaterialRenderMode aMode,bool abX)
+    void SetHasSpecificSettings(eMaterialRenderMode aMode, bool abX)
     {
         mbHasSpecificSettings[aMode] = abX;
     }
@@ -214,7 +214,7 @@ public:
     {
         return  mbHasObjectSpecificsSettings[aMode];
     }
-    void SetHasObjectSpecificsSettings(eMaterialRenderMode aMode,bool abX)
+    void SetHasObjectSpecificsSettings(eMaterialRenderMode aMode, bool abX)
     {
         mbHasObjectSpecificsSettings[aMode] = abX;
     }
@@ -233,7 +233,7 @@ public:
     {
         return mbHasUvAnimation;
     }
-    inline const cMatrixf& GetUvMatrix() const
+    inline const cMatrixf &GetUvMatrix() const
     {
         return m_mtxUV;
     }
@@ -297,8 +297,8 @@ private:
     bool mbUseAlphaDissolveFilter;
 
     iGpuProgram *mvPrograms[2][eMaterialRenderMode_LastEnum]; //[2] == If it has skeleton or not.
-    iTexture* mvTextures[eMaterialTexture_LastEnum];
-    iTexture* mvTextureInUnit[eMaterialRenderMode_LastEnum][kMaxTextureUnits];
+    iTexture *mvTextures[eMaterialTexture_LastEnum];
+    iTexture *mvTextureInUnit[eMaterialRenderMode_LastEnum][kMaxTextureUnits];
 
     std::vector<cMaterialUvAnimation> mvUvAnimations;
     bool mbHasUvAnimation;

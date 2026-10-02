@@ -22,7 +22,7 @@ public:
     virtual ~iRenderContainerData() {}
 };
 
-typedef std::list<iRenderContainerData*> tRenderContainerDataList;
+typedef std::list<iRenderContainerData *> tRenderContainerDataList;
 typedef tRenderContainerDataList::iterator tRenderContainerDataListIt;
 
 //-----------------------------------------
@@ -37,11 +37,11 @@ public:
     iEntity3D(tString asName);
     virtual ~iEntity3D();
 
-    virtual tString GetEntityType()=0;
+    virtual tString GetEntityType() = 0;
 
     virtual void UpdateLogic(double adFixedDelta) {}
 
-    tString& GetName()
+    tString &GetName()
     {
         return msName;
     }
@@ -50,7 +50,7 @@ public:
         msName = asName;
     }
 
-    cNode3D* GetParent()
+    cNode3D *GetParent()
     {
         return mpParentNode;
     }
@@ -60,10 +60,10 @@ public:
     }
     bool HasParent()
     {
-        return mpParentNode!=NULL;
+        return mpParentNode != NULL;
     }
 
-    iEntity3D* GetParentEntity()
+    iEntity3D *GetParentEntity()
     {
         return mpParent;
     }
@@ -73,7 +73,7 @@ public:
     }
     bool HasParentEntity()
     {
-        return mpParent!=NULL;
+        return mpParent != NULL;
     }
 
     bool IsActive()
@@ -86,10 +86,10 @@ public:
     }
 
     cVector3f GetLocalPosition();
-    cMatrixf& GetLocalMatrix();
+    cMatrixf &GetLocalMatrix();
 
     cVector3f GetWorldPosition();
-    cMatrixf& GetWorldMatrix();
+    cMatrixf &GetWorldMatrix();
 
     void SetPosition(const cVector3f& avPos);
     void SetMatrix(const cMatrixf& a_mtxTransform);
@@ -109,12 +109,12 @@ public:
     {
         msSourceFile = asFile;
     }
-    const tString& GetSourceFile()
+    const tString &GetSourceFile()
     {
         return msSourceFile;
     }
 
-    virtual cBoundingVolume* GetBoundingVolume();
+    virtual cBoundingVolume *GetBoundingVolume();
 
     bool IsSaved()
     {
@@ -162,7 +162,7 @@ public:
 protected:
     virtual void OnTransformUpdated() {}
 
-    cNode3D* mpParentNode;
+    cNode3D *mpParentNode;
 
     tString msName;
     bool mbIsActive;

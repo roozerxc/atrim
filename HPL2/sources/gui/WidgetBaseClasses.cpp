@@ -69,9 +69,9 @@ cWidgetItem::~cWidgetItem()
 
 //------------------------------------------------------------------------
 
-cWidgetItemProperty* cWidgetItem::GetProperty(int alIdx) const
+cWidgetItemProperty *cWidgetItem::GetProperty(int alIdx) const
 {
-    if(alIdx>=0 && alIdx<(int)mvProperties.size())
+    if(alIdx >= 0 && alIdx < (int)mvProperties.size())
     {
         return mvProperties[alIdx];
     }
@@ -82,7 +82,7 @@ cWidgetItemProperty* cWidgetItem::GetProperty(int alIdx) const
 
 void cWidgetItem::AddProperty(const tWString& asText)
 {
-    cWidgetItemProperty* pProp = hplNew(cWidgetItemProperty,(asText));
+    cWidgetItemProperty* pProp = hplNew(cWidgetItemProperty, (asText));
 
     mvProperties.push_back(pProp);
 }
@@ -107,7 +107,7 @@ int cWidgetItem::GetPropertyNum()
 
 void cWidgetItem::SetSelected(bool abX)
 {
-    if(mbSelected==abX)
+    if(mbSelected == abX)
     {
         return;
     }
@@ -143,14 +143,14 @@ iWidgetItemContainer::~iWidgetItemContainer()
 
 //-----------------------------------------------------------------------
 
-cWidgetItem* iWidgetItemContainer::AddItem(const tString& asText)
+cWidgetItem *iWidgetItemContainer::AddItem(const tString& asText)
 {
     return AddItem(cString::To16Char(asText));
 }
 
 //-----------------------------------------------------------------------
 
-cWidgetItem* iWidgetItemContainer::AddItem(const tWString &asText)
+cWidgetItem *iWidgetItemContainer::AddItem(const tWString &asText)
 {
     cWidgetItem* pItem = hplNew(cWidgetItem, (this));
 
@@ -166,7 +166,7 @@ cWidgetItem* iWidgetItemContainer::AddItem(const tWString &asText)
 
 //-----------------------------------------------------------------------
 
-cWidgetItem* iWidgetItemContainer::AddItem()
+cWidgetItem *iWidgetItemContainer::AddItem()
 {
     return AddItem(_W(""));
 }
@@ -175,9 +175,9 @@ cWidgetItem* iWidgetItemContainer::AddItem()
 
 void iWidgetItemContainer::RemoveItem(int alX)
 {
-    int lCount =0;
+    int lCount = 0;
     tWidgetItemVecIt it = mvItems.begin();
-    for(; it != mvItems.end(); ++it,++lCount)
+    for(; it != mvItems.end(); ++it, ++lCount)
     {
         if(lCount == alX)
         {
@@ -219,9 +219,9 @@ void iWidgetItemContainer::ClearItems()
 
 //-----------------------------------------------------------------------
 
-cWidgetItem* iWidgetItemContainer::GetItem(int alX) const
+cWidgetItem *iWidgetItemContainer::GetItem(int alX) const
 {
-    if(alX>=0 && alX<(int)mvItems.size())
+    if(alX >= 0 && alX < (int)mvItems.size())
     {
         return mvItems[alX];
     }
@@ -230,9 +230,9 @@ cWidgetItem* iWidgetItemContainer::GetItem(int alX) const
         return NULL;
     }
 }
-const tWString& iWidgetItemContainer::GetItemText(int alX) const
+const tWString &iWidgetItemContainer::GetItemText(int alX) const
 {
-    if(alX>=0 && alX<(int)mvItems.size())
+    if(alX >= 0 && alX < (int)mvItems.size())
     {
         return mvItems[alX]->GetText();
     }
@@ -243,7 +243,7 @@ const tWString& iWidgetItemContainer::GetItemText(int alX) const
 }
 void iWidgetItemContainer::SetItemText(int alX, const tWString& asText)
 {
-    if(alX>=0 && alX<(int)mvItems.size())
+    if(alX >= 0 && alX < (int)mvItems.size())
     {
         mvItems[alX]->SetText(asText);
     }
@@ -298,7 +298,7 @@ iFileBrowser::iFileBrowser(const tWString& asStartPath, bool abAddHiddenFiles)
         {
             mvSystemRootFolders.push_back(sDrive);
         }
-        sDrive[13]+=1;
+        sDrive[13] += 1;
         lAvailableDrives >>= 1;
     }
 
@@ -341,7 +341,7 @@ iFileBrowser::~iFileBrowser()
 
 void iFileBrowser::InitBrowser()
 {
-    if(NavigateTo(msStartPath)==false)
+    if(NavigateTo(msStartPath) == false)
     {
         NavigateTo(_W("<System Root>"));
     }
@@ -357,10 +357,10 @@ int iFileBrowser::AddCategory(const tWString &asCategory, const tWString &asFilt
 
     mvCategories.push_back(pCat);
 
-    int lIndex = (int)mvCategories.size()-1;
-    if(asFilter!=_W(""))
+    int lIndex = (int)mvCategories.size() - 1;
+    if(asFilter != _W(""))
     {
-        AddFilter(lIndex,asFilter);
+        AddFilter(lIndex, asFilter);
     }
 
     return lIndex;
@@ -370,7 +370,7 @@ int iFileBrowser::AddCategory(const tWString &asCategory, const tWString &asFilt
 
 void iFileBrowser::AddFilter(const int alCategoryId, const tWString &asFilter)
 {
-    if(alCategoryId>=0 && alCategoryId<(int)mvCategories.size())
+    if(alCategoryId >= 0 && alCategoryId < (int)mvCategories.size())
     {
         mvCategories[alCategoryId]->mvFilters.push_back(asFilter);
 
@@ -388,8 +388,8 @@ void iFileBrowser::AddFilter(const int alCategoryId, const tWString &asFilter)
 
 void iFileBrowser::GetFilesAndFoldersInCurrentPath(int alCategoryIndex, tWStringList& alstDestination)
 {
-    if(alCategoryIndex<0 ||
-            alCategoryIndex>=(int)mvCategories.size())
+    if(alCategoryIndex < 0 ||
+            alCategoryIndex >= (int)mvCategories.size())
     {
         return;
     }
@@ -407,14 +407,14 @@ void iFileBrowser::GetFilesAndFoldersInCurrentPath(int alCategoryIndex, tWString
     // Get folders and files in current path
     cPlatform::FindFoldersInDir(lstFolders, sCurrentFullPath, mbAddHiddenFiles, true);
 
-    for(int i=0; i<(int)pCat->mvFilters.size(); ++i)
+    for(int i = 0; i < (int)pCat->mvFilters.size(); ++i)
     {
         cPlatform::FindFilesInDir(lstFiles, sCurrentFullPath, pCat->mvFilters[i], mbAddHiddenFiles);
     }
     lstFiles.sort();
 
-    alstDestination.insert(alstDestination.end(),lstFolders.begin(), lstFolders.end());
-    alstDestination.insert(alstDestination.end(),lstFiles.begin(), lstFiles.end());
+    alstDestination.insert(alstDestination.end(), lstFolders.begin(), lstFolders.end());
+    alstDestination.insert(alstDestination.end(), lstFiles.begin(), lstFiles.end());
 
 }
 
@@ -438,11 +438,11 @@ eFileBrowserFileType iFileBrowser::GetFileTypeByName(const tWString &asFilename)
     tWString sExt = cString::GetFileExtW(asFilename);
     sExt = cString::ToLowerCaseW(sExt);
 
-    for(int i=0; i<(int)mvFileTypeExtensions.size(); ++i)
+    for(int i = 0; i < (int)mvFileTypeExtensions.size(); ++i)
     {
         tWStringVec& vFileExtensions = mvFileTypeExtensions[i];
 
-        for(int j=0; j<(int)vFileExtensions.size(); ++j)
+        for(int j = 0; j < (int)vFileExtensions.size(); ++j)
         {
             if(sExt == vFileExtensions[j])
             {
@@ -467,35 +467,35 @@ eFileBrowserFileType iFileBrowser::GetFileTypeByName(const tWString &asFilename)
  */
 bool iFileBrowser::NavigateTo(const tWString& asPath)
 {
-    if(asPath==_W("<System Root>"))
+    if(asPath == _W("<System Root>"))
     {
         mvCurrentDirFullPath.clear();
     }
-    else if(asPath==_W("<Game Folder>"))
+    else if(asPath == _W("<Game Folder>"))
     {
         SetPathFromString(iFileBrowser::msGameDir);
     }
-    else if(asPath==_W("<Personal Folder>"))
+    else if(asPath == _W("<Personal Folder>"))
     {
         SetPathFromString(cPlatform::GetWorkingDir() + iFileBrowser::msPersonalDir);
     }
-    else if(cString::SubW(asPath,0,12) == _W("<Disk Drive>"))
+    else if(cString::SubW(asPath, 0, 12) == _W("<Disk Drive>"))
     {
-        return NavigateTo(cString::SubW(asPath,13));
+        return NavigateTo(cString::SubW(asPath, 13));
     }
-    else if(asPath==_W(".."))
+    else if(asPath == _W(".."))
     {
         if (!mvCurrentDirFullPath.empty())
         {
             mvCurrentDirFullPath.pop_back();
         }
     }
-    else if(asPath==_W("."))
+    else if(asPath == _W("."))
     {
     }
     else
     {
-        if(mvCurrentDirFullPath.empty()==false && cPlatform::FolderExists( GetCurrentFullPath() + asPath ))
+        if(mvCurrentDirFullPath.empty() == false && cPlatform::FolderExists( GetCurrentFullPath() + asPath ))
         {
             mvCurrentDirFullPath.push_back(asPath);
         }
@@ -548,7 +548,7 @@ void iFileBrowser::SetPathFromString(const tWString &asPath)
     /////////////////////////////////////////////////
     // Check if path is valid, and if so, store the
     // directories that conform the full path separately (without slashes)
-    if(cPlatform::FolderExists(sPath) || sPath==_W(""))
+    if(cPlatform::FolderExists(sPath) || sPath == _W(""))
     {
         mvCurrentDirFullPath.clear();
 
@@ -558,7 +558,7 @@ void iFileBrowser::SetPathFromString(const tWString &asPath)
 
         bool pathLeadsOutside = false;
 
-        for(int i=0; i<(int)vInputPath.size(); ++i)
+        for(int i = 0; i < (int)vInputPath.size(); ++i)
         {
             const tWString& sPathPiece = vInputPath[i];
 
@@ -595,8 +595,8 @@ void iFileBrowser::SetPathFromString(const tWString &asPath)
  */
 tWString iFileBrowser::GetHumanReadableSize(unsigned long alSize)
 {
-    int i=0;
-    for(; i<4; ++i)
+    int i = 0;
+    for(; i < 4; ++i)
     {
         if(alSize > 1024)
         {
@@ -624,7 +624,7 @@ tWString iFileBrowser::GetCurrentFullPath()
     sPath = _W("/");
 #endif
 
-    for(int i=0; i<(int)mvCurrentDirFullPath.size(); ++i)
+    for(int i = 0; i < (int)mvCurrentDirFullPath.size(); ++i)
     {
         sPath += cString::AddSlashAtEndW(mvCurrentDirFullPath[i]);
     }

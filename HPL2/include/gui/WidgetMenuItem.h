@@ -24,7 +24,7 @@ public:
     cWidgetMenuItem(iWidgetMenu* apParent);
     virtual ~cWidgetMenuItem();
 
-    cWidgetMenuItem* AddMenuItem(const tWString &asText, const tWString &asIconFilename = _W(""));
+    cWidgetMenuItem *AddMenuItem(const tWString &asText, const tWString &asIconFilename = _W(""));
     void AddSeparator();
     void ClearMenuItems();
 
@@ -49,11 +49,11 @@ public:
         mbDefault = abX;
     }
 
-    iWidgetMenu*    GetParentMenu()
+    iWidgetMenu    *GetParentMenu()
     {
         return (iWidgetMenu*)mpParent;
     }
-    iWidgetMenu*    GetChildMenu()
+    iWidgetMenu    *GetChildMenu()
     {
         return mpChildMenu;
     }
@@ -62,13 +62,13 @@ public:
 
     bool IsSeparator()
     {
-        return (msText==_W(""));
+        return (msText == _W(""));
     }
 
-    cGuiGlobalShortcut* AddShortcut(int alKeyModifiers, eKey aKey, eGuiMessage aMsg=eGuiMessage_ButtonPressed,
-                                    bool abBypassVisibility=true, bool abBypassEnabled=true);
+    cGuiGlobalShortcut *AddShortcut(int alKeyModifiers, eKey aKey, eGuiMessage aMsg = eGuiMessage_ButtonPressed,
+                                    bool abBypassVisibility = true, bool abBypassEnabled = true);
 
-    const tWString& GetShortcutText()
+    const tWString &GetShortcutText()
     {
         return msShortcutText;
     }
@@ -116,13 +116,13 @@ protected:
 
     bool    mbPressed;
 
-    iWidgetMenu*    mpChildMenu;
+    iWidgetMenu    *mpChildMenu;
 
-    cGuiGfxElement*    mpGfxSelection;
-    cGuiGfxElement*    mpGfxSubMenuArrow;
-    cGuiGfxElement* mpGfxChecked[2];
+    cGuiGfxElement    *mpGfxSelection;
+    cGuiGfxElement    *mpGfxSubMenuArrow;
+    cGuiGfxElement *mpGfxChecked[2];
 
-    cGuiGfxElement* mpGfxLine;
+    cGuiGfxElement *mpGfxLine;
 
     float mfItemHPadding;
     float mfItemTextLeftPadding;

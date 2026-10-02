@@ -47,27 +47,27 @@ public:
         return false;
     }
 
-    iTexture* GetTextureForUnit(cMaterial *apMaterial,eMaterialRenderMode aRenderMode, int alUnit)
+    iTexture *GetTextureForUnit(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, int alUnit)
     {
         return NULL;
     }
-    iTexture* GetSpecialTexture(cMaterial *apMaterial, eMaterialRenderMode aRenderMode,iRenderer *apRenderer, int alUnit)
-    {
-        return NULL;
-    }
-
-    iGpuProgram* GetGpuProgram(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, char alSkeleton)
+    iTexture *GetSpecialTexture(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, iRenderer *apRenderer, int alUnit)
     {
         return NULL;
     }
 
-    void SetupTypeSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram,iRenderer *apRenderer) { }
-    void SetupMaterialSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, cMaterial *apMaterial,iRenderer *apRenderer) { }
-    void SetupObjectSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, iRenderable *apObject,iRenderer *apRenderer) { }
-
-    iMaterialVars* CreateSpecificVariables()
+    iGpuProgram *GetGpuProgram(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, char alSkeleton)
     {
-        return hplNew(cMaterialManagerBlankMaterialType_Vars,());
+        return NULL;
+    }
+
+    void SetupTypeSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, iRenderer *apRenderer) { }
+    void SetupMaterialSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, cMaterial *apMaterial, iRenderer *apRenderer) { }
+    void SetupObjectSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, iRenderable *apObject, iRenderer *apRenderer) { }
+
+    iMaterialVars *CreateSpecificVariables()
+    {
+        return hplNew(cMaterialManagerBlankMaterialType_Vars, ());
     }
     void LoadVariables(cMaterial *apMaterial, cResourceVarsObject *apVars) { }
     void GetVariableValues(cMaterial *apMaterial, cResourceVarsObject *apVars) { }
@@ -86,19 +86,19 @@ cMaterialManagerBlankMaterialType gBlankMaterialType;
 
 //-----------------------------------------------------------------------
 
-cMaterialManager::cMaterialManager(cGraphics* apGraphics,cResources *apResources)
-    : iResourceManager(apResources->GetFileSearcher(), apResources->GetLowLevel(),apResources->GetLowLevelSystem())
+cMaterialManager::cMaterialManager(cGraphics* apGraphics, cResources *apResources)
+    : iResourceManager(apResources->GetFileSearcher(), apResources->GetLowLevel(), apResources->GetLowLevelSystem())
 {
     mpGraphics = apGraphics;
     mpResources = apResources;
 
-    mlTextureSizeDownScaleLevel =0;
+    mlTextureSizeDownScaleLevel = 0;
     mTextureFilter = eTextureFilter_Bilinear;
     mfTextureAnisotropy = 1.0f;
 
     mbDisableRenderDataLoading = false;
 
-    mlIdCounter =0;
+    mlIdCounter = 0;
 }
 
 cMaterialManager::~cMaterialManager()
@@ -116,9 +116,9 @@ cMaterialManager::~cMaterialManager()
 
 //-----------------------------------------------------------------------
 
-cMaterial* cMaterialManager::CreateMaterial(const tString& asName)
+cMaterial *cMaterialManager::CreateMaterial(const tString& asName)
 {
-    if(asName=="")
+    if(asName == "")
     {
         return NULL;
     }
@@ -129,17 +129,17 @@ cMaterial* cMaterialManager::CreateMaterial(const tString& asName)
 
     BeginLoad(asName);
 
-    asNewName = cString::SetFileExt(asName,"mat");
+    asNewName = cString::SetFileExt(asName, "mat");
 
-    pMaterial = static_cast<cMaterial*>(this->FindLoadedResource(asNewName,sPath));
+    pMaterial = static_cast<cMaterial *>(this->FindLoadedResource(asNewName, sPath));
 
-    if(pMaterial==NULL && sPath!=_W(""))
+    if(pMaterial == NULL && sPath != _W(""))
     {
-        pMaterial = LoadFromFile(asNewName,sPath);
+        pMaterial = LoadFromFile(asNewName, sPath);
 
-        if(pMaterial==NULL)
+        if(pMaterial == NULL)
         {
-            Error("Couldn't load material '%s'\n",asNewName.c_str());
+            Error("Couldn't load material '%s'\n", asNewName.c_str());
             EndLoad();
             return NULL;
         }
@@ -153,7 +153,7 @@ cMaterial* cMaterialManager::CreateMaterial(const tString& asName)
     }
     else
     {
-        Error("Couldn't create material '%s'\n",asNewName.c_str());
+        Error("Couldn't create material '%s'\n", asNewName.c_str());
     }
 
     EndLoad();
@@ -179,7 +179,7 @@ void cMaterialManager::Destroy(iResourceBase* apResource)
 {
     apResource->DecUserCount();
 
-    if(apResource->HasUsers()==false)
+    if(apResource->HasUsers() == false)
     {
         RemoveResource(apResource);
         hplDelete(apResource);
@@ -199,9 +199,9 @@ void cMaterialManager::SetTextureFilter(eTextureFilter aFilter)
     tResourceBaseMapIt it = m_mapResources.begin();
     for(; it != m_mapResources.end(); ++it)
     {
-        cMaterial *pMat = static_cast<cMaterial*>(it->second);
+        cMaterial *pMat = static_cast<cMaterial *>(it->second);
 
-        for(int i=0; i<eMaterialTexture_LastEnum; ++i)
+        for(int i = 0; i < eMaterialTexture_LastEnum; ++i)
         {
             iTexture *pTex = pMat->GetTexture((eMaterialTexture)i);
             if(pTex)
@@ -216,7 +216,7 @@ void cMaterialManager::SetTextureFilter(eTextureFilter aFilter)
 
 void cMaterialManager::SetTextureAnisotropy(float afX)
 {
-    if(afX <1.0 || mpGraphics->GetLowLevel()->GetCaps(eGraphicCaps_AnisotropicFiltering)==0)
+    if(afX < 1.0 || mpGraphics->GetLowLevel()->GetCaps(eGraphicCaps_AnisotropicFiltering) == 0)
     {
         return;
     }
@@ -234,9 +234,9 @@ void cMaterialManager::SetTextureAnisotropy(float afX)
     tResourceBaseMapIt it = m_mapResources.begin();
     for(; it != m_mapResources.end(); ++it)
     {
-        cMaterial *pMat = static_cast<cMaterial*>(it->second);
+        cMaterial *pMat = static_cast<cMaterial *>(it->second);
 
-        for(int i=0; i<eMaterialTexture_LastEnum; ++i)
+        for(int i = 0; i < eMaterialTexture_LastEnum; ++i)
         {
             iTexture *pTex = pMat->GetTexture((eMaterialTexture)i);
             if(pTex)
@@ -255,14 +255,14 @@ tString cMaterialManager::GetPhysicsMaterialName(const tString& asName)
     cMaterial* pMaterial;
     tString asNewName;
 
-    asNewName = cString::SetFileExt(asName,"mat");
+    asNewName = cString::SetFileExt(asName, "mat");
 
-    pMaterial = static_cast<cMaterial*>(this->FindLoadedResource(asNewName,sPath));
+    pMaterial = static_cast<cMaterial *>(this->FindLoadedResource(asNewName, sPath));
 
-    if(pMaterial==NULL && sPath!=_W(""))
+    if(pMaterial == NULL && sPath != _W(""))
     {
         FILE *pFile = cPlatform::OpenFile(sPath, _W("rb"));
-        if(pFile==NULL)
+        if(pFile == NULL)
         {
             return "";
         }
@@ -279,14 +279,14 @@ tString cMaterialManager::GetPhysicsMaterialName(const tString& asName)
         TiXmlElement *pRoot = pDoc->RootElement();
 
         TiXmlElement *pMain = pRoot->FirstChildElement("Main");
-        if(pMain==NULL)
+        if(pMain == NULL)
         {
             hplDelete(pDoc);
-            Error("Main child not found in '%s'\n",sPath.c_str());
+            Error("Main child not found in '%s'\n", sPath.c_str());
             return "";
         }
 
-        tString sPhysicsName = cString::ToString(pMain->Attribute("PhysicsMaterial"),"Default");
+        tString sPhysicsName = cString::ToString(pMain->Attribute("PhysicsMaterial"), "Default");
 
         hplDelete(pDoc);
 
@@ -305,7 +305,7 @@ tString cMaterialManager::GetPhysicsMaterialName(const tString& asName)
 
 //-----------------------------------------------------------------------
 
-cMaterial* cMaterialManager::CreateCustomMaterial(const tString& asName, iMaterialType *apMaterialType)
+cMaterial *cMaterialManager::CreateCustomMaterial(const tString& asName, iMaterialType *apMaterialType)
 {
     cMaterial* pMat = hplNew( cMaterial, (asName, cString::To16Char(asName), mpGraphics, mpResources, apMaterialType) );
     pMat->IncUserCount();
@@ -320,19 +320,19 @@ cMaterial* cMaterialManager::CreateCustomMaterial(const tString& asName, iMateri
 //////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------
-cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& asPath)
+cMaterial *cMaterialManager::LoadFromFile(const tString& asName, const tWString& asPath)
 {
     //Log("Load material: %s\n", asName.c_str());
 
     iXmlDocument* pDoc = mpResources->GetLowLevel()->CreateXmlDocument();
-    if(pDoc->CreateFromFile(asPath)==false)
+    if(pDoc->CreateFromFile(asPath) == false)
     {
         mpResources->DestroyXmlDocument(pDoc);
         return NULL;
     }
 
     cXmlElement* pMain = pDoc->GetFirstElement("Main");
-    if(pMain==NULL)
+    if(pMain == NULL)
     {
         mpResources->DestroyXmlDocument(pDoc);
         Error("Main child not found.\n");
@@ -340,7 +340,7 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
     }
 
     tString sType = pMain->GetAttributeString("Type");
-    if(sType=="")
+    if(sType == "")
     {
         mpResources->DestroyXmlDocument(pDoc);
         Error("Type not found.\n");
@@ -368,10 +368,10 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
     /////////////////////////////
     // CreateType
     iMaterialType *pMatType = mpGraphics->GetMaterialType(sType);
-    if(pMatType ==NULL)
+    if(pMatType == NULL)
     {
         mpResources->DestroyXmlDocument(pDoc);
-        Error("Invalid material type '%s'!\n",sType.c_str());
+        Error("Invalid material type '%s'!\n", sType.c_str());
         return NULL;
     }
     cMaterial* pMat = hplNew( cMaterial, (asName, asPath, mpGraphics, mpResources, pMatType) );
@@ -386,7 +386,7 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
     ///////////////////////////
     //Textures
     cXmlElement* pTexRoot = pDoc->GetFirstElement("TextureUnits");
-    if(pTexRoot==NULL)
+    if(pTexRoot == NULL)
     {
         mpResources->DestroyXmlDocument(pDoc);
         Error("TextureUnits child not found.\n");
@@ -395,7 +395,7 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
 
     //Log("Material %s\n",asName.c_str());
 
-    for(int i=0; i< pMatType->GetUsedTextureNum(); ++i)
+    for(int i = 0; i < pMatType->GetUsedTextureNum(); ++i)
     {
         cMaterialUsedTexture* pUsedTexture = pMatType->GetUsedTexture(i);
         iTexture *pTex = NULL;
@@ -404,7 +404,7 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
         //Log("Trying to load type: %s\n",sTextureType.c_str());
 
         cXmlElement* pTexChild = pTexRoot->GetFirstElement(sTextureType.c_str());
-        if(pTexChild==NULL)
+        if(pTexChild == NULL)
         {
             //Log(" Texture unit element missing!\n");
             /*hplDelete(pMat);
@@ -421,7 +421,7 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
         eTextureAnimMode animMode = GetAnimMode(pTexChild->GetAttributeString("AnimMode", "None"));
         float fFrameTime = pTexChild->GetAttributeFloat("AnimFrameTime", 1.0f);
 
-        if(sFile=="")
+        if(sFile == "")
         {
             continue;
         }
@@ -435,39 +435,39 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
 
         if(animMode != eTextureAnimMode_None)
         {
-            pTex = mpResources->GetTextureManager()->CreateAnim(sFile,bMipMaps,type,eTextureUsage_Normal,mlTextureSizeDownScaleLevel);
+            pTex = mpResources->GetTextureManager()->CreateAnim(sFile, bMipMaps, type, eTextureUsage_Normal, mlTextureSizeDownScaleLevel);
         }
         else
         {
 
             if(type == eTextureType_1D)
             {
-                pTex = mpResources->GetTextureManager()->Create1D(sFile,bMipMaps,
+                pTex = mpResources->GetTextureManager()->Create1D(sFile, bMipMaps,
                        eTextureUsage_Normal,
                        mlTextureSizeDownScaleLevel);
             }
             else if(type == eTextureType_2D)
             {
-                pTex = mpResources->GetTextureManager()->Create2D(sFile,bMipMaps, eTextureType_2D,
+                pTex = mpResources->GetTextureManager()->Create2D(sFile, bMipMaps, eTextureType_2D,
                        eTextureUsage_Normal,
                        mlTextureSizeDownScaleLevel);
             }
             else if(type == eTextureType_3D)
             {
-                pTex = mpResources->GetTextureManager()->Create3D(sFile,bMipMaps,
+                pTex = mpResources->GetTextureManager()->Create3D(sFile, bMipMaps,
                        eTextureUsage_Normal,
                        mlTextureSizeDownScaleLevel);
             }
             else if(type == eTextureType_CubeMap)
             {
                 //Check for DDS ending and load cubemap as file.
-                pTex = mpResources->GetTextureManager()->CreateCubeMap(sFile,bMipMaps,
+                pTex = mpResources->GetTextureManager()->CreateCubeMap(sFile, bMipMaps,
                        eTextureUsage_Normal,
                        mlTextureSizeDownScaleLevel);
             }
         }
 
-        if(pTex==NULL)
+        if(pTex == NULL)
         {
             mpResources->DestroyXmlDocument(pDoc);
             hplDelete(pMat);
@@ -497,10 +497,10 @@ cMaterial* cMaterialManager::LoadFromFile(const tString& asName,const tWString& 
 
             eMaterialUvAnimation animType = GetUvAnimType(pAnimElem->GetAttributeString("Type").c_str());
             eMaterialAnimationAxis animAxis = GetAnimAxis(pAnimElem->GetAttributeString("Axis").c_str());
-            float fSpeed = pAnimElem->GetAttributeFloat("Speed",0);
-            float fAmp = pAnimElem->GetAttributeFloat("Amplitude",0);
+            float fSpeed = pAnimElem->GetAttributeFloat("Speed", 0);
+            float fAmp = pAnimElem->GetAttributeFloat("Amplitude", 0);
 
-            pMat->AddUvAnimation(animType,fSpeed,fAmp, animAxis);
+            pMat->AddUvAnimation(animType, fSpeed, fAmp, animAxis);
         }
     }
 
@@ -645,7 +645,7 @@ eMaterialBlendMode cMaterialManager::GetBlendMode(const tString& asType)
         return eMaterialBlendMode_PremulAlpha;
     }
 
-    Warning("Material BlendMode '%s' does not exist!\n",asType.c_str());
+    Warning("Material BlendMode '%s' does not exist!\n", asType.c_str());
 
     return eMaterialBlendMode_Add;
 }
@@ -654,7 +654,7 @@ eMaterialBlendMode cMaterialManager::GetBlendMode(const tString& asType)
 
 eMaterialUvAnimation cMaterialManager::GetUvAnimType(const char* apString)
 {
-    if(apString==NULL)
+    if(apString == NULL)
     {
         Error("Uv animation attribute Type does not exist!\n");
         return eMaterialUvAnimation_LastEnum;
@@ -675,13 +675,13 @@ eMaterialUvAnimation cMaterialManager::GetUvAnimType(const char* apString)
         return eMaterialUvAnimation_Rotate;
     }
 
-    Error("Invalid uv animation type %s\n",apString);
+    Error("Invalid uv animation type %s\n", apString);
     return eMaterialUvAnimation_LastEnum;
 }
 
 eMaterialAnimationAxis cMaterialManager::GetAnimAxis(const char* apString)
 {
-    if(apString==NULL)
+    if(apString == NULL)
     {
         Error("Uv animation attribute Axis does not exist!\n");
         return eMaterialAnimationAxis_LastEnum;
@@ -702,7 +702,7 @@ eMaterialAnimationAxis cMaterialManager::GetAnimAxis(const char* apString)
         return eMaterialAnimationAxis_Z;
     }
 
-    Error("Invalid animation axis %s\n",apString);
+    Error("Invalid animation axis %s\n", apString);
     return eMaterialAnimationAxis_LastEnum;
 }
 

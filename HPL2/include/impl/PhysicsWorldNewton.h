@@ -22,7 +22,7 @@ public:
     void  SetMaxTimeStep(double adFixedDelta);
     double GetMaxTimeStep();
 
-    void SetWorldSize(const cVector3f &avMin,const cVector3f &avMax);
+    void SetWorldSize(const cVector3f &avMin, const cVector3f &avMax);
     cVector3f GetWorldSizeMin();
     cVector3f GetWorldSizeMax();
 
@@ -35,43 +35,43 @@ public:
     void SetNumberOfThreads(int alThreads);
     int GetNumberOfThreads();
 
-    iCollideShape* CreateNullShape();
-    iCollideShape* CreateBoxShape(const cVector3f &avSize, cMatrixf* apOffsetMtx);
-    iCollideShape* CreateSphereShape(const cVector3f &avRadii, cMatrixf* apOffsetMtx);
-    iCollideShape* CreateCylinderShape(float afRadius, float afHeight, cMatrixf* apOffsetMtx);
-    iCollideShape* CreateCapsuleShape(float afRadius, float afHeight, cMatrixf* apOffsetMtx);
+    iCollideShape *CreateNullShape();
+    iCollideShape *CreateBoxShape(const cVector3f &avSize, cMatrixf* apOffsetMtx);
+    iCollideShape *CreateSphereShape(const cVector3f &avRadii, cMatrixf* apOffsetMtx);
+    iCollideShape *CreateCylinderShape(float afRadius, float afHeight, cMatrixf* apOffsetMtx);
+    iCollideShape *CreateCapsuleShape(float afRadius, float afHeight, cMatrixf* apOffsetMtx);
 
-    iCollideShape* CreateMeshShape(iVertexBuffer *apVtxBuffer);
-    iCollideShape* LoadMeshShapeFromBuffer(cBinaryBuffer *apBuffer);
+    iCollideShape *CreateMeshShape(iVertexBuffer *apVtxBuffer);
+    iCollideShape *LoadMeshShapeFromBuffer(cBinaryBuffer *apBuffer);
     void SaveMeshShapeToBuffer(iCollideShape* apMeshShape, cBinaryBuffer *apBuffer);
 
-    iCollideShape* CreateCompundShape(tCollideShapeVec &avShapes);
-    iCollideShape* CreateStaticSceneShape(tCollideShapeVec &avShapes, tMatrixfVec *apMatrices);
+    iCollideShape *CreateCompundShape(tCollideShapeVec &avShapes);
+    iCollideShape *CreateStaticSceneShape(tCollideShapeVec &avShapes, tMatrixfVec *apMatrices);
 
-    iPhysicsJointBall* CreateJointBall(const tString &asName,const cVector3f& avPivotPoint,
+    iPhysicsJointBall *CreateJointBall(const tString &asName, const cVector3f& avPivotPoint,
                                        const cVector3f& avPinDir,
                                        iPhysicsBody* apParentBody, iPhysicsBody *apChildBody);
-    iPhysicsJointHinge* CreateJointHinge(const tString &asName,const cVector3f& avPivotPoint,
+    iPhysicsJointHinge *CreateJointHinge(const tString &asName, const cVector3f& avPivotPoint,
                                          const cVector3f& avPinDir,
                                          iPhysicsBody* apParentBody, iPhysicsBody *apChildBody);
-    iPhysicsJointSlider* CreateJointSlider(const tString &asName,const cVector3f& avPivotPoint,
+    iPhysicsJointSlider *CreateJointSlider(const tString &asName, const cVector3f& avPivotPoint,
                                            const cVector3f& avPinDir,
                                            iPhysicsBody* apParentBody, iPhysicsBody *apChildBody);
-    iPhysicsJointScrew* CreateJointScrew(const tString &asName,const cVector3f& avPivotPoint,
+    iPhysicsJointScrew *CreateJointScrew(const tString &asName, const cVector3f& avPivotPoint,
                                          const cVector3f& avPinDir,
                                          iPhysicsBody* apParentBody, iPhysicsBody *apChildBody);
 
-    iPhysicsBody* CreateBody(const tString &asName,iCollideShape *apShape);
+    iPhysicsBody *CreateBody(const tString &asName, iCollideShape *apShape);
 
     void GetBodiesInBV(cBoundingVolume *apBV, std::vector<iPhysicsBody*> *apBodyVec);
 
     iCharacterBody *CreateCharacterBody(const tString &asName, const cVector3f &avSize);
 
-    iPhysicsMaterial* CreateMaterial(const tString &asName);
+    iPhysicsMaterial *CreateMaterial(const tString &asName);
 
     iPhysicsController *CreateController(const tString &asName);
 
-    iPhysicsRope* CreateRope(const tString &asName, const cVector3f &avStartPos, const cVector3f &avEndPos);
+    iPhysicsRope *CreateRope(const tString &asName, const cVector3f &avStartPos, const cVector3f &avEndPos);
 
     void CastRay(iPhysicsRayCallback *apCallback,
                  const cVector3f &avOrigin, const cVector3f& avEnd,
@@ -87,16 +87,16 @@ public:
                                       iLowLevelGraphics *apLowLevel, const cColor& aColor);
     void RenderDebugGeometry(iLowLevelGraphics *apLowLevel, const cColor& aColor);
 
-    NewtonWorld* GetNewtonWorld()
+    NewtonWorld *GetNewtonWorld()
     {
         return mpNewtonWorld;
     }
 private:
     NewtonWorld *mpNewtonWorld;
 
-    float* mpTempPoints;
-    float* mpTempNormals;
-    float* mpTempDepths;
+    float *mpTempPoints;
+    float *mpTempNormals;
+    float *mpTempDepths;
 
     cVector3f mvWorldSizeMin;
     cVector3f mvWorldSizeMax;

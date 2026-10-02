@@ -49,7 +49,7 @@ void cDummyRenderable::SetSize(const cVector3f& avSize)
 
 //-----------------------------------------------------------------------
 
-cMatrixf* cDummyRenderable::GetModelMatrix(cFrustum* apFrustum)
+cMatrixf *cDummyRenderable::GetModelMatrix(cFrustum* apFrustum)
 {
     m_mtxModelOutput = GetWorldMatrix();
 

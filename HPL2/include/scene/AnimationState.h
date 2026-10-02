@@ -104,11 +104,11 @@ public:
 class cAnimationState
 {
 public:
-    cAnimationState(cAnimation* apAnimation,const tString &asName,
+    cAnimationState(cAnimation* apAnimation, const tString &asName,
                     cAnimationManager *apAnimationManager);
     ~cAnimationState();
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -117,13 +117,13 @@ public:
 
     bool DataIsInMeshFile()
     {
-        return mpAnimationManager==NULL;
+        return mpAnimationManager == NULL;
     }
 
     bool IsFading();
     bool IsFadingOut()
     {
-        return mfFadeStep<0;
+        return mfFadeStep < 0;
     }
 
     /**
@@ -189,7 +189,7 @@ public:
 
     void AddTimePosition(float afAdd);
 
-    cAnimation* GetAnimation();
+    cAnimation *GetAnimation();
 
     cAnimationEvent *CreateEvent();
     cAnimationEvent *GetEvent(int alIdx);
@@ -199,8 +199,8 @@ public:
       * If either time is -1 then no limits are checked.
       */
     void AddTransition(int alAnimId, int alPreviousAnimId, float afMinTime, float afMaxTime);
-    cAnimationTransition* GetTransitionFromPrevAnim(int alPreviousAnimId, float afPreviousTimePos);
-    cAnimationTransition* GetTransition(int alIdx);
+    cAnimationTransition *GetTransitionFromPrevAnim(int alPreviousAnimId, float afPreviousTimePos);
+    cAnimationTransition *GetTransition(int alIdx);
     int GetTransitionNum();
 
     float GetFadeStep()
@@ -226,9 +226,9 @@ private:
 
     cAnimationManager *mpAnimationManager;
 
-    cAnimation* mpAnimation;
+    cAnimation *mpAnimation;
 
-    std::vector<cAnimationEvent*> mvEvents;
+    std::vector<cAnimationEvent *> mvEvents;
 
     std::vector<cAnimationTransition> mvTransitions;
 

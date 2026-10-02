@@ -23,10 +23,10 @@ public:
      * Creates a new key frame. These should be added in sequential order.
      * \param afTime the time for the key frame.
      */
-    cKeyFrame* CreateKeyFrame(float afTime);
+    cKeyFrame *CreateKeyFrame(float afTime);
     void ClearKeyFrames();
 
-    inline cKeyFrame* GetKeyFrame(int alIndex)
+    inline cKeyFrame *GetKeyFrame(int alIndex)
     {
         return mvKeyFrames[alIndex];
     }
@@ -47,13 +47,13 @@ public:
      * \param afTime The time at which to apply the animation
      * \param afWeight The weight of the animation, a value from 0 to 1.
      */
-    void ApplyToNode(cNode3D* apNode, float afTime, float afWeight,bool bLoop=true);
+    void ApplyToNode(cNode3D* apNode, float afTime, float afWeight, bool bLoop = true);
 
     /**
      * Get a KeyFrame that contains an interpolated value.
      * \param afTime The time from which to create the key frame.
      */
-    cKeyFrame GetInterpolatedKeyFrame(float afTime,bool bLoop=true);
+    cKeyFrame GetInterpolatedKeyFrame(float afTime, bool bLoop = true);
 
     /**
      * Gets key frames between for a specific time.
@@ -62,9 +62,9 @@ public:
      * \param &apKeyFrameB The frame that is after time.
      * \return Weight of the different frames. 0 = 100% A, 1 = 100% B 0.5 = 50% A and 50% B
      */
-    float GetKeyFramesAtTime(float afTime, cKeyFrame** apKeyFrameA,cKeyFrame** apKeyFrameB,bool bLoop=true);
+    float GetKeyFramesAtTime(float afTime, cKeyFrame** apKeyFrameA, cKeyFrame** apKeyFrameB, bool bLoop = true);
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -88,7 +88,7 @@ private:
 
     float mfMaxFrameTime;
 
-    cAnimation* mpParent;
+    cAnimation *mpParent;
 };
 
 };

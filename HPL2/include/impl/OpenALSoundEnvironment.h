@@ -56,7 +56,7 @@ public:
     {
         return mfReflectionsDelay;
     }
-    inline float* GetReflectionsPan(  )
+    inline float *GetReflectionsPan(  )
     {
         return mfReflectionsPan;
     }
@@ -68,7 +68,7 @@ public:
     {
         return mfLateReverbDelay;
     }
-    inline float* GetLateReverbPan ()
+    inline float *GetLateReverbPan ()
     {
         return mfLateReverbPan;
     }

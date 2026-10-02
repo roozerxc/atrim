@@ -14,7 +14,7 @@ class iPostEffect;
 
 //------------------------------------------
 
-typedef std::multimap<int, iPostEffect*, std::greater<int> > tPostEffectMap;
+typedef std::multimap<int, iPostEffect *, std::greater<int> > tPostEffectMap;
 typedef tPostEffectMap::iterator tPostEffectMapIt;
 
 //------------------------------------------
@@ -35,7 +35,7 @@ public:
     {
         return (int)mvPostEffects.size();
     }
-    inline iPostEffect* GetPostEffect(int alIdx)const
+    inline iPostEffect *GetPostEffect(int alIdx)const
     {
         return mvPostEffects[alIdx];
     }
@@ -54,7 +54,7 @@ private:
     void CopyToFrameBuffer(iTexture *apOutputTexture);
 
     tPostEffectMap m_mapPostEffects;
-    std::vector<iPostEffect*> mvPostEffects;
+    std::vector<iPostEffect *> mvPostEffects;
 
     iFrameBuffer *mpFinalTempBuffer[2];
 

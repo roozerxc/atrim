@@ -210,7 +210,7 @@ int CScriptBuilder::ProcessScriptSection(const char *script, const char *section
 
                     // Overwrite the #if directive with space characters to avoid compiler error
                     pos += len;
-                    OverwriteCode(start, pos-start);
+                    OverwriteCode(start, pos - start);
 
                     // Has this identifier been defined by the application or not?
                     if( definedWords.find(word) == definedWords.end() )
@@ -229,7 +229,7 @@ int CScriptBuilder::ProcessScriptSection(const char *script, const char *section
                 // Only remove the #endif if there was a matching #if
                 if( nested > 0 )
                 {
-                    OverwriteCode(start, pos-start);
+                    OverwriteCode(start, pos - start);
                     nested--;
                 }
             }
@@ -303,14 +303,14 @@ int CScriptBuilder::ProcessScriptSection(const char *script, const char *section
                         {
                             // Get the include file
                             string includefile;
-                            includefile.assign(&modifiedScript[pos+1], len-2);
+                            includefile.assign(&modifiedScript[pos + 1], len - 2);
                             pos += len;
 
                             // Store it for later processing
                             includes.push_back(includefile);
 
                             // Overwrite the include directive with space characters to avoid compiler error
-                            OverwriteCode(start, pos-start);
+                            OverwriteCode(start, pos - start);
                         }
                     }
                 }
@@ -349,7 +349,7 @@ int CScriptBuilder::ProcessScriptSection(const char *script, const char *section
             size_t posOfSlash = path.find_last_of("/\\");
             if( posOfSlash != string::npos )
             {
-                path.resize(posOfSlash+1);
+                path.resize(posOfSlash + 1);
             }
             else
             {
@@ -665,7 +665,7 @@ int CScriptBuilder::ExtractDeclaration(int pos, string &declaration, int &type)
 
 const char *CScriptBuilder::GetMetadataStringForType(int typeId)
 {
-    map<int,string>::iterator it = typeMetadataMap.find(typeId);
+    map<int, string>::iterator it = typeMetadataMap.find(typeId);
     if( it != typeMetadataMap.end() )
     {
         return it->second.c_str();
@@ -676,7 +676,7 @@ const char *CScriptBuilder::GetMetadataStringForType(int typeId)
 
 const char *CScriptBuilder::GetMetadataStringForFunc(int funcId)
 {
-    map<int,string>::iterator it = funcMetadataMap.find(funcId);
+    map<int, string>::iterator it = funcMetadataMap.find(funcId);
     if( it != funcMetadataMap.end() )
     {
         return it->second.c_str();
@@ -687,7 +687,7 @@ const char *CScriptBuilder::GetMetadataStringForFunc(int funcId)
 
 const char *CScriptBuilder::GetMetadataStringForVar(int varIdx)
 {
-    map<int,string>::iterator it = varMetadataMap.find(varIdx);
+    map<int, string>::iterator it = varMetadataMap.find(varIdx);
     if( it != varMetadataMap.end() )
     {
         return it->second.c_str();
@@ -716,7 +716,7 @@ static const char *GetCurrentDir(char *buf, size_t size)
         // array (in case the path is nothing more than a filename)
         while (appLen > 1)
         {
-            if (apppath[appLen-1] == TEXT('\\'))
+            if (apppath[appLen - 1] == TEXT('\\'))
             {
                 break;
             }

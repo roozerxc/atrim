@@ -23,7 +23,7 @@ cNode3D::cNode3D(const tString &asName, bool abAutoDeleteChildren)
     m_mtxLocalTransform = cMatrixf::Identity;
     m_mtxWorldTransform = cMatrixf::Identity;
 
-    mvWorldPosition = cVector3f(0,0,0);
+    mvWorldPosition = cVector3f(0, 0, 0);
 
     mbTransformUpdated = true;
 
@@ -37,10 +37,10 @@ cNode3D::cNode3D(const tString &asName, bool abAutoDeleteChildren)
     mpEntityParent = NULL;
 
     mqRotation = cQuaternion::Identity;
-    mvScale = cVector3f(1,1,1);
-    mvTranslation = cVector3f(0,0,0);
+    mvScale = cVector3f(1, 1, 1);
+    mvTranslation = cVector3f(0, 0, 0);
 
-    mlCustomFlags =0;
+    mlCustomFlags = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -87,7 +87,7 @@ int cNode3D::SetVisible(bool abX, bool abCascade)
     {
         for(tNode3DListIt NIt = mlstNode.begin(); NIt != mlstNode.end(); NIt++)
         {
-            (*NIt)->SetVisible(abX,abCascade);
+            (*NIt)->SetVisible(abX, abCascade);
         }
     }
     return 0;
@@ -147,9 +147,9 @@ cEntity3DIterator cNode3D::GetEntityIterator()
 
 //-----------------------------------------------------------------------
 
-cNode3D* cNode3D::CreateChild(const tString &asName, bool abAutoDeleteChildren)
+cNode3D *cNode3D::CreateChild(const tString &asName, bool abAutoDeleteChildren)
 {
-    cNode3D *pNode = hplNew( cNode3D, (asName,abAutoDeleteChildren) );
+    cNode3D *pNode = hplNew( cNode3D, (asName, abAutoDeleteChildren) );
 
     pNode->mpParent = this;
     mlstNode.push_back(pNode);
@@ -180,7 +180,7 @@ cVector3f cNode3D::GetLocalPosition()
 
 //-----------------------------------------------------------------------
 
-cMatrixf& cNode3D::GetLocalMatrix()
+cMatrixf &cNode3D::GetLocalMatrix()
 {
     return m_mtxLocalTransform;
 }
@@ -196,7 +196,7 @@ cVector3f cNode3D::GetWorldPosition()
 
 //-----------------------------------------------------------------------
 
-cMatrixf& cNode3D::GetWorldMatrix()
+cMatrixf &cNode3D::GetWorldMatrix()
 {
     UpdateWorldTransform();
 
@@ -261,14 +261,14 @@ void cNode3D::SetWorldMatrix(const cMatrixf& a_mtxWorldTransform)
 
 //-----------------------------------------------------------------------
 
-const tString& cNode3D::GetName()
+const tString &cNode3D::GetName()
 {
     return msName;
 }
 
 //-----------------------------------------------------------------------
 
-cNode3D* cNode3D::GetParent()
+cNode3D *cNode3D::GetParent()
 {
     return mpParent;
 }
@@ -319,7 +319,7 @@ void cNode3D::UpdateMatrix(bool abSetChildrenUpdated)
 
     //Save the translation and set it to 0 so that only the rotation is altered.
     cVector3f vPos = mtxTransform.GetTranslation();
-    mtxTransform.SetTranslation(cVector3f(0,0,0));
+    mtxTransform.SetTranslation(cVector3f(0, 0, 0));
 
     //Log("Startpos: %s",vPos.ToString().c_str());
     //Log("World pos: %s\n",GetWorldMatrix().GetTranslation().ToString().c_str());
@@ -332,21 +332,21 @@ void cNode3D::UpdateMatrix(bool abSetChildrenUpdated)
 
     mtxTransform.SetTranslation(vPos + mvTranslation);
 
-    SetMatrix(mtxTransform,abSetChildrenUpdated);
+    SetMatrix(mtxTransform, abSetChildrenUpdated);
 
     //Log("World pos: %s\n",GetWorldMatrix().GetTranslation().ToString().c_str());
 
     //Reset values
     mqRotation = cQuaternion::Identity;
-    mvScale = cVector3f(1,1,1);
-    mvTranslation = cVector3f(0,0,0);
+    mvScale = cVector3f(1, 1, 1);
+    mvTranslation = cVector3f(0, 0, 0);
 }
 
 //-----------------------------------------------------------------------
 
 void cNode3D::ApplyPreAnimTransform(bool abSetChildrenUpdated)
 {
-    if(mbUsePreTransform==false)
+    if(mbUsePreTransform == false)
     {
         return;
     }
@@ -354,12 +354,12 @@ void cNode3D::ApplyPreAnimTransform(bool abSetChildrenUpdated)
     cMatrixf mtxTransform = GetLocalMatrix();
     mtxTransform = cMath::MatrixMul(mtxTransform, m_mtxPreTransform);
 
-    SetMatrix(mtxTransform,abSetChildrenUpdated);
+    SetMatrix(mtxTransform, abSetChildrenUpdated);
 }
 
 void cNode3D::ApplyPostAnimTransform(bool abSetChildrenUpdated)
 {
-    if(mbUsePostTransform==false)
+    if(mbUsePostTransform == false)
     {
         return;
     }
@@ -367,7 +367,7 @@ void cNode3D::ApplyPostAnimTransform(bool abSetChildrenUpdated)
     cMatrixf mtxTransform = GetLocalMatrix();
     mtxTransform = cMath::MatrixMul(m_mtxPostTransform, mtxTransform);
 
-    SetMatrix(mtxTransform,abSetChildrenUpdated);
+    SetMatrix(mtxTransform, abSetChildrenUpdated);
 }
 
 //-----------------------------------------------------------------------
@@ -378,7 +378,7 @@ void cNode3D::UpdateEntityChildren()
     tEntity3DListIt EIt = mlstEntity.begin();
     for(; EIt != mlstEntity.end(); ++EIt)
     {
-        iEntity3D* pEntity = static_cast<iEntity3D*>(*EIt);
+        iEntity3D* pEntity = static_cast<iEntity3D *>(*EIt);
 
         pEntity->SetTransformUpdated();
     }
@@ -402,11 +402,11 @@ void cNode3D::UpdateWorldTransform()
 
         if(mpParent)
         {
-            m_mtxWorldTransform = cMath::MatrixMul(mpParent->GetWorldMatrix(),m_mtxLocalTransform);
+            m_mtxWorldTransform = cMath::MatrixMul(mpParent->GetWorldMatrix(), m_mtxLocalTransform);
         }
         else if(mpEntityParent)
         {
-            m_mtxWorldTransform = cMath::MatrixMul(mpEntityParent->GetWorldMatrix(),m_mtxLocalTransform);
+            m_mtxWorldTransform = cMath::MatrixMul(mpEntityParent->GetWorldMatrix(), m_mtxLocalTransform);
         }
         else
         {
@@ -429,7 +429,7 @@ void cNode3D::SetWorldTransformUpdated()
     tNode3DListIt NIt = mlstNode.begin();
     for(; NIt != mlstNode.end(); ++NIt)
     {
-        cNode3D* pNode = static_cast<cNode3D*>(*NIt);
+        cNode3D* pNode = static_cast<cNode3D *>(*NIt);
 
         pNode->SetWorldTransformUpdated();
     }

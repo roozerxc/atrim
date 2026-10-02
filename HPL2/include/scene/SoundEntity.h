@@ -30,10 +30,10 @@ class iSoundEntityGlobalCallback
 public:
     virtual ~iSoundEntityGlobalCallback() {}
 
-    virtual void OnStart(cSoundEntity *apSoundEntity)=0;
+    virtual void OnStart(cSoundEntity *apSoundEntity) = 0;
 };
 
-typedef std::list<iSoundEntityGlobalCallback*> tSoundEntityGlobalCallbackList;
+typedef std::list<iSoundEntityGlobalCallback *> tSoundEntityGlobalCallbackList;
 typedef tSoundEntityGlobalCallbackList::iterator tSoundEntityGlobalCallbackListIt;
 
 //------------------------------------------
@@ -45,7 +45,7 @@ class cSoundEntity : public iEntity3D
 #endif
     friend class cSoundEntityChannelCallback;
 public:
-    cSoundEntity(const tString& asName,cSoundEntityData *apData,
+    cSoundEntity(const tString& asName, cSoundEntityData *apData,
                  cSoundEntityManager *apSoundEntityManager,
                  cWorld *apWorld,
                  cSoundHandler *apSoundHandler, bool abRemoveWhenOver, int alCreationID);
@@ -53,8 +53,8 @@ public:
 
     //void Setup(const tString& asName,cSoundEntityData *apData, bool abRemoveWhenOver, alCreationID);
 
-    void Play(bool abPlayStart=true);
-    void Stop(bool abPlayEnd=true);
+    void Play(bool abPlayStart = true);
+    void Stop(bool abPlayEnd = true);
 
     void FadeIn(float afSpeed);
     void FadeOut(float afSpeed);
@@ -101,7 +101,7 @@ public:
     /**
      * Gets the sound entry. return can be NULL whether validity is checked or not, best is to ALWAYS check validity, unless the entry has been validated in same code block.
      */
-    cSoundEntry* GetSoundEntry(eSoundEntityType aType, bool abCheckEntryValidity);
+    cSoundEntry *GetSoundEntry(eSoundEntityType aType, bool abCheckEntryValidity);
 
     //Entity implementation
     void UpdateLogic(double adFixedDelta);
@@ -111,7 +111,7 @@ public:
         return "SoundEntity";
     }
 
-    cSoundEntityData* GetData()
+    cSoundEntityData *GetData()
     {
         return mpData;
     }
@@ -128,7 +128,7 @@ public:
 private:
     bool CheckIsOutOfRange();
 
-    bool PlaySound(eSoundEntityType aType,bool abLoop);
+    bool PlaySound(eSoundEntityType aType, bool abLoop);
 
     float GetListenerSqrLength();
 

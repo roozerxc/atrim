@@ -38,7 +38,7 @@ public:
     {
         return NULL;
     }
-    iVertexBuffer* GetVertexBuffer()
+    iVertexBuffer *GetVertexBuffer()
     {
         return NULL;
     }
@@ -52,7 +52,7 @@ public:
     {
         return GetTransformUpdateCount();
     }
-    cMatrixf* GetModelMatrix(cFrustum* apFrustum);
+    cMatrixf *GetModelMatrix(cFrustum* apFrustum);
 
 private:
     cMatrixf m_mtxModelOutput;

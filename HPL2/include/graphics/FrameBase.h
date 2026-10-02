@@ -17,11 +17,11 @@ public:
 
     void SetPicCount(int alPicCount)
     {
-        mlPicCount=alPicCount;
+        mlPicCount = alPicCount;
     }
     void DecPicCount()
     {
-        if(mlPicCount>0)
+        if(mlPicCount > 0)
         {
             mlPicCount--;
         }
@@ -32,7 +32,7 @@ public:
     }
     bool IsEmpty()
     {
-        return mlPicCount<=0;
+        return mlPicCount <= 0;
     }
 
 protected:

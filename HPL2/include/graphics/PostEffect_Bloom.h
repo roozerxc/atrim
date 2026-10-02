@@ -46,7 +46,7 @@ private:
 class cPostEffect_Bloom : public iPostEffect
 {
 public:
-    cPostEffect_Bloom(cGraphics *apGraphics,cResources *apResources, iPostEffectType *apType);
+    cPostEffect_Bloom(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType);
     ~cPostEffect_Bloom();
 
 private:
@@ -56,7 +56,7 @@ private:
         return &mParams;
     }
 
-    iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
+    iTexture *RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
 
     void RenderBlur(iTexture *apInputTex);
 

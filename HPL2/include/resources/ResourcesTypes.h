@@ -52,10 +52,10 @@ typedef tEFL_LightBillboardConnectionList::iterator tEFL_LightBillboardConnectio
 class iXmlDocument;
 class cBinaryBuffer;
 
-typedef std::list<iXmlDocument*> tXmlDocumentList;
+typedef std::list<iXmlDocument *> tXmlDocumentList;
 typedef tXmlDocumentList::iterator tXmlDocumentListIt;
 
-typedef std::list<cBinaryBuffer*> tBinaryBufferList;
+typedef std::list<cBinaryBuffer *> tBinaryBufferList;
 typedef tBinaryBufferList::iterator tBinaryBufferListIt;
 
 //-------------------------------------------------------

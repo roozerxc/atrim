@@ -37,10 +37,10 @@ public:
         return mfBackgroundZ;
     }
 
-    void SetSelectedItem(int alX,bool abMoveList=false,
-                         bool abGenerateCallback=true,
-                         eListBoxSelectType aType=eListBoxSelectType_Toggle,
-                         bool abClearPrevious=true);
+    void SetSelectedItem(int alX, bool abMoveList = false,
+                         bool abGenerateCallback = true,
+                         eListBoxSelectType aType = eListBoxSelectType_Toggle,
+                         bool abClearPrevious = true);
     int GetSelectedItem();
 
     void AddIndexToSelection(int alIdx);

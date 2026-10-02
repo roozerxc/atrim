@@ -53,7 +53,7 @@ public:
      */
     void Reset();
 
-    static SHA1 &reset(SHA1&);
+    static SHA1 &reset(SHA1 &);
 
     /*
      *  Result
@@ -92,8 +92,8 @@ public:
      */
     bool Result(std::string &hex);
 
-    SHA1& operator>>(tString &hex);
-    SHA1& operator>>(tWString &hex);
+    SHA1 &operator>>(tString &hex);
+    SHA1 &operator>>(tWString &hex);
 
     /*
      *  Input
@@ -117,9 +117,9 @@ public:
                 unsigned            length);
     void Input(const tString &message);
     void Input(const tWString &message);
-    SHA1& operator<<(tString message);
-    SHA1& operator<<(tWString message);
-    SHA1& operator<<(SHA1& (*__mf)(SHA1&));
+    SHA1 &operator<<(tString message);
+    SHA1 &operator<<(tWString message);
+    SHA1 &operator<<(SHA1 & (*__mf)(SHA1 &));
 
 private:
 

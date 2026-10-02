@@ -16,7 +16,7 @@ public:
 
     bool CreateFromFile(const tWString &asFile);
 
-    iSoundChannel* CreateChannel(int alPriority);
+    iSoundChannel *CreateChannel(int alPriority);
 
     bool IsStream()
     {
@@ -25,18 +25,18 @@ public:
 
     bool IsStereo();
 
-    cOAL_Sample*    GetSample()
+    cOAL_Sample    *GetSample()
     {
         return ( mpSample );
     }
-    cOAL_Stream*    GetStream()
+    cOAL_Stream    *GetStream()
     {
         return ( mpStream );
     }
 
 private:
-    cOAL_Sample*    mpSample;
-    cOAL_Stream*    mpStream;
+    cOAL_Sample    *mpSample;
+    cOAL_Stream    *mpStream;
 };
 };
 #endif // HPL_OPENAL_SOUND_DATA_H

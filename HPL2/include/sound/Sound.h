@@ -24,24 +24,24 @@ public:
 
     void Update(double adFixedDelta);
 
-    iLowLevelSound* GetLowLevel()
+    iLowLevelSound *GetLowLevel()
     {
         return mpLowLevelSound;
     }
-    cSoundHandler* GetSoundHandler()
+    cSoundHandler *GetSoundHandler()
     {
         return mpSoundHandler;
     }
-    cMusicHandler* GetMusicHandler()
+    cMusicHandler *GetMusicHandler()
     {
         return mpMusicHandler;
     }
 
 private:
     iLowLevelSound *mpLowLevelSound;
-    cResources* mpResources;
-    cSoundHandler* mpSoundHandler;
-    cMusicHandler* mpMusicHandler;
+    cResources *mpResources;
+    cSoundHandler *mpSoundHandler;
+    cMusicHandler *mpMusicHandler;
 };
 
 };

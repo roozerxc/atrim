@@ -71,21 +71,21 @@ void cLowLevelInputSDL::BeginInputUpdate()
     SDL_Event sdlEvent;
 
     mlstEvents.clear();
-    while(SDL_PollEvent(&sdlEvent)!=0)
+    while(SDL_PollEvent(&sdlEvent) != 0)
     {
 #if defined _WIN32
-        if(sdlEvent.type==SDL_SYSWMEVENT)
+        if(sdlEvent.type == SDL_SYSWMEVENT)
         {
             SDL_SysWMmsg* pMsg = sdlEvent.syswm.msg;
 
             // This is bad, cos it is actually Windows specific code, should not be here. TODO: move it, obviously
-            if(pMsg->msg==WM_DEVICECHANGE)
+            if(pMsg->msg == WM_DEVICECHANGE)
             {
-                if(pMsg->wParam==DBT_DEVICEARRIVAL)
+                if(pMsg->wParam == DBT_DEVICEARRIVAL)
                 {
                     cEngine::SetDeviceWasPlugged();
                 }
-                else if(pMsg->wParam==DBT_DEVICEREMOVECOMPLETE)
+                else if(pMsg->wParam == DBT_DEVICEREMOVECOMPLETE)
                 {
                     cEngine::SetDeviceWasRemoved();
                 }
@@ -94,7 +94,7 @@ void cLowLevelInputSDL::BeginInputUpdate()
         else
 #endif //WIN32
 #if defined (__APPLE__)
-            if (sdlEvent.type==SDL_KEYDOWN)
+            if (sdlEvent.type == SDL_KEYDOWN)
             {
                 if (sdlEvent.key.keysym.sym == SDLK_q && sdlEvent.key.keysym.mod & KMOD_GUI)
                 {
@@ -107,7 +107,7 @@ void cLowLevelInputSDL::BeginInputUpdate()
             }
             else
 #endif
-                if (sdlEvent.type==SDL_QUIT)
+                if (sdlEvent.type == SDL_QUIT)
                 {
                     mbQuitMessagePosted = true;
                 }
@@ -180,22 +180,22 @@ int cLowLevelInputSDL::GetPluggedGamepadNum()
 
 //-----------------------------------------------------------------------
 
-iMouse* cLowLevelInputSDL::CreateMouse()
+iMouse *cLowLevelInputSDL::CreateMouse()
 {
-    return hplNew( cMouseSDL,(this));
+    return hplNew( cMouseSDL, (this));
 }
 
 //-----------------------------------------------------------------------
 
-iKeyboard* cLowLevelInputSDL::CreateKeyboard()
+iKeyboard *cLowLevelInputSDL::CreateKeyboard()
 {
-    return hplNew( cKeyboardSDL,(this) );
+    return hplNew( cKeyboardSDL, (this) );
 }
 
 //-----------------------------------------------------------------------
 
 #if USE_GAMEPAD
-iGamepad* cLowLevelInputSDL::CreateGamepad(int alIndex)
+iGamepad *cLowLevelInputSDL::CreateGamepad(int alIndex)
 {
     return hplNew( cGamepadSDL, (this, alIndex) );
 }

@@ -39,7 +39,7 @@ iPostEffectType::~iPostEffectType()
 
 //-----------------------------------------------------------------------
 
-iPostEffect::iPostEffect(cGraphics *apGraphics,cResources *apResources, iPostEffectType *apType)
+iPostEffect::iPostEffect(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType)
 {
     mpGraphics = apGraphics;
     mpResources = apResources;
@@ -61,7 +61,7 @@ iPostEffect::~iPostEffect()
 
 //-----------------------------------------------------------------------
 
-iTexture* iPostEffect::Render(cPostEffectComposite *apComposite, iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer, bool abLastEffect)
+iTexture *iPostEffect::Render(cPostEffectComposite *apComposite, iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer, bool abLastEffect)
 {
     ///////////////////////////
     // Set up variables and data
@@ -110,7 +110,7 @@ void iPostEffect::SetActive(bool abX)
 
 void iPostEffect::SetParams(iPostEffectParams *apSrcParams)
 {
-    if(mpType==NULL)
+    if(mpType == NULL)
     {
         return;
     }
@@ -127,7 +127,7 @@ void iPostEffect::SetParams(iPostEffectParams *apSrcParams)
 
 void iPostEffect::GetParams(iPostEffectParams *apDestParams)
 {
-    if(mpType==NULL)
+    if(mpType == NULL)
     {
         return;
     }
@@ -187,7 +187,7 @@ void iPostEffect::SetFrameBuffer(iFrameBuffer *apFrameBuffer)
     //Check if texture is same size as screen, if so no need do any extra calcs
     if(pTex->GetSizeInt2D() == mpLowLevelGraphics->GetScreenSizeInt())
     {
-        mpCurrentComposite->SetFrameBuffer(apFrameBuffer,true);
+        mpCurrentComposite->SetFrameBuffer(apFrameBuffer, true);
     }
     /////////////////////
     //Texture does not have same size as screen, need to do extra calculations
@@ -195,10 +195,10 @@ void iPostEffect::SetFrameBuffer(iFrameBuffer *apFrameBuffer)
     {
         cVector2f vTexSize = pTex->GetSizeFloat2D();
         cVector2f vUvPos, vUvSize;
-        GetTextureUvPosAndSize(vTexSize,vUvPos, vUvSize);
+        GetTextureUvPosAndSize(vTexSize, vUvPos, vUvSize);
 
-        cVector2l vTargetPos((int)(vUvPos.x+0.5f), (int)(vUvPos.y+0.5f));
-        cVector2l vTargetSize((int)(vUvSize.x+0.5f), (int)(vUvSize.y+0.5f));
+        cVector2l vTargetPos((int)(vUvPos.x + 0.5f), (int)(vUvPos.y + 0.5f));
+        cVector2l vTargetSize((int)(vUvSize.x + 0.5f), (int)(vUvSize.y + 0.5f));
 
         mpLowLevelGraphics->SetCurrentFrameBuffer(apFrameBuffer, vTargetPos, vTargetSize);
     }
@@ -210,31 +210,31 @@ void iPostEffect::DrawQuad(const cVector3f& avPos,  const cVector2f& avSize, iTe
 {
     cVector2f vTexSize = apTexture->GetSizeFloat2D();
     cVector2f vUvPos, vUvSize;
-    GetTextureUvPosAndSize(vTexSize,vUvPos,vUvSize);
+    GetTextureUvPosAndSize(vTexSize, vUvPos, vUvSize);
 
-    mpCurrentComposite->DrawQuad(avPos,avSize,
-                                 cVector2f(vUvPos.x, (vTexSize.y - vUvSize.y)-vUvPos.y),
-                                 cVector2f(vUvPos.x + vUvSize.x,vTexSize.y - vUvPos.y),
+    mpCurrentComposite->DrawQuad(avPos, avSize,
+                                 cVector2f(vUvPos.x, (vTexSize.y - vUvSize.y) - vUvPos.y),
+                                 cVector2f(vUvPos.x + vUvSize.x, vTexSize.y - vUvPos.y),
                                  abFlipY);
 }
 
 //-----------------------------------------------------------------------
 
 void iPostEffect::DrawQuad(    const cVector3f& avPos,  const cVector2f& avSize, iTexture *apTexture0, iTexture *apTexture1,
-                               bool abFlipY0,bool abFlipY1)
+                               bool abFlipY0, bool abFlipY1)
 {
     cVector2f vTexSize[2] = {apTexture0->GetSizeFloat2D(), apTexture1->GetSizeFloat2D()};
     cVector2f vTexMin[2], vTexMax[2];
 
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         cVector2f vUvPos, vUvSize;
-        GetTextureUvPosAndSize(vTexSize[i],vUvPos,vUvSize);
-        vTexMin[i] = cVector2f(vUvPos.x, (vTexSize[i].y - vUvSize.y)-vUvPos.y);
-        vTexMax[i] = cVector2f(vUvPos.x + vUvSize.x,vTexSize[i].y - vUvPos.y);
+        GetTextureUvPosAndSize(vTexSize[i], vUvPos, vUvSize);
+        vTexMin[i] = cVector2f(vUvPos.x, (vTexSize[i].y - vUvSize.y) - vUvPos.y);
+        vTexMax[i] = cVector2f(vUvPos.x + vUvSize.x, vTexSize[i].y - vUvPos.y);
     }
 
-    mpCurrentComposite->DrawQuad(cVector2f(0,0),1,vTexMin[0],vTexMax[0],vTexMin[1],vTexMax[1],abFlipY0,abFlipY1);
+    mpCurrentComposite->DrawQuad(cVector2f(0, 0), 1, vTexMin[0], vTexMax[0], vTexMin[1], vTexMax[1], abFlipY0, abFlipY1);
 }
 
 //-----------------------------------------------------------------------

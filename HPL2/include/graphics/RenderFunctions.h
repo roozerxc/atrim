@@ -35,12 +35,12 @@ public:
      * This must be called every frame before any render function is called
      */
     void InitAndResetRenderFunctions(    cFrustum *apFrustum, cRenderTarget *apRenderTarget, bool abLog,
-                                         bool abUseGlobalScissorRect=false,
-                                         const cVector2l& avGlobalScissorRectPos=0, const cVector2l& avGlobalScissorRectSize=0);
+                                         bool abUseGlobalScissorRect = false,
+                                         const cVector2l& avGlobalScissorRectPos = 0, const cVector2l& avGlobalScissorRectSize = 0);
     void ExitAndCleanUpRenderFunctions();
 
-    void SetFlatProjection(const cVector2f &avSize=1,float afMin=-100,float afMax=100);
-    void SetFlatProjectionMinMax(const cVector3f &avMin,const cVector3f &avMax);
+    void SetFlatProjection(const cVector2f &avSize = 1, float afMin = -100, float afMax = 100);
+    void SetFlatProjectionMinMax(const cVector3f &avMin, const cVector3f &avMax);
     void SetNormalFrustumProjection();
     void SetFrustumProjection(cFrustum *apFrustum);
     void SetProjectionMatrix(const cMatrixf *apProjMatrix);
@@ -49,15 +49,15 @@ public:
     bool SetDepthWrite(bool abX);
     bool SetDepthTestFunc(eDepthTestFunc aFunc);
     bool SetCullActive(bool abX);
-    bool SetCullMode(eCullMode aMode, bool abCheckIfInverted=true);
+    bool SetCullMode(eCullMode aMode, bool abCheckIfInverted = true);
     bool SetStencilActive(bool abX);
     void SetStencilWriteMask(unsigned int alMask);
-    void SetStencil(eStencilFunc aFunc,int alRef, unsigned int aMask,
-                    eStencilOp aFailOp,eStencilOp aZFailOp,eStencilOp aZPassOp);
-    void SetStencilTwoSide(    eStencilFunc aFrontFunc,eStencilFunc aBackFunc,
+    void SetStencil(eStencilFunc aFunc, int alRef, unsigned int aMask,
+                    eStencilOp aFailOp, eStencilOp aZFailOp, eStencilOp aZPassOp);
+    void SetStencilTwoSide(    eStencilFunc aFrontFunc, eStencilFunc aBackFunc,
                                int alRef, unsigned int aMask,
-                               eStencilOp aFrontFailOp,eStencilOp aFrontZFailOp,eStencilOp aFrontZPassOp,
-                               eStencilOp aBackFailOp,eStencilOp aBackZFailOp,eStencilOp aBackZPassOp);
+                               eStencilOp aFrontFailOp, eStencilOp aFrontZFailOp, eStencilOp aFrontZPassOp,
+                               eStencilOp aBackFailOp, eStencilOp aBackZFailOp, eStencilOp aBackZPassOp);
     bool SetScissorActive(bool abX);
     /**
      * When abAutoEnabling is true, it will also set to false if size = render target and pos=0
@@ -71,44 +71,44 @@ public:
     bool SetProgram(iGpuProgram *apProgram);
     bool SetMatrixMirrored(const cMatrixf& a_mtx);
     void SetTexture(int alUnit, iTexture *apTexture);
-    void SetTextureRange(iTexture *apTexture, int alFirstUnit, int alLastUnit = kMaxTextureUnits-1);
+    void SetTextureRange(iTexture *apTexture, int alFirstUnit, int alLastUnit = kMaxTextureUnits - 1);
     void SetVertexBuffer(iVertexBuffer *apVtxBuffer);
     void SetMatrix(cMatrixf *apMatrix);
     void SetModelViewMatrix(const cMatrixf& a_mtxModelView);
 
     void SetInvertCullMode(bool abX);
 
-    void SetFrameBuffer(iFrameBuffer *apFrameBuffer, bool abUsePosAndSize=false, bool abUseGlobalScissor=true);
+    void SetFrameBuffer(iFrameBuffer *apFrameBuffer, bool abUsePosAndSize = false, bool abUseGlobalScissor = true);
     void ClearFrameBuffer(tClearFrameBufferFlag aFlags, bool abUsePosAndSize);
 
-    void DrawQuad(    const cVector3f& aPos, const cVector2f& avSize, const cVector2f& avMinUV=0, const cVector2f& avMaxUV=1,
-                      bool abInvertY=false, const cColor& aColor=cColor(1,1) );
+    void DrawQuad(    const cVector3f& aPos, const cVector2f& avSize, const cVector2f& avMinUV = 0, const cVector2f& avMaxUV = 1,
+                      bool abInvertY = false, const cColor& aColor = cColor(1, 1) );
 
     void DrawQuad(    const cVector3f& aPos, const cVector2f& avSize,
                       const cVector2f& avMinUV0, const cVector2f& avMaxUV0,
                       const cVector2f& avMinUV1, const cVector2f& avMaxUV1,
-                      bool abInvertY0=false,bool abInvertY1=false, const cColor& aColor=cColor(1,1) );
+                      bool abInvertY0 = false, bool abInvertY1 = false, const cColor& aColor = cColor(1, 1) );
 
 
     void DrawCurrent(eVertexBufferDrawType aDrawType = eVertexBufferDrawType_LastEnum);
 
     void DrawWireFrame(iVertexBuffer *apVtxBuffer, const cColor &aColor);
 
-    iTexture* CreateRenderTexture(    const tString& asName, const cVector2l& avSize, ePixelFormat aPixelFormat,
-                                      eTextureFilter aFilter = eTextureFilter_Bilinear, eTextureType aType= eTextureType_Rect);
+    iTexture *CreateRenderTexture(    const tString& asName, const cVector2l& avSize, ePixelFormat aPixelFormat,
+                                      eTextureFilter aFilter = eTextureFilter_Bilinear, eTextureType aType = eTextureType_Rect);
 
     void CopyFrameBufferToTexure(    iTexture *apTexture, const cVector2l& avPos, const cVector2l& avSize, const cVector2l& avTextureOffset,
                                      bool abTextureOffsetUsesRenderTargetPos);
 
-    cRenderTarget* GetCurrentRenderTarget()
+    cRenderTarget *GetCurrentRenderTarget()
     {
         return mpCurrentRenderTarget;
     }
-    const cVector2l& GetCurrentFrameBufferSize()
+    const cVector2l &GetCurrentFrameBufferSize()
     {
         return mvCurrentFrameBufferSize;
     }
-    const cVector2l& GetRenderTargetSize()
+    const cVector2l &GetRenderTargetSize()
     {
         return mvRenderTargetSize;
     }
@@ -149,7 +149,7 @@ protected:
     float mfCurrentAlphaLimit;
     eMaterialBlendMode mCurrentBlendMode;
     iTexture *mvCurrentTexture[kMaxTextureUnits];
-    iGpuProgram* mpCurrentProgram;
+    iGpuProgram *mpCurrentProgram;
     iVertexBuffer *mpCurrentVtxBuffer;
     cMatrixf *mpCurrentMatrix;
 

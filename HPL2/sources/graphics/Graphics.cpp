@@ -74,7 +74,7 @@ cGraphics::~cGraphics()
 
     STLDeleteAll(mvPostEffectTypes);
 
-    for(size_t i=0; i<mvRenderers.size(); ++i)
+    for(size_t i = 0; i < mvRenderers.size(); ++i)
     {
         if(mvRenderers[i])
         {
@@ -107,8 +107,8 @@ cGraphics::~cGraphics()
 //-----------------------------------------------------------------------
 
 bool cGraphics::Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen,
-                         eGpuProgramFormat aGpuProgramFormat,const tString &asWindowCaption,
-                         const cVector2l &avWindowPos,cResources* apResources,tFlag alHplSetupFlags)
+                         eGpuProgramFormat aGpuProgramFormat, const tString &asWindowCaption,
+                         const cVector2l &avWindowPos, cResources* apResources, tFlag alHplSetupFlags)
 {
     Log("Initializing Graphics Module\n");
     Log("--------------------------------------------------------\n");
@@ -117,16 +117,16 @@ bool cGraphics::Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen
 
     ////////////////////////////////////////////////
     //Setup the graphic directories:
-    apResources->AddResourceDir(_W("core/shaders"),false);
-    apResources->AddResourceDir(_W("core/textures"),false);
-    apResources->AddResourceDir(_W("core/models"),false);
+    apResources->AddResourceDir(_W("core/shaders"), false);
+    apResources->AddResourceDir(_W("core/textures"), false);
+    apResources->AddResourceDir(_W("core/models"), false);
 
     ////////////////////////////////////////////////
     // LowLevel Init
     if(alHplSetupFlags & eHplSetup_Screen)
     {
-        Log("Init lowlevel graphics: %dx%d bpp:%d fs:%d gpufmt:%d cap:'%s' pos:(%dx%d)\n",alWidth,alHeight,alBpp,abFullscreen,aGpuProgramFormat, asWindowCaption.c_str(), avWindowPos.x,avWindowPos.y);
-        mpLowLevelGraphics->Init(alWidth,alHeight,alBpp,abFullscreen,aGpuProgramFormat,asWindowCaption,
+        Log("Init lowlevel graphics: %dx%d bpp:%d fs:%d gpufmt:%d cap:'%s' pos:(%dx%d)\n", alWidth, alHeight, alBpp, abFullscreen, aGpuProgramFormat, asWindowCaption.c_str(), avWindowPos.x, avWindowPos.y);
+        mpLowLevelGraphics->Init(alWidth, alHeight, alBpp, abFullscreen, aGpuProgramFormat, asWindowCaption,
                                  avWindowPos);
         mbScreenIsSetup = true;
     }
@@ -138,9 +138,9 @@ bool cGraphics::Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen
 
     ////////////////////////////////////////////////
     // Create systems
-    mpMeshCreator = hplNew( cMeshCreator,(mpLowLevelGraphics, apResources));
-    mpTextureCreator  = hplNew( cTextureCreator,(mpLowLevelGraphics, apResources));
-    mpDecalCreator = hplNew( cDecalCreator,(mpLowLevelGraphics, apResources));
+    mpMeshCreator = hplNew( cMeshCreator, (mpLowLevelGraphics, apResources));
+    mpTextureCreator  = hplNew( cTextureCreator, (mpLowLevelGraphics, apResources));
+    mpDecalCreator = hplNew( cDecalCreator, (mpLowLevelGraphics, apResources));
 
     ////////////////////////////////////////////////
     // Create Renderers
@@ -156,11 +156,11 @@ bool cGraphics::Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen
         mvRenderers[eRenderer_WireFrame] = hplNew(cRendererWireFrame, (this, apResources));
         mvRenderers[eRenderer_Simple] = hplNew(cRendererSimple, (this, apResources));
 
-        for(size_t i=0; i<mvRenderers.size(); ++i)
+        for(size_t i = 0; i < mvRenderers.size(); ++i)
         {
             if(mvRenderers[i])
             {
-                if(mvRenderers[i]->LoadData()==false)
+                if(mvRenderers[i]->LoadData() == false)
                 {
                     FatalError("Renderer #%d could not be initialized! Make sure your graphic card drivers are up to date. Check log file for more information.\n", i);
                 }
@@ -205,7 +205,7 @@ bool cGraphics::Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen
 
 void cGraphics::Update(double adFixedDelta)
 {
-    for(size_t i=0; i< mvRenderers.size(); ++i)
+    for(size_t i = 0; i < mvRenderers.size(); ++i)
     {
         iRenderer *pRenderer = mvRenderers[i];
 
@@ -215,7 +215,7 @@ void cGraphics::Update(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-iRenderer* cGraphics::GetRenderer(eRenderer aType)
+iRenderer *cGraphics::GetRenderer(eRenderer aType)
 {
     if(aType >= (int)mvRenderers.size())
     {
@@ -229,7 +229,7 @@ iRenderer* cGraphics::GetRenderer(eRenderer aType)
 
 void cGraphics::ReloadRendererData()
 {
-    for(size_t i=0; i< mvRenderers.size(); ++i)
+    for(size_t i = 0; i < mvRenderers.size(); ++i)
     {
         iRenderer *pRenderer = mvRenderers[i];
 
@@ -240,7 +240,7 @@ void cGraphics::ReloadRendererData()
 
 //-----------------------------------------------------------------------
 
-iFrameBuffer* cGraphics::CreateFrameBuffer(const tString& asName)
+iFrameBuffer *cGraphics::CreateFrameBuffer(const tString& asName)
 {
     iFrameBuffer* pFrameBuffer = mpLowLevelGraphics->CreateFrameBuffer(asName);
     if(pFrameBuffer == NULL)
@@ -256,16 +256,16 @@ iFrameBuffer* cGraphics::CreateFrameBuffer(const tString& asName)
 
 void cGraphics::DestroyFrameBuffer(iFrameBuffer* apFrameBuffer)
 {
-    STLFindAndDelete(mlstFrameBuffers,apFrameBuffer);
+    STLFindAndDelete(mlstFrameBuffers, apFrameBuffer);
 }
 
 //-----------------------------------------------------------------------
 
-iFrameBuffer* cGraphics::GetTempFrameBuffer(const cVector2l& avSize, ePixelFormat aPixelFormat, int alIndex)
+iFrameBuffer *cGraphics::GetTempFrameBuffer(const cVector2l& avSize, ePixelFormat aPixelFormat, int alIndex)
 {
     /////////////////////////
     // Try and find existing frame buffer
-    for(size_t i=0; i<mvTempFrameBuffers.size(); ++i)
+    for(size_t i = 0; i < mvTempFrameBuffers.size(); ++i)
     {
         cTempFrameBuffer &tempBuffer = mvTempFrameBuffers[i];
         if(    tempBuffer.mvSize == avSize && tempBuffer.mPixelFormat == aPixelFormat &&
@@ -283,15 +283,15 @@ iFrameBuffer* cGraphics::GetTempFrameBuffer(const cVector2l& avSize, ePixelForma
     tempBuffer.mlIndex = alIndex;
 
     //Create texture
-    tString sNameSuffix = cString::ToString(avSize.x)+"x"+cString::ToString(avSize.y)+":"+cString::ToString((int)aPixelFormat);
-    iTexture *pTexture = CreateTexture("TempBufferTexture"+sNameSuffix, eTextureType_Rect, eTextureUsage_RenderTarget);
-    pTexture->CreateFromRawData(cVector3l(avSize.x, avSize.y,0),aPixelFormat,NULL);
+    tString sNameSuffix = cString::ToString(avSize.x) + "x" + cString::ToString(avSize.y) + ":" + cString::ToString((int)aPixelFormat);
+    iTexture *pTexture = CreateTexture("TempBufferTexture" + sNameSuffix, eTextureType_Rect, eTextureUsage_RenderTarget);
+    pTexture->CreateFromRawData(cVector3l(avSize.x, avSize.y, 0), aPixelFormat, NULL);
     pTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
 
     //Create frame buffer
-    iFrameBuffer *pFrameBuffer = CreateFrameBuffer("TempBuffer"+sNameSuffix);
+    iFrameBuffer *pFrameBuffer = CreateFrameBuffer("TempBuffer" + sNameSuffix);
     pFrameBuffer->SetTexture2D(0, pTexture);
-    if(pFrameBuffer->CompileAndValidate()==false)
+    if(pFrameBuffer->CompileAndValidate() == false)
     {
         DestroyFrameBuffer(pFrameBuffer);
         DestroyTexture(pTexture);
@@ -306,7 +306,7 @@ iFrameBuffer* cGraphics::GetTempFrameBuffer(const cVector2l& avSize, ePixelForma
 
 //-----------------------------------------------------------------------
 
-iDepthStencilBuffer* cGraphics::CreateDepthStencilBuffer(const cVector2l& avSize, int alDepthBits, int alStencilBits, bool abLookForMatchingFirst)
+iDepthStencilBuffer *cGraphics::CreateDepthStencilBuffer(const cVector2l& avSize, int alDepthBits, int alStencilBits, bool abLookForMatchingFirst)
 {
     iDepthStencilBuffer* pBuffer = NULL;
 
@@ -320,10 +320,10 @@ iDepthStencilBuffer* cGraphics::CreateDepthStencilBuffer(const cVector2l& avSize
     // Create frame buffer and add to list
     if(pBuffer == NULL)
     {
-        pBuffer = mpLowLevelGraphics->CreateDepthStencilBuffer(avSize,alDepthBits,alStencilBits);
+        pBuffer = mpLowLevelGraphics->CreateDepthStencilBuffer(avSize, alDepthBits, alStencilBits);
         if(pBuffer == NULL)
         {
-            Error("Could not create a depth stencil buffer size %dx%d, depthbits: %d stencilbits: %d\n",avSize.x, avSize.y,alDepthBits,alStencilBits);
+            Error("Could not create a depth stencil buffer size %dx%d, depthbits: %d stencilbits: %d\n", avSize.x, avSize.y, alDepthBits, alStencilBits);
             return NULL;
         }
 
@@ -339,7 +339,7 @@ iDepthStencilBuffer* cGraphics::CreateDepthStencilBuffer(const cVector2l& avSize
 
 //-----------------------------------------------------------------------
 
-iDepthStencilBuffer* cGraphics::FindDepthStencilBuffer(const cVector2l& avSize, int alMinDepthBits, int alMinStencilBits)
+iDepthStencilBuffer *cGraphics::FindDepthStencilBuffer(const cVector2l& avSize, int alMinDepthBits, int alMinStencilBits)
 {
     tDepthStencilBufferListIt it = mlstDepthStencilBuffers.begin();
     for(; it != mlstDepthStencilBuffers.end(); ++it)
@@ -362,17 +362,17 @@ void cGraphics::DestroyDepthStencilBuffer(iDepthStencilBuffer* apBuffer)
 {
     apBuffer->DecUserCount();
 
-    if(apBuffer->HasUsers()==false)
+    if(apBuffer->HasUsers() == false)
     {
-        STLFindAndDelete(mlstDepthStencilBuffers,apBuffer);
+        STLFindAndDelete(mlstDepthStencilBuffers, apBuffer);
     }
 }
 
 //-----------------------------------------------------------------------
 
-iTexture* cGraphics::CreateTexture(const tString &asName,eTextureType aType,   eTextureUsage aUsage)
+iTexture *cGraphics::CreateTexture(const tString &asName, eTextureType aType,   eTextureUsage aUsage)
 {
-    iTexture *pTexture = mpLowLevelGraphics->CreateTexture(asName,aType, aUsage);
+    iTexture *pTexture = mpLowLevelGraphics->CreateTexture(asName, aType, aUsage);
     mlstTextures.push_back(pTexture);
     return pTexture;
 }
@@ -384,7 +384,7 @@ void cGraphics::DestroyTexture(iTexture *apTexture)
 
 //-----------------------------------------------------------------------
 
-cPostEffectComposite* cGraphics::CreatePostEffectComposite()
+cPostEffectComposite *cGraphics::CreatePostEffectComposite()
 {
     cPostEffectComposite *pComposite = hplNew( cPostEffectComposite, (this) );
     mlstPostEffectComposites.push_back(pComposite);
@@ -406,7 +406,7 @@ void  cGraphics::AddPostEffectType(iPostEffectType *apPostEffectBase)
 
 //-----------------------------------------------------------------------
 
-iPostEffect* cGraphics::CreatePostEffect(iPostEffectParams *apParams)
+iPostEffect *cGraphics::CreatePostEffect(iPostEffectParams *apParams)
 {
     iPostEffectType *pType = (iPostEffectType*)STLFindByName(mvPostEffectTypes, apParams->GetName());
     if(pType == NULL)
@@ -427,12 +427,12 @@ iPostEffect* cGraphics::CreatePostEffect(iPostEffectParams *apParams)
 
 void cGraphics::DestroyPostEffect(iPostEffect* apPostEffect)
 {
-    STLFindAndDelete(mlstPostEffects,apPostEffect);
+    STLFindAndDelete(mlstPostEffects, apPostEffect);
 }
 
 //-----------------------------------------------------------------------
 
-iGpuProgram* cGraphics::CreateGpuProgram(const tString& asName)
+iGpuProgram *cGraphics::CreateGpuProgram(const tString& asName)
 {
     iGpuProgram *pProgram = mpLowLevelGraphics->CreateGpuProgram(asName);
     pProgram->SetResources(mpResources);
@@ -441,16 +441,16 @@ iGpuProgram* cGraphics::CreateGpuProgram(const tString& asName)
     return pProgram;
 }
 
-iGpuProgram* cGraphics::CreateGpuProgramFromShaders(const tString& asName, const tString& asVtxShader,const tString& asFragShader,
+iGpuProgram *cGraphics::CreateGpuProgramFromShaders(const tString& asName, const tString& asVtxShader, const tString& asFragShader,
         cParserVarContainer *apVarContainer)
 {
-    iGpuShader *pVtxShader = mpResources->GetGpuShaderManager()->CreateShader(asVtxShader,eGpuShaderType_Vertex,apVarContainer);
-    if(pVtxShader==NULL)
+    iGpuShader *pVtxShader = mpResources->GetGpuShaderManager()->CreateShader(asVtxShader, eGpuShaderType_Vertex, apVarContainer);
+    if(pVtxShader == NULL)
     {
         return NULL;
     }
-    iGpuShader *pFragShader = mpResources->GetGpuShaderManager()->CreateShader(asFragShader,eGpuShaderType_Fragment,apVarContainer);
-    if(pFragShader==NULL)
+    iGpuShader *pFragShader = mpResources->GetGpuShaderManager()->CreateShader(asFragShader, eGpuShaderType_Fragment, apVarContainer);
+    if(pFragShader == NULL)
     {
         mpResources->GetGpuShaderManager()->Destroy(pVtxShader);
         return NULL;
@@ -495,7 +495,7 @@ tStringVec cGraphics::GetMaterialTypeNames()
 {
     tStringVec vNames;
     tMaterialTypeMapIt it = m_mapMaterialTypes.begin();
-    for(; it!=m_mapMaterialTypes.end(); ++it)
+    for(; it != m_mapMaterialTypes.end(); ++it)
     {
         vNames.push_back(it->first);
     }

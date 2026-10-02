@@ -10,7 +10,7 @@ template <class T>
 class cPidController
 {
 public:
-    float p, i,d;
+    float p, i, d;
     //////////////////////////////////////////
     // Constructors
     /////////////////////////////////////////
@@ -21,7 +21,7 @@ public:
     cPidController(float afP, float afI, float afD, int alErrorNum)
     {
         p = afP;
-        i=afI;
+        i = afI;
         d = afD;
         SetErrorNum(alErrorNum);
         Reset();
@@ -37,15 +37,15 @@ public:
         mvErrors[mlErrorNum] = aError;
         mvTimeSteps[mlErrorNum] = (float)adFixedDelta;
 
-        integral =0;
+        integral = 0;
         size_t lCount = mvErrors.size();
-        for(size_t error=0; error<lCount; ++error)
+        for(size_t error = 0; error < lCount; ++error)
         {
             integral += mvErrors[error] * mvTimeSteps[error];
         }
 
         derivative = 0.0f;
-        if(mlLastNum>=0)
+        if(mlLastNum >= 0)
         {
             derivative = (mvErrors[mlErrorNum] - mvErrors[mlLastNum]) / (float)adFixedDelta;
         }
@@ -54,18 +54,18 @@ public:
         mlErrorNum++;
         if(mlErrorNum >= (int)mvErrors.size())
         {
-            mlErrorNum =0;
+            mlErrorNum = 0;
         }
 
-        return mvErrors[mlLastNum]*p + integral*i + derivative*d;
+        return mvErrors[mlLastNum] * p + integral * i + derivative * d;
     }
 
     //------------------------------------
 
     void SetErrorNum(int alErrorNum)
     {
-        mvErrors.resize(alErrorNum,0);
-        mvTimeSteps.resize(alErrorNum,0);
+        mvErrors.resize(alErrorNum, 0);
+        mvTimeSteps.resize(alErrorNum, 0);
     }
 
     //------------------------------------
@@ -73,8 +73,8 @@ public:
     void Reset()
     {
         mlErrorNum = 0;
-        mlLastNum =-1;
-        mvTimeSteps.assign(mvTimeSteps.size(),0);
+        mlLastNum = -1;
+        mvTimeSteps.assign(mvTimeSteps.size(), 0);
 
         integral = 0;
         derivative = 0;
@@ -84,7 +84,7 @@ public:
 
     T GetLastError()
     {
-        if(mlLastNum>=0)
+        if(mlLastNum >= 0)
         {
             return mvErrors[mlLastNum];
         }
@@ -107,7 +107,7 @@ private:
     std::vector<T> mvErrors;
     std::vector<float> mvTimeSteps;
 
-    T integral,derivative;
+    T integral, derivative;
 
     int mlErrorNum;
     int mlLastNum;

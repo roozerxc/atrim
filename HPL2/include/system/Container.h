@@ -18,9 +18,9 @@ class iContainerIterator
 public:
     virtual ~iContainerIterator() {}
 protected:
-    virtual bool HasNext()=0;
+    virtual bool HasNext() = 0;
 
-    virtual void* NextPtr()=0;
+    virtual void *NextPtr() = 0;
 };
 
 //---------------------------------
@@ -30,14 +30,14 @@ class iContainer
     friend class cSerializeClass;
 public:
     virtual ~iContainer() {}
-    virtual size_t Size()=0;
-    virtual void Clear()=0;
+    virtual size_t Size() = 0;
+    virtual void Clear() = 0;
 protected:
 
-    virtual void AddVoidPtr(void **apPtr)=0;
-    virtual void AddVoidClass(void *apClass)=0;
+    virtual void AddVoidPtr(void **apPtr) = 0;
+    virtual void AddVoidClass(void *apClass) = 0;
 
-    virtual iContainerIterator* CreateIteratorPtr()=0;
+    virtual iContainerIterator *CreateIteratorPtr() = 0;
 };
 
 //---------------------------------
@@ -47,10 +47,10 @@ class iContainerKeyPair
 public:
     virtual ~iContainerKeyPair() {}
 
-    virtual size_t Size()=0;
+    virtual size_t Size() = 0;
 
-    virtual void AddVoidPtr(void *apKey, void **apClass)=0;
-    virtual void AddVoidClass(void *apKey, void *apClass)=0;
+    virtual void AddVoidPtr(void *apKey, void **apClass) = 0;
+    virtual void AddVoidClass(void *apKey, void *apClass) = 0;
 };
 
 //---------------------------------
@@ -59,7 +59,7 @@ public:
 template<class T>
 class cContainerVecIterator : public iContainerIterator
 {
-    void* NextPtr()
+    void *NextPtr()
     {
         return &Next();
     }
@@ -84,14 +84,14 @@ public:
         return mIt != mpVec->end();
     }
 
-    T& Next()
+    T &Next()
     {
         T &val = *mIt;
         mIt++;
         return val;
     }
 
-    T& PeekNext()
+    T &PeekNext()
     {
         return *mIt;
     }
@@ -123,7 +123,7 @@ private:
     {
         mvVector.push_back(*((T*)apClass));
     }
-    iContainerIterator* CreateIteratorPtr()
+    iContainerIterator *CreateIteratorPtr()
     {
         return hplNew( cContainerVecIterator<T>, (&mvVector) );
     }
@@ -169,7 +169,7 @@ public:
 
     //////////////////////
 
-    T& operator [](size_t alX)
+    T &operator [](size_t alX)
     {
         return mvVector[alX];
     }
@@ -184,7 +184,7 @@ public:
 template<class T>
 class cContainerListIterator : public iContainerIterator
 {
-    void* NextPtr()
+    void *NextPtr()
     {
         return &Next();
     }
@@ -210,14 +210,14 @@ public:
         return mIt != mpVec->end();
     }
 
-    T& Next()
+    T &Next()
     {
         T &val = *mIt;
         mIt++;
         return val;
     }
 
-    T& PeekNext()
+    T &PeekNext()
     {
         return *mIt;
     }
@@ -249,7 +249,7 @@ private:
     {
         mvVector.push_back(*((T*)apClass));
     }
-    iContainerIterator* CreateIteratorPtr()
+    iContainerIterator *CreateIteratorPtr()
     {
         return hplNew( cContainerListIterator<T>, (&mvVector) );
     }

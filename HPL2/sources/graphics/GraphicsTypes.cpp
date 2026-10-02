@@ -296,7 +296,7 @@ cVideoMode::cVideoMode(const cVector2l& avScreenSize) : mvScreenSize(avScreenSiz
 {
 }
 
-cVideoMode::cVideoMode() : mvScreenSize(cVector2l(-1,-1)),
+cVideoMode::cVideoMode() : mvScreenSize(cVector2l(-1, -1)),
     mlBitsPerPixel(-1),
     mlRefreshRate(-1),
     mbCustom(true)
@@ -316,26 +316,26 @@ bool cVideoMode::operator==(const hpl::cVideoMode &o) const
 
 //-----------------------------------------------------------------------
 
-iTexture* iFrameBufferAttachment::ToTexture()
+iTexture *iFrameBufferAttachment::ToTexture()
 {
     if(GetFrameBufferAttachmentType() != eFrameBufferAttachment_Texture)
     {
         return NULL;
     }
 
-    return static_cast<iTexture*>(this);
+    return static_cast<iTexture *>(this);
 }
 
 //-----------------------------------------------------------------------
 
-iDepthStencilBuffer* iFrameBufferAttachment::ToDepthStencilBuffer()
+iDepthStencilBuffer *iFrameBufferAttachment::ToDepthStencilBuffer()
 {
     if(GetFrameBufferAttachmentType() != eFrameBufferAttachment_RenderBuffer)
     {
         return NULL;
     }
 
-    return static_cast<iDepthStencilBuffer*>(this);
+    return static_cast<iDepthStencilBuffer *>(this);
 }
 
 //-----------------------------------------------------------------------

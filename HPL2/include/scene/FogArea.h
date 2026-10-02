@@ -24,7 +24,7 @@ public:
 
     //////////////////////////////
     //Properties
-    const cColor& GetColor()
+    const cColor &GetColor()
     {
         return mColor;
     }
@@ -33,7 +33,7 @@ public:
         mColor = aCol;
     }
 
-    const cVector3f& GetSize()
+    const cVector3f &GetSize()
     {
         return mvSize;
     }
@@ -68,11 +68,11 @@ public:
 
     void SetShowBacksideWhenOutside(bool abX)
     {
-        mbShowBacksideWhenOutside=abX;
+        mbShowBacksideWhenOutside = abX;
     }
     void SetShowBacksideWhenInside(bool abX)
     {
-        mbShowBacksideWhenInside=abX;
+        mbShowBacksideWhenInside = abX;
     }
     bool GetShowBacksideWhenOutside()
     {
@@ -96,7 +96,7 @@ public:
     {
         return NULL;
     }
-    iVertexBuffer* GetVertexBuffer()
+    iVertexBuffer *GetVertexBuffer()
     {
         return NULL;
     }
@@ -110,7 +110,7 @@ public:
     {
         return GetTransformUpdateCount();
     }
-    cMatrixf* GetModelMatrix(cFrustum* apFrustum);
+    cMatrixf *GetModelMatrix(cFrustum* apFrustum);
 
 private:
     cColor mColor;

@@ -23,8 +23,8 @@ class cUIKey
 public:
     cUIKey(eKey aKey, int alUnicodeLower, int alUnicodeUpper) : mKey(aKey)
     {
-        mvUnicode[0]=alUnicodeLower;
-        mvUnicode[1]=alUnicodeUpper;
+        mvUnicode[0] = alUnicodeLower;
+        mvUnicode[1] = alUnicodeUpper;
     }
 
     eKey mKey;
@@ -47,7 +47,7 @@ public:
 protected:
     /////////////////////////////
     // Own functions
-    void SetUpKey(iWidget* apKeyWidget, eKey aKey, int alUnicode, bool abShift=true);
+    void SetUpKey(iWidget* apKeyWidget, eKey aKey, int alUnicode, bool abShift = true);
 
     bool Key_OnPress(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(Key_OnPress);
@@ -80,7 +80,7 @@ protected:
     // Data
     cVector3f mvPos;
 
-    cWidgetTextBox* mpTargetTextBox;
+    cWidgetTextBox *mpTargetTextBox;
     tWString msBackUpText;
 
     tWidgetList mlstKeyWidgets;

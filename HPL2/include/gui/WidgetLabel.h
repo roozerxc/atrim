@@ -59,7 +59,7 @@ public:
     {
         mBackGroundColor = aColor;
     }
-    const cColor& GetBackGroundColor()
+    const cColor &GetBackGroundColor()
     {
         return mBackGroundColor;
     }

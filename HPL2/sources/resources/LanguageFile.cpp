@@ -39,8 +39,8 @@ cLanguageFile::~cLanguageFile()
 
 bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, const tWString& asAltPath)
 {
-    const bool bLog =false;
-    TiXmlDocument *pDoc = hplNew(TiXmlDocument,() );
+    const bool bLog = false;
+    TiXmlDocument *pDoc = hplNew(TiXmlDocument, () );
 
     tWString sPath = asFile;
     if (asAltPath.length() > 0 && cPlatform::FileExists(asAltPath + asFile))
@@ -50,7 +50,7 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
 
     FILE *pFile = cPlatform::OpenFile(sPath, _W("rb"));
     bool bRet = false;
-    if (pFile!=NULL)
+    if (pFile != NULL)
     {
         bRet = pDoc->LoadFile(pFile);
         fclose(pFile);
@@ -59,13 +59,13 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
     if (!bRet)
     {
         hplDelete(pDoc);
-        Error("Couldn't load language file '%ls'\n",asFile.c_str());
+        Error("Couldn't load language file '%ls'\n", asFile.c_str());
         return false;
     }
 
     if(bLog)
     {
-        Log("Loading lang file '%ls'\n---------------------\n",asFile.c_str());
+        Log("Loading lang file '%ls'\n---------------------\n", asFile.c_str());
     }
 
     TiXmlElement *pRootElem = pDoc->FirstChildElement();
@@ -81,14 +81,14 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
             for(; pDirElem != NULL; pDirElem = pDirElem->NextSiblingElement("Directory"))
             {
                 tString sPath = pDirElem->Attribute("Path");
-                if(sPath=="")
+                if(sPath == "")
                 {
                     continue;
                 }
 
                 bool bAddSubDirs = cString::ToBool(pDirElem->Attribute("AddSubDirs"), true);
 
-                if(sPath[0]=='/' || sPath[0]=='\\')
+                if(sPath[0] == '/' || sPath[0] == '\\')
                 {
                     sPath = cString::Sub(sPath, 1);
                 }
@@ -96,15 +96,15 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
                 //Log("Adding lang path: '%s' %d\n", sPath.c_str(), bAddSubDirs);
                 if (asAltPath.length())
                 {
-                    mpResources->AddResourceDir(asAltPath + cString::To16Char(sPath),bAddSubDirs);
+                    mpResources->AddResourceDir(asAltPath + cString::To16Char(sPath), bAddSubDirs);
                 }
-                mpResources->AddResourceDir(cString::To16Char(sPath),bAddSubDirs);
+                mpResources->AddResourceDir(cString::To16Char(sPath), bAddSubDirs);
 #endif
             }
         }
         else
         {
-            Warning("No resources element found in '%ls'\n",asFile.c_str());
+            Warning("No resources element found in '%ls'\n", asFile.c_str());
         }
     }
 
@@ -127,7 +127,7 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
 
             if(bLog)
             {
-                Log("Creating category '%s'\n",sCatName.c_str());
+                Log("Creating category '%s'\n", sCatName.c_str());
             }
         }
         else
@@ -136,7 +136,7 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
 
             if(bLog)
             {
-                Log("Got existing category '%s'\n",sCatName.c_str());
+                Log("Got existing category '%s'\n", sCatName.c_str());
             }
         }
 
@@ -154,7 +154,7 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
             {
                 if(bLog)
                 {
-                    Log("Entry '%s' already exist!\n",sEntryName.c_str());
+                    Log("Entry '%s' already exist!\n", sEntryName.c_str());
                 }
 
                 continue;
@@ -166,7 +166,7 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
 
             if(bLog)
             {
-                Log("Creating Entry '%s'\n",sEntryName.c_str());
+                Log("Creating Entry '%s'\n", sEntryName.c_str());
             }
 
 
@@ -185,28 +185,28 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
 
                     //if(sCatName == "TEST") Log("String: '%s' %d\n",sString.c_str(),sString.size());
 
-                    for(size_t i=0; i< sString.length(); ++i)
+                    for(size_t i = 0; i < sString.length(); ++i)
                     {
                         unsigned char c = sString[i];
-                        if(c=='[')
+                        if(c == '[')
                         {
                             bool bFoundCommand = true;
                             tString sCommand = "";
-                            int lCount =1;
+                            int lCount = 1;
 
-                            while(sString[i+lCount] != ']' && i+lCount<sString.length() && lCount < 16)
+                            while(sString[i + lCount] != ']' && i + lCount < sString.length() && lCount < 16)
                             {
-                                sCommand += sString[i+lCount];
+                                sCommand += sString[i + lCount];
                                 lCount++;
                             }
 
-                            if(sCommand=="br")
+                            if(sCommand == "br")
                             {
                                 pEntry->mwsText += _W('\n');
                             }
-                            else if(sCommand[0]=='u')
+                            else if(sCommand[0] == 'u')
                             {
-                                int lNum = cString::ToInt(sCommand.substr(1).c_str(),0);
+                                int lNum = cString::ToInt(sCommand.substr(1).c_str(), 0);
                                 pEntry->mwsText += (wchar_t)lNum;
                             }
                             else
@@ -227,7 +227,7 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
                         //Decode UTF-8!
                         else if(c >= 128)
                         {
-                            unsigned char c2 = sString[i+1];
+                            unsigned char c2 = sString[i + 1];
 
                             int lNum = c & 0x1f; // c AND 0001 1111
                             lNum = lNum << 6;
@@ -256,10 +256,10 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
 
             //if(sE == "Motion blur:") Log("After String: '%s'\n",cString::To8Char(pEntry->mwsText).c_str());
 
-            std::pair<tLanguageEntryMap::iterator,bool> ret = pCategory->m_mapEntries.insert(tLanguageEntryMap::value_type(sEntryName,pEntry));
-            if(ret.second==false)
+            std::pair<tLanguageEntryMap::iterator, bool> ret = pCategory->m_mapEntries.insert(tLanguageEntryMap::value_type(sEntryName, pEntry));
+            if(ret.second == false)
             {
-                Warning("Language entry '%s' in category '%s' already exists!\n",sEntryName.c_str(), sCatName.c_str());
+                Warning("Language entry '%s' in category '%s' already exists!\n", sEntryName.c_str(), sCatName.c_str());
                 hplDelete(pEntry);
             }
         }
@@ -291,12 +291,12 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
 
 //-----------------------------------------------------------------------
 
-const tWString& cLanguageFile::Translate(const tString& asCat, const tString& asName)
+const tWString &cLanguageFile::Translate(const tString& asCat, const tString& asName)
 {
     tLanguageCategoryMapIt CatIt = m_mapCategories.find(asCat);
     if(CatIt == m_mapCategories.end())
     {
-        Warning("Could not find language file category '%s'\n",asCat.c_str());
+        Warning("Could not find language file category '%s'\n", asCat.c_str());
         return mwsEmpty;
     }
 
@@ -304,7 +304,7 @@ const tWString& cLanguageFile::Translate(const tString& asCat, const tString& as
     tLanguageEntryMapIt EntryIt = pCategory->m_mapEntries.find(asName);
     if(EntryIt == pCategory->m_mapEntries.end())
     {
-        Warning("Could not find language file entry '%s'\n",asName.c_str());
+        Warning("Could not find language file entry '%s'\n", asName.c_str());
         return mwsEmpty;
     }
 

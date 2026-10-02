@@ -106,7 +106,7 @@ cProgramComboFeature vZFeatureVec[] =
 //--------------------------------------------------------------------------
 
 bool iMaterialType_SolidBase::mbGlobalDataCreated = false;
-cProgramComboManager* iMaterialType_SolidBase::mpGlobalProgramManager;
+cProgramComboManager *iMaterialType_SolidBase::mpGlobalProgramManager;
 
 float iMaterialType_SolidBase::mfVirtualPositionAddScale = 0.03f;
 
@@ -118,7 +118,7 @@ float iMaterialType_SolidBase::mfVirtualPositionAddScale = 0.03f;
 
 //--------------------------------------------------------------------------
 
-iMaterialType_SolidBase::iMaterialType_SolidBase(cGraphics *apGraphics, cResources *apResources) : iMaterialType(apGraphics,apResources)
+iMaterialType_SolidBase::iMaterialType_SolidBase(cGraphics *apGraphics, cResources *apResources) : iMaterialType(apGraphics, apResources)
 {
     mbIsGlobalDataCreator = false;
 }
@@ -166,11 +166,11 @@ void iMaterialType_SolidBase::CreateGlobalPrograms()
     cParserVarContainer defaultVars;
     defaultVars.Add("UseUv");
 
-    mpProgramManager->SetupGenerateProgramData(    eMaterialRenderMode_Z,"Z","deferred_base_vtx.glsl", "deferred_base_frag.glsl",
-            vZFeatureVec,kZFeatureNum, defaultVars);
+    mpProgramManager->SetupGenerateProgramData(    eMaterialRenderMode_Z, "Z", "deferred_base_vtx.glsl", "deferred_base_frag.glsl",
+            vZFeatureVec, kZFeatureNum, defaultVars);
 
-    mpProgramManager->AddGenerateProgramVariableId("a_mtxUV",kVar_a_mtxUV,eMaterialRenderMode_Z);
-    mpProgramManager->AddGenerateProgramVariableId("afDissolveAmount",kVar_afDissolveAmount,eMaterialRenderMode_Z);
+    mpProgramManager->AddGenerateProgramVariableId("a_mtxUV", kVar_a_mtxUV, eMaterialRenderMode_Z);
+    mpProgramManager->AddGenerateProgramVariableId("afDissolveAmount", kVar_afDissolveAmount, eMaterialRenderMode_Z);
 
     mpGlobalProgramManager = mpProgramManager;
 }
@@ -185,7 +185,7 @@ void iMaterialType_SolidBase::LoadData()
 
     //////////////
     // Create textures
-    mpDissolveTexture = mpResources->GetTextureManager()->Create2D("core_dissolve.tga",true);
+    mpDissolveTexture = mpResources->GetTextureManager()->Create2D("core_dissolve.tga", true);
 
 
     LoadSpecificData();
@@ -286,7 +286,7 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
     defaultVars.Add("UseUv");
     defaultVars.Add("UseNormals");
     defaultVars.Add("UseDepth");
-    defaultVars.Add("VirtualPositionAddScale",mfVirtualPositionAddScale);
+    defaultVars.Add("VirtualPositionAddScale", mfVirtualPositionAddScale);
 
     //Get the G-buffer type
     if(cRendererDeferred::GetGBufferType() == eDeferredGBuffer_32Bit)
@@ -322,34 +322,34 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
         defaultVars.Add("ParallaxMethod_Simple");
     }
 
-    mpProgramManager->SetupGenerateProgramData(eMaterialRenderMode_Diffuse,"Diffuse","deferred_base_vtx.glsl", "deferred_gbuffer_solid_frag.glsl",
-            vDiffuseFeatureVec,kDiffuseFeatureNum, defaultVars);
+    mpProgramManager->SetupGenerateProgramData(eMaterialRenderMode_Diffuse, "Diffuse", "deferred_base_vtx.glsl", "deferred_gbuffer_solid_frag.glsl",
+            vDiffuseFeatureVec, kDiffuseFeatureNum, defaultVars);
 
     /////////////////////////////
     //Load Illumination programs
     defaultVars.Clear();
     defaultVars.Add("UseUv");
-    mpProgramManager->SetupGenerateProgramData(    eMaterialRenderMode_Illumination,"Illum","deferred_base_vtx.glsl", "deferred_illumination_frag.glsl",
-            vIllumFeatureVec,kIllumFeatureNum, defaultVars);
+    mpProgramManager->SetupGenerateProgramData(    eMaterialRenderMode_Illumination, "Illum", "deferred_base_vtx.glsl", "deferred_illumination_frag.glsl",
+            vIllumFeatureVec, kIllumFeatureNum, defaultVars);
 
-    mpProgramManager->SetupGenerateProgramData(	eMaterialRenderMode_IlluminationModulate,"IllumMod","deferred_base_vtx.glsl", "deferred_illumination_mod_frag.glsl",
-            vIllumFeatureVec,kIllumFeatureNum, defaultVars);
+    mpProgramManager->SetupGenerateProgramData(	eMaterialRenderMode_IlluminationModulate, "IllumMod", "deferred_base_vtx.glsl", "deferred_illumination_mod_frag.glsl",
+            vIllumFeatureVec, kIllumFeatureNum, defaultVars);
 
 
     ////////////////////////////////
     //Set up variable ids
-    mpProgramManager->AddGenerateProgramVariableId("afInvFarPlane",kVar_afInvFarPlane,eMaterialRenderMode_Diffuse);
-    mpProgramManager->AddGenerateProgramVariableId("avHeightMapScaleAndBias",kVar_avHeightMapScaleAndBias, eMaterialRenderMode_Diffuse);
-    mpProgramManager->AddGenerateProgramVariableId("a_mtxUV",kVar_a_mtxUV,eMaterialRenderMode_Diffuse);
-    mpProgramManager->AddGenerateProgramVariableId("avFresnelBiasPow", kVar_avFresnelBiasPow,eMaterialRenderMode_Diffuse);
-    mpProgramManager->AddGenerateProgramVariableId("a_mtxInvViewRotation", kVar_a_mtxInvViewRotation,eMaterialRenderMode_Diffuse);
+    mpProgramManager->AddGenerateProgramVariableId("afInvFarPlane", kVar_afInvFarPlane, eMaterialRenderMode_Diffuse);
+    mpProgramManager->AddGenerateProgramVariableId("avHeightMapScaleAndBias", kVar_avHeightMapScaleAndBias, eMaterialRenderMode_Diffuse);
+    mpProgramManager->AddGenerateProgramVariableId("a_mtxUV", kVar_a_mtxUV, eMaterialRenderMode_Diffuse);
+    mpProgramManager->AddGenerateProgramVariableId("avFresnelBiasPow", kVar_avFresnelBiasPow, eMaterialRenderMode_Diffuse);
+    mpProgramManager->AddGenerateProgramVariableId("a_mtxInvViewRotation", kVar_a_mtxInvViewRotation, eMaterialRenderMode_Diffuse);
 
-    mpProgramManager->AddGenerateProgramVariableId("a_mtxUV",kVar_a_mtxUV,eMaterialRenderMode_Illumination);
-    mpProgramManager->AddGenerateProgramVariableId("afColorMul",kVar_afColorMul,eMaterialRenderMode_Illumination);
+    mpProgramManager->AddGenerateProgramVariableId("a_mtxUV", kVar_a_mtxUV, eMaterialRenderMode_Illumination);
+    mpProgramManager->AddGenerateProgramVariableId("afColorMul", kVar_afColorMul, eMaterialRenderMode_Illumination);
 
-    mpProgramManager->AddGenerateProgramVariableId("a_mtxUV",kVar_a_mtxUV,eMaterialRenderMode_IlluminationModulate);
-    mpProgramManager->AddGenerateProgramVariableId("afColorMul",kVar_afColorMul,eMaterialRenderMode_IlluminationModulate);
-    mpProgramManager->AddGenerateProgramVariableId("afTimer",kVar_afTimer,eMaterialRenderMode_IlluminationModulate);
+    mpProgramManager->AddGenerateProgramVariableId("a_mtxUV", kVar_a_mtxUV, eMaterialRenderMode_IlluminationModulate);
+    mpProgramManager->AddGenerateProgramVariableId("afColorMul", kVar_afColorMul, eMaterialRenderMode_IlluminationModulate);
+    mpProgramManager->AddGenerateProgramVariableId("afTimer", kVar_afTimer, eMaterialRenderMode_IlluminationModulate);
 }
 
 //--------------------------------------------------------------------------
@@ -360,7 +360,7 @@ void cMaterialType_SolidDiffuse::CompileSolidSpecifics(cMaterial *apMaterial)
 
     //////////////////////////////////
     //Z specifics
-    apMaterial->SetHasObjectSpecificsSettings(eMaterialRenderMode_Z_Dissolve,true);
+    apMaterial->SetHasObjectSpecificsSettings(eMaterialRenderMode_Z_Dissolve, true);
     apMaterial->SetUseAlphaDissolveFilter(pVars->mbAlphaDissolveFilter);
 
     //////////////////////////////////
@@ -369,7 +369,7 @@ void cMaterialType_SolidDiffuse::CompileSolidSpecifics(cMaterial *apMaterial)
     {
         if(apMaterial->GetTexture(eMaterialTexture_Height))
         {
-            apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Diffuse,true);
+            apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Diffuse, true);
         }
     }
 
@@ -377,38 +377,38 @@ void cMaterialType_SolidDiffuse::CompileSolidSpecifics(cMaterial *apMaterial)
     //Uv animation specifics
     if(apMaterial->HasUvAnimation())
     {
-        apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Z,true);
-        apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Diffuse,true);
-        apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Illumination,true);
-        apMaterial->SetHasSpecificSettings(eMaterialRenderMode_IlluminationModulate,true);
+        apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Z, true);
+        apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Diffuse, true);
+        apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Illumination, true);
+        apMaterial->SetHasSpecificSettings(eMaterialRenderMode_IlluminationModulate, true);
     }
 
     //////////////////////////////////
     //Cubemap
     if(apMaterial->GetTexture(eMaterialTexture_CubeMap))
     {
-        apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Diffuse,true);
+        apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Diffuse, true);
     }
 
     //////////////////////////////////
     //Illuminations specifics
     if(apMaterial->GetTexture(eMaterialTexture_Illumination))
     {
-        apMaterial->SetHasObjectSpecificsSettings(eMaterialRenderMode_Illumination,true);
+        apMaterial->SetHasObjectSpecificsSettings(eMaterialRenderMode_Illumination, true);
     }
 
     //////////////////////////////////
     //Illuminations specifics
     if(apMaterial->GetTexture(eMaterialTexture_IlluminationModulate))
     {
-        apMaterial->SetHasObjectSpecificsSettings(eMaterialRenderMode_IlluminationModulate,true);
+        apMaterial->SetHasObjectSpecificsSettings(eMaterialRenderMode_IlluminationModulate, true);
     }
 }
 
 //--------------------------------------------------------------------------
 
 
-iTexture* cMaterialType_SolidDiffuse::GetTextureForUnit(cMaterial *apMaterial,eMaterialRenderMode aRenderMode, int alUnit)
+iTexture *cMaterialType_SolidDiffuse::GetTextureForUnit(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, int alUnit)
 {
     cMaterialType_SolidDiffuse_Vars *pVars = (cMaterialType_SolidDiffuse_Vars*)apMaterial->GetVars();
 
@@ -485,14 +485,14 @@ iTexture* cMaterialType_SolidDiffuse::GetTextureForUnit(cMaterial *apMaterial,eM
 }
 //--------------------------------------------------------------------------
 
-iTexture* cMaterialType_SolidDiffuse::GetSpecialTexture(cMaterial *apMaterial, eMaterialRenderMode aRenderMode,iRenderer *apRenderer, int alUnit)
+iTexture *cMaterialType_SolidDiffuse::GetSpecialTexture(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, iRenderer *apRenderer, int alUnit)
 {
     return NULL;
 }
 
 //--------------------------------------------------------------------------
 
-iGpuProgram* cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, char alSkeleton)
+iGpuProgram *cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, char alSkeleton)
 {
     cMaterialType_SolidDiffuse_Vars *pVars = (cMaterialType_SolidDiffuse_Vars*)apMaterial->GetVars();
 
@@ -500,7 +500,7 @@ iGpuProgram* cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
     //Z
     if(aRenderMode == eMaterialRenderMode_Z)
     {
-        tFlag lFlags =0;
+        tFlag lFlags = 0;
         if(apMaterial->GetTexture(eMaterialTexture_Alpha))
         {
             lFlags |= eFeature_Z_UseAlpha;
@@ -520,7 +520,7 @@ iGpuProgram* cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
     //Z Dissolve
     else if(aRenderMode == eMaterialRenderMode_Z_Dissolve)
     {
-        tFlag lFlags =0;
+        tFlag lFlags = 0;
         lFlags |= eFeature_Z_Dissolve;
         if(apMaterial->GetTexture(eMaterialTexture_Alpha))
         {
@@ -545,7 +545,7 @@ iGpuProgram* cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
     //Diffuse
     else if(aRenderMode == eMaterialRenderMode_Diffuse)
     {
-        tFlag lFlags =0;
+        tFlag lFlags = 0;
         if(apMaterial->GetTexture(eMaterialTexture_NMap))
         {
             lFlags |= eFeature_Diffuse_NormalMaps;
@@ -573,20 +573,20 @@ iGpuProgram* cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
         }
 
 
-        return mpProgramManager->GenerateProgram(aRenderMode,lFlags);
+        return mpProgramManager->GenerateProgram(aRenderMode, lFlags);
     }
     ////////////////////////////
     //Illumination
     else if(aRenderMode == eMaterialRenderMode_Illumination
             || aRenderMode == eMaterialRenderMode_IlluminationModulate )
     {
-        tFlag lFlags =0;
+        tFlag lFlags = 0;
         if(apMaterial->HasUvAnimation())
         {
             lFlags |= eFeature_Illum_UvAnimation;
         }
 
-        return mpProgramManager->GenerateProgram(aRenderMode,lFlags);
+        return mpProgramManager->GenerateProgram(aRenderMode, lFlags);
     }
 
     return NULL;
@@ -602,7 +602,7 @@ void cMaterialType_SolidDiffuse::SetupTypeSpecificData(eMaterialRenderMode aRend
     {
         cFrustum *pFrustum = apRenderer->GetCurrentFrustum();
 
-        apProgram->SetFloat(kVar_afInvFarPlane, 1.0f/pFrustum->GetFarPlane());
+        apProgram->SetFloat(kVar_afInvFarPlane, 1.0f / pFrustum->GetFarPlane());
     }
 
 }
@@ -659,7 +659,7 @@ void cMaterialType_SolidDiffuse::SetupObjectSpecificData(    eMaterialRenderMode
     if(aRenderMode == eMaterialRenderMode_Z_Dissolve)
     {
         bool bRet = apProgram->SetFloat(kVar_afDissolveAmount, apObject->GetCoverageAmount());
-        if(bRet==false)
+        if(bRet == false)
         {
             Error("Could not set variable!\n");
         }
@@ -680,9 +680,9 @@ void cMaterialType_SolidDiffuse::SetupObjectSpecificData(    eMaterialRenderMode
 
 //--------------------------------------------------------------------------
 
-iMaterialVars* cMaterialType_SolidDiffuse::CreateSpecificVariables()
+iMaterialVars *cMaterialType_SolidDiffuse::CreateSpecificVariables()
 {
-    return hplNew(cMaterialType_SolidDiffuse_Vars,());
+    return hplNew(cMaterialType_SolidDiffuse_Vars, ());
 }
 
 //--------------------------------------------------------------------------
@@ -690,7 +690,7 @@ iMaterialVars* cMaterialType_SolidDiffuse::CreateSpecificVariables()
 void cMaterialType_SolidDiffuse::LoadVariables(cMaterial* apMaterial, cResourceVarsObject *apVars)
 {
     cMaterialType_SolidDiffuse_Vars *pVars = (cMaterialType_SolidDiffuse_Vars*)apMaterial->GetVars();
-    if(pVars==NULL)
+    if(pVars == NULL)
     {
         pVars = (cMaterialType_SolidDiffuse_Vars*)CreateSpecificVariables();
         apMaterial->SetVars(pVars);

@@ -35,7 +35,7 @@ public:
 
     static bool FileExists(const tWString& asFileName);
     static void RemoveFile(const tWString& asFileName);
-    static bool CloneFile(const tWString& asSrcFileName,const tWString& asDestFileName,    bool abFailIfExists);
+    static bool CloneFile(const tWString& asSrcFileName, const tWString& asDestFileName,    bool abFailIfExists);
     static bool CreateFolder(const tWString& asPath);
     static bool RemoveFolder(const tWString& asPath, bool abDeleteAllFiles, bool abDeleteAllSubFolders);
     static bool FolderExists(const tWString& asPath);
@@ -55,7 +55,7 @@ public:
     * \param asMask Mask to be used, for example "*.*" to search for all kinds of files.
     * \param abAddHidden If hidden files should be added
     */
-    static void FindFilesInDir(tWStringList &alstStrings, const tWString& asDir, const tWString& asMask, bool abAddHidden=false);
+    static void FindFilesInDir(tWStringList &alstStrings, const tWString& asDir, const tWString& asMask, bool abAddHidden = false);
 
     /**
     * Returns a list of folders in a dir
@@ -64,7 +64,7 @@ public:
     * \param abAddHidden If hidden folders should be added
     * \param abAddUpFolder If the ".." folder should be added
     */
-    static void FindFoldersInDir(tWStringList &alstStrings, const tWString& asDir, bool abAddHidden, bool abAddUpFolder=false);
+    static void FindFoldersInDir(tWStringList &alstStrings, const tWString& asDir, bool abAddHidden, bool abAddUpFolder = false);
 
 
     static tString GetDataDir();
@@ -94,12 +94,12 @@ public:
     //////////////////////////////////////////////////////
 
     static ePlatform GetPlatform();
-    static const tString& GetPlatformName()
+    static const tString &GetPlatformName()
     {
         return msName;
     }
 
-    static iTimer * CreateTimer();
+    static iTimer *CreateTimer();
 
     static cDate GetDate();
 
@@ -110,15 +110,15 @@ public:
 
     static unsigned long GetSystemAvailableDrives();
 
-    static void GetAvailableVideoModes(tVideoModeVec& avDestVidModes, int alMinBpp=-1, int alMinRefreshRate=-1);
+    static void GetAvailableVideoModes(tVideoModeVec& avDestVidModes, int alMinBpp = -1, int alMinRefreshRate = -1);
 
     //////////////////////////////////////////////////////
     ////////// THREADING /////////////////////////////////
     //////////////////////////////////////////////////////
 
-    static iThread* CreateThread(iThreadClass* apThreadClass);
+    static iThread *CreateThread(iThreadClass* apThreadClass);
 
-    static iMutex* CreateMutEx(); // If you name this method CreateMutex strange stuff will happen :S
+    static iMutex *CreateMutEx(); // If you name this method CreateMutex strange stuff will happen :S
 
 private:
     static void CreateMessageBoxBase(eMsgBoxType eType, const wchar_t* asCaption, const wchar_t* fmt, va_list ap);

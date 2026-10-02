@@ -37,12 +37,12 @@ cMutexSDL::~cMutexSDL()
 
 bool cMutexSDL::Lock()
 {
-    return SDL_LockMutex(mpMutexHandle)!=-1;
+    return SDL_LockMutex(mpMutexHandle) != -1;
 }
 
 bool cMutexSDL::Unlock()
 {
-    return SDL_UnlockMutex(mpMutexHandle)!=-1;
+    return SDL_UnlockMutex(mpMutexHandle) != -1;
 }
 
 //-----------------------------------------------------------------------

@@ -88,7 +88,7 @@ public:
 
     //-----------------------------------------------------------------------
 
-    inline bool operator==(const cMatrix<T>& aMtx) const
+    inline bool operator==(const cMatrix<T> &aMtx) const
     {
         if(    m[0][0] == aMtx.m[0][0] &&
                 m[0][1] == aMtx.m[0][1] &&
@@ -115,7 +115,7 @@ public:
 
     //-----------------------------------------------------------------------
 
-    inline bool operator!=(const cMatrix<T>& aMtx)
+    inline bool operator!=(const cMatrix<T> &aMtx)
     {
         return !(*this == aMtx);
     }
@@ -158,7 +158,7 @@ public:
 
         m[0][2] = pA[8];
         m[1][2] = pA[9];
-        m[2][2]= pA[10];
+        m[2][2] = pA[10];
         m[3][2] = pA[11];
 
         m[0][3] = pA[12];
@@ -176,7 +176,7 @@ public:
         return cVector3<T>(m[0][0], m[0][1], m[0][2]);
     }
 
-    inline void SetRight(const cVector3<T>&  avVec)
+    inline void SetRight(const cVector3<T>  &avVec)
     {
         m[0][0] = avVec.x;
         m[0][1] = avVec.y;
@@ -191,7 +191,7 @@ public:
         return cVector3<T>(m[1][0], m[1][1], m[1][2]);
     }
 
-    inline void SetUp(const cVector3<T>&  avVec)
+    inline void SetUp(const cVector3<T>  &avVec)
     {
         m[1][0] = avVec.x;
         m[1][1] = avVec.y;
@@ -206,7 +206,7 @@ public:
         return cVector3<T>(m[2][0], m[2][1], m[2][2]);
     }
 
-    inline void SetForward(const cVector3<T>&  avVec)
+    inline void SetForward(const cVector3<T>  &avVec)
     {
         m[2][0] = avVec.x;
         m[2][1] = avVec.y;
@@ -221,7 +221,7 @@ public:
         return cVector3<T>(m[0][3], m[1][3], m[2][3]);
     }
 
-    inline void SetTranslation(const cVector3<T>& avTrans)
+    inline void SetTranslation(const cVector3<T> &avTrans)
     {
         m[0][3] = avTrans.x;
         m[1][3] = avTrans.y;
@@ -232,10 +232,10 @@ public:
 
     inline cMatrix<T> GetRotation() const
     {
-        return cMatrix<T>(  m[0][0], m[0][1], m[0][2],0,
-               m[1][0], m[1][1], m[1][2],0,
-               m[2][0], m[2][1], m[2][2],0,
-               0,         0,          0,1);
+        return cMatrix<T>(  m[0][0], m[0][1], m[0][2], 0,
+               m[1][0], m[1][1], m[1][2], 0,
+               m[2][0], m[2][1], m[2][2], 0,
+               0,         0,          0, 1);
     }
 
 
@@ -243,10 +243,10 @@ public:
 
     inline cMatrix<T> GetTranspose() const
     {
-        return cMatrix<T>(m[0][0], m[1][0], m[2][0],m[3][0],
-               m[0][1], m[1][1], m[2][1],m[3][1],
-               m[0][2], m[1][2], m[2][2],m[3][2],
-               m[0][3], m[1][3], m[2][3],m[3][3]);
+        return cMatrix<T>(m[0][0], m[1][0], m[2][0], m[3][0],
+               m[0][1], m[1][1], m[2][1], m[3][1],
+               m[0][2], m[1][2], m[2][2], m[3][2],
+               m[0][3], m[1][3], m[2][3], m[3][3]);
     }
 
     //-----------------------------------------------------------------------
@@ -254,22 +254,22 @@ public:
     tString ToString() const
     {
         char buf[512];
-        snprintf(buf, sizeof(buf),"[%f : %f : %f : %f] [%f : %f : %f : %f] [%f : %f : %f : %f] [%f : %f : %f : %f]",
-                 m[0][0],m[0][1],m[0][2],m[0][3],
-                 m[1][0],m[1][1],m[1][2],m[1][3],
-                 m[2][0],m[2][1],m[2][2],m[2][3],
-                 m[3][0],m[3][1],m[3][2],m[3][3]);
+        snprintf(buf, sizeof(buf), "[%f : %f : %f : %f] [%f : %f : %f : %f] [%f : %f : %f : %f] [%f : %f : %f : %f]",
+                 m[0][0], m[0][1], m[0][2], m[0][3],
+                 m[1][0], m[1][1], m[1][2], m[1][3],
+                 m[2][0], m[2][1], m[2][2], m[2][3],
+                 m[3][0], m[3][1], m[3][2], m[3][3]);
         return buf;
     }
 
     tString ToFileString() const
     {
         char buf[512];
-        snprintf(buf, sizeof(buf),"%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g",
-                 m[0][0],m[0][1],m[0][2],m[0][3],
-                 m[1][0],m[1][1],m[1][2],m[1][3],
-                 m[2][0],m[2][1],m[2][2],m[2][3],
-                 m[3][0],m[3][1],m[3][2],m[3][3]);
+        snprintf(buf, sizeof(buf), "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g",
+                 m[0][0], m[0][1], m[0][2], m[0][3],
+                 m[1][0], m[1][1], m[1][2], m[1][3],
+                 m[2][0], m[2][1], m[2][2], m[2][3],
+                 m[3][0], m[3][1], m[3][2], m[3][3]);
         return buf;
     }
 };

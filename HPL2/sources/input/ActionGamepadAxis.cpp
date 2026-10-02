@@ -39,11 +39,11 @@ bool cActionGamepadAxis::IsTriggerd()
     if(pPad)
     {
         float fVal = pPad->GetAxisValue(mAxis);
-        bool bValid = (mRange==eGamepadAxisRange_Positive && fVal>0.0f) ||
-                      (mRange==eGamepadAxisRange_Negative && fVal<0.0f);
+        bool bValid = (mRange == eGamepadAxisRange_Positive && fVal > 0.0f) ||
+                      (mRange == eGamepadAxisRange_Negative && fVal < 0.0f);
 
         fVal = cMath::Abs(fVal);
-        if(bValid && mfMinThreshold<=fVal && fVal<=mfMaxThreshold)
+        if(bValid && mfMinThreshold <= fVal && fVal <= mfMaxThreshold)
         {
             return true;
         }

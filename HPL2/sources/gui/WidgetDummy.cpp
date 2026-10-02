@@ -10,7 +10,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cWidgetDummy::cWidgetDummy(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_Window,apSet, apSkin)
+cWidgetDummy::cWidgetDummy(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_Window, apSet, apSkin)
 {
     mbEncloseChildren = true;
 }
@@ -42,7 +42,7 @@ void cWidgetDummy::SetEncloseChildren(bool abX)
 
 void cWidgetDummy::OnChildUpdate(iWidget* apChild)
 {
-    if(mbEncloseChildren==false)
+    if(mbEncloseChildren == false)
     {
         return;
     }
@@ -52,30 +52,30 @@ void cWidgetDummy::OnChildUpdate(iWidget* apChild)
 
     tWidgetListIt it = mlstChildren.begin();
 
-    for(; it!=mlstChildren.end(); ++it)
+    for(; it != mlstChildren.end(); ++it)
     {
         iWidget* pWidget = *it;
         const cVector3f& vWidgetUpperLeftCorner = pWidget->GetLocalPosition();
         cVector3f vWidgetLowerRightCorner = vWidgetUpperLeftCorner + pWidget->GetSize();
 
-        if(vWidgetUpperLeftCorner.x<vMinPos.x)
+        if(vWidgetUpperLeftCorner.x < vMinPos.x)
         {
             vMinPos.x = vWidgetUpperLeftCorner.x;
         }
-        if(vWidgetUpperLeftCorner.y<vMinPos.y)
+        if(vWidgetUpperLeftCorner.y < vMinPos.y)
         {
             vMinPos.y = vWidgetUpperLeftCorner.y;
         }
-        if(vWidgetLowerRightCorner.x>vMaxPos.x)
+        if(vWidgetLowerRightCorner.x > vMaxPos.x)
         {
             vMaxPos.x = vWidgetLowerRightCorner.x;
         }
-        if(vWidgetLowerRightCorner.y>vMaxPos.y)
+        if(vWidgetLowerRightCorner.y > vMaxPos.y)
         {
             vMaxPos.y = vWidgetLowerRightCorner.y;
         }
     }
-    cVector2f vNewSize = cVector2f(vMaxPos.x-vMinPos.x, vMaxPos.y-vMinPos.y);
+    cVector2f vNewSize = cVector2f(vMaxPos.x - vMinPos.x, vMaxPos.y - vMinPos.y);
     SetSize(vNewSize);
 }
 }

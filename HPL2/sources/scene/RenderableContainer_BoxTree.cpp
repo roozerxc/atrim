@@ -57,7 +57,7 @@ cRenderableContainer_BoxTree::cRenderableContainer_BoxTree()
     //Create the root
     mpRoot = hplNew( cRCNode_BoxTree, ());
     mpRoot->mpParent = NULL;
-    mpRoot->mfViewDistance =0;
+    mpRoot->mfViewDistance = 0;
     mpRoot->mbInsideView = true;
 
     mpObjectCalllback = hplNew( cRenderableContainerObjectCallback, () );
@@ -95,7 +95,7 @@ void cRenderableContainer_BoxTree::Remove(iRenderable *apRenderable)
 
 //-----------------------------------------------------------------------
 
-iRenderableContainerNode* cRenderableContainer_BoxTree::GetRoot()
+iRenderableContainerNode *cRenderableContainer_BoxTree::GetRoot()
 {
     return mpRoot;
 }
@@ -111,7 +111,7 @@ void cRenderableContainer_BoxTree::Compile()
     }
     mpRoot = hplNew( cRCNode_BoxTree, ());
     mpRoot->mpParent = NULL;
-    mpRoot->mfViewDistance =0;
+    mpRoot->mfViewDistance = 0;
     mpRoot->mbInsideView = true;
 
     //Set up temp root node.
@@ -125,28 +125,28 @@ void cRenderableContainer_BoxTree::Compile()
     {
         tempRoot.mlstObjects.push_back(*it);
     }
-    CompileTempNode(&tempRoot,0,-1);
+    CompileTempNode(&tempRoot, 0, -1);
 
     //////////////////////////////
     //Build the actual node tree from temp nodes
-    BuildNodeFromTemp(&tempRoot, mpRoot,0);
+    BuildNodeFromTemp(&tempRoot, mpRoot, 0);
 }
 
 //-----------------------------------------------------------------------
 
-int glCount =0;
-int glDrawLevel=0;
+int glCount = 0;
+int glDrawLevel = 0;
 
 void cRenderableContainer_BoxTree::RenderDebug(cRendererCallbackFunctions *apFunctions)
 {
     glCount++;
     if(glCount > 300)
     {
-        glCount =0;
+        glCount = 0;
         glDrawLevel++;
         if(glDrawLevel > 5)
         {
-            glDrawLevel =0;
+            glDrawLevel = 0;
         }
     }
 
@@ -159,7 +159,7 @@ void cRenderableContainer_BoxTree::RenderDebug(cRendererCallbackFunctions *apFun
     apFunctions->SetMatrix(NULL);
 
 
-    RenderDebugNode(apFunctions, mpRoot,0);
+    RenderDebugNode(apFunctions, mpRoot, 0);
 }
 
 //-----------------------------------------------------------------------
@@ -168,11 +168,11 @@ void cRenderableContainer_BoxTree::RenderDebug(cRendererCallbackFunctions *apFun
 // PRIVATE METHODS
 //////////////////////////////////////////////////////////////////////////
 
-static tString gsTempSpaces="";
+static tString gsTempSpaces = "";
 
 const char *GetSpaces(int alNum)
 {
-    gsTempSpaces.resize(alNum,'\t');
+    gsTempSpaces.resize(alNum, '\t');
     return gsTempSpaces.c_str();
 }
 
@@ -195,14 +195,14 @@ float GetAxisFromVec(const cVector3f& avVec, int alAxis)
 }
 
 //Checks is child is NULL, and if so creates child else just returns it.
-cBoxTreeTempNode* CreateNodeIfNeeded(cBoxTreeTempNode* apParentNode, cBoxTreeTempNode* &apChildNode)
+cBoxTreeTempNode *CreateNodeIfNeeded(cBoxTreeTempNode* apParentNode, cBoxTreeTempNode* &apChildNode)
 {
     if(apChildNode)
     {
         return apChildNode;
     }
 
-    apChildNode = hplNew( cBoxTreeTempNode,(apParentNode) );
+    apChildNode = hplNew( cBoxTreeTempNode, (apParentNode) );
     apParentNode->mlstChildren.push_back(apChildNode);
 
     return apChildNode;
@@ -221,8 +221,8 @@ static bool SortFunc_Z(iRenderable* apObjectA, iRenderable *apObjectB)
     return apObjectA->GetBoundingVolume()->GetWorldCenter().z < apObjectB->GetBoundingVolume()->GetWorldCenter().z;
 }
 
-typedef bool (*tSortFunc)(iRenderable*,iRenderable*);
-static tSortFunc gvSortFunctions[3] = {SortFunc_X, SortFunc_Y,SortFunc_Z};
+typedef bool (*tSortFunc)(iRenderable*, iRenderable*);
+static tSortFunc gvSortFunctions[3] = {SortFunc_X, SortFunc_Y, SortFunc_Z};
 
 //-----------------------------------------------------------------------
 
@@ -231,8 +231,8 @@ static tSortFunc gvSortFunctions[3] = {SortFunc_X, SortFunc_Y,SortFunc_Z};
  */
 int cRenderableContainer_BoxTree::GetSplitGroup(iRenderable *apObject, float afCutPlane, int alAxis, const cVector3f &avNodeSize)
 {
-    float fMinVal =   GetAxisFromVec(apObject->GetBoundingVolume()->GetMin(),alAxis);
-    float fMaxVal =   GetAxisFromVec(apObject->GetBoundingVolume()->GetMax(),alAxis);
+    float fMinVal =   GetAxisFromVec(apObject->GetBoundingVolume()->GetMin(), alAxis);
+    float fMaxVal =   GetAxisFromVec(apObject->GetBoundingVolume()->GetMax(), alAxis);
 
     //////////////////////////
     //Above cut plane
@@ -264,7 +264,7 @@ int cRenderableContainer_BoxTree::GetSplitGroup(iRenderable *apObject, float afC
         if(fBelowDist < fMinDist)
         {
             fMinDist = fBelowDist;
-            lDestDir =0;
+            lDestDir = 0;
         }
 
         /////////////////////
@@ -288,8 +288,8 @@ float cRenderableContainer_BoxTree::CalculateObjectsVolume(tRenderableList &alst
         return 0;
     }
 
-    cVector3f vMin,vMax;
-    CalculateMinMax(&alstObjects,vMin,vMax);
+    cVector3f vMin, vMax;
+    CalculateMinMax(&alstObjects, vMin, vMax);
 
     cVector3f vSize = vMax - vMin;
 
@@ -300,8 +300,8 @@ float cRenderableContainer_BoxTree::CalculateObjectsVolume(tRenderableList &alst
 
 float cRenderableContainer_BoxTree::CalculateBestCutPlane(tRenderableList &alstObjects, int alAxis, const cVector3f &avNodeSize)
 {
-    float fBestCutPlane =0;
-    float fBestHeuristic =-1;
+    float fBestCutPlane = 0;
+    float fBestHeuristic = -1;
 
     ////////////////////////////////////
     // Iterate objects and use each min value as a split value
@@ -320,15 +320,15 @@ float cRenderableContainer_BoxTree::CalculateBestCutPlane(tRenderableList &alstO
         {
             iRenderable *pTestObject = *testObjectIt;
 
-            int lGroup = GetSplitGroup(pTestObject,fCutPlaneVal,alAxis,avNodeSize);
+            int lGroup = GetSplitGroup(pTestObject, fCutPlaneVal, alAxis, avNodeSize);
 
             //Above cut plane
-            if(lGroup==0)
+            if(lGroup == 0)
             {
                 vObjectGroup[0].push_back(pTestObject);
             }
             //Below cut plane
-            else if(lGroup==1)
+            else if(lGroup == 1)
             {
                 vObjectGroup[1].push_back(pTestObject);
             }
@@ -347,7 +347,7 @@ float cRenderableContainer_BoxTree::CalculateBestCutPlane(tRenderableList &alstO
 
         float fH = VolMul0 + VolMul1 + VolMul2;
 
-        if(fH < fBestHeuristic || fBestHeuristic <0)
+        if(fH < fBestHeuristic || fBestHeuristic < 0)
         {
             fBestHeuristic = fH;
             fBestCutPlane = fCutPlaneVal;
@@ -381,7 +381,7 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     ///////////////////////////
     // Calculate the size of the node
     cVector3f vMin, vMax;
-    CalculateMinMax(&apNode->mlstObjects,vMin,vMax);
+    CalculateMinMax(&apNode->mlstObjects, vMin, vMax);
     cVector3f vNodeSize = vMax - vMin;
 
     float fLongestSide = GetLongestSide(vNodeSize);
@@ -389,9 +389,9 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     {
         if(bLog)
         {
-            Log("%s==================\n",GetSpaces(alLevel));
-            Log("%s Skipping Node %d because largest side is to short (only %f)\n",GetSpaces(alLevel),apNode,fLongestSide);
-            Log("%s==================\n",GetSpaces(alLevel));
+            Log("%s==================\n", GetSpaces(alLevel));
+            Log("%s Skipping Node %d because largest side is to short (only %f)\n", GetSpaces(alLevel), apNode, fLongestSide);
+            Log("%s==================\n", GetSpaces(alLevel));
         }
         return;
     }
@@ -399,15 +399,15 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     ///////////////////////////
     // See if there is enough object to continue splitting
     int lNumOfObjects = (int)apNode->mlstObjects.size();
-    if(    lNumOfObjects < mlMinLeafObjects *2 &&    //Multiplied by two, because we want to split it too.
+    if(    lNumOfObjects < mlMinLeafObjects * 2 &&   //Multiplied by two, because we want to split it too.
             apNode->mpParent != NULL &&                //Always try and split first node independant of object number!
             fLongestSide < mfMaxSideLength)            //Override number of objects if the longest side is long enough!
     {
         if(bLog)
         {
-            Log("%s==================\n",GetSpaces(alLevel));
-            Log("%s Skipping Node %d because of too few objects (only %d)\n",GetSpaces(alLevel),apNode, lNumOfObjects);
-            Log("%s==================\n",GetSpaces(alLevel));
+            Log("%s==================\n", GetSpaces(alLevel));
+            Log("%s Skipping Node %d because of too few objects (only %d)\n", GetSpaces(alLevel), apNode, lNumOfObjects);
+            Log("%s==================\n", GetSpaces(alLevel));
         }
         return;
     }
@@ -415,33 +415,33 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     ///////////////////////////
     // Calculate the axis
     int lAxis = alSplitAxis;
-    if(lAxis <0) //If axis < 0, make it depend on largest side
+    if(lAxis < 0) //If axis < 0, make it depend on largest side
     {
         if(fLongestSide == vNodeSize.x)
         {
-            lAxis =0;
+            lAxis = 0;
         }
         else if(fLongestSide == vNodeSize.y)
         {
-            lAxis =1;
+            lAxis = 1;
         }
         else if(fLongestSide == vNodeSize.z)
         {
-            lAxis =2;
+            lAxis = 2;
         }
     }
 
 
     if(bLog)
     {
-        Log("%sNode %d Parent: %d level %d. Axis: %d Size: (%s) Objects: %d\n",GetSpaces(alLevel),apNode,apNode->mpParent, alLevel,lAxis,vNodeSize.ToString().c_str(), lNumOfObjects);
-        Log("%s==================================\n",GetSpaces(alLevel));
+        Log("%sNode %d Parent: %d level %d. Axis: %d Size: (%s) Objects: %d\n", GetSpaces(alLevel), apNode, apNode->mpParent, alLevel, lAxis, vNodeSize.ToString().c_str(), lNumOfObjects);
+        Log("%s==================================\n", GetSpaces(alLevel));
     }
 
 
     ////////////////////////////////
     //Setup vector with all objects
-    std::vector<iRenderable*> vSortedObjects;
+    std::vector<iRenderable *> vSortedObjects;
     vSortedObjects.reserve(apNode->mlstObjects.size());
 
     for(tRenderableListIt it = apNode->mlstObjects.begin(); it != apNode->mlstObjects.end(); ++it)
@@ -457,7 +457,7 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     // Only use if there the number of objects is than a certain number (to increase speed)
     if((int)apNode->mlstObjects.size() < mlMaxVolumeCalcObjects)
     {
-        fCutPlaneVal = CalculateBestCutPlane(apNode->mlstObjects,lAxis,vNodeSize);
+        fCutPlaneVal = CalculateBestCutPlane(apNode->mlstObjects, lAxis, vNodeSize);
     }
     //////////////////////////////
     // If many objects, do a faster calculation for split plane.
@@ -479,24 +479,24 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
 
     if(bLog)
     {
-        Log("%s ---------------\n",GetSpaces(alLevel));
+        Log("%s ---------------\n", GetSpaces(alLevel));
     }
 
-    cBoxTreeTempNode *pHighChild=NULL;            //For objects above fCutPlaneVal
-    cBoxTreeTempNode *pLowChild=NULL;            //For objects below fCutPlaneVal
-    cBoxTreeTempNode *pIntersectChild=NULL;        //For object both above and below
+    cBoxTreeTempNode *pHighChild = NULL;          //For objects above fCutPlaneVal
+    cBoxTreeTempNode *pLowChild = NULL;          //For objects below fCutPlaneVal
+    cBoxTreeTempNode *pIntersectChild = NULL;      //For object both above and below
 
-    for(size_t i=0; i<vSortedObjects.size(); ++i)
+    for(size_t i = 0; i < vSortedObjects.size(); ++i)
     {
         iRenderable *pObject = vSortedObjects[i];
-        if(bLog) Log("%s object: '%s', pos: (%s)",GetSpaces(alLevel), pObject->GetName().c_str(),
+        if(bLog) Log("%s object: '%s', pos: (%s)", GetSpaces(alLevel), pObject->GetName().c_str(),
                          pObject->GetBoundingVolume()->GetWorldCenter().ToString().c_str());
 
-        int lGroup = GetSplitGroup(pObject,fCutPlaneVal,lAxis,vNodeSize);
+        int lGroup = GetSplitGroup(pObject, fCutPlaneVal, lAxis, vNodeSize);
 
         //////////////////////////
         //Above cut plane
-        if(lGroup==0)
+        if(lGroup == 0)
         {
             if(bLog)
             {
@@ -506,7 +506,7 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
         }
         //////////////////////////
         //Below cut plane
-        else if(lGroup==1)
+        else if(lGroup == 1)
         {
             if(bLog)
             {
@@ -530,7 +530,7 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
 
     /////////////////////////////////////
     //Get longest sides of each group
-    float fHigh_LongestSide=0,  fLow_LongestSide=0, fIntersect_LongestSide=0;
+    float fHigh_LongestSide = 0,  fLow_LongestSide = 0, fIntersect_LongestSide = 0;
     if(pHighChild)
     {
         fHigh_LongestSide = GetLongestSide(CalculateSize(&pHighChild->mlstObjects));
@@ -548,15 +548,15 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     {
         if(pHighChild)
         {
-            Log("%s objects above: %d Longest side: %f\n",GetSpaces(alLevel), pHighChild->mlstObjects.size(), fHigh_LongestSide);
+            Log("%s objects above: %d Longest side: %f\n", GetSpaces(alLevel), pHighChild->mlstObjects.size(), fHigh_LongestSide);
         }
         if(pLowChild)
         {
-            Log("%s objects below: %d Longest side: %f\n",GetSpaces(alLevel), pLowChild->mlstObjects.size(), fLow_LongestSide);
+            Log("%s objects below: %d Longest side: %f\n", GetSpaces(alLevel), pLowChild->mlstObjects.size(), fLow_LongestSide);
         }
         if(pIntersectChild)
         {
-            Log("%s objects intersected: %d Longest side: %f\n",GetSpaces(alLevel), pIntersectChild->mlstObjects.size(), fIntersect_LongestSide);
+            Log("%s objects intersected: %d Longest side: %f\n", GetSpaces(alLevel), pIntersectChild->mlstObjects.size(), fIntersect_LongestSide);
         }
     }
 
@@ -568,14 +568,14 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     // If intersected is too small then spread these out among high and low.
     if(pIntersectChild && (int)pIntersectChild->mlstObjects.size() < mlMinLeafObjects && fIntersect_LongestSide < mfMaxSideLength)
     {
-        bool bSkippedMoving=false;
+        bool bSkippedMoving = false;
         tRenderableListIt it = pIntersectChild->mlstObjects.begin();
         for(; it != pIntersectChild->mlstObjects.end();)
         {
             iRenderable *pObject = *it;
 
-            float fMinVal =   GetAxisFromVec(pObject->GetBoundingVolume()->GetMin(),lAxis);
-            float fMaxVal =   GetAxisFromVec(pObject->GetBoundingVolume()->GetMax(),lAxis);
+            float fMinVal =   GetAxisFromVec(pObject->GetBoundingVolume()->GetMin(), lAxis);
+            float fMaxVal =   GetAxisFromVec(pObject->GetBoundingVolume()->GetMax(), lAxis);
             float fNodeSize = GetAxisFromVec(vNodeSize, lAxis);
             float fObjectSize = fMaxVal - fMinVal;
 
@@ -590,11 +590,11 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
                 ++it;
             }
             //If object is in more in the high child, move it there
-            else if( pHighChild && (fAboveDist > fBelowDist || pLowChild==NULL) )
+            else if( pHighChild && (fAboveDist > fBelowDist || pLowChild == NULL) )
             {
                 if(bLog)
                 {
-                    Log("%s  moving '%s' to high!\n",GetSpaces(alLevel),pObject->GetName().c_str());
+                    Log("%s  moving '%s' to high!\n", GetSpaces(alLevel), pObject->GetName().c_str());
                 }
                 pHighChild->mlstObjects.push_back(pObject);
                 it = pIntersectChild->mlstObjects.erase(it);
@@ -605,7 +605,7 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
             {
                 if(bLog)
                 {
-                    Log("%s  moving '%s' to low!\n",GetSpaces(alLevel),pObject->GetName().c_str());
+                    Log("%s  moving '%s' to low!\n", GetSpaces(alLevel), pObject->GetName().c_str());
                 }
                 pLowChild->mlstObjects.push_back(pObject);
                 it = pIntersectChild->mlstObjects.erase(it);
@@ -620,7 +620,7 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
         }
 
         //If not all objects where moved, then do not delete node.
-        if(bSkippedMoving ==false)
+        if(bSkippedMoving == false)
         {
             STLFindAndDelete(apNode->mlstChildren, pIntersectChild);
             pIntersectChild = NULL;
@@ -631,9 +631,9 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     {
         if(bLog)
         {
-            Log("%s moving high to intersected!\n",GetSpaces(alLevel));
+            Log("%s moving high to intersected!\n", GetSpaces(alLevel));
         }
-        pIntersectChild->mlstObjects.splice(pIntersectChild->mlstObjects.end(),pHighChild->mlstObjects);
+        pIntersectChild->mlstObjects.splice(pIntersectChild->mlstObjects.end(), pHighChild->mlstObjects);
         STLFindAndDelete(apNode->mlstChildren, pHighChild);
         pHighChild = NULL;
         bMovedObjects = true;
@@ -643,9 +643,9 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     {
         if(bLog)
         {
-            Log("%s moving low to intersected!\n",GetSpaces(alLevel));
+            Log("%s moving low to intersected!\n", GetSpaces(alLevel));
         }
-        pIntersectChild->mlstObjects.splice(pIntersectChild->mlstObjects.end(),pLowChild->mlstObjects);
+        pIntersectChild->mlstObjects.splice(pIntersectChild->mlstObjects.end(), pLowChild->mlstObjects);
         STLFindAndDelete(apNode->mlstChildren, pLowChild);
         pLowChild = NULL;
         bMovedObjects = true;
@@ -655,21 +655,21 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     {
         if(pHighChild)
         {
-            Log("%s objects above: %d\n",GetSpaces(alLevel), pHighChild->mlstObjects.size());
+            Log("%s objects above: %d\n", GetSpaces(alLevel), pHighChild->mlstObjects.size());
         }
         if(pLowChild)
         {
-            Log("%s objects below: %d\n",GetSpaces(alLevel), pLowChild->mlstObjects.size());
+            Log("%s objects below: %d\n", GetSpaces(alLevel), pLowChild->mlstObjects.size());
         }
         if(pIntersectChild)
         {
-            Log("%s objects intersected: %d\n",GetSpaces(alLevel), pIntersectChild->mlstObjects.size());
+            Log("%s objects intersected: %d\n", GetSpaces(alLevel), pIntersectChild->mlstObjects.size());
         }
     }
 
     if(bLog)
     {
-        Log("%s ---------------\n",GetSpaces(alLevel));
+        Log("%s ---------------\n", GetSpaces(alLevel));
     }
 
     ///////////////////////////////////////
@@ -680,7 +680,7 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
     {
         if(bLog)
         {
-            Log("%s==================================\n",GetSpaces(alLevel));
+            Log("%s==================================\n", GetSpaces(alLevel));
         }
 
         STLDeleteAll(apNode->mlstChildren);
@@ -689,13 +689,13 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
         apNode->mlSplitAxisCount++;
         if(apNode->mlSplitAxisCount < 3)
         {
-            int lNewAxis = lAxis +1;
+            int lNewAxis = lAxis + 1;
             if(lNewAxis > 2)
             {
-                lNewAxis =0;
+                lNewAxis = 0;
             }
 
-            CompileTempNode(apNode,alLevel, lNewAxis);
+            CompileTempNode(apNode, alLevel, lNewAxis);
         }
 
         return;
@@ -706,20 +706,20 @@ void cRenderableContainer_BoxTree::CompileTempNode(cBoxTreeTempNode *apNode, int
 
     if(pHighChild)
     {
-        CompileTempNode(pHighChild,alLevel+1, -1);
+        CompileTempNode(pHighChild, alLevel + 1, -1);
     }
     if(pLowChild)
     {
-        CompileTempNode(pLowChild,alLevel+1, -1);
+        CompileTempNode(pLowChild, alLevel + 1, -1);
     }
     if(pIntersectChild)
     {
-        CompileTempNode(pIntersectChild,alLevel+1, -1);
+        CompileTempNode(pIntersectChild, alLevel + 1, -1);
     }
 
     if(bLog)
     {
-        Log("%s==================================\n",GetSpaces(alLevel));
+        Log("%s==================================\n", GetSpaces(alLevel));
     }
 }
 
@@ -733,22 +733,22 @@ void cRenderableContainer_BoxTree::BuildNodeFromTemp(cBoxTreeTempNode *apTempNod
 
     if(bLog)
     {
-        Log("%s-----------------------------------\n",GetSpaces(alLevel));
-        Log("%sTempNode level %d Children: %d Objects: %d\n",GetSpaces(alLevel), alLevel,apTempNode->mlstChildren.size(),apTempNode->mlstObjects.size() );
+        Log("%s-----------------------------------\n", GetSpaces(alLevel));
+        Log("%sTempNode level %d Children: %d Objects: %d\n", GetSpaces(alLevel), alLevel, apTempNode->mlstChildren.size(), apTempNode->mlstObjects.size() );
         tRenderableListIt it = apTempNode->mlstObjects.begin();
         for(; it != apTempNode->mlstObjects.end(); ++it)
         {
             iRenderable *pObject = *it;
-            Log("%s   '%s'\n",GetSpaces(alLevel), pObject->GetName().c_str());
+            Log("%s   '%s'\n", GetSpaces(alLevel), pObject->GetName().c_str());
         }
     }
 
     ////////////////////////////
     //Create the bounding volume, box and sphere
-    CalculateMinMax(&apTempNode->mlstObjects,apNode->mvMin,apNode->mvMax);
+    CalculateMinMax(&apTempNode->mlstObjects, apNode->mvMin, apNode->mvMax);
 
-    apNode->mvCenter = (apNode->mvMax + apNode->mvMin) *0.5f;
-    apNode->mfRadius = (apNode->mvMax - apNode->mvMin).Length()*0.5f;
+    apNode->mvCenter = (apNode->mvMax + apNode->mvMin) * 0.5f;
+    apNode->mfRadius = (apNode->mvMax - apNode->mvMin).Length() * 0.5f;
 
     ////////////////////////////
     //If leaf, add objects.
@@ -756,8 +756,8 @@ void cRenderableContainer_BoxTree::BuildNodeFromTemp(cBoxTreeTempNode *apTempNod
     {
         if(bLog)
         {
-            Log("%sIs leaf so adding all objects to it!\n",GetSpaces(alLevel));
-            Log("%s-----------------------------------\n",GetSpaces(alLevel));
+            Log("%sIs leaf so adding all objects to it!\n", GetSpaces(alLevel));
+            Log("%s-----------------------------------\n", GetSpaces(alLevel));
         }
 
         tRenderableListIt it = apTempNode->mlstObjects.begin();
@@ -784,27 +784,27 @@ void cRenderableContainer_BoxTree::BuildNodeFromTemp(cBoxTreeTempNode *apTempNod
         pChildNode->mpParent = apNode;
         apNode->mlstChildNodes.push_back(pChildNode);
 
-        BuildNodeFromTemp(pTempChildNode, pChildNode,alLevel+1);
+        BuildNodeFromTemp(pTempChildNode, pChildNode, alLevel + 1);
     }
 }
 
 //-----------------------------------------------------------------------
-static cColor LevelColor[10] = {cColor(1,1,1),cColor(1,0,1),cColor(1,1,0),cColor(0,1,1),cColor(0,0,1),cColor(0,1,0),cColor(1,0,0),cColor(1,0.5f,1),
-                                cColor(1,1,0.5f), cColor(1,0.5f,0.5f)
+static cColor LevelColor[10] = {cColor(1, 1, 1), cColor(1, 0, 1), cColor(1, 1, 0), cColor(0, 1, 1), cColor(0, 0, 1), cColor(0, 1, 0), cColor(1, 0, 0), cColor(1, 0.5f, 1),
+                                cColor(1, 1, 0.5f), cColor(1, 0.5f, 0.5f)
                                };
 void cRenderableContainer_BoxTree::RenderDebugNode(cRendererCallbackFunctions *apFunctions, cRCNode_BoxTree *apNode, int alLevel)
 {
     //if(apNode->GetNodeList()->empty())
-    if(glDrawLevel==alLevel || (glDrawLevel > alLevel && apNode->GetChildNodeList()->empty()))
+    if(glDrawLevel == alLevel || (glDrawLevel > alLevel && apNode->GetChildNodeList()->empty()))
     {
-        apFunctions->GetLowLevelGfx()->DrawBoxMinMax(apNode->GetMin(),apNode->GetMax(),LevelColor[alLevel % 10]);
+        apFunctions->GetLowLevelGfx()->DrawBoxMinMax(apNode->GetMin(), apNode->GetMax(), LevelColor[alLevel % 10]);
     }
 
     tRenderableContainerNodeListIt childIt = apNode->GetChildNodeList()->begin();
     for(; childIt != apNode->GetChildNodeList()->end(); ++childIt)
     {
-        cRCNode_BoxTree *pChildNode = static_cast<cRCNode_BoxTree*>(*childIt);
-        RenderDebugNode(apFunctions,pChildNode, alLevel+1);
+        cRCNode_BoxTree *pChildNode = static_cast<cRCNode_BoxTree *>(*childIt);
+        RenderDebugNode(apFunctions, pChildNode, alLevel + 1);
     }
 
 

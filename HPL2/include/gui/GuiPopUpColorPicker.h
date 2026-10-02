@@ -36,11 +36,11 @@ public:
     iGraphicPickerMode(cGuiPopUpColorPicker* apPicker, const tWString& asName, int alSliderParamIndex, const cVector3f& avMaxValues);
     virtual ~iGraphicPickerMode() { }
 
-    const tWString& GetName()
+    const tWString &GetName()
     {
         return msName;
     }
-    const wchar_t&    GetSubname()
+    const wchar_t    &GetSubname()
     {
         return msName[mlSliderParamIndex];
     }
@@ -51,23 +51,23 @@ public:
     virtual void OnSetSlider(float afValue);
     virtual void OnInputEnter(cWidgetTextBox* apInput);
 
-    virtual void RebuildBox()=0;
-    virtual void RebuildSlider()=0;
+    virtual void RebuildBox() = 0;
+    virtual void RebuildSlider() = 0;
 
     void UpdateMarkers();
 
     void OnDrawBox(iWidget* apWidget);
     void OnDrawSlider(iWidget* apWidget);
 
-    virtual float GetSliderParamValue()=0;
+    virtual float GetSliderParamValue() = 0;
 
 protected:
-    virtual void OnInputEnterSpecific(cWidgetTextBox* apInput)=0;
-    virtual cVector2f GetPosInMap()=0;
-    virtual float GetPosInSlider()=0;
+    virtual void OnInputEnterSpecific(cWidgetTextBox* apInput) = 0;
+    virtual cVector2f GetPosInMap() = 0;
+    virtual float GetPosInSlider() = 0;
 
-    bool SetHSBValue(int alIndex, float afX, bool afUpdateInput=true);
-    bool SetRGBValue(int alIndex, float afX, bool afUpdateInput=true);
+    bool SetHSBValue(int alIndex, float afX, bool afUpdateInput = true);
+    bool SetRGBValue(int alIndex, float afX, bool afUpdateInput = true);
     void SetRGB(float afR, float afG, float afB);
 
     void SaveSliderValue(float afX)
@@ -76,7 +76,7 @@ protected:
     }
     bool SliderValueChanged(float afX)
     {
-        return mfOldSliderParamValue!=afX;
+        return mfOldSliderParamValue != afX;
     }
 
     void UpdateSliderMarkerColor();
@@ -87,13 +87,13 @@ protected:
 
     float mfOldSliderParamValue;
 
-    cGuiPopUpColorPicker* mpPicker;
+    cGuiPopUpColorPicker *mpPicker;
     tWString msName;
 
-    cBitmap* mpBoxBmp;
-    iTexture* mpBoxTex;
-    cBitmap* mpSliderBmp;
-    iTexture* mpSliderTex;
+    cBitmap *mpBoxBmp;
+    iTexture *mpBoxTex;
+    cBitmap *mpSliderBmp;
+    iTexture *mpSliderTex;
 
     cVector2f mvColorMapPos;
     float mfColorSliderPos;
@@ -105,7 +105,7 @@ protected:
 
 //---------------------------------------------------------------
 
-typedef std::vector<iGraphicPickerMode*> tColorPickerModeVec;
+typedef std::vector<iGraphicPickerMode *> tColorPickerModeVec;
 
 //---------------------------------------------------------------
 
@@ -163,16 +163,16 @@ public:
     void SetUpdateColorCallback(void* apCallbackObject, tGuiCallbackFunc apCallback);
 
     void SetColor(const cColor& aX);
-    const cColor& GetColor()
+    const cColor &GetColor()
     {
         return mColor;
     }
-    const cVector3f& GetHSB()
+    const cVector3f &GetHSB()
     {
         return mvHSB;
     }
 
-    const cColor& GetOldColor();
+    const cColor &GetOldColor();
 
     static void LoadRecentColorList(cXmlElement* apElem);
     static void SaveRecentColorList(cXmlElement* apElem);
@@ -206,7 +206,7 @@ protected:
     void CreateHSBInputs(iWidget* apParent, cVector3f& avPos);
     void CreateRGBInputs(iWidget* apParent, cVector3f& avPos);
     void CreateInputs(iWidget* apParent, cVector3f& avPos, tGuiCallbackFunc apCallback,
-                      const tFloatVec& avMin, const tFloatVec& avMax, std::vector<cWidgetTextBox*>& avContainer,
+                      const tFloatVec& avMin, const tFloatVec& avMax, std::vector<cWidgetTextBox *> &avContainer,
                       tBoolVec& avUpdatedContainer, tColorPickerModeVec avModes);
 
     bool Button_Pressed(iWidget* apWidget, const cGuiMessageData& aData);
@@ -267,76 +267,76 @@ protected:
 
     void ClosePopUp();
 
-    void UpdateHSBInputs(bool abForce=false);
-    void UpdateRGBInputs(bool abForce=false);
+    void UpdateHSBInputs(bool abForce = false);
+    void UpdateRGBInputs(bool abForce = false);
 
-    void UpdateColor(bool abForce=false);
-    void UpdateColorHSB(bool abForce=false);
-    void UpdateColorRGB(bool abForce=false);
+    void UpdateColor(bool abForce = false);
+    void UpdateColorHSB(bool abForce = false);
+    void UpdateColorRGB(bool abForce = false);
 
     void AddRecentColor(const cColor& aX);
 
-    cGraphics* mpGraphics;
+    cGraphics *mpGraphics;
 
     //////////////////////////////
     // Data
     cColor mColor;
     cVector3f mvHSB;
-    cColor* mpDestColor;
+    cColor *mpDestColor;
 
     float mfAlpha;
     float mfOldAlpha;
     bool mbShowTransPreview;
 
-    iGraphicPickerMode* mpCurrentMode;
+    iGraphicPickerMode *mpCurrentMode;
 
     bool mbImgPressed;
 
-    cWidgetFrame* mpFCurrentColor;
-    cWidgetFrame* mpFPreviousColor;
+    cWidgetFrame *mpFCurrentColor;
+    cWidgetFrame *mpFPreviousColor;
 
-    cWidgetImage* mpImgColorBox;
-    iTexture*      mpColorBoxTexture;
-    cBitmap*      mpColorBoxBitmap;
+    cWidgetImage *mpImgColorBox;
+    iTexture      *mpColorBoxTexture;
+    cBitmap      *mpColorBoxBitmap;
 
 
-    cWidgetImage* mpImgColorSlider;
-    iTexture*      mpColorSliderTexture;
-    cBitmap*      mpColorSliderBitmap;
+    cWidgetImage *mpImgColorSlider;
+    iTexture      *mpColorSliderTexture;
+    cBitmap      *mpColorSliderBitmap;
 
-    cWidgetImage* mpImgAlphaSliderBG;
-    cWidgetImage* mpImgAlphaSlider;
+    cWidgetImage *mpImgAlphaSliderBG;
+    cWidgetImage *mpImgAlphaSlider;
 
-    cGuiGfxElement* mpGfxBGPattern;
-    cGuiGfxElement* mpGfxColorPointer;
-    cGuiGfxElement* mpGfxSliderPointer;
+    cGuiGfxElement *mpGfxBGPattern;
+    cGuiGfxElement *mpGfxColorPointer;
+    cGuiGfxElement *mpGfxSliderPointer;
 
-    cGuiGfxElement* mpGfxHMarker;
-    cGuiGfxElement* mpGfxVMarker;
+    cGuiGfxElement *mpGfxHMarker;
+    cGuiGfxElement *mpGfxVMarker;
 
-    std::vector<cWidgetCheckBox*> mvPickerModeSwitches;
+    std::vector<cWidgetCheckBox *> mvPickerModeSwitches;
 
-    std::vector<cWidgetTextBox*> mvHSBInputs;
+    std::vector<cWidgetTextBox *> mvHSBInputs;
     tBoolVec                     mvHSBValueUpdated;
 
-    std::vector<cWidgetTextBox*> mvRGBInputs;
+    std::vector<cWidgetTextBox *> mvRGBInputs;
     tBoolVec                     mvRGBValueUpdated;
 
-    cWidgetCheckBox* mpCBAlpha;
-    cWidgetTextBox* mpInpAlpha;
+    cWidgetCheckBox *mpCBAlpha;
+    cWidgetTextBox *mpInpAlpha;
     bool mbAlphaValueUpdated;
 
-    cWidgetTextBox* mpInpHexRGB;
-    cWidgetTextBox* mpInpHexAlpha;
-    cWidgetTextBox* mpInpHexRGBA;
-    cWidgetTextBox* mpInpVecRGBA;
+    cWidgetTextBox *mpInpHexRGB;
+    cWidgetTextBox *mpInpHexAlpha;
+    cWidgetTextBox *mpInpHexRGBA;
+    cWidgetTextBox *mpInpVecRGBA;
 
-    cWidgetButton* mvButtons[3];
+    cWidgetButton *mvButtons[3];
 
-    void * mpCallbackObject;
+    void *mpCallbackObject;
     tGuiCallbackFunc mpCallback;
 
-    void * mpUpdateCallbackObject;
+    void *mpUpdateCallbackObject;
     tGuiCallbackFunc mpUpdateCallback;
 
     static tColorList mlstRecentColors;

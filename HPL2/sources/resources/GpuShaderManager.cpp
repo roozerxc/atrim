@@ -23,16 +23,16 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cGpuShaderManager::cGpuShaderManager(cFileSearcher *apFileSearcher,iLowLevelGraphics *apLowLevelGraphics,
-                                     iLowLevelResources *apLowLevelResources,iLowLevelSystem *apLowLevelSystem)
-    : iResourceManager(apFileSearcher, apLowLevelResources,apLowLevelSystem)
+cGpuShaderManager::cGpuShaderManager(cFileSearcher *apFileSearcher, iLowLevelGraphics *apLowLevelGraphics,
+                                     iLowLevelResources *apLowLevelResources, iLowLevelSystem *apLowLevelSystem)
+    : iResourceManager(apFileSearcher, apLowLevelResources, apLowLevelSystem)
 {
     mpLowLevelGraphics = apLowLevelGraphics;
 
     mpPreprocessParser = hplNew(cPreprocessParser, () );
 
-    mpPreprocessParser->GetEnvVarContainer()->Add("ScreenWidth",mpLowLevelGraphics->GetScreenSizeInt().x);
-    mpPreprocessParser->GetEnvVarContainer()->Add("ScreenHeigth",mpLowLevelGraphics->GetScreenSizeInt().y);
+    mpPreprocessParser->GetEnvVarContainer()->Add("ScreenWidth", mpLowLevelGraphics->GetScreenSizeInt().x);
+    mpPreprocessParser->GetEnvVarContainer()->Add("ScreenHeigth", mpLowLevelGraphics->GetScreenSizeInt().y);
 
 #ifdef _WIN32
     mpPreprocessParser->GetEnvVarContainer()->Add("OS_Windows");
@@ -79,7 +79,7 @@ void cGpuShaderManager::CheckFeatureSupport()
 
     /////////////////////////
     // Test Feature support
-    if(IsShaderSupported("_test_array_support_frag.glsl", eGpuShaderType_Fragment)==false)
+    if(IsShaderSupported("_test_array_support_frag.glsl", eGpuShaderType_Fragment) == false)
     {
         Log("ATTENTION: System does not support const arrays in glsl!\n");
         mpPreprocessParser->GetEnvVarContainer()->Add("FeatureNotSupported_ConstArray");
@@ -88,7 +88,7 @@ void cGpuShaderManager::CheckFeatureSupport()
 
 //-----------------------------------------------------------------------
 
-iGpuShader* cGpuShaderManager::CreateShader(const tString& asName, eGpuShaderType aType,
+iGpuShader *cGpuShaderManager::CreateShader(const tString& asName, eGpuShaderType aType,
         cParserVarContainer *apVarContainer)
 {
     iGpuShader* pShader;
@@ -105,9 +105,9 @@ iGpuShader* cGpuShaderManager::CreateShader(const tString& asName, eGpuShaderTyp
         /////////////////////////////////
         //Get file from file searcher
         tWString sPath = mpFileSearcher->GetFilePath(asName);
-        if(sPath==_W(""))
+        if(sPath == _W(""))
         {
-            Error("Couldn't find file '%s' in resources\n",asName.c_str());
+            Error("Couldn't find file '%s' in resources\n", asName.c_str());
             EndLoad();
             return NULL;
         }
@@ -117,20 +117,20 @@ iGpuShader* cGpuShaderManager::CreateShader(const tString& asName, eGpuShaderTyp
         unsigned int lFileSize = cPlatform::GetFileSize(sPath);
 
         sFileData.resize(lFileSize);
-        cPlatform::CopyFileToBuffer(sPath,&sFileData[0],lFileSize);
+        cPlatform::CopyFileToBuffer(sPath, &sFileData[0], lFileSize);
 
         /////////////////////////////////
         //Parse file
-        mpPreprocessParser->Parse(&sFileData, &sParsedOutput,apVarContainer,cString::GetFilePathW(sPath));
+        mpPreprocessParser->Parse(&sFileData, &sParsedOutput, apVarContainer, cString::GetFilePathW(sPath));
 
         /////////////////////////////////
         //Compile
         pShader = mpLowLevelGraphics->CreateGpuShader(asName, aType);
         pShader->SetFullPath(sPath);
 
-        if(pShader->CreateFromString(sParsedOutput.c_str())==false)
+        if(pShader->CreateFromString(sParsedOutput.c_str()) == false)
         {
-            Error("Couldn't create program '%s'\n",asName.c_str());
+            Error("Couldn't create program '%s'\n", asName.c_str());
             hplDelete(pShader);
             EndLoad();
             return NULL;
@@ -153,8 +153,8 @@ iGpuShader* cGpuShaderManager::CreateShader(const tString& asName, eGpuShaderTyp
 
                 tStringVec vStrings;
                 tString sSepp = "_";
-                cString::GetStringVec(sVarName,vStrings,&sSepp);
-                if(vStrings.size()>=2 && vStrings[0]=="sampler")
+                cString::GetStringVec(sVarName, vStrings, &sSepp);
+                if(vStrings.size() >= 2 && vStrings[0] == "sampler")
                 {
                     int lUnit = cString::ToInt(sVarVal.c_str(), 0);
 
@@ -169,15 +169,15 @@ iGpuShader* cGpuShaderManager::CreateShader(const tString& asName, eGpuShaderTyp
     else
     {
         tWString sPath;
-        pShader = static_cast<iGpuShader*>(FindLoadedResource(asName,sPath));
+        pShader = static_cast<iGpuShader *>(FindLoadedResource(asName, sPath));
 
-        if(pShader==NULL && sPath!=_W(""))
+        if(pShader == NULL && sPath != _W(""))
         {
             pShader = mpLowLevelGraphics->CreateGpuShader(asName, aType);
 
-            if(pShader->CreateFromFile(sPath)==false)
+            if(pShader->CreateFromFile(sPath) == false)
             {
-                Error("Couldn't create program '%s'\n",asName.c_str());
+                Error("Couldn't create program '%s'\n", asName.c_str());
                 hplDelete(pShader);
                 EndLoad();
                 return NULL;
@@ -192,7 +192,7 @@ iGpuShader* cGpuShaderManager::CreateShader(const tString& asName, eGpuShaderTyp
         }
         else
         {
-            Error("Couldn't load program '%s'\n",asName.c_str());
+            Error("Couldn't load program '%s'\n", asName.c_str());
         }
     }
 
@@ -213,7 +213,7 @@ void cGpuShaderManager::Destroy(iResourceBase* apResource)
 {
     apResource->DecUserCount();
 
-    if(apResource->HasUsers()==false)
+    if(apResource->HasUsers() == false)
     {
         RemoveResource(apResource);
         hplDelete(apResource);
@@ -235,9 +235,9 @@ bool cGpuShaderManager::IsShaderSupported(const tString& asName, eGpuShaderType 
     /////////////////////////////////
     //Get file from file searcher
     tWString sPath = mpFileSearcher->GetFilePath(asName);
-    if(sPath==_W(""))
+    if(sPath == _W(""))
     {
-        Error("Couldn't find test file '%s' in resources\n",asName.c_str());
+        Error("Couldn't find test file '%s' in resources\n", asName.c_str());
         return false;
     }
 

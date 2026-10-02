@@ -88,7 +88,7 @@ void iPhysicsWorld::Update(double adFixedDelta)
     {
         iPhysicsBody *pBody = *BodyIt;
 
-        if(pBody->UpdateBeforeSimulate(adFixedDelta)==false)
+        if(pBody->UpdateBeforeSimulate(adFixedDelta) == false)
         {
             //Add to remove list
             lstRemoveUpdateBodies.push_back(pBody);
@@ -96,7 +96,7 @@ void iPhysicsWorld::Update(double adFixedDelta)
     }
 
     //Iterate remove list and remove all bodies in it from the update list.
-    if(lstRemoveUpdateBodies.empty()==false)
+    if(lstRemoveUpdateBodies.empty() == false)
     {
         for(tPhysicsBodyListIt it = lstRemoveUpdateBodies.begin(); it != lstRemoveUpdateBodies.end(); ++it)
         {
@@ -120,7 +120,7 @@ void iPhysicsWorld::Update(double adFixedDelta)
     {
         iPhysicsJoint *pJoint = *JointIt;
 
-        if(pJoint->OnPhysicsUpdate()==false)
+        if(pJoint->OnPhysicsUpdate() == false)
         {
             ++JointIt;
             continue;
@@ -162,7 +162,7 @@ void iPhysicsWorld::Update(double adFixedDelta)
 void iPhysicsWorld::DestroyShape(iCollideShape *apShape)
 {
     apShape->DecUserCount();
-    if(apShape->HasUsers()==false)
+    if(apShape->HasUsers() == false)
     {
         STLFindAndDelete(mlstShapes, apShape);
     }
@@ -208,11 +208,11 @@ void iPhysicsWorld::EnableBodiesInBV(cBoundingVolume *apBV, bool abEnabled)
     mvTempBodies.resize(0);
     GetBodiesInBV(apBV, &mvTempBodies);
 
-    for(size_t i=0; i<mvTempBodies.size(); ++i)
+    for(size_t i = 0; i < mvTempBodies.size(); ++i)
     {
         iPhysicsBody *pBody = mvTempBodies[i];
 
-        if(pBody->GetMass() > 0 && cMath::CheckBVIntersection(*apBV,*pBody->GetBoundingVolume()))
+        if(pBody->GetMass() > 0 && cMath::CheckBVIntersection(*apBV, *pBody->GetBoundingVolume()))
         {
             pBody->Enable();
         }
@@ -236,7 +236,7 @@ void iPhysicsWorld::AddBodyToUpdateList(iPhysicsBody *apBody)
 //        Still want to remove when destroying though.
 void iPhysicsWorld::RemoveBodyFromUpdateList(iPhysicsBody *apBody, bool abDestroyingBody)
 {
-    if(apBody->IsInUpdateList()==false)
+    if(apBody->IsInUpdateList() == false)
     {
         return;
     }
@@ -289,7 +289,7 @@ iPhysicsBody *iPhysicsWorld::GetCharacterBody(const tString &asName)
 
 //-----------------------------------------------------------------------
 
-iPhysicsMaterial* iPhysicsWorld::GetMaterialFromName(const tString &asName)
+iPhysicsMaterial *iPhysicsWorld::GetMaterialFromName(const tString &asName)
 {
     tPhysicsMaterialMapIt it = m_mapMaterials.find(asName);
     if(it == m_mapMaterials.end())
@@ -297,9 +297,9 @@ iPhysicsMaterial* iPhysicsWorld::GetMaterialFromName(const tString &asName)
         return NULL;
     }
 
-    iPhysicsMaterial *pMaterial =it->second;
+    iPhysicsMaterial *pMaterial = it->second;
 
-    if(pMaterial->IsPreloaded()==false && pMaterial->GetSurfaceData())
+    if(pMaterial->IsPreloaded() == false && pMaterial->GetSurfaceData())
     {
         pMaterial->SetPreloaded(true);
         pMaterial->GetSurfaceData()->PreloadData();
@@ -317,12 +317,12 @@ cPhysicsMaterialIterator iPhysicsWorld::GetMaterialIterator()
 
 //-----------------------------------------------------------------------
 
-iPhysicsRope* iPhysicsWorld::GetRope(const tString &asName)
+iPhysicsRope *iPhysicsWorld::GetRope(const tString &asName)
 {
     return (iPhysicsRope*) STLFindByName(mlstRopes, asName);
 }
 
-iPhysicsRope* iPhysicsWorld::GetRopeFromUniqueID(int alID)
+iPhysicsRope *iPhysicsWorld::GetRopeFromUniqueID(int alID)
 {
     for(tPhysicsRopeListIt it = mlstRopes.begin(); it != mlstRopes.end(); ++it)
     {
@@ -387,7 +387,7 @@ void iPhysicsWorld::FadeoutAllLoopSounds(float afFadeSpeed)
         iPhysicsBody *pBody = *bodyIt;
 
         cSoundEntity *pRollSound = pBody->GetRollSoundEntity();
-        if(pRollSound && mpWorld->SoundEntityExists(pRollSound,pBody->GetRollSoundEntityID()))
+        if(pRollSound && mpWorld->SoundEntityExists(pRollSound, pBody->GetRollSoundEntityID()))
         {
             pRollSound->FadeOut(afFadeSpeed);
         }
@@ -424,11 +424,11 @@ void iPhysicsWorld::FadeoutAllLoopSounds(float afFadeSpeed)
 void iPhysicsWorld::RenderContactPoints(iLowLevelGraphics *apLowLevel, const cColor& aPointColor,
                                         const cColor& aLineColor)
 {
-    for(size_t i=0; i < mvContactPoints.size(); i++)
+    for(size_t i = 0; i < mvContactPoints.size(); i++)
     {
-        apLowLevel->DrawSphere(mvContactPoints[i].mvPoint,0.2f, aPointColor);
+        apLowLevel->DrawSphere(mvContactPoints[i].mvPoint, 0.2f, aPointColor);
         apLowLevel->DrawLine(mvContactPoints[i].mvPoint,
-                             mvContactPoints[i].mvNormal * mvContactPoints[i].mfDepth *0.2f,
+                             mvContactPoints[i].mvNormal * mvContactPoints[i].mfDepth * 0.2f,
                              aLineColor);
         //Log("Rendering\n");
     }
@@ -449,7 +449,7 @@ bool iPhysicsWorld::CheckShapeWorldCollision(cVector3f *apPushVector,
 
     if(apPushVector)
     {
-        *apPushVector = cVector3f(0,0,0);
+        *apPushVector = cVector3f(0, 0, 0);
     }
     bool bCollide = false;
 
@@ -461,21 +461,21 @@ bool iPhysicsWorld::CheckShapeWorldCollision(cVector3f *apPushVector,
 
     //if(abDebug)Log("--------------\n");
 
-    int lBefore =0;
-    int lAfter =0;
+    int lBefore = 0;
+    int lAfter = 0;
 
     mvTempBodies.resize(0);
     GetBodiesInBV(&boundingVolume, &mvTempBodies);
 
-    for(size_t i=0; i<mvTempBodies.size(); ++i)
+    for(size_t i = 0; i < mvTempBodies.size(); ++i)
     {
         iPhysicsBody *pBody = mvTempBodies[i];
 
-        if(pBody->IsActive()==false)
+        if(pBody->IsActive() == false)
         {
             continue;
         }
-        if(pBody->IsCharacter() && abCollideCharacter==false)
+        if(pBody->IsCharacter() && abCollideCharacter == false)
         {
             continue;
         }
@@ -483,15 +483,15 @@ bool iPhysicsWorld::CheckShapeWorldCollision(cVector3f *apPushVector,
         {
             continue;
         }
-        if(abSkipStatic && pBody->GetMass()==0 && pBody->IsCharacter()==false)
+        if(abSkipStatic && pBody->GetMass() == 0 && pBody->IsCharacter() == false)
         {
             continue;
         }
-        if(abIsCharacter && pBody->GetCollideCharacter()==false)
+        if(abIsCharacter && pBody->GetCollideCharacter() == false)
         {
             continue;
         }
-        if(abIsCharacter==false && pBody->GetCollide()==false)
+        if(abIsCharacter == false && pBody->GetCollide() == false)
         {
             continue;
         }
@@ -505,14 +505,14 @@ bool iPhysicsWorld::CheckShapeWorldCollision(cVector3f *apPushVector,
         }
 
         //Note: Still make this check, since GetBodiesInBV is not exact.
-        if(cMath::CheckBVIntersection(boundingVolume,*pBody->GetBoundingVolume())==false)
+        if(cMath::CheckBVIntersection(boundingVolume, *pBody->GetBoundingVolume()) == false)
         {
             continue;
 
         }
 
         collideData.SetMaxSize(32);
-        bool bRet = CheckShapeCollision(apShape,a_mtxTransform, pBody->GetShape(),pBody->GetLocalMatrix(),
+        bool bRet = CheckShapeCollision(apShape, a_mtxTransform, pBody->GetShape(), pBody->GetLocalMatrix(),
                                         collideData, 32, true);
 
         if(bRet && apPushVector)
@@ -524,11 +524,11 @@ bool iPhysicsWorld::CheckShapeWorldCollision(cVector3f *apPushVector,
                 apCallback->OnCollision(pBody, &collideData);
             }
 
-            for(int i=0; i< collideData.mlNumOfPoints; i++)
+            for(int i = 0; i < collideData.mlNumOfPoints; i++)
             {
                 cCollidePoint &point = collideData.mvContactPoints[i];
 
-                cVector3f vPush = point.mvNormal*point.mfDepth;
+                cVector3f vPush = point.mvNormal * point.mfDepth;
 
                 if(std::abs(apPushVector->x) < std::abs(vPush.x))
                 {

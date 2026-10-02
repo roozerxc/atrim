@@ -47,9 +47,9 @@ cFPSCounter::cFPSCounter(iLowLevelSystem* apLowLevelSystem)
 {
     mfFPS = 60;
 
-    mlFramecounter=0;
-    mfFrametimestart=0;
-    mfFrametime=0;
+    mlFramecounter = 0;
+    mfFrametimestart = 0;
+    mfFrametime = 0;
 
     mfUpdateRate = 1;
 
@@ -90,7 +90,7 @@ cSetupVarContainer::cSetupVarContainer()
 
 void cSetupVarContainer::AddString(const tString& asName, const tString& asValue)
 {
-    std::map<tString, tString>::value_type val(asName,asValue);
+    std::map<tString, tString>::value_type val(asName, asValue);
     m_mapVars.insert(val);
 }
 
@@ -110,7 +110,7 @@ void cSetupVarContainer::AddBool(const tString& asName, bool abValue)
 //-----------------------------------------------------------------------
 
 
-const tString& cSetupVarContainer::GetString(const tString& asName)
+const tString &cSetupVarContainer::GetString(const tString& asName)
 {
     std::map<tString, tString>::iterator it = m_mapVars.find(asName);
     if(it == m_mapVars.end())
@@ -132,7 +132,7 @@ float cSetupVarContainer::GetFloat(const tString& asName, float afDefault)
     }
     else
     {
-        return cString::ToFloat(sVal.c_str(),afDefault);
+        return cString::ToFloat(sVal.c_str(), afDefault);
     }
 }
 int cSetupVarContainer::GetInt(const tString& asName, int alDefault)
@@ -144,7 +144,7 @@ int cSetupVarContainer::GetInt(const tString& asName, int alDefault)
     }
     else
     {
-        return cString::ToInt(sVal.c_str(),alDefault);
+        return cString::ToInt(sVal.c_str(), alDefault);
     }
 }
 bool cSetupVarContainer::GetBool(const tString& asName, bool abDefault)
@@ -156,7 +156,7 @@ bool cSetupVarContainer::GetBool(const tString& asName, bool abDefault)
     }
     else
     {
-        return cString::ToBool(sVal.c_str(),abDefault);
+        return cString::ToBool(sVal.c_str(), abDefault);
     }
 }
 
@@ -166,7 +166,7 @@ bool cSetupVarContainer::GetBool(const tString& asName, bool abDefault)
 
 //-----------------------------------------------------------------------
 
-cEngine* CreateHPLEngine(eHplAPI aApi, tFlag alHplModuleFlags, cEngineInitVars *apVars)
+cEngine *CreateHPLEngine(eHplAPI aApi, tFlag alHplModuleFlags, cEngineInitVars *apVars)
 {
     iLowLevelEngineSetup *pGameSetup = NULL;
 
@@ -177,7 +177,7 @@ cEngine* CreateHPLEngine(eHplAPI aApi, tFlag alHplModuleFlags, cEngineInitVars *
         break;
     }
 
-    return hplNew( cEngine,  (pGameSetup,alHplModuleFlags, apVars) );
+    return hplNew( cEngine,  (pGameSetup, alHplModuleFlags, apVars) );
 }
 
 //-----------------------------------------------------------------------
@@ -200,7 +200,7 @@ bool cEngine::mbDeviceRemoved = false;
 
 //-----------------------------------------------------------------------
 
-cEngine::cEngine(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, cEngineInitVars *apVars)
+cEngine::cEngine(iLowLevelEngineSetup *apGameSetup, tFlag alHplSetupFlags, cEngineInitVars *apVars)
     : mbGameIsDone(false)
     , mbPaused(false)
     , iMaxGameUpdates(6)
@@ -229,12 +229,12 @@ cEngine::cEngine(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, cEngin
     mvEngineTypeStrings[eVariableType_Enum] =    "Enum";
     mvEngineTypeStrings[eVariableType_Bool] =    "Bool";
 
-    GameInit(apGameSetup,alHplSetupFlags, apVars);
+    GameInit(apGameSetup, alHplSetupFlags, apVars);
 }
 
 //-----------------------------------------------------------------------
 
-void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, cEngineInitVars *apVars)
+void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup, tFlag alHplSetupFlags, cEngineInitVars *apVars)
 {
     mpGameSetup = apGameSetup;
 
@@ -264,16 +264,16 @@ void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, 
     mpAI = mpGameSetup->CreateAI();
 
     Log(" Creating gui module\n");
-    mpGui = hplNew(cGui,());
+    mpGui = hplNew(cGui, ());
 
     Log(" Creating scene module\n");
-    mpScene = mpGameSetup->CreateScene(mpGraphics, mpResources, mpSound,mpPhysics,mpSystem,mpAI,mpGui);
+    mpScene = mpGameSetup->CreateScene(mpGraphics, mpResources, mpSound, mpPhysics, mpSystem, mpAI, mpGui);
 
     Log("--------------------------------------------------------\n\n");
 
 
     //Init the resources
-    mpResources->Init(mpGraphics,mpSystem, mpSound,mpScene,mpGui, mpPhysics);
+    mpResources->Init(mpGraphics, mpSystem, mpSound, mpScene, mpGui, mpPhysics);
 
     //Init the graphics
     mpGraphics->Init(    apVars->mGraphics.mvScreenSize.x,
@@ -283,7 +283,7 @@ void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, 
                          apVars->mGraphics.mGpuProgramFormat,
                          apVars->mGraphics.msWindowCaption,
                          apVars->mGraphics.mvWindowPosition,
-                         mpResources,alHplSetupFlags);
+                         mpResources, alHplSetupFlags);
 
     //Init Sound
     mpSound->Init(mpResources, apVars->mSound.mlSoundDeviceID,
@@ -305,13 +305,13 @@ void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, 
     mpAI->Init();
 
     //Init Gui
-    mpGui->Init(mpResources,mpGraphics,mpSound,mpScene, mpInput);
+    mpGui->Init(mpResources, mpGraphics, mpSound, mpScene, mpInput);
 
     Log("Initializing Game Module\n");
     Log("--------------------------------------------------------\n");
     //Create the updatehandler
     Log(" Adding engine updates\n");
-    mpUpdater = hplNew( cUpdater,(mpSystem->GetLowLevel()));
+    mpUpdater = hplNew( cUpdater, (mpSystem->GetLowLevel()));
 
     //Add some loaded modules to the updater
     mpUpdater->AddGlobalUpdate(mpInput);
@@ -330,11 +330,11 @@ void cEngine::GameInit(iLowLevelEngineSetup *apGameSetup,tFlag alHplSetupFlags, 
     mpMutex = cPlatform::CreateMutEx();
 
     //Since game is not done:
-    mbGameIsDone=false;
+    mbGameIsDone = false;
 
     mbPaused = false;
 
-    mpFPSCounter = hplNew( cFPSCounter,(mpSystem->GetLowLevel()) );
+    mpFPSCounter = hplNew( cFPSCounter, (mpSystem->GetLowLevel()) );
     mpFrameTimer = cPlatform::CreateTimer();
     Log("--------------------------------------------------------\n\n");
 
@@ -633,7 +633,7 @@ float cEngine::GetFPS()
 
 float cEngine::GetAvgFrameTimeInMS()
 {
-    return (1.0f/mpFPSCounter->mfFPS)*1000.0f;
+    return (1.0f / mpFPSCounter->mfFPS) * 1000.0f;
 }
 
 //-----------------------------------------------------------------------
@@ -649,17 +649,17 @@ float cEngine::GetFPSUpdateRate()
 
 //-----------------------------------------------------------------------
 
-cScriptVar* cEngine::CreateLocalVar(const tString& asName)
+cScriptVar *cEngine::CreateLocalVar(const tString& asName)
 {
     cScriptVar* pVar;
-    pVar= GetLocalVar(asName);
-    if(pVar==NULL)
+    pVar = GetLocalVar(asName);
+    if(pVar == NULL)
     {
         cScriptVar Var;
         Var.msName = asName;
-        m_mapLocalVars.insert(tScriptVarMap::value_type(cString::ToLowerCase(asName),Var));
-        pVar= GetLocalVar(asName);
-        if(pVar==NULL)
+        m_mapLocalVars.insert(tScriptVarMap::value_type(cString::ToLowerCase(asName), Var));
+        pVar = GetLocalVar(asName);
+        if(pVar == NULL)
         {
             FatalError("Very strange error when creating script var!\n");
         }
@@ -669,10 +669,10 @@ cScriptVar* cEngine::CreateLocalVar(const tString& asName)
 
 //-----------------------------------------------------------------------
 
-cScriptVar* cEngine::GetLocalVar(const tString& asName)
+cScriptVar *cEngine::GetLocalVar(const tString& asName)
 {
     tScriptVarMapIt it = m_mapLocalVars.find(cString::ToLowerCase(asName));
-    if(it==m_mapLocalVars.end())
+    if(it == m_mapLocalVars.end())
     {
         return NULL;
     }
@@ -682,24 +682,24 @@ cScriptVar* cEngine::GetLocalVar(const tString& asName)
 
 //-----------------------------------------------------------------------
 
-tScriptVarMap* cEngine::GetLocalVarMap()
+tScriptVarMap *cEngine::GetLocalVarMap()
 {
     return &m_mapLocalVars;
 }
 
 //-----------------------------------------------------------------------
 
-cScriptVar* cEngine::CreateGlobalVar(const tString& asName)
+cScriptVar *cEngine::CreateGlobalVar(const tString& asName)
 {
     cScriptVar* pVar;
-    pVar= GetGlobalVar(asName);
-    if(pVar==NULL)
+    pVar = GetGlobalVar(asName);
+    if(pVar == NULL)
     {
         cScriptVar Var;
         Var.msName = asName;
-        m_mapGlobalVars.insert(tScriptVarMap::value_type(cString::ToLowerCase(asName),Var));
-        pVar= GetGlobalVar(asName);
-        if(pVar==NULL)
+        m_mapGlobalVars.insert(tScriptVarMap::value_type(cString::ToLowerCase(asName), Var));
+        pVar = GetGlobalVar(asName);
+        if(pVar == NULL)
         {
             FatalError("Very strange error when creating script var!\n");
         }
@@ -709,10 +709,10 @@ cScriptVar* cEngine::CreateGlobalVar(const tString& asName)
 
 //-----------------------------------------------------------------------
 
-cScriptVar* cEngine::GetGlobalVar(const tString& asName)
+cScriptVar *cEngine::GetGlobalVar(const tString& asName)
 {
     tScriptVarMapIt it = m_mapGlobalVars.find(cString::ToLowerCase(asName));
-    if(it==m_mapGlobalVars.end())
+    if(it == m_mapGlobalVars.end())
     {
         return NULL;
     }
@@ -722,7 +722,7 @@ cScriptVar* cEngine::GetGlobalVar(const tString& asName)
 
 //-----------------------------------------------------------------------
 
-tScriptVarMap* cEngine::GetGlobalVarMap()
+tScriptVarMap *cEngine::GetGlobalVarMap()
 {
     return &m_mapGlobalVars;
 }
@@ -739,9 +739,9 @@ void cEngine::ClearAllVariables()
 
 eVariableType cEngine::GetEngineTypeFromString(const tString& asType)
 {
-    for(int i=0; i<(int)mvEngineTypeStrings.size(); ++i)
+    for(int i = 0; i < (int)mvEngineTypeStrings.size(); ++i)
     {
-        if(asType==mvEngineTypeStrings[i])
+        if(asType == mvEngineTypeStrings[i])
         {
             return (eVariableType)i;
         }

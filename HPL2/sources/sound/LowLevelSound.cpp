@@ -18,9 +18,9 @@ tSoundDeviceVec iLowLevelSound::mvFilteredSoundDevices = tSoundDeviceVec();
 
 iLowLevelSound::iLowLevelSound()
 {
-    mfVolume=1;
-    mfEnvVolume=0;
-    mbListenerAttenuation=true;
+    mfVolume = 1;
+    mfEnvVolume = 0;
+    mbListenerAttenuation = true;
     mbHardwareAcc = false;
     mbEnvAudioEnabled = false;
 }
@@ -41,7 +41,7 @@ iLowLevelSound::~iLowLevelSound()
 
 //-----------------------------------------------------------------------
 
-iSoundEnvironment* iLowLevelSound::GetSoundEnvironmentFromFileName (const tString& asName)
+iSoundEnvironment *iLowLevelSound::GetSoundEnvironmentFromFileName (const tString& asName)
 {
     tString sLowName = cString::ToLowerCase(asName);
     for (tSoundEnvListIt SEIt = mlstSoundEnv.begin(); SEIt != mlstSoundEnv.end(); ++SEIt)
@@ -67,7 +67,7 @@ iSoundEnvironment* iLowLevelSound::GetSoundEnvironmentFromFileName (const tStrin
 
 //-----------------------------------------------------------------------
 
-const tSoundDeviceVec& iLowLevelSound::GetAvailableSoundDevices()
+const tSoundDeviceVec &iLowLevelSound::GetAvailableSoundDevices()
 {
     if(mvSoundDevices.empty())
     {
@@ -77,7 +77,7 @@ const tSoundDeviceVec& iLowLevelSound::GetAvailableSoundDevices()
     return mvSoundDevices;
 }
 
-const tSoundDeviceVec& iLowLevelSound::GetFilteredSoundDevices()
+const tSoundDeviceVec &iLowLevelSound::GetFilteredSoundDevices()
 {
     if(mbSoundDeviceNameFilterChanged)
     {
@@ -87,12 +87,12 @@ const tSoundDeviceVec& iLowLevelSound::GetFilteredSoundDevices()
         const tSoundDeviceVec& vSndDevices = GetAvailableSoundDevices();
 
         tString sLowCaseFilter = cString::ToLowerCase(msSoundDeviceNameFilter);
-        for(int i=0; i<(int)mvSoundDevices.size(); ++i)
+        for(int i = 0; i < (int)mvSoundDevices.size(); ++i)
         {
             iSoundDeviceIdentifier* pSndDev = mvSoundDevices[i];
             tString sLowCaseName = cString::ToLowerCase(pSndDev->GetName());
 
-            if(cString::GetFirstStringPos(sLowCaseName, sLowCaseFilter)!=-1)
+            if(cString::GetFirstStringPos(sLowCaseName, sLowCaseFilter) != -1)
             {
                 mvFilteredSoundDevices.push_back(pSndDev);
             }

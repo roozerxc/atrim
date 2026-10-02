@@ -44,8 +44,8 @@ cSubMesh::cSubMesh(const tString &asName, cMaterialManager* apMaterialManager)
     m_mtxLocalTransform = cMatrixf::Identity;
 
     mbIsOneSided = false;
-    mvOneSidedNormal =0;
-    mvOneSidedPoint =0;
+    mvOneSidedNormal = 0;
+    mvOneSidedPoint = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -110,7 +110,7 @@ cMaterial *cSubMesh::GetMaterial()
 
 //-----------------------------------------------------------------------
 
-iVertexBuffer* cSubMesh::GetVertexBuffer()
+iVertexBuffer *cSubMesh::GetVertexBuffer()
 {
     return mpVtxBuffer;
 }
@@ -126,7 +126,7 @@ int cSubMesh::GetVertexBonePairNum()
 {
     return (int)mvVtxBonePairs.size();
 }
-cVertexBonePair& cSubMesh::GetVertexBonePair(int alNum)
+cVertexBonePair &cSubMesh::GetVertexBonePair(int alNum)
 {
     return mvVtxBonePairs[alNum];
 }
@@ -145,7 +145,7 @@ void cSubMesh::ClearVertexBonePairs()
 
 //-----------------------------------------------------------------------
 
-cMeshCollider* cSubMesh::CreateCollider(eCollideShapeType aType)
+cMeshCollider *cSubMesh::CreateCollider(eCollideShapeType aType)
 {
     cMeshCollider* pColl = hplNew( cMeshCollider, () );
     pColl->mType = aType;
@@ -155,7 +155,7 @@ cMeshCollider* cSubMesh::CreateCollider(eCollideShapeType aType)
     return pColl;
 }
 
-cMeshCollider* cSubMesh::GetCollider(int alIdx)
+cMeshCollider *cSubMesh::GetCollider(int alIdx)
 {
     return mvColliders[alIdx];
 }
@@ -165,28 +165,28 @@ int cSubMesh::GetColliderNum()
     return (int) mvColliders.size();
 }
 
-iCollideShape* cSubMesh::CreateCollideShapeFromCollider(cMeshCollider *pCollider, iPhysicsWorld *apWorld, const cVector3f& avSizeMul, cMatrixf *apMtxOffset)
+iCollideShape *cSubMesh::CreateCollideShapeFromCollider(cMeshCollider *pCollider, iPhysicsWorld *apWorld, const cVector3f& avSizeMul, cMatrixf *apMtxOffset)
 {
     cMatrixf *pOffset = apMtxOffset ? apMtxOffset : &pCollider->m_mtxOffset;
 
-    cVector3f vSize = pCollider->mvSize*avSizeMul;
+    cVector3f vSize = pCollider->mvSize * avSizeMul;
 
     switch(pCollider->mType)
     {
     case eCollideShapeType_Box:
-        return apWorld->CreateBoxShape(vSize,pOffset);
+        return apWorld->CreateBoxShape(vSize, pOffset);
     case eCollideShapeType_Sphere:
-        return apWorld->CreateSphereShape(vSize,pOffset);
+        return apWorld->CreateSphereShape(vSize, pOffset);
     case eCollideShapeType_Cylinder:
-        return apWorld->CreateCylinderShape(vSize.x,vSize.y,pOffset);
+        return apWorld->CreateCylinderShape(vSize.x, vSize.y, pOffset);
     case eCollideShapeType_Capsule:
-        return apWorld->CreateCapsuleShape(vSize.x,vSize.y,pOffset);
+        return apWorld->CreateCapsuleShape(vSize.x, vSize.y, pOffset);
     }
 
     return NULL;
 }
 
-iCollideShape* cSubMesh::CreateCollideShape(iPhysicsWorld *apWorld)
+iCollideShape *cSubMesh::CreateCollideShape(iPhysicsWorld *apWorld)
 {
     if(mvColliders.empty())
     {
@@ -196,7 +196,7 @@ iCollideShape* cSubMesh::CreateCollideShape(iPhysicsWorld *apWorld)
     //Create a single object
     if(mvColliders.size() == 1)
     {
-        return CreateCollideShapeFromCollider(mvColliders[0],apWorld,1, NULL);
+        return CreateCollideShapeFromCollider(mvColliders[0], apWorld, 1, NULL);
     }
     //Create compound object
     else
@@ -204,9 +204,9 @@ iCollideShape* cSubMesh::CreateCollideShape(iPhysicsWorld *apWorld)
         tCollideShapeVec vShapes;
         vShapes.reserve(mvColliders.size());
 
-        for(size_t i=0; i<mvColliders.size(); ++i)
+        for(size_t i = 0; i < mvColliders.size(); ++i)
         {
-            vShapes.push_back(CreateCollideShapeFromCollider(mvColliders[i],apWorld,1, NULL));
+            vShapes.push_back(CreateCollideShapeFromCollider(mvColliders[i], apWorld, 1, NULL));
         }
 
         return apWorld->CreateCompundShape(vShapes);
@@ -234,40 +234,40 @@ void cSubMesh::CheckOneSided()
 {
     //Log("--- %s\n",GetName().c_str());
 
-    if(mpVtxBuffer==NULL)
+    if(mpVtxBuffer == NULL)
     {
         return;
     }
 
     int lIdxNum = mpVtxBuffer->GetIndexNum();
 
-    if(lIdxNum > 400*3)
+    if(lIdxNum > 400 * 3)
     {
         return;    //Just skip larger buffers for now, they should never be planes.
     }
 
-    unsigned int* pIndices = mpVtxBuffer->GetIndices();
+    unsigned int *pIndices = mpVtxBuffer->GetIndices();
     float *pPositions = mpVtxBuffer->GetFloatArray(eVertexBufferElement_Position);
 
     bool bFirst = true;
     cVector3f vNormalSum;
     cVector3f vFirstNormal;
-    cVector3f vPosSum=0;
+    cVector3f vPosSum = 0;
     int vTri[3];
     const int lVtxStride = mpVtxBuffer->GetElementNum(eVertexBufferElement_Position);
-    float fCount=0;
+    float fCount = 0;
 
-    for(int i=0; i< lIdxNum; i+=3)
+    for(int i = 0; i < lIdxNum; i += 3)
     {
         //Log("%d \n",i);
 
-        vTri[0] = pIndices[i+0];
-        vTri[1] = pIndices[i+1];
-        vTri[2] = pIndices[i+2];
+        vTri[0] = pIndices[i + 0];
+        vTri[1] = pIndices[i + 1];
+        vTri[2] = pIndices[i + 2];
 
-        const float *pVtx0 = &pPositions[vTri[0]*    lVtxStride];
-        const float *pVtx1 = &pPositions[vTri[1]*    lVtxStride];
-        const float *pVtx2 = &pPositions[vTri[2]*    lVtxStride];
+        const float *pVtx0 = &pPositions[vTri[0] *    lVtxStride];
+        const float *pVtx1 = &pPositions[vTri[1] *    lVtxStride];
+        const float *pVtx2 = &pPositions[vTri[2] *    lVtxStride];
 
         cVector3f vEdge1( pVtx1[0] - pVtx0[0], pVtx1[1] - pVtx0[1], pVtx1[2] - pVtx0[2]);
         cVector3f vEdge2( pVtx2[0] - pVtx0[0], pVtx2[1] - pVtx0[1], pVtx2[2] - pVtx0[2]);
@@ -312,32 +312,32 @@ void cSubMesh::CompileBonePairs()
 
     mpVertexWeights = hplNewArray( float, 4 * mpVtxBuffer->GetVertexNum());
     mpVertexBones = hplNewArray( unsigned char, 4 * mpVtxBuffer->GetVertexNum()) ;
-    memset(mpVertexWeights,0,4 * mpVtxBuffer->GetVertexNum()*sizeof(float));
+    memset(mpVertexWeights, 0, 4 * mpVtxBuffer->GetVertexNum()*sizeof(float));
     bool bWarn = true;
     ///////////////////////////////////
     // Iterate pairs and fill arrays
-    for(size_t i=0; i < mvVtxBonePairs.size(); i++)
+    for(size_t i = 0; i < mvVtxBonePairs.size(); i++)
     {
         cVertexBonePair &Pair = mvVtxBonePairs[i];
 
-        float *pWeight = &mpVertexWeights[Pair.vtxIdx*4];
-        unsigned char *pBoneIdx = &mpVertexBones[Pair.vtxIdx*4];
-        int lPos=-1;
+        float *pWeight = &mpVertexWeights[Pair.vtxIdx * 4];
+        unsigned char *pBoneIdx = &mpVertexBones[Pair.vtxIdx * 4];
+        int lPos = -1;
         //Find out where to add the next weight.
-        for(int j=0; j<4; j++)
+        for(int j = 0; j < 4; j++)
         {
-            if(pWeight[j]==0)
+            if(pWeight[j] == 0)
             {
                 lPos = j;
                 break;
             }
         }
         //If no place was found there are too many bones on the vertex.
-        if(lPos==-1)
+        if(lPos == -1)
         {
             if (bWarn)
             {
-                Warning("More than 4 bones on a vertex in submesh '%s' in mesh '%s' !\n",GetName().c_str(), mpParent->GetName().c_str());
+                Warning("More than 4 bones on a vertex in submesh '%s' in mesh '%s' !\n", GetName().c_str(), mpParent->GetName().c_str());
             }
             bWarn = false;
             continue;
@@ -347,29 +347,29 @@ void cSubMesh::CompileBonePairs()
         pBoneIdx[lPos] = Pair.boneIdx;
     }
 
-    bool bUnconnectedVertexes=false;
+    bool bUnconnectedVertexes = false;
 
     /////////////////////////////////
     //Normalize the weights
-    for(int vtx =0; vtx < mpVtxBuffer->GetVertexNum(); ++vtx)
+    for(int vtx = 0; vtx < mpVtxBuffer->GetVertexNum(); ++vtx)
     {
-        float *pWeight = &mpVertexWeights[vtx*4];
+        float *pWeight = &mpVertexWeights[vtx * 4];
 
         //check if the vertex is missing bone connection
         if(pWeight[0] == 0)
         {
-            bUnconnectedVertexes=true;
+            bUnconnectedVertexes = true;
             continue;
         }
 
-        float fTotal=0;
-        int lNum=0;
-        while(pWeight[lNum]!=0 && lNum<4)
+        float fTotal = 0;
+        int lNum = 0;
+        while(pWeight[lNum] != 0 && lNum < 4)
         {
             fTotal += pWeight[lNum];
             lNum++;
         }
-        for(int i=0; i<lNum; ++i)
+        for(int i = 0; i < lNum; ++i)
         {
             pWeight[i] = pWeight[i] / fTotal;
         }
@@ -379,7 +379,7 @@ void cSubMesh::CompileBonePairs()
     // Check if any unconnected vertices
     if(bUnconnectedVertexes)
     {
-        Warning("Some vertices in sub mesh '%s' in mesh '%s' are not connected to a bone!\n",GetName().c_str(), mpParent->GetName().c_str());
+        Warning("Some vertices in sub mesh '%s' in mesh '%s' are not connected to a bone!\n", GetName().c_str(), mpParent->GetName().c_str());
     }
 }
 

@@ -13,7 +13,7 @@ class iScript;
 class cScriptManager : public iResourceManager
 {
 public:
-    cScriptManager(cSystem* apSystem,cResources *apResources);
+    cScriptManager(cSystem* apSystem, cResources *apResources);
     ~cScriptManager();
 
     /**
@@ -21,13 +21,13 @@ public:
      * \param asName name of the script.
      * \return
      */
-    iScript* CreateScript(const tString& asName, tString *apCompileMessages=NULL);
+    iScript *CreateScript(const tString& asName, tString *apCompileMessages = NULL);
 
     void Destroy(iResourceBase* apResource);
     void Unload(iResourceBase* apResource);
 
 private:
-    cSystem* mpSystem;
+    cSystem *mpSystem;
     cResources *mpResources;
 };
 

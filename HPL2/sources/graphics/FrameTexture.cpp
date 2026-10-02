@@ -12,10 +12,10 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cFrameTexture::cFrameTexture(iTexture *apTex, int alHandle,cImageManager *apImageManager, bool abIsCustom) : iFrameBase()
+cFrameTexture::cFrameTexture(iTexture *apTex, int alHandle, cImageManager *apImageManager, bool abIsCustom) : iFrameBase()
 {
     mpTexture = apTex;
-    mlHandle =alHandle;
+    mlHandle = alHandle;
 
     mbIsCustom = abIsCustom;
 
@@ -39,16 +39,16 @@ cFrameTexture::~cFrameTexture()
 
 //-----------------------------------------------------------------------
 
-iTexture* cFrameTexture::GetTexture()
+iTexture *cFrameTexture::GetTexture()
 {
     return mpTexture;
 }
 
 //-----------------------------------------------------------------------
 
-cFrameSubImage* cFrameTexture::CreateCustomImage(const cVector2l& avPixelPos,const cVector2l& avPixelSize)
+cFrameSubImage *cFrameTexture::CreateCustomImage(const cVector2l& avPixelPos, const cVector2l& avPixelSize)
 {
-    if(mbIsCustom==false)
+    if(mbIsCustom == false)
     {
         return NULL;
     }
@@ -56,12 +56,12 @@ cFrameSubImage* cFrameTexture::CreateCustomImage(const cVector2l& avPixelPos,con
     mlPicCount++;
 
     const cVector3l& vSourceSize = mpTexture->GetSize();
-    cVector2f vDestPos = cVector2f((float)avPixelPos.x / (float)vSourceSize.x,(float)avPixelPos.y / (float)vSourceSize.y );
-    cVector2f vDestSize = cVector2f((float)avPixelSize.x / (float)vSourceSize.x,(float)avPixelSize.y / (float)vSourceSize.y );
+    cVector2f vDestPos = cVector2f((float)avPixelPos.x / (float)vSourceSize.x, (float)avPixelPos.y / (float)vSourceSize.y );
+    cVector2f vDestSize = cVector2f((float)avPixelSize.x / (float)vSourceSize.x, (float)avPixelSize.y / (float)vSourceSize.y );
 
-    cFrameSubImage* pImage = hplNew(cFrameSubImage, ("",_W(""),this,NULL,
-                                    cRect2l(avPixelPos,avPixelSize),
-                                    cVector2l(vSourceSize.x,vSourceSize.y),
+    cFrameSubImage* pImage = hplNew(cFrameSubImage, ("", _W(""), this, NULL,
+                                    cRect2l(avPixelPos, avPixelSize),
+                                    cVector2l(vSourceSize.x, vSourceSize.y),
                                     mlHandle, NULL) );
 
     pImage->IncUserCount();

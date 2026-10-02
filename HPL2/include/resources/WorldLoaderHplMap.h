@@ -50,7 +50,7 @@ public:
     bool mbVisible;
 };
 
-typedef std::list<cHplMapStaticUserData*> tHplMapStaticUserDataList;
+typedef std::list<cHplMapStaticUserData *> tHplMapStaticUserDataList;
 typedef tHplMapStaticUserDataList::iterator tHplMapStaticUserDataListIt;
 
 
@@ -75,7 +75,7 @@ public:
     cMatrixf m_mtxOffset;
 };
 
-typedef std::vector<cHplMapShape*> tHplMapShapeVec;
+typedef std::vector<cHplMapShape *> tHplMapShapeVec;
 typedef tHplMapShapeVec::iterator tHplMapShapeVecIt;
 
 //----------------------------------------
@@ -94,7 +94,7 @@ public:
     tHplMapShapeVec mvColliders;
 };
 
-typedef std::list<cHplMapShapeBody*> tHplMapShapeBodyList;
+typedef std::list<cHplMapShapeBody *> tHplMapShapeBodyList;
 typedef tHplMapShapeBodyList::iterator tHplMapShapeBodyListIt;
 
 //----------------------------------------
@@ -107,7 +107,7 @@ public:
     ~cWorldLoaderHplMap();
 
 
-    cWorld* LoadWorld(const tWString& asFile, tWorldLoadFlag aFlags);
+    cWorld *LoadWorld(const tWString& asFile, tWorldLoadFlag aFlags);
 
 private:
     void LoadCacheFile(const tWString& asFile);
@@ -136,8 +136,8 @@ private:
     void CreateSubMeshShapeBodies(cSubMeshEntity *apSubEnt, const cMatrixf &a_mtxTransform, const cVector3f& avScale);
     void CreateShapeBody(cHplMapShapeBody* apShapeBody);
 
-    void LoadEntity(const tString& asName, int alID, bool abActive,const cVector3f& avPos, const cVector3f& avRot, const cVector3f& avScale, cXmlElement* apElement);
-    void LoadArea(const tString& asName, int alID, bool abActive,const cVector3f& avPos, const cVector3f& avRot,const cVector3f& avScale, cXmlElement* apElement);
+    void LoadEntity(const tString& asName, int alID, bool abActive, const cVector3f& avPos, const cVector3f& avRot, const cVector3f& avScale, cXmlElement* apElement);
+    void LoadArea(const tString& asName, int alID, bool abActive, const cVector3f& avPos, const cVector3f& avRot, const cVector3f& avScale, cXmlElement* apElement);
 
     bool CheckTransformValidity(const tString& asName, const cVector3f& avPos, const cVector3f& avRot, const cVector3f& avScale);
 
@@ -154,10 +154,10 @@ private:
     int mlCombineMeshTimeTotal;
     int mlCombineBodyTimeTotal;
 
-    cWorld* mpCurrentWorld;
+    cWorld *mpCurrentWorld;
     iPhysicsWorld *mpCurrentPhysicsWorld;
 
-    std::list<iPhysicsBody*> mlstStaticMeshBodies;
+    std::list<iPhysicsBody *> mlstStaticMeshBodies;
     tHplMapShapeBodyList mlstStaticShapeBodies;
     tMeshEntityList mlstStaticMeshEntities;
 

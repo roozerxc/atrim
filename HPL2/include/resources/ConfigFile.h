@@ -37,7 +37,7 @@ public:
     {
         msFile = asFile;
     }
-    const tWString& GetFileLocation()
+    const tWString &GetFileLocation()
     {
         return msFile;
     }
@@ -77,7 +77,7 @@ private:
 
     bool mbUseCRC;
 
-    const char* GetCharArray(tString asLevel, tString asName);
+    const char *GetCharArray(tString asLevel, tString asName);
 };
 
 };

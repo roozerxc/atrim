@@ -46,7 +46,7 @@ public:
     cEntFileManager(cResources *apResources);
     ~cEntFileManager();
 
-    cEntFile* CreateEntFile(const tString& asName);
+    cEntFile *CreateEntFile(const tString& asName);
 
     void Destroy(iResourceBase* apResource);
     void Unload(iResourceBase* apResource);

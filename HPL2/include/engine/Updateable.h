@@ -108,7 +108,7 @@ public:
         };
     }
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }

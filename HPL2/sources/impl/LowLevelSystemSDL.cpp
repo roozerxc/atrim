@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 #endif
     bool cwd = false;
     hpl::tString cmdline = "";
-    for (int i=1; i < argc; i++)
+    for (int i = 1; i < argc; i++)
     {
         if (strcmp(argv[i], "-cwd") == 0)
         {
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            if (cmdline.length()>0)
+            if (cmdline.length() > 0)
             {
                 cmdline.append(" ").append(argv[i]);
             }
@@ -177,9 +177,9 @@ void cLogWriter::ReopenFile()
     }
 
 #ifdef _WIN32
-    mpFile = _wfopen(msFileName.c_str(),_W("w"));
+    mpFile = _wfopen(msFileName.c_str(), _W("w"));
 #else
-    mpFile = fopen(cString::To8Char(msFileName).c_str(),"w");
+    mpFile = fopen(cString::To8Char(msFileName).c_str(), "w");
 #endif
 }
 
@@ -192,7 +192,7 @@ void cLogWriter::ReopenFile()
 
 //-----------------------------------------------------------------------
 
-static tLogMessageCallbackFunc gpLogMessageCallbackFunc=NULL;
+static tLogMessageCallbackFunc gpLogMessageCallbackFunc = NULL;
 
 //-----------------------------------------------------------------------
 
@@ -203,7 +203,7 @@ void SetLogFile(const tWString &asFile)
 
 //-----------------------------------------------------------------------
 
-void FatalError(const char* fmt,... )
+void FatalError(const char* fmt, ... )
 {
     char text[4096];
     va_list ap;
@@ -327,7 +327,7 @@ void ClearUpdateLogFile()
 
 void SetUpdateLogActive(bool abX)
 {
-    gbUpdateLogIsActive =abX;
+    gbUpdateLogIsActive = abX;
 }
 
 bool GetUpdateLogActive()
@@ -396,11 +396,11 @@ void cScriptOutput::AddMessage(const asSMessageInfo *msg)
 
 void cScriptOutput::Display()
 {
-    if(msMessage.size()>500)
+    if(msMessage.size() > 500)
     {
         while(msMessage.size() > 500)
         {
-            tString sSub = msMessage.substr(0,500);
+            tString sSub = msMessage.substr(0, 500);
             msMessage = msMessage.substr(500);
             Log(sSub.c_str());
         }
@@ -430,13 +430,13 @@ void cScriptOutput::Clear()
 cLowLevelSystemSDL::cLowLevelSystemSDL()
 {
     mpScriptEngine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
-    if(mpScriptEngine==NULL)
+    if(mpScriptEngine == NULL)
     {
         Error("Failed to start AngelScript!\n");
     }
 
     mpScriptOutput = hplNew( cScriptOutput, () );
-    mpScriptEngine->SetMessageCallback(asMETHOD(cScriptOutput,AddMessage), mpScriptOutput, asCALL_THISCALL);
+    mpScriptEngine->SetMessageCallback(asMETHOD(cScriptOutput, AddMessage), mpScriptOutput, asCALL_THISCALL);
 
     RegisterScriptString(mpScriptEngine);
 
@@ -473,18 +473,18 @@ cLowLevelSystemSDL::~cLowLevelSystemSDL()
 //-----------------------------------------------------------------------
 
 
-iScript* cLowLevelSystemSDL::CreateScript(const tString& asName)
+iScript *cLowLevelSystemSDL::CreateScript(const tString& asName)
 {
-    return hplNew( cSqScript, (asName,mpScriptEngine,mpScriptOutput,mlHandleCount++) );
+    return hplNew( cSqScript, (asName, mpScriptEngine, mpScriptOutput, mlHandleCount++) );
 }
 
 //-----------------------------------------------------------------------
 
 bool cLowLevelSystemSDL::AddScriptFunc(const tString& asFuncDecl, void* pFunc)
 {
-    if(mpScriptEngine->RegisterGlobalFunction(asFuncDecl.c_str(),asFUNCTION(pFunc),asCALL_STDCALL)<0)
+    if(mpScriptEngine->RegisterGlobalFunction(asFuncDecl.c_str(), asFUNCTION(pFunc), asCALL_STDCALL) < 0)
     {
-        Error("Couldn't add func '%s'\n",asFuncDecl.c_str());
+        Error("Couldn't add func '%s'\n", asFuncDecl.c_str());
         return false;
     }
 
@@ -495,9 +495,9 @@ bool cLowLevelSystemSDL::AddScriptFunc(const tString& asFuncDecl, void* pFunc)
 
 bool cLowLevelSystemSDL::AddScriptVar(const tString& asVarDecl, void *pVar)
 {
-    if(mpScriptEngine->RegisterGlobalProperty(asVarDecl.c_str(),pVar)<0)
+    if(mpScriptEngine->RegisterGlobalProperty(asVarDecl.c_str(), pVar) < 0)
     {
-        Error("Couldn't add var '%s'\n",asVarDecl.c_str());
+        Error("Couldn't add var '%s'\n", asVarDecl.c_str());
         return false;
     }
 

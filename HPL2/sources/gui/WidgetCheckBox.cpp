@@ -23,13 +23,13 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cWidgetCheckBox::cWidgetCheckBox(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_CheckBox,apSet, apSkin)
+cWidgetCheckBox::cWidgetCheckBox(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_CheckBox, apSet, apSkin)
 {
     mbChecked = false;
     mbPressed = false;
 
     LoadGraphics();
-    mpLabel = mpSet->CreateWidgetLabel(    0,-1,_W(""), this);
+    mpLabel = mpSet->CreateWidgetLabel(    0, -1, _W(""), this);
     mpLabel->SetAutogenerateSize(true);
 }
 
@@ -37,7 +37,7 @@ cWidgetCheckBox::cWidgetCheckBox(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWi
 
 cWidgetCheckBox::~cWidgetCheckBox()
 {
-    if(mpSet->IsDestroyingSet()==false)
+    if(mpSet->IsDestroyingSet() == false)
     {
         mpSet->DestroyWidget(mpLabel);
     }
@@ -105,14 +105,14 @@ void cWidgetCheckBox::SetDefaultFontType(iFontData* apFont)
 
 bool cWidgetCheckBox::Label_MouseDown(iWidget *apWidget, const cGuiMessageData& aData)
 {
-    if((aData.mlVal&eGuiMouseButton_Left)==0 && (aData.mlVal&eGuiMouseButton_Right)==0)
+    if((aData.mlVal & eGuiMouseButton_Left) == 0 && (aData.mlVal & eGuiMouseButton_Right) == 0)
     {
         return false;
     }
 
     if(mbEnabled)
     {
-        ProcessMessage(eGuiMessage_MouseDown,aData);
+        ProcessMessage(eGuiMessage_MouseDown, aData);
     }
     return true;
 }
@@ -122,14 +122,14 @@ kGuiCallbackDeclaredFuncEnd(cWidgetCheckBox, Label_MouseDown);
 
 bool cWidgetCheckBox::Label_MouseUp(iWidget *apWidget, const cGuiMessageData& aData)
 {
-    if((aData.mlVal&eGuiMouseButton_Left)==0 && (aData.mlVal&eGuiMouseButton_Right)==0)
+    if((aData.mlVal & eGuiMouseButton_Left) == 0 && (aData.mlVal & eGuiMouseButton_Right) == 0)
     {
         return false;
     }
 
     if(mbEnabled)
     {
-        ProcessMessage(eGuiMessage_MouseUp,aData);
+        ProcessMessage(eGuiMessage_MouseUp, aData);
     }
     return true;
 }
@@ -147,9 +147,9 @@ void cWidgetCheckBox::UpdateLabel()
 
 void cWidgetCheckBox::OnInit()
 {
-    mpLabel->SetPosition( cVector3f(mvGfxBox[0][0]->GetActiveSize().x + 3, mvBoxSize.y/2 - mvDefaultFontSize.y/2,0));
-    mpLabel->AddCallback(eGuiMessage_MouseDown,this,kGuiCallback(Label_MouseDown));
-    mpLabel->AddCallback(eGuiMessage_MouseUp,this,kGuiCallback(Label_MouseUp));
+    mpLabel->SetPosition( cVector3f(mvGfxBox[0][0]->GetActiveSize().x + 3, mvBoxSize.y / 2 - mvDefaultFontSize.y / 2, 0));
+    mpLabel->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(Label_MouseDown));
+    mpLabel->AddCallback(eGuiMessage_MouseUp, this, kGuiCallback(Label_MouseUp));
 }
 
 //-----------------------------------------------------------------------
@@ -171,7 +171,7 @@ void cWidgetCheckBox::OnChangeSize()
     mvBoxSize.x = mvGfxBox[0][0]->GetActiveSize().x;
     mvBoxSize.y = mvDefaultFontSize.y;
 
-    mvSize.x = mvBoxSize.x + 3 + mpLabel->GetLocalPosition().x+mpLabel->GetSize().x;
+    mvSize.x = mvBoxSize.x + 3 + mpLabel->GetLocalPosition().x + mpLabel->GetSize().x;
     mvSize.y = mpLabel->GetSize().y;
 }
 
@@ -190,7 +190,7 @@ void cWidgetCheckBox::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
     ////////////////////////////////
     // Box
     mpSet->DrawGfx( mvGfxBox[IsEnabled()][mbChecked], GetGlobalPosition() +
-                    cVector3f(0,mvBoxSize.y/2 - mvGfxBox[0][0]->GetActiveSize().y/2,0));
+                    cVector3f(0, mvBoxSize.y / 2 - mvGfxBox[0][0]->GetActiveSize().y / 2, 0));
 
     //Log("After DrawGfx\n");
     /*
@@ -214,7 +214,7 @@ bool cWidgetCheckBox::OnMouseMove(const cGuiMessageData& aData)
 
 bool cWidgetCheckBox::OnMouseDown(const cGuiMessageData& aData)
 {
-    if((aData.mlVal&eGuiMouseButton_Left)==0)
+    if((aData.mlVal & eGuiMouseButton_Left) == 0)
     {
         return false;
     }
@@ -257,7 +257,7 @@ bool cWidgetCheckBox::OnUIButtonPress(const cGuiMessageData& aData)
 {
     if(HasFocus())
     {
-        if(aData.mlVal==eUIButton_Primary)
+        if(aData.mlVal == eUIButton_Primary)
         {
             return OnMouseDown(cGuiMessageData(eGuiMouseButton_Left));
         }
@@ -270,7 +270,7 @@ bool cWidgetCheckBox::OnUIButtonRelease(const cGuiMessageData& aData)
 {
     if(HasFocus())
     {
-        if(aData.mlVal==eUIButton_Primary)
+        if(aData.mlVal == eUIButton_Primary)
         {
             return OnMouseUp(cGuiMessageData(eGuiMouseButton_Left));
         }

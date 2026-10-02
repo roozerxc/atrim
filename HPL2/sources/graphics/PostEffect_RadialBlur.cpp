@@ -28,14 +28,14 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cPostEffectType_RadialBlur::cPostEffectType_RadialBlur(cGraphics *apGraphics, cResources *apResources) : iPostEffectType("RadialBlur",apGraphics,apResources)
+cPostEffectType_RadialBlur::cPostEffectType_RadialBlur(cGraphics *apGraphics, cResources *apResources) : iPostEffectType("RadialBlur", apGraphics, apResources)
 {
     cParserVarContainer vars;
-    mpProgram = mpGraphics->CreateGpuProgramFromShaders("RadialBlur","deferred_base_vtx.glsl", "posteffect_radial_blur_frag.glsl", &vars);
+    mpProgram = mpGraphics->CreateGpuProgramFromShaders("RadialBlur", "deferred_base_vtx.glsl", "posteffect_radial_blur_frag.glsl", &vars);
     if(mpProgram)
     {
-        mpProgram->GetVariableAsId("afSize",kVar_afSize);
-        mpProgram->GetVariableAsId("avHalfScreenSize",kVar_avHalfScreenSize);
+        mpProgram->GetVariableAsId("afSize", kVar_afSize);
+        mpProgram->GetVariableAsId("avHalfScreenSize", kVar_avHalfScreenSize);
         mpProgram->GetVariableAsId("afBlurStartDist", kVar_afBlurStartDist);
     }
 }
@@ -49,10 +49,10 @@ cPostEffectType_RadialBlur::~cPostEffectType_RadialBlur()
 
 //-----------------------------------------------------------------------
 
-iPostEffect * cPostEffectType_RadialBlur::CreatePostEffect(iPostEffectParams *apParams)
+iPostEffect *cPostEffectType_RadialBlur::CreatePostEffect(iPostEffectParams *apParams)
 {
-    cPostEffect_RadialBlur *pEffect = hplNew(cPostEffect_RadialBlur, (mpGraphics,mpResources,this));
-    cPostEffectParams_RadialBlur *pRadialBlurParams = static_cast<cPostEffectParams_RadialBlur*>(apParams);
+    cPostEffect_RadialBlur *pEffect = hplNew(cPostEffect_RadialBlur, (mpGraphics, mpResources, this));
+    cPostEffectParams_RadialBlur *pRadialBlurParams = static_cast<cPostEffectParams_RadialBlur *>(apParams);
 
     return pEffect;
 }
@@ -65,11 +65,11 @@ iPostEffect * cPostEffectType_RadialBlur::CreatePostEffect(iPostEffectParams *ap
 
 //-----------------------------------------------------------------------
 
-cPostEffect_RadialBlur::cPostEffect_RadialBlur(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType) : iPostEffect(apGraphics,apResources,apType)
+cPostEffect_RadialBlur::cPostEffect_RadialBlur(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType) : iPostEffect(apGraphics, apResources, apType)
 {
     cVector2l vSize = mpLowLevelGraphics->GetScreenSizeInt();
 
-    mpRadialBlurType = static_cast<cPostEffectType_RadialBlur*>(mpType);
+    mpRadialBlurType = static_cast<cPostEffectType_RadialBlur *>(mpType);
 }
 
 //-----------------------------------------------------------------------
@@ -95,14 +95,14 @@ void cPostEffect_RadialBlur::OnSetParams()
 //-----------------------------------------------------------------------
 
 
-iTexture* cPostEffect_RadialBlur::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
+iTexture *cPostEffect_RadialBlur::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
 {
     /////////////////////////
     // Init render states
     mpCurrentComposite->SetFlatProjection();
     mpCurrentComposite->SetBlendMode(eMaterialBlendMode_None);
     mpCurrentComposite->SetChannelMode(eMaterialChannelMode_RGBA);
-    mpCurrentComposite->SetTextureRange(NULL,1);
+    mpCurrentComposite->SetTextureRange(NULL, 1);
 
     cVector2l vRenderTargetSize = mpCurrentComposite->GetRenderTargetSize();
     cVector2f vRenderTargetSizeFloat((float)vRenderTargetSize.x, (float)vRenderTargetSize.y);
@@ -116,9 +116,9 @@ iTexture* cPostEffect_RadialBlur::RenderEffect(iTexture *apInputTexture, iFrameB
 
     if(mpRadialBlurType->mpProgram)
     {
-        mpRadialBlurType->mpProgram->SetFloat(kVar_afSize, mParams.mfSize*vRenderTargetSizeFloat.x);
+        mpRadialBlurType->mpProgram->SetFloat(kVar_afSize, mParams.mfSize * vRenderTargetSizeFloat.x);
         mpRadialBlurType->mpProgram->SetFloat(kVar_afBlurStartDist, mParams.mfBlurStartDist);
-        mpRadialBlurType->mpProgram->SetVec2f(kVar_avHalfScreenSize,  vRenderTargetSizeFloat*0.5f);
+        mpRadialBlurType->mpProgram->SetVec2f(kVar_avHalfScreenSize,  vRenderTargetSizeFloat * 0.5f);
     }
 
     mpCurrentComposite->SetTexture(0, apInputTexture);

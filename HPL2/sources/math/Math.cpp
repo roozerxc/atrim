@@ -25,21 +25,21 @@ static char mpTempChar[1024];
 
 int cMath::RandRectl(int alMin, int alMax)
 {
-    return (rand()%(alMax-alMin+1))+alMin;
+    return (rand() % (alMax - alMin + 1)) + alMin;
 }
 
 //-----------------------------------------------------------------------
 
 float cMath::RandRectf(float afMin, float afMax)
 {
-    float fRand= (float)rand()/(float)RAND_MAX;
+    float fRand = (float)rand() / (float)RAND_MAX;
 
-    return afMin + fRand*(afMax-afMin);
+    return afMin + fRand * (afMax - afMin);
 }
 
 //-----------------------------------------------------------------------
 
-cVector2f cMath::RandRectVector2f(const cVector2f &avMin,const cVector2f &avMax)
+cVector2f cMath::RandRectVector2f(const cVector2f &avMin, const cVector2f &avMax)
 {
     return cVector2f(    RandRectf(avMin.x, avMax.x),
                          RandRectf(avMin.y, avMax.y));
@@ -47,7 +47,7 @@ cVector2f cMath::RandRectVector2f(const cVector2f &avMin,const cVector2f &avMax)
 
 //-----------------------------------------------------------------------
 
-cVector3f cMath::RandRectVector3f(const cVector3f &avMin,const cVector3f &avMax)
+cVector3f cMath::RandRectVector3f(const cVector3f &avMin, const cVector3f &avMax)
 {
     return cVector3f(    RandRectf(avMin.x, avMax.x),
                          RandRectf(avMin.y, avMax.y),
@@ -56,7 +56,7 @@ cVector3f cMath::RandRectVector3f(const cVector3f &avMin,const cVector3f &avMax)
 
 //-----------------------------------------------------------------------
 
-cColor cMath::RandRectColor(const cColor &aMin,const cColor &aMax)
+cColor cMath::RandRectColor(const cColor &aMin, const cColor &aMax)
 {
     return cColor(    RandRectf(aMin.r, aMax.r),
                       RandRectf(aMin.g, aMax.g),
@@ -68,20 +68,20 @@ cColor cMath::RandRectColor(const cColor &aMin,const cColor &aMax)
 
 cVector3f cMath::RandomSphereSurfacePoint(float afRadius)
 {
-    return Vector3SphereSurfacePoint(cVector2f(cMath::RandRectf(0,1),cMath::RandRectf(0,1)),afRadius);
+    return Vector3SphereSurfacePoint(cVector2f(cMath::RandRectf(0, 1), cMath::RandRectf(0, 1)), afRadius);
 }
 
 cVector3f cMath::RandomSphereInsidePoint(float afRadius)
 {
     float fR = powf(cMath::RandRectf(0, 1), 1.0f / 3.0f); //Need uniform distribution
-    return Vector3SphereSurfacePoint(cVector2f(cMath::RandRectf(0,1),cMath::RandRectf(0,1)),afRadius*fR);
+    return Vector3SphereSurfacePoint(cVector2f(cMath::RandRectf(0, 1), cMath::RandRectf(0, 1)), afRadius * fR);
 }
 
 //-----------------------------------------------------------------------
 
 void cMath::Randomize(int alSeed)
 {
-    if(alSeed==-1)
+    if(alSeed == -1)
     {
         srand((unsigned)time(NULL) );
     }
@@ -163,7 +163,7 @@ void cMath::RGBToHSBHelper(const cColor& aRGB, cVector3f& avX)
     min = Min( r, Min(g, b));
     max = Max( r, Max(g, b));
 
-    delta = max-min;
+    delta = max - min;
 
     avX.z = max;
     if(max == 0)
@@ -172,7 +172,7 @@ void cMath::RGBToHSBHelper(const cColor& aRGB, cVector3f& avX)
     }
     else
     {
-        avX.y = delta/max;
+        avX.y = delta / max;
     }
 
     if(avX.y == 0)
@@ -184,15 +184,15 @@ void cMath::RGBToHSBHelper(const cColor& aRGB, cVector3f& avX)
 
     if(r == max)
     {
-        avX.x = (g - b)/delta;    // between yellow & magenta
+        avX.x = (g - b) / delta;  // between yellow & magenta
     }
     else if(g == max)
     {
-        avX.x = 2 + (b - r)/delta;    // between cyan & yellow
+        avX.x = 2 + (b - r) / delta;  // between cyan & yellow
     }
     else
     {
-        avX.x = 4 + (r - g)/delta;    // between magenta & cyan
+        avX.x = 4 + (r - g) / delta;  // between magenta & cyan
     }
     avX.x *= 60;                    // degrees
     if(avX.x < 0)
@@ -221,13 +221,13 @@ void cMath::HSBToRGBHelper(const cVector3f& avHSB, cColor& aX)
     float b = avHSB.z;
     float fract, p, q, t;
 
-    if(s==0)
+    if(s == 0)
     {
         aX.r = aX.g = aX.b = b;
     }
     else
     {
-        if(h==360)
+        if(h == 360)
         {
             h = 0;
         }
@@ -237,11 +237,11 @@ void cMath::HSBToRGBHelper(const cVector3f& avHSB, cColor& aX)
         }
 
         sextant = (int)floor(h);
-        fract = h-sextant;
+        fract = h - sextant;
 
-        p = b*(1-s);
-        q = b*(1-s*fract);
-        t = b*(1-s*(1-fract));
+        p = b * (1 - s);
+        q = b * (1 - s * fract);
+        t = b * (1 - s * (1 - fract));
 
         switch(sextant)
         {
@@ -412,21 +412,21 @@ tString cMath::UCharToHexString(unsigned char alValue)
 {
     tString s;
 
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         unsigned char nibble = (alValue & 0xF);
-        if(nibble<10)
+        if(nibble < 10)
         {
             nibble += '0';
         }
         else
         {
-            nibble += 'A'-10;
+            nibble += 'A' - 10;
         }
 
-        s.insert(s.begin(),nibble);
+        s.insert(s.begin(), nibble);
 
-        alValue = alValue>>4;
+        alValue = alValue >> 4;
     }
 
     return s;
@@ -436,21 +436,21 @@ tWString cMath::UCharToHexStringW(unsigned char alValue)
 {
     tWString s;
 
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         wchar_t nibble = (alValue & 0xF);
-        if(nibble<10)
+        if(nibble < 10)
         {
             nibble += _W('0');
         }
         else
         {
-            nibble += _W('A')-10;
+            nibble += _W('A') - 10;
         }
 
-        s.insert(s.begin(),nibble);
+        s.insert(s.begin(), nibble);
 
-        alValue = alValue>>4;
+        alValue = alValue >> 4;
     }
 
     return s;
@@ -466,7 +466,7 @@ tWString cMath::UCharToHexStringW(unsigned char alValue)
 
 //-----------------------------------------------------------------------
 
-void cMath::ExpandAABB(cVector3f& avBaseMin,cVector3f& avBaseMax, const cVector3f& avAddMin, const cVector3f& avAddMax)
+void cMath::ExpandAABB(cVector3f& avBaseMin, cVector3f& avBaseMax, const cVector3f& avAddMin, const cVector3f& avAddMax)
 {
     if(avBaseMin.x > avAddMin.x)
     {
@@ -505,70 +505,70 @@ void cMath::ExpandAABB(cVector3f& avBaseMin,cVector3f& avBaseMax, const cVector3
 
 bool cMath::CheckRectIntersection(cRect2l aRect1, cRect2l aRect2)
 {
-    if(aRect1.w<0)
+    if(aRect1.w < 0)
     {
-        aRect1.w*=-1;
-        aRect1.x-=aRect1.w;
+        aRect1.w *= -1;
+        aRect1.x -= aRect1.w;
     }
 
-    if(aRect1.h<0)
+    if(aRect1.h < 0)
     {
-        aRect1.h*=-1;
-        aRect1.y-=aRect1.h;
+        aRect1.h *= -1;
+        aRect1.y -= aRect1.h;
     }
 
-    if(aRect2.w<0)
+    if(aRect2.w < 0)
     {
-        aRect2.w*=-1;
-        aRect2.x-=aRect2.w;
+        aRect2.w *= -1;
+        aRect2.x -= aRect2.w;
     }
 
-    if(aRect2.h<0)
+    if(aRect2.h < 0)
     {
-        aRect2.h*=-1;
-        aRect2.y-=aRect2.h;
+        aRect2.h *= -1;
+        aRect2.y -= aRect2.h;
     }
 
-    return (aRect1.x>aRect2.x+(aRect2.w-1) || aRect2.x>aRect1.x+(aRect1.w-1) ||
-            aRect1.y>aRect2.y+(aRect2.h-1) || aRect2.y>aRect1.y+(aRect1.h-1))==false;
+    return (aRect1.x > aRect2.x + (aRect2.w - 1) || aRect2.x > aRect1.x + (aRect1.w - 1) ||
+            aRect1.y > aRect2.y + (aRect2.h - 1) || aRect2.y > aRect1.y + (aRect1.h - 1)) == false;
 }
 
 //-----------------------------------------------------------------------
 
 bool cMath::CheckRectIntersection(cRect2f aRect1, cRect2f aRect2)
 {
-    if(aRect1.w<0)
+    if(aRect1.w < 0)
     {
-        aRect1.w*=-1;
-        aRect1.x-=aRect1.w;
+        aRect1.w *= -1;
+        aRect1.x -= aRect1.w;
     }
 
-    if(aRect1.h<0)
+    if(aRect1.h < 0)
     {
-        aRect1.h*=-1;
-        aRect1.y-=aRect1.h;
+        aRect1.h *= -1;
+        aRect1.y -= aRect1.h;
     }
 
-    if(aRect2.w<0)
+    if(aRect2.w < 0)
     {
-        aRect2.w*=-1;
-        aRect2.x-=aRect2.w;
+        aRect2.w *= -1;
+        aRect2.x -= aRect2.w;
     }
 
-    if(aRect2.h<0)
+    if(aRect2.h < 0)
     {
-        aRect2.h*=-1;
-        aRect2.y-=aRect2.h;
+        aRect2.h *= -1;
+        aRect2.y -= aRect2.h;
     }
-    return (aRect1.x>aRect2.x+(aRect2.w) || aRect2.x>aRect1.x+(aRect1.w) ||
-            aRect1.y>aRect2.y+(aRect2.h) || aRect2.y>aRect1.y+(aRect1.h))==false;
+    return (aRect1.x > aRect2.x + (aRect2.w) || aRect2.x > aRect1.x + (aRect1.w) ||
+            aRect1.y > aRect2.y + (aRect2.h) || aRect2.y > aRect1.y + (aRect1.h)) == false;
 }
 
 //-----------------------------------------------------------------------
 
 bool cMath::CheckPointInRectIntersection(const cVector2f& avPoint, const cRect2f& aRect)
 {
-    if(avPoint.x<aRect.x || avPoint.x>aRect.x+aRect.w || avPoint.y<aRect.y || avPoint.y>aRect.y+aRect.h)
+    if(avPoint.x < aRect.x || avPoint.x > aRect.x + aRect.w || avPoint.y < aRect.y || avPoint.y > aRect.y + aRect.h)
     {
         return false;
     }
@@ -583,16 +583,16 @@ bool cMath::CheckPointInRectIntersection(const cVector2f& avPoint, const cRect2f
 bool cMath::CheckRectFit(const cRect2l& aRectSrc, const cRect2l& aRectDest)
 {
     //check is size is smaller and doesn't overlap
-    if(aRectSrc.w>aRectDest.w || aRectSrc.h>aRectDest.h ||
-            aRectSrc.x+aRectSrc.w > aRectDest.x+aRectDest.w ||
-            aRectSrc.y+aRectSrc.h > aRectDest.y+aRectDest.h)
+    if(aRectSrc.w > aRectDest.w || aRectSrc.h > aRectDest.h ||
+            aRectSrc.x + aRectSrc.w > aRectDest.x + aRectDest.w ||
+            aRectSrc.y + aRectSrc.h > aRectDest.y + aRectDest.h)
     {
         return false;
     }
 
     //check if x,y is in borders
-    if(aRectSrc.x<aRectDest.x || aRectSrc.y<aRectDest.y ||
-            aRectSrc.x>aRectDest.x+aRectDest.w || aRectSrc.y>aRectDest.y+aRectDest.h)
+    if(aRectSrc.x < aRectDest.x || aRectSrc.y < aRectDest.y ||
+            aRectSrc.x > aRectDest.x + aRectDest.w || aRectSrc.y > aRectDest.y + aRectDest.h)
     {
         return false;
     }
@@ -605,16 +605,16 @@ bool cMath::CheckRectFit(const cRect2l& aRectSrc, const cRect2l& aRectDest)
 bool cMath::CheckRectFit(const cRect2f& aRectSrc, const cRect2f& aRectDest)
 {
     //check is size is smaller and doesn't overlap
-    if(aRectSrc.w>aRectDest.w || aRectSrc.h>aRectDest.h ||
-            aRectSrc.x+aRectSrc.w > aRectDest.x+aRectDest.w ||
-            aRectSrc.y+aRectSrc.h > aRectDest.y+aRectDest.h)
+    if(aRectSrc.w > aRectDest.w || aRectSrc.h > aRectDest.h ||
+            aRectSrc.x + aRectSrc.w > aRectDest.x + aRectDest.w ||
+            aRectSrc.y + aRectSrc.h > aRectDest.y + aRectDest.h)
     {
         return false;
     }
 
     //check if x,y is in borders
-    if(aRectSrc.x<aRectDest.x || aRectSrc.y<aRectDest.y ||
-            aRectSrc.x>aRectDest.x+aRectDest.w || aRectSrc.y>aRectDest.y+aRectDest.h)
+    if(aRectSrc.x < aRectDest.x || aRectSrc.y < aRectDest.y ||
+            aRectSrc.x > aRectDest.x + aRectDest.w || aRectSrc.y > aRectDest.y + aRectDest.h)
     {
         return false;
     }
@@ -624,28 +624,28 @@ bool cMath::CheckRectFit(const cRect2f& aRectSrc, const cRect2f& aRectDest)
 
 //-----------------------------------------------------------------------
 
-cRect2f cMath::GetClipRect(const cRect2f& aRectSrc,const cRect2f& aRectDest)
+cRect2f cMath::GetClipRect(const cRect2f& aRectSrc, const cRect2f& aRectDest)
 {
     cRect2f outputRect = aRectSrc;
 
     if(outputRect.x < aRectDest.x)
     {
-        outputRect.w -= aRectDest.x-outputRect.x;
+        outputRect.w -= aRectDest.x - outputRect.x;
         outputRect.x = aRectDest.x;
     }
     if(outputRect.y < aRectDest.y)
     {
-        outputRect.h -= aRectDest.y-outputRect.y;
+        outputRect.h -= aRectDest.y - outputRect.y;
         outputRect.y = aRectDest.y;
     }
 
-    if(outputRect.x+outputRect.w > aRectDest.x+aRectDest.w)
+    if(outputRect.x + outputRect.w > aRectDest.x + aRectDest.w)
     {
-        outputRect.w -= (outputRect.x+outputRect.w)-(aRectDest.x+aRectDest.w);
+        outputRect.w -= (outputRect.x + outputRect.w) - (aRectDest.x + aRectDest.w);
     }
-    if(outputRect.y+outputRect.h > aRectDest.y+aRectDest.h)
+    if(outputRect.y + outputRect.h > aRectDest.y + aRectDest.h)
     {
-        outputRect.h -= (outputRect.y+outputRect.h)-(aRectDest.y+aRectDest.h);
+        outputRect.h -= (outputRect.y + outputRect.h) - (aRectDest.y + aRectDest.h);
     }
 
     return outputRect;
@@ -671,10 +671,10 @@ bool cMath::CheckSphereLineIntersection(const cVector3f& avSpherePos, float afSp
 
     cVector3f vStartToSpherePos = (avLineStart - avSpherePos);
 
-    float fB = 2*cMath::Vector3Dot(vUnitDirectionVector, vStartToSpherePos);
-    float fC = cMath::Vector3Dot(vStartToSpherePos, vStartToSpherePos) - (afSphereRadius*afSphereRadius);
+    float fB = 2 * cMath::Vector3Dot(vUnitDirectionVector, vStartToSpherePos);
+    float fC = cMath::Vector3Dot(vStartToSpherePos, vStartToSpherePos) - (afSphereRadius * afSphereRadius);
 
-    float fDiscriminant = fB*fB - 4*fC;
+    float fDiscriminant = fB * fB - 4 * fC;
 
     if( fDiscriminant >= 0)
     {
@@ -682,8 +682,8 @@ bool cMath::CheckSphereLineIntersection(const cVector3f& avSpherePos, float afSp
         float fT1;
         float fT2;
 
-        fT1 = 0.5f*(-fB + fDiscSqRoot);
-        fT2 = 0.5f*(-fB - fDiscSqRoot);
+        fT1 = 0.5f * (-fB + fDiscSqRoot);
+        fT2 = 0.5f * (-fB - fDiscSqRoot);
 
         if(fT1 <= fSegmentLength)
         {
@@ -696,7 +696,7 @@ bool cMath::CheckSphereLineIntersection(const cVector3f& avSpherePos, float afSp
 
             if(apIntersection1)
             {
-                *apIntersection1 = avLineStart + vUnitDirectionVector*fT1;
+                *apIntersection1 = avLineStart + vUnitDirectionVector * fT1;
             }
         }
         else
@@ -718,7 +718,7 @@ bool cMath::CheckSphereLineIntersection(const cVector3f& avSpherePos, float afSp
 
             if(apIntersection2)
             {
-                *apIntersection2 = avLineStart + vUnitDirectionVector*fT2;
+                *apIntersection2 = avLineStart + vUnitDirectionVector * fT2;
             }
         }
         else
@@ -738,10 +738,10 @@ bool cMath::CheckSphereLineIntersection(const cVector3f& avSpherePos, float afSp
 
 bool cMath::CheckPointInFlatPolygon( const cVector3f& avRayStart, const cVector3f& avRayEnd,
                                      const cVector2f& avPoint, const cVector2f& avViewportSize,
-                                     int alNumIndices, unsigned int* avIndices, float* avVertexPos, int alStride,
+                                     int alNumIndices, unsigned int *avIndices, float *avVertexPos, int alStride,
                                      const cMatrixf& amtxObjWorldMatrix,
                                      const cMatrixf& amtxCamViewMatrix, const cMatrixf& amtxCamProjMatrix,
-                                     unsigned int* apIntersectedTriIndex, cVector3f* apIntersectionWorldSpace, tVector3fVec* apTriangle)
+                                     unsigned int *apIntersectedTriIndex, cVector3f* apIntersectionWorldSpace, tVector3fVec* apTriangle)
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // HUGE inconvenience with this algo: if one of the vertices of a triangle lies
@@ -751,12 +751,12 @@ bool cMath::CheckPointInFlatPolygon( const cVector3f& avRayStart, const cVector3
     // Need to find a way around for this.
     bool bInside = false;
 
-    cVector2f vPoint = (avPoint*2)/avViewportSize - 1;
+    cVector2f vPoint = (avPoint * 2) / avViewportSize - 1;
 
     cMatrixf mtxScreenSpaceTransform = cMath::MatrixMul(amtxCamProjMatrix,
                                        amtxCamViewMatrix);
 
-    cVector3f vForward = cVector3f(0,0,1);
+    cVector3f vForward = cVector3f(0, 0, 1);
 
     float fShortestT = 1000.0f;
 
@@ -772,16 +772,16 @@ bool cMath::CheckPointInFlatPolygon( const cVector3f& avRayStart, const cVector3
 
     cPlanef trianglePlane;
 
-    for(int i=0; i<alNumIndices; i+=3)
+    for(int i = 0; i < alNumIndices; i += 3)
     {
-        for(int j=0; j<3; ++j)
+        for(int j = 0; j < 3; ++j)
         {
-            int lBaseIndex = avIndices[i+j]*alStride;
+            int lBaseIndex = avIndices[i + j] * alStride;
             vTriangleWorldSpace[j] = cMath::MatrixMul(amtxObjWorldMatrix,
                                      cVector3f(
                                          avVertexPos[lBaseIndex],
-                                         avVertexPos[lBaseIndex+1],
-                                         avVertexPos[lBaseIndex+2])
+                                         avVertexPos[lBaseIndex + 1],
+                                         avVertexPos[lBaseIndex + 2])
                                                      );
             vTriangleScreenSpace[j] = cMath::MatrixMulDivideW(mtxScreenSpaceTransform, vTriangleWorldSpace[j]);
         }
@@ -805,10 +805,10 @@ bool cMath::CheckPointInFlatPolygon( const cVector3f& avRayStart, const cVector3
         cVector3f vIntersection;
         if(cMath::CheckPointInsideTriangle2D(vPoint, vTriangleScreenSpace))
         {
-            trianglePlane.FromPoints(vTriangleWorldSpace[0],vTriangleWorldSpace[1],vTriangleWorldSpace[2]);
+            trianglePlane.FromPoints(vTriangleWorldSpace[0], vTriangleWorldSpace[1], vTriangleWorldSpace[2]);
             if(cMath::CheckPlaneLineIntersection(trianglePlane, avRayStart, avRayEnd, &vIntersection, &fT))
             {
-                if(fT<fShortestT)
+                if(fT < fShortestT)
                 {
                     fShortestT = fT;
                     lTriIndex = i;
@@ -889,7 +889,7 @@ bool cMath::CheckPointInsideTriangle2D(const cVector2f& avPoint, const tVector3f
 
     cVector3f vTri[3];
 
-    for(int i=0; i<3; ++i)
+    for(int i = 0; i < 3; ++i)
     {
         vTri[i] = avTriangle[i];
         vTri[i].z = 0;
@@ -909,16 +909,16 @@ bool cMath::CheckPointInsideTriangle2D(const cVector2f& avPoint, const tVector3f
 
 bool cMath::CheckPointSameSideOfEdge2D(const cVector3f& avPoint1, const cVector3f& avPoint2, const cVector3f& avPointA, const cVector3f& avPointB)
 {
-    cVector3f vEdge = avPointB-avPointA;
-    cVector3f vCP1 = cMath::Vector3Cross(vEdge, avPoint1-avPointA);
-    cVector3f vCP2 = cMath::Vector3Cross(vEdge, avPoint2-avPointA);
+    cVector3f vEdge = avPointB - avPointA;
+    cVector3f vCP1 = cMath::Vector3Cross(vEdge, avPoint1 - avPointA);
+    cVector3f vCP2 = cMath::Vector3Cross(vEdge, avPoint2 - avPointA);
 
-    return (cMath::Vector3Dot(vCP1,vCP2)>=0);
+    return (cMath::Vector3Dot(vCP1, vCP2) >= 0);
 }
 
 //-----------------------------------------------------------------------
 
-bool cMath::CheckBVIntersection(cBoundingVolume& aBV1,cBoundingVolume& aBV2)
+bool cMath::CheckBVIntersection(cBoundingVolume& aBV1, cBoundingVolume& aBV2)
 {
     //////////////////////////////////////////
     //Check Sphere collision.
@@ -955,8 +955,8 @@ bool cMath::CheckBVIntersection(cBoundingVolume& aBV1,cBoundingVolume& aBV2)
 
 //-----------------------------------------------------------------------
 
-bool cMath::CheckAABBIntersection(    const cVector3f& avMin1,const cVector3f& avMax1,
-                                      const cVector3f& avMin2,const cVector3f& avMax2)
+bool cMath::CheckAABBIntersection(    const cVector3f& avMin1, const cVector3f& avMax1,
+                                      const cVector3f& avMin2, const cVector3f& avMax2)
 {
     if(    avMax1.x < avMin2.x || avMax1.y < avMin2.y || avMax1.z < avMin2.z ||
             avMax2.x < avMin1.x || avMax2.y < avMin1.y || avMax2.z < avMin1.z)
@@ -969,8 +969,8 @@ bool cMath::CheckAABBIntersection(    const cVector3f& avMin1,const cVector3f& a
 
 //-----------------------------------------------------------------------
 
-bool cMath::CheckAABBInside(const cVector3f& avInsideMin,const cVector3f& avInsideMax,
-                            const cVector3f& avOutsideMin,const cVector3f& avOutsideMax)
+bool cMath::CheckAABBInside(const cVector3f& avInsideMin, const cVector3f& avInsideMax,
+                            const cVector3f& avOutsideMin, const cVector3f& avOutsideMax)
 {
     if(    avInsideMin.x >= avOutsideMin.x && avInsideMin.y >= avOutsideMin.y && avInsideMin.z >= avOutsideMin.z &&
             avInsideMax.x <= avOutsideMax.x && avInsideMax.y <= avOutsideMax.y && avInsideMax.z <= avOutsideMax.z)
@@ -999,7 +999,7 @@ bool cMath::CheckPointInBVIntersection(const cVector3f& avPoint, cBoundingVolume
 
 //-----------------------------------------------------------------------
 
-bool cMath::CheckPointInAABBIntersection(const cVector3f& avPoint, const cVector3f& avMin,const cVector3f& avMax)
+bool cMath::CheckPointInAABBIntersection(const cVector3f& avPoint, const cVector3f& avMin, const cVector3f& avMax)
 {
     if(avPoint.x > avMax.x || avPoint.y > avMax.y || avPoint.z > avMax.z ||
             avPoint.x < avMin.x || avPoint.y < avMin.y || avPoint.z < avMin.z)
@@ -1014,15 +1014,15 @@ bool cMath::CheckPointInAABBIntersection(const cVector3f& avPoint, const cVector
 
 static int gvBoundVolumeVtxConnections[8][3] =
 {
-    {1,2,4},//0
-    {0,3,5},//1
-    {0,3,6},//2
-    {1,2,7},//3
+    {1, 2, 4}, //0
+    {0, 3, 5}, //1
+    {0, 3, 6}, //2
+    {1, 2, 7}, //3
 
-    {0,5,6},//4
-    {1,4,7},//5
-    {2,4,7},//6
-    {3,5,6},//7
+    {0, 5, 6}, //4
+    {1, 4, 7}, //5
+    {2, 4, 7}, //6
+    {3, 5, 6}, //7
 };
 
 bool cMath::GetNormalizedClipRectFromBV(cVector3f &avDestMin, cVector3f &avDestMax,
@@ -1034,18 +1034,18 @@ bool cMath::GetNormalizedClipRectFromBV(cVector3f &avDestMin, cVector3f &avDestM
     cVector3f vMax = aBV.GetMax();
     cVector3f vMin = aBV.GetMin();
     cVector3f vCorners[8];
-    vCorners[0] = cVector3f(vMax.x,vMax.y,vMax.z);
-    vCorners[1] = cVector3f(vMax.x,vMax.y,vMin.z);
-    vCorners[2] = cVector3f(vMax.x,vMin.y,vMax.z);
-    vCorners[3] = cVector3f(vMax.x,vMin.y,vMin.z);
+    vCorners[0] = cVector3f(vMax.x, vMax.y, vMax.z);
+    vCorners[1] = cVector3f(vMax.x, vMax.y, vMin.z);
+    vCorners[2] = cVector3f(vMax.x, vMin.y, vMax.z);
+    vCorners[3] = cVector3f(vMax.x, vMin.y, vMin.z);
 
-    vCorners[4] = cVector3f(vMin.x,vMax.y,vMax.z);
-    vCorners[5] = cVector3f(vMin.x,vMax.y,vMin.z);
-    vCorners[6] = cVector3f(vMin.x,vMin.y,vMax.z);
-    vCorners[7] = cVector3f(vMin.x,vMin.y,vMin.z);
+    vCorners[4] = cVector3f(vMin.x, vMax.y, vMax.z);
+    vCorners[5] = cVector3f(vMin.x, vMax.y, vMin.z);
+    vCorners[6] = cVector3f(vMin.x, vMin.y, vMax.z);
+    vCorners[7] = cVector3f(vMin.x, vMin.y, vMin.z);
 
-    float fTan = afTanHalfFov > 0 ? afTanHalfFov : tan(apFrustum->GetFOV()*0.5f);
-    float fNearPlane =apFrustum->GetNearPlane();
+    float fTan = afTanHalfFov > 0 ? afTanHalfFov : tan(apFrustum->GetFOV() * 0.5f);
+    float fNearPlane = apFrustum->GetNearPlane();
     float fNearTop =  fTan * fNearPlane;
     float fNearRight = apFrustum->GetAspect() * fNearTop;
 
@@ -1053,7 +1053,7 @@ bool cMath::GetNormalizedClipRectFromBV(cVector3f &avDestMin, cVector3f &avDestM
 
     /////////////////////////////////
     // Transform to camera space
-    for(int i=0; i< 8; i++)
+    for(int i = 0; i < 8; i++)
     {
         cVector3f& vPos = vCorners[i];
         vPos = MatrixMul(apFrustum->GetViewMatrix(), vPos);
@@ -1062,18 +1062,18 @@ bool cMath::GetNormalizedClipRectFromBV(cVector3f &avDestMin, cVector3f &avDestM
     /////////////////////////////////
     // Transform to screen space
     bool bVisible = false;
-    for(int i=0; i< 8; i++)
+    for(int i = 0; i < 8; i++)
     {
         cVector3f vPos = vCorners[i];
 
-        if(vPos.z<0)
+        if(vPos.z < 0)
         {
             bVisible = true;
         }
 
         ////////////////////////
         //Perspective Projection
-        if(apFrustum->GetProjectionType()==eProjectionType_Perspective)
+        if(apFrustum->GetProjectionType() == eProjectionType_Perspective)
         {
             float fZ = vPos.z;
 
@@ -1081,12 +1081,12 @@ bool cMath::GetNormalizedClipRectFromBV(cVector3f &avDestMin, cVector3f &avDestM
             //If behind camera, clip so that it is in front
             if(fZ > 0)
             {
-                for(int j=0; j<3; ++j)
+                for(int j = 0; j < 3; ++j)
                 {
                     // Get the connection and see if it is in front of camera
                     int lConnection = gvBoundVolumeVtxConnections[i][j];
                     cVector3f& vConnectPos = vCorners[ lConnection ];
-                    if(vConnectPos.z >=0)
+                    if(vConnectPos.z >= 0)
                     {
                         continue;
                     }
@@ -1111,7 +1111,7 @@ bool cMath::GetNormalizedClipRectFromBV(cVector3f &avDestMin, cVector3f &avDestM
             //Project to near plane and normalize
             else
             {
-                if(fZ ==0)
+                if(fZ == 0)
                 {
                     fZ = 0.0001f;
                 }
@@ -1126,14 +1126,14 @@ bool cMath::GetNormalizedClipRectFromBV(cVector3f &avDestMin, cVector3f &avDestM
         else
         {
             // TODO: there must be a better way to do this
-            vPos = MatrixMul(apFrustum->GetProjectionMatrix(),vCorners[i]);
+            vPos = MatrixMul(apFrustum->GetProjectionMatrix(), vCorners[i]);
             lstScreenSpacePos.push_back(vPos);
         }
     }
 
     ////////////////////////
     //Check of any pos is visible
-    if(bVisible==false)
+    if(bVisible == false)
     {
         return false;
     }
@@ -1143,7 +1143,7 @@ bool cMath::GetNormalizedClipRectFromBV(cVector3f &avDestMin, cVector3f &avDestM
     //Go through all screen position and get min/max
     avDestMax = -10000.0f;
     avDestMin = 10000.0f;
-    for(tVector3fListIt it= lstScreenSpacePos.begin(); it != lstScreenSpacePos.end(); ++it)
+    for(tVector3fListIt it = lstScreenSpacePos.begin(); it != lstScreenSpacePos.end(); ++it)
     {
         cVector3f& vPos = *it;
 
@@ -1174,8 +1174,8 @@ bool cMath::GetNormalizedClipRectFromBV(cVector3f &avDestMin, cVector3f &avDestM
 
 cRect2l cMath::GetClipRectFromNormalizedMinMax(const cVector3f &avMin, const cVector3f& avMax, const cVector2l &avScreenSize)
 {
-    cVector3f vMin=avMin;
-    cVector3f vMax=avMax;
+    cVector3f vMin = avMin;
+    cVector3f vMax = avMax;
     ////////////////////////
     //Clip min and max
     if(vMin.x < -1)
@@ -1197,7 +1197,7 @@ cRect2l cMath::GetClipRectFromNormalizedMinMax(const cVector3f &avMin, const cVe
 
     ////////////////////////
     //Get the screen coordinates
-    cVector2f vHalfScreenSize = cVector2f((float)avScreenSize.x, (float)avScreenSize.y) *0.5f;
+    cVector2f vHalfScreenSize = cVector2f((float)avScreenSize.x, (float)avScreenSize.y) * 0.5f;
     cVector2l vTopLeft;
     cVector2l vBottomRight;
     vTopLeft.x = (int)(vHalfScreenSize.x + vMin.x * vHalfScreenSize.x);
@@ -1254,157 +1254,157 @@ cRect2l cMath::GetClipRectFromSphere(    const cVector3f& avPosition, float afRa
     ///////////////////////
     //Transform position to screen space if needed.
     const cMatrixf &mtxView = apFrustum->GetViewMatrix();
-    if(abPositionIsScreenSpace==false)
+    if(abPositionIsScreenSpace == false)
     {
         vLightPos = MatrixMul(mtxView, vLightPos);
     }
 
     //////////////////////////////////////
     //Set up the size of the near plane
-    float fTan = afTanHalfFov > 0 ? afTanHalfFov : tan(apFrustum->GetFOV()*0.5f);
-    float fNearPlane =apFrustum->GetNearPlane();
+    float fTan = afTanHalfFov > 0 ? afTanHalfFov : tan(apFrustum->GetFOV() * 0.5f);
+    float fNearPlane = apFrustum->GetNearPlane();
     float fNearTop =  fTan * fNearPlane;
     float fNearRight = apFrustum->GetAspect() * fNearTop;
 
     /////////////////////////////////////////////
     //Set up variables determining screen size
-    cVector2f vHalfScreenSize = cVector2f((float)avScreenSize.x, (float)avScreenSize.y) *0.5f;
+    cVector2f vHalfScreenSize = cVector2f((float)avScreenSize.x, (float)avScreenSize.y) * 0.5f;
 
-    int lRight = avScreenSize.x-1;
+    int lRight = avScreenSize.x - 1;
     int lTop = 0;
     int lLeft = 0;
-    int lBottom = avScreenSize.y-1;
+    int lBottom = avScreenSize.y - 1;
 
     /////////////////////////////////////////////
     //Set up variables to speed up calculations
     float fD;
-    float fSqrRadius= afRadius*afRadius;
-    cVector3f vSqrLightPos = vLightPos*vLightPos;
+    float fSqrRadius = afRadius * afRadius;
+    cVector3f vSqrLightPos = vLightPos * vLightPos;
 
     //////////////////////
     //Check if the XZ-planes have valid solutions, if not skip
-    fD = fSqrRadius*vSqrLightPos.x - (vSqrLightPos.x + vSqrLightPos.z) * (fSqrRadius - vSqrLightPos.z);
-    if (fD>=0)
+    fD = fSqrRadius * vSqrLightPos.x - (vSqrLightPos.x + vSqrLightPos.z) * (fSqrRadius - vSqrLightPos.z);
+    if (fD >= 0)
     {
-        fD= sqrtf(fD);
+        fD = sqrtf(fD);
 
         //Get the two solutions for the Plane's Normal X coordinate
-        float fNx1 = (afRadius*vLightPos.x + fD) / (vSqrLightPos.x+vSqrLightPos.z);
-        float fNx2 = (afRadius*vLightPos.x - fD) / (vSqrLightPos.x+vSqrLightPos.z);
+        float fNx1 = (afRadius * vLightPos.x + fD) / (vSqrLightPos.x + vSqrLightPos.z);
+        float fNx2 = (afRadius * vLightPos.x - fD) / (vSqrLightPos.x + vSqrLightPos.z);
 
         //Get the two solutions for the Plane's Normal Z coordinate
-        float fNz1 = (afRadius-fNx1*vLightPos.x) / vLightPos.z;
-        float fNz2 = (afRadius-fNx2*vLightPos.x) / vLightPos.z;
+        float fNz1 = (afRadius - fNx1 * vLightPos.x) / vLightPos.z;
+        float fNz2 = (afRadius - fNx2 * vLightPos.x) / vLightPos.z;
 
         //Get the two solutions for the Plane-Sphere intersection point Z coordinate
-        float Pz1 = (vSqrLightPos.x+vSqrLightPos.z-fSqrRadius) / (vLightPos.z-(fNz1/fNx1)*vLightPos.x);
-        float Pz2 = (vSqrLightPos.x+vSqrLightPos.z-fSqrRadius) / (vLightPos.z-(fNz2/fNx2)*vLightPos.x);
+        float Pz1 = (vSqrLightPos.x + vSqrLightPos.z - fSqrRadius) / (vLightPos.z - (fNz1 / fNx1) * vLightPos.x);
+        float Pz2 = (vSqrLightPos.x + vSqrLightPos.z - fSqrRadius) / (vLightPos.z - (fNz2 / fNx2) * vLightPos.x);
 
         //Check if position1 is in front of frustum
-        if (Pz1<0)
+        if (Pz1 < 0)
         {
             //Project X to near plane and normalize
-            float fNearX = fNz1 * fNearPlane/fNx1;
-            fNearX = fNearX/fNearRight;
+            float fNearX = fNz1 * fNearPlane / fNx1;
+            fNearX = fNearX / fNearRight;
 
             //Get screen coordinate
             int lScreenX = (int)(vHalfScreenSize.x + vHalfScreenSize.x * fNearX);
 
             //Check if position is left or right of the light position
-            float fPx= -Pz1 * fNz1/fNx1;
+            float fPx = -Pz1 * fNz1 / fNx1;
             if (fPx < vLightPos.x)
             {
-                lLeft = Max(lLeft,lScreenX);
+                lLeft = Max(lLeft, lScreenX);
             }
             else
             {
-                lRight = Min(lRight,lScreenX);
+                lRight = Min(lRight, lScreenX);
             }
         }
 
         //Check if position1 is in front of frustum
-        if (Pz2<0)
+        if (Pz2 < 0)
         {
             //Project X to near plane and normalize
-            float fNearX = fNz2 * fNearPlane/fNx2;
-            fNearX = fNearX/fNearRight;
+            float fNearX = fNz2 * fNearPlane / fNx2;
+            fNearX = fNearX / fNearRight;
 
             //Get screen coordinate
             int lScreenX = (int)(vHalfScreenSize.x + vHalfScreenSize.x * fNearX);
 
             //Check if position is left or right of the light position
-            float fPx= -Pz2 * fNz2/fNx2;
+            float fPx = -Pz2 * fNz2 / fNx2;
             if (fPx < vLightPos.x)
             {
-                lLeft = Max(lLeft,lScreenX);
+                lLeft = Max(lLeft, lScreenX);
             }
             else
             {
-                lRight = Min(lRight,lScreenX);
+                lRight = Min(lRight, lScreenX);
             }
         }
     }
 
     //////////////////////
     //Check if the YZ-planes have valid solutions, if not skip
-    fD=fSqrRadius*vSqrLightPos.y - (vSqrLightPos.y+vSqrLightPos.z)*(fSqrRadius-vSqrLightPos.z);
-    if (fD>=0)
+    fD = fSqrRadius * vSqrLightPos.y - (vSqrLightPos.y + vSqrLightPos.z) * (fSqrRadius - vSqrLightPos.z);
+    if (fD >= 0)
     {
         fD = sqrtf(fD);
 
         //Get the two solutions for the Plane's Normal Y coordinate
-        float fNy1 = (afRadius*vLightPos.y + fD) / (vSqrLightPos.y+vSqrLightPos.z);
-        float fNy2 = (afRadius*vLightPos.y - fD) / (vSqrLightPos.y+vSqrLightPos.z);
+        float fNy1 = (afRadius * vLightPos.y + fD) / (vSqrLightPos.y + vSqrLightPos.z);
+        float fNy2 = (afRadius * vLightPos.y - fD) / (vSqrLightPos.y + vSqrLightPos.z);
 
         //Get the two solutions for the Plane's Normal Z coordinate
-        float fNz1 = (afRadius-fNy1*vLightPos.y) / vLightPos.z;
-        float fNz2 = (afRadius-fNy2*vLightPos.y) / vLightPos.z;
+        float fNz1 = (afRadius - fNy1 * vLightPos.y) / vLightPos.z;
+        float fNz2 = (afRadius - fNy2 * vLightPos.y) / vLightPos.z;
 
         //Get the two solutions for the Plane-Sphere intersection point Z coordinate
-        float fPz1 = (vSqrLightPos.y+vSqrLightPos.z-fSqrRadius) / (vLightPos.z-(fNz1/fNy1)*vLightPos.y);
-        float fPz2 = (vSqrLightPos.y+vSqrLightPos.z-fSqrRadius) / (vLightPos.z-(fNz2/fNy2)*vLightPos.y);
+        float fPz1 = (vSqrLightPos.y + vSqrLightPos.z - fSqrRadius) / (vLightPos.z - (fNz1 / fNy1) * vLightPos.y);
+        float fPz2 = (vSqrLightPos.y + vSqrLightPos.z - fSqrRadius) / (vLightPos.z - (fNz2 / fNy2) * vLightPos.y);
 
         //Check if position1 is in front of frustum
-        if (fPz1<0)
+        if (fPz1 < 0)
         {
             //Project Y to near plane and normalize
-            float fNearY = fNz1 * fNearPlane/fNy1;
-            fNearY = fNearY/fNearTop;
+            float fNearY = fNz1 * fNearPlane / fNy1;
+            fNearY = fNearY / fNearTop;
 
             //Get screen coordinate
-            int lScreenY = (int)(vHalfScreenSize.y - vHalfScreenSize.y*fNearY);
+            int lScreenY = (int)(vHalfScreenSize.y - vHalfScreenSize.y * fNearY);
 
             //Check if position is below or above of the light position
-            float fPy = -fPz1*fNz1/fNy1;
-            if (fPy>vLightPos.y)
+            float fPy = -fPz1 * fNz1 / fNy1;
+            if (fPy > vLightPos.y)
             {
-                lTop = Max(lTop,lScreenY);
+                lTop = Max(lTop, lScreenY);
             }
             else
             {
-                lBottom = Min(lBottom,lScreenY);
+                lBottom = Min(lBottom, lScreenY);
             }
         }
 
         //Check if position1 is in front of frustum
-        if (fPz2<0)
+        if (fPz2 < 0)
         {
             //Project Y to near plane and normalize
-            float fNearY= fNz2 *fNearPlane/fNy2;
-            fNearY = fNearY/fNearTop;
+            float fNearY = fNz2 * fNearPlane / fNy2;
+            fNearY = fNearY / fNearTop;
 
             //Get screen coordinate
-            int lScreenY = (int)(vHalfScreenSize.y - vHalfScreenSize.y*fNearY);
+            int lScreenY = (int)(vHalfScreenSize.y - vHalfScreenSize.y * fNearY);
 
             //Check if position is below or above of the light position
-            float fPy=-fPz2*fNz2/fNy2;
-            if (fPy>vLightPos.y)
+            float fPy = -fPz2 * fNz2 / fNy2;
+            if (fPy > vLightPos.y)
             {
-                lTop = Max(lTop,lScreenY);
+                lTop = Max(lTop, lScreenY);
             }
             else
             {
-                lBottom = Min(lBottom,lScreenY);
+                lBottom = Min(lBottom, lScreenY);
             }
         }
     }
@@ -1412,8 +1412,8 @@ cRect2l cMath::GetClipRectFromSphere(    const cVector3f& avPosition, float afRa
     cRect2l outputRect;
     outputRect.x = lLeft;
     outputRect.y = lTop;
-    outputRect.w = lRight-lLeft+1;
-    outputRect.h = lBottom-lTop+1;
+    outputRect.w = lRight - lLeft + 1;
+    outputRect.h = lBottom - lTop + 1;
 
     return outputRect;
 }
@@ -1429,18 +1429,18 @@ cVector2f cMath::GetSphericalCoordsFromPoint3D(const cVector3f& avSphCenter, con
 {
     cVector2f vPolarCoords = 0;
 
-    cVector3f vRadius = avPoint-avSphCenter;
+    cVector3f vRadius = avPoint - avSphCenter;
 
     float fRadius = vRadius.Length();
-    float fInvRadius = 1/fRadius;
+    float fInvRadius = 1 / fRadius;
 
-    vPolarCoords.x = acos(vRadius.y*fInvRadius);
+    vPolarCoords.x = acos(vRadius.y * fInvRadius);
     vPolarCoords.x = Wrap(vPolarCoords.x, 0, k2Pif);
 
     float fRadiusInSection = cVector2f(avPoint.x, avPoint.z).Length();
-    if(fRadiusInSection>kEpsilonf)
+    if(fRadiusInSection > kEpsilonf)
     {
-        vPolarCoords.y = atan2(vRadius.z,vRadius.x);
+        vPolarCoords.y = atan2(vRadius.z, vRadius.x);
         vPolarCoords.y = Wrap(vPolarCoords.y, 0, k2Pif);
     }
     return vPolarCoords;
@@ -1455,11 +1455,11 @@ cVector3f cMath::GetPoint3DFromSphericalCoords(const cVector3f& avSphCenter, flo
     float fSinPhi = sin(avSphCoords.y);
     float fCosPhi = cos(avSphCoords.y);
 
-    cVector3f vDir = cVector3f(fSinTheta*fCosPhi,
+    cVector3f vDir = cVector3f(fSinTheta * fCosPhi,
                                fCosTheta,
-                               fSinTheta*fSinPhi);
+                               fSinTheta * fSinPhi);
 
-    return (avSphCenter + vDir*afSphRadius);
+    return (avSphCenter + vDir * afSphRadius);
 }
 
 //-----------------------------------------------------------------------
@@ -1483,7 +1483,7 @@ float cMath::PlaneDot(const cPlanef& aPlaneA, const cPlanef& aPlaneB)
 
 bool cMath::PlaneParallel(const cPlanef& aPlaneA, const cPlanef& aPlaneB)
 {
-    float fDot = aPlaneA.a*aPlaneB.a+ aPlaneA.b*aPlaneB.b+aPlaneA.c*aPlaneB.c;
+    float fDot = aPlaneA.a * aPlaneB.a + aPlaneA.b * aPlaneB.b + aPlaneA.c * aPlaneB.c;
     return fDot > 0.99999f;
 }
 
@@ -1505,9 +1505,9 @@ cPlanef cMath::TransformPlane(const cMatrixf &a_mtxTransform, const cPlanef& aPl
 
 bool cMath::CheckSphereInPlanes(const cVector3f &avCenter, float afRadius, const cPlanef* apPlanes, int alPlaneCount)
 {
-    for(int i=0; i<alPlaneCount; i++)
+    for(int i = 0; i < alPlaneCount; i++)
     {
-        float fDist = cMath::PlaneToPointDist(apPlanes[i],avCenter);
+        float fDist = cMath::PlaneToPointDist(apPlanes[i], avCenter);
 
         if(fDist < -afRadius)
         {
@@ -1520,20 +1520,20 @@ bool cMath::CheckSphereInPlanes(const cVector3f &avCenter, float afRadius, const
 
 //-----------------------------------------------------------------------
 
-bool cMath::CheckAABBLineIntersection(    const cVector3f& avMin,const cVector3f& avMax,
+bool cMath::CheckAABBLineIntersection(    const cVector3f& avMin, const cVector3f& avMax,
         const cVector3f &avLineStart, const cVector3f &avLineEnd,
         cVector3f *apIntersectionPos, float *apT)
 {
     cPlanef vPlanes[6] =
     {
-        cPlanef(cVector3f(-1,0,0),avMin), //Left
-        cPlanef(cVector3f(1,0,0), avMax), //Right
+        cPlanef(cVector3f(-1, 0, 0), avMin), //Left
+        cPlanef(cVector3f(1, 0, 0), avMax), //Right
 
-        cPlanef(cVector3f(0,-1,0),avMin), //Bottom
-        cPlanef(cVector3f(0,1,0),avMax),  //Top
+        cPlanef(cVector3f(0, -1, 0), avMin), //Bottom
+        cPlanef(cVector3f(0, 1, 0), avMax), //Top
 
-        cPlanef(cVector3f(0,0,-1),avMin), //Back
-        cPlanef(cVector3f(0,0,1), avMax), //Front
+        cPlanef(cVector3f(0, 0, -1), avMin), //Back
+        cPlanef(cVector3f(0, 0, 1), avMax), //Front
     };
 
     cVector3f vLargerMin = avMin - cVector3f(0.001f);
@@ -1541,14 +1541,14 @@ bool cMath::CheckAABBLineIntersection(    const cVector3f& avMin,const cVector3f
 
     cVector3f vIntersection;
     float fShortestT = 1000.0f;
-    bool bIntersected=false;
-    for(int i=0; i<6; ++i)
+    bool bIntersected = false;
+    for(int i = 0; i < 6; ++i)
     {
         float fT;
-        if(CheckPlaneLineIntersection(vPlanes[i],avLineStart, avLineEnd,&vIntersection,&fT))
+        if(CheckPlaneLineIntersection(vPlanes[i], avLineStart, avLineEnd, &vIntersection, &fT))
         {
             //Check this is the shortest intersection and if it is inside the AABB
-            if(fT < fShortestT && CheckPointInAABBIntersection(vIntersection,vLargerMin,vLargerMax))
+            if(fT < fShortestT && CheckPointInAABBIntersection(vIntersection, vLargerMin, vLargerMax))
             {
                 //Log("    Intersected!\n");
                 if(apIntersectionPos)
@@ -1577,13 +1577,13 @@ bool cMath::CheckAABBLineIntersection(    const cVector3f& avMin,const cVector3f
 
 float cMath::RoundFloatToDecimals(float afVal, int alPrecision)
 {
-    float fPow = (float)pow(10.0f,alPrecision);
-    float fInvPow = 1.0f/fPow;
-    float fAdd = 0.5f*fInvPow;
+    float fPow = (float)pow(10.0f, alPrecision);
+    float fInvPow = 1.0f / fPow;
+    float fAdd = 0.5f * fInvPow;
 
     afVal += fAdd;
 
-    float fFloor = floor(fPow*afVal);
+    float fFloor = floor(fPow * afVal);
     fFloor *= fInvPow;
 
     return fFloor;
@@ -1600,9 +1600,9 @@ float cMath::GetFraction(float afVal)
 
 float cMath::Modulus(float afDividend, float afDivisor)
 {
-    float fNum = std::floor(std::abs(afDividend/afDivisor));
+    float fNum = std::floor(std::abs(afDividend / afDivisor));
 
-    float fRemain = std::abs(afDividend) - std::abs(afDivisor)*fNum;
+    float fRemain = std::abs(afDividend) - std::abs(afDivisor) * fNum;
 
     return fRemain;
 }
@@ -1620,18 +1620,18 @@ float cMath::Wrap(float afX, float afMin, float afMax)
     //Change setup so that min is 0
     afMax = afMax - afMin;
     float fOffSet = afMin;
-    afMin =0;
+    afMin = 0;
     afX = afX - fOffSet;
 
-    float fNumOfMax = std::floor(std::abs(afX/afMax));
+    float fNumOfMax = std::floor(std::abs(afX / afMax));
 
-    if(afX>=afMax)
+    if(afX >= afMax)
     {
-        afX = afX - fNumOfMax*afMax;
+        afX = afX - fNumOfMax * afMax;
     }
-    else if(afX<afMin)
+    else if(afX < afMin)
     {
-        afX = ((fNumOfMax+1.0f)*afMax)+afX;
+        afX = ((fNumOfMax + 1.0f) * afMax) + afX;
     }
 
     return afX + fOffSet;
@@ -1657,20 +1657,20 @@ float cMath::Clamp(float afX, float afMin, float afMax)
 
 float cMath::GetAngleDistanceRad(float afAngle1, float afAngle2)
 {
-    return GetAngleDistance(afAngle1, afAngle2,k2Pif);
+    return GetAngleDistance(afAngle1, afAngle2, k2Pif);
 }
 
 float cMath::GetAngleDistanceDeg(float afAngle1, float afAngle2)
 {
-    return GetAngleDistance(afAngle1, afAngle2,360.0f);
+    return GetAngleDistance(afAngle1, afAngle2, 360.0f);
 }
 
 float cMath::GetAngleDistance(float afAngle1, float afAngle2, float afMaxAngle)
 {
-    afAngle1 = Wrap(afAngle1,0, afMaxAngle);
-    afAngle2 = Wrap(afAngle2,0, afMaxAngle);
+    afAngle1 = Wrap(afAngle1, 0, afMaxAngle);
+    afAngle2 = Wrap(afAngle2, 0, afMaxAngle);
 
-    if(afAngle1==afAngle2)
+    if(afAngle1 == afAngle2)
     {
         return 0;
     }
@@ -1679,7 +1679,7 @@ float cMath::GetAngleDistance(float afAngle1, float afAngle2, float afMaxAngle)
         float fDist1 = afAngle2 - afAngle1;
         float fDist2 = afMaxAngle - std::abs(fDist1);
 
-        if(fDist1>0)
+        if(fDist1 > 0)
         {
             fDist2 = -fDist2;
         }
@@ -1697,13 +1697,13 @@ float cMath::GetAngleDistance(float afAngle1, float afAngle2, float afMaxAngle)
 
 //-----------------------------------------------------------------------
 
-float cMath::TurnAngle(float afAngle,float afFinalAngle,float afSpeed,float afMaxAngle)
+float cMath::TurnAngle(float afAngle, float afFinalAngle, float afSpeed, float afMaxAngle)
 {
-    if(afAngle!=afFinalAngle)
+    if(afAngle != afFinalAngle)
     {
-        float fAngleDist = afFinalAngle-afAngle;
-        if( (afFinalAngle>afAngle && fAngleDist<afMaxAngle) ||
-                (afFinalAngle<afAngle && fAngleDist<(-afMaxAngle)))
+        float fAngleDist = afFinalAngle - afAngle;
+        if( (afFinalAngle > afAngle && fAngleDist < afMaxAngle) ||
+                (afFinalAngle < afAngle && fAngleDist < (-afMaxAngle)))
         {
             afAngle = afAngle + afSpeed;
         }
@@ -1712,22 +1712,22 @@ float cMath::TurnAngle(float afAngle,float afFinalAngle,float afSpeed,float afMa
             afAngle = afAngle + (-afSpeed);
         }
     }
-    if(Abs(GetAngleDistance(afAngle, afFinalAngle,afMaxAngle*2))<=(afSpeed*1.5))
+    if(Abs(GetAngleDistance(afAngle, afFinalAngle, afMaxAngle * 2)) <= (afSpeed * 1.5))
     {
-        afAngle= afFinalAngle;
+        afAngle = afFinalAngle;
     }
 
     return afAngle;
 }
 
-float cMath::TurnAngleRad(float afAngle,float afFinalAngle,float afSpeed)
+float cMath::TurnAngleRad(float afAngle, float afFinalAngle, float afSpeed)
 {
-    return TurnAngle(afAngle, afFinalAngle, afSpeed,kPif);
+    return TurnAngle(afAngle, afFinalAngle, afSpeed, kPif);
 }
 
-float cMath::TurnAngleDeg(float afAngle,float afFinalAngle,float afSpeed)
+float cMath::TurnAngleDeg(float afAngle, float afFinalAngle, float afSpeed)
 {
-    return TurnAngle(afAngle, afFinalAngle, afSpeed,180.0f);
+    return TurnAngle(afAngle, afFinalAngle, afSpeed, 180.0f);
 }
 
 //-----------------------------------------------------------------------
@@ -1740,34 +1740,34 @@ float cMath::GetAngleFromPoints2D(const cVector2f &avStartPos, const cVector2f &
 
     fDx = avGoalPos.x - avStartPos.x;
     fDy = avGoalPos.y - avStartPos.y;
-    if(fDx==0)
+    if(fDx == 0)
     {
-        fDx= 0.00001f;
+        fDx = 0.00001f;
     }
-    if(fDy==0)
+    if(fDy == 0)
     {
-        fDy= 0.00001f;
+        fDy = 0.00001f;
     }
 
 
-    if(fDx>=0 && fDy<0)
+    if(fDx >= 0 && fDy < 0)
     {
-        fAns = atan(fDx/(-fDy));
+        fAns = atan(fDx / (-fDy));
         //Log("1\n");
     }
-    else if(fDx>=0 && fDy>=0)
+    else if(fDx >= 0 && fDy >= 0)
     {
-        fAns = atan(fDy/fDx) + kPi2f;
+        fAns = atan(fDy / fDx) + kPi2f;
         //Log("2\n");
     }
-    else if(fDx<0 && fDy>=0)
+    else if(fDx < 0 && fDy >= 0)
     {
-        fAns = atan((-fDx)/fDy)+kPif;
+        fAns = atan((-fDx) / fDy) + kPif;
         //Log("3\n");
     }
-    else if(fDx<0 && fDy<0)
+    else if(fDx < 0 && fDy < 0)
     {
-        fAns = atan((-fDy)/(-fDx))+kPi2f+kPif;
+        fAns = atan((-fDy) / (-fDx)) + kPi2f + kPif;
         //Log("4\n");
     }
     return fAns;
@@ -1777,14 +1777,14 @@ float cMath::GetAngleFromPoints2D(const cVector2f &avStartPos, const cVector2f &
 
 float cMath::ToRad(float afAngle)
 {
-    return (afAngle/360.0f)*k2Pif;
+    return (afAngle / 360.0f) * k2Pif;
 }
 
 //-----------------------------------------------------------------------
 
 float cMath::ToDeg(float afAngle)
 {
-    return (afAngle/k2Pif)*360.0f;
+    return (afAngle / k2Pif) * 360.0f;
 }
 
 //-----------------------------------------------------------------------
@@ -1869,9 +1869,9 @@ bool cMath::IsPow2(int alX)
 
 //-----------------------------------------------------------------------
 
-float cMath::Interpolate(float afA,float afB,float afT)
+float cMath::Interpolate(float afA, float afB, float afT)
 {
-    return afA * (1-afT) + afB * afT;
+    return afA * (1 - afT) + afB * afT;
 }
 
 //-----------------------------------------------------------------------
@@ -1902,7 +1902,7 @@ float cMath::IncreaseTo(float afX, float afAdd, float afDest)
 
 float cMath::SmoothCurve(float afX)
 {
-    return afX*afX*(3-afX*2);
+    return afX * afX * (3 - afX * 2);
 }
 
 //-----------------------------------------------------------------------
@@ -1915,60 +1915,60 @@ float cMath::SmoothCurve(float afX)
 //-----------------------------------------------------------------------
 
 
-float cMath::Vector2Dist(const cVector2f &avPosA,const cVector2f &avPosB)
+float cMath::Vector2Dist(const cVector2f &avPosA, const cVector2f &avPosB)
 {
     float fDx = avPosA.x - avPosB.x;
     float fDy = avPosA.y - avPosB.y;
 
-    return sqrt(fDx*fDx + fDy*fDy);
+    return sqrt(fDx * fDx + fDy * fDy);
 }
 
 //-----------------------------------------------------------------------
 
-float cMath::Vector2DistXY(const cVector3f &avPosA,const cVector3f &avPosB)
+float cMath::Vector2DistXY(const cVector3f &avPosA, const cVector3f &avPosB)
 {
     float fDx = avPosA.x - avPosB.x;
     float fDy = avPosA.y - avPosB.y;
 
-    return sqrt(fDx*fDx + fDy*fDy);
+    return sqrt(fDx * fDx + fDy * fDy);
 }
 
-float cMath::Vector2DistXZ(const cVector3f &avPosA,const cVector3f &avPosB)
+float cMath::Vector2DistXZ(const cVector3f &avPosA, const cVector3f &avPosB)
 {
     float fDx = avPosA.x - avPosB.x;
     float fDz = avPosA.z - avPosB.z;
 
-    return sqrt(fDx*fDx + fDz*fDz);
+    return sqrt(fDx * fDx + fDz * fDz);
 }
 
 //-----------------------------------------------------------------------
 
-float cMath::Vector2DistSqr(const cVector2f &avPosA,const cVector2f &avPosB)
+float cMath::Vector2DistSqr(const cVector2f &avPosA, const cVector2f &avPosB)
 {
     float fDx = avPosA.x - avPosB.x;
     float fDy = avPosA.y - avPosB.y;
 
-    return fDx*fDx + fDy*fDy;
+    return fDx * fDx + fDy * fDy;
 }
 
 //-----------------------------------------------------------------------
 
-float cMath::Vector2DistSqrXY(const cVector3f &avPosA,const cVector3f &avPosB)
+float cMath::Vector2DistSqrXY(const cVector3f &avPosA, const cVector3f &avPosB)
 {
     float fDx = avPosA.x - avPosB.x;
     float fDy = avPosA.y - avPosB.y;
 
-    return fDx*fDx + fDy*fDy;
+    return fDx * fDx + fDy * fDy;
 }
 
 //-----------------------------------------------------------------------
 
-float cMath::Vector2DistSqrXZ(const cVector3f &avPosA,const cVector3f &avPosB)
+float cMath::Vector2DistSqrXZ(const cVector3f &avPosA, const cVector3f &avPosB)
 {
     float fDx = avPosA.x - avPosB.x;
     float fDz = avPosA.z - avPosB.z;
 
-    return fDx*fDx + fDz*fDz;
+    return fDx * fDx + fDz * fDz;
 }
 
 //-----------------------------------------------------------------------
@@ -1999,17 +1999,17 @@ cVector2f cMath::GetVectorFromAngle2D(float afAngle, float afLength)
 
 void cMath::GetAngleFromVector(const cVector2f &avVec, float *apAngle, float *apLength)
 {
-    *apLength = sqrt(avVec.x*avVec.x + avVec.y*avVec.y);
+    *apLength = sqrt(avVec.x * avVec.x + avVec.y * avVec.y);
 
-    *apAngle = GetAngleFromPoints2D(0,avVec);
+    *apAngle = GetAngleFromPoints2D(0, avVec);
 }
 
 //-----------------------------------------------------------------------
 
 cVector2f cMath::ProjectVector2D(const cVector2f &avSrcVec, const cVector2f &avDestVec)
 {
-    float fTemp = (avSrcVec.x*avDestVec.x + avSrcVec.y*avDestVec.y) /
-                  (avDestVec.x*avDestVec.x + avDestVec.y*avDestVec.y);
+    float fTemp = (avSrcVec.x * avDestVec.x + avSrcVec.y * avDestVec.y) /
+                  (avDestVec.x * avDestVec.x + avDestVec.y * avDestVec.y);
 
     return  avDestVec * fTemp;
 }
@@ -2048,7 +2048,7 @@ cVector3f cMath::Vector3MinLength(const cVector3f &avVec, float afMinLength)
     }
 }
 
-cVector3f cMath::Vector3ClampLength(const cVector3f &avVec,float afMinLength, float afMaxLength)
+cVector3f cMath::Vector3ClampLength(const cVector3f &avVec, float afMinLength, float afMaxLength)
 {
     float fLength = avVec.Length();
     if(fLength < afMinLength)
@@ -2086,7 +2086,7 @@ cVector3f cMath::Vector3AngleDistanceDeg(const cVector3f &avAngles1, const cVect
 
 //-----------------------------------------------------------------------
 
-cVector3f cMath::Vector3Cross(const cVector3f& avVecA,const cVector3f& avVecB)
+cVector3f cMath::Vector3Cross(const cVector3f& avVecA, const cVector3f& avVecB)
 {
     cVector3f vResult;
 
@@ -2099,17 +2099,17 @@ cVector3f cMath::Vector3Cross(const cVector3f& avVecA,const cVector3f& avVecB)
 
 //-----------------------------------------------------------------------
 
-float cMath::Vector3Dot(const cVector3f& avVecA,const cVector3f& avVecB)
+float cMath::Vector3Dot(const cVector3f& avVecA, const cVector3f& avVecB)
 {
-    return avVecA.x*avVecB.x + avVecA.y*avVecB.y + avVecA.z*avVecB.z;
+    return avVecA.x * avVecB.x + avVecA.y * avVecB.y + avVecA.z * avVecB.z;
 }
 
 //-----------------------------------------------------------------------
 
 cVector3f cMath::Vector3Project(const cVector3f &avSrcVec, const cVector3f &avDestVec)
 {
-    float fTemp = (avSrcVec.x*avDestVec.x + avSrcVec.y*avDestVec.y + avSrcVec.z*avDestVec.z) /
-                  (avDestVec.x*avDestVec.x + avDestVec.y*avDestVec.y + avDestVec.z*avDestVec.z);
+    float fTemp = (avSrcVec.x * avDestVec.x + avSrcVec.y * avDestVec.y + avSrcVec.z * avDestVec.z) /
+                  (avDestVec.x * avDestVec.x + avDestVec.y * avDestVec.y + avDestVec.z * avDestVec.z);
 
     return  avDestVec * fTemp;
 }
@@ -2118,14 +2118,14 @@ cVector3f cMath::Vector3Project(const cVector3f &avSrcVec, const cVector3f &avDe
 
 cVector3f cMath::Vector3Reflect(const cVector3f &avVec, const cVector3f &avNormal)
 {
-    return avVec - avNormal*Vector3Dot(avVec, avNormal)*2;
+    return avVec - avNormal * Vector3Dot(avVec, avNormal) * 2;
 }
 
 //-----------------------------------------------------------------------
 
-float cMath::Vector3Angle(const cVector3f& avVecA,const cVector3f& avVecB)
+float cMath::Vector3Angle(const cVector3f& avVecA, const cVector3f& avVecB)
 {
-    float fCos = Vector3Dot(avVecA,avVecB);
+    float fCos = Vector3Dot(avVecA, avVecB);
 
     if(std::abs(fCos - 1) <= kEpsilonf)
     {
@@ -2137,9 +2137,9 @@ float cMath::Vector3Angle(const cVector3f& avVecA,const cVector3f& avVecB)
 
 //-----------------------------------------------------------------------
 
-float cMath::Vector3SignedAngle(const cVector3f& avVecA,const cVector3f& avVecB, const cVector3f& avVecN)
+float cMath::Vector3SignedAngle(const cVector3f& avVecA, const cVector3f& avVecB, const cVector3f& avVecN)
 {
-    float fCos = Vector3Dot(avVecA,avVecB);
+    float fCos = Vector3Dot(avVecA, avVecB);
 
     if(std::abs(fCos - 1) <= kEpsilonf)
     {
@@ -2148,7 +2148,7 @@ float cMath::Vector3SignedAngle(const cVector3f& avVecA,const cVector3f& avVecB,
 
     float angle = acos(fCos);
 
-    float signValue = Vector3Dot( avVecN, Vector3Cross(avVecA,avVecB) );
+    float signValue = Vector3Dot( avVecN, Vector3Cross(avVecA, avVecB) );
 
     if ( signValue < 0 )
     {
@@ -2160,25 +2160,25 @@ float cMath::Vector3SignedAngle(const cVector3f& avVecA,const cVector3f& avVecB,
 
 //-----------------------------------------------------------------------
 
-cVector3f cMath::Vector3UnProject(const cVector3f& avVec,const cRect2f &aScreenRect,
+cVector3f cMath::Vector3UnProject(const cVector3f& avVec, const cRect2f &aScreenRect,
                                   cMatrixf a_mtxViewProj)
 {
     cMatrixf mtxInvViewProj = MatrixInverse(a_mtxViewProj);
 
     cVector3f vNormalized;
-    vNormalized.x =  ((avVec.x - aScreenRect.x)*2.0f / aScreenRect.w) - 1.0f;
-    vNormalized.y = -(((avVec.y - aScreenRect.y)*2.0f / aScreenRect.h) - 1.0f);
-    vNormalized.z = 2.0f*avVec.z - 1.0f;
+    vNormalized.x =  ((avVec.x - aScreenRect.x) * 2.0f / aScreenRect.w) - 1.0f;
+    vNormalized.y = -(((avVec.y - aScreenRect.y) * 2.0f / aScreenRect.h) - 1.0f);
+    vNormalized.z = 2.0f * avVec.z - 1.0f;
 
     //Log("Normalized: %s\n",vNormalized.ToString().c_str());
 
     // Object coordinates.
-    vNormalized = MatrixMulDivideW(mtxInvViewProj,vNormalized);
+    vNormalized = MatrixMulDivideW(mtxInvViewProj, vNormalized);
     //vNormalized = MatrixMul(mtxInvViewProj,vNormalized);
 
     //Log("Normalized After: %s\n",vNormalized.ToString().c_str());
 
-    return vNormalized *-1;
+    return vNormalized * -1;
 }
 
 //-----------------------------------------------------------------------
@@ -2197,7 +2197,7 @@ cVector3f cMath::Vector3IncreaseTo(const cVector3f& avX, const cVector3f& avAdd,
 
 void cMath::Vector3ClampToLength(cVector3f& avVec, float afMaxLength)
 {
-    if(afMaxLength <=0)
+    if(afMaxLength <= 0)
     {
         return;
     }
@@ -2225,13 +2225,13 @@ static float GetAngleFromPoints2DSimple(const cVector3f &avStartPos, const cVect
         vDelta.y = kEpsilonf;
     }
 
-    if(vDelta.y>=0 && vDelta.x<=0)
+    if(vDelta.y >= 0 && vDelta.x <= 0)
     {
-        return -atan(vDelta.y/vDelta.x);
+        return -atan(vDelta.y / vDelta.x);
     }
-    else if(vDelta.y<0 && vDelta.x<=0)
+    else if(vDelta.y < 0 && vDelta.x <= 0)
     {
-        return -atan(vDelta.y/vDelta.x);
+        return -atan(vDelta.y / vDelta.x);
     }
     else
     {
@@ -2244,9 +2244,9 @@ static float GetAngleFromPoints2DSimple(const cVector3f &avStartPos, const cVect
 
 cVector3f cMath::GetAngleFromPoints3D(const cVector3f &avStartPos, const cVector3f &avGoalPos)
 {
-    cVector3f vAngle = cVector3f(0,0,0);
+    cVector3f vAngle = cVector3f(0, 0, 0);
 
-    vAngle.y = -GetAngleFromPoints2D(cVector2f(avStartPos.x,avStartPos.z),
+    vAngle.y = -GetAngleFromPoints2D(cVector2f(avStartPos.x, avStartPos.z),
                                      cVector2f(avGoalPos.x, avGoalPos.z));
 
     //Log("Y Angle: %f\n",vAngle.y);
@@ -2262,11 +2262,11 @@ cVector3f cMath::GetAngleFromPoints3D(const cVector3f &avStartPos, const cVector
 
     //Log("vGoal: %s\n",vGoal.ToString().c_str());
 
-    vAngle.x = GetAngleFromPoints2DSimple(cVector3f(0,0,0),cVector2f(vGoal.z, vGoal.y));
+    vAngle.x = GetAngleFromPoints2DSimple(cVector3f(0, 0, 0), cVector2f(vGoal.z, vGoal.y));
 
     //Log("X Angle: %f\n",vAngle.x);
 
-    vAngle.x = Wrap(vAngle.x,0.0f, k2Pif);
+    vAngle.x = Wrap(vAngle.x, 0.0f, k2Pif);
 
     return vAngle;
 }
@@ -2309,13 +2309,13 @@ void cMath::Vector3OrthonormalizeBasis(const cVector3f& av1, const cVector3f& av
 cVector3f cMath::Vector3SphereSurfacePoint(const cVector2f& avSeed, float afRadius)
 {
     cVector3f vOut;
-    vOut.x = avSeed.x*2.0f - 1.0f;
+    vOut.x = avSeed.x * 2.0f - 1.0f;
     float fT = k2Pif * avSeed.y;
-    float fW = sqrt( 1 - vOut.x*vOut.x );
+    float fW = sqrt( 1 - vOut.x * vOut.x );
     vOut.y = fW * sin( fT );
     vOut.z = fW * cos( fT );
 
-    return vOut*afRadius;
+    return vOut * afRadius;
 }
 
 //-----------------------------------------------------------------------
@@ -2337,7 +2337,7 @@ float cMath::PlaneToPointDist(const cPlanef& aPlane, const cVector3f& avVec)
 void cMath::PlaneIntersectionLine(    const cPlanef& aPA, const cPlanef& aPB,
                                       cVector3f &avDir, cVector3f &avPoint)
 {
-    avDir = Vector3Cross(cVector3f(aPA.a,aPA.b,aPA.c), cVector3f(aPB.a,aPB.b,aPB.c));
+    avDir = Vector3Cross(cVector3f(aPA.a, aPA.b, aPA.c), cVector3f(aPB.a, aPB.b, aPB.c));
 
     //Set x to 0 so the calculation can be solved
     avPoint.x = 0;
@@ -2358,7 +2358,7 @@ bool cMath::PlaneIntersectionPoint(const cPlanef& aP1, const cPlanef& aP2, const
 {
     ///////////////////////////
     // Check if plane is parallel to another, if so return false
-    if(PlaneParallel(aP1,aP2) || PlaneParallel(aP1,aP3) || PlaneParallel(aP2,aP3))
+    if(PlaneParallel(aP1, aP2) || PlaneParallel(aP1, aP3) || PlaneParallel(aP2, aP3))
     {
         return false;
     }
@@ -2371,7 +2371,7 @@ bool cMath::PlaneIntersectionPoint(const cPlanef& aP1, const cPlanef& aP2, const
     cVector3f vCross31 = Vector3Cross(vN3, vN1);
     cVector3f vCross23 = Vector3Cross(vN2, vN3);
 
-    avPoint = (vCross23* -aP1.d + vCross31*-aP2.d + vCross12*-aP3.d) / Vector3Dot(vN1,vCross23);
+    avPoint = (vCross23 * -aP1.d + vCross31 * -aP2.d + vCross12 * -aP3.d) / Vector3Dot(vN1, vCross23);
     return true;
 }
 
@@ -2408,28 +2408,28 @@ eCollision cMath::CheckPlaneAABBCollision(    const cPlanef& aPlane, const cVect
 {
     cVector3f vCorners[8] =
     {
-        cVector3f(avMax.x,avMax.y,avMax.z),
-        cVector3f(avMax.x,avMax.y,avMin.z),
-        cVector3f(avMax.x,avMin.y,avMax.z),
-        cVector3f(avMax.x,avMin.y,avMin.z),
+        cVector3f(avMax.x, avMax.y, avMax.z),
+        cVector3f(avMax.x, avMax.y, avMin.z),
+        cVector3f(avMax.x, avMin.y, avMax.z),
+        cVector3f(avMax.x, avMin.y, avMin.z),
 
-        cVector3f(avMin.x,avMax.y,avMax.z),
-        cVector3f(avMin.x,avMax.y,avMin.z),
-        cVector3f(avMin.x,avMin.y,avMax.z),
-        cVector3f(avMin.x,avMin.y,avMin.z),
+        cVector3f(avMin.x, avMax.y, avMax.z),
+        cVector3f(avMin.x, avMax.y, avMin.z),
+        cVector3f(avMin.x, avMin.y, avMax.z),
+        cVector3f(avMin.x, avMin.y, avMin.z),
     };
 
     int lInCount = 8;
-    for(int j=0; j<8; j++)
+    for(int j = 0; j < 8; j++)
     {
-        float fDist = cMath::PlaneToPointDist(aPlane,vCorners[j]);
+        float fDist = cMath::PlaneToPointDist(aPlane, vCorners[j]);
         if(fDist < 0)
         {
             lInCount--;
         }
     }
 
-    if(lInCount==0)
+    if(lInCount == 0)
     {
         return eCollision_Outside;
     }
@@ -2475,7 +2475,7 @@ bool cMath::CheckPlaneLineIntersection(    const cPlanef& aPlane, const cVector3
     cVector3f vLineDelta = avLineEnd - avLineStart;
 
     float fNegStartToPlaneDist = -PlaneToPointDist(aPlane, avLineStart);
-    float fDeltaPlaneNormalMul = aPlane.a*vLineDelta.x + aPlane.b*vLineDelta.y + aPlane.c*vLineDelta.z;
+    float fDeltaPlaneNormalMul = aPlane.a * vLineDelta.x + aPlane.b * vLineDelta.y + aPlane.c * vLineDelta.z;
 
     //Line is on the plane or parallel
     if(fDeltaPlaneNormalMul == 0)
@@ -2507,17 +2507,17 @@ bool cMath::CheckPlaneLineIntersection(    const cPlanef& aPlane, const cVector3
 
 eCollision cMath::CheckPointsPlanesCollision(cVector3f *apVertices, int alNumOfVertices, cPlanef *apPlanes, int alNumOfPlanes)
 {
-    int lTotalIn =0;
+    int lTotalIn = 0;
     ////////////////////////////
     // Iterate planes
-    for(int i=0; i<alNumOfPlanes; i++)
+    for(int i = 0; i < alNumOfPlanes; i++)
     {
         cPlanef& plane = apPlanes[i];
-        int lInCount=alNumOfVertices;
+        int lInCount = alNumOfVertices;
 
         ////////////////////////////
         // Iterate points and check if inside
-        for(int j=0; j<alNumOfVertices; j++)
+        for(int j = 0; j < alNumOfVertices; j++)
         {
             float fDist = cMath::PlaneToPointDist(plane, apVertices[j]);
             if(fDist < 0)
@@ -2526,11 +2526,11 @@ eCollision cMath::CheckPointsPlanesCollision(cVector3f *apVertices, int alNumOfV
             }
         }
 
-        if(lInCount==0)
+        if(lInCount == 0)
         {
             return eCollision_Outside;
         }
-        if(lInCount==alNumOfVertices)
+        if(lInCount == alNumOfVertices)
         {
             lTotalIn++;
         }
@@ -2550,12 +2550,12 @@ eCollision cMath::CheckPointsAABBPlanesCollision(cVector3f *apVertices, int alNu
 {
     cPlanef vAABBPlanes[6] =
     {
-        cPlanef(-1,0,0, avMax.x),//X-max
-        cPlanef(1,0,0,  -avMin.x),//X-min
-        cPlanef(0,-1,0, avMax.y),//Y-max
-        cPlanef(0, 1,0, -avMin.y),//Y-min
-        cPlanef(0,0,-1, avMax.z),//Z-max
-        cPlanef(0,0,1,  -avMin.z),//Z-min
+        cPlanef(-1, 0, 0, avMax.x), //X-max
+        cPlanef(1, 0, 0,  -avMin.x), //X-min
+        cPlanef(0, -1, 0, avMax.y), //Y-max
+        cPlanef(0, 1, 0, -avMin.y), //Y-min
+        cPlanef(0, 0, -1, avMax.z), //Z-max
+        cPlanef(0, 0, 1,  -avMin.z), //Z-min
     };
 
     return cMath::CheckPointsPlanesCollision(apVertices, alNumOfVertices, vAABBPlanes, 6);
@@ -2574,30 +2574,30 @@ bool cMath::CheckSeparatingAxisIntersection(cVector3f *apVerticesA, int alNumOfV
 
     /////////////////////////////////
     // Go through A and B
-    for(int planevec=0; planevec<2; ++planevec)
+    for(int planevec = 0; planevec < 2; ++planevec)
     {
         cPlanef *pPlanes = vPlaneVec[planevec];
         int lNumOfPlanes = vPlaneNumVec[planevec];
 
-        if(pPlanes==NULL || lNumOfPlanes==0)
+        if(pPlanes == NULL || lNumOfPlanes == 0)
         {
             continue;
         }
 
         /////////////////////////////////
         // Iterate planes
-        for(int plane=0; plane<lNumOfPlanes; ++plane)
+        for(int plane = 0; plane < lNumOfPlanes; ++plane)
         {
             cVector3f vNormal = pPlanes[plane].GetNormal();
 
             /////////////////////////////////
             // Iterate points and project on normal
-            for(int vtxvec=0; vtxvec < 2; ++vtxvec)
+            for(int vtxvec = 0; vtxvec < 2; ++vtxvec)
             {
                 cVector3f *pVertices = vVtxVec[vtxvec];
                 int lNumOfVertices = vVtxNumVec[vtxvec];
 
-                if(pVertices==NULL || lNumOfVertices==0)
+                if(pVertices == NULL || lNumOfVertices == 0)
                 {
                     continue;
                 }
@@ -2605,7 +2605,7 @@ bool cMath::CheckSeparatingAxisIntersection(cVector3f *apVerticesA, int alNumOfV
                 /////////////////////////////////
                 // Project the points and get min / max
                 vMax[vtxvec] = vMin[vtxvec] =     Vector3Dot(pVertices[0], vNormal);
-                for(int vtx=1; vtx< lNumOfVertices; ++vtx)
+                for(int vtx = 1; vtx < lNumOfVertices; ++vtx)
                 {
                     float fDot = Vector3Dot(vVtxVec[vtxvec][vtx], vNormal);
                     if(vMin[vtxvec] > fDot)
@@ -2651,7 +2651,7 @@ bool cMath::CheckLineTriangleIntersection(    const cVector3f& avLineStart, cons
         cVector3f vNormal = Vector3Cross(vEdge1, vEdge2);
 
         float fDDotN = Vector3Dot(vNormal, vLineDelta);
-        if(fDDotN<0)
+        if(fDDotN < 0)
         {
             return false;
         }
@@ -2678,7 +2678,7 @@ bool cMath::CheckLineTriangleIntersection(    const cVector3f& avLineStart, cons
     }
 
     //Get V
-    cVector3f vQ = Vector3Cross(vTriToStart,vEdge1);
+    cVector3f vQ = Vector3Cross(vTriToStart, vEdge1);
     float fV = fF * Vector3Dot(vLineDelta, vQ);
     if (fV < 0.0 || fU + fV > 1.0)
     {
@@ -2687,7 +2687,7 @@ bool cMath::CheckLineTriangleIntersection(    const cVector3f& avLineStart, cons
 
     //Get T
     float fT = fF * Vector3Dot(vEdge2, vQ);
-    if(fT <0 || fT >1.0f)
+    if(fT < 0 || fT > 1.0f)
     {
         return false;
     }
@@ -2703,8 +2703,8 @@ bool cMath::CheckLineTriangleIntersection(    const cVector3f& avLineStart, cons
 
 bool cMath::CheckLineTriMeshIntersection(    const cVector3f& avLineStart, const cVector3f& avLineEnd,
         const cMatrixf& a_mtxInvMeshMtx,
-        const unsigned int* apIndexArray,int alIndexNum,
-        const float* apVertexArray, int alVtxStride,
+        const unsigned int *apIndexArray, int alIndexNum,
+        const float *apVertexArray, int alVtxStride,
         cVector3f *apIntersectionPos, float *apT, int *apTriIndex, bool abSkipBackfacing)
 {
     ////////////////////////////
@@ -2720,12 +2720,12 @@ bool cMath::CheckLineTriMeshIntersection(    const cVector3f& avLineStart, const
 
     ////////////////////////////
     // Iterate triangles
-    for(int idx=0; idx < alIndexNum; idx+=3)
+    for(int idx = 0; idx < alIndexNum; idx += 3)
     {
         // Get the vertex positions
-        const float *pVtx0 = &apVertexArray[apIndexArray[idx]*alVtxStride];
-        const float *pVtx1 = &apVertexArray[apIndexArray[idx+1]*alVtxStride];
-        const float *pVtx2 = &apVertexArray[apIndexArray[idx+2]*alVtxStride];
+        const float *pVtx0 = &apVertexArray[apIndexArray[idx] * alVtxStride];
+        const float *pVtx1 = &apVertexArray[apIndexArray[idx + 1] * alVtxStride];
+        const float *pVtx2 = &apVertexArray[apIndexArray[idx + 2] * alVtxStride];
 
         //Get triangles positions
         cVector3f vP0(pVtx0[0], pVtx0[1], pVtx0[2]);
@@ -2745,7 +2745,7 @@ bool cMath::CheckLineTriMeshIntersection(    const cVector3f& avLineStart, const
 
     ////////////////////////////
     // Check if the there was a proper intersection
-    if(fMinT < 0 || fMinT >1.0f)
+    if(fMinT < 0 || fMinT > 1.0f)
     {
         return false;
     }
@@ -2759,7 +2759,7 @@ bool cMath::CheckLineTriMeshIntersection(    const cVector3f& avLineStart, const
     // Get intersection position
     if(apIntersectionPos)
     {
-        *apIntersectionPos = avLineStart + (avLineEnd - avLineStart)*fMinT;
+        *apIntersectionPos = avLineStart + (avLineEnd - avLineStart) * fMinT;
     }
     if(apTriIndex)
     {
@@ -2790,14 +2790,14 @@ bool cMath::CheckLineTriVertexBufferIntersection( const cVector3f& avLineStart, 
 
 //-----------------------------------------------------------------------
 
-float cMath::QuaternionDot(const cQuaternion& aqA,const cQuaternion& aqB)
+float cMath::QuaternionDot(const cQuaternion& aqA, const cQuaternion& aqB)
 {
-    return aqA.w*aqB.w + aqA.v.x*aqB.v.x + aqA.v.y*aqB.v.y + aqA.v.z*aqB.v.z;
+    return aqA.w * aqB.w + aqA.v.x * aqB.v.x + aqA.v.y * aqB.v.y + aqA.v.z * aqB.v.z;
 }
 
 //-----------------------------------------------------------------------
 
-cQuaternion cMath::QuaternionMul(const cQuaternion& aqA,const cQuaternion& aqB)
+cQuaternion cMath::QuaternionMul(const cQuaternion& aqA, const cQuaternion& aqB)
 {
     cQuaternion qOut;
 
@@ -2811,10 +2811,10 @@ cQuaternion cMath::QuaternionMul(const cQuaternion& aqA,const cQuaternion& aqB)
 
 //-----------------------------------------------------------------------
 
-cQuaternion cMath::QuaternionSlerp(float afT,const cQuaternion& aqA, const cQuaternion& aqB,
+cQuaternion cMath::QuaternionSlerp(float afT, const cQuaternion& aqA, const cQuaternion& aqB,
                                    bool abShortestPath)
 {
-    float fCos = QuaternionDot(aqA,aqB);
+    float fCos = QuaternionDot(aqA, aqB);
 
     //If the rotations are the same, return linear interpolation instead of spherical
     if ( std::abs(fCos - 1) <= kEpsilonf)
@@ -2827,21 +2827,21 @@ cQuaternion cMath::QuaternionSlerp(float afT,const cQuaternion& aqA, const cQuat
     float fAngle = acos(fCos);
 
     float fSin = sin(fAngle);
-    float fInvSin = 1.0f/fSin;
-    float fCoeff0 = sin((1.0f-afT)*fAngle)*fInvSin;
-    float fCoeff1 = sin(afT*fAngle)*fInvSin;
+    float fInvSin = 1.0f / fSin;
+    float fCoeff0 = sin((1.0f-afT) * fAngle) * fInvSin;
+    float fCoeff1 = sin(afT * fAngle) * fInvSin;
     // Do we need to invert rotation?
     if (fCos < 0.0f && abShortestPath)
     {
         fCoeff0 = -fCoeff0;
         // taking the complement requires renormalisation
-        cQuaternion qT(aqA * fCoeff0 + aqB*fCoeff1);
+        cQuaternion qT(aqA * fCoeff0 + aqB * fCoeff1);
         qT.Normalize();
         return qT;
     }
     else
     {
-        return aqA*fCoeff0 + aqB*fCoeff1;
+        return aqA * fCoeff0 + aqB * fCoeff1;
     }
 }
 
@@ -2853,7 +2853,7 @@ cQuaternion cMath::QuaternionSlerp(float afT,const cQuaternion& aqA, const cQuat
 
 //-----------------------------------------------------------------------
 
-cMatrixf cMath::MatrixSlerp(float afT,const cMatrixf& a_mtxA, const cMatrixf& a_mtxB,
+cMatrixf cMath::MatrixSlerp(float afT, const cMatrixf& a_mtxA, const cMatrixf& a_mtxB,
                             bool abShortestPath)
 {
     if(afT <= 0)
@@ -2865,14 +2865,14 @@ cMatrixf cMath::MatrixSlerp(float afT,const cMatrixf& a_mtxA, const cMatrixf& a_
         return a_mtxB;
     }
 
-    cVector3f vPos =  a_mtxA.GetTranslation() * (1- afT) + a_mtxB.GetTranslation() * afT;
+    cVector3f vPos =  a_mtxA.GetTranslation() * (1 - afT) + a_mtxB.GetTranslation() * afT;
 
     cQuaternion qA;
     qA.FromRotationMatrix(a_mtxA);
     cQuaternion qB;
     qB.FromRotationMatrix(a_mtxB);
 
-    cQuaternion qFinal = cMath::QuaternionSlerp(afT,qA,qB,abShortestPath);
+    cQuaternion qFinal = cMath::QuaternionSlerp(afT, qA, qB, abShortestPath);
 
     cMatrixf mtxFinal = cMath::MatrixQuaternion(qFinal);
     mtxFinal.SetTranslation(vPos);
@@ -2882,7 +2882,7 @@ cMatrixf cMath::MatrixSlerp(float afT,const cMatrixf& a_mtxA, const cMatrixf& a_
 
 //-----------------------------------------------------------------------
 
-cMatrixf cMath::MatrixMul(const cMatrixf &a_mtxA,const cMatrixf &a_mtxB)
+cMatrixf cMath::MatrixMul(const cMatrixf &a_mtxA, const cMatrixf &a_mtxB)
 {
     cMatrixf mtxC;
 
@@ -2911,7 +2911,7 @@ cMatrixf cMath::MatrixMul(const cMatrixf &a_mtxA,const cMatrixf &a_mtxB)
 
 //-----------------------------------------------------------------------
 
-cVector3f cMath::MatrixMul(const cMatrixf &a_mtxA,const cVector3f &avB)
+cVector3f cMath::MatrixMul(const cMatrixf &a_mtxA, const cVector3f &avB)
 {
     cVector3f vC;
 
@@ -2924,7 +2924,7 @@ cVector3f cMath::MatrixMul(const cMatrixf &a_mtxA,const cVector3f &avB)
 
 //-----------------------------------------------------------------------
 
-cVector3f cMath::MatrixMul3x3(const cMatrixf &a_mtxA,const cVector3f &avB)
+cVector3f cMath::MatrixMul3x3(const cMatrixf &a_mtxA, const cVector3f &avB)
 {
     cVector3f vC;
 
@@ -2937,7 +2937,7 @@ cVector3f cMath::MatrixMul3x3(const cMatrixf &a_mtxA,const cVector3f &avB)
 
 //-----------------------------------------------------------------------
 
-cVector3f cMath::MatrixMulDivideW(const cMatrixf &a_mtxA,const cVector3f &avB)
+cVector3f cMath::MatrixMulDivideW(const cMatrixf &a_mtxA, const cVector3f &avB)
 {
     cVector3f vC;
 
@@ -2956,22 +2956,22 @@ cMatrixf cMath::MatrixMulScalar(const cMatrixf &a_mtxA, float afB)
 {
     cMatrixf mtxC;
 
-    mtxC.m[0][0] = a_mtxA.m[0][0]*afB;
-    mtxC.m[0][1] = a_mtxA.m[0][1]*afB;
-    mtxC.m[0][2] = a_mtxA.m[0][2]*afB;
-    mtxC.m[0][3] = a_mtxA.m[0][3]*afB;
-    mtxC.m[1][0] = a_mtxA.m[1][0]*afB;
-    mtxC.m[1][1] = a_mtxA.m[1][1]*afB;
-    mtxC.m[1][2] = a_mtxA.m[1][2]*afB;
-    mtxC.m[1][3] = a_mtxA.m[1][3]*afB;
-    mtxC.m[2][0] = a_mtxA.m[2][0]*afB;
-    mtxC.m[2][1] = a_mtxA.m[2][1]*afB;
-    mtxC.m[2][2] = a_mtxA.m[2][2]*afB;
-    mtxC.m[2][3] = a_mtxA.m[2][3]*afB;
-    mtxC.m[3][0] = a_mtxA.m[3][0]*afB;
-    mtxC.m[3][1] = a_mtxA.m[3][1]*afB;
-    mtxC.m[3][2] = a_mtxA.m[3][2]*afB;
-    mtxC.m[3][3] = a_mtxA.m[3][3]*afB;
+    mtxC.m[0][0] = a_mtxA.m[0][0] * afB;
+    mtxC.m[0][1] = a_mtxA.m[0][1] * afB;
+    mtxC.m[0][2] = a_mtxA.m[0][2] * afB;
+    mtxC.m[0][3] = a_mtxA.m[0][3] * afB;
+    mtxC.m[1][0] = a_mtxA.m[1][0] * afB;
+    mtxC.m[1][1] = a_mtxA.m[1][1] * afB;
+    mtxC.m[1][2] = a_mtxA.m[1][2] * afB;
+    mtxC.m[1][3] = a_mtxA.m[1][3] * afB;
+    mtxC.m[2][0] = a_mtxA.m[2][0] * afB;
+    mtxC.m[2][1] = a_mtxA.m[2][1] * afB;
+    mtxC.m[2][2] = a_mtxA.m[2][2] * afB;
+    mtxC.m[2][3] = a_mtxA.m[2][3] * afB;
+    mtxC.m[3][0] = a_mtxA.m[3][0] * afB;
+    mtxC.m[3][1] = a_mtxA.m[3][1] * afB;
+    mtxC.m[3][2] = a_mtxA.m[3][2] * afB;
+    mtxC.m[3][3] = a_mtxA.m[3][3] * afB;
 
     return mtxC;
 }
@@ -3023,30 +3023,30 @@ cMatrixf cMath::MatrixRotate(cVector3f avRot, eEulerRotationOrder aOrder)
 
 cMatrixf cMath::MatrixRotateX(float afAngle)
 {
-    return cMatrixf(1,0,0,0,
-                    0, cos(afAngle),-sin(afAngle),0,
-                    0,sin(afAngle),cos(afAngle),0,
-                    0,0,0,1);
+    return cMatrixf(1, 0, 0, 0,
+                    0, cos(afAngle), -sin(afAngle), 0,
+                    0, sin(afAngle), cos(afAngle), 0,
+                    0, 0, 0, 1);
 }
 
 //-----------------------------------------------------------------------
 
 cMatrixf cMath::MatrixRotateY(float afAngle)
 {
-    return cMatrixf(cos(afAngle),0,sin(afAngle),0,
-                    0,1,0,0,
-                    -sin(afAngle),0, cos(afAngle),0,
-                    0,0,0,1);
+    return cMatrixf(cos(afAngle), 0, sin(afAngle), 0,
+                    0, 1, 0, 0,
+                    -sin(afAngle), 0, cos(afAngle), 0,
+                    0, 0, 0, 1);
 }
 
 //-----------------------------------------------------------------------
 
 cMatrixf cMath::MatrixRotateZ(float afAngle)
 {
-    return cMatrixf(cos(afAngle),-sin(afAngle),0,0,
-                    sin(afAngle), cos(afAngle),0,0,
-                    0,0,1,0,
-                    0,0,0,1);
+    return cMatrixf(cos(afAngle), -sin(afAngle), 0, 0,
+                    sin(afAngle), cos(afAngle), 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1);
 }
 
 //-----------------------------------------------------------------------
@@ -3079,20 +3079,20 @@ cQuaternion cMath::MatrixToQuaternion(const cMatrixf &a_mtxA)
 
 cMatrixf cMath::MatrixScale(cVector3f avScale)
 {
-    return cMatrixf(avScale.x, 0,0,0,
-                    0, avScale.y,0,0,
-                    0, 0,avScale.z,0,
-                    0, 0,0,1);
+    return cMatrixf(avScale.x, 0, 0, 0,
+                    0, avScale.y, 0, 0,
+                    0, 0, avScale.z, 0,
+                    0, 0, 0, 1);
 }
 
 //-----------------------------------------------------------------------
 
 cMatrixf cMath::MatrixTranslate(cVector3f avTrans)
 {
-    return cMatrixf(1, 0,0,avTrans.x,
-                    0, 1,0,avTrans.y,
-                    0, 0,1,avTrans.z,
-                    0, 0,0,1);
+    return cMatrixf(1, 0, 0, avTrans.x,
+                    0, 1, 0, avTrans.y,
+                    0, 0, 1, avTrans.z,
+                    0, 0, 0, 1);
 
 }
 //-----------------------------------------------------------------------
@@ -3152,9 +3152,9 @@ cMatrixf cMath::MatrixInverse(const cMatrixf &a_mtxA)
 
 cMatrixf cMath::MatrixPlaneMirror(const cPlanef &aPlane)
 {
-    return    cMatrixf(    1-2*aPlane.a*aPlane.a,    -2*aPlane.b*aPlane.a,    -2*aPlane.c*aPlane.a,    -2*aPlane.a*aPlane.d,
-                           -2*aPlane.a*aPlane.b,    1-2*aPlane.b*aPlane.b,    -2*aPlane.c*aPlane.b,    -2*aPlane.b*aPlane.d,
-                           -2*aPlane.a*aPlane.c,    -2*aPlane.b*aPlane.c,    1-2*aPlane.c*aPlane.c,    -2*aPlane.c*aPlane.d,
+    return    cMatrixf(    1 - 2 * aPlane.a * aPlane.a,    -2 * aPlane.b * aPlane.a,    -2 * aPlane.c * aPlane.a,    -2 * aPlane.a * aPlane.d,
+                           -2 * aPlane.a * aPlane.b,    1 - 2 * aPlane.b * aPlane.b,    -2 * aPlane.c * aPlane.b,    -2 * aPlane.b * aPlane.d,
+                           -2 * aPlane.a * aPlane.c,    -2 * aPlane.b * aPlane.c,    1 - 2 * aPlane.c * aPlane.c,    -2 * aPlane.c * aPlane.d,
                            0,                        0,                        0,                        1);
 }
 
@@ -3180,9 +3180,9 @@ cVector3f cMath::MatrixToEulerAngles(const cMatrixf &a_mtxA, eEulerRotationOrder
     }
     else*/
     {
-        vAngles.x = atan2(a_mtxA.m[2][1],a_mtxA.m[2][2]);
+        vAngles.x = atan2(a_mtxA.m[2][1], a_mtxA.m[2][2]);
         vAngles.y = -asin(Clamp(a_mtxA.m[2][0], -1, 1) );
-        vAngles.z = atan2(a_mtxA.m[1][0],a_mtxA.m[0][0]);
+        vAngles.z = atan2(a_mtxA.m[1][0], a_mtxA.m[0][0]);
     }
     return vAngles;
 }
@@ -3210,7 +3210,7 @@ cVector3f cMath::MatrixEulerAngleDistance(const cMatrixf &a_mtxA, const cMatrixf
 
     ////////////////
     //X Rotation (align fwd vector with z-axis)
-    if(fabs(vFwd.y)<0.0001f && fabs(vFwd.z)<0.0001f)
+    if(fabs(vFwd.y) < 0.0001f && fabs(vFwd.z) < 0.0001f)
     {
         vOutput.x = 0;
     }
@@ -3220,8 +3220,8 @@ cVector3f cMath::MatrixEulerAngleDistance(const cMatrixf &a_mtxA, const cMatrixf
         cVector2f vYZ(vFwd.y, vFwd.z);
         vYZ.Normalize();
 
-        vOutput.x = acos(Clamp(vYZ.y,-1,1));
-        if(vYZ.x<0)
+        vOutput.x = acos(Clamp(vYZ.y, -1, 1));
+        if(vYZ.x < 0)
         {
             vOutput.x = -vOutput.x;
         }
@@ -3236,7 +3236,7 @@ cVector3f cMath::MatrixEulerAngleDistance(const cMatrixf &a_mtxA, const cMatrixf
 
     ////////////////
     //Y Rotation (align fwd vector with z-axis)
-    if(fabs(vFwd.x)<0.0001f && fabs(vFwd.z)<0.0001f)
+    if(fabs(vFwd.x) < 0.0001f && fabs(vFwd.z) < 0.0001f)
     {
         vOutput.y = 0;
     }
@@ -3246,8 +3246,8 @@ cVector3f cMath::MatrixEulerAngleDistance(const cMatrixf &a_mtxA, const cMatrixf
         cVector2f vXZ(vFwd.x, vFwd.z);
         vXZ.Normalize();
 
-        vOutput.y = acos(Clamp(vXZ.y,-1,1));
-        if(vXZ.x>0)
+        vOutput.y = acos(Clamp(vXZ.y, -1, 1));
+        if(vXZ.x > 0)
         {
             vOutput.y = -vOutput.y;
         }
@@ -3263,7 +3263,7 @@ cVector3f cMath::MatrixEulerAngleDistance(const cMatrixf &a_mtxA, const cMatrixf
 
     ////////////////
     //Z Rotation
-    if(fabs(vUp.y)<0.0001f && fabs(vUp.x)<0.0001f)
+    if(fabs(vUp.y) < 0.0001f && fabs(vUp.x) < 0.0001f)
     {
         vOutput.z = 0;
     }
@@ -3273,8 +3273,8 @@ cVector3f cMath::MatrixEulerAngleDistance(const cMatrixf &a_mtxA, const cMatrixf
         cVector2f vXY(vUp.x, vUp.y);
         vXY.Normalize();
 
-        vOutput.z = acos(Clamp(vXY.y,-1,1));
-        if(vXY.x<0)
+        vOutput.z = acos(Clamp(vXY.y, -1, 1));
+        if(vXY.x < 0)
         {
             vOutput.z = -vOutput.z;
         }
@@ -3323,32 +3323,32 @@ cMatrixf cMath::MatrixPerspectiveProjection(float afNearClipPlane, float afFarCl
 {
     float fFar = afFarClipPlane;
     float fNear = afNearClipPlane;
-    float fTop = tan(afFOV*0.5f) * fNear;
+    float fTop = tan(afFOV * 0.5f) * fNear;
     float fBottom = -fTop;
     float fRight = afAspect * fTop;
     float fLeft = afAspect * fBottom;
 
-    float fA = (2.0f*fNear) / (fRight - fLeft);
-    float fB = (2.0f*fNear) / (fTop - fBottom);
+    float fA = (2.0f * fNear) / (fRight - fLeft);
+    float fB = (2.0f * fNear) / (fTop - fBottom);
     float fD = -1.0f;
 
-    float fC,fZ;
+    float fC, fZ;
     if(abInfFarPlane)
     {
-        fC= -2.0f * fNear;
-        fZ= -1.0f;
+        fC = -2.0f * fNear;
+        fZ = -1.0f;
     }
     else
     {
-        fC = -(2.0f*fFar*fNear) / (fFar - fNear);
-        fZ = -(fFar + fNear)/(fFar - fNear);
+        fC = -(2.0f * fFar * fNear) / (fFar - fNear);
+        fZ = -(fFar + fNear) / (fFar - fNear);
     }
 
     return cMatrixf(
-               fA,0, 0, 0,
-               0,fB, 0, 0,
-               0, 0,fZ,fC,
-               0, 0,fD,0);
+               fA, 0, 0, 0,
+               0, fB, 0, 0,
+               0, 0, fZ, fC,
+               0, 0, fD, 0);
 }
 
 //-----------------------------------------------------------------------
@@ -3362,25 +3362,25 @@ cMatrixf cMath::MatrixOrthographicProjection(float afNearClipPlane, float afFarC
     float fB = 2.0f / avViewSize.y;
     float fC = -2.0f / (fFar - fNear);
 
-    float fZ = -(fFar + fNear)/(fFar - fNear);
+    float fZ = -(fFar + fNear) / (fFar - fNear);
 
     return cMatrixf(
-               fA,0, 0, 0,
-               0,fB, 0, 0,
-               0, 0,fC, fZ,
+               fA, 0, 0, 0,
+               0, fB, 0, 0,
+               0, 0, fC, fZ,
                0, 0, 0, 1);
 }
 
 //-----------------------------------------------------------------------
 
-const char* cMath::MatrixToChar(const cMatrixf &a_mtxA)
+const char *cMath::MatrixToChar(const cMatrixf &a_mtxA)
 {
     snprintf(mpTempChar, sizeof(mpTempChar),
              "[%.3f, %.3f, %.3f, %.3f] [%.3f, %.3f, %.3f, %.3f] [%.3f, %.3f, %.3f, %.3f] [%.3f, %.3f, %.3f, %.3f]",
-             a_mtxA.m[0][0],a_mtxA.m[0][1],a_mtxA.m[0][2],a_mtxA.m[0][3],
-             a_mtxA.m[1][0],a_mtxA.m[1][1],a_mtxA.m[1][2],a_mtxA.m[1][3],
-             a_mtxA.m[2][0],a_mtxA.m[2][1],a_mtxA.m[2][2],a_mtxA.m[2][3],
-             a_mtxA.m[3][0],a_mtxA.m[3][1],a_mtxA.m[3][2],a_mtxA.m[3][3]);
+             a_mtxA.m[0][0], a_mtxA.m[0][1], a_mtxA.m[0][2], a_mtxA.m[0][3],
+             a_mtxA.m[1][0], a_mtxA.m[1][1], a_mtxA.m[1][2], a_mtxA.m[1][3],
+             a_mtxA.m[2][0], a_mtxA.m[2][1], a_mtxA.m[2][2], a_mtxA.m[2][3],
+             a_mtxA.m[3][0], a_mtxA.m[3][1], a_mtxA.m[3][2], a_mtxA.m[3][3]);
 
     return mpTempChar;
 }
@@ -3393,36 +3393,36 @@ const char* cMath::MatrixToChar(const cMatrixf &a_mtxA)
 //-----------------------------------------------------------------------
 
 
-static inline cVector3f GetVector3(const float* apVertexArray, int alIdx,int alStride)
+static inline cVector3f GetVector3(const float* apVertexArray, int alIdx, int alStride)
 {
-    const float* apVec = &apVertexArray[alIdx *alStride];
+    const float *apVec = &apVertexArray[alIdx * alStride];
 
-    return cVector3f(apVec[0],apVec[1],apVec[2]);
+    return cVector3f(apVec[0], apVec[1], apVec[2]);
 }
 
-static inline void AddVector3(float* apArray, int alIdx,const cVector3f &avVec,int alStride)
+static inline void AddVector3(float* apArray, int alIdx, const cVector3f &avVec, int alStride)
 {
-    float* apVec = &apArray[alIdx * alStride];
+    float *apVec = &apArray[alIdx * alStride];
     apVec[0] += avVec.x;
     apVec[1] += avVec.y;
     apVec[2] += avVec.z;
 }
 
-static inline void SetVector4(const cVector3f &avVec, float afW,float* apArray, int alIdx)
+static inline void SetVector4(const cVector3f &avVec, float afW, float* apArray, int alIdx)
 {
-    float* apVec = &apArray[alIdx * 4];
+    float *apVec = &apArray[alIdx * 4];
     apVec[0] = avVec.x;
     apVec[1] = avVec.y;
     apVec[2] = avVec.z;
     apVec[3] = afW;
 }
 
-static inline bool Vector3Equal(const float* apArrayA, int alIdxA,const float* apArrayB, int alIdxB,
+static inline bool Vector3Equal(const float* apArrayA, int alIdxA, const float* apArrayB, int alIdxB,
                                 int alStride)
 {
-    if(apArrayA[alIdxA*alStride + 0] == apArrayB[alIdxB*alStride + 0] &&
-            apArrayA[alIdxA*alStride + 1] == apArrayB[alIdxB*alStride + 1] &&
-            apArrayA[alIdxA*alStride + 2] == apArrayB[alIdxB*alStride + 2])
+    if(apArrayA[alIdxA * alStride + 0] == apArrayB[alIdxB * alStride + 0] &&
+            apArrayA[alIdxA * alStride + 1] == apArrayB[alIdxB * alStride + 1] &&
+            apArrayA[alIdxA * alStride + 2] == apArrayB[alIdxB * alStride + 2])
     {
         return true;
     }
@@ -3431,8 +3431,8 @@ static inline bool Vector3Equal(const float* apArrayA, int alIdxA,const float* a
 }
 
 bool cMath::CreateTriTangentVectors(float* apDestArray,
-                                    const unsigned int* apIndexArray,int alIndexNum,
-                                    const float* apVertexArray, int alVtxStride,
+                                    const unsigned int *apIndexArray, int alIndexNum,
+                                    const float *apVertexArray, int alVtxStride,
                                     const float *apTexArray,
                                     const float *apNormalArray,
                                     int alVertexNum)
@@ -3445,11 +3445,11 @@ bool cMath::CreateTriTangentVectors(float* apDestArray,
     //Log("Num of indices: %d\n",alIndexNum);
     //Log("Num of vertrices: %d\n",alVertexNum);
 
-    vTempTangents1.resize(alVertexNum,cVector3f(0,0,0));
-    vTempTangents2.resize(alVertexNum,cVector3f(0,0,0));
+    vTempTangents1.resize(alVertexNum, cVector3f(0, 0, 0));
+    vTempTangents2.resize(alVertexNum, cVector3f(0, 0, 0));
 
     //Iterate through the triangles
-    for(int triIdx=0; triIdx<alIndexNum; triIdx+=3)
+    for(int triIdx = 0; triIdx < alIndexNum; triIdx += 3)
     {
         //Log("Triangle %d: ",triIdx/3);
 
@@ -3461,14 +3461,14 @@ bool cMath::CreateTriTangentVectors(float* apDestArray,
         //Log("1: '%d' 2: '%d'  3: '%d' ", idx1, idx2, idx3);
 
         //Get the 3 points making up the triangle
-        cVector3f vPos1 = GetVector3(apVertexArray,idx1,alVtxStride);
-        cVector3f vPos2 = GetVector3(apVertexArray,idx2,alVtxStride);
-        cVector3f vPos3 = GetVector3(apVertexArray,idx3,alVtxStride);
+        cVector3f vPos1 = GetVector3(apVertexArray, idx1, alVtxStride);
+        cVector3f vPos2 = GetVector3(apVertexArray, idx2, alVtxStride);
+        cVector3f vPos3 = GetVector3(apVertexArray, idx3, alVtxStride);
 
         //Get the 3 texture coords in the triangle.
-        cVector3f vTex1 = GetVector3(apTexArray,idx1,3);
-        cVector3f vTex2 = GetVector3(apTexArray,idx2,3);
-        cVector3f vTex3 = GetVector3(apTexArray,idx3,3);
+        cVector3f vTex1 = GetVector3(apTexArray, idx1, 3);
+        cVector3f vTex2 = GetVector3(apTexArray, idx2, 3);
+        cVector3f vTex3 = GetVector3(apTexArray, idx3, 3);
 
         //Get the vectors between the positions.
         cVector3f vPos1To2 = vPos2 - vPos1;
@@ -3506,16 +3506,16 @@ bool cMath::CreateTriTangentVectors(float* apDestArray,
     //Log("Looking for duplicates: \n");
     //Go through the vertrices and find normal and vertex copies. Smooth the tangents on these
     float fMaxCosAngle = -1.0f;
-    for(int i=0; i < alVertexNum; i++)
+    for(int i = 0; i < alVertexNum; i++)
     {
-        for(int j=i+1; j< alVertexNum; j++)
+        for(int j = i + 1; j < alVertexNum; j++)
         {
             //Log("(%.1f, %.1f, %.1f)", apVertexArray[i+0],apVertexArray[i+1],apVertexArray[i+2]);
             //Log(" vs ");
             //Log("(%.1f, %.1f, %.1f)\n", apVertexArray[j+0],apVertexArray[j+1],apVertexArray[j+2]);
 
-            if(Vector3Equal(apVertexArray, i, apVertexArray, j,alVtxStride) &&
-                    Vector3Equal(apNormalArray, i, apNormalArray, j,3))
+            if(Vector3Equal(apVertexArray, i, apVertexArray, j, alVtxStride) &&
+                    Vector3Equal(apNormalArray, i, apNormalArray, j, 3))
             {
                 //Log("Found at %d and %d!\n", i, j);
 
@@ -3526,13 +3526,13 @@ bool cMath::CreateTriTangentVectors(float* apDestArray,
                 cVector3f vBT2 = vTempTangents2[j];
 
 
-                if(Vector3Dot(vAT1, vBT1)>= fMaxCosAngle)
+                if(Vector3Dot(vAT1, vBT1) >= fMaxCosAngle)
                 {
                     vTempTangents1[j] += vAT1;
                     vTempTangents1[i] += vBT1;
                 }
 
-                if(Vector3Dot(vAT2, vBT2)>= fMaxCosAngle)
+                if(Vector3Dot(vAT2, vBT2) >= fMaxCosAngle)
                 {
                     vTempTangents2[j] += vAT2;
                     vTempTangents2[i] += vBT2;
@@ -3542,10 +3542,10 @@ bool cMath::CreateTriTangentVectors(float* apDestArray,
     }
 
     //Iterate through the dest array and set tangent values
-    for(int vtxIdx=0; vtxIdx < alVertexNum; vtxIdx++)
+    for(int vtxIdx = 0; vtxIdx < alVertexNum; vtxIdx++)
     {
 
-        cVector3f vNormal = GetVector3(apNormalArray,vtxIdx,3);
+        cVector3f vNormal = GetVector3(apNormalArray, vtxIdx, 3);
         cVector3f &vTempTan1 = vTempTangents1[vtxIdx];
         cVector3f &vTempTan2 = vTempTangents2[vtxIdx];
 
@@ -3560,7 +3560,7 @@ bool cMath::CreateTriTangentVectors(float* apDestArray,
         //Calculate if left or right handed.
         float fW = (cMath::Vector3Dot(cMath::Vector3Cross(vNormal, vTempTan1), vTempTan2) < 0.0f) ? -1.0f : 1.0f;
 
-        SetVector4(vTan, fW, apDestArray,vtxIdx);
+        SetVector4(vTan, fW, apDestArray, vtxIdx);
     }
 
     return true;
@@ -3569,8 +3569,8 @@ bool cMath::CreateTriTangentVectors(float* apDestArray,
 //-----------------------------------------------------------------------
 
 bool cMath::CreateTriangleData(tTriangleDataVec &avTriangles,
-                               const unsigned int* apIndexArray,int alIndexNum,
-                               const float* apVertexArray, int alVtxStride, int alVertexNum)
+                               const unsigned int *apIndexArray, int alIndexNum,
+                               const float *apVertexArray, int alVtxStride, int alVertexNum)
 {
     int lNumOfTri = alIndexNum / 3;
     if((int)avTriangles.size() < lNumOfTri)
@@ -3579,13 +3579,13 @@ bool cMath::CreateTriangleData(tTriangleDataVec &avTriangles,
     }
 
     //Log("Creating triangle data:\n");
-    for(int tri=0, idx=0; tri < lNumOfTri; tri++,idx+=3)
+    for(int tri = 0, idx = 0; tri < lNumOfTri; tri++, idx += 3)
     {
         //Log("checking: tri %d idx %d\n",tri, idx);
         //Calculate normal
-        const float *pVtx0 = &apVertexArray[apIndexArray[idx]*alVtxStride];
-        const float *pVtx1 = &apVertexArray[apIndexArray[idx+1]*alVtxStride];
-        const float *pVtx2 = &apVertexArray[apIndexArray[idx+2]*alVtxStride];
+        const float *pVtx0 = &apVertexArray[apIndexArray[idx] * alVtxStride];
+        const float *pVtx1 = &apVertexArray[apIndexArray[idx + 1] * alVtxStride];
+        const float *pVtx2 = &apVertexArray[apIndexArray[idx + 2] * alVtxStride];
 
         cVector3f vEdge1( pVtx1[0] - pVtx0[0], pVtx1[1] - pVtx0[1], pVtx1[2] - pVtx0[2]);
         cVector3f vEdge2( pVtx2[0] - pVtx0[0], pVtx2[1] - pVtx0[1], pVtx2[2] - pVtx0[2]);
@@ -3602,14 +3602,14 @@ bool cMath::CreateTriangleData(tTriangleDataVec &avTriangles,
 static bool EdgePointEqual(const float* apVertexArray,
                            const cTriEdge &edge1,  const cTriEdge &edge2, int alStride)
 {
-    if(Vector3Equal(apVertexArray, edge1.point1,apVertexArray, edge2.point1,alStride) &&
-            Vector3Equal(apVertexArray, edge1.point2,apVertexArray, edge2.point2,alStride))
+    if(Vector3Equal(apVertexArray, edge1.point1, apVertexArray, edge2.point1, alStride) &&
+            Vector3Equal(apVertexArray, edge1.point2, apVertexArray, edge2.point2, alStride))
     {
         return true;
     }
 
-    if(Vector3Equal(apVertexArray, edge1.point1,apVertexArray, edge2.point2,alStride) &&
-            Vector3Equal(apVertexArray, edge1.point2,apVertexArray, edge2.point1,alStride))
+    if(Vector3Equal(apVertexArray, edge1.point1, apVertexArray, edge2.point2, alStride) &&
+            Vector3Equal(apVertexArray, edge1.point2, apVertexArray, edge2.point1, alStride))
     {
         return true;
     }
@@ -3636,7 +3636,7 @@ static bool EdgeTriEqual(const cTriEdge &edge1,  const cTriEdge &edge2)
 
 static bool EdgeEqual(const float* apVertexArray, const cTriEdge &edge1,  const cTriEdge &edge2, int alStride)
 {
-    if(EdgePointEqual(apVertexArray,edge1, edge2,alStride) && EdgeTriEqual(edge1, edge2))
+    if(EdgePointEqual(apVertexArray, edge1, edge2, alStride) && EdgeTriEqual(edge1, edge2))
     {
         return true;
     }
@@ -3663,7 +3663,7 @@ public:
     tUIntList mlstIndices;
 };
 
-typedef std::map<cVector3f,cVertexIndices> tVtxIdxMap;
+typedef std::map<cVector3f, cVertexIndices> tVtxIdxMap;
 typedef tVtxIdxMap::iterator tVtxIdxMapIt;
 
 //////////////////////////////////////////////////////
@@ -3674,10 +3674,10 @@ public:
     //The point1 must be > than point2 for this to work!
     bool operator()(const cTriEdge &Edge1, const cTriEdge &Edge2)const
     {
-        cVector3f vPoint1_1 = GetVector3(gpVertexArray,Edge1.point1,glVertexStride);
-        cVector3f vPoint1_2 = GetVector3(gpVertexArray,Edge1.point2,glVertexStride);
-        cVector3f vPoint2_1 = GetVector3(gpVertexArray,Edge2.point1,glVertexStride);
-        cVector3f vPoint2_2 = GetVector3(gpVertexArray,Edge2.point2,glVertexStride);
+        cVector3f vPoint1_1 = GetVector3(gpVertexArray, Edge1.point1, glVertexStride);
+        cVector3f vPoint1_2 = GetVector3(gpVertexArray, Edge1.point2, glVertexStride);
+        cVector3f vPoint2_1 = GetVector3(gpVertexArray, Edge2.point1, glVertexStride);
+        cVector3f vPoint2_2 = GetVector3(gpVertexArray, Edge2.point2, glVertexStride);
 
         //1 - 1
         if(vPoint1_1.x != vPoint2_1.x)
@@ -3717,8 +3717,8 @@ typedef tTriEdgeListMap::iterator tTriEdgeListMapIt;
 
 static void CheckEdgeSwitch(cTriEdge *apEdge)
 {
-    cVector3f vPoint1 = GetVector3(gpVertexArray,apEdge->point1,glVertexStride);
-    cVector3f vPoint2 = GetVector3(gpVertexArray,apEdge->point2,glVertexStride);
+    cVector3f vPoint1 = GetVector3(gpVertexArray, apEdge->point1, glVertexStride);
+    cVector3f vPoint2 = GetVector3(gpVertexArray, apEdge->point2, glVertexStride);
     if(vPoint1 < vPoint2)
     {
         unsigned int lTemp = apEdge->point1;
@@ -3758,11 +3758,11 @@ void AddEdgeToMap(cTriEdge &aEdge, tTriEdgeListMap &aMap)
 //////////////////////////////////////////////////////
 
 bool cMath::CreateEdges(tTriEdgeVec &avEdges,
-                        const unsigned int* apIndexArray,int alIndexNum,
-                        const float* apVertexArray, int alVtxStride,int alVertexNum,
+                        const unsigned int *apIndexArray, int alIndexNum,
+                        const float *apVertexArray, int alVtxStride, int alVertexNum,
                         bool *apIsDoubleSided)
 {
-    const bool bLog= false;
+    const bool bLog = false;
 
     //Initial setup
     *apIsDoubleSided = false;
@@ -3777,12 +3777,12 @@ bool cMath::CreateEdges(tTriEdgeVec &avEdges,
     ////////////////////////////////////////////////
     //Iterate indices and add all that reference the same vertex to
     // the same element in a map
-    for(int idx=0; idx < alIndexNum; idx++)
+    for(int idx = 0; idx < alIndexNum; idx++)
     {
-        cVector3f vVtx = GetVector3(apVertexArray,apIndexArray[idx],alVtxStride);
+        cVector3f vVtx = GetVector3(apVertexArray, apIndexArray[idx], alVtxStride);
         if(bLog)
         {
-            Log("Checking idx: %d with vec: %s, ",idx,vVtx.ToString().c_str());
+            Log("Checking idx: %d with vec: %s, ", idx, vVtx.ToString().c_str());
         }
 
         tVtxIdxMapIt it = mapVtxIndices.find(vVtx);
@@ -3813,10 +3813,10 @@ bool cMath::CreateEdges(tTriEdgeVec &avEdges,
         {
             const cVector3f &vVtx = VtxIt->first;
             const cVertexIndices &Data = VtxIt->second;
-            Log("Vtx: %s Idx: ",vVtx.ToString().c_str());
+            Log("Vtx: %s Idx: ", vVtx.ToString().c_str());
             for(tUIntList::const_iterator it = Data.mlstIndices.begin(); it != Data.mlstIndices.end(); ++it)
             {
-                Log("%d, ",*it);
+                Log("%d, ", *it);
             }
             Log("\n");
         }
@@ -3837,30 +3837,30 @@ bool cMath::CreateEdges(tTriEdgeVec &avEdges,
         tUIntListIt it = Data.mlstIndices.begin();
         for(; it != Data.mlstIndices.end(); ++it)
         {
-            int lTriIdx = ((*it)/3)*3;
+            int lTriIdx = ((*it) / 3) * 3;
             unsigned int lVtx = apIndexArray[*it]; //The num of the vertex this index reference to.
 
             //Create edges
-            cTriEdge edge1,edge2;
+            cTriEdge edge1, edge2;
             edge1.point1 = lVtx;
             edge2.point1 = lVtx;
-            edge1.tri1 = lTriIdx/3;
-            edge2.tri1 = lTriIdx/3;
+            edge1.tri1 = lTriIdx / 3;
+            edge2.tri1 = lTriIdx / 3;
 
             //Get the index the vertex has in the tri (0 -2)
             int lIdxInTri = (*it) % 3;
             //Log("Idx in tri: %d\n",lIdxInTri);
 
             //Get the end points of the edge.
-            int lPoint1 = lIdxInTri+1;
-            if(lPoint1>2)
+            int lPoint1 = lIdxInTri + 1;
+            if(lPoint1 > 2)
             {
-                lPoint1 =0;
+                lPoint1 = 0;
             }
-            int lPoint2 = lIdxInTri-1;
-            if(lPoint2<0)
+            int lPoint2 = lIdxInTri - 1;
+            if(lPoint2 < 0)
             {
-                lPoint2 =2;
+                lPoint2 = 2;
             }
 
             //Set the end points.
@@ -3871,8 +3871,8 @@ bool cMath::CreateEdges(tTriEdgeVec &avEdges,
             CheckEdgeSwitch(&edge1);
             CheckEdgeSwitch(&edge2);
 
-            AddEdgeToMap(edge1,mapTriEdgeLists);
-            AddEdgeToMap(edge2,mapTriEdgeLists);
+            AddEdgeToMap(edge1, mapTriEdgeLists);
+            AddEdgeToMap(edge2, mapTriEdgeLists);
         }
     }
     if(bLog)
@@ -3881,9 +3881,9 @@ bool cMath::CreateEdges(tTriEdgeVec &avEdges,
         tTriEdgeListMapIt EdgeIt = mapTriEdgeLists.begin();
         for(; EdgeIt != mapTriEdgeLists.end(); ++EdgeIt)
         {
-            cTriEdge &Edge = const_cast<cTriEdge&>(*EdgeIt);
+            cTriEdge &Edge = const_cast<cTriEdge &>(*EdgeIt);
 
-            Log("P1: %d P2: %d Tri1: %d Tri2: %d\n",Edge.point1,Edge.point2,Edge.tri1,Edge.tri2);
+            Log("P1: %d P2: %d Tri1: %d Tri2: %d\n", Edge.point1, Edge.point2, Edge.tri1, Edge.tri2);
         }
     }
 
@@ -3893,7 +3893,7 @@ bool cMath::CreateEdges(tTriEdgeVec &avEdges,
     tTriEdgeListMapIt EdgeIt = mapTriEdgeLists.begin();
     for(; EdgeIt != mapTriEdgeLists.end(); ++EdgeIt)
     {
-        cTriEdge &Edge = const_cast<cTriEdge&>(*EdgeIt);
+        cTriEdge &Edge = const_cast<cTriEdge &>(*EdgeIt);
         const unsigned int *pTri1 = &apIndexArray[Edge.tri1 * 3];
         const unsigned int *pTri2 = NULL;
         if(Edge.tri2 >= 0)
@@ -3912,27 +3912,27 @@ bool cMath::CreateEdges(tTriEdgeVec &avEdges,
         }
 
         //Get position of point1 in triangle
-        int lPoint1InTri=0;
-        for(int i=0; i < 3; i++)
+        int lPoint1InTri = 0;
+        for(int i = 0; i < 3; i++)
         {
-            if(Vector3Equal(apVertexArray,pTri1[i],apVertexArray, Edge.point1,alVtxStride))
+            if(Vector3Equal(apVertexArray, pTri1[i], apVertexArray, Edge.point1, alVtxStride))
             {
                 lPoint1InTri = i;
                 break;
             }
         }
         //The next position in the triangle.
-        int lNextInTri = lPoint1InTri +1;
-        if(lNextInTri >=3 )
+        int lNextInTri = lPoint1InTri + 1;
+        if(lNextInTri >= 3 )
         {
-            lNextInTri =0;
+            lNextInTri = 0;
         }
 
         //Log("Point in: %d Next: %d\n",lPoint1InTri,lNextInTri);
 
         //If next point is NOT point 2, then the edge
         //must be switched.
-        if(Vector3Equal(apVertexArray,pTri1[ lNextInTri],apVertexArray,Edge.point2,alVtxStride))
+        if(Vector3Equal(apVertexArray, pTri1[ lNextInTri], apVertexArray, Edge.point2, alVtxStride))
         {
             unsigned int lTemp = Edge.point1;
             Edge.point1 = Edge.point2;

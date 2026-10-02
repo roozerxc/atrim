@@ -28,7 +28,7 @@ namespace hpl
 // CONSTRUCTORS
 /////////////////////////////////////////////////////////////////////////////////
 
-static int glUnicodeUpperCaseOffset = _W('A')-_W('a');
+static int glUnicodeUpperCaseOffset = _W('A') - _W('a');
 
 //-------------------------------------------------------------------------------
 
@@ -77,11 +77,11 @@ void cGuiPopUpUIKeyboard::SetUpKey(iWidget* apKeyWidget, eKey aKey, int alUnicod
 {
     tGuiCallbackFunc pCallback;
 
-    if(aKey==eKey_Return)
+    if(aKey == eKey_Return)
     {
         pCallback = kGuiCallback(Enter_OnPress);
     }
-    else if(aKey==eKey_None)
+    else if(aKey == eKey_None)
     {
         pCallback = kGuiCallback(Cancel_OnPress);
     }
@@ -89,7 +89,7 @@ void cGuiPopUpUIKeyboard::SetUpKey(iWidget* apKeyWidget, eKey aKey, int alUnicod
     {
         pCallback = kGuiCallback(Key_OnPress);
 
-        mlstKeys.push_back( cUIKey(aKey, alUnicode, abShift?alUnicode+glUnicodeUpperCaseOffset:alUnicode));
+        mlstKeys.push_back( cUIKey(aKey, alUnicode, abShift ? alUnicode + glUnicodeUpperCaseOffset : alUnicode));
         apKeyWidget->SetUserData(&mlstKeys.back());
     }
 
@@ -102,7 +102,7 @@ void cGuiPopUpUIKeyboard::SetUpKey(iWidget* apKeyWidget, eKey aKey, int alUnicod
 
 bool cGuiPopUpUIKeyboard::Key_OnPress(iWidget* apWidget, const cGuiMessageData &aData)
 {
-    cUIKey* pKey = static_cast<cUIKey*>(apWidget->GetUserData());
+    cUIKey* pKey = static_cast<cUIKey *>(apWidget->GetUserData());
 
     cKeyPress key(pKey->mKey, pKey->mvUnicode[mbShift], 0);
 
@@ -153,20 +153,20 @@ kGuiCallbackDeclaredFuncEnd(cGuiPopUpUIKeyboard, WindowClose);
 
 bool cGuiPopUpUIKeyboard::Window_OnUIButtonPress(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(aData.mlVal==eUIButton_Secondary)
+    if(aData.mlVal == eUIButton_Secondary)
     {
         return Cancel_OnPress(apWidget, aData);
     }
-    else if(aData.mlVal==eUIButton_Delete)
+    else if(aData.mlVal == eUIButton_Delete)
     {
         return mpTargetTextBox->ProcessMessage(eGuiMessage_KeyPress, cGuiMessageData(cKeyPress(eKey_BackSpace, 0, 0)));
     }
-    else if(aData.mlVal==eUIButton_Clear)
+    else if(aData.mlVal == eUIButton_Clear)
     {
         mpTargetTextBox->SetText(_W(""));
         return true;
     }
-    else if(aData.mlVal==eUIButton_PrevPage)
+    else if(aData.mlVal == eUIButton_PrevPage)
     {
         SetShiftActive(true);
         return true;
@@ -181,7 +181,7 @@ kGuiCallbackDeclaredFuncEnd(cGuiPopUpUIKeyboard, Window_OnUIButtonPress);
 
 bool cGuiPopUpUIKeyboard::Window_OnUIButtonRelease(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if((aData.mlVal&eUIButton_PrevPage)!=0)
+    if((aData.mlVal & eUIButton_PrevPage) != 0)
     {
         SetShiftActive(false);
         return true;
@@ -215,30 +215,30 @@ void cGuiPopUpUIKeyboard::Init()
     cWidgetButton* pKey = NULL;
 
     // Adds numeric keys
-    for(int i=eKey_0; i<=eKey_9; ++i)
+    for(int i = eKey_0; i <= eKey_9; ++i)
     {
-        wchar_t lUnicode = _W('0') + i-eKey_0;
-        pKey = mpSet->CreateWidgetButton(0, fKeySize, tWString(1,lUnicode), mpWindow);
+        wchar_t lUnicode = _W('0') + i - eKey_0;
+        pKey = mpSet->CreateWidgetButton(0, fKeySize, tWString(1, lUnicode), mpWindow);
         SetUpKey(pKey, (eKey)i, lUnicode, false);
     }
 
     // Adds alphabetical keys
-    for(int i=eKey_A; i<=eKey_Z; ++i)
+    for(int i = eKey_A; i <= eKey_Z; ++i)
     {
-        wchar_t lUnicode = _W('a') + i-eKey_A;
-        pKey = mpSet->CreateWidgetButton(0, fKeySize, tWString(1,lUnicode), mpWindow);
+        wchar_t lUnicode = _W('a') + i - eKey_A;
+        pKey = mpSet->CreateWidgetButton(0, fKeySize, tWString(1, lUnicode), mpWindow);
         SetUpKey(pKey, (eKey)i, lUnicode);
     }
 
     ////////////////////////////////////////
     // Add enter, cancel and space keys
-    pKey = mpSet->CreateWidgetButton(0, cVector2f(fKeySize*2+1, fKeySize), _W("Enter"), mpWindow);
+    pKey = mpSet->CreateWidgetButton(0, cVector2f(fKeySize * 2 + 1, fKeySize), _W("Enter"), mpWindow);
     SetUpKey(pKey, eKey_Return, 0, false);
 
-    pKey = mpSet->CreateWidgetButton(0, cVector2f(fKeySize*2+1, fKeySize), _W("Cancel"), mpWindow);
+    pKey = mpSet->CreateWidgetButton(0, cVector2f(fKeySize * 2 + 1, fKeySize), _W("Cancel"), mpWindow);
     SetUpKey(pKey, eKey_None, 0, false);
 
-    pKey = mpSet->CreateWidgetButton(0, cVector2f((fKeySize+1)*10-1, fKeySize), _W("Space"), mpWindow);
+    pKey = mpSet->CreateWidgetButton(0, cVector2f((fKeySize + 1) * 10 - 1, fKeySize), _W("Space"), mpWindow);
     SetUpKey(pKey, eKey_Space, _W(' '), false);
 
 
@@ -249,39 +249,39 @@ void cGuiPopUpUIKeyboard::Init()
     vKeyMatrix.push_back(tWidgetVec());
     tWidgetVec* pWidgetRow = &vKeyMatrix.back();
 
-    cVector3f vPos = cVector3f(0,0,2);
+    cVector3f vPos = cVector3f(0, 0, 2);
 
     tWidgetListIt it = mlstKeyWidgets.begin();
-    for(; it!=mlstKeyWidgets.end(); ++it)
+    for(; it != mlstKeyWidgets.end(); ++it)
     {
         iWidget* pKey = *it;
 
-        if(vPos.x+pKey->GetSize().x > (fKeySize+1)*10-1)
+        if(vPos.x + pKey->GetSize().x > (fKeySize + 1) * 10 - 1)
         {
             vKeyMatrix.push_back(tWidgetVec());
             pWidgetRow = &vKeyMatrix.back();
 
             vPos.x = 0;
-            vPos.y += pKey->GetSize().y+1;
+            vPos.y += pKey->GetSize().y + 1;
         }
 
         pKey->SetPosition(vPos);
         pWidgetRow->push_back(pKey);
 
-        vPos.x += pKey->GetSize().x+1;
+        vPos.x += pKey->GetSize().x + 1;
     }
 
     //////////////////////////////////////////////////////////
     // Position window right below the textbox
-    cVector2f vWindowSize = cVector2f((fKeySize+1)*10, vPos.y+fKeySize+1);
+    cVector2f vWindowSize = cVector2f((fKeySize + 1) * 10, vPos.y + fKeySize + 1);
 
     mpWindow->SetSize(vWindowSize);
     cVector3f vGlobalPos = mpTargetTextBox->GetGlobalPosition();
 
     // This 8 is a magic number since I cannot access the activesize for the window border without hacking a bit.
-    vGlobalPos.y += mpTargetTextBox->GetSize().y+8;
-    vGlobalPos.x += mpTargetTextBox->GetSize().x*0.5f;
-    vGlobalPos.x -= vWindowSize.x*0.5f;
+    vGlobalPos.y += mpTargetTextBox->GetSize().y + 8;
+    vGlobalPos.x += mpTargetTextBox->GetSize().x * 0.5f;
+    vGlobalPos.x -= vWindowSize.x * 0.5f;
     mpWindow->SetGlobalPosition(vGlobalPos);
 
     mpSet->PositionWidgetInsideBounds(mpWindow);
@@ -290,25 +290,25 @@ void cGuiPopUpUIKeyboard::Init()
 
     /////////////////////////////////////////////////////////////
     // Set up focus navigation
-    for(size_t i=0; i<vKeyMatrix.size(); ++i)
+    for(size_t i = 0; i < vKeyMatrix.size(); ++i)
     {
-        int lVPrev = (int)i-1;
-        int lVNext = (int)i+1;
+        int lVPrev = (int)i - 1;
+        int lVNext = (int)i + 1;
 
         const tWidgetVec vRow = vKeyMatrix[i];
-        for(size_t j=0; j<vRow.size(); ++j)
+        for(size_t j = 0; j < vRow.size(); ++j)
         {
             iWidget* pWidget = vRow[j];
 
-            int lHPrev = (int)j-1;
-            int lHNext = (int)j+1;
+            int lHPrev = (int)j - 1;
+            int lHNext = (int)j + 1;
 
             iWidget* pUpper = NULL;
             iWidget* pRight = NULL;
             iWidget* pLower = NULL;
             iWidget* pLeft = NULL;
 
-            if(lHPrev>=0)
+            if(lHPrev >= 0)
             {
                 pLeft = vRow[lHPrev];
             }
@@ -316,7 +316,7 @@ void cGuiPopUpUIKeyboard::Init()
             {
                 pLeft = vRow[vRow.size() - 1];
             }
-            if(lHNext<(int)vRow.size())
+            if(lHNext < (int)vRow.size())
             {
                 pRight = vRow[lHNext];
             }
@@ -325,10 +325,10 @@ void cGuiPopUpUIKeyboard::Init()
                 pRight = vRow[0];
             }
 
-            if(lVPrev>=0)
+            if(lVPrev >= 0)
             {
                 const tWidgetVec& vPrevRow = vKeyMatrix[lVPrev];
-                if(j<(int)vPrevRow.size())
+                if(j < (int)vPrevRow.size())
                 {
                     pUpper = vPrevRow[j];
                 }
@@ -340,7 +340,7 @@ void cGuiPopUpUIKeyboard::Init()
             else
             {
                 const tWidgetVec& vPrevRow = vKeyMatrix[vKeyMatrix.size() - 1];
-                if(j<(int)vPrevRow.size())
+                if(j < (int)vPrevRow.size())
                 {
                     pUpper = vPrevRow[j];
                 }
@@ -350,10 +350,10 @@ void cGuiPopUpUIKeyboard::Init()
                 }
             }
 
-            if(lVNext<(int)vKeyMatrix.size())
+            if(lVNext < (int)vKeyMatrix.size())
             {
                 const tWidgetVec& vNextRow = vKeyMatrix[lVNext];
-                if(j<(int)vNextRow.size())
+                if(j < (int)vNextRow.size())
                 {
                     pLower = vNextRow[j];
                 }
@@ -365,7 +365,7 @@ void cGuiPopUpUIKeyboard::Init()
             else
             {
                 const tWidgetVec& vNextRow = vKeyMatrix[0];
-                if(j<(int)vNextRow.size())
+                if(j < (int)vNextRow.size())
                 {
                     pLower = vNextRow[j];
                 }
@@ -396,17 +396,17 @@ void cGuiPopUpUIKeyboard::ClosePopUp()
 
 void cGuiPopUpUIKeyboard::SetShiftActive(bool abX)
 {
-    if(mbShift==abX)
+    if(mbShift == abX)
     {
         return;
     }
 
     mbShift = abX;
     tWidgetListIt it = mlstKeyWidgets.begin();
-    for(; it!=mlstKeyWidgets.end(); ++it)
+    for(; it != mlstKeyWidgets.end(); ++it)
     {
         iWidget* pKeyWidget = *it;
-        cUIKey* pKey = static_cast<cUIKey*>(pKeyWidget->GetUserData());
+        cUIKey* pKey = static_cast<cUIKey *>(pKeyWidget->GetUserData());
 
         if(pKey)
         {

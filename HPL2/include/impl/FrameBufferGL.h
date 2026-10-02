@@ -30,12 +30,12 @@ public:
     cFrameBufferGL(const tString& asName, iLowLevelGraphics* apLowLevelGraphics);
     ~cFrameBufferGL();
 
-    void SetTexture2D(int alColorIdx, iTexture *apTexture, int alMipmapLevel=0);
-    void SetTexture3D(int alColorIdx, iTexture *apTexture, int alZ, int alMipmapLevel=0);
-    void SetTextureCubeMap(int alColorIdx, iTexture *apTexture, int alFace, int alMipmapLevel=0);
+    void SetTexture2D(int alColorIdx, iTexture *apTexture, int alMipmapLevel = 0);
+    void SetTexture3D(int alColorIdx, iTexture *apTexture, int alZ, int alMipmapLevel = 0);
+    void SetTextureCubeMap(int alColorIdx, iTexture *apTexture, int alFace, int alMipmapLevel = 0);
 
-    void SetDepthTexture2D(iTexture *apTexture, int alMipmapLevel=0);
-    void SetDepthTextureCubeMap(iTexture *apTexture, int alFace, int alMipmapLevel=0);
+    void SetDepthTexture2D(iTexture *apTexture, int alMipmapLevel = 0);
+    void SetDepthTextureCubeMap(iTexture *apTexture, int alFace, int alMipmapLevel = 0);
 
     void SetDepthStencilBuffer(iDepthStencilBuffer* apBuffer);
 
@@ -60,8 +60,8 @@ public:
 
 private:
     void PostBindUpdateAttachment(iFrameBufferAttachment *apAttachment);
-    bool CheckIfNullTexture(int alAttachmentType, int alAttachmentIdx,iTexture *apTexture);
-    void AttachTexture(int alAttachmentType, int alAttachmentIdx,iTexture *apTexture, int alMipmapLevel, int alExtra);
+    bool CheckIfNullTexture(int alAttachmentType, int alAttachmentIdx, iTexture *apTexture);
+    void AttachTexture(int alAttachmentType, int alAttachmentIdx, iTexture *apTexture, int alMipmapLevel, int alExtra);
     void SetFirstSize(const cVector2l &avSize);
 
     GLuint mlHandle;

@@ -19,7 +19,7 @@ void StringSubString_Generic(asIScriptGeneric *gen)
 
     // Create the substring
     CScriptString *sub = new CScriptString();
-    sub->buffer = str->buffer.substr(start,count);
+    sub->buffer = str->buffer.substr(start, count);
 
     // Return the substring
     *(CScriptString**)gen->GetAddressOfReturnLocation() = sub;
@@ -265,8 +265,8 @@ void StringSplit_Generic(asIScriptGeneric *gen)
     {
         // Add the part to the array
         CScriptString *part = new CScriptString();
-        part->buffer.assign(&str->buffer[prev], pos-prev);
-        array->Resize(array->GetElementCount()+1);
+        part->buffer.assign(&str->buffer[prev], pos - prev);
+        array->Resize(array->GetElementCount() + 1);
         *(CScriptString**)array->GetElementPointer(count) = part;
 
         // Find the next part
@@ -277,7 +277,7 @@ void StringSplit_Generic(asIScriptGeneric *gen)
     // Add the remaining part
     CScriptString *part = new CScriptString();
     part->buffer.assign(&str->buffer[prev]);
-    array->Resize(array->GetElementCount()+1);
+    array->Resize(array->GetElementCount() + 1);
     *(CScriptString**)array->GetElementPointer(count) = part;
 
     // Return the array by handle

@@ -58,9 +58,9 @@ public:
 
     bool SetInt(int alVarId, int alX);
     bool SetFloat(int alVarId, float afX);
-    bool SetVec2f(int alVarId, float afX,float afY);
-    bool SetVec3f(int alVarId, float afX,float afY,float afZ);
-    bool SetVec4f(int alVarId, float afX,float afY,float afZ, float afW);
+    bool SetVec2f(int alVarId, float afX, float afY);
+    bool SetVec3f(int alVarId, float afX, float afY, float afZ);
+    bool SetVec4f(int alVarId, float afX, float afY, float afZ, float afW);
 
     bool SetMatrixf(int alVarId, const cMatrixf& aMtx);
     bool SetMatrixf(int alVarId, eGpuShaderMatrix aType, eGpuShaderMatrixOp aOp);

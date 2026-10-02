@@ -21,7 +21,7 @@ class cPhysicsBodyNewton : public iPhysicsBody
 {
     friend class cPhysicsBodyNewtonCallback;
 public:
-    cPhysicsBodyNewton(const tString &asName,iPhysicsWorld *apWorld,iCollideShape *apShape);
+    cPhysicsBodyNewton(const tString &asName, iPhysicsWorld *apWorld, iCollideShape *apShape);
     ~cPhysicsBodyNewton();
 
     void SetMaterial(iPhysicsMaterial* apMaterial);
@@ -69,7 +69,7 @@ public:
     void SetGravity(bool abEnabled);
     bool GetGravity() const;
 
-    void RenderDebugGeometry(iLowLevelGraphics *apLowLevel,const cColor &aColor);
+    void RenderDebugGeometry(iLowLevelGraphics *apLowLevel, const cColor &aColor);
 
     NewtonBody *GetNewtonBody()
     {

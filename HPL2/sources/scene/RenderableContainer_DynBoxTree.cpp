@@ -28,24 +28,24 @@ static bool gbLog = false;
 
 //-----------------------------------------------------------------------
 
-static tString gsTempSpaces="";
+static tString gsTempSpaces = "";
 
 static const char *GetSpaces(int alNum)
 {
-    gsTempSpaces.resize(alNum,'\t');
+    gsTempSpaces.resize(alNum, '\t');
     return gsTempSpaces.c_str();
 }
 
 //-----------------------------------------------------------------------
 
-static bool TestAndExpandNodeAABB(iRenderable *apObject, cVector3f& avNodeMin,cVector3f& avNodeMax)
+static bool TestAndExpandNodeAABB(iRenderable *apObject, cVector3f& avNodeMin, cVector3f& avNodeMax)
 {
     const cVector3f &vMin = apObject->GetBoundingVolume()->GetMin();
     const cVector3f &vMax = apObject->GetBoundingVolume()->GetMax();
 
     //////////////////////////////////
     //Check if object is inside
-    if(cMath::CheckAABBInside(vMin,vMax, avNodeMin, avNodeMax))
+    if(cMath::CheckAABBInside(vMin, vMax, avNodeMin, avNodeMax))
     {
         return false;
     }
@@ -66,13 +66,13 @@ static bool CheckObjectIsAtEdgeOfAABB(iRenderable *apObject, const cVector3f& av
 
     //if(    vMin.x == avNodeMin.x || vMin.y == avNodeMin.y || vMin.z == avNodeMin.z ||
     //    vMax.x == avNodeMax.x || vMax.y == avNodeMax.y || vMax.z == avNodeMax.z)
-    if(    cMath::Abs(vMin.x - avNodeMin.x)<kEpsilonf ||
-            cMath::Abs(vMin.y - avNodeMin.y)<kEpsilonf ||
-            cMath::Abs(vMin.z - avNodeMin.z)<kEpsilonf ||
+    if(    cMath::Abs(vMin.x - avNodeMin.x) < kEpsilonf ||
+            cMath::Abs(vMin.y - avNodeMin.y) < kEpsilonf ||
+            cMath::Abs(vMin.z - avNodeMin.z) < kEpsilonf ||
 
-            cMath::Abs(vMax.x - avNodeMax.x)<kEpsilonf ||
-            cMath::Abs(vMax.y - avNodeMax.y)<kEpsilonf ||
-            cMath::Abs(vMax.z - avNodeMax.z)<kEpsilonf)
+            cMath::Abs(vMax.x - avNodeMax.x) < kEpsilonf ||
+            cMath::Abs(vMax.y - avNodeMax.y) < kEpsilonf ||
+            cMath::Abs(vMax.z - avNodeMax.z) < kEpsilonf)
     {
         return true;
     }
@@ -113,8 +113,8 @@ static bool SortFunc_Z(iRenderable* apObjectA, iRenderable *apObjectB)
     return apObjectA->GetBoundingVolume()->GetWorldCenter().z < apObjectB->GetBoundingVolume()->GetWorldCenter().z;
 }
 
-typedef bool (*tSortFunc)(iRenderable*,iRenderable*);
-static tSortFunc gvSortFunctions[3] = {SortFunc_X, SortFunc_Y,SortFunc_Z};
+typedef bool (*tSortFunc)(iRenderable*, iRenderable*);
+static tSortFunc gvSortFunctions[3] = {SortFunc_X, SortFunc_Y, SortFunc_Z};
 
 
 //-----------------------------------------------------------------------
@@ -136,7 +136,7 @@ void cDynBoxTreeObjectCallback::OnTransformUpdate(iEntity3D * apEntity)
 {
     ////////////////////////////////////////////
     //Get renderable object
-    iRenderable *pObject = static_cast<iRenderable*>(apEntity);
+    iRenderable *pObject = static_cast<iRenderable *>(apEntity);
 
     mpContainer->m_setObjectsToUpdate.insert(pObject);
 }
@@ -161,14 +161,14 @@ cRCNode_DynBoxTree::cRCNode_DynBoxTree()
 
     mbRecalculateSplitAxis = true;
     mlSplitAxis = -1;
-    mfSplitPlane =0;
+    mfSplitPlane = 0;
 
     mbUsesFlagsAndVisibility = false;
 
-    mlGarbageCollectCount =0;
-    mlIgnoreSplitCount =0;
+    mlGarbageCollectCount = 0;
+    mlIgnoreSplitCount = 0;
 
-    mvMeanPosition =0;
+    mvMeanPosition = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -190,7 +190,7 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
     {
         //////////////
         //Time for collection, counter is done
-        if(mlGarbageCollectCount <=0)
+        if(mlGarbageCollectCount <= 0)
         {
             if(gbLog)
             {
@@ -208,8 +208,8 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
             // less then split threshold. If so, delete that node.
             if(HasChildNodes())
             {
-                cRCNode_DynBoxTree *pChild1 = static_cast<cRCNode_DynBoxTree*>(mlstChildNodes.front());
-                cRCNode_DynBoxTree *pChild2 = static_cast<cRCNode_DynBoxTree*>(mlstChildNodes.back());
+                cRCNode_DynBoxTree *pChild1 = static_cast<cRCNode_DynBoxTree *>(mlstChildNodes.front());
+                cRCNode_DynBoxTree *pChild2 = static_cast<cRCNode_DynBoxTree *>(mlstChildNodes.back());
 
                 //What lower limit is best really?
                 int lLowerObjectLimit = mpContainer->mlSplitThreshold;
@@ -217,7 +217,7 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
                 //int lLowerObjectLimit = mpContainer->mlSplitThreshold - 2;
 
                 //Check if nodes are leaves and if they have few enough objects
-                if(    pChild1->HasChildNodes()==false && pChild2->HasChildNodes()==false &&
+                if(    pChild1->HasChildNodes() == false && pChild2->HasChildNodes() == false &&
                         (pChild1->GetObjectNum() + pChild2->GetObjectNum() + GetObjectNum() < lLowerObjectLimit))
                 {
                     if(gbLog)
@@ -230,7 +230,7 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
                     for(; nodeIt != mlstChildNodes.end(); ++nodeIt)
                     {
                         //Copy child object to this node
-                        cRCNode_DynBoxTree *pChildNode = static_cast<cRCNode_DynBoxTree*>(*nodeIt);
+                        cRCNode_DynBoxTree *pChildNode = static_cast<cRCNode_DynBoxTree *>(*nodeIt);
 
                         tRenderableListIt objIt = pChildNode->mlstObjects.begin();
                         for(; objIt != pChildNode->mlstObjects.end(); ++objIt)
@@ -286,23 +286,23 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
         //Increase the AABB based on children.
         if(HasChildNodes())
         {
-            cRCNode_DynBoxTree* pNodeA = static_cast<cRCNode_DynBoxTree*>(mlstChildNodes.front());
-            cRCNode_DynBoxTree* pNodeB = static_cast<cRCNode_DynBoxTree*>(mlstChildNodes.back());
+            cRCNode_DynBoxTree* pNodeA = static_cast<cRCNode_DynBoxTree *>(mlstChildNodes.front());
+            cRCNode_DynBoxTree* pNodeB = static_cast<cRCNode_DynBoxTree *>(mlstChildNodes.back());
 
-            cMath::ExpandAABB(mvMin,mvMax, pNodeA->GetMin(), pNodeA->GetMax());
-            cMath::ExpandAABB(mvMin,mvMax, pNodeB->GetMin(), pNodeB->GetMax());
+            cMath::ExpandAABB(mvMin, mvMax, pNodeA->GetMin(), pNodeA->GetMax());
+            cMath::ExpandAABB(mvMin, mvMax, pNodeB->GetMin(), pNodeB->GetMax());
         }
 
         //Sphere center and radius
-        mvCenter = (mvMax + mvMin) *0.5f;
-        mfRadius = (mvMax - mvMin).Length()*0.5f;
+        mvCenter = (mvMax + mvMin) * 0.5f;
+        mfRadius = (mvMax - mvMin).Length() * 0.5f;
     }
 
     //////////////////////////////////
     // Check if a recalculate of split axis is really needed.
     if(mbRecalculateSplit)
     {
-        if(GetObjectNum() < mpContainer->mlSplitThreshold && HasChildNodes()==false)
+        if(GetObjectNum() < mpContainer->mlSplitThreshold && HasChildNodes() == false)
         {
             mbRecalculateSplit = false;
         }
@@ -310,7 +310,7 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
     else
     {
         //Always recalculate the split plane before a split
-        if(mbIsSplit==false && GetObjectNum() >= mpContainer->mlSplitThreshold)
+        if(mbIsSplit == false && GetObjectNum() >= mpContainer->mlSplitThreshold)
         {
             mbRecalculateSplit = true;
         }
@@ -336,7 +336,7 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
             cVector3f vNodeSize = mvMax - mvMin;
 
             float fLongestSide = vNodeSize.x;
-            mlSplitAxis =0;
+            mlSplitAxis = 0;
             if(fLongestSide < vNodeSize.y)
             {
                 fLongestSide = vNodeSize.y;
@@ -388,11 +388,11 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
 
 
 
-        float fPosSum =0;
+        float fPosSum = 0;
         float fWeightSum = 0;
 
         //Objects
-        if(mlstObjects.empty()==false)
+        if(mlstObjects.empty() == false)
         {
             tRenderableListIt it = mlstObjects.begin();
             for(; it != mlstObjects.end(); ++it)
@@ -411,7 +411,7 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
             tRenderableContainerNodeListIt it = mlstChildNodes.begin();
             for(; it != mlstChildNodes.end(); ++it)
             {
-                cRCNode_DynBoxTree *pChildNode = static_cast<cRCNode_DynBoxTree*>(*it);
+                cRCNode_DynBoxTree *pChildNode = static_cast<cRCNode_DynBoxTree *>(*it);
 
                 //Use split plane if axes are the same
                 if(pChildNode->mlSplitAxis == mlSplitAxis)
@@ -436,7 +436,7 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
     // If enough objects, create children and objects to them.
     // Also make sure that the node does not already have childe nodes!
     if(    (int)mlstObjects.size() >= mpContainer->mlSplitThreshold &&
-            HasChildNodes()==false)
+            HasChildNodes() == false)
     {
         /////////////
         //Check if tree has already been split
@@ -447,7 +447,7 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
             if(mbObjectMoved)
             {
                 mlIgnoreSplitCount--;
-                if(mlIgnoreSplitCount <=0)
+                if(mlIgnoreSplitCount <= 0)
                 {
                     mbIsSplit = false;
                 }
@@ -470,11 +470,11 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
             // Setup before objects are added
             cVector3f vNodeSize = GetMax() - GetMin();
 
-            std::vector<iRenderable*> vTempObjects;
+            std::vector<iRenderable *> vTempObjects;
             vTempObjects.resize(mlstObjects.size());
 
-            int lCount =0;
-            for(tRenderableListIt it = mlstObjects.begin(); it != mlstObjects.end(); ++it,++lCount)
+            int lCount = 0;
+            for(tRenderableListIt it = mlstObjects.begin(); it != mlstObjects.end(); ++it, ++lCount)
             {
                 vTempObjects[lCount] = *it;
             }
@@ -486,11 +486,11 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
 
             ///////////////////////////////////
             // Iterate
-            for(size_t i=0; i<vTempObjects.size(); ++i)
+            for(size_t i = 0; i < vTempObjects.size(); ++i)
             {
                 iRenderable *pObject = vTempObjects[i];
 
-                int lSplitGroup = mpContainer->GetSplitGroup(pObject,mfSplitPlane, mlSplitAxis,vNodeSize);
+                int lSplitGroup = mpContainer->GetSplitGroup(pObject, mfSplitPlane, mlSplitAxis, vNodeSize);
 
                 /////////////////////////////
                 // If object is intersecting then add to this node, else add to a child.
@@ -517,7 +517,7 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
             // If either child object list is empty, add objects back to node
             if(lstChildObjects[0].empty() ||  lstChildObjects[1].empty())
             {
-                for(int i=0; i<2; ++i)
+                for(int i = 0; i < 2; ++i)
                     for(tRenderableListIt it = lstChildObjects[i].begin(); it != lstChildObjects[i].end(); ++it)
                     {
                         mlstObjects.push_back(*it);
@@ -530,7 +530,7 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
                 ///////////////////////////////////
                 // Create and setup child nodes
                 // Make sure to create mean position here too! ( can remove later on?)
-                for(int i=0; i<2; ++i)
+                for(int i = 0; i < 2; ++i)
                 {
                     cRCNode_DynBoxTree* pChildNode = hplNew( cRCNode_DynBoxTree, () );
                     pChildNode->mpContainer = mpContainer;
@@ -538,7 +538,7 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
 
                     mlstChildNodes.push_back(pChildNode);
 
-                    pChildNode->mvMeanPosition =0;
+                    pChildNode->mvMeanPosition = 0;
                     for(tRenderableListIt it = lstChildObjects[i].begin(); it != lstChildObjects[i].end(); ++it)
                     {
                         iRenderable *pObject = *it;
@@ -560,8 +560,8 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
                     //Just to be extra sure, caclulate proper AABB directly!
                     pChildNode->CalculateMinMaxFromObjects();
                     //Sphere center and radius
-                    pChildNode->mvCenter = (pChildNode->mvMax + pChildNode->mvMin) *0.5f;
-                    pChildNode->mfRadius = (pChildNode->mvMax - pChildNode->mvMin).Length()*0.5f;
+                    pChildNode->mvCenter = (pChildNode->mvMax + pChildNode->mvMin) * 0.5f;
+                    pChildNode->mfRadius = (pChildNode->mvMax - pChildNode->mvMin).Length() * 0.5f;
                 }
             }
 
@@ -614,7 +614,7 @@ void cRCNode_DynBoxTree::ObjectMoved()
     }
 
     mbObjectMoved = true;
-    cRCNode_DynBoxTree* pParentNode = static_cast<cRCNode_DynBoxTree*>(mpParent);
+    cRCNode_DynBoxTree* pParentNode = static_cast<cRCNode_DynBoxTree *>(mpParent);
     if(pParentNode)
     {
         pParentNode->ObjectMoved();
@@ -654,7 +654,7 @@ cRenderableContainer_DynBoxTree::cRenderableContainer_DynBoxTree()
 
     mRoot.mpContainer = this;
     mRoot.mpParent = NULL;
-    mRoot.mfViewDistance =0;
+    mRoot.mfViewDistance = 0;
     mRoot.mbInsideView = true;
 
     mpObjectCalllback = hplNew( cDynBoxTreeObjectCallback, (this) );
@@ -677,7 +677,7 @@ void cRenderableContainer_DynBoxTree::Add(iRenderable *apRenderable)
 {
     if(gbLog || HasDebug(apRenderable))
     {
-        Log("Adding object '%s' / %d\n",apRenderable->GetName().c_str(), apRenderable);
+        Log("Adding object '%s' / %d\n", apRenderable->GetName().c_str(), apRenderable);
     }
 
     ///////////////////////////////////////////
@@ -694,7 +694,7 @@ void cRenderableContainer_DynBoxTree::Add(iRenderable *apRenderable)
 
     if(gbLog || HasDebug(apRenderable))
     {
-        Log("Added object '%s' / %d to Node %d\n",apRenderable->GetName().c_str(), apRenderable, pNode);
+        Log("Added object '%s' / %d to Node %d\n", apRenderable->GetName().c_str(), apRenderable, pNode);
 
         Log("Objects:\n");
         tRenderableList *pObjList = pNode->GetObjectList();
@@ -702,7 +702,7 @@ void cRenderableContainer_DynBoxTree::Add(iRenderable *apRenderable)
         {
             iRenderable *pObj = *it;
             tString sParent = pObj->GetEntityParent() ? pObj->GetEntityParent()->GetName() : "NULL";
-            Log(" '%s'id: %d  parent: '%s' size: %s\n", pObj->GetName().c_str(),pObj->GetUniqueID(),sParent.c_str(), pObj->GetBoundingVolume()->GetSize().ToString().c_str());
+            Log(" '%s'id: %d  parent: '%s' size: %s\n", pObj->GetName().c_str(), pObj->GetUniqueID(), sParent.c_str(), pObj->GetBoundingVolume()->GetSize().ToString().c_str());
         }
     }
 
@@ -716,22 +716,22 @@ void cRenderableContainer_DynBoxTree::Remove(iRenderable *apRenderable)
 {
     //////////////////////////////////
     // Remove from to-update list
-    if(m_setObjectsToUpdate.empty()==false)
+    if(m_setObjectsToUpdate.empty() == false)
     {
         m_setObjectsToUpdate.erase(apRenderable);
     }
 
     //////////////////////////////////
     // Get the node where the object is
-    cRCNode_DynBoxTree *pNode = static_cast<cRCNode_DynBoxTree*>(apRenderable->GetRenderContainerNode());    //Assume one node only
-    if(pNode==NULL)
+    cRCNode_DynBoxTree *pNode = static_cast<cRCNode_DynBoxTree *>(apRenderable->GetRenderContainerNode());   //Assume one node only
+    if(pNode == NULL)
     {
         return;
     }
 
     if(gbLog  || HasDebug(apRenderable))
     {
-        Log("Removing object '%s' / %d from node %d\n",apRenderable->GetName().c_str(), apRenderable, pNode);
+        Log("Removing object '%s' / %d from node %d\n", apRenderable->GetName().c_str(), apRenderable, pNode);
     }
 
     //////////////////////////////////
@@ -740,7 +740,7 @@ void cRenderableContainer_DynBoxTree::Remove(iRenderable *apRenderable)
 
     //////////////////////////////////
     // If nodes is leaf, has no objects left and is not the root, delete it.
-    if(    pNode->HasChildNodes()==false && pNode->HasObjects()==false && pNode->GetParent() != NULL)
+    if(    pNode->HasChildNodes() == false && pNode->HasObjects() == false && pNode->GetParent() != NULL)
     {
         if(gbLog || HasDebug(apRenderable))
         {
@@ -755,7 +755,7 @@ void cRenderableContainer_DynBoxTree::Remove(iRenderable *apRenderable)
         {
             Log(" Iterate AABB update for node %d\n", pNode);
         }
-        CheckNodeAABBNeedsUpdateIterative(pNode,apRenderable);
+        CheckNodeAABBNeedsUpdateIterative(pNode, apRenderable);
     }
 
     ////////////////////////
@@ -770,7 +770,7 @@ void cRenderableContainer_DynBoxTree::Remove(iRenderable *apRenderable)
 
 //-----------------------------------------------------------------------
 
-iRenderableContainerNode* cRenderableContainer_DynBoxTree::GetRoot()
+iRenderableContainerNode *cRenderableContainer_DynBoxTree::GetRoot()
 {
     return &mRoot;
 }
@@ -803,7 +803,7 @@ void cRenderableContainer_DynBoxTree::RenderDebug(cRendererCallbackFunctions *ap
     apFunctions->SetMatrix(NULL);
 
 
-    RenderDebugNode(apFunctions, &mRoot,0);
+    RenderDebugNode(apFunctions, &mRoot, 0);
 }
 
 //-----------------------------------------------------------------------
@@ -828,7 +828,7 @@ void cRenderableContainer_DynBoxTree::AddNodeObjectsToRoot(cRCNode_DynBoxTree *a
     tRenderableContainerNodeListIt nodeIt = apNode->mlstChildNodes.begin();
     for(; nodeIt != apNode->mlstChildNodes.end(); ++nodeIt)
     {
-        cRCNode_DynBoxTree *pChildNode = static_cast<cRCNode_DynBoxTree*>(*nodeIt);
+        cRCNode_DynBoxTree *pChildNode = static_cast<cRCNode_DynBoxTree *>(*nodeIt);
 
         AddNodeObjectsToRoot(pChildNode);
     }
@@ -840,7 +840,7 @@ void cRenderableContainer_DynBoxTree::SpecificUpdateBeforeRendering()
 {
     ///////////////////////////////////
     // Update tree for objects that have moved
-    if(m_setObjectsToUpdate.empty()==false)
+    if(m_setObjectsToUpdate.empty() == false)
     {
         tRenderableSetIt it = m_setObjectsToUpdate.begin();
         for(; it != m_setObjectsToUpdate.end(); ++it)
@@ -855,7 +855,7 @@ void cRenderableContainer_DynBoxTree::SpecificUpdateBeforeRendering()
 
     ///////////////////////////////////
     // Rebuild tree if needed
-    if(mlRebuildCount >0)
+    if(mlRebuildCount > 0)
     {
         return;
     }
@@ -865,7 +865,7 @@ void cRenderableContainer_DynBoxTree::SpecificUpdateBeforeRendering()
     tRenderableContainerNodeListIt it = mRoot.mlstChildNodes.begin();
     for(; it != mRoot.mlstChildNodes.end(); ++it)
     {
-        cRCNode_DynBoxTree *pNode = static_cast<cRCNode_DynBoxTree*>(*it);
+        cRCNode_DynBoxTree *pNode = static_cast<cRCNode_DynBoxTree *>(*it);
 
         AddNodeObjectsToRoot(pNode);
     }
@@ -880,14 +880,14 @@ void cRenderableContainer_DynBoxTree::SpecificUpdateBeforeRendering()
 
 //-----------------------------------------------------------------------
 
-static cColor LevelColor[10] = {cColor(1,1,1),cColor(1,0,1),cColor(1,1,0),cColor(0,1,1),cColor(0,0,1),cColor(0,1,0),cColor(1,0,0),cColor(1,0.5f,1),
-                                cColor(1,1,0.5f), cColor(1,0.5f,0.5f)
+static cColor LevelColor[10] = {cColor(1, 1, 1), cColor(1, 0, 1), cColor(1, 1, 0), cColor(0, 1, 1), cColor(0, 0, 1), cColor(0, 1, 0), cColor(1, 0, 0), cColor(1, 0.5f, 1),
+                                cColor(1, 1, 0.5f), cColor(1, 0.5f, 0.5f)
                                };
 
 void cRenderableContainer_DynBoxTree::RenderDebugNode(cRendererCallbackFunctions *apFunctions, cRCNode_DynBoxTree *apNode, int alLevel)
 {
     //AABB
-    apFunctions->GetLowLevelGfx()->DrawBoxMinMax(apNode->GetMin(),apNode->GetMax(),LevelColor[alLevel % 10]);
+    apFunctions->GetLowLevelGfx()->DrawBoxMinMax(apNode->GetMin(), apNode->GetMax(), LevelColor[alLevel % 10]);
 
     //Split plane
     if(apNode->HasChildNodes())
@@ -897,7 +897,7 @@ void cRenderableContainer_DynBoxTree::RenderDebugNode(cRendererCallbackFunctions
         vMin.v[apNode->mlSplitAxis] = apNode->mfSplitPlane;
         vMax.v[apNode->mlSplitAxis] = apNode->mfSplitPlane;
 
-        apFunctions->GetLowLevelGfx()->DrawBoxMinMax(vMin, vMax,LevelColor[alLevel % 10]);
+        apFunctions->GetLowLevelGfx()->DrawBoxMinMax(vMin, vMax, LevelColor[alLevel % 10]);
 
     }
 
@@ -905,8 +905,8 @@ void cRenderableContainer_DynBoxTree::RenderDebugNode(cRendererCallbackFunctions
     tRenderableContainerNodeListIt childIt = apNode->GetChildNodeList()->begin();
     for(; childIt != apNode->GetChildNodeList()->end(); ++childIt)
     {
-        cRCNode_DynBoxTree *pChildNode = static_cast<cRCNode_DynBoxTree*>(*childIt);
-        RenderDebugNode(apFunctions,pChildNode, alLevel+1);
+        cRCNode_DynBoxTree *pChildNode = static_cast<cRCNode_DynBoxTree *>(*childIt);
+        RenderDebugNode(apFunctions, pChildNode, alLevel + 1);
     }
 }
 
@@ -914,7 +914,7 @@ void cRenderableContainer_DynBoxTree::RenderDebugNode(cRendererCallbackFunctions
 
 void cRenderableContainer_DynBoxTree::RemoveNode(cRCNode_DynBoxTree *apRemoveNode)
 {
-    cRCNode_DynBoxTree *pParent = static_cast<cRCNode_DynBoxTree*>(apRemoveNode->GetParent());
+    cRCNode_DynBoxTree *pParent = static_cast<cRCNode_DynBoxTree *>(apRemoveNode->GetParent());
     if(pParent == NULL)
     {
         return;
@@ -932,7 +932,7 @@ void cRenderableContainer_DynBoxTree::RemoveNode(cRCNode_DynBoxTree *apRemoveNod
 
     ////////////////////////////////////
     // Get Remaining child node and then clear child node list
-    cRCNode_DynBoxTree *pChild = static_cast<cRCNode_DynBoxTree*>(pParent->mlstChildNodes.front());
+    cRCNode_DynBoxTree *pChild = static_cast<cRCNode_DynBoxTree *>(pParent->mlstChildNodes.front());
 
     pParent->mlstChildNodes.clear();
 
@@ -1019,7 +1019,7 @@ void cRenderableContainer_DynBoxTree::CheckNodeAABBNeedsUpdateIterative(cRCNode_
         apNode->RecalculateAABB();
 
         //Check if parent needs update too
-        cRCNode_DynBoxTree *pParent = static_cast<cRCNode_DynBoxTree*>(apNode->GetParent());
+        cRCNode_DynBoxTree *pParent = static_cast<cRCNode_DynBoxTree *>(apNode->GetParent());
         if(pParent)
         {
             CheckNodeAABBNeedsUpdateIterative(pParent, apObject);
@@ -1046,8 +1046,8 @@ void cRenderableContainer_DynBoxTree::AddObjectToNodeIterative(cRCNode_DynBoxTre
     {
         cBoundingVolume *pBV = apObject->GetBoundingVolume();
         Log(" Testing node %d. Inside: %d Intersect: %d (%s)-(%s) vs (%s)-(%s)\n",    apNode,
-            cMath::CheckAABBInside(pBV->GetMin(),pBV->GetMax(), apNode->mvMin, apNode->mvMax)?1:0,
-            cMath::CheckAABBIntersection(pBV->GetMin(),pBV->GetMax(), apNode->mvMin, apNode->mvMax)?1:0,
+            cMath::CheckAABBInside(pBV->GetMin(), pBV->GetMax(), apNode->mvMin, apNode->mvMax) ? 1 : 0,
+            cMath::CheckAABBIntersection(pBV->GetMin(), pBV->GetMax(), apNode->mvMin, apNode->mvMax) ? 1 : 0,
             pBV->GetMin().ToString().c_str(), pBV->GetMax().ToString().c_str(),
             apNode->mvMin.ToString().c_str(), apNode->mvMax.ToString().c_str());
     }
@@ -1056,8 +1056,8 @@ void cRenderableContainer_DynBoxTree::AddObjectToNodeIterative(cRCNode_DynBoxTre
     if( TestAndExpandNodeAABB(apObject, apNode->mvMin, apNode->mvMax) )
     {
         //TODO: Perhaps sphere calc can be skipped here and done in UpdateBeforeUse instead.
-        apNode->mvCenter = (apNode->mvMax + apNode->mvMin) *0.5f;
-        apNode->mfRadius = (apNode->mvMax - apNode->mvMin).Length()*0.5f;
+        apNode->mvCenter = (apNode->mvMax + apNode->mvMin) * 0.5f;
+        apNode->mfRadius = (apNode->mvMax - apNode->mvMin).Length() * 0.5f;
 
         apNode->RecalculateSplit();
 
@@ -1069,7 +1069,7 @@ void cRenderableContainer_DynBoxTree::AddObjectToNodeIterative(cRCNode_DynBoxTre
 
     /////////////////////////////
     // If node has no children, add it here.
-    if(apNode->HasChildNodes()==false)
+    if(apNode->HasChildNodes() == false)
     {
         mpTempNode = apNode;
         return;
@@ -1078,7 +1078,7 @@ void cRenderableContainer_DynBoxTree::AddObjectToNodeIterative(cRCNode_DynBoxTre
     /////////////////////////////
     // Calculate what group the new object belongs to
     cVector3f vNodeSize = apNode->GetMax() - apNode->GetMin();
-    int lSplitGroup = GetSplitGroup(apObject,apNode->mfSplitPlane, apNode->mlSplitAxis,vNodeSize);
+    int lSplitGroup = GetSplitGroup(apObject, apNode->mfSplitPlane, apNode->mlSplitAxis, vNodeSize);
 
 
     /////////////////////////////
@@ -1090,13 +1090,13 @@ void cRenderableContainer_DynBoxTree::AddObjectToNodeIterative(cRCNode_DynBoxTre
     else
     {
         //Assuming always two children!
-        if(lSplitGroup==0)
+        if(lSplitGroup == 0)
         {
-            AddObjectToNodeIterative(static_cast<cRCNode_DynBoxTree*>(apNode->mlstChildNodes.front()),apObject);
+            AddObjectToNodeIterative(static_cast<cRCNode_DynBoxTree*>(apNode->mlstChildNodes.front()), apObject);
         }
-        if(lSplitGroup==1)
+        if(lSplitGroup == 1)
         {
-            AddObjectToNodeIterative(static_cast<cRCNode_DynBoxTree*>(apNode->mlstChildNodes.back()),apObject);
+            AddObjectToNodeIterative(static_cast<cRCNode_DynBoxTree*>(apNode->mlstChildNodes.back()), apObject);
         }
     }
 }
@@ -1108,8 +1108,8 @@ void cRenderableContainer_DynBoxTree::AddObjectToNodeIterative(cRCNode_DynBoxTre
  */
 int cRenderableContainer_DynBoxTree::GetSplitGroup(iRenderable *apObject, float afSplitPlane, int alAxis, const cVector3f &avNodeSize)
 {
-    float fMinVal =   GetAxisFromVec(apObject->GetBoundingVolume()->GetMin(),alAxis);
-    float fMaxVal =   GetAxisFromVec(apObject->GetBoundingVolume()->GetMax(),alAxis);
+    float fMinVal =   GetAxisFromVec(apObject->GetBoundingVolume()->GetMin(), alAxis);
+    float fMaxVal =   GetAxisFromVec(apObject->GetBoundingVolume()->GetMax(), alAxis);
 
     //////////////////////////
     //Above cut plane
@@ -1141,7 +1141,7 @@ int cRenderableContainer_DynBoxTree::GetSplitGroup(iRenderable *apObject, float 
         if(fBelowDist < fMinDist)
         {
             fMinDist = fBelowDist;
-            lDestDir =0;
+            lDestDir = 0;
         }
 
         /////////////////////
@@ -1161,14 +1161,14 @@ int cRenderableContainer_DynBoxTree::GetSplitGroup(iRenderable *apObject, float 
 
 void cRenderableContainer_DynBoxTree::UpdateObjectInContainer(iRenderable* apObject)
 {
-    const bool bUpdateLog=false;
+    const bool bUpdateLog = false;
     //bool bUpdateLog= HasDebug(apObject);
 
 
     ////////////////////////////////////////////
     //Get Node of correct type
-    cRCNode_DynBoxTree *pNode =  static_cast<cRCNode_DynBoxTree*>(apObject->GetRenderContainerNode());
-    if(pNode==NULL)
+    cRCNode_DynBoxTree *pNode =  static_cast<cRCNode_DynBoxTree *>(apObject->GetRenderContainerNode());
+    if(pNode == NULL)
     {
         return;
     }
@@ -1177,7 +1177,7 @@ void cRenderableContainer_DynBoxTree::UpdateObjectInContainer(iRenderable* apObj
 
     if(bUpdateLog)
     {
-        Log("------- Updating %s. Node: %d -------\n",apObject->GetName().c_str(), pNode);
+        Log("------- Updating %s. Node: %d -------\n", apObject->GetName().c_str(), pNode);
     }
 
 
@@ -1201,7 +1201,7 @@ void cRenderableContainer_DynBoxTree::UpdateObjectInContainer(iRenderable* apObj
     ////////////////////////////////////////////
     // Iterate through the parent nodes of the current and try and find one that fits the node, stopping at root
     mpCheckForFitTempNode = pNode; //Node with fit will be placed here
-    cRCNode_DynBoxTree *pParent =  static_cast<cRCNode_DynBoxTree*>(pNode->GetParent());
+    cRCNode_DynBoxTree *pParent =  static_cast<cRCNode_DynBoxTree *>(pNode->GetParent());
     if(pParent)
     {
         CheckForFitIterative(pParent, pBV);
@@ -1218,7 +1218,7 @@ void cRenderableContainer_DynBoxTree::UpdateObjectInContainer(iRenderable* apObj
 
     if(bUpdateLog)
     {
-        Log("  Node to add object in: %d (leaf: %d)\n", pNewNode, pNewNode->HasChildNodes()==false ? 1:0);
+        Log("  Node to add object in: %d (leaf: %d)\n", pNewNode, pNewNode->HasChildNodes() == false ? 1 : 0);
     }
 
     ////////////////////////////////////////////
@@ -1240,7 +1240,7 @@ void cRenderableContainer_DynBoxTree::UpdateObjectInContainer(iRenderable* apObj
         //If the object is not inside new node need to recalc AABB
         cBoundingVolume *pObjBV = apObject->GetBoundingVolume();
         //if(CheckObjectIsAtEdgeOfAABB(apObject,pNewNode->mvMin,pNewNode->mvMax)) //<- Old bad code! Just have for future reference!
-        if(cMath::CheckAABBInside(pObjBV->GetMin(), pObjBV->GetMax(), pNewNode->mvMin,pNewNode->mvMax)==false)
+        if(cMath::CheckAABBInside(pObjBV->GetMin(), pObjBV->GetMax(), pNewNode->mvMin, pNewNode->mvMax) == false)
         {
             pNewNode->PushUpNeedAABBUpdate();
         }
@@ -1258,7 +1258,7 @@ void cRenderableContainer_DynBoxTree::UpdateObjectInContainer(iRenderable* apObj
         pNode->RemoveObject(apObject);
 
         // If old node is leaf and has no objects left, delete it.
-        if(pNode->HasChildNodes()==false && pNode->HasObjects()==false)
+        if(pNode->HasChildNodes() == false && pNode->HasObjects() == false)
         {
             RemoveNode(pNode);
         }
@@ -1301,7 +1301,7 @@ void cRenderableContainer_DynBoxTree::CheckForFitIterative(cRCNode_DynBoxTree *a
 
     ///////////////////////////////////////////
     //If no fit in curremt, check parent
-    cRCNode_DynBoxTree *pParent =  static_cast<cRCNode_DynBoxTree*>(apNode->GetParent());
+    cRCNode_DynBoxTree *pParent =  static_cast<cRCNode_DynBoxTree *>(apNode->GetParent());
     CheckForFitIterative(pParent, apBV);
 }
 

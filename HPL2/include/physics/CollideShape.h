@@ -20,10 +20,10 @@ public:
     iCollideShape(iPhysicsWorld *apWorld) : mlUserCount(0), mpWorld(apWorld) {}
     virtual ~iCollideShape() {}
 
-    virtual iCollideShape* GetSubShape(int alIdx)=0;
-    virtual int GetSubShapeNum()=0;
+    virtual iCollideShape *GetSubShape(int alIdx) = 0;
+    virtual int GetSubShapeNum() = 0;
 
-    const cVector3f& GetSize()
+    const cVector3f &GetSize()
     {
         return mvSize;
     }
@@ -45,7 +45,7 @@ public:
         return mvSize.z;
     }
 
-    const cMatrixf& GetOffset()
+    const cMatrixf &GetOffset()
     {
         return m_mtxOffset;
     }
@@ -66,7 +66,7 @@ public:
 
     bool HasUsers()
     {
-        return mlUserCount>0;
+        return mlUserCount > 0;
     }
     int GetUserCount()
     {
@@ -78,7 +78,7 @@ public:
         return mfVolume;
     }
 
-    cBoundingVolume& GetBoundingVolume()
+    cBoundingVolume &GetBoundingVolume()
     {
         return mBoundingVolume;
     }

@@ -24,7 +24,7 @@ protected:
     int TranslateEnginePrio(eThreadPrio aPrio);
 
 private:
-    SDL_Thread* mpThreadHandle;
+    SDL_Thread *mpThreadHandle;
 
 };
 

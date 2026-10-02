@@ -12,14 +12,14 @@ class iLowLevelGraphics;
 class iGuiMaterial
 {
 public:
-    iGuiMaterial(const tString &asName,iLowLevelGraphics *apLowLevelGraphics) :
+    iGuiMaterial(const tString &asName, iLowLevelGraphics *apLowLevelGraphics) :
         msName(asName), mpLowLevelGraphics(apLowLevelGraphics) {}
     virtual ~iGuiMaterial() {}
 
-    virtual void BeforeRender()=0;
-    virtual void AfterRender()=0;
+    virtual void BeforeRender() = 0;
+    virtual void AfterRender() = 0;
 
-    const tString& GetName() const
+    const tString &GetName() const
     {
         return msName;
     }

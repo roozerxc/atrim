@@ -19,13 +19,13 @@ class cSurfaceData;
 enum ePhysicsMaterialCombMode
 {
     //! result = (value1 + value2)/2
-    ePhysicsMaterialCombMode_Average=    0,
+    ePhysicsMaterialCombMode_Average =    0,
     //! result = min(value1, value2)
-    ePhysicsMaterialCombMode_Min=        1,
+    ePhysicsMaterialCombMode_Min =        1,
     //! result = value1 * value2
-    ePhysicsMaterialCombMode_Multiply=    2,
+    ePhysicsMaterialCombMode_Multiply =    2,
     //! result = max(value1, value2)
-    ePhysicsMaterialCombMode_Max=        3,
+    ePhysicsMaterialCombMode_Max =        3,
     //! Internal.
     ePhysicsMaterialCombMode_LastEnum
 };
@@ -37,11 +37,11 @@ class cPhysicsContactData
 public:
     cPhysicsContactData()
     {
-        mfMaxContactNormalSpeed =0;
-        mfMaxContactTangentSpeed =0;
-        mvContactNormal = cVector3f(0,0,0);
-        mvContactPosition = cVector3f(0,0,0);
-        mvForce = cVector3f(0,0,0);
+        mfMaxContactNormalSpeed = 0;
+        mfMaxContactTangentSpeed = 0;
+        mvContactNormal = cVector3f(0, 0, 0);
+        mvContactPosition = cVector3f(0, 0, 0);
+        mvForce = cVector3f(0, 0, 0);
     }
 
     float mfMaxContactNormalSpeed;
@@ -59,32 +59,32 @@ class iPhysicsMaterial
 {
 public:
     iPhysicsMaterial(const tString &asName, iPhysicsWorld *apWorld)
-        : msName(asName), mpWorld(apWorld),mpSurfaceData(NULL),
+        : msName(asName), mpWorld(apWorld), mpSurfaceData(NULL),
           mbPreloaded(false) {}
     virtual ~iPhysicsMaterial() {}
 
-    const tString& GetName() const
+    const tString &GetName() const
     {
         return msName;
     }
 
-    virtual void SetElasticity(float afElasticity)=0;
-    virtual float GetElasticity() const=0;
-    virtual void SetStaticFriction(float afElasticity)=0;
-    virtual float GetStaticFriction() const=0;
-    virtual void SetKineticFriction(float afElasticity)=0;
-    virtual float GetKineticFriction() const=0;
+    virtual void SetElasticity(float afElasticity) = 0;
+    virtual float GetElasticity() const = 0;
+    virtual void SetStaticFriction(float afElasticity) = 0;
+    virtual float GetStaticFriction() const = 0;
+    virtual void SetKineticFriction(float afElasticity) = 0;
+    virtual float GetKineticFriction() const = 0;
 
-    virtual void SetFrictionCombMode(ePhysicsMaterialCombMode aMode)=0;
-    virtual ePhysicsMaterialCombMode GetFrictionCombMode() const=0;
-    virtual void SetElasticityCombMode(ePhysicsMaterialCombMode aMode)=0;
-    virtual ePhysicsMaterialCombMode GetElasticityCombMode() const=0;
+    virtual void SetFrictionCombMode(ePhysicsMaterialCombMode aMode) = 0;
+    virtual ePhysicsMaterialCombMode GetFrictionCombMode() const = 0;
+    virtual void SetElasticityCombMode(ePhysicsMaterialCombMode aMode) = 0;
+    virtual ePhysicsMaterialCombMode GetElasticityCombMode() const = 0;
 
     void SetSurfaceData(cSurfaceData *apData)
     {
         mpSurfaceData = apData;
     }
-    cSurfaceData* GetSurfaceData()
+    cSurfaceData *GetSurfaceData()
     {
         return mpSurfaceData;
     }

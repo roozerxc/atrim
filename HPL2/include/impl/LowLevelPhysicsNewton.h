@@ -18,7 +18,7 @@ public:
     cLowLevelPhysicsNewton();
     ~cLowLevelPhysicsNewton();
 
-    iPhysicsWorld* CreateWorld();
+    iPhysicsWorld *CreateWorld();
 };
 };
 #endif // HPL_LOWLEVELPHYSICS_NEWTON_H

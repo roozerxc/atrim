@@ -285,7 +285,7 @@ enum eKeyModifier
 struct cKeyPress
 {
     cKeyPress() {}
-    cKeyPress(eKey aKey, int alUnicode,int alModifier)
+    cKeyPress(eKey aKey, int alUnicode, int alModifier)
         : mKey(aKey), mlUnicode(alUnicode), mlModifier(alModifier) {}
 
     eKey mKey;
@@ -436,8 +436,8 @@ struct cGamepadInputData
 
     bool operator==(const cGamepadInputData& aData) const
     {
-        return mlPadIndex==aData.mlPadIndex && mInputType==aData.mInputType &&
-               mlInputId==aData.mlInputId && mfInputValue==aData.mfInputValue;
+        return mlPadIndex == aData.mlPadIndex && mInputType == aData.mInputType &&
+               mlInputId == aData.mlInputId && mfInputValue == aData.mfInputValue;
     }
 
     int mlPadIndex;

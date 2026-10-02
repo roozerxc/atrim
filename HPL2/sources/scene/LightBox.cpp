@@ -18,13 +18,13 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cLightBox::cLightBox(tString asName, cResources *apResources) : iLight(asName,apResources)
+cLightBox::cLightBox(tString asName, cResources *apResources) : iLight(asName, apResources)
 {
     mLightType = eLightType_Box;
 
     mvSize = 1;
     mBlendFunc = eLightBoxBlendFunc_Replace;
-    mlBoxLightPrio =0;
+    mlBoxLightPrio = 0;
 
     UpdateBoundingVolume();
 }
@@ -51,7 +51,7 @@ void cLightBox::SetSize(const cVector3f& avSize)
 
 bool cLightBox::IsVisible()
 {
-    if(mDiffuseColor.r <=0 && mDiffuseColor.g <=0 && mDiffuseColor.b <=0 && mDiffuseColor.a <=0)
+    if(mDiffuseColor.r <= 0 && mDiffuseColor.g <= 0 && mDiffuseColor.b <= 0 && mDiffuseColor.a <= 0)
     {
         return false;
     }

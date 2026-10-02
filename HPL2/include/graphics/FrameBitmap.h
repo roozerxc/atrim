@@ -18,11 +18,11 @@ class cFBitmapRect
 public:
     cFBitmapRect()
     {
-        mlHandle=-1;
+        mlHandle = -1;
     }
-    cFBitmapRect(int x,int y,int w,int h, int alHandle)
+    cFBitmapRect(int x, int y, int w, int h, int alHandle)
     {
-        mRect = cRect2l(x,y,w,h);
+        mRect = cRect2l(x, y, w, h);
         mlHandle = alHandle;
     }
 
@@ -45,11 +45,11 @@ public:
 
 typedef BinTree<cFBitmapRect> tRectTree;
 typedef BinTreeNode<cFBitmapRect> tRectTreeNode;
-typedef std::vector<tRectTreeNode*> tRectTreeNodeVec;
+typedef std::vector<tRectTreeNode *> tRectTreeNodeVec;
 typedef tRectTreeNodeVec::iterator tRectTreeNodeVecIt;
 typedef tRectTreeNodeVec::const_iterator tRectTreeNodeVecConstIt;
 
-typedef std::list<cFBitmapImage*> cFBitmapImageList;
+typedef std::list<cFBitmapImage *> cFBitmapImageList;
 typedef cFBitmapImageList::iterator cFBitmapImageListIt;
 
 class cFrameBitmap : public iFrameBase
@@ -58,8 +58,8 @@ public:
     cFrameBitmap(cBitmap *apBitmap, cFrameTexture *apFrmTex, int alHandle);
     ~cFrameBitmap();
 
-    cFrameSubImage * AddBitmap(cBitmap *apSrc, const tWString& asFullPath, cFrameSubImage *apSubImageCreated, bool *apFoundNode=NULL);
-    bool MinimumFit(cRect2l aSrc,cRect2l aDest);
+    cFrameSubImage *AddBitmap(cBitmap *apSrc, const tWString& asFullPath, cFrameSubImage *apSubImageCreated, bool *apFoundNode = NULL);
+    bool MinimumFit(cRect2l aSrc, cRect2l aDest);
     bool IsFull();
     bool IsUpdated();
 
@@ -79,7 +79,7 @@ public:
     void Reorganize();
     bool FlushToTexture();
 
-    cFrameTexture* GetFrameTexture()
+    cFrameTexture *GetFrameTexture()
     {
         return mpFrameTexture;
     }
@@ -96,8 +96,8 @@ public:
 private:
     void ClearAddedImages();
 
-    cBitmap* mpBitmap;
-    cFrameTexture* mpFrameTexture;
+    cBitmap *mpBitmap;
+    cFrameTexture *mpFrameTexture;
 
     tRectTree mRects;
 

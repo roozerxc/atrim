@@ -463,7 +463,7 @@ struct cGuiMessageData
         mvPos = avPos;
         mvRel = avRel;
     }
-    cGuiMessageData(const cVector2f& avPos,const cVector2f& avRel, int alVal)
+    cGuiMessageData(const cVector2f& avPos, const cVector2f& avRel, int alVal)
     {
         mvPos = avPos;
         mvRel = avRel;
@@ -494,7 +494,7 @@ struct cGuiMessageData
     cGamepadInputData    mGamepadInputData;
 #endif
     float                mfVal;
-    void*                mpData;
+    void                *mpData;
     eGuiMessage            mMessage;
 };
 
@@ -512,7 +512,7 @@ typedef tFlag tWidgetWindowButtonFlag;
 
 class iWidget;
 
-typedef bool (*tGuiCallbackFunc)(void *,iWidget*, const cGuiMessageData&);
+typedef bool (*tGuiCallbackFunc)(void *, iWidget*, const cGuiMessageData &);
 
 #define kGuiCallbackDeclarationEnd(FuncName) \
         static bool FuncName##_static_gui(void *apObject,iWidget* apWidget,const cGuiMessageData& aData);
@@ -533,12 +533,12 @@ typedef bool (*tGuiCallbackFunc)(void *,iWidget*, const cGuiMessageData&);
 
 //--------------------------------
 
-typedef std::list<iWidget*> tWidgetList;
+typedef std::list<iWidget *> tWidgetList;
 typedef tWidgetList::iterator tWidgetListIt;
 
 //--------------------------------
 
-typedef std::vector<iWidget*>    tWidgetVec;
+typedef std::vector<iWidget *>    tWidgetVec;
 typedef tWidgetVec::iterator    tWidgetVecIt;
 
 //--------------------------------
@@ -546,18 +546,18 @@ typedef tWidgetVec::iterator    tWidgetVecIt;
 class cGuiGfxElement;
 class cGuiSet;
 
-typedef std::list<cGuiGfxElement*> tGuiGfxElementList;
+typedef std::list<cGuiGfxElement *> tGuiGfxElementList;
 typedef tGuiGfxElementList::iterator tGuiGfxElementListIt;
 
-typedef std::list<cGuiSet*> tGuiSetList;
+typedef std::list<cGuiSet *> tGuiSetList;
 typedef tGuiSetList::iterator tGuiSetListIt;
 
-typedef std::multimap<tString, cGuiSet*> tGuiSetMap;
+typedef std::multimap<tString, cGuiSet *> tGuiSetMap;
 typedef tGuiSetMap::iterator tGuiSetMapIt;
 
 //--------------------------------
 
-typedef cSTLIterator<cGuiSet*, tGuiSetList, tGuiSetListIt> cGuiSetListIterator;
+typedef cSTLIterator<cGuiSet *, tGuiSetList, tGuiSetListIt> cGuiSetListIterator;
 
 
 //--------------------------------

@@ -8,9 +8,9 @@ namespace hpl
 
 //------------------------------------------
 
-typedef std::map<tString, iTexture*> tTextureMap;
+typedef std::map<tString, iTexture *> tTextureMap;
 
-typedef std::map<tString, iTexture*>::iterator tTextureMapIt;
+typedef std::map<tString, iTexture *>::iterator tTextureMapIt;
 
 class cPostEffectParams_ColorGrading : public iPostEffectParams
 {
@@ -62,17 +62,17 @@ private:
         return &mParams;
     }
 
-    iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
+    iTexture *RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
 
-    iTexture * LoadLUT( tString asLUTName );
+    iTexture *LoadLUT( tString asLUTName );
 
-    cPostEffectType_ColorGrading* mpSpecificType;
+    cPostEffectType_ColorGrading *mpSpecificType;
 
     cPostEffectParams_ColorGrading mParams;
 
     iTexture
-    * mpLUT1,
-    * mpLUT2;
+    *mpLUT1,
+    *mpLUT2;
     tTextureMap
     mLUTMap;
 };

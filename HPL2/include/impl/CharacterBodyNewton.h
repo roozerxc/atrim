@@ -17,7 +17,7 @@ class iPhysicsWorld;
 class cCharacterBodyNewton : public iCharacterBody
 {
 public:
-    cCharacterBodyNewton(const tString &asName,iPhysicsWorld *apWorld, const cVector3f avSize);
+    cCharacterBodyNewton(const tString &asName, iPhysicsWorld *apWorld, const cVector3f avSize);
     ~cCharacterBodyNewton();
 
 private:

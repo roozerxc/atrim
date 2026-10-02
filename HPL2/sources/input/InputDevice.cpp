@@ -8,7 +8,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-iInputDevice::iInputDevice(tString asName,eInputDeviceType aType)
+iInputDevice::iInputDevice(tString asName, eInputDeviceType aType)
     : msName(asName), mType(aType)
 {
 

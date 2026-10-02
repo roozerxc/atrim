@@ -25,11 +25,11 @@ class cGuiSetEntity : public iRenderable
     typedef iRenderable __super;
 #endif
 public:
-    cGuiSetEntity(const tString asName,cGuiSet *apSet);
+    cGuiSetEntity(const tString asName, cGuiSet *apSet);
     ~cGuiSetEntity();
 
     void SetGuiSet(cGuiSet *apSet);
-    cGuiSet* GetGuiSet()
+    cGuiSet *GetGuiSet()
     {
         return mpGuiSet;
     }
@@ -47,7 +47,7 @@ public:
     {
         return NULL;
     }
-    iVertexBuffer* GetVertexBuffer()
+    iVertexBuffer *GetVertexBuffer()
     {
         return NULL;
     }
@@ -56,7 +56,7 @@ public:
     {
         return eRenderableType_GuiSet;
     }
-    cMatrixf* GetModelMatrix(cFrustum *apFrustum);
+    cMatrixf *GetModelMatrix(cFrustum *apFrustum);
     int GetMatrixUpdateCount();
 
 private:

@@ -56,7 +56,7 @@ void cRenderList::Setup(double adFrameTime, cFrustum *apFrustum)
 
 void cRenderList::AddObject(iRenderable *apObject)
 {
-    eRenderableType renderType =apObject->GetRenderType();
+    eRenderableType renderType = apObject->GetRenderType();
 
     ////////////////////////////////////////
     //Update material, if not already done this frame
@@ -79,10 +79,10 @@ void cRenderList::AddObject(iRenderable *apObject)
     ////////////////////////////////////////
     //Update per viewport specific and set amtrix point
     //Skip this for non-decal translucent! This is because the water rendering might mess it up otherwise!
-    if(pMaterialType==NULL || pMaterialType->IsTranslucent()==false || pMaterialType->IsDecal() )
+    if(pMaterialType == NULL || pMaterialType->IsTranslucent() == false || pMaterialType->IsDecal() )
     {
         //skip rendering if the update return false
-        if(apObject->UpdateGraphicsForViewport(mpFrustum,(float)dFrameTime)==false)
+        if(apObject->UpdateGraphicsForViewport(mpFrustum, (float)dFrameTime) == false)
         {
             return;
         }
@@ -98,13 +98,13 @@ void cRenderList::AddObject(iRenderable *apObject)
     ////////////////////////////////////////
     //Calculate the View Z value
     // For transparent and non decals!
-    if(pMaterialType && pMaterialType->IsTranslucent() && pMaterialType->IsDecal()==false)
+    if(pMaterialType && pMaterialType->IsTranslucent() && pMaterialType->IsDecal() == false)
     {
         cVector3f vIntersectionPos;
         cBoundingVolume *pBV = apObject->GetBoundingVolume();
 
         //If there is an intersection (which happens unless inside), use that. Else use world center
-        if(cMath::CheckAABBLineIntersection(pBV->GetMin(), pBV->GetMax(), mpFrustum->GetOrigin(), pBV->GetWorldCenter(), &vIntersectionPos, NULL)==false)
+        if(cMath::CheckAABBLineIntersection(pBV->GetMin(), pBV->GetMax(), mpFrustum->GetOrigin(), pBV->GetWorldCenter(), &vIntersectionPos, NULL) == false)
         {
             vIntersectionPos = pBV->GetWorldCenter();
         }
@@ -149,7 +149,7 @@ void cRenderList::AddObject(iRenderable *apObject)
     // Normal addition
     else
     {
-        if(pMaterial==NULL)
+        if(pMaterial == NULL)
         {
             return;    //Skip if it has no material...
         }
@@ -172,7 +172,7 @@ void cRenderList::AddObject(iRenderable *apObject)
         else
         {
             mvSolidObjects.push_back(apObject);
-            if(pMaterial->GetTexture(eMaterialTexture_Illumination) && apObject->GetIlluminationAmount()>0)
+            if(pMaterial->GetTexture(eMaterialTexture_Illumination) && apObject->GetIlluminationAmount() > 0)
             {
                 mvIllumObjects.push_back(apObject);
             }
@@ -227,7 +227,7 @@ void cRenderList::Clear()
     mvLights.resize(0);
     mvFogAreas.resize(0);
 
-    for(int i=0; i<eRenderListType_LastEnum; ++i)
+    for(int i = 0; i < eRenderListType_LastEnum; ++i)
     {
         mvSortedArrays[i].resize(0);
     }
@@ -241,7 +241,7 @@ void cRenderList::PrintAllObjects()
     Log("------ RENDER LIST CONTENTS -----\n");
 
     Log("Trans Objects:\n");
-    for(size_t i=0; i<mvTransObjects.size(); ++i)
+    for(size_t i = 0; i < mvTransObjects.size(); ++i)
         Log(" '%s' ViewspaceZ: %f LargeSurfacePlacement: %d Mat: '%s' RenderCount: %d\n", mvTransObjects[i]->GetName().c_str(),
             mvTransObjects[i]->GetViewSpaceZ(),
             mvTransObjects[i]->GetLargePlaneSurfacePlacement(),
@@ -249,19 +249,19 @@ void cRenderList::PrintAllObjects()
             mvTransObjects[i]->GetRenderFrameCount());
 
     Log("Solid Objects:\n");
-    for(size_t i=0; i<mvSolidObjects.size(); ++i)
+    for(size_t i = 0; i < mvSolidObjects.size(); ++i)
     {
         Log(" '%s' Mat: '%s' RenderCount: %d\n", mvSolidObjects[i]->GetName().c_str(), mvSolidObjects[i]->GetMaterial()->GetName().c_str(), mvSolidObjects[i]->GetRenderFrameCount());
     }
 
     Log("Decal Objects:\n");
-    for(size_t i=0; i<mvDecalObjects.size(); ++i)
+    for(size_t i = 0; i < mvDecalObjects.size(); ++i)
     {
         Log(" '%s' Mat: '%s' RenderCount: %d\n", mvDecalObjects[i]->GetName().c_str(), mvDecalObjects[i]->GetMaterial()->GetName().c_str(), mvSolidObjects[i]->GetRenderFrameCount());
     }
 
     Log("Illum Objects:\n");
-    for(size_t i=0; i<mvIllumObjects.size(); ++i)
+    for(size_t i = 0; i < mvIllumObjects.size(); ++i)
     {
         Log(" '%s' Mat: '%s' RenderCount: %d\n", mvIllumObjects[i]->GetName().c_str(), mvIllumObjects[i]->GetMaterial()->GetName().c_str(), mvSolidObjects[i]->GetRenderFrameCount());
     }
@@ -274,7 +274,7 @@ void cRenderList::PrintAllObjects()
 
 bool cRenderList::ArrayHasObjects(eRenderListType aType)
 {
-    return mvSortedArrays[aType].empty()==false;
+    return mvSortedArrays[aType].empty() == false;
 }
 
 //-----------------------------------------------------------------------
@@ -316,9 +316,9 @@ static bool SortFunc_Z(iRenderable* apObjectA, iRenderable *apObjectB)
     //If alpha, sort by texture (we know alpha is same for both materials, so can just test one)
     if(    pMatA->GetAlphaMode() == eMaterialAlphaMode_Trans )
     {
-        if(pMatA->GetProgram(0,eMaterialRenderMode_Z) != pMatB->GetProgram(0,eMaterialRenderMode_Z))
+        if(pMatA->GetProgram(0, eMaterialRenderMode_Z) != pMatB->GetProgram(0, eMaterialRenderMode_Z))
         {
-            return pMatA->GetProgram(0,eMaterialRenderMode_Z) < pMatB->GetProgram(0,eMaterialRenderMode_Z);
+            return pMatA->GetProgram(0, eMaterialRenderMode_Z) < pMatB->GetProgram(0, eMaterialRenderMode_Z);
         }
 
         if(pMatA->GetTexture(eMaterialTexture_Diffuse) != pMatB->GetTexture(eMaterialTexture_Diffuse))
@@ -343,17 +343,17 @@ static bool SortFunc_Diffuse(iRenderable* apObjectA, iRenderable *apObjectB)
 
     //////////////////////////
     //Program
-    if(pMatA->GetProgram(0,eMaterialRenderMode_Diffuse) != pMatB->GetProgram(0,eMaterialRenderMode_Diffuse))
+    if(pMatA->GetProgram(0, eMaterialRenderMode_Diffuse) != pMatB->GetProgram(0, eMaterialRenderMode_Diffuse))
     {
-        return pMatA->GetProgram(0,eMaterialRenderMode_Diffuse) < pMatB->GetProgram(0,eMaterialRenderMode_Diffuse);
+        return pMatA->GetProgram(0, eMaterialRenderMode_Diffuse) < pMatB->GetProgram(0, eMaterialRenderMode_Diffuse);
     }
 
     //////////////////////////
     //Texture
-    for(int i=0; i<kMaxTextureUnits; ++i)
+    for(int i = 0; i < kMaxTextureUnits; ++i)
     {
-        iTexture *pTexA = pMatA->GetTextureInUnit(eMaterialRenderMode_Diffuse,i);
-        iTexture *pTexB = pMatB->GetTextureInUnit(eMaterialRenderMode_Diffuse,i);
+        iTexture *pTexA = pMatA->GetTextureInUnit(eMaterialRenderMode_Diffuse, i);
+        iTexture *pTexB = pMatB->GetTextureInUnit(eMaterialRenderMode_Diffuse, i);
         if(pTexA != pTexB)
         {
             return pTexA < pTexB;
@@ -463,9 +463,9 @@ static bool SortFunc_Illumination(iRenderable* apObjectA, iRenderable *apObjectB
 
 //-----------------------------------------------------------------------
 
-typedef bool (*tSortRenderableFunc)(iRenderable*,iRenderable*);
+typedef bool (*tSortRenderableFunc)(iRenderable*, iRenderable*);
 
-static tSortRenderableFunc vSortFunctions[eRenderListType_LastEnum] = {SortFunc_Z,SortFunc_Diffuse,SortFunc_Translucent,SortFunc_Decal,SortFunc_Illumination,SortFunc_Z};
+static tSortRenderableFunc vSortFunctions[eRenderListType_LastEnum] = {SortFunc_Z, SortFunc_Diffuse, SortFunc_Translucent, SortFunc_Decal, SortFunc_Illumination, SortFunc_Z};
 
 //-----------------------------------------------------------------------
 
@@ -534,12 +534,12 @@ void cRenderList::FindNearestLargeSurfacePlane()
     // Setup variables
     cPlanef nearestSurfacePlane;
     bool bHasLargeSurfacePlane = false;
-    float fClosestDist =0;
+    float fClosestDist = 0;
     iRenderable *pLargeSurfaceObject = NULL;
 
     ////////////////////////////////////
     // Find the neareest surface plane
-    for(size_t i=0; i<mvTransObjects.size(); ++i)
+    for(size_t i = 0; i < mvTransObjects.size(); ++i)
     {
         /////////////////////////////////
         // Check so object is of right type
@@ -550,16 +550,16 @@ void cRenderList::FindNearestLargeSurfacePlane()
         }
 
         cMaterial *pMat = pObject->GetMaterial();
-        if(pMat->GetLargeTransperantSurface()==false)
+        if(pMat->GetLargeTransperantSurface() == false)
         {
             continue;
         }
 
         /////////////////////////////////
         // Check so sub mesh is one sided
-        cSubMeshEntity *pSubEnt = static_cast<cSubMeshEntity*>(pObject);
+        cSubMeshEntity *pSubEnt = static_cast<cSubMeshEntity *>(pObject);
         cSubMesh *pSubMesh = pSubEnt->GetSubMesh();
-        if(pSubMesh->GetIsOneSided()==false)
+        if(pSubMesh->GetIsOneSided() == false)
         {
             continue;
         }
@@ -581,7 +581,7 @@ void cRenderList::FindNearestLargeSurfacePlane()
         surfacePlane.FromNormalPoint(vSurfaceNormal, vSurfacePos);
 
         float fDist = cMath::PlaneToPointDist(surfacePlane, mpFrustum->GetOrigin());
-        if(fDist < fClosestDist || bHasLargeSurfacePlane==false)
+        if(fDist < fClosestDist || bHasLargeSurfacePlane == false)
         {
             bHasLargeSurfacePlane = true;
             fClosestDist = fDist;
@@ -595,7 +595,7 @@ void cRenderList::FindNearestLargeSurfacePlane()
     if(bHasLargeSurfacePlane)
     {
         //Log(" LargePlaneObject: '%s' Mat:'%s'\n", pLargeSurfaceObject->GetName().c_str(),  pLargeSurfaceObject->GetMaterial()->GetName().c_str());
-        for(size_t i=0; i<mvTransObjects.size(); ++i)
+        for(size_t i = 0; i < mvTransObjects.size(); ++i)
         {
             iRenderable *pObject = mvTransObjects[i];
 
@@ -616,7 +616,7 @@ void cRenderList::FindNearestLargeSurfacePlane()
     // Set all to same value.
     else
     {
-        for(size_t i=0; i<mvTransObjects.size(); ++i)
+        for(size_t i = 0; i < mvTransObjects.size(); ++i)
         {
             iRenderable *pObject = mvTransObjects[i];
             pObject->SetLargePlaneSurfacePlacement(0);

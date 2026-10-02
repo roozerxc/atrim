@@ -38,7 +38,7 @@ class iScript;
 //--------------------------------------------------------
 
 extern void SetLogFile(const tWString &asFile);
-extern void FatalError(const char* fmt,... ) NORETURN;
+extern void FatalError(const char* fmt, ... ) NORETURN;
 extern void Error(const char* fmt, ...);
 extern void Warning(const char* fmt, ...);
 extern void Log(const char* fmt, ...);
@@ -77,14 +77,14 @@ public:
      * \param asName name of the script.
      * \return
      */
-    virtual iScript* CreateScript(const tString& asName)=0;
+    virtual iScript *CreateScript(const tString& asName) = 0;
 
     /**
      * Add a function to the script vm. Example: "void test(float x)". must be __stdcall
      * \param asFuncDecl the declaration.
      * \return
      */
-    virtual bool AddScriptFunc(const tString& asFuncDecl, void* pFunc)=0;
+    virtual bool AddScriptFunc(const tString& asFuncDecl, void* pFunc) = 0;
 
     /**
      * Add a variable to the script vm. Example: "int MyVar"
@@ -92,7 +92,7 @@ public:
      * \param *pVar the variable
      * \return
      */
-    virtual bool AddScriptVar(const tString& asVarDecl, void *pVar)=0;
+    virtual bool AddScriptVar(const tString& asVarDecl, void *pVar) = 0;
 
 
 };

@@ -30,7 +30,7 @@ namespace hpl
 // CONSTRUCTORS
 //////////////////////////////////////////////////////////////////////////
 
-cGuiGfxElement* cGui::mpGfxRect = NULL;
+cGuiGfxElement *cGui::mpGfxRect = NULL;
 
 //-----------------------------------------------------------------------
 
@@ -64,7 +64,7 @@ cGui::~cGui()
     STLDeleteAll(mlstToBeDestroyedGfxElements);
 
     Log(" Deleting all materials\n");
-    for(int i=0; i< eGuiMaterial_LastEnum; ++i)
+    for(int i = 0; i < eGuiMaterial_LastEnum; ++i)
     {
         if(mvMaterials[i])
         {
@@ -94,17 +94,17 @@ void cGui::Init(cResources *apResources, cGraphics* apGraphics,
 
     //////////////////////////////
     // Create materials
-    for(int i=0; i< eGuiMaterial_LastEnum; ++i)
+    for(int i = 0; i < eGuiMaterial_LastEnum; ++i)
     {
         mvMaterials[i] = NULL;
     }
 
-    mvMaterials[eGuiMaterial_Diffuse] = hplNew( cGuiMaterial_Diffuse,(mpGraphics->GetLowLevel()) );
-    mvMaterials[eGuiMaterial_Alpha] = hplNew( cGuiMaterial_Alpha,(mpGraphics->GetLowLevel()) );
-    mvMaterials[eGuiMaterial_FontNormal] = hplNew( cGuiMaterial_FontNormal,(mpGraphics->GetLowLevel()) );
-    mvMaterials[eGuiMaterial_Additive] = hplNew( cGuiMaterial_Additive,(mpGraphics->GetLowLevel()) );
-    mvMaterials[eGuiMaterial_Modulative] = hplNew( cGuiMaterial_Modulative,(mpGraphics->GetLowLevel()) );
-    mvMaterials[eGuiMaterial_PremulAlpha] = hplNew( cGuiMaterial_PremulAlpha,(mpGraphics->GetLowLevel()) );
+    mvMaterials[eGuiMaterial_Diffuse] = hplNew( cGuiMaterial_Diffuse, (mpGraphics->GetLowLevel()) );
+    mvMaterials[eGuiMaterial_Alpha] = hplNew( cGuiMaterial_Alpha, (mpGraphics->GetLowLevel()) );
+    mvMaterials[eGuiMaterial_FontNormal] = hplNew( cGuiMaterial_FontNormal, (mpGraphics->GetLowLevel()) );
+    mvMaterials[eGuiMaterial_Additive] = hplNew( cGuiMaterial_Additive, (mpGraphics->GetLowLevel()) );
+    mvMaterials[eGuiMaterial_Modulative] = hplNew( cGuiMaterial_Modulative, (mpGraphics->GetLowLevel()) );
+    mvMaterials[eGuiMaterial_PremulAlpha] = hplNew( cGuiMaterial_PremulAlpha, (mpGraphics->GetLowLevel()) );
 
 
     //////////////////////////////
@@ -114,9 +114,9 @@ void cGui::Init(cResources *apResources, cGraphics* apGraphics,
 
     //////////////////////////////
     // Set up global gfx
-    if(mpGfxRect==NULL)
+    if(mpGfxRect == NULL)
     {
-        mpGfxRect = CreateGfxFilledRect(cColor(1,1), eGuiMaterial_Alpha);
+        mpGfxRect = CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_Alpha);
     }
 }
 
@@ -179,16 +179,16 @@ void cGui::OnPostBufferSwap()
 
 //-----------------------------------------------------------------------
 
-iGuiMaterial* cGui::GetMaterial(eGuiMaterial aType)
+iGuiMaterial *cGui::GetMaterial(eGuiMaterial aType)
 {
     return mvMaterials[aType];
 }
 
 //-----------------------------------------------------------------------
 
-cGuiSkin* cGui::CreateSkin(const tString& asFile)
+cGuiSkin *cGui::CreateSkin(const tString& asFile)
 {
-    tString sName = cString::SetFileExt(cString::GetFileName(asFile),"");
+    tString sName = cString::SetFileExt(cString::GetFileName(asFile), "");
 
     //See if skin exists
     tGuiSkinMapIt it = m_mapSkins.find(sName);
@@ -201,13 +201,13 @@ cGuiSkin* cGui::CreateSkin(const tString& asFile)
     cGuiSkin *pSkin = hplNew( cGuiSkin, (sName, this) );
     tWString sPath = mpResources->GetFileSearcher()->GetFilePath(asFile);
 
-    if(pSkin->LoadFromFile(sPath)==false)
+    if(pSkin->LoadFromFile(sPath) == false)
     {
         hplDelete(pSkin);
         return NULL;
     }
 
-    m_mapSkins.insert(tGuiSkinMap::value_type(sName,pSkin));
+    m_mapSkins.insert(tGuiSkinMap::value_type(sName, pSkin));
     return pSkin;
 }
 
@@ -218,7 +218,7 @@ eGuiSkinGfx cGui::GetSkinGfxFromString(const tString& asType)
     tGuiSkinGfxMapIt it = m_mapSkinGfxStrings.find(asType);
     if(it == m_mapSkinGfxStrings.end())
     {
-        Warning("Skin gfx type '%s' does not exist!\n",asType.c_str());
+        Warning("Skin gfx type '%s' does not exist!\n", asType.c_str());
         return eGuiSkinGfx_LastEnum;
     }
 
@@ -230,7 +230,7 @@ eGuiSkinFont cGui::GetSkinFontFromString(const tString& asType)
     tGuiSkinFontMapIt it = m_mapSkinFontStrings.find(asType);
     if(it == m_mapSkinFontStrings.end())
     {
-        Warning("Skin Font type '%s' does not exist!\n",asType.c_str());
+        Warning("Skin Font type '%s' does not exist!\n", asType.c_str());
         return eGuiSkinFont_LastEnum;
     }
 
@@ -242,7 +242,7 @@ eGuiSkinAttribute cGui::GetSkinAttributeFromString(const tString& asType)
     tGuiSkinAttributeMapIt it = m_mapSkinAttributeStrings.find(asType);
     if(it == m_mapSkinAttributeStrings.end())
     {
-        Warning("Skin Attribute type '%s' does not exist!\n",asType.c_str());
+        Warning("Skin Attribute type '%s' does not exist!\n", asType.c_str());
         return eGuiSkinAttribute_LastEnum;
     }
 
@@ -295,16 +295,16 @@ tString cGui::GetSkinAttributeString(eGuiSkinAttribute aType)
 
 //-----------------------------------------------------------------------
 
-cGuiSet* cGui::CreateSet(const tString& asName, cGuiSkin *apSkin)
+cGuiSet *cGui::CreateSet(const tString& asName, cGuiSkin *apSkin)
 {
-    cGuiSet *pSet = hplNew( cGuiSet, (asName,this,apSkin,mpResources, mpGraphics, mpSound,mpScene) );
+    cGuiSet *pSet = hplNew( cGuiSet, (asName, this, apSkin, mpResources, mpGraphics, mpSound, mpScene) );
 
     m_mapSets.insert(tGuiSetMap::value_type(asName, pSet));
 
     return pSet;
 }
 
-cGuiSet* cGui::GetSetFromName(const tString& asName)
+cGuiSet *cGui::GetSetFromName(const tString& asName)
 {
     tGuiSetMapIt it = m_mapSets.find(asName);
     if(it == m_mapSets.end())
@@ -338,7 +338,7 @@ void cGui::SetFocusByName(const tString& asSetName)
 
 void cGui::DestroySet(cGuiSet *apSet)
 {
-    if(apSet==NULL)
+    if(apSet == NULL)
     {
         return;
     }
@@ -357,7 +357,7 @@ void cGui::DestroySet(cGuiSet *apSet)
 
 //-----------------------------------------------------------------------
 
-cGuiGfxElement* cGui::CreateGfxFilledRect(const cColor& aColor, eGuiMaterial aMaterial, bool abAddToList)
+cGuiGfxElement *cGui::CreateGfxFilledRect(const cColor& aColor, eGuiMaterial aMaterial, bool abAddToList)
 {
     cGuiGfxElement *pGfxElem = hplNew( cGuiGfxElement, (this) );
 
@@ -374,15 +374,15 @@ cGuiGfxElement* cGui::CreateGfxFilledRect(const cColor& aColor, eGuiMaterial aMa
 
 //-----------------------------------------------------------------------
 
-cGuiGfxElement* cGui::CreateGfxImage(    const tString &asFile, eGuiMaterial aMaterial,
+cGuiGfxElement *cGui::CreateGfxImage(    const tString &asFile, eGuiMaterial aMaterial,
         const cColor& aColor, bool abAddToList)
 {
     ////////////////////////////
     // Load image
     cFrameSubImage *pImage = mpResources->GetImageManager()->CreateImage(asFile);
-    if(pImage==NULL)
+    if(pImage == NULL)
     {
-        Error("Could not load image '%s'!\n",asFile.c_str());
+        Error("Could not load image '%s'!\n", asFile.c_str());
         return NULL;
     }
 
@@ -406,7 +406,7 @@ cGuiGfxElement* cGui::CreateGfxImage(    const tString &asFile, eGuiMaterial aMa
 
 //-----------------------------------------------------------------------
 
-cGuiGfxElement* cGui::CreateGfxTexture(    const tString &asFile,
+cGuiGfxElement *cGui::CreateGfxTexture(    const tString &asFile,
         eGuiMaterial aMaterial,
         eTextureType aTextureType,
         const cColor& aColor, bool abMipMaps,
@@ -416,29 +416,29 @@ cGuiGfxElement* cGui::CreateGfxTexture(    const tString &asFile,
     // Error check
     if( aTextureType != eTextureType_2D && aTextureType != eTextureType_Rect )
     {
-        Error("Texture %s could not be loaded because texture type param was not valid!\n",asFile.c_str());
+        Error("Texture %s could not be loaded because texture type param was not valid!\n", asFile.c_str());
         return NULL;
     }
 
     ///////////////////
     // Load texture
-    iTexture *pTexture = mpResources->GetTextureManager()->Create2D(asFile,abMipMaps,aTextureType);
-    if(pTexture==NULL)
+    iTexture *pTexture = mpResources->GetTextureManager()->Create2D(asFile, abMipMaps, aTextureType);
+    if(pTexture == NULL)
     {
-        Error("Could not load texture '%s'!\n",asFile.c_str());
+        Error("Could not load texture '%s'!\n", asFile.c_str());
         return NULL;
     }
 
     /////////////////////////////
     // Create element
-    cGuiGfxElement *pGfxElem = CreateGfxTexture(pTexture,true,aMaterial,aColor,abAddToList);
+    cGuiGfxElement *pGfxElem = CreateGfxTexture(pTexture, true, aMaterial, aColor, abAddToList);
 
     return pGfxElem;
 }
 
 //-----------------------------------------------------------------------
 
-cGuiGfxElement* cGui::CreateGfxTexture(iTexture *apTexture, bool abAutoDestroyTexture,
+cGuiGfxElement *cGui::CreateGfxTexture(iTexture *apTexture, bool abAutoDestroyTexture,
                                        eGuiMaterial aMaterial,
                                        const cColor& aColor,
                                        bool abAddToList,
@@ -467,24 +467,24 @@ cGuiGfxElement* cGui::CreateGfxTexture(iTexture *apTexture, bool abAutoDestroyTe
 
 //-----------------------------------------------------------------------
 
-cGuiGfxElement* cGui::CreateGfxImageBuffer(    const tString &asFile,eGuiMaterial aMaterial,
+cGuiGfxElement *cGui::CreateGfxImageBuffer(    const tString &asFile, eGuiMaterial aMaterial,
         bool abCreateAnimation,
         const cColor& aColor, bool abAddToList)
 {
     ////////////////////////////
     // Load images
-    tString sName = cString::SetFileExt(asFile,"");
+    tString sName = cString::SetFileExt(asFile, "");
     tString sExt = cString::GetFileExt(asFile);
 
-    std::vector<cFrameSubImage*> vImages;
+    std::vector<cFrameSubImage *> vImages;
 
-    int lFileNum =0;
+    int lFileNum = 0;
     while(true)
     {
-        tString sNum = lFileNum<=9 ? "0"+cString::ToString(lFileNum) : cString::ToString(lFileNum);
-        tString sFile = sName + sNum+"."+sExt;
+        tString sNum = lFileNum <= 9 ? "0" + cString::ToString(lFileNum) : cString::ToString(lFileNum);
+        tString sFile = sName + sNum + "." + sExt;
 
-        if(mpResources->GetFileSearcher()->GetFilePath(sFile)==_W(""))
+        if(mpResources->GetFileSearcher()->GetFilePath(sFile) == _W(""))
         {
             break;
         }
@@ -496,7 +496,7 @@ cGuiGfxElement* cGui::CreateGfxImageBuffer(    const tString &asFile,eGuiMateria
 
     if(vImages.empty())
     {
-        Error("Could not load any images with '%s' as base!\n",asFile.c_str());
+        Error("Could not load any images with '%s' as base!\n", asFile.c_str());
         return NULL;
     }
 
@@ -507,9 +507,9 @@ cGuiGfxElement* cGui::CreateGfxImageBuffer(    const tString &asFile,eGuiMateria
     pGfxElem->SetColor(aColor);
     pGfxElem->SetMaterial(GetMaterial(aMaterial));
 
-    for(size_t i=0; i< vImages.size(); ++i)
+    for(size_t i = 0; i < vImages.size(); ++i)
     {
-        if(i==0)
+        if(i == 0)
         {
             pGfxElem->AddImage(vImages[i]);
         }
@@ -526,7 +526,7 @@ cGuiGfxElement* cGui::CreateGfxImageBuffer(    const tString &asFile,eGuiMateria
     if(abCreateAnimation)
     {
         cGuiGfxAnimation *pAnim = pGfxElem->CreateAnimtion("Default");
-        for(size_t i=0; i<vImages.size(); ++i)
+        for(size_t i = 0; i < vImages.size(); ++i)
         {
             pAnim->AddFrame((int)i);
         }
@@ -560,7 +560,7 @@ void cGui::DestroyGfx(cGuiGfxElement* apGfx)
 
 bool cGui::SendMousePos(const cVector2l &avPos, const cVector2l &avRel)
 {
-    if(mpSetInFocus==NULL)
+    if(mpSetInFocus == NULL)
     {
         return false;
     }
@@ -578,7 +578,7 @@ bool cGui::SendMousePos(const cVector2l &avPos, const cVector2l &avRel)
 
 bool cGui::SendMouseClickDown(eGuiMouseButton aButton, int alKeyModifiers)
 {
-    if(mpSetInFocus==NULL)
+    if(mpSetInFocus == NULL)
     {
         return false;
     }
@@ -587,12 +587,12 @@ bool cGui::SendMouseClickDown(eGuiMouseButton aButton, int alKeyModifiers)
     data.mlVal = aButton;
     data.mKeyPress.mlModifier = alKeyModifiers;
 
-    return mpSetInFocus->SendMessage(eGuiMessage_MouseDown,data);
+    return mpSetInFocus->SendMessage(eGuiMessage_MouseDown, data);
 }
 
 bool cGui::SendMouseClickUp(eGuiMouseButton aButton, int alKeyModifiers)
 {
-    if(mpSetInFocus==NULL)
+    if(mpSetInFocus == NULL)
     {
         return false;
     }
@@ -606,7 +606,7 @@ bool cGui::SendMouseClickUp(eGuiMouseButton aButton, int alKeyModifiers)
 
 bool cGui::SendMouseDoubleClick(eGuiMouseButton aButton, int alKeyModifiers)
 {
-    if(mpSetInFocus==NULL)
+    if(mpSetInFocus == NULL)
     {
         return false;
     }
@@ -615,12 +615,12 @@ bool cGui::SendMouseDoubleClick(eGuiMouseButton aButton, int alKeyModifiers)
     data.mlVal = aButton;
     data.mKeyPress.mlModifier = alKeyModifiers;
 
-    return mpSetInFocus->SendMessage(eGuiMessage_MouseDoubleClick,data);
+    return mpSetInFocus->SendMessage(eGuiMessage_MouseDoubleClick, data);
 }
 
 bool cGui::SendKeyPress(const cKeyPress& keyPress)
 {
-    if(mpSetInFocus==NULL)
+    if(mpSetInFocus == NULL)
     {
         return false;
     }
@@ -630,7 +630,7 @@ bool cGui::SendKeyPress(const cKeyPress& keyPress)
 
 bool cGui::SendKeyRelease(const cKeyPress& aKeyPress)
 {
-    if(mpSetInFocus==NULL)
+    if(mpSetInFocus == NULL)
     {
         return false;
     }
@@ -643,7 +643,7 @@ bool cGui::SendKeyRelease(const cKeyPress& aKeyPress)
 #if USE_GAMEPAD
 bool cGui::SendGamepadInput(const cGamepadInputData& aInput)
 {
-    if(mpSetInFocus==NULL)
+    if(mpSetInFocus == NULL)
     {
         return false;
     }
@@ -656,7 +656,7 @@ bool cGui::SendGamepadInput(const cGamepadInputData& aInput)
 
 bool cGui::SendUIArrowPress(eUIArrow aX)
 {
-    if(mpSetInFocus==NULL)
+    if(mpSetInFocus == NULL)
     {
         return false;
     }
@@ -666,7 +666,7 @@ bool cGui::SendUIArrowPress(eUIArrow aX)
 
 bool cGui::SendUIArrowRelease(eUIArrow aX)
 {
-    if(mpSetInFocus==NULL)
+    if(mpSetInFocus == NULL)
     {
         return false;
     }
@@ -676,7 +676,7 @@ bool cGui::SendUIArrowRelease(eUIArrow aX)
 
 bool cGui::SendUIButtonPress(eUIButton aX)
 {
-    if(mpSetInFocus==NULL)
+    if(mpSetInFocus == NULL)
     {
         return false;
     }
@@ -686,7 +686,7 @@ bool cGui::SendUIButtonPress(eUIButton aX)
 
 bool cGui::SendUIButtonRelease(eUIButton aX)
 {
-    if(mpSetInFocus==NULL)
+    if(mpSetInFocus == NULL)
     {
         return false;
     }
@@ -696,7 +696,7 @@ bool cGui::SendUIButtonRelease(eUIButton aX)
 
 bool cGui::SendUIButtonDoublePress(eUIButton aX)
 {
-    if(mpSetInFocus==NULL)
+    if(mpSetInFocus == NULL)
     {
         return false;
     }

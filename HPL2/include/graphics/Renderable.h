@@ -35,18 +35,18 @@ public:
     iRenderable(const tString &asName);
     virtual ~iRenderable() {}
 
-    virtual cMaterial *GetMaterial()=0;
-    virtual iVertexBuffer* GetVertexBuffer()=0;
+    virtual cMaterial *GetMaterial() = 0;
+    virtual iVertexBuffer *GetVertexBuffer() = 0;
 
     virtual bool CollidesWithBV(cBoundingVolume *apBV);
     virtual bool CollidesWithFrustum(cFrustum *apFrustum);
 
-    virtual cMatrixf* GetModelMatrix(cFrustum *apFrustum)=0;
+    virtual cMatrixf *GetModelMatrix(cFrustum *apFrustum) = 0;
 
-    virtual eRenderableType GetRenderType()=0;
+    virtual eRenderableType GetRenderType() = 0;
 
     virtual void UpdateGraphicsForFrame(double adFrameTime) {}
-    virtual bool UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime)
+    virtual bool UpdateGraphicsForViewport(cFrustum *apFrustum, double adFrameTime)
     {
         return true;
     }
@@ -64,7 +64,7 @@ public:
     virtual void SetRenderFlagBit(tRenderableFlag alFlagBit, bool abSet);
     bool GetRenderFlagBit(tRenderableFlag alFlagBit)
     {
-        return (mlRenderFlags & alFlagBit)!=0;
+        return (mlRenderFlags & alFlagBit) != 0;
     }
     inline tRenderableFlag GetRenderFlags() const
     {
@@ -73,7 +73,7 @@ public:
 
     virtual bool IsVisible()
     {
-        return mbIsVisible && mfCoverageAmount >0;
+        return mbIsVisible && mfCoverageAmount > 0;
     }
     void SetVisible(bool abVisible);
 
@@ -123,13 +123,13 @@ public:
      * Should return a different number each time the renderable model matrix is updated. never -1
      * \return
      */
-    virtual int GetMatrixUpdateCount()=0;
+    virtual int GetMatrixUpdateCount() = 0;
 
     inline void SetModelMatrixPtr(cMatrixf *apMtx)
     {
         mpModelMatrix = apMtx;
     }
-    inline cMatrixf* GetModelMatrixPtr() const
+    inline cMatrixf *GetModelMatrixPtr() const
     {
         return mpModelMatrix;
     }
@@ -148,18 +148,18 @@ public:
         return false;
     }
 
-    cMatrixf* GetInvModelMatrix();
+    cMatrixf *GetInvModelMatrix();
 
     inline void SetPrevMatrix(const cMatrixf& a_mtxPrev)
     {
         m_mtxPrevious = a_mtxPrev;
     }
-    inline cMatrixf& GetPrevMatrix()
+    inline cMatrixf &GetPrevMatrix()
     {
         return m_mtxPrevious;
     }
 
-    const cVector3f& GetCalcScale();
+    const cVector3f &GetCalcScale();
 
     void SetStatic(bool abX)
     {
@@ -183,7 +183,7 @@ public:
     {
         return mbIsOneSided;
     }
-    const cVector3f& GetOneSidedNormal()
+    const cVector3f &GetOneSidedNormal()
     {
         return mvOneSidedNormal;
     }
@@ -193,7 +193,7 @@ public:
         mpRenderCallback = apCallback;
     }
 
-    inline iRenderableContainerNode* GetRenderContainerNode()
+    inline iRenderableContainerNode *GetRenderContainerNode()
     {
         return mpRenderContainerNode;
     }
@@ -206,7 +206,7 @@ public:
     {
         mpRenderableUserData = apData;
     }
-    void* GetRenderableUserData()
+    void *GetRenderableUserData()
     {
         return mpRenderableUserData;
     }
@@ -246,7 +246,7 @@ protected:
 
     iRenderableContainerNode *mpRenderContainerNode;
 
-    void* mpRenderableUserData;
+    void *mpRenderableUserData;
 };
 };
 #endif // HPL_RENDERABLE_H

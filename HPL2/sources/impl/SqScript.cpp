@@ -28,7 +28,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cSqScript::cSqScript(const tString& asName,asIScriptEngine *apScriptEngine,
+cSqScript::cSqScript(const tString& asName, asIScriptEngine *apScriptEngine,
                      cScriptOutput *apScriptOutput, int alHandle)
     : iScript(asName, _W(""))
 {
@@ -39,8 +39,8 @@ cSqScript::cSqScript(const tString& asName,asIScriptEngine *apScriptEngine,
     mpContext = mpScriptEngine->CreateContext();
 
     //Create a unique module name
-    msModuleName = "Module_"+cString::ToString(cMath::RandRectl(0,1000000))+
-                   "_"+cString::ToString(mlHandle);
+    msModuleName = "Module_" + cString::ToString(cMath::RandRectl(0, 1000000)) +
+                   "_" + cString::ToString(mlHandle);
 
 }
 
@@ -73,10 +73,10 @@ bool cSqScript::CreateFromFile(const tWString& asFileName, tString *apCompileMes
     // Normal load
     if(sExt == _W("hps"))
     {
-        pCharBuffer = LoadCharBuffer(asFileName,lLength);
-        if(pCharBuffer==NULL)
+        pCharBuffer = LoadCharBuffer(asFileName, lLength);
+        if(pCharBuffer == NULL)
         {
-            Error("Couldn't load script '%s'!\n",asFileName.c_str());
+            Error("Couldn't load script '%s'!\n", asFileName.c_str());
             return false;
         }
     }
@@ -85,7 +85,7 @@ bool cSqScript::CreateFromFile(const tWString& asFileName, tString *apCompileMes
     else if(cResources::GetCreateAndLoadCompressedMaps())
     {
         cBinaryBuffer compBuffer;
-        if(compBuffer.Load(asFileName)==false)
+        if(compBuffer.Load(asFileName) == false)
         {
             //Log("Could not load compressed map!\n");
             return false;
@@ -95,7 +95,7 @@ bool cSqScript::CreateFromFile(const tWString& asFileName, tString *apCompileMes
         compBuffer.XorTransform((char*)&lKey, sizeof(lKey));
 
         cBinaryBuffer textBuff;
-        if(textBuff.DecompressAndAddFromBuffer(&compBuffer, false)==false)
+        if(textBuff.DecompressAndAddFromBuffer(&compBuffer, false) == false)
         {
             //Log("Could not decompress map!\n");
             return false;
@@ -103,7 +103,7 @@ bool cSqScript::CreateFromFile(const tWString& asFileName, tString *apCompileMes
 
         textBuff.SetPos(0);
         lLength = (int)textBuff.GetSize();
-        pCharBuffer = hplNewArray(char,lLength);
+        pCharBuffer = hplNewArray(char, lLength);
         textBuff.GetCharArray(pCharBuffer, lLength);
     }
 
@@ -111,10 +111,10 @@ bool cSqScript::CreateFromFile(const tWString& asFileName, tString *apCompileMes
     // Save compressed
     if(sExt == _W("hps") && cResources::GetCreateAndLoadCompressedMaps())
     {
-        tWString sCompFile = cString::SetFileExtW(asFileName,_W("chps"));
+        tWString sCompFile = cString::SetFileExtW(asFileName, _W("chps"));
 
         //Only recreate if file does not exist or if out of date.
-        if(    cPlatform::FileExists(sCompFile)==false ||
+        if(    cPlatform::FileExists(sCompFile) == false ||
                 cPlatform::FileModifiedDate(sCompFile) < cPlatform::FileModifiedDate(asFileName))
         {
             cBinaryBuffer textBuff;
@@ -160,9 +160,9 @@ bool cSqScript::CreateFromFile(const tWString& asFileName, tString *apCompileMes
         *apCompileMessages = mpScriptOutput->GetMessage();
     }
 
-    if(lBuildOutput<0)
+    if(lBuildOutput < 0)
     {
-        Error("Couldn't build script '%s'!\n",cString::To8Char(asFileName).c_str());
+        Error("Couldn't build script '%s'!\n", cString::To8Char(asFileName).c_str());
         Log("------- SCRIPT OUTPUT BEGIN --------------------------\n");
         mpScriptOutput->Display();
         mpScriptOutput->Clear();
@@ -257,21 +257,21 @@ bool cSqScript::Run(int alHandle)
 
 //-----------------------------------------------------------------------
 
-char* cSqScript::LoadCharBuffer(const tWString& asFileName, int& alLength)
+char *cSqScript::LoadCharBuffer(const tWString& asFileName, int &alLength)
 {
     FILE *pFile = cPlatform::OpenFile(asFileName, _W("rb"));
-    if(pFile==NULL)
+    if(pFile == NULL)
     {
         return NULL;
     }
 
-    fseek(pFile,0,SEEK_END);
+    fseek(pFile, 0, SEEK_END);
     int lLength = (int)ftell(pFile);
     rewind(pFile);
 
     alLength = lLength;
 
-    char *pBuffer = hplNewArray(char,lLength);
+    char *pBuffer = hplNewArray(char, lLength);
     fread(pBuffer, lLength, 1, pFile);
 
     fclose(pFile);

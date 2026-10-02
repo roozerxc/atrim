@@ -32,13 +32,13 @@ cBitmapLoaderDevilDDS::~cBitmapLoaderDevilDDS()
 
 //-----------------------------------------------------------------------
 
-cBitmap* cBitmapLoaderDevilDDS::LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags)
+cBitmap *cBitmapLoaderDevilDDS::LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags)
 {
     Initialize();
 
     //create image id
     unsigned int lImageId;
-    ilGenImages(1,&lImageId);
+    ilGenImages(1, &lImageId);
 
     //Bind image
     ilBindImage(lImageId);
@@ -47,9 +47,9 @@ cBitmap* cBitmapLoaderDevilDDS::LoadBitmap(const tWString& asFile, tBitmapLoadFl
     ilSetInteger(IL_KEEP_DXTC_DATA, IL_TRUE);
 
     //Try and load the file.
-    if(LoadDevilImageW(asFile)==false)
+    if(LoadDevilImageW(asFile) == false)
     {
-        ilDeleteImages(1,&lImageId);
+        ilDeleteImages(1, &lImageId);
         return NULL;
     }
 
@@ -109,8 +109,8 @@ cBitmap* cBitmapLoaderDevilDDS::LoadBitmap(const tWString& asFile, tBitmapLoadFl
         pBitmap->SetIsCompressed(true);
         pBitmap->SetPixelFormat(compressedPixelFormat);
 
-        for(int image=0; image< lNumOfImages; ++image)
-            for(int mip=0; mip< lNumOfMipMaps; ++mip)
+        for(int image = 0; image < lNumOfImages; ++image)
+            for(int mip = 0; mip < lNumOfMipMaps; ++mip)
             {
                 if(lNumOfImages > 1 || lNumOfMipMaps > 1)
                 {
@@ -132,11 +132,11 @@ cBitmap* cBitmapLoaderDevilDDS::LoadBitmap(const tWString& asFile, tBitmapLoadFl
                     }
                 }
 
-                cBitmapData *pImage = pBitmap->GetData(image,mip);
+                cBitmapData *pImage = pBitmap->GetData(image, mip);
 
                 int lSize = ilGetDXTCData(NULL, 0, lDXTFormat);
                 pImage->mlSize = lSize;
-                pImage->mpData = hplNewArray(unsigned char,lSize);
+                pImage->mpData = hplNewArray(unsigned char, lSize);
 
                 ilGetDXTCData(pImage->mpData, lSize, lDXTFormat);
 
@@ -153,8 +153,8 @@ cBitmap* cBitmapLoaderDevilDDS::LoadBitmap(const tWString& asFile, tBitmapLoadFl
         pBitmap->SetIsCompressed(false);
         pBitmap->SetPixelFormat(pixelFormat);
 
-        for(int image=0; image< lNumOfImages; ++image)
-            for(int mip=0; mip< lNumOfMipMaps; ++mip)
+        for(int image = 0; image < lNumOfImages; ++image)
+            for(int mip = 0; mip < lNumOfMipMaps; ++mip)
             {
                 if(lNumOfImages > 1 || lNumOfMipMaps > 1)
                 {
@@ -176,14 +176,14 @@ cBitmap* cBitmapLoaderDevilDDS::LoadBitmap(const tWString& asFile, tBitmapLoadFl
                     }
                 }
 
-                cBitmapData *pImage = pBitmap->GetData(image,mip);
+                cBitmapData *pImage = pBitmap->GetData(image, mip);
                 int lSize = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
                 pImage->SetData(ilGetData(), lSize);
             }
     }
 
 
-    ilDeleteImages(1,&lImageId);
+    ilDeleteImages(1, &lImageId);
 
     return pBitmap;
 }

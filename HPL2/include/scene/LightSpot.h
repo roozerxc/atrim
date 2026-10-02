@@ -21,9 +21,9 @@ public:
     cLightSpot(tString asName, cResources *apResources);
     ~cLightSpot();
 
-    const cMatrixf& GetViewMatrix();
-    const cMatrixf& GetProjectionMatrix();
-    const cMatrixf& GetViewProjMatrix();
+    const cMatrixf &GetViewMatrix();
+    const cMatrixf &GetProjectionMatrix();
+    const cMatrixf &GetViewProjMatrix();
 
     void SetFOV(float afAngle);
     inline float GetFOV() const
@@ -62,7 +62,7 @@ public:
 
     void SetRadius(float afX);
 
-    cFrustum* GetFrustum();
+    cFrustum *GetFrustum();
 
     iTexture *GetSpotFalloffMap();
     void SetSpotFalloffMap(iTexture* apTexture);

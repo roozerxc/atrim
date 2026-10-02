@@ -25,7 +25,7 @@ public:
 typedef std::vector<cSubList> tSubListVec;
 typedef tSubListVec::iterator tSubListVecIt;
 
-typedef std::vector<cWidgetLabel*> tLabelVec;
+typedef std::vector<cWidgetLabel *> tLabelVec;
 typedef tLabelVec::iterator tLabelVecIt;
 
 //-------------------------------------------------------------------
@@ -36,7 +36,7 @@ public:
     cWidgetMultiPropertyListBox(cGuiSet* apSet, cGuiSkin* apSkin);
     virtual ~cWidgetMultiPropertyListBox();
 
-    void AddColumn(const tString& asName, const int alIndex, eFontAlign aAlign=eFontAlign_Left );
+    void AddColumn(const tString& asName, const int alIndex, eFontAlign aAlign = eFontAlign_Left );
 
     void SetColumnWidth(const int alIdx, float afWidth);
 

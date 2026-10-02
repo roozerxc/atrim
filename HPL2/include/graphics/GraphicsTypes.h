@@ -690,7 +690,7 @@ enum eRenderListType
 
 class cMaterial;
 
-typedef std::vector<cMaterial*> tMaterialVec;
+typedef std::vector<cMaterial *> tMaterialVec;
 typedef tMaterialVec::iterator tMaterialVecIt;
 
 //---------------------------------------
@@ -703,7 +703,7 @@ public:
     float time;
 };
 
-typedef std::vector<cKeyFrame*> tKeyFramePtrVec;
+typedef std::vector<cKeyFrame *> tKeyFramePtrVec;
 typedef tKeyFramePtrVec::iterator tKeyFramePtrVecIt;
 
 typedef std::vector<cKeyFrame> tKeyFrameVec;
@@ -722,13 +722,13 @@ enum eAnimationEventType
 
 class iRenderable;
 
-typedef std::vector<iRenderable*> tRenderableVec;
+typedef std::vector<iRenderable *> tRenderableVec;
 typedef tRenderableVec::iterator tRenderableVecIt;
 
-typedef std::list<iRenderable*> tRenderableList;
+typedef std::list<iRenderable *> tRenderableList;
 typedef tRenderableList::iterator tRenderableListIt;
 
-typedef std::set<iRenderable*> tRenderableSet;
+typedef std::set<iRenderable *> tRenderableSet;
 typedef tRenderableSet::iterator tRenderableSetIt;
 
 //---------------------------------------
@@ -759,15 +759,15 @@ typedef tVertexBonePairVec::iterator tVertexBonePairVecIt;
 class cVertex
 {
 public:
-    cVertex():pos(0),tex(0),col(0) {}
-    cVertex(const cVector3f &avPos,const cVector3f &avTex,const cColor &aCol )
+    cVertex(): pos(0), tex(0), col(0) {}
+    cVertex(const cVector3f &avPos, const cVector3f &avTex, const cColor &aCol )
     {
         pos = avPos;
         tex = avTex;
         col = aCol;
     }
 
-    cVertex(const cVector3f &avPos,const cColor &aCol )
+    cVertex(const cVector3f &avPos, const cColor &aCol )
     {
         pos = avPos;
         col = aCol;
@@ -794,7 +794,7 @@ class iVertexBuffer;
 class cOcclusionQueryObject
 {
 public:
-    cOcclusionQueryObject() : mpQuery(NULL), mpVtxBuffer(NULL),mpMatrix(NULL), mbDepthTest(false), mlSampleResults(0) {}
+    cOcclusionQueryObject() : mpQuery(NULL), mpVtxBuffer(NULL), mpMatrix(NULL), mbDepthTest(false), mlSampleResults(0) {}
 
     int mlCustomID;
     iOcclusionQuery *mpQuery;
@@ -811,10 +811,10 @@ class iDepthStencilBuffer;
 class iFrameBufferAttachment
 {
 public:
-    virtual eFrameBufferAttachment GetFrameBufferAttachmentType()=0;
+    virtual eFrameBufferAttachment GetFrameBufferAttachmentType() = 0;
 
-    iTexture* ToTexture();
-    iDepthStencilBuffer* ToDepthStencilBuffer();
+    iTexture *ToTexture();
+    iDepthStencilBuffer *ToDepthStencilBuffer();
 };
 
 //---------------------------------------
@@ -822,8 +822,8 @@ public:
 class iRenderableCallback
 {
 public:
-    virtual void OnVisibleChange(iRenderable *apObject)=0;
-    virtual void OnRenderFlagsChange(iRenderable *apObject)=0;
+    virtual void OnVisibleChange(iRenderable *apObject) = 0;
+    virtual void OnRenderFlagsChange(iRenderable *apObject) = 0;
 };
 
 //---------------------------------------
@@ -845,10 +845,10 @@ public:
 class iGpuShader;
 class iGpuProgram;
 
-typedef std::list<iGpuShader*> tGpuShaderList;
+typedef std::list<iGpuShader *> tGpuShaderList;
 typedef tGpuShaderList::iterator tGpuShaderListIt;
 
-typedef std::list<iGpuProgram*> tGpuProgramList;
+typedef std::list<iGpuProgram *> tGpuProgramList;
 typedef tGpuProgramList::iterator tGpuProgramListIt;
 
 //---------------------------------------
@@ -856,16 +856,16 @@ typedef tGpuProgramList::iterator tGpuProgramListIt;
 
 class cBoneState;
 
-typedef std::vector<cBoneState*> tBoneStateVec;
+typedef std::vector<cBoneState *> tBoneStateVec;
 typedef tBoneStateVec::iterator tBoneStateVecIt;
 
-typedef std::vector<cBoneState*> tNodeStateVec;
+typedef std::vector<cBoneState *> tNodeStateVec;
 typedef tNodeStateVec::iterator tNodeStateVecIt;
 
-typedef std::list<cBoneState*> tNodeStateList;
+typedef std::list<cBoneState *> tNodeStateList;
 typedef tNodeStateList::iterator tNodeStateListIt;
 
-typedef std::map<int, cBoneState*> tNodeStateMap;
+typedef std::map<int, cBoneState *> tNodeStateMap;
 typedef tNodeStateMap::iterator tNodeStateMapIt;
 
 typedef std::map<tString, int> tNodeStateIndexMap;

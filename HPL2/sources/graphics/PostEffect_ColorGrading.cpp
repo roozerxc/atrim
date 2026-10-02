@@ -34,26 +34,26 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cPostEffectType_ColorGrading::cPostEffectType_ColorGrading(cGraphics *apGraphics, cResources *apResources) : iPostEffectType("ColorGrading",apGraphics,apResources)
+cPostEffectType_ColorGrading::cPostEffectType_ColorGrading(cGraphics *apGraphics, cResources *apResources) : iPostEffectType("ColorGrading", apGraphics, apResources)
 {
     ///////////////////////////
     // Load programs
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         cParserVarContainer vars;
         vars.Add("UseUv");
-        if(i==1)
+        if(i == 1)
         {
             vars.Add("IsCrossFading");
         }
 
-        mpProgram[i] = mpGraphics->CreateGpuProgramFromShaders("ColorGrading"+cString::ToString(i),"deferred_base_vtx.glsl",
+        mpProgram[i] = mpGraphics->CreateGpuProgramFromShaders("ColorGrading" + cString::ToString(i), "deferred_base_vtx.glsl",
                        "posteffect_color_grading_frag.glsl", &vars);
-        if(i==1)
+        if(i == 1)
         {
             if(mpProgram[i])
             {
-                mpProgram[i]->GetVariableAsId("afCrossFadeAlpha",kVar_afCrossFadeAlpha);
+                mpProgram[i]->GetVariableAsId("afCrossFadeAlpha", kVar_afCrossFadeAlpha);
             }
         }
     }
@@ -68,10 +68,10 @@ cPostEffectType_ColorGrading::~cPostEffectType_ColorGrading()
 
 //-----------------------------------------------------------------------
 
-iPostEffect * cPostEffectType_ColorGrading::CreatePostEffect(iPostEffectParams *apParams)
+iPostEffect *cPostEffectType_ColorGrading::CreatePostEffect(iPostEffectParams *apParams)
 {
-    cPostEffect_ColorGrading *pEffect = hplNew(cPostEffect_ColorGrading, (mpGraphics,mpResources,this));
-    cPostEffectParams_ColorGrading *pColorCorrectionParams = static_cast<cPostEffectParams_ColorGrading*>(apParams);
+    cPostEffect_ColorGrading *pEffect = hplNew(cPostEffect_ColorGrading, (mpGraphics, mpResources, this));
+    cPostEffectParams_ColorGrading *pColorCorrectionParams = static_cast<cPostEffectParams_ColorGrading *>(apParams);
 
     return pEffect;
 }
@@ -84,9 +84,9 @@ iPostEffect * cPostEffectType_ColorGrading::CreatePostEffect(iPostEffectParams *
 
 //-----------------------------------------------------------------------
 
-cPostEffect_ColorGrading::cPostEffect_ColorGrading(cGraphics *apGraphics,cResources *apResources, iPostEffectType *apType) : iPostEffect(apGraphics,apResources,apType)
+cPostEffect_ColorGrading::cPostEffect_ColorGrading(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType) : iPostEffect(apGraphics, apResources, apType)
 {
-    mpSpecificType = static_cast<cPostEffectType_ColorGrading*>(mpType);
+    mpSpecificType = static_cast<cPostEffectType_ColorGrading *>(mpType);
 
     mpLUT1 = NULL;
     mpLUT2 = NULL;
@@ -132,7 +132,7 @@ void cPostEffect_ColorGrading::SetCrossFadeAlpha( float afCrossFadeAlpha )
 
 //-----------------------------------------------------------------------
 
-iTexture * cPostEffect_ColorGrading::LoadLUT( tString asLUTName )
+iTexture *cPostEffect_ColorGrading::LoadLUT( tString asLUTName )
 {
     if ( asLUTName == "" || IsDisabled())
     {
@@ -155,7 +155,7 @@ iTexture * cPostEffect_ColorGrading::LoadLUT( tString asLUTName )
         if ( cPlatform::FileExists( _W("textures/gradingmaps/") + cString::To16Char(asLUTName) )
                 || cPlatform::FileExists( cString::To16Char(asLUTName) ) )
         {
-            texture = mpResources->GetTextureManager()->CreateFlattened3D(asLUTName,false);
+            texture = mpResources->GetTextureManager()->CreateFlattened3D(asLUTName, false);
             texture->SetWrapSTR(eTextureWrap_ClampToEdge);
             texture->SetFilter(eTextureFilter_Trilinear);
         }
@@ -171,7 +171,7 @@ iTexture * cPostEffect_ColorGrading::LoadLUT( tString asLUTName )
 
 //-----------------------------------------------------------------------
 
-iTexture* cPostEffect_ColorGrading::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
+iTexture *cPostEffect_ColorGrading::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
 {
     if(mpLUT1 == NULL && mpLUT2 == NULL)
     {
@@ -191,7 +191,7 @@ iTexture* cPostEffect_ColorGrading::RenderEffect(iTexture *apInputTexture, iFram
 
     mpCurrentComposite->SetTexture(0, apInputTexture);
 
-    float fAlpha = cMath::Clamp(mParams.mfCrossFadeAlpha,0.0f, 1.0f );
+    float fAlpha = cMath::Clamp(mParams.mfCrossFadeAlpha, 0.0f, 1.0f );
 
     if ( fAlpha == 0.0f || std::abs(fAlpha - 1.0f ) < kEpsilonf )
     {
@@ -204,10 +204,10 @@ iTexture* cPostEffect_ColorGrading::RenderEffect(iTexture *apInputTexture, iFram
         mpCurrentComposite->SetTexture(2, mpLUT2);
 
         mpCurrentComposite->SetProgram(mpSpecificType->mpProgram[1]);
-        mpSpecificType->mpProgram[1]->SetFloat(kVar_afCrossFadeAlpha,fAlpha);
+        mpSpecificType->mpProgram[1]->SetFloat(kVar_afCrossFadeAlpha, fAlpha);
     }
 
-    DrawQuad(0,1,apInputTexture, true);
+    DrawQuad(0, 1, apInputTexture, true);
 
     return apFinalTempBuffer->GetColorBuffer(0)->ToTexture();
 }

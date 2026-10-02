@@ -14,7 +14,7 @@ class iFontData;
 class cFontManager : public iResourceManager
 {
 public:
-    cFontManager(cGraphics* apGraphics,cGui *apGui,cResources *apResources);
+    cFontManager(cGraphics* apGraphics, cGui *apGui, cResources *apResources);
     ~cFontManager();
 
     /**
@@ -25,14 +25,14 @@ public:
      * \param alLastChar last ASCII character to be rendered
      * \return
      */
-    iFontData* CreateFontData(const tString& asName, int alSize=16,unsigned short alFirstChar=32,
-                              unsigned short alLastChar=255);
+    iFontData *CreateFontData(const tString& asName, int alSize = 16, unsigned short alFirstChar = 32,
+                              unsigned short alLastChar = 255);
 
     void Destroy(iResourceBase* apResource);
     void Unload(iResourceBase* apResource);
 
 private:
-    cGraphics* mpGraphics;
+    cGraphics *mpGraphics;
     cResources *mpResources;
     cGui *mpGui;
 };

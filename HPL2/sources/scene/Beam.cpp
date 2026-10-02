@@ -31,7 +31,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cBeam::cBeam(const tString asName, cResources *apResources,cGraphics *apGraphics) :
+cBeam::cBeam(const tString asName, cResources *apResources, cGraphics *apGraphics) :
     iRenderable(asName)
 {
     mpMaterialManager = apResources->GetMaterialManager();
@@ -44,7 +44,7 @@ cBeam::cBeam(const tString asName, cResources *apResources,cGraphics *apGraphics
 
     mbTileHeight = true;
 
-    mColor = cColor(1,1,1,1);
+    mColor = cColor(1, 1, 1, 1);
 
     mpMaterial = NULL;
 
@@ -53,44 +53,44 @@ cBeam::cBeam(const tString asName, cResources *apResources,cGraphics *apGraphics
 
     mpVtxBuffer = mpLowLevelGraphics->CreateVertexBuffer(
                       eVertexBufferType_Hardware,
-                      eVertexBufferDrawType_Tri, eVertexBufferUsageType_Dynamic,4,6);
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Position,eVertexBufferElementFormat_Float,4);
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Normal,eVertexBufferElementFormat_Float,3);
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Color0,eVertexBufferElementFormat_Float,4);
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Texture0,eVertexBufferElementFormat_Float,3);
+                      eVertexBufferDrawType_Tri, eVertexBufferUsageType_Dynamic, 4, 6);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Position, eVertexBufferElementFormat_Float, 4);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Normal, eVertexBufferElementFormat_Float, 3);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Color0, eVertexBufferElementFormat_Float, 4);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Texture0, eVertexBufferElementFormat_Float, 3);
 
-    cVector3f vCoords[4] = {cVector3f((mvSize.x/2),-(mvSize.y/2),0),
-                            cVector3f(-(mvSize.x/2),-(mvSize.y/2),0),
-                            cVector3f(-(mvSize.x/2),(mvSize.y/2),0),
-                            cVector3f((mvSize.x/2),(mvSize.y/2),0)
+    cVector3f vCoords[4] = {cVector3f((mvSize.x / 2), -(mvSize.y / 2), 0),
+                            cVector3f(-(mvSize.x / 2), -(mvSize.y / 2), 0),
+                            cVector3f(-(mvSize.x / 2), (mvSize.y / 2), 0),
+                            cVector3f((mvSize.x / 2), (mvSize.y / 2), 0)
                            };
 
-    cVector3f vTexCoords[4] = {cVector3f(1,1,0),    //Bottom left
-                               cVector3f(-1,1,0),    //Bottom right
-                               cVector3f(-1,-1,0),    //Top left
-                               cVector3f(1,-1,0)
+    cVector3f vTexCoords[4] = {cVector3f(1, 1, 0),  //Bottom left
+                               cVector3f(-1, 1, 0),  //Bottom right
+                               cVector3f(-1, -1, 0),  //Top left
+                               cVector3f(1, -1, 0)
                               };    //Top right
 
-    for(int i=0; i<4; i++)
+    for(int i = 0; i < 4; i++)
     {
         mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position, vCoords[i]);
-        mpVtxBuffer->AddVertexColor(eVertexBufferElement_Color0, cColor(1,1,1,1));
-        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, (vTexCoords[i] + cVector2f(1,1))/2);
-        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Normal,cVector3f(0,0,1));
+        mpVtxBuffer->AddVertexColor(eVertexBufferElement_Color0, cColor(1, 1, 1, 1));
+        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, (vTexCoords[i] + cVector2f(1, 1)) / 2);
+        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Normal, cVector3f(0, 0, 1));
     }
 
-    for(int i=0; i<3; i++)
+    for(int i = 0; i < 3; i++)
     {
         mpVtxBuffer->AddIndex(i);
     }
-    for(int i=2; i<5; i++)
+    for(int i = 2; i < 5; i++)
     {
-        mpVtxBuffer->AddIndex(i==4?0:i);
+        mpVtxBuffer->AddIndex(i == 4 ? 0 : i);
     }
 
     mpVtxBuffer->Compile(eVertexCompileFlag_CreateTangents);
 
-    mpEnd = hplNew( cBeamEnd, (asName + "_end",this));
+    mpEnd = hplNew( cBeamEnd, (asName + "_end", this));
     mpEnd->AddCallback(&mEndCallback);
 
     //Some temp setup
@@ -172,27 +172,27 @@ void cBeam::SetColor(const cColor &aColor)
     //Change "lower colors"
     if(mbMultiplyAlphaWithColor)
     {
-        for(int i=0; i<2; ++i)
+        for(int i = 0; i < 2; ++i)
         {
             pColors[0] = mColor.r * mColor.a;
             pColors[1] = mColor.g * mColor.a;
             pColors[2] = mColor.b * mColor.a;
             pColors[3] = mColor.a;
-            pColors+=4;
+            pColors += 4;
         }
     }
     else
     {
-        for(int i=0; i<2; ++i)
+        for(int i = 0; i < 2; ++i)
         {
             pColors[0] = mColor.r;
             pColors[1] = mColor.g;
             pColors[2] = mColor.b;
             pColors[3] = mColor.a;
-            pColors+=4;
+            pColors += 4;
         }
     }
-    mpVtxBuffer->UpdateData(eVertexElementFlag_Color0,false);
+    mpVtxBuffer->UpdateData(eVertexElementFlag_Color0, false);
 }
 
 //-----------------------------------------------------------------------
@@ -204,7 +204,7 @@ void cBeam::SetMaterial(cMaterial * apMaterial)
 
 //-----------------------------------------------------------------------
 
-cBoundingVolume* cBeam::GetBoundingVolume()
+cBoundingVolume *cBeam::GetBoundingVolume()
 {
     if(mbUpdateBoundingVolume)
     {
@@ -241,7 +241,7 @@ cBoundingVolume* cBeam::GetBoundingVolume()
         vMin -= cVector3f(mvSize.x);
         vMax += cVector3f(mvSize.x);
 
-        mBoundingVolume.SetLocalMinMax(vMin,vMax);
+        mBoundingVolume.SetLocalMinMax(vMin, vMax);
 
         mbUpdateBoundingVolume = false;
     }
@@ -263,7 +263,7 @@ void cBeam::UpdateGraphicsForFrame(double adFrameTime)
     //Get Axis
     mvAxis = mpEnd->GetWorldPosition() - GetWorldPosition();
 
-    mvMidPosition =GetWorldPosition() + mvAxis*0.5f;
+    mvMidPosition = GetWorldPosition() + mvAxis * 0.5f;
     float fDist = mvAxis.Length();
 
     mvAxis.Normalize();
@@ -275,47 +275,47 @@ void cBeam::UpdateGraphicsForFrame(double adFrameTime)
     float *pPos = mpVtxBuffer->GetFloatArray(eVertexBufferElement_Position);
     float *pTex = mpVtxBuffer->GetFloatArray(eVertexBufferElement_Texture0);
 
-    cVector3f vCoords[4] = {cVector3f((vBeamSize.x/2),-(vBeamSize.y/2),0),
-                            cVector3f(-(vBeamSize.x/2),-(vBeamSize.y/2),0),
-                            cVector3f(-(vBeamSize.x/2),(vBeamSize.y/2),0),
-                            cVector3f((vBeamSize.x/2),(vBeamSize.y/2),0)
+    cVector3f vCoords[4] = {cVector3f((vBeamSize.x / 2), -(vBeamSize.y / 2), 0),
+                            cVector3f(-(vBeamSize.x / 2), -(vBeamSize.y / 2), 0),
+                            cVector3f(-(vBeamSize.x / 2), (vBeamSize.y / 2), 0),
+                            cVector3f((vBeamSize.x / 2), (vBeamSize.y / 2), 0)
                            };
 
     cVector3f vTexCoords[4];
     if(mbTileHeight)
     {
-        vTexCoords[0] = cVector3f(1,1,0);    //Bottom left
-        vTexCoords[1] = cVector3f(0,1,0);    //Bottom right
-        vTexCoords[2] = cVector3f(0,-fDist/mvSize.y,0);    //Top left
-        vTexCoords[3] = cVector3f(1,-fDist/mvSize.y,0);    //Top right
+        vTexCoords[0] = cVector3f(1, 1, 0);  //Bottom left
+        vTexCoords[1] = cVector3f(0, 1, 0);  //Bottom right
+        vTexCoords[2] = cVector3f(0, -fDist / mvSize.y, 0); //Top left
+        vTexCoords[3] = cVector3f(1, -fDist / mvSize.y, 0); //Top right
     }
     else
     {
-        vTexCoords[0] = cVector3f(1,1,0);    //Bottom left
-        vTexCoords[1] = cVector3f(0,1,0);    //Bottom right
-        vTexCoords[2] = cVector3f(0,0,0);    //Top left
-        vTexCoords[3] = cVector3f(1,0,0);    //Top right
+        vTexCoords[0] = cVector3f(1, 1, 0);  //Bottom left
+        vTexCoords[1] = cVector3f(0, 1, 0);  //Bottom right
+        vTexCoords[2] = cVector3f(0, 0, 0);  //Top left
+        vTexCoords[3] = cVector3f(1, 0, 0);  //Top right
     }
 
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
         pPos[0] = vCoords[i].x;
         pPos[1] = vCoords[i].y;
         pPos[2] = vCoords[i].z;
-        pPos+=4;
+        pPos += 4;
 
         pTex[0] = vTexCoords[i].x;
         pTex[1] = vTexCoords[i].y;
-        pTex+=3;
+        pTex += 3;
     }
 
     if(mpMaterial->GetType()->IsTranslucent())
     {
-        mpVtxBuffer->UpdateData(eVertexElementFlag_Position | eVertexElementFlag_Texture0,false);
+        mpVtxBuffer->UpdateData(eVertexElementFlag_Position | eVertexElementFlag_Texture0, false);
     }
     else
     {
-        mpVtxBuffer->UpdateData(eVertexElementFlag_Position | eVertexElementFlag_Texture0,false);
+        mpVtxBuffer->UpdateData(eVertexElementFlag_Position | eVertexElementFlag_Texture0, false);
     }
 
 
@@ -324,9 +324,9 @@ void cBeam::UpdateGraphicsForFrame(double adFrameTime)
 
 //-----------------------------------------------------------------------
 
-cMatrixf* cBeam::GetModelMatrix(cFrustum *apFrustum)
+cMatrixf *cBeam::GetModelMatrix(cFrustum *apFrustum)
 {
-    if(apFrustum==NULL)
+    if(apFrustum == NULL)
     {
         return &GetWorldMatrix();
     }
@@ -387,12 +387,12 @@ bool cBeam::LoadXMLProperties(const tString asFile)
 {
     msFileName = asFile;
 
-    tString sNewFile = cString::SetFileExt(asFile,"beam");
+    tString sNewFile = cString::SetFileExt(asFile, "beam");
     tWString sPath = mpFileSearcher->GetFilePath(sNewFile);
     if(sPath != _W(""))
     {
         FILE *pFile = cPlatform::OpenFile(sPath, _W("rb"));
-        if(pFile==NULL)
+        if(pFile == NULL)
         {
             return false;
         }
@@ -402,16 +402,16 @@ bool cBeam::LoadXMLProperties(const tString asFile)
             TiXmlElement *pRootElem = pDoc->RootElement();
 
             TiXmlElement *pMainElem = pRootElem->FirstChildElement("MAIN");
-            if(pMainElem!=NULL)
+            if(pMainElem != NULL)
             {
-                tString sMaterial = cString::ToString(pMainElem->Attribute("Material"),"");
-                cVector2f vSize = cString::ToVector2f(pMainElem->Attribute("Size"),1);
+                tString sMaterial = cString::ToString(pMainElem->Attribute("Material"), "");
+                cVector2f vSize = cString::ToVector2f(pMainElem->Attribute("Size"), 1);
 
-                bool bTileHeight = cString::ToBool(pMainElem->Attribute("TileHeight"),true);
-                bool bMultiplyAlphaWithColor = cString::ToBool(pMainElem->Attribute("MultiplyAlphaWithColor"),false);
+                bool bTileHeight = cString::ToBool(pMainElem->Attribute("TileHeight"), true);
+                bool bMultiplyAlphaWithColor = cString::ToBool(pMainElem->Attribute("MultiplyAlphaWithColor"), false);
 
-                cColor StartColor = cString::ToColor(pMainElem->Attribute("StartColor"),cColor(1,1));
-                cColor EndColor = cString::ToColor(pMainElem->Attribute("EndColor"),cColor(1,1));
+                cColor StartColor = cString::ToColor(pMainElem->Attribute("StartColor"), cColor(1, 1));
+                cColor EndColor = cString::ToColor(pMainElem->Attribute("EndColor"), cColor(1, 1));
 
 
                 SetSize(vSize);
@@ -436,13 +436,13 @@ bool cBeam::LoadXMLProperties(const tString asFile)
             }
             else
             {
-                Error("Cannot find main element in %s\n",sNewFile.c_str());
+                Error("Cannot find main element in %s\n", sNewFile.c_str());
                 return false;
             }
         }
         else
         {
-            Error("Couldn't load file '%s'\n",sNewFile.c_str());
+            Error("Couldn't load file '%s'\n", sNewFile.c_str());
         }
         if(pFile)
         {
@@ -452,7 +452,7 @@ bool cBeam::LoadXMLProperties(const tString asFile)
     }
     else
     {
-        Error("Couldn't find file '%s'\n",sNewFile.c_str());
+        Error("Couldn't find file '%s'\n", sNewFile.c_str());
         return false;
     }
 
@@ -481,7 +481,7 @@ bool cBeam::IsVisible()
 
 void cBeamEnd_UpdateCallback::OnTransformUpdate(iEntity3D * apEntity)
 {
-    cBeamEnd *pEnd = static_cast<cBeamEnd*>(apEntity);
+    cBeamEnd *pEnd = static_cast<cBeamEnd *>(apEntity);
 
     pEnd->mpBeam->SetTransformUpdated(true);
 }
@@ -507,31 +507,31 @@ void cBeamEnd::SetColor(const cColor &aColor)
     float *pColors = mpBeam->mpVtxBuffer->GetFloatArray(eVertexBufferElement_Color0);
 
     //Change "upper colors"
-    pColors+= 4*2;
+    pColors += 4 * 2;
     if(mpBeam->mbMultiplyAlphaWithColor)
     {
-        for(int i=0; i<2; ++i)
+        for(int i = 0; i < 2; ++i)
         {
             pColors[0] = mColor.r * mColor.a;
             pColors[1] = mColor.g * mColor.a;
             pColors[2] = mColor.b * mColor.a;
             pColors[3] = mColor.a;
-            pColors+=4;
+            pColors += 4;
         }
     }
     else
     {
-        for(int i=0; i<2; ++i)
+        for(int i = 0; i < 2; ++i)
         {
             pColors[0] = mColor.r;
             pColors[1] = mColor.g;
             pColors[2] = mColor.b;
             pColors[3] = mColor.a;
-            pColors+=4;
+            pColors += 4;
         }
     }
 
-    mpBeam->mpVtxBuffer->UpdateData(eVertexElementFlag_Color0,false);
+    mpBeam->mpVtxBuffer->UpdateData(eVertexElementFlag_Color0, false);
 }
 
 //-----------------------------------------------------------------------

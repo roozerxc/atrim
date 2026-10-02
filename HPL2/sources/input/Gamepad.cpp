@@ -27,11 +27,11 @@ iGamepad::iGamepad(tString asName, int alIndex) : iInputDevice(asName, eInputDev
 eGamepadAxisRange iGamepad::GetAxisRangeFromValue(float afX)
 {
     eGamepadAxisRange range = eGamepadAxisRange_Dead;
-    if(afX>0.0f)
+    if(afX > 0.0f)
     {
         range = eGamepadAxisRange_Positive;
     }
-    else if(afX<0.0f)
+    else if(afX < 0.0f)
     {
         range = eGamepadAxisRange_Negative;
     }
@@ -114,123 +114,123 @@ tString iGamepad::ButtonToString(eGamepadButton aButton)
 
 eGamepadButton iGamepad::StringToButton(const tString& asButton)
 {
-    if(asButton=="Button 0")
+    if(asButton == "Button 0")
     {
         return eGamepadButton_0;
     }
-    if(asButton=="Button 1")
+    if(asButton == "Button 1")
     {
         return eGamepadButton_1;
     }
-    if(asButton=="Button 2")
+    if(asButton == "Button 2")
     {
         return eGamepadButton_2;
     }
-    if(asButton=="Button 3")
+    if(asButton == "Button 3")
     {
         return eGamepadButton_3;
     }
-    if(asButton=="Button 4")
+    if(asButton == "Button 4")
     {
         return eGamepadButton_4;
     }
-    if(asButton=="Button 5")
+    if(asButton == "Button 5")
     {
         return eGamepadButton_5;
     }
-    if(asButton=="Button 6")
+    if(asButton == "Button 6")
     {
         return eGamepadButton_6;
     }
-    if(asButton=="Button 7")
+    if(asButton == "Button 7")
     {
         return eGamepadButton_7;
     }
-    if(asButton=="Button 8")
+    if(asButton == "Button 8")
     {
         return eGamepadButton_8;
     }
-    if(asButton=="Button 9")
+    if(asButton == "Button 9")
     {
         return eGamepadButton_9;
     }
-    if(asButton=="Button 10")
+    if(asButton == "Button 10")
     {
         return eGamepadButton_10;
     }
-    if(asButton=="Button 11")
+    if(asButton == "Button 11")
     {
         return eGamepadButton_11;
     }
-    if(asButton=="Button 12")
+    if(asButton == "Button 12")
     {
         return eGamepadButton_12;
     }
-    if(asButton=="Button 13")
+    if(asButton == "Button 13")
     {
         return eGamepadButton_13;
     }
-    if(asButton=="Button 14")
+    if(asButton == "Button 14")
     {
         return eGamepadButton_14;
     }
-    if(asButton=="Button 15")
+    if(asButton == "Button 15")
     {
         return eGamepadButton_15;
     }
-    if(asButton=="Button 16")
+    if(asButton == "Button 16")
     {
         return eGamepadButton_16;
     }
-    if(asButton=="Button 17")
+    if(asButton == "Button 17")
     {
         return eGamepadButton_17;
     }
-    if(asButton=="Button 18")
+    if(asButton == "Button 18")
     {
         return eGamepadButton_18;
     }
-    if(asButton=="Button 19")
+    if(asButton == "Button 19")
     {
         return eGamepadButton_19;
     }
-    if(asButton=="Button 20")
+    if(asButton == "Button 20")
     {
         return eGamepadButton_20;
     }
-    if(asButton=="Button 21")
+    if(asButton == "Button 21")
     {
         return eGamepadButton_21;
     }
-    if(asButton=="Button 22")
+    if(asButton == "Button 22")
     {
         return eGamepadButton_22;
     }
-    if(asButton=="Button 23")
+    if(asButton == "Button 23")
     {
         return eGamepadButton_23;
     }
-    if(asButton=="Button 24")
+    if(asButton == "Button 24")
     {
         return eGamepadButton_24;
     }
-    if(asButton=="Button 25")
+    if(asButton == "Button 25")
     {
         return eGamepadButton_25;
     }
-    if(asButton=="Button 26")
+    if(asButton == "Button 26")
     {
         return eGamepadButton_26;
     }
-    if(asButton=="Button 27")
+    if(asButton == "Button 27")
     {
         return eGamepadButton_27;
     }
-    if(asButton=="Button 28")
+    if(asButton == "Button 28")
     {
         return eGamepadButton_28;
     }
-    if(asButton=="Button 29")
+    if(asButton == "Button 29")
     {
         return eGamepadButton_29;
     }
@@ -270,43 +270,43 @@ tString iGamepad::AxisToString(eGamepadAxis aAxis)
 
 eGamepadAxis iGamepad::StringToAxis(const tString& asAxis)
 {
-    if(asAxis=="Axis 0")
+    if(asAxis == "Axis 0")
     {
         return eGamepadAxis_0;
     }
-    if(asAxis=="Axis 1")
+    if(asAxis == "Axis 1")
     {
         return eGamepadAxis_1;
     }
-    if(asAxis=="Axis 2")
+    if(asAxis == "Axis 2")
     {
         return eGamepadAxis_2;
     }
-    if(asAxis=="Axis 3")
+    if(asAxis == "Axis 3")
     {
         return eGamepadAxis_3;
     }
-    if(asAxis=="Axis 4")
+    if(asAxis == "Axis 4")
     {
         return eGamepadAxis_4;
     }
-    if(asAxis=="Axis 5")
+    if(asAxis == "Axis 5")
     {
         return eGamepadAxis_5;
     }
-    if(asAxis=="Axis 6")
+    if(asAxis == "Axis 6")
     {
         return eGamepadAxis_6;
     }
-    if(asAxis=="Axis 7")
+    if(asAxis == "Axis 7")
     {
         return eGamepadAxis_7;
     }
-    if(asAxis=="Axis 8")
+    if(asAxis == "Axis 8")
     {
         return eGamepadAxis_8;
     }
-    if(asAxis=="Axis 9")
+    if(asAxis == "Axis 9")
     {
         return eGamepadAxis_9;
     }
@@ -332,11 +332,11 @@ tString iGamepad::AxisRangeToString(eGamepadAxisRange aRange)
 
 eGamepadAxisRange iGamepad::StringToAxisRange(const tString& asRange)
 {
-    if(asRange=="Positive")
+    if(asRange == "Positive")
     {
         return eGamepadAxisRange_Positive;
     }
-    if(asRange=="Negative")
+    if(asRange == "Negative")
     {
         return eGamepadAxisRange_Negative;
     }
@@ -379,43 +379,43 @@ tString iGamepad::HatToString(eGamepadHat aHat)
 
 eGamepadHat iGamepad::StringToHat(const tString& asHat)
 {
-    if(asHat=="Hat 0")
+    if(asHat == "Hat 0")
     {
         return eGamepadHat_0;
     }
-    if(asHat=="Hat 1")
+    if(asHat == "Hat 1")
     {
         return eGamepadHat_1;
     }
-    if(asHat=="Hat 2")
+    if(asHat == "Hat 2")
     {
         return eGamepadHat_2;
     }
-    if(asHat=="Hat 3")
+    if(asHat == "Hat 3")
     {
         return eGamepadHat_3;
     }
-    if(asHat=="Hat 4")
+    if(asHat == "Hat 4")
     {
         return eGamepadHat_4;
     }
-    if(asHat=="Hat 5")
+    if(asHat == "Hat 5")
     {
         return eGamepadHat_5;
     }
-    if(asHat=="Hat 6")
+    if(asHat == "Hat 6")
     {
         return eGamepadHat_6;
     }
-    if(asHat=="Hat 7")
+    if(asHat == "Hat 7")
     {
         return eGamepadHat_7;
     }
-    if(asHat=="Hat 8")
+    if(asHat == "Hat 8")
     {
         return eGamepadHat_8;
     }
-    if(asHat=="Hat 9")
+    if(asHat == "Hat 9")
     {
         return eGamepadHat_9;
     }
@@ -456,39 +456,39 @@ tString iGamepad::HatStateToString(eGamepadHatState aHatState)
 
 eGamepadHatState iGamepad::StringToHatState(const tString& asHatState)
 {
-    if(asHatState=="Centered")
+    if(asHatState == "Centered")
     {
         return eGamepadHatState_Centered;
     }
-    if(asHatState=="Up")
+    if(asHatState == "Up")
     {
         return eGamepadHatState_Up;
     }
-    if(asHatState=="Right")
+    if(asHatState == "Right")
     {
         return eGamepadHatState_Right;
     }
-    if(asHatState=="Down")
+    if(asHatState == "Down")
     {
         return eGamepadHatState_Down;
     }
-    if(asHatState=="Left")
+    if(asHatState == "Left")
     {
         return eGamepadHatState_Left;
     }
-    if(asHatState=="RightUp")
+    if(asHatState == "RightUp")
     {
         return eGamepadHatState_RightUp;
     }
-    if(asHatState=="RightDown")
+    if(asHatState == "RightDown")
     {
         return eGamepadHatState_RightDown;
     }
-    if(asHatState=="LeftUp")
+    if(asHatState == "LeftUp")
     {
         return eGamepadHatState_LeftUp;
     }
-    if(asHatState=="LeftDown")
+    if(asHatState == "LeftDown")
     {
         return eGamepadHatState_LeftDown;
     }
@@ -513,7 +513,7 @@ tString iGamepad::BallToString(eGamepadBall aBall)
 
 eGamepadBall iGamepad::StringToBall(const tString& asBall)
 {
-    if(asBall=="Trackball 0")
+    if(asBall == "Trackball 0")
     {
         return eGamepadBall_0;
     }

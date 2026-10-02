@@ -22,7 +22,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cWidgetButton::cWidgetButton(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_Button,apSet, apSkin)
+cWidgetButton::cWidgetButton(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_Button, apSet, apSkin)
 {
     mbToggleable = false;
     mbPressed = false;
@@ -62,7 +62,7 @@ void cWidgetButton::SetImage(cGuiGfxElement *apImage, bool abDestroyImage)
 
 void cWidgetButton::SetRepeatFreq(float afFreq)
 {
-    mfRepeatPeriod = 1/afFreq;
+    mfRepeatPeriod = 1 / afFreq;
 }
 
 void cWidgetButton::SetPressed(bool abX, bool abGenCallback)
@@ -131,10 +131,10 @@ void cWidgetButton::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
     // Image
     if(mpImage)
     {
-        cColor color = IsEnabled()?cColor(1):cColor(1,0.2f);
-        mpSet->DrawGfx( mpImage,GetGlobalPosition()+
-                        cVector3f(    mvSize.x/2 - mpImage->GetImageSize().x/2,
-                                      mvSize.y/2 - mpImage->GetImageSize().y/2,0.2f) + vOffset,
+        cColor color = IsEnabled() ? cColor(1) : cColor(1, 0.2f);
+        mpSet->DrawGfx( mpImage, GetGlobalPosition() +
+                        cVector3f(    mvSize.x / 2 - mpImage->GetImageSize().x / 2,
+                                      mvSize.y / 2 - mpImage->GetImageSize().y / 2, 0.2f) + vOffset,
                         -1,
                         color
                       );
@@ -146,15 +146,15 @@ void cWidgetButton::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
     {
         //cColor col = this->HasFocus()?cColor(1,0,0,1):cColor(0,1);
         //cColor col = cColor(0,1);
-        DrawDefaultText( msText,GetGlobalPosition()+
-                         cVector3f(mvSize.x/2, mvSize.y/2 - mvDefaultFontSize.y/2,0.5f)+vOffset,
+        DrawDefaultText( msText, GetGlobalPosition() +
+                         cVector3f(mvSize.x / 2, mvSize.y / 2 - mvDefaultFontSize.y / 2, 0.5f) + vOffset,
                          eFontAlign_Center, mDefaultFontColor);
     }
     else
     {
-        DrawDefaultText( msText,GetGlobalPosition()+
-                         cVector3f(mvSize.x/2, mvSize.y/2 - mvDefaultFontSize.y/2,0.5f)+vOffset,
-                         eFontAlign_Center, cColor(0.5f,1));
+        DrawDefaultText( msText, GetGlobalPosition() +
+                         cVector3f(mvSize.x / 2, mvSize.y / 2 - mvDefaultFontSize.y / 2, 0.5f) + vOffset,
+                         eFontAlign_Center, cColor(0.5f, 1));
         /*DrawSkinText( msText,eGuiSkinFont_Disabled, GetGlobalPosition()+
                     cVector3f(mvSize.x/2, mvSize.y/2 - mvDefaultFontSize.y/2,0.5f)+vOffset,
                     eFontAlign_Center);*/
@@ -181,11 +181,11 @@ void cWidgetButton::OnUpdate(double adFixedDelta)
 {
     if(mbPressed && mbRepeatActive)
     {
-        mfTimer+=(float)adFixedDelta;
+        mfTimer += (float)adFixedDelta;
 
-        if(mfTimer>mfRepeatPeriod)
+        if(mfTimer > mfRepeatPeriod)
         {
-            mfTimer=0;
+            mfTimer = 0;
             mlRepeatTimes++;
 
             ProcessMessage(eGuiMessage_ButtonPressed, mPressedData);
@@ -205,12 +205,12 @@ bool cWidgetButton::OnMouseMove(const cGuiMessageData& aData)
 
 bool cWidgetButton::OnMouseDown(const cGuiMessageData& aData)
 {
-    if(IsEnabled() && aData.mlVal==eGuiMouseButton_Left)
+    if(IsEnabled() && aData.mlVal == eGuiMouseButton_Left)
     {
         if(mbToggleable)
         {
             mbPressed = !mbPressed;
-            ProcessMessage(eGuiMessage_ButtonPressed,aData);
+            ProcessMessage(eGuiMessage_ButtonPressed, aData);
         }
         else
         {
@@ -228,18 +228,18 @@ bool cWidgetButton::OnMouseDown(const cGuiMessageData& aData)
 
 bool cWidgetButton::OnMouseUp(const cGuiMessageData& aData)
 {
-    if(IsEnabled() && aData.mlVal==eGuiMouseButton_Left)
+    if(IsEnabled() && aData.mlVal == eGuiMouseButton_Left)
     {
-        if(GetMouseIsOver()==false)
+        if(GetMouseIsOver() == false)
         {
             return false;
         }
 
-        if(mbToggleable==false)
+        if(mbToggleable == false)
         {
-            if(mbPressed && mlRepeatTimes==0)
+            if(mbPressed && mlRepeatTimes == 0)
             {
-                ProcessMessage(eGuiMessage_ButtonPressed,aData);
+                ProcessMessage(eGuiMessage_ButtonPressed, aData);
             }
             mbPressed = false;
             mlRepeatTimes = 0;
@@ -262,7 +262,7 @@ bool cWidgetButton::OnMouseEnter(const cGuiMessageData& aData)
 
 bool cWidgetButton::OnMouseLeave(const cGuiMessageData& aData)
 {
-    if(mbToggleable==false)
+    if(mbToggleable == false)
     {
         mbPressed = false;
     }
@@ -274,7 +274,7 @@ bool cWidgetButton::OnMouseLeave(const cGuiMessageData& aData)
 
 bool cWidgetButton::OnLostFocus(const cGuiMessageData& aData)
 {
-    if(mbToggleable==false)
+    if(mbToggleable == false)
     {
         mbPressed = false;
     }
@@ -288,7 +288,7 @@ bool cWidgetButton::OnUIButtonPress(const cGuiMessageData& aData)
 {
     if(HasFocus())
     {
-        if(aData.mlVal==eUIButton_Primary)
+        if(aData.mlVal == eUIButton_Primary)
         {
             return OnMouseDown(cGuiMessageData(eGuiMouseButton_Left));
         }
@@ -301,7 +301,7 @@ bool cWidgetButton::OnUIButtonRelease(const cGuiMessageData& aData)
 {
     if(HasFocus())
     {
-        if(aData.mlVal==eUIButton_Primary)
+        if(aData.mlVal == eUIButton_Primary)
         {
             // Lil hack: make widget think mouse is over.
             bool bPrevMouseOver = mbMouseIsOver;

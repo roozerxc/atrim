@@ -57,10 +57,10 @@ iGraphicPickerMode::iGraphicPickerMode(cGuiPopUpColorPicker* apPicker,
     ///////////////////////////////////////////////
     // Determine row and column indices
     cVector2l vIndices;
-    int j=0;
-    for(int i=0; i<3; ++i)
+    int j = 0;
+    for(int i = 0; i < 3; ++i)
     {
-        if(i==mlSliderParamIndex)
+        if(i == mlSliderParamIndex)
         {
             continue;
         }
@@ -83,7 +83,7 @@ iGraphicPickerMode::iGraphicPickerMode(cGuiPopUpColorPicker* apPicker,
 
 bool iGraphicPickerMode::IsCurrent()
 {
-    return mpPicker->mpCurrentMode==this;
+    return mpPicker->mpCurrentMode == this;
 }
 
 //-------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ void iGraphicPickerMode::OnSetSlider(float afX)
 void iGraphicPickerMode::OnInputEnter(cWidgetTextBox* apInput)
 {
     iWidget* pParent = apInput->GetParent();
-    iGraphicPickerMode* pInputMode = static_cast<iGraphicPickerMode*>(pParent->GetUserData());
+    iGraphicPickerMode* pInputMode = static_cast<iGraphicPickerMode *>(pParent->GetUserData());
 
     SaveSliderValue(GetSliderParamValue());
     pInputMode->OnInputEnterSpecific(apInput);
@@ -164,8 +164,8 @@ void iGraphicPickerMode::OnDrawBox(iWidget* apWidget)
 
     const cVector2f& vSize = apWidget->GetSize();
 
-    mpPicker->mpSet->DrawGfx(mpPicker->mpGfxHMarker, vPos+cVector3f(0,mvColorMapPos.y*(vSize.y-1),0), cVector2f(vSize.x,1), cColor(mvColorMapPos.y,1), eGuiMaterial_Diffuse);
-    mpPicker->mpSet->DrawGfx(mpPicker->mpGfxVMarker, vPos+cVector3f(mvColorMapPos.x*(vSize.x-1),0,0), cVector2f(1,vSize.y), cColor(1,1), eGuiMaterial_Diffuse);
+    mpPicker->mpSet->DrawGfx(mpPicker->mpGfxHMarker, vPos + cVector3f(0, mvColorMapPos.y * (vSize.y - 1), 0), cVector2f(vSize.x, 1), cColor(mvColorMapPos.y, 1), eGuiMaterial_Diffuse);
+    mpPicker->mpSet->DrawGfx(mpPicker->mpGfxVMarker, vPos + cVector3f(mvColorMapPos.x * (vSize.x - 1), 0, 0), cVector2f(1, vSize.y), cColor(1, 1), eGuiMaterial_Diffuse);
 }
 
 //-------------------------------------------------------------------------------
@@ -174,11 +174,11 @@ void iGraphicPickerMode::OnDrawSlider(iWidget* apWidget)
 {
     cGuiGfxElement* pPointer = mpPicker->mpGfxHMarker;
     cVector3f vPos = apWidget->GetGlobalPosition();
-    vPos.y += (1.0f-mfColorSliderPos)*apWidget->GetSize().y;
+    vPos.y += (1.0f-mfColorSliderPos) * apWidget->GetSize().y;
     vPos.z += 0.01f;
 
     // Draws the marker on the slider
-    mpPicker->mpSet->DrawGfx(pPointer, vPos, cVector2f(20,1), mSliderMarkerCol, eGuiMaterial_Alpha);
+    mpPicker->mpSet->DrawGfx(pPointer, vPos, cVector2f(20, 1), mSliderMarkerCol, eGuiMaterial_Alpha);
 }
 
 //-------------------------------------------------------------------------------
@@ -187,8 +187,8 @@ void iGraphicPickerMode::UpdateSliderMarkerColor()
 {
     unsigned char pixelData[3];
 
-    mpSliderBmp->GetPixel(0,0,
-                          cVector3l(cMath::FastPositiveFloatToInt(mfColorSliderPos*mpSliderBmp->GetSize().x),0,0),
+    mpSliderBmp->GetPixel(0, 0,
+                          cVector3l(cMath::FastPositiveFloatToInt(mfColorSliderPos * mpSliderBmp->GetSize().x), 0, 0),
                           pixelData);
 
     mSliderMarkerCol.r = 1.0f - UCharColorToFloat(pixelData[0]);
@@ -218,18 +218,18 @@ cHSBMode::cHSBMode(cGuiPopUpColorPicker* apPicker, int alIndex) : iGraphicPicker
 
 void cHSBMode::OnSetBox(const cVector2f& avPos)
 {
-    cVector2f vMapValues = cVector2f(mvMaxValues.v[mlRowIndex]*avPos.x,
-                                     mvMaxValues.v[mlColIndex]*(1-avPos.y));
+    cVector2f vMapValues = cVector2f(mvMaxValues.v[mlRowIndex] * avPos.x,
+                                     mvMaxValues.v[mlColIndex] * (1 - avPos.y));
 
     bool bUpdateBox = false;
 
-    if(mpPicker->GetHSB().v[mlRowIndex]!=vMapValues.x)
+    if(mpPicker->GetHSB().v[mlRowIndex] != vMapValues.x)
     {
         bUpdateBox = true;
         SetHSBValue(mlRowIndex, vMapValues.x);
     }
 
-    if(mpPicker->GetHSB().v[mlColIndex]!=vMapValues.y)
+    if(mpPicker->GetHSB().v[mlColIndex] != vMapValues.y)
     {
         bUpdateBox = true;
         SetHSBValue(mlColIndex, vMapValues.y);
@@ -245,9 +245,9 @@ void cHSBMode::OnSetBox(const cVector2f& avPos)
 
 void cHSBMode::OnSetSlider(float afValue)
 {
-    float fValue = mvMaxValues.v[mlSliderParamIndex]*afValue;
+    float fValue = mvMaxValues.v[mlSliderParamIndex] * afValue;
 
-    if(fValue==mpPicker->GetHSB().v[mlSliderParamIndex])
+    if(fValue == mpPicker->GetHSB().v[mlSliderParamIndex])
     {
         return;
     }
@@ -263,7 +263,7 @@ void cHSBMode::OnSetSlider(float afValue)
 void cHSBMode::OnInputEnterSpecific(cWidgetTextBox* apInput)
 {
     int lIndex = apInput->GetUserValue();
-    float fValue = apInput->GetNumericValue()* mvMaxValues.v[lIndex]/apInput->GetUpperBound();
+    float fValue = apInput->GetNumericValue() * mvMaxValues.v[lIndex] / apInput->GetUpperBound();
 
     SetHSBValue(lIndex, fValue, false);
 }
@@ -278,7 +278,7 @@ void cHSBMode::RebuildBox()
 
     const cVector3l& vSize = mpBoxBmp->GetSize();
     cVector3f vHSB;
-    cVector3f vStepAmounts = cVector3f(mvMaxValues.x/float(vSize.x-1), mvMaxValues.y/float(vSize.x-1), mvMaxValues.z/float(vSize.x-1));
+    cVector3f vStepAmounts = cVector3f(mvMaxValues.x / float(vSize.x - 1), mvMaxValues.y / float(vSize.x - 1), mvMaxValues.z / float(vSize.x - 1));
     cVector2f vStep;
     cVector2l vIndices;
     cColor temp;
@@ -296,9 +296,9 @@ void cHSBMode::RebuildBox()
 
     ////////////////////////////////////////////////////////////////
     // Build the helper bitmap
-    for(int y=vSize.y-1; y>=0; --y)
+    for(int y = vSize.y - 1; y >= 0; --y)
     {
-        for(int x=0; x<vSize.x; ++x)
+        for(int x = 0; x < vSize.x; ++x)
         {
             // Update temp color
             cMath::HSBToRGBHelper(vHSB, temp);
@@ -329,7 +329,7 @@ void cHSBMode::RebuildSlider()
 {
     const cVector3l& vSize = mpSliderBmp->GetSize();
     cVector3f vHSB;
-    cVector3f vStepAmounts = cVector3f(mvMaxValues.x/float(vSize.x-1), mvMaxValues.y/float(vSize.x-1), mvMaxValues.z/float(vSize.x-1));
+    cVector3f vStepAmounts = cVector3f(mvMaxValues.x / float(vSize.x - 1), mvMaxValues.y / float(vSize.x - 1), mvMaxValues.z / float(vSize.x - 1));
 
     cColor temp;
     unsigned char byteArray[4];
@@ -341,12 +341,12 @@ void cHSBMode::RebuildSlider()
 
     float step = vStepAmounts.v[mlSliderParamIndex];
 
-    bool bHue = mlSliderParamIndex==0;
+    bool bHue = mlSliderParamIndex == 0;
     if(bHue)
     {
         /////////////////////////////////////////////////////////////////
         // If Hue, display a nice and wonderful rainbow like slider
-        for(int x=0; x<vSize.x; ++x)
+        for(int x = 0; x < vSize.x; ++x)
         {
             cMath::HSBToRGBHelper(vHSB, temp);
 
@@ -363,7 +363,7 @@ void cHSBMode::RebuildSlider()
     {
         /////////////////////////////////////////////////////////////////
         // Else, a gray scale showing amount of each param set is enough
-        for(int x=0; x<vSize.x; ++x)
+        for(int x = 0; x < vSize.x; ++x)
         {
             byteArray[0] = byteArray[1] = byteArray[2] = FloatColorToUChar(vHSB.v[mlSliderParamIndex]);
 
@@ -397,14 +397,14 @@ float cHSBMode::GetSliderParamValue()
 cVector2f cHSBMode::GetPosInMap()
 {
     const cVector3f& vHSB = mpPicker->GetHSB();
-    return cVector2f(vHSB.v[mlRowIndex]/mvMaxValues.v[mlRowIndex],
-                     1.0f-vHSB.v[mlColIndex]/mvMaxValues.v[mlColIndex]);
+    return cVector2f(vHSB.v[mlRowIndex] / mvMaxValues.v[mlRowIndex],
+                     1.0f-vHSB.v[mlColIndex] / mvMaxValues.v[mlColIndex]);
 }
 
 float cHSBMode::GetPosInSlider()
 {
     const cVector3f& vHSB = mpPicker->GetHSB();
-    return vHSB.v[mlSliderParamIndex]/mvMaxValues.v[mlSliderParamIndex];
+    return vHSB.v[mlSliderParamIndex] / mvMaxValues.v[mlSliderParamIndex];
 }
 
 //-------------------------------------------------------------------------------
@@ -429,11 +429,11 @@ cRGBMode::cRGBMode(cGuiPopUpColorPicker* apPicker, int alSliderParamIndex) : iGr
 
 void cRGBMode::OnSetBox(const cVector2f& avPos)
 {
-    cVector3l vSize = mpBoxBmp->GetSize()-1;
-    cVector3l vPos = cVector3l(int(avPos.x*vSize.x), int(avPos.y*vSize.y), 0);
+    cVector3l vSize = mpBoxBmp->GetSize() - 1;
+    cVector3l vPos = cVector3l(int(avPos.x * vSize.x), int(avPos.y * vSize.y), 0);
 
     unsigned char byteArray[3];
-    mpBoxBmp->GetPixel(0,0, vPos, byteArray);
+    mpBoxBmp->GetPixel(0, 0, vPos, byteArray);
 
     SetRGB( UCharColorToFloat(byteArray[0]),
             UCharColorToFloat(byteArray[1]),
@@ -444,9 +444,9 @@ void cRGBMode::OnSetBox(const cVector2f& avPos)
 
 void cRGBMode::OnSetSlider(float afValue)
 {
-    afValue = mvMaxValues.v[mlSliderParamIndex]*afValue;
+    afValue = mvMaxValues.v[mlSliderParamIndex] * afValue;
 
-    if(afValue==mpPicker->GetColor().v[mlSliderParamIndex])
+    if(afValue == mpPicker->GetColor().v[mlSliderParamIndex])
     {
         return;
     }
@@ -468,7 +468,7 @@ void cRGBMode::OnSetSlider(float afValue)
 void cRGBMode::OnInputEnterSpecific(cWidgetTextBox* apInput)
 {
     int lIndex = apInput->GetUserValue();
-    float fValue = apInput->GetNumericValue() * mvMaxValues.v[mlSliderParamIndex]/apInput->GetUpperBound();
+    float fValue = apInput->GetNumericValue() * mvMaxValues.v[mlSliderParamIndex] / apInput->GetUpperBound();
 
     SetRGBValue(lIndex, fValue, false);
 }
@@ -479,7 +479,7 @@ void cRGBMode::RebuildBox()
 {
     const cVector3l& vSize = mpBoxBmp->GetSize();
     cVector3f vRGB;
-    float fStep = 1.0f/float(vSize.x-1);
+    float fStep = 1.0f / float(vSize.x - 1);
     cColor temp;
     unsigned char byteArray[4];
     byteArray[3] = 255;
@@ -488,9 +488,9 @@ void cRGBMode::RebuildBox()
     vRGB.v[mlRowIndex] = 0.0f;
     vRGB.v[mlColIndex] = 0.0f;
 
-    for(int y=vSize.y-1; y>=0; --y)
+    for(int y = vSize.y - 1; y >= 0; --y)
     {
-        for(int x=0; x<vSize.x; ++x)
+        for(int x = 0; x < vSize.x; ++x)
         {
             byteArray[0] = FloatColorToUChar(vRGB.x);
             byteArray[1] = FloatColorToUChar(vRGB.y);
@@ -516,13 +516,13 @@ void cRGBMode::RebuildSlider()
     cVector3f vRGB;
     unsigned char byteArray[4];
     byteArray[3] = 255;
-    float step = 1.0f/float(vSize.x-1);
+    float step = 1.0f / float(vSize.x - 1);
 
     vRGB.v[mlSliderParamIndex] = 0.0f;
     vRGB.v[mlRowIndex] = 0.0f;
     vRGB.v[mlColIndex] = 0.0f;
 
-    for(int x=0; x<vSize.x; ++x)
+    for(int x = 0; x < vSize.x; ++x)
     {
         byteArray[0] = FloatColorToUChar(vRGB.x);
         byteArray[1] = FloatColorToUChar(vRGB.y);
@@ -579,7 +579,7 @@ cGuiPopUpColorPicker::cGuiPopUpColorPicker(cGraphics *apGraphics,
         cGuiSet* apSet,
         cColor* apDestColor,
         void *apCallbackObject, tGuiCallbackFunc apCallback,
-        void *apUpdateColorCallbackObject, tGuiCallbackFunc apUpdateColorCallback) : iGuiPopUp(apSet, true, cVector2f(600,350))
+        void *apUpdateColorCallbackObject, tGuiCallbackFunc apUpdateColorCallback) : iGuiPopUp(apSet, true, cVector2f(600, 350))
 {
     mpCallbackObject = apCallbackObject;
     mpCallback = apCallback;
@@ -596,10 +596,10 @@ cGuiPopUpColorPicker::cGuiPopUpColorPicker(cGraphics *apGraphics,
     // Create helper bitmaps and textures
 
     // Color map
-    mpColorBoxBitmap = hplNew(cBitmap,());
-    mpColorBoxBitmap->SetUpData(1,1);
+    mpColorBoxBitmap = hplNew(cBitmap, ());
+    mpColorBoxBitmap->SetUpData(1, 1);
     mpColorBoxBitmap->CreateData(cVector3l(256, 256, 1), ePixelFormat_RGB, 0, 0);
-    mpColorBoxBitmap->Clear(cColor(1,1,1,1), 0, 0);
+    mpColorBoxBitmap->Clear(cColor(1, 1, 1, 1), 0, 0);
 
     mpColorBoxTexture = pLowLevelGfx->CreateTexture("ColorBox", eTextureType_2D, eTextureUsage_Normal);
     mpColorBoxTexture->SetUseMipMaps(false);
@@ -608,10 +608,10 @@ cGuiPopUpColorPicker::cGuiPopUpColorPicker(cGraphics *apGraphics,
     mpColorBoxTexture->SetFilter(eTextureFilter_Nearest);
 
     // Color slider
-    mpColorSliderBitmap = hplNew(cBitmap,());
-    mpColorSliderBitmap->SetUpData(1,1);
+    mpColorSliderBitmap = hplNew(cBitmap, ());
+    mpColorSliderBitmap->SetUpData(1, 1);
     mpColorSliderBitmap->CreateData(cVector3l(256, 1, 1), ePixelFormat_RGB, 0, 0);
-    mpColorSliderBitmap->Clear(cColor(1,1,1,1), 0, 0);
+    mpColorSliderBitmap->Clear(cColor(1, 1, 1, 1), 0, 0);
 
     mpColorSliderTexture = pLowLevelGfx->CreateTexture("ColorSlider", eTextureType_1D, eTextureUsage_Normal);
     mpColorSliderTexture->SetUseMipMaps(false);
@@ -643,22 +643,22 @@ cGuiPopUpColorPicker::cGuiPopUpColorPicker(cGraphics *apGraphics,
     mpGfxSliderPointer = pGui->CreateGfxImage("gui_def_colorpicker_pointer_slider.tga", eGuiMaterial_Alpha);
 
     // Build horizontal line marker
-    mpGfxHMarker = pGui->CreateGfxFilledRect(cColor(1,1), eGuiMaterial_Diffuse);
+    mpGfxHMarker = pGui->CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_Diffuse);
 
     // Build vertical line marker
     {
         unsigned char vByteArray[256];
-        float fStep = 1.0f/255.0f;
-        for(int i=0; i<256; ++i)
+        float fStep = 1.0f / 255.0f;
+        for(int i = 0; i < 256; ++i)
         {
-            vByteArray[i] = FloatColorToUChar(1.0f-i*fStep);
+            vByteArray[i] = FloatColorToUChar(1.0f-i * fStep);
         }
 
         iTexture* pHoriMarkerTexture = mpGraphics->GetLowLevel()->CreateTexture("AlphaSlider", eTextureType_1D, eTextureUsage_Normal);
-        pHoriMarkerTexture->CreateFromRawData(cVector3l(256,0,0), ePixelFormat_Luminance, vByteArray);
+        pHoriMarkerTexture->CreateFromRawData(cVector3l(256, 0, 0), ePixelFormat_Luminance, vByteArray);
 
-        mpGfxVMarker = mpSet->GetGui()->CreateGfxFilledRect(cColor(1,1), eGuiMaterial_Diffuse);
-        mpGfxVMarker->AddTexture(pHoriMarkerTexture, cVector2f(1,0), cVector2f(1,1), cVector2f(0,1), cVector2f(0,0));
+        mpGfxVMarker = mpSet->GetGui()->CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_Diffuse);
+        mpGfxVMarker->AddTexture(pHoriMarkerTexture, cVector2f(1, 0), cVector2f(1, 1), cVector2f(0, 1), cVector2f(0, 0));
         mpGfxVMarker->SetDestroyTexture(true);
     }
 
@@ -686,10 +686,10 @@ cGuiPopUpColorPicker::~cGuiPopUpColorPicker()
     pGui->DestroyGfx(mpGfxColorPointer);
     pGui->DestroyGfx(mpGfxSliderPointer);
 
-    for(size_t i=0; i<mvPickerModeSwitches.size(); ++i)
+    for(size_t i = 0; i < mvPickerModeSwitches.size(); ++i)
     {
         iWidget* pCBMode = mvPickerModeSwitches[i];
-        iGraphicPickerMode* pMode = static_cast<iGraphicPickerMode*>(pCBMode->GetUserData());
+        iGraphicPickerMode* pMode = static_cast<iGraphicPickerMode *>(pCBMode->GetUserData());
 
         hplDelete(pMode);
     }
@@ -705,7 +705,7 @@ cGuiPopUpColorPicker::~cGuiPopUpColorPicker()
 
 void cGuiPopUpColorPicker::SetColor(const cColor& aX)
 {
-    if(mColor==aX && mfAlpha==aX.a)
+    if(mColor == aX && mfAlpha == aX.a)
     {
         return;
     }
@@ -723,7 +723,7 @@ void cGuiPopUpColorPicker::SetColor(const cColor& aX)
 
 //-------------------------------------------------------------------------------
 
-const cColor& cGuiPopUpColorPicker::GetOldColor()
+const cColor &cGuiPopUpColorPicker::GetOldColor()
 {
     return mpFPreviousColor->GetBackGroundColor();
 }
@@ -741,22 +741,22 @@ void cGuiPopUpColorPicker::SetUpdateColorCallback(void *apCallbackObject, tGuiCa
 void cGuiPopUpColorPicker::LoadRecentColorList(cXmlElement* apElem)
 {
     mlstRecentColors.clear();
-    for(int i=1; i<=10; ++i)
+    for(int i = 1; i <= 10; ++i)
     {
-        cColor c = apElem->GetAttributeColor("RecentColor"+cString::ToString(i, 1), cColor(0,1));
+        cColor c = apElem->GetAttributeColor("RecentColor" + cString::ToString(i, 1), cColor(0, 1));
         mlstRecentColors.push_back(c);
     }
 }
 
 void cGuiPopUpColorPicker::SaveRecentColorList(cXmlElement* apElem)
 {
-    int i=1;
+    int i = 1;
     tColorListIt it = mlstRecentColors.begin();
-    for(; it!=mlstRecentColors.end(); ++it)
+    for(; it != mlstRecentColors.end(); ++it)
     {
         const cColor& c = *it;
 
-        apElem->SetAttributeColor("RecentColor"+cString::ToString(i, 1), c);
+        apElem->SetAttributeColor("RecentColor" + cString::ToString(i, 1), c);
     }
 }
 
@@ -770,7 +770,7 @@ void cGuiPopUpColorPicker::SaveRecentColorList(cXmlElement* apElem)
 
 bool cGuiPopUpColorPicker::SetHSBValue(int alIdx, float afX, bool abUpdateInput)
 {
-    if(mvHSB.v[alIdx]==afX)
+    if(mvHSB.v[alIdx] == afX)
     {
         return false;
     }
@@ -788,7 +788,7 @@ bool cGuiPopUpColorPicker::SetHSBValue(int alIdx, float afX, bool abUpdateInput)
 
 bool cGuiPopUpColorPicker::SetRGBValue(int alIdx, float afX, bool abUpdateInput)
 {
-    if(mColor.v[alIdx]==afX)
+    if(mColor.v[alIdx] == afX)
     {
         return false;
     }
@@ -804,7 +804,7 @@ bool cGuiPopUpColorPicker::SetRGBValue(int alIdx, float afX, bool abUpdateInput)
 
 void cGuiPopUpColorPicker::SetRGB(float afR, float afG, float afB)
 {
-    if(mColor.r==afR && mColor.g==afG && mColor.b==afB)
+    if(mColor.r == afR && mColor.g == afG && mColor.b == afB)
     {
         return;
     }
@@ -833,9 +833,9 @@ void cGuiPopUpColorPicker::CreateHSBInputs(iWidget* apParent, cVector3f& avPos)
     vMin[2] = 0;
     vMax[2] = 100;
 
-    vModes.push_back(hplNew(cHSBMode,(this, 0)));
-    vModes.push_back(hplNew(cHSBMode,(this, 1)));
-    vModes.push_back(hplNew(cHSBMode,(this, 2)));
+    vModes.push_back(hplNew(cHSBMode, (this, 0)));
+    vModes.push_back(hplNew(cHSBMode, (this, 1)));
+    vModes.push_back(hplNew(cHSBMode, (this, 2)));
 
     CreateInputs(apParent, avPos, kGuiCallback(Color_InputValueEnter), vMin, vMax, mvHSBInputs, mvHSBValueUpdated, vModes);
 }
@@ -846,9 +846,9 @@ void cGuiPopUpColorPicker::CreateRGBInputs(iWidget* apParent, cVector3f& avPos)
 {
     tColorPickerModeVec vModes;
 
-    vModes.push_back(hplNew(cRGBMode,(this, 0)));
-    vModes.push_back(hplNew(cRGBMode,(this, 1)));
-    vModes.push_back(hplNew(cRGBMode,(this, 2)));
+    vModes.push_back(hplNew(cRGBMode, (this, 0)));
+    vModes.push_back(hplNew(cRGBMode, (this, 1)));
+    vModes.push_back(hplNew(cRGBMode, (this, 2)));
 
     CreateInputs(apParent, avPos, kGuiCallback(Color_InputValueEnter), tFloatVec(3, 0.0f), tFloatVec(3, 255.0f), mvRGBInputs, mvRGBValueUpdated, vModes);
 }
@@ -856,16 +856,16 @@ void cGuiPopUpColorPicker::CreateRGBInputs(iWidget* apParent, cVector3f& avPos)
 //-------------------------------------------------------------------------------
 
 void cGuiPopUpColorPicker::CreateInputs(iWidget* apParent, cVector3f& avPos, tGuiCallbackFunc apCallback,
-                                        const tFloatVec& avMin, const tFloatVec& avMax, std::vector<cWidgetTextBox*>& avContainer, tBoolVec& avUpdatedContainer, tColorPickerModeVec avModes)
+                                        const tFloatVec& avMin, const tFloatVec& avMax, std::vector<cWidgetTextBox *> &avContainer, tBoolVec& avUpdatedContainer, tColorPickerModeVec avModes)
 {
     cVector3f vPos = avPos;
 
-    for(size_t i=0; i<avModes.size(); ++i)
+    for(size_t i = 0; i < avModes.size(); ++i)
     {
         ////////////////////////////////////////////////////////////////////////////////////////
         // Checkbox / radio button wannabe, sets the contained mode to current if checked
         iGraphicPickerMode* pMode = avModes[i];
-        cWidgetCheckBox* pCBModeSelector = mpSet->CreateWidgetCheckBox(vPos, -1, tWString(1,pMode->GetSubname()), apParent);
+        cWidgetCheckBox* pCBModeSelector = mpSet->CreateWidgetCheckBox(vPos, -1, tWString(1, pMode->GetSubname()), apParent);
         pCBModeSelector->SetDefaultFontSize(gvInputFontSize);
         pCBModeSelector->AddCallback(eGuiMessage_CheckChange, this, kGuiCallback(PickerMode_OnSelect));
         pCBModeSelector->SetUserData(pMode);
@@ -889,7 +889,7 @@ void cGuiPopUpColorPicker::CreateInputs(iWidget* apParent, cVector3f& avPos, tGu
         avUpdatedContainer.push_back(true);
 
         vPos.x = avPos.x;
-        vPos.y += gvInputSize.y+5.0f;
+        vPos.y += gvInputSize.y + 5.0f;
     }
 
     avPos = vPos;
@@ -926,7 +926,7 @@ kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, Button_Pressed);
 
 bool cGuiPopUpColorPicker::ColorFrame_OnDraw(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    cWidgetFrame* pFrame = static_cast<cWidgetFrame*>(apWidget);
+    cWidgetFrame* pFrame = static_cast<cWidgetFrame *>(apWidget);
     cVector3f vPos = pFrame->GetGlobalPosition();
     vPos.z += pFrame->GetBackgroundZ() - 0.1f;
 
@@ -942,8 +942,8 @@ bool cGuiPopUpColorPicker::RecentColor_OnMouseDown(iWidget* apWidget, const cGui
 {
     cColor col;
 
-    cWidgetFrame* pFrame = static_cast<cWidgetFrame*>(apWidget);
-    cColor* pColor = static_cast<cColor*>(apWidget->GetUserData());
+    cWidgetFrame* pFrame = static_cast<cWidgetFrame *>(apWidget);
+    cColor* pColor = static_cast<cColor *>(apWidget->GetUserData());
     if(pColor)
     {
         col = *pColor;
@@ -963,7 +963,7 @@ kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, RecentColor_OnMouseDown);
 
 bool cGuiPopUpColorPicker::Color_InputValueEnter(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    cWidgetTextBox* pInput = static_cast<cWidgetTextBox*>(apWidget);
+    cWidgetTextBox* pInput = static_cast<cWidgetTextBox *>(apWidget);
     mpCurrentMode->OnInputEnter(pInput);
 
     return true;
@@ -976,7 +976,7 @@ bool cGuiPopUpColorPicker::Alpha_InputValueEnter(iWidget* apWidget, const cGuiMe
 {
     float fValue = mpInpAlpha->GetNumericValue();
 
-    mfAlpha = fValue/255.0f;
+    mfAlpha = fValue / 255.0f;
 
     UpdateColorRGB();
 
@@ -1001,14 +1001,14 @@ kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, Alpha_Toggle);
 
 bool cGuiPopUpColorPicker::PickerMode_OnSelect(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    iGraphicPickerMode* pMode = static_cast<iGraphicPickerMode*>(apWidget->GetUserData());
-    if(mpCurrentMode!=pMode)
+    iGraphicPickerMode* pMode = static_cast<iGraphicPickerMode *>(apWidget->GetUserData());
+    if(mpCurrentMode != pMode)
     {
-        for(size_t i=0; i<mvPickerModeSwitches.size(); ++i)
+        for(size_t i = 0; i < mvPickerModeSwitches.size(); ++i)
         {
             cWidgetCheckBox* pSwitch = mvPickerModeSwitches[i];
 
-            pSwitch->SetChecked(pSwitch==apWidget, false);
+            pSwitch->SetChecked(pSwitch == apWidget, false);
         }
 
         mpCurrentMode = pMode;
@@ -1018,7 +1018,7 @@ bool cGuiPopUpColorPicker::PickerMode_OnSelect(iWidget* apWidget, const cGuiMess
     }
     else
     {
-        cWidgetCheckBox* pSwitch = static_cast<cWidgetCheckBox*>(apWidget);
+        cWidgetCheckBox* pSwitch = static_cast<cWidgetCheckBox *>(apWidget);
 
         pSwitch->SetChecked(true, false);
     }
@@ -1048,7 +1048,7 @@ kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, Img_OnMouseDown);
 
 bool cGuiPopUpColorPicker::Img_OnMouseUp(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(mbImgPressed && mpSet->GetAttentionWidget()==apWidget)
+    if(mbImgPressed && mpSet->GetAttentionWidget() == apWidget)
     {
         mpSet->PopAttentionWidget();
         mbImgPressed = false;
@@ -1062,10 +1062,10 @@ kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, Img_OnMouseUp);
 
 bool cGuiPopUpColorPicker::Slider_OnMouseMove(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(mbImgPressed && mpSet->GetAttentionWidget()==apWidget)
+    if(mbImgPressed && mpSet->GetAttentionWidget() == apWidget)
     {
-        cVector3f vPos = cVector3f(aData.mvPos)-apWidget->GetGlobalPosition();
-        vPos.y = vPos.y/apWidget->GetSize().y;
+        cVector3f vPos = cVector3f(aData.mvPos) - apWidget->GetGlobalPosition();
+        vPos.y = vPos.y / apWidget->GetSize().y;
         vPos.y = cMath::Clamp(vPos.y, 0.0f, 1.0f);
 
         cGuiMessageData data(1.0f-vPos.y);
@@ -1082,15 +1082,15 @@ kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, Slider_OnMouseMove);
 
 bool cGuiPopUpColorPicker::ColorBox_OnMouseMove(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(mbImgPressed && mpSet->GetAttentionWidget()==apWidget)
+    if(mbImgPressed && mpSet->GetAttentionWidget() == apWidget)
     {
-        cVector3f vPos = cVector3f(aData.mvPos)-apWidget->GetGlobalPosition();
+        cVector3f vPos = cVector3f(aData.mvPos) - apWidget->GetGlobalPosition();
 
         /////////////////////////////////////////////////////////////////////////
         // Normalize mouse position in color map before passing to pick mode
-        vPos.x = vPos.x/apWidget->GetSize().x;
+        vPos.x = vPos.x / apWidget->GetSize().x;
         vPos.x = cMath::Clamp(vPos.x, 0.0f, 1.0f);
-        vPos.y = vPos.y/apWidget->GetSize().y;
+        vPos.y = vPos.y / apWidget->GetSize().y;
         vPos.y = cMath::Clamp(vPos.y, 0.0f, 1.0f);
 
         cVector2f vPos2D = cVector2f(vPos.x, vPos.y);
@@ -1151,12 +1151,12 @@ kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, AlphaSlider_OnMouseMove);
 bool cGuiPopUpColorPicker::AlphaSlider_OnDraw(iWidget* apWidget, const cGuiMessageData& aData)
 {
     cVector3f vPos = apWidget->GetGlobalPosition();
-    float fValue = (1-mfAlpha);
-    vPos.y += fValue*255.0f;
+    float fValue = (1 - mfAlpha);
+    vPos.y += fValue * 255.0f;
     vPos.z += 0.01f;
 
     // Draws the marker on the slider
-    mpSet->DrawGfx(mpGfxHMarker, vPos, cVector2f(20,1), cColor(fValue, 1), eGuiMaterial_Alpha);
+    mpSet->DrawGfx(mpGfxHMarker, vPos, cVector2f(20, 1), cColor(fValue, 1), eGuiMaterial_Alpha);
 
     return true;
 }
@@ -1176,7 +1176,7 @@ kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, HexInput_OnChangeText);
 
 bool cGuiPopUpColorPicker::HexInput_OnEnter(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    cWidgetTextBox* pTB = static_cast<cWidgetTextBox*>(apWidget);
+    cWidgetTextBox* pTB = static_cast<cWidgetTextBox *>(apWidget);
 
     int lMaxLength = pTB->GetMaxTextLength();
     tWString sHex = pTB->GetText();
@@ -1215,7 +1215,7 @@ void cGuiPopUpColorPicker::Init()
     mpWindow->SetText(_W("Color Picker"));
     mpWindow->SetStatic(false);
 
-    cVector3f vPos = cVector3f(95,50,0.1f);
+    cVector3f vPos = cVector3f(95, 50, 0.1f);
 
     //////////////////////////////////////////////////////////////////////////////
     // Init Color map and slider texture
@@ -1232,8 +1232,8 @@ void cGuiPopUpColorPicker::Init()
 
     vPos.x += 255 + 25;
 
-    pImg = mpSet->GetGui()->CreateGfxFilledRect(cColor(1,1), eGuiMaterial_Diffuse);
-    pImg->AddTexture(mpColorSliderTexture, cVector2f(1,0), cVector2f(1,1), cVector2f(0,1), cVector2f(0,0));
+    pImg = mpSet->GetGui()->CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_Diffuse);
+    pImg->AddTexture(mpColorSliderTexture, cVector2f(1, 0), cVector2f(1, 1), cVector2f(0, 1), cVector2f(0, 0));
     pImg->SetDestroyTexture(false);
     mpImgColorSlider = mpSet->CreateWidgetImage("", vPos, cVector2f(20, 256), eGuiMaterial_Diffuse, false, mpWindow);
     mpImgColorSlider->SetUserData((void*)kGuiCallback(ColorSlider_OnMouseMove));
@@ -1249,18 +1249,18 @@ void cGuiPopUpColorPicker::Init()
     {
         //mpImgAlphaSliderBG = mpSet->CreateWidgetImage("gui_def_colorpicker_bgpattern.tga", vPos, cVector2f(20, 256), eGuiMaterial_Diffuse, false, mpWindow);
 
-        unsigned char vByteArray[256*3];
-        float fStep = 1.0f/255.0f;
-        for(int i=0; i<256; ++i)
+        unsigned char vByteArray[256 * 3];
+        float fStep = 1.0f / 255.0f;
+        for(int i = 0; i < 256; ++i)
         {
-            vByteArray[i*3] = vByteArray[i*3+1] = vByteArray[i*3+2] = FloatColorToUChar(float(i)*fStep);
+            vByteArray[i * 3] = vByteArray[i * 3 + 1] = vByteArray[i * 3 + 2] = FloatColorToUChar(float(i) * fStep);
         }
 
         iTexture* pAlphaSliderTexture = mpGraphics->GetLowLevel()->CreateTexture("AlphaSlider", eTextureType_1D, eTextureUsage_Normal);
-        pAlphaSliderTexture->CreateFromRawData(cVector3l(256,0,0), ePixelFormat_RGB, vByteArray);
+        pAlphaSliderTexture->CreateFromRawData(cVector3l(256, 0, 0), ePixelFormat_RGB, vByteArray);
 
-        pImg = mpSet->GetGui()->CreateGfxFilledRect(cColor(1,1), eGuiMaterial_Diffuse);
-        pImg->AddTexture(pAlphaSliderTexture, cVector2f(1,0), cVector2f(1,1), cVector2f(0,1), cVector2f(0,0));
+        pImg = mpSet->GetGui()->CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_Diffuse);
+        pImg->AddTexture(pAlphaSliderTexture, cVector2f(1, 0), cVector2f(1, 1), cVector2f(0, 1), cVector2f(0, 0));
         pImg->SetDestroyTexture(true);
     }
 
@@ -1283,7 +1283,7 @@ void cGuiPopUpColorPicker::Init()
 
     // Init Alpha input
     {
-        cVector3f vPosA = vPos + cVector3f(0,10,0);
+        cVector3f vPosA = vPos + cVector3f(0, 10, 0);
         mpCBAlpha = mpSet->CreateWidgetCheckBox(vPosA, 0, _W("A"), mpWindow);
         mpCBAlpha->SetDefaultFontSize(gvInputFontSize);
         mpCBAlpha->AddCallback(eGuiMessage_CheckChange, this, kGuiCallback(Alpha_Toggle));
@@ -1296,7 +1296,7 @@ void cGuiPopUpColorPicker::Init()
         mpInpAlpha->AddCallback(eGuiMessage_TextBoxEnter, this, kGuiCallback(Alpha_InputValueEnter));
         mbAlphaValueUpdated = true;
 
-        vPos.y += mpInpAlpha->GetSize().y+10;
+        vPos.y += mpInpAlpha->GetSize().y + 10;
     }
 
     // Init Hexcode input
@@ -1330,20 +1330,20 @@ void cGuiPopUpColorPicker::Init()
         mpInpHexAlpha->AddLegalCharCodeRange(_W('a'), _W('f'));
         */
 
-        mpInpHexRGBA = mpSet->CreateWidgetTextBox(gvInputOffset, gvInputSize+cVector2f(gvInputSize.x*0.333f,0), _W(""), pLabel);
+        mpInpHexRGBA = mpSet->CreateWidgetTextBox(gvInputOffset, gvInputSize + cVector2f(gvInputSize.x * 0.333f, 0), _W(""), pLabel);
         mpInpHexRGBA->SetDefaultFontSize(gvInputFontSize);
         mpInpHexRGBA->SetMaxTextLength(8);
         mpInpHexRGBA->AddCallback(eGuiMessage_TextChange, this, kGuiCallback(HexInput_OnChangeText));
         mpInpHexRGBA->AddCallback(eGuiMessage_TextBoxEnter, this, kGuiCallback(HexInput_OnEnter));
         mpInpHexRGBA->SetLegalCharCodeLimitEnabled(false);
 
-        vPos.y += mpInpHexRGBA->GetSize().y+10;
+        vPos.y += mpInpHexRGBA->GetSize().y + 10;
 
         pLabel = mpSet->CreateWidgetLabel(vPos, 0, _W("Vec"), mpWindow);
         pLabel->SetDefaultFontSize(gvInputFontSize);
         pLabel->SetAutogenerateSize(true);
 
-        mpInpVecRGBA = mpSet->CreateWidgetTextBox(gvInputOffset, gvInputSize+cVector2f(gvInputSize.x*0.333f,0), _W(""), pLabel);
+        mpInpVecRGBA = mpSet->CreateWidgetTextBox(gvInputOffset, gvInputSize + cVector2f(gvInputSize.x * 0.333f, 0), _W(""), pLabel);
         mpInpVecRGBA->SetDefaultFontSize(gvInputFontSize);
         mpInpVecRGBA->SetLegalCharCodeLimitEnabled(true);
     }
@@ -1351,7 +1351,7 @@ void cGuiPopUpColorPicker::Init()
     //////////////////////////////////////////////////////////////////////////////
     // Init color previews
     vPos = cVector3f(10, 50, 0.7f);
-    mpFCurrentColor = mpSet->CreateWidgetFrame(vPos,50,true,mpWindow);
+    mpFCurrentColor = mpSet->CreateWidgetFrame(vPos, 50, true, mpWindow);
     mpFCurrentColor->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(ColorFrame_OnDraw));
     mpFCurrentColor->SetDrawBackground(true);
     mpFCurrentColor->ChangeBackgroundForColorPicking();
@@ -1361,7 +1361,7 @@ void cGuiPopUpColorPicker::Init()
     vPos.y += 25;
     vPos.z -= 0.4f;
 
-    mpFPreviousColor = mpSet->CreateWidgetFrame(vPos,50,true,mpWindow);
+    mpFPreviousColor = mpSet->CreateWidgetFrame(vPos, 50, true, mpWindow);
     mpFPreviousColor->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(ColorFrame_OnDraw));
     mpFPreviousColor->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(RecentColor_OnMouseDown));
     mpFPreviousColor->SetBackGroundColor(mColor);
@@ -1374,12 +1374,12 @@ void cGuiPopUpColorPicker::Init()
     // Recent color list
     vPos = cVector3f(40, 140, 0.1f);
     tColorListIt itRecent = mlstRecentColors.begin();
-    for(; itRecent!=mlstRecentColors.end(); ++itRecent)
+    for(; itRecent != mlstRecentColors.end(); ++itRecent)
     {
         cColor color = *itRecent;
         color.a = 1.0f;
 
-        cWidgetFrame* pRecent = mpSet->CreateWidgetFrame(vPos,cVector2f(12,12),true,mpWindow);
+        cWidgetFrame* pRecent = mpSet->CreateWidgetFrame(vPos, cVector2f(12, 12), true, mpWindow);
         pRecent->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(RecentColor_OnMouseDown));
         pRecent->SetBackGroundColor(color);
         pRecent->SetUserData(&*itRecent);
@@ -1391,7 +1391,7 @@ void cGuiPopUpColorPicker::Init()
     }
 
     // Buttons
-    for(int i=0; i<3; ++i)
+    for(int i = 0; i < 3; ++i)
     {
         mvButtons[i] = mpSet->CreateWidgetButton(    0,
                        30,
@@ -1409,12 +1409,12 @@ void cGuiPopUpColorPicker::Init()
     vPos = cVector3f(130, 320, 0.1f);
     mvButtons[1]->SetText(_W("Ok"));
     mvButtons[1]->SetPosition(vPos);
-    mvButtons[1]->SetSize(cVector2f(70,20));
+    mvButtons[1]->SetSize(cVector2f(70, 20));
     vPos.x += mvButtons[1]->GetSize().x + 20;
 
     mvButtons[2]->SetText(_W("Cancel"));
     mvButtons[2]->SetPosition(vPos);
-    mvButtons[2]->SetSize(cVector2f(70,20));
+    mvButtons[2]->SetSize(cVector2f(70, 20));
 
 
     ////////////////////////////////////////////////////////////////////
@@ -1462,18 +1462,18 @@ void cGuiPopUpColorPicker::RestorePreviewToOldColor()
 
 void cGuiPopUpColorPicker::UpdateHSBInputs(bool abForce)
 {
-    for(size_t i=0; i<mvHSBInputs.size(); ++i)
+    for(size_t i = 0; i < mvHSBInputs.size(); ++i)
     {
-        if(abForce==false && mvHSBValueUpdated[i]==false)
+        if(abForce == false && mvHSBValueUpdated[i] == false)
         {
             continue;
         }
 
         // If fValue is Saturation or Brightness, do a lil conversion (from range 0-1 to 0-100) - Hue does not need conversion
         float fValue = mvHSB.v[i];
-        if(i>0)
+        if(i > 0)
         {
-            fValue*=100.0f;
+            fValue *= 100.0f;
         }
 
         mvHSBInputs[i]->SetNumericValue(fValue);
@@ -1487,14 +1487,14 @@ void cGuiPopUpColorPicker::UpdateRGBInputs(bool abForce)
 {
     ///////////////////////////////
     // Update RGB
-    for(size_t i=0; i<mvRGBInputs.size(); ++i)
+    for(size_t i = 0; i < mvRGBInputs.size(); ++i)
     {
-        if(abForce==false && mvRGBValueUpdated[i]==false)
+        if(abForce == false && mvRGBValueUpdated[i] == false)
         {
             continue;
         }
 
-        float fValue = mColor.v[i]*255.0f;
+        float fValue = mColor.v[i] * 255.0f;
 
         mvRGBInputs[i]->SetNumericValue(fValue);
         mvRGBValueUpdated[i] = false;
@@ -1504,7 +1504,7 @@ void cGuiPopUpColorPicker::UpdateRGBInputs(bool abForce)
     // Update alpha
     if(abForce || mbAlphaValueUpdated)
     {
-        mpInpAlpha->SetNumericValue(mColor.a*255.0f);
+        mpInpAlpha->SetNumericValue(mColor.a * 255.0f);
         mbAlphaValueUpdated = false;
     }
 }
@@ -1516,13 +1516,13 @@ void cGuiPopUpColorPicker::UpdateColor(bool abForce)
     ////////////////////////////////////////////////////
     // Apply alpha if active
     bool bAlphaActive = mpCBAlpha->IsChecked();
-    mColor.a = bAlphaActive? mfAlpha : 1.0f;
+    mColor.a = bAlphaActive ? mfAlpha : 1.0f;
 
     cColor previewColor = mpFCurrentColor->GetBackGroundColor();
 
-    if(abForce==false &&
-            previewColor.r==mColor.r && previewColor.g==mColor.g && previewColor.b==mColor.b &&
-            mColor.a==mfOldAlpha)
+    if(abForce == false &&
+            previewColor.r == mColor.r && previewColor.g == mColor.g && previewColor.b == mColor.b &&
+            mColor.a == mfOldAlpha)
     {
         return;
     }
@@ -1530,7 +1530,7 @@ void cGuiPopUpColorPicker::UpdateColor(bool abForce)
     /////////////////////////////////////////////////////
     // Color has changed, GUI needs update
     previewColor = mColor;
-    if(mbShowTransPreview==false)
+    if(mbShowTransPreview == false)
     {
         previewColor.a = 1.0f;
     }
@@ -1542,9 +1542,9 @@ void cGuiPopUpColorPicker::UpdateColor(bool abForce)
     //mpImgAlphaSlider->SetColorMul(cColor(mColor.r, mColor.g, mColor.b, 1));
 
     tWString sVecRGBA;
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
-        if(i>0)
+        if(i > 0)
         {
             sVecRGBA += _W(",");
         }
@@ -1572,7 +1572,7 @@ void cGuiPopUpColorPicker::UpdateColorHSB(bool abForce)
 void cGuiPopUpColorPicker::UpdateColorRGB(bool abForce)
 {
     cMath::RGBToHSBHelper(mColor, mvHSB);
-    if(mvHSB.x==-1)
+    if(mvHSB.x == -1)
     {
         mvHSB.x = 0;    // -1 means undefined, just set some value.
     }
@@ -1589,7 +1589,7 @@ void cGuiPopUpColorPicker::AddRecentColor(const cColor& aX)
     mlstRecentColors.remove(aX);
     mlstRecentColors.push_front(aX);
 
-    while(mlstRecentColors.size()>mlRecentColorNum)
+    while(mlstRecentColors.size() > mlRecentColorNum)
     {
         mlstRecentColors.pop_back();
     }

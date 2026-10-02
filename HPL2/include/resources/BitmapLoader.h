@@ -19,8 +19,8 @@ class iBitmapLoader : public iResourceLoader
 public:
     virtual ~iBitmapLoader() {}
 
-    virtual cBitmap* LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags)=0;
-    virtual bool SaveBitmap(cBitmap* apBitmap,const tWString& asFile, tBitmapLoadFlag aFlags)=0;
+    virtual cBitmap *LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags) = 0;
+    virtual bool SaveBitmap(cBitmap* apBitmap, const tWString& asFile, tBitmapLoadFlag aFlags) = 0;
 
 protected:
     iLowLevelGraphics *mpLowLevelGraphics;

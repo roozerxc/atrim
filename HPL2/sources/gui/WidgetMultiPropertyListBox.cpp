@@ -21,7 +21,7 @@ namespace hpl
 
 //-------------------------------------------------------------------------------
 
-cWidgetMultiPropertyListBox::cWidgetMultiPropertyListBox(cGuiSet* apSet, cGuiSkin* apSkin) : iWidgetListBoxBase(apSet,apSkin)
+cWidgetMultiPropertyListBox::cWidgetMultiPropertyListBox(cGuiSet* apSet, cGuiSkin* apSkin) : iWidgetListBoxBase(apSet, apSkin)
 {
     mbClipsGraphics = true;
     mlNumBlankRows = 1;
@@ -29,9 +29,9 @@ cWidgetMultiPropertyListBox::cWidgetMultiPropertyListBox(cGuiSet* apSet, cGuiSki
 
 cWidgetMultiPropertyListBox::~cWidgetMultiPropertyListBox()
 {
-    if(mpSet->IsDestroyingSet()==false)
+    if(mpSet->IsDestroyingSet() == false)
     {
-        for(size_t i=0; i<mvColumns.size(); ++i)
+        for(size_t i = 0; i < mvColumns.size(); ++i)
         {
             mpSet->DestroyWidget(mvColumns[i]);
         }
@@ -54,17 +54,17 @@ cWidgetMultiPropertyListBox::~cWidgetMultiPropertyListBox()
  */
 void cWidgetMultiPropertyListBox::AddColumn(const tString& asName, const int alIndex, eFontAlign aAlign)
 {
-    mvSubLists.push_back(cSubList(asName,alIndex, aAlign));
+    mvSubLists.push_back(cSubList(asName, alIndex, aAlign));
 
-    cWidgetLabel* pLabel = mpSet->CreateWidgetLabel( cVector3f(0,0,mfBackgroundZ+0.5f),
+    cWidgetLabel* pLabel = mpSet->CreateWidgetLabel( cVector3f(0, 0, mfBackgroundZ + 0.5f),
                            -1,
                            cString::To16Char(asName),
                            this);
     pLabel->SetDefaultFontSize(mvDefaultFontSize);
-    pLabel->SetBackGroundColor(cColor(0.82f,0.81f,0.79f,1));
+    pLabel->SetBackGroundColor(cColor(0.82f, 0.81f, 0.79f, 1));
     mvColumns.push_back(pLabel);
 
-    SetColumnWidth((int)mvColumns.size()-1, 0);
+    SetColumnWidth((int)mvColumns.size() - 1, 0);
 
     UpdateColumns();
 }
@@ -78,7 +78,7 @@ void cWidgetMultiPropertyListBox::AddColumn(const tString& asName, const int alI
  */
 void cWidgetMultiPropertyListBox::SetColumnWidth(const int alIdx, float afWidth)
 {
-    if(alIdx>=0 && alIdx<(int)mvColumns.size())
+    if(alIdx >= 0 && alIdx < (int)mvColumns.size())
     {
         cWidgetLabel* pLabel = mvColumns[alIdx];
         cVector2f vSize = pLabel->GetSize();
@@ -102,7 +102,7 @@ void cWidgetMultiPropertyListBox::SetColumnWidth(const int alIdx, float afWidth)
 
 cVector3f cWidgetMultiPropertyListBox::GetItemStartPos()
 {
-    return GetGlobalPosition() + cVector3f(0, mlNumBlankRows * (mvDefaultFontSize.y+2), mfBackgroundZ+0.02f);
+    return GetGlobalPosition() + cVector3f(0, mlNumBlankRows * (mvDefaultFontSize.y + 2), mfBackgroundZ + 0.02f);
 }
 
 //-------------------------------------------------------------------------------
@@ -115,8 +115,8 @@ cVector3f cWidgetMultiPropertyListBox::GetItemStartPos()
 
 void cWidgetMultiPropertyListBox::UpdateColumns()
 {
-    cVector3f vPos = cVector3f(0,0,0.02f);
-    for(size_t i=0; i<mvColumns.size(); ++i)
+    cVector3f vPos = cVector3f(0, 0, 0.02f);
+    for(size_t i = 0; i < mvColumns.size(); ++i)
     {
         mvColumns[i]->SetPosition(vPos);
         vPos.x += mvColumns[i]->GetSize().x;
@@ -128,18 +128,18 @@ void cWidgetMultiPropertyListBox::UpdateColumns()
 void cWidgetMultiPropertyListBox::DrawItems(double adFixedDelta, cGuiClipRegion* apClipRegion)
 {
     cVector3f vPosition = GetGlobalPosition();
-    vPosition.z += mfBackgroundZ+0.01f;
+    vPosition.z += mfBackgroundZ + 0.01f;
 
     bool bSelected = false;
 
     ///////////////////////////////////////
     // Draw Header background
-    mpSet->DrawGfx(mpGfxBackground, vPosition, cVector2f(mvSize.x, mvDefaultFontSize.y+2), cColor(0.82f,0.81f,0.79f,1));
+    mpSet->DrawGfx(mpGfxBackground, vPosition, cVector2f(mvSize.x, mvDefaultFontSize.y + 2), cColor(0.82f, 0.81f, 0.79f, 1));
 
     /////////////////////////////
     // Sets up column clipping
-    std::vector<cGuiClipRegion*> pRegion;
-    for(size_t i=0; i<mvColumns.size(); ++i)
+    std::vector<cGuiClipRegion *> pRegion;
+    for(size_t i = 0; i < mvColumns.size(); ++i)
     {
         cWidgetLabel* pCol = mvColumns[i];
         cVector3f vPos = pCol->GetGlobalPosition();
@@ -151,9 +151,9 @@ void cWidgetMultiPropertyListBox::DrawItems(double adFixedDelta, cGuiClipRegion*
     /////////////////////////////
     // Draws items
     vPosition = GetItemStartPos();
-    for(size_t i=static_cast<size_t>(mlFirstItem); i<mvItems.size(); ++i)
+    for(size_t i = static_cast<size_t>(mlFirstItem); i < mvItems.size(); ++i)
     {
-        if(i-mlFirstItem > static_cast<size_t>(mlMaxItems))
+        if(i - mlFirstItem > static_cast<size_t>(mlMaxItems))
         {
             break;
         }
@@ -166,22 +166,22 @@ void cWidgetMultiPropertyListBox::DrawItems(double adFixedDelta, cGuiClipRegion*
 
         // Draw Highlight
         if(bSelected)
-            mpSet->DrawGfx(    mpGfxSelection,vPosition - cVector3f(0,0,0.01f),
-                               cVector2f(mvSize.x - mfSliderWidth,mvDefaultFontSize.y+2));
+            mpSet->DrawGfx(    mpGfxSelection, vPosition - cVector3f(0, 0, 0.01f),
+                               cVector2f(mvSize.x - mfSliderWidth, mvDefaultFontSize.y + 2));
 
         // One property per column
-        for(size_t j=0; j<mvSubLists.size(); ++j)
+        for(size_t j = 0; j < mvSubLists.size(); ++j)
         {
             const cSubList& sublist = mvSubLists[j];
             cWidgetItemProperty* pProp = pItem->GetProperty(sublist.mlIndex);
 
             vPosition.x = mvColumns[j]->GetGlobalPosition().x;
-            if(sublist.mAlign==eFontAlign_Right)
+            if(sublist.mAlign == eFontAlign_Right)
             {
-                vPosition.x+= mvColumns[j]->GetSize().x-10;
+                vPosition.x += mvColumns[j]->GetSize().x - 10;
             }
 
-            if(pProp==NULL)
+            if(pProp == NULL)
             {
                 continue;
             }
@@ -212,7 +212,7 @@ void cWidgetMultiPropertyListBox::DrawItems(double adFixedDelta, cGuiClipRegion*
 
             mpSet->SetCurrentClipRegion(apClipRegion);
         }
-        vPosition.y += mvDefaultFontSize.y+2;
+        vPosition.y += mvDefaultFontSize.y + 2;
     }
 
 

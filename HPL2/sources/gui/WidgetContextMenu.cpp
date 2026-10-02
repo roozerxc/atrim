@@ -20,7 +20,7 @@ namespace hpl
 //-----------------------------------------------------------------------
 
 
-cWidgetContextMenu::cWidgetContextMenu(cGuiSet *apSet, cGuiSkin *apSkin) : iWidgetMenu(eWidgetType_ContextMenu,apSet,apSkin)
+cWidgetContextMenu::cWidgetContextMenu(cGuiSet *apSet, cGuiSkin *apSkin) : iWidgetMenu(eWidgetType_ContextMenu, apSet, apSkin)
 {
     mfTimer = 0;
     mfHideTime = 0;
@@ -93,7 +93,7 @@ float cWidgetContextMenu::GetMenuItemWidth()
     float fLeftBorderWidth = mvGfxBorders[0]->GetImageSize().x;
     float fRightBorderWidth = mvGfxBorders[1]->GetImageSize().x;
 
-    return mvSize.x - (fLeftBorderWidth+fRightBorderWidth);
+    return mvSize.x - (fLeftBorderWidth + fRightBorderWidth);
 }
 
 //-----------------------------------------------------------------------
@@ -110,7 +110,7 @@ void cWidgetContextMenu::UpdateMenuItemsPos(cWidgetMenuItem* apNewItem)
     float fLeftBorderWidth = mvGfxBorders[0]->GetImageSize().x;
 
     float fMenuItemY = mvSize.y;
-    if(mvMenuItems.size()>1)
+    if(mvMenuItems.size() > 1)
     {
         fMenuItemY -= fUpperBorderHeight;
     }
@@ -135,18 +135,18 @@ void cWidgetContextMenu::UpdateMenuItemsSize(cWidgetMenuItem* apNewItem)
     float fSeparation = 0;
     size_t lNumItems = mvMenuItems.size();
 
-    if(lNumItems>1)
+    if(lNumItems > 1)
     {
-        cWidgetMenuItem *pPreviousItem = mvMenuItems[lNumItems-2];
-        fSeparation = (pPreviousItem->IsSeparator()?0:(apNewItem->IsSeparator()?0:mfItemSeparation));
+        cWidgetMenuItem *pPreviousItem = mvMenuItems[lNumItems - 2];
+        fSeparation = (pPreviousItem->IsSeparator() ? 0 : (apNewItem->IsSeparator() ? 0 : mfItemSeparation));
     }
     else
     {
-        SetSize(cVector2f(mvSize.x,mvGfxBorders[2]->GetImageSize().y + mvGfxBorders[3]->GetImageSize().y));
+        SetSize(cVector2f(mvSize.x, mvGfxBorders[2]->GetImageSize().y + mvGfxBorders[3]->GetImageSize().y));
     }
 
 
-    SetSize(cVector2f(mvSize.x, mvSize.y+apNewItem->GetSize().y+fSeparation) );
+    SetSize(cVector2f(mvSize.x, mvSize.y + apNewItem->GetSize().y + fSeparation) );
 }
 
 //-----------------------------------------------------------------------
@@ -163,7 +163,7 @@ void cWidgetContextMenu::UpdateMenuWidth(float afItemTextWidth)
     // Update MenuItem now. This also sets up check and arrow icons and text offset
 
     // Check if all items need to be updated with new Width (if text length is greater than the reserved width...)
-    if(afItemTextWidth > fItemWidth-fNonTextWidth)
+    if(afItemTextWidth > fItemWidth - fNonTextWidth)
     {
         fItemWidth = afItemTextWidth + fNonTextWidth;
 
@@ -179,7 +179,7 @@ void cWidgetContextMenu::UpdateMenuWidth(float afItemTextWidth)
     SetSize(cVector2f(fMenuWidth, mvSize.y));
 
     SetArrowPos(cVector3f(fItemWidth - (mfItemHPadding + mfItemArrowIconSize),
-                          mfItemArrowIconSize*0.5f,
+                          mfItemArrowIconSize * 0.5f,
                           0.2f));
 
     // Set text and check icon offsets, these should not change
@@ -218,10 +218,10 @@ void cWidgetContextMenu::OnUpdate(double adFixedDelta)
     // Checks if should hide (ie if parent menu highlights some item other
     // than this menu's parent item, or if SetMustHide(true) has been called)
 
-    if(IsVisible() && mpParentItem!=NULL && GetParentMenu()->GetHightlightedItem()!=mpParentItem)
+    if(IsVisible() && mpParentItem != NULL && GetParentMenu()->GetHightlightedItem() != mpParentItem)
     {
-        mfTimer+=(float)adFixedDelta;
-        if(mfTimer>=mfHideTime)
+        mfTimer += (float)adFixedDelta;
+        if(mfTimer >= mfHideTime)
         {
             Hide();
         }
@@ -230,7 +230,7 @@ void cWidgetContextMenu::OnUpdate(double adFixedDelta)
     if(mbMustHide)
     {
         Hide();
-        mbMustHide=false;
+        mbMustHide = false;
     }
 }
 
@@ -253,7 +253,7 @@ bool cWidgetContextMenu::OnMouseEnter(const cGuiMessageData& aData)
 
 bool cWidgetContextMenu::OnMouseLeave(const cGuiMessageData& aData)
 {
-    if(IsSubmenuOpen()==false)
+    if(IsSubmenuOpen() == false)
     {
         SetHighlightedItem(NULL);
     }
@@ -271,7 +271,7 @@ bool cWidgetContextMenu::OnMouseLeave(const cGuiMessageData& aData)
 bool cWidgetContextMenu::OnLostFocus(const cGuiMessageData& aData)
 {
     iWidget* pFocus = mpSet->GetFocusedWidget();
-    if(pFocus==NULL || IsConnectedTo(pFocus, false)==false && pFocus->IsConnectedTo(this, false)==false)
+    if(pFocus == NULL || IsConnectedTo(pFocus, false) == false && pFocus->IsConnectedTo(this, false) == false)
     {
         GetTopMostMenu()->SetMustHide(true);
     }
@@ -281,7 +281,7 @@ bool cWidgetContextMenu::OnLostFocus(const cGuiMessageData& aData)
 
 bool cWidgetContextMenu::OnGotFocus(const cGuiMessageData& aData)
 {
-    mfTimer=0;
+    mfTimer = 0;
 
     return true;
 }
@@ -315,13 +315,13 @@ void    cWidgetContextMenu::OnLoadGraphics()
 
 bool cWidgetContextMenu::OnKeyPress(const cGuiMessageData& aData)
 {
-    if(aData.mKeyPress.mKey==eKey_Escape)
+    if(aData.mKeyPress.mKey == eKey_Escape)
     {
         Hide();
         return true;
     }
 
-    for(int i=0; i<(int)mvMenuItems.size(); ++i)
+    for(int i = 0; i < (int)mvMenuItems.size(); ++i)
     {
         if(mvMenuItems[i]->ProcessMessage(eGuiMessage_KeyPress, aData))
         {

@@ -45,9 +45,9 @@ cAINodeGeneratorParams::cAINodeGeneratorParams()
 class cCollideRayCallback : public iPhysicsRayCallback
 {
 public:
-    bool OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams)
+    bool OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams)
     {
-        if(pBody->GetMass()!=0)
+        if(pBody->GetMass() != 0)
         {
             return true;
         }
@@ -94,16 +94,16 @@ static cCollideRayCallback gCollideRayCallback;
 
 //-----------------------------------------------------------------------
 
-void cAINodeGenerator::Generate(cWorld* apWorld,cAINodeGeneratorParams *apParams)
+void cAINodeGenerator::Generate(cWorld* apWorld, cAINodeGeneratorParams *apParams)
 {
     mpWorld = apWorld;
     mpParams = apParams;
 
-    mlIDCount =0;
+    mlIDCount = 0;
 
     iPhysicsWorld *pPhysicsWorld = apWorld->GetPhysicsWorld();
 
-    bool mbLoadFromFile=false;
+    bool mbLoadFromFile = false;
 
     cSystem *pSystem = apWorld->GetSystem();
     cResources *pResources = apWorld->GetResources();
@@ -114,7 +114,7 @@ void cAINodeGenerator::Generate(cWorld* apWorld,cAINodeGeneratorParams *apParams
     if(mpWorld->GetFilePath() != _W(""))
     {
         tWString sPath = mpWorld->GetFilePath();
-        tWString sSaveFile = cString::SetFileExtW(sPath,_W("ainodes"));
+        tWString sSaveFile = cString::SetFileExtW(sPath, _W("ainodes"));
 
         if(sPath != _W("") && cPlatform::FileExists(sSaveFile))
         {
@@ -134,7 +134,7 @@ void cAINodeGenerator::Generate(cWorld* apWorld,cAINodeGeneratorParams *apParams
     /////////////////////////////////
     // Get the size of the world
     cPhysicsBodyIterator it = pPhysicsWorld->GetBodyIterator();
-    cVector3f vWorldMax(-100000,-100000,-100000);
+    cVector3f vWorldMax(-100000, -100000, -100000);
     cVector3f vWorldMin( 100000, 100000, 100000);
 
     while(it.HasNext())
@@ -213,14 +213,14 @@ void cAINodeGenerator::Generate(cWorld* apWorld,cAINodeGeneratorParams *apParams
 
     /////////////////////////////////////////
     //Place the nodes in the world
-    cVector3f vPos(vWorldMin.x,0,vWorldMin.z);
+    cVector3f vPos(vWorldMin.x, 0, vWorldMin.z);
 
     while(vPos.z <= vWorldMax.z)
     {
         cVector3f vStart(vPos.x, vWorldMax.y, vPos.z);
         cVector3f vEnd(vPos.x, vWorldMin.y, vPos.z);
 
-        pPhysicsWorld->CastRay(this,vStart,vEnd,false,false,true);
+        pPhysicsWorld->CastRay(this, vStart, vEnd, false, false, true);
 
         //Log("Pos: %s Min: %s Max: %s\n",vPos.ToString().c_str(),
         //                                vWorldMin.ToString().c_str(),
@@ -236,16 +236,16 @@ void cAINodeGenerator::Generate(cWorld* apWorld,cAINodeGeneratorParams *apParams
 
     /////////////////////////////////////////
     //Check so that the nodes are not too close to walls
-    cVector3f vEnds[4] = {    cVector3f(mpParams->mfMinWallDist,0,0),
-                              cVector3f(-mpParams->mfMinWallDist,0,0),
-                              cVector3f(0,0,mpParams->mfMinWallDist),
-                              cVector3f(0,0,-mpParams->mfMinWallDist)
+    cVector3f vEnds[4] = {    cVector3f(mpParams->mfMinWallDist, 0, 0),
+                              cVector3f(-mpParams->mfMinWallDist, 0, 0),
+                              cVector3f(0, 0, mpParams->mfMinWallDist),
+                              cVector3f(0, 0, -mpParams->mfMinWallDist)
                          };
 
-    cVector3f vPushBackDirs[4] = {    cVector3f(-1,0,0),
-                                      cVector3f(1,0,0),
-                                      cVector3f(0,0,-1),
-                                      cVector3f(0,0,1)
+    cVector3f vPushBackDirs[4] = {    cVector3f(-1, 0, 0),
+                                      cVector3f(1, 0, 0),
+                                      cVector3f(0, 0, -1),
+                                      cVector3f(0, 0, 1)
                                  };
 
     tTempAiNodeListIt nodeIt = mpNodeList->begin();
@@ -254,10 +254,10 @@ void cAINodeGenerator::Generate(cWorld* apWorld,cAINodeGeneratorParams *apParams
         cTempAiNode &Node = *nodeIt;
 
         //Check if there are any walls close by.
-        for(int i=0; i<4; ++i)
+        for(int i = 0; i < 4; ++i)
         {
             gCollideRayCallback.mbIntersected = false;
-            pPhysicsWorld->CastRay(&gCollideRayCallback,Node.mvPos,Node.mvPos + vEnds[i],true,false,true);
+            pPhysicsWorld->CastRay(&gCollideRayCallback, Node.mvPos, Node.mvPos + vEnds[i], true, false, true);
 
             if(gCollideRayCallback.mbIntersected)
             {
@@ -285,7 +285,7 @@ void cAINodeGenerator::Generate(cWorld* apWorld,cAINodeGeneratorParams *apParams
 
 //-----------------------------------------------------------------------
 
-bool cAINodeGenerator::OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams)
+bool cAINodeGenerator::OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams)
 {
     if(pBody->GetMass() != 0)
     {
@@ -294,9 +294,9 @@ bool cAINodeGenerator::OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apPara
 
     iPhysicsWorld *pPhysicsWorld = mpWorld->GetPhysicsWorld();
 
-    cVector3f vPosition = apParams->mvPoint + cVector3f(0,mpParams->mfHeightFromGround,0);
+    cVector3f vPosition = apParams->mvPoint + cVector3f(0, mpParams->mfHeightFromGround, 0);
 
-    mpNodeList->push_back(cTempAiNode(vPosition,"",mlIDCount));
+    mpNodeList->push_back(cTempAiNode(vPosition, "", mlIDCount));
     mlIDCount++;
 
     return true;
@@ -316,30 +316,30 @@ void cAINodeGenerator::SaveToFile()
     cFileSearcher *pFileSearcher = pResources->GetFileSearcher();
 
     tWString sMapPath = mpWorld->GetFilePath();
-    tWString sSaveFile = cString::SetFileExtW(sMapPath,_W("ainodes"));
+    tWString sSaveFile = cString::SetFileExtW(sMapPath, _W("ainodes"));
 
     TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
 
-    TiXmlElement *pRootElem = static_cast<TiXmlElement*>(pXmlDoc->InsertEndChild(TiXmlElement("AiNodes")));
+    TiXmlElement *pRootElem = static_cast<TiXmlElement *>(pXmlDoc->InsertEndChild(TiXmlElement("AiNodes")));
 
     tTempAiNodeListIt nodeIt = mpNodeList->begin();
     for(; nodeIt != mpNodeList->end(); ++nodeIt)
     {
         cTempAiNode &Node = *nodeIt;
-        TiXmlElement *pNodeElem = static_cast<TiXmlElement*>(pRootElem->InsertEndChild(TiXmlElement("Node")));
+        TiXmlElement *pNodeElem = static_cast<TiXmlElement *>(pRootElem->InsertEndChild(TiXmlElement("Node")));
 
-        tString sPos =    cString::ToString(Node.mvPos.x)+" " +
-                          cString::ToString(Node.mvPos.y)+" " +
+        tString sPos =    cString::ToString(Node.mvPos.x) + " " +
+                          cString::ToString(Node.mvPos.y) + " " +
                           cString::ToString(Node.mvPos.z);
-        pNodeElem->SetAttribute("Pos",sPos.c_str());
+        pNodeElem->SetAttribute("Pos", sPos.c_str());
         pNodeElem->SetAttribute("Name", Node.msName.c_str());
         pNodeElem->SetAttribute("Name", cString::ToString(Node.mlID).c_str());
     }
 
-    FILE *pFile = cPlatform::OpenFile(sSaveFile,_W("w+"));
-    if(pFile==NULL || pXmlDoc->SaveFile(pFile)==false)
+    FILE *pFile = cPlatform::OpenFile(sSaveFile, _W("w+"));
+    if(pFile == NULL || pXmlDoc->SaveFile(pFile) == false)
     {
-        Error("Couldn't save XML file %s\n",sSaveFile.c_str());
+        Error("Couldn't save XML file %s\n", sSaveFile.c_str());
         hplDelete(pXmlDoc);
         return;
     }
@@ -361,18 +361,18 @@ void cAINodeGenerator::LoadFromFile()
     cFileSearcher *pFileSearcher = pResources->GetFileSearcher();
 
     tWString sMapPath = mpWorld->GetFilePath();
-    tWString sSaveFile = cString::SetFileExtW(sMapPath,_W("ainodes"));
+    tWString sSaveFile = cString::SetFileExtW(sMapPath, _W("ainodes"));
 
     FILE *pFile = cPlatform::OpenFile(sSaveFile, _W("rb"));
     if (!pFile)
     {
-        Warning("Couldn't open XML file %s\n",cString::To8Char(sSaveFile).c_str());
+        Warning("Couldn't open XML file %s\n", cString::To8Char(sSaveFile).c_str());
         return;
     }
     TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
-    if(pXmlDoc->LoadFile(pFile)==false)
+    if(pXmlDoc->LoadFile(pFile) == false)
     {
-        Warning("Couldn't open XML file %s\n",cString::To8Char(sSaveFile).c_str());
+        Warning("Couldn't open XML file %s\n", cString::To8Char(sSaveFile).c_str());
         fclose(pFile);
         hplDelete(pXmlDoc);
         return;
@@ -384,11 +384,11 @@ void cAINodeGenerator::LoadFromFile()
     TiXmlElement *pNodeElem = pRootElem->FirstChildElement("Node");
     for(; pNodeElem != NULL; pNodeElem = pNodeElem->NextSiblingElement("Node"))
     {
-        cVector3f vPos = cString::ToVector3f(pNodeElem->Attribute("Pos"),0);
-        tString sName = cString::ToString(pNodeElem->Attribute("Name"),"");
-        int alID = cString::ToInt(pNodeElem->Attribute("ID"),-1);
+        cVector3f vPos = cString::ToVector3f(pNodeElem->Attribute("Pos"), 0);
+        tString sName = cString::ToString(pNodeElem->Attribute("Name"), "");
+        int alID = cString::ToInt(pNodeElem->Attribute("ID"), -1);
 
-        mpNodeList->push_back(cTempAiNode(vPos,sName,alID));
+        mpNodeList->push_back(cTempAiNode(vPos, sName, alID));
     }
 
     hplDelete(pXmlDoc);

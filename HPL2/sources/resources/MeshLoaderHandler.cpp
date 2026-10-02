@@ -36,34 +36,34 @@ cMeshLoaderHandler::~cMeshLoaderHandler()
 
 //-----------------------------------------------------------------------
 
-cMesh* cMeshLoaderHandler::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
+cMesh *cMeshLoaderHandler::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags)
 {
-    iMeshLoader *pMeshLoader = static_cast<iMeshLoader*>(GetLoaderForFile(asFile));
+    iMeshLoader *pMeshLoader = static_cast<iMeshLoader *>(GetLoaderForFile(asFile));
 
     if(pMeshLoader)
     {
-        return pMeshLoader->LoadMesh(asFile,aFlags);
+        return pMeshLoader->LoadMesh(asFile, aFlags);
     }
     return NULL;
 }
 
 //-----------------------------------------------------------------------
 
-bool cMeshLoaderHandler::SaveMesh(cMesh* apMesh,const tWString& asFile)
+bool cMeshLoaderHandler::SaveMesh(cMesh* apMesh, const tWString& asFile)
 {
-    iMeshLoader *pMeshLoader = static_cast<iMeshLoader*>(GetLoaderForFile(asFile));
+    iMeshLoader *pMeshLoader = static_cast<iMeshLoader *>(GetLoaderForFile(asFile));
 
     if(pMeshLoader)
     {
-        return pMeshLoader->SaveMesh(apMesh,asFile);
+        return pMeshLoader->SaveMesh(apMesh, asFile);
     }
     return false;
 }
 
 //-----------------------------------------------------------------------
-cAnimation* cMeshLoaderHandler::LoadAnimation(const tWString& asFile)
+cAnimation *cMeshLoaderHandler::LoadAnimation(const tWString& asFile)
 {
-    iMeshLoader *pMeshLoader = static_cast<iMeshLoader*>(GetLoaderForFile(asFile));
+    iMeshLoader *pMeshLoader = static_cast<iMeshLoader *>(GetLoaderForFile(asFile));
 
     if(pMeshLoader)
     {
@@ -84,7 +84,7 @@ cAnimation* cMeshLoaderHandler::LoadAnimation(const tWString& asFile)
 
 void cMeshLoaderHandler::SetupLoader(iResourceLoader *apLoader)
 {
-    iMeshLoader *pMeshLoader = static_cast<iMeshLoader*>(apLoader);
+    iMeshLoader *pMeshLoader = static_cast<iMeshLoader *>(apLoader);
 
     pMeshLoader->mpMaterialManager = mpResources->GetMaterialManager();
     pMeshLoader->mpMeshManager = mpResources->GetMeshManager();

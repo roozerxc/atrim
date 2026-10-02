@@ -19,7 +19,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cWidgetFrame::cWidgetFrame(cGuiSet *apSet, cGuiSkin *apSkin, bool abHScrollBar, bool abVScrollBar) : iWidget(eWidgetType_Frame,apSet, apSkin)
+cWidgetFrame::cWidgetFrame(cGuiSet *apSet, cGuiSkin *apSkin, bool abHScrollBar, bool abVScrollBar) : iWidget(eWidgetType_Frame, apSet, apSkin)
 {
     mbClipsGraphics = true;
 
@@ -30,7 +30,7 @@ cWidgetFrame::cWidgetFrame(cGuiSet *apSet, cGuiSkin *apSkin, bool abHScrollBar, 
 
     mbDrawBackground = false;
     mfBackgroundZ = -0.5;
-    mBackGroundColor = cColor(1,1);
+    mBackGroundColor = cColor(1, 1);
 
     mpHSlider = NULL;
     mpVSlider = NULL;
@@ -38,7 +38,7 @@ cWidgetFrame::cWidgetFrame(cGuiSet *apSet, cGuiSkin *apSkin, bool abHScrollBar, 
     mvMaxWidgetCoord = -999999.9f;
     if(abHScrollBar)
     {
-        mpHSlider = mpSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal,0,cVector2f(0,18),0, this);
+        mpHSlider = mpSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, 0, cVector2f(0, 18), 0, this);
         mpHSlider->SetAffectedByScroll(false);
         mpHSlider->AddCallback(eGuiMessage_SliderMove, this, kGuiCallback(OnSliderMove));
         mpHSlider->SetVisible(false);
@@ -46,7 +46,7 @@ cWidgetFrame::cWidgetFrame(cGuiSet *apSet, cGuiSkin *apSkin, bool abHScrollBar, 
     }
     if(abVScrollBar)
     {
-        mpVSlider = mpSet->CreateWidgetSlider(eWidgetSliderOrientation_Vertical,0,cVector2f(18,0),0, this);
+        mpVSlider = mpSet->CreateWidgetSlider(eWidgetSliderOrientation_Vertical, 0, cVector2f(18, 0), 0, this);
         mpVSlider->SetAffectedByScroll(false);
         mpVSlider->AddCallback(eGuiMessage_SliderMove, this, kGuiCallback(OnSliderMove));
         mpVSlider->SetVisible(false);
@@ -63,7 +63,7 @@ cWidgetFrame::cWidgetFrame(cGuiSet *apSet, cGuiSkin *apSkin, bool abHScrollBar, 
 
 cWidgetFrame::~cWidgetFrame()
 {
-    if(mpSet->IsDestroyingSet()==false)
+    if(mpSet->IsDestroyingSet() == false)
     {
         if(mpHSlider)
         {
@@ -127,14 +127,14 @@ void cWidgetFrame::ScrollToPosition(const cVector2f& avPos)
 
 bool cWidgetFrame::OnSliderMove(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(apWidget==mpHSlider || apWidget==mpVSlider)
+    if(apWidget == mpHSlider || apWidget == mpVSlider)
     {
         mbScrollUpdated = true;
     }
 
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cWidgetFrame,OnSliderMove);
+kGuiCallbackDeclaredFuncEnd(cWidgetFrame, OnSliderMove);
 
 //-----------------------------------------------------------------------
 
@@ -166,22 +166,22 @@ void cWidgetFrame::OnChangeSize()
     if(mpHSlider)
     {
         float fSliderSize = mvSize.x;
-        if(mpVSlider&&mpVSlider->IsVisible())
+        if(mpVSlider && mpVSlider->IsVisible())
         {
-            fSliderSize-=18;
+            fSliderSize -= 18;
         }
-        mpHSlider->SetSize(cVector2f(fSliderSize,18));
-        mpHSlider->SetPosition(cVector3f(0,mvSize.y-18,0.7f));
+        mpHSlider->SetSize(cVector2f(fSliderSize, 18));
+        mpHSlider->SetPosition(cVector3f(0, mvSize.y - 18, 0.7f));
     }
     if(mpVSlider)
     {
         float fSliderSize = mvSize.y;
-        if(mpHSlider&&mpHSlider->IsVisible())
+        if(mpHSlider && mpHSlider->IsVisible())
         {
-            fSliderSize-=18;
+            fSliderSize -= 18;
         }
-        mpVSlider->SetSize(cVector2f(18,fSliderSize));
-        mpVSlider->SetPosition(cVector3f(mvSize.x-18,0,0.7f));
+        mpVSlider->SetSize(cVector2f(18, fSliderSize));
+        mpVSlider->SetPosition(cVector3f(mvSize.x - 18, 0, 0.7f));
     }
 
     mbScrollBarsNeedUpdate = true;
@@ -204,19 +204,19 @@ void cWidgetFrame::OnUpdate(double adFixedDelta)
 
     if(mbScrollBarsNeedUpdate && (mpHSlider || mpVSlider) && IsVisible())
     {
-        mbScrollBarsNeedUpdate=false;
+        mbScrollBarsNeedUpdate = false;
 
-        cVector2f vSafeFrame = cVector2f(vOffset.x,vOffset.y) + mvSize-mvAutoScrollMargin;
+        cVector2f vSafeFrame = cVector2f(vOffset.x, vOffset.y) + mvSize - mvAutoScrollMargin;
         tWidgetListIt it = mlstChildren.begin();
 
         cVector3f vMaxCoord = -999999;
 
         //////////////////////////////////////////////////////
         // Iterate children
-        for(; it!=mlstChildren.end(); ++it)
+        for(; it != mlstChildren.end(); ++it)
         {
             iWidget* pChild = *it;
-            if(pChild==mpHSlider || pChild==mpVSlider)
+            if(pChild == mpHSlider || pChild == mpVSlider)
             {
                 continue;
             }
@@ -226,31 +226,31 @@ void cWidgetFrame::OnUpdate(double adFixedDelta)
                 cVector3f vPos = pChild->GetLocalPosition();
                 cVector3f vLowerRightCorner = vPos + cVector3f(pChild->GetSize());
 
-                if(vPos.x<vOffset.x || vLowerRightCorner.x>vSafeFrame.x)
+                if(vPos.x < vOffset.x || vLowerRightCorner.x > vSafeFrame.x)
                 {
                     bHoriActive = true;
                 }
-                if(vPos.y<vOffset.y || vLowerRightCorner.y>vSafeFrame.y)
+                if(vPos.y < vOffset.y || vLowerRightCorner.y > vSafeFrame.y)
                 {
                     bVertActive = true;
                 }
 
-                if(vMaxCoord.x<vLowerRightCorner.x)
+                if(vMaxCoord.x < vLowerRightCorner.x)
                 {
                     vMaxCoord.x = vLowerRightCorner.x;
                 }
-                if(vMaxCoord.y<vLowerRightCorner.y)
+                if(vMaxCoord.y < vLowerRightCorner.y)
                 {
                     vMaxCoord.y = vLowerRightCorner.y;
                 }
             }
         }
 
-        if(vMaxCoord.x!=mvMaxWidgetCoord.x)
+        if(vMaxCoord.x != mvMaxWidgetCoord.x)
         {
             mvMaxWidgetCoord.x = vMaxCoord.x;
         }
-        if(vMaxCoord.y!=mvMaxWidgetCoord.y)
+        if(vMaxCoord.y != mvMaxWidgetCoord.y)
         {
             mvMaxWidgetCoord.y = vMaxCoord.y;
         }
@@ -258,25 +258,25 @@ void cWidgetFrame::OnUpdate(double adFixedDelta)
         cVector3f vLimitOffset = vOffset;
         if(mpHSlider)
         {
-            float fEndCoord = mvMaxWidgetCoord.x-mvSize.x;
-            float fBarSize = mvSize.y*fEndCoord/mvMaxWidgetCoord.y;
+            float fEndCoord = mvMaxWidgetCoord.x - mvSize.x;
+            float fBarSize = mvSize.y * fEndCoord / mvMaxWidgetCoord.y;
             if(bVertActive && mpVSlider)
             {
                 fEndCoord += mpVSlider->GetSize().x;
             }
 
-            mpHSlider->SetMaxValue(cMath::RoundToInt(fEndCoord)+1);
+            mpHSlider->SetMaxValue(cMath::RoundToInt(fEndCoord) +1);
             mpHSlider->SetBarValueSize(cMath::RoundToInt(fBarSize));
 
-            mpHSlider->SetButtonValueAdd(cMath::RoundToInt(mvSize.x*0.1f));
+            mpHSlider->SetButtonValueAdd(cMath::RoundToInt(mvSize.x * 0.1f));
             mpHSlider->SetBarClickValueAdd(mpHSlider->GetBarValueSize());
 
-            if(fEndCoord>0 && vLimitOffset.x>fEndCoord)
+            if(fEndCoord > 0 && vLimitOffset.x > fEndCoord)
             {
                 vLimitOffset.x = fEndCoord;
             }
 
-            if(bHoriActive==false)
+            if(bHoriActive == false)
             {
                 mpHSlider->SetValue(0);
             }
@@ -284,7 +284,7 @@ void cWidgetFrame::OnUpdate(double adFixedDelta)
             {
                 int lOffset = cMath::RoundToInt(vOffset.x);
                 int lLimitOffset = cMath::RoundToInt(vLimitOffset.x);
-                if(lOffset>lLimitOffset)
+                if(lOffset > lLimitOffset)
                 {
                     mpHSlider->SetValue(lLimitOffset);
                 }
@@ -295,22 +295,22 @@ void cWidgetFrame::OnUpdate(double adFixedDelta)
         }
         if(mpVSlider)
         {
-            float fEndCoord = mvMaxWidgetCoord.y-mvSize.y;
-            float fBarSize = mvSize.y*fEndCoord/mvMaxWidgetCoord.y;
+            float fEndCoord = mvMaxWidgetCoord.y - mvSize.y;
+            float fBarSize = mvSize.y * fEndCoord / mvMaxWidgetCoord.y;
             if(bHoriActive && mpHSlider)
             {
                 fEndCoord += mpHSlider->GetSize().y;
             }
 
-            mpVSlider->SetMaxValue(cMath::RoundToInt(fEndCoord)+1);
+            mpVSlider->SetMaxValue(cMath::RoundToInt(fEndCoord) +1);
             mpVSlider->SetBarValueSize(cMath::RoundToInt(fBarSize));
 
-            mpVSlider->SetButtonValueAdd(cMath::RoundToInt(mvSize.y*0.1f));
+            mpVSlider->SetButtonValueAdd(cMath::RoundToInt(mvSize.y * 0.1f));
             mpVSlider->SetBarClickValueAdd(mpVSlider->GetBarValueSize());
 
-            if(fEndCoord>0)
+            if(fEndCoord > 0)
             {
-                if(vLimitOffset.y>fEndCoord)
+                if(vLimitOffset.y > fEndCoord)
                 {
                     vLimitOffset.y = fEndCoord;
                 }
@@ -320,7 +320,7 @@ void cWidgetFrame::OnUpdate(double adFixedDelta)
                 bVertActive = false;
             }
 
-            if(bVertActive==false)
+            if(bVertActive == false)
             {
                 mpVSlider->SetValue(0);
             }
@@ -328,7 +328,7 @@ void cWidgetFrame::OnUpdate(double adFixedDelta)
             {
                 int lOffset = cMath::RoundToInt(vOffset.y);
                 int lLimitOffset = cMath::RoundToInt(vLimitOffset.y);
-                if(lOffset>lLimitOffset)
+                if(lOffset > lLimitOffset)
                 {
                     mpVSlider->SetValue(lLimitOffset);
                 }
@@ -369,7 +369,7 @@ void cWidgetFrame::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
         DrawBordersAndCorners(    NULL, mvGfxBorders, mvGfxCorners,
                                   GetGlobalPosition() -
                                   cVector3f(    mvGfxCorners[0]->GetActiveSize().x,
-                                                mvGfxCorners[0]->GetActiveSize().y,0),
+                                                mvGfxCorners[0]->GetActiveSize().y, 0),
                                   mvSize +    mvGfxCorners[0]->GetActiveSize() +
                                   mvGfxCorners[2]->GetActiveSize());
     }
@@ -383,8 +383,8 @@ void cWidgetFrame::OnDrawAfterClip(double adFixedDelta, cGuiClipRegion *apClipRe
     // Background
     if(mbDrawBackground)
     {
-        mpSet->DrawGfx(    mpGfxBackground,GetGlobalPosition() +cVector3f(0,0,mfBackgroundZ),
-                           mvSize,mBackGroundColor);
+        mpSet->DrawGfx(    mpGfxBackground, GetGlobalPosition() + cVector3f(0, 0, mfBackgroundZ),
+                           mvSize, mBackGroundColor);
     }
 }
 
@@ -399,30 +399,30 @@ bool cWidgetFrame::OnMouseMove(const cGuiMessageData& aData)
 
 bool cWidgetFrame::OnMouseDown(const cGuiMessageData& aData)
 {
-    if(aData.mlVal&eGuiMouseButton_Left ||
-            aData.mlVal&eGuiMouseButton_Right)
+    if(aData.mlVal & eGuiMouseButton_Left ||
+            aData.mlVal & eGuiMouseButton_Right)
     {
         return true;
     }
 
-    if(mpVSlider==NULL || mpVSlider->IsVisible()==false)
+    if(mpVSlider == NULL || mpVSlider->IsVisible() == false)
     {
         return false;
     }
 
     int lValue = mpVSlider->GetValue();
-    int lAdd = mpVSlider->GetButtonValueAdd()*3;
+    int lAdd = mpVSlider->GetButtonValueAdd() * 3;
 
     if(aData.mlVal & eGuiMouseButton_WheelUp)
     {
-        lValue-=lAdd;
+        lValue -= lAdd;
     }
     else if(aData.mlVal & eGuiMouseButton_WheelDown)
     {
-        lValue+=lAdd;
+        lValue += lAdd;
     }
 
-    if(lValue!=mpVSlider->GetValue())
+    if(lValue != mpVSlider->GetValue())
     {
         mpVSlider->SetValue(lValue);
     }

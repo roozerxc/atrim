@@ -8,7 +8,7 @@ namespace hpl
 
 class iResourceLoader;
 
-typedef std::list<iResourceLoader*> tResourceLoaderList;
+typedef std::list<iResourceLoader *> tResourceLoaderList;
 typedef tResourceLoaderList::iterator tResourceLoaderListIt;
 
 //------------------------------------
@@ -20,16 +20,16 @@ public:
 
     void AddLoader(iResourceLoader *apLoader);
 
-    tStringVec* GetSupportedTypes()
+    tStringVec *GetSupportedTypes()
     {
         return &mvSupportedTypes;
     }
 
-    iResourceLoader* GetLoaderForFile(const tString& asFileName);
-    iResourceLoader* GetLoaderForFile(const tWString& asFileName);
+    iResourceLoader *GetLoaderForFile(const tString& asFileName);
+    iResourceLoader *GetLoaderForFile(const tWString& asFileName);
 
 protected:
-    virtual void SetupLoader(iResourceLoader *apLoader)=0;
+    virtual void SetupLoader(iResourceLoader *apLoader) = 0;
 
     tStringVec mvSupportedTypes;
 

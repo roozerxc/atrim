@@ -27,10 +27,10 @@ class cBeamEnd : public iEntity3D
     friend class cBeamEnd_UpdateCallback;
 public:
     cBeamEnd(const tString asName, cBeam *apBeam) : iEntity3D(asName),
-        mColor(1,1),mpBeam(apBeam) {}
+        mColor(1, 1), mpBeam(apBeam) {}
 
     void SetColor(const cColor &aColor);
-    const cColor& GetColor()
+    const cColor &GetColor()
     {
         return mColor;
     }
@@ -63,12 +63,12 @@ class cBeam : public iRenderable
 #endif
     friend class cBeamEnd;
 public:
-    cBeam(const tString asName, cResources *apResources,cGraphics *apGraphics);
+    cBeam(const tString asName, cResources *apResources, cGraphics *apGraphics);
     ~cBeam();
 
     void SetMaterial(cMaterial * apMaterial);
 
-    const tString& GetFileName()
+    const tString &GetFileName()
     {
         return msFileName;
     }
@@ -84,7 +84,7 @@ public:
     }
 
     void SetColor(const cColor &aColor);
-    const cColor& GetColor()
+    const cColor &GetColor()
     {
         return mColor;
     }
@@ -101,7 +101,7 @@ public:
         return mbMultiplyAlphaWithColor;
     }
 
-    cBeamEnd* GetEnd()
+    cBeamEnd *GetEnd()
     {
         return mpEnd;
     }
@@ -131,16 +131,16 @@ public:
     {
         return mpMaterial;
     }
-    iVertexBuffer* GetVertexBuffer()
+    iVertexBuffer *GetVertexBuffer()
     {
         return mpVtxBuffer;
     }
 
     void UpdateGraphicsForFrame(double adFrameTime);
 
-    cBoundingVolume* GetBoundingVolume();
+    cBoundingVolume *GetBoundingVolume();
 
-    cMatrixf* GetModelMatrix(cFrustum *apFrustum);
+    cMatrixf *GetModelMatrix(cFrustum *apFrustum);
 
     int GetMatrixUpdateCount();
 
@@ -150,12 +150,12 @@ public:
         return eRenderableType_Beam;
     }
 private:
-    cMaterialManager* mpMaterialManager;
+    cMaterialManager *mpMaterialManager;
     cFileSearcher *mpFileSearcher;
-    iLowLevelGraphics* mpLowLevelGraphics;
+    iLowLevelGraphics *mpLowLevelGraphics;
 
     cMaterial *mpMaterial;
-    iVertexBuffer* mpVtxBuffer;
+    iVertexBuffer *mpVtxBuffer;
 
     cBeamEnd *mpEnd;
 

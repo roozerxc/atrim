@@ -10,8 +10,8 @@ public:
     iMutex();
     virtual ~iMutex() {}
 
-    virtual bool Lock()=0;
-    virtual bool Unlock()=0;
+    virtual bool Lock() = 0;
+    virtual bool Unlock() = 0;
 
 protected:
 private:

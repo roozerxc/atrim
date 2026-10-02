@@ -72,7 +72,7 @@ tWString cPlatform::LoadTextFromClipboard()
     return tstr;
 }
 
-void cPlatform::GetDisplayResolution(int alDisplay, int& alWidth, int& alHeight)
+void cPlatform::GetDisplayResolution(int alDisplay, int &alWidth, int &alHeight)
 {
     alWidth = 1024;
     alHeight = 768;
@@ -92,9 +92,9 @@ void cPlatform::GetAvailableVideoModes(tVideoModeVec& avDestVidModes, int alMinB
     {
         return;
     }
-    for (int i=0; modes[i]; i++)
+    for (int i = 0; modes[i]; i++)
     {
-        avDestVidModes.push_back(cVideoMode(cVector2l(modes[i]->w, modes[i]->h),info->vfmt->BitsPerPixel,1));
+        avDestVidModes.push_back(cVideoMode(cVector2l(modes[i]->w, modes[i]->h), info->vfmt->BitsPerPixel, 1));
     }
     sort(avDestVidModes.begin(), avDestVidModes.end(), VideoComp());
 }
@@ -107,7 +107,7 @@ tWString cPlatform::GetDisplayName(int alDisplay)
 #ifndef HPL_MINIMAL
 //-----------------------------------------------------------------------
 
-iTimer * cPlatform::CreateTimer()
+iTimer *cPlatform::CreateTimer()
 {
     return hplNew(cTimerSDL, () );
 }
@@ -117,7 +117,7 @@ iTimer * cPlatform::CreateTimer()
 //////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------
-iThread* cPlatform::CreateThread(iThreadClass* apThreadClass)
+iThread *cPlatform::CreateThread(iThreadClass* apThreadClass)
 {
     iThread* pThread = hplNew(cThreadSDL, ());
     pThread->SetThreadClass(apThreadClass);
@@ -127,7 +127,7 @@ iThread* cPlatform::CreateThread(iThreadClass* apThreadClass)
 
 //-----------------------------------------------------------------------
 
-iMutex* cPlatform::CreateMutEx()
+iMutex *cPlatform::CreateMutEx()
 {
     return hplNew(cMutexSDL, ());
 }

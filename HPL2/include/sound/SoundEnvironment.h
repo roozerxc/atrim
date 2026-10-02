@@ -18,11 +18,11 @@ public:
         return false;
     }
 
-    tString& GetName()
+    tString &GetName()
     {
         return mstrName;
     }
-    tString& GetFileName()
+    tString &GetFileName()
     {
         return msFileName;
     }

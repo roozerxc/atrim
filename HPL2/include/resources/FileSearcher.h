@@ -51,7 +51,7 @@ public:
      * \param asName Name of the file.
      * \return Path to the file. "" if file is not found.
      */
-    const tWString& GetFilePath(const tString& asFileNameAndPath, int *apEqualCount=NULL);
+    const tWString &GetFilePath(const tString& asFileNameAndPath, int *apEqualCount = NULL);
 
 private:
     tFilePathMap m_mapFiles;

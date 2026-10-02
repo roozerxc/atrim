@@ -16,7 +16,7 @@ namespace hpl
 cOcclusionQueryOGL::cOcclusionQueryOGL()
 {
     glGenQueriesARB(1, (GLuint *)&mlQueryId);
-    mlLastSampleCount =0;
+    mlLastSampleCount = 0;
     mbResultsAreFetched = true;
 }
 
@@ -37,7 +37,7 @@ cOcclusionQueryOGL::~cOcclusionQueryOGL()
 
 void cOcclusionQueryOGL::Begin()
 {
-    glBeginQueryARB(GL_SAMPLES_PASSED_ARB,mlQueryId);
+    glBeginQueryARB(GL_SAMPLES_PASSED_ARB, mlQueryId);
     mbResultsAreFetched = false;
 }
 
@@ -57,18 +57,18 @@ bool cOcclusionQueryOGL::FetchResults()
     if(glIsQuery(mlQueryId) == GL_FALSE)
     {
         mbResultsAreFetched = true;
-        mlLastSampleCount =0;
+        mlLastSampleCount = 0;
         return true;
     }
 
-    GLint lAvailable=0;
-    glGetQueryObjectivARB(mlQueryId,GL_QUERY_RESULT_AVAILABLE_ARB,&lAvailable);
-    if(lAvailable==0)
+    GLint lAvailable = 0;
+    glGetQueryObjectivARB(mlQueryId, GL_QUERY_RESULT_AVAILABLE_ARB, &lAvailable);
+    if(lAvailable == 0)
     {
         return false;
     }
 
-    glGetQueryObjectivARB(mlQueryId,GL_QUERY_RESULT_ARB,(GLint *)&mlLastSampleCount);
+    glGetQueryObjectivARB(mlQueryId, GL_QUERY_RESULT_ARB, (GLint *)&mlLastSampleCount);
 
     mbResultsAreFetched = true;
 

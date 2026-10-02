@@ -35,21 +35,21 @@ cBitmapLoaderDevilMisc::~cBitmapLoaderDevilMisc()
 
 //-----------------------------------------------------------------------
 
-cBitmap* cBitmapLoaderDevilMisc::LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags)
+cBitmap *cBitmapLoaderDevilMisc::LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags)
 {
     Initialize();
 
     //create image id
     unsigned int lImageId;
-    ilGenImages(1,&lImageId);
+    ilGenImages(1, &lImageId);
 
     //Bind image
     ilBindImage(lImageId);
 
     //Try and load the file.
-    if(LoadDevilImageW(asFile)==false)
+    if(LoadDevilImageW(asFile) == false)
     {
-        ilDeleteImages(1,&lImageId);
+        ilDeleteImages(1, &lImageId);
         return NULL;
     }
 
@@ -91,7 +91,7 @@ cBitmap* cBitmapLoaderDevilMisc::LoadBitmap(const tWString& asFile, tBitmapLoadF
     //Loop through and copy image data
     // If 0 number of images, there is still one image to get, so set up accordingly.
     int lCount = lNumOfImages > 0 ? lNumOfImages : 1;
-    for(int image=0; image < lCount; ++image)
+    for(int image = 0; image < lCount; ++image)
     {
         //When 1 image only, no need to set up active image.
         if(lNumOfImages > 1)
@@ -99,13 +99,13 @@ cBitmap* cBitmapLoaderDevilMisc::LoadBitmap(const tWString& asFile, tBitmapLoadF
             ilActiveImage(image);
         }
 
-        cBitmapData *pImage = pBitmap->GetData(image,0);
+        cBitmapData *pImage = pBitmap->GetData(image, 0);
 
         int lSize = ilGetInteger(IL_IMAGE_SIZE_OF_DATA);
         pImage->SetData(ilGetData(), lSize);
     }
 
-    ilDeleteImages(1,&lImageId);
+    ilDeleteImages(1, &lImageId);
 
     return pBitmap;
 }

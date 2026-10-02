@@ -20,17 +20,17 @@ public:
     cFrustum();
 
     void SetupPerspectiveProj( const cMatrixf& a_mtxProj, const cMatrixf& a_mtxView,
-                               float afFarPlane,float afNearPlane,float afFOV, float afAspect,
-                               const cVector3f &avOrigin, bool abInfFarPlane=false,
-                               cMatrixf* apCustomFarProjMtx=NULL,
-                               bool abObliqueNearPlane=false);
+                               float afFarPlane, float afNearPlane, float afFOV, float afAspect,
+                               const cVector3f &avOrigin, bool abInfFarPlane = false,
+                               cMatrixf* apCustomFarProjMtx = NULL,
+                               bool abObliqueNearPlane = false);
 
     void SetupOrthoProj( const cMatrixf& a_mtxProj, const cMatrixf& a_mtxView,
-                         float afFarPlane,float afNearPlane,const cVector2f &avViewSize,
-                         const cVector3f &avOrigin, bool abInfFarPlane=false);
+                         float afFarPlane, float afNearPlane, const cVector2f &avViewSize,
+                         const cVector3f &avOrigin, bool abInfFarPlane = false);
 
-    const cPlanef& GetPlane(eFrustumPlane aType);
-    const cVector3f& GetVertex(int alIdx)
+    const cPlanef &GetPlane(eFrustumPlane aType);
+    const cVector3f &GetVertex(int alIdx)
     {
         return mvVertices[alIdx];
     }
@@ -40,11 +40,11 @@ public:
     eCollision CollideNode(iRenderableContainerNode* apNode);
     eCollision CollideFrustum(cFrustum *apFrustum);
 
-    inline const cMatrixf& GetProjectionMatrix() const
+    inline const cMatrixf &GetProjectionMatrix() const
     {
         return m_mtxProj;
     }
-    inline const cMatrixf& GetViewMatrix()const
+    inline const cMatrixf &GetViewMatrix()const
     {
         return m_mtxView;
     }
@@ -73,7 +73,7 @@ public:
 
     void SetInvertsCullMode(bool abX)
     {
-        mbInvertsCullMode=abX;
+        mbInvertsCullMode = abX;
     }
     bool GetInvertsCullMode()
     {
@@ -85,7 +85,7 @@ public:
         return mProjectionType;
     }
 
-    inline const cVector2f& GetOrthoViewSize() const
+    inline const cVector2f &GetOrthoViewSize() const
     {
         return mvViewSize;
     }
@@ -101,13 +101,13 @@ public:
     {
         return mBoundingSphere;
     }
-    const cBoundingVolume& GetBoundingVolume()
+    const cBoundingVolume &GetBoundingVolume()
     {
         return mBoundingVolume;
     }
 
-    const cVector3f& GetOrigin();
-    cBoundingVolume* GetOriginBV();
+    const cVector3f &GetOrigin();
+    cBoundingVolume *GetOriginBV();
 
     cVector3f GetForward();
 
@@ -116,13 +116,13 @@ public:
 private:
     eCollision CollideFustrumSphere(const cVector3f& avCenter, float afRadius);
 
-    eCollision CollideSphere(const cVector3f& avCenter, float afRadius, int alMaxPlanes=6);
-    eCollision CollideAABB(const cVector3f& avMin,const cVector3f& avMax, int alMaxPlanes=6);
+    eCollision CollideSphere(const cVector3f& avCenter, float afRadius, int alMaxPlanes = 6);
+    eCollision CollideAABB(const cVector3f& avMin, const cVector3f& avMax, int alMaxPlanes = 6);
 
 
     void Setup(    const cMatrixf& a_mtxProj, const cMatrixf& a_mtxView,
-                   float afFarPlane,float afNearPlane,const cVector3f &avOrigin,
-                   bool abInfFarPlane, cMatrixf* apCustomFarProjMtx=NULL);
+                   float afFarPlane, float afNearPlane, const cVector3f &avOrigin,
+                   bool abInfFarPlane, cMatrixf* apCustomFarProjMtx = NULL);
 
     void UpdatePlanes(cMatrixf* apCustomFarProjMtx);
     void UpdateSphere();

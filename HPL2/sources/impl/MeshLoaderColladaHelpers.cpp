@@ -61,28 +61,28 @@ cVector3f cMeshLoaderCollada::GetVectorPosFromPtr(float *apVec)
 {
     if(mbZToY)
     {
-        return cVector3f(apVec[0],apVec[2],apVec[1]);
+        return cVector3f(apVec[0], apVec[2], apVec[1]);
     }
     else
     {
-        return cVector3f(apVec[0],apVec[1],apVec[2]);
+        return cVector3f(apVec[0], apVec[1], apVec[2]);
     }
 }
 
 cVector3f cMeshLoaderCollada::GetVectorRotationFromPtr(float *apVec)
 {
-    return cVector3f(apVec[0],apVec[1],apVec[2]);
+    return cVector3f(apVec[0], apVec[1], apVec[2]);
 }
 
 cVector3f cMeshLoaderCollada::GetVectorScaleFromPtr(float *apVec)
 {
     if(mbZToY)
     {
-        return cVector3f(apVec[0],apVec[2],apVec[1]);
+        return cVector3f(apVec[0], apVec[2], apVec[1]);
     }
     else
     {
-        return cVector3f(apVec[0],apVec[1],apVec[2]);
+        return cVector3f(apVec[0], apVec[1], apVec[2]);
     }
 }
 
@@ -91,7 +91,7 @@ cVector3f cMeshLoaderCollada::GetVectorScaleFromPtr(float *apVec)
 class cTempAnimData
 {
 public:
-    cTempAnimData(): mvTrans(0,0,0), mvRot(0,0,0), mvScale(1,1,1) {}
+    cTempAnimData(): mvTrans(0, 0, 0), mvRot(0, 0, 0), mvScale(1, 1, 1) {}
 
     cVector3f mvTrans;
     cVector3f mvRot;
@@ -106,9 +106,9 @@ typedef std::vector<cTempAnimData> tTempAnimDataVec;
 typedef std::set<float> tTempTimesSet;
 typedef std::set<float>::iterator tTempTimesSetIt;
 
-static cTempAnimData* GetTempAnimData(float afTime, tTempAnimDataVec &avTempData)
+static cTempAnimData *GetTempAnimData(float afTime, tTempAnimDataVec &avTempData)
 {
-    for(size_t i=0; i<avTempData.size(); ++i)
+    for(size_t i = 0; i < avTempData.size(); ++i)
     {
         if(avTempData[i].mfTime == afTime)
         {
@@ -122,11 +122,11 @@ static cTempAnimData* GetTempAnimData(float afTime, tTempAnimDataVec &avTempData
 /////////////////
 
 //Get times in TimeVec closes to afTime.
-static void GetAnimTimes(float afTime,float *apTimeBefore,float *apTimeAfter,tFloatVec* apTimeVec)
+static void GetAnimTimes(float afTime, float *apTimeBefore, float *apTimeAfter, tFloatVec* apTimeVec)
 {
     *apTimeBefore = -1;
-    *apTimeAfter=-1;
-    for(size_t i=0; i<apTimeVec->size(); ++i)
+    *apTimeAfter = -1;
+    for(size_t i = 0; i < apTimeVec->size(); ++i)
     {
         float fTime = (*apTimeVec)[i];
 
@@ -143,7 +143,7 @@ static void GetAnimTimes(float afTime,float *apTimeBefore,float *apTimeAfter,tFl
 
 /////////////////
 
-cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cSkeleton *apSkeleton,
+cAnimationTrack *cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cSkeleton *apSkeleton,
         cColladaAnimation &aAnim, cColladaScene *apScene)
 {
     tTempAnimDataVec vTempData;
@@ -153,9 +153,9 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
 
     //Get the node that will be animated by this track
     cColladaNode* pNode = apScene->GetNode(aAnim.msTargetNode);
-    if(pNode==NULL)
+    if(pNode == NULL)
     {
-        Error("Couldn't find node '%s' for animation id '%s'\n",aAnim.msTargetNode.c_str(), aAnim.msId.c_str());
+        Error("Couldn't find node '%s' for animation id '%s'\n", aAnim.msTargetNode.c_str(), aAnim.msId.c_str());
         return NULL;
     }
 
@@ -166,7 +166,7 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
         pBone = apSkeleton->GetBoneByName(aAnim.msTargetNode);
         if(pBone == NULL)
         {
-            Error("Couldn't find bone '%s'\n",aAnim.msTargetNode.c_str());
+            Error("Couldn't find bone '%s'\n", aAnim.msTargetNode.c_str());
             return NULL;
         }
     }
@@ -177,14 +177,14 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
 
     /////////////////////////////////////////////////
     //Go through all sample and add the different times.
-    for(size_t i=0; i< aAnim.mvSamplers.size(); i++)
+    for(size_t i = 0; i < aAnim.mvSamplers.size(); i++)
     {
         cColladaSampler &Sampler = aAnim.mvSamplers[i];
 
         tFloatVec *pValueVec = aAnim.GetSourceVec(Sampler.msTimeArray);
         if(pValueVec == NULL)
         {
-            Error("Time array not found in sampler '%s'!\n",Sampler.msId.c_str());
+            Error("Time array not found in sampler '%s'!\n", Sampler.msId.c_str());
             return NULL;
         }
 
@@ -198,19 +198,19 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
     ///////////////////////////////
     //Resize temp data and fill with times used.
     vTempData.resize(setTempTimes.size());
-    int lCount=0;
-    for(tTempTimesSetIt it= setTempTimes.begin(); it != setTempTimes.end(); ++it,++lCount)
+    int lCount = 0;
+    for(tTempTimesSetIt it = setTempTimes.begin(); it != setTempTimes.end(); ++it, ++lCount)
     {
         vTempData[lCount].mfTime = *it;
         vTempData[lCount].mlIndex = lCount;
     }
 
-    bool bLoadedTranslation=false;
-    bool bLoadedRotation=false;
+    bool bLoadedTranslation = false;
+    bool bLoadedRotation = false;
 
     /////////////////////////////////////////////////
     //Go through all samples and get data
-    for(size_t i=0; i< aAnim.mvSamplers.size(); i++)
+    for(size_t i = 0; i < aAnim.mvSamplers.size(); i++)
     {
         cColladaSampler &Sampler = aAnim.mvSamplers[i];
 
@@ -226,7 +226,7 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
         }
 
         //Get the Sid of the transformation that this sampler changes.
-        tString sTarget = cString::SetFileExt(cString::GetFileName(Sampler.msTarget),"");
+        tString sTarget = cString::SetFileExt(cString::GetFileName(Sampler.msTarget), "");
         tString sExt = cString::ToLowerCase(cString::GetFileExt(Sampler.msTarget));
 
         ////////////////////
@@ -254,7 +254,7 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
             //Log("Loading Translation\n");
             bLoadedTranslation = true;
 
-            for(size_t j=0; j <pTimeVec->size(); j++)
+            for(size_t j = 0; j < pTimeVec->size(); j++)
             {
                 //Check the translation type
                 //If only a single axis is changes the others are set to
@@ -264,33 +264,33 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
 
                 //Get the temp data:
                 cTempAnimData * pTempData = GetTempAnimData((*pTimeVec)[j], vTempData);
-                if(pTempData==NULL)
+                if(pTempData == NULL)
                 {
-                    Error("Code error at %d\n",__LINE__);
+                    Error("Code error at %d\n", __LINE__);
                     return NULL;
                 }
 
                 // XYZ
-                if(sExt=="")
+                if(sExt == "")
                 {
-                    pTempData->mvTrans = cVector3f((*pValueVec)[j*3 + 0],
-                                                   (*pValueVec)[j*3 +1],
-                                                   (*pValueVec)[j*3 +2]);
+                    pTempData->mvTrans = cVector3f((*pValueVec)[j * 3 + 0],
+                                                   (*pValueVec)[j * 3 + 1],
+                                                   (*pValueVec)[j * 3 + 2]);
                 }
                 // X
-                else if(sExt=="x")
+                else if(sExt == "x")
                 {
-                    pTempData->mvTrans = cVector3f((*pValueVec)[j],vTrans.y,vTrans.z);
+                    pTempData->mvTrans = cVector3f((*pValueVec)[j], vTrans.y, vTrans.z);
                 }
                 // Y
-                else if(sExt=="y")
+                else if(sExt == "y")
                 {
-                    pTempData->mvTrans = cVector3f(vTrans.x,(*pValueVec)[j],vTrans.z);
+                    pTempData->mvTrans = cVector3f(vTrans.x, (*pValueVec)[j], vTrans.z);
                 }
                 // Z
-                else if(sExt=="z")
+                else if(sExt == "z")
                 {
-                    pTempData->mvTrans = cVector3f(vTrans.x,vTrans.y,(*pValueVec)[j]);
+                    pTempData->mvTrans = cVector3f(vTrans.x, vTrans.y, (*pValueVec)[j]);
                 }
 
                 //Scale and rotate data
@@ -306,10 +306,10 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
 
             ////////////////////////////////
             //Go through all of Temp data and find times not added
-            float fTimeBefore=-1, fTimeAfter=-1;
-            for(size_t j=0; j<vTempData.size(); ++j)
+            float fTimeBefore = -1, fTimeAfter = -1;
+            for(size_t j = 0; j < vTempData.size(); ++j)
             {
-                GetAnimTimes(vTempData[j].mfTime,&fTimeBefore, &fTimeAfter, pTimeVec);
+                GetAnimTimes(vTempData[j].mfTime, &fTimeBefore, &fTimeAfter, pTimeVec);
 
                 //Time exists
                 if(fTimeBefore == vTempData[j].mfTime)
@@ -318,23 +318,23 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
                     continue;
                 }
                 //Time between two keys
-                else if(fTimeBefore>=0 && fTimeAfter>=0)
+                else if(fTimeBefore >= 0 && fTimeAfter >= 0)
                 {
-                    cTempAnimData *pBefore = GetTempAnimData(fTimeBefore,vTempData);
-                    cTempAnimData *pAfter = GetTempAnimData(fTimeAfter,vTempData);
+                    cTempAnimData *pBefore = GetTempAnimData(fTimeBefore, vTempData);
+                    cTempAnimData *pAfter = GetTempAnimData(fTimeAfter, vTempData);
 
-                    float fT = (vTempData[j].mfTime - pBefore->mfTime)/(pAfter->mfTime -  pBefore->mfTime);
+                    float fT = (vTempData[j].mfTime - pBefore->mfTime) / (pAfter->mfTime -  pBefore->mfTime);
 
-                    vTempData[j].mvTrans = pBefore->mvTrans*(1.0f-fT) + pAfter->mvTrans*fT;
+                    vTempData[j].mvTrans = pBefore->mvTrans * (1.0f-fT) + pAfter->mvTrans * fT;
 
                     //Log("Interpolated sample %s time %f between %f and %f. T=%f\n",
                     //                        Sampler.msId.c_str(), vTempData[j].mfTime,
                     //                        pBefore->mfTime,pAfter->mfTime,fT);
                 }
                 //Time before start
-                else if(fTimeBefore<0 && fTimeAfter>=0)
+                else if(fTimeBefore < 0 && fTimeAfter >= 0)
                 {
-                    cTempAnimData *pAfter = GetTempAnimData(fTimeAfter,vTempData);
+                    cTempAnimData *pAfter = GetTempAnimData(fTimeAfter, vTempData);
 
                     vTempData[j].mvTrans = pAfter->mvTrans;
 
@@ -343,9 +343,9 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
                     //                    pAfter->mfTime);
                 }
                 //Time after end
-                else if(fTimeBefore>=0 && fTimeAfter<0)
+                else if(fTimeBefore >= 0 && fTimeAfter < 0)
                 {
-                    cTempAnimData *pBefore = GetTempAnimData(fTimeBefore,vTempData);
+                    cTempAnimData *pBefore = GetTempAnimData(fTimeBefore, vTempData);
 
                     vTempData[j].mvTrans = pBefore->mvTrans;
 
@@ -361,13 +361,13 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
         {
             bLoadedRotation = true;
 
-            for(size_t j=0; j <pTimeVec->size(); j++)
+            for(size_t j = 0; j < pTimeVec->size(); j++)
             {
                 //Get the temp data:
                 cTempAnimData * pTempData = GetTempAnimData((*pTimeVec)[j], vTempData);
-                if(pTempData==NULL)
+                if(pTempData == NULL)
                 {
-                    Error("Code error at %d\n",__LINE__);
+                    Error("Code error at %d\n", __LINE__);
                     return NULL;
                 }
 
@@ -376,26 +376,26 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
                                                pTrans->mvValues[2]) * (*pValueVec)[j]);
             }
 
-            size_t lVecNum=0;
-            if(pTrans->mvValues[0]>0.001f)
+            size_t lVecNum = 0;
+            if(pTrans->mvValues[0] > 0.001f)
             {
-                lVecNum =0;
+                lVecNum = 0;
             }
-            else if(pTrans->mvValues[1]>0.001f)
+            else if(pTrans->mvValues[1] > 0.001f)
             {
-                lVecNum =1;
+                lVecNum = 1;
             }
-            else if(pTrans->mvValues[2]>0.001f)
+            else if(pTrans->mvValues[2] > 0.001f)
             {
-                lVecNum =2;
+                lVecNum = 2;
             }
 
             ////////////////////////////////
             //Go through all of Temp data and find times not added
-            float fTimeBefore=-1, fTimeAfter=-1;
-            for(size_t j=0; j<vTempData.size(); ++j)
+            float fTimeBefore = -1, fTimeAfter = -1;
+            for(size_t j = 0; j < vTempData.size(); ++j)
             {
-                GetAnimTimes(vTempData[j].mfTime,&fTimeBefore, &fTimeAfter, pTimeVec);
+                GetAnimTimes(vTempData[j].mfTime, &fTimeBefore, &fTimeAfter, pTimeVec);
 
                 /////////////////////
                 //Time exists
@@ -406,15 +406,15 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
                 }
                 /////////////////////
                 //Time between two keys
-                else if(fTimeBefore>=0 && fTimeAfter>=0)
+                else if(fTimeBefore >= 0 && fTimeAfter >= 0)
                 {
-                    cTempAnimData *pBefore = GetTempAnimData(fTimeBefore,vTempData);
-                    cTempAnimData *pAfter = GetTempAnimData(fTimeAfter,vTempData);
+                    cTempAnimData *pBefore = GetTempAnimData(fTimeBefore, vTempData);
+                    cTempAnimData *pAfter = GetTempAnimData(fTimeAfter, vTempData);
 
-                    float fT = (vTempData[j].mfTime - pBefore->mfTime)/(pAfter->mfTime -  pBefore->mfTime);
+                    float fT = (vTempData[j].mfTime - pBefore->mfTime) / (pAfter->mfTime -  pBefore->mfTime);
 
-                    vTempData[j].mvRot.v[lVecNum] = pBefore->mvRot.v[lVecNum]*(1.0f-fT) +
-                                                    pAfter->mvRot.v[lVecNum]*fT;
+                    vTempData[j].mvRot.v[lVecNum] = pBefore->mvRot.v[lVecNum] * (1.0f-fT) +
+                                                    pAfter->mvRot.v[lVecNum] * fT;
 
                     //Log("Interpolated sample %s time %f between %f and %f. T=%f\n",
                     //    Sampler.msId.c_str(), vTempData[j].mfTime,
@@ -422,9 +422,9 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
                 }
                 /////////////////////
                 //Time before start
-                else if(fTimeBefore<0 && fTimeAfter>=0)
+                else if(fTimeBefore < 0 && fTimeAfter >= 0)
                 {
-                    cTempAnimData *pAfter = GetTempAnimData(fTimeAfter,vTempData);
+                    cTempAnimData *pAfter = GetTempAnimData(fTimeAfter, vTempData);
 
                     vTempData[j].mvRot.v[lVecNum] = pAfter->mvRot.v[lVecNum];
 
@@ -434,9 +434,9 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
                 }
                 /////////////////////
                 //Time after end
-                else if(fTimeBefore>=0 && fTimeAfter<0)
+                else if(fTimeBefore >= 0 && fTimeAfter < 0)
                 {
-                    cTempAnimData *pBefore = GetTempAnimData(fTimeBefore,vTempData);
+                    cTempAnimData *pBefore = GetTempAnimData(fTimeBefore, vTempData);
 
                     vTempData[j].mvRot.v[lVecNum] = pBefore->mvRot.v[lVecNum];
                 }
@@ -449,17 +449,17 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
             bLoadedRotation = true;
             bLoadedTranslation = true;
 
-            for(size_t j=0; j <pTimeVec->size(); j++)
+            for(size_t j = 0; j < pTimeVec->size(); j++)
             {
                 //Get the temp data:
                 cTempAnimData * pTempData = GetTempAnimData((*pTimeVec)[j], vTempData);
-                if(pTempData==NULL)
+                if(pTempData == NULL)
                 {
-                    Error("Code error at %d\n",__LINE__);
+                    Error("Code error at %d\n", __LINE__);
                     return NULL;
                 }
 
-                cMatrixf mtxFrame = GetMatrix(cMatrixf(&(*pValueVec)[j*16]));
+                cMatrixf mtxFrame = GetMatrix(cMatrixf(&(*pValueVec)[j * 16]));
 
                 if(pBone)
                 {
@@ -480,10 +480,10 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
 
             ////////////////////////////////
             //Go through all of Temp data and find times not added
-            float fTimeBefore=-1, fTimeAfter=-1;
-            for(size_t j=0; j<vTempData.size(); ++j)
+            float fTimeBefore = -1, fTimeAfter = -1;
+            for(size_t j = 0; j < vTempData.size(); ++j)
             {
-                GetAnimTimes(vTempData[j].mfTime,&fTimeBefore, &fTimeAfter, pTimeVec);
+                GetAnimTimes(vTempData[j].mfTime, &fTimeBefore, &fTimeAfter, pTimeVec);
 
                 /////////////////////
                 //Time exists
@@ -494,26 +494,26 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
                 }
                 /////////////////////
                 //Time between two keys
-                else if(fTimeBefore>=0 && fTimeAfter>=0)
+                else if(fTimeBefore >= 0 && fTimeAfter >= 0)
                 {
-                    cTempAnimData *pBefore = GetTempAnimData(fTimeBefore,vTempData);
-                    cTempAnimData *pAfter = GetTempAnimData(fTimeAfter,vTempData);
+                    cTempAnimData *pBefore = GetTempAnimData(fTimeBefore, vTempData);
+                    cTempAnimData *pAfter = GetTempAnimData(fTimeAfter, vTempData);
 
-                    float fT = (vTempData[j].mfTime - pBefore->mfTime)/(pAfter->mfTime -  pBefore->mfTime);
+                    float fT = (vTempData[j].mfTime - pBefore->mfTime) / (pAfter->mfTime -  pBefore->mfTime);
 
-                    for(size_t lVecNum=0; lVecNum < 3; ++lVecNum)
-                        vTempData[j].mvRot.v[lVecNum] = pBefore->mvRot.v[lVecNum]*(1.0f-fT) +
-                                                        pAfter->mvRot.v[lVecNum]*fT;
+                    for(size_t lVecNum = 0; lVecNum < 3; ++lVecNum)
+                        vTempData[j].mvRot.v[lVecNum] = pBefore->mvRot.v[lVecNum] * (1.0f-fT) +
+                                                        pAfter->mvRot.v[lVecNum] * fT;
 
-                    vTempData[j].mvTrans = pBefore->mvTrans*(1.0f-fT) + pAfter->mvTrans*fT;
+                    vTempData[j].mvTrans = pBefore->mvTrans * (1.0f-fT) + pAfter->mvTrans * fT;
                 }
                 /////////////////////
                 //Time before start
-                else if(fTimeBefore<0 && fTimeAfter>=0)
+                else if(fTimeBefore < 0 && fTimeAfter >= 0)
                 {
-                    cTempAnimData *pAfter = GetTempAnimData(fTimeAfter,vTempData);
+                    cTempAnimData *pAfter = GetTempAnimData(fTimeAfter, vTempData);
 
-                    for(size_t lVecNum=0; lVecNum < 3; ++lVecNum)
+                    for(size_t lVecNum = 0; lVecNum < 3; ++lVecNum)
                     {
                         vTempData[j].mvRot.v[lVecNum] = pAfter->mvRot.v[lVecNum];
                     }
@@ -522,11 +522,11 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
                 }
                 /////////////////////
                 //Time after end
-                else if(fTimeBefore>=0 && fTimeAfter<0)
+                else if(fTimeBefore >= 0 && fTimeAfter < 0)
                 {
-                    cTempAnimData *pBefore = GetTempAnimData(fTimeBefore,vTempData);
+                    cTempAnimData *pBefore = GetTempAnimData(fTimeBefore, vTempData);
 
-                    for(size_t lVecNum=0; lVecNum < 3; ++lVecNum)
+                    for(size_t lVecNum = 0; lVecNum < 3; ++lVecNum)
                     {
                         vTempData[j].mvRot.v[lVecNum] = pBefore->mvRot.v[lVecNum];
                     }
@@ -556,7 +556,7 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
                                eAnimTransformFlag_Translate);
     ////////////////////////////////////
     //Iterate the temporary data and add to the track.
-    for(size_t i=0; i < vTempData.size(); i++)
+    for(size_t i = 0; i < vTempData.size(); i++)
     {
         cKeyFrame *pFrame = pTrack->CreateKeyFrame(vTempData[i].mfTime - apScene->mfStartTime);
 
@@ -591,7 +591,7 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
         {
             //Create the quaternion from rotations.
             cVector3f vRadRot = vTempData[i].mvRot;
-            vRadRot = cVector3f(cMath::ToRad(vRadRot.x),cMath::ToRad(vRadRot.y),cMath::ToRad(vRadRot.z) );
+            vRadRot = cVector3f(cMath::ToRad(vRadRot.x), cMath::ToRad(vRadRot.y), cMath::ToRad(vRadRot.z) );
             cMatrixf mtxRot = cMath::MatrixRotate(vRadRot, eEulerRotationOrder_XYZ);
             cQuaternion qRot;
             qRot.FromRotationMatrix(mtxRot);
@@ -610,13 +610,13 @@ cAnimationTrack* cMeshLoaderCollada::CreateAnimTrack(cAnimation *apAnimation, cS
 }
 
 static tString gsTemp;
-static const char* GetTabs(int alDepth)
+static const char *GetTabs(int alDepth)
 {
     gsTemp = "";
 
-    for(int i=0; i<alDepth; i++)
+    for(int i = 0; i < alDepth; i++)
     {
-        gsTemp+="\t";
+        gsTemp += "\t";
     }
 
     return gsTemp.c_str();
@@ -632,12 +632,12 @@ void cMeshLoaderCollada::CalcLocalMatrixAfterControllerBindMatrixRec(cBone* apBo
     cMatrixf mtxGlobal;
     //////////////////////
     //The bone is bound to the skin and has a world matrix
-    if(apBone->GetValue()!=0)
+    if(apBone->GetValue() != 0)
     {
         mtxGlobal = apBone->GetLocalTransform();
         cMatrixf mtxInvParent = cMath::MatrixInverse(a_mtxParentGlobal);
 
-        cMatrixf mtxLocal = cMath::MatrixMul(mtxInvParent,mtxGlobal);
+        cMatrixf mtxLocal = cMath::MatrixMul(mtxInvParent, mtxGlobal);
 
         apBone->SetTransform(mtxLocal);
     }
@@ -652,7 +652,7 @@ void cMeshLoaderCollada::CalcLocalMatrixAfterControllerBindMatrixRec(cBone* apBo
     cBoneIterator it = apBone->GetChildIterator();
     while(it.HasNext())
     {
-        CalcLocalMatrixAfterControllerBindMatrixRec(it.Next(),mtxGlobal,alDepth+1);
+        CalcLocalMatrixAfterControllerBindMatrixRec(it.Next(), mtxGlobal, alDepth + 1);
     }
 }
 
@@ -674,7 +674,7 @@ void cMeshLoaderCollada::CreateSkeletonBone(cColladaNode* apColladaNode, cBone* 
 
 //-----------------------------------------------------------------------
 
-iVertexBuffer * cMeshLoaderCollada::CreateVertexBuffer(cColladaGeometry & aGeometry,
+iVertexBuffer *cMeshLoaderCollada::CreateVertexBuffer(cColladaGeometry & aGeometry,
         eVertexBufferUsageType aUsageType)
 //,tColladaExtraVtxListVec &vExtraVtxVec)
 {
@@ -692,32 +692,32 @@ iVertexBuffer * cMeshLoaderCollada::CreateVertexBuffer(cColladaGeometry & aGeome
                                   eVertexBufferType_Hardware,
                                   eVertexBufferDrawType_Tri, aUsageType,
                                   (int)aGeometry.mvVertexVec.size(), (int)aGeometry.mvIndexVec.size());
-    pVtxBuff->CreateElementArray( eVertexBufferElement_Position,eVertexBufferElementFormat_Float, 4);
-    pVtxBuff->CreateElementArray( eVertexBufferElement_Normal,eVertexBufferElementFormat_Float, 3);
-    pVtxBuff->CreateElementArray( eVertexBufferElement_Texture0,eVertexBufferElementFormat_Float, 3);
-    pVtxBuff->CreateElementArray( eVertexBufferElement_Color0,eVertexBufferElementFormat_Float, 4);
-    pVtxBuff->CreateElementArray( eVertexBufferElement_Texture1Tangent,eVertexBufferElementFormat_Float, 4);
+    pVtxBuff->CreateElementArray( eVertexBufferElement_Position, eVertexBufferElementFormat_Float, 4);
+    pVtxBuff->CreateElementArray( eVertexBufferElement_Normal, eVertexBufferElementFormat_Float, 3);
+    pVtxBuff->CreateElementArray( eVertexBufferElement_Texture0, eVertexBufferElementFormat_Float, 3);
+    pVtxBuff->CreateElementArray( eVertexBufferElement_Color0, eVertexBufferElementFormat_Float, 4);
+    pVtxBuff->CreateElementArray( eVertexBufferElement_Texture1Tangent, eVertexBufferElementFormat_Float, 4);
 
-    pVtxBuff->ResizeArray(eVertexBufferElement_Texture1Tangent,(int)aGeometry.mvTangents.size());
+    pVtxBuff->ResizeArray(eVertexBufferElement_Texture1Tangent, (int)aGeometry.mvTangents.size());
 
     //Add vertices
-    for(size_t j=0; j<aGeometry.mvVertexVec.size(); j++)
+    for(size_t j = 0; j < aGeometry.mvVertexVec.size(); j++)
     {
-        pVtxBuff->AddVertexVec3f(eVertexBufferElement_Position,aGeometry.mvVertexVec[j].pos);
-        pVtxBuff->AddVertexVec3f(eVertexBufferElement_Normal,aGeometry.mvVertexVec[j].norm);
-        pVtxBuff->AddVertexVec3f(eVertexBufferElement_Texture0,aGeometry.mvVertexVec[j].tex);
+        pVtxBuff->AddVertexVec3f(eVertexBufferElement_Position, aGeometry.mvVertexVec[j].pos);
+        pVtxBuff->AddVertexVec3f(eVertexBufferElement_Normal, aGeometry.mvVertexVec[j].norm);
+        pVtxBuff->AddVertexVec3f(eVertexBufferElement_Texture0, aGeometry.mvVertexVec[j].tex);
 
-        pVtxBuff->AddVertexColor(eVertexBufferElement_Color0,cColor(1,1));
+        pVtxBuff->AddVertexColor(eVertexBufferElement_Color0, cColor(1, 1));
     }
 
     //Add tangents
-    memcpy(pVtxBuff->GetFloatArray(eVertexBufferElement_Texture1Tangent),&aGeometry.mvTangents[0], aGeometry.mvTangents.size()*sizeof(float));
+    memcpy(pVtxBuff->GetFloatArray(eVertexBufferElement_Texture1Tangent), &aGeometry.mvTangents[0], aGeometry.mvTangents.size()*sizeof(float));
 
     //Add indices
-    for(size_t j=0; j<aGeometry.mvIndexVec.size(); j++)
+    for(size_t j = 0; j < aGeometry.mvIndexVec.size(); j++)
     {
         //Flip order of indices
-        size_t idx = (j/3)*3 + (2-(j%3));
+        size_t idx = (j / 3) * 3 + (2 - (j % 3));
 
         pVtxBuff->AddIndex(aGeometry.mvIndexVec[idx]);
     }
@@ -735,11 +735,11 @@ iVertexBuffer * cMeshLoaderCollada::CreateVertexBuffer(cColladaGeometry & aGeome
 void cMeshLoaderCollada::LoadLights(TiXmlElement* apRootElem, tColladaLightVec &avColladaLightVec)
 {
     TiXmlElement* pLightElem = apRootElem->FirstChildElement("light");
-    for(; pLightElem!=NULL;    pLightElem = pLightElem->NextSiblingElement("light"))
+    for(; pLightElem != NULL;    pLightElem = pLightElem->NextSiblingElement("light"))
     {
         cColladaLight Light;
-        Light.msId = cString::ToString(pLightElem->Attribute("id"),"");
-        Light.msName = cString::ToString(pLightElem->Attribute("name"),"");
+        Light.msId = cString::ToString(pLightElem->Attribute("id"), "");
+        Light.msName = cString::ToString(pLightElem->Attribute("name"), "");
 
         TiXmlElement *pTechniqueCommonElem = pLightElem->FirstChildElement("technique_common");
 
@@ -748,13 +748,13 @@ void cMeshLoaderCollada::LoadLights(TiXmlElement* apRootElem, tColladaLightVec &
         if(pTechniqueCommonElem)
         {
             TiXmlElement *pTypeElem = pTechniqueCommonElem->FirstChildElement();
-            if(pTypeElem==NULL)
+            if(pTypeElem == NULL)
             {
                 Log("No Type element found!\n");
                 continue;
             }
 
-            Light.msType = cString::ToString(pTypeElem->Value(),"");
+            Light.msType = cString::ToString(pTypeElem->Value(), "");
 
             /////////////
             //Color
@@ -770,7 +770,7 @@ void cMeshLoaderCollada::LoadLights(TiXmlElement* apRootElem, tColladaLightVec &
             }
             else
             {
-                Light.mDiffuseColor = cColor(1,1);
+                Light.mDiffuseColor = cColor(1, 1);
             }
 
             /////////////
@@ -779,23 +779,23 @@ void cMeshLoaderCollada::LoadLights(TiXmlElement* apRootElem, tColladaLightVec &
             if(pParamElem)
             {
                 TiXmlText *pText = pParamElem->FirstChild()->ToText();
-                Light.mfAngle = cString::ToFloat(pText->Value(),0);
+                Light.mfAngle = cString::ToFloat(pText->Value(), 0);
             }
             else
             {
-                Light.mfAngle =0;
+                Light.mfAngle = 0;
             }
         }
         ///////////////////////////////////////////////
         //COLLADA 1.3 (NOT SUPPORTED ANY LONGER)
         else
         {
-            Light.msType = cString::ToLowerCase(cString::ToString(pLightElem->Attribute("type"),""));
+            Light.msType = cString::ToLowerCase(cString::ToString(pLightElem->Attribute("type"), ""));
 
             TiXmlElement *pParamElem = pLightElem->FirstChildElement("param");
             for(; pParamElem; pParamElem = pParamElem->NextSiblingElement("param"))
             {
-                tString sName = cString::ToString(pParamElem->Attribute("name"),"");
+                tString sName = cString::ToString(pParamElem->Attribute("name"), "");
                 TiXmlText *pText = pParamElem->FirstChild()->ToText();
 
                 if(sName == "COLOR")
@@ -808,7 +808,7 @@ void cMeshLoaderCollada::LoadLights(TiXmlElement* apRootElem, tColladaLightVec &
                 }
                 else if(sName == "ANGLE")
                 {
-                    Light.mfAngle = cString::ToFloat(pText->Value(),0);
+                    Light.mfAngle = cString::ToFloat(pText->Value(), 0);
                 }
             }
         }
@@ -823,10 +823,10 @@ void cMeshLoaderCollada::LoadLights(TiXmlElement* apRootElem, tColladaLightVec &
 
 //-----------------------------------------------------------------------
 
-static cColladaAnimation& GetAnimationFromTarget(const tString& asTargetNode,
+static cColladaAnimation &GetAnimationFromTarget(const tString& asTargetNode,
         tColladaAnimationVec &avAnimations)
 {
-    for(size_t i=0; i< avAnimations.size(); i++)
+    for(size_t i = 0; i < avAnimations.size(); i++)
     {
         if(avAnimations[i].msTargetNode == asTargetNode)
         {
@@ -836,7 +836,7 @@ static cColladaAnimation& GetAnimationFromTarget(const tString& asTargetNode,
 
     //No animation with that target found, create new.
     avAnimations.push_back(cColladaAnimation());
-    cColladaAnimation& Anim = avAnimations[avAnimations.size() -1];
+    cColladaAnimation& Anim = avAnimations[avAnimations.size() - 1];
     Anim.msTargetNode = asTargetNode;
 
     return Anim;
@@ -846,7 +846,7 @@ void cMeshLoaderCollada::LoadAnimations(TiXmlElement* apRootElem, tColladaAnimat
                                         cColladaScene *apColladaScene)
 {
     TiXmlElement* pAnimElem = apRootElem->FirstChildElement("animation");
-    for(; pAnimElem!=NULL; pAnimElem = pAnimElem->NextSiblingElement("animation"))
+    for(; pAnimElem != NULL; pAnimElem = pAnimElem->NextSiblingElement("animation"))
     {
         /////////////////////////////////////////////
         // Check if there are multiple meshes
@@ -861,33 +861,33 @@ void cMeshLoaderCollada::LoadAnimations(TiXmlElement* apRootElem, tColladaAnimat
         /////////////////////////////////////////////
         //Check what animation to use.
         TiXmlElement *pTestChannelElem = pAnimElem->FirstChildElement("channel");
-        if(pTestChannelElem==NULL)
+        if(pTestChannelElem == NULL)
         {
             Warning("Animation missing channel!\n");
             continue;
         }
 
         //Get target node name
-        tString sTestTarget = cString::ToString(pTestChannelElem->Attribute("target"),"");
+        tString sTestTarget = cString::ToString(pTestChannelElem->Attribute("target"), "");
         tStringVec vTargetStrings;
         tString sTargetSepp = "/";
-        cString::GetStringVec(sTestTarget,vTargetStrings,&sTargetSepp);
+        cString::GetStringVec(sTestTarget, vTargetStrings, &sTargetSepp);
         sTestTarget = vTargetStrings[0];
 
         cColladaAnimation& Anim = GetAnimationFromTarget(sTestTarget, avAnimations);
 
         //Anim.msName = cString::ToString(pAnimElem->Attribute("name"),""); No need..
-        Anim.msId = cString::ToString(pAnimElem->Attribute("id"),"");
+        Anim.msId = cString::ToString(pAnimElem->Attribute("id"), "");
 
         //////////////////////////////////
         // Load all Channels
         TiXmlElement *pChannelElem = pAnimElem->FirstChildElement("channel");
-        for(; pChannelElem!=NULL ; pChannelElem = pChannelElem->NextSiblingElement("channel"))
+        for(; pChannelElem != NULL ; pChannelElem = pChannelElem->NextSiblingElement("channel"))
         {
             cColladaChannel    Channel;
-            Channel.msId = cString::ToString(pChannelElem->Attribute("id"),"");
-            Channel.msSource = cString::ToString(pChannelElem->Attribute("source"),"");
-            Channel.msTarget  = cString::ToString(pChannelElem->Attribute("target"),"");
+            Channel.msId = cString::ToString(pChannelElem->Attribute("id"), "");
+            Channel.msSource = cString::ToString(pChannelElem->Attribute("source"), "");
+            Channel.msTarget  = cString::ToString(pChannelElem->Attribute("target"), "");
             GetAdress(Channel.msSource);
 
             Anim.mvChannels.push_back(Channel);
@@ -896,17 +896,17 @@ void cMeshLoaderCollada::LoadAnimations(TiXmlElement* apRootElem, tColladaAnimat
         //////////////////////////////////
         // Load all Samplers
         TiXmlElement *pSamplerElem = pAnimElem->FirstChildElement("sampler");
-        for(; pSamplerElem!=NULL ; pSamplerElem = pSamplerElem->NextSiblingElement("sampler"))
+        for(; pSamplerElem != NULL ; pSamplerElem = pSamplerElem->NextSiblingElement("sampler"))
         {
             cColladaSampler Sampler;
-            Sampler.msId = cString::ToString(pSamplerElem->Attribute("id"),"");
+            Sampler.msId = cString::ToString(pSamplerElem->Attribute("id"), "");
 
             //Iterate the inputs and find the needed types.
             TiXmlElement *pInput = pSamplerElem->FirstChildElement("input");
-            for(; pInput!=NULL ; pInput = pInput->NextSiblingElement("input"))
+            for(; pInput != NULL ; pInput = pInput->NextSiblingElement("input"))
             {
-                tString sSemantic = cString::ToString(pInput->Attribute("semantic"),"");
-                tString sSource = cString::ToString(pInput->Attribute("source"),"");
+                tString sSemantic = cString::ToString(pInput->Attribute("semantic"), "");
+                tString sSource = cString::ToString(pInput->Attribute("source"), "");
                 GetAdress(sSource);
 
                 if(sSemantic == "INPUT")
@@ -925,9 +925,9 @@ void cMeshLoaderCollada::LoadAnimations(TiXmlElement* apRootElem, tColladaAnimat
         // Set target for the Samplers.
         // This means that the channels can be skipped later on makes things simpler!
         // These values will only work if the samplers are not shared among channels
-        for(size_t i=0; i< Anim.mvChannels.size(); i++)
+        for(size_t i = 0; i < Anim.mvChannels.size(); i++)
         {
-            for(size_t j=0; j<Anim.mvSamplers.size(); j++)
+            for(size_t j = 0; j < Anim.mvSamplers.size(); j++)
             {
                 if(Anim.mvChannels[i].msSource == Anim.mvSamplers[j].msId)
                 {
@@ -939,12 +939,12 @@ void cMeshLoaderCollada::LoadAnimations(TiXmlElement* apRootElem, tColladaAnimat
         //////////////////////////////////
         // Iterate through all the sources
         TiXmlElement *pSourceElem = pAnimElem->FirstChildElement("source");
-        for(; pSourceElem!=NULL ; pSourceElem = pSourceElem->NextSiblingElement("source"))
+        for(; pSourceElem != NULL ; pSourceElem = pSourceElem->NextSiblingElement("source"))
         {
             Anim.mvSources.push_back(cColladaAnimSource());
             cColladaAnimSource &Source = Anim.mvSources.back();
 
-            Source.msId = cString::ToString(pSourceElem->Attribute("id"),"");
+            Source.msId = cString::ToString(pSourceElem->Attribute("id"), "");
 
             TiXmlElement *pArrayElem = pSourceElem->FirstChildElement("float_array");
             if(pArrayElem == NULL)
@@ -953,14 +953,14 @@ void cMeshLoaderCollada::LoadAnimations(TiXmlElement* apRootElem, tColladaAnimat
                 continue;
             }
 
-            int lCount = cString::ToInt(pArrayElem->Attribute("count"),0);
+            int lCount = cString::ToInt(pArrayElem->Attribute("count"), 0);
             Source.mvValues.reserve(lCount);
 
             // Count can be 0, check to avoid crashes
-            if(lCount>0)
+            if(lCount > 0)
             {
                 TiXmlText *pText = pArrayElem->FirstChild()->ToText();
-                cString::GetFloatVec(pText->Value(),Source.mvValues);
+                cString::GetFloatVec(pText->Value(), Source.mvValues);
             }
         }
     }
@@ -970,8 +970,8 @@ void cMeshLoaderCollada::LoadAnimations(TiXmlElement* apRootElem, tColladaAnimat
 
 
 
-void cMeshLoaderCollada::LoadColladaScene(TiXmlElement* apRootElem,cColladaNode *apParentNode,
-        cColladaScene *apScene,tColladaLightVec *apColladaLightVec)
+void cMeshLoaderCollada::LoadColladaScene(TiXmlElement* apRootElem, cColladaNode *apParentNode,
+        cColladaScene *apScene, tColladaLightVec *apColladaLightVec)
 {
     cColladaNode *pNode = apParentNode->CreateChild();
     apScene->mlstNodes.push_back(pNode);
@@ -985,10 +985,10 @@ void cMeshLoaderCollada::LoadColladaScene(TiXmlElement* apRootElem,cColladaNode 
 
     ///////////////////////////////////////////
     //Get properties
-    pNode->msId = cString::ToString(apRootElem->Attribute("id"),"");
-    pNode->msName = cString::ToString(apRootElem->Attribute("name"),"");
-    pNode->msSid = cString::ToString(apRootElem->Attribute("sid"),pNode->msId);
-    pNode->msType = cString::ToString(apRootElem->Attribute("type"),"");
+    pNode->msId = cString::ToString(apRootElem->Attribute("id"), "");
+    pNode->msName = cString::ToString(apRootElem->Attribute("name"), "");
+    pNode->msSid = cString::ToString(apRootElem->Attribute("sid"), pNode->msId);
+    pNode->msType = cString::ToString(apRootElem->Attribute("type"), "");
 
     // XXX
     // Removed as it introduces backwards compatibility issues!!
@@ -1001,15 +1001,15 @@ void cMeshLoaderCollada::LoadColladaScene(TiXmlElement* apRootElem,cColladaNode 
     /////////////////////////////////////////////
     //Get source, if there is any.
     TiXmlElement *pInstanceElem = apRootElem->FirstChildElement("instance_geometry");
-    if(pInstanceElem==NULL)
+    if(pInstanceElem == NULL)
     {
         pInstanceElem = apRootElem->FirstChildElement("instance_light");
     }
-    if(pInstanceElem==NULL)
+    if(pInstanceElem == NULL)
     {
         pInstanceElem = apRootElem->FirstChildElement("instance_controller");
     }
-    if(pInstanceElem==NULL)
+    if(pInstanceElem == NULL)
     {
         pInstanceElem = apRootElem->FirstChildElement("instance");
     }
@@ -1017,7 +1017,7 @@ void cMeshLoaderCollada::LoadColladaScene(TiXmlElement* apRootElem,cColladaNode 
     {
         /////////////////////////////////////////////
         //Get geometry instance
-        tString sSource = cString::ToString(pInstanceElem->Attribute("url"),"");
+        tString sSource = cString::ToString(pInstanceElem->Attribute("url"), "");
         if(sSource[0] == '#')
         {
             pNode->mbSourceIsFile = false;
@@ -1042,7 +1042,7 @@ void cMeshLoaderCollada::LoadColladaScene(TiXmlElement* apRootElem,cColladaNode 
                 TiXmlElement *pInstanceMaterialElem = pTechniqueCommonElem->FirstChildElement("instance_material");
                 if(pInstanceMaterialElem)
                 {
-                    pNode->msInstanceMaterial = cString::ToString(pInstanceMaterialElem->Attribute("target"),"");
+                    pNode->msInstanceMaterial = cString::ToString(pInstanceMaterialElem->Attribute("target"), "");
                     GetAdress(pNode->msInstanceMaterial);
                 }
             }
@@ -1053,7 +1053,7 @@ void cMeshLoaderCollada::LoadColladaScene(TiXmlElement* apRootElem,cColladaNode 
 
     //Log("Node. %s, type: %s\n",pNode->msId.c_str(),pNode->msType.c_str());
 
-    cVector3f vTranslation = cVector3f(0,0,0);
+    cVector3f vTranslation = cVector3f(0, 0, 0);
 
     ///////////////////////////////////////////////////////////
     //Iterate through all of the transforms.
@@ -1061,10 +1061,10 @@ void cMeshLoaderCollada::LoadColladaScene(TiXmlElement* apRootElem,cColladaNode 
     while(pTransformElem)
     {
         tString sVal = pTransformElem->Value();
-        tString sSid = cString::ToString(pTransformElem->Attribute("sid"),"");
+        tString sSid = cString::ToString(pTransformElem->Attribute("sid"), "");
 
         TiXmlNode *pChildElem = pTransformElem->FirstChild();
-        if(pChildElem==NULL)
+        if(pChildElem == NULL)
         {
             pTransformElem = pTransformElem->NextSiblingElement();
             continue;
@@ -1072,8 +1072,8 @@ void cMeshLoaderCollada::LoadColladaScene(TiXmlElement* apRootElem,cColladaNode 
 
         //Log("val: %s\n",sVal.c_str());
 
-        TiXmlText *pText= pChildElem->ToText();
-        if(pText==NULL)
+        TiXmlText *pText = pChildElem->ToText();
+        if(pText == NULL)
         {
             pTransformElem = pTransformElem->NextSiblingElement();
             continue;
@@ -1094,7 +1094,7 @@ void cMeshLoaderCollada::LoadColladaScene(TiXmlElement* apRootElem,cColladaNode 
             cQuaternion qRot;
             cVector3f vRotAxis = GetVectorRotationFromPtr(&vValVec[0]);
 
-            qRot.FromAngleAxis(cMath::ToRad(vValVec[3]),vRotAxis);
+            qRot.FromAngleAxis(cMath::ToRad(vValVec[3]), vRotAxis);
 
             mtxTransform = cMath::MatrixMul(mtxTransform, cMath::MatrixQuaternion(qRot));
         }
@@ -1109,9 +1109,9 @@ void cMeshLoaderCollada::LoadColladaScene(TiXmlElement* apRootElem,cColladaNode 
             {
             }
             //Colliders do not use scale.
-            else if(cString::ToLowerCase(cString::Sub(pNode->msName,1,8))=="collider"
-                    || cString::ToLowerCase(cString::Sub(pNode->msName,1,12))=="charcollider"
-                    ||  cString::ToLowerCase(cString::Sub(pNode->msName,1,4))=="area")
+            else if(cString::ToLowerCase(cString::Sub(pNode->msName, 1, 8)) == "collider"
+                    || cString::ToLowerCase(cString::Sub(pNode->msName, 1, 12)) == "charcollider"
+                    ||  cString::ToLowerCase(cString::Sub(pNode->msName, 1, 4)) == "area")
             {
 
             }
@@ -1155,7 +1155,7 @@ void cMeshLoaderCollada::LoadColladaScene(TiXmlElement* apRootElem,cColladaNode 
     TiXmlElement *pNodeElem = apRootElem->FirstChildElement("node");
     while(pNodeElem)
     {
-        LoadColladaScene(pNodeElem, pNode,apScene,apColladaLightVec);
+        LoadColladaScene(pNodeElem, pNode, apScene, apColladaLightVec);
 
         pNodeElem = pNodeElem->NextSiblingElement("node");
     }
@@ -1169,24 +1169,24 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
         tColladaGeometryVec *apColladaGeometryVec)
 {
     TiXmlElement* pCtrlElem = apRootElem->FirstChildElement("controller");
-    for(; pCtrlElem!=NULL; pCtrlElem = pCtrlElem->NextSiblingElement("controller"))
+    for(; pCtrlElem != NULL; pCtrlElem = pCtrlElem->NextSiblingElement("controller"))
     {
         avColladaControllerVec.push_back(cColladaController());
 
-        cColladaController &Controller = avColladaControllerVec[avColladaControllerVec.size()-1];
+        cColladaController &Controller = avColladaControllerVec[avColladaControllerVec.size() - 1];
 
-        Controller.msId = cString::ToString(pCtrlElem->Attribute("id"),"");
+        Controller.msId = cString::ToString(pCtrlElem->Attribute("id"), "");
 
         ///////////////////////////////////////
         // Get Skin element.
         TiXmlElement *pSkinElem = pCtrlElem->FirstChildElement("skin");
-        if(pSkinElem==NULL)
+        if(pSkinElem == NULL)
         {
             Error("No Skin found in controller!\n");
             continue;
         }
 
-        Controller.msTarget = cString::ToString(pSkinElem->Attribute("source"),"");
+        Controller.msTarget = cString::ToString(pSkinElem->Attribute("source"), "");
         GetAdress(Controller.msTarget);
 
         //Get the bind matrix
@@ -1201,23 +1201,23 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
         }
         else
         {
-            Warning("No bind matrix in controller '%s' using identity\n",Controller.msId.c_str());
+            Warning("No bind matrix in controller '%s' using identity\n", Controller.msId.c_str());
             Controller.m_mtxBindShapeMatrix = cMatrixf::Identity;
         }
 
 
         //These are used so you can find what the different sources contain.
-        tString sJointNameSource="";
-        tString sJointWeightSource="";
-        tString sJointMatrixSource="";
-        int lJointOffset=-1;
-        int lWeightOffset=-1;
+        tString sJointNameSource = "";
+        tString sJointWeightSource = "";
+        tString sJointMatrixSource = "";
+        int lJointOffset = -1;
+        int lWeightOffset = -1;
 
         ////////////////////////////////////////
         // Load Joint information
         {
             TiXmlElement *pJointsElem = pSkinElem->FirstChildElement("joints");
-            if(pJointsElem==NULL)
+            if(pJointsElem == NULL)
             {
                 Warning("Couldn't find joint element for controller!\n");
                 continue;
@@ -1226,16 +1226,16 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
             TiXmlElement *pInputElem = pJointsElem->FirstChildElement("input");
             for(; pInputElem != NULL; pInputElem = pInputElem->NextSiblingElement("input"))
             {
-                tString sSemantic = cString::ToString(pInputElem->Attribute("semantic"),"");
-                tString sSource = cString::ToString(pInputElem->Attribute("source"),"");
+                tString sSemantic = cString::ToString(pInputElem->Attribute("semantic"), "");
+                tString sSource = cString::ToString(pInputElem->Attribute("source"), "");
                 GetAdress(sSource);
 
                 //The names of the joints
-                if(sSemantic=="JOINT")
+                if(sSemantic == "JOINT")
                 {
                     sJointNameSource = sSource;
                 }
-                else if(sSemantic=="INV_BIND_MATRIX")
+                else if(sSemantic == "INV_BIND_MATRIX")
                 {
                     sJointMatrixSource = sSource;
                 }
@@ -1246,7 +1246,7 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
         // Load Joint weight info
         {
             TiXmlElement *pJointWeightElem = pSkinElem->FirstChildElement("vertex_weights");
-            if(pJointWeightElem==NULL)
+            if(pJointWeightElem == NULL)
             {
                 Warning("Couldn't find vertex_weights element for controller!\n");
                 continue;
@@ -1255,18 +1255,18 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
             TiXmlElement *pInputElem = pJointWeightElem->FirstChildElement("input");
             for(; pInputElem != NULL; pInputElem = pInputElem->NextSiblingElement("input"))
             {
-                tString sSemantic = cString::ToString(pInputElem->Attribute("semantic"),"");
-                tString sSource = cString::ToString(pInputElem->Attribute("source"),"");
-                int lOffset  = cString::ToInt(pInputElem->Attribute("offset"),-1);
+                tString sSemantic = cString::ToString(pInputElem->Attribute("semantic"), "");
+                tString sSource = cString::ToString(pInputElem->Attribute("source"), "");
+                int lOffset  = cString::ToInt(pInputElem->Attribute("offset"), -1);
                 GetAdress(sSource);
 
                 //The names of the joints
-                if(sSemantic=="JOINT")
+                if(sSemantic == "JOINT")
                 {
                     lJointOffset = lOffset;
                 }
                 //The weight of the joints
-                else if(sSemantic=="WEIGHT")
+                else if(sSemantic == "WEIGHT")
                 {
                     lWeightOffset = lOffset;
                     sJointWeightSource = sSource;
@@ -1279,26 +1279,26 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
         TiXmlElement *pSourceElem = pSkinElem->FirstChildElement("source");
         while(pSourceElem)
         {
-            tString sId = cString::ToString(pSourceElem->Attribute("id"),"");
+            tString sId = cString::ToString(pSourceElem->Attribute("id"), "");
 
             //////////////////
             //Name of joints
             if(sId == sJointNameSource)
             {
                 TiXmlElement *pNameArrayElem = pSourceElem->FirstChildElement("Name_array");
-                if(pNameArrayElem==NULL)
+                if(pNameArrayElem == NULL)
                 {
                     Warning("Couldn't find name array!\n");
                     continue;
                 }
 
-                int lCount = cString::ToInt(pNameArrayElem->Attribute("count"),0);
+                int lCount = cString::ToInt(pNameArrayElem->Attribute("count"), 0);
 
                 //Reserve for faster push_back
                 Controller.mvJoints.reserve(lCount);
 
                 TiXmlText *pNameText = pNameArrayElem->FirstChild()->ToText();
-                if(pNameText==NULL)
+                if(pNameText == NULL)
                 {
                     Error("No joint name data found!\n");
                     continue;
@@ -1306,7 +1306,7 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
 
                 tStringVec vJoints;
 
-                cString::GetStringVec(pNameText->Value(),vJoints);
+                cString::GetStringVec(pNameText->Value(), vJoints);
 
                 ///////
                 // Support for bones names that have blankspace
@@ -1353,17 +1353,17 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
             else if(sId == sJointWeightSource || sId == sJointMatrixSource)
             {
                 TiXmlElement *pFloatArrayElem = pSourceElem->FirstChildElement("float_array");
-                if(pFloatArrayElem==NULL)
+                if(pFloatArrayElem == NULL)
                 {
                     Warning("Couldn't find name array!\n");
                     continue;
                 }
 
-                int lCount = cString::ToInt(pFloatArrayElem->Attribute("count"),0);
+                int lCount = cString::ToInt(pFloatArrayElem->Attribute("count"), 0);
 
                 //Get the text data
                 TiXmlText *pText = pFloatArrayElem->FirstChild()->ToText();
-                if(pText==NULL)
+                if(pText == NULL)
                 {
                     Error("No value data found!\n");
                     return;
@@ -1384,9 +1384,9 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
                 {
                     Controller.mvMatrices.reserve(lCount / 16);
 
-                    for(int i=0; i< (lCount / 16); i++)
+                    for(int i = 0; i < (lCount / 16); i++)
                     {
-                        cMatrixf mtxTemp(&vValVec[i*16]);
+                        cMatrixf mtxTemp(&vValVec[i * 16]);
                         Controller.mvMatrices.push_back(GetMatrix(mtxTemp));
                     }
                 }
@@ -1399,7 +1399,7 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
         // Get joint - vertex pairs.
         {
             TiXmlElement *pJointWeightElem = pSkinElem->FirstChildElement("vertex_weights");
-            if(pJointWeightElem==NULL)
+            if(pJointWeightElem == NULL)
             {
                 Warning("Couldn't find vertex_weights element for controller!\n");
                 continue;
@@ -1408,7 +1408,7 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
             ////////////////////////////
             // Vcount - get the number of joints for each vertex.
             TiXmlElement *pVCountElem = pJointWeightElem->FirstChildElement("vcount");
-            if(pVCountElem==NULL)
+            if(pVCountElem == NULL)
             {
                 Warning("Couldn't find vertex_weights vcount element for controller!\n");
                 continue;
@@ -1416,19 +1416,19 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
 
             //Get the text data
             TiXmlText *pVCountText = pVCountElem->FirstChild()->ToText();
-            if(pVCountText==NULL)
+            if(pVCountText == NULL)
             {
                 Error("No value data found!\n");
                 continue;
             }
 
             tIntVec vVCount;
-            cString::GetIntVec(pVCountText->Value(),vVCount);
+            cString::GetIntVec(pVCountText->Value(), vVCount);
 
             /////////////////////////////
             //V - Get the pairs
             TiXmlElement *pVElem = pJointWeightElem->FirstChildElement("v");
-            if(pVElem==NULL)
+            if(pVElem == NULL)
             {
                 Warning("Couldn't find vertex_weights v element for controller!\n");
                 continue;
@@ -1436,27 +1436,27 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
 
             //Get the text data
             TiXmlText *pVText = pVElem->FirstChild()->ToText();
-            if(pVText==NULL)
+            if(pVText == NULL)
             {
                 Error("No value data found!\n");
                 continue;
             }
 
             tIntVec vV;
-            cString::GetIntVec(pVText->Value(),vV);
+            cString::GetIntVec(pVText->Value(), vV);
 
-            int lVtx=0;
-            int lNumOfPairs = ((int)vV.size())/2;
-            int lPairCount=0;
+            int lVtx = 0;
+            int lNumOfPairs = ((int)vV.size()) / 2;
+            int lPairCount = 0;
 
 
             Controller.mvPairs.resize(vVCount.size());
-            for(int lPair=0; lPair<lNumOfPairs; ++lPair)
+            for(int lPair = 0; lPair < lNumOfPairs; ++lPair)
             {
                 cColladaJointPair Pair;
 
-                Pair.mlJoint = vV[lPair*2 + lJointOffset];
-                Pair.mlWeight = vV[lPair*2 + lWeightOffset];
+                Pair.mlJoint = vV[lPair * 2 + lJointOffset];
+                Pair.mlWeight = vV[lPair * 2 + lWeightOffset];
 
                 //Log("Pair: %d, %d vtx: %d\n",Pair.mlJoint, Pair.mlWeight,lVtx);
 
@@ -1467,7 +1467,7 @@ void cMeshLoaderCollada::LoadControllers(TiXmlElement* apRootElem,
                 if(lPairCount >= vVCount[lVtx])
                 {
                     lVtx++;
-                    lPairCount =0;
+                    lPairCount = 0;
                 }
             }
         }
@@ -1487,7 +1487,7 @@ public:
     {
         //Log("TestTri:\n");
         //Get the vectors
-        for(int i=0; i<3; i++)
+        for(int i = 0; i < 3; i++)
         {
             mvPos[i] = (*gpVertexVec)[apTriIndex[i].mlVtx];
 
@@ -1495,11 +1495,11 @@ public:
         }
 
         //Sort the vectors
-        for(int i=0; i<3; i++)
+        for(int i = 0; i < 3; i++)
         {
-            for(int j=0; j<3; j++)
+            for(int j = 0; j < 3; j++)
             {
-                if(j==i)
+                if(j == i)
                 {
                     continue;
                 }
@@ -1581,11 +1581,11 @@ typedef tColladaTestTriMap::iterator tColladaTestTriMapIt;
 void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometryVec &avColladaGeometryVec)
 {
     TiXmlElement* pGeomElem = apRootElem->FirstChildElement("geometry");
-    for(; pGeomElem!=NULL; pGeomElem = pGeomElem->NextSiblingElement("geometry"))
+    for(; pGeomElem != NULL; pGeomElem = pGeomElem->NextSiblingElement("geometry"))
     {
         //There should only be one mesh
         TiXmlElement* pMeshElem = pGeomElem->FirstChildElement("mesh");
-        if(pMeshElem==NULL)
+        if(pMeshElem == NULL)
         {
             //Warning("No Mesh element found in geometry element '%s'!\n",Geometry.msName.c_str());
             continue;
@@ -1595,26 +1595,26 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
         cColladaGeometry &Geometry = avColladaGeometryVec.back();
 
         //Get main properties
-        Geometry.msId = cString::ToString(pGeomElem->Attribute("id"),"");
-        Geometry.msName = cString::ToString(pGeomElem->Attribute("name"),"");
+        Geometry.msId = cString::ToString(pGeomElem->Attribute("id"), "");
+        Geometry.msName = cString::ToString(pGeomElem->Attribute("name"), "");
 
         if(Geometry.msName == "")
         {
             Geometry.msName = Geometry.msId;
             //Fix to skip a max addition on mesh names
-            int lPos = cString::GetLastStringPos(Geometry.msName,"-");
-            if(lPos >0)
+            int lPos = cString::GetLastStringPos(Geometry.msName, "-");
+            if(lPos > 0)
             {
-                Geometry.msName = cString::Sub(Geometry.msName,0,lPos);
+                Geometry.msName = cString::Sub(Geometry.msName, 0, lPos);
             }
         }
 
         ///////////////////////////////////////////////////
         //Check if the geometry should loaded
-        if(cString::Sub(Geometry.msName,0,4) == "_ref" ||
-                cString::Sub(Geometry.msName,0,3) == "_bb" ||
-                cString::Sub(Geometry.msName,0,4) == "_ps" ||
-                cString::Sub(Geometry.msName,0,6) == "_sound")
+        if(cString::Sub(Geometry.msName, 0, 4) == "_ref" ||
+                cString::Sub(Geometry.msName, 0, 3) == "_bb" ||
+                cString::Sub(Geometry.msName, 0, 4) == "_ps" ||
+                cString::Sub(Geometry.msName, 0, 6) == "_sound")
         {
             continue;
         }
@@ -1626,15 +1626,15 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
         {
             //Add a new array
             Geometry.mvArrayVec.push_back(cColladaVtxArray());
-            int lPos = (int)Geometry.mvArrayVec.size()-1;
+            int lPos = (int)Geometry.mvArrayVec.size() - 1;
 
             //Get id
-            tString sSourceId = cString::ToString(pSourceElem->Attribute("id"),"");
+            tString sSourceId = cString::ToString(pSourceElem->Attribute("id"), "");
             //Log("Vertex id: '%s' \n",sSourceId.c_str());
 
             Geometry.mvArrayVec[lPos].msId = sSourceId;
 
-            LoadVertexData(pSourceElem,Geometry.mvArrayVec[lPos].mvArray);
+            LoadVertexData(pSourceElem, Geometry.mvArrayVec[lPos].mvArray);
 
             /*Log("Array: %s\n",sSourceId.c_str());
             for(int i=0; i< (int)Geometry.mvArrayVec[lPos].mvArray.size(); i++)
@@ -1650,7 +1650,7 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
         //Get the "real" name for the vertices
         //This always includes positions and can include normals and tex coords aswell.
         TiXmlElement* pVerticesElem = pMeshElem->FirstChildElement("vertices");
-        if(pVerticesElem==NULL)
+        if(pVerticesElem == NULL)
         {
             Error("Vertices not found!\n");
             return;
@@ -1660,34 +1660,34 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
         TiXmlElement* pVtxInput = pVerticesElem->FirstChildElement("input");
         while(pVtxInput)
         {
-            tString sSemantic = cString::ToString(pVtxInput->Attribute("semantic"),"");
+            tString sSemantic = cString::ToString(pVtxInput->Attribute("semantic"), "");
 
             if(sSemantic == "POSITION")
             {
-                tString sSource = cString::ToString(pVtxInput->Attribute("source"),"");
+                tString sSource = cString::ToString(pVtxInput->Attribute("source"), "");
                 GetAdress(sSource);
 
                 //Log("Position vertex source: %s\n", sSource.c_str());
 
-                for(int i=0; i<(int) Geometry.mvArrayVec.size(); i++)
+                for(int i = 0; i < (int) Geometry.mvArrayVec.size(); i++)
                 {
                     //If the vertex array is found just change the name and break.
                     if(Geometry.mvArrayVec[i].msId == sSource)
                     {
-                        Geometry.mvArrayVec[i].msId = cString::ToString(pVerticesElem->Attribute("id"),"");
+                        Geometry.mvArrayVec[i].msId = cString::ToString(pVerticesElem->Attribute("id"), "");
                         break;
                     }
                 }
             }
             else
             {
-                tString sSource = cString::ToString(pVtxInput->Attribute("source"),"");
+                tString sSource = cString::ToString(pVtxInput->Attribute("source"), "");
                 GetAdress(sSource);
 
                 //Log("%s vertex source: %s\n",sSemantic.c_str(), sSource.c_str());
 
                 //Find array and set some properties
-                for(int i=0; i<(int) Geometry.mvArrayVec.size(); i++)
+                for(int i = 0; i < (int) Geometry.mvArrayVec.size(); i++)
                     if(Geometry.mvArrayVec[i].msId == sSource)
                     {
                         Geometry.mvArrayVec[i].msType = sSemantic;
@@ -1703,12 +1703,12 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
         ///////////////////////////////////////////////////
         //Get the Triangles, save them in a row
         TiXmlElement* pTriElem = pMeshElem->FirstChildElement("triangles");
-        if(pTriElem==NULL)
+        if(pTriElem == NULL)
         {
             pTriElem = pMeshElem->FirstChildElement("polylist");
             if(pTriElem && pTriElem->NextSibling("polylist"))
             {
-                Warning("Geometry '%s' seem to have multitexturing!\n",Geometry.msName.c_str());
+                Warning("Geometry '%s' seem to have multitexturing!\n", Geometry.msName.c_str());
             }
 
         }
@@ -1716,38 +1716,38 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
         {
             if(pTriElem->NextSibling("triangles"))
             {
-                Warning("Geometry '%s' seem to have multitexturing!\n",Geometry.msName.c_str());
+                Warning("Geometry '%s' seem to have multitexturing!\n", Geometry.msName.c_str());
             }
 
         }
 
 
-        if(pTriElem==NULL)
+        if(pTriElem == NULL)
         {
             //Warning("No triangle or polylist element found, testing polygons.\n");
             pTriElem = pMeshElem->FirstChildElement("polygons");
-            if(pTriElem==NULL)
+            if(pTriElem == NULL)
             {
                 Error("No Polygons found!\n");
                 return;
             }
         }
-        int lTriElements =0;
+        int lTriElements = 0;
 
-        int lTriCount = cString::ToInt(pTriElem->Attribute("count"),0);
-        Geometry.msMaterial = cString::ToString(pTriElem->Attribute("material"),"");
+        int lTriCount = cString::ToInt(pTriElem->Attribute("count"), 0);
+        Geometry.msMaterial = cString::ToString(pTriElem->Attribute("material"), "");
         GetAdress(Geometry.msMaterial);
 
         //Get the inputs to figure what the indices in he triangles mean.
         TiXmlElement* pTriInputElem = pTriElem->FirstChildElement("input");
         while(pTriInputElem)
         {
-            tString sSemantic = cString::ToString(pTriInputElem->Attribute("semantic"),"");
-            tString sSource = cString::ToString(pTriInputElem->Attribute("source"),"");
-            int lIdx = cString::ToInt(pTriInputElem->Attribute("idx"),-1);
+            tString sSemantic = cString::ToString(pTriInputElem->Attribute("semantic"), "");
+            tString sSource = cString::ToString(pTriInputElem->Attribute("source"), "");
+            int lIdx = cString::ToInt(pTriInputElem->Attribute("idx"), -1);
             if(lIdx < 0)
             {
-                lIdx = cString::ToInt(pTriInputElem->Attribute("offset"),-1);
+                lIdx = cString::ToInt(pTriInputElem->Attribute("offset"), -1);
             }
 
             GetAdress(sSource);
@@ -1755,7 +1755,7 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
             int lArrayNum = -1;
 
             //Get what array that belongs to this input.
-            for(int i=0; i<(int)Geometry.mvArrayVec.size(); i++)
+            for(int i = 0; i < (int)Geometry.mvArrayVec.size(); i++)
             {
                 if(Geometry.mvArrayVec[i].msId == sSource)
                 {
@@ -1782,9 +1782,9 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
             }
 
             //Increase element num
-            if(lTriElements < lIdx+1)
+            if(lTriElements < lIdx + 1)
             {
-                lTriElements =lIdx+1;
+                lTriElements = lIdx + 1;
             }
 
             //next input
@@ -1792,7 +1792,7 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
         }
 
         //Go through the arrays and check if any are in the vertex
-        for(size_t i=0; i<Geometry.mvArrayVec.size(); i++)
+        for(size_t i = 0; i < Geometry.mvArrayVec.size(); i++)
         {
             if(Geometry.mvArrayVec[i].mbIsInVertex)
             {
@@ -1810,14 +1810,14 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
         }
 
         //Check so that none of the arrays are missing
-        if(Geometry.mlNormArrayIdx<0)
+        if(Geometry.mlNormArrayIdx < 0)
         {
-            Warning("No normals for geometry '%s'\n",Geometry.msName.c_str());
+            Warning("No normals for geometry '%s'\n", Geometry.msName.c_str());
             continue;
         }
-        if(Geometry.mlTexArrayIdx<0 && Geometry.msName[0] != '_')
+        if(Geometry.mlTexArrayIdx < 0 && Geometry.msName[0] != '_')
         {
-            Warning("No tex coords for geometry '%s'\n",Geometry.msName.c_str());
+            Warning("No tex coords for geometry '%s'\n", Geometry.msName.c_str());
             continue;
         }
 
@@ -1827,14 +1827,14 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
         {
             //Positions
             tVector3fVec &vVtxVec = Geometry.mvArrayVec[Geometry.mlPosArrayIdx].mvArray;
-            for(size_t i=0; i < vVtxVec.size(); i++)
+            for(size_t i = 0; i < vVtxVec.size(); i++)
             {
                 vVtxVec[i] = GetVectorPos(vVtxVec[i]);
             }
 
             //Normals
             tVector3fVec &vNormVec = Geometry.mvArrayVec[Geometry.mlNormArrayIdx].mvArray;
-            for(size_t i=0; i < vNormVec.size(); i++)
+            for(size_t i = 0; i < vNormVec.size(); i++)
             {
                 vNormVec[i] = GetVectorNormal(vNormVec[i]);
             }
@@ -1853,7 +1853,7 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
         while(pPElem)
         {
             TiXmlText *pText = pPElem->FirstChild()->ToText();
-            if(pText==NULL)
+            if(pText == NULL)
             {
                 Error("No tri data found!\n");
                 return;
@@ -1861,13 +1861,13 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
 
             //Get the indices for the triangle
             tIntVec vIndexArray;
-            cString::GetIntVec(pText->Value(),vIndexArray);
+            cString::GetIntVec(pText->Value(), vIndexArray);
 
-            int lTriangleNum = (int)vIndexArray.size()/ (3*lTriElements);
-            for(int triangle=0; triangle< lTriangleNum; triangle++)
+            int lTriangleNum = (int)vIndexArray.size() / (3 * lTriElements);
+            for(int triangle = 0; triangle < lTriangleNum; triangle++)
             {
                 cColladaVtxIndex DataVec[3];
-                int lTriangleAdd = triangle*3*lTriElements;
+                int lTriangleAdd = triangle * 3 * lTriElements;
 
                 //Iterate the points in triangle
                 //If Z is used as y the order must be reversed.
@@ -1883,11 +1883,11 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
                 }
                 else*/
                 {
-                    for(int i=0; i< 3; i++)
+                    for(int i = 0; i < 3; i++)
                     {
-                        DataVec[i].mlVtx = vIndexArray[lTriangleAdd + i*lTriElements + Geometry.mlPosIdxNum];
-                        DataVec[i].mlNorm = Geometry.mlNormIdxNum >= 0 ? vIndexArray[lTriangleAdd + i*lTriElements + Geometry.mlNormIdxNum] : 0;
-                        DataVec[i].mlTex = Geometry.mlTexIdxNum >= 0 ? vIndexArray[lTriangleAdd + i*lTriElements + Geometry.mlTexIdxNum] : 0;
+                        DataVec[i].mlVtx = vIndexArray[lTriangleAdd + i * lTriElements + Geometry.mlPosIdxNum];
+                        DataVec[i].mlNorm = Geometry.mlNormIdxNum >= 0 ? vIndexArray[lTriangleAdd + i * lTriElements + Geometry.mlNormIdxNum] : 0;
+                        DataVec[i].mlTex = Geometry.mlTexIdxNum >= 0 ? vIndexArray[lTriangleAdd + i * lTriElements + Geometry.mlTexIdxNum] : 0;
                     }
                 }
 
@@ -1896,7 +1896,7 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
                 //if(TestPair.second)
                 {
                     //Add the data to the indices
-                    for(int i=0; i<3; i++)
+                    for(int i = 0; i < 3; i++)
                     {
                         Geometry.mvIndices.push_back(DataVec[i]);
                     }
@@ -1913,24 +1913,24 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
 
         ///////////////////////////////////
         //Split the vertices and make em usable
-        SplitVertices(Geometry,Geometry.mvExtraVtxVec,Geometry.mvVertexVec,Geometry.mvIndexVec);
+        SplitVertices(Geometry, Geometry.mvExtraVtxVec, Geometry.mvVertexVec, Geometry.mvIndexVec);
         Geometry.Clear();
 
         ////////////////////////////////////
         //Create Tangents
         tFloatVec vPosVec;
-        vPosVec.resize(Geometry.mvVertexVec.size() *4);
+        vPosVec.resize(Geometry.mvVertexVec.size() * 4);
         tFloatVec vNormVec;
-        vNormVec.resize(Geometry.mvVertexVec.size() *3);
+        vNormVec.resize(Geometry.mvVertexVec.size() * 3);
         tFloatVec vTexVec;
-        vTexVec.resize(Geometry.mvVertexVec.size() *3);
+        vTexVec.resize(Geometry.mvVertexVec.size() * 3);
 
         float *pPosData = &vPosVec[0];
         float *pNormData = &vNormVec[0];
         float *pTexData = &vTexVec[0];
 
         //Fill vectors
-        for(size_t i=0; i<Geometry.mvVertexVec.size(); ++i)
+        for(size_t i = 0; i < Geometry.mvVertexVec.size(); ++i)
         {
             cVertex &vertex = Geometry.mvVertexVec[i];
 
@@ -1947,16 +1947,16 @@ void cMeshLoaderCollada::LoadGeometry(TiXmlElement* apRootElem, tColladaGeometry
             pTexData[1] = vertex.tex.y;
             pTexData[2] = vertex.tex.z;
 
-            pPosData +=4;
-            pNormData +=3;
-            pTexData +=3;
+            pPosData += 4;
+            pNormData += 3;
+            pTexData += 3;
         }
 
         //Creates tangents
-        Geometry.mvTangents.resize(Geometry.mvVertexVec.size() *4);
+        Geometry.mvTangents.resize(Geometry.mvVertexVec.size() * 4);
         cMath::CreateTriTangentVectors( &Geometry.mvTangents[0],
                                         &Geometry.mvIndexVec[0], (int)Geometry.mvIndexVec.size(),
-                                        &vPosVec[0],4, &vTexVec[0],&vNormVec[0],
+                                        &vPosVec[0], 4, &vTexVec[0], &vNormVec[0],
                                         (int)Geometry.mvVertexVec.size());
     }
 }
@@ -1967,11 +1967,11 @@ void cMeshLoaderCollada::LoadVertexData(TiXmlElement* apSourceElem, tVector3fVec
 {
     //Get some info on the build up of the array
     TiXmlElement* pTechniqueElem = apSourceElem->FirstChildElement("technique_common");
-    if(pTechniqueElem==NULL)
+    if(pTechniqueElem == NULL)
     {
         pTechniqueElem = apSourceElem->FirstChildElement("technique");
     }
-    if(pTechniqueElem==NULL)
+    if(pTechniqueElem == NULL)
     {
         Warning("No technique or technique_common element found!\n");
         return;
@@ -1979,24 +1979,24 @@ void cMeshLoaderCollada::LoadVertexData(TiXmlElement* apSourceElem, tVector3fVec
 
     //Get some attributes from the accessor
     TiXmlElement* pAccessor = pTechniqueElem->FirstChildElement("accessor");
-    if(pAccessor==NULL)
+    if(pAccessor == NULL)
     {
         Warning("No accessor element for source data found!\n");
         return;
     }
 
-    int lElements = cString::ToInt(pAccessor->Attribute("stride"),0);
-    int lVtxCount = cString::ToInt(pAccessor->Attribute("count"),0);
+    int lElements = cString::ToInt(pAccessor->Attribute("stride"), 0);
+    int lVtxCount = cString::ToInt(pAccessor->Attribute("count"), 0);
 
     //Log("Elems: %d Count: %d\n",lElements,lVtxCount);
 
     //Load the array
     TiXmlElement* pDataElem = apSourceElem->FirstChildElement("float_array");
-    if(pDataElem==NULL)
+    if(pDataElem == NULL)
     {
         //try with array as well.
         pDataElem = apSourceElem->FirstChildElement("array");
-        if(pDataElem==NULL)
+        if(pDataElem == NULL)
         {
             Warning("No data found!\n");
             return;
@@ -2004,15 +2004,15 @@ void cMeshLoaderCollada::LoadVertexData(TiXmlElement* apSourceElem, tVector3fVec
     }
 
     TiXmlText* pTextElem = pDataElem->FirstChild()->ToText();
-    if(pTextElem==NULL)
+    if(pTextElem == NULL)
     {
         Warning("No text found!\n");
         return;
     }
 
-    const char* pChars = pTextElem->Value();
+    const char *pChars = pTextElem->Value();
 
-    FillVertexVec(pChars,avVtxVec,lElements,lVtxCount);
+    FillVertexVec(pChars, avVtxVec, lElements, lVtxCount);
 }
 
 //-----------------------------------------------------------------------
@@ -2023,8 +2023,8 @@ void cMeshLoaderCollada::LoadImages(TiXmlElement* apRootElem, tColladaImageVec &
     while(pImageElem)
     {
         cColladaImage Image;
-        Image.msId = cString::ToString(pImageElem->Attribute("id"),"");
-        Image.msName = cString::ToString(pImageElem->Attribute("name"),"");
+        Image.msId = cString::ToString(pImageElem->Attribute("id"), "");
+        Image.msName = cString::ToString(pImageElem->Attribute("name"), "");
 
         TiXmlElement* pInitFromElem = pImageElem->FirstChildElement("init_from");
         //COLLADA 1.4
@@ -2033,7 +2033,7 @@ void cMeshLoaderCollada::LoadImages(TiXmlElement* apRootElem, tColladaImageVec &
             if(pInitFromElem->FirstChild())
             {
                 TiXmlText *pText = pInitFromElem->FirstChild()->ToText();
-                Image.msSource = cString::ToString(pText->Value(),"");
+                Image.msSource = cString::ToString(pText->Value(), "");
             }
             else
             {
@@ -2043,7 +2043,7 @@ void cMeshLoaderCollada::LoadImages(TiXmlElement* apRootElem, tColladaImageVec &
         //COLLADA 1.3
         else
         {
-            Image.msSource = cString::ToString(pImageElem->Attribute("source"),"");
+            Image.msSource = cString::ToString(pImageElem->Attribute("source"), "");
         }
 
         avColladaImageVec.push_back(Image);
@@ -2062,13 +2062,13 @@ public:
     tString msData;
 };
 
-tString* GetFinalSource(std::vector<cEffectNewParam> &avParams,tString& asId)
+tString *GetFinalSource(std::vector<cEffectNewParam> &avParams, tString& asId)
 {
-    for(size_t i=0; i<avParams.size(); ++i)
+    for(size_t i = 0; i < avParams.size(); ++i)
     {
         if(asId == avParams[i].msId)
         {
-            return GetFinalSource(avParams,avParams[i].msData);
+            return GetFinalSource(avParams, avParams[i].msData);
         }
     }
 
@@ -2078,12 +2078,12 @@ tString* GetFinalSource(std::vector<cEffectNewParam> &avParams,tString& asId)
 void cMeshLoaderCollada::LoadTextures(TiXmlElement* apRootElem, tColladaTextureVec &avColladaTextureVec)
 {
     TiXmlElement* pTextureElem = apRootElem->FirstChildElement();
-    for(; pTextureElem!=NULL; pTextureElem = pTextureElem->NextSiblingElement())
+    for(; pTextureElem != NULL; pTextureElem = pTextureElem->NextSiblingElement())
     {
         cColladaTexture Texture;
 
         //Get the main properties of the texture
-        Texture.msId = cString::ToString(pTextureElem->Attribute("id"),"");
+        Texture.msId = cString::ToString(pTextureElem->Attribute("id"), "");
 
         /////////////////////////////////////////
         //COLLADA 1.4
@@ -2107,7 +2107,7 @@ void cMeshLoaderCollada::LoadTextures(TiXmlElement* apRootElem, tColladaTextureV
                     newParam.msType = pChildElem->Value();
                     //Log("Newparam '%s' type '%s'\n",newParam.msId.c_str(),newParam.msType.c_str());
 
-                    tString sDataName ="";
+                    tString sDataName = "";
                     if(newParam.msType == "surface")
                     {
                         sDataName = "init_from";
@@ -2129,7 +2129,7 @@ void cMeshLoaderCollada::LoadTextures(TiXmlElement* apRootElem, tColladaTextureV
                     }
                     else
                     {
-                        Warning("Data element '%s' missing from newparam '%s'\n",sDataName.c_str(),
+                        Warning("Data element '%s' missing from newparam '%s'\n", sDataName.c_str(),
                                 newParam.msId.c_str());
                     }
                 }
@@ -2140,14 +2140,14 @@ void cMeshLoaderCollada::LoadTextures(TiXmlElement* apRootElem, tColladaTextureV
             //////////////////////////
             //Get the first technique
             TiXmlElement *pTechniqueElem = pProfileCommon->FirstChildElement("technique");
-            if(pTechniqueElem==NULL)
+            if(pTechniqueElem == NULL)
             {
                 Warning("No effect technique element found!\n");
                 continue;
             }
 
             TiXmlElement *pTypeElem = pTechniqueElem->FirstChildElement();
-            if(pTypeElem==NULL)
+            if(pTypeElem == NULL)
             {
                 Warning("No effect type element found!\n");
                 continue;
@@ -2155,7 +2155,7 @@ void cMeshLoaderCollada::LoadTextures(TiXmlElement* apRootElem, tColladaTextureV
             if(cString::ToString(pTypeElem->Value(), "") == "extra")
             {
                 pTypeElem = pTypeElem->NextSiblingElement();
-                if(pTypeElem==NULL)
+                if(pTypeElem == NULL)
                 {
                     Warning("No effect type element found!\n");
                     continue;
@@ -2170,8 +2170,8 @@ void cMeshLoaderCollada::LoadTextures(TiXmlElement* apRootElem, tColladaTextureV
                 TiXmlElement *pLocalTexture = pDiffuseElem->FirstChildElement("texture");
                 if(pLocalTexture)
                 {
-                    tString _tstr = cString::ToString(pLocalTexture->Attribute("texture"),"");
-                    Texture.msImage = *GetFinalSource(vNewParams,_tstr);
+                    tString _tstr = cString::ToString(pLocalTexture->Attribute("texture"), "");
+                    Texture.msImage = *GetFinalSource(vNewParams, _tstr);
                 }
                 else
                 {
@@ -2203,7 +2203,7 @@ void cMeshLoaderCollada::LoadTextures(TiXmlElement* apRootElem, tColladaTextureV
             TiXmlElement* pTechniqueElem = pTextureElem->FirstChildElement("technique");
             while(pTechniqueElem)
             {
-                tString sProfile = cString::ToString(pTechniqueElem->Attribute("profile"),"");
+                tString sProfile = cString::ToString(pTechniqueElem->Attribute("profile"), "");
 
                 ////////////////////////////
                 //Technique params:
@@ -2218,12 +2218,12 @@ void cMeshLoaderCollada::LoadTextures(TiXmlElement* apRootElem, tColladaTextureV
                 TiXmlElement* pTechInput = pTechniqueElem->FirstChildElement("input");
                 while(pTechInput)
                 {
-                    tString sSemantic = cString::ToString(pTechInput->Attribute("semantic"),"");
+                    tString sSemantic = cString::ToString(pTechInput->Attribute("semantic"), "");
 
                     //Get the image of the texture
                     if(sSemantic == "IMAGE")
                     {
-                        Texture.msImage = cString::ToString(pTechInput->Attribute("source"),"");
+                        Texture.msImage = cString::ToString(pTechInput->Attribute("source"), "");
                     }
 
                     pTechInput = pTechInput->NextSiblingElement("input");
@@ -2247,15 +2247,15 @@ void cMeshLoaderCollada::LoadMaterials(TiXmlElement* apRootElem, tColladaMateria
     while(pMaterialElem)
     {
         cColladaMaterial Material;
-        Material.msId = cString::ToString(pMaterialElem->Attribute("id"),"");
-        Material.msName = cString::ToString(pMaterialElem->Attribute("name"),"");
+        Material.msId = cString::ToString(pMaterialElem->Attribute("id"), "");
+        Material.msName = cString::ToString(pMaterialElem->Attribute("name"), "");
 
         ///////////////////////////////////////////
         // COLLADA 1.4
         TiXmlElement *pIstanceEffectElem = pMaterialElem->FirstChildElement("instance_effect");
         if(pIstanceEffectElem)
         {
-            Material.msTexture = cString::ToString(pIstanceEffectElem->Attribute("url"),"");
+            Material.msTexture = cString::ToString(pIstanceEffectElem->Attribute("url"), "");
         }
         ///////////////////////////////////////////
         // COLLADA 1.3
@@ -2265,21 +2265,21 @@ void cMeshLoaderCollada::LoadMaterials(TiXmlElement* apRootElem, tColladaMateria
             //Just gonna look for a texture.
 
             TiXmlElement* pShaderElem = pMaterialElem->FirstChildElement("shader");
-            if(pShaderElem==NULL)
+            if(pShaderElem == NULL)
             {
                 Warning("No shader found!\n");
                 continue;
             }
 
             TiXmlElement* pTechElem = pShaderElem->FirstChildElement("technique");
-            if(pTechElem==NULL)
+            if(pTechElem == NULL)
             {
                 Warning("No technique found!\n");
                 continue;
             }
 
             TiXmlElement* pPassElem = pTechElem->FirstChildElement("pass");
-            if(pPassElem==NULL)
+            if(pPassElem == NULL)
             {
                 Warning("No pass found!\n");
                 continue;
@@ -2289,11 +2289,11 @@ void cMeshLoaderCollada::LoadMaterials(TiXmlElement* apRootElem, tColladaMateria
             TiXmlElement* pInputElem = pPassElem->FirstChildElement("input");
             while(pInputElem)
             {
-                tString sSemantic =  cString::ToString(pInputElem->Attribute("semantic"),"");
+                tString sSemantic =  cString::ToString(pInputElem->Attribute("semantic"), "");
 
                 if(sSemantic == "TEXTURE")
                 {
-                    Material.msTexture = cString::ToString(pInputElem->Attribute("source"),"");
+                    Material.msTexture = cString::ToString(pInputElem->Attribute("source"), "");
                 }
 
                 pInputElem = pInputElem->NextSiblingElement("input");
@@ -2324,13 +2324,13 @@ static cVertex IndexDataToVertex(const cColladaVtxIndex &aData, const cColladaGe
 {
     cVertex Vtx;
 
-    Vtx.col = cColor(1,1);
+    Vtx.col = cColor(1, 1);
     Vtx.pos = aGeometry.mvArrayVec[aGeometry.mlPosArrayIdx].mvArray[aData.mlVtx];
-    if(aGeometry.mlNormArrayIdx>=0)
+    if(aGeometry.mlNormArrayIdx >= 0)
     {
         Vtx.norm = aGeometry.mvArrayVec[aGeometry.mlNormArrayIdx].mvArray[aData.mlNorm];
     }
-    if(aGeometry.mlTexArrayIdx>=0)
+    if(aGeometry.mlTexArrayIdx >= 0)
     {
         Vtx.tex = aGeometry.mvArrayVec[aGeometry.mlTexArrayIdx].mvArray[aData.mlTex];
     }
@@ -2352,7 +2352,7 @@ static cColladaExtraVtx IndexDataToExtra(const cColladaVtxIndex &aData, int alNe
 }
 
 
-void cMeshLoaderCollada::SplitVertices(cColladaGeometry &aGeometry,tColladaExtraVtxListVec &avExtraVtxVec,
+void cMeshLoaderCollada::SplitVertices(cColladaGeometry &aGeometry, tColladaExtraVtxListVec &avExtraVtxVec,
                                        tVertexVec &avVertexVec, tUIntVec &avIndexVec)
 {
     //Resize the extra array and the vertex array
@@ -2363,7 +2363,7 @@ void cMeshLoaderCollada::SplitVertices(cColladaGeometry &aGeometry,tColladaExtra
 
     tColladaVtxIndexVec &vIndices = aGeometry.mvIndices;
 
-    for(int i=0; i<(int) vIndices.size(); i++)
+    for(int i = 0; i < (int) vIndices.size(); i++)
     {
         cColladaVtxIndex &Data = vIndices[i];
         //Log("Index %d: ", i);
@@ -2374,7 +2374,7 @@ void cMeshLoaderCollada::SplitVertices(cColladaGeometry &aGeometry,tColladaExtra
         {
             avExtraVtxVec[Data.mlVtx].push_back(IndexDataToExtra(Data, Data.mlVtx));
 
-            avVertexVec[Data.mlVtx] = IndexDataToVertex(Data,aGeometry);
+            avVertexVec[Data.mlVtx] = IndexDataToVertex(Data, aGeometry);
             avIndexVec[i] = Data.mlVtx;
             //Log("New vertex added");
         }
@@ -2403,7 +2403,7 @@ void cMeshLoaderCollada::SplitVertices(cColladaGeometry &aGeometry,tColladaExtra
                 avExtraVtxVec[Data.mlVtx].push_back(IndexDataToExtra(Data, (int)avVertexVec.size()));
                 avIndexVec[i] = (int)avVertexVec.size();
 
-                avVertexVec.push_back(IndexDataToVertex(Data,aGeometry));
+                avVertexVec.push_back(IndexDataToVertex(Data, aGeometry));
                 //Log("New split made");
             }
         }
@@ -2417,19 +2417,19 @@ void cMeshLoaderCollada::SplitVertices(cColladaGeometry &aGeometry,tColladaExtra
 
 tString cMeshLoaderCollada::GetTopString(const tString asPath)
 {
-    int pos = cString::GetLastStringPos(asPath,"-");
+    int pos = cString::GetLastStringPos(asPath, "-");
 
-    if(pos<0)
+    if(pos < 0)
     {
         return "";
     }
 
-    return asPath.substr(pos+1);
+    return asPath.substr(pos + 1);
 }
 
 //-----------------------------------------------------------------------
 
-void cMeshLoaderCollada::FillVertexVec(const char* apChars,tVector3fVec &avVtxVec, int alElements, int alVtxCount)
+void cMeshLoaderCollada::FillVertexVec(const char* apChars, tVector3fVec &avVtxVec, int alElements, int alVtxCount)
 {
     if((int)avVtxVec.size() < alVtxCount)
     {
@@ -2448,14 +2448,14 @@ void cMeshLoaderCollada::FillVertexVec(const char* apChars,tVector3fVec &avVtxVe
         Warning("Vertex array in does not have correct number of values stored. %d instead of %d\n", vFloatData.size(), alElements * alVtxCount);
     }
 
-    for(int i=0; i<alVtxCount; ++i)
+    for(int i = 0; i < alVtxCount; ++i)
     {
-        if(i>=lLoadedVtxNum)
+        if(i >= lLoadedVtxNum)
         {
             break;
         }
 
-        float* fData = &vFloatData[i*alElements];
+        float *fData = &vFloatData[i * alElements];
 
         avVtxVec[i].x = fData[0];
         if(alElements > 1)
@@ -2538,8 +2538,8 @@ tString cMeshLoaderCollada::GetMaterialTextureFile(const tString &asMaterial,
     }
 
     //Get the texture Id
-    tString sTexId ="";
-    for(size_t mat=0; mat < avColladaMaterialVec.size(); mat++)
+    tString sTexId = "";
+    for(size_t mat = 0; mat < avColladaMaterialVec.size(); mat++)
     {
         if(avColladaMaterialVec[mat].msId == asMaterial)
         {
@@ -2551,13 +2551,13 @@ tString cMeshLoaderCollada::GetMaterialTextureFile(const tString &asMaterial,
 
     if(sTexId == "")
     {
-        Warning("Material '%s' was not found!\n",asMaterial.c_str());
+        Warning("Material '%s' was not found!\n", asMaterial.c_str());
         return "";
     }
 
     //Get file Id
-    tString sFileId="";
-    for(size_t tex=0; tex < avColladaTextureVec.size(); tex++)
+    tString sFileId = "";
+    for(size_t tex = 0; tex < avColladaTextureVec.size(); tex++)
     {
         if(avColladaTextureVec[tex].msId == sTexId)
         {
@@ -2569,12 +2569,12 @@ tString cMeshLoaderCollada::GetMaterialTextureFile(const tString &asMaterial,
 
     if(sFileId == "")
     {
-        Warning("Texture '%s' was not found!\n",sTexId.c_str());
+        Warning("Texture '%s' was not found!\n", sTexId.c_str());
         return "";
     }
 
     //Get file source
-    for(size_t img=0; img < avColladaImageVec.size(); img++)
+    for(size_t img = 0; img < avColladaImageVec.size(); img++)
     {
         if(avColladaImageVec[img].msId == sFileId)
         {
@@ -2582,7 +2582,7 @@ tString cMeshLoaderCollada::GetMaterialTextureFile(const tString &asMaterial,
         }
     }
 
-    Warning("Couldn't file image file id '%s'\n",sFileId.c_str());
+    Warning("Couldn't file image file id '%s'\n", sFileId.c_str());
 
     return "";
 }

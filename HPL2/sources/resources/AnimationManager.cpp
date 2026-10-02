@@ -18,7 +18,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cAnimationManager::cAnimationManager(cGraphics* apGraphic,cResources *apResources)
+cAnimationManager::cAnimationManager(cGraphics* apGraphic, cResources *apResources)
     : iResourceManager(apResources->GetFileSearcher(), apResources->GetLowLevel(),
                        apResources->GetLowLevelSystem())
 {
@@ -41,10 +41,10 @@ cAnimationManager::~cAnimationManager()
 
 //-----------------------------------------------------------------------
 
-cAnimation* cAnimationManager::CreateAnimation(const tString& asName)
+cAnimation *cAnimationManager::CreateAnimation(const tString& asName)
 {
     tWString sPath;
-    cAnimation *pAnimation=NULL;
+    cAnimation *pAnimation = NULL;
     tString asNewName;
 
     BeginLoad(asName);
@@ -56,7 +56,7 @@ cAnimation* cAnimationManager::CreateAnimation(const tString& asName)
     {
         bool bFound = false;
         tStringVec *pTypes = mpResources->GetMeshLoaderHandler()->GetSupportedTypes();
-        for(size_t i=0; i< pTypes->size(); i++)
+        for(size_t i = 0; i < pTypes->size(); i++)
         {
             asNewName = cString::SetFileExt(asNewName, (*pTypes)[i]);
             tWString sPath = mpResources->GetFileSearcher()->GetFilePath(asNewName);
@@ -69,15 +69,15 @@ cAnimation* cAnimationManager::CreateAnimation(const tString& asName)
 
         if(bFound == false)
         {
-            Error("Couldn't find animation file '%s' in any supported format!\n",asName.c_str());
+            Error("Couldn't find animation file '%s' in any supported format!\n", asName.c_str());
             EndLoad();
             return NULL;
         }
     }
 
-    pAnimation = static_cast<cAnimation*>(this->FindLoadedResource(asNewName,sPath));
+    pAnimation = static_cast<cAnimation *>(this->FindLoadedResource(asNewName, sPath));
 
-    if(pAnimation==NULL && sPath!=_W(""))
+    if(pAnimation == NULL && sPath != _W(""))
     {
         cMeshLoaderHandler *pMeshLoadHandler = mpResources->GetMeshLoaderHandler();
         pAnimation = pMeshLoadHandler->LoadAnimation(sPath);
@@ -91,7 +91,7 @@ cAnimation* cAnimationManager::CreateAnimation(const tString& asName)
     }
     else
     {
-        Error("Couldn't create animation '%s'\n",asNewName.c_str());
+        Error("Couldn't create animation '%s'\n", asNewName.c_str());
     }
 
     EndLoad();
@@ -110,7 +110,7 @@ void cAnimationManager::Destroy(iResourceBase* apResource)
 {
     apResource->DecUserCount();
 
-    if(apResource->HasUsers()==false)
+    if(apResource->HasUsers() == false)
     {
         RemoveResource(apResource);
         hplDelete(apResource);

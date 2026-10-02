@@ -15,7 +15,7 @@ public:
     cLightBox(tString asName, cResources *apResources);
 
     void SetSize(const cVector3f& avSize);
-    inline const cVector3f& GetSize()
+    inline const cVector3f &GetSize()
     {
         return mvSize;
     }

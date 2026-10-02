@@ -33,19 +33,19 @@ class cWorld;
 
 //--------------------------------------------------
 
-typedef std::vector<cAnimation*> tAnimationVec;
+typedef std::vector<cAnimation *> tAnimationVec;
 typedef tAnimationVec::iterator tAnimationVecIt;
 
 typedef std::map<tString, int> tAnimationIndexMap;
 typedef tAnimationIndexMap::iterator tAnimationIndexMapIt;
 
-typedef std::vector<cSubMesh*> tSubMeshVec;
-typedef std::vector<cSubMesh*>::iterator tSubMeshVecIt;
+typedef std::vector<cSubMesh *> tSubMeshVec;
+typedef std::vector<cSubMesh *>::iterator tSubMeshVecIt;
 
-typedef std::multimap<tString,cSubMesh*> tSubMeshMap;
+typedef std::multimap<tString, cSubMesh *> tSubMeshMap;
 typedef tSubMeshMap::iterator tSubMeshMapIt;
 
-typedef std::vector<cNode3D*> tNode3DVec;
+typedef std::vector<cNode3D *> tNode3DVec;
 typedef tNode3DVec::iterator tNode3DVecIt;
 
 //--------------------------------------------------
@@ -60,22 +60,22 @@ public:
 
     bool CreateFromFile(const tString asFile);
 
-    cSubMesh* CreateSubMesh(const tString &asName);
+    cSubMesh *CreateSubMesh(const tString &asName);
 
-    cSubMesh* GetSubMesh(unsigned int alIdx);
+    cSubMesh *GetSubMesh(unsigned int alIdx);
     int GetSubMeshIndex(const tString &asName);
-    cSubMesh* GetSubMeshName(const tString &asName);
+    cSubMesh *GetSubMeshName(const tString &asName);
     int GetSubMeshNum();
 
     int GetTriangleCount();
 
     void SetSkeleton(cSkeleton* apSkeleton);
-    cSkeleton* GetSkeleton();
+    cSkeleton *GetSkeleton();
 
     void AddAnimation(cAnimation *apAnimation);
 
-    cAnimation* GetAnimation(int alIndex);
-    cAnimation* GetAnimationFromName(const tString& asName);
+    cAnimation *GetAnimation(int alIndex);
+    cAnimation *GetAnimationFromName(const tString& asName);
     int GetAnimationIndex(const tString& asName);
 
     void ClearAnimations(bool abDeleteAll);
@@ -90,11 +90,11 @@ public:
     }
 
     //Node
-    cNode3D* GetRootNode();
+    cNode3D *GetRootNode();
     void AddNode(cNode3D* apNode);
     int GetNodeNum();
-    cNode3D* GetNode(int alIdx);
-    cNode3D* GetNodeByName(const tString &asName);
+    cNode3D *GetNode(int alIdx);
+    cNode3D *GetNodeByName(const tString &asName);
 
 
     //Resources implementation
@@ -106,8 +106,8 @@ public:
     void Destroy() {}
 
 private:
-    cMaterialManager* mpMaterialManager;
-    cAnimationManager * mpAnimationManager;
+    cMaterialManager *mpMaterialManager;
+    cAnimationManager *mpAnimationManager;
 
     tSubMeshVec mvSubMeshes;
     tSubMeshMap m_mapSubMeshes;

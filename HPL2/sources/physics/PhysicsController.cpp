@@ -64,27 +64,27 @@ void iPhysicsController::SetPidIntegralSize(int alSize)
 
 void iPhysicsController::Update(double adFixedDelta)
 {
-    if(mbActive==false || mbPaused)
+    if(mbActive == false || mbPaused)
     {
         return;
     }
-    if(mpBody==NULL)
+    if(mpBody == NULL)
     {
         return;
     }
 
     cVector3f vInput = GetInputValue(mInputType);
     //Get the local input.
-    vInput = cMath::MatrixMul(cMath::MatrixInverse(mpBody->GetLocalMatrix().GetRotation()),vInput);
+    vInput = cMath::MatrixMul(cMath::MatrixInverse(mpBody->GetLocalMatrix().GetRotation()), vInput);
 
     float fValue = GetAxisValue(mInputAxis, vInput);
     float fError = mfDestValue - fValue;
 
-    float fOutput = GetOutputValue(fError,fValue,adFixedDelta);
+    float fOutput = GetOutputValue(fError, fValue, adFixedDelta);
 
-    if(mfMaxOutput>0)
+    if(mfMaxOutput > 0)
     {
-        if(fOutput>0)
+        if(fOutput > 0)
         {
             fOutput = cMath::Min(fOutput, mfMaxOutput);
         }
@@ -96,10 +96,10 @@ void iPhysicsController::Update(double adFixedDelta)
 
     if(mbLogInfo)
     {
-        Log("%s | Input: %f Dest: %f Error: %f OutPut: %f\n",msName.c_str(),fValue,mfDestValue,fError,fOutput);
+        Log("%s | Input: %f Dest: %f Error: %f OutPut: %f\n", msName.c_str(), fValue, mfDestValue, fError, fOutput);
     }
 
-    AddOutputValue(mOutputType,mOutputAxis,fOutput);
+    AddOutputValue(mOutputType, mOutputAxis, fOutput);
 
     ////////////////////////////////////////
     //Check if dest vale is reached
@@ -155,7 +155,7 @@ cVector3f iPhysicsController::GetInputValue(ePhysicsControllerInput aInput)
 
 //-----------------------------------------------------------------------
 
-float iPhysicsController::GetOutputValue(float afError,float afInput, double adFixedDelta)
+float iPhysicsController::GetOutputValue(float afError, float afInput, double adFixedDelta)
 {
     if(mType == ePhysicsControllerType_Pid)
     {
@@ -167,7 +167,7 @@ float iPhysicsController::GetOutputValue(float afError,float afInput, double adF
     }
     else
     {
-        return afError *mfA - afInput *mfB;
+        return afError * mfA - afInput * mfB;
     }
 
     return 0;
@@ -179,7 +179,7 @@ void iPhysicsController::AddOutputValue(ePhysicsControllerOutput aOutput,
                                         ePhysicsControllerAxis aAxis,
                                         float afVal)
 {
-    cVector3f vVec(0,0,0);
+    cVector3f vVec(0, 0, 0);
 
     switch(aAxis)
     {

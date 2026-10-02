@@ -28,7 +28,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-iPhysicsBody::iPhysicsBody(const tString &asName,iPhysicsWorld *apWorld,iCollideShape *apShape)
+iPhysicsBody::iPhysicsBody(const tString &asName, iPhysicsWorld *apWorld, iCollideShape *apShape)
     : iEntity3D(asName)
 {
     mpWorld = apWorld;
@@ -67,7 +67,7 @@ iPhysicsBody::iPhysicsBody(const tString &asName,iPhysicsWorld *apWorld,iCollide
 
     mbGravityCanAttachCharacter = true;
     mbGravityAttachmentRotation = true;
-    mbGravityAttachmentVelocity= true;
+    mbGravityAttachmentVelocity = true;
     mGravityAttachmentVelocityAxes = eVelocityAxes_XYZ;
 
     mpUserData = NULL;
@@ -137,13 +137,13 @@ void iPhysicsBody::Destroy()
 
     ///////////////////////////
     //Remove Joints
-    for(int i=0; i<(int)mvJoints.size(); i++)
+    for(int i = 0; i < (int)mvJoints.size(); i++)
     {
         iPhysicsJoint *pJoint = mvJoints[i];
 
         pJoint->RemoveBody(this);
 
-        if(pJoint->GetParentBody()==NULL && pJoint->GetChildBody()==NULL)
+        if(pJoint->GetParentBody() == NULL && pJoint->GetChildBody() == NULL)
         {
             mpWorld->DestroyJoint(pJoint);
         }
@@ -170,7 +170,7 @@ void iPhysicsBody::Destroy()
     {
         mpWorld->GetWorld()->DestroySoundEntity(mpScrapeSoundEntity);
     }
-    if(mpRollSoundEntity  && mpWorld->GetWorld()->SoundEntityExists(mpRollSoundEntity,mlRollSoundEntityID))
+    if(mpRollSoundEntity  && mpWorld->GetWorld()->SoundEntityExists(mpRollSoundEntity, mlRollSoundEntityID))
     {
         mpWorld->GetWorld()->DestroySoundEntity(mpRollSoundEntity);
     }
@@ -192,9 +192,9 @@ cVector3f iPhysicsBody::GetVelocityAtPosition(const cVector3f& avPos)
 {
     cVector3f vLocalPos = avPos - GetLocalPosition();
     cVector3f vMassCentre = GetMassCentre();
-    if(vMassCentre != cVector3f(0,0,0))
+    if(vMassCentre != cVector3f(0, 0, 0))
     {
-        vMassCentre = cMath::MatrixMul(GetLocalMatrix().GetRotation(),vMassCentre);
+        vMassCentre = cMath::MatrixMul(GetLocalMatrix().GetRotation(), vMassCentre);
         vLocalPos -= vMassCentre;
     }
 
@@ -207,9 +207,9 @@ cVector3f iPhysicsBody::GetTorqueFromForceAtPosition(const cVector3f& avForce, c
 {
     cVector3f vLocalPos = avPos - GetLocalPosition();
     cVector3f vMassCentre = GetMassCentre();
-    if(vMassCentre != cVector3f(0,0,0))
+    if(vMassCentre != cVector3f(0, 0, 0))
     {
-        vMassCentre = cMath::MatrixMul(GetLocalMatrix().GetRotation(),vMassCentre);
+        vMassCentre = cMath::MatrixMul(GetLocalMatrix().GetRotation(), vMassCentre);
         vLocalPos -= vMassCentre;
     }
 
@@ -223,7 +223,7 @@ void iPhysicsBody::AddJoint(iPhysicsJoint *apJoint)
     mvJoints.push_back(apJoint);
 }
 
-iPhysicsJoint* iPhysicsBody::GetJoint(int alIndex)
+iPhysicsJoint *iPhysicsBody::GetJoint(int alIndex)
 {
     return mvJoints[alIndex];
 }
@@ -235,7 +235,7 @@ int iPhysicsBody::GetJointNum()
 
 void iPhysicsBody::RemoveJoint(iPhysicsJoint *apJoint)
 {
-    std::vector<iPhysicsJoint*>::iterator it = mvJoints.begin();
+    std::vector<iPhysicsJoint *>::iterator it = mvJoints.begin();
     for(; it != mvJoints.end(); ++it)
     {
         if(*it == apJoint)
@@ -254,26 +254,26 @@ bool iPhysicsBody::UpdateBeforeSimulate(double adFixedDelta)
     //See if the body should still be in update list.
     bool bNeedsUpdate = false;
 
-    int lTemp=0;
+    int lTemp = 0;
     if(HasSlide() || GetScrapeSoundEntity())
     {
         bNeedsUpdate = true;
-        lTemp=0;
+        lTemp = 0;
     }
     if(GetMass() > 0)
     {
         if(GetEnabled())
         {
             bNeedsUpdate = true;
-            lTemp=1;
+            lTemp = 1;
         }
     }
     else
     {
         if(mbStaticMovement)
         {
-            bNeedsUpdate=true;
-            lTemp=2;
+            bNeedsUpdate = true;
+            lTemp = 2;
         }
     }
 
@@ -284,7 +284,7 @@ bool iPhysicsBody::UpdateBeforeSimulate(double adFixedDelta)
 
     /////////////////////
     //Check if update is needed, else return
-    if(bNeedsUpdate==false)
+    if(bNeedsUpdate == false)
     {
         //Log(" (removed %s from list %d)", lTemp);
         return false;
@@ -352,12 +352,12 @@ void iPhysicsBody::UpdateAfterSimulate(double adFixedDelta)
     //////////////////////////////////
     //Check slide sound
     //Log("Slide: %d\n", HasSlide());
-    if(HasSlide()==false)
+    if(HasSlide() == false)
     {
         if(GetScrapeSoundEntity())
         {
             //Log("Checking stop sound (%d), body (%d): Count: %d \n", GetScrapeSoundEntity(), this, mlSlideCount);
-            if(mlSlideCount<=0)
+            if(mlSlideCount <= 0)
             {
                 //Log("Stopped scrape %d on body '%s' IN BODY!\n", (size_t)GetScrapeSoundEntity(),
                 //                                                 GetName().c_str());
@@ -373,7 +373,7 @@ void iPhysicsBody::UpdateAfterSimulate(double adFixedDelta)
                 SetScrapeSoundEntity(NULL);
                 SetScrapeBody(NULL);
             }
-            else if(mlSlideCount>0)
+            else if(mlSlideCount > 0)
             {
                 mlSlideCount--;
             }
@@ -396,7 +396,7 @@ void iPhysicsBody::UpdateAfterSimulate(double adFixedDelta)
 
 void iPhysicsBody::StaticLinearMove(const cVector3f& avVelocity)
 {
-    if(GetMass()!=0)
+    if(GetMass() != 0)
     {
         return;
     }
@@ -409,7 +409,7 @@ void iPhysicsBody::StaticLinearMove(const cVector3f& avVelocity)
 
 void iPhysicsBody::StaticAngularMove(const cVector3f& avVelocity)
 {
-    if(GetMass()!=0)
+    if(GetMass() != 0)
     {
         return;
     }
@@ -487,7 +487,7 @@ bool iPhysicsBody::OnAABBCollision(iPhysicsBody *apBody)
     {
         iPhysicsBodyCallback *pCallback = *it;
 
-        if(pCallback->OnAABBCollide(this, apBody)==false)
+        if(pCallback->OnAABBCollide(this, apBody) == false)
         {
             bReturn = false;
         }
@@ -512,20 +512,20 @@ void iPhysicsBody::OnCollide(iPhysicsBody *apBody, cPhysicsContactData* apContac
     {
         iPhysicsBodyCallback *pCallback = *it;
 
-        pCallback->OnBodyCollide(this, apBody,apContactData);
+        pCallback->OnBodyCollide(this, apBody, apContactData);
     }
 }
 
 //-----------------------------------------------------------------------
 
-iPhysicsMaterial* iPhysicsBody::GetMaterial()
+iPhysicsMaterial *iPhysicsBody::GetMaterial()
 {
     return mpMaterial;
 }
 
 //-----------------------------------------------------------------------
 
-iCollideShape* iPhysicsBody::GetShape()
+iCollideShape *iPhysicsBody::GetShape()
 {
     return mpShape;
 }
@@ -549,7 +549,7 @@ void iPhysicsBody::RemoveConnectedCharacter(iCharacterBody *apCharBody)
         return;
     }
 
-    STLFindAndRemove(mlstConnectedCharBodies,apCharBody);
+    STLFindAndRemove(mlstConnectedCharBodies, apCharBody);
 }
 
 //-----------------------------------------------------------------------

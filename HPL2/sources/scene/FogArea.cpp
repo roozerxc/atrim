@@ -15,7 +15,7 @@ namespace hpl
 
 cFogArea::cFogArea(tString asName, cResources *apResources) : iRenderable(asName)
 {
-    mColor = cColor(1,1);
+    mColor = cColor(1, 1);
     mvSize = 1;
 
     mfStart = 0;
@@ -57,7 +57,7 @@ void cFogArea::SetSize(const cVector3f& avSize)
 
 //-----------------------------------------------------------------------
 
-cMatrixf* cFogArea::GetModelMatrix(cFrustum* apFrustum)
+cMatrixf *cFogArea::GetModelMatrix(cFrustum* apFrustum)
 {
     m_mtxModelOutput = cMath::MatrixMul(GetWorldMatrix(), cMath::MatrixScale(mvSize));
 

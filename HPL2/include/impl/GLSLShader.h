@@ -36,8 +36,8 @@ public:
         return msName;
     }
 
-    bool CreateFromFile(const tWString& asFile, const tString& asEntry="main", bool abPrintInfoIfFail=true);
-    bool CreateFromString(const char *apStringData, const tString& asEntry="main", bool abPrintInfoIfFail=true);
+    bool CreateFromFile(const tWString& asFile, const tString& asEntry = "main", bool abPrintInfoIfFail = true);
+    bool CreateFromString(const char *apStringData, const tString& asEntry = "main", bool abPrintInfoIfFail = true);
 
     //GLSL Specific
     GLuint GetHandle()

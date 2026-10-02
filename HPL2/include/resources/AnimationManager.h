@@ -13,17 +13,17 @@ class cAnimation;
 class cAnimationManager : public iResourceManager
 {
 public:
-    cAnimationManager(cGraphics* apGraphics,cResources *apResources);
+    cAnimationManager(cGraphics* apGraphics, cResources *apResources);
     ~cAnimationManager();
 
-    cAnimation* CreateAnimation(const tString& asName);
+    cAnimation *CreateAnimation(const tString& asName);
 
     void Destroy(iResourceBase* apResource);
     void Unload(iResourceBase* apResource);
 
 private:
-    cGraphics* mpGraphics;
-    cResources* mpResources;
+    cGraphics *mpGraphics;
+    cResources *mpResources;
 };
 
 };

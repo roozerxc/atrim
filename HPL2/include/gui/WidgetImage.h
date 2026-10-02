@@ -15,7 +15,7 @@ public:
     virtual ~cWidgetImage();
 
     void SetImage(cGuiGfxElement *apGfx);
-    cGuiGfxElement* GetImage()
+    cGuiGfxElement *GetImage()
     {
         return mpGfxImage;
     }

@@ -19,14 +19,14 @@ public:
     cSoundEntityData(const tString& asName, cResources *apResources, cSound *apSound);
     ~cSoundEntityData();
 
-    const tString& GetSoundName(eSoundEntityType aType, int alIdx);
-    const tString& GetRandomSoundName(eSoundEntityType aType, bool abSkipPrevious);
+    const tString &GetSoundName(eSoundEntityType aType, int alIdx);
+    const tString &GetRandomSoundName(eSoundEntityType aType, bool abSkipPrevious);
     int GetSoundNum(eSoundEntityType aType);
     void SetSoundName(const tString& asName, eSoundEntityType aType, int alIdx);
     void AddSoundName(const tString& asName, eSoundEntityType aType);
     inline bool HasSound(eSoundEntityType aType)
     {
-        return mvSoundNameVecs[aType].empty()==false;
+        return mvSoundNameVecs[aType].empty() == false;
     }
 
     void PreloadSounds();
@@ -78,7 +78,7 @@ public:
     }
     void SetMaxDistance(float afX)
     {
-        mfMaxDistance =afX;
+        mfMaxDistance = afX;
     }
     float GetMaxDistance()
     {

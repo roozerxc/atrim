@@ -16,9 +16,9 @@ namespace hpl
 
 cVisibleRCNodeTracker::cVisibleRCNodeTracker()
 {
-    mlCurrentVisibleNodeSet =0;
+    mlCurrentVisibleNodeSet = 0;
 
-    mlFrameCounter =0;
+    mlFrameCounter = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -26,9 +26,9 @@ cVisibleRCNodeTracker::cVisibleRCNodeTracker()
 void cVisibleRCNodeTracker::SwitchAndClearVisibleNodeSet()
 {
     mlCurrentVisibleNodeSet++;
-    if(mlCurrentVisibleNodeSet>=2)
+    if(mlCurrentVisibleNodeSet >= 2)
     {
-        mlCurrentVisibleNodeSet=0;
+        mlCurrentVisibleNodeSet = 0;
     }
 
     m_setVisibleNodes[mlCurrentVisibleNodeSet].clear();
@@ -41,7 +41,7 @@ void cVisibleRCNodeTracker::SetNodeVisible(iRenderableContainerNode *apNode)
 
 bool cVisibleRCNodeTracker::WasNodeVisible(iRenderableContainerNode *apNode)
 {
-    int lPrevSet = mlCurrentVisibleNodeSet==0 ? 1 : 0;
+    int lPrevSet = mlCurrentVisibleNodeSet == 0 ? 1 : 0;
 
     tRenderableContainerNodeSetIt it  = m_setVisibleNodes[lPrevSet].find(apNode);
     return it != m_setVisibleNodes[lPrevSet].end();
@@ -51,10 +51,10 @@ bool cVisibleRCNodeTracker::WasNodeVisible(iRenderableContainerNode *apNode)
 
 void cVisibleRCNodeTracker::Reset()
 {
-    mlCurrentVisibleNodeSet =0;
-    mlFrameCounter =0;
+    mlCurrentVisibleNodeSet = 0;
+    mlFrameCounter = 0;
 
-    for(int i=0; i<2; i++)
+    for(int i = 0; i < 2; i++)
     {
         m_setVisibleNodes[i].clear();
     }
@@ -118,10 +118,10 @@ void cRenderableContainerObjectCallback::OnRenderFlagsChange(iRenderable *apObje
 
 iRenderableContainerNode::iRenderableContainerNode()
 {
-    mvMin =0;
-    mvMax =0;
-    mfRadius =0;
-    mvCenter =0;
+    mvMin = 0;
+    mvMax = 0;
+    mfRadius = 0;
+    mvCenter = 0;
 
     mbNeedPropertyUpdate = true;
     mbNeedAABBUpdate = false;
@@ -306,8 +306,8 @@ void iRenderableContainer::CheckNeedAABBUpdateIteration(iRenderableContainerNode
 
     //////////////////////////
     // Calculate sphere size and pos
-    apNode->mvCenter = (apNode->mvMax + apNode->mvMin) *0.5f;
-    apNode->mfRadius = (apNode->mvMax - apNode->mvMin).Length()*0.5f;
+    apNode->mvCenter = (apNode->mvMax + apNode->mvMin) * 0.5f;
+    apNode->mfRadius = (apNode->mvMax - apNode->mvMin).Length() * 0.5f;
 }
 
 //-----------------------------------------------------------------------

@@ -19,17 +19,17 @@ public:
      * \param eMouseButton the button to check
      * \return
      */
-    virtual bool ButtonIsDown(eMouseButton)=0;
+    virtual bool ButtonIsDown(eMouseButton) = 0;
     /**
      * Get the absolute pos of the mouse.
      * \return
      */
-    virtual cVector2l GetAbsPosition()=0;
+    virtual cVector2l GetAbsPosition() = 0;
     /**
      * Get the relative movement.
      * \return
      */
-    virtual cVector2l GetRelPosition()=0;
+    virtual cVector2l GetRelPosition() = 0;
     /**
      * \param eMouseButton The button to change to string.
      * \return The name of the button as a string.
@@ -39,7 +39,7 @@ public:
      * \param tString Name of the button
      * \return enum of the button.
      */
-    virtual eMouseButton StringToButton(const tString&);
+    virtual eMouseButton StringToButton(const tString &);
 };
 
 };

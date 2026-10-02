@@ -11,8 +11,8 @@ class cVertexBufferOGL_VBO : public iVertexBufferOpenGL
 {
 public:
     cVertexBufferOGL_VBO(    iLowLevelGraphics* apLowLevelGraphics,
-                             eVertexBufferDrawType aDrawType,eVertexBufferUsageType aUsageType,
-                             int alReserveVtxSize,int alReserveIdxSize);
+                             eVertexBufferDrawType aDrawType, eVertexBufferUsageType aUsageType,
+                             int alReserveVtxSize, int alReserveIdxSize);
     ~cVertexBufferOGL_VBO();
 
     void UpdateData(tVertexElementFlag aTypes, bool abIndices);
@@ -26,9 +26,9 @@ public:
 
 private:
     void CompileSpecific();
-    iVertexBufferOpenGL* CreateDataCopy(tVertexElementFlag aFlags, eVertexBufferDrawType aDrawType,
+    iVertexBufferOpenGL *CreateDataCopy(tVertexElementFlag aFlags, eVertexBufferDrawType aDrawType,
                                         eVertexBufferUsageType aUsageType,
-                                        int alReserveVtxSize,int alReserveIdxSize);
+                                        int alReserveVtxSize, int alReserveIdxSize);
 
     void SetVertexStates();
 

@@ -22,89 +22,89 @@ public:
      *
      * \return the system name of the gamepad device
      */
-    virtual tString GetGamepadName()=0;
+    virtual tString GetGamepadName() = 0;
 
     /**
      *
      * \return the number of buttons in the gamepad
      */
-    virtual int GetNumButtons()=0;
+    virtual int GetNumButtons() = 0;
     /**
      *
      * \return the number of axes in the gamepad
      */
-    virtual int GetNumAxes()=0;
+    virtual int GetNumAxes() = 0;
     /**
      *
      * \return the number of hats in the gamepad
      */
-    virtual int GetNumHats()=0;
+    virtual int GetNumHats() = 0;
     /**
      *
      * \return the number of trackballs in the gamepad
      */
-    virtual int GetNumBalls()=0;
+    virtual int GetNumBalls() = 0;
     /**
      *
       * Can be checked many times to see all updated input
      * \return  inputs
      */
-    virtual cGamepadInputData GetInputUpdate()=0;
+    virtual cGamepadInputData GetInputUpdate() = 0;
     /**
      *
      * \return true If ANY input is updated
      */
-    virtual bool HasInputUpdates()=0;
+    virtual bool HasInputUpdates() = 0;
     /**
      *
      * \param aButton The button to check
      * \return true if pressed else false
      */
-    virtual bool ButtonIsDown(eGamepadButton aButton)=0;
+    virtual bool ButtonIsDown(eGamepadButton aButton) = 0;
     /**
      * Can be checked many times to see all button presses
      * \return key that is currently pressed. eKey_NONE is no key.
      */
-    virtual cGamepadInputData GetButton()=0;
+    virtual cGamepadInputData GetButton() = 0;
     /**
      *
      * \return If ANY button is pressed
      */
-    virtual bool ButtonIsPressed()=0;
+    virtual bool ButtonIsPressed() = 0;
     /**
      *
      * \return button that has been released
      */
-    virtual cGamepadInputData GetReleasedButton()=0;
+    virtual cGamepadInputData GetReleasedButton() = 0;
     /**
      *
      * \return If ANY button is released
      */
-    virtual bool ButtonIsReleased()=0;
+    virtual bool ButtonIsReleased() = 0;
     /**
      * \param aAxis the axis to get the value from.
      * \return The normalized input value for the axis.
      */
-    virtual float GetAxisValue(eGamepadAxis aAxis)=0;
+    virtual float GetAxisValue(eGamepadAxis aAxis) = 0;
     /**
      *
      * \return Threshold indicating the at which start value input will be considered.
      */
-    virtual float GetAxisDeadZoneRadiusValue()=0;
+    virtual float GetAxisDeadZoneRadiusValue() = 0;
     /**
      * \param New value for the dead zone radius
      */
-    virtual void SetAxisDeadZoneRadiusValue(float afValue)=0;
+    virtual void SetAxisDeadZoneRadiusValue(float afValue) = 0;
     /**
      * \param aHat the hat to get the state from.
      * \return The state of the hat.
      */
-    virtual cGamepadInputData GetUpdatedAxis()=0;
+    virtual cGamepadInputData GetUpdatedAxis() = 0;
     /**
      * \param aHat the hat to get the state from.
      * \return The state of the hat.
      */
-    virtual bool AxesUpdated()=0;
+    virtual bool AxesUpdated() = 0;
     /**
      * \param aHat the hat to get the state from.
      * \return The state of the hat.
@@ -114,32 +114,32 @@ public:
      * \param aHat the hat to get the state from.
      * \return The state of the hat.
      */
-    virtual eGamepadHatState GetHatCurrentState(eGamepadHat aHat)=0;
+    virtual eGamepadHatState GetHatCurrentState(eGamepadHat aHat) = 0;
     /**
      * \param aHat the hat to get the state from.
      * \return The state of the hat.
      */
-    virtual bool HatIsInState(eGamepadHat aHat, eGamepadHatState aState)=0;
+    virtual bool HatIsInState(eGamepadHat aHat, eGamepadHatState aState) = 0;
     /**
      * \param aHat the hat to get the state from.
      * \return The state of the hat.
      */
-    virtual cGamepadInputData GetHatState()=0;
+    virtual cGamepadInputData GetHatState() = 0;
     /**
      * \param aHat the hat to get the state from.
      * \return The state of the hat.
      */
-    virtual bool HatsChanged()=0;
+    virtual bool HatsChanged() = 0;
     /**
      * \param aBall the ball to get the absolute position from.
      * \return Absolute position for the ball.
      */
-    virtual cVector2l GetBallAbsPos(eGamepadBall aBall)=0;
+    virtual cVector2l GetBallAbsPos(eGamepadBall aBall) = 0;
     /**
      * \param aBall the ball to get the Relative position from.
      * \return Relative position for the ball.
      */
-    virtual cVector2l GetBallRelPos(eGamepadBall aBall)=0;
+    virtual cVector2l GetBallRelPos(eGamepadBall aBall) = 0;
     /**
      * \param aButton The button to change to string.
      * \return The name of the button as a string.
@@ -149,7 +149,7 @@ public:
      * \param tString Name of the button
      * \return enum of the button.
      */
-    static eGamepadButton StringToButton(const tString&);
+    static eGamepadButton StringToButton(const tString &);
     /**
      * \param aButton The button to change to string.
      * \return The name of the button as a string.
@@ -159,7 +159,7 @@ public:
      * \param tString Name of the axis.
      * \return enum of the axis.
      */
-    static eGamepadAxis StringToAxis(const tString&);
+    static eGamepadAxis StringToAxis(const tString &);
     /**
      * \param aButton The button to change to string.
      * \return The name of the button as a string.
@@ -169,7 +169,7 @@ public:
      * \param tString Name of the range
      * \return enum of the range.
      */
-    static eGamepadAxisRange StringToAxisRange(const tString&);
+    static eGamepadAxisRange StringToAxisRange(const tString &);
     /**
      * \param aButton The hat to change to string.
      * \return The name of the hat as a string.
@@ -179,7 +179,7 @@ public:
      * \param tString Name of the hat
      * \return enum of the hat.
      */
-    static eGamepadHat StringToHat(const tString&);
+    static eGamepadHat StringToHat(const tString &);
     /**
      * \param aButton The hat state to change to string.
      * \return The name of the hat state as a string.
@@ -189,7 +189,7 @@ public:
      * \param tString Name of the hat state
      * \return enum of the hat state.
      */
-    static eGamepadHatState StringToHatState(const tString&);
+    static eGamepadHatState StringToHatState(const tString &);
     /**
      * \param aButton The trackball to change to string.
      * \return The name of the trackball as a string.
@@ -199,7 +199,7 @@ public:
      * \param tString Name of the trackball
      * \return enum of the trackball.
      */
-    static eGamepadBall StringToBall(const tString&);
+    static eGamepadBall StringToBall(const tString &);
 protected:
     int mlIndex;
 };

@@ -26,7 +26,7 @@ public:
 class iGpuShader : public iResourceBase
 {
 public:
-    iGpuShader(const tString& asName, const tWString& asFullPath, eGpuShaderType aType,eGpuProgramFormat aProgramFormat) : iResourceBase(asName, asFullPath,0)
+    iGpuShader(const tString& asName, const tWString& asFullPath, eGpuShaderType aType, eGpuProgramFormat aProgramFormat) : iResourceBase(asName, asFullPath, 0)
     {
         mProgramFormat = aProgramFormat;
         mShaderType = aType;
@@ -38,7 +38,7 @@ public:
         mbDebugInfo = abX;
     }
 
-    virtual bool SamplerNeedsTextureUnitSetup()=0;
+    virtual bool SamplerNeedsTextureUnitSetup() = 0;
 
     /**
     * Create a from a file. Used internally
@@ -46,8 +46,8 @@ public:
     * \param asEntry
     * \return
     */
-    virtual bool CreateFromFile(const tWString& asFile, const tString& asEntry="main", bool abPrintInfoIfFail=true)=0;
-    virtual bool CreateFromString(const char *apStringData, const tString& asEntry="main", bool abPrintInfoIfFail=true)=0;
+    virtual bool CreateFromFile(const tWString& asFile, const tString& asEntry = "main", bool abPrintInfoIfFail = true) = 0;
+    virtual bool CreateFromString(const char *apStringData, const tString& asEntry = "main", bool abPrintInfoIfFail = true) = 0;
 
     eGpuProgramFormat GetFormat()
     {
@@ -63,7 +63,7 @@ public:
     {
         return (int)mvSamplerUnits.size();
     }
-    cGpuShader_SamplerUnit* GetSamplerUnit(int alIdx)
+    cGpuShader_SamplerUnit *GetSamplerUnit(int alIdx)
     {
         return &mvSamplerUnits[alIdx];
     }

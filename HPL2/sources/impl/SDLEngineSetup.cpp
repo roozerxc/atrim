@@ -49,23 +49,23 @@ cSDLEngineSetup::cSDLEngineSetup(tFlag alHplSetupFlags)
 
     //////////////////////////
     // Graphics
-    mpLowLevelGraphics = hplNew( cLowLevelGraphicsSDL,() );
+    mpLowLevelGraphics = hplNew( cLowLevelGraphicsSDL, () );
 
     //////////////////////////
     // Input
-    mpLowLevelInput = hplNew( cLowLevelInputSDL,(mpLowLevelGraphics) );
+    mpLowLevelInput = hplNew( cLowLevelInputSDL, (mpLowLevelGraphics) );
 
     //////////////////////////
     // Resources
-    mpLowLevelResources = hplNew( cLowLevelResourcesSDL,(mpLowLevelGraphics) );
+    mpLowLevelResources = hplNew( cLowLevelResourcesSDL, (mpLowLevelGraphics) );
 
     //////////////////////////
     // Sound
-    mpLowLevelSound    = hplNew( cLowLevelSoundOpenAL,() );
+    mpLowLevelSound    = hplNew( cLowLevelSoundOpenAL, () );
 
     //////////////////////////
     // Physics
-    mpLowLevelPhysics = hplNew( cLowLevelPhysicsNewton,() );
+    mpLowLevelPhysics = hplNew( cLowLevelPhysicsNewton, () );
 
 }
 
@@ -99,10 +99,10 @@ cSDLEngineSetup::~cSDLEngineSetup()
 
 //-----------------------------------------------------------------------
 
-cScene* cSDLEngineSetup::CreateScene(cGraphics* apGraphics, cResources *apResources, cSound* apSound,
-                                     cPhysics *apPhysics, cSystem *apSystem,cAI *apAI,cGui *apGui)
+cScene *cSDLEngineSetup::CreateScene(cGraphics* apGraphics, cResources *apResources, cSound* apSound,
+                                     cPhysics *apPhysics, cSystem *apSystem, cAI *apAI, cGui *apGui)
 {
-    cScene *pScene = hplNew( cScene, (apGraphics,apResources, apSound,apPhysics, apSystem,apAI,apGui) );
+    cScene *pScene = hplNew( cScene, (apGraphics, apResources, apSound, apPhysics, apSystem, apAI, apGui) );
     return pScene;
 }
 
@@ -114,15 +114,15 @@ cScene* cSDLEngineSetup::CreateScene(cGraphics* apGraphics, cResources *apResour
  * \param apGraphics
  * \return
  */
-cResources* cSDLEngineSetup::CreateResources(cGraphics* apGraphics)
+cResources *cSDLEngineSetup::CreateResources(cGraphics* apGraphics)
 {
-    cResources *pResources = hplNew( cResources, (mpLowLevelResources,mpLowLevelGraphics) );
+    cResources *pResources = hplNew( cResources, (mpLowLevelResources, mpLowLevelGraphics) );
     return pResources;
 }
 
 //-----------------------------------------------------------------------
 
-cInput* cSDLEngineSetup::CreateInput(cGraphics* apGraphics)
+cInput *cSDLEngineSetup::CreateInput(cGraphics* apGraphics)
 {
     cInput *pInput = hplNew( cInput, (mpLowLevelInput) );
     return pInput;
@@ -130,7 +130,7 @@ cInput* cSDLEngineSetup::CreateInput(cGraphics* apGraphics)
 
 //-----------------------------------------------------------------------
 
-cSystem* cSDLEngineSetup::CreateSystem()
+cSystem *cSDLEngineSetup::CreateSystem()
 {
     cSystem *pSystem = hplNew( cSystem, (mpLowLevelSystem) );
     return pSystem;
@@ -138,14 +138,14 @@ cSystem* cSDLEngineSetup::CreateSystem()
 
 //-----------------------------------------------------------------------
 
-cGraphics* cSDLEngineSetup::CreateGraphics()
+cGraphics *cSDLEngineSetup::CreateGraphics()
 {
-    cGraphics *pGraphics = hplNew( cGraphics, (mpLowLevelGraphics,mpLowLevelResources) );
+    cGraphics *pGraphics = hplNew( cGraphics, (mpLowLevelGraphics, mpLowLevelResources) );
     return pGraphics;
 }
 //-----------------------------------------------------------------------
 
-cSound* cSDLEngineSetup::CreateSound()
+cSound *cSDLEngineSetup::CreateSound()
 {
     cSound *pSound = hplNew( cSound, (mpLowLevelSound) );
     return pSound;
@@ -153,7 +153,7 @@ cSound* cSDLEngineSetup::CreateSound()
 
 //-----------------------------------------------------------------------
 
-cPhysics* cSDLEngineSetup::CreatePhysics()
+cPhysics *cSDLEngineSetup::CreatePhysics()
 {
     cPhysics *pPhysics = hplNew( cPhysics, (mpLowLevelPhysics) );
     return pPhysics;
@@ -161,9 +161,9 @@ cPhysics* cSDLEngineSetup::CreatePhysics()
 
 //-----------------------------------------------------------------------
 
-cAI* cSDLEngineSetup::CreateAI()
+cAI *cSDLEngineSetup::CreateAI()
 {
-    cAI *pAI = hplNew( cAI,() );
+    cAI *pAI = hplNew( cAI, () );
     return pAI;
 }
 

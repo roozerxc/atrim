@@ -42,7 +42,7 @@ private:
 class cPostEffect_ImageTrail : public iPostEffect
 {
 public:
-    cPostEffect_ImageTrail(cGraphics *apGraphics,cResources *apResources, iPostEffectType *apType);
+    cPostEffect_ImageTrail(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType);
     ~cPostEffect_ImageTrail();
 
     void Reset();
@@ -55,7 +55,7 @@ private:
         return &mParams;
     }
 
-    iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
+    iTexture *RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
 
     iFrameBuffer *mpAccumBuffer;
     iTexture *mpAccumTexture;

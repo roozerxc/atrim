@@ -10,16 +10,16 @@ class cSound;
 class cResources;
 class iSoundData;
 
-typedef std::list<iSoundData*> tSoundDataList;
+typedef std::list<iSoundData *> tSoundDataList;
 typedef tSoundDataList::iterator tSoundDataListIt;
 
 class cSoundManager : public iResourceManager
 {
 public:
-    cSoundManager(cSound* apSound,cResources *apResources);
+    cSoundManager(cSound* apSound, cResources *apResources);
     ~cSoundManager();
 
-    iSoundData* CreateSoundData(const tString& asName, bool abStream, bool abLoopStream=false);
+    iSoundData *CreateSoundData(const tString& asName, bool abStream, bool abLoopStream = false);
 
     void Destroy(iResourceBase* apResource);
     void Unload(iResourceBase* apResource);
@@ -27,7 +27,7 @@ public:
     void DestroyAll();
 
 private:
-    cSound* mpSound;
+    cSound *mpSound;
     cResources *mpResources;
 
     tStringList mlstFileFormats;

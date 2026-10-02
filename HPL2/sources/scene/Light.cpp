@@ -68,18 +68,18 @@ iLight::iLight(tString asName, cResources *apResources) : iRenderable(asName)
     mSpecularColor = 0;
     mbCastShadows = false;
     mlShadowCastersAffected = eObjectVariabilityFlag_All;
-    mfRadius =0;
+    mfRadius = 0;
     mfSourceRadius = 0;
-    mfFadeTime=0;
+    mfFadeTime = 0;
     mbFlickering = false;
 
     mfFlickerStateLength = 0;
 
-    mfFadeTime =0;
+    mfFadeTime = 0;
 
     ///////////////////////////////
     //Data init
-    mpFalloffMap = mpTextureManager->Create1D("core_falloff_linear",false);
+    mpFalloffMap = mpTextureManager->Create1D("core_falloff_linear", false);
     mpFalloffMap->SetWrapS(eTextureWrap_ClampToEdge);
     mpFalloffMap->SetWrapT(eTextureWrap_ClampToEdge);
 
@@ -117,7 +117,7 @@ iLight::~iLight()
 
 void iLight::OnChangeVisible()
 {
-    for(size_t i =0; i<mvBillboards.size(); ++i)
+    for(size_t i = 0; i < mvBillboards.size(); ++i)
     {
         mvBillboards[i].mpBillboard->SetVisible(mbIsVisible);
     }
@@ -129,7 +129,7 @@ bool iLight::IsVisible()
     {
         return false;
     }
-    if(mDiffuseColor.r <=0 && mDiffuseColor.g <=0 && mDiffuseColor.b <=0 && mDiffuseColor.a <=0)
+    if(mDiffuseColor.r <= 0 && mDiffuseColor.g <= 0 && mDiffuseColor.b <= 0 && mDiffuseColor.a <= 0)
     {
         return false;
     }
@@ -172,11 +172,11 @@ void iLight::UpdateLight(double adFixedDelta)
 {
     /////////////////////////////////////////////
     // Fade
-    if(mfFadeTime>0)
+    if(mfFadeTime > 0)
     {
         //Log("Fading: %f / %f\n",(float)adFixedDelta,mfFadeTime);
 
-        float fNewRadius = mfRadius + mfRadiusAdd*(float)adFixedDelta;
+        float fNewRadius = mfRadius + mfRadiusAdd * (float)adFixedDelta;
         SetRadius(fNewRadius);
 
         mDiffuseColor.r += mColAdd.r * (float)adFixedDelta;
@@ -188,9 +188,9 @@ void iLight::UpdateLight(double adFixedDelta)
         mfFadeTime -= (float)adFixedDelta;
 
         //Set the dest values.
-        if(mfFadeTime<=0)
+        if(mfFadeTime <= 0)
         {
-            mfFadeTime =0;
+            mfFadeTime = 0;
             SetDiffuseColor(mDestCol);
             mfRadius = mfDestRadius;
         }
@@ -198,7 +198,7 @@ void iLight::UpdateLight(double adFixedDelta)
 
     /////////////////////////////////////////////
     // Flickering
-    if(mbFlickering && mfFadeTime<=0)
+    if(mbFlickering && mfFadeTime <= 0)
     {
         //////////////////////
         //On
@@ -214,13 +214,13 @@ void iLight::UpdateLight(double adFixedDelta)
                 }
                 else
                 {
-                    FadeTo(mFlickerOffColor,mfFlickerOffRadius, cMath::RandRectf(mfFlickerOffFadeMinLength, mfFlickerOffFadeMaxLength));
+                    FadeTo(mFlickerOffColor, mfFlickerOffRadius, cMath::RandRectf(mfFlickerOffFadeMinLength, mfFlickerOffFadeMaxLength));
                 }
                 //Sound
-                if(msFlickerOffSound!="")
+                if(msFlickerOffSound != "")
                 {
                     cSoundEntity *pSound = mpWorld->CreateSoundEntity("FlickerOff",
-                                           msFlickerOffSound,true);
+                                           msFlickerOffSound, true);
                     if(pSound)
                     {
                         pSound->SetIsSaved(false);
@@ -230,8 +230,8 @@ void iLight::UpdateLight(double adFixedDelta)
 
                 OnFlickerOff();
 
-                mfFlickerTime =0;
-                mfFlickerStateLength = cMath::RandRectf(mfFlickerOffMinLength,mfFlickerOffMaxLength);
+                mfFlickerTime = 0;
+                mfFlickerStateLength = cMath::RandRectf(mfFlickerOffMinLength, mfFlickerOffMaxLength);
             }
         }
         //////////////////////
@@ -248,11 +248,11 @@ void iLight::UpdateLight(double adFixedDelta)
                 }
                 else
                 {
-                    FadeTo(mFlickerOnColor,mfFlickerOnRadius,cMath::RandRectf(mfFlickerOnFadeMinLength, mfFlickerOnFadeMaxLength));
+                    FadeTo(mFlickerOnColor, mfFlickerOnRadius, cMath::RandRectf(mfFlickerOnFadeMinLength, mfFlickerOnFadeMaxLength));
                 }
-                if(msFlickerOnSound!="")
+                if(msFlickerOnSound != "")
                 {
-                    cSoundEntity *pSound = mpWorld->CreateSoundEntity("FlickerOn", msFlickerOnSound,true);
+                    cSoundEntity *pSound = mpWorld->CreateSoundEntity("FlickerOn", msFlickerOnSound, true);
                     if(pSound)
                     {
                         pSound->SetIsSaved(false);
@@ -262,8 +262,8 @@ void iLight::UpdateLight(double adFixedDelta)
 
                 OnFlickerOn();
 
-                mfFlickerTime =0;
-                mfFlickerStateLength = cMath::RandRectf(mfFlickerOnMinLength,mfFlickerOnMaxLength);
+                mfFlickerTime = 0;
+                mfFlickerStateLength = cMath::RandRectf(mfFlickerOnMinLength, mfFlickerOnMaxLength);
             }
         }
 
@@ -280,7 +280,7 @@ void iLight::UpdateLight(double adFixedDelta)
 
 void iLight::FadeTo(const cColor& aCol, float afRadius, float afTime)
 {
-    if(afTime<=0)
+    if(afTime <= 0)
     {
         afTime = 0.0001f;
     }
@@ -288,12 +288,12 @@ void iLight::FadeTo(const cColor& aCol, float afRadius, float afTime)
     mfFadeTime = afTime;
     mfFadeDuration = afTime;
 
-    mColAdd.r = (aCol.r - mDiffuseColor.r)/afTime;
-    mColAdd.g = (aCol.g - mDiffuseColor.g)/afTime;
-    mColAdd.b = (aCol.b - mDiffuseColor.b)/afTime;
-    mColAdd.a = (aCol.a - mDiffuseColor.a)/afTime;
+    mColAdd.r = (aCol.r - mDiffuseColor.r) / afTime;
+    mColAdd.g = (aCol.g - mDiffuseColor.g) / afTime;
+    mColAdd.b = (aCol.b - mDiffuseColor.b) / afTime;
+    mColAdd.a = (aCol.a - mDiffuseColor.a) / afTime;
 
-    mfRadiusAdd = (afRadius - mfRadius)/afTime;
+    mfRadiusAdd = (afRadius - mfRadius) / afTime;
 
     mfDestRadius = afRadius;
     mDestCol = aCol;
@@ -301,7 +301,7 @@ void iLight::FadeTo(const cColor& aCol, float afRadius, float afTime)
 
 void iLight::StopFading()
 {
-    mfFadeTime =0;
+    mfFadeTime = 0;
 }
 
 bool iLight::IsFading()
@@ -317,8 +317,8 @@ void iLight::SetFlickerActive(bool abX)
 }
 
 void iLight::SetFlicker(const cColor& aOffCol, float afOffRadius,
-                        float afOnMinLength, float afOnMaxLength,const tString &asOnSound,const tString &asOnPS,
-                        float afOffMinLength, float afOffMaxLength,const tString &asOffSound,const tString &asOffPS,
+                        float afOnMinLength, float afOnMaxLength, const tString &asOnSound, const tString &asOnPS,
+                        float afOffMinLength, float afOffMaxLength, const tString &asOffSound, const tString &asOffPS,
                         bool abFade,    float afOnFadeMinLength, float afOnFadeMaxLength,
                         float afOffFadeMinLength, float afOffFadeMaxLength)
 {
@@ -346,11 +346,11 @@ void iLight::SetFlicker(const cColor& aOffCol, float afOffRadius,
     mfFlickerOnRadius = mfRadius;
 
     mbFlickerOn = true;
-    mfFlickerTime =0;
+    mfFlickerTime = 0;
 
-    mfFadeTime =0;
+    mfFadeTime = 0;
 
-    mfFlickerStateLength = cMath::RandRectf(mfFlickerOnMinLength,mfFlickerOnMaxLength);
+    mfFlickerStateLength = cMath::RandRectf(mfFlickerOnMinLength, mfFlickerOnMaxLength);
 }
 
 //-----------------------------------------------------------------------
@@ -399,7 +399,7 @@ void iLight::SetRadius(float afX)
 void iLight::UpdateLogic(double adFixedDelta)
 {
     UpdateLight(adFixedDelta);
-    if(mfFadeTime>0 || mbFlickering)
+    if(mfFadeTime > 0 || mbFlickering)
     {
         mbUpdateBoundingVolume = true;
 
@@ -410,7 +410,7 @@ void iLight::UpdateLogic(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-cBoundingVolume* iLight::GetBoundingVolume()
+cBoundingVolume *iLight::GetBoundingVolume()
 {
     if(mbUpdateBoundingVolume)
     {
@@ -423,7 +423,7 @@ cBoundingVolume* iLight::GetBoundingVolume()
 
 //-----------------------------------------------------------------------
 
-cMatrixf* iLight::GetModelMatrix(cFrustum* apFrustum)
+cMatrixf *iLight::GetModelMatrix(cFrustum* apFrustum)
 {
     return &GetWorldMatrix();
 }
@@ -466,7 +466,7 @@ void iLight::SetGoboTexture(iTexture *apTexture)
 
 //-----------------------------------------------------------------------
 
-iTexture* iLight::GetGoboTexture()
+iTexture *iLight::GetGoboTexture()
 {
     return mpGoboTexture;
 }
@@ -491,14 +491,14 @@ bool iLight::ShadowCasterIsValid(iRenderable *apObject)
 
 bool iLight::ShadowCastersAreUnchanged(const tRenderableVec &avObjects)
 {
-    size_t lDynObjectCount=0;
-    for(size_t i=0; i<avObjects.size(); ++i)
+    size_t lDynObjectCount = 0;
+    for(size_t i = 0; i < avObjects.size(); ++i)
     {
         iRenderable *pObject = avObjects[i];
-        if(pObject->IsStatic()==false)
+        if(pObject->IsStatic() == false)
         {
             lDynObjectCount++;
-            if(ShadowCasterIsValid(avObjects[i])==false)
+            if(ShadowCasterIsValid(avObjects[i]) == false)
             {
                 return false;
             }
@@ -517,9 +517,9 @@ void iLight::SetShadowCasterCacheFromVec(const tRenderableVec &avObjects)
 {
     m_mapShadowCasterCache.clear();
 
-    for(size_t i=0; i<avObjects.size(); ++i)
+    for(size_t i = 0; i < avObjects.size(); ++i)
     {
-        if(avObjects[i]->IsStatic()==false)
+        if(avObjects[i]->IsStatic() == false)
         {
             AddShadowCaster(avObjects[i]);
         }
@@ -539,28 +539,28 @@ void iLight::LoadXMLProperties(const tString asFile)
     if(sPath != _W(""))
     {
         FILE *pFile = cPlatform::OpenFile(sPath, _W("rb"));
-        if(pFile==NULL)
+        if(pFile == NULL)
         {
             return;
         }
 
-        TiXmlDocument *pDoc = hplNew( TiXmlDocument,() );
+        TiXmlDocument *pDoc = hplNew( TiXmlDocument, () );
         if(pDoc->LoadFile(pFile))
         {
             TiXmlElement *pRootElem = pDoc->RootElement();
 
             TiXmlElement *pMainElem = pRootElem->FirstChildElement("MAIN");
-            if(pMainElem!=NULL)
+            if(pMainElem != NULL)
             {
-                mbCastShadows = cString::ToBool(pMainElem->Attribute("CastsShadows"),mbCastShadows);
+                mbCastShadows = cString::ToBool(pMainElem->Attribute("CastsShadows"), mbCastShadows);
 
-                mDiffuseColor.a = cString::ToFloat(pMainElem->Attribute("Specular"),mDiffuseColor.a);
+                mDiffuseColor.a = cString::ToFloat(pMainElem->Attribute("Specular"), mDiffuseColor.a);
 
                 mfBrightness = cString::ToFloat(pMainElem->Attribute("Brightness"), mfBrightness);
                 mfFalloff = cString::ToFloat(pMainElem->Attribute("Falloff"), mfFalloff);
 
-                tString sFalloffImage = cString::ToString(pMainElem->Attribute("FalloffImage"),"");
-                iTexture *pTexture = mpTextureManager->Create1D(sFalloffImage,false);
+                tString sFalloffImage = cString::ToString(pMainElem->Attribute("FalloffImage"), "");
+                iTexture *pTexture = mpTextureManager->Create1D(sFalloffImage, false);
                 if(pTexture)
                 {
                     SetFalloffMap(pTexture);
@@ -570,12 +570,12 @@ void iLight::LoadXMLProperties(const tString asFile)
             }
             else
             {
-                Error("Cannot find main element in %s\n",asFile.c_str());
+                Error("Cannot find main element in %s\n", asFile.c_str());
             }
         }
         else
         {
-            Error("Couldn't load file '%s'\n",asFile.c_str());
+            Error("Couldn't load file '%s'\n", asFile.c_str());
         }
         if(pFile)
         {
@@ -585,7 +585,7 @@ void iLight::LoadXMLProperties(const tString asFile)
     }
     else
     {
-        Error("Couldn't find file '%s'\n",asFile.c_str());
+        Error("Couldn't find file '%s'\n", asFile.c_str());
     }
 
 }
@@ -599,7 +599,7 @@ void iLight::AttachBillboard(cBillboard *apBillboard, const cColor &aBaseColor)
     bbConnection.mpBillboard = apBillboard;
     bbConnection.mBaseColor = aBaseColor;
 
-    apBillboard->SetColor(aBaseColor * cColor(mDiffuseColor.r,mDiffuseColor.g,mDiffuseColor.b,1));
+    apBillboard->SetColor(aBaseColor * cColor(mDiffuseColor.r, mDiffuseColor.g, mDiffuseColor.b, 1));
     apBillboard->SetVisible(IsVisible());
 
     mvBillboards.push_back(bbConnection);
@@ -631,7 +631,7 @@ void iLight::RemoveBillboard(cBillboard *apBillboard)
 
 //-----------------------------------------------------------------------
 
-void iLight::RenderShadow(iRenderable *apObject,cRenderSettings *apRenderSettings,
+void iLight::RenderShadow(iRenderable *apObject, cRenderSettings *apRenderSettings,
                           iLowLevelGraphics *apLowLevelGraphics)
 {
 
@@ -643,9 +643,9 @@ void iLight::RenderShadow(iRenderable *apObject,cRenderSettings *apRenderSetting
 void iLight::OnFlickerOff()
 {
     //Particle system
-    if(msFlickerOffPS!="")
+    if(msFlickerOffPS != "")
     {
-        cParticleSystem *pPS = mpWorld->CreateParticleSystem(GetName() + "_PS", msFlickerOffPS, cVector3f(1,1,1));
+        cParticleSystem *pPS = mpWorld->CreateParticleSystem(GetName() + "_PS", msFlickerOffPS, cVector3f(1, 1, 1));
         if(pPS)
         {
             pPS->SetMatrix(GetWorldMatrix());
@@ -658,9 +658,9 @@ void iLight::OnFlickerOff()
 void iLight::OnFlickerOn()
 {
     //Particle system
-    if(msFlickerOnPS!="")
+    if(msFlickerOnPS != "")
     {
-        cParticleSystem *pPS = mpWorld->CreateParticleSystem(GetName() + "_PS", msFlickerOnPS, cVector3f(1,1,1));
+        cParticleSystem *pPS = mpWorld->CreateParticleSystem(GetName() + "_PS", msFlickerOnPS, cVector3f(1, 1, 1));
         if(pPS)
         {
             pPS->SetMatrix(GetWorldMatrix());
@@ -673,9 +673,9 @@ void iLight::OnFlickerOn()
 
 void iLight::OnSetDiffuse()
 {
-    for(size_t i =0; i<mvBillboards.size(); ++i)
+    for(size_t i = 0; i < mvBillboards.size(); ++i)
     {
-        mvBillboards[i].mpBillboard->SetColor( mvBillboards[i].mBaseColor * cColor(mDiffuseColor.r,mDiffuseColor.g,mDiffuseColor.b,1));
+        mvBillboards[i].mpBillboard->SetColor( mvBillboards[i].mBaseColor * cColor(mDiffuseColor.r, mDiffuseColor.g, mDiffuseColor.b, 1));
     }
 }
 

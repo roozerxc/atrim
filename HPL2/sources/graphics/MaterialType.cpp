@@ -34,7 +34,7 @@ iMaterialType::iMaterialType(cGraphics *apGraphics, cResources *apResources)
     mbIsTranslucent = false;
     mbIsDecal = false;
 
-    for(int i=0; i<eMaterialRenderMode_LastEnum; ++i)
+    for(int i = 0; i < eMaterialRenderMode_LastEnum; ++i)
     {
         mbHasTypeSpecifics[i] = false;
     }
@@ -42,7 +42,7 @@ iMaterialType::iMaterialType(cGraphics *apGraphics, cResources *apResources)
     //Need to do this to support NULL materials (that do not use graphical stuff)
     if(mpGraphics && mpResources)
     {
-        mpProgramManager = hplNew( cProgramComboManager, ("",mpGraphics, mpResources,eMaterialRenderMode_LastEnum ));
+        mpProgramManager = hplNew( cProgramComboManager, ("", mpGraphics, mpResources, eMaterialRenderMode_LastEnum ));
     }
     else
     {
@@ -74,9 +74,9 @@ void iMaterialType::SetName(const tString& asName)
 
 //-----------------------------------------------------------------------
 
-cMaterialUserVariable* iMaterialType::GetUserVariable(int alIdx)
+cMaterialUserVariable *iMaterialType::GetUserVariable(int alIdx)
 {
-    if(alIdx>=0 && alIdx<GetUserVariableNum())
+    if(alIdx >= 0 && alIdx < GetUserVariableNum())
     {
         return &mvUserVariables[alIdx];
     }
@@ -84,12 +84,12 @@ cMaterialUserVariable* iMaterialType::GetUserVariable(int alIdx)
     return NULL;
 }
 
-cMaterialUserVariable* iMaterialType::GetUserVariable(const tString& asName)
+cMaterialUserVariable *iMaterialType::GetUserVariable(const tString& asName)
 {
-    for(int i=0; i<GetUserVariableNum(); ++i)
+    for(int i = 0; i < GetUserVariableNum(); ++i)
     {
         cMaterialUserVariable* pVar = &mvUserVariables[i];
-        if(pVar->msName==asName)
+        if(pVar->msName == asName)
         {
             return pVar;
         }

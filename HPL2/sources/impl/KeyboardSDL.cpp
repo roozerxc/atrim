@@ -26,7 +26,7 @@ cKeyboardSDL::cKeyboardSDL(cLowLevelInputSDL *apLowLevelInputSDL) : iKeyboard("S
 
     // "World Key" Stuff
     mvWorldKeyMap.resize(96);
-    for (int k=0; k<=95; ++k)
+    for (int k = 0; k <= 95; ++k)
     {
         mvWorldKeyMap[k] = eKey_None;
     }
@@ -55,7 +55,7 @@ void cKeyboardSDL::Update()
         if(pEvent->type == SDL_KEYDOWN || pEvent->type == SDL_KEYUP)
         {
             eKey key = SDLToKey(pEvent->key.keysym.sym);
-            mvKeyArray[key] = pEvent->type == SDL_KEYDOWN?true:false;
+            mvKeyArray[key] = pEvent->type == SDL_KEYDOWN ? true : false;
 
             int lUnicode = pEvent->key.keysym.unicode;
             int sdl_mod = pEvent->key.keysym.mod;
@@ -93,7 +93,7 @@ cKeyPress cKeyboardSDL::GetKey()
 
 bool cKeyboardSDL::KeyIsPressed()
 {
-    return mlstKeysPressed.empty()==false;
+    return mlstKeysPressed.empty() == false;
 }
 
 //-----------------------------------------------------------------------
@@ -118,7 +118,7 @@ cKeyPress cKeyboardSDL::GetReleasedKey()
 
 bool cKeyboardSDL::KeyIsReleased()
 {
-    return mlstKeysReleased.empty()==false;
+    return mlstKeysReleased.empty() == false;
 }
 
 //-----------------------------------------------------------------------
@@ -600,14 +600,14 @@ eKey cKeyboardSDL::SDLToKey(int alKey)
 
 void cKeyboardSDL::ClearKeyList()
 {
-    mvKeyArray.assign(mvKeyArray.size(),false);
+    mvKeyArray.assign(mvKeyArray.size(), false);
 }
 
 //-----------------------------------------------------------------------
 
-void cKeyboardSDL::AddKeyToList(int alSDLMod, eKey aKey, int alUnicode, std::list<cKeyPress>& alstKeys)
+void cKeyboardSDL::AddKeyToList(int alSDLMod, eKey aKey, int alUnicode, std::list<cKeyPress> &alstKeys)
 {
-    int mod =0;
+    int mod = 0;
 
     if(alSDLMod & KMOD_CTRL)
     {
@@ -622,7 +622,7 @@ void cKeyboardSDL::AddKeyToList(int alSDLMod, eKey aKey, int alUnicode, std::lis
         mod |= eKeyModifier_Alt;
     }
 
-    alstKeys.push_back(cKeyPress(aKey,alUnicode,mod));
+    alstKeys.push_back(cKeyPress(aKey, alUnicode, mod));
 
     //if(mlstKeysPressed.size()>MAX_KEY_PRESSES) mlstKeysPressed.pop_front();
 }

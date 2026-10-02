@@ -12,13 +12,13 @@ class iLowLevelSystem;
 class cFileSearcher;
 class iResourceBase;
 
-typedef std::multimap<unsigned int, iResourceBase*> tResourceBaseMap;
+typedef std::multimap<unsigned int, iResourceBase *> tResourceBaseMap;
 typedef tResourceBaseMap::iterator tResourceBaseMapIt;
 
-typedef std::list<iResourceBase*> tResourceBaseList;
+typedef std::list<iResourceBase *> tResourceBaseList;
 typedef tResourceBaseList::iterator tResourceBaseListIt;
 
-typedef cSTLMapIterator<iResourceBase*, tResourceBaseMap, tResourceBaseMapIt> cResourceBaseIterator;
+typedef cSTLMapIterator<iResourceBase *, tResourceBaseMap, tResourceBaseMapIt> cResourceBaseIterator;
 
 //------------------------------------------
 
@@ -29,16 +29,16 @@ public:
                      iLowLevelSystem *apLowLevelSystem);
     virtual ~iResourceManager() {}
 
-    iResourceBase* GetResource(const tWString& asFullPath);
+    iResourceBase *GetResource(const tWString& asFullPath);
 
     cResourceBaseIterator GetResourceBaseIterator();
 
     void DestroyUnused(int alMaxToKeep);
 
-    virtual void Destroy(iResourceBase* apResource)=0;
+    virtual void Destroy(iResourceBase* apResource) = 0;
     virtual void DestroyAll();
 
-    virtual void Unload(iResourceBase* apResource)=0;
+    virtual void Unload(iResourceBase* apResource) = 0;
 
     virtual void Update(double adFixedDelta) {}
 
@@ -60,8 +60,8 @@ protected:
      * \param &asFilePath If the file is not in the manager, the path is put here. "" if there is no such file.
      * \return A pointer to the resource. NULL if not in manager.
      */
-    iResourceBase* FindLoadedResource(const tString &asName, tWString &asFilePath, int *apEqualCount=NULL);
-    void AddResource(iResourceBase* apResource, bool abLog=true, bool abAddToSet=true);
+    iResourceBase *FindLoadedResource(const tString &asName, tWString &asFilePath, int *apEqualCount = NULL);
+    void AddResource(iResourceBase* apResource, bool abLog = true, bool abAddToSet = true);
     void RemoveResource(iResourceBase* apResource);
 
     tString GetTabs();

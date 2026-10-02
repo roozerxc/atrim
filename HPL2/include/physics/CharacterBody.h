@@ -20,17 +20,17 @@ class iEntity3D;
 class iCharacterBodyCallback
 {
 public:
-    virtual void OnGravityCollide(iCharacterBody *apCharBody, iPhysicsBody *apBody, cCollideData *apCollideData)=0;
-    virtual void OnHitGround(iCharacterBody *apCharBody,const cVector3f &avVel)=0;
+    virtual void OnGravityCollide(iCharacterBody *apCharBody, iPhysicsBody *apBody, cCollideData *apCollideData) = 0;
+    virtual void OnHitGround(iCharacterBody *apCharBody, const cVector3f &avVel) = 0;
 };
 
 //------------------------------------------------
 
 enum eCharDir
 {
-    eCharDir_Forward=0,
-    eCharDir_Right=1,
-    eCharDir_LastEnum=2
+    eCharDir_Forward = 0,
+    eCharDir_Right = 1,
+    eCharDir_LastEnum = 2
 };
 
 //------------------------------------------------
@@ -65,7 +65,7 @@ public:
     cCharacterBodyRay();
 
     void Clear();
-    bool OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams);
+    bool OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams);
 
     float mfMinDist;
     cVector3f mvNormal;
@@ -82,7 +82,7 @@ public:
     iCharacterBody(const tString &asName, iPhysicsWorld *apWorld, const cVector3f avSize);
     virtual ~iCharacterBody();
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -111,7 +111,7 @@ public:
     ///////////////////////////////////////
     //Helpers
 
-    bool CheckCharacterFits(const cVector3f &avPosition, bool abFeetPosition=false, int alSizeIdx = -1, cVector3f *apPushBackVec=NULL, float afEpsilon = 0.0f);
+    bool CheckCharacterFits(const cVector3f &avPosition, bool abFeetPosition = false, int alSizeIdx = -1, cVector3f *apPushBackVec = NULL, float afEpsilon = 0.0f);
     bool CheckRayIntersection(const cVector3f &avStart, const cVector3f &avEnd, float *apDistance, cVector3f *apNormalVec);
 
     ///////////////////////////////////////
@@ -134,7 +134,7 @@ public:
 
     iCollideShape *GetCurrentShape();
     iCollideShape *GetShape(int alIdx);
-    iPhysicsBody* GetCurrentBody();
+    iPhysicsBody *GetCurrentBody();
 
     void SetCollideCharacter(bool abX);
     bool GetCollideCharacter()
@@ -181,10 +181,10 @@ public:
 
     cVector3f GetVelocity(double adFrameTime);
 
-    void SetPosition(const cVector3f& avPos, bool abSmooth=false);
-    const cVector3f& GetPosition();
-    const cVector3f& GetLastPosition();
-    void SetFeetPosition(const cVector3f& avPos, bool abSmooth=false);
+    void SetPosition(const cVector3f& avPos, bool abSmooth = false);
+    const cVector3f &GetPosition();
+    const cVector3f &GetLastPosition();
+    void SetFeetPosition(const cVector3f& avPos, bool abSmooth = false);
     cVector3f GetFeetPosition();
 
     void SetYaw(float afX);
@@ -194,11 +194,11 @@ public:
     void AddPitch(float afX);
     float GetPitch();
 
-    const cVector3f& GetForward();
-    const cVector3f& GetRight();
-    const cVector3f& GetUp();
+    const cVector3f &GetForward();
+    const cVector3f &GetRight();
+    const cVector3f &GetUp();
 
-    const cMatrixf& GetMoveMatrix()
+    const cMatrixf &GetMoveMatrix()
     {
         return m_mtxMove;
     }
@@ -271,7 +271,7 @@ public:
 
     void SetMoveDelay(float afX)
     {
-        mfMoveDelayCount=afX;
+        mfMoveDelayCount = afX;
     }
     float GetMoveDelay()
     {
@@ -411,7 +411,7 @@ public:
 
     void SetClimbForwardMul(float afX)
     {
-        mfClimbForwardMul= afX;
+        mfClimbForwardMul = afX;
     }
     float GetClimbForwardMul()
     {
@@ -433,7 +433,7 @@ public:
     }
     void ResetClimbing();
 
-    const cVector3f& GetLastGroundNormal()
+    const cVector3f &GetLastGroundNormal()
     {
         return mvLastGroundNormal;
     }
@@ -451,12 +451,12 @@ public:
     {
         mpGravityAttachedBody = apBody;
     }
-    iPhysicsBody* GetGravityAttachedBody()
+    iPhysicsBody *GetGravityAttachedBody()
     {
         return mpGravityAttachedBody;
     }
 
-    iPhysicsMaterial * GetGravityCollideMaterial()
+    iPhysicsMaterial *GetGravityCollideMaterial()
     {
         return mpGravityCollideMaterial;
     }
@@ -464,15 +464,15 @@ public:
     ///////////////////////////////////////
     // Connection Properties
 
-    iPhysicsBody * GetConnectedBody();
+    iPhysicsBody *GetConnectedBody();
     cVector3f GetBodyConnectionPos();
     cVector3f GetCharConnectionPos();
 
-    const cVector3f& GetConnectionPosLocalToBody()
+    const cVector3f &GetConnectionPosLocalToBody()
     {
         return mvConnectionPosLocalToBody;
     }
-    const cVector3f& GetConnectionPosLocalToChar()
+    const cVector3f &GetConnectionPosLocalToChar()
     {
         return mvConnectionPosLocalToChar;
     }
@@ -485,7 +485,7 @@ public:
         mvConnectionPosLocalToChar = avPos;
     }
 
-    const cVector3f& GetConnectionLocalUpBody()
+    const cVector3f &GetConnectionLocalUpBody()
     {
         return mvConnectionLocalUpBody;
     }
@@ -515,7 +515,7 @@ public:
     // User Properties
 
     void SetCamera(cCamera *apCam);
-    cCamera* GetCamera();
+    cCamera *GetCamera();
     void SetCameraPosAdd(const cVector3f &avAdd);
     cVector3f GetCameraPosAdd();
     void SetCameraSmoothPosNum(int alNum)
@@ -528,13 +528,13 @@ public:
     }
 
     void SetEntity(iEntity3D *apEntity);
-    iEntity3D* GetEntity();
+    iEntity3D *GetEntity();
 
     void SetEntityOffset(const cMatrixf &a_mtxOffset);
-    const cMatrixf & GetEntityOffset();
+    const cMatrixf &GetEntityOffset();
 
     void SetEntityPostOffset(const cMatrixf &a_mtxOffset);
-    const cMatrixf & GetEntityPostOffset();
+    const cMatrixf &GetEntityPostOffset();
 
     void SetEntitySmoothPosNum(int alNum)
     {
@@ -567,7 +567,7 @@ public:
     {
         mpUserData = apUserData;
     }
-    void* GetUserData()
+    void *GetUserData()
     {
         return mpUserData;
     }
@@ -579,7 +579,7 @@ public:
 
     ///////////////////////////////////////
     //Debug:
-    const cVector3f& GetLastMovePosAdd()
+    const cVector3f &GetLastMovePosAdd()
     {
         return mvLastMovePosAdd;
     }
@@ -619,7 +619,7 @@ protected:
 
     void EnableBodiesAroundCharacter();
 
-    bool CheckCollision(cVector3f *apPushBackVector, const cVector3f& avPos, iPhysicsWorldCollisionCallback *apCallback,int alShapeIdx=-1);
+    bool CheckCollision(cVector3f *apPushBackVector, const cVector3f& avPos, iPhysicsWorldCollisionCallback *apCallback, int alShapeIdx = -1);
 
     tString msName;
 
@@ -775,10 +775,10 @@ protected:
     int mlCurrentShapeIdx;
     iCollideShape *mpCurrentShape;
     iPhysicsBody *mpCurrentBody;
-    std::vector<iCollideShape*> mvShapes;
-    std::vector<iPhysicsBody*> mvBodies;
+    std::vector<iCollideShape *> mvShapes;
+    std::vector<iPhysicsBody *> mvBodies;
 
-    static std::vector<iPhysicsBody*> mvTempBodies;
+    static std::vector<iPhysicsBody *> mvTempBodies;
 };
 };
 #endif // HPL_CHARACTER_BODY_H

@@ -52,11 +52,11 @@ private:
         return &mParams;
     }
 
-    iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
+    iTexture *RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
 
     iTexture *mpColorConvTex;
 
-    cPostEffectType_ColorConvTex* mpSpecificType;
+    cPostEffectType_ColorConvTex *mpSpecificType;
 
     cPostEffectParams_ColorConvTex mParams;
 };

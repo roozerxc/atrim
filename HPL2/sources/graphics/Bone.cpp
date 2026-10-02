@@ -15,7 +15,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cBone::cBone(const tString &asName,const tString &asSid, cSkeleton* apSkeleton)
+cBone::cBone(const tString &asName, const tString &asSid, cSkeleton* apSkeleton)
 {
     msName = asName;
     msSid = asSid;
@@ -49,9 +49,9 @@ cBone::~cBone()
 
 //-----------------------------------------------------------------------
 
-cBone* cBone::CreateChildBone(const tString &asName,const tString &asId)
+cBone *cBone::CreateChildBone(const tString &asName, const tString &asId)
 {
-    cBone *pBone = hplNew(cBone,(asName,asId, mpSkeleton) );
+    cBone *pBone = hplNew(cBone, (asName, asId, mpSkeleton) );
     pBone->mpParent = this;
 
     mlstChildren.push_back(pBone);
@@ -93,12 +93,12 @@ void cBone::SetTransformUnscaled(const cMatrixf &a_mtxTransformUnscaled)
     NeedsUpdateUnscaled();
 }
 
-const cMatrixf& cBone::GetLocalTransformUnscaled()
+const cMatrixf &cBone::GetLocalTransformUnscaled()
 {
     return m_mtxTransformUnscaled;
 }
 
-const cMatrixf& cBone::GetWorldTransformUnscaled()
+const cMatrixf &cBone::GetWorldTransformUnscaled()
 {
     UpdateUnscaledMatrix();
 
@@ -112,13 +112,13 @@ void cBone::UpdateUnscaledMatrix()
         return;
     }
 
-    if(mpParent==NULL)
+    if(mpParent == NULL)
     {
         m_mtxWorldTransformUnscaled = m_mtxTransformUnscaled;
     }
     else
     {
-        m_mtxWorldTransformUnscaled = cMath::MatrixMul(mpParent->GetWorldTransformUnscaled(),m_mtxTransformUnscaled);
+        m_mtxWorldTransformUnscaled = cMath::MatrixMul(mpParent->GetWorldTransformUnscaled(), m_mtxTransformUnscaled);
     }
 
     //m_mtxInvWorldTransform = cMath::MatrixInverse(m_mtxWorldTransform);
@@ -131,19 +131,19 @@ void cBone::UpdateUnscaledMatrix()
 
 //-----------------------------------------------------------------------
 
-const cMatrixf& cBone::GetLocalTransform()
+const cMatrixf &cBone::GetLocalTransform()
 {
     return m_mtxTransform;
 }
 
-const cMatrixf& cBone::GetWorldTransform()
+const cMatrixf &cBone::GetWorldTransform()
 {
     UpdateMatrix();
 
     return m_mtxWorldTransform;
 }
 
-const cMatrixf& cBone::GetInvWorldTransform()
+const cMatrixf &cBone::GetInvWorldTransform()
 {
     UpdateMatrix();
 
@@ -188,13 +188,13 @@ void cBone::UpdateMatrix()
         return;
     }
 
-    if(mpParent==NULL)
+    if(mpParent == NULL)
     {
         m_mtxWorldTransform = m_mtxTransform;
     }
     else
     {
-        m_mtxWorldTransform = cMath::MatrixMul(mpParent->GetWorldTransform(),m_mtxTransform);
+        m_mtxWorldTransform = cMath::MatrixMul(mpParent->GetWorldTransform(), m_mtxTransform);
     }
 
     m_mtxInvWorldTransform = cMath::MatrixInverse(m_mtxWorldTransform);

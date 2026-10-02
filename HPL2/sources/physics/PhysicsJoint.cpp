@@ -28,7 +28,7 @@ namespace hpl
 //-----------------------------------------------------------------------
 
 iPhysicsJoint::iPhysicsJoint(const tString &asName, iPhysicsBody *apParentBody, iPhysicsBody *apChildBody,
-                             iPhysicsWorld *apWorld,const cVector3f &avPivotPoint, const cVector3f &avPinDir)
+                             iPhysicsWorld *apWorld, const cVector3f &avPivotPoint, const cVector3f &avPinDir)
     : msName(asName), mpParentBody(apParentBody), mpChildBody(apChildBody), mpWorld(apWorld)
 {
     mlUniqueID = -1;
@@ -61,8 +61,8 @@ iPhysicsJoint::iPhysicsJoint(const tString &asName, iPhysicsBody *apParentBody, 
     if(mpParentBody)
     {
         cMatrixf m_mtxInvParent = cMath::MatrixInverse(mpParentBody->GetLocalMatrix());
-        mvLocalPivot = cMath::MatrixMul(m_mtxInvParent,avPivotPoint);
-        mvLocalPinDir = cMath::MatrixMul(m_mtxInvParent.GetRotation(),avPinDir);
+        mvLocalPivot = cMath::MatrixMul(m_mtxInvParent, avPivotPoint);
+        mvLocalPinDir = cMath::MatrixMul(m_mtxInvParent.GetRotation(), avPinDir);
     }
     else
     {
@@ -90,9 +90,9 @@ iPhysicsJoint::iPhysicsJoint(const tString &asName, iPhysicsBody *apParentBody, 
     mbStickyMinLimit = false;
     mbStickyMaxLimit = false;
 
-    mlLimitStepCount =0;
+    mlLimitStepCount = 0;
 
-    mlSpeedCount =0;
+    mlSpeedCount = 0;
 
     mbLimitAutoSleep = false;
     mfLimitAutoSleepDist = 0.02f;
@@ -170,7 +170,7 @@ void iPhysicsJoint::AddController(iPhysicsController *apController)
 
 //-----------------------------------------------------------------------
 
-iPhysicsController* iPhysicsJoint::GetController(const tString &asName)
+iPhysicsController *iPhysicsJoint::GetController(const tString &asName)
 {
     tPhysicsControllerMapIt it = m_mapControllers.find(asName);
     if(it == m_mapControllers.end())
@@ -186,7 +186,7 @@ iPhysicsController* iPhysicsJoint::GetController(const tString &asName)
 bool iPhysicsJoint::ChangeController(const tString &asName)
 {
     iPhysicsController *pNewCtrl = GetController(asName);
-    if(pNewCtrl==NULL)
+    if(pNewCtrl == NULL)
     {
         return false;
     }
@@ -239,14 +239,14 @@ cPhysicsControllerIterator iPhysicsJoint::GetControllerIterator()
 
 void iPhysicsJoint::OnMaxLimit()
 {
-    if(mbHasCollided==false && mpCallback)
+    if(mbHasCollided == false && mpCallback)
     {
         mpCallback->OnMaxLimit(this);
     }
 
     //////////////////////////////////////////////////
     // Check if any of the controllers has a OnMax end.
-    if(mbHasCollided==false)
+    if(mbHasCollided == false)
     {
         //Log("OnMax!\n");
         tPhysicsControllerMapIt it = m_mapControllers.begin();
@@ -266,7 +266,7 @@ void iPhysicsJoint::OnMaxLimit()
                 }
                 else
                 {
-                    Warning("Controller '%s' does not exist in joint '%s'\n",pCtrl->GetNextController().c_str(),msName.c_str());
+                    Warning("Controller '%s' does not exist in joint '%s'\n", pCtrl->GetNextController().c_str(), msName.c_str());
                 }
             }
         }
@@ -279,7 +279,7 @@ void iPhysicsJoint::OnMaxLimit()
 
 void iPhysicsJoint::OnMinLimit()
 {
-    if(mbHasCollided==false && mpCallback)
+    if(mbHasCollided == false && mpCallback)
     {
         mpCallback->OnMinLimit(this);
 
@@ -287,7 +287,7 @@ void iPhysicsJoint::OnMinLimit()
     }
     //////////////////////////////////////////////////
     // Check if any of the controllers has a OnMin end.
-    if(mbHasCollided==false)
+    if(mbHasCollided == false)
     {
         //Log("OnMin!\n");
 
@@ -306,7 +306,7 @@ void iPhysicsJoint::OnMinLimit()
                 }
                 else
                 {
-                    Warning("Controller '%s' does not exist in joint '%s'\n",pCtrl->GetNextController().c_str(),msName.c_str());
+                    Warning("Controller '%s' does not exist in joint '%s'\n", pCtrl->GetNextController().c_str(), msName.c_str());
                 }
             }
         }
@@ -317,7 +317,7 @@ void iPhysicsJoint::OnMinLimit()
 
 //-----------------------------------------------------------------------
 
-void iPhysicsJoint::CalcSoundFreq(float afSpeed,float *apFreq, float *apVol)
+void iPhysicsJoint::CalcSoundFreq(float afSpeed, float *apFreq, float *apVol)
 {
     float fAbsSpeed = std::abs(afSpeed);
     float fFreq = 1;
@@ -334,11 +334,11 @@ void iPhysicsJoint::CalcSoundFreq(float afSpeed,float *apFreq, float *apVol)
         else
         {
             //Calculate how close the speed is to max.
-            float fT = (fAbsSpeed-mfMiddleMoveSpeed) /
-                       (mfMaxMoveFreqSpeed-mfMiddleMoveSpeed);
+            float fT = (fAbsSpeed - mfMiddleMoveSpeed) /
+                       (mfMaxMoveFreqSpeed - mfMiddleMoveSpeed);
 
             fFreq = (1 - fT) + fT * mfMaxMoveFreq;
-            fVolume = mfMiddleMoveVolume*(1 - fT) + fT * mfMaxMoveVolume;
+            fVolume = mfMiddleMoveVolume * (1 - fT) + fT * mfMaxMoveVolume;
         }
     }
     //Below middle
@@ -356,7 +356,7 @@ void iPhysicsJoint::CalcSoundFreq(float afSpeed,float *apFreq, float *apVol)
                        (mfMiddleMoveSpeed - mfMinMoveFreqSpeed);
 
             fFreq = (1 - fT) + fT * mfMinMoveFreq;
-            fVolume = mfMiddleMoveVolume*(1 - fT) + fT * mfMinMoveVolume;
+            fVolume = mfMiddleMoveVolume * (1 - fT) + fT * mfMinMoveVolume;
         }
     }
 
@@ -378,7 +378,7 @@ bool iPhysicsJoint::OnPhysicsUpdate()
         bFrozen = false;
     }
 
-    if(bFrozen && mpSound==NULL)
+    if(bFrozen && mpSound == NULL)
     {
         return false;
     }
@@ -386,8 +386,8 @@ bool iPhysicsJoint::OnPhysicsUpdate()
     //Get the pivot point, if there is no parent, it is stuck.
     if(mpParentBody)
     {
-        mvPivotPoint = cMath::MatrixMul(mpParentBody->GetLocalMatrix(),mvLocalPivot);
-        mvPinDir = cMath::MatrixMul3x3(mpParentBody->GetLocalMatrix(),mvLocalPinDir);
+        mvPivotPoint = cMath::MatrixMul(mpParentBody->GetLocalMatrix(), mvLocalPivot);
+        mvPinDir = cMath::MatrixMul3x3(mpParentBody->GetLocalMatrix(), mvLocalPinDir);
     }
 
     cWorld *pWorld = mpWorld->GetWorld();
@@ -407,9 +407,9 @@ bool iPhysicsJoint::OnPhysicsUpdate()
 
     //////////////////////////////////////
     //Get the speed
-    cVector3f vVel(0,0,0);
+    cVector3f vVel(0, 0, 0);
     //Linear
-    if(mMoveSpeedType== ePhysicsJointSpeed_Linear)
+    if(mMoveSpeedType == ePhysicsJointSpeed_Linear)
     {
         if(mpParentBody)
         {
@@ -439,7 +439,7 @@ bool iPhysicsJoint::OnPhysicsUpdate()
         if(    m_mtxPrevChild == mpChildBody->GetLocalMatrix() &&
                 m_mtxPrevParent == mpParentBody->GetLocalMatrix())
         {
-            vVel =0;
+            vVel = 0;
         }
         m_mtxPrevChild = mpChildBody->GetLocalMatrix();
         m_mtxPrevParent = mpParentBody->GetLocalMatrix();
@@ -448,14 +448,14 @@ bool iPhysicsJoint::OnPhysicsUpdate()
     {
         if(m_mtxPrevChild == mpChildBody->GetLocalMatrix())
         {
-            vVel =0;
+            vVel = 0;
         }
         m_mtxPrevChild = mpChildBody->GetLocalMatrix();
     }
 
     float fSpeed = vVel.Length();
 
-    if(pWorld->SoundEntityExists(mpSound, mlSoundID)==false)
+    if(pWorld->SoundEntityExists(mpSound, mlSoundID) == false)
     {
         mpSound = NULL;
     }
@@ -466,7 +466,7 @@ bool iPhysicsJoint::OnPhysicsUpdate()
     if(mpSound)
     {
         //Log("Updating %s\n",mpSound->GetName().c_str());
-        float fMin = cMath::Max(mfMinMoveSpeed-0.2f, 0.1f);
+        float fMin = cMath::Max(mfMinMoveSpeed - 0.2f, 0.1f);
         if(fSpeed <= fMin)
         {
             mpSound->FadeOut(4.3f);
@@ -480,7 +480,7 @@ bool iPhysicsJoint::OnPhysicsUpdate()
             {
                 //Log("Update entry!\n");
                 float fFreq, fVolume;
-                CalcSoundFreq(fSpeed, &fFreq,&fVolume);
+                CalcSoundFreq(fSpeed, &fFreq, &fVolume);
 
                 pEntry->SetSpeedMul(fFreq);
                 pEntry->SetVolumeMul(fVolume);
@@ -506,8 +506,8 @@ bool iPhysicsJoint::OnPhysicsUpdate()
         {
             if(mlSpeedCount >= 3)
             {
-                mlSpeedCount =0;
-                mpSound = pWorld->CreateSoundEntity("MoveSound",msMoveSound, true);
+                mlSpeedCount = 0;
+                mpSound = pWorld->CreateSoundEntity("MoveSound", msMoveSound, true);
                 if(mpSound)
                 {
                     mlSoundID = mpSound->GetCreationID();
@@ -526,7 +526,7 @@ bool iPhysicsJoint::OnPhysicsUpdate()
         // Speed is under limit
         else
         {
-            mlSpeedCount =0;
+            mlSpeedCount = 0;
         }
     }
 
@@ -554,9 +554,9 @@ void iPhysicsJoint::LimitEffect(cJointLimitEffect *pEffect)
 {
     cWorld *pWorld = mpWorld->GetWorld();
 
-    if(pWorld && pEffect->msSound!="")
+    if(pWorld && pEffect->msSound != "")
     {
-        cVector3f vVel(0,0,0);
+        cVector3f vVel(0, 0, 0);
         if(mpParentBody)
         {
             vVel = mpChildBody->GetLinearVelocity() - mpParentBody->GetLinearVelocity();
@@ -574,11 +574,11 @@ void iPhysicsJoint::LimitEffect(cJointLimitEffect *pEffect)
 
         //Log("Speed: %f\n",fSpeed);
 
-        if(fSpeed >= pEffect->mfMinSpeed && mbHasCollided==false && pEffect->msSound != "")
+        if(fSpeed >= pEffect->mfMinSpeed && mbHasCollided == false && pEffect->msSound != "")
         {
             float fVolume = (fSpeed - pEffect->mfMinSpeed) / (pEffect->mfMaxSpeed - pEffect->mfMinSpeed);
 
-            cSoundEntity *pSound = pWorld->CreateSoundEntity("LimitSound", pEffect->msSound,true);
+            cSoundEntity *pSound = pWorld->CreateSoundEntity("LimitSound", pEffect->msSound, true);
             if(pSound)
             {
                 pSound->SetIsSaved(false);
@@ -610,7 +610,7 @@ void iPhysicsJoint::Break()
 
 bool iPhysicsJoint::CheckBreakage()
 {
-    if(mbBreakable==false)
+    if(mbBreakable == false)
     {
         return false;
     }
@@ -622,7 +622,7 @@ bool iPhysicsJoint::CheckBreakage()
         if(msBreakSound != "")
         {
             cWorld *pWorld = mpWorld->GetWorld();
-            cSoundEntity *pSound = pWorld->CreateSoundEntity("BreakSound", msBreakSound,true);
+            cSoundEntity *pSound = pWorld->CreateSoundEntity("BreakSound", msBreakSound, true);
             if(pSound)
             {
                 pSound->SetIsSaved(false);
@@ -660,7 +660,7 @@ void iPhysicsJoint::CheckLimitAutoSleep(iPhysicsJoint *apJoint,
         }
         else
         {
-            apJoint->mlLimitStepCount =0;
+            apJoint->mlLimitStepCount = 0;
         }
     }
 }

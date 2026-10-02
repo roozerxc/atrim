@@ -14,39 +14,39 @@ class cBitmapLoaderHandler;
 
 //------------------------------------------------------
 
-typedef std::map<tString, iTexture*> tTextureAttenuationMap;
-typedef std::map<tString, iTexture*>::iterator tTextureAttenuationMapIt;
+typedef std::map<tString, iTexture *> tTextureAttenuationMap;
+typedef std::map<tString, iTexture *>::iterator tTextureAttenuationMapIt;
 
 //------------------------------------------------------
 
 class cTextureManager : public iResourceManager
 {
 public:
-    cTextureManager(cGraphics* apGraphics,cResources *apResources);
+    cTextureManager(cGraphics* apGraphics, cResources *apResources);
     ~cTextureManager();
 
-    iTexture* Create1D(    const tString& asName,bool abUseMipMaps, eTextureUsage aUsage=eTextureUsage_Normal,
-                           unsigned int alTextureSizeLevel=0);
+    iTexture *Create1D(    const tString& asName, bool abUseMipMaps, eTextureUsage aUsage = eTextureUsage_Normal,
+                           unsigned int alTextureSizeLevel = 0);
 
-    iTexture* Create2D(    const tString& asName,bool abUseMipMaps,eTextureType aType= eTextureType_2D,
-                           eTextureUsage aUsage=eTextureUsage_Normal,unsigned int alTextureSizeLevel=0);
+    iTexture *Create2D(    const tString& asName, bool abUseMipMaps, eTextureType aType = eTextureType_2D,
+                           eTextureUsage aUsage = eTextureUsage_Normal, unsigned int alTextureSizeLevel = 0);
 
-    iTexture* Create3D(    const tString& asName,bool abUseMipMaps, eTextureUsage aUsage=eTextureUsage_Normal,
-                           unsigned int alTextureSizeLevel=0);
+    iTexture *Create3D(    const tString& asName, bool abUseMipMaps, eTextureUsage aUsage = eTextureUsage_Normal,
+                           unsigned int alTextureSizeLevel = 0);
 
-    iTexture* CreateFlattened3D(	const tString& asName,bool abUseMipMaps, eTextureUsage aUsage=eTextureUsage_Normal,
-                                    unsigned int alTextureSizeLevel=0);
+    iTexture *CreateFlattened3D(	const tString& asName, bool abUseMipMaps, eTextureUsage aUsage = eTextureUsage_Normal,
+                                    unsigned int alTextureSizeLevel = 0);
 
     /**
      * Creates an animated texture. The name must be [name]01.[ext]. And then the textures in the animation must
      * be named [name]01.[ext], [name]02.[ext], etc
      */
-    iTexture* CreateAnim(    const tString& asFirstFrameName,bool abUseMipMaps, eTextureType aType,
-                             eTextureUsage aUsage=eTextureUsage_Normal,
-                             unsigned int alTextureSizeLevel=0);
+    iTexture *CreateAnim(    const tString& asFirstFrameName, bool abUseMipMaps, eTextureType aType,
+                             eTextureUsage aUsage = eTextureUsage_Normal,
+                             unsigned int alTextureSizeLevel = 0);
 
-    iTexture* CreateCubeMap(const tString& asName,bool abUseMipMaps, eTextureUsage aUsage=eTextureUsage_Normal,
-                            unsigned int alTextureSizeLevel=0);
+    iTexture *CreateCubeMap(const tString& asName, bool abUseMipMaps, eTextureUsage aUsage = eTextureUsage_Normal,
+                            unsigned int alTextureSizeLevel = 0);
 
 
     void Destroy(iResourceBase* apResource);
@@ -60,12 +60,12 @@ public:
     }
 
 private:
-    iTexture* CreateSimpleTexture(const tString& asName,bool abUseMipMaps,
+    iTexture *CreateSimpleTexture(const tString& asName, bool abUseMipMaps,
                                   eTextureUsage aUsage, eTextureType aType,
                                   unsigned int alTextureSizeLevel,
                                   bool isFlattened3D = false);
 
-    iTexture* FindTexture2D(const tString &asName, tWString &asFilePath);
+    iTexture *FindTexture2D(const tString &asName, tWString &asFilePath);
 
     tTextureAttenuationMap m_mapAttenuationTextures;
 
@@ -73,8 +73,8 @@ private:
 
     int mlMemoryUsage;
 
-    cGraphics* mpGraphics;
-    cResources* mpResources;
+    cGraphics *mpGraphics;
+    cResources *mpResources;
     cBitmapLoaderHandler *mpBitmapLoaderHandler;
 };
 

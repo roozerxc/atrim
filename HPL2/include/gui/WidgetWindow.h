@@ -80,7 +80,7 @@ protected:
     // Data
     cGuiSkinFont *mpLabelFont;
 
-    cWidgetButton* mvButtons[1];
+    cWidgetButton *mvButtons[1];
 
     cGuiGfxElement *mpGfxBackground;
     cGuiGfxElement *mpGfxLabel;
@@ -103,8 +103,8 @@ protected:
 
     cVector3f mvRelMousePos;
     bool mbMoving;
-    iWidget* mpPrevAttention;
-    cWidgetWindow* mpPrevTopMostWindow;
+    iWidget *mpPrevAttention;
+    cWidgetWindow *mpPrevTopMostWindow;
 
     float mfButtonSize;
 

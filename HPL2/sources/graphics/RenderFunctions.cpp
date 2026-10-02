@@ -46,7 +46,7 @@ void iRenderFunctions::InitAndResetRenderFunctions(    cFrustum *apFrustum, cRen
     mbCurrentDepthTest = true;
     mbCurrentDepthWrite = true;
     mbCurrentStencilActive = false;
-    mvCurrentScissorRectPos =0;
+    mvCurrentScissorRectPos = 0;
     mvCurrentScissorRectSize = -1;
     mbCurrentScissorActive = false;
     mCurrentDepthTestFunc = eDepthTestFunc_LessOrEqual;
@@ -62,7 +62,7 @@ void iRenderFunctions::InitAndResetRenderFunctions(    cFrustum *apFrustum, cRen
     mpCurrentMaterial = NULL;
     mpCurrentMaterialType = NULL;
 
-    for(int i=0; i<kMaxTextureUnits; ++i)
+    for(int i = 0; i < kMaxTextureUnits; ++i)
     {
         mvCurrentTexture[i] = NULL;
     }
@@ -70,8 +70,8 @@ void iRenderFunctions::InitAndResetRenderFunctions(    cFrustum *apFrustum, cRen
     ////////////////////////////////
     //Get size of render target
     cVector2l vFrameBufferSize = mpCurrentRenderTarget->mpFrameBuffer ? mpCurrentRenderTarget->mpFrameBuffer->GetSize() : mvScreenSize;
-    mvRenderTargetSize.x = mpCurrentRenderTarget->mvSize.x <0 ? vFrameBufferSize.x : mpCurrentRenderTarget->mvSize.x;
-    mvRenderTargetSize.y = mpCurrentRenderTarget->mvSize.y <0 ? vFrameBufferSize.y : mpCurrentRenderTarget->mvSize.y;
+    mvRenderTargetSize.x = mpCurrentRenderTarget->mvSize.x < 0 ? vFrameBufferSize.x : mpCurrentRenderTarget->mvSize.x;
+    mvRenderTargetSize.y = mpCurrentRenderTarget->mvSize.y < 0 ? vFrameBufferSize.y : mpCurrentRenderTarget->mvSize.y;
 
     mvCurrentFrameBufferSize = vFrameBufferSize;
 
@@ -109,14 +109,14 @@ void iRenderFunctions::ExitAndCleanUpRenderFunctions()
 
 //-----------------------------------------------------------------------
 
-void iRenderFunctions::SetFlatProjection(const cVector2f &avSize,float afMin,float afMax)
+void iRenderFunctions::SetFlatProjection(const cVector2f &avSize, float afMin, float afMax)
 {
     if(mbLog)
     {
-        Log(" Setting Ortho Projection size: %fx%f, minz: %f maxz: %f\n",avSize.x, avSize.y, afMin,afMax);
+        Log(" Setting Ortho Projection size: %fx%f, minz: %f maxz: %f\n", avSize.x, avSize.y, afMin, afMax);
     }
 
-    mpLowLevelGraphics->SetOrthoProjection(avSize,afMin,afMax);
+    mpLowLevelGraphics->SetOrthoProjection(avSize, afMin, afMax);
     mpLowLevelGraphics->SetIdentityMatrix(eMatrix_ModelView);
     mpCurrentMatrix = &m_mtxNULL;
     mpCurrentProjectionMatrix = NULL;
@@ -126,14 +126,14 @@ void iRenderFunctions::SetFlatProjection(const cVector2f &avSize,float afMin,flo
 
 //-----------------------------------------------------------------------
 
-void iRenderFunctions::SetFlatProjectionMinMax(const cVector3f &avMin,const cVector3f &avMax)
+void iRenderFunctions::SetFlatProjectionMinMax(const cVector3f &avMin, const cVector3f &avMax)
 {
     if(mbLog)
     {
-        Log(" Setting Ortho Projection min: %s, max: %s\n",avMin.ToString().c_str(), avMax.ToString().c_str());
+        Log(" Setting Ortho Projection min: %s, max: %s\n", avMin.ToString().c_str(), avMax.ToString().c_str());
     }
 
-    mpLowLevelGraphics->SetOrthoProjection(avMin,avMax);
+    mpLowLevelGraphics->SetOrthoProjection(avMin, avMax);
     mpLowLevelGraphics->SetIdentityMatrix(eMatrix_ModelView);
     mpCurrentMatrix = &m_mtxNULL;
     mpCurrentProjectionMatrix = NULL;
@@ -166,7 +166,7 @@ void iRenderFunctions::SetProjectionMatrix(const cMatrixf *apProjMatrix)
 
     if(mbLog)
     {
-        Log(" Setting projection matrix: %d  %s.\n",apProjMatrix, apProjMatrix->ToString().c_str());
+        Log(" Setting projection matrix: %d  %s.\n", apProjMatrix, apProjMatrix->ToString().c_str());
     }
 
     mpLowLevelGraphics->SetMatrix(eMatrix_Projection, *apProjMatrix);
@@ -225,7 +225,7 @@ bool iRenderFunctions::SetDepthTestFunc(eDepthTestFunc aFunc)
 
     if(mbLog)
     {
-        tString sFunc="Unknown";
+        tString sFunc = "Unknown";
         switch(aFunc)
         {
         case eDepthTestFunc_Never:
@@ -273,7 +273,7 @@ bool iRenderFunctions::SetCullActive(bool abX)
 
     if(mbLog)
     {
-        Log("  Setting cull active: %d\n",abX);
+        Log("  Setting cull active: %d\n", abX);
     }
 
     mbCurrentCullActive = abX;
@@ -289,7 +289,7 @@ bool iRenderFunctions::SetCullMode(eCullMode aMode, bool abCheckIfInverted)
 {
     if(abCheckIfInverted && mbInvertCullMode)
     {
-        aMode = aMode==eCullMode_Clockwise ? eCullMode_CounterClockwise : eCullMode_Clockwise;
+        aMode = aMode == eCullMode_Clockwise ? eCullMode_CounterClockwise : eCullMode_Clockwise;
     }
 
     if(mCurrentCullMode == aMode)
@@ -299,7 +299,7 @@ bool iRenderFunctions::SetCullMode(eCullMode aMode, bool abCheckIfInverted)
 
     if(mbLog)
     {
-        tString sMode="Unknown";
+        tString sMode = "Unknown";
         switch(aMode)
         {
         case eCullMode_Clockwise:
@@ -329,7 +329,7 @@ bool iRenderFunctions::SetStencilActive(bool abX)
 
     if(mbLog)
     {
-        Log("  Setting stencil active: %d\n",abX);
+        Log("  Setting stencil active: %d\n", abX);
     }
 
     mpLowLevelGraphics->SetStencilActive(abX);
@@ -346,16 +346,16 @@ void iRenderFunctions::SetStencilWriteMask(unsigned int alMask)
     mpLowLevelGraphics->SetStencilWriteMask(alMask);
 }
 
-void iRenderFunctions::SetStencil(    eStencilFunc aFunc,int alRef, unsigned int aMask,
-                                      eStencilOp aFailOp,eStencilOp aZFailOp,eStencilOp aZPassOp)
+void iRenderFunctions::SetStencil(    eStencilFunc aFunc, int alRef, unsigned int aMask,
+                                      eStencilOp aFailOp, eStencilOp aZFailOp, eStencilOp aZPassOp)
 {
     mpLowLevelGraphics->SetStencil(aFunc, alRef, aMask, aFailOp, aZFailOp, aZPassOp);
 }
 
-void iRenderFunctions::SetStencilTwoSide(    eStencilFunc aFrontFunc,eStencilFunc aBackFunc,
+void iRenderFunctions::SetStencilTwoSide(    eStencilFunc aFrontFunc, eStencilFunc aBackFunc,
         int alRef, unsigned int aMask,
-        eStencilOp aFrontFailOp,eStencilOp aFrontZFailOp,eStencilOp aFrontZPassOp,
-        eStencilOp aBackFailOp,eStencilOp aBackZFailOp,eStencilOp aBackZPassOp)
+        eStencilOp aFrontFailOp, eStencilOp aFrontZFailOp, eStencilOp aFrontZPassOp,
+        eStencilOp aBackFailOp, eStencilOp aBackZFailOp, eStencilOp aBackZPassOp)
 {
     mpLowLevelGraphics->SetStencilTwoSide(    aFrontFunc, aBackFunc,
             alRef, aMask,
@@ -396,7 +396,7 @@ bool iRenderFunctions::SetScissorActive(bool abX)
     {
         if(mbLog)
         {
-            Log("  Setting scissor active: %d\n",abX);
+            Log("  Setting scissor active: %d\n", abX);
         }
 
         mpLowLevelGraphics->SetScissorActive(abX);
@@ -417,11 +417,11 @@ bool iRenderFunctions::SetScissorRect(const cVector2l& avPos, const cVector2l& a
 {
     /////////////////////////////
     // Clip the rect
-    cVector2l vFinalPos=avPos + mpCurrentRenderTarget->mvPos;
+    cVector2l vFinalPos = avPos + mpCurrentRenderTarget->mvPos;
     cVector2l vFinalSize = avSize;
 
     cVector2l vMin = mbUseGlobalScissorRect ? mvGlobalScissorRectPos : mpCurrentRenderTarget->mvPos;
-    cVector2l vMax = mbUseGlobalScissorRect ? mvGlobalScissorRectSize+vMin : mvRenderTargetSize+vMin;
+    cVector2l vMax = mbUseGlobalScissorRect ? mvGlobalScissorRectSize + vMin : mvRenderTargetSize + vMin;
 
     if(vFinalPos.x < vMin.x)
     {
@@ -432,11 +432,11 @@ bool iRenderFunctions::SetScissorRect(const cVector2l& avPos, const cVector2l& a
         vFinalPos.y = vMin.y;
     }
 
-    if(vFinalPos.x+vFinalSize.x > vMax.x)
+    if(vFinalPos.x + vFinalSize.x > vMax.x)
     {
         vFinalSize.x = vMax.x - vFinalPos.x;
     }
-    if(vFinalPos.y+vFinalSize.y > vMax.y)
+    if(vFinalPos.y + vFinalSize.y > vMax.y)
     {
         vFinalSize.y = vMax.y - vFinalPos.y;
     }
@@ -454,7 +454,7 @@ bool iRenderFunctions::SetScissorRect(const cVector2l& avPos, const cVector2l& a
     /////////////////////////////
     // Set the clip rect
     if(    mbUseGlobalScissorRect == false &&
-            vFinalPos.x == 0 && vFinalPos.y ==0 &&
+            vFinalPos.x == 0 && vFinalPos.y == 0 &&
             vFinalSize.x == mvRenderTargetSize.x && vFinalSize.y == mvRenderTargetSize.y)
     {
         if(abAutoEnabling)
@@ -472,7 +472,7 @@ bool iRenderFunctions::SetScissorRect(const cVector2l& avPos, const cVector2l& a
 
         if(mbLog)
         {
-            Log("  Setting scissor rect: %d, %d, %dx%d\n",    vFinalPos.x, vFinalPos.y, vFinalSize.x,vFinalSize.y);
+            Log("  Setting scissor rect: %d, %d, %dx%d\n",    vFinalPos.x, vFinalPos.y, vFinalSize.x, vFinalSize.y);
         }
 
         mpLowLevelGraphics->SetScissorRect(mvCurrentScissorRectPos, mvCurrentScissorRectSize);
@@ -607,35 +607,35 @@ bool iRenderFunctions::SetBlendMode(eMaterialBlendMode aMode)
             {
                 Log("  Setting blend mode: Add\n");
             }
-            mpLowLevelGraphics->SetBlendFunc(eBlendFunc_One,eBlendFunc_One);
+            mpLowLevelGraphics->SetBlendFunc(eBlendFunc_One, eBlendFunc_One);
             break;
         case eMaterialBlendMode_Mul:
             if(mbLog)
             {
                 Log("  Setting blend mode: Mul\n");
             }
-            mpLowLevelGraphics->SetBlendFunc(eBlendFunc_Zero,eBlendFunc_SrcColor);
+            mpLowLevelGraphics->SetBlendFunc(eBlendFunc_Zero, eBlendFunc_SrcColor);
             break;
         case eMaterialBlendMode_MulX2:
             if(mbLog)
             {
                 Log("  Setting blend mode: MulX2\n");
             }
-            mpLowLevelGraphics->SetBlendFunc(eBlendFunc_DestColor,eBlendFunc_SrcColor);
+            mpLowLevelGraphics->SetBlendFunc(eBlendFunc_DestColor, eBlendFunc_SrcColor);
             break;
         case eMaterialBlendMode_Alpha:
             if(mbLog)
             {
                 Log("  Setting blend mode: Alpha\n");
             }
-            mpLowLevelGraphics->SetBlendFunc(eBlendFunc_SrcAlpha,eBlendFunc_OneMinusSrcAlpha);
+            mpLowLevelGraphics->SetBlendFunc(eBlendFunc_SrcAlpha, eBlendFunc_OneMinusSrcAlpha);
             break;
         case eMaterialBlendMode_PremulAlpha:
             if(mbLog)
             {
                 Log("  Setting blend mode: PremulAlpha\n");
             }
-            mpLowLevelGraphics->SetBlendFunc(eBlendFunc_One,eBlendFunc_OneMinusSrcAlpha);
+            mpLowLevelGraphics->SetBlendFunc(eBlendFunc_One, eBlendFunc_OneMinusSrcAlpha);
             break;
         }
     }
@@ -708,11 +708,11 @@ void iRenderFunctions::SetTexture(int alUnit, iTexture *apTexture)
     {
         if(apTexture)
         {
-            Log("  Setting texture unit: %d, %d/'%s'\n",alUnit,apTexture,apTexture->GetName().c_str());
+            Log("  Setting texture unit: %d, %d/'%s'\n", alUnit, apTexture, apTexture->GetName().c_str());
         }
         else
         {
-            Log("  Setting texture unit: %d, 'NULL\n",alUnit);
+            Log("  Setting texture unit: %d, 'NULL\n", alUnit);
         }
     }
     mpLowLevelGraphics->SetTexture(alUnit, apTexture);
@@ -724,7 +724,7 @@ void iRenderFunctions::SetTexture(int alUnit, iTexture *apTexture)
 
 void iRenderFunctions::SetTextureRange(iTexture *apTexture, int alFirstUnit, int alLastUnit)
 {
-    for(int i=alFirstUnit; i<= alLastUnit; ++i)
+    for(int i = alFirstUnit; i <= alLastUnit; ++i)
     {
         if(mvCurrentTexture[i] != apTexture)
         {
@@ -732,11 +732,11 @@ void iRenderFunctions::SetTextureRange(iTexture *apTexture, int alFirstUnit, int
             {
                 if(apTexture)
                 {
-                    Log("  Setting texture unit: %d, %d/'%s'\n",i,apTexture,apTexture->GetName().c_str());
+                    Log("  Setting texture unit: %d, %d/'%s'\n", i, apTexture, apTexture->GetName().c_str());
                 }
                 else
                 {
-                    Log("  Setting texture unit: %d, 'NULL\n",i);
+                    Log("  Setting texture unit: %d, 'NULL\n", i);
                 }
             }
 
@@ -759,7 +759,7 @@ void iRenderFunctions::SetVertexBuffer(iVertexBuffer *apVtxBuffer)
     {
         if(apVtxBuffer)
         {
-            Log("  Setting vertex buffer: %d\n",apVtxBuffer);
+            Log("  Setting vertex buffer: %d\n", apVtxBuffer);
         }
         else
         {
@@ -792,12 +792,12 @@ void iRenderFunctions::SetMatrix(cMatrixf *apMatrix)
         {
             if(mbLog)
             {
-                Log("  Setting model matrix: %d / %s\n",apMatrix, apMatrix->ToString().c_str());
+                Log("  Setting model matrix: %d / %s\n", apMatrix, apMatrix->ToString().c_str());
             }
 
             cMatrixf mtxModel = cMath::MatrixMul(mpCurrentFrustum->GetViewMatrix(), *apMatrix);
 
-            mpLowLevelGraphics->SetMatrix(eMatrix_ModelView,mtxModel);
+            mpLowLevelGraphics->SetMatrix(eMatrix_ModelView, mtxModel);
         }
         //NULL matrix
         else
@@ -807,7 +807,7 @@ void iRenderFunctions::SetMatrix(cMatrixf *apMatrix)
                 Log("  Setting model matrix: NULL\n");
             }
 
-            mpLowLevelGraphics->SetMatrix(eMatrix_ModelView,mpCurrentFrustum->GetViewMatrix());
+            mpLowLevelGraphics->SetMatrix(eMatrix_ModelView, mpCurrentFrustum->GetViewMatrix());
         }
 
         mpCurrentMatrix = apMatrix;
@@ -821,10 +821,10 @@ void iRenderFunctions::SetModelViewMatrix(const cMatrixf& a_mtxModelView)
     //No test here...
     if(mbLog)
     {
-        Log("  Setting view matrix: %s\n",cMath::MatrixToChar(a_mtxModelView));
+        Log("  Setting view matrix: %s\n", cMath::MatrixToChar(a_mtxModelView));
     }
 
-    mpLowLevelGraphics->SetMatrix(eMatrix_ModelView,a_mtxModelView);
+    mpLowLevelGraphics->SetMatrix(eMatrix_ModelView, a_mtxModelView);
     mpCurrentMatrix = &m_mtxNULL;
 }
 
@@ -860,7 +860,7 @@ void iRenderFunctions::SetFrameBuffer(iFrameBuffer *apFrameBuffer, bool abUsePos
                 mvRenderTargetSize.x,
                 mvRenderTargetSize.y);
         }
-        mpLowLevelGraphics->SetCurrentFrameBuffer(    apFrameBuffer,mpCurrentRenderTarget->mvPos,    mvRenderTargetSize);
+        mpLowLevelGraphics->SetCurrentFrameBuffer(    apFrameBuffer, mpCurrentRenderTarget->mvPos,    mvRenderTargetSize);
     }
     else
     {
@@ -886,7 +886,7 @@ void iRenderFunctions::SetFrameBuffer(iFrameBuffer *apFrameBuffer, bool abUsePos
         {
             ////////////////////////////////////
             //Set Active
-            if(mbGlobalScissorRectActive==false)
+            if(mbGlobalScissorRectActive == false)
             {
                 if(mbLog)
                 {
@@ -899,12 +899,12 @@ void iRenderFunctions::SetFrameBuffer(iFrameBuffer *apFrameBuffer, bool abUsePos
 
             ////////////////////////////////////
             //Setup rect
-            if(mbGlobalScissorRectActive==false || mvCurrentFrameBufferSize != vPrevFrameBufferSize)
+            if(mbGlobalScissorRectActive == false || mvCurrentFrameBufferSize != vPrevFrameBufferSize)
             {
                 if(mbLog)
                 {
                     Log("  Setting scissor rect: %d, %d, %dx%d\n",    mvGlobalScissorRectPos.x, mvGlobalScissorRectPos.y,
-                        mvGlobalScissorRectSize.x,mvGlobalScissorRectSize.y);
+                        mvGlobalScissorRectSize.x, mvGlobalScissorRectSize.y);
                 }
 
                 mpLowLevelGraphics->SetScissorRect(mvGlobalScissorRectPos, mvGlobalScissorRectSize);
@@ -933,9 +933,9 @@ void iRenderFunctions::SetFrameBuffer(iFrameBuffer *apFrameBuffer, bool abUsePos
 
 void iRenderFunctions::ClearFrameBuffer(tClearFrameBufferFlag aFlags, bool abUsePosAndSize)
 {
-    bool bScissorUsed=false;
+    bool bScissorUsed = false;
     if(    abUsePosAndSize &&
-            (mpCurrentRenderTarget->mvPos != cVector2l(0,0) || mvRenderTargetSize != mvCurrentFrameBufferSize || mbUseGlobalScissorRect) )
+            (mpCurrentRenderTarget->mvPos != cVector2l(0, 0) || mvRenderTargetSize != mvCurrentFrameBufferSize || mbUseGlobalScissorRect) )
     {
         /////////////////////////////////
         // Global scissor rect (do no setup and do not turn off scissor at the end!)
@@ -996,12 +996,12 @@ void iRenderFunctions::DrawQuad(    const cVector3f& aPos, const cVector2f& avSi
     }
     if(abInvertY)
     {
-        mpLowLevelGraphics->DrawQuad(    aPos, avSize,cVector2f(avMinUV.x, avMaxUV.y),
-                                         cVector2f(avMaxUV.x, avMinUV.y),aColor);
+        mpLowLevelGraphics->DrawQuad(    aPos, avSize, cVector2f(avMinUV.x, avMaxUV.y),
+                                         cVector2f(avMaxUV.x, avMinUV.y), aColor);
     }
     else
     {
-        mpLowLevelGraphics->DrawQuad(aPos, avSize,avMinUV,avMaxUV,aColor);
+        mpLowLevelGraphics->DrawQuad(aPos, avSize, avMinUV, avMaxUV, aColor);
     }
 }
 
@@ -1009,7 +1009,7 @@ void iRenderFunctions::DrawQuad(    const cVector3f& aPos, const cVector2f& avSi
 
 void iRenderFunctions::DrawQuad(    const cVector3f& aPos, const cVector2f& avSize,
                                     const cVector2f& avMinUV0, const cVector2f& avMaxUV0, const cVector2f& avMinUV1, const cVector2f& avMaxUV1,
-                                    bool abInvertY0,bool abInvertY1, const cColor& aColor)
+                                    bool abInvertY0, bool abInvertY1, const cColor& aColor)
 {
     if(mbLog)
     {
@@ -1036,7 +1036,7 @@ void iRenderFunctions::DrawQuad(    const cVector3f& aPos, const cVector2f& avSi
         vFinalMinUv1.y = avMaxUV1.y;
     }
 
-    mpLowLevelGraphics->DrawQuad(aPos, avSize,vFinalMinUv0,vFinalMaxUv0,vFinalMinUv1,vFinalMaxUv1,aColor);
+    mpLowLevelGraphics->DrawQuad(aPos, avSize, vFinalMinUv0, vFinalMaxUv0, vFinalMinUv1, vFinalMaxUv1, aColor);
 }
 
 //-----------------------------------------------------------------------
@@ -1075,11 +1075,11 @@ void iRenderFunctions::DrawWireFrame(iVertexBuffer *apVtxBuffer, const cColor &a
     ///////////////////////////////////////
     //Set up variables
     int lIndexNum = apVtxBuffer->GetElementNum();
-    if(lIndexNum<0)
+    if(lIndexNum < 0)
     {
         lIndexNum = apVtxBuffer->GetIndexNum();
     }
-    unsigned int* pIndexArray = apVtxBuffer->GetIndices();
+    unsigned int *pIndexArray = apVtxBuffer->GetIndices();
 
     float *pVertexArray = apVtxBuffer->GetFloatArray(eVertexBufferElement_Position);
     int lVertexStride = apVtxBuffer->GetElementNum(eVertexBufferElement_Position);
@@ -1088,13 +1088,13 @@ void iRenderFunctions::DrawWireFrame(iVertexBuffer *apVtxBuffer, const cColor &a
 
     ///////////////////////////////////////
     //Iterate through each triangle and draw it as 3 lines
-    for(int tri = 0; tri < lIndexNum; tri+=3)
+    for(int tri = 0; tri < lIndexNum; tri += 3)
     {
         ////////////////////////
         //Set the vector with positions of the lines
-        for(int idx =0; idx < 3; idx++)
+        for(int idx = 0; idx < 3; idx++)
         {
-            int lVtx = pIndexArray[tri + 2-idx]*lVertexStride;
+            int lVtx = pIndexArray[tri + 2 - idx] * lVertexStride;
 
             vTriPos[idx].x = pVertexArray[lVtx + 0];
             vTriPos[idx].y = pVertexArray[lVtx + 1];
@@ -1103,10 +1103,10 @@ void iRenderFunctions::DrawWireFrame(iVertexBuffer *apVtxBuffer, const cColor &a
 
         ////////////////////////
         //Draw the three lines
-        for(int i=0; i<3; ++i)
+        for(int i = 0; i < 3; ++i)
         {
-            int lNext = i==2 ? 0 : i+1;
-            mpLowLevelGraphics->DrawLine(vTriPos[i],vTriPos[lNext], aColor);
+            int lNext = i == 2 ? 0 : i + 1;
+            mpLowLevelGraphics->DrawLine(vTriPos[i], vTriPos[lNext], aColor);
         }
     }
 
@@ -1114,12 +1114,12 @@ void iRenderFunctions::DrawWireFrame(iVertexBuffer *apVtxBuffer, const cColor &a
 
 //-----------------------------------------------------------------------
 
-iTexture* iRenderFunctions::CreateRenderTexture(const tString& asName, const cVector2l& avSize, ePixelFormat aPixelFormat,
+iTexture *iRenderFunctions::CreateRenderTexture(const tString& asName, const cVector2l& avSize, ePixelFormat aPixelFormat,
         eTextureFilter aFilter, eTextureType aType)
 {
-    iTexture *pTexture =NULL;
-    pTexture = mpGraphics->CreateTexture(asName,aType,eTextureUsage_RenderTarget);
-    if(pTexture->CreateFromRawData(cVector3l(avSize.x, avSize.y,0),aPixelFormat, NULL)==false)
+    iTexture *pTexture = NULL;
+    pTexture = mpGraphics->CreateTexture(asName, aType, eTextureUsage_RenderTarget);
+    if(pTexture->CreateFromRawData(cVector3l(avSize.x, avSize.y, 0), aPixelFormat, NULL) == false)
     {
         Error("Could not create texture '%s'\n", asName.c_str());
         return pTexture;
@@ -1142,8 +1142,8 @@ void iRenderFunctions::CopyFrameBufferToTexure(    iTexture *apTexture, const cV
             Log(" Copying current to texture '%s' (%d). Pos: %d:%d Size: %dx%d TextureOffset: %d:%d\n",
                 apTexture->GetName().c_str(), apTexture,
                 avPos.x, avPos.y, avSize.x, avSize.y,
-                avTextureOffset.x+mpCurrentRenderTarget->mvPos.x,
-                avTextureOffset.y+mpCurrentRenderTarget->mvPos.y);
+                avTextureOffset.x + mpCurrentRenderTarget->mvPos.x,
+                avTextureOffset.y + mpCurrentRenderTarget->mvPos.y);
         else
             Log(" Copying current to texture '%s' (%d). Pos: %d:%d Size: %dx%d TextureOffset: %d:%d\n",
                 apTexture->GetName().c_str(), apTexture,

@@ -18,10 +18,10 @@ class iVerletParticleContainer;
 
 //------------------------------------------
 
-typedef std::list<cVerletParticle*> tVerletParticleList;
+typedef std::list<cVerletParticle *> tVerletParticleList;
 typedef tVerletParticleList::iterator tVerletParticleListIt;
 
-typedef cSTLIterator<cVerletParticle*, tVerletParticleList, tVerletParticleListIt> cVerletParticleIterator;
+typedef cSTLIterator<cVerletParticle *, tVerletParticleList, tVerletParticleListIt> cVerletParticleIterator;
 
 //------------------------------------------
 
@@ -34,7 +34,7 @@ public:
     void Reset();
 
     bool BeforeIntersect(iPhysicsBody *pBody);
-    bool OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams);
+    bool OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams);
 
 private:
     iVerletParticleContainer *mpContainer;
@@ -60,9 +60,9 @@ public:
     void SetPosition(const cVector3f& avPos, bool abSetPrevPos);
     void AddPosition(const cVector3f& avAdd, bool abSetPrevPos)
     {
-        SetPosition(mvPosition+avAdd, abSetPrevPos);
+        SetPosition(mvPosition + avAdd, abSetPrevPos);
     }
-    inline const cVector3f& GetPosition() const
+    inline const cVector3f &GetPosition() const
     {
         return mvPosition;
     }
@@ -71,7 +71,7 @@ public:
     {
         mvPrevPosition = avPos;
     }
-    inline const cVector3f& GetPrevPosition() const
+    inline const cVector3f &GetPrevPosition() const
     {
         return mvPrevPosition;
     }
@@ -80,7 +80,7 @@ public:
     {
         mvSmoothPosition = avPos;
     }
-    inline const cVector3f& GetSmoothPosition() const
+    inline const cVector3f &GetSmoothPosition() const
     {
         return mvSmoothPosition;
     }
@@ -113,7 +113,7 @@ public:
     iVerletParticleContainer(const tString &asName, iPhysicsWorld *apWorld);
     virtual ~iVerletParticleContainer();
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -127,13 +127,13 @@ public:
         return mlUniqueID;
     }
 
-    virtual void RemoveAttachedBody(iPhysicsBody *apBody, bool abRemoveContainerFromBody=true)=0;
+    virtual void RemoveAttachedBody(iPhysicsBody *apBody, bool abRemoveContainerFromBody = true) = 0;
 
     void SetGravityForce(const cVector3f& avX)
     {
         mvGravityForce = avX;
     }
-    const cVector3f& GetGravityForce()
+    const cVector3f &GetGravityForce()
     {
         return mvGravityForce;
     }
@@ -181,10 +181,10 @@ public:
     }
 
 protected:
-    virtual bool CheckParticleBodyCollision(iPhysicsBody *apBody)=0;
-    virtual bool CheckSpecificDataSleeping()=0;    //Tested when container is NOT sleeping
-    virtual bool CheckSpecificDataAwake()=0;        //Tested when container IS sleeping
-    virtual void SetSpecificDataSleeping(bool abSleeping)=0;
+    virtual bool CheckParticleBodyCollision(iPhysicsBody *apBody) = 0;
+    virtual bool CheckSpecificDataSleeping() = 0;  //Tested when container is NOT sleeping
+    virtual bool CheckSpecificDataAwake() = 0;      //Tested when container IS sleeping
+    virtual void SetSpecificDataSleeping(bool abSleeping) = 0;
 
     void PreUpdate(double adFixedDelta);
 

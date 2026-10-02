@@ -38,9 +38,9 @@ cBitmapLoaderHandler::~cBitmapLoaderHandler()
 
 //-----------------------------------------------------------------------
 
-cBitmap* cBitmapLoaderHandler::LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags)
+cBitmap *cBitmapLoaderHandler::LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags)
 {
-    iBitmapLoader *pBitmapLoader = static_cast<iBitmapLoader*>(GetLoaderForFile(asFile));
+    iBitmapLoader *pBitmapLoader = static_cast<iBitmapLoader *>(GetLoaderForFile(asFile));
 
     if(pBitmapLoader)
     {
@@ -64,11 +64,11 @@ cBitmap* cBitmapLoaderHandler::LoadBitmap(const tWString& asFile, tBitmapLoadFla
 
 bool cBitmapLoaderHandler::SaveBitmap(cBitmap* apBitmap, const tWString& asFile, tBitmapSaveFlag aFlags)
 {
-    iBitmapLoader *pBitmapLoader = static_cast<iBitmapLoader*>(GetLoaderForFile(asFile));
+    iBitmapLoader *pBitmapLoader = static_cast<iBitmapLoader *>(GetLoaderForFile(asFile));
 
     if(pBitmapLoader)
     {
-        return pBitmapLoader->SaveBitmap(apBitmap,asFile,aFlags);
+        return pBitmapLoader->SaveBitmap(apBitmap, asFile, aFlags);
     }
     return false;
 }
@@ -83,7 +83,7 @@ bool cBitmapLoaderHandler::SaveBitmap(cBitmap* apBitmap, const tWString& asFile,
 
 void cBitmapLoaderHandler::SetupLoader(iResourceLoader *apLoader)
 {
-    iBitmapLoader *pBitmapLoader = static_cast<iBitmapLoader*>(apLoader);
+    iBitmapLoader *pBitmapLoader = static_cast<iBitmapLoader *>(apLoader);
 
     pBitmapLoader->mpLowLevelGraphics = mpGraphics->GetLowLevel();
 }

@@ -16,10 +16,10 @@ class iMaterialType;
 class cMaterialManager : public iResourceManager
 {
 public:
-    cMaterialManager(cGraphics* apGraphics,cResources *apResources);
+    cMaterialManager(cGraphics* apGraphics, cResources *apResources);
     ~cMaterialManager();
 
-    cMaterial* CreateMaterial(const tString& asName);
+    cMaterial *CreateMaterial(const tString& asName);
 
     void Update(double adFixedDelta);
 
@@ -49,7 +49,7 @@ public:
 
     tString GetPhysicsMaterialName(const tString& asName);
 
-    cMaterial* CreateCustomMaterial(const tString& asName, iMaterialType *apMaterialType);
+    cMaterial *CreateCustomMaterial(const tString& asName, iMaterialType *apMaterialType);
 
     tString GetTextureString(eMaterialTexture aType);
 
@@ -68,7 +68,7 @@ public:
     eMaterialAnimationAxis GetAnimAxis(const char* apString);
 
 private:
-    cMaterial* LoadFromFile(const tString& asName,const tWString& asPath);
+    cMaterial *LoadFromFile(const tString& asName, const tWString& asPath);
 
     unsigned int mlTextureSizeDownScaleLevel;
     eTextureFilter mTextureFilter;
@@ -78,8 +78,8 @@ private:
 
     tStringVec mvCubeSideSuffixes;
 
-    cGraphics* mpGraphics;
-    cResources* mpResources;
+    cGraphics *mpGraphics;
+    cResources *mpResources;
 
     bool mbDisableRenderDataLoading;
 

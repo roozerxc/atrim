@@ -76,28 +76,28 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cWorld::cWorld(tString asName,cGraphics *apGraphics,cResources *apResources,cSound* apSound,
-               cPhysics *apPhysics, cScene *apScene,cSystem *apSystem, cAI *apAI)
+cWorld::cWorld(tString asName, cGraphics *apGraphics, cResources *apResources, cSound* apSound,
+               cPhysics *apPhysics, cScene *apScene, cSystem *apSystem, cAI *apAI)
 {
     mpGraphics = apGraphics;
     mpResources = apResources;
     mpSound = apSound;
     mpPhysics = apPhysics;
     mpScene = apScene;
-    mpSystem =apSystem;
+    mpSystem = apSystem;
     mpAI = apAI;
 
     mpRootNode = hplNew( cNode3D, () );
 
-    msName=asName;
+    msName = asName;
 
     mbActive = true;
 
-    mAmbientColor=cColor(0,0);
+    mAmbientColor = cColor(0, 0);
 
     mbIsSoundEmitter = false;
 
-    mlSoundCreationIDCount =0;
+    mlSoundCreationIDCount = 0;
 
     //TODO: Have the container type as param and create.
     mpRenderableContainer[eWorldContainerType_Static] = hplNew( cRenderableContainer_BoxTree, () );
@@ -112,15 +112,15 @@ cWorld::cWorld(tString asName,cGraphics *apGraphics,cResources *apResources,cSou
     mpSkyBoxTexture = NULL;
     mbAutoDestroySkybox = false;
     mbSkyBoxActive = false;
-    mSkyBoxColor = cColor(1,1);
+    mSkyBoxColor = cColor(1, 1);
 
     //////////////////////////////
     //Fog
     mbFogActive = false;
-    mfFogStart =0;
+    mfFogStart = 0;
     mfFogEnd = 10;
     mfFogFalloffExp = 1;
-    mFogColor = cColor(1,1);
+    mFogColor = cColor(1, 1);
     mbFogCulling = true;
 
 
@@ -147,7 +147,7 @@ cWorld::~cWorld()
 
     DestroyAllEntities(0);
 
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         if(mpRenderableContainer[i])
         {
@@ -168,7 +168,7 @@ cWorld::~cWorld()
 
 void cWorld::DestroyAllEntities(tWorldDestroyAllFlag aFlags)
 {
-    if( (aFlags & eWorldDestroyAllFlag_SkipStaticEntities)==0)
+    if( (aFlags & eWorldDestroyAllFlag_SkipStaticEntities) == 0)
     {
         STLDeleteAll(mlstStaticMeshEntities);
     }
@@ -189,7 +189,7 @@ void cWorld::DestroyAllEntities(tWorldDestroyAllFlag aFlags)
     STLDeleteAll(mlstAStarHandlers);
     STLMapDeleteAll(m_mapTempNodes);
 
-    if( (aFlags & eWorldDestroyAllFlag_SkipPhysics)==0)
+    if( (aFlags & eWorldDestroyAllFlag_SkipPhysics) == 0)
     {
         if(mpPhysicsWorld && mbAutoDeletePhysicsWorld)
         {
@@ -237,7 +237,7 @@ void cWorld::PreUpdate(float afTotalTime, double adFixedDelta)
 {
     mpSound->GetSoundHandler()->SetSilent(true);
 
-    while(afTotalTime>0)
+    while(afTotalTime > 0)
     {
         if(mpPhysicsWorld)
         {
@@ -253,7 +253,7 @@ void cWorld::PreUpdate(float afTotalTime, double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-iRenderableContainer* cWorld::GetRenderableContainer(eWorldContainerType aType)
+iRenderableContainer *cWorld::GetRenderableContainer(eWorldContainerType aType)
 {
     return mpRenderableContainer[aType];
 }
@@ -270,15 +270,15 @@ void cWorld::SetPhysicsWorld(iPhysicsWorld *apWorld, bool abAutoDelete)
     }
 }
 
-iPhysicsWorld* cWorld::GetPhysicsWorld()
+iPhysicsWorld *cWorld::GetPhysicsWorld()
 {
     return mpPhysicsWorld;
 }
 
 //-----------------------------------------------------------------------
 
-static void CheckMinMaxUpdate(cVector3f &avMin,cVector3f &avMax,
-                              const cVector3f &avLocalMin,const cVector3f &avLocalMax)
+static void CheckMinMaxUpdate(cVector3f &avMin, cVector3f &avMax,
+                              const cVector3f &avLocalMin, const cVector3f &avLocalMax)
 {
     if(avMin.x > avLocalMin.x)
     {
@@ -312,7 +312,7 @@ static void CheckMinMaxUpdate(cVector3f &avMin,cVector3f &avMax,
 
 void cWorld::Compile(bool abCalcPhysicsWorldSize)
 {
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
         if(mpRenderableContainer[i])
         {
             mpRenderableContainer[i]->Compile();
@@ -323,8 +323,8 @@ void cWorld::Compile(bool abCalcPhysicsWorldSize)
         iRenderableContainerNode *pStaticRoot = mpRenderableContainer[eWorldContainerType_Static]->GetRoot();
 
         //Create a 10 m border around the world too
-        cVector3f vMin = pStaticRoot->GetMin() - cVector3f(10,10,10);
-        cVector3f vMax = pStaticRoot->GetMax() + cVector3f(10,10,10);
+        cVector3f vMin = pStaticRoot->GetMin() - cVector3f(10, 10, 10);
+        cVector3f vMax = pStaticRoot->GetMax() + cVector3f(10, 10, 10);
 
         mpPhysicsWorld->SetWorldSize(vMin, vMax);
     }
@@ -364,20 +364,20 @@ void cWorld::SetSkyBoxColor(const cColor& aColor)
 
     float *pColors = mpSkyBoxVtxBuffer->GetFloatArray(eVertexBufferElement_Color0);
     int lNum = mpSkyBoxVtxBuffer->GetVertexNum();
-    for(int i=0; i<lNum; ++i)
+    for(int i = 0; i < lNum; ++i)
     {
         pColors[0] = mSkyBoxColor.r;
         pColors[1] = mSkyBoxColor.g;
         pColors[2] = mSkyBoxColor.b;
         pColors[3] = mSkyBoxColor.a;
-        pColors+=4;
+        pColors += 4;
     }
 
-    mpSkyBoxVtxBuffer->UpdateData(eVertexElementFlag_Color0,false);
+    mpSkyBoxVtxBuffer->UpdateData(eVertexElementFlag_Color0, false);
 }
 //-----------------------------------------------------------------------
 
-cAreaEntity* cWorld::CreateAreaEntity(const tString &asName)
+cAreaEntity *cWorld::CreateAreaEntity(const tString &asName)
 {
     cAreaEntity *pArea = hplNew( cAreaEntity, () );
     pArea->msName = asName;
@@ -385,10 +385,10 @@ cAreaEntity* cWorld::CreateAreaEntity(const tString &asName)
     return pArea;
 }
 
-cAreaEntity* cWorld::GetAreaEntity(const tString &asName)
+cAreaEntity *cWorld::GetAreaEntity(const tString &asName)
 {
     tAreaEntityMapIt it = m_mapAreaEntities.find(asName);
-    if(it== m_mapAreaEntities.end())
+    if(it == m_mapAreaEntities.end())
     {
         return NULL;
     }
@@ -398,14 +398,14 @@ cAreaEntity* cWorld::GetAreaEntity(const tString &asName)
 
 //-----------------------------------------------------------------------
 
-iEntity3D* cWorld::CreateEntity(const tString& asName, const cMatrixf &a_mtxTransform,const tString& asFile, int alID, bool abActive,
+iEntity3D *cWorld::CreateEntity(const tString& asName, const cMatrixf &a_mtxTransform, const tString& asFile, int alID, bool abActive,
                                 const cVector3f &avScale,
                                 cResourceVarsObject *apInstanceVars, bool abSkipNonStaticEntity)
 {
     iEntity3D *pEntity = NULL;
 
     cEntFile *pEntFile = mpResources->GetEntFileManager()->CreateEntFile(asFile);
-    if(pEntFile==NULL)
+    if(pEntFile == NULL)
     {
         return NULL;
     }
@@ -418,7 +418,7 @@ iEntity3D* cWorld::CreateEntity(const tString& asName, const cMatrixf &a_mtxTran
     //////////////////////////////////
     // Get Root element
     cXmlElement *pVarRootElem = pDoc->GetFirstElement("UserDefinedVariables");
-    if(pVarRootElem==NULL)
+    if(pVarRootElem == NULL)
     {
         Warning("Can not find a UserDefinedVariables element in '%s'. Using default entity type\n", asFile.c_str());
     }
@@ -433,9 +433,9 @@ iEntity3D* cWorld::CreateEntity(const tString& asName, const cMatrixf &a_mtxTran
     iEntityLoader *pLoader = mpResources->GetEntityLoader(sEntityType);
     if(pLoader)
     {
-        if(abSkipNonStaticEntity==false || pLoader->GetCreatesStaticEntity())
+        if(abSkipNonStaticEntity == false || pLoader->GetCreatesStaticEntity())
         {
-            pEntity = pLoader->Load(asName,alID, abActive, pDoc,a_mtxTransform, avScale, this,pEntFile->GetName(),pEntFile->GetFullPath(), apInstanceVars);
+            pEntity = pLoader->Load(asName, alID, abActive, pDoc, a_mtxTransform, avScale, this, pEntFile->GetName(), pEntFile->GetFullPath(), apInstanceVars);
             if(pEntity)
             {
                 pEntity->SetSourceFile(pEntFile->GetName());
@@ -444,7 +444,7 @@ iEntity3D* cWorld::CreateEntity(const tString& asName, const cMatrixf &a_mtxTran
     }
     else
     {
-        Error("Couldn't find loader for type '%s' in file '%s'\n",sEntityType.c_str(),pEntFile->GetName().c_str());
+        Error("Couldn't find loader for type '%s' in file '%s'\n", sEntityType.c_str(), pEntFile->GetName().c_str());
     }
 
     return pEntity;
@@ -452,9 +452,9 @@ iEntity3D* cWorld::CreateEntity(const tString& asName, const cMatrixf &a_mtxTran
 
 //-----------------------------------------------------------------------
 
-cMeshEntity* cWorld::CreateMeshEntity(const tString &asName,cMesh *apMesh, bool abStatic)
+cMeshEntity *cWorld::CreateMeshEntity(const tString &asName, cMesh *apMesh, bool abStatic)
 {
-    cMeshEntity* pMeshEntity = hplNew( cMeshEntity, (asName,apMesh,mpResources->GetMaterialManager(),
+    cMeshEntity* pMeshEntity = hplNew( cMeshEntity, (asName, apMesh, mpResources->GetMaterialManager(),
                                        mpResources->GetMeshManager(),
                                        mpResources->GetAnimationManager()) );
 
@@ -472,7 +472,7 @@ cMeshEntity* cWorld::CreateMeshEntity(const tString &asName,cMesh *apMesh, bool 
 
     //////////////////////////////
     // Add submeshes to renderable container
-    for(int i=0; i<pMeshEntity->GetSubMeshEntityNum(); ++i)
+    for(int i = 0; i < pMeshEntity->GetSubMeshEntityNum(); ++i)
     {
         cSubMeshEntity *pSubEntity = pMeshEntity->GetSubMeshEntity(i);
         if(pSubEntity->GetSubMesh()->IsCollideShape())
@@ -493,29 +493,29 @@ cMeshEntity* cWorld::CreateMeshEntity(const tString &asName,cMesh *apMesh, bool 
 
 void cWorld::DestroyMeshEntity(cMeshEntity* apMesh)
 {
-    if(apMesh==NULL)
+    if(apMesh == NULL)
     {
         return;
     }
 
-    for(int i=0; i<apMesh->GetSubMeshEntityNum(); ++i)
+    for(int i = 0; i < apMesh->GetSubMeshEntityNum(); ++i)
     {
         RemoveRenderableFromContainer(apMesh->GetSubMeshEntity(i));
     }
 
     if(apMesh->IsStatic())
     {
-        STLFindAndDelete(mlstStaticMeshEntities,apMesh);
+        STLFindAndDelete(mlstStaticMeshEntities, apMesh);
     }
     else
     {
-        STLFindAndDelete(mlstDynamicMeshEntities,apMesh);
+        STLFindAndDelete(mlstDynamicMeshEntities, apMesh);
     }
 }
 
 //-----------------------------------------------------------------------
 
-cMeshEntity* cWorld::GetDynamicMeshEntity(const tString& asName)
+cMeshEntity *cWorld::GetDynamicMeshEntity(const tString& asName)
 {
     return (cMeshEntity*)STLFindByName(mlstDynamicMeshEntities, asName);
 }
@@ -536,12 +536,12 @@ cMeshEntityIterator cWorld::GetStaticMeshEntityIterator()
 
 void cWorld::DrawMeshBoundingBoxes(const cColor &aColor, bool abStatic)
 {
-    tMeshEntityListIt It=mlstDynamicMeshEntities.begin();
+    tMeshEntityListIt It = mlstDynamicMeshEntities.begin();
     for(; It != mlstDynamicMeshEntities.end(); ++It)
     {
         cMeshEntity *pEntity = *It;
 
-        if(abStatic==false && pEntity->IsStatic())
+        if(abStatic == false && pEntity->IsStatic())
         {
             continue;
         }
@@ -554,21 +554,21 @@ void cWorld::DrawMeshBoundingBoxes(const cColor &aColor, bool abStatic)
 //-----------------------------------------------------------------------
 
 
-cLightPoint* cWorld::CreateLightPoint(const tString &asName,const tString &asGobo,bool abStatic)
+cLightPoint *cWorld::CreateLightPoint(const tString &asName, const tString &asGobo, bool abStatic)
 {
-    cLightPoint* pLight = hplNew( cLightPoint, (asName,mpResources) );
+    cLightPoint* pLight = hplNew( cLightPoint, (asName, mpResources) );
     mlstLights.push_back(pLight);
 
     if(asGobo != "")
     {
-        iTexture *pTexture = mpResources->GetTextureManager()->CreateCubeMap(asGobo,true);
-        if(pTexture!=NULL)
+        iTexture *pTexture = mpResources->GetTextureManager()->CreateCubeMap(asGobo, true);
+        if(pTexture != NULL)
         {
             pLight->SetGoboTexture(pTexture);
         }
         else
         {
-            Warning("Couldn't load gobo texture '%s' for light '%s'",asGobo.c_str(), asName.c_str());
+            Warning("Couldn't load gobo texture '%s' for light '%s'", asGobo.c_str(), asName.c_str());
         }
     }
 
@@ -582,22 +582,22 @@ cLightPoint* cWorld::CreateLightPoint(const tString &asName,const tString &asGob
 
 //-----------------------------------------------------------------------
 
-cLightSpot* cWorld::CreateLightSpot(const tString &asName, const tString &asGobo,
+cLightSpot *cWorld::CreateLightSpot(const tString &asName, const tString &asGobo,
                                     bool abStatic)
 {
-    cLightSpot* pLight = hplNew( cLightSpot, (asName,mpResources) );
+    cLightSpot* pLight = hplNew( cLightSpot, (asName, mpResources) );
     mlstLights.push_back(pLight);
 
     if(asGobo != "")
     {
-        iTexture *pTexture = mpResources->GetTextureManager()->Create2D(asGobo,true);
-        if(pTexture!=NULL)
+        iTexture *pTexture = mpResources->GetTextureManager()->Create2D(asGobo, true);
+        if(pTexture != NULL)
         {
             pLight->SetGoboTexture(pTexture);
         }
         else
         {
-            Warning("Couldn't load gobo texture '%s' for light '%s'",asGobo.c_str(), asName.c_str());
+            Warning("Couldn't load gobo texture '%s' for light '%s'", asGobo.c_str(), asName.c_str());
         }
     }
 
@@ -611,9 +611,9 @@ cLightSpot* cWorld::CreateLightSpot(const tString &asName, const tString &asGobo
 
 //-----------------------------------------------------------------------
 
-cLightBox* cWorld::CreateLightBox(const tString &asName,bool abStatic)
+cLightBox *cWorld::CreateLightBox(const tString &asName, bool abStatic)
 {
-    cLightBox* pLight = hplNew( cLightBox, (asName,mpResources) );
+    cLightBox* pLight = hplNew( cLightBox, (asName, mpResources) );
     mlstLights.push_back(pLight);
 
     pLight->SetStatic(abStatic);
@@ -635,10 +635,10 @@ void cWorld::DestroyLight(iLight* apLight)
 
 //-----------------------------------------------------------------------
 
-iLight* cWorld::GetLight(const tString& asName)
+iLight *cWorld::GetLight(const tString& asName)
 {
-    tLightListIt LightIt=mlstLights.begin();
-    for(; LightIt !=mlstLights.end(); ++LightIt)
+    tLightListIt LightIt = mlstLights.begin();
+    for(; LightIt != mlstLights.end(); ++LightIt)
     {
         if((*LightIt)->GetName() == asName)
         {
@@ -648,10 +648,10 @@ iLight* cWorld::GetLight(const tString& asName)
     return NULL;
 }
 
-iLight* cWorld::GetLightFromUniqueID(int alID)
+iLight *cWorld::GetLightFromUniqueID(int alID)
 {
-    tLightListIt LightIt=mlstLights.begin();
-    for(; LightIt !=mlstLights.end(); ++LightIt)
+    tLightListIt LightIt = mlstLights.begin();
+    for(; LightIt != mlstLights.end(); ++LightIt)
     {
         if((*LightIt)->GetUniqueID() == alID)
         {
@@ -663,13 +663,13 @@ iLight* cWorld::GetLightFromUniqueID(int alID)
 
 //-----------------------------------------------------------------------
 
-cBillboard* cWorld::CreateBillboard(const tString& asName, const cVector2f& avSize,eBillboardType aType,
+cBillboard *cWorld::CreateBillboard(const tString& asName, const cVector2f& avSize, eBillboardType aType,
                                     const tString& asMaterial, bool abStatic)
 {
-    cBillboard* pBillboard = hplNew( cBillboard, (asName, avSize,aType,mpResources,mpGraphics) );
+    cBillboard* pBillboard = hplNew( cBillboard, (asName, avSize, aType, mpResources, mpGraphics) );
     mlstBillboards.push_back(pBillboard);
 
-    if(asMaterial!="")
+    if(asMaterial != "")
     {
         cMaterial *pMat = mpResources->GetMaterialManager()->CreateMaterial(asMaterial);
         pBillboard->SetMaterial(pMat);
@@ -691,15 +691,15 @@ void cWorld::DestroyBillboard(cBillboard* apObject)
 
 //-----------------------------------------------------------------------
 
-cBillboard* cWorld::GetBillboard(const tString& asName)
+cBillboard *cWorld::GetBillboard(const tString& asName)
 {
-    return (cBillboard*)STLFindByName(mlstBillboards,asName);
+    return (cBillboard*)STLFindByName(mlstBillboards, asName);
 }
 
-cBillboard* cWorld::GetBillboardFromUniqueID(int alID)
+cBillboard *cWorld::GetBillboardFromUniqueID(int alID)
 {
-    tBillboardListIt BillboardIt=mlstBillboards.begin();
-    for(; BillboardIt !=mlstBillboards.end(); ++BillboardIt)
+    tBillboardListIt BillboardIt = mlstBillboards.begin();
+    for(; BillboardIt != mlstBillboards.end(); ++BillboardIt)
     {
         if((*BillboardIt)->GetUniqueID() == alID)
         {
@@ -719,9 +719,9 @@ cBillboardIterator cWorld::GetBillboardIterator()
 //-----------------------------------------------------------------------
 
 
-cBeam* cWorld::CreateBeam(const tString& asName, bool abStatic)
+cBeam *cWorld::CreateBeam(const tString& asName, bool abStatic)
 {
-    cBeam* pBeam = hplNew( cBeam, (asName,mpResources,mpGraphics) );
+    cBeam* pBeam = hplNew( cBeam, (asName, mpResources, mpGraphics) );
     mlstBeams.push_back(pBeam);
 
     pBeam->SetStatic(abStatic);
@@ -741,14 +741,14 @@ void cWorld::DestroyBeam(cBeam* apObject)
 
 //-----------------------------------------------------------------------
 
-cBeam* cWorld::GetBeam(const tString& asName)
+cBeam *cWorld::GetBeam(const tString& asName)
 {
-    return (cBeam*)STLFindByName(mlstBeams,asName);
+    return (cBeam*)STLFindByName(mlstBeams, asName);
 }
 
-cBeam* cWorld::GetBeamFromUniqueID(int alID)
+cBeam *cWorld::GetBeamFromUniqueID(int alID)
 {
-    for(tBeamListIt BeamIt=mlstBeams.begin(); BeamIt !=mlstBeams.end(); ++BeamIt)
+    for(tBeamListIt BeamIt = mlstBeams.begin(); BeamIt != mlstBeams.end(); ++BeamIt)
     {
         if((*BeamIt)->GetUniqueID() == alID)
         {
@@ -768,19 +768,19 @@ cBeamIterator cWorld::GetBeamIterator()
 
 //-----------------------------------------------------------------------
 
-cParticleSystem* cWorld::CreateParticleSystem(const tString& asName,const tString& asType,const cVector3f& avSize, bool abRemoveWhenDead)
+cParticleSystem *cWorld::CreateParticleSystem(const tString& asName, const tString& asType, const cVector3f& avSize, bool abRemoveWhenDead)
 {
-    cParticleSystem* pPS = mpResources->GetParticleManager()->CreatePS(asName,asType, avSize);
+    cParticleSystem* pPS = mpResources->GetParticleManager()->CreatePS(asName, asType, avSize);
     if(pPS == NULL)
     {
-        Error("Couldn't create particle system '%s' of type '%s'\n",asName.c_str(), asType.c_str());
+        Error("Couldn't create particle system '%s' of type '%s'\n", asName.c_str(), asType.c_str());
         return NULL;
     }
 
     //Log("Created particle system '%s' of type '%s'\n",asName.c_str(), asType.c_str());
     if(false)//asName== "candlestick02_1_ParticleSystem_1")
     {
-        for(int i=0; i< pPS->GetEmitterNum(); ++i)
+        for(int i = 0; i < pPS->GetEmitterNum(); ++i)
         {
             iParticleEmitter *pPE = pPS->GetEmitter(i);
             pPE->SetRenderFlagBit(eRenderableFlag_ContainerDebug, true);
@@ -791,7 +791,7 @@ cParticleSystem* cWorld::CreateParticleSystem(const tString& asName,const tStrin
 
     //Add the emitters contained in the system.
     //Do not add the system itself.
-    for(int i=0; i< pPS->GetEmitterNum(); ++i)
+    for(int i = 0; i < pPS->GetEmitterNum(); ++i)
     {
         iParticleEmitter *pPE = pPS->GetEmitter(i);
 
@@ -809,12 +809,12 @@ cParticleSystem* cWorld::CreateParticleSystem(const tString& asName,const tStrin
 
 //-----------------------------------------------------------------------
 
-cParticleSystem* cWorld::CreateParticleSystem(const tString& asName, const tString& asDataName, cXmlElement* apElement, const cVector3f& avSize)
+cParticleSystem *cWorld::CreateParticleSystem(const tString& asName, const tString& asDataName, cXmlElement* apElement, const cVector3f& avSize)
 {
-    cParticleSystem* pPS = mpResources->GetParticleManager()->CreatePS(asName,asDataName, apElement, avSize);
+    cParticleSystem* pPS = mpResources->GetParticleManager()->CreatePS(asName, asDataName, apElement, avSize);
     if(pPS == NULL)
     {
-        Error("Couldn't create particle system '%s' of type '%s'\n",asName.c_str(), asDataName.c_str());
+        Error("Couldn't create particle system '%s' of type '%s'\n", asName.c_str(), asDataName.c_str());
         return NULL;
     }
 
@@ -822,7 +822,7 @@ cParticleSystem* cWorld::CreateParticleSystem(const tString& asName, const tStri
 
     //Add the emitters contained in the system.
     //Do not add the system itself.
-    for(int i=0; i< pPS->GetEmitterNum(); ++i)
+    for(int i = 0; i < pPS->GetEmitterNum(); ++i)
     {
         iParticleEmitter *pPE = pPS->GetEmitter(i);
 
@@ -842,12 +842,12 @@ cParticleSystem* cWorld::CreateParticleSystem(const tString& asName, const tStri
 
 void cWorld::DestroyParticleSystem(cParticleSystem* apPS)
 {
-    if(apPS==NULL)
+    if(apPS == NULL)
     {
         return;
     }
 
-    for(int i=0; i< apPS->GetEmitterNum(); ++i)
+    for(int i = 0; i < apPS->GetEmitterNum(); ++i)
     {
         iParticleEmitter *pPE = apPS->GetEmitter(i);
 
@@ -859,14 +859,14 @@ void cWorld::DestroyParticleSystem(cParticleSystem* apPS)
 
 //-----------------------------------------------------------------------
 
-cParticleSystem* cWorld::GetParticleSystem(const tString& asName)
+cParticleSystem *cWorld::GetParticleSystem(const tString& asName)
 {
-    return (cParticleSystem*)STLFindByName(mlstParticleSystems,asName);
+    return (cParticleSystem*)STLFindByName(mlstParticleSystems, asName);
 }
 
-cParticleSystem* cWorld::GetParticleSystemFromUniqueID(int alID)
+cParticleSystem *cWorld::GetParticleSystemFromUniqueID(int alID)
 {
-    for(tParticleSystemListIt PSIt=mlstParticleSystems.begin(); PSIt !=mlstParticleSystems.end(); ++PSIt)
+    for(tParticleSystemListIt PSIt = mlstParticleSystems.begin(); PSIt != mlstParticleSystems.end(); ++PSIt)
     {
         if((*PSIt)->GetUniqueID() == alID)
         {
@@ -898,7 +898,7 @@ void cWorld::DestroyAllParticleSystems()
     {
         cParticleSystem *pPS = *it;
 
-        for(int i=0; i< pPS->GetEmitterNum(); ++i)
+        for(int i = 0; i < pPS->GetEmitterNum(); ++i)
         {
             iParticleEmitter *pPE = pPS->GetEmitter(i);
 
@@ -911,7 +911,7 @@ void cWorld::DestroyAllParticleSystems()
 
 //-----------------------------------------------------------------------
 
-cGuiSetEntity* cWorld::CreateGuiSetEntity(const tString& asName, cGuiSet *apSet, bool abStatic)
+cGuiSetEntity *cWorld::CreateGuiSetEntity(const tString& asName, cGuiSet *apSet, bool abStatic)
 {
     cGuiSetEntity *pSetEntity = hplNew( cGuiSetEntity, (asName, apSet) );
     mlstGuiSetEntities.push_back(pSetEntity);
@@ -929,14 +929,14 @@ void cWorld::DestroyGuiSetEntity(cGuiSetEntity* apObject)
     STLFindAndDelete(mlstGuiSetEntities, apObject);
 }
 
-cGuiSetEntity* cWorld::GetGuiSetEntity(const tString& asName)
+cGuiSetEntity *cWorld::GetGuiSetEntity(const tString& asName)
 {
-    return static_cast<cGuiSetEntity*>(STLFindByName(mlstGuiSetEntities, asName));
+    return static_cast<cGuiSetEntity *>(STLFindByName(mlstGuiSetEntities, asName));
 }
 
-cGuiSetEntity* cWorld::GetGuiSetEntityFromUniqueID(int alID)
+cGuiSetEntity *cWorld::GetGuiSetEntityFromUniqueID(int alID)
 {
-    for(tGuiSetEntityListIt it=mlstGuiSetEntities.begin(); it !=mlstGuiSetEntities.end(); ++it)
+    for(tGuiSetEntityListIt it = mlstGuiSetEntities.begin(); it != mlstGuiSetEntities.end(); ++it)
     {
         if((*it)->GetUniqueID() == alID)
         {
@@ -953,7 +953,7 @@ cGuiSetEntityIterator cWorld::GetGuiSetEntityIterator()
 
 //-----------------------------------------------------------------------
 
-cRopeEntity* cWorld::CreateRopeEntity(const tString& asName, iPhysicsRope *apRope, int alMaxSegments)
+cRopeEntity *cWorld::CreateRopeEntity(const tString& asName, iPhysicsRope *apRope, int alMaxSegments)
 {
     cRopeEntity *pRope = hplNew( cRopeEntity, (asName, mpResources, mpGraphics, apRope, alMaxSegments));
     mlstRopeEntities.push_back(pRope);
@@ -970,14 +970,14 @@ void cWorld::DestroyRopeEntity(cRopeEntity* apRope)
     STLFindAndDelete(mlstRopeEntities, apRope);
 }
 
-cRopeEntity* cWorld::GetRopeEntity(const tString& asName)
+cRopeEntity *cWorld::GetRopeEntity(const tString& asName)
 {
-    return static_cast<cRopeEntity*>(STLFindByName(mlstRopeEntities, asName));
+    return static_cast<cRopeEntity *>(STLFindByName(mlstRopeEntities, asName));
 }
 
-cRopeEntity* cWorld::GetRopeEntityFromUniqueID(int alID)
+cRopeEntity *cWorld::GetRopeEntityFromUniqueID(int alID)
 {
-    for(tRopeEntityListIt it=mlstRopeEntities.begin(); it !=mlstRopeEntities.end(); ++it)
+    for(tRopeEntityListIt it = mlstRopeEntities.begin(); it != mlstRopeEntities.end(); ++it)
     {
         if((*it)->GetUniqueID() == alID)
         {
@@ -994,7 +994,7 @@ cRopeEntityIterator cWorld::GetRopeEntityIterator()
 
 //-----------------------------------------------------------------------
 
-cFogArea* cWorld::CreateFogArea(const tString& asName, bool abStatic)
+cFogArea *cWorld::CreateFogArea(const tString& asName, bool abStatic)
 {
     cFogArea *pFog = hplNew( cFogArea, (asName, mpResources));
     mlstFogAreas.push_back(pFog);
@@ -1013,14 +1013,14 @@ void cWorld::DestroyFogArea(cFogArea* apRope)
     STLFindAndDelete(mlstFogAreas, apRope);
 }
 
-cFogArea* cWorld::GetFogArea(const tString& asName)
+cFogArea *cWorld::GetFogArea(const tString& asName)
 {
-    return static_cast<cFogArea*>(STLFindByName(mlstFogAreas, asName));
+    return static_cast<cFogArea *>(STLFindByName(mlstFogAreas, asName));
 }
 
-cFogArea* cWorld::GetFogAreaFromUniqueID(int alID)
+cFogArea *cWorld::GetFogAreaFromUniqueID(int alID)
 {
-    for(tFogAreaListIt it=mlstFogAreas.begin(); it !=mlstFogAreas.end(); ++it)
+    for(tFogAreaListIt it = mlstFogAreas.begin(); it != mlstFogAreas.end(); ++it)
     {
         if((*it)->GetUniqueID() == alID)
         {
@@ -1037,18 +1037,18 @@ cFogAreaIterator cWorld::GetFogAreaIterator()
 
 //-----------------------------------------------------------------------
 
-cSoundEntity* cWorld::CreateSoundEntity(const tString &asName,const tString &asSoundEntity,
+cSoundEntity *cWorld::CreateSoundEntity(const tString &asName, const tString &asSoundEntity,
                                         bool abRemoveWhenOver)
 {
     cSoundEntityData *pData = mpResources->GetSoundEntityManager()->CreateSoundEntity(asSoundEntity);
-    if(pData==NULL)
+    if(pData == NULL)
     {
-        Error("Cannot find sound entity '%s'\n",asSoundEntity.c_str());
+        Error("Cannot find sound entity '%s'\n", asSoundEntity.c_str());
         return NULL;
     }
 
-    cSoundEntity *pSound = hplNew( cSoundEntity, (asName,pData, mpResources->GetSoundEntityManager(), this, mpSound->GetSoundHandler(),
-                                   abRemoveWhenOver,mlSoundCreationIDCount++));
+    cSoundEntity *pSound = hplNew( cSoundEntity, (asName, pData, mpResources->GetSoundEntityManager(), this, mpSound->GetSoundHandler(),
+                                   abRemoveWhenOver, mlSoundCreationIDCount++));
     /*cSoundEntity *pSound = NULL;
     if(mlstSoundEntityPool.empty())
     {
@@ -1074,7 +1074,7 @@ void cWorld::DestroySoundEntity(cSoundEntity* apEntity)
     //STLFindAndDelete(mlstSoundEntities,apEntity);
 
     //Only delete if found! (as it is possible that the sound entity is not longer a valid pointer!
-    tSoundEntityListIt it= mlstSoundEntities.begin();
+    tSoundEntityListIt it = mlstSoundEntities.begin();
     for(; it != mlstSoundEntities.end(); ++it)
     {
         cSoundEntity *pSound = *it;
@@ -1115,14 +1115,14 @@ void cWorld::DestroyAllSoundEntities()
 }
 
 
-cSoundEntity* cWorld::GetSoundEntity(const tString& asName)
+cSoundEntity *cWorld::GetSoundEntity(const tString& asName)
 {
-    return (cSoundEntity*)STLFindByName(mlstSoundEntities,asName);
+    return (cSoundEntity*)STLFindByName(mlstSoundEntities, asName);
 }
 
-cSoundEntity* cWorld::GetSoundEntityFromUniqueID(int alID)
+cSoundEntity *cWorld::GetSoundEntityFromUniqueID(int alID)
 {
-    for(tSoundEntityListIt it=mlstSoundEntities.begin(); it !=mlstSoundEntities.end(); ++it)
+    for(tSoundEntityListIt it = mlstSoundEntities.begin(); it != mlstSoundEntities.end(); ++it)
     {
         if((*it)->GetUniqueID() == alID)
         {
@@ -1134,14 +1134,14 @@ cSoundEntity* cWorld::GetSoundEntityFromUniqueID(int alID)
 
 bool cWorld::SoundEntityExists(cSoundEntity* apEntity, int alCreationID)
 {
-    tSoundEntityListIt it= mlstSoundEntities.begin();
+    tSoundEntityListIt it = mlstSoundEntities.begin();
     tSoundEntityListIt end = mlstSoundEntities.end();
     for(; it != end; ++it)
     {
         cSoundEntity *pTestSound = *it;
         if(*it == apEntity)
         {
-            if(alCreationID==pTestSound->GetCreationID())
+            if(alCreationID == pTestSound->GetCreationID())
             {
                 return true;
             }
@@ -1157,7 +1157,7 @@ bool cWorld::SoundEntityExists(cSoundEntity* apEntity, int alCreationID)
 
 //-----------------------------------------------------------------------
 
-cStartPosEntity* cWorld::CreateStartPos(const tString &asName)
+cStartPosEntity *cWorld::CreateStartPos(const tString &asName)
 {
     cStartPosEntity *pStartPos = hplNew( cStartPosEntity, (asName) );
 
@@ -1166,12 +1166,12 @@ cStartPosEntity* cWorld::CreateStartPos(const tString &asName)
     return pStartPos;
 }
 
-cStartPosEntity* cWorld::GetStartPosEntity(const tString &asName)
+cStartPosEntity *cWorld::GetStartPosEntity(const tString &asName)
 {
-    return (cStartPosEntity*)STLFindByName(mlstStartPosEntities,asName);
+    return (cStartPosEntity*)STLFindByName(mlstStartPosEntities, asName);
 }
 
-cStartPosEntity* cWorld::GetFirstStartPosEntity()
+cStartPosEntity *cWorld::GetFirstStartPosEntity()
 {
     if(mlstStartPosEntities.empty())
     {
@@ -1191,13 +1191,13 @@ void  cWorld::GenerateAINodes(cAINodeGeneratorParams *apParams)
 
 //-----------------------------------------------------------------------
 
-cAINodeContainer* cWorld::CreateAINodeContainer(const tString &asName,
+cAINodeContainer *cWorld::CreateAINodeContainer(const tString &asName,
         const tString &asNodeName,
         const cVector3f &avSize,
         bool abNodeIsAtCenter,
-        int alMinEdges, int alMaxEdges, float afMaxEdgeDistance,float afMaxHeight)
+        int alMinEdges, int alMaxEdges, float afMaxEdgeDistance, float afMaxHeight)
 {
-    cAINodeContainer* pContainer=NULL;
+    cAINodeContainer* pContainer = NULL;
 
     //unsigned long lStartTime = mpSystem->GetLowLevel()->GetTime();
 
@@ -1219,9 +1219,9 @@ cAINodeContainer* cWorld::CreateAINodeContainer(const tString &asName,
     cFileSearcher *pFileSearcher = mpResources->GetFileSearcher();
     tWString sMapPath = GetFilePath();
 
-    tWString sAiFileName = cString::SetFileExtW(sMapPath,_W(""));
-    sAiFileName += _W("_")+cString::To16Char(asName);
-    sAiFileName = cString::SetFileExtW(sAiFileName,_W("nodes"));
+    tWString sAiFileName = cString::SetFileExtW(sMapPath, _W(""));
+    sAiFileName += _W("_") + cString::To16Char(asName);
+    sAiFileName = cString::SetFileExtW(sAiFileName, _W("nodes"));
 
     //////////////////////////////////
     //If there is no container created, create it.
@@ -1230,12 +1230,12 @@ cAINodeContainer* cWorld::CreateAINodeContainer(const tString &asName,
         tTempNodeContainerMapIt ContIt = m_mapTempNodes.find(asNodeName);
         if(ContIt == m_mapTempNodes.end())
         {
-            Warning("AI node type '%s' does not exist!\n",asNodeName.c_str());
+            Warning("AI node type '%s' does not exist!\n", asNodeName.c_str());
             return NULL;
         }
         cTempNodeContainer *pTempCont = ContIt->second;
 
-        pContainer = hplNew( cAINodeContainer, (asName,asNodeName,this,avSize) );
+        pContainer = hplNew( cAINodeContainer, (asName, asNodeName, this, avSize) );
         mlstAINodeContainers.push_back(pContainer);
 
         //Set properties
@@ -1253,10 +1253,10 @@ cAINodeContainer* cWorld::CreateAINodeContainer(const tString &asName,
         for(; NodeIt != pTempCont->mlstNodes.end(); ++NodeIt)
         {
             cTempAiNode& pNode = *NodeIt;
-            pContainer->AddNode(pNode.msName,pNode.mlID,pNode.mvPos,NULL);
+            pContainer->AddNode(pNode.msName, pNode.mlID, pNode.mvPos, NULL);
         }
 
-        bool bLoadedFromFile=false;
+        bool bLoadedFromFile = false;
         if(cPlatform::FileExists(sAiFileName))
         {
             cDate dateMapFile = cPlatform::FileModifiedDate(sMapPath);
@@ -1269,15 +1269,15 @@ cAINodeContainer* cWorld::CreateAINodeContainer(const tString &asName,
             }
         }
 
-        if(bLoadedFromFile==false)
+        if(bLoadedFromFile == false)
         {
-            Log("Rebuilding node connections and saving to '%s'\n",cString::To8Char(sAiFileName).c_str());
+            Log("Rebuilding node connections and saving to '%s'\n", cString::To8Char(sAiFileName).c_str());
 
             //Compile
             pContainer->Compile();
 
             //Save to disk
-            if(cResources::GetForceCacheLoadingAndSkipSaving()==false)
+            if(cResources::GetForceCacheLoadingAndSkipSaving() == false)
             {
                 pContainer->SaveToFile(sAiFileName);
             }
@@ -1293,7 +1293,7 @@ cAINodeContainer* cWorld::CreateAINodeContainer(const tString &asName,
 
 //-----------------------------------------------------------------------
 
-cAStarHandler* cWorld::CreateAStarHandler(cAINodeContainer* apContainer)
+cAStarHandler *cWorld::CreateAStarHandler(cAINodeContainer* apContainer)
 {
     cAStarHandler *pAStar = hplNew( cAStarHandler, (apContainer) );
 
@@ -1318,18 +1318,18 @@ void cWorld::AddAINode(const tString &asName, int alID, const tString &asType, c
         pContainer = it->second;
     }
 
-    if(pContainer==NULL)
+    if(pContainer == NULL)
     {
         pContainer = hplNew( cTempNodeContainer, () );
-        m_mapTempNodes.insert(tTempNodeContainerMap::value_type(asType,pContainer));
+        m_mapTempNodes.insert(tTempNodeContainerMap::value_type(asType, pContainer));
     }
 
-    pContainer->mlstNodes.push_back(cTempAiNode(avPosition,asName, alID));
+    pContainer->mlstNodes.push_back(cTempAiNode(avPosition, asName, alID));
 }
 
 //-----------------------------------------------------------------------
 
-tTempAiNodeList* cWorld::GetAINodeList(const tString &asType)
+tTempAiNodeList *cWorld::GetAINodeList(const tString &asType)
 {
     cTempNodeContainer *pContainer = NULL;
     tTempNodeContainerMapIt it = m_mapTempNodes.find(asType);
@@ -1338,10 +1338,10 @@ tTempAiNodeList* cWorld::GetAINodeList(const tString &asType)
         pContainer = it->second;
     }
 
-    if(pContainer==NULL)
+    if(pContainer == NULL)
     {
         pContainer = hplNew( cTempNodeContainer, () );
-        m_mapTempNodes.insert(tTempNodeContainerMap::value_type(asType,pContainer));
+        m_mapTempNodes.insert(tTempNodeContainerMap::value_type(asType, pContainer));
     }
 
     return &pContainer->mlstNodes;
@@ -1356,7 +1356,7 @@ bool cWorld::CreateFromFile(tString asFile)
 
 //-----------------------------------------------------------------------
 
-cDummyRenderable* cWorld::CreateDummyRenderable(const tString& asName, bool abStatic)
+cDummyRenderable *cWorld::CreateDummyRenderable(const tString& asName, bool abStatic)
 {
     cDummyRenderable *pDummy = hplNew( cDummyRenderable, (asName));
     mlstDummyRenderables.push_back(pDummy);
@@ -1374,14 +1374,14 @@ void cWorld::DestroyDummyRenderable(cDummyRenderable* apDummy)
     STLFindAndDelete(mlstDummyRenderables, apDummy);
 }
 
-cDummyRenderable* cWorld::GetDummyRenderable(const tString& asName)
+cDummyRenderable *cWorld::GetDummyRenderable(const tString& asName)
 {
-    return static_cast<cDummyRenderable*>(STLFindByName(mlstDummyRenderables, asName));
+    return static_cast<cDummyRenderable *>(STLFindByName(mlstDummyRenderables, asName));
 }
 
-cDummyRenderable* cWorld::GetDummyRenderableFromUniqueID(int alID)
+cDummyRenderable *cWorld::GetDummyRenderableFromUniqueID(int alID)
 {
-    for(tDummyRenderableListIt it=mlstDummyRenderables.begin(); it !=mlstDummyRenderables.end(); ++it)
+    for(tDummyRenderableListIt it = mlstDummyRenderables.begin(); it != mlstDummyRenderables.end(); ++it)
     {
         if((*it)->GetUniqueID() == alID)
         {
@@ -1446,7 +1446,7 @@ void cWorld::UpdateParticles(double adFixedDelta)
         if(pPS->GetRemoveWhenDead() && pPS->IsDead())
         {
             it = mlstParticleSystems.erase(it);
-            for(int i=0; i< pPS->GetEmitterNum(); ++i)
+            for(int i = 0; i < pPS->GetEmitterNum(); ++i)
             {
                 RemoveRenderableFromContainer(pPS->GetEmitter(i));
             }
@@ -1468,7 +1468,7 @@ void cWorld::UpdateEntities(double adFixedDelta)
     //if(mlstDynamicMeshEntities.size()>=2) lLastSize = mlstDynamicMeshEntities.size();
 
     tMeshEntityListIt MeshIt = mlstDynamicMeshEntities.begin();
-    tMeshEntityListIt endIt =mlstDynamicMeshEntities.end();
+    tMeshEntityListIt endIt = mlstDynamicMeshEntities.end();
     //if(bRenderDebug)Log("----\n");
     for(; MeshIt != endIt; MeshIt++)
     {

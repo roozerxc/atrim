@@ -47,7 +47,7 @@ public:
 class cMeshEntityCallback
 {
 public:
-    virtual void AfterAnimationUpdate(cMeshEntity *apMeshEntity, double adFixedDelta)=0;
+    virtual void AfterAnimationUpdate(cMeshEntity *apMeshEntity, double adFixedDelta) = 0;
 };
 
 //------------------------------------------
@@ -61,7 +61,7 @@ class cMeshEntity : public iEntity3D
     friend class cMeshEntityRootNodeUpdate;
     friend class cMesh;
 public:
-    cMeshEntity(const tString asName,cMesh* apMesh, cMaterialManager* apMaterialManager,
+    cMeshEntity(const tString asName, cMesh* apMesh, cMaterialManager* apMaterialManager,
                 cMeshManager* apMeshManager, cAnimationManager *apAnimationManager);
     ~cMeshEntity();
 
@@ -69,12 +69,12 @@ public:
     {
         mpWorld = apWorld;
     }
-    cWorld* GetWorld()
+    cWorld *GetWorld()
     {
         return mpWorld;
     }
 
-    cMesh* GetMesh()
+    cMesh *GetMesh()
     {
         return mpMesh;
     }
@@ -85,29 +85,29 @@ public:
     }
 
     //Sub mesh entities
-    cSubMeshEntity* GetSubMeshEntity(unsigned int alIdx);
-    cSubMeshEntity* GetSubMeshEntityName(const tString &asName);
+    cSubMeshEntity *GetSubMeshEntity(unsigned int alIdx);
+    cSubMeshEntity *GetSubMeshEntityName(const tString &asName);
     int GetSubMeshEntityNum();
 
     //Animation states
-    cAnimationState* AddAnimation(cAnimation *apAnimation,const tString &asName, float afBaseSpeed);
+    cAnimationState *AddAnimation(cAnimation *apAnimation, const tString &asName, float afBaseSpeed);
     void ClearAnimations();
 
-    cAnimationState* GetAnimationState(int alIndex);
+    cAnimationState *GetAnimationState(int alIndex);
     int GetAnimationStateIndex(const tString &asName);
-    cAnimationState* GetAnimationStateFromName(const tString &asName);
+    cAnimationState *GetAnimationStateFromName(const tString &asName);
     int GetAnimationStateNum();
     bool IsMeshCulled();
 
     void SetIsOccluder(bool abX);
 
     //Animation controller
-    void Play(int alIndex,bool abLoop, bool bStopPrev);
-    void PlayName(const tString &asName,bool abLoop, bool bStopPrev);
+    void Play(int alIndex, bool abLoop, bool bStopPrev);
+    void PlayName(const tString &asName, bool abLoop, bool bStopPrev);
     void Stop();
 
-    void PlayFadeTo(int alIndex,bool abLoop, float afTime);
-    void PlayFadeToName(const tString &asName,bool abLoop, float afTime);
+    void PlayFadeTo(int alIndex, bool abLoop, float afTime);
+    void PlayFadeToName(const tString &asName, bool abLoop, float afTime);
 
     void FadeOutCurrent(float afTime);
     void FadeInCurrent(float afTime, bool abLoop);
@@ -124,15 +124,15 @@ public:
     }
 
     //Bone states
-    cNode3D* GetBoneStateRoot()
+    cNode3D *GetBoneStateRoot()
     {
         return mpBoneStateRoot;
     }
 
-    cBoneState* GetBoneState(int alIndex);
+    cBoneState *GetBoneState(int alIndex);
     int GetBoneStateIndex(const tString &asName);
     int GetBoneStateIndexFromPtr(cBoneState* apBoneState);
-    cBoneState* GetBoneStateFromName(const tString &asName);
+    cBoneState *GetBoneStateFromName(const tString &asName);
     int GetBoneStateNum();
 
     //Skeleton physics
@@ -165,7 +165,7 @@ public:
      * \param *apPosition Can be NULL, the position
      * \param *apAngles Can be NULL, the angles.
      */
-    cMatrixf CalculateTransformFromSkeleton(cVector3f *apPosition,cVector3f *apAngles);
+    cMatrixf CalculateTransformFromSkeleton(cVector3f *apPosition, cVector3f *apAngles);
 
     /**
      * Checks collision with the skeletons collider boides
@@ -182,9 +182,9 @@ public:
     void ResetGraphicsUpdated();
 
     //Node states
-    cNode3D* GetNodeState(int alIndex);
+    cNode3D *GetNodeState(int alIndex);
     int GetNodeStateIndex(const tString &asName);
-    cNode3D* GetNodeStateFromName(const tString &asName);
+    cNode3D *GetNodeStateFromName(const tString &asName);
     int GetNodeStateNum();
 
     //Entity implementation
@@ -198,7 +198,7 @@ public:
     }
     void SetVisible(bool abVisible);
 
-    cBoundingVolume* GetBoundingVolume();
+    cBoundingVolume *GetBoundingVolume();
 
     void SetStatic(bool abX);
     bool IsStatic()
@@ -245,7 +245,7 @@ public:
     {
         mpBody = apBody;
     }
-    iPhysicsBody* GetBody()
+    iPhysicsBody *GetBody()
     {
         return mpBody;
     }
@@ -254,7 +254,7 @@ public:
     {
         mpUserData = apData;
     }
-    void* GetUserData()
+    void *GetUserData()
     {
         return mpUserData;
     }
@@ -268,7 +268,7 @@ private:
 
     void HandleAnimationEvent(cAnimationEvent *apEvent);
 
-    void SetBoneMatrixFromBodyRec(const cMatrixf& a_mtxParentWorld,cBoneState *apBoneState);
+    void SetBoneMatrixFromBodyRec(const cMatrixf& a_mtxParentWorld, cBoneState *apBoneState);
 
     void UpdateBVFromSkeleton();
     void GetAABBFromBones(cVector3f &avMin, cVector3f &avMax);
@@ -278,8 +278,8 @@ private:
 
     bool GetAABBFromSkeletonBounds(cVector3f &avMin, cVector3f &avMax);
 
-    cMaterialManager* mpMaterialManager;
-    cMeshManager* mpMeshManager;
+    cMaterialManager *mpMaterialManager;
+    cMeshManager *mpMeshManager;
     cAnimationManager *mpAnimationManager;
 
     cWorld *mpWorld;
@@ -333,13 +333,13 @@ private:
     tNodeStateVec mvNodeStates;
     tNodeStateIndexMap m_mapNodeStateIndices;
 
-    cMesh* mpMesh;
+    cMesh *mpMesh;
 
     cMeshEntityCallback *mpCallback;
 
     iPhysicsBody *mpBody;
 
-    void* mpUserData;
+    void *mpUserData;
 };
 
 //-----------------------------------------------------------------------

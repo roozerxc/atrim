@@ -15,13 +15,13 @@ typedef tParseVarMap::iterator tParseVarMapIt;
 class cParserVarContainer
 {
 public:
-    void Add(const tString& asName, const tString& asVal="");
+    void Add(const tString& asName, const tString& asVal = "");
     void Add(const tString& asName, int alVal);
     void Add(const tString& asName, float afVal);
     bool Remove(const tString& asName);
-    tString* Get(const tString& asName);
+    tString *Get(const tString& asName);
 
-    tParseVarMap* GetMapPtr()
+    tParseVarMap *GetMapPtr()
     {
         return &m_mapVars;
     }
@@ -74,12 +74,12 @@ public:
     iParserSymbol(int alRow) : mlRow(alRow) {}
     virtual ~iParserSymbol() {}
 
-    virtual eParserSymbol GetType()=0;
+    virtual eParserSymbol GetType() = 0;
 
-    cParserSymbolText* ToText();
-    cParserSymbolKeyword* ToKeyword();
-    cParserSymbolOperator* ToOperator();
-    cParserSymbolVariable* ToVariable();
+    cParserSymbolText *ToText();
+    cParserSymbolKeyword *ToKeyword();
+    cParserSymbolOperator *ToOperator();
+    cParserSymbolVariable *ToVariable();
 
     int mlRow;
 };
@@ -150,7 +150,7 @@ enum eSymbolProcess
 
 //---------------------------------------
 
-typedef std::list<iParserSymbol*> tParserSymbolList;
+typedef std::list<iParserSymbol *> tParserSymbolList;
 typedef tParserSymbolList::iterator tParserSymbolListIt;
 
 //---------------------------------------
@@ -162,13 +162,13 @@ public:
     ~cPreprocessParser();
 
     bool Parse(    const tString* apInput, tString *apOutput, cParserVarContainer *apVarContainer,
-                   const tWString& asDir=_W(""));
+                   const tWString& asDir = _W(""));
 
-    cParserVarContainer* GetEnvVarContainer()
+    cParserVarContainer *GetEnvVarContainer()
     {
         return &mEnvironmentVars;
     }
-    cParserVarContainer* GetParsingVarContainer()
+    cParserVarContainer *GetParsingVarContainer()
     {
         return &mParsingVars;
     }
@@ -176,7 +176,7 @@ public:
 private:
     bool CharIsVariableValid(char alChar);
     bool VariableExists(const tString &asName);
-    tString* GetVar(const tString &asName);
+    tString *GetVar(const tString &asName);
 
     bool EndOfInput();
     void GetNextString();

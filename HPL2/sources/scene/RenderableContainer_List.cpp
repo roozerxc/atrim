@@ -65,7 +65,7 @@ void cRenderableContainer_List::Remove(iRenderable *apRenderable)
 
 //-----------------------------------------------------------------------
 
-iRenderableContainerNode* cRenderableContainer_List::GetRoot()
+iRenderableContainerNode *cRenderableContainer_List::GetRoot()
 {
     return &mRoot;
 }

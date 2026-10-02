@@ -33,11 +33,11 @@ public:
     iMeshLoader(iLowLevelGraphics *apLowLevelGraphics): mpLowLevelGraphics(apLowLevelGraphics) {}
     virtual ~iMeshLoader() { }
 
-    virtual cMesh* LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags)=0;
-    virtual bool SaveMesh(cMesh* apMesh,const tWString& asFile)=0;
+    virtual cMesh *LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags) = 0;
+    virtual bool SaveMesh(cMesh* apMesh, const tWString& asFile) = 0;
 
-    virtual cAnimation* LoadAnimation(const tWString& asFile)=0;
-    virtual bool SaveAnimation(cAnimation* apAnimation, const tWString& asFile)=0;
+    virtual cAnimation *LoadAnimation(const tWString& asFile) = 0;
+    virtual bool SaveAnimation(cAnimation* apAnimation, const tWString& asFile) = 0;
 
 protected:
     cMaterialManager *mpMaterialManager;

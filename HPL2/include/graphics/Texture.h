@@ -14,7 +14,7 @@ class iTexture : public iResourceBase, public iFrameBufferAttachment
 {
 public:
     iTexture(const tString& asName, const tWString& asFullPath, eTextureType aType, eTextureUsage aUsage, iLowLevelGraphics* apLowLevelGraphics)
-        : iResourceBase(asName,asFullPath,0),
+        : iResourceBase(asName, asFullPath, 0),
           mUsage(aUsage),
           mType(aType),
           mpLowLevelGraphics(apLowLevelGraphics),
@@ -22,9 +22,9 @@ public:
           mbIsCompressed(false),
           mlMemorySize(0),
           mPixelFormat(ePixelFormat_Unknown),
-          mWrapS(eTextureWrap_Repeat), mWrapT(eTextureWrap_Repeat),mWrapR(eTextureWrap_Repeat),
-          dFrameTime(1), mAnimMode(eTextureAnimMode_Loop), mlSizeDownScaleLevel(0), mvMinDownScaleSize(16,16,16),
-          mfAnisotropyDegree(1.0f),mFilter(eTextureFilter_Bilinear),
+          mWrapS(eTextureWrap_Repeat), mWrapT(eTextureWrap_Repeat), mWrapR(eTextureWrap_Repeat),
+          dFrameTime(1), mAnimMode(eTextureAnimMode_Loop), mlSizeDownScaleLevel(0), mvMinDownScaleSize(16, 16, 16),
+          mfAnisotropyDegree(1.0f), mFilter(eTextureFilter_Bilinear),
           mCompareMode(eTextureCompareMode_None),
           mCompareFunc(eTextureCompareFunc_LessOrEqual)
     {}
@@ -38,22 +38,22 @@ public:
     void Unload() {}
     void Destroy() {}
 
-    virtual bool CreateFromBitmap(cBitmap* pBmp)=0;
-    virtual bool CreateAnimFromBitmapVec(std::vector<cBitmap*> *avBitmaps)=0;
-    virtual bool CreateCubeFromBitmapVec(std::vector<cBitmap*> *avBitmaps)=0;
-    virtual bool CreateFromRawData(const cVector3l &avSize,ePixelFormat aPixelFormat, unsigned char *apData)=0;
+    virtual bool CreateFromBitmap(cBitmap* pBmp) = 0;
+    virtual bool CreateAnimFromBitmapVec(std::vector<cBitmap*> *avBitmaps) = 0;
+    virtual bool CreateCubeFromBitmapVec(std::vector<cBitmap*> *avBitmaps) = 0;
+    virtual bool CreateFromRawData(const cVector3l &avSize, ePixelFormat aPixelFormat, unsigned char *apData) = 0;
 
     virtual void SetRawData(    int alLevel, const cVector3l& avOffset, const cVector3l& avSize,
-                                ePixelFormat aPixelFormat, void *apData)=0;
+                                ePixelFormat aPixelFormat, void *apData) = 0;
 
-    virtual void Update(double adFixedDelta)=0;
+    virtual void Update(double adFixedDelta) = 0;
 
     inline ePixelFormat GetPixelFormat() const
     {
         return mPixelFormat;
     }
 
-    inline const cVector3l& GetSize() const
+    inline const cVector3l &GetSize() const
     {
         return mvSize;
     }
@@ -79,8 +79,8 @@ public:
         return cVector2l(mvSize.x, mvSize.y);
     }
 
-    virtual void SetFilter(eTextureFilter aFilter)=0;
-    virtual void SetAnisotropyDegree(float afX)=0;
+    virtual void SetFilter(eTextureFilter aFilter) = 0;
+    virtual void SetAnisotropyDegree(float afX) = 0;
     eTextureFilter GetFilter()
     {
         return mFilter;
@@ -90,10 +90,10 @@ public:
         return mfAnisotropyDegree;
     }
 
-    virtual void SetWrapS(eTextureWrap aMode)=0;
-    virtual void SetWrapT(eTextureWrap aMode)=0;
-    virtual void SetWrapR(eTextureWrap aMode)=0;
-    virtual void SetWrapSTR(eTextureWrap aMode)=0;
+    virtual void SetWrapS(eTextureWrap aMode) = 0;
+    virtual void SetWrapT(eTextureWrap aMode) = 0;
+    virtual void SetWrapR(eTextureWrap aMode) = 0;
+    virtual void SetWrapSTR(eTextureWrap aMode) = 0;
 
     eTextureWrap GetWrapS()
     {
@@ -108,8 +108,8 @@ public:
         return mWrapR;
     }
 
-    virtual void SetCompareMode(eTextureCompareMode aMode)=0;
-    virtual void SetCompareFunc(eTextureCompareFunc aFunc)=0;
+    virtual void SetCompareMode(eTextureCompareMode aMode) = 0;
+    virtual void SetCompareFunc(eTextureCompareFunc aFunc) = 0;
 
     eTextureCompareMode GetCompareMode()
     {
@@ -121,7 +121,7 @@ public:
     }
 
 
-    virtual void AutoGenerateMipmaps()=0;
+    virtual void AutoGenerateMipmaps() = 0;
 
     int GetMemorySize()
     {
@@ -183,13 +183,13 @@ public:
         return eFrameBufferAttachment_Texture;
     }
 
-    virtual bool HasAnimation()=0;
-    virtual void NextFrame()=0;
-    virtual void PrevFrame()=0;
-    virtual float GetT()=0;
-    virtual float GetTimeCount()=0;
-    virtual void SetTimeCount(float afX)=0;
-    virtual int GetCurrentLowlevelHandle()=0;
+    virtual bool HasAnimation() = 0;
+    virtual void NextFrame() = 0;
+    virtual void PrevFrame() = 0;
+    virtual float GetT() = 0;
+    virtual float GetTimeCount() = 0;
+    virtual void SetTimeCount(float afX) = 0;
+    virtual int GetCurrentLowlevelHandle() = 0;
 
 protected:
     eTextureUsage mUsage;
@@ -211,7 +211,7 @@ protected:
     bool mbUseMipMaps;
     bool mbIsCompressed;
     ePixelFormat mPixelFormat;
-    iLowLevelGraphics* mpLowLevelGraphics;
+    iLowLevelGraphics *mpLowLevelGraphics;
     double dFrameTime;
     eTextureAnimMode mAnimMode;
 

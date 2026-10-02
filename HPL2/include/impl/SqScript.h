@@ -12,10 +12,10 @@ namespace hpl
 class cSqScript : public iScript
 {
 public:
-    cSqScript(const tString& asName, asIScriptEngine *apScriptEngine,cScriptOutput *apScriptOutput, int alHandle);
+    cSqScript(const tString& asName, asIScriptEngine *apScriptEngine, cScriptOutput *apScriptOutput, int alHandle);
     ~cSqScript();
 
-    bool CreateFromFile(const tWString& asFileName, tString *apCompileMessages=NULL);
+    bool CreateFromFile(const tWString& asFileName, tString *apCompileMessages = NULL);
 
     int GetFuncHandle(const tString& asFunc);
     void AddArg(const tString& asArg);
@@ -34,7 +34,7 @@ private:
     int mlHandle;
     tString msModuleName;
 
-    char* LoadCharBuffer(const tWString& asFileName, int& alLength);
+    char *LoadCharBuffer(const tWString& asFileName, int &alLength);
 };
 };
 #endif // HPL_SCRIPT_H

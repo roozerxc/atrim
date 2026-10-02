@@ -24,7 +24,7 @@ class cFrameSubImage : public iResourceBase
     friend class cFrameBitmap;
     friend class cImageManager;
 public:
-    cFrameSubImage(const tString& asName,const tWString& asFullPath, cFrameTexture *apFrameTex,
+    cFrameSubImage(const tString& asName, const tWString& asFullPath, cFrameTexture *apFrameTex,
                    cFrameBitmap *apFrameBmp,
                    cRect2l aRect,
                    cVector2l avSrcSize, int alHandle,
@@ -47,11 +47,11 @@ public:
     }
     cVector2l GetSize()const
     {
-        return cVector2l(mRect.w,mRect.h);
+        return cVector2l(mRect.w, mRect.h);
     }
     cVector2l GetPosition()const
     {
-        return cVector2l(mRect.x,mRect.y);
+        return cVector2l(mRect.x, mRect.y);
     }
 
     int GetSourceWidth()const
@@ -75,7 +75,7 @@ public:
     }
 
     tVertexVec GetVertexVecCopy(const cVector2f &avPos, const cVector2f &avSize);
-    const tVertexVec& GetVertexVec()
+    const tVertexVec &GetVertexVec()
     {
         return mvVtx;
     }
@@ -106,7 +106,7 @@ private:
     int mlUpdateCount;
 };
 
-typedef std::vector<cFrameSubImage*> tResourceImageVec;
+typedef std::vector<cFrameSubImage *> tResourceImageVec;
 typedef tResourceImageVec::iterator tResourceImageVecIt;
 
 };

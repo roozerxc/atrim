@@ -26,28 +26,28 @@ public:
     * Filled in by the class that inherits from Action.
     * \return true if the action is being triggered
     */
-    virtual bool IsTriggerd()=0;
+    virtual bool IsTriggerd() = 0;
 
     /**
     *
     * \return A value from the input, ie the relative mouse x position.
     */
-    virtual float GetValue()=0;
+    virtual float GetValue() = 0;
 
     /**
     * The name of the input, ie for keyboard the name of the key is returned.
     */
-    virtual tString GetInputName()=0;
+    virtual tString GetInputName() = 0;
 
     /**
     * The name of the input type.
     */
-    virtual tString GetInputType()=0;
+    virtual tString GetInputType() = 0;
 };
 
 //---------------------------------------------------------
 
-typedef std::vector<iSubAction*> tSubActionVec;
+typedef std::vector<iSubAction *> tSubActionVec;
 typedef tSubActionVec::iterator tSubActionVecIt;
 
 class cInput;
@@ -57,14 +57,14 @@ class cInput;
 class cAction
 {
 public:
-    cAction(const tString& asName,int alId, cInput *apInput);
+    cAction(const tString& asName, int alId, cInput *apInput);
     ~cAction();
 
     void AddKey(eKey aKey);
     void AddMouseButton(eMouseButton aButton);
 #if USE_GAMEPAD
     void AddGamepadButton(int alPadIndex, eGamepadButton aButton);
-    void AddGamepadAxis(int alPadIndex, eGamepadAxis aAxis, eGamepadAxisRange aRange, float afMinThreshold, float afMaxThreshold=1.0f);
+    void AddGamepadAxis(int alPadIndex, eGamepadAxis aAxis, eGamepadAxisRange aRange, float afMinThreshold, float afMaxThreshold = 1.0f);
     void AddGamepadHat(int alPadIndex, eGamepadHat aHat, eGamepadHatState aHatState);
 #endif
 
@@ -112,7 +112,7 @@ public:
     }
 
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }

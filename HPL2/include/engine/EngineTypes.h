@@ -92,8 +92,8 @@ public:
     {
         friend class cMultipleSettingsHandler;
     public:
-        cGSEntry() : mfVal(1),mfDest(1), mTypes(0), mbDestroyAtDest(false) {}
-        cGSEntry(float afVal,tFlag aTypes) : mfVal(afVal),mfDest(afVal), mTypes(aTypes), mbDestroyAtDest(false) {}
+        cGSEntry() : mfVal(1), mfDest(1), mTypes(0), mbDestroyAtDest(false) {}
+        cGSEntry(float afVal, tFlag aTypes) : mfVal(afVal), mfDest(afVal), mTypes(aTypes), mbDestroyAtDest(false) {}
 
         void FadeTo(float afDest, float afSpeed, bool abDestroyAtDest);
         void SetValAndDest(float afVal);
@@ -148,11 +148,11 @@ public:
         bool mbDestroyAtDest;
     };
 
-    typedef std::vector<cGSEntry*> tEntryVec;
+    typedef std::vector<cGSEntry *> tEntryVec;
     typedef tEntryVec::iterator tEntryVecIt;
 
 public:
-    cGSEntry* GetEntry(int alIdx, bool abForceCreation=true);
+    cGSEntry *GetEntry(int alIdx, bool abForceCreation = true);
     int CreateEntry();
     void DestroyEntry(int alIdx);
     bool EntryExists(int alIdx)
@@ -181,7 +181,7 @@ public:
     int mlVal;
 };
 
-typedef std::map<tString,cScriptVar> tScriptVarMap;
+typedef std::map<tString, cScriptVar> tScriptVarMap;
 typedef tScriptVarMap::iterator tScriptVarMapIt;
 
 //---------------------------------------

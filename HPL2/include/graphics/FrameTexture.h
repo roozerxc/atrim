@@ -13,10 +13,10 @@ class cImageManager;
 class cFrameTexture : public iFrameBase
 {
 public:
-    cFrameTexture(iTexture *pTex, int alHandle,cImageManager *apImageManager, bool abIsCustom);
+    cFrameTexture(iTexture *pTex, int alHandle, cImageManager *apImageManager, bool abIsCustom);
     ~cFrameTexture();
 
-    iTexture* GetTexture();
+    iTexture *GetTexture();
     int GetHandle()
     {
         return mlHandle;
@@ -30,7 +30,7 @@ public:
     /**
     * Creates a subimage in frame at pos and with size messured in pixel. Only works on custom frames!
     */
-    cFrameSubImage* CreateCustomImage(const cVector2l& avPixelPos,const cVector2l& avPixelSize);
+    cFrameSubImage *CreateCustomImage(const cVector2l& avPixelPos, const cVector2l& avPixelSize);
 
 private:
 

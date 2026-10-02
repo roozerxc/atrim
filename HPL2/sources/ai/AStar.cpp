@@ -24,7 +24,7 @@ cAStarNode::cAStarNode(cAINode *apAINode)
 
 //-----------------------------------------------------------------------
 
-bool cAStarNodeCompare::operator()(cAStarNode* apNodeA,cAStarNode* apNodeB) const
+bool cAStarNodeCompare::operator()(cAStarNode* apNodeA, cAStarNode* apNodeB) const
 {
     return apNodeA->mpAINode < apNodeB->mpAINode;
 }
@@ -63,14 +63,14 @@ cAStarHandler::~cAStarHandler()
 
 //-----------------------------------------------------------------------
 
-bool cAStarHandler::GetPath(const cVector3f& avStart, const cVector3f& avGoal,tAINodeList *apNodeList)
+bool cAStarHandler::GetPath(const cVector3f& avStart, const cVector3f& avGoal, tAINodeList *apNodeList)
 {
-    float fMaxHeight = mpContainer->GetMaxHeight()*1.5f;
+    float fMaxHeight = mpContainer->GetMaxHeight() * 1.5f;
 
     /////////////////////////////////////////////////
     // check if there is free path from start to goal
     float fHeight = fabs(avStart.y - avGoal.y);
-    if(fHeight <= fMaxHeight && mpContainer->FreePath(avStart,avGoal,-1,eAIFreePathFlag_SkipDynamic))
+    if(fHeight <= fMaxHeight && mpContainer->FreePath(avStart, avGoal, -1, eAIFreePathFlag_SkipDynamic))
     {
         mpGoalNode = NULL;
         return true;
@@ -82,7 +82,7 @@ bool cAStarHandler::GetPath(const cVector3f& avStart, const cVector3f& avGoal,tA
     STLDeleteAll(m_setClosedList);
     STLDeleteAll(m_setOpenList);
     m_setGoalNodes.clear();
-    mpGoalNode=NULL;
+    mpGoalNode = NULL;
 
     //Set goal position
     mvGoal = avGoal;
@@ -90,25 +90,25 @@ bool cAStarHandler::GetPath(const cVector3f& avStart, const cVector3f& avGoal,tA
 
     ////////////////////////////////////////////////
     //Find nodes reachable from the start and goal position (use double 2*2 distance)
-    float fMaxDist = mpContainer->GetMaxEdgeDistance()*2; //float fMaxDist = mpContainer->GetMaxEdgeDistance()*mpContainer->GetMaxEdgeDistance()*4;
+    float fMaxDist = mpContainer->GetMaxEdgeDistance() * 2; //float fMaxDist = mpContainer->GetMaxEdgeDistance()*mpContainer->GetMaxEdgeDistance()*4;
 
     /////////////////////
     //Check with Start
     //Log(" Get Start\n");
-    cAINodeIterator startNodeIt =  mpContainer->GetNodeIterator(avStart,fMaxDist);
+    cAINodeIterator startNodeIt =  mpContainer->GetNodeIterator(avStart, fMaxDist);
     while(startNodeIt.HasNext())
     {
         cAINode *pAINode = startNodeIt.Next();
         //Log("Check node: %s\n",pAINode->GetName().c_str());
 
         float fHeight = fabs(avStart.y - pAINode->GetPosition().y);
-        float fDist = cMath::Vector3Dist(avStart,pAINode->GetPosition()); //float fDist = cMath::Vector3DistSqr(avStart,pAINode->GetPosition());
+        float fDist = cMath::Vector3Dist(avStart, pAINode->GetPosition()); //float fDist = cMath::Vector3DistSqr(avStart,pAINode->GetPosition());
         if(fDist < fMaxDist && fHeight <= fMaxHeight)
         {
             //Check if path is clear
-            if(mpContainer->FreePath(avStart,pAINode->GetPosition(),-1,    eAIFreePathFlag_SkipDynamic))
+            if(mpContainer->FreePath(avStart, pAINode->GetPosition(), -1,    eAIFreePathFlag_SkipDynamic))
             {
-                AddOpenNode(pAINode,NULL,fDist);
+                AddOpenNode(pAINode, NULL, fDist);
             }
         }
     }
@@ -117,18 +117,18 @@ bool cAStarHandler::GetPath(const cVector3f& avStart, const cVector3f& avGoal,tA
     ////////////////////////////////
     //Check with Goal
     //Log(" Get Goal\n");
-    cAINodeIterator goalNodeIt =  mpContainer->GetNodeIterator(avGoal,fMaxDist);
+    cAINodeIterator goalNodeIt =  mpContainer->GetNodeIterator(avGoal, fMaxDist);
     while(goalNodeIt.HasNext())
     {
         cAINode *pAINode = goalNodeIt.Next();
         //Log("Check node: %s\n",pAINode->GetName().c_str());
 
         float fHeight = fabs(avGoal.y - pAINode->GetPosition().y);
-        float fDist = cMath::Vector3Dist(avGoal,pAINode->GetPosition()); //fDist = cMath::Vector3DistSqr(avGoal,pAINode->GetPosition());
+        float fDist = cMath::Vector3Dist(avGoal, pAINode->GetPosition()); //fDist = cMath::Vector3DistSqr(avGoal,pAINode->GetPosition());
         if(fDist < fMaxDist && fHeight <= fMaxHeight)
         {
             //Check if path is clear
-            if(mpContainer->FreePath(avGoal,pAINode->GetPosition(),-1, eAIFreePathFlag_SkipDynamic))
+            if(mpContainer->FreePath(avGoal, pAINode->GetPosition(), -1, eAIFreePathFlag_SkipDynamic))
             {
                 m_setGoalNodes.insert(pAINode);
             }
@@ -205,8 +205,8 @@ bool cAStarHandler::GetPath(const cVector3f& avStart, const cVector3f& avGoal,tA
 
 void cAStarHandler::IterateAlgorithm()
 {
-    int lIterationCount=0;
-    while(m_setOpenList.empty()==false && (mlMaxIterations <0 || lIterationCount < mlMaxIterations))
+    int lIterationCount = 0;
+    while(m_setOpenList.empty() == false && (mlMaxIterations < 0 || lIterationCount < mlMaxIterations))
     {
         cAStarNode *pNode = GetBestNode();
         cAINode *pAINode = pNode->mpAINode;
@@ -222,7 +222,7 @@ void cAStarHandler::IterateAlgorithm()
         /////////////////////
         //Add nodes connected to current
         int lEdgeCount = pAINode->GetEdgeNum();
-        for(int i=0; i< lEdgeCount; ++i)
+        for(int i = 0; i < lEdgeCount; ++i)
         {
             cAINodeEdge *pEdge = pAINode->GetEdge(i);
 
@@ -264,13 +264,13 @@ void cAStarHandler::AddOpenNode(cAINode *apAINode, cAStarNode *apParent, float a
     }
 
     pNode->mfDistance = afDistance;
-    pNode->mfCost = Cost(afDistance,apAINode,apParent) + Heuristic(pNode->mpAINode->GetPosition(), mvGoal);
+    pNode->mfCost = Cost(afDistance, apAINode, apParent) + Heuristic(pNode->mpAINode->GetPosition(), mvGoal);
     pNode->mpParent = apParent;
 }
 
 //-----------------------------------------------------------------------
 
-cAStarNode* cAStarHandler::GetBestNode()
+cAStarNode *cAStarHandler::GetBestNode()
 {
     tAStarNodeSetIt it = m_setOpenList.begin();
     tAStarNodeSetIt bestIt = it;
@@ -303,7 +303,7 @@ float cAStarHandler::Cost(float afDistance, cAINode *apAINode, cAStarNode *apPar
 {
     if(apParent)
     {
-        float fHeight = (1+fabs(apAINode->GetPosition().y - apParent->mpAINode->GetPosition().y));
+        float fHeight = (1 + fabs(apAINode->GetPosition().y - apParent->mpAINode->GetPosition().y));
         return afDistance * fHeight;
     }
     else

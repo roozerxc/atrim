@@ -107,45 +107,45 @@ public :
     }
 
     // = operator
-    TiXmlString& operator = (const char * copy)
+    TiXmlString &operator = (const char * copy)
     {
         return assign( copy, (size_type)strlen(copy));
     }
 
     // = operator
-    TiXmlString& operator = (const TiXmlString & copy)
+    TiXmlString &operator = (const TiXmlString & copy)
     {
         return assign(copy.start(), copy.length());
     }
 
 
     // += operator. Maps to append
-    TiXmlString& operator += (const char * suffix)
+    TiXmlString &operator += (const char * suffix)
     {
         return append(suffix, static_cast<size_type>( strlen(suffix) ));
     }
 
     // += operator. Maps to append
-    TiXmlString& operator += (char single)
+    TiXmlString &operator += (char single)
     {
         return append(&single, 1);
     }
 
     // += operator. Maps to append
-    TiXmlString& operator += (const TiXmlString & suffix)
+    TiXmlString &operator += (const TiXmlString & suffix)
     {
         return append(suffix.data(), suffix.length());
     }
 
 
     // Convert a TiXmlString into a null-terminated char *
-    const char * c_str () const
+    const char *c_str () const
     {
         return rep_->str;
     }
 
     // Convert a TiXmlString into a char * (need not be null terminated).
-    const char * data () const
+    const char *data () const
     {
         return rep_->str;
     }
@@ -176,14 +176,14 @@ public :
 
 
     // single char extraction
-    const char& at (size_type index) const
+    const char &at (size_type index) const
     {
         assert( index < length() );
         return rep_->str[ index ];
     }
 
     // [] operator
-    char& operator [] (size_type index) const
+    char &operator [] (size_type index) const
     {
         assert( index < length() );
         return rep_->str[ index ];
@@ -203,7 +203,7 @@ public :
             return npos;
         }
 
-        for (const char* p = c_str() + offset; *p != '\0'; ++p)
+        for (const char * p = c_str() + offset; *p != '\0'; ++p)
         {
             if (*p == tofind)
             {
@@ -220,7 +220,7 @@ public :
         //    TiXmlString().swap(*this);
         //Instead use the quit & re-init:
         quit();
-        init(0,0);
+        init(0, 0);
     }
 
     /*    Function to reserve a big amount of data when we know we'll need it. Be aware that this
@@ -228,9 +228,9 @@ public :
     */
     void reserve (size_type cap);
 
-    TiXmlString& assign (const char* str, size_type len);
+    TiXmlString &assign (const char* str, size_type len);
 
-    TiXmlString& append (const char* str, size_type len);
+    TiXmlString &append (const char* str, size_type len);
 
     void swap (TiXmlString& other)
     {
@@ -249,11 +249,11 @@ private:
     {
         rep_->str[ rep_->size = sz ] = '\0';
     }
-    char* start() const
+    char *start() const
     {
         return rep_->str;
     }
-    char* finish() const
+    char *finish() const
     {
         return rep_->str + rep_->size;
     }
@@ -275,7 +275,7 @@ private:
             // that are overly picky about structure alignment.
             const size_type bytesNeeded = sizeof(Rep) + cap;
             const size_type intsNeeded = ( bytesNeeded + sizeof(int) - 1 ) / sizeof( int );
-            rep_ = reinterpret_cast<Rep*>( new int[ intsNeeded ] );
+            rep_ = reinterpret_cast<Rep *>( new int[ intsNeeded ] );
 
             rep_->str[ rep_->size = sz ] = '\0';
             rep_->capacity = cap;
@@ -296,7 +296,7 @@ private:
         }
     }
 
-    Rep * rep_;
+    Rep *rep_;
     static Rep nullrep_;
 
 } ;
@@ -360,14 +360,14 @@ class TiXmlOutStream : public TiXmlString
 public :
 
     // TiXmlOutStream << operator.
-    TiXmlOutStream & operator << (const TiXmlString & in)
+    TiXmlOutStream &operator << (const TiXmlString & in)
     {
         *this += in;
         return *this;
     }
 
     // TiXmlOutStream << operator.
-    TiXmlOutStream & operator << (const char * in)
+    TiXmlOutStream &operator << (const char * in)
     {
         *this += in;
         return *this;

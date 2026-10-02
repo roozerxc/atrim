@@ -28,7 +28,7 @@ iThread::iThread()
 
 void iThread::SetUpdateRate(float afUpdateRate)
 {
-    SetSleepTime(cMath::RoundToInt(1000.0f/afUpdateRate));
+    SetSleepTime(cMath::RoundToInt(1000.0f / afUpdateRate));
 }
 
 //-----------------------------------------------------------------------
@@ -56,7 +56,7 @@ void iThread::SetPriority(eThreadPrio aPrio)
 
 int iThread::MainThreadFunc(void* apThread)
 {
-    if(apThread==NULL)
+    if(apThread == NULL)
     {
         return -1;
     }

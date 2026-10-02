@@ -18,7 +18,7 @@ class cXmlElement;
 
 //----------------------------------------------------
 
-typedef std::map<tString, cParticleSystemData*> tParticleSystemData3DMap;
+typedef std::map<tString, cParticleSystemData *> tParticleSystemData3DMap;
 typedef tParticleSystemData3DMap::iterator tParticleSystemData3DMapIt;
 
 
@@ -27,14 +27,14 @@ typedef tParticleSystemData3DMap::iterator tParticleSystemData3DMapIt;
 class cParticleManager : public iResourceManager
 {
 public:
-    cParticleManager(cGraphics* apGraphics,cResources *apResources);
+    cParticleManager(cGraphics* apGraphics, cResources *apResources);
     ~cParticleManager();
 
-    cParticleSystem* CreatePS(const tString& asName,const tString& asType, cVector3f avSize);
+    cParticleSystem *CreatePS(const tString& asName, const tString& asType, cVector3f avSize);
 
     /////////////////////////////////////////////////
     // This method is a hack, just so everyone knows
-    cParticleSystem* CreatePS(const tString& asName, const tString& asDataName, cXmlElement* apElement,cVector3f avSize);
+    cParticleSystem *CreatePS(const tString& asName, const tString& asDataName, cXmlElement* apElement, cVector3f avSize);
 
     void AddData(cParticleSystemData *apData);
 
@@ -43,10 +43,10 @@ public:
     void Destroy(iResourceBase* apResource);
     void Unload(iResourceBase* apResource);
 private:
-    cGraphics* mpGraphics;
+    cGraphics *mpGraphics;
     cResources *mpResources;
 
-    std::list<cParticleSystem*> mlstSystems;
+    std::list<cParticleSystem *> mlstSystems;
 };
 
 };

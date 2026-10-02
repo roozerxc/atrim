@@ -14,10 +14,10 @@ class iWidgetItemContainer;
 
 //--------------------------------------
 
-typedef std::vector<cWidgetItem*> tWidgetItemVec;
+typedef std::vector<cWidgetItem *> tWidgetItemVec;
 typedef tWidgetItemVec::iterator tWidgetItemVecIt;
 
-typedef std::vector<cWidgetItemProperty*> tWidgetItemPropertyVec;
+typedef std::vector<cWidgetItemProperty *> tWidgetItemPropertyVec;
 typedef tWidgetItemPropertyVec::iterator tWidgetItemPropertyVecIt;
 
 enum eItemPropertyType
@@ -49,11 +49,11 @@ public:
     cWidgetItemProperty(const tWString& asText);
     cWidgetItemProperty(const cGuiGfxElement* apGfx);
 
-    tWString& GetText()
+    tWString &GetText()
     {
         return msText;
     }
-    cGuiGfxElement* GetGfx()
+    cGuiGfxElement *GetGfx()
     {
         return mpGfx;
     }
@@ -65,7 +65,7 @@ public:
 
 protected:
     tWString msText;
-    cGuiGfxElement* mpGfx;
+    cGuiGfxElement *mpGfx;
 
     eItemPropertyType mType;
 };
@@ -93,11 +93,11 @@ public:
         return mlIndex;
     }
 
-    const tWString& GetText()const
+    const tWString &GetText()const
     {
         return msText;
     }
-    cWidgetItemProperty* GetProperty(int alIdx) const;
+    cWidgetItemProperty *GetProperty(int alIdx) const;
 
     void AddProperty(const tWString& asText);
     void AddProperty(const cGuiGfxElement* apGfx);
@@ -124,7 +124,7 @@ public:
     {
         mpUserData = apData;
     }
-    void* GetUserData()
+    void *GetUserData()
     {
         return mpUserData;
     }
@@ -139,7 +139,7 @@ public:
     }
 
 protected:
-    iWidgetItemContainer* mpCont;
+    iWidgetItemContainer *mpCont;
     int mlIndex;
     bool mbSelectable;
     bool mbSelected;
@@ -147,7 +147,7 @@ protected:
     tWString msText;
     tWidgetItemPropertyVec mvProperties;
 
-    void* mpUserData;
+    void *mpUserData;
     int mlUserValue;
 };
 
@@ -164,16 +164,16 @@ class iWidgetItemContainer
 public:
     ~iWidgetItemContainer();
 
-    cWidgetItem* AddItem(const tString& asItem);
-    cWidgetItem* AddItem(const tWString &asItem);
-    cWidgetItem* AddItem();
+    cWidgetItem *AddItem(const tString& asItem);
+    cWidgetItem *AddItem(const tWString &asItem);
+    cWidgetItem *AddItem();
     void RemoveItem(int alX);
     void RemoveItem(const tWString &asItem);
 
     void ClearItems();
 
-    cWidgetItem* GetItem(int alX) const;
-    const tWString& GetItemText(int alX) const;
+    cWidgetItem *GetItem(int alX) const;
+    const tWString &GetItemText(int alX) const;
     void SetItemText(int alX, const tWString& asText);
     int GetItemNum() const;
     bool HasItem(const tWString &asItem);
@@ -183,7 +183,7 @@ public:
     virtual void RemoveItemFromSelection(cWidgetItem* apItem) {}
 
 protected:
-    virtual void UpdateProperties()=0;
+    virtual void UpdateProperties() = 0;
 
     tWidgetItemVec mvItems;
 };
@@ -217,7 +217,7 @@ public:
 
 //--------------------------------------
 
-typedef std::vector<cFileBrowserCategory*> tFileBrowserCategoryVec;
+typedef std::vector<cFileBrowserCategory *> tFileBrowserCategoryVec;
 typedef tFileBrowserCategoryVec::iterator tFileBrowserCategoryVecIt;
 
 //--------------------------------------
@@ -230,7 +230,7 @@ public:
 
     void InitBrowser();
 
-    int AddCategory(const tWString& asCategory, const tWString& asFilter=_W(""));
+    int AddCategory(const tWString& asCategory, const tWString& asFilter = _W(""));
     void AddFilter(const int alCategoryId, const tWString& asFilter);
 
     void SetPathFromString(const tWString &asPath);
@@ -247,8 +247,8 @@ public:
 
     tWString GetCurrentFullPath();
 
-    virtual void OnAddFilter()=0;
-    virtual void OnNavigate()=0;
+    virtual void OnAddFilter() = 0;
+    virtual void OnNavigate() = 0;
 
     //////////////////////////////
     // Data

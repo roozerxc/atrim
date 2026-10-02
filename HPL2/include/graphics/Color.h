@@ -16,7 +16,7 @@ public:
     {
         struct
         {
-            float r,g,b,a;
+            float r, g, b, a;
         };
         float v[4];
     };

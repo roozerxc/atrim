@@ -26,7 +26,7 @@ class cBillboard : public iRenderable
     typedef iRenderable __super;
 #endif
 public:
-    cBillboard(const tString asName,const cVector2f& avSize,eBillboardType aType, cResources *apResources,cGraphics *apGraphics);
+    cBillboard(const tString asName, const cVector2f& avSize, eBillboardType aType, cResources *apResources, cGraphics *apGraphics);
     ~cBillboard();
 
     void SetMaterial(cMaterial * apMaterial);
@@ -55,7 +55,7 @@ public:
     }
 
     void SetColor(const cColor &aColor);
-    const cColor& GetColor()
+    const cColor &GetColor()
     {
         return mColor;
     }
@@ -99,12 +99,12 @@ public:
     {
         return mpMaterial;
     }
-    iVertexBuffer* GetVertexBuffer()
+    iVertexBuffer *GetVertexBuffer()
     {
         return mpVtxBuffer;
     }
 
-    cMatrixf* GetModelMatrix(cFrustum *apFrustum);
+    cMatrixf *GetModelMatrix(cFrustum *apFrustum);
 
     int GetMatrixUpdateCount();
 
@@ -114,11 +114,11 @@ public:
     }
 
 private:
-    cMaterialManager* mpMaterialManager;
-    iLowLevelGraphics* mpLowLevelGraphics;
+    cMaterialManager *mpMaterialManager;
+    iLowLevelGraphics *mpLowLevelGraphics;
 
     cMaterial *mpMaterial;
-    iVertexBuffer* mpVtxBuffer;
+    iVertexBuffer *mpVtxBuffer;
 
     cMatrixf m_mtxHaloOcclusionMatrix;
     cMatrixf m_mtxTempTransform;

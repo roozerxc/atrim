@@ -49,7 +49,7 @@ class cSubMeshEntity : public iRenderable
 #endif
     friend class cMeshEntity;
 public:
-    cSubMeshEntity(const tString &asName,cMeshEntity *apMeshEntity, cSubMesh * apSubMesh,cMaterialManager* apMaterialManager);
+    cSubMeshEntity(const tString &asName, cMeshEntity *apMeshEntity, cSubMesh * apSubMesh, cMaterialManager* apMaterialManager);
     ~cSubMeshEntity();
 
     cMaterial *GetMaterial();
@@ -57,12 +57,12 @@ public:
     bool UpdateGraphicsForViewport(cFrustum *apFrustum, double afFrameTime);
     void UpdateGraphicsForFrame(double adFrameTime);
 
-    iVertexBuffer* GetVertexBuffer();
+    iVertexBuffer *GetVertexBuffer();
 
-    cBoundingVolume* GetBoundingVolume();
-    cBoundingVolume* GetSubMeshBoundingVolume();
+    cBoundingVolume *GetBoundingVolume();
+    cBoundingVolume *GetSubMeshBoundingVolume();
 
-    cMatrixf* GetModelMatrix(cFrustum *apFrustum);
+    cMatrixf *GetModelMatrix(cFrustum *apFrustum);
 
     int GetMatrixUpdateCount();
 
@@ -71,15 +71,15 @@ public:
         return eRenderableType_SubMesh;
     }
 
-    cSubMesh* GetSubMesh() const
+    cSubMesh *GetSubMesh() const
     {
         return mpSubMesh;
     }
 
     void SetLocalNode(cNode3D *apNode);
-    cNode3D* GetLocalNode();
+    cNode3D *GetLocalNode();
 
-    void* GetUserData()
+    void *GetUserData()
     {
         return mpUserData;
     }
@@ -105,15 +105,15 @@ public:
 
     void UpdateLogic(double adFixedDelta);
 
-    cTriangleData& GetTriangle(int alIndex);
+    cTriangleData &GetTriangle(int alIndex);
     int GetTriangleNum();
-    tTriangleDataVec* GetTriangleVecPtr();
+    tTriangleDataVec *GetTriangleVecPtr();
 
     void SetUpdateBody(bool abX);
     bool GetUpdateBody();
 
-    void SetCustomMaterial(cMaterial *apMaterial, bool abDestroyOldCustom=true);
-    cMaterial* GetCustomMaterial()
+    void SetCustomMaterial(cMaterial *apMaterial, bool abDestroyOldCustom = true);
+    cMaterial *GetCustomMaterial()
     {
         return mpMaterial;
     }
@@ -128,12 +128,12 @@ private:
 
     cNode3D *mpLocalNode;
 
-    cMaterialManager* mpMaterialManager;
+    cMaterialManager *mpMaterialManager;
 
-    iVertexBuffer* mpDynVtxBuffer;
+    iVertexBuffer *mpDynVtxBuffer;
     tTriangleDataVec mvDynTriangles;
 
-    cSubMeshEntityBodyUpdate* mpEntityCallback;
+    cSubMeshEntityBodyUpdate *mpEntityCallback;
     bool mbUpdateBody;
 
     bool mbIsOccluder;
@@ -145,10 +145,10 @@ private:
     void *mpUserData;
 };
 
-typedef std::vector<cSubMeshEntity*> tSubMeshEntityVec;
-typedef std::vector<cSubMeshEntity*>::iterator tSubMeshEntityVecIt;
+typedef std::vector<cSubMeshEntity *> tSubMeshEntityVec;
+typedef std::vector<cSubMeshEntity *>::iterator tSubMeshEntityVecIt;
 
-typedef std::multimap<tString,cSubMeshEntity*> tSubMeshEntityMap;
+typedef std::multimap<tString, cSubMeshEntity *> tSubMeshEntityMap;
 typedef tSubMeshEntityMap::iterator tSubMeshEntityMapIt;
 
 };

@@ -77,10 +77,10 @@ protected:
     float mfItemCheckIconSize;
 
     // Graphics
-    cGuiGfxElement* mpGfxBackground;
+    cGuiGfxElement *mpGfxBackground;
 
-    cGuiGfxElement* mvGfxBorders[4];
-    cGuiGfxElement* mvGfxCorners[4];
+    cGuiGfxElement *mvGfxBorders[4];
+    cGuiGfxElement *mvGfxCorners[4];
 };
 };
 

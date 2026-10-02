@@ -43,17 +43,17 @@ public:
     /**
     * Generates a random float from min to max
     */
-    static cVector2f RandRectVector2f(const cVector2f &avMin,const cVector2f &avMax);
+    static cVector2f RandRectVector2f(const cVector2f &avMin, const cVector2f &avMax);
 
     /**
     * Generates a random float from min to max
     */
-    static cVector3f RandRectVector3f(const cVector3f &avMin,const cVector3f &avMax);
+    static cVector3f RandRectVector3f(const cVector3f &avMin, const cVector3f &avMax);
 
     /**
     * Generates a random float from min to max
     */
-    static cColor RandRectColor(const cColor &aMin,const cColor &aMax);
+    static cColor RandRectColor(const cColor &aMin, const cColor &aMax);
 
     static cVector3f RandomSphereSurfacePoint(float afRadius);
     static cVector3f RandomSphereInsidePoint(float afRadius);
@@ -129,7 +129,7 @@ public:
     ////////// BV AND AABB OPERTIONS //////////////////
     //////////////////////////////////////////////////////
 
-    static void ExpandAABB(cVector3f& avBaseMin,cVector3f& avBaseMax, const cVector3f& avAddMin, const cVector3f& avAddMax);
+    static void ExpandAABB(cVector3f& avBaseMin, cVector3f& avBaseMax, const cVector3f& avAddMin, const cVector3f& avAddMax);
 
     //////////////////////////////////////////////////////
     ////////// BV AND RECT INTERSECTION //////////////////
@@ -143,7 +143,7 @@ public:
     static bool CheckRectFit(const cRect2l& aRectSrc, const cRect2l& aRectDest);
     static bool CheckRectFit(const cRect2f& aRectSrc, const cRect2f& aRectDest);
 
-    static cRect2f GetClipRect(const cRect2f& aRectSrc,const cRect2f& aRectDest);
+    static cRect2f GetClipRect(const cRect2f& aRectSrc, const cRect2f& aRectDest);
 
     static inline bool CheckPointInSphereIntersection(const cVector3f& avPoint, const cVector3f& avSpherePos, float afSphereRadius)
     {
@@ -151,7 +151,7 @@ public:
         return vSepAxis.SqrLength() <= afSphereRadius * afSphereRadius;
     }
 
-    static inline bool CheckSphereIntersection(const cVector3f& avPosA, float afRadiusA,const cVector3f& avPosB, float afRadiusB)
+    static inline bool CheckSphereIntersection(const cVector3f& avPosA, float afRadiusA, const cVector3f& avPosB, float afRadiusB)
     {
         float fRadiusSum = afRadiusA + afRadiusB;
         cVector3f vSepAxis = avPosA - avPosB;
@@ -169,25 +169,25 @@ public:
     * Checks intersection between two bounding volumes.
     * \return true if intersection, else false.
     */
-    static bool CheckBVIntersection(cBoundingVolume& aBV1,cBoundingVolume& aBV2);
+    static bool CheckBVIntersection(cBoundingVolume& aBV1, cBoundingVolume& aBV2);
 
     /**
     * Checks intersection between two AABB:s (defined by min and max vectors)
     * \return true if intersection, else false.
     */
-    static bool CheckAABBIntersection(    const cVector3f& avMin1,const cVector3f& avMax1,
-                                          const cVector3f& avMin2,const cVector3f& avMax2);
+    static bool CheckAABBIntersection(    const cVector3f& avMin1, const cVector3f& avMax1,
+                                          const cVector3f& avMin2, const cVector3f& avMax2);
 
 
     /**
      * Check if an AABB is completely inside another.
      */
-    static bool CheckAABBInside(    const cVector3f& avInsideMin,const cVector3f& avInsideMax,
-                                    const cVector3f& avOutsideMin,const cVector3f& avOutsideMax);
+    static bool CheckAABBInside(    const cVector3f& avInsideMin, const cVector3f& avInsideMax,
+                                    const cVector3f& avOutsideMin, const cVector3f& avOutsideMax);
 
     static bool CheckPointInBVIntersection(const cVector3f& avPoint, cBoundingVolume& aBV);
 
-    static bool CheckPointInAABBIntersection(const cVector3f& avPoint, const cVector3f& avMin,const cVector3f& avMax);
+    static bool CheckPointInAABBIntersection(const cVector3f& avPoint, const cVector3f& avMin, const cVector3f& avMax);
 
 
     /**
@@ -223,7 +223,7 @@ public:
     /**
     * Checks if AABB intersects with line. Returns false if there was no intersection, else true.
     */
-    static bool CheckAABBLineIntersection(    const cVector3f& avMin,const cVector3f& avMax,
+    static bool CheckAABBLineIntersection(    const cVector3f& avMin, const cVector3f& avMax,
             const cVector3f &avLineStart, const cVector3f &avLineEnd,
             cVector3f *apIntersectionPos, float *apT);
 
@@ -244,10 +244,10 @@ public:
      */
     static bool CheckPointInFlatPolygon( const cVector3f& avRayStart, const cVector3f& avRayEnd,
                                          const cVector2f& avPoint, const cVector2f& avViewportSize,
-                                         int alNumIndices, unsigned int* avIndices, float* avVertexPos, int alStride,
+                                         int alNumIndices, unsigned int *avIndices, float *avVertexPos, int alStride,
                                          const cMatrixf& amtxObjWorldMatrix,
                                          const cMatrixf& amtxCamViewMatrix, const cMatrixf& amtxCamProjMatrix,
-                                         unsigned int* apIntersectedTriIndex, cVector3f* apIntersectionWorldSpace, tVector3fVec* apTriangleWorldSpace );
+                                         unsigned int *apIntersectedTriIndex, cVector3f* apIntersectionWorldSpace, tVector3fVec* apTriangleWorldSpace );
 
     /**
      * Check if a point is inside a 2D triangle. Must be in normalized coordinates.
@@ -309,7 +309,7 @@ public:
      */
     static inline int FastPosAndNegFloatToInt(float afVal)
     {
-        if(afVal>=0)
+        if(afVal >= 0)
         {
             return FastPositiveFloatToInt(afVal);
         }
@@ -391,34 +391,34 @@ public:
      */
     static float Clamp(float afX, float afMin, float afMax);
 
-    inline static float Max(float afX,float afY)
+    inline static float Max(float afX, float afY)
     {
-        if(afX>afY)
+        if(afX > afY)
         {
             return afX;
         }
         return afY;
     }
-    inline static float Min(float afX,float afY)
+    inline static float Min(float afX, float afY)
     {
-        if(afX<afY)
+        if(afX < afY)
         {
             return afX;
         }
         return afY;
     }
 
-    inline static int Max(int alX,int alY)
+    inline static int Max(int alX, int alY)
     {
-        if(alX>alY)
+        if(alX > alY)
         {
             return alX;
         }
         return alY;
     }
-    inline static int Min(int alX,int alY)
+    inline static int Min(int alX, int alY)
     {
-        if(alX<alY)
+        if(alX < alY)
         {
             return alX;
         }
@@ -436,22 +436,22 @@ public:
 
     inline static float Sign(float afX)
     {
-        return (float)((afX>0.0f) - (afX<0.0f));
+        return (float)((afX > 0.0f) - (afX < 0.0f));
     }
     inline static int Sign(int alX)
     {
-        return (alX>0) - (alX<0);
+        return (alX > 0) - (alX < 0);
     }
 
     static float GetAngleDistance(float afAngle1, float afAngle2, float afMaxAngle);
     static float GetAngleDistanceRad(float afAngle1, float afAngle2);
     static float GetAngleDistanceDeg(float afAngle1, float afAngle2);
 
-    static float TurnAngle(float afAngle,float afFinalAngle,float afSpeed,float afMaxAngle);
-    static float TurnAngleRad(float afAngle,float afFinalAngle,float afSpeed);
-    static float TurnAngleDeg(float afAngle,float afFinalAngle,float afSpeed);
+    static float TurnAngle(float afAngle, float afFinalAngle, float afSpeed, float afMaxAngle);
+    static float TurnAngleRad(float afAngle, float afFinalAngle, float afSpeed);
+    static float TurnAngleDeg(float afAngle, float afFinalAngle, float afSpeed);
 
-    static float Interpolate(float afA,float afB,float afT);
+    static float Interpolate(float afA, float afB, float afT);
 
     inline static float GetCorrectSignOfSpeed(float afCurrent, float afDest, float afSpeed)
     {
@@ -479,13 +479,13 @@ public:
     ////////// VECTOR 2D ///////////////////////////////
     //////////////////////////////////////////////////////
 
-    static float Vector2Dist(const cVector2f &avPosA,const cVector2f &avPosB);
-    static float Vector2DistXY(const cVector3f &avPosA,const cVector3f &avPosB);
-    static float Vector2DistXZ(const cVector3f &avPosA,const cVector3f &avPosB);
+    static float Vector2Dist(const cVector2f &avPosA, const cVector2f &avPosB);
+    static float Vector2DistXY(const cVector3f &avPosA, const cVector3f &avPosB);
+    static float Vector2DistXZ(const cVector3f &avPosA, const cVector3f &avPosB);
 
-    static float Vector2DistSqr(const cVector2f &avPosA,const cVector2f &avPosB);
-    static float Vector2DistSqrXY(const cVector3f &avPosA,const cVector3f &avPosB);
-    static float Vector2DistSqrXZ(const cVector3f &avPosA,const cVector3f &avPosB);
+    static float Vector2DistSqr(const cVector2f &avPosA, const cVector2f &avPosB);
+    static float Vector2DistSqrXY(const cVector3f &avPosA, const cVector3f &avPosB);
+    static float Vector2DistSqrXZ(const cVector3f &avPosA, const cVector3f &avPosB);
 
     static cVector2f Vector2IncreaseTo(const cVector2f& avX, const cVector2f& avAdd, const cVector2f& avDest);
 
@@ -521,27 +521,27 @@ public:
 
     static inline cVector2f Vector2Floor(const cVector2f &avVec)
     {
-        return cVector2f(floor(avVec.x),floor(avVec.y));
+        return cVector2f(floor(avVec.x), floor(avVec.y));
     }
 
     static inline cVector2f Vector2Ceil(const cVector2f &avVec)
     {
-        return cVector2f(ceil(avVec.x),ceil(avVec.y));
+        return cVector2f(ceil(avVec.x), ceil(avVec.y));
     }
 
     static inline cVector2f Vector2Abs(const cVector2f &avVec)
     {
-        return cVector2f(Abs(avVec.x),Abs(avVec.y));
+        return cVector2f(Abs(avVec.x), Abs(avVec.y));
     }
 
     static inline cVector2f Vector2Min(const cVector2f &avVecA, const cVector2f &avVecB)
     {
-        return cVector2f(Min(avVecA.x, avVecB.x),Min(avVecA.y, avVecB.y));
+        return cVector2f(Min(avVecA.x, avVecB.x), Min(avVecA.y, avVecB.y));
     }
 
     static inline cVector2f Vector2Max(const cVector2f &avVecA, const cVector2f &avVecB)
     {
-        return cVector2f(Max(avVecA.x, avVecB.x),Max(avVecA.y, avVecB.y));
+        return cVector2f(Max(avVecA.x, avVecB.x), Max(avVecA.y, avVecB.y));
     }
 
     static inline bool Vector2Less(const cVector2f &avVec, const cVector2f &avCompareVec)
@@ -605,12 +605,12 @@ public:
 
     static inline cVector2f Vector2ToRad(const cVector2f &avVec)
     {
-        return cVector2f(ToRad(avVec.x),ToRad(avVec.y));
+        return cVector2f(ToRad(avVec.x), ToRad(avVec.y));
     }
 
     static inline cVector2f Vector2ToDeg(const cVector2f &avVec)
     {
-        return cVector2f(ToDeg(avVec.x),ToDeg(avVec.y));
+        return cVector2f(ToDeg(avVec.x), ToDeg(avVec.y));
     }
 
     //////////////////////////////////////////////////////
@@ -619,16 +619,16 @@ public:
 
     static cVector3f Vector3MaxLength(const cVector3f &avVec, float afMaxLength);
     static cVector3f Vector3MinLength(const cVector3f &avVec, float afMinLength);
-    static cVector3f Vector3ClampLength(const cVector3f &avVec,float afMinLength, float afMaxLength);
+    static cVector3f Vector3ClampLength(const cVector3f &avVec, float afMinLength, float afMaxLength);
 
     static inline cVector3f Vector3ToRad(const cVector3f &avVec)
     {
-        return cVector3f(ToRad(avVec.x),ToRad(avVec.y),ToRad(avVec.z));
+        return cVector3f(ToRad(avVec.x), ToRad(avVec.y), ToRad(avVec.z));
     }
 
     static inline cVector3f Vector3ToDeg(const cVector3f &avVec)
     {
-        return cVector3f(ToDeg(avVec.x),ToDeg(avVec.y),ToDeg(avVec.z));
+        return cVector3f(ToDeg(avVec.x), ToDeg(avVec.y), ToDeg(avVec.z));
     }
 
     static cVector3f Vector3AngleDistance(const cVector3f &avAngles1, const cVector3f &avAngles2, float afMaxAngle);
@@ -638,27 +638,27 @@ public:
 
     static inline cVector3f Vector3Floor(const cVector3f &avVec)
     {
-        return cVector3f(floor(avVec.x),floor(avVec.y),floor(avVec.z));
+        return cVector3f(floor(avVec.x), floor(avVec.y), floor(avVec.z));
     }
 
     static inline cVector3f Vector3Ceil(const cVector3f &avVec)
     {
-        return cVector3f(ceil(avVec.x),ceil(avVec.y),ceil(avVec.z));
+        return cVector3f(ceil(avVec.x), ceil(avVec.y), ceil(avVec.z));
     }
 
     static inline cVector3f Vector3Abs(const cVector3f &avVec)
     {
-        return cVector3f(Abs(avVec.x),Abs(avVec.y),Abs(avVec.z));
+        return cVector3f(Abs(avVec.x), Abs(avVec.y), Abs(avVec.z));
     }
 
     static inline cVector3f Vector3Min(const cVector3f &avVecA, const cVector3f &avVecB)
     {
-        return cVector3f(Min(avVecA.x, avVecB.x),Min(avVecA.y, avVecB.y),Min(avVecA.z, avVecB.z));
+        return cVector3f(Min(avVecA.x, avVecB.x), Min(avVecA.y, avVecB.y), Min(avVecA.z, avVecB.z));
     }
 
     static inline cVector3f Vector3Max(const cVector3f &avVecA, const cVector3f &avVecB)
     {
-        return cVector3f(Max(avVecA.x, avVecB.x),Max(avVecA.y, avVecB.y),Max(avVecA.z, avVecB.z));
+        return cVector3f(Max(avVecA.x, avVecB.x), Max(avVecA.y, avVecB.y), Max(avVecA.z, avVecB.z));
     }
 
     static inline bool Vector3Less(const cVector3f &avVec, const cVector3f &avCompareVec)
@@ -742,7 +742,7 @@ public:
         float fDY = avEndPos.y - avStartPos.y;
         float fDZ = avEndPos.z - avStartPos.z;
 
-        return fDX*fDX + fDY*fDY + fDZ*fDZ;
+        return fDX * fDX + fDY * fDY + fDZ * fDZ;
     }
 
     static inline float Vector3Dist(const cVector3f &avStartPos, const cVector3f &avEndPos)
@@ -759,7 +759,7 @@ public:
      * \param avVecB
      * \return
      */
-    static cVector3f Vector3Cross(const cVector3f& avVecA,const cVector3f& avVecB);
+    static cVector3f Vector3Cross(const cVector3f& avVecA, const cVector3f& avVecB);
 
     /**
      * Vector dot product, A * B = R
@@ -767,7 +767,7 @@ public:
      * \param avVecB
      * \return
      */
-    static float Vector3Dot(const cVector3f& avVecA,const cVector3f& avVecB);
+    static float Vector3Dot(const cVector3f& avVecA, const cVector3f& avVecB);
 
     /**
     * Project Src on Dest
@@ -793,7 +793,7 @@ public:
     * \param avVecB
     * \return
     */
-    static float Vector3Angle(const cVector3f& avVecA,const cVector3f& avVecB);
+    static float Vector3Angle(const cVector3f& avVecA, const cVector3f& avVecB);
 
     /**
     * Calculates the signed angle between two vectors using a normal as reference
@@ -802,7 +802,7 @@ public:
     * \param avVecN
     * \return
     */
-    static float Vector3SignedAngle(const cVector3f& avVecA,const cVector3f& avVecB, const cVector3f& avVecN);
+    static float Vector3SignedAngle(const cVector3f& avVecA, const cVector3f& avVecB, const cVector3f& avVecN);
 
     /**
      * Unprojects a vector from screen size and coords.
@@ -947,23 +947,23 @@ public:
      */
     static bool CheckLineTriangleIntersection(    const cVector3f& avLineStart, const cVector3f& avLineEnd,
             const cVector3f& avP0, const cVector3f& avP1, const cVector3f& avP2,
-            float *apT, bool abSkipBackfacing=true);
+            float *apT, bool abSkipBackfacing = true);
 
     /**
     * Checks intersection between line and a mesh. For speed reasons the matrix is INVERSE!
     */
     static bool CheckLineTriMeshIntersection(    const cVector3f& avLineStart, const cVector3f& avLineEnd,
             const cMatrixf& a_mtxInvMeshMtx,
-            const unsigned int* apIndexArray,int alIndexNum,
-            const float* apVertexArray, int alVtxStride,
-            cVector3f *apIntersectionPos, float *apT, int *apTriIndex, bool abSkipBackfacing=true);
+            const unsigned int *apIndexArray, int alIndexNum,
+            const float *apVertexArray, int alVtxStride,
+            cVector3f *apIntersectionPos, float *apT, int *apTriIndex, bool abSkipBackfacing = true);
 
     /**
     * Checks intersection between line and a mesh. For speed reasons the matrix is INVERSE!
     */
     static bool CheckLineTriVertexBufferIntersection(    const cVector3f& avLineStart, const cVector3f& avLineEnd,
             const cMatrixf& a_mtxInvMeshMtx, iVertexBuffer *apVtxBuffer,
-            cVector3f *apIntersectionPos, float *apT, int *apTriIndex, bool abSkipBackfacing=true);
+            cVector3f *apIntersectionPos, float *apT, int *apTriIndex, bool abSkipBackfacing = true);
 
     //////////////////////////////////////////////////////
     ////////// QUATERNIONS ///////////////////////////////
@@ -975,15 +975,15 @@ public:
      * \param abShortestPath Move the the shortest path.
      * \return
      */
-    static cQuaternion QuaternionSlerp(float afT,const cQuaternion& aqA, const cQuaternion& aqB,
+    static cQuaternion QuaternionSlerp(float afT, const cQuaternion& aqA, const cQuaternion& aqB,
                                        bool abShortestPath);
 
-    static float QuaternionDot(const cQuaternion& aqA,const cQuaternion& aqB);
+    static float QuaternionDot(const cQuaternion& aqA, const cQuaternion& aqB);
 
     /**
     * Quaternion multiplication,  A * B = R. This means that B is applied BEFORE A.
     */
-    static cQuaternion QuaternionMul(const cQuaternion& aqA,const cQuaternion& aqB);
+    static cQuaternion QuaternionMul(const cQuaternion& aqA, const cQuaternion& aqB);
 
 
     //////////////////////////////////////////////////////
@@ -996,26 +996,26 @@ public:
     * \param abShortestPath Move the the shortest path.
     * \return
     */
-    static cMatrixf MatrixSlerp(float afT,const cMatrixf& a_mtxA, const cMatrixf& a_mtxB,
+    static cMatrixf MatrixSlerp(float afT, const cMatrixf& a_mtxA, const cMatrixf& a_mtxB,
                                 bool abShortestPath);
 
     /**
      * Matrix multiplication,  A * B = R. This means that B is applied BEFORE A.
      */
-    static cMatrixf MatrixMul(const cMatrixf &a_mtxA,const cMatrixf &a_mtxB);
+    static cMatrixf MatrixMul(const cMatrixf &a_mtxA, const cMatrixf &a_mtxB);
     /**
      * Multiply and matrix and a 3d vector
      */
-    static cVector3f MatrixMul(const cMatrixf &a_mtxA,const cVector3f &avB);
+    static cVector3f MatrixMul(const cMatrixf &a_mtxA, const cVector3f &avB);
 
     /**
     * Matrix multiplication only using 3x3 matrix (rotation)
     */
-    static cVector3f MatrixMul3x3(const cMatrixf &a_mtxA,const cVector3f &avB);
+    static cVector3f MatrixMul3x3(const cMatrixf &a_mtxA, const cVector3f &avB);
     /**
     * Multiply and matrix and a 3d vector and devide the result with W.
     */
-    static cVector3f MatrixMulDivideW(const cMatrixf &a_mtxA,const cVector3f &avB);
+    static cVector3f MatrixMulDivideW(const cMatrixf &a_mtxA, const cVector3f &avB);
 
     /**
      * Multiply matrix and a float.
@@ -1122,7 +1122,7 @@ public:
     /**
      * Create a char string from the matrix
      */
-    static const char* MatrixToChar(const cMatrixf &a_mtxA);
+    static const char *MatrixToChar(const cMatrixf &a_mtxA);
 
     //////////////////////////////////////////////////////
     ////////// POLYGON MANAGEMENT ///////////////////////
@@ -1140,10 +1140,10 @@ public:
      * \return true if success, else false
      */
     static bool CreateTriTangentVectors(float* apDestArray,
-                                        const unsigned int* apIndexArray,int alIndexNum,
-                                        const float* apVertexArray, int alVtxStride,
+                                        const unsigned int *apIndexArray, int alIndexNum,
+                                        const float *apVertexArray, int alVtxStride,
                                         const float *apTexArray,
-                                        const float *apNormalArray,int alVertexNum);
+                                        const float *apNormalArray, int alVertexNum);
 
     /**
     * Creates triangle data for a triangle mesh. alIndexNum % 3 must be 0.
@@ -1155,8 +1155,8 @@ public:
     * \return true if success, else false
     */
     static bool CreateTriangleData(tTriangleDataVec &avTriangles,
-                                   const unsigned int* apIndexArray,int alIndexNum,
-                                   const float* apVertexArray, int alVtxStride, int alVertexNum);
+                                   const unsigned int *apIndexArray, int alIndexNum,
+                                   const float *apVertexArray, int alVtxStride, int alVertexNum);
 
     /**
     * Creates edges for a triangle mesh. alIndexNum % 3 must be 0.
@@ -1168,8 +1168,8 @@ public:
     * \return true if success, else false
     */
     static bool CreateEdges(tTriEdgeVec &avEdges,
-                            const unsigned int* apIndexArray,int alIndexNum,
-                            const float* apVertexArray, int alVtxStride, int alVertexNum,
+                            const unsigned int *apIndexArray, int alIndexNum,
+                            const float *apVertexArray, int alVtxStride, int alVertexNum,
                             bool *apIsDoubleSided);
 };
 

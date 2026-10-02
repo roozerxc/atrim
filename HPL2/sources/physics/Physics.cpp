@@ -62,7 +62,7 @@ void cPhysics::Update(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-iPhysicsWorld* cPhysics::CreateWorld(bool abAddSurfaceData)
+iPhysicsWorld *cPhysics::CreateWorld(bool abAddSurfaceData)
 {
     iPhysicsWorld * pWorld = mpLowLevelPhysics->CreateWorld();
     mlstWorlds.push_back(pWorld);
@@ -110,7 +110,7 @@ void cPhysics::AddImpact()
 
 cSurfaceData *cPhysics::CreateSurfaceData(const tString& asName)
 {
-    cSurfaceData *pData = hplNew( cSurfaceData, (asName, this,mpResources) );
+    cSurfaceData *pData = hplNew( cSurfaceData, (asName, this, mpResources) );
 
     m_mapSurfaceData.insert(tSurfaceDataMap::value_type(asName, pData));
 
@@ -135,9 +135,9 @@ bool cPhysics::LoadSurfaceData(const tString& asFile)
     //////////////////////////////////
     //Open document
     TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, (asFile.c_str()) );
-    if(pXmlDoc->LoadFile()==false)
+    if(pXmlDoc->LoadFile() == false)
     {
-        Error("Couldn't load XML file '%s'!\n",asFile.c_str());
+        Error("Couldn't load XML file '%s'!\n", asFile.c_str());
         hplDelete(pXmlDoc);
         return false;
     }
@@ -151,8 +151,8 @@ bool cPhysics::LoadSurfaceData(const tString& asFile)
     TiXmlElement* pChildElem = pRootElem->FirstChildElement("Material");
     for(; pChildElem != NULL; pChildElem = pChildElem->NextSiblingElement("Material"))
     {
-        tString sName = cString::ToString(pChildElem->Attribute("Name"),"");
-        if(sName=="")
+        tString sName = cString::ToString(pChildElem->Attribute("Name"), "");
+        if(sName == "")
         {
             continue;
         }
@@ -160,42 +160,42 @@ bool cPhysics::LoadSurfaceData(const tString& asFile)
         cSurfaceData *pData = CreateSurfaceData(sName);
 
         //Get properties
-        pData->SetElasticity(cString::ToFloat(pChildElem->Attribute("Elasticity"),0.5f));
-        pData->SetKineticFriction(cString::ToFloat(pChildElem->Attribute("KineticFriction"),0.3f));
-        pData->SetStaticFriction(cString::ToFloat(pChildElem->Attribute("StaticFriction"),0.3f));
+        pData->SetElasticity(cString::ToFloat(pChildElem->Attribute("Elasticity"), 0.5f));
+        pData->SetKineticFriction(cString::ToFloat(pChildElem->Attribute("KineticFriction"), 0.3f));
+        pData->SetStaticFriction(cString::ToFloat(pChildElem->Attribute("StaticFriction"), 0.3f));
 
-        pData->SetPriority(cString::ToInt(pChildElem->Attribute("Priority"),0));
+        pData->SetPriority(cString::ToInt(pChildElem->Attribute("Priority"), 0));
 
         pData->SetElasticityCombMode(GetCombMode(pChildElem->Attribute("ElasticityMode")));
         pData->SetFrictionCombMode(GetCombMode(pChildElem->Attribute("FrictionMode")));
 
-        pData->GetStepType(cString::ToString(pChildElem->Attribute("StepType"),""));
+        pData->GetStepType(cString::ToString(pChildElem->Attribute("StepType"), ""));
 
-        pData->SetMinScrapeSpeed(cString::ToFloat(pChildElem->Attribute("MinScrapeSpeed"),0.7f));
-        pData->SetMinScrapeFreq(cString::ToFloat(pChildElem->Attribute("MinScrapeFreq"),0.7f));
-        pData->SetMinScrapeFreqSpeed(cString::ToFloat(pChildElem->Attribute("MinScrapeFreqSpeed"),0.7f));
-        pData->SetMiddleScrapeSpeed(cString::ToFloat(pChildElem->Attribute("MiddleScrapeSpeed"),1.2f));
-        pData->SetMaxScrapeFreqSpeed(cString::ToFloat(pChildElem->Attribute("MaxScrapeFreqSpeed"),3));
-        pData->SetMaxScrapeFreq(cString::ToFloat(pChildElem->Attribute("MaxScrapeFreq"),2));
-        pData->SetMinScrapeContacts(cString::ToInt(pChildElem->Attribute("MinScrapeContacts"),4));
-        pData->SetScrapeSoundName(cString::ToString(pChildElem->Attribute("ScrapeSoundName"),""));
+        pData->SetMinScrapeSpeed(cString::ToFloat(pChildElem->Attribute("MinScrapeSpeed"), 0.7f));
+        pData->SetMinScrapeFreq(cString::ToFloat(pChildElem->Attribute("MinScrapeFreq"), 0.7f));
+        pData->SetMinScrapeFreqSpeed(cString::ToFloat(pChildElem->Attribute("MinScrapeFreqSpeed"), 0.7f));
+        pData->SetMiddleScrapeSpeed(cString::ToFloat(pChildElem->Attribute("MiddleScrapeSpeed"), 1.2f));
+        pData->SetMaxScrapeFreqSpeed(cString::ToFloat(pChildElem->Attribute("MaxScrapeFreqSpeed"), 3));
+        pData->SetMaxScrapeFreq(cString::ToFloat(pChildElem->Attribute("MaxScrapeFreq"), 2));
+        pData->SetMinScrapeContacts(cString::ToInt(pChildElem->Attribute("MinScrapeContacts"), 4));
+        pData->SetScrapeSoundName(cString::ToString(pChildElem->Attribute("ScrapeSoundName"), ""));
 
-        pData->SetMinRollSpeed(cString::ToFloat(pChildElem->Attribute("MinRollSpeed"),0.7f));
-        pData->SetMinRollFreq(cString::ToFloat(pChildElem->Attribute("MinRollFreq"),0.7f));
-        pData->SetMinRollVolume(cString::ToFloat(pChildElem->Attribute("MinRollVolume"),0.7f));
-        pData->SetMinRollFreqSpeed(cString::ToFloat(pChildElem->Attribute("MinRollFreqSpeed"),0.7f));
-        pData->SetMiddleRollSpeed(cString::ToFloat(pChildElem->Attribute("MiddleRollSpeed"),1.2f));
-        pData->SetMaxRollFreqSpeed(cString::ToFloat(pChildElem->Attribute("MaxRollFreqSpeed"),3));
-        pData->SetMaxRollFreq(cString::ToFloat(pChildElem->Attribute("MaxRollFreq"),2));
-        pData->SetMaxRollVolume(cString::ToFloat(pChildElem->Attribute("MaxRollVolume"),2));
-        pData->SetRollSoundName(cString::ToString(pChildElem->Attribute("RollSoundName"),""));
+        pData->SetMinRollSpeed(cString::ToFloat(pChildElem->Attribute("MinRollSpeed"), 0.7f));
+        pData->SetMinRollFreq(cString::ToFloat(pChildElem->Attribute("MinRollFreq"), 0.7f));
+        pData->SetMinRollVolume(cString::ToFloat(pChildElem->Attribute("MinRollVolume"), 0.7f));
+        pData->SetMinRollFreqSpeed(cString::ToFloat(pChildElem->Attribute("MinRollFreqSpeed"), 0.7f));
+        pData->SetMiddleRollSpeed(cString::ToFloat(pChildElem->Attribute("MiddleRollSpeed"), 1.2f));
+        pData->SetMaxRollFreqSpeed(cString::ToFloat(pChildElem->Attribute("MaxRollFreqSpeed"), 3));
+        pData->SetMaxRollFreq(cString::ToFloat(pChildElem->Attribute("MaxRollFreq"), 2));
+        pData->SetMaxRollVolume(cString::ToFloat(pChildElem->Attribute("MaxRollVolume"), 2));
+        pData->SetRollSoundName(cString::ToString(pChildElem->Attribute("RollSoundName"), ""));
 
         //Axes
-        tString sAxisVec = cString::ToString(pChildElem->Attribute("RollAxis"),"");
+        tString sAxisVec = cString::ToString(pChildElem->Attribute("RollAxis"), "");
         tStringVec vAxes;
-        tFlag axisFlags=0;
-        cString::GetStringVec(sAxisVec,vAxes);
-        for(size_t i=0; i<vAxes.size(); ++i)
+        tFlag axisFlags = 0;
+        cString::GetStringVec(sAxisVec, vAxes);
+        for(size_t i = 0; i < vAxes.size(); ++i)
         {
             tString sAxis = cString::ToLowerCase(vAxes[i]);
             if(sAxis == "x")
@@ -218,13 +218,13 @@ bool cPhysics::LoadSurfaceData(const tString& asFile)
         TiXmlElement* pImpactElem = pChildElem->FirstChildElement("Impact");
         for(; pImpactElem != NULL; pImpactElem = pImpactElem->NextSiblingElement("Impact"))
         {
-            float fMinSpeed = cString::ToFloat(pImpactElem->Attribute("MinSpeed"),1);
+            float fMinSpeed = cString::ToFloat(pImpactElem->Attribute("MinSpeed"), 1);
 
             cSurfaceImpactData *pImpactData = pData->CreateImpactData(fMinSpeed);
 
-            pImpactData->SetSoundName(cString::ToString(pImpactElem->Attribute("SoundName"),""));
-            pImpactData->SetPSName(cString::ToString(pImpactElem->Attribute("PSName"),""));
-            pImpactData->SetPSPrio(cString::ToInt(pImpactElem->Attribute("PSPrio"),10));
+            pImpactData->SetSoundName(cString::ToString(pImpactElem->Attribute("SoundName"), ""));
+            pImpactData->SetPSName(cString::ToString(pImpactElem->Attribute("PSName"), ""));
+            pImpactData->SetPSPrio(cString::ToInt(pImpactElem->Attribute("PSPrio"), 10));
         }
 
         /////////////////////////
@@ -232,13 +232,13 @@ bool cPhysics::LoadSurfaceData(const tString& asFile)
         TiXmlElement* pHitElem = pChildElem->FirstChildElement("Hit");
         for(; pHitElem != NULL; pHitElem = pHitElem->NextSiblingElement("Hit"))
         {
-            float fMinSpeed = cString::ToFloat(pHitElem->Attribute("MinSpeed"),1);
+            float fMinSpeed = cString::ToFloat(pHitElem->Attribute("MinSpeed"), 1);
 
             cSurfaceImpactData *pHitData = pData->CreateHitData(fMinSpeed);
 
-            pHitData->SetSoundName(cString::ToString(pHitElem->Attribute("SoundName"),""));
-            pHitData->SetPSName(cString::ToString(pHitElem->Attribute("PSName"),""));
-            pHitData->SetPSPrio(cString::ToInt(pHitElem->Attribute("PSPrio"),10));
+            pHitData->SetSoundName(cString::ToString(pHitElem->Attribute("SoundName"), ""));
+            pHitData->SetPSName(cString::ToString(pHitElem->Attribute("PSName"), ""));
+            pHitData->SetPSPrio(cString::ToInt(pHitElem->Attribute("PSPrio"), 10));
         }
 
         /*Log("Added %s e: %f sf: %f kf: %f emode: %d fmode: %d\n", pData->GetName().c_str(),

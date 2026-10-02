@@ -24,8 +24,8 @@ private:
     void LoadFromTinyXMLData(TiXmlElement* apTinyElem, cXmlElement *apDestElem);
     void SaveToTinyXMLData(TiXmlElement* apTinyElem, cXmlElement *apSrcElem);
 
-    bool CreateTinyXMLFromFile(TiXmlDocument* pDoc,const tWString& asPath);
-    bool SaveTinyXMLToFile(TiXmlDocument* pDoc,const tWString& asPath);
+    bool CreateTinyXMLFromFile(TiXmlDocument* pDoc, const tWString& asPath);
+    bool SaveTinyXMLToFile(TiXmlDocument* pDoc, const tWString& asPath);
 };
 
 };

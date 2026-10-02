@@ -35,7 +35,7 @@ cLowLevelPhysicsNewton::~cLowLevelPhysicsNewton()
 //-----------------------------------------------------------------------
 
 
-iPhysicsWorld* cLowLevelPhysicsNewton::CreateWorld()
+iPhysicsWorld *cLowLevelPhysicsNewton::CreateWorld()
 {
     cPhysicsWorldNewton* pWorld = hplNew( cPhysicsWorldNewton, () );
     return pWorld;

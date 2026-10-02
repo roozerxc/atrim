@@ -36,21 +36,21 @@ cGuiPopUpMessageBox::cGuiPopUpMessageBox(cGuiSet *apSet,
 
     cGuiSkinFont *pFont = mpSkin->GetFont(eGuiSkinFont_Default);
 
-    float fWindowMinLength = pFont->mpFont->GetLength(pFont->mvSize,asLabel.c_str());
-    float fTextLength = pFont->mpFont->GetLength(pFont->mvSize,asText.c_str());
+    float fWindowMinLength = pFont->mpFont->GetLength(pFont->mvSize, asLabel.c_str());
+    float fTextLength = pFont->mpFont->GetLength(pFont->mvSize, asText.c_str());
 
     if(fTextLength > fWindowMinLength)
     {
         fWindowMinLength = fTextLength;
     }
 
-    float fWindowWidth = fWindowMinLength+40 > 200 ? fWindowMinLength+40 : 200;
+    float fWindowWidth = fWindowMinLength + 40 > 200 ? fWindowMinLength + 40 : 200;
 
     cVector2f vVirtSize = mpSet->GetVirtualSize();
 
     float fWindowHeight = 90 + pFont->mvSize.y;
 
-    cVector3f vPos = cVector3f(vVirtSize.x/2 - fWindowWidth/2,vVirtSize.y/2- fWindowHeight/2,100);
+    cVector3f vPos = cVector3f(vVirtSize.x / 2 - fWindowWidth / 2, vVirtSize.y / 2 - fWindowHeight / 2, 100);
 
     //////////////////////////
     // Window
@@ -62,11 +62,11 @@ cGuiPopUpMessageBox::cGuiPopUpMessageBox(cGuiSet *apSet,
     // Buttons
     if(asButton2 == _W(""))
     {
-        vPos = cVector3f(fWindowWidth/2 - 40, 50 + pFont->mvSize.y,1);
-        mvButtons[0] = mpSet->CreateWidgetButton(vPos,cVector2f(80,30),asButton1,mpWindow);
-        mvButtons[0]->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(ButtonPress));
+        vPos = cVector3f(fWindowWidth / 2 - 40, 50 + pFont->mvSize.y, 1);
+        mvButtons[0] = mpSet->CreateWidgetButton(vPos, cVector2f(80, 30), asButton1, mpWindow);
+        mvButtons[0]->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(ButtonPress));
 #if USE_GAMEPAD
-        mvButtons[0]->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(GamepadButtonPress));
+        mvButtons[0]->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(GamepadButtonPress));
 #endif
         mvButtons[0]->SetGlobalUIInputListener(true);
 
@@ -74,19 +74,19 @@ cGuiPopUpMessageBox::cGuiPopUpMessageBox(cGuiSet *apSet,
     }
     else
     {
-        vPos = cVector3f(fWindowWidth/2 - (80*2+20)/2, 50 + pFont->mvSize.y,1);
-        mvButtons[0] = mpSet->CreateWidgetButton(vPos,cVector2f(80,30),asButton1,mpWindow);
-        mvButtons[0]->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(ButtonPress));
+        vPos = cVector3f(fWindowWidth / 2 - (80 * 2 + 20) / 2, 50 + pFont->mvSize.y, 1);
+        mvButtons[0] = mpSet->CreateWidgetButton(vPos, cVector2f(80, 30), asButton1, mpWindow);
+        mvButtons[0]->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(ButtonPress));
 #if USE_GAMEPAD
-        mvButtons[0]->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(GamepadButtonPress));
+        mvButtons[0]->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(GamepadButtonPress));
 #endif
         mvButtons[0]->SetGlobalUIInputListener(true);
 
-        vPos.x += 80+20;
-        mvButtons[1] = mpSet->CreateWidgetButton(vPos,cVector2f(80,30),asButton2,mpWindow);
-        mvButtons[1]->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(ButtonPress));
+        vPos.x += 80 + 20;
+        mvButtons[1] = mpSet->CreateWidgetButton(vPos, cVector2f(80, 30), asButton2, mpWindow);
+        mvButtons[1]->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(ButtonPress));
 #if USE_GAMEPAD
-        mvButtons[1]->AddCallback(eGuiMessage_UIButtonPress,this, kGuiCallback(GamepadButtonPress));
+        mvButtons[1]->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(GamepadButtonPress));
 #endif
         mvButtons[1]->SetGlobalUIInputListener(true);
 
@@ -99,9 +99,9 @@ cGuiPopUpMessageBox::cGuiPopUpMessageBox(cGuiSet *apSet,
 
     //////////////////////////
     // Label
-    vPos = cVector3f(20, 30,1);
-    mpLabel = mpSet->CreateWidgetLabel(vPos,cVector2f(fWindowWidth-10,pFont->mvSize.y),
-                                       asText,mpWindow);
+    vPos = cVector3f(20, 30, 1);
+    mpLabel = mpSet->CreateWidgetLabel(vPos, cVector2f(fWindowWidth - 10, pFont->mvSize.y),
+                                       asText, mpWindow);
 
     SetUpDefaultFocus(mvButtons[0]);
 }
@@ -142,7 +142,7 @@ cGuiPopUpMessageBox::~cGuiPopUpMessageBox()
 
 //-----------------------------------------------------------------------
 
-bool cGuiPopUpMessageBox::ButtonPress(iWidget* apWidget,const cGuiMessageData& aData)
+bool cGuiPopUpMessageBox::ButtonPress(iWidget* apWidget, const cGuiMessageData& aData)
 {
     int lButton = apWidget == mvButtons[0] ? 0 : 1;
 
@@ -152,13 +152,13 @@ bool cGuiPopUpMessageBox::ButtonPress(iWidget* apWidget,const cGuiMessageData& a
 
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cGuiPopUpMessageBox,ButtonPress)
+kGuiCallbackDeclaredFuncEnd(cGuiPopUpMessageBox, ButtonPress)
 
 
 //-----------------------------------------------------------------------
 
 #if USE_GAMEPAD
-bool cGuiPopUpMessageBox::GamepadButtonPress(iWidget* apWidget,const cGuiMessageData& aData)
+bool cGuiPopUpMessageBox::GamepadButtonPress(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(!(aData.mlVal == eUIButton_Primary || aData.mlVal == eUIButton_Secondary))
     {
@@ -172,7 +172,7 @@ bool cGuiPopUpMessageBox::GamepadButtonPress(iWidget* apWidget,const cGuiMessage
 
     return ButtonPress(apWidget, aData);
 }
-kGuiCallbackDeclaredFuncEnd(cGuiPopUpMessageBox,GamepadButtonPress)
+kGuiCallbackDeclaredFuncEnd(cGuiPopUpMessageBox, GamepadButtonPress)
 #endif
 
 //-----------------------------------------------------------------------

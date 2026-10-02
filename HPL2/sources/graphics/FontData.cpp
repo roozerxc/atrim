@@ -22,7 +22,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cGlyph::cGlyph(    cGuiGfxElement *apGuiGfx,const cVector2f &avOffset, const cVector2f &avSize, float afAdvance)
+cGlyph::cGlyph(    cGuiGfxElement *apGuiGfx, const cVector2f &avOffset, const cVector2f &avSize, float afAdvance)
 {
     mpGuiGfx = apGuiGfx;
     mvOffset = avOffset;
@@ -43,7 +43,7 @@ cGlyph::~cGlyph()
 
 //-----------------------------------------------------------------------
 
-iFontData::iFontData(const tString &asName,iLowLevelGraphics* apLowLevelGraphics) : iResourceBase(asName,_W(""),0)
+iFontData::iFontData(const tString &asName, iLowLevelGraphics* apLowLevelGraphics) : iResourceBase(asName, _W(""), 0)
 {
     mpLowLevelGraphics = apLowLevelGraphics;
     mpResources = NULL;
@@ -53,7 +53,7 @@ iFontData::iFontData(const tString &asName,iLowLevelGraphics* apLowLevelGraphics
 
 iFontData::~iFontData()
 {
-    for(int i=0; i<(int)mvGlyphs.size(); i++)
+    for(int i = 0; i < (int)mvGlyphs.size(); i++)
     {
         if(mvGlyphs[i])
         {
@@ -220,14 +220,14 @@ struct cRowLength
 };
 
 
-void iFontData::GetWordWrapRows(float afLength,float afFontHeight,cVector2f avSize,
-                                const tWString& asString,tWStringVec *apRowVec)
+void iFontData::GetWordWrapRows(float afLength, float afFontHeight, cVector2f avSize,
+                                const tWString& asString, tWStringVec *apRowVec)
 {
     int rows = 0;
 
     unsigned int pos;
-    unsigned int first_letter=0;
-    unsigned int last_space=0;
+    unsigned int first_letter = 0;
+    unsigned int last_space = 0;
 
     std::list<cRowLength> rowLengthList;
     cRowLength row;
@@ -238,8 +238,8 @@ void iFontData::GetWordWrapRows(float afLength,float afFontHeight,cVector2f avSi
         //Log("char: %d\n",(char)asString[pos]);
         if(asString[pos] == _W(' ') || asString[pos] == _W('\n') || IsChineseFullwidthChar(asString[pos]))
         {
-            tWString temp = asString.substr(first_letter, pos-first_letter);
-            fTextLength =  GetLength(avSize,temp.c_str());
+            tWString temp = asString.substr(first_letter, pos - first_letter);
+            fTextLength =  GetLength(avSize, temp.c_str());
 
             //Log("r:%d p:%d f:%d l:%d Temp:'%s'\n",rows,pos,first_letter,last_space, temp.c_str());
             bool nothing = true;
@@ -251,7 +251,7 @@ void iFontData::GetWordWrapRows(float afLength,float afFontHeight,cVector2f avSi
                 row.mlPos = last_space;
                 rowLengthList.push_back(row);
 
-                first_letter=last_space+1;
+                first_letter = last_space + 1;
                 last_space = pos;
                 nothing = false;
             }
@@ -270,7 +270,7 @@ void iFontData::GetWordWrapRows(float afLength,float afFontHeight,cVector2f avSi
             if(asString[pos] == _W('\n'))
             {
                 last_space = pos;
-                first_letter=last_space+1;
+                first_letter = last_space + 1;
 
                 row.mbIncr = true;
                 row.mlPos = last_space;
@@ -286,8 +286,8 @@ void iFontData::GetWordWrapRows(float afLength,float afFontHeight,cVector2f avSi
             }
         }
     }
-    tWString temp =  asString.substr(first_letter, pos-first_letter);
-    fTextLength = GetLength(avSize,temp.c_str());
+    tWString temp =  asString.substr(first_letter, pos - first_letter);
+    fTextLength = GetLength(avSize, temp.c_str());
     if(fTextLength > afLength)
     {
         rows++;
@@ -296,18 +296,18 @@ void iFontData::GetWordWrapRows(float afLength,float afFontHeight,cVector2f avSi
         rowLengthList.push_back(row);
     }
 
-    if(rows==0)
+    if(rows == 0)
     {
         apRowVec->push_back(asString.c_str());
     }
     else
     {
-        first_letter=0;
-        unsigned int i=0;
+        first_letter = 0;
+        unsigned int i = 0;
 
         for(std::list<cRowLength>::iterator it = rowLengthList.begin(); it != rowLengthList.end(); ++it)
         {
-            apRowVec->push_back(asString.substr(first_letter, it->mlPos -first_letter).c_str());
+            apRowVec->push_back(asString.substr(first_letter, it->mlPos - first_letter).c_str());
             i++;
             first_letter = it->mlPos;
             if (it->mbIncr)
@@ -322,15 +322,15 @@ void iFontData::GetWordWrapRows(float afLength,float afFontHeight,cVector2f avSi
 
 //-----------------------------------------------------------------------
 
-float iFontData::GetLength(const cVector2f& avSize,const wchar_t* sText)
+float iFontData::GetLength(const cVector2f& avSize, const wchar_t* sText)
 {
-    int lCount=0;
-    float lXAdd =0;
-    float fLength =0;
+    int lCount = 0;
+    float lXAdd = 0;
+    float fLength = 0;
     while(sText[lCount] != 0)
     {
         unsigned short lGlyphNum = ((wchar_t)sText[lCount]);
-        if(lGlyphNum<mlFirstChar || lGlyphNum>mlLastChar)
+        if(lGlyphNum < mlFirstChar || lGlyphNum > mlLastChar)
         {
             lCount++;
             continue;
@@ -343,7 +343,7 @@ float iFontData::GetLength(const cVector2f& avSize,const wchar_t* sText)
             cVector2f vOffset(pGlyph->mvOffset * avSize);
             cVector2f vSize(pGlyph->mvSize * avSize);
 
-            fLength += pGlyph->mfAdvance*avSize.x;
+            fLength += pGlyph->mfAdvance * avSize.x;
         }
         lCount++;
     }
@@ -354,7 +354,7 @@ float iFontData::GetLength(const cVector2f& avSize,const wchar_t* sText)
 //-----------------------------------------------------------------------
 
 
-float iFontData::GetLengthFmt(const cVector2f& avSize,const wchar_t* fmt,...)
+float iFontData::GetLengthFmt(const cVector2f& avSize, const wchar_t* fmt, ...)
 {
     wchar_t sText[256];
     va_list ap;
@@ -376,27 +376,27 @@ float iFontData::GetLengthFmt(const cVector2f& avSize,const wchar_t* fmt,...)
 
 //-----------------------------------------------------------------------
 
-cGlyph* iFontData::CreateGlyph(    cFrameSubImage* apImage, const cVector2l &avOffset,const cVector2l &avSize,
+cGlyph *iFontData::CreateGlyph(    cFrameSubImage* apImage, const cVector2l &avOffset, const cVector2l &avSize,
                                    const cVector2l& avFontSize, int alAdvance)
 {
     //////////////////////////
     //Gui gfx
-    cGuiGfxElement* pGuiGfx = mpGui->CreateGfxFilledRect(cColor(1,1),eGuiMaterial_FontNormal,false);
+    cGuiGfxElement* pGuiGfx = mpGui->CreateGfxFilledRect(cColor(1, 1), eGuiMaterial_FontNormal, false);
     pGuiGfx->AddImage(apImage);
 
     //////////////////////////
     //Sizes
     cVector2f vSize;
-    vSize.x = ((float)avSize.x)/((float)avFontSize.x) * mvSizeRatio.x;
-    vSize.y = ((float)avSize.y)/((float)avFontSize.y) * mvSizeRatio.y;
+    vSize.x = ((float)avSize.x) / ((float)avFontSize.x) * mvSizeRatio.x;
+    vSize.y = ((float)avSize.y) / ((float)avFontSize.y) * mvSizeRatio.y;
 
     cVector2f vOffset;
-    vOffset.x = ((float)avOffset.x)/((float)avFontSize.x) * mvSizeRatio.x;
-    vOffset.y = ((float)avOffset.y)/((float)avFontSize.y) * mvSizeRatio.y;
+    vOffset.x = ((float)avOffset.x) / ((float)avFontSize.x) * mvSizeRatio.x;
+    vOffset.y = ((float)avOffset.y) / ((float)avFontSize.y) * mvSizeRatio.y;
 
-    float fAdvance = ((float)alAdvance)/((float)avFontSize.x) * mvSizeRatio.x;
+    float fAdvance = ((float)alAdvance) / ((float)avFontSize.x) * mvSizeRatio.x;
 
-    cGlyph* pGlyph = hplNew( cGlyph,(pGuiGfx,vOffset,vSize,fAdvance));
+    cGlyph* pGlyph = hplNew( cGlyph, (pGuiGfx, vOffset, vSize, fAdvance));
 
     return pGlyph;
 }

@@ -48,9 +48,9 @@ void cAnimationTrack::ResizeKeyFrames(int alSize)
 
 //-----------------------------------------------------------------------
 
-cKeyFrame* cAnimationTrack::CreateKeyFrame(float afTime)
+cKeyFrame *cAnimationTrack::CreateKeyFrame(float afTime)
 {
-    cKeyFrame* pFrame = hplNew( cKeyFrame,());
+    cKeyFrame* pFrame = hplNew( cKeyFrame, ());
     pFrame->time = afTime;
 
     //Check so that this is the first
@@ -69,7 +69,7 @@ cKeyFrame* cAnimationTrack::CreateKeyFrame(float afTime)
                 break;
             }
         }
-        mvKeyFrames.insert(it,pFrame);
+        mvKeyFrames.insert(it, pFrame);
     }
 
     return pFrame;
@@ -112,7 +112,7 @@ cKeyFrame cAnimationTrack::GetInterpolatedKeyFrame(float afTime, bool bLoop)
 
     if(mvKeyFrames.empty())
     {
-        ResultKeyFrame.rotation = cQuaternion(1,0,0,0);
+        ResultKeyFrame.rotation = cQuaternion(1, 0, 0, 0);
         ResultKeyFrame.trans = 0;
         return ResultKeyFrame;
     }
@@ -180,7 +180,7 @@ cKeyFrame cAnimationTrack::GetInterpolatedKeyFrame(float afTime, bool bLoop)
 
 //-----------------------------------------------------------------------
 
-float cAnimationTrack::GetKeyFramesAtTime(float afTime, cKeyFrame** apKeyFrameA,cKeyFrame** apKeyFrameB, bool bLoop)
+float cAnimationTrack::GetKeyFramesAtTime(float afTime, cKeyFrame** apKeyFrameA, cKeyFrame** apKeyFrameB, bool bLoop)
 {
     float fTotalAnimLength = mpParent->GetLength();
 
@@ -189,7 +189,7 @@ float cAnimationTrack::GetKeyFramesAtTime(float afTime, cKeyFrame** apKeyFrameA,
     int lFirst = 0, lLast = lSize - 1;
 
     //Find the second frame.
-    int lIdxB=-1;
+    int lIdxB = -1;
 
     while(lFirst <= lLast)
     {

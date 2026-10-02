@@ -10,8 +10,8 @@ namespace hpl
 
 class cBoxTreeTempNode;
 
-typedef std::list<cBoxTreeTempNode*> tBoxTreeTempNodeList;
-typedef std::list<cBoxTreeTempNode*>::iterator tBoxTreeTempNodeListIt;
+typedef std::list<cBoxTreeTempNode *> tBoxTreeTempNodeList;
+typedef std::list<cBoxTreeTempNode *>::iterator tBoxTreeTempNodeListIt;
 
 class cBoxTreeTempNode
 {
@@ -54,7 +54,7 @@ public:
      */
     void Remove(iRenderable *apRenderable);
 
-    iRenderableContainerNode* GetRoot();
+    iRenderableContainerNode *GetRoot();
 
     void Compile();
 
@@ -129,7 +129,7 @@ private:
 
     int GetSplitGroup(iRenderable *apObject, float afCutPlane, int alAxis, const cVector3f &avNodeSize);
 
-    cRCNode_BoxTree* mpRoot;
+    cRCNode_BoxTree *mpRoot;
 
     int mlMinLeafObjects;
     float mfMinSideLength;

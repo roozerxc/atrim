@@ -31,7 +31,7 @@ public:
 
     void SetForceCallBackOnEnter(bool abX)
     {
-        mbForceCallBackOnEnter=abX;
+        mbForceCallBackOnEnter = abX;
     }
     bool GetForceCallBackOnEnter()
     {
@@ -44,7 +44,7 @@ public:
         return mlMaxCharacters;
     }
 
-    void SetSelectedText(int alStart=0, int alCount=-1);
+    void SetSelectedText(int alStart = 0, int alCount = -1);
 
     cVector2f GetBackgroundSize();
 
@@ -73,12 +73,12 @@ public:
     void SetNumericValue(float afX);
     float GetNumericValue();
 
-    void SetLowerBound(bool abX, float afValue=0);
+    void SetLowerBound(bool abX, float afValue = 0);
     float GetLowerBound()
     {
         return mfLowerBound;
     }
-    void SetUpperBound(bool abX, float afValue=0);
+    void SetUpperBound(bool abX, float afValue = 0);
     float GetUpperBound()
     {
         return mfUpperBound;
@@ -96,7 +96,7 @@ public:
     }
 
     void SetIllegalChars(const tWString &asIllegalChars);
-    const tWString& GetIllegalChars();
+    const tWString &GetIllegalChars();
 
     void SetLegalCharCodeLimitEnabled(bool abX);
 
@@ -175,7 +175,7 @@ protected:
 
     /////////////////////////
     // Data
-    iWidget* mpPrevAttention;
+    iWidget *mpPrevAttention;
     bool mbPressed;
     int mlMarkerCharPos;
     int mlSelectedTextEnd;

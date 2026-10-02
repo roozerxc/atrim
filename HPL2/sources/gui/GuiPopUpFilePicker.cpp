@@ -35,7 +35,7 @@ cGuiPopUpFilePicker::cGuiPopUpFilePicker(cGuiSet* apSet, cGuiSkin* apSkin,
         eFilePickerType aType,
         const tWString &asStartPath, bool abShowHiddenFiles,
         void *apCallbackObject, tGuiCallbackFunc apCallback,
-        const tWString& asStartFilename) : iGuiPopUp(apSet,false,cVector2f(600,500)),
+        const tWString& asStartFilename) : iGuiPopUp(apSet, false, cVector2f(600, 500)),
     iFileBrowser(asStartPath, abShowHiddenFiles)
 {
     mpSkin = apSkin;
@@ -51,7 +51,7 @@ cGuiPopUpFilePicker::cGuiPopUpFilePicker(cGuiSet* apSet, cGuiSkin* apSkin,
         msStartFilename = cString::GetFileNameW(asStartPath);
     }
 
-    if(msStartFilename==asStartPath)
+    if(msStartFilename == asStartPath)
     {
         msStartFilename.clear();
     }
@@ -64,7 +64,7 @@ cGuiPopUpFilePicker::cGuiPopUpFilePicker(cGuiSet* apSet, cGuiSkin* apSkin,
 
 cGuiPopUpFilePicker::~cGuiPopUpFilePicker()
 {
-    for(int i=0; i<3; ++i) if(mvButtons[i])
+    for(int i = 0; i < 3; ++i) if(mvButtons[i])
         {
             mpSet->DestroyWidget(mvButtons[i]);
         }
@@ -134,7 +134,7 @@ bool cGuiPopUpFilePicker::Button_Pressed(iWidget* apWidget, const cGuiMessageDat
                                              _W("File name must not be empty"),
                                              _W("OK"),
                                              _W(""),
-                                             NULL,NULL);
+                                             NULL, NULL);
         else
         {
             tWString sFilenameFullPath = GetCurrentFullPath() + mpCurrentFileName->GetText();
@@ -144,9 +144,9 @@ bool cGuiPopUpFilePicker::Button_Pressed(iWidget* apWidget, const cGuiMessageDat
             {
             case eFilePickerType_Save:
 
-                if(cString::GetFileExtW(sFilenameFullPath)!=cString::SubW(mvCategories[0]->mvFilters[0],2))
+                if(cString::GetFileExtW(sFilenameFullPath) != cString::SubW(mvCategories[0]->mvFilters[0], 2))
                 {
-                    tWString sExt = cString::SubW(mvCategories[0]->mvFilters[0],1);
+                    tWString sExt = cString::SubW(mvCategories[0]->mvFilters[0], 1);
                     mpCurrentFileName->SetText(mpCurrentFileName->GetText() + sExt);
                     sFilenameFullPath += sExt;
 
@@ -168,7 +168,7 @@ bool cGuiPopUpFilePicker::Button_Pressed(iWidget* apWidget, const cGuiMessageDat
 
                 break;
             case eFilePickerType_Load:
-                if(bFileExists==false)
+                if(bFileExists == false)
                 {
                     mpSet->CreatePopUpMessageBox(    _W("Error"),
                                                      _W("File does not exist. Please choose a valid file."),
@@ -236,11 +236,11 @@ bool cGuiPopUpFilePicker::Directory_OnSelectionChange(iWidget* apWidget, const c
         NavigateTo(pBox->GetItemText(lSelection));
     }
     // If selection is not last item, remove items from selection onwards, then navigate to selection
-    else if(lSelection != lNumItems-1)
+    else if(lSelection != lNumItems - 1)
     {
         sDir = pBox->GetItemText(lSelection);
 
-        for(int i=lNumItems; i>lSelection; --i)
+        for(int i = lNumItems; i > lSelection; --i)
         {
             mvCurrentDirFullPath.pop_back();
         }
@@ -261,7 +261,7 @@ bool cGuiPopUpFilePicker::FileList_OnSelectionDblClick(iWidget* apWidget, const 
     tWString sPath = mpFileList->GetItem(mpFileList->GetSelectedItem())->GetProperty(1)->GetText();
 
     // Try to navigate to path (if folder)
-    if(NavigateTo(sPath)==false)
+    if(NavigateTo(sPath) == false)
     {
         // Simulate Load/Save Button press
         Button_Pressed(mvButtons[1], cGuiMessageData());
@@ -301,7 +301,7 @@ bool cGuiPopUpFilePicker::FileList_OnSelectionChange(iWidget* apWidget, const cG
         }
     }
 
-    if(sPath != _W("") && cPlatform::FolderExists(GetCurrentFullPath() + sPath)==false)
+    if(sPath != _W("") && cPlatform::FolderExists(GetCurrentFullPath() + sPath) == false)
     {
         mpCurrentFileName->SetText( sPath );
     }
@@ -352,15 +352,15 @@ void cGuiPopUpFilePicker::OnAddFilter()
     // it adds an item per category, and writes the filters on the item text
     mpFilterList->ClearItems();
 
-    for(int i=0; i<(int)mvCategories.size(); ++i)
+    for(int i = 0; i < (int)mvCategories.size(); ++i)
     {
         cFileBrowserCategory* pCat = mvCategories[i];
 
         tWString sFilterText = pCat->msName + _W(" (");
 
-        for(int j=0; j <(int)pCat->mvFilters.size(); ++j)
+        for(int j = 0; j < (int)pCat->mvFilters.size(); ++j)
         {
-            if(j!=0)
+            if(j != 0)
             {
                 sFilterText += _W(", ");
             }
@@ -391,7 +391,7 @@ void cGuiPopUpFilePicker::OnNavigate()
         mpCurrentDirectory->AddItem(_W("<Game Folder>"));
     }
 
-    for(int i=0; i<(int)mvCurrentDirFullPath.size(); ++i)
+    for(int i = 0; i < (int)mvCurrentDirFullPath.size(); ++i)
     {
         mpCurrentDirectory->AddItem(mvCurrentDirFullPath[i]);
     }
@@ -410,7 +410,7 @@ void cGuiPopUpFilePicker::PopulateFileList()
 {
     int lSelectedCategoryIndex = mpFilterList->GetSelectedItem();
 
-    if(lSelectedCategoryIndex<0)
+    if(lSelectedCategoryIndex < 0)
     {
         return;
     }
@@ -422,9 +422,9 @@ void cGuiPopUpFilePicker::PopulateFileList()
     tWString sCurrentFullPath = GetCurrentFullPath();
     ///////////////////////////////////////
     // If we are at the root, set up special folders
-    if(sCurrentFullPath==_W(""))
+    if(sCurrentFullPath == _W(""))
     {
-        for(int i=0; i<(int)mvSystemRootFolders.size(); ++i)
+        for(int i = 0; i < (int)mvSystemRootFolders.size(); ++i)
         {
             cWidgetItem* pItem = mpFileList->AddItem();
 
@@ -444,7 +444,7 @@ void cGuiPopUpFilePicker::PopulateFileList()
 
     ////////////////////////////////////////
     // Add them as items to the file list
-    for(; it!=lstFilesAndFolders.end(); ++it)
+    for(; it != lstFilesAndFolders.end(); ++it)
     {
         tWString sFilename = *it;
 
@@ -489,9 +489,9 @@ void cGuiPopUpFilePicker::Init()
     // Set up graphics
     mpGfxUpButton = mpSkin->GetGfx(eGuiSkinGfx_FilePickerUpButton);
 
-    for(int i=0; i<6; ++i)
+    for(int i = 0; i < 6; ++i)
     {
-        mvGfxFileTypeIcons[i] = mpSkin->GetGfx((eGuiSkinGfx) (i + eGuiSkinGfx_FilePickerUpButton+1));
+        mvGfxFileTypeIcons[i] = mpSkin->GetGfx((eGuiSkinGfx) (i + eGuiSkinGfx_FilePickerUpButton + 1));
     }
 
 
@@ -502,15 +502,15 @@ void cGuiPopUpFilePicker::Init()
     mpWindow->SetText(sCaption);
 
     // Current directory TextBox
-    mpCurrentDirectory = mpSet->CreateWidgetComboBox(cVector3f(30,60,0.1f),
-                         cVector2f(400, mpWindow->GetDefaultFontSize().y+2),
+    mpCurrentDirectory = mpSet->CreateWidgetComboBox(cVector3f(30, 60, 0.1f),
+                         cVector2f(400, mpWindow->GetDefaultFontSize().y + 2),
                          _W(""),
                          mpWindow);
     mpCurrentDirectory->SetCanEdit(false);
-    mpCurrentDirectory->AddCallback(eGuiMessage_SelectionChange,this, kGuiCallback(Directory_OnSelectionChange));
+    mpCurrentDirectory->AddCallback(eGuiMessage_SelectionChange, this, kGuiCallback(Directory_OnSelectionChange));
 
     // Buttons
-    for(int i=0; i<3; ++i)
+    for(int i = 0; i < 3; ++i)
     {
         mvButtons[i] = mpSet->CreateWidgetButton(    0,
                        0,
@@ -524,20 +524,20 @@ void cGuiPopUpFilePicker::Init()
     {
         mvButtons[0]->SetImage( mpGfxUpButton, false);
     }
-    mvButtons[0]->SetPosition(cVector3f(435,60,0.1f));
+    mvButtons[0]->SetPosition(cVector3f(435, 60, 0.1f));
     mvButtons[0]->SetSize(23);
 
     mvButtons[1]->SetText(sCaption);
-    mvButtons[1]->SetPosition(cVector3f(500,425, 0.5f));
-    mvButtons[1]->SetSize(cVector2f(70,20));
+    mvButtons[1]->SetPosition(cVector3f(500, 425, 0.5f));
+    mvButtons[1]->SetSize(cVector2f(70, 20));
 
     mvButtons[2]->SetText(_W("Cancel"));
-    mvButtons[2]->SetPosition(cVector3f(500,450, 0.5f));
-    mvButtons[2]->SetSize(cVector2f(70,20));
+    mvButtons[2]->SetPosition(cVector3f(500, 450, 0.5f));
+    mvButtons[2]->SetSize(cVector2f(70, 20));
 
     // Current file name TextBox
-    mpCurrentFileName = mpSet->CreateWidgetTextBox(    cVector3f(30,425,0.5f),
-                        cVector2f(400,mpWindow->GetDefaultFontSize().y+2),
+    mpCurrentFileName = mpSet->CreateWidgetTextBox(    cVector3f(30, 425, 0.5f),
+                        cVector2f(400, mpWindow->GetDefaultFontSize().y + 2),
                         msStartFilename,
                         mpWindow);
     mpCurrentFileName->SetForceCallBackOnEnter(true);
@@ -549,23 +549,23 @@ void cGuiPopUpFilePicker::Init()
 
     // Filters ComboBox
     mpFilterList = mpSet->CreateWidgetComboBox(    cVector3f(30, 450, 0.5f),
-                   cVector2f(300, mpWindow->GetDefaultFontSize().y+2),
+                   cVector2f(300, mpWindow->GetDefaultFontSize().y + 2),
                    _W(""),
                    mpWindow);
     mpFilterList->AddCallback(eGuiMessage_SelectionChange, this, kGuiCallback(FilterList_OnSelectionChange));
 
     // File ListBox
-    mpFileList = mpSet->CreateWidgetMultiPropertyListBox(cVector3f(30,90,1),
-                 cVector2f(540,300),
+    mpFileList = mpSet->CreateWidgetMultiPropertyListBox(cVector3f(30, 90, 1),
+                 cVector2f(540, 300),
                  mpWindow);
-    mpFileList->AddColumn("",0);
-    mpFileList->SetColumnWidth(0,24);
-    mpFileList->AddColumn("Name",1);
-    mpFileList->SetColumnWidth(1,300);
-    mpFileList->AddColumn("Size",2, eFontAlign_Right);
-    mpFileList->SetColumnWidth(2,75);
-    mpFileList->AddColumn("Date modified",3);
-    mpFileList->SetColumnWidth(3,125);
+    mpFileList->AddColumn("", 0);
+    mpFileList->SetColumnWidth(0, 24);
+    mpFileList->AddColumn("Name", 1);
+    mpFileList->SetColumnWidth(1, 300);
+    mpFileList->AddColumn("Size", 2, eFontAlign_Right);
+    mpFileList->SetColumnWidth(2, 75);
+    mpFileList->AddColumn("Date modified", 3);
+    mpFileList->SetColumnWidth(3, 125);
 
     mpFileList->AddCallback(eGuiMessage_SelectionChange, this, kGuiCallback(FileList_OnSelectionChange));
     mpFileList->AddCallback(eGuiMessage_SelectionDoubleClick, this, kGuiCallback(FileList_OnSelectionDblClick));

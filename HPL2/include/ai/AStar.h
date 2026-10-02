@@ -13,12 +13,12 @@ class cAINode;
 
 //--------------------------------------
 
-typedef std::set<cAINode*> tAINodeSet;
+typedef std::set<cAINode *> tAINodeSet;
 typedef tAINodeSet::iterator tAINodeSetIt;
 
 //--------------------------------------
 
-typedef std::list<cAINode*> tAINodeList;
+typedef std::list<cAINode *> tAINodeList;
 typedef tAINodeList::iterator tAINodeListIt;
 
 //--------------------------------------
@@ -44,23 +44,23 @@ public:
 class cAStarNodeCompare
 {
 public:
-    bool operator()(cAStarNode* apNodeA,cAStarNode* apNodeB) const;
+    bool operator()(cAStarNode* apNodeA, cAStarNode* apNodeB) const;
 };
 
 class cAStarNodePresort
 {
 public:
-    bool operator()(cAStarNode* apNodeA,cAStarNode* apNodeB) const;
+    bool operator()(cAStarNode* apNodeA, cAStarNode* apNodeB) const;
 };
 
-typedef std::list<cAStarNode*> tAStarNodeList;
-typedef std::set<cAStarNode*,cAStarNodeCompare> tAStarNodeSet;
+typedef std::list<cAStarNode *> tAStarNodeList;
+typedef std::set<cAStarNode *, cAStarNodeCompare> tAStarNodeSet;
 typedef tAStarNodeSet::iterator tAStarNodeSetIt;
 
 typedef std::vector<cAStarNode> tAStarNodeVec;
 typedef tAStarNodeVec::iterator tAStarNodeVecIt;
 
-typedef std::set<cAStarNode*,cAStarNodePresort> tAStarNodePresortSet;
+typedef std::set<cAStarNode *, cAStarNodePresort> tAStarNodePresortSet;
 typedef tAStarNodePresortSet::iterator tAStarNodePresortSetIt;
 
 //--------------------------------------
@@ -71,7 +71,7 @@ class iAStarCallback
 public:
     virtual ~iAStarCallback() {}
 
-    virtual bool CanAddNode(cAINode *apParentNode,cAINode *apChildNode)=0;
+    virtual bool CanAddNode(cAINode *apParentNode, cAINode *apChildNode) = 0;
 };
 
 //--------------------------------------
@@ -103,8 +103,8 @@ private:
 
     void AddOpenNode(cAINode *apAINode, cAStarNode *apParent, float afDistance);
 
-    cAStarNode* GetBestNode();
-    cAStarNode* GetNode(cAINode *apAINode);
+    cAStarNode *GetBestNode();
+    cAStarNode *GetNode(cAINode *apAINode);
 
     float Cost(float afDistance, cAINode *apAINode, cAStarNode *apParent);
     float Heuristic(const cVector3f& avStart, const cVector3f& avGoal);
@@ -116,7 +116,7 @@ private:
     cVector3f mvGoal;
     cVector3f mvStart;
 
-    cAStarNode* mpGoalNode;
+    cAStarNode *mpGoalNode;
     tAINodeSet m_setGoalNodes;
 
     cAINodeContainer *mpContainer;

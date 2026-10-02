@@ -58,7 +58,7 @@ cCollideShapeNewton::cCollideShapeNewton(eCollideShapeType aType, const cVector3
     case eCollideShapeType_Sphere:
         mpNewtonCollision = NewtonCreateSphere(apNewtonWorld,
                                                //mvSize.x, mvSize.y, mvSize.z, if not all values are equal then this does not work
-                                               mvSize.x, mvSize.x,mvSize.x,    //so this is better!
+                                               mvSize.x, mvSize.x, mvSize.x,   //so this is better!
                                                0, pMtx);
         break;
 
@@ -81,38 +81,38 @@ cCollideShapeNewton::cCollideShapeNewton(eCollideShapeType aType, const cVector3
     {
         mBoundingVolume.SetSize(mvSize);
 
-        mfVolume = mvSize.x * mvSize.y *mvSize.z;
+        mfVolume = mvSize.x * mvSize.y * mvSize.z;
     }
     else if(mType == eCollideShapeType_Sphere)
     {
-        mBoundingVolume.SetSize(mvSize*2);
+        mBoundingVolume.SetSize(mvSize * 2);
 
-        mfVolume = (4.0f / 3.0f) * kPif * (mvSize.x*mvSize.x*mvSize.x);
+        mfVolume = (4.0f / 3.0f) * kPif * (mvSize.x * mvSize.x * mvSize.x);
     }
     else if(mType == eCollideShapeType_Cylinder ||
             mType == eCollideShapeType_Capsule)
     {
-        mBoundingVolume.SetSize(cVector3f(mvSize.y,mvSize.x*2,mvSize.x*2));
+        mBoundingVolume.SetSize(cVector3f(mvSize.y, mvSize.x * 2, mvSize.x * 2));
 
         //Not gonna be correct for capsule...
         if(mType == eCollideShapeType_Cylinder)
         {
-            mfVolume = kPif * (mvSize.x*mvSize.x)*mvSize.y;
+            mfVolume = kPif * (mvSize.x * mvSize.x) * mvSize.y;
         }
         else
         {
             //Height of the cylinder part.
-            float fCylHeight = mvSize.y - (mvSize.x*2);
-            mfVolume =0;
+            float fCylHeight = mvSize.y - (mvSize.x * 2);
+            mfVolume = 0;
 
             //The volume of the cylinder part.
-            if(fCylHeight>0)
+            if(fCylHeight > 0)
             {
-                mfVolume += kPif * (mvSize.x*mvSize.x)*fCylHeight;
+                mfVolume += kPif * (mvSize.x * mvSize.x) * fCylHeight;
             }
 
             //The volume of the sphere part.
-            mfVolume += (4.0f / 3.0f) * kPif * (mvSize.x*mvSize.x*mvSize.x);
+            mfVolume += (4.0f / 3.0f) * kPif * (mvSize.x * mvSize.x * mvSize.x);
         }
     }
 
@@ -126,11 +126,11 @@ cCollideShapeNewton::~cCollideShapeNewton()
     //Release Newton Collision
     if(mpNewtonCollision)
     {
-        NewtonReleaseCollision(mpNewtonWorld,mpNewtonCollision);
+        NewtonReleaseCollision(mpNewtonWorld, mpNewtonCollision);
     }
 
     //Release all subshapes (for compound objects)
-    for(int i=0; i < (int)mvSubShapes.size(); i++)
+    for(int i = 0; i < (int)mvSubShapes.size(); i++)
     {
         mpWorld->DestroyShape(mvSubShapes[i]);
     }
@@ -144,7 +144,7 @@ cCollideShapeNewton::~cCollideShapeNewton()
 
 //-----------------------------------------------------------------------
 
-iCollideShape* cCollideShapeNewton::GetSubShape(int alIdx)
+iCollideShape *cCollideShapeNewton::GetSubShape(int alIdx)
 {
     if(mType == eCollideShapeType_Compound)
     {
@@ -172,7 +172,7 @@ int cCollideShapeNewton::GetSubShapeNum()
 
 cVector3f cCollideShapeNewton::GetInertia(float afMass)
 {
-    cVector3f vInertia(1,1,1);
+    cVector3f vInertia(1, 1, 1);
 
     // Box
     if(mType == eCollideShapeType_Box)
@@ -188,23 +188,23 @@ cVector3f cCollideShapeNewton::GetInertia(float afMass)
     else if(mType == eCollideShapeType_Sphere)
     {
         float fI = 0.4f * afMass * mvSize.x * mvSize.x;
-        vInertia = cVector3f(fI, fI,fI);
+        vInertia = cVector3f(fI, fI, fI);
     }
     //Cylinder
     else if(mType == eCollideShapeType_Cylinder)
     {
         float fRadius = mvSize.x;
-        vInertia.x = afMass * (fRadius*fRadius) * (1.0f/4.0f) + afMass * (mvSize.y*mvSize.y) * (1.0f / 12.0f);
+        vInertia.x = afMass * (fRadius * fRadius) * (1.0f / 4.0f) + afMass * (mvSize.y * mvSize.y) * (1.0f / 12.0f);
         vInertia.y = vInertia.x;
-        vInertia.z = afMass * (fRadius*fRadius) * (1.0f/2.0f);
+        vInertia.z = afMass * (fRadius * fRadius) * (1.0f / 2.0f);
     }
     //Capsule
     else if(mType == eCollideShapeType_Capsule)
     {
         float fRadius = mvSize.x;
-        vInertia.x = afMass * (fRadius*fRadius) * (1.0f/4.0f) + afMass * (mvSize.y*mvSize.y) * (1.0f / 12.0f);
+        vInertia.x = afMass * (fRadius * fRadius) * (1.0f / 4.0f) + afMass * (mvSize.y * mvSize.y) * (1.0f / 12.0f);
         vInertia.y = vInertia.x;
-        vInertia.z = afMass * (fRadius*fRadius) * (1.0f/2.0f);
+        vInertia.z = afMass * (fRadius * fRadius) * (1.0f / 2.0f);
     }
     //Compound
     //This is only a very bad approximation.
@@ -220,7 +220,7 @@ cVector3f cCollideShapeNewton::GetInertia(float afMass)
                        afMass * (vBoxSize.x * vBoxSize.x + vBoxSize.y * vBoxSize.y) * fInv
                    );
         //Scale of a bit of the inertia since the compound is not a 100% solid box
-        vInertia = vInertia * (1.0f - ((fBoxVolume / mfVolume)*0.3f));
+        vInertia = vInertia * (1.0f - ((fBoxVolume / mfVolume) * 0.3f));
     }
 
     return vInertia;
@@ -234,11 +234,11 @@ void cCollideShapeNewton::CreateStaticSceneFromShapeVec(tCollideShapeVec &avShap
 
     mvSubShapes.reserve(avShapes.size());
 
-    for(size_t i=0; i<avShapes.size(); ++i)
+    for(size_t i = 0; i < avShapes.size(); ++i)
     {
         mvSubShapes.push_back(avShapes[i]);
 
-        cCollideShapeNewton *pNewtonShape = static_cast<cCollideShapeNewton*>(avShapes[i]);
+        cCollideShapeNewton *pNewtonShape = static_cast<cCollideShapeNewton *>(avShapes[i]);
 
         NewtonSceneProxy* pProxy = NewtonSceneCollisionCreateProxy(mpNewtonCollision, pNewtonShape->GetNewtonCollision());
         //cMatrixf mtxTransform = cMatrixf::Identity;
@@ -259,18 +259,18 @@ void cCollideShapeNewton::CreateStaticSceneFromShapeVec(tCollideShapeVec &avShap
 
 void cCollideShapeNewton::CreateCompoundFromShapeVec(tCollideShapeVec &avShapes)
 {
-    std::vector<NewtonCollision*> vNewtonColliders;
+    std::vector<NewtonCollision *> vNewtonColliders;
 
     vNewtonColliders.reserve(avShapes.size());
     mvSubShapes.reserve(avShapes.size());
 
-    mfVolume =0;
+    mfVolume = 0;
 
-    for(size_t i=0; i< avShapes.size(); i++)
+    for(size_t i = 0; i < avShapes.size(); i++)
     {
         mvSubShapes.push_back(avShapes[i]);
 
-        cCollideShapeNewton *pNewtonShape = static_cast<cCollideShapeNewton*>(avShapes[i]);
+        cCollideShapeNewton *pNewtonShape = static_cast<cCollideShapeNewton *>(avShapes[i]);
         vNewtonColliders.push_back(pNewtonShape->GetNewtonCollision());
 
         mfVolume += pNewtonShape->GetVolume();
@@ -283,7 +283,7 @@ void cCollideShapeNewton::CreateCompoundFromShapeVec(tCollideShapeVec &avShapes)
     cVector3f vFinalMax = avShapes[0]->GetBoundingVolume().GetMax();
     cVector3f vFinalMin = avShapes[0]->GetBoundingVolume().GetMin();
 
-    for(size_t i=1; i< avShapes.size(); i++)
+    for(size_t i = 1; i < avShapes.size(); i++)
     {
         cVector3f vMax = avShapes[i]->GetBoundingVolume().GetMax();
         cVector3f vMin = avShapes[i]->GetBoundingVolume().GetMin();
@@ -331,7 +331,7 @@ void cCollideShapeNewton::CreateFromVertices(    const unsigned int* apIndexArra
     bool bCreatedPlane = false;
     cPlanef plane;
 
-    int lCount=0;
+    int lCount = 0;
 
     //unsigned long lStartTime = cPlatform::GetApplicationTime();
     //Log("%d triangles: ", alIndexNum/3);
@@ -339,16 +339,16 @@ void cCollideShapeNewton::CreateFromVertices(    const unsigned int* apIndexArra
     mpNewtonCollision = NewtonCreateTreeCollision(mpNewtonWorld, 0);
     //Log("-- Creating mesh collision.:\n");
     NewtonTreeCollisionBeginBuild(mpNewtonCollision);
-    for(int tri = 0; tri < alIndexNum; tri+=3)
+    for(int tri = 0; tri < alIndexNum; tri += 3)
     {
         //Log("tri: %d:\n", tri/3);
-        for(int idx =0; idx < 3; idx++)
+        for(int idx = 0; idx < 3; idx++)
         {
-            int lVtx = apIndexArray[tri + 2-idx]*alVtxStride;
+            int lVtx = apIndexArray[tri + 2 - idx] * alVtxStride;
 
-            vTriVec[idx*3 + 0] = apVertexArray[lVtx + 0];
-            vTriVec[idx*3 + 1] = apVertexArray[lVtx + 1];
-            vTriVec[idx*3 + 2] = apVertexArray[lVtx + 2];
+            vTriVec[idx * 3 + 0] = apVertexArray[lVtx + 0];
+            vTriVec[idx * 3 + 1] = apVertexArray[lVtx + 1];
+            vTriVec[idx * 3 + 2] = apVertexArray[lVtx + 2];
         }
 
         //if(alIndexNum<100)
@@ -367,9 +367,9 @@ void cCollideShapeNewton::CreateFromVertices(    const unsigned int* apIndexArra
         if(false)//bOptimize==false)
         {
             cPlanef tempPlane;
-            cVector3f vP1(vTriVec[0+0],vTriVec[0+1],vTriVec[0+2]);
-            cVector3f vP2(vTriVec[1*3+0],vTriVec[1*3+1],vTriVec[1*3+2]);
-            cVector3f vP3(vTriVec[2*3+0],vTriVec[2*3+1],vTriVec[2*3+2]);
+            cVector3f vP1(vTriVec[0 + 0], vTriVec[0 + 1], vTriVec[0 + 2]);
+            cVector3f vP2(vTriVec[1 * 3 + 0], vTriVec[1 * 3 + 1], vTriVec[1 * 3 + 2]);
+            cVector3f vP3(vTriVec[2 * 3 + 0], vTriVec[2 * 3 + 1], vTriVec[2 * 3 + 2]);
 
             tempPlane.FromPoints(vP1, vP2, vP3);
 
@@ -379,7 +379,7 @@ void cCollideShapeNewton::CreateFromVertices(    const unsigned int* apIndexArra
             /////////////////////////////////
             //Check if the triangles are on the same plane. If so, do not optimize
             // Do not check first triangle
-            if(bCreatedPlane==false)
+            if(bCreatedPlane == false)
             {
                 plane = tempPlane;
                 bCreatedPlane = true;
@@ -398,10 +398,10 @@ void cCollideShapeNewton::CreateFromVertices(    const unsigned int* apIndexArra
             }
         }
 
-        NewtonTreeCollisionAddFace(mpNewtonCollision,3,vTriVec,sizeof(float)*3,1);
+        NewtonTreeCollisionAddFace(mpNewtonCollision, 3, vTriVec, sizeof(float) * 3, 1);
     }
 
-    NewtonTreeCollisionEndBuild(mpNewtonCollision,0);//bOptimize ? 1: 0);
+    NewtonTreeCollisionEndBuild(mpNewtonCollision, 0); //bOptimize ? 1: 0);
 
     //Log(" %dms\n", cPlatform::GetApplicationTime()-lStartTime);
 
@@ -417,7 +417,7 @@ void cCollideShapeNewton::CreateFromVertices(    const unsigned int* apIndexArra
 static void NewtonWriteToBinaryBuffer(void* apSerializeHandle, const void* apNewtonBuffer, int alSize)
 {
     cBinaryBuffer *pBinBuff = (cBinaryBuffer*)apSerializeHandle;
-    pBinBuff->AddInt32Array((int*)apNewtonBuffer, (size_t)(alSize>>2));
+    pBinBuff->AddInt32Array((int*)apNewtonBuffer, (size_t)(alSize >> 2));
 }
 
 void cCollideShapeNewton::SaveToSerializedData(cBinaryBuffer* apBinBuffer)
@@ -432,7 +432,7 @@ void cCollideShapeNewton::SaveToSerializedData(cBinaryBuffer* apBinBuffer)
 static void NewtonReadFromBinaryBuffer(void* apSerializeHandle, void* apNewtonBuffer, int alSize)
 {
     cBinaryBuffer *pBinBuff = (cBinaryBuffer*)apSerializeHandle;
-    pBinBuff->GetInt32Array((int*)apNewtonBuffer, (size_t)(alSize>>2));
+    pBinBuff->GetInt32Array((int*)apNewtonBuffer, (size_t)(alSize >> 2));
 }
 
 void cCollideShapeNewton::CreateFromSerializedData(cBinaryBuffer* apBinBuffer)

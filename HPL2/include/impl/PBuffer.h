@@ -16,10 +16,10 @@ class iLowLevelGraphics;
 class cPBuffer
 {
 public:
-    cPBuffer(iLowLevelGraphics* apLowLevelGraphics,bool abShareObjects,bool abUseMipMaps=false,bool abUseDepth=true,bool abUseStencil=true);
+    cPBuffer(iLowLevelGraphics* apLowLevelGraphics, bool abShareObjects, bool abUseMipMaps = false, bool abUseDepth = true, bool abUseStencil = true);
     ~cPBuffer();
 
-    bool Init(unsigned int alWidth,unsigned int alHeight, cColor aCol);
+    bool Init(unsigned int alWidth, unsigned int alHeight, cColor aCol);
 
     int MakeCurrentContext();
 
@@ -41,7 +41,7 @@ private:
     int mlHeight;
 
     bool mbShareObjects;
-    iLowLevelGraphics* mpLowLevelGraphics;
+    iLowLevelGraphics *mpLowLevelGraphics;
 
     std::vector<int> mvAttribBuffer;
     std::vector<int> mvAttribFormat;

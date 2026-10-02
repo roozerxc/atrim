@@ -18,7 +18,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cLightPoint::cLightPoint(tString asName, cResources *apResources) : iLight(asName,apResources)
+cLightPoint::cLightPoint(tString asName, cResources *apResources) : iLight(asName, apResources)
 {
     mLightType = eLightType_Point;
 
@@ -35,7 +35,7 @@ cLightPoint::cLightPoint(tString asName, cResources *apResources) : iLight(asNam
 
 void cLightPoint::UpdateBoundingVolume()
 {
-    mBoundingVolume.SetSize(mfRadius*2);
+    mBoundingVolume.SetSize(mfRadius * 2);
     mBoundingVolume.SetPosition(GetWorldPosition());
 }
 //-----------------------------------------------------------------------

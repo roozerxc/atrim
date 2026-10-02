@@ -14,7 +14,7 @@ class cGuiSet;
 class cGuiSkin;
 class cWidgetMenuItem;
 
-typedef vector<cWidgetMenuItem*>        tWidgetMenuItemVector;
+typedef vector<cWidgetMenuItem *>        tWidgetMenuItemVector;
 typedef tWidgetMenuItemVector::iterator    tWidgetMenuItemVectorIt;
 
 
@@ -22,21 +22,21 @@ class iWidgetMenu : public iWidget
 {
     friend class cWidgetMenuItem;
 public:
-    iWidgetMenu(eWidgetType aeMenuType,cGuiSet *apSet, cGuiSkin *apSkin);
+    iWidgetMenu(eWidgetType aeMenuType, cGuiSet *apSet, cGuiSkin *apSkin);
     virtual ~iWidgetMenu();
 
-    virtual cWidgetMenuItem* AddMenuItem(const tWString &asText);
+    virtual cWidgetMenuItem *AddMenuItem(const tWString &asText);
     virtual void AddSeparator() {}
     virtual void ClearMenuItems();
 
 
 
     void SetParentItem( cWidgetMenuItem* apParentItem );
-    cWidgetMenuItem* GetParentItem()
+    cWidgetMenuItem *GetParentItem()
     {
         return mpParentItem;
     }
-    iWidgetMenu* GetParentMenu();
+    iWidgetMenu *GetParentMenu();
 
     void SetPrevAttention(iWidget* apWidget)
     {
@@ -45,12 +45,12 @@ public:
 
     void SetHighlightedItem( cWidgetMenuItem* apItem )
     {
-        if(apItem!=mpHighlightedItem)
+        if(apItem != mpHighlightedItem)
         {
             mpHighlightedItem = apItem;
         }
     }
-    cWidgetMenuItem* GetHightlightedItem ()
+    cWidgetMenuItem *GetHightlightedItem ()
     {
         return mpHighlightedItem;
     }
@@ -64,7 +64,7 @@ public:
 
     bool IsSubmenuOpen();
 
-    iWidgetMenu* GetTopMostMenu();
+    iWidgetMenu *GetTopMostMenu();
 
     virtual void OnChildMenuHide() {};
 
@@ -81,15 +81,15 @@ public:
         mvCheckPos = avPos;
     }
 
-    const cVector3f& GetTextOffset()
+    const cVector3f &GetTextOffset()
     {
         return mvTextPos;
     }
-    const cVector3f& GetArrowOffset()
+    const cVector3f &GetArrowOffset()
     {
         return mvArrowPos;
     }
-    const cVector3f& GetCheckOffset()
+    const cVector3f &GetCheckOffset()
     {
         return mvCheckPos;
     }
@@ -119,15 +119,15 @@ protected:
     ////////////////////////////
     // Data
     tWidgetMenuItemVector mvMenuItems;
-    cWidgetMenuItem* mpHighlightedItem;
+    cWidgetMenuItem *mpHighlightedItem;
 
     cVector3f mvTextPos;
     cVector3f mvArrowPos;
     cVector3f mvCheckPos;
 
-    cWidgetMenuItem* mpParentItem;
+    cWidgetMenuItem *mpParentItem;
 
-    iWidget* mpPrevAttention;
+    iWidget *mpPrevAttention;
 
     bool mbMustHide;
 };

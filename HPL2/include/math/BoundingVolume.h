@@ -52,13 +52,13 @@ class cBoundingVolume : public iSerializable
 public:
     cBoundingVolume();
 
-    const cVector3f& GetMax();
-    const cVector3f& GetMin();
+    const cVector3f &GetMax();
+    const cVector3f &GetMin();
 
-    const cVector3f& GetLocalMax();
-    const cVector3f& GetLocalMin();
+    const cVector3f &GetLocalMax();
+    const cVector3f &GetLocalMin();
 
-    void SetLocalMinMax(const cVector3f& mvMin,const cVector3f& mvMax);
+    void SetLocalMinMax(const cVector3f& mvMin, const cVector3f& mvMax);
 
     void SetPosition(const cVector3f& avPos);
     cVector3f GetPosition();
@@ -67,7 +67,7 @@ public:
     cVector3f GetSize();
 
     void SetTransform(const cMatrixf &a_mtxTransform);
-    const cMatrixf& GetTransform();
+    const cMatrixf &GetTransform();
 
     cVector3f GetLocalCenter();
     cVector3f GetWorldCenter();
@@ -77,10 +77,10 @@ public:
     void AddArrayPoints(const float *apArray, int alNumOfVectors);
     void CreateFromPoints(int alStride);
 
-    cShadowVolumeBV* GetShadowVolume(const cVector3f& avLightPos,float afLightRange, bool abForceUpdate);
+    cShadowVolumeBV *GetShadowVolume(const cVector3f& avLightPos, float afLightRange, bool abForceUpdate);
 
     //Debug:
-    void DrawEdges(const cVector3f& avLightPos,float afLightRange, iLowLevelGraphics *apLowLevelGraphics);
+    void DrawEdges(const cVector3f& avLightPos, float afLightRange, iLowLevelGraphics *apLowLevelGraphics);
     void UpdateSize();
 
     cMatrixf m_mtxTransform;

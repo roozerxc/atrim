@@ -21,7 +21,7 @@ public:
         mlUserCount(0) {}
     virtual ~iDepthStencilBuffer() {}
 
-    const cVector2l& GetSize()
+    const cVector2l &GetSize()
     {
         return mvSize;
     }
@@ -58,7 +58,7 @@ public:
     }
     bool HasUsers()
     {
-        return mlUserCount >0;
+        return mlUserCount > 0;
     }
 
 protected:
@@ -77,61 +77,61 @@ public:
     iFrameBuffer(const tString& asName, iLowLevelGraphics* apLowLevelGraphics) :
         msName(asName), mpLowLevelGraphics(apLowLevelGraphics), mvSize(-1), mpDepthBuffer(NULL), mpStencilBuffer(NULL)
     {
-        for(int i=0; i<kMaxDrawColorBuffers; ++i)
+        for(int i = 0; i < kMaxDrawColorBuffers; ++i)
         {
             mpColorBuffer[i] = NULL;
         }
     }
     virtual ~iFrameBuffer() {}
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
 
-    virtual void SetTexture2D(int alColorIdx, iTexture *apTexture, int alMipmapLevel=0)=0;
-    virtual void SetTexture3D(int alColorIdx, iTexture *apTexture, int alZ, int alMipmapLevel=0)=0;
-    virtual void SetTextureCubeMap(int alColorIdx, iTexture *apTexture, int alFace, int alMipmapLevel=0)=0;
+    virtual void SetTexture2D(int alColorIdx, iTexture *apTexture, int alMipmapLevel = 0) = 0;
+    virtual void SetTexture3D(int alColorIdx, iTexture *apTexture, int alZ, int alMipmapLevel = 0) = 0;
+    virtual void SetTextureCubeMap(int alColorIdx, iTexture *apTexture, int alFace, int alMipmapLevel = 0) = 0;
 
-    virtual void SetDepthTexture2D(iTexture *apTexture, int alMipmapLevel=0)=0;
-    virtual void SetDepthTextureCubeMap(iTexture *apTexture, int alFace, int alMipmapLevel=0)=0;
+    virtual void SetDepthTexture2D(iTexture *apTexture, int alMipmapLevel = 0) = 0;
+    virtual void SetDepthTextureCubeMap(iTexture *apTexture, int alFace, int alMipmapLevel = 0) = 0;
 
-    virtual void SetDepthStencilBuffer(iDepthStencilBuffer* apBuffer)=0;
+    virtual void SetDepthStencilBuffer(iDepthStencilBuffer* apBuffer) = 0;
 
-    virtual bool CompileAndValidate()=0;
+    virtual bool CompileAndValidate() = 0;
 
     /**
     * To be used internally!
     */
-    virtual void PostBindUpdate()=0;
+    virtual void PostBindUpdate() = 0;
 
 
-    iFrameBufferAttachment* GetColorBuffer(int alIdx)
+    iFrameBufferAttachment *GetColorBuffer(int alIdx)
     {
         return mpColorBuffer[alIdx];
     }
-    iFrameBufferAttachment* GetDepthBuffer()
+    iFrameBufferAttachment *GetDepthBuffer()
     {
         return mpDepthBuffer;
     }
-    iFrameBufferAttachment* GetStencilBuffer()
+    iFrameBufferAttachment *GetStencilBuffer()
     {
         return mpStencilBuffer;
     }
 
-    inline const cVector2l& GetSize()
+    inline const cVector2l &GetSize()
     {
         return mvSize;
     }
 
 protected:
-    iLowLevelGraphics* mpLowLevelGraphics;
+    iLowLevelGraphics *mpLowLevelGraphics;
 
     tString msName;
 
-    iFrameBufferAttachment* mpColorBuffer[kMaxDrawColorBuffers];
-    iFrameBufferAttachment* mpDepthBuffer;
-    iFrameBufferAttachment* mpStencilBuffer;
+    iFrameBufferAttachment *mpColorBuffer[kMaxDrawColorBuffers];
+    iFrameBufferAttachment *mpDepthBuffer;
+    iFrameBufferAttachment *mpStencilBuffer;
 
     cVector2l mvSize;
 

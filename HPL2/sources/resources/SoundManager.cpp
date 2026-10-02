@@ -16,7 +16,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cSoundManager::cSoundManager(cSound* apSound,cResources *apResources)
+cSoundManager::cSoundManager(cSound* apSound, cResources *apResources)
     : iResourceManager(apResources->GetFileSearcher(), apResources->GetLowLevel(),
                        apResources->GetLowLevelSystem())
 {
@@ -40,10 +40,10 @@ cSoundManager::~cSoundManager()
 
 //-----------------------------------------------------------------------
 
-iSoundData* cSoundManager::CreateSoundData(const tString& asName, bool abStream,bool abLoopStream)
+iSoundData *cSoundManager::CreateSoundData(const tString& asName, bool abStream, bool abLoopStream)
 {
     tWString sPath;
-    iSoundData* pSound=NULL;
+    iSoundData* pSound = NULL;
 
     BeginLoad(asName);
 
@@ -52,9 +52,9 @@ iSoundData* cSoundManager::CreateSoundData(const tString& asName, bool abStream,
     if(abStream)
     {
         FindStreamPath(asName, sPath);
-        if(sPath!=_W(""))
+        if(sPath != _W(""))
         {
-            pSound = mpSound->GetLowLevel()->LoadSoundData(    asName,sPath,"",abStream, abLoopStream);
+            pSound = mpSound->GetLowLevel()->LoadSoundData(    asName, sPath, "", abStream, abLoopStream);
             if(pSound)
             {
                 AddResource(pSound, true, false);
@@ -69,9 +69,9 @@ iSoundData* cSoundManager::CreateSoundData(const tString& asName, bool abStream,
     {
         pSound = FindSampleData(asName, sPath);
 
-        if(pSound==NULL && sPath!=_W(""))
+        if(pSound == NULL && sPath != _W(""))
         {
-            pSound = mpSound->GetLowLevel()->LoadSoundData(    asName,sPath,"",abStream, abLoopStream);
+            pSound = mpSound->GetLowLevel()->LoadSoundData(    asName, sPath, "", abStream, abLoopStream);
             if(pSound)
             {
                 AddResource(pSound);
@@ -100,7 +100,7 @@ void cSoundManager::Destroy(iResourceBase* apResource)
     apResource->DecUserCount();
 
     iSoundData *pData = static_cast<iSoundData *>(apResource);
-    if(pData->IsStream() && pData->HasUsers()==false)
+    if(pData->IsStream() && pData->HasUsers() == false)
     {
         STLFindAndDelete(mlstStreamData, pData);
     }
@@ -112,11 +112,11 @@ void cSoundManager::DestroyAll()
 {
     /////////////////////
     // Streams
-    for(tSoundDataListIt streamIt=mlstStreamData.begin(); streamIt != mlstStreamData.end(); ++streamIt)
+    for(tSoundDataListIt streamIt = mlstStreamData.begin(); streamIt != mlstStreamData.end(); ++streamIt)
     {
         iSoundData *pStream = *streamIt;
 
-        Log("  destroying %p\n",pStream);
+        Log("  destroying %p\n", pStream);
         Log("   file '%s'\n", cString::To8Char(pStream->GetFullPath()).c_str());
 
         hplDelete(pStream);
@@ -131,7 +131,7 @@ void cSoundManager::DestroyAll()
         iResourceBase* pData = it->second;
         RemoveResource(pData);
         hplDelete(pData);
-        it= m_mapResources.begin();
+        it = m_mapResources.begin();
     }
 }
 
@@ -145,16 +145,16 @@ void cSoundManager::DestroyAll()
 
 iSoundData *cSoundManager::FindSampleData(const tString &asName, tWString &asFilePath)
 {
-    iSoundData *pData=NULL;
+    iSoundData *pData = NULL;
 
-    if(cString::GetFileExt(asName)=="")
+    if(cString::GetFileExt(asName) == "")
     {
-        for(tStringListIt it = mlstFileFormats.begin(); it!=mlstFileFormats.end(); ++it)
+        for(tStringListIt it = mlstFileFormats.begin(); it != mlstFileFormats.end(); ++it)
         {
-            tString sNewName = cString::SetFileExt(asName,*it);
+            tString sNewName = cString::SetFileExt(asName, *it);
 
-            pData = static_cast<iSoundData*> (FindLoadedResource(sNewName, asFilePath));
-            if((pData==NULL && asFilePath!=_W("")) || pData!=NULL)
+            pData = static_cast<iSoundData *> (FindLoadedResource(sNewName, asFilePath));
+            if((pData == NULL && asFilePath != _W("")) || pData != NULL)
             {
                 break;
             }
@@ -162,7 +162,7 @@ iSoundData *cSoundManager::FindSampleData(const tString &asName, tWString &asFil
     }
     else
     {
-        pData = static_cast<iSoundData*> (FindLoadedResource(asName, asFilePath));
+        pData = static_cast<iSoundData *> (FindLoadedResource(asName, asFilePath));
     }
 
     return pData;
@@ -172,13 +172,13 @@ iSoundData *cSoundManager::FindSampleData(const tString &asName, tWString &asFil
 
 void cSoundManager::FindStreamPath(const tString &asName, tWString &asFilePath)
 {
-    iSoundData *pData=NULL;
+    iSoundData *pData = NULL;
 
-    if(cString::GetFileExt(asName)=="")
+    if(cString::GetFileExt(asName) == "")
     {
-        for(tStringListIt it = mlstFileFormats.begin(); it!=mlstFileFormats.end(); ++it)
+        for(tStringListIt it = mlstFileFormats.begin(); it != mlstFileFormats.end(); ++it)
         {
-            tString sNewName = cString::SetFileExt(asName,*it);
+            tString sNewName = cString::SetFileExt(asName, *it);
 
             asFilePath = mpFileSearcher->GetFilePath(sNewName);
             if(asFilePath != _W(""))

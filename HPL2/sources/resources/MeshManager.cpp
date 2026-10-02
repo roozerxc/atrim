@@ -19,7 +19,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cMeshManager::cMeshManager(cGraphics* apGraphic,cResources *apResources)
+cMeshManager::cMeshManager(cGraphics* apGraphic, cResources *apResources)
     : iResourceManager(apResources->GetFileSearcher(), apResources->GetLowLevel(),
                        apResources->GetLowLevelSystem())
 {
@@ -45,7 +45,7 @@ cMeshManager::~cMeshManager()
 
 //-----------------------------------------------------------------------
 
-cMesh* cMeshManager::CreateMesh(const tString& asName, tMeshLoadFlag aFlag)
+cMesh *cMeshManager::CreateMesh(const tString& asName, tMeshLoadFlag aFlag)
 {
     tWString sPath;
     cMesh* pMesh;
@@ -60,7 +60,7 @@ cMesh* cMeshManager::CreateMesh(const tString& asName, tMeshLoadFlag aFlag)
     {
         bool bFound = false;
         tStringVec *pTypes = mpResources->GetMeshLoaderHandler()->GetSupportedTypes();
-        for(size_t i=0; i< pTypes->size(); i++)
+        for(size_t i = 0; i < pTypes->size(); i++)
         {
             asNewName = cString::SetFileExt(asNewName, (*pTypes)[i]);
             tWString sPath = mpResources->GetFileSearcher()->GetFilePath(asNewName);
@@ -73,13 +73,13 @@ cMesh* cMeshManager::CreateMesh(const tString& asName, tMeshLoadFlag aFlag)
 
         if(bFound == false)
         {
-            Error("Couldn't find mesh file '%s' in any supported format!\n",asName.c_str());
+            Error("Couldn't find mesh file '%s' in any supported format!\n", asName.c_str());
             EndLoad();
             return NULL;
         }
     }
 
-    pMesh = static_cast<cMesh*>(FindLoadedResource(asNewName,sPath));
+    pMesh = static_cast<cMesh *>(FindLoadedResource(asNewName, sPath));
 
     //An extra hackish check to load msh or anim
     //TODO: When the model is loaded, then it
@@ -98,9 +98,9 @@ cMesh* cMeshManager::CreateMesh(const tString& asName, tMeshLoadFlag aFlag)
         }
     }*/
 
-    if(pMesh==NULL && sPath!=_W(""))
+    if(pMesh == NULL && sPath != _W(""))
     {
-        pMesh = mpResources->GetMeshLoaderHandler()->LoadMesh(sPath,aFlag);
+        pMesh = mpResources->GetMeshLoaderHandler()->LoadMesh(sPath, aFlag);
         if(pMesh == NULL)
         {
             EndLoad();
@@ -116,7 +116,7 @@ cMesh* cMeshManager::CreateMesh(const tString& asName, tMeshLoadFlag aFlag)
     }
     else
     {
-        Error("Couldn't load mesh '%s'\n",asNewName.c_str());
+        Error("Couldn't load mesh '%s'\n", asNewName.c_str());
     }
 
     EndLoad();
@@ -125,10 +125,10 @@ cMesh* cMeshManager::CreateMesh(const tString& asName, tMeshLoadFlag aFlag)
 
 //-----------------------------------------------------------------------
 
-iVertexBuffer* cMeshManager::CreateVertexBufferFromMesh(const tString& asName, tVertexElementFlag alVtxToCopy)
+iVertexBuffer *cMeshManager::CreateVertexBufferFromMesh(const tString& asName, tVertexElementFlag alVtxToCopy)
 {
     cMesh *pMesh = CreateMesh(asName);
-    if(pMesh==NULL)
+    if(pMesh == NULL)
     {
         return NULL;
     }
@@ -152,7 +152,7 @@ void cMeshManager::Destroy(iResourceBase* apResource)
 {
     apResource->DecUserCount();
 
-    if(apResource->HasUsers()==false)
+    if(apResource->HasUsers() == false)
     {
         RemoveResource(apResource);
         hplDelete(apResource);

@@ -12,7 +12,7 @@ public:
     cBitmapLoaderDevilDDS();
     ~cBitmapLoaderDevilDDS();
 
-    cBitmap* LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags);
+    cBitmap *LoadBitmap(const tWString& asFile, tBitmapLoadFlag aFlags);
 
 
 protected:

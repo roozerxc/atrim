@@ -29,7 +29,7 @@ cFrustum::cFrustum()
 //-----------------------------------------------------------------------
 
 void cFrustum::SetupPerspectiveProj(const cMatrixf& a_mtxProj, const cMatrixf& a_mtxView,
-                                    float afFarPlane, float afNearPlane,float afFOV,float afAspect,
+                                    float afFarPlane, float afNearPlane, float afFOV, float afAspect,
                                     const cVector3f &avOrigin, bool abInfFarPlane,
                                     cMatrixf* apCustomFarProjMtx, bool abObliqueNearPlane)
 {
@@ -38,21 +38,21 @@ void cFrustum::SetupPerspectiveProj(const cMatrixf& a_mtxProj, const cMatrixf& a
     mfAspect = afAspect;
     mbObliqueNearPlane = abObliqueNearPlane;
 
-    Setup(a_mtxProj, a_mtxView,afFarPlane,afNearPlane,avOrigin,abInfFarPlane, apCustomFarProjMtx);
+    Setup(a_mtxProj, a_mtxView, afFarPlane, afNearPlane, avOrigin, abInfFarPlane, apCustomFarProjMtx);
 }
 
 void cFrustum::SetupOrthoProj(    const cMatrixf& a_mtxProj, const cMatrixf& a_mtxView,
-                                  float afFarPlane,float afNearPlane,const cVector2f &avViewSize,
+                                  float afFarPlane, float afNearPlane, const cVector2f &avViewSize,
                                   const cVector3f &avOrigin, bool abInfFarPlane)
 {
     mProjectionType = eProjectionType_Orthographic;
     mvViewSize = avViewSize;
 
-    Setup(a_mtxProj, a_mtxView,afFarPlane,afNearPlane,avOrigin,abInfFarPlane);
+    Setup(a_mtxProj, a_mtxView, afFarPlane, afNearPlane, avOrigin, abInfFarPlane);
 }
 
 void cFrustum::Setup(    const cMatrixf& a_mtxProj, const cMatrixf& a_mtxView,
-                         float afFarPlane,float afNearPlane,const cVector3f &avOrigin,
+                         float afFarPlane, float afNearPlane, const cVector3f &avOrigin,
                          bool abInfFarPlane, cMatrixf* apCustomFarProjMtx )
 {
     m_mtxViewProj = cMath::MatrixMul(a_mtxProj, a_mtxView);
@@ -66,7 +66,7 @@ void cFrustum::Setup(    const cMatrixf& a_mtxProj, const cMatrixf& a_mtxView,
 
     mbInfFarPlane = abInfFarPlane;
 
-    mOriginBV.SetSize(afNearPlane*2);
+    mOriginBV.SetSize(afNearPlane * 2);
     mOriginBV.SetPosition(mvOrigin);
 
     UpdatePlanes(apCustomFarProjMtx);
@@ -77,7 +77,7 @@ void cFrustum::Setup(    const cMatrixf& a_mtxProj, const cMatrixf& a_mtxView,
 
 //-----------------------------------------------------------------------
 
-const cPlanef& cFrustum::GetPlane(eFrustumPlane aType)
+const cPlanef &cFrustum::GetPlane(eFrustumPlane aType)
 {
     return mPlane[aType];
 }
@@ -88,17 +88,17 @@ bool cFrustum::CollidePoint(const cVector3f& avPoint)
 {
     ////////////////////////
     //Check with Bounding volume
-    if(cMath::CheckPointInBVIntersection(avPoint, mBoundingVolume)==false)
+    if(cMath::CheckPointInBVIntersection(avPoint, mBoundingVolume) == false)
     {
         return false;
     }
 
     ////////////////////////
     //Check with planes
-    int lPlanes = mbInfFarPlane ? 5:6;
-    for(int i=0; i<lPlanes; i++)
+    int lPlanes = mbInfFarPlane ? 5 : 6;
+    for(int i = 0; i < lPlanes; i++)
     {
-        float fDist = cMath::PlaneToPointDist(mPlane[i],avPoint);
+        float fDist = cMath::PlaneToPointDist(mPlane[i], avPoint);
         if(fDist < 0)
         {
             return false;
@@ -113,18 +113,18 @@ bool cFrustum::CollidePoint(const cVector3f& avPoint)
 eCollision cFrustum::CollideBoundingVolume(cBoundingVolume* apBV)
 {
     //Check if the BV is in the Frustum sphere.
-    if(CollideFustrumSphere(apBV->GetWorldCenter(),apBV->GetRadius()) == eCollision_Outside)
+    if(CollideFustrumSphere(apBV->GetWorldCenter(), apBV->GetRadius()) == eCollision_Outside)
     {
         return eCollision_Outside;
     }
 
     //Do a simple sphere collide test
-    eCollision ret = CollideSphere(apBV->GetWorldCenter(),apBV->GetRadius());
+    eCollision ret = CollideSphere(apBV->GetWorldCenter(), apBV->GetRadius());
 
     //If there was an intersection, collide with the AABB
     if(ret == eCollision_Intersect)
     {
-        return CollideAABB(apBV->GetMin(),apBV->GetMax());
+        return CollideAABB(apBV->GetMin(), apBV->GetMax());
     }
 
     return ret;
@@ -135,18 +135,18 @@ eCollision cFrustum::CollideBoundingVolume(cBoundingVolume* apBV)
 eCollision cFrustum::CollideNode(iRenderableContainerNode* apNode)
 {
     //Check if the BV is in the Frustum sphere.
-    if(CollideFustrumSphere(apNode->GetCenter(),apNode->GetRadius()) == eCollision_Outside)
+    if(CollideFustrumSphere(apNode->GetCenter(), apNode->GetRadius()) == eCollision_Outside)
     {
         return eCollision_Outside;
     }
 
     //Do a simple sphere collide test
-    eCollision ret = CollideSphere(apNode->GetCenter(),apNode->GetRadius());
+    eCollision ret = CollideSphere(apNode->GetCenter(), apNode->GetRadius());
 
     //If there was an intersection, collide with the AABB
     if(ret == eCollision_Intersect)
     {
-        return CollideAABB(apNode->GetMin(),apNode->GetMax());
+        return CollideAABB(apNode->GetMin(), apNode->GetMax());
     }
 
     return ret;
@@ -158,7 +158,7 @@ eCollision cFrustum::CollideFrustum(cFrustum *apFrustum)
 {
     /////////////////////////////
     //BV Collision
-    if(cMath::CheckBVIntersection(mBoundingVolume, apFrustum->mBoundingVolume)==false)
+    if(cMath::CheckBVIntersection(mBoundingVolume, apFrustum->mBoundingVolume) == false)
     {
         return eCollision_Outside;
     }
@@ -202,14 +202,14 @@ bool cFrustum::CheckSphereNearPlaneIntersection(const cVector3f &avCenter, float
 {
     //////////////////////////////
     // Sphere vs near plane (needed?)
-    if(cMath::CheckPlaneSphereCollision(GetPlane(eFrustumPlane_Near), avCenter, afRadius)!= eCollision_Intersect)
+    if(cMath::CheckPlaneSphereCollision(GetPlane(eFrustumPlane_Near), avCenter, afRadius) != eCollision_Intersect)
     {
         return false;
     }
 
     //////////////////////////////
     // Near plane points vs Sphere
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
         if(cMath::CheckPointInSphereIntersection(mvVertices[i], avCenter, afRadius))
         {
@@ -219,18 +219,18 @@ bool cFrustum::CheckSphereNearPlaneIntersection(const cVector3f &avCenter, float
 
     //////////////////////////////
     // For each point in near plane make a plane between it and sphere center and check if all points lie outside this!
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
         cVector3f &vVtx = mvVertices[i];
 
         cVector3f vToVtx = cMath::Vector3Normalize(vVtx - avCenter);
         cVector3f vPlanePoint = avCenter + vToVtx * afRadius;
-        cVector3f vPlaneNormal = vToVtx*-1;
+        cVector3f vPlaneNormal = vToVtx * -1;
 
         cPlanef plane;
         plane.FromNormalPoint(vPlaneNormal, vPlanePoint);
 
-        if(cMath::CheckPointsPlanesCollision(&mvVertices[0], 4, &plane,1) == eCollision_Outside)
+        if(cMath::CheckPointsPlanesCollision(&mvVertices[0], 4, &plane, 1) == eCollision_Outside)
         {
             return false;
         }
@@ -246,14 +246,14 @@ bool cFrustum::CheckAABBNearPlaneIntersection(const cVector3f &avMin, const cVec
 {
     //////////////////////////////
     // AABB vs Near Plane
-    if(cMath::CheckPlaneAABBCollision(GetPlane(eFrustumPlane_Near), avMin, avMax)!= eCollision_Intersect)
+    if(cMath::CheckPlaneAABBCollision(GetPlane(eFrustumPlane_Near), avMin, avMax) != eCollision_Intersect)
     {
         return false;
     }
 
     //////////////////////////////
     // Near plane points vs AABB
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
         if(cMath::CheckPointInAABBIntersection(mvVertices[i], avMin, avMax))
         {
@@ -263,7 +263,7 @@ bool cFrustum::CheckAABBNearPlaneIntersection(const cVector3f &avMin, const cVec
 
     //////////////////////////////
     // Check if near plane points intersect with box
-    if(cMath::CheckPointsAABBPlanesCollision(mvVertices, 4, avMin, avMax)!=eCollision_Outside)
+    if(cMath::CheckPointsAABBPlanesCollision(mvVertices, 4, avMin, avMax) != eCollision_Outside)
     {
         return true;
     }
@@ -277,14 +277,14 @@ bool cFrustum::CheckBVNearPlaneIntersection(cBoundingVolume* apBV)
 {
     //////////////////////////////
     // BV vs Near Plane
-    if(cMath::CheckPlaneBVCollision(GetPlane(eFrustumPlane_Near), *apBV)!= eCollision_Intersect)
+    if(cMath::CheckPlaneBVCollision(GetPlane(eFrustumPlane_Near), *apBV) != eCollision_Intersect)
     {
         return false;
     }
 
     //////////////////////////////
     // Near plane points vs AABB
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
         if(cMath::CheckPointInBVIntersection(mvVertices[i], *apBV))
         {
@@ -294,14 +294,14 @@ bool cFrustum::CheckBVNearPlaneIntersection(cBoundingVolume* apBV)
 
     //////////////////////////////
     // Check if Sphere Inside the frustum (check only frustum sides!)
-    if(CollideSphere(apBV->GetWorldCenter(), apBV->GetRadius(),4)==eCollision_Inside)
+    if(CollideSphere(apBV->GetWorldCenter(), apBV->GetRadius(), 4) == eCollision_Inside)
     {
         return true;
     }
 
     //////////////////////////////
     // Check if AABB Inside frustum (check only frustum sides!)
-    if(cMath::CheckPointsAABBPlanesCollision(mvVertices, 4, apBV->GetMin(), apBV->GetMax())!=eCollision_Outside)
+    if(cMath::CheckPointsAABBPlanesCollision(mvVertices, 4, apBV->GetMin(), apBV->GetMax()) != eCollision_Outside)
     {
         return true;
     }
@@ -317,7 +317,7 @@ bool cFrustum::CheckFrustumNearPlaneIntersection(cFrustum* apFrustum)
 
     //////////////////////////////
     // Frustum Sphere vs Near Plane
-    if(cMath::CheckPlaneSphereCollision(nearPlane, apFrustum->mBoundingSphere.center, apFrustum->mBoundingSphere.r)!= eCollision_Intersect)
+    if(cMath::CheckPlaneSphereCollision(nearPlane, apFrustum->mBoundingSphere.center, apFrustum->mBoundingSphere.r) != eCollision_Intersect)
     {
         return false;
     }
@@ -325,9 +325,9 @@ bool cFrustum::CheckFrustumNearPlaneIntersection(cFrustum* apFrustum)
     //////////////////////////////
     // Frustum vs Near plane
     bool bInside = true;
-    for(int i=0; i<8; ++i)
+    for(int i = 0; i < 8; ++i)
     {
-        if( cMath::PlaneToPointDist(nearPlane, apFrustum->mvVertices[i])>0)
+        if( cMath::PlaneToPointDist(nearPlane, apFrustum->mvVertices[i]) > 0)
         {
             bInside = false;
             break;
@@ -340,7 +340,7 @@ bool cFrustum::CheckFrustumNearPlaneIntersection(cFrustum* apFrustum)
 
     //////////////////////////////
     // Near plane points vs Frustum
-    if(cMath::CheckPointsPlanesCollision(mvVertices, 4, &apFrustum->mPlane[0], apFrustum->mbInfFarPlane? 5 : 6)==eCollision_Outside)
+    if(cMath::CheckPointsPlanesCollision(mvVertices, 4, &apFrustum->mPlane[0], apFrustum->mbInfFarPlane ? 5 : 6) == eCollision_Outside)
     {
         return false;
     }
@@ -366,8 +366,8 @@ bool cFrustum::CheckLineIntersection(const cVector3f& avStart, const cVector3f &
 
     //////////////////////////////
     // Iterate planes
-    int lPlanes = mbInfFarPlane? 5 : 6;
-    for(int i=0; i<lPlanes; i++)
+    int lPlanes = mbInfFarPlane ? 5 : 6;
+    for(int i = 0; i < lPlanes; i++)
     {
         cPlanef &plane = mPlane[i];
         float fT;
@@ -377,8 +377,8 @@ bool cFrustum::CheckLineIntersection(const cVector3f& avStart, const cVector3f &
         //See if the line intersects with plane
         if(cMath::CheckPlaneLineIntersection(plane, avStart, avEnd, &vIntersection, &fT))
         {
-            if(    (fT < fClosestT || fClosestT<0) &&
-                    CollidePoint(vIntersection+plane.GetNormal()*0.001f))
+            if(    (fT < fClosestT || fClosestT < 0) &&
+                    CollidePoint(vIntersection + plane.GetNormal() * 0.001f))
             {
                 avIntersection = vIntersection;
                 fClosestT = fT;
@@ -386,7 +386,7 @@ bool cFrustum::CheckLineIntersection(const cVector3f& avStart, const cVector3f &
         }
     }
 
-    return fClosestT >=0;
+    return fClosestT >= 0;
 }
 
 //-----------------------------------------------------------------------
@@ -413,10 +413,10 @@ eCollision cFrustum::CollideFustrumSphere(const cVector3f& avCenter, float afRad
 
 eCollision cFrustum::CollideSphere(const cVector3f& avCenter, float afRadius, int alMaxPlanes)
 {
-    int lPlanes = cMath::Max(mbInfFarPlane? 5 : 6, alMaxPlanes);
-    for(int i=0; i<lPlanes; i++)
+    int lPlanes = cMath::Max(mbInfFarPlane ? 5 : 6, alMaxPlanes);
+    for(int i = 0; i < lPlanes; i++)
     {
-        float fDist = cMath::PlaneToPointDist(mPlane[i],avCenter);
+        float fDist = cMath::PlaneToPointDist(mPlane[i], avCenter);
 
         if(fDist < -afRadius)
         {
@@ -433,7 +433,7 @@ eCollision cFrustum::CollideSphere(const cVector3f& avCenter, float afRadius, in
 }
 //-----------------------------------------------------------------------
 
-eCollision cFrustum::CollideAABB(const cVector3f& avMin,const cVector3f& avMax, int alMaxPlanes)
+eCollision cFrustum::CollideAABB(const cVector3f& avMin, const cVector3f& avMax, int alMaxPlanes)
 {
     const cVector3f& vMax = avMax;
     const cVector3f& vMin = avMin;
@@ -441,15 +441,15 @@ eCollision cFrustum::CollideAABB(const cVector3f& avMin,const cVector3f& avMax, 
     //Get the corners from the AAB
     cVector3f vCorners[8] =
     {
-        cVector3f(vMax.x,vMax.y,vMax.z),
-        cVector3f(vMax.x,vMax.y,vMin.z),
-        cVector3f(vMax.x,vMin.y,vMax.z),
-        cVector3f(vMax.x,vMin.y,vMin.z),
+        cVector3f(vMax.x, vMax.y, vMax.z),
+        cVector3f(vMax.x, vMax.y, vMin.z),
+        cVector3f(vMax.x, vMin.y, vMax.z),
+        cVector3f(vMax.x, vMin.y, vMin.z),
 
-        cVector3f(vMin.x,vMax.y,vMax.z),
-        cVector3f(vMin.x,vMax.y,vMin.z),
-        cVector3f(vMin.x,vMin.y,vMax.z),
-        cVector3f(vMin.x,vMin.y,vMin.z),
+        cVector3f(vMin.x, vMax.y, vMax.z),
+        cVector3f(vMin.x, vMax.y, vMin.z),
+        cVector3f(vMin.x, vMin.y, vMax.z),
+        cVector3f(vMin.x, vMin.y, vMin.z),
     };
 
     /////////////////////////////
@@ -508,7 +508,7 @@ void cFrustum::UpdateSphere()
         // calculate the center of the sphere
         cVector3f vCenter = (mvOrigin) + (vLookVector * (fViewLen * 0.5f + mfNearPlane));
 
-        mBoundingSphere = cSpheref(vCenter,fRadius);
+        mBoundingSphere = cSpheref(vCenter, fRadius);
     }
     //////////////////////////////////////////////
     // Orthographic projection
@@ -530,7 +530,7 @@ void cFrustum::UpdateSphere()
         // calculate the center of the sphere
         cVector3f vCenter = mvOrigin + (vLookVector * (fViewLen * 0.5f + mfNearPlane));
 
-        mBoundingSphere = cSpheref(vCenter,fRadius);
+        mBoundingSphere = cSpheref(vCenter, fRadius);
     }
 
 }
@@ -587,7 +587,7 @@ void cFrustum::UpdatePlanes(cMatrixf* apCustomFarProjMtx )
                                                 m_mtxViewProj.m[3][3] - m_mtxViewProj.m[2][3]);
     }
 
-    for(int i=0; i<6; i++)
+    for(int i = 0; i < 6; i++)
     {
         mPlane[i].Normalize();
     }
@@ -609,15 +609,15 @@ void cFrustum::UpdateVertices()
 {
     //NOTE: Does not work with infinite far plane!
 
-    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Near],mPlane[eFrustumPlane_Right], mPlane[eFrustumPlane_Top], mvVertices[0]);
-    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Near],mPlane[eFrustumPlane_Right], mPlane[eFrustumPlane_Bottom], mvVertices[1]);
-    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Near],mPlane[eFrustumPlane_Left],  mPlane[eFrustumPlane_Bottom], mvVertices[2]);
-    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Near],mPlane[eFrustumPlane_Left],  mPlane[eFrustumPlane_Top], mvVertices[3]);
+    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Near], mPlane[eFrustumPlane_Right], mPlane[eFrustumPlane_Top], mvVertices[0]);
+    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Near], mPlane[eFrustumPlane_Right], mPlane[eFrustumPlane_Bottom], mvVertices[1]);
+    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Near], mPlane[eFrustumPlane_Left],  mPlane[eFrustumPlane_Bottom], mvVertices[2]);
+    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Near], mPlane[eFrustumPlane_Left],  mPlane[eFrustumPlane_Top], mvVertices[3]);
 
-    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Far],mPlane[eFrustumPlane_Right], mPlane[eFrustumPlane_Top], mvVertices[4]);
-    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Far],mPlane[eFrustumPlane_Right], mPlane[eFrustumPlane_Bottom], mvVertices[5]);
-    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Far],mPlane[eFrustumPlane_Left], mPlane[eFrustumPlane_Bottom], mvVertices[6]);
-    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Far],mPlane[eFrustumPlane_Left], mPlane[eFrustumPlane_Top], mvVertices[7]);
+    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Far], mPlane[eFrustumPlane_Right], mPlane[eFrustumPlane_Top], mvVertices[4]);
+    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Far], mPlane[eFrustumPlane_Right], mPlane[eFrustumPlane_Bottom], mvVertices[5]);
+    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Far], mPlane[eFrustumPlane_Left], mPlane[eFrustumPlane_Bottom], mvVertices[6]);
+    cMath::PlaneIntersectionPoint(mPlane[eFrustumPlane_Far], mPlane[eFrustumPlane_Left], mPlane[eFrustumPlane_Top], mvVertices[7]);
 
     //////////////////////////////////
     //Check if any near plane point is behind the near plane, this can happen to oblique clip plane!
@@ -630,39 +630,39 @@ void cFrustum::UpdateVertices()
         cVector3f vNearCrossFar = cMath::Vector3Cross(farPlane.GetNormal(), nearPlane.GetNormal());
 
         cPlanef fakeNearPlane;
-        fakeNearPlane.FromNormalPoint(farPlane.GetNormal()*-1, mvOrigin);
+        fakeNearPlane.FromNormalPoint(farPlane.GetNormal() * -1, mvOrigin);
 
         ///////////////////////////
         //Iterate near plane vertices.
-        for(int i=0; i<4; ++i)
+        for(int i = 0; i < 4; ++i)
         {
             //Check if behind fake near or behind far plane
-            if(    cMath::PlaneToPointDist(fakeNearPlane, mvVertices[i])<0 ||
-                    cMath::PlaneToPointDist(farPlane, mvVertices[i])<0)
+            if(    cMath::PlaneToPointDist(fakeNearPlane, mvVertices[i]) < 0 ||
+                    cMath::PlaneToPointDist(farPlane, mvVertices[i]) < 0)
             {
                 eFrustumPlane plane0 = vPlaneTypeOrder[i][0];
                 eFrustumPlane plane1 = vPlaneTypeOrder[i][1];
 
-                cMath::PlaneIntersectionPoint(farPlane,mPlane[plane0], mPlane[plane1], mvVertices[i]);
+                cMath::PlaneIntersectionPoint(farPlane, mPlane[plane0], mPlane[plane1], mvVertices[i]);
 
                 //"project" on near plane
                 cPlanef splitPlane;
-                splitPlane.FromNormalPoint(vNearCrossFar,mvVertices[i]);
+                splitPlane.FromNormalPoint(vNearCrossFar, mvVertices[i]);
 
-                cMath::PlaneIntersectionPoint(farPlane,nearPlane, splitPlane, mvVertices[i]);
+                cMath::PlaneIntersectionPoint(farPlane, nearPlane, splitPlane, mvVertices[i]);
             }
         }
 
         ///////////////////////////
         //Iterate far plane vertices and check if below near plane
-        for(int i=4; i<8; ++i)
+        for(int i = 4; i < 8; ++i)
         {
-            if(cMath::PlaneToPointDist(nearPlane, mvVertices[i])<0)
+            if(cMath::PlaneToPointDist(nearPlane, mvVertices[i]) < 0)
             {
                 cPlanef splitPlane;
                 splitPlane.FromNormalPoint(vNearCrossFar, mvVertices[i]);
 
-                cMath::PlaneIntersectionPoint(farPlane,nearPlane, splitPlane, mvVertices[i]);
+                cMath::PlaneIntersectionPoint(farPlane, nearPlane, splitPlane, mvVertices[i]);
             }
         }
     }
@@ -675,7 +675,7 @@ void cFrustum::UpdateBV()
     cVector3f vMin = mvVertices[0];
     cVector3f vMax = mvVertices[0];
 
-    for(int i=1; i<8; i++)
+    for(int i = 1; i < 8; i++)
     {
         if(vMax.x < mvVertices[i].x)
         {
@@ -710,14 +710,14 @@ void cFrustum::UpdateBV()
 
 //-----------------------------------------------------------------------
 
-const cVector3f& cFrustum::GetOrigin()
+const cVector3f &cFrustum::GetOrigin()
 {
     return mvOrigin;
 }
 
 //-----------------------------------------------------------------------
 
-cBoundingVolume* cFrustum::GetOriginBV()
+cBoundingVolume *cFrustum::GetOriginBV()
 {
     return &mOriginBV;
 }
@@ -741,22 +741,22 @@ void cFrustum::Draw(iLowLevelGraphics *apLowLevelGraphics, const cColor &aColor)
         //    apLowLevelGraphics->DrawSphere(mvVertices[i],0.05f, cColor(0,1,0));
     }
 
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
-        apLowLevelGraphics->DrawLine(mvVertices[i==0?3:i-1], mvVertices[i],aColor);
+        apLowLevelGraphics->DrawLine(mvVertices[i == 0 ? 3 : i - 1], mvVertices[i], aColor);
     }
 
-    for(int i=4; i<8; ++i)
+    for(int i = 4; i < 8; ++i)
     {
-        apLowLevelGraphics->DrawLine(mvVertices[i==4?7:i-1], mvVertices[i],aColor);
+        apLowLevelGraphics->DrawLine(mvVertices[i == 4 ? 7 : i - 1], mvVertices[i], aColor);
     }
 
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
-        apLowLevelGraphics->DrawLine(mvVertices[i], mvVertices[i+4],aColor);
+        apLowLevelGraphics->DrawLine(mvVertices[i], mvVertices[i + 4], aColor);
     }
 
-    if(mbInvertsCullMode==false)
+    if(mbInvertsCullMode == false)
     {
         return;
     }

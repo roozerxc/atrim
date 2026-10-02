@@ -43,18 +43,18 @@ cFrameBitmap::cFrameBitmap(cBitmap *apBitmap,  cFrameTexture *apFrmTex, int alHa
     mpBitmap = apBitmap;
     mpFrameTexture = apFrmTex;
     //TODO: Make a filling method
-    mpBitmap->Clear(cColor(1,0,1,0),0,0);
+    mpBitmap->Clear(cColor(1, 0, 1, 0), 0, 0);
     mlMinHole = 6;
     mlHandle = alHandle;
     mbIsFull = false;
     mbIsLocked = false;
-    mlPicCount =0;
-    mlAdditionsSinceReorganization =0;
+    mlPicCount = 0;
+    mlAdditionsSinceReorganization = 0;
 
     mbNeedNeedReorganisation = false;
 
     //Root node in rect tree
-    mRects.Insert(cFBitmapRect(0,0,mpBitmap->GetWidth(), mpBitmap->GetHeight(),-1));
+    mRects.Insert(cFBitmapRect(0, 0, mpBitmap->GetWidth(), mpBitmap->GetHeight(), -1));
 }
 
 cFrameBitmap::~cFrameBitmap()
@@ -76,12 +76,12 @@ cFrameBitmap::~cFrameBitmap()
 
 cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPath, cFrameSubImage *apSubImageCreated, bool *apFoundNode)
 {
-    cFBitmapImage *pBitmapImage=NULL;
-    cFrameSubImage *pImage=NULL;
+    cFBitmapImage *pBitmapImage = NULL;
+    cFrameSubImage *pImage = NULL;
     //source size
     //+2 because we are gonna have a border to get rid if some antialiasing problems
-    int lSW = apSrc->GetWidth()+2;
-    int lSH = apSrc->GetHeight()+2;
+    int lSW = apSrc->GetWidth() + 2;
+    int lSH = apSrc->GetHeight() + 2;
 
     //destination size
     int lDW = mpBitmap->GetWidth();
@@ -92,27 +92,27 @@ cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPa
     bool bFoundEmptyNode = false;
     bool bFoundNode = false;
     //Debug
-    int node=0;
+    int node = 0;
 
     if(DEBUG_BTREE)
     {
-        Log("**** Image %d *****\n",mlPicCount);
+        Log("**** Image %d *****\n", mlPicCount);
     }
 
     //Get the leaves of the tree and search it for a good pos.
     const tRectTreeNodeVec& lstNodes =  mRects.GetLeafList();
     tRectTreeNodeVecConstIt it;
-    for(it = lstNodes.begin(); it!=lstNodes.end(); ++it)
+    for(it = lstNodes.begin(); it != lstNodes.end(); ++it)
     {
         if(DEBUG_BTREE)
         {
-            Log("Checking node %d:\n",node++);
+            Log("Checking node %d:\n", node++);
         }
         tRectTreeNode *TopNode = *it;
         cFBitmapRect* pData = TopNode->GetData();
 
         //Check if the space is free
-        if(pData->mlHandle<0)
+        if(pData->mlHandle < 0)
         {
             if(DEBUG_BTREE)
             {
@@ -121,10 +121,10 @@ cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPa
             bFoundEmptyNode = true; //An empty node was found.. bitmap not full yet.
 
             //Check if the Image fits in the rect
-            cRect2l NewRect = cRect2l(pData->mRect.x,pData->mRect.y,lSW, lSH);
+            cRect2l NewRect = cRect2l(pData->mRect.x, pData->mRect.y, lSW, lSH);
             if(DEBUG_BTREE)Log("Fit: [%d:%d:%d:%d] in [%d:%d:%d:%d]\n",
-                                   NewRect.x,NewRect.y,NewRect.w,NewRect.h,
-                                   pData->mRect.x,pData->mRect.y,pData->mRect.w,pData->mRect.h);
+                                   NewRect.x, NewRect.y, NewRect.w, NewRect.h,
+                                   pData->mRect.x, pData->mRect.y, pData->mRect.w, pData->mRect.h);
 
             if(cMath::CheckRectFit(NewRect, pData->mRect))
             {
@@ -135,7 +135,7 @@ cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPa
                 bFoundNode = true;
 
                 //If the bitmap fits perfectly add the node without splitting
-                if(MinimumFit(NewRect,pData->mRect))
+                if(MinimumFit(NewRect, pData->mRect))
                 {
                     if(DEBUG_BTREE)
                     {
@@ -154,52 +154,52 @@ cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPa
                     //Insert 2 children for the top node (lower and upper part.
                     tRectTreeNode* UpperNode;
                     //Upper
-                    UpperNode = mRects.InsertAt(cFBitmapRect(NewRect.x,NewRect.y,
-                                                pData->mRect.w,NewRect.h,-2),TopNode,
+                    UpperNode = mRects.InsertAt(cFBitmapRect(NewRect.x, NewRect.y,
+                                                pData->mRect.w, NewRect.h, -2), TopNode,
                                                 eBinTreeNode_Left);
 
                     //Lower
-                    mRects.InsertAt(cFBitmapRect(NewRect.x,NewRect.y+NewRect.h,
-                                                 pData->mRect.w,pData->mRect.h-NewRect.h,-3),TopNode,
+                    mRects.InsertAt(cFBitmapRect(NewRect.x, NewRect.y + NewRect.h,
+                                                 pData->mRect.w, pData->mRect.h - NewRect.h, -3), TopNode,
                                     eBinTreeNode_Right);
 
                     //Split the Upper Node into 2 nodes.
                     pData = UpperNode->GetData();//Get the data for the upper node.
                     //Upper split, this is the new bitmap
-                    mRects.InsertAt(cFBitmapRect(NewRect.x,NewRect.y,
-                                                 NewRect.w,NewRect.h,2),UpperNode,
+                    mRects.InsertAt(cFBitmapRect(NewRect.x, NewRect.y,
+                                                 NewRect.w, NewRect.h, 2), UpperNode,
                                     eBinTreeNode_Left);
 
                     //Lower split, this is empty
-                    mRects.InsertAt(cFBitmapRect(NewRect.x+NewRect.w,NewRect.y,
-                                                 pData->mRect.w-NewRect.w,NewRect.h,-4),UpperNode,
+                    mRects.InsertAt(cFBitmapRect(NewRect.x + NewRect.w, NewRect.y,
+                                                 pData->mRect.w - NewRect.w, NewRect.h, -4), UpperNode,
                                     eBinTreeNode_Right);
                 }
 
-                vPos = cVector2l(NewRect.x+1,NewRect.y+1);//+1 for the right pos
+                vPos = cVector2l(NewRect.x + 1, NewRect.y + 1); //+1 for the right pos
 
                 //Draw corners for border
-                mpBitmap->Blit(    apSrc,cVector3l(NewRect.x, NewRect.y, 0),
-                                   cVector3l(1,1,1),0);
-                mpBitmap->Blit(    apSrc,cVector3l(NewRect.x + apSrc->GetWidth()+1, NewRect.y,0),
-                                   cVector3l(1,1,1), cVector3l(apSrc->GetWidth()-1,0,0) );
-                mpBitmap->Blit(    apSrc,cVector3l(NewRect.x + apSrc->GetWidth()+1, NewRect.y + apSrc->GetHeight()+1,0),
-                                   cVector3l(1,1,1), cVector3l(apSrc->GetWidth()-1,apSrc->GetHeight()-1,0) );
-                mpBitmap->Blit(    apSrc,cVector3l(NewRect.x, NewRect.y + apSrc->GetHeight()+1,0),
-                                   cVector3l(1,1,1), cVector3l(0,apSrc->GetHeight()-1,0) );
+                mpBitmap->Blit(    apSrc, cVector3l(NewRect.x, NewRect.y, 0),
+                                   cVector3l(1, 1, 1), 0);
+                mpBitmap->Blit(    apSrc, cVector3l(NewRect.x + apSrc->GetWidth() + 1, NewRect.y, 0),
+                                   cVector3l(1, 1, 1), cVector3l(apSrc->GetWidth() - 1, 0, 0) );
+                mpBitmap->Blit(    apSrc, cVector3l(NewRect.x + apSrc->GetWidth() + 1, NewRect.y + apSrc->GetHeight() + 1, 0),
+                                   cVector3l(1, 1, 1), cVector3l(apSrc->GetWidth() - 1, apSrc->GetHeight() - 1, 0) );
+                mpBitmap->Blit(    apSrc, cVector3l(NewRect.x, NewRect.y + apSrc->GetHeight() + 1, 0),
+                                   cVector3l(1, 1, 1), cVector3l(0, apSrc->GetHeight() - 1, 0) );
 
                 //Draw sides for border
-                mpBitmap->Blit(    apSrc,cVector3l(NewRect.x+1, NewRect.y, 0),
-                                   cVector3l(apSrc->GetWidth(),1,1),0);
-                mpBitmap->Blit(    apSrc,cVector3l(NewRect.x+1, NewRect.y+apSrc->GetHeight()+1, 0),
-                                   cVector3l(apSrc->GetWidth(),1,1), cVector3l(0,apSrc->GetHeight()-1,0));
-                mpBitmap->Blit(    apSrc,cVector3l(NewRect.x, NewRect.y+1, 0),
-                                   cVector3l(1,apSrc->GetHeight(),1),0);
-                mpBitmap->Blit(    apSrc,cVector3l(NewRect.x+apSrc->GetWidth()+1, NewRect.y+1, 0),
-                                   cVector3l(1,apSrc->GetHeight(),1),cVector3l(apSrc->GetWidth()-1,0,0));
+                mpBitmap->Blit(    apSrc, cVector3l(NewRect.x + 1, NewRect.y, 0),
+                                   cVector3l(apSrc->GetWidth(), 1, 1), 0);
+                mpBitmap->Blit(    apSrc, cVector3l(NewRect.x + 1, NewRect.y + apSrc->GetHeight() + 1, 0),
+                                   cVector3l(apSrc->GetWidth(), 1, 1), cVector3l(0, apSrc->GetHeight() - 1, 0));
+                mpBitmap->Blit(    apSrc, cVector3l(NewRect.x, NewRect.y + 1, 0),
+                                   cVector3l(1, apSrc->GetHeight(), 1), 0);
+                mpBitmap->Blit(    apSrc, cVector3l(NewRect.x + apSrc->GetWidth() + 1, NewRect.y + 1, 0),
+                                   cVector3l(1, apSrc->GetHeight(), 1), cVector3l(apSrc->GetWidth() - 1, 0, 0));
 
                 //Draw the final
-                mpBitmap->Blit(apSrc,cVector3l(NewRect.x+1,NewRect.y+1,0), apSrc->GetSize(),0);
+                mpBitmap->Blit(apSrc, cVector3l(NewRect.x + 1, NewRect.y + 1, 0), apSrc->GetSize(), 0);
 
                 //Add image data
                 pBitmapImage = hplNew( cFBitmapImage, () );
@@ -209,8 +209,8 @@ cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPa
                     pBitmapImage->mpSubImage = apSubImageCreated;
                     apSubImageCreated->mpFrameBitmapImage = pBitmapImage;
                 }
-                pBitmapImage->mRect.x = NewRect.x+1;
-                pBitmapImage->mRect.y = NewRect.y+1;
+                pBitmapImage->mRect.x = NewRect.x + 1;
+                pBitmapImage->mRect.y = NewRect.y + 1;
                 pBitmapImage->mRect.w = apSrc->GetWidth();
                 pBitmapImage->mRect.h = apSrc->GetHeight();
                 mlstImages.push_back(pBitmapImage);
@@ -226,10 +226,10 @@ cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPa
     if(bFoundNode && apSubImageCreated == NULL)
     {
         //Create the image resource
-        pImage = hplNew( cFrameSubImage, (cString::To8Char(apSrc->GetFileName()),asFullPath,
+        pImage = hplNew( cFrameSubImage, (cString::To8Char(apSrc->GetFileName()), asFullPath,
                                           mpFrameTexture, this,
-                                          cRect2l(vPos,cVector2l(lSW-2,lSH-2)),//-2 to get the correct size.
-                                          cVector2l(mpBitmap->GetWidth(),mpBitmap->GetHeight()),
+                                          cRect2l(vPos, cVector2l(lSW - 2, lSH - 2)), //-2 to get the correct size.
+                                          cVector2l(mpBitmap->GetWidth(), mpBitmap->GetHeight()),
                                           mlHandle, pBitmapImage) );
 
         pBitmapImage->mpSubImage = pImage;
@@ -253,12 +253,12 @@ cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPa
         Log("Current Tree begin:\n");
         const tRectTreeNodeVec& lstNodes =  mRects.GetNodeList();
         tRectTreeNodeVecConstIt it;
-        int node=0;
-        for(it = lstNodes.begin(); it!=lstNodes.end(); ++it)
+        int node = 0;
+        for(it = lstNodes.begin(); it != lstNodes.end(); ++it)
         {
             cRect2l Rect = (*it)->GetData()->mRect;
             int h = (*it)->GetData()->mlHandle;
-            Log(" %d: [%d:%d:%d:%d]:%d\n",node,Rect.x,Rect.y,Rect.w,Rect.h,h);
+            Log(" %d: [%d:%d:%d:%d]:%d\n", node, Rect.x, Rect.y, Rect.w, Rect.h, h);
             node++;
         }
         Log("Current Tree end:\n");
@@ -266,12 +266,12 @@ cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPa
 
         Log("Current Leaves begin:\n");
         const tRectTreeNodeVec& lstLeafNodes =  mRects.GetLeafList();
-        node=0;
-        for(it = lstLeafNodes.begin(); it!=lstLeafNodes.end(); ++it)
+        node = 0;
+        for(it = lstLeafNodes.begin(); it != lstLeafNodes.end(); ++it)
         {
             cRect2l Rect = (*it)->GetData()->mRect;
             int h = (*it)->GetData()->mlHandle;
-            Log(" %d: [%d:%d:%d:%d]: %d\n",node,Rect.x,Rect.y,Rect.w,Rect.h,h);
+            Log(" %d: [%d:%d:%d:%d]: %d\n", node, Rect.x, Rect.y, Rect.w, Rect.h, h);
             node++;
         }
         Log("Current Tree end:\n");
@@ -284,9 +284,9 @@ cFrameSubImage *cFrameBitmap::AddBitmap(cBitmap *apSrc, const tWString& asFullPa
 
 //-----------------------------------------------------------------------
 
-bool cFrameBitmap::MinimumFit(cRect2l aSrc,cRect2l aDest)
+bool cFrameBitmap::MinimumFit(cRect2l aSrc, cRect2l aDest)
 {
-    if(aDest.w-aSrc.w<mlMinHole && aDest.h-aSrc.h<mlMinHole)
+    if(aDest.w - aSrc.w < mlMinHole && aDest.h - aSrc.h < mlMinHole)
     {
         return true;
     }
@@ -350,7 +350,7 @@ public:
 class cFrameBitmapCompare
 {
 public:
-    bool operator()(cBitmapSubImageComb* apCombA,cBitmapSubImageComb* apCombB) const
+    bool operator()(cBitmapSubImageComb* apCombA, cBitmapSubImageComb* apCombB) const
     {
         const cVector3l& vSizeA = apCombA->mpBitmap->GetSize();
         const cVector3l& vSizeB = apCombB->mpBitmap->GetSize();
@@ -368,14 +368,14 @@ public:
         }
 
         //If equal go by area
-        return vSizeA.x*vSizeA.y > vSizeB.x *vSizeB.y;
+        return vSizeA.x * vSizeA.y > vSizeB.x * vSizeB.y;
     }
 };
 
-typedef std::multiset<cBitmapSubImageComb*,cFrameBitmapCompare> tFrameBitmapSortSet;
+typedef std::multiset<cBitmapSubImageComb *, cFrameBitmapCompare> tFrameBitmapSortSet;
 typedef tFrameBitmapSortSet::iterator tFrameBitmapSortSetIt;
 
-typedef std::list<cBitmapSubImageComb*> tFrameBitmapCombList;
+typedef std::list<cBitmapSubImageComb *> tFrameBitmapCombList;
 typedef tFrameBitmapCombList::iterator tFrameBitmapCombListIt;
 
 //-----------------------------------------------------------------------
@@ -396,7 +396,7 @@ void cFrameBitmap::Reorganize()
     for(; imageIt != mlstImages.end(); ++imageIt)
     {
         cFBitmapImage* pImage = *imageIt;
-        if(pImage->mpSubImage==NULL)
+        if(pImage->mpSubImage == NULL)
         {
             continue;
         }
@@ -406,19 +406,19 @@ void cFrameBitmap::Reorganize()
         //Create bitmap according to node rect
         cBitmap *pBitmap = hplNew( cBitmap, ());
         //-2 since we do not want borders
-        pBitmap->CreateData(cVector3l(pImage->mRect.w,pImage->mRect.h,1),ePixelFormat_RGBA,0,0);
+        pBitmap->CreateData(cVector3l(pImage->mRect.w, pImage->mRect.h, 1), ePixelFormat_RGBA, 0, 0);
 
         //Copy from from bitmap to temp bitmap. +1 because we do not want borders.
-        pBitmap->Blit(mpBitmap, 0, pBitmap->GetSize(),cVector3l(pImage->mRect.x, pImage->mRect.y,0));
+        pBitmap->Blit(mpBitmap, 0, pBitmap->GetSize(), cVector3l(pImage->mRect.x, pImage->mRect.y, 0));
 
         //Add bitmap to list
-        cBitmapSubImageComb *pBmpComb = hplNew( cBitmapSubImageComb,(pBitmap,pImage->mpSubImage) );
+        cBitmapSubImageComb *pBmpComb = hplNew( cBitmapSubImageComb, (pBitmap, pImage->mpSubImage) );
         setSortedBitmaps.insert(pBmpComb);
         lstBitmaps.push_back(pBmpComb);
     }
     if(mbLogTime)
     {
-        Log(" getting image data took: %dms\n",cPlatform::GetApplicationTime()-lStartTime);
+        Log(" getting image data took: %dms\n", cPlatform::GetApplicationTime() - lStartTime);
     }
 
 
@@ -430,7 +430,7 @@ void cFrameBitmap::Reorganize()
 
     if(mbLogTime)
     {
-        Log(" clearing data took: %dms\n",cPlatform::GetApplicationTime()-lStartTime);
+        Log(" clearing data took: %dms\n", cPlatform::GetApplicationTime() - lStartTime);
     }
 
 
@@ -445,7 +445,7 @@ void cFrameBitmap::Reorganize()
         cBitmapSubImageComb *pComb = *bmpIt;
 
         AddBitmap(pComb->mpBitmap, pComb->mpSubImage->GetFullPath(), pComb->mpSubImage, &bAllNodesFit);
-        if(bAllNodesFit==false)
+        if(bAllNodesFit == false)
         {
             break;
         }
@@ -454,7 +454,7 @@ void cFrameBitmap::Reorganize()
     ///////////////////////////////////////
     // Check if all could be added
     // If no room for bitmap was found, need to add again, according to previous order
-    if(bAllNodesFit==false)
+    if(bAllNodesFit == false)
     {
         ClearAddedImages();
 
@@ -464,7 +464,7 @@ void cFrameBitmap::Reorganize()
 
             bool bFit = false;
             AddBitmap(pComb->mpBitmap, pComb->mpSubImage->GetFullPath(), pComb->mpSubImage, &bFit);
-            if(bFit==false)
+            if(bFit == false)
             {
                 Error("When reorganizing images according to previous order an image still does not fit!!!\n");
                 pComb->mpSubImage->mpFrameBitmapImage = NULL;
@@ -475,7 +475,7 @@ void cFrameBitmap::Reorganize()
 
     if(mbLogTime)
     {
-        Log(" adding again took: %dms\n",cPlatform::GetApplicationTime()-lStartTime);
+        Log(" adding again took: %dms\n", cPlatform::GetApplicationTime() - lStartTime);
     }
 
 
@@ -495,7 +495,7 @@ void cFrameBitmap::Reorganize()
     //Clean up and exit
     STLDeleteAll(lstBitmaps);
 
-    mlAdditionsSinceReorganization =0;
+    mlAdditionsSinceReorganization = 0;
     //Set as updated!
     mbIsUpdated = true;
 }
@@ -524,9 +524,9 @@ bool cFrameBitmap::FlushToTexture()
 
 void cFrameBitmap::ClearAddedImages()
 {
-    mpBitmap->Clear(cColor(1,0,1,0),0,0);
+    mpBitmap->Clear(cColor(1, 0, 1, 0), 0, 0);
 
-    mlPicCount =0;
+    mlPicCount = 0;
     STLDeleteAll(mlstImages);
     mlstImages.clear();
 
@@ -534,7 +534,7 @@ void cFrameBitmap::ClearAddedImages()
     mRects.Clear();
 
     //Add a new Root node in rect tree
-    mRects.Insert(cFBitmapRect(0,0,mpBitmap->GetWidth(), mpBitmap->GetHeight(),-1));
+    mRects.Insert(cFBitmapRect(0, 0, mpBitmap->GetWidth(), mpBitmap->GetHeight(), -1));
 }
 
 //-----------------------------------------------------------------------

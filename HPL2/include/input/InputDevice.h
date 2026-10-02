@@ -10,7 +10,7 @@ namespace hpl
 class iInputDevice
 {
 public:
-    iInputDevice(tString asName,eInputDeviceType aType);
+    iInputDevice(tString asName, eInputDeviceType aType);
     virtual ~iInputDevice() {}
 
     /**
@@ -28,7 +28,7 @@ public:
     /**
      * Update the device, called by cInput
      */
-    virtual void Update()=0;
+    virtual void Update() = 0;
 
 private:
     tString msName;

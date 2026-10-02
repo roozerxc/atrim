@@ -24,7 +24,7 @@ class cGuiPopUpFilePicker : public iGuiPopUp, public iFileBrowser
 {
 public:
     cGuiPopUpFilePicker(cGuiSet* apSet, cGuiSkin* apSkin, eFilePickerType aeType, const tWString &asStartPath, bool abShowHiddenFiles,
-                        void *apCallbackObject, tGuiCallbackFunc apCallback, const tWString& asStartFilename=_W(""));
+                        void *apCallbackObject, tGuiCallbackFunc apCallback, const tWString& asStartFilename = _W(""));
     virtual ~cGuiPopUpFilePicker();
 
     void Init();
@@ -70,21 +70,21 @@ protected:
     // Data
     tWString msStartFilename;
 
-    tWString* mpSaveFileDest;
-    tWStringVec* mpLoadFileListDest;
+    tWString *mpSaveFileDest;
+    tWStringVec *mpLoadFileListDest;
 
     eFilePickerType mPickerType;
 
-    cGuiGfxElement* mvGfxFileTypeIcons[6];
-    cGuiGfxElement* mpGfxUpButton;
+    cGuiGfxElement *mvGfxFileTypeIcons[6];
+    cGuiGfxElement *mpGfxUpButton;
 
-    cWidgetComboBox* mpCurrentDirectory;
-    cWidgetMultiPropertyListBox* mpFileList;
-    cWidgetTextBox* mpCurrentFileName;
-    cWidgetComboBox* mpFilterList;
-    cWidgetButton* mvButtons[3];
+    cWidgetComboBox *mpCurrentDirectory;
+    cWidgetMultiPropertyListBox *mpFileList;
+    cWidgetTextBox *mpCurrentFileName;
+    cWidgetComboBox *mpFilterList;
+    cWidgetButton *mvButtons[3];
 
-    void* mpCallbackObject;
+    void *mpCallbackObject;
     tGuiCallbackFunc mpCallback;
 };
 };

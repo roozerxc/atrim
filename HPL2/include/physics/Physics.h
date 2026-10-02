@@ -17,13 +17,13 @@ class cResources;
 
 //------------------------------------------------
 
-typedef std::list<iPhysicsWorld*> tPhysicsWorldList;
+typedef std::list<iPhysicsWorld *> tPhysicsWorldList;
 typedef tPhysicsWorldList::iterator tPhysicsWorldListIt;
 
-typedef std::map<tString, cSurfaceData*> tSurfaceDataMap;
+typedef std::map<tString, cSurfaceData *> tSurfaceDataMap;
 typedef tSurfaceDataMap::iterator tSurfaceDataMapIt;
 
-typedef cSTLMapIterator<cSurfaceData*, tSurfaceDataMap, tSurfaceDataMapIt> cSurfaceDataIterator;
+typedef cSTLMapIterator<cSurfaceData *, tSurfaceDataMap, tSurfaceDataMapIt> cSurfaceDataIterator;
 
 //------------------------------------------------
 
@@ -32,7 +32,7 @@ class cPhysicsImpactCount
 public:
     cPhysicsImpactCount()
     {
-        mfCount =0;
+        mfCount = 0;
     }
 
     float mfCount;
@@ -53,14 +53,14 @@ public:
 
     void Update(double adFixedDelta);
 
-    iPhysicsWorld* CreateWorld(bool abAddSurfaceData);
+    iPhysicsWorld *CreateWorld(bool abAddSurfaceData);
     void DestroyWorld(iPhysicsWorld* apWorld);
 
     cSurfaceData *CreateSurfaceData(const tString& asName);
     cSurfaceData *GetSurfaceData(const tString& asName);
     bool LoadSurfaceData(const tString& asFile);
 
-    iLowLevelPhysics* GetLowLevel()
+    iLowLevelPhysics *GetLowLevel()
     {
         return mpLowLevelPhysics;
     }

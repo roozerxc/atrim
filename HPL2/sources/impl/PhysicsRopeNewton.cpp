@@ -15,7 +15,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cPhysicsRopeNewton::cPhysicsRopeNewton(const tString &asName,iPhysicsWorld *apWorld, const cVector3f &avStartPos, const cVector3f &avEndPos)
+cPhysicsRopeNewton::cPhysicsRopeNewton(const tString &asName, iPhysicsWorld *apWorld, const cVector3f &avStartPos, const cVector3f &avEndPos)
     : iPhysicsRope(asName, apWorld, avStartPos, avEndPos)
 {
 

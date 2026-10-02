@@ -28,22 +28,22 @@ public:
         return mfMinSpeed;
     }
 
-    const tString& GetSoundName()
+    const tString &GetSoundName()
     {
         return msSoundName;
     }
     void SetSoundName(const tString& asName)
     {
-        msSoundName =asName;
+        msSoundName = asName;
     }
 
-    const tString& GetPSName()
+    const tString &GetPSName()
     {
         return msPSName;
     }
     void SetPSName(const tString& asName)
     {
-        msPSName =asName;
+        msPSName = asName;
     }
 
     int GetPSPrio()
@@ -62,7 +62,7 @@ private:
     int mlPSPrio;
 };
 
-typedef std::vector<cSurfaceImpactData*> tSurfaceImpactDataVec;
+typedef std::vector<cSurfaceImpactData *> tSurfaceImpactDataVec;
 typedef tSurfaceImpactDataVec::iterator tSurfaceImpactDataVecIt;
 
 //----------------------------------------
@@ -70,18 +70,18 @@ typedef tSurfaceImpactDataVec::iterator tSurfaceImpactDataVecIt;
 class cSurfaceData
 {
 public:
-    cSurfaceData(const tString &asName, cPhysics *apPhysics,cResources *apResources);
+    cSurfaceData(const tString &asName, cPhysics *apPhysics, cResources *apResources);
     ~cSurfaceData();
 
-    const tString& GetName() const
+    const tString &GetName() const
     {
         return msName;
     }
 
-    void OnImpact(float afSpeed,const cVector3f &avPos,int alContacts,  iPhysicsBody *apBody);
-    void OnSlide(float afSpeed,const cVector3f &avPos,int alContacts, iPhysicsBody *apBody,
+    void OnImpact(float afSpeed, const cVector3f &avPos, int alContacts,  iPhysicsBody *apBody);
+    void OnSlide(float afSpeed, const cVector3f &avPos, int alContacts, iPhysicsBody *apBody,
                  iPhysicsBody *apSlideAgainstBody);
-    void CreateImpactEffect(float afSpeed,const cVector3f &avPos,int alContacts,
+    void CreateImpactEffect(float afSpeed, const cVector3f &avPos, int alContacts,
                             cSurfaceData *apSecondSurface, iPhysicsWorld *apPhysicsWorld);
 
     void UpdateRollEffect(iPhysicsBody *apBody);
@@ -101,7 +101,7 @@ public:
     void SetElasticityCombMode(ePhysicsMaterialCombMode aMode);
     ePhysicsMaterialCombMode GetElasticityCombMode() const;
 
-    const tString& GetStepType()
+    const tString &GetStepType()
     {
         return msStepType;
     }
@@ -191,29 +191,29 @@ public:
     /**
      * This must be added with the largest speed first.
     **/
-    cSurfaceImpactData* CreateImpactData(float afMinSpeed);
-    cSurfaceImpactData* GetImpactData(int alIdx);
+    cSurfaceImpactData *CreateImpactData(float afMinSpeed);
+    cSurfaceImpactData *GetImpactData(int alIdx);
     int GetImpactDataNum();
     /**
     * Gets the the appropriate impact data depending on speed. It gets the data with highest speed not higher than afSpeed
     * \param afSpeed The speed value.
     * \return
     */
-    cSurfaceImpactData* GetImpactDataFromSpeed(float afSpeed);
+    cSurfaceImpactData *GetImpactDataFromSpeed(float afSpeed);
 
 
     /**
     * This must be added with the largest speed first.
     **/
-    cSurfaceImpactData* CreateHitData(float afMinSpeed);
-    cSurfaceImpactData* GetHitData(int alIdx);
+    cSurfaceImpactData *CreateHitData(float afMinSpeed);
+    cSurfaceImpactData *GetHitData(int alIdx);
     int GetHitDataNum();
     /**
      * Gets the the appropriate hit data depending on speed. It gets the data with highest speed not higher than afSpeed
      * \param afSpeed The speed value.
      * \return
      */
-    cSurfaceImpactData* GetHitDataFromSpeed(float afSpeed);
+    cSurfaceImpactData *GetHitDataFromSpeed(float afSpeed);
 
 protected:
     cResources *mpResources;

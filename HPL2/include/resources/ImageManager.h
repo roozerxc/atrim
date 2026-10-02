@@ -16,13 +16,13 @@ class cBitmap;
 class cBitmapLoaderHandler;
 class iTexture;
 
-typedef std::list<cFrameBitmap*> tFrameBitmapList;
+typedef std::list<cFrameBitmap *> tFrameBitmapList;
 typedef tFrameBitmapList::iterator tFrameBitmapListIt;
 
-typedef std::map<int,cFrameTexture*> tFrameTextureMap;
+typedef std::map<int, cFrameTexture *> tFrameTextureMap;
 typedef tFrameTextureMap::iterator tFrameTextureMapIt;
 
-class cImageManager :public iResourceManager
+class cImageManager : public iResourceManager
 {
     friend class cFrameTexture;
 public:
@@ -35,8 +35,8 @@ public:
     void Unload(iResourceBase* apResource);
 
     //Image specifc
-    iResourceBase* CreateInFrame(const tString& asName, int alFrameHandle);
-    cFrameSubImage* CreateImage(const tString& asName, int alFrameHandle=-1);
+    iResourceBase *CreateInFrame(const tString& asName, int alFrameHandle);
+    cFrameSubImage *CreateImage(const tString& asName, int alFrameHandle = -1);
     /**
      * Draws all updated content to textures. THis must be done before a loaded image can be used.
      * Use this as unoften as possible.
@@ -45,11 +45,11 @@ public:
     int FlushAll();
     void ReorganizeAll();
 
-    cFrameSubImage* CreateFromBitmap(const tString &asName,cBitmap* apBmp, int alFrameHandle=-1);
+    cFrameSubImage *CreateFromBitmap(const tString &asName, cBitmap* apBmp, int alFrameHandle = -1);
 
-    cFrameTexture* CreateCustomFrame(iTexture *apTexture);
+    cFrameTexture *CreateCustomFrame(iTexture *apTexture);
 
-    cFrameTexture* GetFrameTexture(int alHandle);
+    cFrameTexture *GetFrameTexture(int alHandle);
 
     int CreateFrame(cVector2l avSize);
     void SetFrameLocked(int alHandle, bool abLocked);

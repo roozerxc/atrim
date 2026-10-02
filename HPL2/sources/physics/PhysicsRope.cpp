@@ -23,14 +23,14 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-iPhysicsRope::iPhysicsRope(const tString &asName,iPhysicsWorld *apWorld, const cVector3f &avStartPos, const cVector3f &avEndPos)
+iPhysicsRope::iPhysicsRope(const tString &asName, iPhysicsWorld *apWorld, const cVector3f &avStartPos, const cVector3f &avEndPos)
     : iVerletParticleContainer(asName, apWorld)
 {
     //Add start and end particles.
-    mlstParticles.push_front(    hplNew( cVerletParticle, (this,avStartPos, 0) ) );
-    mlstParticles.push_back(    hplNew( cVerletParticle, (this,avEndPos, 1) ) );
+    mlstParticles.push_front(    hplNew( cVerletParticle, (this, avStartPos, 0) ) );
+    mlstParticles.push_back(    hplNew( cVerletParticle, (this, avEndPos, 1) ) );
 
-    for(int i=0; i< 2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         mvAttachedBody[i].mpBody = NULL;
         mForcePid[i].SetErrorNum(10);
@@ -54,7 +54,7 @@ iPhysicsRope::iPhysicsRope(const tString &asName,iPhysicsWorld *apWorld, const c
     mbAutoMoveActive = false;
     mfAutoMoveAcc = 1.0f;
     mfAutoMoveMaxSpeed = 1.0f;
-    mfAutoMoveSpeed =0;
+    mfAutoMoveSpeed = 0;
 
     mfMinTotalLength = mfTotalLength;
     mfMaxTotalLength = mfTotalLength;
@@ -77,7 +77,7 @@ iPhysicsRope::iPhysicsRope(const tString &asName,iPhysicsWorld *apWorld, const c
 
 iPhysicsRope::~iPhysicsRope()
 {
-    for(size_t i=0; i<2; ++i)
+    for(size_t i = 0; i < 2; ++i)
     {
         if(mvAttachedBody[i].mpBody)
         {
@@ -113,7 +113,7 @@ void iPhysicsRope::UpdateBeforeSimulate(double adFixedDelta)
 
     UpdateAttachedParticlePositions(adFixedDelta);
 
-    for(int i=0; i<mlMaxIterations; ++i)
+    for(int i = 0; i < mlMaxIterations; ++i)
     {
         UpdateConstraints(adFixedDelta);
     }
@@ -172,7 +172,7 @@ bool iPhysicsRope::GetAutoMoveActive()
 
 void iPhysicsRope::RemoveAttachedBody(iPhysicsBody *apBody, bool abRemoveContainerFromBody)
 {
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         if(mvAttachedBody[i].mpBody == apBody)
         {
@@ -230,7 +230,7 @@ void iPhysicsRope::SetMaxTotalLength(float afX)
 
 void iPhysicsRope::SetSegmentLength(float afX)
 {
-    if(afX<0 || mfSegmentLength == afX)
+    if(afX < 0 || mfSegmentLength == afX)
     {
         return;
     }
@@ -245,21 +245,21 @@ void iPhysicsRope::SetSegmentLength(float afX)
 
 void iPhysicsRope::RenderDebug(iLowLevelGraphics *apLowLevel)
 {
-    cVector3f vPrevPos =0;
-    bool bFirst=true;
-    int lCount =0;
+    cVector3f vPrevPos = 0;
+    bool bFirst = true;
+    int lCount = 0;
     for(tVerletParticleListIt it = mlstParticles.begin(); it != mlstParticles.end(); ++it, ++lCount)
     {
         cVerletParticle *pPart = *it;
 
-        apLowLevel->DrawSphere(pPart->GetPosition(), mfParticleRadius,cColor(1,0,0,1));
+        apLowLevel->DrawSphere(pPart->GetPosition(), mfParticleRadius, cColor(1, 0, 0, 1));
 
-        if(bFirst==false)
+        if(bFirst == false)
         {
-            apLowLevel->DrawLine(vPrevPos,pPart->GetPosition(),cColor(1,1));
+            apLowLevel->DrawLine(vPrevPos, pPart->GetPosition(), cColor(1, 1));
         }
 
-        bFirst=false;
+        bFirst = false;
         vPrevPos = pPart->GetPosition();
     }
 }
@@ -280,8 +280,8 @@ bool iPhysicsRope::CheckParticleBodyCollision(iPhysicsBody *apBody)
         return true;
     }
 
-    bool bAttachment=false;
-    for(int i=0; i<2; ++i)
+    bool bAttachment = false;
+    for(int i = 0; i < 2; ++i)
     {
         if(mvAttachedBody[i].mpBody == apBody)
         {
@@ -301,16 +301,16 @@ bool iPhysicsRope::CheckSpecificDataSleeping()
         return false;
     }
 
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         iPhysicsBody *pBody = mvAttachedBody[i].mpBody;
         if(pBody)
         {
-            if(pBody->GetAngularVelocity().SqrLength() > 0.001f*0.001f)
+            if(pBody->GetAngularVelocity().SqrLength() > 0.001f * 0.001f)
             {
                 return false;
             }
-            if(pBody->GetLinearVelocity().SqrLength() > 0.001f*0.001f)
+            if(pBody->GetLinearVelocity().SqrLength() > 0.001f * 0.001f)
             {
                 return false;
             }
@@ -327,7 +327,7 @@ bool iPhysicsRope::CheckSpecificDataAwake()
         return true;
     }
 
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         iPhysicsBody *pBody = mvAttachedBody[i].mpBody;
         if(pBody)
@@ -343,12 +343,12 @@ bool iPhysicsRope::CheckSpecificDataAwake()
 
 void iPhysicsRope::SetSpecificDataSleeping(bool abSleeping)
 {
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         iPhysicsBody *pBody = mvAttachedBody[i].mpBody;
         if(pBody)
         {
-            if(abSleeping==false)
+            if(abSleeping == false)
             {
                 pBody->Enable();
             }
@@ -372,7 +372,7 @@ void iPhysicsRope::UpdateMovement(double adFixedDelta)
 
 void iPhysicsRope::UpdateMotorAndAutoMove(double adFixedDelta)
 {
-    float fVel =0;
+    float fVel = 0;
 
     //////////////////
     // Update Motor
@@ -432,7 +432,7 @@ void iPhysicsRope::UpdateMotorAndAutoMove(double adFixedDelta)
 
         if(bStop)
         {
-            mfAutoMoveSpeed =0;
+            mfAutoMoveSpeed = 0;
         }
         fVel = mfAutoMoveSpeed;
 
@@ -443,7 +443,7 @@ void iPhysicsRope::UpdateMotorAndAutoMove(double adFixedDelta)
 
     //////////////////
     // Update sound
-    if(mpMotorSoundEntity==NULL && fVel==0)
+    if(mpMotorSoundEntity == NULL && fVel == 0)
     {
         return;
     }
@@ -455,7 +455,7 @@ void iPhysicsRope::UpdateMotorAndAutoMove(double adFixedDelta)
         return;
     }
 
-    if(mpMotorSoundEntity && pNormalWorld->SoundEntityExists(mpMotorSoundEntity, mlMotorSoundEntityID)==false)
+    if(mpMotorSoundEntity && pNormalWorld->SoundEntityExists(mpMotorSoundEntity, mlMotorSoundEntityID) == false)
     {
         mpMotorSoundEntity = NULL;
     }
@@ -469,9 +469,9 @@ void iPhysicsRope::UpdateMotorAndAutoMove(double adFixedDelta)
     }
     ///////////////////////
     //Sound is NOT playing. See if one should be started.
-    else if(msMotorSound != "" && mpMotorSoundEntity==NULL && cMath::Abs(fVel) > mfMotorSoundStartSpeed)
+    else if(msMotorSound != "" && mpMotorSoundEntity == NULL && cMath::Abs(fVel) > mfMotorSoundStartSpeed)
     {
-        mpMotorSoundEntity = pNormalWorld->CreateSoundEntity(msName+"_MotorSound",msMotorSound,true);
+        mpMotorSoundEntity = pNormalWorld->CreateSoundEntity(msName + "_MotorSound", msMotorSound, true);
         if(mpMotorSoundEntity)
         {
             mlMotorSoundEntityID = mpMotorSoundEntity->GetCreationID();
@@ -488,9 +488,9 @@ void iPhysicsRope::UpdateMotorAndAutoMove(double adFixedDelta)
 
 void iPhysicsRope::UpdateAttachedParticlePositions(double adFixedDelta)
 {
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
-        if(mvAttachedBody[i].mpBody==NULL)
+        if(mvAttachedBody[i].mpBody == NULL)
         {
             continue;
         }
@@ -505,9 +505,9 @@ void iPhysicsRope::UpdateAttachedParticlePositions(double adFixedDelta)
 
 void iPhysicsRope::UpdateAttachedBodies(double adFixedDelta)
 {
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
-        if(mvAttachedBody[i].mpBody==NULL)
+        if(mvAttachedBody[i].mpBody == NULL)
         {
             continue;
         }
@@ -528,9 +528,9 @@ void iPhysicsRope::UpdateAttachedBodies(double adFixedDelta)
 
         cVector3f vLocalPos = vCurrentPos - pBody->GetLocalPosition();
         cVector3f vMassCentre = pBody->GetMassCentre();
-        if(vMassCentre != cVector3f(0,0,0))
+        if(vMassCentre != cVector3f(0, 0, 0))
         {
-            vMassCentre = cMath::MatrixMul(pBody->GetLocalMatrix().GetRotation(),vMassCentre);
+            vMassCentre = cMath::MatrixMul(pBody->GetLocalMatrix().GetRotation(), vMassCentre);
             vLocalPos -= vMassCentre;
         }
 
@@ -552,9 +552,9 @@ void iPhysicsRope::UpdateConstraints(double adFixedDelta)
     for(int lCount = 0; it != mlstParticles.end(); ++it, ++lCount)
     {
         cVerletParticle *pPart = *it;
-        if(lCount >0)
+        if(lCount > 0)
         {
-            float fLength = lCount==1 ? mfFirstSegmentLength : mfSegmentLength;
+            float fLength = lCount == 1 ? mfFirstSegmentLength : mfSegmentLength;
 
             //Log("Updating %d, pos1: (%s) pos2: (%s)\n", lCount, pPrevPart->mvPosition.ToString().c_str(), pPart->mvPosition.ToString().c_str());
 
@@ -571,7 +571,7 @@ void iPhysicsRope::UpdateConstraints(double adFixedDelta)
     {
         cVerletParticle *pPart = *it;
 
-        if(mbCollideAttachments==false && (pPart == GetStartParticle() || pPart == GetEndParticle()))
+        if(mbCollideAttachments == false && (pPart == GetStartParticle() || pPart == GetEndParticle()))
         {
             continue;
         }
@@ -589,7 +589,7 @@ void iPhysicsRope::CalculateSmoothPositions(double adFixedDelta)
 {
     cVector3f vBasePos[2] = { GetStartParticle()->GetPosition(), GetEndParticle()->GetPosition()};
     cVector3f vAddPos[2] = {0, 0};
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         if(mvAttachedBody[i].mpBody)
         {
@@ -607,7 +607,7 @@ void iPhysicsRope::CalculateSmoothPositions(double adFixedDelta)
 
         float fT = fCount / fMaxCount;
 
-        cVector3f vAdd = vAddPos[0]*(1-fT) + vAddPos[1]*fT;
+        cVector3f vAdd = vAddPos[0] * (1 - fT) + vAddPos[1] * fT;
 
         pPart->SetSmoothPosition(pPart->GetPosition() + vAdd);
     }
@@ -619,12 +619,12 @@ void iPhysicsRope::BuildRopeParticles()
 {
     ////////////////////////
     //If not updated, clear data
-    if(mbHasUpdated==false)
+    if(mbHasUpdated == false)
     {
-        int lRemoveCount = (int)mlstParticles.size() -2;
+        int lRemoveCount = (int)mlstParticles.size() - 2;
         tVerletParticleListIt it = mlstParticles.begin();
         it++;
-        for(; lRemoveCount>0; --lRemoveCount)
+        for(; lRemoveCount > 0; --lRemoveCount)
         {
             cVerletParticle* pPart = *it;
             it = mlstParticles.erase(it);
@@ -641,7 +641,7 @@ void iPhysicsRope::BuildRopeParticles()
     int lWantedNum = 0;
     if(mfSegmentLength > 0)
     {
-        lWantedNum = (int)((mfTotalLength / mfSegmentLength)+0.999999f) - 1;
+        lWantedNum = (int)((mfTotalLength / mfSegmentLength) +0.999999f) - 1;
 
         mfFirstSegmentLength = cMath::Modulus(mfTotalLength, mfSegmentLength);
         if(mfFirstSegmentLength == 0)
@@ -667,8 +667,8 @@ void iPhysicsRope::BuildRopeParticles()
     {
         tVerletParticleListIt it = mlstParticles.begin();
         it++;
-        int lRemoveCount= lParticleNum - lWantedNum;
-        for(; lRemoveCount>0; --lRemoveCount)
+        int lRemoveCount = lParticleNum - lWantedNum;
+        for(; lRemoveCount > 0; --lRemoveCount)
         {
             cVerletParticle* pPart = *it;
             it = mlstParticles.erase(it);
@@ -680,22 +680,22 @@ void iPhysicsRope::BuildRopeParticles()
     else if(lWantedNum > lParticleNum)
     {
         cVector3f vDir = GetStartDirection();
-        int lAddCount= lWantedNum - lParticleNum;
+        int lAddCount = lWantedNum - lParticleNum;
 
         cVector3f vStartPos = GetStartParticle()->GetPosition();
 
-        float fLength = mfFirstSegmentLength + mfSegmentLength*((float)lAddCount-1);
+        float fLength = mfFirstSegmentLength + mfSegmentLength * ((float)lAddCount - 1);
 
         tVerletParticleListIt it = mlstParticles.begin();
         it++;
 
-        for(; lAddCount>0; --lAddCount)
+        for(; lAddCount > 0; --lAddCount)
         {
-            cVector3f vPos = vStartPos + vDir*fLength;
+            cVector3f vPos = vStartPos + vDir * fLength;
             //Log("Adding %d pos: %s length: %f\n", lAddCount, vPos.ToString().c_str(), fLength);
             fLength -= mfSegmentLength;
 
-            it = mlstParticles.insert(it, hplNew(cVerletParticle, (this,vPos, 1)) );
+            it = mlstParticles.insert(it, hplNew(cVerletParticle, (this, vPos, 1)) );
         }
     }
 }

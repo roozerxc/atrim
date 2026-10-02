@@ -38,16 +38,16 @@ public:
     cAINodeGenerator();
     ~cAINodeGenerator();
 
-    void Generate(cWorld* apWorld,cAINodeGeneratorParams *apParams);
+    void Generate(cWorld* apWorld, cAINodeGeneratorParams *apParams);
 
 private:
-    bool OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams);
+    bool OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams);
 
     void SaveToFile();
     void LoadFromFile();
 
     cAINodeGeneratorParams *mpParams;
-    cWorld* mpWorld;
+    cWorld *mpWorld;
     tTempAiNodeList *mpNodeList;
     int mlIDCount;
 };

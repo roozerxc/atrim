@@ -34,7 +34,7 @@ cSystem::~cSystem()
 
 //-----------------------------------------------------------------------
 
-iLowLevelSystem* cSystem::GetLowLevel()
+iLowLevelSystem *cSystem::GetLowLevel()
 {
     return mpLowLevelSystem;
 }

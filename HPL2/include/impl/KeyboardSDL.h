@@ -33,7 +33,7 @@ private:
     void ClearKeyList();
     eKey AsciiToKey(int alChar);
 
-    void AddKeyToList(int alSDLMod, eKey aKey, int alUnicode, std::list<cKeyPress>& alstKeys);
+    void AddKeyToList(int alSDLMod, eKey aKey, int alUnicode, std::list<cKeyPress> &alstKeys);
 
     std::vector<bool> mvKeyArray;
     std::vector<eKey> mvWorldKeyMap;

@@ -160,8 +160,8 @@ cProgramComboFeature gvFogAreaFeatureVec[] =
 
 //-----------------------------------------------------------------------
 
-cRendererDeferred::cRendererDeferred(cGraphics *apGraphics,cResources* apResources)
-    : iRenderer("Deferred",apGraphics, apResources,eDefferredProgramMode_LastEnum)
+cRendererDeferred::cRendererDeferred(cGraphics *apGraphics, cResources* apResources)
+    : iRenderer("Deferred", apGraphics, apResources, eDefferredProgramMode_LastEnum)
 {
     ////////////////////////////////////
     // Set up render specific things
@@ -174,7 +174,7 @@ cRendererDeferred::cRendererDeferred(cGraphics *apGraphics,cResources* apResourc
     mfLastFrustumFOV = -1;
     mfLastFrustumFarPlane = -1;
 
-    mfMinLargeLightNormalizedArea = 0.2f*0.2f;
+    mfMinLargeLightNormalizedArea = 0.2f * 0.2f;
     mfMinRenderReflectionNormilzedLength = 0.15f;
 
     mfShadowDistanceHigh = 5.0f;
@@ -204,37 +204,37 @@ cRendererDeferred::~cRendererDeferred()
 
 bool cRendererDeferred::LoadData()
 {
-    cVector2l vRelfectionSize = cVector2l(mvScreenSize.x/mlReflectionSizeDiv, mvScreenSize.y/mlReflectionSizeDiv);
+    cVector2l vRelfectionSize = cVector2l(mvScreenSize.x / mlReflectionSizeDiv, mvScreenSize.y / mlReflectionSizeDiv);
 
     Log("Setting up G-Buffer: type: %d texturenum: %d\n", mGBufferType, mlNumOfGBufferTextures);
     ////////////////////////////////////
     //Create G-Buffer textures
-    for(int i=0; i<mlNumOfGBufferTextures; ++i)
+    for(int i = 0; i < mlNumOfGBufferTextures; ++i)
     {
         ePixelFormat pixelFormat = mGBufferType == eDeferredGBuffer_32Bit ? ePixelFormat_RGBA : ePixelFormat_RGBA16;
         //ePixelFormat pixelFormat = ePixelFormat_RGBA16;
 
-        tString sName = "G-BufferTexure"+cString::ToString(i);
-        mpGBufferTexture[0][i] = CreateRenderTexture(sName, mvScreenSize,pixelFormat,eTextureFilter_Nearest);
-        mpGBufferTexture[1][i] = CreateRenderTexture(sName+"_Reflection", vRelfectionSize, pixelFormat,eTextureFilter_Nearest);
+        tString sName = "G-BufferTexure" + cString::ToString(i);
+        mpGBufferTexture[0][i] = CreateRenderTexture(sName, mvScreenSize, pixelFormat, eTextureFilter_Nearest);
+        mpGBufferTexture[1][i] = CreateRenderTexture(sName + "_Reflection", vRelfectionSize, pixelFormat, eTextureFilter_Nearest);
     }
 
     ////////////////////////////////////
     //Create Depth and stencil
-    mpDepthStencil[0] = mpGraphics->CreateDepthStencilBuffer(mvScreenSize,24,8, false);
-    mpDepthStencil[1] = mpGraphics->CreateDepthStencilBuffer(vRelfectionSize, 24,8, false);
+    mpDepthStencil[0] = mpGraphics->CreateDepthStencilBuffer(mvScreenSize, 24, 8, false);
+    mpDepthStencil[1] = mpGraphics->CreateDepthStencilBuffer(vRelfectionSize, 24, 8, false);
 
     ////////////////////////////////////
     //Create Frame buffers
-    for(int type=0; type<2; ++type)
+    for(int type = 0; type < 2; ++type)
     {
         mpGBuffer[type][eGBufferComponents_Full] = mpGraphics->CreateFrameBuffer("Deferred_GBuffer_Main");
-        for(int i=0; i<mlNumOfGBufferTextures; ++i)
+        for(int i = 0; i < mlNumOfGBufferTextures; ++i)
         {
-            mpGBuffer[type][eGBufferComponents_Full]->SetTexture2D(i,mpGBufferTexture[type][i]);
+            mpGBuffer[type][eGBufferComponents_Full]->SetTexture2D(i, mpGBufferTexture[type][i]);
         }
         mpGBuffer[type][eGBufferComponents_Full]->SetDepthStencilBuffer(mpDepthStencil[type]);
-        if(mpGBuffer[type][eGBufferComponents_Full]->CompileAndValidate()==false)
+        if(mpGBuffer[type][eGBufferComponents_Full]->CompileAndValidate() == false)
         {
             Error("Could not create frame buffer for Deferred renderer type: %d!\n", type);
             return false;
@@ -243,8 +243,8 @@ bool cRendererDeferred::LoadData()
         /////////////////////////
         //Frame buffer with only color
         mpGBuffer[type][eGBufferComponents_Color] = mpGraphics->CreateFrameBuffer("Deferred_GBuffer_ColorDepth");
-        mpGBuffer[type][eGBufferComponents_Color]->SetTexture2D(0,mpGBufferTexture[type][0]);
-        if(mpGBuffer[type][eGBufferComponents_Color]->CompileAndValidate()==false)
+        mpGBuffer[type][eGBufferComponents_Color]->SetTexture2D(0, mpGBufferTexture[type][0]);
+        if(mpGBuffer[type][eGBufferComponents_Color]->CompileAndValidate() == false)
         {
             Error("Could not create frame buffer with only color Deferred renderer type: %d!\n", type);
             return false;
@@ -254,7 +254,7 @@ bool cRendererDeferred::LoadData()
         //Frame buffer with only depth
         mpGBuffer[type][eGBufferComponents_Depth] = mpGraphics->CreateFrameBuffer("Deferred_GBuffer_Depth");
         mpGBuffer[type][eGBufferComponents_Depth]->SetDepthStencilBuffer(mpDepthStencil[type]);
-        if(mpGBuffer[type][eGBufferComponents_Depth]->CompileAndValidate()==false)
+        if(mpGBuffer[type][eGBufferComponents_Depth]->CompileAndValidate() == false)
         {
             Error("Could not create frame buffer with only depth for Deferred renderer type: %d!\n", type);
             return false;
@@ -263,9 +263,9 @@ bool cRendererDeferred::LoadData()
         /////////////////////////
         //Frame buffer with only depth and color
         mpGBuffer[type][eGBufferComponents_ColorAndDepth] = mpGraphics->CreateFrameBuffer("Deferred_GBuffer_ColorDepth");
-        mpGBuffer[type][eGBufferComponents_ColorAndDepth]->SetTexture2D(0,mpGBufferTexture[type][0]);
+        mpGBuffer[type][eGBufferComponents_ColorAndDepth]->SetTexture2D(0, mpGBufferTexture[type][0]);
         mpGBuffer[type][eGBufferComponents_ColorAndDepth]->SetDepthStencilBuffer(mpDepthStencil[type]);
-        if(mpGBuffer[type][eGBufferComponents_ColorAndDepth]->CompileAndValidate()==false)
+        if(mpGBuffer[type][eGBufferComponents_ColorAndDepth]->CompileAndValidate() == false)
         {
             Error("Could not create frame buffer with only color and depth for Deferred renderer type: %d!\n", type);
             return false;
@@ -274,8 +274,8 @@ bool cRendererDeferred::LoadData()
         /////////////////////////
         //Frame buffer with only normals
         mpGBuffer[type][eGBufferComponents_Normals] = mpGraphics->CreateFrameBuffer("Deferred_GBuffer_Normals");
-        mpGBuffer[type][eGBufferComponents_Normals]->SetTexture2D(0,mpGBufferTexture[type][1]);
-        if(mpGBuffer[type][eGBufferComponents_Normals]->CompileAndValidate()==false)
+        mpGBuffer[type][eGBufferComponents_Normals]->SetTexture2D(0, mpGBufferTexture[type][1]);
+        if(mpGBuffer[type][eGBufferComponents_Normals]->CompileAndValidate() == false)
         {
             Error("Could not create frame buffer with only normals for Deferred renderer type: %d!\n", type);
             return false;
@@ -284,8 +284,8 @@ bool cRendererDeferred::LoadData()
         /////////////////////////
         //Frame buffer with only linear depth
         mpGBuffer[type][eGBufferComponents_LinearDepth] = mpGraphics->CreateFrameBuffer("Deferred_GBuffer_LinearDepth");
-        mpGBuffer[type][eGBufferComponents_LinearDepth]->SetTexture2D(0,mpGBufferTexture[type][2]);
-        if(mpGBuffer[type][eGBufferComponents_LinearDepth]->CompileAndValidate()==false)
+        mpGBuffer[type][eGBufferComponents_LinearDepth]->SetTexture2D(0, mpGBufferTexture[type][2]);
+        if(mpGBuffer[type][eGBufferComponents_LinearDepth]->CompileAndValidate() == false)
         {
             Error("Could not create frame buffer with only linear depth for Deferred renderer type: %d!\n", type);
             return false;
@@ -294,31 +294,31 @@ bool cRendererDeferred::LoadData()
 
     ////////////////////////////////////
     //Create Accumulation texture
-    mpAccumBufferTexture = mpGraphics->CreateTexture("AccumBuffer",eTextureType_Rect,eTextureUsage_RenderTarget);
-    mpAccumBufferTexture->CreateFromRawData(cVector3l(mvScreenSize.x, mvScreenSize.y,0),ePixelFormat_RGBA, NULL);
+    mpAccumBufferTexture = mpGraphics->CreateTexture("AccumBuffer", eTextureType_Rect, eTextureUsage_RenderTarget);
+    mpAccumBufferTexture->CreateFromRawData(cVector3l(mvScreenSize.x, mvScreenSize.y, 0), ePixelFormat_RGBA, NULL);
     mpAccumBufferTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
 
     ////////////////////////////////////
     //Create Accumulation buffer
     mpAccumBuffer = mpGraphics->CreateFrameBuffer("Deferred_Accumulation");
-    mpAccumBuffer->SetTexture2D(0,mpAccumBufferTexture);
+    mpAccumBuffer->SetTexture2D(0, mpAccumBufferTexture);
     mpAccumBuffer->SetDepthStencilBuffer(mpDepthStencil[0]);
 
     mpAccumBuffer->CompileAndValidate();
 
     ////////////////////////////////////
     //Create Refraction texture
-    mpRefractionTexture = mpGraphics->GetTempFrameBuffer(mvScreenSize,ePixelFormat_RGBA,0)->GetColorBuffer(0)->ToTexture();
+    mpRefractionTexture = mpGraphics->GetTempFrameBuffer(mvScreenSize, ePixelFormat_RGBA, 0)->GetColorBuffer(0)->ToTexture();
     mpRefractionTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
 
     ////////////////////////////////////
     //Create Reflection texture
-    mpReflectionTexture = CreateRenderTexture("ReflectionTexture",vRelfectionSize,ePixelFormat_RGBA);
+    mpReflectionTexture = CreateRenderTexture("ReflectionTexture", vRelfectionSize, ePixelFormat_RGBA);
 
     ////////////////////////////////////
     //Create Reflection buffer
     mpReflectionBuffer = mpGraphics->CreateFrameBuffer("Deferred_Reflection");
-    mpReflectionBuffer->SetTexture2D(0,mpReflectionTexture);
+    mpReflectionBuffer->SetTexture2D(0, mpReflectionTexture);
     mpReflectionBuffer->SetDepthStencilBuffer(mpDepthStencil[1]);
     mpReflectionBuffer->CompileAndValidate();
 
@@ -327,13 +327,13 @@ bool cRendererDeferred::LoadData()
     //Create Shadow Textures
     cVector3l vShadowSize[] =
     {
-        cVector3l(64, 64,1),     // 0
-        cVector3l(128, 128,1),   // 1
-        cVector3l(256, 256,1),   // 2
-        cVector3l(512, 512,1),   // 3
-        cVector3l(1024, 1024,1), // 4
-        cVector3l(2048, 2048,1), // 5
-        cVector3l(4096, 4096,1)  // 6
+        cVector3l(64, 64, 1),    // 0
+        cVector3l(128, 128, 1),  // 1
+        cVector3l(256, 256, 1),  // 2
+        cVector3l(512, 512, 1),  // 3
+        cVector3l(1024, 1024, 1), // 4
+        cVector3l(2048, 2048, 1), // 5
+        cVector3l(4096, 4096, 1) // 6
     };
 
     int lStartSizeHigh = 4;
@@ -366,24 +366,24 @@ bool cRendererDeferred::LoadData()
     // ONLY if user has enabled ultra shadows...
     if(mShadowMapResolution == eShadowMapResolution_Ultra)
     {
-        for(int i=0; i<1; ++i)
+        for(int i = 0; i < 1; ++i)
         {
-            CreateAndAddShadowMap(eShadowMapResolution_Ultra, vShadowSize[lStartSizeUltra],ePixelFormat_Depth24);
+            CreateAndAddShadowMap(eShadowMapResolution_Ultra, vShadowSize[lStartSizeUltra], ePixelFormat_Depth24);
         }
     }
 
     // Standard 1-4-6. Haha, version 1.4.6 ;)
-    for(int i=0; i<1; ++i)
+    for(int i = 0; i < 1; ++i)
     {
-        CreateAndAddShadowMap(eShadowMapResolution_High, vShadowSize[lStartSizeHigh],ePixelFormat_Depth16);
+        CreateAndAddShadowMap(eShadowMapResolution_High, vShadowSize[lStartSizeHigh], ePixelFormat_Depth16);
     }
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
-        CreateAndAddShadowMap(eShadowMapResolution_Medium, vShadowSize[lStartSizeMedium],ePixelFormat_Depth16);
+        CreateAndAddShadowMap(eShadowMapResolution_Medium, vShadowSize[lStartSizeMedium], ePixelFormat_Depth16);
     }
-    for(int i=0; i<6; ++i)
+    for(int i = 0; i < 6; ++i)
     {
-        CreateAndAddShadowMap(eShadowMapResolution_Low, vShadowSize[lStartSizeLow],ePixelFormat_Depth16);
+        CreateAndAddShadowMap(eShadowMapResolution_Low, vShadowSize[lStartSizeLow], ePixelFormat_Depth16);
     }
 
 
@@ -447,7 +447,7 @@ bool cRendererDeferred::LoadData()
     if(mShadowMapQuality != eShadowMapQuality_Low)
     {
         mpShadowJitterTexture = mpGraphics->CreateTexture("ShadowOffset", eTextureType_2D, eTextureUsage_Normal);
-        mpGraphics->GetTextureCreator()->GenerateScatterDiskMap2D(mpShadowJitterTexture,mlShadowJitterSize,mlShadowJitterSamples, true);
+        mpGraphics->GetTextureCreator()->GenerateScatterDiskMap2D(mpShadowJitterTexture, mlShadowJitterSize, mlShadowJitterSamples, true);
     }
     else
     {
@@ -459,8 +459,8 @@ bool cRendererDeferred::LoadData()
     {
         cParserVarContainer vars;
         vars.Add("UseUv");
-        iGpuShader *pVtxShader = mpShaderManager->CreateShader("deferred_base_vtx.glsl",eGpuShaderType_Vertex,&vars);
-        iGpuShader *pFragShader = mpShaderManager->CreateShader("deferred_gbuffer_skybox_frag.glsl", eGpuShaderType_Fragment,&vars);
+        iGpuShader *pVtxShader = mpShaderManager->CreateShader("deferred_base_vtx.glsl", eGpuShaderType_Vertex, &vars);
+        iGpuShader *pFragShader = mpShaderManager->CreateShader("deferred_gbuffer_skybox_frag.glsl", eGpuShaderType_Fragment, &vars);
 
         mpSkyBoxProgram = mpGraphics->CreateGpuProgram("DeferredSkyBox");
         mpSkyBoxProgram->SetShader(eGpuShaderType_Vertex, pVtxShader);
@@ -480,19 +480,19 @@ bool cRendererDeferred::LoadData()
 
         mpFogProgramManager = hplNew(    cProgramComboManager, ("FogArea", mpGraphics, mpResources, 1));
 
-        mpFogProgramManager->SetupGenerateProgramData(0,"Fog","deferred_fog_vtx.glsl","deferred_fog_frag.glsl",gvFogAreaFeatureVec,kFogAreaFeatureNum,vars);
+        mpFogProgramManager->SetupGenerateProgramData(0, "Fog", "deferred_fog_vtx.glsl", "deferred_fog_frag.glsl", gvFogAreaFeatureVec, kFogAreaFeatureNum, vars);
 
         if(GetGBufferType() == eDeferredGBuffer_32Bit)
         {
-            mpFogProgramManager->AddGenerateProgramVariableId("afNegFarPlane", kVar_afNegFarPlane,0);
+            mpFogProgramManager->AddGenerateProgramVariableId("afNegFarPlane", kVar_afNegFarPlane, 0);
         }
-        mpFogProgramManager->AddGenerateProgramVariableId("avFogStartAndLength", kVar_avFogStartAndLength,0);
-        mpFogProgramManager->AddGenerateProgramVariableId("avFogColor", kVar_avFogColor,0);
-        mpFogProgramManager->AddGenerateProgramVariableId("avRayCastStart", kVar_avRayCastStart,0);
-        mpFogProgramManager->AddGenerateProgramVariableId("a_mtxBoxInvViewModelRotation", kVar_a_mtxBoxInvViewModelRotation,0);
-        mpFogProgramManager->AddGenerateProgramVariableId("avNegPlaneDistNeg",kVar_avNegPlaneDistNeg,0);
-        mpFogProgramManager->AddGenerateProgramVariableId("avNegPlaneDistPos",kVar_avNegPlaneDistPos,0);
-        mpFogProgramManager->AddGenerateProgramVariableId("afFalloffExp",kVar_afFalloffExp,0);
+        mpFogProgramManager->AddGenerateProgramVariableId("avFogStartAndLength", kVar_avFogStartAndLength, 0);
+        mpFogProgramManager->AddGenerateProgramVariableId("avFogColor", kVar_avFogColor, 0);
+        mpFogProgramManager->AddGenerateProgramVariableId("avRayCastStart", kVar_avRayCastStart, 0);
+        mpFogProgramManager->AddGenerateProgramVariableId("a_mtxBoxInvViewModelRotation", kVar_a_mtxBoxInvViewModelRotation, 0);
+        mpFogProgramManager->AddGenerateProgramVariableId("avNegPlaneDistNeg", kVar_avNegPlaneDistNeg, 0);
+        mpFogProgramManager->AddGenerateProgramVariableId("avNegPlaneDistPos", kVar_avNegPlaneDistPos, 0);
+        mpFogProgramManager->AddGenerateProgramVariableId("afFalloffExp", kVar_afFalloffExp, 0);
     }
 
     ////////////////////////////////////
@@ -508,25 +508,25 @@ bool cRendererDeferred::LoadData()
             mpLightStencilProgram = mpProgramManager->CreateProgramFromShaders("LightStencil",
                                     "deferred_base_vtx.glsl",
                                     "deferred_base_frag.glsl",
-                                    &vars,true);
+                                    &vars, true);
 
             //////////////
             //Light box
-            for(int i=0; i<2; ++i)
+            for(int i = 0; i < 2; ++i)
             {
-                if(i==1)
+                if(i == 1)
                 {
                     vars.Add("UseSSAO");
                 }
                 mpLightBoxProgram[i] = mpProgramManager->CreateProgramFromShaders("LightBoxNormal",
                                        "deferred_base_vtx.glsl",
                                        "deferred_light_box_frag.glsl",
-                                       &vars,true);
+                                       &vars, true);
 
                 vars.Clear();
                 if(mpLightBoxProgram[i])
                 {
-                    mpLightBoxProgram[i]->GetVariableAsId("avLightColor",kVar_avLightColor);
+                    mpLightBoxProgram[i]->GetVariableAsId("avLightColor", kVar_avLightColor);
                 }
             }
 
@@ -535,11 +535,11 @@ bool cRendererDeferred::LoadData()
             mpLightBoxProgram[2] = mpProgramManager->CreateProgramFromShaders("LightBoxNormal",
                                    "deferred_base_vtx.glsl",
                                    "deferred_light_box_frag.glsl",
-                                   &vars,true);
+                                   &vars, true);
 
             if(mpLightBoxProgram[2])
             {
-                mpLightBoxProgram[2]->GetVariableAsId("afComplexity",kVar_afComplexity);
+                mpLightBoxProgram[2]->GetVariableAsId("afComplexity", kVar_afComplexity);
             }
 
             vars.Clear();
@@ -548,11 +548,11 @@ bool cRendererDeferred::LoadData()
             mpOverdrawProgram = mpProgramManager->CreateProgramFromShaders("Debug Light Complexity",
                                 "deferred_base_vtx.glsl",
                                 "debug_overdraw_frag.glsl",
-                                &vars,true);
+                                &vars, true);
             mpHeatMapProgram = mpProgramManager->CreateProgramFromShaders("Debug Heat map",
                                "deferred_base_vtx.glsl",
                                "debug_heat_map_frag.glsl",
-                               &vars,true);
+                               &vars, true);
         }
 
         /////////////////////////////
@@ -561,8 +561,8 @@ bool cRendererDeferred::LoadData()
             cParserVarContainer defaultVars;
 
             //Shadow variables
-            defaultVars.Add("ShadowJitterLookupMul",1.0f / (float)mlShadowJitterSize);
-            defaultVars.Add("ShadowJitterSamplesDiv2",mlShadowJitterSamples / 2);
+            defaultVars.Add("ShadowJitterLookupMul", 1.0f / (float)mlShadowJitterSize);
+            defaultVars.Add("ShadowJitterSamplesDiv2", mlShadowJitterSamples / 2);
             defaultVars.Add("ShadowJitterSamples", mlShadowJitterSamples);
 
             if(mShadowMapQuality == eShadowMapQuality_Ultra)
@@ -588,24 +588,24 @@ bool cRendererDeferred::LoadData()
             //Deferred renderer type
             if(mGBufferType == eDeferredGBuffer_32Bit)
             {
-                defaultVars.Add("Deferred_32bit","");
+                defaultVars.Add("Deferred_32bit", "");
             }
             else
             {
-                defaultVars.Add("Deferred_64bit","");
+                defaultVars.Add("Deferred_64bit", "");
             }
 
             if(mlNumOfGBufferTextures == 4)
             {
-                defaultVars.Add("RenderTargets_4","");
+                defaultVars.Add("RenderTargets_4", "");
             }
             else
             {
-                defaultVars.Add("RenderTargets_3","");
+                defaultVars.Add("RenderTargets_3", "");
             }
 
-            mpProgramManager->SetupGenerateProgramData(    eDefferredProgramMode_Lights,"Lights", "deferred_base_vtx.glsl", "deferred_light_frag.glsl",gvLightFeatureVec,
-                    kLightFeatureNum,defaultVars);
+            mpProgramManager->SetupGenerateProgramData(    eDefferredProgramMode_Lights, "Lights", "deferred_base_vtx.glsl", "deferred_light_frag.glsl", gvLightFeatureVec,
+                    kLightFeatureNum, defaultVars);
             //1, defaultVars);
 
 
@@ -625,7 +625,7 @@ bool cRendererDeferred::LoadData()
 
     ////////////////////////////////////
     //Create SSAO programs and textures
-    if(mbSSAOLoaded && mpLowLevelGraphics->GetCaps(eGraphicCaps_TextureFloat)==0)
+    if(mbSSAOLoaded && mpLowLevelGraphics->GetCaps(eGraphicCaps_TextureFloat) == 0)
     {
         mbSSAOLoaded = false;
         Warning("System does not support float textures! SSAO is disabled.\n");
@@ -638,26 +638,26 @@ bool cRendererDeferred::LoadData()
         // Textures and frame buffers
 
         // Textures
-        mpLinearDepthTexture = CreateRenderTexture("LinearDepth", vSSAOSize,ePixelFormat_RGB16);
-        mpSSAOTexture = CreateRenderTexture("SSAO", vSSAOSize,ePixelFormat_RGB);
-        mpSSAOBlurTexture = CreateRenderTexture("SSAOBlur", vSSAOSize,ePixelFormat_RGB);
+        mpLinearDepthTexture = CreateRenderTexture("LinearDepth", vSSAOSize, ePixelFormat_RGB16);
+        mpSSAOTexture = CreateRenderTexture("SSAO", vSSAOSize, ePixelFormat_RGB);
+        mpSSAOBlurTexture = CreateRenderTexture("SSAOBlur", vSSAOSize, ePixelFormat_RGB);
 
         //Frame buffers
         mpLinearDepthBuffer = mpGraphics->CreateFrameBuffer("LinearDepth");
-        mpLinearDepthBuffer->SetTexture2D(0,mpLinearDepthTexture);
+        mpLinearDepthBuffer->SetTexture2D(0, mpLinearDepthTexture);
         mpLinearDepthBuffer->CompileAndValidate();
 
         mpSSAOBuffer = mpGraphics->CreateFrameBuffer("SSAO");
-        mpSSAOBuffer->SetTexture2D(0,mpSSAOTexture);
+        mpSSAOBuffer->SetTexture2D(0, mpSSAOTexture);
         mpSSAOBuffer->CompileAndValidate();
 
         mpSSAOBlurBuffer = mpGraphics->CreateFrameBuffer("SSAOBlur");
-        mpSSAOBlurBuffer->SetTexture2D(0,mpSSAOBlurTexture);
+        mpSSAOBlurBuffer->SetTexture2D(0, mpSSAOBlurTexture);
         mpSSAOBlurBuffer->CompileAndValidate();
 
         //Scatter disk
-        mpSSAOScatterDisk = mpGraphics->CreateTexture("SSAOScatterDisk", eTextureType_2D,eTextureUsage_Normal);
-        mpGraphics->GetTextureCreator()->GenerateScatterDiskMap2D(mpSSAOScatterDisk,4, mlSSAONumOfSamples, false);
+        mpSSAOScatterDisk = mpGraphics->CreateTexture("SSAOScatterDisk", eTextureType_2D, eTextureUsage_Normal);
+        mpGraphics->GetTextureCreator()->GenerateScatterDiskMap2D(mpSSAOScatterDisk, 4, mlSSAONumOfSamples, false);
 
 
         /////////////////////////////////////
@@ -674,34 +674,34 @@ bool cRendererDeferred::LoadData()
             programVars.Add("Deferred_64bit");
         }
         programVars.Add("UseUv");
-        mpUnpackDepthProgram = mpGraphics->CreateGpuProgramFromShaders("UnpackDepth","deferred_base_vtx.glsl", "deferred_unpack_depth_frag.glsl",&programVars);
+        mpUnpackDepthProgram = mpGraphics->CreateGpuProgramFromShaders("UnpackDepth", "deferred_base_vtx.glsl", "deferred_unpack_depth_frag.glsl", &programVars);
         if(mpUnpackDepthProgram)
         {
-            mpUnpackDepthProgram->GetVariableAsId("afNegInvFarPlane",kVar_afNegInvFarPlane);
+            mpUnpackDepthProgram->GetVariableAsId("afNegInvFarPlane", kVar_afNegInvFarPlane);
         }
         programVars.Clear();
 
         //SSAO Blur programs (vertical and horizontal)
         programVars.Add("BlurHorisontal");
-        mpSSAOBlurProgram[0] = mpGraphics->CreateGpuProgramFromShaders("SSAOBlurHori","deferred_ssao_blur_vtx.glsl", "deferred_ssao_blur_frag.glsl",&programVars);
+        mpSSAOBlurProgram[0] = mpGraphics->CreateGpuProgramFromShaders("SSAOBlurHori", "deferred_ssao_blur_vtx.glsl", "deferred_ssao_blur_frag.glsl", &programVars);
         programVars.Clear();
-        mpSSAOBlurProgram[1] = mpGraphics->CreateGpuProgramFromShaders("SSAOBlurVert","deferred_ssao_blur_vtx.glsl", "deferred_ssao_blur_frag.glsl",&programVars);
+        mpSSAOBlurProgram[1] = mpGraphics->CreateGpuProgramFromShaders("SSAOBlurVert", "deferred_ssao_blur_vtx.glsl", "deferred_ssao_blur_frag.glsl", &programVars);
 
-        for(int i=0; i<2; ++i)
+        for(int i = 0; i < 2; ++i)
         {
             if(mpSSAOBlurProgram[i])
             {
-                mpSSAOBlurProgram[i]->GetVariableAsId("afFarPlane",kVar_afFarPlane);
+                mpSSAOBlurProgram[i]->GetVariableAsId("afFarPlane", kVar_afFarPlane);
             }
         }
 
         //SSAO Rendering
         programVars.Add("SampleNumDiv2", mlSSAONumOfSamples / 2);
-        mpSSAORenderProgram = mpGraphics->CreateGpuProgramFromShaders(    "SSAORender","deferred_ssao_render_vtx.glsl",
-                              "deferred_ssao_render_frag.glsl",&programVars);
+        mpSSAORenderProgram = mpGraphics->CreateGpuProgramFromShaders(    "SSAORender", "deferred_ssao_render_vtx.glsl",
+                              "deferred_ssao_render_frag.glsl", &programVars);
         if(mpSSAORenderProgram)
         {
-            mpSSAORenderProgram->GetVariableAsId("afFarPlane",kVar_afFarPlane);
+            mpSSAORenderProgram->GetVariableAsId("afFarPlane", kVar_afFarPlane);
             mpSSAORenderProgram->GetVariableAsId("afScatterLengthMul", kVar_afScatterLengthMul);
             mpSSAORenderProgram->GetVariableAsId("avScatterLengthLimits", kVar_avScatterLengthLimits);
             mpSSAORenderProgram->GetVariableAsId("avScreenSize", kVar_avScreenSize);
@@ -713,15 +713,15 @@ bool cRendererDeferred::LoadData()
     ////////////////////////////////////
     //Create light shapes
     tFlag lVtxFlag = eVertexElementFlag_Position | eVertexElementFlag_Color0 | eVertexElementFlag_Texture0;
-    mpShapeSphere[eDeferredShapeQuality_High] = LoadVertexBufferFromMesh("core_12_12_sphere.dae",lVtxFlag);
-    mpShapeSphere[eDeferredShapeQuality_Medium] = LoadVertexBufferFromMesh("core_7_7_sphere.dae",lVtxFlag);
-    mpShapeSphere[eDeferredShapeQuality_Low] = LoadVertexBufferFromMesh("core_5_5_sphere.dae",lVtxFlag);
+    mpShapeSphere[eDeferredShapeQuality_High] = LoadVertexBufferFromMesh("core_12_12_sphere.dae", lVtxFlag);
+    mpShapeSphere[eDeferredShapeQuality_Medium] = LoadVertexBufferFromMesh("core_7_7_sphere.dae", lVtxFlag);
+    mpShapeSphere[eDeferredShapeQuality_Low] = LoadVertexBufferFromMesh("core_5_5_sphere.dae", lVtxFlag);
 
-    mpShapePyramid = LoadVertexBufferFromMesh("core_pyramid.dae",lVtxFlag);
+    mpShapePyramid = LoadVertexBufferFromMesh("core_pyramid.dae", lVtxFlag);
 
     ////////////////////////////////////
     //Quad used when rendering light.
-    mpFullscreenLightQuad = CreateQuadVertexBuffer(eVertexBufferType_Software,0,1,0,mvScreenSizeFloat, true);
+    mpFullscreenLightQuad = CreateQuadVertexBuffer(eVertexBufferType_Software, 0, 1, 0, mvScreenSizeFloat, true);
 
     ////////////////////////////////////
     //Batch vertex buffer
@@ -729,12 +729,12 @@ bool cRendererDeferred::LoadData()
     mlMaxBatchIndices = mpShapeSphere[eDeferredShapeQuality_Low]->GetIndexNum() * mlMaxBatchLights;
     mpBatchBuffer = mpLowLevelGraphics->CreateVertexBuffer(    eVertexBufferType_Software,
                     eVertexBufferDrawType_Quad, eVertexBufferUsageType_Stream,
-                    mlMaxBatchVertices,mlMaxBatchIndices);
-    mpBatchBuffer->CreateElementArray(eVertexBufferElement_Position,eVertexBufferElementFormat_Float,4);
-    mpBatchBuffer->CreateElementArray(eVertexBufferElement_Normal,eVertexBufferElementFormat_Float,3);
-    mpBatchBuffer->CreateElementArray(eVertexBufferElement_Color0,eVertexBufferElementFormat_Byte,4);
-    mpBatchBuffer->CreateElementArray(eVertexBufferElement_Texture0,eVertexBufferElementFormat_Float,3);
-    mpBatchBuffer->CreateElementArray(eVertexBufferElement_Texture1,eVertexBufferElementFormat_Float,3);
+                    mlMaxBatchVertices, mlMaxBatchIndices);
+    mpBatchBuffer->CreateElementArray(eVertexBufferElement_Position, eVertexBufferElementFormat_Float, 4);
+    mpBatchBuffer->CreateElementArray(eVertexBufferElement_Normal, eVertexBufferElementFormat_Float, 3);
+    mpBatchBuffer->CreateElementArray(eVertexBufferElement_Color0, eVertexBufferElementFormat_Byte, 4);
+    mpBatchBuffer->CreateElementArray(eVertexBufferElement_Texture0, eVertexBufferElementFormat_Float, 3);
+    mpBatchBuffer->CreateElementArray(eVertexBufferElement_Texture1, eVertexBufferElementFormat_Float, 3);
 
     mpBatchBuffer->Compile(0);
 
@@ -758,7 +758,7 @@ void cRendererDeferred::DestroyData()
         hplDelete(mpFullscreenLightQuad);
     }
 
-    for(int i=0; i< eDeferredShapeQuality_LastEnum; ++i)
+    for(int i = 0; i < eDeferredShapeQuality_LastEnum; ++i)
     {
         if(mpShapeSphere[i])
         {
@@ -773,14 +773,14 @@ void cRendererDeferred::DestroyData()
 
     /////////////////////////
     //G-Buffer and Accum buffer
-    for(int type=0; type<2; ++type)
+    for(int type = 0; type < 2; ++type)
     {
-        for(int j=0; j<eGBufferComponents_LastEnum; ++j)
+        for(int j = 0; j < eGBufferComponents_LastEnum; ++j)
         {
             mpGraphics->DestroyFrameBuffer(mpGBuffer[type][j]);
         }
 
-        for(int j=0; j<mlNumOfGBufferTextures; ++j)
+        for(int j = 0; j < mlNumOfGBufferTextures; ++j)
         {
             mpGraphics->DestroyTexture(mpGBufferTexture[type][j]);
         }
@@ -822,7 +822,7 @@ void cRendererDeferred::DestroyData()
         mpGraphics->DestroyFrameBuffer(mpSSAOBlurBuffer);
 
         mpGraphics->DestroyGpuProgram(mpUnpackDepthProgram);
-        for(int i=0; i<2; ++i)
+        for(int i = 0; i < 2; ++i)
         {
             mpGraphics->DestroyGpuProgram(mpSSAOBlurProgram[i]);
         }
@@ -838,18 +838,18 @@ void cRendererDeferred::DestroyData()
 
 //-----------------------------------------------------------------------
 
-iTexture* cRendererDeferred::GetPostEffectTexture()
+iTexture *cRendererDeferred::GetPostEffectTexture()
 {
     return mpAccumBufferTexture;
 }
 
-iTexture* cRendererDeferred::GetGbufferTexture(int alIdx)
+iTexture *cRendererDeferred::GetGbufferTexture(int alIdx)
 {
     int lType = mpCurrentSettings->mbIsReflection ? 1 : 0;
     return mpGBufferTexture[lType][alIdx];
 }
 
-cDeferredLight* cRendererDeferred::GetDeferredLight(int alID)
+cDeferredLight *cRendererDeferred::GetDeferredLight(int alID)
 {
     if(alID < (int)mvTempDeferredLights.size())
     {
@@ -886,12 +886,12 @@ void cRendererDeferred::CopyToFrameBuffer()
     SetAlphaMode(eMaterialAlphaMode_Solid);
     SetChannelMode(eMaterialChannelMode_RGBA);
 
-    SetFrameBuffer(mpCurrentRenderTarget->mpFrameBuffer,true);
+    SetFrameBuffer(mpCurrentRenderTarget->mpFrameBuffer, true);
 
     SetFlatProjection();
 
     SetProgram(NULL);
-    SetTexture(0,mpAccumBufferTexture);
+    SetTexture(0, mpAccumBufferTexture);
     SetTextureRange(NULL, 1);
 
     ////////////////////////////////////
@@ -899,9 +899,9 @@ void cRendererDeferred::CopyToFrameBuffer()
     //Since the texture v coordinate is reversed, need to do some math.
     cVector2f vViewportPos((float)mpCurrentRenderTarget->mvPos.x, (float)mpCurrentRenderTarget->mvPos.y);
     cVector2f vViewportSize((float)mvRenderTargetSize.x, (float)mvRenderTargetSize.y);
-    DrawQuad(    cVector2f(0,0),1,
-                 cVector2f(vViewportPos.x, (mvScreenSizeFloat.y - vViewportSize.y)-vViewportPos.y ),
-                 cVector2f(vViewportPos.x + vViewportSize.x,mvScreenSizeFloat.y - vViewportPos.y),
+    DrawQuad(    cVector2f(0, 0), 1,
+                 cVector2f(vViewportPos.x, (mvScreenSizeFloat.y - vViewportSize.y) - vViewportPos.y ),
+                 cVector2f(vViewportPos.x + vViewportSize.x, mvScreenSizeFloat.y - vViewportPos.y),
                  true);
 
     END_RENDER_PASS();
@@ -911,7 +911,7 @@ void cRendererDeferred::CopyToFrameBuffer()
 
 void cRendererDeferred::SetupRenderList()
 {
-    mpCurrentRenderList->Setup(dCurrentFrameTime,mpCurrentFrustum);
+    mpCurrentRenderList->Setup(dCurrentFrameTime, mpCurrentFrustum);
 }
 
 //-----------------------------------------------------------------------
@@ -926,7 +926,7 @@ void cRendererDeferred::RenderObjects()
     //Set up the frame buffers needed for G-buffer
     SetupGBuffer();
 
-    tRenderableFlag lVisibleFlags=0;
+    tRenderableFlag lVisibleFlags = 0;
     if(mpCurrentSettings->mbIsReflection)
     {
         lVisibleFlags |= eRenderableFlag_VisibleInReflection;
@@ -940,7 +940,7 @@ void cRendererDeferred::RenderObjects()
     //Occlusion testing
     if(mpCurrentSettings->mbUseOcclusionCulling)
     {
-        CheckForVisibleObjectsAddToListAndRenderZ(    mpCurrentSettings->mpVisibleNodeTracker,eObjectVariabilityFlag_All, lVisibleFlags,
+        CheckForVisibleObjectsAddToListAndRenderZ(    mpCurrentSettings->mpVisibleNodeTracker, eObjectVariabilityFlag_All, lVisibleFlags,
                 true, NULL);
 
         mpCurrentRenderList->Compile(	 eRenderListCompileFlag_Z_Dissolve |
@@ -1058,7 +1058,7 @@ void cRendererDeferred::SetupRenderVariables()
     //////////////////////////////
     //Setup far plane coordinates
     mfFarPlane = mpCurrentFrustum->GetFarPlane();
-    mfFarTop = -tan(mpCurrentFrustum->GetFOV()*0.5f) * mfFarPlane;
+    mfFarTop = -tan(mpCurrentFrustum->GetFOV() * 0.5f) * mfFarPlane;
     mfFarBottom = -mfFarTop;
     mfFarRight = mfFarBottom * mpCurrentFrustum->GetAspect();
     mfFarLeft = -mfFarRight;
@@ -1076,7 +1076,7 @@ void cRendererDeferred::RenderZ()
     SetAlphaMode(eMaterialAlphaMode_Solid);
     SetChannelMode(eMaterialChannelMode_None);
 
-    SetTextureRange(NULL,0);
+    SetTextureRange(NULL, 0);
 
     cRenderableVecIterator zIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Z);
     while(zIt.HasNext())
@@ -1098,7 +1098,7 @@ void cRendererDeferred::RenderZDissolve()
     SetAlphaMode(eMaterialAlphaMode_Solid);
     SetChannelMode(eMaterialChannelMode_None);
 
-    SetTextureRange(NULL,0);
+    SetTextureRange(NULL, 0);
 
     cRenderableVecIterator zIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Z_Dissolve);
     while(zIt.HasNext())
@@ -1122,9 +1122,9 @@ void cRendererDeferred::RenderDynamicZTemp()
     SetAlphaMode(eMaterialAlphaMode_Solid);
     SetChannelMode(eMaterialChannelMode_None);
 
-    SetTextureRange(NULL,0);
+    SetTextureRange(NULL, 0);
 
-    for(int i=0; i<mpCurrentRenderList->GetSolidObjectNum(); ++i)
+    for(int i = 0; i < mpCurrentRenderList->GetSolidObjectNum(); ++i)
     {
         iRenderable *pObject = mpCurrentRenderList->GetSolidObject(i);
         if(pObject->IsStatic())
@@ -1134,16 +1134,16 @@ void cRendererDeferred::RenderDynamicZTemp()
 
         cMaterial *pMaterial = pObject->GetMaterial();
 
-        SetMaterialProgram(eMaterialRenderMode_Z,pMaterial);
+        SetMaterialProgram(eMaterialRenderMode_Z, pMaterial);
 
         if(pMaterial->GetTexture(eMaterialTexture_Alpha))
         {
-            SetTexture(0,pMaterial->GetTexture(eMaterialTexture_Alpha));
+            SetTexture(0, pMaterial->GetTexture(eMaterialTexture_Alpha));
             SetAlphaMode(eMaterialAlphaMode_Trans);
         }
         else
         {
-            SetTexture(0,NULL);
+            SetTexture(0, NULL);
             SetAlphaMode(eMaterialAlphaMode_Solid);
         }
 
@@ -1187,7 +1187,7 @@ void cRendererDeferred::RenderGbuffer()
             SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
         }
 
-        SetMaterialProgram(eMaterialRenderMode_Diffuse,pMaterial);
+        SetMaterialProgram(eMaterialRenderMode_Diffuse, pMaterial);
 
         SetMaterialTextures(eMaterialRenderMode_Diffuse, pMaterial);
 
@@ -1208,7 +1208,7 @@ void cRendererDeferred::RenderGbuffer()
 void cRendererDeferred::RenderSSAO()
 {
     //If not active or loaded, return.
-    if(mbSSAOLoaded==false || mpCurrentSettings->mbSSAOActive==false)
+    if(mbSSAOLoaded == false || mpCurrentSettings->mbSSAOActive == false)
     {
         return;
     }
@@ -1227,8 +1227,8 @@ void cRendererDeferred::RenderSSAO()
 
     //////////////////////////////
     // Set up variables
-    cVector3f vQuadPos = cVector3f(mfFarLeft,mfFarBottom,-mfFarPlane);
-    cVector2f vQuadSize = cVector2f(mfFarRight*2,mfFarTop*2);
+    cVector3f vQuadPos = cVector3f(mfFarLeft, mfFarBottom, -mfFarPlane);
+    cVector2f vQuadSize = cVector2f(mfFarRight * 2, mfFarTop * 2);
 
     iTexture *pGBufferDepthTexture = GetBufferTexture(2);
 
@@ -1244,7 +1244,7 @@ void cRendererDeferred::RenderSSAO()
     SetDepthWrite(false);
     SetDepthTest(false);
 
-    SetFlatProjectionMinMax(cVector3f(mfFarLeft,mfFarBottom,-mfFarPlane*1.5f),cVector3f(mfFarRight,mfFarTop,mfFarPlane*1.5f));
+    SetFlatProjectionMinMax(cVector3f(mfFarLeft, mfFarBottom, -mfFarPlane * 1.5f), cVector3f(mfFarRight, mfFarTop, mfFarPlane * 1.5f));
 
 
     //////////////////////////////
@@ -1261,29 +1261,29 @@ void cRendererDeferred::RenderSSAO()
     SetProgram(mpUnpackDepthProgram);
     SetTexture(0, pGBufferDepthTexture);    //Set G-buffer depth texture
 
-    DrawQuad(vQuadPos, vQuadSize,0, vGBufferDepthSize,true);
+    DrawQuad(vQuadPos, vQuadSize, 0, vGBufferDepthSize, true);
 
 
     //////////////////////////////
     // Render SSAO
     SetFrameBuffer(mpSSAOBuffer);
-    SetTexture(0,mpLinearDepthTexture);
-    SetTexture(1,mpSSAOScatterDisk);
+    SetTexture(0, mpLinearDepthTexture);
+    SetTexture(1, mpSSAOScatterDisk);
 
 
     if(mpSSAORenderProgram)
     {
         mpSSAORenderProgram->SetFloat(kVar_afFarPlane, mfFarPlane);
         mpSSAORenderProgram->SetFloat(kVar_afScatterLengthMul, mfSSAOScatterLengthMul);
-        mpSSAORenderProgram->SetVec2f(kVar_avScatterLengthLimits, mfSSAOScatterLengthMin,mfSSAOScatterLengthMax);
-        mpSSAORenderProgram->SetVec2f(kVar_avScreenSize,vSSAOSize);
+        mpSSAORenderProgram->SetVec2f(kVar_avScatterLengthLimits, mfSSAOScatterLengthMin, mfSSAOScatterLengthMax);
+        mpSSAORenderProgram->SetVec2f(kVar_avScreenSize, vSSAOSize);
         mpSSAORenderProgram->SetFloat(kVar_afDepthDiffMul, mfSSAODepthDiffMul);
         mpSSAORenderProgram->SetFloat(kVar_afSkipEdgeLimit, mfSSAOSkipEdgeLimit);
     }
 
     SetProgram(mpSSAORenderProgram);
 
-    DrawQuad(vQuadPos, vQuadSize,0, vSSAOSize,true);
+    DrawQuad(vQuadPos, vQuadSize, 0, vSSAOSize, true);
 
 
     //////////////////////////////
@@ -1292,27 +1292,27 @@ void cRendererDeferred::RenderSSAO()
     {
         //Horizontal
         SetFrameBuffer(mpSSAOBlurBuffer);
-        SetTexture(0,mpSSAOTexture);
-        SetTexture(1,mpLinearDepthTexture);
+        SetTexture(0, mpSSAOTexture);
+        SetTexture(1, mpLinearDepthTexture);
 
         if(mpSSAOBlurProgram[0])
         {
             mpSSAOBlurProgram[0]->SetFloat(kVar_afFarPlane, mfFarPlane);
         }
         SetProgram(mpSSAOBlurProgram[0]);
-        DrawQuad(vQuadPos, vQuadSize,0, vSSAOSize,true);
+        DrawQuad(vQuadPos, vQuadSize, 0, vSSAOSize, true);
 
         //Vertical
         SetFrameBuffer(mpSSAOBuffer);
-        SetTexture(0,mpSSAOBlurTexture);
-        SetTexture(1,mpLinearDepthTexture);
+        SetTexture(0, mpSSAOBlurTexture);
+        SetTexture(1, mpLinearDepthTexture);
 
         if(mpSSAOBlurProgram[1])
         {
             mpSSAOBlurProgram[1]->SetFloat(kVar_afFarPlane, mfFarPlane);
         }
         SetProgram(mpSSAOBlurProgram[1]);
-        DrawQuad(vQuadPos, vQuadSize,0, vSSAOSize,true);
+        DrawQuad(vQuadPos, vQuadSize, 0, vSSAOSize, true);
     }
 
 
@@ -1325,10 +1325,10 @@ void cRendererDeferred::RenderSSAO()
         SetFlatProjection();
         SetProgram(NULL);
 
-        SetTextureRange(NULL,1);
+        SetTextureRange(NULL, 1);
 
-        SetTexture(0,mpSSAOTexture);
-        DrawQuad(0,1, 0,vSSAOSize, true);
+        SetTexture(0, mpSSAOTexture);
+        DrawQuad(0, 1, 0, vSSAOSize, true);
 
         SetNormalFrustumProjection();
         END_RENDER_PASS();
@@ -1347,10 +1347,10 @@ void cRendererDeferred::RenderSSAO()
 
         SetBlendMode(eMaterialBlendMode_Mul);
 
-        SetTexture(0,mpSSAOTexture);
-        SetTexture(1,NULL);
+        SetTexture(0, mpSSAOTexture);
+        SetTexture(1, NULL);
 
-        DrawQuad(0,1, 0,vSSAOSize, true);
+        DrawQuad(0, 1, 0, vSSAOSize, true);
         SetChannelMode(eMaterialChannelMode_RGBA);
     }
 
@@ -1378,7 +1378,7 @@ void cRendererDeferred::RenderSSAO()
  * \param a_mtxDestTransform A simple view space transform for the light.
  * \param afRadiusMul
  */
-static inline void SetupLightMatrix(cMatrixf& a_mtxDestRender,cMatrixf& a_mtxDestTransform, iLight *apLight, cFrustum *apFrustum, float afRadiusMul)
+static inline void SetupLightMatrix(cMatrixf& a_mtxDestRender, cMatrixf& a_mtxDestTransform, iLight *apLight, cFrustum *apFrustum, float afRadiusMul)
 {
     ////////////////////////////
     // Point Light
@@ -1386,31 +1386,31 @@ static inline void SetupLightMatrix(cMatrixf& a_mtxDestRender,cMatrixf& a_mtxDes
     {
         a_mtxDestRender = cMath::MatrixScale(apLight->GetRadius() * afRadiusMul); //kLightRadiusMul = make sure it encapsulates the light.
         a_mtxDestTransform = cMath::MatrixMul(apFrustum->GetViewMatrix(), apLight->GetWorldMatrix());
-        a_mtxDestRender = cMath::MatrixMul(a_mtxDestTransform,a_mtxDestRender);
+        a_mtxDestRender = cMath::MatrixMul(a_mtxDestTransform, a_mtxDestRender);
     }
     ////////////////////////////
     // Spot Light
     else if(apLight->GetLightType() == eLightType_Spot)
     {
-        cLightSpot *pLightSpot = static_cast<cLightSpot*>(apLight);
+        cLightSpot *pLightSpot = static_cast<cLightSpot *>(apLight);
 
         float fFarHeight = pLightSpot->GetTanHalfFOV() * pLightSpot->GetRadius() * 2.0f;
         //Note: Aspect might be wonky if there is no gobo.
         float fFarWidth = fFarHeight * pLightSpot->GetAspect();
 
-        a_mtxDestRender = cMath::MatrixScale(cVector3f(fFarWidth,fFarHeight,apLight->GetRadius()) );//x and y = "far plane", z = radius
+        a_mtxDestRender = cMath::MatrixScale(cVector3f(fFarWidth, fFarHeight, apLight->GetRadius()) ); //x and y = "far plane", z = radius
         a_mtxDestTransform = cMath::MatrixMul(apFrustum->GetViewMatrix(), apLight->GetWorldMatrix());
-        a_mtxDestRender = cMath::MatrixMul(a_mtxDestTransform,a_mtxDestRender);
+        a_mtxDestRender = cMath::MatrixMul(a_mtxDestTransform, a_mtxDestRender);
     }
 }
 
 //-----------------------------------------------------------------------
 
-void cRendererDeferred::SetupLightProgramVariables(    iGpuProgram *apProgram,cDeferredLight* apLightData)
+void cRendererDeferred::SetupLightProgramVariables(    iGpuProgram *apProgram, cDeferredLight* apLightData)
 {
     iLight *pLight = apLightData->mpLight;
 
-    if(apProgram==NULL)
+    if(apProgram == NULL)
     {
         return;
     }
@@ -1428,7 +1428,7 @@ void cRendererDeferred::SetupLightProgramVariables(    iGpuProgram *apProgram,cD
     {
         if(pLight->GetGoboTexture())
         {
-            cMatrixf mtxFinal = cMath::MatrixMul(pLight->GetWorldMatrix(),m_mtxInvView);
+            cMatrixf mtxFinal = cMath::MatrixMul(pLight->GetWorldMatrix(), m_mtxInvView);
             apProgram->SetMatrixf(kVar_a_mtxInvViewRotation, mtxFinal.GetRotation());
         }
     }
@@ -1436,10 +1436,10 @@ void cRendererDeferred::SetupLightProgramVariables(    iGpuProgram *apProgram,cD
     // Spot light specific
     else if(pLight->GetLightType() == eLightType_Spot)
     {
-        cLightSpot *pLightSpot = static_cast<cLightSpot*>(pLight);
+        cLightSpot *pLightSpot = static_cast<cLightSpot *>(pLight);
 
         //Calculate and set the forward vector
-        cVector3f vForward = cVector3f(0,0,1);
+        cVector3f vForward = cVector3f(0, 0, 1);
         vForward = cMath::MatrixMul3x3(apLightData->m_mtxViewSpaceTransform, vForward);
         apProgram->SetVec3f(kVar_avLightForward, vForward);
 
@@ -1528,7 +1528,7 @@ float cRendererDeferred::GetLightComplexity(cDeferredLight* apLightData)
 
 //-----------------------------------------------------------------------
 
-iGpuProgram* cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightData, tFlag alExtraFlags)
+iGpuProgram *cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightData, tFlag alExtraFlags)
 {
     iLight *pLight = apLightData->mpLight;
     eLightType lightType = pLight->GetLightType();
@@ -1577,7 +1577,7 @@ iGpuProgram* cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightD
 
     /////////////////////////
     //Textures
-    SetTexture(4,pLight->GetFalloffMap());
+    SetTexture(4, pLight->GetFalloffMap());
 
     if(pLight->GetGoboTexture())
     {
@@ -1594,7 +1594,7 @@ iGpuProgram* cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightD
     // Spot light specific
     else if(lightType == eLightType_Spot)
     {
-        cLightSpot *pLightSpot = static_cast<cLightSpot*>(pLight);
+        cLightSpot *pLightSpot = static_cast<cLightSpot *>(pLight);
 
         //Shadow stuff
         if(apLightData->mpShadowTexture)
@@ -1608,9 +1608,9 @@ iGpuProgram* cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightD
         }
 
         //Spot fall off
-        if(pLight->GetGoboTexture()==NULL)
+        if(pLight->GetGoboTexture() == NULL)
         {
-            SetTexture(5,pLightSpot->GetSpotFalloffMap());
+            SetTexture(5, pLightSpot->GetSpotFalloffMap());
         }
 
     }
@@ -1650,7 +1650,7 @@ void cRendererDeferred::RenderLightShadowMap(cDeferredLight* apLightData)
     }
 
     //Set back G-buffer textures
-    for(int i=0; i<mlNumOfGBufferTextures; ++i)
+    for(int i = 0; i < mlNumOfGBufferTextures; ++i)
     {
         SetTexture(i, GetBufferTexture(i));
     }
@@ -1668,7 +1668,7 @@ void cRendererDeferred::RenderLightShadowMap(cDeferredLight* apLightData)
 //-----------------------------------------------------------------------
 
 
-iVertexBuffer* cRendererDeferred::GetLightShape(iLight *apLight, eDeferredShapeQuality aQuality)
+iVertexBuffer *cRendererDeferred::GetLightShape(iLight *apLight, eDeferredShapeQuality aQuality)
 {
     ///////////////////
     //Point Light
@@ -1693,8 +1693,8 @@ static bool SortFunc_Box(const cDeferredLight* apLightDataA, const cDeferredLigh
     iLight *pLightA = apLightDataA->mpLight;
     iLight *pLightB = apLightDataB->mpLight;
 
-    cLightBox *pBoxLightA = static_cast<cLightBox*>(pLightA);
-    cLightBox *pBoxLightB = static_cast<cLightBox*>(pLightB);
+    cLightBox *pBoxLightA = static_cast<cLightBox *>(pLightA);
+    cLightBox *pBoxLightB = static_cast<cLightBox *>(pLightB);
 
     if(pBoxLightA->GetBoxLightPrio() != pBoxLightB->GetBoxLightPrio())
     {
@@ -1754,8 +1754,8 @@ static bool SortFunc_Default(const cDeferredLight* apLightDataA, const cDeferred
     //Spot falloff
     if(pLightA->GetLightType() == eLightType_Spot)
     {
-        cLightSpot *pLightSpotA = static_cast<cLightSpot*>(pLightA);
-        cLightSpot *pLightSpotB = static_cast<cLightSpot*>(pLightB);
+        cLightSpot *pLightSpotA = static_cast<cLightSpot *>(pLightA);
+        cLightSpot *pLightSpotB = static_cast<cLightSpot *>(pLightB);
 
         if(pLightSpotA->GetSpotFalloffMap() != pLightSpotB->GetSpotFalloffMap())
         {
@@ -1791,7 +1791,7 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
     tLightSet setPrevVisibleLights;
     if(mbOcclusionTestLargeLights)
     {
-        for(size_t i=0; i<mpCurrentSettings->mvLightOcclusionPairs.size(); ++i)
+        for(size_t i = 0; i < mpCurrentSettings->mvLightOcclusionPairs.size(); ++i)
         {
             cLightOcclusionPair &loPair = mpCurrentSettings->mvLightOcclusionPairs[i];
 
@@ -1812,7 +1812,7 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
 
     ////////////////////////////////
     // Set up variables
-    float fScreenArea = (float)(mvRenderTargetSize.x*mvRenderTargetSize.y);
+    float fScreenArea = (float)(mvRenderTargetSize.x * mvRenderTargetSize.y);
 
     mlMinLargeLightArea =    (int)(mfMinLargeLightNormalizedArea * fScreenArea);
 
@@ -1824,12 +1824,12 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
     SetAlphaMode(eMaterialAlphaMode_Solid);
     SetChannelMode(eMaterialChannelMode_None);
 
-    SetTextureRange(NULL,0);
+    SetTextureRange(NULL, 0);
     SetProgram(mpDepthOnlyProgram);
 
     ///////////////////////////////
     //Iterate all lights in render list
-    for(int i=0; i<mpCurrentRenderList->GetLightNum(); ++i)
+    for(int i = 0; i < mpCurrentRenderList->GetLightNum(); ++i)
     {
         cDeferredLight* pLightData = hplNew( cDeferredLight, () );
         iLight* pLight = mpCurrentRenderList->GetLight(i);
@@ -1856,19 +1856,19 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
         if(lightType == eLightType_Point)
         {
             pLightData->mbInsideNearPlane = mpCurrentFrustum->CheckSphereNearPlaneIntersection(    pLight->GetWorldPosition(),
-                                            pLight->GetRadius()*kLightRadiusMul_Low);
+                                            pLight->GetRadius() * kLightRadiusMul_Low);
         }
         //Spot
         else if(lightType == eLightType_Spot)
         {
-            cLightSpot *pLightSpot = static_cast<cLightSpot*>(pLight);
+            cLightSpot *pLightSpot = static_cast<cLightSpot *>(pLight);
             pLightData->mbInsideNearPlane = mpCurrentFrustum->CheckFrustumNearPlaneIntersection(pLightSpot->GetFrustum());
         }
 
         ////////////////////////////////////
         // Setup Light matrix
         SetupLightMatrix(    pLightData->m_mtxViewSpaceRender, pLightData->m_mtxViewSpaceTransform,
-                             pLight,mpCurrentFrustum,kLightRadiusMul_Medium);
+                             pLight, mpCurrentFrustum, kLightRadiusMul_Medium);
 
 
         ////////////////////////
@@ -1878,8 +1878,8 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
         if(lightType == eLightType_Point)
         {
             pLightData->mClipRect = cMath::GetClipRectFromSphere(pLightData->m_mtxViewSpaceRender.GetTranslation(), pLight->GetRadius(),
-                                    mpCurrentFrustum,mvRenderTargetSize,
-                                    true,mfScissorLastTanHalfFov);
+                                    mpCurrentFrustum, mvRenderTargetSize,
+                                    true, mfScissorLastTanHalfFov);
         }
         //Spot
         else if(lightType == eLightType_Spot)
@@ -1893,7 +1893,7 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
         // Setup Shadow casting variables
         if(lightType == eLightType_Spot && pLight->GetCastShadows()  && mpCurrentSettings->mbRenderShadows)
         {
-            cLightSpot *pLightSpot = static_cast<cLightSpot*>(pLight);
+            cLightSpot *pLightSpot = static_cast<cLightSpot *>(pLight);
 
             ////////////////////////
             //Inside near plane, use max resolution
@@ -1907,7 +1907,7 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
             else
             {
                 cVector3f vIntersection = pLightSpot->GetFrustum()->GetOrigin();
-                pLightSpot->GetFrustum()->CheckLineIntersection(mpCurrentFrustum->GetOrigin(), pLight->GetBoundingVolume()->GetWorldCenter(),vIntersection);
+                pLightSpot->GetFrustum()->CheckLineIntersection(mpCurrentFrustum->GetOrigin(), pLight->GetBoundingVolume()->GetWorldCenter(), vIntersection);
 
                 float fDistToLight = cMath::Vector3Dist(mpCurrentFrustum->GetOrigin(), vIntersection);
 
@@ -1971,7 +1971,7 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
         // Render Query
 
         //If not doing occlusion testing on large light, might as well just skip here
-        if(mbOcclusionTestLargeLights==false || mpCurrentSettings->mbUseOcclusionCulling==false)
+        if(mbOcclusionTestLargeLights == false || mpCurrentSettings->mbUseOcclusionCulling == false)
         {
             continue;
         }
@@ -1985,7 +1985,7 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
 
         ///////////////////////////
         // Only check if light was invisible last frame
-        if(STLObjectExists(setPrevVisibleLights,pLight))
+        if(STLObjectExists(setPrevVisibleLights, pLight))
         {
             continue;
         }
@@ -2027,7 +2027,7 @@ void cRendererDeferred::InitLightRendering()
     if(mfLastFrustumFOV != mpCurrentFrustum->GetFOV() || mfLastFrustumFarPlane != mfFarPlane)
     {
         UpdateqQuadVertexPosition(    mpFullscreenLightQuad,
-                                      cVector3f(mfFarLeft,mfFarBottom,-mfFarPlane),cVector2f(mfFarRight*2,mfFarTop*2),
+                                      cVector3f(mfFarLeft, mfFarBottom, -mfFarPlane), cVector2f(mfFarRight * 2, mfFarTop * 2),
                                       true);
     }
 
@@ -2037,7 +2037,7 @@ void cRendererDeferred::InitLightRendering()
 
     //////////////////////////////
     //Clear lists
-    for(int i=0; i<eDeferredLightList_LastEnum; ++i)
+    for(int i = 0; i < eDeferredLightList_LastEnum; ++i)
     {
         mvSortedLights[i].resize(0); //No clear, keep array size data, no need to delete, same pointer in temp list
     }
@@ -2045,8 +2045,8 @@ void cRendererDeferred::InitLightRendering()
 
     //////////////////////////////
     //Fill lists
-    mpCurrentSettings->mlNumberOfLightsRendered =0;
-    for(size_t i=0; i<mvTempDeferredLights.size(); ++i)
+    mpCurrentSettings->mlNumberOfLightsRendered = 0;
+    for(size_t i = 0; i < mvTempDeferredLights.size(); ++i)
     {
         cDeferredLight* pLightData =  mvTempDeferredLights[i];
         iLight* pLight = pLightData->mpLight;
@@ -2056,7 +2056,7 @@ void cRendererDeferred::InitLightRendering()
         //If box, we have special case...
         if(lightType == eLightType_Box)
         {
-            cLightBox *pLightBox = static_cast<cLightBox*>(pLight);
+            cLightBox *pLightBox = static_cast<cLightBox *>(pLight);
 
             //Set up matrix
             pLightData->m_mtxViewSpaceRender = cMath::MatrixScale(pLightBox->GetSize());
@@ -2095,7 +2095,7 @@ void cRendererDeferred::InitLightRendering()
 
                 if(mbLog)
                 {
-                    Log(" Fetching query for light '%s'/%d. Have %d samples. Visible: %d\n", pLight->GetName().c_str(), pLight,lSampleCount, !bLightInvisible);
+                    Log(" Fetching query for light '%s'/%d. Have %d samples. Visible: %d\n", pLight->GetName().c_str(), pLight, lSampleCount, !bLightInvisible);
                 }
             }
 
@@ -2159,7 +2159,7 @@ void cRendererDeferred::InitLightRendering()
 
     //////////////////////////////
     //Sort lists
-    for(int i=0; i<eDeferredLightList_LastEnum; ++i)
+    for(int i = 0; i < eDeferredLightList_LastEnum; ++i)
     {
         if(mvSortedLights[i].size() > 0)
         {
@@ -2186,7 +2186,7 @@ void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
     //Check if stencil is dirty
     if(mbStencilNeedClearing)
     {
-        ClearFrameBuffer(eClearFrameBufferFlag_Stencil,true);
+        ClearFrameBuffer(eClearFrameBufferFlag_Stencil, true);
         mbStencilNeedClearing = false;
     }
 
@@ -2199,13 +2199,13 @@ void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
     // Render Inside Near Plane Lights
     int lNumOfNearPlaneLights = (int)mvSortedLights[eDeferredLightList_StencilBack_ScreenQuad].size();
     int lStartLight = 0;
-    while(lNumOfNearPlaneLights>0)
+    while(lNumOfNearPlaneLights > 0)
     {
         //cVector2l vMinClip(10000,10000);
         //cVector2l vMaxClip(-1000,-10000);
 
         int lIterations;
-        if(lNumOfNearPlaneLights >kMaxStencilBitsUsed)
+        if(lNumOfNearPlaneLights > kMaxStencilBitsUsed)
         {
             lIterations = kMaxStencilBitsUsed;
         }
@@ -2227,21 +2227,21 @@ void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
             SetDepthTest(false);
         }
         SetChannelMode(eMaterialChannelMode_None);
-        SetStencil(eStencilFunc_Always,0xFF,0xFF,eStencilOp_Keep,eStencilOp_Keep,eStencilOp_Replace);
-        for(int i=0; i<lIterations; ++i)
+        SetStencil(eStencilFunc_Always, 0xFF, 0xFF, eStencilOp_Keep, eStencilOp_Keep, eStencilOp_Replace);
+        for(int i = 0; i < lIterations; ++i)
         {
             cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_StencilBack_ScreenQuad][lStartLight + i];
             iLight *pLight = pLightData->mpLight;
             if(mbLog)
             {
-                Log(" Stencil light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+                Log(" Stencil light: '%s' / %d\n", pLight->GetName().c_str(), pLight);
             }
 
             //Stencil
             SetStencilWriteMask(cMath::GetFlagBit(kStartStencilBit + i));
 
             //Set up textures
-            SetTexture(5,NULL);
+            SetTexture(5, NULL);
 
             //Set up matrix
             //SetupLightMatrix(m_mtxTempLight,pLight, mpCurrentFrustum);
@@ -2260,12 +2260,12 @@ void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
         //Render lights as quads
         SetDepthTest(false);
         SetChannelMode(eMaterialChannelMode_RGBA);
-        SetFlatProjectionMinMax(cVector3f(mfFarLeft,mfFarBottom,-mfFarPlane*1.5f),cVector3f(mfFarRight,mfFarTop,mfFarPlane*1.5f));
+        SetFlatProjectionMinMax(cVector3f(mfFarLeft, mfFarBottom, -mfFarPlane * 1.5f), cVector3f(mfFarRight, mfFarTop, mfFarPlane * 1.5f));
         SetCullMode(eCullMode_CounterClockwise);
 
         SetStencilWriteMask(0xFF);
 
-        for(int i=0; i<lIterations; ++i)
+        for(int i = 0; i < lIterations; ++i)
         {
             cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_StencilBack_ScreenQuad][lStartLight + i];
             iLight *pLight = pLightData->mpLight;
@@ -2297,19 +2297,19 @@ void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
                     SetDepthTest(false);
                 }
 
-                SetFlatProjectionMinMax(cVector3f(mfFarLeft,mfFarBottom,-mfFarPlane*1.5f),cVector3f(mfFarRight,mfFarTop,mfFarPlane*1.5f));
+                SetFlatProjectionMinMax(cVector3f(mfFarLeft, mfFarBottom, -mfFarPlane * 1.5f), cVector3f(mfFarRight, mfFarTop, mfFarPlane * 1.5f));
             }
 
             //////////////////
             // Render light
             if(mbLog)
             {
-                Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+                Log(" Rendering light: '%s' / %d\n", pLight->GetName().c_str(), pLight);
             }
 
             //Stencil
             SetStencil(    eStencilFunc_Equal, 0xFF, cMath::GetFlagBit(kStartStencilBit + i),
-                           eStencilOp_Keep, eStencilOp_Keep,eStencilOp_Keep);
+                           eStencilOp_Keep, eStencilOp_Keep, eStencilOp_Keep);
 
             //Set vertex buffer
             SetVertexBuffer(mpFullscreenLightQuad);
@@ -2321,7 +2321,7 @@ void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
             RenderSingleLightDebug();
 
             //Set up program and textures
-            iGpuProgram *pProgram = SetupProgramAndTextures(pLightData,0);
+            iGpuProgram *pProgram = SetupProgramAndTextures(pLightData, 0);
 
             //Set up Light specific variables
             SetupLightProgramVariables(pProgram, pLightData);
@@ -2345,14 +2345,14 @@ void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
 
         /////////////////////////////
         //Prepare for next iteration (if any)
-        if(lNumOfNearPlaneLights >0)
+        if(lNumOfNearPlaneLights > 0)
         {
             //According to test there was a slow down using this. Keeping code anyways.
             //cRect2l dirtyRect(vMinClip, vMaxClip - vMinClip);
             //SetupScissorRect(dirtyRect);
 
             lStartLight += kMaxStencilBitsUsed;
-            ClearFrameBuffer(eClearFrameBufferFlag_Stencil,true);
+            ClearFrameBuffer(eClearFrameBufferFlag_Stencil, true);
         }
     }
 
@@ -2381,7 +2381,7 @@ void cRendererDeferred::RenderLights_StencilFront_RenderBack()
     //Check if stencil is dirty
     if(mbStencilNeedClearing)
     {
-        ClearFrameBuffer(eClearFrameBufferFlag_Stencil,true);
+        ClearFrameBuffer(eClearFrameBufferFlag_Stencil, true);
         mbStencilNeedClearing = false;
     }
 
@@ -2399,12 +2399,12 @@ void cRendererDeferred::RenderLights_StencilFront_RenderBack()
     // Render Large Lights
     int lNumOfNearPlaneLights = (int)mvSortedLights[eDeferredLightList_StencilFront_RenderBack].size();
     int lStartLight = 0;
-    while(lNumOfNearPlaneLights>0)
+    while(lNumOfNearPlaneLights > 0)
     {
 
 
         int lIterations;
-        if(lNumOfNearPlaneLights >kMaxStencilBitsUsed)
+        if(lNumOfNearPlaneLights > kMaxStencilBitsUsed)
         {
             lIterations = kMaxStencilBitsUsed;
         }
@@ -2419,21 +2419,21 @@ void cRendererDeferred::RenderLights_StencilFront_RenderBack()
         //Render stencil using the front (back?!), set bit at zfail (since test is inverted)
         SetChannelMode(eMaterialChannelMode_None);
         SetCullMode(eCullMode_CounterClockwise);
-        SetStencil(eStencilFunc_Always,0xFF,0xFF,eStencilOp_Keep,eStencilOp_Replace,eStencilOp_Keep);
-        for(int i=0; i<lIterations; ++i)
+        SetStencil(eStencilFunc_Always, 0xFF, 0xFF, eStencilOp_Keep, eStencilOp_Replace, eStencilOp_Keep);
+        for(int i = 0; i < lIterations; ++i)
         {
             cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_StencilFront_RenderBack][lStartLight + i];
             iLight *pLight = pLightData->mpLight;
             if(mbLog)
             {
-                Log(" Stencil light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+                Log(" Stencil light: '%s' / %d\n", pLight->GetName().c_str(), pLight);
             }
 
             //Stencil
             SetStencilWriteMask(cMath::GetFlagBit(kStartStencilBit + i));
 
             //Set up textures
-            SetTexture(5,NULL);
+            SetTexture(5, NULL);
 
             //Set up matrix
             SetModelViewMatrix(pLightData->m_mtxViewSpaceRender);
@@ -2454,7 +2454,7 @@ void cRendererDeferred::RenderLights_StencilFront_RenderBack()
         SetChannelMode(eMaterialChannelMode_RGBA);
         SetCullMode(eCullMode_Clockwise);
         SetStencilWriteMask(0xFF);
-        for(int i=0; i<lIterations; ++i)
+        for(int i = 0; i < lIterations; ++i)
         {
             cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_StencilFront_RenderBack][lStartLight + i];
             iLight *pLight = pLightData->mpLight;
@@ -2479,12 +2479,12 @@ void cRendererDeferred::RenderLights_StencilFront_RenderBack()
             // Render light
             if(mbLog)
             {
-                Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+                Log(" Rendering light: '%s' / %d\n", pLight->GetName().c_str(), pLight);
             }
 
             //Stencil
             SetStencil(    eStencilFunc_Equal, 0xFF, cMath::GetFlagBit(kStartStencilBit + i),
-                           eStencilOp_Keep, eStencilOp_Keep,eStencilOp_Keep);
+                           eStencilOp_Keep, eStencilOp_Keep, eStencilOp_Keep);
 
             //Set up matrix
             SetModelViewMatrix(pLightData->m_mtxViewSpaceRender);
@@ -2494,7 +2494,7 @@ void cRendererDeferred::RenderLights_StencilFront_RenderBack()
             SetVertexBuffer(GetLightShape(pLight, eDeferredShapeQuality_High));
 
             //Set up program and textures
-            iGpuProgram *pProgram = SetupProgramAndTextures(pLightData,eFeature_Light_LightShapes | eFeature_Light_DivideInFrag);
+            iGpuProgram *pProgram = SetupProgramAndTextures(pLightData, eFeature_Light_LightShapes | eFeature_Light_DivideInFrag);
 
             //Set up Light specific variables
             SetupLightProgramVariables(pProgram, pLightData);
@@ -2524,10 +2524,10 @@ void cRendererDeferred::RenderLights_StencilFront_RenderBack()
 
         /////////////////////////////
         //Prepare for next iteration (if any)
-        if(lNumOfNearPlaneLights >0)
+        if(lNumOfNearPlaneLights > 0)
         {
             lStartLight += kMaxStencilBitsUsed;
-            ClearFrameBuffer(eClearFrameBufferFlag_Stencil,true);
+            ClearFrameBuffer(eClearFrameBufferFlag_Stencil, true);
         }
     }
 
@@ -2566,7 +2566,7 @@ void cRendererDeferred::RenderLights_RenderBack()
     /////////////////////////////
     //Render back of light geometry, checking depth
     SetChannelMode(eMaterialChannelMode_RGBA);
-    for(size_t i=0; i<mvSortedLights[eDeferredLightList_RenderBack].size(); ++i)
+    for(size_t i = 0; i < mvSortedLights[eDeferredLightList_RenderBack].size(); ++i)
     {
         cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_RenderBack][i];
         iLight *pLight = pLightData->mpLight;
@@ -2589,7 +2589,7 @@ void cRendererDeferred::RenderLights_RenderBack()
         // Render light
         if(mbLog)
         {
-            Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+            Log(" Rendering light: '%s' / %d\n", pLight->GetName().c_str(), pLight);
         }
 
         //Set up matrix
@@ -2605,7 +2605,7 @@ void cRendererDeferred::RenderLights_RenderBack()
         {
             lExtraFlags |= eFeature_Light_DivideInFrag;
         }
-        iGpuProgram *pProgram = SetupProgramAndTextures(pLightData,lExtraFlags);
+        iGpuProgram *pProgram = SetupProgramAndTextures(pLightData, lExtraFlags);
 
         //Set up Light specific variables
         SetupLightProgramVariables(pProgram, pLightData);
@@ -2626,13 +2626,13 @@ void cRendererDeferred::RenderBoxLight(cDeferredLight* apLightData)
     iLight *pLight = apLightData->mpLight;
     if(mbLog)
     {
-        Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+        Log(" Rendering light: '%s' / %d\n", pLight->GetName().c_str(), pLight);
     }
 
-    cLightBox *pLightBox = static_cast<cLightBox*>(pLight);
+    cLightBox *pLightBox = static_cast<cLightBox *>(pLight);
 
     //Get correct program, depending if ssao is used or not.
-    int lProgramNum =    (mbSSAOLoaded && mpCurrentSettings->mbSSAOActive && mSSAOType == eDeferredSSAO_InBoxLight) ? 1 :0;
+    int lProgramNum =    (mbSSAOLoaded && mpCurrentSettings->mbSSAOActive && mSSAOType == eDeferredSSAO_InBoxLight) ? 1 : 0;
 
     if(mbDebugRenderLightComplexity)
     {
@@ -2651,7 +2651,7 @@ void cRendererDeferred::RenderBoxLight(cDeferredLight* apLightData)
     //Set up Light specific variables
     if(mpLightBoxProgram[lProgramNum])
     {
-        mpLightBoxProgram[lProgramNum]->SetColor4f(kVar_avLightColor,pLight->GetDiffuseColor());
+        mpLightBoxProgram[lProgramNum]->SetColor4f(kVar_avLightColor, pLight->GetDiffuseColor());
 
         if(mbDebugRenderLightComplexity)
         {
@@ -2693,7 +2693,7 @@ void cRendererDeferred::RenderLights_Box_StencilFront_RenderBack()
     //Check if stencil is dirty
     if(mbStencilNeedClearing)
     {
-        ClearFrameBuffer(eClearFrameBufferFlag_Stencil,true);
+        ClearFrameBuffer(eClearFrameBufferFlag_Stencil, true);
         mbStencilNeedClearing = false;
     }
 
@@ -2712,10 +2712,10 @@ void cRendererDeferred::RenderLights_Box_StencilFront_RenderBack()
     // Render Large Lights
     int lNumOfNearPlaneLights = (int)mvSortedLights[eDeferredLightList_Box_StencilFront_RenderBack].size();
     int lStartLight = 0;
-    while(lNumOfNearPlaneLights>0)
+    while(lNumOfNearPlaneLights > 0)
     {
         int lIterations;
-        if(lNumOfNearPlaneLights >kMaxStencilBitsUsed)
+        if(lNumOfNearPlaneLights > kMaxStencilBitsUsed)
         {
             lIterations = kMaxStencilBitsUsed;
         }
@@ -2730,14 +2730,14 @@ void cRendererDeferred::RenderLights_Box_StencilFront_RenderBack()
         //Render stencil using the front, set bit at zfail (since test is inverted)
         SetChannelMode(eMaterialChannelMode_None);
         SetCullMode(eCullMode_CounterClockwise);
-        SetStencil(eStencilFunc_Always,0xFF,0xFF,eStencilOp_Keep,eStencilOp_Replace,eStencilOp_Keep);
-        for(int i=0; i<lIterations; ++i)
+        SetStencil(eStencilFunc_Always, 0xFF, 0xFF, eStencilOp_Keep, eStencilOp_Replace, eStencilOp_Keep);
+        for(int i = 0; i < lIterations; ++i)
         {
             cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_Box_StencilFront_RenderBack][lStartLight + i];
             iLight *pLight = pLightData->mpLight;
             if(mbLog)
             {
-                Log(" Stencil light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+                Log(" Stencil light: '%s' / %d\n", pLight->GetName().c_str(), pLight);
             }
 
             //Stencil
@@ -2757,18 +2757,18 @@ void cRendererDeferred::RenderLights_Box_StencilFront_RenderBack()
         SetChannelMode(eMaterialChannelMode_RGBA);
         SetCullMode(eCullMode_Clockwise);
         SetStencilWriteMask(0xFF);
-        for(int i=0; i<lIterations; ++i)
+        for(int i = 0; i < lIterations; ++i)
         {
             cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_Box_StencilFront_RenderBack][lStartLight + i];
             iLight *pLight = pLightData->mpLight;
             if(mbLog)
             {
-                Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
+                Log(" Rendering light: '%s' / %d\n", pLight->GetName().c_str(), pLight);
             }
 
             //Stencil
             SetStencil(    eStencilFunc_Equal, 0xFF, cMath::GetFlagBit(kStartStencilBit + i),
-                           eStencilOp_Keep, eStencilOp_Keep,eStencilOp_Keep);
+                           eStencilOp_Keep, eStencilOp_Keep, eStencilOp_Keep);
             //SetStencil(    eStencilFunc_Always, 0xFF, cMath::GetFlagBit(kStartStencilBit + i),
             //                                eStencilOp_Keep, eStencilOp_Keep,eStencilOp_Keep);
 
@@ -2777,10 +2777,10 @@ void cRendererDeferred::RenderLights_Box_StencilFront_RenderBack()
 
         /////////////////////////////
         //Prepare for next iteration (if any)
-        if(lNumOfNearPlaneLights >0)
+        if(lNumOfNearPlaneLights > 0)
         {
             lStartLight += kMaxStencilBitsUsed;
-            ClearFrameBuffer(eClearFrameBufferFlag_Stencil,true);
+            ClearFrameBuffer(eClearFrameBufferFlag_Stencil, true);
         }
     }
 
@@ -2823,7 +2823,7 @@ void cRendererDeferred::RenderLights_Box_RenderBack()
 
     /////////////////////////////
     //Render back of light geometry, checking depth
-    for(size_t i=0; i<mvSortedLights[eDeferredLightList_Box_RenderBack].size(); ++i)
+    for(size_t i = 0; i < mvSortedLights[eDeferredLightList_Box_RenderBack].size(); ++i)
     {
         cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_Box_RenderBack][i];
 
@@ -2862,7 +2862,7 @@ void cRendererDeferred::RenderLights()
     SetAlphaMode(eMaterialAlphaMode_Solid);
     SetChannelMode(eMaterialChannelMode_RGBA);
 
-    for(int i=0; i<mlNumOfGBufferTextures; ++i)
+    for(int i = 0; i < mlNumOfGBufferTextures; ++i)
     {
         SetTexture(i, GetBufferTexture(i));
     }
@@ -2871,7 +2871,7 @@ void cRendererDeferred::RenderLights()
     ////////////////////////////////
     //Set up frame buffer
     SetAccumulationBuffer();
-    ClearFrameBuffer(eClearFrameBufferFlag_Color |eClearFrameBufferFlag_Stencil,true); //Perhaps there is some ambient light that can be added instead?
+    ClearFrameBuffer(eClearFrameBufferFlag_Color | eClearFrameBufferFlag_Stencil, true); //Perhaps there is some ambient light that can be added instead?
 
     ///////////////////////
     // Set up culling and depth mode
@@ -2916,21 +2916,21 @@ void cRendererDeferred::RenderLights()
 
         SetVertexBuffer(NULL);
         SetProgram(NULL);
-        SetTextureRange(NULL,0);
+        SetTextureRange(NULL, 0);
         SetMatrix(NULL);
 
-        for(int i=0; i<mpRenderList->GetLightNum(); ++i)
+        for(int i = 0; i < mpRenderList->GetLightNum(); ++i)
         {
             iLight* pLight = mpRenderList->GetLight(i);
 
             if(pLight->GetLightType() == eLightType_Point)
             {
-                mpLowLevelGraphics->DrawSphere(pLight->GetWorldPosition(),pLight->GetRadius(), cColor(1,1));
-                mpLowLevelGraphics->DrawSphere(pLight->GetWorldPosition(),0.2f, cColor(0.6f,1));
+                mpLowLevelGraphics->DrawSphere(pLight->GetWorldPosition(), pLight->GetRadius(), cColor(1, 1));
+                mpLowLevelGraphics->DrawSphere(pLight->GetWorldPosition(), 0.2f, cColor(0.6f, 1));
             }
             else if(pLight->GetLightType() == eLightType_Spot)
             {
-                cLightSpot *pLightSpot = static_cast<cLightSpot*>(pLight);
+                cLightSpot *pLightSpot = static_cast<cLightSpot *>(pLight);
 
                 pLightSpot->GetFrustum()->Draw(mpLowLevelGraphics);
             }
@@ -2946,7 +2946,7 @@ void cRendererDeferred::RenderLights()
 
 void cRendererDeferred::RenderIllumination()
 {
-    if(mpCurrentRenderList->ArrayHasObjects(eRenderListType_Illumination)==false)
+    if(mpCurrentRenderList->ArrayHasObjects(eRenderListType_Illumination) == false)
     {
         return;
     }
@@ -2954,7 +2954,7 @@ void cRendererDeferred::RenderIllumination()
     START_RENDER_PASS(Illumination);
 
     cRenderableVecIterator illumIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Illumination);
-    if(illumIt.HasNext()==false)
+    if(illumIt.HasNext() == false)
     {
         return;
     }
@@ -2967,7 +2967,7 @@ void cRendererDeferred::RenderIllumination()
     SetAlphaMode(eMaterialAlphaMode_Solid);
     SetChannelMode(eMaterialChannelMode_RGBA);
 
-    SetTextureRange(NULL,1);
+    SetTextureRange(NULL, 1);
 
     while(illumIt.HasNext())
     {
@@ -2985,13 +2985,13 @@ void cRendererDeferred::RenderIllumination()
 
         eMaterialRenderMode renderMode = pMaterial->GetTexture(eMaterialTexture_IlluminationModulate) ? eMaterialRenderMode_IlluminationModulate : eMaterialRenderMode_Illumination;
 
-        SetMaterialProgram(renderMode,pMaterial);
+        SetMaterialProgram(renderMode, pMaterial);
 
-        SetTexture(0,pMaterial->GetTextureInUnit(renderMode,0));
+        SetTexture(0, pMaterial->GetTextureInUnit(renderMode, 0));
 
         if ( renderMode == eMaterialRenderMode_IlluminationModulate )
         {
-            SetTexture(1,pMaterial->GetTextureInUnit(renderMode,1));
+            SetTexture(1, pMaterial->GetTextureInUnit(renderMode, 1));
         }
 
         SetMatrix(pObject->GetModelMatrixPtr());
@@ -3010,7 +3010,7 @@ void cRendererDeferred::RenderIllumination()
 
 void cRendererDeferred::RenderDecals()
 {
-    if(mpCurrentRenderList->ArrayHasObjects(eRenderListType_Decal)==false)
+    if(mpCurrentRenderList->ArrayHasObjects(eRenderListType_Decal) == false)
     {
         return;
     }
@@ -3028,7 +3028,7 @@ void cRendererDeferred::RenderDecals()
     SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
 
 
-    float fHalfFovTan=0;
+    float fHalfFovTan = 0;
 
     cRenderableVecIterator transIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Decal);
     while(transIt.HasNext())
@@ -3038,7 +3038,7 @@ void cRendererDeferred::RenderDecals()
 
         SetBlendMode(pMaterial->GetBlendMode());
 
-        SetMaterialProgram(eMaterialRenderMode_Diffuse,pMaterial);
+        SetMaterialProgram(eMaterialRenderMode_Diffuse, pMaterial);
 
         SetMaterialTextures(eMaterialRenderMode_Diffuse, pMaterial);
 
@@ -3060,7 +3060,7 @@ void cRendererDeferred::RenderDecals()
 
 void cRendererDeferred::RenderFullScreenFog()
 {
-    if(mpCurrentWorld->GetFogActive()==false)
+    if(mpCurrentWorld->GetFogActive() == false)
     {
         return;
     }
@@ -3083,7 +3083,7 @@ void cRendererDeferred::RenderFullScreenFog()
 
     //////////////////////////
     // Set up program
-    int lFlags =0;
+    int lFlags = 0;
     iGpuProgram *pProgram = mpFogProgramManager->GenerateProgram(0, lFlags);
     SetProgram(pProgram);
 
@@ -3119,7 +3119,7 @@ void cRendererDeferred::RenderFullScreenFog()
 
 void cRendererDeferred::RenderFog()
 {
-    if(mpCurrentRenderList->GetFogAreaNum()==0)
+    if(mpCurrentRenderList->GetFogAreaNum() == 0)
     {
         mpCurrentSettings->mvFogRenderData.resize(0); //Make sure render data array is empty!
         return;
@@ -3139,14 +3139,14 @@ void cRendererDeferred::RenderFog()
     SetTexture(0, GetGbufferTexture(2)); //depth!
     SetTextureRange(NULL, 1);
 
-    for(size_t i=0; i<mpCurrentSettings->mvFogRenderData.size(); ++i)
+    for(size_t i = 0; i < mpCurrentSettings->mvFogRenderData.size(); ++i)
     {
         cFogAreaRenderData& fogData = mpCurrentSettings->mvFogRenderData[i];
         cFogArea *pFogArea = fogData.mpFogArea;
 
         /////////////////////////////////////////////
         // Get program
-        int lFlags =0;
+        int lFlags = 0;
         if(fogData.mbInsideNearFrustum)
         {
             if(pFogArea->GetShowBacksideWhenInside())
@@ -3164,7 +3164,7 @@ void cRendererDeferred::RenderFog()
         }
 
         iGpuProgram *pProgram = mpFogProgramManager->GenerateProgram(0, lFlags);
-        if(pProgram==NULL)
+        if(pProgram == NULL)
         {
             continue;
         }
@@ -3183,7 +3183,7 @@ void cRendererDeferred::RenderFog()
 
         /////////////////////////////////////////////
         //Outside of box setup
-        if(fogData.mbInsideNearFrustum==false)
+        if(fogData.mbInsideNearFrustum == false)
         {
             cMatrixf mtxInvModelView = cMath::MatrixInverse( cMath::MatrixMul(mpCurrentFrustum->GetViewMatrix(), *pFogArea->GetModelMatrixPtr()) );
             cVector3f vRayCastStart = cMath::MatrixMul(mtxInvModelView, cVector3f(0));
@@ -3192,13 +3192,13 @@ void cRendererDeferred::RenderFog()
             pProgram->SetVec3f(kVar_avRayCastStart, vRayCastStart);
             pProgram->SetMatrixf(kVar_a_mtxBoxInvViewModelRotation, mtxInvModelView.GetRotation());
 
-            cVector3f vNegPlaneDistNeg( cMath::PlaneToPointDist(cPlanef(-1,0,0,0.5f),vRayCastStart), cMath::PlaneToPointDist(cPlanef(0,-1,0,0.5f),vRayCastStart),
-                                        cMath::PlaneToPointDist(cPlanef(0,0,-1,0.5f),vRayCastStart));
-            cVector3f vNegPlaneDistPos( cMath::PlaneToPointDist(cPlanef(1,0,0,0.5f),vRayCastStart), cMath::PlaneToPointDist(cPlanef(0,1,0,0.5f),vRayCastStart),
-                                        cMath::PlaneToPointDist(cPlanef(0,0,1,0.5f),vRayCastStart));
+            cVector3f vNegPlaneDistNeg( cMath::PlaneToPointDist(cPlanef(-1, 0, 0, 0.5f), vRayCastStart), cMath::PlaneToPointDist(cPlanef(0, -1, 0, 0.5f), vRayCastStart),
+                                        cMath::PlaneToPointDist(cPlanef(0, 0, -1, 0.5f), vRayCastStart));
+            cVector3f vNegPlaneDistPos( cMath::PlaneToPointDist(cPlanef(1, 0, 0, 0.5f), vRayCastStart), cMath::PlaneToPointDist(cPlanef(0, 1, 0, 0.5f), vRayCastStart),
+                                        cMath::PlaneToPointDist(cPlanef(0, 0, 1, 0.5f), vRayCastStart));
 
-            pProgram->SetVec3f(kVar_avNegPlaneDistNeg, vNegPlaneDistNeg*-1);
-            pProgram->SetVec3f(kVar_avNegPlaneDistPos, vNegPlaneDistPos*-1);
+            pProgram->SetVec3f(kVar_avNegPlaneDistNeg, vNegPlaneDistNeg * -1);
+            pProgram->SetVec3f(kVar_avNegPlaneDistPos, vNegPlaneDistPos * -1);
         }
 
         /////////////////////////////////////////////
@@ -3226,7 +3226,7 @@ void cRendererDeferred::RenderFog()
 
 void cRendererDeferred::RenderTranslucent()
 {
-    if(mpCurrentRenderList->ArrayHasObjects(eRenderListType_Translucent)==false)
+    if(mpCurrentRenderList->ArrayHasObjects(eRenderListType_Translucent) == false)
     {
         return;
     }
@@ -3243,7 +3243,7 @@ void cRendererDeferred::RenderTranslucent()
 
     ///////////////////////////////
     //Set up variables
-    float fHalfFovTan=0;
+    float fHalfFovTan = 0;
 
     ///////////////////////////////
     //Iterate transparent objects
@@ -3254,7 +3254,7 @@ void cRendererDeferred::RenderTranslucent()
         cMaterial *pMaterial = pObject->GetMaterial();
 
         eMaterialRenderMode renderMode = mpCurrentWorld->GetFogActive() ? eMaterialRenderMode_DiffuseFog : eMaterialRenderMode_Diffuse;
-        if(pMaterial->GetAffectedByFog()==false)
+        if(pMaterial->GetAffectedByFog() == false)
         {
             renderMode = eMaterialRenderMode_Diffuse;
         }
@@ -3270,7 +3270,7 @@ void cRendererDeferred::RenderTranslucent()
         mfTempAlpha = 1;
         if(pMaterial->GetAffectedByFog())
         {
-            for(size_t i=0; i<mpCurrentSettings->mvFogRenderData.size(); ++i)
+            for(size_t i = 0; i < mpCurrentSettings->mvFogRenderData.size(); ++i)
             {
                 mfTempAlpha *= GetFogAreaVisibilityForObject(&mpCurrentSettings->mvFogRenderData[i], pObject);
             }
@@ -3281,12 +3281,12 @@ void cRendererDeferred::RenderTranslucent()
         // Update object, need to do this here since otherwise the reflection rendering might reset it!
 
         //Before viewport
-        if(pObject->UpdateGraphicsForViewport(mpCurrentFrustum, dCurrentFrameTime)==false)
+        if(pObject->UpdateGraphicsForViewport(mpCurrentFrustum, dCurrentFrameTime) == false)
         {
             continue;
         }
 
-        if(pObject->RetrieveOcculsionQuery(this)==false)
+        if(pObject->RetrieveOcculsionQuery(this) == false)
         {
             continue;
         }
@@ -3297,7 +3297,7 @@ void cRendererDeferred::RenderTranslucent()
         // World reflection
         if(pMaterial->HasWorldReflection() && pObject->GetRenderType() == eRenderableType_SubMesh)
         {
-            if(CheckRenderablePlaneIsVisible(pObject, mpCurrentFrustum)==false)
+            if(CheckRenderablePlaneIsVisible(pObject, mpCurrentFrustum) == false)
             {
                 continue;
             }
@@ -3313,7 +3313,7 @@ void cRendererDeferred::RenderTranslucent()
 
             ///////////////////////////////////
             //Render the reflection
-            cSubMeshEntity *pReflectSubMeshEnt = static_cast<cSubMeshEntity*>(pObject);
+            cSubMeshEntity *pReflectSubMeshEnt = static_cast<cSubMeshEntity *>(pObject);
             RenderReflection(pReflectSubMeshEnt);
         }
 
@@ -3321,7 +3321,7 @@ void cRendererDeferred::RenderTranslucent()
         // Refraction set up
         if(pMaterial->HasRefraction())
         {
-            if(CheckRenderablePlaneIsVisible(pObject, mpCurrentFrustum)==false)
+            if(CheckRenderablePlaneIsVisible(pObject, mpCurrentFrustum) == false)
             {
                 continue;
             }
@@ -3330,9 +3330,9 @@ void cRendererDeferred::RenderTranslucent()
             // Get the clip rect needed by the refraction
             cBoundingVolume *pBV = pObject->GetBoundingVolume();
 
-            if(fHalfFovTan ==0)
+            if(fHalfFovTan == 0)
             {
-                fHalfFovTan = tan(mpCurrentFrustum->GetFOV()*0.5f);
+                fHalfFovTan = tan(mpCurrentFrustum->GetFOV() * 0.5f);
             }
             cRect2l clipRect = GetClipRectFromObject(pObject, 0.2f, mpCurrentFrustum, mvRenderTargetSize, fHalfFovTan);
 
@@ -3350,10 +3350,10 @@ void cRendererDeferred::RenderTranslucent()
                 SetBlendMode(eMaterialBlendMode_None);
                 SetAlphaMode(eMaterialAlphaMode_Solid);
                 SetChannelMode(eMaterialChannelMode_A);
-                SetTextureRange(NULL,0);
+                SetTextureRange(NULL, 0);
 
                 DrawQuad(    cVector2f((float)clipRect.x, (float)clipRect.y),
-                             cVector2f((float)clipRect.w, (float)clipRect.h), 0, 1, false, cColor(1,0));
+                             cVector2f((float)clipRect.w, (float)clipRect.h), 0, 1, false, cColor(1, 0));
 
                 //Set Normal projection and depth test
                 SetNormalFrustumProjection();
@@ -3393,7 +3393,7 @@ void cRendererDeferred::RenderTranslucent()
         }
         SetDepthTest(pMaterial->GetDepthTest());
 
-        SetMaterialProgram(renderMode,pMaterial);
+        SetMaterialProgram(renderMode, pMaterial);
         SetMaterialTextures(renderMode, pMaterial);
 
         SetMatrix(pMatrix);
@@ -3412,7 +3412,7 @@ void cRendererDeferred::RenderTranslucent()
             SetBlendMode(eMaterialBlendMode_Add);
             SetDepthTest(pMaterial->GetDepthTest());
 
-            SetMaterialProgram(renderMode,pMaterial);
+            SetMaterialProgram(renderMode, pMaterial);
             SetMaterialTextures(renderMode, pMaterial);
 
             SetMatrix(pMatrix);
@@ -3437,22 +3437,22 @@ void cRendererDeferred::RenderReflection(iRenderable *apObject)
 {
     ////////////////////////////////////
     //Set up variables
-    cSubMeshEntity *pReflectionObject = static_cast<cSubMeshEntity*>(apObject);
+    cSubMeshEntity *pReflectionObject = static_cast<cSubMeshEntity *>(apObject);
     cMaterial *pRelfMaterial = pReflectionObject->GetMaterial();
 
 
     ///////////////////////////
     //Check if surface is close enough for reflection!
-    bool bReflectionIsInRange=true;
+    bool bReflectionIsInRange = true;
     if(pRelfMaterial->GetMaxReflectionDistance() > 0)
     {
-        cVector3f vPoint = mpCurrentFrustum->GetOrigin() + mpCurrentFrustum->GetForward()*-1*pRelfMaterial->GetMaxReflectionDistance();
+        cVector3f vPoint = mpCurrentFrustum->GetOrigin() + mpCurrentFrustum->GetForward() * -1 * pRelfMaterial->GetMaxReflectionDistance();
         cVector3f vNormal = mpCurrentFrustum->GetForward();
 
         cPlanef maxRelfctionDistPlane;
         maxRelfctionDistPlane.FromNormalPoint(vNormal, vPoint);
 
-        if(cMath::CheckPlaneBVCollision(maxRelfctionDistPlane, *pReflectionObject->GetBoundingVolume())==eCollision_Outside)
+        if(cMath::CheckPlaneBVCollision(maxRelfctionDistPlane, *pReflectionObject->GetBoundingVolume()) == eCollision_Outside)
         {
             bReflectionIsInRange = false;
         }
@@ -3532,8 +3532,8 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
     cVector2l vCurrentFrameBufferSize = mpCurrentRenderTarget->mpFrameBuffer ? mpCurrentRenderTarget->mpFrameBuffer->GetSize() : mvScreenSize;
     renderTarget.mpFrameBuffer = mpReflectionBuffer;
     renderTarget.mvPos = mpCurrentRenderTarget->mvPos / mlReflectionSizeDiv;
-    renderTarget.mvSize.x = mpCurrentRenderTarget->mvSize.x == -1 ? vCurrentFrameBufferSize.x/mlReflectionSizeDiv : mpCurrentRenderTarget->mvSize.x/mlReflectionSizeDiv;
-    renderTarget.mvSize.y = mpCurrentRenderTarget->mvSize.y == -1 ? vCurrentFrameBufferSize.y/mlReflectionSizeDiv : mpCurrentRenderTarget->mvSize.y/mlReflectionSizeDiv;
+    renderTarget.mvSize.x = mpCurrentRenderTarget->mvSize.x == -1 ? vCurrentFrameBufferSize.x / mlReflectionSizeDiv : mpCurrentRenderTarget->mvSize.x / mlReflectionSizeDiv;
+    renderTarget.mvSize.y = mpCurrentRenderTarget->mvSize.y == -1 ? vCurrentFrameBufferSize.y / mlReflectionSizeDiv : mpCurrentRenderTarget->mvSize.y / mlReflectionSizeDiv;
 
     ///////////////////////////
     //Make a frustum, mirrored along the plane
@@ -3556,9 +3556,9 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
 
     cFrustum reflectFrustum;
     reflectFrustum.SetupPerspectiveProj(mtxReflProj, mtxReflView,
-                                        mpCurrentFrustum->GetFarPlane(),mpCurrentFrustum->GetNearPlane(),
+                                        mpCurrentFrustum->GetFarPlane(), mpCurrentFrustum->GetNearPlane(),
                                         mpCurrentFrustum->GetFOV(), mpCurrentFrustum->GetAspect(),
-                                        vReflOrigin,false, &mtxProj, true);
+                                        vReflOrigin, false, &mtxProj, true);
     reflectFrustum.SetInvertsCullMode(true);
 
     ///////////////////////////
@@ -3569,18 +3569,18 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
     //End of reflection clip plane
     if(pRelfMaterial->GetMaxReflectionDistance() > 0)
     {
-        cVector3f vForward = mpCurrentFrustum->GetForward()*-1;
+        cVector3f vForward = mpCurrentFrustum->GetForward() * -1;
         float fMaxReflDist = pRelfMaterial->GetMaxReflectionDistance();
         cPlanef maxRelfctionDistPlane;
 
         ///////////////////////////////
         //Forward and normal is aligned, the normal of plane becomes inverse forward
         float fFDotN = cMath::Vector3Dot(vForward, vSurfaceNormal);
-        if(fFDotN <-0.99999f)
+        if(fFDotN < -0.99999f)
         {
             cVector3f vClipNormal, vClipPoint;
-            vClipNormal = vForward*-1;
-            vClipPoint = mpCurrentFrustum->GetOrigin() + vForward*pRelfMaterial->GetMaxReflectionDistance();
+            vClipNormal = vForward * -1;
+            vClipPoint = mpCurrentFrustum->GetOrigin() + vForward * pRelfMaterial->GetMaxReflectionDistance();
 
             maxRelfctionDistPlane.FromNormalPoint(vClipNormal, vClipPoint);
         }
@@ -3591,40 +3591,40 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
         {
             cPlanef cameraSpacePlane = cMath::TransformPlane(mpCurrentFrustum->GetViewMatrix(), reflectPlane);
 
-            cVector3f vPoint1 = cVector3f(0,0, -fMaxReflDist);
-            cVector3f vPoint2 = cVector3f(0,0, -fMaxReflDist);
+            cVector3f vPoint1 = cVector3f(0, 0, -fMaxReflDist);
+            cVector3f vPoint2 = cVector3f(0, 0, -fMaxReflDist);
 
             //Vertical row (x always same)
             if(fabs(cameraSpacePlane.b) < 0.0001f)
             {
-                vPoint1.x = (-cameraSpacePlane.c*-fMaxReflDist - cameraSpacePlane.d) / cameraSpacePlane.a;
+                vPoint1.x = (-cameraSpacePlane.c * -fMaxReflDist - cameraSpacePlane.d) / cameraSpacePlane.a;
                 vPoint2 = vPoint1;
-                vPoint2.y+=1;
+                vPoint2.y += 1;
             }
             //Horizontal row (y always same)
             else if(fabs(cameraSpacePlane.a) < 0.0001f)
             {
-                vPoint1.y = (-cameraSpacePlane.c*-fMaxReflDist - cameraSpacePlane.d) / cameraSpacePlane.b;
+                vPoint1.y = (-cameraSpacePlane.c * -fMaxReflDist - cameraSpacePlane.d) / cameraSpacePlane.b;
                 vPoint2 = vPoint1;
-                vPoint2.x+=1;
+                vPoint2.x += 1;
             }
             //Oblique row (x and y changes)
             else
             {
-                vPoint1.x = (-cameraSpacePlane.c*-fMaxReflDist - cameraSpacePlane.d) / cameraSpacePlane.a;
-                vPoint2.y = (-cameraSpacePlane.c*-fMaxReflDist - cameraSpacePlane.d) / cameraSpacePlane.b;
+                vPoint1.x = (-cameraSpacePlane.c * -fMaxReflDist - cameraSpacePlane.d) / cameraSpacePlane.a;
+                vPoint2.y = (-cameraSpacePlane.c * -fMaxReflDist - cameraSpacePlane.d) / cameraSpacePlane.b;
             }
 
             cMatrixf mtxInvCamera = cMath::MatrixInverse(mpCurrentFrustum->GetViewMatrix());
             vPoint1 = cMath::MatrixMul(mtxInvCamera, vPoint1);
             vPoint2 = cMath::MatrixMul(mtxInvCamera, vPoint2);
 
-            cVector3f vNormal = cMath::Vector3Cross(vPoint1-vReflOrigin, vPoint2-vReflOrigin);
+            cVector3f vNormal = cMath::Vector3Cross(vPoint1 - vReflOrigin, vPoint2 - vReflOrigin);
             vNormal.Normalize();
             //make sure normal has correct sign!
-            if(cMath::Vector3Dot(vSurfaceNormal, vNormal)<0)
+            if(cMath::Vector3Dot(vSurfaceNormal, vNormal) < 0)
             {
-                vNormal = vNormal*-1;
+                vNormal = vNormal * -1;
             }
 
             maxRelfctionDistPlane.FromNormalPoint(vNormal, vPoint1);
@@ -3644,11 +3644,11 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
         cVector3f vOrigin = reflectFrustum.GetOrigin();
 
         float fNearPlane = reflectFrustum.GetNearPlane();
-        float fHalfFovTan = tan(reflectFrustum.GetFOV()*0.5f);
+        float fHalfFovTan = tan(reflectFrustum.GetFOV() * 0.5f);
         float fNearTop =  fHalfFovTan * fNearPlane;
         float fNearRight = reflectFrustum.GetAspect() * fNearTop;
 
-        cVector3f vMin,vMax;
+        cVector3f vMin, vMax;
         bool bNeedsClipRect = false;
         bool bVisible = cMath::GetNormalizedClipRectFromBV(vMin, vMax, *pReflectionObject->GetBoundingVolume(), &reflectFrustum, fHalfFovTan);
         if(bVisible)
@@ -3659,46 +3659,46 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
             }
             ////////////////////////////
             // Right
-            if(vMax.x <1)
+            if(vMax.x < 1)
             {
-                cVector3f vNearPlanePos = vOrigin + vRight*(vMax.x*fNearRight) + vForward*-fNearPlane;
+                cVector3f vNearPlanePos = vOrigin + vRight * (vMax.x * fNearRight) + vForward * -fNearPlane;
                 cPlanef rightPlane;
-                rightPlane.FromPoints(vOrigin, vNearPlanePos, vNearPlanePos+vUp);
+                rightPlane.FromPoints(vOrigin, vNearPlanePos, vNearPlanePos + vUp);
                 mpCurrentSettings->mpReflectionSettings->AddOcclusionPlane(rightPlane);
-                bNeedsClipRect =true;
+                bNeedsClipRect = true;
             }
 
             ////////////////////////////
             // Left
-            if(vMin.x >-1)
+            if(vMin.x > -1)
             {
-                cVector3f vNearPlanePos = vOrigin + vRight*(vMin.x*fNearRight) + vForward*-fNearPlane;
+                cVector3f vNearPlanePos = vOrigin + vRight * (vMin.x * fNearRight) + vForward * -fNearPlane;
                 cPlanef leftPlane;
-                leftPlane.FromPoints(vOrigin, vNearPlanePos+vUp, vNearPlanePos);
+                leftPlane.FromPoints(vOrigin, vNearPlanePos + vUp, vNearPlanePos);
                 mpCurrentSettings->mpReflectionSettings->AddOcclusionPlane(leftPlane);
-                bNeedsClipRect =true;
+                bNeedsClipRect = true;
             }
 
             ////////////////////////////
             // Top
-            if(vMax.y <1)
+            if(vMax.y < 1)
             {
-                cVector3f vNearPlanePos = vOrigin + vUp*(vMax.y*fNearTop) + vForward*-fNearPlane;
+                cVector3f vNearPlanePos = vOrigin + vUp * (vMax.y * fNearTop) + vForward * -fNearPlane;
                 cPlanef topPlane;
-                topPlane.FromPoints(vOrigin, vNearPlanePos+vRight, vNearPlanePos);
+                topPlane.FromPoints(vOrigin, vNearPlanePos + vRight, vNearPlanePos);
                 mpCurrentSettings->mpReflectionSettings->AddOcclusionPlane(topPlane);
                 bNeedsClipRect = true;
             }
 
             ////////////////////////////
             // Bottom
-            if(vMin.y >-1)
+            if(vMin.y > -1)
             {
-                cVector3f vNearPlanePos = vOrigin + vUp*(vMin.y*fNearTop) + vForward*-fNearPlane;
+                cVector3f vNearPlanePos = vOrigin + vUp * (vMin.y * fNearTop) + vForward * -fNearPlane;
                 cPlanef bottomPlane;
-                bottomPlane.FromPoints(vOrigin, vNearPlanePos, vNearPlanePos+vRight);
+                bottomPlane.FromPoints(vOrigin, vNearPlanePos, vNearPlanePos + vRight);
                 mpCurrentSettings->mpReflectionSettings->AddOcclusionPlane(bottomPlane);
-                bNeedsClipRect =true;
+                bNeedsClipRect = true;
             }
 
             ////////////////////////////
@@ -3715,7 +3715,7 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
 
                 if(mbLog)
                 {
-                    Log("  Setting up scissor rect. pos: (%d, %d)  %d x %d\n", clipRect.x, clipRect.y,clipRect.w, clipRect.h);
+                    Log("  Setting up scissor rect. pos: (%d, %d)  %d x %d\n", clipRect.x, clipRect.y, clipRect.w, clipRect.h);
                 }
 
                 mpCurrentSettings->mpReflectionSettings->mbUseScissorRect = true;
@@ -3743,7 +3743,7 @@ void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectio
     ///////////////////////////
     //Set back to order!
     BeginRendering(    dCurrentFrameTime, pSaved_Frustum, mpCurrentWorld, pSaved_Settings, pSaved_RenderTarget,
-                       bSaved_SendFrameBufferToPostEffects,mpCallbackList, false);
+                       bSaved_SendFrameBufferToPostEffects, mpCallbackList, false);
 
 
     SetAccumulationBuffer();
@@ -3780,7 +3780,7 @@ void cRendererDeferred::SetGBuffer(eGBufferComponents aComponents)
 
 //-----------------------------------------------------------------------
 
-iFrameBuffer* cRendererDeferred::GetGBufferFrameBuffer(eGBufferComponents aComponents)
+iFrameBuffer *cRendererDeferred::GetGBufferFrameBuffer(eGBufferComponents aComponents)
 {
     int lType = mpCurrentSettings->mbIsReflection ? 1 : 0;
 
@@ -3789,7 +3789,7 @@ iFrameBuffer* cRendererDeferred::GetGBufferFrameBuffer(eGBufferComponents aCompo
 
 //-----------------------------------------------------------------------
 
-iTexture* cRendererDeferred::GetBufferTexture(int alIdx)
+iTexture *cRendererDeferred::GetBufferTexture(int alIdx)
 {
     int lType = mpCurrentSettings->mbIsReflection ? 1 : 0;
     return mpGBufferTexture[lType][alIdx];
@@ -3800,7 +3800,7 @@ iTexture* cRendererDeferred::GetBufferTexture(int alIdx)
 
 void cRendererDeferred::RenderDeferredSkyBox()
 {
-    if(mpCurrentWorld==NULL || mpCurrentWorld->GetSkyBoxActive()==false)
+    if(mpCurrentWorld == NULL || mpCurrentWorld->GetSkyBoxActive() == false)
     {
         return;
     }
@@ -3825,7 +3825,7 @@ void cRendererDeferred::RenderDeferredSkyBox()
 
     float fFarClip = mpCurrentFrustum->GetFarPlane();
 
-    float fSide = sqrt((fFarClip*fFarClip) / 3) *0.95f;
+    float fSide = sqrt((fFarClip * fFarClip) / 3) * 0.95f;
     m_mtxSkyBox.m[0][0] = fSide;
     m_mtxSkyBox.m[1][1] = fSide;
     m_mtxSkyBox.m[2][2] = fSide;
@@ -3840,8 +3840,8 @@ void cRendererDeferred::RenderDeferredSkyBox()
 
     /////////////////////////
     //Texture and vertex buffer
-    SetTexture(0,mpCurrentWorld->GetSkyBoxTexture());
-    SetTextureRange(NULL,1);
+    SetTexture(0, mpCurrentWorld->GetSkyBoxTexture());
+    SetTextureRange(NULL, 1);
 
     SetVertexBuffer(mpCurrentWorld->GetSkyBoxVertexBuffer());
 
@@ -3875,19 +3875,19 @@ void cRendererDeferred::RenderGbufferContent()
     SetFlatProjection();
     SetProgram(NULL);
 
-    SetTextureRange(NULL,1);
+    SetTextureRange(NULL, 1);
 
-    SetTexture(0,GetBufferTexture(0));
-    DrawQuad(cVector2f(0,0),cVector2f(0.5f,0.5f), 0,mvScreenSizeFloat, true);
-    SetTexture(0,GetBufferTexture(1));
-    DrawQuad(cVector2f(0.5f,0),cVector2f(0.5f,0.5f), 0,mvScreenSizeFloat, true);
-    SetTexture(0,GetBufferTexture(2));
-    DrawQuad(cVector2f(0,0.5f),cVector2f(0.5f,0.5f), 0,mvScreenSizeFloat, true);
+    SetTexture(0, GetBufferTexture(0));
+    DrawQuad(cVector2f(0, 0), cVector2f(0.5f, 0.5f), 0, mvScreenSizeFloat, true);
+    SetTexture(0, GetBufferTexture(1));
+    DrawQuad(cVector2f(0.5f, 0), cVector2f(0.5f, 0.5f), 0, mvScreenSizeFloat, true);
+    SetTexture(0, GetBufferTexture(2));
+    DrawQuad(cVector2f(0, 0.5f), cVector2f(0.5f, 0.5f), 0, mvScreenSizeFloat, true);
 
     if(mlNumOfGBufferTextures > 3)
     {
-        SetTexture(0,GetBufferTexture(3));
-        DrawQuad(cVector2f(0.5f,0.5f),cVector2f(0.5f,0.5f), 0,mvScreenSizeFloat, true);
+        SetTexture(0, GetBufferTexture(3));
+        DrawQuad(cVector2f(0.5f, 0.5f), cVector2f(0.5f, 0.5f), 0, mvScreenSizeFloat, true);
     }
 
     SetNormalFrustumProjection();
@@ -3914,16 +3914,16 @@ void cRendererDeferred::RenderLightComplexity()
     SetVertexBuffer(NULL);
     SetProgram(mpHeatMapProgram);
 
-    DrawQuad(0,1,0,1);
+    DrawQuad(0, 1, 0, 1);
 
     /////////////
     // Render it back to accum buffer
-    SetTextureRange(0,0);
+    SetTextureRange(0, 0);
     SetAccumulationBuffer();
     SetProgram(NULL);
     SetTexture(0, GetBufferTexture(1));
 
-    DrawQuad(0,1, 0,mvScreenSizeFloat, true);
+    DrawQuad(0, 1, 0, mvScreenSizeFloat, true);
 
     /////////////
     // Reset states
@@ -3940,14 +3940,14 @@ void cRendererDeferred::RenderOverdraw()
     /////////////////
     // Render each translucent object with additive blending
     SetAccumulationBuffer();
-    mpLowLevelGraphics->SetClearColor(cColor(0,0));
+    mpLowLevelGraphics->SetClearColor(cColor(0, 0));
     ClearFrameBuffer(eClearFrameBufferFlag_Color, true);
 
     SetDepthWrite(false);
     SetAlphaMode(eMaterialAlphaMode_Solid);
     SetBlendMode(eMaterialBlendMode_Add);
     SetNormalFrustumProjection();
-    SetTextureRange(0,0);
+    SetTextureRange(0, 0);
     SetProgram(mpOverdrawProgram);
 
 
@@ -3956,7 +3956,7 @@ void cRendererDeferred::RenderOverdraw()
     {
         ///////////////
         // Set specific settings
-        iRenderable *pObject =transIt.Next();
+        iRenderable *pObject = transIt.Next();
         cMatrixf *pMatrix = pObject->GetModelMatrix(mpCurrentFrustum);
         cMaterial *pMaterial = pObject->GetMaterial();
         SetDepthTest(pMaterial->GetDepthTest());
@@ -3964,7 +3964,7 @@ void cRendererDeferred::RenderOverdraw()
         //////////////
         // Update
 
-        if(pObject->UpdateGraphicsForViewport(mpCurrentFrustum, dCurrentFrameTime)==false)
+        if(pObject->UpdateGraphicsForViewport(mpCurrentFrustum, dCurrentFrameTime) == false)
         {
             continue;
         }
@@ -4009,16 +4009,16 @@ void cRendererDeferred::RenderOverdraw()
     SetVertexBuffer(NULL);
     SetProgram(mpHeatMapProgram);
 
-    DrawQuad(0,1,0,1);
+    DrawQuad(0, 1, 0, 1);
 
     /////////////
     // Render it back to accum buffer
-    SetTextureRange(0,0);
+    SetTextureRange(0, 0);
     SetAccumulationBuffer();
     SetProgram(NULL);
     SetTexture(0, GetBufferTexture(1));
 
-    DrawQuad(0,1, 0,mvScreenSizeFloat, true);
+    DrawQuad(0, 1, 0, mvScreenSizeFloat, true);
 
     /////////////
     // Reset states
@@ -4044,10 +4044,10 @@ void cRendererDeferred::RenderReflectionContent()
     SetFlatProjection();
     SetProgram(NULL);
 
-    SetTextureRange(NULL,1);
+    SetTextureRange(NULL, 1);
 
-    SetTexture(0,mpReflectionTexture);
-    DrawQuad(cVector2f(0,0),cVector2f(1,1), 0, mvScreenSizeFloat / (float)mlReflectionSizeDiv, true);
+    SetTexture(0, mpReflectionTexture);
+    DrawQuad(cVector2f(0, 0), cVector2f(1, 1), 0, mvScreenSizeFloat / (float)mlReflectionSizeDiv, true);
 
 
     SetNormalFrustumProjection();

@@ -32,7 +32,7 @@ public:
     bool mbCharCollider;
 };
 
-typedef std::vector<cMeshCollider*> tMeshColliderVec;
+typedef std::vector<cMeshCollider *> tMeshColliderVec;
 typedef tMeshColliderVec::iterator tMeshColliderVecIt;
 
 //--------------------------------------------------
@@ -42,7 +42,7 @@ class cSubMesh
     friend class cMesh;
     friend class cSubMeshEntity;
 public:
-    cSubMesh(const tString &asName,cMaterialManager* apMaterialManager);
+    cSubMesh(const tString &asName, cMaterialManager* apMaterialManager);
     ~cSubMesh();
 
     void SetMaterial(cMaterial* apMaterial);
@@ -50,9 +50,9 @@ public:
 
     //Renderable implementation.
     cMaterial *GetMaterial();
-    iVertexBuffer* GetVertexBuffer();
+    iVertexBuffer *GetVertexBuffer();
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -60,17 +60,17 @@ public:
     //Vertex-Bone pairs
     void ResizeVertexBonePairs(int alSize);
     int GetVertexBonePairNum();
-    cVertexBonePair& GetVertexBonePair(int alNum);
+    cVertexBonePair &GetVertexBonePair(int alNum);
 
     void AddVertexBonePair(const cVertexBonePair &aPair);
     void ClearVertexBonePairs();
 
     //Colliders
-    cMeshCollider* CreateCollider(eCollideShapeType aType);
-    cMeshCollider* GetCollider(int alIdx);
+    cMeshCollider *CreateCollider(eCollideShapeType aType);
+    cMeshCollider *GetCollider(int alIdx);
     int GetColliderNum();
-    iCollideShape* CreateCollideShape(iPhysicsWorld *apWorld);
-    static iCollideShape* CreateCollideShapeFromCollider(cMeshCollider *pCollider, iPhysicsWorld *apWorld, const cVector3f& avSizeMul, cMatrixf *apMtxOffset);
+    iCollideShape *CreateCollideShape(iPhysicsWorld *apWorld);
+    static iCollideShape *CreateCollideShapeFromCollider(cMeshCollider *pCollider, iPhysicsWorld *apWorld, const cVector3f& avSizeMul, cMatrixf *apMtxOffset);
 
     void SetIsCollideShape(bool abX)
     {
@@ -81,7 +81,7 @@ public:
         return mbCollideShape;
     }
 
-    const cTriEdge& GetEdge(int alIndex) const
+    const cTriEdge &GetEdge(int alIndex) const
     {
         return mvEdges[alIndex];
     }
@@ -90,12 +90,12 @@ public:
         return (int)mvEdges.size();
     }
 
-    tTriEdgeVec* GetEdgeVecPtr()
+    tTriEdgeVec *GetEdgeVecPtr()
     {
         return &mvEdges;
     }
 
-    tTriangleDataVec* GetTriangleVecPtr()
+    tTriangleDataVec *GetTriangleVecPtr()
     {
         return &mvTriangles;
     }
@@ -118,7 +118,7 @@ public:
         return mvModelScale;
     }
 
-    const cMatrixf& GetLocalTransform()
+    const cMatrixf &GetLocalTransform()
     {
         return m_mtxLocalTransform;
     }
@@ -131,20 +131,20 @@ public:
     {
         return mbIsOneSided;
     }
-    const cVector3f& GetOneSidedNormal()
+    const cVector3f &GetOneSidedNormal()
     {
         return mvOneSidedNormal;
     }
-    const cVector3f& GetOneSidedPoint()
+    const cVector3f &GetOneSidedPoint()
     {
         return mvOneSidedPoint;
     }
 
     void SetMaterialName(const tString& asName)
     {
-        msMaterialName =asName;
+        msMaterialName = asName;
     }
-    const tString& GetMaterialName()
+    const tString &GetMaterialName()
     {
         return msMaterialName;
     }
@@ -157,8 +157,8 @@ private:
     tString msName;
 
     tString msMaterialName;
-    cMaterial* mpMaterial;
-    iVertexBuffer* mpVtxBuffer;
+    cMaterial *mpMaterial;
+    iVertexBuffer *mpVtxBuffer;
 
     cMatrixf m_mtxLocalTransform;
 
@@ -182,9 +182,9 @@ private:
     cVector3f mvOneSidedNormal;
     cVector3f mvOneSidedPoint;
 
-    cMaterialManager* mpMaterialManager;
+    cMaterialManager *mpMaterialManager;
 
-    cMesh* mpParent;
+    cMesh *mpParent;
 };
 
 };

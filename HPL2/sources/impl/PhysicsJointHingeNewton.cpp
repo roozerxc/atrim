@@ -18,13 +18,13 @@ namespace hpl
 
 cPhysicsJointHingeNewton::cPhysicsJointHingeNewton(const tString &asName,
         iPhysicsBody *apParentBody, iPhysicsBody *apChildBody,
-        iPhysicsWorld *apWorld,const cVector3f &avPivotPoint, const cVector3f &avPinDir)
-    : iPhysicsJointNewton<iPhysicsJointHinge>(asName,apParentBody,apChildBody,apWorld,avPivotPoint, avPinDir)
+        iPhysicsWorld *apWorld, const cVector3f &avPivotPoint, const cVector3f &avPinDir)
+    : iPhysicsJointNewton<iPhysicsJointHinge>(asName, apParentBody, apChildBody, apWorld, avPivotPoint, avPinDir)
 {
     mfMaxAngle = 0;
     mfMinAngle = 0;
 
-    mfPreviousAngle =0;
+    mfPreviousAngle = 0;
 
     CreateCustomJoint(6);
 
@@ -68,7 +68,7 @@ float cPhysicsJointHingeNewton::GetMinAngle()
 
 cVector3f cPhysicsJointHingeNewton::GetVelocity()
 {
-    return cVector3f(0,0,0);
+    return cVector3f(0, 0, 0);
 }
 
 cVector3f cPhysicsJointHingeNewton::GetAngularVelocity()
@@ -93,7 +93,7 @@ float cPhysicsJointHingeNewton::GetForceSize()
     float fSize = 0;
 
     //Only get for the linear rows!
-    for(int i=0; i<3; ++i)
+    for(int i = 0; i < 3; ++i)
     {
         fSize += fabs(NewtonUserJointGetRowForce(mpNewtonJoint, i));
     }
@@ -177,7 +177,7 @@ void cPhysicsJointHingeNewton::SubmitConstraints (dFloat afTimestep, int alThrea
 
         ///////////////////////////
         //Avoid oscillation
-        CheckLimitAutoSleep(this, mfMinAngle,mfMaxAngle,fAngle);
+        CheckLimitAutoSleep(this, mfMinAngle, mfMaxAngle, fAngle);
 
         bool bSkipLimitCheck = false;
         if(std::abs(mfPreviousAngle - fAngle) > cMath::ToRad(300))
@@ -187,7 +187,7 @@ void cPhysicsJointHingeNewton::SubmitConstraints (dFloat afTimestep, int alThrea
 
         ///////////////
         //Min
-        if (fAngle < mfMinAngle && bSkipLimitCheck ==false)
+        if (fAngle < mfMinAngle && bSkipLimitCheck == false)
         {
             OnMinLimit();
 
@@ -204,7 +204,7 @@ void cPhysicsJointHingeNewton::SubmitConstraints (dFloat afTimestep, int alThrea
         }
         ///////////////
         //Max
-        else if (fAngle > mfMaxAngle  && bSkipLimitCheck ==false)
+        else if (fAngle > mfMaxAngle  && bSkipLimitCheck == false)
         {
             OnMaxLimit();
 
@@ -222,9 +222,9 @@ void cPhysicsJointHingeNewton::SubmitConstraints (dFloat afTimestep, int alThrea
         }
         else
         {
-            if(mpParentBody ==NULL || mpParentBody->GetMass()==0)
+            if(mpParentBody == NULL || mpParentBody->GetMass() == 0)
             {
-                if( bSkipLimitCheck==false &&
+                if( bSkipLimitCheck == false &&
                         ( (mbStickyMaxLimit && mfPreviousAngle > mfMaxAngle) ||
                           (mbStickyMinLimit && mfPreviousAngle < mfMinAngle) ) )
                 {

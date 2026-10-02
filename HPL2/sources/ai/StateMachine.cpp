@@ -69,7 +69,7 @@ cStateMachine::~cStateMachine()
 
 void cStateMachine::Update(float afTime)
 {
-    if(mbActive== false || mpCurrentState==NULL)
+    if(mbActive == false || mpCurrentState == NULL)
     {
         return;
     }
@@ -104,9 +104,9 @@ void cStateMachine::ChangeState(int alId)
     }
 
     iAIState *pState = GetState(alId);
-    if(pState==NULL)
+    if(pState == NULL)
     {
-        Warning("State %d does not exist!\n",alId);
+        Warning("State %d does not exist!\n", alId);
         return;
     }
 
@@ -114,14 +114,14 @@ void cStateMachine::ChangeState(int alId)
     {
         mpCurrentState->OnLeaveState(pState->GetId());
     }
-    pState->OnEnterState(mpCurrentState==NULL ? -1 : mpCurrentState->GetId());
+    pState->OnEnterState(mpCurrentState == NULL ? -1 : mpCurrentState->GetId());
 
     mpCurrentState = pState;
 }
 
 //-----------------------------------------------------------------------
 
-iAIState* cStateMachine::GetState(int alId)
+iAIState *cStateMachine::GetState(int alId)
 {
     tAIStateMapIt it = m_mapStates.find(alId);
     if(it == m_mapStates.end())
@@ -133,7 +133,7 @@ iAIState* cStateMachine::GetState(int alId)
 }
 //-----------------------------------------------------------------------
 
-iAIState* cStateMachine::CurrentState()
+iAIState *cStateMachine::CurrentState()
 {
     return mpCurrentState;
 }

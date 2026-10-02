@@ -13,50 +13,50 @@ namespace hpl
 class cSkeleton;
 class cBone;
 
-typedef std::list<cBone*> tBoneList;
+typedef std::list<cBone *> tBoneList;
 typedef tBoneList::iterator tBoneListIt;
 
-typedef cSTLIterator<cBone*,tBoneList,tBoneListIt> cBoneIterator;
+typedef cSTLIterator<cBone *, tBoneList, tBoneListIt> cBoneIterator;
 
 class cBone
 {
     friend class cSkeleton;
 public:
-    cBone(const tString &asName,const tString &asSid, cSkeleton* apSkeleton);
+    cBone(const tString &asName, const tString &asSid, cSkeleton* apSkeleton);
     ~cBone();
 
-    cBone* CreateChildBone(const tString &asName,const tString &asId);
+    cBone *CreateChildBone(const tString &asName, const tString &asId);
 
     void SetTransform(const cMatrixf &a_mtxTransform);
-    const cMatrixf& GetLocalTransform();
-    const cMatrixf& GetWorldTransform();
-    const cMatrixf& GetInvWorldTransform();
+    const cMatrixf &GetLocalTransform();
+    const cMatrixf &GetWorldTransform();
+    const cMatrixf &GetInvWorldTransform();
 
     //// -- <UNSCALED> -- ///
     void SetTransformUnscaled(const cMatrixf &a_mtxTransform);
-    const cMatrixf& GetWorldTransformUnscaled();
-    const cMatrixf& GetLocalTransformUnscaled();
+    const cMatrixf &GetWorldTransformUnscaled();
+    const cMatrixf &GetLocalTransformUnscaled();
     void NeedsUpdateUnscaled();
     //// -- </UNSCALED> -- ///
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
-    const tString& GetSid()
+    const tString &GetSid()
     {
         return msSid;
     }
 
     cBoneIterator GetChildIterator();
-    tBoneList* GetChildList()
+    tBoneList *GetChildList()
     {
         return &mlstChildren;
     }
 
     void Detach();
 
-    cBone* GetParent()
+    cBone *GetParent()
     {
         return mpParent;
     }
@@ -91,10 +91,10 @@ private:
     void UpdateUnscaledMatrix();
     //// -- </UNSCALED> -- ///
 
-    cBone* mpParent;
+    cBone *mpParent;
     tBoneList mlstChildren;
 
-    cSkeleton* mpSkeleton;
+    cSkeleton *mpSkeleton;
 
     bool mbNeedsUpdate;
 

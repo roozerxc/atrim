@@ -21,17 +21,17 @@ class cPhysics;
 class cWorldLoaderHandler : public iResourceLoaderHandler
 {
 public:
-    cWorldLoaderHandler(cResources* apResources,cGraphics *apGraphics, cScene *apScene, cPhysics *apPhysics);
+    cWorldLoaderHandler(cResources* apResources, cGraphics *apGraphics, cScene *apScene, cPhysics *apPhysics);
     ~cWorldLoaderHandler();
 
-    cWorld* LoadWorld(const tWString& asFile,tWorldLoadFlag aFlags);
+    cWorld *LoadWorld(const tWString& asFile, tWorldLoadFlag aFlags);
 
 private:
     void SetupLoader(iResourceLoader *apLoader);
 
     cGraphics *mpGraphics;
-    cResources* mpResources;
-    cScene* mpScene;
+    cResources *mpResources;
+    cScene *mpScene;
     cPhysics *mpPhysics;
 };
 

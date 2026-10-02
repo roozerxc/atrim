@@ -21,12 +21,12 @@ namespace hpl
 cMouseSDL::cMouseSDL(cLowLevelInputSDL *apLowLevelInputSDL) : iMouse("SDL Portable Mouse")
 {
     mvMButtonArray.resize(eMouseButton_LastEnum);
-    mvMButtonArray.assign(mvMButtonArray.size(),false);
+    mvMButtonArray.assign(mvMButtonArray.size(), false);
 
     mpLowLevelInputSDL = apLowLevelInputSDL;
 
-    mvMouseRelPos = cVector2l(0,0);
-    mvMouseAbsPos = cVector2l(0,0);
+    mvMouseRelPos = cVector2l(0, 0);
+    mvMouseAbsPos = cVector2l(0, 0);
 
     mbWheelUpMoved = false;
     mbWheelDownMoved = false;
@@ -49,10 +49,10 @@ void cMouseSDL::Update()
     if(mbFirstTime)
     {
         //Clear all relative movement
-        for(int i=0; i<10; ++i)
+        for(int i = 0; i < 10; ++i)
         {
             SDL_PumpEvents();
-            int lX,lY;
+            int lX, lY;
             SDL_GetRelativeMouseState(&lX, &lY);
         }
         mbFirstTime = false;
@@ -77,7 +77,7 @@ void cMouseSDL::Update()
 
         if(pEvent->type == SDL_MOUSEMOTION)
         {
-            mvMouseAbsPos = cVector2l(pEvent->motion.x,pEvent->motion.y);
+            mvMouseAbsPos = cVector2l(pEvent->motion.x, pEvent->motion.y);
 
             Uint8 buttonState = pEvent->motion.state;
 
@@ -88,7 +88,7 @@ void cMouseSDL::Update()
         }
         else
         {
-            bool bButtonIsDown = pEvent->type==SDL_MOUSEBUTTONDOWN;
+            bool bButtonIsDown = pEvent->type == SDL_MOUSEBUTTONDOWN;
 
             //if(pEvent->button.button == SDL_BUTTON_WHEELUP)Log(" Wheel %d!\n",bButtonIsDown);
 
@@ -144,9 +144,9 @@ void cMouseSDL::Update()
         mvMButtonArray[eMouseButton_WheelUp] = false;
     }
 
-    int lX,lY;
+    int lX, lY;
     SDL_GetRelativeMouseState(&lX, &lY);
-    mvMouseRelPos = cVector2l(lX,lY);
+    mvMouseRelPos = cVector2l(lX, lY);
 
 
 }
@@ -170,7 +170,7 @@ cVector2l cMouseSDL::GetAbsPosition()
 cVector2l cMouseSDL::GetRelPosition()
 {
     cVector2l vPos = mvMouseRelPos;
-    mvMouseRelPos = cVector2l(0,0);
+    mvMouseRelPos = cVector2l(0, 0);
 
     return vPos;
 }

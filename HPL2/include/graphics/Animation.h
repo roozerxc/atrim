@@ -11,7 +11,7 @@ namespace hpl
 
 class cAnimationTrack;
 
-typedef std::vector<cAnimationTrack*> tAnimationTrackVec;
+typedef std::vector<cAnimationTrack *> tAnimationTrackVec;
 typedef tAnimationTrackVec::iterator tAnimationTrackVecIt;
 
 class cAnimation : public iResourceBase
@@ -23,22 +23,22 @@ public:
     float GetLength();
     void SetLength(float afTime);
 
-    cAnimationTrack* CreateTrack(const tString &asName, tAnimTransformFlag aFlags);
-    cAnimationTrack* GetTrack(int alIndex);
-    cAnimationTrack* GetTrackByName(const tString &asName);
+    cAnimationTrack *CreateTrack(const tString &asName, tAnimTransformFlag aFlags);
+    cAnimationTrack *GetTrack(int alIndex);
+    cAnimationTrack *GetTrackByName(const tString &asName);
     void ReserveTrackNum(int alNum);
     int GetTrackNum();
 
-    const char* GetAnimationName()
+    const char *GetAnimationName()
     {
         return msAnimName.c_str();
     }
     void SetAnimationName(const tString &asName)
     {
-        msAnimName =asName;
+        msAnimName = asName;
     }
 
-    tString& GetFileName()
+    tString &GetFileName()
     {
         return msFileName;
     }

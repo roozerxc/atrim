@@ -15,7 +15,7 @@ public:
     iBitmapLoaderDevil();
     virtual ~iBitmapLoaderDevil();
 
-    bool SaveBitmap(cBitmap* apBitmap,const tWString& asFile, tBitmapSaveFlag aFlags);
+    bool SaveBitmap(cBitmap* apBitmap, const tWString& asFile, tBitmapSaveFlag aFlags);
 
 protected:
     void Initialize();

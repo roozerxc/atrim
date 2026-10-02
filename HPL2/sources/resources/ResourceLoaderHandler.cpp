@@ -49,14 +49,14 @@ void iResourceLoaderHandler::AddLoader(iResourceLoader *apLoader)
 
 //-----------------------------------------------------------------------
 
-iResourceLoader* iResourceLoaderHandler::GetLoaderForFile(const tWString& asFileName)
+iResourceLoader *iResourceLoaderHandler::GetLoaderForFile(const tWString& asFileName)
 {
     return GetLoaderForFile(cString::To8Char(asFileName));
 }
 
 //-----------------------------------------------------------------------
 
-iResourceLoader* iResourceLoaderHandler::GetLoaderForFile(const tString& asFileName)
+iResourceLoader *iResourceLoaderHandler::GetLoaderForFile(const tString& asFileName)
 {
     tString sLowExt = cString::ToLowerCase(cString::GetFileExt(asFileName));
 
@@ -70,7 +70,7 @@ iResourceLoader* iResourceLoaderHandler::GetLoaderForFile(const tString& asFileN
             return pLoader;
         }
     }
-    Error("No loader for file extension '%s' found!\n",sLowExt.c_str());
+    Error("No loader for file extension '%s' found!\n", sLowExt.c_str());
     return NULL;
 }
 

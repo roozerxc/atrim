@@ -17,7 +17,7 @@ public:
     ~cWidgetGroup();
 
     void SetHeaderText(const tWString& asText);
-    const tWString& GetHeaderText();
+    const tWString &GetHeaderText();
 
     void SetDefaultFontSize(const cVector2f& avSize);
 protected:

@@ -12,7 +12,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cAnimation::cAnimation(const tString &asName, const tWString &asFullPath, const tString &asFile) : iResourceBase(asName, asFullPath,0)
+cAnimation::cAnimation(const tString &asName, const tWString &asFullPath, const tString &asFile) : iResourceBase(asName, asFullPath, 0)
 {
     msAnimName = "";
     msFileName = asFile;
@@ -47,9 +47,9 @@ void cAnimation::SetLength(float afTime)
 
 //-----------------------------------------------------------------------
 
-cAnimationTrack* cAnimation::CreateTrack(const tString &asName, tAnimTransformFlag aFlags)
+cAnimationTrack *cAnimation::CreateTrack(const tString &asName, tAnimTransformFlag aFlags)
 {
-    cAnimationTrack *pTrack = hplNew( cAnimationTrack,(asName, aFlags, this) );
+    cAnimationTrack *pTrack = hplNew( cAnimationTrack, (asName, aFlags, this) );
 
     mvTracks.push_back(pTrack);
 
@@ -58,16 +58,16 @@ cAnimationTrack* cAnimation::CreateTrack(const tString &asName, tAnimTransformFl
 
 //-----------------------------------------------------------------------
 
-cAnimationTrack* cAnimation::GetTrack(int alIndex)
+cAnimationTrack *cAnimation::GetTrack(int alIndex)
 {
     return mvTracks[alIndex];
 }
 
 //-----------------------------------------------------------------------
 
-cAnimationTrack* cAnimation::GetTrackByName(const tString &asName)
+cAnimationTrack *cAnimation::GetTrackByName(const tString &asName)
 {
-    for(size_t i=0; i< mvTracks.size(); ++i)
+    for(size_t i = 0; i < mvTracks.size(); ++i)
     {
         if(asName == tString(mvTracks[i]->GetName()))
         {

@@ -12,7 +12,7 @@ class cGuiSkinFont;
 class cWidgetFrame : public iWidget
 {
 public:
-    cWidgetFrame(cGuiSet *apSet, cGuiSkin *apSkin, bool abHScrollBar=false, bool abVScrollBar=false);
+    cWidgetFrame(cGuiSet *apSet, cGuiSkin *apSkin, bool abHScrollBar = false, bool abVScrollBar = false);
     virtual ~cWidgetFrame();
 
     void SetDrawFrame(bool abX)
@@ -46,7 +46,7 @@ public:
     {
         mBackGroundColor = aColor;
     }
-    const cColor& GetBackGroundColor()
+    const cColor &GetBackGroundColor()
     {
         return mBackGroundColor;
     }
@@ -100,8 +100,8 @@ protected:
     cVector3f mvMinWidgetCoord;
     cVector3f mvMaxWidgetCoord;
 
-    cWidgetSlider* mpHSlider;
-    cWidgetSlider* mpVSlider;
+    cWidgetSlider *mpHSlider;
+    cWidgetSlider *mpVSlider;
 
     bool mbScrollBarsNeedUpdate;
     bool mbScrollUpdated;

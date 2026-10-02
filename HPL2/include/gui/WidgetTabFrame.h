@@ -19,7 +19,7 @@ class cWidgetTabFrame;
 
 class cGuiGfxElement;
 
-typedef vector<cWidgetTab*>            tWidgetTabVector;
+typedef vector<cWidgetTab *>            tWidgetTabVector;
 typedef tWidgetTabVector::iterator    tWidgetTabVectorIt;
 
 
@@ -35,7 +35,7 @@ public:
     cWidgetTabLabel(cGuiSet* apSet, cGuiSkin* apSkin);
     virtual ~cWidgetTabLabel();
 
-    cGuiGfxElement* GetIcon()
+    cGuiGfxElement *GetIcon()
     {
         return mpGfxIcon;
     }
@@ -53,15 +53,15 @@ protected:
 
     ///////////////////////////
     // Data
-    cWidgetTab* mpParentTab;
+    cWidgetTab *mpParentTab;
 
 
 
-    cGuiGfxElement* mvGfxBorders[4];
-    cGuiGfxElement* mvGfxCorners[4];
-    cGuiGfxElement* mpGfxBackground;
+    cGuiGfxElement *mvGfxBorders[4];
+    cGuiGfxElement *mvGfxCorners[4];
+    cGuiGfxElement *mpGfxBackground;
 
-    cGuiGfxElement* mpGfxIcon;
+    cGuiGfxElement *mpGfxIcon;
 };
 
 //////////////////////////////////////////////////////////////////
@@ -88,11 +88,11 @@ public:
 
     void SetIcon(cGuiGfxElement* apIcon);
 
-    cWidgetTabFrame* GetParentTabFrame()
+    cWidgetTabFrame *GetParentTabFrame()
     {
         return mpParentTabFrame;
     }
-    cWidgetTabLabel* GetTabLabel()
+    cWidgetTabLabel *GetTabLabel()
     {
         return mpTabLabel;
     }
@@ -123,10 +123,10 @@ protected:
 
     bool mbOnTop;
 
-    cWidgetTabFrame* mpParentTabFrame;
+    cWidgetTabFrame *mpParentTabFrame;
 
-    cWidgetTabLabel* mpTabLabel;
-    cWidgetFrame*    mpFrame;
+    cWidgetTabLabel *mpTabLabel;
+    cWidgetFrame    *mpFrame;
 };
 
 //////////////////////////////////////////////////////////////////
@@ -141,14 +141,14 @@ public:
     cWidgetTabFrame(cGuiSet* apSet, cGuiSkin* apSkin);
     virtual ~cWidgetTabFrame();
 
-    cWidgetTab* AddTab(const tWString& asTabCaption);
+    cWidgetTab *AddTab(const tWString& asTabCaption);
     void ClearTabs();
 
     int GetTabNum();
-    cWidgetTab* GetTab(int alIdx);
-    cWidgetTab* GetTab(const tWString& asTabCaption);
+    cWidgetTab *GetTab(int alIdx);
+    cWidgetTab *GetTab(const tWString& asTabCaption);
 
-    cWidgetTab* GetTabOnTop()
+    cWidgetTab *GetTabOnTop()
     {
         return mpTopTab;
     }
@@ -199,9 +199,9 @@ protected:
     /////////////////////////////
     // Data
     tWidgetTabVector mvTabs;
-    cWidgetTab*        mpTopTab;
+    cWidgetTab        *mpTopTab;
 
-    cWidgetButton* mvArrowButtons[2];
+    cWidgetButton *mvArrowButtons[2];
 
     float mfBackgroundZ;
     float mfForegroundZ;
@@ -218,22 +218,22 @@ protected:
     float mfTabInactiveOffset;
     float mfTabActiveOffset;
 
-    cGuiGfxElement* mvGfxArrows[2];
-    cGuiGfxElement* mvGfxDisabledArrows[2];
+    cGuiGfxElement *mvGfxArrows[2];
+    cGuiGfxElement *mvGfxDisabledArrows[2];
 
     float mfTextLeftPadding;
     float mfTextRightPadding;
     float mfIconPadding;
 
-    cGuiGfxElement* mvGfxTabLabelBorders[4];
-    cGuiGfxElement* mvGfxTabLabelCorners[4];
-    cGuiGfxElement* mpGfxTabLabelBG;
-    cGuiGfxElement* mpGfxTabLabelBGActive;
+    cGuiGfxElement *mvGfxTabLabelBorders[4];
+    cGuiGfxElement *mvGfxTabLabelCorners[4];
+    cGuiGfxElement *mpGfxTabLabelBG;
+    cGuiGfxElement *mpGfxTabLabelBGActive;
 
 
-    cGuiGfxElement* mvGfxTabBorders[4];
-    cGuiGfxElement* mvGfxTabCorners[4];
-    cGuiGfxElement* mpGfxTabBG;
+    cGuiGfxElement *mvGfxTabBorders[4];
+    cGuiGfxElement *mvGfxTabCorners[4];
+    cGuiGfxElement *mpGfxTabBG;
 
     bool mbHoriScrollEnabled;
     bool mbVertScrollEnabled;

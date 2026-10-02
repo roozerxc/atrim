@@ -30,13 +30,13 @@ class cViewport;
 
 //--------------------------------------------------------------------
 
-typedef std::list<cViewport*> tViewportList;
+typedef std::list<cViewport *> tViewportList;
 typedef tViewportList::iterator tViewportListIt;
 
-typedef std::list<cCamera*> tCameraList;
+typedef std::list<cCamera *> tCameraList;
 typedef tCameraList::iterator tCameraListIt;
 
-typedef std::list<cWorld*> tWorldList;
+typedef std::list<cWorld *> tWorldList;
 typedef tWorldList::iterator tWorldListIt;
 
 //--------------------------------------------------------------------
@@ -52,8 +52,8 @@ typedef tWorldList::iterator tWorldListIt;
 class cScene : public iUpdateable
 {
 public:
-    cScene(cGraphics *apGraphics,cResources *apResources, cSound* apSound, cPhysics *apPhysics,
-           cSystem *apSystem, cAI *apAI,cGui *apGui);
+    cScene(cGraphics *apGraphics, cResources *apResources, cSound* apSound, cPhysics *apPhysics,
+           cSystem *apSystem, cAI *apAI, cGui *apGui);
     ~cScene();
 
     void Reset();
@@ -67,7 +67,7 @@ public:
 
     ///// VIEW PORT METHODS ////////////////////
 
-    cViewport* CreateViewport(cCamera *apCamera=NULL, cWorld *apWorld=NULL, bool abPushFront = false);
+    cViewport *CreateViewport(cCamera *apCamera = NULL, cWorld *apWorld = NULL, bool abPushFront = false);
     void DestroyViewport(cViewport* apViewPort);
     bool ViewportExists(cViewport* apViewPort);
 
@@ -75,20 +75,20 @@ public:
 
     ///// CAMERA METHODS ////////////////////
 
-    cCamera* CreateCamera(eCameraMoveMode aMoveMode);
+    cCamera *CreateCamera(eCameraMoveMode aMoveMode);
     void DestroyCamera(cCamera* apCam);
 
     ///// WORLD METHODS ////////////////////
 
-    cWorld* LoadWorld(const tString& asFile, tWorldLoadFlag aFlags);
-    cWorld* CreateWorld(const tString& asName);
+    cWorld *LoadWorld(const tString& asFile, tWorldLoadFlag aFlags);
+    cWorld *CreateWorld(const tString& asName);
     void DestroyWorld(cWorld* apWorld);
     bool WorldExists(cWorld* apWorld);
 
 
 private:
-    void Render3DGui(cViewport* apViewPort,cFrustum *apFrustum,double adFrameTime);
-    void RenderPrePostEffectScreenGui(cViewport* apViewPort,double adFrameTime);
+    void Render3DGui(cViewport* apViewPort, cFrustum *apFrustum, double adFrameTime);
+    void RenderPrePostEffectScreenGui(cViewport* apViewPort, double adFrameTime);
     void RenderScreenGui(cViewport* apViewPort, double adFrameTime);
 
     cGraphics *mpGraphics;

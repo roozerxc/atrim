@@ -117,10 +117,10 @@ typedef tDoubleVec::iterator tDoubleVecIt;
 typedef std::list<double> tDoubleList;
 typedef tDoubleList::iterator tDoubleListIt;
 
-typedef std::vector<float*> tFloatPtrVec;
+typedef std::vector<float *> tFloatPtrVec;
 typedef tFloatPtrVec::iterator tFloatPtrVecIt;
 
-typedef std::list<float*> tFloatPtrList;
+typedef std::list<float *> tFloatPtrList;
 typedef tFloatPtrList::iterator tFloatPtrListIt;
 
 typedef std::list<unsigned int> tUIntList;
@@ -197,7 +197,7 @@ public:
     {
         char buff[256];
 
-        snprintf(buff,sizeof(buff),"%d/%d/%d %d:%02d:%02d",month_day,month,year,hours, minutes, seconds);
+        snprintf(buff, sizeof(buff), "%d/%d/%d %d:%02d:%02d", month_day, month, year, hours, minutes, seconds);
 
         return buff;
     }
@@ -349,14 +349,14 @@ class cMemoryPool
 public:
 //---------------------------------
 
-cMemoryPool(size_t alSize, T* (*apCreateFunc)())
+cMemoryPool(size_t alSize, T * (*apCreateFunc)())
     {
-        mvData.resize(alSize,NULL);
+        mvData.resize(alSize, NULL);
         mlCurrentData = 0;
 
         mpCreateFunc = apCreateFunc;
 
-        for(size_t i=0; i< mvData.size(); ++i)
+        for(size_t i = 0; i < mvData.size(); ++i)
         {
             if(mpCreateFunc)
             {
@@ -373,7 +373,7 @@ cMemoryPool(size_t alSize, T* (*apCreateFunc)())
 
     ~cMemoryPool()
     {
-        for(size_t i=0; i< mvData.size(); ++i)
+        for(size_t i = 0; i < mvData.size(); ++i)
         {
             hplDelete(mvData[i]);
         }
@@ -381,17 +381,17 @@ cMemoryPool(size_t alSize, T* (*apCreateFunc)())
 
     //---------------------------------
 
-    T* Create()
+    T *Create()
     {
         T*  pData = mvData[mlCurrentData];
 
-        if(mlCurrentData == mvData.size()-1)
+        if(mlCurrentData == mvData.size() - 1)
         {
             size_t lNewSize = mvData.size() * 2;
             size_t lStart = mvData.size();
             mvData.resize(lNewSize);
 
-            for(size_t i=lStart; i< mvData.size(); ++i)
+            for(size_t i = lStart; i < mvData.size(); ++i)
             {
                 if(mpCreateFunc)
                 {
@@ -399,7 +399,7 @@ cMemoryPool(size_t alSize, T* (*apCreateFunc)())
                 }
                 else
                 {
-                    mvData[i] = hplNew(T,());
+                    mvData[i] = hplNew(T, ());
                 }
             }
 
@@ -417,7 +417,7 @@ cMemoryPool(size_t alSize, T* (*apCreateFunc)())
 
     void Release(T *apData)
     {
-        if(mlCurrentData==0)
+        if(mlCurrentData == 0)
         {
             return;
         }
@@ -430,21 +430,21 @@ cMemoryPool(size_t alSize, T* (*apCreateFunc)())
 
     void ClearUnused()
     {
-        for(size_t i=mlCurrentData+1; i< mvData.size(); ++i)
+        for(size_t i = mlCurrentData + 1; i < mvData.size(); ++i)
         {
             hplDelete(mvData[i]);
         }
-        mvData.resize(mlCurrentData+1);
+        mvData.resize(mlCurrentData + 1);
     }
 
     //---------------------------------
 
 private:
-    std::vector<T*> mvData;
+    std::vector<T *> mvData;
 
     size_t mlCurrentData;
 
-    T* (*mpCreateFunc)();
+    T *(*mpCreateFunc)();
 };
 
 //----------------------------------------------------------
@@ -456,7 +456,7 @@ private:
 
 //--------------------------------------------------------
 
-template <class CONT,class T>
+template <class CONT, class T>
 void STLFindAndRemove(CONT &aCont, T* pObject)
 {
     typename CONT::iterator it = aCont.begin();
@@ -470,7 +470,7 @@ void STLFindAndRemove(CONT &aCont, T* pObject)
     }
 }
 
-template <class CONT,class T>
+template <class CONT, class T>
 void STLMapFindAndRemove(CONT &aCont, T* pObject)
 {
     typename CONT::iterator it = aCont.begin();
@@ -486,7 +486,7 @@ void STLMapFindAndRemove(CONT &aCont, T* pObject)
 
 //--------------------------------------------------------
 
-template <class CONT,class T>
+template <class CONT, class T>
 void STLFindAndDelete(CONT &aCont, T* pObject)
 {
     typename CONT::iterator it = aCont.begin();
@@ -501,7 +501,7 @@ void STLFindAndDelete(CONT &aCont, T* pObject)
     hplDelete(pObject);
 }
 
-template <class CONT,class T>
+template <class CONT, class T>
 void STLMapFindAndDelete(CONT &aCont, T* pObject)
 {
     typename CONT::iterator it = aCont.begin();
@@ -519,7 +519,7 @@ void STLMapFindAndDelete(CONT &aCont, T* pObject)
 //--------------------------------------------------------
 
 template <class CONT>
-void* STLFindByName(CONT &aCont,const tString& asName )
+void *STLFindByName(CONT &aCont, const tString& asName )
 {
     typename CONT::iterator it = aCont.begin();
     for(; it != aCont.end(); it++)
@@ -540,7 +540,7 @@ bool STLContainsPointer(CONT &aCont, const void* apPointer)
     typename CONT::iterator it = aCont.begin();
     for(; it != aCont.end(); ++it)
     {
-        if((*it)==apPointer)
+        if((*it) == apPointer)
         {
             return true;
         }
@@ -601,7 +601,7 @@ void STLMapDeleteAll_NoClear(T &aCont)
 
 //--------------------------------------------------------
 
-template <class CONT,class T>
+template <class CONT, class T>
 bool STLObjectExists(CONT &aCont, T* apObject)
 {
     return aCont.find(apObject) != aCont.end();
@@ -629,7 +629,7 @@ public:
         return mIt != mpCont->end();
     }
 
-    void* NextPtr()
+    void *NextPtr()
     {
         if(mIt == mpCont->end())
         {
@@ -677,7 +677,7 @@ public:
 
 private:
     IT mIt;
-    CONT* mpCont;
+    CONT *mpCont;
 
 };
 
@@ -702,7 +702,7 @@ public:
         return mIt != mpCont->end();
     }
 
-    void* NextPtr()
+    void *NextPtr()
     {
         if(mIt == mpCont->end())
         {
@@ -750,7 +750,7 @@ public:
 
 private:
     IT mIt;
-    CONT* mpCont;
+    CONT *mpCont;
 
 };
 

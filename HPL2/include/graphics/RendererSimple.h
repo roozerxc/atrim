@@ -18,7 +18,7 @@ class iLight;
 class cRendererSimple : public  iRenderer
 {
 public:
-    cRendererSimple(cGraphics *apGraphics,cResources* apResources);
+    cRendererSimple(cGraphics *apGraphics, cResources* apResources);
     ~cRendererSimple();
 
     bool LoadData();

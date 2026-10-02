@@ -54,7 +54,7 @@ cMeshLoaderCollada::cMeshLoaderCollada(iLowLevelGraphics *apLowLevelGraphics, cM
     AddSupportedExtension("dae");
     AddSupportedExtension("dae_anim");
 
-    mFlags =0;
+    mFlags = 0;
     mfUnitScale = 1;
 
     m_mtxZToY = cMatrixf(-1.0f, 0.0f, 0.0f, 0.0f,
@@ -77,22 +77,22 @@ cMeshLoaderCollada::~cMeshLoaderCollada()
 
 //-----------------------------------------------------------------------
 
-static cColladaNode* GetNodeFromController(const tString& asGeomId,
+static cColladaNode *GetNodeFromController(const tString& asGeomId,
         tColladaControllerVec &avColladaControllers,
         cColladaScene &aColladaScene)
 {
-    tString sControlId="";
-    bool bGuess=false;
-    for(int ctrl=0; ctrl < (int)avColladaControllers.size(); ctrl++)
+    tString sControlId = "";
+    bool bGuess = false;
+    for(int ctrl = 0; ctrl < (int)avColladaControllers.size(); ctrl++)
     {
         cColladaController &Control = avColladaControllers[ctrl];
         if(Control.msTarget == asGeomId)
         {
             sControlId = Control.msId;
-            bGuess=false;
+            bGuess = false;
         }
         //Guessing, if no controller found try the one with source "".
-        else if(sControlId=="" && Control.msTarget=="")
+        else if(sControlId == "" && Control.msTarget == "")
         {
             sControlId = Control.msId;
             bGuess = true;
@@ -102,16 +102,16 @@ static cColladaNode* GetNodeFromController(const tString& asGeomId,
     if(bGuess) Warning("No controller for for geometry %s, guessing on %s target = ''\n",
                            asGeomId.c_str(), sControlId.c_str());
 
-    if(sControlId=="")
+    if(sControlId == "")
     {
         Warning("No controller refered to the geometry!\n");
         return NULL;
     }
 
     cColladaNode* pNode = aColladaScene.GetNodeFromSource(sControlId);
-    if(pNode==NULL)
+    if(pNode == NULL)
     {
-        Warning("No node for controller '%s'\n",sControlId.c_str());
+        Warning("No node for controller '%s'\n", sControlId.c_str());
     }
 
     return pNode;
@@ -123,15 +123,15 @@ static void FixLocalTransform(cMatrixf *apMatrix, cColladaNode *apNode,
                               tColladaAnimationVec &avColladaAnimations, cSkeleton *apSkeleton, bool abHasSeveralBodies)
 {
     cColladaNode *pParentNode = apNode->pParent;
-    if(pParentNode && apSkeleton==NULL)
+    if(pParentNode && apSkeleton == NULL)
     {
         if(avColladaAnimations.empty() == false || abHasSeveralBodies)
         {
-            *apMatrix = cMath::MatrixMul(cMath::MatrixScale(pParentNode->mvScale),*apMatrix);
+            *apMatrix = cMath::MatrixMul(cMath::MatrixScale(pParentNode->mvScale), *apMatrix);
         }
         else
         {
-            *apMatrix = cMath::MatrixMul(pParentNode->m_mtxTransform,*apMatrix);
+            *apMatrix = cMath::MatrixMul(pParentNode->m_mtxTransform, *apMatrix);
         }
     }
 }
@@ -142,22 +142,22 @@ static void FixLocalPosition(cVector3f *apPos, cColladaNode *apNode,
                              tColladaAnimationVec &avColladaAnimations, cSkeleton *apSkeleton, bool abHasSeveralBodies)
 {
     cColladaNode *pParentNode = apNode->pParent;
-    if(pParentNode && apSkeleton==NULL)
+    if(pParentNode && apSkeleton == NULL)
     {
         if(avColladaAnimations.empty() == false || abHasSeveralBodies)
         {
-            *apPos = cMath::MatrixMul(cMath::MatrixScale(pParentNode->mvScale),*apPos);
+            *apPos = cMath::MatrixMul(cMath::MatrixScale(pParentNode->mvScale), *apPos);
         }
         else
         {
-            *apPos = cMath::MatrixMul(pParentNode->m_mtxTransform,*apPos);
+            *apPos = cMath::MatrixMul(pParentNode->m_mtxTransform, *apPos);
         }
     }
 }
 
 //-------------------------------------------------
 
-cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
+cMesh *cMeshLoaderCollada::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags)
 {
     /////////////////////////////////////////////////
     // TRY USING MSH LOADER
@@ -167,7 +167,7 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
         cDate currentDate = cPlatform::FileModifiedDate(asFile);
         cDate mshDate = cPlatform::FileModifiedDate(sMSHFile);
 
-        if(cResources::GetForceCacheLoadingAndSkipSaving() || mshDate > currentDate || cPlatform::FileExists(asFile)==false)
+        if(cResources::GetForceCacheLoadingAndSkipSaving() || mshDate > currentDate || cPlatform::FileExists(asFile) == false)
         {
             cMesh *pMesh = mpMeshLoaderMSH->LoadMesh(sMSHFile, aFlags);
             if(pMesh)
@@ -203,12 +203,12 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
     tColladaGeometryVec *pGeomVec = (aFlags & eMeshLoadFlag_NoGeometry) ? NULL : &vColladaGeometries;
 
     bool bRet = FillStructures(asFile, &vColladaImages, &vColladaTextures,
-                               &vColladaMaterials,&vColladaLights,
+                               &vColladaMaterials, &vColladaLights,
                                pGeomVec, &vColladaControllers,
                                &vColladaAnimations,
-                               &ColladaScene,true);
+                               &ColladaScene, true);
 
-    if(bRet==false)
+    if(bRet == false)
     {
         return NULL;
     }
@@ -216,10 +216,10 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
     ////////////////////////
     //Check so the mesh is okay
     bool bMeshIsOKToCache = true;
-    for(size_t geom=0; geom<vColladaGeometries.size(); ++geom)
+    for(size_t geom = 0; geom < vColladaGeometries.size(); ++geom)
     {
         cColladaGeometry *pGeometry = &vColladaGeometries[geom];
-        for(size_t i=0; i<pGeometry->mvVertexVec.size(); ++i)
+        for(size_t i = 0; i < pGeometry->mvVertexVec.size(); ++i)
         {
             cVector3f vNrm = pGeometry->mvVertexVec[i].norm;
 
@@ -257,11 +257,11 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
         ////////////////////////////////////
         //Set the bind position of the bones
         //(This will set the local matrix as the global bind)
-        for(size_t i=0; i< vColladaControllers.size(); i++)
+        for(size_t i = 0; i < vColladaControllers.size(); i++)
         {
             cColladaController &Ctrl = vColladaControllers[i];
 
-            for(size_t j=0; j<Ctrl.mvJoints.size(); j++)
+            for(size_t j = 0; j < Ctrl.mvJoints.size(); j++)
             {
                 cBone *pBone = pSkeleton->GetBoneBySid(Ctrl.mvJoints[j]);
 
@@ -272,7 +272,7 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
                 }
                 else
                 {
-                    Log("Bone '%s' does not exist\n",Ctrl.mvJoints[j].c_str());
+                    Log("Bone '%s' does not exist\n", Ctrl.mvJoints[j].c_str());
                 }
             }
         }
@@ -284,13 +284,13 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
         while(BoneIt.HasNext())
         {
             cMatrixf mtxRoot = cMatrixf::Identity;
-            CalcLocalMatrixAfterControllerBindMatrixRec(BoneIt.Next(), mtxRoot,0);
+            CalcLocalMatrixAfterControllerBindMatrixRec(BoneIt.Next(), mtxRoot, 0);
         }
     }
 
     ////////////////////////////////////
     //Create Mesh
-    cMesh *pMesh = hplNew( cMesh, (cString::To8Char(asFile), asFile, mpMaterialManager,mpAnimationManager) );
+    cMesh *pMesh = hplNew( cMesh, (cString::To8Char(asFile), asFile, mpMaterialManager, mpAnimationManager) );
 
     //Set the skeleton to the mesh
     if(pSkeleton)
@@ -301,17 +301,17 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
     ///////////////////////////
     //Create Sub meshes
     std::vector<cMeshCollider> vMeshColliders;
-    for(size_t i=0; i<vColladaGeometries.size(); i++)
+    for(size_t i = 0; i < vColladaGeometries.size(); i++)
     {
         cColladaGeometry &Geom = vColladaGeometries[i];
 
         cColladaNode *pGeomNode = ColladaScene.GetNodeFromSource(Geom.msId);
-        if(pGeomNode==NULL)
+        if(pGeomNode == NULL)
         {
-            pGeomNode = GetNodeFromController(Geom.msId,vColladaControllers,ColladaScene);
-            if(pGeomNode==NULL)
+            pGeomNode = GetNodeFromController(Geom.msId, vColladaControllers, ColladaScene);
+            if(pGeomNode == NULL)
             {
-                Error("No node with geometry id '%s'\n",Geom.msId.c_str());
+                Error("No node with geometry id '%s'\n", Geom.msId.c_str());
                 continue;
             }
         }
@@ -320,14 +320,14 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
 
         /////////////////////////////////////////////////////
         //If the name starts with '_' it is a special object.
-        if(sNodeName.length()>0 && sNodeName[0] == '_')
+        if(sNodeName.length() > 0 && sNodeName[0] == '_')
         {
             tStringVec vStrings;
             tString sSepp = "_";
-            cString::GetStringVec(sNodeName,vStrings,&sSepp);
+            cString::GetStringVec(sNodeName, vStrings, &sSepp);
 
             tString sSpecialName = cString::ToLowerCase(vStrings[0]);
-            tString sTypeName = vStrings.size()<=1 ? "" : vStrings[1];
+            tString sTypeName = vStrings.size() <= 1 ? "" : vStrings[1];
 
             bool bCreateMesh = true;
 
@@ -335,23 +335,23 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
 
             /////////////////////////////////////
             //COLLIDER
-            if(    (sSpecialName == "collider" || sSpecialName == "charcollider") && vStrings.size()>1 && sTypeName != "mesh")
+            if(    (sSpecialName == "collider" || sSpecialName == "charcollider") && vStrings.size() > 1 && sTypeName != "mesh")
             {
                 bCreateMesh = false;
 
                 tFloatVec vVertexVec;
                 tVertexVec &vArray = Geom.mvVertexVec;
-                vVertexVec.resize(vArray.size() *3);
+                vVertexVec.resize(vArray.size() * 3);
 
-                for(size_t vtx=0; vtx < vArray.size(); ++vtx)
+                for(size_t vtx = 0; vtx < vArray.size(); ++vtx)
                 {
-                    vVertexVec[vtx*3 + 0] = vArray[vtx].pos.x;
-                    vVertexVec[vtx*3 + 1] = vArray[vtx].pos.y;
-                    vVertexVec[vtx*3 + 2] = vArray[vtx].pos.z;
+                    vVertexVec[vtx * 3 + 0] = vArray[vtx].pos.x;
+                    vVertexVec[vtx * 3 + 1] = vArray[vtx].pos.y;
+                    vVertexVec[vtx * 3 + 2] = vArray[vtx].pos.z;
                 }
 
                 cBoundingVolume TempBV;
-                TempBV.AddArrayPoints(&vVertexVec[0],(int)vArray.size());
+                TempBV.AddArrayPoints(&vVertexVec[0], (int)vArray.size());
                 TempBV.CreateFromPoints(3);
 
                 tString sShapeType = cString::ToLowerCase(vStrings[1]);
@@ -384,9 +384,9 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
                 meshCollider.mbCharCollider = sSpecialName == "charcollider";
 
                 cColladaNode *pNode = ColladaScene.GetNodeFromSource(Geom.msId);
-                if(pNode==NULL)
+                if(pNode == NULL)
                 {
-                    Warning("No node for geometry '%s' when creating collider!\n",Geom.msId.c_str());
+                    Warning("No node for geometry '%s' when creating collider!\n", Geom.msId.c_str());
                     continue;
                 }
 
@@ -437,7 +437,7 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
                 vMeshColliders.push_back(meshCollider);
             }
 
-            if(bCreateMesh==false)
+            if(bCreateMesh == false)
             {
                 continue;
             }
@@ -485,7 +485,7 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
         /////////////////////////////
         //Add material
         tString sNodeMaterial = pGeomNode->msInstanceMaterial != "" ? pGeomNode->msInstanceMaterial : Geom.msMaterial;
-        tString sMatName = GetMaterialTextureFile(sNodeMaterial,vColladaMaterials,vColladaTextures,    vColladaImages);
+        tString sMatName = GetMaterialTextureFile(sNodeMaterial, vColladaMaterials, vColladaTextures,    vColladaImages);
 
         //Log("Material name: '%s'\n",sMatName.c_str());
         if(sMatName != "")
@@ -495,7 +495,7 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
             sMatName = cString::SetFilePath(sMatName, cString::To8Char(sRelativePath));
 
             //Save the full path to material name!
-            pSubMesh->SetMaterialName(cString::SetFileExt(sMatName,"mat"));
+            pSubMesh->SetMaterialName(cString::SetFileExt(sMatName, "mat"));
 
             //Use Fastload material if set
             if(    mpMeshManager->GetUseFastloadMaterial())
@@ -514,9 +514,9 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
             else
             {
                 cMaterial *pMaterial = mpMaterialManager->CreateMaterial(sMatName);
-                if(pMaterial==NULL)
+                if(pMaterial == NULL)
                 {
-                    Error("Couldn't create material '%s' for object '%s'\n",sMatName.c_str(), Geom.msName.c_str());
+                    Error("Couldn't create material '%s' for object '%s'\n", sMatName.c_str(), Geom.msName.c_str());
                     //NOTE: Even if the material is null we still want to load the model!
                 }
                 pSubMesh->SetMaterial(pMaterial);
@@ -530,8 +530,8 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
         /////////////////////////////
         //If there is a controller for the mesh, get vertex-bone pairs.
         //First find the controller.
-        cColladaController *pCtrl =NULL;
-        for(size_t j=0; j<vColladaControllers.size(); j++)
+        cColladaController *pCtrl = NULL;
+        for(size_t j = 0; j < vColladaControllers.size(); j++)
         {
             if(vColladaControllers[j].msTarget == Geom.msId)
             {
@@ -540,9 +540,9 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
             }
         }
         //If no controller can be found, guess the one with target=""
-        if(pCtrl==NULL)
+        if(pCtrl == NULL)
         {
-            for(size_t j=0; j<vColladaControllers.size(); j++)
+            for(size_t j = 0; j < vColladaControllers.size(); j++)
             {
                 if(vColladaControllers[j].msTarget == "")
                 {
@@ -558,7 +558,7 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
         {
             //Log("Adding vertex-bone pairs!\n");
             //Iterate the pairs
-            for(size_t j=0; j<pCtrl->mvPairs.size(); j++)
+            for(size_t j = 0; j < pCtrl->mvPairs.size(); j++)
             {
                 //Get all vertices for this vertex pos
                 tColladaExtraVtxListIt ExtraIt = vExtraVtxVec[j].begin();
@@ -612,18 +612,18 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
 
     ///////////////////////////////////////////////
     // Set colliders to sub meshes
-    if(vMeshColliders.empty()==false && pMesh->GetSubMeshNum()>0)
+    if(vMeshColliders.empty() == false && pMesh->GetSubMeshNum() > 0)
     {
-        for(size_t i=0; i<vMeshColliders.size(); ++i)
+        for(size_t i = 0; i < vMeshColliders.size(); ++i)
         {
             cMeshCollider& meshCollider = vMeshColliders[i];
             cSubMesh *pSubMesh = NULL;
-            if(meshCollider.msGroup!="")
+            if(meshCollider.msGroup != "")
             {
                 pSubMesh = pMesh->GetSubMeshName(meshCollider.msGroup);
-                if(pSubMesh==NULL)
+                if(pSubMesh == NULL)
                 {
-                    Log("Sub mesh '%s' for collider was not found!\n",meshCollider.msGroup.c_str());
+                    Log("Sub mesh '%s' for collider was not found!\n", meshCollider.msGroup.c_str());
                     continue;
                 }
             }
@@ -647,11 +647,11 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
         tColladaNodeListIt it = ColladaScene.mRoot.mlstChildren.begin();
         for(; it != ColladaScene.mRoot.mlstChildren.end(); ++it)
         {
-            CreateHierarchyNodes(pMesh, pRootNode,*it,vColladaGeometries);
+            CreateHierarchyNodes(pMesh, pRootNode, *it, vColladaGeometries);
         }
 
         //Clear scale on all joint nodes.
-        for(int i=0; i<pMesh->GetNodeNum(); i++)
+        for(int i = 0; i < pMesh->GetNodeNum(); i++)
         {
             cNode3D* pMeshNode = pMesh->GetNode(i);
             cMatrixf mtxNode = pMeshNode->GetLocalMatrix();
@@ -667,7 +667,7 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
             else if(pMeshNode->GetName() != "" && pMeshNode->GetName()[0] != '_' &&
                     pMeshNode->GetCustomFlags() != 0)
             {
-                Error("Cannot find submesh '%s' in node!\n",pMeshNode->GetName().c_str());
+                Error("Cannot find submesh '%s' in node!\n", pMeshNode->GetName().c_str());
             }
 
             pMeshNode->SetMatrix(mtxNode);
@@ -690,20 +690,20 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
         // Go through all tracks and add them to the animation
         float fStart = 9999999.0f;
         float fEnd = 0;
-        for(size_t i=0; i < vColladaAnimations.size(); i++)
+        for(size_t i = 0; i < vColladaAnimations.size(); i++)
         {
             cAnimationTrack *pTrack = CreateAnimTrack(pAnimation, pSkeleton,
-                                      vColladaAnimations[i],&ColladaScene);
-            if(pTrack==NULL)
+                                      vColladaAnimations[i], &ColladaScene);
+            if(pTrack == NULL)
             {
                 continue;
             }
 
             //Update the state and end times if needed
-            if(pTrack->GetKeyFrameNum() >0)
+            if(pTrack->GetKeyFrameNum() > 0)
             {
                 cKeyFrame *pFirst = pTrack->GetKeyFrame(0);
-                cKeyFrame *pLast = pTrack->GetKeyFrame(pTrack->GetKeyFrameNum()-1);
+                cKeyFrame *pLast = pTrack->GetKeyFrame(pTrack->GetKeyFrameNum() - 1);
 
                 if(fStart > pFirst->time)
                 {
@@ -725,7 +725,7 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
             pAnimation->SetLength(fEnd - fStart);
         }
 
-        CleanUpNonAnimatedNodes(pAnimation,pSkeleton, &ColladaScene);
+        CleanUpNonAnimatedNodes(pAnimation, pSkeleton, &ColladaScene);
     }
 
     ///////////////
@@ -768,7 +768,7 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
 
     /////////////////////////////////////////////////
     // SAVE MSH FORMAT
-    if(    cResources::GetForceCacheLoadingAndSkipSaving()==false &&
+    if(    cResources::GetForceCacheLoadingAndSkipSaving() == false &&
             mbLoadAndSaveMSHFormat && bMeshIsOKToCache)
     {
         tWString sMSHFile = cString::SetFileExtW(asFile, _W("msh"));
@@ -818,7 +818,7 @@ cMesh* cMeshLoaderCollada::LoadMesh(const tWString& asFile,tMeshLoadFlag aFlags)
 
 //-----------------------------------------------------------------------
 
-cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
+cAnimation *cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
 {
 
     /////////////////////////////////////////////////
@@ -830,7 +830,7 @@ cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
         cDate mshDate = cPlatform::FileModifiedDate(sMSHFile);
 
         if(    cResources::GetForceCacheLoadingAndSkipSaving() ||
-                mshDate > currentDate || cPlatform::FileExists(asFile)==false)
+                mshDate > currentDate || cPlatform::FileExists(asFile) == false)
         {
             cAnimation *pAnim = mpMeshLoaderMSH->LoadAnimation(sMSHFile);
             if(pAnim)
@@ -858,13 +858,13 @@ cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
     //Scene
     cColladaScene ColladaScene;
 
-    bool bRet = FillStructures(asFile, NULL,NULL,
-                               NULL,NULL,
+    bool bRet = FillStructures(asFile, NULL, NULL,
+                               NULL, NULL,
                                &vColladaGeometries, &vColladaControllers,
                                &vColladaAnimations,
-                               &ColladaScene,true);
+                               &ColladaScene, true);
 
-    if(bRet==false)
+    if(bRet == false)
     {
         return NULL;
     }
@@ -887,11 +887,11 @@ cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
         ////////////////////////////////////
         //Set the bind transform of the bones
         //(This will set the local matrix as the global bind)
-        for(size_t i=0; i< vColladaControllers.size(); i++)
+        for(size_t i = 0; i < vColladaControllers.size(); i++)
         {
             cColladaController &Ctrl = vColladaControllers[i];
 
-            for(size_t j=0; j<Ctrl.mvJoints.size(); j++)
+            for(size_t j = 0; j < Ctrl.mvJoints.size(); j++)
             {
                 cBone *pBone = pSkeleton->GetBoneBySid(Ctrl.mvJoints[j]);
 
@@ -902,7 +902,7 @@ cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
                 }
                 else
                 {
-                    Log("Bone '%s' does not exist.\n",Ctrl.mvJoints[j].c_str());
+                    Log("Bone '%s' does not exist.\n", Ctrl.mvJoints[j].c_str());
                 }
             }
         }
@@ -913,7 +913,7 @@ cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
         while(BoneIt.HasNext())
         {
             cMatrixf mtxRoot = cMatrixf::Identity;
-            CalcLocalMatrixAfterControllerBindMatrixRec(BoneIt.Next(), mtxRoot,0);
+            CalcLocalMatrixAfterControllerBindMatrixRec(BoneIt.Next(), mtxRoot, 0);
         }
     }
 
@@ -924,26 +924,26 @@ cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
     if(vColladaAnimations.empty() == false)
     {
         tString sFileName = cString::GetFileName(cString::To8Char(asFile));
-        pAnimation = hplNew( cAnimation, (cString::To8Char(asFile),asFile, sFileName) );
+        pAnimation = hplNew( cAnimation, (cString::To8Char(asFile), asFile, sFileName) );
 
         pAnimation->ReserveTrackNum((int)vColladaAnimations.size());
 
 
         float fStart = 9999999.0f;
         float fEnd = 0;
-        for(size_t i=0; i < vColladaAnimations.size(); i++)
+        for(size_t i = 0; i < vColladaAnimations.size(); i++)
         {
-            cAnimationTrack *pTrack = CreateAnimTrack(pAnimation, pSkeleton, vColladaAnimations[i],&ColladaScene);
-            if(pTrack==NULL)
+            cAnimationTrack *pTrack = CreateAnimTrack(pAnimation, pSkeleton, vColladaAnimations[i], &ColladaScene);
+            if(pTrack == NULL)
             {
                 continue;
             }
 
             //Update the state and end times if needed
-            if(pTrack->GetKeyFrameNum() >0)
+            if(pTrack->GetKeyFrameNum() > 0)
             {
                 cKeyFrame *pFirst = pTrack->GetKeyFrame(0);
-                cKeyFrame *pLast = pTrack->GetKeyFrame(pTrack->GetKeyFrameNum()-1);
+                cKeyFrame *pLast = pTrack->GetKeyFrame(pTrack->GetKeyFrameNum() - 1);
 
                 if(fStart > pFirst->time)
                 {
@@ -965,7 +965,7 @@ cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
             pAnimation->SetLength(fEnd - fStart);
         }
 
-        CleanUpNonAnimatedNodes(pAnimation,pSkeleton, &ColladaScene);
+        CleanUpNonAnimatedNodes(pAnimation, pSkeleton, &ColladaScene);
     }
 
     ///////////////
@@ -1009,7 +1009,7 @@ cAnimation* cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
 
     /////////////////////////////////////////////////
     // SAVE MSH FORMAT
-    if(cResources::GetForceCacheLoadingAndSkipSaving()==false && mbLoadAndSaveMSHFormat)
+    if(cResources::GetForceCacheLoadingAndSkipSaving() == false && mbLoadAndSaveMSHFormat)
     {
         tWString sMSHFile = cString::SetFileExtW(asFile, _W("anm"));
 
@@ -1037,12 +1037,12 @@ void cMeshLoaderCollada::CleanUpNonAnimatedNodes(cAnimation *apAnimation, cSkele
     //Skeleton
     if(apSkeleton)
     {
-        for(int i=0; i< apSkeleton->GetBoneNum(); ++i)
+        for(int i = 0; i < apSkeleton->GetBoneNum(); ++i)
         {
             cBone *pBone = apSkeleton->GetBoneByIndex(i);
 
             //Check if there is no animation for this node.
-            if(apAnimation->GetTrackByName(pBone->GetName())==NULL)
+            if(apAnimation->GetTrackByName(pBone->GetName()) == NULL)
             {
                 cColladaNode *pNode = apColladaScene->GetNode(pBone->GetName());
                 if(pNode)
@@ -1054,7 +1054,7 @@ void cMeshLoaderCollada::CleanUpNonAnimatedNodes(cAnimation *apAnimation, cSkele
                     cMatrixf mtxRotChange = cMath::MatrixMul(mtxLocal.GetRotation(), mtxInvBone.GetRotation());
                     cVector3f vTransChange = mtxLocal.GetTranslation() - mtxBone.GetTranslation();
 
-                    cAnimationTrack * pTrack = apAnimation->CreateTrack(pBone->GetName(),eAnimTransformFlag_Rotate | eAnimTransformFlag_Translate);
+                    cAnimationTrack * pTrack = apAnimation->CreateTrack(pBone->GetName(), eAnimTransformFlag_Rotate | eAnimTransformFlag_Translate);
                     cKeyFrame *pFrame = pTrack->CreateKeyFrame(0);
 
                     //Translation
@@ -1066,7 +1066,7 @@ void cMeshLoaderCollada::CleanUpNonAnimatedNodes(cAnimation *apAnimation, cSkele
                 }
                 else
                 {
-                    Warning("Couldn't find node for bone '%s'\n",pBone->GetName().c_str());
+                    Warning("Couldn't find node for bone '%s'\n", pBone->GetName().c_str());
                 }
             }
         }
@@ -1081,7 +1081,7 @@ void cMeshLoaderCollada::CleanUpNonAnimatedNodes(cAnimation *apAnimation, cSkele
             cColladaNode *pNode = *it;
 
             //Check if there is no animation for this node.
-            if(apAnimation->GetTrackByName(pNode->msName)==NULL)
+            if(apAnimation->GetTrackByName(pNode->msName) == NULL)
             {
                 cAnimationTrack * pTrack = apAnimation->CreateTrack(pNode->msId, eAnimTransformFlag_Rotate | eAnimTransformFlag_Translate);
                 pTrack->SetNodeIndex(-1);
@@ -1131,7 +1131,7 @@ tString cMeshLoaderCollada::GetParentName(cColladaNode *apNode, tColladaGeometry
         //If the parent is a geometry the geometry name must be used.
         if(apNode->pParent->msSource != "")
         {
-            cColladaGeometry *pGeom = GetGeometry(apNode->pParent->msSource,*apColladaGeometries);
+            cColladaGeometry *pGeom = GetGeometry(apNode->pParent->msSource, *apColladaGeometries);
             if(pGeom)
             {
                 sParent = pGeom->msName;
@@ -1146,7 +1146,7 @@ tString cMeshLoaderCollada::GetParentName(cColladaNode *apNode, tColladaGeometry
 
 static bool HasParam(const tStringVec & avVec, const tString &asParam)
 {
-    for(int i=0; i< (int)avVec.size(); i++)
+    for(int i = 0; i < (int)avVec.size(); i++)
     {
         if(cString::ToLowerCase(avVec[i]) == asParam)
         {
@@ -1169,7 +1169,7 @@ void cMeshLoaderCollada::CreateHierarchyNodes(cMesh *apMesh, cNode3D* mpParentNo
     pNode->SetMatrix(apColladaNode->m_mtxTransform);
 
     //Set if this node has any geometry source
-    if(apColladaNode->msSource!="")
+    if(apColladaNode->msSource != "")
     {
         pNode->SetCustomFlags(1);
     }
@@ -1194,7 +1194,7 @@ void cMeshLoaderCollada::CreateHierarchyNodes(cMesh *apMesh, cNode3D* mpParentNo
             //(*it)->m_mtxTransform = cMath::MatrixMul(m_mtxZToY, (*it)->m_mtxTransform);
         }
 
-        CreateHierarchyNodes(apMesh, pNode,*it,avColladaGeom);
+        CreateHierarchyNodes(apMesh, pNode, *it, avColladaGeom);
     }
 }
 
@@ -1202,9 +1202,9 @@ void cMeshLoaderCollada::CreateHierarchyNodes(cMesh *apMesh, cNode3D* mpParentNo
 
 //-----------------------------------------------------------------------
 
-cColladaGeometry* cMeshLoaderCollada::GetGeometry(const tString& asId, tColladaGeometryVec &avGeomVec)
+cColladaGeometry *cMeshLoaderCollada::GetGeometry(const tString& asId, tColladaGeometryVec &avGeomVec)
 {
-    for(size_t i=0; i<avGeomVec.size(); i++)
+    for(size_t i = 0; i < avGeomVec.size(); i++)
     {
         if(avGeomVec[i].msId == asId)
         {
@@ -1217,9 +1217,9 @@ cColladaGeometry* cMeshLoaderCollada::GetGeometry(const tString& asId, tColladaG
 
 //-----------------------------------------------------------------------
 
-cColladaLight* cMeshLoaderCollada::GetLight(const tString& asId, tColladaLightVec &avLightVec)
+cColladaLight *cMeshLoaderCollada::GetLight(const tString& asId, tColladaLightVec &avLightVec)
 {
-    for(size_t i=0; i<avLightVec.size(); i++)
+    for(size_t i = 0; i < avLightVec.size(); i++)
     {
         if(avLightVec[i].msId == asId)
         {

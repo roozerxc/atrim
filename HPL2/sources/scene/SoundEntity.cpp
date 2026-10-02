@@ -24,11 +24,11 @@ tSoundEntityGlobalCallbackList cSoundEntity::mlstGobalCallbacks;
 
 //-----------------------------------------------------------------------
 
-cSoundEntity::cSoundEntity(const tString& asName,cSoundEntityData *apData,
+cSoundEntity::cSoundEntity(const tString& asName, cSoundEntityData *apData,
                            cSoundEntityManager *apSoundEntityManager,
                            cWorld *apWorld,
                            cSoundHandler *apSoundHandler, bool abRemoveWhenOver, int alCreationID)
-    :iEntity3D(asName)
+    : iEntity3D(asName)
 {
     mbRemoveWhenOver = abRemoveWhenOver;
     mlCreationID = alCreationID;
@@ -42,10 +42,10 @@ cSoundEntity::cSoundEntity(const tString& asName,cSoundEntityData *apData,
     mpData = apData;
     mpData->PreloadSounds();
 
-    for(int i=0; i<3; i++)
+    for(int i = 0; i < 3; i++)
     {
         mvSoundEntries[i] = NULL;
-        mvSoundEntryID[i]=-1;
+        mvSoundEntryID[i] = -1;
     }
 
     mfIntervalCount = mpData->GetInterval();
@@ -55,7 +55,7 @@ cSoundEntity::cSoundEntity(const tString& asName,cSoundEntityData *apData,
     mfMinDistance = mpData->GetMinDistance();
     mfMaxDistance = mpData->GetMaxDistance();
 
-    mBoundingVolume.SetSize(mfMaxDistance*2);
+    mBoundingVolume.SetSize(mfMaxDistance * 2);
 
     mbStopped = false; //If the sound should be stopped
     mbStarted = false; //If the sound started playing-
@@ -81,7 +81,7 @@ cSoundEntity::cSoundEntity(const tString& asName,cSoundEntityData *apData,
     {
         mbStarted = true;
         mbStopped = true;
-        mfVolume =0;
+        mfVolume = 0;
         mbSkipStartEnd = true;
         mbRemoveWhenOver = true;
     }
@@ -99,7 +99,7 @@ cSoundEntity::~cSoundEntity()
     {
         Log("Deleting %d\n", this);
     }
-    for(int i=0; i<3; i++)
+    for(int i = 0; i < 3; i++)
     {
         if(mpSoundHandler->IsValid(mvSoundEntries[i], mvSoundEntryID[i]))
         {
@@ -225,11 +225,11 @@ void cSoundEntityChannelCallback::OnPriorityRelease()
 
 //-----------------------------------------------------------------------
 
-cSoundEntry* cSoundEntity::GetSoundEntry(eSoundEntityType aType, bool abCheckEntryValidity)
+cSoundEntry *cSoundEntity::GetSoundEntry(eSoundEntityType aType, bool abCheckEntryValidity)
 {
     if(abCheckEntryValidity && mvSoundEntries[aType])
     {
-        if(mpSoundHandler->IsValid(mvSoundEntries[aType], mvSoundEntryID[aType])==false)
+        if(mpSoundHandler->IsValid(mvSoundEntries[aType], mvSoundEntryID[aType]) == false)
         {
             return NULL;
         }
@@ -250,26 +250,26 @@ void cSoundEntity::Play(bool abPlayStart)
     {
         Log("Playing %d\n", this);
     }
-    mbStopped =false;
+    mbStopped = false;
     mbOutOfRange = false;
     mbFadingOut = false;
 
     //Play start sound if settings allow
-    if(abPlayStart && mbSkipStartEnd==false)
+    if(abPlayStart && mbSkipStartEnd == false)
     {
         if(mpData->GetLoop() && mpData->HasSound(eSoundEntityType_Start))
         {
-            PlaySound(eSoundEntityType_Start,false);
+            PlaySound(eSoundEntityType_Start, false);
             mbStarted = false;
         }
     }
 
     //If start is not playing, play main sound directly.
-    if(    mvSoundEntries[eSoundEntityType_Main]==NULL &&
-            mvSoundEntries[eSoundEntityType_Start]==NULL &&
-            (mpData->GetLoop()== false || mpData->GetInterval()==0))
+    if(    mvSoundEntries[eSoundEntityType_Main] == NULL &&
+            mvSoundEntries[eSoundEntityType_Start] == NULL &&
+            (mpData->GetLoop() == false || mpData->GetInterval() == 0))
     {
-        PlaySound(eSoundEntityType_Main,mpData->GetLoop());
+        PlaySound(eSoundEntityType_Main, mpData->GetLoop());
         mbStarted = true;
     }
 
@@ -287,7 +287,7 @@ void cSoundEntity::Stop(bool abPlayEnd)
     mbStopped = true;
     mbOutOfRange = false;
 
-    if(mvSoundEntries[eSoundEntityType_Main]==NULL)
+    if(mvSoundEntries[eSoundEntityType_Main] == NULL)
     {
         return;
     }
@@ -299,7 +299,7 @@ void cSoundEntity::Stop(bool abPlayEnd)
 
     if(mpData->GetLoop())
     {
-        if(abPlayEnd  && mbSkipStartEnd==false)
+        if(abPlayEnd  && mbSkipStartEnd == false)
         {
             PlaySound(eSoundEntityType_Stop, false);
         }
@@ -359,7 +359,7 @@ void cSoundEntity::FadeOut(float afSpeed)
         Log("Fading out %d\n", this);
     }
 
-    if(mvSoundEntries[eSoundEntityType_Main]==NULL)
+    if(mvSoundEntries[eSoundEntityType_Main] == NULL)
     {
         mbStopped = true;
         return;
@@ -382,7 +382,7 @@ void cSoundEntity::FadeOut(float afSpeed)
 
 bool cSoundEntity::IsStopped()
 {
-    if(mbStopped && mvSoundEntries[eSoundEntityType_Stop]==NULL)
+    if(mbStopped && mvSoundEntries[eSoundEntityType_Stop] == NULL)
     {
         return true;
     }
@@ -412,7 +412,7 @@ void cSoundEntity::UpdateLogic(double adFixedDelta)
         return;
     }
 
-    if(mfSleepCount >0)
+    if(mfSleepCount > 0)
     {
         mfSleepCount -= (float)adFixedDelta;
         return;
@@ -420,9 +420,9 @@ void cSoundEntity::UpdateLogic(double adFixedDelta)
 
     //////////////////////////////////////////////
     //If out of range check if it is inside range.
-    if(mbOutOfRange && mbStopped==false)
+    if(mbOutOfRange && mbStopped == false)
     {
-        if(CheckIsOutOfRange()==false)
+        if(CheckIsOutOfRange() == false)
         {
             if(mbLog)
             {
@@ -441,25 +441,25 @@ void cSoundEntity::UpdateLogic(double adFixedDelta)
     /////////////////////////////////////////////////
     //Go through all sounds and check if they are playing,
     //if so update their positions else remove.
-    for(int i=0; i<3; i++)
+    for(int i = 0; i < 3; i++)
     {
         if(mvSoundEntries[i])
         {
-            if(mpSoundHandler->IsValid(mvSoundEntries[i], mvSoundEntryID[i])==false)
+            if(mpSoundHandler->IsValid(mvSoundEntries[i], mvSoundEntryID[i]) == false)
             {
                 mvSoundEntries[i] = NULL;
 
                 //if the sound has stopped due to priority try starting again
                 if(mbPrioRemove && i == (int)eSoundEntityType_Main)
                 {
-                    if(mbStopped==false)
+                    if(mbStopped == false)
                     {
                         mbStarted = false;
                         mfSleepCount = 0.3f;
                     }
                 }
                 //If the sound has already started, stop it.
-                else if((mpData->GetInterval()==0 || mpData->GetLoop()==false) &&
+                else if((mpData->GetInterval() == 0 || mpData->GetLoop() == false) &&
                         mbStarted)
                 {
                     mbStopped = true;
@@ -482,15 +482,15 @@ void cSoundEntity::UpdateLogic(double adFixedDelta)
 
     //////////////////////////////////////////////
     //Check if sound is playing, and if so update it.
-    if(mbStopped==false)
+    if(mbStopped == false)
     {
         /////////////////////////////////////////////////////////////////////////
         //Sound is not playing, start it and since it has not been invoked by Play
         //no need to play start sound. Only do this if interval is 0 or non looping else it might
         //be a deliberate pause.
-        if(    mvSoundEntries[eSoundEntityType_Main]==NULL &&
-                mvSoundEntries[eSoundEntityType_Start]==NULL &&
-                (mpData->GetLoop()== false || mpData->GetInterval()==0))
+        if(    mvSoundEntries[eSoundEntityType_Main] == NULL &&
+                mvSoundEntries[eSoundEntityType_Start] == NULL &&
+                (mpData->GetLoop() == false || mpData->GetInterval() == 0))
         {
 
             if(PlaySound(eSoundEntityType_Main, mpData->GetLoop()))
@@ -518,9 +518,9 @@ void cSoundEntity::UpdateLogic(double adFixedDelta)
         //Check if looping and interval is not 0.
         //then there needs to be some updating.
         if(    mpData->GetLoop() &&
-                mpData->GetInterval()>0 &&
-                mvSoundEntries[eSoundEntityType_Start]==NULL &&
-                mvSoundEntries[eSoundEntityType_Main]==NULL)
+                mpData->GetInterval() > 0 &&
+                mvSoundEntries[eSoundEntityType_Start] == NULL &&
+                mvSoundEntries[eSoundEntityType_Main] == NULL)
         {
             mfIntervalCount += (float)adFixedDelta;
 
@@ -528,18 +528,18 @@ void cSoundEntity::UpdateLogic(double adFixedDelta)
             if(mfIntervalCount >= mpData->GetInterval())
             {
                 //Check random and if rand is right play the sound.
-                if(cMath::RandRectf(0,1) <= mpData->GetRandom() ||
-                        mpData->GetRandom()==0)
+                if(cMath::RandRectf(0, 1) <= mpData->GetRandom() ||
+                        mpData->GetRandom() == 0)
                 {
-                    PlaySound(eSoundEntityType_Main,false);
+                    PlaySound(eSoundEntityType_Main, false);
                 }
-                mfIntervalCount =0;
+                mfIntervalCount = 0;
             }
         }
 
         //////////////////////////////////////////////
         // If the sound is looped and out of range, stop it
-        if(    mvSoundEntries[eSoundEntityType_Start]==NULL && mpData->GetLoop() && mpData->GetUse3D())
+        if(    mvSoundEntries[eSoundEntityType_Start] == NULL && mpData->GetLoop() && mpData->GetUse3D())
         {
             if(CheckIsOutOfRange() && !mpData->GetKeepPlayingOutOfRange())
             {
@@ -607,7 +607,7 @@ void cSoundEntity::RemoveGlobalCallback(iSoundEntityGlobalCallback *apCallback)
 
 bool cSoundEntity::CheckIsOutOfRange()
 {
-    if(mpWorld->IsSoundEmitter()==false)
+    if(mpWorld->IsSoundEmitter() == false)
     {
         return true;
     }
@@ -620,9 +620,9 @@ bool cSoundEntity::CheckIsOutOfRange()
 
 //-----------------------------------------------------------------------
 
-bool cSoundEntity::PlaySound(eSoundEntityType aType,bool abLoop)
+bool cSoundEntity::PlaySound(eSoundEntityType aType, bool abLoop)
 {
-    tString sSoundName = mpData->GetRandomSoundName(aType,true); //TODO: Add a var instead of null!
+    tString sSoundName = mpData->GetRandomSoundName(aType, true); //TODO: Add a var instead of null!
     if(sSoundName == "")
     {
         return false;
@@ -634,9 +634,9 @@ bool cSoundEntity::PlaySound(eSoundEntityType aType,bool abLoop)
     {
         mvSoundEntries[aType] = mpSoundHandler->Play3D(
                                     sSoundName, abLoop,
-                                    mfVolume, cVector3f(0,0,1),
+                                    mfVolume, cVector3f(0, 0, 1),
                                     100.0f, 200.0f,    //Just set something so that sound is always inside min.
-                                    eSoundEntryType_Gui,true, mpData->GetPriority(),
+                                    eSoundEntryType_Gui, true, mpData->GetPriority(),
                                     mpData->GetStream(), &bNotEnoughChannels);
     }
     else
@@ -647,33 +647,33 @@ bool cSoundEntity::PlaySound(eSoundEntityType aType,bool abLoop)
                                         sSoundName, abLoop,
                                         mfVolume, GetWorldPosition(),
                                         mfMinDistance, mfMaxDistance,
-                                        eSoundEntryType_World,false, mpData->GetPriority(),
+                                        eSoundEntryType_World, false, mpData->GetPriority(),
                                         mpData->GetStream(), &bNotEnoughChannels);
         }
         else
         {
             mvSoundEntries[aType] = mpSoundHandler->Play3D(
                                         sSoundName, abLoop,
-                                        mfVolume, cVector3f(0,0,1),
+                                        mfVolume, cVector3f(0, 0, 1),
                                         100.0f, 200.0f,    //Just set something so that sound is always inside min.
-                                        eSoundEntryType_World,true, mpData->GetPriority(),
+                                        eSoundEntryType_World, true, mpData->GetPriority(),
                                         mpData->GetStream(), &bNotEnoughChannels);
         }
     }
 
     /////////////////////////////////
     // Sound entry Not created!
-    if(mvSoundEntries[aType]==NULL)
+    if(mvSoundEntries[aType] == NULL)
     {
         // Sound entry could not be loaded
-        if(bNotEnoughChannels==false)
+        if(bNotEnoughChannels == false)
         {
-            Error("Couldn't play sound '%s' for sound entity %s\n",sSoundName.c_str(),msName.c_str());
+            Error("Couldn't play sound '%s' for sound entity %s\n", sSoundName.c_str(), msName.c_str());
         }
 
         //If could not be loaded and main or not enough channels and non loop: Stop the entity!
-        if(    (aType == eSoundEntityType_Main && bNotEnoughChannels==false) ||
-                (bNotEnoughChannels && abLoop==false))
+        if(    (aType == eSoundEntityType_Main && bNotEnoughChannels == false) ||
+                (bNotEnoughChannels && abLoop == false))
         {
             mbStopped = true;
 
@@ -697,7 +697,7 @@ bool cSoundEntity::PlaySound(eSoundEntityType aType,bool abLoop)
         pChannel->SetBlockVolumeMul(mpData->GetBlockVolumeMul());
         pChannel->SetPriorityModifier(mpData->GetPriority());
 
-        if(aType==eSoundEntityType_Main)
+        if(aType == eSoundEntityType_Main)
         {
             mvSoundEntries[aType]->SetCallBack(mpSoundCallback);
         }
@@ -713,7 +713,7 @@ bool cSoundEntity::PlaySound(eSoundEntityType aType,bool abLoop)
 float cSoundEntity::GetListenerSqrLength()
 {
     cVector3f vListenerPos = mpWorld->GetSound()->GetLowLevel()->GetListenerPosition();
-    return cMath::Vector3DistSqr(vListenerPos,GetWorldPosition());
+    return cMath::Vector3DistSqr(vListenerPos, GetWorldPosition());
 }
 
 //-----------------------------------------------------------------------

@@ -22,7 +22,7 @@ public:
     {
         return mlValue;
     }
-    void SetValue(int alValue, bool abGenCallback=true);
+    void SetValue(int alValue, bool abGenCallback = true);
 
     int GetMaxValue()
     {
@@ -111,7 +111,7 @@ protected:
 
     cVector2f mvRelMousePos;
 
-    cWidgetButton* mvButtons[2];
+    cWidgetButton *mvButtons[2];
 
     cGuiGfxElement *mpGfxButtonBackground;
     cGuiGfxElement *mvGfxBorders[4];

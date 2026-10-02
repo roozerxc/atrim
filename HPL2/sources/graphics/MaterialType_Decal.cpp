@@ -79,12 +79,12 @@ void cMaterialType_Decal::LoadData()
     defaultVars.Add("UseUv");
     defaultVars.Add("UseColor");
 
-    mpProgramManager->SetupGenerateProgramData(    eMaterialRenderMode_Diffuse,"Diffuse","deferred_base_vtx.glsl", "deferred_decal_frag.glsl",
-            vDiffuseFeatureVec,kDiffuseFeatureNum, defaultVars);
+    mpProgramManager->SetupGenerateProgramData(    eMaterialRenderMode_Diffuse, "Diffuse", "deferred_base_vtx.glsl", "deferred_decal_frag.glsl",
+            vDiffuseFeatureVec, kDiffuseFeatureNum, defaultVars);
 
     ////////////////////////////////
     //Set up variable ids
-    mpProgramManager->AddGenerateProgramVariableId("a_mtxUV",kVar_a_mtxUV,eMaterialRenderMode_Diffuse);
+    mpProgramManager->AddGenerateProgramVariableId("a_mtxUV", kVar_a_mtxUV, eMaterialRenderMode_Diffuse);
 }
 
 //--------------------------------------------------------------------------
@@ -96,7 +96,7 @@ void cMaterialType_Decal::DestroyData()
 
 //--------------------------------------------------------------------------
 
-iTexture* cMaterialType_Decal::GetTextureForUnit(cMaterial *apMaterial,eMaterialRenderMode aRenderMode, int alUnit)
+iTexture *cMaterialType_Decal::GetTextureForUnit(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, int alUnit)
 {
     ////////////////////////////
     //Diffuse
@@ -114,26 +114,26 @@ iTexture* cMaterialType_Decal::GetTextureForUnit(cMaterial *apMaterial,eMaterial
 
 //--------------------------------------------------------------------------
 
-iTexture* cMaterialType_Decal::GetSpecialTexture(cMaterial *apMaterial, eMaterialRenderMode aRenderMode,iRenderer *apRenderer, int alUnit)
+iTexture *cMaterialType_Decal::GetSpecialTexture(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, iRenderer *apRenderer, int alUnit)
 {
     return NULL;
 }
 
 //--------------------------------------------------------------------------
 
-iGpuProgram* cMaterialType_Decal::GetGpuProgram(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, char alSkeleton)
+iGpuProgram *cMaterialType_Decal::GetGpuProgram(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, char alSkeleton)
 {
     ////////////////////////////
     //Diffuse
     if(aRenderMode == eMaterialRenderMode_Diffuse)
     {
-        tFlag lFlags =0;
+        tFlag lFlags = 0;
         if(apMaterial->HasUvAnimation())
         {
             lFlags |= eFeature_Diffuse_UvAnimation;
         }
 
-        return mpProgramManager->GenerateProgram(aRenderMode,lFlags);
+        return mpProgramManager->GenerateProgram(aRenderMode, lFlags);
     }
 
     return NULL;
@@ -141,19 +141,19 @@ iGpuProgram* cMaterialType_Decal::GetGpuProgram(cMaterial *apMaterial, eMaterial
 
 //--------------------------------------------------------------------------
 
-void cMaterialType_Decal::SetupTypeSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram,iRenderer *apRenderer)
+void cMaterialType_Decal::SetupTypeSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, iRenderer *apRenderer)
 {
 }
 
 //--------------------------------------------------------------------------
 
-void cMaterialType_Decal::SetupMaterialSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, cMaterial *apMaterial,iRenderer *apRenderer)
+void cMaterialType_Decal::SetupMaterialSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, cMaterial *apMaterial, iRenderer *apRenderer)
 {
     ////////////////////////////
     //Diffuse
     if(aRenderMode == eMaterialRenderMode_Diffuse)
     {
-        cMaterialType_Decal_Vars *pVars = static_cast<cMaterialType_Decal_Vars*>(apMaterial->GetVars());
+        cMaterialType_Decal_Vars *pVars = static_cast<cMaterialType_Decal_Vars *>(apMaterial->GetVars());
 
         /////////////////////////
         //UV Animation
@@ -166,16 +166,16 @@ void cMaterialType_Decal::SetupMaterialSpecificData(eMaterialRenderMode aRenderM
 
 //--------------------------------------------------------------------------
 
-void cMaterialType_Decal::SetupObjectSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, iRenderable *apObject,iRenderer *apRenderer)
+void cMaterialType_Decal::SetupObjectSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, iRenderable *apObject, iRenderer *apRenderer)
 {
 }
 
 
 //--------------------------------------------------------------------------
 
-iMaterialVars* cMaterialType_Decal::CreateSpecificVariables()
+iMaterialVars *cMaterialType_Decal::CreateSpecificVariables()
 {
-    return hplNew(cMaterialType_Decal_Vars,());
+    return hplNew(cMaterialType_Decal_Vars, ());
 }
 
 //--------------------------------------------------------------------------
@@ -183,7 +183,7 @@ iMaterialVars* cMaterialType_Decal::CreateSpecificVariables()
 void cMaterialType_Decal::LoadVariables(cMaterial *apMaterial, cResourceVarsObject *apVars)
 {
     cMaterialType_Decal_Vars *pVars = (cMaterialType_Decal_Vars*)apMaterial->GetVars();
-    if(pVars==NULL)
+    if(pVars == NULL)
     {
         pVars = (cMaterialType_Decal_Vars*)CreateSpecificVariables();
         apMaterial->SetVars(pVars);
@@ -201,13 +201,13 @@ void cMaterialType_Decal::GetVariableValues(cMaterial* apMaterial, cResourceVars
 
 void cMaterialType_Decal::CompileMaterialSpecifics(cMaterial *apMaterial)
 {
-    cMaterialType_Decal_Vars *pVars = static_cast<cMaterialType_Decal_Vars*>(apMaterial->GetVars());
+    cMaterialType_Decal_Vars *pVars = static_cast<cMaterialType_Decal_Vars *>(apMaterial->GetVars());
 
     //////////////////////////////////
     //UV animation specifics
     if(apMaterial->HasUvAnimation())
     {
-        apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Diffuse,true);
+        apMaterial->SetHasSpecificSettings(eMaterialRenderMode_Diffuse, true);
     }
 
     /////////////////////////////////////

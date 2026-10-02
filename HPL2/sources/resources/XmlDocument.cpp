@@ -27,11 +27,11 @@ iXmlNode::~iXmlNode()
 
 //-----------------------------------------------------------------------
 
-cXmlElement* iXmlNode::ToElement()
+cXmlElement *iXmlNode::ToElement()
 {
     if(mType == eXmlNodeType_Element)
     {
-        return static_cast<cXmlElement*> ( this );
+        return static_cast<cXmlElement *> ( this );
     }
     else
     {
@@ -39,19 +39,19 @@ cXmlElement* iXmlNode::ToElement()
     }
 }
 
-cXmlElement* iXmlNode::GetFirstElement()
+cXmlElement *iXmlNode::GetFirstElement()
 {
-    return static_cast<cXmlElement*>(GetFirstOfType(eXmlNodeType_Element));
+    return static_cast<cXmlElement *>(GetFirstOfType(eXmlNodeType_Element));
 }
 
-cXmlElement* iXmlNode::GetFirstElement(const tString& asName)
+cXmlElement *iXmlNode::GetFirstElement(const tString& asName)
 {
-    return static_cast<cXmlElement*>(GetFirstOfType(eXmlNodeType_Element, asName));
+    return static_cast<cXmlElement *>(GetFirstOfType(eXmlNodeType_Element, asName));
 }
 
-cXmlElement * iXmlNode::CreateChildElement(const tString& asName)
+cXmlElement *iXmlNode::CreateChildElement(const tString& asName)
 {
-    cXmlElement *pElement = hplNew(cXmlElement, (asName,this));
+    cXmlElement *pElement = hplNew(cXmlElement, (asName, this));
 
     AddChild(pElement);
 
@@ -72,7 +72,7 @@ void iXmlNode::DestroyChild(iXmlNode* apNode)
 
 //-----------------------------------------------------------------------
 
-iXmlNode* iXmlNode::GetFirstOfType(eXmlNodeType aType)
+iXmlNode *iXmlNode::GetFirstOfType(eXmlNodeType aType)
 {
     if(mlstChildren.empty())
     {
@@ -96,7 +96,7 @@ iXmlNode* iXmlNode::GetFirstOfType(eXmlNodeType aType)
 
 //-----------------------------------------------------------------------
 
-iXmlNode* iXmlNode::GetFirstOfType(eXmlNodeType aType, const tString& asName)
+iXmlNode *iXmlNode::GetFirstOfType(eXmlNodeType aType, const tString& asName)
 {
     if(mlstChildren.empty())
     {
@@ -141,7 +141,7 @@ void iXmlNode::DestroyChildren()
 
 //-----------------------------------------------------------------------
 
-cXmlElement::cXmlElement(const tString& asName, iXmlNode* apParent) : iXmlNode(eXmlNodeType_Element,apParent,asName)
+cXmlElement::cXmlElement(const tString& asName, iXmlNode* apParent) : iXmlNode(eXmlNodeType_Element, apParent, asName)
 {
 }
 
@@ -151,7 +151,7 @@ cXmlElement::~cXmlElement()
 }
 //-----------------------------------------------------------------------
 
-const char* cXmlElement::GetAttribute(const tString& asName)
+const char *cXmlElement::GetAttribute(const tString& asName)
 {
     tAttributeMapIt it = m_mapAttributes.find(asName);
     if(it != m_mapAttributes.end())
@@ -165,7 +165,7 @@ const char* cXmlElement::GetAttribute(const tString& asName)
 
 tString cXmlElement::GetAttributeString(const tString& asName, const tString& asDefault)
 {
-    const char* pString = GetAttribute(asName);
+    const char *pString = GetAttribute(asName);
     if(pString)
     {
         return pString;
@@ -178,34 +178,34 @@ tString cXmlElement::GetAttributeString(const tString& asName, const tString& as
 
 float cXmlElement::GetAttributeFloat(const tString& asName, float afDefault)
 {
-    const char* pString = GetAttribute(asName);
-    return cString::ToFloat(pString,afDefault);
+    const char *pString = GetAttribute(asName);
+    return cString::ToFloat(pString, afDefault);
 }
 int cXmlElement::GetAttributeInt(const tString& asName, int alDefault)
 {
-    const char* pString = GetAttribute(asName);
-    return cString::ToInt(pString,alDefault);
+    const char *pString = GetAttribute(asName);
+    return cString::ToInt(pString, alDefault);
 }
 bool cXmlElement::GetAttributeBool(const tString& asName, bool abDefault)
 {
-    const char* pString = GetAttribute(asName);
-    return cString::ToBool(pString,abDefault);
+    const char *pString = GetAttribute(asName);
+    return cString::ToBool(pString, abDefault);
 }
 cVector2f cXmlElement::GetAttributeVector2f(const tString& asName, const cVector2f& avDefault)
 {
-    const char* pString = GetAttribute(asName);
-    return cString::ToVector2f(pString,avDefault);
+    const char *pString = GetAttribute(asName);
+    return cString::ToVector2f(pString, avDefault);
 
 }
 cVector3f cXmlElement::GetAttributeVector3f(const tString& asName, const cVector3f& avDefault)
 {
-    const char* pString = GetAttribute(asName);
-    return cString::ToVector3f(pString,avDefault);
+    const char *pString = GetAttribute(asName);
+    return cString::ToVector3f(pString, avDefault);
 }
 cColor cXmlElement::GetAttributeColor(const tString& asName, const cColor& aDefault)
 {
-    const char* pString = GetAttribute(asName);
-    return cString::ToColor(pString,aDefault);
+    const char *pString = GetAttribute(asName);
+    return cString::ToColor(pString, aDefault);
 }
 
 //-----------------------------------------------------------------------
@@ -247,7 +247,7 @@ void cXmlElement::SetAttributeBool(const tString& asName, bool abVal)
 }
 void cXmlElement::SetAttributeVector2f(const tString& asName, const cVector2f& avVal)
 {
-    SetAttribute(asName,avVal.ToFileString().c_str());
+    SetAttribute(asName, avVal.ToFileString().c_str());
 }
 void cXmlElement::SetAttributeVector3f(const tString& asName, const cVector3f& avVal)
 {
@@ -287,7 +287,7 @@ iXmlDocument::~iXmlDocument()
 bool iXmlDocument::CreateFromFile(const tWString& asPath)
 {
     bool bRet = LoadDataFromFile(asPath);
-    if(bRet==false)
+    if(bRet == false)
     {
         Log("Failed parsing of XML document %s in line %d, column %d: %s\n", cString::To8Char(asPath).c_str(),
             mlErrorRow, mlErrorCol, msErrorDesc.c_str());

@@ -29,7 +29,7 @@ public:
     cBitmap();
     ~cBitmap();
 
-    inline const cVector3l& GetSize() const
+    inline const cVector3l &GetSize() const
     {
         return mvSize;
     }
@@ -77,7 +77,7 @@ public:
         mlBytesPerPixel = alBpp;
     }
 
-    cBitmapData* GetData(int alImage, int alMipMapLevel);
+    cBitmapData *GetData(int alImage, int alMipMapLevel);
     void SetUpData(int alNumOfImages, int alNumOfMipmaps);
     inline bool IsCompressed() const
     {
@@ -88,7 +88,7 @@ public:
         mbDataIsCompressed = abX;
     }
 
-    inline const tWString& GetFileName()const
+    inline const tWString &GetFileName()const
     {
         return msFileName;
     }
@@ -99,13 +99,13 @@ public:
 
     void CreateData(const cVector3l& avSize, ePixelFormat aFormat, int alImage, int alMipMap);
 
-    void Clear( const cColor& aColor,int alImage, int alMipMap);
+    void Clear( const cColor& aColor, int alImage, int alMipMap);
 
     void Blit(    cBitmap *apSrc,
-                  const cVector3l& avDestPosition,const cVector3l& avSrcSize,
+                  const cVector3l& avDestPosition, const cVector3l& avSrcSize,
                   const cVector3l& avSrcPosition,
-                  int alDestImage=0, int alDestMipMap=0,
-                  int alSrcImage=0, int alSrcMipMap=0);
+                  int alDestImage = 0, int alDestMipMap = 0,
+                  int alSrcImage = 0, int alSrcMipMap = 0);
 
 
     void SetPixel(int alImage, int alMipMapLevel, const cVector3l& avPixelPos, unsigned char* apPixelData);
@@ -114,9 +114,9 @@ public:
 
 private:
     void CopyPixel(    unsigned char* apDest, ePixelFormat aDestFormat,
-                       unsigned char* apSrc, ePixelFormat aSrcFormat);
-    unsigned char* ConvertDataToFormat(unsigned char* apPixelData, ePixelFormat aSrcFormat, ePixelFormat aDestFormat);
-    unsigned char* ConvertDataToRGBA(unsigned char* apPixelData, ePixelFormat aFormat);
+                       unsigned char *apSrc, ePixelFormat aSrcFormat);
+    unsigned char *ConvertDataToFormat(unsigned char* apPixelData, ePixelFormat aSrcFormat, ePixelFormat aDestFormat);
+    unsigned char *ConvertDataToRGBA(unsigned char* apPixelData, ePixelFormat aFormat);
 
     std::vector<cBitmapData> mvImages;
     bool mbDataIsCompressed;

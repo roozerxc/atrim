@@ -7,10 +7,10 @@ namespace hpl
 
 
 tAllocatedPointerMap cMemoryManager::m_mapPointers;
-size_t cMemoryManager::mlTotalMemoryUsage=0;
+size_t cMemoryManager::mlTotalMemoryUsage = 0;
 bool cMemoryManager::mbLogDeletion = false;
 bool cMemoryManager::mbLogCreation = false;
-int cMemoryManager::mlCreationCount =0;
+int cMemoryManager::mlCreationCount = 0;
 
 //////////////////////////////////////////////////////////////////////////
 // ALLOCATED POINTER
@@ -18,7 +18,7 @@ int cMemoryManager::mlCreationCount =0;
 
 //-----------------------------------------------------------------------
 
-cAllocatedPointer::cAllocatedPointer(void *apData,const std::string &asFile, int alLine, size_t alMemory)
+cAllocatedPointer::cAllocatedPointer(void *apData, const std::string &asFile, int alLine, size_t alMemory)
 {
     mpData = apData;
     msFile = asFile;
@@ -35,9 +35,9 @@ cAllocatedPointer::cAllocatedPointer(void *apData,const std::string &asFile, int
 
 //-----------------------------------------------------------------------
 
-void* cMemoryManager::AddPointer(const cAllocatedPointer& aAllocatedPointer)
+void *cMemoryManager::AddPointer(const cAllocatedPointer& aAllocatedPointer)
 {
-    m_mapPointers.insert(tAllocatedPointerMap::value_type(aAllocatedPointer.mpData,aAllocatedPointer));
+    m_mapPointers.insert(tAllocatedPointerMap::value_type(aAllocatedPointer.mpData, aAllocatedPointer));
     mlTotalMemoryUsage += aAllocatedPointer.mlMemory;
 
     if(mbLogCreation)
@@ -51,7 +51,7 @@ void* cMemoryManager::AddPointer(const cAllocatedPointer& aAllocatedPointer)
 
 //-----------------------------------------------------------------------
 
-void* cMemoryManager::UpdatePointer(void *apOldData,const cAllocatedPointer& aNewAllocatedPointer)
+void *cMemoryManager::UpdatePointer(void *apOldData, const cAllocatedPointer& aNewAllocatedPointer)
 {
     RemovePointer(apOldData, aNewAllocatedPointer.msFile.c_str(), aNewAllocatedPointer.mlLine);
     return AddPointer(aNewAllocatedPointer);
@@ -59,14 +59,14 @@ void* cMemoryManager::UpdatePointer(void *apOldData,const cAllocatedPointer& aNe
 
 //-----------------------------------------------------------------------
 
-bool cMemoryManager::RemovePointer(void *apData,const char* apFileString, int alLine)
+bool cMemoryManager::RemovePointer(void *apData, const char* apFileString, int alLine)
 {
-    bool bFound=false;
+    bool bFound = false;
     tAllocatedPointerMapIt it = m_mapPointers.upper_bound(apData);
     it--;
     if(it != m_mapPointers.end())
     {
-        char* apTest = (char*)it->second.mpData;
+        char *apTest = (char*)it->second.mpData;
         size_t testSize = it->second.mlMemory;
         if(apData >= apTest && apData < apTest + testSize)
         {
@@ -74,9 +74,9 @@ bool cMemoryManager::RemovePointer(void *apData,const char* apFileString, int al
         }
     }
 
-    if(bFound==false)
+    if(bFound == false)
     {
-        Warning("Trying to delete pointer %d in file %s at line %d that does not exist!\n",apData,apFileString,alLine);
+        Warning("Trying to delete pointer %d in file %s at line %d that does not exist!\n", apData, apFileString, alLine);
         return false;
     }
 
@@ -96,7 +96,7 @@ bool cMemoryManager::IsValid(void *apData)
     it--;
     if(it != m_mapPointers.end())
     {
-        char* apTest = (char*)it->second.mpData;
+        char *apTest = (char*)it->second.mpData;
         size_t testSize = it->second.mlMemory;
         if(apData >= apTest && apData < apTest + testSize)
         {
@@ -116,7 +116,7 @@ void cMemoryManager::LogResults()
 
     if(m_mapPointers.empty())
     {
-        Log("| No memory leaks detected. Memory left: %d\n",mlTotalMemoryUsage);
+        Log("| No memory leaks detected. Memory left: %d\n", mlTotalMemoryUsage);
     }
     else
     {
@@ -126,7 +126,7 @@ void cMemoryManager::LogResults()
         Log("| address\t file");
 
         //Get max length of file name
-        int lMax =0;
+        int lMax = 0;
         tAllocatedPointerMapIt it = m_mapPointers.begin();
         for(; it != m_mapPointers.end(); ++it)
         {
@@ -139,7 +139,7 @@ void cMemoryManager::LogResults()
 
         lMax += 5;
 
-        for(int i=0; i<lMax-4; ++i)
+        for(int i = 0; i < lMax - 4; ++i)
         {
             Log(" ");
         }
@@ -153,8 +153,8 @@ void cMemoryManager::LogResults()
         for(; it != m_mapPointers.end(); ++it)
         {
             cAllocatedPointer &ap = it->second;
-            Log("| 0x%p\t %s",ap.mpData, ap.msFile.c_str());
-            for(int i=0; i<lMax - (int)ap.msFile.length(); ++i)
+            Log("| 0x%p\t %s", ap.mpData, ap.msFile.c_str());
+            for(int i = 0; i < lMax - (int)ap.msFile.length(); ++i)
             {
                 Log(" ");
             }

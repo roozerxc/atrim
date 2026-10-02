@@ -18,7 +18,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cWidgetImage::cWidgetImage(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_Image,apSet, apSkin)
+cWidgetImage::cWidgetImage(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_Image, apSet, apSkin)
 {
     mpGfxImage = NULL;
 }
@@ -74,7 +74,7 @@ void cWidgetImage::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
     // Background
     if(mpGfxImage)
     {
-        mpSet->DrawGfx(    mpGfxImage,    GetGlobalPosition(),mvSize,mColorMul);
+        mpSet->DrawGfx(    mpGfxImage,    GetGlobalPosition(), mvSize, mColorMul);
     }
 }
 
@@ -89,7 +89,7 @@ bool cWidgetImage::OnMouseMove(const cGuiMessageData& aData)
 
 bool cWidgetImage::OnMouseDown(const cGuiMessageData& aData)
 {
-    if(aData.mlVal==eGuiMouseButton_WheelUp || aData.mlVal==eGuiMouseButton_WheelDown)
+    if(aData.mlVal == eGuiMouseButton_WheelUp || aData.mlVal == eGuiMouseButton_WheelDown)
     {
         return false;
     }
@@ -101,7 +101,7 @@ bool cWidgetImage::OnMouseDown(const cGuiMessageData& aData)
 
 bool cWidgetImage::OnMouseUp(const cGuiMessageData& aData)
 {
-    if(aData.mlVal==eGuiMouseButton_WheelUp || aData.mlVal==eGuiMouseButton_WheelDown)
+    if(aData.mlVal == eGuiMouseButton_WheelUp || aData.mlVal == eGuiMouseButton_WheelDown)
     {
         return false;
     }

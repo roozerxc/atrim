@@ -126,7 +126,7 @@ struct cColladaSortVertex
 class cColladaExtraVtx
 {
 public:
-    cColladaExtraVtx(int alVtx,int alNorm,int alTex,int alNewVtx)
+    cColladaExtraVtx(int alVtx, int alNorm, int alTex, int alNewVtx)
     {
         mlVtx = alVtx;
         mlNorm = alNorm;
@@ -163,14 +163,14 @@ typedef std::vector<tColladaExtraVtxList> tColladaExtraVtxListVec;
 class cColladaGeometry
 {
 public:
-    cColladaGeometry() : mlPosArrayIdx(-1),mlNormArrayIdx(-1),mlTexArrayIdx(-1),
-        mlPosIdxNum(-1),mlNormIdxNum(-1),mlTexIdxNum(-1)  {}
+    cColladaGeometry() : mlPosArrayIdx(-1), mlNormArrayIdx(-1), mlTexArrayIdx(-1),
+        mlPosIdxNum(-1), mlNormIdxNum(-1), mlTexIdxNum(-1)  {}
 
     void Clear()
     {
         mvIndices.clear();
 
-        for(int i=0; i<(int)mvArrayVec.size(); i++)
+        for(int i = 0; i < (int)mvArrayVec.size(); i++)
         {
             mvArrayVec[i].mvArray.clear();
         }
@@ -295,9 +295,9 @@ public:
 
     tColladaAnimSourceVec mvSources;
 
-    tFloatVec* GetSourceVec(const tString& asId)
+    tFloatVec *GetSourceVec(const tString& asId)
     {
-        for(size_t i=0; i< mvSources.size(); i++)
+        for(size_t i = 0; i < mvSources.size(); i++)
         {
             if(mvSources[i].msId == asId)
             {
@@ -327,13 +327,13 @@ typedef tColladaTransformList::iterator tColladaTransformListIt;
 
 
 class cColladaNode;
-typedef std::list<cColladaNode*> tColladaNodeList;
+typedef std::list<cColladaNode *> tColladaNodeList;
 typedef tColladaNodeList::iterator tColladaNodeListIt;
 
 class cColladaNode
 {
 public:
-    cColladaNode() : mlCount(0), pParent(NULL), mvScale(1,1,1), msInstanceMaterial("") {}
+    cColladaNode() : mlCount(0), pParent(NULL), mvScale(1, 1, 1), msInstanceMaterial("") {}
 
     tString msId;
     tString msName;
@@ -363,7 +363,7 @@ public:
         STLDeleteAll(mlstChildren);
     }*/
 
-    cColladaNode* CreateChild()
+    cColladaNode *CreateChild()
     {
         cColladaNode *pNode = hplNew( cColladaNode, () );
         mlstChildren.push_back(pNode);
@@ -371,7 +371,7 @@ public:
         return pNode;
     }
 
-    cColladaTransform* GetTransform(const tString &asSid)
+    cColladaTransform *GetTransform(const tString &asSid)
     {
         tColladaTransformListIt it = mlstTransforms.begin();
         for(; it != mlstTransforms.end(); it++)
@@ -394,7 +394,7 @@ public:
         mRoot.m_mtxTransform = cMatrixf::Identity;
         mRoot.m_mtxWorldTransform = cMatrixf::Identity;
 
-        mfDeltaTime =0;
+        mfDeltaTime = 0;
     }
 
     ~cColladaScene()
@@ -409,7 +409,7 @@ public:
         mRoot.mlstChildren.clear();
     }
 
-    cColladaNode* GetNode(const tString asId)
+    cColladaNode *GetNode(const tString asId)
     {
         tColladaNodeListIt it = mlstNodes.begin();
         for(; it != mlstNodes.end(); ++it)
@@ -424,7 +424,7 @@ public:
         return NULL;
     }
 
-    cColladaNode* GetNodeFromSource(const tString asSource)
+    cColladaNode *GetNodeFromSource(const tString asSource)
     {
         tColladaNodeListIt it = mlstNodes.begin();
         for(; it != mlstNodes.end(); ++it)
@@ -461,13 +461,13 @@ public:
         mbLoadAndSaveMSHFormat = abX;   //Needed for tools!
     }
 
-    cMesh* LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags);
-    bool SaveMesh(cMesh* apMesh,const tWString& asFile)
+    cMesh *LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags);
+    bool SaveMesh(cMesh* apMesh, const tWString& asFile)
     {
         return false;
     }
 
-    cAnimation* LoadAnimation(const tWString& asFile);
+    cAnimation *LoadAnimation(const tWString& asFile);
     bool SaveAnimation(cAnimation* apAnimation, const tWString& asFile)
     {
         return false;
@@ -497,19 +497,19 @@ private:
 
     tString GetParentName(cColladaNode *apNode, tColladaGeometryVec *apColladaGeometries);
 
-    void CreateMeshJoint(cMeshJoint* apJoint,ePhysicsJointType aJointType,cBoundingVolume &aBV,
-                         tStringVec &avStrings,cColladaNode* apNode,cColladaScene &aColladaScene,
+    void CreateMeshJoint(cMeshJoint* apJoint, ePhysicsJointType aJointType, cBoundingVolume &aBV,
+                         tStringVec &avStrings, cColladaNode* apNode, cColladaScene &aColladaScene,
                          tColladaGeometryVec &avColladaGeom);
 
     void CreateHierarchyNodes(cMesh *apMesh, cNode3D* mpParentNode,
                               cColladaNode* apColladaNode,
                               tColladaGeometryVec &avColladaGeom);
 
-    cColladaGeometry* GetGeometry(const tString& asId, tColladaGeometryVec &avGeomVec);
-    cColladaLight* GetLight(const tString& asId, tColladaLightVec &avLightVec);
+    cColladaGeometry *GetGeometry(const tString& asId, tColladaGeometryVec &avGeomVec);
+    cColladaLight *GetLight(const tString& asId, tColladaLightVec &avLightVec);
 
 
-    cAnimationTrack* CreateAnimTrack(cAnimation *apAnimation, cSkeleton *apSkeleton,
+    cAnimationTrack *CreateAnimTrack(cAnimation *apAnimation, cSkeleton *apSkeleton,
                                      cColladaAnimation &aAnim, cColladaScene *apScene);
 
     void CalcLocalMatrixAfterControllerBindMatrixRec(cBone* apBone, cMatrixf a_mtxParentGlobal, int alDepth);
@@ -551,7 +551,7 @@ private:
                         tColladaAnimationVec *apColladaAnimVec,
                         cColladaScene *apColladaScene);
 
-    void LoadColladaScene(TiXmlElement* apRootElem,cColladaNode *apParentNode, cColladaScene *apScene,
+    void LoadColladaScene(TiXmlElement* apRootElem, cColladaNode *apParentNode, cColladaScene *apScene,
                           tColladaLightVec *apColladaLightVec);
 
     void LoadAnimations(TiXmlElement* apRootElem, tColladaAnimationVec &avAnimations,
@@ -573,11 +573,11 @@ private:
     void LoadJointData(TiXmlElement* apSourceElem, cColladaController &aController);
 
     //Helpers
-    void SplitVertices(cColladaGeometry &aGeometry,tColladaExtraVtxListVec &avExtraVtxVec,
+    void SplitVertices(cColladaGeometry &aGeometry, tColladaExtraVtxListVec &avExtraVtxVec,
                        tVertexVec &avVertexVec, tUIntVec &avIndexVec);
 
 
-    void FillVertexVec(const char* apChars,tVector3fVec &avVtxVec, int alElements, int alVtxCount);
+    void FillVertexVec(const char* apChars, tVector3fVec &avVtxVec, int alElements, int alVtxCount);
     tString GetTopString(const tString asPath);
     tString GetMaterialTextureFile(const tString &asMaterial, tColladaMaterialVec &avColladaMaterialVec,
                                    tColladaTextureVec &avColladaTextureVec,

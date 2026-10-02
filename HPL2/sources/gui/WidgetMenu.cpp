@@ -36,7 +36,7 @@ iWidgetMenu::iWidgetMenu(eWidgetType aeMenuType, cGuiSet* apSet, cGuiSkin* apSki
 
 iWidgetMenu::~iWidgetMenu()
 {
-    if(mpSet->IsDestroyingSet()==false)
+    if(mpSet->IsDestroyingSet() == false)
     {
         ClearMenuItems();
     }
@@ -55,9 +55,9 @@ iWidgetMenu::~iWidgetMenu()
  * \param &asText
  * \return cWidgetMenuItem*
  */
-cWidgetMenuItem* iWidgetMenu::AddMenuItem(const tWString &asText)
+cWidgetMenuItem *iWidgetMenu::AddMenuItem(const tWString &asText)
 {
-    cWidgetMenuItem* pItem = mpSet->CreateWidgetMenuItem(0,0,asText,this);
+    cWidgetMenuItem* pItem = mpSet->CreateWidgetMenuItem(0, 0, asText, this);
     mvMenuItems.push_back(pItem);
 
     UpdateMenuItemsPos(pItem);
@@ -73,7 +73,7 @@ cWidgetMenuItem* iWidgetMenu::AddMenuItem(const tWString &asText)
  */
 void iWidgetMenu::ClearMenuItems()
 {
-    for (tWidgetMenuItemVectorIt it= mvMenuItems.begin(); it != mvMenuItems.end(); ++it)
+    for (tWidgetMenuItemVectorIt it = mvMenuItems.begin(); it != mvMenuItems.end(); ++it)
     {
         mpSet->DestroyWidget(*it);
     }
@@ -98,9 +98,9 @@ void iWidgetMenu::SetParentItem( cWidgetMenuItem* apParentItem )
  * GetParentMenu() : returns the parent Menu, NULL if topmost.
  * \return
  */
-iWidgetMenu* iWidgetMenu::GetParentMenu()
+iWidgetMenu *iWidgetMenu::GetParentMenu()
 {
-    if(mpParentItem==NULL)
+    if(mpParentItem == NULL)
     {
         return NULL;
     }
@@ -127,7 +127,7 @@ void iWidgetMenu::SetMustHide(bool abX)
  */
 bool iWidgetMenu::IsSubmenuOpen()
 {
-    if(mpHighlightedItem!=NULL)
+    if(mpHighlightedItem != NULL)
     {
         return mpHighlightedItem->IsMenuOpen();
     }
@@ -141,9 +141,9 @@ bool iWidgetMenu::IsSubmenuOpen()
  * GetTopMostMenu() : returns the topmost Menu in the hierarchy
  * \return
  */
-iWidgetMenu* iWidgetMenu::GetTopMostMenu()
+iWidgetMenu *iWidgetMenu::GetTopMostMenu()
 {
-    if(mpParentItem!=NULL)
+    if(mpParentItem != NULL)
     {
         return GetParentMenu()->GetTopMostMenu();
     }

@@ -25,13 +25,13 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cRopeEntity::cRopeEntity(const tString& asName, cResources *apResources,cGraphics *apGraphics,
+cRopeEntity::cRopeEntity(const tString& asName, cResources *apResources, cGraphics *apGraphics,
                          iPhysicsRope *apRope, int alMaxSegments) :    iRenderable(asName)
 {
     mpMaterialManager = apResources->GetMaterialManager();
     mpLowLevelGraphics = apGraphics->GetLowLevel();
 
-    mColor = cColor(1,1,1,1);
+    mColor = cColor(1, 1, 1, 1);
 
     mpMaterial = NULL;
 
@@ -45,34 +45,34 @@ cRopeEntity::cRopeEntity(const tString& asName, cResources *apResources,cGraphic
     mpVtxBuffer = mpLowLevelGraphics->CreateVertexBuffer(    eVertexBufferType_Hardware, eVertexBufferDrawType_Tri, eVertexBufferUsageType_Dynamic,
                   4 * mlMaxSegments, 6 * mlMaxSegments);
 
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Position,eVertexBufferElementFormat_Float,4);
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Normal,eVertexBufferElementFormat_Float,3);
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Color0,eVertexBufferElementFormat_Float,4);
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Texture0,eVertexBufferElementFormat_Float,3);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Position, eVertexBufferElementFormat_Float, 4);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Normal, eVertexBufferElementFormat_Float, 3);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Color0, eVertexBufferElementFormat_Float, 4);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Texture0, eVertexBufferElementFormat_Float, 3);
 
-    for(int i=0; i<mlMaxSegments; ++i)
+    for(int i = 0; i < mlMaxSegments; ++i)
     {
-        cVector3f vTexCoords[4] = {cVector3f(1,1,0),    //Bottom left
-                                   cVector3f(-1,1,0),    //Bottom right
-                                   cVector3f(-1,-1,0),    //Top left
-                                   cVector3f(1,-1,0)
+        cVector3f vTexCoords[4] = {cVector3f(1, 1, 0),  //Bottom left
+                                   cVector3f(-1, 1, 0),  //Bottom right
+                                   cVector3f(-1, -1, 0),  //Top left
+                                   cVector3f(1, -1, 0)
                                   };    //Top right
 
-        for(int j=0; j<4; j++)
+        for(int j = 0; j < 4; j++)
         {
             mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position,    0);
             mpVtxBuffer->AddVertexColor(eVertexBufferElement_Color0,    mColor);
             mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, 0);
-            mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Normal,    cVector3f(0,0,1));
+            mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Normal,    cVector3f(0, 0, 1));
         }
 
-        for(int j=0; j<3; j++)
+        for(int j = 0; j < 3; j++)
         {
-            mpVtxBuffer->AddIndex(j + i*4);
+            mpVtxBuffer->AddIndex(j + i * 4);
         }
-        for(int j=2; j<5; j++)
+        for(int j = 2; j < 5; j++)
         {
-            mpVtxBuffer->AddIndex( (j==4?0:j)  + i*4);
+            mpVtxBuffer->AddIndex( (j == 4 ? 0 : j)  + i * 4);
         }
     }
 
@@ -136,16 +136,16 @@ void cRopeEntity::SetColor(const cColor &aColor)
         finalColor.b = finalColor.b * mColor.a;
     }
 
-    for(int i=0; i<mlMaxSegments * 4; ++i)
+    for(int i = 0; i < mlMaxSegments * 4; ++i)
     {
         pColors[0] = finalColor.r;
         pColors[1] = finalColor.g;
         pColors[2] = finalColor.b;
         pColors[3] = finalColor.a;
-        pColors+=4;
+        pColors += 4;
     }
 
-    mpVtxBuffer->UpdateData(eVertexElementFlag_Color0,false);
+    mpVtxBuffer->UpdateData(eVertexElementFlag_Color0, false);
 }
 
 //-----------------------------------------------------------------------
@@ -157,7 +157,7 @@ void cRopeEntity::SetMaterial(cMaterial * apMaterial)
 
 //-----------------------------------------------------------------------
 
-cBoundingVolume* cRopeEntity::GetBoundingVolume()
+cBoundingVolume *cRopeEntity::GetBoundingVolume()
 {
     if(mlLastUpdateCount != mpRope->GetUpdateCount())
     {
@@ -169,11 +169,11 @@ cBoundingVolume* cRopeEntity::GetBoundingVolume()
         {
             cVerletParticle *pPart = it.Next();
 
-            cMath::ExpandAABB(vMin,vMax, pPart->GetPosition(), pPart->GetPosition());
-            cMath::ExpandAABB(vMin,vMax, pPart->GetSmoothPosition(), pPart->GetSmoothPosition());
+            cMath::ExpandAABB(vMin, vMax, pPart->GetPosition(), pPart->GetPosition());
+            cMath::ExpandAABB(vMin, vMax, pPart->GetSmoothPosition(), pPart->GetSmoothPosition());
         }
 
-        mBoundingVolume.SetLocalMinMax(vMin-cVector3f(mfRadius + 2.0f),vMax+cVector3f(mfRadius + 2.0f));
+        mBoundingVolume.SetLocalMinMax(vMin - cVector3f(mfRadius + 2.0f), vMax + cVector3f(mfRadius + 2.0f));
 
         mlLastUpdateCount = mpRope->GetUpdateCount();
     }
@@ -210,10 +210,10 @@ static inline void SetVec4(float *apPos, const cVector3f &aPos)
 static cVector2f gvPosAdd[4] =
 {
     //cVector2f (1,1), cVector2f (1,0), cVector2f (-1,0), cVector2f (-1,1)
-    cVector2f (1,0), cVector2f (-1,0), cVector2f (-1,1), cVector2f (1,1)
+    cVector2f (1, 0), cVector2f (-1, 0), cVector2f (-1, 1), cVector2f (1, 1)
 };
 
-bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime)
+bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum, double adFrameTime)
 {
     float *pPosArray = mpVtxBuffer->GetFloatArray(eVertexBufferElement_Position);
     float *pUvArray = mpVtxBuffer->GetFloatArray(eVertexBufferElement_Texture0);
@@ -224,17 +224,17 @@ bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTi
 
     cVector3f vTexCoords[4] =
     {
-        cVector3f(1,1,0),    //Bottom left
-        cVector3f(0,1,0),    //Bottom right
-        cVector3f(0,0,0),    //Top left
-        cVector3f(1,0,0)    //Top right
+        cVector3f(1, 1, 0),  //Bottom left
+        cVector3f(0, 1, 0),  //Bottom right
+        cVector3f(0, 0, 0),  //Top left
+        cVector3f(1, 0, 0)  //Top right
     };
 
     vTexCoords[0].y *= mfLengthTileAmount;
     vTexCoords[1].y *= mfLengthTileAmount;
 
     cVerletParticleIterator it = mpRope->GetParticleIterator();
-    int lCount=0;
+    int lCount = 0;
     cVector3f vPrevPos;
     while(it.HasNext())
     {
@@ -274,54 +274,54 @@ bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTi
 
         /////////////////////////
         //Update position
-        for(int i=0; i<4; ++i)
+        for(int i = 0; i < 4; ++i)
         {
-            SetVec4(&pPosArray[i*4], vPrevPos + vRight * gvPosAdd[i].x*mfRadius + vUp * gvPosAdd[i].y*fLength);
+            SetVec4(&pPosArray[i * 4], vPrevPos + vRight * gvPosAdd[i].x * mfRadius + vUp * gvPosAdd[i].y * fLength);
         }
 
         /////////////////////////
         //Update uv
-        if(lCount==2 && (fLength < fSegmentLength || fSegmentLength==0))
+        if(lCount == 2 && (fLength < fSegmentLength || fSegmentLength == 0))
         {
             //////////////////
             //No segments
-            if(fSegmentLength==0)
+            if(fSegmentLength == 0)
             {
-                float fYAdd = 1 - fLength/ mfLengthTileSize;
+                float fYAdd = 1 - fLength / mfLengthTileSize;
 
-                SetVec3(&pUvArray[0*3], vTexCoords[0] - cVector3f(0,fYAdd,0));
-                SetVec3(&pUvArray[1*3], vTexCoords[1] - cVector3f(0,fYAdd,0));
+                SetVec3(&pUvArray[0 * 3], vTexCoords[0] - cVector3f(0, fYAdd, 0));
+                SetVec3(&pUvArray[1 * 3], vTexCoords[1] - cVector3f(0, fYAdd, 0));
 
-                SetVec3(&pUvArray[2*3], vTexCoords[2]);
-                SetVec3(&pUvArray[3*3], vTexCoords[3]);
+                SetVec3(&pUvArray[2 * 3], vTexCoords[2]);
+                SetVec3(&pUvArray[3 * 3], vTexCoords[3]);
             }
             //////////////////
             //First segment of many
             else
             {
-                float fYAdd = (1 - (fLength / fSegmentLength))*mfLengthTileAmount;
+                float fYAdd = (1 - (fLength / fSegmentLength)) * mfLengthTileAmount;
 
-                SetVec3(&pUvArray[0*3], vTexCoords[0] - cVector3f(0,fYAdd,0) );
-                SetVec3(&pUvArray[1*3], vTexCoords[1] - cVector3f(0,fYAdd,0) );
+                SetVec3(&pUvArray[0 * 3], vTexCoords[0] - cVector3f(0, fYAdd, 0) );
+                SetVec3(&pUvArray[1 * 3], vTexCoords[1] - cVector3f(0, fYAdd, 0) );
 
-                SetVec3(&pUvArray[2*3], vTexCoords[2]);
-                SetVec3(&pUvArray[3*3], vTexCoords[3]);
+                SetVec3(&pUvArray[2 * 3], vTexCoords[2]);
+                SetVec3(&pUvArray[3 * 3], vTexCoords[3]);
             }
         }
         else
         {
-            for(int i=0; i<4; ++i)
+            for(int i = 0; i < 4; ++i)
             {
-                SetVec3(&pUvArray[i*3], vTexCoords[i]);
+                SetVec3(&pUvArray[i * 3], vTexCoords[i]);
             }
         }
 
         /////////////////////////
         //Update Normal and Tangent
-        for(int i=0; i<4; ++i)
+        for(int i = 0; i < 4; ++i)
         {
-            SetVec3(&pNrmArray[i*3], vFwd);
-            SetVec4(&pTanArray[i*4], vRight);
+            SetVec3(&pNrmArray[i * 3], vFwd);
+            SetVec4(&pTanArray[i * 4], vRight);
         }
 
         /////////////////////////
@@ -336,7 +336,7 @@ bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTi
         vPrevPos = vPos;
     }
 
-    mpVtxBuffer->SetElementNum((lCount-1) * 6);
+    mpVtxBuffer->SetElementNum((lCount - 1) * 6);
 
     mpVtxBuffer->UpdateData(eVertexElementFlag_Position | eVertexElementFlag_Texture0 | eVertexElementFlag_Texture1 | eVertexElementFlag_Normal, false);
 
@@ -345,9 +345,9 @@ bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTi
 
 //-----------------------------------------------------------------------
 
-cMatrixf* cRopeEntity::GetModelMatrix(cFrustum *apFrustum)
+cMatrixf *cRopeEntity::GetModelMatrix(cFrustum *apFrustum)
 {
-    if(apFrustum==NULL)
+    if(apFrustum == NULL)
     {
         return &GetWorldMatrix();
     }

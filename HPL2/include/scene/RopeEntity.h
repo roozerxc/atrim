@@ -23,10 +23,10 @@ class iPhysicsRope;
 class cRopeEntity : public iRenderable
 {
 public:
-    cRopeEntity(const tString& asName, cResources *apResources,cGraphics *apGraphics, iPhysicsRope *apRope, int alMaxSegments);
+    cRopeEntity(const tString& asName, cResources *apResources, cGraphics *apGraphics, iPhysicsRope *apRope, int alMaxSegments);
     ~cRopeEntity();
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -39,7 +39,7 @@ public:
     void SetMaterial(cMaterial * apMaterial);
 
     void SetColor(const cColor &aColor);
-    const cColor& GetColor()
+    const cColor &GetColor()
     {
         return mColor;
     }
@@ -104,17 +104,17 @@ public:
     {
         return mpMaterial;
     }
-    iVertexBuffer* GetVertexBuffer()
+    iVertexBuffer *GetVertexBuffer()
     {
         return mpVtxBuffer;
     }
 
     void UpdateGraphicsForFrame(double adFrameTime);
-    bool UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime);
+    bool UpdateGraphicsForViewport(cFrustum *apFrustum, double adFrameTime);
 
-    cBoundingVolume* GetBoundingVolume();
+    cBoundingVolume *GetBoundingVolume();
 
-    cMatrixf* GetModelMatrix(cFrustum *apFrustum);
+    cMatrixf *GetModelMatrix(cFrustum *apFrustum);
 
     int GetMatrixUpdateCount();
 
@@ -124,13 +124,13 @@ public:
         return eRenderableType_Rope;
     }
 private:
-    cMaterialManager* mpMaterialManager;
-    iLowLevelGraphics* mpLowLevelGraphics;
+    cMaterialManager *mpMaterialManager;
+    iLowLevelGraphics *mpLowLevelGraphics;
 
     iPhysicsRope *mpRope;
 
     cMaterial *mpMaterial;
-    iVertexBuffer* mpVtxBuffer;
+    iVertexBuffer *mpVtxBuffer;
 
     int mlMaxSegments;
 

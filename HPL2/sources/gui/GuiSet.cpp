@@ -138,17 +138,17 @@ void cGuiClipRegion::Clear()
     STLDeleteAll(mlstChildren);
 }
 
-cGuiClipRegion* cGuiClipRegion::CreateChild(const cVector3f &avPos, const cVector2f &avSize)
+cGuiClipRegion *cGuiClipRegion::CreateChild(const cVector3f &avPos, const cVector2f &avSize)
 {
     cGuiClipRegion *pRegion = hplNew( cGuiClipRegion, () );
 
-    if(mRect.w <0)
+    if(mRect.w < 0)
     {
-        pRegion->mRect = cRect2f(cVector2f(avPos.x, avPos.y),avSize);
+        pRegion->mRect = cRect2f(cVector2f(avPos.x, avPos.y), avSize);
     }
     else
     {
-        cRect2f t = cRect2f(cVector2f(avPos.x, avPos.y),avSize);
+        cRect2f t = cRect2f(cVector2f(avPos.x, avPos.y), avSize);
         pRegion->mRect = cMath::GetClipRect(t, mRect);
         if(pRegion->mRect.w < 0 )
         {
@@ -189,7 +189,7 @@ cGuiGlobalShortcut::cGuiGlobalShortcut(int alKeyModifiers, eKey aKey, iWidget* a
 
 bool cGuiGlobalShortcut::DoesAcceptKeyPress(const cKeyPress& aKey)
 {
-    if(IsEnabled()==false ||
+    if(IsEnabled() == false ||
             mKey.mlModifier != aKey.mlModifier ||
             mKey.mKey != aKey.mKey)
     {
@@ -220,21 +220,21 @@ tString cGuiGlobalShortcut::ToString()
     if(mpWidget)
     {
         iKeyboard* pKB = mpWidget->GetSet()->GetGui()->GetInput()->GetKeyboard();
-        for(int i=0; i<eKeyModifier_LastEnum; ++i)
+        for(int i = 0; i < eKeyModifier_LastEnum; ++i)
         {
             eKeyModifier mod = (eKeyModifier) cMath::Pow2(i);
             if(mKey.mlModifier & mod)
             {
-                if(sText!="")
+                if(sText != "")
                 {
-                    sText+= "+";
+                    sText += "+";
                 }
                 sText += pKB->ModifierKeyToString(mod);
             }
         }
-        if(mKey.mKey!=eKey_None)
+        if(mKey.mKey != eKey_None)
         {
-            if(sText!="")
+            if(sText != "")
             {
                 sText += "+";
             }
@@ -273,10 +273,10 @@ cGuiSet::cGuiSet(    const tString &asName, cGui *apGui, cGuiSkin *apSkin,
 
     mpAttentionWidget = NULL;
 
-    mlPopupCount =0;
+    mlPopupCount = 0;
     mfLastPopUpZ = 20;
 
-    mvDrawOffset =0;
+    mvDrawOffset = 0;
 
     mfContextMenuZ = 500;
 
@@ -287,7 +287,7 @@ cGuiSet::cGuiSet(    const tString &asName, cGui *apGui, cGuiSkin *apSkin,
 
     mbActive = true;
     mbDrawMouse = true;
-    mfMouseZ =mfVirtualMaxZ;
+    mfMouseZ = mfVirtualMaxZ;
 
     mbIs3D = false;
     mbRendersBeforePostEffects = false;
@@ -295,9 +295,9 @@ cGuiSet::cGuiSet(    const tString &asName, cGui *apGui, cGuiSkin *apSkin,
     m_mtx3DTransform = cMatrixf::Identity;
     mbCullBackface = false;
 
-    mpWidgetRoot = hplNew( iWidget, (eWidgetType_Root,this,mpSkin) );
-    mpWidgetRoot->AddCallback(eGuiMessage_OnDraw,this,kGuiCallback(DrawMouse));
-    mpWidgetRoot->AddCallback(eGuiMessage_OnDraw,this,kGuiCallback(DrawFocus));
+    mpWidgetRoot = hplNew( iWidget, (eWidgetType_Root, this, mpSkin) );
+    mpWidgetRoot->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(DrawMouse));
+    mpWidgetRoot->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(DrawFocus));
 
     mpCurrentClipRegion = &mBaseClipRegion;
 
@@ -307,7 +307,7 @@ cGuiSet::cGuiSet(    const tString &asName, cGui *apGui, cGuiSkin *apSkin,
 
     // 9 mouse buttons defined in InputTypes and GuiTypes
     mvMouseDown.resize(9);
-    for(int i=0; i<(int)mvMouseDown.size(); ++i)
+    for(int i = 0; i < (int)mvMouseDown.size(); ++i)
     {
         mvMouseDown[i] = false;
     }
@@ -368,7 +368,7 @@ void cGuiSet::Update(double adFixedDelta)
 {
     /////////////////////////////
     // Popups
-    if(mlstPopUps.empty()==false)
+    if(mlstPopUps.empty() == false)
     {
         STLDeleteAll(mlstPopUps);
     }
@@ -391,7 +391,7 @@ void cGuiSet::Update(double adFixedDelta)
 
 void cGuiSet::DrawAll(double adFixedDelta)
 {
-    if(mbActive==false)
+    if(mbActive == false)
     {
         return;
     }
@@ -452,7 +452,7 @@ bool cGuiSet::SendMessage(eGuiMessage aMessage, const cGuiMessageData& aData)
 
 //-----------------------------------------------------------------------
 
-cGuiGlobalShortcut* cGuiSet::AddGlobalShortcut(int alKeyModifiers, eKey aKey, iWidget* apWidget, eGuiMessage aMessage, bool abBypassVisibility, bool abBypassEnabled)
+cGuiGlobalShortcut *cGuiSet::AddGlobalShortcut(int alKeyModifiers, eKey aKey, iWidget* apWidget, eGuiMessage aMessage, bool abBypassVisibility, bool abBypassEnabled)
 {
     cGuiGlobalShortcut* pShortcut = hplNew(cGuiGlobalShortcut, (alKeyModifiers, aKey,
                                            apWidget, aMessage,
@@ -467,13 +467,13 @@ cGuiGlobalShortcut* cGuiSet::AddGlobalShortcut(int alKeyModifiers, eKey aKey, iW
 
 void cGuiSet::RemoveGlobalShortcut(cGuiGlobalShortcut* apShortcut)
 {
-    if(apShortcut==NULL)
+    if(apShortcut == NULL)
     {
         return;
     }
 
     tShortcutListIt it = find(mlstShortcuts.begin(), mlstShortcuts.end(), apShortcut);
-    if(it!=mlstShortcuts.end())
+    if(it != mlstShortcuts.end())
     {
         cGuiGlobalShortcut* pShortcut = *it;
         mlstShortcuts.erase(it);
@@ -545,7 +545,7 @@ void cGuiSet::Render(cFrustum *apFrustum)
                                         mv3DSize.z / (mfVirtualMaxZ - mfVirtualMinZ));
         cMatrixf mtxPreMul = cMath::MatrixScale(vPreScale);
         //note: Offset needs to be converted to shape coords (done by multiplying with pre scale)
-        mtxPreMul.SetTranslation(cVector3f(mvVirtualSizeOffset.x*vPreScale.x, mvVirtualSizeOffset.y*vPreScale.y, 0));
+        mtxPreMul.SetTranslation(cVector3f(mvVirtualSizeOffset.x * vPreScale.x, mvVirtualSizeOffset.y * vPreScale.y, 0));
 
         //Create the final model matrix
         cMatrixf mtxModel = cMath::MatrixMul(m_mtx3DTransform, mtxPreMul);
@@ -566,9 +566,9 @@ void cGuiSet::Render(cFrustum *apFrustum)
 
         //Set up min and max for orth projection
         cVector3f vProjMin(-mvVirtualSizeOffset.x, -mvVirtualSizeOffset.y, mfVirtualMinZ);
-        cVector3f vProjMax(mvVirtualSize.x-mvVirtualSizeOffset.x, mvVirtualSize.y-mvVirtualSizeOffset.y, mfVirtualMaxZ);
+        cVector3f vProjMax(mvVirtualSize.x - mvVirtualSizeOffset.x, mvVirtualSize.y - mvVirtualSizeOffset.y, mfVirtualMaxZ);
 
-        pLowLevelGraphics->SetOrthoProjection(vProjMin,vProjMax);
+        pLowLevelGraphics->SetOrthoProjection(vProjMin, vProjMax);
     }
 
     ///////////////////////////////
@@ -582,7 +582,7 @@ void cGuiSet::Render(cFrustum *apFrustum)
 
     if(mbIs3D)
     {
-        if(mbCullBackface==false)
+        if(mbCullBackface == false)
         {
             pLowLevelGraphics->SetCullActive(true);
         }
@@ -599,15 +599,15 @@ void cGuiSet::ClearRenderObjects()
 //-----------------------------------------------------------------------
 
 void cGuiSet::DrawGfx(    cGuiGfxElement* apGfx, const cVector3f &avPos, const cVector2f &avSize,
-                          const cColor& aColor,eGuiMaterial aMaterial,
+                          const cColor& aColor, eGuiMaterial aMaterial,
                           float afRotationAngle,
                           bool abUseCustomPivot, const cVector3f& avCustomPivot)
 {
-    if(mpCurrentClipRegion==NULL)
+    if(mpCurrentClipRegion == NULL)
     {
         return;
     }
-    if(mpCurrentClipRegion->mRect.w ==0 || mpCurrentClipRegion->mRect.h==0)
+    if(mpCurrentClipRegion->mRect.w == 0 || mpCurrentClipRegion->mRect.h == 0)
     {
         return;
     }
@@ -615,7 +615,7 @@ void cGuiSet::DrawGfx(    cGuiGfxElement* apGfx, const cVector3f &avPos, const c
     //Log("Bug:Drawing gfx: %p\n", apGfx);
 
     cVector3f vAbsPos =  avPos + apGfx->GetOffset() + mvDrawOffset;
-    if(mpCurrentClipRegion->mRect.w >0)
+    if(mpCurrentClipRegion->mRect.w > 0)
     {
         cRect2f gfxRect;
         gfxRect.x = vAbsPos.x;
@@ -631,7 +631,7 @@ void cGuiSet::DrawGfx(    cGuiGfxElement* apGfx, const cVector3f &avPos, const c
             gfxRect.h = avSize.y;
         }
 
-        if(cMath::CheckRectIntersection(mpCurrentClipRegion->mRect,gfxRect)==false)
+        if(cMath::CheckRectIntersection(mpCurrentClipRegion->mRect, gfxRect) == false)
         {
             return;
         }
@@ -674,7 +674,7 @@ void cGuiSet::DrawGfx(    cGuiGfxElement* apGfx, const cVector3f &avPos, const c
 
     ///////////////////////////
     //Rotation
-    if(afRotationAngle !=0)
+    if(afRotationAngle != 0)
     {
         object.mbRotated = true;
         object.mfAngle = afRotationAngle;
@@ -685,7 +685,7 @@ void cGuiSet::DrawGfx(    cGuiGfxElement* apGfx, const cVector3f &avPos, const c
         }
         else
         {
-            object.mvPivot = object.mvSize*0.5f;
+            object.mvPivot = object.mvSize * 0.5f;
         }
     }
     else
@@ -703,7 +703,7 @@ void cGuiSet::DrawFont(    const tWString &asText,
                            const cVector2f &avSize, const cColor& aColor,
                            eFontAlign aAlign, eGuiMaterial aMaterial)
 {
-    DrawTextFromCharArry(asText.c_str(), apFont,avSize,avPos,aColor,aMaterial,aAlign);
+    DrawTextFromCharArry(asText.c_str(), apFont, avSize, avPos, aColor, aMaterial, aAlign);
 }
 
 //-----------------------------------------------------------------------
@@ -711,8 +711,8 @@ void cGuiSet::DrawFont(    const tWString &asText,
 static wchar_t gsTempTextArray[1024];
 void cGuiSet::DrawFont (iFontData *apFont, const cVector3f &avPos,
                         const cVector2f &avSize, const cColor& aColor,
-                        eFontAlign aAlign,eGuiMaterial aMaterial,
-                        const wchar_t* fmt,...)
+                        eFontAlign aAlign, eGuiMaterial aMaterial,
+                        const wchar_t *fmt, ...)
 {
     va_list ap;
     if (fmt == NULL)
@@ -723,12 +723,12 @@ void cGuiSet::DrawFont (iFontData *apFont, const cVector3f &avPos,
     vswprintf(gsTempTextArray, 1023, fmt, ap);
     va_end(ap);
 
-    DrawTextFromCharArry(gsTempTextArray, apFont,avSize,avPos,aColor,aMaterial,aAlign);
+    DrawTextFromCharArry(gsTempTextArray, apFont, avSize, avPos, aColor, aMaterial, aAlign);
 }
 
 void cGuiSet::DrawFont (    iFontData *apFont, const cVector3f &avPos,
                             const cVector2f &avSize, const cColor& aColor,
-                            const wchar_t* fmt,...)
+                            const wchar_t *fmt, ...)
 {
     va_list ap;
     if (fmt == NULL)
@@ -739,20 +739,20 @@ void cGuiSet::DrawFont (    iFontData *apFont, const cVector3f &avPos,
     vswprintf(gsTempTextArray, 1023, fmt, ap);
     va_end(ap);
 
-    DrawTextFromCharArry(gsTempTextArray, apFont,avSize,avPos,aColor,eGuiMaterial_FontNormal,eFontAlign_Left);
+    DrawTextFromCharArry(gsTempTextArray, apFont, avSize, avPos, aColor, eGuiMaterial_FontNormal, eFontAlign_Left);
 }
 
 
 //-----------------------------------------------------------------------
 
-cWidgetWindow* cGuiSet::CreateWidgetWindow(    tWidgetWindowButtonFlag alFlags,
+cWidgetWindow *cGuiSet::CreateWidgetWindow(    tWidgetWindowButtonFlag alFlags,
         const cVector3f &avLocalPos,
         const cVector2f &avSize,
         const tWString &asText,
         iWidget *apParent,
         const tString& asName)
 {
-    cWidgetWindow *pWindow = hplNew( cWidgetWindow, (this,mpSkin, alFlags) );
+    cWidgetWindow *pWindow = hplNew( cWidgetWindow, (this, mpSkin, alFlags) );
     pWindow->SetPosition(avLocalPos);
     pWindow->SetSize(avSize);
     pWindow->SetText(asText);
@@ -764,46 +764,46 @@ cWidgetWindow* cGuiSet::CreateWidgetWindow(    tWidgetWindowButtonFlag alFlags,
     return pWindow;
 }
 
-cWidgetFrame* cGuiSet::CreateWidgetFrame(    const cVector3f &avLocalPos,
+cWidgetFrame *cGuiSet::CreateWidgetFrame(    const cVector3f &avLocalPos,
         const cVector2f &avSize,
         bool abDrawFrame,
         iWidget *apParent,
         bool abHScrollBar, bool abVScrollBar,
         const tString& asName)
 {
-    cWidgetFrame *pFrame = hplNew( cWidgetFrame, (this,mpSkin, abHScrollBar, abVScrollBar) );
+    cWidgetFrame *pFrame = hplNew( cWidgetFrame, (this, mpSkin, abHScrollBar, abVScrollBar) );
     pFrame->SetPosition(avLocalPos);
     pFrame->SetSize(avSize);
     pFrame->SetDrawFrame(abDrawFrame);
     pFrame->SetName(asName);
-    AddWidget(pFrame,apParent);
+    AddWidget(pFrame, apParent);
     return pFrame;
 }
 
-cWidgetButton* cGuiSet::CreateWidgetButton(    const cVector3f &avLocalPos,
+cWidgetButton *cGuiSet::CreateWidgetButton(    const cVector3f &avLocalPos,
         const cVector2f &avSize,
         const tWString &asText,
         iWidget *apParent,
         bool abToggleable,
         const tString& asName)
 {
-    cWidgetButton *pButton = hplNew( cWidgetButton, (this,mpSkin) );
+    cWidgetButton *pButton = hplNew( cWidgetButton, (this, mpSkin) );
     pButton->SetPosition(avLocalPos);
     pButton->SetSize(avSize);
     pButton->SetText(asText);
     pButton->SetName(asName);
     pButton->SetToggleable(abToggleable);
-    AddWidget(pButton,apParent);
+    AddWidget(pButton, apParent);
     return pButton;
 }
 
-cWidgetLabel* cGuiSet::CreateWidgetLabel(    const cVector3f &avLocalPos,
+cWidgetLabel *cGuiSet::CreateWidgetLabel(    const cVector3f &avLocalPos,
         const cVector2f &avSize,
         const tWString &asText,
         iWidget *apParent,
         const tString& asName)
 {
-    cWidgetLabel *pLabel = hplNew( cWidgetLabel, (this,mpSkin) );
+    cWidgetLabel *pLabel = hplNew( cWidgetLabel, (this, mpSkin) );
     pLabel->SetPosition(avLocalPos);
     pLabel->SetSize(avSize);
     pLabel->SetText(asText);
@@ -815,27 +815,27 @@ cWidgetLabel* cGuiSet::CreateWidgetLabel(    const cVector3f &avLocalPos,
         pLabel->SetAutogenerateSize(false);
     }
 
-    AddWidget(pLabel,apParent);
+    AddWidget(pLabel, apParent);
     return pLabel;
 }
 
-cWidgetSlider* cGuiSet::CreateWidgetSlider(    eWidgetSliderOrientation aOrientation,
+cWidgetSlider *cGuiSet::CreateWidgetSlider(    eWidgetSliderOrientation aOrientation,
         const cVector3f &avLocalPos,
         const cVector2f &avSize,
         int alMaxValue,
         iWidget *apParent,
         const tString& asName)
 {
-    cWidgetSlider *pSlider = hplNew( cWidgetSlider, (this,mpSkin,aOrientation) );
+    cWidgetSlider *pSlider = hplNew( cWidgetSlider, (this, mpSkin, aOrientation) );
     pSlider->SetPosition(avLocalPos);
     pSlider->SetSize(avSize);
     pSlider->SetMaxValue(alMaxValue);
     pSlider->SetName(asName);
-    AddWidget(pSlider,apParent);
+    AddWidget(pSlider, apParent);
     return pSlider;
 }
 
-cWidgetTextBox* cGuiSet::CreateWidgetTextBox( const cVector3f &avLocalPos,
+cWidgetTextBox *cGuiSet::CreateWidgetTextBox( const cVector3f &avLocalPos,
         const cVector2f &avSize,
         const tWString &asText,
         iWidget *apParent,
@@ -844,33 +844,33 @@ cWidgetTextBox* cGuiSet::CreateWidgetTextBox( const cVector3f &avLocalPos,
         bool abShowButtons,
         const tString& asName)
 {
-    cWidgetTextBox *pTextBox = hplNew( cWidgetTextBox, (this,mpSkin,aType) );
+    cWidgetTextBox *pTextBox = hplNew( cWidgetTextBox, (this, mpSkin, aType) );
     pTextBox->SetPosition(avLocalPos);
     pTextBox->SetSize(avSize);
     pTextBox->SetShowButtons(abShowButtons);
     pTextBox->SetNumericAdd(afNumericAdd);
     pTextBox->SetText(asText);
     pTextBox->SetName(asName);
-    AddWidget(pTextBox,apParent);
+    AddWidget(pTextBox, apParent);
     return pTextBox;
 }
 
-cWidgetCheckBox* cGuiSet::CreateWidgetCheckBox(    const cVector3f &avLocalPos,
+cWidgetCheckBox *cGuiSet::CreateWidgetCheckBox(    const cVector3f &avLocalPos,
         const cVector2f &avSize,
         const tWString &asText,
         iWidget *apParent,
         const tString& asName)
 {
-    cWidgetCheckBox *pCheckBox = hplNew( cWidgetCheckBox, (this,mpSkin) );
+    cWidgetCheckBox *pCheckBox = hplNew( cWidgetCheckBox, (this, mpSkin) );
     pCheckBox->SetPosition(avLocalPos);
     pCheckBox->SetSize(avSize);
     pCheckBox->SetText(asText);
     pCheckBox->SetName(asName);
-    AddWidget(pCheckBox,apParent);
+    AddWidget(pCheckBox, apParent);
     return pCheckBox;
 }
 
-cWidgetImage* cGuiSet::CreateWidgetImage(const tString &asFile,
+cWidgetImage *cGuiSet::CreateWidgetImage(const tString &asFile,
         const cVector3f &avLocalPos,
         const cVector2f &avSize,
         eGuiMaterial aMaterial,
@@ -878,22 +878,22 @@ cWidgetImage* cGuiSet::CreateWidgetImage(const tString &asFile,
         iWidget *apParent,
         const tString& asName)
 {
-    cWidgetImage *pImage = hplNew( cWidgetImage, (this,mpSkin) );
+    cWidgetImage *pImage = hplNew( cWidgetImage, (this, mpSkin) );
     cGuiGfxElement *pGfx = NULL;
     if(asFile != "")
     {
         if(abAnimate)
         {
-            pGfx = mpGui->CreateGfxImageBuffer(asFile,aMaterial,true);
+            pGfx = mpGui->CreateGfxImageBuffer(asFile, aMaterial, true);
         }
         else
         {
-            pGfx = mpGui->CreateGfxImage(asFile,aMaterial);
+            pGfx = mpGui->CreateGfxImage(asFile, aMaterial);
         }
     }
     pImage->SetPosition(avLocalPos);
 
-    if(pGfx && avSize.x <0)
+    if(pGfx && avSize.x < 0)
     {
         pImage->SetSize(pGfx->GetImageSize());
     }
@@ -906,52 +906,52 @@ cWidgetImage* cGuiSet::CreateWidgetImage(const tString &asFile,
 
     pImage->SetName(asName);
 
-    AddWidget(pImage,apParent);
+    AddWidget(pImage, apParent);
     return pImage;
 }
 
-cWidgetListBox* cGuiSet::CreateWidgetListBox(const cVector3f &avLocalPos,
+cWidgetListBox *cGuiSet::CreateWidgetListBox(const cVector3f &avLocalPos,
         const cVector2f &avSize,
         iWidget *apParent,
         const tString& asName)
 {
-    cWidgetListBox *pListBox = hplNew( cWidgetListBox,(this,mpSkin) );
+    cWidgetListBox *pListBox = hplNew( cWidgetListBox, (this, mpSkin) );
     pListBox->SetPosition(avLocalPos);
     pListBox->SetSize(avSize);
     pListBox->SetName(asName);
-    AddWidget(pListBox,apParent);
+    AddWidget(pListBox, apParent);
     return pListBox;
 }
 
-cWidgetMultiPropertyListBox* cGuiSet::CreateWidgetMultiPropertyListBox(    const cVector3f& avLocalPos,
+cWidgetMultiPropertyListBox *cGuiSet::CreateWidgetMultiPropertyListBox(    const cVector3f& avLocalPos,
         const cVector2f& avSize,
         iWidget* apParent,
         const tString& asName)
 {
-    cWidgetMultiPropertyListBox* pListBox = hplNew( cWidgetMultiPropertyListBox, (this,mpSkin));
+    cWidgetMultiPropertyListBox* pListBox = hplNew( cWidgetMultiPropertyListBox, (this, mpSkin));
     pListBox->SetPosition(avLocalPos);
     pListBox->SetSize(avSize);
     pListBox->SetName(asName);
-    AddWidget(pListBox,apParent);
+    AddWidget(pListBox, apParent);
     return pListBox;
 }
 
-cWidgetComboBox* cGuiSet::CreateWidgetComboBox(    const cVector3f &avLocalPos,
+cWidgetComboBox *cGuiSet::CreateWidgetComboBox(    const cVector3f &avLocalPos,
         const cVector2f &avSize,
         const tWString &asText,
         iWidget *apParent,
         const tString& asName)
 {
-    cWidgetComboBox *pComboBox = hplNew( cWidgetComboBox, (this,mpSkin) );
+    cWidgetComboBox *pComboBox = hplNew( cWidgetComboBox, (this, mpSkin) );
     pComboBox->SetPosition(avLocalPos);
     pComboBox->SetSize(avSize);
     pComboBox->SetText(asText);
     pComboBox->SetName(asName);
-    AddWidget(pComboBox,apParent);
+    AddWidget(pComboBox, apParent);
     return pComboBox;
 }
 
-cWidgetMenuItem* cGuiSet::CreateWidgetMenuItem(    const cVector3f &avLocalPos,
+cWidgetMenuItem *cGuiSet::CreateWidgetMenuItem(    const cVector3f &avLocalPos,
         const cVector2f &avSize,
         const tWString &asText,
         iWidget *apParent,
@@ -962,50 +962,50 @@ cWidgetMenuItem* cGuiSet::CreateWidgetMenuItem(    const cVector3f &avLocalPos,
     pItem->SetSize(avSize);
     pItem->SetText(asText);
     pItem->SetName(asName);
-    AddWidget(pItem,apParent);
+    AddWidget(pItem, apParent);
     return pItem;
 }
 
-cWidgetContextMenu* cGuiSet::CreateWidgetContextMenu(    const cVector3f &avLocalPos,
+cWidgetContextMenu *cGuiSet::CreateWidgetContextMenu(    const cVector3f &avLocalPos,
         const cVector2f &avSize,
         const tWString &asText,
         iWidget *apParent,
         const tString& asName)
 {
-    cWidgetContextMenu *pMenu = hplNew( cWidgetContextMenu, (this,mpSkin) );
+    cWidgetContextMenu *pMenu = hplNew( cWidgetContextMenu, (this, mpSkin) );
     pMenu->SetPosition(avLocalPos);
     pMenu->SetSize(avSize);
     pMenu->SetText(asText);
     pMenu->SetName(asName);
-    AddWidget(pMenu,apParent);
+    AddWidget(pMenu, apParent);
     return pMenu;
 }
 
-cWidgetMainMenu* cGuiSet::CreateWidgetMainMenu(iWidget *apParent,
+cWidgetMainMenu *cGuiSet::CreateWidgetMainMenu(iWidget *apParent,
         const tString& asName)
 {
-    cWidgetMainMenu *pMenu = hplNew( cWidgetMainMenu, (this,mpSkin) );
+    cWidgetMainMenu *pMenu = hplNew( cWidgetMainMenu, (this, mpSkin) );
     pMenu->SetName(asName);
-    AddWidget(pMenu,apParent);
+    AddWidget(pMenu, apParent);
     return pMenu;
 }
 
-cWidgetTabLabel* cGuiSet::CreateWidgetTabLabel(    const cVector3f &avLocalPos,
+cWidgetTabLabel *cGuiSet::CreateWidgetTabLabel(    const cVector3f &avLocalPos,
         const cVector2f &avSize,
         const tWString &asText,
         iWidget *apParent,
         const tString& asName)
 {
-    cWidgetTabLabel *pLabel = hplNew( cWidgetTabLabel, (this,mpSkin) );
+    cWidgetTabLabel *pLabel = hplNew( cWidgetTabLabel, (this, mpSkin) );
     pLabel->SetPosition(avLocalPos);
     pLabel->SetSize(avSize);
     pLabel->SetText(asText);
     pLabel->SetName(asName);
-    AddWidget(pLabel,apParent);
+    AddWidget(pLabel, apParent);
     return pLabel;
 }
 
-cWidgetTab* cGuiSet::CreateWidgetTab(    const cVector3f &avLocalPos,
+cWidgetTab *cGuiSet::CreateWidgetTab(    const cVector3f &avLocalPos,
         const cVector2f &avSize,
         const tWString &asText,
         iWidget *apParent,
@@ -1017,11 +1017,11 @@ cWidgetTab* cGuiSet::CreateWidgetTab(    const cVector3f &avLocalPos,
     pTab->SetText(asText);
     pTab->SetName(asName);
 
-    AddWidget(pTab,apParent);
+    AddWidget(pTab, apParent);
     return pTab;
 }
 
-cWidgetTabFrame* cGuiSet::CreateWidgetTabFrame(    const cVector3f &avLocalPos,
+cWidgetTabFrame *cGuiSet::CreateWidgetTabFrame(    const cVector3f &avLocalPos,
         const cVector2f &avSize,
         const tWString &asText,
         iWidget *apParent,
@@ -1029,46 +1029,46 @@ cWidgetTabFrame* cGuiSet::CreateWidgetTabFrame(    const cVector3f &avLocalPos,
         bool abAllowVScroll,
         const tString& asName)
 {
-    cWidgetTabFrame *pFrame = hplNew( cWidgetTabFrame, (this,mpSkin) );
+    cWidgetTabFrame *pFrame = hplNew( cWidgetTabFrame, (this, mpSkin) );
     pFrame->SetPosition(avLocalPos);
     pFrame->SetSize(avSize);
     pFrame->SetText(asText);
     pFrame->SetName(asName);
     pFrame->SetHorizontalScrollEnabled(abAllowHScroll);
     pFrame->SetVerticalScrollEnabled(abAllowVScroll);
-    AddWidget(pFrame,apParent);
+    AddWidget(pFrame, apParent);
     return pFrame;
 }
 
-cWidgetGroup* cGuiSet::CreateWidgetGroup(const cVector3f &avLocalPos,
+cWidgetGroup *cGuiSet::CreateWidgetGroup(const cVector3f &avLocalPos,
         const cVector2f &avSize,
         const tWString &asText,
         iWidget *apParent,
         const tString& asName)
 {
-    cWidgetGroup* pGroup = hplNew( cWidgetGroup, (this,mpSkin) );
+    cWidgetGroup* pGroup = hplNew( cWidgetGroup, (this, mpSkin) );
     pGroup->SetPosition(avLocalPos);
     pGroup->SetSize(avSize);
     pGroup->SetText(asText);
     pGroup->SetName(asName);
-    AddWidget(pGroup,apParent);
+    AddWidget(pGroup, apParent);
     return pGroup;
 }
 
-cWidgetDummy* cGuiSet::CreateWidgetDummy(const cVector3f &avLocalPos,
+cWidgetDummy *cGuiSet::CreateWidgetDummy(const cVector3f &avLocalPos,
         iWidget* apParent,
         const tString &asName)
 {
-    cWidgetDummy* pDummy = hplNew( cWidgetDummy, (this,mpSkin) );
+    cWidgetDummy* pDummy = hplNew( cWidgetDummy, (this, mpSkin) );
     pDummy->SetPosition(avLocalPos);
     pDummy->SetName(asName);
-    AddWidget(pDummy,apParent);
+    AddWidget(pDummy, apParent);
     return pDummy;
 }
 
 //-----------------------------------------------------------------------
 
-iWidget * cGuiSet::GetWidgetFromName(const tString& asName)
+iWidget *cGuiSet::GetWidgetFromName(const tString& asName)
 {
     return (iWidget*)STLFindByName(mlstWidgets, asName);
 }
@@ -1084,20 +1084,20 @@ void cGuiSet::DestroyWidget(iWidget *apWidget, bool abDestroyChildren)
     mlstTabOrderWidgets.remove(apWidget);
     mpTabOrderWidget = NULL;
 
-    if(apWidget==mpCurrentToolTipWidget)
+    if(apWidget == mpCurrentToolTipWidget)
     {
         SetToolTipWidget(NULL);
     }
 
-    if(apWidget==mpDefaultFocusNavWidget)
+    if(apWidget == mpDefaultFocusNavWidget)
     {
         mpDefaultFocusNavWidget = NULL;
     }
 
     tWidgetList& lstChildren = apWidget->GetChildren();
-    if(abDestroyChildren && lstChildren.empty()==false)
+    if(abDestroyChildren && lstChildren.empty() == false)
     {
-        if(mpTopMostDestroyingWidget==NULL)
+        if(mpTopMostDestroyingWidget == NULL)
         {
             mpTopMostDestroyingWidget = apWidget;
             mbOldDestroyingSet = mbDestroyingSet;
@@ -1106,7 +1106,7 @@ void cGuiSet::DestroyWidget(iWidget *apWidget, bool abDestroyChildren)
 
         tWidgetList& lstChildren = apWidget->GetChildren();
         tWidgetListIt it = lstChildren.begin();
-        while(it!=lstChildren.end())
+        while(it != lstChildren.end())
         {
             iWidget* pWidget = *it;
             DestroyWidget(pWidget, true);
@@ -1117,7 +1117,7 @@ void cGuiSet::DestroyWidget(iWidget *apWidget, bool abDestroyChildren)
 
     STLFindAndDelete(mlstWidgets, apWidget);
 
-    if(mpTopMostDestroyingWidget==apWidget)
+    if(mpTopMostDestroyingWidget == apWidget)
     {
         mpTopMostDestroyingWidget = NULL;
         mbDestroyingSet = mbOldDestroyingSet;
@@ -1128,31 +1128,31 @@ void cGuiSet::DestroyWidget(iWidget *apWidget, bool abDestroyChildren)
 
 bool cGuiSet::IsValidWidget(iWidget* apWidget)
 {
-    if(apWidget==NULL)
+    if(apWidget == NULL)
     {
         return true;
     }
 
     tWidgetListIt it = find(mlstWidgets.begin(), mlstWidgets.end(), apWidget);
-    return (it!=mlstWidgets.end());
+    return (it != mlstWidgets.end());
 }
 
 //-----------------------------------------------------------------------
 
-cGuiPopUpMessageBox* cGuiSet::CreatePopUpMessageBox(    const tWString& asLabel, const tWString& asText,
+cGuiPopUpMessageBox *cGuiSet::CreatePopUpMessageBox(    const tWString& asLabel, const tWString& asText,
         const tWString& asButton1, const tWString& asButton2,
         void *apCallbackObject, tGuiCallbackFunc apCallback)
 {
-    cGuiPopUpMessageBox* pMessageBox = hplNew( cGuiPopUpMessageBox, (this, asLabel,asText,
-                                       asButton1,asButton2,
-                                       apCallbackObject,apCallback) );
+    cGuiPopUpMessageBox* pMessageBox = hplNew( cGuiPopUpMessageBox, (this, asLabel, asText,
+                                       asButton1, asButton2,
+                                       apCallbackObject, apCallback) );
 
     return pMessageBox;
 }
 
 //-----------------------------------------------------------------------
 
-cGuiPopUpFilePicker* cGuiSet::CreatePopUpSaveFilePicker( tWString &asFileName, const tWString &asCategory,
+cGuiPopUpFilePicker *cGuiSet::CreatePopUpSaveFilePicker( tWString &asFileName, const tWString &asCategory,
         const tWString &asFilter, const tWString &asStartPath, bool abShowHidden,
         void *apCallbackObject, tGuiCallbackFunc apCallback, const tWString& asStartFilename)
 {
@@ -1176,7 +1176,7 @@ cGuiPopUpFilePicker* cGuiSet::CreatePopUpSaveFilePicker( tWString &asFileName, c
  * \param apCallback
  * \return
  */
-cGuiPopUpFilePicker* cGuiSet::CreatePopUpLoadFilePicker( tWStringVec &avFileList, bool abAddAllFilesFilter,
+cGuiPopUpFilePicker *cGuiSet::CreatePopUpLoadFilePicker( tWStringVec &avFileList, bool abAddAllFilesFilter,
         const tWString &asStartPath, bool abShowHidden,
         void *apCallbackObject, tGuiCallbackFunc apCallback)
 {
@@ -1194,7 +1194,7 @@ cGuiPopUpFilePicker* cGuiSet::CreatePopUpLoadFilePicker( tWStringVec &avFileList
 
 //-----------------------------------------------------------------------
 
-cGuiPopUpColorPicker* cGuiSet::CreatePopUpColorPicker( cColor* apDestColor, const cVector3f& avPos,  void *apCallbackObject, tGuiCallbackFunc apCallback)
+cGuiPopUpColorPicker *cGuiSet::CreatePopUpColorPicker( cColor* apDestColor, const cVector3f& avPos,  void *apCallbackObject, tGuiCallbackFunc apCallback)
 {
     cGuiPopUpColorPicker* pPicker = hplNew(cGuiPopUpColorPicker, (mpGraphics, this, apDestColor, apCallbackObject, apCallback, NULL, NULL));
 
@@ -1203,9 +1203,9 @@ cGuiPopUpColorPicker* cGuiSet::CreatePopUpColorPicker( cColor* apDestColor, cons
 
 //-----------------------------------------------------------------------
 
-cGuiPopUpUIKeyboard* cGuiSet::CreatePopUpUIKeyboard(cWidgetTextBox* apTarget)
+cGuiPopUpUIKeyboard *cGuiSet::CreatePopUpUIKeyboard(cWidgetTextBox* apTarget)
 {
-    cGuiPopUpUIKeyboard* pKB = hplNew(cGuiPopUpUIKeyboard,(apTarget, NULL, NULL));
+    cGuiPopUpUIKeyboard* pKB = hplNew(cGuiPopUpUIKeyboard, (apTarget, NULL, NULL));
 
     return pKB;
 }
@@ -1230,7 +1230,7 @@ bool cGuiSet::PopUpIsActive()
 
 void cGuiSet::ShowContextMenu( cWidgetContextMenu* apMenu, const cVector3f& avPosition )
 {
-    if(apMenu==NULL)
+    if(apMenu == NULL)
     {
         return;
     }
@@ -1251,8 +1251,8 @@ void cGuiSet::ShowContextMenu( cWidgetContextMenu* apMenu, const cVector3f& avPo
 
     apMenu->SetHighlightedItem(NULL);
 
-    if(    apMenu->GetParentItem()==NULL ||
-            apMenu->GetParentMenu()->GetType()==eWidgetType_MainMenu)
+    if(    apMenu->GetParentItem() == NULL ||
+            apMenu->GetParentMenu()->GetType() == eWidgetType_MainMenu)
     {
         vPos.z = mfContextMenuZ;
         IncContextMenuZ();
@@ -1284,7 +1284,7 @@ void cGuiSet::SetLastWindowZ(float afX)
 void cGuiSet::SetWindowOnTop(cWidgetWindow* apWin)
 {
     tWidgetListIt it = find(mlstWindows.begin(), mlstWindows.end(), apWin);
-    if(it==mlstWindows.end())
+    if(it == mlstWindows.end())
     {
         return;
     }
@@ -1293,14 +1293,14 @@ void cGuiSet::SetWindowOnTop(cWidgetWindow* apWin)
 
     it = mlstWindows.begin();
     float fHeight = 20.0f;
-    for(; it!=mlstWindows.end(); ++it)
+    for(; it != mlstWindows.end(); ++it)
     {
         iWidget* pWin = *it;
         cVector3f vPos = pWin->GetGlobalPosition();
         vPos.z = fHeight;
 
         pWin->SetGlobalPosition(vPos);
-        fHeight+=10.0f;
+        fHeight += 10.0f;
     }
 }
 
@@ -1362,18 +1362,18 @@ void cGuiSet::SetVirtualSize(const cVector2f& avSize, float afMinZ, float afMaxZ
 
 void cGuiSet::SetFocusedWidget(iWidget* apWidget, bool abCheckForValidity)
 {
-    if(mpFocusedWidget==apWidget)
+    if(mpFocusedWidget == apWidget)
     {
         return;
     }
 
-    if(abCheckForValidity && IsValidWidget(apWidget)==false)
+    if(abCheckForValidity && IsValidWidget(apWidget) == false)
     {
         apWidget = NULL;
     }
 
     iWidget* pOldFocus = mpFocusedWidget;
-    cGuiMessageData data = cGuiMessageData(mvMousePos,0);
+    cGuiMessageData data = cGuiMessageData(mvMousePos, 0);
 
     mpFocusedWidget = apWidget;
 
@@ -1415,7 +1415,7 @@ void cGuiSet::SetAttentionWidget(iWidget *apWidget, bool abClearFocus, bool abCh
         return;
     }
 
-    if(abCheckForValidity && IsValidWidget(apWidget)==false)
+    if(abCheckForValidity && IsValidWidget(apWidget) == false)
     {
         apWidget = NULL;
     }
@@ -1426,11 +1426,11 @@ void cGuiSet::SetAttentionWidget(iWidget *apWidget, bool abClearFocus, bool abCh
     //Log("Sett attn: %d\n",mpAttentionWidget);
     iWidget* pOldFocus = mpFocusedWidget;
 
-    if(mpFocusedWidget && mpFocusedWidget->IsConnectedTo(mpAttentionWidget)==false)
+    if(mpFocusedWidget && mpFocusedWidget->IsConnectedTo(mpAttentionWidget) == false)
     {
         //Log("Lost focus %d\n",mpFocusedWidget);
 
-        if(mpAttentionWidget!= NULL || abClearFocus)
+        if(mpAttentionWidget != NULL || abClearFocus)
         {
             mpFocusedWidget = NULL;
         }
@@ -1516,15 +1516,15 @@ void cGuiSet::PositionWidgetInsideBounds(iWidget* apWidget)
     const cVector2f& vSize = apWidget->GetSize();
     const cVector2f& vSetSize = GetVirtualSize();
 
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         if(vPos.v[i] < 0)
         {
-            vPos.v[i]=0;
+            vPos.v[i] = 0;
         }
-        if(vPos.v[i]+vSize.v[i] > vSetSize.v[i])
+        if(vPos.v[i] + vSize.v[i] > vSetSize.v[i])
         {
-            vPos.v[i] = vSetSize.v[i]-vSize.v[i];
+            vPos.v[i] = vSetSize.v[i] - vSize.v[i];
         }
     }
 
@@ -1553,7 +1553,7 @@ void cGuiSet::SetSkin(cGuiSkin* apSkin)
 void cGuiSet::IncPopUpZ()
 {
     mfLastPopUpZ += 5.0f;
-    if(mfLastPopUpZ>=500)
+    if(mfLastPopUpZ >= 500)
     {
         mfLastPopUpZ = 20;
     }
@@ -1572,14 +1572,14 @@ void cGuiSet::DrawTextFromCharArry(    const wchar_t* apString, iFontData *apFon
                                        const cColor& aColor, eGuiMaterial aMaterial,
                                        eFontAlign aAlign)
 {
-    int lCount =0;
+    int lCount = 0;
     cVector3f vPos = avPosition;
 
     //////////////////////////////////////////////////////
     // Change position depending on the alignment
     if(aAlign == eFontAlign_Center)
     {
-        vPos.x -= apFont->GetLength(avSize, apString)/2;
+        vPos.x -= apFont->GetLength(avSize, apString) / 2;
     }
     else if(aAlign == eFontAlign_Right)
     {
@@ -1609,9 +1609,9 @@ void cGuiSet::DrawTextFromCharArry(    const wchar_t* apString, iFontData *apFon
             cVector2f vOffset(pGlyph->mvOffset * avSize);
             cVector2f vSize(pGlyph->mvSize * avSize);// *apFont->GetSizeRatio());
 
-            DrawGfx(pGlyph->mpGuiGfx,vPos + vOffset,vSize,aColor,aMaterial);
+            DrawGfx(pGlyph->mpGuiGfx, vPos + vOffset, vSize, aColor, aMaterial);
 
-            vPos.x += pGlyph->mfAdvance*avSize.x;
+            vPos.x += pGlyph->mfAdvance * avSize.x;
         }
         lCount++;
     }
@@ -1623,43 +1623,43 @@ void cGuiSet::DrawTextFromCharArry(    const wchar_t* apString, iFontData *apFon
 
 static void SetClipArea(iLowLevelGraphics *pLowLevelGraphics, cGuiClipRegion *apRegion)
 {
-    cRect2f& clipRect =apRegion->mRect;
+    cRect2f& clipRect = apRegion->mRect;
 
     //////////////////////////////////
     // Set up clip area
-    if(apRegion->mRect.w >0)
+    if(apRegion->mRect.w > 0)
     {
         cPlanef plane;
 
         //Bottom
-        plane.FromNormalPoint(cVector3f(0,-1,0),cVector3f(0,clipRect.y+clipRect.h,0));
+        plane.FromNormalPoint(cVector3f(0, -1, 0), cVector3f(0, clipRect.y + clipRect.h, 0));
         pLowLevelGraphics->SetClipPlane(0, plane);
         pLowLevelGraphics->SetClipPlaneActive(0, true);
 
         //Top
-        plane.FromNormalPoint(cVector3f(0,1,0),cVector3f(0,clipRect.y,0));
+        plane.FromNormalPoint(cVector3f(0, 1, 0), cVector3f(0, clipRect.y, 0));
         pLowLevelGraphics->SetClipPlane(1, plane);
         pLowLevelGraphics->SetClipPlaneActive(1, true);
 
         //Right
-        plane.FromNormalPoint(cVector3f(1,0,0),cVector3f(clipRect.x,0,0));
+        plane.FromNormalPoint(cVector3f(1, 0, 0), cVector3f(clipRect.x, 0, 0));
         pLowLevelGraphics->SetClipPlane(2, plane);
         pLowLevelGraphics->SetClipPlaneActive(2, true);
 
         //Left
-        plane.FromNormalPoint(cVector3f(-1,0,0),cVector3f(clipRect.x+clipRect.w,0,0));
+        plane.FromNormalPoint(cVector3f(-1, 0, 0), cVector3f(clipRect.x + clipRect.w, 0, 0));
         pLowLevelGraphics->SetClipPlane(3, plane);
         pLowLevelGraphics->SetClipPlaneActive(3, true);
 
-        if(kLogRender) Log("-- Clip region: %d Clipping: x %f y %f w %f h %f\n",apRegion,
-                               apRegion->mRect.x,apRegion->mRect.y,
-                               apRegion->mRect.w,apRegion->mRect.h);
+        if(kLogRender) Log("-- Clip region: %d Clipping: x %f y %f w %f h %f\n", apRegion,
+                               apRegion->mRect.x, apRegion->mRect.y,
+                               apRegion->mRect.w, apRegion->mRect.h);
     }
     else
     {
         if(kLogRender)
         {
-            Log("-- Clip region: %d No clipping!\n",apRegion);
+            Log("-- Clip region: %d No clipping!\n", apRegion);
         }
     }
 }
@@ -1689,7 +1689,7 @@ void cGuiSet::RenderClipRegion()
 
     //////////////////////////////////
     // Graphics setup
-    pLowLevelGraphics->SetTexture(0,NULL);
+    pLowLevelGraphics->SetTexture(0, NULL);
 
     //////////////////////////////////
     // Set up variables
@@ -1705,7 +1705,7 @@ void cGuiSet::RenderClipRegion()
     iTexture *pTexture = pGfx->mvTextures[0];
     cGuiClipRegion *pClipRegion = it->mpClipRegion;
 
-    int lIdxAdd=0;
+    int lIdxAdd = 0;
 
     //Log("bug:Rendering objects!\n");
 
@@ -1720,7 +1720,7 @@ void cGuiSet::RenderClipRegion()
             pMaterial->BeforeRender();
             if(kLogRender)
             {
-                Log("Material %s before\n",pMaterial->GetName().c_str());
+                Log("Material %s before\n", pMaterial->GetName().c_str());
             }
         }
 
@@ -1728,13 +1728,13 @@ void cGuiSet::RenderClipRegion()
         // SetClip area
         if(pLastClipRegion != pClipRegion)
         {
-            SetClipArea(pLowLevelGraphics,pClipRegion);
+            SetClipArea(pLowLevelGraphics, pClipRegion);
         }
 
-        pLowLevelGraphics->SetTexture(0,pTexture);
+        pLowLevelGraphics->SetTexture(0, pTexture);
         if(kLogRender)
         {
-            Log("Texture %d\n",pTexture);
+            Log("Texture %d\n", pTexture);
         }
 
         //////////////////////////
@@ -1750,7 +1750,7 @@ void cGuiSet::RenderClipRegion()
             {
                 if(pGfx->mvImages[0])
                 {
-                    Log(" gfx: %d '%s'\n",pGfx,pGfx->mvImages[0]->GetName().c_str());
+                    Log(" gfx: %d '%s'\n", pGfx, pGfx->mvImages[0]->GetName().c_str());
                 }
                 else
                 {
@@ -1769,7 +1769,7 @@ void cGuiSet::RenderClipRegion()
             // Add object to batch
             if(object.mbRotated)
             {
-                for(int i=0; i<4; ++i)
+                for(int i = 0; i < 4; ++i)
                 {
                     cVertex &vtx = pGfx->mvVtx[i];
                     cVector3f vVtxPos = vtx.pos;
@@ -1796,7 +1796,7 @@ void cGuiSet::RenderClipRegion()
             }
             else
             {
-                for(int i=0; i<4; ++i)
+                for(int i = 0; i < 4; ++i)
                 {
                     cVertex &vtx = pGfx->mvVtx[i];
                     cVector3f& vVtxPos = vtx.pos;
@@ -1810,7 +1810,7 @@ void cGuiSet::RenderClipRegion()
                 }
             }
 
-            for(int i=0; i<4; i++)
+            for(int i = 0; i < 4; i++)
             {
                 pLowLevelGraphics->AddIndexToBatch(lIdxAdd + i);
             }
@@ -1843,17 +1843,17 @@ void cGuiSet::RenderClipRegion()
         //////////////////////////////
         // Render batch
         pLowLevelGraphics->FlushQuadBatch(    eVtxBatchFlag_Position | eVtxBatchFlag_Texture0 |
-                                              eVtxBatchFlag_Color0,false);
+                                              eVtxBatchFlag_Color0, false);
         pLowLevelGraphics->ClearBatch();
-        lIdxAdd=0;
+        lIdxAdd = 0;
 
         /////////////////////////////////
         //Clip region end
         if(pLastClipRegion  != pClipRegion  || it == setRenderObjects.end())
         {
-            if(pLastClipRegion->mRect.w >0)
+            if(pLastClipRegion->mRect.w > 0)
             {
-                for(int i=0; i<4; ++i)
+                for(int i = 0; i < 4; ++i)
                 {
                     pLowLevelGraphics->SetClipPlaneActive(i, false);
                 }
@@ -1865,8 +1865,8 @@ void cGuiSet::RenderClipRegion()
         if(pLastMaterial != pMaterial || it == setRenderObjects.end())
         {
             pLastMaterial->AfterRender();
-            if(kLogRender)Log("Material %d '%s' after. new: %d '%s'\n",    pLastMaterial,pLastMaterial->GetName().c_str(),
-                                  pMaterial,pMaterial->GetName().c_str());
+            if(kLogRender)Log("Material %d '%s' after. new: %d '%s'\n",    pLastMaterial, pLastMaterial->GetName().c_str(),
+                                  pMaterial, pMaterial->GetName().c_str());
         }
     }
 
@@ -1877,7 +1877,7 @@ void cGuiSet::RenderClipRegion()
 }
 //-----------------------------------------------------------------------
 
-void cGuiSet::AddWidget(iWidget *apWidget,iWidget *apParent)
+void cGuiSet::AddWidget(iWidget *apWidget, iWidget *apParent)
 {
     mlstWidgets.push_front(apWidget);
 
@@ -1897,7 +1897,7 @@ void cGuiSet::AddWidget(iWidget *apWidget,iWidget *apParent)
 
 bool cGuiSet::OnMouseMove(const cGuiMessageData &aData)
 {
-    if(GetMouseMovementEnabled()==false)
+    if(GetMouseMovementEnabled() == false)
     {
         return false;
     }
@@ -1938,7 +1938,7 @@ bool cGuiSet::OnMouseMove(const cGuiMessageData &aData)
     bool bPointerSet = false;
     bool bToolTipWidgetSet = false;
     bool bToolTipWidgetLeft = false;
-    iWidget* pWidgetUnderMouse=NULL;
+    iWidget* pWidgetUnderMouse = NULL;
 
     ///////////////////////////
     // Widgets should be sorted by z value, so the first check must be the widget that is right under the mouse
@@ -1946,30 +1946,30 @@ bool cGuiSet::OnMouseMove(const cGuiMessageData &aData)
     for(; it != mlstWidgets.end(); ++it)
     {
         iWidget *pWidget = *it;
-        if(pWidget->IsVisible()==false)
+        if(pWidget->IsVisible() == false)
         {
             continue;
         }
 
-        if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget)==false)
+        if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget) == false)
         {
             continue;
         }
 
-        if(pWidget->PointIsInside(mvMousePos,false))
+        if(pWidget->PointIsInside(mvMousePos, false))
         {
-            if(pWidgetUnderMouse==NULL ||
+            if(pWidgetUnderMouse == NULL ||
                     pWidgetUnderMouse->IsConnectedTo(pWidget) ||
                     pWidget->IsConnectedTo(pWidgetUnderMouse))
             {
-                if(pWidgetUnderMouse==NULL)
+                if(pWidgetUnderMouse == NULL)
                 {
-                    pWidgetUnderMouse=pWidget;
+                    pWidgetUnderMouse = pWidget;
                 }
 
                 ////////////////////////////
                 //Mouse enter event
-                if(pWidget->GetMouseIsOver()==false)
+                if(pWidget->GetMouseIsOver() == false)
                 {
                     pWidget->SetMouseIsOver(true);
                     if(pWidget->ProcessMessage(eGuiMessage_MouseEnter, tData))
@@ -1981,12 +1981,12 @@ bool cGuiSet::OnMouseMove(const cGuiMessageData &aData)
                     //Set up tooltips on mouse enter
                     if(pWidget->IsToolTipEnabled())
                     {
-                        if(bToolTipWidgetSet==false)
+                        if(bToolTipWidgetSet == false)
                         {
                             bToolTipWidgetSet = true;
                             pNewToolTipWidget = pWidget;
 
-                            if(pNewToolTipWidget!=pOldToolTipWidget)
+                            if(pNewToolTipWidget != pOldToolTipWidget)
                             {
                                 mfToolTipTimer = 0;
                             }
@@ -1997,8 +1997,8 @@ bool cGuiSet::OnMouseMove(const cGuiMessageData &aData)
                     {
                         iWidget *pOldFocus = mpFocusedWidget;
 
-                        if(pOldFocus==NULL || (pOldFocus->GetParent() == pWidget->GetParent()
-                                               && pOldFocus->GetSet() == pWidget->GetSet()))
+                        if(pOldFocus == NULL || (pOldFocus->GetParent() == pWidget->GetParent()
+                                                 && pOldFocus->GetSet() == pWidget->GetSet()))
                         {
                             SetFocusedWidget(pWidget);
                         }
@@ -2007,10 +2007,10 @@ bool cGuiSet::OnMouseMove(const cGuiMessageData &aData)
 
                 ////////////////////////////
                 //Set pointer
-                if(bPointerSet==false && pWidget->GetPointerGfx())
+                if(bPointerSet == false && pWidget->GetPointerGfx())
                 {
                     if(    mpAttentionWidget &&
-                            pWidget->IsConnectedTo(mpAttentionWidget)==false)
+                            pWidget->IsConnectedTo(mpAttentionWidget) == false)
                     {
                     }
                     else
@@ -2051,7 +2051,7 @@ bool cGuiSet::OnMouseMove(const cGuiMessageData &aData)
                 }
                 else
                 {
-                    if(pOldToolTipWidget==pWidget)
+                    if(pOldToolTipWidget == pWidget)
                     {
                         bToolTipWidgetLeft = true;
                     }
@@ -2076,7 +2076,7 @@ bool cGuiSet::OnMouseMove(const cGuiMessageData &aData)
     }
     else if(bToolTipWidgetLeft)
     {
-        mpCurrentToolTipWidget=NULL;
+        mpCurrentToolTipWidget = NULL;
     }
 
     return bRet;
@@ -2105,13 +2105,13 @@ bool cGuiSet::OnMouseDown(const cGuiMessageData& aData)
         iWidget *pWidget = *it;
 
         //If widget is not visible, skip it
-        if(pWidget->IsVisible()==false)
+        if(pWidget->IsVisible() == false)
         {
             continue;
         }
 
         //If there is an attention set, do not send clicks to any other widgets
-        if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget)==false)
+        if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget) == false)
         {
             continue;
         }
@@ -2189,7 +2189,7 @@ bool cGuiSet::OnMouseUp(const cGuiMessageData& aData)
             iWidget *pWidget = *it;
 
             //If these is an attention set, do send clicks to any other widgets
-            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget)==false)
+            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget) == false)
             {
                 continue;
             }
@@ -2226,7 +2226,7 @@ bool cGuiSet::OnMouseDoubleClick(const cGuiMessageData& aData)
         iWidget *pWidget = *it;
 
         //If these is an attention set, do send clicks to any other widgets
-        if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget)==false)
+        if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget) == false)
         {
             continue;
         }
@@ -2259,41 +2259,41 @@ bool cGuiSet::OnKeyPress(const cGuiMessageData& aData)
 
     ///////////////////////////
     // Check tab order (temporary - this should be handled by iWidget, for widgets capable of containing other widgets)
-    if(bRet==false && tData.mKeyPress.mKey==eKey_Tab && mlstTabOrderWidgets.empty()==false)
+    if(bRet == false && tData.mKeyPress.mKey == eKey_Tab && mlstTabOrderWidgets.empty() == false)
     {
         iWidget* pOldWidgetToFocus = mpTabOrderWidget;
-        iWidget* pNewWidgetToFocus=NULL;
+        iWidget* pNewWidgetToFocus = NULL;
 
         tWidgetListIt it = find(mlstTabOrderWidgets.begin(), mlstTabOrderWidgets.end(), mpFocusedWidget);
-        if(it==mlstTabOrderWidgets.end())
+        if(it == mlstTabOrderWidgets.end())
         {
             it = find(mlstTabOrderWidgets.begin(), mlstTabOrderWidgets.end(), pOldWidgetToFocus);
         }
 
-        if(it!=mlstTabOrderWidgets.end())
+        if(it != mlstTabOrderWidgets.end())
         {
             do
             {
-                if(tData.mKeyPress.mlModifier==eKeyModifier_Shift)
+                if(tData.mKeyPress.mlModifier == eKeyModifier_Shift)
                 {
-                    if(it==mlstTabOrderWidgets.begin())
+                    if(it == mlstTabOrderWidgets.begin())
                     {
-                        it=mlstTabOrderWidgets.end();
+                        it = mlstTabOrderWidgets.end();
                     }
                     --it;
                 }
-                else if(tData.mKeyPress.mlModifier==eKeyModifier_None)
+                else if(tData.mKeyPress.mlModifier == eKeyModifier_None)
                 {
                     ++it;
-                    if(it==mlstTabOrderWidgets.end())
+                    if(it == mlstTabOrderWidgets.end())
                     {
-                        it=mlstTabOrderWidgets.begin();
+                        it = mlstTabOrderWidgets.begin();
                     }
                 }
 
                 pNewWidgetToFocus = *it;
             }
-            while(pNewWidgetToFocus->IsVisible()==false && pNewWidgetToFocus->IsEnabled()==false);
+            while(pNewWidgetToFocus->IsVisible() == false && pNewWidgetToFocus->IsEnabled() == false);
         }
 
         if(pNewWidgetToFocus && pNewWidgetToFocus->IsVisible() && pNewWidgetToFocus->IsEnabled())
@@ -2306,19 +2306,19 @@ bool cGuiSet::OnKeyPress(const cGuiMessageData& aData)
     }
 
 
-    if(bRet==false)
+    if(bRet == false)
     {
         if(mpFocusedWidget)
         {
             bRet = mpFocusedWidget->ProcessMessage(eGuiMessage_KeyPress, tData);
         }
 
-        if(bRet==false)
+        if(bRet == false)
         {
             eKey key = tData.mKeyPress.mKey;
             eUIArrow dir = TranslateKeyToUIArrow(key);
 
-            if(dir!=eUIArrow_LastEnum)
+            if(dir != eUIArrow_LastEnum)
             {
                 bRet = SendMessage(eGuiMessage_UIArrowPress, dir);
             }
@@ -2327,7 +2327,7 @@ bool cGuiSet::OnKeyPress(const cGuiMessageData& aData)
 
 
 
-    if(bRet==false)
+    if(bRet == false)
     {
         cGuiGlobalShortcut* shortcut = FindShortcut(tData.mKeyPress);
         if(shortcut)
@@ -2346,7 +2346,7 @@ bool cGuiSet::OnKeyPress(const cGuiMessageData& aData)
         }
     }
 
-    if(bRet==false)
+    if(bRet == false)
     {
         tWidgetListIt it = mlstWidgets.begin();
         for(; it != mlstWidgets.end(); ++it)
@@ -2354,7 +2354,7 @@ bool cGuiSet::OnKeyPress(const cGuiMessageData& aData)
             iWidget *pWidget = *it;
 
             //If these is an attention set, do send clicks to any other widgets
-            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget)==false)
+            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget) == false)
             {
                 continue;
             }
@@ -2389,19 +2389,19 @@ bool cGuiSet::OnKeyRelease(const cGuiMessageData& aData)
     if(mpFocusedWidget)
     {
         bRet = mpFocusedWidget->ProcessMessage(eGuiMessage_KeyRelease, tData);
-        if(bRet==false)
+        if(bRet == false)
         {
             eKey key = tData.mKeyPress.mKey;
             eUIArrow dir = TranslateKeyToUIArrow(key);
 
-            if(dir!=eUIArrow_LastEnum)
+            if(dir != eUIArrow_LastEnum)
             {
                 bRet = SendMessage(eGuiMessage_UIArrowRelease, dir);
             }
         }
     }
 
-    if(bRet==false)
+    if(bRet == false)
     {
         tWidgetListIt it = mlstWidgets.begin();
         for(; it != mlstWidgets.end(); ++it)
@@ -2409,7 +2409,7 @@ bool cGuiSet::OnKeyRelease(const cGuiMessageData& aData)
             iWidget *pWidget = *it;
 
             //If these is an attention set, do send clicks to any other widgets
-            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget)==false)
+            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget) == false)
             {
                 continue;
             }
@@ -2446,7 +2446,7 @@ bool cGuiSet::OnGamepadInput(const cGuiMessageData& aData)
         bRet = mpFocusedWidget->ProcessMessage(eGuiMessage_GamepadInput, tData);
     }
 
-    if(bRet==false)
+    if(bRet == false)
     {
         tWidgetListIt it = mlstWidgets.begin();
         for(; it != mlstWidgets.end(); ++it)
@@ -2454,7 +2454,7 @@ bool cGuiSet::OnGamepadInput(const cGuiMessageData& aData)
             iWidget *pWidget = *it;
 
             //If these is an attention set, do send clicks to any other widgets
-            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget)==false)
+            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget) == false)
             {
                 continue;
             }
@@ -2480,16 +2480,16 @@ bool cGuiSet::OnUIArrowPress(const cGuiMessageData& aData)
 {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // First check if we have a proper start point, if we are not and cannot set one, just skip
-    if(mpFocusedWidget==NULL ||
-            mpFocusedWidget->HasFocusNavigation()==false && mpFocusedWidget!=mpDefaultFocusNavWidget)
+    if(mpFocusedWidget == NULL ||
+            mpFocusedWidget->HasFocusNavigation() == false && mpFocusedWidget != mpDefaultFocusNavWidget)
     {
-        if(mpDefaultFocusNavWidget==NULL)
+        if(mpDefaultFocusNavWidget == NULL)
         {
             return false;
         }
         else
         {
-            if(mpAttentionWidget==NULL || mpDefaultFocusNavWidget->IsConnectedTo(mpAttentionWidget))
+            if(mpAttentionWidget == NULL || mpDefaultFocusNavWidget->IsConnectedTo(mpAttentionWidget))
             {
                 SetFocusedWidget(mpDefaultFocusNavWidget);
                 mpFocusedWidget->ProcessMessage(eGuiMessage_GetUINavFocus, cGuiMessageData());
@@ -2510,14 +2510,14 @@ bool cGuiSet::OnUIArrowPress(const cGuiMessageData& aData)
         bRet = mpFocusedWidget->ProcessMessage(eGuiMessage_UIArrowPress, aData);
     }
 
-    if(bRet==false)
+    if(bRet == false)
     {
         iWidget* pNextWidget = mpFocusedWidget->GetFocusNavigation((eUIArrow)aData.mlVal);
 
         if(pNextWidget &&
                 pNextWidget->IsEnabled() &&
                 pNextWidget->IsVisible() &&
-                (mpAttentionWidget==NULL || pNextWidget->IsConnectedTo(mpAttentionWidget)))
+                (mpAttentionWidget == NULL || pNextWidget->IsConnectedTo(mpAttentionWidget)))
         {
             iWidget *pOldFocus = mpFocusedWidget;
             SetFocusedWidget(pNextWidget);
@@ -2531,7 +2531,7 @@ bool cGuiSet::OnUIArrowPress(const cGuiMessageData& aData)
 
     ///////////////////////////////////////////////////////////////////////////
     // If we still haven't consumed the input, check for global listeners
-    if(bRet==false)
+    if(bRet == false)
     {
         tWidgetListIt it = mlstWidgets.begin();
         for(; it != mlstWidgets.end(); ++it)
@@ -2539,13 +2539,13 @@ bool cGuiSet::OnUIArrowPress(const cGuiMessageData& aData)
             iWidget *pWidget = *it;
 
             // If widget is not eligible for input check, skip it (or if it's the focused one, we already checked that)
-            if(pWidget->IsGlobalUIInputListener()==false || pWidget==mpFocusedWidget || pWidget->IsVisible()==false)
+            if(pWidget->IsGlobalUIInputListener() == false || pWidget == mpFocusedWidget || pWidget->IsVisible() == false)
             {
                 continue;
             }
 
             //If there is an attention set, do not send clicks to any other widgets
-            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget)==false)
+            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget) == false)
             {
                 continue;
             }
@@ -2566,7 +2566,7 @@ bool cGuiSet::OnUIArrowPress(const cGuiMessageData& aData)
 
 bool cGuiSet::OnUIArrowRelease(const cGuiMessageData& aData)
 {
-    if(mpFocusedWidget==NULL)
+    if(mpFocusedWidget == NULL)
     {
         return false;
     }
@@ -2588,7 +2588,7 @@ bool cGuiSet::OnUIButtonPress(const cGuiMessageData& aData)
         bRet = mpFocusedWidget->ProcessMessage(eGuiMessage_UIButtonPress, aData);
     }
 
-    if(bRet==false)
+    if(bRet == false)
     {
         tWidgetListIt it = mlstWidgets.begin();
         for(; it != mlstWidgets.end(); ++it)
@@ -2596,13 +2596,13 @@ bool cGuiSet::OnUIButtonPress(const cGuiMessageData& aData)
             iWidget *pWidget = *it;
 
             // If widget is not eligible for input check, skip it (or if it's the focused one, we already checked that)
-            if(pWidget->IsGlobalUIInputListener()==false || pWidget==mpFocusedWidget || pWidget->IsVisible()==false)
+            if(pWidget->IsGlobalUIInputListener() == false || pWidget == mpFocusedWidget || pWidget->IsVisible() == false)
             {
                 continue;
             }
 
             //If there is an attention set, do not send clicks to any other widgets
-            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget)==false)
+            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget) == false)
             {
                 continue;
             }
@@ -2630,7 +2630,7 @@ bool cGuiSet::OnUIButtonRelease(const cGuiMessageData& aData)
         bRet = mpFocusedWidget->ProcessMessage(eGuiMessage_UIButtonRelease, aData);
     }
 
-    if(bRet==false)
+    if(bRet == false)
     {
         tWidgetListIt it = mlstWidgets.begin();
         for(; it != mlstWidgets.end(); ++it)
@@ -2638,13 +2638,13 @@ bool cGuiSet::OnUIButtonRelease(const cGuiMessageData& aData)
             iWidget *pWidget = *it;
 
             // If widget is not eligible for input check, skip it (or if it's the focused one, we already checked that)
-            if(pWidget->IsGlobalUIInputListener()==false || pWidget==mpFocusedWidget || pWidget->IsVisible()==false)
+            if(pWidget->IsGlobalUIInputListener() == false || pWidget == mpFocusedWidget || pWidget->IsVisible() == false)
             {
                 continue;
             }
 
             //If there is an attention set, do not send clicks to any other widgets
-            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget)==false)
+            if(mpAttentionWidget && pWidget->IsConnectedTo(mpAttentionWidget) == false)
             {
                 continue;
             }
@@ -2664,7 +2664,7 @@ bool cGuiSet::OnUIButtonRelease(const cGuiMessageData& aData)
 
 bool cGuiSet::OnUIButtonDoublePress(const cGuiMessageData& aData)
 {
-    if(mpFocusedWidget==NULL)
+    if(mpFocusedWidget == NULL)
     {
         return false;
     }
@@ -2678,20 +2678,20 @@ bool cGuiSet::DrawMouse(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(HasFocus() && mbDrawMouse && mpGfxCurrentPointer)
     {
-        DrawGfx(mpGfxCurrentPointer,cVector3f(mvMousePos.x,mvMousePos.y, mfMouseZ),
-                mpGfxCurrentPointer->GetImageSize(),cColor(1,1));
+        DrawGfx(mpGfxCurrentPointer, cVector3f(mvMousePos.x, mvMousePos.y, mfMouseZ),
+                mpGfxCurrentPointer->GetImageSize(), cColor(1, 1));
     }
 
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cGuiSet,DrawMouse)
+kGuiCallbackDeclaredFuncEnd(cGuiSet, DrawMouse)
 
 //-----------------------------------------------------------------------
 
 bool cGuiSet::DrawFocus(iWidget* apWidget, const cGuiMessageData& aData)
 {
     if(HasFocus() && mpFocusedWidget && mbDrawFocus &&
-            (mpFocusedWidget==mpDefaultFocusNavWidget || mpFocusedWidget->HasFocusNavigation()))
+            (mpFocusedWidget == mpDefaultFocusNavWidget || mpFocusedWidget->HasFocusNavigation()))
     {
         if(mpFocusDrawObject && mpFocusDrawCallback)
         {
@@ -2700,21 +2700,21 @@ bool cGuiSet::DrawFocus(iWidget* apWidget, const cGuiMessageData& aData)
         else
         {
             cVector3f vPos = mpFocusedWidget->GetGlobalPosition();
-            vPos.z = mfMouseZ-1.0f;
+            vPos.z = mfMouseZ - 1.0f;
             DrawGfx(cGui::mpGfxRect, vPos, mpFocusedWidget->GetSize(), cColor(0.8f, 0.2f));
         }
     }
 
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cGuiSet,DrawFocus)
+kGuiCallbackDeclaredFuncEnd(cGuiSet, DrawFocus)
 
 //-----------------------------------------------------------------------
 
-cGuiGlobalShortcut* cGuiSet::FindShortcut(const cKeyPress& aKeyPress)
+cGuiGlobalShortcut *cGuiSet::FindShortcut(const cKeyPress& aKeyPress)
 {
     tShortcutListIt it = mlstShortcuts.begin();
-    for(; it!=mlstShortcuts.end(); ++it)
+    for(; it != mlstShortcuts.end(); ++it)
     {
         cGuiGlobalShortcut* pShortcut = *it;
         if(pShortcut->DoesAcceptKeyPress(aKeyPress))
@@ -2730,12 +2730,12 @@ cGuiGlobalShortcut* cGuiSet::FindShortcut(const cKeyPress& aKeyPress)
 
 void cGuiSet::UpdateToolTip(double adFixedDelta)
 {
-    if(mpSkin==NULL || mpFrameToolTip==NULL)
+    if(mpSkin == NULL || mpFrameToolTip == NULL)
     {
         return;
     }
 
-    if(mpCurrentToolTipWidget==NULL || mpCurrentToolTipWidget->IsVisible()==false)
+    if(mpCurrentToolTipWidget == NULL || mpCurrentToolTipWidget->IsVisible() == false)
     {
         if(mpFrameToolTip->IsVisible())
         {
@@ -2745,44 +2745,44 @@ void cGuiSet::UpdateToolTip(double adFixedDelta)
     }
     else
     {
-        if(mfToolTipTimer>=mfToolTipTimeToPopUp)
+        if(mfToolTipTimer >= mfToolTipTimeToPopUp)
         {
-            if(mpFrameToolTip->IsVisible()==false)
+            if(mpFrameToolTip->IsVisible() == false)
             {
                 const tWString& sTipText = mpCurrentToolTipWidget->GetToolTip().c_str();
                 const cVector2f& mvFontSize = mpLabelToolTip->GetDefaultFontSize();
 
                 float fTextLength = mpLabelToolTip->GetDefaultFontType()->GetLength(mvFontSize,
                                     sTipText.c_str()) + 3 + 3;
-                float fMaxTextLength = GetVirtualSize().x*0.4f;
+                float fMaxTextLength = GetVirtualSize().x * 0.4f;
                 iFontData* pFont = mpLabelToolTip->GetDefaultFontType();
 
                 tWStringVec vRows;
-                pFont->GetWordWrapRows(fMaxTextLength, mvFontSize.y+2, mvFontSize, sTipText, &vRows);
+                pFont->GetWordWrapRows(fMaxTextLength, mvFontSize.y + 2, mvFontSize, sTipText, &vRows);
                 int lRows = (int)vRows.size();
 
                 cVector3f vPos = mvMousePos + mpGfxCurrentPointer->GetImageSize();
                 vPos.z = mfMouseZ - 2;
 
                 cVector2f vToolTipSize = cVector2f( cMath::Min(fTextLength, fMaxTextLength),
-                                                    lRows*(mvFontSize.y+2) -2 +3 +3);
+                                                    lRows * (mvFontSize.y + 2) -2 + 3 + 3);
 
                 mpLabelToolTip->SetText(sTipText);
                 mpLabelToolTip->SetSize(vToolTipSize);
 
                 if(vPos.x + vToolTipSize.x > mvVirtualSize.x)
                 {
-                    vPos.x = mvVirtualSize.x-vToolTipSize.x;
+                    vPos.x = mvVirtualSize.x - vToolTipSize.x;
                 }
                 if(vPos.y + vToolTipSize.y > mvVirtualSize.y)
                 {
-                    vPos.y = mvVirtualSize.y-vToolTipSize.y;
+                    vPos.y = mvVirtualSize.y - vToolTipSize.y;
                 }
 
                 mpFrameToolTip->SetGlobalPosition(vPos);
                 mpFrameToolTip->SetSize(vToolTipSize);
 
-                mpFrameBGToolTip->SetSize(vToolTipSize-2);
+                mpFrameBGToolTip->SetSize(vToolTipSize - 2);
 
                 mpFrameToolTip->SetEnabled(true);
                 mpFrameToolTip->SetVisible(true);
@@ -2790,7 +2790,7 @@ void cGuiSet::UpdateToolTip(double adFixedDelta)
         }
         else
         {
-            mfToolTipTimer+=(float)adFixedDelta;
+            mfToolTipTimer += (float)adFixedDelta;
 
             if(mpFrameToolTip->IsVisible())
             {
@@ -2805,17 +2805,17 @@ void cGuiSet::UpdateToolTip(double adFixedDelta)
 
 void cGuiSet::CreateToolTipWidgets()
 {
-    mpFrameToolTip = CreateWidgetFrame(0,0,false);
-    mpFrameToolTip->SetBackGroundColor(cColor(0,1));
+    mpFrameToolTip = CreateWidgetFrame(0, 0, false);
+    mpFrameToolTip->SetBackGroundColor(cColor(0, 1));
     mpFrameToolTip->SetDrawBackground(true);
     mpFrameToolTip->SetEnabled(false);
     mpFrameToolTip->SetVisible(false);
 
-    mpFrameBGToolTip = CreateWidgetFrame(cVector3f(1,1,0.1f),0,false,mpFrameToolTip);
-    mpFrameBGToolTip->SetBackGroundColor(cColor(1,1,0.882f,1));
+    mpFrameBGToolTip = CreateWidgetFrame(cVector3f(1, 1, 0.1f), 0, false, mpFrameToolTip);
+    mpFrameBGToolTip->SetBackGroundColor(cColor(1, 1, 0.882f, 1));
     mpFrameBGToolTip->SetDrawBackground(true);
 
-    mpLabelToolTip = CreateWidgetLabel(cVector3f(3,2,0.1f),0,_W(""), mpFrameToolTip);
+    mpLabelToolTip = CreateWidgetLabel(cVector3f(3, 2, 0.1f), 0, _W(""), mpFrameToolTip);
     mpLabelToolTip->SetDefaultFontSize(12);
     mpLabelToolTip->SetWordWrap(true);
 }
@@ -2843,7 +2843,7 @@ eUIArrow cGuiSet::TranslateKeyToUIArrow(eKey aKey)
 
 void cGuiSet::AddToTabOrder(iWidget* apWidget)
 {
-    if(apWidget && find(mlstTabOrderWidgets.begin(), mlstTabOrderWidgets.end(), apWidget)==mlstTabOrderWidgets.end())
+    if(apWidget && find(mlstTabOrderWidgets.begin(), mlstTabOrderWidgets.end(), apWidget) == mlstTabOrderWidgets.end())
     {
         mlstTabOrderWidgets.push_back(apWidget);
     }
@@ -2864,12 +2864,12 @@ void cGuiSet::ClearTabOrder()
 
 void cGuiSet::SetDefaultFocusNavWidget(iWidget* apWidget, bool abCheckForValidity)
 {
-    if(mpDefaultFocusNavWidget==apWidget)
+    if(mpDefaultFocusNavWidget == apWidget)
     {
         return;
     }
 
-    if(abCheckForValidity && IsValidWidget(apWidget)==false)
+    if(abCheckForValidity && IsValidWidget(apWidget) == false)
     {
         apWidget = NULL;
     }

@@ -16,15 +16,15 @@ class iVertexBuffer;
 class cMeshManager : public iResourceManager
 {
 public:
-    cMeshManager(cGraphics* apGraphics,cResources *apResources);
+    cMeshManager(cGraphics* apGraphics, cResources *apResources);
     ~cMeshManager();
 
-    cMesh* CreateMesh(const tString& asName, tMeshLoadFlag aFlag=0);
+    cMesh *CreateMesh(const tString& asName, tMeshLoadFlag aFlag = 0);
 
     /**
      * Loads only the vertex buffer from the first submesh. Vertexbuffer must be deleted!
      */
-    iVertexBuffer* CreateVertexBufferFromMesh(const tString& asName, tVertexElementFlag alVtxToCopy);
+    iVertexBuffer *CreateVertexBufferFromMesh(const tString& asName, tVertexElementFlag alVtxToCopy);
 
     void Destroy(iResourceBase* apResource);
     void Unload(iResourceBase* apResource);
@@ -37,7 +37,7 @@ public:
     {
         mbUseFastloadMaterial = abX;
     }
-    const tString& GetFastloadMaterial()
+    const tString &GetFastloadMaterial()
     {
         return msFastloadMaterial;
     }
@@ -47,8 +47,8 @@ public:
     }
 
 private:
-    cGraphics* mpGraphics;
-    cResources* mpResources;
+    cGraphics *mpGraphics;
+    cResources *mpResources;
 
     tString msFastloadMaterial;
     bool mbUseFastloadMaterial;

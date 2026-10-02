@@ -26,15 +26,15 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cPostEffectType_ImageTrail::cPostEffectType_ImageTrail(cGraphics *apGraphics, cResources *apResources) : iPostEffectType("ImageTrail",apGraphics,apResources)
+cPostEffectType_ImageTrail::cPostEffectType_ImageTrail(cGraphics *apGraphics, cResources *apResources) : iPostEffectType("ImageTrail", apGraphics, apResources)
 {
     cParserVarContainer vars;
     vars.Add("UseUv");
 
-    mpProgram = mpGraphics->CreateGpuProgramFromShaders("ImageTrail","deferred_base_vtx.glsl", "posteffect_image_trail_frag.glsl", &vars);
+    mpProgram = mpGraphics->CreateGpuProgramFromShaders("ImageTrail", "deferred_base_vtx.glsl", "posteffect_image_trail_frag.glsl", &vars);
     if(mpProgram)
     {
-        mpProgram->GetVariableAsId("afAlpha",kVar_afAlpha);
+        mpProgram->GetVariableAsId("afAlpha", kVar_afAlpha);
     }
 }
 
@@ -47,10 +47,10 @@ cPostEffectType_ImageTrail::~cPostEffectType_ImageTrail()
 
 //-----------------------------------------------------------------------
 
-iPostEffect * cPostEffectType_ImageTrail::CreatePostEffect(iPostEffectParams *apParams)
+iPostEffect *cPostEffectType_ImageTrail::CreatePostEffect(iPostEffectParams *apParams)
 {
-    cPostEffect_ImageTrail *pEffect = hplNew(cPostEffect_ImageTrail, (mpGraphics,mpResources,this));
-    cPostEffectParams_ImageTrail *pImageTrailParams = static_cast<cPostEffectParams_ImageTrail*>(apParams);
+    cPostEffect_ImageTrail *pEffect = hplNew(cPostEffect_ImageTrail, (mpGraphics, mpResources, this));
+    cPostEffectParams_ImageTrail *pImageTrailParams = static_cast<cPostEffectParams_ImageTrail *>(apParams);
 
     return pEffect;
 }
@@ -63,21 +63,21 @@ iPostEffect * cPostEffectType_ImageTrail::CreatePostEffect(iPostEffectParams *ap
 
 //-----------------------------------------------------------------------
 
-cPostEffect_ImageTrail::cPostEffect_ImageTrail(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType) : iPostEffect(apGraphics,apResources,apType)
+cPostEffect_ImageTrail::cPostEffect_ImageTrail(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType) : iPostEffect(apGraphics, apResources, apType)
 {
     cVector2l vSize = mpLowLevelGraphics->GetScreenSizeInt();
 
     mpAccumTexture = mpGraphics->CreateTexture("ImageTrailTexture", eTextureType_Rect, eTextureUsage_RenderTarget);
-    mpAccumTexture->CreateFromRawData(cVector3l(vSize.x, vSize.y,1), ePixelFormat_RGB, NULL);
+    mpAccumTexture->CreateFromRawData(cVector3l(vSize.x, vSize.y, 1), ePixelFormat_RGB, NULL);
 
     mpAccumBuffer = mpGraphics->CreateFrameBuffer("ImageTrailBuffer");
     mpAccumBuffer->SetTexture2D(0, mpAccumTexture);
-    if(mpAccumBuffer->CompileAndValidate()==false)
+    if(mpAccumBuffer->CompileAndValidate() == false)
     {
         Error("Could not compile and validate image trail frame buffer!\n");
     }
 
-    mpImageTrailType = static_cast<cPostEffectType_ImageTrail*>(mpType);
+    mpImageTrailType = static_cast<cPostEffectType_ImageTrail *>(mpType);
 
     mbClearFrameBuffer = true;
 }
@@ -116,14 +116,14 @@ void cPostEffect_ImageTrail::OnSetActive(bool abX)
 //-----------------------------------------------------------------------
 
 
-iTexture* cPostEffect_ImageTrail::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
+iTexture *cPostEffect_ImageTrail::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
 {
     /////////////////////////
     // Init render states
     mpCurrentComposite->SetFlatProjection();
     mpCurrentComposite->SetBlendMode(eMaterialBlendMode_Alpha);
     mpCurrentComposite->SetChannelMode(eMaterialChannelMode_RGBA);
-    mpCurrentComposite->SetTextureRange(NULL,0);
+    mpCurrentComposite->SetTextureRange(NULL, 0);
 
     /////////////////////////
     // Render to accumulation buffer

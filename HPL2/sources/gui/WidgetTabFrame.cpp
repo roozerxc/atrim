@@ -80,12 +80,12 @@ void cWidgetTabLabel::OnChangeText()
                       pTabFrame->mfTextRightPadding +
                       fBordersWidth;
 
-    if(mpGfxIcon!=NULL)
+    if(mpGfxIcon != NULL)
     {
-        fNewWidth += mpGfxIcon->GetImageSize().x + 2*pTabFrame->mfIconPadding;
+        fNewWidth += mpGfxIcon->GetImageSize().x + 2 * pTabFrame->mfIconPadding;
     }
 
-    SetSize(cVector2f(fNewWidth,mvSize.y));
+    SetSize(cVector2f(fNewWidth, mvSize.y));
 }
 
 //-------------------------------------------------------------------
@@ -102,7 +102,7 @@ bool cWidgetTabLabel::OnGetUINavFocus(const cGuiMessageData& aData)
 void cWidgetTabLabel::OnDraw(double adFixedDelta, cGuiClipRegion* apClipRegion)
 {
     cWidgetTabFrame* pTabFrame = mpParentTab->mpParentTabFrame;
-    cVector3f vTextPos = GetGlobalPosition() + cVector3f(pTabFrame->mfTextLeftPadding,2,0.1f);
+    cVector3f vTextPos = GetGlobalPosition() + cVector3f(pTabFrame->mfTextLeftPadding, 2, 0.1f);
 
     cGuiGfxElement* pBG;
 
@@ -116,9 +116,9 @@ void cWidgetTabLabel::OnDraw(double adFixedDelta, cGuiClipRegion* apClipRegion)
     }
 
 
-    if(mpGfxIcon!=NULL)
+    if(mpGfxIcon != NULL)
     {
-        vTextPos.x += 2*pTabFrame->mfIconPadding + mpGfxIcon->GetImageSize().x;
+        vTextPos.x += 2 * pTabFrame->mfIconPadding + mpGfxIcon->GetImageSize().x;
     }
 
     DrawDefaultText(msText, vTextPos, eFontAlign_Left);
@@ -169,7 +169,7 @@ cWidgetTab::cWidgetTab(cWidgetTabFrame* apParent) : iWidget(eWidgetType_Tab, apP
 
 cWidgetTab::~cWidgetTab()
 {
-    if(mpSet->IsDestroyingSet()==false)
+    if(mpSet->IsDestroyingSet() == false)
     {
         mpSet->DestroyWidget(mpTabLabel);
         mpSet->DestroyWidget(mpFrame);
@@ -188,7 +188,7 @@ cWidgetTab::~cWidgetTab()
 
 void cWidgetTab::AttachChild(iWidget* apChild)
 {
-    if(apChild==mpTabLabel || apChild==mpFrame)
+    if(apChild == mpTabLabel || apChild == mpFrame)
     {
         iWidget::AttachChild(apChild);
     }
@@ -202,7 +202,7 @@ void cWidgetTab::AttachChild(iWidget* apChild)
 
 void cWidgetTab::RemoveChild(iWidget* apChild)
 {
-    if(apChild==mpTabLabel || apChild==mpFrame)
+    if(apChild == mpTabLabel || apChild == mpFrame)
     {
         iWidget::RemoveChild(apChild);
     }
@@ -247,12 +247,12 @@ void cWidgetTab::SetOnTop(bool abX)
 
 bool cWidgetTab::PointIsInside(const cVector2f& avPoint, bool abOnlyClipped)
 {
-    if(CheckPointInsideClippingParent(avPoint)==false)
+    if(CheckPointInsideClippingParent(avPoint) == false)
     {
         return false;
     }
 
-    if(abOnlyClipped && mbClipsGraphics==false)
+    if(abOnlyClipped && mbClipsGraphics == false)
     {
         return true;
     }
@@ -267,7 +267,7 @@ bool cWidgetTab::PointIsInside(const cVector2f& avPoint, bool abOnlyClipped)
     if( avPoint.x < vFrameGlobalPos.x || avPoint.x > vFrameGlobalPos.x + vFrameSize.x ||
             avPoint.y < vFrameGlobalPos.y || avPoint.y > vFrameGlobalPos.y + vFrameSize.y)
     {
-        if( bLabelVisible==false ||
+        if( bLabelVisible == false ||
                 avPoint.x < vLabelGlobalPos.x || avPoint.x > vLabelGlobalPos.x + vLabelSize.x ||
                 avPoint.y < vLabelGlobalPos.y || avPoint.y > vLabelGlobalPos.y + vLabelSize.y)
         {
@@ -294,7 +294,7 @@ bool cWidgetTab::PointIsInside(const cVector2f& avPoint, bool abOnlyClipped)
 
 void cWidgetTab::OnChangeText()
 {
-    if(mpTabLabel!=NULL)
+    if(mpTabLabel != NULL)
     {
         mpTabLabel->SetText(msText);
     }
@@ -311,9 +311,9 @@ void cWidgetTab::OnChangeSize()
 
     float fTextHeight = mpDefaultFont->mvSize.y + 8;
 
-    mpTabLabel->SetPosition(cVector3f(0,mpParentTabFrame->mfTabActiveOffset, 0.1f));
+    mpTabLabel->SetPosition(cVector3f(0, mpParentTabFrame->mfTabActiveOffset, 0.1f));
 
-    mpFrame->SetPosition(cVector3f(0,fTextHeight-4 + mpParentTabFrame->mfTabActiveOffset, 0.1f));
+    mpFrame->SetPosition(cVector3f(0, fTextHeight - 4 + mpParentTabFrame->mfTabActiveOffset, 0.1f));
     mpFrame->SetSize(mvSize - cVector2f(0, fTextHeight + mpParentTabFrame->mfTabActiveOffset));
 }
 
@@ -321,7 +321,7 @@ void cWidgetTab::OnChangeSize()
 
 void cWidgetTab::OnInit()
 {
-    float fLabelHeight = mpDefaultFont->mvSize.y+8;
+    float fLabelHeight = mpDefaultFont->mvSize.y + 8;
     mpTabLabel = mpSet->CreateWidgetTabLabel(0,
                  cVector2f(0, fLabelHeight),
                  msText,
@@ -339,7 +339,7 @@ void cWidgetTab::OnInit()
 
 
     mpFrame = mpSet->CreateWidgetFrame(0,
-                                       mvSize-cVector2f(vCornerSize.x,fLabelHeight+fFrameOffset+vCornerSize.y),
+                                       mvSize - cVector2f(vCornerSize.x, fLabelHeight + fFrameOffset + vCornerSize.y),
                                        false,
                                        NULL,
                                        mpParentTabFrame->mbHoriScrollEnabled, mpParentTabFrame->mbVertScrollEnabled);
@@ -350,7 +350,7 @@ void cWidgetTab::OnInit()
     mpTabLabel->SetPosition(cVector3f(0, 0, 0.1f));
 
     cVector3f vPos = cVector3f(mpParentTabFrame->mvGfxTabCorners[0]->GetActiveSize().x, mpParentTabFrame->mvGfxTabCorners[0]->GetActiveSize().y, 0);
-    mpFrame->SetPosition(cVector3f(vPos.x,vPos.y + fLabelHeight+fFrameOffset-mpParentTabFrame->mvGfxTabCorners[0]->GetActiveSize().y,0));
+    mpFrame->SetPosition(cVector3f(vPos.x, vPos.y + fLabelHeight + fFrameOffset - mpParentTabFrame->mvGfxTabCorners[0]->GetActiveSize().y, 0));
 
     SetOnTop(false);
 }
@@ -401,8 +401,8 @@ cWidgetTabFrame::cWidgetTabFrame(cGuiSet* apSet, cGuiSkin* apSkin) : iWidget(eWi
 
     mpTopTab = NULL;
 
-    mvArrowButtons[0] =NULL;
-    mvArrowButtons[1] =NULL;
+    mvArrowButtons[0] = NULL;
+    mvArrowButtons[1] = NULL;
 
     mbHoriScrollEnabled = true;
     mbVertScrollEnabled = true;
@@ -416,9 +416,9 @@ cWidgetTabFrame::cWidgetTabFrame(cGuiSet* apSet, cGuiSkin* apSkin) : iWidget(eWi
 
 cWidgetTabFrame::~cWidgetTabFrame()
 {
-    if(mpSet->IsDestroyingSet()==false)
+    if(mpSet->IsDestroyingSet() == false)
     {
-        for(int i=0; i<2; ++i)
+        for(int i = 0; i < 2; ++i)
         {
             mpSet->DestroyWidget(mvArrowButtons[i]);
         }
@@ -434,15 +434,15 @@ cWidgetTabFrame::~cWidgetTabFrame()
 
 //-------------------------------------------------------------------
 
-cWidgetTab* cWidgetTabFrame::AddTab(const tWString& asTabCaption)
+cWidgetTab *cWidgetTabFrame::AddTab(const tWString& asTabCaption)
 {
     ////////////////////////////////////////////////////////////////////
     // Create new tab, if first tab created, set as topmost
     // If not, check if fits in frame, and show scroll buttons if needed.
-    cWidgetTab* pTab = mpSet->CreateWidgetTab(mvPosition,mvSize,_W(""), this);
+    cWidgetTab* pTab = mpSet->CreateWidgetTab(mvPosition, mvSize, _W(""), this);
 
     pTab->SetText(asTabCaption);
-    pTab->SetPosition(cVector3f(0,0,mfBackgroundZ));
+    pTab->SetPosition(cVector3f(0, 0, mfBackgroundZ));
 
     if(mvTabs.empty())
     {
@@ -477,19 +477,19 @@ int cWidgetTabFrame::GetTabNum()
 
 //-------------------------------------------------------------------
 
-cWidgetTab* cWidgetTabFrame::GetTab(int alIdx)
+cWidgetTab *cWidgetTabFrame::GetTab(int alIdx)
 {
     return mvTabs[alIdx];
 }
 
 //-------------------------------------------------------------------
 
-cWidgetTab* cWidgetTabFrame::GetTab(const tWString& asTabCaption)
+cWidgetTab *cWidgetTabFrame::GetTab(const tWString& asTabCaption)
 {
-    for(int i=0; i<GetTabNum(); ++i)
+    for(int i = 0; i < GetTabNum(); ++i)
     {
         cWidgetTab* pTab = GetTab(i);
-        if(pTab->GetText()==asTabCaption)
+        if(pTab->GetText() == asTabCaption)
         {
             return pTab;
         }
@@ -505,9 +505,9 @@ cWidgetTab* cWidgetTabFrame::GetTab(const tWString& asTabCaption)
 int cWidgetTabFrame::GetTabOnTopIndex()
 {
     int lIndex = -1;
-    for(int i=0; i<(int)mvTabs.size(); ++i)
+    for(int i = 0; i < (int)mvTabs.size(); ++i)
     {
-        if(mpTopTab==mvTabs[i])
+        if(mpTopTab == mvTabs[i])
         {
             lIndex = i;
             break;
@@ -531,7 +531,7 @@ void cWidgetTabFrame::SetTabOnTop(cWidgetTab* apTab)
 
     cVector3f vNewPos;
 
-    if(mpTopTab!=NULL)
+    if(mpTopTab != NULL)
     {
         vNewPos = mpTopTab->GetLocalPosition();
         vNewPos.z = mfBackgroundZ;
@@ -546,7 +546,7 @@ void cWidgetTabFrame::SetTabOnTop(cWidgetTab* apTab)
     mpTopTab->SetPosition(vNewPos);
     mpTopTab->SetOnTop(true);
 
-    if(mvTabs.empty()==false)
+    if(mvTabs.empty() == false)
     {
         ProcessMessage(eGuiMessage_SelectionChange, cGuiMessageData(mpTopTab->GetIndex()));
     }
@@ -556,7 +556,7 @@ void cWidgetTabFrame::SetTabOnTop(cWidgetTab* apTab)
 
 void cWidgetTabFrame::SetTabOnTopByIndex(int alIdx)
 {
-    if(alIdx<0 || alIdx>=(int)mvTabs.size())
+    if(alIdx < 0 || alIdx >= (int)mvTabs.size())
     {
         return;
     }
@@ -618,18 +618,18 @@ bool cWidgetTabFrame::ArrowButton_Pressed(iWidget* apWidget, const cGuiMessageDa
 {
     ///////////////////////////
     // Left Arrow Button
-    if(apWidget==mvArrowButtons[0])
+    if(apWidget == mvArrowButtons[0])
     {
-        if(mlFirstVisibleTab>0)
+        if(mlFirstVisibleTab > 0)
         {
             mlFirstVisibleTab--;
         }
     }
     ///////////////////////////
     // Right Arrow Button
-    if(apWidget==mvArrowButtons[1])
+    if(apWidget == mvArrowButtons[1])
     {
-        if(mlLastVisibleTab < (int) mvTabs.size()-1)
+        if(mlLastVisibleTab < (int) mvTabs.size() - 1)
         {
             mlFirstVisibleTab++;
         }
@@ -648,7 +648,7 @@ void cWidgetTabFrame::UpdateTabVisibility()
 
     ///////////////////////////////
     // Hide tabs at the left of the first visible
-    for(int i=0; i<mlFirstVisibleTab; ++i)
+    for(int i = 0; i < mlFirstVisibleTab; ++i)
     {
         cWidgetTab* pTab = mvTabs[i];
 
@@ -658,7 +658,7 @@ void cWidgetTabFrame::UpdateTabVisibility()
 
     ////////////////////////////////
     // Check how many tabs are visible
-    for(int i=mlFirstVisibleTab; i<(int) mvTabs.size(); ++i)
+    for(int i = mlFirstVisibleTab; i < (int) mvTabs.size(); ++i)
     {
         cWidgetTab* pTab = mvTabs[i];
 
@@ -667,7 +667,7 @@ void cWidgetTabFrame::UpdateTabVisibility()
         pTab->SetLabelPosX(fPosX);
 
 
-        if(fPosX+pTab->mpTabLabel->GetSize().x < mvSize.x-(mfButtonSize*2+2))
+        if(fPosX + pTab->mpTabLabel->GetSize().x < mvSize.x - (mfButtonSize * 2 + 2))
         {
             mlLastVisibleTab = i;
         }
@@ -677,10 +677,10 @@ void cWidgetTabFrame::UpdateTabVisibility()
 
     ////////////////////////////////
     // Update arrow buttons
-    mvArrowButtons[0]->SetEnabled(mlFirstVisibleTab>0);
-    mvArrowButtons[1]->SetEnabled(mlLastVisibleTab<(int)mvTabs.size()-1);
+    mvArrowButtons[0]->SetEnabled(mlFirstVisibleTab > 0);
+    mvArrowButtons[1]->SetEnabled(mlLastVisibleTab < (int)mvTabs.size() - 1);
 
-    bool bArrowsShown = (mlLastVisibleTab-mlFirstVisibleTab<(int)mvTabs.size()-1);
+    bool bArrowsShown = (mlLastVisibleTab - mlFirstVisibleTab < (int)mvTabs.size() - 1);
     mvArrowButtons[0]->SetVisible(bArrowsShown);
     mvArrowButtons[1]->SetVisible(bArrowsShown);
 }
@@ -689,7 +689,7 @@ void cWidgetTabFrame::UpdateTabVisibility()
 
 void cWidgetTabFrame::SetScrollButtonsHidden(bool abX)
 {
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         cWidgetButton* pArrow = mvArrowButtons[i];
 
@@ -708,10 +708,10 @@ void cWidgetTabFrame::OnInit()
 
     for(int i = 0; i < 2; ++i)
     {
-        mvArrowButtons[i] = mpSet->CreateWidgetButton(0,0,_W(""),this);
-        mvArrowButtons[i]->SetImage(mvGfxArrows[i],false);
+        mvArrowButtons[i] = mpSet->CreateWidgetButton(0, 0, _W(""), this);
+        mvArrowButtons[i]->SetImage(mvGfxArrows[i], false);
         mvArrowButtons[i]->SetSize(mfButtonSize);
-        mvArrowButtons[i]->AddCallback(eGuiMessage_ButtonPressed,this,kGuiCallback(ArrowButton_Pressed));
+        mvArrowButtons[i]->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(ArrowButton_Pressed));
     }
 
     OnChangeSize();
@@ -721,16 +721,16 @@ void cWidgetTabFrame::OnInit()
 
 void cWidgetTabFrame::OnChangeSize()
 {
-    if(mvArrowButtons[0]==NULL || mvArrowButtons[1]==NULL)
+    if(mvArrowButtons[0] == NULL || mvArrowButtons[1] == NULL)
     {
         return;
     }
-    for(int i = 0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
-        mvArrowButtons[i]->SetPosition(cVector3f(mvSize.x - (mfButtonSize+2)*(2-i), 0, mfForegroundZ+0.5f));
+        mvArrowButtons[i]->SetPosition(cVector3f(mvSize.x - (mfButtonSize + 2) * (2 - i), 0, mfForegroundZ + 0.5f));
     }
 
-    for(int i=0; i<(int)mvTabs.size(); ++i)
+    for(int i = 0; i < (int)mvTabs.size(); ++i)
     {
         mvTabs[i]->SetSize(mvSize);
     }

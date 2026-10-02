@@ -22,7 +22,7 @@ public:
 
 //------------------------------------
 
-typedef std::map<void*, cAllocatedPointer> tAllocatedPointerMap;
+typedef std::map<void *, cAllocatedPointer> tAllocatedPointerMap;
 typedef tAllocatedPointerMap::iterator tAllocatedPointerMapIt;
 
 //------------------------------------
@@ -31,10 +31,10 @@ class cMemoryManager
 {
 public:
 
-    static void* AddPointer(const cAllocatedPointer& aAllocatedPointer);
-    static void* UpdatePointer(void *apOldData, const cAllocatedPointer& aNewAllocatedPointer);
+    static void *AddPointer(const cAllocatedPointer& aAllocatedPointer);
+    static void *UpdatePointer(void *apOldData, const cAllocatedPointer& aNewAllocatedPointer);
 
-    static bool RemovePointer(void *apData,const char* apFileString, int alLine);
+    static bool RemovePointer(void *apData, const char* apFileString, int alLine);
 
     /**
      * Checks if data is valid, and can even be used on sub data (like pData + x )

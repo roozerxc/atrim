@@ -64,23 +64,23 @@ class cResourceVarsObject
 public:
     void LoadVariables(cXmlElement *apRootElem);
     void SetUserVariable(const tString& asName, const tString& asValue);
-    tString* GetUserVariable(const tString& asName);
+    tString *GetUserVariable(const tString& asName);
 
-    void AddVarBool(const tString& asName, bool abDefault=false);
-    void AddVarInt(const tString& asName, int alDefault=0);
-    void AddVarFloat(const tString& asName, float afDefault=0);
-    void AddVarVector2f(const tString& asName, const cVector2f& avDefault=0);
-    void AddVarVector3f(const tString& asName, const cVector3f& avDefault=0);
-    void AddVarColor(const tString& asName, const cColor& aDefault=0);
-    void AddVarString(const tString& asName, const tString& alDefault="");
+    void AddVarBool(const tString& asName, bool abDefault = false);
+    void AddVarInt(const tString& asName, int alDefault = 0);
+    void AddVarFloat(const tString& asName, float afDefault = 0);
+    void AddVarVector2f(const tString& asName, const cVector2f& avDefault = 0);
+    void AddVarVector3f(const tString& asName, const cVector3f& avDefault = 0);
+    void AddVarColor(const tString& asName, const cColor& aDefault = 0);
+    void AddVarString(const tString& asName, const tString& alDefault = "");
 
-    bool GetVarBool(const tString& asName, bool abDefault=false);
-    int GetVarInt(const tString& asName, int alDefault=0);
-    float GetVarFloat(const tString& asName, float afDefault=0);
-    cVector2f GetVarVector2f(const tString& asName, const cVector2f& avDefault=0);
-    cVector3f GetVarVector3f(const tString& asName, const cVector3f& avDefault=0);
-    cColor GetVarColor(const tString& asName, const cColor& aDefault=cColor(1,1));
-    tString GetVarString(const tString& asName, const tString& asDefault="");
+    bool GetVarBool(const tString& asName, bool abDefault = false);
+    int GetVarInt(const tString& asName, int alDefault = 0);
+    float GetVarFloat(const tString& asName, float afDefault = 0);
+    cVector2f GetVarVector2f(const tString& asName, const cVector2f& avDefault = 0);
+    cVector3f GetVarVector3f(const tString& asName, const cVector3f& avDefault = 0);
+    cColor GetVarColor(const tString& asName, const cColor& aDefault = cColor(1, 1));
+    tString GetVarString(const tString& asName, const tString& asDefault = "");
 
 protected:
     tResourceVarMap m_mapVars;
@@ -95,7 +95,7 @@ public:
     iMapDataLoader(const tString& asName): msName(asName) {}
     virtual ~iMapDataLoader() {}
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -117,15 +117,15 @@ public:
         return mbCreatesStaticEntity;
     }
 
-    virtual iEntity3D* Load(const tString &asName, int alID, bool abActive, cXmlElement* apRootElem,
+    virtual iEntity3D *Load(const tString &asName, int alID, bool abActive, cXmlElement* apRootElem,
                             const cMatrixf &a_mtxTransform, const cVector3f &avScale,
-                            cWorld *apWorld, const tString &asFileName, const tWString &asFullPath, cResourceVarsObject *apInstanceVars)=0;
+                            cWorld *apWorld, const tString &asFileName, const tWString &asFullPath, cResourceVarsObject *apInstanceVars) = 0;
 
 protected:
     bool mbCreatesStaticEntity;
 };
 
-typedef std::map<tString,iEntityLoader*> tEntityLoaderMap;
+typedef std::map<tString, iEntityLoader *> tEntityLoaderMap;
 typedef tEntityLoaderMap::iterator tEntityLoaderMapIt;
 
 //-------------------------------------------------------
@@ -140,18 +140,18 @@ public:
     {
         return mbCreatesStaticArea;
     }
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
 
-    virtual void Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform,cWorld *apWorld)=0;
+    virtual void Load(const tString &asName, int alID, bool abActive, const cVector3f &avSize, const cMatrixf &a_mtxTransform, cWorld *apWorld) = 0;
 
 protected:
     bool mbCreatesStaticArea;
 };
 
-typedef std::map<tString,iAreaLoader*> tAreaLoaderMap;
+typedef std::map<tString, iAreaLoader *> tAreaLoaderMap;
 typedef tAreaLoaderMap::iterator tAreaLoaderMapIt;
 
 //-------------------------------------------------------
@@ -160,7 +160,7 @@ typedef tAreaLoaderMap::iterator tAreaLoaderMapIt;
 // GetManager(tString) when getting a manager?
 // This way you would be able to add your own resource types
 // easily.
-typedef std::list<iResourceManager*> tResourceManagerList;
+typedef std::list<iResourceManager *> tResourceManagerList;
 typedef tResourceManagerList::iterator tResourceManagerListIt;
 
 //-------------------------------------------------------
@@ -169,100 +169,100 @@ typedef tResourceManagerList::iterator tResourceManagerListIt;
 class cResources : public iUpdateable
 {
 public:
-    cResources(iLowLevelResources *apLowLevelResources,iLowLevelGraphics *apLowLevelGraphics);
+    cResources(iLowLevelResources *apLowLevelResources, iLowLevelGraphics *apLowLevelGraphics);
     ~cResources();
 
-    void Init(cGraphics* apGraphics,cSystem *apSystem, cSound* apSound, cScene *apScene, cGui *apGui, cPhysics *apPhysics);
+    void Init(cGraphics* apGraphics, cSystem *apSystem, cSound* apSound, cScene *apScene, cGui *apGui, cPhysics *apPhysics);
 
     void Update(double adFixedDelta);
 
-    iLowLevelResources* GetLowLevel();
-    cFileSearcher* GetFileSearcher();
+    iLowLevelResources *GetLowLevel();
+    cFileSearcher *GetFileSearcher();
 
     bool AddResourceDir(const tWString &asDir, bool abAddSubDirectories, const tString &asMask = "*.*");
     void ClearResourceDirs();
 
     bool AddLanguageFile(const tString &asFilePath, bool abAddResourceDirs, const tWString &asAltPath = _W(""));
     void ClearTranslations();
-    const tWString& Translate(const tString& asCat, const tString& asName);
+    const tWString &Translate(const tString& asCat, const tString& asName);
 
-    void AddEntityLoader(iEntityLoader* apLoader, bool abSetAsDefault=false);
-    iEntityLoader* GetEntityLoader(const tString& asName);
+    void AddEntityLoader(iEntityLoader* apLoader, bool abSetAsDefault = false);
+    iEntityLoader *GetEntityLoader(const tString& asName);
 
-    void AddAreaLoader(iAreaLoader* apLoader, bool abSetAsDefault=false);
-    iAreaLoader* GetAreaLoader(const tString& asName);
+    void AddAreaLoader(iAreaLoader* apLoader, bool abSetAsDefault = false);
+    iAreaLoader *GetAreaLoader(const tString& asName);
 
     bool LoadResourceDirsFile(const tString &asFile, const tWString &asAltPath = _W(""));
 
-    iXmlDocument* LoadXmlDocument(const tString& asFile);
+    iXmlDocument *LoadXmlDocument(const tString& asFile);
     void DestroyXmlDocument(iXmlDocument* apDoc);
 
-    cBinaryBuffer* LoadBinaryBuffer(const tString& asFile);
+    cBinaryBuffer *LoadBinaryBuffer(const tString& asFile);
     void DestroyBinaryBuffer(cBinaryBuffer* apFile);
 
-    cMeshLoaderHandler* GetMeshLoaderHandler()
+    cMeshLoaderHandler *GetMeshLoaderHandler()
     {
         return mpMeshLoaderHandler;
     }
-    cBitmapLoaderHandler* GetBitmapLoaderHandler()
+    cBitmapLoaderHandler *GetBitmapLoaderHandler()
     {
         return mpBitmapLoaderHandler;
     }
-    cWorldLoaderHandler* GetWorldLoaderHandler()
+    cWorldLoaderHandler *GetWorldLoaderHandler()
     {
         return mpWorldLoaderHandler;
     }
 
-    cImageManager* GetImageManager()
+    cImageManager *GetImageManager()
     {
         return mpImageManager;
     }
-    cGpuShaderManager* GetGpuShaderManager()
+    cGpuShaderManager *GetGpuShaderManager()
     {
         return mpGpuShaderManager;
     }
-    cParticleManager* GetParticleManager()
+    cParticleManager *GetParticleManager()
     {
         return mpParticleManager;
     }
-    cSoundManager* GetSoundManager()
+    cSoundManager *GetSoundManager()
     {
         return mpSoundManager;
     }
-    cFontManager* GetFontManager()
+    cFontManager *GetFontManager()
     {
         return mpFontManager;
     }
-    cScriptManager* GetScriptManager()
+    cScriptManager *GetScriptManager()
     {
         return mpScriptManager;
     }
-    cTextureManager* GetTextureManager()
+    cTextureManager *GetTextureManager()
     {
         return mpTextureManager;
     }
-    cMaterialManager* GetMaterialManager()
+    cMaterialManager *GetMaterialManager()
     {
         return mpMaterialManager;
     }
-    cMeshManager* GetMeshManager()
+    cMeshManager *GetMeshManager()
     {
         return mpMeshManager;
     }
-    cSoundEntityManager* GetSoundEntityManager()
+    cSoundEntityManager *GetSoundEntityManager()
     {
         return mpSoundEntityManager;
     }
-    cAnimationManager* GetAnimationManager()
+    cAnimationManager *GetAnimationManager()
     {
         return mpAnimationManager;
     }
-    cEntFileManager* GetEntFileManager()
+    cEntFileManager *GetEntFileManager()
     {
         return mpEntFileManager;
     }
 
-    iLowLevelSystem* GetLowLevelSystem()
+    iLowLevelSystem *GetLowLevelSystem()
     {
         return mpLowLevelSystem;
     }
@@ -294,29 +294,29 @@ private:
     tResourceManagerList mlstManagers;
     cImageManager *mpImageManager;
     cGpuShaderManager *mpGpuShaderManager;
-    cParticleManager* mpParticleManager;
-    cSoundManager* mpSoundManager;
-    cFontManager* mpFontManager;
-    cScriptManager* mpScriptManager;
-    cTextureManager* mpTextureManager;
-    cMaterialManager* mpMaterialManager;
-    cSoundEntityManager* mpSoundEntityManager;
+    cParticleManager *mpParticleManager;
+    cSoundManager *mpSoundManager;
+    cFontManager *mpFontManager;
+    cScriptManager *mpScriptManager;
+    cTextureManager *mpTextureManager;
+    cMaterialManager *mpMaterialManager;
+    cSoundEntityManager *mpSoundEntityManager;
     cAnimationManager *mpAnimationManager;
     cEntFileManager *mpEntFileManager;
 
     cLanguageFile *mpLanguageFile;
 
-    cMeshManager* mpMeshManager;
+    cMeshManager *mpMeshManager;
 
-    cMeshLoaderHandler* mpMeshLoaderHandler;
-    cBitmapLoaderHandler* mpBitmapLoaderHandler;
+    cMeshLoaderHandler *mpMeshLoaderHandler;
+    cBitmapLoaderHandler *mpBitmapLoaderHandler;
     cWorldLoaderHandler *mpWorldLoaderHandler;
 
     tEntityLoaderMap m_mEntityLoaders;
-    iEntityLoader* mpDefaultEntityLoader;
+    iEntityLoader *mpDefaultEntityLoader;
 
     tAreaLoaderMap m_mAreaLoaders;
-    iAreaLoader* mpDefaultAreaLoader;
+    iAreaLoader *mpDefaultAreaLoader;
 
     tXmlDocumentList mlstXmlDocuments;
     tBinaryBufferList mlstBinBuffers;

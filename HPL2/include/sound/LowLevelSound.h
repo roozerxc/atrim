@@ -13,7 +13,7 @@ class iSoundData;
 class iSoundEnvironment;
 //class iSoundFilter;
 
-typedef std::list<iSoundEnvironment*> tSoundEnvList;
+typedef std::list<iSoundEnvironment *> tSoundEnvList;
 typedef tSoundEnvList::iterator tSoundEnvListIt;
 
 //---------------------------------------
@@ -23,14 +23,14 @@ class iSoundDeviceIdentifier
 public:
     virtual ~iSoundDeviceIdentifier() {}
 
-    virtual int    GetID()=0;
-    virtual const tString& GetName()=0;
-    virtual bool IsDefault()=0;
+    virtual int    GetID() = 0;
+    virtual const tString &GetName() = 0;
+    virtual bool IsDefault() = 0;
 };
 
 //---------------------------------------
 
-typedef std::vector<iSoundDeviceIdentifier*> tSoundDeviceVec;
+typedef std::vector<iSoundDeviceIdentifier *> tSoundDeviceVec;
 
 //---------------------------------------
 
@@ -44,40 +44,40 @@ public:
      * Get the formats supported
      * \param &alstFormats
      */
-    virtual void GetSupportedFormats(tStringList &alstFormats)=0;
+    virtual void GetSupportedFormats(tStringList &alstFormats) = 0;
 
-    virtual iSoundData* LoadSoundData(const tString& asName,const tWString& asFilePath,
-                                      const tString& asType, bool abStream,bool abLoopStream)=0;
+    virtual iSoundData *LoadSoundData(const tString& asName, const tWString& asFilePath,
+                                      const tString& asType, bool abStream, bool abLoopStream) = 0;
 
-    virtual void UpdateSound(double adFixedDelta)=0;
+    virtual void UpdateSound(double adFixedDelta) = 0;
 
-    virtual void SetListenerAttributes (const cVector3f &avPos,const cVector3f &avVel,
-                                        const cVector3f &avForward,const cVector3f &avUp)=0;
-    virtual void SetListenerPosition(const cVector3f &avPos)=0;
-    const cMatrixf& GetListenerMatrix()
+    virtual void SetListenerAttributes (const cVector3f &avPos, const cVector3f &avVel,
+                                        const cVector3f &avForward, const cVector3f &avUp) = 0;
+    virtual void SetListenerPosition(const cVector3f &avPos) = 0;
+    const cMatrixf &GetListenerMatrix()
     {
         return m_mtxListener;
     }
 
-    virtual void SetListenerAttenuation (bool abEnabled)=0;
+    virtual void SetListenerAttenuation (bool abEnabled) = 0;
 
-    virtual void SetSetRolloffFactor(float afFactor)=0;
+    virtual void SetSetRolloffFactor(float afFactor) = 0;
 
-    virtual void SetVolume(float afVolume)=0;
+    virtual void SetVolume(float afVolume) = 0;
 
-    cVector3f& GetListenerPosition()
+    cVector3f &GetListenerPosition()
     {
         return mvListenerPosition;
     }
-    cVector3f& GetListenerVelocity()
+    cVector3f &GetListenerVelocity()
     {
         return mvListenerVelocity;
     }
-    cVector3f& GetListenerForward()
+    cVector3f &GetListenerForward()
     {
         return mvListenerForward;
     }
-    cVector3f& GetListenerUp()
+    cVector3f &GetListenerUp()
     {
         return mvListenerUp;
     }
@@ -92,10 +92,10 @@ public:
     }
 
     //virtual void LogSoundStatus() {}
-    virtual void Init(int alSoundDeviceID, bool abUseEnvAudio,int alMaxChannels,
+    virtual void Init(int alSoundDeviceID, bool abUseEnvAudio, int alMaxChannels,
                       int alStreamUpdateFreq, bool abUseThreading, bool abUseVoiceManagement,
                       int alMaxMonoSourceHint, int alMaxStereoSourceHint,
-                      int alStreamingBufferSize, int alStreamingBufferCount, bool abEnableLowLevelLog)=0;
+                      int alStreamingBufferSize, int alStreamingBufferCount, bool abEnableLowLevelLog) = 0;
 
     bool IsHardwareAccelerated ()
     {
@@ -106,21 +106,21 @@ public:
         return mbEnvAudioEnabled;
     }
 
-    virtual void SetEnvVolume(float afVolume)=0;
+    virtual void SetEnvVolume(float afVolume) = 0;
     float GetEnvVolume ()
     {
         return mfEnvVolume;
     }
 
-    virtual iSoundEnvironment* LoadSoundEnvironment (const tString& asFilePath)=0;
+    virtual iSoundEnvironment *LoadSoundEnvironment (const tString& asFilePath) = 0;
 
-    virtual void SetSoundEnvironment ( iSoundEnvironment* apSoundEnv )=0;
-    virtual void FadeSoundEnvironment( iSoundEnvironment* apSourceSoundEnv, iSoundEnvironment* apDestSoundEnv, float afT )=0;
+    virtual void SetSoundEnvironment ( iSoundEnvironment* apSoundEnv ) = 0;
+    virtual void FadeSoundEnvironment( iSoundEnvironment* apSourceSoundEnv, iSoundEnvironment* apDestSoundEnv, float afT ) = 0;
 
-    iSoundEnvironment* GetSoundEnvironmentFromFileName (const tString& asName);
+    iSoundEnvironment *GetSoundEnvironmentFromFileName (const tString& asName);
     //void DestroySoundEnvironment( iSoundEnvironment* apSoundEnv);
 
-    virtual iSoundDeviceIdentifier* GetCurrentSoundDevice()=0;
+    virtual iSoundDeviceIdentifier *GetCurrentSoundDevice() = 0;
 
     //static tStringVec GetAvailableSoundDevices();
     static void SetSoundDeviceNameFilter(const tString& asFilter)
@@ -129,8 +129,8 @@ public:
         msSoundDeviceNameFilter = asFilter;
     }
     static void PopulateAvailableSoundDevices(tSoundDeviceVec& avSoundDeviceVec);
-    static const tSoundDeviceVec& GetAvailableSoundDevices();
-    static const tSoundDeviceVec& GetFilteredSoundDevices();
+    static const tSoundDeviceVec &GetAvailableSoundDevices();
+    static const tSoundDeviceVec &GetFilteredSoundDevices();
 
 protected:
     float mfVolume;

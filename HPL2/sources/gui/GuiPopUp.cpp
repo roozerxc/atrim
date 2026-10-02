@@ -26,10 +26,10 @@ iGuiPopUp::iGuiPopUp(cGuiSet *apSet, bool abAddCloseButton, const cVector2f& avP
 
     mpSet->mlPopupCount++;
 
-    cVector3f vPos = cVector3f(mpSet->GetVirtualSize()-avPopUpSize)*0.5f + cVector3f(0,0, mpSet->GetPopUpZ());
+    cVector3f vPos = cVector3f(mpSet->GetVirtualSize() - avPopUpSize) * 0.5f + cVector3f(0, 0, mpSet->GetPopUpZ());
     mpSet->IncPopUpZ();
 
-    mpWindow = mpSet->CreateWidgetWindow(abAddCloseButton?eWidgetWindowButtonFlag_ButtonClose:eWidgetWindowButtonFlag_None,
+    mpWindow = mpSet->CreateWidgetWindow(abAddCloseButton ? eWidgetWindowButtonFlag_ButtonClose : eWidgetWindowButtonFlag_None,
                                          vPos, avPopUpSize, _W(""), NULL);
     mpWindow->SetCloseButtonDisablesWindow(false);
     mpWindow->AddCallback(eGuiMessage_WindowClose, this, kGuiCallback(Window_OnClose));
@@ -144,7 +144,7 @@ void iGuiPopUp::SelfDestruct()
 bool iGuiPopUp::RunCallback(void* apObj, tGuiCallbackFunc apCallback,
                             iWidget* apWidget, const cGuiMessageData& aData, bool abRunFocusChangeChecks)
 {
-    if(apObj==NULL || apCallback==NULL)
+    if(apObj == NULL || apCallback == NULL)
     {
         return false;
     }
@@ -166,19 +166,19 @@ bool iGuiPopUp::RunCallback(void* apObj, tGuiCallbackFunc apCallback,
         pPostCallFocus = mpSet->GetFocusedWidget();
         pPostCallDefaultUIFocus = mpSet->GetDefaultFocusNavWidget();
 
-        mbAttChanged = pPreCallAtt!=pPostCallAtt;
+        mbAttChanged = pPreCallAtt != pPostCallAtt;
         if(mbAttChanged)
         {
             mpNewAttention = pPostCallAtt;
         }
 
-        mbFocusChanged = pPreCallFocus!=pPostCallFocus;
+        mbFocusChanged = pPreCallFocus != pPostCallFocus;
         if(mbFocusChanged)
         {
             mpNewFocused = pPostCallFocus;
         }
 
-        mbDefaultUIFocusChanged = pPreCallDefaultUIFocus!=pPostCallDefaultUIFocus;
+        mbDefaultUIFocusChanged = pPreCallDefaultUIFocus != pPostCallDefaultUIFocus;
         if(mbDefaultUIFocusChanged)
         {
             mpNewDefaultUIFocus = pPostCallDefaultUIFocus;

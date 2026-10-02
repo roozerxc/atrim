@@ -35,7 +35,7 @@ public:
     cCamera();
     ~cCamera();
 
-    const cVector3f& GetPosition()const
+    const cVector3f &GetPosition()const
     {
         return mvPosition;
     }
@@ -88,7 +88,7 @@ public:
     }
 
     void SetOrthoViewSize(const cVector2f &avSize);
-    const cVector2f& GetOrthoViewSize()
+    const cVector2f &GetOrthoViewSize()
     {
         return mvViewSize;
     }
@@ -108,7 +108,7 @@ public:
         return mbInfFarPlane;
     }
 
-    cFrustum* GetFrustum();
+    cFrustum *GetFrustum();
 
     eCameraRotateMode GetRotateMode()
     {
@@ -140,14 +140,14 @@ public:
     /**
      * Unproject the screen coordinate to a world space position and direction
     */
-    void UnProject(cVector3f *apPosition, cVector3f *apDirection, const cVector2f& avScreenPos, const cVector2f& avVirtualScreenSize=1);
+    void UnProject(cVector3f *apPosition, cVector3f *apDirection, const cVector2f& avScreenPos, const cVector2f& avVirtualScreenSize = 1);
     void UnProjectHelper(cVector3f* apPosition, cVector3f* apDirection, const cVector2f& avScreenPos, const cVector2f& avVirtualScreenSize,
                          const cMatrixf& amtxCameraRotation,
                          const cVector3f& avCameraPos, const cVector3f& avCameraFwd, const cVector3f& avCameraUp, const cVector3f& avCameraRgt);
 
     void AttachEntity(iEntity3D *apEntity);
     void RemoveEntity(iEntity3D *apEntity);
-    cNode3D* GetAttachmentNode()
+    cNode3D *GetAttachmentNode()
     {
         return &mNode;
     }
@@ -223,7 +223,7 @@ public:
     cVector3f GetRight();
     cVector3f GetUp();
 
-    const cMatrixf& GetRotationMatrix()
+    const cMatrixf &GetRotationMatrix()
     {
         return m_mtxMatrixRotation;
     }
@@ -232,10 +232,10 @@ public:
     ////////// PROPERTIES /////////////////
     //////////////////////////////////////////////////
 
-    const cMatrixf& GetViewMatrix();
-    const cMatrixf& GetProjectionMatrix();
+    const cMatrixf &GetViewMatrix();
+    const cMatrixf &GetProjectionMatrix();
 
-    const cMatrixf& GetMoveMatrix();
+    const cMatrixf &GetMoveMatrix();
 
     //iCamera stuff:
     void SetModelViewMatrix(iLowLevelGraphics* apLowLevel);
@@ -255,11 +255,11 @@ public:
         m_mtxPrevProjection = a_mtxA;
     }
 
-    cMatrixf& GetPrevView()
+    cMatrixf &GetPrevView()
     {
         return m_mtxPrevView;
     }
-    cMatrixf& GetPrevProjection()
+    cMatrixf &GetPrevProjection()
     {
         return m_mtxPrevProjection;
     }

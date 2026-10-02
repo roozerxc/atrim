@@ -77,7 +77,7 @@ public:
     /////////////////////////////////////////////////////
 
     bool Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen,
-                  eGpuProgramFormat aGpuProgramFormat,const tString& asWindowCaption,
+                  eGpuProgramFormat aGpuProgramFormat, const tString& asWindowCaption,
                   const cVector2l &avWindowPos);
 
     eGpuProgramFormat GetGpuProgramFormat()
@@ -114,28 +114,28 @@ public:
     float GetGammaCorrection();
 
     cVector2f GetScreenSizeFloat();
-    const cVector2l& GetScreenSizeInt();
+    const cVector2l &GetScreenSizeInt();
 
     /////////////////////////////////////////////////////
     /////////////// DATA CREATION //////////////////////
     /////////////////////////////////////////////////////
 
-    iFontData* CreateFontData(const tString &asName);
+    iFontData *CreateFontData(const tString &asName);
 
-    iTexture* CreateTexture(const tString &asName, eTextureType aType, eTextureUsage aUsage);
+    iTexture *CreateTexture(const tString &asName, eTextureType aType, eTextureUsage aUsage);
 
-    iVertexBuffer* CreateVertexBuffer(    eVertexBufferType aType,
+    iVertexBuffer *CreateVertexBuffer(    eVertexBufferType aType,
                                           eVertexBufferDrawType aDrawType,
                                           eVertexBufferUsageType aUsageType,
-                                          int alReserveVtxSize=0,int alReserveIdxSize=0);
+                                          int alReserveVtxSize = 0, int alReserveIdxSize = 0);
 
-    iGpuProgram* CreateGpuProgram(const tString& asName);
-    iGpuShader* CreateGpuShader(const tString& asName, eGpuShaderType aType);
+    iGpuProgram *CreateGpuProgram(const tString& asName);
+    iGpuShader *CreateGpuShader(const tString& asName, eGpuShaderType aType);
 
-    iFrameBuffer* CreateFrameBuffer(const tString& asName);
-    iDepthStencilBuffer* CreateDepthStencilBuffer(const cVector2l& avSize, int alDepthBits, int alStencilBits);
+    iFrameBuffer *CreateFrameBuffer(const tString& asName);
+    iDepthStencilBuffer *CreateDepthStencilBuffer(const cVector2l& avSize, int alDepthBits, int alStencilBits);
 
-    iOcclusionQuery* CreateOcclusionQuery();
+    iOcclusionQuery *CreateOcclusionQuery();
 
     /////////////////////////////////////////////////////
     /////////// FRAME BUFFER OPERATIONS ///////
@@ -148,15 +148,15 @@ public:
     void SetClearStencil(int alVal);
 
     void CopyFrameBufferToTexure(    iTexture* apTex, const cVector2l &avPos,
-                                     const cVector2l &avSize, const cVector2l &avTexOffset=0);
-    cBitmap* CopyFrameBufferToBitmap(const cVector2l &avScreenPos=0, const cVector2l &avScreenSize=-1);
+                                     const cVector2l &avSize, const cVector2l &avTexOffset = 0);
+    cBitmap *CopyFrameBufferToBitmap(const cVector2l &avScreenPos = 0, const cVector2l &avScreenSize = -1);
 
     void WaitAndFinishRendering();
     void FlushRendering();
     void SwapBuffers();
 
     void SetCurrentFrameBuffer(iFrameBuffer* apFrameBuffer, const cVector2l &avPos = 0, const cVector2l& avSize = -1);
-    iFrameBuffer* GetCurrentFrameBuffer()
+    iFrameBuffer *GetCurrentFrameBuffer()
     {
         return mpFrameBuffer;
     }
@@ -167,7 +167,7 @@ public:
     /////////// RENDER STATE ////////////////////////////
     /////////////////////////////////////////////////////
 
-    void SetColorWriteActive(bool abR,bool abG,bool abB,bool abA);
+    void SetColorWriteActive(bool abR, bool abG, bool abB, bool abA);
     void SetDepthWriteActive(bool abX);
 
     void SetCullActive(bool abX);
@@ -177,16 +177,16 @@ public:
     void SetDepthTestFunc(eDepthTestFunc aFunc);
 
     void SetAlphaTestActive(bool abX);
-    void SetAlphaTestFunc(eAlphaTestFunc aFunc,float afRef);
+    void SetAlphaTestFunc(eAlphaTestFunc aFunc, float afRef);
 
     void SetStencilActive(bool abX);
     void SetStencilWriteMask(unsigned int alMask);
-    void SetStencil(eStencilFunc aFunc,int alRef, unsigned int aMask,
-                    eStencilOp aFailOp,eStencilOp aZFailOp,eStencilOp aZPassOp);
-    void SetStencilTwoSide(    eStencilFunc aFrontFunc,eStencilFunc aBackFunc,
+    void SetStencil(eStencilFunc aFunc, int alRef, unsigned int aMask,
+                    eStencilOp aFailOp, eStencilOp aZFailOp, eStencilOp aZPassOp);
+    void SetStencilTwoSide(    eStencilFunc aFrontFunc, eStencilFunc aBackFunc,
                                int alRef, unsigned int aMask,
-                               eStencilOp aFrontFailOp,eStencilOp aFrontZFailOp,eStencilOp aFrontZPassOp,
-                               eStencilOp aBackFailOp,eStencilOp aBackZFailOp,eStencilOp aBackZPassOp);
+                               eStencilOp aFrontFailOp, eStencilOp aFrontZFailOp, eStencilOp aFrontZPassOp,
+                               eStencilOp aBackFailOp, eStencilOp aBackZFailOp, eStencilOp aBackZPassOp);
 
     void SetScissorActive(bool abX);
     void SetScissorRect(const cVector2l& avPos, const cVector2l& avSize);
@@ -203,7 +203,7 @@ public:
                                   eBlendFunc aSrcFactorAlpha, eBlendFunc aDestFactorAlpha);
 
     void SetPolygonOffsetActive(bool abX);
-    void SetPolygonOffset(float afBias,float afSlopeScaleBias);
+    void SetPolygonOffset(float afBias, float afSlopeScaleBias);
 
     /////////////////////////////////////////////////////
     /////////// MATRIX //////////////////////////////////
@@ -222,7 +222,7 @@ public:
     /////////// TEXTURE OPERATIONS ///////////////////////
     /////////////////////////////////////////////////////
 
-    void SetTexture(unsigned int alUnit,iTexture* apTex);
+    void SetTexture(unsigned int alUnit, iTexture* apTex);
     void ClearTextureHandle(GLuint aHandle);
 
     void SetActiveTextureUnit(unsigned int alUnit);
@@ -236,20 +236,20 @@ public:
 
     void DrawTriangle(tVertexVec& avVtx);
 
-    void DrawQuad(    const cVector3f &avPos,const cVector2f &avSize, const cColor& aColor=cColor(1,1));
-    void DrawQuad(    const cVector3f &avPos,const cVector2f &avSize,
-                      const cVector2f &avMinTexCoord,const cVector2f &avMaxTexCoord,
-                      const cColor& aColor=cColor(1,1));
-    void DrawQuad(    const cVector3f &avPos,const cVector2f &avSize,
-                      const cVector2f &avMinTexCoord0,const cVector2f &avMaxTexCoord0,
-                      const cVector2f &avMinTexCoord1,const cVector2f &avMaxTexCoord1,
-                      const cColor& aColor=cColor(1,1));
+    void DrawQuad(    const cVector3f &avPos, const cVector2f &avSize, const cColor& aColor = cColor(1, 1));
+    void DrawQuad(    const cVector3f &avPos, const cVector2f &avSize,
+                      const cVector2f &avMinTexCoord, const cVector2f &avMaxTexCoord,
+                      const cColor& aColor = cColor(1, 1));
+    void DrawQuad(    const cVector3f &avPos, const cVector2f &avSize,
+                      const cVector2f &avMinTexCoord0, const cVector2f &avMaxTexCoord0,
+                      const cVector2f &avMinTexCoord1, const cVector2f &avMaxTexCoord1,
+                      const cColor& aColor = cColor(1, 1));
 
     void DrawQuad(const tVertexVec &avVtx);
     void DrawQuad(const tVertexVec &avVtx, const cColor aCol);
-    void DrawQuad(const tVertexVec &avVtx,const float afZ);
-    void DrawQuad(const tVertexVec &avVtx,const float afZ,const cColor &aCol);
-    void DrawQuadMultiTex(const tVertexVec &avVtx,const tVector3fVec &avExtraUvs);
+    void DrawQuad(const tVertexVec &avVtx, const float afZ);
+    void DrawQuad(const tVertexVec &avVtx, const float afZ, const cColor &aCol);
+    void DrawQuadMultiTex(const tVertexVec &avVtx, const tVector3fVec &avExtraUvs);
 
     void DrawLine(const cVector3f& avBegin, const cVector3f& avEnd, cColor aCol);
     void DrawLine(const cVector3f& avBegin, const cColor& aBeginCol, const cVector3f& avEnd, const cColor& aEndCol);
@@ -259,7 +259,7 @@ public:
     void DrawSphere(const cVector3f& avPos, float afRadius, cColor aColX, cColor aColY, cColor aColZ);
 
     void DrawLineQuad(const cRect2f& aRect, float afZ, cColor aCol);
-    void DrawLineQuad(const cVector3f &avPos,const cVector2f &avSize, cColor aCol);
+    void DrawLineQuad(const cVector3f &avPos, const cVector2f &avSize, cColor aCol);
 
     /////////////////////////////////////////////////////
     /////////// VERTEX BATCHING /////////////////////////
@@ -270,19 +270,19 @@ public:
     void AddVertexToBatch(const cVertex *apVtx, const cMatrixf* aMtx);
 
     void AddVertexToBatch_Size2D(const cVertex *apVtx, const cVector3f* avTransform,
-                                 const cColor* apCol,const float& mfW, const float& mfH);
+                                 const cColor* apCol, const float &mfW, const float &mfH);
 
     void AddVertexToBatch_Raw(    const cVector3f& avPos, const cColor &aColor,
                                   const cVector3f& avTex);
 
 
-    void AddTexCoordToBatch(unsigned int alUnit,const cVector3f *apCoord);
-    void SetBatchTextureUnitActive(unsigned int alUnit,bool abActive);
+    void AddTexCoordToBatch(unsigned int alUnit, const cVector3f *apCoord);
+    void SetBatchTextureUnitActive(unsigned int alUnit, bool abActive);
 
     void AddIndexToBatch(int alIndex);
 
-    void FlushTriBatch(tVtxBatchFlag aTypeFlags, bool abAutoClear=true);
-    void FlushQuadBatch(tVtxBatchFlag aTypeFlags, bool abAutoClear=true);
+    void FlushTriBatch(tVtxBatchFlag aTypeFlags, bool abAutoClear = true);
+    void FlushQuadBatch(tVtxBatchFlag aTypeFlags, bool abAutoClear = true);
     void ClearBatch();
 
     /////////////////////////////////////////////////////
@@ -340,7 +340,7 @@ private:
 
     bool mbBlendFuncSeparate;
 
-    iFrameBuffer* mpFrameBuffer;
+    iFrameBuffer *mpFrameBuffer;
     cVector2l mvFrameBufferPos;
     cVector2l mvFrameBufferSize;
     cVector2l mvFrameBufferTotalSize;
@@ -363,9 +363,9 @@ private:
     //////////////////////////////////////
     //Vertex Array variables
     //The vertex arrays used:
-    float* mpVertexArray;
+    float *mpVertexArray;
     unsigned int mlVertexCount;
-    unsigned int* mpIndexArray;
+    unsigned int *mpIndexArray;
     unsigned int mlIndexCount;
 
     unsigned int mlBatchStride;

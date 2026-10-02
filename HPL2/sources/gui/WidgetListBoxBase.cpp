@@ -20,7 +20,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-iWidgetListBoxBase::iWidgetListBoxBase(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_ListBox,apSet, apSkin)
+iWidgetListBoxBase::iWidgetListBoxBase(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetType_ListBox, apSet, apSkin)
 {
     mbClipsGraphics = true;
 
@@ -50,7 +50,7 @@ iWidgetListBoxBase::iWidgetListBoxBase(cGuiSet *apSet, cGuiSkin *apSkin) : iWidg
 
 iWidgetListBoxBase::~iWidgetListBoxBase()
 {
-    if(mpSet->IsDestroyingSet()==false)
+    if(mpSet->IsDestroyingSet() == false)
     {
         mpSet->DestroyWidget(mpSlider);
     }
@@ -67,7 +67,7 @@ iWidgetListBoxBase::~iWidgetListBoxBase()
 void iWidgetListBoxBase::SetSelectedItem(int alX, bool abMoveList, bool abGenerateCallback, eListBoxSelectType aType,
         bool abClearPrevious)
 {
-    if(abClearPrevious || mbAllowMultiSelection==false)
+    if(abClearPrevious || mbAllowMultiSelection == false)
     {
         ClearSelection();
     }
@@ -137,10 +137,10 @@ int iWidgetListBoxBase::GetSelectedItem()
 
 int iWidgetListBoxBase::GetMultiSelection(int alIdx)
 {
-    int i=0;
-    for(tIntListIt it=mlstSelectedItems.begin(); it!=mlstSelectedItems.end() || i>alIdx; ++it, ++i)
+    int i = 0;
+    for(tIntListIt it = mlstSelectedItems.begin(); it != mlstSelectedItems.end() || i > alIdx; ++it, ++i)
     {
-        if(i==alIdx)
+        if(i == alIdx)
         {
             return *it;
         }
@@ -161,7 +161,7 @@ void iWidgetListBoxBase::ClearSelection()
     mbClearingSelection = true;
 
     tIntListIt it = mlstSelectedItems.begin();
-    for(; it!=mlstSelectedItems.end(); ++it)
+    for(; it != mlstSelectedItems.end(); ++it)
     {
         mvItems[*it]->SetSelected(false);
     }
@@ -174,7 +174,7 @@ void iWidgetListBoxBase::ClearSelection()
 
 cVector3f iWidgetListBoxBase::GetItemStartPos()
 {
-    return GetGlobalPosition() + cVector3f(0,2,0.01f);
+    return GetGlobalPosition() + cVector3f(0, 2, 0.01f);
 }
 
 //-----------------------------------------------------------------------
@@ -189,7 +189,7 @@ void iWidgetListBoxBase::SelectRange(int alStart, int alEnd)
 {
     int add;
 
-    if(alStart<alEnd)
+    if(alStart < alEnd)
     {
         add = 1;
     }
@@ -199,7 +199,7 @@ void iWidgetListBoxBase::SelectRange(int alStart, int alEnd)
     }
 
     cWidgetItem* pItem = NULL;
-    for(int i=alStart; i!=alEnd; i+=add)
+    for(int i = alStart; i != alEnd; i += add)
     {
         pItem = GetItem(i);
         if(pItem)
@@ -219,7 +219,7 @@ void iWidgetListBoxBase::SelectRange(int alStart, int alEnd)
 void iWidgetListBoxBase::UpdateProperties()
 {
     mlNumItems = (int)mvItems.size();
-    mlMaxItems = (int)(mvSize.y /(mvDefaultFontSize.y +2))-1;
+    mlMaxItems = (int)(mvSize.y / (mvDefaultFontSize.y + 2)) - 1;
 
     if(mpSlider == NULL)
     {
@@ -238,13 +238,13 @@ void iWidgetListBoxBase::UpdateProperties()
     }
 
     mpSlider->SetButtonValueAdd(1);
-    mpSlider->SetBarClickValueAdd(mlMaxItems-1);
+    mpSlider->SetBarClickValueAdd(mlMaxItems - 1);
 
     tIntListIt it = mlstSelectedItems.begin();
-    for(; it!=mlstSelectedItems.end();)
+    for(; it != mlstSelectedItems.end();)
     {
         int lIdx = *it;
-        if(lIdx>=GetItemNum())
+        if(lIdx >= GetItemNum())
         {
             it = mlstSelectedItems.erase(it);
         }
@@ -256,9 +256,9 @@ void iWidgetListBoxBase::UpdateProperties()
 
     mpSlider->SetValue(GetSelectedItem(), true);
 
-    if(mlNumItems==0)
+    if(mlNumItems == 0)
     {
-        SetCursorPos(0,true, true);
+        SetCursorPos(0, true, true);
     }
 }
 
@@ -268,7 +268,7 @@ void iWidgetListBoxBase::OnChangeSize()
 {
     if(mpSlider)
     {
-        mpSlider->SetSize(cVector2f(mfSliderWidth,mvSize.y));
+        mpSlider->SetSize(cVector2f(mfSliderWidth, mvSize.y));
         mpSlider->SetPosition(cVector3f(mvSize.x - mfSliderWidth, 0, 0.2f));
     }
 
@@ -279,8 +279,8 @@ void iWidgetListBoxBase::OnChangeSize()
 
 void iWidgetListBoxBase::OnInit()
 {
-    mpSlider = mpSet->CreateWidgetSlider(eWidgetSliderOrientation_Vertical,0,0,0,this);
-    mpSlider->AddCallback(eGuiMessage_SliderMove,this,kGuiCallback(MoveSlider));
+    mpSlider = mpSet->CreateWidgetSlider(eWidgetSliderOrientation_Vertical, 0, 0, 0, this);
+    mpSlider->AddCallback(eGuiMessage_SliderMove, this, kGuiCallback(MoveSlider));
 
     OnChangeSize();
 }
@@ -294,7 +294,7 @@ void iWidgetListBoxBase::AddItemToSelection(cWidgetItem* apItem)
 
 void iWidgetListBoxBase::RemoveItemFromSelection(cWidgetItem* apItem)
 {
-    if(mbClearingSelection==false)
+    if(mbClearingSelection == false)
     {
         mlstSelectedItems.remove(apItem->GetIndex());
     }
@@ -308,7 +308,7 @@ bool iWidgetListBoxBase::MoveSlider(iWidget* apWidget, const cGuiMessageData& aD
 
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(iWidgetListBoxBase,MoveSlider)
+kGuiCallbackDeclaredFuncEnd(iWidgetListBoxBase, MoveSlider)
 
 //-----------------------------------------------------------------------
 
@@ -335,7 +335,7 @@ void iWidgetListBoxBase::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegio
 {
     ////////////////////////////////
     // Background
-    mpSet->DrawGfx(    mpGfxBackground,GetGlobalPosition() +cVector3f(0,0,mfBackgroundZ),
+    mpSet->DrawGfx(    mpGfxBackground, GetGlobalPosition() + cVector3f(0, 0, mfBackgroundZ),
                        mvSize);
 
 
@@ -344,7 +344,7 @@ void iWidgetListBoxBase::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegio
     DrawBordersAndCorners(    NULL, mvGfxBorders, mvGfxCorners,
                               GetGlobalPosition() -
                               cVector3f(    mvGfxCorners[0]->GetActiveSize().x,
-                                            mvGfxCorners[0]->GetActiveSize().y,0),
+                                            mvGfxCorners[0]->GetActiveSize().y, 0),
                               mvSize +    mvGfxCorners[0]->GetActiveSize() +
                               mvGfxCorners[2]->GetActiveSize());
 }
@@ -353,26 +353,26 @@ void iWidgetListBoxBase::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegio
 
 void iWidgetListBoxBase::OnDrawAfterClip(double adFixedDelta, cGuiClipRegion* apClipRegion)
 {
-    cGuiClipRegion* pRegion = apClipRegion->CreateChild(GetGlobalPosition(), mvSize-cVector2f(mfSliderWidth,0));
+    cGuiClipRegion* pRegion = apClipRegion->CreateChild(GetGlobalPosition(), mvSize - cVector2f(mfSliderWidth, 0));
     mpSet->SetCurrentClipRegion(pRegion);
 
     DrawItems(adFixedDelta, pRegion);
     // Draw cursor
     if(HasFocus())
     {
-        int lIndex = mlCursorPos-mlFirstItem;
-        if(lIndex!=-1)
+        int lIndex = mlCursorPos - mlFirstItem;
+        if(lIndex != -1)
         {
             cVector3f vPosition = GetItemStartPos();
 
-            cVector3f vUpperLeftCorner = vPosition + cVector3f(-1,lIndex*(mvDefaultFontSize.y+2),0);
-            cVector2f vWidth = cVector2f(mvSize.x-mfSliderWidth,1);
+            cVector3f vUpperLeftCorner = vPosition + cVector3f(-1, lIndex * (mvDefaultFontSize.y + 2), 0);
+            cVector2f vWidth = cVector2f(mvSize.x - mfSliderWidth, 1);
             cVector2f vHeight = cVector2f(1, mvDefaultFontSize.y);
 
             mpSet->DrawGfx(cGui::mpGfxRect, vUpperLeftCorner, vWidth, cColor(0.3f, 0.4f));
-            mpSet->DrawGfx(cGui::mpGfxRect, vUpperLeftCorner+cVector3f(0,vHeight.y,0), vWidth, cColor(0.3f, 0.4f));
+            mpSet->DrawGfx(cGui::mpGfxRect, vUpperLeftCorner + cVector3f(0, vHeight.y, 0), vWidth, cColor(0.3f, 0.4f));
             mpSet->DrawGfx(cGui::mpGfxRect, vUpperLeftCorner, vHeight, cColor(0.3f, 0.4f));
-            mpSet->DrawGfx(cGui::mpGfxRect, vUpperLeftCorner+cVector3f(vHeight.x,0,0), vHeight, cColor(0.3f, 0.4f));
+            mpSet->DrawGfx(cGui::mpGfxRect, vUpperLeftCorner + cVector3f(vHeight.x, 0, 0), vHeight, cColor(0.3f, 0.4f));
         }
     }
 
@@ -393,19 +393,19 @@ bool iWidgetListBoxBase::OnMouseDown(const cGuiMessageData& aData)
     int lSliderValue = mpSlider->GetValue();
     if(aData.mlVal == eGuiMouseButton_WheelUp)
     {
-        mpSlider->SetValue(lSliderValue-5);
+        mpSlider->SetValue(lSliderValue - 5);
         return true;
     }
 
     if(aData.mlVal == eGuiMouseButton_WheelDown)
     {
-        mpSlider->SetValue(lSliderValue+5);
+        mpSlider->SetValue(lSliderValue + 5);
         return true;
     }
 
     cVector3f vLocalPos = WorldToLocalPosition(aData.mvPos);
 
-    int lSelection = (int)((vLocalPos.y - 2) / (mvDefaultFontSize.y+2)) - mlNumBlankRows;
+    int lSelection = (int)((vLocalPos.y - 2) / (mvDefaultFontSize.y + 2)) - mlNumBlankRows;
     if(lSelection < 0)
     {
         return false;
@@ -413,21 +413,21 @@ bool iWidgetListBoxBase::OnMouseDown(const cGuiMessageData& aData)
 
     lSelection = lSelection + mlFirstItem;
 
-    bool bUsingCtrl = (aData.mKeyPress.mlModifier & eKeyModifier_Ctrl)!=0;
-    bool bUsingShift = (aData.mKeyPress.mlModifier & eKeyModifier_Shift)!=0;
+    bool bUsingCtrl = (aData.mKeyPress.mlModifier & eKeyModifier_Ctrl) != 0;
+    bool bUsingShift = (aData.mKeyPress.mlModifier & eKeyModifier_Shift) != 0;
     bool bClearSelection = !bUsingCtrl;
 
-    eListBoxSelectType type = bUsingShift? eListBoxSelectType_FromAnchorPos :
-                              (bUsingCtrl? eListBoxSelectType_Toggle : eListBoxSelectType_Select);
+    eListBoxSelectType type = bUsingShift ? eListBoxSelectType_FromAnchorPos :
+                              (bUsingCtrl ? eListBoxSelectType_Toggle : eListBoxSelectType_Select);
 
-    SetCursorPos(lSelection,true,false);
+    SetCursorPos(lSelection, true, false);
 
-    if(bUsingShift==false)
+    if(bUsingShift == false)
     {
         SetAnchorPos(mlCursorPos);
     }
 
-    if(lSelection==mlLastCursorPos)
+    if(lSelection == mlLastCursorPos)
     {
         ++mlNumClicksOnSamePos;
     }
@@ -464,7 +464,7 @@ bool iWidgetListBoxBase::OnMouseDoubleClick(const cGuiMessageData& aData)
         return false;
     }
 
-    if(mlCursorPos!=-1 && mlNumClicksOnSamePos>=2)
+    if(mlCursorPos != -1 && mlNumClicksOnSamePos >= 2)
     {
         mlNumClicksOnSamePos = 0;
         ProcessMessage(eGuiMessage_SelectionDoubleClick, aData);
@@ -495,43 +495,43 @@ bool iWidgetListBoxBase::OnKeyPress(const cGuiMessageData& aData)
     eKey key = aData.mKeyPress.mKey;
     int keyMod = aData.mKeyPress.mlModifier;
     eListBoxSelectType type = eListBoxSelectType_Select;
-    bool bUsingCtrl = ((keyMod&eKeyModifier_Ctrl)!=0);
-    bool bUsingShift = ((keyMod&eKeyModifier_Shift)!=0);
+    bool bUsingCtrl = ((keyMod & eKeyModifier_Ctrl) != 0);
+    bool bUsingShift = ((keyMod & eKeyModifier_Shift) != 0);
 
     if(key == eKey_Up)
     {
-        SetCursorPos(mlCursorPos-1, true, true);
-        if(bUsingCtrl==false && bUsingShift==false)
+        SetCursorPos(mlCursorPos - 1, true, true);
+        if(bUsingCtrl == false && bUsingShift == false)
         {
             SetAnchorPos(mlCursorPos);
         }
 
-        if(bUsingCtrl==false && bUsingShift==false)
+        if(bUsingCtrl == false && bUsingShift == false)
         {
             SetSelectedItem(mlCursorPos, false, true, eListBoxSelectType_Select, true);
         }
         else if(bUsingShift)
         {
-            SetSelectedItem(mlCursorPos, false, true, eListBoxSelectType_FromAnchorPos, bUsingCtrl==false);
+            SetSelectedItem(mlCursorPos, false, true, eListBoxSelectType_FromAnchorPos, bUsingCtrl == false);
         }
 
         return true;
     }
     else if(key == eKey_Down)
     {
-        SetCursorPos(mlCursorPos+1, true, true);
-        if(bUsingCtrl==false && bUsingShift==false)
+        SetCursorPos(mlCursorPos + 1, true, true);
+        if(bUsingCtrl == false && bUsingShift == false)
         {
             SetAnchorPos(mlCursorPos);
         }
 
-        if(bUsingCtrl==false && bUsingShift==false)
+        if(bUsingCtrl == false && bUsingShift == false)
         {
             SetSelectedItem(mlCursorPos, false, true, eListBoxSelectType_Select, true);
         }
         else if(bUsingShift)
         {
-            SetSelectedItem(mlCursorPos, false, true, eListBoxSelectType_FromAnchorPos, bUsingCtrl==false);
+            SetSelectedItem(mlCursorPos, false, true, eListBoxSelectType_FromAnchorPos, bUsingCtrl == false);
         }
 
         return true;
@@ -564,22 +564,22 @@ bool iWidgetListBoxBase::OnKeyPress(const cGuiMessageData& aData)
 
 bool iWidgetListBoxBase::OnUIArrowPress(const cGuiMessageData& aData)
 {
-    if(mbLocked==false)
+    if(mbLocked == false)
     {
         return false;
     }
 
     bool bUnlock = false;
 
-    if(aData.mlVal==eUIArrow_Up)
+    if(aData.mlVal == eUIArrow_Up)
     {
-        SetCursorPos(mlCursorPos-1, true, true);
+        SetCursorPos(mlCursorPos - 1, true, true);
     }
-    else if(aData.mlVal==eUIArrow_Down)
+    else if(aData.mlVal == eUIArrow_Down)
     {
         int lOldPos = mlCursorPos;
 
-        SetCursorPos(mlCursorPos+1, true, true);
+        SetCursorPos(mlCursorPos + 1, true, true);
 
         bUnlock = lOldPos == mlCursorPos;
     }
@@ -610,11 +610,11 @@ bool iWidgetListBoxBase::OnUIButtonPress(const cGuiMessageData& aData)
 {
     if(HasFocus())
     {
-        if(aData.mlVal==eUIButton_Primary)
+        if(aData.mlVal == eUIButton_Primary)
         {
             if(GetSelectedItem() == -1)
             {
-                SetCursorPos(0, true,true);
+                SetCursorPos(0, true, true);
                 SetSelectedItem(mlCursorPos, true, true, eListBoxSelectType_Select);
             }
             if(mbLocked == true)
@@ -626,15 +626,15 @@ bool iWidgetListBoxBase::OnUIButtonPress(const cGuiMessageData& aData)
                 }
             }
 
-            mbLocked=true;
+            mbLocked = true;
         }
-        if(aData.mlVal==eUIButton_Secondary)
+        if(aData.mlVal == eUIButton_Secondary)
         {
             if(mbLocked == false)
             {
                 return false;
             }
-            mbLocked=false;
+            mbLocked = false;
         }
 
         return true;
@@ -652,7 +652,7 @@ bool iWidgetListBoxBase::OnUIButtonDoublePress(const cGuiMessageData& aData)
 {
     if(HasFocus())
     {
-        if(aData.mlVal==eUIButton_Primary)
+        if(aData.mlVal == eUIButton_Primary)
         {
             mbLocked = false;
             return ProcessMessage(eGuiMessage_SelectionDoubleClick, aData);
@@ -670,18 +670,18 @@ void iWidgetListBoxBase::SetCursorPos(int alPos, bool abMoveList, bool abClamp)
 {
     if(abClamp)
     {
-        if(alPos<0)
+        if(alPos < 0)
         {
             alPos = 0;
         }
-        if(alPos>=mlNumItems)
+        if(alPos >= mlNumItems)
         {
-            alPos = mlNumItems-1;
+            alPos = mlNumItems - 1;
         }
     }
     else
     {
-        if(alPos<0 || alPos>=mlNumItems)
+        if(alPos < 0 || alPos >= mlNumItems)
         {
             alPos = -1;
         }
@@ -698,7 +698,7 @@ void iWidgetListBoxBase::SetCursorPos(int alPos, bool abMoveList, bool abClamp)
         }
         mpSlider->SetValue(mlFirstItem);
     }
-    if(abMoveList && mlCursorPos < mlFirstItem && mlCursorPos>=0)
+    if(abMoveList && mlCursorPos < mlFirstItem && mlCursorPos >= 0)
     {
         while(mlCursorPos < mlFirstItem)
         {

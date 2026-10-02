@@ -15,7 +15,7 @@ namespace hpl
 //-----------------------------------------------------------------------
 
 cPhysicsControllerNewton::cPhysicsControllerNewton(const tString &asName, iPhysicsWorld *apWorld)
-    : iPhysicsController(asName,apWorld)
+    : iPhysicsController(asName, apWorld)
 {
 }
 

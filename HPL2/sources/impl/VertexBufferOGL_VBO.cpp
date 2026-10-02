@@ -22,9 +22,9 @@ namespace hpl
 //-----------------------------------------------------------------------
 
 cVertexBufferOGL_VBO::cVertexBufferOGL_VBO(iLowLevelGraphics* apLowLevelGraphics,
-        eVertexBufferDrawType aDrawType,eVertexBufferUsageType aUsageType,
-        int alReserveVtxSize,int alReserveIdxSize) :
-    iVertexBufferOpenGL(apLowLevelGraphics,eVertexBufferType_Hardware,  aDrawType,aUsageType, alReserveVtxSize, alReserveIdxSize)
+        eVertexBufferDrawType aDrawType, eVertexBufferUsageType aUsageType,
+        int alReserveVtxSize, int alReserveIdxSize) :
+    iVertexBufferOpenGL(apLowLevelGraphics, eVertexBufferType_Hardware,  aDrawType, aUsageType, alReserveVtxSize, alReserveIdxSize)
 {
     mlElementHandle = 0;
 
@@ -72,11 +72,11 @@ void cVertexBufferOGL_VBO::UpdateData(tVertexElementFlag aTypes, bool abIndices)
 {
     GLenum usageType = GL_STATIC_DRAW_ARB;
 
-    if(mUsageType== eVertexBufferUsageType_Dynamic)
+    if(mUsageType == eVertexBufferUsageType_Dynamic)
     {
         usageType = GL_DYNAMIC_DRAW_ARB;
     }
-    else if(mUsageType== eVertexBufferUsageType_Stream)
+    else if(mUsageType == eVertexBufferUsageType_Stream)
     {
         usageType = GL_STREAM_DRAW_ARB;
     }
@@ -95,13 +95,13 @@ void cVertexBufferOGL_VBO::UpdateData(tVertexElementFlag aTypes, bool abIndices)
             temp.resize(lTotalBytes);
         }
 
-        for(size_t i=0; i<mvElementArrays.size(); ++i)
+        for(size_t i = 0; i < mvElementArrays.size(); ++i)
         {
             cVtxBufferGLElementArray *pElement = mvElementArrays[i];
             const size_t lElementBytes = pElement->mlElementNum * GetVertexFormatByteSize(pElement->mFormat);
             const char *src = (const char*)pElement->GetArrayPtr();
 
-            for(int v=0; v<lVertexCount; ++v)
+            for(int v = 0; v < lVertexCount; ++v)
             {
                 char *dst = &temp[v * mlInterleavedStride + mvElementOffsets[i]];
                 memcpy(dst, src + v * lElementBytes, lElementBytes);
@@ -132,7 +132,7 @@ void cVertexBufferOGL_VBO::UpdateData(tVertexElementFlag aTypes, bool abIndices)
             //16bit conversion
             std::vector<unsigned short> shortIndices(GetIndexNum());
 
-            for(int i=0; i<GetIndexNum(); ++i)
+            for(int i = 0; i < GetIndexNum(); ++i)
             {
 #ifdef _DEBUG
                 if(mvIndexArray[i] > 65535)
@@ -173,10 +173,10 @@ void cVertexBufferOGL_VBO::Draw(eVertexBufferDrawType aDrawType)
 
     //////////////////////////////////
     //Bind and draw the buffer
-    glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,mlElementHandle);
+    glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, mlElementHandle);
 
     int lSize = mlElementNum;
-    if(mlElementNum<0)
+    if(mlElementNum < 0)
     {
         lSize = GetIndexNum();
     }
@@ -189,7 +189,7 @@ void cVertexBufferOGL_VBO::Draw(eVertexBufferDrawType aDrawType)
 
 //-----------------------------------------------------------------------
 
-void cVertexBufferOGL_VBO::DrawIndices(unsigned int *apIndices, int alCount,eVertexBufferDrawType aDrawType)
+void cVertexBufferOGL_VBO::DrawIndices(unsigned int *apIndices, int alCount, eVertexBufferDrawType aDrawType)
 {
     eVertexBufferDrawType drawType = aDrawType == eVertexBufferDrawType_LastEnum ? mDrawType : aDrawType;
 
@@ -214,16 +214,16 @@ void cVertexBufferOGL_VBO::Bind()
 
 void cVertexBufferOGL_VBO::UnBind()
 {
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB,0);
+    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 
-    for(size_t i=0; i<mvElementArrays.size(); ++i)
+    for(size_t i = 0; i < mvElementArrays.size(); ++i)
     {
         cVtxBufferGLElementArray *pElement = mvElementArrays[i];
 
         //Log("Unbinding %d handle %d, type: %d\n",i,pElement->mlGLHandle, pElement->mType);
 
         int lTextureUnit = GetVertexElementTextureUnit(pElement->mType);
-        if(lTextureUnit >=0)
+        if(lTextureUnit >= 0)
         {
             glClientActiveTextureARB(GL_TEXTURE0_ARB + lTextureUnit);
         }
@@ -245,11 +245,11 @@ void cVertexBufferOGL_VBO::CompileSpecific()
 {
     GLenum usageType = GL_STATIC_DRAW_ARB;
 
-    if(mUsageType== eVertexBufferUsageType_Dynamic)
+    if(mUsageType == eVertexBufferUsageType_Dynamic)
     {
         usageType = GL_DYNAMIC_DRAW_ARB;
     }
-    else if(mUsageType== eVertexBufferUsageType_Stream)
+    else if(mUsageType == eVertexBufferUsageType_Stream)
     {
         usageType = GL_STREAM_DRAW_ARB;
     }
@@ -258,7 +258,7 @@ void cVertexBufferOGL_VBO::CompileSpecific()
     mlInterleavedStride = 0;
     mvElementOffsets.resize(mvElementArrays.size());
 
-    for(size_t i=0; i<mvElementArrays.size(); ++i)
+    for(size_t i = 0; i < mvElementArrays.size(); ++i)
     {
         cVtxBufferGLElementArray *pElement = mvElementArrays[i];
         mvElementOffsets[i] = mlInterleavedStride;
@@ -269,7 +269,7 @@ void cVertexBufferOGL_VBO::CompileSpecific()
     const int lVertexCount = GetVertexNum();
     const size_t lTotalBytes = (size_t)lVertexCount * mlInterleavedStride;
 
-    for(int b=0; b<2; ++b)
+    for(int b = 0; b < 2; ++b)
     {
         if(mlInterleavedHandle[b] == 0)
         {
@@ -280,21 +280,21 @@ void cVertexBufferOGL_VBO::CompileSpecific()
     //Pack into temp buffer
     std::vector<char> temp(lTotalBytes);
 
-    for(size_t i=0; i<mvElementArrays.size(); ++i)
+    for(size_t i = 0; i < mvElementArrays.size(); ++i)
     {
         cVtxBufferGLElementArray *pElement = mvElementArrays[i];
 
         const size_t lElementBytes = pElement->mlElementNum * GetVertexFormatByteSize(pElement->mFormat);
         const char *src = (const char*)pElement->GetArrayPtr();
 
-        for(int v=0; v<lVertexCount; ++v)
+        for(int v = 0; v < lVertexCount; ++v)
         {
             char *dst = &temp[v * mlInterleavedStride + mvElementOffsets[i]];
             memcpy(dst, src + v * lElementBytes, lElementBytes);
         }
     }
 
-    for(int b=0; b<2; ++b)
+    for(int b = 0; b < 2; ++b)
     {
         glBindBufferARB(GL_ARRAY_BUFFER_ARB, mlInterleavedHandle[b]);
         glBufferDataARB(GL_ARRAY_BUFFER_ARB, lTotalBytes, &temp[0], usageType);
@@ -313,14 +313,14 @@ void cVertexBufferOGL_VBO::CompileSpecific()
         glGenBuffersARB(1, (GLuint*)&mlElementHandle);
     }
 
-    glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,mlElementHandle);
+    glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, mlElementHandle);
 
     if(mbUse16BitIndices)
     {
         //16bit conversion
         std::vector<unsigned short> shortIndices(GetIndexNum());
 
-        for(int i=0; i<GetIndexNum(); ++i)
+        for(int i = 0; i < GetIndexNum(); ++i)
         {
 #ifdef _DEBUG
             if(mvIndexArray[i] > 65535)
@@ -345,16 +345,16 @@ void cVertexBufferOGL_VBO::CompileSpecific()
                         &mvIndexArray[0], usageType);
     }
 
-    glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,0);
+    glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
 }
 
 //-----------------------------------------------------------------------
 
-iVertexBufferOpenGL* cVertexBufferOGL_VBO::CreateDataCopy(tVertexElementFlag aFlags, eVertexBufferDrawType aDrawType,
+iVertexBufferOpenGL *cVertexBufferOGL_VBO::CreateDataCopy(tVertexElementFlag aFlags, eVertexBufferDrawType aDrawType,
         eVertexBufferUsageType aUsageType,
-        int alReserveVtxSize,int alReserveIdxSize)
+        int alReserveVtxSize, int alReserveIdxSize)
 {
-    return hplNew(cVertexBufferOGL_VBO, (mpLowLevelGraphics,aDrawType,aUsageType,alReserveVtxSize,alReserveIdxSize));
+    return hplNew(cVertexBufferOGL_VBO, (mpLowLevelGraphics, aDrawType, aUsageType, alReserveVtxSize, alReserveIdxSize));
 }
 
 //-----------------------------------------------------------------------
@@ -369,7 +369,7 @@ void cVertexBufferOGL_VBO::SetVertexStates()
     // Set all vertices except position
     bool bHadExtraTextureUnit = false;
 
-    for(size_t i=0; i<mvElementArrays.size(); ++i)
+    for(size_t i = 0; i < mvElementArrays.size(); ++i)
     {
         cVtxBufferGLElementArray *pElement = mvElementArrays[i];
         if(pElement->mType == eVertexBufferElement_Position)
@@ -381,9 +381,9 @@ void cVertexBufferOGL_VBO::SetVertexStates()
         int lSize = pElement->mlElementNum;
 
         int lTextureUnit = GetVertexElementTextureUnit(pElement->mType);
-        if(lTextureUnit >=0)
+        if(lTextureUnit >= 0)
         {
-            if(lTextureUnit>0)
+            if(lTextureUnit > 0)
             {
                 bHadExtraTextureUnit = true;
             }
@@ -425,7 +425,7 @@ void cVertexBufferOGL_VBO::SetVertexStates()
 
     ////////////////////////////////////////
     // Set position vertex, so it is set last.
-    for(size_t i=0; i<mvElementArrays.size(); ++i)
+    for(size_t i = 0; i < mvElementArrays.size(); ++i)
     {
         cVtxBufferGLElementArray *pElement = mvElementArrays[i];
         if(pElement->mType != eVertexBufferElement_Position)
@@ -439,7 +439,7 @@ void cVertexBufferOGL_VBO::SetVertexStates()
         glEnableClientState( GetGLArrayFromVertexElement(pElement->mType) );
 
         const char *offset = (const char*)NULL + mvElementOffsets[i];
-        glVertexPointer(lSize,GLType, (GLsizei)mlInterleavedStride, offset);
+        glVertexPointer(lSize, GLType, (GLsizei)mlInterleavedStride, offset);
     }
 
     glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);

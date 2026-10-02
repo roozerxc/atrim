@@ -28,7 +28,7 @@ enum eSoundEntryType
 
 //----------------------------------------
 
-class cSoundRayCallback :public iPhysicsRayCallback
+class cSoundRayCallback : public iPhysicsRayCallback
 {
 public:
     void Reset();
@@ -38,7 +38,7 @@ public:
     }
 
     bool BeforeIntersect(iPhysicsBody *pBody);
-    bool OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams);
+    bool OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams);
 
 private:
     bool mbHasCollided;
@@ -62,13 +62,13 @@ class cSoundEntry
 public:
     cSoundEntry(const tString& asName, iSoundChannel* apSound, float afVolume,
                 eSoundEntryType aType, bool ab3D,
-                bool abStream,int alId,
+                bool abStream, int alId,
                 cSoundHandler *apSoundHandler);
     ~cSoundEntry();
 
     bool Update(double adFixedDelta);
 
-    inline const tString& GetName() const
+    inline const tString &GetName() const
     {
         return msName;
     }
@@ -80,7 +80,7 @@ public:
     {
         return mlId;
     }
-    inline iSoundChannel* GetChannel() const
+    inline iSoundChannel *GetChannel() const
     {
         return mpSound;
     }
@@ -103,14 +103,14 @@ public:
     void FadeSpeedMulTo(float afDestMul, float afSpeed);
 
     void FadeOut(float afSpeed);
-    void FadeIn(float afVolumeMul,float afSpeed);
+    void FadeIn(float afVolumeMul, float afSpeed);
 
-    iSoundChannel* GetSoundChannel()
+    iSoundChannel *GetSoundChannel()
     {
         return mpSound;
     }
 
-    iSoundEntryCallback* GetCallBack()
+    iSoundEntryCallback *GetCallBack()
     {
         return mpCallback;
     }
@@ -135,7 +135,7 @@ private:
     void Update3DSpecifics(double adFixedDelta);
 
     tString msName;
-    iSoundChannel* mpSound;
+    iSoundChannel *mpSound;
     cSoundHandler *mpSoundHandler;
 
     eSoundEntryType mType;
@@ -175,9 +175,9 @@ private:
 
 //----------------------------------------
 
-typedef std::list<cSoundEntry*> tSoundEntryList;
+typedef std::list<cSoundEntry *> tSoundEntryList;
 typedef tSoundEntryList::iterator tSoundEntryListIt;
-typedef cSTLIterator<cSoundEntry,tSoundEntryList,tSoundEntryListIt> tSoundEntryIterator;
+typedef cSTLIterator<cSoundEntry, tSoundEntryList, tSoundEntryListIt> tSoundEntryIterator;
 
 class cResources;
 
@@ -206,26 +206,26 @@ public:
      * \param alPriorityModifier The priority of the sound, if 3D then this number is added to a calculated priority based on distance from listener.
      * \return
      */
-    cSoundEntry* Play(    const tString& asName,bool abLoop,float afVolume,const cVector3f& avPos,
-                          float afMinDist,float afMaxDist, eSoundEntryType aEntryType,
+    cSoundEntry *Play(    const tString& asName, bool abLoop, float afVolume, const cVector3f& avPos,
+                          float afMinDist, float afMaxDist, eSoundEntryType aEntryType,
                           bool abRelative, bool ab3D, int alPriorityModifier, bool abStream,
-                          bool *apNotEnoughChannels=NULL);
+                          bool *apNotEnoughChannels = NULL);
 
-    cSoundEntry* Play3D(    const tString& asName,bool abLoop,float afVolume,const cVector3f& avPos,
-                            float afMinDist,float afMaxDist,
+    cSoundEntry *Play3D(    const tString& asName, bool abLoop, float afVolume, const cVector3f& avPos,
+                            float afMinDist, float afMaxDist,
                             eSoundEntryType aEntryType = eSoundEntryType_World,
-                            bool abRelative=false,
-                            int alPriorityModifier=0, bool abStream=false, bool *apNotEnoughChannels=NULL);
+                            bool abRelative = false,
+                            int alPriorityModifier = 0, bool abStream = false, bool *apNotEnoughChannels = NULL);
 
-    cSoundEntry* PlayGuiStream(    const tString& asFileName,bool abLoop,float afVolume,const cVector3f& avPos=cVector3f(0,0,1),
-                                   eSoundEntryType aEntryType = eSoundEntryType_Gui, bool *apNotEnoughChannels=NULL);
+    cSoundEntry *PlayGuiStream(    const tString& asFileName, bool abLoop, float afVolume, const cVector3f& avPos = cVector3f(0, 0, 1),
+                                   eSoundEntryType aEntryType = eSoundEntryType_Gui, bool *apNotEnoughChannels = NULL);
 
-    cSoundEntry* PlayGui(    const tString& asName,bool abLoop,float afVolume,const cVector3f& avPos=cVector3f(0,0,1),
-                             eSoundEntryType aEntryType = eSoundEntryType_Gui, bool *apNotEnoughChannels=NULL);
+    cSoundEntry *PlayGui(    const tString& asName, bool abLoop, float afVolume, const cVector3f& avPos = cVector3f(0, 0, 1),
+                             eSoundEntryType aEntryType = eSoundEntryType_Gui, bool *apNotEnoughChannels = NULL);
 
-    cSoundEntry* PlaySoundEntityGui(const tString& asName,bool abLoop,float afVolume,
+    cSoundEntry *PlaySoundEntityGui(const tString& asName, bool abLoop, float afVolume,
                                     eSoundEntryType aEntryType = eSoundEntryType_Gui,
-                                    const cVector3f& avPos=cVector3f(0,0,1), bool *apNotEnoughChannels=NULL);
+                                    const cVector3f& avPos = cVector3f(0, 0, 1), bool *apNotEnoughChannels = NULL);
 
 
     void SetSilent(bool abX)
@@ -243,7 +243,7 @@ public:
     void StopAll(tFlag mTypes);
     void PauseAll(tFlag mTypes);
     void ResumeAll(tFlag mTypes);
-    void FadeOutAll(tFlag mTypes,float afFadeSpeed, bool abDisableStop);
+    void FadeOutAll(tFlag mTypes, float afFadeSpeed, bool abDisableStop);
 
     bool IsPlaying(const tString& asName);
 
@@ -257,36 +257,36 @@ public:
      * \return if alId >=0, alId is returned, else the lowest free id.
      */
     int SetGlobalVolume(float afVolume, tFlag mAffectedTypes, int alId);
-    int SetGlobalSpeed(float afSpeed,tFlag mAffectedTypes, int alId);
+    int SetGlobalSpeed(float afSpeed, tFlag mAffectedTypes, int alId);
 
-    int FadeGlobalVolume(float afDestVolume, float afSpeed,tFlag mAffectedTypes, int alId, bool abDestroyIdAtDest);
-    int FadeGlobalSpeed(float afDestSpeed, float afSpeed,tFlag mAffectedTypes, int alId, bool abDestroyIdAtDest);
+    int FadeGlobalVolume(float afDestVolume, float afSpeed, tFlag mAffectedTypes, int alId, bool abDestroyIdAtDest);
+    int FadeGlobalSpeed(float afDestSpeed, float afSpeed, tFlag mAffectedTypes, int alId, bool abDestroyIdAtDest);
 
     float GetGlobalVolume(eSoundEntryType aType);
     float GetGlobalSpeed(eSoundEntryType aType);
 
-    cMultipleSettingsHandler* GetGlobalVolumeSettingsHandler()
+    cMultipleSettingsHandler *GetGlobalVolumeSettingsHandler()
     {
         return &mGlobalVolumeHandler;
     }
-    cMultipleSettingsHandler* GetGlobalSpeedSettingsHandler()
+    cMultipleSettingsHandler *GetGlobalSpeedSettingsHandler()
     {
         return &mGlobalSpeedHandler;
     }
 
     void SetWorld(cWorld *apWorld);
 
-    iSoundChannel* CreateChannel(const tString& asName, int alPriority, bool abStream, bool *apNotEnoughChannels);
+    iSoundChannel *CreateChannel(const tString& asName, int alPriority, bool abStream, bool *apNotEnoughChannels);
 
-    tSoundEntryList* GetEntryList();
+    tSoundEntryList *GetEntryList();
 
     bool CheckSoundIsBlocked(const cVector3f& avSoundPosition);
 
 private:
-    cSoundEntry* GetEntry(const tString& asName);
+    cSoundEntry *GetEntry(const tString& asName);
 
-    iLowLevelSound* mpLowLevelSound;
-    cResources* mpResources;
+    iLowLevelSound *mpLowLevelSound;
+    cResources *mpResources;
 
     tSoundEntryList m_lstSoundEntries;
 

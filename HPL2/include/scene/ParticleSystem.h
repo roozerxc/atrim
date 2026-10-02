@@ -26,10 +26,10 @@ class cParticleSystem;
 class cParticleSystemData : public iResourceBase
 {
 public:
-    cParticleSystemData(const tString &asName,cResources* apResources,cGraphics *apGraphics);
+    cParticleSystemData(const tString &asName, cResources* apResources, cGraphics *apGraphics);
     virtual ~cParticleSystemData();
 
-    cParticleSystem* Create(tString asName, cVector3f avSize);
+    cParticleSystem *Create(tString asName, cVector3f avSize);
 
     bool LoadFromFile(const tWString &asFile);
     bool LoadFromElement(cXmlElement* apElement);
@@ -43,16 +43,16 @@ public:
     void Unload() {}
     void Destroy() {}
 
-    iParticleEmitterData* GetEmitterData(int alIdx) const
+    iParticleEmitterData *GetEmitterData(int alIdx) const
     {
         return mvEmitterData[alIdx];
     }
 
 private:
-    cResources* mpResources;
+    cResources *mpResources;
     cGraphics *mpGraphics;
 
-    std::vector<iParticleEmitterData*> mvEmitterData;
+    std::vector<iParticleEmitterData *> mvEmitterData;
 };
 
 //----------------------------------------------------
@@ -65,7 +65,7 @@ class cParticleSystem : public iEntity3D
 #endif
     friend class iParticleEmitter;
 public:
-    cParticleSystem(    const tString asName,cParticleSystemData *apData,
+    cParticleSystem(    const tString asName, cParticleSystemData *apData,
                         cResources *apResources, cGraphics *apGraphics);
     ~cParticleSystem();
 
@@ -92,7 +92,7 @@ public:
     void KillInstantly();
 
     void AddEmitter(iParticleEmitter* apEmitter);
-    iParticleEmitter* GetEmitter(int alIdx);
+    iParticleEmitter *GetEmitter(int alIdx);
     int GetEmitterNum();
 
     tString GetEntityType()
@@ -109,11 +109,11 @@ public:
         mvDataSize = avSize;
     }
 
-    const tString& GetDataName()
+    const tString &GetDataName()
     {
         return msDataName;
     }
-    const cVector3f& GetDataSize()
+    const cVector3f &GetDataSize()
     {
         return mvDataSize;
     }
@@ -193,7 +193,7 @@ private:
     cParticleManager *mpParticleManager;
     cParticleSystemData *mpData;
 
-    std::vector<iParticleEmitter*> mvEmitters;
+    std::vector<iParticleEmitter *> mvEmitters;
 
     bool mbRemoveWhenDead;
 

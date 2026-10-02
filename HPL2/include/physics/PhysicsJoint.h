@@ -18,11 +18,11 @@ class cSoundEntity;
 class iPhysicsJoint;
 class iPhysicsController;
 
-typedef std::map<tString, iPhysicsController*> tPhysicsControllerMap;
+typedef std::map<tString, iPhysicsController *> tPhysicsControllerMap;
 typedef tPhysicsControllerMap::iterator tPhysicsControllerMapIt;
 
 
-typedef cSTLMapIterator<iPhysicsController*, tPhysicsControllerMap, tPhysicsControllerMapIt> cPhysicsControllerIterator;
+typedef cSTLMapIterator<iPhysicsController *, tPhysicsControllerMap, tPhysicsControllerMapIt> cPhysicsControllerIterator;
 
 //-----------------------------------
 
@@ -63,8 +63,8 @@ class iPhysicsJointCallback
 public:
     virtual ~iPhysicsJointCallback() {}
 
-    virtual void OnMinLimit(iPhysicsJoint *apJoint)=0;
-    virtual void OnMaxLimit(iPhysicsJoint *apJoint)=0;
+    virtual void OnMinLimit(iPhysicsJoint *apJoint) = 0;
+    virtual void OnMaxLimit(iPhysicsJoint *apJoint) = 0;
 
     //Ugly trick to support joint script callback.
     virtual bool IsScript()
@@ -82,10 +82,10 @@ class iPhysicsJoint
 #endif
 public:
     iPhysicsJoint(    const tString &asName, iPhysicsBody *apParentBody, iPhysicsBody *apChildBody,
-                      iPhysicsWorld *apWorld,const cVector3f &avPivotPoint, const cVector3f &avPinDir);
+                      iPhysicsWorld *apWorld, const cVector3f &avPivotPoint, const cVector3f &avPinDir);
     virtual ~iPhysicsJoint();
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -99,46 +99,46 @@ public:
         return mlUniqueID;
     }
 
-    iPhysicsBody * GetParentBody()
+    iPhysicsBody *GetParentBody()
     {
         return mpParentBody;
     }
-    iPhysicsBody * GetChildBody()
+    iPhysicsBody *GetChildBody()
     {
         return mpChildBody;
     }
 
     void RemoveBody(iPhysicsBody *apBody);
 
-    const cVector3f& GetPivotPoint()
+    const cVector3f &GetPivotPoint()
     {
         return mvPivotPoint;
     }
-    const cVector3f& GetPinDir()
+    const cVector3f &GetPinDir()
     {
         return mvPinDir;
     }
 
-    virtual ePhysicsJointType GetType()=0;
+    virtual ePhysicsJointType GetType() = 0;
 
-    virtual void SetCollideBodies(bool abX)=0;
-    virtual bool GetCollideBodies()=0;
+    virtual void SetCollideBodies(bool abX) = 0;
+    virtual bool GetCollideBodies() = 0;
 
-    virtual void SetStiffness(float afX)=0;
-    virtual float GetStiffness()=0;
+    virtual void SetStiffness(float afX) = 0;
+    virtual float GetStiffness() = 0;
 
-    virtual cVector3f GetVelocity()=0;
-    virtual cVector3f GetAngularVelocity()=0;
-    virtual float GetForceSize()=0;
+    virtual cVector3f GetVelocity() = 0;
+    virtual cVector3f GetAngularVelocity() = 0;
+    virtual float GetForceSize() = 0;
 
-    virtual float GetDistance()=0;
-    virtual float GetAngle()=0;
+    virtual float GetDistance() = 0;
+    virtual float GetAngle() = 0;
 
-    cJointLimitEffect* GetMaxLimit()
+    cJointLimitEffect *GetMaxLimit()
     {
         return &mMaxLimit;
     }
-    cJointLimitEffect* GetMinLimit()
+    cJointLimitEffect *GetMinLimit()
     {
         return &mMinLimit;
     }
@@ -195,7 +195,7 @@ public:
         mbAutoDeleteCallback = abAutoDelete;
     }
 
-    iPhysicsJointCallback* GetCallback()
+    iPhysicsJointCallback *GetCallback()
     {
         return mpCallback;
     }
@@ -279,7 +279,7 @@ public:
     }
 
     void AddController(iPhysicsController *apController);
-    iPhysicsController* GetController(const tString &asName);
+    iPhysicsController *GetController(const tString &asName);
     bool ChangeController(const tString &asName);
     cPhysicsControllerIterator GetControllerIterator();
 
@@ -288,7 +288,7 @@ public:
     bool OnPhysicsUpdate();
 
     void SetSound(cSoundEntity *apSound);
-    cSoundEntity* GetSound()
+    cSoundEntity *GetSound()
     {
         return mpSound;
     }
@@ -370,7 +370,7 @@ protected:
     void OnMinLimit();
     void OnNoLimit();
 
-    void CalcSoundFreq(float afSpeed,float *apFreq, float *apVol);
+    void CalcSoundFreq(float afSpeed, float *apFreq, float *apVol);
 
     void LimitEffect(cJointLimitEffect *pEffect);
 };

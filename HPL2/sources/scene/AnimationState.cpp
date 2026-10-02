@@ -41,14 +41,14 @@ cAnimationState::cAnimationState(cAnimation* apAnimation, const tString &asName,
     mfSpeed = 1.0f;
     mfBaseSpeed = 1.0f;
     mfTimePos = 0;
-    mfPrevTimePos=0;
+    mfPrevTimePos = 0;
 
-    mbLoop =false;
+    mbLoop = false;
     mbPaused = false;
 
-    mfSpecialEventTime =0;
+    mfSpecialEventTime = 0;
 
-    mfFadeStep=0;
+    mfFadeStep = 0;
 
     mfFadeSpeed = 0;
 
@@ -83,36 +83,36 @@ void cAnimationState::Update(double adFixedDelta)
     AddTimePosition((float)adFixedDelta);
 
     //Fading
-    if(mfFadeStep!=0)
+    if(mfFadeStep != 0)
     {
-        mfWeight += mfFadeStep*(float)adFixedDelta;
+        mfWeight += mfFadeStep * (float)adFixedDelta;
 
-        if(mfFadeStep<0 && mfWeight<=0)
+        if(mfFadeStep < 0 && mfWeight <= 0)
         {
-            mfWeight =0;
+            mfWeight = 0;
             mbActive = false;
-            mfFadeStep =0;
+            mfFadeStep = 0;
         }
-        else if(mfFadeStep>0 && mfWeight>=1)
+        else if(mfFadeStep > 0 && mfWeight >= 1)
         {
-            mfWeight =1;
-            mfFadeStep =0;
+            mfWeight = 1;
+            mfFadeStep = 0;
         }
     }
 
-    if(mfFadeSpeed!=0)
+    if(mfFadeSpeed != 0)
     {
         mfSpeed += mfFadeSpeed * (float)adFixedDelta;
 
-        if(mfSpeed<0)
+        if(mfSpeed < 0)
         {
-            mfSpeed =0;
-            mfFadeSpeed =0;
+            mfSpeed = 0;
+            mfFadeSpeed = 0;
         }
-        else if(mfSpeed>1.0f)
+        else if(mfSpeed > 1.0f)
         {
-            mfSpeed =1;
-            mfFadeSpeed =0;
+            mfSpeed = 1;
+            mfFadeSpeed = 0;
         }
     }
 }
@@ -121,7 +121,7 @@ void cAnimationState::Update(double adFixedDelta)
 
 bool cAnimationState::IsFading()
 {
-    return mfFadeStep!=0;
+    return mfFadeStep != 0;
 }
 
 
@@ -229,7 +229,7 @@ void cAnimationState::SetTimePosition(float afPosition)
 {
     if(mbLoop)
     {
-        mfTimePos = cMath::Wrap(afPosition,0,mfLength);
+        mfTimePos = cMath::Wrap(afPosition, 0, mfLength);
     }
     else
     {
@@ -278,7 +278,7 @@ void cAnimationState::SetActive(bool abActive)
 
     //Should this really be here?
     mbPaused = false;
-    mfFadeStep =0;
+    mfFadeStep = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -327,11 +327,11 @@ void cAnimationState::AddTimePosition(float afAdd)
 
     mfPrevTimePos = mfTimePos;
 
-    mfTimePos += afAdd*mfSpeed*mfBaseSpeed;
+    mfTimePos += afAdd * mfSpeed * mfBaseSpeed;
 
     if(mbLoop)
     {
-        mfTimePos = cMath::Wrap(mfTimePos,0,mfLength);
+        mfTimePos = cMath::Wrap(mfTimePos, 0, mfLength);
     }
     else
     {
@@ -341,7 +341,7 @@ void cAnimationState::AddTimePosition(float afAdd)
 
 //-----------------------------------------------------------------------
 
-cAnimation* cAnimationState::GetAnimation()
+cAnimation *cAnimationState::GetAnimation()
 {
     return mpAnimation;
 }
@@ -360,7 +360,7 @@ void cAnimationState::CreateSkeletonBoundsFromMesh(cMeshEntity * apMesh, tBoneSt
 
         /////////////////////////
         // Find the smallest delta time
-        for(int i=0; i< mpAnimation->GetTrackNum(); i++)
+        for(int i = 0; i < mpAnimation->GetTrackNum(); i++)
         {
             cAnimationTrack *pTrack = mpAnimation->GetTrack(i);
 
@@ -396,14 +396,14 @@ void cAnimationState::CreateSkeletonBoundsFromMesh(cMeshEntity * apMesh, tBoneSt
             const int lSize = mpAnimation->GetTrackNum();
 
             //Reset bone states
-            for(size_t i=0; i < apvBoneStates->size(); i++)
+            for(size_t i = 0; i < apvBoneStates->size(); i++)
             {
                 cNode3D *pState = (*apvBoneStates)[i];
                 cBone* pBone = pMesh->GetSkeleton()->GetBoneByIndex((int)i);
 
                 if(pState->IsActive())
                 {
-                    pState->SetMatrix(pBone->GetLocalTransform(),false);
+                    pState->SetMatrix(pBone->GetLocalTransform(), false);
                 }
             }
 
@@ -411,7 +411,7 @@ void cAnimationState::CreateSkeletonBoundsFromMesh(cMeshEntity * apMesh, tBoneSt
             cNode3D* pState;
             /////////////////////////////////////
             //Go through all tracks in animation and apply to nodes
-            for(int i=0; i<lSize; i++)
+            for(int i = 0; i < lSize; i++)
             {
                 pTrack = mpAnimation->GetTrack(i);
 
@@ -424,7 +424,7 @@ void cAnimationState::CreateSkeletonBoundsFromMesh(cMeshEntity * apMesh, tBoneSt
 
                 ///////////////////////////////////
                 //Apply the animation track to node.
-                pTrack->ApplyToNode(pState,fTimePosition,fWeight,true);
+                pTrack->ApplyToNode(pState, fTimePosition, fWeight, true);
             }
 
             for(int i = 0; i < (int)apvBoneStates->size(); i++)
@@ -448,7 +448,7 @@ void cAnimationState::CreateSkeletonBoundsFromMesh(cMeshEntity * apMesh, tBoneSt
 
             ///////////////////////////////
             // Create bounding volume at this time
-            for(size_t i=0; i < lBoneSize; i++)
+            for(size_t i = 0; i < lBoneSize; i++)
             {
                 float fBoundingRadius = pMesh->GetBoneBoundingRadius((int)i);
 
@@ -488,7 +488,7 @@ bool cAnimationState::TryGetBoundingVolumeAtTime(float afTime, cVector3f & avMin
 cAnimationEvent *cAnimationState::CreateEvent()
 {
     cAnimationEvent *pEvent = hplNew( cAnimationEvent, () );
-    pEvent->mfTime =0;
+    pEvent->mfTime = 0;
     pEvent->mType = eAnimationEventType_LastEnum;
     pEvent->msValue = "";
     mvEvents.push_back(pEvent);
@@ -510,21 +510,21 @@ int cAnimationState::GetEventNum()
 
 void cAnimationState::AddTransition(int alAnimId, int alPreviousAnimId, float afMinTime, float afMaxTime)
 {
-    mvTransitions.push_back(cAnimationTransition(alAnimId,alPreviousAnimId, afMinTime, afMaxTime));
+    mvTransitions.push_back(cAnimationTransition(alAnimId, alPreviousAnimId, afMinTime, afMaxTime));
 }
 
-cAnimationTransition* cAnimationState::GetTransitionFromPrevAnim(int alPreviousAnimId, float afPreviousTimePos)
+cAnimationTransition *cAnimationState::GetTransitionFromPrevAnim(int alPreviousAnimId, float afPreviousTimePos)
 {
     cAnimationTransition *pTransOut = NULL;
 
-    for(size_t i=0; i<mvTransitions.size(); ++i)
+    for(size_t i = 0; i < mvTransitions.size(); ++i)
     {
         cAnimationTransition &trans = mvTransitions[i];
 
-        if(trans.mlPreviousAnimId == alPreviousAnimId || trans.mlPreviousAnimId<0)
+        if(trans.mlPreviousAnimId == alPreviousAnimId || trans.mlPreviousAnimId < 0)
         {
             //Check if within time limits
-            if(trans.mfMinTime>=0 && trans.mfMaxTime>=0 && afPreviousTimePos>=0)
+            if(trans.mfMinTime >= 0 && trans.mfMaxTime >= 0 && afPreviousTimePos >= 0)
             {
                 if(afPreviousTimePos < trans.mfMinTime || afPreviousTimePos > trans.mfMaxTime)
                 {
@@ -533,7 +533,7 @@ cAnimationTransition* cAnimationState::GetTransitionFromPrevAnim(int alPreviousA
             }
 
             pTransOut = &trans;
-            if(trans.mlPreviousAnimId>=0 || alPreviousAnimId<0)
+            if(trans.mlPreviousAnimId >= 0 || alPreviousAnimId < 0)
             {
                 break;    //if not a default transition, we know we got the right one.
             }
@@ -543,7 +543,7 @@ cAnimationTransition* cAnimationState::GetTransitionFromPrevAnim(int alPreviousA
     return pTransOut;
 }
 
-cAnimationTransition* cAnimationState::GetTransition(int alIdx)
+cAnimationTransition *cAnimationState::GetTransition(int alIdx)
 {
     return &mvTransitions[alIdx];
 }

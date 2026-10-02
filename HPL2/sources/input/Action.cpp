@@ -32,13 +32,13 @@ void iSubAction::Update(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-cAction::cAction(const tString& asName,int alId, cInput *apInput)
+cAction::cAction(const tString& asName, int alId, cInput *apInput)
 {
     msName = asName;
     mlId = alId;
     mpInput = apInput;
 
-    mbBecameTriggerd= false;
+    mbBecameTriggerd = false;
     mbIsTriggerd = false;
 
     mfTimeCount = -1.0;
@@ -66,12 +66,12 @@ cAction::~cAction()
 
 void cAction::AddKey(eKey aKey)
 {
-    AddSubAction( hplNew(cActionKeyboard, (mpInput,aKey) ));
+    AddSubAction( hplNew(cActionKeyboard, (mpInput, aKey) ));
 }
 
 void cAction::AddMouseButton(eMouseButton aButton)
 {
-    AddSubAction( hplNew(cActionMouseButton, (mpInput,aButton) ));
+    AddSubAction( hplNew(cActionMouseButton, (mpInput, aButton) ));
 }
 #if USE_GAMEPAD
 void cAction::AddGamepadButton(int alPadIndex, eGamepadButton aButton)
@@ -114,9 +114,9 @@ bool cAction::IsTriggerd()
 
 bool cAction::WasTriggerd()
 {
-    if(mbBecameTriggerd && mbIsDown==false)
+    if(mbBecameTriggerd && mbIsDown == false)
     {
-        mbBecameTriggerd=false;
+        mbBecameTriggerd = false;
         return true;
     }
 
@@ -127,9 +127,9 @@ bool cAction::WasTriggerd()
 
 bool cAction::BecameTriggerd()
 {
-    if(mbIsTriggerd==false && mbIsDown)
+    if(mbIsTriggerd == false && mbIsDown)
     {
-        mbIsTriggerd=true;
+        mbIsTriggerd = true;
         return true;
     }
 
@@ -142,20 +142,20 @@ bool cAction::DoubleTriggerd(float afLimit)
 {
     if(!mbDoubleTrigger_Down && mbIsDown)
     {
-        mbDoubleTrigger_Down=true;
+        mbDoubleTrigger_Down = true;
 
         if(mbDoubleTrigger_Triggered ||
-                mfTimeCount <0 || mfTimeCount > afLimit)
+                mfTimeCount < 0 || mfTimeCount > afLimit)
         {
-            mbDoubleTrigger_Triggered=false;
-            mfTimeCount =0;
+            mbDoubleTrigger_Triggered = false;
+            mfTimeCount = 0;
             return false;
         }
         else
         {
-            mfTimeCount =0;
-            mbIsTriggerd=true;
-            mbDoubleTrigger_Triggered=true;
+            mfTimeCount = 0;
+            mbIsTriggerd = true;
+            mbDoubleTrigger_Triggered = true;
             return true;
         }
     }
@@ -176,7 +176,7 @@ void cAction::ResetToCurrentState()
     }
     else
     {
-        mbBecameTriggerd=false;
+        mbBecameTriggerd = false;
     }
 }
 
@@ -186,7 +186,7 @@ void cAction::Update(double adFixedDelta)
 {
     mbIsDown = false;
 
-    for(size_t i=0; i< mvSubActions.size(); ++i)
+    for(size_t i = 0; i < mvSubActions.size(); ++i)
     {
         iSubAction *pSubAction = mvSubActions[i];
         if(pSubAction->IsTriggerd())
@@ -197,11 +197,11 @@ void cAction::Update(double adFixedDelta)
 
     if(mbIsDown)
     {
-        mbBecameTriggerd=true;
+        mbBecameTriggerd = true;
     }
     else
     {
-        mbIsTriggerd=false;
+        mbIsTriggerd = false;
         mbDoubleTrigger_Down = false;
 
         if(mfTimeCount >= 0)

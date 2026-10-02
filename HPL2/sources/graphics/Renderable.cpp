@@ -19,7 +19,7 @@ iRenderable::iRenderable(const tString &asName) : iEntity3D(asName)
 
     mbStatic = false;
 
-    mlRenderFlags =eRenderableFlag_VisibleInReflection | eRenderableFlag_VisibleInNonReflection;
+    mlRenderFlags = eRenderableFlag_VisibleInReflection | eRenderableFlag_VisibleInNonReflection;
 
     mfIlluminationAmount = 1.0f;
     mfCoverageAmount = 1.0f;
@@ -27,12 +27,12 @@ iRenderable::iRenderable(const tString &asName) : iEntity3D(asName)
     mlRenderFrameCount = -1;
 
     mlCalcScaleMatrixCount = -1;
-    mvCalcScale = cVector3f(1,1,1);
+    mvCalcScale = cVector3f(1, 1, 1);
 
     mbForceShadow = false;
 
     mbIsOneSided = false;
-    mvOneSidedNormal =0;
+    mvOneSidedNormal = 0;
 
     mpModelMatrix = NULL;
 
@@ -92,10 +92,10 @@ void iRenderable::SetVisible(bool abVisible)
 
 //-----------------------------------------------------------------------
 
-cMatrixf* iRenderable::GetInvModelMatrix()
+cMatrixf *iRenderable::GetInvModelMatrix()
 {
     cMatrixf *pModelMatrix = GetModelMatrix(NULL);
-    if(pModelMatrix==NULL)
+    if(pModelMatrix == NULL)
     {
         return NULL;
     }
@@ -127,7 +127,7 @@ void iRenderable::SetCoverageAmount(float afX)
 
 //-----------------------------------------------------------------------
 
-const cVector3f& iRenderable::GetCalcScale()
+const cVector3f &iRenderable::GetCalcScale()
 {
     cMatrixf *pModelMatrix = GetModelMatrix(NULL);
 

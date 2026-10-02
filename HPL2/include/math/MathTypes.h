@@ -72,15 +72,15 @@ enum eCollision
 class cLinearOscillation
 {
 public:
-    float max,min,val, up_speed, down_speed;
+    float max, min, val, up_speed, down_speed;
 
     cLinearOscillation() {}
-    cLinearOscillation(float afMin, float afMax, float afVal, float afUpSpeed,float afDownSpeed)
+    cLinearOscillation(float afMin, float afMax, float afVal, float afUpSpeed, float afDownSpeed)
     {
-        SetUp(afMin,afMax,afVal, afUpSpeed, afDownSpeed);
+        SetUp(afMin, afMax, afVal, afUpSpeed, afDownSpeed);
     }
 
-    void SetUp(float afMin, float afMax, float afVal, float afUpSpeed,float afDownSpeed)
+    void SetUp(float afMin, float afMax, float afVal, float afUpSpeed, float afDownSpeed)
     {
         min = afMin;
         max = afMax;
@@ -167,7 +167,7 @@ private:
 template <class T> class cPlane
 {
 public:
-    T a,b,c,d;
+    T a, b, c, d;
 
     /////////////////
 
@@ -204,10 +204,10 @@ public:
 
     inline cPlane<T> operator*(const T &aVal) const
     {
-        return cPlane<T>(a*aVal, b*aVal,c*aVal, d*aVal);
+        return cPlane<T>(a * aVal, b * aVal, c * aVal, d * aVal);
     }
 
-    inline cPlane<T>& operator*=(const T &aVal) const
+    inline cPlane<T> &operator*=(const T &aVal) const
     {
         a *= aVal;
         b *= aVal;
@@ -225,10 +225,10 @@ public:
 
     /////////////////
 
-    cPlane(const cVector3<T> &avPoint0,const cVector3<T> &avPoint1,
+    cPlane(const cVector3<T> &avPoint0, const cVector3<T> &avPoint1,
            const cVector3<T> &avPoint2)
     {
-        FromPoints(avPoint0,avPoint1,avPoint2);
+        FromPoints(avPoint0, avPoint1, avPoint2);
     }
 
     /////////////////
@@ -240,12 +240,12 @@ public:
         c = avNormal.z;
 
         //Dot product
-        d = -(a*avPoint.x + b*avPoint.y + c*avPoint.z);
+        d = -(a * avPoint.x + b * avPoint.y + c * avPoint.z);
     }
 
     /////////////////
 
-    inline void FromPoints(const cVector3<T> &avPoint0,const cVector3<T> &avPoint1,
+    inline void FromPoints(const cVector3<T> &avPoint0, const cVector3<T> &avPoint1,
                            const cVector3<T> &avPoint2)
     {
         cVector3<T> vEdge1 = avPoint1 - avPoint0;
@@ -257,7 +257,7 @@ public:
         c = vEdge1.x * vEdge2.y - vEdge1.y * vEdge2.x;
 
         //Dot product
-        d = -(a*avPoint0.x + b*avPoint0.y + c*avPoint0.z);
+        d = -(a * avPoint0.x + b * avPoint0.y + c * avPoint0.z);
 
         Normalize();
     }
@@ -266,7 +266,7 @@ public:
 
     inline void Normalize()
     {
-        T fMag = sqrt(a*a + b*b + c*c);
+        T fMag = sqrt(a * a + b * b + c * c);
         a = a / fMag;
         b = b / fMag;
         c = c / fMag;
@@ -277,7 +277,7 @@ public:
 
     inline cVector3<T> GetNormal() const
     {
-        return cVector3<T>(a,b,c);
+        return cVector3<T>(a, b, c);
     }
 
     /////////////////
@@ -321,7 +321,7 @@ typedef cSphere<float> cSpheref;
 template <class T> class cRect2
 {
 public:
-    T x,y,w,h;
+    T x, y, w, h;
     cRect2(T aX, T aY, T aW, T aH)
     {
         x = aX;

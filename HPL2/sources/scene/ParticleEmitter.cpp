@@ -29,14 +29,14 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-iParticleEmitterData::iParticleEmitterData(const tString &asName,cResources* apResources,
+iParticleEmitterData::iParticleEmitterData(const tString &asName, cResources* apResources,
         cGraphics *apGraphics)
 {
     msName = asName;
     mpResources = apResources;
     mpGraphics = apGraphics;
 
-    mfWarmUpTime =0;
+    mfWarmUpTime = 0;
     mfWarmUpStepsPerSec = 20;
 }
 
@@ -44,7 +44,7 @@ iParticleEmitterData::iParticleEmitterData(const tString &asName,cResources* apR
 
 iParticleEmitterData::~iParticleEmitterData()
 {
-    for(int i=0; i<(int)mvMaterials.size(); i++)
+    for(int i = 0; i < (int)mvMaterials.size(); i++)
     {
         if(mvMaterials[i])
         {
@@ -67,10 +67,10 @@ void iParticleEmitterData::AddMaterial(cMaterial *apMaterial)
 
 //-----------------------------------------------------------------------
 
-iParticleEmitter::iParticleEmitter(tString asName,tMaterialVec *avMaterials,
+iParticleEmitter::iParticleEmitter(tString asName, tMaterialVec *avMaterials,
                                    unsigned int alMaxParticles, cVector3f avSize,
-                                   cGraphics *apGraphics,cResources *apResources)
-    :iRenderable(asName)
+                                   cGraphics *apGraphics, cResources *apResources)
+    : iRenderable(asName)
 {
 
     mpGraphics = apGraphics;
@@ -79,12 +79,12 @@ iParticleEmitter::iParticleEmitter(tString asName,tMaterialVec *avMaterials,
     /////////////////////////////////////
     //Create and set up particle data
     mvParticles.resize(alMaxParticles);
-    for(int i=0; i<(int)alMaxParticles; i++)
+    for(int i = 0; i < (int)alMaxParticles; i++)
     {
         mvParticles[i] = hplNew( cParticle, () );
     }
     mlMaxParticles = alMaxParticles;
-    mlNumOfParticles =0;
+    mlNumOfParticles = 0;
 
     mvMaterials = avMaterials;
 
@@ -92,42 +92,42 @@ iParticleEmitter::iParticleEmitter(tString asName,tMaterialVec *avMaterials,
     //Create vertex buffer
     mpVtxBuffer = apGraphics->GetLowLevel()->CreateVertexBuffer(eVertexBufferType_Hardware,
                   eVertexBufferDrawType_Tri, eVertexBufferUsageType_Stream,
-                  alMaxParticles*4, alMaxParticles*6);
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Position,eVertexBufferElementFormat_Float,4);
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Color0,eVertexBufferElementFormat_Float,4);
-    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Texture0,eVertexBufferElementFormat_Float,3);
+                  alMaxParticles * 4, alMaxParticles * 6);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Position, eVertexBufferElementFormat_Float, 4);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Color0, eVertexBufferElementFormat_Float, 4);
+    mpVtxBuffer->CreateElementArray(eVertexBufferElement_Texture0, eVertexBufferElementFormat_Float, 3);
 
     //////////////////////////////////
     //Fill the indices with quads
-    for(int i=0; i<(int)alMaxParticles; i++)
+    for(int i = 0; i < (int)alMaxParticles; i++)
     {
-        int lStart = i*4;
-        for(int j=0; j<3; j++)
+        int lStart = i * 4;
+        for(int j = 0; j < 3; j++)
         {
             mpVtxBuffer->AddIndex(lStart + j);
         }
-        for(int j=2; j<5; j++)
+        for(int j = 2; j < 5; j++)
         {
-            mpVtxBuffer->AddIndex(lStart + (j==4?0:j));
+            mpVtxBuffer->AddIndex(lStart + (j == 4 ? 0 : j));
         }
     }
 
     //////////////////////////////////
     //Fill with texture coords (will do for most particle systems)
-    for(int i=0; i<(int)alMaxParticles; i++)
+    for(int i = 0; i < (int)alMaxParticles; i++)
     {
-        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(1,1,0));
-        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(0,1,0));
-        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(0,0,0));
-        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(1,0,0));
+        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(1, 1, 0));
+        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(0, 1, 0));
+        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(0, 0, 0));
+        mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(1, 0, 0));
     }
 
     //////////////////////////////////
     //Set default values for pos and col
-    for(int i=0; i<(int)alMaxParticles*4; i++)
+    for(int i = 0; i < (int)alMaxParticles * 4; i++)
     {
         mpVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position, 0);
-        mpVtxBuffer->AddVertexColor(eVertexBufferElement_Color0, cColor(1,1));
+        mpVtxBuffer->AddVertexColor(eVertexBufferElement_Color0, cColor(1, 1));
     }
 
     ////////////////////////////////////
@@ -137,18 +137,18 @@ iParticleEmitter::iParticleEmitter(tString asName,tMaterialVec *avMaterials,
 
     ////////////////////////////////////
     //Setup vars
-    mlSleepCount = 60*5; //Start with high sleep count to make sure a looping particle system reaches equilibrium. 5 secs should eb enough!
+    mlSleepCount = 60 * 5; //Start with high sleep count to make sure a looping particle system reaches equilibrium. 5 secs should eb enough!
 
     mbDying = false;
-    mfFrame =0;
+    mfFrame = 0;
 
     mbUpdateGfx = true;
     mbUpdateBV = true;
 
     mlDirectionUpdateCount = -1;
-    mvDirection = cVector3f(0,0,0);
+    mvDirection = cVector3f(0, 0, 0);
 
-    mvMaxDrawSize =0;
+    mvMaxDrawSize = 0;
 
     mlAxisDrawUpdateCount = -1;
 
@@ -168,7 +168,7 @@ iParticleEmitter::iParticleEmitter(tString asName,tMaterialVec *avMaterials,
 
 iParticleEmitter::~iParticleEmitter()
 {
-    for(int i=0; i<(int)mvParticles.size(); i++)
+    for(int i = 0; i < (int)mvParticles.size(); i++)
     {
         hplDelete(mvParticles[i]);
     }
@@ -188,7 +188,7 @@ void iParticleEmitter::SetSubDivUV(const cVector2l &avSubDiv)
 {
     //Check so that there is any subdivision and that no sub divison axis is
     //equal or below zero
-    if( (avSubDiv.x > 1 || avSubDiv.x > 1) && (avSubDiv.x >0 && avSubDiv.y >0))
+    if( (avSubDiv.x > 1 || avSubDiv.x > 1) && (avSubDiv.x > 0 && avSubDiv.y > 0))
     {
         int lSubDivNum = avSubDiv.x * avSubDiv.y;
 
@@ -197,20 +197,20 @@ void iParticleEmitter::SetSubDivUV(const cVector2l &avSubDiv)
         float fInvW = 1.0f / (float)avSubDiv.x;
         float fInvH = 1.0f / (float)avSubDiv.y;
 
-        for(int x=0; x < avSubDiv.x; ++x)
-            for(int y=0; y < avSubDiv.y; ++y)
+        for(int x = 0; x < avSubDiv.x; ++x)
+            for(int y = 0; y < avSubDiv.y; ++y)
             {
-                int lIdx = y*avSubDiv.x + x;
+                int lIdx = y * avSubDiv.x + x;
 
                 float fX = (float)x;
                 float fY = (float)y;
 
                 cPESubDivision *pSubDiv = &mvSubDivUV[lIdx];
 
-                pSubDiv->mvUV[0] = cVector3f( (fX +1)*fInvW,    (fY +1)*fInvH,0);    //1,1
-                pSubDiv->mvUV[1] = cVector3f( fX*fInvW,            (fY +1)*fInvH,0);    //0,1
-                pSubDiv->mvUV[2] = cVector3f( fX*fInvW,            fY*fInvH,0);        //0,0
-                pSubDiv->mvUV[3] = cVector3f( (fX +1)*fInvW,    fY*fInvH,0);        //1,0
+                pSubDiv->mvUV[0] = cVector3f( (fX + 1) * fInvW,    (fY + 1) * fInvH, 0); //1,1
+                pSubDiv->mvUV[1] = cVector3f( fX * fInvW,            (fY + 1) * fInvH, 0); //0,1
+                pSubDiv->mvUV[2] = cVector3f( fX * fInvW,            fY * fInvH, 0);   //0,0
+                pSubDiv->mvUV[3] = cVector3f( (fX + 1) * fInvW,    fY * fInvH, 0);  //1,0
             }
     }
 
@@ -221,14 +221,14 @@ void iParticleEmitter::SetSubDivUV(const cVector2l &avSubDiv)
 //Seems like this fucntion is never called any more...
 void iParticleEmitter::UpdateLogic(double adFixedDelta)
 {
-    if(IsActive()==false)
+    if(IsActive() == false)
     {
         return;
     }
 
     //////////////////////////////
     // Update sleep
-    if(IsDying()==false && iRenderer::GetRenderFrameCount() != mlRenderFrameCount)
+    if(IsDying() == false && iRenderer::GetRenderFrameCount() != mlRenderFrameCount)
     {
         if(mlSleepCount <= 0)
         {
@@ -238,9 +238,9 @@ void iParticleEmitter::UpdateLogic(double adFixedDelta)
     }
     else
     {
-        if(mlSleepCount<10)
+        if(mlSleepCount < 10)
         {
-            mlSleepCount =10;
+            mlSleepCount = 10;
         }
     }
 
@@ -277,7 +277,7 @@ void iParticleEmitter::KillInstantly()
 
 //-----------------------------------------------------------------------
 
-cMaterial* iParticleEmitter::GetMaterial()
+cMaterial *iParticleEmitter::GetMaterial()
 {
     return (*mvMaterials)[(int)mfFrame];
 }
@@ -306,7 +306,7 @@ static inline void SetTex(float *apTex, const cVector3f &aPos)
     apTex[2] = aPos.z;
 }
 
-bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime)
+bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum, double adFrameTime)
 {
     //if(mbUpdateGfx == false) return;
 
@@ -331,7 +331,7 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
 
         ///////////
         // Below min
-        if(fMinStart >0 && fDistSqr < fMinStart* fMinStart)
+        if(fMinStart > 0 && fDistSqr < fMinStart * fMinStart)
         {
             if(fDistSqr <= fMinEnd * fMinEnd)
             {
@@ -340,12 +340,12 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
             else
             {
                 float fDist = sqrt(fDistSqr);
-                colorMul.a *= (fDist - fMinEnd)/(fMinStart - fMinEnd);
+                colorMul.a *= (fDist - fMinEnd) / (fMinStart - fMinEnd);
             }
         }
         ///////////
         // Above max
-        if(fMaxStart >0 && fDistSqr > fMaxStart* fMaxStart)
+        if(fMaxStart > 0 && fDistSqr > fMaxStart * fMaxStart)
         {
             if(fDistSqr >= fMaxEnd * fMaxEnd)
             {
@@ -354,7 +354,7 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
             else
             {
                 float fDist = sqrt(fDistSqr);
-                colorMul.a *= 1 - (fDist - fMaxStart)/(fMaxEnd - fMaxStart);
+                colorMul.a *= 1 - (fDist - fMaxStart) / (fMaxEnd - fMaxStart);
             }
         }
     }
@@ -406,16 +406,16 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
         {
             float *pTexArray = mpVtxBuffer->GetFloatArray(eVertexBufferElement_Texture0);
 
-            for(int i=0; i<(int)mlNumOfParticles; i++)
+            for(int i = 0; i < (int)mlNumOfParticles; i++)
             {
                 cParticle *pParticle = mvParticles[i];
 
                 cPESubDivision &subDiv = mvSubDivUV[pParticle->mlSubDivNum];
 
-                SetTex(&pTexArray[i*12 + 0*3],subDiv.mvUV[0]);
-                SetTex(&pTexArray[i*12 + 1*3],subDiv.mvUV[1]);
-                SetTex(&pTexArray[i*12 + 2*3],subDiv.mvUV[2]);
-                SetTex(&pTexArray[i*12 + 3*3],subDiv.mvUV[3]);
+                SetTex(&pTexArray[i * 12 + 0 * 3], subDiv.mvUV[0]);
+                SetTex(&pTexArray[i * 12 + 1 * 3], subDiv.mvUV[1]);
+                SetTex(&pTexArray[i * 12 + 2 * 3], subDiv.mvUV[2]);
+                SetTex(&pTexArray[i * 12 + 3 * 3], subDiv.mvUV[3]);
 
                 /*SetTex(&pTexArray[i*12 + 0*3], cVector3f(1,1,0));
                 SetTex(&pTexArray[i*12 + 1*3], cVector3f(0,1,0));
@@ -430,16 +430,16 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
         {
             cVector3f vAdd[4] =
             {
-                cVector3f( mvDrawSize.x,-mvDrawSize.y,0),
-                cVector3f(-mvDrawSize.x,-mvDrawSize.y,0),
-                cVector3f(-mvDrawSize.x, mvDrawSize.y,0),
-                cVector3f( mvDrawSize.x, mvDrawSize.y,0)
+                cVector3f( mvDrawSize.x, -mvDrawSize.y, 0),
+                cVector3f(-mvDrawSize.x, -mvDrawSize.y, 0),
+                cVector3f(-mvDrawSize.x, mvDrawSize.y, 0),
+                cVector3f( mvDrawSize.x, mvDrawSize.y, 0)
             };
 
             //If this is a reflection, need to invert the ordering.
             if(apFrustum->GetInvertsCullMode())
             {
-                for(int i=0; i<4; ++i)
+                for(int i = 0; i < 4; ++i)
                 {
                     vAdd[i].y = -vAdd[i].y;
                 }
@@ -451,9 +451,9 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
 
 
             int lVtxStride = mpVtxBuffer->GetElementNum(eVertexBufferElement_Position);
-            int lVtxQuadSize = lVtxStride*4;
+            int lVtxQuadSize = lVtxStride * 4;
 
-            for(int i=0; i<(int)mlNumOfParticles; i++)
+            for(int i = 0; i < (int)mlNumOfParticles; i++)
             {
                 cParticle *pParticle = mvParticles[i];
 
@@ -468,17 +468,17 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
                 cVector3f vPos = cMath::MatrixMul(apFrustum->GetViewMatrix(), vParticlePos);
                 cColor finalColor = pParticle->mColor * colorMul;
 
-                SetPos(&pPosArray[i*lVtxQuadSize + 0*lVtxStride], vPos + vAdd[0]);
-                SetCol(&pColArray[i*16 + 0*4], finalColor);
+                SetPos(&pPosArray[i * lVtxQuadSize + 0 * lVtxStride], vPos + vAdd[0]);
+                SetCol(&pColArray[i * 16 + 0 * 4], finalColor);
 
-                SetPos(&pPosArray[i*lVtxQuadSize + 1*lVtxStride], vPos + vAdd[1]);
-                SetCol(&pColArray[i*16 + 1*4], finalColor);
+                SetPos(&pPosArray[i * lVtxQuadSize + 1 * lVtxStride], vPos + vAdd[1]);
+                SetCol(&pColArray[i * 16 + 1 * 4], finalColor);
 
-                SetPos(&pPosArray[i*lVtxQuadSize + 2*lVtxStride], vPos + vAdd[2]);
-                SetCol(&pColArray[i*16 + 2*4], finalColor);
+                SetPos(&pPosArray[i * lVtxQuadSize + 2 * lVtxStride], vPos + vAdd[2]);
+                SetCol(&pColArray[i * 16 + 2 * 4], finalColor);
 
-                SetPos(&pPosArray[i*lVtxQuadSize + 3*lVtxStride], vPos + vAdd[3]);
-                SetCol(&pColArray[i*16 + 3*4], finalColor);
+                SetPos(&pPosArray[i * lVtxQuadSize + 3 * lVtxStride], vPos + vAdd[3]);
+                SetCol(&pColArray[i * 16 + 3 * 4], finalColor);
             }
         }
         //////////////////////////////////////////////////
@@ -487,25 +487,25 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
         {
             cVector3f vAdd[4] =
             {
-                cVector3f( mvDrawSize.x,-mvDrawSize.y,0),
-                cVector3f(-mvDrawSize.x,-mvDrawSize.y,0),
-                cVector3f(-mvDrawSize.x, mvDrawSize.y,0),
-                cVector3f( mvDrawSize.x, mvDrawSize.y,0)
+                cVector3f( mvDrawSize.x, -mvDrawSize.y, 0),
+                cVector3f(-mvDrawSize.x, -mvDrawSize.y, 0),
+                cVector3f(-mvDrawSize.x, mvDrawSize.y, 0),
+                cVector3f( mvDrawSize.x, mvDrawSize.y, 0)
             };
 
             //If this is a reflection, need to invert the ordering.
             if(apFrustum->GetInvertsCullMode())
             {
-                for(int i=0; i<4; ++i)
+                for(int i = 0; i < 4; ++i)
                 {
                     vAdd[i].y = -vAdd[i].y;
                 }
             }
 
             int lVtxStride = mpVtxBuffer->GetElementNum(eVertexBufferElement_Position);
-            int lVtxQuadSize = lVtxStride*4;
+            int lVtxQuadSize = lVtxStride * 4;
 
-            for(int i=0; i<(int)mlNumOfParticles; i++)
+            for(int i = 0; i < (int)mlNumOfParticles; i++)
             {
                 cParticle *pParticle = mvParticles[i];
 
@@ -531,34 +531,34 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
                     cMatrixf mtxRotationMatrix = cMath::MatrixRotateZ(pParticle->mfSpin);
 
 
-                    SetPos(&pPosArray[i*lVtxQuadSize + 0*lVtxStride], vPos + cMath::MatrixMul(mtxRotationMatrix, vAdd[0]*vParticleSize));
-                    SetCol(&pColArray[i*16 + 0*4], finalColor);
+                    SetPos(&pPosArray[i * lVtxQuadSize + 0 * lVtxStride], vPos + cMath::MatrixMul(mtxRotationMatrix, vAdd[0]*vParticleSize));
+                    SetCol(&pColArray[i * 16 + 0 * 4], finalColor);
 
-                    SetPos(&pPosArray[i*lVtxQuadSize + 1*lVtxStride], vPos + cMath::MatrixMul(mtxRotationMatrix, vAdd[1]*vParticleSize));
-                    SetCol(&pColArray[i*16 + 1*4], finalColor);
+                    SetPos(&pPosArray[i * lVtxQuadSize + 1 * lVtxStride], vPos + cMath::MatrixMul(mtxRotationMatrix, vAdd[1]*vParticleSize));
+                    SetCol(&pColArray[i * 16 + 1 * 4], finalColor);
 
-                    SetPos(&pPosArray[i*lVtxQuadSize + 2*lVtxStride], vPos + cMath::MatrixMul(mtxRotationMatrix, vAdd[2]*vParticleSize));
-                    SetCol(&pColArray[i*16 + 2*4], finalColor);
+                    SetPos(&pPosArray[i * lVtxQuadSize + 2 * lVtxStride], vPos + cMath::MatrixMul(mtxRotationMatrix, vAdd[2]*vParticleSize));
+                    SetCol(&pColArray[i * 16 + 2 * 4], finalColor);
 
-                    SetPos(&pPosArray[i*lVtxQuadSize + 3*lVtxStride], vPos + cMath::MatrixMul(mtxRotationMatrix, vAdd[3]*vParticleSize));
-                    SetCol(&pColArray[i*16 + 3*4], finalColor);
+                    SetPos(&pPosArray[i * lVtxQuadSize + 3 * lVtxStride], vPos + cMath::MatrixMul(mtxRotationMatrix, vAdd[3]*vParticleSize));
+                    SetCol(&pColArray[i * 16 + 3 * 4], finalColor);
 
                 }
                 else
                 {
                     //--
 
-                    SetPos(&pPosArray[i*lVtxQuadSize + 0*lVtxStride], vPos + vAdd[0]*vParticleSize);
-                    SetCol(&pColArray[i*16 + 0*4], finalColor);
+                    SetPos(&pPosArray[i * lVtxQuadSize + 0 * lVtxStride], vPos + vAdd[0]*vParticleSize);
+                    SetCol(&pColArray[i * 16 + 0 * 4], finalColor);
 
-                    SetPos(&pPosArray[i*lVtxQuadSize + 1*lVtxStride], vPos + vAdd[1]*vParticleSize);
-                    SetCol(&pColArray[i*16 + 1*4], finalColor);
+                    SetPos(&pPosArray[i * lVtxQuadSize + 1 * lVtxStride], vPos + vAdd[1]*vParticleSize);
+                    SetCol(&pColArray[i * 16 + 1 * 4], finalColor);
 
-                    SetPos(&pPosArray[i*lVtxQuadSize + 2*lVtxStride], vPos + vAdd[2]*vParticleSize);
-                    SetCol(&pColArray[i*16 + 2*4], finalColor);
+                    SetPos(&pPosArray[i * lVtxQuadSize + 2 * lVtxStride], vPos + vAdd[2]*vParticleSize);
+                    SetCol(&pColArray[i * 16 + 2 * 4], finalColor);
 
-                    SetPos(&pPosArray[i*lVtxQuadSize + 3*lVtxStride], vPos + vAdd[3]*vParticleSize);
-                    SetCol(&pColArray[i*16 + 3*4], finalColor);
+                    SetPos(&pPosArray[i * lVtxQuadSize + 3 * lVtxStride], vPos + vAdd[3]*vParticleSize);
+                    SetCol(&pColArray[i * 16 + 3 * 4], finalColor);
 
                 }
             }
@@ -568,9 +568,9 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
         else if(mDrawType == eParticleEmitterType_Line)
         {
             int lVtxStride = mpVtxBuffer->GetElementNum(eVertexBufferElement_Position);
-            int lVtxQuadSize = lVtxStride*4;
+            int lVtxQuadSize = lVtxStride * 4;
 
-            for(int i=0; i<(int)mlNumOfParticles; i++)
+            for(int i = 0; i < (int)mlNumOfParticles; i++)
             {
                 cParticle *pParticle = mvParticles[i];
 
@@ -593,14 +593,14 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
 
                 if(vPos1 == vPos2)
                 {
-                    vDirY = cVector3f(0,1,0);
-                    vDirX = cVector2f(1,0);
+                    vDirY = cVector3f(0, 1, 0);
+                    vDirX = cVector2f(1, 0);
                 }
                 else
                 {
                     vDirY = vPos1 - vPos2;
                     vDirY.Normalize();
-                    vDirX = cVector2f(vDirY.y,-vDirY.x);
+                    vDirX = cVector2f(vDirY.y, -vDirY.x);
                     vDirX.Normalize();
                 }
 
@@ -609,22 +609,22 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
 
                 if(apFrustum->GetInvertsCullMode())
                 {
-                    vDirY = vDirY*-1;
+                    vDirY = vDirY * -1;
                 }
 
                 cColor finalColor = pParticle->mColor * colorMul;
 
-                SetPos(&pPosArray[i*lVtxQuadSize + 0*lVtxStride], vPos2 + vDirY*-1 + vDirX);
-                SetCol(&pColArray[i*16 + 0*4], finalColor);
+                SetPos(&pPosArray[i * lVtxQuadSize + 0 * lVtxStride], vPos2 + vDirY * -1 + vDirX);
+                SetCol(&pColArray[i * 16 + 0 * 4], finalColor);
 
-                SetPos(&pPosArray[i*lVtxQuadSize + 1*lVtxStride], vPos2 + vDirY*-1 + vDirX*-1);
-                SetCol(&pColArray[i*16 + 1*4], finalColor);
+                SetPos(&pPosArray[i * lVtxQuadSize + 1 * lVtxStride], vPos2 + vDirY * -1 + vDirX * -1);
+                SetCol(&pColArray[i * 16 + 1 * 4], finalColor);
 
-                SetPos(&pPosArray[i*lVtxQuadSize + 2*lVtxStride], vPos1 + vDirY + vDirX*-1);
-                SetCol(&pColArray[i*16 + 2*4], finalColor);
+                SetPos(&pPosArray[i * lVtxQuadSize + 2 * lVtxStride], vPos1 + vDirY + vDirX * -1);
+                SetCol(&pColArray[i * 16 + 2 * 4], finalColor);
 
-                SetPos(&pPosArray[i*lVtxQuadSize + 3*lVtxStride], vPos1 + vDirY + vDirX);
-                SetCol(&pColArray[i*16 + 3*4], finalColor);
+                SetPos(&pPosArray[i * lVtxQuadSize + 3 * lVtxStride], vPos1 + vDirY + vDirX);
+                SetCol(&pColArray[i * 16 + 3 * 4], finalColor);
             }
         }
         //////////////////////////////////////////////////
@@ -649,9 +649,9 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
             };*/
 
             int lVtxStride = mpVtxBuffer->GetElementNum(eVertexBufferElement_Position);
-            int lVtxQuadSize = lVtxStride*4;
+            int lVtxQuadSize = lVtxStride * 4;
 
-            for(int i=0; i<(int)mlNumOfParticles; i++)
+            for(int i = 0; i < (int)mlNumOfParticles; i++)
             {
                 cParticle *pParticle = mvParticles[i];
 
@@ -674,17 +674,17 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
 
                 cColor finalColor = pParticle->mColor * colorMul;
 
-                SetPos(&pPosArray[i*lVtxQuadSize + 0*lVtxStride], vPos + vAdd[0]);
-                SetCol(&pColArray[i*16 + 0*4], finalColor);
+                SetPos(&pPosArray[i * lVtxQuadSize + 0 * lVtxStride], vPos + vAdd[0]);
+                SetCol(&pColArray[i * 16 + 0 * 4], finalColor);
 
-                SetPos(&pPosArray[i*lVtxQuadSize + 1*lVtxStride], vPos + vAdd[1]);
-                SetCol(&pColArray[i*16 + 1*4], finalColor);
+                SetPos(&pPosArray[i * lVtxQuadSize + 1 * lVtxStride], vPos + vAdd[1]);
+                SetCol(&pColArray[i * 16 + 1 * 4], finalColor);
 
-                SetPos(&pPosArray[i*lVtxQuadSize + 2*lVtxStride], vPos + vAdd[2]);
-                SetCol(&pColArray[i*16 + 2*4], finalColor);
+                SetPos(&pPosArray[i * lVtxQuadSize + 2 * lVtxStride], vPos + vAdd[2]);
+                SetCol(&pColArray[i * 16 + 2 * 4], finalColor);
 
-                SetPos(&pPosArray[i*lVtxQuadSize + 3*lVtxStride], vPos + vAdd[3]);
-                SetCol(&pColArray[i*16 + 3*4], finalColor);
+                SetPos(&pPosArray[i * lVtxQuadSize + 3 * lVtxStride], vPos + vAdd[3]);
+                SetCol(&pColArray[i * 16 + 3 * 4], finalColor);
             }
         }
 
@@ -708,7 +708,7 @@ bool iParticleEmitter::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFr
 
 //-----------------------------------------------------------------------
 
-iVertexBuffer* iParticleEmitter::GetVertexBuffer()
+iVertexBuffer *iParticleEmitter::GetVertexBuffer()
 {
     return mpVtxBuffer;
 }
@@ -717,7 +717,7 @@ iVertexBuffer* iParticleEmitter::GetVertexBuffer()
 
 bool iParticleEmitter::IsVisible()
 {
-    if(IsActive()==false)
+    if(IsActive() == false)
     {
         return false;
     }
@@ -726,20 +726,20 @@ bool iParticleEmitter::IsVisible()
 
 //-----------------------------------------------------------------------
 
-cBoundingVolume* iParticleEmitter::GetBoundingVolume()
+cBoundingVolume *iParticleEmitter::GetBoundingVolume()
 {
     if(mbUpdateBV)
     {
         cVector3f vMin;
         cVector3f vMax;
 
-        if(mlNumOfParticles >0)
+        if(mlNumOfParticles > 0)
         {
             //Make a bounding volume that encompasses start pos too!
             vMin = GetWorldPosition();
             vMax = GetWorldPosition();
 
-            for(int i=0; i<(int)mlNumOfParticles; i++)
+            for(int i = 0; i < (int)mlNumOfParticles; i++)
             {
                 cParticle *pParticle = mvParticles[i];
 
@@ -792,7 +792,7 @@ cBoundingVolume* iParticleEmitter::GetBoundingVolume()
                 mvForward = mtxInv.GetForward();
             }
 
-            cVector3f vAdd = mvRight*mvMaxDrawSize.x + mvForward*mvMaxDrawSize.y;
+            cVector3f vAdd = mvRight * mvMaxDrawSize.x + mvForward * mvMaxDrawSize.y;
 
             vMax += vAdd;
             vMin -= vAdd;
@@ -801,8 +801,8 @@ cBoundingVolume* iParticleEmitter::GetBoundingVolume()
         // Add size for other particle types.
         else
         {
-            vMax += cVector3f(mvMaxDrawSize.x,mvMaxDrawSize.y, mvMaxDrawSize.x);
-            vMin -= cVector3f(mvMaxDrawSize.x,mvMaxDrawSize.y, mvMaxDrawSize.x);
+            vMax += cVector3f(mvMaxDrawSize.x, mvMaxDrawSize.y, mvMaxDrawSize.x);
+            vMin -= cVector3f(mvMaxDrawSize.x, mvMaxDrawSize.y, mvMaxDrawSize.x);
         }
 
         mBoundingVolume.SetLocalMinMax(vMin, vMax);
@@ -822,7 +822,7 @@ cBoundingVolume* iParticleEmitter::GetBoundingVolume()
 
 //-----------------------------------------------------------------------
 
-cMatrixf* iParticleEmitter::GetModelMatrix(cFrustum *apFrustum)
+cMatrixf *iParticleEmitter::GetModelMatrix(cFrustum *apFrustum)
 {
     if(apFrustum)
     {
@@ -866,25 +866,25 @@ cMatrixf* iParticleEmitter::GetModelMatrix(cFrustum *apFrustum)
 
 //-----------------------------------------------------------------------
 
-cParticle* iParticleEmitter::CreateParticle()
+cParticle *iParticleEmitter::CreateParticle()
 {
     if(mlNumOfParticles == mlMaxParticles)
     {
         return NULL;
     }
     ++mlNumOfParticles;
-    return mvParticles[mlNumOfParticles-1];
+    return mvParticles[mlNumOfParticles - 1];
 }
 
 //-----------------------------------------------------------------------
 
 void iParticleEmitter::SwapRemove(unsigned int alIndex)
 {
-    if(alIndex < mlNumOfParticles-1)
+    if(alIndex < mlNumOfParticles - 1)
     {
         cParticle* pTemp = mvParticles[alIndex];
-        mvParticles[alIndex] = mvParticles[mlNumOfParticles-1];
-        mvParticles[mlNumOfParticles-1] = pTemp;
+        mvParticles[alIndex] = mvParticles[mlNumOfParticles - 1];
+        mvParticles[mlNumOfParticles - 1] = pTemp;
     }
     mlNumOfParticles--;
 }

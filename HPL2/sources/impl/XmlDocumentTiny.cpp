@@ -66,7 +66,7 @@ bool cXmlDocumentTiny::CreateFromString(const tString& asData)
 bool cXmlDocumentTiny::LoadDataFromFile(const tWString& asPath)
 {
     TiXmlDocument *pXmlDoc = hplNew( TiXmlDocument, () );
-    if(CreateTinyXMLFromFile(pXmlDoc,asPath)==false)
+    if(CreateTinyXMLFromFile(pXmlDoc, asPath) == false)
     {
         tString sErrorDesc = tString(pXmlDoc->ErrorDesc());
         int lErrorRow = pXmlDoc->ErrorRow();
@@ -95,7 +95,7 @@ bool cXmlDocumentTiny::SaveDataToFile(const tWString& asPath)
     pXmlDoc->InsertEndChild(TiXmlElement(""));
     SaveToTinyXMLData(pXmlDoc->FirstChildElement(), this);
 
-    bool bRet = SaveTinyXMLToFile(pXmlDoc,asPath);
+    bool bRet = SaveTinyXMLToFile(pXmlDoc, asPath);
     hplDelete( pXmlDoc );
 
     return bRet;
@@ -149,7 +149,7 @@ void cXmlDocumentTiny::SaveToTinyXMLData(TiXmlElement* apTinyElem, cXmlElement *
         cXmlElement *pChild = it.Next()->ToElement();
 
         TiXmlElement tempElem(pChild->GetValue().c_str());
-        TiXmlElement* pTinyChild = static_cast<TiXmlElement*>(apTinyElem->InsertEndChild(tempElem));
+        TiXmlElement* pTinyChild = static_cast<TiXmlElement *>(apTinyElem->InsertEndChild(tempElem));
 
         SaveToTinyXMLData(pTinyChild, pChild);
     }
@@ -158,10 +158,10 @@ void cXmlDocumentTiny::SaveToTinyXMLData(TiXmlElement* apTinyElem, cXmlElement *
 
 //-----------------------------------------------------------------------
 
-bool cXmlDocumentTiny::CreateTinyXMLFromFile(TiXmlDocument* pDoc,const tWString& asPath)
+bool cXmlDocumentTiny::CreateTinyXMLFromFile(TiXmlDocument* pDoc, const tWString& asPath)
 {
     FILE *pFile = cPlatform::OpenFile(asPath, _W("rb"));
-    if(pFile==NULL)
+    if(pFile == NULL)
     {
         return false;
     }
@@ -178,7 +178,7 @@ bool cXmlDocumentTiny::CreateTinyXMLFromFile(TiXmlDocument* pDoc,const tWString&
 
 //-----------------------------------------------------------------------
 
-bool cXmlDocumentTiny::SaveTinyXMLToFile(TiXmlDocument* pDoc,const tWString& asPath)
+bool cXmlDocumentTiny::SaveTinyXMLToFile(TiXmlDocument* pDoc, const tWString& asPath)
 {
     if(asPath == _W(""))
     {

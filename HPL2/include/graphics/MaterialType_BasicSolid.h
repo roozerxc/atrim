@@ -30,7 +30,7 @@ public:
 
     void CreateGlobalPrograms();
 
-    iMaterialVars* CreateSpecificVariables()
+    iMaterialVars *CreateSpecificVariables()
     {
         return NULL;
     }
@@ -42,14 +42,14 @@ public:
 protected:
     virtual void CompileSolidSpecifics(cMaterial *apMaterial) {}
 
-    virtual void LoadSpecificData()=0;
+    virtual void LoadSpecificData() = 0;
 
     void LoadData();
     void DestroyData();
 
     bool mbIsGlobalDataCreator;
     static bool mbGlobalDataCreated;
-    static cProgramComboManager* mpGlobalProgramManager;
+    static cProgramComboManager *mpGlobalProgramManager;
     //[skeleton][uv animation]
 
     iTexture *mpDissolveTexture;
@@ -87,10 +87,10 @@ public:
         return true;
     }
 
-    iTexture* GetTextureForUnit(cMaterial *apMaterial,eMaterialRenderMode aRenderMode, int alUnit);
-    iTexture* GetSpecialTexture(cMaterial *apMaterial, eMaterialRenderMode aRenderMode,iRenderer *apRenderer, int alUnit);
+    iTexture *GetTextureForUnit(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, int alUnit);
+    iTexture *GetSpecialTexture(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, iRenderer *apRenderer, int alUnit);
 
-    iGpuProgram* GetGpuProgram(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, char alSkeleton);
+    iGpuProgram *GetGpuProgram(cMaterial *apMaterial, eMaterialRenderMode aRenderMode, char alSkeleton);
 
     void SetupTypeSpecificData(eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, iRenderer *apRenderer);
     void SetupMaterialSpecificData(    eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, cMaterial *apMaterial,
@@ -98,7 +98,7 @@ public:
     void SetupObjectSpecificData(    eMaterialRenderMode aRenderMode, iGpuProgram* apProgram, iRenderable *apObject,
                                      iRenderer *apRenderer);
 
-    iMaterialVars* CreateSpecificVariables();
+    iMaterialVars *CreateSpecificVariables();
     void LoadVariables(cMaterial *apMaterial, cResourceVarsObject *apVars);
     void GetVariableValues(cMaterial *apMaterial, cResourceVarsObject *apVars);
 

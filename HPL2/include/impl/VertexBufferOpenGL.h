@@ -27,7 +27,7 @@ public:
     void PushBack(const void *apData);
     size_t Size();
 
-    void* GetArrayPtr();
+    void *GetArrayPtr();
 
     eVertexBufferElement mType;
     tVertexElementFlag mFlag;
@@ -40,9 +40,9 @@ public:
 
     int mlProgramVarIndex;
 
-    tByteVec* mpByteArray;
-    tIntVec* mpIntArray;
-    tFloatVec* mpFloatArray;
+    tByteVec *mpByteArray;
+    tIntVec *mpIntArray;
+    tFloatVec *mpFloatArray;
 };
 
 
@@ -53,16 +53,16 @@ class iVertexBufferOpenGL : public iVertexBuffer
 public:
     iVertexBufferOpenGL(    iLowLevelGraphics* apLowLevelGraphics,
                             eVertexBufferType aType,
-                            eVertexBufferDrawType aDrawType,eVertexBufferUsageType aUsageType,
-                            int alReserveVtxSize,int alReserveIdxSize);
+                            eVertexBufferDrawType aDrawType, eVertexBufferUsageType aUsageType,
+                            int alReserveVtxSize, int alReserveIdxSize);
     ~iVertexBufferOpenGL();
 
     void CreateElementArray(    eVertexBufferElement aType, eVertexBufferElementFormat aFormat,
-                                int alElementNum, int alProgramVarIndex=0);
+                                int alElementNum, int alProgramVarIndex = 0);
 
-    void AddVertexVec3f(eVertexBufferElement aElement,const cVector3f& avVtx);
-    void AddVertexVec4f(eVertexBufferElement aElement,const cVector3f& avVtx, float afW);
-    void AddVertexColor(eVertexBufferElement aElement,const cColor& aColor);
+    void AddVertexVec3f(eVertexBufferElement aElement, const cVector3f& avVtx);
+    void AddVertexVec4f(eVertexBufferElement aElement, const cVector3f& avVtx, float afW);
+    void AddVertexColor(eVertexBufferElement aElement, const cColor& aColor);
     void AddIndex(unsigned int alIndex);
 
     bool Compile(tVertexCompileFlag aFlags);
@@ -71,7 +71,7 @@ public:
 
     void Transform(const cMatrixf &mtxTransform);
 
-    iVertexBuffer* CreateCopy(    eVertexBufferType aType, eVertexBufferUsageType aUsageType,
+    iVertexBuffer *CreateCopy(    eVertexBufferType aType, eVertexBufferUsageType aUsageType,
                                   tVertexElementFlag alVtxToCopy);
 
     cBoundingVolume CreateBoundingVolume();
@@ -83,25 +83,25 @@ public:
     eVertexBufferElementFormat GetElementFormat(eVertexBufferElement aElement);
     int GetElementProgramVarIndex(eVertexBufferElement aElement);
 
-    float* GetFloatArray(eVertexBufferElement aElement);
-    int* GetIntArray(eVertexBufferElement aElement);
-    unsigned char* GetByteArray(eVertexBufferElement aElement);
+    float *GetFloatArray(eVertexBufferElement aElement);
+    int *GetIntArray(eVertexBufferElement aElement);
+    unsigned char *GetByteArray(eVertexBufferElement aElement);
 
-    unsigned int* GetIndices();
+    unsigned int *GetIndices();
 
     void ResizeArray(eVertexBufferElement aElement, int alSize);
     void ResizeIndices(int alSize);
 
 protected:
-    virtual void CompileSpecific()=0;
-    virtual iVertexBufferOpenGL* CreateDataCopy(tVertexElementFlag aFlags, eVertexBufferDrawType aDrawType,
+    virtual void CompileSpecific() = 0;
+    virtual iVertexBufferOpenGL *CreateDataCopy(tVertexElementFlag aFlags, eVertexBufferDrawType aDrawType,
             eVertexBufferUsageType aUsageType,
-            int alReserveVtxSize,int alReserveIdxSize)=0;
+            int alReserveVtxSize, int alReserveIdxSize) = 0;
 
-    inline cVtxBufferGLElementArray* GetElementArray(eVertexBufferElement aElement)
+    inline cVtxBufferGLElementArray *GetElementArray(eVertexBufferElement aElement)
     {
         int lIdx = mvElementArrayIndex[aElement];
-        if(lIdx <0)
+        if(lIdx < 0)
         {
             return NULL;
         }
@@ -109,7 +109,7 @@ protected:
     }
 
     char mvElementArrayIndex[eVertexBufferElement_LastEnum];
-    std::vector<cVtxBufferGLElementArray*> mvElementArrays;
+    std::vector<cVtxBufferGLElementArray *> mvElementArrays;
 
     tUIntVec mvIndexArray;
 

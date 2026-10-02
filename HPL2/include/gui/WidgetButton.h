@@ -14,7 +14,7 @@ public:
     cWidgetButton(cGuiSet *apSet, cGuiSkin *apSkin);
     virtual ~cWidgetButton();
 
-    void SetImage(cGuiGfxElement *apImage, bool abDestroyImage=true);
+    void SetImage(cGuiGfxElement *apImage, bool abDestroyImage = true);
     cGuiGfxElement *GetImage()
     {
         return mpImage;
@@ -40,7 +40,7 @@ public:
         return mbToggleable;
     }
 
-    void SetPressed(bool abX, bool abGenCallback=true);
+    void SetPressed(bool abX, bool abGenCallback = true);
     bool IsPressed()
     {
         return mbPressed;

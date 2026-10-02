@@ -52,14 +52,14 @@ namespace hpl
 eShadowMapQuality iRenderer::mShadowMapQuality    =        eShadowMapQuality_Medium;
 eShadowMapResolution iRenderer::mShadowMapResolution    =    eShadowMapResolution_High;
 eParallaxQuality iRenderer::mParallaxQuality = eParallaxQuality_Simple;
-bool iRenderer::mbParallaxEnabled=true;
+bool iRenderer::mbParallaxEnabled = true;
 int iRenderer::mlReflectionSizeDiv = 2;
-bool iRenderer::mbRefractionEnabled=true;
-int iRenderer::mlDrawCalls=1;
+bool iRenderer::mbRefractionEnabled = true;
+int iRenderer::mlDrawCalls = 1;
 
 //-----------------------------------------------------------------------
 
-int iRenderer::mlRenderFrameCount =0;
+int iRenderer::mlRenderFrameCount = 0;
 
 //-----------------------------------------------------------------------
 
@@ -104,7 +104,7 @@ cRenderSettings::cRenderSettings(bool abIsReflection)
     mbIsReflection = abIsReflection;
     mbLog = false;
 
-    mClearColor = cColor(0,0);
+    mClearColor = cColor(0, 0);
 
     ////////////////////////
     // Set up Render Variables
@@ -140,8 +140,8 @@ cRenderSettings::cRenderSettings(bool abIsReflection)
 
     ////////////////////////
     // Set up Output Variables
-    mlNumberOfLightsRendered =0;
-    mlNumberOfOcclusionQueries =0;
+    mlNumberOfLightsRendered = 0;
+    mlNumberOfOcclusionQueries = 0;
 
     ////////////////////////
     // Set up Private Variables
@@ -164,7 +164,7 @@ cRenderSettings::~cRenderSettings()
 
     STLDeleteAll(mvOcclusionObjectPool);
 
-    for(size_t i=0; i<mvLightOcclusionPairs.size(); ++i)
+    for(size_t i = 0; i < mvLightOcclusionPairs.size(); ++i)
     {
         if(mvLightOcclusionPairs[i].mpQuery)
         {
@@ -199,7 +199,7 @@ void cRenderSettings::ResetVariables()
 #define RenderSettingsCopy(aVar) mpReflectionSettings->aVar = aVar
 void cRenderSettings::SetupReflectionSettings()
 {
-    if(mpReflectionSettings==NULL)
+    if(mpReflectionSettings == NULL)
     {
         return;
     }
@@ -286,7 +286,7 @@ int cRenderSettings::RetrieveOcclusionObjectSamples(iRenderer *apRenderer, void 
     //Get the number of objects with key and get the one with right custom ID
     size_t lCount = m_setOcclusionObjects.count(apSource);
     cOcclusionQueryObject* pObject = NULL;
-    for(size_t i=0; i < lCount; ++i)
+    for(size_t i = 0; i < lCount; ++i)
     {
         cOcclusionQueryObject* pTestObject = it->second;
         if(pTestObject->mlCustomID == alCustomIndex)
@@ -296,7 +296,7 @@ int cRenderSettings::RetrieveOcclusionObjectSamples(iRenderer *apRenderer, void 
         }
         it++;
     }
-    if(pObject==NULL)
+    if(pObject == NULL)
     {
         if(mbLog)
         {
@@ -310,12 +310,12 @@ int cRenderSettings::RetrieveOcclusionObjectSamples(iRenderer *apRenderer, void 
     iOcclusionQuery *pQuery = pObject->mpQuery;
 
     //If query is null, then samples have already been retrieved.
-    if(pQuery==NULL)
+    if(pQuery == NULL)
     {
         return pObject->mlSampleResults;
     }
 
-    while(pQuery->FetchResults()==false);
+    while(pQuery->FetchResults() == false);
 
     pObject->mlSampleResults = pQuery->GetSampleCount();
     pObject->mpQuery = NULL;
@@ -328,15 +328,15 @@ int cRenderSettings::RetrieveOcclusionObjectSamples(iRenderer *apRenderer, void 
 
 void cRenderSettings::WaitAndRetrieveAllOcclusionQueries(iRenderer *apRenderer)
 {
-    for(int i=0; i<mlCurrentOcclusionObject; ++i)
+    for(int i = 0; i < mlCurrentOcclusionObject; ++i)
     {
         iOcclusionQuery *pQuery = mvOcclusionObjectPool[i]->mpQuery;
-        if(pQuery==NULL)
+        if(pQuery == NULL)
         {
             continue;
         }
 
-        while(pQuery->FetchResults()==false);
+        while(pQuery->FetchResults() == false);
 
         mvOcclusionObjectPool[i]->mlSampleResults = pQuery->GetSampleCount();
         mvOcclusionObjectPool[i]->mpQuery = NULL;
@@ -353,10 +353,10 @@ void cRenderSettings::ClearOcclusionObjects(iRenderer *apRenderer)
         Log(" Clearing occlusion queries i settings!\n");
     }
     m_setOcclusionObjects.clear();
-    for(int i=0; i<mlCurrentOcclusionObject; ++i)
+    for(int i = 0; i < mlCurrentOcclusionObject; ++i)
     {
         iOcclusionQuery *pQuery = mvOcclusionObjectPool[i]->mpQuery;
-        if(pQuery==NULL)
+        if(pQuery == NULL)
         {
             continue;
         }
@@ -384,7 +384,7 @@ void cShadowMapLightCache::SetFromLight(iLight* apLight)
 
     if(apLight->GetLightType() == eLightType_Spot)
     {
-        cLightSpot *pSpotLight = static_cast<cLightSpot*>(apLight);
+        cLightSpot *pSpotLight = static_cast<cLightSpot *>(apLight);
         mfAspect = pSpotLight->GetAspect();
         mfFOV = pSpotLight->GetFOV();
     }
@@ -398,7 +398,7 @@ void cShadowMapLightCache::SetFromLight(iLight* apLight)
 
 //-----------------------------------------------------------------------
 
-iRenderer::iRenderer(const tString& asName, cGraphics *apGraphics,cResources* apResources, int alNumOfProgramComboModes)
+iRenderer::iRenderer(const tString& asName, cGraphics *apGraphics, cResources* apResources, int alNumOfProgramComboModes)
 {
     mpGraphics = apGraphics;
     mpResources = apResources;
@@ -416,7 +416,7 @@ iRenderer::iRenderer(const tString& asName, cGraphics *apGraphics,cResources* ap
     ////////////////////////
     // Debug Variables
     mbOnlyRenderPrevVisibleOcclusionObjects = false;
-    mlOnlyRenderPrevVisibleOcclusionObjectsFrameCount =0;
+    mlOnlyRenderPrevVisibleOcclusionObjectsFrameCount = 0;
 
     //////////////
     //Create data classes
@@ -430,14 +430,14 @@ iRenderer::iRenderer(const tString& asName, cGraphics *apGraphics,cResources* ap
     mbClearFrameBufferAtBeginRendering = true;
     mbSetupOcclusionPlaneForFog = false;
 
-    mfScissorLastFov =0;
-    mfScissorLastTanHalfFov =0;
+    mfScissorLastFov = 0;
+    mfScissorLastTanHalfFov = 0;
 
     mpCallbackFunctions = hplNew( cRendererCallbackFunctions, (this) );
 
-    mfTimeCount =0;
+    mfTimeCount = 0;
 
-    mlActiveOcclusionQueryNum =0;
+    mlActiveOcclusionQueryNum = 0;
 
     //////////////
     // Create programs
@@ -446,13 +446,13 @@ iRenderer::iRenderer(const tString& asName, cGraphics *apGraphics,cResources* ap
     mpDepthOnlyProgram = mpProgramManager->CreateProgramFromShaders("DepthOnly",
                          "deferred_base_vtx.glsl",
                          "deferred_depthonly_frag.glsl",
-                         &vars,false);
+                         &vars, false);
 
 
     ////////////
     // Create shapes
     //  Color and Texture because Geforce cards fail without it, no idea why...
-    mpShapeBox = LoadVertexBufferFromMesh("core_box.dae", eVertexElementFlag_Position | eVertexElementFlag_Texture0| eVertexElementFlag_Color0);
+    mpShapeBox = LoadVertexBufferFromMesh("core_box.dae", eVertexElementFlag_Position | eVertexElementFlag_Texture0 | eVertexElementFlag_Color0);
 }
 
 //-----------------------------------------------------------------------
@@ -482,10 +482,10 @@ iRenderer::~iRenderer()
 
 //-----------------------------------------------------------------------
 
-void iRenderer::Render(double adFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
-                       bool abSendFrameBufferToPostEffects,tRendererCallbackList *apCallbackList)
+void iRenderer::Render(double adFrameTime, cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
+                       bool abSendFrameBufferToPostEffects, tRendererCallbackList *apCallbackList)
 {
-    BeginRendering(adFrameTime,apFrustum, apWorld, apSettings,apRenderTarget,abSendFrameBufferToPostEffects,apCallbackList);
+    BeginRendering(adFrameTime, apFrustum, apWorld, apSettings, apRenderTarget, abSendFrameBufferToPostEffects, apCallbackList);
 
     SetupRenderList();
     RenderObjects();
@@ -502,12 +502,12 @@ void iRenderer::Update(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-iTexture* iRenderer::GetPostEffectTexture()
+iTexture *iRenderer::GetPostEffectTexture()
 {
     if(mpCurrentRenderTarget->mpFrameBuffer)
     {
         iFrameBufferAttachment *pAttachement = mpCurrentRenderTarget->mpFrameBuffer->GetColorBuffer(0);
-        iTexture *pTexture = static_cast<iTexture*>(pAttachement);
+        iTexture *pTexture = static_cast<iTexture *>(pAttachement);
 
         return pTexture;
     }
@@ -536,7 +536,7 @@ int iRenderer::RetrieveOcclusionObjectSamples(void *apSource, int alCustomIndex)
 
     if(mbLog)
     {
-        Log("  Retrieved %d samples from occlusion object with source %d and custom ID: %d.\n",lSamples,apSource, alCustomIndex);
+        Log("  Retrieved %d samples from occlusion object with source %d and custom ID: %d.\n", lSamples, apSource, alCustomIndex);
     }
 
     return lSamples;
@@ -560,8 +560,8 @@ void iRenderer::WaitAndRetrieveAllOcclusionQueries()
 
 //-----------------------------------------------------------------------
 
-void iRenderer::BeginRendering(    double adFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
-                                   bool abSendFrameBufferToPostEffects,tRendererCallbackList *apCallbackList, bool abAtStartOfRendering)
+void iRenderer::BeginRendering(    double adFrameTime, cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
+                                   bool abSendFrameBufferToPostEffects, tRendererCallbackList *apCallbackList, bool abAtStartOfRendering)
 {
     if(apSettings->mbLog)
     {
@@ -591,7 +591,7 @@ void iRenderer::BeginRendering(    double adFrameTime,cFrustum *apFrustum, cWorl
     //Set up near plane variables
 
     //Calculate radius for near plane so that it is always inside it.
-    float fTanHalfFOV = tan(mpCurrentFrustum->GetFOV()*0.5f);
+    float fTanHalfFOV = tan(mpCurrentFrustum->GetFOV() * 0.5f);
 
     float fNearPlane = mpCurrentFrustum->GetNearPlane();
     mfCurrentNearPlaneTop =  fTanHalfFOV * fNearPlane;
@@ -603,7 +603,7 @@ void iRenderer::BeginRendering(    double adFrameTime,cFrustum *apFrustum, cWorl
     mvCurrentOcclusionPlanes.resize(0);
 
     //User clip planes
-    for(size_t i=0; i<apSettings->mvOcclusionPlanes.size(); ++i)
+    for(size_t i = 0; i < apSettings->mvOcclusionPlanes.size(); ++i)
     {
         mvCurrentOcclusionPlanes.push_back(apSettings->mvOcclusionPlanes[i]);
     }
@@ -613,7 +613,7 @@ void iRenderer::BeginRendering(    double adFrameTime,cFrustum *apFrustum, cWorl
     {
         cPlanef fogPlane;
         fogPlane.FromNormalPoint(    apFrustum->GetForward(),
-                                     apFrustum->GetOrigin() + apFrustum->GetForward()*-apWorld->GetFogEnd());
+                                     apFrustum->GetOrigin() + apFrustum->GetForward() * -apWorld->GetFogEnd());
         mvCurrentOcclusionPlanes.push_back(fogPlane);
     }
 
@@ -643,9 +643,9 @@ void iRenderer::BeginRendering(    double adFrameTime,cFrustum *apFrustum, cWorl
     mpLowLevelGraphics->SetDepthWriteActive(true);
     mpLowLevelGraphics->SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
 
-    mpLowLevelGraphics->SetColor(cColor(1,1,1,1));
+    mpLowLevelGraphics->SetColor(cColor(1, 1, 1, 1));
 
-    for(int i=0; i<kMaxTextureUnits; ++i)
+    for(int i = 0; i < kMaxTextureUnits; ++i)
     {
         mpLowLevelGraphics->SetTexture(i, NULL);
     }
@@ -683,7 +683,7 @@ void iRenderer::EndRendering(bool abAtEndOfRendering)
 
     /////////////////////////////////////////////
     // If no post effects, make sure rendering is copied to frame buffer.
-    if(abAtEndOfRendering && mbSendFrameBufferToPostEffects==false)
+    if(abAtEndOfRendering && mbSendFrameBufferToPostEffects == false)
     {
         CopyToFrameBuffer();
     }
@@ -701,7 +701,7 @@ void iRenderer::EndRendering(bool abAtEndOfRendering)
 
     /////////////////////////////////////////////
     // Unbind all rendering data
-    for(int i=0; i<kMaxTextureUnits; ++i)
+    for(int i = 0; i < kMaxTextureUnits; ++i)
     {
         if(mvCurrentTexture[i])
         {
@@ -739,12 +739,12 @@ void iRenderer::EndRendering(bool abAtEndOfRendering)
 
 void iRenderer::CreateAndAddShadowMap(eShadowMapResolution aResolution, const cVector3l &avSize, ePixelFormat aFormat)
 {
-    tString sName = "ShadowMap"+cString::ToString(avSize.x)+"x"+cString::ToString(avSize.y)+"_"+
+    tString sName = "ShadowMap" + cString::ToString(avSize.x) + "x" + cString::ToString(avSize.y) + "_" +
                     cString::ToString((int)mvShadowMapData[aResolution].size());
     cShadowMapData *pData = hplNew(cShadowMapData, ());
     pData->mlFrameCount = -1;
 
-    pData->mpTexture = mpGraphics->CreateTexture(sName+"_Texture",eTextureType_2D, eTextureUsage_RenderTarget);
+    pData->mpTexture = mpGraphics->CreateTexture(sName + "_Texture", eTextureType_2D, eTextureUsage_RenderTarget);
     pData->mpTexture->CreateFromRawData(avSize, aFormat, NULL);
     pData->mpTexture->SetCompareMode(eTextureCompareMode_RToTexture);
     pData->mpTexture->SetCompareFunc(eTextureCompareFunc_LessOrEqual);
@@ -764,7 +764,7 @@ void iRenderer::CreateAndAddShadowMap(eShadowMapResolution aResolution, const cV
     //Hack to avoid ATI drier failure:
     if(mpLowLevelGraphics->GetCaps(eGraphicCaps_OGL_ATIFragmentShader))
     {
-        pData->mpTempDiffTexture = mpGraphics->CreateTexture(sName+"_TempDiff",eTextureType_2D, eTextureUsage_RenderTarget);
+        pData->mpTempDiffTexture = mpGraphics->CreateTexture(sName + "_TempDiff", eTextureType_2D, eTextureUsage_RenderTarget);
         pData->mpTempDiffTexture->CreateFromRawData(avSize, ePixelFormat_Alpha, NULL);
     }
     else
@@ -772,7 +772,7 @@ void iRenderer::CreateAndAddShadowMap(eShadowMapResolution aResolution, const cV
         pData->mpTempDiffTexture = NULL;
     }
 
-    pData->mpBuffer = mpGraphics->CreateFrameBuffer(sName+"_Buffer");
+    pData->mpBuffer = mpGraphics->CreateFrameBuffer(sName + "_Buffer");
     if(pData->mpTempDiffTexture)
     {
         pData->mpBuffer->SetTexture2D(0, pData->mpTempDiffTexture);
@@ -788,11 +788,11 @@ void iRenderer::CreateAndAddShadowMap(eShadowMapResolution aResolution, const cV
 
 
 
-cShadowMapData* iRenderer::GetShadowMapData(eShadowMapResolution aResolution, iLight *apLight)
+cShadowMapData *iRenderer::GetShadowMapData(eShadowMapResolution aResolution, iLight *apLight)
 {
     ////////////////////////////
     //If size is 1, then just return that one
-    if(mvShadowMapData[aResolution].size()==1)
+    if(mvShadowMapData[aResolution].size() == 1)
     {
         return mvShadowMapData[aResolution][0];
     }
@@ -805,7 +805,7 @@ cShadowMapData* iRenderer::GetShadowMapData(eShadowMapResolution aResolution, iL
     ////////////////////////////
     //Iterate the shadow map array looking for shadow map already used by light
     //Else find the one with the largest frame length.
-    for(size_t i=0; i<mvShadowMapData[aResolution].size(); ++i)
+    for(size_t i = 0; i < mvShadowMapData[aResolution].size(); ++i)
     {
         cShadowMapData *pData = mvShadowMapData[aResolution][i];
 
@@ -816,7 +816,7 @@ cShadowMapData* iRenderer::GetShadowMapData(eShadowMapResolution aResolution, iL
         }
         else
         {
-            int lFrameDist = cMath::Abs(pData->mlFrameCount- mlRenderFrameCount);
+            int lFrameDist = cMath::Abs(pData->mlFrameCount - mlRenderFrameCount);
             if(lFrameDist > lMaxFrameDist)
             {
                 lMaxFrameDist = lFrameDist;
@@ -858,7 +858,7 @@ bool iRenderer::ShadowMapNeedsUpdate(iLight *apLight, cShadowMapData *apShadowDa
     // Spotlight specific
     if(bValid && apLight->GetLightType() == eLightType_Spot)
     {
-        cLightSpot *pSpotLight = static_cast<cLightSpot*>(apLight);
+        cLightSpot *pSpotLight = static_cast<cLightSpot *>(apLight);
         bValid = pSpotLight->GetAspect() == cacheData.mfAspect && pSpotLight->GetFOV() == cacheData.mfFOV;
     }
 
@@ -884,9 +884,9 @@ bool iRenderer::ShadowMapNeedsUpdate(iLight *apLight, cShadowMapData *apShadowDa
 
 void iRenderer::DestroyShadowMaps()
 {
-    for(int res=0; res < eShadowMapResolution_LastEnum; ++res)
+    for(int res = 0; res < eShadowMapResolution_LastEnum; ++res)
     {
-        for(size_t i=0; i<mvShadowMapData[res].size(); ++i)
+        for(size_t i = 0; i < mvShadowMapData[res].size(); ++i)
         {
             cShadowMapData *pData = mvShadowMapData[res][i];
 
@@ -908,13 +908,13 @@ void iRenderer::RenderZObject(iRenderable *apObject, cFrustum *apCustomFrustum)
 {
     cMaterial *pMaterial = apObject->GetMaterial();
 
-    eMaterialRenderMode renderMode = apObject->GetCoverageAmount()>=1 ? eMaterialRenderMode_Z : eMaterialRenderMode_Z_Dissolve;
+    eMaterialRenderMode renderMode = apObject->GetCoverageAmount() >= 1 ? eMaterialRenderMode_Z : eMaterialRenderMode_Z_Dissolve;
 
     ////////////////////////
     //Set up render modes
     SetBlendMode(eMaterialBlendMode_None);
     SetAlphaLimit(mfDefaultAlphaLimit);
-    SetAlphaMode( pMaterial->GetTexture(eMaterialTexture_Alpha) || renderMode==eMaterialRenderMode_Z_Dissolve ?
+    SetAlphaMode( pMaterial->GetTexture(eMaterialTexture_Alpha) || renderMode == eMaterialRenderMode_Z_Dissolve ?
                   eMaterialAlphaMode_Trans : eMaterialAlphaMode_Solid);
 
     ////////////////////////
@@ -923,7 +923,7 @@ void iRenderer::RenderZObject(iRenderable *apObject, cFrustum *apCustomFrustum)
 
     ////////////////////////
     //Set up program
-    SetMaterialProgram(renderMode,pMaterial);
+    SetMaterialProgram(renderMode, pMaterial);
 
 
     ////////////////////////
@@ -966,7 +966,7 @@ void iRenderer::CheckNodesAndAddToListIterative(iRenderableContainerNode *apNode
         {
             return;
         }
-        if(CheckNodeIsVisible(apNode)==false)
+        if(CheckNodeIsVisible(apNode) == false)
         {
             return;
         }
@@ -992,7 +992,7 @@ void iRenderer::CheckNodesAndAddToListIterative(iRenderableContainerNode *apNode
         for(; it != apNode->GetObjectList()->end(); ++it)
         {
             iRenderable *pObject = *it;
-            if(CheckObjectIsVisible(pObject, alNeededFlags)==false)
+            if(CheckObjectIsVisible(pObject, alNeededFlags) == false)
             {
                 continue;
             }
@@ -1022,7 +1022,7 @@ void iRenderer::CheckForVisibleAndAddToList(iRenderableContainer *apContainer, t
 */
 void iRenderer::PushNodeChildrenToStack(tRendererSortedNodeSet& a_setNodeStack, iRenderableContainerNode *apNode, int alNeededFlags)
 {
-    if(apNode->HasChildNodes()==false)
+    if(apNode->HasChildNodes() == false)
     {
         return;
     }
@@ -1039,7 +1039,7 @@ void iRenderer::PushNodeChildrenToStack(tRendererSortedNodeSet& a_setNodeStack, 
         ///////////////////////////////////////////////////
         // Check node has object and needed flags
         if(    pChildNode->UsesFlagsAndVisibility() &&
-                (pChildNode->HasVisibleObjects()==false || (pChildNode->GetRenderFlags() & alNeededFlags) != alNeededFlags))
+                (pChildNode->HasVisibleObjects() == false || (pChildNode->GetRenderFlags() & alNeededFlags) != alNeededFlags))
         {
             continue;
         }
@@ -1053,7 +1053,7 @@ void iRenderer::PushNodeChildrenToStack(tRendererSortedNodeSet& a_setNodeStack, 
         {
             continue;
         }
-        if(CheckNodeIsVisible(pChildNode)==false)
+        if(CheckNodeIsVisible(pChildNode) == false)
         {
             continue;
         }
@@ -1098,7 +1098,7 @@ void iRenderer::AddAndRenderNodeOcclusionQuery(tNodeOcclusionPairList *apList, i
     if(    mbOnlyRenderPrevVisibleOcclusionObjects &&
             mlOnlyRenderPrevVisibleOcclusionObjectsFrameCount >= 1)
     {
-        RenderNodeBoundingBox(apNode,NULL);
+        RenderNodeBoundingBox(apNode, NULL);
         return;
     }
 
@@ -1111,7 +1111,7 @@ void iRenderer::AddAndRenderNodeOcclusionQuery(tNodeOcclusionPairList *apList, i
 
     if(mbLog)
     {
-        Log("CHC: Testing query %d on node: %d\n",noPair.mpQuery, apNode);
+        Log("CHC: Testing query %d on node: %d\n", noPair.mpQuery, apNode);
     }
 
     /////////////////////
@@ -1139,7 +1139,7 @@ void iRenderer::RenderNodeBoundingBox(iRenderableContainerNode *apNode, iOcclusi
 
     /////////////////////////
     //Texture
-    SetTexture(0,NULL);
+    SetTexture(0, NULL);
 
     /////////////////////////
     //Matrix
@@ -1189,7 +1189,7 @@ bool iRenderer::RenderObjectZAndAddToRenderList(iRenderable *apObject)
     ////////////////////////////
     //Check if object is translucent or has no material
     // If so, do not render it.
-    if( pMaterial==NULL || pMaterial->GetType()->IsTranslucent() || apObject->IsOccluder() == false)
+    if( pMaterial == NULL || pMaterial->GetType()->IsTranslucent() || apObject->IsOccluder() == false)
     {
         return false;
     }
@@ -1205,10 +1205,10 @@ bool iRenderer::RenderObjectZAndAddToRenderList(iRenderable *apObject)
 
 //-----------------------------------------------------------------------
 
-static std::vector<iRenderable*> gvSortedObjects;
+static std::vector<iRenderable *> gvSortedObjects;
 int iRenderer::RenderAndAddNodeObjects(iRenderableContainerNode *apNode, tRenderCHCObjectCallbackFunc apRenderCallback, tRenderableFlag alNeededFlags)
 {
-    if(apNode->HasObjects()==false)
+    if(apNode->HasObjects() == false)
     {
         return 0;
     }
@@ -1223,7 +1223,7 @@ int iRenderer::RenderAndAddNodeObjects(iRenderableContainerNode *apNode, tRender
 
         //////////////////////
         // Check if object is visible
-        if(CheckObjectIsVisible(pObject, alNeededFlags)==false)
+        if(CheckObjectIsVisible(pObject, alNeededFlags) == false)
         {
             continue;
         }
@@ -1231,12 +1231,12 @@ int iRenderer::RenderAndAddNodeObjects(iRenderableContainerNode *apNode, tRender
         /////////////////////////////
         //Check if inside frustum, skip test node was inside
         if(    apNode->GetPrevFrustumCollision() != eCollision_Inside &&
-                pObject->CollidesWithFrustum(mpCurrentFrustum)==false)
+                pObject->CollidesWithFrustum(mpCurrentFrustum) == false)
         {
             continue;
         }
 
-        if(apRenderCallback(this,pObject))
+        if(apRenderCallback(this, pObject))
         {
             ++lRenderedObjects;
         }
@@ -1294,7 +1294,7 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
         SetAlphaMode(eMaterialAlphaMode_Solid);
         SetChannelMode(eMaterialChannelMode_None);
 
-        SetTextureRange(NULL,0);
+        SetTextureRange(NULL, 0);
     }
 
     ////////////////////////////
@@ -1308,7 +1308,7 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
     tNodeOcclusionPairList lstNodeOcclusionPairs;
 
     // Set up output variables
-    mpCurrentSettings->mlNumberOfOcclusionQueries =0;
+    mpCurrentSettings->mlNumberOfOcclusionQueries = 0;
 
     // Switch sets, so that the last frames set is not current.
     apVisibleNodeTracker->SwitchAndClearVisibleNodeSet();
@@ -1325,7 +1325,7 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
 
 
     // Setup the container before rendering
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         if(vContainerFlags[i] & alObjectTypes)
         {
@@ -1341,7 +1341,7 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
 
     //Add Root nodes to stack
     tRendererSortedNodeSet setNodeStack;
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         if(vContainerFlags[i] & alObjectTypes)
         {
@@ -1358,13 +1358,13 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
 
     ////////////////////////////
     //Iterate the nodes on the stack.
-    while(setNodeStack.empty()==false || lstNodeOcclusionPairs.empty()==false)
+    while(setNodeStack.empty() == false || lstNodeOcclusionPairs.empty() == false)
     {
         //if(mbLog) PrintNodeDebugContents(setNodeStack);
 
         ///////////////////////////
         //If node stack not empty, pop the first node on the stack
-        if(setNodeStack.empty()==false)
+        if(setNodeStack.empty() == false)
         {
             tRendererSortedNodeSetIt firstIt = setNodeStack.begin(); //Might be slow...
             iRenderableContainerNode *pNode = *firstIt;
@@ -1372,7 +1372,7 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
 
             //////////////////////////
             // Check if node is a leaf
-            bool bNodeIsLeaf = pNode->HasChildNodes()==false;
+            bool bNodeIsLeaf = pNode->HasChildNodes() == false;
 
             //////////////////////////
             // Check if near plane is inside node AABB
@@ -1388,8 +1388,8 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
             // - Near plane is not inside node AABB
             // - All of the closest objects have been rendered (so there are some blockers)
             // - Node was not visible or node is leaf (always draw leaves!)
-            if(    bNearPlaneInsideNode==false && lMinRenderedObjects<=0 &&
-                    (bWasVisible==false || bNodeIsLeaf) )
+            if(    bNearPlaneInsideNode == false && lMinRenderedObjects <= 0 &&
+                    (bWasVisible == false || bNodeIsLeaf) )
             {
                 ////////////////
                 //If node is leaf and was visible render objects directly.
@@ -1408,7 +1408,7 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
                 //Render node objects after AABB so that an object does not occlude its own node.
                 if(bRenderObjects)
                 {
-                    RenderAndAddNodeObjects(pNode,pRenderCallback, alNeededFlags);
+                    RenderAndAddNodeObjects(pNode, pRenderCallback, alNeededFlags);
                 }
 
                 //Debug:
@@ -1426,13 +1426,13 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
             {
                 if(mbLog)
                 {
-                    if(lMinRenderedObjects>0)
+                    if(lMinRenderedObjects > 0)
                     {
-                        Log("CHC: Rendered objects left: %d node %d, pushing children and rendering nodes!\n",lMinRenderedObjects, pNode);
+                        Log("CHC: Rendered objects left: %d node %d, pushing children and rendering nodes!\n", lMinRenderedObjects, pNode);
                     }
                     else
                     {
-                        Log("CHC: Near plane inside node %d, pushing children and rendering nodes!\n",pNode);
+                        Log("CHC: Near plane inside node %d, pushing children and rendering nodes!\n", pNode);
                     }
                 }
 
@@ -1442,7 +1442,7 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
 
                 ////////////////
                 //Render objects if any
-                int lObjectsRendered = RenderAndAddNodeObjects(pNode,pRenderCallback, alNeededFlags);
+                int lObjectsRendered = RenderAndAddNodeObjects(pNode, pRenderCallback, alNeededFlags);
                 lMinRenderedObjects -= lObjectsRendered;
             }
 
@@ -1456,14 +1456,14 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
 
         ///////////////////////////
         //If node-query list is not empty, check if the first query is ready
-        if(lstNodeOcclusionPairs.empty()==false)
+        if(lstNodeOcclusionPairs.empty() == false)
         {
             cNodeOcclusionPair& noPair = lstNodeOcclusionPairs.front();
 
 
             //////////////////////////////////////
             //Check if the query is done
-            if(noPair.mpQuery->FetchResults()==false)
+            if(noPair.mpQuery->FetchResults() == false)
             {
                 //Do nothing for now....
             }
@@ -1483,7 +1483,7 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
 
                 if(mbLog)
                 {
-                    Log("CHC: Fetching query %d on node: %d, samples: %d\n",noPair.mpQuery, pNode, lSampleCount);
+                    Log("CHC: Fetching query %d on node: %d, samples: %d\n", noPair.mpQuery, pNode, lSampleCount);
                 }
 
                 //////////
@@ -1505,9 +1505,9 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
 
                     ////////////////
                     //Render objects if any and not already rendered.
-                    if(bObjectsRendered==false)
+                    if(bObjectsRendered == false)
                     {
-                        RenderAndAddNodeObjects(pNode,pRenderCallback, alNeededFlags);
+                        RenderAndAddNodeObjects(pNode, pRenderCallback, alNeededFlags);
                     }
                 }
                 else
@@ -1534,18 +1534,18 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
 
 //-----------------------------------------------------------------------
 
-static tRenderableVec* gpLightShadowCasterVec=NULL;
-static cFrustum *gpLightFrustum=NULL;
-static cFrustum *gpViewFrustum=NULL;
+static tRenderableVec *gpLightShadowCasterVec = NULL;
+static cFrustum *gpLightFrustum = NULL;
+static cFrustum *gpViewFrustum = NULL;
 static eFrustumPlane gvBeyondLightAndViewPlanes[6]; //Use to check if an caster is not going to affect view.
 static int glBeyondLightAndViewPlaneNum;
 static bool gbLightBehindNearPlane;
 
 //-----------------------------------------------------------------------
 
-static bool BoxIntersectOrInsidePlane(const cPlanef& aPlane,cVector3f *apCornerVec)
+static bool BoxIntersectOrInsidePlane(const cPlanef& aPlane, cVector3f *apCornerVec)
 {
-    for(int corner =0; corner < 8; ++corner)
+    for(int corner = 0; corner < 8; ++corner)
     {
         //Check if point is inside, if so skip plane...
         if(cMath::PlaneToPointDist(aPlane, apCornerVec[corner]) > 0)
@@ -1557,9 +1557,9 @@ static bool BoxIntersectOrInsidePlane(const cPlanef& aPlane,cVector3f *apCornerV
     return false;
 }
 
-static bool BoxInsidePlane(const cPlanef& aPlane,cVector3f *apCornerVec)
+static bool BoxInsidePlane(const cPlanef& aPlane, cVector3f *apCornerVec)
 {
-    for(int corner =0; corner < 8; ++corner)
+    for(int corner = 0; corner < 8; ++corner)
     {
         //Check if point is inside, if so skip plane...
         if(cMath::PlaneToPointDist(aPlane, apCornerVec[corner]) < 0)
@@ -1586,7 +1586,7 @@ bool iRenderer::CheckShadowCasterContributesToView(iRenderable *apObject)
     //Log("1\n");
     //////////////////////////////////////
     //If light is behind near plane, one must check if object in front of near plane
-    bool bObjectMightOnNearPlane=false;
+    bool bObjectMightOnNearPlane = false;
     if(gbLightBehindNearPlane)
     {
         return true;    //Temp, until I can come up with a qay to resolve the issues.
@@ -1612,9 +1612,9 @@ bool iRenderer::CheckShadowCasterContributesToView(iRenderable *apObject)
     //Log("2\n");
     ////////////////////////////
     // Sphere test
-    int lOutsideCount=0;
-    int lInsideCount=0;
-    for(int i=0; i<glBeyondLightAndViewPlaneNum; ++i)
+    int lOutsideCount = 0;
+    int lInsideCount = 0;
+    for(int i = 0; i < glBeyondLightAndViewPlaneNum; ++i)
     {
         eFrustumPlane frustumPlane = gvBeyondLightAndViewPlanes[i];
         const cPlanef& cameraPlane = gpViewFrustum->GetPlane(frustumPlane);
@@ -1642,7 +1642,7 @@ bool iRenderer::CheckShadowCasterContributesToView(iRenderable *apObject)
 
     //Log("4\n");
     // If any was outside, we are sure it does NOT contribute
-    if(lOutsideCount > 0 && bObjectMightOnNearPlane==false)
+    if(lOutsideCount > 0 && bObjectMightOnNearPlane == false)
     {
         return false;
     }
@@ -1654,11 +1654,11 @@ bool iRenderer::CheckShadowCasterContributesToView(iRenderable *apObject)
 
     cVector3f vCorners[8] =
     {
-        cVector3f(vMax.x,vMax.y,vMax.z), cVector3f(vMax.x,vMax.y,vMin.z),
-        cVector3f(vMax.x,vMin.y,vMax.z), cVector3f(vMax.x,vMin.y,vMin.z),
+        cVector3f(vMax.x, vMax.y, vMax.z), cVector3f(vMax.x, vMax.y, vMin.z),
+        cVector3f(vMax.x, vMin.y, vMax.z), cVector3f(vMax.x, vMin.y, vMin.z),
 
-        cVector3f(vMin.x,vMax.y,vMax.z), cVector3f(vMin.x,vMax.y,vMin.z),
-        cVector3f(vMin.x,vMin.y,vMax.z), cVector3f(vMin.x,vMin.y,vMin.z),
+        cVector3f(vMin.x, vMax.y, vMax.z), cVector3f(vMin.x, vMax.y, vMin.z),
+        cVector3f(vMin.x, vMin.y, vMax.z), cVector3f(vMin.x, vMin.y, vMin.z),
     };
 
     //Log("5\n");
@@ -1667,7 +1667,7 @@ bool iRenderer::CheckShadowCasterContributesToView(iRenderable *apObject)
     if(lOutsideCount > 0 && bObjectMightOnNearPlane)
     {
         //If object is not fully inside, it contributes
-        if(BoxInsidePlane(gpViewFrustum->GetPlane(eFrustumPlane_Near),vCorners)==false)
+        if(BoxInsidePlane(gpViewFrustum->GetPlane(eFrustumPlane_Near), vCorners) == false)
         {
             return true;
         }
@@ -1682,7 +1682,7 @@ bool iRenderer::CheckShadowCasterContributesToView(iRenderable *apObject)
     if(bObjectMightOnNearPlane)
     {
         //If object is not fully inside, it contributes
-        if(BoxInsidePlane(gpViewFrustum->GetPlane(eFrustumPlane_Near),vCorners)==false)
+        if(BoxInsidePlane(gpViewFrustum->GetPlane(eFrustumPlane_Near), vCorners) == false)
         {
             return true;
         }
@@ -1691,7 +1691,7 @@ bool iRenderer::CheckShadowCasterContributesToView(iRenderable *apObject)
     //Log("7\n");
     //Iterate all planes separating between contributing and not.
     bool bContributes;
-    for(int plane=0; plane<glBeyondLightAndViewPlaneNum; ++plane)
+    for(int plane = 0; plane < glBeyondLightAndViewPlaneNum; ++plane)
     {
         eFrustumPlane frustumPlane = gvBeyondLightAndViewPlanes[plane];
         const cPlanef& cameraPlane = gpViewFrustum->GetPlane(frustumPlane);
@@ -1700,7 +1700,7 @@ bool iRenderer::CheckShadowCasterContributesToView(iRenderable *apObject)
 
         //Log("plane %d contribute: %d\n",frustumPlane, bContributes);
 
-        if(bContributes==false)
+        if(bContributes == false)
         {
             break;
         }
@@ -1730,7 +1730,7 @@ void iRenderer::GetShadowCastersIterative(iRenderableContainerNode *apNode, eCol
         {
             return;
         }
-        if(CheckNodeIsVisible(apNode)==false)
+        if(CheckNodeIsVisible(apNode) == false)
         {
             return;
         }
@@ -1757,7 +1757,7 @@ void iRenderer::GetShadowCastersIterative(iRenderableContainerNode *apNode, eCol
 
             /////////
             //Check so visible and shadow caster
-            if(    CheckObjectIsVisible(pObject, eRenderableFlag_ShadowCaster)==false ||
+            if(    CheckObjectIsVisible(pObject, eRenderableFlag_ShadowCaster) == false ||
                     pObject->GetMaterial() == NULL ||
                     pObject->GetMaterial()->GetType()->IsTranslucent())
             {
@@ -1774,7 +1774,7 @@ void iRenderer::GetShadowCastersIterative(iRenderableContainerNode *apNode, eCol
 
             /////////
             // Check if it contributes to scene
-            if(CheckShadowCasterContributesToView(pObject)==false)
+            if(CheckShadowCasterContributesToView(pObject) == false)
             {
                 continue;
             }
@@ -1823,9 +1823,9 @@ static bool SortFunc_ShadowCasters(iRenderable* apObjectA, iRenderable *apObject
     //If alpha, sort by texture (we know alpha is same for both materials, so can just test one)
     if(    pMatA->GetAlphaMode() == eMaterialAlphaMode_Trans )
     {
-        if(pMatA->GetProgram(0,eMaterialRenderMode_Z) != pMatB->GetProgram(0,eMaterialRenderMode_Z))
+        if(pMatA->GetProgram(0, eMaterialRenderMode_Z) != pMatB->GetProgram(0, eMaterialRenderMode_Z))
         {
-            return pMatA->GetProgram(0,eMaterialRenderMode_Z) < pMatB->GetProgram(0,eMaterialRenderMode_Z);
+            return pMatA->GetProgram(0, eMaterialRenderMode_Z) < pMatB->GetProgram(0, eMaterialRenderMode_Z);
         }
 
         if(pMatA->GetTexture(eMaterialTexture_Diffuse) != pMatB->GetTexture(eMaterialTexture_Diffuse))
@@ -1851,7 +1851,7 @@ bool iRenderer::SetupShadowMapRendering(iLight *apLight)
         return false;    //Only support spot lights for now...
     }
 
-    cLightSpot *pSpotLight = static_cast<cLightSpot*>(apLight);
+    cLightSpot *pSpotLight = static_cast<cLightSpot *>(apLight);
     cFrustum *pLightFrustum = pSpotLight->GetFrustum();
 
     //Set the view frustum, needed in some functions cause the current is set for the light during rendering.
@@ -1859,9 +1859,9 @@ bool iRenderer::SetupShadowMapRendering(iLight *apLight)
 
     /////////////////////////
     // Get the camera planes that face away from the light
-    glBeyondLightAndViewPlaneNum =0;
+    glBeyondLightAndViewPlaneNum = 0;
     cVector3f vLightForward = pLightFrustum->GetForward();
-    for(int i=0; i<eFrustumPlane_LastEnum; ++i)
+    for(int i = 0; i < eFrustumPlane_LastEnum; ++i)
     {
         const cPlanef& cameraPlane = gpViewFrustum->GetPlane((eFrustumPlane)i);
 
@@ -1905,12 +1905,12 @@ bool iRenderer::SetupShadowMapRendering(iLight *apLight)
     //Get the objects
     if(apLight->GetShadowCastersAffected() & eObjectVariabilityFlag_Dynamic)
     {
-        GetShadowCasters(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Dynamic),mvShadowCasters, pSpotLight->GetFrustum());
+        GetShadowCasters(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Dynamic), mvShadowCasters, pSpotLight->GetFrustum());
     }
 
     if(apLight->GetShadowCastersAffected() & eObjectVariabilityFlag_Static)
     {
-        GetShadowCasters(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Static),mvShadowCasters, pSpotLight->GetFrustum());
+        GetShadowCasters(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Static), mvShadowCasters, pSpotLight->GetFrustum());
     }
 
     //See if any objects where added.
@@ -1927,7 +1927,7 @@ bool iRenderer::SetupShadowMapRendering(iLight *apLight)
 
 //-----------------------------------------------------------------------
 
-static cFrustum * gpTempLightFrustum=NULL;
+static cFrustum *gpTempLightFrustum = NULL;
 bool iRenderer::RenderShadowCasterCHCStaticCallback(iRenderer *apRenderer, iRenderable *apObject)
 {
     return apRenderer->RenderShadowCasterCHC(apObject);
@@ -1938,13 +1938,13 @@ bool iRenderer::RenderShadowCasterCHC(iRenderable *apObject)
     cMaterial *pMaterial = apObject->GetMaterial();
 
     //Check so it is a solid object
-    if( pMaterial==NULL || pMaterial->GetType()->IsTranslucent())
+    if( pMaterial == NULL || pMaterial->GetType()->IsTranslucent())
     {
         return false;
     }
 
     //Check so it affects the view frustum
-    if(CheckShadowCasterContributesToView(apObject)==false)
+    if(CheckShadowCasterContributesToView(apObject) == false)
     {
         return false;
     }
@@ -1952,7 +1952,7 @@ bool iRenderer::RenderShadowCasterCHC(iRenderable *apObject)
     //mvShadowCasters.push_back(apObject); //Debug. Only to see what object are rendered.
 
     //Render the object
-    RenderShadowCaster(apObject,gpTempLightFrustum);
+    RenderShadowCaster(apObject, gpTempLightFrustum);
 
     return true;
 }
@@ -1971,7 +1971,7 @@ void iRenderer::RenderShadowCastersNormal(cFrustum *apLightFrustum)
 {
     ////////////////////////////////
     // Iterate the objects to be rendered
-    for(size_t i=0; i<mvShadowCasters.size(); ++i)
+    for(size_t i = 0; i < mvShadowCasters.size(); ++i)
     {
         RenderShadowCaster(mvShadowCasters[i], apLightFrustum);
     }
@@ -1982,7 +1982,7 @@ void iRenderer::RenderShadowMap(iLight *apLight, iFrameBuffer *apShadowBuffer)
 {
     if(mbLog)
     {
-        Log("---\nBegin Rendering Shadow Map for light '%s' / %d to buffer %d\n",apLight->GetName().c_str(), apLight, apShadowBuffer);
+        Log("---\nBegin Rendering Shadow Map for light '%s' / %d to buffer %d\n", apLight->GetName().c_str(), apLight, apShadowBuffer);
     }
     /////////////////////////
     // Get light data
@@ -1991,7 +1991,7 @@ void iRenderer::RenderShadowMap(iLight *apLight, iFrameBuffer *apShadowBuffer)
         return;    //Only support spot lights for now...
     }
 
-    cLightSpot *pSpotLight = static_cast<cLightSpot*>(apLight);
+    cLightSpot *pSpotLight = static_cast<cLightSpot *>(apLight);
     cFrustum *pLightFrustum = pSpotLight->GetFrustum();
 
 
@@ -2004,7 +2004,7 @@ void iRenderer::RenderShadowMap(iLight *apLight, iFrameBuffer *apShadowBuffer)
     SetAlphaLimit(mfDefaultAlphaLimit);
     SetChannelMode(eMaterialChannelMode_None);
 
-    SetTextureRange(NULL,0);
+    SetTextureRange(NULL, 0);
 
     //Do not use any custom occlusion for shadows!
     SetOcclusionPlanesActive(false);
@@ -2015,7 +2015,7 @@ void iRenderer::RenderShadowMap(iLight *apLight, iFrameBuffer *apShadowBuffer)
 
     /////////////////////////
     // Setup render target
-    SetFrameBuffer(apShadowBuffer,false, false);
+    SetFrameBuffer(apShadowBuffer, false, false);
 
     mpLowLevelGraphics->SetClearDepth(1);
     ClearFrameBuffer(eClearFrameBufferFlag_Depth, false);
@@ -2045,7 +2045,7 @@ void iRenderer::RenderShadowMap(iLight *apLight, iFrameBuffer *apShadowBuffer)
 
     /////////////////////////
     // Reset states
-    SetTexture(0,NULL);
+    SetTexture(0, NULL);
 
     SetOcclusionPlanesActive(true);
 
@@ -2101,7 +2101,7 @@ void iRenderer::AssignAndRenderOcclusionQueryObjects(bool abSetFrameBuffer, iFra
 
     /////////////////////////////////////
     //If no queries added, then skip any rendering
-    if(mpCurrentSettings->mlCurrentOcclusionObject <=0)
+    if(mpCurrentSettings->mlCurrentOcclusionObject <= 0)
     {
         return;
     }
@@ -2111,7 +2111,7 @@ void iRenderer::AssignAndRenderOcclusionQueryObjects(bool abSetFrameBuffer, iFra
     ////////////////////////////////////
     // Copying queries to new array
     mvSortedOcclusionObjects.resize(mpCurrentSettings->mlCurrentOcclusionObject);
-    for(int i=0; i<mpCurrentSettings->mlCurrentOcclusionObject; ++i)
+    for(int i = 0; i < mpCurrentSettings->mlCurrentOcclusionObject; ++i)
     {
         mvSortedOcclusionObjects[i] = mpCurrentSettings->mvOcclusionObjectPool[i];
     }
@@ -2136,12 +2136,12 @@ void iRenderer::AssignAndRenderOcclusionQueryObjects(bool abSetFrameBuffer, iFra
     SetAlphaMode(eMaterialAlphaMode_Solid);
     SetChannelMode(eMaterialChannelMode_None);
 
-    SetTextureRange(NULL,0);
+    SetTextureRange(NULL, 0);
     SetProgram(NULL);
 
     ///////////////////////////////////
     // Render the queries
-    for(size_t i=0; i<mvSortedOcclusionObjects.size(); ++i)
+    for(size_t i = 0; i < mvSortedOcclusionObjects.size(); ++i)
     {
         cOcclusionQueryObject *pObject = mvSortedOcclusionObjects[i];
 
@@ -2181,7 +2181,7 @@ void iRenderer::AssignAndRenderOcclusionQueryObjects(bool abSetFrameBuffer, iFra
 
 void iRenderer::RetrieveAllLightOcclusionPair(bool abWaitForResult)
 {
-    for(size_t i=0; i<mpCurrentSettings->mvLightOcclusionPairs.size(); ++i)
+    for(size_t i = 0; i < mpCurrentSettings->mvLightOcclusionPairs.size(); ++i)
     {
         cLightOcclusionPair &loPair = mpCurrentSettings->mvLightOcclusionPairs[i];
         iOcclusionQuery *pQuery = loPair.mpQuery;
@@ -2204,7 +2204,7 @@ void iRenderer::RetrieveAllLightOcclusionPair(bool abWaitForResult)
         }
         else
         {
-            loPair.mlSampleResults =0;
+            loPair.mlSampleResults = 0;
         }
 
         loPair.mpQuery = NULL;
@@ -2216,7 +2216,7 @@ void iRenderer::RetrieveAllLightOcclusionPair(bool abWaitForResult)
 
 void iRenderer::RenderBasicSkyBox()
 {
-    if(mpCurrentWorld==NULL || mpCurrentWorld->GetSkyBoxActive()==false)
+    if(mpCurrentWorld == NULL || mpCurrentWorld->GetSkyBoxActive() == false)
     {
         return;
     }
@@ -2235,7 +2235,7 @@ void iRenderer::RenderBasicSkyBox()
 
     float fFarClip = mpCurrentFrustum->GetFarPlane();
 
-    float fSide = sqrt((fFarClip*fFarClip) / 3) *0.95f;
+    float fSide = sqrt((fFarClip * fFarClip) / 3) * 0.95f;
     m_mtxSkyBox.m[0][0] = fSide;
     m_mtxSkyBox.m[1][1] = fSide;
     m_mtxSkyBox.m[2][2] = fSide;
@@ -2250,8 +2250,8 @@ void iRenderer::RenderBasicSkyBox()
 
     /////////////////////////
     //Texture and vertex buffer
-    SetTexture(0,mpCurrentWorld->GetSkyBoxTexture());
-    SetTextureRange(NULL,1);
+    SetTexture(0, mpCurrentWorld->GetSkyBoxTexture());
+    SetTextureRange(NULL, 1);
 
     SetVertexBuffer(mpCurrentWorld->GetSkyBoxVertexBuffer());
 
@@ -2266,7 +2266,7 @@ bool iRenderer::SetupLightScissorRect(iLight *apLight, cMatrixf *apViewSpaceMatr
 {
     if(mfScissorLastFov != mpCurrentFrustum->GetFOV())
     {
-        mfScissorLastTanHalfFov = tan(mpCurrentFrustum->GetFOV()*0.5f);
+        mfScissorLastTanHalfFov = tan(mpCurrentFrustum->GetFOV() * 0.5f);
     }
 
     /*cMath::GetClipRectFromBV(mTempClipRect,*apLight->GetBoundingVolume(),mpCurrentFrustum,
@@ -2275,7 +2275,7 @@ bool iRenderer::SetupLightScissorRect(iLight *apLight, cMatrixf *apViewSpaceMatr
 
     mTempClipRect = cMath::GetClipRectFromSphere(apViewSpaceMatrix->GetTranslation(),
                     apLight->GetRadius(), mpCurrentFrustum,
-                    mvRenderTargetSize,true,mfScissorLastTanHalfFov);
+                    mvRenderTargetSize, true, mfScissorLastTanHalfFov);
 
     return SetScissorRect(mTempClipRect, true);
 }
@@ -2286,7 +2286,7 @@ bool iRenderer::SetupLightScissorRect(iLight *apLight, cMatrixf *apViewSpaceMatr
 void iRenderer::SetMaterialProgram(eMaterialRenderMode aRenderMode, cMaterial *apMaterial)
 {
     iMaterialType *pMatType = apMaterial->GetType();
-    iGpuProgram *pProgram = apMaterial->GetProgram(0,aRenderMode);
+    iGpuProgram *pProgram = apMaterial->GetProgram(0, aRenderMode);
 
     ///////////////////////////////////////
     // Check if program is set
@@ -2324,9 +2324,9 @@ void iRenderer::SetMaterialProgram(eMaterialRenderMode aRenderMode, cMaterial *a
         {
             if(mbLog)
             {
-                Log("  Setting up type specific program vars for material type %d/'%s'\n",pMatType,pMatType->GetName().c_str());
+                Log("  Setting up type specific program vars for material type %d/'%s'\n", pMatType, pMatType->GetName().c_str());
             }
-            pMatType->SetupTypeSpecificData(aRenderMode,pProgram,this);
+            pMatType->SetupTypeSpecificData(aRenderMode, pProgram, this);
             mpCurrentMaterialType = pMatType;
         }
         //////////////////////
@@ -2335,9 +2335,9 @@ void iRenderer::SetMaterialProgram(eMaterialRenderMode aRenderMode, cMaterial *a
         {
             if(mbLog)
             {
-                Log("  Setting up material specific program vars for material %d/'%s'\n",apMaterial,apMaterial->GetName().c_str());
+                Log("  Setting up material specific program vars for material %d/'%s'\n", apMaterial, apMaterial->GetName().c_str());
             }
-            pMatType->SetupMaterialSpecificData(aRenderMode,pProgram,apMaterial,this);
+            pMatType->SetupMaterialSpecificData(aRenderMode, pProgram, apMaterial, this);
             mpCurrentMaterial = apMaterial;
         }
     }
@@ -2349,10 +2349,10 @@ void iRenderer::SetMaterialTextures(eMaterialRenderMode aRenderMode, cMaterial *
 {
     iMaterialType *pType = apMaterial->GetType();
 
-    for(int i=0; i<kMaxTextureUnits; ++i)
+    for(int i = 0; i < kMaxTextureUnits; ++i)
     {
         //Set texture, if special textures are used, check for those too!
-        iTexture *pTexture = apMaterial->GetTextureInUnit(aRenderMode,i);
+        iTexture *pTexture = apMaterial->GetTextureInUnit(aRenderMode, i);
 
         if(mvCurrentTexture[i] != pTexture)
         {
@@ -2360,11 +2360,11 @@ void iRenderer::SetMaterialTextures(eMaterialRenderMode aRenderMode, cMaterial *
             {
                 if(pTexture)
                 {
-                    Log("  Setting texture unit: %d, %d/'%s'\n",i,pTexture,pTexture->GetName().c_str());
+                    Log("  Setting texture unit: %d, %d/'%s'\n", i, pTexture, pTexture->GetName().c_str());
                 }
                 else
                 {
-                    Log("  Setting texture unit: %d, 'NULL\n",i);
+                    Log("  Setting texture unit: %d, 'NULL\n", i);
                 }
             }
 
@@ -2385,7 +2385,7 @@ void iRenderer::DrawCurrentMaterial(eMaterialRenderMode aRenderMode, iRenderable
 
         if(pMaterial->HasObjectSpecificsSettings(aRenderMode))
         {
-            pMatType->SetupObjectSpecificData(aRenderMode,mpCurrentProgram,apObject,this);
+            pMatType->SetupObjectSpecificData(aRenderMode, mpCurrentProgram, apObject, this);
         }
     }
 
@@ -2401,10 +2401,10 @@ bool iRenderer::CheckRenderablePlaneIsVisible(iRenderable *apObject, cFrustum *a
         return true;
     }
 
-    cSubMeshEntity *pSubMeshEnt = static_cast<cSubMeshEntity*>(apObject);
+    cSubMeshEntity *pSubMeshEnt = static_cast<cSubMeshEntity *>(apObject);
     cSubMesh *pSubMesh = pSubMeshEnt->GetSubMesh();
 
-    if(pSubMesh->GetIsOneSided()==false)
+    if(pSubMesh->GetIsOneSided() == false)
     {
         return true;
     }
@@ -2424,20 +2424,20 @@ cRect2l iRenderer::GetClipRectFromObject(iRenderable *apObject, float afPaddingP
     cBoundingVolume *pBV = apObject->GetBoundingVolume();
 
     cRect2l clipRect;
-    if(afHalfFovTan ==0)
+    if(afHalfFovTan == 0)
     {
-        afHalfFovTan = tan(apFrustum->GetFOV()*0.5f);
+        afHalfFovTan = tan(apFrustum->GetFOV() * 0.5f);
     }
     cMath::GetClipRectFromBV(clipRect, *pBV, apFrustum, avScreenSize, afHalfFovTan);
 
     //Add 20% padding on clip rect
-    int lXInc = (int)((float)clipRect.w*afHalfFovTan);
-    int lYInc = (int)((float)clipRect.h*afHalfFovTan);
+    int lXInc = (int)((float)clipRect.w * afHalfFovTan);
+    int lYInc = (int)((float)clipRect.h * afHalfFovTan);
 
-    clipRect.x = cMath::Max(clipRect.x-lXInc, 0);
-    clipRect.y = cMath::Max(clipRect.y-lYInc, 0);
-    clipRect.w = cMath::Min(clipRect.w+lXInc*2, avScreenSize.x-clipRect.x);
-    clipRect.h = cMath::Min(clipRect.h+lYInc*2, avScreenSize.y-clipRect.y);
+    clipRect.x = cMath::Max(clipRect.x - lXInc, 0);
+    clipRect.y = cMath::Max(clipRect.y - lYInc, 0);
+    clipRect.w = cMath::Min(clipRect.w + lXInc * 2, avScreenSize.x - clipRect.x);
+    clipRect.h = cMath::Min(clipRect.h + lYInc * 2, avScreenSize.y - clipRect.y);
 
     return clipRect;
 }
@@ -2449,7 +2449,7 @@ bool iRenderer::CheckObjectIsVisible(iRenderable *apObject, tRenderableFlag alNe
 {
     /////////////////////////////
     // Is Visible var
-    if(apObject->IsVisible()==false)
+    if(apObject->IsVisible() == false)
     {
         return false;
     }
@@ -2464,14 +2464,14 @@ bool iRenderer::CheckObjectIsVisible(iRenderable *apObject, tRenderableFlag alNe
     /////////////////////////////
     // Clip plane check.
     // NOTE: This shall always be the user clip planes! Since we wanna cull stuff like nodes where clip planes are not active, etc.
-    if(mvCurrentOcclusionPlanes.empty()==false && mbOcclusionPlanesActive)
+    if(mvCurrentOcclusionPlanes.empty() == false && mbOcclusionPlanesActive)
     {
         cBoundingVolume *pBV = apObject->GetBoundingVolume();
-        for(size_t i=0; i<mvCurrentOcclusionPlanes.size(); ++i)
+        for(size_t i = 0; i < mvCurrentOcclusionPlanes.size(); ++i)
         {
             cPlanef& plane = mvCurrentOcclusionPlanes[i];
 
-            if(cMath::CheckPlaneBVCollision(plane, *pBV)==eCollision_Outside)
+            if(cMath::CheckPlaneBVCollision(plane, *pBV) == eCollision_Outside)
             {
                 return false;
             }
@@ -2485,18 +2485,18 @@ bool iRenderer::CheckObjectIsVisible(iRenderable *apObject, tRenderableFlag alNe
 
 bool iRenderer::CheckNodeIsVisible(iRenderableContainerNode *apNode)
 {
-    if(mbOcclusionPlanesActive==false || mvCurrentOcclusionPlanes.empty())
+    if(mbOcclusionPlanesActive == false || mvCurrentOcclusionPlanes.empty())
     {
         return true;
     }
 
     // NOTE: This shall always be the user clip planes! The render function ones might not be active when culling is needed and so on.
-    for(size_t i=0; i<mvCurrentOcclusionPlanes.size(); ++i)
+    for(size_t i = 0; i < mvCurrentOcclusionPlanes.size(); ++i)
     {
         cPlanef& plane = mvCurrentOcclusionPlanes[i];
 
         if(cMath::CheckPlaneAABBCollision(    plane, apNode->GetMin(), apNode->GetMax(),
-                                              apNode->GetCenter(), apNode->GetRadius())==eCollision_Outside)
+                                              apNode->GetCenter(), apNode->GetRadius()) == eCollision_Outside)
         {
             return false;
         }
@@ -2511,7 +2511,7 @@ bool iRenderer::CheckFogAreaInsideNearPlane(cMatrixf &a_mtxInvBoxModelMatrix)
 {
     cPlanef boxspaceNearPlane = cMath::TransformPlane(a_mtxInvBoxModelMatrix, mpCurrentFrustum->GetPlane(eFrustumPlane_Near));
     cVector3f vNearPlaneVtx[4];
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
         vNearPlaneVtx[i] = cMath::MatrixMul(a_mtxInvBoxModelMatrix, mpCurrentFrustum->GetVertex(i));
     }
@@ -2528,7 +2528,7 @@ bool iRenderer::CheckFogAreaInsideNearPlane(cMatrixf &a_mtxInvBoxModelMatrix)
 
     //////////////////////////////
     // Near plane points vs AABB
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
         if(cMath::CheckPointInAABBIntersection(vNearPlaneVtx[i], vMin, vMax))
         {
@@ -2538,7 +2538,7 @@ bool iRenderer::CheckFogAreaInsideNearPlane(cMatrixf &a_mtxInvBoxModelMatrix)
 
     //////////////////////////////
     // Check if near plane points intersect with box
-    if(cMath::CheckPointsAABBPlanesCollision(vNearPlaneVtx, 4, vMin, vMax)!=eCollision_Outside)
+    if(cMath::CheckPointsAABBPlanesCollision(vNearPlaneVtx, 4, vMin, vMax) != eCollision_Outside)
     {
         return true;
     }
@@ -2550,14 +2550,14 @@ bool iRenderer::CheckFogAreaInsideNearPlane(cMatrixf &a_mtxInvBoxModelMatrix)
 
 static const cVector3f gvFogBoxPlaneNormals[6] =
 {
-    cVector3f(-1,0,0), //Left
-    cVector3f(1,0,0), //Right
+    cVector3f(-1, 0, 0), //Left
+    cVector3f(1, 0, 0), //Right
 
-    cVector3f(0,-1,0), //Bottom
-    cVector3f(0,1,0), //Top
+    cVector3f(0, -1, 0), //Bottom
+    cVector3f(0, 1, 0), //Top
 
-    cVector3f(0,0,-1), //Back
-    cVector3f(0,0,1), //Front
+    cVector3f(0, 0, -1), //Back
+    cVector3f(0, 0, 1), //Front
 };
 static const cVector3f gvFogBoxCompareSize = cVector3f(0.5001f);
 
@@ -2566,30 +2566,30 @@ bool iRenderer::CheckFogAreaRayIntersection(cMatrixf &a_mtxInvBoxModelMatrix, co
 {
     cVector3f vBoxSpaceDir = cMath::MatrixMul3x3(a_mtxInvBoxModelMatrix, avRayDir);
 
-    bool bFoundIntersection=false;
+    bool bFoundIntersection = false;
     afExitDist = 0;
 
     ///////////////////////////////////
     // Iterate the sides of the cube
-    for(int i=0; i<6; ++i)
+    for(int i = 0; i < 6; ++i)
     {
         const cVector3f& vPlaneNormal = gvFogBoxPlaneNormals[i];
 
         ///////////////////////////////////
         // Calculate plane intersection
         float fMul = cMath::Vector3Dot(vPlaneNormal, vBoxSpaceDir);
-        if(fabs(fMul)<0.0001f)
+        if(fabs(fMul) < 0.0001f)
         {
             continue;
         }
-        float fNegDist = -(cMath::Vector3Dot(vPlaneNormal, avBoxSpaceRayStart)+0.5f);
+        float fNegDist = -(cMath::Vector3Dot(vPlaneNormal, avBoxSpaceRayStart) +0.5f);
 
         float fT = fNegDist / fMul;
-        if(fT <0)
+        if(fT < 0)
         {
             continue;
         }
-        cVector3f vAbsNrmIntersect = cMath::Vector3Abs(vBoxSpaceDir*fT + avBoxSpaceRayStart);
+        cVector3f vAbsNrmIntersect = cMath::Vector3Abs(vBoxSpaceDir * fT + avBoxSpaceRayStart);
 
         ///////////////////////////////////
         // Check if the intersection is inside the cube
@@ -2597,7 +2597,7 @@ bool iRenderer::CheckFogAreaRayIntersection(cMatrixf &a_mtxInvBoxModelMatrix, co
         {
             //////////////////////
             // First intersection
-            if(bFoundIntersection==false)
+            if(bFoundIntersection == false)
             {
                 afEntryDist = fT;
                 afExitDist = fT;
@@ -2613,7 +2613,7 @@ bool iRenderer::CheckFogAreaRayIntersection(cMatrixf &a_mtxInvBoxModelMatrix, co
         }
     }
 
-    if(afExitDist<0)
+    if(afExitDist < 0)
     {
         return false;
     }
@@ -2632,7 +2632,7 @@ static bool SortFunc_FogAreaData(const cFogAreaRenderData& aFogDataA, const cFog
 void iRenderer::SetupFogRenderDataArray(bool abSort)
 {
     mpCurrentSettings->mvFogRenderData.resize(0);
-    for(int i=0; i<mpCurrentRenderList->GetFogAreaNum(); ++i)
+    for(int i = 0; i < mpCurrentRenderList->GetFogAreaNum(); ++i)
     {
         cFogArea *pFogArea = mpCurrentRenderList->GetFogArea(i);
         cFogAreaRenderData fogData;
@@ -2645,7 +2645,7 @@ void iRenderer::SetupFogRenderDataArray(bool abSort)
         mpCurrentSettings->mvFogRenderData.push_back(fogData);
     }
 
-    if(abSort && mpCurrentSettings->mvFogRenderData.empty()==false)
+    if(abSort && mpCurrentSettings->mvFogRenderData.empty() == false)
     {
         std::sort(mpCurrentSettings->mvFogRenderData.begin(), mpCurrentSettings->mvFogRenderData.end(), SortFunc_FogAreaData);
     }
@@ -2663,12 +2663,12 @@ float iRenderer::GetFogAreaVisibilityForObject(cFogAreaRenderData *apFogData, iR
     vRayDir = vRayDir / fCameraDistance;
 
     float fEntryDist, fExitDist;
-    if(CheckFogAreaRayIntersection(apFogData->m_mtxInvBoxSpace,apFogData->mvBoxSpaceFrustumOrigin, vRayDir, fEntryDist, fExitDist)==false)
+    if(CheckFogAreaRayIntersection(apFogData->m_mtxInvBoxSpace, apFogData->mvBoxSpaceFrustumOrigin, vRayDir, fEntryDist, fExitDist) == false)
     {
         return 1.0f;
     }
 
-    if(apFogData->mbInsideNearFrustum==false && fCameraDistance < fEntryDist)
+    if(apFogData->mbInsideNearFrustum == false && fCameraDistance < fEntryDist)
     {
         return 1.0f;
     }
@@ -2701,7 +2701,7 @@ float iRenderer::GetFogAreaVisibilityForObject(cFogAreaRenderData *apFogData, iR
 
     //////////////////////////////
     //Calculate the alpha
-    if(fFogDist <=0)
+    if(fFogDist <= 0)
     {
         return 1.0f;
     }
@@ -2721,7 +2721,7 @@ float iRenderer::GetFogAreaVisibilityForObject(cFogAreaRenderData *apFogData, iR
     }
 
     float fAlpha = (fFogDist - fFogStart) / (fFogEnd - fFogStart);
-    if(pFogArea->GetFalloffExp()!=1)
+    if(pFogArea->GetFalloffExp() != 1)
     {
         fAlpha = powf(fAlpha, pFogArea->GetFalloffExp());
     }
@@ -2739,7 +2739,7 @@ void iRenderer::SetOcclusionPlanesActive(bool abX)
 
 //-----------------------------------------------------------------------
 
-iVertexBuffer* iRenderer::CreateQuadVertexBuffer(    eVertexBufferType aType,
+iVertexBuffer *iRenderer::CreateQuadVertexBuffer(    eVertexBufferType aType,
         const cVector3f& avPos, const cVector2f& avSize,
         const cVector2f& avMinUV, const cVector2f& avMaxUV,
         bool abInvertY)
@@ -2747,10 +2747,10 @@ iVertexBuffer* iRenderer::CreateQuadVertexBuffer(    eVertexBufferType aType,
     iVertexBuffer *pVtxBuffer = mpLowLevelGraphics->CreateVertexBuffer(    aType,
                                 eVertexBufferDrawType_Quad,
                                 eVertexBufferUsageType_Dynamic);
-    pVtxBuffer->CreateElementArray(eVertexBufferElement_Position,eVertexBufferElementFormat_Float,4);
-    pVtxBuffer->CreateElementArray(eVertexBufferElement_Texture0,eVertexBufferElementFormat_Float,3);
+    pVtxBuffer->CreateElementArray(eVertexBufferElement_Position, eVertexBufferElementFormat_Float, 4);
+    pVtxBuffer->CreateElementArray(eVertexBufferElement_Texture0, eVertexBufferElementFormat_Float, 3);
 
-    for(int i=0; i<4; ++i)
+    for(int i = 0; i < 4; ++i)
     {
         pVtxBuffer->AddIndex(i);
     }
@@ -2758,17 +2758,17 @@ iVertexBuffer* iRenderer::CreateQuadVertexBuffer(    eVertexBufferType aType,
     float fMinUV_Y = abInvertY ? avMaxUV.y : avMinUV.y;
     float fMaxUV_Y = abInvertY ? avMinUV.y : avMaxUV.y;
 
-    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMinUV.x, fMinUV_Y,0));
-    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position, cVector3f(avPos.x, avPos.y,avPos.z));
+    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMinUV.x, fMinUV_Y, 0));
+    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position, cVector3f(avPos.x, avPos.y, avPos.z));
 
-    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMaxUV.x, fMinUV_Y,0));
-    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position,  cVector3f(avPos.x+avSize.x, avPos.y,avPos.z));
+    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMaxUV.x, fMinUV_Y, 0));
+    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position,  cVector3f(avPos.x + avSize.x, avPos.y, avPos.z));
 
-    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMaxUV.x, fMaxUV_Y,0));
-    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position,  cVector3f(avPos.x+avSize.x, avPos.y+avSize.y,avPos.z));
+    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMaxUV.x, fMaxUV_Y, 0));
+    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position,  cVector3f(avPos.x + avSize.x, avPos.y + avSize.y, avPos.z));
 
-    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMinUV.x, fMaxUV_Y,0));
-    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position,  cVector3f(avPos.x, avPos.y+avSize.y,avPos.z));
+    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMinUV.x, fMaxUV_Y, 0));
+    pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position,  cVector3f(avPos.x, avPos.y + avSize.y, avPos.z));
 
     pVtxBuffer->Compile(0);
 
@@ -2777,45 +2777,45 @@ iVertexBuffer* iRenderer::CreateQuadVertexBuffer(    eVertexBufferType aType,
 
 //-----------------------------------------------------------------------
 
-void iRenderer::UpdateqQuadVertexPosition(iVertexBuffer *apVtxBuffer,const cVector3f& avPos, const cVector2f& avSize, bool abCallUpdate)
+void iRenderer::UpdateqQuadVertexPosition(iVertexBuffer *apVtxBuffer, const cVector3f& avPos, const cVector2f& avSize, bool abCallUpdate)
 {
     int lVtxStride = apVtxBuffer->GetElementNum(eVertexBufferElement_Position);
     float *pPos = apVtxBuffer->GetFloatArray(eVertexBufferElement_Position);
 
     //0
-    pPos[0*lVtxStride +0] = avPos.x;
-    pPos[0*lVtxStride +1] = avPos.y;
-    pPos[0*lVtxStride +2] = avPos.z;
+    pPos[0 * lVtxStride + 0] = avPos.x;
+    pPos[0 * lVtxStride + 1] = avPos.y;
+    pPos[0 * lVtxStride + 2] = avPos.z;
 
     //1
-    pPos[1*lVtxStride +0] = avPos.x+avSize.x;
-    pPos[1*lVtxStride +1] = avPos.y;
-    pPos[1*lVtxStride +2] = avPos.z;
+    pPos[1 * lVtxStride + 0] = avPos.x + avSize.x;
+    pPos[1 * lVtxStride + 1] = avPos.y;
+    pPos[1 * lVtxStride + 2] = avPos.z;
 
     //2
-    pPos[2*lVtxStride +0] = avPos.x+avSize.x;
-    pPos[2*lVtxStride +1] = avPos.y+avSize.y;
-    pPos[2*lVtxStride +2] = avPos.z;
+    pPos[2 * lVtxStride + 0] = avPos.x + avSize.x;
+    pPos[2 * lVtxStride + 1] = avPos.y + avSize.y;
+    pPos[2 * lVtxStride + 2] = avPos.z;
 
     //3
-    pPos[3*lVtxStride +0] = avPos.x;
-    pPos[3*lVtxStride +1] = avPos.y+avSize.y;
-    pPos[3*lVtxStride +2] = avPos.z;
+    pPos[3 * lVtxStride + 0] = avPos.x;
+    pPos[3 * lVtxStride + 1] = avPos.y + avSize.y;
+    pPos[3 * lVtxStride + 2] = avPos.z;
 
     if(abCallUpdate)
     {
-        apVtxBuffer->UpdateData(eVertexElementFlag_Position,false);
+        apVtxBuffer->UpdateData(eVertexElementFlag_Position, false);
     }
 }
 
 //-----------------------------------------------------------------------
 
-iVertexBuffer* iRenderer::LoadVertexBufferFromMesh(const tString& asMeshName, tVertexElementFlag alVtxToCopy)
+iVertexBuffer *iRenderer::LoadVertexBufferFromMesh(const tString& asMeshName, tVertexElementFlag alVtxToCopy)
 {
     iVertexBuffer *pVtxBuffer = mpResources->GetMeshManager()-> CreateVertexBufferFromMesh(asMeshName, alVtxToCopy);
-    if(pVtxBuffer==NULL)
+    if(pVtxBuffer == NULL)
     {
-        FatalError("Could not load vertex buffer from mesh '%s'\n",asMeshName.c_str());
+        FatalError("Could not load vertex buffer from mesh '%s'\n", asMeshName.c_str());
     }
 
     return pVtxBuffer;
@@ -2834,7 +2834,7 @@ iVertexBuffer* iRenderer::LoadVertexBufferFromMesh(const tString& asMeshName, tV
 
 void iRenderer::RunCallback(eRendererMessage aMessage)
 {
-    if(mpCallbackList == NULL || mpCurrentSettings->mbUseCallbacks==false)
+    if(mpCallbackList == NULL || mpCurrentSettings->mbUseCallbacks == false)
     {
         return;
     }
@@ -2883,7 +2883,7 @@ iOcclusionQuery *iRenderer::GetOcclusionQuery()
     else
     {
         pOcclusionQuery = mvOcclusionQueryPool.back();
-        mvOcclusionQueryPool.resize(mvOcclusionQueryPool.size()-1);
+        mvOcclusionQueryPool.resize(mvOcclusionQueryPool.size() - 1);
     }
 
     mlActiveOcclusionQueryNum++;

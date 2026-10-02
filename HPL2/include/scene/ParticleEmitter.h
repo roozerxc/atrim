@@ -139,7 +139,7 @@ public:
 
 //-------------------------------------------------------------------
 
-typedef std::vector<cParticle*> tParticleVec;
+typedef std::vector<cParticle *> tParticleVec;
 typedef tParticleVec::iterator tParticleVecIt;
 
 //-------------------------------------------------------------------
@@ -148,11 +148,11 @@ typedef tParticleVec::iterator tParticleVecIt;
 /////////////// PARTICLE SYSTEM //////////////////////
 //////////////////////////////////////////////////////
 
-class iParticleEmitter :public iRenderable
+class iParticleEmitter : public iRenderable
 {
 public:
-    iParticleEmitter(    tString asName,tMaterialVec* avMaterials,unsigned int alMaxParticles,
-                         cVector3f avSize, cGraphics* apGraphics,cResources *apResources);
+    iParticleEmitter(    tString asName, tMaterialVec* avMaterials, unsigned int alMaxParticles,
+                         cVector3f avSize, cGraphics* apGraphics, cResources *apResources);
     virtual ~iParticleEmitter();
 
     void UpdateLogic(double adFixedDelta);
@@ -173,7 +173,7 @@ public:
 
     virtual bool IsDead()
     {
-        return mlNumOfParticles==0 && mbDying;
+        return mlNumOfParticles == 0 && mbDying;
     }
     virtual bool IsDying()
     {
@@ -207,14 +207,14 @@ public:
     bool IsVisible();
 
     //Renderable implementation
-    bool UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime);
+    bool UpdateGraphicsForViewport(cFrustum *apFrustum, double adFrameTime);
 
     cMaterial *GetMaterial();
-    iVertexBuffer* GetVertexBuffer();
+    iVertexBuffer *GetVertexBuffer();
 
-    cBoundingVolume* GetBoundingVolume();
+    cBoundingVolume *GetBoundingVolume();
 
-    cMatrixf* GetModelMatrix(cFrustum *apFrustum);
+    cMatrixf *GetModelMatrix(cFrustum *apFrustum);
 
     int GetMatrixUpdateCount()
     {
@@ -227,10 +227,10 @@ public:
 
 protected:
     void SwapRemove(unsigned int alIndex);
-    cParticle* CreateParticle();
+    cParticle *CreateParticle();
 
-    virtual void UpdateMotion(double adFixedDelta)=0;
-    virtual void SetParticleDefaults(cParticle *apParticle)=0;
+    virtual void UpdateMotion(double adFixedDelta) = 0;
+    virtual void SetParticleDefaults(cParticle *apParticle) = 0;
 
     cGraphics *mpGraphics;
     cResources *mpResources;
@@ -244,7 +244,7 @@ protected:
 
     cMatrixf m_mtxTemp;
 
-    tMaterialVec* mvMaterials;
+    tMaterialVec *mvMaterials;
 
     int mlSleepCount;
 
@@ -290,7 +290,7 @@ protected:
 
 //-----------------------------------------------------------------
 
-typedef std::list<iParticleEmitter*> tParticleEmitterList;
+typedef std::list<iParticleEmitter *> tParticleEmitterList;
 typedef tParticleEmitterList::iterator tParticleEmitterListIt;
 
 //-----------------------------------------------------------------
@@ -313,17 +313,17 @@ public:
     * \param apResources
     * \param apGraphics
     */
-    iParticleEmitterData(const tString &asName,cResources* apResources,cGraphics *apGraphics);
+    iParticleEmitterData(const tString &asName, cResources* apResources, cGraphics *apGraphics);
     virtual ~iParticleEmitterData();
 
     void AddMaterial(cMaterial *apMaterial);
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
 
-    virtual iParticleEmitter* Create(tString asName, cVector3f avSize)=0;
+    virtual iParticleEmitter *Create(tString asName, cVector3f avSize) = 0;
 
     float GetWarmUpTime() const
     {
@@ -347,7 +347,7 @@ protected:
 
 //-----------------------------------------------------------------
 
-typedef std::map<tString,iParticleEmitterData*> tParticleEmitterDataMap;
+typedef std::map<tString, iParticleEmitterData *> tParticleEmitterDataMap;
 typedef tParticleEmitterDataMap::iterator tParticleEmitterDataMapIt;
 
 //-----------------------------------------------------------------

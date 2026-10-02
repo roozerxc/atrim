@@ -18,12 +18,12 @@ public:
 
     virtual ~iSoundData() {}
 
-    virtual bool CreateFromFile(const tWString &asFile)=0;
+    virtual bool CreateFromFile(const tWString &asFile) = 0;
 
-    virtual iSoundChannel* CreateChannel(int alPriority)=0;
+    virtual iSoundChannel *CreateChannel(int alPriority) = 0;
 
 
-    virtual bool IsStereo()=0;
+    virtual bool IsStereo() = 0;
 
     bool IsStream()
     {
@@ -53,7 +53,7 @@ public:
 protected:
     bool mbStream;
     bool mbLoopStream;
-    cSoundManager* mpSoundManger;
+    cSoundManager *mpSoundManger;
 };
 };
 #endif // HPL_SOUND_DATA_H

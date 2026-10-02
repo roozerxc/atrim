@@ -14,14 +14,14 @@ public:
     cBoneState(const tString &asName, bool abAutoDeleteChildren);
 
     void SetBody(iPhysicsBody *apBody);
-    iPhysicsBody* GetBody();
+    iPhysicsBody *GetBody();
 
     void SetColliderBody(iPhysicsBody *apBody);
-    iPhysicsBody* GetColliderBody();
+    iPhysicsBody *GetColliderBody();
 
     void SetBodyMatrix(const cMatrixf &a_mtxBody);
-    const cMatrixf& GetBodyMatrix();
-    const cMatrixf& GetInvBodyMatrix();
+    const cMatrixf &GetBodyMatrix();
+    const cMatrixf &GetInvBodyMatrix();
 
 private:
     iPhysicsBody *mpBody;

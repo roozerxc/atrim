@@ -43,7 +43,7 @@ cSubMeshEntity::cSubMeshEntity(const tString &asName, cMeshEntity *apMeshEntity,
 
     if(mpMeshEntity->GetMesh()->GetSkeleton())
     {
-        mpDynVtxBuffer = mpSubMesh->GetVertexBuffer()->CreateCopy(eVertexBufferType_Hardware,eVertexBufferUsageType_Dynamic,eFlagBit_All);
+        mpDynVtxBuffer = mpSubMesh->GetVertexBuffer()->CreateCopy(eVertexBufferType_Hardware, eVertexBufferUsageType_Dynamic, eFlagBit_All);
         mvDynTriangles = *mpSubMesh->GetTriangleVecPtr();
     }
     else
@@ -65,7 +65,7 @@ cSubMeshEntity::cSubMeshEntity(const tString &asName, cMeshEntity *apMeshEntity,
     // 0 = no check made, test if matrix is identity
     // -1 = Matrix was not identity
     // 1 = matrix was identiy
-    mlStaticNullMatrixCount =0;
+    mlStaticNullMatrixCount = 0;
     mlBoneMatricesUpdateCount = -2;
 }
 
@@ -126,9 +126,9 @@ void cSubMeshEntity::UpdateLogic(double adFixedDelta)
 //-----------------------------------------------------------------------
 
 
-cMaterial* cSubMeshEntity::GetMaterial()
+cMaterial *cSubMeshEntity::GetMaterial()
 {
-    if(mpMaterial==NULL && mpSubMesh->GetMaterial()==NULL)
+    if(mpMaterial == NULL && mpSubMesh->GetMaterial() == NULL)
     {
         //Error("Materials for sub entity %s are NULL!\n",GetName().c_str());
     }
@@ -179,7 +179,7 @@ static inline void MatrixFloatRotateAdd(float *pDest, const cMatrixf &a_mtxA, co
 
 //-----------------------------------------------------------------------
 
-bool cSubMeshEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,double adFrameTime)
+bool cSubMeshEntity::UpdateGraphicsForViewport(cFrustum *apFrustum, double adFrameTime)
 {
     /////////////////
     // Get distance to frustum
@@ -225,27 +225,27 @@ void cSubMeshEntity::UpdateGraphicsForFrame(double adFrameTime)
         const int lVtxStride = mpDynVtxBuffer->GetElementNum(eVertexBufferElement_Position);
         const int lVtxNum = mpDynVtxBuffer->GetVertexNum();
 
-        for(int vtx=0; vtx < lVtxNum; vtx++)
+        for(int vtx = 0; vtx < lVtxNum; vtx++)
         {
             //To count the bone bindings
             int lCount = 0;
             //Get pointer to weights and bone index.
-            const float *pWeight = &mpSubMesh->mpVertexWeights[vtx*4];
-            if(*pWeight==0)
+            const float *pWeight = &mpSubMesh->mpVertexWeights[vtx * 4];
+            if(*pWeight == 0)
             {
                 continue;
             }
 
-            const unsigned char *pBoneIdx = &mpSubMesh->mpVertexBones[vtx*4];
+            const unsigned char *pBoneIdx = &mpSubMesh->mpVertexBones[vtx * 4];
 
             const cMatrixf &mtxTransform = mpMeshEntity->mvBoneMatrices[*pBoneIdx];
 
 
-            MatrixFloatTransformSet(pSkinPos,mtxTransform, pBindPos, *pWeight);
+            MatrixFloatTransformSet(pSkinPos, mtxTransform, pBindPos, *pWeight);
 
-            MatrixFloatRotateSet(pSkinNormal,mtxTransform, pBindNormal, *pWeight);
+            MatrixFloatRotateSet(pSkinNormal, mtxTransform, pBindNormal, *pWeight);
 
-            MatrixFloatRotateSet(pSkinTangent,mtxTransform, pBindTangent, *pWeight);
+            MatrixFloatRotateSet(pSkinTangent, mtxTransform, pBindTangent, *pWeight);
 
             ++pWeight;
             ++pBoneIdx;
@@ -258,11 +258,11 @@ void cSubMeshEntity::UpdateGraphicsForFrame(double adFrameTime)
                 const cMatrixf &mtxTransform = mpMeshEntity->mvBoneMatrices[*pBoneIdx];
 
                 //Transform with the local movement of the bone.
-                MatrixFloatTransformAdd(pSkinPos,mtxTransform, pBindPos, *pWeight);
+                MatrixFloatTransformAdd(pSkinPos, mtxTransform, pBindPos, *pWeight);
 
-                MatrixFloatRotateAdd(pSkinNormal,mtxTransform, pBindNormal, *pWeight);
+                MatrixFloatRotateAdd(pSkinNormal, mtxTransform, pBindNormal, *pWeight);
 
-                MatrixFloatRotateAdd(pSkinTangent,mtxTransform, pBindTangent, *pWeight);
+                MatrixFloatRotateAdd(pSkinTangent, mtxTransform, pBindTangent, *pWeight);
 
                 ++pWeight;
                 ++pBoneIdx;
@@ -292,7 +292,7 @@ void cSubMeshEntity::UpdateGraphicsForFrame(double adFrameTime)
         }*/
 
         //Update buffer
-        mpDynVtxBuffer->UpdateData(eVertexElementFlag_Position | eVertexElementFlag_Normal | eVertexElementFlag_Texture1,false);
+        mpDynVtxBuffer->UpdateData(eVertexElementFlag_Position | eVertexElementFlag_Normal | eVertexElementFlag_Texture1, false);
 
         //No stencil shadows:
         /*if(mpMeshEntity->GetRenderFlagBit(eRenderableFlag_ShadowCaster))
@@ -309,7 +309,7 @@ void cSubMeshEntity::UpdateGraphicsForFrame(double adFrameTime)
 //-----------------------------------------------------------------------
 
 
-iVertexBuffer* cSubMeshEntity::GetVertexBuffer()
+iVertexBuffer *cSubMeshEntity::GetVertexBuffer()
 {
     if(mpDynVtxBuffer)
     {
@@ -324,7 +324,7 @@ iVertexBuffer* cSubMeshEntity::GetVertexBuffer()
 //-----------------------------------------------------------------------
 
 
-cBoundingVolume* cSubMeshEntity::GetBoundingVolume()
+cBoundingVolume *cSubMeshEntity::GetBoundingVolume()
 {
     if(mpMeshEntity->GetMesh()->GetSkeleton())
     {
@@ -336,7 +336,7 @@ cBoundingVolume* cSubMeshEntity::GetBoundingVolume()
     }
 }
 
-cBoundingVolume* cSubMeshEntity::GetSubMeshBoundingVolume()
+cBoundingVolume *cSubMeshEntity::GetSubMeshBoundingVolume()
 {
     if(mbUpdateBoundingVolume)
     {
@@ -357,13 +357,13 @@ int cSubMeshEntity::GetMatrixUpdateCount()
 
 //-----------------------------------------------------------------------
 
-cMatrixf* cSubMeshEntity::GetModelMatrix(cFrustum *apFrustum)
+cMatrixf *cSubMeshEntity::GetModelMatrix(cFrustum *apFrustum)
 {
     ////////////////////////
     // Static entity
-    if(IsStatic() && mlStaticNullMatrixCount>=0)
+    if(IsStatic() && mlStaticNullMatrixCount >= 0)
     {
-        if(mlStaticNullMatrixCount==0)
+        if(mlStaticNullMatrixCount == 0)
         {
             if(GetWorldMatrix() == cMatrixf::Identity)
             {
@@ -408,7 +408,7 @@ void cSubMeshEntity::SetLocalNode(cNode3D *apNode)
 
 //-----------------------------------------------------------------------
 
-cNode3D* cSubMeshEntity::GetLocalNode()
+cNode3D *cSubMeshEntity::GetLocalNode()
 {
     return mpLocalNode;
 }
@@ -436,7 +436,7 @@ bool cSubMeshEntity::GetUpdateBody()
 
 //-----------------------------------------------------------------------
 
-cTriangleData& cSubMeshEntity::GetTriangle(int alIndex)
+cTriangleData &cSubMeshEntity::GetTriangle(int alIndex)
 {
     if(mpDynVtxBuffer)
     {
@@ -459,7 +459,7 @@ int cSubMeshEntity::GetTriangleNum()
     }
 }
 
-tTriangleDataVec* cSubMeshEntity::GetTriangleVecPtr()
+tTriangleDataVec *cSubMeshEntity::GetTriangleVecPtr()
 {
     if(mpDynVtxBuffer)
     {

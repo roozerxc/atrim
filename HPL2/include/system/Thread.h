@@ -18,7 +18,7 @@ class iThreadClass
 {
 public:
     virtual ~iThreadClass() {}
-    virtual void UpdateThread()=0;
+    virtual void UpdateThread() = 0;
 };
 
 class iThread
@@ -47,11 +47,11 @@ public:
         return mlSleepTime;
     }
 
-    virtual void Start()=0;
-    virtual void Stop()=0;
-    virtual void Sleep(unsigned int alSleepTime)=0;
+    virtual void Start() = 0;
+    virtual void Stop() = 0;
+    virtual void Sleep(unsigned int alSleepTime) = 0;
 
-    virtual void SetPriority(eThreadPrio aPrio)=0;
+    virtual void SetPriority(eThreadPrio aPrio) = 0;
     eThreadPrio GetPriority()
     {
         return mPrio;
@@ -59,13 +59,13 @@ public:
 
 protected:
     static int MainThreadFunc(void* apThread);
-    virtual int TranslateEnginePrio(eThreadPrio aPrio)=0;
+    virtual int TranslateEnginePrio(eThreadPrio aPrio) = 0;
 
     unsigned long mlSleepTime;
     bool mbThreadActive;
 
 private:
-    iThreadClass* mpThreadClass;
+    iThreadClass *mpThreadClass;
     eThreadPrio mPrio;
 };
 };

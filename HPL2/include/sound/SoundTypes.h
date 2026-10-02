@@ -21,7 +21,7 @@ class iSoundEntryCallback
 {
 public:
     virtual ~iSoundEntryCallback() {}
-    virtual void OnPriorityRelease()=0;
+    virtual void OnPriorityRelease() = 0;
 };
 
 //---------------------------------------

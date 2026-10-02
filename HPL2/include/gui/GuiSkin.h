@@ -21,7 +21,7 @@ public:
     cGuiSkinFont(cGui *apGui);
     ~cGuiSkinFont();
 
-    iFontData* mpFont;
+    iFontData *mpFont;
     cVector2f mvSize;
     cColor mColor;
     iGuiMaterial *mpMaterial;
@@ -34,26 +34,26 @@ private:
 class cGuiSkin
 {
 public:
-    cGuiSkin(const tString & asName,cGui *apGui);
+    cGuiSkin(const tString & asName, cGui *apGui);
     ~cGuiSkin();
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
 
     bool LoadFromFile(const tWString &asFile);
 
-    cGuiGfxElement* GetGfx(eGuiSkinGfx aType);
-    cGuiSkinFont* GetFont(eGuiSkinFont aType);
-    const cVector3f& GetAttribute(eGuiSkinAttribute aType);
+    cGuiGfxElement *GetGfx(eGuiSkinGfx aType);
+    cGuiSkinFont *GetFont(eGuiSkinFont aType);
+    const cVector3f &GetAttribute(eGuiSkinAttribute aType);
 private:
 
     tString msName;
     cGui *mpGui;
 
-    std::vector<cGuiGfxElement*> mvGfxElements;
-    std::vector<cGuiSkinFont*> mvFonts;
+    std::vector<cGuiGfxElement *> mvGfxElements;
+    std::vector<cGuiSkinFont *> mvFonts;
     std::vector<cVector3f> mvAttributes;
 };
 

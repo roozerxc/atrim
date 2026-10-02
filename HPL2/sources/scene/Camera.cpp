@@ -23,7 +23,7 @@ cCamera::cCamera()
     mvPosition = cVector3f(0);
 
     mfFOV = cMath::ToRad(70.0f);
-    mfAspect = 4.0f/3.0f;
+    mfAspect = 4.0f / 3.0f;
     mfFarClipPlane = 1000.0f;
     mfNearClipPlane = 0.05f;
 
@@ -54,8 +54,8 @@ cCamera::cCamera()
     mfPitchLimitMin = -kPi2f;
     mfPitchLimitMax = kPi2f;
 
-    mfYawLimitMin =0;
-    mfYawLimitMax =0;
+    mfYawLimitMin = 0;
+    mfYawLimitMax = 0;
 
 }
 
@@ -88,13 +88,13 @@ void cCamera::SetPitch(float afAngle)
 {
     mfPitch = afAngle;
 
-    if(mfPitchLimitMin!=0 || mfPitchLimitMax!=0)
+    if(mfPitchLimitMin != 0 || mfPitchLimitMax != 0)
     {
-        if(mfPitch> mfPitchLimitMax)
+        if(mfPitch > mfPitchLimitMax)
         {
             mfPitch = mfPitchLimitMax;
         }
-        if(mfPitch< mfPitchLimitMin)
+        if(mfPitch < mfPitchLimitMin)
         {
             mfPitch = mfPitchLimitMin;
         }
@@ -108,13 +108,13 @@ void cCamera::SetYaw(float afAngle)
 {
     mfYaw = afAngle;
 
-    if(mfYawLimitMin!=0 || mfYawLimitMax!=0)
+    if(mfYawLimitMin != 0 || mfYawLimitMax != 0)
     {
-        if(mfYaw> mfYawLimitMax)
+        if(mfYaw > mfYawLimitMax)
         {
             mfYaw = mfYawLimitMax;
         }
-        if(mfYaw< mfYawLimitMin)
+        if(mfYaw < mfYawLimitMin)
         {
             mfYaw = mfYawLimitMin;
         }
@@ -160,7 +160,7 @@ void cCamera::MoveForward(float afDist)
 {
     UpdateMoveMatrix();
 
-    mvPosition += m_mtxMove.GetForward()*-afDist;
+    mvPosition += m_mtxMove.GetForward() * -afDist;
 
     mbViewUpdated = true;
     mbFrustumUpdated = true;
@@ -174,7 +174,7 @@ void cCamera::MoveRight(float afDist)
 {
     UpdateMoveMatrix();
 
-    mvPosition += m_mtxMove.GetRight()*afDist;
+    mvPosition += m_mtxMove.GetRight() * afDist;
 
     mbViewUpdated = true;
     mbFrustumUpdated = true;
@@ -188,7 +188,7 @@ void cCamera::MoveUp(float afDist)
 {
     UpdateMoveMatrix();
 
-    mvPosition += m_mtxMove.GetUp()*afDist;
+    mvPosition += m_mtxMove.GetUp() * afDist;
 
     mbViewUpdated = true;
     mbFrustumUpdated = true;
@@ -200,7 +200,7 @@ void cCamera::MoveUp(float afDist)
 
 void cCamera::SetFOV(float afAngle)
 {
-    if(mfFOV==afAngle)
+    if(mfFOV == afAngle)
     {
         return;
     }
@@ -215,7 +215,7 @@ void cCamera::SetFOV(float afAngle)
 
 void cCamera::SetAspect(float afAspect)
 {
-    if(mfAspect==afAspect)
+    if(mfAspect == afAspect)
     {
         return;
     }
@@ -228,7 +228,7 @@ void cCamera::SetAspect(float afAspect)
 
 void cCamera::SetFarClipPlane(float afX)
 {
-    if(mfFarClipPlane==afX)
+    if(mfFarClipPlane == afX)
     {
         return;
     }
@@ -241,7 +241,7 @@ void cCamera::SetFarClipPlane(float afX)
 
 void cCamera::SetNearClipPlane(float afX)
 {
-    if(mfNearClipPlane==afX)
+    if(mfNearClipPlane == afX)
     {
         return;
     }
@@ -306,24 +306,24 @@ void cCamera::ResetRotation()
     m_mtxMove = cMatrixf::Identity;
     m_mtxView = cMatrixf::Identity;
 
-    mfRoll =0;
-    mfYaw =0;
-    mfPitch =0;
+    mfRoll = 0;
+    mfYaw = 0;
+    mfPitch = 0;
 }
 
 //-----------------------------------------------------------------------
 
-cFrustum* cCamera::GetFrustum()
+cFrustum *cCamera::GetFrustum()
 {
     if(mbFrustumUpdated)
     {
         //If the far plane is infinite, still have to use a number on far plane
         //to calculate the near plane in the frustm.
-        bool bWasInf=false;
+        bool bWasInf = false;
         if(mbInfFarPlane)
         {
             SetInifintiveFarPlane(false);
-            bWasInf=true;
+            bWasInf = true;
         }
         //////////////////////////////////////////////
         // Perspective projection
@@ -331,8 +331,8 @@ cFrustum* cCamera::GetFrustum()
         {
             mFrustum.SetupPerspectiveProj(    GetProjectionMatrix(),
                                               GetViewMatrix(),
-                                              GetFarClipPlane(),GetNearClipPlane(),
-                                              GetFOV(),GetAspect(),GetPosition(),mbInfFarPlane);
+                                              GetFarClipPlane(), GetNearClipPlane(),
+                                              GetFOV(), GetAspect(), GetPosition(), mbInfFarPlane);
         }
         //////////////////////////////////////////////
         // Orthographic projection
@@ -340,8 +340,8 @@ cFrustum* cCamera::GetFrustum()
         {
             mFrustum.SetupOrthoProj(    GetProjectionMatrix(),
                                         GetViewMatrix(),
-                                        GetFarClipPlane(),GetNearClipPlane(),
-                                        mvViewSize,GetPosition(),mbInfFarPlane);
+                                        GetFarClipPlane(), GetNearClipPlane(),
+                                        mvViewSize, GetPosition(), mbInfFarPlane);
         }
 
         if(bWasInf)
@@ -357,22 +357,22 @@ cFrustum* cCamera::GetFrustum()
 
 //-----------------------------------------------------------------------
 
-const cMatrixf& cCamera::GetViewMatrix()
+const cMatrixf &cCamera::GetViewMatrix()
 {
     if(mbViewUpdated)
     {
-        m_mtxView=  cMatrixf::Identity;
+        m_mtxView =  cMatrixf::Identity;
 
         if(mRotateMode == eCameraRotateMode_EulerAngles)
         {
-            m_mtxView = cMath::MatrixMul(cMath::MatrixTranslate(mvPosition *-1), m_mtxView);
+            m_mtxView = cMath::MatrixMul(cMath::MatrixTranslate(mvPosition * -1), m_mtxView);
             m_mtxView = cMath::MatrixMul(cMath::MatrixRotateY(-mfYaw), m_mtxView);
             m_mtxView = cMath::MatrixMul(cMath::MatrixRotateX(-mfPitch), m_mtxView);
             m_mtxView = cMath::MatrixMul(cMath::MatrixRotateZ(-mfRoll), m_mtxView);
         }
         else if(mRotateMode == eCameraRotateMode_Matrix)
         {
-            m_mtxView = cMath::MatrixMul(m_mtxMatrixRotation, cMath::MatrixTranslate(mvPosition*-1));
+            m_mtxView = cMath::MatrixMul(m_mtxMatrixRotation, cMath::MatrixTranslate(mvPosition * -1));
         }
 
         mbViewUpdated = false;
@@ -382,7 +382,7 @@ const cMatrixf& cCamera::GetViewMatrix()
 
 //-----------------------------------------------------------------------
 
-const cMatrixf& cCamera::GetProjectionMatrix()
+const cMatrixf &cCamera::GetProjectionMatrix()
 {
     if(mbProjectionUpdated)
     {
@@ -407,7 +407,7 @@ const cMatrixf& cCamera::GetProjectionMatrix()
 
 //-----------------------------------------------------------------------
 
-const cMatrixf& cCamera::GetMoveMatrix()
+const cMatrixf &cCamera::GetMoveMatrix()
 {
     UpdateMoveMatrix();
 
@@ -456,7 +456,7 @@ void cCamera::UnProjectHelper(cVector3f *apPosition, cVector3f *apDirection, con
     // Perspective projection
     if(mProjectionType == eProjectionType_Perspective)
     {
-        float afNormalizedSlope = tan(mfFOV*0.5f);
+        float afNormalizedSlope = tan(mfFOV * 0.5f);
 
         cVector2f avViewportToWorld;
         avViewportToWorld.y = afNormalizedSlope * mfNearClipPlane * 2.0f;
@@ -468,7 +468,7 @@ void cCamera::UnProjectHelper(cVector3f *apPosition, cVector3f *apDirection, con
 
         cMatrixf mtxRot = cMath::MatrixInverse(amtxCameraRotation);
 
-        vDir = cMath::MatrixMul(mtxRot,vDir);
+        vDir = cMath::MatrixMul(mtxRot, vDir);
         vDir.Normalize();
 
         if(apDirection)
@@ -561,7 +561,7 @@ void cCamera::SetRotationMatrix(const cMatrixf& a_mtxRot)
 
 cVector3f cCamera::GetForward()
 {
-    return GetViewMatrix().GetForward()*-1.0f;
+    return GetViewMatrix().GetForward() * -1.0f;
 }
 cVector3f cCamera::GetRight()
 {
@@ -587,9 +587,9 @@ void cCamera::UpdateMoveMatrix()
         if(mRotateMode == eCameraRotateMode_EulerAngles)
         {
             m_mtxMove = cMath::MatrixRotateY(-mfYaw);
-            if(mMoveMode==eCameraMoveMode_Fly)
+            if(mMoveMode == eCameraMoveMode_Fly)
             {
-                m_mtxMove = cMath::MatrixMul(cMath::MatrixRotateX(-mfPitch),m_mtxMove);
+                m_mtxMove = cMath::MatrixMul(cMath::MatrixRotateX(-mfPitch), m_mtxMove);
             }
         }
 

@@ -55,15 +55,15 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-typedef std::multimap<int,iCollideShape*> tLoaderCollideShapeMap;
+typedef std::multimap<int, iCollideShape *> tLoaderCollideShapeMap;
 typedef tLoaderCollideShapeMap::iterator tLoaderCollideShapeMapIt;
 
-typedef std::multimap<int,iPhysicsBody*> tLoaderPhysicsBodyMap;
+typedef std::multimap<int, iPhysicsBody *> tLoaderPhysicsBodyMap;
 typedef tLoaderPhysicsBodyMap::iterator tLoaderPhysicsBodyMapIt;
 
 //-----------------------------------------------------------------------
 
-static iCollideShape* GetBodyShape(cXmlElement *apBodyElem,iPhysicsWorld *apPhysicsWorld, tLoaderCollideShapeMap &a_setShapes)
+static iCollideShape *GetBodyShape(cXmlElement *apBodyElem, iPhysicsWorld *apPhysicsWorld, tLoaderCollideShapeMap &a_setShapes)
 {
     ////////////////////////////////////////
     // Get shapes for body
@@ -88,7 +88,7 @@ static iCollideShape* GetBodyShape(cXmlElement *apBodyElem,iPhysicsWorld *apPhys
     {
         return NULL;
     }
-    if(vShapes.size()==1)
+    if(vShapes.size() == 1)
     {
         return vShapes[0];
     }
@@ -125,28 +125,28 @@ eCollideShapeType ToCollideShape(const tString& asType)
     return eCollideShapeType_Null;
 }
 
-static iCollideShape* CreateCollideShape(cXmlElement *apShapeElem, iPhysicsWorld *apPhysicsWorld, const cVector3f &avScale)
+static iCollideShape *CreateCollideShape(cXmlElement *apShapeElem, iPhysicsWorld *apPhysicsWorld, const cVector3f &avScale)
 {
     eCollideShapeType type = ToCollideShape(apShapeElem->GetAttributeString("ShapeType"));
     cVector3f vSize = apShapeElem->GetAttributeVector3f("Scale") * avScale;
     cVector3f vPos = apShapeElem->GetAttributeVector3f("RelativeTranslation") * avScale;
     cVector3f vRot = apShapeElem->GetAttributeVector3f("RelativeRotation");
 
-    cMatrixf mtxOffset = cMath::MatrixRotate(vRot,eEulerRotationOrder_XYZ);
+    cMatrixf mtxOffset = cMath::MatrixRotate(vRot, eEulerRotationOrder_XYZ);
     mtxOffset.SetTranslation(vPos);
 
     switch(type)
     {
     case eCollideShapeType_Box:
-        return apPhysicsWorld->CreateBoxShape(vSize,&mtxOffset);
+        return apPhysicsWorld->CreateBoxShape(vSize, &mtxOffset);
     case eCollideShapeType_Sphere:
-        return apPhysicsWorld->CreateSphereShape(vSize,&mtxOffset);
+        return apPhysicsWorld->CreateSphereShape(vSize, &mtxOffset);
     case eCollideShapeType_Cylinder:
         mtxOffset = cMath::MatrixMul(mtxOffset, cMath::MatrixRotateZ(kPi2f));
-        return apPhysicsWorld->CreateCylinderShape(vSize.x,vSize.y,&mtxOffset);
+        return apPhysicsWorld->CreateCylinderShape(vSize.x, vSize.y, &mtxOffset);
     case eCollideShapeType_Capsule:
         mtxOffset = cMath::MatrixMul(mtxOffset, cMath::MatrixRotateZ(kPi2f));
-        return apPhysicsWorld->CreateCapsuleShape(vSize.x,vSize.y,&mtxOffset);
+        return apPhysicsWorld->CreateCapsuleShape(vSize.x, vSize.y, &mtxOffset);
     }
 
     return NULL;
@@ -154,7 +154,7 @@ static iCollideShape* CreateCollideShape(cXmlElement *apShapeElem, iPhysicsWorld
 
 //-----------------------------------------------------------------------
 
-static iPhysicsBody * FindBody(int alID, tLoaderPhysicsBodyMap &a_setBodies)
+static iPhysicsBody *FindBody(int alID, tLoaderPhysicsBodyMap &a_setBodies)
 {
     tLoaderPhysicsBodyMapIt it = a_setBodies.find(alID);
     if(it == a_setBodies.end())
@@ -191,7 +191,7 @@ static ePhysicsJointType ToJointType(const tString& asType)
     return ePhysicsJointType_Ball;
 }
 
-static iPhysicsJoint* CreateJoint(    const tString& asEntityName,
+static iPhysicsJoint *CreateJoint(    const tString& asEntityName,
                                       cXmlElement *apJointElem, iPhysicsWorld *apPhysicsWorld,
                                       tLoaderPhysicsBodyMap &a_setBodies,
                                       const cMatrixf& a_mtxTransform,
@@ -218,10 +218,10 @@ static iPhysicsJoint* CreateJoint(    const tString& asEntityName,
     int lParentID = apJointElem->GetAttributeInt("ConnectedParentBodyID");
     int lChildID = apJointElem->GetAttributeInt("ConnectedChildBodyID");
 
-    iPhysicsBody *pParentBody = lParentID > 0 ? FindBody(lParentID,a_setBodies) : NULL;
-    iPhysicsBody *pChildBody = FindBody(lChildID,a_setBodies);
+    iPhysicsBody *pParentBody = lParentID > 0 ? FindBody(lParentID, a_setBodies) : NULL;
+    iPhysicsBody *pChildBody = FindBody(lChildID, a_setBodies);
 
-    if(pChildBody==NULL)
+    if(pChildBody == NULL)
     {
         Error("Could not find child body with ID %d for joint '%s'\n", lChildID, sJointName.c_str());
         return NULL;
@@ -231,7 +231,7 @@ static iPhysicsJoint* CreateJoint(    const tString& asEntityName,
     // Hinge
     if(jointType == ePhysicsJointType_Hinge)
     {
-        iPhysicsJointHinge *pJoint = apPhysicsWorld->CreateJointHinge(sJointName,vPivot,vPinDir,pParentBody,pChildBody);
+        iPhysicsJointHinge *pJoint = apPhysicsWorld->CreateJointHinge(sJointName, vPivot, vPinDir, pParentBody, pChildBody);
 
         pJoint->SetMinAngle(cMath::ToRad(apJointElem->GetAttributeFloat("MinAngle")));
         pJoint->SetMaxAngle(cMath::ToRad(apJointElem->GetAttributeFloat("MaxAngle")));
@@ -242,7 +242,7 @@ static iPhysicsJoint* CreateJoint(    const tString& asEntityName,
     // Ball
     else if(jointType == ePhysicsJointType_Ball)
     {
-        iPhysicsJointBall *pJoint = apPhysicsWorld->CreateJointBall(sJointName,vPivot,vPinDir,pParentBody,pChildBody);
+        iPhysicsJointBall *pJoint = apPhysicsWorld->CreateJointBall(sJointName, vPivot, vPinDir, pParentBody, pChildBody);
 
         pJoint->SetConeLimits(    cMath::ToRad(apJointElem->GetAttributeFloat("MaxConeAngle")),
                                   cMath::ToRad(apJointElem->GetAttributeFloat("MaxTwistAngle")));
@@ -253,7 +253,7 @@ static iPhysicsJoint* CreateJoint(    const tString& asEntityName,
     // Slider
     else if(jointType == ePhysicsJointType_Slider)
     {
-        iPhysicsJointSlider *pJoint = apPhysicsWorld->CreateJointSlider(sJointName, vPivot,vPinDir,pParentBody,pChildBody);
+        iPhysicsJointSlider *pJoint = apPhysicsWorld->CreateJointSlider(sJointName, vPivot, vPinDir, pParentBody, pChildBody);
 
         pJoint->SetMinDistance(apJointElem->GetAttributeFloat("MinDistance"));
         pJoint->SetMaxDistance(apJointElem->GetAttributeFloat("MaxDistance"));
@@ -264,7 +264,7 @@ static iPhysicsJoint* CreateJoint(    const tString& asEntityName,
     // Screw
     else if(jointType == ePhysicsJointType_Screw)
     {
-        iPhysicsJointScrew *pJoint = apPhysicsWorld->CreateJointScrew(sJointName,vPivot,vPinDir,pParentBody,pChildBody);
+        iPhysicsJointScrew *pJoint = apPhysicsWorld->CreateJointScrew(sJointName, vPivot, vPinDir, pParentBody, pChildBody);
 
         pJoint->SetMinDistance(apJointElem->GetAttributeFloat("MinDistance"));
         pJoint->SetMaxDistance(apJointElem->GetAttributeFloat("MaxDistance"));
@@ -311,7 +311,7 @@ eAnimationEventType ToAnimEventType(const tString& asType)
 //-----------------------------------------------------------------------
 
 
-iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool abActive, cXmlElement *apRootElem,
+iEntity3D *cEntityLoader_Object::Load(    const tString &asName, int alID, bool abActive, cXmlElement *apRootElem,
         const cMatrixf &a_mtxTransform, const cVector3f &avScale,
         cWorld *apWorld, const tString &asFileName, const tWString &asFullPath, cResourceVarsObject *apInstanceVars)
 {
@@ -345,7 +345,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
     ////////////////////////////////////////
     // Load ModelData
     cXmlElement* pModelDataElem = apRootElem->GetFirstElement("ModelData");
-    if(pModelDataElem==NULL)
+    if(pModelDataElem == NULL)
     {
         Error("Couldn't load element ModelData");
         return NULL;
@@ -356,15 +356,15 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
 
     //////////////////////////////
     // Before load virtual call.
-    BeforeLoad(apRootElem,a_mtxTransform,apWorld,apInstanceVars);
+    BeforeLoad(apRootElem, a_mtxTransform, apWorld, apInstanceVars);
 
 
     ////////////////////////////////////////
     // Load Mesh and create entity
-    cXmlElement *pMeshElem =NULL;
+    cXmlElement *pMeshElem = NULL;
     {
         pMeshElem  = pModelDataElem->GetFirstElement("Mesh");
-        if(pMeshElem==NULL)
+        if(pMeshElem == NULL)
         {
             Error("Couldn't load element Mesh");
             return NULL;
@@ -378,7 +378,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
         }
         //Log("Mesh: '%s'\n",sMeshFile.c_str());
         mpMesh = apWorld->GetResources()->GetMeshManager()->CreateMesh(sMeshFile);
-        if(mpMesh==NULL)
+        if(mpMesh == NULL)
         {
             return NULL;
         }
@@ -386,14 +386,14 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
         //Create entity
         mpEntity = apWorld->CreateMeshEntity(asName, mpMesh, mbLoadAsStatic);
 
-        if(mpMesh->GetSkeleton()!=NULL)
+        if(mpMesh->GetSkeleton() != NULL)
         {
             mpEntity->SetMatrix(cMath::MatrixScale(mvScale));
         }
 
         //Set entity properties
         //TODO...
-        mpEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster,true); //<- Temp
+        mpEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster, true); //<- Temp
         if(apInstanceVars)
         {
             mpEntity->SetIsOccluder(apInstanceVars->GetVarBool("IsOccluder", false));
@@ -403,7 +403,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
     ////////////////////////////////////////
     // Load sub meshes
     {
-        bool bHasSkeleton = mpMesh->GetSkeleton()!=NULL;
+        bool bHasSkeleton = mpMesh->GetSkeleton() != NULL;
         cXmlNodeListIterator submeshIt = pMeshElem->GetChildIterator();
         while(submeshIt.HasNext())
         {
@@ -415,12 +415,12 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
             //tString sMaterialFile = cString::ToString(pSubMeshElem->Attribute("MaterialFile"),"");
 
             cSubMeshEntity *pSubEntity = mpEntity->GetSubMeshEntityName(sName);
-            if(pSubEntity==NULL)
+            if(pSubEntity == NULL)
             {
-                Warning("Sub mesh '%s' does not exist in mesh '%s'!\n",sName.c_str(), mpMesh->GetName().c_str());
+                Warning("Sub mesh '%s' does not exist in mesh '%s'!\n", sName.c_str(), mpMesh->GetName().c_str());
                 continue;
             }
-            if(bHasSkeleton==false)
+            if(bHasSkeleton == false)
             {
                 lstEntities.push_back(pSubEntity);
             }
@@ -428,11 +428,11 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
 
             //////////////////////////
             // Get transform matrix
-            if(bHasSkeleton==false)
+            if(bHasSkeleton == false)
             {
-                cMatrixf mtxLocalTransform = GetMatrixFromVectors(    pSubMeshElem->GetAttributeVector3f("WorldPos")*mvScale,
+                cMatrixf mtxLocalTransform = GetMatrixFromVectors(    pSubMeshElem->GetAttributeVector3f("WorldPos") * mvScale,
                                              pSubMeshElem->GetAttributeVector3f("Rotation"),
-                                             pSubMeshElem->GetAttributeVector3f("Scale")*mvScale);
+                                             pSubMeshElem->GetAttributeVector3f("Scale") * mvScale);
 
                 //mtxLocalTransform = cMath::MatrixMul(mtxLocalTransform, cMath::MatrixScale(mvScale));
 
@@ -441,7 +441,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
 
             //////////////////////////
             // Set the variables
-            int lID = pSubMeshElem->GetAttributeInt("ID",-1);
+            int lID = pSubMeshElem->GetAttributeInt("ID", -1);
             if(lID < 0)
             {
                 lID = pSubMeshElem->GetAttributeInt("SubMeshID");    //To support older files!
@@ -476,8 +476,8 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
 
             tString sFile = pAnimElem->GetAttributeString("File");
             tString sName = pAnimElem->GetAttributeString("Name");
-            float fSpeed = pAnimElem->GetAttributeFloat("Speed",1.0f);
-            float fSpecialEventTime = pAnimElem->GetAttributeFloat("SpecialEventTime",0.0f);
+            float fSpeed = pAnimElem->GetAttributeFloat("Speed", 1.0f);
+            float fSpecialEventTime = pAnimElem->GetAttributeFloat("SpecialEventTime", 0.0f);
 
             if(cString::GetFilePath(sFile).length() <= 1)
             {
@@ -488,7 +488,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
 
             if(pAnim)
             {
-                cAnimationState *pState = mpEntity->AddAnimation(pAnim, sName,fSpeed);
+                cAnimationState *pState = mpEntity->AddAnimation(pAnim, sName, fSpeed);
                 pState->SetSpecialEventTime(fSpecialEventTime);
 
                 ///////////////////////////////
@@ -533,7 +533,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
                 {
                     if(mbLoadParticleSystems)
                     {
-                        cParticleSystem *pPS = cEngineFileLoading::LoadParticleSystem(pEntityElem,asName +"_", apWorld);
+                        cParticleSystem *pPS = cEngineFileLoading::LoadParticleSystem(pEntityElem, asName + "_", apWorld);
                         if(pPS)
                         {
                             mvParticleSystems.push_back(pPS);
@@ -547,7 +547,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
                 {
                     if(mbLoadBillboards)
                     {
-                        cBillboard *pBillboard = cEngineFileLoading::LoadBillboard(pEntityElem,asName +"_", apWorld, apWorld->GetResources(), mbLoadAsStatic,
+                        cBillboard *pBillboard = cEngineFileLoading::LoadBillboard(pEntityElem, asName + "_", apWorld, apWorld->GetResources(), mbLoadAsStatic,
                                                  &lstLightBillboardListConnections);
                         if(pBillboard)
                         {
@@ -562,7 +562,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
                 {
                     if(mbLoadSounds)
                     {
-                        cSoundEntity *pSound = cEngineFileLoading::LoadSound(pEntityElem,asName +"_", apWorld);
+                        cSoundEntity *pSound = cEngineFileLoading::LoadSound(pEntityElem, asName + "_", apWorld);
                         if(pSound)
                         {
                             mvSoundEntities.push_back(pSound);
@@ -572,11 +572,11 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
                 }
                 /////////////////////////
                 // Light
-                else if(cString::GetLastStringPos(sEntityType,"Light")>0)
+                else if(cString::GetLastStringPos(sEntityType, "Light") > 0)
                 {
                     if(mbLoadLights)
                     {
-                        iLight *pLight = cEngineFileLoading::LoadLight(pEntityElem,asName +"_", apWorld, apWorld->GetResources(),mbLoadAsStatic);
+                        iLight *pLight = cEngineFileLoading::LoadLight(pEntityElem, asName + "_", apWorld, apWorld->GetResources(), mbLoadAsStatic);
                         if(pLight)
                         {
                             mvLights.push_back(pLight);
@@ -614,14 +614,14 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
             cBillboard *pBB = GetBillboardFromID(lightConnect.msBillboardID);
             iLight *pLight = GetLightFromName(lightConnect.msLightName);
 
-            if(pLight==NULL)
+            if(pLight == NULL)
             {
-                Warning("Light with name '%s' does not exist!",lightConnect.msLightName.c_str());
+                Warning("Light with name '%s' does not exist!", lightConnect.msLightName.c_str());
                 continue;
             }
-            if(pBB==NULL)
+            if(pBB == NULL)
             {
-                Warning("Billboard with id '%d' does not exist!",lightConnect.msBillboardID);
+                Warning("Billboard with id '%d' does not exist!", lightConnect.msBillboardID);
                 continue;
             }
 
@@ -653,7 +653,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
                 tString sName = pBoneElem->GetAttributeString("Name");
 
                 cBoneState *pBoneState = mpEntity->GetBoneStateFromName(sName);
-                if(pBoneState==NULL)
+                if(pBoneState == NULL)
                 {
                     Error("Could not find bone '%s' in model '%s'\n", sName.c_str(), cString::To8Char(asFullPath).c_str());
                     continue;
@@ -721,8 +721,8 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
 
                 /////////////////////
                 // Get shape
-                iCollideShape *pShape = GetBodyShape(pBodyElem,pPhysicsWorld,setShapes);
-                if(pShape==NULL)
+                iCollideShape *pShape = GetBodyShape(pBodyElem, pPhysicsWorld, setShapes);
+                if(pShape == NULL)
                 {
                     Error("No shapes found for body '%s'\n", sBodyName.c_str());
                     continue;
@@ -730,7 +730,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
 
                 /////////////////////
                 // Create body and set up properties
-                iPhysicsBody *pBody = pPhysicsWorld->CreateBody(asName +"_"+ sBodyName,pShape);
+                iPhysicsBody *pBody = pPhysicsWorld->CreateBody(asName + "_" + sBodyName, pShape);
                 SetBodyProperties(pBody, pBodyElem);
 
                 //Material
@@ -745,7 +745,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
 
                 /////////////////////
                 // Add extra properties
-                size_t lIdx = mvBodies.size() -1;
+                size_t lIdx = mvBodies.size() - 1;
                 mvBodyExtraData.push_back(cEntityBodyExtraData());
 
                 mvBodyExtraData[lIdx].m_mtxLocalTransform = pBody->GetLocalMatrix();
@@ -765,7 +765,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
                 Error("Loading entity %s: Skeletons in mesh file (%ls) and .ent file (%ls) differ! Probably caused by .ent not being up to date with mesh\n",
                       asName.c_str(),
                       mpMesh->GetFullPath().c_str(),
-                      static_cast<iXmlDocument*>(apRootElem)->GetPath().c_str());
+                      static_cast<iXmlDocument *>(apRootElem)->GetPath().c_str());
             }
             else
             {
@@ -784,7 +784,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
 
     ////////////////////////////////////////
     // Add all remaining entities directly to first body
-    if(mvBodies.empty()==false)
+    if(mvBodies.empty() == false)
     {
         iPhysicsBody *pMainBody = mvBodies[0];
         cMatrixf mtxInvParent = cMath::MatrixInverse(pMainBody->GetLocalMatrix());
@@ -815,7 +815,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
 
     ////////////////////////////////////////
     // Set matrix on entity if there are no bodies.
-    if(mvBodies.size()<=0)
+    if(mvBodies.size() <= 0)
     {
         if(mpMesh->GetSkeleton())
         {
@@ -831,11 +831,11 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
     }
     else
     {
-        for(size_t i=0; i<mvBodies.size(); ++i)
+        for(size_t i = 0; i < mvBodies.size(); ++i)
         {
             iPhysicsBody *pBody = mvBodies[i];
 
-            pBody->SetMatrix(cMath::MatrixMul(a_mtxTransform,pBody->GetLocalMatrix()));
+            pBody->SetMatrix(cMath::MatrixMul(a_mtxTransform, pBody->GetLocalMatrix()));
         }
     }
 
@@ -852,10 +852,10 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
                 cXmlElement *pJointElem = jointIt.Next()->ToElement();
 
 
-                iPhysicsJoint *pJoint = CreateJoint(asName,pJointElem,pPhysicsWorld,setBodies, a_mtxTransform, mvScale);
+                iPhysicsJoint *pJoint = CreateJoint(asName, pJointElem, pPhysicsWorld, setBodies, a_mtxTransform, mvScale);
                 if(pJoint)
                 {
-                    SetJointProperties(pJoint,pJointElem, apWorld);
+                    SetJointProperties(pJoint, pJointElem, apWorld);
 
                     mvJoints.push_back(pJoint);
                 }
@@ -875,11 +875,11 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
 
     ////////////////////////////////////////
     // Final setup, start animation or go to ragdoll mode is possible
-    if(mpEntity->GetAnimationStateNum() >0)
+    if(mpEntity->GetAnimationStateNum() > 0)
     {
         mpEntity->Play(0, true, true);
     }
-    else if(mpEntity->GetMesh()->GetSkeleton() && mvBodies.size() >0)
+    else if(mpEntity->GetMesh()->GetSkeleton() && mvBodies.size() > 0)
     {
         mpEntity->SetSkeletonPhysicsActive(true);
     }
@@ -890,7 +890,7 @@ iEntity3D* cEntityLoader_Object::Load(    const tString &asName, int alID, bool 
 
     // After load virtual call.
     // This is where the user adds extra stuff.
-    AfterLoad(apRootElem,a_mtxTransform,apWorld,apInstanceVars);
+    AfterLoad(apRootElem, a_mtxTransform, apWorld, apInstanceVars);
 
     return mpEntity;
 }
@@ -968,7 +968,7 @@ void cEntityLoader_Object::LoadAndAttachChildren(    cXmlElement *apMainElem, iE
         bool abRemoveAttachedChild, bool abIsBody)
 {
     cXmlElement *pChildrenElem  = apMainElem->GetFirstElement("Children");
-    if(pChildrenElem==NULL)
+    if(pChildrenElem == NULL)
     {
         return;
     }
@@ -1034,12 +1034,12 @@ void cEntityLoader_Object::LoadAndAttachChildren(    cXmlElement *apMainElem, iE
 
         //////////////////////////////////
         // Search for child bone
-        if(abIsBody && bFound==false)
+        if(abIsBody && bFound == false)
         {
             tNodeStateMapIt it = a_mapBoneStates.find(lID);
             if(it != a_mapBoneStates.end())
             {
-                iPhysicsBody *pParentBody = static_cast<iPhysicsBody*>(apEntityParent);
+                iPhysicsBody *pParentBody = static_cast<iPhysicsBody *>(apEntityParent);
 
                 cBoneState *pBoneState = it->second;
                 AttachBoneToBody(pParentBody, mtxInvParent, pBoneState);
@@ -1066,9 +1066,9 @@ void cEntityLoader_Object::LoadAndAttachChildren(    cXmlElement *apMainElem, iE
 
 //-----------------------------------------------------------------------
 
-cBillboard* cEntityLoader_Object::GetBillboardFromID(int alID)
+cBillboard *cEntityLoader_Object::GetBillboardFromID(int alID)
 {
-    for(size_t i=0; i<mvBillboards.size(); ++i)
+    for(size_t i = 0; i < mvBillboards.size(); ++i)
     {
         cBillboard *pBB = mvBillboards[i];
         if(pBB->GetUniqueID() == alID)
@@ -1079,9 +1079,9 @@ cBillboard* cEntityLoader_Object::GetBillboardFromID(int alID)
     return NULL;
 }
 
-iLight* cEntityLoader_Object::GetLightFromName(const tString& asName)
+iLight *cEntityLoader_Object::GetLightFromName(const tString& asName)
 {
-    for(size_t i=0; i<mvLights.size(); ++i)
+    for(size_t i = 0; i < mvLights.size(); ++i)
     {
         iLight *pLight = mvLights[i];
         if(pLight->GetName() == asName)
@@ -1101,83 +1101,83 @@ void cEntityLoader_Object::SetBodyProperties(iPhysicsBody *apBody, cXmlElement *
                       1.0f)
                      );
 
-    apBody->SetMass(apElem->GetAttributeFloat("Mass",1.0f));
+    apBody->SetMass(apElem->GetAttributeFloat("Mass", 1.0f));
 
     apBody->SetAngularDamping(apElem->GetAttributeFloat("AngularDamping"));
     apBody->SetLinearDamping(apElem->GetAttributeFloat("LinearDamping"));
 
-    apBody->SetBlocksSound(apElem->GetAttributeBool("BlocksSound",false));
-    apBody->SetCollideCharacter(apElem->GetAttributeBool("CollideCharacter",true));
-    apBody->SetBlocksPathfinding(apElem->GetAttributeBool("BlocksPathfinding",false));
-    apBody->SetCollide(apElem->GetAttributeBool("CollideNonCharacter",true));
+    apBody->SetBlocksSound(apElem->GetAttributeBool("BlocksSound", false));
+    apBody->SetCollideCharacter(apElem->GetAttributeBool("CollideCharacter", true));
+    apBody->SetBlocksPathfinding(apElem->GetAttributeBool("BlocksPathfinding", false));
+    apBody->SetCollide(apElem->GetAttributeBool("CollideNonCharacter", true));
 
-    apBody->SetGravity(apElem->GetAttributeBool("HasGravity",true));
-    apBody->SetBuoyancyDensityMul(apElem->GetAttributeFloat("BuoyancyDensityMul",1.0));
+    apBody->SetGravity(apElem->GetAttributeBool("HasGravity", true));
+    apBody->SetBuoyancyDensityMul(apElem->GetAttributeFloat("BuoyancyDensityMul", 1.0));
 
-    apBody->SetMaxAngularSpeed(apElem->GetAttributeFloat("MaxAngularSpeed",0));
-    apBody->SetMaxLinearSpeed(apElem->GetAttributeFloat("MaxLinearSpeed",0));
+    apBody->SetMaxAngularSpeed(apElem->GetAttributeFloat("MaxAngularSpeed", 0));
+    apBody->SetMaxLinearSpeed(apElem->GetAttributeFloat("MaxLinearSpeed", 0));
 
-    apBody->SetContinuousCollision(apElem->GetAttributeBool("ContinuousCollision",true));
+    apBody->SetContinuousCollision(apElem->GetAttributeBool("ContinuousCollision", true));
 
-    apBody->SetPushedByCharacterGravity(apElem->GetAttributeBool("PushedByCharacterGravity",false));
+    apBody->SetPushedByCharacterGravity(apElem->GetAttributeBool("PushedByCharacterGravity", false));
 
-    apBody->SetVolatile(apElem->GetAttributeBool("Volatile",false));
+    apBody->SetVolatile(apElem->GetAttributeBool("Volatile", false));
 
-    apBody->SetUseSurfaceEffects(apElem->GetAttributeBool("UseSurfaceEffects",true));
+    apBody->SetUseSurfaceEffects(apElem->GetAttributeBool("UseSurfaceEffects", true));
 
-    apBody->SetGravityCanAttachCharacter(apElem->GetAttributeBool("CanAttachCharacter",false));
+    apBody->SetGravityCanAttachCharacter(apElem->GetAttributeBool("CanAttachCharacter", false));
 
-    apBody->SetUniqueID(apElem->GetAttributeInt("ID",-1));
+    apBody->SetUniqueID(apElem->GetAttributeInt("ID", -1));
 }
 
 //-----------------------------------------------------------------------
 
 void cEntityLoader_Object::SetJointProperties(iPhysicsJoint *pJoint, cXmlElement *apJointElem, cWorld *apWorld)
 {
-    tString t = apJointElem->GetAttributeString("MoveSound","");
+    tString t = apJointElem->GetAttributeString("MoveSound", "");
     pJoint->SetMoveSound(t);
-    pJoint->SetMinMoveSpeed(apJointElem->GetAttributeFloat("MinMoveSpeed",0.5f));
-    pJoint->SetMinMoveFreq(apJointElem->GetAttributeFloat("MinMoveFreq",0.9f));
-    pJoint->SetMinMoveVolume(apJointElem->GetAttributeFloat("MinMoveVolume",0.3f));
-    pJoint->SetMinMoveFreqSpeed(apJointElem->GetAttributeFloat("MinMoveFreqSpeed",0.9f));
-    pJoint->SetMaxMoveFreq(apJointElem->GetAttributeFloat("MaxMoveFreq",1.1f));
-    pJoint->SetMaxMoveVolume(apJointElem->GetAttributeFloat("MaxMoveVolume",1.0f));
-    pJoint->SetMaxMoveFreqSpeed(apJointElem->GetAttributeFloat("MaxMoveFreqSpeed",1.1f));
-    pJoint->SetMiddleMoveSpeed(apJointElem->GetAttributeFloat("MiddleMoveSpeed",1.0f));
-    pJoint->SetMiddleMoveVolume(apJointElem->GetAttributeFloat("MiddleMoveVolume",1.0f));
-    pJoint->SetMoveSpeedType(cString::ToLowerCase(apJointElem->GetAttributeString("MoveType","Linear")) == "angular" ?
+    pJoint->SetMinMoveSpeed(apJointElem->GetAttributeFloat("MinMoveSpeed", 0.5f));
+    pJoint->SetMinMoveFreq(apJointElem->GetAttributeFloat("MinMoveFreq", 0.9f));
+    pJoint->SetMinMoveVolume(apJointElem->GetAttributeFloat("MinMoveVolume", 0.3f));
+    pJoint->SetMinMoveFreqSpeed(apJointElem->GetAttributeFloat("MinMoveFreqSpeed", 0.9f));
+    pJoint->SetMaxMoveFreq(apJointElem->GetAttributeFloat("MaxMoveFreq", 1.1f));
+    pJoint->SetMaxMoveVolume(apJointElem->GetAttributeFloat("MaxMoveVolume", 1.0f));
+    pJoint->SetMaxMoveFreqSpeed(apJointElem->GetAttributeFloat("MaxMoveFreqSpeed", 1.1f));
+    pJoint->SetMiddleMoveSpeed(apJointElem->GetAttributeFloat("MiddleMoveSpeed", 1.0f));
+    pJoint->SetMiddleMoveVolume(apJointElem->GetAttributeFloat("MiddleMoveVolume", 1.0f));
+    pJoint->SetMoveSpeedType(cString::ToLowerCase(apJointElem->GetAttributeString("MoveType", "Linear")) == "angular" ?
                              ePhysicsJointSpeed_Angular :     ePhysicsJointSpeed_Linear);
 
-    pJoint->SetStickyMinLimit(apJointElem->GetAttributeBool("StickyMinLimit",false));
-    pJoint->SetStickyMaxLimit(apJointElem->GetAttributeBool("StickyMaxLimit",false));
+    pJoint->SetStickyMinLimit(apJointElem->GetAttributeBool("StickyMinLimit", false));
+    pJoint->SetStickyMaxLimit(apJointElem->GetAttributeBool("StickyMaxLimit", false));
 
-    pJoint->SetBreakable(apJointElem->GetAttributeBool("Breakable",false));
-    pJoint->SetBreakForce(apJointElem->GetAttributeFloat("BreakForce",1000));
-    pJoint->SetBreakSound(apJointElem->GetAttributeString("BreakSound",""));
+    pJoint->SetBreakable(apJointElem->GetAttributeBool("Breakable", false));
+    pJoint->SetBreakForce(apJointElem->GetAttributeFloat("BreakForce", 1000));
+    pJoint->SetBreakSound(apJointElem->GetAttributeString("BreakSound", ""));
 
-    pJoint->SetLimitAutoSleep(apJointElem->GetAttributeBool("LimitAutoSleep",false));
-    pJoint->SetLimitAutoSleepDist(apJointElem->GetAttributeFloat("LimitAutoSleepDist",0.02f));
-    pJoint->SetLimitAutoSleepNumSteps(apJointElem->GetAttributeInt("LimitAutoSleepNumSteps",10));
+    pJoint->SetLimitAutoSleep(apJointElem->GetAttributeBool("LimitAutoSleep", false));
+    pJoint->SetLimitAutoSleepDist(apJointElem->GetAttributeFloat("LimitAutoSleepDist", 0.02f));
+    pJoint->SetLimitAutoSleepNumSteps(apJointElem->GetAttributeInt("LimitAutoSleepNumSteps", 10));
 
-    pJoint->SetCollideBodies(apJointElem->GetAttributeBool("CollideBodies",true));
+    pJoint->SetCollideBodies(apJointElem->GetAttributeBool("CollideBodies", true));
 
-    pJoint->GetMaxLimit()->msSound = apJointElem->GetAttributeString("MaxLimitSound","");
-    pJoint->GetMaxLimit()->mfMaxSpeed = apJointElem->GetAttributeFloat("MaxLimitMaxSpeed",10.0f);
-    pJoint->GetMaxLimit()->mfMinSpeed = apJointElem->GetAttributeFloat("MaxLimit_MinSpeed",20.0f);
-    if(pJoint->GetMaxLimit()->mfMaxSpeed <=0)
+    pJoint->GetMaxLimit()->msSound = apJointElem->GetAttributeString("MaxLimitSound", "");
+    pJoint->GetMaxLimit()->mfMaxSpeed = apJointElem->GetAttributeFloat("MaxLimitMaxSpeed", 10.0f);
+    pJoint->GetMaxLimit()->mfMinSpeed = apJointElem->GetAttributeFloat("MaxLimit_MinSpeed", 20.0f);
+    if(pJoint->GetMaxLimit()->mfMaxSpeed <= 0)
     {
         pJoint->GetMaxLimit()->mfMaxSpeed = 0.01f;
     }
 
-    pJoint->GetMinLimit()->msSound = apJointElem->GetAttributeString("MinLimitSound","");
-    pJoint->GetMinLimit()->mfMaxSpeed = apJointElem->GetAttributeFloat("MinLimitMaxSpeed",10.0f);
-    pJoint->GetMinLimit()->mfMinSpeed = apJointElem->GetAttributeFloat("MinLimitMinSpeed",20.0f);
-    if(pJoint->GetMinLimit()->mfMaxSpeed <=0)
+    pJoint->GetMinLimit()->msSound = apJointElem->GetAttributeString("MinLimitSound", "");
+    pJoint->GetMinLimit()->mfMaxSpeed = apJointElem->GetAttributeFloat("MinLimitMaxSpeed", 10.0f);
+    pJoint->GetMinLimit()->mfMinSpeed = apJointElem->GetAttributeFloat("MinLimitMinSpeed", 20.0f);
+    if(pJoint->GetMinLimit()->mfMaxSpeed <= 0)
     {
         pJoint->GetMaxLimit()->mfMaxSpeed = 0.01f;
     }
 
-    pJoint->SetUniqueID(apJointElem->GetAttributeInt("ID",-1));
+    pJoint->SetUniqueID(apJointElem->GetAttributeInt("ID", -1));
 
 
     /////////////////////////////
@@ -1324,7 +1324,7 @@ static ePhysicsControllerEnd GetControllerEnd(const char* apString)
 /////////////////////////
 
 
-void cEntityLoader_Object::LoadController(iPhysicsJoint* apJoint,iPhysicsWorld *apPhysicsWorld,
+void cEntityLoader_Object::LoadController(iPhysicsJoint* apJoint, iPhysicsWorld *apPhysicsWorld,
         TiXmlElement *apElem)
 {
     //////////////////////////////
@@ -1405,7 +1405,7 @@ eAnimationEventType cEntityLoader_Object::GetAnimationEventType(const char* apSt
         return eAnimationEventType_PlaySound;
     }
 
-    Warning("Animation event type '%s' does not exist!\n",apString);
+    Warning("Animation event type '%s' does not exist!\n", apString);
     return eAnimationEventType_LastEnum;
 }
 
@@ -1414,7 +1414,7 @@ eAnimationEventType cEntityLoader_Object::GetAnimationEventType(const char* apSt
 void cEntityLoader_Object::LoadUserVariables(cXmlElement *apRootElem)
 {
     cXmlElement *pVarRootElem = apRootElem->GetFirstElement("UserDefinedVariables");
-    if(pVarRootElem==NULL)
+    if(pVarRootElem == NULL)
     {
         Warning("Can not find a use variable root element!\n");
         return;

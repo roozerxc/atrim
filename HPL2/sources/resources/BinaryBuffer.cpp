@@ -92,8 +92,8 @@ bool cBinaryBuffer::Load(const tWString& asFile)
 {
     ////////////////////////////
     // Open file
-    FILE *pFile = cPlatform::OpenFile(asFile,_W("rb"));
-    if(pFile==NULL)
+    FILE *pFile = cPlatform::OpenFile(asFile, _W("rb"));
+    if(pFile == NULL)
     {
         Error("Could not open binary file '%s'\n", cString::To8Char(asFile).c_str());
         return false;
@@ -101,7 +101,7 @@ bool cBinaryBuffer::Load(const tWString& asFile)
 
     ////////////////////////////
     // Get file size
-    fseek(pFile,0,SEEK_END);
+    fseek(pFile, 0, SEEK_END);
     size_t lFileSize = ftell(pFile);
     rewind(pFile);
 
@@ -116,7 +116,7 @@ bool cBinaryBuffer::Load(const tWString& asFile)
     }
     mlDataSize = lFileSize;
     mlReservedDataSize = lFileSize;
-    mlDataPos =0;
+    mlDataPos = 0;
 
     ////////////////////////////
     // Load data from file
@@ -150,8 +150,8 @@ bool cBinaryBuffer::Save()
 
 bool cBinaryBuffer::Save(const tWString& asFile)
 {
-    FILE *pFile = cPlatform::OpenFile(asFile,_W("wb"));
-    if(pFile==NULL)
+    FILE *pFile = cPlatform::OpenFile(asFile, _W("wb"));
+    if(pFile == NULL)
     {
         Error("Could not open binary file '%s'\n", cString::To8Char(asFile).c_str());
         return false;
@@ -180,7 +180,7 @@ void cBinaryBuffer::LoadFromCharEncode(const tString& asInputData, size_t alSize
     mpData = (char*)hplMalloc(alSize);
     mlDataSize = alSize;
     mlReservedDataSize = alSize;
-    mlDataPos =0;
+    mlDataPos = 0;
 
     ////////////////////////////
     // Load from string
@@ -204,8 +204,8 @@ bool cBinaryBuffer::Reserve(size_t alSize)
         return false;
     }
 
-    char* pNewData = (char*)hplRealloc(mpData, alSize);
-    if(pNewData==NULL)
+    char *pNewData = (char*)hplRealloc(mpData, alSize);
+    if(pNewData == NULL)
     {
         return false;
     }
@@ -257,11 +257,11 @@ bool cBinaryBuffer::CompressAndAdd(char *apSrcData, size_t alSize, int alCompres
 {
     ///////////////////////////
     // Check the parameters
-    if(apSrcData==NULL)
+    if(apSrcData == NULL)
     {
         return false;
     }
-    if(alCompressionLevel>9)
+    if(alCompressionLevel > 9)
     {
         return false;
     }
@@ -286,7 +286,7 @@ bool cBinaryBuffer::CompressAndAdd(char *apSrcData, size_t alSize, int alCompres
 
     ///////////////////////////
     // Init compression
-    int ret = deflateInit(&zipStream, alCompressionLevel<0 ? Z_DEFAULT_COMPRESSION : alCompressionLevel);
+    int ret = deflateInit(&zipStream, alCompressionLevel < 0 ? Z_DEFAULT_COMPRESSION : alCompressionLevel);
     if (ret != Z_OK)
     {
         return false;
@@ -343,7 +343,7 @@ bool cBinaryBuffer::DecompressAndAdd(char *apSrcData, size_t alSize)
 {
     ///////////////////////////
     // Check the parameters
-    if(apSrcData==NULL)
+    if(apSrcData == NULL)
     {
         return false;
     }
@@ -430,14 +430,14 @@ bool cBinaryBuffer::DecompressAndAddFromBuffer(cBinaryBuffer *apSrcBuffer, bool 
 
 void cBinaryBuffer::XorTransform(const char* apKeyData, size_t alKeySize)
 {
-    size_t lCurrentKeyChar =0;
-    for(size_t i=0; i<mlDataSize; ++i)
+    size_t lCurrentKeyChar = 0;
+    for(size_t i = 0; i < mlDataSize; ++i)
     {
         mpData[i] = mpData[i] ^ apKeyData[lCurrentKeyChar];
         ++lCurrentKeyChar;
         if(lCurrentKeyChar >= alKeySize)
         {
-            lCurrentKeyChar =0;
+            lCurrentKeyChar = 0;
         }
     }
 }
@@ -454,20 +454,20 @@ void cBinaryBuffer::AddCRC_Begin()
 
 unsigned int cBinaryBuffer::AddCRC_End(unsigned int alKey)
 {
-    unsigned int lCRC = GetCRC(alKey, (int)mlCRCStartPos+4, (int)(mlDataSize - mlCRCStartPos) - 4);
+    unsigned int lCRC = GetCRC(alKey, (int)mlCRCStartPos + 4, (int)(mlDataSize - mlCRCStartPos) - 4);
     *((unsigned int*)GetDataPointerAtPos(mlCRCStartPos)) = lCRC;
 
-    mlCRCStartPos =0;
+    mlCRCStartPos = 0;
 
     return lCRC;
 }
 
 //-----------------------------------------------------------------------
 
-unsigned int cBinaryBuffer::GetCRC(unsigned int alKey,int alDataPos, int alCount)
+unsigned int cBinaryBuffer::GetCRC(unsigned int alKey, int alDataPos, int alCount)
 {
-    size_t lDataPos = alDataPos<0 ? mlDataPos : (size_t)alDataPos;
-    size_t lDataSize = alCount<0 ? mlDataSize - lDataPos : (size_t)alCount;
+    size_t lDataPos = alDataPos < 0 ? mlDataPos : (size_t)alDataPos;
+    size_t lDataSize = alCount < 0 ? mlDataSize - lDataPos : (size_t)alCount;
 
     cCRC crcData(alKey);
 
@@ -480,9 +480,9 @@ unsigned int cBinaryBuffer::GetCRC(unsigned int alKey,int alDataPos, int alCount
 
 bool cBinaryBuffer::CheckInternalCRC(unsigned int alKey, int alCount)
 {
-    if(alCount>0)
+    if(alCount > 0)
     {
-        alCount = alCount-4;    //Skip the first four bytes
+        alCount = alCount - 4;  //Skip the first four bytes
     }
 
     int lSavedCRC = GetInt32();
@@ -518,7 +518,7 @@ void cBinaryBuffer::AddUnsignedChar(unsigned char alX)
 
 void cBinaryBuffer::AddBool(bool abX)
 {
-    char c = abX ? 1:0;
+    char c = abX ? 1 : 0;
     AddData(&c, sizeof(char));
 }
 
@@ -564,7 +564,7 @@ void cBinaryBuffer::AddVector2f(const cVector2f& avX)
     AddFloat32(avX.x);
     AddFloat32(avX.y);
 #else
-    AddData(avX.v, sizeof(float)*2);
+    AddData(avX.v, sizeof(float) * 2);
 #endif
 }
 
@@ -577,7 +577,7 @@ void cBinaryBuffer::AddVector3f(const cVector3f& avX)
     AddFloat32(avX.y);
     AddFloat32(avX.z);
 #else
-    AddData(avX.v, sizeof(float)*3);
+    AddData(avX.v, sizeof(float) * 3);
 #endif
 }
 
@@ -585,16 +585,16 @@ void cBinaryBuffer::AddVector3f(const cVector3f& avX)
 
 void cBinaryBuffer::AddVector2l(const cVector2l& avX)
 {
-    int t[2] = { SDL_SwapLE32(avX.v[0]),SDL_SwapLE32(avX.v[1]) };
-    AddData(t, sizeof(int)*2);
+    int t[2] = { SDL_SwapLE32(avX.v[0]), SDL_SwapLE32(avX.v[1]) };
+    AddData(t, sizeof(int) * 2);
 }
 
 //-----------------------------------------------------------------------
 
 void cBinaryBuffer::AddVector3l(const cVector3l& avX)
 {
-    int t[3] = { SDL_SwapLE32(avX.v[0]),SDL_SwapLE32(avX.v[1]), SDL_SwapLE32(avX.v[2]) };
-    AddData(t, sizeof(int)*3);
+    int t[3] = { SDL_SwapLE32(avX.v[0]), SDL_SwapLE32(avX.v[1]), SDL_SwapLE32(avX.v[2]) };
+    AddData(t, sizeof(int) * 3);
 }
 
 //-----------------------------------------------------------------------
@@ -604,7 +604,7 @@ void cBinaryBuffer::AddMatrixf(const cMatrixf& a_mtxX)
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     AddFloat32Array(a_mtxX.v, 16);
 #else
-    AddData(a_mtxX.v, sizeof(float)*16);
+    AddData(a_mtxX.v, sizeof(float) * 16);
 #endif
 }
 
@@ -626,14 +626,14 @@ void cBinaryBuffer::AddColor(const cColor& avX)
     AddFloat32(avX.v[2]);
     AddFloat32(avX.v[3]);
 #else
-    AddData(avX.v, sizeof(float)*4);
+    AddData(avX.v, sizeof(float) * 4);
 #endif
 }
 
 //-----------------------------------------------------------------------
 void cBinaryBuffer::AddString(const tString& asStr)
 {
-    AddData(asStr.c_str(), sizeof(char) * (asStr.size()+1) ); //+1 for the zero!
+    AddData(asStr.c_str(), sizeof(char) * (asStr.size() + 1) ); //+1 for the zero!
 }
 
 //-----------------------------------------------------------------------
@@ -641,9 +641,9 @@ void cBinaryBuffer::AddString(const tString& asStr)
 void cBinaryBuffer::AddStringW(const tWString& asStr)
 {
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    AddInt32Array(asStr[i], asStr.size()+1);
+    AddInt32Array(asStr[i], asStr.size() + 1);
 #else
-    AddData(asStr.c_str(), sizeof(wchar_t) * (asStr.size()+1) ); //+1 for the zero!
+    AddData(asStr.c_str(), sizeof(wchar_t) * (asStr.size() + 1) ); //+1 for the zero!
 #endif
 }
 
@@ -659,7 +659,7 @@ void cBinaryBuffer::AddCharArray(const char* apData, size_t alSize)
 void cBinaryBuffer::AddShort16Array(const short* apData, size_t alSize)
 {
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    for(size_t i=0; i<alSize; ++i)
+    for(size_t i = 0; i < alSize; ++i)
     {
         AddShort16(apData[i]);
     }
@@ -673,7 +673,7 @@ void cBinaryBuffer::AddShort16Array(const short* apData, size_t alSize)
 void cBinaryBuffer::AddInt32Array(const int* apData, size_t alSize)
 {
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    for(size_t i=0; i<alSize; ++i)
+    for(size_t i = 0; i < alSize; ++i)
     {
         AddInt32(apData[i]);
     }
@@ -687,7 +687,7 @@ void cBinaryBuffer::AddInt32Array(const int* apData, size_t alSize)
 void cBinaryBuffer::AddFloat32Array(const float* apData, size_t alSize)
 {
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    for (size_t i=0; i<alSize; ++i)
+    for (size_t i = 0; i < alSize; ++i)
     {
         AddFloat32(apData[i]);
     }
@@ -730,7 +730,7 @@ bool cBinaryBuffer::GetBool()
 {
     char c;
     GetData(&c, sizeof(char));
-    return c==0 ? false : true;
+    return c == 0 ? false : true;
 }
 
 //-----------------------------------------------------------------------
@@ -781,7 +781,7 @@ void cBinaryBuffer::GetVector2f(cVector2f *apX)
     apX->x = GetFloat32();
     apX->y = GetFloat32();
 #else
-    GetData(apX->v, sizeof(float)*2);
+    GetData(apX->v, sizeof(float) * 2);
 #endif
 }
 
@@ -794,7 +794,7 @@ void cBinaryBuffer::GetVector3f(cVector3f *apX)
     apX->y = GetFloat32();
     apX->z = GetFloat32();
 #else
-    GetData(apX->v, sizeof(float)*3);
+    GetData(apX->v, sizeof(float) * 3);
 #endif
 }
 
@@ -802,7 +802,7 @@ void cBinaryBuffer::GetVector3f(cVector3f *apX)
 
 void cBinaryBuffer::GetVector2l(cVector2l *apX)
 {
-    GetData(apX->v, sizeof(int)*2);
+    GetData(apX->v, sizeof(int) * 2);
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     apX->x = SDL_SwapLE32(apX->x);
     apX->y = SDL_SwapLE32(apX->y);
@@ -813,7 +813,7 @@ void cBinaryBuffer::GetVector2l(cVector2l *apX)
 
 void cBinaryBuffer::GetVector3l(cVector3l *apX)
 {
-    GetData(apX->v, sizeof(int)*3);
+    GetData(apX->v, sizeof(int) * 3);
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     apX->x = SDL_SwapLE32(apX->x);
     apX->y = SDL_SwapLE32(apX->y);
@@ -846,7 +846,7 @@ void cBinaryBuffer::GetColor(cColor *apX)
     apX->v[2] = GetFloat32();
     apX->v[3] = GetFloat32();
 #else
-    GetData(apX->v, sizeof(float)*4);
+    GetData(apX->v, sizeof(float) * 4);
 #endif
 }
 
@@ -855,7 +855,7 @@ void cBinaryBuffer::GetString( tString *apStr)
 {
     *apStr = "";
     char c = GetChar();
-    while(c != 0 && IsEOF()==false)
+    while(c != 0 && IsEOF() == false)
     {
         *apStr += c;
         c = GetChar();
@@ -898,7 +898,7 @@ void cBinaryBuffer::GetCharArray(char* apData, size_t alSize)
 void cBinaryBuffer::GetShort16Array(short* apData, size_t alSize)
 {
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    for(size_t i=0; i<alSize; ++i)
+    for(size_t i = 0; i < alSize; ++i)
     {
         apData[i] = GetShort16();
     }
@@ -912,7 +912,7 @@ void cBinaryBuffer::GetShort16Array(short* apData, size_t alSize)
 void cBinaryBuffer::GetInt32Array(int* apData, size_t alSize)
 {
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    for(size_t i=0; i<alSize; ++i)
+    for(size_t i = 0; i < alSize; ++i)
     {
         apData[i] = GetInt32();
     }
@@ -926,7 +926,7 @@ void cBinaryBuffer::GetInt32Array(int* apData, size_t alSize)
 void cBinaryBuffer::GetFloat32Array(float* apData, size_t alSize)
 {
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    for(size_t i=0; i<alSize; ++i)
+    for(size_t i = 0; i < alSize; ++i)
     {
         apData[i] = GetFloat32();
     }
@@ -950,8 +950,8 @@ void cBinaryBuffer::AddData(const void *apData, size_t alSize)
     //Check if data needs to be increased, if double and add size
     if(mlDataPos + alSize > mlReservedDataSize)
     {
-        size_t lNewDataSize = mlDataSize*2 + alSize;
-        char* newData = (char*)hplRealloc(mpData, lNewDataSize);
+        size_t lNewDataSize = mlDataSize * 2 + alSize;
+        char *newData = (char*)hplRealloc(mpData, lNewDataSize);
         if (newData == NULL)
         {
             Error("Failed to allocate %zu bytes\n", lNewDataSize);
@@ -979,7 +979,7 @@ bool cBinaryBuffer::GetData(void *apData, size_t alSize)
         return false;
     }
 
-    memcpy(apData, mpData+mlDataPos, alSize);
+    memcpy(apData, mpData + mlDataPos, alSize);
 
     mlDataPos += alSize;
 
@@ -990,8 +990,8 @@ bool cBinaryBuffer::GetData(void *apData, size_t alSize)
 
 void cBinaryBuffer::InitAndAllocData()
 {
-    mlCRCStartPos =0;
-    mlDataPos =0;
+    mlCRCStartPos = 0;
+    mlDataPos = 0;
     mlDataSize = 0;
     mlReservedDataSize = 100;
     mpData = (char*)hplMalloc(mlReservedDataSize);

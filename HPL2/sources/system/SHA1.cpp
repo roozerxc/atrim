@@ -99,7 +99,7 @@ void SHA1::Reset()
     Corrupted   = false;
 }
 
-SHA1& SHA1::reset(SHA1& o)
+SHA1 &SHA1::reset(SHA1& o)
 {
     o.Reset();
     return o;
@@ -160,14 +160,14 @@ bool SHA1::Result(tString &hex)
     return true;
 }
 
-SHA1& SHA1::operator>>(tString &hex)
+SHA1 &SHA1::operator>>(tString &hex)
 {
     Result(hex);
 
     return *this;
 }
 
-SHA1& SHA1::operator>>(tWString &hex)
+SHA1 &SHA1::operator>>(tWString &hex)
 {
     tString t;
     Result(t);
@@ -225,21 +225,21 @@ void SHA1::Input(const tWString &message)
     Input(cString::To8Char(message));
 }
 
-SHA1& SHA1::operator<<(tString message)
+SHA1 &SHA1::operator<<(tString message)
 {
     Input(message);
 
     return *this;
 }
 
-SHA1& SHA1::operator<<(tWString message)
+SHA1 &SHA1::operator<<(tWString message)
 {
     Input(message);
 
     return *this;
 }
 
-SHA1& SHA1::operator <<(SHA1& (*__mf)(SHA1&))
+SHA1 &SHA1::operator <<(SHA1 & (*__mf)(SHA1 &))
 {
     return __mf(*this);
 }
@@ -271,7 +271,7 @@ void SHA1::ProcessMessageBlock()
 
     for(t = 16; t < 80; t++)
     {
-        W[t] = CircularShift(1,W[t-3] ^ W[t-8] ^ W[t-14] ^ W[t-16]);
+        W[t] = CircularShift(1, W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16]);
     }
 
     A = H[0];
@@ -282,45 +282,45 @@ void SHA1::ProcessMessageBlock()
 
     for(t = 0; t < 20; t++)
     {
-        temp = CircularShift(5,A) + ((B & C) | ((~B) & D)) + E + W[t] + K[0];
+        temp = CircularShift(5, A) + ((B & C) | ((~B) & D)) + E + W[t] + K[0];
         temp &= 0xFFFFFFFF;
         E = D;
         D = C;
-        C = CircularShift(30,B);
+        C = CircularShift(30, B);
         B = A;
         A = temp;
     }
 
     for(t = 20; t < 40; t++)
     {
-        temp = CircularShift(5,A) + (B ^ C ^ D) + E + W[t] + K[1];
+        temp = CircularShift(5, A) + (B ^ C ^ D) + E + W[t] + K[1];
         temp &= 0xFFFFFFFF;
         E = D;
         D = C;
-        C = CircularShift(30,B);
+        C = CircularShift(30, B);
         B = A;
         A = temp;
     }
 
     for(t = 40; t < 60; t++)
     {
-        temp = CircularShift(5,A) +
+        temp = CircularShift(5, A) +
                ((B & C) | (B & D) | (C & D)) + E + W[t] + K[2];
         temp &= 0xFFFFFFFF;
         E = D;
         D = C;
-        C = CircularShift(30,B);
+        C = CircularShift(30, B);
         B = A;
         A = temp;
     }
 
     for(t = 60; t < 80; t++)
     {
-        temp = CircularShift(5,A) + (B ^ C ^ D) + E + W[t] + K[3];
+        temp = CircularShift(5, A) + (B ^ C ^ D) + E + W[t] + K[3];
         temp &= 0xFFFFFFFF;
         E = D;
         D = C;
-        C = CircularShift(30,B);
+        C = CircularShift(30, B);
         B = A;
         A = temp;
     }
@@ -384,7 +384,7 @@ void SHA1::PadMessage()
 
 unsigned SHA1::CircularShift(int bits, unsigned word)
 {
-    return ((word << bits) & 0xFFFFFFFF) | ((word & 0xFFFFFFFF) >> (32-bits));
+    return ((word << bits) & 0xFFFFFFFF) | ((word & 0xFFFFFFFF) >> (32 - bits));
 }
 
 }

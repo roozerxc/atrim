@@ -15,7 +15,7 @@ public:
     {
         struct
         {
-            T x,y;
+            T x, y;
         };
         T v[2];
     };
@@ -23,11 +23,11 @@ public:
     //////////////////////////////////////////
     // Constructors
     /////////////////////////////////////////
-    cVector2() : x(0),y(0)
+    cVector2() : x(0), y(0)
     {}
-    cVector2(T afVal) : x(afVal),y(afVal)
+    cVector2(T afVal) : x(afVal), y(afVal)
     {}
-    cVector2(T afX, T afY) : x(afX),y(afY)
+    cVector2(T afX, T afY) : x(afX), y(afY)
     {}
     cVector2(cVector2<T> const &avVec) : x(avVec.x), y(avVec.y)
     {}
@@ -36,14 +36,14 @@ public:
     // Copy
     /////////////////////////////////////////
 
-    inline cVector2<T>& operator=(const cVector2<T> &aVec)
+    inline cVector2<T> &operator=(const cVector2<T> &aVec)
     {
         x = aVec.x;
         y = aVec.y;
         return *this;
     }
 
-    inline cVector2<T>& operator=(const T aVal)
+    inline cVector2<T> &operator=(const T aVal)
     {
         x = aVal;
         y = aVal;
@@ -56,7 +56,7 @@ public:
 
     inline bool operator==(const cVector2<T> &aVec) const
     {
-        if(x == aVec.x && y==aVec.y)
+        if(x == aVec.x && y == aVec.y)
         {
             return true;
         }
@@ -68,7 +68,7 @@ public:
 
     inline bool operator!=(const cVector2<T> &aVec) const
     {
-        if(x == aVec.x && y==aVec.y)
+        if(x == aVec.x && y == aVec.y)
         {
             return false;
         }
@@ -114,31 +114,31 @@ public:
         return vec;
     }
 
-    inline cVector2<T>& operator-=(const cVector2<T>  &aVec)
+    inline cVector2<T> &operator-=(const cVector2<T>  &aVec)
     {
-        x-=aVec.x;
-        y-=aVec.y;
+        x -= aVec.x;
+        y -= aVec.y;
         return *this;
     }
 
-    inline cVector2<T>& operator+=(const cVector2<T> &aVec)
+    inline cVector2<T> &operator+=(const cVector2<T> &aVec)
     {
-        x+=aVec.x;
-        y+=aVec.y;
+        x += aVec.x;
+        y += aVec.y;
         return *this;
     }
 
-    inline cVector2<T>& operator*=(const cVector2<T>  &aVec)
+    inline cVector2<T> &operator*=(const cVector2<T>  &aVec)
     {
-        x*=aVec.x;
-        y*=aVec.y;
+        x *= aVec.x;
+        y *= aVec.y;
         return *this;
     }
 
-    inline cVector2<T>& operator/=(const cVector2<T> &aVec)
+    inline cVector2<T> &operator/=(const cVector2<T> &aVec)
     {
-        x/=aVec.x;
-        y/=aVec.y;
+        x /= aVec.x;
+        y /= aVec.y;
         return *this;
     }
 
@@ -223,7 +223,7 @@ public:
     tString ToString() const
     {
         char buf[512];
-        snprintf(buf, sizeof(buf),"%f : %f",x,y);
+        snprintf(buf, sizeof(buf), "%f : %f", x, y);
         tString str = buf;
         return str;
     }
@@ -231,7 +231,7 @@ public:
     tString ToFileString() const
     {
         char buf[512];
-        snprintf(buf, sizeof(buf),"%g %g",x,y);
+        snprintf(buf, sizeof(buf), "%g %g", x, y);
         tString str = buf;
         return str;
     }

@@ -22,10 +22,10 @@ enum eXmlNodeType
 class iXmlNode;
 class cXmlElement;
 
-typedef std::list<iXmlNode*> tXmlNodeList;
+typedef std::list<iXmlNode *> tXmlNodeList;
 typedef tXmlNodeList::iterator tXmlNodeListIt;
 
-typedef cSTLIterator<iXmlNode*, tXmlNodeList, tXmlNodeListIt> cXmlNodeListIterator;
+typedef cSTLIterator<iXmlNode *, tXmlNodeList, tXmlNodeListIt> cXmlNodeListIterator;
 
 class iXmlNode
 {
@@ -33,7 +33,7 @@ public:
     iXmlNode(eXmlNodeType aType, iXmlNode *apParent, const tString& asValue);
     virtual ~iXmlNode();
 
-    const tString& GetValue()
+    const tString &GetValue()
     {
         return msValue;
     }
@@ -47,21 +47,21 @@ public:
         return mType;
     }
 
-    iXmlNode* GetParent()
+    iXmlNode *GetParent()
     {
         return mpParent;
     }
 
-    cXmlElement* ToElement();
-    cXmlElement* GetFirstElement();
-    cXmlElement* GetFirstElement(const tString& asName);
-    cXmlElement* CreateChildElement(const tString& asName="");
+    cXmlElement *ToElement();
+    cXmlElement *GetFirstElement();
+    cXmlElement *GetFirstElement(const tString& asName);
+    cXmlElement *CreateChildElement(const tString& asName = "");
 
     void AddChild(iXmlNode* apNode);
     void DestroyChild(iXmlNode* apNode);
 
-    iXmlNode* GetFirstOfType(eXmlNodeType aType);
-    iXmlNode* GetFirstOfType(eXmlNodeType aType, const tString& asName);
+    iXmlNode *GetFirstOfType(eXmlNodeType aType);
+    iXmlNode *GetFirstOfType(eXmlNodeType aType, const tString& asName);
 
     cXmlNodeListIterator GetChildIterator();
 
@@ -86,15 +86,15 @@ public:
     cXmlElement(const tString& asName, iXmlNode* apParent);
     virtual ~cXmlElement();
 
-    const char* GetAttribute(const tString& asName);
+    const char *GetAttribute(const tString& asName);
 
-    tString GetAttributeString(const tString& asName, const tString& asDefault="");
-    float GetAttributeFloat(const tString& asName, float afDefault=0);
-    int GetAttributeInt(const tString& asName, int alDefault=0);
-    bool GetAttributeBool(const tString& asName, bool abDefault=false);
-    cVector2f GetAttributeVector2f(const tString& asName, const cVector2f& avDefault=0);
-    cVector3f GetAttributeVector3f(const tString& asName, const cVector3f& avDefault=0);
-    cColor GetAttributeColor(const tString& asName, const cColor& aDefault=cColor(0,0));
+    tString GetAttributeString(const tString& asName, const tString& asDefault = "");
+    float GetAttributeFloat(const tString& asName, float afDefault = 0);
+    int GetAttributeInt(const tString& asName, int alDefault = 0);
+    bool GetAttributeBool(const tString& asName, bool abDefault = false);
+    cVector2f GetAttributeVector2f(const tString& asName, const cVector2f& avDefault = 0);
+    cVector3f GetAttributeVector3f(const tString& asName, const cVector3f& avDefault = 0);
+    cColor GetAttributeColor(const tString& asName, const cColor& aDefault = cColor(0, 0));
 
     void SetAttribute(const tString& asName, const char* asVal);
 
@@ -107,7 +107,7 @@ public:
     void SetAttributeColor(const tString& asName, const cColor& aVal);
 
 
-    tAttributeMap* GetAttributeMap()
+    tAttributeMap *GetAttributeMap()
     {
         return &m_mapAttributes;
     }
@@ -128,7 +128,7 @@ public:
     {
         msFile = asPath;
     }
-    const tWString& GetPath()
+    const tWString &GetPath()
     {
         return msFile;
     }
@@ -137,7 +137,7 @@ public:
     bool Save();
     bool SaveToFile(const tWString& asPath);
 
-    const tString& GetErrorDesc()
+    const tString &GetErrorDesc()
     {
         return msErrorDesc;
     }
@@ -150,8 +150,8 @@ public:
         return mlErrorCol;
     }
 
-    virtual void SaveToString(tString *apDestData)=0;
-    virtual bool CreateFromString(const tString& asData)=0;
+    virtual void SaveToString(tString *apDestData) = 0;
+    virtual bool CreateFromString(const tString& asData) = 0;
 
 protected:
     void SaveErrorInfo(const tString& asDesc, int alRow, int alCol)
@@ -162,8 +162,8 @@ protected:
     }
 
 private:
-    virtual bool LoadDataFromFile(const tWString& asPath)=0;
-    virtual bool SaveDataToFile(const tWString& asPath)=0;
+    virtual bool LoadDataFromFile(const tWString& asPath) = 0;
+    virtual bool SaveDataToFile(const tWString& asPath) = 0;
 
     tWString msFile;
 

@@ -13,7 +13,7 @@ namespace hpl
 class iUpdateable;
 class iLowLevelSystem;
 
-typedef std::list<iUpdateable*> tUpdateableList;
+typedef std::list<iUpdateable *> tUpdateableList;
 typedef tUpdateableList::iterator tUpdateableListIt;
 
 typedef std::map<tString, tUpdateableList> tUpdateContainerMap;
@@ -27,8 +27,8 @@ public:
 
     void Reset();
 
-    void BroadcastMessageToAll(eUpdateableMessage aMessage, double adX=0);
-    void RunMessage(eUpdateableMessage aMessage, double adX=0);
+    void BroadcastMessageToAll(eUpdateableMessage aMessage, double adX = 0);
+    void RunMessage(eUpdateableMessage aMessage, double adX = 0);
 
     /**
      * Sets the active update container to be used.

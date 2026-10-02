@@ -74,7 +74,7 @@ public:
 
     void Update(double adFixedDelta);
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -83,7 +83,7 @@ public:
     {
         mpJoint = apJoint;
     }
-    iPhysicsJoint* GetJoint()
+    iPhysicsJoint *GetJoint()
     {
         return mpJoint;
     }
@@ -91,7 +91,7 @@ public:
     {
         mpBody = apBody;
     }
-    iPhysicsBody* GetBody()
+    iPhysicsBody *GetBody()
     {
         return mpBody;
     }
@@ -174,7 +174,7 @@ public:
     {
         msNextController = asName;
     }
-    const tString& GetNextController()
+    const tString &GetNextController()
     {
         return msNextController;
     }
@@ -191,7 +191,7 @@ public:
 
 protected:
     cVector3f GetInputValue(ePhysicsControllerInput aInput);
-    float GetOutputValue(float afError,float afInput, double adFixedDelta);
+    float GetOutputValue(float afError, float afInput, double adFixedDelta);
     void AddOutputValue(ePhysicsControllerOutput aOutput, ePhysicsControllerAxis aAxis,
                         float afVal);
     float GetAxisValue(ePhysicsControllerAxis aAxis, const cVector3f &avVec);
@@ -202,7 +202,7 @@ protected:
     iPhysicsBody *mpBody;
     iPhysicsJoint *mpJoint;
 
-    float mfA,mfB,mfC;
+    float mfA, mfB, mfC;
 
     float mfDestValue;
     float mfMaxOutput;

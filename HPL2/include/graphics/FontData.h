@@ -24,7 +24,7 @@ class cFrameSubImage;
 class cGlyph
 {
 public:
-    cGlyph(    cGuiGfxElement *apGuiGfx,const cVector2f &avOffset,
+    cGlyph(    cGuiGfxElement *apGuiGfx, const cVector2f &avOffset,
                const cVector2f &avSize, float afAdvance);
     ~cGlyph();
 
@@ -34,7 +34,7 @@ public:
     float mfAdvance;
 };
 
-typedef std::vector<cGlyph*> tGlyphVec;
+typedef std::vector<cGlyph *> tGlyphVec;
 typedef tGlyphVec::iterator tGlyphVecIt;
 
 class iFontData : public iResourceBase
@@ -43,7 +43,7 @@ public:
     iFontData(const tString &asName, iLowLevelGraphics* apLowLevelGraphics);
     ~iFontData();
 
-    virtual bool CreateFromBitmapFile(const tWString &asFileName)=0;
+    virtual bool CreateFromBitmapFile(const tWString &asFileName) = 0;
 
 
     bool Reload()
@@ -67,9 +67,9 @@ public:
      * \param alNum
      * \return
      */
-    inline cGlyph* GetGlyph(int alNum)const
+    inline cGlyph *GetGlyph(int alNum)const
     {
-        if(alNum<0 || alNum>=(int)mvGlyphs.size())
+        if(alNum < 0 || alNum >= (int)mvGlyphs.size())
         {
             return NULL;
         }
@@ -85,12 +85,12 @@ public:
         return mlLastChar;
     }
 
-    inline const cVector2f& GetSizeRatio()const
+    inline const cVector2f &GetSizeRatio()const
     {
         return mvSizeRatio;
     }
 
-    void GetWordWrapRows(float afLength,float afFontHeight,cVector2f avSize,const tWString& asString,
+    void GetWordWrapRows(float afLength, float afFontHeight, cVector2f avSize, const tWString& asString,
                          tWStringVec *apRowVec);
 
     /**
@@ -109,18 +109,18 @@ public:
      * \param ...
      * \return
      */
-    float GetLengthFmt(const cVector2f& avSize,const wchar_t* fmt,...);
+    float GetLengthFmt(const cVector2f& avSize, const wchar_t* fmt, ...);
     /**
      * Get the length in virtual screen size "pixels" of a string
      * \param avSize size of the characters
      * \param sText
      * \return
      */
-    float GetLength(const cVector2f& avSize,const wchar_t* sText);
+    float GetLength(const cVector2f& avSize, const wchar_t* sText);
 
 protected:
-    iLowLevelGraphics* mpLowLevelGraphics;
-    cResources* mpResources;
+    iLowLevelGraphics *mpLowLevelGraphics;
+    cResources *mpResources;
     cGui *mpGui;
 
     tGlyphVec mvGlyphs;
@@ -131,7 +131,7 @@ protected:
 
     cVector2f mvSizeRatio;
 
-    cGlyph* CreateGlyph(cFrameSubImage* apImage, const cVector2l &avOffset,const cVector2l &avSize,
+    cGlyph *CreateGlyph(cFrameSubImage* apImage, const cVector2l &avOffset, const cVector2l &avSize,
                         const cVector2l& avFontSize, int alAdvance);
     void AddGlyph(cGlyph *apGlyph);
 };

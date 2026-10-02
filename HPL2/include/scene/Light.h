@@ -46,7 +46,7 @@ enum eShadowVolumeType
 
 //------------------------------------------
 
-typedef std::map<iRenderable*, int> tShadowCasterCacheMap;
+typedef std::map<iRenderable *, int> tShadowCasterCacheMap;
 typedef tShadowCasterCacheMap::iterator tShadowCasterCacheMapIt;
 
 //------------------------------------------
@@ -82,7 +82,7 @@ public:
     void SetFalloffMap(iTexture* apTexture);
 
     void SetGoboTexture(iTexture *apTexture);
-    iTexture* GetGoboTexture();
+    iTexture *GetGoboTexture();
 
     ///////////////////////////////
     //iEntity implementation
@@ -100,7 +100,7 @@ public:
     {
         return NULL;
     }
-    iVertexBuffer* GetVertexBuffer()
+    iVertexBuffer *GetVertexBuffer()
     {
         return NULL;
     }
@@ -110,22 +110,22 @@ public:
         return eRenderableType_Light;
     }
 
-    cBoundingVolume* GetBoundingVolume();
+    cBoundingVolume *GetBoundingVolume();
 
     int GetMatrixUpdateCount()
     {
         return GetTransformUpdateCount();
     }
 
-    cMatrixf* GetModelMatrix(cFrustum* apFrustum);
+    cMatrixf *GetModelMatrix(cFrustum* apFrustum);
 
-    inline void RenderShadow(iRenderable *apObject,cRenderSettings *apRenderSettings,iLowLevelGraphics *apLowLevelGraphics);
+    inline void RenderShadow(iRenderable *apObject, cRenderSettings *apRenderSettings, iLowLevelGraphics *apLowLevelGraphics);
 
     void LoadXMLProperties(const tString asFile);
 
     void AttachBillboard(cBillboard *apBillboard, const cColor &aBaseColor);
     void RemoveBillboard(cBillboard *apBillboard);
-    std::vector<cLightBillboardConnection>* GetBillboardVec()
+    std::vector<cLightBillboardConnection> *GetBillboardVec()
     {
         return &mvBillboards;
     }
@@ -166,8 +166,8 @@ public:
     }
 
     void SetFlicker(const cColor& aOffCol, float afOffRadius,
-                    float afOnMinLength, float afOnMaxLength,const tString &asOnSound,const tString &asOnPS,
-                    float afOffMinLength, float afOffMaxLength,const tString &asOffSound,const tString &asOffPS,
+                    float afOnMinLength, float afOnMaxLength, const tString &asOnSound, const tString &asOnPS,
+                    float afOffMinLength, float afOffMaxLength, const tString &asOffSound, const tString &asOffPS,
                     bool abFade,    float afOnFadeMinLength, float afOnFadeMaxLength,
                     float afOffFadeMinLength, float afOffFadeMaxLength);
 
@@ -243,7 +243,7 @@ public:
 
     //////////////////////////
     //Properties
-    const cColor& GetDiffuseColor()
+    const cColor &GetDiffuseColor()
     {
         return mDiffuseColor;
     }
@@ -269,7 +269,7 @@ public:
 
     cColor GetColor();
 
-    const cColor&  GetDefaultDiffuseColor()
+    const cColor  &GetDefaultDiffuseColor()
     {
         return mDefaultDiffuseColor;
     }
@@ -278,7 +278,7 @@ public:
         mDefaultDiffuseColor = aColor;
     }
 
-    const cColor& GetSpecularColor()
+    const cColor &GetSpecularColor()
     {
         return mSpecularColor;
     }
@@ -332,7 +332,7 @@ public:
         mbOcclusionCullShadowCasters  = abX;
     }
 
-    inline cVisibleRCNodeTracker * GetVisibleNodeTracker()
+    inline cVisibleRCNodeTracker *GetVisibleNodeTracker()
     {
         return mpVisibleNodeTracker;
     }
@@ -388,7 +388,7 @@ protected:
     void OnSetDiffuse();
 
     virtual void ExtraXMLProperties(TiXmlElement *apMainElem) {}
-    virtual void UpdateBoundingVolume()=0;
+    virtual void UpdateBoundingVolume() = 0;
 
     eLightType mLightType;
 
@@ -462,7 +462,7 @@ protected:
     float mfFlickerStateLength;
 };
 
-typedef std::list<iLight*> tLightList;
+typedef std::list<iLight *> tLightList;
 typedef tLightList::iterator tLightListIt;
 };
 #endif // HPL_LIGHT_H

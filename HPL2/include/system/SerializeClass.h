@@ -202,7 +202,7 @@ public:
     }
 
     cSerializeMemberField(const tString &asName, size_t alOffset, size_t alSize, eSerializeType alType,
-                          eSerializeMainType aMainType,size_t alArraySize)
+                          eSerializeMainType aMainType, size_t alArraySize)
     {
         msName = asName;
         mlOffset = alOffset;
@@ -213,7 +213,7 @@ public:
     }
 
     cSerializeMemberField(const tString &asName, size_t alOffset, size_t alSize, eSerializeType alType,
-                          eSerializeMainType aMainType,const tString &asClassName)
+                          eSerializeMainType aMainType, const tString &asClassName)
     {
         msName = asName;
         mlOffset = alOffset;
@@ -250,8 +250,8 @@ class iSerializableType
 {
 public:
     virtual ~iSerializableType() {}
-    virtual char* ValueToString(void *apVal)=0;
-    virtual void ValueFromString(char* apString, void *apVal)=0;
+    virtual char *ValueToString(void *apVal) = 0;
+    virtual void ValueFromString(char* apString, void *apVal) = 0;
 };
 
 //-------------------------------------------------
@@ -260,13 +260,13 @@ typedef struct cSerializeSavedClass
 {
 public:
     cSerializeSavedClass() {}
-    cSerializeSavedClass(const char *asName,const char* asParent,
+    cSerializeSavedClass(const char *asName, const char* asParent,
                          cSerializeMemberField* apMemberFields, size_t alSize,
-                         iSerializable *(*apCreateFunc)());
+                         iSerializable * (*apCreateFunc)());
 
-    const char* msName;
-    const char*  msParentName;
-    cSerializeMemberField* mpMemberFields;
+    const char *msName;
+    const char  *msParentName;
+    cSerializeMemberField *mpMemberFields;
     size_t mlSize;
     iSerializable *(*mpCreateFunc)();
 
@@ -281,7 +281,7 @@ public:
     cSerializeMemberFieldIterator(cSerializeSavedClass *apTopClass);
 
     bool HasNext();
-    cSerializeMemberField* GetNext();
+    cSerializeMemberField *GetNext();
 
 private:
     cSerializeSavedClass *mpSavedClass;
@@ -293,34 +293,34 @@ private:
 typedef std::map<tString, cSerializeSavedClass> tSerializeSavedClassMap;
 typedef tSerializeSavedClassMap::iterator tSerializeSavedClassMapIt;
 
-typedef std::list<cSerializeSavedClass*> tSerializeSavedClassList;
+typedef std::list<cSerializeSavedClass *> tSerializeSavedClassList;
 typedef tSerializeSavedClassList::iterator tSerializeSavedClassListIt;
 
 class cSerializeClass
 {
 public:
-    cSerializeClass(const char* asName,const char* asParent, cSerializeMemberField* apMemberFields,
-                    size_t alSize, iSerializable* (*apCreateFunc)());
+    cSerializeClass(const char* asName, const char* asParent, cSerializeMemberField* apMemberFields,
+                    size_t alSize, iSerializable * (*apCreateFunc)());
 
     static void SetLog(bool abX);
     static bool GetLog();
 
     static void PrintMembers(iSerializable* apData);
 
-    static bool SaveToFile(iSerializable* apData, const tWString &asFile,const tString &asRoot, bool abCompressAndCRC=false);
-    static void SaveToElement(iSerializable* apData,const tString &asName, TiXmlElement *apParent, bool abIsPointer=false);
-    static bool SaveElementToFile(TiXmlDocument* apXmlDoc, const tWString &asFile,bool abCompressAndCRC=false);
+    static bool SaveToFile(iSerializable* apData, const tWString &asFile, const tString &asRoot, bool abCompressAndCRC = false);
+    static void SaveToElement(iSerializable* apData, const tString &asName, TiXmlElement *apParent, bool abIsPointer = false);
+    static bool SaveElementToFile(TiXmlDocument* apXmlDoc, const tWString &asFile, bool abCompressAndCRC = false);
 
-    static bool LoadFromFile(iSerializable* apData, const tWString &asFile, bool abCompressedAndCRC=false);
-    static void LoadFromElement(iSerializable* apData, TiXmlElement *apElement, bool abIsPointer=false);
+    static bool LoadFromFile(iSerializable* apData, const tWString &asFile, bool abCompressedAndCRC = false);
+    static void LoadFromElement(iSerializable* apData, TiXmlElement *apElement, bool abIsPointer = false);
 
-    static cSerializeSavedClass * GetClass(const tString &asName);
+    static cSerializeSavedClass *GetClass(const tString &asName);
 
     static cSerializeMemberFieldIterator GetMemberFieldIterator(iSerializable* apData);
 
-    static const char* ValueToString(void* apData, size_t alOffset, eSerializeType aType);
+    static const char *ValueToString(void* apData, size_t alOffset, eSerializeType aType);
     static void StringToValue(void* apData, size_t alOffset, eSerializeType aType,
-                              const char* asVal);
+                              const char *asVal);
 
     static void ResetGeneration();
 
@@ -329,16 +329,16 @@ private:
     static void SaveArray(TiXmlElement *apElement, cSerializeMemberField *apField, iSerializable* apData);
     static void SaveContainer(TiXmlElement *apElement, cSerializeMemberField *apField, iSerializable* apData);
 
-    static void LoadVariable(TiXmlElement *apElement, iSerializable* apData,cSerializeSavedClass *apClass);
-    static void LoadArray(TiXmlElement *apElement, iSerializable* apData,cSerializeSavedClass *apClass);
-    static void LoadClass(TiXmlElement *apElement, iSerializable* apData,cSerializeSavedClass *apClass);
-    static void LoadClassPointer(TiXmlElement *apElement, iSerializable* apData,cSerializeSavedClass *apClass);
-    static void LoadContainer(TiXmlElement *apElement, iSerializable* apData,cSerializeSavedClass *apClass);
+    static void LoadVariable(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass);
+    static void LoadArray(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass);
+    static void LoadClass(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass);
+    static void LoadClassPointer(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass);
+    static void LoadContainer(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass);
 
     static void FillSaveClassMembersList(tSerializeSavedClassList *apList, cSerializeSavedClass* apClass);
-    static void SaveSavedClassMembers(cSerializeSavedClass* apClass,iSerializable* apData);
+    static void SaveSavedClassMembers(cSerializeSavedClass* apClass, iSerializable* apData);
 
-    static cSerializeMemberField *GetMemberField(const tString &asName,cSerializeSavedClass* apClass);
+    static cSerializeMemberField *GetMemberField(const tString &asName, cSerializeSavedClass* apClass);
 
     static size_t SizeOfType(eSerializeType aType);
 
@@ -349,7 +349,7 @@ private:
 
     static bool mbDataSetup;
     static tSerializeSavedClassMap m_mapSavedClasses;
-    static std::vector<iSerializableType*> mvValueTypes;
+    static std::vector<iSerializableType *> mvValueTypes;
 };
 
 //-------------------------------------------------

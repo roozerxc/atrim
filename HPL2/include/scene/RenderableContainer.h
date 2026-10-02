@@ -58,7 +58,7 @@ public:
 
     virtual void UpdateBeforeUse() {}
 
-    inline tRenderableContainerNodeList* GetChildNodeList()
+    inline tRenderableContainerNodeList *GetChildNodeList()
     {
         return &mlstChildNodes;
     }
@@ -67,7 +67,7 @@ public:
         return mlstChildNodes.empty() == false;
     }
 
-    inline tRenderableList* GetObjectList()
+    inline tRenderableList *GetObjectList()
     {
         return &mlstObjects;
     }
@@ -76,7 +76,7 @@ public:
         return mlstObjects.empty() == false;
     }
 
-    inline iRenderableContainerNode* GetParent()
+    inline iRenderableContainerNode *GetParent()
     {
         return mpParent;
     }
@@ -90,11 +90,11 @@ public:
         return (int)mlstObjects.size();
     }
 
-    inline const cVector3f& GetMin() const
+    inline const cVector3f &GetMin() const
     {
         return mvMin;
     }
-    inline const cVector3f& GetMax() const
+    inline const cVector3f &GetMax() const
     {
         return mvMax;
     }
@@ -208,18 +208,18 @@ public:
 
     void UpdateBeforeRendering();
 
-    virtual void Add(iRenderable *apRenderable)=0;
-    virtual void Remove(iRenderable *apRenderable)=0;
+    virtual void Add(iRenderable *apRenderable) = 0;
+    virtual void Remove(iRenderable *apRenderable) = 0;
 
-    virtual iRenderableContainerNode* GetRoot()=0;
+    virtual iRenderableContainerNode *GetRoot() = 0;
 
     /**
      * This compiles the container. Even if the container is static, it should be possible to change orientation (scale, pos, rotation,radius etc) of added
      * objects before this method is called. After compile is called, objects orientation can not be changed!
      */
-    virtual void Compile()=0;
+    virtual void Compile() = 0;
 
-    virtual void RenderDebug(cRendererCallbackFunctions *apFunctions)=0;
+    virtual void RenderDebug(cRendererCallbackFunctions *apFunctions) = 0;
 
 private:
     void CheckNeedPropertyUpdateIteration(iRenderableContainerNode* apNode);

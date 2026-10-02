@@ -16,11 +16,11 @@ namespace hpl
  * All pBuffers must be created before any of them are set as a render target!
  *
  */
-cPBuffer::cPBuffer(iLowLevelGraphics* apLowLevelGraphics,bool abShareObjects,bool abUseMipMaps, bool abUseDepth,bool abUseStencil)
+cPBuffer::cPBuffer(iLowLevelGraphics* apLowLevelGraphics, bool abShareObjects, bool abUseMipMaps, bool abUseDepth, bool abUseStencil)
 {
 #ifdef _WIN32
     mDeviceContext = 0;
-    mGLContext =0;
+    mGLContext = 0;
 
     mbShareObjects = abShareObjects;
     mpLowLevelGraphics = apLowLevelGraphics;
@@ -82,11 +82,11 @@ cPBuffer::~cPBuffer()
 
 //-----------------------------------------------------------------------
 
-bool cPBuffer::Init(unsigned int alWidth,unsigned int alHeight, cColor aCol)
+bool cPBuffer::Init(unsigned int alWidth, unsigned int alHeight, cColor aCol)
 {
 #ifdef _WIN32
-    unsigned int lFormatNum=0;
-    int lFormat=0;
+    unsigned int lFormatNum = 0;
+    int lFormat = 0;
 
     mlWidth = alWidth;
     mlHeight = alHeight;
@@ -96,7 +96,7 @@ bool cPBuffer::Init(unsigned int alWidth,unsigned int alHeight, cColor aCol)
 
     //Set the pixel format:
     wglChoosePixelFormatARB(CurrentHdc, &mvAttribFormat[0], NULL, 1, &lFormat, &lFormatNum);
-    if(lFormatNum==0)
+    if(lFormatNum == 0)
     {
         Error("Couldn't find any pixel format!\n");
         return false;
@@ -146,14 +146,14 @@ bool cPBuffer::Init(unsigned int alWidth,unsigned int alHeight, cColor aCol)
 
     if(mbShareObjects)
     {
-        cLowLevelGraphicsSDL* pSDLGfx = static_cast<cLowLevelGraphicsSDL*>(mpLowLevelGraphics);
+        cLowLevelGraphicsSDL* pSDLGfx = static_cast<cLowLevelGraphicsSDL *>(mpLowLevelGraphics);
         pSDLGfx->SetupGL();
     }
 
     mpLowLevelGraphics->SetClearColor(aCol);
     mpLowLevelGraphics->ClearFrameBuffer(eClearFrameBufferFlag_Color);
 
-    wglMakeCurrent(OldHDC,OldGLRC);
+    wglMakeCurrent(OldHDC, OldGLRC);
 #elif defined(__linux__)
     return false;
 #endif
@@ -191,7 +191,7 @@ void cPBuffer::Bind()
 void cPBuffer::UnBind()
 {
 #ifdef _WIN32
-    if(wglReleaseTexImageARB(mPBuffer, WGL_FRONT_LEFT_ARB)==false)
+    if(wglReleaseTexImageARB(mPBuffer, WGL_FRONT_LEFT_ARB) == false)
     {
         Error("Error UnBinding pbuffer...\n");
     }

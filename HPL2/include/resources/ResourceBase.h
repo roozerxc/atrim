@@ -12,7 +12,7 @@ class iResourceBase
 {
 public:
 
-    iResourceBase(const tString& asName, const tWString& asFullPath,unsigned long alPrio);
+    iResourceBase(const tString& asName, const tWString& asFullPath, unsigned long alPrio);
 
     virtual ~iResourceBase();
 
@@ -20,19 +20,19 @@ public:
      * virtual bool Reload()=0;
      * \return true is reload was succesful, else false.
      */
-    virtual bool Reload()=0;
+    virtual bool Reload() = 0;
 
     /**
      * Free most the memory, save info to get started again.
      */
-    virtual void Unload()=0;
+    virtual void Unload() = 0;
 
     /**
      * Free all memory.
      */
-    virtual void Destroy()=0;
+    virtual void Destroy() = 0;
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -42,11 +42,11 @@ public:
     }
     void SetHandle(unsigned long alHandle)
     {
-        mlHandle=alHandle;
+        mlHandle = alHandle;
     }
 
     void SetFullPath(const tWString& asPath);
-    const tWString& GetFullPath()
+    const tWString &GetFullPath()
     {
         return msFullPath;
     }
@@ -76,14 +76,14 @@ public:
     void IncUserCount();
     void DecUserCount()
     {
-        if(mlUserCount>0)
+        if(mlUserCount > 0)
         {
             mlUserCount--;
         }
     }
     bool HasUsers()
     {
-        return mlUserCount>0;
+        return mlUserCount > 0;
     }
 
     static bool GetLogCreateAndDelete()

@@ -19,7 +19,7 @@ public:
     {
     public:
         cGraphicsVars() :
-            mvScreenSize(800,600),
+            mvScreenSize(800, 600),
             mlScreenBpp(32),
             mbFullscreen(false),
             msWindowCaption(""),

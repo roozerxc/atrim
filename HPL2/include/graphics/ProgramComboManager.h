@@ -44,11 +44,11 @@ class cProgramComboShader
 public:
     cProgramComboShader() : mpShader(NULL), mlUserCount(0) {}
 
-    iGpuShader* mpShader;
+    iGpuShader *mpShader;
     int mlUserCount;
 };
 
-typedef std::map<unsigned int, cProgramComboShader*> tProgramComboShaderMap;
+typedef std::map<unsigned int, cProgramComboShader *> tProgramComboShaderMap;
 typedef tProgramComboShaderMap::iterator tProgramComboShaderMapIt;
 
 //---------------------------------------------------
@@ -60,11 +60,11 @@ public:
 
     void DestroyProgram();
 
-    iGpuProgram* mpProgram;
+    iGpuProgram *mpProgram;
     int mlUserCount;
 };
 
-typedef std::map<unsigned int, cProgramComboProgram*> tProgramComboProgramMap;
+typedef std::map<unsigned int, cProgramComboProgram *> tProgramComboProgramMap;
 typedef tProgramComboProgramMap::iterator tProgramComboProgramMapIt;
 
 //---------------------------------------------------
@@ -106,7 +106,7 @@ public:
         msName = asName;
     }
 
-    iGpuProgram* GenerateProgram(int alMainMode, int alFlags);
+    iGpuProgram *GenerateProgram(int alMainMode, int alFlags);
     int GetGenerateCombinationNum(int alMainMode)
     {
         return mvCombinationNum[alMainMode];
@@ -131,10 +131,10 @@ public:
     void DestroyShader(iGpuShader * apShader);
     void DestroyProgram(iGpuProgram * apProgram);
 
-    iGpuProgram* CreateProgramFromShaders(    const tString &asProgramName,
+    iGpuProgram *CreateProgramFromShaders(    const tString &asProgramName,
             const tString &asVtxShaderName, const tString &asFragShaderName,
-            cParserVarContainer *apVars,bool abAddtoList);
-    iGpuProgram* CreateProgramFromShaders(    const tString &asProgramName, iGpuShader *apVtxShader,iGpuShader *apFragShader,
+            cParserVarContainer *apVars, bool abAddtoList);
+    iGpuProgram *CreateProgramFromShaders(    const tString &asProgramName, iGpuShader *apVtxShader, iGpuShader *apFragShader,
             bool abAddtoList);
 
     void DestroyShadersAndPrograms();
@@ -142,8 +142,8 @@ public:
 private:
     tString GenerateProgramName(int alMainMode, int alBitFlags);
 
-    iGpuShader* GetShaderForCombo(int alMainMode, int alBitFlags, const tString& asShaderName, tFlag aShaderType);
-    iGpuShader* CreateShaderFromFeatures(    const tString& asShaderFile, tFlag aShaderType, int alBitFlags, cProgramComboFeature* apFeatures, int alFeatureNum,
+    iGpuShader *GetShaderForCombo(int alMainMode, int alBitFlags, const tString& asShaderName, tFlag aShaderType);
+    iGpuShader *CreateShaderFromFeatures(    const tString& asShaderFile, tFlag aShaderType, int alBitFlags, cProgramComboFeature* apFeatures, int alFeatureNum,
             cProgramComboSettingsVar *apDefaultVars, int alDefaultVarsNum);
 
 

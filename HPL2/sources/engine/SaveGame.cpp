@@ -24,16 +24,16 @@ kEndSerialize()
 // SAVE GAME OBJECT
 //////////////////////////////////////////////////////////////////////////
 
-int iSaveObject::_mlGlobalIdCount =0;
+int iSaveObject::_mlGlobalIdCount = 0;
 
 //------------------------------------------------------------------------
 
 iSaveObject::iSaveObject()
 {
     mlSaveObjectId = _mlGlobalIdCount++;
-    if(_mlGlobalIdCount <0)
+    if(_mlGlobalIdCount < 0)
     {
-        _mlGlobalIdCount=0;
+        _mlGlobalIdCount = 0;
     }
 
     mbIsSaved = true;
@@ -88,17 +88,17 @@ cSaveObjectHandler::~cSaveObjectHandler()
 
 void cSaveObjectHandler::Add(iSaveObject *pObject)
 {
-    m_mapSaveObjects.insert(tSaveObjectMap::value_type(pObject->GetSaveObjectId(),pObject));
+    m_mapSaveObjects.insert(tSaveObjectMap::value_type(pObject->GetSaveObjectId(), pObject));
 }
 
 //------------------------------------------------------------------------
 
-iSaveObject* cSaveObjectHandler::Get(int alId)
+iSaveObject *cSaveObjectHandler::Get(int alId)
 {
     tSaveObjectMapIt it = m_mapSaveObjects.find(alId);
-    if(it== m_mapSaveObjects.end())
+    if(it == m_mapSaveObjects.end())
     {
-        Warning("Couldn't find save object with id %d\n",alId);
+        Warning("Couldn't find save object with id %d\n", alId);
         return NULL;
     }
 
@@ -116,7 +116,7 @@ cSaveObjectIterator cSaveObjectHandler::GetIterator()
 
 void cSaveObjectHandler::SetUpAll(cEngine *apGame)
 {
-    int lMaxId =0;
+    int lMaxId = 0;
 
     tSaveObjectMapIt it = m_mapSaveObjects.begin();
     for(; it != m_mapSaveObjects.end(); ++it)
@@ -128,7 +128,7 @@ void cSaveObjectHandler::SetUpAll(cEngine *apGame)
             lMaxId = pObject->GetSaveObjectId();
         }
 
-        pObject->SaveDataSetup(this,apGame);
+        pObject->SaveDataSetup(this, apGame);
     }
 
     iSaveObject::_mlGlobalIdCount = lMaxId;
@@ -193,7 +193,7 @@ size_t cSaveDataHandler::Size()
 
 void cSaveDataHandler::AddVoidPtr(void **apPtr)
 {
-    iSaveData** pDataPtr = (iSaveData**)apPtr;
+    iSaveData **pDataPtr = (iSaveData**)apPtr;
     Add(*pDataPtr);
 }
 void cSaveDataHandler::AddVoidClass(void *apClass)
@@ -202,7 +202,7 @@ void cSaveDataHandler::AddVoidClass(void *apClass)
     Add(pData);
 }
 
-iContainerIterator* cSaveDataHandler::CreateIteratorPtr()
+iContainerIterator *cSaveDataHandler::CreateIteratorPtr()
 {
     return hplNew( cSaveDataIterator, (&m_mapSaveData) );
 }

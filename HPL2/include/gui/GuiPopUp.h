@@ -28,7 +28,7 @@ public:
         mbFocusChanged = apNewFocused != NULL;
     }
 
-    cGuiSet* GetGuiSet()
+    cGuiSet *GetGuiSet()
     {
         return mpSet;
     }
@@ -51,17 +51,17 @@ protected:
     cGuiSet *mpSet;
     cGuiSkin *mpSkin;
 
-    cWidgetWindow* mpWindow;
+    cWidgetWindow *mpWindow;
 
-    void* mpDestroyCallbackObject;
+    void *mpDestroyCallbackObject;
     tGuiCallbackFunc mpDestroyCallback;
 
     bool mbAttChanged;
-    iWidget* mpNewAttention;
+    iWidget *mpNewAttention;
     bool mbFocusChanged;
-    iWidget* mpNewFocused;
+    iWidget *mpNewFocused;
     bool mbDefaultUIFocusChanged;
-    iWidget* mpNewDefaultUIFocus;
+    iWidget *mpNewDefaultUIFocus;
 };
 
 };

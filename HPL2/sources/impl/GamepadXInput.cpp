@@ -18,8 +18,8 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-float cGamepadXInput::mfInvAxisMax = 1.0f/(float(32768));
-float cGamepadXInput::mfDeadZoneRadius = 3200.0f*cGamepadXInput::mfInvAxisMax;
+float cGamepadXInput::mfInvAxisMax = 1.0f / (float(32768));
+float cGamepadXInput::mfDeadZoneRadius = 3200.0f * cGamepadXInput::mfInvAxisMax;
 bool cGamepadXInput::mbDeviceConnected[4] = { false, false, false, false };
 
 //-----------------------------------------------------------------------
@@ -40,9 +40,9 @@ cGamepadXInput::cGamepadXInput(int alIndex) : iGamepad("XInput Portable Gamepad"
     mvHatArray.assign(mvHatArray.size(), eGamepadHatState_Centered);
 
     mvBallAbsPosArray.resize(0);
-    mvBallAbsPosArray.assign(mvBallAbsPosArray.size(), cVector2l(0,0));
+    mvBallAbsPosArray.assign(mvBallAbsPosArray.size(), cVector2l(0, 0));
     mvBallRelPosArray.resize(0);
-    mvBallRelPosArray.assign(mvBallRelPosArray.size(), cVector2l(0,0));
+    mvBallRelPosArray.assign(mvBallRelPosArray.size(), cVector2l(0, 0));
 
     mfLeftTrigger = 0;
     mfRightTrigger = 0;
@@ -167,8 +167,8 @@ void cGamepadXInput::Update()
         //////////////////
         // Axis
         UpdateAxis(0, XInputToAxisValue(mState.Gamepad.sThumbLX));
-        UpdateAxis(1,-XInputToAxisValue(mState.Gamepad.sThumbLY));
-        UpdateAxis(3,-XInputToAxisValue(mState.Gamepad.sThumbRY));
+        UpdateAxis(1, -XInputToAxisValue(mState.Gamepad.sThumbLY));
+        UpdateAxis(3, -XInputToAxisValue(mState.Gamepad.sThumbRY));
         UpdateAxis(4, XInputToAxisValue(mState.Gamepad.sThumbRX));
 
         UpdateTrigger(XInputToTriggerValue(mState.Gamepad.bLeftTrigger), XInputToTriggerValue(mState.Gamepad.bRightTrigger));
@@ -185,7 +185,7 @@ void cGamepadXInput::Update()
 
 bool cGamepadXInput::HasInputUpdates()
 {
-    return mlstInputUpdates.empty()==false;
+    return mlstInputUpdates.empty() == false;
 }
 
 cGamepadInputData cGamepadXInput::GetInputUpdate()
@@ -197,7 +197,7 @@ cGamepadInputData cGamepadXInput::GetInputUpdate()
     {
     case eGamepadInputType_Button:
     {
-        if(input.mfInputValue==0.0f)
+        if(input.mfInputValue == 0.0f)
         {
             mlstButtonsReleased.remove(input);
         }
@@ -241,7 +241,7 @@ cGamepadInputData cGamepadXInput::GetButton()
 
 bool cGamepadXInput::ButtonIsPressed()
 {
-    return mlstButtonsPressed.empty()==false;
+    return mlstButtonsPressed.empty() == false;
 }
 
 //-----------------------------------------------------------------------
@@ -259,7 +259,7 @@ cGamepadInputData cGamepadXInput::GetReleasedButton()
 
 bool cGamepadXInput::ButtonIsReleased()
 {
-    return mlstButtonsReleased.empty()==false;
+    return mlstButtonsReleased.empty() == false;
 }
 
 //-----------------------------------------------------------------------
@@ -290,7 +290,7 @@ cGamepadInputData cGamepadXInput::GetUpdatedAxis()
 
 bool cGamepadXInput::AxesUpdated()
 {
-    return mlstAxisChanges.empty()==false;
+    return mlstAxisChanges.empty() == false;
 }
 
 //-----------------------------------------------------------------------
@@ -302,12 +302,12 @@ eGamepadHatState cGamepadXInput::GetHatCurrentState(eGamepadHat aHat)
 
 bool cGamepadXInput::HatIsInState(eGamepadHat aHat, eGamepadHatState aState)
 {
-    return (GetHatCurrentState(aHat)&aState)!=0;
+    return (GetHatCurrentState(aHat)&aState) != 0;
 }
 
 bool cGamepadXInput::HatsChanged()
 {
-    return mlstHatStateChanges.empty()==false;
+    return mlstHatStateChanges.empty() == false;
 }
 
 cGamepadInputData cGamepadXInput::GetHatState()
@@ -371,7 +371,7 @@ void cGamepadXInput::UpdateAxis(int alAxis, float afVal)
         afVal = 0.0f;
     }
 
-    if(afVal!=mvAxisArray[alAxis])
+    if(afVal != mvAxisArray[alAxis])
     {
         cGamepadInputData inputUpdate = cGamepadInputData(mlIndex, eGamepadInputType_Axis, static_cast<eGamepadAxis>(alAxis), afVal);
 
@@ -401,12 +401,12 @@ void cGamepadXInput::UpdateTrigger(float afLVal, float afRVal)
     {
         mfRightTrigger = afRVal;
 
-        cGamepadInputData inputUpdate = cGamepadInputData(mlIndex, eGamepadInputType_Axis, 2,-mfRightTrigger);
+        cGamepadInputData inputUpdate = cGamepadInputData(mlIndex, eGamepadInputType_Axis, 2, -mfRightTrigger);
 
         mlstAxisChanges.push_back(inputUpdate);
         mlstInputUpdates.push_back(inputUpdate);
 
-        mvAxisArray[2] =-mfRightTrigger;
+        mvAxisArray[2] = -mfRightTrigger;
     }
 
     if(afLVal != mfLeftTrigger)

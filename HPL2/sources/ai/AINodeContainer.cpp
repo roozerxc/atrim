@@ -71,7 +71,7 @@ bool cAINodeRayCallback::Intersected()
 
 bool cAINodeRayCallback::BeforeIntersect(iPhysicsBody *pBody)
 {
-    if(pBody->GetCollideCharacter()==false)
+    if(pBody->GetCollideCharacter() == false)
     {
         return false;
     }
@@ -97,11 +97,11 @@ bool cAINodeRayCallback::BeforeIntersect(iPhysicsBody *pBody)
 
 //-----------------------------------------------------------------------
 
-bool cAINodeRayCallback::OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams)
+bool cAINodeRayCallback::OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams)
 {
     if(mpCallback)
     {
-        if(mpCallback->Intersects(pBody,apParams))
+        if(mpCallback->Intersects(pBody, apParams))
         {
             mbIntersected = true;
             return false;
@@ -171,7 +171,7 @@ cAINodeIterator::cAINodeIterator(cAINodeContainer *apContainer, const cVector3f 
 
 bool cAINodeIterator::HasNext()
 {
-    if(mpNodeList==NULL || mpNodeList->empty())
+    if(mpNodeList == NULL || mpNodeList->empty())
     {
         return false;
     }
@@ -304,8 +304,8 @@ void cAINodeContainer::AddNode(const tString &asName, int alID, const cVector3f 
         pNode->mpUserData = apUserData;
 
         mvNodes.push_back(pNode);
-        m_mapNodesByName.insert(tAINodeNameMap::value_type(asName,mvNodes.back()));
-        m_mapNodesByID.insert(tAINodeIDMap::value_type(alID,mvNodes.back()));
+        m_mapNodesByName.insert(tAINodeNameMap::value_type(asName, mvNodes.back()));
+        m_mapNodesByID.insert(tAINodeIDMap::value_type(alID, mvNodes.back()));
     }
 }
 
@@ -318,7 +318,7 @@ int cAINodeContainer::GetNodeNum() const
 
 //-----------------------------------------------------------------------
 
-cAINode* cAINodeContainer::GetNodeFromName(const tString &asName)
+cAINode *cAINodeContainer::GetNodeFromName(const tString &asName)
 {
     tAINodeNameMapIt it = m_mapNodesByName.find(asName);
     if(it == m_mapNodesByName.end())
@@ -330,7 +330,7 @@ cAINode* cAINodeContainer::GetNodeFromName(const tString &asName)
 
 //-----------------------------------------------------------------------
 
-cAINode* cAINodeContainer::GetNodeFromID(int alID)
+cAINode *cAINodeContainer::GetNodeFromID(int alID)
 {
     tAINodeIDMapIt it = m_mapNodesByID.find(alID);
     if(it == m_mapNodesByID.end())
@@ -360,7 +360,7 @@ void cAINodeContainer::Compile()
     {
         cAINode *pNode = *CurrentNodeIt;
 
-        cAINodeIterator nodeIt = GetNodeIterator(pNode->mvPosition,mfMaxEndDistance*1.5f);
+        cAINodeIterator nodeIt = GetNodeIterator(pNode->mvPosition, mfMaxEndDistance * 1.5f);
         while(nodeIt.HasNext())
         {
             cAINode *pEndNode = nodeIt.Next();
@@ -370,7 +370,7 @@ void cAINodeContainer::Compile()
                 continue;
             }
             float fDist = cMath::Vector3Dist(pNode->mvPosition, pEndNode->mvPosition);
-            if(fDist > mfMaxEndDistance*2)
+            if(fDist > mfMaxEndDistance * 2)
             {
                 continue;
             }
@@ -379,7 +379,7 @@ void cAINodeContainer::Compile()
 
             tAIFreePathFlag flag = eAIFreePathFlag_SkipDynamic | eAIFreePathFlag_SkipVolatile;
             if(    fHeight <= mfMaxHeight &&
-                    FreePath(pNode->mvPosition, pEndNode->mvPosition,-1,flag))
+                    FreePath(pNode->mvPosition, pEndNode->mvPosition, -1, flag))
             {
                 pNode->AddEdge(pEndNode);
             }
@@ -396,7 +396,7 @@ void cAINodeContainer::Compile()
         }
 
         //Remove ends to far, but skip if min nodes is not met
-        for(size_t i=0; i< pNode->mvEdges.size(); ++i)
+        for(size_t i = 0; i < pNode->mvEdges.size(); ++i)
         {
             if( pNode->mvEdges[i].mfDistance > mfMaxEndDistance && (int)i >= mlMinNodeEnds)
             {
@@ -413,19 +413,19 @@ void cAINodeContainer::Compile()
 
 void cAINodeContainer::BuildNodeGridMap()
 {
-    bool bLog=false;
+    bool bLog = false;
 
     if(bLog)
     {
-        Log("Nodes: %d\n",mvNodes.size());
+        Log("Nodes: %d\n", mvNodes.size());
     }
 
     ////////////////////////////////////
     // Calculate min and max
-    cVector2f vMin(mvNodes[0]->GetPosition().x,mvNodes[0]->GetPosition().z);
-    cVector2f vMax(mvNodes[0]->GetPosition().x,mvNodes[0]->GetPosition().z);
+    cVector2f vMin(mvNodes[0]->GetPosition().x, mvNodes[0]->GetPosition().z);
+    cVector2f vMax(mvNodes[0]->GetPosition().x, mvNodes[0]->GetPosition().z);
 
-    for(size_t i=1; i< mvNodes.size(); ++i)
+    for(size_t i = 1; i < mvNodes.size(); ++i)
     {
         cAINode *pNode = mvNodes[i];
 
@@ -453,18 +453,18 @@ void cAINodeContainer::BuildNodeGridMap()
 
     ////////////////////////////////////
     // Determine size of grids
-    int lGridNum = (int)(sqrt((float)mvNodes.size() / (float)mlNodesPerGrid)+0.5f)+1;
+    int lGridNum = (int)(sqrt((float)mvNodes.size() / (float)mlNodesPerGrid) +0.5f) +1;
 
     if(bLog)
     {
-        Log("Grid Num: %d\n",lGridNum);
+        Log("Grid Num: %d\n", lGridNum);
     }
 
     mvGridMapSize.x = lGridNum;
     mvGridMapSize.y = lGridNum;
 
     //+1 to fix so that nodes on the border has a grid)
-    mvGrids.resize((lGridNum+1) * (lGridNum+1));
+    mvGrids.resize((lGridNum + 1) * (lGridNum + 1));
 
     mvGridSize = (mvMaxGridPos - mvMinGridPos);
     mvGridSize.x /= (float)mvGridMapSize.x;
@@ -472,20 +472,20 @@ void cAINodeContainer::BuildNodeGridMap()
 
     if(bLog)
     {
-        Log("GridSize: %f : %f\n",mvGridSize.x,mvGridSize.y);
+        Log("GridSize: %f : %f\n", mvGridSize.x, mvGridSize.y);
     }
     if(bLog)
     {
-        Log("MinPos: %s\n",mvMinGridPos.ToString().c_str());
+        Log("MinPos: %s\n", mvMinGridPos.ToString().c_str());
     }
     if(bLog)
     {
-        Log("MaxPos: %s\n",mvMaxGridPos.ToString().c_str());
+        Log("MaxPos: %s\n", mvMaxGridPos.ToString().c_str());
     }
 
     ////////////////////////////////////
     // Add nodes to grid
-    for(size_t i=0; i< mvNodes.size(); ++i)
+    for(size_t i = 0; i < mvNodes.size(); ++i)
     {
         cAINode *pNode = mvNodes[i];
 
@@ -494,21 +494,21 @@ void cAINodeContainer::BuildNodeGridMap()
 
         cVector2l vGridPos(0);
         //Have checks so we are sure there is no division by zero.
-        if(mvGridSize.x >0)
+        if(mvGridSize.x > 0)
         {
             vGridPos.x = (int)(vLocalPos.x / mvGridSize.x);
         }
-        if(mvGridSize.y >0)
+        if(mvGridSize.y > 0)
         {
             vGridPos.y = (int)(vLocalPos.y / mvGridSize.y);
         }
 
-        if(false)Log("Adding node %d, world: (%s) local (%s), at %d : %d\n",i,
+        if(false)Log("Adding node %d, world: (%s) local (%s), at %d : %d\n", i,
                          pNode->GetPosition().ToString().c_str(),
                          vLocalPos.ToString().c_str(),
-                         vGridPos.x,vGridPos.y);
+                         vGridPos.x, vGridPos.y);
 
-        mvGrids[vGridPos.y * (mvGridMapSize.x+1) + vGridPos.x].mlstNodes.push_back(pNode);
+        mvGrids[vGridPos.y * (mvGridMapSize.x + 1) + vGridPos.x].mlstNodes.push_back(pNode);
     }
 }
 
@@ -516,7 +516,7 @@ void cAINodeContainer::BuildNodeGridMap()
 
 void cAINodeContainer::SetupListID()
 {
-    bool bLog=false;
+    bool bLog = false;
 
     if(bLog)
     {
@@ -525,7 +525,7 @@ void cAINodeContainer::SetupListID()
 
     ////////////////////////////////////
     // Reset variables
-    for(size_t i=0; i< mvNodes.size(); ++i)
+    for(size_t i = 0; i < mvNodes.size(); ++i)
     {
         mvNodes[i]->mlListID = -1;
     }
@@ -534,7 +534,7 @@ void cAINodeContainer::SetupListID()
     // Search for unintialized node and create list from it and all nodes connected to it in any way
     mlListNum = 0;
 
-    for(size_t i=0; i< mvNodes.size(); ++i)
+    for(size_t i = 0; i < mvNodes.size(); ++i)
     {
         if(mvNodes[i]->mlListID == -1)
         {
@@ -564,45 +564,45 @@ void cAINodeContainer::SetupListIDIterative(cAINode* apNode, int alID)
 
 cAINodeIterator cAINodeContainer::GetNodeIterator(const cVector3f &avPosition, float afRadius)
 {
-    return cAINodeIterator(this,avPosition, afRadius);
+    return cAINodeIterator(this, avPosition, afRadius);
 }
 
 //-----------------------------------------------------------------------
 
-static const cVector2f gvPosAdds[] = {cVector2f(0,0),
-                                      cVector2f(1,0),
-                                      cVector2f(-1,0),
-                                      cVector2f(0,1),
-                                      cVector2f(0,-1),
-                                      cVector2f(0.5,0.5),
-                                      cVector2f(0.5,-0.5),
-                                      cVector2f(-0.5,0.5),
-                                      cVector2f(-0.5,-0.5)
+static const cVector2f gvPosAdds[] = {cVector2f(0, 0),
+                                      cVector2f(1, 0),
+                                      cVector2f(-1, 0),
+                                      cVector2f(0, 1),
+                                      cVector2f(0, -1),
+                                      cVector2f(0.5, 0.5),
+                                      cVector2f(0.5, -0.5),
+                                      cVector2f(-0.5, 0.5),
+                                      cVector2f(-0.5, -0.5)
                                      };
 
 bool cAINodeContainer::FreePath(const cVector3f &avStart, const cVector3f &avEnd, int alRayNum,
-                                tAIFreePathFlag aFlags,iAIFreePathCallback *apCallback)
+                                tAIFreePathFlag aFlags, iAIFreePathCallback *apCallback)
 {
     iPhysicsWorld *pPhysicsWorld = mpWorld->GetPhysicsWorld();
-    if(pPhysicsWorld==NULL)
+    if(pPhysicsWorld == NULL)
     {
         return true;
     }
 
-    if(alRayNum<0 || alRayNum>9)
+    if(alRayNum < 0 || alRayNum > 9)
     {
-        alRayNum =5;
+        alRayNum = 5;
     }
 
     /////////////////////////////
     //Calculate the right vector
     const cVector3f vForward = cMath::Vector3Normalize(avEnd - avStart);
-    const cVector3f vUp = cVector3f(0,1.0f,0);
+    const cVector3f vUp = cVector3f(0, 1.0f, 0);
     const cVector3f vRight = cMath::Vector3Cross(vForward, vUp);
 
     //Get the center
-    const cVector3f vStartCenter = mbNodeIsAtCenter ? avStart : avStart + cVector3f(0,mvSize.y/2,0);
-    const cVector3f vEndCenter  = mbNodeIsAtCenter ? avEnd : avEnd + cVector3f(0,mvSize.y/2,0);
+    const cVector3f vStartCenter = mbNodeIsAtCenter ? avStart : avStart + cVector3f(0, mvSize.y / 2, 0);
+    const cVector3f vEndCenter  = mbNodeIsAtCenter ? avEnd : avEnd + cVector3f(0, mvSize.y / 2, 0);
 
     //Get the half with and height. Make them a little smaller so that player can slide over funk on floor.
     const float fHalfWidth = mvSize.x * 0.55f;
@@ -612,16 +612,16 @@ bool cAINodeContainer::FreePath(const cVector3f &avStart, const cVector3f &avEnd
     mpRayCallback->SetFlags(aFlags);
 
     //Iterate through all the rays.
-    for(int i=0; i< alRayNum; ++i)
+    for(int i = 0; i < alRayNum; ++i)
     {
-        cVector3f vAdd = vRight * (gvPosAdds[i].x*fHalfWidth) + vUp * (gvPosAdds[i].y*fHalfHeight);
+        cVector3f vAdd = vRight * (gvPosAdds[i].x * fHalfWidth) + vUp * (gvPosAdds[i].y * fHalfHeight);
         cVector3f vStart = vStartCenter + vAdd;
         cVector3f vEnd = vEndCenter + vAdd;
 
         mpRayCallback->Reset();
         mpRayCallback->mpCallback = apCallback;
 
-        pPhysicsWorld->CastRay(mpRayCallback,vStart,vEnd,false,false,false,true);
+        pPhysicsWorld->CastRay(mpRayCallback, vStart, vEnd, false, false, false, true);
 
         if(mpRayCallback->Intersected())
         {
@@ -636,24 +636,24 @@ bool cAINodeContainer::FreePath(const cVector3f &avStart, const cVector3f &avEnd
 
 void cAINodeContainer::SaveToFile(const tWString &asFile)
 {
-    TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument,() );
+    TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
 
-    TiXmlElement *pRootElem = static_cast<TiXmlElement*>(pXmlDoc->InsertEndChild(TiXmlElement("AINodes")));
+    TiXmlElement *pRootElem = static_cast<TiXmlElement *>(pXmlDoc->InsertEndChild(TiXmlElement("AINodes")));
     pRootElem->SetAttribute("ListNum", cString::ToString(mlListNum).c_str());
 
-    for(size_t i=0; i< mvNodes.size(); ++i)
+    for(size_t i = 0; i < mvNodes.size(); ++i)
     {
         cAINode * pNode = mvNodes[i];
-        TiXmlElement *pNodeElem = static_cast<TiXmlElement*>(pRootElem->InsertEndChild(TiXmlElement("Node")));
+        TiXmlElement *pNodeElem = static_cast<TiXmlElement *>(pRootElem->InsertEndChild(TiXmlElement("Node")));
 
         pNodeElem->SetAttribute("Name", pNode->GetName().c_str());
         pNodeElem->SetAttribute("ID", cString::ToString(pNode->GetID()).c_str());
         pNodeElem->SetAttribute("ListID", cString::ToString(pNode->GetListID()).c_str());
 
-        for(int edge =0; edge < pNode->GetEdgeNum(); ++edge)
+        for(int edge = 0; edge < pNode->GetEdgeNum(); ++edge)
         {
             cAINodeEdge *pEdge = pNode->GetEdge(edge);
-            TiXmlElement *pEdgeElem = static_cast<TiXmlElement*>(pNodeElem->InsertEndChild(TiXmlElement("Edge")));
+            TiXmlElement *pEdgeElem = static_cast<TiXmlElement *>(pNodeElem->InsertEndChild(TiXmlElement("Edge")));
 
             pEdgeElem->SetAttribute("Node", pEdge->mpNode->GetName().c_str());
             tString sDistance = cString::ToString(pEdge->mfDistance);
@@ -662,9 +662,9 @@ void cAINodeContainer::SaveToFile(const tWString &asFile)
     }
 
     FILE *pFile = cPlatform::OpenFile(asFile, _W("w+"));
-    if(pFile==NULL || pXmlDoc->SaveFile(pFile)==false)
+    if(pFile == NULL || pXmlDoc->SaveFile(pFile) == false)
     {
-        Error("Couldn't save XML file '%s'\n",asFile.c_str());
+        Error("Couldn't save XML file '%s'\n", asFile.c_str());
         hplDelete(pXmlDoc);
         return;
     }
@@ -679,15 +679,15 @@ void cAINodeContainer::LoadFromFile(const tWString &asFile)
     BuildNodeGridMap();
 
     FILE *pFile = cPlatform::OpenFile(asFile, _W("rb"));
-    if(pFile==NULL)
+    if(pFile == NULL)
     {
         return;
     }
 
     TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
-    if(pXmlDoc->LoadFile(pFile)==false)
+    if(pXmlDoc->LoadFile(pFile) == false)
     {
-        Warning("Couldn't open XML file %s\n",cString::To8Char(asFile).c_str());
+        Warning("Couldn't open XML file %s\n", cString::To8Char(asFile).c_str());
         fclose(pFile);
         hplDelete(pXmlDoc);
         return;
@@ -700,12 +700,12 @@ void cAINodeContainer::LoadFromFile(const tWString &asFile)
     TiXmlElement *pNodeElem = pRootElem->FirstChildElement("Node");
     for(; pNodeElem != NULL; pNodeElem = pNodeElem->NextSiblingElement("Node"))
     {
-        tString sName = cString::ToString(pNodeElem->Attribute("Name"),"");
-        int alID = cString::ToInt(pNodeElem->Attribute("ID"),-1);
+        tString sName = cString::ToString(pNodeElem->Attribute("Name"), "");
+        int alID = cString::ToInt(pNodeElem->Attribute("ID"), -1);
         int alListID = cString::ToInt(pNodeElem->Attribute("ListID"), 0);
 
         cAINode *pNode = GetNodeFromID(alID);
-        if(pNode==NULL)
+        if(pNode == NULL)
         {
             Error("Could not find node with id %d in node container cache '%s'\n", alID, cString::To8Char(asFile).c_str());
             continue;
@@ -716,7 +716,7 @@ void cAINodeContainer::LoadFromFile(const tWString &asFile)
         TiXmlElement *pEdgeElem = pNodeElem->FirstChildElement("Edge");
         for(; pEdgeElem != NULL; pEdgeElem = pEdgeElem->NextSiblingElement("Edge"))
         {
-            tString sNodeName = cString::ToString(pEdgeElem->Attribute("Node"),"");
+            tString sNodeName = cString::ToString(pEdgeElem->Attribute("Node"), "");
             cAINode *pEdgeNode = GetNodeFromName(sNodeName);
             if(pEdgeNode == NULL)
             {
@@ -726,8 +726,8 @@ void cAINodeContainer::LoadFromFile(const tWString &asFile)
 
             cAINodeEdge Edge;
             Edge.mpNode = pEdgeNode;
-            Edge.mfDistance = cString::ToFloat(pEdgeElem->Attribute("Distance"),0);
-            Edge.mfSqrDistance = Edge.mfDistance*Edge.mfDistance;
+            Edge.mfDistance = cString::ToFloat(pEdgeElem->Attribute("Distance"), 0);
+            Edge.mfSqrDistance = Edge.mfDistance * Edge.mfDistance;
 
             pNode->mvEdges.push_back(Edge);
         }
@@ -749,13 +749,13 @@ cVector2l cAINodeContainer::GetGridPosFromLocal(const cVector2f &avLocalPos)
     vGridPos.x = (int)(avLocalPos.x / mvGridSize.x);
     vGridPos.y = (int)(avLocalPos.y / mvGridSize.y);
 
-    if(vGridPos.x <0)
+    if(vGridPos.x < 0)
     {
-        vGridPos.x =0;
+        vGridPos.x = 0;
     }
-    if(vGridPos.y <0)
+    if(vGridPos.y < 0)
     {
-        vGridPos.y =0;
+        vGridPos.y = 0;
     }
     if(vGridPos.x > mvGridMapSize.x)
     {
@@ -771,9 +771,9 @@ cVector2l cAINodeContainer::GetGridPosFromLocal(const cVector2f &avLocalPos)
 
 //-----------------------------------------------------------------------
 
-cAIGridNode* cAINodeContainer::GetGrid(const cVector2l& avPos)
+cAIGridNode *cAINodeContainer::GetGrid(const cVector2l& avPos)
 {
-    int lIndex = avPos.y * (mvGridMapSize.x+1) + avPos.x;
+    int lIndex = avPos.y * (mvGridMapSize.x + 1) + avPos.x;
     //Log(" index: %d Max: %d\n",lIndex,(int)mvGrids.size());
 
     return &mvGrids[lIndex];

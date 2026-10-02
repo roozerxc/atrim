@@ -49,17 +49,17 @@ public:
     {
         return (int)mvEdges.size();
     }
-    inline cAINodeEdge* GetEdge(int alIdx)
+    inline cAINodeEdge *GetEdge(int alIdx)
     {
         return &mvEdges[alIdx];
     }
 
-    const cVector3f& GetPosition()
+    const cVector3f &GetPosition()
     {
         return mvPosition;
     }
 
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
@@ -83,16 +83,16 @@ private:
     tAINodeEdgeVec mvEdges;
 };
 
-typedef std::vector<cAINode*> tAINodeVec;
+typedef std::vector<cAINode *> tAINodeVec;
 typedef tAINodeVec::iterator tAINodeVecIt;
 
-typedef std::list<cAINode*> tAINodeList;
+typedef std::list<cAINode *> tAINodeList;
 typedef tAINodeList::iterator tAINodeListIt;
 
-typedef std::map<tString,cAINode*> tAINodeNameMap;
+typedef std::map<tString, cAINode *> tAINodeNameMap;
 typedef tAINodeNameMap::iterator tAINodeNameMapIt;
 
-typedef std::map<int,cAINode*> tAINodeIDMap;
+typedef std::map<int, cAINode *> tAINodeIDMap;
 typedef tAINodeIDMap::iterator tAINodeIDMapIt;
 
 //--------------------------------
@@ -101,7 +101,7 @@ class iAIFreePathCallback
 {
 public:
     virtual ~iAIFreePathCallback() { }
-    virtual bool Intersects(iPhysicsBody *pBody,cPhysicsRayParams *apParams)=0;
+    virtual bool Intersects(iPhysicsBody *pBody, cPhysicsRayParams *apParams) = 0;
 };
 
 //--------------------------------
@@ -116,7 +116,7 @@ public:
     }
 
     bool BeforeIntersect(iPhysicsBody *pBody);
-    bool OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams);
+    bool OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams);
 
     bool Intersected();
 
@@ -166,20 +166,20 @@ class cAINodeContainer
 {
     friend class cAINodeIterator;
 public:
-    cAINodeContainer(    const tString& asName,const tString &asNodeName,
+    cAINodeContainer(    const tString& asName, const tString &asNodeName,
                          cWorld *apWorld, const cVector3f &avCollideSize);
     ~cAINodeContainer();
 
-    const tString& GetNodeName()
+    const tString &GetNodeName()
     {
         return msNodeName;
     }
-    const tString& GetName()
+    const tString &GetName()
     {
         return msName;
     }
 
-    const cVector3f& GetCollideSize()
+    const cVector3f &GetCollideSize()
     {
         return mvSize;
     }
@@ -196,7 +196,7 @@ public:
     * \param &avPosition Position of the node.
     * \param *apUserData Data supplied by user.
      */
-    void AddNode(const tString &asName, int alID, const cVector3f &avPosition, void *apUserData=NULL);
+    void AddNode(const tString &asName, int alID, const cVector3f &avPosition, void *apUserData = NULL);
 
     /**
      * Get the number of nodes.
@@ -211,7 +211,7 @@ public:
      * Get a node.
      * \param alIdx index of node.
      */
-    inline cAINode* GetNode(int alIdx)
+    inline cAINode *GetNode(int alIdx)
     {
         return mvNodes[alIdx];
     }
@@ -225,8 +225,8 @@ public:
      * Gets a node based on the name.
      * \param &asName Name of the node.
      */
-    cAINode* GetNodeFromName(const tString &asName);
-    cAINode* GetNodeFromID(int alID);
+    cAINode *GetNodeFromName(const tString &asName);
+    cAINode *GetNodeFromID(int alID);
 
 
     /**
@@ -262,8 +262,8 @@ public:
      * \param apCallback Check for every body and overrides alFlags.
      * \return
      */
-    bool FreePath(const cVector3f &avStart, const cVector3f &avEnd, int alRayNum=-1,
-                  tAIFreePathFlag aFlags=0, iAIFreePathCallback *apCallback=NULL);
+    bool FreePath(const cVector3f &avStart, const cVector3f &avEnd, int alRayNum = -1,
+                  tAIFreePathFlag aFlags = 0, iAIFreePathCallback *apCallback = NULL);
 
 
     /**
@@ -331,7 +331,7 @@ public:
 
 private:
     cVector2l GetGridPosFromLocal(const cVector2f &avLocalPos);
-    cAIGridNode* GetGrid(const cVector2l& avPos);
+    cAIGridNode *GetGrid(const cVector2l& avPos);
 
     tString msName;
     tString msNodeName;

@@ -38,8 +38,8 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cScene::cScene(cGraphics *apGraphics,cResources *apResources, cSound* apSound,cPhysics *apPhysics,
-               cSystem *apSystem, cAI *apAI,cGui *apGui) : iUpdateable("HPL_Scene")
+cScene::cScene(cGraphics *apGraphics, cResources *apResources, cSound* apSound, cPhysics *apPhysics,
+               cSystem *apSystem, cAI *apAI, cGui *apGui) : iUpdateable("HPL_Scene")
 {
     mpGraphics = apGraphics;
     mpResources = apResources;
@@ -75,7 +75,7 @@ cScene::~cScene()
 
 //-----------------------------------------------------------------------
 
-cViewport* cScene::CreateViewport(cCamera *apCamera, cWorld *apWorld, bool abPushFront)
+cViewport *cScene::CreateViewport(cCamera *apCamera, cWorld *apWorld, bool abPushFront)
 {
     cViewport *pViewport = hplNew ( cViewport, (this) );
 
@@ -147,7 +147,7 @@ void cScene::SetCurrentListener(cViewport* apViewPort)
 
 //-----------------------------------------------------------------------
 
-cCamera* cScene::CreateCamera(eCameraMoveMode aMoveMode)
+cCamera *cScene::CreateCamera(eCameraMoveMode aMoveMode)
 {
     cCamera *pCamera = hplNew( cCamera, () );
     pCamera->SetAspect(mpGraphics->GetLowLevel()->GetScreenSizeFloat().x /
@@ -180,7 +180,7 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
     for(; viewIt != mlstViewports.end(); ++viewIt)
     {
         cViewport *pViewPort = *viewIt;
-        if(pViewPort->IsVisible()==false)
+        if(pViewPort->IsVisible() == false)
         {
             continue;
         }
@@ -207,8 +207,8 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
             if(pRenderer && pViewPort->GetWorld() && pFrustum)
             {
                 START_TIMING(RenderWorld)
-                pRenderer->Render(    adFrameTime,pFrustum,
-                                      pViewPort->GetWorld(),pViewPort->GetRenderSettings(),
+                pRenderer->Render(    adFrameTime, pFrustum,
+                                      pViewPort->GetWorld(), pViewPort->GetRenderSettings(),
                                       pViewPort->GetRenderTarget(),
                                       bPostEffects,
                                       pViewPort->GetRendererCallbackList());
@@ -228,7 +228,7 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
             //Render 3D GuiSets
             // Should this really be here? Or perhaps send in a frame buffer depending on the renderer.
             START_TIMING(Render3DGui)
-            Render3DGui(pViewPort,pFrustum, adFrameTime);
+            Render3DGui(pViewPort, pFrustum, adFrameTime);
             STOP_TIMING(Render3DGui)
 
             START_TIMING(RenderPrePostEffectScreenGui)
@@ -245,7 +245,7 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
             iTexture *pInputTexture = pRenderer->GetPostEffectTexture();
 
             START_TIMING(RenderPostEffects)
-            pPostEffectComposite->Render(adFrameTime, pFrustum, pInputTexture,pViewPort->GetRenderTarget());
+            pPostEffectComposite->Render(adFrameTime, pFrustum, pInputTexture, pViewPort->GetRenderTarget());
             STOP_TIMING(RenderPostEffects)
         }
 
@@ -282,8 +282,8 @@ void cScene::PostUpdate(double adFixedDelta)
     if(mpCurrentListener && mpCurrentListener->GetCamera())
     {
         cCamera* pCamera3D = mpCurrentListener->GetCamera();
-        mpSound->GetLowLevel()->SetListenerAttributes(    pCamera3D->GetPosition(), cVector3f(0,0,0),
-                pCamera3D->GetForward()*-1.0f, pCamera3D->GetUp());
+        mpSound->GetLowLevel()->SetListenerAttributes(    pCamera3D->GetPosition(), cVector3f(0, 0, 0),
+                pCamera3D->GetForward() * -1.0f, pCamera3D->GetUp());
     }
 }
 
@@ -295,7 +295,7 @@ void cScene::Reset()
 
 //-----------------------------------------------------------------------
 
-cWorld* cScene::LoadWorld(const tString& asFile, tWorldLoadFlag aFlags)
+cWorld *cScene::LoadWorld(const tString& asFile, tWorldLoadFlag aFlags)
 {
     ///////////////////////////////////
     // Load the map file
@@ -304,20 +304,20 @@ cWorld* cScene::LoadWorld(const tString& asFile, tWorldLoadFlag aFlags)
     {
         if(cResources::GetCreateAndLoadCompressedMaps())
         {
-            asPath = mpResources->GetFileSearcher()->GetFilePath(cString::SetFileExt(asFile,"cmap"));
+            asPath = mpResources->GetFileSearcher()->GetFilePath(cString::SetFileExt(asFile, "cmap"));
         }
 
         if(asPath == _W(""))
         {
-            Error("World '%s' doesn't exist\n",asFile.c_str());
+            Error("World '%s' doesn't exist\n", asFile.c_str());
             return NULL;
         }
     }
 
     cWorld* pWorld = mpResources->GetWorldLoaderHandler()->LoadWorld(asPath, aFlags);
-    if(pWorld==NULL)
+    if(pWorld == NULL)
     {
-        Error("Couldn't load world from '%s'\n",cString::To8Char(asPath).c_str());
+        Error("Couldn't load world from '%s'\n", cString::To8Char(asPath).c_str());
         return NULL;
     }
 
@@ -326,10 +326,10 @@ cWorld* cScene::LoadWorld(const tString& asFile, tWorldLoadFlag aFlags)
 
 //-----------------------------------------------------------------------
 
-cWorld* cScene::CreateWorld(const tString& asName)
+cWorld *cScene::CreateWorld(const tString& asName)
 {
-    cWorld* pWorld = hplNew( cWorld, (asName,mpGraphics,mpResources,mpSound,mpPhysics,this,
-                                      mpSystem,mpAI) );
+    cWorld* pWorld = hplNew( cWorld, (asName, mpGraphics, mpResources, mpSound, mpPhysics, this,
+                                      mpSystem, mpAI) );
 
     mlstWorlds.push_back(pWorld);
 
@@ -340,7 +340,7 @@ cWorld* cScene::CreateWorld(const tString& asName)
 
 void cScene::DestroyWorld(cWorld* apWorld)
 {
-    STLFindAndDelete(mlstWorlds,apWorld);
+    STLFindAndDelete(mlstWorlds, apWorld);
 }
 
 //-----------------------------------------------------------------------
@@ -366,9 +366,9 @@ bool cScene::WorldExists(cWorld* apWorld)
 
 //-----------------------------------------------------------------------
 
-void cScene::RenderPrePostEffectScreenGui(cViewport *apViewPort,double adFrameTime)
+void cScene::RenderPrePostEffectScreenGui(cViewport *apViewPort, double adFrameTime)
 {
-    if(apViewPort->GetCamera()==NULL)
+    if(apViewPort->GetCamera() == NULL)
     {
         return;
     }
@@ -386,9 +386,9 @@ void cScene::RenderPrePostEffectScreenGui(cViewport *apViewPort,double adFrameTi
 
 //-----------------------------------------------------------------------
 
-void cScene::Render3DGui(cViewport *apViewPort,cFrustum *apFrustum,double adFrameTime)
+void cScene::Render3DGui(cViewport *apViewPort, cFrustum *apFrustum, double adFrameTime)
 {
-    if(apViewPort->GetCamera()==NULL)
+    if(apViewPort->GetCamera() == NULL)
     {
         return;
     }
@@ -404,11 +404,11 @@ void cScene::Render3DGui(cViewport *apViewPort,cFrustum *apFrustum,double adFram
     }
 }
 
-void cScene::RenderScreenGui(cViewport *apViewPort,double adFrameTime)
+void cScene::RenderScreenGui(cViewport *apViewPort, double adFrameTime)
 {
     ///////////////////////////////////////
     //Put all of the non 3D sets in to a sorted map
-    typedef std::multimap<int, cGuiSet*> tPrioMap;
+    typedef std::multimap<int, cGuiSet *> tPrioMap;
     tPrioMap mapSortedSets;
 
     cGuiSetListIterator it = apViewPort->GetGuiSetIterator();
@@ -416,9 +416,9 @@ void cScene::RenderScreenGui(cViewport *apViewPort,double adFrameTime)
     {
         cGuiSet *pSet = it.Next();
 
-        if(pSet->Is3D()==false)
+        if(pSet->Is3D() == false)
         {
-            mapSortedSets.insert(tPrioMap::value_type(pSet->GetDrawPriority(),pSet));
+            mapSortedSets.insert(tPrioMap::value_type(pSet->GetDrawPriority(), pSet));
         }
     }
 

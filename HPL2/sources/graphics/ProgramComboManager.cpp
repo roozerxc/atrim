@@ -29,7 +29,7 @@ const static bool gbLogStuff = false;
 
 void cProgramComboProgram::DestroyProgram()
 {
-    if(mpProgram==NULL)
+    if(mpProgram == NULL)
     {
         return;
     }
@@ -47,7 +47,7 @@ void cProgramComboProgram::DestroyProgram()
 
 //-----------------------------------------------------------------------
 
-cProgramComboManager::cProgramComboManager(const tString& asName,cGraphics *apGraphics, cResources *apResources, int alNumOfMainModes)
+cProgramComboManager::cProgramComboManager(const tString& asName, cGraphics *apGraphics, cResources *apResources, int alNumOfMainModes)
 {
     mpGraphics = apGraphics;
     mpResources = apResources;
@@ -79,7 +79,7 @@ cProgramComboManager::~cProgramComboManager()
 
 //--------------------------------------------------------------------------
 
-iGpuProgram* cProgramComboManager::GenerateProgram(int alMainMode, int alFlags)
+iGpuProgram *cProgramComboManager::GenerateProgram(int alMainMode, int alFlags)
 {
     cProgramComboProgram *pProgData = NULL;
 
@@ -107,7 +107,7 @@ iGpuProgram* cProgramComboManager::GenerateProgram(int alMainMode, int alFlags)
 
         if(pVtxShader && pFragShader)
         {
-            pProgram = CreateProgramFromShaders(sProgramName, pVtxShader, pFragShader,false);
+            pProgram = CreateProgramFromShaders(sProgramName, pVtxShader, pFragShader, false);
         }
 
         pProgData->mpProgram = pProgram;
@@ -123,7 +123,7 @@ iGpuProgram* cProgramComboManager::GenerateProgram(int alMainMode, int alFlags)
             for(; it != endIt; ++it)
             {
                 cProgramComboVariable &var = *it;
-                pProgram->GetVariableAsId(var.msVarName,var.mlId);
+                pProgram->GetVariableAsId(var.msVarName, var.mlId);
             }
 
             //Log(" -- Creating program '%s' / %d\n", sProgramName.c_str(), pProgram);
@@ -154,7 +154,7 @@ void cProgramComboManager::SetupGenerateProgramData(int alMainMode, const tStrin
     ////////////////////////////////
     //Set up variables and containers
     int lFeatureNum = alFeatureNum;
-    int lCombinations = (int)(pow(2.0,(double)lFeatureNum)+0.49);
+    int lCombinations = (int)(pow(2.0, (double)lFeatureNum) +0.49);
     mvCombinationNum[alMainMode] = lCombinations;
 
     ////////////////////////////////
@@ -165,7 +165,7 @@ void cProgramComboManager::SetupGenerateProgramData(int alMainMode, const tStrin
     comboSettings.msFragShader = asFragShaderName;
 
     comboSettings.mvFeatures.resize(alFeatureNum);
-    for(int i=0; i<alFeatureNum; ++i)
+    for(int i = 0; i < alFeatureNum; ++i)
     {
         comboSettings.mvFeatures[i] = apFeatures[i];
     }
@@ -223,11 +223,11 @@ void cProgramComboManager::DestroyGeneratedProgram(int alMainMode, iGpuProgram* 
         //Destroy shaders (must be done after program deletion!)
         if(pVtxShader)
         {
-            DestroyGeneratedShader(alMainMode,pVtxShader, eGpuShaderType_Vertex);
+            DestroyGeneratedShader(alMainMode, pVtxShader, eGpuShaderType_Vertex);
         }
         if(pFragShader)
         {
-            DestroyGeneratedShader(alMainMode,pFragShader, eGpuShaderType_Fragment);
+            DestroyGeneratedShader(alMainMode, pFragShader, eGpuShaderType_Fragment);
         }
     }
 }
@@ -236,7 +236,7 @@ void cProgramComboManager::DestroyGeneratedProgram(int alMainMode, iGpuProgram* 
 
 void cProgramComboManager::DestroyGeneratedShader(int alMainMode, iGpuShader* apShader, eGpuShaderType aType)
 {
-    tProgramComboShaderMap* pShaderSet = aType== eGpuShaderType_Vertex ? &mvVtxShaderSets[alMainMode] : &mvFragShaderSets[alMainMode];
+    tProgramComboShaderMap* pShaderSet = aType == eGpuShaderType_Vertex ? &mvVtxShaderSets[alMainMode] : &mvFragShaderSets[alMainMode];
 
     /////////////////////////
     //Search for shader using id (which is the saved bitflags)
@@ -253,7 +253,7 @@ void cProgramComboManager::DestroyGeneratedShader(int alMainMode, iGpuShader* ap
     /////////////////////////
     //Dec user count and destroy if 0
     pShaderData->mlUserCount--;
-    if(pShaderData->mlUserCount <=0)
+    if(pShaderData->mlUserCount <= 0)
     {
         //Log(" Destroying shader '%s' id: %d\n", pShader->GetName().c_str(), pShader->GetUserId());
 
@@ -283,12 +283,12 @@ iGpuProgram *cProgramComboManager::CreateProgram(const tString& asName, bool abA
 
 //-----------------------------------------------------------------------
 
-iGpuShader *cProgramComboManager::CreateShader(const tString& asName,eGpuShaderType aType, cParserVarContainer *apVars, bool abAddtoList)
+iGpuShader *cProgramComboManager::CreateShader(const tString& asName, eGpuShaderType aType, cParserVarContainer *apVars, bool abAddtoList)
 {
-    iGpuShader *pShader = mpResources->GetGpuShaderManager()->CreateShader(asName,aType,apVars);
+    iGpuShader *pShader = mpResources->GetGpuShaderManager()->CreateShader(asName, aType, apVars);
     if(pShader == NULL)
     {
-        Error("Could not load material '%s' shader '%s'\n",msName.c_str(),asName.c_str());
+        Error("Could not load material '%s' shader '%s'\n", msName.c_str(), asName.c_str());
         return NULL;
     }
 
@@ -323,7 +323,7 @@ void cProgramComboManager::DestroyProgram(iGpuProgram * apProgram)
 
 //-----------------------------------------------------------------------
 
-iGpuProgram* cProgramComboManager::CreateProgramFromShaders(const tString &asProgramName,
+iGpuProgram *cProgramComboManager::CreateProgramFromShaders(const tString &asProgramName,
         const tString &asVtxShaderName,
         const tString &asFragShaderName,
         cParserVarContainer *apVars,
@@ -332,13 +332,13 @@ iGpuProgram* cProgramComboManager::CreateProgramFromShaders(const tString &asPro
     iGpuProgram *pProgram;
     iGpuShader *pVtxShader, *pFragShader;
 
-    pVtxShader = CreateShader(asVtxShaderName,eGpuShaderType_Vertex,apVars, abAddtoList);
+    pVtxShader = CreateShader(asVtxShaderName, eGpuShaderType_Vertex, apVars, abAddtoList);
     if(pVtxShader == NULL)
     {
         return NULL;
     }
 
-    pFragShader = CreateShader(asFragShaderName,eGpuShaderType_Fragment,apVars, abAddtoList);
+    pFragShader = CreateShader(asFragShaderName, eGpuShaderType_Fragment, apVars, abAddtoList);
     if(pFragShader == NULL)
     {
         DestroyShader(pVtxShader);
@@ -349,9 +349,9 @@ iGpuProgram* cProgramComboManager::CreateProgramFromShaders(const tString &asPro
     pProgram->SetShader(eGpuShaderType_Vertex, pVtxShader);
     pProgram->SetShader(eGpuShaderType_Fragment, pFragShader);
 
-    if(pProgram->Link()==false)
+    if(pProgram->Link() == false)
     {
-        Error("Could not link material '%s' program %s!\n",msName.c_str(),asProgramName.c_str());
+        Error("Could not link material '%s' program %s!\n", msName.c_str(), asProgramName.c_str());
         //////////////////
         // Remove from list and destroy
         if(abAddtoList)
@@ -372,7 +372,7 @@ iGpuProgram* cProgramComboManager::CreateProgramFromShaders(const tString &asPro
         return NULL;
     }
 
-    if(abAddtoList==false)
+    if(abAddtoList == false)
     {
         pProgram->SetAutoDestroyShaders(true);
         pProgram->SetResources(mpResources);
@@ -383,7 +383,7 @@ iGpuProgram* cProgramComboManager::CreateProgramFromShaders(const tString &asPro
 
 //-----------------------------------------------------------------------
 
-iGpuProgram* cProgramComboManager::CreateProgramFromShaders(const tString &asProgramName, iGpuShader *apVtxShader,iGpuShader *apFragShader,
+iGpuProgram *cProgramComboManager::CreateProgramFromShaders(const tString &asProgramName, iGpuShader *apVtxShader, iGpuShader *apFragShader,
         bool abAddtoList)
 {
     iGpuProgram *pProgram;
@@ -392,9 +392,9 @@ iGpuProgram* cProgramComboManager::CreateProgramFromShaders(const tString &asPro
     pProgram->SetShader(eGpuShaderType_Vertex, apVtxShader);
     pProgram->SetShader(eGpuShaderType_Fragment, apFragShader);
 
-    if(pProgram->Link()==false)
+    if(pProgram->Link() == false)
     {
-        Error("Could not link program '%s' in ProgramComboManager!\n",asProgramName.c_str());
+        Error("Could not link program '%s' in ProgramComboManager!\n", asProgramName.c_str());
         if(abAddtoList)
         {
             DestroyProgram(pProgram);
@@ -414,7 +414,7 @@ iGpuProgram* cProgramComboManager::CreateProgramFromShaders(const tString &asPro
 
 void cProgramComboManager::DestroyShadersAndPrograms()
 {
-    for(int rmode =0; rmode < mlNumOfMainModes; ++rmode)
+    for(int rmode = 0; rmode < mlNumOfMainModes; ++rmode)
     {
         ///////////////////////////////
         // Destroy Generated Content
@@ -452,7 +452,7 @@ void cProgramComboManager::DestroyShadersAndPrograms()
         STLDeleteAll(mlstExtraPrograms);
 
         //Shaders (must be after programs!)
-        for(tGpuShaderListIt it = mlstExtraShaders.begin(); it!= mlstExtraShaders.end(); ++it)
+        for(tGpuShaderListIt it = mlstExtraShaders.begin(); it != mlstExtraShaders.end(); ++it)
         {
             mpResources->GetGpuShaderManager()->Destroy(*it);
         }
@@ -474,7 +474,7 @@ tString cProgramComboManager::GenerateProgramName(int alMainMode, int alBitFlags
     cProgramComboSettings& settings = mvSettings[alMainMode];
 
     tString sName = msName + "_" + settings.msName;
-    for(size_t i=0; i<settings.mvFeatures.size(); ++i)
+    for(size_t i = 0; i < settings.mvFeatures.size(); ++i)
     {
         if(alBitFlags & cMath::GetFlagBit((int)i))
         {
@@ -488,15 +488,15 @@ tString cProgramComboManager::GenerateProgramName(int alMainMode, int alBitFlags
 //--------------------------------------------------------------------------
 
 
-iGpuShader* cProgramComboManager::GetShaderForCombo(int alMainMode, int alBitFlags, const tString& asShaderName, tFlag aShaderType)
+iGpuShader *cProgramComboManager::GetShaderForCombo(int alMainMode, int alBitFlags, const tString& asShaderName, tFlag aShaderType)
 {
     cProgramComboSettings &comboSettings = mvSettings[alMainMode];
 
     //////////////////////////////
     // Calculate the valid bit flags for current shader type
     // Valid means that only bits use the correct shader type is part of bit string.
-    int lValidBits =0;
-    for(size_t i=0; i<comboSettings.mvFeatures.size(); ++i)
+    int lValidBits = 0;
+    for(size_t i = 0; i < comboSettings.mvFeatures.size(); ++i)
     {
         int lCurrentBit = cMath::GetFlagBit((int)i);
         if( (alBitFlags & lCurrentBit) &&
@@ -508,7 +508,7 @@ iGpuShader* cProgramComboManager::GetShaderForCombo(int alMainMode, int alBitFla
 
     //////////////////////////////
     // Check if program exists and if so return it
-    tProgramComboShaderMap* pShaderSet = aShaderType== kPC_VertexBit ? &mvVtxShaderSets[alMainMode] : &mvFragShaderSets[alMainMode];
+    tProgramComboShaderMap* pShaderSet = aShaderType == kPC_VertexBit ? &mvVtxShaderSets[alMainMode] : &mvFragShaderSets[alMainMode];
     tProgramComboShaderMapIt it = pShaderSet->find(lValidBits);
     if(it != pShaderSet->end())
     {
@@ -541,7 +541,7 @@ iGpuShader* cProgramComboManager::GetShaderForCombo(int alMainMode, int alBitFla
 
 //--------------------------------------------------------------------
 
-iGpuShader* cProgramComboManager::CreateShaderFromFeatures(    const tString& asShaderFile, tFlag aShaderType,
+iGpuShader *cProgramComboManager::CreateShaderFromFeatures(    const tString& asShaderFile, tFlag aShaderType,
         int alBitFlags, cProgramComboFeature* apFeatures, int alFeatureNum,
         cProgramComboSettingsVar *apDefaultVars, int alDefaultVarsNum)
 {
@@ -549,7 +549,7 @@ iGpuShader* cProgramComboManager::CreateShaderFromFeatures(    const tString& as
 
     ///////////////////////////
     //Add variables to variable container
-    for(int lFeature=0; lFeature<alFeatureNum; ++lFeature)
+    for(int lFeature = 0; lFeature < alFeatureNum; ++lFeature)
     {
         //This check if feature j in in current flag
         if( alBitFlags & cMath::GetFlagBit(lFeature))
@@ -563,7 +563,7 @@ iGpuShader* cProgramComboManager::CreateShaderFromFeatures(    const tString& as
 
     /////////////////////////
     //Add the default variables,
-    for(int i=0; i<alDefaultVarsNum; ++i)
+    for(int i = 0; i < alDefaultVarsNum; ++i)
     {
         vars.Add(apDefaultVars[i].msName, apDefaultVars[i].msValue);
     }
@@ -571,7 +571,7 @@ iGpuShader* cProgramComboManager::CreateShaderFromFeatures(    const tString& as
     /////////////////////////
     //Create the shader
     eGpuShaderType shaderType = aShaderType == kPC_VertexBit ? eGpuShaderType_Vertex : eGpuShaderType_Fragment;
-    return CreateShader(asShaderFile,shaderType,&vars,false);
+    return CreateShader(asShaderFile, shaderType, &vars, false);
 }
 
 //--------------------------------------------------------------------------

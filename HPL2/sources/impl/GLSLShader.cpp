@@ -19,7 +19,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cGLSLShader::cGLSLShader(const tString& asName,eGpuShaderType aType, iLowLevelGraphics *apLowLevelGraphics)
+cGLSLShader::cGLSLShader(const tString& asName, eGpuShaderType aType, iLowLevelGraphics *apLowLevelGraphics)
     : iGpuShader(asName, _W(""), aType, eGpuProgramFormat_GLSL)
 {
     mpLowLevelGraphics = apLowLevelGraphics;
@@ -61,14 +61,14 @@ bool cGLSLShader::CreateFromFile(const tWString &asFile, const tString &asEntry,
     }
     SetFullPath(asFile);
 
-    fseek(pFile,0,SEEK_END);
+    fseek(pFile, 0, SEEK_END);
     int lFileSize = ftell(pFile);
     rewind(pFile);
 
-    char *pBuffer = (char*) hplMalloc(sizeof(char)* lFileSize+1);
+    char *pBuffer = (char*) hplMalloc(sizeof(char) * lFileSize + 1);
 
     fread(pBuffer, sizeof(GLchar), lFileSize, pFile);
-    pBuffer[lFileSize] =0; //Zero at end so it is a proper string.
+    pBuffer[lFileSize] = 0; //Zero at end so it is a proper string.
 
     fclose(pFile);
 
@@ -96,12 +96,12 @@ bool cGLSLShader::CreateFromString(const char *apStringData, const tString& asEn
     ///////////////////////////////////////
     //Check for errors.
     GLint lStatus;
-    glGetShaderiv(mlHandle,GL_COMPILE_STATUS,&lStatus);
+    glGetShaderiv(mlHandle, GL_COMPILE_STATUS, &lStatus);
     if(lStatus == GL_FALSE)
     {
         if(abPrintInfoIfFail)
         {
-            Error("Failed to compile GLSL shader '%s'!\n",cString::To8Char(GetFullPath()).c_str());
+            Error("Failed to compile GLSL shader '%s'!\n", cString::To8Char(GetFullPath()).c_str());
             Log("Shader code:\n-------------------\n");
 
             LogShaderCode(apStringData);
@@ -145,14 +145,14 @@ void cGLSLShader::LogShaderInfoLog()
     GLsizei charsWritten  = 0;
     char *infoLog;
 
-    glGetShaderiv(mlHandle, GL_INFO_LOG_LENGTH,&infologLength);
+    glGetShaderiv(mlHandle, GL_INFO_LOG_LENGTH, &infologLength);
 
     if (infologLength > 0)
     {
         infoLog = (char *)hplMalloc(infologLength);
         glGetShaderInfoLog(mlHandle, infologLength, &charsWritten, infoLog);
         Log("---------------------\n");
-        Log("%s\n",infoLog);
+        Log("%s\n", infoLog);
         Log("---------------------\n");
         hplFree(infoLog);
     }
@@ -162,25 +162,25 @@ void cGLSLShader::LogShaderInfoLog()
 
 void cGLSLShader::LogShaderCode(const char *apStringData)
 {
-    int lRow =1;
-    tString sRowCode ="";
-    for(int i=0; apStringData[i]!=0; ++i)
+    int lRow = 1;
+    tString sRowCode = "";
+    for(int i = 0; apStringData[i] != 0; ++i)
     {
         char lChar = apStringData[i];
-        if(lChar=='\r')
+        if(lChar == '\r')
         {
             continue;    //Can skip this sign.
         }
 
         if(lChar == '\n')
         {
-            Log("[%04d] %s\n",lRow, sRowCode.c_str());
+            Log("[%04d] %s\n", lRow, sRowCode.c_str());
             sRowCode.resize(0);
             lRow++;
         }
         else
         {
-            sRowCode +=lChar;
+            sRowCode += lChar;
         }
     }
 }

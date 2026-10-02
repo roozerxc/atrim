@@ -11,7 +11,7 @@ class cNode3D
 {
     friend class iEntity3D;
 public:
-    cNode3D(const tString &asName="", bool abAutoDeleteChildren = true);
+    cNode3D(const tString &asName = "", bool abAutoDeleteChildren = true);
     virtual ~cNode3D();
 
     ///////////////////////
@@ -20,17 +20,17 @@ public:
     bool RemoveEntity(iEntity3D* apEntity);
     void ClearEntities();
 
-    cNode3D* GetParent();
+    cNode3D *GetParent();
 
     cNode3DIterator GetChildIterator();
-    tNode3DList* GetChildList()
+    tNode3DList *GetChildList()
     {
         return &mlstNode;
     }
 
     cEntity3DIterator GetEntityIterator();
 
-    cNode3D* CreateChild(const tString &asName="", bool abAutoDeleteChildren = true);
+    cNode3D *CreateChild(const tString &asName = "", bool abAutoDeleteChildren = true);
     void RemoveChild(cNode3D* apNode);
 
 
@@ -40,7 +40,7 @@ public:
 
     ///////////////////////
     //Properties
-    const tString& GetName();
+    const tString &GetName();
 
     void SetActive(bool abX)
     {
@@ -54,13 +54,13 @@ public:
     int SetVisible(bool abX, bool abCascade);
 
     cVector3f GetLocalPosition();
-    cMatrixf& GetLocalMatrix();
+    cMatrixf &GetLocalMatrix();
 
     cVector3f GetWorldPosition();
-    cMatrixf& GetWorldMatrix();
+    cMatrixf &GetWorldMatrix();
 
     void SetPosition(const cVector3f& avPos);
-    void SetMatrix(const cMatrixf& a_mtxTransform, bool abSetChildrenUpdated=true);
+    void SetMatrix(const cMatrixf& a_mtxTransform, bool abSetChildrenUpdated = true);
 
     void SetWorldPosition(const cVector3f& avWorldPos);
     void SetWorldMatrix(const cMatrixf& a_mtxWorldTransform);
@@ -80,11 +80,11 @@ public:
     {
         return mbUsePostTransform;
     }
-    const cMatrixf& GetPreAnimTransform()
+    const cMatrixf &GetPreAnimTransform()
     {
         return m_mtxPostTransform;
     }
-    const cMatrixf& GetPostAnimTransform()
+    const cMatrixf &GetPostAnimTransform()
     {
         return m_mtxPostTransform;
     }
@@ -155,8 +155,8 @@ private:
 
     bool mbTransformUpdated;
 
-    cNode3D* mpParent;
-    iEntity3D* mpEntityParent;
+    cNode3D *mpParent;
+    iEntity3D *mpEntityParent;
 
     tEntity3DList mlstEntity;
     tNode3DList mlstNode;

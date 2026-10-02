@@ -56,7 +56,7 @@ public:
     void Update(double adFixedDelta);
 
     void AddImage(cFrameSubImage* apImage);
-    void AddTexture(iTexture* apTexture, const cVector2f& avStartUV=0, const cVector2f& avEndUV=1);
+    void AddTexture(iTexture* apTexture, const cVector2f& avStartUV = 0, const cVector2f& avEndUV = 1);
     void AddTexture(iTexture* apTexture, const cVector2f& avUVUpperLeft, const cVector2f& avUVUpperRight, const cVector2f& avUVLowerRight, const cVector2f& avUVLowerLeft);
 
     void AddImageToBuffer(cFrameSubImage* apImage);
@@ -75,11 +75,11 @@ public:
         return mbDestroyTexture;
     }
 
-    iTexture * GetTexture(int alIdx)
+    iTexture *GetTexture(int alIdx)
     {
         return mvTextures[alIdx];
     }
-    cFrameSubImage * GetImage(int alIdx)
+    cFrameSubImage *GetImage(int alIdx)
     {
         return mvImages[alIdx];
     }
@@ -88,7 +88,7 @@ public:
     {
         mvOffset = avOffset;
     }
-    const cVector3f& GetOffset()const
+    const cVector3f &GetOffset()const
     {
         return mvOffset;
     }
@@ -97,14 +97,14 @@ public:
     {
         mvActiveSize = avSize;
     }
-    const cVector2f& GetActiveSize()
+    const cVector2f &GetActiveSize()
     {
         return mvActiveSize;
     }
 
-    cGuiGfxAnimation* CreateAnimtion(const tString& asName);
+    cGuiGfxAnimation *CreateAnimtion(const tString& asName);
     void PlayAnimation(int alNum);
-    cGuiGfxAnimation* GetAnimation(int alIdx)
+    cGuiGfxAnimation *GetAnimation(int alIdx)
     {
         return mvAnimations[alIdx];
     }
@@ -149,14 +149,14 @@ private:
     cVector2f mvActiveSize;
 
     iGuiMaterial *mpMaterial;
-    iTexture* mvTextures[kMaxGuiTextures];
-    cFrameSubImage* mvImages[kMaxGuiTextures];
+    iTexture *mvTextures[kMaxGuiTextures];
+    cFrameSubImage *mvImages[kMaxGuiTextures];
 
     bool mbDestroyTexture;
 
-    std::vector<cFrameSubImage*> mvImageBufferVec;
+    std::vector<cFrameSubImage *> mvImageBufferVec;
 
-    std::vector<cGuiGfxAnimation*> mvAnimations;
+    std::vector<cGuiGfxAnimation *> mvAnimations;
     int mlCurrentAnimation;
     float mfCurrentFrame;
     int mlActiveImage;

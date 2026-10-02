@@ -47,7 +47,7 @@ void cThreadSDL::Start()
 void cThreadSDL::Stop()
 {
     mbThreadActive = false;
-    SDL_WaitThread(mpThreadHandle,0);
+    SDL_WaitThread(mpThreadHandle, 0);
     mpThreadHandle = NULL;
 }
 
@@ -71,7 +71,7 @@ void cThreadSDL::SetPriority(eThreadPrio aPrio)
 #   ifdef __linux__
     struct sched_param param;
     param.sched_priority = TranslateEnginePrio(aPrio);
-    int ret = pthread_setschedparam(SDL_GetThreadID(mpThreadHandle),SCHED_OTHER,&param);
+    int ret = pthread_setschedparam(SDL_GetThreadID(mpThreadHandle), SCHED_OTHER, &param);
 #   endif
 #endif
     iThread::SetPriority(aPrio);

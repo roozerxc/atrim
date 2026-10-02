@@ -36,9 +36,9 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cSerializeSavedClass::cSerializeSavedClass(const char* asName,const char *asParent,
+cSerializeSavedClass::cSerializeSavedClass(const char* asName, const char *asParent,
         cSerializeMemberField* apMemberFields, size_t alSize,
-        iSerializable* (*apCreateFunc)())
+        iSerializable * (*apCreateFunc)())
 {
     msName = asName;
     msParentName = asParent;
@@ -57,7 +57,7 @@ cSerializeSavedClass::cSerializeSavedClass(const char* asName,const char *asPare
 
 cSerializeMemberFieldIterator::cSerializeMemberFieldIterator(cSerializeSavedClass *apTopClass)
 {
-    mlFieldNum =0;
+    mlFieldNum = 0;
     mpSavedClass = apTopClass;
 
     //Make sure that the first field type is not null
@@ -69,7 +69,7 @@ cSerializeMemberFieldIterator::cSerializeMemberFieldIterator(cSerializeSavedClas
             if(pClass)
             {
                 mpSavedClass = pClass;
-                mlFieldNum =0;
+                mlFieldNum = 0;
             }
         }
     }
@@ -90,7 +90,7 @@ bool cSerializeMemberFieldIterator::HasNext()
 
 //-----------------------------------------------------------------------
 
-cSerializeMemberField* cSerializeMemberFieldIterator::GetNext()
+cSerializeMemberField *cSerializeMemberFieldIterator::GetNext()
 {
     cSerializeMemberField *pField = &mpSavedClass->mpMemberFields[mlFieldNum];
     mlFieldNum++;
@@ -103,7 +103,7 @@ cSerializeMemberField* cSerializeMemberFieldIterator::GetNext()
             if(pClass)
             {
                 mpSavedClass = pClass;
-                mlFieldNum =0;
+                mlFieldNum = 0;
             }
         }
     }
@@ -120,7 +120,7 @@ cSerializeMemberField* cSerializeMemberFieldIterator::GetNext()
 //-----------------------------------------------------------------------
 
 cSerializeSavedClass gvSerializeTempClasses[kMaxSerializeClasses];
-int glSerializeTempClassesNum =0;
+int glSerializeTempClassesNum = 0;
 
 //Define static variables
 tSerializeSavedClassMap cSerializeClass::m_mapSavedClasses;
@@ -134,26 +134,26 @@ char cSerializeClass::msTempCharArray[2048];
 // PUBLIC SERIALIZE CLASS METHODS
 //////////////////////////////////////////////////////////////////////////
 
-static bool gbLog=false;
-static int glTabs=0;
-static tString gsTabString="";
+static bool gbLog = false;
+static int glTabs = 0;
+static tString gsTabString = "";
 
-const char*    GetTabs()
+const char    *GetTabs()
 {
-    gsTabString ="";
-    for(int i=0; i<glTabs; ++i)
+    gsTabString = "";
+    for(int i = 0; i < glTabs; ++i)
     {
         gsTabString += "   ";
     }
     return gsTabString.c_str();
 }
 
-cSerializeClass::cSerializeClass(const char* asName,const char* asParent,
-                                 cSerializeMemberField* apMemberFields,size_t alSize,
-                                 iSerializable* (*apCreateFunc)())
+cSerializeClass::cSerializeClass(const char* asName, const char* asParent,
+                                 cSerializeMemberField* apMemberFields, size_t alSize,
+                                 iSerializable * (*apCreateFunc)())
 {
-    gvSerializeTempClasses[glSerializeTempClassesNum] = cSerializeSavedClass(asName,asParent,
-        apMemberFields,alSize,apCreateFunc);
+    gvSerializeTempClasses[glSerializeTempClassesNum] = cSerializeSavedClass(asName, asParent,
+        apMemberFields, alSize, apCreateFunc);
 
     glSerializeTempClassesNum++;
 }
@@ -183,45 +183,45 @@ void cSerializeClass::PrintMembers(iSerializable* apData)
     {
         cSerializeMemberField *pField = classIt.GetNext();
 
-        Log(" '%s':'%s' type: %d offset: %d\n",pField->msName.c_str(),
-            ValueToString(apData,pField->mlOffset,pField->mType),
+        Log(" '%s':'%s' type: %d offset: %d\n", pField->msName.c_str(),
+            ValueToString(apData, pField->mlOffset, pField->mType),
             pField->mType, pField->mlOffset);
     }
 }
 
 //-----------------------------------------------------------------------
 
-bool cSerializeClass::SaveToFile(iSerializable* apData, const tWString &asFile,const tString &asRoot, bool abCompressAndCrc)
+bool cSerializeClass::SaveToFile(iSerializable* apData, const tWString &asFile, const tString &asRoot, bool abCompressAndCrc)
 {
     SetUpData();
 
-    glTabs=0;
+    glTabs = 0;
 
     TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
 
     //Create root
     TiXmlElement XmlRoot(asRoot.c_str());
-    TiXmlElement* pRootElem = static_cast<TiXmlElement*>(pXmlDoc->InsertEndChild(XmlRoot));
+    TiXmlElement* pRootElem = static_cast<TiXmlElement *>(pXmlDoc->InsertEndChild(XmlRoot));
 
-    SaveToElement(apData,"",pRootElem);
+    SaveToElement(apData, "", pRootElem);
 
     ///////////////////////////////
     //Normal Save
-    if(abCompressAndCrc==false)
+    if(abCompressAndCrc == false)
     {
         FILE *pFile = cPlatform::OpenFile(asFile, _W("w+"));
-        if(pFile==NULL)
+        if(pFile == NULL)
         {
             Error("Unable to open serialized file '%s' as w+! Invalid filepointer returned!\n", cString::To8Char(asFile).c_str());
             return false;
         }
 
         // Enable buffered writing to disk
-        char buffer[8*1024];
-        setvbuf(pFile, buffer, _IOFBF, 8*1024);
+        char buffer[8 * 1024];
+        setvbuf(pFile, buffer, _IOFBF, 8 * 1024);
 
         bool bRet = pXmlDoc->SaveFile(pFile);
-        if(bRet==false)
+        if(bRet == false)
         {
             Error("Couldn't save class to '%s'\n", asFile.c_str());
         }
@@ -249,7 +249,7 @@ bool cSerializeClass::SaveToFile(iSerializable* apData, const tWString &asFile,c
 
         destBuffer.AddCRC_Begin();
 
-        if(destBuffer.CompressAndAdd(&sData[0], sData.size()+1)==false)
+        if(destBuffer.CompressAndAdd(&sData[0], sData.size() + 1) == false)
         {
             Error("Unable to compress data for serialized data '%s'!\n", cString::To8Char(asFile).c_str());
             return false;
@@ -259,7 +259,7 @@ bool cSerializeClass::SaveToFile(iSerializable* apData, const tWString &asFile,c
 
         /////////////////////////////
         // Save the file
-        if(destBuffer.Save(asFile)==false)
+        if(destBuffer.Save(asFile) == false)
         {
             Error("Unable to save serialized file '%s'!\n", cString::To8Char(asFile).c_str());
             return false;
@@ -272,38 +272,38 @@ bool cSerializeClass::SaveToFile(iSerializable* apData, const tWString &asFile,c
 //-----------------------------------------------------------------------
 
 
-void cSerializeClass::SaveToElement(iSerializable* apData,const tString &asName, TiXmlElement *apParent,
+void cSerializeClass::SaveToElement(iSerializable* apData, const tString &asName, TiXmlElement *apParent,
                                     bool abIsPointer)
 {
     SetUpData();
 
-    if(apData==NULL)
+    if(apData == NULL)
     {
         return;
     }
 
     //Create element
-    TiXmlElement* pClassElem=NULL;
+    TiXmlElement* pClassElem = NULL;
 
     if(abIsPointer)
     {
         TiXmlElement XmlClassElem("class_ptr");
-        pClassElem = static_cast<TiXmlElement*>(apParent->InsertEndChild(XmlClassElem));
+        pClassElem = static_cast<TiXmlElement *>(apParent->InsertEndChild(XmlClassElem));
     }
     else
     {
         TiXmlElement XmlClassElem("class");
-        pClassElem = static_cast<TiXmlElement*>(apParent->InsertEndChild(XmlClassElem));
+        pClassElem = static_cast<TiXmlElement *>(apParent->InsertEndChild(XmlClassElem));
     }
 
 
     //Set attributes
-    pClassElem->SetAttribute("type",apData->Serialize_GetTopClass().c_str());
-    pClassElem->SetAttribute("name",asName.c_str());
+    pClassElem->SetAttribute("type", apData->Serialize_GetTopClass().c_str());
+    pClassElem->SetAttribute("name", asName.c_str());
 
     if(gbLog)
     {
-        Log("---Saving class '%s' Begin---\n",apData->Serialize_GetTopClass().c_str());
+        Log("---Saving class '%s' Begin---\n", apData->Serialize_GetTopClass().c_str());
     }
 
     cSerializeMemberFieldIterator classIt = GetMemberFieldIterator(apData);
@@ -314,7 +314,7 @@ void cSerializeClass::SaveToElement(iSerializable* apData,const tString &asName,
 
         if(gbLog)
         {
-            Log(" Field : '%s', MainType: %d Type: %d\n",pField->msName.c_str(), pField->mMainType, pField->mType);
+            Log(" Field : '%s', MainType: %d Type: %d\n", pField->msName.c_str(), pField->mMainType, pField->mType);
         }
 
         switch(pField->mMainType)
@@ -322,19 +322,19 @@ void cSerializeClass::SaveToElement(iSerializable* apData,const tString &asName,
         // VARIABLE /////////////////////////////////
         case eSerializeMainType_Variable:
         {
-            SaveVariable(pClassElem,pField, apData);
+            SaveVariable(pClassElem, pField, apData);
             break;
         }
         // ARRAY ////////////////////////////////////
         case eSerializeMainType_Array:
         {
-            SaveArray(pClassElem,pField, apData);
+            SaveArray(pClassElem, pField, apData);
             break;
         }
         // CONTAINER ////////////////////////////////////
         case eSerializeMainType_Container:
         {
-            SaveContainer(pClassElem,pField, apData);
+            SaveContainer(pClassElem, pField, apData);
             break;
         }
         }
@@ -342,7 +342,7 @@ void cSerializeClass::SaveToElement(iSerializable* apData,const tString &asName,
 
     if(gbLog)
     {
-        Log("---Done saving class '%s' ---\n",apData->Serialize_GetTopClass().c_str());
+        Log("---Done saving class '%s' ---\n", apData->Serialize_GetTopClass().c_str());
     }
 }
 
@@ -352,27 +352,27 @@ bool cSerializeClass::LoadFromFile(iSerializable* apData, const tWString &asFile
 {
     SetUpData();
 
-    glTabs=0;
+    glTabs = 0;
 
     //Load document
-    TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument,() );
+    TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
 
     ///////////////////////////////
     //Normal Load
-    if(abCompressedAndCrc==false)
+    if(abCompressedAndCrc == false)
     {
 #ifdef _WIN32
-        FILE *pFile = _wfopen(asFile.c_str(),_W("rb"));
+        FILE *pFile = _wfopen(asFile.c_str(), _W("rb"));
 #else
-        FILE *pFile = fopen(cString::To8Char(asFile).c_str(),"rb");
+        FILE *pFile = fopen(cString::To8Char(asFile).c_str(), "rb");
 #endif
 
-        if(pFile==NULL)
+        if(pFile == NULL)
         {
             Error("Unable to open serialized file '%s' as rb! Invalid filepointer returned!\n", cString::To8Char(asFile).c_str());
             return false;
         }
-        if(pXmlDoc->LoadFile(pFile)==false)
+        if(pXmlDoc->LoadFile(pFile) == false)
         {
             Error("Couldn't load saved class file '%s' from %s!\n",
                   cString::To8Char(asFile).c_str(),
@@ -396,7 +396,7 @@ bool cSerializeClass::LoadFromFile(iSerializable* apData, const tWString &asFile
         ////////////////////////////////
         // Get compressed data
         cBinaryBuffer compBuffer;
-        if(compBuffer.Load(asFile)==false)
+        if(compBuffer.Load(asFile) == false)
         {
             hplDelete(pXmlDoc);
             Error("Unable to open serialized file '%s'!\n", cString::To8Char(asFile).c_str());
@@ -405,7 +405,7 @@ bool cSerializeClass::LoadFromFile(iSerializable* apData, const tWString &asFile
 
         ////////////////////////////////
         // Check CRC
-        if(compBuffer.CheckInternalCRC(kSavedDataCRCKey)==false)
+        if(compBuffer.CheckInternalCRC(kSavedDataCRCKey) == false)
         {
             hplDelete(pXmlDoc);
             Error("CRC check for serialized file '%s' failed!\n", cString::To8Char(asFile).c_str());
@@ -415,7 +415,7 @@ bool cSerializeClass::LoadFromFile(iSerializable* apData, const tWString &asFile
         ////////////////////////////////
         // Uncompress data
         cBinaryBuffer textBuffer;
-        if(textBuffer.DecompressAndAddFromBuffer(&compBuffer, false)==false)
+        if(textBuffer.DecompressAndAddFromBuffer(&compBuffer, false) == false)
         {
             hplDelete(pXmlDoc);
             Error("Unable to decompress serialized data '%s'!\n", cString::To8Char(asFile).c_str());
@@ -446,7 +446,7 @@ bool cSerializeClass::LoadFromFile(iSerializable* apData, const tWString &asFile
         return false;
     }
 
-    LoadFromElement(apData,pClassElem);
+    LoadFromElement(apData, pClassElem);
 
     hplDelete(pXmlDoc);
     return true;
@@ -465,14 +465,14 @@ void cSerializeClass::LoadFromElement(iSerializable* apData, TiXmlElement *apEle
     }
 
     cSerializeSavedClass *pClass = GetClass(apData->Serialize_GetTopClass());
-    if(pClass==NULL)
+    if(pClass == NULL)
     {
         return;
     }
 
     if(gbLog)
     {
-        Log("%sBegin class %s\n",GetTabs(),pClass->msName);
+        Log("%sBegin class %s\n", GetTabs(), pClass->msName);
         ++glTabs;
     }
 
@@ -483,48 +483,48 @@ void cSerializeClass::LoadFromElement(iSerializable* apData, TiXmlElement *apEle
 
         if(gbLog)
         {
-            Log("%sMember field type %s\n",GetTabs(),sMainType.c_str());
+            Log("%sMember field type %s\n", GetTabs(), sMainType.c_str());
         }
 
         if(sMainType == "var")
         {
-            LoadVariable(pMemberElem,apData,pClass);
+            LoadVariable(pMemberElem, apData, pClass);
         }
         else if(sMainType == "array")
         {
-            LoadArray(pMemberElem,apData,pClass);
+            LoadArray(pMemberElem, apData, pClass);
         }
         else if(sMainType == "class")
         {
-            LoadClass(pMemberElem,apData,pClass);
+            LoadClass(pMemberElem, apData, pClass);
         }
         else if(sMainType == "class_ptr")
         {
-            LoadClassPointer(pMemberElem,apData,pClass);
+            LoadClassPointer(pMemberElem, apData, pClass);
         }
         else if(sMainType == "container")
         {
-            LoadContainer(pMemberElem,apData,pClass);
+            LoadContainer(pMemberElem, apData, pClass);
         }
     }
 
     if(gbLog)
     {
         --glTabs;
-        Log("%sEnd class %s\n",GetTabs(),pClass->msName);
+        Log("%sEnd class %s\n", GetTabs(), pClass->msName);
     }
 }
 
 //-----------------------------------------------------------------------
 
-cSerializeSavedClass * cSerializeClass::GetClass(const tString &asName)
+cSerializeSavedClass *cSerializeClass::GetClass(const tString &asName)
 {
     SetUpData();
 
     tSerializeSavedClassMapIt it = m_mapSavedClasses.find(asName);
     if(it == m_mapSavedClasses.end())
     {
-        Warning("Serialize class '%s' not found!\n",asName.c_str());
+        Warning("Serialize class '%s' not found!\n", asName.c_str());
         return NULL;
     }
 
@@ -546,16 +546,16 @@ cSerializeMemberFieldIterator cSerializeClass::GetMemberFieldIterator(iSerializa
 #define ValuePointer(aObject, aOffset)                (((char*)aObject)+aOffset)
 #define PointerValue(aPointer,aType)                (*((aType*)aPointer))
 
-const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSerializeType aType)
+const char *cSerializeClass::ValueToString(void* apData, size_t alOffset, eSerializeType aType)
 {
-    void *pVal = ValuePointer(apData,alOffset);
+    void *pVal = ValuePointer(apData, alOffset);
 
     switch(aType)
     {
     /////////// BOOL ////////////////////////////////
     case eSerializeType_Bool:
     {
-        if(PointerValue(pVal,bool)==0)
+        if(PointerValue(pVal, bool) == 0)
         {
             return "false";
         }
@@ -569,7 +569,7 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     /////////// INT 32 ////////////////////////////////
     case eSerializeType_Int32:
     {
-        snprintf(msTempCharArray, sizeof(msTempCharArray), "%d", PointerValue(pVal,int));
+        snprintf(msTempCharArray, sizeof(msTempCharArray), "%d", PointerValue(pVal, int));
         return msTempCharArray;
         break;
     }
@@ -577,7 +577,7 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     /////////// FLOAT 32 ////////////////////////////////
     case eSerializeType_Float32:
     {
-        snprintf(msTempCharArray, sizeof(msTempCharArray), "%f", PointerValue(pVal,float));
+        snprintf(msTempCharArray, sizeof(msTempCharArray), "%f", PointerValue(pVal, float));
         return msTempCharArray;
         break;
     }
@@ -585,7 +585,7 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     /////////// STRING ////////////////////////////////
     case eSerializeType_String:
     {
-        tString &sVal = PointerValue(pVal,tString);
+        tString &sVal = PointerValue(pVal, tString);
         return sVal.c_str();
         break;
     }
@@ -593,8 +593,8 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     /////////// VECTOR 2L ////////////////////////////////
     case eSerializeType_Vector2l:
     {
-        cVector2l &vVec = PointerValue(pVal,cVector2l);
-        snprintf(msTempCharArray, sizeof(msTempCharArray), "%d %d",vVec.x, vVec.y);
+        cVector2l &vVec = PointerValue(pVal, cVector2l);
+        snprintf(msTempCharArray, sizeof(msTempCharArray), "%d %d", vVec.x, vVec.y);
         return msTempCharArray;
         break;
     }
@@ -602,8 +602,8 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     /////////// VECTOR 2F ////////////////////////////////
     case eSerializeType_Vector2f:
     {
-        cVector2f &vVec = PointerValue(pVal,cVector2f);
-        snprintf(msTempCharArray, sizeof(msTempCharArray), "%f %f",vVec.x, vVec.y);
+        cVector2f &vVec = PointerValue(pVal, cVector2f);
+        snprintf(msTempCharArray, sizeof(msTempCharArray), "%f %f", vVec.x, vVec.y);
         return msTempCharArray;
         break;
     }
@@ -611,8 +611,8 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     /////////// VECTOR 3L ////////////////////////////////
     case eSerializeType_Vector3l:
     {
-        cVector3l &vVec = PointerValue(pVal,cVector3l);
-        snprintf(msTempCharArray, sizeof(msTempCharArray), "%d %d %d",vVec.x, vVec.y,vVec.z);
+        cVector3l &vVec = PointerValue(pVal, cVector3l);
+        snprintf(msTempCharArray, sizeof(msTempCharArray), "%d %d %d", vVec.x, vVec.y, vVec.z);
         return msTempCharArray;
         break;
     }
@@ -620,8 +620,8 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     /////////// VECTOR 3F ////////////////////////////////
     case eSerializeType_Vector3f:
     {
-        cVector3f &vVec = PointerValue(pVal,cVector3f);
-        snprintf(msTempCharArray, sizeof(msTempCharArray), "%f %f %f",vVec.x, vVec.y, vVec.z);
+        cVector3f &vVec = PointerValue(pVal, cVector3f);
+        snprintf(msTempCharArray, sizeof(msTempCharArray), "%f %f %f", vVec.x, vVec.y, vVec.z);
         return msTempCharArray;
         break;
     }
@@ -629,15 +629,15 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     /////////// MATRIX F ////////////////////////////////
     case eSerializeType_Matrixf:
     {
-        cMatrixf &Mtx = PointerValue(pVal,cMatrixf);
+        cMatrixf &Mtx = PointerValue(pVal, cMatrixf);
         snprintf(msTempCharArray, sizeof(msTempCharArray), "%f %f %f %f "
                                                            "%f %f %f %f "
                                                            "%f %f %f %f "
                                                            "%f %f %f %f",
-                 Mtx.m[0][0],Mtx.m[0][1],Mtx.m[0][2],Mtx.m[0][3],
-                 Mtx.m[1][0],Mtx.m[1][1],Mtx.m[1][2],Mtx.m[1][3],
-                 Mtx.m[2][0],Mtx.m[2][1],Mtx.m[2][2],Mtx.m[2][3],
-                 Mtx.m[3][0],Mtx.m[3][1],Mtx.m[3][2],Mtx.m[3][3]);
+                 Mtx.m[0][0], Mtx.m[0][1], Mtx.m[0][2], Mtx.m[0][3],
+                 Mtx.m[1][0], Mtx.m[1][1], Mtx.m[1][2], Mtx.m[1][3],
+                 Mtx.m[2][0], Mtx.m[2][1], Mtx.m[2][2], Mtx.m[2][3],
+                 Mtx.m[3][0], Mtx.m[3][1], Mtx.m[3][2], Mtx.m[3][3]);
         return msTempCharArray;
         break;
     }
@@ -645,8 +645,8 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     /////////// COLOR ////////////////////////////////
     case eSerializeType_Color:
     {
-        cColor Col = PointerValue(pVal,cColor);
-        snprintf(msTempCharArray, sizeof(msTempCharArray), "%f %f %f %f",Col.r, Col.g, Col.b, Col.a);
+        cColor Col = PointerValue(pVal, cColor);
+        snprintf(msTempCharArray, sizeof(msTempCharArray), "%f %f %f %f", Col.r, Col.g, Col.b, Col.a);
         return msTempCharArray;
         break;
     }
@@ -654,8 +654,8 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     /////////// RECT 2L ////////////////////////////////
     case eSerializeType_Rect2l:
     {
-        cRect2l &vR = PointerValue(pVal,cRect2l);
-        snprintf(msTempCharArray, sizeof(msTempCharArray), "%d %d %d %d",vR.x, vR.y, vR.w, vR.h);
+        cRect2l &vR = PointerValue(pVal, cRect2l);
+        snprintf(msTempCharArray, sizeof(msTempCharArray), "%d %d %d %d", vR.x, vR.y, vR.w, vR.h);
         return msTempCharArray;
         break;
     }
@@ -663,8 +663,8 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     /////////// RECT 2F ////////////////////////////////
     case eSerializeType_Rect2f:
     {
-        cRect2f &vR = PointerValue(pVal,cRect2f);
-        snprintf(msTempCharArray, sizeof(msTempCharArray), "%f %f %f %f",vR.x, vR.y, vR.w, vR.h);
+        cRect2f &vR = PointerValue(pVal, cRect2f);
+        snprintf(msTempCharArray, sizeof(msTempCharArray), "%f %f %f %f", vR.x, vR.y, vR.w, vR.h);
         return msTempCharArray;
         break;
     }
@@ -672,8 +672,8 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     /////////// PLANE F ////////////////////////////////
     case eSerializeType_Planef:
     {
-        cPlanef &vP = PointerValue(pVal,cPlanef);
-        snprintf(msTempCharArray, sizeof(msTempCharArray), "%f %f %f %f",vP.a, vP.b, vP.c, vP.d);
+        cPlanef &vP = PointerValue(pVal, cPlanef);
+        snprintf(msTempCharArray, sizeof(msTempCharArray), "%f %f %f %f", vP.a, vP.b, vP.c, vP.d);
         return msTempCharArray;
         break;
     }
@@ -682,8 +682,8 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
     case eSerializeType_WString:
     {
         msTempString = "";
-        tWString &wsString = PointerValue(pVal,tWString);
-        for(size_t i=0; i<wsString.length(); ++i)
+        tWString &wsString = PointerValue(pVal, tWString);
+        for(size_t i = 0; i < wsString.length(); ++i)
         {
             msTempString += cString::ToString((int)wsString[i]) + " ";
         }
@@ -700,40 +700,40 @@ const char* cSerializeClass::ValueToString(void* apData, size_t alOffset, eSeria
 //-----------------------------------------------------------------------
 
 void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeType aType,
-                                    const char* asVal)
+                                    const char *asVal)
 {
     if(asVal == NULL)
     {
         asVal = "";
     }
 
-    void *pVal = ValuePointer(apData,alOffset);
+    void *pVal = ValuePointer(apData, alOffset);
 
     switch(aType)
     {
     /////////// BOOL ////////////////////////////////
     case eSerializeType_Bool:
     {
-        PointerValue(pVal,bool) = cString::ToBool(asVal,false);
+        PointerValue(pVal, bool) = cString::ToBool(asVal, false);
         break;
     }
 
     ////////// INT 32 ////////////////////////////////
     case eSerializeType_Int32:
     {
-        PointerValue(pVal,int) = cString::ToInt(asVal,0);
+        PointerValue(pVal, int) = cString::ToInt(asVal, 0);
         break;
     }
     ////////// FLOAT 32 ////////////////////////////////
     case eSerializeType_Float32:
     {
-        PointerValue(pVal,float) = cString::ToFloat(asVal,0);
+        PointerValue(pVal, float) = cString::ToFloat(asVal, 0);
         break;
     }
     ////////// STRING ////////////////////////////////
     case eSerializeType_String:
     {
-        PointerValue(pVal,tString) = cString::ToString(asVal,"");
+        PointerValue(pVal, tString) = cString::ToString(asVal, "");
         break;
     }
 
@@ -742,14 +742,14 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     {
         tIntVec vVals;
         vVals.reserve(2);
-        cString::GetIntVec(asVal,vVals,NULL);
+        cString::GetIntVec(asVal, vVals, NULL);
 
         while(vVals.size() < 2)
         {
             vVals.push_back(0);
         }
 
-        PointerValue(pVal,cVector2l).FromVec(&vVals[0]);
+        PointerValue(pVal, cVector2l).FromVec(&vVals[0]);
 
         break;
     }
@@ -759,14 +759,14 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     {
         tFloatVec vVals;
         vVals.reserve(2);
-        cString::GetFloatVec(asVal,vVals,NULL);
+        cString::GetFloatVec(asVal, vVals, NULL);
 
         while(vVals.size() < 2)
         {
             vVals.push_back(0.0f);
         }
 
-        PointerValue(pVal,cVector2f).FromVec(&vVals[0]);
+        PointerValue(pVal, cVector2f).FromVec(&vVals[0]);
 
         break;
     }
@@ -776,14 +776,14 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     {
         tIntVec vVals;
         vVals.reserve(3);
-        cString::GetIntVec(asVal,vVals,NULL);
+        cString::GetIntVec(asVal, vVals, NULL);
 
         while(vVals.size() < 3)
         {
             vVals.push_back(0);
         }
 
-        PointerValue(pVal,cVector3l).FromVec(&vVals[0]);
+        PointerValue(pVal, cVector3l).FromVec(&vVals[0]);
 
         break;
     }
@@ -793,14 +793,14 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     {
         tFloatVec vVals;
         vVals.reserve(3);
-        cString::GetFloatVec(asVal,vVals,NULL);
+        cString::GetFloatVec(asVal, vVals, NULL);
 
         while(vVals.size() < 3)
         {
             vVals.push_back(0.0f);
         }
 
-        PointerValue(pVal,cVector3f).FromVec(&vVals[0]);
+        PointerValue(pVal, cVector3f).FromVec(&vVals[0]);
 
         break;
     }
@@ -810,14 +810,14 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     {
         tFloatVec vVals;
         vVals.reserve(16);
-        cString::GetFloatVec(asVal,vVals,NULL);
+        cString::GetFloatVec(asVal, vVals, NULL);
 
         while(vVals.size() < 16)
         {
             vVals.push_back(0.0f);
         }
 
-        PointerValue(pVal,cMatrixf).FromVec(&vVals[0]);
+        PointerValue(pVal, cMatrixf).FromVec(&vVals[0]);
 
         break;
     }
@@ -827,14 +827,14 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     {
         tFloatVec vVals;
         vVals.reserve(4);
-        cString::GetFloatVec(asVal,vVals,NULL);
+        cString::GetFloatVec(asVal, vVals, NULL);
 
         while(vVals.size() < 4)
         {
             vVals.push_back(0.0f);
         }
 
-        PointerValue(pVal,cColor).FromVec(&vVals[0]);
+        PointerValue(pVal, cColor).FromVec(&vVals[0]);
 
         break;
     }
@@ -844,14 +844,14 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     {
         tIntVec vVals;
         vVals.reserve(4);
-        cString::GetIntVec(asVal,vVals,NULL);
+        cString::GetIntVec(asVal, vVals, NULL);
 
         while(vVals.size() < 4)
         {
             vVals.push_back(0);
         }
 
-        PointerValue(pVal,cRect2l).FromVec(&vVals[0]);
+        PointerValue(pVal, cRect2l).FromVec(&vVals[0]);
 
         break;
     }
@@ -861,14 +861,14 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     {
         tFloatVec vVals;
         vVals.reserve(4);
-        cString::GetFloatVec(asVal,vVals,NULL);
+        cString::GetFloatVec(asVal, vVals, NULL);
 
         while(vVals.size() < 4)
         {
             vVals.push_back(0.0f);
         }
 
-        PointerValue(pVal,cRect2f).FromVec(&vVals[0]);
+        PointerValue(pVal, cRect2f).FromVec(&vVals[0]);
 
         break;
     }
@@ -878,14 +878,14 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     {
         tFloatVec vVals;
         vVals.reserve(4);
-        cString::GetFloatVec(asVal,vVals,NULL);
+        cString::GetFloatVec(asVal, vVals, NULL);
 
         while(vVals.size() < 4)
         {
             vVals.push_back(0.0f);
         }
 
-        PointerValue(pVal,cPlanef).FromVec(&vVals[0]);
+        PointerValue(pVal, cPlanef).FromVec(&vVals[0]);
 
         break;
     }
@@ -893,7 +893,7 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
     /////////// WSTRING ////////////////////////////////
     case eSerializeType_WString:
     {
-        PointerValue(pVal,tWString) = cString::Get16BitFromArray(asVal);
+        PointerValue(pVal, tWString) = cString::Get16BitFromArray(asVal);
         break;
     }
 
@@ -914,26 +914,26 @@ void cSerializeClass::SaveVariable(TiXmlElement *apElement, cSerializeMemberFiel
     //CLASS
     if(apField->mType == eSerializeType_Class)
     {
-        void *pClassData = ValuePointer(apData,apField->mlOffset);
+        void *pClassData = ValuePointer(apData, apField->mlOffset);
 
-        SaveToElement((iSerializable*)pClassData,apField->msName,apElement);
+        SaveToElement((iSerializable*)pClassData, apField->msName, apElement);
     }
     //CLASS POINTER
     else if(apField->mType == eSerializeType_ClassPointer)
     {
-        iSerializable** pFieldData = (iSerializable**)ValuePointer(apData,apField->mlOffset);
+        iSerializable **pFieldData = (iSerializable**)ValuePointer(apData, apField->mlOffset);
 
-        SaveToElement(*pFieldData,apField->msName,apElement,true);
+        SaveToElement(*pFieldData, apField->msName, apElement, true);
     }
     //NORMAL VAR
     else
     {
         TiXmlElement XmlVarElem("var");
-        TiXmlElement* pVarElem = static_cast<TiXmlElement*>(apElement->InsertEndChild(XmlVarElem));
+        TiXmlElement* pVarElem = static_cast<TiXmlElement *>(apElement->InsertEndChild(XmlVarElem));
 
-        pVarElem->SetAttribute("type",apField->mType);
-        pVarElem->SetAttribute("name",apField->msName.c_str());
-        pVarElem->SetAttribute("val",ValueToString(apData,apField->mlOffset,apField->mType));
+        pVarElem->SetAttribute("type", apField->mType);
+        pVarElem->SetAttribute("name", apField->msName.c_str());
+        pVarElem->SetAttribute("val", ValueToString(apData, apField->mlOffset, apField->mType));
     }
 }
 
@@ -942,14 +942,14 @@ void cSerializeClass::SaveVariable(TiXmlElement *apElement, cSerializeMemberFiel
 void cSerializeClass::SaveArray(TiXmlElement *apElement, cSerializeMemberField *apField,
                                 iSerializable* apData)
 {
-    void *pArrayData = ValuePointer(apData,apField->mlOffset);
+    void *pArrayData = ValuePointer(apData, apField->mlOffset);
 
     TiXmlElement XmlArrayElem("array");
-    TiXmlElement* pArrayElem = static_cast<TiXmlElement*>(apElement->InsertEndChild(XmlArrayElem));
+    TiXmlElement* pArrayElem = static_cast<TiXmlElement *>(apElement->InsertEndChild(XmlArrayElem));
 
-    pArrayElem->SetAttribute("type",apField->mType);
-    pArrayElem->SetAttribute("name",apField->msName.c_str());
-    pArrayElem->SetAttribute("size",(int)apField->mlArraySize);
+    pArrayElem->SetAttribute("type", apField->mType);
+    pArrayElem->SetAttribute("name", apField->msName.c_str());
+    pArrayElem->SetAttribute("size", (int)apField->mlArraySize);
 
 
     // CLASS ////////////////////////////////////////////
@@ -958,45 +958,45 @@ void cSerializeClass::SaveArray(TiXmlElement *apElement, cSerializeMemberField *
         cSerializeSavedClass *pClass = GetClass(((iSerializable*)pArrayData)->Serialize_GetTopClass());
         size_t lClassSize = pClass->mlSize;
 
-        for(size_t i=0; i< apField->mlArraySize; i++)
+        for(size_t i = 0; i < apField->mlArraySize; i++)
         {
             size_t lOffset = lClassSize * i;
 
-            SaveToElement((iSerializable*)ValuePointer(pArrayData,lOffset),"",pArrayElem);
+            SaveToElement((iSerializable*)ValuePointer(pArrayData, lOffset), "", pArrayElem);
         }
     }
     // CLASS POINTER /////////////////////////////////////
     else if(apField->mType == eSerializeType_ClassPointer)
     {
-        iSerializable ** pClassDataPtr = (iSerializable **)pArrayData;
+        iSerializable **pClassDataPtr = (iSerializable **)pArrayData;
 
-        if(*pClassDataPtr==NULL)
+        if(*pClassDataPtr == NULL)
         {
-            Warning("Array %s is NULL!\n",apField->msName.c_str());
+            Warning("Array %s is NULL!\n", apField->msName.c_str());
             return;
         }
 
-        pArrayElem->SetAttribute("class_type",(*pClassDataPtr)->Serialize_GetTopClass().c_str());
+        pArrayElem->SetAttribute("class_type", (*pClassDataPtr)->Serialize_GetTopClass().c_str());
 
-        for(size_t i=0; i< apField->mlArraySize; i++)
+        for(size_t i = 0; i < apField->mlArraySize; i++)
         {
             size_t lOffset = sizeof(void*) * i;
 
-            iSerializable **pValue = (iSerializable**)ValuePointer(pArrayData,lOffset);
-            SaveToElement(*pValue,"",pArrayElem,true);
+            iSerializable **pValue = (iSerializable**)ValuePointer(pArrayData, lOffset);
+            SaveToElement(*pValue, "", pArrayElem, true);
         }
     }
     // VARIABLE /////////////////////////////////////////
     else
     {
-        for(size_t i=0; i< apField->mlArraySize; i++)
+        for(size_t i = 0; i < apField->mlArraySize; i++)
         {
-            size_t lOffset = SizeOfType(apField->mType)* i;
+            size_t lOffset = SizeOfType(apField->mType) * i;
 
             TiXmlElement XmlClassElem("var");
-            TiXmlElement* pVarElem = static_cast<TiXmlElement*>(pArrayElem->InsertEndChild(XmlClassElem));
+            TiXmlElement* pVarElem = static_cast<TiXmlElement *>(pArrayElem->InsertEndChild(XmlClassElem));
 
-            pVarElem->SetAttribute("val",ValueToString(pArrayData,lOffset,apField->mType));
+            pVarElem->SetAttribute("val", ValueToString(pArrayData, lOffset, apField->mType));
         }
     }
 }
@@ -1006,26 +1006,26 @@ void cSerializeClass::SaveArray(TiXmlElement *apElement, cSerializeMemberField *
 void cSerializeClass::SaveContainer(TiXmlElement *apElement, cSerializeMemberField *apField,
                                     iSerializable* apData)
 {
-    iContainer* pCont = (iContainer*)ValuePointer(apData,apField->mlOffset);
+    iContainer* pCont = (iContainer*)ValuePointer(apData, apField->mlOffset);
 
     iContainerIterator* pContIt = pCont->CreateIteratorPtr();
 
     TiXmlElement XmlArrayElem("container");
-    TiXmlElement* pArrayElem = static_cast<TiXmlElement*>(apElement->InsertEndChild(XmlArrayElem));
+    TiXmlElement* pArrayElem = static_cast<TiXmlElement *>(apElement->InsertEndChild(XmlArrayElem));
 
-    pArrayElem->SetAttribute("type",apField->mType);
-    pArrayElem->SetAttribute("name",apField->msName.c_str());
+    pArrayElem->SetAttribute("type", apField->mType);
+    pArrayElem->SetAttribute("name", apField->msName.c_str());
 
     // CLASS ////////////////////////////////////////////
     if(apField->mType == eSerializeType_Class)
     {
-        pArrayElem->SetAttribute("class_type",apField->msClassName.c_str());
+        pArrayElem->SetAttribute("class_type", apField->msClassName.c_str());
 
         while(pContIt->HasNext())
         {
             iSerializable *pData =  (iSerializable*)pContIt->NextPtr();
 
-            SaveToElement(pData,"",pArrayElem);
+            SaveToElement(pData, "", pArrayElem);
         }
     }
     // CLASS POINTER /////////////////////////////////////
@@ -1035,7 +1035,7 @@ void cSerializeClass::SaveContainer(TiXmlElement *apElement, cSerializeMemberFie
         {
             iSerializable **pData =  (iSerializable**)pContIt->NextPtr();
 
-            SaveToElement(*pData,"",pArrayElem,true);
+            SaveToElement(*pData, "", pArrayElem, true);
         }
     }
     // VARIABLE /////////////////////////////////////////
@@ -1044,11 +1044,11 @@ void cSerializeClass::SaveContainer(TiXmlElement *apElement, cSerializeMemberFie
         while(pContIt->HasNext())
         {
             TiXmlElement XmlClassElem("var");
-            TiXmlElement* pVarElem = static_cast<TiXmlElement*>(pArrayElem->InsertEndChild(XmlClassElem));
+            TiXmlElement* pVarElem = static_cast<TiXmlElement *>(pArrayElem->InsertEndChild(XmlClassElem));
 
             void *pData = const_cast<void *>(pContIt->NextPtr());
 
-            pVarElem->SetAttribute("val",ValueToString(pData,0,apField->mType));
+            pVarElem->SetAttribute("val", ValueToString(pData, 0, apField->mType));
         }
     }
 
@@ -1062,16 +1062,16 @@ void cSerializeClass::SaveContainer(TiXmlElement *apElement, cSerializeMemberFie
 void cSerializeClass::LoadVariable(TiXmlElement *apElement, iSerializable* apData,
                                    cSerializeSavedClass *apClass)
 {
-    tString sName = cString::ToString(apElement->Attribute("name"),"");
-    const char* sVal = apElement->Attribute("val");
+    tString sName = cString::ToString(apElement->Attribute("name"), "");
+    const char *sVal = apElement->Attribute("val");
 
     if(gbLog)
     {
-        Log("%s Loading variable: %s val: %s\n",GetTabs(),sName.c_str(),sVal ? sVal : "(null)");
+        Log("%s Loading variable: %s val: %s\n", GetTabs(), sName.c_str(), sVal ? sVal : "(null)");
     }
 
-    cSerializeMemberField *pField = GetMemberField(sName,apClass);
-    if(pField==NULL)
+    cSerializeMemberField *pField = GetMemberField(sName, apClass);
+    if(pField == NULL)
     {
         return;
     }
@@ -1087,44 +1087,44 @@ void cSerializeClass::LoadVariable(TiXmlElement *apElement, iSerializable* apDat
 
 //-----------------------------------------------------------------------
 
-void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData,cSerializeSavedClass *apClass)
+void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass)
 {
-    tString sName = cString::ToString(apElement->Attribute("name"),"");
-    tString sClassType = cString::ToString(apElement->Attribute("class_type"),"");
+    tString sName = cString::ToString(apElement->Attribute("name"), "");
+    tString sClassType = cString::ToString(apElement->Attribute("class_type"), "");
 
     if(gbLog)
     {
-        Log("%s Begin Loading array: '%s' classtype: %s\n",GetTabs(),sName.c_str(),sClassType.c_str());
+        Log("%s Begin Loading array: '%s' classtype: %s\n", GetTabs(), sName.c_str(), sClassType.c_str());
         ++glTabs;
     }
 
-    cSerializeMemberField *pField = GetMemberField(sName,apClass);
-    if(pField==NULL)
+    cSerializeMemberField *pField = GetMemberField(sName, apClass);
+    if(pField == NULL)
     {
         return;
     }
 
-    void *pArrayData = ValuePointer(apData,pField->mlOffset);
+    void *pArrayData = ValuePointer(apData, pField->mlOffset);
     const size_t lArraySize = pField->mlArraySize;
 
     // CLASS ////////////////////////////////////////////
     if(pField->mType == eSerializeType_Class)
     {
         cSerializeSavedClass *pClass = GetClass(((iSerializable*)pArrayData)->Serialize_GetTopClass());
-        if(pClass==NULL)
+        if(pClass == NULL)
         {
             return;
         }
 
         size_t lClassSize = pClass->mlSize;
 
-        size_t lCount=0;
+        size_t lCount = 0;
         TiXmlElement *pVarElem = apElement->FirstChildElement();
-        for(; pVarElem != NULL && lCount < lArraySize; pVarElem = pVarElem->NextSiblingElement(),++lCount)
+        for(; pVarElem != NULL && lCount < lArraySize; pVarElem = pVarElem->NextSiblingElement(), ++lCount)
         {
             size_t lOffset = lCount * lClassSize;
 
-            LoadFromElement( (iSerializable*)ValuePointer(pArrayData,lOffset),pVarElem);
+            LoadFromElement( (iSerializable*)ValuePointer(pArrayData, lOffset), pVarElem);
         }
         if(pVarElem != NULL)
         {
@@ -1135,23 +1135,23 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData,c
     // CLASS POINTER ////////////////////////////////////////////
     else if(pField->mType == eSerializeType_ClassPointer)
     {
-        size_t lCount=0;
+        size_t lCount = 0;
         TiXmlElement *pVarElem = apElement->FirstChildElement();
-        for(; pVarElem != NULL && lCount < lArraySize; pVarElem = pVarElem->NextSiblingElement(),++lCount)
+        for(; pVarElem != NULL && lCount < lArraySize; pVarElem = pVarElem->NextSiblingElement(), ++lCount)
         {
             size_t lOffset = sizeof(void*) * lCount;
-            iSerializable **pValuePtr = (iSerializable**)ValuePointer(pArrayData,lOffset);
+            iSerializable **pValuePtr = (iSerializable**)ValuePointer(pArrayData, lOffset);
 
-            tString sElemClassType = cString::ToString(pVarElem->Attribute("type"),"");
+            tString sElemClassType = cString::ToString(pVarElem->Attribute("type"), "");
             cSerializeSavedClass *pSavedClass = GetClass(sElemClassType);
-            if(pSavedClass==NULL || pSavedClass->mpCreateFunc==NULL)
+            if(pSavedClass == NULL || pSavedClass->mpCreateFunc == NULL)
             {
                 continue;
             }
 
             if(gbLog)
             {
-                Log("%s Element Class pointer: %s\n",GetTabs(),sElemClassType.c_str());
+                Log("%s Element Class pointer: %s\n", GetTabs(), sElemClassType.c_str());
             }
 
             //If NULL, then just create else delete and then create-
@@ -1172,7 +1172,7 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData,c
                 continue;
             }
 
-            LoadFromElement(*pValuePtr,pVarElem);
+            LoadFromElement(*pValuePtr, pVarElem);
         }
         if(pVarElem != NULL)
         {
@@ -1191,15 +1191,15 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData,c
             return;
         }
 
-        size_t lCount=0;
+        size_t lCount = 0;
         TiXmlElement *pVarElem = apElement->FirstChildElement();
-        for(; pVarElem != NULL && lCount < lArraySize; pVarElem = pVarElem->NextSiblingElement(),++lCount)
+        for(; pVarElem != NULL && lCount < lArraySize; pVarElem = pVarElem->NextSiblingElement(), ++lCount)
         {
-            const char* sVal = pVarElem->Attribute("val");
+            const char *sVal = pVarElem->Attribute("val");
 
             if(gbLog)
             {
-                Log("%s Element variable val '%s'\n",GetTabs(),sVal ? sVal : "(null)");
+                Log("%s Element variable val '%s'\n", GetTabs(), sVal ? sVal : "(null)");
             }
 
             StringToValue(pArrayData, lCount * lElemSize, fieldType, sVal);
@@ -1214,52 +1214,52 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData,c
     if(gbLog)
     {
         --glTabs;
-        Log("%s End Loading array: %s\n",GetTabs(),sName.c_str());
+        Log("%s End Loading array: %s\n", GetTabs(), sName.c_str());
     }
 }
 
 //-----------------------------------------------------------------------
 
-void cSerializeClass::LoadClass(TiXmlElement *apElement, iSerializable* apData,cSerializeSavedClass *apClass)
+void cSerializeClass::LoadClass(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass)
 {
-    tString sName = cString::ToString(apElement->Attribute("name"),"");
+    tString sName = cString::ToString(apElement->Attribute("name"), "");
 
-    cSerializeMemberField *pField = GetMemberField(sName,apClass);
-    if(pField==NULL)
+    cSerializeMemberField *pField = GetMemberField(sName, apClass);
+    if(pField == NULL)
     {
         return;
     }
 
-    iSerializable *pClassData = (iSerializable*)ValuePointer(apData,pField->mlOffset);
+    iSerializable *pClassData = (iSerializable*)ValuePointer(apData, pField->mlOffset);
 
     if(gbLog)
     {
-        Log("%s Saving class name: '%s' top class: '%s'\n",GetTabs(),sName.c_str(),pClassData->Serialize_GetTopClass().c_str());
+        Log("%s Saving class name: '%s' top class: '%s'\n", GetTabs(), sName.c_str(), pClassData->Serialize_GetTopClass().c_str());
     }
 
-    LoadFromElement(pClassData,apElement);
+    LoadFromElement(pClassData, apElement);
 }
 
 //-----------------------------------------------------------------------
 
-void cSerializeClass::LoadClassPointer(TiXmlElement *apElement, iSerializable* apData,cSerializeSavedClass *apClass)
+void cSerializeClass::LoadClassPointer(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass)
 {
-    tString sName = cString::ToString(apElement->Attribute("name"),"");
-    tString sType = cString::ToString(apElement->Attribute("type"),"");
-    bool bNull = cString::ToBool(apElement->Attribute("null"),false);
+    tString sName = cString::ToString(apElement->Attribute("name"), "");
+    tString sType = cString::ToString(apElement->Attribute("type"), "");
+    bool bNull = cString::ToBool(apElement->Attribute("null"), false);
 
-    cSerializeMemberField *pField = GetMemberField(sName,apClass);
-    if(pField==NULL)
+    cSerializeMemberField *pField = GetMemberField(sName, apClass);
+    if(pField == NULL)
     {
         return;
     }
 
-    iSerializable **pClassDataPtr = (iSerializable**)ValuePointer(apData,pField->mlOffset);
+    iSerializable **pClassDataPtr = (iSerializable**)ValuePointer(apData, pField->mlOffset);
 
     if(gbLog)
     {
-        Log("%s Loading classpointer name: '%s' type: '%s' null: %d\n",GetTabs(),sName.c_str(),
-            sType.c_str(),bNull?1:0);
+        Log("%s Loading classpointer name: '%s' type: '%s' null: %d\n", GetTabs(), sName.c_str(),
+            sType.c_str(), bNull ? 1 : 0);
     }
 
     //TODO: Question is here if previous data should be deleted.
@@ -1278,7 +1278,7 @@ void cSerializeClass::LoadClassPointer(TiXmlElement *apElement, iSerializable* a
     if(*pClassDataPtr == NULL)
     {
         cSerializeSavedClass* pNewClass = GetClass(sType);
-        if(pNewClass==NULL || pNewClass->mpCreateFunc==NULL)
+        if(pNewClass == NULL || pNewClass->mpCreateFunc == NULL)
         {
             Warning("Cannot create class pointer '%s' of type '%s' - unknown class or no create func\n",
                     sName.c_str(), sType.c_str());
@@ -1293,37 +1293,37 @@ void cSerializeClass::LoadClassPointer(TiXmlElement *apElement, iSerializable* a
         }
     }
 
-    LoadFromElement(*pClassDataPtr,apElement);
+    LoadFromElement(*pClassDataPtr, apElement);
 }
 
 //-----------------------------------------------------------------------
 
-void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apData,cSerializeSavedClass *apClass)
+void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass)
 {
-    tString sName = cString::ToString(apElement->Attribute("name"),"");
+    tString sName = cString::ToString(apElement->Attribute("name"), "");
 
-    cSerializeMemberField *pField = GetMemberField(sName,apClass);
-    if(pField==NULL)
+    cSerializeMemberField *pField = GetMemberField(sName, apClass);
+    if(pField == NULL)
     {
         return;
     }
 
-    iContainer *pCont = (iContainer*)ValuePointer(apData,pField->mlOffset);
+    iContainer *pCont = (iContainer*)ValuePointer(apData, pField->mlOffset);
 
     if(gbLog)
     {
-        Log("%s Begin load container name: '%s' type %d\n",GetTabs(),sName.c_str(),(int)pField->mType);
+        Log("%s Begin load container name: '%s' type %d\n", GetTabs(), sName.c_str(), (int)pField->mType);
         ++glTabs;
     }
 
     // CLASS ////////////////////////////////////////////
     if(pField->mType == eSerializeType_Class)
     {
-        tString sClassType = cString::ToString(apElement->Attribute("class_type"),"");
+        tString sClassType = cString::ToString(apElement->Attribute("class_type"), "");
         pCont->Clear();
 
         cSerializeSavedClass *pSavedClass = GetClass(sClassType);
-        if(pSavedClass==NULL || pSavedClass->mpCreateFunc==NULL)
+        if(pSavedClass == NULL || pSavedClass->mpCreateFunc == NULL)
         {
             Warning("Cannot load container '%s' - unknown class '%s' or no create func\n",
                     sName.c_str(), sClassType.c_str());
@@ -1335,7 +1335,7 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
         {
             if(gbLog)
             {
-                Log("%sCreating element class %s\n",GetTabs(),sClassType.c_str());
+                Log("%sCreating element class %s\n", GetTabs(), sClassType.c_str());
             }
 
             iSerializable *pData = pSavedClass->mpCreateFunc();
@@ -1345,7 +1345,7 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
                 continue;
             }
 
-            LoadFromElement(pData,pVarElem);
+            LoadFromElement(pData, pVarElem);
             pCont->AddVoidClass(pData);
 
             hplDelete(pData);
@@ -1358,7 +1358,7 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
         //Delete all and clear
         if(gbLog)
         {
-            Log("%sClearing container and deleting elements\n",GetTabs());
+            Log("%sClearing container and deleting elements\n", GetTabs());
         }
 
         iContainerIterator *pContIt = pCont->CreateIteratorPtr();
@@ -1376,16 +1376,16 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
         TiXmlElement *pVarElem = apElement->FirstChildElement();
         for(; pVarElem != NULL; pVarElem = pVarElem->NextSiblingElement())
         {
-            tString sClassType = cString::ToString(pVarElem->Attribute("type"),"");
+            tString sClassType = cString::ToString(pVarElem->Attribute("type"), "");
             cSerializeSavedClass *pSavedClass = GetClass(sClassType);
-            if(pSavedClass==NULL || pSavedClass->mpCreateFunc==NULL)
+            if(pSavedClass == NULL || pSavedClass->mpCreateFunc == NULL)
             {
                 continue;
             }
 
             if(gbLog)
             {
-                Log("%s Container member class pointer '%s'\n",GetTabs(),sClassType.c_str());
+                Log("%s Container member class pointer '%s'\n", GetTabs(), sClassType.c_str());
             }
 
             iSerializable *pData = pSavedClass->mpCreateFunc();
@@ -1395,7 +1395,7 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
                 continue;
             }
 
-            LoadFromElement(pData,pVarElem,true);
+            LoadFromElement(pData, pVarElem, true);
             pCont->AddVoidPtr((void**)&pData);
         }
     }
@@ -1422,7 +1422,7 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
         TiXmlElement *pVarElem = apElement->FirstChildElement();
         for(; pVarElem != NULL; pVarElem = pVarElem->NextSiblingElement())
         {
-            const char* sVal = pVarElem->Attribute("val");
+            const char *sVal = pVarElem->Attribute("val");
             void *pData = hplMalloc(lElemSize);
             if(pData == NULL)
             {
@@ -1432,7 +1432,7 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
 
             if(gbLog)
             {
-                Log("%s Element var val '%s' type: %d\n",GetTabs(),sVal ? sVal : "(null)",(int)fieldType);
+                Log("%s Element var val '%s' type: %d\n", GetTabs(), sVal ? sVal : "(null)", (int)fieldType);
             }
 
             StringToValue(pData, 0, fieldType, sVal);
@@ -1445,13 +1445,13 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
     if(gbLog)
     {
         --glTabs;
-        Log("%s End load container name: '%s'\n",GetTabs(),sName.c_str());
+        Log("%s End load container name: '%s'\n", GetTabs(), sName.c_str());
     }
 }
 
 //-----------------------------------------------------------------------
 
-cSerializeMemberField * cSerializeClass::GetMemberField(const tString &asName,cSerializeSavedClass* apClass)
+cSerializeMemberField *cSerializeClass::GetMemberField(const tString &asName, cSerializeSavedClass* apClass)
 {
     cSerializeMemberFieldIterator classIt = cSerializeMemberFieldIterator(apClass);
 
@@ -1465,7 +1465,7 @@ cSerializeMemberField * cSerializeClass::GetMemberField(const tString &asName,cS
         }
     }
 
-    Warning("Couldn't find member field '%s' in class '%s'\n",asName.c_str(), apClass->msName);
+    Warning("Couldn't find member field '%s' in class '%s'\n", asName.c_str(), apClass->msName);
     return NULL;
 }
 
@@ -1520,10 +1520,10 @@ void cSerializeClass::SetUpData()
 
     mbDataSetup = true;
 
-    for(int i=0; i< glSerializeTempClassesNum; i++)
+    for(int i = 0; i < glSerializeTempClassesNum; i++)
     {
         m_mapSavedClasses.insert(tSerializeSavedClassMap::value_type(
-                                     tString(gvSerializeTempClasses[i].msName),gvSerializeTempClasses[i])
+                                     tString(gvSerializeTempClasses[i].msName), gvSerializeTempClasses[i])
                                 );
     }
 }
@@ -1532,7 +1532,7 @@ void cSerializeClass::SetUpData()
 
 void cSerializeClass::FillSaveClassMembersList(tSerializeSavedClassList *apList, cSerializeSavedClass* apClass)
 {
-    if(apClass==NULL)
+    if(apClass == NULL)
     {
         return;
     }

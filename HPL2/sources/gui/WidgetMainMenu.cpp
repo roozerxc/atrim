@@ -19,7 +19,7 @@ namespace hpl
 //-----------------------------------------------------------------------
 
 
-cWidgetMainMenu::cWidgetMainMenu(cGuiSet *apSet, cGuiSkin *apSkin) : iWidgetMenu(eWidgetType_MainMenu,apSet,apSkin)
+cWidgetMainMenu::cWidgetMainMenu(cGuiSet *apSet, cGuiSkin *apSkin) : iWidgetMenu(eWidgetType_MainMenu, apSet, apSkin)
 {
     LoadGraphics();
 }
@@ -38,7 +38,7 @@ cWidgetMainMenu::~cWidgetMainMenu()
 
 void cWidgetMainMenu::UpdateMenuItemsPos(cWidgetMenuItem* apNewItem)
 {
-    cVector3f vPos = cVector3f(3,mfItemVPadding,1);
+    cVector3f vPos = cVector3f(3, mfItemVPadding, 1);
 
     size_t lNumItems = mvMenuItems.size();
 
@@ -47,8 +47,8 @@ void cWidgetMainMenu::UpdateMenuItemsPos(cWidgetMenuItem* apNewItem)
     // and set it as new item's position.
     if(lNumItems > 1)
     {
-        vPos.x += mvMenuItems[lNumItems-2]->GetLocalPosition().x;
-        vPos.x += mvMenuItems[lNumItems-2]->GetSize().x;
+        vPos.x += mvMenuItems[lNumItems - 2]->GetLocalPosition().x;
+        vPos.x += mvMenuItems[lNumItems - 2]->GetSize().x;
         vPos.x += mfItemSeparation;
     }
 
@@ -63,10 +63,10 @@ void cWidgetMainMenu::UpdateMenuItemsSize(cWidgetMenuItem* apNewItem)
     // Set item text length as items size
     float fLength = apNewItem->GetTextLength();
 
-    apNewItem->SetSize(cVector2f(fLength + 2*mfItemTextPadding, mpDefaultFont->mvSize.y + 2*mfItemVPadding));
+    apNewItem->SetSize(cVector2f(fLength + 2 * mfItemTextPadding, mpDefaultFont->mvSize.y + 2 * mfItemVPadding));
 
     // Also set text offset
-    SetTextPos(cVector3f(mfItemTextPadding,mfItemVPadding,0.2f));
+    SetTextPos(cVector3f(mfItemTextPadding, mfItemVPadding, 0.2f));
 }
 
 //-----------------------------------------------------------------------
@@ -97,7 +97,7 @@ void cWidgetMainMenu::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     ////////////////////////////////
     // Draw background
-    mpSet->DrawGfx( mpGfxBackground,GetGlobalPosition(),mvSize-cVector2f(0,1));
+    mpSet->DrawGfx( mpGfxBackground, GetGlobalPosition(), mvSize - cVector2f(0, 1));
     //mpSet->DrawGfx( mpGfxBackground, GetGlobalPosition()+cVector3f(0,mvSize.y-1,0.05f), cVector2f(mvSize.x,1), cColor(0.5f,1));
 
 }
@@ -141,9 +141,9 @@ void cWidgetMainMenu::OnInit()
 
     SetSize(cVector2f(fWidth, fHeight));
 
-    fHeight=0;
-    mpParent->SetChildrenOffset(cVector3f(0,fHeight,0));
-    SetPosition(GetLocalPosition()+cVector3f(fXOffset,-fHeight,1));
+    fHeight = 0;
+    mpParent->SetChildrenOffset(cVector3f(0, fHeight, 0));
+    SetPosition(GetLocalPosition() + cVector3f(fXOffset, -fHeight, 1));
 }
 
 //-----------------------------------------------------------------------

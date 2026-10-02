@@ -21,7 +21,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-iWidget::iWidget(eWidgetType aType,cGuiSet *apSet, cGuiSkin *apSkin)
+iWidget::iWidget(eWidgetType aType, cGuiSet *apSet, cGuiSkin *apSkin)
 {
     mpSet = apSet;
     mpSkin = apSkin;
@@ -33,7 +33,7 @@ iWidget::iWidget(eWidgetType aType,cGuiSet *apSet, cGuiSkin *apSkin)
 
     mpParent = NULL;
 
-    mvPosition =0;
+    mvPosition = 0;
     mvSize = 0;
     mvChildrenOffset = 0;
     mvScrollAmount = 0;
@@ -46,15 +46,15 @@ iWidget::iWidget(eWidgetType aType,cGuiSet *apSet, cGuiSkin *apSkin)
 
     mbMouseIsOver = false;
 
-    msText =_W("");
+    msText = _W("");
 
     mbPositionIsUpdated = true;
 
-    mlPositionCount =0;
+    mlPositionCount = 0;
 
     mbConnectedToChildren = true;
 
-    mColorMul = cColor(1,1);
+    mColorMul = cColor(1, 1);
 
     if(mpSkin)
     {
@@ -84,12 +84,12 @@ iWidget::iWidget(eWidgetType aType,cGuiSet *apSet, cGuiSkin *apSkin)
 
 iWidget::~iWidget()
 {
-    if(mpSet->GetToolTipWidget()==this)
+    if(mpSet->GetToolTipWidget() == this)
     {
         mpSet->SetToolTipWidget(NULL);
     }
 
-    for(size_t i=0; i<mvShortcuts.size(); ++i)
+    for(size_t i = 0; i < mvShortcuts.size(); ++i)
     {
         mpSet->RemoveGlobalShortcut(mvShortcuts[i]);
     }
@@ -138,7 +138,7 @@ void iWidget::Update(double adFixedDelta)
 
 void iWidget::Draw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
-    if(mbVisible==false)
+    if(mbVisible == false)
     {
         return;
     }
@@ -152,7 +152,7 @@ void iWidget::Draw(double adFixedDelta, cGuiClipRegion *apClipRegion)
         mpSet->SetCurrentClipRegion(pChildRegion);
     }
 
-    OnDrawAfterClip(adFixedDelta,apClipRegion);
+    OnDrawAfterClip(adFixedDelta, apClipRegion);
 
     /////////////////////////////////
     //Draw callbacks
@@ -187,7 +187,7 @@ void iWidget::Init()
 
 //-----------------------------------------------------------------------
 
-cGuiGlobalShortcut* iWidget::AddShortcut(int alKeyModifiers, eKey aKey, eGuiMessage aMsg, bool abBypassVisibility, bool abBypassEnabled)
+cGuiGlobalShortcut *iWidget::AddShortcut(int alKeyModifiers, eKey aKey, eGuiMessage aMsg, bool abBypassVisibility, bool abBypassEnabled)
 {
     cGuiGlobalShortcut* pShortcut = mpSet->AddGlobalShortcut(alKeyModifiers, aKey, this, aMsg, abBypassVisibility, abBypassEnabled);
     mvShortcuts.push_back(pShortcut);
@@ -200,8 +200,8 @@ cGuiGlobalShortcut* iWidget::AddShortcut(int alKeyModifiers, eKey aKey, eGuiMess
 bool iWidget::ProcessMessage(eGuiMessage aMessage, const cGuiMessageData& aData, bool abSkipVisCheck, bool abSkipEnabledCheck)
 {
     if(mbCallbacksDisabled ||
-            !abSkipVisCheck && IsVisible()==false ||
-            !abSkipEnabledCheck && IsEnabled()==false)
+            !abSkipVisCheck && IsVisible() == false ||
+            !abSkipEnabledCheck && IsEnabled() == false)
     {
         return false;
     }
@@ -210,11 +210,11 @@ bool iWidget::ProcessMessage(eGuiMessage aMessage, const cGuiMessageData& aData,
     tData.mMessage = aMessage;
 
     bool bRet = false;
-    bRet = OnMessage(aMessage,tData); //This can override any message.
+    bRet = OnMessage(aMessage, tData); //This can override any message.
 
     /////////////////////////////////////////
     //Call the correct virtual function
-    if(bRet==false)
+    if(bRet == false)
     {
         switch(aMessage)
         {
@@ -274,7 +274,7 @@ bool iWidget::ProcessMessage(eGuiMessage aMessage, const cGuiMessageData& aData,
 
     /////////////////////////////////////////
     //Process user callbacks for the event.
-    if(ProcessCallbacks(aMessage,tData))
+    if(ProcessCallbacks(aMessage, tData))
     {
         bRet = true;
     }
@@ -284,7 +284,7 @@ bool iWidget::ProcessMessage(eGuiMessage aMessage, const cGuiMessageData& aData,
 
 //-----------------------------------------------------------------------
 
-void iWidget::AddCallback(eGuiMessage aMessage,void *apObject,tGuiCallbackFunc apFunc)
+void iWidget::AddCallback(eGuiMessage aMessage, void *apObject, tGuiCallbackFunc apFunc)
 {
     mvCallbackLists[aMessage].push_back(cWidgetCallback(apObject, apFunc));
 }
@@ -293,12 +293,12 @@ void iWidget::AddCallback(eGuiMessage aMessage,void *apObject,tGuiCallbackFunc a
 
 bool iWidget::PointIsInside(const cVector2f& avPoint, bool abOnlyClipped)
 {
-    if(CheckPointInsideClippingParent(avPoint)==false)
+    if(CheckPointInsideClippingParent(avPoint) == false)
     {
         return false;
     }
 
-    if(abOnlyClipped && mbClipsGraphics==false)
+    if(abOnlyClipped && mbClipsGraphics == false)
     {
         return true;
     }
@@ -455,7 +455,7 @@ void iWidget::SetText(const tWString& asText)
 
 void iWidget::SetPosition(const cVector3f &avPos)
 {
-    if(mvPosition.z!=avPos.z)
+    if(mvPosition.z != avPos.z)
     {
         mpSet->SetWidgetsNeedSorting();
     }
@@ -482,19 +482,19 @@ void iWidget::SetGlobalPosition(const cVector3f &avPos)
     }
 }
 
-const cVector3f& iWidget::GetLocalPosition()
+const cVector3f &iWidget::GetLocalPosition()
 {
     return mvPosition;
 }
 
-const cVector3f& iWidget::GetGlobalPosition()
+const cVector3f &iWidget::GetGlobalPosition()
 {
     if(mpParent)
     {
         if(mbPositionIsUpdated)
         {
             mbPositionIsUpdated = false;
-            mvGlobalPosition = mpParent->GetGlobalPosition() + mpParent->GetChildrenOffset() - (mbAffectedByScroll? mpParent->GetScrollAmount() : cVector3f(0)) + mvPosition;
+            mvGlobalPosition = mpParent->GetGlobalPosition() + mpParent->GetChildrenOffset() - (mbAffectedByScroll ? mpParent->GetScrollAmount() : cVector3f(0)) + mvPosition;
         }
         return mvGlobalPosition;
     }
@@ -508,7 +508,7 @@ const cVector3f& iWidget::GetGlobalPosition()
 
 void iWidget::SetChildrenOffset(const cVector3f& avX)
 {
-    if(mvChildrenOffset==avX)
+    if(mvChildrenOffset == avX)
     {
         return;
     }
@@ -521,7 +521,7 @@ void iWidget::SetChildrenOffset(const cVector3f& avX)
 
 void iWidget::SetAffectedByScroll(bool abX)
 {
-    if(mbAffectedByScroll==abX)
+    if(mbAffectedByScroll == abX)
     {
         return;
     }
@@ -532,7 +532,7 @@ void iWidget::SetAffectedByScroll(bool abX)
 
 void iWidget::SetScrollAmount(const cVector3f& avX)
 {
-    if(mvScrollAmount==avX)
+    if(mvScrollAmount == avX)
     {
         return;
     }
@@ -548,7 +548,7 @@ void iWidget::CenterGlobalPositionInSet()
     cVector2f vSetSize = mpSet->GetVirtualSize();
     float fGlobalZ = GetGlobalPosition().z;
 
-    SetGlobalPosition(cVector3f(vSetSize.x/2.0f - mvSize.x/2.0f, vSetSize.y/2.0f - mvSize.y/2.0f, fGlobalZ));
+    SetGlobalPosition(cVector3f(vSetSize.x / 2.0f - mvSize.x / 2.0f, vSetSize.y / 2.0f - mvSize.y / 2.0f, fGlobalZ));
 }
 
 //-----------------------------------------------------------------------
@@ -581,7 +581,7 @@ bool iWidget::ClipsGraphics()
 
 bool iWidget::IsConnectedTo(iWidget *apWidget, bool abIsStartWidget)
 {
-    if(abIsStartWidget == false && mbConnectedToChildren==false)
+    if(abIsStartWidget == false && mbConnectedToChildren == false)
     {
         return false;
     }
@@ -597,7 +597,7 @@ bool iWidget::IsConnectedTo(iWidget *apWidget, bool abIsStartWidget)
 
     if(mpParent)
     {
-        return mpParent->IsConnectedTo(apWidget,false);
+        return mpParent->IsConnectedTo(apWidget, false);
     }
 
     return false;
@@ -606,7 +606,7 @@ bool iWidget::IsConnectedTo(iWidget *apWidget, bool abIsStartWidget)
 
 //-----------------------------------------------------------------------
 
-cGuiGfxElement* iWidget::GetPointerGfx()
+cGuiGfxElement *iWidget::GetPointerGfx()
 {
     return mpPointerGfx;
 }
@@ -618,7 +618,7 @@ void iWidget::SetFocusNavigation(eUIArrow aDir, iWidget* apWidget)
     mvFocusNavWidgets[UIArrowToArrayPos(aDir)] = apWidget;
 }
 
-iWidget* iWidget::GetFocusNavigation(eUIArrow aDir)
+iWidget *iWidget::GetFocusNavigation(eUIArrow aDir)
 {
     return mvFocusNavWidgets[UIArrowToArrayPos(aDir)];
 }
@@ -627,7 +627,7 @@ iWidget* iWidget::GetFocusNavigation(eUIArrow aDir)
 
 bool iWidget::HasFocusNavigation()
 {
-    for(size_t i=0; i<mvFocusNavWidgets.size(); ++i)
+    for(size_t i = 0; i < mvFocusNavWidgets.size(); ++i)
         if(mvFocusNavWidgets[i])
         {
             return true;
@@ -722,7 +722,7 @@ bool iWidget::CheckPointInsideClippingParent(const cVector2f& avPoint)
 {
     if(mpParent && mpParent->ClipsGraphics())
     {
-        if(mpParent->PointIsInside(avPoint, true)==false)
+        if(mpParent->PointIsInside(avPoint, true) == false)
         {
             return false;
         }
@@ -747,7 +747,7 @@ cVector2f iWidget::GetPosRelativeToMouse(const cGuiMessageData& aData)
 //-----------------------------------------------------------------------
 
 void iWidget::DrawBordersAndCorners(cGuiGfxElement *apBackground,
-                                    cGuiGfxElement **apBorderVec,cGuiGfxElement **apCornerVec,
+                                    cGuiGfxElement **apBorderVec, cGuiGfxElement **apCornerVec,
                                     const cVector3f &avPosition, const cVector2f &avSize, bool abBordersOutside)
 {
     mpSet->SetDrawOffset(avPosition);
@@ -773,12 +773,12 @@ void iWidget::DrawBordersAndCorners(cGuiGfxElement *apBackground,
             vPos.x = apCornerVec[0]->GetActiveSize().x;
             vPos.y = apCornerVec[0]->GetActiveSize().y;
 
-            vSize = avSize - apCornerVec[2]->GetActiveSize()-apCornerVec[0]->GetActiveSize();
+            vSize = avSize - apCornerVec[2]->GetActiveSize() - apCornerVec[0]->GetActiveSize();
         }
 
-        mpSet->DrawGfx(apBackground,vPos,
+        mpSet->DrawGfx(apBackground, vPos,
                        vSize,
-                       cColor(1,1));
+                       cColor(1, 1));
 
         //mpSet->DrawGfx(apBackground,cVector3f(    apCornerVec[0]->GetActiveSize().x,
         //                                    apCornerVec[0]->GetActiveSize().y,0 ),
@@ -793,25 +793,25 @@ void iWidget::DrawBordersAndCorners(cGuiGfxElement *apBackground,
         // Borders
         //Right
         mpSet->DrawGfx(    apBorderVec[0],
-                           cVector3f(    avSize.x,0,0),
+                           cVector3f(    avSize.x, 0, 0),
                            cVector2f(    apBorderVec[0]->GetImageSize().x,
                                          avSize.y));
         //Left
         mpSet->DrawGfx(    apBorderVec[1],
                            cVector3f(    -apCornerVec[0]->GetActiveSize().x,
-                                         0,0),
+                                         0, 0),
                            cVector2f(    apBorderVec[1]->GetImageSize().x,
                                          avSize.y));
 
         //Up
         mpSet->DrawGfx(    apBorderVec[2],
-                           cVector3f(    0,-apCornerVec[0]->GetActiveSize().y,0),
+                           cVector3f(    0, -apCornerVec[0]->GetActiveSize().y, 0),
                            cVector2f(    avSize.x,
                                          apBorderVec[2]->GetImageSize().y));
 
         //Down
         mpSet->DrawGfx(    apBorderVec[3],
-                           cVector3f(    0, avSize.y,0),
+                           cVector3f(    0, avSize.y, 0),
                            cVector2f(    avSize.x,
                                          apBorderVec[3]->GetImageSize().y));
 
@@ -819,15 +819,15 @@ void iWidget::DrawBordersAndCorners(cGuiGfxElement *apBackground,
         ///////////////////////
         // Corners
         //Left Up
-        mpSet->DrawGfx(apCornerVec[0], cVector3f(-apCornerVec[0]->GetActiveSize().x,-apCornerVec[0]->GetActiveSize().y,0));
+        mpSet->DrawGfx(apCornerVec[0], cVector3f(-apCornerVec[0]->GetActiveSize().x, -apCornerVec[0]->GetActiveSize().y, 0));
         //Right Up
-        mpSet->DrawGfx(apCornerVec[1], cVector3f( avSize.x, -apCornerVec[1]->GetActiveSize().y,0));
+        mpSet->DrawGfx(apCornerVec[1], cVector3f( avSize.x, -apCornerVec[1]->GetActiveSize().y, 0));
 
         //Right Down
         mpSet->DrawGfx(apCornerVec[2], cVector3f(    avSize.x,
-                       avSize.y,0));
+                       avSize.y, 0));
         //Left Down
-        mpSet->DrawGfx(apCornerVec[3], cVector3f( -apCornerVec[3]->GetActiveSize().x,avSize.y, 0));
+        mpSet->DrawGfx(apCornerVec[3], cVector3f( -apCornerVec[3]->GetActiveSize().x, avSize.y, 0));
     }
     else
     {
@@ -836,29 +836,29 @@ void iWidget::DrawBordersAndCorners(cGuiGfxElement *apBackground,
         //Right
         mpSet->DrawGfx(    apBorderVec[0],
                            cVector3f(    avSize.x - apBorderVec[0]->GetActiveSize().x,
-                                         apCornerVec[1]->GetActiveSize().y,0),
+                                         apCornerVec[1]->GetActiveSize().y, 0),
                            cVector2f(    apBorderVec[0]->GetImageSize().x,
                                          avSize.y - (apCornerVec[2]->GetActiveSize().y +
                                                  apCornerVec[1]->GetActiveSize().y)));
         //Left
         mpSet->DrawGfx(    apBorderVec[1],
-                           cVector3f(    0,apCornerVec[0]->GetActiveSize().y,0),
+                           cVector3f(    0, apCornerVec[0]->GetActiveSize().y, 0),
                            cVector2f(    apBorderVec[1]->GetImageSize().x,
                                          avSize.y - (apCornerVec[3]->GetActiveSize().y +
                                                  apCornerVec[0]->GetActiveSize().y)));
 
         //Up
         mpSet->DrawGfx(    apBorderVec[2],
-                           cVector3f(    apCornerVec[0]->GetActiveSize().x,0,0),
-                           cVector2f(    avSize.x - (apCornerVec[0]->GetActiveSize().x+
+                           cVector3f(    apCornerVec[0]->GetActiveSize().x, 0, 0),
+                           cVector2f(    avSize.x - (apCornerVec[0]->GetActiveSize().x +
                                          apCornerVec[1]->GetActiveSize().x),
                                          apBorderVec[2]->GetImageSize().y));
 
         //Down
         mpSet->DrawGfx(    apBorderVec[3],
                            cVector3f(    apCornerVec[3]->GetActiveSize().x,
-                                         avSize.y - apBorderVec[3]->GetActiveSize().y,0),
-                           cVector2f(    avSize.x - (apCornerVec[2]->GetActiveSize().x+
+                                         avSize.y - apBorderVec[3]->GetActiveSize().y, 0),
+                           cVector2f(    avSize.x - (apCornerVec[2]->GetActiveSize().x +
                                          apCornerVec[3]->GetActiveSize().x),
                                          apBorderVec[3]->GetImageSize().y));
 
@@ -866,15 +866,15 @@ void iWidget::DrawBordersAndCorners(cGuiGfxElement *apBackground,
         ///////////////////////
         // Corners
         //Left Up
-        mpSet->DrawGfx(apCornerVec[0], cVector3f(0,0,0));
+        mpSet->DrawGfx(apCornerVec[0], cVector3f(0, 0, 0));
         //Right Up
-        mpSet->DrawGfx(apCornerVec[1], cVector3f(    avSize.x - apCornerVec[1]->GetActiveSize().x,0,0));
+        mpSet->DrawGfx(apCornerVec[1], cVector3f(    avSize.x - apCornerVec[1]->GetActiveSize().x, 0, 0));
 
         //Right Down
         mpSet->DrawGfx(apCornerVec[2], cVector3f(    avSize.x -  apCornerVec[2]->GetActiveSize().x,
-                       avSize.y -  apCornerVec[2]->GetActiveSize().y,0));
+                       avSize.y -  apCornerVec[2]->GetActiveSize().y, 0));
         //Left Down
-        mpSet->DrawGfx(apCornerVec[3], cVector3f(    0,avSize.y - apCornerVec[3]->GetActiveSize().y,0));
+        mpSet->DrawGfx(apCornerVec[3], cVector3f(    0, avSize.y - apCornerVec[3]->GetActiveSize().y, 0));
     }
 
 
@@ -883,49 +883,49 @@ void iWidget::DrawBordersAndCorners(cGuiGfxElement *apBackground,
 
 //-----------------------------------------------------------------------
 
-void iWidget::DrawSkinText(    const tWString& asText,eGuiSkinFont aFont,
-                               const cVector3f& avPosition,eFontAlign aAlign)
+void iWidget::DrawSkinText(    const tWString& asText, eGuiSkinFont aFont,
+                               const cVector3f& avPosition, eFontAlign aAlign)
 {
     cGuiSkinFont *pFont = mpSkin->GetFont(aFont);
-    mpSet->DrawFont(asText,pFont->mpFont,avPosition,pFont->mvSize,pFont->mColor*mColorMul,
+    mpSet->DrawFont(asText, pFont->mpFont, avPosition, pFont->mvSize, pFont->mColor * mColorMul,
                     aAlign);
 }
 
 //-----------------------------------------------------------------------
 
 void iWidget::DrawDefaultText(    const tWString& asText,
-                                  const cVector3f& avPosition,eFontAlign aAlign)
+                                  const cVector3f& avPosition, eFontAlign aAlign)
 {
-    if(mpDefaultFontType==NULL)
+    if(mpDefaultFontType == NULL)
     {
         return;
     }
 
-    mpSet->DrawFont(asText,mpDefaultFontType,avPosition,mvDefaultFontSize,
-                    mDefaultFontColor*mColorMul, aAlign);
+    mpSet->DrawFont(asText, mpDefaultFontType, avPosition, mvDefaultFontSize,
+                    mDefaultFontColor * mColorMul, aAlign);
 }
 
 //-----------------------------------------------------------------------
 
 void iWidget::DrawDefaultText(    const tWString& asText,
-                                  const cVector3f& avPosition,eFontAlign aAlign, const cColor& aCol)
+                                  const cVector3f& avPosition, eFontAlign aAlign, const cColor& aCol)
 {
-    if(mpDefaultFontType==NULL)
+    if(mpDefaultFontType == NULL)
     {
         return;
     }
 
-    mpSet->DrawFont(asText,mpDefaultFontType,avPosition,mvDefaultFontSize,
-                    aCol*mColorMul, aAlign);
+    mpSet->DrawFont(asText, mpDefaultFontType, avPosition, mvDefaultFontSize,
+                    aCol * mColorMul, aAlign);
 }
 
 //-----------------------------------------------------------------------
 
 
 void iWidget::DrawDefaultTextHighlight(    const tWString& asText,
-        const cVector3f& avPosition,eFontAlign aAlign) //, int alFirstVisibleChar, int alHighlightStart, int alHighlightSize )
+        const cVector3f& avPosition, eFontAlign aAlign) //, int alFirstVisibleChar, int alHighlightStart, int alHighlightSize )
 {
-    if(mpDefaultFontType==NULL)
+    if(mpDefaultFontType == NULL)
     {
         return;
     }
@@ -934,8 +934,8 @@ void iWidget::DrawDefaultTextHighlight(    const tWString& asText,
                 mpSet->DrawFont(asText,mpDefaultFontType,avPosition,mvDefaultFontSize,
                             mDefaultFontColor, aAlign);
                             */
-    mpSet->DrawFont(asText,mpDefaultFontType,avPosition,mvDefaultFontSize,
-                    mDefaultFontHighlightColor*mColorMul,aAlign);
+    mpSet->DrawFont(asText, mpDefaultFontType, avPosition, mvDefaultFontSize,
+                    mDefaultFontHighlightColor * mColorMul, aAlign);
 
 }
 
@@ -962,7 +962,7 @@ bool iWidget::ProcessCallbacks(eGuiMessage aMessage, const cGuiMessageData& aDat
     {
         cWidgetCallback &callback = *it;
 
-        bool bX = (callback.mpFunc)(callback.mpObject,this, aData);
+        bool bX = (callback.mpFunc)(callback.mpObject, this, aData);
         if(bX)
         {
             bRet = true;
@@ -1025,9 +1025,9 @@ void iWidget::SetPositionUpdated()
 void iWidget::SetToolTip(const tWString& asToolTip)
 {
     msToolTip = asToolTip;
-    mbToolTipEnabled = (msToolTip!=_W(""));
+    mbToolTipEnabled = (msToolTip != _W(""));
 
-    if(GetSize()==0)
+    if(GetSize() == 0)
     {
         float fWidth = mpDefaultFontType->GetLength(mvDefaultFontSize, msText.c_str());
         float fHeight = mvDefaultFontSize.y;

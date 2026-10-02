@@ -74,8 +74,8 @@ class iViewportCallback
 {
 public:
     virtual ~iViewportCallback() {}
-    virtual void OnPreWorldDraw()=0;
-    virtual void OnPostWorldDraw()=0;
+    virtual void OnPreWorldDraw() = 0;
+    virtual void OnPostWorldDraw() = 0;
 
     void RunMessage(eViewportMessage aMessage)
     {
@@ -99,10 +99,10 @@ class iEntityCallback
 {
 public:
     virtual ~iEntityCallback() {}
-    virtual void OnTransformUpdate(iEntity3D * apEntity)=0;
+    virtual void OnTransformUpdate(iEntity3D * apEntity) = 0;
 };
 
-typedef std::list<iEntityCallback*> tEntityCallbackList;
+typedef std::list<iEntityCallback *> tEntityCallbackList;
 typedef tEntityCallbackList::iterator tEntityCallbackListIt;
 
 //------------------------------------------
@@ -114,8 +114,8 @@ class iRendererCallback
 public:
     virtual ~iRendererCallback() {}
 
-    virtual void OnPostSolidDraw(cRendererCallbackFunctions *apFunctions)=0;
-    virtual void OnPostTranslucentDraw(cRendererCallbackFunctions *apFunctions)=0;
+    virtual void OnPostSolidDraw(cRendererCallbackFunctions *apFunctions) = 0;
+    virtual void OnPostTranslucentDraw(cRendererCallbackFunctions *apFunctions) = 0;
     virtual void OnPostPostGBufferDraw(cRendererCallbackFunctions *apFunctions) {}
 
     void RunMessage(eRendererMessage aMessage, cRendererCallbackFunctions *apFunctions)
@@ -137,39 +137,39 @@ public:
 
 //------------------------------------------
 
-typedef std::list<iViewportCallback*> tViewportCallbackList;
+typedef std::list<iViewportCallback *> tViewportCallbackList;
 typedef tViewportCallbackList::iterator tViewportCallbackListIt;
 
-typedef std::list<iRendererCallback*> tRendererCallbackList;
+typedef std::list<iRendererCallback *> tRendererCallbackList;
 typedef tRendererCallbackList::iterator tRendererCallbackListIt;
 
 //------------------------------------------
 
 class iRenderableContainerNode;
 
-typedef std::set<iRenderableContainerNode*> tRenderableContainerNodeSet;
+typedef std::set<iRenderableContainerNode *> tRenderableContainerNodeSet;
 typedef tRenderableContainerNodeSet::iterator tRenderableContainerNodeSetIt;
 
-typedef std::list<iRenderableContainerNode*> tRenderableContainerNodeList;
+typedef std::list<iRenderableContainerNode *> tRenderableContainerNodeList;
 typedef tRenderableContainerNodeList::iterator tRenderableContainerNodeListIt;
 
 //------------------------------------------
 
 class iEntity3D;
 
-typedef std::list<iEntity3D*> tEntity3DList;
+typedef std::list<iEntity3D *> tEntity3DList;
 typedef tEntity3DList::iterator tEntity3DListIt;
 
-typedef cSTLIterator<iEntity3D*,tEntity3DList,tEntity3DListIt> cEntity3DIterator;
+typedef cSTLIterator<iEntity3D *, tEntity3DList, tEntity3DListIt> cEntity3DIterator;
 
 //------------------------------------------
 
 class cNode3D;
 
-typedef std::list<cNode3D*> tNode3DList;
+typedef std::list<cNode3D *> tNode3DList;
 typedef tNode3DList::iterator tNode3DListIt;
 
-typedef cSTLIterator<cNode3D*,tNode3DList,tNode3DListIt> cNode3DIterator;
+typedef cSTLIterator<cNode3D *, tNode3DList, tNode3DListIt> cNode3DIterator;
 
 
 //------------------------------------------
@@ -191,46 +191,46 @@ class cDummyRenderable;
 
 //------------------------------------------
 
-typedef std::list<iLight*> tLightList;
-typedef std::list<iLight*>::iterator tLightListIt;
+typedef std::list<iLight *> tLightList;
+typedef std::list<iLight *>::iterator tLightListIt;
 
-typedef std::list<cMeshEntity*> tMeshEntityList;
-typedef std::list<cMeshEntity*>::iterator tMeshEntityListIt;
+typedef std::list<cMeshEntity *> tMeshEntityList;
+typedef std::list<cMeshEntity *>::iterator tMeshEntityListIt;
 
-typedef std::list<cSubMeshEntity*> tSubMeshEntityList;
-typedef std::list<cSubMeshEntity*>::iterator tSubMeshEntityListIt;
+typedef std::list<cSubMeshEntity *> tSubMeshEntityList;
+typedef std::list<cSubMeshEntity *>::iterator tSubMeshEntityListIt;
 
-typedef std::list<cBillboard*> tBillboardList;
-typedef std::list<cBillboard*>::iterator tBillboardListIt;
+typedef std::list<cBillboard *> tBillboardList;
+typedef std::list<cBillboard *>::iterator tBillboardListIt;
 
-typedef std::list<cBeam*> tBeamList;
-typedef std::list<cBeam*>::iterator tBeamListIt;
+typedef std::list<cBeam *> tBeamList;
+typedef std::list<cBeam *>::iterator tBeamListIt;
 
-typedef std::list<cParticleSystem*> tParticleSystemList;
+typedef std::list<cParticleSystem *> tParticleSystemList;
 typedef tParticleSystemList::iterator tParticleSystemListIt;
 
-typedef std::list<cSoundEntity*> tSoundEntityList;
-typedef std::list<cSoundEntity*>::iterator tSoundEntityListIt;
+typedef std::list<cSoundEntity *> tSoundEntityList;
+typedef std::list<cSoundEntity *>::iterator tSoundEntityListIt;
 
-typedef std::list<cGuiSetEntity*> tGuiSetEntityList;
-typedef std::list<cGuiSetEntity*>::iterator tGuiSetEntityListIt;
+typedef std::list<cGuiSetEntity *> tGuiSetEntityList;
+typedef std::list<cGuiSetEntity *>::iterator tGuiSetEntityListIt;
 
-typedef std::list<cRopeEntity*> tRopeEntityList;
-typedef std::list<cRopeEntity*>::iterator tRopeEntityListIt;
+typedef std::list<cRopeEntity *> tRopeEntityList;
+typedef std::list<cRopeEntity *>::iterator tRopeEntityListIt;
 
-typedef std::list<cFogArea*> tFogAreaList;
-typedef std::list<cFogArea*>::iterator tFogAreaListIt;
+typedef std::list<cFogArea *> tFogAreaList;
+typedef std::list<cFogArea *>::iterator tFogAreaListIt;
 
-typedef std::list<cDummyRenderable*> tDummyRenderableList;
+typedef std::list<cDummyRenderable *> tDummyRenderableList;
 typedef tDummyRenderableList::iterator tDummyRenderableListIt;
 
-typedef std::list<cAINodeContainer*> tAINodeContainerList;
-typedef std::list<cAINodeContainer*>::iterator tAINodeContainerListIt;
+typedef std::list<cAINodeContainer *> tAINodeContainerList;
+typedef std::list<cAINodeContainer *>::iterator tAINodeContainerListIt;
 
-typedef std::list<cAStarHandler*> tAStarHandlerList;
-typedef std::list<cAStarHandler*>::iterator tAStarHandlerIt;
+typedef std::list<cAStarHandler *> tAStarHandlerList;
+typedef std::list<cAStarHandler *>::iterator tAStarHandlerIt;
 
-typedef std::vector<cAnimationState*> tAnimationStateVec;
+typedef std::vector<cAnimationState *> tAnimationStateVec;
 typedef tAnimationStateVec::iterator tAnimationStateVecIt;
 
 typedef std::map<tString, int> tAnimationStateIndexMap;
@@ -238,25 +238,25 @@ typedef tAnimationStateIndexMap::iterator tAnimationStateIndexMapIt;
 
 //-------------------------------------------------------------------
 
-typedef cSTLIterator<cMeshEntity*, tMeshEntityList, tMeshEntityListIt> cMeshEntityIterator;
-typedef cSTLIterator<cBillboard*, tBillboardList, tBillboardListIt> cBillboardIterator;
-typedef cSTLIterator<iLight*, tLightList, tLightListIt> cLightListIterator;
-typedef cSTLIterator<cParticleSystem*, tParticleSystemList, tParticleSystemListIt> cParticleSystemIterator;
-typedef cSTLIterator<cSoundEntity*, tSoundEntityList, tSoundEntityListIt> cSoundEntityIterator;
-typedef cSTLIterator<cBeam*, tBeamList, tBeamListIt> cBeamIterator;
-typedef cSTLIterator<cGuiSetEntity*, tGuiSetEntityList, tGuiSetEntityListIt> cGuiSetEntityIterator;
-typedef cSTLIterator<cRopeEntity*, tRopeEntityList, tRopeEntityListIt> cRopeEntityIterator;
-typedef cSTLIterator<cFogArea*, tFogAreaList, tFogAreaListIt> cFogAreaIterator;
-typedef cSTLIterator<cDummyRenderable*, tDummyRenderableList, tDummyRenderableListIt> cDummyRenderableIterator;
+typedef cSTLIterator<cMeshEntity *, tMeshEntityList, tMeshEntityListIt> cMeshEntityIterator;
+typedef cSTLIterator<cBillboard *, tBillboardList, tBillboardListIt> cBillboardIterator;
+typedef cSTLIterator<iLight *, tLightList, tLightListIt> cLightListIterator;
+typedef cSTLIterator<cParticleSystem *, tParticleSystemList, tParticleSystemListIt> cParticleSystemIterator;
+typedef cSTLIterator<cSoundEntity *, tSoundEntityList, tSoundEntityListIt> cSoundEntityIterator;
+typedef cSTLIterator<cBeam *, tBeamList, tBeamListIt> cBeamIterator;
+typedef cSTLIterator<cGuiSetEntity *, tGuiSetEntityList, tGuiSetEntityListIt> cGuiSetEntityIterator;
+typedef cSTLIterator<cRopeEntity *, tRopeEntityList, tRopeEntityListIt> cRopeEntityIterator;
+typedef cSTLIterator<cFogArea *, tFogAreaList, tFogAreaListIt> cFogAreaIterator;
+typedef cSTLIterator<cDummyRenderable *, tDummyRenderableList, tDummyRenderableListIt> cDummyRenderableIterator;
 
 //------------------------------------------
 
 class iLight;
 
-typedef std::set<iLight*> tLightSet;
+typedef std::set<iLight *> tLightSet;
 typedef tLightSet::iterator tLightSetIt;
 
-typedef std::vector<iLight*> tLightVec;
+typedef std::vector<iLight *> tLightVec;
 typedef tLightVec::iterator tLightVecIt;
 
 

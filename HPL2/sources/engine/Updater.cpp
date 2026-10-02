@@ -37,7 +37,7 @@ cUpdater::~cUpdater()
 
 void cUpdater::BroadcastMessageToAll(eUpdateableMessage aMessage, double adX)
 {
-    for(tUpdateableListIt it = mlstGlobalUpdateableList.begin(); it!=mlstGlobalUpdateableList.end(); ++it)
+    for(tUpdateableListIt it = mlstGlobalUpdateableList.begin(); it != mlstGlobalUpdateableList.end(); ++it)
     {
         iUpdateable *pUpdateable = *it;
         pUpdateable->RunMessage(aMessage, adX);
@@ -48,7 +48,7 @@ void cUpdater::BroadcastMessageToAll(eUpdateableMessage aMessage, double adX)
     {
         tUpdateableList *pUpdateList = &contIt->second;
 
-        for(tUpdateableListIt it = pUpdateList->begin(); it!=pUpdateList->end(); ++it)
+        for(tUpdateableListIt it = pUpdateList->begin(); it != pUpdateList->end(); ++it)
         {
             iUpdateable *pUpdateable = *it;
             pUpdateable->RunMessage(aMessage, adX);
@@ -62,7 +62,7 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, double adX)
 {
     if(aMessage != eUpdateableMessage_Update)
     {
-        for(tUpdateableListIt it = mlstGlobalUpdateableList.begin(); it!=mlstGlobalUpdateableList.end(); ++it)
+        for(tUpdateableListIt it = mlstGlobalUpdateableList.begin(); it != mlstGlobalUpdateableList.end(); ++it)
         {
             iUpdateable *pUpdateable = *it;
             pUpdateable->RunMessage(aMessage, adX);
@@ -71,7 +71,7 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, double adX)
         if(mpCurrentUpdates)
         {
             tUpdateableList *pCurrentUpdateContainer = mpCurrentUpdates;
-            for(tUpdateableListIt it = mpCurrentUpdates->begin(); it!=mpCurrentUpdates->end(); ++it)
+            for(tUpdateableListIt it = mpCurrentUpdates->begin(); it != mpCurrentUpdates->end(); ++it)
             {
                 iUpdateable *pUpdateable = *it;
                 pUpdateable->RunMessage(aMessage, adX);
@@ -86,13 +86,13 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, double adX)
     }
     else
     {
-        for(tUpdateableListIt it = mlstGlobalUpdateableList.begin(); it!=mlstGlobalUpdateableList.end(); ++it)
+        for(tUpdateableListIt it = mlstGlobalUpdateableList.begin(); it != mlstGlobalUpdateableList.end(); ++it)
         {
             iUpdateable *pUpdateable = *it;
             //Log("pUpdateable %d, ", pUpdateable);
             //Log("'%s'\n", pUpdateable->GetName().c_str());
 
-            START_TIMING_EX(pUpdateable->GetName().c_str(),game)
+            START_TIMING_EX(pUpdateable->GetName().c_str(), game)
             pUpdateable->RunMessage(aMessage, adX);
             STOP_TIMING(game)
         }
@@ -100,13 +100,13 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, double adX)
         if(mpCurrentUpdates)
         {
             tUpdateableList *pCurrentUpdateContainer = mpCurrentUpdates;
-            for(tUpdateableListIt it = mpCurrentUpdates->begin(); it!=mpCurrentUpdates->end(); ++it)
+            for(tUpdateableListIt it = mpCurrentUpdates->begin(); it != mpCurrentUpdates->end(); ++it)
             {
                 iUpdateable *pUpdateable = *it;
                 //Log("pUpdateable %d, ", pUpdateable);
                 //Log("'%s'\n", pUpdateable->GetName().c_str());
 
-                START_TIMING_EX(pUpdateable->GetName().c_str(),game)
+                START_TIMING_EX(pUpdateable->GetName().c_str(), game)
                 pUpdateable->RunMessage(aMessage, adX);
                 STOP_TIMING(game)
 
@@ -155,7 +155,7 @@ bool cUpdater::SetContainer(tString asContainer)
     // If was a previous container, send leave message
     if(mpCurrentUpdates)
     {
-        for(tUpdateableListIt it = mpCurrentUpdates->begin(); it!=mpCurrentUpdates->end(); ++it)
+        for(tUpdateableListIt it = mpCurrentUpdates->begin(); it != mpCurrentUpdates->end(); ++it)
         {
             iUpdateable *pUpdateable = *it;
             pUpdateable->OnLeaveContainer(asContainer);
@@ -166,7 +166,7 @@ bool cUpdater::SetContainer(tString asContainer)
 
     /////////////////////////////////
     // Send enter message
-    for(tUpdateableListIt it = mpCurrentUpdates->begin(); it!=mpCurrentUpdates->end(); ++it)
+    for(tUpdateableListIt it = mpCurrentUpdates->begin(); it != mpCurrentUpdates->end(); ++it)
     {
         iUpdateable *pUpdateable = *it;
         pUpdateable->OnEnterContainer(sOldContainer);
@@ -179,7 +179,7 @@ bool cUpdater::SetContainer(tString asContainer)
 
 tString cUpdater::GetCurrentContainerName()
 {
-    if(mpCurrentUpdates==NULL)
+    if(mpCurrentUpdates == NULL)
     {
         return "";
     }
@@ -205,7 +205,7 @@ bool cUpdater::AddContainer(tString asName)
 
 bool cUpdater::AddUpdate(tString asContainer, iUpdateable* apUpdate)
 {
-    if(apUpdate==NULL)
+    if(apUpdate == NULL)
     {
         Error("Couldn't add NULL updatable!");
         return false;

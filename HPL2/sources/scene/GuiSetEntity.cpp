@@ -12,7 +12,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cGuiSetEntity::cGuiSetEntity(const tString asName,cGuiSet *apSet) :
+cGuiSetEntity::cGuiSetEntity(const tString asName, cGuiSet *apSet) :
     iRenderable(asName)
 {
     mpGuiSet = apSet;
@@ -42,7 +42,7 @@ void cGuiSetEntity::SetGuiSet(cGuiSet *apSet)
 
 //-----------------------------------------------------------------------
 
-cMatrixf*  cGuiSetEntity::GetModelMatrix(cFrustum *apFrustum)
+cMatrixf  *cGuiSetEntity::GetModelMatrix(cFrustum *apFrustum)
 {
     m_mtxTemp = GetWorldMatrix();
     return &m_mtxTemp;

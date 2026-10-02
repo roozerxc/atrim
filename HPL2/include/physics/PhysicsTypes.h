@@ -59,7 +59,7 @@ typedef tFlag tPhysicsConnectionFlag;
 
 class iVerletParticleContainer;
 
-typedef std::list<iVerletParticleContainer*> tVerletParticleContainerList;
+typedef std::list<iVerletParticleContainer *> tVerletParticleContainerList;
 typedef tVerletParticleContainerList::iterator tVerletParticleContainerListIt;
 
 
@@ -86,7 +86,7 @@ public:
     {
         return true;
     }
-    virtual bool OnIntersect(iPhysicsBody *pBody,cPhysicsRayParams *apParams)=0;
+    virtual bool OnIntersect(iPhysicsBody *pBody, cPhysicsRayParams *apParams) = 0;
 };
 
 //----------------------------------------------------
@@ -97,7 +97,7 @@ class iPhysicsWorldCollisionCallback
 {
 public:
     virtual ~iPhysicsWorldCollisionCallback() {}
-    virtual void OnCollision(iPhysicsBody *apBody, cCollideData *apCollideData)=0;
+    virtual void OnCollision(iPhysicsBody *apBody, cCollideData *apCollideData) = 0;
 };
 
 

@@ -23,10 +23,10 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cWidgetWindow::cWidgetWindow(cGuiSet *apSet, cGuiSkin *apSkin, tWidgetWindowButtonFlag alFlags) : iWidget(eWidgetType_Window,apSet, apSkin)
+cWidgetWindow::cWidgetWindow(cGuiSet *apSet, cGuiSkin *apSkin, tWidgetWindowButtonFlag alFlags) : iWidget(eWidgetType_Window, apSet, apSkin)
 {
     mpPrevAttention = NULL;
-    mvRelMousePos =0;
+    mvRelMousePos = 0;
     mbMoving = false;
     mbStatic = false;
     mbFocused = false;
@@ -38,7 +38,7 @@ cWidgetWindow::cWidgetWindow(cGuiSet *apSet, cGuiSkin *apSkin, tWidgetWindowButt
 
     SetGlobalKeyPressListener(true);
 
-    for(int i=0; i<1; ++i)
+    for(int i = 0; i < 1; ++i)
     {
         mvButtons[i] = NULL;
     }
@@ -52,9 +52,9 @@ cWidgetWindow::~cWidgetWindow()
 {
     mpSet->RemoveWindow(this);
 
-    if(mpSet->IsDestroyingSet()==false)
+    if(mpSet->IsDestroyingSet() == false)
     {
-        for(int i=0; i<1; ++i) if(mvButtons[i])
+        for(int i = 0; i < 1; ++i) if(mvButtons[i])
             {
                 mpSet->DestroyWidget(mvButtons[i]);
             }
@@ -73,7 +73,7 @@ void cWidgetWindow::SetStatic(bool abX)
 {
     mbStatic = abX;
 
-    if(mbStatic==false)
+    if(mbStatic == false)
     {
         mbMoving = false;
     }
@@ -99,7 +99,7 @@ void cWidgetWindow::SetDrawLabel(bool abX)
 bool cWidgetWindow::ButtonPressed(iWidget* apWidget, const cGuiMessageData& aData)
 {
     int i;
-    for(i=0; i<1; ++i) if(mvButtons[i] == apWidget)
+    for(i = 0; i < 1; ++i) if(mvButtons[i] == apWidget)
         {
             break;
         }
@@ -122,7 +122,7 @@ bool cWidgetWindow::ButtonPressed(iWidget* apWidget, const cGuiMessageData& aDat
 
     return true;
 }
-kGuiCallbackDeclaredFuncEnd(cWidgetWindow,ButtonPressed)
+kGuiCallbackDeclaredFuncEnd(cWidgetWindow, ButtonPressed)
 
 //-----------------------------------------------------------------------
 
@@ -130,10 +130,10 @@ void cWidgetWindow::OnInit()
 {
     if(mlFlags & eWidgetWindowButtonFlag_ButtonClose)
     {
-        mvButtons[0] = mpSet->CreateWidgetButton(0,0,_W(""), this);
-        mvButtons[0]->SetImage(mpGfxButtonCross,false);
+        mvButtons[0] = mpSet->CreateWidgetButton(0, 0, _W(""), this);
+        mvButtons[0]->SetImage(mpGfxButtonCross, false);
         mvButtons[0]->SetSize(cVector2f(mfButtonSize));
-        mvButtons[0]->AddCallback(eGuiMessage_ButtonPressed,this,kGuiCallback(ButtonPressed));
+        mvButtons[0]->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(ButtonPressed));
 
         OnChangeSize();
     }
@@ -165,22 +165,22 @@ void cWidgetWindow::OnLoadGraphics()
 
     mfButtonSize = mpSkin->GetAttribute(eGuiSkinAttribute_WindowButtonSize).x;
 
-    mbDrawBordersOutside = (mpSkin->GetAttribute(eGuiSkinAttribute_WindowBordersOutside).x==1);
+    mbDrawBordersOutside = (mpSkin->GetAttribute(eGuiSkinAttribute_WindowBordersOutside).x == 1);
 }
 
 //-----------------------------------------------------------------------
 
 void cWidgetWindow::OnAttachChild(iWidget* apChild)
 {
-    if(apChild->GetType()==eWidgetType_MainMenu)
+    if(apChild->GetType() == eWidgetType_MainMenu)
     {
         ////////////////////////////////
         // Calc label size
         cVector2f vLabelSize;
         vLabelSize.x = mvSize.x - (mvGfxCorners[0]->GetActiveSize().x + mvGfxCorners[1]->GetActiveSize().x);
-        vLabelSize.y = mpLabelFont->mvSize.y + mvLabelTextOffset.y*2;
+        vLabelSize.y = mpLabelFont->mvSize.y + mvLabelTextOffset.y * 2;
 
-        apChild->SetPosition(cVector3f(0,vLabelSize.y+3,0.1f));
+        apChild->SetPosition(cVector3f(0, vLabelSize.y + 3, 0.1f));
     }
 }
 
@@ -190,7 +190,7 @@ void cWidgetWindow::OnChangeSize()
 {
     if(mvButtons[0])
     {
-        mvButtons[0]->SetPosition(cVector3f(mvSize.x - mfButtonSize - 5,5,0.2f));
+        mvButtons[0]->SetPosition(cVector3f(mvSize.x - mfButtonSize - 5, 5, 0.2f));
     }
 }
 
@@ -202,23 +202,23 @@ void cWidgetWindow::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
     // Calc label size
     cVector2f vLabelSize;
     vLabelSize.x = mvSize.x - (mvGfxCorners[0]->GetActiveSize().x + mvGfxCorners[1]->GetActiveSize().x);
-    vLabelSize.y = mpLabelFont->mvSize.y + mvLabelTextOffset.y*2;
+    vLabelSize.y = mpLabelFont->mvSize.y + mvLabelTextOffset.y * 2;
 
     ////////////////////////////////
     // Label
     if(mbDrawLabel)
     {
-        cColor col = mbFocused? cColor(1,1) : cColor(0.6f,0.3f);
-        mpSet->DrawGfx(    mpGfxLabel,GetGlobalPosition() +
-                           cVector3f(mvGfxCorners[0]->GetActiveSize().x,mvGfxCorners[0]->GetActiveSize().y,0.2f),
+        cColor col = mbFocused ? cColor(1, 1) : cColor(0.6f, 0.3f);
+        mpSet->DrawGfx(    mpGfxLabel, GetGlobalPosition() +
+                           cVector3f(mvGfxCorners[0]->GetActiveSize().x, mvGfxCorners[0]->GetActiveSize().y, 0.2f),
                            vLabelSize, col);
     }
 
     ////////////////////////////////
     // Label text
-    DrawSkinText(    msText,eGuiSkinFont_WindowLabel,GetGlobalPosition()+
-                     cVector3f(    mvGfxCorners[0]->GetActiveSize().x+mvLabelTextOffset.x,
-                                   mvGfxCorners[0]->GetActiveSize().y+mvLabelTextOffset.y,0.4f));
+    DrawSkinText(    msText, eGuiSkinFont_WindowLabel, GetGlobalPosition() +
+                     cVector3f(    mvGfxCorners[0]->GetActiveSize().x + mvLabelTextOffset.x,
+                                   mvGfxCorners[0]->GetActiveSize().y + mvLabelTextOffset.y, 0.4f));
 
     ////////////////////////////////
     // Borders and background
@@ -231,7 +231,7 @@ bool cWidgetWindow::OnMouseMove(const cGuiMessageData& aData)
 {
     if(mbMoving)
     {
-        SetGlobalPosition(mvRelMousePos + cVector3f(aData.mvPos.x, aData.mvPos.y,0));
+        SetGlobalPosition(mvRelMousePos + cVector3f(aData.mvPos.x, aData.mvPos.y, 0));
     }
     return true;
 }
@@ -249,13 +249,13 @@ bool cWidgetWindow::OnMouseDown(const cGuiMessageData& aData)
     // Calculate label rectangle
     cRect2f labelRect;
     labelRect.w = mvSize.x - (mvGfxCorners[0]->GetActiveSize().x + mvGfxCorners[1]->GetActiveSize().x);
-    labelRect.h = mpLabelFont->mvSize.y + mvLabelTextOffset.y*2;
+    labelRect.h = mpLabelFont->mvSize.y + mvLabelTextOffset.y * 2;
     labelRect.x = GetGlobalPosition().x + mvGfxCorners[0]->GetActiveSize().x;
     labelRect.y = GetGlobalPosition().y + mvGfxCorners[0]->GetActiveSize().y;
 
     ////////////////////////////////
     // Check for collision
-    if(cMath::CheckPointInRectIntersection(aData.mvPos,labelRect) && aData.mlVal & eGuiMouseButton_Left)
+    if(cMath::CheckPointInRectIntersection(aData.mvPos, labelRect) && aData.mlVal & eGuiMouseButton_Left)
     {
         mbMoving = true;
         mpPrevAttention = mpSet->GetAttentionWidget();
@@ -299,10 +299,10 @@ bool cWidgetWindow::OnMouseLeave(const cGuiMessageData& aData)
 
     if(mbMoving)
     {
-        SetGlobalPosition(mvRelMousePos + cVector3f(aData.mvPos.x, aData.mvPos.y,0));
+        SetGlobalPosition(mvRelMousePos + cVector3f(aData.mvPos.x, aData.mvPos.y, 0));
 
         //Check so that mouse is not outside of clip area.
-        if(PointIsInside(aData.mvPos, false)==false)
+        if(PointIsInside(aData.mvPos, false) == false)
         {
             SetGlobalPosition(vLastGlobal);
             mbMoving = false;
@@ -316,12 +316,12 @@ bool cWidgetWindow::OnMouseLeave(const cGuiMessageData& aData)
 
 bool cWidgetWindow::OnKeyPress(const cGuiMessageData& aData)
 {
-    if(mbFocused==false || mbCloseOnEscapeKey==false)
+    if(mbFocused == false || mbCloseOnEscapeKey == false)
     {
         return false;
     }
 
-    if(aData.mKeyPress.mKey==eKey_Escape && aData.mKeyPress.mlModifier==eKeyModifier_None)
+    if(aData.mKeyPress.mKey == eKey_Escape && aData.mKeyPress.mlModifier == eKeyModifier_None)
     {
         return ProcessMessage(eGuiMessage_WindowClose, aData);
     }
@@ -365,7 +365,7 @@ void cWidgetWindow::OnChildGotFocus(iWidget* apChild, const cGuiMessageData& aDa
 void cWidgetWindow::OnChildLostFocus(iWidget* apChild, const cGuiMessageData& aData)
 {
     iWidget* pWidget = mpSet->GetFocusedWidget();
-    if(pWidget==NULL || IsConnectedTo(pWidget,false)==false && pWidget->IsConnectedTo(this, false)==false)
+    if(pWidget == NULL || IsConnectedTo(pWidget, false) == false && pWidget->IsConnectedTo(this, false) == false)
     {
         mbFocused = false;
     }

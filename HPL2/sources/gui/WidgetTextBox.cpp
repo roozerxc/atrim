@@ -27,7 +27,7 @@ int cWidgetTextBox::mlDefaultDecimals = 3;
 
 //-----------------------------------------------------------------------
 
-cWidgetTextBox::cWidgetTextBox(cGuiSet *apSet, cGuiSkin *apSkin, eWidgetTextBoxInputType aType) : iWidget(eWidgetType_TextBox,apSet, apSkin)
+cWidgetTextBox::cWidgetTextBox(cGuiSet *apSet, cGuiSkin *apSkin, eWidgetTextBoxInputType aType) : iWidget(eWidgetType_TextBox, apSet, apSkin)
 {
     mvButtons[0] = NULL;
     mvButtons[1] = NULL;
@@ -42,15 +42,15 @@ cWidgetTextBox::cWidgetTextBox(cGuiSet *apSet, cGuiSkin *apSkin, eWidgetTextBoxI
     mlMarkerCharPos = -1;
     mlSelectedTextEnd = -1;
 
-    mlFirstVisibleChar =0;
-    mlVisibleCharSize =0;
+    mlFirstVisibleChar = 0;
+    mlVisibleCharSize = 0;
 
-    mfTextMaxSize =0;
-    mfMaxTextSizeNeg =0;
+    mfTextMaxSize = 0;
+    mfMaxTextSizeNeg = 0;
 
     mlMaxCharacters = -1;
 
-    mlVisibleCharSize =0;
+    mlVisibleCharSize = 0;
 
     mbPressed = false;
 
@@ -84,9 +84,9 @@ cWidgetTextBox::cWidgetTextBox(cGuiSet *apSet, cGuiSkin *apSkin, eWidgetTextBoxI
 
 cWidgetTextBox::~cWidgetTextBox()
 {
-    if(mpSet->IsDestroyingSet()==false)
+    if(mpSet->IsDestroyingSet() == false)
     {
-        for(int i=0; i<2; ++i)
+        for(int i = 0; i < 2; ++i)
             if(mvButtons[i])
             {
                 mpSet->DestroyWidget(mvButtons[i]);
@@ -119,17 +119,17 @@ void cWidgetTextBox::SetMaxTextLength(int alLength)
 
     mlMaxCharacters = alLength;
 
-    if(mlMaxCharacters >=0 && (int)msText.size() > mlMaxCharacters)
+    if(mlMaxCharacters >= 0 && (int)msText.size() > mlMaxCharacters)
     {
-        SetText(cString::SubW(msText,0,mlMaxCharacters));
+        SetText(cString::SubW(msText, 0, mlMaxCharacters));
 
         if(mlSelectedTextEnd >= mlMaxCharacters)
         {
-            mlSelectedTextEnd = mlMaxCharacters-1;
+            mlSelectedTextEnd = mlMaxCharacters - 1;
         }
         if(mlMarkerCharPos >= mlMaxCharacters)
         {
-            mlMarkerCharPos = mlMaxCharacters-1;
+            mlMarkerCharPos = mlMaxCharacters - 1;
         }
 
         OnChangeText();
@@ -142,22 +142,22 @@ void cWidgetTextBox::SetSelectedText(int alStart, int alCount)
 {
     int lTextLen = (int)msText.length();
 
-    if(alStart<0)
+    if(alStart < 0)
     {
         alStart = 0;
     }
-    if(alStart>lTextLen)
+    if(alStart > lTextLen)
     {
         alStart = lTextLen;
     }
-    mlSelectedTextEnd=alStart;
+    mlSelectedTextEnd = alStart;
 
-    if(alCount==-1)
+    if(alCount == -1)
     {
-        alCount = lTextLen-mlSelectedTextEnd;
+        alCount = lTextLen - mlSelectedTextEnd;
     }
 
-    SetMarkerPos(mlSelectedTextEnd+alCount);
+    SetMarkerPos(mlSelectedTextEnd + alCount);
 }
 
 //-----------------------------------------------------------------------
@@ -194,7 +194,7 @@ void cWidgetTextBox::SetCanEdit(bool abX)
         mpPointerGfx = mpSkin->GetGfx(eGuiSkinGfx_PointerNormal);
     }
 
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         cWidgetButton* pButton = mvButtons[i];
         if(pButton)
@@ -209,21 +209,21 @@ void cWidgetTextBox::SetCanEdit(bool abX)
 
 void cWidgetTextBox::SetNumericValue(float afX)
 {
-    if(mInputType!=eWidgetTextBoxInputType_Numeric)
+    if(mInputType != eWidgetTextBoxInputType_Numeric)
     {
         return;
     }
 
-    if(mbHasLowerBound && afX<mfLowerBound)
+    if(mbHasLowerBound && afX < mfLowerBound)
     {
         afX = mfLowerBound;
     }
-    if(mbHasUpperBound && afX>mfUpperBound)
+    if(mbHasUpperBound && afX > mfUpperBound)
     {
         afX = mfUpperBound;
     }
 
-    if(mfNumericValue==afX)
+    if(mfNumericValue == afX)
     {
         return;
     }
@@ -271,7 +271,7 @@ void cWidgetTextBox::SetUpperBound(bool abX, float afValue)
 
 int cWidgetTextBox::GetDecimals()
 {
-    if(mlDecimals<0)
+    if(mlDecimals < 0)
     {
         return mlDefaultDecimals;
     }
@@ -286,7 +286,7 @@ void cWidgetTextBox::SetIllegalChars(const tWString &asIllegalChars)
     msIllegalChars = asIllegalChars;
 }
 
-const tWString& cWidgetTextBox::GetIllegalChars()
+const tWString &cWidgetTextBox::GetIllegalChars()
 {
     return msIllegalChars;
 }
@@ -336,28 +336,28 @@ kGuiCallbackDeclaredFuncEnd(cWidgetTextBox, Widget_OnValueDown);
 
 bool cWidgetTextBox::ButtonPressed(iWidget* apWidget, const cGuiMessageData& aData)
 {
-    if(IsEnabled()==false)
+    if(IsEnabled() == false)
     {
         return false;
     }
 
-    float fAdd=0;
+    float fAdd = 0;
 
-    if(apWidget==mvButtons[0])
+    if(apWidget == mvButtons[0])
     {
         fAdd = mfNumericAdd;
     }
-    else if(apWidget==mvButtons[1])
+    else if(apWidget == mvButtons[1])
     {
         fAdd = -mfNumericAdd;
     }
 
-    if(fAdd==0)
+    if(fAdd == 0)
     {
         return true;
     }
 
-    SetNumericValue(GetNumericValue()+fAdd);
+    SetNumericValue(GetNumericValue() + fAdd);
 
     return OnEnter(aData);
 }
@@ -368,18 +368,18 @@ kGuiCallbackDeclaredFuncEnd(cWidgetTextBox, ButtonPressed);
 int cWidgetTextBox::GetLastCharInSize(int alStartPos, float afMaxSize, float afLengthAdd)
 {
     int lCharPos = (int)msText.size();
-    float fLength =0;
+    float fLength = 0;
     int lFirst = mpDefaultFontType->GetFirstChar();
     int lLast = mpDefaultFontType->GetLastChar();
-    for(int i=alStartPos; i< (int)msText.size(); ++i)
+    for(int i = alStartPos; i < (int)msText.size(); ++i)
     {
-        if(i < lFirst || i >lLast)
+        if(i < lFirst || i > lLast)
         {
             continue;
         }
 
         cGlyph* pGlyph = mpDefaultFontType->GetGlyph(msText[i] - lFirst);
-        if(pGlyph==NULL)
+        if(pGlyph == NULL)
         {
             continue;
         }
@@ -400,18 +400,18 @@ int cWidgetTextBox::GetLastCharInSize(int alStartPos, float afMaxSize, float afL
 int cWidgetTextBox::GetFirstCharInSize(int alStartPos, float afMaxSize, float afLengthAdd)
 {
     int lCharPos = 0;
-    float fLength =0;
+    float fLength = 0;
     int lFirst = mpDefaultFontType->GetFirstChar();
     int lLast = mpDefaultFontType->GetLastChar();
-    for(int i=alStartPos; i>=0 ; --i)
+    for(int i = alStartPos; i >= 0 ; --i)
     {
-        if(i < lFirst || i >lLast)
+        if(i < lFirst || i > lLast)
         {
             continue;
         }
 
         cGlyph* pGlyph = mpDefaultFontType->GetGlyph(msText[i] - lFirst);
-        if(pGlyph==NULL)
+        if(pGlyph == NULL)
         {
             continue;
         }
@@ -431,7 +431,7 @@ int cWidgetTextBox::GetFirstCharInSize(int alStartPos, float afMaxSize, float af
 
 bool cWidgetTextBox::WidgetConsiderSomeCharsIllegal()
 {
-    if(msIllegalChars.length()>0)
+    if(msIllegalChars.length() > 0)
     {
         return true;
     }
@@ -444,7 +444,7 @@ bool cWidgetTextBox::WidgetConsiderSomeCharsIllegal()
 
 bool cWidgetTextBox::IsIllegalChar(wchar_t alChar)
 {
-    for(size_t i=0; i<msIllegalChars.length(); ++i)
+    for(size_t i = 0; i < msIllegalChars.length(); ++i)
     {
         if(msIllegalChars[i] == alChar)
         {
@@ -472,7 +472,7 @@ void cWidgetTextBox::SetTextUpdated()
 {
     mbChangedSinceLastEnter = true;
 
-    if(mInputType==eWidgetTextBoxInputType_Numeric)
+    if(mInputType == eWidgetTextBoxInputType_Numeric)
     {
         mbNumericValueUpdated = true;
     }
@@ -487,13 +487,13 @@ int cWidgetTextBox::WorldToCharPos(const cVector2f &avWorldPos)
                         mvGfxCorners[0]->GetActiveSize().x + 3;
 
     int lMarkerCharPos;
-    if(fTextPos >0)
+    if(fTextPos > 0)
     {
-        lMarkerCharPos = GetLastCharInSize(mlFirstVisibleChar,fTextPos,3.0f);
+        lMarkerCharPos = GetLastCharInSize(mlFirstVisibleChar, fTextPos, 3.0f);
     }
     else
     {
-        lMarkerCharPos =mlFirstVisibleChar;
+        lMarkerCharPos = mlFirstVisibleChar;
     }
 
     return lMarkerCharPos;
@@ -504,10 +504,10 @@ int cWidgetTextBox::WorldToCharPos(const cVector2f &avWorldPos)
 float cWidgetTextBox::CharToLocalPos(int alChar)
 {
     float fMarkerPos = -2;
-    if(alChar>0 && alChar - mlFirstVisibleChar >0)
+    if(alChar > 0 && alChar - mlFirstVisibleChar > 0)
     {
         fMarkerPos = mpDefaultFontType->GetLength(mvDefaultFontSize,
-                     cString::SubW(msText,mlFirstVisibleChar,alChar-mlFirstVisibleChar).c_str());
+                     cString::SubW(msText, mlFirstVisibleChar, alChar - mlFirstVisibleChar).c_str());
     }
     return fMarkerPos;
 }
@@ -519,19 +519,19 @@ void cWidgetTextBox::SetMarkerPos(int alPos)
     mlMarkerCharPos = alPos;
     if(mlMarkerCharPos < 0)
     {
-        mlMarkerCharPos =0;
+        mlMarkerCharPos = 0;
     }
-    if(mlMarkerCharPos > (int)msText.size() && msText.size()>0)
+    if(mlMarkerCharPos > (int)msText.size() && msText.size() > 0)
     {
-        mlMarkerCharPos =(int)msText.size();
+        mlMarkerCharPos = (int)msText.size();
     }
 
     if(mlMarkerCharPos > mlFirstVisibleChar + mlVisibleCharSize)
     {
-        mlFirstVisibleChar =    GetFirstCharInSize(mlMarkerCharPos,mfTextMaxSize,0)+1;
-        if(msText.size()<=1)
+        mlFirstVisibleChar =    GetFirstCharInSize(mlMarkerCharPos, mfTextMaxSize, 0) +1;
+        if(msText.size() <= 1)
         {
-            mlFirstVisibleChar =0;
+            mlFirstVisibleChar = 0;
         }
         OnChangeText();
     }
@@ -552,7 +552,7 @@ void cWidgetTextBox::OnChangeSize()
                   mvDefaultFontSize.y + 2 * 2;
 
     float fButtonWidth = 0;
-    if(mInputType==eWidgetTextBoxInputType_Numeric && mvButtons[0])
+    if(mInputType == eWidgetTextBoxInputType_Numeric && mvButtons[0])
     {
         fButtonWidth = mvButtons[0]->GetSize().x;
     }
@@ -573,20 +573,20 @@ void cWidgetTextBox::OnChangeText()
         mlVisibleCharSize = 0;
     }
     else
-        mlVisibleCharSize = GetLastCharInSize(    mlFirstVisibleChar,mfTextMaxSize,0) -
+        mlVisibleCharSize = GetLastCharInSize(    mlFirstVisibleChar, mfTextMaxSize, 0) -
                             mlFirstVisibleChar;
 
-    if(mlMaxCharacters >=0 && (int)msText.size() > mlMaxCharacters)
+    if(mlMaxCharacters >= 0 && (int)msText.size() > mlMaxCharacters)
     {
-        SetText(cString::SubW(msText,0,mlMaxCharacters));
+        SetText(cString::SubW(msText, 0, mlMaxCharacters));
 
         if(mlSelectedTextEnd >= mlMaxCharacters)
         {
-            mlSelectedTextEnd = mlMaxCharacters-1;
+            mlSelectedTextEnd = mlMaxCharacters - 1;
         }
         if(mlMarkerCharPos >= mlMaxCharacters)
         {
-            mlMarkerCharPos = mlMaxCharacters-1;
+            mlMarkerCharPos = mlMaxCharacters - 1;
         }
     }
 
@@ -600,12 +600,12 @@ void cWidgetTextBox::OnChangeText()
 
 void cWidgetTextBox::OnInit()
 {
-    if(mInputType!=eWidgetTextBoxInputType_Numeric)
+    if(mInputType != eWidgetTextBoxInputType_Numeric)
     {
         return;
     }
 
-    if(mbShowButtons==false)
+    if(mbShowButtons == false)
     {
         return;
     }
@@ -613,13 +613,13 @@ void cWidgetTextBox::OnInit()
     AddCallback(eGuiMessage_TextBoxValueUp, this, kGuiCallback(Widget_OnValueUp));
     AddCallback(eGuiMessage_TextBoxValueDown, this, kGuiCallback(Widget_OnValueDown));
 
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
-        mvButtons[i] = mpSet->CreateWidgetButton(cVector3f(mvSize.x-10,1 + i*10.0f,0.1f), cVector2f(10), _W(""), this);
+        mvButtons[i] = mpSet->CreateWidgetButton(cVector3f(mvSize.x - 10, 1 + i * 10.0f, 0.1f), cVector2f(10), _W(""), this);
         mvButtons[i]->SetDefaultFontSize(12);
         mvButtons[i]->SetRepeatActive(true);
         mvButtons[i]->SetRepeatFreq(3);
-        mvButtons[i]->AddCallback(eGuiMessage_ButtonPressed,this,kGuiCallback(ButtonPressed));
+        mvButtons[i]->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(ButtonPressed));
     }
 
     mvButtons[0]->SetText(_W("+"));
@@ -658,29 +658,29 @@ void cWidgetTextBox::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
 {
     ////////////////////////////////
     // Text
-    cColor col = IsEnabled()? mDefaultFontColor : mpSkin->GetFont(eGuiSkinFont_Disabled)->mColor;
+    cColor col = IsEnabled() ? mDefaultFontColor : mpSkin->GetFont(eGuiSkinFont_Disabled)->mColor;
 
-    cVector3f vTextAdd = cVector3f(3,2,0.2f) + mvGfxCorners[0]->GetActiveSize();
-    DrawDefaultText(cString::SubW(msText,mlFirstVisibleChar,mlVisibleCharSize),
-                    GetGlobalPosition()+ vTextAdd,
-                    eFontAlign_Left,col);
+    cVector3f vTextAdd = cVector3f(3, 2, 0.2f) + mvGfxCorners[0]->GetActiveSize();
+    DrawDefaultText(cString::SubW(msText, mlFirstVisibleChar, mlVisibleCharSize),
+                    GetGlobalPosition() + vTextAdd,
+                    eFontAlign_Left, col);
 
     //Marker
-    if(mlMarkerCharPos >=0)
+    if(mlMarkerCharPos >= 0)
     {
         float fMarkerPos = CharToLocalPos(mlMarkerCharPos);
-        mpSet->DrawGfx(    mpGfxMarker,GetGlobalPosition() + vTextAdd + cVector3f(fMarkerPos,0,0.1f),
+        mpSet->DrawGfx(    mpGfxMarker, GetGlobalPosition() + vTextAdd + cVector3f(fMarkerPos, 0, 0.1f),
                            cVector2f(2, mvDefaultFontSize.y));
 
         //Selected text
-        if(mlSelectedTextEnd >=0)
+        if(mlSelectedTextEnd >= 0)
         {
             int lStart = mlMarkerCharPos < mlSelectedTextEnd ? mlMarkerCharPos : mlSelectedTextEnd;
             int lEnd = mlMarkerCharPos > mlSelectedTextEnd ? mlMarkerCharPos : mlSelectedTextEnd;
             int lSelectSize = lEnd - lStart;
 
             int lHighlightStart = mlFirstVisibleChar > lStart ? mlFirstVisibleChar : lStart;
-            int lHighlightEnd =  mlFirstVisibleChar+mlVisibleCharSize < lEnd ? mlFirstVisibleChar+mlVisibleCharSize : lEnd;
+            int lHighlightEnd =  mlFirstVisibleChar + mlVisibleCharSize < lEnd ? mlFirstVisibleChar + mlVisibleCharSize : lEnd;
             int lHighlightSize = lHighlightEnd - lHighlightStart;
 
             float fSelectEnd = CharToLocalPos(mlSelectedTextEnd);
@@ -688,9 +688,9 @@ void cWidgetTextBox::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
             float fPos = fSelectEnd < fMarkerPos ? fSelectEnd : fMarkerPos;
             float fEnd = fSelectEnd > fMarkerPos ? fSelectEnd : fMarkerPos;
 
-            if(fPos <0)
+            if(fPos < 0)
             {
-                fPos =0;
+                fPos = 0;
             }
             if(fEnd > mfTextMaxSize)
             {
@@ -700,11 +700,11 @@ void cWidgetTextBox::OnDraw(double adFixedDelta, cGuiClipRegion *apClipRegion)
             float fSize = fEnd - fPos;
 
             mpSet->DrawGfx( mpGfxSelectedTextBack, GetGlobalPosition() +
-                            vTextAdd + cVector3f(fPos,0,0.01f),
-                            cVector2f(fSize,mvDefaultFontSize.y));
+                            vTextAdd + cVector3f(fPos, 0, 0.01f),
+                            cVector2f(fSize, mvDefaultFontSize.y));
 
-            DrawDefaultTextHighlight(cString::SubW(msText,lHighlightStart,lHighlightSize),
-                                     GetGlobalPosition() + vTextAdd + cVector3f(fPos,0,0.02f),
+            DrawDefaultTextHighlight(cString::SubW(msText, lHighlightStart, lHighlightSize),
+                                     GetGlobalPosition() + vTextAdd + cVector3f(fPos, 0, 0.02f),
                                      eFontAlign_Left);
         }
     }
@@ -725,7 +725,7 @@ bool cWidgetTextBox::OnMouseMove(const cGuiMessageData& aData)
         int lPos = WorldToCharPos(aData.mvPos);
         if(lPos != mlMarkerCharPos)
         {
-            if(mlSelectedTextEnd==-1)
+            if(mlSelectedTextEnd == -1)
             {
                 mlSelectedTextEnd = mlMarkerCharPos;
             }
@@ -744,13 +744,13 @@ bool cWidgetTextBox::OnMouseDown(const cGuiMessageData& aData)
     {
         return false;
     }
-    if(mbCanEdit==false)
+    if(mbCanEdit == false)
     {
         return false;
     }
 
     SetMarkerPos(WorldToCharPos(aData.mvPos));
-    mlSelectedTextEnd=-1;
+    mlSelectedTextEnd = -1;
 
     mbPressed = true;
     mpPrevAttention = mpSet->GetAttentionWidget();
@@ -767,7 +767,7 @@ bool cWidgetTextBox::OnMouseUp(const cGuiMessageData& aData)
     {
         return true;
     }
-    if(mbCanEdit==false)
+    if(mbCanEdit == false)
     {
         return true;
     }
@@ -775,10 +775,10 @@ bool cWidgetTextBox::OnMouseUp(const cGuiMessageData& aData)
     if(mbGotFocusRecently)
     {
         int lPos = WorldToCharPos(aData.mvPos);
-        if(mlSelectedTextEnd==-1 || mlSelectedTextEnd==lPos)
+        if(mlSelectedTextEnd == -1 || mlSelectedTextEnd == lPos)
         {
             SetMarkerPos((int)msText.size());
-            mlSelectedTextEnd=0;
+            mlSelectedTextEnd = 0;
         }
 
         mbGotFocusRecently = false;
@@ -808,23 +808,23 @@ bool cWidgetTextBox::OnMouseDoubleClick(const cGuiMessageData& aData)
     {
         return true;
     }
-    if(mbCanEdit==false)
+    if(mbCanEdit == false)
     {
         return true;
     }
 
     SetMarkerPos(WorldToCharPos(aData.mvPos));
 
-    if(mlMarkerCharPos!=msText.size() && msText[mlMarkerCharPos] == _W(' '))
+    if(mlMarkerCharPos != msText.size() && msText[mlMarkerCharPos] == _W(' '))
     {
         return true;
     }
 
     /////////////////////////////
     //Get space to the right.
-    for(mlSelectedTextEnd=mlMarkerCharPos; mlSelectedTextEnd>0; --mlSelectedTextEnd)
+    for(mlSelectedTextEnd = mlMarkerCharPos; mlSelectedTextEnd > 0; --mlSelectedTextEnd)
     {
-        if(msText[mlSelectedTextEnd-1] == _W(' ') )
+        if(msText[mlSelectedTextEnd - 1] == _W(' ') )
         {
             break;
         }
@@ -832,13 +832,13 @@ bool cWidgetTextBox::OnMouseDoubleClick(const cGuiMessageData& aData)
 
     /////////////////////////////
     //Get space to the left
-    for(size_t i=mlMarkerCharPos; i<msText.size(); ++i)
+    for(size_t i = mlMarkerCharPos; i < msText.size(); ++i)
     {
-        if(msText[i] == _W(' ') || i==msText.size()-1)
+        if(msText[i] == _W(' ') || i == msText.size() - 1)
         {
-            if(i==(int)msText.size()-1)
+            if(i == (int)msText.size() - 1)
             {
-                SetMarkerPos((int)i+1);
+                SetMarkerPos((int)i + 1);
             }
             else
             {
@@ -912,11 +912,11 @@ bool cWidgetTextBox::OnLostFocus(const cGuiMessageData& aData)
 bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
 {
     // XXX = maybe does not have sense to capture keypresses if edit is disabled?
-    if(mbCanEdit==false)
+    if(mbCanEdit == false)
     {
         return false;
     }
-    if(mlMarkerCharPos <0)
+    if(mlMarkerCharPos < 0)
     {
         return false;
     }
@@ -956,9 +956,9 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
         // Copy
         else if(key == eKey_C)
         {
-            if(mlSelectedTextEnd >=0)
+            if(mlSelectedTextEnd >= 0)
             {
-                cPlatform::CopyTextToClipboard(cString::SubW(msText,lStart, lSelectSize));
+                cPlatform::CopyTextToClipboard(cString::SubW(msText, lStart, lSelectSize));
             }
 
             return true;
@@ -967,10 +967,10 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
         // Cut
         else if(key == eKey_X)
         {
-            if(mlSelectedTextEnd >=0)
+            if(mlSelectedTextEnd >= 0)
             {
-                cPlatform::CopyTextToClipboard(cString::SubW(msText,lStart, lSelectSize));
-                SetText(cString::SubW(msText,0,    lStart) + cString::SubW(msText,lEnd));
+                cPlatform::CopyTextToClipboard(cString::SubW(msText, lStart, lSelectSize));
+                SetText(cString::SubW(msText, 0,    lStart) + cString::SubW(msText, lEnd));
                 mlSelectedTextEnd = -1;
 
                 SetTextUpdated();
@@ -993,24 +993,24 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
             {
                 tWString sTempExtra = sExtra;
                 sExtra = _W("");
-                for(size_t i=0; i<sTempExtra.size(); ++i)
+                for(size_t i = 0; i < sTempExtra.size(); ++i)
                 {
-                    if(IsIllegalChar(sTempExtra[i])==false)
+                    if(IsIllegalChar(sTempExtra[i]) == false)
                     {
                         sExtra += sTempExtra[i];
                     }
                 }
             }
 
-            if(mlSelectedTextEnd <0)
+            if(mlSelectedTextEnd < 0)
             {
-                if(    mlMaxCharacters ==-1 ||
+                if(    mlMaxCharacters == -1 ||
                         (int)msText.size() + (int)sExtra.size() <= mlMaxCharacters)
                 {
-                    SetText(cString::SubW(msText,0,    mlMarkerCharPos)+ sExtra +
-                            cString::SubW(msText,mlMarkerCharPos) );
+                    SetText(cString::SubW(msText, 0,    mlMarkerCharPos) + sExtra +
+                            cString::SubW(msText, mlMarkerCharPos) );
 
-                    SetMarkerPos(mlMarkerCharPos+(int)sExtra.size());
+                    SetMarkerPos(mlMarkerCharPos + (int)sExtra.size());
                 }
             }
             else
@@ -1019,11 +1019,11 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
                         (int)sExtra.size() <= lSelectSize ||
                         (int)sExtra.size() + (int)msText.size() - lSelectSize <= mlMaxCharacters)
                 {
-                    SetText(cString::SubW(msText,0,    lStart) + sExtra +
-                            cString::SubW(msText,lEnd));
+                    SetText(cString::SubW(msText, 0,    lStart) + sExtra +
+                            cString::SubW(msText, lEnd));
 
                     mlSelectedTextEnd = -1;
-                    SetMarkerPos(lStart+(int)sExtra.size());
+                    SetMarkerPos(lStart + (int)sExtra.size());
                 }
             }
 
@@ -1038,29 +1038,29 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
     {
         if(mod & eKeyModifier_Shift)
         {
-            if(mlSelectedTextEnd==-1)
+            if(mlSelectedTextEnd == -1)
             {
                 mlSelectedTextEnd = mlMarkerCharPos;
             }
 
             if(key == eKey_Left)
             {
-                SetMarkerPos(mlMarkerCharPos-1);
+                SetMarkerPos(mlMarkerCharPos - 1);
             }
             else
             {
-                SetMarkerPos(mlMarkerCharPos+1);
+                SetMarkerPos(mlMarkerCharPos + 1);
             }
         }
         else
         {
             if(key == eKey_Left)
             {
-                SetMarkerPos(mlMarkerCharPos-1);
+                SetMarkerPos(mlMarkerCharPos - 1);
             }
             else
             {
-                SetMarkerPos(mlMarkerCharPos+1);
+                SetMarkerPos(mlMarkerCharPos + 1);
             }
 
             mlSelectedTextEnd = -1;
@@ -1072,12 +1072,12 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
     //Delete and backspace
     else if(key == eKey_Delete || key == eKey_BackSpace)
     {
-        if(mlSelectedTextEnd >=0)
+        if(mlSelectedTextEnd >= 0)
         {
             int lStart = mlMarkerCharPos < mlSelectedTextEnd ? mlMarkerCharPos : mlSelectedTextEnd;
             int lEnd = mlMarkerCharPos > mlSelectedTextEnd ? mlMarkerCharPos : mlSelectedTextEnd;
 
-            SetText(cString::SubW(msText,0,    lStart) + cString::SubW(msText,lEnd));
+            SetText(cString::SubW(msText, 0,    lStart) + cString::SubW(msText, lEnd));
 
             mlSelectedTextEnd = -1;
             SetMarkerPos(lStart);
@@ -1088,18 +1088,18 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
         {
             if(key == eKey_Delete)
             {
-                SetText(cString::SubW(msText,0,    mlMarkerCharPos)+
-                        cString::SubW(msText,mlMarkerCharPos+1));
+                SetText(cString::SubW(msText, 0,    mlMarkerCharPos) +
+                        cString::SubW(msText, mlMarkerCharPos + 1));
 
                 SetTextUpdated();
             }
             else
             {
-                if(mlMarkerCharPos!=0)
+                if(mlMarkerCharPos != 0)
                 {
-                    SetText(cString::SubW(msText,0,    mlMarkerCharPos-1)+
-                            cString::SubW(msText,mlMarkerCharPos));
-                    SetMarkerPos(mlMarkerCharPos-1);
+                    SetText(cString::SubW(msText, 0,    mlMarkerCharPos - 1) +
+                            cString::SubW(msText, mlMarkerCharPos));
+                    SetMarkerPos(mlMarkerCharPos - 1);
 
                     SetTextUpdated();
                 }
@@ -1114,7 +1114,7 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
     {
         if(mod & eKeyModifier_Shift)
         {
-            if(mlSelectedTextEnd==-1)
+            if(mlSelectedTextEnd == -1)
             {
                 mlSelectedTextEnd = mlMarkerCharPos;
             }
@@ -1134,7 +1134,7 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
     {
         if(mod & eKeyModifier_Shift)
         {
-            if(mlSelectedTextEnd==-1)
+            if(mlSelectedTextEnd == -1)
             {
                 mlSelectedTextEnd = mlMarkerCharPos;
             }
@@ -1175,28 +1175,28 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
                     (unicode == _W('.') || unicode == _W('-')) &&
                     mpDefaultFontType->GetGlyph(unicode - lFirstFontChar))
             {
-                if(mlSelectedTextEnd<0)
+                if(mlSelectedTextEnd < 0)
                 {
-                    if(unicode==_W('-'))
+                    if(unicode == _W('-'))
                     {
-                        if(mlMarkerCharPos==0)
+                        if(mlMarkerCharPos == 0)
                         {
-                            if(msText[0]!=_W('-'))
+                            if(msText[0] != _W('-'))
                             {
-                                SetText(unicode + cString::SubW(msText,0));
-                                SetMarkerPos(mlMarkerCharPos+1);
+                                SetText(unicode + cString::SubW(msText, 0));
+                                SetMarkerPos(mlMarkerCharPos + 1);
 
                                 SetTextUpdated();
                             }
                         }
                     }
-                    else if(unicode==_W('.'))
+                    else if(unicode == _W('.'))
                     {
-                        if(mlDecimals!=0 && cString::CountCharsInStringW(msText,_W("."))==0)
+                        if(mlDecimals != 0 && cString::CountCharsInStringW(msText, _W(".")) == 0)
                         {
-                            SetText(cString::SubW(msText,0,mlMarkerCharPos) + unicode +
-                                    cString::SubW(msText,mlMarkerCharPos) );
-                            SetMarkerPos(mlMarkerCharPos+1);
+                            SetText(cString::SubW(msText, 0, mlMarkerCharPos) + unicode +
+                                    cString::SubW(msText, mlMarkerCharPos) );
+                            SetMarkerPos(mlMarkerCharPos + 1);
 
                             SetTextUpdated();
                         }
@@ -1204,9 +1204,9 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
                     else
                     {
 
-                        SetText(cString::SubW(msText,0,mlMarkerCharPos) + unicode +
-                                cString::SubW(msText,mlMarkerCharPos) );
-                        SetMarkerPos(mlMarkerCharPos+1);
+                        SetText(cString::SubW(msText, 0, mlMarkerCharPos) + unicode +
+                                cString::SubW(msText, mlMarkerCharPos) );
+                        SetMarkerPos(mlMarkerCharPos + 1);
 
                         SetTextUpdated();
                     }
@@ -1216,41 +1216,41 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
                     int lStart = mlMarkerCharPos < mlSelectedTextEnd ? mlMarkerCharPos : mlSelectedTextEnd;
                     int lEnd = mlMarkerCharPos > mlSelectedTextEnd ? mlMarkerCharPos : mlSelectedTextEnd;
 
-                    if(unicode==_W('-'))
+                    if(unicode == _W('-'))
                     {
-                        if(lStart==0)
+                        if(lStart == 0)
                         {
-                            SetText(unicode + cString::SubW(msText,lEnd));
+                            SetText(unicode + cString::SubW(msText, lEnd));
 
                             SetTextUpdated();
                         }
                     }
-                    else if(unicode==_W('.'))
+                    else if(unicode == _W('.'))
                     {
-                        int lNumDots = cString::CountCharsInStringW(msText,_W("."));
-                        int lDotPos = cString::GetLastStringPosW(msText,_W("."));
+                        int lNumDots = cString::CountCharsInStringW(msText, _W("."));
+                        int lDotPos = cString::GetLastStringPosW(msText, _W("."));
 
-                        if(    lNumDots==0 ||
-                                lNumDots==1 &&
-                                lDotPos >=lStart && lDotPos <= lEnd)
+                        if(    lNumDots == 0 ||
+                                lNumDots == 1 &&
+                                lDotPos >= lStart && lDotPos <= lEnd)
                         {
-                            SetText(cString::SubW(msText,0,lStart) + unicode +
-                                    cString::SubW(msText,lEnd));
+                            SetText(cString::SubW(msText, 0, lStart) + unicode +
+                                    cString::SubW(msText, lEnd));
 
                             SetTextUpdated();
                         }
                     }
                     else
                     {
-                        SetText(cString::SubW(msText,0,lStart) + unicode +
-                                cString::SubW(msText,lEnd));
+                        SetText(cString::SubW(msText, 0, lStart) + unicode +
+                                cString::SubW(msText, lEnd));
 
                         SetTextUpdated();
                     }
 
                     mlSelectedTextEnd = -1;
 
-                    SetMarkerPos(lStart+1);
+                    SetMarkerPos(lStart + 1);
                 }
             }
         }
@@ -1261,14 +1261,14 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
             if( unicode >= lFirstFontChar && unicode <= lLastFontChar &&
                     mpDefaultFontType->GetGlyph(unicode - lFirstFontChar))
             {
-                if(    mlSelectedTextEnd <0)
+                if(    mlSelectedTextEnd < 0)
                 {
-                    if(mlMaxCharacters ==-1 || (int)msText.size() < mlMaxCharacters)
+                    if(mlMaxCharacters == -1 || (int)msText.size() < mlMaxCharacters)
                     {
-                        SetText(cString::SubW(msText,0,    mlMarkerCharPos)+ unicode +
-                                cString::SubW(msText,mlMarkerCharPos) );
+                        SetText(cString::SubW(msText, 0,    mlMarkerCharPos) + unicode +
+                                cString::SubW(msText, mlMarkerCharPos) );
 
-                        SetMarkerPos(mlMarkerCharPos+1);
+                        SetMarkerPos(mlMarkerCharPos + 1);
 
                         SetTextUpdated();
                     }
@@ -1278,12 +1278,12 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
                     int lStart = mlMarkerCharPos < mlSelectedTextEnd ? mlMarkerCharPos : mlSelectedTextEnd;
                     int lEnd = mlMarkerCharPos > mlSelectedTextEnd ? mlMarkerCharPos : mlSelectedTextEnd;
 
-                    SetText(cString::SubW(msText,0,    lStart) + unicode +
-                            cString::SubW(msText,lEnd));
+                    SetText(cString::SubW(msText, 0,    lStart) + unicode +
+                            cString::SubW(msText, lEnd));
 
                     mlSelectedTextEnd = -1;
 
-                    SetMarkerPos(lStart+1);
+                    SetMarkerPos(lStart + 1);
 
                     SetTextUpdated();
                 }
@@ -1301,12 +1301,12 @@ bool cWidgetTextBox::OnKeyPress(const cGuiMessageData& aData)
 bool cWidgetTextBox::OnUIButtonPress(const cGuiMessageData& aData)
 {
     // XXX = maybe does not have sense to capture keypresses if edit is disabled?
-    if(mbCanEdit==false)
+    if(mbCanEdit == false)
     {
         return false;
     }
 
-    if(HasFocus() && aData.mlVal==eUIButton_Primary)
+    if(HasFocus() && aData.mlVal == eUIButton_Primary)
     {
         mlSelectedTextEnd = 0;
         SetMarkerPos((int)msText.length());
@@ -1322,7 +1322,7 @@ bool cWidgetTextBox::OnUIButtonPress(const cGuiMessageData& aData)
 
 bool cWidgetTextBox::OnEnter(const cGuiMessageData& aData)
 {
-    if(mInputType==eWidgetTextBoxInputType_Numeric)
+    if(mInputType == eWidgetTextBoxInputType_Numeric)
     {
         SetText(cString::ToStringW(GetNumericValue(), GetDecimals(), true));
         mbNumericValueUpdated = false;

@@ -12,7 +12,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-iGpuProgram::iGpuProgram(const tString& asName,eGpuProgramFormat aProgramFormat)
+iGpuProgram::iGpuProgram(const tString& asName, eGpuProgramFormat aProgramFormat)
 {
     msName = asName;
 
@@ -22,7 +22,7 @@ iGpuProgram::iGpuProgram(const tString& asName,eGpuProgramFormat aProgramFormat)
 
     mbAutoDestroyShaders = true;
 
-    for(int i=0; i<2; ++i)
+    for(int i = 0; i < 2; ++i)
     {
         mpShader[i] = NULL;
     }
@@ -34,7 +34,7 @@ iGpuProgram::~iGpuProgram()
 {
     if(mbAutoDestroyShaders && mpResources)
     {
-        for(int i=0; i<2; ++i)
+        for(int i = 0; i < 2; ++i)
         {
             if(mpShader[i])
             {

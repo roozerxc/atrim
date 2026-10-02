@@ -16,7 +16,7 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-cScriptManager::cScriptManager(cSystem* apSystem,cResources *apResources)
+cScriptManager::cScriptManager(cSystem* apSystem, cResources *apResources)
     : iResourceManager(apResources->GetFileSearcher(), apResources->GetLowLevel(),
                        apResources->GetLowLevelSystem())
 {
@@ -38,7 +38,7 @@ cScriptManager::~cScriptManager()
 
 //-----------------------------------------------------------------------
 
-iScript* cScriptManager::CreateScript(const tString& asName, tString *apCompileMessages)
+iScript *cScriptManager::CreateScript(const tString& asName, tString *apCompileMessages)
 {
     tWString sPath;
     iScript* pScript;
@@ -48,20 +48,20 @@ iScript* cScriptManager::CreateScript(const tString& asName, tString *apCompileM
 
     if(cString::GetFileExt(asName) != "chps")
     {
-        asNewName = cString::SetFileExt(asName,"hps");
+        asNewName = cString::SetFileExt(asName, "hps");
     }
     else
     {
-        asNewName = cString::SetFileExt(asName,"chps");
+        asNewName = cString::SetFileExt(asName, "chps");
     }
 
-    pScript = static_cast<iScript*>(this->FindLoadedResource(asNewName,sPath));
+    pScript = static_cast<iScript *>(this->FindLoadedResource(asNewName, sPath));
 
-    if(pScript==NULL && sPath!=_W(""))
+    if(pScript == NULL && sPath != _W(""))
     {
         pScript = mpSystem->GetLowLevel()->CreateScript(asNewName);
 
-        if(pScript->CreateFromFile(sPath, apCompileMessages)==false)
+        if(pScript->CreateFromFile(sPath, apCompileMessages) == false)
         {
             hplDelete(pScript);
             EndLoad();
@@ -77,7 +77,7 @@ iScript* cScriptManager::CreateScript(const tString& asName, tString *apCompileM
     }
     else
     {
-        Error("Couldn't create script '%s'\n",asNewName.c_str());
+        Error("Couldn't create script '%s'\n", asNewName.c_str());
     }
 
     EndLoad();
@@ -96,7 +96,7 @@ void cScriptManager::Destroy(iResourceBase* apResource)
 {
     apResource->DecUserCount();
 
-    if(apResource->HasUsers()==false)
+    if(apResource->HasUsers() == false)
     {
         RemoveResource(apResource);
         hplDelete(apResource);

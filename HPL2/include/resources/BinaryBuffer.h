@@ -54,7 +54,7 @@ public:
     {
         msFile = asFile;
     }
-    const tWString& GetFileLocation()
+    const tWString &GetFileLocation()
     {
         return msFile;
     }
@@ -79,15 +79,15 @@ public:
         return mlReservedDataSize;
     }
 
-    char* GetDataPointer()
+    char *GetDataPointer()
     {
         return mpData;
     }
-    char* GetDataPointerAtPos(size_t alPos)
+    char *GetDataPointerAtPos(size_t alPos)
     {
         return &mpData[alPos];
     }
-    char* GetDataPointerAtCurrentPos()
+    char *GetDataPointerAtCurrentPos()
     {
         return &mpData[mlDataPos];
     }
@@ -119,7 +119,7 @@ public:
     * Compresses the data from apSrcData to current pos. Compression level is 0 - 9, where 0 is no compression. -1 = default (recommended basically) compression.
     * If abWriteDataSize is true, then the first 4 bytes, will be a 32bit int with the size of the compressed data.
     */
-    bool CompressAndAdd(char *apSrcData, size_t alSize, int alCompressionLevel=-1, bool abWriteDataSize=false);
+    bool CompressAndAdd(char *apSrcData, size_t alSize, int alCompressionLevel = -1, bool abWriteDataSize = false);
 
     /**
     * Decompresses the data from apSrcData to current pos.
@@ -159,18 +159,18 @@ public:
     /**
     * Calculates the CRC from current position (if alDataPos<0) or alDataPos, to end (if alCount < 0) or according to alCount
     */
-    unsigned int GetCRC(unsigned int alKey, int alDataPos=-1, int alCount=-1);
+    unsigned int GetCRC(unsigned int alKey, int alDataPos = -1, int alCount = -1);
 
     /**
     * This checks CRC from current position to end (if alCount<0) else according to alCount (which includes the the first 32bit CRC)
     * It assumes that the first the 32bit int is the CRC and will increase the data position to be past these.
     */
-    bool CheckInternalCRC(unsigned int alKey, int alCount=-1);
+    bool CheckInternalCRC(unsigned int alKey, int alCount = -1);
 
     /**
     * This checks CRC from current position to end (if alCount<0) else according to alCount
     */
-    bool CheckCRC(unsigned int alCRC, unsigned int alKey, int alCount=-1);
+    bool CheckCRC(unsigned int alCRC, unsigned int alKey, int alCount = -1);
 
     ////////////////////////////////
     // DATA INPUT

@@ -21,7 +21,7 @@ cQuaternion::cQuaternion()
 
 cQuaternion::cQuaternion(float afAngle, const cVector3f & avAxis)
 {
-    FromAngleAxis(afAngle,avAxis);
+    FromAngleAxis(afAngle, avAxis);
 }
 
 //-----------------------------------------------------------------------
@@ -47,13 +47,13 @@ cQuaternion::cQuaternion(const cMatrix<float> &a_mtxRot)
 //////////////////////////////////////////////////////////////////////////
 
 
-const cQuaternion cQuaternion::Identity = cQuaternion(1.0f,0.0f,0.0f,0.0f);
+const cQuaternion cQuaternion::Identity = cQuaternion(1.0f, 0.0f, 0.0f, 0.0f);
 
 //-----------------------------------------------------------------------
 
 void cQuaternion::Normalize()
 {
-    float fLen = w*w + v.x*v.x + v.y*v.y + v.z*v.z;
+    float fLen = w * w + v.x * v.x + v.y * v.y + v.z * v.z;
     float fFactor = 1.0f / sqrt(fLen);
     v = v * fFactor;
     w = w * fFactor;
@@ -65,28 +65,28 @@ void cQuaternion::ToRotationMatrix(cMatrixf &a_mtxDest) const
 {
     cMatrixf mtxA;
 
-    float fTx  = 2.0f*v.x;
-    float fTy  = 2.0f*v.y;
-    float fTz  = 2.0f*v.z;
-    float fTwx = fTx*w;
-    float fTwy = fTy*w;
-    float fTwz = fTz*w;
-    float fTxx = fTx*v.x;
-    float fTxy = fTy*v.x;
-    float fTxz = fTz*v.x;
-    float fTyy = fTy*v.y;
-    float fTyz = fTz*v.y;
-    float fTzz = fTz*v.z;
+    float fTx  = 2.0f * v.x;
+    float fTy  = 2.0f * v.y;
+    float fTz  = 2.0f * v.z;
+    float fTwx = fTx * w;
+    float fTwy = fTy * w;
+    float fTwz = fTz * w;
+    float fTxx = fTx * v.x;
+    float fTxy = fTy * v.x;
+    float fTxz = fTz * v.x;
+    float fTyy = fTy * v.y;
+    float fTyz = fTz * v.y;
+    float fTzz = fTz * v.z;
 
-    a_mtxDest.m[0][0] = 1.0f-(fTyy+fTzz);
-    a_mtxDest.m[0][1] = fTxy-fTwz;
-    a_mtxDest.m[0][2] = fTxz+fTwy;
-    a_mtxDest.m[1][0] = fTxy+fTwz;
-    a_mtxDest.m[1][1] = 1.0f-(fTxx+fTzz);
-    a_mtxDest.m[1][2] = fTyz-fTwx;
-    a_mtxDest.m[2][0] = fTxz-fTwy;
-    a_mtxDest.m[2][1] = fTyz+fTwx;
-    a_mtxDest.m[2][2] = 1.0f-(fTxx+fTyy);
+    a_mtxDest.m[0][0] = 1.0f-(fTyy + fTzz);
+    a_mtxDest.m[0][1] = fTxy - fTwz;
+    a_mtxDest.m[0][2] = fTxz + fTwy;
+    a_mtxDest.m[1][0] = fTxy + fTwz;
+    a_mtxDest.m[1][1] = 1.0f-(fTxx + fTzz);
+    a_mtxDest.m[1][2] = fTyz - fTwx;
+    a_mtxDest.m[2][0] = fTxz - fTwy;
+    a_mtxDest.m[2][1] = fTyz + fTwx;
+    a_mtxDest.m[2][2] = 1.0f-(fTxx + fTyy);
 }
 
 
@@ -94,18 +94,18 @@ void cQuaternion::ToRotationMatrix(cMatrixf &a_mtxDest) const
 
 void cQuaternion::FromRotationMatrix(const cMatrix<float> &a_mtxRot)
 {
-    float fTrace = a_mtxRot.m[0][0]+a_mtxRot.m[1][1]+a_mtxRot.m[2][2];
+    float fTrace = a_mtxRot.m[0][0] + a_mtxRot.m[1][1] + a_mtxRot.m[2][2];
     float fRoot;
 
     if ( fTrace > 0.0 )
     {
         // |w| > 1/2, may as well choose w > 1/2
         fRoot = sqrt(fTrace + 1.0f);  // 2w
-        w = 0.5f*fRoot;
-        fRoot = 0.5f/fRoot;  // 1/(4w)
-        v.x = (a_mtxRot.m[2][1]-a_mtxRot.m[1][2])*fRoot;
-        v.y = (a_mtxRot.m[0][2]-a_mtxRot.m[2][0])*fRoot;
-        v.z = (a_mtxRot.m[1][0]-a_mtxRot.m[0][1])*fRoot;
+        w = 0.5f * fRoot;
+        fRoot = 0.5f / fRoot; // 1/(4w)
+        v.x = (a_mtxRot.m[2][1] - a_mtxRot.m[1][2]) * fRoot;
+        v.y = (a_mtxRot.m[0][2] - a_mtxRot.m[2][0]) * fRoot;
+        v.z = (a_mtxRot.m[1][0] - a_mtxRot.m[0][1]) * fRoot;
     }
     else
     {
@@ -123,13 +123,13 @@ void cQuaternion::FromRotationMatrix(const cMatrix<float> &a_mtxRot)
         size_t j = s_iNext[i];
         size_t k = s_iNext[j];
 
-        fRoot = sqrt(a_mtxRot.m[i][i]-a_mtxRot.m[j][j]-a_mtxRot.m[k][k] + 1.0f);
-        float* apkQuat[3] = { &v.x, &v.y, &v.z };
-        *apkQuat[i] = 0.5f*fRoot;
-        fRoot = 0.5f/fRoot;
-        w = (a_mtxRot.m[k][j]-a_mtxRot.m[j][k])*fRoot;
-        *apkQuat[j] = (a_mtxRot.m[j][i]+a_mtxRot.m[i][j])*fRoot;
-        *apkQuat[k] = (a_mtxRot.m[k][i]+a_mtxRot.m[i][k])*fRoot;
+        fRoot = sqrt(a_mtxRot.m[i][i] - a_mtxRot.m[j][j] - a_mtxRot.m[k][k] + 1.0f);
+        float *apkQuat[3] = { &v.x, &v.y, &v.z };
+        *apkQuat[i] = 0.5f * fRoot;
+        fRoot = 0.5f / fRoot;
+        w = (a_mtxRot.m[k][j] - a_mtxRot.m[j][k]) * fRoot;
+        *apkQuat[j] = (a_mtxRot.m[j][i] + a_mtxRot.m[i][j]) * fRoot;
+        *apkQuat[k] = (a_mtxRot.m[k][i] + a_mtxRot.m[i][k]) * fRoot;
     }
 }
 
@@ -142,12 +142,12 @@ void cQuaternion::FromAngleAxis(float afAngle, const cVector3f &avAxis)
     // The quaternion representing the rotation is
     //   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
 
-    float fHalfAngle = 0.5f*afAngle;
+    float fHalfAngle = 0.5f * afAngle;
     float fSin = sin(fHalfAngle);
     w = cos(fHalfAngle);
-    v.x = fSin*avAxis.x;
-    v.y = fSin*avAxis.y;
-    v.z = fSin*avAxis.z;
+    v.x = fSin * avAxis.x;
+    v.y = fSin * avAxis.y;
+    v.z = fSin * avAxis.z;
 }
 
 //-----------------------------------------------------------------------

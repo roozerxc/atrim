@@ -45,7 +45,7 @@ public:
     void UpdateBeforeSimulate(double adFixedDelta);
     void UpdateAfterSimulate(double adFixedDelta);
 
-    void RemoveAttachedBody(iPhysicsBody *apBody, bool abRemoveContainerFromBody=true);
+    void RemoveAttachedBody(iPhysicsBody *apBody, bool abRemoveContainerFromBody = true);
 
 
     /////////////////////////////
@@ -103,7 +103,7 @@ public:
         mfMotorSoundStopSpeed = afX;
     }
 
-    const tString& GetMotorSound()
+    const tString &GetMotorSound()
     {
         return msMotorSound;
     }
@@ -149,11 +149,11 @@ public:
 
     /////////////////////////////
     // Properties
-    cVerletParticle* GetStartParticle()
+    cVerletParticle *GetStartParticle()
     {
         return mlstParticles.front();
     }
-    cVerletParticle* GetEndParticle()
+    cVerletParticle *GetEndParticle()
     {
         return mlstParticles.back();
     }
@@ -161,16 +161,16 @@ public:
     void SetAttachedStartBody(iPhysicsBody *apBody);
     void SetAttachedEndBody(iPhysicsBody *apBody);
 
-    iPhysicsBody* GetAttachedStartBody()
+    iPhysicsBody *GetAttachedStartBody()
     {
         return mvAttachedBody[0].mpBody;
     }
-    iPhysicsBody* GetAttachedEndBody()
+    iPhysicsBody *GetAttachedEndBody()
     {
         return mvAttachedBody[1].mpBody;
     }
 
-    cPhysicsRopeAttachment* GetAttachment(int alIdx)
+    cPhysicsRopeAttachment *GetAttachment(int alIdx)
     {
         return &mvAttachedBody[alIdx];
     }
