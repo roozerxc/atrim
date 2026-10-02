@@ -1,12 +1,14 @@
 # Changelog
-Here are a list of changes from versions v1.4.4 to v1.4.6. This list will be updated however infrequently as a ton of changes are being made to the project.
+Here are a list of changes from versions 1.4.4 to 1.4.6.
+
+This list will be updated however infrequently as a ton of changes are being made to the project.
 
 - Added 64-bit support
-- Added an extra check to ensure the parallax quality setting is applied correctly
 - Added application thread locking for multi-processor systems
 - Added borderless window functionality on Windows Vista and 7+
 - Added customizable loading text colors
 - Added customizable top menu font color settings from version 1.5
+- Added extra check to ensure the parallax quality setting is applied correctly
 - Added `#include` directive for Version 1.5 mod support
 - Added left- and right-handedness options
 - Added `LUXPROP_OBJECT_BREAKABLE_WORKAROUND` preprocessor definition for breakable objects
@@ -40,7 +42,7 @@ Here are a list of changes from versions v1.4.4 to v1.4.6. This list will be upd
 - Added two-sided stencil safety check for nVidia + ATi
 - Added unused Servant Brute enabled sound
 - Added vertex batch overflow protection
-- Allowed debug menu to be used and individual maps loaded in Justine (ptest)
+- Allowed debug menu to be used and individual maps to be loaded in Justine (ptest)
 - Allowed loading of outlines for bitmap fonts
 - Changed `F8` screenshot key to `F12`, so screenshots can be taken normally
 - Converted immediate OpenGL draw calls to batched versions
