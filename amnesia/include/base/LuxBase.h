@@ -98,6 +98,8 @@ public:
 
     tString msExtraLangFilePrefix;
     tString msDefaultExtraLanguage;
+
+    tString msInitCfgFile;
 };
 
 typedef std::vector<cLuxCustomStorySettings *> tCustomStorySettingsVec;
@@ -120,6 +122,7 @@ public:
     void RunModuleMessage(eLuxUpdateableMessage aMessage, void * apData = NULL);
 
     bool StartGame(const tString& asFile, const tString& asFolder, const tString& asStartPos);
+    bool StartFullConversionGame(cLuxCustomStorySettings *apStory);
     bool StartCustomStory();
 
     void SaveConfig();
@@ -277,7 +280,8 @@ public:
     bool mbSaveConfigAtExit;
 
     std::vector<iLuxUpdateable *> mvModules;
-
+private:
+    tString ResolveConfigPath(const tString& asRelative, const tString& asStoryRoot8);
 };
 
 //----------------------------------------------

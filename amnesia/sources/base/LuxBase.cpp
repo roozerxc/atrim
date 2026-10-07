@@ -1,4 +1,5 @@
 #include "LuxBase.h"
+#include "LuxBasePersonal.h"
 
 #include "LuxInputHandler.h"
 
@@ -172,6 +173,8 @@ cLuxCustomStorySettings::cLuxCustomStorySettings(cLuxCustomStorySettings* apStor
     msMapsFolder = apStory->msMapsFolder;
     msStartMap = apStory->msStartMap;
     msStartPos = apStory->msStartPos;
+
+    msInitCfgFile = apStory->msInitCfgFile;
 }
 
 cLuxCustomStorySettings::~cLuxCustomStorySettings()
@@ -226,15 +229,6 @@ bool cLuxCustomStorySettings::CreateFromPath(const tWString& asPath)
         msStartMap = pCustomStoryCfg->GetString("Main", "StartMap", "");
         msStartPos = pCustomStoryCfg->GetString("Main", "StartPos", "");
 
-        tWString sStartMapPath = cString::To16Char(msMapsFolder) + cString::To16Char(msStartMap);
-
-        if(msStartMap == "" ||
-                cPlatform::FileExists(sStartMapPath) == false)
-        {
-            sErrorMsg = "could not find start map";
-            bValid = false;
-        }
-
         msName = cString::To16Char(pCustomStoryCfg->GetString("Main", "Name", ""));
         if(msName == _W(""))
         {
@@ -249,6 +243,35 @@ bool cLuxCustomStorySettings::CreateFromPath(const tWString& asPath)
 
         msExtraLangFilePrefix = pCustomStoryCfg->GetString("Main", "ExtraLangFilePrefix", "extra_");
         msDefaultExtraLanguage = pCustomStoryCfg->GetString("Main", "DefaultExtraLangFile", gpBase->msDefaultGameLanguage);
+
+        msInitCfgFile = pCustomStoryCfg->GetString("Main", "InitCfgFile", "");
+        bool bHasValidInitCfgFile = false;
+
+        if(msInitCfgFile != "")
+        {
+            tWString sInitCfgFile = msStoryRootFolder + cString::To16Char(msInitCfgFile);
+
+            if(cPlatform::FileExists(sInitCfgFile))
+            {
+                bHasValidInitCfgFile = true;
+            }
+            else
+            {
+                Log("InitCfgFile '%ls' not found, treating as normal custom story\n", sInitCfgFile.c_str());
+                msInitCfgFile = "";
+            }
+        }
+
+        if(bHasValidInitCfgFile == false)
+        {
+            tWString sStartMapPath = cString::To16Char(msMapsFolder) + cString::To16Char(msStartMap);
+
+            if(msStartMap == "" || cPlatform::FileExists(sStartMapPath) == false)
+            {
+                sErrorMsg = "could not find start map";
+                bValid = false;
+            }
+        }
     }
     else
     {
@@ -286,6 +309,11 @@ bool cLuxCustomStorySettings::StartGame()
     gpBase->mpEngine->GetUpdater()->BroadcastMessageToAll(eUpdateableMessage_Reset);
 
     gpBase->mpProgressLogHandler->CreateAndResetLogFile();
+
+    if(msInitCfgFile != "")
+    {
+        return gpBase->StartFullConversionGame(this);
+    }
 
     return gpBase->StartGame(msStartMap, msMapsFolder, msStartPos);
 }
@@ -573,6 +601,175 @@ bool cLuxBase::StartGame(const tString& asFile, const tString& asFolder, const t
     return true;
 }
 
+bool cLuxBase::StartFullConversionGame(cLuxCustomStorySettings *apStory)
+{
+    // Remember root first
+    tWString sStoryRoot = apStory->msStoryRootFolder;
+    tString sStoryRoot8 = cString::To8Char(sStoryRoot);
+
+    // Make init path via sInitPath then pass it to the game
+    tWString sInitPath = sStoryRoot + cString::To16Char(apStory->msInitCfgFile);
+    cConfigFile *pInitCfg = hplNew(cConfigFile, (sInitPath));
+    if(pInitCfg->Load() == false)
+    {
+        Error("Could not load InitCfgFile '%ls'!\n", sInitPath.c_str());
+        hplDelete(pInitCfg);
+        return false;
+    }
+
+    // main_init.cfg: Recreation, Replication, Resurrection. A private helper func in base had to be created
+    msResourceConfigPath       = ResolveConfigPath(pInitCfg->GetString("ConfigFiles", "Resources", ""), sStoryRoot8);
+    msMaterialConfigPath       = ResolveConfigPath(pInitCfg->GetString("ConfigFiles", "Materials", ""), sStoryRoot8);
+
+    msGameConfigPath           = cString::To16Char(ResolveConfigPath(pInitCfg->GetString("ConfigFiles", "Game", ""), sStoryRoot8));
+    msMenuConfigPath           = cString::To16Char(ResolveConfigPath(pInitCfg->GetString("ConfigFiles", "Menu", ""), sStoryRoot8));
+    msPreMenuConfigPath        = cString::To16Char(ResolveConfigPath(pInitCfg->GetString("ConfigFiles", "PreMenu", ""), sStoryRoot8));
+
+    msDefaultMainConfigPath    = cString::To16Char(ResolveConfigPath(pInitCfg->GetString("ConfigFiles", "DefaultMainSettings", ""), sStoryRoot8));
+
+    msDefaultUserConfigPath    = cString::To16Char(ResolveConfigPath(pInitCfg->GetString("ConfigFiles", "DefaultUserSettings", ""), sStoryRoot8));
+    msDefaultUserKeyConfigPath = cString::To16Char(ResolveConfigPath(pInitCfg->GetString("ConfigFiles", "DefaultUserKeys", ""), sStoryRoot8));
+
+    msDefaultBaseLanguage      = pInitCfg->GetString("ConfigFiles", "DefaultBaseLanguage", "");
+    msDefaultBaseLanguage      = cString::GetFileName(msDefaultBaseLanguage);
+
+    msDefaultGameLanguage      = pInitCfg->GetString("ConfigFiles", "DefaultGameLanguage", "");
+    msDefaultGameLanguage      = cString::GetFileName(msDefaultGameLanguage);
+
+    msMainSaveFolder           = pInitCfg->GetStringW("Directories", "MainSaveFolder", _W(""));
+
+    msBaseLanguageFolder       = ResolveConfigPath(pInitCfg->GetString("Directories", "BaseLanguageFolder", ""), sStoryRoot8);
+    msGameLanguageFolder       = ResolveConfigPath(pInitCfg->GetString("Directories", "GameLanguageFolder", ""), sStoryRoot8);
+
+    msCustomStoryPath          = pInitCfg->GetString("Directories", "CustomStoryPath", "");
+    if(msCustomStoryPath.empty() || cPlatform::FolderExists(cString::To16Char(msCustomStoryPath)) == false)
+    {
+        // Fallback to base customs folder if it doesnt exist
+        msCustomStoryPath = "custom_stories";
+    }
+
+    msGameName                 = pInitCfg->GetString("Variables", "GameName", "");
+    mbAllowHardMode            = pInitCfg->GetBool("Variables", "AllowHardMode", false);
+
+    msStartMapFile             = pInitCfg->GetString("StartMap", "File", "");
+    msStartMapFolder           = ResolveConfigPath(pInitCfg->GetString("StartMap", "Folder", ""), sStoryRoot8);
+    msStartMapPos              = pInitCfg->GetString("StartMap", "Pos", "");
+
+    hplDelete(pInitCfg);
+
+    // Portability, save game in working app dir (preferably settings FC folder in game dir)
+    tWString sPersonalDir = cString::AddSlashAtEndW(cPlatform::GetWorkingDir());
+    tWStringVec vDirs;
+
+    hpl::SetupBaseDirs(vDirs, PERSONAL_RELATIVEGAME_PARENT, msMainSaveFolder);
+    hpl::CreateBaseDirs(vDirs, sPersonalDir);
+
+    msBaseSavePath = sPersonalDir + PERSONAL_RELATIVEROOT PERSONAL_RELATIVEGAME_PARENT + msMainSaveFolder + _W("/");
+
+    // Clear resources and load it from the custom resources.cfg
+    mpEngine->GetResources()->ClearResourceDirs();
+
+    // we should PREVENT crashing by adding the core stuff back
+    mpEngine->GetResources()->LoadResourceDirsFile("resources.cfg");
+    mpEngine->GetResources()->AddResourceDir(_W("core/shaders"), false);
+    mpEngine->GetResources()->AddResourceDir(_W("core/textures"), false);
+    mpEngine->GetResources()->AddResourceDir(_W("core/models"), false);
+
+    // Story root was already added by SetCustomStory!!!
+    mpEngine->GetResources()->AddResourceDir(sStoryRoot, true);
+    mpEngine->GetResources()->LoadResourceDirsFile(msResourceConfigPath);
+
+    if(mpCustomStory != NULL)
+    {
+        hplDelete(mpCustomStory);
+        mpCustomStory = NULL;
+    }
+
+    mpEngine->GetPhysics()->LoadSurfaceData(msMaterialConfigPath);
+    LoadLanguage(msDefaultGameLanguage, true);
+
+    if(mpMainConfig)
+    {
+        hplDelete(mpMainConfig);
+        mpMainConfig = NULL;
+    }
+    mpMainConfig = hplNew(cConfigFile, (msDefaultMainConfigPath));
+
+    if(mpMainConfig->Load() == false)
+    {
+        Error("Failed to initialize main settings for Full Conversion story!\n");
+
+        // SAFETY NET for broken config
+        mpInputHandler->ChangeState(eLuxInputState_MainMenu);
+        mpEngine->GetUpdater()->SetContainer("MainMenu");
+
+        return false;
+    }
+
+    // Wipe menu and game cfg beforehand
+    if(mpMenuCfg)
+    {
+        hplDelete(mpMenuCfg);
+        mpMenuCfg = NULL;
+    }
+    if(mpGameCfg)
+    {
+        hplDelete(mpGameCfg);
+        mpGameCfg = NULL;
+    }
+
+    // Recreation
+    mpMenuCfg = hplNew(cConfigFile, (msMenuConfigPath));
+    mpMenuCfg->Load();
+    mpGameCfg = hplNew(cConfigFile, (msGameConfigPath));
+    mpGameCfg->Load();
+
+    // Soft reset and reinitialization of all the game modules
+    mpEngine->GetUpdater()->BroadcastMessageToAll(eUpdateableMessage_Reset);
+    RunModuleMessage(eLuxUpdateableMessage_LoadMainConfig);
+    RunModuleMessage(eLuxUpdateableMessage_LoadFonts);
+
+    mbShowPreMenu = mpMainConfig->GetBool("Main", "ShowPreMenu", true);
+    mbShowMenu    = mpMainConfig->GetBool("Main", "ShowMenu", true);
+
+    if(cPlatform::FolderExists(msBaseSavePath + msDefaultProfileName + _W("/")) == false)
+    {
+        CreateProfile(msDefaultProfileName);
+    }
+    SetProfile(msDefaultProfileName);
+
+    InitUserConfig();
+
+    if(mbShowPreMenu && mbShowMenu)
+    {
+        mpInputHandler->ChangeState(eLuxInputState_PreMenu);
+        mpEngine->GetUpdater()->SetContainer("PreMenu");
+    }
+    else if(mbShowMenu)
+    {
+        mpLoadScreenHandler->DrawMenuScreen();
+        mpInputHandler->ChangeState(eLuxInputState_MainMenu);
+        mpEngine->GetUpdater()->SetContainer("MainMenu");
+    }
+    else
+    {
+        if(mpDebugHandler->GetDebugWindowActive() == false)
+        {
+            mpEngine->GetInput()->GetLowLevel()->LockInput(true);
+            mpEngine->GetInput()->GetLowLevel()->RelativeMouse(true);
+        }
+
+        // Now we start with the stuff supplied by our full conversion mod
+        return StartGame(msStartMapFile, msStartMapFolder, msStartMapPos);
+    }
+
+    Log("FC menu cfg path = '%ls'\n",        msMenuConfigPath.c_str());
+    Log("FC game cfg path = '%ls'\n",        msGameConfigPath.c_str());
+    Log("ShowPreMenu = %d  ShowMenu = %d\n", mbShowPreMenu ? 1 : 0, mbShowMenu ? 1 : 0);
+
+    return true;
+}
+
 //-----------------------------------------------------------------------
 
 bool cLuxBase::StartCustomStory()
@@ -592,6 +789,27 @@ bool cLuxBase::StartCustomStory()
 //////////////////////////////////////////////////////////////////////////
 
 //#define LOG_CRC 0
+
+//-----------------------------------------------------------------------
+
+tString cLuxBase::ResolveConfigPath(const tString& asRelative, const tString& asStoryRoot8)
+{
+    if(asRelative.empty())
+    {
+        return asRelative;
+    }
+
+    // Pass relative to 8 char story root as candidate.
+    tString sCandidate = asStoryRoot8 + asRelative;
+    tWString sCandidateW = cString::To16Char(sCandidate);
+
+    if(cPlatform::FileExists(sCandidateW) || cPlatform::FolderExists(sCandidateW))
+    {
+        return sCandidate;
+    }
+
+    return asRelative;
+}
 
 //-----------------------------------------------------------------------
 
@@ -627,10 +845,6 @@ bool cLuxBase::ParseCommandLine(const tString &asCommandline)
 
     return true;
 }
-
-//-----------------------------------------------------------------------
-
-#include "LuxBasePersonal.h"
 
 //-----------------------------------------------------------------------
 
