@@ -97,6 +97,15 @@ public:
         return mfVolumeMul;
     }
 
+    /**
+     * Playback speed of all music (fast forward).
+     */
+    void SetSpeedMul(float afMul);
+    float GetSpeedMul()
+    {
+        return mfSpeedMul;
+    }
+
 
     /**
      * No more music can be played when locked. Latest song that has been tried to be palyed is saved in lock.
@@ -128,6 +137,8 @@ private:
     float mfVolumeMul;
     float mfVolumeMulFadeGoal;
     float mfVolumeMulFadeSpeed;
+
+    float mfSpeedMul;
 
     tMusicResumeEntryList mlstResumeEntries;
 

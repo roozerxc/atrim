@@ -31,6 +31,8 @@ cMusicHandler::cMusicHandler(iLowLevelSound* apLowLevelSound, cResources* apReso
     mfVolumeMul = 1.0f;
     mfVolumeMulFadeGoal = 1.0f;
     mfVolumeMulFadeSpeed = 1.0f;
+
+    mfSpeedMul = 1.0f;
 }
 
 //-----------------------------------------------------------------------
@@ -237,6 +239,32 @@ void cMusicHandler::FadeVolumeMul(float afDest, float afSpeed)
 {
     mfVolumeMulFadeGoal = afDest;
     mfVolumeMulFadeSpeed = afSpeed;
+}
+
+//-----------------------------------------------------------------------
+
+void cMusicHandler::SetSpeedMul(float afMul)
+{
+    if(mfSpeedMul == afMul)
+    {
+        return;
+    }
+
+    mfSpeedMul = afMul;
+
+    if(mpMainSong && mpMainSong->mpStream)
+    {
+        mpMainSong->mpStream->SetSpeed(mfSpeedMul);
+    }
+
+    for(tMusicEntryListIt it = mlstFadingSongs.begin(); it != mlstFadingSongs.end(); ++it)
+    {
+        cMusicEntry* pSong = *it;
+        if(pSong->mpStream)
+        {
+            pSong->mpStream->SetSpeed(mfSpeedMul);
+        }
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -458,6 +486,7 @@ bool cMusicHandler::LoadAndStart(const tString& asFileName, cMusicEntry* apSong,
     apSong->msFileName = asFileName;
     apSong->mpStream = pStream;
     apSong->mpStream->SetVolume(afVolume);
+    apSong->mpStream->SetSpeed(mfSpeedMul);
 
     if(abResume)
     {

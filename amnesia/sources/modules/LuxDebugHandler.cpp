@@ -758,6 +758,7 @@ void cLuxDebugHandler::SetFastForward(bool abX)
 
     float fSoundSpeed = mbFastForward ? 4.0f : 1.0f;
     gpBase->mpEngine->GetSound()->GetSoundHandler()->SetMasterSpeedMul(fSoundSpeed);
+    gpBase->mpEngine->GetSound()->GetMusicHandler()->SetSpeedMul(fSoundSpeed);
 }
 
 //-----------------------------------------------------------------------
