@@ -315,10 +315,12 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
         defaultVars.Add("ParallaxMethod_Relief");
     }
     //Fall back to simple parallax mapping method
-    else if(iRenderer::GetParallaxQuality() == eParallaxQuality_Simple ||
-            (iRenderer::GetParallaxQuality() != eParallaxQuality_Relief &&
-             mpGraphics->GetLowLevel()->GetCaps(eGraphicCaps_ShaderModel_3) == 0))
+    else
     {
+        if(iRenderer::GetParallaxQuality() == eParallaxQuality_Relief)
+        {
+            Log("Relief parallax needs shader model 3, using simple parallax.\n");
+        }
         defaultVars.Add("ParallaxMethod_Simple");
     }
 

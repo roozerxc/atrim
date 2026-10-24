@@ -506,7 +506,8 @@ int cLowLevelGraphicsSDL::GetCaps(eGraphicCaps aType)
         }
         else
         {
-            return  (GLEW_NV_vertex_program3 || GLEW_ATI_shader_texture_lod) ? 1 : 0;
+            return  (GLEW_NV_vertex_program3 || GLEW_ATI_shader_texture_lod ||
+                     GLEW_ARB_shader_texture_lod || GLEW_EXT_gpu_shader4 || GLEW_VERSION_3_0) ? 1 : 0;
         }
     }
     case eGraphicCaps_ShaderModel_4:
