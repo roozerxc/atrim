@@ -165,7 +165,7 @@ bool cSoundEntry::Update(double adFixedDelta)
 
     ////////////////////////////////////////////
     // Set final speed
-    float fFinalSpeed = mfNormalSpeed * mfSpeedMul * mpSoundHandler->GetGlobalSpeed(mType);
+    float fFinalSpeed = mfNormalSpeed * mfSpeedMul * mpSoundHandler->GetGlobalSpeed(mType) * mpSoundHandler->GetMasterSpeedMul();
     if(mpSound->GetSpeed() != fFinalSpeed)
     {
         mpSound->SetSpeed(fFinalSpeed);
@@ -499,6 +499,7 @@ cSoundHandler::cSoundHandler(iLowLevelSound* apLowLevelSound, cResources* apReso
     mfGlobalVolume[1] = 1;
     mfGlobalSpeed[0] = 1;
     mfGlobalSpeed[1] = 1;
+    mfMasterSpeedMul = 1;
 }
 
 //-----------------------------------------------------------------------

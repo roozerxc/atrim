@@ -265,6 +265,19 @@ public:
     float GetGlobalVolume(eSoundEntryType aType);
     float GetGlobalSpeed(eSoundEntryType aType);
 
+    /**
+     * Multiplies the speed of every sound, on top of the global speed settings (which are combined with Min,
+     * so they can only slow down). Used by fast forward.
+     */
+    void SetMasterSpeedMul(float afMul)
+    {
+        mfMasterSpeedMul = afMul;
+    }
+    float GetMasterSpeedMul()
+    {
+        return mfMasterSpeedMul;
+    }
+
     cMultipleSettingsHandler *GetGlobalVolumeSettingsHandler()
     {
         return &mGlobalVolumeHandler;
@@ -303,6 +316,7 @@ private:
 
     float mfGlobalVolume[2];
     float mfGlobalSpeed[2];
+    float mfMasterSpeedMul;
 
     cMultipleSettingsHandler mGlobalVolumeHandler;
     cMultipleSettingsHandler mGlobalSpeedHandler;
