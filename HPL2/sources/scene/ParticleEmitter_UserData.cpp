@@ -5,7 +5,6 @@
 //#include "graphics/Mesh.h"
 //#include "graphics/SubMesh.h"
 
-#include "impl/tinyXML/tinyxml.h"
 
 #include "resources/Resources.h"
 #include "resources/LowLevelResources.h"

@@ -5,7 +5,10 @@
 #include "math/MathTypes.h"
 #include "graphics/GraphicsTypes.h"
 
-class TiXmlDocument;
+namespace pugi
+{
+class xml_document;
+}
 
 namespace hpl
 {
@@ -79,7 +82,7 @@ private:
     tWString msFile;
     cFileSearcher *mpFileSearcher;
 
-    TiXmlDocument *mpXmlDoc;
+    pugi::xml_document *mpXmlDoc;
 
     bool mbUseCRC;
 

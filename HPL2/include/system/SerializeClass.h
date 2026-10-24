@@ -5,9 +5,10 @@
 #include "system/SystemTypes.h"
 #include "system/MemoryManager.h"
 
-#include "impl/tinyxml/tinyxml.h"
-
-class TiXmlElement;
+namespace pugi
+{
+class xml_node;
+}
 
 namespace hpl
 {
@@ -308,11 +309,10 @@ public:
     static void PrintMembers(iSerializable* apData);
 
     static bool SaveToFile(iSerializable* apData, const tWString &asFile, const tString &asRoot, bool abCompressAndCRC = false);
-    static void SaveToElement(iSerializable* apData, const tString &asName, TiXmlElement *apParent, bool abIsPointer = false);
-    static bool SaveElementToFile(TiXmlDocument* apXmlDoc, const tWString &asFile, bool abCompressAndCRC = false);
+    static void SaveToElement(iSerializable* apData, const tString &asName, pugi::xml_node apParent, bool abIsPointer = false);
 
     static bool LoadFromFile(iSerializable* apData, const tWString &asFile, bool abCompressedAndCRC = false);
-    static void LoadFromElement(iSerializable* apData, TiXmlElement *apElement, bool abIsPointer = false);
+    static void LoadFromElement(iSerializable* apData, pugi::xml_node apElement, bool abIsPointer = false);
 
     static cSerializeSavedClass *GetClass(const tString &asName);
 
@@ -325,15 +325,15 @@ public:
     static void ResetGeneration();
 
 private:
-    static void SaveVariable(TiXmlElement *apElement, cSerializeMemberField *apField, iSerializable* apData);
-    static void SaveArray(TiXmlElement *apElement, cSerializeMemberField *apField, iSerializable* apData);
-    static void SaveContainer(TiXmlElement *apElement, cSerializeMemberField *apField, iSerializable* apData);
+    static void SaveVariable(pugi::xml_node apElement, cSerializeMemberField *apField, iSerializable* apData);
+    static void SaveArray(pugi::xml_node apElement, cSerializeMemberField *apField, iSerializable* apData);
+    static void SaveContainer(pugi::xml_node apElement, cSerializeMemberField *apField, iSerializable* apData);
 
-    static void LoadVariable(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass);
-    static void LoadArray(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass);
-    static void LoadClass(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass);
-    static void LoadClassPointer(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass);
-    static void LoadContainer(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass);
+    static void LoadVariable(pugi::xml_node apElement, iSerializable* apData, cSerializeSavedClass *apClass);
+    static void LoadArray(pugi::xml_node apElement, iSerializable* apData, cSerializeSavedClass *apClass);
+    static void LoadClass(pugi::xml_node apElement, iSerializable* apData, cSerializeSavedClass *apClass);
+    static void LoadClassPointer(pugi::xml_node apElement, iSerializable* apData, cSerializeSavedClass *apClass);
+    static void LoadContainer(pugi::xml_node apElement, iSerializable* apData, cSerializeSavedClass *apClass);
 
     static void FillSaveClassMembersList(tSerializeSavedClassList *apList, cSerializeSavedClass* apClass);
     static void SaveSavedClassMembers(cSerializeSavedClass* apClass, iSerializable* apData);

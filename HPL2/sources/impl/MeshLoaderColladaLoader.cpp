@@ -17,7 +17,7 @@
 
 #include "resources/MaterialManager.h"
 
-#include "impl/tinyXML/tinyxml.h"
+#include "impl/XmlPugi.h"
 
 #include "math/Math.h"
 
@@ -83,28 +83,24 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
     // LOAD THE DOCUMENT
     //unsigned long lStartTime = mpSystem->GetLowLevel()->GetTime();
 
-    FILE *pFile = cPlatform::OpenFile(asFile, _W("rb"));
-    if(pFile == NULL)
+    if(cPlatform::FileExists(asFile) == false)
     {
         return false;
     }
 
-    TiXmlDocument* pXmlDoc = hplNew(TiXmlDocument, () );
-    if(pXmlDoc->LoadFile(pFile) == false)
+    //pugixml parses in place: the file is read once and the tree points into that buffer.
+    pugi::xml_document xmlDoc;
+    if(Xml::LoadFile(xmlDoc, asFile) == false)
     {
-        Error("Couldn't load Collada XML file '%s'!\n", asFile.c_str());
-        fclose(pFile);
-        hplDelete(pXmlDoc);
+        Error("Couldn't load Collada XML file '%s'!\n", cString::To8Char(asFile).c_str());
         return false;
     }
-
-    fclose(pFile);
 
     //unsigned long lTime = mpSystem->GetLowLevel()->GetTime() - lStartTime;
     //Log("Loading collada XML file for '%s' took: %d ms\n",asFile.c_str(),lTime);
 
     //Get the root.
-    TiXmlElement* pRootElem = pXmlDoc->RootElement();
+    pugi::xml_node pRootElem = xmlDoc.document_element();
 
     /////////////////////////////////////////////////
     // FIRST SETUP
@@ -114,15 +110,13 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
     mfUnitScale = 1.0f;
 
     //Load assets element.
-    TiXmlElement *pAssetElem = pRootElem->FirstChildElement("asset");
+    pugi::xml_node pAssetElem = pRootElem.child("asset");
     if(pAssetElem)
     {
-        TiXmlElement *pUpAxisElem = pAssetElem->FirstChildElement("up_axis");
+        pugi::xml_node pUpAxisElem = pAssetElem.child("up_axis");
         if(pUpAxisElem)
         {
-            TiXmlText *pAxisText = pUpAxisElem->FirstChild()->ToText();
-
-            if(tString(pAxisText->Value()) == "Z_UP")
+            if(Xml::TextCondensed(pUpAxisElem) == "Z_UP")
             {
                 mbZToY = true;
                 //Log("!!!!!!!Z IS UP!!!!!!");
@@ -133,20 +127,20 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
         bool bGetUnit = false;
 
         // Only get unit from 3ds max files!
-        TiXmlElement *pCont = pAssetElem->FirstChildElement("contributor");
+        pugi::xml_node pCont = pAssetElem.child("contributor");
 
         if(pCont)
         {
-            pCont = pCont->FirstChildElement("authoring_tool");
+            pCont = pCont.child("authoring_tool");
         }
         else
         {
-            pCont = pAssetElem->FirstChildElement("authoring_tool");
+            pCont = pAssetElem.child("authoring_tool");
         }
 
         if(pCont)
         {
-            tString sName = cString::ToString(pCont->FirstChild()->Value(), "");
+            tString sName = Xml::TextCondensed(pCont);
 
             if(sName == "FBX COLLADA exporter")
             {
@@ -154,24 +148,24 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
             }
         }
 
-        TiXmlElement *pUnitElem = pAssetElem->FirstChildElement("unit");
+        pugi::xml_node pUnitElem = pAssetElem.child("unit");
 
         if(pUnitElem && bGetUnit && mbConvertUnit)
         {
             float fUnitTypeScale = 1.0f;
             float fUnitValue = 1.0f;
 
-            TiXmlAttribute *pFirstAttri = pUnitElem->FirstAttribute();
+            pugi::xml_attribute firstAttri = pUnitElem.first_attribute();
 
-            for(; pFirstAttri; pFirstAttri = pFirstAttri->Next())
+            for(; firstAttri; firstAttri = firstAttri.next_attribute())
             {
-                tString sName = cString::ToString(pFirstAttri->Name(), "");
+                tString sName = cString::ToString(firstAttri.name(), "");
 
                 if(sName == "meter")
                 {
                     //////////////
                     // Read the scale
-                    fUnitValue = (float)pFirstAttri->DoubleValue();
+                    fUnitValue = (float)firstAttri.as_double();
                 }
             }
 
@@ -190,11 +184,11 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
 
     /////////////////////////////////////////////////
     // ITERATE THE LIBRARIES BEFORE SCENE LIBRARIES
-    TiXmlElement* pLibraryElem = pRootElem->FirstChildElement();
+    pugi::xml_node pLibraryElem = Xml::FirstElem(pRootElem);
     while(pLibraryElem)
     {
-        tString sType = cString::ToString(pLibraryElem->Attribute("type"), "");
-        tString sValue = cString::ToString(pLibraryElem->Value(), "");
+        tString sType = cString::ToString(Xml::Attr(pLibraryElem, "type"), "");
+        tString sValue = cString::ToString(pLibraryElem.name(), "");
 
         // Lights
         if((sType == "LIGHT" || sValue == "library_lights") && apColladaLightVec)
@@ -204,60 +198,60 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
             //Log(" --- \n");
         }
 
-        pLibraryElem = pLibraryElem->NextSiblingElement();
+        pLibraryElem = Xml::NextElem(pLibraryElem);
     }
 
     //////////////////////////////////////////////
     // LOAD SCENE
     if(apColladaScene)
     {
-        TiXmlElement* pSceneElem = pRootElem->FirstChildElement("library_visual_scenes");
+        pugi::xml_node pSceneElem = pRootElem.child("library_visual_scenes");
         if(pSceneElem)
         {
-            pSceneElem = pSceneElem->FirstChildElement("visual_scene");
-            if(pSceneElem == NULL)
+            pSceneElem = pSceneElem.child("visual_scene");
+            if(!pSceneElem)
             {
                 Warning("No visual scene element found!\n");
             }
         }
 
-        if(pSceneElem == NULL)
+        if(!pSceneElem)
         {
-            pSceneElem = pRootElem->FirstChildElement("scene");
+            pSceneElem = pRootElem.child("scene");
         }
 
-        if(pSceneElem == NULL)
+        if(!pSceneElem)
         {
             Warning("No scene element found!\n");
         }
         else
         {
             //Get start and end time (MAYA ONLY!)
-            TiXmlElement* pExtraElem = pSceneElem->FirstChildElement("extra");
+            pugi::xml_node pExtraElem = pSceneElem.child("extra");
             if(pExtraElem)
             {
                 // Get techniques
-                TiXmlElement* pExtraTechElem = pExtraElem->FirstChildElement("technique");
-                for(; pExtraTechElem; pExtraTechElem = pExtraTechElem->NextSiblingElement("technique"))
+                pugi::xml_node pExtraTechElem = pExtraElem.child("technique");
+                for(; pExtraTechElem; pExtraTechElem = pExtraTechElem.next_sibling("technique"))
                 {
                     //Check for maya profile
-                    tString sProfile = cString::ToString(pExtraTechElem->Attribute("profile"), "");
+                    tString sProfile = cString::ToString(Xml::Attr(pExtraTechElem, "profile"), "");
                     if(sProfile == "MAYA" || sProfile == "FCOLLADA")
                     {
                         //Iterate params
-                        TiXmlElement *pParam = pExtraTechElem->FirstChildElement();
-                        for(; pParam; pParam = pParam->NextSiblingElement())
+                        pugi::xml_node pParam = Xml::FirstElem(pExtraTechElem);
+                        for(; pParam; pParam = Xml::NextElem(pParam))
                         {
-                            tString sName = cString::ToString(pParam->Attribute("name"), "");
+                            tString sName = cString::ToString(Xml::Attr(pParam, "name"), "");
                             if(sName == "")
                             {
-                                sName = cString::ToString(pParam->Value(), "");
+                                sName = cString::ToString(pParam.name(), "");
                             }
 
                             sName = cString::ToLowerCase(sName);
 
-                            TiXmlText *pText = pParam->FirstChild()->ToText();
-                            float fValue = cString::ToFloat(pText->Value(), 0);
+                            const char *pText = Xml::TextOrEmpty(pParam);
+                            float fValue = cString::ToFloat(pText, 0);
 
                             if(sName == "start_time")
                             {
@@ -284,12 +278,12 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
             }
 
             //Load all nodes in the scene.
-            TiXmlElement* pNodeElem = pSceneElem->FirstChildElement("node");
+            pugi::xml_node pNodeElem = pSceneElem.child("node");
             while(pNodeElem)
             {
                 LoadColladaScene(pNodeElem, &apColladaScene->mRoot, apColladaScene, apColladaLightVec);
 
-                pNodeElem = pNodeElem->NextSiblingElement("node");
+                pNodeElem = pNodeElem.next_sibling("node");
             }
         }
     }
@@ -297,11 +291,11 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
     /////////////////////////////////////////////////
     // ITERATE THE AFTER SCENE LIBRARIES
 
-    pLibraryElem = pRootElem->FirstChildElement();
+    pLibraryElem = Xml::FirstElem(pRootElem);
     while(pLibraryElem)
     {
-        tString sValue = cString::ToString(pLibraryElem->Value(), "");
-        tString sType = cString::ToString(pLibraryElem->Attribute("type"), "");
+        tString sValue = cString::ToString(pLibraryElem.name(), "");
+        tString sType = cString::ToString(Xml::Attr(pLibraryElem, "type"), "");
 
         // Image
         if((sType == "IMAGE" || sValue == "library_images") && apColladaImageVec)
@@ -341,7 +335,7 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
 
         //Log(" ---- \n",sType.c_str());
 
-        pLibraryElem = pLibraryElem->NextSiblingElement();
+        pLibraryElem = Xml::NextElem(pLibraryElem);
     }
 
     /*if(abCache && mbLoadAndSaveMSHFormat==false)
@@ -355,7 +349,6 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
                         apColladaAnimVec,
                         apColladaScene);
     }*/
-    hplDelete(pXmlDoc);
     return true;
 }
 
@@ -365,20 +358,28 @@ bool cMeshLoaderCollada::FillStructures(const tWString &asFile,
 // SAVE COLLADA DATA
 //////////////////////////////////////////////////////////////////////////
 
-#define CreateXMLChild(parent, name) static_cast<TiXmlElement*>(parent->InsertEndChild(TiXmlElement(name)));
+static pugi::xml_node CreateXMLChild(pugi::xml_node aParent, const char* asName)
+{
+    return aParent.append_child(asName);
+}
 
-#define CreateXMLTextChild(parent, name) static_cast<TiXmlText*>(parent->InsertEndChild(TiXmlText(name)));
+static pugi::xml_node CreateXMLTextChild(pugi::xml_node aParent, const char* asText)
+{
+    pugi::xml_node textNode = aParent.append_child(pugi::node_pcdata);
+    textNode.set_value(asText);
+    return textNode;
+}
 
 //-----------------------------------------------------------------------
 
-static void SaveImageVec(TiXmlElement *apRootElem, tColladaImageVec *apColladaImageVec);
-static void SaveTextureVec(TiXmlElement *apRootElem, tColladaTextureVec *apColladaTextureVec);
-static void SaveMaterialVec(TiXmlElement *apRootElem, tColladaMaterialVec *apColladaMaterialVec);
-static void SaveLightVec(TiXmlElement *apRootElem, tColladaLightVec *apColladaLightVec);
-static void SaveAnimationVec(TiXmlElement *apRootElem, tColladaAnimationVec *apColladaAnimationVec);
-static void SaveControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *apColladaControllerVec);
-static void SaveGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apColladaGeometryVec);
-static void SaveScene(TiXmlElement *apRootElem, cColladaScene *apColladaScene);
+static void SaveImageVec(pugi::xml_node apRootElem, tColladaImageVec *apColladaImageVec);
+static void SaveTextureVec(pugi::xml_node apRootElem, tColladaTextureVec *apColladaTextureVec);
+static void SaveMaterialVec(pugi::xml_node apRootElem, tColladaMaterialVec *apColladaMaterialVec);
+static void SaveLightVec(pugi::xml_node apRootElem, tColladaLightVec *apColladaLightVec);
+static void SaveAnimationVec(pugi::xml_node apRootElem, tColladaAnimationVec *apColladaAnimationVec);
+static void SaveControllerVec(pugi::xml_node apRootElem, tColladaControllerVec *apColladaControllerVec);
+static void SaveGeometryVec(pugi::xml_node apRootElem, tColladaGeometryVec *apColladaGeometryVec);
+static void SaveScene(pugi::xml_node apRootElem, cColladaScene *apColladaScene);
 
 bool cMeshLoaderCollada::SaveStructures(const tWString &asFile,
                                         tColladaImageVec *apColladaImageVec,
@@ -390,9 +391,9 @@ bool cMeshLoaderCollada::SaveStructures(const tWString &asFile,
                                         tColladaAnimationVec *apColladaAnimVec,
                                         cColladaScene *apColladaScene)
 {
-    TiXmlDocument* pXmlDoc = hplNew(TiXmlDocument, () );
+    pugi::xml_document xmlDoc;
 
-    TiXmlElement *pRootElem = CreateXMLChild(pXmlDoc, "ColladaCache");
+    pugi::xml_node pRootElem = CreateXMLChild(xmlDoc, "ColladaCache");
 
     if(apColladaImageVec)
     {
@@ -427,173 +428,169 @@ bool cMeshLoaderCollada::SaveStructures(const tWString &asFile,
         SaveScene(pRootElem, apColladaScene);
     }
 
-    FILE *pFile = cPlatform::OpenFile(asFile, _W("w+"));
-    if(pFile == NULL || pXmlDoc->SaveFile(pFile) == false)
+    if(Xml::SaveFile(xmlDoc, asFile) == false)
     {
-        Error("Couldn't save XML file %s\n", asFile.c_str());
-        hplDelete(pXmlDoc);
+        Error("Couldn't save XML file %s\n", cString::To8Char(asFile).c_str());
         return false;
     }
-    fclose(pFile);
-    hplDelete(pXmlDoc);
     return true;
 }
 
 //-----------------------------------------------------------------------
 
-static void SaveImageVec(TiXmlElement *apRootElem, tColladaImageVec *apColladaImageVec)
+static void SaveImageVec(pugi::xml_node apRootElem, tColladaImageVec *apColladaImageVec)
 {
-    TiXmlElement *pImageRootElem =  CreateXMLChild(apRootElem, "ImageRoot");
+    pugi::xml_node pImageRootElem =  CreateXMLChild(apRootElem, "ImageRoot");
 
-    pImageRootElem->SetAttribute("Size", (int)apColladaImageVec->size());
+    Xml::SetAttr(pImageRootElem, "Size", (int)apColladaImageVec->size());
 
     for(size_t i = 0; i < apColladaImageVec->size(); ++i)
     {
         cColladaImage *pImage = &(*apColladaImageVec)[i];
 
-        TiXmlElement *pImageElem = CreateXMLChild(pImageRootElem, "Image");
+        pugi::xml_node pImageElem = CreateXMLChild(pImageRootElem, "Image");
 
-        pImageElem->SetAttribute("Id", pImage->msId.c_str());
-        pImageElem->SetAttribute("Name", pImage->msName.c_str());
-        pImageElem->SetAttribute("Source", cString::GetFileName(pImage->msSource.c_str()).c_str());
+        Xml::SetAttr(pImageElem, "Id", pImage->msId.c_str());
+        Xml::SetAttr(pImageElem, "Name", pImage->msName.c_str());
+        Xml::SetAttr(pImageElem, "Source", cString::GetFileName(pImage->msSource.c_str()).c_str());
     }
 }
 
 //-----------------------------------------------------------------------
 
-static void SaveTextureVec(TiXmlElement *apRootElem, tColladaTextureVec *apColladaTextureVec)
+static void SaveTextureVec(pugi::xml_node apRootElem, tColladaTextureVec *apColladaTextureVec)
 {
-    TiXmlElement *pTextureRootElem =  CreateXMLChild(apRootElem, "TextureRoot");
+    pugi::xml_node pTextureRootElem =  CreateXMLChild(apRootElem, "TextureRoot");
 
-    pTextureRootElem->SetAttribute("Size", (int)apColladaTextureVec->size());
+    Xml::SetAttr(pTextureRootElem, "Size", (int)apColladaTextureVec->size());
 
     for(size_t i = 0; i < apColladaTextureVec->size(); ++i)
     {
         cColladaTexture *pTexture = &(*apColladaTextureVec)[i];
 
-        TiXmlElement *pTextureElem = CreateXMLChild(pTextureRootElem, "Texture");
+        pugi::xml_node pTextureElem = CreateXMLChild(pTextureRootElem, "Texture");
 
-        pTextureElem->SetAttribute("Id", pTexture->msId.c_str());
-        pTextureElem->SetAttribute("Name", pTexture->msName.c_str());
-        pTextureElem->SetAttribute("Image", pTexture->msImage.c_str());
+        Xml::SetAttr(pTextureElem, "Id", pTexture->msId.c_str());
+        Xml::SetAttr(pTextureElem, "Name", pTexture->msName.c_str());
+        Xml::SetAttr(pTextureElem, "Image", pTexture->msImage.c_str());
     }
 }
 
 //-----------------------------------------------------------------------
 
-static void SaveMaterialVec(TiXmlElement *apRootElem, tColladaMaterialVec *apColladaMaterialVec)
+static void SaveMaterialVec(pugi::xml_node apRootElem, tColladaMaterialVec *apColladaMaterialVec)
 {
-    TiXmlElement *pMaterialRootElem =  CreateXMLChild(apRootElem, "MaterialRoot");
+    pugi::xml_node pMaterialRootElem =  CreateXMLChild(apRootElem, "MaterialRoot");
 
-    pMaterialRootElem->SetAttribute("Size", (int)apColladaMaterialVec->size());
+    Xml::SetAttr(pMaterialRootElem, "Size", (int)apColladaMaterialVec->size());
 
     for(size_t i = 0; i < apColladaMaterialVec->size(); ++i)
     {
         cColladaMaterial *pMaterial = &(*apColladaMaterialVec)[i];
 
-        TiXmlElement *pMaterialElem = CreateXMLChild(pMaterialRootElem, "Material");
+        pugi::xml_node pMaterialElem = CreateXMLChild(pMaterialRootElem, "Material");
 
-        pMaterialElem->SetAttribute("Id", pMaterial->msId.c_str());
-        pMaterialElem->SetAttribute("Name", pMaterial->msName.c_str());
-        pMaterialElem->SetAttribute("Texture", pMaterial->msTexture.c_str());
-        pMaterialElem->SetAttribute("Color", pMaterial->mDiffuseColor.ToFileString().c_str());
+        Xml::SetAttr(pMaterialElem, "Id", pMaterial->msId.c_str());
+        Xml::SetAttr(pMaterialElem, "Name", pMaterial->msName.c_str());
+        Xml::SetAttr(pMaterialElem, "Texture", pMaterial->msTexture.c_str());
+        Xml::SetAttr(pMaterialElem, "Color", pMaterial->mDiffuseColor.ToFileString().c_str());
     }
 }
 
 //-----------------------------------------------------------------------
 
-static void SaveLightVec(TiXmlElement *apRootElem, tColladaLightVec *apColladaLightVec)
+static void SaveLightVec(pugi::xml_node apRootElem, tColladaLightVec *apColladaLightVec)
 {
-    TiXmlElement *pLightRootElem =  CreateXMLChild(apRootElem, "LightRoot");
+    pugi::xml_node pLightRootElem =  CreateXMLChild(apRootElem, "LightRoot");
 
-    pLightRootElem->SetAttribute("Size", (int)apColladaLightVec->size());
+    Xml::SetAttr(pLightRootElem, "Size", (int)apColladaLightVec->size());
 
     for(size_t i = 0; i < apColladaLightVec->size(); ++i)
     {
         cColladaLight *pLight = &(*apColladaLightVec)[i];
 
-        TiXmlElement *pLightElem = CreateXMLChild(pLightRootElem, "Light");
+        pugi::xml_node pLightElem = CreateXMLChild(pLightRootElem, "Light");
 
         //Log("Light %s\n",pLight->msName.c_str());
 
-        pLightElem->SetAttribute("Id", pLight->msId.c_str());
-        pLightElem->SetAttribute("Name", pLight->msName.c_str());
-        pLightElem->SetAttribute("Type", pLight->msType.c_str());
+        Xml::SetAttr(pLightElem, "Id", pLight->msId.c_str());
+        Xml::SetAttr(pLightElem, "Name", pLight->msName.c_str());
+        Xml::SetAttr(pLightElem, "Type", pLight->msType.c_str());
 
-        pLightElem->SetAttribute("Angle", cString::ToString(pLight->mfAngle).c_str());
-        pLightElem->SetAttribute("Color", pLight->mDiffuseColor.ToFileString().c_str());
+        Xml::SetAttr(pLightElem, "Angle", cString::ToString(pLight->mfAngle).c_str());
+        Xml::SetAttr(pLightElem, "Color", pLight->mDiffuseColor.ToFileString().c_str());
     }
 }
 
 //-----------------------------------------------------------------------
 
-static void SaveAnimationVec(TiXmlElement *apRootElem, tColladaAnimationVec *apColladaAnimationVec)
+static void SaveAnimationVec(pugi::xml_node apRootElem, tColladaAnimationVec *apColladaAnimationVec)
 {
-    TiXmlElement *pAnimationRootElem =  CreateXMLChild(apRootElem, "AnimationRoot");
+    pugi::xml_node pAnimationRootElem =  CreateXMLChild(apRootElem, "AnimationRoot");
 
-    pAnimationRootElem->SetAttribute("Size", (int)apColladaAnimationVec->size());
+    Xml::SetAttr(pAnimationRootElem, "Size", (int)apColladaAnimationVec->size());
 
     for(size_t i = 0; i < apColladaAnimationVec->size(); ++i)
     {
         cColladaAnimation *pAnimation = &(*apColladaAnimationVec)[i];
 
-        TiXmlElement *pAnimationElem = CreateXMLChild(pAnimationRootElem, "Animation");
+        pugi::xml_node pAnimationElem = CreateXMLChild(pAnimationRootElem, "Animation");
 
-        pAnimationElem->SetAttribute("Id", pAnimation->msId.c_str());
-        pAnimationElem->SetAttribute("TargetNode", pAnimation->msTargetNode.c_str());
+        Xml::SetAttr(pAnimationElem, "Id", pAnimation->msId.c_str());
+        Xml::SetAttr(pAnimationElem, "TargetNode", pAnimation->msTargetNode.c_str());
 
         /////////////////////////////////////
         // Channels
         {
-            TiXmlElement *pChannelVecElem =  CreateXMLChild(pAnimationElem, "ChannelVec");
-            pChannelVecElem->SetAttribute("Size", (int)pAnimation->mvChannels.size());
+            pugi::xml_node pChannelVecElem =  CreateXMLChild(pAnimationElem, "ChannelVec");
+            Xml::SetAttr(pChannelVecElem, "Size", (int)pAnimation->mvChannels.size());
 
             for(size_t idx = 0; idx < pAnimation->mvChannels.size(); ++idx)
             {
                 cColladaChannel *pChannel = &pAnimation->mvChannels[idx];
-                TiXmlElement *pChannelElem =  CreateXMLChild(pChannelVecElem, "Channel");
+                pugi::xml_node pChannelElem =  CreateXMLChild(pChannelVecElem, "Channel");
 
-                pChannelElem->SetAttribute("Id", pChannel->msId.c_str());
-                pChannelElem->SetAttribute("Target", pChannel->msTarget.c_str());
-                pChannelElem->SetAttribute("Source", pChannel->msSource.c_str());
+                Xml::SetAttr(pChannelElem, "Id", pChannel->msId.c_str());
+                Xml::SetAttr(pChannelElem, "Target", pChannel->msTarget.c_str());
+                Xml::SetAttr(pChannelElem, "Source", pChannel->msSource.c_str());
             }
         }
         /////////////////////////////////////
         // Samplers
         {
-            TiXmlElement *pSamplerVecElem =  CreateXMLChild(pAnimationElem, "SamplerVec");
-            pSamplerVecElem->SetAttribute("Size", (int)pAnimation->mvSamplers.size());
+            pugi::xml_node pSamplerVecElem =  CreateXMLChild(pAnimationElem, "SamplerVec");
+            Xml::SetAttr(pSamplerVecElem, "Size", (int)pAnimation->mvSamplers.size());
 
             for(size_t idx = 0; idx < pAnimation->mvSamplers.size(); ++idx)
             {
                 cColladaSampler *pSampler = &pAnimation->mvSamplers[idx];
-                TiXmlElement *pSamplerElem =  CreateXMLChild(pSamplerVecElem, "Sampler");
+                pugi::xml_node pSamplerElem =  CreateXMLChild(pSamplerVecElem, "Sampler");
 
-                pSamplerElem->SetAttribute("Id", pSampler->msId.c_str());
-                pSamplerElem->SetAttribute("TimeArray", pSampler->msTimeArray.c_str());
-                pSamplerElem->SetAttribute("ValueArray", pSampler->msValueArray.c_str());
-                pSamplerElem->SetAttribute("Target", pSampler->msTarget.c_str());
+                Xml::SetAttr(pSamplerElem, "Id", pSampler->msId.c_str());
+                Xml::SetAttr(pSamplerElem, "TimeArray", pSampler->msTimeArray.c_str());
+                Xml::SetAttr(pSamplerElem, "ValueArray", pSampler->msValueArray.c_str());
+                Xml::SetAttr(pSamplerElem, "Target", pSampler->msTarget.c_str());
             }
         }
         /////////////////////////////////////
         // Sources
         {
-            TiXmlElement *pSourceVecElem =  CreateXMLChild(pAnimationElem, "SourceVec");
-            pSourceVecElem->SetAttribute("Size", (int)pAnimation->mvSources.size());
+            pugi::xml_node pSourceVecElem =  CreateXMLChild(pAnimationElem, "SourceVec");
+            Xml::SetAttr(pSourceVecElem, "Size", (int)pAnimation->mvSources.size());
 
             for(size_t idx = 0; idx < pAnimation->mvSources.size(); ++idx)
             {
                 cColladaAnimSource *pSource = &pAnimation->mvSources[idx];
-                TiXmlElement *pSourceElem =  CreateXMLChild(pSourceVecElem, "Source");
+                pugi::xml_node pSourceElem =  CreateXMLChild(pSourceVecElem, "Source");
 
-                pSourceElem->SetAttribute("Id", pSource->msId.c_str());
+                Xml::SetAttr(pSourceElem, "Id", pSource->msId.c_str());
                 tString sData = "";
                 for(size_t j = 0; j < pSource->mvValues.size(); ++j)
                 {
                     sData += cString::ToString(pSource->mvValues[j]) + " ";
                 }
 
-                pSourceElem->SetAttribute("Values", sData.c_str());
+                Xml::SetAttr(pSourceElem, "Values", sData.c_str());
             }
         }
     }
@@ -601,31 +598,31 @@ static void SaveAnimationVec(TiXmlElement *apRootElem, tColladaAnimationVec *apC
 
 //-----------------------------------------------------------------------
 
-static void SaveControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *apColladaControllerVec)
+static void SaveControllerVec(pugi::xml_node apRootElem, tColladaControllerVec *apColladaControllerVec)
 {
-    TiXmlElement *pControllerRootElem =  CreateXMLChild(apRootElem, "ControllerRoot");
+    pugi::xml_node pControllerRootElem =  CreateXMLChild(apRootElem, "ControllerRoot");
 
-    pControllerRootElem->SetAttribute("Size", (int)apColladaControllerVec->size());
+    Xml::SetAttr(pControllerRootElem, "Size", (int)apColladaControllerVec->size());
 
     for(size_t i = 0; i < apColladaControllerVec->size(); ++i)
     {
         cColladaController *pController = &(*apColladaControllerVec)[i];
 
-        TiXmlElement *pControllerElem = CreateXMLChild(pControllerRootElem, "Controller");
+        pugi::xml_node pControllerElem = CreateXMLChild(pControllerRootElem, "Controller");
 
-        pControllerElem->SetAttribute("Id", pController->msId.c_str());
-        pControllerElem->SetAttribute("Target", pController->msTarget.c_str());
+        Xml::SetAttr(pControllerElem, "Id", pController->msId.c_str());
+        Xml::SetAttr(pControllerElem, "Target", pController->msTarget.c_str());
 
-        pControllerElem->SetAttribute("BindShapeMatrix", pController->m_mtxBindShapeMatrix.ToFileString().c_str());
+        Xml::SetAttr(pControllerElem, "BindShapeMatrix", pController->m_mtxBindShapeMatrix.ToFileString().c_str());
 
-        pControllerElem->SetAttribute("JointPairIdx", pController->mlJointPairIdx);
-        pControllerElem->SetAttribute("WeightPairIdx", pController->mlWeightPairIdx);
+        Xml::SetAttr(pControllerElem, "JointPairIdx", pController->mlJointPairIdx);
+        Xml::SetAttr(pControllerElem, "WeightPairIdx", pController->mlWeightPairIdx);
 
         ///////////////////////
         // Joints
         {
-            TiXmlElement *pJointsElem = CreateXMLChild(pControllerElem, "Joints");
-            pJointsElem->SetAttribute("Size", (int)pController->mvJoints.size());
+            pugi::xml_node pJointsElem = CreateXMLChild(pControllerElem, "Joints");
+            Xml::SetAttr(pJointsElem, "Size", (int)pController->mvJoints.size());
 
             tString sData = "";
             sData.reserve(pController->mvJoints.size() * 10);
@@ -638,8 +635,8 @@ static void SaveControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *a
         ///////////////////////
         // Weights
         {
-            TiXmlElement *pWeightsElem = CreateXMLChild(pControllerElem, "Weights");
-            pWeightsElem->SetAttribute("Size", (int)pController->mvWeights.size());
+            pugi::xml_node pWeightsElem = CreateXMLChild(pControllerElem, "Weights");
+            Xml::SetAttr(pWeightsElem, "Size", (int)pController->mvWeights.size());
 
             tString sData = "";
             sData.reserve(pController->mvWeights.size() * 5);
@@ -652,8 +649,8 @@ static void SaveControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *a
         ///////////////////////
         // Matrices
         {
-            TiXmlElement *pMatricesElem = CreateXMLChild(pControllerElem, "Matrices");
-            pMatricesElem->SetAttribute("Size", (int)pController->mvMatrices.size());
+            pugi::xml_node pMatricesElem = CreateXMLChild(pControllerElem, "Matrices");
+            Xml::SetAttr(pMatricesElem, "Size", (int)pController->mvMatrices.size());
 
             tString sData = "";
             sData.reserve(pController->mvMatrices.size() * 5);
@@ -666,8 +663,8 @@ static void SaveControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *a
         ///////////////////////
         // Pairs
         {
-            TiXmlElement *pPairVecElem = CreateXMLChild(pControllerElem, "PairVec");
-            pPairVecElem->SetAttribute("Size", (int)pController->mvPairs.size());
+            pugi::xml_node pPairVecElem = CreateXMLChild(pControllerElem, "PairVec");
+            Xml::SetAttr(pPairVecElem, "Size", (int)pController->mvPairs.size());
 
             tIntVec vPairNumVec;
             vPairNumVec.resize(pController->mvPairs.size(), 0);
@@ -675,7 +672,7 @@ static void SaveControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *a
             ////////////////////////////////
             //The pair connections
             int lCount = 0;
-            TiXmlElement *pPairsElem = CreateXMLChild(pPairVecElem, "Pairs");
+            pugi::xml_node pPairsElem = CreateXMLChild(pPairVecElem, "Pairs");
             tString sData = "";
             sData.reserve(pController->mvPairs.size() * 4 * 2);
             for(size_t idx = 0; idx < pController->mvPairs.size(); ++idx)
@@ -691,11 +688,11 @@ static void SaveControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *a
                 }
             }
             CreateXMLTextChild(pPairsElem, sData.c_str());
-            pPairsElem->SetAttribute("Size", lCount);
+            Xml::SetAttr(pPairsElem, "Size", lCount);
 
             ////////////////////////////////
             //The pair numbers
-            TiXmlElement *pPairNumElem = CreateXMLChild(pPairVecElem, "PairNum");
+            pugi::xml_node pPairNumElem = CreateXMLChild(pPairVecElem, "PairNum");
             sData = "";
             sData.reserve(pController->mvPairs.size() * 4);
             for(size_t idx = 0; idx < pController->mvPairs.size(); ++idx)
@@ -710,43 +707,43 @@ static void SaveControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *a
 
 //-----------------------------------------------------------------------
 
-static void SaveGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apColladaGeometryVec)
+static void SaveGeometryVec(pugi::xml_node apRootElem, tColladaGeometryVec *apColladaGeometryVec)
 {
-    TiXmlElement *pGeometryRootElem =  CreateXMLChild(apRootElem, "GeometryRoot");
+    pugi::xml_node pGeometryRootElem =  CreateXMLChild(apRootElem, "GeometryRoot");
 
-    pGeometryRootElem->SetAttribute("Size", (int)apColladaGeometryVec->size());
+    Xml::SetAttr(pGeometryRootElem, "Size", (int)apColladaGeometryVec->size());
 
     for(size_t i = 0; i < apColladaGeometryVec->size(); ++i)
     {
         cColladaGeometry *pGeometry = &(*apColladaGeometryVec)[i];
 
-        TiXmlElement *pGeometryElem = CreateXMLChild(pGeometryRootElem, "Geometry");
+        pugi::xml_node pGeometryElem = CreateXMLChild(pGeometryRootElem, "Geometry");
 
         /////////////////////////////////7
         //Main properties
-        pGeometryElem->SetAttribute("Id", pGeometry->msId.c_str());
-        pGeometryElem->SetAttribute("Name", pGeometry->msName.c_str());
+        Xml::SetAttr(pGeometryElem, "Id", pGeometry->msId.c_str());
+        Xml::SetAttr(pGeometryElem, "Name", pGeometry->msName.c_str());
 
-        pGeometryElem->SetAttribute("Material", pGeometry->msMaterial.c_str());
+        Xml::SetAttr(pGeometryElem, "Material", pGeometry->msMaterial.c_str());
 
         /////////////////////////////////
         // Vertex properties
         // Should not be needed.
-        /*pGeometryElem->SetAttribute("PosIdxNum",pGeometry->mlPosIdxNum);
-        pGeometryElem->SetAttribute("NormIdxNum",pGeometry->mlNormIdxNum);
-        pGeometryElem->SetAttribute("TexIdxNum",pGeometry->mlTexIdxNum);
+        /*Xml::SetAttr(pGeometryElem, "PosIdxNum", pGeometry->mlPosIdxNum);
+        Xml::SetAttr(pGeometryElem, "NormIdxNum", pGeometry->mlNormIdxNum);
+        Xml::SetAttr(pGeometryElem, "TexIdxNum", pGeometry->mlTexIdxNum);
 
-        pGeometryElem->SetAttribute("PosArrayIdx",pGeometry->mlPosArrayIdx);
-        pGeometryElem->SetAttribute("NormArrayIdx",pGeometry->mlNormArrayIdx);
-        pGeometryElem->SetAttribute("TexArrayIdx",pGeometry->mlTexArrayIdx); */
+        Xml::SetAttr(pGeometryElem, "PosArrayIdx", pGeometry->mlPosArrayIdx);
+        Xml::SetAttr(pGeometryElem, "NormArrayIdx", pGeometry->mlNormArrayIdx);
+        Xml::SetAttr(pGeometryElem, "TexArrayIdx", pGeometry->mlTexArrayIdx); */
 
         /////////////////////////////////
         // Index Vec
-        TiXmlElement *pIndexVecElem = CreateXMLChild(pGeometryElem, "IndexVec");
+        pugi::xml_node pIndexVecElem = CreateXMLChild(pGeometryElem, "IndexVec");
 
-        pIndexVecElem->SetAttribute("Size", (int)pGeometry->mvIndexVec.size());
+        Xml::SetAttr(pIndexVecElem, "Size", (int)pGeometry->mvIndexVec.size());
 
-        TiXmlElement *pIndicesDataElem = CreateXMLChild(pIndexVecElem, "Indices");
+        pugi::xml_node pIndicesDataElem = CreateXMLChild(pIndexVecElem, "Indices");
 
         tString sIndexVec = "";
         sIndexVec.reserve(pGeometry->mvIndexVec.size() * 5);
@@ -754,13 +751,13 @@ static void SaveGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
         {
             sIndexVec += cString::ToString((int)pGeometry->mvIndexVec[j]) + " ";
         }
-        TiXmlText *pIndecVecText = CreateXMLTextChild(pIndicesDataElem, "Data");
-        pIndecVecText->SetValue(sIndexVec.c_str());
+        pugi::xml_node pIndecVecText = CreateXMLTextChild(pIndicesDataElem, "Data");
+        pIndecVecText.set_value(sIndexVec.c_str());
 
         /////////////////////////////////
         // Vertex vec
-        TiXmlElement *pVertexVecElem = CreateXMLChild(pGeometryElem, "VertexVec");
-        pVertexVecElem->SetAttribute("Size", (int)pGeometry->mvVertexVec.size());
+        pugi::xml_node pVertexVecElem = CreateXMLChild(pGeometryElem, "VertexVec");
+        Xml::SetAttr(pVertexVecElem, "Size", (int)pGeometry->mvVertexVec.size());
         {
             /////////////////////////////////
             // Positions
@@ -770,9 +767,9 @@ static void SaveGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
             {
                 sData += pGeometry->mvVertexVec[j].pos.ToFileString() + " ";
             }
-            TiXmlElement *pDataElem = CreateXMLChild(pVertexVecElem, "Positions");
-            TiXmlText *pVecText = CreateXMLTextChild(pDataElem, "Data");
-            pVecText->SetValue(sData.c_str());
+            pugi::xml_node pDataElem = CreateXMLChild(pVertexVecElem, "Positions");
+            pugi::xml_node pVecText = CreateXMLTextChild(pDataElem, "Data");
+            pVecText.set_value(sData.c_str());
 
             /////////////////////////////////
             // Normals
@@ -784,7 +781,7 @@ static void SaveGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
             }
             pDataElem = CreateXMLChild(pVertexVecElem, "Normals");
             pVecText = CreateXMLTextChild(pDataElem, "Data");
-            pVecText->SetValue(sData.c_str());
+            pVecText.set_value(sData.c_str());
 
             /////////////////////////////////
             // UVs
@@ -796,7 +793,7 @@ static void SaveGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
             }
             pDataElem = CreateXMLChild(pVertexVecElem, "UV");
             pVecText = CreateXMLTextChild(pDataElem, "Data");
-            pVecText->SetValue(sData.c_str());
+            pVecText.set_value(sData.c_str());
 
             /////////////////////////////////
             // Tangents
@@ -805,6 +802,8 @@ static void SaveGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
             sData.reserve(pGeometry->mvVertexVec.size() * 10 * 4);
             for(size_t j = 0; j < pGeometry->mvTangents.size(); ++j)
             {
+                //sTemp was never filled, so the cache got garbage (and could not be parsed again).
+                snprintf(sTemp, sizeof(sTemp), "%g ", pGeometry->mvTangents[j]);
                 sData += sTemp;
             }
             pDataElem = CreateXMLChild(pVertexVecElem, "Tangents");
@@ -815,8 +814,8 @@ static void SaveGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
         // Extra vertex vec
         //if(false)
         {
-            TiXmlElement *pExtraVertexVecElem = CreateXMLChild(pGeometryElem, "ExtraVertexVec");
-            pExtraVertexVecElem->SetAttribute("Size", (int)pGeometry->mvExtraVtxVec.size());
+            pugi::xml_node pExtraVertexVecElem = CreateXMLChild(pGeometryElem, "ExtraVertexVec");
+            Xml::SetAttr(pExtraVertexVecElem, "Size", (int)pGeometry->mvExtraVtxVec.size());
 
             tUIntVec vExtraNum;
             vExtraNum.resize(pGeometry->mvExtraVtxVec.size(), 0);
@@ -826,7 +825,7 @@ static void SaveGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
             tString sData = "";
             sData.reserve(pGeometry->mvExtraVtxVec.size() * 4 * 4 * 4);
             int lExtraCount = 0;
-            TiXmlElement *pExtraElem = CreateXMLChild(pExtraVertexVecElem, "ExtraVertex");
+            pugi::xml_node pExtraElem = CreateXMLChild(pExtraVertexVecElem, "ExtraVertex");
             for(size_t idx = 0; idx < pGeometry->mvExtraVtxVec.size(); ++idx)
             {
                 tColladaExtraVtxList *pList = &pGeometry->mvExtraVtxVec[idx];
@@ -845,13 +844,13 @@ static void SaveGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
 
             }
             CreateXMLTextChild(pExtraElem, sData.c_str());
-            pExtraElem->SetAttribute("Size", (int)lExtraCount);
+            Xml::SetAttr(pExtraElem, "Size", (int)lExtraCount);
 
             ////////////////////////////
             //Extra num
             sData = "";
             sData.reserve(pGeometry->mvExtraVtxVec.size() * 4 * 4);
-            TiXmlElement *pExtraNumElem = CreateXMLChild(pExtraVertexVecElem, "ExtraNum");
+            pugi::xml_node pExtraNumElem = CreateXMLChild(pExtraVertexVecElem, "ExtraNum");
             for(size_t idx = 0; idx < pGeometry->mvExtraVtxVec.size(); ++idx)
             {
                 sData += cString::ToString((int)vExtraNum[idx]) + " ";
@@ -864,42 +863,42 @@ static void SaveGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
 
 //-----------------------------------------------------------------------
 
-static void SaveIterativeNode(TiXmlElement *apParentElem, cColladaNode *apParentNode)
+static void SaveIterativeNode(pugi::xml_node apParentElem, cColladaNode *apParentNode)
 {
     tColladaNodeListIt it = apParentNode->mlstChildren.begin();
     for(; it != apParentNode->mlstChildren.end(); ++it)
     {
         cColladaNode *pNode = *it;
-        TiXmlElement *pNodeElem =  CreateXMLChild(apParentElem, "Node");
+        pugi::xml_node pNodeElem =  CreateXMLChild(apParentElem, "Node");
 
-        pNodeElem->SetAttribute("Id", pNode->msId.c_str());
-        pNodeElem->SetAttribute("Sid", pNode->msSid.c_str());
-        pNodeElem->SetAttribute("Name", pNode->msName.c_str());
-        pNodeElem->SetAttribute("Type", pNode->msType.c_str());
+        Xml::SetAttr(pNodeElem, "Id", pNode->msId.c_str());
+        Xml::SetAttr(pNodeElem, "Sid", pNode->msSid.c_str());
+        Xml::SetAttr(pNodeElem, "Name", pNode->msName.c_str());
+        Xml::SetAttr(pNodeElem, "Type", pNode->msType.c_str());
 
-        pNodeElem->SetAttribute("InstanceMaterial", pNode->msInstanceMaterial.c_str());
+        Xml::SetAttr(pNodeElem, "InstanceMaterial", pNode->msInstanceMaterial.c_str());
 
-        pNodeElem->SetAttribute("Source", pNode->msSource.c_str());
-        pNodeElem->SetAttribute("SourceIsFile", pNode->mbSourceIsFile ? "true" : "false");
+        Xml::SetAttr(pNodeElem, "Source", pNode->msSource.c_str());
+        Xml::SetAttr(pNodeElem, "SourceIsFile", pNode->mbSourceIsFile ? "true" : "false");
 
-        pNodeElem->SetAttribute("Transform", pNode->m_mtxTransform.ToFileString().c_str());
-        pNodeElem->SetAttribute("WorldTransform", pNode->m_mtxWorldTransform.ToFileString().c_str());
+        Xml::SetAttr(pNodeElem, "Transform", pNode->m_mtxTransform.ToFileString().c_str());
+        Xml::SetAttr(pNodeElem, "WorldTransform", pNode->m_mtxWorldTransform.ToFileString().c_str());
 
-        pNodeElem->SetAttribute("Scale", pNode->mvScale.ToFileString().c_str());
+        Xml::SetAttr(pNodeElem, "Scale", pNode->mvScale.ToFileString().c_str());
 
-        pNodeElem->SetAttribute("Count", pNode->mlCount);
+        Xml::SetAttr(pNodeElem, "Count", pNode->mlCount);
 
 
-        TiXmlElement *pTransformRootElem =  CreateXMLChild(pNodeElem, "TransformRoot");
+        pugi::xml_node pTransformRootElem =  CreateXMLChild(pNodeElem, "TransformRoot");
         //tColladaTransformList mlstTransforms;
         tColladaTransformListIt transIt = pNode->mlstTransforms.begin();
         for(; transIt != pNode->mlstTransforms.end(); ++transIt)
         {
             cColladaTransform & transform = *transIt;
-            TiXmlElement *pTransformElem =  CreateXMLChild(pTransformRootElem, "Transform");
+            pugi::xml_node pTransformElem =  CreateXMLChild(pTransformRootElem, "Transform");
 
-            pTransformElem->SetAttribute("Sid", transform.msSid.c_str());
-            pTransformElem->SetAttribute("Type", transform.msType.c_str());
+            Xml::SetAttr(pTransformElem, "Sid", transform.msSid.c_str());
+            Xml::SetAttr(pTransformElem, "Type", transform.msType.c_str());
 
             tString sValues = "";
             for(size_t i = 0; i < transform.mvValues.size(); ++i)
@@ -907,22 +906,22 @@ static void SaveIterativeNode(TiXmlElement *apParentElem, cColladaNode *apParent
                 sValues += cString::ToString(transform.mvValues[i]) + " ";
             }
 
-            pTransformElem->SetAttribute("Values", sValues.c_str());
+            Xml::SetAttr(pTransformElem, "Values", sValues.c_str());
         }
 
         SaveIterativeNode(pNodeElem, pNode);
     }
 }
 
-static void SaveScene(TiXmlElement *apRootElem, cColladaScene *apColladaScene)
+static void SaveScene(pugi::xml_node apRootElem, cColladaScene *apColladaScene)
 {
-    TiXmlElement *pSceneElem =  CreateXMLChild(apRootElem, "Scene");
+    pugi::xml_node pSceneElem =  CreateXMLChild(apRootElem, "Scene");
 
-    pSceneElem->SetAttribute("StartTime", cString::ToString(apColladaScene->mfStartTime).c_str());
-    pSceneElem->SetAttribute("EndTime", cString::ToString(apColladaScene->mfEndTime).c_str());
-    pSceneElem->SetAttribute("DeltaTime", cString::ToString(apColladaScene->mfDeltaTime).c_str());
+    Xml::SetAttr(pSceneElem, "StartTime", cString::ToString(apColladaScene->mfStartTime).c_str());
+    Xml::SetAttr(pSceneElem, "EndTime", cString::ToString(apColladaScene->mfEndTime).c_str());
+    Xml::SetAttr(pSceneElem, "DeltaTime", cString::ToString(apColladaScene->mfDeltaTime).c_str());
 
-    TiXmlElement *pSceneRootElem =  CreateXMLChild(pSceneElem, "Root");
+    pugi::xml_node pSceneRootElem =  CreateXMLChild(pSceneElem, "Root");
 
     SaveIterativeNode(pSceneRootElem, &apColladaScene->mRoot);
 }
@@ -935,14 +934,14 @@ static void SaveScene(TiXmlElement *apRootElem, cColladaScene *apColladaScene)
 
 //-----------------------------------------------------------------------
 
-static void LoadImageVec(TiXmlElement *apRootElem, tColladaImageVec *apColladaImageVec);
-static void LoadTextureVec(TiXmlElement *apRootElem, tColladaTextureVec *apColladaTextureVec);
-static void LoadMaterialVec(TiXmlElement *apRootElem, tColladaMaterialVec *apColladaMaterialVec);
-static void LoadLightVec(TiXmlElement *apRootElem, tColladaLightVec *apColladaLightVec);
-static void LoadAnimationVec(TiXmlElement *apRootElem, tColladaAnimationVec *apColladaAnimVec);
-static void LoadControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *apColladaControllerVec);
-static void LoadGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apColladaGeometryVec);
-static void LoadScene(TiXmlElement *apRootElem, cColladaScene *apColladaScene);
+static void LoadImageVec(pugi::xml_node apRootElem, tColladaImageVec *apColladaImageVec);
+static void LoadTextureVec(pugi::xml_node apRootElem, tColladaTextureVec *apColladaTextureVec);
+static void LoadMaterialVec(pugi::xml_node apRootElem, tColladaMaterialVec *apColladaMaterialVec);
+static void LoadLightVec(pugi::xml_node apRootElem, tColladaLightVec *apColladaLightVec);
+static void LoadAnimationVec(pugi::xml_node apRootElem, tColladaAnimationVec *apColladaAnimVec);
+static void LoadControllerVec(pugi::xml_node apRootElem, tColladaControllerVec *apColladaControllerVec);
+static void LoadGeometryVec(pugi::xml_node apRootElem, tColladaGeometryVec *apColladaGeometryVec);
+static void LoadScene(pugi::xml_node apRootElem, cColladaScene *apColladaScene);
 
 bool cMeshLoaderCollada::LoadStructures(const tWString &asFile,
                                         tColladaImageVec *apColladaImageVec,
@@ -956,26 +955,22 @@ bool cMeshLoaderCollada::LoadStructures(const tWString &asFile,
 {
     //unsigned long lStartTime = mpSystem->GetLowLevel()->GetTime();
 
-    FILE *pFile = cPlatform::OpenFile(asFile, _W("rb"));
-    if(pFile == NULL)
+    if(cPlatform::FileExists(asFile) == false)
     {
         return false;
     }
 
-    TiXmlDocument* pXmlDoc = hplNew(TiXmlDocument, () );
-    if(pXmlDoc->LoadFile(pFile) == false)
+    pugi::xml_document xmlDoc;
+    if(Xml::LoadFile(xmlDoc, asFile) == false)
     {
         Warning("Couldn't open XML file %s\n", cString::To8Char(asFile).c_str());
-        fclose(pFile);
-        hplDelete(pXmlDoc);
         return false;
     }
-    fclose(pFile);
 
     //unsigned long lTime = mpSystem->GetLowLevel()->GetTime() - lStartTime;
     //Log("Loading cached collada XML file '%s' took: %d ms\n",asFile.c_str(),lTime);
 
-    TiXmlElement *pRootElem = pXmlDoc->RootElement();
+    pugi::xml_node pRootElem = xmlDoc.document_element();
 
     if(apColladaImageVec)
     {
@@ -1010,113 +1005,112 @@ bool cMeshLoaderCollada::LoadStructures(const tWString &asFile,
         LoadScene(pRootElem, apColladaScene);
     }
 
-    hplDelete(pXmlDoc);
     return true;
 }
 
 //-----------------------------------------------------------------------
 
-static void LoadImageVec(TiXmlElement *apRootElem, tColladaImageVec *apColladaImageVec)
+static void LoadImageVec(pugi::xml_node apRootElem, tColladaImageVec *apColladaImageVec)
 {
-    TiXmlElement *pImageRootElem = apRootElem->FirstChildElement("ImageRoot");
+    pugi::xml_node pImageRootElem = apRootElem.child("ImageRoot");
 
-    int lSize = cString::ToInt(pImageRootElem->Attribute("Size"), 0);
+    int lSize = cString::ToInt(Xml::Attr(pImageRootElem, "Size"), 0);
 
     apColladaImageVec->clear();
     apColladaImageVec->resize(lSize);
 
     int lCount = 0;
-    TiXmlElement *pImageElem = pImageRootElem->FirstChildElement();
-    for(; pImageElem != NULL; pImageElem = pImageElem->NextSiblingElement(), ++lCount)
+    pugi::xml_node pImageElem = Xml::FirstElem(pImageRootElem);
+    for(; pImageElem; pImageElem = Xml::NextElem(pImageElem), ++lCount)
     {
         cColladaImage* pImage = &(*apColladaImageVec)[lCount];
 
-        pImage->msId = pImageElem->Attribute("Id");
-        pImage->msName = pImageElem->Attribute("Name");
-        pImage->msSource = pImageElem->Attribute("Source");
+        pImage->msId = Xml::AttrOrEmpty(pImageElem, "Id");
+        pImage->msName = Xml::AttrOrEmpty(pImageElem, "Name");
+        pImage->msSource = Xml::AttrOrEmpty(pImageElem, "Source");
     }
 }
 
 //-----------------------------------------------------------------------
 
-static void LoadTextureVec(TiXmlElement *apRootElem, tColladaTextureVec *apColladaTextureVec)
+static void LoadTextureVec(pugi::xml_node apRootElem, tColladaTextureVec *apColladaTextureVec)
 {
-    TiXmlElement *pTextureRootElem = apRootElem->FirstChildElement("TextureRoot");
+    pugi::xml_node pTextureRootElem = apRootElem.child("TextureRoot");
 
-    int lSize = cString::ToInt(pTextureRootElem->Attribute("Size"), 0);
+    int lSize = cString::ToInt(Xml::Attr(pTextureRootElem, "Size"), 0);
 
     apColladaTextureVec->clear();
     apColladaTextureVec->resize(lSize);
 
     int lCount = 0;
-    TiXmlElement *pTextureElem = pTextureRootElem->FirstChildElement();
-    for(; pTextureElem != NULL; pTextureElem = pTextureElem->NextSiblingElement(), ++lCount)
+    pugi::xml_node pTextureElem = Xml::FirstElem(pTextureRootElem);
+    for(; pTextureElem; pTextureElem = Xml::NextElem(pTextureElem), ++lCount)
     {
         cColladaTexture* pTexture = &(*apColladaTextureVec)[lCount];
 
-        pTexture->msId = pTextureElem->Attribute("Id");
-        pTexture->msName = pTextureElem->Attribute("Name");
-        pTexture->msImage = pTextureElem->Attribute("Image");
+        pTexture->msId = Xml::AttrOrEmpty(pTextureElem, "Id");
+        pTexture->msName = Xml::AttrOrEmpty(pTextureElem, "Name");
+        pTexture->msImage = Xml::AttrOrEmpty(pTextureElem, "Image");
     }
 }
 
 //-----------------------------------------------------------------------
 
-static void LoadMaterialVec(TiXmlElement *apRootElem, tColladaMaterialVec *apColladaMaterialVec)
+static void LoadMaterialVec(pugi::xml_node apRootElem, tColladaMaterialVec *apColladaMaterialVec)
 {
-    TiXmlElement *pMaterialRootElem = apRootElem->FirstChildElement("MaterialRoot");
+    pugi::xml_node pMaterialRootElem = apRootElem.child("MaterialRoot");
 
-    int lSize = cString::ToInt(pMaterialRootElem->Attribute("Size"), 0);
+    int lSize = cString::ToInt(Xml::Attr(pMaterialRootElem, "Size"), 0);
 
     apColladaMaterialVec->clear();
     apColladaMaterialVec->resize(lSize);
 
     int lCount = 0;
-    TiXmlElement *pMaterialElem = pMaterialRootElem->FirstChildElement();
-    for(; pMaterialElem != NULL; pMaterialElem = pMaterialElem->NextSiblingElement(), ++lCount)
+    pugi::xml_node pMaterialElem = Xml::FirstElem(pMaterialRootElem);
+    for(; pMaterialElem; pMaterialElem = Xml::NextElem(pMaterialElem), ++lCount)
     {
         cColladaMaterial* pMaterial = &(*apColladaMaterialVec)[lCount];
 
-        pMaterial->msId = pMaterialElem->Attribute("Id");
-        pMaterial->msName = pMaterialElem->Attribute("Name");
-        pMaterial->msTexture = pMaterialElem->Attribute("Texture");
-        pMaterial->mDiffuseColor = cString::ToColor(pMaterialElem->Attribute("Color"), cColor(0, 0));
+        pMaterial->msId = Xml::AttrOrEmpty(pMaterialElem, "Id");
+        pMaterial->msName = Xml::AttrOrEmpty(pMaterialElem, "Name");
+        pMaterial->msTexture = Xml::AttrOrEmpty(pMaterialElem, "Texture");
+        pMaterial->mDiffuseColor = cString::ToColor(Xml::Attr(pMaterialElem, "Color"), cColor(0, 0));
     }
 }
 
 //-----------------------------------------------------------------------
 
-static void LoadControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *apColladaControllerVec)
+static void LoadControllerVec(pugi::xml_node apRootElem, tColladaControllerVec *apColladaControllerVec)
 {
-    TiXmlElement *pControllerRootElem = apRootElem->FirstChildElement("ControllerRoot");
+    pugi::xml_node pControllerRootElem = apRootElem.child("ControllerRoot");
 
-    int lSize = cString::ToInt(pControllerRootElem->Attribute("Size"), 0);
+    int lSize = cString::ToInt(Xml::Attr(pControllerRootElem, "Size"), 0);
 
     apColladaControllerVec->clear();
     apColladaControllerVec->resize(lSize);
 
     int lCount = 0;
-    TiXmlElement *pControllerElem = pControllerRootElem->FirstChildElement();
-    for(; pControllerElem != NULL; pControllerElem = pControllerElem->NextSiblingElement(), ++lCount)
+    pugi::xml_node pControllerElem = Xml::FirstElem(pControllerRootElem);
+    for(; pControllerElem; pControllerElem = Xml::NextElem(pControllerElem), ++lCount)
     {
         cColladaController* pController = &(*apColladaControllerVec)[lCount];
 
-        pController->msId = pControllerElem->Attribute("Id");
-        pController->msTarget = pControllerElem->Attribute("Target");
+        pController->msId = Xml::AttrOrEmpty(pControllerElem, "Id");
+        pController->msTarget = Xml::AttrOrEmpty(pControllerElem, "Target");
 
-        pController->m_mtxBindShapeMatrix = cString::ToMatrixf(pControllerElem->Attribute("BindShapeMatrix"), cMatrixf::Identity);
+        pController->m_mtxBindShapeMatrix = cString::ToMatrixf(Xml::Attr(pControllerElem, "BindShapeMatrix"), cMatrixf::Identity);
 
-        pController->mlJointPairIdx = cString::ToInt(pControllerElem->Attribute("JointPairIdx"), 0);
-        pController->mlWeightPairIdx = cString::ToInt(pControllerElem->Attribute("WeightPairIdx"), 0);
+        pController->mlJointPairIdx = cString::ToInt(Xml::Attr(pControllerElem, "JointPairIdx"), 0);
+        pController->mlWeightPairIdx = cString::ToInt(Xml::Attr(pControllerElem, "WeightPairIdx"), 0);
 
         ////////////////////////////
         //Joints
         {
-            TiXmlElement * pJointsElem = pControllerElem->FirstChildElement("Joints");
-            int lSize = cString::ToInt(pJointsElem->Attribute("Size"), 0);
-            TiXmlText *pJointsText = pJointsElem->FirstChild()->ToText();
+            pugi::xml_node pJointsElem = pControllerElem.child("Joints");
+            int lSize = cString::ToInt(Xml::Attr(pJointsElem, "Size"), 0);
+            const char *pJointsText = Xml::TextOrEmpty(pJointsElem);
 
-            tString sData = pJointsText->Value();
+            tString sData = pJointsText;
             tString sSepp = " ";
             pController->mvJoints.reserve(lSize);
             cString::GetStringVec(sData, pController->mvJoints, &sSepp);
@@ -1124,30 +1118,30 @@ static void LoadControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *a
         ////////////////////////////
         //Weights
         {
-            TiXmlElement * pWeightsElem = pControllerElem->FirstChildElement("Weights");
-            int lSize = cString::ToInt(pWeightsElem->Attribute("Size"), 0);
-            TiXmlText *pWeightsText = pWeightsElem->FirstChild()->ToText();
+            pugi::xml_node pWeightsElem = pControllerElem.child("Weights");
+            int lSize = cString::ToInt(Xml::Attr(pWeightsElem, "Size"), 0);
+            const char *pWeightsText = Xml::TextOrEmpty(pWeightsElem);
 
-            //tString sData = pWeightsText->Value();
+            //tString sData = pWeightsText;
             //tString sSepp = " "; pController->mvWeights.reserve(lSize);
             //cString::GetFloatVec(sData,pController->mvWeights,&sSepp);
 
             pController->mvWeights.resize(lSize);
-            cString::FloatStringToArray(&pController->mvWeights[0], pWeightsText->Value(), lSize);
+            cString::FloatStringToArray(&pController->mvWeights[0], pWeightsText, lSize);
         }
         ////////////////////////////
         //Matrices
         {
-            TiXmlElement * pMatricesElem = pControllerElem->FirstChildElement("Matrices");
-            int lSize = cString::ToInt(pMatricesElem->Attribute("Size"), 0);
-            TiXmlText *pMatricesText = pMatricesElem->FirstChild()->ToText();
+            pugi::xml_node pMatricesElem = pControllerElem.child("Matrices");
+            int lSize = cString::ToInt(Xml::Attr(pMatricesElem, "Size"), 0);
+            const char *pMatricesText = Xml::TextOrEmpty(pMatricesElem);
 
-            //tString sData = pMatricesText->Value();
+            //tString sData = pMatricesText;
             //tString sSepp = " ";
             //cString::GetFloatVec(sData,vRawData,&sSepp);
             tFloatVec vRawData;
             vRawData.resize(lSize * 16);
-            cString::FloatStringToArray(&vRawData[0], pMatricesText->Value(), lSize * 16);
+            cString::FloatStringToArray(&vRawData[0], pMatricesText, lSize * 16);
 
 
             float *pData = &vRawData[0];
@@ -1165,32 +1159,32 @@ static void LoadControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *a
         ////////////////////////////
         //Pairs
         {
-            TiXmlElement * pPairVecElem = pControllerElem->FirstChildElement("PairVec");
-            int lSize = cString::ToInt(pPairVecElem->Attribute("Size"), 0);
+            pugi::xml_node pPairVecElem = pControllerElem.child("PairVec");
+            int lSize = cString::ToInt(Xml::Attr(pPairVecElem, "Size"), 0);
 
             /////////////////////////////////////////
             // Get number of connections per pair
-            TiXmlElement* pPairNumElem = pPairVecElem->FirstChildElement("PairNum");
-            TiXmlText *pPairNumText = pPairNumElem->FirstChild()->ToText();
+            pugi::xml_node pPairNumElem = pPairVecElem.child("PairNum");
+            const char *pPairNumText = Xml::TextOrEmpty(pPairNumElem);
 
             tUIntVec vPairNum;
             vPairNum.resize(lSize);
-            //tString sData = pPairNumText->Value();
+            //tString sData = pPairNumText;
             //tString sSepp = " ";
             //cString::GetIntVec(sData,vPairNum,&sSepp);
-            cString::UIntStringToArray(&vPairNum[0], pPairNumText->Value(), lSize);
+            cString::UIntStringToArray(&vPairNum[0], pPairNumText, lSize);
 
             /////////////////////////////////////////
             // Get pairs
-            TiXmlElement* pPairsElem = pPairVecElem->FirstChildElement("Pairs");
-            int lPairSize = cString::ToInt(pPairsElem->Attribute("Size"), 0);
-            TiXmlText *pPairsText = pPairsElem->FirstChild()->ToText();
+            pugi::xml_node pPairsElem = pPairVecElem.child("Pairs");
+            int lPairSize = cString::ToInt(Xml::Attr(pPairsElem, "Size"), 0);
+            const char *pPairsText = Xml::TextOrEmpty(pPairsElem);
 
             tUIntVec vPairs;
             vPairs.resize(lPairSize * 2);
-            //sData = pPairsText->Value();
+            //sData = pPairsText;
             //cString::GetIntVec(sData,vPairs,&sSepp);
-            cString::UIntStringToArray(&vPairs[0], pPairsText->Value(), lPairSize * 2);
+            cString::UIntStringToArray(&vPairs[0], pPairsText, lPairSize * 2);
 
 
             pController->mvPairs.resize(lSize);
@@ -1210,103 +1204,103 @@ static void LoadControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *a
 }
 //-----------------------------------------------------------------------
 
-static void LoadLightVec(TiXmlElement *apRootElem, tColladaLightVec *apColladaLightVec)
+static void LoadLightVec(pugi::xml_node apRootElem, tColladaLightVec *apColladaLightVec)
 {
-    TiXmlElement *pLightRootElem = apRootElem->FirstChildElement("LightRoot");
+    pugi::xml_node pLightRootElem = apRootElem.child("LightRoot");
 
-    int lSize = cString::ToInt(pLightRootElem->Attribute("Size"), 0);
+    int lSize = cString::ToInt(Xml::Attr(pLightRootElem, "Size"), 0);
 
     apColladaLightVec->clear();
     apColladaLightVec->resize(lSize);
 
     int lCount = 0;
-    TiXmlElement *pLightElem = pLightRootElem->FirstChildElement();
-    for(; pLightElem != NULL; pLightElem = pLightElem->NextSiblingElement(), ++lCount)
+    pugi::xml_node pLightElem = Xml::FirstElem(pLightRootElem);
+    for(; pLightElem; pLightElem = Xml::NextElem(pLightElem), ++lCount)
     {
         cColladaLight* pLight = &(*apColladaLightVec)[lCount];
 
-        pLight->msId = pLightElem->Attribute("Id");
-        pLight->msName = pLightElem->Attribute("Name");
-        pLight->msType = pLightElem->Attribute("Type");
-        pLight->mfAngle = cString::ToFloat(pLightElem->Attribute("Angle"), 0);
-        pLight->mDiffuseColor = cString::ToColor(pLightElem->Attribute("Color"), cColor(0, 0));
+        pLight->msId = Xml::AttrOrEmpty(pLightElem, "Id");
+        pLight->msName = Xml::AttrOrEmpty(pLightElem, "Name");
+        pLight->msType = Xml::AttrOrEmpty(pLightElem, "Type");
+        pLight->mfAngle = cString::ToFloat(Xml::Attr(pLightElem, "Angle"), 0);
+        pLight->mDiffuseColor = cString::ToColor(Xml::Attr(pLightElem, "Color"), cColor(0, 0));
     }
 }
 
 //-----------------------------------------------------------------------
 
-static void LoadAnimationVec(TiXmlElement *apRootElem, tColladaAnimationVec *apColladaAnimationVec)
+static void LoadAnimationVec(pugi::xml_node apRootElem, tColladaAnimationVec *apColladaAnimationVec)
 {
-    TiXmlElement *pAnimationRootElem = apRootElem->FirstChildElement("AnimationRoot");
+    pugi::xml_node pAnimationRootElem = apRootElem.child("AnimationRoot");
 
-    int lSize = cString::ToInt(pAnimationRootElem->Attribute("Size"), 0);
+    int lSize = cString::ToInt(Xml::Attr(pAnimationRootElem, "Size"), 0);
 
     apColladaAnimationVec->clear();
     apColladaAnimationVec->resize(lSize);
 
     int lCount = 0;
-    TiXmlElement *pAnimationElem = pAnimationRootElem->FirstChildElement();
-    for(; pAnimationElem != NULL; pAnimationElem = pAnimationElem->NextSiblingElement(), ++lCount)
+    pugi::xml_node pAnimationElem = Xml::FirstElem(pAnimationRootElem);
+    for(; pAnimationElem; pAnimationElem = Xml::NextElem(pAnimationElem), ++lCount)
     {
         cColladaAnimation* pAnimation = &(*apColladaAnimationVec)[lCount];
 
-        pAnimation->msId = pAnimationElem->Attribute("Id");
-        pAnimation->msTargetNode = pAnimationElem->Attribute("TargetNode");
+        pAnimation->msId = Xml::AttrOrEmpty(pAnimationElem, "Id");
+        pAnimation->msTargetNode = Xml::AttrOrEmpty(pAnimationElem, "TargetNode");
 
         /////////////////////////////////////
         //Channels
         {
-            TiXmlElement *pChannelVecElem = pAnimationElem->FirstChildElement("ChannelVec");
-            int lSize = cString::ToInt(pChannelVecElem->Attribute("Size"), 0);
+            pugi::xml_node pChannelVecElem = pAnimationElem.child("ChannelVec");
+            int lSize = cString::ToInt(Xml::Attr(pChannelVecElem, "Size"), 0);
             pAnimation->mvChannels.resize(lSize);
 
             int idx = 0;
-            TiXmlElement *pChannelElem = pChannelVecElem->FirstChildElement("Channel");
-            for(; pChannelElem != NULL; pChannelElem = pChannelElem->NextSiblingElement("Channel"), ++idx)
+            pugi::xml_node pChannelElem = pChannelVecElem.child("Channel");
+            for(; pChannelElem; pChannelElem = pChannelElem.next_sibling("Channel"), ++idx)
             {
                 cColladaChannel *pChannel = &pAnimation->mvChannels[idx];
 
-                pChannel->msId = pChannelElem->Attribute("Id");
-                pChannel->msTarget = pChannelElem->Attribute("Target");
-                pChannel->msSource = pChannelElem->Attribute("Source");
+                pChannel->msId = Xml::AttrOrEmpty(pChannelElem, "Id");
+                pChannel->msTarget = Xml::AttrOrEmpty(pChannelElem, "Target");
+                pChannel->msSource = Xml::AttrOrEmpty(pChannelElem, "Source");
             }
         }
 
         /////////////////////////////////////
         //Samplers
         {
-            TiXmlElement *pSamplerVecElem = pAnimationElem->FirstChildElement("SamplerVec");
-            int lSize = cString::ToInt(pSamplerVecElem->Attribute("Size"), 0);
+            pugi::xml_node pSamplerVecElem = pAnimationElem.child("SamplerVec");
+            int lSize = cString::ToInt(Xml::Attr(pSamplerVecElem, "Size"), 0);
             pAnimation->mvSamplers.resize(lSize);
 
             int idx = 0;
-            TiXmlElement *pSamplerElem = pSamplerVecElem->FirstChildElement("Sampler");
-            for(; pSamplerElem != NULL; pSamplerElem = pSamplerElem->NextSiblingElement("Sampler"), ++idx)
+            pugi::xml_node pSamplerElem = pSamplerVecElem.child("Sampler");
+            for(; pSamplerElem; pSamplerElem = pSamplerElem.next_sibling("Sampler"), ++idx)
             {
                 cColladaSampler *pSampler = &pAnimation->mvSamplers[idx];
 
-                pSampler->msId = pSamplerElem->Attribute("Id");
-                pSampler->msTarget = pSamplerElem->Attribute("Target");
-                pSampler->msTimeArray = pSamplerElem->Attribute("TimeArray");
-                pSampler->msValueArray = pSamplerElem->Attribute("ValueArray");
+                pSampler->msId = Xml::AttrOrEmpty(pSamplerElem, "Id");
+                pSampler->msTarget = Xml::AttrOrEmpty(pSamplerElem, "Target");
+                pSampler->msTimeArray = Xml::AttrOrEmpty(pSamplerElem, "TimeArray");
+                pSampler->msValueArray = Xml::AttrOrEmpty(pSamplerElem, "ValueArray");
             }
         }
 
         /////////////////////////////////////
         //Sources
         {
-            TiXmlElement *pSourceVecElem = pAnimationElem->FirstChildElement("SourceVec");
-            int lSize = cString::ToInt(pSourceVecElem->Attribute("Size"), 0);
+            pugi::xml_node pSourceVecElem = pAnimationElem.child("SourceVec");
+            int lSize = cString::ToInt(Xml::Attr(pSourceVecElem, "Size"), 0);
             pAnimation->mvSources.resize(lSize);
 
             int idx = 0;
-            TiXmlElement *pSourceElem = pSourceVecElem->FirstChildElement("Source");
-            for(; pSourceElem != NULL; pSourceElem = pSourceElem->NextSiblingElement("Source"), ++idx)
+            pugi::xml_node pSourceElem = pSourceVecElem.child("Source");
+            for(; pSourceElem; pSourceElem = pSourceElem.next_sibling("Source"), ++idx)
             {
                 cColladaAnimSource *pSource = &pAnimation->mvSources[idx];
 
-                pSource->msId = pSourceElem->Attribute("Id");
-                tString sData = pSourceElem->Attribute("Values");
+                pSource->msId = Xml::AttrOrEmpty(pSourceElem, "Id");
+                tString sData = Xml::AttrOrEmpty(pSourceElem, "Values");
                 tString sSepp = " ";
                 pSource->mvValues.reserve(3);
 
@@ -1319,23 +1313,23 @@ static void LoadAnimationVec(TiXmlElement *apRootElem, tColladaAnimationVec *apC
 
 //-----------------------------------------------------------------------
 
-static void LoadGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apColladaGeometryVec)
+static void LoadGeometryVec(pugi::xml_node apRootElem, tColladaGeometryVec *apColladaGeometryVec)
 {
-    TiXmlElement *pGeometryRootElem = apRootElem->FirstChildElement("GeometryRoot");
-    int lSize = cString::ToInt(pGeometryRootElem->Attribute("Size"), 0);
+    pugi::xml_node pGeometryRootElem = apRootElem.child("GeometryRoot");
+    int lSize = cString::ToInt(Xml::Attr(pGeometryRootElem, "Size"), 0);
 
     apColladaGeometryVec->clear();
     apColladaGeometryVec->resize(lSize);
 
     int lCount = 0;
-    TiXmlElement *pGeometryElem = pGeometryRootElem->FirstChildElement();
-    for(; pGeometryElem != NULL; pGeometryElem = pGeometryElem->NextSiblingElement(), ++lCount)
+    pugi::xml_node pGeometryElem = Xml::FirstElem(pGeometryRootElem);
+    for(; pGeometryElem; pGeometryElem = Xml::NextElem(pGeometryElem), ++lCount)
     {
         cColladaGeometry* pGeometry = &(*apColladaGeometryVec)[lCount];
 
-        pGeometry->msId = pGeometryElem->Attribute("Id");
-        pGeometry->msName = pGeometryElem->Attribute("Name");
-        pGeometry->msMaterial = pGeometryElem->Attribute("Material");
+        pGeometry->msId = Xml::AttrOrEmpty(pGeometryElem, "Id");
+        pGeometry->msName = Xml::AttrOrEmpty(pGeometryElem, "Name");
+        pGeometry->msMaterial = Xml::AttrOrEmpty(pGeometryElem, "Material");
 
         // XXX
         if(pGeometry->msName.empty())
@@ -1347,19 +1341,19 @@ static void LoadGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
         /////////////////////////////////
         // Index Vec
         {
-            TiXmlElement *pIndexVecElem = pGeometryElem->FirstChildElement("IndexVec");
-            int lSize = cString::ToInt(pIndexVecElem->Attribute("Size"), 0);
+            pugi::xml_node pIndexVecElem = pGeometryElem.child("IndexVec");
+            int lSize = cString::ToInt(Xml::Attr(pIndexVecElem, "Size"), 0);
 
             if(lSize > 0)
             {
-                TiXmlElement *pIndicesDataElem = pIndexVecElem->FirstChildElement("Indices");
-                TiXmlText *pVecText = pIndicesDataElem->FirstChild()->ToText();
+                pugi::xml_node pIndicesDataElem = pIndexVecElem.child("Indices");
+                const char *pVecText = Xml::TextOrEmpty(pIndicesDataElem);
 
                 pGeometry->mvIndexVec.resize(lSize);
 
-                cString::UIntStringToArray(&pGeometry->mvIndexVec[0], pVecText->Value(), lSize);
+                cString::UIntStringToArray(&pGeometry->mvIndexVec[0], pVecText, lSize);
 
-                //tString sData = pVecText->Value();
+                //tString sData = pVecText;
                 //tString sSepp = " ";
                 //cString::GetUIntVec(sData,pGeometry->mvIndexVec,&sSepp);
             }
@@ -1368,8 +1362,8 @@ static void LoadGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
         /////////////////////////////////
         // Vertex vec
         {
-            TiXmlElement *pVertexVecElem = pGeometryElem->FirstChildElement("VertexVec");
-            int lSize = cString::ToInt(pVertexVecElem->Attribute("Size"), 0);
+            pugi::xml_node pVertexVecElem = pGeometryElem.child("VertexVec");
+            int lSize = cString::ToInt(Xml::Attr(pVertexVecElem, "Size"), 0);
 
             if(lSize > 0)
             {
@@ -1381,15 +1375,15 @@ static void LoadGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
                 /////////////////////////////////
                 // Positions
                 {
-                    TiXmlElement *pDataElem = pVertexVecElem->FirstChildElement("Positions");
-                    TiXmlText *pVecText = pDataElem->FirstChild()->ToText();
+                    pugi::xml_node pDataElem = pVertexVecElem.child("Positions");
+                    const char *pVecText = Xml::TextOrEmpty(pDataElem);
 
-                    //tString sData = pVecText->Value();
+                    //tString sData = pVecText;
                     //tString sSepp = " ";
                     //tFloatVec vRawData; vRawData.reserve(lSize * 3);
                     //cString::GetFloatVec(sData,vRawData,&sSepp);
 
-                    cString::FloatStringToArray(&vRawData[0], pVecText->Value(), lSize * 3);
+                    cString::FloatStringToArray(&vRawData[0], pVecText, lSize * 3);
 
                     float *pData = &vRawData[0];
                     for(int i = 0; i < lSize; ++i)
@@ -1405,15 +1399,15 @@ static void LoadGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
                 /////////////////////////////////
                 // Normals
                 {
-                    TiXmlElement *pDataElem = pVertexVecElem->FirstChildElement("Normals");
-                    TiXmlText *pVecText = pDataElem->FirstChild()->ToText();
+                    pugi::xml_node pDataElem = pVertexVecElem.child("Normals");
+                    const char *pVecText = Xml::TextOrEmpty(pDataElem);
 
-                    //tString sData = pVecText->Value();
+                    //tString sData = pVecText;
                     //tString sSepp = " ";
                     //tFloatVec vRawData; vRawData.reserve(lSize * 3);
                     //cString::GetFloatVec(sData,vRawData,&sSepp);
 
-                    cString::FloatStringToArray(&vRawData[0], pVecText->Value(), lSize * 3);
+                    cString::FloatStringToArray(&vRawData[0], pVecText, lSize * 3);
 
                     float *pData = &vRawData[0];
                     for(int i = 0; i < lSize; ++i)
@@ -1429,15 +1423,15 @@ static void LoadGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
                 /////////////////////////////////
                 // UVs
                 {
-                    TiXmlElement *pDataElem = pVertexVecElem->FirstChildElement("UV");
-                    TiXmlText *pVecText = pDataElem->FirstChild()->ToText();
+                    pugi::xml_node pDataElem = pVertexVecElem.child("UV");
+                    const char *pVecText = Xml::TextOrEmpty(pDataElem);
 
-                    //tString sData = pVecText->Value();
+                    //tString sData = pVecText;
                     //tString sSepp = " ";
                     //tFloatVec vRawData; vRawData.reserve(lSize * 3);
                     //cString::GetFloatVec(sData,vRawData,&sSepp);
 
-                    cString::FloatStringToArray(&vRawData[0], pVecText->Value(), lSize * 3);
+                    cString::FloatStringToArray(&vRawData[0], pVecText, lSize * 3);
 
                     float *pData = &vRawData[0];
                     for(int i = 0; i < lSize; ++i)
@@ -1453,16 +1447,16 @@ static void LoadGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
                 /////////////////////////////////
                 // Tangents
                 {
-                    TiXmlElement *pDataElem = pVertexVecElem->FirstChildElement("Tangents");
-                    TiXmlText *pVecText = pDataElem->FirstChild()->ToText();
+                    pugi::xml_node pDataElem = pVertexVecElem.child("Tangents");
+                    const char *pVecText = Xml::TextOrEmpty(pDataElem);
 
-                    //tString sData = pVecText->Value();
+                    //tString sData = pVecText;
                     //tString sSepp = " ";
                     //tFloatVec vRawData; vRawData.reserve(lSize * 3);
                     //cString::GetFloatVec(sData,vRawData,&sSepp);
 
                     pGeometry->mvTangents.resize(lSize * 4);
-                    cString::FloatStringToArray(&pGeometry->mvTangents[0], pVecText->Value(), lSize * 4);
+                    cString::FloatStringToArray(&pGeometry->mvTangents[0], pVecText, lSize * 4);
                 }
             }
 
@@ -1471,8 +1465,8 @@ static void LoadGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
         /////////////////////////////////
         // Extra vertex vec
         {
-            TiXmlElement *pVertexVecElem = pGeometryElem->FirstChildElement("ExtraVertexVec");
-            int lSize = cString::ToInt(pVertexVecElem->Attribute("Size"), 0);
+            pugi::xml_node pVertexVecElem = pGeometryElem.child("ExtraVertexVec");
+            int lSize = cString::ToInt(Xml::Attr(pVertexVecElem, "Size"), 0);
 
             if(lSize > 0)
             {
@@ -1484,21 +1478,21 @@ static void LoadGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
                 //////////////////////////////////////////////
                 // Extra num
                 {
-                    TiXmlElement *pExtraNumElem = pVertexVecElem->FirstChildElement("ExtraNum");
-                    TiXmlText* pExtraNumText = pExtraNumElem->FirstChild()->ToText();
+                    pugi::xml_node pExtraNumElem = pVertexVecElem.child("ExtraNum");
+                    const char *pExtraNumText = Xml::TextOrEmpty(pExtraNumElem);
 
-                    cString::UIntStringToArray(&mvExtraNum[0], pExtraNumText->Value(), lSize);
+                    cString::UIntStringToArray(&mvExtraNum[0], pExtraNumText, lSize);
                 }
 
                 //////////////////////////////////////////////
                 // Extra vertex
                 {
-                    TiXmlElement *pExtraVertexElem = pVertexVecElem->FirstChildElement("ExtraVertex");
-                    TiXmlText* pExtraVertexText = pExtraVertexElem->FirstChild()->ToText();
-                    int lExtraVtxSize = cString::ToInt(pExtraVertexElem->Attribute("Size"), 0);
+                    pugi::xml_node pExtraVertexElem = pVertexVecElem.child("ExtraVertex");
+                    const char *pExtraVertexText = Xml::TextOrEmpty(pExtraVertexElem);
+                    int lExtraVtxSize = cString::ToInt(Xml::Attr(pExtraVertexElem, "Size"), 0);
                     mvExtraVtx.resize(lExtraVtxSize * 4);
 
-                    cString::UIntStringToArray(&mvExtraVtx[0], pExtraVertexText->Value(), lExtraVtxSize * 4);
+                    cString::UIntStringToArray(&mvExtraVtx[0], pExtraVertexText, lExtraVtxSize * 4);
                 }
 
                 unsigned int *pData = &mvExtraVtx[0];
@@ -1519,44 +1513,44 @@ static void LoadGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apCol
 
 //-----------------------------------------------------------------------
 
-static void LoadIterativeNode(TiXmlElement *apNodeElem, cColladaNode *apParentNode, cColladaScene *apColladaScene)
+static void LoadIterativeNode(pugi::xml_node apNodeElem, cColladaNode *apParentNode, cColladaScene *apColladaScene)
 {
     cColladaNode *pNode = apParentNode->CreateChild();
     apColladaScene->mlstNodes.push_back(pNode);
 
-    pNode->msId = apNodeElem->Attribute("Id");
-    pNode->msSid = cString::ToString(apNodeElem->Attribute("Sid"), pNode->msId);
-    pNode->msName = cString::ToString(apNodeElem->Attribute("Name"), pNode->msId);
-    pNode->msType = apNodeElem->Attribute("Type");
+    pNode->msId = Xml::AttrOrEmpty(apNodeElem, "Id");
+    pNode->msSid = cString::ToString(Xml::Attr(apNodeElem, "Sid"), pNode->msId);
+    pNode->msName = cString::ToString(Xml::Attr(apNodeElem, "Name"), pNode->msId);
+    pNode->msType = Xml::AttrOrEmpty(apNodeElem, "Type");
 
-    pNode->msInstanceMaterial = cString::ToString(apNodeElem->Attribute("InstanceMaterial"), "");
+    pNode->msInstanceMaterial = cString::ToString(Xml::Attr(apNodeElem, "InstanceMaterial"), "");
 
-    pNode->msSource  = apNodeElem->Attribute("Source");
-    pNode->mbSourceIsFile = cString::ToBool(apNodeElem->Attribute("SourceIsFile"), false);
+    pNode->msSource  = Xml::AttrOrEmpty(apNodeElem, "Source");
+    pNode->mbSourceIsFile = cString::ToBool(Xml::Attr(apNodeElem, "SourceIsFile"), false);
 
-    pNode->m_mtxTransform = cString::ToMatrixf(apNodeElem->Attribute("Transform"), cMatrixf::Identity);
-    pNode->m_mtxWorldTransform = cString::ToMatrixf(apNodeElem->Attribute("WorldTransform"), cMatrixf::Identity);
+    pNode->m_mtxTransform = cString::ToMatrixf(Xml::Attr(apNodeElem, "Transform"), cMatrixf::Identity);
+    pNode->m_mtxWorldTransform = cString::ToMatrixf(Xml::Attr(apNodeElem, "WorldTransform"), cMatrixf::Identity);
 
-    pNode->mvScale = cString::ToVector3f(apNodeElem->Attribute("Scale"), 1);
-    pNode->mlCount = cString::ToInt(apNodeElem->Attribute("Count"), 1);
+    pNode->mvScale = cString::ToVector3f(Xml::Attr(apNodeElem, "Scale"), 1);
+    pNode->mlCount = cString::ToInt(Xml::Attr(apNodeElem, "Count"), 1);
 
-    TiXmlElement *pTransformRootElem = apNodeElem->FirstChildElement("TransformRoot");
-    TiXmlElement *pTransformElem = pTransformRootElem->FirstChildElement("Transform");
-    for(; pTransformElem != NULL; pTransformElem = pTransformElem->NextSiblingElement("Transform"))
+    pugi::xml_node pTransformRootElem = apNodeElem.child("TransformRoot");
+    pugi::xml_node pTransformElem = pTransformRootElem.child("Transform");
+    for(; pTransformElem; pTransformElem = pTransformElem.next_sibling("Transform"))
     {
         pNode->mlstTransforms.push_back(cColladaTransform());
         cColladaTransform &transform = pNode->mlstTransforms.back();
 
-        transform.msSid =  pTransformElem->Attribute("Sid");
-        transform.msType =  pTransformElem->Attribute("Type");
+        transform.msSid =  Xml::AttrOrEmpty(pTransformElem, "Sid");
+        transform.msType =  Xml::AttrOrEmpty(pTransformElem, "Type");
 
-        tString sData = pTransformElem->Attribute("Values");
+        tString sData = Xml::AttrOrEmpty(pTransformElem, "Values");
         tString sSepp = " ";
         cString::GetFloatVec(sData, transform.mvValues, &sSepp);
     }
 
-    TiXmlElement *pChildElem = apNodeElem->FirstChildElement("Node");
-    for(; pChildElem != NULL; pChildElem = pChildElem->NextSiblingElement("Node"))
+    pugi::xml_node pChildElem = apNodeElem.child("Node");
+    for(; pChildElem; pChildElem = pChildElem.next_sibling("Node"))
     {
         LoadIterativeNode(pChildElem, pNode, apColladaScene);
     }
@@ -1564,20 +1558,20 @@ static void LoadIterativeNode(TiXmlElement *apNodeElem, cColladaNode *apParentNo
 
 //-----------------------------------------------------------------------
 
-static void LoadScene(TiXmlElement *apRootElem, cColladaScene *apColladaScene)
+static void LoadScene(pugi::xml_node apRootElem, cColladaScene *apColladaScene)
 {
-    TiXmlElement *pSceneElem = apRootElem->FirstChildElement("Scene");
+    pugi::xml_node pSceneElem = apRootElem.child("Scene");
 
     //Delete all nodes.
     apColladaScene->ResetNodes();
 
-    apColladaScene->mfStartTime = cString::ToFloat(pSceneElem->Attribute("StartTime"), 0);
-    apColladaScene->mfEndTime = cString::ToFloat(pSceneElem->Attribute("EndTime"), 0);
-    apColladaScene->mfDeltaTime = cString::ToFloat(pSceneElem->Attribute("DeltaTime"), 0);
+    apColladaScene->mfStartTime = cString::ToFloat(Xml::Attr(pSceneElem, "StartTime"), 0);
+    apColladaScene->mfEndTime = cString::ToFloat(Xml::Attr(pSceneElem, "EndTime"), 0);
+    apColladaScene->mfDeltaTime = cString::ToFloat(Xml::Attr(pSceneElem, "DeltaTime"), 0);
 
-    TiXmlElement *pSceneRootElem = pSceneElem->FirstChildElement("Root");
-    TiXmlElement *pNodeElem = pSceneRootElem->FirstChildElement("Node");
-    for(; pNodeElem != NULL; pNodeElem = pNodeElem->NextSiblingElement("Node"))
+    pugi::xml_node pSceneRootElem = pSceneElem.child("Root");
+    pugi::xml_node pNodeElem = pSceneRootElem.child("Node");
+    for(; pNodeElem; pNodeElem = pNodeElem.next_sibling("Node"))
     {
         LoadIterativeNode(pNodeElem, &apColladaScene->mRoot, apColladaScene);
     }

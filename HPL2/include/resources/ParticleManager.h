@@ -5,7 +5,6 @@
 
 #include "math/MathTypes.h"
 
-class TiXmlElement;
 
 namespace hpl
 {

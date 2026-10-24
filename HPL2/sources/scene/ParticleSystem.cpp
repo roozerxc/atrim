@@ -1,6 +1,6 @@
 #include "scene/ParticleSystem.h"
 
-#include "impl/tinyXML/tinyxml.h"
+#include "impl/XmlPugi.h"
 
 #include "system/String.h"
 

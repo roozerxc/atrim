@@ -1,7 +1,7 @@
 #include "impl/LowLevelResourcesSDL.h"
 #include "impl/MeshLoaderMSH.h"
 #include "impl/MeshLoaderCollada.h"
-#include "impl/XmlDocumentTiny.h"
+#include "impl/XmlDocumentPugi.h"
 #include "impl/BitmapLoaderDevilDDS.h"
 #include "impl/BitmapLoaderDevilMisc.h"
 
@@ -59,7 +59,7 @@ void cLowLevelResourcesSDL::AddMeshLoaders(cMeshLoaderHandler* apHandler)
 
 iXmlDocument *cLowLevelResourcesSDL::CreateXmlDocument(const tString& asName)
 {
-    return hplNew( cXmlDocumentTiny, (asName) );
+    return hplNew( cXmlDocumentPugi, (asName) );
 }
 
 //-----------------------------------------------------------------------

@@ -3,7 +3,7 @@
 
 #include "system/String.h"
 
-#include "impl/tinyXML/tinyxml.h"
+#include "impl/XmlPugi.h"
 
 
 #include "system/LowLevelSystem.h"
@@ -603,28 +603,22 @@ void iLight::LoadXMLProperties(const tString asFile)
     tWString sPath = mpFileSearcher->GetFilePath(asFile);
     if(sPath != _W(""))
     {
-        FILE *pFile = cPlatform::OpenFile(sPath, _W("rb"));
-        if(pFile == NULL)
+        pugi::xml_document xmlDoc;
+        if(Xml::LoadFile(xmlDoc, sPath))
         {
-            return;
-        }
+            pugi::xml_node pRootElem = xmlDoc.document_element();
 
-        TiXmlDocument *pDoc = hplNew( TiXmlDocument, () );
-        if(pDoc->LoadFile(pFile))
-        {
-            TiXmlElement *pRootElem = pDoc->RootElement();
-
-            TiXmlElement *pMainElem = pRootElem->FirstChildElement("MAIN");
-            if(pMainElem != NULL)
+            pugi::xml_node pMainElem = pRootElem.child("MAIN");
+            if(pMainElem)
             {
-                mbCastShadows = cString::ToBool(pMainElem->Attribute("CastsShadows"), mbCastShadows);
+                mbCastShadows = cString::ToBool(Xml::Attr(pMainElem, "CastsShadows"), mbCastShadows);
 
-                mDiffuseColor.a = cString::ToFloat(pMainElem->Attribute("Specular"), mDiffuseColor.a);
+                mDiffuseColor.a = cString::ToFloat(Xml::Attr(pMainElem, "Specular"), mDiffuseColor.a);
 
-                mfBrightness = cString::ToFloat(pMainElem->Attribute("Brightness"), mfBrightness);
-                mfFalloff = cString::ToFloat(pMainElem->Attribute("Falloff"), mfFalloff);
+                mfBrightness = cString::ToFloat(Xml::Attr(pMainElem, "Brightness"), mfBrightness);
+                mfFalloff = cString::ToFloat(Xml::Attr(pMainElem, "Falloff"), mfFalloff);
 
-                tString sFalloffImage = cString::ToString(pMainElem->Attribute("FalloffImage"), "");
+                tString sFalloffImage = cString::ToString(Xml::Attr(pMainElem, "FalloffImage"), "");
                 iTexture *pTexture = mpTextureManager->Create1D(sFalloffImage, false);
                 if(pTexture)
                 {
@@ -642,11 +636,6 @@ void iLight::LoadXMLProperties(const tString asFile)
         {
             Error("Couldn't load file '%s'\n", asFile.c_str());
         }
-        if(pFile)
-        {
-            fclose(pFile);
-        }
-        hplDelete(pDoc);
     }
     else
     {

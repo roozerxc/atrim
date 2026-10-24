@@ -4,7 +4,7 @@
 #include "system/String.h"
 #include "system/Platform.h"
 
-#include "impl/tinyXML/tinyxml.h"
+#include "impl/XmlPugi.h"
 
 #include "gui/Gui.h"
 #include "gui/GuiGfxElement.h"
@@ -148,39 +148,30 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
 {
     //////////////////////////////////
     //Open document
-    FILE *pFile = cPlatform::OpenFile(asFile, _W("rb"));
-    if (!pFile)
+    pugi::xml_document xmlDoc;
+    if(Xml::LoadFile(xmlDoc, asFile) == false)
     {
-        Error("Couldn't load skin file '%s'!\n", asFile.c_str());
+        Error("Couldn't load skin file '%s'!\n", cString::To8Char(asFile).c_str());
         return false;
     }
-    TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
-    if(pXmlDoc->LoadFile(pFile) == false)
-    {
-        Error("Couldn't load skin file '%s'!\n", asFile.c_str());
-        fclose(pFile);
-        hplDelete(pXmlDoc);
-        return false;
-    }
-    fclose(pFile);
 
     /////////////////////////
     //Get the root.
-    TiXmlElement* pRootElem = pXmlDoc->RootElement();
+    pugi::xml_node pRootElem = xmlDoc.document_element();
 
 
     //////////////////////////////////////
     // ATTRIBUTES
-    TiXmlElement* pAttributesElement = pRootElem->FirstChildElement("Attributes");
+    pugi::xml_node pAttributesElement = pRootElem.child("Attributes");
 
     tBoolVec vAttribLoaded;
     vAttribLoaded.resize(eGuiSkinAttribute_LastEnum, false);
 
     //Iterate font elements
-    TiXmlElement* pAttributeElem = pAttributesElement->FirstChildElement();
-    for(; pAttributeElem != NULL; pAttributeElem = pAttributeElem->NextSiblingElement())
+    pugi::xml_node pAttributeElem = Xml::FirstElem(pAttributesElement);
+    for(; pAttributeElem; pAttributeElem = Xml::NextElem(pAttributeElem))
     {
-        tString sType = cString::ToString(pAttributeElem->Attribute("type"), "");
+        tString sType = cString::ToString(Xml::Attr(pAttributeElem, "type"), "");
 
         eGuiSkinAttribute type = mpGui->GetSkinAttributeFromString(sType);
         if(type == eGuiSkinAttribute_LastEnum)
@@ -188,7 +179,7 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
             continue;
         }
 
-        tString sValue = cString::ToString(pAttributeElem->Attribute("value"), "");
+        tString sValue = cString::ToString(Xml::Attr(pAttributeElem, "value"), "");
 
         cVector3f vVal(0);
         tFloatVec vValues;
@@ -225,13 +216,13 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
 
     //////////////////////////////////////
     // FONTS
-    TiXmlElement* pFontsElement = pRootElem->FirstChildElement("Fonts");
+    pugi::xml_node pFontsElement = pRootElem.child("Fonts");
 
     //Iterate font elements
-    TiXmlElement* pFontElem = pFontsElement->FirstChildElement();
-    for(; pFontElem != NULL; pFontElem = pFontElem->NextSiblingElement())
+    pugi::xml_node pFontElem = Xml::FirstElem(pFontsElement);
+    for(; pFontElem; pFontElem = Xml::NextElem(pFontElem))
     {
-        tString sType = cString::ToString(pFontElem->Attribute("type"), "");
+        tString sType = cString::ToString(Xml::Attr(pFontElem, "type"), "");
 
         eGuiSkinFont type = mpGui->GetSkinFontFromString(sType);
         if(type == eGuiSkinFont_LastEnum)
@@ -239,9 +230,9 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
             continue;
         }
 
-        tString sFontFile = cString::ToString(pFontElem->Attribute("file"), "");
-        cVector2f vSize = cString::ToVector2f(pFontElem->Attribute("size"), 1);
-        cColor color = cString::ToColor(pFontElem->Attribute("color"), cColor(1, 1));
+        tString sFontFile = cString::ToString(Xml::Attr(pFontElem, "file"), "");
+        cVector2f vSize = cString::ToVector2f(Xml::Attr(pFontElem, "size"), 1);
+        cColor color = cString::ToColor(Xml::Attr(pFontElem, "color"), cColor(1, 1));
 
         cGuiSkinFont *pFont = hplNew( cGuiSkinFont, (mpGui) );
 
@@ -267,13 +258,13 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
     // GFX ELEMENTS
 
     //Get gfx element
-    TiXmlElement* pGfxElementsElement = pRootElem->FirstChildElement("GfxElements");
+    pugi::xml_node pGfxElementsElement = pRootElem.child("GfxElements");
 
     //Iterate gfx elements
-    TiXmlElement* pGfxElem = pGfxElementsElement->FirstChildElement();
-    for(; pGfxElem != NULL; pGfxElem = pGfxElem->NextSiblingElement())
+    pugi::xml_node pGfxElem = Xml::FirstElem(pGfxElementsElement);
+    for(; pGfxElem; pGfxElem = Xml::NextElem(pGfxElem))
     {
-        tString sType = cString::ToString(pGfxElem->Attribute("type"), "");
+        tString sType = cString::ToString(Xml::Attr(pGfxElem, "type"), "");
 
         eGuiSkinGfx type = mpGui->GetSkinGfxFromString(sType);
         if(type == eGuiSkinGfx_LastEnum)
@@ -281,15 +272,15 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
             continue;
         }
 
-        tString sFile = cString::ToString(pGfxElem->Attribute("file"), "");
-        cVector2f vOffset = cString::ToVector2f(pGfxElem->Attribute("offset"), 0);
-        cVector2f vSize = cString::ToVector2f(pGfxElem->Attribute("active_size"), -1);
-        cColor color = cString::ToColor(pGfxElem->Attribute("color"), cColor(1, 1));
-        eGuiMaterial material = ToMaterial(pGfxElem->Attribute("material"));
+        tString sFile = cString::ToString(Xml::Attr(pGfxElem, "file"), "");
+        cVector2f vOffset = cString::ToVector2f(Xml::Attr(pGfxElem, "offset"), 0);
+        cVector2f vSize = cString::ToVector2f(Xml::Attr(pGfxElem, "active_size"), -1);
+        cColor color = cString::ToColor(Xml::Attr(pGfxElem, "color"), cColor(1, 1));
+        eGuiMaterial material = ToMaterial(Xml::Attr(pGfxElem, "material"));
 
-        bool bAnimated = cString::ToBool(pGfxElem->Attribute("animated"), false);
-        float fAnimFrameTime = cString::ToFloat(pGfxElem->Attribute("anim_frame_time"), 1);
-        eGuiGfxAnimationType animType = ToAnimType(pGfxElem->Attribute("anim_mode"));
+        bool bAnimated = cString::ToBool(Xml::Attr(pGfxElem, "animated"), false);
+        float fAnimFrameTime = cString::ToFloat(Xml::Attr(pGfxElem, "anim_frame_time"), 1);
+        eGuiGfxAnimationType animType = ToAnimType(Xml::Attr(pGfxElem, "anim_mode"));
 
         cGuiGfxElement *pGfx = NULL;
         if(sFile != "")
@@ -336,7 +327,6 @@ bool cGuiSkin::LoadFromFile(const tWString &asFile)
         }
     }
 
-    hplDelete(pXmlDoc);
 
     return true;
 }

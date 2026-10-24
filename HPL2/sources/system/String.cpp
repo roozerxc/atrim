@@ -1453,12 +1453,18 @@ void cString::UIntStringToArray(unsigned int *apArray, const char* apString, int
     int lArrayCount = 0;
     int lStringCount = 0;
 
+    if(apString == NULL)
+    {
+        return;
+    }
+
     while(lArrayCount < alSize)
     {
         char c = apString[lStringCount];
 
-        //if a space is found, convert the previous characters to a float.
-        if(c == ' ' || c == 0)
+        //if white space (or the end) is found, convert the previous characters.
+        //(Any white space: the text is no longer condensed to single spaces by the XML parser.)
+        if(c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == 0)
         {
             if(lTempCharCount > 0)
             {
@@ -1468,9 +1474,15 @@ void cString::UIntStringToArray(unsigned int *apArray, const char* apString, int
                 lTempCharCount = 0;
                 lArrayCount++;
             }
+
+            //End of string: stop instead of reading past it when there are too few values.
+            if(c == 0)
+            {
+                break;
+            }
         }
         //If character is not a space, add to temp char.
-        else
+        else if(lTempCharCount < (int)sizeof(vTempChar) - 1)
         {
             vTempChar[lTempCharCount] = c;
             lTempCharCount++;
@@ -1490,11 +1502,17 @@ void cString::FloatStringToArray(float *apArray, const char* apString, int alSiz
     int lArrayCount = 0;
     int lStringCount = 0;
 
+    if(apString == NULL)
+    {
+        return;
+    }
+
     while(lArrayCount < alSize)
     {
         char c = apString[lStringCount];
-        //if a space is found, convert the previous characters to a float.
-        if(c == ' ' || c == 0)
+        //if white space (or the end) is found, convert the previous characters to a float.
+        //(Any white space: the text is no longer condensed to single spaces by the XML parser.)
+        if(c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == 0)
         {
             if(lTempCharCount > 0)
             {
@@ -1504,11 +1522,17 @@ void cString::FloatStringToArray(float *apArray, const char* apString, int alSiz
                 lTempCharCount = 0;
                 lArrayCount++;
             }
+
+            //End of string: stop instead of reading past it when there are too few values.
+            if(c == 0)
+            {
+                break;
+            }
         }
         //If character is not a space, add to temp char.
-        else
+        else if(lTempCharCount < (int)sizeof(vTempChar) - 1)
         {
-            vTempChar[lTempCharCount] = apString[lStringCount];
+            vTempChar[lTempCharCount] = c;
             lTempCharCount++;
         }
 

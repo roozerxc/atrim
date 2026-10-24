@@ -6,7 +6,6 @@
 #include "system/SystemTypes.h"
 #include "system/SerializeClass.h"
 
-class TiXmlElement;
 
 #define kSaveData_LoadFromBegin(aClass) \
                             __super::LoadFromSaveData(apSaveData); \

@@ -1,6 +1,5 @@
 #include "scene/BillBoard.h"
 
-#include "impl/tinyXML/tinyxml.h"
 
 #include "resources/Resources.h"
 #include "resources/MaterialManager.h"

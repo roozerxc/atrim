@@ -1628,30 +1628,26 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="TinyXml"
+				Name="pugixml"
 				>
 				<File
-					RelativePath=".\sources\impl\tinyXml\tinystr.cpp"
+					RelativePath=".\sources\impl\pugixml\pugixml.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\tinyXML\tinystr.h"
+					RelativePath=".\include\impl\pugixml\pugixml.hpp"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\tinyXml\tinyxml.cpp"
+					RelativePath=".\include\impl\pugixml\pugiconfig.hpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\impl\tinyXML\tinyxml.h"
+					RelativePath=".\sources\impl\XmlPugi.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\sources\impl\tinyXml\tinyxmlerror.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\sources\impl\tinyXml\tinyxmlparser.cpp"
+					RelativePath=".\include\impl\XmlPugi.h"
 					>
 				</File>
 			</Filter>
@@ -2256,11 +2252,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\sources\impl\XmlDocumentTiny.cpp"
+				RelativePath=".\sources\impl\XmlDocumentPugi.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\include\impl\XmlDocumentTiny.h"
+				RelativePath=".\include\impl\XmlDocumentPugi.h"
 				>
 			</File>
 		</Filter>

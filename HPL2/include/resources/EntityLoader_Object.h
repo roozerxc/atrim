@@ -7,7 +7,6 @@
 
 #include "resources/Resources.h"
 
-class TiXmlElement;
 
 namespace hpl
 {
@@ -70,7 +69,7 @@ protected:
     void SetBodyProperties(iPhysicsBody *apBody, cXmlElement *apPhysicsElem);
     void SetJointProperties(iPhysicsJoint *apJoint, cXmlElement *apJointElem, cWorld *apWorld);
 
-    void LoadController(iPhysicsJoint *apJoint, iPhysicsWorld *apPhysicsWorld, TiXmlElement *apElem);
+    void LoadController(iPhysicsJoint *apJoint, iPhysicsWorld *apPhysicsWorld, cXmlElement *apElem);
 
     eAnimationEventType GetAnimationEventType(const char* apString);
 

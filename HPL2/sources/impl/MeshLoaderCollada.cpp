@@ -27,7 +27,6 @@
 #include "graphics/Animation.h"
 #include "graphics/AnimationTrack.h"
 
-#include "impl/tinyXML/tinyxml.h"
 #include "impl/MeshLoaderMSH.h"
 
 #include "math/Math.h"
