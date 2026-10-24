@@ -1325,7 +1325,7 @@ static ePhysicsControllerEnd GetControllerEnd(const char* apString)
 
 
 void cEntityLoader_Object::LoadController(iPhysicsJoint* apJoint, iPhysicsWorld *apPhysicsWorld,
-        TiXmlElement *apElem)
+        cXmlElement *apElem)
 {
     //////////////////////////////
     // Get the properties

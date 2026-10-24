@@ -10,7 +10,7 @@
 #include "graphics/FrameSubImage.h"
 #include "graphics/Texture.h"
 
-#include "impl/tinyXML/tinyxml.h"
+#include "impl/XmlPugi.h"
 
 #include "system/String.h"
 #include "system/Platform.h"
@@ -48,34 +48,31 @@ bool cSDLFontData::CreateFromBitmapFile(const tWString &asFileName)
 
     ////////////////////////////////////////////
     // Load xml file
-    FILE *pFile = cPlatform::OpenFile(asFileName, _W("rb"));
-    if(pFile == NULL)
+    if(cPlatform::FileExists(asFileName) == false)
     {
         return false;
     }
 
-    TiXmlDocument *pXmlDoc = hplNew( TiXmlDocument, () );
-    if(pXmlDoc->LoadFile(pFile) == false)
+    pugi::xml_document xmlDoc;
+    if(Xml::LoadFile(xmlDoc, asFileName) == false)
     {
         Error("Couldn't load angle code font file '%s', file does not exist or is not in XML format\n", cString::To8Char(asFileName).c_str());
-        fclose(pFile);
-        hplDelete(pXmlDoc);
         return false;
     }
 
-    TiXmlElement *pRootElem = pXmlDoc->RootElement();
+    pugi::xml_node pRootElem = xmlDoc.document_element();
 
     ////////////////////////////////////////////
     // Load Common info
-    TiXmlElement *pCommonElem = pRootElem->FirstChildElement("common");
+    pugi::xml_node pCommonElem = pRootElem.child("common");
 
-    int lLineHeight = cString::ToInt(pCommonElem->Attribute("lineHeight"), 0);
-    int lBase = cString::ToInt(pCommonElem->Attribute("base"), 0);
+    int lLineHeight = cString::ToInt(Xml::Attr(pCommonElem, "lineHeight"), 0);
+    int lBase = cString::ToInt(Xml::Attr(pCommonElem, "base"), 0);
 
     //////////////////////////////////////////
     // Load info
-    TiXmlElement *pInfoElem = pRootElem->FirstChildElement("info");
-    int lOutline = cString::ToInt(pInfoElem->Attribute("outline"), 0) * 2;
+    pugi::xml_node pInfoElem = pRootElem.child("info");
+    int lOutline = cString::ToInt(Xml::Attr(pInfoElem, "outline"), 0) * 2;
 
     /////////////
     // Apply outline to the scale
@@ -88,11 +85,11 @@ bool cSDLFontData::CreateFromBitmapFile(const tWString &asFileName)
 
     ////////////////////////////////////////////
     // Check for largest glyph number and resize array.
-    TiXmlElement *pCharsRootElem = pRootElem->FirstChildElement("chars");
-    TiXmlElement *pCharElem = pCharsRootElem->FirstChildElement("char");
-    for(; pCharElem != NULL; pCharElem = pCharElem->NextSiblingElement("char"))
+    pugi::xml_node pCharsRootElem = pRootElem.child("chars");
+    pugi::xml_node pCharElem = pCharsRootElem.child("char");
+    for(; pCharElem; pCharElem = pCharElem.next_sibling("char"))
     {
-        int lId = cString::ToInt(pCharElem->Attribute("id"), 0);
+        int lId = cString::ToInt(Xml::Attr(pCharElem, "id"), 0);
         if(lId > lLargestGlyphId)
         {
             lLargestGlyphId = lId;
@@ -107,13 +104,13 @@ bool cSDLFontData::CreateFromBitmapFile(const tWString &asFileName)
     // Load bitmaps
     std::vector<cFrameTexture *> vFrameTextures;
 
-    TiXmlElement *pPagesRootElem = pRootElem->FirstChildElement("pages");
+    pugi::xml_node pPagesRootElem = pRootElem.child("pages");
 
     int lCount = 0;
-    TiXmlElement *pPageElem = pPagesRootElem->FirstChildElement("page");
-    for(; pPageElem != NULL; pPageElem = pPageElem->NextSiblingElement("page"), ++lCount)
+    pugi::xml_node pPageElem = pPagesRootElem.child("page");
+    for(; pPageElem; pPageElem = pPageElem.next_sibling("page"), ++lCount)
     {
-        tWString sFileName = cString::To16Char(pPageElem->Attribute("file"));
+        tWString sFileName = cString::To16Char(pPageElem.attribute("file").value());
         tWString sFilePath = cString::SetFilePathW(sFileName, sPath);
 
         //////////////////////////////
@@ -122,8 +119,6 @@ bool cSDLFontData::CreateFromBitmapFile(const tWString &asFileName)
         if(pBitmap == NULL)
         {
             Error("Couldn't load bitmap %s for FNT file '%s'\n", cString::To8Char(sFilePath).c_str(), cString::To8Char(asFileName).c_str());
-            fclose(pFile);
-            hplDelete(pXmlDoc);
             return false;
         }
 
@@ -160,24 +155,24 @@ bool cSDLFontData::CreateFromBitmapFile(const tWString &asFileName)
 
     ////////////////////////////////////////////
     // Load glyphs
-    pCharsRootElem = pRootElem->FirstChildElement("chars");
-    pCharElem = pCharsRootElem->FirstChildElement("char");
-    for(; pCharElem != NULL; pCharElem = pCharElem->NextSiblingElement("char"))
+    pCharsRootElem = pRootElem.child("chars");
+    pCharElem = pCharsRootElem.child("char");
+    for(; pCharElem; pCharElem = pCharElem.next_sibling("char"))
     {
         //Get the info on the character
-        int lId = cString::ToInt(pCharElem->Attribute("id"), 0);
-        int lX = cString::ToInt(pCharElem->Attribute("x"), 0);
-        int lY = cString::ToInt(pCharElem->Attribute("y"), 0);
+        int lId = cString::ToInt(Xml::Attr(pCharElem, "id"), 0);
+        int lX = cString::ToInt(Xml::Attr(pCharElem, "x"), 0);
+        int lY = cString::ToInt(Xml::Attr(pCharElem, "y"), 0);
 
-        int lW = cString::ToInt(pCharElem->Attribute("width"), 0);
-        int lH = cString::ToInt(pCharElem->Attribute("height"), 0);
+        int lW = cString::ToInt(Xml::Attr(pCharElem, "width"), 0);
+        int lH = cString::ToInt(Xml::Attr(pCharElem, "height"), 0);
 
-        int lXOffset = cString::ToInt(pCharElem->Attribute("xoffset"), 0);
-        int lYOffset = cString::ToInt(pCharElem->Attribute("yoffset"), 0);
+        int lXOffset = cString::ToInt(Xml::Attr(pCharElem, "xoffset"), 0);
+        int lYOffset = cString::ToInt(Xml::Attr(pCharElem, "yoffset"), 0);
 
-        int lAdvance = cString::ToInt(pCharElem->Attribute("xadvance"), 0);
+        int lAdvance = cString::ToInt(Xml::Attr(pCharElem, "xadvance"), 0);
 
-        int lPage = cString::ToInt(pCharElem->Attribute("page"), 0);
+        int lPage = cString::ToInt(Xml::Attr(pCharElem, "page"), 0);
 
         if(lId < 0 || lId >= (int)mvGlyphs.size())
         {
@@ -199,8 +194,6 @@ bool cSDLFontData::CreateFromBitmapFile(const tWString &asFileName)
     }
 
     //Destroy XML
-    fclose(pFile);
-    hplDelete(pXmlDoc);
     return true;
 }
 

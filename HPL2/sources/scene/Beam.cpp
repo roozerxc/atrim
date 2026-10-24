@@ -1,6 +1,6 @@
 #include "scene/Beam.h"
 
-#include "impl/tinyXML/tinyxml.h"
+#include "impl/XmlPugi.h"
 
 #include "math/Math.h"
 #include "system/String.h"
@@ -391,27 +391,22 @@ bool cBeam::LoadXMLProperties(const tString asFile)
     tWString sPath = mpFileSearcher->GetFilePath(sNewFile);
     if(sPath != _W(""))
     {
-        FILE *pFile = cPlatform::OpenFile(sPath, _W("rb"));
-        if(pFile == NULL)
+        pugi::xml_document xmlDoc;
+        if(Xml::LoadFile(xmlDoc, sPath))
         {
-            return false;
-        }
-        TiXmlDocument *pDoc = hplNew( TiXmlDocument, () );
-        if(pDoc->LoadFile(pFile))
-        {
-            TiXmlElement *pRootElem = pDoc->RootElement();
+            pugi::xml_node pRootElem = xmlDoc.document_element();
 
-            TiXmlElement *pMainElem = pRootElem->FirstChildElement("MAIN");
-            if(pMainElem != NULL)
+            pugi::xml_node pMainElem = pRootElem.child("MAIN");
+            if(pMainElem)
             {
-                tString sMaterial = cString::ToString(pMainElem->Attribute("Material"), "");
-                cVector2f vSize = cString::ToVector2f(pMainElem->Attribute("Size"), 1);
+                tString sMaterial = cString::ToString(Xml::Attr(pMainElem, "Material"), "");
+                cVector2f vSize = cString::ToVector2f(Xml::Attr(pMainElem, "Size"), 1);
 
-                bool bTileHeight = cString::ToBool(pMainElem->Attribute("TileHeight"), true);
-                bool bMultiplyAlphaWithColor = cString::ToBool(pMainElem->Attribute("MultiplyAlphaWithColor"), false);
+                bool bTileHeight = cString::ToBool(Xml::Attr(pMainElem, "TileHeight"), true);
+                bool bMultiplyAlphaWithColor = cString::ToBool(Xml::Attr(pMainElem, "MultiplyAlphaWithColor"), false);
 
-                cColor StartColor = cString::ToColor(pMainElem->Attribute("StartColor"), cColor(1, 1));
-                cColor EndColor = cString::ToColor(pMainElem->Attribute("EndColor"), cColor(1, 1));
+                cColor StartColor = cString::ToColor(Xml::Attr(pMainElem, "StartColor"), cColor(1, 1));
+                cColor EndColor = cString::ToColor(Xml::Attr(pMainElem, "EndColor"), cColor(1, 1));
 
 
                 SetSize(vSize);
@@ -444,11 +439,6 @@ bool cBeam::LoadXMLProperties(const tString asFile)
         {
             Error("Couldn't load file '%s'\n", sNewFile.c_str());
         }
-        if(pFile)
-        {
-            fclose(pFile);
-        }
-        hplDelete(pDoc);
     }
     else
     {

@@ -14,7 +14,6 @@
 #include "resources/LowLevelResources.h"
 #include "resources/XmlDocument.h"
 
-#include "impl/tinyXML/tinyxml.h"
 
 
 namespace hpl

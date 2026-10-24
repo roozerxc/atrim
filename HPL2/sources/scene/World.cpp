@@ -1,6 +1,5 @@
 #include "scene/World.h"
 
-#include "impl/tinyXML/tinyxml.h"
 
 #include "system/Script.h"
 #include "system/String.h"

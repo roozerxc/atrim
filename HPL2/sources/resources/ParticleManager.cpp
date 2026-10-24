@@ -7,7 +7,6 @@
 #include "system/LowLevelSystem.h"
 #include "system/String.h"
 
-#include "impl/tinyXML/tinyxml.h"
 
 namespace hpl
 {

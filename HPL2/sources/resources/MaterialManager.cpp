@@ -15,7 +15,7 @@
 #include "resources/LowLevelResources.h"
 #include "resources/XmlDocument.h"
 
-#include "impl/tinyXML/tinyxml.h"
+#include "impl/XmlPugi.h"
 
 
 
@@ -261,34 +261,20 @@ tString cMaterialManager::GetPhysicsMaterialName(const tString& asName)
 
     if(pMaterial == NULL && sPath != _W(""))
     {
-        FILE *pFile = cPlatform::OpenFile(sPath, _W("rb"));
-        if(pFile == NULL)
+        pugi::xml_document xmlDoc;
+        if(!Xml::LoadFile(xmlDoc, sPath))
         {
             return "";
         }
 
-        TiXmlDocument *pDoc = hplNew( TiXmlDocument, () );
-        if(!pDoc->LoadFile(pFile))
+        pugi::xml_node mainElem = xmlDoc.document_element().child("Main");
+        if(!mainElem)
         {
-            fclose(pFile);
-            hplDelete(pDoc);
-            return "";
-        }
-        fclose(pFile);
-
-        TiXmlElement *pRoot = pDoc->RootElement();
-
-        TiXmlElement *pMain = pRoot->FirstChildElement("Main");
-        if(pMain == NULL)
-        {
-            hplDelete(pDoc);
-            Error("Main child not found in '%s'\n", sPath.c_str());
+            Error("Main child not found in '%s'\n", cString::To8Char(sPath).c_str());
             return "";
         }
 
-        tString sPhysicsName = cString::ToString(pMain->Attribute("PhysicsMaterial"), "Default");
-
-        hplDelete(pDoc);
+        tString sPhysicsName = cString::ToString(Xml::Attr(mainElem, "PhysicsMaterial"), "Default");
 
         return sPhysicsName;
     }

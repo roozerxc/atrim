@@ -29,7 +29,6 @@
 #include "system/String.h"
 #include "system/Platform.h"
 
-#include "impl/tinyXML/tinyxml.h"
 
 namespace hpl
 {

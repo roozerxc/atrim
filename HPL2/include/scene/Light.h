@@ -5,7 +5,10 @@
 #include "graphics/GraphicsTypes.h"
 #include "graphics/Renderable.h"
 
-class TiXmlElement;
+namespace pugi
+{
+class xml_node;
+}
 
 namespace hpl
 {
@@ -398,7 +401,7 @@ protected:
     float mfInterpCurrRadius;
     bool mbInterpLightActive;
 
-    virtual void ExtraXMLProperties(TiXmlElement *apMainElem) {}
+    virtual void ExtraXMLProperties(const pugi::xml_node &apMainElem) {}
     virtual void UpdateBoundingVolume() = 0;
 
     eLightType mLightType;

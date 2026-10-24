@@ -13,7 +13,7 @@
 #include "physics/PhysicsWorld.h"
 #include "physics/PhysicsBody.h"
 
-#include "impl/tinyXML/tinyxml.h"
+#include "impl/XmlPugi.h"
 
 
 namespace hpl
@@ -318,33 +318,29 @@ void cAINodeGenerator::SaveToFile()
     tWString sMapPath = mpWorld->GetFilePath();
     tWString sSaveFile = cString::SetFileExtW(sMapPath, _W("ainodes"));
 
-    TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
+    pugi::xml_document xmlDoc;
 
-    TiXmlElement *pRootElem = static_cast<TiXmlElement *>(pXmlDoc->InsertEndChild(TiXmlElement("AiNodes")));
+    pugi::xml_node pRootElem = xmlDoc.append_child("AiNodes");
 
     tTempAiNodeListIt nodeIt = mpNodeList->begin();
     for(; nodeIt != mpNodeList->end(); ++nodeIt)
     {
         cTempAiNode &Node = *nodeIt;
-        TiXmlElement *pNodeElem = static_cast<TiXmlElement *>(pRootElem->InsertEndChild(TiXmlElement("Node")));
+        pugi::xml_node pNodeElem = pRootElem.append_child("Node");
 
         tString sPos =    cString::ToString(Node.mvPos.x) + " " +
                           cString::ToString(Node.mvPos.y) + " " +
                           cString::ToString(Node.mvPos.z);
-        pNodeElem->SetAttribute("Pos", sPos.c_str());
-        pNodeElem->SetAttribute("Name", Node.msName.c_str());
-        pNodeElem->SetAttribute("Name", cString::ToString(Node.mlID).c_str());
+        Xml::SetAttr(pNodeElem, "Pos", sPos.c_str());
+        Xml::SetAttr(pNodeElem, "Name", Node.msName.c_str());
+        Xml::SetAttr(pNodeElem, "Name", cString::ToString(Node.mlID).c_str());
     }
 
-    FILE *pFile = cPlatform::OpenFile(sSaveFile, _W("w+"));
-    if(pFile == NULL || pXmlDoc->SaveFile(pFile) == false)
+    if(Xml::SaveFile(xmlDoc, sSaveFile) == false)
     {
-        Error("Couldn't save XML file %s\n", sSaveFile.c_str());
-        hplDelete(pXmlDoc);
+        Error("Couldn't save XML file %s\n", cString::To8Char(sSaveFile).c_str());
         return;
     }
-    fclose(pFile);
-    hplDelete(pXmlDoc);
 }
 
 //-----------------------------------------------------------------------
@@ -363,35 +359,24 @@ void cAINodeGenerator::LoadFromFile()
     tWString sMapPath = mpWorld->GetFilePath();
     tWString sSaveFile = cString::SetFileExtW(sMapPath, _W("ainodes"));
 
-    FILE *pFile = cPlatform::OpenFile(sSaveFile, _W("rb"));
-    if (!pFile)
+    pugi::xml_document xmlDoc;
+    if(Xml::LoadFile(xmlDoc, sSaveFile) == false)
     {
         Warning("Couldn't open XML file %s\n", cString::To8Char(sSaveFile).c_str());
         return;
     }
-    TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
-    if(pXmlDoc->LoadFile(pFile) == false)
-    {
-        Warning("Couldn't open XML file %s\n", cString::To8Char(sSaveFile).c_str());
-        fclose(pFile);
-        hplDelete(pXmlDoc);
-        return;
-    }
-    fclose(pFile);
 
-    TiXmlElement *pRootElem = pXmlDoc->RootElement();
+    pugi::xml_node pRootElem = xmlDoc.document_element();
 
-    TiXmlElement *pNodeElem = pRootElem->FirstChildElement("Node");
-    for(; pNodeElem != NULL; pNodeElem = pNodeElem->NextSiblingElement("Node"))
+    pugi::xml_node pNodeElem = pRootElem.child("Node");
+    for(; pNodeElem; pNodeElem = pNodeElem.next_sibling("Node"))
     {
-        cVector3f vPos = cString::ToVector3f(pNodeElem->Attribute("Pos"), 0);
-        tString sName = cString::ToString(pNodeElem->Attribute("Name"), "");
-        int alID = cString::ToInt(pNodeElem->Attribute("ID"), -1);
+        cVector3f vPos = cString::ToVector3f(Xml::Attr(pNodeElem, "Pos"), 0);
+        tString sName = cString::ToString(Xml::Attr(pNodeElem, "Name"), "");
+        int alID = cString::ToInt(Xml::Attr(pNodeElem, "ID"), -1);
 
         mpNodeList->push_back(cTempAiNode(vPos, sName, alID));
     }
-
-    hplDelete(pXmlDoc);
 }
 
 //-----------------------------------------------------------------------

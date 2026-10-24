@@ -2,12 +2,13 @@
 #include "system/String.h"
 #include "system/LowLevelSystem.h"
 #include "resources/FileSearcher.h"
-#include "impl/tinyXML/tinyxml.h"
+#include "impl/XmlPugi.h"
 
 #include "resources/BinaryBuffer.h"
 #include "system/Platform.h"
 
 #include <stdio.h>
+#include <string.h>
 
 namespace hpl
 {
@@ -30,7 +31,7 @@ cConfigFile::cConfigFile(const tWString& asFile, const tWString& asAltPath)
     {
         msFile = asFile;
     }
-    mpXmlDoc = hplNew( TiXmlDocument, () );
+    mpXmlDoc = hplNew( pugi::xml_document, () );
     //mpFileSearcher = apFileSearcher;
 
     mbUseCRC = false;
@@ -74,9 +75,8 @@ bool cConfigFile::Load()
 
         /////////////////////////////////
         // Get XML
-        mpXmlDoc->Parse(buff.GetDataPointerAtCurrentPos());
-
-        if(mpXmlDoc->Error())
+        const char *pData = buff.GetDataPointerAtCurrentPos();
+        if(Xml::LoadFromMemory(*mpXmlDoc, pData, pData ? strlen(pData) : 0) == false)
         {
             Error("Parsing binary config file '%s' failed!\n", cString::To8Char(msFile).c_str());
             return false;
@@ -88,21 +88,13 @@ bool cConfigFile::Load()
     // Normal load
     else
     {
-        FILE *pFile = cPlatform::OpenFile(msFile, _W("rb"));
-
-        if(pFile == NULL)
+        if(cPlatform::FileExists(msFile) == false)
         {
             Error("Unable to open config file '%s'! Invalid filepointer returned!\n", cString::To8Char(msFile).c_str());
             return false;
         }
 
-        bool bRet = mpXmlDoc->LoadFile(pFile);
-
-        if(pFile)
-        {
-            fclose(pFile);
-        }
-        return bRet;
+        return Xml::LoadFile(*mpXmlDoc, msFile);
     }
 }
 
@@ -117,7 +109,7 @@ bool cConfigFile::Save()
         /////////////////////////////
         // Get the data
         tString sData;
-        sData << *mpXmlDoc;
+        Xml::SaveString(*mpXmlDoc, &sData);
 
         /////////////////////////////
         // Compress the data
@@ -145,25 +137,16 @@ bool cConfigFile::Save()
     {
 #ifdef _WIN32
         tWString sFile = cString::ReplaceCharToW(msFile, _W("/"), _W("\\"));
-        FILE *pFile = _wfopen(sFile.c_str(), _W("w+"));
 #else
-        FILE *pFile = fopen(cString::To8Char(msFile).c_str(), "w+");
+        tWString sFile = msFile;
 #endif
-
-        if(pFile == NULL)
+        if(Xml::SaveFile(*mpXmlDoc, sFile) == false)
         {
             Error("Unable to save config file '%s'! Invalid filepointer returned!\n", cString::To8Char(msFile).c_str());
             return false;
         }
 
-        bool bRet = mpXmlDoc->SaveFile(pFile);
-
-        if(pFile)
-        {
-            fclose(pFile);
-        }
-
-        return bRet;
+        return true;
     }
 
 }
@@ -177,19 +160,18 @@ void cConfigFile::CopyLevelsFrom(cConfigFile *apSource, const tString& asSkipLev
         return;
     }
 
-    TiXmlElement *pSrcLevel = apSource->mpXmlDoc->FirstChildElement();
-    for(; pSrcLevel != NULL; pSrcLevel = pSrcLevel->NextSiblingElement())
+    pugi::xml_node srcLevel = Xml::FirstElem(*apSource->mpXmlDoc);
+    for(; srcLevel; srcLevel = Xml::NextElem(srcLevel))
     {
-        tString sLevel = pSrcLevel->Value();
+        tString sLevel = srcLevel.name();
         if(sLevel == asSkipLevel)
         {
             continue;
         }
 
-        TiXmlAttribute *pAttr = pSrcLevel->FirstAttribute();
-        for(; pAttr != NULL; pAttr = pAttr->Next())
+        for(pugi::xml_attribute attr = srcLevel.first_attribute(); attr; attr = attr.next_attribute())
         {
-            SetString(sLevel, pAttr->Name(), pAttr->Value());
+            SetString(sLevel, attr.name(), attr.value());
         }
     }
 }
@@ -198,16 +180,14 @@ void cConfigFile::CopyLevelsFrom(cConfigFile *apSource, const tString& asSkipLev
 
 void cConfigFile::SetString(const tString& asLevel, const tString& asName, const tString& asVal)
 {
-    TiXmlElement *pLevelElem = mpXmlDoc->FirstChildElement(asLevel.c_str());
+    pugi::xml_node levelElem = mpXmlDoc->child(asLevel.c_str());
 
-    if(pLevelElem == NULL)
+    if(!levelElem)
     {
-        TiXmlElement *pNodeChild = hplNew( TiXmlElement, (asLevel.c_str()) );
-        pLevelElem = static_cast<TiXmlElement *>(mpXmlDoc->InsertEndChild(*pNodeChild));
-        hplDelete(pNodeChild);
+        levelElem = mpXmlDoc->append_child(asLevel.c_str());
     }
 
-    pLevelElem->SetAttribute(asName.c_str(), asVal.c_str());
+    Xml::SetAttr(levelElem, asName.c_str(), asVal.c_str());
 }
 //-----------------------------------------------------------------------
 
@@ -358,13 +338,13 @@ cColor cConfigFile::GetColor(const tString& asLevel, const tString& asName, cons
 
 const char *cConfigFile::GetCharArray(tString asLevel, tString asName)
 {
-    TiXmlElement *pLevelElem = mpXmlDoc->FirstChildElement(asLevel.c_str());
-    if(pLevelElem == NULL)
+    pugi::xml_node levelElem = mpXmlDoc->child(asLevel.c_str());
+    if(!levelElem)
     {
         return NULL;
     }
 
-    return pLevelElem->Attribute(asName.c_str());
+    return Xml::Attr(levelElem, asName.c_str());
 }
 
 //-----------------------------------------------------------------------

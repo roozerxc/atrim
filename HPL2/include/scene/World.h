@@ -7,7 +7,6 @@
 #include "engine/EngineTypes.h"
 #include "scene/SceneTypes.h"
 
-class TiXmlElement;
 
 namespace hpl
 {

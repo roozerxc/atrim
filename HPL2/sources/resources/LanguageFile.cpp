@@ -2,7 +2,7 @@
 #include "system/String.h"
 #include "system/LowLevelSystem.h"
 #include "resources/FileSearcher.h"
-#include "impl/tinyXML/tinyxml.h"
+#include "impl/XmlPugi.h"
 
 #include "resources/Resources.h"
 #include "resources/FileSearcher.h"
@@ -40,7 +40,7 @@ cLanguageFile::~cLanguageFile()
 bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, const tWString& asAltPath)
 {
     const bool bLog = false;
-    TiXmlDocument *pDoc = hplNew(TiXmlDocument, () );
+    pugi::xml_document xmlDoc;
 
     tWString sPath = asFile;
     if (asAltPath.length() > 0 && cPlatform::FileExists(asAltPath + asFile))
@@ -48,17 +48,8 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
         sPath = asAltPath + asFile;
     }
 
-    FILE *pFile = cPlatform::OpenFile(sPath, _W("rb"));
-    bool bRet = false;
-    if (pFile != NULL)
+    if (Xml::LoadFile(xmlDoc, sPath) == false)
     {
-        bRet = pDoc->LoadFile(pFile);
-        fclose(pFile);
-    }
-
-    if (!bRet)
-    {
-        hplDelete(pDoc);
         Error("Couldn't load language file '%ls'\n", asFile.c_str());
         return false;
     }
@@ -68,25 +59,31 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
         Log("Loading lang file '%ls'\n---------------------\n", asFile.c_str());
     }
 
-    TiXmlElement *pRootElem = pDoc->FirstChildElement();
+    pugi::xml_node rootElem = Xml::FirstElem(xmlDoc);
+    if(!rootElem)
+    {
+        Error("Couldn't load language file '%ls'\n", asFile.c_str());
+        return false;
+    }
 
     ///////////////////////////
     //Iterate the resources
     if(abAddResourceDirs)
     {
-        TiXmlElement *pResourceElem = pRootElem->FirstChildElement("RESOURCES");
-        if(pResourceElem)
+        pugi::xml_node resourceElem = rootElem.child("RESOURCES");
+        if(resourceElem)
         {
-            TiXmlElement *pDirElem = pResourceElem->FirstChildElement("Directory");
-            for(; pDirElem != NULL; pDirElem = pDirElem->NextSiblingElement("Directory"))
+            pugi::xml_node dirElem = resourceElem.child("Directory");
+            for(; dirElem; dirElem = dirElem.next_sibling("Directory"))
             {
-                tString sPath = pDirElem->Attribute("Path");
+                const char *pPathAttr = Xml::Attr(dirElem, "Path");
+                tString sPath = pPathAttr ? pPathAttr : "";
                 if(sPath == "")
                 {
                     continue;
                 }
 
-                bool bAddSubDirs = cString::ToBool(pDirElem->Attribute("AddSubDirs"), true);
+                bool bAddSubDirs = cString::ToBool(Xml::Attr(dirElem, "AddSubDirs"), true);
 
                 if(sPath[0] == '/' || sPath[0] == '\\')
                 {
@@ -111,10 +108,10 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
 
     ///////////////////////////
     //Iterate the categories
-    TiXmlElement *pCatElem = pRootElem->FirstChildElement("CATEGORY");
-    for(; pCatElem != NULL; pCatElem = pCatElem->NextSiblingElement("CATEGORY"))
+    pugi::xml_node catElem = rootElem.child("CATEGORY");
+    for(; catElem; catElem = catElem.next_sibling("CATEGORY"))
     {
-        tString sCatName = pCatElem->Attribute("Name");
+        tString sCatName = catElem.attribute("Name").value();
 
         /////////////////////////////////
         //Get the category or create if it does not exist
@@ -143,10 +140,10 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
 
         ///////////////////////////
         //Iterate the entries
-        TiXmlElement *pEntryElem = pCatElem->FirstChildElement("Entry");
-        for(; pEntryElem != NULL; pEntryElem = pEntryElem->NextSiblingElement("Entry"))
+        pugi::xml_node entryElem = catElem.child("Entry");
+        for(; entryElem; entryElem = entryElem.next_sibling("Entry"))
         {
-            tString sEntryName = pEntryElem->Attribute("Name");
+            tString sEntryName = entryElem.attribute("Name").value();
 
             ///////////////////////////////////
             //Check if the entry already exists, if so, just continue.
@@ -172,15 +169,18 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
 
             ////////////////////////
             //Add Text
-            if(pEntryElem->FirstChild())
+            if(entryElem.first_child())
             {
-                TiXmlText *pTextNode = pEntryElem->FirstChild()->ToText();
-                if(pTextNode)
+                const char *pText = Xml::Text(entryElem);
+                if(pText)
                 {
                     //pEntry->msText = pTextNode->Value();
                     //pEntry->msText = cString::ReplaceStringTo(pEntry->msText,"[br]","\n");
 
-                    tString sString = pTextNode->Value();
+                    //TinyXML condensed white space in text (line breaks and indentation in the
+                    //lang file become single spaces). Keep doing that, line breaks are [br].
+                    //(CDATA was kept as it is.)
+                    tString sString = entryElem.first_child().type() == pugi::node_cdata ? tString(pText) : Xml::CondenseWhiteSpace(pText);
                     pEntry->mwsText = _W("");
 
                     //if(sCatName == "TEST") Log("String: '%s' %d\n",sString.c_str(),sString.size());
@@ -306,8 +306,6 @@ bool cLanguageFile::AddFromFile(const tWString& asFile, bool abAddResourceDirs, 
             }
         }
     }
-
-    hplDelete(pDoc);
 
     /*{
         FILE *pFile = fopen("raw_lang_text.txt","w+");

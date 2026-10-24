@@ -9,7 +9,6 @@
 
 #include "engine/Updateable.h"
 
-class TiXmlElement;
 
 namespace hpl
 {

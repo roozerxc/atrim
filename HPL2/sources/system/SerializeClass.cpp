@@ -10,7 +10,7 @@
 #include "math/MathTypes.h"
 #include "system/Container.h"
 
-#include "impl/tinyXML/tinyxml.h"
+#include "impl/XmlPugi.h"
 
 #include "resources/BinaryBuffer.h"
 
@@ -197,41 +197,23 @@ bool cSerializeClass::SaveToFile(iSerializable* apData, const tWString &asFile, 
 
     glTabs = 0;
 
-    TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
+    pugi::xml_document xmlDoc;
 
     //Create root
-    TiXmlElement XmlRoot(asRoot.c_str());
-    TiXmlElement* pRootElem = static_cast<TiXmlElement *>(pXmlDoc->InsertEndChild(XmlRoot));
+    pugi::xml_node rootElem = xmlDoc.append_child(asRoot.c_str());
 
-    SaveToElement(apData, "", pRootElem);
+    SaveToElement(apData, "", rootElem);
 
     ///////////////////////////////
     //Normal Save
     if(abCompressAndCrc == false)
     {
-        FILE *pFile = cPlatform::OpenFile(asFile, _W("w+"));
-        if(pFile == NULL)
-        {
-            Error("Unable to open serialized file '%s' as w+! Invalid filepointer returned!\n", cString::To8Char(asFile).c_str());
-            return false;
-        }
-
-        // Enable buffered writing to disk
-        char buffer[8 * 1024];
-        setvbuf(pFile, buffer, _IOFBF, 8 * 1024);
-
-        bool bRet = pXmlDoc->SaveFile(pFile);
+        bool bRet = Xml::SaveFile(xmlDoc, asFile);
         if(bRet == false)
         {
-            Error("Couldn't save class to '%s'\n", asFile.c_str());
+            Error("Couldn't save class to '%s'\n", cString::To8Char(asFile).c_str());
         }
 
-        if(pFile)
-        {
-            fclose(pFile);
-        }
-
-        hplDelete(pXmlDoc);
         return bRet;
     }
     ///////////////////////////////
@@ -241,7 +223,7 @@ bool cSerializeClass::SaveToFile(iSerializable* apData, const tWString &asFile, 
         /////////////////////////////
         // Get the data
         tString sData;
-        sData << *pXmlDoc;
+        Xml::SaveString(xmlDoc, &sData);
 
         /////////////////////////////
         // Compress the data
@@ -272,7 +254,7 @@ bool cSerializeClass::SaveToFile(iSerializable* apData, const tWString &asFile, 
 //-----------------------------------------------------------------------
 
 
-void cSerializeClass::SaveToElement(iSerializable* apData, const tString &asName, TiXmlElement *apParent,
+void cSerializeClass::SaveToElement(iSerializable* apData, const tString &asName, pugi::xml_node apParent,
                                     bool abIsPointer)
 {
     SetUpData();
@@ -283,23 +265,12 @@ void cSerializeClass::SaveToElement(iSerializable* apData, const tString &asName
     }
 
     //Create element
-    TiXmlElement* pClassElem = NULL;
-
-    if(abIsPointer)
-    {
-        TiXmlElement XmlClassElem("class_ptr");
-        pClassElem = static_cast<TiXmlElement *>(apParent->InsertEndChild(XmlClassElem));
-    }
-    else
-    {
-        TiXmlElement XmlClassElem("class");
-        pClassElem = static_cast<TiXmlElement *>(apParent->InsertEndChild(XmlClassElem));
-    }
+    pugi::xml_node pClassElem = apParent.append_child(abIsPointer ? "class_ptr" : "class");
 
 
     //Set attributes
-    pClassElem->SetAttribute("type", apData->Serialize_GetTopClass().c_str());
-    pClassElem->SetAttribute("name", asName.c_str());
+    Xml::SetAttr(pClassElem, "type", apData->Serialize_GetTopClass().c_str());
+    Xml::SetAttr(pClassElem, "name", asName.c_str());
 
     if(gbLog)
     {
@@ -355,38 +326,25 @@ bool cSerializeClass::LoadFromFile(iSerializable* apData, const tWString &asFile
     glTabs = 0;
 
     //Load document
-    TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
+    pugi::xml_document xmlDoc;
 
     ///////////////////////////////
     //Normal Load
     if(abCompressedAndCrc == false)
     {
-#ifdef _WIN32
-        FILE *pFile = _wfopen(asFile.c_str(), _W("rb"));
-#else
-        FILE *pFile = fopen(cString::To8Char(asFile).c_str(), "rb");
-#endif
-
-        if(pFile == NULL)
+        if(cPlatform::FileExists(asFile) == false)
         {
             Error("Unable to open serialized file '%s' as rb! Invalid filepointer returned!\n", cString::To8Char(asFile).c_str());
             return false;
         }
-        if(pXmlDoc->LoadFile(pFile) == false)
+
+        tString sErrorDesc;
+        if(Xml::LoadFile(xmlDoc, asFile, &sErrorDesc) == false)
         {
             Error("Couldn't load saved class file '%s' from %s!\n",
                   cString::To8Char(asFile).c_str(),
-                  pXmlDoc->ErrorDesc());
-            if(pFile)
-            {
-                fclose(pFile);
-            }
-            hplDelete(pXmlDoc);
+                  sErrorDesc.c_str());
             return false;
-        }
-        if(pFile)
-        {
-            fclose(pFile);
         }
     }
     ///////////////////////////////
@@ -398,7 +356,6 @@ bool cSerializeClass::LoadFromFile(iSerializable* apData, const tWString &asFile
         cBinaryBuffer compBuffer;
         if(compBuffer.Load(asFile) == false)
         {
-            hplDelete(pXmlDoc);
             Error("Unable to open serialized file '%s'!\n", cString::To8Char(asFile).c_str());
             return false;
         }
@@ -407,7 +364,6 @@ bool cSerializeClass::LoadFromFile(iSerializable* apData, const tWString &asFile
         // Check CRC
         if(compBuffer.CheckInternalCRC(kSavedDataCRCKey) == false)
         {
-            hplDelete(pXmlDoc);
             Error("CRC check for serialized file '%s' failed!\n", cString::To8Char(asFile).c_str());
             return false;
         }
@@ -417,49 +373,46 @@ bool cSerializeClass::LoadFromFile(iSerializable* apData, const tWString &asFile
         cBinaryBuffer textBuffer;
         if(textBuffer.DecompressAndAddFromBuffer(&compBuffer, false) == false)
         {
-            hplDelete(pXmlDoc);
             Error("Unable to decompress serialized data '%s'!\n", cString::To8Char(asFile).c_str());
             return false;
         }
 
         ////////////////////
-        //Load xml
-        pXmlDoc->Parse(textBuffer.GetDataPointerAtCurrentPos());
+        //Load xml (errors are handled like before: whatever was parsed is used)
+        const char *pData = textBuffer.GetDataPointerAtCurrentPos();
+        Xml::LoadFromMemory(xmlDoc, pData, pData ? strlen(pData) : 0);
     }
 
 
     //Get root
-    TiXmlElement* pRootElem = pXmlDoc->RootElement();
-    if(pRootElem == NULL)
+    pugi::xml_node pRootElem = xmlDoc.document_element();
+    if(!pRootElem)
     {
-        hplDelete(pXmlDoc);
         Error("Serialized file '%s' has no root element!\n", cString::To8Char(asFile).c_str());
         return false;
     }
 
     //Get first, there should only be ONE class at the root.
-    TiXmlElement* pClassElem = pRootElem->FirstChildElement("class");
-    if(pClassElem == NULL)
+    pugi::xml_node pClassElem = pRootElem.child("class");
+    if(!pClassElem)
     {
-        hplDelete(pXmlDoc);
         Error("Serialized file '%s' has no class element!\n", cString::To8Char(asFile).c_str());
         return false;
     }
 
     LoadFromElement(apData, pClassElem);
 
-    hplDelete(pXmlDoc);
     return true;
 }
 
 //-----------------------------------------------------------------------
 
-void cSerializeClass::LoadFromElement(iSerializable* apData, TiXmlElement *apElement,
+void cSerializeClass::LoadFromElement(iSerializable* apData, pugi::xml_node apElement,
                                       bool abIsPointer)
 {
     SetUpData();
 
-    if(apData == NULL || apElement == NULL)
+    if(apData == NULL || !apElement)
     {
         return;
     }
@@ -476,10 +429,10 @@ void cSerializeClass::LoadFromElement(iSerializable* apData, TiXmlElement *apEle
         ++glTabs;
     }
 
-    TiXmlElement *pMemberElem = apElement->FirstChildElement();
-    for(; pMemberElem != NULL; pMemberElem = pMemberElem->NextSiblingElement())
+    pugi::xml_node pMemberElem = Xml::FirstElem(apElement);
+    for(; pMemberElem; pMemberElem = Xml::NextElem(pMemberElem))
     {
-        tString sMainType = pMemberElem->Value() ? pMemberElem->Value() : "";
+        tString sMainType = pMemberElem.name();
 
         if(gbLog)
         {
@@ -908,7 +861,7 @@ void cSerializeClass::StringToValue(void* apData, size_t alOffset, eSerializeTyp
 
 //-----------------------------------------------------------------------
 
-void cSerializeClass::SaveVariable(TiXmlElement *apElement, cSerializeMemberField *apField,
+void cSerializeClass::SaveVariable(pugi::xml_node apElement, cSerializeMemberField *apField,
                                    iSerializable* apData)
 {
     //CLASS
@@ -928,28 +881,26 @@ void cSerializeClass::SaveVariable(TiXmlElement *apElement, cSerializeMemberFiel
     //NORMAL VAR
     else
     {
-        TiXmlElement XmlVarElem("var");
-        TiXmlElement* pVarElem = static_cast<TiXmlElement *>(apElement->InsertEndChild(XmlVarElem));
+        pugi::xml_node pVarElem = apElement.append_child("var");
 
-        pVarElem->SetAttribute("type", apField->mType);
-        pVarElem->SetAttribute("name", apField->msName.c_str());
-        pVarElem->SetAttribute("val", ValueToString(apData, apField->mlOffset, apField->mType));
+        Xml::SetAttrInt(pVarElem, "type", (int)(apField->mType));
+        Xml::SetAttr(pVarElem, "name", apField->msName.c_str());
+        Xml::SetAttr(pVarElem, "val", ValueToString(apData, apField->mlOffset, apField->mType));
     }
 }
 
 //-----------------------------------------------------------------------
 
-void cSerializeClass::SaveArray(TiXmlElement *apElement, cSerializeMemberField *apField,
+void cSerializeClass::SaveArray(pugi::xml_node apElement, cSerializeMemberField *apField,
                                 iSerializable* apData)
 {
     void *pArrayData = ValuePointer(apData, apField->mlOffset);
 
-    TiXmlElement XmlArrayElem("array");
-    TiXmlElement* pArrayElem = static_cast<TiXmlElement *>(apElement->InsertEndChild(XmlArrayElem));
+    pugi::xml_node pArrayElem = apElement.append_child("array");
 
-    pArrayElem->SetAttribute("type", apField->mType);
-    pArrayElem->SetAttribute("name", apField->msName.c_str());
-    pArrayElem->SetAttribute("size", (int)apField->mlArraySize);
+    Xml::SetAttrInt(pArrayElem, "type", (int)(apField->mType));
+    Xml::SetAttr(pArrayElem, "name", apField->msName.c_str());
+    Xml::SetAttrInt(pArrayElem, "size", (int)apField->mlArraySize);
 
 
     // CLASS ////////////////////////////////////////////
@@ -976,7 +927,7 @@ void cSerializeClass::SaveArray(TiXmlElement *apElement, cSerializeMemberField *
             return;
         }
 
-        pArrayElem->SetAttribute("class_type", (*pClassDataPtr)->Serialize_GetTopClass().c_str());
+        Xml::SetAttr(pArrayElem, "class_type", (*pClassDataPtr)->Serialize_GetTopClass().c_str());
 
         for(size_t i = 0; i < apField->mlArraySize; i++)
         {
@@ -993,33 +944,31 @@ void cSerializeClass::SaveArray(TiXmlElement *apElement, cSerializeMemberField *
         {
             size_t lOffset = SizeOfType(apField->mType) * i;
 
-            TiXmlElement XmlClassElem("var");
-            TiXmlElement* pVarElem = static_cast<TiXmlElement *>(pArrayElem->InsertEndChild(XmlClassElem));
+            pugi::xml_node pVarElem = pArrayElem.append_child("var");
 
-            pVarElem->SetAttribute("val", ValueToString(pArrayData, lOffset, apField->mType));
+            Xml::SetAttr(pVarElem, "val", ValueToString(pArrayData, lOffset, apField->mType));
         }
     }
 }
 
 //-----------------------------------------------------------------------
 
-void cSerializeClass::SaveContainer(TiXmlElement *apElement, cSerializeMemberField *apField,
+void cSerializeClass::SaveContainer(pugi::xml_node apElement, cSerializeMemberField *apField,
                                     iSerializable* apData)
 {
     iContainer* pCont = (iContainer*)ValuePointer(apData, apField->mlOffset);
 
     iContainerIterator* pContIt = pCont->CreateIteratorPtr();
 
-    TiXmlElement XmlArrayElem("container");
-    TiXmlElement* pArrayElem = static_cast<TiXmlElement *>(apElement->InsertEndChild(XmlArrayElem));
+    pugi::xml_node pArrayElem = apElement.append_child("container");
 
-    pArrayElem->SetAttribute("type", apField->mType);
-    pArrayElem->SetAttribute("name", apField->msName.c_str());
+    Xml::SetAttrInt(pArrayElem, "type", (int)(apField->mType));
+    Xml::SetAttr(pArrayElem, "name", apField->msName.c_str());
 
     // CLASS ////////////////////////////////////////////
     if(apField->mType == eSerializeType_Class)
     {
-        pArrayElem->SetAttribute("class_type", apField->msClassName.c_str());
+        Xml::SetAttr(pArrayElem, "class_type", apField->msClassName.c_str());
 
         while(pContIt->HasNext())
         {
@@ -1043,12 +992,11 @@ void cSerializeClass::SaveContainer(TiXmlElement *apElement, cSerializeMemberFie
     {
         while(pContIt->HasNext())
         {
-            TiXmlElement XmlClassElem("var");
-            TiXmlElement* pVarElem = static_cast<TiXmlElement *>(pArrayElem->InsertEndChild(XmlClassElem));
+            pugi::xml_node pVarElem = pArrayElem.append_child("var");
 
             void *pData = const_cast<void *>(pContIt->NextPtr());
 
-            pVarElem->SetAttribute("val", ValueToString(pData, 0, apField->mType));
+            Xml::SetAttr(pVarElem, "val", ValueToString(pData, 0, apField->mType));
         }
     }
 
@@ -1059,11 +1007,11 @@ void cSerializeClass::SaveContainer(TiXmlElement *apElement, cSerializeMemberFie
 //-----------------------------------------------------------------------
 
 
-void cSerializeClass::LoadVariable(TiXmlElement *apElement, iSerializable* apData,
+void cSerializeClass::LoadVariable(pugi::xml_node apElement, iSerializable* apData,
                                    cSerializeSavedClass *apClass)
 {
-    tString sName = cString::ToString(apElement->Attribute("name"), "");
-    const char *sVal = apElement->Attribute("val");
+    tString sName = cString::ToString(Xml::Attr(apElement, "name"), "");
+    const char *sVal = Xml::Attr(apElement, "val");
 
     if(gbLog)
     {
@@ -1087,10 +1035,10 @@ void cSerializeClass::LoadVariable(TiXmlElement *apElement, iSerializable* apDat
 
 //-----------------------------------------------------------------------
 
-void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass)
+void cSerializeClass::LoadArray(pugi::xml_node apElement, iSerializable* apData, cSerializeSavedClass *apClass)
 {
-    tString sName = cString::ToString(apElement->Attribute("name"), "");
-    tString sClassType = cString::ToString(apElement->Attribute("class_type"), "");
+    tString sName = cString::ToString(Xml::Attr(apElement, "name"), "");
+    tString sClassType = cString::ToString(Xml::Attr(apElement, "class_type"), "");
 
     if(gbLog)
     {
@@ -1119,14 +1067,14 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData, 
         size_t lClassSize = pClass->mlSize;
 
         size_t lCount = 0;
-        TiXmlElement *pVarElem = apElement->FirstChildElement();
-        for(; pVarElem != NULL && lCount < lArraySize; pVarElem = pVarElem->NextSiblingElement(), ++lCount)
+        pugi::xml_node pVarElem = Xml::FirstElem(apElement);
+        for(; pVarElem && lCount < lArraySize; pVarElem = Xml::NextElem(pVarElem), ++lCount)
         {
             size_t lOffset = lCount * lClassSize;
 
             LoadFromElement( (iSerializable*)ValuePointer(pArrayData, lOffset), pVarElem);
         }
-        if(pVarElem != NULL)
+        if(pVarElem)
         {
             Warning("Array '%s' has more elements than declared size %zu - excess ignored\n",
                     sName.c_str(), lArraySize);
@@ -1136,13 +1084,13 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData, 
     else if(pField->mType == eSerializeType_ClassPointer)
     {
         size_t lCount = 0;
-        TiXmlElement *pVarElem = apElement->FirstChildElement();
-        for(; pVarElem != NULL && lCount < lArraySize; pVarElem = pVarElem->NextSiblingElement(), ++lCount)
+        pugi::xml_node pVarElem = Xml::FirstElem(apElement);
+        for(; pVarElem && lCount < lArraySize; pVarElem = Xml::NextElem(pVarElem), ++lCount)
         {
             size_t lOffset = sizeof(void*) * lCount;
             iSerializable **pValuePtr = (iSerializable**)ValuePointer(pArrayData, lOffset);
 
-            tString sElemClassType = cString::ToString(pVarElem->Attribute("type"), "");
+            tString sElemClassType = cString::ToString(Xml::Attr(pVarElem, "type"), "");
             cSerializeSavedClass *pSavedClass = GetClass(sElemClassType);
             if(pSavedClass == NULL || pSavedClass->mpCreateFunc == NULL)
             {
@@ -1174,7 +1122,7 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData, 
 
             LoadFromElement(*pValuePtr, pVarElem);
         }
-        if(pVarElem != NULL)
+        if(pVarElem)
         {
             Warning("Array '%s' has more elements than declared size %zu - excess ignored\n",
                     sName.c_str(), lArraySize);
@@ -1192,10 +1140,10 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData, 
         }
 
         size_t lCount = 0;
-        TiXmlElement *pVarElem = apElement->FirstChildElement();
-        for(; pVarElem != NULL && lCount < lArraySize; pVarElem = pVarElem->NextSiblingElement(), ++lCount)
+        pugi::xml_node pVarElem = Xml::FirstElem(apElement);
+        for(; pVarElem && lCount < lArraySize; pVarElem = Xml::NextElem(pVarElem), ++lCount)
         {
-            const char *sVal = pVarElem->Attribute("val");
+            const char *sVal = Xml::Attr(pVarElem, "val");
 
             if(gbLog)
             {
@@ -1204,7 +1152,7 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData, 
 
             StringToValue(pArrayData, lCount * lElemSize, fieldType, sVal);
         }
-        if(pVarElem != NULL)
+        if(pVarElem)
         {
             Warning("Array '%s' has more elements than declared size %zu - excess ignored\n",
                     sName.c_str(), lArraySize);
@@ -1220,9 +1168,9 @@ void cSerializeClass::LoadArray(TiXmlElement *apElement, iSerializable* apData, 
 
 //-----------------------------------------------------------------------
 
-void cSerializeClass::LoadClass(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass)
+void cSerializeClass::LoadClass(pugi::xml_node apElement, iSerializable* apData, cSerializeSavedClass *apClass)
 {
-    tString sName = cString::ToString(apElement->Attribute("name"), "");
+    tString sName = cString::ToString(Xml::Attr(apElement, "name"), "");
 
     cSerializeMemberField *pField = GetMemberField(sName, apClass);
     if(pField == NULL)
@@ -1242,11 +1190,11 @@ void cSerializeClass::LoadClass(TiXmlElement *apElement, iSerializable* apData, 
 
 //-----------------------------------------------------------------------
 
-void cSerializeClass::LoadClassPointer(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass)
+void cSerializeClass::LoadClassPointer(pugi::xml_node apElement, iSerializable* apData, cSerializeSavedClass *apClass)
 {
-    tString sName = cString::ToString(apElement->Attribute("name"), "");
-    tString sType = cString::ToString(apElement->Attribute("type"), "");
-    bool bNull = cString::ToBool(apElement->Attribute("null"), false);
+    tString sName = cString::ToString(Xml::Attr(apElement, "name"), "");
+    tString sType = cString::ToString(Xml::Attr(apElement, "type"), "");
+    bool bNull = cString::ToBool(Xml::Attr(apElement, "null"), false);
 
     cSerializeMemberField *pField = GetMemberField(sName, apClass);
     if(pField == NULL)
@@ -1298,9 +1246,9 @@ void cSerializeClass::LoadClassPointer(TiXmlElement *apElement, iSerializable* a
 
 //-----------------------------------------------------------------------
 
-void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apData, cSerializeSavedClass *apClass)
+void cSerializeClass::LoadContainer(pugi::xml_node apElement, iSerializable* apData, cSerializeSavedClass *apClass)
 {
-    tString sName = cString::ToString(apElement->Attribute("name"), "");
+    tString sName = cString::ToString(Xml::Attr(apElement, "name"), "");
 
     cSerializeMemberField *pField = GetMemberField(sName, apClass);
     if(pField == NULL)
@@ -1319,7 +1267,7 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
     // CLASS ////////////////////////////////////////////
     if(pField->mType == eSerializeType_Class)
     {
-        tString sClassType = cString::ToString(apElement->Attribute("class_type"), "");
+        tString sClassType = cString::ToString(Xml::Attr(apElement, "class_type"), "");
         pCont->Clear();
 
         cSerializeSavedClass *pSavedClass = GetClass(sClassType);
@@ -1330,8 +1278,8 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
             return;
         }
 
-        TiXmlElement *pVarElem = apElement->FirstChildElement();
-        for(; pVarElem != NULL; pVarElem = pVarElem->NextSiblingElement())
+        pugi::xml_node pVarElem = Xml::FirstElem(apElement);
+        for(; pVarElem; pVarElem = Xml::NextElem(pVarElem))
         {
             if(gbLog)
             {
@@ -1373,10 +1321,10 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
             pCont->Clear();
         }
 
-        TiXmlElement *pVarElem = apElement->FirstChildElement();
-        for(; pVarElem != NULL; pVarElem = pVarElem->NextSiblingElement())
+        pugi::xml_node pVarElem = Xml::FirstElem(apElement);
+        for(; pVarElem; pVarElem = Xml::NextElem(pVarElem))
         {
-            tString sClassType = cString::ToString(pVarElem->Attribute("type"), "");
+            tString sClassType = cString::ToString(Xml::Attr(pVarElem, "type"), "");
             cSerializeSavedClass *pSavedClass = GetClass(sClassType);
             if(pSavedClass == NULL || pSavedClass->mpCreateFunc == NULL)
             {
@@ -1419,10 +1367,10 @@ void cSerializeClass::LoadContainer(TiXmlElement *apElement, iSerializable* apDa
             return;
         }
 
-        TiXmlElement *pVarElem = apElement->FirstChildElement();
-        for(; pVarElem != NULL; pVarElem = pVarElem->NextSiblingElement())
+        pugi::xml_node pVarElem = Xml::FirstElem(apElement);
+        for(; pVarElem; pVarElem = Xml::NextElem(pVarElem))
         {
-            const char *sVal = pVarElem->Attribute("val");
+            const char *sVal = Xml::Attr(pVarElem, "val");
             void *pData = hplMalloc(lElemSize);
             if(pData == NULL)
             {

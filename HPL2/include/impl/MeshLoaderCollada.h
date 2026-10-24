@@ -8,7 +8,10 @@
 #include "physics/PhysicsJoint.h"
 #include "system/MemoryManager.h"
 
-class TiXmlElement;
+namespace pugi
+{
+class xml_node;
+}
 
 namespace hpl
 {
@@ -551,26 +554,26 @@ private:
                         tColladaAnimationVec *apColladaAnimVec,
                         cColladaScene *apColladaScene);
 
-    void LoadColladaScene(TiXmlElement* apRootElem, cColladaNode *apParentNode, cColladaScene *apScene,
+    void LoadColladaScene(pugi::xml_node apRootElem, cColladaNode *apParentNode, cColladaScene *apScene,
                           tColladaLightVec *apColladaLightVec);
 
-    void LoadAnimations(TiXmlElement* apRootElem, tColladaAnimationVec &avAnimations,
+    void LoadAnimations(pugi::xml_node apRootElem, tColladaAnimationVec &avAnimations,
                         cColladaScene *apColladaScene);
 
-    void LoadImages(TiXmlElement* apRootElem, tColladaImageVec &avColladaImageVec);
+    void LoadImages(pugi::xml_node apRootElem, tColladaImageVec &avColladaImageVec);
 
-    void LoadTextures(TiXmlElement* apRootElem, tColladaTextureVec &avColladaTextureVec);
+    void LoadTextures(pugi::xml_node apRootElem, tColladaTextureVec &avColladaTextureVec);
 
-    void LoadMaterials(TiXmlElement* apRootElem, tColladaMaterialVec &avColladaMaterialVec);
+    void LoadMaterials(pugi::xml_node apRootElem, tColladaMaterialVec &avColladaMaterialVec);
 
-    void LoadLights(TiXmlElement* apRootElem, tColladaLightVec &avColladaLightVec);
+    void LoadLights(pugi::xml_node apRootElem, tColladaLightVec &avColladaLightVec);
 
-    void LoadGeometry(TiXmlElement* apRootElem, tColladaGeometryVec &avColladaGeometryVec);
-    void LoadVertexData(TiXmlElement* apSourceElem, tVector3fVec &avVtxVec);
+    void LoadGeometry(pugi::xml_node apRootElem, tColladaGeometryVec &avColladaGeometryVec);
+    void LoadVertexData(pugi::xml_node apSourceElem, tVector3fVec &avVtxVec);
 
-    void LoadControllers(TiXmlElement* apRootElem, tColladaControllerVec &avColladaControllerVec,
+    void LoadControllers(pugi::xml_node apRootElem, tColladaControllerVec &avColladaControllerVec,
                          tColladaGeometryVec *apColladaGeometryVec);
-    void LoadJointData(TiXmlElement* apSourceElem, cColladaController &aController);
+    void LoadJointData(pugi::xml_node apSourceElem, cColladaController &aController);
 
     //Helpers
     void SplitVertices(cColladaGeometry &aGeometry, tColladaExtraVtxListVec &avExtraVtxVec,

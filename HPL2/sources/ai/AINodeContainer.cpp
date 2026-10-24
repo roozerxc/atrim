@@ -9,7 +9,7 @@
 #include "math/Math.h"
 
 
-#include "impl/tinyXML/tinyxml.h"
+#include "impl/XmlPugi.h"
 
 #include <algorithm>
 
@@ -636,40 +636,36 @@ bool cAINodeContainer::FreePath(const cVector3f &avStart, const cVector3f &avEnd
 
 void cAINodeContainer::SaveToFile(const tWString &asFile)
 {
-    TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
+    pugi::xml_document xmlDoc;
 
-    TiXmlElement *pRootElem = static_cast<TiXmlElement *>(pXmlDoc->InsertEndChild(TiXmlElement("AINodes")));
-    pRootElem->SetAttribute("ListNum", cString::ToString(mlListNum).c_str());
+    pugi::xml_node pRootElem = xmlDoc.append_child("AINodes");
+    Xml::SetAttr(pRootElem, "ListNum", cString::ToString(mlListNum).c_str());
 
     for(size_t i = 0; i < mvNodes.size(); ++i)
     {
         cAINode * pNode = mvNodes[i];
-        TiXmlElement *pNodeElem = static_cast<TiXmlElement *>(pRootElem->InsertEndChild(TiXmlElement("Node")));
+        pugi::xml_node pNodeElem = pRootElem.append_child("Node");
 
-        pNodeElem->SetAttribute("Name", pNode->GetName().c_str());
-        pNodeElem->SetAttribute("ID", cString::ToString(pNode->GetID()).c_str());
-        pNodeElem->SetAttribute("ListID", cString::ToString(pNode->GetListID()).c_str());
+        Xml::SetAttr(pNodeElem, "Name", pNode->GetName().c_str());
+        Xml::SetAttr(pNodeElem, "ID", cString::ToString(pNode->GetID()).c_str());
+        Xml::SetAttr(pNodeElem, "ListID", cString::ToString(pNode->GetListID()).c_str());
 
         for(int edge = 0; edge < pNode->GetEdgeNum(); ++edge)
         {
             cAINodeEdge *pEdge = pNode->GetEdge(edge);
-            TiXmlElement *pEdgeElem = static_cast<TiXmlElement *>(pNodeElem->InsertEndChild(TiXmlElement("Edge")));
+            pugi::xml_node pEdgeElem = pNodeElem.append_child("Edge");
 
-            pEdgeElem->SetAttribute("Node", pEdge->mpNode->GetName().c_str());
+            Xml::SetAttr(pEdgeElem, "Node", pEdge->mpNode->GetName().c_str());
             tString sDistance = cString::ToString(pEdge->mfDistance);
-            pEdgeElem->SetAttribute("Distance", sDistance.c_str());
+            Xml::SetAttr(pEdgeElem, "Distance", sDistance.c_str());
         }
     }
 
-    FILE *pFile = cPlatform::OpenFile(asFile, _W("w+"));
-    if(pFile == NULL || pXmlDoc->SaveFile(pFile) == false)
+    if(Xml::SaveFile(xmlDoc, asFile) == false)
     {
-        Error("Couldn't save XML file '%s'\n", asFile.c_str());
-        hplDelete(pXmlDoc);
+        Error("Couldn't save XML file '%s'\n", cString::To8Char(asFile).c_str());
         return;
     }
-    fclose(pFile);
-    hplDelete(pXmlDoc);
 }
 
 //-----------------------------------------------------------------------
@@ -678,31 +674,27 @@ void cAINodeContainer::LoadFromFile(const tWString &asFile)
 {
     BuildNodeGridMap();
 
-    FILE *pFile = cPlatform::OpenFile(asFile, _W("rb"));
-    if(pFile == NULL)
+    if(cPlatform::FileExists(asFile) == false)
     {
         return;
     }
 
-    TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument, () );
-    if(pXmlDoc->LoadFile(pFile) == false)
+    pugi::xml_document xmlDoc;
+    if(Xml::LoadFile(xmlDoc, asFile) == false)
     {
         Warning("Couldn't open XML file %s\n", cString::To8Char(asFile).c_str());
-        fclose(pFile);
-        hplDelete(pXmlDoc);
         return;
     }
-    fclose(pFile);
 
-    TiXmlElement *pRootElem = pXmlDoc->RootElement();
-    mlListNum = cString::ToInt(pRootElem->Attribute("ListNum"), 1);
+    pugi::xml_node pRootElem = xmlDoc.document_element();
+    mlListNum = cString::ToInt(Xml::Attr(pRootElem, "ListNum"), 1);
 
-    TiXmlElement *pNodeElem = pRootElem->FirstChildElement("Node");
-    for(; pNodeElem != NULL; pNodeElem = pNodeElem->NextSiblingElement("Node"))
+    pugi::xml_node pNodeElem = pRootElem.child("Node");
+    for(; pNodeElem; pNodeElem = pNodeElem.next_sibling("Node"))
     {
-        tString sName = cString::ToString(pNodeElem->Attribute("Name"), "");
-        int alID = cString::ToInt(pNodeElem->Attribute("ID"), -1);
-        int alListID = cString::ToInt(pNodeElem->Attribute("ListID"), 0);
+        tString sName = cString::ToString(Xml::Attr(pNodeElem, "Name"), "");
+        int alID = cString::ToInt(Xml::Attr(pNodeElem, "ID"), -1);
+        int alListID = cString::ToInt(Xml::Attr(pNodeElem, "ListID"), 0);
 
         cAINode *pNode = GetNodeFromID(alID);
         if(pNode == NULL)
@@ -713,10 +705,10 @@ void cAINodeContainer::LoadFromFile(const tWString &asFile)
 
         pNode->mlListID = alListID;
 
-        TiXmlElement *pEdgeElem = pNodeElem->FirstChildElement("Edge");
-        for(; pEdgeElem != NULL; pEdgeElem = pEdgeElem->NextSiblingElement("Edge"))
+        pugi::xml_node pEdgeElem = pNodeElem.child("Edge");
+        for(; pEdgeElem; pEdgeElem = pEdgeElem.next_sibling("Edge"))
         {
-            tString sNodeName = cString::ToString(pEdgeElem->Attribute("Node"), "");
+            tString sNodeName = cString::ToString(Xml::Attr(pEdgeElem, "Node"), "");
             cAINode *pEdgeNode = GetNodeFromName(sNodeName);
             if(pEdgeNode == NULL)
             {
@@ -726,14 +718,12 @@ void cAINodeContainer::LoadFromFile(const tWString &asFile)
 
             cAINodeEdge Edge;
             Edge.mpNode = pEdgeNode;
-            Edge.mfDistance = cString::ToFloat(pEdgeElem->Attribute("Distance"), 0);
+            Edge.mfDistance = cString::ToFloat(Xml::Attr(pEdgeElem, "Distance"), 0);
             Edge.mfSqrDistance = Edge.mfDistance * Edge.mfDistance;
 
             pNode->mvEdges.push_back(Edge);
         }
     }
-
-    hplDelete(pXmlDoc);
 }
 //-----------------------------------------------------------------------
 

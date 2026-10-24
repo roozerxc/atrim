@@ -71,7 +71,7 @@ public:
     bool CollidesWithFrustum(cFrustum *apFrustum);
 
 private:
-    void ExtraXMLProperties(TiXmlElement *apMainElem);
+    void ExtraXMLProperties(const pugi::xml_node &apMainElem);
     void UpdateBoundingVolume();
 
 
