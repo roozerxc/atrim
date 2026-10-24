@@ -127,7 +127,8 @@ void main()
             vec3 vEyeVec = normalize(gvTangentEyePos);
 
             //roozy: Fix hardware freeze from dividing by zero in the eye vector Z
-            float fEyeVectorZ = sign(vEyeVec.z) * max(abs(vEyeVec.z), 0.05);
+            //(sign() is 0 for 0, which still divided by zero, so pick the sign by hand.)
+            float fEyeVectorZ = (vEyeVec.z < 0.0 ? -1.0 : 1.0) * max(abs(vEyeVec.z), 0.05);
 
             //Get give eyevec the length so it reaches bottom.
             vEyeVec *= 1.0 / fEyeVectorZ;
@@ -139,8 +140,6 @@ void main()
             //Get the postion to start the search from. 0 since we start at the top.
             vec3 vHeightMapPos = vec3(gl_TexCoord[0].xy, 0.0); 
             
-            //Determine number of steps based on angle between normal and eye
-            float fSteps = clamp(floor(( 1 - dot(vEyeVec, normalize(gvNormal)) ) * 18.0) + 2.0, 2.0, 20.0); 
             
             //Do a linear search to find the first intersection.
             RayLinearIntersectionSM2(aHeightMap, vHeightMapPos, vEyeVec);
