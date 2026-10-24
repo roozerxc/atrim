@@ -139,8 +139,6 @@ private:
     cColor mColor;
     float mfHaloAlpha;
 
-    int mlLastHaloSamples;
-    int mlLastHaloMaxSamples;
 };
 
 };
