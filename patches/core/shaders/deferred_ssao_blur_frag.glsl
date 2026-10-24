@@ -35,8 +35,7 @@ void main()
 
 	//Get the core (at center) depth and create the minimum depth based on that.
 	float fCoreDepth = texture2DRect(depthMap, gl_FragCoord.xy).x;
-	float fMinDepth =  fCoreDepth - 0.2 / afFarPlane;
-	//float fMaxDepth =  fCoreDepth + 0.5 / afFarPlane; <- can skip since it does not give that much impact.
+	float fInvTolerance = 1.0 / max(0.2 / afFarPlane, fCoreDepth * 0.03);
 	
 	//Offset mul depends on the direction of the blur.	
 	float fBlurSize = 2.0;
@@ -59,10 +58,7 @@ void main()
 	
 		float fMul = vMul[i];
 		
-		//Skip any pixels where depth is lower (in front of) the core depth
-		//Do not want foreground leaking into background (opposite is acceptable though)
-		if(fDepth < fMinDepth) fMul*=0.25;
-		//if(fDepth > fMaxDepth) fMul=0; <- can skip since it does not give that much impact.
+		fMul *= clamp(1.0 - abs(fDepth - fCoreDepth) * fInvTolerance, 0.0, 1.0);
 		
 		vOcc *= fMul;
 		
