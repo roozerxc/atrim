@@ -147,7 +147,7 @@ public:
     void SetClearDepth(float afDepth);
     void SetClearStencil(int alVal);
 
-    void CopyFrameBufferToTexure(    iTexture* apTex, const cVector2l &avPos,
+    void CopyFrameBufferToTexture(    iTexture* apTex, const cVector2l &avPos,
                                      const cVector2l &avSize, const cVector2l &avTexOffset = 0);
     cBitmap *CopyFrameBufferToBitmap(const cVector2l &avScreenPos = 0, const cVector2l &avScreenSize = -1);
 

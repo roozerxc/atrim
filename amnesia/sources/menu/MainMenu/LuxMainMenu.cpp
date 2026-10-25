@@ -1389,7 +1389,7 @@ void cLuxMainMenu::RenderBlurTexture()
     pLowGfx->SetIdentityMatrix(eMatrix_ModelView);
 
     //Copy screen to screen texture
-    pLowGfx->CopyFrameBufferToTexure(mpScreenTexture, 0, pLowGfx->GetScreenSizeInt(), 0);
+    pLowGfx->CopyFrameBufferToTexture(mpScreenTexture, 0, pLowGfx->GetScreenSizeInt(), 0);
 
     RenderBlur(mpScreenTexture, pTempBlurTexture, pBlurBuffer);
 

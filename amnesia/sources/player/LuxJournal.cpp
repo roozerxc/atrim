@@ -1964,7 +1964,7 @@ void cLuxJournal::RenderBackgroundImage()
     pLowGfx->SetIdentityMatrix(eMatrix_ModelView);
 
     //Copy screen to screen texture
-    pLowGfx->CopyFrameBufferToTexure(mpScreenTexture, 0, pLowGfx->GetScreenSizeInt(), 0);
+    pLowGfx->CopyFrameBufferToTexture(mpScreenTexture, 0, pLowGfx->GetScreenSizeInt(), 0);
 
     //Bind shader and draw
     mpEffectProgram->Bind();
@@ -1980,7 +1980,7 @@ void cLuxJournal::RenderBackgroundImage()
     pLowGfx->SetTexture(0, NULL);
 
     gpBase->mpHelpFuncs->RenderBackgroundScreen(true);
-    pLowGfx->CopyFrameBufferToTexure(mpScreenTexture, 0, pLowGfx->GetScreenSizeInt(), 0);
+    pLowGfx->CopyFrameBufferToTexture(mpScreenTexture, 0, pLowGfx->GetScreenSizeInt(), 0);
 
 
 

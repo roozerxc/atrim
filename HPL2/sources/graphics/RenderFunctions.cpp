@@ -1139,7 +1139,7 @@ iTexture *iRenderFunctions::CreateRenderTexture(const tString& asName, const cVe
 
 //-----------------------------------------------------------------------
 
-void iRenderFunctions::CopyFrameBufferToTexure(    iTexture *apTexture, const cVector2l& avPos, const cVector2l& avSize, const cVector2l& avTextureOffset,
+void iRenderFunctions::CopyFrameBufferToTexture(    iTexture *apTexture, const cVector2l& avPos, const cVector2l& avSize, const cVector2l& avTextureOffset,
         bool abTextureOffsetUsesRenderTargetPos)
 {
     if(mbLog)
@@ -1159,11 +1159,11 @@ void iRenderFunctions::CopyFrameBufferToTexure(    iTexture *apTexture, const cV
     }
     if(abTextureOffsetUsesRenderTargetPos)
     {
-        mpLowLevelGraphics->CopyFrameBufferToTexure(apTexture, avPos, avSize, avTextureOffset + mpCurrentRenderTarget->mvPos);
+        mpLowLevelGraphics->CopyFrameBufferToTexture(apTexture, avPos, avSize, avTextureOffset + mpCurrentRenderTarget->mvPos);
     }
     else
     {
-        mpLowLevelGraphics->CopyFrameBufferToTexure(apTexture, avPos, avSize, avTextureOffset);
+        mpLowLevelGraphics->CopyFrameBufferToTexture(apTexture, avPos, avSize, avTextureOffset);
     }
 }
 

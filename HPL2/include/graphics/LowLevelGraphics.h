@@ -138,7 +138,7 @@ public:
     * \param &avSize The size of the screen.
     * \param &avTexOffset The position on the texture.
     */
-    virtual void CopyFrameBufferToTexure(    iTexture* apTex, const cVector2l &avPos,
+    virtual void CopyFrameBufferToTexture(    iTexture* apTex, const cVector2l &avPos,
             const cVector2l &avSize, const cVector2l &avTexOffset = 0) = 0;
 
     /**

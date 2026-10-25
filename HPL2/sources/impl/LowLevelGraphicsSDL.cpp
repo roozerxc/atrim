@@ -783,7 +783,7 @@ void cLowLevelGraphicsSDL::SetClearStencil(int alVal)
 
 //-----------------------------------------------------------------------
 
-void cLowLevelGraphicsSDL::CopyFrameBufferToTexure(iTexture* apTex, const cVector2l &avPos,
+void cLowLevelGraphicsSDL::CopyFrameBufferToTexture(iTexture* apTex, const cVector2l &avPos,
         const cVector2l &avSize, const cVector2l &avTexOffset)
 {
     if(apTex == NULL)

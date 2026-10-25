@@ -214,7 +214,7 @@ bool cRendererDeferred::LoadData()
         ePixelFormat pixelFormat = mGBufferType == eDeferredGBuffer_32Bit ? ePixelFormat_RGBA : ePixelFormat_RGBA16;
         //ePixelFormat pixelFormat = ePixelFormat_RGBA16;
 
-        tString sName = "G-BufferTexure" + cString::ToString(i);
+        tString sName = "GBufferTexture" + cString::ToString(i);
         mpGBufferTexture[0][i] = CreateRenderTexture(sName, mvScreenSize, pixelFormat, eTextureFilter_Nearest);
         mpGBufferTexture[1][i] = CreateRenderTexture(sName + "_Reflection", vRelfectionSize, pixelFormat, eTextureFilter_Nearest);
     }
@@ -3393,7 +3393,7 @@ void cRendererDeferred::RenderTranslucent()
 
             ////////////////////////////////////
             // Copy frame buffer to texture
-            CopyFrameBufferToTexure(mpRefractionTexture,
+            CopyFrameBufferToTexture(mpRefractionTexture,
                                     cVector2l(clipRect.x, clipRect.y),
                                     cVector2l(clipRect.w, clipRect.h),
                                     cVector2l(clipRect.x, clipRect.y),

@@ -97,7 +97,7 @@ public:
     iTexture *CreateRenderTexture(    const tString& asName, const cVector2l& avSize, ePixelFormat aPixelFormat,
                                       eTextureFilter aFilter = eTextureFilter_Bilinear, eTextureType aType = eTextureType_Rect);
 
-    void CopyFrameBufferToTexure(    iTexture *apTexture, const cVector2l& avPos, const cVector2l& avSize, const cVector2l& avTextureOffset,
+    void CopyFrameBufferToTexture(    iTexture *apTexture, const cVector2l& avPos, const cVector2l& avSize, const cVector2l& avTextureOffset,
                                      bool abTextureOffsetUsesRenderTargetPos);
 
     cRenderTarget *GetCurrentRenderTarget()
