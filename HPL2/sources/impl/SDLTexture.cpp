@@ -386,7 +386,7 @@ void cSDLTexture::SetFilter(eTextureFilter aFilter)
                     glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
                     glTexParameteri(GLTarget, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
                 }
-                if(mFilter == eTextureFilter_Bilinear && mFilter == eTextureFilter_Trilinear)
+                if(mFilter == eTextureFilter_Bilinear || mFilter == eTextureFilter_Trilinear)
                 {
                     glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
                     glTexParameteri(GLTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -1119,7 +1119,7 @@ void cSDLTexture::SetupProperties(int alTextureHandle)
         {
             glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
         }
-        if(mFilter == eTextureFilter_Bilinear)
+        else if(mFilter == eTextureFilter_Bilinear)
         {
             glTexParameteri(GLTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
         }
