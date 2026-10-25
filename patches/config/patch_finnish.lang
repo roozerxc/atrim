@@ -95,6 +95,8 @@
 
         <Entry Name="FlashIntensity">Flashback-intensiteetti</Entry>
         <Entry Name="FlashIntensityTip">Säädä flashback- ja emotion stone -efektien voimakkuutta. Laske tätä, jos sinulla on usein migreeniä tai valoherkkyyttä.</Entry>
+        <Entry Name="FieldOfView">Näkökenttä</Entry>
+        <Entry Name="FieldOfViewTip">Pystysuuntainen näkökenttä asteina. Oletus on 70; suurempi arvo näyttää enemmän ympäristöä, pienempi zoomaa lähemmäs.</Entry>
 
         <Entry Name="InvertGamepadLook">Käännä oikean sauvan katselua</Entry>
         <Entry Name="InvertGamepadLookTip">Kääntää peliohjaimen analogisen sauvan Y-akselia.</Entry>

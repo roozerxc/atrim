@@ -95,6 +95,8 @@
 
         <Entry Name="FlashIntensity">Flashback-Intensität</Entry>
         <Entry Name="FlashIntensityTip">Passen Sie die Intensität der Flashback- und Emotionsstein-Effekte an. Verringern Sie diese, wenn Sie häufig unter Migräne oder Lichtempfindlichkeit leiden.</Entry>
+        <Entry Name="FieldOfView">Sichtfeld</Entry>
+        <Entry Name="FieldOfViewTip">Vertikales Sichtfeld in Grad. Standard ist 70; höhere Werte zeigen mehr von der Umgebung, niedrigere zoomen heran.</Entry>
 
         <Entry Name="InvertGamepadLook">Blickrichtung des rechten Sticks umkehren.</Entry>
         <Entry Name="InvertGamepadLookTip">Kehrt die Blickrichtung des Gamepad-Analogpads auf der Y-Achse um.</Entry>

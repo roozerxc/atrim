@@ -511,6 +511,13 @@ public:
         mHandOrientation = aX;
     }
 
+    void SetFOVDegrees(float afDegrees);
+    float GetFOVDegrees();
+
+    static const float kfDefaultFOVDegrees;
+    static const float kfMinFOVDegrees;
+    static const float kfMaxFOVDegrees;
+
     static eLuxFocusIconStyle StringToFocusIconStyle(const tString& asX);
     static tString FocusIconStyleToString(eLuxFocusIconStyle aX);
 

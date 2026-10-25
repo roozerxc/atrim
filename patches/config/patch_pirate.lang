@@ -95,6 +95,8 @@
 
         <Entry Name="FlashIntensity">Flashback intensity</Entry>
         <Entry Name="FlashIntensityTip">Adjust the intensity o' flashback and emotion stone effects. Lower this if ye frequently suffer migraines or photosensitivity.</Entry>
+        <Entry Name="FieldOfView">Field o' view</Entry>
+        <Entry Name="FieldOfViewTip">How much o' the world ye can see, in degrees. 70 be the default; higher shows ye more o' yer surroundings, lower brings 'em closer like a spyglass.</Entry>
 
         <Entry Name="InvertGamepadLook">Invert Right Stick look</Entry>
         <Entry Name="InvertGamepadLookTip">Inverts the gamepad analog look Y-axis.</Entry>

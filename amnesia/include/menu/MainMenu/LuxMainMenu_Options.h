@@ -60,6 +60,10 @@ private:
     {
         return GetSliderValue(mpSFlash, mfFlashMin, mfFlashMax);
     }
+    float GetFOV()
+    {
+        return (float)cMath::RoundToInt(GetSliderValue(mpSFOV, mfFOVMin, mfFOVMax));
+    }
     float GetGamma()
     {
         return GetSliderValue(mpSGamma, mfGammaMin, mfGammaMax);
@@ -80,6 +84,7 @@ private:
     }
 
     void SetFlashLabelString(float afX);
+    void SetFOVLabelString(float afX);
     void SetGammaLabelString(float afX);
     void SetSensitivityLabelString(float afX);
 #if USE_GAMEPAD
@@ -157,6 +162,13 @@ private:
     float mfFlashMin;
     float mfFlashMax;
     float mfFlashStep;
+
+    cWidgetLabel    *mpLFOV;
+    cWidgetSlider   *mpSFOV;
+
+    float mfFOVMin;
+    float mfFOVMax;
+    float mfFOVStep;
 
     // Graphics;
     cWidgetDummy    *mpDBasicGfxOptions;
@@ -274,6 +286,9 @@ private:
 
     bool FlashSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(FlashSlider_OnMove);
+
+    bool FOVSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(FOVSlider_OnMove);
 
     bool GammaSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(GammaSlider_OnMove);

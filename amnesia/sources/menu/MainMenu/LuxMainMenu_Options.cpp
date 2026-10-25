@@ -130,6 +130,10 @@ cLuxMainMenu_Options::cLuxMainMenu_Options(cGuiSet *apGuiSet, cGuiSkin *apGuiSki
     mfFlashStep = 0.05f;
     mfFlashMax = 1.0f;
 
+    mfFOVMin = cLuxPlayer::kfMinFOVDegrees;
+    mfFOVStep = 1.0f;
+    mfFOVMax = cLuxPlayer::kfMaxFOVDegrees;
+
     mfGammaMin = 0.3f;
     mfGammaStep = 0.05f;
     mfGammaMax = 2.0f;
@@ -366,13 +370,20 @@ void cLuxMainMenu_Options::AddGameOptions(cWidgetTab* apTab)
     vPos.y += pLabel->GetSize().y + 15;
 
     ///////////////////////////////////////////////
+    // Field of view (per profile, in game only; the menu cameras keep theirs)
+    pLabel = mpGuiSet->CreateWidgetLabel(vPos, -1, kTranslate("OptionsMenu", "FieldOfView"), apTab);
+    mpSFOV = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, cVector3f(pLabel->GetSize().x + 5, -1, 0), cVector2f(150, 20), 0, pLabel);
+    SetUpInput(pLabel, mpSFOV, false, kTranslate("OptionsMenu", "FieldOfViewTip"));
+    SetUpSlider(mpSFOV, mfFOVMin, mfFOVMax, mfFOVStep, kGuiCallback(FOVSlider_OnMove), &mpLFOV);
+    vPos.y += pLabel->GetSize().y + 15;
+
+    ///////////////////////////////////////////////
     // Flashback Intensity
     pLabel = mpGuiSet->CreateWidgetLabel(vPos, -1, kTranslate("OptionsMenu", "FlashIntensity"), apTab);
-    mpSFlash = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, cVector3f(0, pLabel->GetSize().y + 5, 0), cVector2f(100, 20), 0, pLabel);
+    mpSFlash = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, cVector3f(pLabel->GetSize().x + 5, -1, 0), cVector2f(150, 20), 0, pLabel);
     SetUpInput(pLabel, mpSFlash, false, kTranslate("OptionsMenu", "FlashIntensityTip"));
     SetUpSlider(mpSFlash, mfFlashMin, mfFlashMax, mfFlashStep, kGuiCallback(FlashSlider_OnMove), &mpLFlash);
-
-    vPos.y += mpSFlash->GetLocalPosition().y + mpSFlash->GetSize().y + 15;
+    vPos.y += pLabel->GetSize().y + 15;
 
     //////////////////////////////////
     // Commentary
@@ -398,18 +409,20 @@ void cLuxMainMenu_Options::AddGameOptions(cWidgetTab* apTab)
     mpChBShowDeathHints->SetFocusNavigation(eUIArrow_Down, mpChBShowCrosshair);
     mpChBShowCrosshair->SetFocusNavigation(eUIArrow_Down, mpCBFocusIconStyle);
     mpCBFocusIconStyle->SetFocusNavigation(eUIArrow_Down, mpCBHandOrientation);
+    mpCBHandOrientation->SetFocusNavigation(eUIArrow_Down, mpSFOV);
+    mpSFOV->SetFocusNavigation(eUIArrow_Down, mpSFlash);
     if(mbShowCommentary)
     {
-        mpCBHandOrientation->SetFocusNavigation(eUIArrow_Down, mpChBShowCommentary);
+        mpSFlash->SetFocusNavigation(eUIArrow_Down, mpChBShowCommentary);
         mpChBShowCommentary->SetFocusNavigation(eUIArrow_Down, mpBOK);
 
         pLastWidget = mpChBShowCommentary;
     }
     else
     {
-        mpCBHandOrientation->SetFocusNavigation(eUIArrow_Down, mpBOK);
+        mpSFlash->SetFocusNavigation(eUIArrow_Down, mpBOK);
 
-        pLastWidget = mpCBHandOrientation;
+        pLastWidget = mpSFlash;
     }
 
     apTab->SetUserData(pLastWidget);
@@ -423,9 +436,11 @@ void cLuxMainMenu_Options::AddGameOptions(cWidgetTab* apTab)
     mpChBShowCrosshair->SetFocusNavigation(eUIArrow_Up, mpChBShowDeathHints);
     mpCBFocusIconStyle->SetFocusNavigation(eUIArrow_Up, mpChBShowCrosshair);
     mpCBHandOrientation->SetFocusNavigation(eUIArrow_Up, mpCBFocusIconStyle);
+    mpSFOV->SetFocusNavigation(eUIArrow_Up, mpCBHandOrientation);
+    mpSFlash->SetFocusNavigation(eUIArrow_Up, mpSFOV);
     if(mbShowCommentary)
     {
-        mpChBShowCommentary->SetFocusNavigation(eUIArrow_Up, mpCBHandOrientation);
+        mpChBShowCommentary->SetFocusNavigation(eUIArrow_Up, mpSFlash);
     }
 
     // Left/Right
@@ -1093,6 +1108,10 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
         SetSliderValue(mpSFlash, mfFlashIntensity, false, mfFlashMin, mfFlashMax);
         SetFlashLabelString(mfFlashIntensity);
 
+        float fFOV = aObj.GetVarFloat("FOV", cLuxPlayer::kfDefaultFOVDegrees);
+        SetSliderValue(mpSFOV, fFOV, false, mfFOVMin, mfFOVMax);
+        SetFOVLabelString(fFOV);
+
         // Language
         {
             tString sLang = aObj.GetVarString("Language", gpBase->msDefaultGameLanguage);
@@ -1454,6 +1473,8 @@ void cLuxMainMenu_Options::ApplyChanges()
         gpBase->mpPlayer->SetHandOrientation((eLuxHandOrientation)mpCBHandOrientation->GetSelectedItem());
 
         gpBase->mpEffectHandler->SetFlashIntensity(GetFlash());
+
+        gpBase->mpPlayer->SetFOVDegrees(GetFOV());
     }
 
 
@@ -1555,6 +1576,11 @@ void cLuxMainMenu_Options::ApplyChanges()
 void cLuxMainMenu_Options::SetFlashLabelString(float afX)
 {
     SetSliderLabelString(mpLFlash, afX, mfFlashMin, mfFlashMax);
+}
+
+void cLuxMainMenu_Options::SetFOVLabelString(float afX)
+{
+    SetSliderLabelString(mpLFOV, (float)cMath::RoundToInt(afX), mfFOVMin, mfFOVMax);
 }
 
 //-----------------------------------------------------------------------
@@ -1770,6 +1796,7 @@ void cLuxMainMenu_Options::DumpInitialValues(cResourceVarsObject &aObj)
         aObj.AddVarInt("HandOrientation", gpBase->mpPlayer->GetHandOrientation());
         aObj.AddVarBool("ShowCommentary", gpBase->mpMapHandler->GetShowCommentary());
         aObj.AddVarFloat("FlashIntensity", gpBase->mpEffectHandler->GetFlashIntensity());
+        aObj.AddVarFloat("FOV", (float)cMath::RoundToInt(gpBase->mpPlayer->GetFOVDegrees()));
 
         // Language
         aObj.AddVarString("Language", gpBase->mpConfigHandler->msLangFile);
@@ -1863,6 +1890,7 @@ void cLuxMainMenu_Options::DumpCurrentValues(cResourceVarsObject &aObj)
         aObj.AddVarInt("HandOrientation",    mpCBHandOrientation->GetSelectedItem());
         aObj.AddVarBool("ShowCommentary",   mpChBShowCommentary->IsChecked());
         aObj.AddVarFloat("FlashIntensity",  GetFlash());
+        aObj.AddVarFloat("FOV",             GetFOV());
 
         aObj.AddVarString("Language",        cString::To8Char(mvLangFiles[mpCBLanguage->GetSelectedItem()]));
     }
@@ -2089,6 +2117,16 @@ bool cLuxMainMenu_Options::FlashSlider_OnMove(iWidget* apWidget, const cGuiMessa
     return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Options, FlashSlider_OnMove);
+
+//-----------------------------------------------------------------------
+
+bool cLuxMainMenu_Options::FOVSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    SetFOVLabelString(GetFOV());
+
+    return true;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Options, FOVSlider_OnMove);
 
 //-----------------------------------------------------------------------
 
