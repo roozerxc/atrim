@@ -97,6 +97,12 @@
         <Entry Name="FlashIntensityTip">Adjust the intensity of flashback and emotion stone effects. Lower this if you frequently experience migraines or photosensitivity.</Entry>
         <Entry Name="FieldOfView">Field of view</Entry>
         <Entry Name="FieldOfViewTip">Vertical field of view in degrees. 70 is the default; higher values show more around you, lower values zoom in.</Entry>
+        <Entry Name="MasterVolume">Master volume</Entry>
+        <Entry Name="MasterVolumeTip">Volume of everything: sounds and music.</Entry>
+        <Entry Name="SoundVolume">Sound volume</Entry>
+        <Entry Name="SoundVolumeTip">Volume of sound effects, ambience, voices and menu sounds.</Entry>
+        <Entry Name="MusicVolume">Music volume</Entry>
+        <Entry Name="MusicVolumeTip">Volume of the music.</Entry>
 
         <Entry Name="InvertGamepadLook">Invert Right Stick look</Entry>
         <Entry Name="InvertGamepadLookTip">Inverts the gamepad analog look Y-axis.</Entry>

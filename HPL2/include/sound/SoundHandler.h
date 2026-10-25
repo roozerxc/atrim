@@ -278,6 +278,19 @@ public:
         return mfMasterSpeedMul;
     }
 
+    /**
+     * Volume of all sounds (not music) set by the player (Options > Sound), 0 - 1.
+     * Multiplied on top of the global volume settings, which scripts and effects fade.
+     */
+    void SetUserVolume(float afVolume)
+    {
+        mfUserVolume = afVolume < 0.0f ? 0.0f : (afVolume > 1.0f ? 1.0f : afVolume);
+    }
+    float GetUserVolume()
+    {
+        return mfUserVolume;
+    }
+
     cMultipleSettingsHandler *GetGlobalVolumeSettingsHandler()
     {
         return &mGlobalVolumeHandler;
@@ -317,6 +330,7 @@ private:
     float mfGlobalVolume[2];
     float mfGlobalSpeed[2];
     float mfMasterSpeedMul;
+    float mfUserVolume;
 
     cMultipleSettingsHandler mGlobalVolumeHandler;
     cMultipleSettingsHandler mGlobalSpeedHandler;

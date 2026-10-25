@@ -33,6 +33,7 @@ cMusicHandler::cMusicHandler(iLowLevelSound* apLowLevelSound, cResources* apReso
     mfVolumeMulFadeSpeed = 1.0f;
 
     mfSpeedMul = 1.0f;
+    mfUserVolume = 1.0f;
 }
 
 //-----------------------------------------------------------------------
@@ -269,6 +270,33 @@ void cMusicHandler::SetSpeedMul(float afMul)
 
 //-----------------------------------------------------------------------
 
+void cMusicHandler::SetUserVolume(float afVolume)
+{
+    afVolume = cMath::Clamp(afVolume, 0.0f, 1.0f);
+    if(mfUserVolume == afVolume)
+    {
+        return;
+    }
+
+    mfUserVolume = afVolume;
+
+    //Apply right away (Update() does not run while the music is paused, e.g. in the menu)
+    if(mpMainSong && mpMainSong->mpStream)
+    {
+        mpMainSong->mpStream->SetVolume(mpMainSong->mfVolume * mfVolumeMul * mfUserVolume);
+    }
+    for(tMusicEntryListIt it = mlstFadingSongs.begin(); it != mlstFadingSongs.end(); ++it)
+    {
+        cMusicEntry* pSong = *it;
+        if(pSong->mpStream)
+        {
+            pSong->mpStream->SetVolume(pSong->mfVolume * mfVolumeMul * mfUserVolume);
+        }
+    }
+}
+
+//-----------------------------------------------------------------------
+
 void cMusicHandler::SetVolumeMul(float afMul)
 {
     mfVolumeMul = afMul;
@@ -373,7 +401,7 @@ void cMusicHandler::Update(double adFixedDelta)
                 }
             }
 
-            float fNewVolume = mpMainSong->mfVolume * mfVolumeMul;
+            float fNewVolume = mpMainSong->mfVolume * mfVolumeMul * mfUserVolume;
 
             if(mpMainSong->mpStream->GetVolume() != fNewVolume)
             {
@@ -402,7 +430,7 @@ void cMusicHandler::Update(double adFixedDelta)
         }
         else
         {
-            pSong->mpStream->SetVolume(pSong->mfVolume * mfVolumeMul);
+            pSong->mpStream->SetVolume(pSong->mfVolume * mfVolumeMul * mfUserVolume);
             it++;
         }
     }
@@ -485,7 +513,7 @@ bool cMusicHandler::LoadAndStart(const tString& asFileName, cMusicEntry* apSong,
 
     apSong->msFileName = asFileName;
     apSong->mpStream = pStream;
-    apSong->mpStream->SetVolume(afVolume);
+    apSong->mpStream->SetVolume(afVolume * mfVolumeMul * mfUserVolume);
     apSong->mpStream->SetSpeed(mfSpeedMul);
 
     if(abResume)

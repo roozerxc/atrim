@@ -97,6 +97,12 @@
         <Entry Name="FlashIntensityTip">Passen Sie die Intensität der Flashback- und Emotionsstein-Effekte an. Verringern Sie diese, wenn Sie häufig unter Migräne oder Lichtempfindlichkeit leiden.</Entry>
         <Entry Name="FieldOfView">Sichtfeld</Entry>
         <Entry Name="FieldOfViewTip">Vertikales Sichtfeld in Grad. Standard ist 70; höhere Werte zeigen mehr von der Umgebung, niedrigere zoomen heran.</Entry>
+        <Entry Name="MasterVolume">Gesamtlautstärke</Entry>
+        <Entry Name="MasterVolumeTip">Lautstärke von allem: Geräusche und Musik.</Entry>
+        <Entry Name="SoundVolume">Geräuschlautstärke</Entry>
+        <Entry Name="SoundVolumeTip">Lautstärke von Soundeffekten, Umgebungsgeräuschen, Stimmen und Menügeräuschen.</Entry>
+        <Entry Name="MusicVolume">Musiklautstärke</Entry>
+        <Entry Name="MusicVolumeTip">Lautstärke der Musik.</Entry>
 
         <Entry Name="InvertGamepadLook">Blickrichtung des rechten Sticks umkehren.</Entry>
         <Entry Name="InvertGamepadLookTip">Kehrt die Blickrichtung des Gamepad-Analogpads auf der Y-Achse um.</Entry>

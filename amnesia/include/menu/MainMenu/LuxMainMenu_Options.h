@@ -82,6 +82,14 @@ private:
     {
         return GetSliderValue(mpSVolume, mfVolumeMin, mfVolumeMax);
     }
+    float GetSoundVolume()
+    {
+        return GetSliderValue(mpSSoundVolume, mfVolumeMin, mfVolumeMax);
+    }
+    float GetMusicVolume()
+    {
+        return GetSliderValue(mpSMusicVolume, mfVolumeMin, mfVolumeMax);
+    }
 
     void SetFlashLabelString(float afX);
     void SetFOVLabelString(float afX);
@@ -91,6 +99,7 @@ private:
     void SetGamepadLookSensitivityLabelString(float afX);
 #endif
     void SetVolumeLabelString(float afX);
+    void SetVolumeLabelString(cWidgetLabel *apLabel, float afX);
 
     bool ChangeLanguage(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(ChangeLanguage);
@@ -227,6 +236,10 @@ private:
     // Sound
     cWidgetLabel  *mpLVolume;
     cWidgetSlider *mpSVolume;
+    cWidgetLabel  *mpLSoundVolume;
+    cWidgetSlider *mpSSoundVolume;
+    cWidgetLabel  *mpLMusicVolume;
+    cWidgetSlider *mpSMusicVolume;
 
     cWidgetLabel  *mpLSndDevice;
     cWidgetComboBox *mpCBSndDevice;
@@ -303,6 +316,12 @@ private:
 
     bool SoundSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(SoundSlider_OnMove);
+
+    bool SoundVolumeSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(SoundVolumeSlider_OnMove);
+
+    bool MusicVolumeSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(MusicVolumeSlider_OnMove);
 
     bool PressToggleShowGfxOptions(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressToggleShowGfxOptions);

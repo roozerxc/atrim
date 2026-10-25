@@ -211,7 +211,7 @@ bool cSoundEntry::Update(double adFixedDelta)
     // Update Non-3D Specifics
     else
     {
-        float fFinalVolume = mfNormalVolume * mfVolumeMul * mpSoundHandler->GetGlobalVolume(mType);
+        float fFinalVolume = mfNormalVolume * mfVolumeMul * mpSoundHandler->GetGlobalVolume(mType) * mpSoundHandler->GetUserVolume();
         if(mpSound->GetVolume() != fFinalVolume)
         {
             mpSound->SetVolume(fFinalVolume);
@@ -377,7 +377,7 @@ void cSoundEntry::Update3DSpecifics(double adFixedDelta)
 
     //Multiply all factors to get the final volume.
     mpSound->SetVolume(    mfNormalVolume * mfVolumeMul * fBlock * fDistVolumeMul  *
-                           mpSoundHandler->GetGlobalVolume(mType));
+                           mpSoundHandler->GetGlobalVolume(mType) * mpSoundHandler->GetUserVolume());
 }
 
 //-----------------------------------------------------------------------
@@ -500,6 +500,7 @@ cSoundHandler::cSoundHandler(iLowLevelSound* apLowLevelSound, cResources* apReso
     mfGlobalSpeed[0] = 1;
     mfGlobalSpeed[1] = 1;
     mfMasterSpeedMul = 1;
+    mfUserVolume = 1;
 }
 
 //-----------------------------------------------------------------------

@@ -177,6 +177,8 @@ void cLuxConfigHandler::SaveMainConfig()
     cSound *pSound = gpBase->mpEngine->GetSound();
     gpBase->mpMainConfig->SetInt("Sound", "Device", mlSoundDevID);
     gpBase->mpMainConfig->SetFloat("Sound", "Volume", pSound->GetLowLevel()->GetVolume());
+    gpBase->mpMainConfig->SetFloat("Sound", "SoundVolume", pSound->GetSoundHandler()->GetUserVolume());
+    gpBase->mpMainConfig->SetFloat("Sound", "MusicVolume", pSound->GetMusicHandler()->GetUserVolume());
     gpBase->mpMainConfig->SetInt("Sound", "MaxChannels", mlMaxSoundChannels);
     gpBase->mpMainConfig->SetInt("Sound", "StreamBuffers", mlSoundStreamBuffers);
     gpBase->mpMainConfig->SetInt("Sound", "StreamBufferSize", mlSoundStreamBufferSize);

@@ -106,6 +106,16 @@ public:
         return mfSpeedMul;
     }
 
+    /**
+     * Music volume set by the player (Options > Sound), 0 - 1. Separate from the
+     * volume mul that scripts and effects fade.
+     */
+    void SetUserVolume(float afVolume);
+    float GetUserVolume()
+    {
+        return mfUserVolume;
+    }
+
 
     /**
      * No more music can be played when locked. Latest song that has been tried to be palyed is saved in lock.
@@ -139,6 +149,7 @@ private:
     float mfVolumeMulFadeSpeed;
 
     float mfSpeedMul;
+    float mfUserVolume;
 
     tMusicResumeEntryList mlstResumeEntries;
 

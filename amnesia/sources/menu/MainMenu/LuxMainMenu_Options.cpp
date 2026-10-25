@@ -1054,18 +1054,39 @@ void cLuxMainMenu_Options::AddSoundOptions(cWidgetTab* apTab)
     vPos.y += mpCBSndDevice->GetSize().y + 15;
 
     /////////////////////////////
-    // Sound Master Volume
-    pLabel = mpGuiSet->CreateWidgetLabel(vPos, -1, kTranslate("OptionsMenu", "Volume"), apTab);
-    mpSVolume = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, vPos + cVector3f(0, pLabel->GetSize().y + 5, 0), cVector2f(100, 20), 0, apTab);
-    SetUpInput(pLabel, mpSVolume, false, kTranslate("OptionsMenu", "VolumeTip"));
+    // Volume sliders, next to their labels (like Field of view / Flashback intensity)
+
+    // Master (everything, OpenAL listener gain)
+    pLabel = mpGuiSet->CreateWidgetLabel(vPos, -1, kTranslate("OptionsMenu", "MasterVolume"), apTab);
+    mpSVolume = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, cVector3f(pLabel->GetSize().x + 5, -1, 0), cVector2f(150, 20), 0, pLabel);
+    SetUpInput(pLabel, mpSVolume, false, kTranslate("OptionsMenu", "MasterVolumeTip"));
     SetUpSlider(mpSVolume, mfVolumeMin, mfVolumeMax, mfVolumeStep, kGuiCallback(SoundSlider_OnMove), &mpLVolume);
+    vPos.y += pLabel->GetSize().y + 15;
+
+    // Sounds (effects, ambience, voices, ui)
+    pLabel = mpGuiSet->CreateWidgetLabel(vPos, -1, kTranslate("OptionsMenu", "SoundVolume"), apTab);
+    mpSSoundVolume = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, cVector3f(pLabel->GetSize().x + 5, -1, 0), cVector2f(150, 20), 0, pLabel);
+    SetUpInput(pLabel, mpSSoundVolume, false, kTranslate("OptionsMenu", "SoundVolumeTip"));
+    SetUpSlider(mpSSoundVolume, mfVolumeMin, mfVolumeMax, mfVolumeStep, kGuiCallback(SoundVolumeSlider_OnMove), &mpLSoundVolume);
+    vPos.y += pLabel->GetSize().y + 15;
+
+    // Music
+    pLabel = mpGuiSet->CreateWidgetLabel(vPos, -1, kTranslate("OptionsMenu", "MusicVolume"), apTab);
+    mpSMusicVolume = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, cVector3f(pLabel->GetSize().x + 5, -1, 0), cVector2f(150, 20), 0, pLabel);
+    SetUpInput(pLabel, mpSMusicVolume, false, kTranslate("OptionsMenu", "MusicVolumeTip"));
+    SetUpSlider(mpSMusicVolume, mfVolumeMin, mfVolumeMax, mfVolumeStep, kGuiCallback(MusicVolumeSlider_OnMove), &mpLMusicVolume);
+    vPos.y += pLabel->GetSize().y + 15;
 
     mpCBSndDevice->SetFocusNavigation(eUIArrow_Down, mpSVolume);
 
     mpSVolume->SetFocusNavigation(eUIArrow_Up, mpCBSndDevice);
-    mpSVolume->SetFocusNavigation(eUIArrow_Down, mpBOK);
+    mpSVolume->SetFocusNavigation(eUIArrow_Down, mpSSoundVolume);
+    mpSSoundVolume->SetFocusNavigation(eUIArrow_Up, mpSVolume);
+    mpSSoundVolume->SetFocusNavigation(eUIArrow_Down, mpSMusicVolume);
+    mpSMusicVolume->SetFocusNavigation(eUIArrow_Up, mpSSoundVolume);
+    mpSMusicVolume->SetFocusNavigation(eUIArrow_Down, mpBOK);
 
-    apTab->SetUserData(mpSVolume);
+    apTab->SetUserData(mpSMusicVolume);
     apTab->GetTabLabel()->SetUserData(mpCBSndDevice);
 
     PopulateSoundDevices();
@@ -1361,6 +1382,14 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
     SetSliderValue(mpSVolume, fVolume, false, mfVolumeMin, mfVolumeMax);
     SetVolumeLabelString(fVolume);
 
+    float fEffectsVolume = aObj.GetVarFloat("EffectsVolume", 1.0f);
+    SetSliderValue(mpSSoundVolume, fEffectsVolume, false, mfVolumeMin, mfVolumeMax);
+    SetVolumeLabelString(mpLSoundVolume, fEffectsVolume);
+
+    float fMusicVolume = aObj.GetVarFloat("MusicVolume", 1.0f);
+    SetSliderValue(mpSMusicVolume, fMusicVolume, false, mfVolumeMin, mfVolumeMax);
+    SetVolumeLabelString(mpLMusicVolume, fMusicVolume);
+
     int lSndDev = aObj.GetVarInt("SoundDeviceID");
     int lSndDevIdx = -1;
     for(size_t i = 0; i < mvSoundDevices.size(); ++i)
@@ -1557,6 +1586,8 @@ void cLuxMainMenu_Options::ApplyChanges()
     /////////////////////////////
     // Sound
     gpBase->mpEngine->GetSound()->GetLowLevel()->SetVolume(GetVolume());
+    gpBase->mpEngine->GetSound()->GetSoundHandler()->SetUserVolume(GetSoundVolume());
+    gpBase->mpEngine->GetSound()->GetMusicHandler()->SetUserVolume(GetMusicVolume());
     cWidgetItem* pItem = mpCBSndDevice->GetItem(mpCBSndDevice->GetSelectedItem());
     if(pItem)
     {
@@ -1607,6 +1638,11 @@ void cLuxMainMenu_Options::SetGamepadLookSensitivityLabelString(float afX)
 #endif
 
 //-----------------------------------------------------------------------
+
+void cLuxMainMenu_Options::SetVolumeLabelString(cWidgetLabel *apLabel, float afX)
+{
+    SetSliderLabelString(apLabel, afX * 10.0f, mfVolumeMin * 10.0f, mfVolumeMax * 10.0f);
+}
 
 void cLuxMainMenu_Options::SetVolumeLabelString(float afX)
 {
@@ -1870,6 +1906,8 @@ void cLuxMainMenu_Options::DumpInitialValues(cResourceVarsObject &aObj)
     ////////////////////////////////
     // Sound
     aObj.AddVarFloat("SoundVolume", gpBase->mpEngine->GetSound()->GetLowLevel()->GetVolume());
+    aObj.AddVarFloat("EffectsVolume", gpBase->mpEngine->GetSound()->GetSoundHandler()->GetUserVolume());
+    aObj.AddVarFloat("MusicVolume", gpBase->mpEngine->GetSound()->GetMusicHandler()->GetUserVolume());
     aObj.AddVarInt("SoundDeviceID", gpBase->mpConfigHandler->mlSoundDevID);
 }
 
@@ -1962,6 +2000,8 @@ void cLuxMainMenu_Options::DumpCurrentValues(cResourceVarsObject &aObj)
     ////////////////////////////////
     // Sound
     aObj.AddVarFloat("SoundVolume", GetVolume());
+    aObj.AddVarFloat("EffectsVolume", GetSoundVolume());
+    aObj.AddVarFloat("MusicVolume", GetMusicVolume());
     cWidgetItem* pItem = mpCBSndDevice->GetItem(mpCBSndDevice->GetSelectedItem());
     int lDevID = -1;
     if(pItem)
@@ -2186,6 +2226,33 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Options, SoundSlider_OnMove);
 
 //-----------------------------------------------------------------------
 
+bool cLuxMainMenu_Options::SoundVolumeSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    float fVol = GetSoundVolume();
+    SetVolumeLabelString(mpLSoundVolume, fVol);
+
+    //Live, like the master volume (menu sounds let you hear it)
+    gpBase->mpEngine->GetSound()->GetSoundHandler()->SetUserVolume(fVol);
+
+    return true;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Options, SoundVolumeSlider_OnMove);
+
+//-----------------------------------------------------------------------
+
+bool cLuxMainMenu_Options::MusicVolumeSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    float fVol = GetMusicVolume();
+    SetVolumeLabelString(mpLMusicVolume, fVol);
+
+    gpBase->mpEngine->GetSound()->GetMusicHandler()->SetUserVolume(fVol);
+
+    return true;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Options, MusicVolumeSlider_OnMove);
+
+//-----------------------------------------------------------------------
+
 bool cLuxMainMenu_Options::PressToggleShowGfxOptions(iWidget* apWidget, const cGuiMessageData& aData)
 {
     bool bBasicVisible = mpDBasicGfxOptions->IsVisible();
@@ -2264,6 +2331,8 @@ bool cLuxMainMenu_Options::PressCancel(iWidget* apWidget, const cGuiMessageData&
     gpBase->mpInputHandler->SetGamepadLookSensitivity(mInitialValues.GetVarFloat("GamepadLookSensitivity"));
 #endif
     gpBase->mpEngine->GetSound()->GetLowLevel()->SetVolume(mInitialValues.GetVarFloat("SoundVolume"));
+    gpBase->mpEngine->GetSound()->GetSoundHandler()->SetUserVolume(mInitialValues.GetVarFloat("EffectsVolume", 1.0f));
+    gpBase->mpEngine->GetSound()->GetMusicHandler()->SetUserVolume(mInitialValues.GetVarFloat("MusicVolume", 1.0f));
 
     gpBase->mpEffectHandler->SetFlashIntensity(mInitialValues.GetVarFloat("FlashIntensity", 1.0f));
 

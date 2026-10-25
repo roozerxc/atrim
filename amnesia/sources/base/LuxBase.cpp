@@ -1353,6 +1353,8 @@ bool cLuxBase::InitEngine()
 
     cSound *pSound = mpEngine->GetSound();
     pSound->GetLowLevel()->SetVolume(mpMainConfig->GetFloat("Sound", "Volume", 1.0f));
+    pSound->GetSoundHandler()->SetUserVolume(mpMainConfig->GetFloat("Sound", "SoundVolume", 1.0f));
+    pSound->GetMusicHandler()->SetUserVolume(mpMainConfig->GetFloat("Sound", "MusicVolume", 1.0f));
 
     /////////////////////////
     //Load configurations
