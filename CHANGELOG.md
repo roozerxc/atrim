@@ -44,6 +44,7 @@
 - Custom Stories can now be loaded from floppy disk
 - Decoupled engine renderer and game logic from each other, allowing for truly uncapped framerates
 - Decoupled timers and scripts to use their own functions instead of using the same "Run" function
+- Disabled SSAO and relief parallax for older video cards that don't support Shader Models 3 & 4
 - Fixed aspect ratio calculation for custom `menu_loading_screen.jpg` images
 - Fixed billboard alphas dividing by zero
 - Fixed broken byte order/endianness check so fast little-endian paths are now used
