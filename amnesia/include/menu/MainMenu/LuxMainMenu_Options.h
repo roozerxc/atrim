@@ -136,6 +136,7 @@ private:
     // Properties
     cVector2f mvWindowSize;
     bool mbShowCommentary;
+    bool mbShaderModel3;
 
     ///////////////////////
     // Data and variables

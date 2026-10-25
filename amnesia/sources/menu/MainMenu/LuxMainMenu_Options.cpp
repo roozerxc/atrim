@@ -153,6 +153,7 @@ cLuxMainMenu_Options::cLuxMainMenu_Options(cGuiSet *apGuiSet, cGuiSkin *apGuiSki
     mfVolumeMax = 1.0f;
 
     mbShowCommentary = gpBase->mpMenuCfg->GetBool("Options", "ShowCommentary", false);
+    mbShaderModel3 = gpBase->mpEngine->GetGraphics()->GetLowLevel()->GetCaps(eGraphicCaps_ShaderModel_3) != 0;
 
     mbSettingInitialValues = false;
 
@@ -652,6 +653,17 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         mpCBParallaxQuality->ClearItems();
         mpCBParallaxQuality->AddItem(kTranslate("OptionsMenu", "ParallaxSimple"));
         mpCBParallaxQuality->AddItem(kTranslate("OptionsMenu", "ParallaxRelief"));
+
+        //Relief parallax requires SM3+, also position checkbox so that its center
+        if(mbShaderModel3 == false)
+        {
+            mpCBParallaxQuality->SetVisible(false);
+            mpCBParallaxQuality->SetEnabled(false);
+
+            float fRowHeight = pLabel->GetSize().y + 5 + mpCBAnisotropy->GetSize().y;
+            float fCheckBoxY = vPosInGroup.y + (fRowHeight - mpChBParallax->GetSize().y) * 0.5f;
+            mpChBParallax->SetPosition(cVector3f(vPosInGroup.x, fCheckBoxY, vPosInGroup.z));
+        }
     }
 
     vPos.y += pGroup->GetSize().y + 10;
@@ -809,7 +821,16 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         mpCBSSAOResolution->AddItem(kTranslate("OptionsMenu", "High"));
     }
 
-    vPos.y += pGroup->GetSize().y + 10;
+    //SSAO requires SM3+ so hide the whole group if unsupported
+    if(mbShaderModel3)
+    {
+        vPos.y += pGroup->GetSize().y + 10;
+    }
+    else
+    {
+        pGroup->SetVisible(false);
+        pGroup->SetEnabled(false);
+    }
 
     ////////////////////////////
     // Water Group
@@ -914,8 +935,16 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         mpChBImageTrail->SetFocusNavigation(eUIArrow_Right, mpChBRadialBlur);
         mpChBRadialBlur->SetFocusNavigation(eUIArrow_Left, mpChBImageTrail);
 
-        mpChBImageTrail->SetFocusNavigation(eUIArrow_Down, mpChBSSAO);
-        mpChBRadialBlur->SetFocusNavigation(eUIArrow_Down, mpCBSSAOSamples);
+        if(mbShaderModel3)
+        {
+            mpChBImageTrail->SetFocusNavigation(eUIArrow_Down, mpChBSSAO);
+            mpChBRadialBlur->SetFocusNavigation(eUIArrow_Down, mpCBSSAOSamples);
+        }
+        else
+        {
+            mpChBImageTrail->SetFocusNavigation(eUIArrow_Down, mpChBRefraction);
+            mpChBRadialBlur->SetFocusNavigation(eUIArrow_Down, mpChBWorldReflection);
+        }
     }
 
     {
@@ -940,6 +969,18 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         mpChBWorldReflection->SetFocusNavigation(eUIArrow_Down, mpChBRefraction);
 
         mpChBRefraction->SetFocusNavigation(eUIArrow_Up, mpChBRefraction);
+    }
+
+    //////////////
+    // Keep nav out if sm3 isn't supported
+    if(mbShaderModel3 == false)
+    {
+        mpCBAnisotropy->SetFocusNavigation(eUIArrow_Right, NULL);
+        mpCBShadowRes->SetFocusNavigation(eUIArrow_Up, mpCBAnisotropy);
+
+        mpChBRefraction->SetFocusNavigation(eUIArrow_Up, mpChBImageTrail);
+        mpChBWorldReflection->SetFocusNavigation(eUIArrow_Up, mpChBRadialBlur);
+        mpChBWorldReflection->SetFocusNavigation(eUIArrow_Left, mpChBRefraction);
     }
 }
 

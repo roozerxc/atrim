@@ -1338,6 +1338,25 @@ bool cLuxBase::InitEngine()
     mpEngine = CreateHPLEngine(eHplAPI_OpenGL, eHplSetup_All, &vars);
 
     /////////////////////////
+    // Shader model 2 only (or ForceShaderModel3And4Off)
+    // Options menu should hide these settings when SM3 isn't supported
+    if(mpEngine->GetGraphics()->GetLowLevel()->GetCaps(eGraphicCaps_ShaderModel_3) == 0)
+    {
+        if(mpConfigHandler->mbSSAOActive || mpConfigHandler->mlParallaxQuality != eParallaxQuality_Simple)
+        {
+            Log("No shader model 3: SSAO off, parallax quality simple.\n");
+        }
+
+        // Turn off SSAO completely
+        mpConfigHandler->mbSSAOActive = false;
+        cRendererDeferred::SetSSAOLoaded(false);
+
+        // Lower parallax quality to Simple
+        mpConfigHandler->mlParallaxQuality = eParallaxQuality_Simple;
+        iRenderer::SetParallaxQuality(eParallaxQuality_Simple);
+    }
+
+    /////////////////////////
     // Set up more properties
     mpEngine->GetGraphics()->GetLowLevel()->SetVsyncActive(mpConfigHandler->mbVSync);
     mpEngine->SetFrameRateLimit(mpConfigHandler->mlFrameRateLimit);
