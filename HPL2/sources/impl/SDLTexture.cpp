@@ -745,6 +745,19 @@ bool cSDLTexture::CreateTexture(    int alTextureHandle,
                                     bool abCheckForResize)
 {
     /////////////////////////////
+    //Early out to reject invalid input
+    if(apBitmapImage == NULL)
+    {
+        Error("CreateTexture called with NULL bitmap data for '%s'\n", msName.c_str());
+        return false;
+    }
+    if(avSize.x < 1 || avSize.y < 1 || (mType == eTextureType_3D && avSize.z < 1))
+    {
+        Error("CreateTexture called with invalid size %dx%dx%d for '%s'\n",
+              avSize.x, avSize.y, avSize.z, msName.c_str());
+        return false;
+    }
+
     //Check so size is power of 2
     if((!cMath::IsPow2(avSize.x) || !cMath::IsPow2(avSize.y)) && mType != eTextureType_Rect)
     {
@@ -817,20 +830,63 @@ bool cSDLTexture::CreateTexture(    int alTextureHandle,
                 vNewSize.x >>= 1;
                 vNewSize.y >>= 1;
 
-                if(vNewSize.x <= mvMinDownScaleSize.x || mvSize.y <= mvMinDownScaleSize.y)
+                if(vNewSize.x <= mvMinDownScaleSize.x || vNewSize.y <= mvMinDownScaleSize.y)
                 {
                     break;
                 }
             }
 
+            if(vNewSize.x < 1)
+            {
+                vNewSize.x = 1;
+            }
+            if(vNewSize.y < 1)
+            {
+                vNewSize.y = 1;
+            }
+            if(vNewSize.z < 1)
+            {
+                vNewSize.z = 1;
+            }
+
             //Create new data and resize current data to it.
             int lChannels = GetBytesPerPixel(aPixelFormat);
             lResizeDataSize = vNewSize.x * vNewSize.y * lChannels;
+            if(lResizeDataSize <= 0)
+            {
+                Error("Texture '%s' resize produced invalid data size %d (new size %dx%d)\n",
+                      msName.c_str(), lResizeDataSize, vNewSize.x, vNewSize.y);
+                return false;
+            }
+
             pResizeData = hplNewArray(unsigned char, lResizeDataSize);
+            if(pResizeData == NULL)
+            {
+                Error("Texture '%s' failed to allocate resize buffer of %d bytes\n",
+                      msName.c_str(), lResizeDataSize);
+                return false;
+            }
 
+            //Simple point-sampled downsample
+            const int lSrcW = mvSize.x;
+            const int lSrcH = mvSize.y;
+            const int lDstW = vNewSize.x;
+            const int lDstH = vNewSize.y;
 
-            gluScaleImage(    GLFormat, mvSize.x, mvSize.y, GL_UNSIGNED_BYTE, apBitmapImage->mpData,
-                              vNewSize.x, vNewSize.y, GL_UNSIGNED_BYTE, pResizeData);
+            for(int y = 0; y < lDstH; ++y)
+            {
+                const int lSrcY = (y * lSrcH) / lDstH;
+                for(int x = 0; x < lDstW; ++x)
+                {
+                    const int lSrcX = (x * lSrcW) / lDstW;
+                    const unsigned char *pSrc = apBitmapImage->mpData + (lSrcY * lSrcW + lSrcX) * lChannels;
+                    unsigned char *pDst = pResizeData + (y * lDstW + x) * lChannels;
+                    for(int c = 0; c < lChannels; ++c)
+                    {
+                        pDst[c] = pSrc[c];
+                    }
+                }
+            }
 
             mvSize = vNewSize;
         }
@@ -1017,6 +1073,20 @@ void cSDLTexture::GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelForma
 bool cSDLTexture::CopyTextureDataToGL(    int alTextureHandle, int alLevel, unsigned char *apData, int alDataSize,
         const cVector3l avSize, ePixelFormat aPixelFormat, int alFaceNum)
 {
+    //Only reject NULL when caller claims to supply pixel data
+    if(apData == NULL && alDataSize > 0)
+    {
+        Error("CopyTextureDataToGL called with NULL data pointer but non-zero size for '%s' (level %d, size %dx%dx%d, dataSize %d)\n",
+              msName.c_str(), alLevel, avSize.x, avSize.y, avSize.z, alDataSize);
+        return false;
+    }
+    if(avSize.x < 1 || avSize.y < 1 || (mType == eTextureType_3D && avSize.z < 1))
+    {
+        Error("CopyTextureDataToGL called with invalid size %dx%dx%d for '%s'\n",
+              avSize.x, avSize.y, avSize.z, msName.c_str());
+        return false;
+    }
+
     GLenum GLTarget = TextureTypeToGLTarget(mType);
     GLenum GLFormat = PixelFormatToGLFormat(aPixelFormat);
     GLenum GLInternalFormat = PixelFormatToGLInternalFormat(aPixelFormat);

@@ -423,11 +423,12 @@ iTexture *cTextureManager::CreateSimpleTexture(const tString& asName, bool abUse
         {
             cVector3l size = pBmp->GetSize();
 
-            if(size.z != 1 || size.y != (size.x * size.x))
+            if(size.x < 1 || size.z != 1 || size.y != (size.x * size.x))
             {
-                Error("Texture '%s' is not a valid Flattened 3D volume (got %dx%dx%d, expected height == width*width)\n",
+                Error("Texture '%s' is not a valid Flattened 3D volume (got %dx%dx%d, expected height == width*width and depth==1)\n",
                       asName.c_str(), size.x, size.y, size.z);
                 hplDelete(pBmp);
+                hplDelete(pTexture);
                 EndLoad();
                 return NULL;
             }
@@ -435,6 +436,15 @@ iTexture *cTextureManager::CreateSimpleTexture(const tString& asName, bool abUse
             size.y = size.x;
             size.z = size.x;
             pBmp->SetSize(size);
+
+            if(size.x < 2)
+            {
+                Error("Texture '%s' Flattened 3D volume is too small (%d^3)\n", asName.c_str(), size.x);
+                hplDelete(pBmp);
+                hplDelete(pTexture);
+                EndLoad();
+                return NULL;
+            }
         }
 
         if(pTexture->CreateFromBitmap(pBmp) == false)
