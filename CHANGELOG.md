@@ -57,25 +57,26 @@
 - Fixed destructive recursive reparse point deletion when a profile is deleted
 - Fixed enemy breakable/stuck door check malfunctions
 - Fixed enemy proximity and player distancing issues
-- Fixed engine crash from addressing 32-bit memory over 2 GB
 - Fixed excess screen aspect ratio calculation
 - Fixed Fast Forward (`F3`) speed sound and music multiplier
 - Fixed fatal crash after loading invalid or null animation data
+- Fixed fatal crash caused by decoding faulty Ogg Vorbis files
+- Fixed fatal crash caused by the libvorbis library being too old
 - Fixed fatal crash due to missing null checks for skeleton bounds
-- Fixed fatal crash when meshes and mesh caches had invalid data
-- Fixed fatal crash while encoding Ogg Vorbis files
+- Fixed fatal crash due to missing shaders for effect renderer
+- Fixed fatal crash from addressing 32-bit memory over 2 GB
+- Fixed fatal crash from downscaling non-pow2 textures on "Ultra Low"
+- Fixed fatal crash when meshes and mesh caches had invalid or null data
+- Fixed fatal crash when pressing Esc quickly to skip through bootup logos
 - Fixed faulty texture filter selection
 - Fixed frame pacing issues when frames per second were slightly low
-- Fixed game crash when pressing Esc quickly to skip through bootup logos
 - Fixed inactive character bodies being simulated
 - Fixed invalid serialization of coins needed to unlock chests
-- Fixed libvorbis crashes caused by the library being too old
 - Fixed limit for Tinderboxes not being properly enforced
 - Fixed max amount of game logic updates not scaling properly with Fast Forward (`F3`)
 - Fixed mipmap level detection and image loading
 - Fixed missing material check for player step sounds
 - Fixed missing, null or invalid data check for sound entities
-- Fixed missing shader crashes for effect renderer
 - Fixed patch language fallback loading for unsupported languages
 - Fixed post effects breaking at >60 FPS
 - Fixed SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
@@ -86,6 +87,7 @@
 - Fixed visual bug caused by mesh coverage overshoot when an entity was being faded in
 - Fixed visual bug with ropes disappearing when they were stretched to a significant degree
 - Fixed Z-fighting caused by decal depth mismatches with surfaces
+- Game now looks for `hand_object` and `hand_objects` folders for custom hand object models
 - Improved AI node iterator with changes from Amnesia: A Machine for Pigs
 - Improved Father Hector David's idle reciting of biblical verses (specifically the Lord's Prayer (Matthew 6:9–10) and Revelation 11:15)
 - Improved text quality for notes, diaries and mementos in the Journal
