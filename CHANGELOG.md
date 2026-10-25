@@ -13,12 +13,14 @@
 - Added new drop-down menu for selecting the type of parallax rendering effect (Simple, Relief)
 - Added new engine build ID (`YYYYMMDDhhmmss`)
 - Added new engine performance metrics (saved to `hpl.log`)
+- Added new field of view (FOV) slider setting
 - Added new flashback intensity slider
 - Added new "Flattened 3D" texture type
 - Added new frame limiter setting (`FrameRateLimit`) in `main_settings.cfg`
 - Added new Infinity Ward-style version watermark for debugging
 - Added new left- and right-handedness options
 - Added new "lite" version of the deferred light shader for ATi Radeon 9xxx video cards
+- Added new master, sound, and music volume sliders
 - Added new modulated illumination rendering type for surface materials
 - Added new occluder and pathfinding block checks
 - Added new Pirate Speak language. Arr Matey!
@@ -44,7 +46,6 @@
 - Decoupled timers and scripts to use their own functions instead of using the same "Run" function
 - Fixed aspect ratio calculation for custom `menu_loading_screen.jpg` images
 - Fixed billboard alphas dividing by zero
-- Fixed bloom and SSAO shader rendering bugs
 - Fixed broken byte order/endianness check so fast little-endian paths are now used
 - Fixed broken enemy "standing still" checks
 - Fixed broken node and bone index resolve for mesh entities
@@ -57,10 +58,12 @@
 - Fixed enemy proximity and player distancing issues
 - Fixed engine crash from addressing 32-bit memory over 2 GB
 - Fixed excess screen aspect ratio calculation
+- Fixed Fast Forward (`F3`) speed sound and music multiplier
 - Fixed fatal crash after loading invalid or null animation data
 - Fixed fatal crash due to missing null checks for skeleton bounds
 - Fixed fatal crash when meshes and mesh caches had invalid data
 - Fixed fatal crash while encoding Ogg Vorbis files
+- Fixed faulty texture filter selection
 - Fixed frame pacing issues when frames per second were slightly low
 - Fixed game crash when pressing Esc quickly to skip through bootup logos
 - Fixed inactive character bodies being simulated
@@ -76,10 +79,12 @@
 - Fixed post effects breaking at >60 FPS
 - Fixed SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
 - Fixed SSAO rendering lag from depth fetch expenses
+- Fixed SSAO shader occlusion depth problems (inspired by patches from Florian)
 - Fixed Shader Model 3 parallax mapping fallback
 - Fixed user settings not refreshing visually after switching between profiles
 - Fixed visual bug caused by mesh coverage overshoot when an entity was being faded in
 - Fixed visual bug with ropes disappearing when they were stretched to a significant degree
+- Fixed Z-fighting caused by decal depth mismatches with surfaces
 - Improved AI node iterator with changes from Amnesia: A Machine for Pigs
 - Improved Father Hector David's idle reciting of biblical verses (specifically the Lord's Prayer (Matthew 6:9–10) and Revelation 11:15)
 - Improved text quality for notes, diaries and mementos in the Journal
@@ -100,6 +105,7 @@
 - Removed "wait and finish rendering" bottleneck in MainMenu, Inventory and Journal
 - Replaced loading icons from loose bitmaps with header-based RWops in the executable
 - Replaced `SDL_SetGamma` with a dedicated GLSL shader that controls the in-game gamma
+- Replaced tinyxml with pugixml, decreasing loading times and memory consumption
 - Restored unused Brute enemy enabled sound
 - Restored unused Penumbra-style head leaning behavior
 - Unified loading resource directories
