@@ -630,6 +630,11 @@ bool cRendererDeferred::LoadData()
         mbSSAOLoaded = false;
         Warning("System does not support float textures! SSAO is disabled.\n");
     }
+    if(mbSSAOLoaded && mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_3) == 0)
+    {
+        mbSSAOLoaded = false;
+        Warning("System does not support Shader Model 3! SSAO is disabled.\n");
+    }
     if(mbSSAOLoaded)
     {
         cVector2l vSSAOSize = mvScreenSize / mlSSAOBufferSizeDiv;
