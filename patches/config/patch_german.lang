@@ -66,16 +66,16 @@
     <!-- BEGIN HARD MODE STRINGS -->
 
     <CATEGORY Name="MainMenu">
-        <Entry Name="HardMode">Hard-Mode</Entry>
+        <Entry Name="HardMode">Hard Mode</Entry>
         <Entry Name="NormalMode">Normal</Entry>
 
-        <Entry Name="HardModeDescription">Feinde werden dich leichter entdecken. Zunder und Öl sind schwerer zu finden. Automatisches Speichern ist deaktiviert und das Speicheren kostet Zunder. Wenn du den Verstand verlierst, stirbst du.</Entry>
+        <Entry Name="HardModeDescription">Feinde werden dich leichter entdecken. Zunder und Öl sind schwerer zu finden. Automatisches Speichern ist deaktiviert und das Speichern kostet Zunder. Wenn du den Verstand verlierst, stirbst du.</Entry>
         <Entry Name="NormalModeDescription">So, wie das Spiel ursprünglich konzipiert wurde.</Entry>
-        <Entry Name="HardModeStartNewGame">Ein neues Spiel im Schwierigkeitsgrad „Schwer“ starten?</Entry>
+        <Entry Name="HardModeStartNewGame">Ein neues Spiel im Hard Mode starten?</Entry>
 
-        <Entry Name="HardModeSaveCost">Kosten sparen # Zünderkasten</Entry>
-        <Entry Name="HardModeTinderboxInInventory">Du hast # in deinem Inventar</Entry>
-        <Entry Name="HardModeSavePopup">Durch das Speichern werden # Zunderboxen aus dem Inventar entfernt.</Entry>
+        <Entry Name="HardModeSaveCost">Speichern kostet # Zunder</Entry>
+        <Entry Name="HardModeTinderboxInInventory">Du hast # Zunder in deinem Inventar</Entry>
+        <Entry Name="HardModeSavePopup">Durch das Speichern werden # Zunder aus dem Inventar entfernt.</Entry>
     </CATEGORY>
 
     <CATEGORY Name="Hints">
