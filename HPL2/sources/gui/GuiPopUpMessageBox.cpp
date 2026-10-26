@@ -1,6 +1,7 @@
 #include "gui/GuiPopUpMessageBox.h"
 
 #include "system/LowLevelSystem.h"
+#include "system/String.h"
 
 #include "math/Math.h"
 
@@ -23,6 +24,28 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
+static tWString ReplaceLineBreakTags(const tWString& asText)
+{
+    const tWString sTag = _W("[br]");
+    tWString sRet;
+    size_t lStart = 0;
+    while(true)
+    {
+        size_t lPos = asText.find(sTag, lStart);
+        if(lPos == tWString::npos)
+        {
+            sRet += asText.substr(lStart);
+            break;
+        }
+        sRet += asText.substr(lStart, lPos - lStart);
+        sRet += _W("\n");
+        lStart = lPos + sTag.size();
+    }
+    return sRet;
+}
+
+//-----------------------------------------------------------------------
+
 cGuiPopUpMessageBox::cGuiPopUpMessageBox(cGuiSet *apSet,
         const tWString& asLabel, const tWString& asText,
         const tWString& asButton1, const tWString& asButton2,
@@ -36,19 +59,50 @@ cGuiPopUpMessageBox::cGuiPopUpMessageBox(cGuiSet *apSet,
 
     cGuiSkinFont *pFont = mpSkin->GetFont(eGuiSkinFont_Default);
 
-    float fWindowMinLength = pFont->mpFont->GetLength(pFont->mvSize, asLabel.c_str());
-    float fTextLength = pFont->mpFont->GetLength(pFont->mvSize, asText.c_str());
+    tWString sText = ReplaceLineBreakTags(asText);
 
-    if(fTextLength > fWindowMinLength)
+    cVector2f vVirtSize = mpSet->GetVirtualSize();
+    float fMaxTextWidth = cMath::Min(560.0f, vVirtSize.x - 80.0f);
+    if(fMaxTextWidth < 160.0f)
     {
-        fWindowMinLength = fTextLength;
+        fMaxTextWidth = 160.0f;
+    }
+
+    //Widest line (lines that need wrapping get the max width)
+    float fTextWidth = 0;
+    {
+        tWStringVec vLines;
+        tWString sSep = _W("\n");
+        cString::GetStringVecW(sText, vLines, &sSep);
+        for(size_t i = 0; i < vLines.size(); ++i)
+        {
+            float fLength = pFont->mpFont->GetLength(pFont->mvSize, vLines[i].c_str());
+            if(fLength > fTextWidth)
+            {
+                fTextWidth = fLength;
+            }
+        }
+    }
+    if(fTextWidth > fMaxTextWidth)
+    {
+        fTextWidth = fMaxTextWidth;
+    }
+
+    float fRowHeight = pFont->mvSize.y + 2; //same as cWidgetLabel
+    tWStringVec vRows;
+    pFont->mpFont->GetWordWrapRows(fTextWidth + 1, fRowHeight, pFont->mvSize, sText, &vRows);
+    int lRows = cMath::Max((int)vRows.size(), 1);
+    float fExtraHeight = fRowHeight * (float)(lRows - 1);
+
+    float fWindowMinLength = pFont->mpFont->GetLength(pFont->mvSize, asLabel.c_str());
+    if(fTextWidth > fWindowMinLength)
+    {
+        fWindowMinLength = fTextWidth;
     }
 
     float fWindowWidth = fWindowMinLength + 40 > 200 ? fWindowMinLength + 40 : 200;
 
-    cVector2f vVirtSize = mpSet->GetVirtualSize();
-
-    float fWindowHeight = 90 + pFont->mvSize.y;
+    float fWindowHeight = 90 + pFont->mvSize.y + fExtraHeight;
 
     cVector3f vPos = cVector3f(vVirtSize.x / 2 - fWindowWidth / 2, vVirtSize.y / 2 - fWindowHeight / 2, 100);
 
@@ -62,7 +116,7 @@ cGuiPopUpMessageBox::cGuiPopUpMessageBox(cGuiSet *apSet,
     // Buttons
     if(asButton2 == _W(""))
     {
-        vPos = cVector3f(fWindowWidth / 2 - 40, 50 + pFont->mvSize.y, 1);
+        vPos = cVector3f(fWindowWidth / 2 - 40, 50 + pFont->mvSize.y + fExtraHeight, 1);
         mvButtons[0] = mpSet->CreateWidgetButton(vPos, cVector2f(80, 30), asButton1, mpWindow);
         mvButtons[0]->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(ButtonPress));
 #if USE_GAMEPAD
@@ -74,7 +128,7 @@ cGuiPopUpMessageBox::cGuiPopUpMessageBox(cGuiSet *apSet,
     }
     else
     {
-        vPos = cVector3f(fWindowWidth / 2 - (80 * 2 + 20) / 2, 50 + pFont->mvSize.y, 1);
+        vPos = cVector3f(fWindowWidth / 2 - (80 * 2 + 20) / 2, 50 + pFont->mvSize.y + fExtraHeight, 1);
         mvButtons[0] = mpSet->CreateWidgetButton(vPos, cVector2f(80, 30), asButton1, mpWindow);
         mvButtons[0]->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(ButtonPress));
 #if USE_GAMEPAD
@@ -100,8 +154,10 @@ cGuiPopUpMessageBox::cGuiPopUpMessageBox(cGuiSet *apSet,
     //////////////////////////
     // Label
     vPos = cVector3f(20, 30, 1);
-    mpLabel = mpSet->CreateWidgetLabel(vPos, cVector2f(fWindowWidth - 10, pFont->mvSize.y),
-                                       asText, mpWindow);
+    mpLabel = mpSet->CreateWidgetLabel(vPos, cVector2f(fTextWidth + 1, fRowHeight * (float)lRows),
+                                       sText, mpWindow);
+    mpLabel->SetWordWrap(true);
+    mpLabel->SetAutoScroll(false);
 
     SetUpDefaultFocus(mvButtons[0]);
 }
