@@ -230,6 +230,7 @@ public:
     cVector3f mvHudVirtualStartPos;
 
     cLuxCustomStorySettings *mpCustomStory;
+    tFileSearcherAddedFileVec mvCustomStoryFiles;
 
     cLuxConfigHandler *mpConfigHandler;
     cLuxInputHandler *mpInputHandler;

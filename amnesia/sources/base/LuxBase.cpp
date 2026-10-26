@@ -1763,6 +1763,9 @@ void cLuxBase::SetCustomStory(cLuxCustomStorySettings* apCustomStory)
         mpCustomStory = NULL;
     }
 
+    mpEngine->GetResources()->GetFileSearcher()->RemoveFiles(mvCustomStoryFiles);
+    mvCustomStoryFiles.clear();
+
     mpCustomStory = apCustomStory;
 
     if(mpCustomStory)
@@ -1775,7 +1778,7 @@ void cLuxBase::SetCustomStory(cLuxCustomStorySettings* apCustomStory)
         msProfileSavePath = cString::AddSlashAtEndW(msMainProfileSavePath + _W("custom")) +
                             cString::AddSlashAtEndW(sStoryFolder);
 
-        mpEngine->GetResources()->AddResourceDir(mpCustomStory->msStoryRootFolder, true);
+        mpEngine->GetResources()->GetFileSearcher()->AddDirectory(mpCustomStory->msStoryRootFolder, "*.*", true, &mvCustomStoryFiles);
     }
     else
     {

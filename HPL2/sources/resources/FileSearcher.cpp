@@ -51,7 +51,8 @@ cFileSearcher::~cFileSearcher()
 
 //-----------------------------------------------------------------------
 
-void cFileSearcher::AddDirectory(const tWString& asSearchPath, const tString &asMask, bool abAddSubDirectories)
+void cFileSearcher::AddDirectory(const tWString& asSearchPath, const tString &asMask, bool abAddSubDirectories,
+                                 tFileSearcherAddedFileVec *apAddedFiles)
 {
     //Make the path with only "/" and lower case.
     tWString sPath = cString::ReplaceCharToW(asSearchPath, _W("\\"), _W("/"));
@@ -68,9 +69,19 @@ void cFileSearcher::AddDirectory(const tWString& asSearchPath, const tString &as
         tString sLowFile = cString::ToLowerCase(cString::To8Char(sFile));
         tWString sFilePath = cString::ReplaceCharToW( cPlatform::GetFullFilePath( cString::SetFilePathW(sFile, sPath)), _W("\\"), _W("/"));;
 
-        //Check if file and path already exist
-        tFilePathMapIt pathIt = m_mapFiles.find(sLowFile);
-        if(pathIt != m_mapFiles.end() && pathIt->second.msPath == sFilePath)
+        //Check if file and path already exist (any of the entries with that name)
+        bool bExists = false;
+        tFilePathMapIt pathIt = m_mapFiles.lower_bound(sLowFile);
+        tFilePathMapIt pathEnd = m_mapFiles.upper_bound(sLowFile);
+        for(; pathIt != pathEnd; ++pathIt)
+        {
+            if(pathIt->second.msPath == sFilePath)
+            {
+                bExists = true;
+                break;
+            }
+        }
+        if(bExists)
         {
             continue;
         }
@@ -79,6 +90,10 @@ void cFileSearcher::AddDirectory(const tWString& asSearchPath, const tString &as
         //Log("Adding lowercase file: '%s' with path: '%s'\n 8bitHash: %u 16bitHash %u\n", sLowFile.c_str(), cString::To8Char(sFilePath).c_str(),
         //    cString::GetHash(cString::To8Char(sFilePath)), cString::GetHashW(sFilePath));
         m_mapFiles.insert(tFilePathMap::value_type(sLowFile, cFileSearcherEntry(sFilePath) ));
+        if(apAddedFiles)
+        {
+            apAddedFiles->push_back(tFileSearcherAddedFile(sLowFile, sFilePath));
+        }
     }
 
     //////////////////////////////////
@@ -92,7 +107,26 @@ void cFileSearcher::AddDirectory(const tWString& asSearchPath, const tString &as
         {
             tWString sNewPath = cString::SetFilePathW(*it, sPath);
 
-            AddDirectory(sNewPath, asMask, true);
+            AddDirectory(sNewPath, asMask, true, apAddedFiles);
+        }
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cFileSearcher::RemoveFiles(const tFileSearcherAddedFileVec& avFiles)
+{
+    for(size_t i = 0; i < avFiles.size(); ++i)
+    {
+        tFilePathMapIt it = m_mapFiles.lower_bound(avFiles[i].first);
+        tFilePathMapIt itEnd = m_mapFiles.upper_bound(avFiles[i].first);
+        for(; it != itEnd; ++it)
+        {
+            if(it->second.msPath == avFiles[i].second)
+            {
+                m_mapFiles.erase(it);
+                break;
+            }
         }
     }
 }
