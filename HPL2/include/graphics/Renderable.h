@@ -23,6 +23,7 @@ class cRenderList;
 class iRenderableContainerNode;
 class iPhysicsBody;
 class iRenderer;
+class cCamera;
 
 //------------------------------------------
 
@@ -105,6 +106,16 @@ public:
     inline float GetCoverageAmount()const
     {
         return mfCoverageAmount;
+    }
+
+    /** Set by the render list each frame: the view model camera (FindRenderInterpCamera()), NULL for world objects. */
+    inline void SetViewModelCamera(cCamera *apCamera)
+    {
+        mpViewModelCamera = apCamera;
+    }
+    inline cCamera *GetViewModelCamera() const
+    {
+        return mpViewModelCamera;
     }
 
     void SetLargePlaneSurfacePlacement(int alX)
@@ -239,6 +250,8 @@ protected:
     bool mbForceShadow;
 
     int mlLargePlaneSurfacePlacement;
+
+    cCamera *mpViewModelCamera;
 
     int mlRenderFrameCount;
 

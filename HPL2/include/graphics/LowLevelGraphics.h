@@ -180,6 +180,8 @@ public:
 
     virtual void SetDepthTestActive(bool abX) = 0;
     virtual void SetDepthTestFunc(eDepthTestFunc aFunc) = 0;
+    /** Maps window depth to [afNear, afFar] (glDepthRange). Used to draw the first person view model on top. */
+    virtual void SetDepthRange(float afNear, float afFar) {}
 
     virtual void SetAlphaTestActive(bool abX) = 0;
     virtual void SetAlphaTestFunc(eAlphaTestFunc aFunc, float afRef) = 0;

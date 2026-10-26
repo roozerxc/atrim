@@ -60,6 +60,10 @@ int iRenderer::mlDrawCalls = 1;
 
 //-----------------------------------------------------------------------
 
+//Window depth range of the first person view model. Anything in the world closer than about
+//near plane / (1 - this) (5.1 cm with the default 5 cm near plane) is the only thing it can lose against.
+static const float kfViewModelDepthRange = 0.02f;
+
 int iRenderer::mlRenderFrameCount = 0;
 
 //-----------------------------------------------------------------------
@@ -465,6 +469,8 @@ iRenderer::iRenderer(const tString& asName, cGraphics *apGraphics, cResources* a
 {
     mpGraphics = apGraphics;
     mpResources = apResources;
+
+    mbViewModelRealDepthPass = false;
 
     //////////////
     //Set variables from arguments
@@ -2474,7 +2480,112 @@ void iRenderer::DrawCurrentMaterial(eMaterialRenderMode aRenderMode, iRenderable
         }
     }
 
+    ////////////////////////////
+    // Player viewmodel
+    bool bViewModelDepth =    apObject && mbViewModelRealDepthPass == false &&
+                            aRenderMode != eMaterialRenderMode_Illumination &&
+                            aRenderMode != eMaterialRenderMode_IlluminationFog &&
+                            IsViewModelObject(apObject);
+    if(bViewModelDepth)
+    {
+        mpLowLevelGraphics->SetDepthRange(0.0f, kfViewModelDepthRange);
+    }
+
     DrawCurrent();
+
+    if(bViewModelDepth)
+    {
+        mpLowLevelGraphics->SetDepthRange(0.0f, 1.0f);
+    }
+}
+
+//-----------------------------------------------------------------------
+
+bool iRenderer::IsViewModelObject(iRenderable *apObject)
+{
+    cCamera *pCamera = apObject->GetViewModelCamera();
+    if(pCamera == NULL)
+    {
+        return false;
+    }
+
+    //Only in the view of the camera the view model belongs to (not in shadow maps, reflections, ...)
+    return mpCurrentSettings->mbIsReflection == false && pCamera->GetFrustum() == mpCurrentFrustum;
+}
+
+//-----------------------------------------------------------------------
+
+void iRenderer::RenderViewModelDepth(bool abRealDepth)
+{
+    ////////////////////////////
+    // Any opaque view model objects at all?
+    bool bFound = false;
+    cRenderableVecIterator testIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Diffuse);
+    while(testIt.HasNext())
+    {
+        if(IsViewModelObject(testIt.Next()))
+        {
+            bFound = true;
+            break;
+        }
+    }
+    if(bFound == false)
+    {
+        return;
+    }
+
+    START_RENDER_PASS(ViewModelDepth);
+
+    SetDepthTest(true);
+    SetDepthWrite(true);
+    SetChannelMode(eMaterialChannelMode_None);
+
+    int lPassNum = abRealDepth ? 2 : 1;
+    for(int lPass = 0; lPass < lPassNum; ++lPass)
+    {
+        if(abRealDepth)
+        {
+            mbViewModelRealDepthPass = true;
+
+            //Pass 1: push the view model pixels to the far plane, pass 2: real depth, nearest wins.
+            if(lPass == 0)
+            {
+                SetDepthTestFunc(eDepthTestFunc_Always);
+                mpLowLevelGraphics->SetDepthRange(1.0f, 1.0f);
+            }
+            else
+            {
+                SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
+                mpLowLevelGraphics->SetDepthRange(0.0f, 1.0f);
+            }
+        }
+        else
+        {
+            //Squeezed depth (set in DrawCurrentMaterial) is in front of any real depth.
+            SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
+        }
+
+        cRenderableVecIterator objIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Diffuse);
+        while(objIt.HasNext())
+        {
+            iRenderable *pObject = objIt.Next();
+            if(IsViewModelObject(pObject) == false)
+            {
+                continue;
+            }
+
+            RenderZObject(pObject, NULL);
+        }
+    }
+
+    mbViewModelRealDepthPass = false;
+    mpLowLevelGraphics->SetDepthRange(0.0f, 1.0f);
+
+    SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
+    SetChannelMode(eMaterialChannelMode_RGBA);
+    SetDepthWrite(false);
+
+    END_RENDER_PASS();
 }
 
 //-----------------------------------------------------------------------

@@ -174,6 +174,7 @@ public:
 
     void SetDepthTestActive(bool abX);
     void SetDepthTestFunc(eDepthTestFunc aFunc);
+    void SetDepthRange(float afNear, float afFar);
 
     void SetAlphaTestActive(bool abX);
     void SetAlphaTestFunc(eAlphaTestFunc aFunc, float afRef);
@@ -328,6 +329,8 @@ private:
 
     bool mbDepthTestActive;
     eDepthTestFunc mDepthTestFunc;
+    float mfDepthRangeNear;
+    float mfDepthRangeFar;
 
     bool mbAlphaTestActive;
     eAlphaTestFunc mAlphaTestFunc;

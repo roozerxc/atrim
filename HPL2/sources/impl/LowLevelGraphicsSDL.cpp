@@ -291,6 +291,9 @@ void cLowLevelGraphicsSDL::SetupGL()
     mbDepthTestActive = true;
     mDepthTestFunc = eDepthTestFunc_LessOrEqual;
 
+    mfDepthRangeNear = 0.0f;
+    mfDepthRangeFar = 1.0f;
+
     mbAlphaTestActive = false;
     mAlphaTestFunc = eAlphaTestFunc_GreaterOrEqual;
     mfAlphaTestFuncRef = 0.6f;
@@ -1013,6 +1016,20 @@ void cLowLevelGraphicsSDL::SetDepthTestActive(bool abX)
     {
         glDisable(GL_DEPTH_TEST);
     }
+}
+
+//-----------------------------------------------------------------------
+
+void cLowLevelGraphicsSDL::SetDepthRange(float afNear, float afFar)
+{
+    if(mfDepthRangeNear == afNear && mfDepthRangeFar == afFar)
+    {
+        return;
+    }
+    mfDepthRangeNear = afNear;
+    mfDepthRangeFar = afFar;
+
+    glDepthRange(afNear, afFar);
 }
 
 //-----------------------------------------------------------------------

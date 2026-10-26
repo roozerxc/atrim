@@ -994,6 +994,10 @@ void cRendererDeferred::RenderObjects()
 
     RenderDecals();
 
+    //The view model (hands, lantern) went into the G-buffer on top of everything (squeezed depth).
+    //Lights, fog and illumination test against depth, so put its real depth back.
+    RenderViewModelDepth(true);
+
     RunCallback(eRendererMessage_PostGBuffer);
 
     RenderLights();
@@ -1030,6 +1034,9 @@ void cRendererDeferred::RenderObjects()
         }
         return;
     }
+
+    //Squeeze the view model depth again: translucent world objects (water, particles) stay behind it.
+    RenderViewModelDepth(false);
 
     RenderTranslucent();
 

@@ -424,7 +424,10 @@ void cBillboard::AssignOcclusionQuery(iRenderer *apRenderer)
 
     iVertexBuffer *pShapeVtx = apRenderer->GetShapeBoxVertexBuffer();
 
-    apRenderer->AssignOcclusionObject(this, 0, pShapeVtx, &m_mtxHaloOcclusionMatrix, true);
+    //The view model (e.g. the lantern in the player's hand) is drawn in front of the world,
+    //so the world must not hide its halo either.
+    bool bDepthTest = FindRenderInterpCamera() == NULL;
+    apRenderer->AssignOcclusionObject(this, 0, pShapeVtx, &m_mtxHaloOcclusionMatrix, bDepthTest);
     apRenderer->AssignOcclusionObject(this, 1, pShapeVtx, &m_mtxHaloOcclusionMatrix, false);
 }
 

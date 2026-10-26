@@ -454,6 +454,20 @@ protected:
 
     void DrawCurrentMaterial(eMaterialRenderMode aRenderMode, iRenderable *apObject);
 
+    /**
+     * True if the object is part of the first person view model (player hands and what they hold)
+     * of the camera that is being rendered. Such objects are drawn with their window depth squeezed
+     * into [0, kfViewModelDepthRange] so they are always in front of the world (never clip into
+     * walls or grabbed objects). Lighting is not affected: it uses the linear depth in the G-buffer.
+     */
+    bool IsViewModelObject(iRenderable *apObject);
+    /**
+     * Draws the depth of all view model objects in the render list (no color).
+     * abRealDepth = true: replaces the squeezed depth with the real one (for lights, fog, illumination).
+     * abRealDepth = false: squeezed again (so translucent world objects stay behind the hands).
+     */
+    void RenderViewModelDepth(bool abRealDepth);
+
 
     /**
      * Checks if the renderable object is 1) submeshentity 2) is onesided plane 3)is away from camera. If all are true, FALSE is returned.
@@ -541,6 +555,8 @@ protected:
     double mdTimeCount;
 
     bool mbOcclusionPlanesActive;
+
+    bool mbViewModelRealDepthPass;
     tPlanefVec mvCurrentOcclusionPlanes;
 
     cRendererCallbackFunctions *mpCallbackFunctions;

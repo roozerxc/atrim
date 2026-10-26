@@ -58,6 +58,9 @@ void cRenderList::AddObject(iRenderable *apObject)
 {
     eRenderableType renderType = apObject->GetRenderType();
 
+    //First person view model (hands, lantern, ...): drawn on top of the world, see iRenderer::IsViewModelObject
+    apObject->SetViewModelCamera(apObject->FindRenderInterpCamera());
+
     ////////////////////////////////////////
     //Update material, if not already done this frame
     cMaterial *pMaterial = apObject->GetMaterial();
@@ -623,10 +626,15 @@ void cRenderList::FindNearestLargeSurfacePlane()
         }
     }
 
+    ////////////////////////////////////
+    // First person view model (the player's hands and what they hold, e.g. the lantern halo):
+    // always in front of everything else, so always drawn last. Its placement must not come
+    // from the water plane: wading in water the lantern can be below the surface height, and
+    // the water was then drawn over its halo (the halo vanished and the lantern looked lit).
     for(size_t i = 0; i < mvTransObjects.size(); ++i)
     {
         iRenderable *pObject = mvTransObjects[i];
-        if(pObject->FindRenderInterpCamera())
+        if(pObject->GetViewModelCamera())
         {
             pObject->SetLargePlaneSurfacePlacement(2);
         }

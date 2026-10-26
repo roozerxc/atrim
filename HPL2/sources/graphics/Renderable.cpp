@@ -43,6 +43,8 @@ iRenderable::iRenderable(const tString &asName) : iEntity3D(asName)
 
     mlLargePlaneSurfacePlacement = 0;
 
+    mpViewModelCamera = NULL;
+
     mpRenderCallback = NULL;
 
     mpRenderContainerNode = NULL;
