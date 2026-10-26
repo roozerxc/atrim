@@ -169,7 +169,7 @@ bool cSDLTexture::CreateFromRawData(const cVector3l &avSize, ePixelFormat aPixel
 
     if(mbUseMipMaps)
     {
-        GenerateMipMaps(GLTarget, aPixelFormat, avSize, apData, lDataSize, 0);
+        GenerateMipMaps(GLTarget, aPixelFormat, mvSize, apData, lDataSize, 0);
     }
 
 
@@ -738,6 +738,51 @@ bool cSDLTexture::CreateFromBitmapToIndex(cBitmap* apBmp, int alIdx)
 
 //-----------------------------------------------------------------------
 
+//Averages each block of source pixels into one destination pixel. Works for any size
+//(the source rectangle of a destination pixel is never empty since dest <= source).
+static void BoxDownscale(const unsigned char *apSrc, int alSrcW, int alSrcH,
+                         unsigned char *apDest, int alDestW, int alDestH, int alChannels)
+{
+    for(int y = 0; y < alDestH; ++y)
+    {
+        int lY0 = (y * alSrcH) / alDestH;
+        int lY1 = ((y + 1) * alSrcH) / alDestH;
+        if(lY1 <= lY0)
+        {
+            lY1 = lY0 + 1;
+        }
+
+        for(int x = 0; x < alDestW; ++x)
+        {
+            int lX0 = (x * alSrcW) / alDestW;
+            int lX1 = ((x + 1) * alSrcW) / alDestW;
+            if(lX1 <= lX0)
+            {
+                lX1 = lX0 + 1;
+            }
+
+            int lCount = (lY1 - lY0) * (lX1 - lX0);
+            unsigned char *pDest = apDest + (y * alDestW + x) * alChannels;
+
+            for(int c = 0; c < alChannels; ++c)
+            {
+                unsigned int lSum = 0;
+                for(int sy = lY0; sy < lY1; ++sy)
+                {
+                    const unsigned char *pRow = apSrc + (sy * alSrcW) * alChannels + c;
+                    for(int sx = lX0; sx < lX1; ++sx)
+                    {
+                        lSum += pRow[sx * alChannels];
+                    }
+                }
+                pDest[c] = (unsigned char)((lSum + lCount / 2) / lCount);
+            }
+        }
+    }
+}
+
+//-----------------------------------------------------------------------
+
 bool cSDLTexture::CreateTexture(    int alTextureHandle,
                                     cBitmapData* apBitmapImage, int alNumOfMipMaps,
                                     const cVector3l avSize, ePixelFormat aPixelFormat,
@@ -869,26 +914,7 @@ bool cSDLTexture::CreateTexture(    int alTextureHandle,
                 return false;
             }
 
-            //Simple point-sampled downsample
-            const int lSrcW = mvSize.x;
-            const int lSrcH = mvSize.y;
-            const int lDstW = vNewSize.x;
-            const int lDstH = vNewSize.y;
-
-            for(int y = 0; y < lDstH; ++y)
-            {
-                const int lSrcY = (y * lSrcH) / lDstH;
-                for(int x = 0; x < lDstW; ++x)
-                {
-                    const int lSrcX = (x * lSrcW) / lDstW;
-                    const unsigned char *pSrc = apBitmapImage->mpData + (lSrcY * lSrcW + lSrcX) * lChannels;
-                    unsigned char *pDst = pResizeData + (y * lDstW + x) * lChannels;
-                    for(int c = 0; c < lChannels; ++c)
-                    {
-                        pDst[c] = pSrc[c];
-                    }
-                }
-            }
+            BoxDownscale(apBitmapImage->mpData, mvSize.x, mvSize.y, pResizeData, vNewSize.x, vNewSize.y, lChannels);
 
             mvSize = vNewSize;
         }
@@ -1022,6 +1048,11 @@ void cSDLTexture::GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelForma
                              0, GLInternalFormat, avSize.x, avSize.y, 0,
                              GLFormat, GL_UNSIGNED_BYTE, apData);
             glTexParameteri(aGLTarget, GL_GENERATE_MIPMAP_SGIS, GL_FALSE);
+        }
+        else if(apData == NULL)
+        {
+            mbUseMipMaps = false;
+            return;
         }
         else if(mType == eTextureType_1D)
         {
