@@ -66,16 +66,16 @@
     <!-- BEGIN HARD MODE STRINGS -->
 
     <CATEGORY Name="MainMenu">
-        <Entry Name="HardMode">Vaikea tila</Entry>
+        <Entry Name="HardMode">Hard Mode</Entry>
         <Entry Name="NormalMode">Normaali</Entry>
 
         <Entry Name="HardModeDescription">Viholliset havaitsevat sinut helpommin. Tuluksia ja öljyä on vaikeampi löytää. Automaattinen tallennus on poistettu ja pelin tallennus maksaa tuluksia. Mielenterveytesi menetys tappaa sinut.</Entry>
         <Entry Name="NormalModeDescription">Tapa, jolla peli on suunniteltu pelattavaksi.</Entry>
-        <Entry Name="HardModeStartNewGame">Aloita peli vaikealla tilalla?</Entry>
+        <Entry Name="HardModeStartNewGame">Aloitetaanko peli hard modessa?</Entry>
 
-        <Entry Name="HardModeSaveCost">Tallentaminen maksaa # tulusta</Entry>
-        <Entry Name="HardModeTinderboxInInventory">sinulla on # inventaariossasi</Entry>
-        <Entry Name="HardModeSavePopup">Tallentaminen poistaa # tulusta inventaariosta</Entry>
+        <Entry Name="HardModeSaveCost">Tallentaminen maksaa # tulitikkuja</Entry>
+        <Entry Name="HardModeTinderboxInInventory">Sinulla on # inventaariossasi</Entry>
+        <Entry Name="HardModeSavePopup">Tallentaminen poistaa # tulitikkuja inventaariosta</Entry>
     </CATEGORY>
 
     <CATEGORY Name="Hints">
