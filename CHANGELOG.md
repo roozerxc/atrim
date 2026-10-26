@@ -81,7 +81,7 @@
 - Fixed post effects breaking at >60 FPS
 - Fixed SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
 - Fixed SSAO rendering lag from depth fetch expenses
-- Fixed SSAO shader occlusion depth problems (inspired by patches from Florian)
+- Fixed SSAO shader occlusion depth problems (additional patches by Florian)
 - Fixed Shader Model 3 parallax mapping fallback
 - Fixed user settings not refreshing visually after switching between profiles
 - Fixed visual bug caused by mesh coverage overshoot when an entity was being faded in
