@@ -3356,6 +3356,11 @@ void cRendererDeferred::RenderTranslucent()
             }
             cRect2l clipRect = GetClipRectFromObject(pObject, 0.2f, mpCurrentFrustum, mvRenderTargetSize, fHalfFovTan);
 
+            if(mpCurrentSettings->mbIsReflection)
+            {
+                clipRect = cRect2l(0, 0, mvRenderTargetSize.x, mvRenderTargetSize.y);
+            }
+
             ////////////////////////////////////
             // Add an extra check to make sure there is no bleeding. Draw outline of mesh to alpha!
             if(pMaterial->UseRefractionEdgeCheck())
@@ -3393,10 +3398,16 @@ void cRendererDeferred::RenderTranslucent()
 
             ////////////////////////////////////
             // Copy frame buffer to texture
+            cVector2l vTexOffset(clipRect.x, clipRect.y);
+            if(mvCurrentFrameBufferSize.y > 0 && mpRefractionTexture->GetHeight() != mvCurrentFrameBufferSize.y)
+            {
+                vTexOffset.y += mpRefractionTexture->GetHeight() - mvCurrentFrameBufferSize.y;
+            }
+
             CopyFrameBufferToTexture(mpRefractionTexture,
                                     cVector2l(clipRect.x, clipRect.y),
                                     cVector2l(clipRect.w, clipRect.h),
-                                    cVector2l(clipRect.x, clipRect.y),
+                                    vTexOffset,
                                     true);
 
         }
