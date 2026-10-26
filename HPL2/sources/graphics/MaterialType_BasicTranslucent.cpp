@@ -400,20 +400,26 @@ void cMaterialType_Translucent::SetupObjectSpecificData(eMaterialRenderMode aRen
     if(pVars->mbAffectedByLightLevel)
     {
         cVector3f vCenterPos = apObject->GetBoundingVolume()->GetWorldCenter();
-        cRenderList *pRenderList = apRenderer->GetCurrentRenderList();
 
         float fLightAmount = 0.0f;
 
         ////////////////////////////////////////
         //Iterate lights and add light amount
-        for(int i = 0; i < pRenderList->GetLightNum(); ++i)
+        cWorld *pWorld = apRenderer->GetCurrentWorld();
+        if(pWorld == NULL)
         {
-            iLight* pLight = pRenderList->GetLight(i);
+            apProgram->SetFloat(kVar_afAlpha, apRenderer->GetTempAlpha());
+            apProgram->SetFloat(kVar_afLightLevel, 1.0f);
+            return;
+        }
 
-            if ( pLight->GetName() == "PlayerHands_LanternLight1"
-                    || pLight->GetName() == "PlayerHands_LanternLight2" )
+        cLightListIterator lightIt = pWorld->GetLightIterator();
+        while(lightIt.HasNext())
+        {
+            iLight* pLight = lightIt.Next();
+            if(pLight->IsVisible() == false)
             {
-                continue;    // request by Sindre: lantern does not affect translucent materials
+                continue;
             }
 
             //Check if there is an intersection
