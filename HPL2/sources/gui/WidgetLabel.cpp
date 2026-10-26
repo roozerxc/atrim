@@ -31,6 +31,7 @@ cWidgetLabel::cWidgetLabel(cGuiSet *apSet, cGuiSkin *apSkin) : iWidget(eWidgetTy
     mfWordWrapOffset = 0.0f;
     mfWordWrapRowsHeight = 0.0f;
     mbScrollingDown = true;
+    mbAutoScroll = true;
 
     mTextAlign = eFontAlign_Left;
 
@@ -80,6 +81,23 @@ void cWidgetLabel::SetAutogenerateSize(bool abX)
     mbAutogenerateSize = abX;
 
     OnChangeText();
+}
+
+//-----------------------------------------------------------------------
+
+float cWidgetLabel::GetWordWrapTextHeight()
+{
+    float fHeight = mvDefaultFontSize.y + 2;
+    if(mbWordWrap == false || mpDefaultFontType == NULL)
+    {
+        return fHeight;
+    }
+
+    //Same rows as DrawText
+    tWStringVec vRows;
+    mpDefaultFontType->GetWordWrapRows(mvSize.x, fHeight, mvDefaultFontSize, msText, &vRows);
+
+    return fHeight * (float)vRows.size();
 }
 
 //-----------------------------------------------------------------------
@@ -196,7 +214,7 @@ void cWidgetLabel::OnLoadGraphics()
 
 void cWidgetLabel::OnUpdate(double adFixedDelta)
 {
-    if(mbWordWrap == false)
+    if(mbWordWrap == false || mbAutoScroll == false)
     {
         return;
     }

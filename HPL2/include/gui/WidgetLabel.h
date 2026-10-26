@@ -87,6 +87,24 @@ public:
         return mfScrollSpeedMul;
     }
 
+    /** Word wrapped text that does not fit scrolls up and down by itself (default). Turn it off
+     * when the label is in a scrolling frame (see GetWordWrapTextHeight). */
+    void SetAutoScroll(bool abX)
+    {
+        mbAutoScroll = abX;
+        if(abX == false)
+        {
+            mfWordWrapOffset = 0;
+        }
+    }
+    bool GetAutoScroll()
+    {
+        return mbAutoScroll;
+    }
+
+    /** Height of the text word wrapped to the current width (one line when not word wrapping). */
+    float GetWordWrapTextHeight();
+
 protected:
     /////////////////////////
     // Own Funcs
@@ -119,6 +137,7 @@ protected:
     float mfScrollTimer;
     float mfWaitToScrollTime;
     bool mbScrollingDown;
+    bool mbAutoScroll;
 
     float mfBackgroundZ;
     cGuiGfxElement *mpGfxBackground;
