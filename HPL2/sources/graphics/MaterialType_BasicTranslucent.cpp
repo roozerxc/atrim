@@ -307,6 +307,10 @@ iGpuProgram *cMaterialType_Translucent::GetGpuProgram(cMaterial *apMaterial, eMa
             {
                 lFlags |= eFeature_Diffuse_Fog;
             }
+            if(apMaterial->HasUvAnimation())
+            {
+                lFlags |= eFeature_Diffuse_UvAnimation;
+            }
             if(apMaterial->GetTexture(eMaterialTexture_NMap))
             {
                 lFlags |= eFeature_Diffuse_NormalMap;
