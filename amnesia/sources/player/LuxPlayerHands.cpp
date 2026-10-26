@@ -425,8 +425,12 @@ void cLuxPlayerHands::SetCurrentHandObject(iLuxHandObject *apObject)
     else if(apObject)
     {
         CreateAndAttachHandObject(pMap, apObject);
-        PlayAnim(apObject->GetAnimDraw(), false);
+
+        mpHandsEntity->PlayName(apObject->GetAnimDraw(), false, true);
+        msCurrentAnim = apObject->GetAnimDraw();
         mpHandsEntity->SetVisible(true);
+        mpHandsEntity->UpdateLogic(0);
+        mpHandsEntity->SnapRenderInterpolation();
 
         mHandState = eLuxHandsState_Draw;
     }
