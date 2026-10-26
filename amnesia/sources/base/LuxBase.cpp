@@ -330,6 +330,8 @@ bool cLuxCustomStorySettings::StartGame()
         return true;
     }
 
+    gpBase->mbHardMode = abHardMode;
+
     gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_LastEnum);
 
     gpBase->mpInputHandler->ChangeState(eLuxInputState_Game);

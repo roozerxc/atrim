@@ -165,6 +165,8 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
     mpStory = apStory;
     mpStory->SetActive();
 
+    gpBase->mbHardMode = false;
+
     tWString sBy = kTranslate("CustomStory", "By");
     tWString sName, sAuthor, sDescription;
 

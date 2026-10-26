@@ -236,6 +236,8 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_StartGame, PressStartGame);
 
 bool cLuxMainMenu_StartGame::PressCancel(iWidget* apWidget, const cGuiMessageData& aData)
 {
+    gpBase->mbHardMode = false;
+
     ExitCallback(NULL, cGuiMessageData(0));
     return true;
 }
