@@ -623,6 +623,14 @@ void cRenderList::FindNearestLargeSurfacePlane()
         }
     }
 
+    for(size_t i = 0; i < mvTransObjects.size(); ++i)
+    {
+        iRenderable *pObject = mvTransObjects[i];
+        if(pObject->FindRenderInterpCamera())
+        {
+            pObject->SetLargePlaneSurfacePlacement(2);
+        }
+    }
 }
 
 //-----------------------------------------------------------------------
