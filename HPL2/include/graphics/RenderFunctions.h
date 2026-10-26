@@ -89,6 +89,7 @@ public:
                       const cVector2f& avMinUV1, const cVector2f& avMaxUV1,
                       bool abInvertY0 = false, bool abInvertY1 = false, const cColor& aColor = cColor(1, 1) );
 
+    void ReleaseVertexBufferForBatch();
 
     void DrawCurrent(eVertexBufferDrawType aDrawType = eVertexBufferDrawType_LastEnum);
 

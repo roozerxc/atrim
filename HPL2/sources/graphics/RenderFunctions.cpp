@@ -1000,6 +1000,8 @@ void iRenderFunctions::DrawQuad(    const cVector3f& aPos, const cVector2f& avSi
             avMinUV.ToString().c_str(),
             avMaxUV.ToString().c_str());
     }
+    ReleaseVertexBufferForBatch();
+
     if(abInvertY)
     {
         mpLowLevelGraphics->DrawQuad(    aPos, avSize, cVector2f(avMinUV.x, avMaxUV.y),
@@ -1042,7 +1044,16 @@ void iRenderFunctions::DrawQuad(    const cVector3f& aPos, const cVector2f& avSi
         vFinalMinUv1.y = avMaxUV1.y;
     }
 
+    ReleaseVertexBufferForBatch();
+
     mpLowLevelGraphics->DrawQuad(aPos, avSize, vFinalMinUv0, vFinalMaxUv0, vFinalMinUv1, vFinalMaxUv1, aColor);
+}
+
+//-----------------------------------------------------------------------
+
+void iRenderFunctions::ReleaseVertexBufferForBatch()
+{
+    SetVertexBuffer(NULL);
 }
 
 //-----------------------------------------------------------------------
