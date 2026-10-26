@@ -157,8 +157,8 @@ bool cSDLTexture::CreateFromRawData(const cVector3l &avSize, ePixelFormat aPixel
     glBindTexture(GLTarget, mvTextureHandles[0]);
     mpGfxSDL->InvalidateActiveTextureUnit();
 
-    int lDataSize = avSize.x * avSize.y * avSize.z * GetBytesPerPixel(aPixelFormat);
-    bool bRet = CopyTextureDataToGL(mvTextureHandles[0], 0, apData, lDataSize, avSize, aPixelFormat, 0);
+    int lDataSize = mvSize.x * mvSize.y * mvSize.z * GetBytesPerPixel(aPixelFormat);
+    bool bRet = CopyTextureDataToGL(mvTextureHandles[0], 0, apData, lDataSize, mvSize, aPixelFormat, 0);
     if(bRet == false)
     {
         glDisable(GLTarget);
@@ -751,7 +751,9 @@ bool cSDLTexture::CreateTexture(    int alTextureHandle,
         Error("CreateTexture called with NULL bitmap data for '%s'\n", msName.c_str());
         return false;
     }
-    if(avSize.x < 1 || avSize.y < 1 || (mType == eTextureType_3D && avSize.z < 1))
+    if(avSize.x < 1 ||
+            (mType != eTextureType_1D && avSize.y < 1) ||
+            (mType == eTextureType_3D && avSize.z < 1))
     {
         Error("CreateTexture called with invalid size %dx%dx%d for '%s'\n",
               avSize.x, avSize.y, avSize.z, msName.c_str());
@@ -1073,14 +1075,9 @@ void cSDLTexture::GenerateMipMaps(    GLenum aGLTarget, ePixelFormat aPixelForma
 bool cSDLTexture::CopyTextureDataToGL(    int alTextureHandle, int alLevel, unsigned char *apData, int alDataSize,
         const cVector3l avSize, ePixelFormat aPixelFormat, int alFaceNum)
 {
-    //Only reject NULL when caller claims to supply pixel data
-    if(apData == NULL && alDataSize > 0)
-    {
-        Error("CopyTextureDataToGL called with NULL data pointer but non-zero size for '%s' (level %d, size %dx%dx%d, dataSize %d)\n",
-              msName.c_str(), alLevel, avSize.x, avSize.y, avSize.z, alDataSize);
-        return false;
-    }
-    if(avSize.x < 1 || avSize.y < 1 || (mType == eTextureType_3D && avSize.z < 1))
+    if(avSize.x < 1 ||
+            (mType != eTextureType_1D && avSize.y < 1) ||
+            (mType == eTextureType_3D && avSize.z < 1))
     {
         Error("CopyTextureDataToGL called with invalid size %dx%dx%d for '%s'\n",
               avSize.x, avSize.y, avSize.z, msName.c_str());
