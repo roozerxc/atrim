@@ -126,6 +126,29 @@ void cLuxMainMenu_CustomStory::CreateGui()
 
 //-----------------------------------------------------------------------
 
+static tString GetStoryImageFile(cLuxCustomStorySettings* apStory)
+{
+    tString sImgFile = cString::ReplaceCharTo(apStory->msImgFile, "\\", "/");
+    while(sImgFile != "" && sImgFile[0] == '/')
+    {
+        sImgFile = cString::Sub(sImgFile, 1);
+    }
+    if(sImgFile == "")
+    {
+        return apStory->msImgFile;
+    }
+
+    tWString sStoryFile = cString::AddSlashAtEndW(apStory->msStoryRootFolder) + cString::To16Char(sImgFile);
+    if(cPlatform::FileExists(sStoryFile) == false)
+    {
+        return apStory->msImgFile;
+    }
+
+    return cString::To8Char(cString::ReplaceCharToW(sStoryFile, _W("\\"), _W("/")));
+}
+
+//-----------------------------------------------------------------------
+
 void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
 {
     if(mpStory == apStory)
@@ -167,26 +190,26 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
     }
 
     // Check to see if image exists and set if it does
-    if(mpStory->msImgFile != "")
     {
         cGuiGfxElement* pGfx = mpIPicture->GetImage();
         if(pGfx)
         {
+            mpIPicture->SetImage(NULL);
             mpGui->DestroyGfx(pGfx);
             pGfx = NULL;
         }
+    }
+    if(mpStory->msImgFile != "")
+    {
+        cGuiGfxElement* pGfx = NULL;
 
-        iTexture* pTex = gpBase->mpEngine->GetResources()->GetTextureManager()->Create2D(mpStory->msImgFile, false, eTextureType_Rect);
+        iTexture* pTex = gpBase->mpEngine->GetResources()->GetTextureManager()->Create2D(GetStoryImageFile(mpStory), false, eTextureType_Rect);
         if(pTex)
         {
             pGfx = mpGui->CreateGfxTexture(pTex, true, eGuiMaterial_Alpha);
         }
 
         mpIPicture->SetImage(pGfx);
-    }
-    else if(mpStory->msImgFile == "")
-    {
-        mpIPicture->SetImage(NULL);
     }
 
 
