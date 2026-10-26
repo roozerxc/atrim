@@ -8,6 +8,8 @@
 - Added customizable top menu font color settings from version 1.5
 - Added extra checks to ensure the parallax quality setting is applied correctly
 - Added `#include` directive for version 1.5 mod support
+- Added line break and word wrapping for GUI message boxes
+- Added new checkbox to play Custom Stories and Full Conversion mods in Hard Mode
 - Added new customizable loading bar, inspired by the *Amnesia: Collection* ports
 - Added new dark mode GUI theme based on the HPL2 Community Editors
 - Added new drop-down menu for selecting the type of parallax rendering effect (Simple, Relief)
@@ -53,7 +55,9 @@
 - Fixed buggy enemy collision behavior
 - Fixed character collision flag bits being fed with garbage data
 - Fixed crosshair focus for static, non-interactable entities and objects
+- Fixed Custom Stories borrowing image files (`ImgFile`) from another Custom Story
 - Fixed Custom Story images not being cleared out when another Custom Story was selected
+- Fixed Custom Story Resources not being unloaded from memory when another mod was selected
 - Fixed destructive recursive reparse point deletion when a profile is deleted
 - Fixed enemy breakable/stuck door check malfunctions
 - Fixed enemy proximity and player distancing issues
@@ -70,6 +74,10 @@
 - Fixed fatal crash when pressing Esc quickly to skip through bootup logos
 - Fixed faulty texture filter selection
 - Fixed frame pacing issues when frames per second were slightly low
+- Fixed hand and hand object models clipping through map geometry
+- Fixed hand animations jerking violently when drawing a hand object
+- Fixed Hard Mode retention after exiting a Hard Mode game session
+- Fixed Hard Mode retention when the Start Game dialog box was closed
 - Fixed inactive character bodies being simulated
 - Fixed invalid serialization of coins needed to unlock chests
 - Fixed limit for Tinderboxes not being properly enforced
@@ -87,6 +95,7 @@
 - Fixed visual bug caused by mesh coverage overshoot when an entity was being faded in
 - Fixed visual bug with ropes disappearing when they were stretched to a significant degree
 - Fixed Z-fighting caused by decal depth mismatches with surfaces
+- Game now forces the high performance GPU on hybrid laptops (NVIDIA Optimus, AMD PowerXpress/Enduro)
 - Game now looks for `hand_object` and `hand_objects` folders for custom hand object models
 - Improved AI node iterator with changes from Amnesia: A Machine for Pigs
 - Improved Father Hector David's idle reciting of biblical verses (specifically the Lord's Prayer (Matthew 6:9–10) and Revelation 11:15)
