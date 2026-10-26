@@ -386,7 +386,6 @@ cEngine::~cEngine()
 void cEngine::Run()
 {
     bool bGameWasFocused = true;
-    float fMasterVolume = 1.0f;
 
     double dAverageFPS = 0.0;
     double dLastLogClearedTime = 0.0;
@@ -462,15 +461,7 @@ void cEngine::Run()
         // Detect whether game was in focus at the time
         if(bGameHasFocus != bGameWasFocused)
         {
-            if(!bGameHasFocus)
-            {
-                fMasterVolume = mpSound->GetLowLevel()->GetVolume();
-                mpSound->GetLowLevel()->SetVolume(0.0f);
-            }
-            else
-            {
-                mpSound->GetLowLevel()->SetVolume(fMasterVolume);
-            }
+            mpSound->GetLowLevel()->SetMuted(!bGameHasFocus);
 
             // State tracker update
             bGameWasFocused = bGameHasFocus;

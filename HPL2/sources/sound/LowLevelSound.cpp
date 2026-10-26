@@ -19,6 +19,7 @@ tSoundDeviceVec iLowLevelSound::mvFilteredSoundDevices = tSoundDeviceVec();
 iLowLevelSound::iLowLevelSound()
 {
     mfVolume = 1;
+    mbMuted = false;
     mfEnvVolume = 0;
     mbListenerAttenuation = true;
     mbHardwareAcc = false;

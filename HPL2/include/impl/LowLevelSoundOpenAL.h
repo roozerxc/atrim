@@ -60,6 +60,7 @@ public:
               int alStreamingBufferSize, int alStreamingBufferCount, bool abEnableLowLevelLog);
 
     void SetVolume(float afVolume);
+    void SetMuted(bool abX);
 
     void SetEnvVolume( float afEnvVolume );
 

@@ -175,7 +175,18 @@ void cLowLevelSoundOpenAL::SetVolume(float afVolume)
 {
     mfVolume = afVolume;
 
-    OAL_Listener_SetMasterVolume ( afVolume );
+    OAL_Listener_SetMasterVolume ( mbMuted ? 0.0f : afVolume );
+}
+
+void cLowLevelSoundOpenAL::SetMuted(bool abX)
+{
+    if(mbMuted == abX)
+    {
+        return;
+    }
+    mbMuted = abX;
+
+    OAL_Listener_SetMasterVolume ( mbMuted ? 0.0f : mfVolume );
 }
 
 //-----------------------------------------------------------------------

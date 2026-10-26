@@ -65,6 +65,19 @@ public:
 
     virtual void SetVolume(float afVolume) = 0;
 
+    /**
+     * Silences all sound without touching the master volume (GetVolume() keeps the user's value,
+     * so it is still saved and shown right). Used while the window has no input focus.
+     */
+    virtual void SetMuted(bool abX)
+    {
+        mbMuted = abX;
+    }
+    bool GetMuted()
+    {
+        return mbMuted;
+    }
+
     cVector3f &GetListenerPosition()
     {
         return mvListenerPosition;
@@ -134,6 +147,7 @@ public:
 
 protected:
     float mfVolume;
+    bool mbMuted;
     float mfEnvVolume;
     bool mbListenerAttenuation;
 
