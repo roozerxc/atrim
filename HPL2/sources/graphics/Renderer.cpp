@@ -2485,6 +2485,7 @@ void iRenderer::DrawCurrentMaterial(eMaterialRenderMode aRenderMode, iRenderable
     bool bViewModelDepth =    apObject && mbViewModelRealDepthPass == false &&
                             aRenderMode != eMaterialRenderMode_Illumination &&
                             aRenderMode != eMaterialRenderMode_IlluminationFog &&
+                            aRenderMode != eMaterialRenderMode_IlluminationModulate &&
                             IsViewModelObject(apObject);
     if(bViewModelDepth)
     {
