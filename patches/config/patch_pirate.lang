@@ -82,6 +82,11 @@
         <Entry Name="HardModeDeath">Ye have met Davy Jones...</Entry>
     </CATEGORY>
 
+    <CATEGORY Name="CustomStory">
+        <Entry Name="EnableHardMode">Enable Cutthroat Mode</Entry>
+        <Entry Name="HardModeWarning">This tale weren't made fer Cutthroat Mode. Scripted events may break and it may not sail the way it were meant to. Set sail in Cutthroat Mode anyway?</Entry>
+    </CATEGORY>
+
     <!-- END HARD MODE STRINGS -->
 
     <CATEGORY Name="OptionsMenu">

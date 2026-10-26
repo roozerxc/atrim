@@ -322,11 +322,11 @@ void cLuxCustomStorySettings::SetActive()
 
 //-----------------------------------------------------------------------
 
-bool cLuxCustomStorySettings::StartGame()
+bool cLuxCustomStorySettings::StartGame(bool abHardMode)
 {
     if(IsFullConversion())
     {
-        gpBase->LaunchFullConversion(msStoryRootFolder);
+        gpBase->LaunchFullConversion(msStoryRootFolder, abHardMode);
         return true;
     }
 
@@ -636,11 +636,11 @@ bool cLuxBase::StartGame(const tString& asFile, const tString& asFolder, const t
 
 //-----------------------------------------------------------------------
 
-bool cLuxBase::StartCustomStory()
+bool cLuxBase::StartCustomStory(bool abHardMode)
 {
     if(mpCustomStory)
     {
-        return mpCustomStory->StartGame();
+        return mpCustomStory->StartGame(abHardMode);
     }
 
     return false;
@@ -847,8 +847,24 @@ bool cLuxBase::InitApp()
 bool cLuxBase::ParseFullConversionCommandLine(const tString& asArgs)
 {
     //////////////////////////
+    // Optional "-hardmode" after the (quoted) folder
+    tString sArgs = asArgs;
+    bool bHardMode = false;
+    {
+        tString sFlag = "-hardmode";
+        size_t lFlagPos = cString::ToLowerCase(sArgs).rfind(sFlag);
+        size_t lQuotePos = sArgs.rfind('"');
+        if(lFlagPos != tString::npos && (lQuotePos == tString::npos || lFlagPos > lQuotePos) &&
+                (lFlagPos == 0 || sArgs[lFlagPos - 1] == ' '))
+        {
+            bHardMode = true;
+            sArgs = sArgs.substr(0, lFlagPos) + sArgs.substr(lFlagPos + sFlag.size());
+        }
+    }
+
+    //////////////////////////
     // Get the root folder (trim spaces and quotes)
-    tString sRoot = asArgs;
+    tString sRoot = sArgs;
     while(sRoot.empty() == false && (sRoot[0] == ' ' || sRoot[0] == '"'))
     {
         sRoot = cString::Sub(sRoot, 1);
@@ -896,6 +912,11 @@ bool cLuxBase::ParseFullConversionCommandLine(const tString& asArgs)
 
     mbFullConversionMode = true;
     msFullConversionRoot = sRootW;
+    if(bHardMode)
+    {
+        mbHardMode = true;
+        Log("Full conversion started in hard mode\n");
+    }
     msInitConfigFile = msFullConversionRoot + cString::To16Char(sInitCfgFile);
 
     return true;
@@ -1009,10 +1030,14 @@ void cLuxBase::LoadResourceDirs()
 
 //-----------------------------------------------------------------------
 
-void cLuxBase::LaunchFullConversion(const tWString& asStoryRootFolder)
+void cLuxBase::LaunchFullConversion(const tWString& asStoryRootFolder, bool abHardMode)
 {
     mbRelaunchAtExit = true;
     msRelaunchCommandLine = "-fc \"" + cString::To8Char(asStoryRootFolder) + "\"";
+    if(abHardMode)
+    {
+        msRelaunchCommandLine += " -hardmode";
+    }
 
     Log("Restarting as full conversion: %s\n", msRelaunchCommandLine.c_str());
 

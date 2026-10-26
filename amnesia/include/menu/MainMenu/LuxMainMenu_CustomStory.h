@@ -38,6 +38,12 @@ private:
     bool PressBack(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressBack);
 
+    bool HardModeWarningCallback(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(HardModeWarningCallback);
+
+    void StartStory(bool abHardMode);
+    void UpdateDescriptionSize();
+
     void RepositionButtons();
 
     cVector2f mvWindowSize;
@@ -48,6 +54,9 @@ private:
 
     cWidgetLabel *mpLAuthor;
     cWidgetLabel *mpLDesc;
+    cWidgetFrame *mpFDescription;
+    cWidgetImage *mpIDescBackground;
+    cWidgetCheckBox *mpCBHardMode;
 
     std::vector<cWidgetButton *> mvButtons;
 };

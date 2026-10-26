@@ -82,6 +82,11 @@
         <Entry Name="HardModeDeath">Kuolit...</Entry>
     </CATEGORY>
 
+    <CATEGORY Name="CustomStory">
+        <Entry Name="EnableHardMode">Ota käyttöön Hard Mode</Entry>
+        <Entry Name="HardModeWarning">Tätä mukautettua tarinaa ei ole tehty hard modea varten. Käsikirjoitetut tapahtumat saattavat rikkoutua, eikä se välttämättä toimi tarkoitetulla tavalla. Käynnistetäänkö se silti hard modessa?</Entry>
+    </CATEGORY>
+
     <!-- END HARD MODE STRINGS -->
 
     <CATEGORY Name="OptionsMenu">

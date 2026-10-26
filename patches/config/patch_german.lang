@@ -82,6 +82,11 @@
         <Entry Name="HardModeDeath">Du bist gestorben...</Entry>
     </CATEGORY>
 
+    <CATEGORY Name="CustomStory">
+        <Entry Name="EnableHardMode">Hard Mode aktivieren</Entry>
+        <Entry Name="HardModeWarning">Diese benutzerdefinierte Geschichte wurde nicht für den Hard Mode gemacht. Skriptierte Ereignisse können kaputtgehen und sie läuft möglicherweise nicht so, wie sie gedacht war. Trotzdem im Hard Mode starten?</Entry>
+    </CATEGORY>
+
     <!-- END HARD MODE STRINGS -->
 
     <CATEGORY Name="OptionsMenu">

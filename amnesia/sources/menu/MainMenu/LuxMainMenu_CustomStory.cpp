@@ -21,6 +21,11 @@ cLuxMainMenu_CustomStory::cLuxMainMenu_CustomStory(cGuiSet* apGuiSet, cGuiSkin* 
     mvWindowSize = cVector2f(600, 440);
 
     mpStory = NULL;
+
+    mpLDesc = NULL;
+    mpFDescription = NULL;
+    mpIDescBackground = NULL;
+    mpCBHardMode = NULL;
 }
 
 //-----------------------------------------------------------------------
@@ -42,7 +47,6 @@ void cLuxMainMenu_CustomStory::CreateGui()
     //////////////////////////
     //Window
     mpWindow = mpGuiSet->CreateWidgetWindow(eWidgetWindowButtonFlag_None, cVector3f(0, 0, 5), mvWindowSize, _W(""));
-    //mpWindow->AddCallback(eGuiMessage_OnUpdate, this, kGuiCallback(WindowOnUpdate));
 
     float fBorderSize = 15;
     cVector3f vPos = cVector3f(fBorderSize, 60 + fBorderSize, 0.1f);
@@ -51,9 +55,30 @@ void cLuxMainMenu_CustomStory::CreateGui()
     mpIPicture->SetColorMul(cColor(1, 0.65f));
 
     mpLAuthor = mpGuiSet->CreateWidgetLabel(vPos + cVector3f(50, -50, 0), 0, _W(" "), mpWindow);
-    cWidgetFrame* pFDescription = mpGuiSet->CreateWidgetFrame(vPos + cVector3f(0, 10, 0), cVector2f(420, 345), false, mpWindow, false, true);
-    mpLDesc = mpGuiSet->CreateWidgetLabel(0, pFDescription->GetSize() - cVector2f(20, 10), _W(""), pFDescription);
+
+    //////////////////////////
+    //Description
+    cVector3f vDescPos = vPos + cVector3f(0, 10, 0);
+    cVector2f vDescSize = cVector2f(420, 315);
+
+    mpIDescBackground = mpGuiSet->CreateWidgetImage("", cVector3f(vDescPos.x, vDescPos.y, 0.07f), vDescSize, eGuiMaterial_Alpha, false, mpWindow);
+    mpIDescBackground->SetImage(mpGui->CreateGfxFilledRect(cColor(0, 0, 0, 0.6f), eGuiMaterial_Alpha));
+
+    mpFDescription = mpGuiSet->CreateWidgetFrame(vDescPos, vDescSize, false, mpWindow, false, true);
+    //Text inset a little from the backdrop's edges, and clear of the scroll bar (18) on the right
+    mpLDesc = mpGuiSet->CreateWidgetLabel(cVector3f(6, 4, 0), cVector2f(vDescSize.x - 18 - 12, vDescSize.y - 8), _W(""), mpFDescription);
     mpLDesc->SetWordWrap(true);
+    mpLDesc->SetAutoScroll(false);
+
+    //////////////////////////
+    //Hard mode
+    tWString sHardModeLabel = kTranslate("CustomStory", "EnableHardMode");
+    if(sHardModeLabel == _W(""))
+    {
+        sHardModeLabel = _W("Enable Hard Mode");
+    }
+    mpCBHardMode = mpGuiSet->CreateWidgetCheckBox(cVector3f(vDescPos.x, vDescPos.y + vDescSize.y + 8, 0.1f), cVector2f(300, 20), sHardModeLabel, mpWindow);
+    mpCBHardMode->SetChecked(false, false);
 
     mvButtons.clear();
 
@@ -122,6 +147,19 @@ void cLuxMainMenu_CustomStory::CreateGui()
     pButton->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(PressBack));
 
     mvButtons.push_back(pButton);
+
+    //////////////////////////
+    //Widen up to the buttons so the scroll bar sits next to them
+    {
+        float fDescRight = vPos.x - 12;
+        cVector2f vDescSize = cVector2f(fDescRight - mpFDescription->GetLocalPosition().x, mpFDescription->GetSize().y);
+        if(vDescSize.x > mpFDescription->GetSize().x)
+        {
+            mpFDescription->SetSize(vDescSize);
+            mpIDescBackground->SetSize(vDescSize);
+            mpLDesc->SetSize(cVector2f(vDescSize.x - 18 - 12, mpLDesc->GetSize().y));
+        }
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -218,6 +256,13 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
     mpWindow->SetText(sName);
     mpLAuthor->SetText(sBy + _W(" ") + sAuthor);
     mpLDesc->SetText(sDescription);
+    UpdateDescriptionSize();
+
+    //Every story starts unticked
+    if(mpCBHardMode)
+    {
+        mpCBHardMode->SetChecked(false, false);
+    }
 
     ////////////////////////////////////////////////////
     // Set up buttons (positioning and visibility)
@@ -299,14 +344,79 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStory, PressContinue);
 
 //-----------------------------------------------------------------------
 
+void cLuxMainMenu_CustomStory::UpdateDescriptionSize()
+{
+    if(mpLDesc == NULL || mpFDescription == NULL)
+    {
+        return;
+    }
+
+    float fMinHeight = mpFDescription->GetSize().y - 8;
+    float fTextHeight = mpLDesc->GetWordWrapTextHeight() + 4;
+    mpLDesc->SetSize(cVector2f(mpLDesc->GetSize().x, cMath::Max(fMinHeight, fTextHeight)));
+
+    mpFDescription->ScrollToPosition(0);
+}
+
+//-----------------------------------------------------------------------
+
+bool cLuxMainMenu_CustomStory::HardModeWarningCallback(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    bool bStart = aData.mlVal == 0;
+    mpGuiSet->SetDrawFocus(false);
+
+    if(bStart)
+    {
+        StartStory(true);
+    }
+
+    return true;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStory, HardModeWarningCallback);
+
+//-----------------------------------------------------------------------
+
 bool cLuxMainMenu_CustomStory::PressStart(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    //////////////////////////////////////////////////////
+    // Warn first before starting custom in hard mode
+    if(mpCBHardMode && mpCBHardMode->IsChecked())
+    {
+        tWString sText = kTranslate("CustomStory", "HardModeWarning");
+        if(sText == _W(""))
+        {
+            sText = _W("This custom story was not made for hard mode. Scripted events may break and it may not ")
+                    _W("play the way it was meant to. Start it in hard mode anyway?");
+        }
+
+#if USE_GAMEPAD
+        mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
+#endif
+        cGuiPopUpMessageBox *pPopUp = mpGuiSet->CreatePopUpMessageBox(kTranslate("MainMenu", "HardMode"), sText,
+                                      kTranslate("MainMenu", "Yes"), kTranslate("MainMenu", "No"),
+                                      this, kGuiCallback(HardModeWarningCallback));
+        pPopUp->GetGuiSet()->SetDrawFocus(mpGuiSet->GetDrawFocus());
+        pPopUp->SetKillOnEscapeKey(false);
+
+        return true;
+    }
+
+    StartStory(false);
+
+    return true;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStory, PressStart);
+
+//-----------------------------------------------------------------------
+
+void cLuxMainMenu_CustomStory::StartStory(bool abHardMode)
 {
     //////////////////////////////////////////////////////
     // Full conversion: restarts atrim into it, no custom story save folder needed.
     if(mpStory && mpStory->IsFullConversion())
     {
-        gpBase->StartCustomStory();
-        return true;
+        gpBase->StartCustomStory(abHardMode);
+        return;
     }
 
     //////////////////////////////////////////////////////
@@ -324,11 +434,8 @@ bool cLuxMainMenu_CustomStory::PressStart(iWidget* apWidget, const cGuiMessageDa
         }
     }
 
-    gpBase->StartCustomStory();
-
-    return true;
+    gpBase->StartCustomStory(abHardMode);
 }
-kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStory, PressStart);
 
 //-----------------------------------------------------------------------
 

@@ -82,6 +82,11 @@
         <Entry Name="HardModeDeath">You died...</Entry>
     </CATEGORY>
 
+    <CATEGORY Name="CustomStory">
+        <Entry Name="EnableHardMode">Enable Hard Mode</Entry>
+        <Entry Name="HardModeWarning">This custom story was not made for hard mode. Scripted events may break and it may not play the way it was meant to. Start it in hard mode anyway?</Entry>
+    </CATEGORY>
+
     <!-- END HARD MODE STRINGS -->
 
     <CATEGORY Name="OptionsMenu">

@@ -84,8 +84,9 @@ public:
     /**
      * Starts a new game using the custom settings.
      * NOTE: Should be called from a copied object, NEVER from one in the Custom Story List window!!
+     * \param abHardMode Only when the player asked for it in the custom story window (stories are not made for it).
      */
-    bool StartGame();
+    bool StartGame(bool abHardMode = false);
 
     tWString msName;
     tWString msAuthor;
@@ -128,7 +129,7 @@ public:
     void RunModuleMessage(eLuxUpdateableMessage aMessage, void * apData = NULL);
 
     bool StartGame(const tString& asFile, const tString& asFolder, const tString& asStartPos);
-    bool StartCustomStory();
+    bool StartCustomStory(bool abHardMode = false);
 
     /////////////////////////
     // Full conversion switching
@@ -140,7 +141,7 @@ public:
     void LoadResourceDirs();
 
     /** Exits and restarts atrim as the full conversion in asStoryRootFolder. */
-    void LaunchFullConversion(const tWString& asStoryRootFolder);
+    void LaunchFullConversion(const tWString& asStoryRootFolder, bool abHardMode = false);
     /** Quit from a menu: inside a full conversion, go back to the base game instead. */
     void ExitFromMenu();
 
