@@ -700,8 +700,8 @@ void cMaterialType_SolidDiffuse::LoadVariables(cMaterial* apMaterial, cResourceV
 
     pVars->mfHeightMapScale = apVars->GetVarFloat("HeightMapScale", 0.1f);
     pVars->mfHeightMapBias = apVars->GetVarFloat("HeightMapBias", 0);
-    pVars->mfFresnelBias = apVars->GetVarFloat("FresnelBias", 0.2f);
-    pVars->mfFresnelPow = apVars->GetVarFloat("FresnelPow", 8.0f);
+    pVars->mfFresnelBias = apVars->GetVarFloat("FresnelBias", apVars->GetVarFloat("FrenselBias", 0.2f));
+    pVars->mfFresnelPow = apVars->GetVarFloat("FresnelPow", apVars->GetVarFloat("FrenselPow", 8.0f));
     pVars->mbAlphaDissolveFilter = apVars->GetVarBool("AlphaDissolveFilter", false);
 
 }

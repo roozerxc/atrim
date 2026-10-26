@@ -482,8 +482,8 @@ void cMaterialType_Translucent::LoadVariables(cMaterial *apMaterial, cResourceVa
     pVars->mbRefractionEdgeCheck = apVars->GetVarBool("RefractionEdgeCheck", true);
     pVars->mbRefractionNormals = apVars->GetVarBool("RefractionNormals", true);
     pVars->mfRefractionScale  = apVars->GetVarFloat("RefractionScale", 1.0f);
-    pVars->mfFresnelBias = apVars->GetVarFloat("FresnelBias", 0.2f);
-    pVars->mfFresnelPow = apVars->GetVarFloat("FresnelPow", 8.0);
+    pVars->mfFresnelBias = apVars->GetVarFloat("FresnelBias", apVars->GetVarFloat("FrenselBias", 0.2f));
+    pVars->mfFresnelPow = apVars->GetVarFloat("FresnelPow", apVars->GetVarFloat("FrenselPow", 8.0f));
     pVars->mfRimLightMul =  apVars->GetVarFloat("RimLightMul", 0.0f);
     pVars->mfRimLightPow = apVars->GetVarFloat("RimLightPow", 8.0f);
     pVars->mbAffectedByLightLevel = apVars->GetVarBool("AffectedByLightLevel", false);

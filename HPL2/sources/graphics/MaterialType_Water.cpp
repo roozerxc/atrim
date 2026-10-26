@@ -358,8 +358,8 @@ void cMaterialType_Water::LoadVariables(cMaterial *apMaterial, cResourceVarsObje
 
     pVars->mbHasReflection = apVars->GetVarBool("HasReflection", true);
     pVars->mfRefractionScale = apVars->GetVarFloat("RefractionScale", 0.1f);
-    pVars->mfFresnelBias = apVars->GetVarFloat("FresnelBias", 0.2f);
-    pVars->mfFresnelPow = apVars->GetVarFloat("FresnelPow", 8.0f);
+    pVars->mfFresnelBias = apVars->GetVarFloat("FresnelBias", apVars->GetVarFloat("FrenselBias", 0.2f));
+    pVars->mfFresnelPow = apVars->GetVarFloat("FresnelPow", apVars->GetVarFloat("FrenselPow", 8.0f));
     pVars->mfReflectionFadeStart = apVars->GetVarFloat("ReflectionFadeStart", 0);
     pVars->mfReflectionFadeEnd = apVars->GetVarFloat("ReflectionFadeEnd", 0);
     pVars->mfWaveSpeed = apVars->GetVarFloat("WaveSpeed", 1.0f);
