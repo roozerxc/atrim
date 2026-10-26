@@ -58,9 +58,9 @@ static void WaitForDebugger()
 
     wchar_t sMessage[1024];
     _snwprintf(sMessage, 1023,
-               L"The game restarted itself (full conversion switch) while it was being debugged.\n\n"
+               L"The game restarted itself while it was being debugged.\n\n"
                L"Attach the debugger to the new process now:\n"
-               L"Debug > Attach to Process... > %s (process ID %lu)\n\n"
+               L"%s (process ID %lu)\n\n"
                L"Then press OK to continue.",
                pExeName, (unsigned long)GetCurrentProcessId());
     sMessage[1023] = 0;
