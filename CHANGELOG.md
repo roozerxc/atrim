@@ -111,6 +111,7 @@
 - Replaced tinyxml with pugixml, decreasing loading times and memory consumption
 - Restored unused Brute enemy enabled sound
 - Restored unused Penumbra-style head leaning behavior
+- Softened ear ringing sound (`insanity_ear_ring` audio by entropy_maker91)
 - Unified loading resource directories
 - Upgraded application timing to use platform high resolution timers
 - Upgraded engine and game code with changes from Amnesia: A Machine For Pigs
