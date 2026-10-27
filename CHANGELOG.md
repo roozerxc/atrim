@@ -128,7 +128,7 @@
 - Unified loading resource directories
 - Upgraded application timing to use platform high-resolution timers
 - Upgraded engine and game code with changes from Amnesia: A Machine for Pigs
-- Upgraded game physics and time to use double precision, fixing severe time drifting issues
+- Upgraded game physics and time to use double precision, fixing severe drifting issues
 
 ### v1.4.5
 - Disabled `UpdateLogActive` by default to fix severe performance degradation on first launch
