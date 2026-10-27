@@ -1,9 +1,12 @@
 ## Special thanks to the following testers!
 
-#### v1.4.6-win32
-- **ANDREWJOHN5** - German/Deutsch localization and testing
+#### v1.4.6
+- **Ajdino** - Testing
+- **Arkhany** - German/Deutsch localization and testing
+- **auxxci** - Testing
 - **georgeempy** - Testing
-- **phnxs** - Finnish/Suomenkieli localization and testing
+- **[@phnxs](https://github.com/phnxs)** - Finnish/Suomenkieli localization and testing
+- **[@visadaking](https://github.com/visadaking)** - Testing
 
-#### v1.4.5-win32
-- **phnxs** - Testing
+#### v1.4.5
+- **[@phnxs](https://github.com/phnxs)** - Testing

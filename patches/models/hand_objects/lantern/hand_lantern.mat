@@ -1,0 +1,9 @@
+<Material>
+    <Main DepthTest="True" PhysicsMaterial="Default" Type="SolidDiffuse" />
+    <TextureUnits>
+        <Diffuse AnimFrameTime="" AnimMode="" File="hand_lantern.jpg" Mipmaps="true" Type="2D" Wrap="Repeat" />
+        <NMap AnimFrameTime="" AnimMode="" File="hand_lantern_nrm.dds" Mipmaps="true" Type="2D" Wrap="Repeat" />
+        <Specular AnimFrameTime="" AnimMode="" File="hand_lantern_spec.dds" Mipmaps="true" Type="2D" Wrap="Repeat" />
+        <Illumination AnimFrameTime="" AnimMode="" File="hand_lantern_illum.dds" Mipmaps="true" Type="2D" Wrap="Repeat" />
+    </TextureUnits>
+</Material>

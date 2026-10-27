@@ -1,5 +1,5 @@
 # atrim
-**A legal, unmodified and DRM-free copy of *Amnesia: The Dark Descent* and/or *Amnesia: A Machine for Pigs* is required.**
+**A legal, unmodified and DRM-free copy of *Amnesia: The Dark Descent* is required.**
 
 This is atrim, a custom client for *Amnesia: The Dark Descent* which attempts to port the game to very old and weak machines, and make it compatible with operating systems as early as Windows 2000.
 
@@ -9,23 +9,29 @@ atrim is currently being maintained by one person ([@RoozerXC](https://github.co
 
 > [!IMPORTANT]
 > - **This port is based on the official *Amnesia: The Dark Descent* version 1.4.3 (1.41b) source code release from October 12th, 2020.**
-> - **Mods installed from the Steam Workshop, including Custom Stories and Full Conversion mods will not work here!**
+> - **This port now works with mods made for version 1.5, and mods installed from the Steam Workshop!**
 
-> [!CAUTION]
-> - **DirectInput controller support on SDL 1.2.15 is very poor! We need your help! (see issue [#21](https://github.com/roozerxc/atrim/issues/21))**
+See instructions below on how to install the atrim client and installing Steam Workshop mods for it.
 
 For a list of changes, read [`CHANGELOG.md`](CHANGELOG.md). Special thanks are in [`THANKS.md`](THANKS.md).
 
-## Installation
-### Steps
-1. Go to the Releases section which can be found on the right-hand side of the page.
-2. Download the zip file of the latest release (for example, `v1.4.5-win32-release`)
-3. Open the zip file and drag all of its contents into your *Amnesia: The Dark Descent* installation folder.
+## Installation Guide
+### Normal Installation
+1. Install *Amnesia: The Dark Descent* from DVD, Steam, GOG.com, Epic Games, or any source, provided it has the 1.2 *Justine* update.
+- **Tip: You can check this after installation by searching for `ptest` in your game folder.**
+2. Copy the atrim client files (found in Releases) into your *Amnesia: The Dark Descent* game folder.
+3. Run `amnesia-Win32-Release.exe` for legacy systems, or `amnesia-x64-Release.exe` for modern systems.
 
-### System Requirements
-- 1.8+ GHz single-core CPU
-- *OpenGL* 2.1-compatible graphics card
-- *DirectSound* and/or *OpenAL*-compatible sound card
+### Installing *Amnesia: The Dark Descent - Remastered*
+Installing [*Amnesia: The Dark Descent - Remastered*](https://archive.org/details/the-dark-descent-remaster-mod) is also possible with this client and it is a very easy 3-step process.
+1. Backup your *Amnesia: The Dark Descent* game folder before installing *Amnesia: The Dark Descent - Remastered*.
+2. Copy the *Amnesia: The Dark Descent - Remastered* files into your *Amnesia: The Dark Descent* game folder, overwrite all files.
+3. Copy the atrim client files (i.e. from `v1.4.6-beta.zip`) into the game folder, overwrite all files.
+
+### Installing Mods from the Steam Workshop
+1. Go to this path: `steamapps/workshop/content/57300`
+2. Copy all of the Workshop mod folders.
+3. Go to the `custom_stories` folder in your game directory and paste all of them.
 
 ## Building & Debugging
 ### Prerequisites
@@ -54,3 +60,5 @@ You will also need to [configure the *DirectX SDK* in your *Visual C++* director
 atrim is licensed under Version 3 of the GNU General Public License (GNU GPL).
 
 Read the license information via the **GPL-3.0 license** tab on the top, or open the [`LICENSE.md`](LICENSE.md) file.
+
+© 2009-2010 Frictional Games. Frictional, Amnesia: The Dark Descent, and the HPL Engine software are all registered trademarks of Frictional Games. All rights reserved.

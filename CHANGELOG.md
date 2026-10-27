@@ -1,43 +1,152 @@
 # Changelog
-### v1.4.6-win32-release (currently in public testing)
-- [`067186b`](https://github.com/roozerxc/atrim/commit/067186ba7c6c50bfe807f7d07bd356d904b3ccca) Added customizable top menu font color settings
-- [`bc98941`](https://github.com/roozerxc/atrim/commit/bc989418e2455b48983440c0dfd17386dbfc6794) Added map cache version number detection
-- [`0d132a5`](https://github.com/roozerxc/atrim/commit/0d132a505bff363d721a56bc014e57196b45b404) Added "Reset List" button for Custom Story menu
-- [`b1de39b`](https://github.com/roozerxc/atrim/commit/b1de39b0c8dda4a1e647669a0ebf09af09e26d1e) Added string localization for hardcoded texts (Finnish and German translation by [@phnxs](https://github.com/phnxs) and ANDREWJOHN5)
-- [`ef6c70e`](https://github.com/roozerxc/atrim/commit/ef6c70e534c2eb12e7cc8371bae3f74a15590c2d) Decoupled timers and scripts to use their own functions instead of using the same "Run" function
-- [`c2d7155`](https://github.com/roozerxc/atrim/commit/c2d7155de5f6522622a7174a201c45a221433d45) Fixed buggy enemy collision behavior
-- [`b496952`](https://github.com/roozerxc/atrim/commit/b496952608936ed83cde7a959521c7ec5c01ffff) Fixed custom story pictures not being wiped when another custom story was selected
-- [`73424fd`](https://github.com/roozerxc/atrim/commit/73424fd9c3410726fa91b79d674709298a9383ff) Fixed invalid serialization of coins needed to unlock chests
-- [`8c946b1`](https://github.com/roozerxc/atrim/commit/8c946b1a695330e05308fb5df4db5791a204ea3c) Fixed missing xinput support
-- [`5c29b95`](https://github.com/roozerxc/atrim/commit/5c29b958d314dd2ba9d2cb44e5e7b86c25e22ea4) Fixed the SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
-- [`45bda0f`](https://github.com/roozerxc/atrim/commit/45bda0fb26a98d19165b91bbd6aa79f5ad7bc2e6) Removed fake anti-aliasing shader (Edge Smoothing)
-- [`7491cc4`](https://github.com/roozerxc/atrim/commit/7491cc43e3e7b712c8723bfb12038d2146264d2c) Replaced loading icons from loose bitmaps with header-based RWops in the executable
-- [`0a3de4d`](https://github.com/roozerxc/atrim/commit/0a3de4d6e60806f30c31cb48281bd80c29efd79a) Replaced OpenAL with OpenAL-Soft
-- [`1731b30`](https://github.com/roozerxc/atrim/commit/1731b3071cefc3034e3a2fd3c152bd7998d68d3e) Restored unused Penumbra-style head leaning behavior
+### v1.4.6
+- Added 64-bit support
+- Added application thread locking for multi-processor systems
+- Added borderless window functionality on Windows Vista and 7+
+- Added checkbox in Sound settings to enable or disable enemy activation sounds
+- Added checkbox in Sound settings to enable or disable insanity ear-ringing noise
+- Added checkbox in Sound settings to enable or disable terror meter noise
+- Added checkbox to play Custom Stories and Full Conversion mods in Hard Mode
+- Added customizable loading bar inspired by the Amnesia: Collection ports
+- Added customizable loading text colors
+- Added customizable top menu font colors
+- Added dark mode GUI theme based on the HPL2 Community Editors
+- Added drop-down menu for selecting parallax rendering type (Simple/Relief)
+- Added engine build ID from older Amnesia versions (`YYYYMMDDhhmmss`)
+- Added engine performance statistics (saved to `hpl.log` after exit)
+- Added extra checks to ensure the parallax quality setting is applied correctly
+- Added extra properties for lights and particles
+- Added field of view (FOV) slider
+- Added flashback intensity slider
+- Added "Flattened 3D" texture type
+- Added frame limiter setting (`FrameRateLimit`) in `main_settings.cfg`
+- Added `#include` directive for version 1.5 mod support
+- Added Infinity Ward-style version watermark for debugging
+- Added left- and right-handedness options
+- Added line break and word wrapping for GUI message boxes
+- Added "lite" version of deferred light fragment shader for older ATi Radeon 9xxx cards
+- Added master, sound, and music volume sliders
+- Added modulated illumination rendering type for surface materials
+- Added occluder and pathfinding block checks
+- Added `OnUpdate(float afStep)` for version 1.5 mod support
+- Added Pirate Speak language. Arrr, matey! Shiver me timbers!
+- Added player body and camera script functions
+- Added post-version 1.3 strings for playing the client with older game versions
+- Added sanity drain control script functions
+- Added ScreenImage effect and related script functions from A Machine for Pigs
+- Added SDL 1.2.15 as a static library
+- Added setting to change player hand orientation
+- Added string localization for hardcoded texts (Finnish and German translations by [@phnxs](https://github.com/phnxs) and Arkhany)
+- Added support for loading Custom Stories from floppy disk
+- Added two-sided stencil safety check for NVIDIA and ATi hardware
+- Added "Ultra" setting for shadow quality and resolution
+- Added "Ultra Low" texture setting for significantly weaker hardware
+- Added version 1.5 Full Conversion mod support
+- Added warning on every boot advising players who purchased the client to seek a refund
+- Allowed loading and switching to different maps via the Debug menu in Amnesia: Justine
+- Allowed loading of glyph outlines for custom bitmap fonts and typefaces
+- Changed in-game screenshot key from `F8` to `F12`
+- Decoupled engine renderer and game logic, allowing for truly uncapped framerates
+- Decoupled timers and scripts to use their own functions instead of sharing the same "Run" function
+- Disabled SSAO and relief parallax for older video cards that don't support Shader Models 3 and 4
+- Fixed aspect ratio calculation for custom `menu_loading_screen.jpg` images
+- Fixed billboard alphas dividing by zero
+- Fixed broken byte order/endianness check (fast little-endian paths are now used)
+- Fixed broken enemy "standing still" checks
+- Fixed broken node and bone index resolution for mesh entities
+- Fixed buggy enemy collision behavior
+- Fixed character collision flag bits receiving garbage data
+- Fixed crosshair focus on static, non-interactable entities
+- Fixed Custom Stories borrowing image files from other Custom Stories
+- Fixed Custom Story images not being cleared when another story is selected
+- Fixed Custom Story resources not being unloaded when another mod is selected
+- Fixed destructive recursive reparse point deletion when a profile is deleted
+- Fixed enemy breakable/stuck door check malfunctions
+- Fixed enemy proximity and player distancing issues
+- Fixed excess screen aspect ratio calculation
+- Fixed Fast Forward (`F3`) sound and music multipliers
+- Fixed fatal crash caused by decoding faulty Ogg Vorbis files
+- Fixed fatal crash caused by pressing Escape rapidly to skip pre-menu logos
+- Fixed fatal crash caused by the libvorbis library being too old
+- Fixed fatal crash due to missing shaders for the effect renderer
+- Fixed fatal crash due to missing validation checks and protections for bitmaps and indices
+- Fixed fatal crash due to missing validation checks for animation data
+- Fixed fatal crash due to missing validation checks for invalid mesh and mesh cache data
+- Fixed fatal crash due to missing validation checks for skeleton bounds
+- Fixed fatal crash from addressing 32-bit memory above 2 GB
+- Fixed fatal crash from downscaling non-power-of-two textures on Ultra Low
+- Fixed fatal crash from loading a save file that was missing or corrupted
+- Fixed faulty texture filter selection
+- Fixed frame pacing issues when frames per second were slightly low
+- Fixed hand and hand object models clipping through map geometry
+- Fixed hand animations jerking violently when drawing a hand object
+- Fixed Hard Mode retention after exiting a session
+- Fixed Hard Mode retention when the Start Game dialog was closed
+- Fixed inactive character bodies being simulated
+- Fixed invalid serialization of coins required to unlock chests
+- Fixed language fallbacks for loading with unsupported languages
+- Fixed limit for Tinderboxes not being properly enforced
+- Fixed maximum game logic updates not scaling correctly with Fast Forward
+- Fixed mipmap level detection and image loading
+- Fixed missing material check for player step sounds
+- Fixed missing, null, or invalid data checks for sound entities
+- Fixed post-effects breaking at frame rates above 60 FPS
+- Fixed profile settings not being refreshed properly after switching profiles
+- Fixed props disappearing after breaking
+- Fixed SDL backquote/grave key incorrectly returning as a backslash
+- Fixed searching `hand_object` and `hand_objects` folders for custom hand models
+- Fixed Shader Model 3 parallax mapping fallback
+- Fixed SSAO occlusion depth problems (additional patches by Florian)
+- Fixed SSAO rendering lag caused by expensive depth fetches
+- Fixed visual bug caused by mesh coverage overshoot when an entity is faded in
+- Fixed visual bug with ropes disappearing when stretched to a significant degree
+- Fixed Z-fighting caused by decal depth mismatches with surfaces
+- Forced high-performance GPU selection on hybrid laptops (NVIDIA Optimus, AMD PowerXpress/Enduro)
+- Improved AI node iterator with changes from Amnesia: A Machine for Pigs
+- Improved Father Hector David’s idle recitation of biblical verses (Matthew 6:9–10 and Revelation 11:15) in Amnesia: Justine
+- Improved text quality for notes, diaries, and mementos in the Journal
+- Improved text quality for on-screen debug overlay and game subtitles
+- Improved volume slider precision in the main menu
+- Major optimizations to OpenGL graphics code
+- Removed achievement code from the Steam and console versions
+- Removed crosshair toggle key (`X`)
+- Removed dangerous system command functions
+- Removed demo version code and references
+- Removed fake anti-aliasing shader (Edge Smoothing)
+- Removed Lean (`Alt`) key
+- Removed logic timer in favor of fixed 60 Hz delta timing (`1 % 60 = 16.67ms`)
+- Removed `P` key, which activated heavy logging and caused severe performance issues
+- Removed performance bottleneck caused by constant mutex locking and unlocking
+- Removed proprietary Kaydara/Autodesk FBX loader
+- Removed "Wait and finish rendering" bottleneck in Main Menu, Inventory, and Journal
+- Replaced loading icons from loose bitmaps with header-based RWops
+- Replaced `SDL_SetGamma` with a dedicated GLSL shader for in-game gamma control
+- Replaced tinyxml with pugixml, reducing loading times and memory consumption
+- Restored unused Brute enemy enabled sound
+- Restored unused Penumbra-style head leaning behavior
+- Softened insanity ear-ringing sound (`insanity_ear_ring` audio by entropy_maker91)
+- Unified loading resource directories
+- Upgraded application timing to use platform high-resolution timers
+- Upgraded engine and game code with changes from Amnesia: A Machine for Pigs
+- Upgraded game physics and time to use double precision, fixing severe drifting issues
 
-### v1.4.5-win32-release
-- [`19dc606`](https://github.com/roozerxc/atrim/commit/19dc606e47500a52f9ab685abe2531cf2b0d1c41) Added `LUXPROP_OBJECT_BREAKABLE_WORKAROUND` preprocessor definition for breakable objects
-- [`0080872`](https://github.com/roozerxc/atrim/commit/00808725cbe4de2cbc021c8656dc0d682c90e9a2) Disabled `UpdateLogActive` by default to fix severe performance degradation on first launch
-- [`2d5dd97`](https://github.com/roozerxc/atrim/commit/2d5dd97f921ac12ea7ae74a5a78d71c6b8d5d66a) Fixed Aspect, FOV, Lean, and Roll goals
-- [`759d6ad`](https://github.com/roozerxc/atrim/commit/759d6adc4ca1ce59afaab8247e5a99b061103769) Fixed a failure to copy darkness sanity drain variable
-- [`b821937`](https://github.com/roozerxc/atrim/commit/b82193765c91a69f031044966257ece1447b2c1d) Fixed a persistent sanity flash when opening Inventory or Journal
-- [`5573ad5`](https://github.com/roozerxc/atrim/commit/5573ad53c1843b0a1bf48483217288c57f52d683) Fixed enemy sight range multiplication after the player drew their lantern
-- [`64eef0a`](https://github.com/roozerxc/atrim/commit/64eef0a5f5dbb61261f45e4ec8cfad04d4bd9899) Fixed examine area insane messages not appearing
-- [`a78779f`](https://github.com/roozerxc/atrim/commit/a78779f31c37468d731ee5cb968871ef45ff9c7f) Fixed fly camera typo when the player's sanity was too low
-- [`45b4bcb`](https://github.com/roozerxc/atrim/commit/45b4bcba472eb64aa58ab2256db24bb9dc3778d7) Fixed fullscreen boolean that used to return as an integer value
-- [`5d97e08`](https://github.com/roozerxc/atrim/commit/5d97e08ebd80958677958062da31bce6d11192dc) Fixed insanity event boolean that returned as nothing
-- [`5146d49`](https://github.com/roozerxc/atrim/commit/5146d4994de95c16c075b213c19ac645528847d4) Fixed mipmap generation to use `GL_SGIS_generate_mipmap` instead of the framebuffer object
-- [`3bcb545`](https://github.com/roozerxc/atrim/commit/3bcb5453dee5e4d02a256602515fa36b350cd07a) Fixed non-working player particle system destructor
-- [`3c6ec17`](https://github.com/roozerxc/atrim/commit/3c6ec17627b23ec1d594e2ffdee65adfd7824c48) Player can now look straight up and down in a 90 degree angle
-- [`4f98490`](https://github.com/roozerxc/atrim/commit/4f98490efb4e29cfb76680b05df0f750fe7d2156) Removed dangerous "suicide" (`H`) key (`eLuxAction_Holster`)
-- [`ffad602`](https://github.com/roozerxc/atrim/commit/ffad602b3933baaeb5d7d7a05d860c5da90a4e66) Removed `eLuxAction_Holster` entry from `LuxInputHandler`
-- [`9c1bbc9`](https://github.com/roozerxc/atrim/commit/9c1bbc96922c7bfca71db83076f0227b0735cadb) Upgraded OpenGL cube map constants to not use `ARB` extension
+### v1.4.5
+- Disabled `UpdateLogActive` by default to fix severe performance degradation on first launch
+- Fixed Aspect, FOV, Lean, and Roll goals
+- Fixed enemy sight range multiplication after the player drew their lantern
+- Fixed examine area insane messages not appearing
+- Fixed failure to copy darkness sanity drain variable
+- Fixed fly camera typo when the player's sanity was too low
+- Fixed fullscreen boolean that used to return as an integer value
+- Fixed insanity event boolean that returned as nothing
+- Fixed non-working player particle system destructor
+- Fixed persistent sanity flash when opening Inventory or Journal
+- Player can now look straight up and down in a 90-degree angle
+- Removed dangerous "suicide" (`H`) key (`eLuxAction_Holster`)
 
-### v1.4.4-win32-release
-- Account for portable backport effort by creating `settings` and `screenshot` folders in Amnesia game directory
+### v1.4.4
 - Added customizable 24-bit bitmap icon which can be set as the icon for the game's title bar
-- Fixed buggy screenshots that used an incorrect pixel format (`RGBA`)
-- Replaced `GL_TEXTURE_RECTANGLE_NV` with standard `GL_TEXTURE_RECTANGLE`
-- Replaced `std::to_wstring` with `LongToWString` in the main menu
+- Fixed buggy screenshots that used an incorrect pixel format (RGBA)
+- Game is now portable and creates `settings` and `screenshot` folders in Amnesia directory
 - Removed all references to haptics and HaptX code
 - Removed SDL2-specific code related to device broadcasting, sleeping and out-of-focus window interactions

@@ -1,0 +1,190 @@
+#ifndef LUX_MOVE_STATE_NORMAL_H
+#define LUX_MOVE_STATE_NORMAL_H
+
+//----------------------------------------------
+
+#include "LuxMoveState.h"
+
+//----------------------------------------------
+
+class cLuxMoveState_Normal;
+
+class cLuxMoveState_Normal_Callback : public iCharacterBodyCallback
+{
+public:
+    cLuxMoveState_Normal_Callback(cLuxMoveState_Normal *apMoveState);
+
+    void OnGravityCollide(iCharacterBody *apCharBody, iPhysicsBody *apBody, cCollideData *apCollideData);
+    void OnHitGround(iCharacterBody *apCharBody, const cVector3f &avVel) {}
+
+private:
+    cLuxMoveState_Normal *mpMoveState;
+};
+
+//----------------------------------------------
+
+enum eLuxFootSound
+{
+    eLuxFootSound_Step,
+    eLuxFootSound_Landing
+};
+
+//----------------------------------------------
+
+class cLuxMoveState_Normal : public iLuxMoveState
+{
+    friend class cLuxMoveState_Normal_Callback;
+    friend class cLuxPlayer_SaveData;
+public:
+    cLuxMoveState_Normal(cLuxPlayer *apPlayer);
+    ~cLuxMoveState_Normal();
+
+    void OnMapEnter();
+
+    void OnEnterState(eLuxMoveState aPrevState);
+    void OnLeaveState(eLuxMoveState aNewState);
+
+    void OnUpdate(double adFixedDelta);
+
+    bool GetAllowsInteraction();
+
+    bool OnMove(eCharDir aDir, float afMul);
+    bool OnAddYaw(float afAmount);
+    bool OnAddPitch(float afAmount);
+
+    void OnRun(bool abActive);
+    void OnCrouch(bool abActive);
+    void OnJump(bool abActive);
+
+    void Jump();
+
+    void OnDraw(double adFrameTime);
+
+    float GetHeadBobCount()
+    {
+        return mfHeadBobCount;
+    }
+
+    bool IsRunning()
+    {
+        return mbRunning;
+    }
+    bool IsCrouching()
+    {
+        return mbCrouching;
+    }
+
+    void SetCrouch(bool abActive);
+    void ResetJumping();
+
+    float GetMoveSpeedMul();
+    float GetRunSpeedMul();
+
+private:
+    bool UpdateLedgeCheck(double adFixedDelta);
+    void UpdateMovement(double adFixedDelta);
+    void UpdateSpeedMultipliers(double adFixedDelta);
+    void UpdateJumpAndGroundCheck(double adFixedDelta);
+    void UpdateHeadBob(double adFixedDelta);
+
+    void FootSound(eLuxFootSound aType);
+
+    void FallDamage(float afYSpeed);
+
+    cLuxMoveState_Normal_Callback *mpCallback;
+
+    tString msJumpSound;
+    tString msCrouchSound;
+    tString msStandSound;
+
+    bool mbWasMoving;
+
+    float mfRunForwardMul;
+    float mfRunBackwardMul;
+    float mfRunSidewayMul;
+
+    float mfCrouchForwardMul;
+    float mfCrouchBackwardMul;
+    float mfCrouchSidewayMul;
+
+    float mfInAirForwardMul;
+    float mfInAirBackwardMul;
+    float mfInAirSidewayMul;
+
+    float mfDefaultForwardMul;
+
+    float mfMinHitGroundBounceSpeed;
+
+    bool mbRunning;
+    bool mbCrouching;
+
+    bool mbJumping;
+    float mfJumpStartForce;
+    float mfJumpCrouchStartForce;
+    float mfMaxJumpCount;
+    float mfJumpCount;
+
+    cVector3f mvHeadBob;
+    cVector2f mvEnergyBobSize;
+    float mfPrevHeadBobCount;
+    float mfHeadBobCount;
+    float mfHeadBobMul;
+    float mfHeadBobMulTarget;
+    float mfHeadBobMulSpeed;
+    bool mbBobbing;
+
+    bool mbWasOnGround;
+
+    bool mbHeadGroundBounceActive;
+    float mfHeadGroundBounce;
+
+    cVector2f mvWalkBobMax;
+    cVector2f mvRunBobMax;
+    cVector2f mvCrouchBobMax;
+
+    float mfWalkMinBobSpeed;
+    float mfWalkMaxBobSpeed;
+
+    float mfRunMinBobSpeed;
+    float mfRunMaxBobSpeed;
+
+    float mfCrouchMinBobSpeed;
+    float mfCrouchMaxBobSpeed;
+
+    cVector2f mvCurrentBobMax;
+    cVector2f mvBobMaxGoal;
+
+    float mfGroundBounceSize;
+    float mfGroundBounceSpeed;
+
+    float mfBounceSizeMul;
+    float mfBounceSpeedMul;
+
+    float mfClimbLedgeCount;
+    float mfMaxClimbLedgeCount;
+
+    float mfClimbLedgeCheckDistForward;
+    float mfClimbLedgeCheckDistFromTop;
+    float mfClimbLedgeCheckDistTopToEnd;
+    float mfClimbLedgeMaxPushDist;
+
+    float mfFallDamageBounceSizeMul;
+    float mfFallDamageBounceSpeedMul;
+
+    float mfFallDamageSpeed_Min;
+    float mfFallDamage_Min;
+    tString msFallDamageSound_Min;
+
+    float mfFallDamageSpeed_Med;
+    float mfFallDamage_Med;
+    tString msFallDamageSound_Med;
+
+    float mfFallDamageSpeed_Max;
+    float mfFallDamage_Max;
+    tString msFallDamageSound_Max;
+};
+
+//----------------------------------------------
+
+
+#endif // LUX_MOVE_STATE_H

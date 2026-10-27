@@ -1,0 +1,25 @@
+# Asset files
+*.cfg        linguist-language=XML
+*.comment    linguist-language=XML
+*.dae        linguist-language=COLLADA
+*.dae_anim   linguist-language=COLLADA
+*.ent        linguist-language=XML
+*.flash      linguist-language=XML
+*.glsl       linguist-language=GLSL
+*.hps        linguist-language=AngelScript
+*.lang       linguist-language=XML
+*.map        linguist-language=XML
+*.mat        linguist-language=XML
+*.nodes      linguist-language=XML
+*.ps         linguist-language=XML
+*.rope       linguist-language=XML
+*.sav        linguist-language=XML
+*.save       linguist-language=XML
+*.skin       linguist-language=XML
+*.snt        linguist-language=XML
+*.sps        linguist-language=XML
+
+# Cache files
+*.msh        binary
+*.anm        binary
+*.map_cache  binary

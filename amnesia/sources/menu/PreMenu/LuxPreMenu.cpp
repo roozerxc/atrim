@@ -1,0 +1,826 @@
+#include "LuxPreMenu.h"
+
+#include "LuxMapHandler.h"
+#include "LuxInputHandler.h"
+#include "LuxHelpFuncs.h"
+#include "LuxConfigHandler.h"
+#include "LuxDebugHandler.h"
+#include "LuxLoadScreenHandler.h"
+
+//-----------------------------------------------------------------------
+
+static eFontAlign ToFontAlign(const tString& asX)
+{
+    tString sLowerCase = cString::ToLowerCase(asX);
+    if(sLowerCase == "center")
+    {
+        return eFontAlign_Center;
+    }
+    else if(sLowerCase == "right")
+    {
+        return eFontAlign_Right;
+    }
+    else if(sLowerCase == "left")
+    {
+        return eFontAlign_Left;
+    }
+
+    Error("The font alignment '%s' does not exist!\n", asX.c_str());
+    return eFontAlign_Left;
+}
+
+//-----------------------------------------------------------------------
+
+cLuxPreMenuSection::cLuxPreMenuSection()
+{
+    mbHideGuiSet = false;
+}
+
+cLuxPreMenuSection::~cLuxPreMenuSection()
+{
+    STLDeleteAll(mlstTextElements);
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxPreMenuSection::AddTextElement(cLuxPreMenuTextElement* apText)
+{
+    if(apText)
+    {
+        mlstTextElements.push_back(apText);
+    }
+}
+
+//-----------------------------------------------------------------------
+
+bool cLuxPreMenuSection::HasTextElements()
+{
+    return mlstTextElements.empty() == false;
+}
+
+//-----------------------------------------------------------------------
+
+cGuiGfxElement *cLuxPreMenuSection::CreateBackground(cGui* apGui, cTextureManager* apTexMgr)
+{
+    cGuiGfxElement* pBG = NULL;
+    // Load background, or create black rect if no file is loaded
+    if(msBackgroundFile == "")
+    {
+        pBG  = apGui->CreateGfxFilledRect(mBackgroundColor, eGuiMaterial_Alpha);
+    }
+    else
+    {
+        iTexture* pTex = apTexMgr->Create2D(msBackgroundFile, false, eTextureType_Rect);
+        if(pTex)
+        {
+            pBG = apGui->CreateGfxTexture(pTex, true, eGuiMaterial_Alpha);
+        }
+    }
+
+    return pBG;
+}
+
+//-----------------------------------------------------------------------
+
+bool cLuxPreMenuSection::Load(cXmlElement* apElement, const cVector2f& avGuiSetSize)
+{
+    if(apElement == NULL)
+    {
+        return false;
+    }
+
+    mBackgroundColor = apElement->GetAttributeColor("Color", cColor(0, 1));
+    msBackgroundFile = apElement->GetAttributeString("Image", "");
+    mfTime = apElement->GetAttributeFloat("Time", 2);
+    mbShowFirstStartOnly = apElement->GetAttributeBool("ShowFirstStartOnly", false);
+    mbHasGammaSettings = apElement->GetAttributeBool("HasGammaSettings", false);
+
+    msMusic = apElement->GetAttributeString("Music", "");
+    mfMusicVolume = apElement->GetAttributeFloat("MusicVolume", 0);
+    mfMusicFadeTime = apElement->GetAttributeFloat("MusicFadeTime", 0);
+
+    mbAllowSkipping = apElement->GetAttributeBool("AllowSkipping", true);
+
+    //////////////////////////////
+    // Retrieve text elements
+    cXmlNodeListIterator itText = apElement->GetChildIterator();
+    while(itText.HasNext())
+    {
+        cXmlElement* pTextElement = itText.Next()->ToElement();
+
+        // Create and set up text element
+        cLuxPreMenuTextElement* pText = hplNew(cLuxPreMenuTextElement, ());
+        if(pText->Load(pTextElement, avGuiSetSize))
+        {
+            AddTextElement(pText);
+        }
+        else
+        {
+            hplDelete(pText);
+        }
+    }
+
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
+bool cLuxPreMenuTextElement::Load(cXmlElement* apElement, const cVector2f& avGuiSetSize)
+{
+    if(apElement == NULL)
+    {
+        return false;
+    }
+
+    // Load text data
+    tString sCat = apElement->GetAttributeString("TextCat");
+    tString sEntry = apElement->GetAttributeString("TextEntry");
+
+    msText = kTranslate(sCat, sEntry);
+    mvPos = apElement->GetAttributeVector3f("Pos") + cVector3f(0, 0, 1);
+    mvFrameSize = apElement->GetAttributeVector2f("FrameSize");
+    mvFontSize = apElement->GetAttributeVector2f("FontSize", cVector2f(0));
+    mColor = apElement->GetAttributeColor("Color");
+    mAlign = ToFontAlign(apElement->GetAttributeString("Align", "Left"));
+
+    mfTime = apElement->GetAttributeFloat("time", 2);
+
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
+cWidgetLabel *cLuxPreMenuTextElement::CreateLabel(cGuiSet* apSet)
+{
+    if(apSet == NULL)
+    {
+        return NULL;
+    }
+
+    cWidgetLabel* pLabel = apSet->CreateWidgetLabel(mvPos, mvFrameSize, msText);
+    pLabel->SetDefaultFontColor(mColor);
+    pLabel->SetDefaultFontSize(mvFontSize);
+    pLabel->SetTextAlign(mAlign);
+    pLabel->SetWordWrap(true);
+
+    return pLabel;
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// CONSTRUCTORS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+cLuxPreMenu::cLuxPreMenu() : iLuxUpdateable("LuxPreMenu")
+{
+    ///////////////////////////////
+    //Get Engine
+    mpGraphics = gpBase->mpEngine->GetGraphics();
+    mpGui = gpBase->mpEngine->GetGui();
+    mpGuiSet = mpGui->CreateSet("PreMenu", NULL);
+    mpGuiSet->SetDrawMouse(false);//Init
+
+    ///////////////////////
+    // Load settings
+    mvScreenSize = gpBase->mpEngine->GetGraphics()->GetLowLevel()->GetScreenSizeFloat();
+
+    mvGuiSetCenterSize = cVector2f(800, 600);
+
+    LuxCalcGuiSetScreenOffset(mvGuiSetCenterSize, mvGuiSetSize, mvGuiSetOffset);
+    mvGuiSetStartPos = cVector3f(-mvGuiSetOffset.x, -mvGuiSetOffset.y, 0);
+
+    mpGuiSet->SetVirtualSize(mvGuiSetSize, -1000, 1000, mvGuiSetOffset);
+
+    ///////////////////////////////
+    //Create Viewport
+    mpViewport = gpBase->mpEngine->GetScene()->CreateViewport();
+    mpViewport->SetActive(false);
+    mpViewport->SetVisible(false);
+    mpGuiSet->SetActive(false);
+    mpGuiSet->SetDrawMouse(false);//Init
+
+    mpViewport->AddGuiSet(mpGuiSet);
+
+    ///////////////////////////////
+    //Setup variables
+    Reset();
+
+    mpBlackFade = mpGui->CreateGfxFilledRect(cColor(0, 1), eGuiMaterial_Alpha, true);
+    mbExitPreMenu = false;
+
+    ///////////////////////////////////////
+    // Load skin and sections
+    LoadPreMenuSections();
+
+    ///////////////////////////////////////
+    // Create continue button
+    tWString sButtonLabel = kTranslate("PreMenu", "Continue");
+
+    mpBContinue = mpGuiSet->CreateWidgetButton(0, 0, sButtonLabel, NULL);
+    iFontData* pFont = mpBContinue->GetDefaultFontType();
+
+    float fLength = pFont->GetLength(cVector2f(pFont->GetHeight()), sButtonLabel.c_str()) + 20;
+
+    cVector2f vSize = cVector2f(fLength, pFont->GetHeight()) + 10;
+    cVector3f vPos = (cVector3f(mvGuiSetCenterSize - vSize) + cVector3f(0, -10, 0.1f)) * cVector3f(0.5f, 1, 1);
+
+    mpBContinue->SetPosition(vPos);
+    mpBContinue->SetSize(vSize);
+
+    mpBContinue->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(Continue_Pressed));
+    mpBContinue->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(Continue_UIPressed));
+    mpBContinue->AddCallback(eGuiMessage_UIArrowPress, this, kGuiCallback(Gamma_UIArrowPressed));
+    mpBContinue->SetGlobalUIInputListener(true);
+    mpBContinue->SetVisible(false);
+
+    ///////////////////////////////////////
+    // Create gamma widgets
+    {
+        cVector2f vCenter = mvGuiSetCenterSize * 0.5f;
+        mpGGamma = mpGuiSet->CreateWidgetDummy(0);
+
+        // Preview image
+        mpIGammaPreview = mpGuiSet->CreateWidgetImage("menu_gamma.tga", 0, -1, eGuiMaterial_Alpha, false, mpGGamma);
+
+        vSize = mpIGammaPreview->GetSize() * 1.25f;
+        //vPos = (cVector3f(mvGuiSetCenterSize-vSize) + cVector3f(0,40,0.1f)) * cVector3f(0.5f, 0.5f, 1);
+
+        mpIGammaPreview->SetPosition(cVector3f(0, 0, 0.1f));
+        mpIGammaPreview->SetSize(vSize);
+
+        mpIGammaPreview->SetVisible(false);
+        mpIGammaPreview->SetEnabled(false);
+
+        // Value label
+        mpLGamma = mpGuiSet->CreateWidgetLabel(0, 0, _W(""), mpGGamma);
+
+        mpLGamma->SetVisible(false);
+        mpLGamma->SetEnabled(false);
+
+        // Slider
+        mfGammaMinValue = 0.3f;
+        mfGammaMaxValue = 2.0f;
+        mfGammaStep = 0.05f;
+
+        vSize.y = 25;
+
+        mpSGamma = mpGuiSet->CreateWidgetSlider(eWidgetSliderOrientation_Horizontal, vPos, vSize, 10, mpGGamma);
+        mpSGamma->AddCallback(eGuiMessage_SliderMove, this, kGuiCallback(Gamma_ChangeValue));
+
+        int lMaxValue = cMath::RoundToInt((mfGammaMaxValue - mfGammaMinValue) / mfGammaStep);
+        mpSGamma->SetMaxValue(lMaxValue);
+        mpSGamma->SetBarValueSize(cMath::RoundToInt(0.25f * (float)lMaxValue));
+
+        // Set initial value
+        SetGammaValueToInput(gpBase->mpEngine->GetGraphics()->GetLowLevel()->GetGammaCorrection(), true);
+
+        mpSGamma->SetVisible(false);
+        mpSGamma->SetEnabled(false);
+
+        vPos = cVector3f(0, 0, 0.1f);
+        mpIGammaPreview->SetPosition(vPos);
+
+        vPos.y += mpIGammaPreview->GetSize().y + 10;
+        mpLGamma->SetPosition(vPos);
+
+        vPos.y += 25.0f;
+        mpSGamma->SetPosition(vPos);
+
+        vPos = cVector3f(vCenter - (mpGGamma->GetSize() * 0.5f)) + cVector3f(0, 20, 0.1f);
+        mpGGamma->SetPosition(vPos);
+    }
+
+    mpGuiSet->SetDefaultFocusNavWidget(mpBContinue);
+    mpGuiSet->SetFocusedWidget(mpBContinue);
+}
+
+//-----------------------------------------------------------------------
+
+cLuxPreMenu::~cLuxPreMenu()
+{
+    //Destroy data
+    STLDeleteAll(mvSections);
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+void cLuxPreMenu::OnEnterContainer(const tString& asOldContainer)
+{
+    //Unlock input if not in window
+    gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(false);
+    gpBase->mpEngine->GetInput()->GetLowLevel()->RelativeMouse(false);
+
+    ////////////////////////////
+    //Set up states and viewport
+    gpBase->mpInputHandler->ChangeState(eLuxInputState_PreMenu);
+
+    mpViewport->SetActive(true);
+    mpViewport->SetVisible(true);
+
+    mpGuiSet->SetActive(true);
+    mpGui->SetFocus(mpGuiSet);
+
+    ///////////////////////////////
+    //Load data
+    mlCurrentSectionIdx = -1;
+    mpCurrentBackground = NULL;
+    mpCurrentSection = NULL;
+
+    mCurrentState = eLuxPreMenuState_Initial;
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxPreMenu::OnLeaveContainer(const tString& asNewContainer)
+{
+    //Unlock input if not in window
+    if(gpBase->mpDebugHandler->GetDebugWindowActive() == false)
+    {
+        gpBase->mpEngine->GetInput()->GetLowLevel()->LockInput(true);
+        gpBase->mpEngine->GetInput()->GetLowLevel()->RelativeMouse(true);
+    }
+
+    //Turn off viewport and sets
+    mpViewport->SetActive(false);
+    mpViewport->SetVisible(false);
+
+    mpGuiSet->SetActive(false);
+
+    gpBase->mpLoadScreenHandler->DrawMenuScreen(true);
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxPreMenu::Update(double adFixedDelta)
+{
+    UpdateActions(adFixedDelta);
+    UpdateState();
+
+    ////////////////////////////////////////////////////////
+    // Exit premenu
+    if(mbExitPreMenu)
+    {
+        if(gpBase->mbShowMenu)
+        {
+            gpBase->mpEngine->GetUpdater()->SetContainer("MainMenu");
+        }
+        else
+        {
+            gpBase->mpInputHandler->ChangeState(eLuxInputState_Game);
+
+            //Create (if not existing) and set profile.
+            gpBase->CreateProfile(gpBase->msDefaultProfileName);
+            gpBase->SetProfile(gpBase->msDefaultProfileName);
+
+            //Load user config
+            if(gpBase->InitUserConfig() == false)
+            {
+                gpBase->Exit();
+                return;
+            }
+
+            gpBase->mpEngine->GetUpdater()->SetContainer("Default");
+
+            //Load map and start game.
+            //By using "" user config values are used.
+            gpBase->StartGame("", "", "");
+        }
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxPreMenu::SetGammaValueToInput(float afGamma, bool abGenCallback)
+{
+    afGamma = cMath::Clamp(afGamma, mfGammaMinValue, mfGammaMaxValue);
+
+    float fMaxSliderValue = (float) mpSGamma->GetMaxValue();
+    float fRange = mfGammaMaxValue - mfGammaMinValue;
+
+    int lValue = cMath::RoundToInt((afGamma - mfGammaMinValue) * fMaxSliderValue / fRange);
+
+    mpSGamma->SetValue(lValue, abGenCallback);
+}
+
+//-----------------------------------------------------------------------
+
+bool cLuxPreMenu::Gamma_ChangeValue(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    float fSliderRelValue = ((float)mpSGamma->GetValue()) / (float)mpSGamma->GetMaxValue();
+    float fRange = mfGammaMaxValue - mfGammaMinValue;
+
+    float fGamma = mfGammaMinValue + fRange * fSliderRelValue;
+
+    mpLGamma->SetText(kTranslate("OptionsMenu", "Gamma") + _W(": ") + cString::ToStringW(fGamma, 2, true));
+    gpBase->mpEngine->GetGraphics()->GetLowLevel()->SetGammaCorrection(fGamma);
+
+    return true;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxPreMenu, Gamma_ChangeValue);
+
+//-----------------------------------------------------------------------
+
+bool cLuxPreMenu::Continue_Pressed(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    mCurrentState = eLuxPreMenuState_FadeOut;
+
+    return true;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxPreMenu, Continue_Pressed);
+
+//-----------------------------------------------------------------------------
+
+bool cLuxPreMenu::Continue_UIPressed(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    if(aData.mlVal == eUIButton_Primary)
+    {
+        mCurrentState = eLuxPreMenuState_FadeOut;
+
+        return true;
+    }
+    return false;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxPreMenu, Continue_UIPressed);
+
+//-----------------------------------------------------------------------------
+
+bool cLuxPreMenu::Gamma_UIArrowPressed(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    if(aData.mlVal == eUIArrow_Left)
+    {
+        mpSGamma->SetValue(mpSGamma->GetValue() - 1, true);
+    }
+    else if(aData.mlVal == eUIArrow_Right)
+    {
+        mpSGamma->SetValue(mpSGamma->GetValue() + 1, true);
+    }
+    return true;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxPreMenu, Gamma_UIArrowPressed);
+
+//-----------------------------------------------------------------------
+
+void cLuxPreMenu::ButtonPressed()
+{
+    if(mbQuickTransition)
+    {
+        return;
+    }
+
+    if(mpCurrentSection && mpCurrentSection->mbAllowSkipping == false)
+    {
+        return;
+    }
+
+    mCurrentState = eLuxPreMenuState_FastFadeOut;
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxPreMenu::OnDraw(double adFrameTime)
+{
+    ///////////////////////////////////////
+    // Draw fade rect and background
+    mpGuiSet->DrawGfx(mpBlackFade, mvGuiSetStartPos + cVector3f(0, 0, 2), mvGuiSetSize, cColor(1, mfAlphaFade.Get()));
+    mpGuiSet->DrawGfx(mpBlackFade, mvGuiSetStartPos - cVector3f(0, 0, 2), mvGuiSetSize, cColor(1, 1));
+
+    if(mpCurrentBackground)
+    {
+        //Draw the image with correct ratio, always filling out height-wise.
+        cVector2f vSize = mpCurrentBackground->GetImageSize();
+        float fRatio = vSize.x / vSize.y;
+        float fRatioMul = fRatio / (4.0f / 3.0f);
+
+        mpGuiSet->DrawGfx(mpCurrentBackground, cVector3f(400 * (1 - fRatioMul), 0, 0), cVector2f(800 * fRatioMul, 600), cColor(1, 1));
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxPreMenu::AppLostInputFocus()
+{
+    if(gpBase->mpMapHandler->MapIsLoaded() == false)
+    {
+        cMusicHandler* pMusHdlr = gpBase->mpEngine->GetSound()->GetMusicHandler();
+        pMusHdlr->Pause();
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxPreMenu::AppGotInputFocus()
+{
+    if(gpBase->mpMapHandler->MapIsLoaded() == false)
+    {
+        cMusicHandler* pMusHdlr = gpBase->mpEngine->GetSound()->GetMusicHandler();
+        pMusHdlr->Resume();
+    }
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+void cLuxPreMenu::UpdateActions(double adFixedDelta)
+{
+    //////////////////////////////////////////
+    // Update stuff according to state
+    switch(mCurrentState)
+    {
+    case eLuxPreMenuState_Initial:
+        // Set initial fade value
+        mfAlphaFade = 0.0f;
+        break;
+    case eLuxPreMenuState_Final:
+    {
+        mbExitPreMenu = true;
+    }
+    break;
+
+    case eLuxPreMenuState_FadeIn:
+    {
+        // Update alpha for fading in
+        if(mfAlphaFade > 0.0f)
+        {
+            mfAlphaFade -= (float)adFixedDelta;
+        }
+        else
+        {
+            mfAlphaFade = 0.0f;
+        }
+    }
+    break;
+    case eLuxPreMenuState_FadeOut:
+    {
+        // Update alpha for fading out
+        if(mfAlphaFade < 1.0f)
+        {
+            mfAlphaFade += (float)adFixedDelta;
+        }
+        else
+        {
+            mfAlphaFade = 1.0f;
+        }
+    }
+    break;
+    case eLuxPreMenuState_FastFadeOut:
+    {
+        // Fast fade out (2x)
+        if(mfAlphaFade < 1.0f)
+        {
+            mfAlphaFade += (float)adFixedDelta * 2.0f;
+        }
+        else
+        {
+            mfAlphaFade = 1.0f;
+        }
+    }
+    break;
+    case eLuxPreMenuState_ShowPremenuSection:
+    {
+        // Update pic show timer
+        mfTimer -= (float)adFixedDelta;
+    }
+    break;
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxPreMenu::UpdateState()
+{
+    cTextureManager* pTexMgr = gpBase->mpEngine->GetResources()->GetTextureManager();
+    //////////////////////////////////////////////////////////////
+    // Set next state according to conditions and current state
+    switch(mCurrentState)
+    {
+    // Initial state, just change to next
+    case eLuxPreMenuState_Initial:
+    {
+        mCurrentState = eLuxPreMenuState_FadeOut;
+    }
+    break;
+    // Final state, no checks
+    case eLuxPreMenuState_Final:
+    {
+    }
+    break;
+    // FadeIn state, check if fade is done
+    case eLuxPreMenuState_FadeIn:
+    {
+        if(mfAlphaFade <= 0.0f)
+        {
+            mfTimer = mpCurrentSection->GetTime();
+            mCurrentState = eLuxPreMenuState_ShowPremenuSection;
+        }
+    }
+    break;
+    // (Fast)FadeOut state, check if fade is done, also sets up next section
+    case eLuxPreMenuState_FadeOut:
+    case eLuxPreMenuState_FastFadeOut:
+    {
+        if(mfAlphaFade >= 1.0f)
+        {
+            mbQuickTransition = true;
+
+            if(mpCurrentBackground)
+            {
+                mpGui->DestroyGfx(mpCurrentBackground);
+                mpCurrentBackground = NULL;
+            }
+
+            for(int i = 0; i < (int)mvCurrentLabels.size(); ++i)
+            {
+                mpGuiSet->DestroyWidget(mvCurrentLabels[i]);
+            }
+            mvCurrentLabels.clear();
+
+            // Fade is done, get next section, if no sections left, move to final state
+            ++mlCurrentSectionIdx;
+
+            //If not first start, skip any sections that are only shown on firs start.
+            if(gpBase->mpConfigHandler->mbFirstStart == false)
+            {
+                while(    mlCurrentSectionIdx < (int)mvSections.size() &&
+                          mvSections[mlCurrentSectionIdx]->ShowFirstStartOnly() )
+                {
+                    ++mlCurrentSectionIdx;
+                }
+            }
+
+            ////////////////////////////
+            // All Sections Shown
+            if(mlCurrentSectionIdx == (int)mvSections.size())
+            {
+                mCurrentState = eLuxPreMenuState_Final;
+                mpCurrentSection = NULL;
+            }
+            ////////////////////////////
+            // New Sections
+            else
+            {
+                mCurrentState = eLuxPreMenuState_FadeIn;
+
+                mpCurrentSection = mvSections[mlCurrentSectionIdx];
+
+                /////////////////////////////////
+                // Set up current section
+                if(mpCurrentSection)
+                {
+                    bool bGuiSetActive = (mpCurrentSection->HasTextElements() || mpCurrentSection->HasGammaSettings());
+
+                    if(mpCurrentSection->mbHideGuiSet)
+                    {
+                        bGuiSetActive = false;
+                    }
+
+                    ////////////////////////////////////////////
+                    // Set up Background
+                    mpCurrentBackground = mpCurrentSection->CreateBackground(mpGui, pTexMgr);
+
+                    ////////////////////////////////////////////
+                    // Set up Gui elements
+                    mpLGamma->SetVisible(mpCurrentSection->HasGammaSettings());
+                    mpLGamma->SetEnabled(mpCurrentSection->HasGammaSettings());
+                    mpSGamma->SetVisible(mpCurrentSection->HasGammaSettings());
+                    mpSGamma->SetEnabled(mpCurrentSection->HasGammaSettings());
+
+                    mpIGammaPreview->SetVisible(mpCurrentSection->HasGammaSettings());
+                    mpIGammaPreview->SetEnabled(mpCurrentSection->HasGammaSettings());
+
+                    mpBContinue->SetVisible(bGuiSetActive);
+                    mpBContinue->SetEnabled(bGuiSetActive);
+                    mpGuiSet->SetDrawMouse(bGuiSetActive);
+
+                    ////////////////////////////////////////////
+                    // Set up text
+                    const tPreMenuTextList& lstText = mpCurrentSection->GetTextElements();
+                    tPreMenuTextList::const_iterator itText = lstText.begin();
+                    for(; itText != lstText.end(); ++itText)
+                    {
+                        cLuxPreMenuTextElement* pText = *itText;
+
+                        // One label per element, word wrap enabled
+                        cWidgetLabel* pLabel = pText->CreateLabel(mpGuiSet);
+                        mvCurrentLabels.push_back(pLabel);
+                    }
+
+                    ////////////////////////////////////////////
+                    // Play music
+                    if(mpCurrentSection->msMusic != "")
+                    {
+                        cMusicHandler* pMusHandler = gpBase->mpEngine->GetSound()->GetMusicHandler();
+
+                        float fFadeSpeed = mpCurrentSection->mfMusicFadeTime == 0 ? 100.0f : 1.0f / mpCurrentSection->mfMusicFadeTime;
+                        pMusHandler->Play(mpCurrentSection->msMusic, mpCurrentSection->mfMusicVolume, fFadeSpeed, true, false);
+                    }
+                }
+            }
+        }
+        mbQuickTransition = false;
+    }
+    break;
+    // ShowPremenuSection state, if no text, check if timer is done or some key was pressed
+    case eLuxPreMenuState_ShowPremenuSection:
+    {
+        if((mpCurrentSection->mbHideGuiSet == true ||
+                (mpCurrentSection->HasTextElements() == false &&
+                 mpCurrentSection->HasGammaSettings() == false))
+                && mfTimer <= 0.0f)
+        {
+            mCurrentState = eLuxPreMenuState_FadeOut;
+        }
+    }
+    break;
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxPreMenu::LoadPreMenuSections()
+{
+    ///////////////////////////////////////////////
+    // First clear any previously loaded stuff
+    cResources* pRes = gpBase->mpEngine->GetResources();
+
+    //////////////////////////////////////////////////////////////////////////////
+    // Check file pointed by config file and retrieve image files from there
+    iXmlDocument* pDoc = pRes->GetLowLevel()->CreateXmlDocument();
+    tWString sConfigPath = gpBase->msPreMenuConfigPath;
+    if(pDoc->CreateFromFile(sConfigPath))
+    {
+        /////////////////////////////////////////////////////
+        // Set up skin
+        tString sSkinFile = pDoc->GetAttributeString("skin", "gui_default.skin");
+        mpGuiSet->SetSkin(mpGui->CreateSkin(sSkinFile));
+
+        // Init new section and text then load it before the ones in cfg file
+        cLuxPreMenuSection* pFreeSection  = hplNew(cLuxPreMenuSection, ());
+        cLuxPreMenuTextElement* pFreeText = hplNew(cLuxPreMenuTextElement, ());
+
+        // Setup new section, disable continue button!
+        pFreeSection->mBackgroundColor = cColor(0, 0, 0, 1);
+        pFreeSection->msBackgroundFile = "";
+
+        pFreeSection->msMusic = "";
+        pFreeSection->mfMusicVolume = 0.0f;
+        pFreeSection->mfMusicFadeTime = 0.0f;
+
+        pFreeSection->mbHideGuiSet = true;
+        pFreeSection->mbHasGammaSettings = false;
+
+        pFreeSection->mbAllowSkipping = true;
+        pFreeSection->mbShowFirstStartOnly = false;
+
+        pFreeSection->mfTime = 2.0f;
+
+        // Setup new text element
+        pFreeText->mvFrameSize = cVector2f(640, 300);
+
+        pFreeText->msText = kTranslate("PreMenu", "FreeWarning");
+        pFreeText->mvFontSize = cVector2f(18, 18);
+        pFreeText->mvPos = cVector3f(80, 280, 0);
+        pFreeText->mColor = cColor(1, 1, 1, 1);
+        pFreeText->mAlign = eFontAlign_Center;
+
+        pFreeText->mfTime = 2.0f;
+
+        // Bind together and make it front!
+        pFreeSection->AddTextElement(pFreeText);
+        mvSections.push_back(pFreeSection);
+
+        // Do everything else as original.
+        cXmlNodeListIterator it = pDoc->GetChildIterator();
+        while(it.HasNext())
+        {
+            cXmlElement* pSectionElement = it.Next()->ToElement();
+
+            cLuxPreMenuSection* pSection = hplNew(cLuxPreMenuSection, ());
+            if(pSection->Load(pSectionElement, mvGuiSetCenterSize))
+            {
+                mvSections.push_back(pSection);
+            }
+            else
+            {
+                hplDelete(pSection);
+            }
+        }
+    }
+
+    pRes->DestroyXmlDocument(pDoc);
+}
+
+//-----------------------------------------------------------------------

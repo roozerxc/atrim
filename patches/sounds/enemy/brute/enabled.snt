@@ -1,0 +1,11 @@
+<SOUNDENTITY>
+  <SOUNDS>
+  	<Main>
+  		<Sound File="brute/enabled01.ogg" />
+		<Sound File="brute/enabled02.ogg" />
+		<Sound File="brute/enabled03.ogg" />
+		<Sound File="brute/enabled04.ogg" />
+  	</Main>
+  </SOUNDS>
+  <PROPERTIES Volume="0.7" MinDistance="10" MaxDistance="60" Random="1" Interval="0" FadeEnd="False" FadeStart="False" Stream="false" Loop="False" Use3D="True" Blockable="False" BlockVolumeMul="0.7" Priority="0" />
+</SOUNDENTITY>

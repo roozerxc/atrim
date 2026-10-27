@@ -1,0 +1,11 @@
+////////////////////////////////////////////////////////
+// Debug Light complext
+//
+// Draw the complexity of the light to the shader using additive blending
+////////////////////////////////////////////////////////
+#version 120
+
+void main()
+{
+	gl_FragColor = vec4(1.0f / 48.0f);
+}
