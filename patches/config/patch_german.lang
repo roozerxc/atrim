@@ -102,12 +102,21 @@
         <Entry Name="FlashIntensityTip">Passen Sie die Intensität der Flashback- und Emotionsstein-Effekte an. Verringern Sie diese, wenn Sie häufig unter Migräne oder Lichtempfindlichkeit leiden.</Entry>
         <Entry Name="FieldOfView">Sichtfeld</Entry>
         <Entry Name="FieldOfViewTip">Vertikales Sichtfeld in Grad. Standard ist 70; höhere Werte zeigen mehr von der Umgebung, niedrigere zoomen heran.</Entry>
+
         <Entry Name="MasterVolume">Gesamtlautstärke</Entry>
         <Entry Name="MasterVolumeTip">Lautstärke von allem: Geräusche und Musik.</Entry>
         <Entry Name="SoundVolume">Geräuschlautstärke</Entry>
         <Entry Name="SoundVolumeTip">Lautstärke von Soundeffekten, Umgebungsgeräuschen, Stimmen und Menügeräuschen.</Entry>
         <Entry Name="MusicVolume">Musiklautstärke</Entry>
         <Entry Name="MusicVolumeTip">Lautstärke der Musik.</Entry>
+
+        <Entry Name="ExtraSoundSettings">Zusätzliche Einstellungen</Entry>
+        <Entry Name="EnemyActivateSound">Gegner-Aktivierungsgeräusche</Entry>
+        <Entry Name="EnemyActivateSoundTip">Der Sound, der abspielt, wenn ein Gegner in der Nähe erscheint und aktiv wird.</Entry>
+        <Entry Name="InsanityRingSound">Ohrensausen bei niedrigem Verstand</Entry>
+        <Entry Name="InsanityRingSoundTip">Das laute Klingeln in den Ohren, wenn dein Verstand niedrig ist.</Entry>
+        <Entry Name="TerrorSound">Terror-Meter-Geräusch</Entry>
+        <Entry Name="TerrorSoundTip">Das anschwellende Geräusch, während ein Gegner dich jagt.</Entry>
 
         <Entry Name="InvertGamepadLook">Blickrichtung des rechten Sticks umkehren.</Entry>
         <Entry Name="InvertGamepadLookTip">Kehrt die Blickrichtung des Gamepad-Analogpads auf der Y-Achse um.</Entry>

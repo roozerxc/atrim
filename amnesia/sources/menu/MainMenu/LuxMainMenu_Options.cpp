@@ -11,6 +11,7 @@
 #include "LuxPlayerHelpers.h"
 #include "LuxPlayer.h"
 #include "LuxHelpFuncs.h"
+#include "LuxGlobalDataHandler.h"
 
 //////////////////////////////////////////////////////////////////////////
 // HELPERS
@@ -1118,6 +1119,25 @@ void cLuxMainMenu_Options::AddSoundOptions(cWidgetTab* apTab)
     SetUpSlider(mpSMusicVolume, mfVolumeMin, mfVolumeMax, mfVolumeStep, kGuiCallback(MusicVolumeSlider_OnMove), &mpLMusicVolume);
     vPos.y += pLabel->GetSize().y + 15;
 
+    /////////////////////////////
+    // Extra settings
+    pLabel = mpGuiSet->CreateWidgetLabel(vPos, -1, kTranslate("OptionsMenu", "ExtraSoundSettings"), apTab);
+    vPos.y += pLabel->GetSize().y + 8;
+
+    vPos.x += 10;
+    mpChBEnemyActivateSound = mpGuiSet->CreateWidgetCheckBox(vPos, 0, kTranslate("OptionsMenu", "EnemyActivateSound"), apTab);
+    SetUpInput(NULL, mpChBEnemyActivateSound, false, kTranslate("OptionsMenu", "EnemyActivateSoundTip"));
+    vPos.y += mpChBEnemyActivateSound->GetSize().y + 10;
+
+    mpChBInsanityRingSound = mpGuiSet->CreateWidgetCheckBox(vPos, 0, kTranslate("OptionsMenu", "InsanityRingSound"), apTab);
+    SetUpInput(NULL, mpChBInsanityRingSound, false, kTranslate("OptionsMenu", "InsanityRingSoundTip"));
+    vPos.y += mpChBInsanityRingSound->GetSize().y + 10;
+
+    mpChBTerrorSound = mpGuiSet->CreateWidgetCheckBox(vPos, 0, kTranslate("OptionsMenu", "TerrorSound"), apTab);
+    SetUpInput(NULL, mpChBTerrorSound, false, kTranslate("OptionsMenu", "TerrorSoundTip"));
+    vPos.y += mpChBTerrorSound->GetSize().y + 10;
+    vPos.x -= 10;
+
     mpCBSndDevice->SetFocusNavigation(eUIArrow_Down, mpSVolume);
 
     mpSVolume->SetFocusNavigation(eUIArrow_Up, mpCBSndDevice);
@@ -1125,9 +1145,15 @@ void cLuxMainMenu_Options::AddSoundOptions(cWidgetTab* apTab)
     mpSSoundVolume->SetFocusNavigation(eUIArrow_Up, mpSVolume);
     mpSSoundVolume->SetFocusNavigation(eUIArrow_Down, mpSMusicVolume);
     mpSMusicVolume->SetFocusNavigation(eUIArrow_Up, mpSSoundVolume);
-    mpSMusicVolume->SetFocusNavigation(eUIArrow_Down, mpBOK);
+    mpSMusicVolume->SetFocusNavigation(eUIArrow_Down, mpChBEnemyActivateSound);
+    mpChBEnemyActivateSound->SetFocusNavigation(eUIArrow_Up, mpSMusicVolume);
+    mpChBEnemyActivateSound->SetFocusNavigation(eUIArrow_Down, mpChBInsanityRingSound);
+    mpChBInsanityRingSound->SetFocusNavigation(eUIArrow_Up, mpChBEnemyActivateSound);
+    mpChBInsanityRingSound->SetFocusNavigation(eUIArrow_Down, mpChBTerrorSound);
+    mpChBTerrorSound->SetFocusNavigation(eUIArrow_Up, mpChBInsanityRingSound);
+    mpChBTerrorSound->SetFocusNavigation(eUIArrow_Down, mpBOK);
 
-    apTab->SetUserData(mpSMusicVolume);
+    apTab->SetUserData(mpChBTerrorSound);
     apTab->GetTabLabel()->SetUserData(mpCBSndDevice);
 
     PopulateSoundDevices();
@@ -1431,6 +1457,10 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
     SetSliderValue(mpSMusicVolume, fMusicVolume, false, mfVolumeMin, mfVolumeMax);
     SetVolumeLabelString(mpLMusicVolume, fMusicVolume);
 
+    mpChBEnemyActivateSound->SetChecked(aObj.GetVarBool("EnemyActivateSound", true), false);
+    mpChBInsanityRingSound->SetChecked(aObj.GetVarBool("InsanityRingSound", true), false);
+    mpChBTerrorSound->SetChecked(aObj.GetVarBool("TerrorSound", true), false);
+
     int lSndDev = aObj.GetVarInt("SoundDeviceID");
     int lSndDevIdx = -1;
     for(size_t i = 0; i < mvSoundDevices.size(); ++i)
@@ -1623,24 +1653,11 @@ void cLuxMainMenu_Options::ApplyChanges()
     gpBase->mpInputHandler->SetInvertGamepadLook(mpChBGamepadInvertLook->IsChecked());
 #endif
 
-    /*
-    /////////////////////////////
-    // Sound
-    gpBase->mpEngine->GetSound()->GetLowLevel()->SetVolume(GetVolume());
-    gpBase->mpEngine->GetSound()->GetSoundHandler()->SetUserVolume(GetSoundVolume());
-    gpBase->mpEngine->GetSound()->GetMusicHandler()->SetUserVolume(GetMusicVolume());
-    cWidgetItem* pItem = mpCBSndDevice->GetItem(mpCBSndDevice->GetSelectedItem());
-    if(pItem)
-    {
-        iSoundDeviceIdentifier* pSndDev = (iSoundDeviceIdentifier*)pItem->GetUserData();
-        gpBase->mpConfigHandler->mlSoundDevID = pSndDev->GetID();
-    }
-    */
-
-    //////////////////////////////////////////////////////////////
-    //--- REMOVED - Language is now loaded only at startup
-    //if(gpBase->LoadLanguage(cString::To8Char(mvLangFiles[mpCBLanguage->GetSelectedItem()])))
-    //    gpBase->mpMainMenu->RecreateGui();
+    //////////////////////////////
+    // Extra sound settings
+    gpBase->mpGlobalDataHandler->SetEnemyActivateSoundEnabled(mpChBEnemyActivateSound->IsChecked());
+    gpBase->mpGlobalDataHandler->SetInsanityRingSoundEnabled(mpChBInsanityRingSound->IsChecked());
+    gpBase->mpGlobalDataHandler->SetTerrorSoundEnabled(mpChBTerrorSound->IsChecked());
 }
 
 //-----------------------------------------------------------------------
@@ -1950,6 +1967,9 @@ void cLuxMainMenu_Options::DumpInitialValues(cResourceVarsObject &aObj)
     aObj.AddVarFloat("EffectsVolume", gpBase->mpEngine->GetSound()->GetSoundHandler()->GetUserVolume());
     aObj.AddVarFloat("MusicVolume", gpBase->mpEngine->GetSound()->GetMusicHandler()->GetUserVolume());
     aObj.AddVarInt("SoundDeviceID", gpBase->mpConfigHandler->mlSoundDevID);
+    aObj.AddVarBool("EnemyActivateSound", gpBase->mpGlobalDataHandler->GetEnemyActivateSoundEnabled());
+    aObj.AddVarBool("InsanityRingSound", gpBase->mpGlobalDataHandler->GetInsanityRingSoundEnabled());
+    aObj.AddVarBool("TerrorSound", gpBase->mpGlobalDataHandler->GetTerrorSoundEnabled());
 }
 
 //-----------------------------------------------------------------------
@@ -2052,6 +2072,10 @@ void cLuxMainMenu_Options::DumpCurrentValues(cResourceVarsObject &aObj)
     }
 
     aObj.AddVarInt("SoundDeviceID", lDevID);
+
+    aObj.AddVarBool("EnemyActivateSound", mpChBEnemyActivateSound->IsChecked());
+    aObj.AddVarBool("InsanityRingSound", mpChBInsanityRingSound->IsChecked());
+    aObj.AddVarBool("TerrorSound", mpChBTerrorSound->IsChecked());
 }
 
 

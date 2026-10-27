@@ -5,6 +5,7 @@
 #include "LuxMessageHandler.h"
 #include "LuxMapHandler.h"
 #include "LuxHelpFuncs.h"
+#include "LuxGlobalDataHandler.h"
 
 #include "LuxPlayerState_Normal.h"
 #include "LuxPlayerState_HandObject.h"
@@ -1603,6 +1604,17 @@ void cLuxPlayer::UpdateTerror(double adFixedDelta)
 
 
     cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
+
+    if(gpBase->mpGlobalDataHandler->GetTerrorSoundEnabled() == false)
+    {
+        if(mpTerrorSound && pSoundHandler->IsValid(mpTerrorSound, mlTerrorSoundID))
+        {
+            mpTerrorSound->GetChannel()->Stop();
+        }
+        mpTerrorSound = NULL;
+        mlTerrorSoundID = -1;
+        return;
+    }
 
     if(mfTerror > 0)
     {

@@ -16,6 +16,10 @@ cLuxGlobalDataHandler::cLuxGlobalDataHandler() : iLuxUpdateable("LuxGlobalDataHa
 {
     mpScript = NULL;
 
+    mbEnemyActivateSoundEnabled = true;
+    mbInsanityRingSoundEnabled = true;
+    mbTerrorSoundEnabled = true;
+
     mfLightLampMinSanityIncrease = gpBase->mpGameCfg->GetFloat("Player_Sanity", "LightLampMinSanityIncrease", 0);
     mfLightLampMaxSanityIncrease = gpBase->mpGameCfg->GetFloat("Player_Sanity", "LightLampMaxSanityIncrease", 0);
 }
@@ -163,7 +167,46 @@ cLuxScriptVar *cLuxGlobalDataHandler::GetVar(const tString &asName)
 
 bool cLuxGlobalDataHandler::GetEnemyActivateSoundAllowed()
 {
-    return mfEnemyActivateSoundCount <= 0;
+    return mbEnemyActivateSoundEnabled && mfEnemyActivateSoundCount <= 0;
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxGlobalDataHandler::SetInsanityRingSoundEnabled(bool abX)
+{
+    mbInsanityRingSoundEnabled = abX;
+
+    tString sSound = gpBase->mpGameCfg->GetString("Player_General", "InsanityCollapse_SleepLoopSound", "");
+    sSound = cString::SetFileExt(cString::GetFileName(sSound), "");
+    if(sSound == "")
+    {
+        return;
+    }
+
+    cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
+    if(msInsanityRingSound != "" && msInsanityRingSound != sSound)
+    {
+        pSoundHandler->SetSoundBlocked(msInsanityRingSound, false);
+    }
+    pSoundHandler->SetSoundBlocked(sSound, abX == false);
+
+    msInsanityRingSound = abX ? tString("") : sSound;
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxGlobalDataHandler::LoadUserConfig()
+{
+    mbEnemyActivateSoundEnabled = gpBase->mpUserConfig->GetBool("Sound", "EnemyActivateSound", true);
+    SetInsanityRingSoundEnabled(gpBase->mpUserConfig->GetBool("Sound", "InsanityRingSound", true));
+    mbTerrorSoundEnabled = gpBase->mpUserConfig->GetBool("Sound", "TerrorSound", true);
+}
+
+void cLuxGlobalDataHandler::SaveUserConfig()
+{
+    gpBase->mpUserConfig->SetBool("Sound", "EnemyActivateSound", mbEnemyActivateSoundEnabled);
+    gpBase->mpUserConfig->SetBool("Sound", "InsanityRingSound", mbInsanityRingSoundEnabled);
+    gpBase->mpUserConfig->SetBool("Sound", "TerrorSound", mbTerrorSoundEnabled);
 }
 
 void cLuxGlobalDataHandler::SetEnemyActivateSoundMade()

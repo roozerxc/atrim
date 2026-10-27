@@ -28,12 +28,39 @@ public:
 
     void RunScript(const tString& asCommand);
 
+    void LoadUserConfig();
+    void SaveUserConfig();
+
     cLuxScriptVar *GetVar(const tString &asName);
 
     /////////////////////////////
     // AI
     bool GetEnemyActivateSoundAllowed();
     void SetEnemyActivateSoundMade();
+
+    /////////////////////////////
+    // Extra sound settings
+    void SetEnemyActivateSoundEnabled(bool abX)
+    {
+        mbEnemyActivateSoundEnabled = abX;
+    }
+    bool GetEnemyActivateSoundEnabled()
+    {
+        return mbEnemyActivateSoundEnabled;
+    }
+    void SetInsanityRingSoundEnabled(bool abX);
+    bool GetInsanityRingSoundEnabled()
+    {
+        return mbInsanityRingSoundEnabled;
+    }
+    void SetTerrorSoundEnabled(bool abX)
+    {
+        mbTerrorSoundEnabled = abX;
+    }
+    bool GetTerrorSoundEnabled()
+    {
+        return mbTerrorSoundEnabled;
+    }
 
 
     /////////////////////////////
@@ -52,6 +79,12 @@ private:
     iScript *mpScript;
 
     float mfEnemyActivateSoundCount;
+
+    bool mbEnemyActivateSoundEnabled;
+    bool mbInsanityRingSoundEnabled;
+    bool mbTerrorSoundEnabled;
+
+    tString msInsanityRingSound;
 
     float mfLightLampMinSanityIncrease;
     float mfLightLampMaxSanityIncrease;

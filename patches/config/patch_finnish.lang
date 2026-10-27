@@ -102,12 +102,21 @@
         <Entry Name="FlashIntensityTip">Säädä flashback- ja emotion stone -efektien voimakkuutta. Laske tätä, jos sinulla on usein migreeniä tai valoherkkyyttä.</Entry>
         <Entry Name="FieldOfView">Näkökenttä</Entry>
         <Entry Name="FieldOfViewTip">Pystysuuntainen näkökenttä asteina. Oletus on 70; suurempi arvo näyttää enemmän ympäristöä, pienempi zoomaa lähemmäs.</Entry>
+
         <Entry Name="MasterVolume">Pääänenvoimakkuus</Entry>
         <Entry Name="MasterVolumeTip">Kaiken äänenvoimakkuus: äänet ja musiikki.</Entry>
         <Entry Name="SoundVolume">Äänitehosteet</Entry>
         <Entry Name="SoundVolumeTip">Äänitehosteiden, taustaäänien, puheen ja valikkoäänien voimakkuus.</Entry>
         <Entry Name="MusicVolume">Musiikki</Entry>
         <Entry Name="MusicVolumeTip">Musiikin äänenvoimakkuus.</Entry>
+
+        <Entry Name="ExtraSoundSettings">Lisäasetukset</Entry>
+        <Entry Name="EnemyActivateSound">Vihollisen aktivoitumisäänet</Entry>
+        <Entry Name="EnemyActivateSoundTip">Ääni, joka soi, kun vihollinen ilmestyy ja aktivoituu lähellä.</Entry>
+        <Entry Name="InsanityRingSound">Matalan mielenterveyden korvien soiminen</Entry>
+        <Entry Name="InsanityRingSoundTip">Kova korvien soiminen, kun mielenterveytesi on matala.</Entry>
+        <Entry Name="TerrorSound">Kauhumittarin ääni</Entry>
+        <Entry Name="TerrorSoundTip">Nouseva ääni, kun vihollinen metsästää sinua.</Entry>
 
         <Entry Name="InvertGamepadLook">Käännä oikean sauvan katselua</Entry>
         <Entry Name="InvertGamepadLookTip">Kääntää peliohjaimen analogisen sauvan Y-akselia.</Entry>
