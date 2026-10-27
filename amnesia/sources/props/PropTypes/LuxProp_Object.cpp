@@ -488,6 +488,17 @@ void cLuxProp_Object::UpdatePropSpecific(double adFixedDelta)
 void cLuxProp_Object::BeforePropDestruction()
 {
     //////////////////////////////
+    // Check if the object was actually broken
+    if(mbBroken == false || mBreakData.mbActive == false || mvBodies.empty())
+    {
+        if(mbBroken && mvBodies.empty())
+        {
+            Warning("Object '%s' broke but has no bodies, no broken version created\n", msName.c_str());
+        }
+        return;
+    }
+
+    //////////////////////////////
     // Init stuff
     cWorld *pWorld = mpMap->GetWorld();
     cMatrixf mtxCenterTransform = cMatrixf::Identity;
@@ -561,6 +572,25 @@ void cLuxProp_Object::BeforePropDestruction()
             ////////////////////////
             //Add impulse and velocity
             iLuxEntity *pEntity = mpMap->GetLatestEntity();
+
+            //For debugging
+            if(gpBase->mpConfigHandler->mbLoadDebugMenu)
+            {
+                //Object suddenly vanished, notify in log immediately!
+                if(pEntity == NULL || mpMap->EntityExists(pEntity) == false)
+                {
+                    Error("Object '%s' broke but its broken version '%s' could not be created, the object is gone\n",
+                          msName.c_str(), mBreakData.msEntity.c_str());
+                }
+                //Object was successfully broken, share object coordinates.
+                else
+                {
+                    cVector3f vPos = mtxEntity.GetTranslation();
+                    Log("Object '%s' broke, created '%s' from '%s' at (%.2f, %.2f, %.2f)\n", msName.c_str(),
+                        pEntity->GetName().c_str(), mBreakData.msEntity.c_str(), vPos.x, vPos.y, vPos.z);
+                }
+            }
+
             if(pEntity && mpMap->EntityExists(pEntity) && pEntity->GetEntityType() == eLuxEntityType_Prop)
             {
                 //If the parent has full game save, so must the broken version!
