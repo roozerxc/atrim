@@ -492,9 +492,12 @@ void cLuxProp_Object::BeforePropDestruction()
     // Check if the object was actually broken
     if(mbBroken == false || mBreakData.mbActive == false || mvBodies.empty())
     {
-        if(mbBroken && mvBodies.empty())
+        if(gpBase->mpConfigHandler->mbLoadDebugMenu)
         {
-            Warning("Object '%s' broke but has no bodies, no broken version created\n", msName.c_str());
+            if(mbBroken && mvBodies.empty())
+            {
+                Warning("Object '%s' broke but has no bodies, no broken version created\n", msName.c_str());
+            }
         }
         return;
     }
