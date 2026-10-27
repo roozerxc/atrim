@@ -29,7 +29,7 @@
 - Added modulated illumination rendering type for surface materials
 - Added occluder and pathfinding block checks
 - Added `OnUpdate(float afStep)` for version 1.5 mod support
-- Added Pirate Speak language. Arrr, Matey! Shiver me timbers!
+- Added Pirate Speak language. Arrr, matey! Shiver me timbers!
 - Added player body and camera script functions
 - Added post-version 1.3 strings for playing the client with older game versions
 - Added sanity drain control script functions
