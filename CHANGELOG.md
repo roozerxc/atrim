@@ -2,129 +2,129 @@
 ### v1.4.6
 - Added 64-bit support
 - Added application thread locking for multi-processor systems
-- Added bitmap to texture and index null checks and protections
 - Added borderless window functionality on Windows Vista and 7+
+- Added checkbox in Sound settings to enable or disable enemy activation sounds
+- Added checkbox in Sound settings to enable or disable insanity ear-ringing noise
+- Added checkbox in Sound settings to enable or disable terror meter noise
+- Added checkbox to play Custom Stories and Full Conversion mods in Hard Mode
+- Added customizable loading bar inspired by the Amnesia: Collection ports
 - Added customizable loading text colors
-- Added customizable top menu font color settings from version 1.5
+- Added customizable top menu font colors
+- Added dark mode GUI theme based on the HPL2 Community Editors
+- Added drop-down menu for selecting parallax rendering type (Simple/Relief)
+- Added engine build ID from older Amnesia versions (`YYYYMMDDhhmmss`)
+- Added engine performance statistics (saved to `hpl.log` after exit)
 - Added extra checks to ensure the parallax quality setting is applied correctly
+- Added extra properties for lights and particles
+- Added field of view (FOV) slider
+- Added flashback intensity slider
+- Added "Flattened 3D" texture type
+- Added frame limiter setting (`FrameRateLimit`) in `main_settings.cfg`
 - Added `#include` directive for version 1.5 mod support
+- Added Infinity Ward-style version watermark for debugging
+- Added left- and right-handedness options
 - Added line break and word wrapping for GUI message boxes
-- Added new checkbox to play Custom Stories and Full Conversion mods in Hard Mode
-- Added new customizable loading bar, inspired by the *Amnesia: Collection* ports
-- Added new dark mode GUI theme based on the HPL2 Community Editors
-- Added new drop-down menu for selecting the type of parallax rendering effect (Simple, Relief)
-- Added new engine build ID (`YYYYMMDDhhmmss`)
-- Added new engine performance metrics (saved to `hpl.log`)
-- Added new field of view (FOV) slider setting
-- Added new flashback intensity slider
-- Added new "Flattened 3D" texture type
-- Added new frame limiter setting (`FrameRateLimit`) in `main_settings.cfg`
-- Added new Infinity Ward-style version watermark for debugging
-- Added new left- and right-handedness options
-- Added new "lite" version of the deferred light shader for ATi Radeon 9xxx video cards
-- Added new master, sound, and music volume sliders
-- Added new modulated illumination rendering type for surface materials
-- Added new occluder and pathfinding block checks
-- Added new Pirate Speak language. Arr Matey!
-- Added new player body and camera script funcs
-- Added new properties for lights and particles
-- Added new sanity drain control script functions
-- Added new setting for changing the player's hand orientation
-- Added new string localization for hardcoded texts (Finnish and German translations by [@phnxs](https://github.com/phnxs) and Arkhany)
-- Added new "Ultra Low" texture setting for significantly weaker hardware
-- Added new "Ultra" setting for shadow quality and resolution
-- Added new warning on every bootup advising the player to get their money back if they purchased the client
+- Added "lite" version of deferred light fragment shader for older ATi Radeon 9xxx cards
+- Added master, sound, and music volume sliders
+- Added modulated illumination rendering type for surface materials
+- Added occluder and pathfinding block checks
 - Added `OnUpdate(float afStep)` for version 1.5 mod support
-- Added post-version 1.3 strings for playing the client with older game versions
-- Added ScreenImage effect and script functions from A Machine For Pigs
-- Added SDL 1.2.15 as a static library in the executable
-- Added two-sided stencil safety check for nVidia + ATi
-- Added version 1.5 full conversion mod support
-- Allowed debug menu to be used and individual maps to be loaded in Justine (ptest)
-- Allowed loading of outlines for bitmap fonts
-- Changed `F8` screenshot key to `F12`, so screenshots can be taken normally
-- Custom Stories can now be loaded from floppy disk
-- Decoupled engine renderer and game logic from each other, allowing for truly uncapped framerates
-- Decoupled timers and scripts to use their own functions instead of using the same "Run" function
-- Disabled SSAO and relief parallax for older video cards that don't support Shader Models 3 & 4
+- Added Pirate Speak language. Arrr, Matey! Shiver me timbers!
+- Added player body and camera script functions
+- Added sanity drain control script functions
+- Added ScreenImage effect and related script functions from A Machine for Pigs
+- Added SDL 1.2.15 as a static library
+- Added setting to change player hand orientation
+- Added string localization for hardcoded texts (Finnish and German translations included)
+- Added support for loading Custom Stories from floppy disk
+- Added two-sided stencil safety check for NVIDIA and ATi hardware
+- Added "Ultra" setting for shadow quality and resolution
+- Added "Ultra Low" texture setting for significantly weaker hardware
+- Added version 1.5 Full Conversion mod support
+- Added warning on every boot advising players who purchased the client to seek a refund
+- Changed in-game screenshot key from `F8` to `F12`
+- Decoupled engine renderer and game logic, allowing for truly uncapped framerates
+- Decoupled timers and scripts to use their own functions instead of sharing the same "Run" function
 - Fixed aspect ratio calculation for custom `menu_loading_screen.jpg` images
 - Fixed billboard alphas dividing by zero
-- Fixed broken byte order/endianness check so fast little-endian paths are now used
+- Fixed broken byte order/endianness check (fast little-endian paths are now used)
 - Fixed broken enemy "standing still" checks
-- Fixed broken node and bone index resolve for mesh entities
+- Fixed broken node and bone index resolution for mesh entities
 - Fixed buggy enemy collision behavior
-- Fixed character collision flag bits being fed with garbage data
-- Fixed crosshair focus for static, non-interactable entities and objects
-- Fixed Custom Stories borrowing image files (`ImgFile`) from another Custom Story
-- Fixed Custom Story images not being cleared out when another Custom Story was selected
-- Fixed Custom Story Resources not being unloaded from memory when another mod was selected
+- Fixed character collision flag bits receiving garbage data
+- Fixed crosshair focus on static, non-interactable entities
+- Fixed Custom Stories borrowing image files from other Custom Stories
+- Fixed Custom Story images not being cleared when another story is selected
+- Fixed Custom Story resources not being unloaded when another mod is selected
 - Fixed destructive recursive reparse point deletion when a profile is deleted
 - Fixed enemy breakable/stuck door check malfunctions
 - Fixed enemy proximity and player distancing issues
 - Fixed excess screen aspect ratio calculation
-- Fixed Fast Forward (`F3`) speed sound and music multiplier
-- Fixed fatal crash after loading invalid or null animation data
+- Fixed Fast Forward (`F3`) sound and music multipliers
 - Fixed fatal crash caused by decoding faulty Ogg Vorbis files
+- Fixed fatal crash caused by pressing Escape rapidly to skip pre-menu logos
 - Fixed fatal crash caused by the libvorbis library being too old
-- Fixed fatal crash due to missing null checks for skeleton bounds
-- Fixed fatal crash due to missing shaders for effect renderer
-- Fixed fatal crash from addressing 32-bit memory over 2 GB
-- Fixed fatal crash from downscaling non-pow2 textures on "Ultra Low"
-- Fixed fatal crash when meshes and mesh caches had invalid or null data
-- Fixed fatal crash when pressing Esc quickly to skip through bootup logos
+- Fixed fatal crash due to missing shaders for the effect renderer
+- Fixed fatal crash due to missing validation checks for animation data
+- Fixed fatal crash due to missing validation checks and protections for bitmaps and indices
+- Fixed fatal crash due to missing validation checks for invalid mesh and mesh cache data
+- Fixed fatal crash due to missing validation checks for skeleton bounds
+- Fixed fatal crash from addressing 32-bit memory above 2 GB
+- Fixed fatal crash from downscaling non-power-of-two textures on Ultra Low
 - Fixed faulty texture filter selection
 - Fixed frame pacing issues when frames per second were slightly low
 - Fixed hand and hand object models clipping through map geometry
 - Fixed hand animations jerking violently when drawing a hand object
-- Fixed Hard Mode retention after exiting a Hard Mode game session
-- Fixed Hard Mode retention when the Start Game dialog box was closed
+- Fixed Hard Mode retention after exiting a session
+- Fixed Hard Mode retention when the Start Game dialog was closed
 - Fixed inactive character bodies being simulated
-- Fixed invalid serialization of coins needed to unlock chests
+- Fixed invalid serialization of coins required to unlock chests
 - Fixed limit for Tinderboxes not being properly enforced
-- Fixed max amount of game logic updates not scaling properly with Fast Forward (`F3`)
+- Fixed maximum game logic updates not scaling correctly with Fast Forward
 - Fixed mipmap level detection and image loading
 - Fixed missing material check for player step sounds
-- Fixed missing, null or invalid data check for sound entities
-- Fixed patch language fallback loading for unsupported languages
-- Fixed post effects breaking at >60 FPS
-- Fixed SDL backquote/grave (`` ` ``) key which incorrectly returned as a backslash (`\`)
-- Fixed SSAO rendering lag from depth fetch expenses
-- Fixed SSAO shader occlusion depth problems (additional patches by Florian)
+- Fixed missing, null, or invalid data checks for sound entities
+- Fixed post-effects breaking at frame rates above 60 FPS
+- Fixed props disappearing after breaking
+- Fixed SDL backquote/grave key incorrectly returning as a backslash
 - Fixed Shader Model 3 parallax mapping fallback
-- Fixed user settings not refreshing visually after switching between profiles
-- Fixed visual bug caused by mesh coverage overshoot when an entity was being faded in
-- Fixed visual bug with ropes disappearing when they were stretched to a significant degree
+- Fixed SSAO occlusion depth problems (additional patches by Florian)
+- Fixed SSAO rendering lag caused by expensive depth fetches
+- Fixed user settings not refreshing visually after switching profiles
+- Fixed visual bug caused by mesh coverage overshoot when an entity is faded in
+- Fixed visual bug with ropes disappearing when stretched to a significant degree
 - Fixed Z-fighting caused by decal depth mismatches with surfaces
-- Game now forces the high performance GPU on hybrid laptops (NVIDIA Optimus, AMD PowerXpress/Enduro)
-- Game now looks for `hand_object` and `hand_objects` folders for custom hand object models
+- Forced high-performance GPU selection on hybrid laptops (NVIDIA Optimus, AMD PowerXpress/Enduro)
+- Game now allows loading and switching to different maps via the Debug toolbar in Amnesia: Justine
+- Game now returns the player to the main menu if a save file is missing or corrupt
+- Game now searches `hand_object` and `hand_objects` folders for custom hand models
 - Improved AI node iterator with changes from Amnesia: A Machine for Pigs
-- Improved Father Hector David's idle reciting of biblical verses (specifically the Lord's Prayer (Matthew 6:9–10) and Revelation 11:15)
-- Improved text quality for notes, diaries and mementos in the Journal
+- Improved Father Hector David’s idle recitation of biblical verses in Amnesia: Justine
+- Improved text quality for notes, diaries, and mementos in the Journal
 - Improved text quality for on-screen debug overlay and game subtitles
-- Improved volume slider in the main menu for more precise control
-- Major optimizations to OpenGL graphics code, greatly improving performance
-- Prevent game crash by kicking the player back into main menu if a save file was missing or corrupt
-- Removed achievement code from the Steam and console versions of Amnesia: The Dark Descent
-- Removed annoying crosshair toggle key (`X`)
-- Removed code and references to the demo version of Amnesia: The Dark Descent
+- Improved volume slider precision in the main menu
+- Major optimizations to OpenGL graphics code
+- Removed achievement code from the Steam and console versions
+- Removed crosshair toggle key (`X`)
 - Removed dangerous system command functions
+- Removed demo version code and references
 - Removed fake anti-aliasing shader (Edge Smoothing)
-- Removed "Lean" (`Alt`) key
-- Removed logic timer in place of the new fixed delta (`1 % 60 = 16.67ms`)
-- Removed `P` key, which activated logging and lagged the game severely
-- Removed performance bottleneck caused by constantly locking and unlocking mutexes
+- Removed Lean (`Alt`) key
+- Removed logic timer in favor of fixed 60 Hz delta timing
+- Removed `P` key, which activated heavy logging and caused severe performance issues
+- Removed performance bottleneck caused by constant mutex locking and unlocking
 - Removed proprietary Kaydara/Autodesk FBX loader
-- Removed "wait and finish rendering" bottleneck in MainMenu, Inventory and Journal
-- Replaced loading icons from loose bitmaps with header-based RWops in the executable
-- Replaced `SDL_SetGamma` with a dedicated GLSL shader that controls the in-game gamma
-- Replaced tinyxml with pugixml, decreasing loading times and memory consumption
+- Removed "Wait and finish rendering" bottleneck in Main Menu, Inventory, and Journal
+- Replaced loading icons from loose bitmaps with header-based RWops
+- Replaced `SDL_SetGamma` with a dedicated GLSL shader for in-game gamma control
+- Replaced tinyxml with pugixml, reducing loading times and memory consumption
 - Restored unused Brute enemy enabled sound
 - Restored unused Penumbra-style head leaning behavior
-- Softened ear ringing sound (`insanity_ear_ring` audio by entropy_maker91)
+- Softened insanity ear-ringing sound (audio by entropy_maker91)
 - Unified loading resource directories
-- Upgraded application timing to use platform high resolution timers
-- Upgraded engine and game code with changes from Amnesia: A Machine For Pigs
-- Upgraded game physics to use double precision
+- Upgraded application timing to use platform high-resolution timers
+- Upgraded engine and game code with changes from Amnesia: A Machine for Pigs
+- Upgraded game physics and time to use double precision, fixing time drifting issues
 
 ### v1.4.5
 - Disabled `UpdateLogActive` by default to fix severe performance degradation on first launch
