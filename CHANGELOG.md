@@ -31,6 +31,7 @@
 - Added `OnUpdate(float afStep)` for version 1.5 mod support
 - Added Pirate Speak language. Arrr, Matey! Shiver me timbers!
 - Added player body and camera script functions
+- Added post-version 1.3 strings for playing the client with older game versions
 - Added sanity drain control script functions
 - Added ScreenImage effect and related script functions from A Machine for Pigs
 - Added SDL 1.2.15 as a static library
@@ -42,9 +43,12 @@
 - Added "Ultra Low" texture setting for significantly weaker hardware
 - Added version 1.5 Full Conversion mod support
 - Added warning on every boot advising players who purchased the client to seek a refund
+- Allowed loading and switching to different maps via the Debug menu in Amnesia: Justine
+- Allowed loading of glyph outlines for custom bitmap fonts and typefaces
 - Changed in-game screenshot key from `F8` to `F12`
 - Decoupled engine renderer and game logic, allowing for truly uncapped framerates
 - Decoupled timers and scripts to use their own functions instead of sharing the same "Run" function
+- Disabled SSAO and relief parallax for older video cards that don't support Shader Models 3 and 4
 - Fixed aspect ratio calculation for custom `menu_loading_screen.jpg` images
 - Fixed billboard alphas dividing by zero
 - Fixed broken byte order/endianness check (fast little-endian paths are now used)
@@ -65,12 +69,13 @@
 - Fixed fatal crash caused by pressing Escape rapidly to skip pre-menu logos
 - Fixed fatal crash caused by the libvorbis library being too old
 - Fixed fatal crash due to missing shaders for the effect renderer
-- Fixed fatal crash due to missing validation checks for animation data
 - Fixed fatal crash due to missing validation checks and protections for bitmaps and indices
+- Fixed fatal crash due to missing validation checks for animation data
 - Fixed fatal crash due to missing validation checks for invalid mesh and mesh cache data
 - Fixed fatal crash due to missing validation checks for skeleton bounds
 - Fixed fatal crash from addressing 32-bit memory above 2 GB
 - Fixed fatal crash from downscaling non-power-of-two textures on Ultra Low
+- Fixed fatal crash from loading a save file that was missing or corrupted
 - Fixed faulty texture filter selection
 - Fixed frame pacing issues when frames per second were slightly low
 - Fixed hand and hand object models clipping through map geometry
@@ -79,27 +84,26 @@
 - Fixed Hard Mode retention when the Start Game dialog was closed
 - Fixed inactive character bodies being simulated
 - Fixed invalid serialization of coins required to unlock chests
+- Fixed language fallbacks for loading with unsupported languages
 - Fixed limit for Tinderboxes not being properly enforced
 - Fixed maximum game logic updates not scaling correctly with Fast Forward
 - Fixed mipmap level detection and image loading
 - Fixed missing material check for player step sounds
 - Fixed missing, null, or invalid data checks for sound entities
 - Fixed post-effects breaking at frame rates above 60 FPS
+- Fixed profile settings not being refreshed properly after switching profiles
 - Fixed props disappearing after breaking
 - Fixed SDL backquote/grave key incorrectly returning as a backslash
+- Fixed searching `hand_object` and `hand_objects` folders for custom hand models
 - Fixed Shader Model 3 parallax mapping fallback
 - Fixed SSAO occlusion depth problems (additional patches by Florian)
 - Fixed SSAO rendering lag caused by expensive depth fetches
-- Fixed user settings not refreshing visually after switching profiles
 - Fixed visual bug caused by mesh coverage overshoot when an entity is faded in
 - Fixed visual bug with ropes disappearing when stretched to a significant degree
 - Fixed Z-fighting caused by decal depth mismatches with surfaces
 - Forced high-performance GPU selection on hybrid laptops (NVIDIA Optimus, AMD PowerXpress/Enduro)
-- Game now allows loading and switching to different maps via the Debug toolbar in Amnesia: Justine
-- Game now returns the player to the main menu if a save file is missing or corrupt
-- Game now searches `hand_object` and `hand_objects` folders for custom hand models
 - Improved AI node iterator with changes from Amnesia: A Machine for Pigs
-- Improved Father Hector David’s idle recitation of biblical verses in Amnesia: Justine
+- Improved Father Hector David’s idle recitation of biblical verses (Matthew 6:9–10 and Revelation 11:15) in Amnesia: Justine
 - Improved text quality for notes, diaries, and mementos in the Journal
 - Improved text quality for on-screen debug overlay and game subtitles
 - Improved volume slider precision in the main menu
@@ -110,7 +114,7 @@
 - Removed demo version code and references
 - Removed fake anti-aliasing shader (Edge Smoothing)
 - Removed Lean (`Alt`) key
-- Removed logic timer in favor of fixed 60 Hz delta timing
+- Removed logic timer in favor of fixed 60 Hz delta timing (`1 % 60 = 16.67ms`)
 - Removed `P` key, which activated heavy logging and caused severe performance issues
 - Removed performance bottleneck caused by constant mutex locking and unlocking
 - Removed proprietary Kaydara/Autodesk FBX loader
@@ -120,11 +124,11 @@
 - Replaced tinyxml with pugixml, reducing loading times and memory consumption
 - Restored unused Brute enemy enabled sound
 - Restored unused Penumbra-style head leaning behavior
-- Softened insanity ear-ringing sound (audio by entropy_maker91)
+- Softened insanity ear-ringing sound (`insanity_ear_ring` audio by entropy_maker91)
 - Unified loading resource directories
 - Upgraded application timing to use platform high-resolution timers
 - Upgraded engine and game code with changes from Amnesia: A Machine for Pigs
-- Upgraded game physics and time to use double precision, fixing time drifting issues
+- Upgraded game physics and time to use double precision, fixing severe time drifting issues
 
 ### v1.4.5
 - Disabled `UpdateLogActive` by default to fix severe performance degradation on first launch
