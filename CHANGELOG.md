@@ -36,7 +36,7 @@
 - Added ScreenImage effect and related script functions from A Machine for Pigs
 - Added SDL 1.2.15 as a static library
 - Added setting to change player hand orientation
-- Added string localization for hardcoded texts (Finnish and German translations included)
+- Added string localization for hardcoded texts (Finnish and German translations by @phnxs and Arkhany)
 - Added support for loading Custom Stories from floppy disk
 - Added two-sided stencil safety check for NVIDIA and ATi hardware
 - Added "Ultra" setting for shadow quality and resolution
