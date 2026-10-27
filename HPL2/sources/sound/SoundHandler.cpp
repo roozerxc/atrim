@@ -565,6 +565,10 @@ cSoundEntry *cSoundHandler::Play(    const tString& asName, bool abLoop, float a
     {
         return NULL;
     }
+    if(mvBlockedSoundName.empty() == false && IsSoundBlocked(asName))
+    {
+        return NULL;
+    }
 
     /////////////////////////////////
     //Calculate priority
@@ -747,6 +751,45 @@ cSoundEntry *cSoundHandler::PlaySoundEntityGui(    const tString& asName, bool a
     {
         return PlayGui(sSoundName, abLoop, pData->GetVolume() * pData->GetVolume(), avPos, aEntryType, apNotEnoughChannels);
     }
+}
+
+//-----------------------------------------------------------------------
+
+void cSoundHandler::SetSoundBlocked(const tString& asName, bool abBlocked)
+{
+    tString sPart = cString::ToLowerCase(asName);
+    for(size_t i = 0; i < mvBlockedSoundName.size(); ++i)
+    {
+        if(mvBlockedSoundName[i] == sPart)
+        {
+            if(abBlocked == false)
+            {
+                mvBlockedSoundName.erase(mvBlockedSoundName.begin() + i);
+            }
+            return;
+        }
+    }
+    if(abBlocked && sPart != "")
+    {
+        mvBlockedSoundName.push_back(sPart);
+    }
+}
+
+bool cSoundHandler::IsSoundBlocked(const tString& asName)
+{
+    if(mvBlockedSoundName.empty())
+    {
+        return false;
+    }
+    tString sLowName = cString::ToLowerCase(cString::GetFileName(asName));
+    for(size_t i = 0; i < mvBlockedSoundName.size(); ++i)
+    {
+        if(sLowName.find(mvBlockedSoundName[i]) != tString::npos)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 //-----------------------------------------------------------------------

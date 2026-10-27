@@ -307,6 +307,8 @@ public:
     tSoundEntryList *GetEntryList();
 
     bool CheckSoundIsBlocked(const cVector3f& avSoundPosition);
+    void SetSoundBlocked(const tString& asName, bool abBlocked);
+    bool IsSoundBlocked(const tString& asName);
 
 private:
     cSoundEntry *GetEntry(const tString& asName);
@@ -316,7 +318,7 @@ private:
 
     tSoundEntryList m_lstSoundEntries;
 
-    //tSoundEntryList m_lstSoundEntriesPool;
+    tStringVec mvBlockedSoundName;
 
     bool mbSilent;
 
