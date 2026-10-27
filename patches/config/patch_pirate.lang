@@ -107,7 +107,7 @@
         <Entry Name="SoundVolume">Sound volume</Entry>
         <Entry Name="SoundVolumeTip">How loud the creaks, howls, voices and menu clatter be.</Entry>
         <Entry Name="MusicVolume">Shanty volume</Entry>
-        <Entry Name="MusicVolumeTip">How loud the music be.</Entry>
+        <Entry Name="MusicVolumeTip">How loud the shanties be.</Entry>
 
         <Entry Name="InvertGamepadLook">Invert Right Stick look</Entry>
         <Entry Name="InvertGamepadLookTip">Inverts the gamepad analog look Y-axis.</Entry>
