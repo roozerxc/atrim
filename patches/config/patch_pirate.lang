@@ -84,7 +84,7 @@
 
     <CATEGORY Name="CustomStory">
         <Entry Name="EnableHardMode">Enable Cutthroat Mode</Entry>
-        <Entry Name="HardModeWarning">[br]This tale weren't made fer Cutthroat Mode.[br][br]Scripted events may break and it may not sail the way it were meant to.[br][br]Set sail in Cutthroat Mode anyway?</Entry>
+        <Entry Name="HardModeWarning">[br]This tale weren't made fer Cutthroat Mode, matey.[br][br]Scripted events may break an' it may not sail the way it were meant to.[br][br]Set sail in Cutthroat Mode anyway, savvy?</Entry>
     </CATEGORY>
 
     <!-- END HARD MODE STRINGS -->
