@@ -1,3 +1,4 @@
+#include "LuxConfigHandler.h"
 #include "LuxProp_Object.h"
 
 #include "LuxPlayer.h"
