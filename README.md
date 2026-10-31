@@ -48,7 +48,7 @@ You will also need to [configure the *DirectX SDK* in your *Visual C++* director
 > [!IMPORTANT]
 > **You must compile the dependencies first before building `atrim.sln`**
 1. `git clone` the repository or download it from the **Code** button.
-2. Open the `HPL2/dependencies` folder and open the `dependencies.sln` solution file.
+2. Open the `HPL2/depends` folder and open the `depends.sln` solution file.
 3. Press `F7` to build the solution. This will compile the dependencies needed for the `HPL2` project.
 
 #### Engine and Game
