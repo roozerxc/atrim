@@ -90,7 +90,7 @@
 
 #define kCurrentVersion_Major 1
 #define kCurrentVersion_Minor 4
-#define kCurrentVersion_Patch 6
+#define kCurrentVersion_Patch 7
 
 //-----------------------------------------------------------------------
 
