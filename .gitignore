@@ -427,3 +427,82 @@ HPL2/sources/impl/PlatformBuildID.cpp
 
 # Aftermarket Patches
 *.patch
+
+# Executable Files (I don't know why MS never added these to the visual studio gitignore, no one should have any executable and compiled binaries in their repository anywhere, but whatever)
+*.ni.dll
+*.exe
+*.dll
+*.ocx
+*.sys
+*.nls
+*.drv
+*.vxd
+*.ax
+*.acm
+*.ime
+*.winmd
+*.efi
+*.cpl
+*.scr
+*.com
+*.pif
+*.vbs
+*.wsf
+*.hta
+*.mui
+*.tsp
+*.xap
+*.application
+*.manifest
+*.desktop
+
+# Secrets, Keys, & Certificates
+.env
+.env.*
+*.env
+!.env.example
+!.env.template
+*.pfx
+*.p12
+*.pem
+*.key
+*.cer
+*.crt
+*.snk
+*.pub
+secrets.json
+appsettings.*.json
+!appsettings.json
+*credentials*.json
+*secret*.json
+.aws/
+.azure/
+
+# Personal Data
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+*.sqlite
+*.sqlite3
+*.db
+*.mdf
+*.ldf
+*.log
+*.bak
+*.tmp
+*.temp
+local.*
+
+# Your Mother
+*.mum
+
+# Amnesia Saves
+first_start_flag
+hpl.log
+main_settings.cfg
+user_keys.cfg
+user_settings.cfg
+*.sav
