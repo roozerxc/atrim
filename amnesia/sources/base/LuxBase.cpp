@@ -86,7 +86,7 @@
 //-----------------------------------------------------------------------
 
 // The current branch that is on svn/git. Must change!
-#define kCurrentVersion_Branch "v1.4.7-alpha"
+#define kCurrentVersion_Branch "v1.4.7-experimental"
 
 #define kCurrentVersion_Major 1
 #define kCurrentVersion_Minor 4
