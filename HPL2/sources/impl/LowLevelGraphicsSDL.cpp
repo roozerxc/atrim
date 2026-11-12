@@ -400,6 +400,10 @@ void cLowLevelGraphicsSDL::SetupGL()
     Log("  Texture float: %d\n", GetCaps(eGraphicCaps_TextureFloat));
 
     Log("  GLSL Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+    if(GetCaps(eGraphicCaps_GLSLVersion) < 120)
+    {
+        Log("  GLSL 1.20 not available%s, shaders will be compiled as GLSL 1.10\n", mbForceGLSL110 ? " (ForceGLSL110 is on)" : "");
+    }
     Log("  ShaderModel 2: %d\n", GetCaps(eGraphicCaps_ShaderModel_2));
     Log("  ShaderModel 3: %d\n", GetCaps(eGraphicCaps_ShaderModel_3));
     Log("  ShaderModel 4: %d\n", GetCaps(eGraphicCaps_ShaderModel_4));
@@ -533,6 +537,51 @@ int cLowLevelGraphicsSDL::GetCaps(eGraphicCaps aType)
         GLint lMax;
         glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &lMax);
         return lMax;
+    }
+
+    case eGraphicCaps_GLSLVersion:
+    {
+        //Should only be parsed once
+        static int lDriverVersion = -1;
+        if(lDriverVersion < 0)
+        {
+            lDriverVersion = 100; //no string at all, this is an ARB_shading_language_100 era driver
+            const char *pVersion = (const char *)glGetString(GL_SHADING_LANGUAGE_VERSION);
+            if(pVersion)
+            {
+                int lMajor = 0, lMinor = 0, lMinorDigits = 0;
+                const char *pC = pVersion;
+                while(*pC >= '0' && *pC <= '9')
+                {
+                    lMajor = lMajor * 10 + (*pC - '0');
+                    ++pC;
+                }
+                if(*pC == '.')
+                {
+                    ++pC;
+                }
+                while(*pC >= '0' && *pC <= '9' && lMinorDigits < 2)
+                {
+                    lMinor = lMinor * 10 + (*pC - '0');
+                    ++lMinorDigits;
+                    ++pC;
+                }
+                if(lMinorDigits == 1)
+                {
+                    lMinor *= 10;    //"1.2" -> 120
+                }
+                if(lMajor > 0)
+                {
+                    lDriverVersion = lMajor * 100 + lMinor;
+                }
+            }
+        }
+
+        if(mbForceGLSL110 && lDriverVersion > 110)
+        {
+            return 110;
+        }
+        return lDriverVersion;
     }
     }
     return 0;

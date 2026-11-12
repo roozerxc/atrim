@@ -77,6 +77,15 @@ void cGpuShaderManager::CheckFeatureSupport()
         mpPreprocessParser->GetEnvVarContainer()->Add("ShaderModel_4");
     }
 
+    ////////////////////////////
+    // GLSL version
+    if(mpLowLevelGraphics->GetCaps(eGraphicCaps_GLSLVersion) < 120)
+    {
+        Log("ATTENTION: GLSL 1.20 is not supported, using GLSL 1.10 shader paths.\n");
+        mpPreprocessParser->GetEnvVarContainer()->Add("GLSL_110");
+        mpPreprocessParser->GetEnvVarContainer()->Add("FeatureNotSupported_ConstArray");
+    }
+
     /////////////////////////
     // Test Feature support
     if(IsShaderSupported("_test_array_support_frag.glsl", eGpuShaderType_Fragment) == false)

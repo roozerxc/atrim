@@ -7,5 +7,5 @@
 
 void main()
 {
-	gl_FragColor = vec4(1.0f / 48.0f);
+	gl_FragColor = vec4(1.0 / 48.0);
 }

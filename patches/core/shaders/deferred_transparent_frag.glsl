@@ -93,7 +93,7 @@ void main()
         fFogAmount = clamp(fFogAmount, 0.0, 1.0);
         fFogAmount = pow(fFogAmount, afFalloffExp);
 
-        float fFinalAlpha = afOneMinusFogAlpha * fFogAmount + (1-fFogAmount);
+        float fFinalAlpha = afOneMinusFogAlpha * fFogAmount + (1.0-fFogAmount);
         fFinalAlpha *= afAlpha;
     @else
         float fFinalAlpha = afAlpha;
@@ -107,7 +107,7 @@ void main()
         vFinalColor.xyz += (vec3(1.0) - vFinalColor.xyz) * (1.0-fFinalAlpha);
     @elseif BlendMode_MulX2
         float fBlendMulAlpha = afLightLevel*fFinalAlpha;
-        vFinalColor.xyz = vFinalColor.xyz*fBlendMulAlpha + vec3(0.5)*(1-fBlendMulAlpha);
+        vFinalColor.xyz = vFinalColor.xyz*fBlendMulAlpha + vec3(0.5)*(1.0-fBlendMulAlpha);
     @elseif BlendMode_Alpha
         vFinalColor.a *= fFinalAlpha;
         vFinalColor.xyz *= afLightLevel;
@@ -161,11 +161,11 @@ void main()
         @elseif BlendMode_Mul
             vFinalColor.xyz = vFinalColor.xyz * vRefractionColor.xyz;
         @elseif BlendMode_MulX2
-            vFinalColor.xyz = vFinalColor.xyz * vRefractionColor.xyz * 2;
+            vFinalColor.xyz = vFinalColor.xyz * vRefractionColor.xyz * 2.0;
         @elseif BlendMode_Alpha
-            vFinalColor.xyz = vFinalColor.xyz * vFinalColor.a + vRefractionColor.xyz * (1-vFinalColor.a);
+            vFinalColor.xyz = vFinalColor.xyz * vFinalColor.a + vRefractionColor.xyz * (1.0-vFinalColor.a);
         @elseif BlendMode_PremulAlpha
-            vFinalColor.xyz = vFinalColor.xyz + vRefractionColor.xyz * (1-vFinalColor.a);
+            vFinalColor.xyz = vFinalColor.xyz + vRefractionColor.xyz * (1.0-vFinalColor.a);
         @endif
     @endif
 

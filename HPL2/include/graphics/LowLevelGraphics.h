@@ -303,6 +303,15 @@ public:
         return mbForceShaderModel3And4Off;
     }
 
+    static void SetForceGLSL110(bool abX)
+    {
+        mbForceGLSL110 = abX;
+    }
+    static bool GetForceGLSL110()
+    {
+        return mbForceGLSL110;
+    }
+
 protected:
     void RunPreSwapBuffersCallback()
     {
@@ -316,6 +325,7 @@ protected:
     }
 
     static bool mbForceShaderModel3And4Off;
+    static bool mbForceGLSL110;
 
     tPreSwapBuffersCallback mpPreSwapBuffersCallback;
     void *mpPreSwapBuffersUserData;

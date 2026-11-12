@@ -20,7 +20,7 @@ void main()
 	@endif
 	
 	vec3 vAmount =vec3(0.0);
-	float fMulSum =0;
+	float fMulSum =0.0;
 	for(int i=0; i<7; i+=1)
 	{	
 		float fCoordOffset = fOffset[i];

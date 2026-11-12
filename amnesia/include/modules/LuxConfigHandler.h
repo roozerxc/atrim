@@ -60,6 +60,7 @@ public:
     bool mbShadowsActive;
 
     bool mbForceShaderModel3And4Off;
+    bool mbForceGLSL110;
 
     bool mbFastPhysicsLoad;
     bool mbFastStaticLoad;

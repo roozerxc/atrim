@@ -10,6 +10,7 @@ namespace hpl
 //-----------------------------------------------------------------------
 
 bool iLowLevelGraphics::mbForceShaderModel3And4Off = false;
+bool iLowLevelGraphics::mbForceGLSL110 = false;
 
 //-----------------------------------------------------------------------
 }

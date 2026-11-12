@@ -87,8 +87,19 @@ bool cGLSLShader::CreateFromString(const char *apStringData, const tString& asEn
     ///////////////////////////////////////
     //Compile
 
-    //const char *pConstBuffer = apStringData;
-    //glShaderSource(mlHandle, 1, &pConstBuffer, NULL);
+    //Drivers with GLSL 1.10 only (OpenGL 2.0) reject "#version 120" so lower the version directive.
+    tString sDowngraded;
+    if(mpLowLevelGraphics->GetCaps(eGraphicCaps_GLSLVersion) < 120)
+    {
+        sDowngraded = apStringData;
+        size_t lPos = sDowngraded.find("#version 120");
+        if(lPos != tString::npos)
+        {
+            sDowngraded.replace(lPos, 12, "#version 110");
+            apStringData = sDowngraded.c_str();
+        }
+    }
+
     glShaderSource(mlHandle, 1, &apStringData, NULL);
 
     glCompileShader(mlHandle);

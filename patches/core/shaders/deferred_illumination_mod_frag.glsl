@@ -15,7 +15,7 @@ uniform sampler2D aModulate;
 uniform float afColorMul;
 uniform float afTimer;
 
-const float animationSpeed = 50.02f;
+const float animationSpeed = 50.02;
 
 void main()
 {

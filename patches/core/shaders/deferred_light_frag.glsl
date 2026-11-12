@@ -258,7 +258,7 @@ void main()
     @ifdef UseShadowMap && LightType_Spot
         @ifdef UseGobo
         @else
-            vPos += vNormal * (1 - dot(vNormal, vLightDir)) * 0.03;
+            vPos += vNormal * (1.0 - dot(vNormal, vLightDir)) * 0.03;
             vec4 vProjectedUv = a_mtxSpotViewProj * vec4(vPos,1.0);
         @endif
 
@@ -272,12 +272,12 @@ void main()
         // Smoothing
         @else
             //Set up variables
-            float fShadowSum = 0;
-            float fJitterZ =0;
+            float fShadowSum = 0.0;
+            float fJitterZ =0.0;
             vec2 vScreenJitterCoord = gl_FragCoord.xy * $ShadowJitterLookupMul;
 
             vScreenJitterCoord.y = fract(vScreenJitterCoord.y);     //Make sure the coord is in 0 - 1 range
-            vScreenJitterCoord.y *= 1.0 / $ShadowJitterSamplesDiv2;     //Access only first texture piece
+            vScreenJitterCoord.y *= 1.0 / float($ShadowJitterSamplesDiv2);     //Access only first texture piece
 
             ////////////////
             // Shader Model 3, Dynamic Branching available
@@ -286,7 +286,7 @@ void main()
             // Cheap pre-test
             //  Note1: division must occur when getting samples else gfx card gets angry.)
             //  Note2: It _must_ be division! doing sample * 1/8 will fail!!
-            for(int i=0; i<2.0; i++)
+            for(int i=0; i<2; i++)
             {
                 vec2 vJitterLookupCoord = vec2(vScreenJitterCoord.x, vScreenJitterCoord.y + fJitterZ);
         
@@ -295,7 +295,7 @@ void main()
                 fShadowSum += ShadowOffsetLookup(aShadowMap, vProjectedUv, vec2(vOffset.xy) * avShadowMapOffsetMul ) / 4.0;
                 fShadowSum += ShadowOffsetLookup(aShadowMap, vProjectedUv, vec2(vOffset.zw) * avShadowMapOffsetMul ) / 4.0;
         
-                fJitterZ += 1.0 / $ShadowJitterSamplesDiv2;
+                fJitterZ += 1.0 / float($ShadowJitterSamplesDiv2);
             }
         
             ////////////////
@@ -303,20 +303,20 @@ void main()
             if(fShadowSum > 0.0 && fShadowSum < 1.0)
             {
                 //Multiply, so the X presamples only affect their part (X/all_samples) of samples taken.
-                fShadowSum *= 4.0 / $ShadowJitterSamples;
+                fShadowSum *= 4.0 / float($ShadowJitterSamples);
         
                 ////////////////
                 // Fullscale filtering
-                for(int i=0; i<$ShadowJitterSamplesDiv2-2.0; i++)
+                for(int i=0; i<$ShadowJitterSamplesDiv2-2; i++)
                 {
                     vec2 vJitterLookupCoord = vec2(vScreenJitterCoord.x, vScreenJitterCoord.y + fJitterZ); //Not that coords are 0-1!
         
                     vec4 vOffset = texture2D(aShadowOffsetMap, vJitterLookupCoord) *2.0 - 1.0;
         
-                    fShadowSum += ShadowOffsetLookup(aShadowMap, vProjectedUv, vec2(vOffset.xy) * avShadowMapOffsetMul ) / $ShadowJitterSamples;
-                    fShadowSum += ShadowOffsetLookup(aShadowMap, vProjectedUv, vec2(vOffset.zw) * avShadowMapOffsetMul ) / $ShadowJitterSamples;
+                    fShadowSum += ShadowOffsetLookup(aShadowMap, vProjectedUv, vec2(vOffset.xy) * avShadowMapOffsetMul ) / float($ShadowJitterSamples);
+                    fShadowSum += ShadowOffsetLookup(aShadowMap, vProjectedUv, vec2(vOffset.zw) * avShadowMapOffsetMul ) / float($ShadowJitterSamples);
         
-                    fJitterZ += 1.0 / $ShadowJitterSamplesDiv2;
+                    fJitterZ += 1.0 / float($ShadowJitterSamplesDiv2);
                 }
         
                 //vDiffuse.xyz = vec3(0,0,1);
@@ -333,10 +333,10 @@ void main()
                     fShadowSum += ShadowOffsetLookup(aShadowMap, vProjectedUv, vec2(vOffset.xy) * avShadowMapOffsetMul );
                     fShadowSum += ShadowOffsetLookup(aShadowMap, vProjectedUv, vec2(vOffset.zw) * avShadowMapOffsetMul );
         
-                    fJitterZ += 1.0 / $ShadowJitterSamplesDiv2;
+                    fJitterZ += 1.0 / float($ShadowJitterSamplesDiv2);
                 }
         
-                fShadowSum /= $ShadowJitterSamples;
+                fShadowSum /= float($ShadowJitterSamples);
             @endif
 
             /////////////////////

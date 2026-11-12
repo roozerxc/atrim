@@ -1363,6 +1363,7 @@ bool cLuxBase::InitEngine()
     cRendererDeferred::SetOcclusionTestLargeLights(mpConfigHandler->mbOcclusionTestLights);
 
     iLowLevelGraphics::SetForceShaderModel3And4Off(mpConfigHandler->mbForceShaderModel3And4Off);
+    iLowLevelGraphics::SetForceGLSL110(mpConfigHandler->mbForceGLSL110);
 
     //Other vars
     cResources::SetForceCacheLoadingAndSkipSaving(mpConfigHandler->mbForceCacheLoadingAndSkipSaving);

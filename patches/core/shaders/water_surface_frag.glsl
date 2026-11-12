@@ -76,12 +76,12 @@ void main()
     ///////////////////////////////
     //Get the two uv coords
     float fT1 = afT*0.8;
-    vec2 vUv1 = gl_TexCoord[0].xy+afT*0.01f;
+    vec2 vUv1 = gl_TexCoord[0].xy+afT*0.01;
     vUv1.x += sin(fT1 + vUv1.y * afWaveFreq)* afWaveAmplitude;
     vUv1.y += sin(fT1 + vUv1.x * afWaveFreq)* afWaveAmplitude;
 
     float fT2 = afT*-2.6;
-    vec2 vUv2 = gl_TexCoord[0].xy+afT*-0.012f;
+    vec2 vUv2 = gl_TexCoord[0].xy+afT*-0.012;
     vUv2.x += sin(fT2 + vUv2.y * afWaveFreq*1.2) * afWaveAmplitude*0.75;
     vUv2.y += sin(fT2 + vUv2.x * afWaveFreq*1.2) * afWaveAmplitude*0.75;
 

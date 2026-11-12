@@ -22,7 +22,7 @@ uniform vec2 avHalfScreenSize;
 	float vColorMul[5] = float[5]   ( 0.1,  0.2, 0.5, 0.2, 0.1);
 	float vSizeMul[5] = float[5]   ( -1.0,  -0.5, 0.0, 0.5, 1.0);
 @endif
-const float fTotalMul = 1.1f;
+const float fTotalMul = 1.1;
 
 
 void main()

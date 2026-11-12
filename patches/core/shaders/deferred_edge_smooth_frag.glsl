@@ -45,7 +45,7 @@ void main()
 	vDepthDiff.y  = texture2DRect(depthTexture, vScreenPos + vec2(fD,0.0) ).x + texture2DRect(depthTexture, vScreenPos + vec2(-fD,0.0)).x;
 	vDepthDiff.z  = texture2DRect(depthTexture, vScreenPos + vec2(fD,fD) ).x + texture2DRect(depthTexture, vScreenPos + vec2(-fD,-fD)).x;
 	vDepthDiff.w  = texture2DRect(depthTexture, vScreenPos + vec2(fD,-fD) ).x + texture2DRect(depthTexture, vScreenPos + vec2(fD,-fD)).x;
-	vDepthDiff = abs( vec4(2*fCoreDepth) - vDepthDiff )*afFarPlane - vec4(0.5); //negate limit value for minum depth.
+	vDepthDiff = abs( vec4(2.0*fCoreDepth) - vDepthDiff )*afFarPlane - vec4(0.5); //negate limit value for minum depth.
 	vDepthDiff = step(0.0, vDepthDiff);
 	
 	float fDepthT =  max(dot( vDepthDiff, vec4(0.25) ), 0.0);

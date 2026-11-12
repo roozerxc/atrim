@@ -79,7 +79,7 @@ void RayLinearIntersectionSM2(sampler2D aHeightMap, inout vec3 avPosition, inout
 {
     const int lSearchSteps = 8;
 
-    avEyeVec /= lSearchSteps;     //Split up the eye vector into the number of steps
+    avEyeVec /= float(lSearchSteps);     //Split up the eye vector into the number of steps
 
     for(int i=0; i<lSearchSteps-1; i++)
     {
@@ -92,7 +92,7 @@ void RayLinearIntersectionSM3(sampler2D aHeightMap, float afSearchSteps, inout v
 {
     avEyeVec /= afSearchSteps;     //Split up the eye vector into the number of steps
 
-    for(int i=0; i<afSearchSteps-1; i++)
+    for(int i=0; float(i)<afSearchSteps-1.0; i++)
     {
         float fDepth = texture2D(aHeightMap, avPosition.xy).w;
         if(avPosition.z < fDepth) avPosition += avEyeVec;

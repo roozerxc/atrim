@@ -5,7 +5,8 @@
 ////////////////////////////////////////////////////////
 #version 120
 
-@ifdef ShaderModel_3 || ShaderModel_4
+@ifdef GLSL_110
+@elseif ShaderModel_3 || ShaderModel_4
 invariant gl_Position;
 @endif
 

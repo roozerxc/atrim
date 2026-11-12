@@ -26,7 +26,7 @@ void main()
 				 texture1D(convMap, vDiffuseColor.z).z);
 	
 	@ifdef UseFadeAlpha
-		gl_FragColor.xyz = vOutput*afFadeAlpha + vDiffuseColor*(1-afFadeAlpha);
+		gl_FragColor.xyz = vOutput*afFadeAlpha + vDiffuseColor*(1.0-afFadeAlpha);
 	@else
 		gl_FragColor.xyz = vOutput;	
 	@endif	

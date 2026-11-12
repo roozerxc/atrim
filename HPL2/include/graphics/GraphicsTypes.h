@@ -263,6 +263,8 @@ enum eGraphicCaps
 
     eGraphicCaps_MaxColorRenderTargets,
 
+    eGraphicCaps_GLSLVersion,
+
     eGraphicCaps_LastEnum
 };
 

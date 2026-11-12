@@ -98,6 +98,7 @@ void cLuxConfigHandler::LoadMainConfig()
     mfTextureAnisotropy = gpBase->mpMainConfig->GetFloat("Graphics", "TextureAnisotropy", 1.0f);
 
     mbForceShaderModel3And4Off = gpBase->mpMainConfig->GetBool("Graphics", "ForceShaderModel3And4Off", false);
+    mbForceGLSL110 = gpBase->mpMainConfig->GetBool("Graphics", "ForceGLSL110", false);
 
     /////////////////////
     // Sound variables
@@ -172,6 +173,7 @@ void cLuxConfigHandler::SaveMainConfig()
     gpBase->mpMainConfig->SetBool("Graphics", "ParallaxEnabled", mbParallaxEnabled);
 
     gpBase->mpMainConfig->SetBool("Graphics", "ForceShaderModel3And4Off", mbForceShaderModel3And4Off);
+    gpBase->mpMainConfig->SetBool("Graphics", "ForceGLSL110", mbForceGLSL110);
 
     /////////////////////
     // Sound variables

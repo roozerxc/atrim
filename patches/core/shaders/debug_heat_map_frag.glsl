@@ -18,16 +18,16 @@ uniform sampler2DRect aSceneMap;
 
 void main()
 {
-	float fComplexity = texture2DRect(aComplexityMap, gl_FragCoord.xy).x * 1.4f;
+	float fComplexity = texture2DRect(aComplexityMap, gl_FragCoord.xy).x * 1.4;
 	vec4 vColor = texture2DRect(aSceneMap, gl_FragCoord.xy);
 
 	vec4 vFinalColor = vec4(0,0,0,0.5);
 
-	if(fComplexity > 0)
+	if(fComplexity > 0.0)
 	{
 		/////////////
 		// Fade from green to red, where green is good and red is bad
-		vFinalColor = mix(vec4(0,1,0,0), vec4(1, 0, 0, 0), min(1, fComplexity));
+		vFinalColor = mix(vec4(0,1,0,0), vec4(1, 0, 0, 0), min(1.0, fComplexity));
 
 		float fLength = length(vFinalColor);
 		vFinalColor /= fLength;
