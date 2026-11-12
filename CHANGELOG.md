@@ -1,4 +1,8 @@
 # Changelog
+### v1.4.7
+- Added engine startup self-test for the deferred light fragment shader on older video cards
+- Added support for graphics drivers that are only able to compile OpenGL 2.0/GLSL 1.20 shader code
+
 ### v1.4.6
 - Added 64-bit support
 - Added application thread locking for multi-processor systems
