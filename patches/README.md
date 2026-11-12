@@ -24,6 +24,10 @@ The contents of this folder should be merged within the root of the *Amnesia: Th
 
         The GLSL 1.20 shaders which are also required for the engine's deferred graphics renderer to function properly. If these are missing, the rendered visuals in the game can either look wrong or the engine's graphics module will crash.
 
+        This includes `_test_deferred_light_vtx.glsl`, which is used by the start-up self-test that checks whether the full deferred light shader (`deferred_light_frag.glsl`) renders correctly on your graphics card. If it does not (e.g. on ATi Radeon 9500-X850 class cards), the client switches to `deferred_light_frag_lite.glsl` on its own, so there is no need to rename shader files anymore. The result is written to `hpl.log`. To skip the test, set `LightShaderMode` in the `Graphics` section of `main_settings.cfg` to `1` (always use full shader) or `2` (always use lite shader).
+
+        The shaders are written to work with both GLSL 1.20 (OpenGL 2.1) and GLSL 1.10 (OpenGL 2.0). On drivers that only support GLSL 1.10, the client compiles them as `#version 110` and uses the 1.10 code paths, so older drivers (such as ATi Catalyst versions before 7.12) work without updating. When editing shaders, keep them GLSL 1.10 compatible: write float literals as `1.0` instead of `1` (no implicit int-to-float conversion), don't use `f` suffixes, and put 1.20-only features (`invariant`, array constructors) behind `@ifdef GLSL_110` / `@ifdef FeatureNotSupported_ConstArray`. To test the 1.10 path on a newer card, set `ForceGLSL110` in the `Graphics` section of `main_settings.cfg` to `true`.
+
     - `core/textures`
 
         The core textures for the game's graphics renderer. This includes the Z dissolve texture (`core_dissolve.tga`) and light falloff map (`core_falloff_linear.png`).
