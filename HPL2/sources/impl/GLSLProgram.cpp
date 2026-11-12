@@ -87,6 +87,31 @@ bool cGLSLProgram::Link()
     }
 
     ///////////////////////////////////////
+    //Check if the driver fell back to software emulation.
+    //Linking still succeeds in that case, the only hint is the info log
+    //(e.g. ATI: "Fragment shader will run in software - ...").
+    mbRunsInSoftware = false;
+    {
+        GLint lLogLength = 0;
+        glGetProgramiv(mlHandle, GL_INFO_LOG_LENGTH, &lLogLength);
+        if(lLogLength > 1)
+        {
+            char *pLog = (char *)hplMalloc(lLogLength + 1);
+            GLsizei lWritten = 0;
+            glGetProgramInfoLog(mlHandle, lLogLength, &lWritten, pLog);
+            pLog[lWritten] = 0;
+
+            tString sLog = cString::ToLowerCase(tString(pLog));
+            if(sLog.find("software") != tString::npos)
+            {
+                mbRunsInSoftware = true;
+                Warning("GLSL program '%s' will run in software according to the driver:\n%s\n", msName.c_str(), pLog);
+            }
+            hplFree(pLog);
+        }
+    }
+
+    ///////////////////////////////////////
     //Set up sampler units
     iGpuShader* pFragShader = mpShader[eGpuShaderType_Fragment];
     if(pFragShader && pFragShader->GetSamplerUnitNum() > 0)

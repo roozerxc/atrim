@@ -24,6 +24,7 @@ class iDepthStencilBuffer;
 class iTexture;
 class iLight;
 class cSubMeshEntity;
+class cParserVarContainer;
 
 //---------------------------------------------
 
@@ -66,6 +67,16 @@ enum eDeferredSSAO
     eDeferredSSAO_InBoxLight,
     eDeferredSSAO_OnColorBuffer,
     eDeferredSSAO_LastEnum
+};
+
+//---------------------------------------------
+
+enum eDeferredLightShaderMode
+{
+    eDeferredLightShaderMode_Auto,
+    eDeferredLightShaderMode_Full,
+    eDeferredLightShaderMode_Lite,
+    eDeferredLightShaderMode_LastEnum
 };
 
 //---------------------------------------------
@@ -147,6 +158,39 @@ public:
     float GetLightComplexity(cDeferredLight* apLightData);
 
     //Static properties. Must be set before renderer data load.
+    static void SetLightShaderMode(eDeferredLightShaderMode aMode)
+    {
+        mLightShaderMode = aMode;
+    }
+    static eDeferredLightShaderMode GetLightShaderMode()
+    {
+        return mLightShaderMode;
+    }
+
+    static void SetLightFragShader(const tString& asFile)
+    {
+        msLightFragShader = asFile;
+    }
+    static void SetLiteLightFragShader(const tString& asFile)
+    {
+        msLiteLightFragShader = asFile;
+    }
+
+    /**
+     * The light fragment shader that was actually chosen during LoadData().
+     */
+    const tString& GetActiveLightFragShader()
+    {
+        return msActiveLightFragShader;
+    }
+    /**
+     * True if the self-test had to turn off shadow maps for lights.
+     */
+    bool GetLightShadowsDisabled()
+    {
+        return mbLightShadowsDisabled;
+    }
+
     static void SetGBufferType(eDeferredGBuffer aType)
     {
         mGBufferType = aType;
@@ -375,6 +419,17 @@ private:
     iGpuProgram *SetupProgramAndTextures(cDeferredLight* apLightData, tFlag alExtraFlags);
     iVertexBuffer *GetLightShape(iLight *apLight, eDeferredShapeQuality aQuality);
 
+    ////////////////
+    //Light shader start-up self-test
+    void AddLightProgramDefaultVars(cParserVarContainer &aVars);
+    tString SelectLightFragShader();
+    bool RunLightShaderSelfTest(const tString& asFragShader, bool abTestNormals, bool abTestShadows,
+                                bool *apCompiled, bool *apBaseCombosPassed);
+
+    tString msActiveLightFragShader;
+    bool mbLiteLightShader;
+    bool mbLightShadowsDisabled;
+
 
     iVertexBuffer *mpShapeSphere[eDeferredShapeQuality_LastEnum];
     iVertexBuffer *mpShapePyramid;
@@ -461,6 +516,10 @@ private:
     cMatrixf m_mtxTempLight;
 
     //Static setting variables
+    static eDeferredLightShaderMode mLightShaderMode;
+    static tString msLightFragShader;
+    static tString msLiteLightFragShader;
+
     static eDeferredGBuffer mGBufferType;
     static int mlNumOfGBufferTextures;
     static bool mbDepthCullLights;

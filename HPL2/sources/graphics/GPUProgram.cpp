@@ -28,6 +28,8 @@ iGpuProgram::iGpuProgram(const tString& asName, eGpuProgramFormat aProgramFormat
     }
 
     mlUserId = 0;
+
+    mbRunsInSoftware = false;
 }
 
 iGpuProgram::~iGpuProgram()

@@ -149,6 +149,7 @@ void cLuxConfigHandler::SaveMainConfig()
     gpBase->mpMainConfig->SetFloat("Graphics", "Gamma", gpBase->mpEngine->GetGraphics()->GetLowLevel()->GetGammaCorrection());
     gpBase->mpMainConfig->SetInt("Graphics", "GBufferType", cRendererDeferred::GetGBufferType());
     gpBase->mpMainConfig->SetInt("Graphics", "NumOfGBufferTextures", cRendererDeferred::GetNumOfGBufferTextures());
+    gpBase->mpMainConfig->SetInt("Graphics", "LightShaderMode", cRendererDeferred::GetLightShaderMode());
 
     gpBase->mpMainConfig->SetBool("Graphics", "OcclusionTestLights", mbOcclusionTestLights);
 

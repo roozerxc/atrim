@@ -20,11 +20,13 @@
 #include "graphics/ProgramComboManager.h"
 #include "graphics/OcclusionQuery.h"
 #include "graphics/TextureCreator.h"
+#include "graphics/Bitmap.h"
 
 #include "resources/Resources.h"
 #include "resources/TextureManager.h"
 #include "resources/GpuShaderManager.h"
 #include "resources/MeshManager.h"
+#include "resources/FileSearcher.h"
 #include "graphics/GPUShader.h"
 #include "graphics/GPUProgram.h"
 
@@ -38,6 +40,8 @@
 #include "scene/MeshEntity.h"
 
 #include <algorithm>
+#include <math.h>
+#include <string.h>
 
 namespace hpl
 {
@@ -45,6 +49,10 @@ namespace hpl
 //////////////////////////////////////////////////////////////////////////
 // STATIC VARIABLES
 //////////////////////////////////////////////////////////////////////////
+
+eDeferredLightShaderMode cRendererDeferred::mLightShaderMode = eDeferredLightShaderMode_Auto;
+tString cRendererDeferred::msLightFragShader = "deferred_light_frag.glsl";
+tString cRendererDeferred::msLiteLightFragShader = "deferred_light_frag_lite.glsl";
 
 eDeferredGBuffer cRendererDeferred::mGBufferType = eDeferredGBuffer_32Bit;
 int cRendererDeferred::mlNumOfGBufferTextures = 4;
@@ -185,6 +193,10 @@ cRendererDeferred::cRendererDeferred(cGraphics *apGraphics, cResources* apResour
     mlMaxBatchLights = 100;
 
     mbReflectionTextureCleared = false;
+
+    msActiveLightFragShader = msLightFragShader;
+    mbLiteLightShader = false;
+    mbLightShadowsDisabled = false;
 }
 
 //-----------------------------------------------------------------------
@@ -558,55 +570,16 @@ bool cRendererDeferred::LoadData()
         /////////////////////////////
         //Lights
         {
+            //Pick the light fragment shader. In auto mode this runs a small render
+            //self-test and falls back to the lite shader only if the full one
+            //gives wrong results on this GPU/driver. May also lower shadow quality.
+            msActiveLightFragShader = SelectLightFragShader();
+
             cParserVarContainer defaultVars;
+            AddLightProgramDefaultVars(defaultVars);
 
-            //Shadow variables
-            defaultVars.Add("ShadowJitterLookupMul", 1.0f / (float)mlShadowJitterSize);
-            defaultVars.Add("ShadowJitterSamplesDiv2", mlShadowJitterSamples / 2);
-            defaultVars.Add("ShadowJitterSamples", mlShadowJitterSamples);
-
-            if(mShadowMapQuality == eShadowMapQuality_Ultra)
-            {
-                defaultVars.Add("ShadowMapQuality_Ultra");
-            }
-            if(mShadowMapQuality == eShadowMapQuality_High)
-            {
-                defaultVars.Add("ShadowMapQuality_High");
-            }
-            if(mShadowMapQuality == eShadowMapQuality_Medium)
-            {
-                defaultVars.Add("ShadowMapQuality_Medium");
-            }
-            if(mShadowMapQuality == eShadowMapQuality_Low)
-            {
-                defaultVars.Add("ShadowMapQuality_Low");
-            }
-
-            //Vertex shader will handles deferred lights
-            defaultVars.Add("DeferredLight");
-
-            //Deferred renderer type
-            if(mGBufferType == eDeferredGBuffer_32Bit)
-            {
-                defaultVars.Add("Deferred_32bit", "");
-            }
-            else
-            {
-                defaultVars.Add("Deferred_64bit", "");
-            }
-
-            if(mlNumOfGBufferTextures == 4)
-            {
-                defaultVars.Add("RenderTargets_4", "");
-            }
-            else
-            {
-                defaultVars.Add("RenderTargets_3", "");
-            }
-
-            mpProgramManager->SetupGenerateProgramData(    eDefferredProgramMode_Lights, "Lights", "deferred_base_vtx.glsl", "deferred_light_frag.glsl", gvLightFeatureVec,
+            mpProgramManager->SetupGenerateProgramData(    eDefferredProgramMode_Lights, "Lights", "deferred_base_vtx.glsl", msActiveLightFragShader, gvLightFeatureVec,
                     kLightFeatureNum, defaultVars);
-            //1, defaultVars);
 
 
             mpProgramManager->AddGenerateProgramVariableId("avLightPos",    kVar_avLightPos, eDefferredProgramMode_Lights);
@@ -1564,7 +1537,11 @@ iGpuProgram *cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightD
     {
         lFlags |= eFeature_Light_Specular;
     }
-    if(pLight->GetGoboTexture())
+
+    //The lite light shader has no gobo support, it always samples the
+    //spot falloff map on unit 5, so pretend there is no gobo.
+    iTexture *pGoboTexture = mbLiteLightShader ? NULL : pLight->GetGoboTexture();
+    if(pGoboTexture)
     {
         lFlags |= eFeature_Light_Gobo;
     }
@@ -1603,9 +1580,9 @@ iGpuProgram *cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightD
     //Textures
     SetTexture(4, pLight->GetFalloffMap());
 
-    if(pLight->GetGoboTexture())
+    if(pGoboTexture)
     {
-        SetTexture(5, pLight->GetGoboTexture());
+        SetTexture(5, pGoboTexture);
     }
 
     ////////////////////////
@@ -1632,7 +1609,7 @@ iGpuProgram *cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightD
         }
 
         //Spot fall off
-        if(pLight->GetGoboTexture() == NULL)
+        if(pGoboTexture == NULL)
         {
             SetTexture(5, pLightSpot->GetSpotFalloffMap());
         }
@@ -1915,7 +1892,8 @@ void cRendererDeferred::SetupLightsAndRenderQueries()
 
         ///////////////////////////
         // Setup Shadow casting variables
-        if(lightType == eLightType_Spot && pLight->GetCastShadows()  && mpCurrentSettings->mbRenderShadows)
+        if(lightType == eLightType_Spot && pLight->GetCastShadows()  && mpCurrentSettings->mbRenderShadows &&
+           mbLightShadowsDisabled == false)
         {
             cLightSpot *pLightSpot = static_cast<cLightSpot *>(pLight);
 
@@ -4090,6 +4068,940 @@ void cRendererDeferred::RenderReflectionContent()
 
     SetNormalFrustumProjection();
     END_RENDER_PASS();
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// LIGHT SHADER SELF-TEST
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+namespace
+{
+    //Render target is kLT_Size x kLT_Size pixels
+    const int kLT_Size = 8;
+    const int kLT_CellsPerRow = kLT_Size / 2;
+    const int kLT_CellNum = kLT_CellsPerRow * kLT_CellsPerRow;
+    const int kLT_FalloffMapSize = 256;
+
+    const float kLT_FarPlane = 50.0f;
+    const float kLT_LightRadius = 8.0f;
+    const float kLT_LightColor = 0.6f;
+    const float kLT_SpecIntensity = 0.5f;
+    const float kLT_SpecPower = 0.5f; //stored value, shader uses exp2(x*10)+1
+    const float kLT_RefDepth = 0.1f;
+    const float kLT_OneMinusCosHalfFOV = 0.5f; //60 degree half angle
+
+    //Max allowed difference in 8 bit units
+    const int kLT_ZeroTolerance = 3;
+    const int kLT_UniformTolerance = 2;
+    const int kLT_RepeatTolerance = 1;
+
+    struct cLTCell
+    {
+        float mvNormal[3];
+        float mfDepth;
+        float mfDiffuse;
+    };
+
+    //Light direction (from surface to light) at the reference depth is (0.48, 0.36, 0.80)
+    const cLTCell gvLTCells[kLT_CellNum] =
+    {
+        {{ 0.48f, 0.36f, 0.80f}, kLT_RefDepth, 1.0f}, // 0: N == L, brightest
+        {{ 0.00f, 0.00f, 1.00f}, kLT_RefDepth, 1.0f}, // 1: N.L = 0.80
+        {{ 1.00f, 0.00f, 0.00f}, kLT_RefDepth, 1.0f}, // 2: N.L = 0.48
+        {{ 0.00f, 1.00f, 0.00f}, kLT_RefDepth, 1.0f}, // 3: N.L = 0.36
+        {{-0.48f,-0.36f,-0.80f}, kLT_RefDepth, 1.0f}, // 4: facing away -> black
+        {{-1.00f, 0.00f, 0.00f}, kLT_RefDepth, 1.0f}, // 5: facing away -> black
+        {{ 0.00f,-1.00f, 0.00f}, kLT_RefDepth, 1.0f}, // 6: facing away -> black
+        {{ 0.48f, 0.36f, 0.80f}, 0.50f,        1.0f}, // 7: outside light radius -> black
+        {{ 0.48f, 0.36f, 0.80f}, 0.16f,        1.0f}, // 8: further away -> attenuated
+        {{ 0.00f, 0.00f,-1.00f}, kLT_RefDepth, 1.0f}, // 9: facing away -> black
+        {{ 0.80f, 0.00f, 0.60f}, kLT_RefDepth, 1.0f}, //10: N.L = 0.864
+        {{ 0.00f, 0.60f, 0.80f}, kLT_RefDepth, 1.0f}, //11: N.L = 0.856
+        {{ 0.48f, 0.36f, 0.80f}, kLT_RefDepth, 0.5f}, //12: darker albedo
+        {{ 0.60f, 0.80f, 0.00f}, kLT_RefDepth, 1.0f}, //13: N.L = 0.576
+        {{ 0.36f,-0.48f, 0.80f}, kLT_RefDepth, 1.0f}, //14: N.L = 0.64
+        {{ 0.48f, 0.36f, 0.80f}, kLT_RefDepth, 1.0f}, //15: same as 0 (control)
+    };
+
+    //-----------------------------------------------------------------------
+
+    enum eLTExpect
+    {
+        eLTExpect_Zero,     //must be black
+        eLTExpect_Lit,      //must be clearly lit
+        eLTExpect_Any,      //no absolute expectation
+    };
+
+    struct cLTReference
+    {
+        eLTExpect mExpect;
+        float mfNDotL;
+        float mfAtten;      //distance attenuation * spot falloff
+        float mfDiffuse;
+    };
+
+    struct cLTTest
+    {
+        const char *msName;
+        tFlag mlFlags;
+        bool mbSpecular;
+        bool mbSpot;
+        bool mbShadow;
+        bool mbShadowOccluded;
+    };
+
+    //-----------------------------------------------------------------------
+
+    unsigned char LTToByte(float afX)
+    {
+        int lX = (int)floor(afX * 255.0f + 0.5f);
+        if(lX < 0)
+        {
+            lX = 0;
+        }
+        if(lX > 255)
+        {
+            lX = 255;
+        }
+        return (unsigned char)lX;
+    }
+
+    float LTFromByte(unsigned char alX)
+    {
+        return (float)alX / 255.0f;
+    }
+
+    void LTPackDepth(float afDepth, unsigned char *apOut)
+    {
+        float fX = afDepth * 255.0f;
+        float fA = floor(fX);
+        fX = (fX - fA) * 255.0f;
+        float fB = floor(fX);
+        float fC = fX - fB;
+
+        apOut[0] = (unsigned char)fA;
+        apOut[1] = (unsigned char)fB;
+        apOut[2] = LTToByte(fC);
+    }
+
+    float LTUnpackDepth(const unsigned char *apIn)
+    {
+        return LTFromByte(apIn[0]) + LTFromByte(apIn[1]) / 255.0f + LTFromByte(apIn[2]) / (255.0f * 255.0f);
+    }
+
+    float LTDot(const float *apA, const float *apB)
+    {
+        return apA[0] * apB[0] + apA[1] * apB[1] + apA[2] * apB[2];
+    }
+
+    void LTNormalize(float *apV)
+    {
+        float fLen = sqrtf(LTDot(apV, apV));
+        if(fLen > 0.00001f)
+        {
+            apV[0] /= fLen;
+            apV[1] /= fLen;
+            apV[2] /= fLen;
+        }
+    }
+
+    void LTGetLightPos(float *apOut)
+    {
+        //Two units from the reference surface point along (0.48, 0.36, 0.80)
+        apOut[0] = 0.48f * 2.0f;
+        apOut[1] = 0.36f * 2.0f;
+        apOut[2] = -kLT_FarPlane * kLT_RefDepth + 0.80f * 2.0f;
+    }
+
+    //-----------------------------------------------------------------------
+
+    /**
+     * Fills the G-buffer data (RGBA8, kLT_Size x kLT_Size) the same way as the
+     * 32 bit G-buffer shaders would, and computes reference values from the
+     * quantized data so the CPU sees exactly what the GPU sees.
+     */
+    void LTBuildGBuffer(unsigned char *apColor, unsigned char *apNormal, unsigned char *apDepth, unsigned char *apExtra)
+    {
+        for(int y = 0; y < kLT_Size; ++y)
+        {
+            for(int x = 0; x < kLT_Size; ++x)
+            {
+                const cLTCell &cell = gvLTCells[(y / 2) * kLT_CellsPerRow + (x / 2)];
+                int lOffset = (y * kLT_Size + x) * 4;
+
+                float vNormal[3] = {cell.mvNormal[0], cell.mvNormal[1], cell.mvNormal[2]};
+                LTNormalize(vNormal);
+
+                apColor[lOffset + 0] = LTToByte(cell.mfDiffuse);
+                apColor[lOffset + 1] = LTToByte(cell.mfDiffuse);
+                apColor[lOffset + 2] = LTToByte(cell.mfDiffuse);
+                apColor[lOffset + 3] = 255;
+
+                for(int i = 0; i < 3; ++i)
+                {
+                    apNormal[lOffset + i] = LTToByte(vNormal[i] * 0.5f + 0.5f);
+                }
+                apNormal[lOffset + 3] = LTToByte(kLT_SpecIntensity); //3 targets: specular intensity
+
+                LTPackDepth(cell.mfDepth, &apDepth[lOffset]);
+                apDepth[lOffset + 3] = LTToByte(kLT_SpecPower);      //3 targets: specular power
+
+                apExtra[lOffset + 0] = LTToByte(kLT_SpecIntensity);  //4 targets
+                apExtra[lOffset + 1] = LTToByte(kLT_SpecPower);
+                apExtra[lOffset + 2] = 0;
+                apExtra[lOffset + 3] = 0;
+            }
+        }
+    }
+
+    //-----------------------------------------------------------------------
+
+    void LTBuildReference(const cLTTest &aTest, const unsigned char *apNormal, const unsigned char *apDepth,
+                          cLTReference *apRef)
+    {
+        float vLightPos[3];
+        LTGetLightPos(vLightPos);
+
+        for(int c = 0; c < kLT_CellNum; ++c)
+        {
+            //First pixel of the cell
+            int lX = (c % kLT_CellsPerRow) * 2;
+            int lY = (c / kLT_CellsPerRow) * 2;
+            int lOffset = (lY * kLT_Size + lX) * 4;
+
+            float fDepth = LTUnpackDepth(&apDepth[lOffset]);
+            float vPos[3] = {0, 0, -kLT_FarPlane * fDepth};
+
+            float vNormal[3];
+            for(int i = 0; i < 3; ++i)
+            {
+                vNormal[i] = LTFromByte(apNormal[lOffset + i]) * 2.0f - 1.0f;
+            }
+            if(aTest.mbSpecular)
+            {
+                LTNormalize(vNormal);
+            }
+
+            //Attenuation (falloff map is 1 - x)
+            float vLightDir[3];
+            for(int i = 0; i < 3; ++i)
+            {
+                vLightDir[i] = (vLightPos[i] - vPos[i]) / kLT_LightRadius;
+            }
+            float fAtten = 1.0f - LTDot(vLightDir, vLightDir);
+            if(fAtten < 0)
+            {
+                fAtten = 0;
+            }
+            LTNormalize(vLightDir);
+
+            //Spot falloff, the test light points straight at the reference cell
+            if(aTest.mbSpot)
+            {
+                float vForward[3] = {0.48f, 0.36f, 0.80f};
+                float fSpot = 1.0f - (1.0f - LTDot(vLightDir, vForward)) / kLT_OneMinusCosHalfFOV;
+                fAtten *= fSpot < 0 ? 0 : fSpot;
+            }
+
+            float fNDotL = LTDot(vLightDir, vNormal);
+
+            //Half vector (eye is at origin, pos is on the -z axis)
+            float vHalf[3] = {vLightDir[0], vLightDir[1], vLightDir[2] + 1.0f};
+            LTNormalize(vHalf);
+            float fHDotN = LTDot(vHalf, vNormal);
+
+            cLTReference &ref = apRef[c];
+            ref.mfNDotL = fNDotL;
+            ref.mfAtten = fAtten;
+            ref.mfDiffuse = gvLTCells[c].mfDiffuse;
+
+            if(aTest.mbShadowOccluded || fAtten <= 0.0f ||
+               (fNDotL < 0.0f && (aTest.mbSpecular == false || fHDotN < 0.0f)))
+            {
+                ref.mExpect = eLTExpect_Zero;
+            }
+            else if(fAtten > 0.1f && fNDotL > 0.3f)
+            {
+                ref.mExpect = eLTExpect_Lit;
+            }
+            else
+            {
+                ref.mExpect = eLTExpect_Any;
+            }
+        }
+    }
+
+    //-----------------------------------------------------------------------
+
+    float LTCellValue(const unsigned char *apPixels, int alCell)
+    {
+        int lX = (alCell % kLT_CellsPerRow) * 2;
+        int lY = (alCell / kLT_CellsPerRow) * 2;
+
+        float fSum = 0;
+        for(int y = lY; y < lY + 2; ++y)
+        {
+            for(int x = lX; x < lX + 2; ++x)
+            {
+                const unsigned char *pPix = &apPixels[(y * kLT_Size + x) * 4];
+                fSum += (float)pPix[0] + (float)pPix[1] + (float)pPix[2];
+            }
+        }
+        return fSum / 12.0f;
+    }
+
+    int LTCellMaxChannel(const unsigned char *apPixels, int alCell)
+    {
+        int lX = (alCell % kLT_CellsPerRow) * 2;
+        int lY = (alCell / kLT_CellsPerRow) * 2;
+
+        int lMax = 0;
+        for(int y = lY; y < lY + 2; ++y)
+        {
+            for(int x = lX; x < lX + 2; ++x)
+            {
+                const unsigned char *pPix = &apPixels[(y * kLT_Size + x) * 4];
+                for(int i = 0; i < 3; ++i)
+                {
+                    lMax = pPix[i] > lMax ? pPix[i] : lMax;
+                }
+            }
+        }
+        return lMax;
+    }
+
+    int LTCellSpread(const unsigned char *apPixels, int alCell)
+    {
+        int lX = (alCell % kLT_CellsPerRow) * 2;
+        int lY = (alCell / kLT_CellsPerRow) * 2;
+
+        int lSpread = 0;
+        for(int i = 0; i < 3; ++i)
+        {
+            int lMin = 255, lMax = 0;
+            for(int y = lY; y < lY + 2; ++y)
+            {
+                for(int x = lX; x < lX + 2; ++x)
+                {
+                    int lVal = apPixels[(y * kLT_Size + x) * 4 + i];
+                    lMin = lVal < lMin ? lVal : lMin;
+                    lMax = lVal > lMax ? lVal : lMax;
+                }
+            }
+            lSpread = (lMax - lMin) > lSpread ? (lMax - lMin) : lSpread;
+        }
+        return lSpread;
+    }
+
+    //-----------------------------------------------------------------------
+
+    bool LTCheckResult(const cLTTest &aTest, const cLTReference *apRef, const unsigned char *apPixels,
+                       bool abTestNormals, tString &asReason)
+    {
+        float vValue[kLT_CellNum];
+        for(int c = 0; c < kLT_CellNum; ++c)
+        {
+            vValue[c] = LTCellValue(apPixels, c);
+        }
+
+        ////////////////////////
+        // Every 2x2 cell has identical input, output must be identical too
+        for(int c = 0; c < kLT_CellNum; ++c)
+        {
+            int lSpread = LTCellSpread(apPixels, c);
+            if(lSpread > kLT_UniformTolerance)
+            {
+                asReason = "cell " + cString::ToString(c) + " is not uniform (spread " + cString::ToString(lSpread) + ")";
+                return false;
+            }
+        }
+
+        ////////////////////////
+        // Identical data in different places of the screen
+        if(fabs(vValue[0] - vValue[15]) > (float)kLT_UniformTolerance)
+        {
+            asReason = "identical cells 0 and 15 differ (" + cString::ToString(vValue[0]) + " vs " + cString::ToString(vValue[15]) + ")";
+            return false;
+        }
+
+        ////////////////////////
+        // Absolute expectations
+        for(int c = 0; c < kLT_CellNum; ++c)
+        {
+            if(abTestNormals == false && apRef[c].mfAtten > 0.0f && aTest.mbShadowOccluded == false)
+            {
+                continue; //Normal independent shader lights everything in range
+            }
+
+            if(apRef[c].mExpect == eLTExpect_Zero)
+            {
+                int lMax = LTCellMaxChannel(apPixels, c);
+                if(lMax > kLT_ZeroTolerance)
+                {
+                    asReason = "cell " + cString::ToString(c) + " must be black but is " + cString::ToString(lMax) +
+                               " (N.L " + cString::ToString(apRef[c].mfNDotL) + ")";
+                    return false;
+                }
+            }
+            else if(apRef[c].mExpect == eLTExpect_Lit)
+            {
+                if(vValue[c] < 6.0f)
+                {
+                    asReason = "cell " + cString::ToString(c) + " must be lit but is " + cString::ToString(vValue[c]) +
+                               " (N.L " + cString::ToString(apRef[c].mfNDotL) + ")";
+                    return false;
+                }
+            }
+        }
+
+        if(aTest.mbShadowOccluded)
+        {
+            return true;
+        }
+
+        ////////////////////////
+        // Darker albedo must be darker
+        if(vValue[12] > vValue[0] - 4.0f)
+        {
+            asReason = "albedo has no effect (cell 12 " + cString::ToString(vValue[12]) + " vs cell 0 " + cString::ToString(vValue[0]) + ")";
+            return false;
+        }
+
+        ////////////////////////
+        // Relative checks against cell 0 (N == L, full albedo).
+        // Specular adds a term that does not follow N.L, so only without it.
+        if(aTest.mbSpecular == false && vValue[0] > 0.0f)
+        {
+            for(int c = 1; c < kLT_CellNum; ++c)
+            {
+                if(apRef[c].mExpect != eLTExpect_Lit || gvLTCells[c].mfDiffuse != gvLTCells[0].mfDiffuse)
+                {
+                    continue;
+                }
+
+                float fAttenRatio = apRef[c].mfAtten / apRef[0].mfAtten;
+                float fNDotLRatio = abTestNormals ? apRef[c].mfNDotL / apRef[0].mfNDotL : 1.0f;
+                if(fNDotLRatio > 1.0f)
+                {
+                    fNDotLRatio = 1.0f;
+                }
+
+                //Linear lighting gives N.L^1, the atrim shader N.L^0.625
+                //Allow a generous exponent range around that
+                float fMin = fAttenRatio * powf(fNDotLRatio, 1.3f) - 0.06f;
+                float fMax = fAttenRatio * powf(fNDotLRatio, 0.4f) + 0.06f;
+                float fActual = vValue[c] / vValue[0];
+
+                if(fActual < fMin || fActual > fMax)
+                {
+                    asReason = "cell " + cString::ToString(c) + " brightness ratio " + cString::ToString(fActual) +
+                               " outside [" + cString::ToString(fMin) + ", " + cString::ToString(fMax) + "]" +
+                               " (N.L " + cString::ToString(apRef[c].mfNDotL) + ")";
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cRendererDeferred::AddLightProgramDefaultVars(cParserVarContainer &aVars)
+{
+    //Shadow variables
+    aVars.Add("ShadowJitterLookupMul", 1.0f / (float)mlShadowJitterSize);
+    aVars.Add("ShadowJitterSamplesDiv2", mlShadowJitterSamples / 2);
+    aVars.Add("ShadowJitterSamples", mlShadowJitterSamples);
+
+    if(mShadowMapQuality == eShadowMapQuality_Ultra)
+    {
+        aVars.Add("ShadowMapQuality_Ultra");
+    }
+    if(mShadowMapQuality == eShadowMapQuality_High)
+    {
+        aVars.Add("ShadowMapQuality_High");
+    }
+    if(mShadowMapQuality == eShadowMapQuality_Medium)
+    {
+        aVars.Add("ShadowMapQuality_Medium");
+    }
+    if(mShadowMapQuality == eShadowMapQuality_Low)
+    {
+        aVars.Add("ShadowMapQuality_Low");
+    }
+
+    //Vertex shader will handles deferred lights
+    aVars.Add("DeferredLight");
+
+    //Deferred renderer type
+    if(mGBufferType == eDeferredGBuffer_32Bit)
+    {
+        aVars.Add("Deferred_32bit", "");
+    }
+    else
+    {
+        aVars.Add("Deferred_64bit", "");
+    }
+
+    if(mlNumOfGBufferTextures == 4)
+    {
+        aVars.Add("RenderTargets_4", "");
+    }
+    else
+    {
+        aVars.Add("RenderTargets_3", "");
+    }
+}
+
+//-----------------------------------------------------------------------
+
+tString cRendererDeferred::SelectLightFragShader()
+{
+    mbLiteLightShader = false;
+    mbLightShadowsDisabled = false;
+
+    bool bLiteExists = mpResources->GetFileSearcher()->GetFilePath(msLiteLightFragShader) != _W("");
+
+    ///////////////////////////
+    // Forced by config
+    if(mLightShaderMode == eDeferredLightShaderMode_Full)
+    {
+        Log("Deferred light shader: '%s' (forced in config, self-test skipped)\n", msLightFragShader.c_str());
+        return msLightFragShader;
+    }
+    if(mLightShaderMode == eDeferredLightShaderMode_Lite)
+    {
+        if(bLiteExists == false)
+        {
+            Error("Deferred light shader: lite shader '%s' is missing! Using '%s'.\n", msLiteLightFragShader.c_str(), msLightFragShader.c_str());
+            return msLightFragShader;
+        }
+        Log("Deferred light shader: '%s' (forced in config, self-test skipped)\n", msLiteLightFragShader.c_str());
+        mbLiteLightShader = true;
+        mbLightShadowsDisabled = true; //lite shader ignores shadow maps, do not waste time rendering them
+        return msLiteLightFragShader;
+    }
+
+    ///////////////////////////
+    // Auto
+    if(mGBufferType != eDeferredGBuffer_32Bit)
+    {
+        Log("Deferred light shader: '%s' (self-test only supports the 32 bit G-buffer, skipped)\n", msLightFragShader.c_str());
+        return msLightFragShader;
+    }
+
+    if(mpResources->GetFileSearcher()->GetFilePath("_test_deferred_light_vtx.glsl") == _W(""))
+    {
+        Warning("Deferred light shader: '%s' (self-test shader '_test_deferred_light_vtx.glsl' is missing, test skipped)\n",
+                msLightFragShader.c_str());
+        return msLightFragShader;
+    }
+
+    Log("Running deferred light shader self-test...\n");
+
+    bool bCompiled = false;
+    bool bBasePassed = false;
+    if(RunLightShaderSelfTest(msLightFragShader, true, true, &bCompiled, &bBasePassed))
+    {
+        Log("Deferred light shader: '%s' (self-test passed)\n", msLightFragShader.c_str());
+        return msLightFragShader;
+    }
+
+    ///////////////////////////
+    // Only the shadow mapped variants fail, try lighter shadows before giving up normals
+    if(bBasePassed)
+    {
+        if(mShadowMapQuality != eShadowMapQuality_Low)
+        {
+            Warning("Light shader fails with shadow quality %d, retrying with low shadow quality.\n", (int)mShadowMapQuality);
+
+            SetShadowMapQuality(eShadowMapQuality_Low);
+            mlShadowJitterSize = 0;
+            mlShadowJitterSamples = 0;
+
+            if(RunLightShaderSelfTest(msLightFragShader, true, true, &bCompiled, NULL))
+            {
+                Warning("Deferred light shader: '%s' (self-test passed with low shadow quality)\n", msLightFragShader.c_str());
+                return msLightFragShader;
+            }
+        }
+
+        Warning("Deferred light shader: '%s' (self-test passed only without shadow maps, light shadows disabled)\n", msLightFragShader.c_str());
+        mbLightShadowsDisabled = true;
+        return msLightFragShader;
+    }
+
+    ///////////////////////////
+    // Full shader is broken, use lite instead
+    if(bLiteExists == false)
+    {
+        Error("Deferred light shader '%s' failed the self-test and the lite shader '%s' is missing! Lighting may be wrong.\n",
+              msLightFragShader.c_str(), msLiteLightFragShader.c_str());
+        return msLightFragShader;
+    }
+
+    bool bLiteCompiled = false;
+    bool bLitePassed = RunLightShaderSelfTest(msLiteLightFragShader, false, false, &bLiteCompiled, NULL);
+    if(bLiteCompiled == false && bCompiled)
+    {
+        Error("Lite light shader '%s' does not compile, keeping '%s'. Lighting may be wrong.\n",
+              msLiteLightFragShader.c_str(), msLightFragShader.c_str());
+        return msLightFragShader;
+    }
+    if(bLitePassed == false)
+    {
+        Error("Lite light shader '%s' also failed the self-test, using it anyway. Lighting may be wrong.\n",
+              msLiteLightFragShader.c_str());
+    }
+
+    Warning("Deferred light shader: '%s' (full shader failed the self-test, using lite shader without normals/specular/shadows)\n",
+            msLiteLightFragShader.c_str());
+    mbLiteLightShader = true;
+    mbLightShadowsDisabled = true;
+    return msLiteLightFragShader;
+}
+
+//-----------------------------------------------------------------------
+
+bool cRendererDeferred::RunLightShaderSelfTest(const tString& asFragShader, bool abTestNormals, bool abTestShadows,
+        bool *apCompiled, bool *apBaseCombosPassed)
+{
+    if(apCompiled)
+    {
+        *apCompiled = true;
+    }
+    if(apBaseCombosPassed)
+    {
+        *apBaseCombosPassed = false;
+    }
+
+    ///////////////////////////
+    // Shadow tests are last, base combos are the ones before
+    const cLTTest vTests[] =
+    {
+        {"point",                     0,                                                                                   false, false, false, false},
+        {"point+specular",            eFeature_Light_Specular,                                                             true,  false, false, false},
+        {"spot",                      eFeature_Light_SpotLight,                                                            false, true,  false, false},
+        {"spot+specular",             eFeature_Light_SpotLight | eFeature_Light_Specular,                                  true,  true,  false, false},
+        {"spot+shadow",               eFeature_Light_SpotLight | eFeature_Light_ShadowMap,                                 false, true,  true,  false},
+        {"spot+shadow (occluded)",    eFeature_Light_SpotLight | eFeature_Light_ShadowMap,                                 false, true,  true,  true },
+        {"spot+specular+shadow",      eFeature_Light_SpotLight | eFeature_Light_Specular | eFeature_Light_ShadowMap,       true,  true,  true,  false},
+    };
+    const int lTestNum = sizeof(vTests) / sizeof(vTests[0]);
+
+    cShadowMapData *pShadowData = mvShadowMapData[eShadowMapResolution_Low].empty() ? NULL : mvShadowMapData[eShadowMapResolution_Low][0];
+    if(pShadowData == NULL || pShadowData->mpTexture == NULL || pShadowData->mpBuffer == NULL)
+    {
+        abTestShadows = false;
+    }
+
+    ///////////////////////////
+    // G-buffer data
+    std::vector<unsigned char> vColor(kLT_Size * kLT_Size * 4);
+    std::vector<unsigned char> vNormal(kLT_Size * kLT_Size * 4);
+    std::vector<unsigned char> vDepth(kLT_Size * kLT_Size * 4);
+    std::vector<unsigned char> vExtra(kLT_Size * kLT_Size * 4);
+    LTBuildGBuffer(&vColor[0], &vNormal[0], &vDepth[0], &vExtra[0]);
+
+    unsigned char *pGBufferData[4] = {&vColor[0], &vNormal[0], &vDepth[0], &vExtra[0]};
+    iTexture *pGBufferTex[4] = {NULL, NULL, NULL, NULL};
+    for(int i = 0; i < mlNumOfGBufferTextures && i < 4; ++i)
+    {
+        pGBufferTex[i] = mpGraphics->CreateTexture("LightSelfTest_GBuffer" + cString::ToString(i), eTextureType_Rect, eTextureUsage_Normal);
+        pGBufferTex[i]->CreateFromRawData(cVector3l(kLT_Size, kLT_Size, 0), ePixelFormat_RGBA, pGBufferData[i]);
+        pGBufferTex[i]->SetWrapSTR(eTextureWrap_ClampToEdge);
+        pGBufferTex[i]->SetFilter(eTextureFilter_Nearest);
+    }
+
+    //Linear falloff (1 - x), used for both attenuation and spot falloff
+    std::vector<unsigned char> vFalloff(kLT_FalloffMapSize * 4);
+    for(int i = 0; i < kLT_FalloffMapSize; ++i)
+    {
+        float fT = ((float)i + 0.5f) / (float)kLT_FalloffMapSize;
+        unsigned char lVal = i == kLT_FalloffMapSize - 1 ? 0 : LTToByte(1.0f - fT);
+        vFalloff[i * 4 + 0] = vFalloff[i * 4 + 1] = vFalloff[i * 4 + 2] = vFalloff[i * 4 + 3] = lVal;
+    }
+    iTexture *pFalloffTex = mpGraphics->CreateTexture("LightSelfTest_Falloff", eTextureType_1D, eTextureUsage_Normal);
+    pFalloffTex->CreateFromRawData(cVector3l(kLT_FalloffMapSize, 1, 0), ePixelFormat_RGBA, &vFalloff[0]);
+    pFalloffTex->SetWrapSTR(eTextureWrap_ClampToEdge);
+    pFalloffTex->SetFilter(eTextureFilter_Bilinear);
+
+    //Output
+    iTexture *pOutputTex = CreateRenderTexture("LightSelfTest_Output", cVector2l(kLT_Size, kLT_Size), ePixelFormat_RGBA, eTextureFilter_Nearest);
+    iFrameBuffer *pOutputBuffer = mpGraphics->CreateFrameBuffer("LightSelfTest_Output");
+    pOutputBuffer->SetTexture2D(0, pOutputTex);
+    bool bBufferOk = pOutputBuffer->CompileAndValidate();
+
+    ///////////////////////////
+    // Programs (generated lazily per combo, with the same defines as the real ones)
+    cProgramComboManager *pComboManager = hplNew(cProgramComboManager, ("LightSelfTest", mpGraphics, mpResources, 1));
+    {
+        cParserVarContainer defaultVars;
+        AddLightProgramDefaultVars(defaultVars);
+        pComboManager->SetupGenerateProgramData(0, "LightSelfTest", "_test_deferred_light_vtx.glsl", asFragShader,
+                                                gvLightFeatureVec, kLightFeatureNum, defaultVars);
+
+        pComboManager->AddGenerateProgramVariableId("avLightPos",    kVar_avLightPos, 0);
+        pComboManager->AddGenerateProgramVariableId("avLightColor",    kVar_avLightColor, 0);
+        pComboManager->AddGenerateProgramVariableId("afInvLightRadius",    kVar_afInvLightRadius, 0);
+        pComboManager->AddGenerateProgramVariableId("afNegFarPlane",    kVar_afNegFarPlane, 0);
+        pComboManager->AddGenerateProgramVariableId("afOneMinusCosHalfSpotFOV",    kVar_afOneMinusCosHalfSpotFOV, 0);
+        pComboManager->AddGenerateProgramVariableId("avLightForward", kVar_avLightForward, 0);
+        pComboManager->AddGenerateProgramVariableId("a_mtxSpotViewProj", kVar_a_mtxSpotViewProj, 0);
+        pComboManager->AddGenerateProgramVariableId("avShadowMapOffsetMul", kVar_avShadowMapOffsetMul, 0);
+        pComboManager->AddGenerateProgramVariableId("afFalloff",	kVar_afFalloff, 0);
+    }
+
+    ///////////////////////////
+    // Render states
+    mpLowLevelGraphics->SetDepthTestActive(false);
+    mpLowLevelGraphics->SetDepthWriteActive(false);
+    mpLowLevelGraphics->SetCullActive(false);
+    mpLowLevelGraphics->SetBlendActive(false);
+    mpLowLevelGraphics->SetAlphaTestActive(false);
+    mpLowLevelGraphics->SetStencilActive(false);
+    mpLowLevelGraphics->SetScissorActive(false);
+    mpLowLevelGraphics->SetColorWriteActive(true, true, true, true);
+
+    for(int i = 0; i < 4; ++i)
+    {
+        mpLowLevelGraphics->SetTexture(i, pGBufferTex[i]);
+    }
+    mpLowLevelGraphics->SetTexture(4, pFalloffTex);
+    mpLowLevelGraphics->SetTexture(5, pFalloffTex);
+    if(abTestShadows)
+    {
+        mpLowLevelGraphics->SetTexture(6, pShadowData->mpTexture);
+        mpLowLevelGraphics->SetTexture(7, mpShadowJitterTexture);
+    }
+
+    //Quad in clip space, far plane position sent in texcoord 0 (see _test_deferred_light_vtx.glsl)
+    cVector3f vFarPlanePos(0, 0, -kLT_FarPlane);
+    tVertexVec vQuad;
+    vQuad.push_back(cVertex(cVector3f(-1, -1, 0), vFarPlanePos, cColor(1, 1)));
+    vQuad.push_back(cVertex(cVector3f( 1, -1, 0), vFarPlanePos, cColor(1, 1)));
+    vQuad.push_back(cVertex(cVector3f( 1,  1, 0), vFarPlanePos, cColor(1, 1)));
+    vQuad.push_back(cVertex(cVector3f(-1,  1, 0), vFarPlanePos, cColor(1, 1)));
+
+    float vLightPos[3];
+    LTGetLightPos(vLightPos);
+
+    //Shadow projection: every position lands in the middle of the shadow map at depth 0.5
+    cMatrixf mtxShadow = cMatrixf::Zero;
+    mtxShadow.m[0][3] = 0.5f;
+    mtxShadow.m[1][3] = 0.5f;
+    mtxShadow.m[2][3] = 0.5f;
+    mtxShadow.m[3][3] = 1.0f;
+
+    ///////////////////////////
+    // Run the tests
+    bool bAllPassed = bBufferOk;
+    bool bBasePassed = bBufferOk;
+    if(bBufferOk == false)
+    {
+        Warning("  Light self-test: could not create test frame buffer, test is inconclusive.\n");
+    }
+
+    std::vector<unsigned char> vResult[2];
+    vResult[0].resize(kLT_Size * kLT_Size * 4);
+    vResult[1].resize(kLT_Size * kLT_Size * 4);
+
+    for(int t = 0; t < lTestNum && bBufferOk; ++t)
+    {
+        const cLTTest &test = vTests[t];
+        if(test.mbShadow && abTestShadows == false)
+        {
+            continue;
+        }
+
+        tString sReason = "";
+        bool bPassed = true;
+
+        iGpuProgram *pProgram = pComboManager->GenerateProgram(0, test.mlFlags);
+        if(pProgram == NULL)
+        {
+            sReason = "program does not compile/link";
+            bPassed = false;
+            if(apCompiled)
+            {
+                *apCompiled = false;
+            }
+        }
+        else if(pProgram->GetRunsInSoftware())
+        {
+            sReason = "driver runs the program in software";
+            bPassed = false;
+        }
+        else
+        {
+            ////////////////////
+            // Shadow map content: cleared to far (lit) or near (occluded)
+            if(test.mbShadow)
+            {
+                mpLowLevelGraphics->SetCurrentFrameBuffer(pShadowData->mpBuffer);
+                mpLowLevelGraphics->SetDepthWriteActive(true);
+                mpLowLevelGraphics->SetClearDepth(test.mbShadowOccluded ? 0.0f : 1.0f);
+                mpLowLevelGraphics->ClearFrameBuffer(eClearFrameBufferFlag_Depth);
+                mpLowLevelGraphics->SetDepthWriteActive(false);
+                pShadowData->mlFrameCount = -1;
+            }
+
+            cLTReference vRef[kLT_CellNum];
+            LTBuildReference(test, &vNormal[0], &vDepth[0], vRef);
+
+            ////////////////////
+            // Render: first pass, a pass with other uniforms (to stir up
+            // registers/caches), then the first pass again. Results must match.
+            for(int lPass = 0; lPass < 3; ++lPass)
+            {
+                bool bPerturb = (lPass == 1);
+
+                pProgram->Bind();
+                pProgram->SetVec3f(kVar_avLightPos, vLightPos[0], vLightPos[1], vLightPos[2]);
+                if(bPerturb)
+                {
+                    pProgram->SetVec4f(kVar_avLightColor, 1.0f, 0.2f, 0.1f, 0.0f);
+                }
+                else
+                {
+                    pProgram->SetVec4f(kVar_avLightColor, kLT_LightColor, kLT_LightColor, kLT_LightColor, 1.0f);
+                }
+                pProgram->SetFloat(kVar_afInvLightRadius, 1.0f / kLT_LightRadius);
+                pProgram->SetFloat(kVar_afNegFarPlane, -kLT_FarPlane);
+                pProgram->SetFloat(kVar_afFalloff, 1.0f);
+                if(test.mbSpot)
+                {
+                    pProgram->SetFloat(kVar_afOneMinusCosHalfSpotFOV, kLT_OneMinusCosHalfFOV);
+                    pProgram->SetVec3f(kVar_avLightForward, 0.48f, 0.36f, 0.80f);
+                }
+                if(test.mbShadow)
+                {
+                    float fInvSize = 1.0f / (float)pShadowData->mpTexture->GetWidth();
+                    pProgram->SetMatrixf(kVar_a_mtxSpotViewProj, mtxShadow);
+                    pProgram->SetVec2f(kVar_avShadowMapOffsetMul, fInvSize, fInvSize);
+                }
+
+                mpLowLevelGraphics->SetCurrentFrameBuffer(pOutputBuffer);
+                mpLowLevelGraphics->SetClearColor(cColor(1, 0, 1, 1)); //Anything not written stays magenta and fails
+                mpLowLevelGraphics->ClearFrameBuffer(eClearFrameBufferFlag_Color);
+                mpLowLevelGraphics->DrawQuad(vQuad);
+
+                if(bPerturb)
+                {
+                    continue;
+                }
+
+                cBitmap *pBitmap = mpLowLevelGraphics->CopyFrameBufferToBitmap(0, cVector2l(kLT_Size, kLT_Size));
+                unsigned char *pDst = &vResult[lPass == 0 ? 0 : 1][0];
+                if(pBitmap && pBitmap->GetData(0, 0) && pBitmap->GetData(0, 0)->mlSize >= kLT_Size * kLT_Size * 4)
+                {
+                    memcpy(pDst, pBitmap->GetData(0, 0)->mpData, kLT_Size * kLT_Size * 4);
+                }
+                else
+                {
+                    memset(pDst, 0, kLT_Size * kLT_Size * 4);
+                    sReason = "could not read back result";
+                    bPassed = false;
+                }
+                if(pBitmap)
+                {
+                    hplDelete(pBitmap);
+                }
+            }
+            pProgram->UnBind();
+
+            ////////////////////
+            // Check
+            if(bPassed)
+            {
+                for(int i = 0; i < kLT_Size * kLT_Size * 4; ++i)
+                {
+                    if((i % 4) == 3)
+                    {
+                        continue;    //alpha is not written by the shader
+                    }
+                    int lDiff = (int)vResult[0][i] - (int)vResult[1][i];
+                    if(lDiff > kLT_RepeatTolerance || lDiff < -kLT_RepeatTolerance)
+                    {
+                        sReason = "result changes between identical draws (pixel " + cString::ToString(i / 4) + ")";
+                        bPassed = false;
+                        break;
+                    }
+                }
+            }
+            if(bPassed)
+            {
+                bPassed = LTCheckResult(test, vRef, &vResult[0][0], abTestNormals, sReason);
+            }
+        }
+
+        if(bPassed)
+        {
+            Log("  Light self-test '%s' [%s]: passed\n", asFragShader.c_str(), test.msName);
+        }
+        else
+        {
+            Warning("  Light self-test '%s' [%s]: FAILED - %s\n", asFragShader.c_str(), test.msName, sReason.c_str());
+            bAllPassed = false;
+            if(test.mbShadow == false)
+            {
+                bBasePassed = false;
+            }
+        }
+    }
+
+    if(apBaseCombosPassed)
+    {
+        *apBaseCombosPassed = bBasePassed;
+    }
+
+    ///////////////////////////
+    // Restore state to what the renderer expects at the start of a frame
+    mpLowLevelGraphics->SetCurrentFrameBuffer(NULL);
+    for(int i = 0; i < 8; ++i)
+    {
+        mpLowLevelGraphics->SetTexture(i, NULL);
+    }
+    mpLowLevelGraphics->SetClearColor(cColor(0, 0));
+    mpLowLevelGraphics->SetClearDepth(1.0f);
+    mpLowLevelGraphics->SetDepthTestActive(true);
+    mpLowLevelGraphics->SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
+    mpLowLevelGraphics->SetDepthWriteActive(true);
+    mpLowLevelGraphics->SetCullActive(true);
+    mpLowLevelGraphics->SetCullMode(eCullMode_CounterClockwise);
+
+    ///////////////////////////
+    // Clean up (programs are unbound above, safe to delete)
+    hplDelete(pComboManager);
+
+    mpGraphics->DestroyFrameBuffer(pOutputBuffer);
+    mpGraphics->DestroyTexture(pOutputTex);
+    mpGraphics->DestroyTexture(pFalloffTex);
+    for(int i = 0; i < 4; ++i)
+    {
+        if(pGBufferTex[i])
+        {
+            mpGraphics->DestroyTexture(pGBufferTex[i]);
+        }
+    }
+
+    //A test that could not run at all should not force a fallback
+    if(bBufferOk == false)
+    {
+        if(apBaseCombosPassed)
+        {
+            *apBaseCombosPassed = true;
+        }
+        return true;
+    }
+
+    return bAllPassed;
 }
 
 //-----------------------------------------------------------------------

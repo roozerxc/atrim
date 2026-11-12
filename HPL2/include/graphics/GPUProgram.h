@@ -99,7 +99,14 @@ public:
         return mlUserId;
     }
 
+    bool GetRunsInSoftware()
+    {
+        return mbRunsInSoftware;
+    }
+
 protected:
+    bool mbRunsInSoftware;
+
     tString msName;
     cResources *mpResources;
     unsigned int mlUserId;

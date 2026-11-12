@@ -1352,6 +1352,14 @@ bool cLuxBase::InitEngine()
     cRendererDeferred::SetGBufferType((eDeferredGBuffer)mpMainConfig->GetInt("Graphics", "GBufferType", eDeferredGBuffer_32Bit));
     cRendererDeferred::SetNumOfGBufferTextures(mpMainConfig->GetInt("Graphics", "NumOfGBufferTextures", 3));
 
+    // Deferred light shader: 0 = auto (start-up self-test picks full or lite), 1 = always full, 2 = always lite
+    int lLightShaderMode = mpMainConfig->GetInt("Graphics", "LightShaderMode", eDeferredLightShaderMode_Auto);
+    if(lLightShaderMode < 0 || lLightShaderMode >= eDeferredLightShaderMode_LastEnum)
+    {
+        lLightShaderMode = eDeferredLightShaderMode_Auto;
+    }
+    cRendererDeferred::SetLightShaderMode((eDeferredLightShaderMode)lLightShaderMode);
+
     cRendererDeferred::SetOcclusionTestLargeLights(mpConfigHandler->mbOcclusionTestLights);
 
     iLowLevelGraphics::SetForceShaderModel3And4Off(mpConfigHandler->mbForceShaderModel3And4Off);
