@@ -321,6 +321,16 @@ public:
         return mbForceNoStencil;
     }
 
+    //Checks for OpenGL errors once per frame and writes them to the log. For finding driver trouble.
+    static void SetLogGLErrors(bool abX)
+    {
+        mbLogGLErrors = abX;
+    }
+    static bool GetLogGLErrors()
+    {
+        return mbLogGLErrors;
+    }
+
     //Behave as on drivers whose GLSL has no sampler2DRect (old ATI). For testing.
     static void SetForceRectAs2D(bool abX)
     {
@@ -355,6 +365,7 @@ protected:
     static bool mbForceGLSL110;
     static bool mbForceNoStencil;
     static bool mbForceRectAs2D;
+    static bool mbLogGLErrors;
     static bool mbRectAs2D;
 
     tPreSwapBuffersCallback mpPreSwapBuffersCallback;

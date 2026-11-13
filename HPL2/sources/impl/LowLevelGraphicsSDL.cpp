@@ -1095,7 +1095,36 @@ void cLowLevelGraphicsSDL::FlushRendering()
 
 void cLowLevelGraphicsSDL::SwapBuffers()
 {
-    RunPreSwapBuffersCallback(); 
+    RunPreSwapBuffersCallback();
+
+    if(mbLogGLErrors)
+    {
+        static int lFrame = 0;
+        static int lLogged = 0;
+        ++lFrame;
+
+        GLenum lError = glGetError();
+        for(int i = 0; lError != GL_NO_ERROR && i < 16; ++i)
+        {
+            if(lLogged < 200)
+            {
+                ++lLogged;
+                const char *pName = "unknown";
+                switch(lError)
+                {
+                case GL_INVALID_ENUM:       pName = "GL_INVALID_ENUM"; break;
+                case GL_INVALID_VALUE:      pName = "GL_INVALID_VALUE"; break;
+                case GL_INVALID_OPERATION:  pName = "GL_INVALID_OPERATION"; break;
+                case GL_STACK_OVERFLOW:     pName = "GL_STACK_OVERFLOW"; break;
+                case GL_STACK_UNDERFLOW:    pName = "GL_STACK_UNDERFLOW"; break;
+                case GL_OUT_OF_MEMORY:      pName = "GL_OUT_OF_MEMORY"; break;
+                case GL_INVALID_FRAMEBUFFER_OPERATION_EXT: pName = "GL_INVALID_FRAMEBUFFER_OPERATION"; break;
+                }
+                Error("OpenGL error in frame %d: %s (0x%04x)\n", lFrame, pName, (unsigned int)lError);
+            }
+            lError = glGetError();
+        }
+    }
 
     SDL_GL_SwapBuffers();
 }
