@@ -180,6 +180,16 @@ public:
     }
 
     /**
+     * Logic ticks per second (30 - 60, default 60). Must be set before the engine is created.
+     * Fewer ticks means less CPU time spent on logic, rendering is interpolated between ticks either way.
+     */
+    static void SetLogicUpdatesPerSec(int alX);
+    static int GetLogicUpdatesPerSec()
+    {
+        return mlLogicUpdatesPerSec;
+    }
+
+    /**
      * Optional frame rate cap (0 = off). Helps frame pacing when running far above the
      * refresh rate without vsync (frames are presented at a steady rate instead of as fast
      * as possible).
@@ -226,6 +236,7 @@ private:
     const int iMaxGameUpdates;
     const double kMaxFrameTime;
     const double kFixedDelta;
+    static int mlLogicUpdatesPerSec;
 
     int iUpdatesOnCurrentFrame;
 

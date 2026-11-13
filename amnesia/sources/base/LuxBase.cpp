@@ -1354,6 +1354,8 @@ bool cLuxBase::InitEngine()
     }
     cRendererDeferred::SetLightShaderMode((eDeferredLightShaderMode)lLightShaderMode);
 
+    cEngine::SetLogicUpdatesPerSec(mpMainConfig->GetInt("Main", "LogicUpdatesPerSec", 60));
+
     cRendererDeferred::SetOcclusionTestLargeLights(mpConfigHandler->mbOcclusionTestLights);
 
     iLowLevelGraphics::SetForceShaderModel3And4Off(mpConfigHandler->mbForceShaderModel3And4Off);

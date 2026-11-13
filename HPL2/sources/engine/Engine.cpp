@@ -198,6 +198,7 @@ void DestroyHPLEngine(cEngine* apGame)
 //-----------------------------------------------------------------------
 
 bool cEngine::mbDevicePlugged = false;
+int cEngine::mlLogicUpdatesPerSec = 60;
 bool cEngine::mbDeviceRemoved = false;
 
 //-----------------------------------------------------------------------
@@ -208,7 +209,7 @@ cEngine::cEngine(iLowLevelEngineSetup *apGameSetup, tFlag alHplSetupFlags, cEngi
     , iMaxGameUpdates(6)
     , mbNonGameplayFrame(false)
     , kMaxFrameTime(0.25)
-    , kFixedDelta(1.0 / 60.0)
+    , kFixedDelta(1.0 / (double)mlLogicUpdatesPerSec)
     , iUpdatesOnCurrentFrame(0)
     , dAccumulator(0.0)
     , dLogicTime(0.0)
@@ -690,6 +691,21 @@ void cEngine::Run()
     Log("--------------------------------------------------------\n");
 
     mpUpdater->BroadcastMessageToAll(eUpdateableMessage_OnExit);
+}
+
+//-----------------------------------------------------------------------
+
+void cEngine::SetLogicUpdatesPerSec(int alX)
+{
+    if(alX < 30)
+    {
+        alX = 30;
+    }
+    if(alX > 60)
+    {
+        alX = 60;
+    }
+    mlLogicUpdatesPerSec = alX;
 }
 
 //-----------------------------------------------------------------------

@@ -1909,28 +1909,28 @@ float __stdcall cLuxScriptHandler::GetPlayerLampOil()
 
 float __stdcall cLuxScriptHandler::GetPlayerSpeed()
 {
-    return gpBase->mpPlayer->GetCharacterBody()->GetVelocity(1.0f / 60.0f).Length();
+    return gpBase->mpPlayer->GetCharacterBody()->GetVelocity((float)gpBase->mpEngine->GetFixedDelta()).Length();
 }
 
 //-----------------------------------------------------------------------
 
 float __stdcall cLuxScriptHandler::GetPlayerXSpeed()
 {
-    return gpBase->mpPlayer->GetCharacterBody()->GetVelocity(1.0f / 60.0f).x;
+    return gpBase->mpPlayer->GetCharacterBody()->GetVelocity((float)gpBase->mpEngine->GetFixedDelta()).x;
 }
 
 //-----------------------------------------------------------------------
 
 float __stdcall cLuxScriptHandler::GetPlayerYSpeed()
 {
-    return gpBase->mpPlayer->GetCharacterBody()->GetVelocity(1.0f / 60.0f).y;
+    return gpBase->mpPlayer->GetCharacterBody()->GetVelocity((float)gpBase->mpEngine->GetFixedDelta()).y;
 }
 
 //-----------------------------------------------------------------------
 
 float __stdcall cLuxScriptHandler::GetPlayerZSpeed()
 {
-    return gpBase->mpPlayer->GetCharacterBody()->GetVelocity(1.0f / 60.0f).z;
+    return gpBase->mpPlayer->GetCharacterBody()->GetVelocity((float)gpBase->mpEngine->GetFixedDelta()).z;
 }
 
 //-----------------------------------------------------------------------
