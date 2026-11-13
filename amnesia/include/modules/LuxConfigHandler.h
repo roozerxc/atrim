@@ -62,6 +62,7 @@ public:
     bool mbForceShaderModel3And4Off;
     bool mbForceGLSL110;
     bool mbForceNoStencil;
+    bool mbForceRectAs2D;
 
     bool mbFrameProfiler;
     int mlFrameProfilerFrames;

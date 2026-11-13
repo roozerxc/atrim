@@ -321,6 +321,24 @@ public:
         return mbForceNoStencil;
     }
 
+    //Behave as on drivers whose GLSL has no sampler2DRect (old ATI). For testing.
+    static void SetForceRectAs2D(bool abX)
+    {
+        mbForceRectAs2D = abX;
+    }
+    static bool GetForceRectAs2D()
+    {
+        return mbForceRectAs2D;
+    }
+    /**
+     * True if rect textures are backed by normal 2D textures, because the driver can not
+     * sample rect textures in GLSL. Shaders are rewritten when compiled, see cGLSLShader.
+     */
+    static bool GetRectAs2D()
+    {
+        return mbRectAs2D;
+    }
+
 protected:
     void RunPreSwapBuffersCallback()
     {
@@ -336,6 +354,8 @@ protected:
     static bool mbForceShaderModel3And4Off;
     static bool mbForceGLSL110;
     static bool mbForceNoStencil;
+    static bool mbForceRectAs2D;
+    static bool mbRectAs2D;
 
     tPreSwapBuffersCallback mpPreSwapBuffersCallback;
     void *mpPreSwapBuffersUserData;

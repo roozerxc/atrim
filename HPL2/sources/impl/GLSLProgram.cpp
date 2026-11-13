@@ -15,6 +15,26 @@ namespace hpl
 //-----------------------------------------------------------------------
 
 int cGLSLProgram::mlCurrentProgram = 0;
+cGLSLProgram *cGLSLProgram::mpCurrentProgramPtr = NULL;
+
+//Scale of the rect texture on each texture unit (rect textures backed by 2D textures).
+static const int kRectScaleUnits = 32;
+static float gvUnitRectScale[kRectScaleUnits][2];
+static bool gbUnitRectScaleInit = false;
+
+static void InitUnitRectScales()
+{
+    if(gbUnitRectScaleInit)
+    {
+        return;
+    }
+    gbUnitRectScaleInit = true;
+    for(int i = 0; i < kRectScaleUnits; ++i)
+    {
+        gvUnitRectScale[i][0] = 1.0f;
+        gvUnitRectScale[i][1] = 1.0f;
+    }
+}
 
 //-----------------------------------------------------------------------
 
@@ -34,6 +54,11 @@ cGLSLProgram::cGLSLProgram(const tString& asName) : iGpuProgram(asName, eGpuProg
 
 cGLSLProgram::~cGLSLProgram()
 {
+    if(mpCurrentProgramPtr == this)
+    {
+        mpCurrentProgramPtr = NULL;
+    }
+
     for(int i = 0; i < 2; ++i)
     {
         cGLSLShader* pGLSLShader = static_cast<cGLSLShader *>(mpShader[i]);
@@ -129,7 +154,8 @@ bool cGLSLProgram::Link()
             GLint lVarHandle = glGetUniformLocation(mlHandle, sSamplerName.c_str());
             if(lVarHandle < 0)
             {
-                Error("Sampler %s does not exist, could not bind it to unit %d\n", sSamplerName.c_str(), lUnit);
+                //Not an error: the sampler is declared but not used by this variant of the
+                //shader, and the driver has removed it.
                 continue;
             }
 
@@ -139,7 +165,107 @@ bool cGLSLProgram::Link()
         glUseProgram(mlCurrentProgram);
     }
 
+    SetupRectScales();
+
     return true;
+}
+
+//-----------------------------------------------------------------------
+
+void cGLSLProgram::SetupRectScales()
+{
+    mvRectScales.clear();
+    InitUnitRectScales();
+
+    for(int lShader = 0; lShader < 2; ++lShader)
+    {
+        cGLSLShader* pGLSLShader = static_cast<cGLSLShader *>(mpShader[lShader]);
+        if(pGLSLShader == NULL)
+        {
+            continue;
+        }
+
+        const tStringVec &vSamplers = pGLSLShader->GetRectSamplers();
+        for(size_t i = 0; i < vSamplers.size(); ++i)
+        {
+            cRectScale scale;
+            scale.msSampler = vSamplers[i];
+            scale.mlLocation = glGetUniformLocation(mlHandle, ("gvRectScale_" + vSamplers[i]).c_str());
+            if(scale.mlLocation < 0)
+            {
+                continue;    //Not used by this variant of the shader
+            }
+
+            //Samplers that are not given a unit use unit 0
+            scale.mlUnit = 0;
+            for(int j = 0; j < pGLSLShader->GetSamplerUnitNum(); ++j)
+            {
+                if(pGLSLShader->GetSamplerUnit(j)->msName == vSamplers[i])
+                {
+                    scale.mlUnit = pGLSLShader->GetSamplerUnit(j)->mlUnit;
+                }
+            }
+
+            //Values that are never used, so the first upload always goes through
+            scale.mfX = -1.0f;
+            scale.mfY = -1.0f;
+
+            mvRectScales.push_back(scale);
+        }
+    }
+
+    if(mpCurrentProgramPtr == this)
+    {
+        UploadRectScales();
+    }
+}
+
+//-----------------------------------------------------------------------
+
+//The program must be the current one.
+void cGLSLProgram::UploadRectScales()
+{
+    for(size_t i = 0; i < mvRectScales.size(); ++i)
+    {
+        cRectScale &scale = mvRectScales[i];
+        if(scale.mlUnit < 0 || scale.mlUnit >= kRectScaleUnits)
+        {
+            continue;
+        }
+
+        float fX = gvUnitRectScale[scale.mlUnit][0];
+        float fY = gvUnitRectScale[scale.mlUnit][1];
+        if(scale.mfX != fX || scale.mfY != fY)
+        {
+            scale.mfX = fX;
+            scale.mfY = fY;
+            glUniform2f(scale.mlLocation, fX, fY);
+        }
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cGLSLProgram::SetRectScale(int alUnit, float afX, float afY)
+{
+    if(alUnit < 0 || alUnit >= kRectScaleUnits)
+    {
+        return;
+    }
+    InitUnitRectScales();
+
+    if(gvUnitRectScale[alUnit][0] == afX && gvUnitRectScale[alUnit][1] == afY)
+    {
+        return;
+    }
+    gvUnitRectScale[alUnit][0] = afX;
+    gvUnitRectScale[alUnit][1] = afY;
+
+    //The texture may be set after the program, keep the current program up to date.
+    if(mpCurrentProgramPtr && mpCurrentProgramPtr->mvRectScales.empty() == false)
+    {
+        mpCurrentProgramPtr->UploadRectScales();
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -152,7 +278,13 @@ void cGLSLProgram::Bind()
     }
 
     mlCurrentProgram = mlHandle;
+    mpCurrentProgramPtr = this;
     glUseProgram(mlHandle);
+
+    if(mvRectScales.empty() == false)
+    {
+        UploadRectScales();
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -165,6 +297,7 @@ void cGLSLProgram::UnBind()
     }
 
     mlCurrentProgram = 0;
+    mpCurrentProgramPtr = NULL;
     glUseProgram(0);
 }
 
@@ -177,6 +310,17 @@ bool cGLSLProgram::SetSamplerToUnit(const tString& asSamplerName, int alUnit)
     if(lVarHandle < 0)
     {
         return false;
+    }
+
+    //Rect sampler turned into a 2D sampler: its scale follows the unit
+    for(size_t i = 0; i < mvRectScales.size(); ++i)
+    {
+        if(mvRectScales[i].msSampler == asSamplerName)
+        {
+            mvRectScales[i].mlUnit = alUnit;
+            mvRectScales[i].mfX = -1.0f;
+            mvRectScales[i].mfY = -1.0f;
+        }
     }
 
     Bind();

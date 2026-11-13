@@ -19,6 +19,193 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
+//RECT-REWRITE-BEGIN
+static inline bool IsIdentChar(char c)
+{
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_';
+}
+
+/**
+ * Turns rect samplers into 2D samplers, for drivers whose GLSL has no sampler2DRect:
+ *   uniform sampler2DRect aMap;   ->  uniform sampler2D aMap; uniform vec2 gvRectScale_aMap;
+ *   texture2DRect(aMap, coord)    ->  texture2D(aMap, (coord) * gvRectScale_aMap)
+ * Line count is kept so compile errors still point at the right line.
+ */
+static void RewriteRectSamplers(tString &asCode, tStringVec &avSamplers)
+{
+    const tString sSamplerType = "sampler2DRect";
+    const tString sLookup = "texture2DRect";
+    const tString sExtension = "GL_ARB_texture_rectangle";
+
+    ///////////////////////////
+    // Extension line is of no use any more (and gives a warning)
+    size_t lPos = asCode.find(sExtension);
+    while(lPos != tString::npos)
+    {
+        size_t lLineStart = asCode.rfind('\n', lPos);
+        lLineStart = lLineStart == tString::npos ? 0 : lLineStart + 1;
+        size_t lLineEnd = asCode.find('\n', lPos);
+        if(lLineEnd == tString::npos)
+        {
+            lLineEnd = asCode.size();
+        }
+
+        size_t lHash = asCode.find('#', lLineStart);
+        if(lHash != tString::npos && lHash < lPos && asCode.compare(lHash + 1, 9, "extension") == 0)
+        {
+            bool bCarriageReturn = lLineEnd > lLineStart && asCode[lLineEnd - 1] == '\r';
+            asCode.replace(lLineStart, lLineEnd - lLineStart, bCarriageReturn ? "\r" : "");
+            lPos = asCode.find(sExtension, lLineStart);
+        }
+        else
+        {
+            lPos = asCode.find(sExtension, lPos + sExtension.size());
+        }
+    }
+
+    ///////////////////////////
+    // Declarations
+    lPos = asCode.find(sSamplerType);
+    while(lPos != tString::npos)
+    {
+        size_t lEnd = lPos + sSamplerType.size();
+        if((lPos > 0 && IsIdentChar(asCode[lPos - 1])) || (lEnd < asCode.size() && IsIdentChar(asCode[lEnd])))
+        {
+            lPos = asCode.find(sSamplerType, lEnd);
+            continue;
+        }
+
+        asCode.replace(lPos, sSamplerType.size(), "sampler2D");
+        lEnd = lPos + 9;
+
+        //Name of the sampler
+        size_t lNameStart = lEnd;
+        while(lNameStart < asCode.size() && (asCode[lNameStart] == ' ' || asCode[lNameStart] == '\t'))
+        {
+            ++lNameStart;
+        }
+        size_t lNameEnd = lNameStart;
+        while(lNameEnd < asCode.size() && IsIdentChar(asCode[lNameEnd]))
+        {
+            ++lNameEnd;
+        }
+        size_t lSemiColon = lNameEnd;
+        while(lSemiColon < asCode.size() && (asCode[lSemiColon] == ' ' || asCode[lSemiColon] == '\t'))
+        {
+            ++lSemiColon;
+        }
+
+        //Only plain "uniform sampler2DRect name;" gets a scale (the only form the shaders use)
+        if(lNameEnd > lNameStart && lSemiColon < asCode.size() && asCode[lSemiColon] == ';')
+        {
+            tString sName = asCode.substr(lNameStart, lNameEnd - lNameStart);
+            bool bExists = false;
+            for(size_t i = 0; i < avSamplers.size(); ++i)
+            {
+                if(avSamplers[i] == sName)
+                {
+                    bExists = true;
+                }
+            }
+            if(bExists == false)
+            {
+                avSamplers.push_back(sName);
+                asCode.insert(lSemiColon + 1, " uniform vec2 gvRectScale_" + sName + ";");
+            }
+        }
+
+        lPos = asCode.find(sSamplerType, lEnd);
+    }
+
+    ///////////////////////////
+    // Lookups
+    lPos = asCode.find(sLookup);
+    while(lPos != tString::npos)
+    {
+        size_t lEnd = lPos + sLookup.size();
+        size_t lParen = lEnd;
+        while(lParen < asCode.size() && (asCode[lParen] == ' ' || asCode[lParen] == '\t'))
+        {
+            ++lParen;
+        }
+        if((lPos > 0 && IsIdentChar(asCode[lPos - 1])) || lParen >= asCode.size() || asCode[lParen] != '(')
+        {
+            lPos = asCode.find(sLookup, lEnd);
+            continue;
+        }
+
+        //First argument: the sampler
+        size_t lNameStart = lParen + 1;
+        while(lNameStart < asCode.size() && (asCode[lNameStart] == ' ' || asCode[lNameStart] == '\t'))
+        {
+            ++lNameStart;
+        }
+        size_t lNameEnd = lNameStart;
+        while(lNameEnd < asCode.size() && IsIdentChar(asCode[lNameEnd]))
+        {
+            ++lNameEnd;
+        }
+        size_t lComma = lNameEnd;
+        while(lComma < asCode.size() && (asCode[lComma] == ' ' || asCode[lComma] == '\t'))
+        {
+            ++lComma;
+        }
+
+        tString sName = asCode.substr(lNameStart, lNameEnd - lNameStart);
+        bool bKnown = false;
+        for(size_t i = 0; i < avSamplers.size(); ++i)
+        {
+            if(avSamplers[i] == sName)
+            {
+                bKnown = true;
+            }
+        }
+
+        //Second argument: everything up to the closing parenthesis
+        size_t lClose = tString::npos;
+        if(bKnown && lComma < asCode.size() && asCode[lComma] == ',')
+        {
+            int lDepth = 1;
+            for(size_t i = lComma + 1; i < asCode.size(); ++i)
+            {
+                if(asCode[i] == '(')
+                {
+                    ++lDepth;
+                }
+                else if(asCode[i] == ')')
+                {
+                    if(--lDepth == 0)
+                    {
+                        lClose = i;
+                        break;
+                    }
+                }
+                else if(asCode[i] == ';')
+                {
+                    break;
+                }
+            }
+        }
+
+        if(lClose == tString::npos)
+        {
+            lPos = asCode.find(sLookup, lEnd);
+            continue;
+        }
+
+        //Close first so the positions before it stay valid
+        asCode.insert(lClose, ") * gvRectScale_" + sName);
+        asCode.insert(lComma + 1, " (");
+        asCode.replace(lPos, sLookup.size(), "texture2D");
+
+        //Go on right after the name, nested lookups in the coordinate are handled too.
+        lPos = asCode.find(sLookup, lPos + 9);
+    }
+}
+//RECT-REWRITE-END
+
+//-----------------------------------------------------------------------
+
 cGLSLShader::cGLSLShader(const tString& asName, eGpuShaderType aType, iLowLevelGraphics *apLowLevelGraphics)
     : iGpuShader(asName, _W(""), aType, eGpuProgramFormat_GLSL)
 {
@@ -98,6 +285,16 @@ bool cGLSLShader::CreateFromString(const char *apStringData, const tString& asEn
             sDowngraded.replace(lPos, 12, "#version 110");
             apStringData = sDowngraded.c_str();
         }
+    }
+
+    //Drivers without sampler2DRect in GLSL: rect textures are 2D textures, change the samplers to fit.
+    tString sRewritten;
+    mvRectSamplers.clear();
+    if(iLowLevelGraphics::GetRectAs2D())
+    {
+        sRewritten = apStringData;
+        RewriteRectSamplers(sRewritten, mvRectSamplers);
+        apStringData = sRewritten.c_str();
     }
 
     glShaderSource(mlHandle, 1, &apStringData, NULL);

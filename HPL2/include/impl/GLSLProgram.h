@@ -92,11 +92,30 @@ public:
     bool SetMatrixf(int alVarId, const cMatrixf& aMtx);
     bool SetMatrixf(int alVarId, eGpuShaderMatrix aType, eGpuShaderMatrixOp aOp);
 
+    /**
+     * Sets the scale (1 / size) of the rect texture on a texture unit, used by programs
+     * whose rect samplers were turned into 2D samplers. Called when a texture is set.
+     */
+    static void SetRectScale(int alUnit, float afX, float afY);
+
 private:
     void LogProgramInfoLog();
+    void SetupRectScales();
+    void UploadRectScales();
 
     GLuint mlHandle;
     static int mlCurrentProgram;
+    static cGLSLProgram *mpCurrentProgramPtr;
+
+    class cRectScale
+    {
+    public:
+        tString msSampler;
+        GLint mlLocation;
+        int mlUnit;
+        float mfX, mfY;
+    };
+    std::vector<cRectScale> mvRectScales;
 
     std::vector<cGLSLParam> mvParameters;
 };

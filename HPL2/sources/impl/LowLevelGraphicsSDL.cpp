@@ -49,6 +49,35 @@ static void FrameProfilerGpuSync()
     glFinish();
 }
 
+
+//Fixed function texture units that have a texture matrix (rect textures backed by 2D textures).
+static const int kRectMatrixUnits = 8;
+static bool gvRectMatrixSet[kRectMatrixUnits] = {false, false, false, false, false, false, false, false};
+static float gvRectMatrixScale[kRectMatrixUnits][2];
+
+//Checks if the GLSL compiler knows sampler2DRect. Old ATI drivers (before Catalyst 7.x)
+//have rect textures, but only for fixed function.
+static bool TestRectSamplerSupport()
+{
+    const char *pSource =
+        "#extension GL_ARB_texture_rectangle : enable\n"
+        "uniform sampler2DRect aMap;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = texture2DRect(aMap, gl_FragCoord.xy);\n"
+        "}\n";
+
+    GLuint lShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(lShader, 1, &pSource, NULL);
+    glCompileShader(lShader);
+
+    GLint lStatus = GL_FALSE;
+    glGetShaderiv(lShader, GL_COMPILE_STATUS, &lStatus);
+    glDeleteShader(lShader);
+
+    return lStatus != GL_FALSE;
+}
+
 static int glCurrentActiveTextureUnit = -1;
 static inline void SetGLActiveTextureUnit(unsigned int alUnit)
 {
@@ -246,6 +275,25 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFul
         Error(" Couldn't init glew!\n");
     }
 
+    //Must be known before any texture or shader is created.
+    mbRectAs2D = false;
+    if(GLEW_VERSION_2_0 || GLEW_ARB_fragment_shader)
+    {
+        bool bRectSamplers = TestRectSamplerSupport();
+        if(bRectSamplers == false || mbForceRectAs2D)
+        {
+            if(GLEW_VERSION_2_0 || GLEW_ARB_texture_non_power_of_two)
+            {
+                mbRectAs2D = true;
+            }
+            else
+            {
+                Error("GLSL has no rect samplers and there are no non power of two textures, shaders using screen textures will fail!\n");
+            }
+        }
+        while(glGetError() != GL_NO_ERROR);
+    }
+
     ///Setup up windows specifc context:
 #if defined(_WIN32)
     mGLContext = wglGetCurrentContext();
@@ -419,6 +467,8 @@ void cLowLevelGraphicsSDL::SetupGL()
     Log("  ShaderModel 4: %d\n", GetCaps(eGraphicCaps_ShaderModel_4));
 
     Log("  OGL ATIFragmentShader: %d\n", GetCaps(eGraphicCaps_OGL_ATIFragmentShader));
+    Log("  Rect textures: %s\n", mbRectAs2D ? (mbForceRectAs2D ? "as 2D textures (ForceRectAs2D is on)" :
+            "as 2D textures (GLSL has no sampler2DRect)") : "native");
 
 }
 //-----------------------------------------------------------------------
@@ -1627,6 +1677,46 @@ void cLowLevelGraphicsSDL::SetTexture(unsigned int alUnit, iTexture* apTex)
     {
         glBindTexture(NewTarget, NewHandle);
         glEnable(NewTarget);
+
+        ////////////////////////////////////
+        // Rect textures backed by 2D textures still get coordinates in pixels:
+        //  - shaders scale them with a uniform, set through cGLSLProgram.
+        //  - fixed function scales them with the texture matrix.
+        if(mbRectAs2D)
+        {
+            bool bRect = apTex->GetType() == eTextureType_Rect;
+            float fScaleX = 1.0f, fScaleY = 1.0f;
+            if(bRect)
+            {
+                fScaleX = 1.0f / (float)(apTex->GetWidth() > 0 ? apTex->GetWidth() : 1);
+                fScaleY = 1.0f / (float)(apTex->GetHeight() > 0 ? apTex->GetHeight() : 1);
+
+                cGLSLProgram::SetRectScale((int)alUnit, fScaleX, fScaleY);
+            }
+
+            if(alUnit < (unsigned int)kRectMatrixUnits)
+            {
+                bool bChange = bRect ?  (gvRectMatrixSet[alUnit] == false ||
+                                         gvRectMatrixScale[alUnit][0] != fScaleX ||
+                                         gvRectMatrixScale[alUnit][1] != fScaleY)
+                                     :  gvRectMatrixSet[alUnit];
+                if(bChange)
+                {
+                    //All matrix functions in here set the matrix mode they need, no need to restore.
+                    glMatrixMode(GL_TEXTURE);
+                    glLoadIdentity();
+                    if(bRect)
+                    {
+                        glScalef(fScaleX, fScaleY, 1.0f);
+                    }
+                    glMatrixMode(GL_MODELVIEW);
+
+                    gvRectMatrixSet[alUnit] = bRect;
+                    gvRectMatrixScale[alUnit][0] = fScaleX;
+                    gvRectMatrixScale[alUnit][1] = fScaleY;
+                }
+            }
+        }
     }
 
     mvCurrentTextureTarget[alUnit] = NewTarget;
@@ -2672,7 +2762,7 @@ GLenum TextureTypeToGLTarget(eTextureType aType)
     case eTextureType_2D:
         return GL_TEXTURE_2D;
     case eTextureType_Rect:
-        return GL_TEXTURE_RECTANGLE;
+        return iLowLevelGraphics::GetRectAs2D() ? GL_TEXTURE_2D : GL_TEXTURE_RECTANGLE;
     case eTextureType_CubeMap:
         return GL_TEXTURE_CUBE_MAP;
     case eTextureType_3D:
@@ -2801,7 +2891,7 @@ GLenum GetGLTextureTargetEnum(eTextureType aType)
     case eTextureType_2D:
         return GL_TEXTURE_2D;
     case eTextureType_Rect:
-        return GL_TEXTURE_RECTANGLE;
+        return iLowLevelGraphics::GetRectAs2D() ? GL_TEXTURE_2D : GL_TEXTURE_RECTANGLE;
     case eTextureType_CubeMap:
         return GL_TEXTURE_CUBE_MAP;
     case eTextureType_3D:

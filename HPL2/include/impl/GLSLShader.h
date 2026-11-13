@@ -45,6 +45,12 @@ public:
         return mlHandle;
     }
 
+    //Rect samplers that were turned into 2D samplers, each has a "gvRectScale_<name>" uniform.
+    const tStringVec& GetRectSamplers()
+    {
+        return mvRectSamplers;
+    }
+
 protected:
     void LogShaderInfoLog();
     void LogShaderCode(const char *apStringData);
@@ -53,6 +59,7 @@ protected:
     iLowLevelGraphics *mpLowLevelGraphics;
 
     GLuint mlHandle;
+    tStringVec mvRectSamplers;
 };
 };
 #endif // HPL_GLSL_SHADER_H
