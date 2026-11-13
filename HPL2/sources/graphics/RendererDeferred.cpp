@@ -161,6 +161,7 @@ cProgramComboFeature gvFogAreaFeatureVec[] =
 #define kVar_afSkipEdgeLimit                    22
 #define kVar_afFalloff							23
 #define kVar_afComplexity						24
+#define kVar_a_mtxInvBoxViewSpace                25
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -196,6 +197,8 @@ cRendererDeferred::cRendererDeferred(cGraphics *apGraphics, cResources* apResour
     mbReflectionTextureCleared = false;
 
     mbStencilAvailable = true;
+    mpLightBoxClipProgram[0] = NULL;
+    mpLightBoxClipProgram[1] = NULL;
 
     msActiveLightFragShader = msLightFragShader;
     mbLiteLightShader = false;
@@ -2720,7 +2723,20 @@ void cRendererDeferred::RenderLights_RenderBack()
         SetupLightProgramVariables(pProgram, pLightData);
 
         //Draw the light
-        DrawCurrent();
+        if(pLightData->mbRenderFront)
+        {
+            SetCullMode(eCullMode_CounterClockwise);
+            SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
+
+            DrawCurrent();
+
+            SetCullMode(eCullMode_Clockwise);
+            SetDepthTestFunc(eDepthTestFunc_GreaterOrEqual);
+        }
+        else
+        {
+            DrawCurrent();
+        }
     }
     if(mbLog)
     {
@@ -2756,16 +2772,28 @@ void cRendererDeferred::RenderBoxLight(cDeferredLight* apLightData)
     }
 
     //Set up program
-    SetProgram(mpLightBoxProgram[lProgramNum]);
+    iGpuProgram *pProgram = mpLightBoxProgram[lProgramNum];
+    bool bClip = apLightData->mbClipInShader && lProgramNum < 2 && mpLightBoxClipProgram[lProgramNum] != NULL;
+    if(bClip)
+    {
+        pProgram = mpLightBoxClipProgram[lProgramNum];
+    }
+    SetProgram(pProgram);
 
     //Set up Light specific variables
-    if(mpLightBoxProgram[lProgramNum])
+    if(pProgram)
     {
-        mpLightBoxProgram[lProgramNum]->SetColor4f(kVar_avLightColor, pLight->GetDiffuseColor());
+        pProgram->SetColor4f(kVar_avLightColor, pLight->GetDiffuseColor());
+
+        if(bClip)
+        {
+            pProgram->SetFloat(kVar_afNegFarPlane, -mpCurrentFrustum->GetFarPlane());
+            pProgram->SetMatrixf(kVar_a_mtxInvBoxViewSpace, cMath::MatrixInverse(apLightData->m_mtxViewSpaceRender));
+        }
 
         if(mbDebugRenderLightComplexity)
         {
-            mpLightBoxProgram[lProgramNum]->SetFloat(kVar_afComplexity, GetLightComplexity(apLightData));
+            pProgram->SetFloat(kVar_afComplexity, GetLightComplexity(apLightData));
         }
     }
 

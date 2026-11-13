@@ -97,7 +97,7 @@ enum eGBufferComponents
 class cDeferredLight
 {
 public:
-    cDeferredLight() : mpShadowTexture(NULL), mbCastShadows(false) {}
+    cDeferredLight() : mbClipInShader(false), mbRenderFront(false), mpShadowTexture(NULL), mbCastShadows(false) {}
 
     iLight *mpLight;
     cRect2l mClipRect;
@@ -105,6 +105,8 @@ public:
     cMatrixf m_mtxViewSpaceRender;
     cMatrixf m_mtxViewSpaceTransform;
     bool mbInsideNearPlane;
+    bool mbClipInShader;
+    bool mbRenderFront;
     iOcclusionQuery *mpQuery;
 
     iTexture *mpShadowTexture;
@@ -128,7 +130,6 @@ public:
 
     iTexture *GetGbufferTexture(int alIdx);
     iFrameBuffer *GetGBufferFrameBuffer(eGBufferComponents aComponents);
-    //iTexture *GetShadowTexture(eShadowMapResolution aQuality){ return mpShadowTexture[aQuality]; }
 
     iDepthStencilBuffer *GetDepthStencilBuffer()
     {
@@ -531,6 +532,7 @@ private:
     iGpuProgram *mpSkyBoxProgram;
     iGpuProgram *mpLightStencilProgram;
     iGpuProgram *mpLightBoxProgram[3];//0=no SSAO, 1=SSAO used, 2=light debug
+    iGpuProgram *mpLightBoxClipProgram[2]; //no stencil: 0=normal, 1=ssao
     bool mbStencilAvailable;
 
     cProgramComboManager *mpFogProgramManager;
