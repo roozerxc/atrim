@@ -1650,13 +1650,19 @@ void cLuxInventory::RenderBackgroundImage()
     pLowGfx->CopyFrameBufferToTexture(mpScreenTexture, 0, pLowGfx->GetScreenSizeInt(), 0);
 
     //Bind shader and draw
-    mpEffectProgram->Bind();
+    if(mpEffectProgram)
+    {
+        mpEffectProgram->Bind();    //NULL if the shader failed to compile, drawn without the effect then
+    }
     pLowGfx->SetCurrentFrameBuffer(pEffectBuffer);
 
     pLowGfx->SetTexture(0, mpScreenTexture);
 
     pLowGfx->DrawQuad(0, mvScreenSize, cVector2f(0, mvScreenSize.y), cVector2f(mvScreenSize.x, 0), cColor(1, 1));
-    mpEffectProgram->UnBind();
+    if(mpEffectProgram)
+    {
+        mpEffectProgram->UnBind();
+    }
 
     //Copy a copy of the full gui with all HUD!
     pLowGfx->SetCurrentFrameBuffer(NULL);

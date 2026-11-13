@@ -1333,22 +1333,34 @@ void cLuxMainMenu::RenderBlur(iTexture *apInputTexture, iTexture *apTempTexture,
     iLowLevelGraphics *pLowGfx = mpGraphics->GetLowLevel();
 
     //Draw horizontal blur to temp from screen
-    mpBlurProgram[0]->Bind();
+    if(mpBlurProgram[0])
+    {
+        mpBlurProgram[0]->Bind();    //NULL if the shader failed to compile, drawn without the effect then
+    }
     pLowGfx->SetCurrentFrameBuffer(apBlurBuffers[0]);
 
     pLowGfx->SetTexture(0, apInputTexture);
 
     pLowGfx->DrawQuad(0, mvScreenSize, cVector2f(0, mvScreenSize.y), cVector2f(mvScreenSize.x, 0), cColor(1, 1));
-    mpBlurProgram[0]->UnBind();
+    if(mpBlurProgram[0])
+    {
+        mpBlurProgram[0]->UnBind();
+    }
 
     //Draw vertical blur to final from temp
-    mpBlurProgram[1]->Bind();
+    if(mpBlurProgram[1])
+    {
+        mpBlurProgram[1]->Bind();    //NULL if the shader failed to compile, drawn without the effect then
+    }
     pLowGfx->SetCurrentFrameBuffer(apBlurBuffers[1]);
 
     pLowGfx->SetTexture(0, apTempTexture);
 
     pLowGfx->DrawQuad(0, mvScreenSize, cVector2f(0, mvScreenSize.y), cVector2f(mvScreenSize.x, 0), cColor(1, 1));
-    mpBlurProgram[1]->UnBind();
+    if(mpBlurProgram[1])
+    {
+        mpBlurProgram[1]->UnBind();
+    }
 }
 
 void cLuxMainMenu::RenderBlurTexture()
