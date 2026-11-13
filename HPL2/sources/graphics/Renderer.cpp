@@ -57,6 +57,7 @@ bool iRenderer::mbParallaxEnabled = true;
 int iRenderer::mlReflectionSizeDiv = 2;
 bool iRenderer::mbRefractionEnabled = true;
 int iRenderer::mlDrawCalls = 1;
+float iRenderer::mfSmallObjectCullPixels = 0;
 
 static const tString gsProfileNoName = "(no object)";
 
@@ -502,6 +503,7 @@ iRenderer::iRenderer(const tString& asName, cGraphics *apGraphics, cResources* a
     mbSetupOcclusionPlaneForFog = false;
 
     mfScissorLastFov = 0;
+    mfSmallObjectCullMul = 0;
     mfScissorLastTanHalfFov = 0;
 
     mpCallbackFunctions = hplNew( cRendererCallbackFunctions, (this) );
@@ -681,6 +683,14 @@ void iRenderer::BeginRendering(    double adFrameTime, cFrustum *apFrustum, cWor
     float fNearPlane = mpCurrentFrustum->GetNearPlane();
     mfCurrentNearPlaneTop =  fTanHalfFOV * fNearPlane;
     mfCurrentNearPlaneRight = mpCurrentFrustum->GetAspect() * mfCurrentNearPlaneTop;
+
+    //Small object culling: size on screen = radius * height / (dist * tan), so cull when (radius * mul)^2 < dist^2
+    mfSmallObjectCullMul = 0;
+    if(mfSmallObjectCullPixels > 0 && fTanHalfFOV > 0)
+    {
+        float fMul = (float)mvRenderTargetSize.y / (mfSmallObjectCullPixels * fTanHalfFOV);
+        mfSmallObjectCullMul = fMul * fMul;
+    }
 
 
     /////////////////////////////////////////////
@@ -1077,7 +1087,7 @@ void iRenderer::CheckNodesAndAddToListIterative(iRenderableContainerNode *apNode
         for(; it != apNode->GetObjectList()->end(); ++it)
         {
             iRenderable *pObject = *it;
-            if(CheckObjectIsVisible(pObject, alNeededFlags) == false)
+            if(CheckObjectIsVisible(pObject, alNeededFlags) == false || CheckObjectIsTooSmall(pObject))
             {
                 continue;
             }
@@ -1308,7 +1318,7 @@ int iRenderer::RenderAndAddNodeObjects(iRenderableContainerNode *apNode, tRender
 
         //////////////////////
         // Check if object is visible
-        if(CheckObjectIsVisible(pObject, alNeededFlags) == false)
+        if(CheckObjectIsVisible(pObject, alNeededFlags) == false || CheckObjectIsTooSmall(pObject))
         {
             continue;
         }
@@ -2682,6 +2692,22 @@ bool iRenderer::CheckObjectIsVisible(iRenderable *apObject, tRenderableFlag alNe
     }
 
     return true;
+}
+
+//-----------------------------------------------------------------------
+
+bool iRenderer::CheckObjectIsTooSmall(iRenderable *apObject)
+{
+    if(mfSmallObjectCullMul <= 0 || apObject->GetRenderType() != eRenderableType_SubMesh)
+    {
+        return false;
+    }
+
+    cBoundingVolume *pBV = apObject->GetBoundingVolume();
+    float fRadius = pBV->GetRadius();
+    cVector3f vToObject = pBV->GetWorldCenter() - mpCurrentFrustum->GetOrigin();
+
+    return fRadius * fRadius * mfSmallObjectCullMul < vToObject.SqrLength();
 }
 
 //-----------------------------------------------------------------------

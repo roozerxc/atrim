@@ -364,6 +364,15 @@ public:
         return mbRefractionEnabled;
     }
 
+    static void SetSmallObjectCullPixels(float afX)
+    {
+        mfSmallObjectCullPixels = afX;
+    }
+    static float GetSmallObjectCullPixels()
+    {
+        return mfSmallObjectCullPixels;
+    }
+
     static void IncDrawCalls()
     {
         mlDrawCalls++;
@@ -486,6 +495,7 @@ protected:
     * Checks the IsVisible and also clip planes (in setttings), if visible in reflection and other stuff . No frustum check!
     */
     bool CheckObjectIsVisible(iRenderable *apObject, tRenderableFlag alNeededFlags);
+    bool CheckObjectIsTooSmall(iRenderable *apObject);
 
     /**
      * Checks custom clip planes (in setttings) and more to determine if a node is viisible. No frustum check!
@@ -580,6 +590,9 @@ protected:
     static int mlReflectionSizeDiv;
     static bool mbRefractionEnabled;
     static int mlDrawCalls;
+
+    static float mfSmallObjectCullPixels;
+    float mfSmallObjectCullMul;
 };
 
 //---------------------------------------------
