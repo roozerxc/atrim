@@ -57,6 +57,7 @@ tString cRendererDeferred::msLiteLightFragShader = "deferred_light_frag_lite.gls
 eDeferredGBuffer cRendererDeferred::mGBufferType = eDeferredGBuffer_32Bit;
 int cRendererDeferred::mlNumOfGBufferTextures = 4;
 bool cRendererDeferred::mbDepthCullLights = true;
+bool cRendererDeferred::mbLightSpecularEnabled = true;
 
 bool cRendererDeferred::mbSSAOLoaded = false;
 int cRendererDeferred::mlSSAONumOfSamples = 8;
@@ -1578,7 +1579,7 @@ iGpuProgram *cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightD
     /////////////////////////
     //Flag setup
     tFlag lFlags = alExtraFlags;
-    if(pLight->GetDiffuseColor().a > 0)
+    if(pLight->GetDiffuseColor().a > 0 && mbLightSpecularEnabled)
     {
         lFlags |= eFeature_Light_Specular;
     }

@@ -156,6 +156,7 @@ void cLuxConfigHandler::SaveMainConfig()
     gpBase->mpMainConfig->SetInt("Graphics", "GBufferType", cRendererDeferred::GetGBufferType());
     gpBase->mpMainConfig->SetInt("Graphics", "NumOfGBufferTextures", cRendererDeferred::GetNumOfGBufferTextures());
     gpBase->mpMainConfig->SetInt("Graphics", "LightShaderMode", cRendererDeferred::GetLightShaderMode());
+    gpBase->mpMainConfig->SetBool("Graphics", "LightSpecular", cRendererDeferred::GetLightSpecularEnabled());
     gpBase->mpMainConfig->SetFloat("Graphics", "SmallObjectCullPixels", iRenderer::GetSmallObjectCullPixels());
     gpBase->mpMainConfig->SetInt("Main", "LogicUpdatesPerSec", cEngine::GetLogicUpdatesPerSec());
 

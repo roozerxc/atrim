@@ -213,6 +213,15 @@ public:
         return mlNumOfGBufferTextures;
     }
 
+    static void SetLightSpecularEnabled(bool abX)
+    {
+        mbLightSpecularEnabled = abX;
+    }
+    static bool GetLightSpecularEnabled()
+    {
+        return mbLightSpecularEnabled;
+    }
+
     static void SetDepthCullLights(bool abX)
     {
         mbDepthCullLights = abX;
@@ -528,6 +537,7 @@ private:
     static eDeferredGBuffer mGBufferType;
     static int mlNumOfGBufferTextures;
     static bool mbDepthCullLights;
+    static bool mbLightSpecularEnabled;
 
     static bool mbSSAOLoaded;
     static int mlSSAONumOfSamples;
