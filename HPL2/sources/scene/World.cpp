@@ -1,4 +1,5 @@
 #include "scene/World.h"
+#include "system/FrameProfiler.h"
 
 
 #include "system/Script.h"
@@ -208,25 +209,38 @@ void cWorld::Update(double adFixedDelta)
     START_TIMING(Physics);
     if(mpPhysicsWorld)
     {
+        HPL_PROFILE_SCOPE("Physics");
         mpPhysicsWorld->Update(adFixedDelta);
     }
     STOP_TIMING(Physics);
 
 
     START_TIMING(Entities);
-    UpdateEntities(adFixedDelta);
+    {
+        HPL_PROFILE_SCOPE("Entities");
+        UpdateEntities(adFixedDelta);
+    }
     STOP_TIMING(Entities);
 
     START_TIMING(Particles);
-    UpdateParticles(adFixedDelta);
+    {
+        HPL_PROFILE_SCOPE("Particles");
+        UpdateParticles(adFixedDelta);
+    }
     STOP_TIMING(Particles);
 
     START_TIMING(Lights);
-    UpdateLights(adFixedDelta);
+    {
+        HPL_PROFILE_SCOPE("Lights");
+        UpdateLights(adFixedDelta);
+    }
     STOP_TIMING(Lights);
 
     START_TIMING(SoundEntities);
-    UpdateSoundEntities(adFixedDelta);
+    {
+        HPL_PROFILE_SCOPE("SoundEntities");
+        UpdateSoundEntities(adFixedDelta);
+    }
     STOP_TIMING(SoundEntities);
 }
 

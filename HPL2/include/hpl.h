@@ -11,6 +11,7 @@
 #include "system/PreprocessParser.h"
 #include "system/Thread.h"
 #include "system/Mutex.h"
+#include "system/FrameProfiler.h"
 #include "system/Platform.h"
 #include "system/SHA1.h"
 

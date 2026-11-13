@@ -1,4 +1,5 @@
 #include "engine/Updater.h"
+#include "system/FrameProfiler.h"
 
 #include "engine/Updateable.h"
 #include "system/LowLevelSystem.h"
@@ -51,6 +52,7 @@ void cUpdater::BroadcastMessageToAll(eUpdateableMessage aMessage, double adX)
         for(tUpdateableListIt it = pUpdateList->begin(); it != pUpdateList->end(); ++it)
         {
             iUpdateable *pUpdateable = *it;
+            HPL_PROFILE_SCOPE(pUpdateable->GetName().c_str());
             pUpdateable->RunMessage(aMessage, adX);
         }
     }
@@ -65,6 +67,7 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, double adX)
         for(tUpdateableListIt it = mlstGlobalUpdateableList.begin(); it != mlstGlobalUpdateableList.end(); ++it)
         {
             iUpdateable *pUpdateable = *it;
+            HPL_PROFILE_SCOPE(pUpdateable->GetName().c_str());
             pUpdateable->RunMessage(aMessage, adX);
         }
 
@@ -74,6 +77,7 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, double adX)
             for(tUpdateableListIt it = mpCurrentUpdates->begin(); it != mpCurrentUpdates->end(); ++it)
             {
                 iUpdateable *pUpdateable = *it;
+                HPL_PROFILE_SCOPE(pUpdateable->GetName().c_str());
                 pUpdateable->RunMessage(aMessage, adX);
 
                 //In case the container is change, do not do any more updating.
@@ -93,6 +97,7 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, double adX)
             //Log("'%s'\n", pUpdateable->GetName().c_str());
 
             START_TIMING_EX(pUpdateable->GetName().c_str(), game)
+            HPL_PROFILE_SCOPE(pUpdateable->GetName().c_str());
             pUpdateable->RunMessage(aMessage, adX);
             STOP_TIMING(game)
         }
@@ -107,6 +112,7 @@ void cUpdater::RunMessage(eUpdateableMessage aMessage, double adX)
                 //Log("'%s'\n", pUpdateable->GetName().c_str());
 
                 START_TIMING_EX(pUpdateable->GetName().c_str(), game)
+                HPL_PROFILE_SCOPE(pUpdateable->GetName().c_str());
                 pUpdateable->RunMessage(aMessage, adX);
                 STOP_TIMING(game)
 

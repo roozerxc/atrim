@@ -9,6 +9,7 @@
 #include "graphics/Graphics.h"
 
 #include "system/LowLevelSystem.h"
+#include "system/FrameProfiler.h"
 
 #include "math/Math.h"
 #include "math/Frustum.h"
@@ -1077,6 +1078,16 @@ void iRenderFunctions::DrawCurrent(eVertexBufferDrawType aDrawType)
     if(mpCurrentVtxBuffer)
     {
         mpCurrentVtxBuffer->Draw(aDrawType);
+
+        if(cFrameProfiler::IsActive())
+        {
+            int lIndexNum = mpCurrentVtxBuffer->GetElementNum();
+            if(lIndexNum < 0)
+            {
+                lIndexNum = mpCurrentVtxBuffer->GetIndexNum();
+            }
+            cFrameProfiler::AddDrawCall(lIndexNum / 3);
+        }
     }
 
     if(bToggle)

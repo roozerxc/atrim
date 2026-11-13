@@ -17,6 +17,7 @@
 
 #include "system/String.h"
 #include "system/Platform.h"
+#include "system/FrameProfiler.h"
 #include "system/Timer.h"
 #include "system/Mutex.h"
 
@@ -455,6 +456,8 @@ void cEngine::Run()
         }
         dCurrentTime = dNewTime;
 
+        cFrameProfiler::BeginFrame();
+
         // Do we actually have window focus?
         bool bGameHasFocus = mpGraphics->GetLowLevel()->GetWindowInputFocus();
 
@@ -512,11 +515,24 @@ void cEngine::Run()
 
             // Run Update callback in updater
             START_TIMING(FixedUpdate)
-            cRenderInterpolation::BeginTick(iUpdatesOnCurrentFrame >= iTicksThisFrame - 2);
-            mpUpdater->RunMessage(eUpdateableMessage_PreUpdate, kFixedDelta);
-            mpUpdater->RunMessage(eUpdateableMessage_Update, kFixedDelta);
-            mpUpdater->RunMessage(eUpdateableMessage_PostUpdate, kFixedDelta);
-            cRenderInterpolation::EndTick();
+            {
+                //One call per logic tick, "calls" in the profile is ticks per frame
+                HPL_PROFILE_SCOPE("LogicTick");
+                cRenderInterpolation::BeginTick(iUpdatesOnCurrentFrame >= iTicksThisFrame - 2);
+                {
+                    HPL_PROFILE_SCOPE("PreUpdate");
+                    mpUpdater->RunMessage(eUpdateableMessage_PreUpdate, kFixedDelta);
+                }
+                {
+                    HPL_PROFILE_SCOPE("Update");
+                    mpUpdater->RunMessage(eUpdateableMessage_Update, kFixedDelta);
+                }
+                {
+                    HPL_PROFILE_SCOPE("PostUpdate");
+                    mpUpdater->RunMessage(eUpdateableMessage_PostUpdate, kFixedDelta);
+                }
+                cRenderInterpolation::EndTick();
+            }
             STOP_TIMING(FixedUpdate)
 
             // If log update is active, clear it regularly.
@@ -568,25 +584,44 @@ void cEngine::Run()
         // Read the very latest mouse/input state right before drawing, so things
         // driven every frame (mouse look, GUI cursor) use input that is as fresh as possible.
         mpInput->FrameUpdate();
-        mpUpdater->RunMessage(eUpdateableMessage_OnFrameInput, dFrameTime);
+        {
+            HPL_PROFILE_SCOPE("FrameInput");
+            mpUpdater->RunMessage(eUpdateableMessage_OnFrameInput, dFrameTime);
+        }
 
         START_TIMING(OnDraw)
-        mpUpdater->RunMessage(eUpdateableMessage_OnDraw, dFrameTime);
+        {
+            HPL_PROFILE_SCOPE("OnDraw");
+            mpUpdater->RunMessage(eUpdateableMessage_OnDraw, dFrameTime);
+        }
         STOP_TIMING(OnDraw)
 
         START_TIMING(RenderAll)
-        mpScene->Render(dFrameTime, tSceneRenderFlag_All);
+        {
+            HPL_PROFILE_SCOPE_GPU("Render");
+            mpScene->Render(dFrameTime, tSceneRenderFlag_All);
+        }
         STOP_TIMING(RenderAll)
 
-        START_TIMING(FlushRender)
-        mpGraphics->GetLowLevel()->FlushRendering();
-        STOP_TIMING(FlushRender)
+        {
+            HPL_PROFILE_SCOPE_GPU("SwapBuffers");
 
-        START_TIMING(SwapBuffers)
-        mpGraphics->GetLowLevel()->SwapBuffers();
-        STOP_TIMING(SwapBuffers)
+            START_TIMING(FlushRender)
+            mpGraphics->GetLowLevel()->FlushRendering();
+            STOP_TIMING(FlushRender)
 
-        mpUpdater->RunMessage(eUpdateableMessage_OnPostBufferSwap);
+            START_TIMING(SwapBuffers)
+            mpGraphics->GetLowLevel()->SwapBuffers();
+            STOP_TIMING(SwapBuffers)
+        }
+
+        {
+            HPL_PROFILE_SCOPE("PostBufferSwap");
+            mpUpdater->RunMessage(eUpdateableMessage_OnPostBufferSwap);
+        }
+
+        //Loading screens and such are left out of the profile
+        cFrameProfiler::EndFrame(mbNonGameplayFrame);
 
         mpFPSCounter->AddFrame();
 

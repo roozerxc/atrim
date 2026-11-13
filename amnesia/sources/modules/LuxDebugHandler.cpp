@@ -101,6 +101,7 @@ void cLuxDebugHandler::LoadUserConfig()
     //////////////////////
     //Load from config
     mbShowFPS = gpBase->mpUserConfig->GetBool("Debug", "ShowFPS", true);
+    mbProfilerKeyWasDown = false;
     mbShowSoundPlaying = gpBase->mpUserConfig->GetBool("Debug", "ShowSoundPlaying", true);
     mbShowPlayerInfo = gpBase->mpUserConfig->GetBool("Debug", "ShowPlayerInfo", true);
     mbShowEntityInfo = gpBase->mpUserConfig->GetBool("Debug", "ShowEntityInfo", true);
@@ -388,6 +389,19 @@ static tString PixelFormatToString(ePixelFormat aFormat)
 
 void cLuxDebugHandler::OnDraw(double adFrameTime)
 {
+    ////////////////////
+    // F8 turns the frame profiler on and off (reports go to the log)
+    if(gpBase->mpConfigHandler->mbLoadDebugMenu || gpBase->mpConfigHandler->mbFrameProfiler)
+    {
+        bool bKeyDown = gpBase->mpEngine->GetInput()->GetKeyboard()->KeyIsDown(eKey_F8);
+        if(bKeyDown && mbProfilerKeyWasDown == false)
+        {
+            cFrameProfiler::SetActive(!cFrameProfiler::IsActive());
+            AddMessage(cFrameProfiler::IsActive() ? _W("Frame profiler ON, reports are written to the log") : _W("Frame profiler OFF"), false);
+        }
+        mbProfilerKeyWasDown = bKeyDown;
+    }
+
     float fY = 5.0f;
 
     ////////////////////

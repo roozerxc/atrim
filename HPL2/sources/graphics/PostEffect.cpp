@@ -1,4 +1,5 @@
 #include "graphics/PostEffect.h"
+#include "system/FrameProfiler.h"
 
 #include "graphics/Graphics.h"
 
@@ -72,6 +73,7 @@ iTexture *iPostEffect::Render(cPostEffectComposite *apComposite, iTexture *apInp
 
     ///////////////////////////
     // Render
+    HPL_PROFILE_SCOPE_GPU(mpType ? mpType->GetName().c_str() : "PostEffect");
     iTexture *pOutputTex = RenderEffect(apInputTexture, apFinalTempBuffer);
 
     //////////////////////////

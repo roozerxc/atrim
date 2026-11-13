@@ -1,4 +1,5 @@
 #include "scene/Scene.h"
+#include "system/FrameProfiler.h"
 #include "scene/RenderInterpolation.h"
 
 #include "scene/Viewport.h"
@@ -211,6 +212,7 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
             if(pRenderer && pViewPort->GetWorld() && pFrustum)
             {
                 START_TIMING(RenderWorld)
+                HPL_PROFILE_SCOPE_GPU("World");
                 pRenderer->Render(    adFrameTime, pFrustum,
                                       pViewPort->GetWorld(), pViewPort->GetRenderSettings(),
                                       pViewPort->GetRenderTarget(),
@@ -232,11 +234,17 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
             //Render 3D GuiSets
             // Should this really be here? Or perhaps send in a frame buffer depending on the renderer.
             START_TIMING(Render3DGui)
-            Render3DGui(pViewPort, pFrustum, adFrameTime);
+            {
+                HPL_PROFILE_SCOPE_GPU("Gui3D");
+                Render3DGui(pViewPort, pFrustum, adFrameTime);
+            }
             STOP_TIMING(Render3DGui)
 
             START_TIMING(RenderPrePostEffectScreenGui)
-            RenderPrePostEffectScreenGui(pViewPort, adFrameTime);
+            {
+                HPL_PROFILE_SCOPE_GPU("GuiPrePostEffect");
+                RenderPrePostEffectScreenGui(pViewPort, adFrameTime);
+            }
             STOP_TIMING(RenderPrePostEffectScreenGui)
         }
 
@@ -249,7 +257,10 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
             iTexture *pInputTexture = pRenderer->GetPostEffectTexture();
 
             START_TIMING(RenderPostEffects)
-            pPostEffectComposite->Render(adFrameTime, pFrustum, pInputTexture, pViewPort->GetRenderTarget());
+            {
+                HPL_PROFILE_SCOPE_GPU("PostEffects");
+                pPostEffectComposite->Render(adFrameTime, pFrustum, pInputTexture, pViewPort->GetRenderTarget());
+            }
             STOP_TIMING(RenderPostEffects)
         }
 
@@ -258,7 +269,10 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
         if(alFlags & tSceneRenderFlag_Gui)
         {
             START_TIMING(RenderGUI)
-            RenderScreenGui(pViewPort, adFrameTime);
+            {
+                HPL_PROFILE_SCOPE_GPU("Gui");
+                RenderScreenGui(pViewPort, adFrameTime);
+            }
             STOP_TIMING(RenderGUI)
         }
     }

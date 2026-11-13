@@ -188,6 +188,7 @@ private:
     std::vector<tLightComplexity> mvLightComplexity;
 
     bool mbShowFPS;
+    bool mbProfilerKeyWasDown;
     bool mbShowSoundPlaying;
     bool mbShowPlayerInfo;
     bool mbShowEntityInfo;

@@ -1631,15 +1631,15 @@
 				Name="pugixml"
 				>
 				<File
+					RelativePath=".\include\impl\pugixml\pugiconfig.hpp"
+					>
+				</File>
+				<File
 					RelativePath=".\sources\impl\pugixml\pugixml.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\include\impl\pugixml\pugixml.hpp"
-					>
-				</File>
-				<File
-					RelativePath=".\include\impl\pugixml\pugiconfig.hpp"
 					>
 				</File>
 				<File
@@ -2569,6 +2569,14 @@
 			</File>
 			<File
 				RelativePath=".\include\system\Container.h"
+				>
+			</File>
+			<File
+				RelativePath=".\sources\system\FrameProfiler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\system\FrameProfiler.h"
 				>
 			</File>
 			<File

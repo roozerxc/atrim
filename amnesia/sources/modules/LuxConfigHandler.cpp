@@ -100,6 +100,9 @@ void cLuxConfigHandler::LoadMainConfig()
     mbForceShaderModel3And4Off = gpBase->mpMainConfig->GetBool("Graphics", "ForceShaderModel3And4Off", false);
     mbForceGLSL110 = gpBase->mpMainConfig->GetBool("Graphics", "ForceGLSL110", false);
 
+    mbFrameProfiler = gpBase->mpMainConfig->GetBool("Main", "FrameProfiler", false);
+    mlFrameProfilerFrames = gpBase->mpMainConfig->GetInt("Main", "FrameProfilerFrames", 120);
+
     /////////////////////
     // Sound variables
     mlSoundDevID = gpBase->mpMainConfig->GetInt("Sound", "Device", -1);
@@ -174,6 +177,9 @@ void cLuxConfigHandler::SaveMainConfig()
 
     gpBase->mpMainConfig->SetBool("Graphics", "ForceShaderModel3And4Off", mbForceShaderModel3And4Off);
     gpBase->mpMainConfig->SetBool("Graphics", "ForceGLSL110", mbForceGLSL110);
+
+    gpBase->mpMainConfig->SetBool("Main", "FrameProfiler", mbFrameProfiler);
+    gpBase->mpMainConfig->SetInt("Main", "FrameProfilerFrames", mlFrameProfilerFrames);
 
     /////////////////////
     // Sound variables

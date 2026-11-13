@@ -2,6 +2,7 @@
 #define HPL_RENDERER_H
 
 #include "graphics/GraphicsTypes.h"
+#include "system/FrameProfiler.h"
 #include "math/MathTypes.h"
 #include "scene/SceneTypes.h"
 
@@ -79,7 +80,9 @@ typedef bool (*tRenderCHCObjectCallbackFunc)(iRenderer *, iRenderable *apObject)
 
 //---------------------------------------------
 
+//The profile section ends when leaving the scope the pass was started in.
 #define START_RENDER_PASS(asName) \
+            cFrameProfilerScope profileScope_##asName(#asName, true); \
             if(mbLog){ \
                 Log("----------\n -- Start Rendering %s:\n----------\n",#asName);\
             }

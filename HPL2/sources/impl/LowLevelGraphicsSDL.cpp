@@ -38,8 +38,16 @@
 #endif
 #endif
 
+#include "system/FrameProfiler.h"
+
 namespace hpl
 {
+
+//Makes the GPU finish all it has been given, so the frame profiler can time it.
+static void FrameProfilerGpuSync()
+{
+    glFinish();
+}
 
 static int glCurrentActiveTextureUnit = -1;
 static inline void SetGLActiveTextureUnit(unsigned int alUnit)
@@ -370,6 +378,8 @@ void cLowLevelGraphicsSDL::SetupGL()
     glLoadIdentity();
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+
+    cFrameProfiler::SetGpuSyncFunc(FrameProfilerGpuSync);
 
     //Show some info
     Log("  Vendor: %s\n", glGetString(GL_VENDOR));

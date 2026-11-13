@@ -2174,6 +2174,48 @@ void cRendererDeferred::InitLightRendering()
 
 //-----------------------------------------------------------------------
 
+static const tString gsProfileEmpty = "";
+
+//Name used for a light in the frame profile, only built when needed.
+static tString GetLightProfileName(cDeferredLight *apLightData)
+{
+    iLight *pLight = apLightData->mpLight;
+    tString sName = pLight->GetName();
+    switch(pLight->GetLightType())
+    {
+    case eLightType_Point:
+        sName += " [point";
+        break;
+    case eLightType_Spot:
+        sName += " [spot";
+        break;
+    case eLightType_Box:
+        sName += " [box";
+        break;
+    default:
+        sName += " [";
+        break;
+    }
+    if(pLight->GetGoboTexture())
+    {
+        sName += ",gobo";
+    }
+    if(apLightData->mbCastShadows)
+    {
+        sName += ",shadow";
+    }
+    if(apLightData->mbInsideNearPlane)
+    {
+        sName += ",inside";
+    }
+    return sName + "]";
+}
+
+#define PROFILE_LIGHT(apLightData) \
+    HPL_PROFILE_ITEM(eFrameProfilerItem_Light, cFrameProfiler::InSyncedWindow() ? GetLightProfileName(apLightData) : gsProfileEmpty)
+
+//-----------------------------------------------------------------------
+
 void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
 {
     if(mvSortedLights[eDeferredLightList_StencilBack_ScreenQuad].empty())
@@ -2460,6 +2502,7 @@ void cRendererDeferred::RenderLights_StencilFront_RenderBack()
         {
             cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_StencilFront_RenderBack][lStartLight + i];
             iLight *pLight = pLightData->mpLight;
+            PROFILE_LIGHT(pLightData);
 
             //////////////////
             // Render shadow (if light is caster)
@@ -2572,6 +2615,7 @@ void cRendererDeferred::RenderLights_RenderBack()
     {
         cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_RenderBack][i];
         iLight *pLight = pLightData->mpLight;
+        PROFILE_LIGHT(pLightData);
 
         //////////////////
         // Render shadow (if light is caster)
@@ -2626,6 +2670,7 @@ void cRendererDeferred::RenderLights_RenderBack()
 void cRendererDeferred::RenderBoxLight(cDeferredLight* apLightData)
 {
     iLight *pLight = apLightData->mpLight;
+    PROFILE_LIGHT(apLightData);
     if(mbLog)
     {
         Log(" Rendering light: '%s' / %d\n", pLight->GetName().c_str(), pLight);

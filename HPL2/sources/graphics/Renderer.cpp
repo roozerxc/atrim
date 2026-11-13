@@ -58,6 +58,8 @@ int iRenderer::mlReflectionSizeDiv = 2;
 bool iRenderer::mbRefractionEnabled = true;
 int iRenderer::mlDrawCalls = 1;
 
+static const tString gsProfileNoName = "(no object)";
+
 //-----------------------------------------------------------------------
 
 //Window depth range of the first person view model. Anything in the world closer than about
@@ -2071,6 +2073,8 @@ void iRenderer::RenderShadowCastersNormal(cFrustum *apLightFrustum)
 
 void iRenderer::RenderShadowMap(iLight *apLight, iFrameBuffer *apShadowBuffer)
 {
+    HPL_PROFILE_SCOPE_GPU("ShadowMap");
+
     if(mbLog)
     {
         Log("---\nBegin Rendering Shadow Map for light '%s' / %d to buffer %d\n", apLight->GetName().c_str(), apLight, apShadowBuffer);
@@ -2469,6 +2473,8 @@ void iRenderer::SetMaterialTextures(eMaterialRenderMode aRenderMode, cMaterial *
 
 void iRenderer::DrawCurrentMaterial(eMaterialRenderMode aRenderMode, iRenderable *apObject)
 {
+    HPL_PROFILE_ITEM(eFrameProfilerItem_Object, apObject ? apObject->GetName() : gsProfileNoName);
+
     if(apObject)
     {
         cMaterial *pMaterial = apObject->GetMaterial();

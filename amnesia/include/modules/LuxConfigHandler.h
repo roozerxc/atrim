@@ -62,6 +62,9 @@ public:
     bool mbForceShaderModel3And4Off;
     bool mbForceGLSL110;
 
+    bool mbFrameProfiler;
+    int mlFrameProfilerFrames;
+
     bool mbFastPhysicsLoad;
     bool mbFastStaticLoad;
     bool mbFastEntityLoad;
