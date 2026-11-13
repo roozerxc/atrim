@@ -467,6 +467,40 @@ void cLowLevelGraphicsSDL::SetupGL()
     Log("  ShaderModel 4: %d\n", GetCaps(eGraphicCaps_ShaderModel_4));
 
     Log("  OGL ATIFragmentShader: %d\n", GetCaps(eGraphicCaps_OGL_ATIFragmentShader));
+    {
+        GLint lRed = 0, lGreen = 0, lBlue = 0, lAlpha = 0, lDepth = 0, lStencil = 0;
+        glGetIntegerv(GL_RED_BITS, &lRed);
+        glGetIntegerv(GL_GREEN_BITS, &lGreen);
+        glGetIntegerv(GL_BLUE_BITS, &lBlue);
+        glGetIntegerv(GL_ALPHA_BITS, &lAlpha);
+        glGetIntegerv(GL_DEPTH_BITS, &lDepth);
+        glGetIntegerv(GL_STENCIL_BITS, &lStencil);
+        Log("  Window bits: R%d G%d B%d A%d depth %d stencil %d\n", lRed, lGreen, lBlue, lAlpha, lDepth, lStencil);
+        if(lRed < 8)
+        {
+            Warning("The window has %d bit color! The desktop is probably set to 16 bit, set it to 32 bit (or run fullscreen) for correct colors.\n",
+                    lRed + lGreen + lBlue);
+        }
+
+        //What an RGBA8 texture really gets. The deferred renderer packs depth into 8 bit channels.
+        GLuint lTex = 0;
+        GLint lTexRed = 0, lTexAlpha = 0;
+        glGenTextures(1, &lTex);
+        glBindTexture(GL_TEXTURE_2D, lTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+        glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_RED_SIZE, &lTexRed);
+        glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_ALPHA_SIZE, &lTexAlpha);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDeleteTextures(1, &lTex);
+        while(glGetError() != GL_NO_ERROR);
+
+        Log("  RGBA8 texture bits: R%d A%d\n", lTexRed, lTexAlpha);
+        if(lTexRed < 8)
+        {
+            Warning("The driver gives %d bit channels for RGBA8 textures! Lighting will have bands and stripes. "
+                    "Set the texture quality / texture preference in the driver control panel to the highest and the desktop to 32 bit.\n", lTexRed);
+        }
+    }
     Log("  Rect textures: %s\n", mbRectAs2D ? (mbForceRectAs2D ? "as 2D textures (ForceRectAs2D is on)" :
             "as 2D textures (GLSL has no sampler2DRect)") : "native");
 
@@ -2691,19 +2725,19 @@ GLenum PixelFormatToGLInternalFormat(ePixelFormat aFormat)
     switch(aFormat)
     {
     case ePixelFormat_Alpha:
-        return GL_ALPHA;
+        return GL_ALPHA8;
     case ePixelFormat_Luminance:
-        return GL_LUMINANCE;
+        return GL_LUMINANCE8;
     case ePixelFormat_LuminanceAlpha:
-        return GL_LUMINANCE_ALPHA;
+        return GL_LUMINANCE8_ALPHA8;
     case ePixelFormat_RGB:
-        return GL_RGB;
+        return GL_RGB8;
     case ePixelFormat_RGBA:
-        return GL_RGBA;
+        return GL_RGBA8;
     case ePixelFormat_BGR:
-        return GL_RGB;
+        return GL_RGB8;
     case ePixelFormat_BGRA:
-        return GL_RGBA;
+        return GL_RGBA8;
     case ePixelFormat_Depth16:
         return GL_DEPTH_COMPONENT16;
     case ePixelFormat_Depth24:

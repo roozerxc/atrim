@@ -79,7 +79,7 @@ static bool SeparateDepthStencilSupported()
 
     glGenTextures(1, &lColor);
     glBindTexture(lColorTarget, lColor);
-    glTexImage2D(lColorTarget, 0, GL_RGBA, lSize, lSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(lColorTarget, 0, GL_RGBA8, lSize, lSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(lColorTarget, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(lColorTarget, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
