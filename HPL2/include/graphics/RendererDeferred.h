@@ -179,6 +179,14 @@ public:
     {
         msLiteLightFragShader = asFile;
     }
+    static const tString& GetLightFragShader()
+    {
+        return msLightFragShader;
+    }
+    static const tString& GetLiteLightFragShader()
+    {
+        return msLiteLightFragShader;
+    }
 
     /**
      * The light fragment shader that was actually chosen during LoadData().

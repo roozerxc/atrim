@@ -1354,6 +1354,9 @@ bool cLuxBase::InitEngine()
     }
     cRendererDeferred::SetLightShaderMode((eDeferredLightShaderMode)lLightShaderMode);
 
+    cRendererDeferred::SetLightFragShader(mpMainConfig->GetString("Graphics", "LightShaderFile", "deferred_light_frag.glsl"));
+    cRendererDeferred::SetLiteLightFragShader(mpMainConfig->GetString("Graphics", "LiteLightShaderFile", "deferred_light_frag_lite.glsl"));
+
     cRendererDeferred::SetLightSpecularEnabled(mpMainConfig->GetBool("Graphics", "LightSpecular", true));
     iRenderer::SetSmallObjectCullPixels(mpMainConfig->GetFloat("Graphics", "SmallObjectCullPixels", 0.0f));
     cEngine::SetLogicUpdatesPerSec(mpMainConfig->GetInt("Main", "LogicUpdatesPerSec", 60));
