@@ -61,6 +61,9 @@ float iRenderer::mfSmallObjectCullPixels = 0;
 
 static const tString gsProfileNoName = "(no object)";
 
+//Set once a shadow map frame buffer with an alpha only color texture was refused by the driver.
+static bool gbShadowMapAlphaTargetFails = false;
+
 //-----------------------------------------------------------------------
 
 //Window depth range of the first person view model. Anything in the world closer than about
@@ -860,7 +863,7 @@ void iRenderer::CreateAndAddShadowMap(eShadowMapResolution aResolution, const cV
     if(mpLowLevelGraphics->GetCaps(eGraphicCaps_OGL_ATIFragmentShader))
     {
         pData->mpTempDiffTexture = mpGraphics->CreateTexture(sName + "_TempDiff", eTextureType_2D, eTextureUsage_RenderTarget);
-        pData->mpTempDiffTexture->CreateFromRawData(avSize, ePixelFormat_Alpha, NULL);
+        pData->mpTempDiffTexture->CreateFromRawData(avSize, gbShadowMapAlphaTargetFails ? ePixelFormat_RGBA : ePixelFormat_Alpha, NULL);
     }
     else
     {
@@ -874,7 +877,18 @@ void iRenderer::CreateAndAddShadowMap(eShadowMapResolution aResolution, const cV
     }
     pData->mpBuffer->SetDepthTexture2D(pData->mpTexture);
 
-    pData->mpBuffer->CompileAndValidate();
+    if(pData->mpBuffer->CompileAndValidate() == false && pData->mpTempDiffTexture && gbShadowMapAlphaTargetFails == false)
+    {
+        Warning("The error above is expected on this driver: alpha only color targets do not work, using RGBA for shadow map frame buffers.\n");
+        gbShadowMapAlphaTargetFails = true;
+
+        mpGraphics->DestroyTexture(pData->mpTempDiffTexture);
+        pData->mpTempDiffTexture = mpGraphics->CreateTexture(sName + "_TempDiff", eTextureType_2D, eTextureUsage_RenderTarget);
+        pData->mpTempDiffTexture->CreateFromRawData(avSize, ePixelFormat_RGBA, NULL);
+
+        pData->mpBuffer->SetTexture2D(0, pData->mpTempDiffTexture);
+        pData->mpBuffer->CompileAndValidate();
+    }
 
     mvShadowMapData[aResolution].push_back(pData);
 }
