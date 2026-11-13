@@ -17,6 +17,21 @@ uniform sampler2DRect  aDiffuseMap;
     @define sampler_aSSAOMap 5
 @endif
 
+//Used when there is no stencil buffer: discard pixels outside of the box.
+@ifdef UseBoxClip
+    uniform sampler2DRect aDepthMap;
+    @define sampler_aDepthMap 2
+
+    uniform mat4 a_mtxInvBoxViewSpace;
+
+    @ifdef Deferred_32bit
+        @include helper_float_packing.glsl
+
+        varying vec3 gvFarPlanePos;
+        uniform float afNegFarPlane;
+    @endif
+@endif
+
 ////////////////////
 //Uniform varaibles
 uniform vec4 avLightColor;
@@ -26,6 +41,24 @@ uniform float afComplexity;
 void main()
 {
     vec2 vMapCoords = gl_FragCoord.xy;
+
+    @ifdef UseBoxClip
+        vec4 vDepthVal = texture2DRect(aDepthMap, vMapCoords);
+
+        @ifdef Deferred_32bit
+            vec3 vPos;
+            vPos.xy = gvFarPlanePos.xy / gvFarPlanePos.z;
+            vPos.z = afNegFarPlane;
+            vPos *= UnpackVec3ToFloat(vDepthVal.xyz);
+        @else
+            vec3 vPos = vDepthVal.xyz;
+        @endif
+
+        //Box is a unit cube in its own space
+        vec3 vBoxDist = abs((a_mtxInvBoxViewSpace * vec4(vPos, 1.0)).xyz) - vec3(0.501);
+        if(max(vBoxDist.x, max(vBoxDist.y, vBoxDist.z)) > 0.0) discard;
+    @endif
+
     vec4 vColorVal =  texture2DRect(aDiffuseMap, vMapCoords);
 
     @ifdef UseSSAO

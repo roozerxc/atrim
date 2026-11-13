@@ -203,6 +203,12 @@ void main()
         @ifdef UseGobo
             vec4 vProjectedUv = a_mtxSpotViewProj * vec4(vPos,1.0);
             vec3 vGoboVal = texture2DProj(aGoboMap, vProjectedUv).xyz;
+
+            //No stencil buffer: nothing else limits the light to its frustum (also kills the back projection)
+            @ifdef NoStencilLightClip
+                vec2 vFrustumClip = step(abs(vProjectedUv.xy - vec2(0.5 * vProjectedUv.w)), vec2(0.5 * vProjectedUv.w));
+                fAttenuatuion *= vFrustumClip.x * vFrustumClip.y;
+            @endif
         @else
             float fOneMinusCos = 1.0 - dot( vLightDir,  avLightForward);
             fAttenuatuion *= texture1D(aSpotFalloffMap, fOneMinusCos / afOneMinusCosHalfSpotFOV).x;
