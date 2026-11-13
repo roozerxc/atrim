@@ -1080,12 +1080,6 @@ bool cLuxBase::CheckFeatureSupport()
             msErrorMessage = _W("Not enough drawbuffers supported! Make sure your graphic card drivers are up to date!\n");
             return false;
         }
-
-        if(pLowLevelGfx->GetCaps(eGraphicCaps_PackedDepthStencil) == 0)
-        {
-            msErrorMessage = _W("Packed Depth and Stencil not supported! Make sure your graphic card drivers are up to date!\n");
-            return false;
-        }
     }
 
     return true;
@@ -1364,6 +1358,7 @@ bool cLuxBase::InitEngine()
 
     iLowLevelGraphics::SetForceShaderModel3And4Off(mpConfigHandler->mbForceShaderModel3And4Off);
     iLowLevelGraphics::SetForceGLSL110(mpConfigHandler->mbForceGLSL110);
+    iLowLevelGraphics::SetForceNoStencil(mpConfigHandler->mbForceNoStencil);
 
     cFrameProfiler::SetFramesPerWindow(mpConfigHandler->mlFrameProfilerFrames);
     cFrameProfiler::SetActive(mpConfigHandler->mbFrameProfiler);

@@ -134,6 +134,10 @@ public:
     {
         return mpDepthStencil[0];
     }
+    bool GetStencilAvailable()
+    {
+        return mbStencilAvailable;
+    }
 
     iFrameBuffer *GetAccumBuffer()
     {
@@ -510,6 +514,7 @@ private:
     iGpuProgram *mpSkyBoxProgram;
     iGpuProgram *mpLightStencilProgram;
     iGpuProgram *mpLightBoxProgram[3];//0=no SSAO, 1=SSAO used, 2=light debug
+    bool mbStencilAvailable;
 
     cProgramComboManager *mpFogProgramManager;
 

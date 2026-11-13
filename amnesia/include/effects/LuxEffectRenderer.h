@@ -63,6 +63,7 @@ private:
 
     iFrameBuffer *mpDeferredAccumBuffer;
     iFrameBuffer *mpFrameBufferColor;
+    bool mbStencilAvailable;
 
     int mlBlurSizeDiv;
     iGpuProgram *mpBlurProgram[2];

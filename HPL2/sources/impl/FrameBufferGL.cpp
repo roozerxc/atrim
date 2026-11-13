@@ -17,22 +17,117 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
+//Creates a depth renderbuffer, falls back to fewer bits if the driver refuses the format.
+static GLuint CreateDepthRenderBuffer(const cVector2l& avSize, int &alDepthBits)
+{
+    static const int vBits[] = {32, 24, 16};
+    static const GLenum vFormats[] = {GL_DEPTH_COMPONENT32, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT16};
+
+    for(int i = 0; i < 3; ++i)
+    {
+        if(vBits[i] > alDepthBits)
+        {
+            continue;
+        }
+
+        while(glGetError() != GL_NO_ERROR);
+
+        GLuint lHandle = 0;
+        glGenRenderbuffersEXT(1, &lHandle);
+        glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, lHandle);
+        glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, vFormats[i], avSize.x, avSize.y);
+
+        if(glGetError() == GL_NO_ERROR)
+        {
+            if(vBits[i] != alDepthBits)
+            {
+                Warning("Depth buffer with %d bits not supported, using %d bits.\n", alDepthBits, vBits[i]);
+                alDepthBits = vBits[i];
+            }
+            return lHandle;
+        }
+
+        glDeleteRenderbuffersEXT(1, &lHandle);
+    }
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------
+
+//Checks (once) if a frame buffer with separate depth and stencil render buffers is accepted by the driver.
+static bool SeparateDepthStencilSupported()
+{
+    static int lSupported = -1;
+    if(lSupported >= 0)
+    {
+        return lSupported == 1;
+    }
+    lSupported = 0;
+
+    const int lSize = 64;
+    const GLenum lColorTarget = TextureTypeToGLTarget(eTextureType_Rect);
+    const GLenum lColorBinding = lColorTarget == GL_TEXTURE_2D ? GL_TEXTURE_BINDING_2D : GL_TEXTURE_BINDING_RECTANGLE_ARB;
+    GLint lPrevTexture = 0, lPrevFrameBuffer = 0, lPrevRenderBuffer = 0;
+    glGetIntegerv(lColorBinding, &lPrevTexture);
+    glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &lPrevFrameBuffer);
+    glGetIntegerv(GL_RENDERBUFFER_BINDING_EXT, &lPrevRenderBuffer);
+
+    while(glGetError() != GL_NO_ERROR);
+
+    GLuint lColor = 0, lDepth = 0, lStencil = 0, lFrameBuffer = 0;
+
+    glGenTextures(1, &lColor);
+    glBindTexture(lColorTarget, lColor);
+    glTexImage2D(lColorTarget, 0, GL_RGBA, lSize, lSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(lColorTarget, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(lColorTarget, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glGenRenderbuffersEXT(1, &lDepth);
+    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, lDepth);
+    glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, lSize, lSize);
+
+    glGenRenderbuffersEXT(1, &lStencil);
+    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, lStencil);
+    glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_STENCIL_INDEX8_EXT, lSize, lSize);
+
+    glGenFramebuffersEXT(1, &lFrameBuffer);
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, lFrameBuffer);
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, lColorTarget, lColor, 0);
+    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, lDepth);
+    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, lStencil);
+
+    if(glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT) == GL_FRAMEBUFFER_COMPLETE_EXT && glGetError() == GL_NO_ERROR)
+    {
+        lSupported = 1;
+    }
+
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, lPrevFrameBuffer);
+    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, lPrevRenderBuffer);
+    glDeleteFramebuffersEXT(1, &lFrameBuffer);
+    glDeleteRenderbuffersEXT(1, &lDepth);
+    glDeleteRenderbuffersEXT(1, &lStencil);
+    glBindTexture(lColorTarget, lPrevTexture);
+    glDeleteTextures(1, &lColor);
+    while(glGetError() != GL_NO_ERROR);
+
+    Log(" Frame buffer with separate depth and stencil: %d\n", lSupported);
+
+    return lSupported == 1;
+}
+
+//-----------------------------------------------------------------------
+
 cDepthStencilBufferGL::cDepthStencilBufferGL(const cVector2l& avSize, int alDepthBits, int alStencilBits)
     : iDepthStencilBuffer(avSize, alDepthBits, alStencilBits)
 {
     mlHandle = 0;
+    mlStencilHandle = 0;
 
     ///////////////////////////////////
-    // Create packed depth and stencil
+    // Create depth and stencil
     if(alDepthBits > 0 && alStencilBits > 0)
     {
-        ///////
-        //Check so extension is supported!
-        if(!GLEW_EXT_packed_depth_stencil)
-        {
-            Error("Drivers does not support packed depth and stencil!\n");
-            return;
-        }
         ///////
         //Check so bit sizes are correct
         if(alDepthBits != 24 || alStencilBits != 8)
@@ -42,37 +137,50 @@ cDepthStencilBufferGL::cDepthStencilBufferGL(const cVector2l& avSize, int alDept
             return;
         }
 
-        glGenRenderbuffersEXT(1, &mlHandle);
-        glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, mlHandle);
-        glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH24_STENCIL8_EXT, avSize.x, avSize.y);
+        bool bForceNoStencil = iLowLevelGraphics::GetForceNoStencil();
+
+        ///////
+        //Packed
+        if(GLEW_EXT_packed_depth_stencil && bForceNoStencil == false)
+        {
+            glGenRenderbuffersEXT(1, &mlHandle);
+            glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, mlHandle);
+            glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH24_STENCIL8_EXT, avSize.x, avSize.y);
+            mlStencilHandle = mlHandle;
+        }
+        ///////
+        //Two render buffers
+        else if(bForceNoStencil == false && SeparateDepthStencilSupported())
+        {
+            mlHandle = CreateDepthRenderBuffer(avSize, mlDepthBits);
+
+            glGenRenderbuffersEXT(1, &mlStencilHandle);
+            glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, mlStencilHandle);
+            glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_STENCIL_INDEX8_EXT, avSize.x, avSize.y);
+        }
+        ///////
+        //Depth only. Users must check GetStencilBits() and not rely on stencil.
+        else
+        {
+            static bool bWarned = false;
+            if(bWarned == false)
+            {
+                Warning("%s, using depth only!\n", bForceNoStencil ? "ForceNoStencil is on" :
+                        "Drivers do not support stencil in frame buffers (no packed depth-stencil)");
+                bWarned = true;
+            }
+            mlStencilBits = 0;
+            mlHandle = CreateDepthRenderBuffer(avSize, mlDepthBits);
+        }
     }
     ///////////////////////////////////
     // Create depth buffer
     else if(alDepthBits > 0)
     {
-        GLenum depthType = 0;
-        switch(alDepthBits)
-        {
-        case 16:
-            depthType = GL_DEPTH_COMPONENT16;
-            break;
-        case 24:
-            depthType = GL_DEPTH_COMPONENT24;
-            break;
-        case 32:
-            depthType = GL_DEPTH_COMPONENT32;
-            break;
-        };
-
-        if(depthType == 0)
+        mlHandle = CreateDepthRenderBuffer(avSize, mlDepthBits);
+        if(mlHandle == 0)
         {
             Error("Invalid depth format: %d bits! Could not create depth buffer\n", alDepthBits);
-        }
-        else
-        {
-            glGenRenderbuffersEXT(1, &mlHandle);
-            glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, mlHandle);
-            glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, depthType, avSize.x, avSize.y);
         }
     }
     ///////////////////////////////////
@@ -105,6 +213,7 @@ cDepthStencilBufferGL::cDepthStencilBufferGL(const cVector2l& avSize, int alDept
             glGenRenderbuffersEXT(1, &mlHandle);
             glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, mlHandle);
             glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, stencilType, avSize.x, avSize.y);
+            mlStencilHandle = mlHandle;
         }
     }
 
@@ -114,6 +223,10 @@ cDepthStencilBufferGL::cDepthStencilBufferGL(const cVector2l& avSize, int alDept
 
 cDepthStencilBufferGL::~cDepthStencilBufferGL()
 {
+    if(mlStencilHandle != 0 && mlStencilHandle != mlHandle)
+    {
+        glDeleteRenderbuffersEXT(1, &mlStencilHandle);
+    }
     if(mlHandle != 0)
     {
         glDeleteRenderbuffersEXT(1, &mlHandle);
@@ -267,8 +380,13 @@ void cFrameBufferGL::SetDepthStencilBuffer(iDepthStencilBuffer* apBuffer)
     if(pBufferSDL->GetStencilBits() > 0)
     {
         glFramebufferRenderbufferEXT(    GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT,
-                                         GL_RENDERBUFFER_EXT, pBufferSDL->GetHandle());
+                                         GL_RENDERBUFFER_EXT, pBufferSDL->GetStencilHandle());
         mpStencilBuffer = apBuffer;
+    }
+    else
+    {
+        glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, 0);
+        mpStencilBuffer = NULL;
     }
 
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);

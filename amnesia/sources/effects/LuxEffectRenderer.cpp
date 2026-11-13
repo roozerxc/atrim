@@ -39,6 +39,7 @@ cLuxEffectRenderer::cLuxEffectRenderer() : iLuxUpdateable("LuxEffectRenderer")
     cRendererDeferred *pRendererDeferred = static_cast<cRendererDeferred *>(pGraphics->GetRenderer(eRenderer_Main));
 
     mpDeferredAccumBuffer = pRendererDeferred->GetAccumBuffer();
+    mbStencilAvailable = pRendererDeferred->GetStencilAvailable();
 
     /////////////////////////////
     //Create Outline color buffer
@@ -401,11 +402,11 @@ void cLuxEffectRenderer::RenderOutline(cRendererCallbackFunctions* apFunctions)
     // General setup
     apFunctions->SetFrameBuffer(mpFrameBufferColor);
 
-    apFunctions->ClearFrameBuffer(eClearFrameBufferFlag_Stencil | eClearFrameBufferFlag_Color, true);
+    apFunctions->ClearFrameBuffer(mbStencilAvailable ? (eClearFrameBufferFlag_Stencil | eClearFrameBufferFlag_Color) : eClearFrameBufferFlag_Color, true);
 
     apFunctions->SetDepthTest(true);
     apFunctions->SetDepthWrite(false);
-    apFunctions->SetStencilActive(true);
+    apFunctions->SetStencilActive(mbStencilAvailable);
 
     ////////////////////////////////////
     // Render stencil
@@ -413,10 +414,13 @@ void cLuxEffectRenderer::RenderOutline(cRendererCallbackFunctions* apFunctions)
     apFunctions->SetBlendMode(eMaterialBlendMode_None);
     apFunctions->SetChannelMode(eMaterialChannelMode_None);
 
-    apFunctions->GetLowLevelGfx()->SetStencil(eStencilFunc_Always, 0xFF, 0xFF, eStencilOp_Keep, eStencilOp_Keep, eStencilOp_Replace);
+    if(mbStencilAvailable)
+    {
+        apFunctions->GetLowLevelGfx()->SetStencil(eStencilFunc_Always, 0xFF, 0xFF, eStencilOp_Keep, eStencilOp_Keep, eStencilOp_Replace);
+    }
 
 
-    for(tRenderableListIt it = lstObjects.begin(); it != lstObjects.end(); ++it)
+    for(tRenderableListIt it = lstObjects.begin(); mbStencilAvailable && it != lstObjects.end(); ++it)
     {
         iRenderable *pObject = *it;
 
@@ -449,7 +453,10 @@ void cLuxEffectRenderer::RenderOutline(cRendererCallbackFunctions* apFunctions)
     apFunctions->SetBlendMode(eMaterialBlendMode_None);
     apFunctions->SetChannelMode(eMaterialChannelMode_RGBA);
 
-    apFunctions->GetLowLevelGfx()->SetStencil(eStencilFunc_NotEqual, 0xFF, 0xFF, eStencilOp_Keep, eStencilOp_Keep, eStencilOp_Keep);
+    if(mbStencilAvailable)
+    {
+        apFunctions->GetLowLevelGfx()->SetStencil(eStencilFunc_NotEqual, 0xFF, 0xFF, eStencilOp_Keep, eStencilOp_Keep, eStencilOp_Keep);
+    }
 
     apFunctions->SetTextureRange(NULL, 0);
 
@@ -489,6 +496,37 @@ void cLuxEffectRenderer::RenderOutline(cRendererCallbackFunctions* apFunctions)
     }
 
     ////////////////////////////////////
+    // No stencil: cut the objects out of the outline by drawing them in black on top
+    if(mbStencilAvailable == false)
+    {
+        for(tRenderableListIt it = lstObjects.begin(); it != lstObjects.end(); ++it)
+        {
+            iRenderable *pObject = *it;
+            cMaterial *pMat = pObject->GetMaterial();
+
+            int lProgram = pMat->GetTexture(eMaterialTexture_Alpha) ? 1 : 0;
+            if(lProgram == 1)
+            {
+                apFunctions->SetAlphaMode(eMaterialAlphaMode_Trans);
+                apFunctions->SetTexture(0, pMat->GetTexture(eMaterialTexture_Alpha));
+            }
+            else
+            {
+                apFunctions->SetAlphaMode(eMaterialAlphaMode_Solid);
+                apFunctions->SetTexture(0, NULL);
+            }
+            apFunctions->SetProgram(mpOutlineColorProgram[lProgram]);
+            mpOutlineColorProgram[lProgram]->SetColor3f(mpOutlineColorProgram[lProgram]->GetVariableId("gvColor"), cColor(0, 0));
+
+            apFunctions->SetVertexBuffer(pObject->GetVertexBuffer());
+            apFunctions->SetMatrix(pObject->GetModelMatrixPtr());
+            apFunctions->DrawCurrent();
+        }
+        apFunctions->SetAlphaMode(eMaterialAlphaMode_Solid);
+        apFunctions->SetTextureRange(NULL, 0);
+    }
+
+    ////////////////////////////////////
     // Blur the color buffer
     apFunctions->SetFlatProjection();
 
@@ -514,7 +552,7 @@ void cLuxEffectRenderer::RenderOutline(cRendererCallbackFunctions* apFunctions)
 
     ////////////////////////////////////
     // Draw the color buffer
-    apFunctions->SetStencilActive(true);
+    apFunctions->SetStencilActive(mbStencilAvailable);
     apFunctions->SetBlendMode(eMaterialBlendMode_Add);
 
     apFunctions->SetProgram(NULL);

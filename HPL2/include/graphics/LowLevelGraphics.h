@@ -312,6 +312,15 @@ public:
         return mbForceGLSL110;
     }
 
+    static void SetForceNoStencil(bool abX)
+    {
+        mbForceNoStencil = abX;
+    }
+    static bool GetForceNoStencil()
+    {
+        return mbForceNoStencil;
+    }
+
 protected:
     void RunPreSwapBuffersCallback()
     {
@@ -326,6 +335,7 @@ protected:
 
     static bool mbForceShaderModel3And4Off;
     static bool mbForceGLSL110;
+    static bool mbForceNoStencil;
 
     tPreSwapBuffersCallback mpPreSwapBuffersCallback;
     void *mpPreSwapBuffersUserData;

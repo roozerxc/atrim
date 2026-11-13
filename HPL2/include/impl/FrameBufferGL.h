@@ -18,8 +18,13 @@ public:
     {
         return mlHandle;
     }
+    inline unsigned int GetStencilHandle()
+    {
+        return mlStencilHandle;
+    }
 public:
     GLuint mlHandle;
+    GLuint mlStencilHandle;
 };
 
 //-----------------------------------------------

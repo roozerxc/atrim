@@ -194,6 +194,8 @@ cRendererDeferred::cRendererDeferred(cGraphics *apGraphics, cResources* apResour
 
     mbReflectionTextureCleared = false;
 
+    mbStencilAvailable = true;
+
     msActiveLightFragShader = msLightFragShader;
     mbLiteLightShader = false;
     mbLightShadowsDisabled = false;
@@ -236,6 +238,12 @@ bool cRendererDeferred::LoadData()
     mpDepthStencil[0] = mpGraphics->CreateDepthStencilBuffer(mvScreenSize, 24, 8, false);
     mpDepthStencil[1] = mpGraphics->CreateDepthStencilBuffer(vRelfectionSize, 24, 8, false);
 
+    mbStencilAvailable = mpDepthStencil[0]->GetStencilBits() > 0 && mpDepthStencil[1]->GetStencilBits() > 0;
+    if(mbStencilAvailable == false)
+    {
+        Log(" No stencil in frame buffers, light volumes are rendered without stencil\n");
+    }
+
     ////////////////////////////////////
     //Create Frame buffers
     for(int type = 0; type < 2; ++type)
@@ -268,8 +276,8 @@ bool cRendererDeferred::LoadData()
         mpGBuffer[type][eGBufferComponents_Depth]->SetDepthStencilBuffer(mpDepthStencil[type]);
         if(mpGBuffer[type][eGBufferComponents_Depth]->CompileAndValidate() == false)
         {
-            Error("Could not create frame buffer with only depth for Deferred renderer type: %d!\n", type);
-            return false;
+            //Not fatal, this buffer is never rendered to and some old drivers need a color attachment.
+            Warning("Could not create frame buffer with only depth for Deferred renderer type: %d!\n", type);
         }
 
         /////////////////////////
@@ -539,6 +547,43 @@ bool cRendererDeferred::LoadData()
                 if(mpLightBoxProgram[i])
                 {
                     mpLightBoxProgram[i]->GetVariableAsId("avLightColor", kVar_avLightColor);
+                }
+            }
+
+            //No stencil: variants that discard pixels outside the box, for boxes seen from outside.
+            if(mbStencilAvailable == false)
+            {
+                for(int i = 0; i < 2; ++i)
+                {
+                    vars.Clear();
+                    if(i == 1)
+                    {
+                        if(mbSSAOLoaded == false)
+                        {
+                            continue;
+                        }
+                        vars.Add("UseSSAO");
+                    }
+                    vars.Add("UseBoxClip");
+                    vars.Add("DeferredLight");
+                    vars.Add("UseDeferredLightShapes");
+                    vars.Add("DivideInFrag");
+                    vars.Add(mGBufferType == eDeferredGBuffer_32Bit ? "Deferred_32bit" : "Deferred_64bit");
+
+                    mpLightBoxClipProgram[i] = mpProgramManager->CreateProgramFromShaders("LightBoxClip",
+                                               "deferred_base_vtx.glsl",
+                                               "deferred_light_box_frag.glsl",
+                                               &vars, true);
+                    if(mpLightBoxClipProgram[i])
+                    {
+                        mpLightBoxClipProgram[i]->GetVariableAsId("avLightColor", kVar_avLightColor);
+                        mpLightBoxClipProgram[i]->GetVariableAsId("afNegFarPlane", kVar_afNegFarPlane);
+                        mpLightBoxClipProgram[i]->GetVariableAsId("a_mtxInvBoxViewSpace", kVar_a_mtxInvBoxViewSpace);
+                    }
+                    else
+                    {
+                        Warning("Could not create light box clip program, box lights seen from outside may leak.\n");
+                    }
                 }
             }
 
@@ -2068,13 +2113,19 @@ void cRendererDeferred::InitLightRendering()
             mpCurrentSettings->mlNumberOfLightsRendered++;
 
             //Check if near plane is inside box. If so only render back
+            pLightData->mbClipInShader = false;
             if( mpCurrentFrustum->CheckBVNearPlaneIntersection(pLight->GetBoundingVolume()) )
             {
                 mvSortedLights[eDeferredLightList_Box_RenderBack].push_back(pLightData);
             }
-            else
+            else if(mbStencilAvailable)
             {
                 mvSortedLights[eDeferredLightList_Box_StencilFront_RenderBack].push_back(pLightData);
+            }
+            else
+            {
+                pLightData->mbClipInShader = true;
+                mvSortedLights[eDeferredLightList_Box_RenderBack].push_back(pLightData);
             }
 
             continue;
@@ -2114,7 +2165,18 @@ void cRendererDeferred::InitLightRendering()
 
         ////////////////////////
         //Check what list to put light in
-        if(pLightData->mbInsideNearPlane)
+        pLightData->mbRenderFront = false;
+        if(mbStencilAvailable == false)
+        {
+            //One pass per light, with the depth test as the only limit:
+            // - camera inside the volume: back faces, shades what is in front of them.
+            // - camera outside: front faces, shades what is behind them, so a light hidden behind
+            //   a wall is rejected by the depth test and costs nothing.
+            //Pixels shaded outside the volume get no light (attenuation / frustum clip in the shader).
+            pLightData->mbRenderFront = pLightData->mbInsideNearPlane == false;
+            mvSortedLights[eDeferredLightList_RenderBack].push_back(pLightData);
+        }
+        else if(pLightData->mbInsideNearPlane)
         {
             if(lightType == eLightType_Point)
             {
@@ -2918,7 +2980,7 @@ void cRendererDeferred::RenderLights()
     ////////////////////////////////
     //Set up frame buffer
     SetAccumulationBuffer();
-    ClearFrameBuffer(eClearFrameBufferFlag_Color | eClearFrameBufferFlag_Stencil, true); //Perhaps there is some ambient light that can be added instead?
+    ClearFrameBuffer(mbStencilAvailable ? (eClearFrameBufferFlag_Color | eClearFrameBufferFlag_Stencil) : eClearFrameBufferFlag_Color, true); //Perhaps there is some ambient light that can be added instead?
 
     ///////////////////////
     // Set up culling and depth mode
@@ -4583,6 +4645,12 @@ void cRendererDeferred::AddLightProgramDefaultVars(cParserVarContainer &aVars)
 
     //Vertex shader will handles deferred lights
     aVars.Add("DeferredLight");
+
+    //Without stencil, gobo spotlights must clip to their frustum in the shader
+    if(mbStencilAvailable == false)
+    {
+        aVars.Add("NoStencilLightClip");
+    }
 
     //Deferred renderer type
     if(mGBufferType == eDeferredGBuffer_32Bit)
