@@ -206,7 +206,7 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
 
             if(pPostEffectComposite && (alFlags & tSceneRenderFlag_PostEffects))
             {
-                bPostEffects = pPostEffectComposite->HasActiveEffects();
+                bPostEffects = pPostEffectComposite->HasActiveEffects() && iLowLevelGraphics::GetPostEffectsDisabled() == false;
             }
 
             if(pRenderer && pViewPort->GetWorld() && pFrustum)

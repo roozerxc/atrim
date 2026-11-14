@@ -331,6 +331,16 @@ public:
         return mbForceVertexArrays;
     }
 
+    //No post effects are rendered at all (bloom, image trail, radial blur, game effects). For finding driver trouble.
+    static void SetPostEffectsDisabled(bool abX)
+    {
+        mbPostEffectsDisabled = abX;
+    }
+    static bool GetPostEffectsDisabled()
+    {
+        return mbPostEffectsDisabled;
+    }
+
     //Checks for OpenGL errors once per frame and writes them to the log. For finding driver trouble.
     static void SetLogGLErrors(bool abX)
     {
@@ -377,6 +387,7 @@ protected:
     static bool mbForceRectAs2D;
     static bool mbLogGLErrors;
     static bool mbForceVertexArrays;
+    static bool mbPostEffectsDisabled;
     static bool mbRectAs2D;
 
     tPreSwapBuffersCallback mpPreSwapBuffersCallback;

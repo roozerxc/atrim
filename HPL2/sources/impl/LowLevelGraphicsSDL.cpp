@@ -505,6 +505,10 @@ void cLowLevelGraphicsSDL::SetupGL()
     {
         Log("  ForceVertexArrays is on, no vertex buffer objects are used\n");
     }
+    if(mbPostEffectsDisabled)
+    {
+        Log("  DisablePostEffects is on\n");
+    }
     Log("  Rect textures: %s\n", mbRectAs2D ? (mbForceRectAs2D ? "as 2D textures (ForceRectAs2D is on)" :
             "as 2D textures (GLSL has no sampler2DRect)") : "native");
 

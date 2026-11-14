@@ -1369,6 +1369,7 @@ bool cLuxBase::InitEngine()
     iLowLevelGraphics::SetForceRectAs2D(mpConfigHandler->mbForceRectAs2D);
     iLowLevelGraphics::SetLogGLErrors(mpConfigHandler->mbLogGLErrors);
     iLowLevelGraphics::SetForceVertexArrays(mpConfigHandler->mbForceVertexArrays);
+    iLowLevelGraphics::SetPostEffectsDisabled(mpConfigHandler->mbDisablePostEffects);
 
     cFrameProfiler::SetFramesPerWindow(mpConfigHandler->mlFrameProfilerFrames);
     cFrameProfiler::SetActive(mpConfigHandler->mbFrameProfiler);

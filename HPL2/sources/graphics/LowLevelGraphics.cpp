@@ -15,6 +15,7 @@ bool iLowLevelGraphics::mbForceNoStencil = false;
 bool iLowLevelGraphics::mbForceRectAs2D = false;
 bool iLowLevelGraphics::mbLogGLErrors = false;
 bool iLowLevelGraphics::mbForceVertexArrays = false;
+bool iLowLevelGraphics::mbPostEffectsDisabled = false;
 bool iLowLevelGraphics::mbRectAs2D = false;
 
 //-----------------------------------------------------------------------

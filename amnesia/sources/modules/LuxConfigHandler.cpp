@@ -103,6 +103,7 @@ void cLuxConfigHandler::LoadMainConfig()
     mbForceRectAs2D = gpBase->mpMainConfig->GetBool("Graphics", "ForceRectAs2D", false);
     mbLogGLErrors = gpBase->mpMainConfig->GetBool("Graphics", "LogGLErrors", false);
     mbForceVertexArrays = gpBase->mpMainConfig->GetBool("Graphics", "ForceVertexArrays", false);
+    mbDisablePostEffects = gpBase->mpMainConfig->GetBool("Graphics", "DisablePostEffects", false);
 
     mbFrameProfiler = gpBase->mpMainConfig->GetBool("Main", "FrameProfiler", false);
     mlFrameProfilerFrames = gpBase->mpMainConfig->GetInt("Main", "FrameProfilerFrames", 120);
@@ -190,6 +191,7 @@ void cLuxConfigHandler::SaveMainConfig()
     gpBase->mpMainConfig->SetBool("Graphics", "ForceRectAs2D", mbForceRectAs2D);
     gpBase->mpMainConfig->SetBool("Graphics", "LogGLErrors", mbLogGLErrors);
     gpBase->mpMainConfig->SetBool("Graphics", "ForceVertexArrays", mbForceVertexArrays);
+    gpBase->mpMainConfig->SetBool("Graphics", "DisablePostEffects", mbDisablePostEffects);
 
     gpBase->mpMainConfig->SetBool("Main", "FrameProfiler", mbFrameProfiler);
     gpBase->mpMainConfig->SetInt("Main", "FrameProfilerFrames", mlFrameProfilerFrames);
