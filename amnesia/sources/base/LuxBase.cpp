@@ -1368,6 +1368,7 @@ bool cLuxBase::InitEngine()
     iLowLevelGraphics::SetForceNoStencil(mpConfigHandler->mbForceNoStencil);
     iLowLevelGraphics::SetForceRectAs2D(mpConfigHandler->mbForceRectAs2D);
     iLowLevelGraphics::SetLogGLErrors(mpConfigHandler->mbLogGLErrors);
+    iLowLevelGraphics::SetForceVertexArrays(mpConfigHandler->mbForceVertexArrays);
 
     cFrameProfiler::SetFramesPerWindow(mpConfigHandler->mlFrameProfilerFrames);
     cFrameProfiler::SetActive(mpConfigHandler->mbFrameProfiler);

@@ -64,6 +64,7 @@ public:
     bool mbForceNoStencil;
     bool mbForceRectAs2D;
     bool mbLogGLErrors;
+    bool mbForceVertexArrays;
 
     bool mbFrameProfiler;
     int mlFrameProfilerFrames;

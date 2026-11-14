@@ -321,6 +321,16 @@ public:
         return mbForceNoStencil;
     }
 
+    //Vertex buffers are plain vertex arrays, no VBOs. For finding driver trouble.
+    static void SetForceVertexArrays(bool abX)
+    {
+        mbForceVertexArrays = abX;
+    }
+    static bool GetForceVertexArrays()
+    {
+        return mbForceVertexArrays;
+    }
+
     //Checks for OpenGL errors once per frame and writes them to the log. For finding driver trouble.
     static void SetLogGLErrors(bool abX)
     {
@@ -366,6 +376,7 @@ protected:
     static bool mbForceNoStencil;
     static bool mbForceRectAs2D;
     static bool mbLogGLErrors;
+    static bool mbForceVertexArrays;
     static bool mbRectAs2D;
 
     tPreSwapBuffersCallback mpPreSwapBuffersCallback;

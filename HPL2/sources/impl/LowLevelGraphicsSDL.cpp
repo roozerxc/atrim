@@ -501,6 +501,10 @@ void cLowLevelGraphicsSDL::SetupGL()
                     "Set the texture quality / texture preference in the driver control panel to the highest and the desktop to 32 bit.\n", lTexRed);
         }
     }
+    if(mbForceVertexArrays)
+    {
+        Log("  ForceVertexArrays is on, no vertex buffer objects are used\n");
+    }
     Log("  Rect textures: %s\n", mbRectAs2D ? (mbForceRectAs2D ? "as 2D textures (ForceRectAs2D is on)" :
             "as 2D textures (GLSL has no sampler2DRect)") : "native");
 
@@ -836,7 +840,7 @@ iVertexBuffer *cLowLevelGraphicsSDL::CreateVertexBuffer(
     int alReserveVtxSize,
     int alReserveIdxSize)
 {
-    if(GetCaps(eGraphicCaps_VertexBufferObject) != 0 &&
+    if(GetCaps(eGraphicCaps_VertexBufferObject) != 0 && mbForceVertexArrays == false &&
             (aType == eVertexBufferType_Hardware))
     {
 #ifdef _DEBUG
