@@ -2278,7 +2278,7 @@ static tString GetLightProfileName(cDeferredLight *apLightData)
 }
 
 #define PROFILE_LIGHT(apLightData) \
-    HPL_PROFILE_ITEM(eFrameProfilerItem_Light, cFrameProfiler::InSyncedWindow() ? GetLightProfileName(apLightData) : gsProfileEmpty)
+    HPL_PROFILE_ITEM(eFrameProfilerItem_Light, (cFrameProfiler::InSyncedWindow() || cFrameProfiler::IsTraceActive()) ? GetLightProfileName(apLightData) : gsProfileEmpty)
 
 //-----------------------------------------------------------------------
 

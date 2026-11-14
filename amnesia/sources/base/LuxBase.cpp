@@ -1370,6 +1370,7 @@ bool cLuxBase::InitEngine()
     iLowLevelGraphics::SetLogGLErrors(mpConfigHandler->mbLogGLErrors);
     iLowLevelGraphics::SetForceVertexArrays(mpConfigHandler->mbForceVertexArrays);
     iLowLevelGraphics::SetPostEffectsDisabled(mpConfigHandler->mbDisablePostEffects);
+    cFrameProfiler::SetTraceFile(mpConfigHandler->mbRenderTrace ? msBaseSavePath + _W("render_trace.txt") : tWString());
 
     cFrameProfiler::SetFramesPerWindow(mpConfigHandler->mlFrameProfilerFrames);
     cFrameProfiler::SetActive(mpConfigHandler->mbFrameProfiler);

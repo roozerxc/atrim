@@ -8,6 +8,11 @@
 #include <vector>
 #include <string.h>
 #include <stdio.h>
+#ifdef _WIN32
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
 
 namespace hpl
 {
@@ -248,6 +253,24 @@ namespace
 
 bool cFrameProfiler::mbActive = false;
 int cFrameProfiler::mlWindow = 0;
+bool cFrameProfiler::mbTrace = false;
+
+static tWString gsTraceFile;
+static FILE *gpTraceFile = NULL;
+static unsigned int glTraceFrame = 0;
+
+static void TraceOpen()
+{
+    if(gpTraceFile)
+    {
+        fclose(gpTraceFile);
+    }
+#ifdef _WIN32
+    gpTraceFile = _wfopen(gsTraceFile.c_str(), L"w");
+#else
+    gpTraceFile = fopen(tString(gsTraceFile.begin(), gsTraceFile.end()).c_str(), "w");
+#endif
+}
 
 //-----------------------------------------------------------------------
 
@@ -289,8 +312,64 @@ void cFrameProfiler::SetGpuSyncFunc(tFrameProfilerGpuSyncFunc apFunc)
 
 //-----------------------------------------------------------------------
 
+void cFrameProfiler::SetTraceFile(const tWString &asFile)
+{
+    if(gpTraceFile)
+    {
+        fclose(gpTraceFile);
+        gpTraceFile = NULL;
+    }
+    gsTraceFile = asFile;
+    mbTrace = asFile.empty() == false;
+}
+
+//-----------------------------------------------------------------------
+
+void cFrameProfiler::Trace(const char *apName, bool abCommit)
+{
+    if(mbTrace == false)
+    {
+        return;
+    }
+    if(gpTraceFile == NULL)
+    {
+        TraceOpen();
+        if(gpTraceFile == NULL)
+        {
+            mbTrace = false;
+            return;
+        }
+        fprintf(gpTraceFile, "frame %u\n", glTraceFrame);
+    }
+
+    fputs(apName, gpTraceFile);
+    fputc('\n', gpTraceFile);
+    fflush(gpTraceFile);
+    if(abCommit)
+    {
+#ifdef _WIN32
+        _commit(_fileno(gpTraceFile));
+#else
+        fsync(fileno(gpTraceFile));
+#endif
+    }
+}
+
+//-----------------------------------------------------------------------
+
 void cFrameProfiler::BeginFrame()
 {
+    //Trace: start the file over, it only holds the frame in progress.
+    if(mbTrace)
+    {
+        ++glTraceFrame;
+        TraceOpen();
+        if(gpTraceFile)
+        {
+            fprintf(gpTraceFile, "frame %u\n", glTraceFrame);
+        }
+    }
+
     if(mbActive == false)
     {
         return;

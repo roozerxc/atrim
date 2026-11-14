@@ -62,9 +62,24 @@ public:
         return mbActive && mlWindow == 1;
     }
 
+    /**
+     * Render trace: every section, light and object is written to a file as it starts.
+     * The file is restarted each frame, so after a lock-up in the video driver it holds
+     * the last frame up to the thing that was being drawn. Independent of the profiler.
+     * An empty file name turns it off.
+     */
+    static void SetTraceFile(const tWString &asFile);
+    static inline bool IsTraceActive()
+    {
+        return mbTrace;
+    }
+    //abCommit: force the file to disk, so it survives a hard power off (slow).
+    static void Trace(const char *apName, bool abCommit);
+
 private:
     static bool mbActive;
     static int mlWindow;
+    static bool mbTrace;
 };
 
 //---------------------------------------------
@@ -75,6 +90,10 @@ class cFrameProfilerScope
 public:
     inline cFrameProfilerScope(const char *apName, bool abGpu) : mbStarted(cFrameProfiler::IsActive())
     {
+        if(cFrameProfiler::IsTraceActive())
+        {
+            cFrameProfiler::Trace(apName, true);
+        }
         if(mbStarted)
         {
             cFrameProfiler::Begin(apName, abGpu);
@@ -97,6 +116,10 @@ class cFrameProfilerItemScope
 public:
     inline cFrameProfilerItemScope(eFrameProfilerItem aType, const tString &asName) : mbStarted(cFrameProfiler::InSyncedWindow())
     {
+        if(cFrameProfiler::IsTraceActive())
+        {
+            cFrameProfiler::Trace(asName.c_str(), aType == eFrameProfilerItem_Light);
+        }
         if(mbStarted)
         {
             cFrameProfiler::BeginItem(aType, asName.c_str());

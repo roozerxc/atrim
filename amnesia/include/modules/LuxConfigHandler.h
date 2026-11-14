@@ -66,6 +66,7 @@ public:
     bool mbLogGLErrors;
     bool mbForceVertexArrays;
     bool mbDisablePostEffects;
+    bool mbRenderTrace;
 
     bool mbFrameProfiler;
     int mlFrameProfilerFrames;
