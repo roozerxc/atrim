@@ -51,8 +51,8 @@ public:
             mlMaxChannels(128),
             mlMaxMonoChannelsHint(0),
             mlMaxStereoChannelsHint(0),
-            mlStreamBufferSize(262144),
-            mlStreamBufferCount(4)
+            mlStreamBufferSize(32768),
+            mlStreamBufferCount(8)
         {}
 
         int    mlSoundDeviceID;
