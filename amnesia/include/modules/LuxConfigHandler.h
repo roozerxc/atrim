@@ -72,6 +72,7 @@ public:
     bool mbShaderWarming;
     int mlMaxFramesAhead;
     int mlFullscreenMode;
+    int mlLightColorGradeMode;
 
     bool mbFrameProfiler;
     int mlFrameProfilerFrames;

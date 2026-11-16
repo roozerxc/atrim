@@ -152,9 +152,16 @@ void main()
     vec4 vColorVal =  texture2DRect(aDiffuseMap, vMapCoords);
     vec4 vNormalVal = texture2DRect(aNormalMap, vMapCoords);
     vec4 vDepthVal =  texture2DRect(aDepthMap, vMapCoords);
-    
+
+    @ifdef UseLightColorGrade
+        vColorVal.xyz = mix(vColorVal.xyz, vColorVal.xyz * vColorVal.xyz, vec3(0.468, 0.595, 0.252));
+        @ifdef UseSSAO
+            float fGradeSSAO = texture2DRect(aSSAOMap, vMapCoords * 0.5).x;
+        @endif
+    @else
     @ifdef UseSSAO
         vColorVal *= texture2DRect(aSSAOMap, vMapCoords * 0.5);    //SSAO should be half the size of the screen.
+    @endif
     @endif
 
     @ifdef RenderTargets_4
@@ -237,6 +244,12 @@ void main()
     /////////////////////////////////
     //Calculate diffuse color
     float fLDotN = max( dot( vLightDir, vNormal.xyz), 0.0);
+    @ifdef UseLightColorGrade
+        @ifdef UseSSAO
+            fLDotN *= fGradeSSAO;
+        @endif
+        fLDotN = pow(max(fLDotN, 0.000001), 0.625);
+    @endif
     vec3 vDiffuse = vColorVal.xyz * avLightColor.xyz * fLDotN;
 
     /////////////////////////////////

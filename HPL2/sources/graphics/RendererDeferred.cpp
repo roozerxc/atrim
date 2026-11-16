@@ -58,6 +58,7 @@ eDeferredGBuffer cRendererDeferred::mGBufferType = eDeferredGBuffer_32Bit;
 int cRendererDeferred::mlNumOfGBufferTextures = 4;
 bool cRendererDeferred::mbDepthCullLights = true;
 bool cRendererDeferred::mbLightSpecularEnabled = true;
+bool cRendererDeferred::mbLightColorGrade = false;
 
 bool cRendererDeferred::mbSSAOLoaded = false;
 int cRendererDeferred::mlSSAONumOfSamples = 8;
@@ -626,6 +627,11 @@ bool cRendererDeferred::LoadData()
 
             cParserVarContainer defaultVars;
             AddLightProgramDefaultVars(defaultVars);
+            //Not in AddLightProgramDefaultVars, the self-test checks plain lighting
+            if(mbLightColorGrade)
+            {
+                defaultVars.Add("UseLightColorGrade");
+            }
 
             mpProgramManager->SetupGenerateProgramData(    eDefferredProgramMode_Lights, "Lights", "deferred_base_vtx.glsl", msActiveLightFragShader, gvLightFeatureVec,
                     kLightFeatureNum, defaultVars);
@@ -1464,7 +1470,22 @@ void cRendererDeferred::SetupLightProgramVariables(    iGpuProgram *apProgram, c
     ///////////////////////
     // General variables
     apProgram->SetVec3f(kVar_avLightPos, apLightData->m_mtxViewSpaceRender.GetTranslation());
-    apProgram->SetColor4f(kVar_avLightColor, pLight->GetDiffuseColor());
+    if(mbLightColorGrade)
+    {
+        //colour^0.625 (sign kept, Amnesia uses negative lights to darken)
+        cColor col = pLight->GetDiffuseColor();
+        float *pCh[3] = {&col.r, &col.g, &col.b};
+        for(int i = 0; i < 3; ++i)
+        {
+            float fX = *pCh[i];
+            *pCh[i] = fX < 0 ? -powf(-fX, 0.625f) : powf(fX, 0.625f);
+        }
+        apProgram->SetColor4f(kVar_avLightColor, col);
+    }
+    else
+    {
+        apProgram->SetColor4f(kVar_avLightColor, pLight->GetDiffuseColor());
+    }
     apProgram->SetFloat(kVar_afFalloff, pLight->GetFalloff());
     apProgram->SetFloat(kVar_afInvLightRadius, 1.0f / pLight->GetRadius());
 

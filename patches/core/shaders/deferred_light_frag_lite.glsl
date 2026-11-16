@@ -46,6 +46,10 @@ void main()
     vec4 vColorVal = texture2DRect(aDiffuseMap, gl_FragCoord.xy);
     vec4 vDepthVal = texture2DRect(aDepthMap, gl_FragCoord.xy);
 
+    @ifdef UseLightColorGrade
+        vColorVal.xyz = mix(vColorVal.xyz, vColorVal.xyz * vColorVal.xyz, vec3(0.640, 0.764, 0.426));
+    @endif
+
     // Manually unpack vDepthVal due to ati 9xxx 16bit mantissa
     float fDepth = dot(vDepthVal.xy, vec2(1.0, 1.0/255.0));
 

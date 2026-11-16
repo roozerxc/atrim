@@ -222,6 +222,20 @@ public:
         return mlNumOfGBufferTextures;
     }
 
+    /**
+     * Old light colour curve, done cheaply in the light shader: albedo^(1.375, 1.5, 1.19) with
+     * (light colour * NdotL * SSAO)^0.625. Matches the earlier pow based light shader closely at a
+     * fraction of its cost. The light colour part is done on the CPU (once per light).
+     */
+    static void SetLightColorGrade(bool abX)
+    {
+        mbLightColorGrade = abX;
+    }
+    static bool GetLightColorGrade()
+    {
+        return mbLightColorGrade;
+    }
+
     static void SetLightSpecularEnabled(bool abX)
     {
         mbLightSpecularEnabled = abX;
@@ -548,6 +562,7 @@ private:
     static int mlNumOfGBufferTextures;
     static bool mbDepthCullLights;
     static bool mbLightSpecularEnabled;
+    static bool mbLightColorGrade;
 
     static bool mbSSAOLoaded;
     static int mlSSAONumOfSamples;
