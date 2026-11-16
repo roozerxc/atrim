@@ -1371,6 +1371,11 @@ bool cLuxBase::InitEngine()
     iLowLevelGraphics::SetForceVertexArrays(mpConfigHandler->mbForceVertexArrays);
     iLowLevelGraphics::SetPostEffectsDisabled(mpConfigHandler->mbDisablePostEffects);
     cFrameProfiler::SetTraceFile(mpConfigHandler->mbRenderTrace ? msBaseSavePath + _W("render_trace.txt") : tWString());
+    cFrameProfiler::SetTraceSync(mpConfigHandler->mbRenderTraceSync);
+    if(mpConfigHandler->mbOcclusionCulling == false)
+    {
+        Log("OcclusionCulling is off: objects are culled without occlusion queries.\n");
+    }
 
     cFrameProfiler::SetFramesPerWindow(mpConfigHandler->mlFrameProfilerFrames);
     cFrameProfiler::SetActive(mpConfigHandler->mbFrameProfiler);
