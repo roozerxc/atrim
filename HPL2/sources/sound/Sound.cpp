@@ -4,6 +4,7 @@
 #include "resources/Resources.h"
 #include "sound/SoundHandler.h"
 #include "sound/MusicHandler.h"
+#include "system/FrameProfiler.h"
 
 
 namespace hpl
@@ -43,10 +44,18 @@ cSound::~cSound()
 
 void cSound::Update(double adFixedDelta)
 {
-    mpSoundHandler->Update(adFixedDelta);
-    mpMusicHandler->Update(adFixedDelta);
-
-    mpLowLevelSound->UpdateSound(adFixedDelta);
+    {
+        HPL_PROFILE_SCOPE("SoundEntries");
+        mpSoundHandler->Update(adFixedDelta);
+    }
+    {
+        HPL_PROFILE_SCOPE("Music");
+        mpMusicHandler->Update(adFixedDelta);
+    }
+    {
+        HPL_PROFILE_SCOPE("SoundLowLevel");
+        mpLowLevelSound->UpdateSound(adFixedDelta);
+    }
 }
 
 //-----------------------------------------------------------------------

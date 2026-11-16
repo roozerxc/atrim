@@ -5,6 +5,7 @@
 #include "system/String.h"
 #include "math/Math.h"
 #include "sound/LowLevelSound.h"
+#include "system/FrameProfiler.h"
 #include "sound/SoundChannel.h"
 #include "resources/SoundManager.h"
 #include "sound/SoundData.h"
@@ -222,6 +223,7 @@ bool cSoundEntry::Update(double adFixedDelta)
     // If first time and not silent. Start sound!
     if(mbFirstTime && mpSoundHandler->GetSilent() == false)
     {
+        HPL_PROFILE_SCOPE("SoundStart");
         mpSound->Play();
         mbFirstTime = false;
     }
@@ -541,6 +543,7 @@ void cSoundHandler::Update(double adFixedDelta)
 
         if(pEntry->Update(adFixedDelta) == false)
         {
+            HPL_PROFILE_SCOPE("SoundDestroy");
             hplDelete( pEntry );
             //m_lstSoundEntriesPool.push_back(pEntry);
             it = m_lstSoundEntries.erase(it);
@@ -1084,7 +1087,11 @@ iSoundChannel *cSoundHandler::CreateChannel(const tString& asName, int alPriorit
 
     ////////////////////////
     //Load the data
-    iSoundData* pData = mpResources->GetSoundManager()->CreateSoundData(asName, abStream);
+    iSoundData* pData = NULL;
+    {
+        HPL_PROFILE_SCOPE("SoundLoad");
+        pData = mpResources->GetSoundManager()->CreateSoundData(asName, abStream);
+    }
     if(pData == NULL)
     {
         Error("Could not load sound '%s'\n", asName.c_str());
@@ -1093,7 +1100,11 @@ iSoundChannel *cSoundHandler::CreateChannel(const tString& asName, int alPriorit
 
     /////////////////////////
     //Create sound channel
-    iSoundChannel* pSound = pData->CreateChannel(alPriority);
+    iSoundChannel* pSound = NULL;
+    {
+        HPL_PROFILE_SCOPE("SoundChannel");
+        pSound = pData->CreateChannel(alPriority);
+    }
     if(pSound == NULL)
     {
         //Need to destroy channel else it will never be deleted!

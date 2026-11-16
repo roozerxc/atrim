@@ -8,6 +8,7 @@
 #include "sound/SoundData.h"
 #include "resources/SoundManager.h"
 #include "system/Platform.h"
+#include "system/FrameProfiler.h"
 
 
 namespace hpl
@@ -489,6 +490,7 @@ void cMusicHandler::UpdateResumeEntry(cMusicEntry* apSong, float afFadeStepSize)
 
 bool cMusicHandler::LoadAndStart(const tString& asFileName, cMusicEntry* apSong, float afVolume, bool abLoop, bool abResume)
 {
+    HPL_PROFILE_SCOPE("MusicLoad");
     /////////////////////////
     // Create data
     iSoundData* pData = mpResources->GetSoundManager()->CreateSoundData(asFileName, true, abLoop);
