@@ -240,6 +240,8 @@ void cLuxMapHandler::UpdateViewportRenderProperties()
     cRenderSettings *pRenderSettings = mpViewport->GetRenderSettings();
     pRenderSettings->mbRenderWorldReflection = gpBase->mpConfigHandler->mbWorldReflection;
     pRenderSettings->mbRenderShadows = gpBase->mpConfigHandler->mbShadowsActive;
+    //Off: no occlusion queries for objects (they can hang some old drivers), frustum culling only.
+    pRenderSettings->mbUseOcclusionCulling = gpBase->mpConfigHandler->mbOcclusionCulling;
 }
 
 //-----------------------------------------------------------------------
