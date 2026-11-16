@@ -258,6 +258,7 @@ bool cFrameProfiler::mbTrace = false;
 static tWString gsTraceFile;
 static FILE *gpTraceFile = NULL;
 static unsigned int glTraceFrame = 0;
+static bool gbTraceSync = false;
 
 static void TraceOpen()
 {
@@ -325,11 +326,25 @@ void cFrameProfiler::SetTraceFile(const tWString &asFile)
 
 //-----------------------------------------------------------------------
 
+void cFrameProfiler::SetTraceSync(bool abX)
+{
+    gbTraceSync = abX;
+}
+
+//-----------------------------------------------------------------------
+
 void cFrameProfiler::Trace(const char *apName, bool abCommit)
 {
     if(mbTrace == false)
     {
         return;
+    }
+
+    //Everything before this name is done on the GPU once this returns.
+    if(gbTraceSync)
+    {
+        GpuSync();
+        abCommit = true;
     }
     if(gpTraceFile == NULL)
     {
@@ -362,11 +377,20 @@ void cFrameProfiler::BeginFrame()
     //Trace: start the file over, it only holds the frame in progress.
     if(mbTrace)
     {
+        //Sync mode: the previous frame (including the buffer swap) is done before the file is restarted.
+        if(gbTraceSync)
+        {
+            GpuSync();
+        }
         ++glTraceFrame;
         TraceOpen();
         if(gpTraceFile)
         {
             fprintf(gpTraceFile, "frame %u\n", glTraceFrame);
+            if(gbTraceSync)
+            {
+                fflush(gpTraceFile);
+            }
         }
     }
 

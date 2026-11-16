@@ -75,6 +75,12 @@ public:
     }
     //abCommit: force the file to disk, so it survives a hard power off (slow).
     static void Trace(const char *apName, bool abCommit);
+    /**
+     * Sync mode: the GPU is made to finish everything before each name is written, and
+     * every line is forced to disk. If the GPU hangs, the last line is the work it hung on
+     * (in normal mode the last line is only where the CPU was). Very slow.
+     */
+    static void SetTraceSync(bool abX);
 
 private:
     static bool mbActive;
