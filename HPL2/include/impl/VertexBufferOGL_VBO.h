@@ -36,13 +36,10 @@ private:
 
     unsigned int mlElementHandle;
 
-    unsigned int mlInterleavedHandle[2];
-    int          mlCurrentInterleaved;
+    unsigned int mlInterleavedHandle;
     size_t       mlInterleavedStride;
 
     std::vector<size_t> mvElementOffsets;
-
-    size_t mlLastUploadedBytes[2];
 
     std::vector<char> mvInterleavedShadow;
 

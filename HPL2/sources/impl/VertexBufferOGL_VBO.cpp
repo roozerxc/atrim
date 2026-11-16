@@ -76,14 +76,8 @@ cVertexBufferOGL_VBO::cVertexBufferOGL_VBO(iLowLevelGraphics* apLowLevelGraphics
 {
     mlElementHandle = 0;
 
-    mlInterleavedHandle[0] = 0;
-    mlInterleavedHandle[1] = 0;
-
-    mlCurrentInterleaved = 0;
+    mlInterleavedHandle = 0;
     mlInterleavedStride = 0;
-
-    mlLastUploadedBytes[0] = 0;
-    mlLastUploadedBytes[1] = 0;
 
     mbUse16BitIndices = false;
     mlIndexBufferSize = 0;
@@ -93,13 +87,9 @@ cVertexBufferOGL_VBO::cVertexBufferOGL_VBO(iLowLevelGraphics* apLowLevelGraphics
 
 cVertexBufferOGL_VBO::~cVertexBufferOGL_VBO()
 {
-    if(mlInterleavedHandle[0])
+    if(mlInterleavedHandle)
     {
-        glDeleteBuffersARB(1, &mlInterleavedHandle[0]);
-    }
-    if(mlInterleavedHandle[1])
-    {
-        glDeleteBuffersARB(1, &mlInterleavedHandle[1]);
+        glDeleteBuffersARB(1, &mlInterleavedHandle);
     }
 
     if(mlElementHandle)
@@ -138,11 +128,8 @@ void cVertexBufferOGL_VBO::UpdateData(tVertexElementFlag aTypes, bool abIndices)
         const int lVertexCount = GetVertexNum();
         const size_t lTotalBytes = (size_t)lVertexCount * (size_t)mlInterleavedStride;
 
-        if(lTotalBytes > 0)
+        if(lTotalBytes > 0 && mlInterleavedHandle != 0)
         {
-            int lUpdateIdx = 1 - mlCurrentInterleaved;
-            unsigned int lHandle = mlInterleavedHandle[lUpdateIdx];
-
             bool bFullRepack = false;
             if(mvInterleavedShadow.size() != lTotalBytes)
             {
@@ -175,18 +162,9 @@ void cVertexBufferOGL_VBO::UpdateData(tVertexElementFlag aTypes, bool abIndices)
                                    src, lElementBytes, lVertexCount);
             }
 
-            glBindBufferARB(GL_ARRAY_BUFFER_ARB, lHandle);
-
-            if(lTotalBytes != mlLastUploadedBytes[lUpdateIdx])
-            {
-                glBufferDataARB(GL_ARRAY_BUFFER_ARB, (GLsizeiptr)lTotalBytes, NULL, usageType);
-                mlLastUploadedBytes[lUpdateIdx] = lTotalBytes;
-            }
-
-            glBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, (GLsizeiptr)lTotalBytes, &mvInterleavedShadow[0]);
+            glBindBufferARB(GL_ARRAY_BUFFER_ARB, mlInterleavedHandle);
+            glBufferDataARB(GL_ARRAY_BUFFER_ARB, (GLsizeiptr)lTotalBytes, &mvInterleavedShadow[0], usageType);
             glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
-
-            mlCurrentInterleaved = lUpdateIdx;
         }
     }
 
@@ -404,12 +382,9 @@ void cVertexBufferOGL_VBO::CompileSpecific()
     const int lVertexCount = GetVertexNum();
     const size_t lTotalBytes = (size_t)lVertexCount * (size_t)mlInterleavedStride;
 
-    for(int b = 0; b < 2; ++b)
+    if(mlInterleavedHandle == 0)
     {
-        if(mlInterleavedHandle[b] == 0)
-        {
-            glGenBuffersARB(1, &mlInterleavedHandle[b]);
-        }
+        glGenBuffersARB(1, &mlInterleavedHandle);
     }
 
     // Pack into temp buffer (skip when there is no vertex data)
@@ -438,28 +413,17 @@ void cVertexBufferOGL_VBO::CompileSpecific()
             PackElementStrided(&temp[0] + mvElementOffsets[i], mlInterleavedStride, src, lElementBytes, lVertexCount);
         }
 
-        for(int b = 0; b < 2; ++b)
-        {
-            glBindBufferARB(GL_ARRAY_BUFFER_ARB, mlInterleavedHandle[b]);
-            glBufferDataARB(GL_ARRAY_BUFFER_ARB, (GLsizeiptr)lTotalBytes, &temp[0], usageType);
-            mlLastUploadedBytes[b] = lTotalBytes;
-        }
+        glBindBufferARB(GL_ARRAY_BUFFER_ARB, mlInterleavedHandle);
+        glBufferDataARB(GL_ARRAY_BUFFER_ARB, (GLsizeiptr)lTotalBytes, &temp[0], usageType);
         glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
     }
     else
     {
         // No usable vertex data, allocate empty VBOs so later binds stay valid
-        for(int b = 0; b < 2; ++b)
-        {
-            glBindBufferARB(GL_ARRAY_BUFFER_ARB, mlInterleavedHandle[b]);
-            glBufferDataARB(GL_ARRAY_BUFFER_ARB, 0, NULL, usageType);
-            mlLastUploadedBytes[b] = 0;
-        }
+        glBindBufferARB(GL_ARRAY_BUFFER_ARB, mlInterleavedHandle);
+        glBufferDataARB(GL_ARRAY_BUFFER_ARB, 0, NULL, usageType);
         glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
     }
-
-    //Start with buffer 0 or the primary buffer
-    mlCurrentInterleaved = 0;
 
     //Create the VBO index array
     const int lIndexCount = GetIndexNum();
@@ -554,7 +518,7 @@ void cVertexBufferOGL_VBO::SetVertexStates()
 
     ////////////////////////////////////////
     // Bind the interleaved buffer designated for drawing
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB, mlInterleavedHandle[mlCurrentInterleaved]);
+    glBindBufferARB(GL_ARRAY_BUFFER_ARB, mlInterleavedHandle);
 
     ////////////////////////////////////////
     // Set all vertices except position
