@@ -532,7 +532,10 @@ void cEngine::Run()
                     HPL_PROFILE_SCOPE("PostUpdate");
                     mpUpdater->RunMessage(eUpdateableMessage_PostUpdate, kFixedDelta);
                 }
-                cRenderInterpolation::EndTick();
+                {
+                    HPL_PROFILE_SCOPE("InterpSnapshot");
+                    cRenderInterpolation::EndTick();
+                }
             }
             STOP_TIMING(FixedUpdate)
 

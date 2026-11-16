@@ -177,7 +177,10 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
     iRenderer::IncRenderFrameCount();
 
     //Present the world between the last two ticks (restored again at the end)
-    cRenderInterpolation::BeginRender();
+    {
+        HPL_PROFILE_SCOPE("InterpApply");
+        cRenderInterpolation::BeginRender();
+    }
 
     ///////////////////////////////////////////
     // Iterate all viewports and render
@@ -278,7 +281,10 @@ void cScene::Render(double adFrameTime, tFlag alFlags)
     }
 
     //Back to the exact simulation state
-    cRenderInterpolation::EndRender();
+    {
+        HPL_PROFILE_SCOPE("InterpRestore");
+        cRenderInterpolation::EndRender();
+    }
 }
 
 //-----------------------------------------------------------------------
