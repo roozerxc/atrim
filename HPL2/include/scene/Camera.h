@@ -283,6 +283,26 @@ public:
     void InterpApply(float afT, int alCurrentTick);
     void InterpRestore();
 
+    /**
+     * Pitch, yaw and roll as the camera will be drawn this frame (the not yet shown part of the
+     * last tick's change taken off), for things that follow the camera smoothly every frame.
+     */
+    cVector3f GetRenderPitchYawRoll();
+
+    /**
+     * Extra world space rotation for view model entities (see iEntity3D::SetRenderInterpCamera),
+     * applied around the camera position when they are drawn. Only the rotation part is used.
+     * Used for the hand sway, which is updated every frame instead of every tick.
+     */
+    void SetViewModelOffset(const cMatrixf& a_mtxOffset)
+    {
+        m_mtxViewModelOffset = a_mtxOffset;
+    }
+    const cMatrixf& GetViewModelOffset()
+    {
+        return m_mtxViewModelOffset;
+    }
+
     /** View matrix at the end of the last tick, and of the tick before (for view model entities). */
     const cMatrixf &GetInterpTickEndView()
     {
@@ -363,6 +383,7 @@ private:
     cInterpState mInterpTickEnd;
     cInterpState mInterpSaved;
     int mlInterpTick;
+    cMatrixf m_mtxViewModelOffset;
     bool mbInterpApplied;
     bool mbInterpSnapPending;
 

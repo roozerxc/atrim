@@ -29,6 +29,24 @@ cLuxPlayerHands::cLuxPlayerHands(cLuxPlayer *apPlayer) : iLuxPlayerHelper(apPlay
     mlMaxCamRotations = gpBase->mpGameCfg->GetInt("Player_General", "HandsRotationSmoothNum", 0);
     mfPosAddMul = gpBase->mpGameCfg->GetFloat("Player_General", "HandsPosAddMul", 0);
 
+    mfSwayTimeConst = 0;
+    if(mlMaxCamRotations > 1)
+    {
+        float fN = (float)mlMaxCamRotations;
+        float fWeightSum = 0;
+        float fAgeSum = 0;
+        for(size_t i = 1; i <= mlMaxCamRotations; ++i)
+        {
+            float fWeight = (float)i / fN;
+            fWeight *= fWeight;
+            fWeightSum += fWeight;
+            fAgeSum += fWeight * (fN - (float)i);
+        }
+        mfSwayTimeConst = (fAgeSum / fWeightSum) / 60.0f;
+    }
+    mvSwayRotation = 0;
+    mbSwayValid = false;
+
     mpHandsMesh = NULL;
 
 }
@@ -238,6 +256,68 @@ void cLuxPlayerHands::PostUpdate(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
+static float WrapAngleDelta(float afX)
+{
+    while(afX > kPif)
+    {
+        afX -= k2Pif;
+    }
+    while(afX < -kPif)
+    {
+        afX += k2Pif;
+    }
+    return afX;
+}
+
+void cLuxPlayerHands::OnDraw(double adFrameTime)
+{
+    if(mpHandsEntity == NULL || cRenderInterpolation::IsEnabled() == false)
+    {
+        return;
+    }
+
+    cCamera *pCam = mpPlayer->GetCamera();
+    cVector3f vTarget = pCam->GetRenderPitchYawRoll();
+
+    float fDelta = (float)adFrameTime;
+    if(fDelta < 0)
+    {
+        fDelta = 0;
+    }
+    if(fDelta > 0.25f)
+    {
+        fDelta = 0.25f;
+    }
+
+    if(mbSwayValid == false || mfSwayTimeConst <= 0)
+    {
+        mvSwayRotation = vTarget;
+        mbSwayValid = true;
+    }
+    else
+    {
+        float fFollow = 1.0f - expf(-fDelta / mfSwayTimeConst);
+        cVector3f vDiff(WrapAngleDelta(vTarget.x - mvSwayRotation.x),
+                        WrapAngleDelta(vTarget.y - mvSwayRotation.y),
+                        WrapAngleDelta(vTarget.z - mvSwayRotation.z));
+
+        if(cMath::Abs(vDiff.x) > kPi2f || cMath::Abs(vDiff.y) > kPi2f || cMath::Abs(vDiff.z) > kPi2f)
+        {
+            mvSwayRotation = vTarget;
+        }
+        else
+        {
+            mvSwayRotation = vTarget - vDiff * (1.0f - fFollow);
+        }
+    }
+
+    cMatrixf mtxCam = cMath::MatrixRotate(vTarget, eEulerRotationOrder_ZXY);
+    cMatrixf mtxSway = cMath::MatrixRotate(mvSwayRotation, eEulerRotationOrder_ZXY);
+    pCam->SetViewModelOffset(cMath::MatrixMul(mtxSway, mtxCam.GetTranspose()));
+}
+
+//-----------------------------------------------------------------------
+
 void cLuxPlayerHands::OnMapEnter(cLuxMap *apMap)
 {
     //////////////////////////
@@ -251,6 +331,7 @@ void cLuxPlayerHands::OnMapEnter(cLuxMap *apMap)
     }
 
     mlstCamRotations.clear();
+    mbSwayValid = false;
 }
 
 //-----------------------------------------------------------------------
@@ -546,30 +627,51 @@ void cLuxPlayerHands::UpdatePlayerHandsPos(double adFixedDelta)
     cCamera *pCam = mpPlayer->GetCamera();
 
     cVector3f vRotation(pCam->GetPitch(), pCam->GetYaw(), pCam->GetRoll());
-    mlstCamRotations.push_back(vRotation);
-    if(mlstCamRotations.size() > mlMaxCamRotations)
+    cVector3f vFinalRot = vRotation;
+
+    if(cRenderInterpolation::IsEnabled())
     {
-        mlstCamRotations.pop_front();
+        ////////////////////////////////////////
+        // Sway is added every frame (OnDraw), the hands follow the camera exactly here.
+        mlstCamRotations.clear();
     }
-
-    ////////////////////////////////////////
-    // Iterate all of the saved rotations and calculate a new
-    cVector3f vFinalRot = 0;
-    float fWeightTotal = 0;
-    float fCount = 1.0f;
-
-    tVector3fListIt it = mlstCamRotations.begin();
-    for(; it != mlstCamRotations.end(); ++it)
+    else
     {
-        float fWeight = fCount / ((float)mlstCamRotations.size());
-        fWeight *= fWeight; //Exp increase...
-        ++fCount;
+        pCam->SetViewModelOffset(cMatrixf::Identity);
+        mbSwayValid = false;
 
-        vFinalRot += *it * fWeight;
-        fWeightTotal += fWeight;
+        mlstCamRotations.push_back(vRotation);
+        if(mlstCamRotations.size() > mlMaxCamRotations)
+        {
+            mlstCamRotations.pop_front();
+        }
+
+        ////////////////////////////////////////
+        // Iterate all of the saved rotations and calculate a new
+        vFinalRot = 0;
+        float fWeightTotal = 0;
+        float fCount = 1.0f;
+
+        tVector3fListIt it = mlstCamRotations.begin();
+        for(; it != mlstCamRotations.end(); ++it)
+        {
+            float fWeight = fCount / ((float)mlstCamRotations.size());
+            fWeight *= fWeight; //Exp increase...
+            ++fCount;
+
+            vFinalRot += *it * fWeight;
+            fWeightTotal += fWeight;
+        }
+
+        if(fWeightTotal > 0)
+        {
+            vFinalRot = vFinalRot / fWeightTotal;
+        }
+        else
+        {
+            vFinalRot = vRotation;
+        }
     }
-
-    vFinalRot = vFinalRot / fWeightTotal;
 
     ////////////////////////////////////////
     // Set hand matrix

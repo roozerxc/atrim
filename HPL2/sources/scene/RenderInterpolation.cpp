@@ -326,6 +326,12 @@ void cRenderInterpolation::BeginRender()
             //Camera space -> world, using the camera as it is being rendered
             cMatrixf mtxCamWorld = cMath::MatrixInverse(entry.mpCamera->GetViewMatrix());
             cMatrixf mtxRel = InterpolateMatrix(entry.m_mtxPrev, entry.m_mtxCurr, fT);
+
+            cVector3f vCamPos = mtxCamWorld.GetTranslation();
+            mtxCamWorld.SetTranslation(0);
+            mtxCamWorld = cMath::MatrixMul(entry.mpCamera->GetViewModelOffset(), mtxCamWorld);
+            mtxCamWorld.SetTranslation(vCamPos);
+
             pEntity->SetRenderWorldMatrix(cMath::MatrixMul(mtxCamWorld, mtxRel));
         }
         else if(entry.mbMoved && fT < 1.0f)

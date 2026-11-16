@@ -53,6 +53,7 @@ public:
     void OnStart();
     void Update(double adFixedDelta);
     void PostUpdate(double adFixedDelta);
+    void OnDraw(double adFrameTime);
     void Reset();
 
     void OnMapEnter(cLuxMap *apMap);
@@ -133,6 +134,10 @@ private:
 
     size_t mlMaxCamRotations;
     tVector3fList mlstCamRotations;
+
+    float mfSwayTimeConst;
+    cVector3f mvSwayRotation;
+    bool mbSwayValid;
 
     eLuxHandsState mHandState;
     tString msCurrentAnim;

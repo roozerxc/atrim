@@ -61,6 +61,7 @@ cCamera::cCamera()
     mlInterpTick = -1;
     mbInterpApplied = false;
     mbInterpSnapPending = false;
+    m_mtxViewModelOffset = cMatrixf::Identity;
     m_mtxInterpTickEndView = cMatrixf::Identity;
     m_mtxInterpPrevTickEndView = cMatrixf::Identity;
     mlInterpTickEndViewTick = -10;
@@ -695,6 +696,31 @@ void cCamera::InterpApply(float afT, int alCurrentTick)
 
     InterpSetState(renderState);
     mbInterpApplied = true;
+}
+
+//-----------------------------------------------------------------------
+
+cVector3f cCamera::GetRenderPitchYawRoll()
+{
+    cVector3f vAngles(mfPitch, mfYaw, mfRoll);
+
+    float fT = cRenderInterpolation::GetAlpha();
+    if(cRenderInterpolation::IsEnabled() == false || mlInterpTick != cRenderInterpolation::GetTick() || fT >= 1.0f)
+    {
+        return vAngles;
+    }
+
+    const float fBack = 1.0f - fT;
+    vAngles.x -= (mInterpTickEnd.mfPitch - mInterpTickStart.mfPitch) * fBack;
+    vAngles.y -= (mInterpTickEnd.mfYaw - mInterpTickStart.mfYaw) * fBack;
+    vAngles.z -= (mInterpTickEnd.mfRoll - mInterpTickStart.mfRoll) * fBack;
+
+    if(mfPitchLimitMin != 0 || mfPitchLimitMax != 0)
+    {
+        vAngles.x = cMath::Clamp(vAngles.x, mfPitchLimitMin, mfPitchLimitMax);
+    }
+
+    return vAngles;
 }
 
 //-----------------------------------------------------------------------
