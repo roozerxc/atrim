@@ -27,6 +27,7 @@ public:
 	inline void ReleaseVoices ( int alNum ) { if (!mbManageVoices) alNum = 1; mlAvailableVoices += alNum; }
 
 	inline bool IsThreadAlive ( ) { return mbUseThreading; }
+	bool IsUpdaterThread ( );
 	inline int	GetThreadWaitTime ( ) { return mlThreadWaitTime; }
 
 	inline int GetNumVoices()	{ return mlNumOfVoices; }
@@ -46,6 +47,7 @@ private:
 
     SDL_mutex*			mpStreamListMutex;
 	SDL_Thread*			mpUpdaterThread;
+	Uint32				mlUpdaterThreadId;
 	int					mlThreadWaitTime;
 	bool				mbUseThreading;
 
@@ -54,6 +56,9 @@ private:
 
 };
 
+void OAL_Stats_RecordLockWait(double afMs);
+void OAL_Stats_RecordRefill(double afMs, const wstring& asFile);
+void OAL_Stats_Get(float *apLockWaitMs, int *apLockWaits, float *apRefillMs, char *apFile, int alFileSize);
 
 #endif 
 

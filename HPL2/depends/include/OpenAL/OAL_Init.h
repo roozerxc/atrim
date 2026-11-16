@@ -63,6 +63,7 @@ const int	OAL_Info_GetNumSources();
 const bool	OAL_Info_IsEFXActive();
 int OAL_Info_GetStreamBufferCount();
 int OAL_Info_GetStreamBufferSize();
+void OAL_Info_GetStreamStalls(float *apLockWaitMs, int *apLockWaits, float *apRefillMs, char *apFile, int alFileSize);
 string		OAL_Info_GetDefaultOutputDevice();
 vector<string> OAL_Info_GetOutputDevices();
 

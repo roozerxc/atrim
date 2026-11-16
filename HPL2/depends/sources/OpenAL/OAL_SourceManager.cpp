@@ -4,6 +4,10 @@
 
 #include "system/MemoryManager.h"
 #include "system/LowLevelSystem.h"
+#include "system/Platform.h"
+
+#include <vector>
+#include <stdio.h>
 
 //-----------------------------------------------------------------------------------
 
@@ -15,8 +19,65 @@ int UpdaterThread(void*);
 
 //-----------------------------------------------------------------------------------
 
+static SDL_mutex* gpStatsMutex = NULL;
+static double gfStatsLockWaitMs = 0;
+static int glStatsLockWaits = 0;
+static double gfStatsRefillMs = 0;
+static wstring gsStatsRefillFile;
+
+void OAL_Stats_RecordLockWait(double afMs)
+{
+	if(gpStatsMutex==NULL) return;
+	SDL_LockMutex(gpStatsMutex);
+	if(afMs > gfStatsLockWaitMs) gfStatsLockWaitMs = afMs;
+	++glStatsLockWaits;
+	SDL_UnlockMutex(gpStatsMutex);
+}
+
+void OAL_Stats_RecordRefill(double afMs, const wstring& asFile)
+{
+	if(gpStatsMutex==NULL) return;
+	SDL_LockMutex(gpStatsMutex);
+	if(afMs > gfStatsRefillMs)
+	{
+		gfStatsRefillMs = afMs;
+		gsStatsRefillFile = asFile;
+	}
+	SDL_UnlockMutex(gpStatsMutex);
+}
+
+void OAL_Stats_Get(float *apLockWaitMs, int *apLockWaits, float *apRefillMs, char *apFile, int alFileSize)
+{
+	*apLockWaitMs = 0; *apLockWaits = 0; *apRefillMs = 0;
+	if(alFileSize > 0) apFile[0] = 0;
+	if(gpStatsMutex==NULL) return;
+
+	SDL_LockMutex(gpStatsMutex);
+	*apLockWaitMs = (float)gfStatsLockWaitMs;
+	*apLockWaits = glStatsLockWaits;
+	*apRefillMs = (float)gfStatsRefillMs;
+	if(alFileSize > 0)
+	{
+		//Only the file name, as plain chars
+		size_t lStart = gsStatsRefillFile.find_last_of(L"/\\");
+		lStart = lStart == wstring::npos ? 0 : lStart + 1;
+		int j = 0;
+		for(size_t i = lStart; i < gsStatsRefillFile.size() && j < alFileSize - 1; ++i, ++j)
+			apFile[j] = gsStatsRefillFile[i] < 128 ? (char)gsStatsRefillFile[i] : '?';
+		apFile[j] = 0;
+	}
+	gfStatsLockWaitMs = 0;
+	glStatsLockWaits = 0;
+	gfStatsRefillMs = 0;
+	gsStatsRefillFile.clear();
+	SDL_UnlockMutex(gpStatsMutex);
+}
+
+//-----------------------------------------------------------------------------------
+
 cOAL_SourceManager::cOAL_SourceManager() : mpStreamListMutex(NULL), 
 										   mpUpdaterThread(NULL),
+										   mlUpdaterThreadId(0),
 										   mbUseThreading(false), 
 										   mlNumOfVoices(0), 
 										   mlAvailableVoices(0), 
@@ -83,8 +144,11 @@ bool cOAL_SourceManager::Initialize ( bool abManageVoices, int alNumSourcesHint,
 		// This converts the desired frequency in aInput to amount of milliseconds to wait.
 		// Note that this is an int value, so any freq above 1000 will turn mlThreadWaitTime to 0;
 		mlThreadWaitTime = 1000/alUpdateFreq;
-		mpUpdaterThread = SDL_CreateThread(UpdaterThread, NULL);
+		//Mutexes before the thread, it uses them right away.
 		mpStreamListMutex = SDL_CreateMutex ();
+		if(gpStatsMutex==NULL) gpStatsMutex = SDL_CreateMutex();
+		mpUpdaterThread = SDL_CreateThread(UpdaterThread, NULL);
+		mlUpdaterThreadId = mpUpdaterThread ? SDL_GetThreadID(mpUpdaterThread) : 0;
 
 		LogMsg("", eOAL_LogVerbose_Medium, eOAL_LogMsg_Info, "Done\n" );
 	}
@@ -200,30 +264,67 @@ void cOAL_SourceManager::AddActiveStream(cOAL_Source* apSource)
 
 //-----------------------------------------------------------------------------------
 
+bool cOAL_SourceManager::IsUpdaterThread()
+{
+	return mpUpdaterThread != NULL && SDL_ThreadID() == mlUpdaterThreadId;
+}
+
+//-----------------------------------------------------------------------------------
+
 void cOAL_SourceManager::UpdateStreaming()
 {
+	////////////////////////////////
+	// Copy the list, so the game can start a stream (AddActiveStream) while streams are
+	// being decoded, instead of waiting for all of them. Sources are never deleted while
+	// the thread runs, so the pointers stay valid.
+	std::vector<cOAL_Source*> vStreams;
 	LockStreamList();
 	{
-		tSourceListIt it = mlstStreamingSources.begin();
-		while (it!=mlstStreamingSources.end())
-		{
-			cOAL_Source* pSource = *it;
-			
-			pSource->Lock();
-			{
-				if(pSource->GetSourceType()!=eOAL_AudioDataType_Stream )
-					it = mlstStreamingSources.erase(it);
-				else
-				{
-					pSource->Update();
-					++it;
-				}
-				
-			}
-			pSource->Unlock();
-		}
+		vStreams.assign(mlstStreamingSources.begin(), mlstStreamingSources.end());
 	}
 	UnlockStreamList();
+
+	bool bRemove = false;
+	for(size_t i = 0; i < vStreams.size(); ++i)
+	{
+		cOAL_Source* pSource = vStreams[i];
+
+		double fStart = hpl::cPlatform::GetApplicationTimeX();
+		pSource->Lock();
+		{
+			if(pSource->GetSourceType()!=eOAL_AudioDataType_Stream )
+				bRemove = true;
+			else
+				pSource->Update();
+		}
+		double fMs = (hpl::cPlatform::GetApplicationTimeX() - fStart) * 1000.0;
+		if(fMs >= 1.0 && pSource->GetAudioData())
+			OAL_Stats_RecordRefill(fMs, pSource->GetAudioData()->GetFilename());
+		pSource->Unlock();
+	}
+
+	////////////////////////////////
+	// Drop sources that do not play a stream any more (checked again, it may have got a new one)
+	if(bRemove)
+	{
+		LockStreamList();
+		{
+			tSourceListIt it = mlstStreamingSources.begin();
+			while (it!=mlstStreamingSources.end())
+			{
+				cOAL_Source* pSource = *it;
+				pSource->Lock();
+				bool bStream = pSource->GetSourceType()==eOAL_AudioDataType_Stream;
+				pSource->Unlock();
+
+				if(bStream)
+					++it;
+				else
+					it = mlstStreamingSources.erase(it);
+			}
+		}
+		UnlockStreamList();
+	}
 }
 
 //-----------------------------------------------------------------------------------

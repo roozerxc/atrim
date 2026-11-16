@@ -7,6 +7,7 @@
 */
 
 #include "OpenAL/OAL_Source.h"
+#include "system/Platform.h"
 #include "OpenAL/OAL_Buffer.h"
 #include "OpenAL/OAL_Sample.h"
 #include "OpenAL/OAL_Stream.h"
@@ -154,7 +155,20 @@ bool cOAL_Source::IsValidObject()
 void cOAL_Source::Lock()
 {
 	if(mpSourceManager->IsThreadAlive())
-		SDL_LockMutex(mpSourceMutex);
+	{
+		if(mpSourceManager->IsUpdaterThread())
+		{
+			SDL_LockMutex(mpSourceMutex);
+		}
+		else
+		{
+			double fStart = hpl::cPlatform::GetApplicationTimeX();
+			SDL_LockMutex(mpSourceMutex);
+			double fMs = (hpl::cPlatform::GetApplicationTimeX() - fStart) * 1000.0;
+			if(fMs >= 0.5)
+				OAL_Stats_RecordLockWait(fMs);
+		}
+	}
 }
 
 void cOAL_Source::Unlock()

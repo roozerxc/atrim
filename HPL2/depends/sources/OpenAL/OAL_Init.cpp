@@ -315,6 +315,11 @@ int OAL_Info_GetStreamBufferSize()
 	return cOAL_Stream::GetBufferSize();
 }
 
+void OAL_Info_GetStreamStalls(float *apLockWaitMs, int *apLockWaits, float *apRefillMs, char *apFile, int alFileSize)
+{
+	OAL_Stats_Get(apLockWaitMs, apLockWaits, apRefillMs, apFile, alFileSize);
+}
+
 string OAL_Info_GetDefaultOutputDevice()
 {
 	return cOAL_Device::GetDefaultDeviceName();

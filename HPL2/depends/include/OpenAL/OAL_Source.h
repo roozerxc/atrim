@@ -148,6 +148,8 @@ public:
 	//void LogMsg("",eOAL_LogVerbose aeVerboseLevelReq, eOAL_LogMsg aeMessageType, const char* asMessage, ...);
 
 
+	inline iOAL_AudioData* GetAudioData() { return mpAudioData; }
+
 private:
 	friend class cOAL_Stream;
 

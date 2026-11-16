@@ -6,6 +6,7 @@
 #include "math/Math.h"
 #include "sound/LowLevelSound.h"
 #include "system/FrameProfiler.h"
+#include "system/Platform.h"
 #include "sound/SoundChannel.h"
 #include "resources/SoundManager.h"
 #include "sound/SoundData.h"
@@ -1090,7 +1091,15 @@ iSoundChannel *cSoundHandler::CreateChannel(const tString& asName, int alPriorit
     iSoundData* pData = NULL;
     {
         HPL_PROFILE_SCOPE("SoundLoad");
+        double fLoadStart = cPlatform::GetApplicationTimeX();
         pData = mpResources->GetSoundManager()->CreateSoundData(asName, abStream);
+
+        //Sounds are loaded (and, unless streamed, decoded whole) the first time they are played.
+        double fLoadMs = (cPlatform::GetApplicationTimeX() - fLoadStart) * 1000.0;
+        if(fLoadMs >= 4.0)
+        {
+            Log("Slow sound load: '%s' took %.1f ms (first time played)\n", asName.c_str(), fLoadMs);
+        }
     }
     if(pData == NULL)
     {

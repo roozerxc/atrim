@@ -115,6 +115,18 @@ void cLowLevelSoundOpenAL::GetSupportedFormats(tStringList &alstFormats)
 void cLowLevelSoundOpenAL::UpdateSound(double adFixedDelta)
 {
     OAL_Update();
+
+    ////////////////////////////
+    // Report stalls caused by the stream thread (decoding while the game needed the source)
+    float fLockWaitMs, fRefillMs;
+    int lLockWaits;
+    char sFile[96];
+    OAL_Info_GetStreamStalls(&fLockWaitMs, &lLockWaits, &fRefillMs, sFile, sizeof(sFile));
+    if(fLockWaitMs >= 3.0f || fRefillMs >= 5.0f)
+    {
+        Log("Sound stream stall: game waited %.1f ms (%d waits), slowest refill %.1f ms '%s'\n",
+            fLockWaitMs, lLockWaits, fRefillMs, sFile);
+    }
 }
 
 //-----------------------------------------------------------------------
