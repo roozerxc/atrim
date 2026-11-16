@@ -73,6 +73,7 @@ public:
     int mlMaxFramesAhead;
     int mlFullscreenMode;
     int mlLightColorGradeMode;
+    int mlPhysicsPreSettleSteps;
 
     bool mbFrameProfiler;
     int mlFrameProfilerFrames;

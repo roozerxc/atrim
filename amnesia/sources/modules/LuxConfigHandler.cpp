@@ -65,6 +65,7 @@ void cLuxConfigHandler::LoadMainConfig()
     mlFrameRateLimit =    gpBase->mpMainConfig->GetInt("Screen", "FrameRateLimit", 0);
 
     mbFastPhysicsLoad =    gpBase->mpMainConfig->GetBool("MapLoad", "FastPhysicsLoad", false);
+    mlPhysicsPreSettleSteps = gpBase->mpMainConfig->GetInt("MapLoad", "PhysicsPreSettleSteps", 20);
     mbFastStaticLoad =    gpBase->mpMainConfig->GetBool("MapLoad", "FastStaticLoad", false);
     mbFastEntityLoad =    gpBase->mpMainConfig->GetBool("MapLoad", "FastEntityLoad", false);
 
@@ -158,6 +159,7 @@ void cLuxConfigHandler::SaveMainConfig()
     gpBase->mpMainConfig->SetInt("Screen", "FrameRateLimit", mlFrameRateLimit);
 
     gpBase->mpMainConfig->SetBool("MapLoad", "FastPhysicsLoad", mbFastPhysicsLoad);
+    gpBase->mpMainConfig->SetInt("MapLoad", "PhysicsPreSettleSteps", mlPhysicsPreSettleSteps);
     gpBase->mpMainConfig->SetBool("MapLoad", "FastStaticLoad", mbFastStaticLoad);
     gpBase->mpMainConfig->SetBool("MapLoad", "FastEntityLoad", mbFastEntityLoad);
 

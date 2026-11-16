@@ -501,12 +501,49 @@ void cLuxMapHandler::SetCurrentMap(cLuxMap* apMap, bool abRunScript, bool abFirs
 
         mRenderCallback.mpPhysicsWorld = mpCurrentMap->GetPhysicsWorld();
         mRenderCallback.mpLowLevelGfx = gpBase->mpEngine->GetGraphics()->GetLowLevel();
+
+        if(abRunScript)
+        {
+            PreSettlePhysics();
+        }
     }
     else
     {
         //If no map, set NULL as world
         mpViewport->SetWorld(NULL);
     }
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxMapHandler::PreSettlePhysics()
+{
+    ////////////////////////////
+    // The first physics steps after a map is loaded are slow (every body is awake, contacts and
+    // caches are new): 15-50 ms ticks while the screen fades in. Run them behind the load screen.
+    int lSteps = gpBase->mpConfigHandler->mlPhysicsPreSettleSteps;
+    if(lSteps <= 0 || mpCurrentMap == NULL || mpCurrentMap->GetPhysicsWorld() == NULL)
+    {
+        return;
+    }
+
+    //Impact sounds from objects settling would play all at once, drop them.
+    cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
+    bool bWasSilent = pSoundHandler->GetSilent();
+    pSoundHandler->SetSilent(true);
+
+    double fStepSize = 1.0 / (double)cMath::Max(cEngine::GetLogicUpdatesPerSec(), 1);
+    double fStart = cPlatform::GetApplicationTimeX();
+
+    iPhysicsWorld *pPhysicsWorld = mpCurrentMap->GetPhysicsWorld();
+    for(int i = 0; i < lSteps; ++i)
+    {
+        pPhysicsWorld->Update(fStepSize);
+    }
+
+    pSoundHandler->SetSilent(bWasSilent);
+
+    Log("Physics pre-settle: %d steps in %.0f ms\n", lSteps, (cPlatform::GetApplicationTimeX() - fStart) * 1000.0);
 }
 
 //-----------------------------------------------------------------------
@@ -723,6 +760,7 @@ void cLuxMapHandler::CheckMapChange(double adFixedDelta)
         }
         mpCurrentMap->RunScript("OnEnter()");
 
+        PreSettlePhysics();
 
         mpSavedGameMutex->Unlock();
 

@@ -96,6 +96,9 @@ public:
     void DestroyMap(cLuxMap* apMap, bool abRunScript);
 
     void SetCurrentMap(cLuxMap* apMap, bool abRunScript, bool abFirstTime, const tString& asPlayerPos);
+
+    //Runs the first physics steps of a freshly loaded map behind the load screen (PhysicsPreSettleSteps)
+    void PreSettlePhysics();
     cLuxMap *GetCurrentMap()
     {
         return mpCurrentMap;
