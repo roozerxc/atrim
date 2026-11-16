@@ -75,6 +75,7 @@ public:
 
     bool mbFrameProfiler;
     int mlFrameProfilerFrames;
+    float mfFrameProfilerSpikeMs;
 
     bool mbFastPhysicsLoad;
     bool mbFastStaticLoad;

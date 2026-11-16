@@ -83,6 +83,47 @@ namespace
 
     const int kMaxItemsInReport = 12;
 
+    float gfSpikeThresholdMs = 0;
+    int glSpikesThisWindow = 0;
+    const int kMaxSpikesPerWindow = 4;
+    const int kMaxSectionsInSpike = 8;
+
+    typedef std::pair<double, int> tSpikeSort;
+    bool SortSpike(const tSpikeSort &aA, const tSpikeSort &aB)
+    {
+        return aA.first > aB.first;
+    }
+
+    //One line per slow plain frame: where its time went. The window averages hide these.
+    void LogSpike(double adFrameTime, double adAvg)
+    {
+        std::vector<tSpikeSort> vSorted;
+        for(size_t i = 0; i < gvSections.size(); ++i)
+        {
+            if(gvSections[i].mdFrameTime >= 0.0005)
+            {
+                vSorted.push_back(tSpikeSort(gvSections[i].mdFrameTime, (int)i));
+            }
+        }
+        std::sort(vSorted.begin(), vSorted.end(), SortSpike);
+
+        tString sLine;
+        char vBuf[64];
+        for(size_t i = 0; i < vSorted.size() && i < (size_t)kMaxSectionsInSpike; ++i)
+        {
+            const cProfSection &section = gvSections[vSorted[i].second];
+            tString sName = section.msName;
+            if(section.mlParent >= 0)
+            {
+                sName = gvSections[section.mlParent].msName + "/" + sName;
+            }
+            sprintf(vBuf, " %.1f", vSorted[i].first * 1000.0);
+            sLine += (i > 0 ? ", " : " ") + sName + vBuf;
+        }
+
+        Log("Frame profiler spike: %.1f ms (window avg %.1f ms):%s\n", adFrameTime * 1000.0, adAvg * 1000.0, sLine.c_str());
+    }
+
     //-----------------------------------------------------------------------
 
     inline void GpuSync()
@@ -107,6 +148,7 @@ namespace
             gdFrameTimeMax[i] = 0;
             glFramesCounted[i] = 0;
         }
+        glSpikesThisWindow = 0;
         glWindowFrames = 0;
         glItemDepth = 0;
         gpCurrentItem = NULL;
@@ -306,6 +348,11 @@ void cFrameProfiler::SetMaxReports(int alX)
     glMaxReports = alX;
 }
 
+void cFrameProfiler::SetSpikeThreshold(float afMs)
+{
+    gfSpikeThresholdMs = afMs;
+}
+
 void cFrameProfiler::SetGpuSyncFunc(tFrameProfilerGpuSyncFunc apFunc)
 {
     gpGpuSyncFunc = apFunc;
@@ -434,6 +481,24 @@ void cFrameProfiler::EndFrame(bool abDiscard)
     }
     double dFrameTime = cPlatform::GetApplicationTimeX() - gdFrameStart;
     gbInFrame = false;
+
+    //////////////////////////////
+    // Spikes (plain frames only, synced frames are slow by design)
+    if(abDiscard == false && mlWindow == 0 && gfSpikeThresholdMs >= 0 && glSpikesThisWindow < kMaxSpikesPerWindow)
+    {
+        double dAvg = glFramesCounted[0] > 0 ? gdFrameTimeSum[0] / (double)glFramesCounted[0] : 0.0;
+        double dThreshold = gfSpikeThresholdMs / 1000.0;
+        if(gfSpikeThresholdMs == 0)
+        {
+            dThreshold = dAvg * 3.0 > 0.012 ? dAvg * 3.0 : 0.012;
+        }
+        //Auto needs a few frames for the average
+        if(dFrameTime > dThreshold && (gfSpikeThresholdMs > 0 || glFramesCounted[0] >= 10))
+        {
+            LogSpike(dFrameTime, dAvg);
+            ++glSpikesThisWindow;
+        }
+    }
 
     //////////////////////////////
     // Move the frame's values to the window (or drop them)

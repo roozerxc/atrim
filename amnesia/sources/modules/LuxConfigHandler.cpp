@@ -113,6 +113,7 @@ void cLuxConfigHandler::LoadMainConfig()
 
     mbFrameProfiler = gpBase->mpMainConfig->GetBool("Main", "FrameProfiler", false);
     mlFrameProfilerFrames = gpBase->mpMainConfig->GetInt("Main", "FrameProfilerFrames", 120);
+    mfFrameProfilerSpikeMs = gpBase->mpMainConfig->GetFloat("Main", "FrameProfilerSpikeMs", 0);
 
     /////////////////////
     // Sound variables
@@ -207,6 +208,7 @@ void cLuxConfigHandler::SaveMainConfig()
 
     gpBase->mpMainConfig->SetBool("Main", "FrameProfiler", mbFrameProfiler);
     gpBase->mpMainConfig->SetInt("Main", "FrameProfilerFrames", mlFrameProfilerFrames);
+    gpBase->mpMainConfig->SetFloat("Main", "FrameProfilerSpikeMs", mfFrameProfilerSpikeMs);
 
     /////////////////////
     // Sound variables

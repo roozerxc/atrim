@@ -1386,6 +1386,7 @@ bool cLuxBase::InitEngine()
     }
 
     cFrameProfiler::SetFramesPerWindow(mpConfigHandler->mlFrameProfilerFrames);
+    cFrameProfiler::SetSpikeThreshold(mpConfigHandler->mfFrameProfilerSpikeMs);
     cFrameProfiler::SetActive(mpConfigHandler->mbFrameProfiler);
 
     //Other vars

@@ -43,6 +43,9 @@ public:
     static void SetFramesPerWindow(int alX);
     //Number of reports to write before turning itself off, 0 = no limit.
     static void SetMaxReports(int alX);
+    //Plain frames slower than this (ms) are logged right away with their slowest sections.
+    //0 = auto (3x the window average, at least 12 ms), < 0 = off.
+    static void SetSpikeThreshold(float afMs);
 
     static void SetGpuSyncFunc(tFrameProfilerGpuSyncFunc apFunc);
 
