@@ -305,7 +305,6 @@ void cLuxMusicHandler::UpdateDangerMusic(double adFixedDelta)
             if(mfEnemyCloseCount > 2.0f)
             {
                 Play(sMusic, true, 1.0f, 6.0f, 5, true, true);
-                mvGameMusic[5].msFile = ""; //hack to make sure it doesnt loop automatically when all enemies are disabled
                 mbEnemyClosePlaying = true;
             }
         }
@@ -337,7 +336,7 @@ void cLuxMusicHandler::UpdateDangerMusic(double adFixedDelta)
             mfEnemyGoneCount += (float)adFixedDelta;
             if(mfEnemyGoneCount > 6.0f)
             {
-                Stop(6.0f, 5, true); //slot 5 file is blanked on play, must force
+                Stop(6.0f, 5, true);
                 mbEnemyClosePlaying = false;
             }
         }
@@ -359,6 +358,23 @@ void cLuxMusicHandler::UpdateEnemyMusic(double adFixedDelta, eLuxEnemyMusic aTyp
         if(mbEnemyPlaying[i])
         {
             return;
+        }
+    }
+
+    ////////////////////////////////////////
+    // Enemies that were disabled or killed without leaving the set would keep the music going
+    // forever. (This used to be handled by blanking the music slot right after playing it, but then
+    // the enemy music could not come back after a script song of higher priority had ended.)
+    for(tLuxEnemySetIt pruneIt = m_setEnemies[aType].begin(); pruneIt != m_setEnemies[aType].end();)
+    {
+        iLuxEnemy *pEnemy = *pruneIt;
+        if(pEnemy->IsActive() == false || pEnemy->GetHealth() <= 0)
+        {
+            m_setEnemies[aType].erase(pruneIt++);
+        }
+        else
+        {
+            ++pruneIt;
         }
     }
 
@@ -406,7 +422,6 @@ void cLuxMusicHandler::UpdateEnemyMusic(double adFixedDelta, eLuxEnemyMusic aTyp
                 }
 
                 Play(sMusic, true, 1.0f, 1.5f, 8 + aType, true, true);
-                mvGameMusic[8+aType].msFile = ""; //hack to make sure the music does not start playing automatically again
                 mbEnemyPlaying[aType] = true;
                 //Log("Play!");
                 mfEnemyPlayCount[aType] = 0;
