@@ -693,8 +693,12 @@ tWString cLuxInputHandler::GetInputName(const tString& asActionName)
 
 void cLuxInputHandler::ChangeState(eLuxInputState aState)
 {
-    mState = aState;
+    if(aState == eLuxInputState_Game && gpBase->mpDebugHandler && gpBase->mpDebugHandler->GetDebugWindowActive())
+    {
+        aState = eLuxInputState_Debug;
+    }
 
+    mState = aState;
 
     //This rests all actions so changing states does not give unwanted clicks!
     mpInput->ResetActionsToCurrentState();

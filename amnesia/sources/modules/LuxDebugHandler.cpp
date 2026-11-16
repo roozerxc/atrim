@@ -293,6 +293,8 @@ void cLuxDebugHandler::SetDebugWindowActive(bool abActive)
         return;
     }
 
+    mbWindowActive = abActive;
+
     //////////////////
     // Active
     if(abActive)
