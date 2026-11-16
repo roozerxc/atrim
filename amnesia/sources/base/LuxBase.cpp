@@ -360,6 +360,9 @@ cLuxBase::cLuxBase()
     // Init pointers
     mpEngine = NULL;
 
+    mbSoundPreloadLoaded = false;
+    mbSoundPreloadChanged = false;
+
     mpMainConfig = NULL;
     mpUserConfig = NULL;
     mpUserKeyConfig = NULL;
@@ -1374,6 +1377,7 @@ bool cLuxBase::InitEngine()
     iLowLevelGraphics::SetPostEffectsDisabled(mpConfigHandler->mbDisablePostEffects);
     iLowLevelGraphics::SetMaxFramesAhead(mpConfigHandler->mlMaxFramesAhead);
     iLowLevelGraphics::SetFullscreenMode(mpConfigHandler->mlFullscreenMode);
+    cSoundManager::SetAutoStreamMinBytes(mpConfigHandler->mlSoundAutoStreamKB > 0 ? (unsigned long)mpConfigHandler->mlSoundAutoStreamKB * 1024 : 0);
     if(mpConfigHandler->mlMaxFramesAhead >= 0)
     {
         Log("MaxFramesAhead is %d: the CPU waits for the GPU to limit input lag.\n", mpConfigHandler->mlMaxFramesAhead);
@@ -1493,11 +1497,208 @@ void cLuxBase::SaveShaderWarmList()
 
 //-----------------------------------------------------------------------
 
+void cLuxBase::LoadSoundPreloadList()
+{
+    mbSoundPreloadLoaded = true;
+    mbSoundPreloadChanged = false;
+
+    FILE *pFile = cPlatform::OpenFile(msBaseSavePath + _W("sound_preload_list.txt"), _W("rb"));
+    if(pFile == NULL)
+    {
+        return;
+    }
+
+    tString sData;
+    char vBuffer[4096];
+    size_t lRead;
+    while((lRead = fread(vBuffer, 1, sizeof(vBuffer), pFile)) > 0)
+    {
+        sData.append(vBuffer, lRead);
+    }
+    fclose(pFile);
+
+    //"map<TAB>sound" per line
+    size_t lStart = 0;
+    while(lStart < sData.size())
+    {
+        size_t lEnd = sData.find('\n', lStart);
+        if(lEnd == tString::npos)
+        {
+            lEnd = sData.size();
+        }
+        tString sLine = sData.substr(lStart, lEnd - lStart);
+        lStart = lEnd + 1;
+
+        if(sLine.size() > 0 && sLine[sLine.size() - 1] == '\r')
+        {
+            sLine.resize(sLine.size() - 1);
+        }
+        size_t lTab = sLine.find('\t');
+        if(lTab == tString::npos || lTab == 0 || lTab + 1 >= sLine.size())
+        {
+            continue;
+        }
+        m_mapSoundPreload[sLine.substr(0, lTab)].insert(sLine.substr(lTab + 1));
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxBase::CollectPlayedSounds()
+{
+    if(mpEngine == NULL)
+    {
+        return;
+    }
+
+    cSoundManager *pSoundManager = mpEngine->GetResources()->GetSoundManager();
+    if(msSoundPreloadMap != "")
+    {
+        std::set<tString> &setMap = m_mapSoundPreload[msSoundPreloadMap];
+        const std::set<tString> &setPlayed = pSoundManager->GetPlayedSamples();
+        for(std::set<tString>::const_iterator it = setPlayed.begin(); it != setPlayed.end(); ++it)
+        {
+            if(setMap.insert(*it).second)
+            {
+                mbSoundPreloadChanged = true;
+            }
+        }
+    }
+    pSoundManager->ClearPlayedSamples();
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxBase::PinCommonSounds()
+{
+    ////////////////////////////
+    // Sounds played in two or more maps (doors, sanity, breathing, steps...) are loaded once and
+    // kept: map changes free all but 20 unused sounds, so they were loaded again in every map.
+    std::map<tString, int> mapCount;
+    for(std::map<tString, std::set<tString> >::iterator mapIt = m_mapSoundPreload.begin(); mapIt != m_mapSoundPreload.end(); ++mapIt)
+    {
+        for(std::set<tString>::iterator it = mapIt->second.begin(); it != mapIt->second.end(); ++it)
+        {
+            mapCount[*it]++;
+        }
+    }
+
+    cSoundManager *pSoundManager = mpEngine->GetResources()->GetSoundManager();
+    int lCount = 0;
+    for(std::map<tString, int>::iterator it = mapCount.begin(); it != mapCount.end(); ++it)
+    {
+        if(it->second < 2 || msetPinnedSounds.find(it->first) != msetPinnedSounds.end())
+        {
+            continue;
+        }
+        if(pSoundManager->ShouldAutoStream(it->first))
+        {
+            continue;
+        }
+
+        iSoundData *pData = pSoundManager->CreateSoundData(it->first, false);
+        if(pData)
+        {
+            //The extra user keeps it from being freed
+            pData->IncUserCount();
+            msetPinnedSounds.insert(it->first);
+            ++lCount;
+        }
+    }
+
+    if(lCount > 0)
+    {
+        Log("Kept %d sounds used in several maps loaded (%d in total)\n", lCount, (int)msetPinnedSounds.size());
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxBase::PreloadMapSounds(const tString& asMapName)
+{
+    if(mbSoundPreloadLoaded == false)
+    {
+        LoadSoundPreloadList();
+    }
+
+    //Sounds played so far belong to the map before
+    CollectPlayedSounds();
+    msSoundPreloadMap = asMapName;
+
+    if(mpConfigHandler->mbSoundPreload == false)
+    {
+        return;
+    }
+
+    PinCommonSounds();
+
+    std::map<tString, std::set<tString> >::iterator mapIt = m_mapSoundPreload.find(asMapName);
+    if(mapIt == m_mapSoundPreload.end())
+    {
+        return;
+    }
+
+    double fStart = cPlatform::GetApplicationTimeX();
+    cSoundManager *pSoundManager = mpEngine->GetResources()->GetSoundManager();
+    int lCount = 0;
+    for(std::set<tString>::iterator it = mapIt->second.begin(); it != mapIt->second.end(); ++it)
+    {
+        //Long ones are streamed when played, loading them whole here would undo that
+        if(pSoundManager->ShouldAutoStream(*it))
+        {
+            continue;
+        }
+        if(pSoundManager->CreateSoundData(*it, false))
+        {
+            ++lCount;
+        }
+    }
+
+    //Loading counts as playing for the list, these are already in it
+    pSoundManager->ClearPlayedSamples();
+
+    Log("Preloaded %d sounds for map '%s' in %.0f ms\n", lCount, asMapName.c_str(), (cPlatform::GetApplicationTimeX() - fStart) * 1000.0);
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxBase::SaveSoundPreloadList()
+{
+    if(mbSoundPreloadLoaded == false)
+    {
+        LoadSoundPreloadList();
+    }
+
+    CollectPlayedSounds();
+    if(mbSoundPreloadChanged == false)
+    {
+        return;
+    }
+
+    FILE *pFile = cPlatform::OpenFile(msBaseSavePath + _W("sound_preload_list.txt"), _W("wb"));
+    if(pFile == NULL)
+    {
+        return;
+    }
+    for(std::map<tString, std::set<tString> >::iterator mapIt = m_mapSoundPreload.begin(); mapIt != m_mapSoundPreload.end(); ++mapIt)
+    {
+        for(std::set<tString>::iterator it = mapIt->second.begin(); it != mapIt->second.end(); ++it)
+        {
+            fprintf(pFile, "%s\t%s\n", mapIt->first.c_str(), it->c_str());
+        }
+    }
+    fclose(pFile);
+    mbSoundPreloadChanged = false;
+}
+
+//-----------------------------------------------------------------------
+
 void cLuxBase::ExitEngine()
 {
     if(mpEngine)
     {
         SaveShaderWarmList();
+        SaveSoundPreloadList();
 
         mpEngine->GetGraphics()->GetLowLevel()->SetPreSwapBuffersCallback(NULL, NULL);
         mpVersionWatermarkSet = NULL;

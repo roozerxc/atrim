@@ -7,6 +7,9 @@
 
 #include "LuxTypes.h"
 
+#include <map>
+#include <set>
+
 //----------------------------------------------
 
 class cLuxMapHandler;
@@ -123,6 +126,10 @@ public:
     void Exit();
 
     void SaveShaderWarmList();
+
+    //Sounds each map played (sound_preload_list.txt), loaded with the map next time.
+    void PreloadMapSounds(const tString& asMapName);
+    void SaveSoundPreloadList();
 
     void Run();
 
@@ -280,6 +287,15 @@ public:
     tWString msDefaultProfileName;
 
     tWString msBaseSavePath;
+
+    std::map<tString, std::set<tString> > m_mapSoundPreload;
+    tString msSoundPreloadMap;
+    bool mbSoundPreloadLoaded;
+    bool mbSoundPreloadChanged;
+    std::set<tString> msetPinnedSounds;
+    void PinCommonSounds();
+    void LoadSoundPreloadList();
+    void CollectPlayedSounds();
     tWString msProfileSavePath;
     tWString msMainProfileSavePath;
     tWString msProfileName;

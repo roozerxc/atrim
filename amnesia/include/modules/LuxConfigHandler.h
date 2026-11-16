@@ -85,6 +85,8 @@ public:
     int mlMaxSoundChannels;
     int mlSoundStreamBuffers;
     int mlSoundStreamBufferSize;
+    int mlSoundAutoStreamKB;
+    bool mbSoundPreload;
 
 
 private:

@@ -1088,11 +1088,25 @@ iSoundChannel *cSoundHandler::CreateChannel(const tString& asName, int alPriorit
 
     ////////////////////////
     //Load the data
+    cSoundManager *pSoundManager = mpResources->GetSoundManager();
+
+    //Long sounds are streamed, decoding them whole on first play stalls the game.
+    if(abStream == false && pSoundManager->ShouldAutoStream(asName))
+    {
+        abStream = true;
+    }
+
     iSoundData* pData = NULL;
     {
         HPL_PROFILE_SCOPE("SoundLoad");
         double fLoadStart = cPlatform::GetApplicationTimeX();
-        pData = mpResources->GetSoundManager()->CreateSoundData(asName, abStream);
+        pData = pSoundManager->CreateSoundData(asName, abStream);
+
+        //Remembered so the game can preload it next time the map is loaded
+        if(pData && abStream == false)
+        {
+            pSoundManager->AddPlayedSample(asName);
+        }
 
         //Sounds are loaded (and, unless streamed, decoded whole) the first time they are played.
         double fLoadMs = (cPlatform::GetApplicationTimeX() - fLoadStart) * 1000.0;

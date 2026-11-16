@@ -429,6 +429,8 @@ cLuxMap *cLuxMapHandler::LoadMap(const tString& asFileName, bool abLoadEntities)
 
     pMap->LoadFromFile(msMapFolder + asFileName, abLoadEntities);
 
+    gpBase->PreloadMapSounds(FileToMapName(asFileName));
+
     gpBase->mpLoadScreenHandler->OnMapFileLoaded();
 
     mlstMaps.push_back(pMap);
@@ -463,6 +465,7 @@ void cLuxMapHandler::SetCurrentMap(cLuxMap* apMap, bool abRunScript, bool abFirs
     if(mpCurrentMap)
     {
         gpBase->SaveShaderWarmList();
+        gpBase->SaveSoundPreloadList();
 
         mpCurrentMap->OnLeave(abRunScript);
 

@@ -121,6 +121,8 @@ void cLuxConfigHandler::LoadMainConfig()
     mlMaxSoundChannels = gpBase->mpMainConfig->GetInt("Sound", "MaxChannels", 128);
     mlSoundStreamBuffers = gpBase->mpMainConfig->GetInt("Sound", "StreamBuffers", 8);
     mlSoundStreamBufferSize = gpBase->mpMainConfig->GetInt("Sound", "StreamBufferSize", 32768);
+    mlSoundAutoStreamKB = gpBase->mpMainConfig->GetInt("Sound", "AutoStreamKB", 256);
+    mbSoundPreload = gpBase->mpMainConfig->GetBool("Sound", "PreloadMapSounds", true);
 }
 
 //-----------------------------------------------------------------------
@@ -220,6 +222,8 @@ void cLuxConfigHandler::SaveMainConfig()
     gpBase->mpMainConfig->SetInt("Sound", "MaxChannels", mlMaxSoundChannels);
     gpBase->mpMainConfig->SetInt("Sound", "StreamBuffers", mlSoundStreamBuffers);
     gpBase->mpMainConfig->SetInt("Sound", "StreamBufferSize", mlSoundStreamBufferSize);
+    gpBase->mpMainConfig->SetInt("Sound", "AutoStreamKB", mlSoundAutoStreamKB);
+    gpBase->mpMainConfig->SetBool("Sound", "PreloadMapSounds", mbSoundPreload);
 }
 
 //-----------------------------------------------------------------------

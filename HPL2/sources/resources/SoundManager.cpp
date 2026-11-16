@@ -6,6 +6,7 @@
 #include "sound/SoundData.h"
 #include "sound/LowLevelSound.h"
 #include "resources/FileSearcher.h"
+#include "system/Platform.h"
 
 namespace hpl
 {
@@ -85,6 +86,42 @@ iSoundData *cSoundManager::CreateSoundData(const tString& asName, bool abStream,
     //if(!pSound) Error("Couldn't load sound data '%s'\n",asName.c_str());
     EndLoad();
     return pSound;
+}
+
+//-----------------------------------------------------------------------
+
+unsigned long cSoundManager::mlAutoStreamMinBytes = 0;
+
+bool cSoundManager::ShouldAutoStream(const tString& asName)
+{
+    if(mlAutoStreamMinBytes == 0)
+    {
+        return false;
+    }
+
+    std::map<tString, bool>::iterator it = m_mapAutoStream.find(asName);
+    if(it != m_mapAutoStream.end())
+    {
+        return it->second;
+    }
+
+    //Already loaded (preloaded, or played before streaming was decided): use it.
+    tWString sPath;
+    iSoundData *pData = FindSampleData(asName, sPath);
+
+    bool bStream = false;
+    if(pData == NULL && sPath != _W(""))
+    {
+        unsigned long lSize = cPlatform::GetFileSize(sPath);
+        if(lSize >= mlAutoStreamMinBytes)
+        {
+            bStream = true;
+            Log("Auto streaming sound '%s' (%lu KB)\n", asName.c_str(), lSize / 1024);
+        }
+    }
+
+    m_mapAutoStream[asName] = bStream;
+    return bStream;
 }
 
 //-----------------------------------------------------------------------
