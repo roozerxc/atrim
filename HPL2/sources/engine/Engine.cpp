@@ -211,6 +211,7 @@ cEngine::cEngine(iLowLevelEngineSetup *apGameSetup, tFlag alHplSetupFlags, cEngi
     , kMaxFrameTime(0.25)
     , kFixedDelta(1.0 / (double)mlLogicUpdatesPerSec)
     , iUpdatesOnCurrentFrame(0)
+    , mlTicksThisFrame(0)
     , dAccumulator(0.0)
     , dLogicTime(0.0)
     , dSpeedMul(1.0)
@@ -498,6 +499,7 @@ void cEngine::Run()
         //Count the ticks that will run this frame (same arithmetic as the loop below), so
         //render interpolation knows which ticks are the last two (the only ones it uses).
         int iTicksThisFrame = 0;
+        mlTicksThisFrame = 0;
         {
             double dTempAccumulator = dAccumulator;
             while(dTempAccumulator >= kFixedDelta && iTicksThisFrame < iDynamicMaxUpdates)
@@ -506,6 +508,7 @@ void cEngine::Run()
                 ++iTicksThisFrame;
             }
         }
+        mlTicksThisFrame = iTicksThisFrame;
 
         while(dAccumulator >= kFixedDelta && iUpdatesOnCurrentFrame < iDynamicMaxUpdates)
         {

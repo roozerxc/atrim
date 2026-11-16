@@ -180,6 +180,17 @@ public:
     }
 
     /**
+     * Logic ticks still to run this frame, counting the one running now (1 outside of ticks).
+     * With a low frame rate several ticks run back to back per frame, input that is read once
+     * per frame can be spread over them with this.
+     */
+    int GetLogicTicksLeftThisFrame()
+    {
+        int lLeft = mlTicksThisFrame - iUpdatesOnCurrentFrame;
+        return lLeft > 0 ? lLeft : 1;
+    }
+
+    /**
      * Logic ticks per second (30 - 60, default 60). Must be set before the engine is created.
      * Fewer ticks means less CPU time spent on logic, rendering is interpolated between ticks either way.
      */
@@ -239,6 +250,7 @@ private:
     static int mlLogicUpdatesPerSec;
 
     int iUpdatesOnCurrentFrame;
+    int mlTicksThisFrame;
 
     double dAccumulator;
     double dLogicTime;

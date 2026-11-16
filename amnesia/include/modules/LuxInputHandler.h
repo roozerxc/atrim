@@ -204,6 +204,9 @@ private:
     std::list<cFrameMouseSample> mlstFrameMouseSamples;
     bool mbFrameLookWasActive;
 
+    bool MouseDrivesInteraction();
+    cVector2f mvInteractMousePending;
+
     cVector2l mvLastFrameGuiMousePos;
 
 #if USE_GAMEPAD

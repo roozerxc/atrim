@@ -275,6 +275,7 @@ cLuxInputHandler::cLuxInputHandler() : iLuxUpdateable("LuxInputHandler")
 
     mbFrameLookWasActive = false;
     mvLastFrameGuiMousePos = cVector2l(-1, -1);
+    mvInteractMousePending = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -525,6 +526,13 @@ void cLuxInputHandler::OnFrameInput(double adFrameTime)
         vRelPos.y = -vRelPos.y;
     }
 
+    if(MouseDrivesInteraction())
+    {
+        mvInteractMousePending += vRelPos;
+        return;
+    }
+    mvInteractMousePending = 0;
+
     if(vRelPos.x != 0)
     {
         mpPlayer->AddYaw(-vRelPos.x, true);
@@ -559,6 +567,27 @@ bool cLuxInputHandler::FrameMouseLookActive()
     }
 
     return true;
+}
+
+//-----------------------------------------------------------------------
+
+bool cLuxInputHandler::MouseDrivesInteraction()
+{
+    if(mpPlayer == NULL)
+    {
+        return false;
+    }
+
+    switch(mpPlayer->GetCurrentState())
+    {
+    case eLuxPlayerState_InteractSlide:
+    case eLuxPlayerState_InteractLever:
+    case eLuxPlayerState_InteractWheel:
+    case eLuxPlayerState_InteractSwingDoor:
+        return true;
+    default:
+        return false;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1377,6 +1406,19 @@ void cLuxInputHandler::UpdateGamePlayerInput()
         {
             vFinalPos.y = -vFinalPos.y;
         }
+    }
+
+    if(MouseDrivesInteraction())
+    {
+        mvInteractMousePending += vFinalPos;
+        int lTicksLeft = gpBase->mpEngine->GetLogicTicksLeftThisFrame();
+        cVector2f vShare = mvInteractMousePending / (float)lTicksLeft;
+        mvInteractMousePending -= vShare;
+        vFinalPos = vShare;
+    }
+    else
+    {
+        mvInteractMousePending = 0;
     }
 
 #if USE_GAMEPAD
