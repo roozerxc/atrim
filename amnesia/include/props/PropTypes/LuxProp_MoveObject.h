@@ -13,6 +13,7 @@ class cLuxProp_MoveObject_SaveData : public iLuxProp_SaveData
 public:
     cVector3f mvAngularOffsetPos;
     bool mbUseAngularLocalOffset;
+    tString msAngularOffsetArea;
 
     bool mbAutoMoveReachedGoal;
 };
@@ -78,6 +79,7 @@ private:
 
     void OnStartMove();
     void CalculateOpenRotateMatrix(float afCurrentOpenAmount);
+    void ResolveAngularOffsetArea();
 
     //Vars
     cVector3f mvAngularOffsetPos;

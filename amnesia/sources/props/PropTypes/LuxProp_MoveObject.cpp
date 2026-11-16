@@ -166,19 +166,7 @@ void cLuxProp_MoveObject::UpdatePropSpecific(double adFixedDelta)
 
     //////////////////////
     //Check the anglular offset area
-    if(msAngularOffsetArea != "")
-    {
-        iLuxArea *pArea = static_cast<iLuxArea *>(mpMap->GetEntityByName(msAngularOffsetArea));
-        if(pArea)
-        {
-            SetAngularOffsetPos(pArea->GetPosition());
-        }
-        else
-        {
-            Error("Angular offset area '%s' does not exist!\n", msAngularOffsetArea.c_str());
-        }
-        msAngularOffsetArea = "";
-    }
+    ResolveAngularOffsetArea();
 
 
     //////////////////////
@@ -210,8 +198,32 @@ eLuxFocusCrosshair cLuxProp_MoveObject::GetFocusCrosshair(iPhysicsBody *apBody, 
 
 //-----------------------------------------------------------------------
 
+void cLuxProp_MoveObject::ResolveAngularOffsetArea()
+{
+    if(msAngularOffsetArea == "")
+    {
+        return;
+    }
+
+    iLuxArea *pArea = static_cast<iLuxArea *>(mpMap->GetEntityByName(msAngularOffsetArea));
+    if(pArea)
+    {
+        SetAngularOffsetPos(pArea->GetPosition());
+    }
+    else
+    {
+        Error("Angular offset area '%s' does not exist!\n", msAngularOffsetArea.c_str());
+    }
+    msAngularOffsetArea = "";
+}
+
+//-----------------------------------------------------------------------
+
 void cLuxProp_MoveObject::MoveToState(float afState, float afAcc, float afMaxSpeed, float afSlowdownDist, bool abResetSpeed)
 {
+    //A script can move the object in the same tick it is activated, before its first update
+    ResolveAngularOffsetArea();
+
     ///////////////////
     // Linear
     if(mMoveObjectType == eLuxMoveObjectType_Linear)
@@ -399,6 +411,7 @@ kBeginSerialize(cLuxProp_MoveObject_SaveData, iLuxProp_SaveData)
 
 kSerializeVar(mvAngularOffsetPos, eSerializeType_Vector3f)
 kSerializeVar(mbUseAngularLocalOffset, eSerializeType_Bool)
+kSerializeVar(msAngularOffsetArea, eSerializeType_String)
 
 kSerializeVar(mbAutoMoveReachedGoal, eSerializeType_Bool)
 
@@ -425,6 +438,11 @@ void cLuxProp_MoveObject::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
     kCopyToVar(pData, mvAngularOffsetPos);
     kCopyToVar(pData, mbUseAngularLocalOffset);
     kCopyToVar(pData, mbAutoMoveReachedGoal);
+
+    //The pivot area name is only read from the map file and resolved on the first update. An object
+    //that was never active when saved (like the hammer and chipper in Prison South) still needs it:
+    //props saved in full are created again without the map's instance variables when a save is loaded.
+    pData->msAngularOffsetArea = msAngularOffsetArea;
 }
 
 //-----------------------------------------------------------------------
@@ -441,6 +459,11 @@ void cLuxProp_MoveObject::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
     kCopyFromVar(pData, mvAngularOffsetPos);
     kCopyFromVar(pData, mbUseAngularLocalOffset);
     kCopyFromVar(pData, mbAutoMoveReachedGoal);
+
+    if(pData->msAngularOffsetArea != "")
+    {
+        msAngularOffsetArea = pData->msAngularOffsetArea;
+    }
 
     if(mMoveObjectType == eLuxMoveObjectType_Angular)
     {
