@@ -149,8 +149,7 @@ void main()
     /////////////////////////////////
     //Get values from samplers
     vec2 vMapCoords = gl_FragCoord.xy;
-    vec4 vColorVal = pow(texture2DRect(aDiffuseMap, vMapCoords), vec4(2.2, vec3(2.4, 1.9, 0.1)));
-    //vec4 vColorVal =  texture2DRect(aDiffuseMap, vMapCoords);
+    vec4 vColorVal =  texture2DRect(aDiffuseMap, vMapCoords);
     vec4 vNormalVal = texture2DRect(aNormalMap, vMapCoords);
     vec4 vDepthVal =  texture2DRect(aDepthMap, vMapCoords);
     
@@ -238,8 +237,7 @@ void main()
     /////////////////////////////////
     //Calculate diffuse color
     float fLDotN = max( dot( vLightDir, vNormal.xyz), 0.0);
-    vec3 vDiffuse = pow(vColorVal.xyz * avLightColor.xyz * fLDotN, vec3(1.0 / 1.6));
-    //vec3 vDiffuse = vColorVal.xyz * avLightColor.xyz * fLDotN;
+    vec3 vDiffuse = vColorVal.xyz * avLightColor.xyz * fLDotN;
 
     /////////////////////////////////
     //Calculate specular color

@@ -185,6 +185,7 @@ private:
     iPostEffect *mpPostEffect_ImageTrail;
     iPostEffect *mpPostEffect_Sepia;
     iPostEffect *mpPostEffect_RadialBlur;
+    iPostEffect *mpPostEffect_LightColorGrade;
 
     cLuxMapHandler_ChangeMap mMapChangeData;
 

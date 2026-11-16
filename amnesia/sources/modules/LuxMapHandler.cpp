@@ -151,6 +151,13 @@ cLuxMapHandler::cLuxMapHandler() : iLuxUpdateable("LuxMapHandler")
     cPostEffectComposite *pPostEffectComp = pGraphics->CreatePostEffectComposite();
     mpViewport->SetPostEffectComposite(pPostEffectComp);
 
+    cPostEffectParams_ColorConvTex lightGradeParams;
+    lightGradeParams.msTextureFile = gpBase->mpMainConfig->GetString("Graphics", "LightColorGradeFile", "core_light_colorgrade.tga");
+    lightGradeParams.mfFadeAlpha = 1.0f;
+    mpPostEffect_LightColorGrade = pGraphics->CreatePostEffect(&lightGradeParams);
+    pPostEffectComp->AddPostEffect(mpPostEffect_LightColorGrade, 1);
+    mpPostEffect_LightColorGrade->SetActive(true);
+
     //Bloom
     cPostEffectParams_Bloom bloomParams;
     bloomParams.mfBlurSize = 1.0f;
@@ -572,6 +579,7 @@ void cLuxMapHandler::LoadMainConfig()
     mpPostEffect_ImageTrail->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectImageTrail", true) == false);
     mpPostEffect_Sepia->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectSepia", true) == false);
     mpPostEffect_RadialBlur->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectRadialBlur", true) == false);
+    mpPostEffect_LightColorGrade->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectLightColorGrade", true) == false);
 
     cRenderSettings *pRenderSettings = mpViewport->GetRenderSettings();
 }
@@ -582,6 +590,7 @@ void cLuxMapHandler::SaveMainConfig()
     gpBase->mpMainConfig->SetBool("Graphics", "PostEffectImageTrail", mpPostEffect_ImageTrail->IsDisabled() == false);
     gpBase->mpMainConfig->SetBool("Graphics", "PostEffectSepia", mpPostEffect_Sepia->IsDisabled() == false);
     gpBase->mpMainConfig->SetBool("Graphics", "PostEffectRadialBlur", mpPostEffect_RadialBlur->IsDisabled() == false);
+    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectLightColorGrade", mpPostEffect_LightColorGrade->IsDisabled() == false);
 }
 
 //-----------------------------------------------------------------------

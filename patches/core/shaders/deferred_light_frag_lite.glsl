@@ -43,7 +43,7 @@ uniform sampler1D aAttenuationMap;
 
 void main()
 {
-    vec4 vColorVal = pow(texture2DRect(aDiffuseMap, gl_FragCoord.xy), vec4(2.2, vec3(2.4, 1.9, 0.1)) * 1.125);
+    vec4 vColorVal = texture2DRect(aDiffuseMap, gl_FragCoord.xy);
     vec4 vDepthVal = texture2DRect(aDepthMap, gl_FragCoord.xy);
 
     // Manually unpack vDepthVal due to ati 9xxx 16bit mantissa
@@ -67,7 +67,7 @@ void main()
         fAttenuation *= texture1D(aSpotFalloffMap, clamp(fOneMinusCos / afOneMinusCosHalfSpotFOV, 0.0, 1.0)).x;
     @endif
 
-    gl_FragColor.xyz = pow(vColorVal.xyz * avLightColor.xyz, vec3(1.0 / 1.6)) * fAttenuation;
+    gl_FragColor.xyz = vColorVal.xyz * avLightColor.xyz * fAttenuation;
 }
 
 //--------------------------------------------------------------
