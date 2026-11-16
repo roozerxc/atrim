@@ -122,6 +122,8 @@ public:
     bool Init(const tString &asCommandline);
     void Exit();
 
+    void SaveShaderWarmList();
+
     void Run();
 
     void Reset();

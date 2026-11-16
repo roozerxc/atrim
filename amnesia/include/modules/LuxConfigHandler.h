@@ -69,6 +69,7 @@ public:
     bool mbRenderTrace;
     bool mbRenderTraceSync;
     bool mbOcclusionCulling;
+    bool mbShaderWarming;
 
     bool mbFrameProfiler;
     int mlFrameProfilerFrames;

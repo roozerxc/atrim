@@ -462,6 +462,8 @@ void cLuxMapHandler::SetCurrentMap(cLuxMap* apMap, bool abRunScript, bool abFirs
     //Unload stuff from previous map
     if(mpCurrentMap)
     {
+        gpBase->SaveShaderWarmList();
+
         mpCurrentMap->OnLeave(abRunScript);
 
         //Leave callback for modules

@@ -107,6 +107,7 @@ void cLuxConfigHandler::LoadMainConfig()
     mbRenderTrace = gpBase->mpMainConfig->GetBool("Graphics", "RenderTrace", false);
     mbRenderTraceSync = gpBase->mpMainConfig->GetBool("Graphics", "RenderTraceSync", false);
     mbOcclusionCulling = gpBase->mpMainConfig->GetBool("Graphics", "OcclusionCulling", true);
+    mbShaderWarming = gpBase->mpMainConfig->GetBool("Graphics", "ShaderWarming", false);
 
     mbFrameProfiler = gpBase->mpMainConfig->GetBool("Main", "FrameProfiler", false);
     mlFrameProfilerFrames = gpBase->mpMainConfig->GetInt("Main", "FrameProfilerFrames", 120);
@@ -198,6 +199,7 @@ void cLuxConfigHandler::SaveMainConfig()
     gpBase->mpMainConfig->SetBool("Graphics", "RenderTrace", mbRenderTrace);
     gpBase->mpMainConfig->SetBool("Graphics", "RenderTraceSync", mbRenderTraceSync);
     gpBase->mpMainConfig->SetBool("Graphics", "OcclusionCulling", mbOcclusionCulling);
+    gpBase->mpMainConfig->SetBool("Graphics", "ShaderWarming", mbShaderWarming);
 
     gpBase->mpMainConfig->SetBool("Main", "FrameProfiler", mbFrameProfiler);
     gpBase->mpMainConfig->SetInt("Main", "FrameProfilerFrames", mlFrameProfilerFrames);

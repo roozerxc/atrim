@@ -15,11 +15,30 @@
 #include "math/Math.h"
 
 #include "system/String.h"
+#include "system/Platform.h"
+
+#include <set>
+#include <stdio.h>
 
 namespace hpl
 {
 
 const static bool gbLogStuff = false;
+
+//////////////////////////////////////////////////////////////////////////
+// SHADER WARMING DATA
+//////////////////////////////////////////////////////////////////////////
+
+//All live managers, to find them by name when warming.
+static std::vector<cProgramComboManager *> gvComboManagers;
+//"name<TAB>mode<TAB>flags" of every program generated (and every line of a loaded list).
+static std::set<tString> gsetWarmEntries;
+static bool gbWarmListChanged = false;
+
+static tString WarmEntryName(const tString &asManager, int alMode, int alFlags)
+{
+    return asManager + "\t" + cString::ToString(alMode) + "\t" + cString::ToString(alFlags);
+}
 
 //////////////////////////////////////////////////////////////////////////
 // PROGRAM
@@ -64,11 +83,22 @@ cProgramComboManager::cProgramComboManager(const tString& asName, cGraphics *apG
 
     mvVarLists.resize(mlNumOfMainModes);
     mvSettings.resize(mlNumOfMainModes);
+
+    gvComboManagers.push_back(this);
 }
 
 cProgramComboManager::~cProgramComboManager()
 {
     DestroyShadersAndPrograms();
+
+    for(size_t i = 0; i < gvComboManagers.size(); ++i)
+    {
+        if(gvComboManagers[i] == this)
+        {
+            gvComboManagers.erase(gvComboManagers.begin() + i);
+            break;
+        }
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -111,6 +141,16 @@ iGpuProgram *cProgramComboManager::GenerateProgram(int alMainMode, int alFlags)
         }
 
         pProgData->mpProgram = pProgram;
+
+        ////////////////////////////////////
+        // Record for shader warming (temporary managers like the light self-test have no use for it)
+        if(pProgram && msName != "" && msName != "LightSelfTest")
+        {
+            if(gsetWarmEntries.insert(WarmEntryName(msName, alMainMode, alFlags)).second)
+            {
+                gbWarmListChanged = true;
+            }
+        }
 
         ////////////////////////////////////
         // Init variables
@@ -576,7 +616,127 @@ iGpuShader *cProgramComboManager::CreateShaderFromFeatures(    const tString& as
 
 //--------------------------------------------------------------------------
 
+//////////////////////////////////////////////////////////////////////////
+// SHADER WARMING
+//////////////////////////////////////////////////////////////////////////
 
+//-----------------------------------------------------------------------
 
+int cProgramComboManager::WarmFromFile(const tWString& asFile)
+{
+    FILE *pFile = cPlatform::OpenFile(asFile, _W("rb"));
+    if(pFile == NULL)
+    {
+        return -1;
+    }
+
+    tString sData;
+    char vBuffer[4096];
+    size_t lRead;
+    while((lRead = fread(vBuffer, 1, sizeof(vBuffer), pFile)) > 0)
+    {
+        sData.append(vBuffer, lRead);
+    }
+    fclose(pFile);
+
+    int lCompiled = 0;
+    int lSkipped = 0;
+
+    size_t lStart = 0;
+    while(lStart < sData.size())
+    {
+        size_t lEnd = sData.find('\n', lStart);
+        if(lEnd == tString::npos)
+        {
+            lEnd = sData.size();
+        }
+        tString sLine = sData.substr(lStart, lEnd - lStart);
+        lStart = lEnd + 1;
+
+        if(sLine.size() > 0 && sLine[sLine.size() - 1] == '\r')
+        {
+            sLine.resize(sLine.size() - 1);
+        }
+
+        size_t lTab1 = sLine.find('\t');
+        size_t lTab2 = lTab1 == tString::npos ? tString::npos : sLine.find('\t', lTab1 + 1);
+        if(lTab2 == tString::npos)
+        {
+            continue;
+        }
+
+        tString sName = sLine.substr(0, lTab1);
+        int lMode = cString::ToInt(sLine.substr(lTab1 + 1, lTab2 - lTab1 - 1).c_str(), -1);
+        int lFlags = cString::ToInt(sLine.substr(lTab2 + 1).c_str(), -1);
+
+        //Keep the line even if it can not be used now (another renderer, setting...)
+        gsetWarmEntries.insert(WarmEntryName(sName, lMode, lFlags));
+
+        cProgramComboManager *pManager = NULL;
+        for(size_t i = 0; i < gvComboManagers.size(); ++i)
+        {
+            if(gvComboManagers[i]->msName == sName)
+            {
+                pManager = gvComboManagers[i];
+                break;
+            }
+        }
+
+        if(pManager == NULL || lMode < 0 || lMode >= pManager->mlNumOfMainModes || lFlags < 0 ||
+                pManager->mvSettings[lMode].msFragShader == "" || pManager->mvSettings[lMode].msVtxShader == "")
+        {
+            ++lSkipped;
+            continue;
+        }
+
+        bool bExisted = pManager->mvProgramSets[lMode].find(lFlags) != pManager->mvProgramSets[lMode].end();
+
+        //The extra user this adds keeps the program alive, so it is not compiled again on the next map.
+        iGpuProgram *pProgram = pManager->GenerateProgram(lMode, lFlags);
+        if(pProgram && bExisted == false)
+        {
+            //Some drivers only finish the work when the program is first bound.
+            pProgram->Bind();
+            pProgram->UnBind();
+            ++lCompiled;
+        }
+    }
+
+    gbWarmListChanged = false;
+
+    Log("Shader warming: compiled %d programs (%d skipped)\n", lCompiled, lSkipped);
+
+    return lCompiled;
+}
+
+//-----------------------------------------------------------------------
+
+bool cProgramComboManager::SaveWarmList(const tWString& asFile)
+{
+    FILE *pFile = cPlatform::OpenFile(asFile, _W("wb"));
+    if(pFile == NULL)
+    {
+        return false;
+    }
+
+    for(std::set<tString>::iterator it = gsetWarmEntries.begin(); it != gsetWarmEntries.end(); ++it)
+    {
+        fputs(it->c_str(), pFile);
+        fputs("\n", pFile);
+    }
+    fclose(pFile);
+
+    gbWarmListChanged = false;
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
+bool cProgramComboManager::GetWarmListChanged()
+{
+    return gbWarmListChanged;
+}
+
+//-----------------------------------------------------------------------
 
 }

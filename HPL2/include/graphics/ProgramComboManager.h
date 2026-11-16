@@ -106,6 +106,19 @@ public:
         msName = asName;
     }
 
+    /////////////////////////////////
+    // Shader warming
+    // Programs are compiled the first time a material / light combination is drawn, which
+    // makes the game stutter then. Every program generated is recorded (manager name, mode,
+    // flags); the list can be saved and, at the next start, compiled up front.
+
+    //Compiles all programs in the list file. Returns the number compiled, -1 if no file.
+    static int WarmFromFile(const tWString& asFile);
+    //Writes everything recorded (and everything in the list that was loaded). False on failure.
+    static bool SaveWarmList(const tWString& asFile);
+    //True if programs were recorded that are not in the saved list yet.
+    static bool GetWarmListChanged();
+
     iGpuProgram *GenerateProgram(int alMainMode, int alFlags);
     int GetGenerateCombinationNum(int alMainMode)
     {

@@ -1,5 +1,7 @@
 #include "LuxBase.h"
 
+#include "graphics/ProgramComboManager.h"
+
 #include "LuxInputHandler.h"
 
 #include "LuxMapHandler.h"
@@ -1416,6 +1418,22 @@ bool cLuxBase::InitEngine()
     float fGamma = mpMainConfig->GetFloat("Graphics", "Gamma", 1.0f);
     mpEngine->GetGraphics()->GetLowLevel()->SetGammaCorrection(fGamma);
 
+    /////////////////////////
+    // Shader warming: compile the programs used in earlier sessions now instead of mid game
+    if(mpConfigHandler->mbShaderWarming)
+    {
+        unsigned long lStart = cPlatform::GetApplicationTime();
+        int lCount = cProgramComboManager::WarmFromFile(msBaseSavePath + _W("shader_warm_list.txt"));
+        if(lCount < 0)
+        {
+            Log("Shader warming: no list yet, it is written while playing.\n");
+        }
+        else
+        {
+            Log("Shader warming took %lu ms\n", cPlatform::GetApplicationTime() - lStart);
+        }
+    }
+
     cMaterialManager* pMatMgr = mpEngine->GetResources()->GetMaterialManager();
     pMatMgr->SetTextureSizeDownScaleLevel(mpConfigHandler->mlTextureQuality);
     pMatMgr->SetTextureFilter((eTextureFilter)mpConfigHandler->mlTextureFilter);
@@ -1457,10 +1475,23 @@ bool cLuxBase::InitEngine()
     return true;
 }
 
+void cLuxBase::SaveShaderWarmList()
+{
+    //Always written, so the list is ready when ShaderWarming is turned on.
+    if(cProgramComboManager::GetWarmListChanged())
+    {
+        cProgramComboManager::SaveWarmList(msBaseSavePath + _W("shader_warm_list.txt"));
+    }
+}
+
+//-----------------------------------------------------------------------
+
 void cLuxBase::ExitEngine()
 {
     if(mpEngine)
     {
+        SaveShaderWarmList();
+
         mpEngine->GetGraphics()->GetLowLevel()->SetPreSwapBuffersCallback(NULL, NULL);
         mpVersionWatermarkSet = NULL;
 
