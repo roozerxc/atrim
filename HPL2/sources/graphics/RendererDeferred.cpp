@@ -3186,9 +3186,6 @@ void cRendererDeferred::RenderDecals()
     SetChannelMode(eMaterialChannelMode_RGBA); //RGB?
     SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
 
-    mpLowLevelGraphics->SetPolygonOffsetActive(true);
-    mpLowLevelGraphics->SetPolygonOffset(-2.0f, -1.0f);
-
     float fHalfFovTan = 0;
 
     cRenderableVecIterator transIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Decal);
@@ -3212,8 +3209,6 @@ void cRendererDeferred::RenderDecals()
 
     SetAlphaMode(eMaterialAlphaMode_Solid);
     SetAlphaLimit(mfDefaultAlphaLimit);
-
-    mpLowLevelGraphics->SetPolygonOffsetActive(false);
 
     END_RENDER_PASS();
 }

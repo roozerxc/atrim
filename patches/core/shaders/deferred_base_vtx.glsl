@@ -72,7 +72,13 @@ void main()
 {	
 	//////////////////////
 	// Position
-	gl_Position = ftransform();
+	@ifdef UseDecalDepthPull
+		vec4 vDecalViewPos = gl_ModelViewMatrix * gl_Vertex;
+		vDecalViewPos.xyz *= 0.9995;
+		gl_Position = gl_ProjectionMatrix * vDecalViewPos;
+	@else
+		gl_Position = ftransform();
+	@endif
 	
 	
 	//////////////////////

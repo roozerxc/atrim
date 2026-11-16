@@ -78,6 +78,7 @@ void cMaterialType_Decal::LoadData()
     cParserVarContainer defaultVars;
     defaultVars.Add("UseUv");
     defaultVars.Add("UseColor");
+    defaultVars.Add("UseDecalDepthPull");
 
     mpProgramManager->SetupGenerateProgramData(    eMaterialRenderMode_Diffuse, "Diffuse", "deferred_base_vtx.glsl", "deferred_decal_frag.glsl",
             vDiffuseFeatureVec, kDiffuseFeatureNum, defaultVars);
