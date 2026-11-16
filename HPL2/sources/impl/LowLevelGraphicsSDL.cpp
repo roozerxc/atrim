@@ -193,7 +193,27 @@ bool cLowLevelGraphicsSDL::Init(int alWidth, int alHeight, int alBpp, bool abFul
 #ifdef _WIN32
     bool abBorderless = false;
 
-    if(abFullscreen && cPlatformWin32::DWMCompositorActive())
+    bool bUseBorderless = false;
+    if(abFullscreen)
+    {
+        switch(GetFullscreenMode())
+        {
+        case 1:
+            bUseBorderless = false;
+            Log(" FullscreenMode 1: exclusive fullscreen\n");
+            break;
+        case 2:
+            bUseBorderless = true;
+            Log(" FullscreenMode 2: borderless window\n");
+            break;
+        default:
+            bUseBorderless = cPlatformWin32::DWMCompositorActive();
+            Log(" FullscreenMode 0 (auto): %s\n", bUseBorderless ? "borderless window, DWM is on" : "exclusive fullscreen");
+            break;
+        }
+    }
+
+    if(bUseBorderless)
     {
         abBorderless = true;
         abFullscreen = false;

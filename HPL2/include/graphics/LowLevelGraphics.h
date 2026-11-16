@@ -360,6 +360,16 @@ public:
         return mlMaxFramesAhead;
     }
 
+    //0 = auto (borderless if DWM is on), 1 = exclusive fullscreen, 2 = borderless window
+    static void SetFullscreenMode(int alX)
+    {
+        mlFullscreenMode = alX;
+    }
+    static int GetFullscreenMode()
+    {
+        return mlFullscreenMode;
+    }
+
     //Behave as on drivers whose GLSL has no sampler2DRect (old ATI). For testing.
     static void SetForceRectAs2D(bool abX)
     {
@@ -396,6 +406,7 @@ protected:
     static bool mbForceRectAs2D;
     static bool mbLogGLErrors;
     static int mlMaxFramesAhead;
+    static int mlFullscreenMode;
     static bool mbForceVertexArrays;
     static bool mbPostEffectsDisabled;
     static bool mbRectAs2D;

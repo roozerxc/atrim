@@ -71,6 +71,7 @@ public:
     bool mbOcclusionCulling;
     bool mbShaderWarming;
     int mlMaxFramesAhead;
+    int mlFullscreenMode;
 
     bool mbFrameProfiler;
     int mlFrameProfilerFrames;

@@ -109,6 +109,7 @@ void cLuxConfigHandler::LoadMainConfig()
     mbOcclusionCulling = gpBase->mpMainConfig->GetBool("Graphics", "OcclusionCulling", true);
     mbShaderWarming = gpBase->mpMainConfig->GetBool("Graphics", "ShaderWarming", false);
     mlMaxFramesAhead = gpBase->mpMainConfig->GetInt("Graphics", "MaxFramesAhead", -1);
+    mlFullscreenMode = gpBase->mpMainConfig->GetInt("Screen", "FullscreenMode", 0);
 
     mbFrameProfiler = gpBase->mpMainConfig->GetBool("Main", "FrameProfiler", false);
     mlFrameProfilerFrames = gpBase->mpMainConfig->GetInt("Main", "FrameProfilerFrames", 120);
@@ -202,6 +203,7 @@ void cLuxConfigHandler::SaveMainConfig()
     gpBase->mpMainConfig->SetBool("Graphics", "OcclusionCulling", mbOcclusionCulling);
     gpBase->mpMainConfig->SetBool("Graphics", "ShaderWarming", mbShaderWarming);
     gpBase->mpMainConfig->SetInt("Graphics", "MaxFramesAhead", mlMaxFramesAhead);
+    gpBase->mpMainConfig->SetInt("Screen", "FullscreenMode", mlFullscreenMode);
 
     gpBase->mpMainConfig->SetBool("Main", "FrameProfiler", mbFrameProfiler);
     gpBase->mpMainConfig->SetInt("Main", "FrameProfilerFrames", mlFrameProfilerFrames);

@@ -1373,6 +1373,7 @@ bool cLuxBase::InitEngine()
     iLowLevelGraphics::SetForceVertexArrays(mpConfigHandler->mbForceVertexArrays);
     iLowLevelGraphics::SetPostEffectsDisabled(mpConfigHandler->mbDisablePostEffects);
     iLowLevelGraphics::SetMaxFramesAhead(mpConfigHandler->mlMaxFramesAhead);
+    iLowLevelGraphics::SetFullscreenMode(mpConfigHandler->mlFullscreenMode);
     if(mpConfigHandler->mlMaxFramesAhead >= 0)
     {
         Log("MaxFramesAhead is %d: the CPU waits for the GPU to limit input lag.\n", mpConfigHandler->mlMaxFramesAhead);
