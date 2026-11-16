@@ -1139,6 +1139,65 @@ void cLowLevelGraphicsSDL::SwapBuffers()
     }
 
     SDL_GL_SwapBuffers();
+
+    LimitFramesAhead();
+}
+
+//-----------------------------------------------------------------------
+
+void cLowLevelGraphicsSDL::LimitFramesAhead()
+{
+    int lMax = GetMaxFramesAhead();
+    if(lMax < 0)
+    {
+        return;
+    }
+
+    //0, or no queries: wait until the GPU has finished everything, the swap included.
+    if(lMax == 0 || GLEW_ARB_occlusion_query == false)
+    {
+        glFinish();
+        return;
+    }
+
+    ////////////////////////////
+    // A query is put in the command stream after every swap and used as a fence:
+    // waiting for the one from lMax frames ago lets at most lMax frames be queued.
+    const int kMaxFences = 4;
+    static GLuint vFences[kMaxFences];
+    static bool vFenceUsed[kMaxFences];
+    static bool bCreated = false;
+    static int lCurrent = 0;
+
+    if(lMax > kMaxFences - 1)
+    {
+        lMax = kMaxFences - 1;
+    }
+
+    if(bCreated == false)
+    {
+        glGenQueriesARB(kMaxFences, vFences);
+        for(int i = 0; i < kMaxFences; ++i)
+        {
+            vFenceUsed[i] = false;
+        }
+        bCreated = true;
+    }
+
+    //An empty query: the samples passed do not matter, only when the result is ready.
+    glBeginQueryARB(GL_SAMPLES_PASSED_ARB, vFences[lCurrent]);
+    glEndQueryARB(GL_SAMPLES_PASSED_ARB);
+    vFenceUsed[lCurrent] = true;
+
+    int lWait = (lCurrent - lMax + kMaxFences) % kMaxFences;
+    if(vFenceUsed[lWait])
+    {
+        GLuint lResult = 0;
+        glGetQueryObjectuivARB(vFences[lWait], GL_QUERY_RESULT_ARB, &lResult);
+        vFenceUsed[lWait] = false;
+    }
+
+    lCurrent = (lCurrent + 1) % kMaxFences;
 }
 
 //-----------------------------------------------------------------------

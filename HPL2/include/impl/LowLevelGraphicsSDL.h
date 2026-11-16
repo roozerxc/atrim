@@ -153,6 +153,7 @@ public:
 
     void FlushRendering();
     void SwapBuffers();
+    void LimitFramesAhead();
 
     void SetCurrentFrameBuffer(iFrameBuffer* apFrameBuffer, const cVector2l &avPos = 0, const cVector2l& avSize = -1);
     iFrameBuffer *GetCurrentFrameBuffer()

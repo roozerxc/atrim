@@ -1372,6 +1372,11 @@ bool cLuxBase::InitEngine()
     iLowLevelGraphics::SetLogGLErrors(mpConfigHandler->mbLogGLErrors);
     iLowLevelGraphics::SetForceVertexArrays(mpConfigHandler->mbForceVertexArrays);
     iLowLevelGraphics::SetPostEffectsDisabled(mpConfigHandler->mbDisablePostEffects);
+    iLowLevelGraphics::SetMaxFramesAhead(mpConfigHandler->mlMaxFramesAhead);
+    if(mpConfigHandler->mlMaxFramesAhead >= 0)
+    {
+        Log("MaxFramesAhead is %d: the CPU waits for the GPU to limit input lag.\n", mpConfigHandler->mlMaxFramesAhead);
+    }
     cFrameProfiler::SetTraceFile(mpConfigHandler->mbRenderTrace ? msBaseSavePath + _W("render_trace.txt") : tWString());
     cFrameProfiler::SetTraceSync(mpConfigHandler->mbRenderTraceSync);
     if(mpConfigHandler->mbOcclusionCulling == false)

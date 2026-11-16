@@ -351,6 +351,15 @@ public:
         return mbLogGLErrors;
     }
 
+    static void SetMaxFramesAhead(int alX)
+    {
+        mlMaxFramesAhead = alX;
+    }
+    static int GetMaxFramesAhead()
+    {
+        return mlMaxFramesAhead;
+    }
+
     //Behave as on drivers whose GLSL has no sampler2DRect (old ATI). For testing.
     static void SetForceRectAs2D(bool abX)
     {
@@ -386,6 +395,7 @@ protected:
     static bool mbForceNoStencil;
     static bool mbForceRectAs2D;
     static bool mbLogGLErrors;
+    static int mlMaxFramesAhead;
     static bool mbForceVertexArrays;
     static bool mbPostEffectsDisabled;
     static bool mbRectAs2D;
