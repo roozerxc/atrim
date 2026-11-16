@@ -16,6 +16,7 @@
 
 #include "system/String.h"
 #include "system/Platform.h"
+#include "system/FrameProfiler.h"
 
 #include <set>
 #include <stdio.h>
@@ -34,6 +35,7 @@ static std::vector<cProgramComboManager *> gvComboManagers;
 //"name<TAB>mode<TAB>flags" of every program generated (and every line of a loaded list).
 static std::set<tString> gsetWarmEntries;
 static bool gbWarmListChanged = false;
+static bool gbWarming = false;
 
 static tString WarmEntryName(const tString &asManager, int alMode, int alFlags)
 {
@@ -126,6 +128,9 @@ iGpuProgram *cProgramComboManager::GenerateProgram(int alMainMode, int alFlags)
         cProgramComboSettings& comboSettings = mvSettings[alMainMode];
         tString sProgramName = GenerateProgramName(alMainMode, alFlags);
 
+        HPL_PROFILE_SCOPE("ShaderCompile");
+        double fCompileStart = cPlatform::GetApplicationTimeX();
+
         ////////////////////////////////////
         // Create (or get) shaders
         iGpuShader *pVtxShader = GetShaderForCombo(alMainMode, alFlags, comboSettings.msVtxShader, kPC_VertexBit);
@@ -138,6 +143,13 @@ iGpuProgram *cProgramComboManager::GenerateProgram(int alMainMode, int alFlags)
         if(pVtxShader && pFragShader)
         {
             pProgram = CreateProgramFromShaders(sProgramName, pVtxShader, pFragShader, false);
+        }
+
+        //Compiles outside warming are what shader warming is meant to remove, so tell about them.
+        if(gbWarming == false && msName != "" && msName != "LightSelfTest")
+        {
+            Log("Shader compiled while playing: %s %d %d (%.1f ms)\n", msName.c_str(), alMainMode, alFlags,
+                (cPlatform::GetApplicationTimeX() - fCompileStart) * 1000.0);
         }
 
         pProgData->mpProgram = pProgram;
@@ -641,6 +653,7 @@ int cProgramComboManager::WarmFromFile(const tWString& asFile)
 
     int lCompiled = 0;
     int lSkipped = 0;
+    gbWarming = true;
 
     size_t lStart = 0;
     while(lStart < sData.size())
@@ -702,6 +715,7 @@ int cProgramComboManager::WarmFromFile(const tWString& asFile)
         }
     }
 
+    gbWarming = false;
     gbWarmListChanged = false;
 
     Log("Shader warming: compiled %d programs (%d skipped)\n", lCompiled, lSkipped);
