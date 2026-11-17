@@ -277,18 +277,9 @@ void cLuxProp_MoveObject::MoveToState(float afState, float afAcc, float afMaxSpe
     // Angular
     else
     {
-        //afState = cMath::Clamp(afState,0,1);
-
-        cVector3f vMul[3] = {cVector3f(1,0,0), cVector3f(0,1,0), cVector3f(0,0,1) };
-
-        float fCurrentOpenAmount = afState * mfOpenAmount;
-
-        cMatrixf mtxWanted = m_mtxClosedTransform.GetRotation();
-
-        cMatrixf mtxRot = cMath::MatrixRotate(vMul[mMoveAxis] * kPi2f * fCurrentOpenAmount,eEulerRotationOrder_XYZ);
-        mtxWanted = cMath::MatrixMul(mtxWanted, mtxRot);
-
-        mtxWanted.SetTranslation(m_mtxClosedTransform.GetTranslation());
+        //Like vanilla: blend between the closed and open poses. Scaling the angle instead breaks
+        //on large OpenAmounts (the prison hammer's 90 makes state 0.4 a whole number of turns).
+        cMatrixf mtxWanted = cMath::MatrixSlerp(afState, m_mtxClosedTransform, m_mtxOpenTransform, true);
 
         cMatrixf mtxInvClose = cMath::MatrixInverse(m_mtxClosedTransform);
         cVector3f vLocalOffset = cMath::MatrixMul(mtxInvClose, mvAngularOffsetPos);
