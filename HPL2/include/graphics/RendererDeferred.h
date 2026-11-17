@@ -236,6 +236,13 @@ public:
         return mbLightColorGrade;
     }
 
+    //True when the lite light shader is used: it reads no normals, so the G-buffer
+    //does not need to sample normal maps.
+    static bool GetLiteLightShaderActive()
+    {
+        return mbLiteLightShaderActive;
+    }
+
     static void SetLightSpecularEnabled(bool abX)
     {
         mbLightSpecularEnabled = abX;
@@ -563,6 +570,7 @@ private:
     static bool mbDepthCullLights;
     static bool mbLightSpecularEnabled;
     static bool mbLightColorGrade;
+    static bool mbLiteLightShaderActive;
 
     static bool mbSSAOLoaded;
     static int mlSSAONumOfSamples;

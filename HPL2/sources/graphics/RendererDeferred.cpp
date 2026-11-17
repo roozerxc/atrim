@@ -59,6 +59,7 @@ int cRendererDeferred::mlNumOfGBufferTextures = 4;
 bool cRendererDeferred::mbDepthCullLights = true;
 bool cRendererDeferred::mbLightSpecularEnabled = true;
 bool cRendererDeferred::mbLightColorGrade = false;
+bool cRendererDeferred::mbLiteLightShaderActive = false;
 
 bool cRendererDeferred::mbSSAOLoaded = false;
 int cRendererDeferred::mlSSAONumOfSamples = 8;
@@ -624,6 +625,7 @@ bool cRendererDeferred::LoadData()
             //self-test and falls back to the lite shader only if the full one
             //gives wrong results on this GPU/driver. May also lower shadow quality.
             msActiveLightFragShader = SelectLightFragShader();
+            mbLiteLightShaderActive = mbLiteLightShader;
 
             cParserVarContainer defaultVars;
             AddLightProgramDefaultVars(defaultVars);

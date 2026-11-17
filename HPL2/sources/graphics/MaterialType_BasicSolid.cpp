@@ -578,7 +578,11 @@ iGpuProgram *cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
     else if(aRenderMode == eMaterialRenderMode_Diffuse)
     {
         tFlag lFlags = 0;
-        if(apMaterial->GetTexture(eMaterialTexture_NMap))
+        bool bParallax = apMaterial->GetTexture(eMaterialTexture_Height) && iRenderer::GetParallaxEnabled();
+        //The lite light shader ignores normals, so skip the normal map lookup (parallax still needs the tangents)
+        bool bNormalMap = apMaterial->GetTexture(eMaterialTexture_NMap) &&
+                          (cRendererDeferred::GetLiteLightShaderActive() == false || bParallax);
+        if(bNormalMap)
         {
             lFlags |= eFeature_Diffuse_NormalMaps;
         }
@@ -586,8 +590,7 @@ iGpuProgram *cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
         {
             lFlags |= eFeature_Diffuse_Specular;
         }
-        if(    apMaterial->GetTexture(eMaterialTexture_Height) &&
-                iRenderer::GetParallaxEnabled())
+        if(bParallax)
         {
             lFlags |= eFeature_Diffuse_Parallax;
         }
