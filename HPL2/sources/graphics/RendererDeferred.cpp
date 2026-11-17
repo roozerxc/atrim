@@ -3006,12 +3006,18 @@ void cRendererDeferred::RenderLights()
 
     /////////////////////////////////////////
     // Sort the Lights and place them in the lists
-    InitLightRendering();
+    {
+        HPL_PROFILE_SCOPE_GPU("LightSetup");
+        InitLightRendering();
+    }
 
 
     /////////////////////////////////////////
     // Render SSAO (used by box lights)
-    RenderSSAO();
+    {
+        HPL_PROFILE_SCOPE_GPU("LightSSAO");
+        RenderSSAO();
+    }
 
     /////////////////////////////////////////
     // Set up general render states.
@@ -3029,8 +3035,11 @@ void cRendererDeferred::RenderLights()
 
     ////////////////////////////////
     //Set up frame buffer
-    SetAccumulationBuffer();
-    ClearFrameBuffer(mbStencilAvailable ? (eClearFrameBufferFlag_Color | eClearFrameBufferFlag_Stencil) : eClearFrameBufferFlag_Color, true); //Perhaps there is some ambient light that can be added instead?
+    {
+        HPL_PROFILE_SCOPE_GPU("LightClear");
+        SetAccumulationBuffer();
+        ClearFrameBuffer(mbStencilAvailable ? (eClearFrameBufferFlag_Color | eClearFrameBufferFlag_Stencil) : eClearFrameBufferFlag_Color, true); //Perhaps there is some ambient light that can be added instead?
+    }
 
     ///////////////////////
     // Set up culling and depth mode
@@ -3039,20 +3048,32 @@ void cRendererDeferred::RenderLights()
 
     ///////////////////////
     // Render box lights
-    RenderLights_Box_StencilFront_RenderBack();
-    RenderLights_Box_RenderBack();
+    {
+        HPL_PROFILE_SCOPE_GPU("LightBox");
+        RenderLights_Box_StencilFront_RenderBack();
+        RenderLights_Box_RenderBack();
+    }
 
     ///////////////////////
     // Render lights that are inside near plane
-    RenderLights_StencilBack_ScreenQuad();
+    {
+        HPL_PROFILE_SCOPE_GPU("LightNearQuad");
+        RenderLights_StencilBack_ScreenQuad();
+    }
 
     ///////////////////////
     // Render lights with large screen size or with shadows.
-    RenderLights_StencilFront_RenderBack();
+    {
+        HPL_PROFILE_SCOPE_GPU("LightStencilFront");
+        RenderLights_StencilFront_RenderBack();
+    }
 
     ///////////////////////
     // Simple rendering with no stencil
-    RenderLights_RenderBack();
+    {
+        HPL_PROFILE_SCOPE_GPU("LightBack");
+        RenderLights_RenderBack();
+    }
 
     ///////////////////////
     // Batch lights and renderer several at a time.

@@ -326,6 +326,7 @@ int cRenderSettings::RetrieveOcclusionObjectSamples(iRenderer *apRenderer, void 
         return pObject->mlSampleResults;
     }
 
+    HPL_PROFILE_SCOPE("HaloQueryWait");
     pQuery->WaitForResults();
 
     pObject->mlSampleResults = pQuery->GetSampleCount();
@@ -401,6 +402,7 @@ bool cRenderSettings::TryRetrieveOcclusionObjectSamples(iRenderer *apRenderer, v
 
 void cRenderSettings::WaitAndRetrieveAllOcclusionQueries(iRenderer *apRenderer)
 {
+    HPL_PROFILE_SCOPE("QueryWaitAll");
     for(int i = 0; i < mlCurrentOcclusionObject; ++i)
     {
         iOcclusionQuery *pQuery = mvOcclusionObjectPool[i]->mpQuery;
@@ -1575,6 +1577,7 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
             //instead of spinning on the query (each spin is a full driver round trip).
             if(setNodeStack.empty())
             {
+                HPL_PROFILE_SCOPE("CHC_QueryWait");
                 noPair.mpQuery->WaitForResults();
             }
 
