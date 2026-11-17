@@ -509,16 +509,17 @@ void cWorldLoaderHplMap::LoadCacheFile(const tWString& asFile)
     tWString sCacheFile = cString::SetFileExtW(asFile, msCacheFileExt);
 
     ////////////////////////////////////////
-    // Check if there is a cache file
+    // Check if there is an up to date cache file (atrim writes its own caches, so always check the date)
+    if(cPlatform::FileExists(sCacheFile) == false)
+    {
+        return;
+    }
     cDate currentDate = cPlatform::FileModifiedDate(asFile);
     cDate cacheDate = cPlatform::FileModifiedDate(sCacheFile);
-
-    if(cResources::GetForceCacheLoadingAndSkipSaving() == false)
+    if(cacheDate < currentDate)
     {
-        if(cacheDate < currentDate || cPlatform::FileExists(sCacheFile) == false)
-        {
-            return;
-        }
+        Log("Map cache '%s' is older than the map, rebuilding it\n", cString::To8Char(cString::GetFileNameW(sCacheFile)).c_str());
+        return;
     }
 
     ////////////////////////////////////////
@@ -534,53 +535,26 @@ void cWorldLoaderHplMap::LoadCacheFile(const tWString& asFile)
     // Header
     int lMagicNum = binBuff.GetInt32();
     int lVersion = binBuff.GetInt32();
+    int lNewtonVersion = binBuff.GetInt32();
 
-    //Check magic number
-    if(lMagicNum != MAP_CACHE_FORMAT_MAGIC_NUMBER)
+    if(lMagicNum != (int)MAP_CACHE_FORMAT_MAGIC_NUMBER || lVersion != MAP_CACHE_FORMAT_VERSION_ATRIM ||
+       lNewtonVersion != mpCurrentPhysicsWorld->GetMeshShapeBufferVersion())
     {
-        Error("File '%s' does not have right MAP_CACHE magic number (%X instead of %X)! ",
-              cString::To8Char(sCacheFile).c_str(), lMagicNum, MAP_CACHE_FORMAT_MAGIC_NUMBER
-              + "Invalid header!\n");
+        if(lVersion == MAP_CACHE_FORMAT_VERSION_TDD)
+        {
+            Log("Map cache '%s' is from the original game, replacing it with an atrim one\n", cString::To8Char(cString::GetFileNameW(sCacheFile)).c_str());
+        }
+        else
+        {
+            Log("Map cache '%s' is from another version, rebuilding it\n", cString::To8Char(cString::GetFileNameW(sCacheFile)).c_str());
+        }
         return;
     }
 
-    //Check so file has the right map cache version
-    if(lVersion != MAP_CACHE_FORMAT_VERSION)
+    //A cache cut short (crash or full disk while saving) must not reach the Newton loader
+    if(binBuff.CheckInternalCRC(MAP_CACHE_ATRIM_CRC_KEY) == false)
     {
-        Error("File '%s' does not have right MAP_CACHE version! (%d instead of %d)\n",
-              cString::To8Char(sCacheFile).c_str(), lVersion, MAP_CACHE_FORMAT_VERSION);
-        return;
-    }
-
-    //Check TDD map cache version
-    if(lVersion == MAP_CACHE_FORMAT_VERSION_TDD)
-    {
-        Log("File '%s' is a The Dark Descent map cache file (version %d)\n",
-            cString::To8Char(sCacheFile).c_str(), MAP_CACHE_FORMAT_VERSION_TDD);
-        return;
-    }
-
-    //Check MFP map cache version
-    if(lVersion == MAP_CACHE_FORMAT_VERSION_MFP)
-    {
-        Log("File '%s' is a Machine for Pigs map cache file (version %d)\n",
-            cString::To8Char(sCacheFile).c_str(), MAP_CACHE_FORMAT_VERSION_MFP);
-        return;
-    }
-
-    //Check HiP map cache version
-    if(lVersion == MAP_CACHE_FORMAT_VERSION_ROOZY)
-    {
-        Log("File '%s' is a Hate is Peace map cache file (version %d)\n",
-            cString::To8Char(sCacheFile).c_str(), MAP_CACHE_FORMAT_VERSION_ROOZY);
-        return;
-    }
-
-    //Check BUzer map cache version
-    if(lVersion == MAP_CACHE_FORMAT_VERSION_BUZER)
-    {
-        Log("File '%s' is an Amnesia64 map cache file (version %d)\n",
-            cString::To8Char(sCacheFile).c_str(), MAP_CACHE_FORMAT_VERSION_BUZER);
+        Warning("Map cache '%s' is damaged, rebuilding it\n", cString::To8Char(cString::GetFileNameW(sCacheFile)).c_str());
         return;
     }
 
@@ -616,6 +590,7 @@ void cWorldLoaderHplMap::LoadCacheFile(const tWString& asFile)
         //////////////////////////////////////
         // Create Body
         iPhysicsBody *pBody = mpCurrentPhysicsWorld->CreateBody(sName, pShape);
+        pBody->SetMass(0);
 
         pBody->SetMaterial(mpCurrentPhysicsWorld->GetMaterialFromName(sMaterial));
         pBody->SetBlocksLight(bBlocksLight);
@@ -814,7 +789,8 @@ void cWorldLoaderHplMap::LoadCacheFile(const tWString& asFile)
 
     ////////////////////////////////////////
     // Done loading
-    Log("    Cache Loading: %d ms\n", cPlatform::GetApplicationTime() - lStartTime);
+    Log("  Static objects from cache '%s': %d ms (%d meshes, %d bodies)\n", cString::To8Char(cString::GetFileNameW(sCacheFile)).c_str(),
+        cPlatform::GetApplicationTime() - lStartTime, lStaticMeshEntities, lStaticMeshBodyNum);
 }
 
 //-----------------------------------------------------------------------
@@ -828,12 +804,13 @@ void cWorldLoaderHplMap::SaveCacheFile(const tWString& asFile)
     {
         return;    //No need to save if cache was loaded!
     }
-    if(cResources::GetForceCacheLoadingAndSkipSaving())
+    //Static objects were not loaded, nothing to cache
+    if(mlstStaticMeshEntities.empty() && mlstStaticMeshBodies.empty() && mlstStaticShapeBodies.empty())
     {
         return;
     }
 
-    Log("Saving cache file for '%s'\n", cString::To8Char(asFile).c_str());
+    unsigned long lSaveStartTime = cPlatform::GetApplicationTime();
 
     size_t iNewtonTotal = 0;
     tWString sCacheFile = cString::SetFileExtW(asFile, msCacheFileExt);
@@ -842,7 +819,9 @@ void cWorldLoaderHplMap::SaveCacheFile(const tWString& asFile)
     ////////////////////////////////////////
     // Header
     binBuff.AddInt32(MAP_CACHE_FORMAT_MAGIC_NUMBER);
-    binBuff.AddInt32(MAP_CACHE_FORMAT_VERSION);
+    binBuff.AddInt32(MAP_CACHE_FORMAT_VERSION_ATRIM);
+    binBuff.AddInt32(mpCurrentPhysicsWorld->GetMeshShapeBufferVersion());
+    binBuff.AddCRC_Begin();
 
     ////////////////////////////////////////
     // General Data
@@ -966,9 +945,10 @@ void cWorldLoaderHplMap::SaveCacheFile(const tWString& asFile)
                 {
                     lCompressionType = 1;
                 }
+                //16 bit, so cached normals light the same as freshly built ones
                 if(arrayType == eVertexBufferElement_Normal || arrayType == eVertexBufferElement_Texture1Tangent)
                 {
-                    lCompressionType = 2;
+                    lCompressionType = 3;
                 }
 
                 binBuff.AddInt32(lCompressionType);
@@ -1036,10 +1016,16 @@ void cWorldLoaderHplMap::SaveCacheFile(const tWString& asFile)
 
     ////////////////////////////////////////
     // Save
+    binBuff.AddCRC_End(MAP_CACHE_ATRIM_CRC_KEY);
     bool bRet = binBuff.Save();
     if(bRet == false)
     {
-        Error("Couldn't save map cache to '%s'", cString::To8Char(sCacheFile).c_str());
+        Warning("Couldn't save map cache to '%s' (is the folder read only?)\n", cString::To8Char(sCacheFile).c_str());
+    }
+    else
+    {
+        Log("Saved map cache '%s' (%d KB) in %d ms\n", cString::To8Char(cString::GetFileNameW(sCacheFile)).c_str(),
+            (int)(binBuff.GetSize() / 1024), cPlatform::GetApplicationTime() - lSaveStartTime);
     }
 }
 

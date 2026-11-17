@@ -118,6 +118,11 @@ public:
      * The shape must be a mesh shape!
      */
     virtual void SaveMeshShapeToBuffer(iCollideShape* apMeshShape, cBinaryBuffer *apBuffer) = 0;
+    //Changes whenever saved mesh shapes can not be read back (other physics library version)
+    virtual int GetMeshShapeBufferVersion()
+    {
+        return 0;
+    }
 
     virtual iCollideShape *CreateCompundShape(tCollideShapeVec &avShapes) = 0;
     virtual iCollideShape *CreateStaticSceneShape(tCollideShapeVec &avShapes, tMatrixfVec *apMatrices) = 0;

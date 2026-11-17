@@ -292,6 +292,11 @@ void cPhysicsWorldNewton::SaveMeshShapeToBuffer(iCollideShape* apMeshShape, cBin
     pNewtonMeshShape->SaveToSerializedData(apBuffer);
 }
 
+int cPhysicsWorldNewton::GetMeshShapeBufferVersion()
+{
+    return NewtonWorldGetVersion() * 10 + NewtonWorldFloatSize();
+}
+
 //-----------------------------------------------------------------------
 
 iCollideShape *cPhysicsWorldNewton::CreateCompundShape(tCollideShapeVec &avShapes)

@@ -44,6 +44,7 @@ public:
     iCollideShape *CreateMeshShape(iVertexBuffer *apVtxBuffer);
     iCollideShape *LoadMeshShapeFromBuffer(cBinaryBuffer *apBuffer);
     void SaveMeshShapeToBuffer(iCollideShape* apMeshShape, cBinaryBuffer *apBuffer);
+    int GetMeshShapeBufferVersion();
 
     iCollideShape *CreateCompundShape(tCollideShapeVec &avShapes);
     iCollideShape *CreateStaticSceneShape(tCollideShapeVec &avShapes, tMatrixfVec *apMatrices);

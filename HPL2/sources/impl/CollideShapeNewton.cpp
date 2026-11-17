@@ -417,7 +417,7 @@ void cCollideShapeNewton::CreateFromVertices(    const unsigned int* apIndexArra
 static void NewtonWriteToBinaryBuffer(void* apSerializeHandle, const void* apNewtonBuffer, int alSize)
 {
     cBinaryBuffer *pBinBuff = (cBinaryBuffer*)apSerializeHandle;
-    pBinBuff->AddInt32Array((int*)apNewtonBuffer, (size_t)(alSize >> 2));
+    pBinBuff->AddCharArray((const char*)apNewtonBuffer, (size_t)alSize);
 }
 
 void cCollideShapeNewton::SaveToSerializedData(cBinaryBuffer* apBinBuffer)
@@ -432,7 +432,7 @@ void cCollideShapeNewton::SaveToSerializedData(cBinaryBuffer* apBinBuffer)
 static void NewtonReadFromBinaryBuffer(void* apSerializeHandle, void* apNewtonBuffer, int alSize)
 {
     cBinaryBuffer *pBinBuff = (cBinaryBuffer*)apSerializeHandle;
-    pBinBuff->GetInt32Array((int*)apNewtonBuffer, (size_t)(alSize >> 2));
+    pBinBuff->GetCharArray((char*)apNewtonBuffer, (size_t)alSize);
 }
 
 void cCollideShapeNewton::CreateFromSerializedData(cBinaryBuffer* apBinBuffer)

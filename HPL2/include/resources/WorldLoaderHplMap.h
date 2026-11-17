@@ -38,6 +38,9 @@ class iPhysicsBody;
 // Use The Dark Descent's map cache format version as default
 #define MAP_CACHE_FORMAT_VERSION MAP_CACHE_FORMAT_VERSION_TDD
 
+#define MAP_CACHE_FORMAT_VERSION_ATRIM      0x41540001
+#define MAP_CACHE_ATRIM_CRC_KEY             0x7A11CACE
+
 //----------------------------------------
 
 class cHplMapStaticUserData
