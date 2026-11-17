@@ -482,6 +482,13 @@ void cLowLevelGraphicsSDL::SetupGL()
     {
         Log("  GLSL 1.20 not available%s, shaders will be compiled as GLSL 1.10\n", mbForceGLSL110 ? " (ForceGLSL110 is on)" : "");
     }
+    {
+        GLint lVtxUniforms = 0, lVtxAttribs = 0;
+        glGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB, &lVtxUniforms);
+        glGetIntegerv(GL_MAX_VERTEX_ATTRIBS_ARB, &lVtxAttribs);
+        Log("  Max vertex uniform components: %d\n", lVtxUniforms);
+        Log("  Max vertex attribs: %d\n", lVtxAttribs);
+    }
     Log("  ShaderModel 2: %d\n", GetCaps(eGraphicCaps_ShaderModel_2));
     Log("  ShaderModel 3: %d\n", GetCaps(eGraphicCaps_ShaderModel_3));
     Log("  ShaderModel 4: %d\n", GetCaps(eGraphicCaps_ShaderModel_4));
@@ -665,6 +672,12 @@ int cLowLevelGraphicsSDL::GetCaps(eGraphicCaps aType)
         return lMax;
     }
 
+    case eGraphicCaps_MaxVertexUniformComponents:
+    {
+        GLint lComponents = 0;
+        glGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB, &lComponents);
+        return lComponents;
+    }
     case eGraphicCaps_GLSLVersion:
     {
         //Should only be parsed once

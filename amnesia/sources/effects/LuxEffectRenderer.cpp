@@ -1,5 +1,35 @@
 #include "LuxEffectRenderer.h"
 
+//-----------------------------------------------------------------------
+
+static cSubMeshEntity *GetGpuSkinnedSubMesh(iRenderable *apObject)
+{
+    if(apObject->GetRenderType() != eRenderableType_SubMesh)
+    {
+        return NULL;
+    }
+    cSubMeshEntity *pSubEnt = static_cast<cSubMeshEntity *>(apObject);
+    return pSubEnt->UsesGpuSkinning() ? pSubEnt : NULL;
+}
+
+//Picks the skinned twin of a program for GPU skinned objects (CPU skins the object if there is none)
+static iGpuProgram *SetupSkinnedProgram(iRenderable *apObject, iGpuProgram *apProgram, iGpuProgram **apSkinPrograms)
+{
+    cSubMeshEntity *pSubEnt = GetGpuSkinnedSubMesh(apObject);
+    if(pSubEnt == NULL)
+    {
+        return apProgram;
+    }
+    iGpuProgram *apSkinProgram = apSkinPrograms[pSubEnt->GetSubMesh()->GetGpuSkinProgramType() - 1];
+    if(apSkinProgram == NULL)
+    {
+        pSubEnt->SwitchToCpuSkinning();
+        return apProgram;
+    }
+    pSubEnt->SetGpuSkinningUniforms(apSkinProgram);
+    return apSkinProgram;
+}
+
 
 //-----------------------------------------------------------------------
 
@@ -63,6 +93,26 @@ cLuxEffectRenderer::cLuxEffectRenderer() : iLuxUpdateable("LuxEffectRenderer")
     {
         mpFlashProgram->GetVariableAsId("afColorMul", kVar_afColorMul);
     }
+    for(int i = 0; i < 2; ++i)
+    {
+        mpFlashSkinProgram[i] = NULL;
+        if(cSubMesh::GetGpuSkinningEnabled() == false)
+        {
+            continue;
+        }
+        cParserVarContainer skinVars = programVars;
+        skinVars.Add("UseSkeleton");
+        if(i == 1)
+        {
+            skinVars.Add("UseSkinMatrices");
+        }
+        skinVars.Add("GpuSkinBoneVecs", cSubMesh::GetGpuSkinVecs());
+        mpFlashSkinProgram[i] = pGraphics->CreateGpuProgramFromShaders(i == 1 ? "GameOutlineSkinMtx" : "GameOutlineSkin", "deferred_base_vtx.glsl", "game_object_flash_frag.glsl", &skinVars);
+        if(mpFlashSkinProgram[i])
+        {
+            mpFlashSkinProgram[i]->GetVariableAsId("afColorMul", kVar_afColorMul);
+        }
+    }
     programVars.Clear();
 
     /////////////////////////////
@@ -74,6 +124,26 @@ cLuxEffectRenderer::cLuxEffectRenderer() : iLuxUpdateable("LuxEffectRenderer")
     if(mpEnemyGlowProgram)
     {
         mpEnemyGlowProgram->GetVariableAsId("afColorMul", kVar_afColorMul);
+    }
+    for(int i = 0; i < 2; ++i)
+    {
+        mpEnemyGlowSkinProgram[i] = NULL;
+        if(cSubMesh::GetGpuSkinningEnabled() == false)
+        {
+            continue;
+        }
+        cParserVarContainer skinVars = programVars;
+        skinVars.Add("UseSkeleton");
+        if(i == 1)
+        {
+            skinVars.Add("UseSkinMatrices");
+        }
+        skinVars.Add("GpuSkinBoneVecs", cSubMesh::GetGpuSkinVecs());
+        mpEnemyGlowSkinProgram[i] = pGraphics->CreateGpuProgramFromShaders(i == 1 ? "EnemyGlowSkinMtx" : "EnemyGlowSkin", "deferred_base_vtx.glsl", "game_enemy_darkness_glow_frag.glsl", &skinVars);
+        if(mpEnemyGlowSkinProgram[i])
+        {
+            mpEnemyGlowSkinProgram[i]->GetVariableAsId("afColorMul", kVar_afColorMul);
+        }
     }
     programVars.Clear();
 
@@ -263,14 +333,13 @@ void cLuxEffectRenderer::RenderFlashObjects(cRendererCallbackFunctions* apFuncti
             continue;
         }
 
-        if(mpFlashProgram)
-        {
+        iGpuProgram *pProgram = SetupSkinnedProgram(pObject, mpFlashProgram, mpFlashSkinProgram);
+        apFunctions->SetProgram(pProgram);
 #if LUX_FLASH_SHADER_USES_COLOR
-            mpFlashProgram->SetColor4f(kVar_afColorMul,mvFlashObjects[i].mcColor*mvFlashObjects[i].mfAlpha*fGlobalAlpha);
+        pProgram->SetColor4f(kVar_afColorMul,mvFlashObjects[i].mcColor*mvFlashObjects[i].mfAlpha*fGlobalAlpha);
 #else
-            mpFlashProgram->SetFloat(kVar_afColorMul, mvFlashObjects[i].mfAlpha * fGlobalAlpha);
+        pProgram->SetFloat(kVar_afColorMul, mvFlashObjects[i].mfAlpha * fGlobalAlpha);
 #endif
-        }
 
         apFunctions->SetTexture(0, pObject->GetMaterial()->GetTexture(eMaterialTexture_Diffuse));
 
@@ -324,7 +393,9 @@ void cLuxEffectRenderer::RenderEnemyGlow(cRendererCallbackFunctions* apFunctions
             continue;
         }
 
-        mpEnemyGlowProgram->SetFloat(kVar_afColorMul, mvEnemyGlowObjects[i].mfAlpha);
+        iGpuProgram *pProgram = SetupSkinnedProgram(pObject, mpEnemyGlowProgram, mpEnemyGlowSkinProgram);
+        apFunctions->SetProgram(pProgram);
+        pProgram->SetFloat(kVar_afColorMul, mvEnemyGlowObjects[i].mfAlpha);
 
         apFunctions->SetTexture(0, pObject->GetMaterial()->GetTexture(eMaterialTexture_Diffuse));
 
@@ -371,6 +442,13 @@ void cLuxEffectRenderer::RenderOutline(cRendererCallbackFunctions* apFunctions)
 
         if(pObject->CollidesWithFrustum(pFrustum))
         {
+            //The outline programs have no skinned versions
+            cSubMeshEntity *pSkinned = GetGpuSkinnedSubMesh(pObject);
+            if(pSkinned)
+            {
+                pSkinned->SwitchToCpuSkinning();
+            }
+
             lstObjects.push_back(pObject);
             lstColors.push_back(mvOutlineObjects[i].mcColor);
         }

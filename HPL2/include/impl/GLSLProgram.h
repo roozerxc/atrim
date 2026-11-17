@@ -91,6 +91,7 @@ public:
 
     bool SetMatrixf(int alVarId, const cMatrixf& aMtx);
     bool SetMatrixf(int alVarId, eGpuShaderMatrix aType, eGpuShaderMatrixOp aOp);
+    bool SetVec4fArray(int alVarId, const float *apValues, int alCount);
 
     /**
      * Sets the scale (1 / size) of the rect texture on a texture unit, used by programs

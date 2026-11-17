@@ -65,6 +65,10 @@ public:
     virtual bool SetVec4f(int alVarId, float afX, float afY, float afZ, float afW) = 0;
     virtual bool SetMatrixf(int alVarId, const cMatrixf& mMtx) = 0;
     virtual bool SetMatrixf(int alVarId, eGpuShaderMatrix mType, eGpuShaderMatrixOp mOp) = 0;
+    virtual bool SetVec4fArray(int alVarId, const float *apValues, int alCount)
+    {
+        return false;
+    }
 
     bool SetVec2f(int alVarId, const cVector2f avVec)
     {

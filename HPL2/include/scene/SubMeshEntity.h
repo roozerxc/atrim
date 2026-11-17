@@ -23,6 +23,7 @@ class cAnimationState;
 class cNodeState;
 class cBone;
 class cNode3D;
+class iGpuProgram;
 class iPhysicsBody;
 class cMaterial;
 class cBoneState;
@@ -113,6 +114,15 @@ public:
     bool GetUpdateBody();
 
     void SetCustomMaterial(cMaterial *apMaterial, bool abDestroyOldCustom = true);
+
+    //GPU skinning: the bind pose vertex buffer is drawn with a skinned program and the bone
+    //palette set as uniforms. Draws that cannot do that call SwitchToCpuSkinning.
+    bool UsesGpuSkinning() const
+    {
+        return mbGpuSkinning;
+    }
+    bool SetGpuSkinningUniforms(iGpuProgram *apProgram);
+    void SwitchToCpuSkinning();
     cMaterial *GetCustomMaterial()
     {
         return mpMaterial;
@@ -120,6 +130,11 @@ public:
 
 private:
     void OnTransformUpdated();
+
+    bool CanUseGpuSkinning(cMaterial *apMaterial);
+    void CreateCpuSkinBuffer();
+    void SkinOnCpu();
+    void UpdateGpuSkinData();
 
     cSubMesh *mpSubMesh;
     cMeshEntity *mpMeshEntity;
@@ -140,6 +155,9 @@ private:
     bool mbGraphicsUpdated;
     int mlBoneMatricesUpdateCount;
     float mfDistanceToFrustum;
+
+    bool mbGpuSkinning;
+    std::vector<float> mvGpuSkinData;
 
     char mlStaticNullMatrixCount;
     void *mpUserData;

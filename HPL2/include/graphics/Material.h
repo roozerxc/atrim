@@ -168,6 +168,9 @@ public:
     {
         return mvPrograms[alSkeleton][aRenderMode];
     }
+    //GPU skinned version of a program, generated the first time it is asked for.
+    //alSkeleton: 1 = bones as quaternion + translation/scale, 2 = bones as 3x4 matrices.
+    iGpuProgram *GetSkeletonProgram(eMaterialRenderMode aRenderMode, char alSkeleton);
     inline eMaterialBlendMode GetBlendMode() const
     {
         return mBlendMode;
@@ -296,7 +299,8 @@ private:
 
     bool mbUseAlphaDissolveFilter;
 
-    iGpuProgram *mvPrograms[2][eMaterialRenderMode_LastEnum]; //[2] == If it has skeleton or not.
+    iGpuProgram *mvPrograms[3][eMaterialRenderMode_LastEnum]; //[0] no skeleton, [1] and [2] GPU skinned.
+    bool mvSkeletonProgramTried[3][eMaterialRenderMode_LastEnum];
     iTexture *mvTextures[eMaterialTexture_LastEnum];
     iTexture *mvTextureInUnit[eMaterialRenderMode_LastEnum][kMaxTextureUnits];
 

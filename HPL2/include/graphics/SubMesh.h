@@ -18,6 +18,7 @@ class iPhysicsWorld;
 class iCollideShape;
 
 class cMaterialManager;
+class iLowLevelGraphics;
 
 //--------------------------------------------------
 
@@ -150,9 +151,51 @@ public:
     }
 
     void Compile();
+
+    //GPU skinning: per vertex weights (texcoord 2) and palette indices (texcoord 3) are
+    //added to the vertex buffer, each palette entry is a skeleton bone index.
+    static void SetGpuSkinningEnabled(bool abX)
+    {
+        mbGpuSkinningEnabled = abX;
+    }
+    static bool GetGpuSkinningEnabled()
+    {
+        return mbGpuSkinningEnabled && mlMaxGpuSkinBones > 0;
+    }
+    static void SetupGpuSkinningLimits(iLowLevelGraphics *apLowLevelGraphics);
+    static int GetMaxGpuSkinBones()
+    {
+        return mlMaxGpuSkinBones;
+    }
+    //Size of the bone uniform array, in vec4s
+    static int GetGpuSkinVecs()
+    {
+        return (mlMaxGpuSkinBones > 1 ? mlMaxGpuSkinBones : 1) * 2;
+    }
+
+    bool PrepareGpuSkinning();
+    const std::vector<int> &GetGpuSkinPalette() const
+    {
+        return mvGpuSkinPalette;
+    }
+    //Palettes small enough are sent as 3x4 matrices (exact for any bone), bigger ones as
+    //quaternion + translation/scale (needs rigid bones). Same numbers as cMaterial::GetSkeletonProgram.
+    char GetGpuSkinProgramType() const
+    {
+        return mbGpuSkinMatrices ? 2 : 1;
+    }
+
 private:
     void CheckOneSided();
     void CompileBonePairs();
+
+    static bool mbGpuSkinningEnabled;
+    static int mlMaxGpuSkinBones;
+    static bool mbGpuSkinningLimitsSet;
+
+    int mlGpuSkinState;
+    bool mbGpuSkinMatrices;
+    std::vector<int> mvGpuSkinPalette;
 
     tString msName;
 

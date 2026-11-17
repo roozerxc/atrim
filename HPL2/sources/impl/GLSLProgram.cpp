@@ -601,6 +601,28 @@ bool cGLSLProgram::SetMatrixf(int alVarId, const cMatrixf& aMtx)
 
 //-----------------------------------------------------------------------
 
+bool cGLSLProgram::SetVec4fArray(int alVarId, const float *apValues, int alCount)
+{
+    if(alVarId < 0 || alVarId >= (int)mvParameters.size() || alCount <= 0)
+    {
+        return false;
+    }
+
+    if(mlCurrentProgram != mlHandle)
+    {
+        Bind();
+    }
+
+    cGLSLParam &param = mvParameters[alVarId];
+    param.mCacheType = eGLSLParamCache_None;
+
+    glUniform4fv(param.mlId, alCount, apValues);
+
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
 bool cGLSLProgram::SetMatrixf(int alVarId, eGpuShaderMatrix aType,
                               eGpuShaderMatrixOp aOp)
 {

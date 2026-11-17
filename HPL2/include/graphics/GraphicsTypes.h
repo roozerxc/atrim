@@ -265,6 +265,8 @@ enum eGraphicCaps
 
     eGraphicCaps_GLSLVersion,
 
+    eGraphicCaps_MaxVertexUniformComponents,
+
     eGraphicCaps_LastEnum
 };
 

@@ -76,10 +76,11 @@ cMaterial::cMaterial(const tString& asName, const tWString& asFullPath, cGraphic
     {
         mvTextures[i] = NULL;
     }
-    for(int j = 0; j < 2; ++j)
+    for(int j = 0; j < 3; ++j)
         for(int i = 0; i < eMaterialRenderMode_LastEnum; ++i)
         {
             mvPrograms[j][i] = NULL;
+            mvSkeletonProgramTried[j][i] = false;
         }
     for(int i = 0; i < eMaterialRenderMode_LastEnum; ++i)
         for(int j = 0; j < kMaxTextureUnits; ++j)
@@ -116,7 +117,7 @@ cMaterial::~cMaterial()
     {
         // Destroy all programs
         for(int i = 0; i < eMaterialRenderMode_LastEnum; ++i)
-            for(int j = 0; j < 2; ++j)
+            for(int j = 0; j < 3; ++j)
             {
                 if(mvPrograms[j][i])
                 {
@@ -168,6 +169,25 @@ void cMaterial::SetType(iMaterialType* apType)
 
 //-----------------------------------------------------------------------
 
+iGpuProgram *cMaterial::GetSkeletonProgram(eMaterialRenderMode aRenderMode, char alSkeleton)
+{
+    if(alSkeleton < 1 || alSkeleton > 2)
+    {
+        return NULL;
+    }
+    if(mvSkeletonProgramTried[alSkeleton][aRenderMode] == false)
+    {
+        mvSkeletonProgramTried[alSkeleton][aRenderMode] = true;
+        if(mpType && mpType->SupportsHWSkinning())
+        {
+            mvPrograms[alSkeleton][aRenderMode] = mpType->GetGpuProgram(this, aRenderMode, alSkeleton);
+        }
+    }
+    return mvPrograms[alSkeleton][aRenderMode];
+}
+
+//-----------------------------------------------------------------------
+
 void cMaterial::Compile()
 {
     ////////////////////////
@@ -181,10 +201,12 @@ void cMaterial::Compile()
     ///////////////////
     // Get the programs
     for(int i = 0; i < eMaterialRenderMode_LastEnum; ++i)
-        for(int j = 0; j < 2; ++j)
+        for(int j = 0; j < 3; ++j)
         {
             iGpuProgram *pPrevProg = mvPrograms[j][i];
-            mvPrograms[j][i] = mpType->GetGpuProgram(this, (eMaterialRenderMode)i, j);
+            //Skinned programs are only made for materials that are used on skinned meshes
+            mvPrograms[j][i] = j == 0 ? mpType->GetGpuProgram(this, (eMaterialRenderMode)i, 0) : NULL;
+            mvSkeletonProgramTried[j][i] = false;
 
             //Destroy any previous program (this is so recompilations work with program count!)
             if(pPrevProg)

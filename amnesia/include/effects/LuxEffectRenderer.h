@@ -77,9 +77,11 @@ private:
     iGpuProgram *mpOutlineStencilAlphaProgram;
 
     iGpuProgram *mpFlashProgram;
+    iGpuProgram *mpFlashSkinProgram[2];
     cLinearOscillation mFlashOscill;
 
     iGpuProgram *mpEnemyGlowProgram;
+    iGpuProgram *mpEnemyGlowSkinProgram[2];
 
     cMatrixf m_mtxTemp;
 };

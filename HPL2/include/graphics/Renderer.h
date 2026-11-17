@@ -462,6 +462,8 @@ protected:
     bool SetupLightScissorRect(iLight *apLight, cMatrixf *apViewSpaceMatrix);
 
     void SetMaterialProgram(eMaterialRenderMode aRenderMode, cMaterial *apMaterial);
+    void SetMaterialProgram(eMaterialRenderMode aRenderMode, cMaterial *apMaterial, iGpuProgram *apProgram);
+    void SetupGpuSkinning(eMaterialRenderMode aRenderMode, iRenderable *apObject);
     void SetMaterialTextures(eMaterialRenderMode aRenderMode, cMaterial *apMaterial);
 
     void DrawCurrentMaterial(eMaterialRenderMode aRenderMode, iRenderable *apObject);

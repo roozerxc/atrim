@@ -63,6 +63,42 @@ invariant gl_Position;
 	uniform mat4 a_mtxBoxInvViewModelRotation;
 @endif
 
+@ifdef UseSkeleton
+	//Weights in texcoord 2, palette indices in texcoord 3.
+	//UseSkinMatrices: three vec4 per bone, the rows of the 3x4 bone matrix.
+	//Otherwise two vec4 per bone: rotation quaternion, translation + uniform scale (w).
+	uniform vec4 avSkinBones[$GpuSkinBoneVecs];
+
+	@ifdef UseSkinMatrices
+	void AddSkinBone(float afIndex, float afWeight, inout vec4 avRow0, inout vec4 avRow1, inout vec4 avRow2)
+	{
+		int lIdx = int(afIndex + 0.5) * 3;
+		avRow0 += avSkinBones[lIdx] * afWeight;
+		avRow1 += avSkinBones[lIdx + 1] * afWeight;
+		avRow2 += avSkinBones[lIdx + 2] * afWeight;
+	}
+	@else
+	void AddSkinBone(float afIndex, float afWeight, inout vec4 avRow0, inout vec4 avRow1, inout vec4 avRow2)
+	{
+		int lIdx = int(afIndex + 0.5) * 2;
+		vec4 q = avSkinBones[lIdx];
+		vec4 t = avSkinBones[lIdx + 1];
+		
+		vec3 q2 = q.xyz * 2.0;
+		vec3 qq = q.xyz * q2;
+		float fXY = q.x * q2.y;
+		float fXZ = q.x * q2.z;
+		float fYZ = q.y * q2.z;
+		vec3 vW = q.w * q2;
+		
+		float fScale = t.w * afWeight;
+		avRow0 += vec4(1.0 - qq.y - qq.z, fXY - vW.z, fXZ + vW.y, 0.0) * fScale + vec4(0.0, 0.0, 0.0, t.x * afWeight);
+		avRow1 += vec4(fXY + vW.z, 1.0 - qq.x - qq.z, fYZ - vW.x, 0.0) * fScale + vec4(0.0, 0.0, 0.0, t.y * afWeight);
+		avRow2 += vec4(fXZ - vW.y, fYZ + vW.x, 1.0 - qq.x - qq.y, 0.0) * fScale + vec4(0.0, 0.0, 0.0, t.z * afWeight);
+	}
+	@endif
+@endif
+
 
 //---------------------------------------------
 
@@ -70,12 +106,32 @@ invariant gl_Position;
 // Main program
 void main()
 {	
+	vec4 vInVertex = gl_Vertex;
+	vec3 vInNormal = gl_Normal;
+	vec4 vInTangent = gl_MultiTexCoord1;
+	
+	@ifdef UseSkeleton
+		vec4 vRow0 = vec4(0.0);
+		vec4 vRow1 = vec4(0.0);
+		vec4 vRow2 = vec4(0.0);
+		AddSkinBone(gl_MultiTexCoord3.x, gl_MultiTexCoord2.x, vRow0, vRow1, vRow2);
+		AddSkinBone(gl_MultiTexCoord3.y, gl_MultiTexCoord2.y, vRow0, vRow1, vRow2);
+		AddSkinBone(gl_MultiTexCoord3.z, gl_MultiTexCoord2.z, vRow0, vRow1, vRow2);
+		AddSkinBone(gl_MultiTexCoord3.w, gl_MultiTexCoord2.w, vRow0, vRow1, vRow2);
+		
+		vInVertex = vec4(dot(vRow0, gl_Vertex), dot(vRow1, gl_Vertex), dot(vRow2, gl_Vertex), 1.0);
+		vInNormal = vec3(dot(vRow0.xyz, gl_Normal), dot(vRow1.xyz, gl_Normal), dot(vRow2.xyz, gl_Normal));
+		vInTangent.xyz = vec3(dot(vRow0.xyz, gl_MultiTexCoord1.xyz), dot(vRow1.xyz, gl_MultiTexCoord1.xyz), dot(vRow2.xyz, gl_MultiTexCoord1.xyz));
+	@endif
+	
 	//////////////////////
 	// Position
 	@ifdef UseDecalDepthPull
-		vec4 vDecalViewPos = gl_ModelViewMatrix * gl_Vertex;
+		vec4 vDecalViewPos = gl_ModelViewMatrix * vInVertex;
 		vDecalViewPos.xyz *= 0.9995;
 		gl_Position = gl_ProjectionMatrix * vDecalViewPos;
+	@elseif UseSkeleton
+		gl_Position = gl_ModelViewProjectionMatrix * vInVertex;
 	@else
 		gl_Position = ftransform();
 	@endif
@@ -103,23 +159,23 @@ void main()
 	//////////////////////
 	// Normals
 	@ifdef UseNormals
-		gvNormal = normalize(gl_NormalMatrix * gl_Normal);
+		gvNormal = normalize(gl_NormalMatrix * vInNormal);
 	@endif
 
 	//////////////////////
 	// Normalmapping
 	@ifdef UseNormalMapping
 		//To consider: Is gl_NormalMatrix correct here?
-		gvTangent = normalize(gl_NormalMatrix * gl_MultiTexCoord1.xyz);
+		gvTangent = normalize(gl_NormalMatrix * vInTangent.xyz);
 		
 		//Need to do it in model space (and not view) because reflection normal mapping will fail otherwise!
-		gvBinormal = normalize(gl_NormalMatrix * cross(gl_Normal,gl_MultiTexCoord1.xyz) * gl_MultiTexCoord1.w); 
+		gvBinormal = normalize(gl_NormalMatrix * cross(vInNormal,vInTangent.xyz) * vInTangent.w); 
 	@endif
 	
 	//////////////////////
 	// Parallax
 	@ifdef UseParallax
-		vec3 vViewEyeVec =  (gl_ModelViewMatrix * gl_Vertex).xyz;
+		vec3 vViewEyeVec =  (gl_ModelViewMatrix * vInVertex).xyz;
 		
 		gvTangentEyePos.x = dot(vViewEyeVec, gvTangent);
 		gvTangentEyePos.y = dot(vViewEyeVec, gvBinormal);
@@ -131,11 +187,11 @@ void main()
 	//////////////////////
 	// Deferring (G-Buffer)
 	@ifdef Deferred_32bit
-		gfLinearDepth = -(gl_ModelViewMatrix * gl_Vertex).z * afInvFarPlane; //Do not use near plane! Doing like this will make the calcs simpler in the light shader.
+		gfLinearDepth = -(gl_ModelViewMatrix * vInVertex).z * afInvFarPlane; //Do not use near plane! Doing like this will make the calcs simpler in the light shader.
 	@endif
 	
 	@ifdef Deferred_64bit || UseVertexPosition || UseEnvMap || UseFog || UseRefraction
-		gvVertexPos = (gl_ModelViewMatrix * gl_Vertex).xyz;
+		gvVertexPos = (gl_ModelViewMatrix * vInVertex).xyz;
 	@endif
 	
 	//////////////////////
@@ -147,7 +203,7 @@ void main()
 			//Light are rendered as shapes
 			@ifdef UseDeferredLightShapes
 				//Project the position to the farplane
-				vec3 vPos = (gl_ModelViewMatrix * gl_Vertex).xyz;
+				vec3 vPos = (gl_ModelViewMatrix * vInVertex).xyz;
 				
 				//Spotlight will divided in fragment shader
 				@ifdef DivideInFrag

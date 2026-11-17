@@ -18,6 +18,7 @@
 #include "graphics/ProgramComboManager.h"
 #include "graphics/Renderable.h"
 #include "graphics/RendererDeferred.h"
+#include "graphics/SubMesh.h"
 
 
 namespace hpl
@@ -49,8 +50,9 @@ namespace hpl
 #define eFeature_Diffuse_Skeleton        eFlagBit_4
 #define eFeature_Diffuse_EnvMap            eFlagBit_5
 #define eFeature_Diffuse_CubeMapAlpha    eFlagBit_6
+#define eFeature_Diffuse_SkinMatrices    eFlagBit_7
 
-#define kDiffuseFeatureNum 7
+#define kDiffuseFeatureNum 8
 
 static cProgramComboFeature vDiffuseFeatureVec[] =
 {
@@ -61,6 +63,7 @@ static cProgramComboFeature vDiffuseFeatureVec[] =
     cProgramComboFeature("UseSkeleton",    kPC_VertexBit),
     cProgramComboFeature("UseEnvMap", kPC_VertexBit | kPC_FragmentBit),
     cProgramComboFeature("UseCubeMapAlpha", kPC_FragmentBit),
+    cProgramComboFeature("UseSkinMatrices", kPC_VertexBit),
 };
 
 //------------------------------
@@ -68,13 +71,15 @@ static cProgramComboFeature vDiffuseFeatureVec[] =
 //------------------------------
 #define eFeature_Illum_UvAnimation    eFlagBit_0
 #define eFeature_Illum_Skeleton        eFlagBit_1
+#define eFeature_Illum_SkinMatrices    eFlagBit_2
 
-#define kIllumFeatureNum 2
+#define kIllumFeatureNum 3
 
 cProgramComboFeature vIllumFeatureVec[] =
 {
     cProgramComboFeature("UseUvAnimation", kPC_VertexBit),
     cProgramComboFeature("UseSkeleton",    kPC_VertexBit),
+    cProgramComboFeature("UseSkinMatrices", kPC_VertexBit),
 };
 
 //------------------------------
@@ -85,8 +90,10 @@ cProgramComboFeature vIllumFeatureVec[] =
 #define eFeature_Z_Dissolve                    eFlagBit_2
 #define eFeature_Z_DissolveAlpha            eFlagBit_3
 #define eFeature_Z_UseAlphaDissolveFilter    eFlagBit_4
+#define eFeature_Z_Skeleton                    eFlagBit_5
+#define eFeature_Z_SkinMatrices                eFlagBit_6
 
-#define kZFeatureNum 5
+#define kZFeatureNum 7
 
 cProgramComboFeature vZFeatureVec[] =
 {
@@ -94,7 +101,9 @@ cProgramComboFeature vZFeatureVec[] =
     cProgramComboFeature("UseUvAnimation",                kPC_VertexBit),
     cProgramComboFeature("UseDissolve",                    kPC_FragmentBit),
     cProgramComboFeature("UseDissolveAlphaMap",            kPC_FragmentBit),
-    cProgramComboFeature("UseAlphaUseDissolveFilter",    kPC_FragmentBit)
+    cProgramComboFeature("UseAlphaUseDissolveFilter",    kPC_FragmentBit),
+    cProgramComboFeature("UseSkeleton",                    kPC_VertexBit),
+    cProgramComboFeature("UseSkinMatrices",                kPC_VertexBit)
 };
 
 //------------------------------
@@ -163,8 +172,11 @@ void iMaterialType_SolidBase::CreateGlobalPrograms()
     /////////////////////////////
     //Load programs
     //This makes this material's program manager responsible for managing the global programs!
+    cSubMesh::SetupGpuSkinningLimits(mpGraphics->GetLowLevel());
+
     cParserVarContainer defaultVars;
     defaultVars.Add("UseUv");
+    defaultVars.Add("GpuSkinBoneVecs", cSubMesh::GetGpuSkinVecs());
 
     mpProgramManager->SetupGenerateProgramData(    eMaterialRenderMode_Z, "Z", "deferred_base_vtx.glsl", "deferred_base_frag.glsl",
             vZFeatureVec, kZFeatureNum, defaultVars);
@@ -287,6 +299,7 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
     defaultVars.Add("UseNormals");
     defaultVars.Add("UseDepth");
     defaultVars.Add("VirtualPositionAddScale", mfVirtualPositionAddScale);
+    defaultVars.Add("GpuSkinBoneVecs", cSubMesh::GetGpuSkinVecs());
 
     //Get the G-buffer type
     if(cRendererDeferred::GetGBufferType() == eDeferredGBuffer_32Bit)
@@ -331,6 +344,7 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
     //Load Illumination programs
     defaultVars.Clear();
     defaultVars.Add("UseUv");
+    defaultVars.Add("GpuSkinBoneVecs", cSubMesh::GetGpuSkinVecs());
     mpProgramManager->SetupGenerateProgramData(    eMaterialRenderMode_Illumination, "Illum", "deferred_base_vtx.glsl", "deferred_illumination_frag.glsl",
             vIllumFeatureVec, kIllumFeatureNum, defaultVars);
 
@@ -515,6 +529,14 @@ iGpuProgram *cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
         {
             lFlags |= eFeature_Z_UseAlphaDissolveFilter;
         }
+        if(alSkeleton)
+        {
+            lFlags |= eFeature_Z_Skeleton;
+        }
+        if(alSkeleton == 2)
+        {
+            lFlags |= eFeature_Z_SkinMatrices;
+        }
 
         return mpGlobalProgramManager->GenerateProgram(eMaterialRenderMode_Z, lFlags);
     }
@@ -539,6 +561,14 @@ iGpuProgram *cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
         if(pVars->mbAlphaDissolveFilter)
         {
             lFlags |= eFeature_Z_UseAlphaDissolveFilter;
+        }
+        if(alSkeleton)
+        {
+            lFlags |= eFeature_Z_Skeleton;
+        }
+        if(alSkeleton == 2)
+        {
+            lFlags |= eFeature_Z_SkinMatrices;
         }
 
         return mpGlobalProgramManager->GenerateProgram(eMaterialRenderMode_Z, lFlags);
@@ -573,6 +603,14 @@ iGpuProgram *cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
         {
             lFlags |= eFeature_Diffuse_UvAnimation;
         }
+        if(alSkeleton)
+        {
+            lFlags |= eFeature_Diffuse_Skeleton;
+        }
+        if(alSkeleton == 2)
+        {
+            lFlags |= eFeature_Diffuse_SkinMatrices;
+        }
 
 
         return mpProgramManager->GenerateProgram(aRenderMode, lFlags);
@@ -586,6 +624,14 @@ iGpuProgram *cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
         if(apMaterial->HasUvAnimation())
         {
             lFlags |= eFeature_Illum_UvAnimation;
+        }
+        if(alSkeleton)
+        {
+            lFlags |= eFeature_Illum_Skeleton;
+        }
+        if(alSkeleton == 2)
+        {
+            lFlags |= eFeature_Illum_SkinMatrices;
         }
 
         return mpProgramManager->GenerateProgram(aRenderMode, lFlags);

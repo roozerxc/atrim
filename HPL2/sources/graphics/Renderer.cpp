@@ -2404,8 +2404,13 @@ bool iRenderer::SetupLightScissorRect(iLight *apLight, cMatrixf *apViewSpaceMatr
 
 void iRenderer::SetMaterialProgram(eMaterialRenderMode aRenderMode, cMaterial *apMaterial)
 {
+    SetMaterialProgram(aRenderMode, apMaterial, apMaterial->GetProgram(0, aRenderMode));
+}
+
+void iRenderer::SetMaterialProgram(eMaterialRenderMode aRenderMode, cMaterial *apMaterial, iGpuProgram *apProgram)
+{
     iMaterialType *pMatType = apMaterial->GetType();
-    iGpuProgram *pProgram = apMaterial->GetProgram(0, aRenderMode);
+    iGpuProgram *pProgram = apProgram;
 
     ///////////////////////////////////////
     // Check if program is set
@@ -2495,12 +2500,50 @@ void iRenderer::SetMaterialTextures(eMaterialRenderMode aRenderMode, cMaterial *
 
 //-----------------------------------------------------------------------
 
+void iRenderer::SetupGpuSkinning(eMaterialRenderMode aRenderMode, iRenderable *apObject)
+{
+    if(apObject->GetRenderType() != eRenderableType_SubMesh)
+    {
+        return;
+    }
+    cSubMeshEntity *pSubEnt = static_cast<cSubMeshEntity *>(apObject);
+    if(pSubEnt->UsesGpuSkinning() == false)
+    {
+        return;
+    }
+
+    //Only the material's own program has a skinned twin. Anything else gets CPU skinned vertices.
+    cMaterial *pMaterial = apObject->GetMaterial();
+    char lSkeleton = pSubEnt->GetSubMesh()->GetGpuSkinProgramType();
+    iGpuProgram *pSkinProgram = NULL;
+    if(pMaterial && mpCurrentProgram != NULL && mpCurrentProgram == pMaterial->GetProgram(0, aRenderMode))
+    {
+        pSkinProgram = pMaterial->GetSkeletonProgram(aRenderMode, lSkeleton);
+    }
+    else if(pMaterial && mpCurrentProgram != NULL && mpCurrentProgram == pMaterial->GetProgram(lSkeleton, aRenderMode))
+    {
+        pSkinProgram = mpCurrentProgram;
+    }
+
+    if(pSkinProgram == NULL)
+    {
+        pSubEnt->SwitchToCpuSkinning();
+        SetVertexBuffer(pSubEnt->GetVertexBuffer());
+        return;
+    }
+
+    SetMaterialProgram(aRenderMode, pMaterial, pSkinProgram);
+    pSubEnt->SetGpuSkinningUniforms(pSkinProgram);
+}
+
 void iRenderer::DrawCurrentMaterial(eMaterialRenderMode aRenderMode, iRenderable *apObject)
 {
     HPL_PROFILE_ITEM(eFrameProfilerItem_Object, apObject ? apObject->GetName() : gsProfileNoName);
 
     if(apObject)
     {
+        SetupGpuSkinning(aRenderMode, apObject);
+
         cMaterial *pMaterial = apObject->GetMaterial();
         iMaterialType *pMatType = pMaterial->GetType();
 
