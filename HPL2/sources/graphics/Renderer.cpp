@@ -3165,14 +3165,32 @@ iOcclusionQuery *iRenderer::GetOcclusionQuery()
 {
     iOcclusionQuery *pOcclusionQuery = NULL;
 
-    if(mvOcclusionQueryPool.empty())
+    //Starting a query whose previous result is still on the way makes the driver wait for
+    //the GPU (light and halo queries are released without waiting for their results).
+    //Take the oldest finished one, look at a few at most, else make a new one.
+    const size_t kMaxQueriesChecked = 4;
+    size_t lChecked = mvOcclusionQueryPool.size() < kMaxQueriesChecked ? mvOcclusionQueryPool.size() : kMaxQueriesChecked;
+    for(size_t i = 0; i < lChecked; ++i)
+    {
+        if(mvOcclusionQueryPool[i]->FetchResults())
+        {
+            pOcclusionQuery = mvOcclusionQueryPool[i];
+            mvOcclusionQueryPool.erase(mvOcclusionQueryPool.begin() + i);
+            break;
+        }
+    }
+
+    //Too many still running: wait for the oldest rather than growing forever
+    if(pOcclusionQuery == NULL && mvOcclusionQueryPool.size() >= 1024)
+    {
+        pOcclusionQuery = mvOcclusionQueryPool.front();
+        mvOcclusionQueryPool.pop_front();
+        pOcclusionQuery->WaitForResults();
+    }
+
+    if(pOcclusionQuery == NULL)
     {
         pOcclusionQuery = mpLowLevelGraphics->CreateOcclusionQuery();
-    }
-    else
-    {
-        pOcclusionQuery = mvOcclusionQueryPool.back();
-        mvOcclusionQueryPool.resize(mvOcclusionQueryPool.size() - 1);
     }
 
     mlActiveOcclusionQueryNum++;

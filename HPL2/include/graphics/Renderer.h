@@ -1,6 +1,8 @@
 #ifndef HPL_RENDERER_H
 #define HPL_RENDERER_H
 
+#include <deque>
+
 #include "graphics/GraphicsTypes.h"
 #include "system/FrameProfiler.h"
 #include "math/MathTypes.h"
@@ -577,7 +579,9 @@ protected:
     cRendererCallbackFunctions *mpCallbackFunctions;
 
     int mlActiveOcclusionQueryNum;
-    std::vector<iOcclusionQuery *> mvOcclusionQueryPool;
+    //Released queries, oldest first. A query can be released before its result is in,
+    //so it is only handed out again once FetchResults says it is done.
+    std::deque<iOcclusionQuery *> mvOcclusionQueryPool;
     std::vector<cOcclusionQueryObject *> mvSortedOcclusionObjects;
 
     std::vector<cShadowMapData *> mvShadowMapData[eShadowMapResolution_LastEnum];
