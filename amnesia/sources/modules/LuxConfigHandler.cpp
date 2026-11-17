@@ -66,6 +66,7 @@ void cLuxConfigHandler::LoadMainConfig()
 
     mbFastPhysicsLoad =    gpBase->mpMainConfig->GetBool("MapLoad", "FastPhysicsLoad", false);
     mlPhysicsPreSettleSteps = gpBase->mpMainConfig->GetInt("MapLoad", "PhysicsPreSettleSteps", 20);
+    mbLogMoveObjects = gpBase->mpMainConfig->GetBool("Main", "LogMoveObjects", false);
     mbFastStaticLoad =    gpBase->mpMainConfig->GetBool("MapLoad", "FastStaticLoad", false);
     mbFastEntityLoad =    gpBase->mpMainConfig->GetBool("MapLoad", "FastEntityLoad", false);
 

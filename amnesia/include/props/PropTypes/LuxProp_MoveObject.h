@@ -80,6 +80,10 @@ private:
     void OnStartMove();
     void CalculateOpenRotateMatrix(float afCurrentOpenAmount);
     void ResolveAngularOffsetArea();
+    void LogMoveState(const char *apWhat);
+public:
+    static bool mbLogMoveObjects;
+private:
 
     //Vars
     cVector3f mvAngularOffsetPos;

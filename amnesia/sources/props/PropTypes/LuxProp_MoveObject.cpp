@@ -150,6 +150,11 @@ void cLuxProp_MoveObject::OnSetupAfterLoad(cWorld *apWorld)
     {
         CalculateOpenRotateMatrix(mfOpenAmount);
     }
+
+    if(mbLogMoveObjects)
+    {
+        LogMoveState("setup");
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -167,6 +172,11 @@ void cLuxProp_MoveObject::UpdatePropSpecific(double adFixedDelta)
     //////////////////////
     //Check the anglular offset area
     ResolveAngularOffsetArea();
+
+    if(mbLogMoveObjects && (mbMovingAngular || mbMovingLinear))
+    {
+        LogMoveState("tick");
+    }
 
 
     //////////////////////
@@ -197,6 +207,36 @@ eLuxFocusCrosshair cLuxProp_MoveObject::GetFocusCrosshair(iPhysicsBody *apBody, 
 }
 
 //-----------------------------------------------------------------------
+
+bool cLuxProp_MoveObject::mbLogMoveObjects = false;
+
+void cLuxProp_MoveObject::LogMoveState(const char *apWhat)
+{
+    iPhysicsBody *pBody = GetMainBody();
+    if(pBody == NULL)
+    {
+        Log("MoveObject '%s' %s: no body!\n", msName.c_str(), apWhat);
+        return;
+    }
+    cVector3f vBodyPos = pBody->GetLocalPosition();
+    cVector3f vMeshPos = mpMeshEntity ? mpMeshEntity->GetWorldPosition() : cVector3f(0);
+    cVector3f vToGoal = cMath::MatrixEulerAngleDistance(pBody->GetLocalMatrix(), m_mtxMoveAngularGoal);
+    cVector3f vMeshToBody = mpMeshEntity ? cMath::MatrixEulerAngleDistance(pBody->GetLocalMatrix().GetRotation(), mpMeshEntity->GetWorldMatrix().GetRotation()) : cVector3f(0);
+    cVector3f vBodyUp = cMath::MatrixMul3x3(pBody->GetLocalMatrix(), cVector3f(0, 1, 0));
+    cVector3f vMeshUp = mpMeshEntity ? cMath::MatrixMul3x3(mpMeshEntity->GetWorldMatrix(), cVector3f(0, 1, 0)) : cVector3f(0);
+    cVector3f vSubUp = (mpMeshEntity && mpMeshEntity->GetSubMeshEntityNum() > 0) ?
+                       cMath::MatrixMul3x3(mpMeshEntity->GetSubMeshEntity(0)->GetWorldMatrix(), cVector3f(0, 1, 0)) : cVector3f(0);
+    bool bSkeleton = mpMeshEntity && mpMeshEntity->GetMesh() && mpMeshEntity->GetMesh()->GetSkeleton();
+    Log("MoveObject '%s' %s: bodyUp (%s) meshUp (%s) subMeshUp (%s) skeleton %d meshParent %d\n", msName.c_str(), apWhat,
+        vBodyUp.ToString().c_str(), vMeshUp.ToString().c_str(), vSubUp.ToString().c_str(), bSkeleton ? 1 : 0,
+        (mpMeshEntity && mpMeshEntity->GetEntityParent()) ? 1 : 0);
+    Log("MoveObject '%s' %s: state %.3f moving %d/%d mass %.2f bodyActive %d meshVisible %d openAmount %.2f axis %d offset %d (%s) "
+        "bodyPos (%s) meshPos (%s) toGoal (%s) meshToBody (%s)\n",
+        msName.c_str(), apWhat, GetMoveState(), mbMovingAngular ? 1 : 0, mbMovingLinear ? 1 : 0, pBody->GetMass(), pBody->IsActive() ? 1 : 0,
+        mpMeshEntity ? (mpMeshEntity->IsVisible() ? 1 : 0) : -1, mfOpenAmount, (int)mMoveAxis, mbUseAngularLocalOffset ? 1 : 0,
+        mvAngularOffsetPos.ToString().c_str(), vBodyPos.ToString().c_str(), vMeshPos.ToString().c_str(), vToGoal.ToString().c_str(), vMeshToBody.ToString().c_str());
+}
+
 
 void cLuxProp_MoveObject::ResolveAngularOffsetArea()
 {
@@ -261,6 +301,12 @@ void cLuxProp_MoveObject::MoveToState(float afState, float afAcc, float afMaxSpe
         {
             MoveAngularTo(mtxWanted, afAcc, afMaxSpeed, afSlowdownDist, abResetSpeed, false, 0, 0);
         }
+    }
+
+    if(mbLogMoveObjects)
+    {
+        Log("MoveObject '%s' MoveToState(%.3f) acc %.2f speed %.2f\n", msName.c_str(), afState, afAcc, afMaxSpeed);
+        LogMoveState("start");
     }
 }
 

@@ -74,6 +74,7 @@ public:
     int mlFullscreenMode;
     int mlLightColorGradeMode;
     int mlPhysicsPreSettleSteps;
+    bool mbLogMoveObjects;
 
     bool mbFrameProfiler;
     int mlFrameProfilerFrames;

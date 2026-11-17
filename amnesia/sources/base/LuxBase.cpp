@@ -1364,6 +1364,7 @@ bool cLuxBase::InitEngine()
 
     cRendererDeferred::SetLightSpecularEnabled(mpMainConfig->GetBool("Graphics", "LightSpecular", true));
     cRendererDeferred::SetLightColorGrade(mpConfigHandler->mlLightColorGradeMode == 2);
+    cLuxProp_MoveObject::mbLogMoveObjects = mpConfigHandler->mbLogMoveObjects;
     iRenderer::SetSmallObjectCullPixels(mpMainConfig->GetFloat("Graphics", "SmallObjectCullPixels", 0.0f));
     cEngine::SetLogicUpdatesPerSec(mpMainConfig->GetInt("Main", "LogicUpdatesPerSec", 60));
 
