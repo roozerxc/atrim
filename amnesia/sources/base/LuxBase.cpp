@@ -1948,8 +1948,8 @@ void cLuxBase::DrawVersionWatermark()
     // Shadow color. DO NOT CHANGE!
     const cColor watermarkShadowColor(0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f);
 
-    // Changable by dev. for now its just IW style blue :P  (hex : 297ECE)
-    const cColor watermarkColor(41.0f / 255.0f, 126.0f / 255.0f, 206.0f / 255.0f, 1.0f);
+    // Changable by dev. Color is Sarven Red  (hex : E82B46)
+    const cColor watermarkColor(232.0f / 255.0f, 43.0f / 255.0f, 70.0f / 255.0f, 1.0f);
 
     //Shadow is offset right/down by whole pixels (at least 1) so it stays crisp and scales with font size
     float fShadowOffset = (float)(int)(fFontSize * kVersionWatermark_ShadowOffsetRel + 0.5f);
