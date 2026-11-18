@@ -1,7 +1,8 @@
 # Changelog
-### v1.4.7
+### v1.4.666+
 - Added engine startup self-test for the deferred light fragment shader on older video cards
 - Added support for graphics drivers that are only able to compile OpenGL 2.0/GLSL 1.20 shader code
+- Replaced the awful ImageTrail shader with the beautiful motion blur program from HPL1
 
 ### v1.4.6
 - Added 64-bit support
