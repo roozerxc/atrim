@@ -408,15 +408,21 @@ bool cFrameBufferGL::CompileAndValidate()
 
     /////////////////////////////////////////
     //Check color buffers
+    //Empty slots below the last attachment become GL_NONE, so fragment output i always goes to attachment i.
     std::vector<GLenum> vColorBuffers;
     int lNumOfColorBuffers = 0;
+    int lLastBuffer = -1;
     for(int i = 0; i < kMaxDrawColorBuffers; ++i)
     {
         if(mpColorBuffer[i] != NULL)
         {
-            vColorBuffers.push_back(GL_COLOR_ATTACHMENT0_EXT + i);
+            lLastBuffer = i;
             ++lNumOfColorBuffers;
         }
+    }
+    for(int i = 0; i <= lLastBuffer; ++i)
+    {
+        vColorBuffers.push_back(mpColorBuffer[i] != NULL ? (GLenum)(GL_COLOR_ATTACHMENT0_EXT + i) : (GLenum)GL_NONE);
     }
     //If no color buffers, turn of read and draw buffers.
     if(lNumOfColorBuffers == 0)
@@ -427,13 +433,13 @@ bool cFrameBufferGL::CompileAndValidate()
     //One color buffer is active
     else if(lNumOfColorBuffers == 1)
     {
-        glDrawBuffer(vColorBuffers[0]);
-        glReadBuffer(vColorBuffers[0]);
+        glDrawBuffer(vColorBuffers[lLastBuffer]);
+        glReadBuffer(vColorBuffers[lLastBuffer]);
     }
     //Multiple color buffers
     else
     {
-        glDrawBuffers(lNumOfColorBuffers, &vColorBuffers[0]);
+        glDrawBuffers((GLsizei)vColorBuffers.size(), &vColorBuffers[0]);
     }
 
     /////////////////////////////////////////
