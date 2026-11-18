@@ -544,6 +544,12 @@ bool cFrameBufferGL::CheckIfNullTexture(int alAttachmentType, int alAttachmentId
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, alAttachmentType + alAttachmentIdx, GL_TEXTURE_2D, 0, 0);
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
+    //Forget the detached texture, so CompileAndValidate does not count it
+    if(alAttachmentType == GL_COLOR_ATTACHMENT0_EXT && alAttachmentIdx >= 0 && alAttachmentIdx < kMaxDrawColorBuffers)
+    {
+        mpColorBuffer[alAttachmentIdx] = NULL;
+    }
+
     return true;
 }
 
