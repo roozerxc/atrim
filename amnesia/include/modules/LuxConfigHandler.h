@@ -63,6 +63,7 @@ public:
     bool mbForceGLSL110;
     tString msGpuSkinning; //"auto", "true" or "false"
     bool mbOcclusionCullingLatency;
+    bool mbLiteGBuffer;
     bool mbForceNoStencil;
     bool mbForceRectAs2D;
     bool mbLogGLErrors;

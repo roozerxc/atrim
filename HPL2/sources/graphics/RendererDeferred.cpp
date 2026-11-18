@@ -27,6 +27,7 @@
 #include "resources/GpuShaderManager.h"
 #include "resources/MeshManager.h"
 #include "resources/FileSearcher.h"
+#include "system/Platform.h"
 #include "graphics/GPUShader.h"
 #include "graphics/GPUProgram.h"
 
@@ -60,6 +61,9 @@ bool cRendererDeferred::mbDepthCullLights = true;
 bool cRendererDeferred::mbLightSpecularEnabled = true;
 bool cRendererDeferred::mbLightColorGrade = false;
 bool cRendererDeferred::mbLiteLightShaderActive = false;
+bool cRendererDeferred::mbLiteGBufferActive = false;
+bool cRendererDeferred::mbLiteGBufferSparse = false;
+bool cRendererDeferred::mbLiteGBufferAllowed = false;
 
 bool cRendererDeferred::mbSSAOLoaded = false;
 int cRendererDeferred::mlSSAONumOfSamples = 8;
@@ -626,6 +630,19 @@ bool cRendererDeferred::LoadData()
             //gives wrong results on this GPU/driver. May also lower shadow quality.
             msActiveLightFragShader = SelectLightFragShader();
             mbLiteLightShaderActive = mbLiteLightShader;
+            mbLiteGBufferActive = false;
+            mbLiteGBufferSparse = false;
+            if(mbLiteLightShaderActive && mbLiteGBufferAllowed && mlNumOfGBufferTextures == 3 && mGBufferType == eDeferredGBuffer_32Bit)
+            {
+                if(SetupLiteGBuffer() == false)
+                {
+                    return false;
+                }
+            }
+            else if(mbLiteLightShaderActive && mbLiteGBufferAllowed == false)
+            {
+                Log(" Lite G-Buffer: off (LiteGBuffer=\"false\" in config), 3 render targets\n");
+            }
 
             cParserVarContainer defaultVars;
             AddLightProgramDefaultVars(defaultVars);
@@ -1725,7 +1742,10 @@ void cRendererDeferred::RenderLightShadowMap(cDeferredLight* apLightData)
     //Set back G-buffer textures
     for(int i = 0; i < mlNumOfGBufferTextures; ++i)
     {
-        SetTexture(i, GetBufferTexture(i));
+        //Lite G-buffer has no normals texture. Some ATI drivers sample wrong when a unit
+        //below a used one is empty, so keep depth bound there too.
+        iTexture *pTexture = GetBufferTexture(i);
+        SetTexture(i, pTexture ? pTexture : GetBufferTexture(2));
     }
 
     //Reset render states
@@ -3031,7 +3051,10 @@ void cRendererDeferred::RenderLights()
 
     for(int i = 0; i < mlNumOfGBufferTextures; ++i)
     {
-        SetTexture(i, GetBufferTexture(i));
+        //Lite G-buffer has no normals texture. Some ATI drivers sample wrong when a unit
+        //below a used one is empty, so keep depth bound there too.
+        iTexture *pTexture = GetBufferTexture(i);
+        SetTexture(i, pTexture ? pTexture : GetBufferTexture(2));
     }
     SetTextureRange(NULL, mlNumOfGBufferTextures);
 
@@ -4089,6 +4112,10 @@ void cRendererDeferred::RenderGbufferContent()
 
 void cRendererDeferred::RenderLightComplexity()
 {
+    if(mpGBuffer[0][eGBufferComponents_Normals] == NULL)
+    {
+        return;
+    }
     START_RENDER_PASS(LightComplexity);
 
     /////////////////
@@ -4126,6 +4153,10 @@ void cRendererDeferred::RenderLightComplexity()
 
 void cRendererDeferred::RenderOverdraw()
 {
+    if(mpGBuffer[0][eGBufferComponents_Normals] == NULL)
+    {
+        return;
+    }
     START_RENDER_PASS(Overdraw);
 
     /////////////////
@@ -4738,6 +4769,265 @@ void cRendererDeferred::AddLightProgramDefaultVars(cParserVarContainer &aVars)
     {
         aVars.Add("RenderTargets_3", "");
     }
+}
+
+//-----------------------------------------------------------------------
+
+//Lite light shader never reads normals, so the normals target is dropped.
+//Two layouts, both checked on start-up by writing and reading back depth (some
+//drivers do not write a moved target): compact (depth on attachment 1) and
+//sparse (depth stays on attachment 2, nothing on 1). If both fail, 3 targets are kept.
+//Texture indices are unchanged, so GetBufferTexture(2) is still depth.
+bool cRendererDeferred::SetupLiteGBuffer()
+{
+    //An older G-buffer shader (from before the lite layout) writes normals where depth is expected.
+    if(GBufferShaderSupportsLite() == false)
+    {
+        Warning("Lite G-Buffer: 'deferred_gbuffer_solid_frag.glsl' has no GBufferLite support (old shader file?), keeping 3 render targets\n");
+        return true;
+    }
+
+    //The existing frame buffers are changed in place (not recreated), so the
+    //driver sees the same objects, created in the same order, as with 3 targets.
+    const char *vLayoutNames[2] = {"compact", "sparse"};
+    for(int lLayout = 0; lLayout < 2; ++lLayout)
+    {
+        bool bSparse = lLayout == 1;
+        int lDepthSlot = bSparse ? 2 : 1;
+
+        bool bOk = true;
+        for(int type = 0; type < 2; ++type)
+        {
+            iFrameBuffer *pBuffer = mpGBuffer[type][eGBufferComponents_Full];
+            pBuffer->SetTexture2D(1, NULL);
+            pBuffer->SetTexture2D(2, NULL);
+            pBuffer->SetTexture2D(lDepthSlot, mpGBufferTexture[type][2]);
+            if(pBuffer->CompileAndValidate() == false)
+            {
+                bOk = false;
+            }
+        }
+
+        tString sReason = bOk ? "" : "frame buffer is not complete";
+        if(bOk)
+        {
+            bOk = TestLiteGBufferLayout(mpGBuffer[0][eGBufferComponents_Full], bSparse, sReason);
+        }
+
+        if(bOk == false)
+        {
+            Log(" Lite G-Buffer %s layout: FAILED - %s\n", vLayoutNames[lLayout], sReason.c_str());
+            continue;
+        }
+
+        for(int type = 0; type < 2; ++type)
+        {
+            mpGraphics->DestroyFrameBuffer(mpGBuffer[type][eGBufferComponents_Normals]);
+            mpGBuffer[type][eGBufferComponents_Normals] = NULL;
+            mpGraphics->DestroyTexture(mpGBufferTexture[type][1]);
+            mpGBufferTexture[type][1] = NULL;
+        }
+
+        mbLiteGBufferActive = true;
+        mbLiteGBufferSparse = bSparse;
+        Log(" Lite G-Buffer: color and depth only (2 render targets, %s layout)\n", vLayoutNames[lLayout]);
+        return true;
+    }
+
+    //Back to the 3 target layout
+    for(int type = 0; type < 2; ++type)
+    {
+        iFrameBuffer *pBuffer = mpGBuffer[type][eGBufferComponents_Full];
+        pBuffer->SetTexture2D(1, NULL);
+        pBuffer->SetTexture2D(2, NULL);
+        pBuffer->SetTexture2D(1, mpGBufferTexture[type][1]);
+        pBuffer->SetTexture2D(2, mpGBufferTexture[type][2]);
+        if(pBuffer->CompileAndValidate() == false)
+        {
+            Error("Could not restore G-Buffer frame buffer type: %d!\n", type);
+            return false;
+        }
+    }
+    Warning("Lite G-Buffer: no layout works on this driver, keeping 3 render targets\n");
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
+bool cRendererDeferred::GBufferShaderSupportsLite()
+{
+    const tWString& sPath = mpResources->GetFileSearcher()->GetFilePath("deferred_gbuffer_solid_frag.glsl");
+    if(sPath == _W(""))
+    {
+        return false;
+    }
+    FILE *pFile = cPlatform::OpenFile(sPath, _W("rb"));
+    if(pFile == NULL)
+    {
+        return false;
+    }
+    tString sData;
+    char vBuffer[4096];
+    size_t lRead;
+    while((lRead = fread(vBuffer, 1, sizeof(vBuffer), pFile)) > 0)
+    {
+        sData.append(vBuffer, lRead);
+    }
+    fclose(pFile);
+
+    Log(" Lite G-Buffer: using G-buffer shader '%s'\n", cString::To8Char(sPath).c_str());
+    return sData.find("GBufferLiteSparse") != tString::npos;
+}
+
+//-----------------------------------------------------------------------
+
+bool cRendererDeferred::TestLiteGBufferLayout(iFrameBuffer *apBuffer, bool abSparse, tString &asReason)
+{
+    const int lTestWidth = 64;
+
+    cProgramComboFeature vFeatures[] = { cProgramComboFeature("DepthTarget_2", kPC_FragmentBit) };
+    cProgramComboManager *pComboManager = hplNew(cProgramComboManager, ("GBufferLiteTest", mpGraphics, mpResources, 1));
+    {
+        cParserVarContainer defaultVars;
+        pComboManager->SetupGenerateProgramData(0, "GBufferLiteTest", "_test_deferred_light_vtx.glsl", "_test_gbuffer_lite_frag.glsl",
+                                                vFeatures, 1, defaultVars);
+    }
+    iGpuProgram *pProgram = pComboManager->GenerateProgram(0, abSparse ? eFlagBit_0 : 0);
+
+    bool bPassed = true;
+    if(pProgram == NULL)
+    {
+        asReason = "test program does not compile/link";
+        bPassed = false;
+    }
+
+    iFrameBuffer *pDepthRead = mpGBuffer[0][eGBufferComponents_LinearDepth];
+    iFrameBuffer *pColorRead = mpGBuffer[0][eGBufferComponents_Color];
+
+    if(bPassed)
+    {
+        mpLowLevelGraphics->SetDepthTestActive(false);
+        mpLowLevelGraphics->SetDepthWriteActive(false);
+        mpLowLevelGraphics->SetCullActive(false);
+        mpLowLevelGraphics->SetBlendActive(false);
+        mpLowLevelGraphics->SetAlphaTestActive(false);
+        mpLowLevelGraphics->SetStencilActive(false);
+        mpLowLevelGraphics->SetScissorActive(false);
+        mpLowLevelGraphics->SetColorWriteActive(true, true, true, true);
+        for(int i = 0; i < 8; ++i)
+        {
+            mpLowLevelGraphics->SetTexture(i, NULL);
+        }
+
+        //Anything not written stays magenta and fails
+        mpLowLevelGraphics->SetClearColor(cColor(1, 0, 1, 1));
+        mpLowLevelGraphics->SetCurrentFrameBuffer(pDepthRead);
+        mpLowLevelGraphics->ClearFrameBuffer(eClearFrameBufferFlag_Color);
+        mpLowLevelGraphics->SetCurrentFrameBuffer(pColorRead);
+        mpLowLevelGraphics->ClearFrameBuffer(eClearFrameBufferFlag_Color);
+
+        tVertexVec vQuad;
+        vQuad.push_back(cVertex(cVector3f(-1, -1, 0), 0, cColor(1, 1)));
+        vQuad.push_back(cVertex(cVector3f( 1, -1, 0), 0, cColor(1, 1)));
+        vQuad.push_back(cVertex(cVector3f( 1,  1, 0), 0, cColor(1, 1)));
+        vQuad.push_back(cVertex(cVector3f(-1,  1, 0), 0, cColor(1, 1)));
+
+        //Like a frame: depth only pass, then the G-buffer pass with an equal depth test
+        mpLowLevelGraphics->SetCurrentFrameBuffer(apBuffer);
+        mpLowLevelGraphics->SetClearDepth(1.0f);
+        mpLowLevelGraphics->SetDepthWriteActive(true);
+        mpLowLevelGraphics->ClearFrameBuffer(eClearFrameBufferFlag_Depth);
+        pProgram->Bind();
+
+        mpLowLevelGraphics->SetDepthTestActive(true);
+        mpLowLevelGraphics->SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
+        mpLowLevelGraphics->SetColorWriteActive(false, false, false, false);
+        mpLowLevelGraphics->DrawQuad(vQuad);
+
+        mpLowLevelGraphics->SetDepthWriteActive(false);
+        mpLowLevelGraphics->SetDepthTestFunc(eDepthTestFunc_Equal);
+        mpLowLevelGraphics->SetColorWriteActive(true, true, true, true);
+        mpLowLevelGraphics->DrawQuad(vQuad);
+
+        pProgram->UnBind();
+        mpLowLevelGraphics->SetDepthTestActive(false);
+        mpLowLevelGraphics->SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
+
+        ////////////////////
+        //Depth: one row, the value only depends on x
+        mpLowLevelGraphics->SetCurrentFrameBuffer(pDepthRead);
+        cBitmap *pBitmap = mpLowLevelGraphics->CopyFrameBufferToBitmap(0, cVector2l(lTestWidth, 1));
+        if(pBitmap == NULL || pBitmap->GetData(0, 0) == NULL || pBitmap->GetData(0, 0)->mlSize < lTestWidth * 4)
+        {
+            asReason = "could not read back depth";
+            bPassed = false;
+        }
+        else
+        {
+            unsigned char *pData = pBitmap->GetData(0, 0)->mpData;
+            for(int x = 0; x < lTestWidth; ++x)
+            {
+                float fExpected = ((float)x + 0.5f) * 0.0137f;
+                fExpected -= floorf(fExpected);
+                float fGot = (float)pData[x * 4 + 0] / 255.0f + (float)pData[x * 4 + 1] / (255.0f * 255.0f);
+                if(fabsf(fGot - fExpected) > 0.0015f)
+                {
+                    asReason = "depth is not written (pixel " + cString::ToString(x) + ": " + cString::ToString(fGot) +
+                               " instead of " + cString::ToString(fExpected) + ")";
+                    bPassed = false;
+                    break;
+                }
+            }
+        }
+        if(pBitmap)
+        {
+            hplDelete(pBitmap);
+        }
+
+        ////////////////////
+        //Colour
+        if(bPassed)
+        {
+            mpLowLevelGraphics->SetCurrentFrameBuffer(pColorRead);
+            pBitmap = mpLowLevelGraphics->CopyFrameBufferToBitmap(0, cVector2l(lTestWidth, 1));
+            if(pBitmap && pBitmap->GetData(0, 0) && pBitmap->GetData(0, 0)->mlSize >= lTestWidth * 4)
+            {
+                unsigned char *pData = pBitmap->GetData(0, 0)->mpData;
+                int vExpected[3] = {64, 128, 191};
+                for(int x = 0; x < lTestWidth && bPassed; ++x)
+                {
+                    for(int c = 0; c < 3; ++c)
+                    {
+                        int lDiff = (int)pData[x * 4 + c] - vExpected[c];
+                        if(lDiff > 2 || lDiff < -2)
+                        {
+                            asReason = "colour target is wrong (pixel " + cString::ToString(x) + ")";
+                            bPassed = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                asReason = "could not read back colour";
+                bPassed = false;
+            }
+            if(pBitmap)
+            {
+                hplDelete(pBitmap);
+            }
+        }
+
+        mpLowLevelGraphics->SetCurrentFrameBuffer(NULL);
+        mpLowLevelGraphics->SetClearColor(cColor(0, 0));
+        mpLowLevelGraphics->SetDepthTestActive(true);
+        mpLowLevelGraphics->SetDepthWriteActive(true);
+        mpLowLevelGraphics->SetCullActive(true);
+    }
+
+    hplDelete(pComboManager);
+    return bPassed;
 }
 
 //-----------------------------------------------------------------------

@@ -227,6 +227,10 @@ public:
      * (light colour * NdotL * SSAO)^0.625. Matches the earlier pow based light shader closely at a
      * fraction of its cost. The light colour part is done on the CPU (once per light).
      */
+    static void SetLiteGBufferAllowed(bool abX)
+    {
+        mbLiteGBufferAllowed = abX;
+    }
     static void SetLightColorGrade(bool abX)
     {
         mbLightColorGrade = abX;
@@ -241,6 +245,14 @@ public:
     static bool GetLiteLightShaderActive()
     {
         return mbLiteLightShaderActive;
+    }
+    static bool GetLiteGBufferSparse()
+    {
+        return mbLiteGBufferSparse;
+    }
+    static bool GetLiteGBufferActive()
+    {
+        return mbLiteGBufferActive;
     }
 
     static void SetLightSpecularEnabled(bool abX)
@@ -466,6 +478,9 @@ private:
     //Light shader start-up self-test
     void AddLightProgramDefaultVars(cParserVarContainer &aVars);
     tString SelectLightFragShader();
+    bool SetupLiteGBuffer();
+    bool GBufferShaderSupportsLite();
+    bool TestLiteGBufferLayout(iFrameBuffer *apBuffer, bool abSparse, tString &asReason);
     bool RunLightShaderSelfTest(const tString& asFragShader, bool abTestNormals, bool abTestShadows,
                                 bool *apCompiled, bool *apBaseCombosPassed);
 
@@ -571,6 +586,9 @@ private:
     static bool mbLightSpecularEnabled;
     static bool mbLightColorGrade;
     static bool mbLiteLightShaderActive;
+    static bool mbLiteGBufferActive;
+    static bool mbLiteGBufferSparse;
+    static bool mbLiteGBufferAllowed;
 
     static bool mbSSAOLoaded;
     static int mlSSAONumOfSamples;

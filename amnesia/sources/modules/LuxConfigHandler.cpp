@@ -103,6 +103,7 @@ void cLuxConfigHandler::LoadMainConfig()
     mbForceGLSL110 = gpBase->mpMainConfig->GetBool("Graphics", "ForceGLSL110", false);
     msGpuSkinning = cString::ToLowerCase(gpBase->mpMainConfig->GetString("Graphics", "GPUSkinning", "auto"));
     mbOcclusionCullingLatency = gpBase->mpMainConfig->GetBool("Graphics", "OcclusionCullingLatency", false);
+    mbLiteGBuffer = gpBase->mpMainConfig->GetBool("Graphics", "LiteGBuffer", false);
     mbForceNoStencil = gpBase->mpMainConfig->GetBool("Graphics", "ForceNoStencil", false);
     mbForceRectAs2D = gpBase->mpMainConfig->GetBool("Graphics", "ForceRectAs2D", false);
     mbLogGLErrors = gpBase->mpMainConfig->GetBool("Graphics", "LogGLErrors", false);
@@ -205,6 +206,7 @@ void cLuxConfigHandler::SaveMainConfig()
     gpBase->mpMainConfig->SetBool("Graphics", "ForceGLSL110", mbForceGLSL110);
     gpBase->mpMainConfig->SetString("Graphics", "GPUSkinning", msGpuSkinning);
     gpBase->mpMainConfig->SetBool("Graphics", "OcclusionCullingLatency", mbOcclusionCullingLatency);
+    gpBase->mpMainConfig->SetBool("Graphics", "LiteGBuffer", mbLiteGBuffer);
     gpBase->mpMainConfig->SetBool("Graphics", "ForceNoStencil", mbForceNoStencil);
     gpBase->mpMainConfig->SetBool("Graphics", "ForceRectAs2D", mbForceRectAs2D);
     gpBase->mpMainConfig->SetBool("Graphics", "LogGLErrors", mbLogGLErrors);

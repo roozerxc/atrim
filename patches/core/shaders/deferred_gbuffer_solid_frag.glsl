@@ -182,7 +182,8 @@ void main()
     @endif
 
     //If 32 bit we need to pack, else no packing is needed.
-    @ifdef Deferred_32bit
+    @ifdef GBufferLite
+    @elseif Deferred_32bit
         gl_FragData[1].xyz = vScreenNormal*0.5 + 0.5;
     @elseif Deferred_64bit
         gl_FragData[1].xyz = vScreenNormal;
@@ -211,7 +212,11 @@ void main()
 
     //////////////////////////////////
     //Depth
-    @ifdef Deferred_32bit
+    @ifdef GBufferLiteSparse
+        gl_FragData[2] = vec4(PackFloatInVec3(gfLinearDepth), 0.0);
+    @elseif GBufferLite
+        gl_FragData[1] = vec4(PackFloatInVec3(gfLinearDepth), 0.0);
+    @elseif Deferred_32bit
         gl_FragData[2].xyz = PackFloatInVec3(gfLinearDepth);
     @elseif Deferred_64bit
         gl_FragData[2].xyz = gvVertexPos;
@@ -219,7 +224,8 @@ void main()
 
     //////////////////////////////////
     //Specular
-    @ifdef RenderTargets_4
+    @ifdef GBufferLite
+    @elseif RenderTargets_4
         @ifdef UseSpecular
             gl_FragData[3].xy = texture2D(aSpecularMap, vTexCoord).xy;
         @else

@@ -1363,6 +1363,7 @@ bool cLuxBase::InitEngine()
     cRendererDeferred::SetLiteLightFragShader(mpMainConfig->GetString("Graphics", "LiteLightShaderFile", "deferred_light_frag_lite.glsl"));
 
     cRendererDeferred::SetLightSpecularEnabled(mpMainConfig->GetBool("Graphics", "LightSpecular", true));
+    cRendererDeferred::SetDebugRenderFrameBuffers(mpMainConfig->GetBool("Graphics", "DebugRenderFrameBuffers", false));
     cRendererDeferred::SetLightColorGrade(mpConfigHandler->mlLightColorGradeMode == 2);
     cLuxProp_MoveObject::mbLogMoveObjects = mpConfigHandler->mbLogMoveObjects;
     iRenderer::SetSmallObjectCullPixels(mpMainConfig->GetFloat("Graphics", "SmallObjectCullPixels", 0.0f));
@@ -1375,6 +1376,7 @@ bool cLuxBase::InitEngine()
     cSubMesh::SetGpuSkinningEnabled(mpConfigHandler->msGpuSkinning != "false");
     cSubMesh::SetGpuSkinningAuto(mpConfigHandler->msGpuSkinning != "true" && mpConfigHandler->msGpuSkinning != "false");
     iRenderer::SetOcclusionCullingLatency(mpConfigHandler->mbOcclusionCullingLatency);
+    cRendererDeferred::SetLiteGBufferAllowed(mpConfigHandler->mbLiteGBuffer);
     iLowLevelGraphics::SetForceNoStencil(mpConfigHandler->mbForceNoStencil);
     iLowLevelGraphics::SetForceRectAs2D(mpConfigHandler->mbForceRectAs2D);
     iLowLevelGraphics::SetLogGLErrors(mpConfigHandler->mbLogGLErrors);

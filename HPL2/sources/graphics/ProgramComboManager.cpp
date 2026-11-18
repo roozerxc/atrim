@@ -164,7 +164,7 @@ iGpuProgram *cProgramComboManager::GenerateProgram(int alMainMode, int alFlags)
         }
 
         //Compiles outside warming are what shader warming is meant to remove, so tell about them.
-        if(gbWarming == false && msName != "" && msName != "LightSelfTest")
+        if(gbWarming == false && msName != "" && msName != "LightSelfTest" && msName != "GBufferLiteTest")
         {
             Log("Shader compiled while playing: %s %d %d (%.1f ms)\n", msName.c_str(), alMainMode, alFlags,
                 (cPlatform::GetApplicationTimeX() - fCompileStart) * 1000.0);
@@ -174,7 +174,7 @@ iGpuProgram *cProgramComboManager::GenerateProgram(int alMainMode, int alFlags)
 
         ////////////////////////////////////
         // Record for shader warming (temporary managers like the light self-test have no use for it)
-        if(pProgram && msName != "" && msName != "LightSelfTest")
+        if(pProgram && msName != "" && msName != "LightSelfTest" && msName != "GBufferLiteTest")
         {
             if(gsetWarmEntries.insert(WarmEntryName(msName, alMainMode, alFlags, WarmSettingsHash(mvSettings[alMainMode].mvDefaultVars))).second)
             {

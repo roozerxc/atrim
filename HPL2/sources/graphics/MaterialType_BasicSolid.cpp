@@ -320,6 +320,14 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
     {
         defaultVars.Add("RenderTargets_4");
     }
+    if(cRendererDeferred::GetLiteGBufferActive())
+    {
+        defaultVars.Add("GBufferLite");
+        if(cRendererDeferred::GetLiteGBufferSparse())
+        {
+            defaultVars.Add("GBufferLiteSparse");
+        }
+    }
 
     //Set up relief mapping method
     if(iRenderer::GetParallaxQuality() == eParallaxQuality_Relief &&
