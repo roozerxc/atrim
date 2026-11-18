@@ -63,7 +63,7 @@ bool cRendererDeferred::mbLightColorGrade = false;
 bool cRendererDeferred::mbLiteLightShaderActive = false;
 bool cRendererDeferred::mbLiteGBufferActive = false;
 bool cRendererDeferred::mbLiteGBufferSparse = false;
-bool cRendererDeferred::mbLiteGBufferAllowed = false;
+bool cRendererDeferred::mbLiteGBufferAllowed = true;
 bool cRendererDeferred::mbMergeInsideLights = true;
 
 bool cRendererDeferred::mbSSAOLoaded = false;

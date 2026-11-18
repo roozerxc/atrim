@@ -103,7 +103,7 @@ void cLuxConfigHandler::LoadMainConfig()
     mbForceGLSL110 = gpBase->mpMainConfig->GetBool("Graphics", "ForceGLSL110", false);
     msGpuSkinning = cString::ToLowerCase(gpBase->mpMainConfig->GetString("Graphics", "GPUSkinning", "auto"));
     mbOcclusionCullingLatency = gpBase->mpMainConfig->GetBool("Graphics", "OcclusionCullingLatency", false);
-    mbLiteGBuffer = gpBase->mpMainConfig->GetBool("Graphics", "LiteGBuffer", false);
+    mbLiteGBuffer = gpBase->mpMainConfig->GetBool("Graphics", "LiteGBuffer", true);
     mbMergeInsideLights = gpBase->mpMainConfig->GetBool("Graphics", "MergeInsideLights", true);
     mbForceNoStencil = gpBase->mpMainConfig->GetBool("Graphics", "ForceNoStencil", false);
     mbForceRectAs2D = gpBase->mpMainConfig->GetBool("Graphics", "ForceRectAs2D", false);
