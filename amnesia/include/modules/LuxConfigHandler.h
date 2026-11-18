@@ -61,7 +61,7 @@ public:
 
     bool mbForceShaderModel3And4Off;
     bool mbForceGLSL110;
-    bool mbGpuSkinning;
+    tString msGpuSkinning; //"auto", "true" or "false"
     bool mbForceNoStencil;
     bool mbForceRectAs2D;
     bool mbLogGLErrors;

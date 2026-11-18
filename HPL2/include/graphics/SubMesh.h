@@ -158,6 +158,12 @@ public:
     {
         mbGpuSkinningEnabled = abX;
     }
+    //Auto: only on cards with Shader Model 3 or better. Shader Model 2 cards have so little
+    //vertex shader power that skinning there costs more GPU time than it saves on the CPU.
+    static void SetGpuSkinningAuto(bool abX)
+    {
+        mbGpuSkinningAuto = abX;
+    }
     static bool GetGpuSkinningEnabled()
     {
         return mbGpuSkinningEnabled && mlMaxGpuSkinBones > 0;
@@ -190,6 +196,7 @@ private:
     void CompileBonePairs();
 
     static bool mbGpuSkinningEnabled;
+    static bool mbGpuSkinningAuto;
     static int mlMaxGpuSkinBones;
     static bool mbGpuSkinningLimitsSet;
 

@@ -1372,7 +1372,8 @@ bool cLuxBase::InitEngine()
 
     iLowLevelGraphics::SetForceShaderModel3And4Off(mpConfigHandler->mbForceShaderModel3And4Off);
     iLowLevelGraphics::SetForceGLSL110(mpConfigHandler->mbForceGLSL110);
-    cSubMesh::SetGpuSkinningEnabled(mpConfigHandler->mbGpuSkinning);
+    cSubMesh::SetGpuSkinningEnabled(mpConfigHandler->msGpuSkinning != "false");
+    cSubMesh::SetGpuSkinningAuto(mpConfigHandler->msGpuSkinning != "true" && mpConfigHandler->msGpuSkinning != "false");
     iLowLevelGraphics::SetForceNoStencil(mpConfigHandler->mbForceNoStencil);
     iLowLevelGraphics::SetForceRectAs2D(mpConfigHandler->mbForceRectAs2D);
     iLowLevelGraphics::SetLogGLErrors(mpConfigHandler->mbLogGLErrors);

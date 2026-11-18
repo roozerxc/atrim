@@ -22,6 +22,7 @@ namespace hpl
 {
 
 bool cSubMesh::mbGpuSkinningEnabled = true;
+bool cSubMesh::mbGpuSkinningAuto = false;
 int cSubMesh::mlMaxGpuSkinBones = 0;
 bool cSubMesh::mbGpuSkinningLimitsSet = false;
 
@@ -417,7 +418,12 @@ void cSubMesh::SetupGpuSkinningLimits(iLowLevelGraphics *apLowLevelGraphics)
     }
     mlMaxGpuSkinBones = lBones;
 
-    if(mbGpuSkinningEnabled == false)
+    if(mbGpuSkinningEnabled && mbGpuSkinningAuto && apLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_3) == 0)
+    {
+        mbGpuSkinningEnabled = false;
+        Log("GPU skinning: off (auto: Shader Model 2 card, skinning on the CPU is faster here)\n");
+    }
+    else if(mbGpuSkinningEnabled == false)
     {
         Log("GPU skinning: off (config)\n");
     }
