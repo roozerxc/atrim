@@ -703,12 +703,11 @@ void cEngine::Run()
 
 void cEngine::SetLogicUpdatesPerSec(int alX)
 {
-    if(alX < 30)
+    //Jumping, grabbing and other physics are tuned for 60 updates a second (at 30 the
+    //player jumps twice as high and held objects shake), so other rates are not allowed.
+    if(alX != 60)
     {
-        alX = 30;
-    }
-    if(alX > 60)
-    {
+        Warning("LogicUpdatesPerSec %d is not supported, using 60\n", alX);
         alX = 60;
     }
     mlLogicUpdatesPerSec = alX;
