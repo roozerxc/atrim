@@ -70,6 +70,38 @@ extern "C" {
 
 #define IL_NO_WDP
 
+// atrim: HPL2 only loads bmp, dds, jpg, pcx, png, psd, sgi and tga
+// (see FileNameToDevilTypeW in HPL2/sources/impl/BitmapLoaderDevil.cpp).
+// Every other loader is reachable from ilLoadF's format switch, so the
+// linker can't strip it; disable them here to keep them out of the exe.
+// If you ever add a format to HPL2, remove its line below.
+#define IL_NO_CHEAD
+#define IL_NO_CUT
+#define IL_NO_DCX
+#define IL_NO_DICOM
+#define IL_NO_DPX
+#define IL_NO_FITS
+#define IL_NO_GIF
+#define IL_NO_HDR
+#define IL_NO_ICNS
+#define IL_NO_ICO
+#define IL_NO_IFF
+#define IL_NO_ILBM
+#define IL_NO_KTX
+#define IL_NO_MP3
+#define IL_NO_PCD
+#define IL_NO_PIC
+#define IL_NO_PIX
+#define IL_NO_PNM
+#define IL_NO_PSP
+#define IL_NO_PXR
+#define IL_NO_RAW
+#define IL_NO_SUN
+#define IL_NO_TEXTURE
+#define IL_NO_VTF
+#define IL_NO_WBMP
+#define IL_NO_XPM
+
 // Windows-specific
 #ifdef _WIN32
 	#ifdef _MSC_VER

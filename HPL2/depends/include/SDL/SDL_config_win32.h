@@ -121,20 +121,13 @@ typedef unsigned int uintptr_t;
 #define HAVE_STDDEF_H	1
 #endif
 
-/* Enable various audio drivers */
-#ifndef _WIN32_WCE
-#define SDL_AUDIO_DRIVER_DSOUND	1
-#endif
-#define SDL_AUDIO_DRIVER_WAVEOUT	1
-#define SDL_AUDIO_DRIVER_DISK	1
-#define SDL_AUDIO_DRIVER_DUMMY	1
+/* atrim: audio goes through OpenAL, never SDL, so SDL's audio drivers
+   (DirectSound, waveOut, disk, dummy) are disabled to keep them out of the exe. */
+#define SDL_AUDIO_DISABLED	1
 
-/* Enable various cdrom drivers */
-#ifdef _WIN32_WCE
-#define SDL_CDROM_DISABLED      1
-#else
-#define SDL_CDROM_WIN32		0
-#endif
+/* atrim: CD audio is unused. Note that the old "#define SDL_CDROM_WIN32 0"
+   did NOT disable it: cdrom/win32/SDL_syscdrom.c tests it with #ifdef. */
+#define SDL_CDROM_DISABLED	1
 
 /* Enable various input drivers */
 #ifdef _WIN32_WCE
