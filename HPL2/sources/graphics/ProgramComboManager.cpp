@@ -592,8 +592,8 @@ iGpuShader *cProgramComboManager::GetShaderForCombo(int alMainMode, int alBitFla
     // Create program, add to set and return it
     cProgramComboShader *pShaderData = hplNew(cProgramComboShader, ());
     iGpuShader* pShader = CreateShaderFromFeatures(    asShaderName, aShaderType, alBitFlags,
-                          &comboSettings.mvFeatures[0], (int)comboSettings.mvFeatures.size(),
-                          &comboSettings.mvDefaultVars[0], (int)comboSettings.mvDefaultVars.size());
+                          comboSettings.mvFeatures.empty() ? NULL : &comboSettings.mvFeatures[0], (int)comboSettings.mvFeatures.size(),
+                          comboSettings.mvDefaultVars.empty() ? NULL : &comboSettings.mvDefaultVars[0], (int)comboSettings.mvDefaultVars.size());
     pShaderData->mpShader = pShader;
     pShaderData->mlUserCount++;
     pShaderSet->insert(tProgramComboShaderMap::value_type(lValidBits, pShaderData));
