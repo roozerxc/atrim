@@ -397,7 +397,10 @@ void cEngine::Run()
     size_t iTotalFrames = 0; // Every frame i saw in the game!
     size_t iGameplayFrames = 0; // Only frames actually drawn during gameplay
 
-    unsigned int iFrameTimeHg[1000] = {0};
+    //Frame time histogram in 10 us steps up to 100 ms
+    const int kFrameHgBuckets = 10000;
+    std::vector<unsigned int> vFrameTimeHg(kFrameHgBuckets, 0);
+    std::vector<double> vLongFrames;
     double dTempTime = cPlatform::GetApplicationTimeX();
 
     //Log line that ends user init.
@@ -434,18 +437,15 @@ void cEngine::Run()
         {
             ++iGameplayFrames;
 
-            int iFrameMs = (int)(dRawFrameTime * 1000.0);
-
-            if(iFrameMs < 0)
+            int lBucket = (int)(dRawFrameTime * 100000.0);
+            if(lBucket < kFrameHgBuckets)
             {
-                iFrameMs = 0;
+                vFrameTimeHg[lBucket]++;
             }
-            if(iFrameMs > 999)
+            else
             {
-                iFrameMs = 999;
+                vLongFrames.push_back(dRawFrameTime);
             }
-
-            iFrameTimeHg[iFrameMs]++;
         }
         mbNonGameplayFrame = false;
 
@@ -648,7 +648,7 @@ void cEngine::Run()
 
     if(iGameplayFrames > 0)
     {
-        // Count both 1 and .1% low frame times of the whole session
+        // Count both 1 and .1% low frame times of the whole session, worst first
         size_t iWorstCount01  = std::max((size_t)1, (size_t)(iGameplayFrames * 0.01));
         double dWorstSum01 = 0.0;
 
@@ -657,30 +657,33 @@ void cEngine::Run()
 
         size_t iCountedFrames = 0;
 
-        // Iterate backwards from worst possible time...
-        for(int i = 999; i >= 0; --i)
+        std::sort(vLongFrames.begin(), vLongFrames.end());
+        for(int i = (int)vLongFrames.size() - 1; i >= 0 && iCountedFrames < iWorstCount01; --i)
         {
-            unsigned int iFramesInBucket = iFrameTimeHg[i];
+            dWorstSum01 += vLongFrames[i];
+            if(iCountedFrames < iWorstCount001)
+            {
+                dWorstSum001 += vLongFrames[i];
+            }
+            iCountedFrames++;
+        }
+
+        for(int i = kFrameHgBuckets - 1; i >= 0 && iCountedFrames < iWorstCount01; --i)
+        {
+            unsigned int iFramesInBucket = vFrameTimeHg[i];
+
+            //Middle of the 10 us bucket
+            double dSeconds = ((double)i + 0.5) / 100000.0;
 
             while(iFramesInBucket > 0 && iCountedFrames < iWorstCount01)
             {
-                // Convert the time back to seconds
-                double dSeconds = (double)i / 1000.0;
-
                 dWorstSum01 += dSeconds;
-
                 if(iCountedFrames < iWorstCount001)
                 {
                     dWorstSum001 += dSeconds;
                 }
-
                 iCountedFrames++;
                 iFramesInBucket--;
-            }
-
-            if(iCountedFrames >= iWorstCount01)
-            {
-                break;
             }
         }
 
