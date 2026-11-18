@@ -1377,6 +1377,7 @@ bool cLuxBase::InitEngine()
     cSubMesh::SetGpuSkinningAuto(mpConfigHandler->msGpuSkinning != "true" && mpConfigHandler->msGpuSkinning != "false");
     iRenderer::SetOcclusionCullingLatency(mpConfigHandler->mbOcclusionCullingLatency);
     cRendererDeferred::SetLiteGBufferAllowed(mpConfigHandler->mbLiteGBuffer);
+    cRendererDeferred::SetMergeInsideLights(mpConfigHandler->mbMergeInsideLights);
     iLowLevelGraphics::SetForceNoStencil(mpConfigHandler->mbForceNoStencil);
     iLowLevelGraphics::SetForceRectAs2D(mpConfigHandler->mbForceRectAs2D);
     iLowLevelGraphics::SetLogGLErrors(mpConfigHandler->mbLogGLErrors);

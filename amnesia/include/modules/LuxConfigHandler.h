@@ -64,6 +64,7 @@ public:
     tString msGpuSkinning; //"auto", "true" or "false"
     bool mbOcclusionCullingLatency;
     bool mbLiteGBuffer;
+    bool mbMergeInsideLights;
     bool mbForceNoStencil;
     bool mbForceRectAs2D;
     bool mbLogGLErrors;

@@ -64,6 +64,7 @@ bool cRendererDeferred::mbLiteLightShaderActive = false;
 bool cRendererDeferred::mbLiteGBufferActive = false;
 bool cRendererDeferred::mbLiteGBufferSparse = false;
 bool cRendererDeferred::mbLiteGBufferAllowed = false;
+bool cRendererDeferred::mbMergeInsideLights = true;
 
 bool cRendererDeferred::mbSSAOLoaded = false;
 int cRendererDeferred::mlSSAONumOfSamples = 8;
@@ -108,8 +109,9 @@ enum eDefferredProgramMode
 #define eFeature_Light_DivideInFrag        eFlagBit_5
 #define eFeature_Light_ShadowMap        eFlagBit_6
 #define eFeature_Light_DebugComplexity	eFlagBit_7
+#define eFeature_Light_SecondLight		eFlagBit_8
 
-#define kLightFeatureNum 8
+#define kLightFeatureNum 9
 
 cProgramComboFeature gvLightFeatureVec[] =
 {
@@ -121,6 +123,7 @@ cProgramComboFeature gvLightFeatureVec[] =
     cProgramComboFeature("DivideInFrag", kPC_FragmentBit | kPC_VertexBit),
     cProgramComboFeature("UseShadowMap", kPC_FragmentBit, eFeature_Light_SpotLight),
     cProgramComboFeature("DebugComplexity", kPC_FragmentBit),
+    cProgramComboFeature("UseSecondLight", kPC_FragmentBit),
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -168,6 +171,9 @@ cProgramComboFeature gvFogAreaFeatureVec[] =
 #define kVar_afFalloff							23
 #define kVar_afComplexity						24
 #define kVar_a_mtxInvBoxViewSpace                25
+#define kVar_avLightPos2                        26
+#define kVar_avLightColor2                      27
+#define kVar_afInvLightRadius2                  28
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -667,6 +673,9 @@ bool cRendererDeferred::LoadData()
             mpProgramManager->AddGenerateProgramVariableId("avShadowMapOffsetMul", kVar_avShadowMapOffsetMul, eDefferredProgramMode_Lights);
             mpProgramManager->AddGenerateProgramVariableId("afFalloff",	kVar_afFalloff, eDefferredProgramMode_Lights);
             mpProgramManager->AddGenerateProgramVariableId("afComplexity",	kVar_afComplexity, eDefferredProgramMode_Lights);
+            mpProgramManager->AddGenerateProgramVariableId("avLightPos2", kVar_avLightPos2, eDefferredProgramMode_Lights);
+            mpProgramManager->AddGenerateProgramVariableId("avLightColor2", kVar_avLightColor2, eDefferredProgramMode_Lights);
+            mpProgramManager->AddGenerateProgramVariableId("afInvLightRadius2", kVar_afInvLightRadius2, eDefferredProgramMode_Lights);
         }
     }
 
@@ -1477,6 +1486,24 @@ static inline void SetupLightMatrix(cMatrixf& a_mtxDestRender, cMatrixf& a_mtxDe
 
 //-----------------------------------------------------------------------
 
+cColor cRendererDeferred::GetLightRenderColor(iLight *apLight)
+{
+    cColor col = apLight->GetDiffuseColor();
+    if(mbLightColorGrade)
+    {
+        //colour^0.625 (sign kept, Amnesia uses negative lights to darken)
+        float *pCh[3] = {&col.r, &col.g, &col.b};
+        for(int i = 0; i < 3; ++i)
+        {
+            float fX = *pCh[i];
+            *pCh[i] = fX < 0 ? -powf(-fX, 0.625f) : powf(fX, 0.625f);
+        }
+    }
+    return col;
+}
+
+//-----------------------------------------------------------------------
+
 void cRendererDeferred::SetupLightProgramVariables(    iGpuProgram *apProgram, cDeferredLight* apLightData)
 {
     iLight *pLight = apLightData->mpLight;
@@ -1489,22 +1516,7 @@ void cRendererDeferred::SetupLightProgramVariables(    iGpuProgram *apProgram, c
     ///////////////////////
     // General variables
     apProgram->SetVec3f(kVar_avLightPos, apLightData->m_mtxViewSpaceRender.GetTranslation());
-    if(mbLightColorGrade)
-    {
-        //colour^0.625 (sign kept, Amnesia uses negative lights to darken)
-        cColor col = pLight->GetDiffuseColor();
-        float *pCh[3] = {&col.r, &col.g, &col.b};
-        for(int i = 0; i < 3; ++i)
-        {
-            float fX = *pCh[i];
-            *pCh[i] = fX < 0 ? -powf(-fX, 0.625f) : powf(fX, 0.625f);
-        }
-        apProgram->SetColor4f(kVar_avLightColor, col);
-    }
-    else
-    {
-        apProgram->SetColor4f(kVar_avLightColor, pLight->GetDiffuseColor());
-    }
+    apProgram->SetColor4f(kVar_avLightColor, GetLightRenderColor(pLight));
     apProgram->SetFloat(kVar_afFalloff, pLight->GetFalloff());
     apProgram->SetFloat(kVar_afInvLightRadius, 1.0f / pLight->GetRadius());
 
@@ -2268,6 +2280,11 @@ void cRendererDeferred::InitLightRendering()
     //Log("Large lights: %d\n",mvSortedLights[eDeferredLightList_StencilFront_RenderBack].size());
     //Log("Default lights: %d\n",mvSortedLights[eDeferredLightList_RenderBack].size());
 
+    if(mbLiteLightShader && mbMergeInsideLights && mbDebugRenderLightComplexity == false)
+    {
+        MergeInsideLights();
+    }
+
     //////////////////////////////
     //Sort lists
     for(int i = 0; i < eDeferredLightList_LastEnum; ++i)
@@ -2696,6 +2713,88 @@ void cRendererDeferred::RenderLights_StencilFront_RenderBack()
 
 //-----------------------------------------------------------------------
 
+//Two point lights with the camera inside both are each a full-screen pass.
+//If the smaller sphere lies inside the bigger one, the lite shader does both in one pass.
+//Only for non-negative colours, separate passes clamp each light before adding.
+static bool CanMergeInsideLight(cDeferredLight *apData)
+{
+    iLight *pLight = apData->mpLight;
+    if(pLight->GetLightType() != eLightType_Point || apData->mbInsideNearPlane == false ||
+            apData->mbRenderFront || apData->mbCastShadows)
+    {
+        return false;
+    }
+    const cColor& col = pLight->GetDiffuseColor();
+    return col.r >= 0 && col.g >= 0 && col.b >= 0;
+}
+
+void cRendererDeferred::MergeInsideLights()
+{
+    std::vector<cDeferredLight *>& vLights = mvSortedLights[eDeferredLightList_RenderBack];
+    if(vLights.size() < 2)
+    {
+        return;
+    }
+
+    bool bMerged = false;
+    for(size_t i = 0; i < vLights.size(); ++i)
+    {
+        cDeferredLight *pBig = vLights[i];
+        if(pBig->mbMergedAway || pBig->mpSecondLight || CanMergeInsideLight(pBig) == false)
+        {
+            continue;
+        }
+        float fBigRadius = pBig->mpLight->GetRadius();
+        cVector3f vBigPos = pBig->mpLight->GetWorldPosition();
+
+        cDeferredLight *pBest = NULL;
+        float fBestRadius = 0;
+        for(size_t j = 0; j < vLights.size(); ++j)
+        {
+            cDeferredLight *pSmall = vLights[j];
+            if(j == i || pSmall->mbMergedAway || pSmall->mpSecondLight || CanMergeInsideLight(pSmall) == false)
+            {
+                continue;
+            }
+            float fRadius = pSmall->mpLight->GetRadius();
+            if(fRadius > fBigRadius || fRadius <= fBestRadius)
+            {
+                continue;
+            }
+            float fDist = cMath::Vector3Dist(vBigPos, pSmall->mpLight->GetWorldPosition());
+            if(fDist + fRadius <= fBigRadius)
+            {
+                pBest = pSmall;
+                fBestRadius = fRadius;
+            }
+        }
+
+        if(pBest)
+        {
+            pBig->mpSecondLight = pBest;
+            pBest->mbMergedAway = true;
+            bMerged = true;
+        }
+    }
+
+    if(bMerged == false)
+    {
+        return;
+    }
+
+    size_t lCount = 0;
+    for(size_t i = 0; i < vLights.size(); ++i)
+    {
+        if(vLights[i]->mbMergedAway == false)
+        {
+            vLights[lCount++] = vLights[i];
+        }
+    }
+    vLights.resize(lCount);
+}
+
+//------------------------------------------------------------------------------
+
 void cRendererDeferred::RenderLights_RenderBack()
 {
     if(mvSortedLights[eDeferredLightList_RenderBack].empty())
@@ -2760,10 +2859,24 @@ void cRendererDeferred::RenderLights_RenderBack()
         {
             lExtraFlags |= eFeature_Light_DivideInFrag;
         }
+        cDeferredLight *pSecondData = pLightData->mpSecondLight;
+        if(pSecondData)
+        {
+            lExtraFlags |= eFeature_Light_SecondLight;
+        }
         iGpuProgram *pProgram = SetupProgramAndTextures(pLightData, lExtraFlags);
 
         //Set up Light specific variables
         SetupLightProgramVariables(pProgram, pLightData);
+
+        if(pSecondData && pProgram)
+        {
+            iLight *pSecond = pSecondData->mpLight;
+            pProgram->SetVec3f(kVar_avLightPos2, pSecondData->m_mtxViewSpaceRender.GetTranslation());
+            pProgram->SetColor4f(kVar_avLightColor2, GetLightRenderColor(pSecond));
+            pProgram->SetFloat(kVar_afInvLightRadius2, 1.0f / pSecond->GetRadius());
+            SetTexture(6, pSecond->GetFalloffMap());
+        }
 
         //Draw the light
         if(pLightData->mbRenderFront)
@@ -5160,6 +5273,7 @@ bool cRendererDeferred::RunLightShaderSelfTest(const tString& asFragShader, bool
         {"point+specular",            eFeature_Light_Specular,                                                             true,  false, false, false},
         {"spot",                      eFeature_Light_SpotLight,                                                            false, true,  false, false},
         {"spot+specular",             eFeature_Light_SpotLight | eFeature_Light_Specular,                                  true,  true,  false, false},
+        {"point+second light",        eFeature_Light_SecondLight,                                                          false, false, false, false},
         {"spot+shadow",               eFeature_Light_SpotLight | eFeature_Light_ShadowMap,                                 false, true,  true,  false},
         {"spot+shadow (occluded)",    eFeature_Light_SpotLight | eFeature_Light_ShadowMap,                                 false, true,  true,  true },
         {"spot+specular+shadow",      eFeature_Light_SpotLight | eFeature_Light_Specular | eFeature_Light_ShadowMap,       true,  true,  true,  false},
@@ -5227,6 +5341,9 @@ bool cRendererDeferred::RunLightShaderSelfTest(const tString& asFragShader, bool
         pComboManager->AddGenerateProgramVariableId("a_mtxSpotViewProj", kVar_a_mtxSpotViewProj, 0);
         pComboManager->AddGenerateProgramVariableId("avShadowMapOffsetMul", kVar_avShadowMapOffsetMul, 0);
         pComboManager->AddGenerateProgramVariableId("afFalloff",	kVar_afFalloff, 0);
+        pComboManager->AddGenerateProgramVariableId("avLightPos2", kVar_avLightPos2, 0);
+        pComboManager->AddGenerateProgramVariableId("avLightColor2", kVar_avLightColor2, 0);
+        pComboManager->AddGenerateProgramVariableId("afInvLightRadius2", kVar_afInvLightRadius2, 0);
     }
 
     ///////////////////////////
@@ -5290,6 +5407,12 @@ bool cRendererDeferred::RunLightShaderSelfTest(const tString& asFragShader, bool
         {
             continue;
         }
+        //Only the lite shader merges lights (the full shader is tested with normals)
+        bool bSecondLight = (test.mlFlags & eFeature_Light_SecondLight) != 0;
+        if(bSecondLight && abTestNormals)
+        {
+            continue;
+        }
 
         tString sReason = "";
         bool bPassed = true;
@@ -5346,6 +5469,19 @@ bool cRendererDeferred::RunLightShaderSelfTest(const tString& asFragShader, bool
                 pProgram->SetFloat(kVar_afInvLightRadius, 1.0f / kLT_LightRadius);
                 pProgram->SetFloat(kVar_afNegFarPlane, -kLT_FarPlane);
                 pProgram->SetFloat(kVar_afFalloff, 1.0f);
+                //Second light: the first one is black and the second one is the normal test light,
+                //so the result must match the plain point light.
+                if(bSecondLight)
+                {
+                    if(bPerturb == false)
+                    {
+                        pProgram->SetVec4f(kVar_avLightColor, 0.0f, 0.0f, 0.0f, 0.0f);
+                    }
+                    pProgram->SetVec3f(kVar_avLightPos2, vLightPos[0], vLightPos[1], vLightPos[2]);
+                    pProgram->SetVec4f(kVar_avLightColor2, kLT_LightColor, kLT_LightColor, kLT_LightColor, 1.0f);
+                    pProgram->SetFloat(kVar_afInvLightRadius2, 1.0f / kLT_LightRadius);
+                    mpLowLevelGraphics->SetTexture(6, pFalloffTex);
+                }
                 if(test.mbSpot)
                 {
                     pProgram->SetFloat(kVar_afOneMinusCosHalfSpotFOV, kLT_OneMinusCosHalfFOV);
@@ -5419,6 +5555,13 @@ bool cRendererDeferred::RunLightShaderSelfTest(const tString& asFragShader, bool
         else
         {
             Warning("  Light self-test '%s' [%s]: FAILED - %s\n", asFragShader.c_str(), test.msName, sReason.c_str());
+            if(bSecondLight)
+            {
+                //Not a reason to drop the shader, only the light merging
+                Warning("  Merging nested inside lights is off (second light failed the self-test)\n");
+                mbMergeInsideLights = false;
+                continue;
+            }
             bAllPassed = false;
             if(test.mbShadow == false)
             {

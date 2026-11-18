@@ -18,6 +18,12 @@ uniform vec4 avLightColor;
     uniform float afNegFarPlane;
 @endif
 
+@ifdef UseSecondLight
+    uniform vec3 avLightPos2;
+    uniform float afInvLightRadius2;
+    uniform vec4 avLightColor2;
+@endif
+
 @ifdef LightType_Spot
     uniform float afOneMinusCosHalfSpotFOV;
     uniform vec3 avLightForward;
@@ -33,6 +39,11 @@ uniform sampler2DRect aDepthMap;
 
 uniform sampler1D aAttenuationMap;
 @define sampler_aAttenuationMap 4
+
+@ifdef UseSecondLight
+    uniform sampler1D aAttenuationMap2;
+    @define sampler_aAttenuationMap2 6
+@endif
 
 @ifdef LightType_Spot
     uniform sampler1D aSpotFalloffMap;
@@ -71,7 +82,13 @@ void main()
         fAttenuation *= texture1D(aSpotFalloffMap, clamp(fOneMinusCos / afOneMinusCosHalfSpotFOV, 0.0, 1.0)).x;
     @endif
 
-    gl_FragColor.xyz = vColorVal.xyz * avLightColor.xyz * fAttenuation;
+    @ifdef UseSecondLight
+        vec3 vLightDir2 = (avLightPos2 - vPos) * afInvLightRadius2;
+        float fAttenuation2 = texture1D(aAttenuationMap2, dot(vLightDir2, vLightDir2)).x;
+        gl_FragColor.xyz = vColorVal.xyz * (avLightColor.xyz * fAttenuation + avLightColor2.xyz * fAttenuation2);
+    @else
+        gl_FragColor.xyz = vColorVal.xyz * avLightColor.xyz * fAttenuation;
+    @endif
 }
 
 //--------------------------------------------------------------

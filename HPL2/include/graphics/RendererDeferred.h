@@ -97,7 +97,7 @@ enum eGBufferComponents
 class cDeferredLight
 {
 public:
-    cDeferredLight() : mbClipInShader(false), mbRenderFront(false), mpShadowTexture(NULL), mbCastShadows(false) {}
+    cDeferredLight() : mbClipInShader(false), mbRenderFront(false), mpShadowTexture(NULL), mbCastShadows(false), mpSecondLight(NULL), mbMergedAway(false) {}
 
     iLight *mpLight;
     cRect2l mClipRect;
@@ -113,6 +113,9 @@ public:
     bool mbCastShadows;
     eShadowMapResolution mShadowResolution;
     int mlShadowCasterNum;
+
+    cDeferredLight *mpSecondLight;
+    bool mbMergedAway;
 };
 
 //---------------------------------------------
@@ -230,6 +233,10 @@ public:
     static void SetLiteGBufferAllowed(bool abX)
     {
         mbLiteGBufferAllowed = abX;
+    }
+    static void SetMergeInsideLights(bool abX)
+    {
+        mbMergeInsideLights = abX;
     }
     static void SetLightColorGrade(bool abX)
     {
@@ -481,6 +488,8 @@ private:
     bool SetupLiteGBuffer();
     bool GBufferShaderSupportsLite();
     bool TestLiteGBufferLayout(iFrameBuffer *apBuffer, bool abSparse, tString &asReason);
+    void MergeInsideLights();
+    cColor GetLightRenderColor(iLight *apLight);
     bool RunLightShaderSelfTest(const tString& asFragShader, bool abTestNormals, bool abTestShadows,
                                 bool *apCompiled, bool *apBaseCombosPassed);
 
@@ -589,6 +598,7 @@ private:
     static bool mbLiteGBufferActive;
     static bool mbLiteGBufferSparse;
     static bool mbLiteGBufferAllowed;
+    static bool mbMergeInsideLights;
 
     static bool mbSSAOLoaded;
     static int mlSSAONumOfSamples;
