@@ -54,6 +54,8 @@ eShadowMapQuality iRenderer::mShadowMapQuality    =        eShadowMapQuality_Med
 eShadowMapResolution iRenderer::mShadowMapResolution    =    eShadowMapResolution_High;
 eParallaxQuality iRenderer::mParallaxQuality = eParallaxQuality_Simple;
 bool iRenderer::mbParallaxEnabled = true;
+bool iRenderer::mbOcclusionCullingLatency = false;
+static const float kOcclusionLatencyMinDist = 6.0f;
 int iRenderer::mlReflectionSizeDiv = 2;
 bool iRenderer::mbRefractionEnabled = true;
 int iRenderer::mlDrawCalls = 1;
@@ -332,6 +334,7 @@ int cRenderSettings::RetrieveOcclusionObjectSamples(iRenderer *apRenderer, void 
     pObject->mlSampleResults = pQuery->GetSampleCount();
     pObject->mpQuery = NULL;
     apRenderer->ReleaseOcclusionQuery(pQuery);
+    m_mapLastOcclusionSamples[std::make_pair(apSource, alCustomIndex)] = pObject->mlSampleResults;
 
     return pObject->mlSampleResults;
 }
@@ -393,9 +396,24 @@ bool cRenderSettings::TryRetrieveOcclusionObjectSamples(iRenderer *apRenderer, v
     pObject->mlSampleResults = pQuery->GetSampleCount();
     pObject->mpQuery = NULL;
     apRenderer->ReleaseOcclusionQuery(pQuery);
+    m_mapLastOcclusionSamples[std::make_pair(apSource, alCustomIndex)] = pObject->mlSampleResults;
 
     alSamples = pObject->mlSampleResults;
     return true;
+}
+
+//-----------------------------------------------------------------------
+
+int cRenderSettings::RetrieveOcclusionObjectSamplesNoWait(iRenderer *apRenderer, void *apSource, int alCustomIndex)
+{
+    int lSamples = 0;
+    if(TryRetrieveOcclusionObjectSamples(apRenderer, apSource, alCustomIndex, lSamples))
+    {
+        return lSamples;
+    }
+
+    std::map<std::pair<void *, int>, int>::iterator it = m_mapLastOcclusionSamples.find(std::make_pair(apSource, alCustomIndex));
+    return it != m_mapLastOcclusionSamples.end() ? it->second : 0;
 }
 
 //-----------------------------------------------------------------------
@@ -427,6 +445,20 @@ void cRenderSettings::ClearOcclusionObjects(iRenderer *apRenderer)
     {
         Log(" Clearing occlusion queries i settings!\n");
     }
+    //Results that came in after they were asked for are kept for the next frame
+    if(m_mapLastOcclusionSamples.size() > 4096)
+    {
+        m_mapLastOcclusionSamples.clear();
+    }
+    for(tOcclusionQueryObjectMapIt it = m_setOcclusionObjects.begin(); it != m_setOcclusionObjects.end(); ++it)
+    {
+        iOcclusionQuery *pQuery = it->second->mpQuery;
+        if(pQuery && pQuery->FetchResults())
+        {
+            m_mapLastOcclusionSamples[std::make_pair(it->first, it->second->mlCustomID)] = pQuery->GetSampleCount();
+        }
+    }
+
     m_setOcclusionObjects.clear();
     for(int i = 0; i < mlCurrentOcclusionObject; ++i)
     {
@@ -539,6 +571,15 @@ iRenderer::~iRenderer()
 {
     DestroyShadowMaps();
 
+    for(std::map<cVisibleRCNodeTracker *, tNodeOcclusionPairList>::iterator it = m_mapCarriedNodeQueries.begin(); it != m_mapCarriedNodeQueries.end(); ++it)
+    {
+        for(tNodeOcclusionPairListIt pairIt = it->second.begin(); pairIt != it->second.end(); ++pairIt)
+        {
+            hplDelete(pairIt->mpQuery);
+        }
+    }
+    m_mapCarriedNodeQueries.clear();
+
     STLDeleteAll(mvOcclusionQueryPool);
 
     if(mpShapeBox)
@@ -632,6 +673,11 @@ int iRenderer::RetrieveOcclusionObjectSamples(void *apSource, int alCustomIndex)
 bool iRenderer::TryRetrieveOcclusionObjectSamples(void *apSource, int alCustomIndex, int &alSamples)
 {
     return mpCurrentSettings->TryRetrieveOcclusionObjectSamples(this, apSource, alCustomIndex, alSamples);
+}
+
+int iRenderer::RetrieveOcclusionObjectSamplesNoWait(void *apSource, int alCustomIndex)
+{
+    return mpCurrentSettings->RetrieveOcclusionObjectSamplesNoWait(this, apSource, alCustomIndex);
 }
 
 void iRenderer::WaitAndRetrieveAllOcclusionQueries()
@@ -1388,6 +1434,46 @@ static void PrintNodeDebugContents(tRendererSortedNodeSet &a_setNodes)
 //-----------------------------------------------------------------------
 
 
+void iRenderer::ResolveCarriedNodeQueries(cVisibleRCNodeTracker *apTracker)
+{
+    std::map<cVisibleRCNodeTracker *, tNodeOcclusionPairList>::iterator mapIt = m_mapCarriedNodeQueries.find(apTracker);
+    if(mapIt == m_mapCarriedNodeQueries.end())
+    {
+        return;
+    }
+
+    tNodeOcclusionPairList &lstPairs = mapIt->second;
+    tNodeOcclusionPairListIt it = lstPairs.begin();
+    while(it != lstPairs.end())
+    {
+        cNodeOcclusionPair &noPair = *it;
+        if(noPair.mpQuery->FetchResults())
+        {
+            //Node pointers are only compared here, never used, so nodes removed since are harmless
+            bool bVisible = (int)noPair.mpQuery->GetSampleCount() > mpCurrentSettings->mlSampleVisiblilityLimit;
+            if(bVisible && noPair.mbObjectsRendered == false)
+            {
+                m_setForceVisibleNodes.insert(noPair.mpNode);
+            }
+            else if(bVisible == false && noPair.mbObjectsRendered)
+            {
+                m_setForceInvisibleNodes.insert(noPair.mpNode);
+            }
+        }
+        else if(++noPair.mlFramesCarried < 4)
+        {
+            ++it;
+            continue;
+        }
+
+        //Done (or given up on: rendered nodes stay visible, hidden ones get a new query)
+        ReleaseOcclusionQuery(noPair.mpQuery);
+        it = lstPairs.erase(it);
+    }
+}
+
+//-----------------------------------------------------------------------
+
 void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTracker *apVisibleNodeTracker,
         tObjectVariabilityFlag alObjectTypes, tRenderableFlag alNeededFlags,
         bool abSetupRenderStates,
@@ -1423,6 +1509,15 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
 
     // Switch sets, so that the last frames set is not current.
     apVisibleNodeTracker->SwitchAndClearVisibleNodeSet();
+
+    //Only the camera view carries queries over to the next frame (shadow casters keep waiting)
+    bool bCarryQueries = apVisibleNodeTracker == mpCurrentSettings->mpVisibleNodeTracker;
+    m_setForceVisibleNodes.clear();
+    m_setForceInvisibleNodes.clear();
+    if(bCarryQueries)
+    {
+        ResolveCarriedNodeQueries(apVisibleNodeTracker);
+    }
 
     tRenderCHCObjectCallbackFunc pRenderCallback;
     if(apRenderObjectCallback)
@@ -1490,8 +1585,18 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
             bool bNearPlaneInsideNode = pNode->IsInsideView();
 
             //////////////////////////
-            // Check if node was visible
+            // Check if node was visible (late query results from the last frame override)
             bool bWasVisible = apVisibleNodeTracker->WasNodeVisible(pNode);
+            bool bForceVisible = false;
+            if(bWasVisible && m_setForceInvisibleNodes.empty() == false && m_setForceInvisibleNodes.count(pNode))
+            {
+                bWasVisible = false;
+            }
+            else if(bWasVisible == false && m_setForceVisibleNodes.empty() == false && m_setForceVisibleNodes.count(pNode))
+            {
+                bWasVisible = true;
+                bForceVisible = true;
+            }
 
             //////////////////////////
             //Render nodes and queue queries
@@ -1551,6 +1656,16 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
                 //Add child nodes to stack if any (also checks if they have needed flags are in frustum)
                 PushNodeChildrenToStack(setNodeStack, pNode, alNeededFlags);
 
+                //A node found visible late shows its whole subtree, else it would take a frame per level
+                if(bForceVisible)
+                {
+                    tRenderableContainerNodeList *pChildList = pNode->GetChildNodeList();
+                    for(tRenderableContainerNodeListIt childIt = pChildList->begin(); childIt != pChildList->end(); ++childIt)
+                    {
+                        m_setForceVisibleNodes.insert(*childIt);
+                    }
+                }
+
                 ////////////////
                 //Render objects if any
                 int lObjectsRendered = RenderAndAddNodeObjects(pNode, pRenderCallback, alNeededFlags);
@@ -1573,10 +1688,45 @@ void iRenderer::CheckForVisibleObjectsAddToListAndRenderZ(    cVisibleRCNodeTrac
 
 
             //////////////////////////////////////
-            //Nothing else to do on the CPU until this result is in: let the driver wait for it
-            //instead of spinning on the query (each spin is a full driver round trip).
-            if(setNodeStack.empty())
+            //Nothing else to do on the CPU until this result is in.
+            if(setNodeStack.empty() && noPair.mpQuery->FetchResults() == false)
             {
+                //Objects already drawn: the result only matters for the next frame, so check it then
+                //(the node stays visible until then). Hidden nodes too, if latency is allowed.
+                //With latency, nodes close to the camera still wait: something popping in a few
+                //meters away is easy to see, far away it is not.
+                bool bCarryHidden = false;
+                if(mbOcclusionCullingLatency && noPair.mbObjectsRendered == false)
+                {
+                    const cVector3f &vOrigin = mpCurrentFrustum->GetOrigin();
+                    const cVector3f &vMin = noPair.mpNode->GetMin();
+                    const cVector3f &vMax = noPair.mpNode->GetMax();
+                    cVector3f vClosest(cMath::Clamp(vOrigin.x, vMin.x, vMax.x), cMath::Clamp(vOrigin.y, vMin.y, vMax.y),
+                                       cMath::Clamp(vOrigin.z, vMin.z, vMax.z));
+                    bCarryHidden = cMath::Vector3DistSqr(vOrigin, vClosest) > kOcclusionLatencyMinDist * kOcclusionLatencyMinDist;
+                }
+
+                //A node that was drawn last frame and only looked hidden in a late result is drawn
+                //again instead of vanishing on a guess that may be stale.
+                if(bCarryHidden && m_setForceInvisibleNodes.empty() == false && m_setForceInvisibleNodes.count(noPair.mpNode))
+                {
+                    RenderAndAddNodeObjects(noPair.mpNode, pRenderCallback, alNeededFlags);
+                    noPair.mbObjectsRendered = true;
+                }
+
+                if(bCarryQueries && (noPair.mbObjectsRendered || bCarryHidden))
+                {
+                    if(noPair.mbObjectsRendered)
+                    {
+                        PushUpVisibility(noPair.mpNode);
+                    }
+                    noPair.mlFramesCarried = 0;
+                    m_mapCarriedNodeQueries[apVisibleNodeTracker].push_back(noPair);
+                    lstNodeOcclusionPairs.pop_front();
+                    continue;
+                }
+
+                //Let the driver wait instead of spinning on the query (each spin is a driver round trip)
                 HPL_PROFILE_SCOPE("CHC_QueryWait");
                 noPair.mpQuery->WaitForResults();
             }

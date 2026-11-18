@@ -443,8 +443,9 @@ bool cBillboard::RetrieveOcculsionQuery(iRenderer *apRenderer)
     int lSamples = 0;
     int lMaxSamples = 0;
 
-    lSamples = apRenderer->RetrieveOcclusionObjectSamples(this, 0);
-    lMaxSamples = apRenderer->RetrieveOcclusionObjectSamples(this, 1);
+    //A halo a frame behind can not be seen, waiting for the GPU here costs a lot on slow cards
+    lSamples = apRenderer->RetrieveOcclusionObjectSamplesNoWait(this, 0);
+    lMaxSamples = apRenderer->RetrieveOcclusionObjectSamplesNoWait(this, 1);
 
     ////////////////////////////
     // Samples are visible

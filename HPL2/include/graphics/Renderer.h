@@ -38,9 +38,12 @@ class cVisibleRCNodeTracker;
 class cNodeOcclusionPair
 {
 public:
+    cNodeOcclusionPair() : mlFramesCarried(0) {}
+
     iRenderableContainerNode *mpNode;
     iOcclusionQuery *mpQuery;
     bool mbObjectsRendered;
+    int mlFramesCarried;
 };
 
 typedef std::list<cNodeOcclusionPair> tNodeOcclusionPairList;
@@ -114,6 +117,7 @@ public:
     void AssignOcclusionObject(iRenderer *apRenderer, void *apSource, int alCustomIndex, iVertexBuffer *apVtxBuffer, cMatrixf *apMatrix, bool abDepthTest);
     int RetrieveOcclusionObjectSamples(iRenderer *apRenderer, void *apSource, int alCustomIndex);
     bool TryRetrieveOcclusionObjectSamples(iRenderer *apRenderer, void *apSource, int alCustomIndex, int &alSamples);
+    int RetrieveOcclusionObjectSamplesNoWait(iRenderer *apRenderer, void *apSource, int alCustomIndex);
     void ClearOcclusionObjects(iRenderer *apRenderer);
     void WaitAndRetrieveAllOcclusionQueries(iRenderer *apRenderer);
 
@@ -129,6 +133,8 @@ public:
     int mlCurrentOcclusionObject;
     std::vector<cOcclusionQueryObject *> mvOcclusionObjectPool;
     tOcclusionQueryObjectMap m_setOcclusionObjects;
+    //Latest known result per source and custom index, used when this frame's is not in yet
+    std::map<std::pair<void *, int>, int> m_mapLastOcclusionSamples;
 
     std::vector<cFogAreaRenderData> mvFogRenderData;
 
@@ -300,6 +306,10 @@ public:
      */
     bool TryRetrieveOcclusionObjectSamples(void *apSource, int alCustomIndex, int &alSamples);
     /**
+     * Never waits: if this frame's result is not in, the last one known is returned (a frame old).
+     */
+    int RetrieveOcclusionObjectSamplesNoWait(void *apSource, int alCustomIndex);
+    /**
     * Retrieves number of samples for all active occlusion queries. It does not release the queries, but the values are gotten and stored in query.
     */
     void WaitAndRetrieveAllOcclusionQueries();
@@ -346,6 +356,17 @@ public:
     static bool GetParallaxEnabled()
     {
         return mbParallaxEnabled;
+    }
+
+    //Occlusion culling does not wait for the queries of nodes hidden last frame: they stay
+    //hidden until the result is in (a frame later at most, so things can show up late).
+    static void SetOcclusionCullingLatency(bool abX)
+    {
+        mbOcclusionCullingLatency = abX;
+    }
+    static bool GetOcclusionCullingLatency()
+    {
+        return mbOcclusionCullingLatency;
     }
 
     static void SetReflectionSizeDiv(int alX)
@@ -582,6 +603,12 @@ protected:
     //Released queries, oldest first. A query can be released before its result is in,
     //so it is only handed out again once FetchResults says it is done.
     std::deque<iOcclusionQuery *> mvOcclusionQueryPool;
+
+    //CHC queries whose results came in too late, checked the next frame (per visibility tracker)
+    std::map<cVisibleRCNodeTracker *, tNodeOcclusionPairList> m_mapCarriedNodeQueries;
+    std::set<iRenderableContainerNode *> m_setForceVisibleNodes;
+    std::set<iRenderableContainerNode *> m_setForceInvisibleNodes;
+    void ResolveCarriedNodeQueries(cVisibleRCNodeTracker *apTracker);
     std::vector<cOcclusionQueryObject *> mvSortedOcclusionObjects;
 
     std::vector<cShadowMapData *> mvShadowMapData[eShadowMapResolution_LastEnum];
@@ -593,6 +620,7 @@ protected:
     static eShadowMapResolution mShadowMapResolution;
     static eParallaxQuality mParallaxQuality;
     static bool mbParallaxEnabled;
+    static bool mbOcclusionCullingLatency;
     static int mlReflectionSizeDiv;
     static bool mbRefractionEnabled;
     static int mlDrawCalls;
