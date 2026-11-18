@@ -778,11 +778,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\sources\graphics\PostEffect_ImageTrail.cpp"
+					RelativePath=".\sources\graphics\PostEffect_MotionBlur.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\include\graphics\PostEffect_ImageTrail.h"
+					RelativePath=".\include\graphics\PostEffect_MotionBlur.h"
 					>
 				</File>
 				<File

@@ -113,6 +113,10 @@ public:
     {
         return mvRenderTargetSize;
     }
+    cFrustum *GetCurrentFrustum()
+    {
+        return mpCurrentFrustum;
+    }
 
 protected:
     cGraphics *mpGraphics;

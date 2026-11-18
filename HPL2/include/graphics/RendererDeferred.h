@@ -132,6 +132,27 @@ public:
     iTexture *GetPostEffectTexture();
 
     iTexture *GetGbufferTexture(int alIdx);
+    /**
+     * Linear depth of the main (non reflection) view, used by post effects after rendering is done.
+     */
+    iTexture *GetMainLinearDepthTexture()
+    {
+        return mpGBufferTexture[0][2];
+    }
+
+    /**
+     * Set by the motion blur post effect. When on, the linear depth is cleared every frame (so empty
+     * pixels, like the sky, are far away instead of old data), and the view model (hands, lantern)
+     * is written as 1 into the alpha of the accumulation buffer so it is not blurred.
+     */
+    static void SetMotionBlurActive(bool abX)
+    {
+        mbMotionBlurActive = abX;
+    }
+    static bool GetMotionBlurActive()
+    {
+        return mbMotionBlurActive;
+    }
     iFrameBuffer *GetGBufferFrameBuffer(eGBufferComponents aComponents);
 
     iDepthStencilBuffer *GetDepthStencilBuffer()
@@ -599,6 +620,7 @@ private:
     static bool mbLiteGBufferSparse;
     static bool mbLiteGBufferAllowed;
     static bool mbMergeInsideLights;
+    static bool mbMotionBlurActive;
 
     static bool mbSSAOLoaded;
     static int mlSSAONumOfSamples;

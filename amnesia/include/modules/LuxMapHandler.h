@@ -125,9 +125,9 @@ public:
     {
         return mpPostEffect_Bloom;
     }
-    iPostEffect *GetPostEffect_ImageTrail()
+    iPostEffect *GetPostEffect_MotionBlur()
     {
-        return mpPostEffect_ImageTrail;
+        return mpPostEffect_MotionBlur;
     }
     iPostEffect *GetPostEffect_Sepia()
     {
@@ -185,7 +185,7 @@ private:
     bool mbShowCommentary;
 
     iPostEffect *mpPostEffect_Bloom;
-    iPostEffect *mpPostEffect_ImageTrail;
+    iPostEffect *mpPostEffect_MotionBlur;
     iPostEffect *mpPostEffect_Sepia;
     iPostEffect *mpPostEffect_RadialBlur;
     iPostEffect *mpPostEffect_LightColorGrade;

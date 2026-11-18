@@ -1343,7 +1343,8 @@ void __stdcall cLuxScriptHandler::FadeOut(float afTime)
 
 void __stdcall cLuxScriptHandler::FadeImageTrailTo(float afAmount, float afSpeed)
 {
-    gpBase->mpEffectHandler->GetImageTrail()->FadeTo(afAmount, afSpeed);
+    //Does nothing. Kept so maps and mods that call it still load. The image trail
+    //is gone, motion blur (options menu) is used for the whole game instead.
 }
 
 //-----------------------------------------------------------------------

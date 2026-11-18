@@ -62,7 +62,7 @@
 #include "graphics/MaterialType.h"
 #include "graphics/PostEffect_Bloom.h"
 #include "graphics/PostEffect_ColorConvTex.h"
-#include "graphics/PostEffect_ImageTrail.h"
+#include "graphics/PostEffect_MotionBlur.h"
 #include "graphics/PostEffect_RadialBlur.h"
 
 #include "math/MathTypes.h"

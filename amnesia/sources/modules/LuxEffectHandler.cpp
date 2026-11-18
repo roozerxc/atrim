@@ -796,53 +796,25 @@ cLuxEffect_ImageTrail::cLuxEffect_ImageTrail()
 {
     mfAmount = 0;
     mfAmountGoal = 0;
+    mfFadeSpeed = 0;
 }
+
+//The image trail post effect is gone (replaced by motion blur in the options menu).
+//This stays as a no-op so old save games load and FadeImageTrailTo calls do nothing.
 
 void cLuxEffect_ImageTrail::FadeTo(float afAmount, float afSpeed)
 {
-    mfAmountGoal = afAmount;
-    mfFadeSpeed = afSpeed;
-    SetActive(true);
-    gpBase->mpMapHandler->GetPostEffect_ImageTrail()->SetActive(true);
 }
 
 void cLuxEffect_ImageTrail::Update(double adFixedDelta)
 {
-    if(mfAmountGoal < mfAmount)
-    {
-        mfAmount -= mfFadeSpeed * (float)adFixedDelta;
-        if(mfAmount <= mfAmountGoal)
-        {
-            mfAmount =     mfAmountGoal;
-            SetActive(false);
-        }
-    }
-    else
-    {
-        mfAmount += mfFadeSpeed * (float)adFixedDelta;
-        if(mfAmount >= mfAmountGoal)
-        {
-            mfAmount = mfAmountGoal;
-            SetActive(false);
-        }
-    }
-
-    cPostEffectParams_ImageTrail imageTrailParams;
-    imageTrailParams.mfAmount = mfAmount;
-    gpBase->mpMapHandler->GetPostEffect_ImageTrail()->SetParams(&imageTrailParams);
-
-    if(mfAmount <= 0)
-    {
-        gpBase->mpMapHandler->GetPostEffect_ImageTrail()->SetActive(false);
-    }
 }
 
 void cLuxEffect_ImageTrail::Reset()
 {
     mfAmount = 0;
     mfAmountGoal = 0;
-    gpBase->mpMapHandler->GetPostEffect_ImageTrail()->Reset();
-    gpBase->mpMapHandler->GetPostEffect_ImageTrail()->SetActive(false);
+    mfFadeSpeed = 0;
 }
 
 //-----------------------------------------------------------------------

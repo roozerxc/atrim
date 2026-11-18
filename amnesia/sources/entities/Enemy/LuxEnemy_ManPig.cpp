@@ -2427,7 +2427,7 @@ void cLuxEnemy_ManPig::SetTeslaEffectsAmount(float afX)
 
 void cLuxEnemy_ManPig::ResetMindFuckEffects()
 {
-    gpBase->mpEffectHandler->GetImageTrail()->FadeTo(0, 1);
+    //Image trail is gone (FadeImageTrailTo does nothing)
     gpBase->mpPlayer->FadeAspectMulTo(1.0f, 10.0f);
     gpBase->mpPlayer->FadeFOVMulTo(1.0f, 1.0f);
     mbTeslaMindFuckActive = false;

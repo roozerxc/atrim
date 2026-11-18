@@ -90,6 +90,9 @@
     <!-- END HARD MODE STRINGS -->
 
     <CATEGORY Name="OptionsMenu">
+        <Entry Name="MotionBlur">Motion blur</Entry>
+        <Entry Name="MotionBlurTip">Blurs yer view when ye turn yer head, like in Penumbra. Them image trails be sent to Davy Jones' locker.</Entry>
+
         <Entry Name="Ultra">Kraken</Entry>
         <Entry Name="UltraLow">Bilge Rat</Entry>
 

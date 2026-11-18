@@ -157,7 +157,6 @@ void cLuxPlayerVoiceFlashback::StartEffects()
 {
     gpBase->mpEffectHandler->GetFade()->FadeOut(mfEffectFadeInTime,mfLightFadeAmount);
     gpBase->mpEffectHandler->GetSepiaColor()->FadeTo(mfSepiaAmount,mfEffectFadeInTime);
-    gpBase->mpEffectHandler->GetImageTrail()->FadeTo(mfImageTrailAmount, mfEffectFadeInTime);
     gpBase->mpEffectHandler->GetRadialBlur()->SetBlurStartDist( mfBlurStartDistance );
     gpBase->mpEffectHandler->GetRadialBlur()->FadeTo( mfBlurAmount, mfEffectFadeInTime );
     gpBase->mpPlayer->FadeFOVMulTo(mfFovMultiplier, mfEffectFadeInTime);
@@ -169,7 +168,6 @@ void cLuxPlayerVoiceFlashback::StopEffects()
 {
     gpBase->mpEffectHandler->GetFade()->FadeOut(mfEffectFadeOutTime,0.0f);
     gpBase->mpEffectHandler->GetSepiaColor()->FadeTo(0.0f,mfEffectFadeOutTime);
-    gpBase->mpEffectHandler->GetImageTrail()->FadeTo(0.0f, 3.0f * mfEffectFadeOutTime );
     gpBase->mpEffectHandler->GetRadialBlur()->FadeTo( 0.0f, mfEffectFadeOutTime );
     gpBase->mpPlayer->FadeFOVMulTo(1.0f, mfEffectFadeOutTime);
 }
@@ -1567,7 +1565,6 @@ void cLuxPlayerSanity::UpdateInsaneEffects(double adFixedDelta)
 
     if(mbSanityEffectUpdated)
     {
-        gpBase->mpEffectHandler->GetImageTrail()->FadeTo(0, 1);
         mpPlayer->FadeAspectMulTo(1, 1);
         mpPlayer->FadeFOVMulTo(1, 1);
 
@@ -1790,7 +1787,6 @@ void cLuxPlayerSanity::UpdateHit(double adFixedDelta)
         }
     }
 
-    gpBase->mpEffectHandler->GetImageTrail()->FadeTo(mfHitAlpha * 0.9f, 100);
     mpPlayer->FadeAspectMulTo(1 - mfHitAlpha * mfHitZoomInAspectMul, 100);
     mpPlayer->FadeFOVMulTo(1 - mfHitAlpha * mfHitZoomInFOVMul, 100);
 
@@ -1928,7 +1924,6 @@ void cLuxPlayerSanity::UpdateLowSanity(double adFixedDelta)
 
     if(mbSanityLostIsUpdated == false)
     {
-        gpBase->mpEffectHandler->GetImageTrail()->FadeTo(1.6f, 3);
         mbSanityEffectUpdated = true;
     }
 

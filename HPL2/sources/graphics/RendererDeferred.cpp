@@ -64,6 +64,7 @@ bool cRendererDeferred::mbLiteLightShaderActive = false;
 bool cRendererDeferred::mbLiteGBufferActive = false;
 bool cRendererDeferred::mbLiteGBufferSparse = false;
 bool cRendererDeferred::mbLiteGBufferAllowed = true;
+bool cRendererDeferred::mbMotionBlurActive = false;
 bool cRendererDeferred::mbMergeInsideLights = true;
 
 bool cRendererDeferred::mbSSAOLoaded = false;
@@ -1098,6 +1099,13 @@ void cRendererDeferred::RenderObjects()
 
     RunCallback(eRendererMessage_PostTranslucent);
 
+    //Motion blur: mark the view model in the alpha of the accumulation buffer (must be last, after all blending)
+    if(mbMotionBlurActive && mpCurrentSettings->mbIsReflection == false)
+    {
+        SetAccumulationBuffer();
+        RenderViewModelMask();
+    }
+
     if(mbOcclusionTestLargeLights)
     {
         RetrieveAllLightOcclusionPair(false);    //false = we do not stop and wait.
@@ -1109,6 +1117,18 @@ void cRendererDeferred::RenderObjects()
 void cRendererDeferred::SetupGBuffer()
 {
     START_RENDER_PASS(GBufferSetup);
+    /////////////////////////////
+    // Motion blur reads the linear depth of every pixel, also of those nothing is drawn to (sky).
+    // Clear it to "far away": 32 bit = 1 (far plane), 64 bit = 0 (the shader treats it as infinitely far).
+    if(mbMotionBlurActive && mpCurrentSettings->mbIsReflection == false)
+    {
+        SetGBuffer(eGBufferComponents_LinearDepth);
+        SetChannelMode(eMaterialChannelMode_RGBA);
+        mpLowLevelGraphics->SetClearColor(mGBufferType == eDeferredGBuffer_32Bit ? cColor(1, 1) : cColor(0, 0));
+        ClearFrameBuffer(eClearFrameBufferFlag_Color, true);
+        mpLowLevelGraphics->SetClearColor(mpCurrentSettings->mClearColor); //the light accumulation clear uses it
+    }
+
     /////////////////////////////
     // Set G-Buffer as frame buffer (need to set something with color else textures will not be used and alpha will not work!)
     SetGBuffer(eGBufferComponents_Full);

@@ -438,11 +438,9 @@ void cLuxEffectHandler_SaveData::ToEffectHandler(cLuxMap *apMap, cLuxEffectHandl
     // ImageTrail
     cLuxEffect_ImageTrail *pImageTrail = apEffects->GetImageTrail();
 
-    gpBase->mpMapHandler->GetPostEffect_ImageTrail()->SetActive(mbImageTrail_Active);
-    pImageTrail->mbActive = mbImageTrail_Active;
-    pImageTrail->mfAmount = mfImageTrail_Amount;
-    pImageTrail->mfAmountGoal = mfImageTrail_AmountGoal;
-    pImageTrail->mfFadeSpeed = mfImageTrail_FadeSpeed;
+    //Image trail is gone, saved values (from older saves) are ignored.
+    pImageTrail->Reset();
+    pImageTrail->mbActive = false;
 
     //////////////////////
     // Sepia COlor

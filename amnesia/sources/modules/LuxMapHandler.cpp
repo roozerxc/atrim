@@ -166,11 +166,14 @@ cLuxMapHandler::cLuxMapHandler() : iLuxUpdateable("LuxMapHandler")
     mpPostEffect_Bloom = pGraphics->CreatePostEffect(&bloomParams);
     pPostEffectComp->AddPostEffect(mpPostEffect_Bloom, 100);
 
-    //Image trail
-    cPostEffectParams_ImageTrail imageTrailParams;
-    mpPostEffect_ImageTrail = pGraphics->CreatePostEffect(&imageTrailParams);
-    pPostEffectComp->AddPostEffect(mpPostEffect_ImageTrail, 10);
-    mpPostEffect_ImageTrail->SetActive(false);
+    //Motion blur (replaces the image trail, which scripts can no longer turn on).
+    //Always active, the options menu setting disables it. It must be the very first effect
+    //(before gamma, prio 1000): it reads the view model mask from the alpha of the renderer output.
+    cPostEffectParams_MotionBlur motionBlurParams;
+    mpPostEffect_MotionBlur = pGraphics->CreatePostEffect(&motionBlurParams);
+    pPostEffectComp->AddPostEffect(mpPostEffect_MotionBlur, 2000);
+    mpPostEffect_MotionBlur->SetDisabled(true);
+    mpPostEffect_MotionBlur->SetActive(true);
 
     //Radial
     cPostEffectParams_RadialBlur radialBlurParams;
@@ -619,7 +622,16 @@ void cLuxMapHandler::AppGotInputFocus()
 void cLuxMapHandler::LoadMainConfig()
 {
     mpPostEffect_Bloom->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectBloom", true) == false);
-    mpPostEffect_ImageTrail->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectImageTrail", true) == false);
+    {
+        cPostEffectParams_MotionBlur motionBlurParams;
+        //Exposure in 1/60ths of a second: 0.5 = 1/120 s (180 degree shutter at 60 fps)
+        motionBlurParams.mfShutter = cMath::Clamp(gpBase->mpMainConfig->GetFloat("Graphics", "MotionBlurAmount", 0.5f), 0.0f, 2.0f) / 60.0f;
+        motionBlurParams.mfMaxLength = cMath::Clamp(gpBase->mpMainConfig->GetFloat("Graphics", "MotionBlurMaxLength", 0.04f), 0.0f, 0.25f);
+        motionBlurParams.mfSmoothTime = cMath::Clamp(gpBase->mpMainConfig->GetFloat("Graphics", "MotionBlurSmoothTime", 0.03f), 0.0f, 0.25f);
+        motionBlurParams.mbHighQuality = gpBase->mpMainConfig->GetInt("Graphics", "MotionBlurQuality", 1) != 0;
+        mpPostEffect_MotionBlur->SetParams(&motionBlurParams);
+    }
+    mpPostEffect_MotionBlur->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectMotionBlur", false) == false);
     mpPostEffect_Sepia->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectSepia", true) == false);
     mpPostEffect_RadialBlur->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectRadialBlur", true) == false);
     //The LUT is only used in LightColorGradeMode 1 (2 does the grade in the light shader)
@@ -632,7 +644,15 @@ void cLuxMapHandler::LoadMainConfig()
 void cLuxMapHandler::SaveMainConfig()
 {
     gpBase->mpMainConfig->SetBool("Graphics", "PostEffectBloom", mpPostEffect_Bloom->IsDisabled() == false);
-    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectImageTrail", mpPostEffect_ImageTrail->IsDisabled() == false);
+    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectMotionBlur", mpPostEffect_MotionBlur->IsDisabled() == false);
+    {
+        cPostEffectParams_MotionBlur motionBlurParams;
+        mpPostEffect_MotionBlur->GetParams(&motionBlurParams);
+        gpBase->mpMainConfig->SetFloat("Graphics", "MotionBlurAmount", motionBlurParams.mfShutter * 60.0f);
+        gpBase->mpMainConfig->SetFloat("Graphics", "MotionBlurMaxLength", motionBlurParams.mfMaxLength);
+        gpBase->mpMainConfig->SetFloat("Graphics", "MotionBlurSmoothTime", motionBlurParams.mfSmoothTime);
+        gpBase->mpMainConfig->SetInt("Graphics", "MotionBlurQuality", motionBlurParams.mbHighQuality ? 1 : 0);
+    }
     gpBase->mpMainConfig->SetBool("Graphics", "PostEffectSepia", mpPostEffect_Sepia->IsDisabled() == false);
     gpBase->mpMainConfig->SetBool("Graphics", "PostEffectRadialBlur", mpPostEffect_RadialBlur->IsDisabled() == false);
     gpBase->mpMainConfig->SetBool("Graphics", "PostEffectLightColorGrade", mbPostEffectLightColorGradeSetting);

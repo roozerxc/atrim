@@ -29,7 +29,7 @@
 
 #include "graphics/PostEffect_Bloom.h"
 #include "graphics/PostEffect_ColorConvTex.h"
-#include "graphics/PostEffect_ImageTrail.h"
+#include "graphics/PostEffect_MotionBlur.h"
 #include "graphics/PostEffect_RadialBlur.h"
 
 #include "graphics/RendererDeferred.h"
@@ -190,7 +190,7 @@ bool cGraphics::Init(    int alWidth, int alHeight, int alBpp, bool abFullscreen
         Log(" Adding engine post effects\n");
         AddPostEffectType(hplNew( cPostEffectType_Bloom, (this, apResources)) );
         AddPostEffectType(hplNew( cPostEffectType_ColorConvTex, (this, apResources)) );
-        AddPostEffectType(hplNew( cPostEffectType_ImageTrail, (this, apResources)) );
+        AddPostEffectType(hplNew( cPostEffectType_MotionBlur, (this, apResources)) );
         AddPostEffectType(hplNew( cPostEffectType_RadialBlur, (this, apResources)) );
     }
 

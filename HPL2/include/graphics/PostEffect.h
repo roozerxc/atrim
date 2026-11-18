@@ -90,7 +90,12 @@ public:
      */
     void SetDisabled(bool abX)
     {
+        if(mbDisabled == abX)
+        {
+            return;
+        }
         mbDisabled = abX;
+        OnSetDisabled(abX);
     }
     bool IsDisabled()
     {
@@ -110,6 +115,7 @@ public:
 
 protected:
     virtual void OnSetActive(bool abX) {}
+    virtual void OnSetDisabled(bool abX) {}
     virtual void OnSetParams() = 0;
     virtual iPostEffectParams *GetTypeSpecificParams() = 0;
     virtual iTexture *RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer) = 0;

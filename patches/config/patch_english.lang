@@ -90,6 +90,9 @@
     <!-- END HARD MODE STRINGS -->
 
     <CATEGORY Name="OptionsMenu">
+        <Entry Name="MotionBlur">Motion blur</Entry>
+        <Entry Name="MotionBlurTip">Blurs the picture when the camera moves, like the motion blur in Penumbra. Replaces the image trail effect, which maps and mods can no longer turn on.</Entry>
+
         <Entry Name="Ultra">Ultra</Entry>
         <Entry Name="UltraLow">Ultra Low</Entry>
 

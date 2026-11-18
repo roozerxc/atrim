@@ -737,13 +737,13 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
 
         vPosInGroup.y += mpChBBloom->GetSize().y + fInputSep;
 
-        // ImageTrail
-        mpChBImageTrail = mpGuiSet->CreateWidgetCheckBox(vPosInGroup, 0, kTranslate("OptionsMenu", "ImageTrail"), pGroup);
-        SetUpInput(NULL, mpChBImageTrail, false, kTranslate("OptionsMenu", "ImageTrailTip"));
+        // Motion blur
+        mpChBMotionBlur = mpGuiSet->CreateWidgetCheckBox(vPosInGroup, 0, kTranslate("OptionsMenu", "MotionBlur"), pGroup);
+        SetUpInput(NULL, mpChBMotionBlur, false, kTranslate("OptionsMenu", "MotionBlurTip"));
 
-        if(fMaxWidth < mpChBImageTrail->GetSize().x)
+        if(fMaxWidth < mpChBMotionBlur->GetSize().x)
         {
-            fMaxWidth = mpChBImageTrail->GetSize().x;
+            fMaxWidth = mpChBMotionBlur->GetSize().x;
         }
 
         vPosInGroup.y = fBorderSize;
@@ -877,7 +877,7 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
     mpChBBloom;
     mpChBSepia;
     mpChBInsanity;
-    mpChBImageTrail;
+    mpChBMotionBlur;
     mpChBRadialBlur;
 
     mpChBSSAO;
@@ -926,30 +926,30 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         mpChBSepia->SetFocusNavigation(eUIArrow_Left, mpChBBloom);
         mpChBInsanity->SetFocusNavigation(eUIArrow_Left, mpChBSepia);
 
-        mpChBBloom->SetFocusNavigation(eUIArrow_Down, mpChBImageTrail);
+        mpChBBloom->SetFocusNavigation(eUIArrow_Down, mpChBMotionBlur);
         mpChBSepia->SetFocusNavigation(eUIArrow_Down, mpChBRadialBlur);
         mpChBInsanity->SetFocusNavigation(eUIArrow_Down, mpChBRadialBlur);
 
-        mpChBImageTrail->SetFocusNavigation(eUIArrow_Up, mpChBBloom);
+        mpChBMotionBlur->SetFocusNavigation(eUIArrow_Up, mpChBBloom);
         mpChBRadialBlur->SetFocusNavigation(eUIArrow_Up, mpChBSepia);
 
-        mpChBImageTrail->SetFocusNavigation(eUIArrow_Right, mpChBRadialBlur);
-        mpChBRadialBlur->SetFocusNavigation(eUIArrow_Left, mpChBImageTrail);
+        mpChBMotionBlur->SetFocusNavigation(eUIArrow_Right, mpChBRadialBlur);
+        mpChBRadialBlur->SetFocusNavigation(eUIArrow_Left, mpChBMotionBlur);
 
         if(mbShaderModel3)
         {
-            mpChBImageTrail->SetFocusNavigation(eUIArrow_Down, mpChBSSAO);
+            mpChBMotionBlur->SetFocusNavigation(eUIArrow_Down, mpChBSSAO);
             mpChBRadialBlur->SetFocusNavigation(eUIArrow_Down, mpCBSSAOSamples);
         }
         else
         {
-            mpChBImageTrail->SetFocusNavigation(eUIArrow_Down, mpChBRefraction);
+            mpChBMotionBlur->SetFocusNavigation(eUIArrow_Down, mpChBRefraction);
             mpChBRadialBlur->SetFocusNavigation(eUIArrow_Down, mpChBWorldReflection);
         }
     }
 
     {
-        mpChBSSAO->SetFocusNavigation(eUIArrow_Up, mpChBImageTrail);
+        mpChBSSAO->SetFocusNavigation(eUIArrow_Up, mpChBMotionBlur);
         mpCBSSAOSamples->SetFocusNavigation(eUIArrow_Up, mpChBRadialBlur);
         mpCBSSAOResolution->SetFocusNavigation(eUIArrow_Up, mpChBRadialBlur);
 
@@ -979,7 +979,7 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         mpCBAnisotropy->SetFocusNavigation(eUIArrow_Right, NULL);
         mpCBShadowRes->SetFocusNavigation(eUIArrow_Up, mpCBAnisotropy);
 
-        mpChBRefraction->SetFocusNavigation(eUIArrow_Up, mpChBImageTrail);
+        mpChBRefraction->SetFocusNavigation(eUIArrow_Up, mpChBMotionBlur);
         mpChBWorldReflection->SetFocusNavigation(eUIArrow_Up, mpChBRadialBlur);
         mpChBWorldReflection->SetFocusNavigation(eUIArrow_Left, mpChBRefraction);
     }
@@ -1411,8 +1411,8 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
             cLuxPostEffectHandler *pPostEffects = gpBase->mpPostEffectHandler;
             // Bloom
             mpChBBloom->SetChecked(aObj.GetVarBool("BloomActive"), false);
-            // ImageTrail
-            mpChBImageTrail->SetChecked(aObj.GetVarBool("ImageTrailActive"), false);
+            // Motion blur
+            mpChBMotionBlur->SetChecked(aObj.GetVarBool("MotionBlurActive"), false);
             // Sepia
             mpChBSepia->SetChecked(aObj.GetVarBool("SepiaActive"), false);
             // RadialBlur
@@ -1624,8 +1624,8 @@ void cLuxMainMenu_Options::ApplyChanges()
 
             // Bloom
             pMapHdlr->GetPostEffect_Bloom()->SetDisabled(mpChBBloom->IsChecked() == false);
-            // ImageTrail
-            pMapHdlr->GetPostEffect_ImageTrail()->SetDisabled(mpChBImageTrail->IsChecked() == false);
+            // Motion blur
+            pMapHdlr->GetPostEffect_MotionBlur()->SetDisabled(mpChBMotionBlur->IsChecked() == false);
             // Sepia
             pMapHdlr->GetPostEffect_Sepia()->SetDisabled(mpChBSepia->IsChecked() == false);
             // RadialBlur
@@ -1939,7 +1939,7 @@ void cLuxMainMenu_Options::DumpInitialValues(cResourceVarsObject &aObj)
         cLuxMapHandler* pMapHdlr = gpBase->mpMapHandler;
         cLuxPostEffectHandler *pPostEffects = gpBase->mpPostEffectHandler;
         aObj.AddVarBool("BloomActive", pMapHdlr->GetPostEffect_Bloom()->IsDisabled() == false);
-        aObj.AddVarBool("ImageTrailActive", pMapHdlr->GetPostEffect_ImageTrail()->IsDisabled() == false);
+        aObj.AddVarBool("MotionBlurActive", pMapHdlr->GetPostEffect_MotionBlur()->IsDisabled() == false);
         aObj.AddVarBool("SepiaActive", pMapHdlr->GetPostEffect_Sepia()->IsDisabled() == false);
         aObj.AddVarBool("RadialBlurActive", pMapHdlr->GetPostEffect_RadialBlur()->IsDisabled() == false);
         aObj.AddVarBool("InsanityActive", pPostEffects->GetInsanity()->IsDisabled() == false);
@@ -2037,7 +2037,7 @@ void cLuxMainMenu_Options::DumpCurrentValues(cResourceVarsObject &aObj)
         /////////////////
         // PostEffects
         aObj.AddVarBool("BloomActive", mpChBBloom->IsChecked());
-        aObj.AddVarBool("ImageTrailActive", mpChBImageTrail->IsChecked());
+        aObj.AddVarBool("MotionBlurActive", mpChBMotionBlur->IsChecked());
         aObj.AddVarBool("SepiaActive", mpChBSepia->IsChecked());
         aObj.AddVarBool("RadialBlurActive", mpChBRadialBlur->IsChecked());
         aObj.AddVarBool("InsanityActive", mpChBInsanity->IsChecked());

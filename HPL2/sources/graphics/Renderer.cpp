@@ -2742,6 +2742,43 @@ bool iRenderer::IsViewModelObject(iRenderable *apObject)
 
 //-----------------------------------------------------------------------
 
+void iRenderer::RenderViewModelMask()
+{
+    START_RENDER_PASS(ViewModelMask);
+
+    ////////////////////////////
+    // Alpha = 0 everywhere (nothing reads the alpha of the light accumulation)
+    SetChannelMode(eMaterialChannelMode_A);
+    mpLowLevelGraphics->SetClearColor(cColor(0, 0));
+    ClearFrameBuffer(eClearFrameBufferFlag_Color, true);
+    mpLowLevelGraphics->SetClearColor(mpCurrentSettings->mClearColor);
+
+    ////////////////////////////
+    // Alpha = 1 on the view model. The depth buffer has its squeezed depth, so only visible parts pass.
+    // The z program writes 1 to all channels.
+    SetDepthTest(true);
+    SetDepthWrite(false);
+    SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
+
+    cRenderableVecIterator objIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Diffuse);
+    while(objIt.HasNext())
+    {
+        iRenderable *pObject = objIt.Next();
+        if(IsViewModelObject(pObject) == false)
+        {
+            continue;
+        }
+
+        RenderZObject(pObject, NULL);
+    }
+
+    SetChannelMode(eMaterialChannelMode_RGBA);
+
+    END_RENDER_PASS();
+}
+
+//-----------------------------------------------------------------------
+
 void iRenderer::RenderViewModelDepth(bool abRealDepth)
 {
     ////////////////////////////

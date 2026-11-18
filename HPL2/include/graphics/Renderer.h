@@ -504,6 +504,11 @@ protected:
      * abRealDepth = false: squeezed again (so translucent world objects stay behind the hands).
      */
     void RenderViewModelDepth(bool abRealDepth);
+    /**
+     * Clears the alpha of the current frame buffer to 0 and writes 1 where the view model is visible
+     * (needs the squeezed view model depth in the depth buffer). Used by motion blur.
+     */
+    void RenderViewModelMask();
 
 
     /**
