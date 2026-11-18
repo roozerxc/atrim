@@ -32,14 +32,32 @@ const static bool gbLogStuff = false;
 
 //All live managers, to find them by name when warming.
 static std::vector<cProgramComboManager *> gvComboManagers;
-//"name<TAB>mode<TAB>flags" of every program generated (and every line of a loaded list).
+//"name<TAB>mode<TAB>flags<TAB>settings" of every program generated (and every line of a loaded list).
 static std::set<tString> gsetWarmEntries;
 static bool gbWarmListChanged = false;
 static bool gbWarming = false;
 
-static tString WarmEntryName(const tString &asManager, int alMode, int alFlags)
+//Hash of a mode's default vars. Graphics settings change them (refraction, lite shader...),
+//and flags recorded under other settings can make combos the shaders do not support.
+static tString WarmSettingsHash(const std::vector<cProgramComboSettingsVar> &avVars)
 {
-    return asManager + "\t" + cString::ToString(alMode) + "\t" + cString::ToString(alFlags);
+    unsigned int lHash = 2166136261u;
+    for(size_t i = 0; i < avVars.size(); ++i)
+    {
+        tString sVar = avVars[i].msName + "=" + avVars[i].msValue + ";";
+        for(size_t j = 0; j < sVar.size(); ++j)
+        {
+            lHash = (lHash ^ (unsigned char)sVar[j]) * 16777619u;
+        }
+    }
+    char vBuffer[16];
+    sprintf(vBuffer, "%08x", lHash);
+    return vBuffer;
+}
+
+static tString WarmEntryName(const tString &asManager, int alMode, int alFlags, const tString &asSettings)
+{
+    return asManager + "\t" + cString::ToString(alMode) + "\t" + cString::ToString(alFlags) + "\t" + asSettings;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -158,7 +176,7 @@ iGpuProgram *cProgramComboManager::GenerateProgram(int alMainMode, int alFlags)
         // Record for shader warming (temporary managers like the light self-test have no use for it)
         if(pProgram && msName != "" && msName != "LightSelfTest")
         {
-            if(gsetWarmEntries.insert(WarmEntryName(msName, alMainMode, alFlags)).second)
+            if(gsetWarmEntries.insert(WarmEntryName(msName, alMainMode, alFlags, WarmSettingsHash(mvSettings[alMainMode].mvDefaultVars))).second)
             {
                 gbWarmListChanged = true;
             }
@@ -673,17 +691,21 @@ int cProgramComboManager::WarmFromFile(const tWString& asFile)
 
         size_t lTab1 = sLine.find('\t');
         size_t lTab2 = lTab1 == tString::npos ? tString::npos : sLine.find('\t', lTab1 + 1);
-        if(lTab2 == tString::npos)
+        size_t lTab3 = lTab2 == tString::npos ? tString::npos : sLine.find('\t', lTab2 + 1);
+        //Lines without settings are from older lists, drop them
+        if(lTab3 == tString::npos)
         {
+            gbWarmListChanged = true;
             continue;
         }
 
         tString sName = sLine.substr(0, lTab1);
         int lMode = cString::ToInt(sLine.substr(lTab1 + 1, lTab2 - lTab1 - 1).c_str(), -1);
-        int lFlags = cString::ToInt(sLine.substr(lTab2 + 1).c_str(), -1);
+        int lFlags = cString::ToInt(sLine.substr(lTab2 + 1, lTab3 - lTab2 - 1).c_str(), -1);
+        tString sSettings = sLine.substr(lTab3 + 1);
 
         //Keep the line even if it can not be used now (another renderer, setting...)
-        gsetWarmEntries.insert(WarmEntryName(sName, lMode, lFlags));
+        gsetWarmEntries.insert(WarmEntryName(sName, lMode, lFlags, sSettings));
 
         cProgramComboManager *pManager = NULL;
         for(size_t i = 0; i < gvComboManagers.size(); ++i)
@@ -696,7 +718,8 @@ int cProgramComboManager::WarmFromFile(const tWString& asFile)
         }
 
         if(pManager == NULL || lMode < 0 || lMode >= pManager->mlNumOfMainModes || lFlags < 0 ||
-                pManager->mvSettings[lMode].msFragShader == "" || pManager->mvSettings[lMode].msVtxShader == "")
+                pManager->mvSettings[lMode].msFragShader == "" || pManager->mvSettings[lMode].msVtxShader == "" ||
+                WarmSettingsHash(pManager->mvSettings[lMode].mvDefaultVars) != sSettings)
         {
             ++lSkipped;
             continue;
@@ -716,7 +739,6 @@ int cProgramComboManager::WarmFromFile(const tWString& asFile)
     }
 
     gbWarming = false;
-    gbWarmListChanged = false;
 
     Log("Shader warming: compiled %d programs (%d skipped)\n", lCompiled, lSkipped);
 
