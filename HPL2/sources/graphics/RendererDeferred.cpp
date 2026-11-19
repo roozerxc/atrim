@@ -210,6 +210,19 @@ cRendererDeferred::cRendererDeferred(cGraphics *apGraphics, cResources* apResour
     mbReflectionTextureCleared = false;
 
     mbStencilAvailable = true;
+
+    for(int type = 0; type < 2; ++type)
+    {
+        for(int i = 0; i < 4; ++i)
+        {
+            mpGBufferTexture[type][i] = NULL;
+        }
+        for(int i = 0; i < eGBufferComponents_LastEnum; ++i)
+        {
+            mpGBuffer[type][i] = NULL;
+        }
+    }
+
     mpLightBoxClipProgram[0] = NULL;
     mpLightBoxClipProgram[1] = NULL;
 
