@@ -62,6 +62,11 @@ struct joystick_hwdata
 		int offset;
 		float scale;
 	} transaxis[6];
+
+	/* atrim: SDL axis index -> winmm axis slot (0=X 1=Y 2=Z 3=R 4=U 5=V).
+	   winmm only counts the axes a device has, so a pad with X, Y, R and U
+	   (no Z) has wNumAxes == 4 but its axes are not in slots 0..3. */
+	int axismap[6];
 };
 
 /* Convert a win32 Multimedia API return code to a text message */
@@ -221,21 +226,26 @@ int SDL_SYS_JoystickOpen(SDL_Joystick *joystick)
 
 	/* set hardware data */
 	joystick->hwdata->id = SYS_JoystickID[index];
+	joystick->naxes = 0;
 	for ( i = 0; i < MAX_AXES; ++i ) {
-		if ( (i<2) || (SYS_Joystick[index].wCaps & caps_flags[i-2]) ) {
+		if ( ((i<2) || (SYS_Joystick[index].wCaps & caps_flags[i-2])) &&
+		     (axis_max[i] > axis_min[i]) ) {
 			joystick->hwdata->transaxis[i].offset =
 				AXIS_MIN - axis_min[i];
 			joystick->hwdata->transaxis[i].scale =
 				(float)(AXIS_MAX - AXIS_MIN) / (axis_max[i] - axis_min[i]);
+			joystick->hwdata->axismap[joystick->naxes++] = i;
 		} else {
 			joystick->hwdata->transaxis[i].offset = 0;
 			joystick->hwdata->transaxis[i].scale = 1.0; /* Just in case */
 		}
 	}
 
-	/* fill nbuttons, naxes, and nhats fields */
+	/* fill nbuttons and nhats fields (naxes was counted above) */
 	joystick->nbuttons = SYS_Joystick[index].wNumButtons;
-	joystick->naxes = SYS_Joystick[index].wNumAxes;
+	if ( joystick->nbuttons > MAX_BUTTONS ) {
+		joystick->nbuttons = MAX_BUTTONS;
+	}
 	if ( SYS_Joystick[index].wCaps & JOYCAPS_HASPOV ) {
 		joystick->nhats = 1;
 	} else {
@@ -303,8 +313,11 @@ void SDL_SYS_JoystickUpdate(SDL_Joystick *joystick)
 
 	transaxis = joystick->hwdata->transaxis;
 	for (i = 0; i < joystick->naxes; i++) {
-		if (joyinfo.dwFlags & flags[i]) {
-			value = (int)(((float)pos[i] + transaxis[i].offset) * transaxis[i].scale);
+		int slot = joystick->hwdata->axismap[i];
+		if (joyinfo.dwFlags & flags[slot]) {
+			value = (int)(((float)pos[slot] + transaxis[slot].offset) * transaxis[slot].scale);
+			if ( value < AXIS_MIN ) value = AXIS_MIN;
+			if ( value > AXIS_MAX ) value = AXIS_MAX;
 			change = (value - joystick->axes[i]);
 			if ( (change < -JOY_AXIS_THRESHOLD) || (change > JOY_AXIS_THRESHOLD) ) {
 				SDL_PrivateJoystickAxis(joystick, (Uint8)i, (Sint16)value);
