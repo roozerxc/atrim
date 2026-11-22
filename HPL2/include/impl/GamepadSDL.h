@@ -124,6 +124,7 @@ public:
 private:
     void SetUpMapping();
     bool FindUserMapping(cGamepadSDLMapping& aMapping);
+    void ConvertDInputAxes(cGamepadSDLMapping& aMapping);
 
     float RawAxis(int alAxis);
     bool SourceIsDown(const cGamepadSDLSource& aSrc);

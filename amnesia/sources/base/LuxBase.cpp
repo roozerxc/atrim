@@ -1389,6 +1389,11 @@ bool cLuxBase::InitEngine()
     // Button layout overrides for DirectInput pads, read by cGamepadSDL when the pads are opened
     iGamepad::SetUserMappings(mpMainConfig->GetString("Input", "GamepadMappings", ""));
     iGamepad::SetLogRawInput(mpMainConfig->GetBool("Input", "GamepadLogRawInput", false));
+
+    // Gamepad layouts (SDL_GameControllerDB format). The player's own file is
+    // read first so its lines win over the ones atrim ships.
+    iGamepad::LoadControllerDBFile(msBaseSavePath + _W("gamecontrollerdb.txt"));
+    iGamepad::LoadControllerDBFile(_W("config/gamecontrollerdb.txt"));
 #endif
 
     cRendererDeferred::SetOcclusionTestLargeLights(mpConfigHandler->mbOcclusionTestLights);

@@ -22,48 +22,35 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
-// Mappings use the SDL GameControllerDB syntax, with indices as SDL 1.2's
-// winmm driver reports them (axes: X, Y, Z, R, U, V in that order, skipping
-// the ones a pad does not have). For pads with X/Y/Z/Rz this is the same as
-// the DirectInput indices in GameControllerDB "platform:Windows" lines.
+// Layouts come from SDL_GameControllerDB "platform:Windows" lines, which
+// number axes the way DirectInput does; ConvertDInputAxes() turns those into
+// the axis numbers SDL 1.2's winmm driver reports.
 //
-// Users can override or add to these with GamepadMappings in the Input
-// section of main_settings.cfg, see iGamepad::SetUserMappings().
+// Where they are looked up, first match wins:
+//  1. GamepadMappings in the Input section of main_settings.cfg (raw winmm
+//     numbers, as GamepadLogRawInput logs them), see iGamepad::SetUserMappings()
+//  2. Xbox pads: used raw, the bindings are made for them
+//  3. gamecontrollerdb.txt next to main_settings.cfg, then config/gamecontrollerdb.txt
+//     (loaded by cLuxBase::InitEngine())
+//  4. the few lines below, so the pads atrim was tested with work without the file
+//  5. the most common DirectInput layout (Logitech style)
+
+static const char *gsBuiltInControllerDB =
+    "030000006d04000016c2000000000000,Logitech Dual Action,a:b1,b:b2,back:b8,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,leftshoulder:b4,leftstick:b10,lefttrigger:b6,leftx:a0,lefty:a1,rightshoulder:b5,rightstick:b11,righttrigger:b7,rightx:a2,righty:a3,start:b9,x:b0,y:b3,platform:Windows,\n"
+    "03000000100800000100000000000000,PS1 Controller,a:b2,b:b1,back:b8,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,leftshoulder:b6,leftstick:b10,lefttrigger:b4,leftx:a0,lefty:a1,rightshoulder:b7,rightstick:b11,righttrigger:b5,rightx:a3,righty:a2,start:b9,x:b3,y:b0,platform:Windows,\n"
+    "030000008f0e00000300000000000000,PS3 Controller,a:b2,b:b1,back:b8,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,leftshoulder:b4,leftstick:b10,lefttrigger:b6,leftx:a0,lefty:a1,rightshoulder:b5,rightstick:b11,righttrigger:b7,rightx:a2,righty:a5,start:b9,x:b3,y:b0,platform:Windows,\n"
+    "030000004c050000c405000000000000,PS4 Controller,a:b1,b:b2,back:b8,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b4,leftstick:b10,lefttrigger:a3,leftx:a0,lefty:a1,rightshoulder:b5,rightstick:b11,righttrigger:a4,rightx:a2,righty:a5,start:b9,touchpad:b13,x:b0,y:b3,platform:Windows,\n"
+    "030000004c050000cc09000000000000,PS4 Controller,a:b1,b:b2,back:b8,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b4,leftstick:b10,lefttrigger:a3,leftx:a0,lefty:a1,rightshoulder:b5,rightstick:b11,righttrigger:a4,rightx:a2,righty:a5,start:b9,touchpad:b13,x:b0,y:b3,platform:Windows,\n"
+    "030000004c050000e60c000000000000,PS5 Controller,a:b1,b:b2,back:b8,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b4,leftstick:b10,lefttrigger:a3,leftx:a0,lefty:a1,misc1:b14,rightshoulder:b5,rightstick:b11,righttrigger:a4,rightx:a2,righty:a5,start:b9,touchpad:b13,x:b0,y:b3,platform:Windows,\n";
 
 // "Logitech style": buttons 1-4 = left, bottom, right, top face button,
 // 5/6 = LB/RB, 7/8 = LT/RT, 9/10 = Back/Start, 11/12 = stick clicks,
-// right stick on Z/Rz. Also used for unknown non-Xbox pads.
-static const char *gsMapping_Logitech =
+// right stick on Z/Rz. Used for pads no layout is known for.
+static const char *gsMapping_Generic =
     "a:b1,b:b2,x:b0,y:b3,leftshoulder:b4,rightshoulder:b5,lefttrigger:b6,righttrigger:b7,"
     "back:b8,start:b9,leftstick:b10,rightstick:b11,"
     "leftx:a0,lefty:a1,rightx:a2,righty:a3,"
     "dpup:h0.1,dpright:h0.2,dpdown:h0.4,dpleft:h0.8";
-
-// "PlayStation adapter style": 1 Triangle, 2 Circle, 3 Cross, 4 Square,
-// 5 L2, 6 R2, 7 L1, 8 R1, 9 Select, 10 Start, 11 L3, 12 R3,
-// right stick X on Rz and Y on Z.
-static const char *gsMapping_PlayStation =
-    "a:b2,b:b1,x:b3,y:b0,leftshoulder:b6,rightshoulder:b7,lefttrigger:b4,righttrigger:b5,"
-    "back:b8,start:b9,leftstick:b10,rightstick:b11,"
-    "leftx:a0,lefty:a1,rightx:a3,righty:a2,"
-    "dpup:h0.1,dpright:h0.2,dpdown:h0.4,dpleft:h0.8";
-
-struct cGamepadSDLBuiltInMapping
-{
-    Uint16 mlVendor;
-    Uint16 mlProduct;
-    const char *msName;
-    const char *msMapping;
-};
-
-static const cGamepadSDLBuiltInMapping gvBuiltInMappings[] =
-{
-    { 0x046D, 0xC216, "Logitech Dual Action", gsMapping_Logitech },
-    { 0x0810, 0x0001, "Twin USB PlayStation adapter", gsMapping_PlayStation },
-    { 0x0E8F, 0x0003, "PS3 style USB pad", gsMapping_PlayStation },
-
-    { 0, 0, NULL, NULL }
-};
 
 static const Uint16 kVendor_Microsoft = 0x045E;
 
@@ -750,27 +737,112 @@ void cGamepadSDL::SetUpMapping()
     }
 
     ///////////////////
-    // Known pads
-    for(int i = 0; gvBuiltInMappings[i].msMapping != NULL; ++i)
+    // Controller database, then the built-in lines
+    static bool bBuiltInAdded = false;
+    if(bBuiltInAdded == false)
     {
-        const cGamepadSDLBuiltInMapping& builtIn = gvBuiltInMappings[i];
-        if(builtIn.mlVendor == mlVendorId && builtIn.mlProduct == mlProductId)
+        // Added after the files, so lines in the files win
+        iGamepad::AddControllerDBLines(gsBuiltInControllerDB);
+        bBuiltInAdded = true;
+    }
+
+    tString sName, sMapping;
+    if(iGamepad::FindControllerDBEntry(mlVendorId, mlProductId, sName, sMapping))
+    {
+        mMapping.msName = sName + " (gamecontrollerdb)";
+        if(ParseMapping(sMapping, mMapping))
         {
-            mMapping.msName = builtIn.msName;
-            if(ParseMapping(builtIn.msMapping, mMapping))
-            {
-                return;
-            }
+            ConvertDInputAxes(mMapping);
+            return;
         }
+        Log("  Gamepad layout '%s' could not be used\n", sName.c_str());
     }
 
     ///////////////////
     // Everything else: the most common DirectInput layout
     mMapping.msName = "generic DirectInput";
-    if(ParseMapping(gsMapping_Logitech, mMapping) == false)
+    if(ParseMapping(gsMapping_Generic, mMapping))
+    {
+        ConvertDInputAxes(mMapping);
+    }
+    else
     {
         mMapping = cGamepadSDLMapping();
         mMapping.msName = "raw";
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cGamepadSDL::ConvertDInputAxes(cGamepadSDLMapping& aMapping)
+{
+    ////////////////////////////////////////////////////////////
+    // SDL_GameControllerDB numbers the axes a pad has in DirectInput order:
+    // X, Y, Z, Rx, Ry, Rz. winmm puts them in its X, Y, Z, R, U and V slots
+    // as Z -> Z, Rz -> R, Ry -> U, Rx -> V (what Windows and Wine do), and
+    // SDL 1.2 numbers the slots a pad has in that order. So the DirectInput
+    // axes a pad has are worked out from the winmm slots it has.
+    //
+    // For pads with X, Y, Z and Rz (most of them) nothing changes. For a PS4
+    // or PS5 controller (all six) DB axis 3 (Rx, L2) becomes 5, 4 (Ry, R2)
+    // stays 4 and 5 (Rz, right stick Y) becomes 3.
+    int vSlotToAxis[6] = { -1, -1, -1, -1, -1, -1 };
+    int lNumAxes = SDL_JoystickNumAxes(mpHandle);
+    for(int i = 0; i < lNumAxes; ++i)
+    {
+#if defined(_WIN32) && !defined(_WIN32_WCE)
+        int lSlot = SDL_JoystickGetWinMMAxisSlot(mpHandle, i);
+#else
+        int lSlot = i;
+#endif
+        if(lSlot >= 0 && lSlot < 6)
+        {
+            vSlotToAxis[lSlot] = i;
+        }
+    }
+
+    static const int vDInputToSlot[6] = { 0, 1, 2, 5, 4, 3 }; // X, Y, Z, Rx, Ry, Rz
+    std::vector<int> vDInputToAxis;
+    for(int i = 0; i < 6; ++i)
+    {
+        if(vSlotToAxis[vDInputToSlot[i]] >= 0)
+        {
+            vDInputToAxis.push_back(vSlotToAxis[vDInputToSlot[i]]);
+        }
+    }
+
+    std::vector<cGamepadSDLSource*> vSources;
+    for(int i = 0; i < kGamepadSDLNumButtons; ++i)
+    {
+        vSources.push_back(&aMapping.mvButtons[i]);
+    }
+    for(int i = 0; i < 4; ++i)
+    {
+        vSources.push_back(&aMapping.mvDpad[i]);
+    }
+    for(int i = 0; i < eGamepadSDLStick_LastEnum; ++i)
+    {
+        vSources.push_back(&aMapping.mvAxes[i]);
+    }
+
+    for(size_t i = 0; i < vSources.size(); ++i)
+    {
+        cGamepadSDLSource* pSrc = vSources[i];
+        if(pSrc->mType != eGamepadSDLSourceType_Axis)
+        {
+            continue;
+        }
+
+        if(pSrc->mlIndex >= 0 && pSrc->mlIndex < (int)vDInputToAxis.size())
+        {
+            pSrc->mlIndex = vDInputToAxis[pSrc->mlIndex];
+        }
+        else
+        {
+            // Probably a slider, which this can't place
+            Log("  Gamepad layout uses DirectInput axis %d, which this pad's %d axes don't have\n", pSrc->mlIndex, lNumAxes);
+            pSrc->mType = eGamepadSDLSourceType_None;
+        }
     }
 }
 

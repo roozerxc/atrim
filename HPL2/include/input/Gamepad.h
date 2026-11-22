@@ -211,6 +211,23 @@ public:
     static tString TranslateSDL2InputString(const tString& asInput);
 
     /**
+     * Reads SDL_GameControllerDB lines ("<GUID>,<name>,<mapping>,platform:Windows,")
+     * from a file and keeps the ones for USB devices, keyed by vendor/product ID.
+     * Lines for other platforms are skipped. When two lines (in the same or different
+     * files) have the same ID the first one wins, so load the user's own file first.
+     * \return number of lines added, -1 if the file could not be opened.
+     */
+    static int LoadControllerDBFile(const tWString& asFile);
+    /**
+     * Adds lines in the same format from memory, same rules as LoadControllerDBFile().
+     */
+    static int AddControllerDBLines(const tString& asText);
+    /**
+     * \return true and the name and mapping (the part after the name) for a USB ID.
+     */
+    static bool FindControllerDBEntry(unsigned int alVendor, unsigned int alProduct, tString& asName, tString& asMapping);
+
+    /**
      * Button/axis layout overrides for non-XInput pads, set before gamepads are created
      * (GamepadMappings in the Input section of main_settings.cfg).
      * Format: "VVVV:PPPP,<SDL GameControllerDB mapping>;VVVV:PPPP,..." with hex USB IDs,

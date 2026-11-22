@@ -2,6 +2,14 @@
 #include "input/Gamepad.h"
 #include "input/InputTypes.h"
 
+#include "system/Platform.h"
+#include "system/LowLevelSystem.h"
+#include "system/String.h"
+
+#include <map>
+#include <stdio.h>
+#include <stdlib.h>
+
 namespace hpl
 {
 
@@ -107,6 +115,211 @@ tString iGamepad::TranslateSDL2InputString(const tString& asInput)
     }
 
     return asInput;
+}
+
+//-----------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// CONTROLLER DATABASE
+//////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+struct cControllerDBEntry
+{
+    tString msName;
+    tString msMapping;
+};
+
+typedef std::map<unsigned int, cControllerDBEntry> tControllerDBMap;
+
+static tControllerDBMap& GetControllerDB()
+{
+    static tControllerDBMap gmapDB;
+    return gmapDB;
+}
+
+//-----------------------------------------------------------------------
+
+static int HexDigit(char c)
+{
+    if(c >= '0' && c <= '9') return c - '0';
+    if(c >= 'a' && c <= 'f') return c - 'a' + 10;
+    if(c >= 'A' && c <= 'F') return c - 'A' + 10;
+    return -1;
+}
+
+// Little endian 16 bit value from 4 hex characters
+static int HexLE16(const tString& asGUID, size_t alPos)
+{
+    int lVal = 0;
+    for(int i = 0; i < 4; ++i)
+    {
+        int lDigit = HexDigit(asGUID[alPos + i]);
+        if(lDigit < 0)
+        {
+            return -1;
+        }
+        lVal = lVal * 16 + lDigit;
+    }
+    // "6d04" -> 0x6d04 -> swap bytes -> 0x046d
+    return ((lVal & 0xff) << 8) | ((lVal >> 8) & 0xff);
+}
+
+static bool HexIsZero(const tString& asGUID, size_t alPos, size_t alCount)
+{
+    for(size_t i = 0; i < alCount; ++i)
+    {
+        if(asGUID[alPos + i] != '0')
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+// SDL2 joystick GUIDs carry the USB IDs in one of two layouts:
+//   SDL 2.0.5+:  BBBB CCCC VVVV 0000 PPPP 0000 vvvv 0000  (bus, CRC, vendor, product, version)
+//   older Windows DirectInput:  VVVV PPPP 0000 0000 0000 "PIDVID" in hex
+static bool ParseControllerGUID(const tString& asGUID, unsigned int& alVendor, unsigned int& alProduct)
+{
+    if(asGUID.size() != 32)
+    {
+        return false;
+    }
+
+    tString sLower = cString::ToLowerCase(asGUID);
+    int lVendor = -1, lProduct = -1;
+
+    if(sLower.compare(20, 12, "504944564944") == 0)
+    {
+        lVendor = HexLE16(sLower, 0);
+        lProduct = HexLE16(sLower, 4);
+    }
+    else if((sLower.compare(0, 4, "0300") == 0 || sLower.compare(0, 4, "0500") == 0) &&
+            HexIsZero(sLower, 12, 4) && HexIsZero(sLower, 20, 4) &&
+            HexIsZero(sLower, 28, 4)) // driver signature: 0 is DirectInput, 'h' HIDAPI, 'x' XInput, ...
+    {
+        lVendor = HexLE16(sLower, 8);
+        lProduct = HexLE16(sLower, 16);
+    }
+
+    if(lVendor <= 0 || lProduct < 0)
+    {
+        return false;
+    }
+
+    alVendor = (unsigned int)lVendor;
+    alProduct = (unsigned int)lProduct;
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
+int iGamepad::AddControllerDBLines(const tString& asText)
+{
+    tControllerDBMap& mapDB = GetControllerDB();
+    int lAdded = 0;
+
+    size_t lStart = 0;
+    while(lStart < asText.size())
+    {
+        size_t lEnd = asText.find('\n', lStart);
+        if(lEnd == tString::npos)
+        {
+            lEnd = asText.size();
+        }
+        tString sLine = asText.substr(lStart, lEnd - lStart);
+        lStart = lEnd + 1;
+
+        // Trim
+        size_t lFirst = sLine.find_first_not_of(" \t\r");
+        if(lFirst == tString::npos || sLine[lFirst] == '#')
+        {
+            continue;
+        }
+        size_t lLast = sLine.find_last_not_of(" \t\r");
+        sLine = sLine.substr(lFirst, lLast - lFirst + 1);
+
+        // Only DirectInput (Windows) layouts apply to winmm. Lines without a
+        // platform are taken too, in case someone writes their own.
+        size_t lPlatform = sLine.find("platform:");
+        if(lPlatform != tString::npos && sLine.compare(lPlatform, 16, "platform:Windows") != 0)
+        {
+            continue;
+        }
+
+        size_t lComma1 = sLine.find(',');
+        if(lComma1 == tString::npos)
+        {
+            continue;
+        }
+        size_t lComma2 = sLine.find(',', lComma1 + 1);
+        if(lComma2 == tString::npos)
+        {
+            continue;
+        }
+
+        unsigned int lVendor = 0, lProduct = 0;
+        if(ParseControllerGUID(sLine.substr(0, lComma1), lVendor, lProduct) == false)
+        {
+            continue;
+        }
+
+        unsigned int lKey = (lVendor << 16) | lProduct;
+        if(mapDB.find(lKey) != mapDB.end())
+        {
+            continue;
+        }
+
+        cControllerDBEntry entry;
+        entry.msName = sLine.substr(lComma1 + 1, lComma2 - lComma1 - 1);
+        entry.msMapping = sLine.substr(lComma2 + 1);
+        mapDB[lKey] = entry;
+        ++lAdded;
+    }
+
+    return lAdded;
+}
+
+//-----------------------------------------------------------------------
+
+int iGamepad::LoadControllerDBFile(const tWString& asFile)
+{
+    FILE *pFile = cPlatform::OpenFile(asFile, _W("rb"));
+    if(pFile == NULL)
+    {
+        return -1;
+    }
+
+    tString sText;
+    char vBuffer[4096];
+    size_t lRead;
+    while((lRead = fread(vBuffer, 1, sizeof(vBuffer), pFile)) > 0)
+    {
+        sText.append(vBuffer, lRead);
+    }
+    fclose(pFile);
+
+    int lAdded = AddControllerDBLines(sText);
+    Log("Loaded %d gamepad layouts from '%s'\n", lAdded, cString::To8Char(asFile).c_str());
+    return lAdded;
+}
+
+//-----------------------------------------------------------------------
+
+bool iGamepad::FindControllerDBEntry(unsigned int alVendor, unsigned int alProduct, tString& asName, tString& asMapping)
+{
+    tControllerDBMap& mapDB = GetControllerDB();
+    tControllerDBMap::iterator it = mapDB.find((alVendor << 16) | alProduct);
+    if(it == mapDB.end())
+    {
+        return false;
+    }
+
+    asName = it->second.msName;
+    asMapping = it->second.msMapping;
+    return true;
 }
 
 //-----------------------------------------------------------------------
