@@ -176,8 +176,6 @@ private:
 #if USE_GAMEPAD
     bool InputEntryGamepadButtonPress(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(InputEntryGamepadButtonPress);
-
-    static bool mbGamepadButtonPress;
 #endif
 };
 
@@ -206,6 +204,14 @@ public:
     void CancelInputSetting()
     {
         mbInputSettingCancelled = true;
+    }
+    /**
+     * True while an input is being set and for the rest of the frame it was set
+     * or cancelled in, so the UI action of that same press can be ignored.
+     */
+    bool WasWaitingOnInput()
+    {
+        return mbWasWaitingOnInput;
     }
 private:
     void OnSetActive(bool abX);

@@ -7,9 +7,6 @@
 //////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------
-#if USE_GAMEPAD
-bool cLuxInputMenuEntry::mbGamepadButtonPress = false;
-#endif
 
 cLuxInputMenuEntry::cLuxInputMenuEntry(cLuxMainMenu_KeyConfig* apWindow, cLuxAction* apAction, iWidget* apParent, const cVector3f& avPos)
 {
@@ -910,13 +907,11 @@ kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryKeyPress);
 
 bool cLuxInputMenuEntry::InputEntryUIArrowPress(iWidget* apWidget, const cGuiMessageData& aData)
 {
-#if USE_GAMEPAD
-    if(mbGamepadButtonPress)
+    // The D-pad/stick press that was just bound must not also move the focus
+    if(mpWindow->WasWaitingOnInput())
     {
-        mbGamepadButtonPress = false;
         return true;
     }
-#endif
 
     return false;
 }
@@ -924,18 +919,20 @@ kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryUIArrowPress);
 
 bool cLuxInputMenuEntry::InputEntryUIButtonPress(iWidget* apWidget, const cGuiMessageData& aData)
 {
+    // Swallow the UI press made by the button that was just bound (or that
+    // cancelled), whichever UI action it is, so binding A doesn't start
+    // waiting again and binding B doesn't leave the window. This used to be
+    // a flag set on each gamepad bind, which was only cleared by the next
+    // A press or arrow, so the first A after binding e.g. Back was ignored.
+    if(mpWindow->WasWaitingOnInput())
+    {
+        return true;
+    }
+
     if(aData.mlVal != eUIButton_Primary)
     {
         return false;
     }
-
-#if USE_GAMEPAD
-    if(mbGamepadButtonPress)
-    {
-        mbGamepadButtonPress = false;
-        return true;
-    }
-#endif
 
     if(mpWindow->GetWaitingInput() == NULL)
     {
@@ -960,10 +957,13 @@ bool cLuxInputMenuEntry::InputEntryGamepadButtonPress(iWidget* apWidget, const c
         {
             return false;
         }
-        if(aData.mGamepadInputData.mInputType == eGamepadInputType_Button && aData.mGamepadInputData.mlInputId == eGamepadButton_1)
+        if(aData.mGamepadInputData.mInputType == eGamepadInputType_Button && aData.mGamepadInputData.mlInputId == eGamepadButton_7)
         {
             //////////
-            // Cancel when pressing B
+            // Cancel when pressing Start, the gamepad's Escape. Start is the
+            // Exit action, which can't be rebound, so every bindable button
+            // (B included, the default Crouch) can be bound here. The Exit
+            // action this press also triggers is ignored by ExitPressed().
             UpdateEntry();
             SetWaiting(false, GetPosFromInput(apWidget));
 
@@ -971,9 +971,6 @@ bool cLuxInputMenuEntry::InputEntryGamepadButtonPress(iWidget* apWidget, const c
 
             return true;
         }
-
-        mbGamepadButtonPress = true;
-
 
         SaveGamepadSubAction(GetPosFromInput(apWidget),
                              aData.mGamepadInputData.mInputType,
