@@ -11,6 +11,106 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
+tString iGamepad::TranslateSDL2InputString(const tString& asInput)
+{
+    ///////////////////////////
+    // Split on '.', skipping empty parts like cString::GetStringVec does
+    // (vanilla's own default_user_keys.cfg has "GamepadAxis..Axis 0.Positive")
+    std::vector<tString> vParts;
+    tString sPart;
+    for(size_t i = 0; i <= asInput.size(); ++i)
+    {
+        if(i == asInput.size() || asInput[i] == '.')
+        {
+            if(sPart.empty() == false)
+            {
+                vParts.push_back(sPart);
+            }
+            sPart = "";
+        }
+        else
+        {
+            sPart += asInput[i];
+        }
+    }
+
+    if(vParts.size() < 2)
+    {
+        return asInput;
+    }
+
+    ///////////////////////////
+    // Buttons
+    if(vParts[0] == "GamepadButton")
+    {
+        static const char *vNames[][2] =
+        {
+            { "Button A", "GamepadButton.Button 0" },
+            { "Button B", "GamepadButton.Button 1" },
+            { "Button X", "GamepadButton.Button 2" },
+            { "Button Y", "GamepadButton.Button 3" },
+            { "Button LeftShoulder", "GamepadButton.Button 4" },
+            { "Button RightShoulder", "GamepadButton.Button 5" },
+            { "Button Back", "GamepadButton.Button 6" },
+            { "Button Start", "GamepadButton.Button 7" },
+            { "Button LeftStick", "GamepadButton.Button 8" },
+            { "Button RightStick", "GamepadButton.Button 9" },
+            { "Button DpadUp", "GamepadHat.Hat 0.Up" },
+            { "Button DpadDown", "GamepadHat.Hat 0.Down" },
+            { "Button DpadLeft", "GamepadHat.Hat 0.Left" },
+            { "Button DpadRight", "GamepadHat.Hat 0.Right" },
+            { "Button Guide", "" },
+            { NULL, NULL }
+        };
+        for(int i = 0; vNames[i][0] != NULL; ++i)
+        {
+            if(vParts[1] == vNames[i][0])
+            {
+                return vNames[i][1];
+            }
+        }
+        return asInput;
+    }
+
+    ///////////////////////////
+    // Axes
+    if(vParts[0] == "GamepadAxis" && vParts.size() >= 3)
+    {
+        const tString& sAxis = vParts[1];
+        const tString& sRange = vParts[2];
+
+        if(sAxis == "Axis LeftX")
+        {
+            return "GamepadAxis.Axis 0." + sRange;
+        }
+        if(sAxis == "Axis LeftY")
+        {
+            return "GamepadAxis.Axis 1." + sRange;
+        }
+        if(sAxis == "Axis RightY")
+        {
+            return "GamepadAxis.Axis 3." + sRange;
+        }
+        if(sAxis == "Axis RightX")
+        {
+            return "GamepadAxis.Axis 4." + sRange;
+        }
+        // Both triggers share axis 2: LT pushes it positive, RT negative
+        if(sAxis == "Axis LeftTrigger")
+        {
+            return "GamepadAxis.Axis 2.Positive";
+        }
+        if(sAxis == "Axis RightTrigger")
+        {
+            return "GamepadAxis.Axis 2.Negative";
+        }
+    }
+
+    return asInput;
+}
+
+//-----------------------------------------------------------------------
+
 tString iGamepad::msUserMappings = "";
 bool iGamepad::mbLogRawInput = false;
 

@@ -202,6 +202,15 @@ public:
     static eGamepadBall StringToBall(const tString &);
 
     /**
+     * Converts an input string saved by vanilla 1.3+ (SDL2 GameController names,
+     * e.g. "GamepadButton.Button Back" or "GamepadAxis.Axis RightTrigger.Positive")
+     * into atrim's numbering ("GamepadButton.Button 6", "GamepadAxis.Axis 2.Negative").
+     * Any other string is returned unchanged; inputs atrim has no equivalent for
+     * (the Guide button) come back empty.
+     */
+    static tString TranslateSDL2InputString(const tString& asInput);
+
+    /**
      * Button/axis layout overrides for non-XInput pads, set before gamepads are created
      * (GamepadMappings in the Input section of main_settings.cfg).
      * Format: "VVVV:PPPP,<SDL GameControllerDB mapping>;VVVV:PPPP,..." with hex USB IDs,

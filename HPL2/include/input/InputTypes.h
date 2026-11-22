@@ -340,21 +340,20 @@ enum eGamepadButton
     eGamepadButton_29,
 
     eGamepadButton_LastEnum,
+
+    // atrim's layout (the Xbox 360 pad through DirectInput, see GamepadSDL.h).
+    // These used to be SDL2 GameController numbers left over from vanilla 1.3,
+    // which don't match. The D-pad is hat 0, not buttons.
     eGamepadButton_A = eGamepadButton_0,
     eGamepadButton_B = eGamepadButton_1,
     eGamepadButton_X = eGamepadButton_2,
     eGamepadButton_Y = eGamepadButton_3,
-    eGamepadButton_Back = eGamepadButton_4,
-    eGamepadButton_Guide = eGamepadButton_5,
-    eGamepadButton_Start = eGamepadButton_6,
-    eGamepadButton_LeftStick = eGamepadButton_7,
-    eGamepadButton_RightStick = eGamepadButton_8,
-    eGamepadButton_LeftShoulder = eGamepadButton_9,
-    eGamepadButton_RightShoulder = eGamepadButton_10,
-    eGamepadButton_DpadUp = eGamepadButton_11,
-    eGamepadButton_DpadDown = eGamepadButton_12,
-    eGamepadButton_DpadLeft = eGamepadButton_13,
-    eGamepadButton_DpadRight = eGamepadButton_14
+    eGamepadButton_LeftShoulder = eGamepadButton_4,
+    eGamepadButton_RightShoulder = eGamepadButton_5,
+    eGamepadButton_Back = eGamepadButton_6,
+    eGamepadButton_Start = eGamepadButton_7,
+    eGamepadButton_LeftStick = eGamepadButton_8,
+    eGamepadButton_RightStick = eGamepadButton_9
 };
 
 enum eGamepadAxis
@@ -371,12 +370,13 @@ enum eGamepadAxis
     eGamepadAxis_9,
 
     eGamepadAxis_LastEnum,
+
+    // atrim's layout, see eGamepadButton above
     eGamepadAxis_LeftX = eGamepadAxis_0,
     eGamepadAxis_LeftY = eGamepadAxis_1,
-    eGamepadAxis_RightX = eGamepadAxis_2,
+    eGamepadAxis_Triggers = eGamepadAxis_2,     // LT positive, RT negative
     eGamepadAxis_RightY = eGamepadAxis_3,
-    eGamepadAxis_LeftTrigger = eGamepadAxis_4,
-    eGamepadAxis_RightTrigger = eGamepadAxis_5
+    eGamepadAxis_RightX = eGamepadAxis_4
 };
 
 enum eGamepadAxisRange

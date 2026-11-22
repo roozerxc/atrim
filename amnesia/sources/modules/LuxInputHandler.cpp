@@ -192,9 +192,9 @@ static cLuxInput gvLuxInputs[] =
     // ------------Axis-------------
     // 0 --> (-) Left, (+) Right
     // 1 --> (-) Forward, (+) Back
-    // 2 --> (-) Look-Down, (+) Look-Up
-    // 3 --> (-) Look-Left, (+) Look-Right
-    // 4 --> (-) LTrigger, (+) RTrigger
+    // 2 --> (+) LTrigger, (-) RTrigger
+    // 3 --> (-) Look-Up, (+) Look-Down
+    // 4 --> (-) Look-Left, (+) Look-Right
 
 #if USE_GAMEPAD
     cLuxInput("GamepadAxis.Axis 1", eGamepadAxisRange_Negative, eLuxAction_Forward),
@@ -329,6 +329,10 @@ void cLuxInputHandler::LoadUserConfig()
         for(size_t j = 0; gvLuxInputPos[j] != ""; ++j)
         {
             tString sInput = gpBase->mpUserKeyConfig->GetString(pAction->GetName(), gvLuxInputPos[j], "");
+#if USE_GAMEPAD
+            // Profiles made by vanilla 1.3+ save gamepad inputs with SDL2 names
+            sInput = iGamepad::TranslateSDL2InputString(sInput);
+#endif
             if(sInput.empty())
             {
                 continue;
