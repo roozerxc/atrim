@@ -187,6 +187,15 @@ extern DECLSPEC void SDLCALL SDL_JoystickClose(SDL_Joystick *joystick);
  *         driver did not report them.
  */
 extern DECLSPEC int SDLCALL SDL_JoystickGetUSBIDs(int device_index, Uint16 *vendor, Uint16 *product);
+
+/**
+ * atrim extension (winmm driver only): which winmm axis an SDL axis is.
+ *
+ * @param[in] axis SDL axis index, 0 to SDL_JoystickNumAxes() - 1
+ * @return 0 = X, 1 = Y, 2 = Z, 3 = R, 4 = U, 5 = V, or -1 if the
+ *         joystick or axis is invalid
+ */
+extern DECLSPEC int SDLCALL SDL_JoystickGetWinMMAxisSlot(SDL_Joystick *joystick, int axis);
 #endif
 
 

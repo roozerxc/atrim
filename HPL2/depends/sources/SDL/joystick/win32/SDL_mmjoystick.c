@@ -203,6 +203,16 @@ int SDL_JoystickGetUSBIDs(int device_index, Uint16 *vendor, Uint16 *product)
 	return(0);
 }
 
+/* atrim extension: winmm axis slot of an SDL axis (see SDL_joystick.h) */
+int SDL_JoystickGetWinMMAxisSlot(SDL_Joystick *joystick, int axis)
+{
+	if ( (joystick == NULL) || (joystick->hwdata == NULL) ||
+	     (axis < 0) || (axis >= joystick->naxes) ) {
+		return(-1);
+	}
+	return(joystick->hwdata->axismap[axis]);
+}
+
 /* Function to open a joystick for use.
    The joystick to open is specified by the index field of the joystick.
    This should fill the nbuttons and naxes fields of the joystick structure.
