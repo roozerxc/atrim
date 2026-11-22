@@ -92,6 +92,8 @@
     <CATEGORY Name="OptionsMenu">
         <Entry Name="MotionBlur">Bewegungsunschärfe</Entry>
         <Entry Name="MotionBlurTip">Verwischt das Bild, wenn sich die Kamera bewegt, wie die Bewegungsunschärfe in Penumbra. Ersetzt den Bildspur-Effekt, den Karten und Mods nicht mehr einschalten können.</Entry>
+        <Entry Name="PotatoMode">Kartoffelmodus</Entry>
+        <Entry Name="PotatoModeTip">Zeichnet nur die Texturen, ohne Licht, Schatten, Nebel oder Effekte, für sehr schwache Grafikkarten. Deine anderen Grafikeinstellungen bleiben erhalten, wenn du ihn wieder ausschaltest.</Entry>
 
         <Entry Name="Ultra">Ultra</Entry>
         <Entry Name="UltraLow">Ultra Low</Entry>

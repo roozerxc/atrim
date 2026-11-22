@@ -320,7 +320,11 @@ void cMaterialType_SolidDiffuse::LoadSpecificData()
     {
         defaultVars.Add("RenderTargets_4");
     }
-    if(cRendererDeferred::GetLiteGBufferActive())
+    if(cRendererDeferred::GetFullbrightActive())
+    {
+        defaultVars.Add("GBufferAlbedoOnly");
+    }
+    else if(cRendererDeferred::GetLiteGBufferActive())
     {
         defaultVars.Add("GBufferLite");
         if(cRendererDeferred::GetLiteGBufferSparse())

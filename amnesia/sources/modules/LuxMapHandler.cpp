@@ -249,8 +249,10 @@ void cLuxMapHandler::OnStart()
 void cLuxMapHandler::UpdateViewportRenderProperties()
 {
     cRenderSettings *pRenderSettings = mpViewport->GetRenderSettings();
-    pRenderSettings->mbRenderWorldReflection = gpBase->mpConfigHandler->mbWorldReflection;
-    pRenderSettings->mbRenderShadows = gpBase->mpConfigHandler->mbShadowsActive;
+    //Fullbright G-buffer mode: no reflections or shadows (the config keeps the user's setting)
+    bool bFullbright = cRendererDeferred::GetFullbrightActive();
+    pRenderSettings->mbRenderWorldReflection = gpBase->mpConfigHandler->mbWorldReflection && bFullbright == false;
+    pRenderSettings->mbRenderShadows = gpBase->mpConfigHandler->mbShadowsActive && bFullbright == false;
     //Off: no occlusion queries for objects (they can hang some old drivers), frustum culling only.
     pRenderSettings->mbUseOcclusionCulling = gpBase->mpConfigHandler->mbOcclusionCulling;
 }
@@ -638,13 +640,28 @@ void cLuxMapHandler::LoadMainConfig()
     mbPostEffectLightColorGradeSetting = gpBase->mpMainConfig->GetBool("Graphics", "PostEffectLightColorGrade", true);
     mpPostEffect_LightColorGrade->SetDisabled(mbPostEffectLightColorGradeSetting == false || gpBase->mpConfigHandler->mlLightColorGradeMode != 1);
 
+    //Fullbright G-buffer mode: albedo only, no post effects (the options menu hides them).
+    //SaveMainConfig does not write them in this mode, so the user's settings stay in the config.
+    if(cRendererDeferred::GetFullbrightActive())
+    {
+        mpPostEffect_Bloom->SetDisabled(true);
+        mpPostEffect_MotionBlur->SetDisabled(true);
+        mpPostEffect_Sepia->SetDisabled(true);
+        mpPostEffect_RadialBlur->SetDisabled(true);
+    }
+
     cRenderSettings *pRenderSettings = mpViewport->GetRenderSettings();
 }
 
 void cLuxMapHandler::SaveMainConfig()
 {
-    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectBloom", mpPostEffect_Bloom->IsDisabled() == false);
-    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectMotionBlur", mpPostEffect_MotionBlur->IsDisabled() == false);
+    //Fullbright forces them off, keep the user's settings from the config file instead
+    bool bSavePostEffects = cRendererDeferred::GetFullbrightActive() == false;
+    if(bSavePostEffects)
+    {
+        gpBase->mpMainConfig->SetBool("Graphics", "PostEffectBloom", mpPostEffect_Bloom->IsDisabled() == false);
+        gpBase->mpMainConfig->SetBool("Graphics", "PostEffectMotionBlur", mpPostEffect_MotionBlur->IsDisabled() == false);
+    }
     {
         cPostEffectParams_MotionBlur motionBlurParams;
         mpPostEffect_MotionBlur->GetParams(&motionBlurParams);
@@ -653,8 +670,11 @@ void cLuxMapHandler::SaveMainConfig()
         gpBase->mpMainConfig->SetFloat("Graphics", "MotionBlurSmoothTime", motionBlurParams.mfSmoothTime);
         gpBase->mpMainConfig->SetInt("Graphics", "MotionBlurQuality", motionBlurParams.mbHighQuality ? 1 : 0);
     }
-    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectSepia", mpPostEffect_Sepia->IsDisabled() == false);
-    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectRadialBlur", mpPostEffect_RadialBlur->IsDisabled() == false);
+    if(bSavePostEffects)
+    {
+        gpBase->mpMainConfig->SetBool("Graphics", "PostEffectSepia", mpPostEffect_Sepia->IsDisabled() == false);
+        gpBase->mpMainConfig->SetBool("Graphics", "PostEffectRadialBlur", mpPostEffect_RadialBlur->IsDisabled() == false);
+    }
     gpBase->mpMainConfig->SetBool("Graphics", "PostEffectLightColorGrade", mbPostEffectLightColorGradeSetting);
 }
 

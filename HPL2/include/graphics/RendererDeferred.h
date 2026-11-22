@@ -71,6 +71,17 @@ enum eDeferredSSAO
 
 //---------------------------------------------
 
+//How much the G-buffer holds. Fullbright: albedo only, written straight to the
+//final buffer, no lights, fog or SSAO (for very weak cards).
+enum eDeferredGBufferMode
+{
+    eDeferredGBufferMode_Normal,
+    eDeferredGBufferMode_Fullbright,
+    eDeferredGBufferMode_LastEnum
+};
+
+//---------------------------------------------
+
 enum eDeferredLightShaderMode
 {
     eDeferredLightShaderMode_Auto,
@@ -235,6 +246,20 @@ public:
     static eDeferredGBuffer GetGBufferType()
     {
         return mGBufferType;
+    }
+
+    static void SetGBufferMode(eDeferredGBufferMode aMode)
+    {
+        mGBufferMode = aMode;
+    }
+    static eDeferredGBufferMode GetGBufferMode()
+    {
+        return mGBufferMode;
+    }
+    //True while the renderer runs in fullbright mode (set when data is loaded).
+    static bool GetFullbrightActive()
+    {
+        return mbFullbrightActive;
     }
 
     static void SetNumOfGBufferTextures(int alNum)
@@ -507,6 +532,7 @@ private:
     void AddLightProgramDefaultVars(cParserVarContainer &aVars);
     tString SelectLightFragShader();
     bool SetupLiteGBuffer();
+    void CreateAccumAndReflectionTextures(const cVector2l& avReflectionSize);
     bool GBufferShaderSupportsLite();
     bool TestLiteGBufferLayout(iFrameBuffer *apBuffer, bool abSparse, tString &asReason);
     void MergeInsideLights();
@@ -611,6 +637,8 @@ private:
     static tString msLiteLightFragShader;
 
     static eDeferredGBuffer mGBufferType;
+    static eDeferredGBufferMode mGBufferMode;
+    static bool mbFullbrightActive;
     static int mlNumOfGBufferTextures;
     static bool mbDepthCullLights;
     static bool mbLightSpecularEnabled;

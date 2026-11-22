@@ -92,6 +92,8 @@
     <CATEGORY Name="OptionsMenu">
         <Entry Name="MotionBlur">Motion Blur</Entry>
         <Entry Name="MotionBlurTip">Blurs yer view when ye turn yer head, like in Penumbra. Them image trails be sent to Davy Jones' locker.</Entry>
+        <Entry Name="PotatoMode">Potato Mode</Entry>
+        <Entry Name="PotatoModeTip">Draws only th' textures, no lights, shadows, fog nor fancy trickery, fer the weakest o' graphics cards. Yer other settin's be kept safe fer when ye turn it off again.</Entry>
 
         <Entry Name="Ultra">Kraken</Entry>
         <Entry Name="UltraLow">Bilge Rat</Entry>

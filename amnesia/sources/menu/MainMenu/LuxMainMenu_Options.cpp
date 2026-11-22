@@ -155,6 +155,7 @@ cLuxMainMenu_Options::cLuxMainMenu_Options(cGuiSet *apGuiSet, cGuiSkin *apGuiSki
 
     mbShowCommentary = gpBase->mpMenuCfg->GetBool("Options", "ShowCommentary", false);
     mbShaderModel3 = gpBase->mpEngine->GetGraphics()->GetLowLevel()->GetCaps(eGraphicCaps_ShaderModel_3) != 0;
+    mbFullbright = cRendererDeferred::GetFullbrightActive();
 
     mbSettingInitialValues = false;
 
@@ -503,7 +504,14 @@ void cLuxMainMenu_Options::AddGraphicsOptions(cWidgetTab* apTab)
     mpBToggleShowGfxOptions->SetFocusNavigation(eUIArrow_Up, mpSGamma);
 
     mpSGamma->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
+    mpChBPotatoMode->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
     mpChBRefraction->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
+    if(mbFullbright)
+    {
+        //Only the texture options are shown in the advanced options
+        mpCBTextureFilter->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
+        mpCBAnisotropy->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
+    }
 
     apTab->SetUserData(mpBToggleShowGfxOptions);
     apTab->GetTabLabel()->SetUserData(mpCBResolution);
@@ -565,6 +573,14 @@ void cLuxMainMenu_Options::AddBasicGfxOptions(cWidgetDummy* apDummy)
     }
 
     /////////////////////////////////
+    // Potato mode (fullbright G-buffer mode, GBufferMode=1), below texture quality
+    {
+        cVector3f vPotatoPos = mpCBTextureSizeLevel->GetLocalPosition() + cVector3f(0, mpCBTextureSizeLevel->GetSize().y + 15, 0);
+        mpChBPotatoMode = mpGuiSet->CreateWidgetCheckBox(vPotatoPos, 0, kTranslate("OptionsMenu", "PotatoMode"), apDummy);
+        SetUpInput(NULL, mpChBPotatoMode, true, kTranslate("OptionsMenu", "PotatoModeTip"));
+    }
+
+    /////////////////////////////////
     // Gamma
     vPos.x += 140;
 
@@ -595,9 +611,14 @@ void cLuxMainMenu_Options::AddBasicGfxOptions(cWidgetDummy* apDummy)
     mpChBVSync->SetFocusNavigation(eUIArrow_Down, mpCBTextureSizeLevel);
 
     mpCBTextureSizeLevel->SetFocusNavigation(eUIArrow_Up, mpCBResolution);
-    mpCBTextureSizeLevel->SetFocusNavigation(eUIArrow_Down, mpSGamma);
+    mpCBTextureSizeLevel->SetFocusNavigation(eUIArrow_Down, mpChBPotatoMode);
+    mpCBTextureSizeLevel->SetFocusNavigation(eUIArrow_Right, mpSGamma);
+
+    mpChBPotatoMode->SetFocusNavigation(eUIArrow_Up, mpCBTextureSizeLevel);
+    mpChBPotatoMode->SetFocusNavigation(eUIArrow_Right, mpSGamma);
 
     mpSGamma->SetFocusNavigation(eUIArrow_Up, mpCBTextureSizeLevel);
+    mpSGamma->SetFocusNavigation(eUIArrow_Left, mpChBPotatoMode);
 
 }
 
@@ -665,6 +686,15 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
             float fCheckBoxY = vPosInGroup.y + (fRowHeight - mpChBParallax->GetSize().y) * 0.5f;
             mpChBParallax->SetPosition(cVector3f(vPosInGroup.x, fCheckBoxY, vPosInGroup.z));
         }
+
+        //Fullbright only draws the albedo, no parallax at all
+        if(mbFullbright)
+        {
+            mpChBParallax->SetVisible(false);
+            mpChBParallax->SetEnabled(false);
+            mpCBParallaxQuality->SetVisible(false);
+            mpCBParallaxQuality->SetEnabled(false);
+        }
     }
 
     vPos.y += pGroup->GetSize().y + 10;
@@ -715,7 +745,16 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         }
     }
 
-    vPos.y += pGroup->GetSize().y + 10;
+    //Fullbright has no lights, so no shadows
+    if(mbFullbright)
+    {
+        pGroup->SetVisible(false);
+        pGroup->SetEnabled(false);
+    }
+    else
+    {
+        vPos.y += pGroup->GetSize().y + 10;
+    }
 
     ////////////////////////////
     // Post Effects
@@ -781,7 +820,16 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         SetUpInput(NULL, mpChBInsanity, false, kTranslate("OptionsMenu", "InsanityTip"));
     }
 
-    vPos.y += pGroup->GetSize().y + 10;
+    //Fullbright: no post effects
+    if(mbFullbright)
+    {
+        pGroup->SetVisible(false);
+        pGroup->SetEnabled(false);
+    }
+    else
+    {
+        vPos.y += pGroup->GetSize().y + 10;
+    }
     ////////////////////////////
     // SSAO Group
     pGroup = mpGuiSet->CreateWidgetGroup(vPos, vGroupSize, kTranslate("OptionsMenu", "SSAO"), pMainFrame);
@@ -822,8 +870,8 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         mpCBSSAOResolution->AddItem(kTranslate("OptionsMenu", "High"));
     }
 
-    //SSAO requires SM3+ so hide the whole group if unsupported
-    if(mbShaderModel3)
+    //SSAO requires SM3+ so hide the whole group if unsupported (and fullbright has no SSAO)
+    if(mbShaderModel3 && mbFullbright == false)
     {
         vPos.y += pGroup->GetSize().y + 10;
     }
@@ -861,6 +909,13 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         // World Reflection Active
         mpChBWorldReflection = mpGuiSet->CreateWidgetCheckBox(vPosInGroup, 0, kTranslate("OptionsMenu", "WorldReflection") + _W(" (") + kTranslate("OptionsMenu", "Water") + _W(")"), pGroup);
         SetUpInput(NULL, mpChBWorldReflection, false, kTranslate("OptionsMenu", "WorldReflectionTip"));
+    }
+
+    //Fullbright: no refraction or reflection
+    if(mbFullbright)
+    {
+        pGroup->SetVisible(false);
+        pGroup->SetEnabled(false);
     }
 
 
@@ -982,6 +1037,14 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         mpChBRefraction->SetFocusNavigation(eUIArrow_Up, mpChBMotionBlur);
         mpChBWorldReflection->SetFocusNavigation(eUIArrow_Up, mpChBRadialBlur);
         mpChBWorldReflection->SetFocusNavigation(eUIArrow_Left, mpChBRefraction);
+    }
+
+    //////////////
+    // Fullbright: only texture filter and anisotropy are left
+    if(mbFullbright)
+    {
+        //(down goes to the Basic/Advanced button, set in AddGraphicsOptions)
+        mpCBAnisotropy->SetFocusNavigation(eUIArrow_Right, NULL);
     }
 }
 
@@ -1300,6 +1363,7 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
         // Fullscreen & vsync
         mpChBFullScreen->SetChecked(aObj.GetVarBool("FullScreen"), false);
         mpChBVSync->SetChecked(aObj.GetVarBool("VSync"), false);
+        mpChBPotatoMode->SetChecked(aObj.GetVarBool("PotatoMode"), false);
 
         /////////////////////////
         // Texture quality and filtering
@@ -1589,6 +1653,27 @@ void cLuxMainMenu_Options::ApplyChanges()
         pCfgHdr->mvScreenSize = vidMode.mvScreenSize;
         pCfgHdr->mbFullscreen = mpChBFullScreen->IsChecked();
         pCfgHdr->mbVSync = mpChBVSync->IsChecked();
+
+        // Potato mode: fullbright G-buffer mode from the next start. The mode it replaces is kept
+        // in the config, so turning it off goes back to it (normal or hardware depth).
+        {
+            eDeferredGBufferMode currentMode = cRendererDeferred::GetGBufferMode();
+            bool bPotato = mpChBPotatoMode->IsChecked();
+            if(bPotato && currentMode != eDeferredGBufferMode_Fullbright)
+            {
+                gpBase->mpMainConfig->SetInt("Graphics", "GBufferModeBeforePotato", currentMode);
+                cRendererDeferred::SetGBufferMode(eDeferredGBufferMode_Fullbright);
+            }
+            else if(bPotato == false && currentMode == eDeferredGBufferMode_Fullbright)
+            {
+                int lPrevMode = gpBase->mpMainConfig->GetInt("Graphics", "GBufferModeBeforePotato", eDeferredGBufferMode_Normal);
+                if(lPrevMode < 0 || lPrevMode >= eDeferredGBufferMode_LastEnum || lPrevMode == eDeferredGBufferMode_Fullbright)
+                {
+                    lPrevMode = eDeferredGBufferMode_Normal;
+                }
+                cRendererDeferred::SetGBufferMode((eDeferredGBufferMode)lPrevMode);
+            }
+        }
         pGfx->GetLowLevel()->SetVsyncActive(pCfgHdr->mbVSync);
         pGfx->GetLowLevel()->SetGammaCorrection(GetGamma());
 
@@ -1617,7 +1702,8 @@ void cLuxMainMenu_Options::ApplyChanges()
         gpBase->mpMapHandler->UpdateViewportRenderProperties();
 
         /////////////////////
-        // PostEffects
+        // PostEffects (hidden and forced off in fullbright mode)
+        if(mbFullbright == false)
         {
             cLuxMapHandler* pMapHdlr = gpBase->mpMapHandler;
             cLuxPostEffectHandler *pPostEffects = gpBase->mpPostEffectHandler;
@@ -1908,6 +1994,8 @@ void cLuxMainMenu_Options::DumpInitialValues(cResourceVarsObject &aObj)
         // Fullscreen & vsync
         aObj.AddVarBool("FullScreen", gpBase->mpConfigHandler->mbFullscreen);
         aObj.AddVarBool("VSync", gpBase->mpConfigHandler->mbVSync);
+        //The mode for the next start (can differ from the running one after applying)
+        aObj.AddVarBool("PotatoMode", cRendererDeferred::GetGBufferMode() == eDeferredGBufferMode_Fullbright);
 
         /////////////////////////
         // Texture quality and filtering
@@ -2007,6 +2095,7 @@ void cLuxMainMenu_Options::DumpCurrentValues(cResourceVarsObject &aObj)
         // Fullscreen & vsync
         aObj.AddVarBool("FullScreen",    mpChBFullScreen->IsChecked());
         aObj.AddVarBool("VSync",        mpChBVSync->IsChecked());
+        aObj.AddVarBool("PotatoMode",   mpChBPotatoMode->IsChecked());
 
         /////////////////////////
         // Texture quality and filtering
@@ -2333,7 +2422,8 @@ bool cLuxMainMenu_Options::PressToggleShowGfxOptions(iWidget* apWidget, const cG
 
     if(bBasicVisible)
     {
-        mpBToggleShowGfxOptions->SetFocusNavigation(eUIArrow_Up, mpChBRefraction);
+        //Fullbright hides everything below the texture options
+        mpBToggleShowGfxOptions->SetFocusNavigation(eUIArrow_Up, mbFullbright ? (iWidget *)mpCBAnisotropy : (iWidget *)mpChBRefraction);
 
         pTab->GetTabLabel()->SetUserData(mpBToggleShowGfxOptions);
     }

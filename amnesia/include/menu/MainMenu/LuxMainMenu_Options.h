@@ -137,6 +137,7 @@ private:
     cVector2f mvWindowSize;
     bool mbShowCommentary;
     bool mbShaderModel3;
+    bool mbFullbright; //Fullbright G-buffer mode: parallax, shadows, post effects, SSAO and misc are hidden
 
     ///////////////////////
     // Data and variables
@@ -185,6 +186,7 @@ private:
     cWidgetComboBox *mpCBResolution;
     cWidgetCheckBox *mpChBFullScreen;
     cWidgetCheckBox *mpChBVSync;
+    cWidgetCheckBox *mpChBPotatoMode;
 
     cWidgetComboBox *mpCBTextureSizeLevel;
 

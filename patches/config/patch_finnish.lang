@@ -92,6 +92,8 @@
     <CATEGORY Name="OptionsMenu">
         <Entry Name="MotionBlur">Liikesumennus</Entry>
         <Entry Name="MotionBlurTip">Sumentaa kuvaa kameran liikkuessa, kuten Penumbran liikesumennus. Korvaa kuvajälkitehosteen, jota kartat ja modit eivät voi enää käyttää.</Entry>
+        <Entry Name="PotatoMode">Perunatila</Entry>
+        <Entry Name="PotatoModeTip">Piirtää vain tekstuurit ilman valoja, varjoja, sumua tai tehosteita hyvin heikoille näytönohjaimille. Muut grafiikka-asetuksesi säilyvät, kun otat sen taas pois päältä.</Entry>
 
         <Entry Name="Ultra">Ultra</Entry>
         <Entry Name="UltraLow">Erittäin matala</Entry>

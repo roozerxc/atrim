@@ -270,6 +270,12 @@ void cLuxPostEffectHandler::LoadMainConfig()
     cConfigFile *pMainCfg = gpBase->mpMainConfig;
 
     mpInsanity->SetDisabled(pMainCfg->GetBool("Graphics", "PostEffectInsanity", true) == false);
+    //Fullbright G-buffer mode: albedo only, no post effects (the options menu hides them).
+    //SaveMainConfig does not write it in this mode, so the user's setting stays in the config.
+    if(cRendererDeferred::GetFullbrightActive())
+    {
+        mpInsanity->SetDisabled(true);
+    }
 
 }
 
@@ -279,7 +285,10 @@ void cLuxPostEffectHandler::SaveMainConfig()
 {
     cConfigFile *pMainCfg = gpBase->mpMainConfig;
 
-    pMainCfg->SetBool("Graphics", "PostEffectInsanity", mpInsanity->IsDisabled() == false);
+    if(cRendererDeferred::GetFullbrightActive() == false)
+    {
+        pMainCfg->SetBool("Graphics", "PostEffectInsanity", mpInsanity->IsDisabled() == false);
+    }
 }
 
 //-----------------------------------------------------------------------

@@ -56,6 +56,8 @@ tString cRendererDeferred::msLightFragShader = "deferred_light_frag.glsl";
 tString cRendererDeferred::msLiteLightFragShader = "deferred_light_frag_lite.glsl";
 
 eDeferredGBuffer cRendererDeferred::mGBufferType = eDeferredGBuffer_32Bit;
+eDeferredGBufferMode cRendererDeferred::mGBufferMode = eDeferredGBufferMode_Normal;
+bool cRendererDeferred::mbFullbrightActive = false;
 int cRendererDeferred::mlNumOfGBufferTextures = 4;
 bool cRendererDeferred::mbDepthCullLights = true;
 bool cRendererDeferred::mbLightSpecularEnabled = true;
@@ -250,10 +252,21 @@ bool cRendererDeferred::LoadData()
 {
     cVector2l vRelfectionSize = cVector2l(mvScreenSize.x / mlReflectionSizeDiv, mvScreenSize.y / mlReflectionSizeDiv);
 
-    Log("Setting up G-Buffer: type: %d texturenum: %d\n", mGBufferType, mlNumOfGBufferTextures);
+    Log("Setting up G-Buffer: type: %d texturenum: %d mode: %d\n", mGBufferType, mlNumOfGBufferTextures, mGBufferMode);
+
+    //Fullbright: the G-buffer is only the albedo, drawn straight into the accumulation (and
+    //reflection) texture. No lights, so nothing needs normals or depth, and SSAO and fog are off.
+    mbFullbrightActive = mGBufferMode == eDeferredGBufferMode_Fullbright;
+    int lNumOfGBufferTargets = mbFullbrightActive ? 1 : mlNumOfGBufferTextures;
+    if(mbFullbrightActive)
+    {
+        Log(" G-Buffer mode: fullbright (albedo only, no lights, fog or SSAO)\n");
+        mbSSAOLoaded = false;
+    }
+
     ////////////////////////////////////
     //Create G-Buffer textures
-    for(int i = 0; i < mlNumOfGBufferTextures; ++i)
+    for(int i = 0; i < mlNumOfGBufferTextures && mbFullbrightActive == false; ++i)
     {
         ePixelFormat pixelFormat = mGBufferType == eDeferredGBuffer_32Bit ? ePixelFormat_RGBA : ePixelFormat_RGBA16;
         //ePixelFormat pixelFormat = ePixelFormat_RGBA16;
@@ -274,12 +287,19 @@ bool cRendererDeferred::LoadData()
         Log(" No stencil in frame buffers, light volumes are rendered without stencil\n");
     }
 
+    if(mbFullbrightActive)
+    {
+        CreateAccumAndReflectionTextures(vRelfectionSize);
+        mpGBufferTexture[0][0] = mpAccumBufferTexture;
+        mpGBufferTexture[1][0] = mpReflectionTexture;
+    }
+
     ////////////////////////////////////
     //Create Frame buffers
     for(int type = 0; type < 2; ++type)
     {
         mpGBuffer[type][eGBufferComponents_Full] = mpGraphics->CreateFrameBuffer("Deferred_GBuffer_Main");
-        for(int i = 0; i < mlNumOfGBufferTextures; ++i)
+        for(int i = 0; i < lNumOfGBufferTargets; ++i)
         {
             mpGBuffer[type][eGBufferComponents_Full]->SetTexture2D(i, mpGBufferTexture[type][i]);
         }
@@ -321,6 +341,14 @@ bool cRendererDeferred::LoadData()
             return false;
         }
 
+        //Fullbright has no normals or linear depth
+        if(mbFullbrightActive)
+        {
+            mpGBuffer[type][eGBufferComponents_Normals] = NULL;
+            mpGBuffer[type][eGBufferComponents_LinearDepth] = NULL;
+            continue;
+        }
+
         /////////////////////////
         //Frame buffer with only normals
         mpGBuffer[type][eGBufferComponents_Normals] = mpGraphics->CreateFrameBuffer("Deferred_GBuffer_Normals");
@@ -343,10 +371,11 @@ bool cRendererDeferred::LoadData()
     }
 
     ////////////////////////////////////
-    //Create Accumulation texture
-    mpAccumBufferTexture = mpGraphics->CreateTexture("AccumBuffer", eTextureType_Rect, eTextureUsage_RenderTarget);
-    mpAccumBufferTexture->CreateFromRawData(cVector3l(mvScreenSize.x, mvScreenSize.y, 0), ePixelFormat_RGBA, NULL);
-    mpAccumBufferTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
+    //Create Accumulation and Reflection textures (fullbright made them above)
+    if(mbFullbrightActive == false)
+    {
+        CreateAccumAndReflectionTextures(vRelfectionSize);
+    }
 
     ////////////////////////////////////
     //Create Accumulation buffer
@@ -360,10 +389,6 @@ bool cRendererDeferred::LoadData()
     //Create Refraction texture
     mpRefractionTexture = mpGraphics->GetTempFrameBuffer(mvScreenSize, ePixelFormat_RGBA, 0)->GetColorBuffer(0)->ToTexture();
     mpRefractionTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
-
-    ////////////////////////////////////
-    //Create Reflection texture
-    mpReflectionTexture = CreateRenderTexture("ReflectionTexture", vRelfectionSize, ePixelFormat_RGBA);
 
     ////////////////////////////////////
     //Create Reflection buffer
@@ -648,11 +673,16 @@ bool cRendererDeferred::LoadData()
             //Pick the light fragment shader. In auto mode this runs a small render
             //self-test and falls back to the lite shader only if the full one
             //gives wrong results on this GPU/driver. May also lower shadow quality.
-            msActiveLightFragShader = SelectLightFragShader();
+            //Fullbright renders no lights, so skip the self-test (start-up time on weak cards).
+            msActiveLightFragShader = mbFullbrightActive ? msLightFragShader : SelectLightFragShader();
             mbLiteLightShaderActive = mbLiteLightShader;
             mbLiteGBufferActive = false;
             mbLiteGBufferSparse = false;
-            if(mbLiteLightShaderActive && mbLiteGBufferAllowed && mlNumOfGBufferTextures == 3 && mGBufferType == eDeferredGBuffer_32Bit)
+            if(mbFullbrightActive)
+            {
+                //No G-buffer layout to change, lights are not rendered
+            }
+            else if(mbLiteLightShaderActive && mbLiteGBufferAllowed && mlNumOfGBufferTextures == 3 && mGBufferType == eDeferredGBuffer_32Bit)
             {
                 if(SetupLiteGBuffer() == false)
                 {
@@ -857,7 +887,8 @@ void cRendererDeferred::DestroyData()
             mpGraphics->DestroyFrameBuffer(mpGBuffer[type][j]);
         }
 
-        for(int j = 0; j < mlNumOfGBufferTextures; ++j)
+        //Fullbright: slot 0 is the accumulation/reflection texture, destroyed below
+        for(int j = 0; j < mlNumOfGBufferTextures && mbFullbrightActive == false; ++j)
         {
             mpGraphics->DestroyTexture(mpGBufferTexture[type][j]);
         }
@@ -1060,7 +1091,10 @@ void cRendererDeferred::RenderObjects()
     }
 
     AssignAndRenderOcclusionQueryObjects(false, NULL, true);
-    SetupLightsAndRenderQueries();
+    if(mbFullbrightActive == false)
+    {
+        SetupLightsAndRenderQueries();
+    }
 
     RenderDecals();
 
@@ -1070,7 +1104,15 @@ void cRendererDeferred::RenderObjects()
 
     RunCallback(eRendererMessage_PostGBuffer);
 
-    RenderLights();
+    //Fullbright: the albedo is already in the accumulation buffer, everything else draws on top of it.
+    if(mbFullbrightActive)
+    {
+        SetAccumulationBuffer();
+    }
+    else
+    {
+        RenderLights();
+    }
 
     if(mbDebugRenderLightComplexity)
     {
@@ -1133,7 +1175,7 @@ void cRendererDeferred::SetupGBuffer()
     /////////////////////////////
     // Motion blur reads the linear depth of every pixel, also of those nothing is drawn to (sky).
     // Clear it to "far away": 32 bit = 1 (far plane), 64 bit = 0 (the shader treats it as infinitely far).
-    if(mbMotionBlurActive && mpCurrentSettings->mbIsReflection == false)
+    if(mbMotionBlurActive && mpCurrentSettings->mbIsReflection == false && GetGBufferFrameBuffer(eGBufferComponents_LinearDepth))
     {
         SetGBuffer(eGBufferComponents_LinearDepth);
         SetChannelMode(eMaterialChannelMode_RGBA);
@@ -1148,9 +1190,10 @@ void cRendererDeferred::SetupGBuffer()
 
     /////////////////////////////
     // Clear depth (no need to clear any of the textures!)
+    // Fullbright: the color target is the final buffer, so clear it too (the light pass does that normally).
 
     mpLowLevelGraphics->SetClearDepth(1);
-    ClearFrameBuffer(eClearFrameBufferFlag_Depth, true);
+    ClearFrameBuffer(mbFullbrightActive ? (eClearFrameBufferFlag_Depth | eClearFrameBufferFlag_Color) : eClearFrameBufferFlag_Depth, true);
     END_RENDER_PASS();
 }
 
@@ -3409,7 +3452,8 @@ void cRendererDeferred::RenderDecals()
 
 void cRendererDeferred::RenderFullScreenFog()
 {
-    if(mpCurrentWorld->GetFogActive() == false)
+    //Fullbright has no depth texture to compute fog from
+    if(mpCurrentWorld->GetFogActive() == false || mbFullbrightActive)
     {
         return;
     }
@@ -3468,7 +3512,7 @@ void cRendererDeferred::RenderFullScreenFog()
 
 void cRendererDeferred::RenderFog()
 {
-    if(mpCurrentRenderList->GetFogAreaNum() == 0)
+    if(mpCurrentRenderList->GetFogAreaNum() == 0 || mbFullbrightActive) //Fullbright: no depth texture for fog
     {
         mpCurrentSettings->mvFogRenderData.resize(0); //Make sure render data array is empty!
         return;
@@ -4915,6 +4959,21 @@ void cRendererDeferred::AddLightProgramDefaultVars(cParserVarContainer &aVars)
     {
         aVars.Add("RenderTargets_3", "");
     }
+}
+
+//-----------------------------------------------------------------------
+
+void cRendererDeferred::CreateAccumAndReflectionTextures(const cVector2l& avReflectionSize)
+{
+    ////////////////////////////////////
+    //Create Accumulation texture
+    mpAccumBufferTexture = mpGraphics->CreateTexture("AccumBuffer", eTextureType_Rect, eTextureUsage_RenderTarget);
+    mpAccumBufferTexture->CreateFromRawData(cVector3l(mvScreenSize.x, mvScreenSize.y, 0), ePixelFormat_RGBA, NULL);
+    mpAccumBufferTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
+
+    ////////////////////////////////////
+    //Create Reflection texture
+    mpReflectionTexture = CreateRenderTexture("ReflectionTexture", avReflectionSize, ePixelFormat_RGBA);
 }
 
 //-----------------------------------------------------------------------

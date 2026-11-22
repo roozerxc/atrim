@@ -1357,6 +1357,15 @@ bool cLuxBase::InitEngine()
     }
     cRendererDeferred::SetNumOfGBufferTextures(lNumOfGBufferTextures);
 
+    // G-buffer mode: 0 = normal, 1 = fullbright (albedo only, no lights, fog or SSAO; for very weak cards)
+    int lGBufferMode = mpMainConfig->GetInt("Graphics", "GBufferMode", eDeferredGBufferMode_Normal);
+    if(lGBufferMode < 0 || lGBufferMode >= eDeferredGBufferMode_LastEnum)
+    {
+        Warning("GBufferMode=%d is not supported, using 0 (normal).\n", lGBufferMode);
+        lGBufferMode = eDeferredGBufferMode_Normal;
+    }
+    cRendererDeferred::SetGBufferMode((eDeferredGBufferMode)lGBufferMode);
+
     // Deferred light shader: 0 = auto (start-up self-test picks full or lite), 1 = always full, 2 = always lite
     int lLightShaderMode = mpMainConfig->GetInt("Graphics", "LightShaderMode", eDeferredLightShaderMode_Auto);
     if(lLightShaderMode < 0 || lLightShaderMode >= eDeferredLightShaderMode_LastEnum)
@@ -1432,6 +1441,21 @@ bool cLuxBase::InitEngine()
         // Lower parallax quality to Simple
         mpConfigHandler->mlParallaxQuality = eParallaxQuality_Simple;
         iRenderer::SetParallaxQuality(eParallaxQuality_Simple);
+    }
+
+    /////////////////////////
+    // Fullbright G-buffer mode (GBufferMode=1): only the albedo is drawn, so anything more is
+    // turned off. The options menu hides these settings in this mode. Only the renderer is told,
+    // the config handler keeps the user's values so they are saved and come back in normal mode.
+    // Shadows and world reflection are left out in UpdateViewportRenderProperties, post effects by
+    // the map and post effect handlers when they load their config.
+    if(cRendererDeferred::GetFullbrightActive())
+    {
+        Log("Fullbright G-buffer mode: parallax, shadows, SSAO, refraction, world reflection and post effects off.\n");
+
+        iRenderer::SetParallaxEnabled(false);
+        cRendererDeferred::SetSSAOLoaded(false);
+        iRenderer::SetRefractionEnabled(false);
     }
 
     /////////////////////////

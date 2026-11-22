@@ -92,6 +92,8 @@
     <CATEGORY Name="OptionsMenu">
         <Entry Name="MotionBlur">Motion Blur</Entry>
         <Entry Name="MotionBlurTip">Blurs the picture when the camera moves, like the motion blur in Penumbra. Replaces the image trail effect, which maps and mods can no longer turn on.</Entry>
+        <Entry Name="PotatoMode">Potato Mode</Entry>
+        <Entry Name="PotatoModeTip">Draws only the textures, without lights, shadows, fog or effects, for very weak graphics cards. Your other graphics settings are kept for when you turn it off again.</Entry>
 
         <Entry Name="Ultra">Ultra</Entry>
         <Entry Name="UltraLow">Ultra Low</Entry>
