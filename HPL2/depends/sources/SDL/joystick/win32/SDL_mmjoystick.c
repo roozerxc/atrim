@@ -187,6 +187,22 @@ const char *SDL_SYS_JoystickName(int index)
 	}
 }
 
+/* atrim extension: USB vendor/product ID of a joystick (see SDL_joystick.h) */
+int SDL_JoystickGetUSBIDs(int device_index, Uint16 *vendor, Uint16 *product)
+{
+	if ( (device_index < 0) || (device_index >= SDL_numjoysticks) ) {
+		SDL_SetError("There are %d joysticks available", SDL_numjoysticks);
+		return(-1);
+	}
+	if ( vendor ) {
+		*vendor = (Uint16)SYS_Joystick[device_index].wMid;
+	}
+	if ( product ) {
+		*product = (Uint16)SYS_Joystick[device_index].wPid;
+	}
+	return(0);
+}
+
 /* Function to open a joystick for use.
    The joystick to open is specified by the index field of the joystick.
    This should fill the nbuttons and naxes fields of the joystick structure.

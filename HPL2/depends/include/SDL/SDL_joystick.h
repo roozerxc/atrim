@@ -177,6 +177,18 @@ extern DECLSPEC Uint8 SDLCALL SDL_JoystickGetButton(SDL_Joystick *joystick, int 
  */
 extern DECLSPEC void SDLCALL SDL_JoystickClose(SDL_Joystick *joystick);
 
+#if defined(_WIN32) && !defined(_WIN32_WCE)
+/**
+ * atrim extension (winmm driver only): get the USB vendor and product ID
+ * of a joystick, as reported by joyGetDevCaps() in wMid/wPid.
+ *
+ * @param[in] device_index The index passed to SDL_JoystickOpen()
+ * @return 0 on success, -1 if the index is invalid. Both IDs are 0 if the
+ *         driver did not report them.
+ */
+extern DECLSPEC int SDLCALL SDL_JoystickGetUSBIDs(int device_index, Uint16 *vendor, Uint16 *product);
+#endif
+
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
