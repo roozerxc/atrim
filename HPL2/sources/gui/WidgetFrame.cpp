@@ -119,6 +119,14 @@ void cWidgetFrame::ScrollToPosition(const cVector2f& avPos)
 
 //-----------------------------------------------------------------------
 
+cVector2f cWidgetFrame::GetScrollPosition()
+{
+    return cVector2f(mpHSlider ? (float)mpHSlider->GetValue() : 0.0f,
+                     mpVSlider ? (float)mpVSlider->GetValue() : 0.0f);
+}
+
+//-----------------------------------------------------------------------
+
 //////////////////////////////////////////////////////////////////////////
 // PROTECTED METHODS
 //////////////////////////////////////////////////////////////////////////

@@ -499,6 +499,8 @@ void cLuxMainMenu::SetWindowActive(eLuxMainMenuWindow aWindow)
     case eLuxMainMenuWindow_LoadGame:
     case eLuxMainMenuWindow_Profiles:
     case eLuxMainMenuWindow_StartGame:
+    case eLuxMainMenuWindow_CustomStoryList:
+    case eLuxMainMenuWindow_CustomStory:
 #if USE_GAMEPAD
         mpGuiSet->SetDrawFocus(bHasGamepad);
         break;

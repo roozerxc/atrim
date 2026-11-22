@@ -57,6 +57,7 @@ public:
     void OnRemoveChild(iWidget* apChild);
 
     void ScrollToPosition(const cVector2f& avPos);
+    cVector2f GetScrollPosition();
 
 protected:
     /////////////////////////

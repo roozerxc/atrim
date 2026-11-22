@@ -79,6 +79,7 @@ void cLuxMainMenu_CustomStory::CreateGui()
     }
     mpCBHardMode = mpGuiSet->CreateWidgetCheckBox(cVector3f(vDescPos.x, vDescPos.y + vDescSize.y + 8, 0.1f), cVector2f(300, 20), sHardModeLabel, mpWindow);
     mpCBHardMode->SetChecked(false, false);
+    mpCBHardMode->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(UIPress));
 
     mvButtons.clear();
 
@@ -147,6 +148,12 @@ void cLuxMainMenu_CustomStory::CreateGui()
     pButton->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(PressBack));
 
     mvButtons.push_back(pButton);
+
+    //Gamepad: B goes back, LB/RB scroll the description
+    for(size_t i = 0; i < mvButtons.size(); ++i)
+    {
+        mvButtons[i]->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(UIPress));
+    }
 
     //////////////////////////
     //Widen up to the buttons so the scroll bar sits next to them
@@ -306,6 +313,8 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
 
         vButtonPos.y += pButton->GetSize().y + fButtonSep * 2;
     }
+
+    SetUpFocusNavigation();
 }
 
 
@@ -317,9 +326,125 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
 
 //-----------------------------------------------------------------------
 
+void cLuxMainMenu_CustomStory::ExitPressed()
+{
+    if(mpGuiSet->PopUpIsActive())
+    {
+        return;
+    }
+
+    PressBack(NULL, cGuiMessageData());
+}
+
+//-----------------------------------------------------------------------
+
 void cLuxMainMenu_CustomStory::OnSetActive(bool abX)
 {
+    if(abX)
+    {
+        //Start on Continue if the story has saves, otherwise on Start
+        iWidget* pFirst = GetFirstActiveButton();
+        if(pFirst)
+        {
+            mpGuiSet->SetDefaultFocusNavWidget(pFirst);
+            mpGuiSet->SetFocusedWidget(pFirst);
+        }
+    }
 }
+
+//-----------------------------------------------------------------------
+
+iWidget* cLuxMainMenu_CustomStory::GetFirstActiveButton()
+{
+    for(size_t i = 0; i < mvButtons.size(); ++i)
+    {
+        if(mvButtons[i]->IsVisible() && mvButtons[i]->IsEnabled())
+        {
+            return mvButtons[i];
+        }
+    }
+    return NULL;
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxMainMenu_CustomStory::SetUpFocusNavigation()
+{
+    ////////////////////////////////////////////////////
+    // The buttons are a column on the right, and which ones are shown
+    // depends on the story having saves. The hard mode check box is
+    // bottom left, under the description.
+    std::vector<iWidget*> vActive;
+    for(size_t i = 0; i < mvButtons.size(); ++i)
+    {
+        mvButtons[i]->SetFocusNavigation(eUIArrow_Up, NULL);
+        mvButtons[i]->SetFocusNavigation(eUIArrow_Down, NULL);
+        mvButtons[i]->SetFocusNavigation(eUIArrow_Left, mpCBHardMode);
+
+        if(mvButtons[i]->IsVisible() && mvButtons[i]->IsEnabled())
+        {
+            vActive.push_back(mvButtons[i]);
+        }
+    }
+
+    for(size_t i = 0; i < vActive.size(); ++i)
+    {
+        if(i > 0)
+        {
+            vActive[i]->SetFocusNavigation(eUIArrow_Up, vActive[i - 1]);
+        }
+        if(i + 1 < vActive.size())
+        {
+            vActive[i]->SetFocusNavigation(eUIArrow_Down, vActive[i + 1]);
+        }
+    }
+
+    if(mpCBHardMode && vActive.empty() == false)
+    {
+        vActive.back()->SetFocusNavigation(eUIArrow_Down, mpCBHardMode);
+        mpCBHardMode->SetFocusNavigation(eUIArrow_Up, vActive.back());
+        mpCBHardMode->SetFocusNavigation(eUIArrow_Right, vActive.front());
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxMainMenu_CustomStory::ScrollDescription(float afDir)
+{
+    if(mpFDescription == NULL)
+    {
+        return;
+    }
+
+    cVector2f vPos = mpFDescription->GetScrollPosition();
+    vPos.y += afDir * mpFDescription->GetSize().y * 0.75f;
+    if(vPos.y < 0)
+    {
+        vPos.y = 0;
+    }
+    // ScrollToPosition clamps to the end of the text
+    mpFDescription->ScrollToPosition(vPos);
+}
+
+//-----------------------------------------------------------------------
+
+bool cLuxMainMenu_CustomStory::UIPress(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    switch(aData.mlVal)
+    {
+    case eUIButton_Secondary:
+        return PressBack(apWidget, aData);
+    case eUIButton_PrevPage:
+        ScrollDescription(-1.0f);
+        return true;
+    case eUIButton_NextPage:
+        ScrollDescription(1.0f);
+        return true;
+    }
+
+    return false;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStory, UIPress);
 
 //-----------------------------------------------------------------------
 
@@ -471,6 +596,7 @@ cLuxMainMenu_CustomStoryList::cLuxMainMenu_CustomStoryList(cGuiSet *apGuiSet, cG
     mvWindowSize = cVector2f(600, 440);
 
     mpStoryWindow = apWindow;
+    mpBOK = NULL;
 }
 
 //-----------------------------------------------------------------------
@@ -502,6 +628,9 @@ void cLuxMainMenu_CustomStoryList::CreateGui()
     mpLBStories = mpGuiSet->CreateWidgetListBox(vPos + cVector3f(0, 0, 1), cVector2f((mvWindowSize.x - fBorderSize * 2), 300), mpWindow);
     mpLBStories->AddCallback(eGuiMessage_SelectionChange, this, kGuiCallback(SelectStory));
     mpLBStories->AddCallback(eGuiMessage_SelectionDoubleClick, this, kGuiCallback(PressOK));
+    mpLBStories->AddCallback(eGuiMessage_CheckChange, this, kGuiCallback(ListCheckChange));
+    mpLBStories->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(UIPressList));
+    mpLBStories->AddCallback(eGuiMessage_GetUINavFocus, this, kGuiCallback(LockList));
 
     //////////////////////////
     //Buttons
@@ -514,11 +643,22 @@ void cLuxMainMenu_CustomStoryList::CreateGui()
     //Start
     cWidgetButton* pButton  = mpGuiSet->CreateWidgetButton(vPos, cVector2f(fButtonWidth, 30), kTranslate("Global", "OK"), mpWindow);
     pButton->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(PressOK));
+    pButton->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(UIPressButton));
+    mpBOK = pButton;
 
     //Cancel
     vPos.x += fButtonWidth + fButtonSepp;
     pButton = mpGuiSet->CreateWidgetButton(vPos, cVector2f(fButtonWidth, 30), kTranslate("Global", "Cancel"), mpWindow);
     pButton->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(PressCancel));
+    pButton->AddCallback(eGuiMessage_UIButtonPress, this, kGuiCallback(UIPressButton));
+
+    ////////////////////////////////////////
+    // Gamepad focus navigation (same as the Load Game window)
+    mpLBStories->SetFocusNavigation(eUIArrow_Down, mpBOK);
+    mpBOK->SetFocusNavigation(eUIArrow_Right, pButton);
+    mpBOK->SetFocusNavigation(eUIArrow_Up, mpLBStories);
+    pButton->SetFocusNavigation(eUIArrow_Left, mpBOK);
+    pButton->SetFocusNavigation(eUIArrow_Up, mpLBStories);
 }
 
 //-----------------------------------------------------------------------
@@ -547,6 +687,19 @@ void cLuxMainMenu_CustomStoryList::OnSetActive(bool abX)
     if(abX)
     {
         PopulateStoryList();
+
+        ////////////////////////////////////////
+        // Gamepad: start in the list with the first story selected. Up/down
+        // pick a story, A opens it, Down past the last story goes to OK.
+        mpGuiSet->SetDefaultFocusNavWidget(mpLBStories);
+        mpGuiSet->SetFocusedWidget(mpLBStories);
+
+        if(mpLBStories->GetItemNum() > 0)
+        {
+            mpLBStories->SetCursorPos(0, true, true);
+            mpLBStories->SetSelectedItem(0, true, true, eListBoxSelectType_Select);
+            mpLBStories->SetIsLocked(true);
+        }
     }
     else
     {
@@ -685,6 +838,63 @@ bool cLuxMainMenu_CustomStoryList::PressCancel(iWidget* apWidget, const cGuiMess
     return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, PressCancel);
+
+//-----------------------------------------------------------------------
+
+bool cLuxMainMenu_CustomStoryList::ListCheckChange(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    // A locked list sends this for A (open the story) and for Down past the
+    // last story (move on to the OK button, like the Load Game window does)
+    if(aData.mlVal == eUIButton_Primary)
+    {
+        PressOK(apWidget, aData);
+        return true;
+    }
+
+    mpGuiSet->SetFocusedWidget(mpBOK);
+    return true;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, ListCheckChange);
+
+//-----------------------------------------------------------------------
+
+bool cLuxMainMenu_CustomStoryList::LockList(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    // Coming back up from the buttons: up/down should pick stories again
+    if(mpLBStories->GetItemNum() > 0)
+    {
+        mpLBStories->SetIsLocked(true);
+    }
+
+    return true;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, LockList);
+
+//-----------------------------------------------------------------------
+
+bool cLuxMainMenu_CustomStoryList::UIPressList(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    if(aData.mlVal == eUIButton_Secondary)
+    {
+        return PressCancel(apWidget, aData);
+    }
+
+    return false;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, UIPressList);
+
+//-----------------------------------------------------------------------
+
+bool cLuxMainMenu_CustomStoryList::UIPressButton(iWidget* apWidget, const cGuiMessageData& aData)
+{
+    if(aData.mlVal == eUIButton_Secondary)
+    {
+        return PressCancel(apWidget, aData);
+    }
+
+    return false;
+}
+kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_CustomStoryList, UIPressButton);
 
 //-----------------------------------------------------------------------
 

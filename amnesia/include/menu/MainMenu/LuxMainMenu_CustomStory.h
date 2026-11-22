@@ -19,7 +19,7 @@ public:
 
     void CreateGui();
 
-    void ExitPressed() {}
+    void ExitPressed();
 
     void SetCurrentStory(cLuxCustomStorySettings* apStory);
 
@@ -41,8 +41,15 @@ private:
     bool HardModeWarningCallback(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(HardModeWarningCallback);
 
+    bool UIPress(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(UIPress);
+
     void StartStory(bool abHardMode);
     void UpdateDescriptionSize();
+    void ScrollDescription(float afDir);
+
+    void SetUpFocusNavigation();
+    iWidget* GetFirstActiveButton();
 
     void RepositionButtons();
 
@@ -88,6 +95,7 @@ private:
     ////////////////////////
     // Layout
     cWidgetListBox *mpLBStories;
+    cWidgetButton *mpBOK;
 
     ////////////////////////
     // Callbacks
@@ -102,6 +110,18 @@ private:
 
     bool PressCancel(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(PressCancel);
+
+    bool UIPressList(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(UIPressList);
+
+    bool UIPressButton(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(UIPressButton);
+
+    bool ListCheckChange(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(ListCheckChange);
+
+    bool LockList(iWidget* apWidget, const cGuiMessageData& aData);
+    kGuiCallbackDeclarationEnd(LockList);
 
     bool LoadStoryCallback(iWidget* apWidget, const cGuiMessageData& aData);
     kGuiCallbackDeclarationEnd(LoadStoryCallback);
