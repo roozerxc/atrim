@@ -27,6 +27,10 @@ uniform sampler2DRect  aDepthMap;
     uniform float afNegFarPlane;
 @endif
 
+@ifdef HardwareDepth
+    @include helper_hardware_depth.glsl
+@endif
+
 @ifdef FogModulation
     uniform sampler2DRect  aDiffuseMap;
     @define sampler_aDiffuseMap 1
@@ -69,7 +73,10 @@ void main()
 {
     ////////////////////////////////////
     // Get depth
-    @ifdef PackedDepth
+    @ifdef HardwareDepth
+        //The depth map is the depth buffer (GBufferMode=2)
+        float fDepth = -HardwareDepthToLinear(texture2DRect(aDepthMap, gl_FragCoord.xy).x) * afNegFarPlane;
+    @elseif PackedDepth
         vec4 vDepthVal =  texture2DRect(aDepthMap, gl_FragCoord.xy);
         float fDepth = -UnpackVec3ToFloat(vDepthVal.xyz) * afNegFarPlane;
     @else

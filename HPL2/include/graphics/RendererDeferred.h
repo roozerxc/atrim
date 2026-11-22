@@ -72,11 +72,14 @@ enum eDeferredSSAO
 //---------------------------------------------
 
 //How much the G-buffer holds. Fullbright: albedo only, written straight to the
-//final buffer, no lights, fog or SSAO (for very weak cards).
+//final buffer, no lights, fog or SSAO (for very weak cards). Hardware depth: color
+//only, lights read the depth buffer (a depth texture) instead of a linear depth
+//target; needs the lite light shader and has no stencil.
 enum eDeferredGBufferMode
 {
     eDeferredGBufferMode_Normal,
     eDeferredGBufferMode_Fullbright,
+    eDeferredGBufferMode_HardwareDepth,
     eDeferredGBufferMode_LastEnum
 };
 
@@ -148,7 +151,8 @@ public:
      */
     iTexture *GetMainLinearDepthTexture()
     {
-        return mpGBufferTexture[0][2];
+        //Hardware depth mode holds non-linear depth there, post effects can not use it
+        return mbHardwareDepthActive ? NULL : mpGBufferTexture[0][2];
     }
 
     /**
@@ -166,9 +170,15 @@ public:
     }
     iFrameBuffer *GetGBufferFrameBuffer(eGBufferComponents aComponents);
 
+    //NULL in hardware depth mode, use GetDepthTexture() then.
     iDepthStencilBuffer *GetDepthStencilBuffer()
     {
         return mpDepthStencil[0];
+    }
+    //Depth texture of the main view in hardware depth mode, else NULL.
+    iTexture *GetDepthTexture()
+    {
+        return mbHardwareDepthActive ? mpGBufferTexture[0][2] : NULL;
     }
     bool GetStencilAvailable()
     {
@@ -260,6 +270,11 @@ public:
     static bool GetFullbrightActive()
     {
         return mbFullbrightActive;
+    }
+    //True while the G-buffer depth is the hardware depth buffer (a depth texture in G-buffer slot 2).
+    static bool GetHardwareDepthActive()
+    {
+        return mbHardwareDepthActive;
     }
 
     static void SetNumOfGBufferTextures(int alNum)
@@ -533,6 +548,11 @@ private:
     tString SelectLightFragShader();
     bool SetupLiteGBuffer();
     void CreateAccumAndReflectionTextures(const cVector2l& avReflectionSize);
+    bool CanUseHardwareDepth();
+    bool TestHardwareDepth(tString &asReason);
+    bool ShaderFileHasText(const tString& asFile, const tString& asText);
+    void AttachGBufferDepth(iFrameBuffer *apBuffer, int alType);
+    void UpdateDepthUnproject();
     bool GBufferShaderSupportsLite();
     bool TestLiteGBufferLayout(iFrameBuffer *apBuffer, bool abSparse, tString &asReason);
     void MergeInsideLights();
@@ -627,6 +647,9 @@ private:
     iGpuProgram *mpLightBoxClipProgram[2]; //no stencil: 0=normal, 1=ssao
     bool mbStencilAvailable;
 
+    //Hardware depth mode: linear depth = 1 / dot(vec4(depth, gl_FragCoord.xy, 1), this). Set per frame.
+    float mvDepthUnproject[4];
+
     cProgramComboManager *mpFogProgramManager;
 
     cMatrixf m_mtxTempLight;
@@ -639,6 +662,7 @@ private:
     static eDeferredGBuffer mGBufferType;
     static eDeferredGBufferMode mGBufferMode;
     static bool mbFullbrightActive;
+    static bool mbHardwareDepthActive;
     static int mlNumOfGBufferTextures;
     static bool mbDepthCullLights;
     static bool mbLightSpecularEnabled;

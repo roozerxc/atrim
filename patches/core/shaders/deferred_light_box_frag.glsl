@@ -5,7 +5,8 @@
 ////////////////////////////////////////////////////////
 
 #version 120
-#extension GL_ARB_texture_rectangle : enable
+
+#extension GL_ARB_texture_rectangle : enable
 
 ////////////////////
 //Textures
@@ -23,6 +24,10 @@ uniform sampler2DRect  aDiffuseMap;
     @define sampler_aDepthMap 2
 
     uniform mat4 a_mtxInvBoxViewSpace;
+
+    @ifdef HardwareDepth
+        @include helper_hardware_depth.glsl
+    @endif
 
     @ifdef Deferred_32bit
         @include helper_float_packing.glsl
@@ -49,7 +54,11 @@ void main()
             vec3 vPos;
             vPos.xy = gvFarPlanePos.xy / gvFarPlanePos.z;
             vPos.z = afNegFarPlane;
-            vPos *= UnpackVec3ToFloat(vDepthVal.xyz);
+            @ifdef HardwareDepth
+                vPos *= HardwareDepthToLinear(vDepthVal.x);
+            @else
+                vPos *= UnpackVec3ToFloat(vDepthVal.xyz);
+            @endif
         @else
             vec3 vPos = vDepthVal.xyz;
         @endif

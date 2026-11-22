@@ -76,7 +76,15 @@ cLuxEffectRenderer::cLuxEffectRenderer() : iLuxUpdateable("LuxEffectRenderer")
     mpOutlineColorTexture = pGraphics->GetTempFrameBuffer(vScreenSize, ePixelFormat_RGBA, 0)->GetColorBuffer(0)->ToTexture();
 
     mpFrameBufferColor = pGraphics->CreateFrameBuffer("OutlineColor");
-    mpFrameBufferColor->SetDepthStencilBuffer(pRendererDeferred->GetDepthStencilBuffer());
+    //Hardware depth G-buffer mode has a depth texture instead of a depth-stencil buffer
+    if(pRendererDeferred->GetDepthTexture())
+    {
+        mpFrameBufferColor->SetDepthTexture2D(pRendererDeferred->GetDepthTexture());
+    }
+    else
+    {
+        mpFrameBufferColor->SetDepthStencilBuffer(pRendererDeferred->GetDepthStencilBuffer());
+    }
     mpFrameBufferColor->SetTexture2D(0, mpOutlineColorTexture);
 
     mpFrameBufferColor->CompileAndValidate();

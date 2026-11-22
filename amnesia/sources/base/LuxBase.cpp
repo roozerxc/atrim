@@ -1357,7 +1357,8 @@ bool cLuxBase::InitEngine()
     }
     cRendererDeferred::SetNumOfGBufferTextures(lNumOfGBufferTextures);
 
-    // G-buffer mode: 0 = normal, 1 = fullbright (albedo only, no lights, fog or SSAO; for very weak cards)
+    // G-buffer mode: 0 = normal, 1 = fullbright (albedo only, no lights, fog or SSAO; for very weak cards),
+    // 2 = hardware depth (color target only, lights read the depth buffer; lite light shader, no stencil)
     int lGBufferMode = mpMainConfig->GetInt("Graphics", "GBufferMode", eDeferredGBufferMode_Normal);
     if(lGBufferMode < 0 || lGBufferMode >= eDeferredGBufferMode_LastEnum)
     {

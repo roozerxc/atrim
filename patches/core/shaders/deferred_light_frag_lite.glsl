@@ -6,6 +6,10 @@
 #version 120
 #extension GL_ARB_texture_rectangle : enable
 
+@ifdef HardwareDepth
+    @include helper_hardware_depth.glsl
+@endif
+
 //--------------------------------------------------------------
 
 varying vec3 gvFarPlanePos;
@@ -61,8 +65,13 @@ void main()
         vColorVal.xyz = mix(vColorVal.xyz, vColorVal.xyz * vColorVal.xyz, vec3(0.640, 0.764, 0.426));
     @endif
 
-    // Manually unpack vDepthVal due to ati 9xxx 16bit mantissa
-    float fDepth = dot(vDepthVal.xy, vec2(1.0, 1.0/255.0));
+    @ifdef HardwareDepth
+        //The depth map is the depth buffer (GBufferMode=2)
+        float fDepth = HardwareDepthToLinear(vDepthVal.x);
+    @else
+        // Manually unpack vDepthVal due to ati 9xxx 16bit mantissa
+        float fDepth = dot(vDepthVal.xy, vec2(1.0, 1.0/255.0));
+    @endif
 
     @ifdef DivideInFrag
         vec3 vPos;

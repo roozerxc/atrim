@@ -58,6 +58,7 @@ tString cRendererDeferred::msLiteLightFragShader = "deferred_light_frag_lite.gls
 eDeferredGBuffer cRendererDeferred::mGBufferType = eDeferredGBuffer_32Bit;
 eDeferredGBufferMode cRendererDeferred::mGBufferMode = eDeferredGBufferMode_Normal;
 bool cRendererDeferred::mbFullbrightActive = false;
+bool cRendererDeferred::mbHardwareDepthActive = false;
 int cRendererDeferred::mlNumOfGBufferTextures = 4;
 bool cRendererDeferred::mbDepthCullLights = true;
 bool cRendererDeferred::mbLightSpecularEnabled = true;
@@ -177,6 +178,7 @@ cProgramComboFeature gvFogAreaFeatureVec[] =
 #define kVar_avLightPos2                        26
 #define kVar_avLightColor2                      27
 #define kVar_afInvLightRadius2                  28
+#define kVar_avDepthUnproject                   29
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -228,6 +230,13 @@ cRendererDeferred::cRendererDeferred(cGraphics *apGraphics, cResources* apResour
     mpLightBoxClipProgram[0] = NULL;
     mpLightBoxClipProgram[1] = NULL;
 
+    mpDepthStencil[0] = NULL;
+    mpDepthStencil[1] = NULL;
+    for(int i = 0; i < 4; ++i)
+    {
+        mvDepthUnproject[i] = 0;
+    }
+
     msActiveLightFragShader = msLightFragShader;
     mbLiteLightShader = false;
     mbLightShadowsDisabled = false;
@@ -257,16 +266,29 @@ bool cRendererDeferred::LoadData()
     //Fullbright: the G-buffer is only the albedo, drawn straight into the accumulation (and
     //reflection) texture. No lights, so nothing needs normals or depth, and SSAO and fog are off.
     mbFullbrightActive = mGBufferMode == eDeferredGBufferMode_Fullbright;
-    int lNumOfGBufferTargets = mbFullbrightActive ? 1 : mlNumOfGBufferTextures;
     if(mbFullbrightActive)
     {
         Log(" G-Buffer mode: fullbright (albedo only, no lights, fog or SSAO)\n");
         mbSSAOLoaded = false;
     }
 
+    //Hardware depth: only the color target, lights read the depth buffer. Tested first, falls back to normal.
+    mbHardwareDepthActive = false;
+    if(mGBufferMode == eDeferredGBufferMode_HardwareDepth)
+    {
+        mbHardwareDepthActive = CanUseHardwareDepth();
+        if(mbHardwareDepthActive)
+        {
+            Log(" G-Buffer mode: hardware depth (color target only, no stencil, SSAO and motion blur off)\n");
+            mbSSAOLoaded = false;
+        }
+    }
+    bool bColorTargetOnly = mbFullbrightActive || mbHardwareDepthActive;
+    int lNumOfGBufferTargets = bColorTargetOnly ? 1 : mlNumOfGBufferTextures;
+
     ////////////////////////////////////
     //Create G-Buffer textures
-    for(int i = 0; i < mlNumOfGBufferTextures && mbFullbrightActive == false; ++i)
+    for(int i = 0; i < lNumOfGBufferTargets && mbFullbrightActive == false; ++i)
     {
         ePixelFormat pixelFormat = mGBufferType == eDeferredGBuffer_32Bit ? ePixelFormat_RGBA : ePixelFormat_RGBA16;
         //ePixelFormat pixelFormat = ePixelFormat_RGBA16;
@@ -278,10 +300,22 @@ bool cRendererDeferred::LoadData()
 
     ////////////////////////////////////
     //Create Depth and stencil
-    mpDepthStencil[0] = mpGraphics->CreateDepthStencilBuffer(mvScreenSize, 24, 8, false);
-    mpDepthStencil[1] = mpGraphics->CreateDepthStencilBuffer(vRelfectionSize, 24, 8, false);
+    if(mbHardwareDepthActive)
+    {
+        //Depth textures in the depth slot of the G-buffer, so everything that binds GetBufferTexture(2) gets it.
+        mpDepthStencil[0] = NULL;
+        mpDepthStencil[1] = NULL;
+        mpGBufferTexture[0][2] = CreateRenderTexture("GBufferDepth", mvScreenSize, ePixelFormat_Depth24, eTextureFilter_Nearest);
+        mpGBufferTexture[1][2] = CreateRenderTexture("GBufferDepth_Reflection", vRelfectionSize, ePixelFormat_Depth24, eTextureFilter_Nearest);
+        mbStencilAvailable = false;
+    }
+    else
+    {
+        mpDepthStencil[0] = mpGraphics->CreateDepthStencilBuffer(mvScreenSize, 24, 8, false);
+        mpDepthStencil[1] = mpGraphics->CreateDepthStencilBuffer(vRelfectionSize, 24, 8, false);
 
-    mbStencilAvailable = mpDepthStencil[0]->GetStencilBits() > 0 && mpDepthStencil[1]->GetStencilBits() > 0;
+        mbStencilAvailable = mpDepthStencil[0]->GetStencilBits() > 0 && mpDepthStencil[1]->GetStencilBits() > 0;
+    }
     if(mbStencilAvailable == false)
     {
         Log(" No stencil in frame buffers, light volumes are rendered without stencil\n");
@@ -303,7 +337,7 @@ bool cRendererDeferred::LoadData()
         {
             mpGBuffer[type][eGBufferComponents_Full]->SetTexture2D(i, mpGBufferTexture[type][i]);
         }
-        mpGBuffer[type][eGBufferComponents_Full]->SetDepthStencilBuffer(mpDepthStencil[type]);
+        AttachGBufferDepth(mpGBuffer[type][eGBufferComponents_Full], type);
         if(mpGBuffer[type][eGBufferComponents_Full]->CompileAndValidate() == false)
         {
             Error("Could not create frame buffer for Deferred renderer type: %d!\n", type);
@@ -323,7 +357,7 @@ bool cRendererDeferred::LoadData()
         /////////////////////////
         //Frame buffer with only depth
         mpGBuffer[type][eGBufferComponents_Depth] = mpGraphics->CreateFrameBuffer("Deferred_GBuffer_Depth");
-        mpGBuffer[type][eGBufferComponents_Depth]->SetDepthStencilBuffer(mpDepthStencil[type]);
+        AttachGBufferDepth(mpGBuffer[type][eGBufferComponents_Depth], type);
         if(mpGBuffer[type][eGBufferComponents_Depth]->CompileAndValidate() == false)
         {
             //Not fatal, this buffer is never rendered to and some old drivers need a color attachment.
@@ -334,15 +368,15 @@ bool cRendererDeferred::LoadData()
         //Frame buffer with only depth and color
         mpGBuffer[type][eGBufferComponents_ColorAndDepth] = mpGraphics->CreateFrameBuffer("Deferred_GBuffer_ColorDepth");
         mpGBuffer[type][eGBufferComponents_ColorAndDepth]->SetTexture2D(0, mpGBufferTexture[type][0]);
-        mpGBuffer[type][eGBufferComponents_ColorAndDepth]->SetDepthStencilBuffer(mpDepthStencil[type]);
+        AttachGBufferDepth(mpGBuffer[type][eGBufferComponents_ColorAndDepth], type);
         if(mpGBuffer[type][eGBufferComponents_ColorAndDepth]->CompileAndValidate() == false)
         {
             Error("Could not create frame buffer with only color and depth for Deferred renderer type: %d!\n", type);
             return false;
         }
 
-        //Fullbright has no normals or linear depth
-        if(mbFullbrightActive)
+        //Fullbright and hardware depth have no normals or linear depth targets
+        if(bColorTargetOnly)
         {
             mpGBuffer[type][eGBufferComponents_Normals] = NULL;
             mpGBuffer[type][eGBufferComponents_LinearDepth] = NULL;
@@ -381,7 +415,7 @@ bool cRendererDeferred::LoadData()
     //Create Accumulation buffer
     mpAccumBuffer = mpGraphics->CreateFrameBuffer("Deferred_Accumulation");
     mpAccumBuffer->SetTexture2D(0, mpAccumBufferTexture);
-    mpAccumBuffer->SetDepthStencilBuffer(mpDepthStencil[0]);
+    AttachGBufferDepth(mpAccumBuffer, 0);
 
     mpAccumBuffer->CompileAndValidate();
 
@@ -394,7 +428,7 @@ bool cRendererDeferred::LoadData()
     //Create Reflection buffer
     mpReflectionBuffer = mpGraphics->CreateFrameBuffer("Deferred_Reflection");
     mpReflectionBuffer->SetTexture2D(0, mpReflectionTexture);
-    mpReflectionBuffer->SetDepthStencilBuffer(mpDepthStencil[1]);
+    AttachGBufferDepth(mpReflectionBuffer, 1);
     mpReflectionBuffer->CompileAndValidate();
 
 
@@ -552,6 +586,10 @@ bool cRendererDeferred::LoadData()
         {
             vars.Add("PackedDepth");
         }
+        if(mbHardwareDepthActive)
+        {
+            vars.Add("HardwareDepth");
+        }
 
         mpFogProgramManager = hplNew(    cProgramComboManager, ("FogArea", mpGraphics, mpResources, 1));
 
@@ -568,6 +606,7 @@ bool cRendererDeferred::LoadData()
         mpFogProgramManager->AddGenerateProgramVariableId("avNegPlaneDistNeg", kVar_avNegPlaneDistNeg, 0);
         mpFogProgramManager->AddGenerateProgramVariableId("avNegPlaneDistPos", kVar_avNegPlaneDistPos, 0);
         mpFogProgramManager->AddGenerateProgramVariableId("afFalloffExp", kVar_afFalloffExp, 0);
+        mpFogProgramManager->AddGenerateProgramVariableId("avDepthUnproject", kVar_avDepthUnproject, 0);
     }
 
     ////////////////////////////////////
@@ -624,6 +663,10 @@ bool cRendererDeferred::LoadData()
                     vars.Add("UseDeferredLightShapes");
                     vars.Add("DivideInFrag");
                     vars.Add(mGBufferType == eDeferredGBuffer_32Bit ? "Deferred_32bit" : "Deferred_64bit");
+                    if(mbHardwareDepthActive)
+                    {
+                        vars.Add("HardwareDepth");
+                    }
 
                     mpLightBoxClipProgram[i] = mpProgramManager->CreateProgramFromShaders("LightBoxClip",
                                                "deferred_base_vtx.glsl",
@@ -634,6 +677,7 @@ bool cRendererDeferred::LoadData()
                         mpLightBoxClipProgram[i]->GetVariableAsId("avLightColor", kVar_avLightColor);
                         mpLightBoxClipProgram[i]->GetVariableAsId("afNegFarPlane", kVar_afNegFarPlane);
                         mpLightBoxClipProgram[i]->GetVariableAsId("a_mtxInvBoxViewSpace", kVar_a_mtxInvBoxViewSpace);
+                        mpLightBoxClipProgram[i]->GetVariableAsId("avDepthUnproject", kVar_avDepthUnproject);
                     }
                     else
                     {
@@ -674,13 +718,28 @@ bool cRendererDeferred::LoadData()
             //self-test and falls back to the lite shader only if the full one
             //gives wrong results on this GPU/driver. May also lower shadow quality.
             //Fullbright renders no lights, so skip the self-test (start-up time on weak cards).
-            msActiveLightFragShader = mbFullbrightActive ? msLightFragShader : SelectLightFragShader();
+            if(mbFullbrightActive)
+            {
+                msActiveLightFragShader = msLightFragShader;
+            }
+            else if(mbHardwareDepthActive)
+            {
+                //No normals in the G-buffer, so only the lite shader works (CanUseHardwareDepth checked that it exists)
+                eDeferredLightShaderMode prevMode = mLightShaderMode;
+                mLightShaderMode = eDeferredLightShaderMode_Lite;
+                msActiveLightFragShader = SelectLightFragShader();
+                mLightShaderMode = prevMode;
+            }
+            else
+            {
+                msActiveLightFragShader = SelectLightFragShader();
+            }
             mbLiteLightShaderActive = mbLiteLightShader;
             mbLiteGBufferActive = false;
             mbLiteGBufferSparse = false;
-            if(mbFullbrightActive)
+            if(mbFullbrightActive || mbHardwareDepthActive)
             {
-                //No G-buffer layout to change, lights are not rendered
+                //No G-buffer layout to change (fullbright renders no lights, hardware depth is already color only)
             }
             else if(mbLiteLightShaderActive && mbLiteGBufferAllowed && mlNumOfGBufferTextures == 3 && mGBufferType == eDeferredGBuffer_32Bit)
             {
@@ -701,6 +760,10 @@ bool cRendererDeferred::LoadData()
             {
                 defaultVars.Add("UseLightColorGrade");
             }
+            if(mbHardwareDepthActive)
+            {
+                defaultVars.Add("HardwareDepth");
+            }
 
             mpProgramManager->SetupGenerateProgramData(    eDefferredProgramMode_Lights, "Lights", "deferred_base_vtx.glsl", msActiveLightFragShader, gvLightFeatureVec,
                     kLightFeatureNum, defaultVars);
@@ -720,6 +783,7 @@ bool cRendererDeferred::LoadData()
             mpProgramManager->AddGenerateProgramVariableId("avLightPos2", kVar_avLightPos2, eDefferredProgramMode_Lights);
             mpProgramManager->AddGenerateProgramVariableId("avLightColor2", kVar_avLightColor2, eDefferredProgramMode_Lights);
             mpProgramManager->AddGenerateProgramVariableId("afInvLightRadius2", kVar_afInvLightRadius2, eDefferredProgramMode_Lights);
+            mpProgramManager->AddGenerateProgramVariableId("avDepthUnproject", kVar_avDepthUnproject, eDefferredProgramMode_Lights);
         }
     }
 
@@ -893,7 +957,11 @@ void cRendererDeferred::DestroyData()
             mpGraphics->DestroyTexture(mpGBufferTexture[type][j]);
         }
 
-        mpGraphics->DestroyDepthStencilBuffer(mpDepthStencil[type]);
+        if(mpDepthStencil[type])
+        {
+            mpGraphics->DestroyDepthStencilBuffer(mpDepthStencil[type]);
+            mpDepthStencil[type] = NULL;
+        }
     }
 
     mpGraphics->DestroyFrameBuffer(mpAccumBuffer);
@@ -1208,6 +1276,11 @@ void cRendererDeferred::SetupRenderVariables()
     mfFarBottom = -mfFarTop;
     mfFarRight = mfFarBottom * mpCurrentFrustum->GetAspect();
     mfFarLeft = -mfFarRight;
+
+    if(mbHardwareDepthActive)
+    {
+        UpdateDepthUnproject();
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1751,6 +1824,10 @@ iGpuProgram *cRendererDeferred::SetupProgramAndTextures(cDeferredLight* apLightD
     if(pProgram)
     {
         pProgram->SetFloat(kVar_afNegFarPlane, -mpCurrentFrustum->GetFarPlane());
+        if(mbHardwareDepthActive)
+        {
+            pProgram->SetVec4f(kVar_avDepthUnproject, mvDepthUnproject[0], mvDepthUnproject[1], mvDepthUnproject[2], mvDepthUnproject[3]);
+        }
     }
 
     /////////////////////////
@@ -3020,6 +3097,10 @@ void cRendererDeferred::RenderBoxLight(cDeferredLight* apLightData)
         if(bClip)
         {
             pProgram->SetFloat(kVar_afNegFarPlane, -mpCurrentFrustum->GetFarPlane());
+            if(mbHardwareDepthActive)
+            {
+                pProgram->SetVec4f(kVar_avDepthUnproject, mvDepthUnproject[0], mvDepthUnproject[1], mvDepthUnproject[2], mvDepthUnproject[3]);
+            }
             pProgram->SetMatrixf(kVar_a_mtxInvBoxViewSpace, cMath::MatrixInverse(apLightData->m_mtxViewSpaceRender));
         }
 
@@ -3485,6 +3566,10 @@ void cRendererDeferred::RenderFullScreenFog()
         if(GetGBufferType() == eDeferredGBuffer_32Bit)
         {
             pProgram->SetFloat(kVar_afNegFarPlane, -mpCurrentFrustum->GetFarPlane());
+            if(mbHardwareDepthActive)
+            {
+                pProgram->SetVec4f(kVar_avDepthUnproject, mvDepthUnproject[0], mvDepthUnproject[1], mvDepthUnproject[2], mvDepthUnproject[3]);
+            }
         }
         pProgram->SetVec2f(kVar_avFogStartAndLength, cVector2f(mpCurrentWorld->GetFogStart(), mpCurrentWorld->GetFogEnd() - mpCurrentWorld->GetFogStart()));
         pProgram->SetColor4f(kVar_avFogColor, mpCurrentWorld->GetFogColor());
@@ -3569,6 +3654,10 @@ void cRendererDeferred::RenderFog()
         if(GetGBufferType() == eDeferredGBuffer_32Bit)
         {
             pProgram->SetFloat(kVar_afNegFarPlane, -mpCurrentFrustum->GetFarPlane());
+            if(mbHardwareDepthActive)
+            {
+                pProgram->SetVec4f(kVar_avDepthUnproject, mvDepthUnproject[0], mvDepthUnproject[1], mvDepthUnproject[2], mvDepthUnproject[3]);
+            }
         }
         pProgram->SetVec2f(kVar_avFogStartAndLength, cVector2f(pFogArea->GetStart(), pFogArea->GetEnd() - pFogArea->GetStart()));
         pProgram->SetColor4f(kVar_avFogColor, pFogArea->GetColor());
@@ -4974,6 +5063,312 @@ void cRendererDeferred::CreateAccumAndReflectionTextures(const cVector2l& avRefl
     ////////////////////////////////////
     //Create Reflection texture
     mpReflectionTexture = CreateRenderTexture("ReflectionTexture", avReflectionSize, ePixelFormat_RGBA);
+}
+
+//-----------------------------------------------------------------------
+
+void cRendererDeferred::AttachGBufferDepth(iFrameBuffer *apBuffer, int alType)
+{
+    if(mbHardwareDepthActive)
+    {
+        apBuffer->SetDepthTexture2D(mpGBufferTexture[alType][2]);
+    }
+    else
+    {
+        apBuffer->SetDepthStencilBuffer(mpDepthStencil[alType]);
+    }
+}
+
+//-----------------------------------------------------------------------
+
+//Hardware depth: the shaders get the linear depth (distance / far plane, as in the
+//packed depth target) as 1 / dot(vec4(depth, gl_FragCoord.xy, 1), avDepthUnproject).
+//
+//For the pixel ray through the far plane point (x, y, -f):
+//  x = f * (ndcX + P02) / P00,  y = f * (ndcY + P12) / P11
+//  linear depth = P23 / (f * (ndcZ + P22) - P20 * x - P21 * y),  ndcZ = 2 * depth - 1
+//P20 and P21 are only non zero for the oblique near plane of reflections. All of it
+//is linear in depth and gl_FragCoord, so it folds into one vec4.
+void cRendererDeferred::UpdateDepthUnproject()
+{
+    const cMatrixf& mtxProj = mpCurrentFrustum->GetProjectionMatrix();
+    float fFar = mpCurrentFrustum->GetFarPlane();
+
+    float fP00 = mtxProj.m[0][0], fP02 = mtxProj.m[0][2];
+    float fP11 = mtxProj.m[1][1], fP12 = mtxProj.m[1][2];
+    float fP20 = mtxProj.m[2][0], fP21 = mtxProj.m[2][1], fP22 = mtxProj.m[2][2], fP23 = mtxProj.m[2][3];
+
+    if(fabsf(fP23) < 1e-12f || fabsf(fP00) < 1e-12f || fabsf(fP11) < 1e-12f || mvRenderTargetSize.x <= 0 || mvRenderTargetSize.y <= 0)
+    {
+        //Not a perspective projection, everything ends up at the far plane
+        mvDepthUnproject[0] = 0;
+        mvDepthUnproject[1] = 0;
+        mvDepthUnproject[2] = 0;
+        mvDepthUnproject[3] = 1;
+        return;
+    }
+
+    //Viewport, as set in cLowLevelGraphicsSDL::SetCurrentFrameBuffer (GL y goes up from the bottom)
+    iFrameBuffer *pBuffer = GetGBufferFrameBuffer(eGBufferComponents_Full);
+    cVector2l vBufferSize = pBuffer ? pBuffer->GetSize() : mvScreenSize;
+    float fViewW = (float)mvRenderTargetSize.x;
+    float fViewH = (float)mvRenderTargetSize.y;
+    float fViewX = (float)mpCurrentRenderTarget->mvPos.x;
+    float fViewY = (float)(vBufferSize.y - mvRenderTargetSize.y - mpCurrentRenderTarget->mvPos.y);
+
+    //ndc = gl_FragCoord * mul + add
+    float fMulX = 2.0f / fViewW;
+    float fAddX = -2.0f * fViewX / fViewW - 1.0f;
+    float fMulY = 2.0f / fViewH;
+    float fAddY = -2.0f * fViewY / fViewH - 1.0f;
+
+    float fRayX = fP20 * fFar / fP00;
+    float fRayY = fP21 * fFar / fP11;
+
+    float fDepth = 2.0f * fFar;
+    float fFragX = -fRayX * fMulX;
+    float fFragY = -fRayY * fMulY;
+    float fConst = fFar * (fP22 - 1.0f) - fRayX * (fAddX + fP02) - fRayY * (fAddY + fP12);
+
+    mvDepthUnproject[0] = fDepth / fP23;
+    mvDepthUnproject[1] = fFragX / fP23;
+    mvDepthUnproject[2] = fFragY / fP23;
+    mvDepthUnproject[3] = fConst / fP23;
+}
+
+//-----------------------------------------------------------------------
+
+bool cRendererDeferred::ShaderFileHasText(const tString& asFile, const tString& asText)
+{
+    const tWString& sPath = mpResources->GetFileSearcher()->GetFilePath(asFile);
+    if(sPath == _W(""))
+    {
+        return false;
+    }
+    FILE *pFile = cPlatform::OpenFile(sPath, _W("rb"));
+    if(pFile == NULL)
+    {
+        return false;
+    }
+    tString sData;
+    char vBuffer[4096];
+    size_t lRead;
+    while((lRead = fread(vBuffer, 1, sizeof(vBuffer), pFile)) > 0)
+    {
+        sData.append(vBuffer, lRead);
+    }
+    fclose(pFile);
+
+    return sData.find(asText) != tString::npos;
+}
+
+//-----------------------------------------------------------------------
+
+bool cRendererDeferred::CanUseHardwareDepth()
+{
+    tString sReason = "";
+    const char *vShaders[] = { msLiteLightFragShader.c_str(), "deferred_fog_frag.glsl", "deferred_light_box_frag.glsl" };
+
+    if(mGBufferType != eDeferredGBuffer_32Bit)
+    {
+        sReason = "only works with the 32 bit G-buffer (GBufferType=0)";
+    }
+    else if(mpResources->GetFileSearcher()->GetFilePath(msLiteLightFragShader) == _W(""))
+    {
+        sReason = "lite light shader '" + msLiteLightFragShader + "' is missing";
+    }
+    else if(mpResources->GetFileSearcher()->GetFilePath("_test_hardware_depth_vtx.glsl") == _W("") ||
+            mpResources->GetFileSearcher()->GetFilePath("_test_hardware_depth_frag.glsl") == _W(""))
+    {
+        sReason = "self-test shaders '_test_hardware_depth_vtx/frag.glsl' are missing";
+    }
+    else
+    {
+        for(int i = 0; i < 3; ++i)
+        {
+            if(ShaderFileHasText(vShaders[i], "HardwareDepth") == false)
+            {
+                sReason = tString("'") + vShaders[i] + "' has no HardwareDepth support (old shader file?)";
+                break;
+            }
+        }
+    }
+
+    if(sReason == "")
+    {
+        if(TestHardwareDepth(sReason))
+        {
+            Log(" Hardware depth: self-test passed\n");
+            return true;
+        }
+        sReason = "self-test failed: " + sReason;
+    }
+
+    Warning("Hardware depth G-buffer mode is not used (%s), using the normal G-buffer\n", sReason.c_str());
+    return false;
+}
+
+//-----------------------------------------------------------------------
+
+//Like a frame: write depth into a depth texture, then (as the light pass does) draw with
+//that texture attached, depth test on and depth write off, sampling it in the shader.
+//Reading a texture that is attached to the bound frame buffer is not defined by GL 2.0,
+//so this checks that the driver gives the right depth and still does the depth test.
+bool cRendererDeferred::TestHardwareDepth(tString &asReason)
+{
+    const int lTestWidth = 64;
+    const int lTestHeight = 4;
+    cVector2l vSize(lTestWidth, lTestHeight);
+
+    iTexture *pColorTexture = CreateRenderTexture("HardwareDepthTest_Color", vSize, ePixelFormat_RGBA, eTextureFilter_Nearest);
+    iTexture *pDepthTexture = CreateRenderTexture("HardwareDepthTest_Depth", vSize, ePixelFormat_Depth24, eTextureFilter_Nearest);
+    iFrameBuffer *pBuffer = mpGraphics->CreateFrameBuffer("HardwareDepthTest");
+    pBuffer->SetTexture2D(0, pColorTexture);
+    pBuffer->SetDepthTexture2D(pDepthTexture);
+
+    cParserVarContainer vars;
+    iGpuProgram *pWriteProgram = mpGraphics->CreateGpuProgramFromShaders("HardwareDepthTestWrite", "_test_hardware_depth_vtx.glsl",
+                                 "_test_hardware_depth_frag.glsl", &vars);
+    vars.Add("ReadDepth");
+    iGpuProgram *pReadProgram = mpGraphics->CreateGpuProgramFromShaders("HardwareDepthTestRead", "_test_hardware_depth_vtx.glsl",
+                                "_test_hardware_depth_frag.glsl", &vars);
+
+    bool bPassed = true;
+    if(pBuffer->CompileAndValidate() == false)
+    {
+        asReason = "frame buffer with a depth texture is not complete";
+        bPassed = false;
+    }
+    else if(pWriteProgram == NULL || pReadProgram == NULL)
+    {
+        asReason = "test program does not compile/link";
+        bPassed = false;
+    }
+
+    if(bPassed)
+    {
+        mpLowLevelGraphics->SetDepthTestActive(false);
+        mpLowLevelGraphics->SetDepthWriteActive(false);
+        mpLowLevelGraphics->SetCullActive(false);
+        mpLowLevelGraphics->SetBlendActive(false);
+        mpLowLevelGraphics->SetAlphaTestActive(false);
+        mpLowLevelGraphics->SetStencilActive(false);
+        mpLowLevelGraphics->SetScissorActive(false);
+        mpLowLevelGraphics->SetColorWriteActive(true, true, true, true);
+        for(int i = 0; i < 8; ++i)
+        {
+            mpLowLevelGraphics->SetTexture(i, NULL);
+        }
+
+        //Pixels that fail the depth test stay magenta
+        mpLowLevelGraphics->SetCurrentFrameBuffer(pBuffer);
+        mpLowLevelGraphics->SetClearColor(cColor(1, 0, 1, 1));
+        mpLowLevelGraphics->SetClearDepth(1.0f);
+        mpLowLevelGraphics->SetDepthWriteActive(true);
+        mpLowLevelGraphics->ClearFrameBuffer(eClearFrameBufferFlag_Color | eClearFrameBufferFlag_Depth);
+
+        //Pass 1: depth only, a slope from window depth 0.25 (left) to 0.75 (right)
+        tVertexVec vSlope;
+        vSlope.push_back(cVertex(cVector3f(-1, -1, -0.5f), 0, cColor(1, 1)));
+        vSlope.push_back(cVertex(cVector3f( 1, -1,  0.5f), 0, cColor(1, 1)));
+        vSlope.push_back(cVertex(cVector3f( 1,  1,  0.5f), 0, cColor(1, 1)));
+        vSlope.push_back(cVertex(cVector3f(-1,  1, -0.5f), 0, cColor(1, 1)));
+
+        pWriteProgram->Bind();
+        mpLowLevelGraphics->SetDepthTestActive(true);
+        mpLowLevelGraphics->SetDepthTestFunc(eDepthTestFunc_Always);
+        mpLowLevelGraphics->SetColorWriteActive(false, false, false, false);
+        mpLowLevelGraphics->DrawQuad(vSlope);
+        pWriteProgram->UnBind();
+
+        //Pass 2: like a light, a flat quad at depth 0.5 with "greater or equal" passes on the left half only.
+        tVertexVec vFlat;
+        vFlat.push_back(cVertex(cVector3f(-1, -1, 0), 0, cColor(1, 1)));
+        vFlat.push_back(cVertex(cVector3f( 1, -1, 0), 0, cColor(1, 1)));
+        vFlat.push_back(cVertex(cVector3f( 1,  1, 0), 0, cColor(1, 1)));
+        vFlat.push_back(cVertex(cVector3f(-1,  1, 0), 0, cColor(1, 1)));
+
+        mpLowLevelGraphics->SetDepthWriteActive(false);
+        mpLowLevelGraphics->SetDepthTestFunc(eDepthTestFunc_GreaterOrEqual);
+        mpLowLevelGraphics->SetColorWriteActive(true, true, true, true);
+        mpLowLevelGraphics->SetTexture(0, pDepthTexture);
+        pReadProgram->Bind();
+        mpLowLevelGraphics->DrawQuad(vFlat);
+        pReadProgram->UnBind();
+        mpLowLevelGraphics->SetTexture(0, NULL);
+
+        mpLowLevelGraphics->SetDepthTestActive(false);
+        mpLowLevelGraphics->SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
+
+        ////////////////////
+        //Read back one row
+        cBitmap *pBitmap = mpLowLevelGraphics->CopyFrameBufferToBitmap(0, cVector2l(lTestWidth, 1));
+        if(pBitmap == NULL || pBitmap->GetData(0, 0) == NULL || pBitmap->GetData(0, 0)->mlSize < lTestWidth * 4)
+        {
+            asReason = "could not read back the result";
+            bPassed = false;
+        }
+        else
+        {
+            unsigned char *pData = pBitmap->GetData(0, 0)->mpData;
+            for(int x = 0; x < lTestWidth; ++x)
+            {
+                float fT = ((float)x + 0.5f) / (float)lTestWidth;
+                //Skip the pixels where the slope crosses 0.5, both results are fine there.
+                if(fabsf(fT - 0.5f) < 3.0f / (float)lTestWidth)
+                {
+                    continue;
+                }
+
+                unsigned char *pPixel = &pData[x * 4];
+                bool bMagenta = pPixel[0] == 255 && pPixel[1] == 0 && pPixel[2] == 255;
+                if(fT > 0.5f)
+                {
+                    if(bMagenta == false)
+                    {
+                        asReason = "depth test does not work while the depth texture is read (pixel " + cString::ToString(x) + ")";
+                        bPassed = false;
+                        break;
+                    }
+                    continue;
+                }
+
+                float fExpected = 0.25f + 0.5f * fT;
+                float fGot = (float)pPixel[0] / 255.0f + (float)pPixel[1] / (255.0f * 255.0f);
+                if(bMagenta || fabsf(fGot - fExpected) > 0.002f)
+                {
+                    asReason = "wrong depth read (pixel " + cString::ToString(x) + ": " + cString::ToString(fGot) +
+                               " instead of " + cString::ToString(fExpected) + ")";
+                    bPassed = false;
+                    break;
+                }
+            }
+        }
+        if(pBitmap)
+        {
+            hplDelete(pBitmap);
+        }
+
+        mpLowLevelGraphics->SetCurrentFrameBuffer(NULL);
+        mpLowLevelGraphics->SetClearColor(cColor(0, 0));
+        mpLowLevelGraphics->SetDepthTestActive(true);
+        mpLowLevelGraphics->SetDepthWriteActive(true);
+        mpLowLevelGraphics->SetCullActive(true);
+    }
+
+    if(pWriteProgram)
+    {
+        mpGraphics->DestroyGpuProgram(pWriteProgram);
+    }
+    if(pReadProgram)
+    {
+        mpGraphics->DestroyGpuProgram(pReadProgram);
+    }
+    mpGraphics->DestroyFrameBuffer(pBuffer);
+    mpGraphics->DestroyTexture(pColorTexture);
+    mpGraphics->DestroyTexture(pDepthTexture);
+
+    return bPassed;
 }
 
 //-----------------------------------------------------------------------
