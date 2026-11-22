@@ -1349,7 +1349,13 @@ bool cLuxBase::InitEngine()
     cRendererDeferred::SetSSAONumOfSamples(mpConfigHandler->mlSSAOSamples);
     cRendererDeferred::SetSSAOLoaded(mpConfigHandler->mbSSAOActive);
     cRendererDeferred::SetGBufferType((eDeferredGBuffer)mpMainConfig->GetInt("Graphics", "GBufferType", eDeferredGBuffer_32Bit));
-    cRendererDeferred::SetNumOfGBufferTextures(mpMainConfig->GetInt("Graphics", "NumOfGBufferTextures", 3));
+    int lNumOfGBufferTextures = mpMainConfig->GetInt("Graphics", "NumOfGBufferTextures", 3);
+    if(lNumOfGBufferTextures != 3 && lNumOfGBufferTextures != 4)
+    {
+        Warning("NumOfGBufferTextures=%d is not supported (must be 3 or 4), using 3.\n", lNumOfGBufferTextures);
+        lNumOfGBufferTextures = 3;
+    }
+    cRendererDeferred::SetNumOfGBufferTextures(lNumOfGBufferTextures);
 
     // Deferred light shader: 0 = auto (start-up self-test picks full or lite), 1 = always full, 2 = always lite
     int lLightShaderMode = mpMainConfig->GetInt("Graphics", "LightShaderMode", eDeferredLightShaderMode_Auto);
