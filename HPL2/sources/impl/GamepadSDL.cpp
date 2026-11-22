@@ -4,6 +4,7 @@
 #include "impl/LowLevelInputSDL.h"
 
 #include "system/LowLevelSystem.h"
+#include "system/Platform.h"
 #include "system/String.h"
 #include "math/Math.h"
 #include <limits>
@@ -29,7 +30,8 @@ namespace hpl
 // Where they are looked up, first match wins:
 //  1. GamepadMappings in the Input section of main_settings.cfg (raw winmm
 //     numbers, as GamepadLogRawInput logs them), see iGamepad::SetUserMappings()
-//  2. Xbox pads: used raw, the bindings are made for them
+//  2. Wine's own gamepad (see LooksLikeWineGamepad()): gsMapping_WineGamepad,
+//     then Xbox pads: used raw, the bindings are made for them
 //  3. gamecontrollerdb.txt next to main_settings.cfg, then config/gamecontrollerdb.txt
 //     (loaded by cLuxBase::InitEngine())
 //  4. the few lines below, so the pads atrim was tested with work without the file
@@ -42,6 +44,16 @@ static const char *gsBuiltInControllerDB =
     "030000004c050000c405000000000000,PS4 Controller,a:b1,b:b2,back:b8,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b4,leftstick:b10,lefttrigger:a3,leftx:a0,lefty:a1,rightshoulder:b5,rightstick:b11,righttrigger:a4,rightx:a2,righty:a5,start:b9,touchpad:b13,x:b0,y:b3,platform:Windows,\n"
     "030000004c050000cc09000000000000,PS4 Controller,a:b1,b:b2,back:b8,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b4,leftstick:b10,lefttrigger:a3,leftx:a0,lefty:a1,rightshoulder:b5,rightstick:b11,righttrigger:a4,rightx:a2,righty:a5,start:b9,touchpad:b13,x:b0,y:b3,platform:Windows,\n"
     "030000004c050000e60c000000000000,PS5 Controller,a:b1,b:b2,back:b8,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b4,leftstick:b10,lefttrigger:a3,leftx:a0,lefty:a1,misc1:b14,rightshoulder:b5,rightstick:b11,righttrigger:a4,rightx:a2,righty:a5,start:b9,touchpad:b13,x:b0,y:b3,platform:Windows,\n";
+
+// Under Wine, a pad SDL knows as a game controller (on the Linux side) is
+// handed to Windows programs as Wine's own Xbox-like pad, whatever it really
+// is: buttons A B X Y LB RB Back Start LS RS, axes X/Y left stick, Rx/Ry
+// right stick, Z/Rz triggers, the D-pad on the hat. winmm puts those in
+// X Y Z(LT) R(RT) U(right Y) V(right X). Numbers here are winmm ones.
+static const char *gsMapping_WineGamepad =
+    "a:b0,b:b1,x:b2,y:b3,leftshoulder:b4,rightshoulder:b5,back:b6,start:b7,leftstick:b8,rightstick:b9,"
+    "leftx:a0,lefty:a1,lefttrigger:a2,righttrigger:a3,righty:a4,rightx:a5,"
+    "dpup:h0.1,dpright:h0.2,dpdown:h0.4,dpleft:h0.8";
 
 // "Logitech style": buttons 1-4 = left, bottom, right, top face button,
 // 5/6 = LB/RB, 7/8 = LT/RT, 9/10 = Back/Start, 11/12 = stick clicks,
@@ -728,6 +740,19 @@ void cGamepadSDL::SetUpMapping()
     }
 
     ///////////////////
+    // Wine's Xbox-like pad. Its USB IDs are the real pad's, so the database
+    // would give the real pad's layout, which Wine doesn't use. Checked before
+    // the Xbox test: under Wine a real Xbox pad looks like this too.
+    if(LooksLikeWineGamepad())
+    {
+        mMapping.msName = "Wine gamepad";
+        if(ParseMapping(gsMapping_WineGamepad, mMapping))
+        {
+            return;
+        }
+    }
+
+    ///////////////////
     // Xbox 360 pads through winmm already use the layout the bindings expect
     if(mlVendorId == kVendor_Microsoft || NameLooksLikeXbox(msGamepadName))
     {
@@ -770,6 +795,45 @@ void cGamepadSDL::SetUpMapping()
         mMapping = cGamepadSDLMapping();
         mMapping.msName = "raw";
     }
+}
+
+//-----------------------------------------------------------------------
+
+bool cGamepadSDL::LooksLikeWineGamepad()
+{
+    ////////////////////////////////////////////////////////////
+    // Wine hands a pad to Windows programs one of two ways: as it really is
+    // (hidraw, used for PlayStation pads when Wine may open /dev/hidraw*),
+    // then the database layout is right, or as its own Xbox-like pad (SDL),
+    // then it isn't. Both have six axes, and the USB IDs are the same. They
+    // differ in which axes rest at one end: the Xbox-like pad's triggers are
+    // on Z and R, a PlayStation pad's on U and V with the right stick on Z/R.
+    // This assumes the triggers aren't held down while the game starts.
+    if(cPlatform::IsRunningOnWine() == false)
+    {
+        return false;
+    }
+    if(SDL_JoystickNumAxes(mpHandle) != 6 || SDL_JoystickNumButtons(mpHandle) < 10)
+    {
+        return false;
+    }
+#if defined(_WIN32) && !defined(_WIN32_WCE)
+    for(int i = 0; i < 6; ++i)
+    {
+        if(SDL_JoystickGetWinMMAxisSlot(mpHandle, i) != i)
+        {
+            return false;
+        }
+    }
+#endif
+
+    // Nothing has been read from the pad yet
+    SDL_JoystickUpdate();
+
+    float fZ = RawAxis(2), fR = RawAxis(3), fU = RawAxis(4), fV = RawAxis(5);
+    Log("  Wine: gamepad axes at rest Z %.2f R %.2f U %.2f V %.2f\n", fZ, fR, fU, fV);
+
+    return fZ < -0.75f && fR < -0.75f && cMath::Abs(fU) < 0.5f && cMath::Abs(fV) < 0.5f;
 }
 
 //-----------------------------------------------------------------------

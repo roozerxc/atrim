@@ -125,6 +125,7 @@ private:
     void SetUpMapping();
     bool FindUserMapping(cGamepadSDLMapping& aMapping);
     void ConvertDInputAxes(cGamepadSDLMapping& aMapping);
+    bool LooksLikeWineGamepad();
 
     float RawAxis(int alAxis);
     bool SourceIsDown(const cGamepadSDLSource& aSrc);
