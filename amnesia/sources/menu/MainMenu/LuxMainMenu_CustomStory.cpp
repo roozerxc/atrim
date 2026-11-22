@@ -196,6 +196,7 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
 
     if(apStory == NULL)
     {
+        mpStory = NULL;
         gpBase->SetCustomStory(NULL);
         return;
     }
