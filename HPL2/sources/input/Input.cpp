@@ -45,6 +45,18 @@ cInput::~cInput()
 
     STLMapDeleteAll(m_mapActions);
 
+#if USE_GAMEPAD
+    // Close the pads before the joystick subsystem goes away
+    for(tGamepadListIt it = mlstGamepads.begin(); it != mlstGamepads.end(); ++it)
+    {
+        mlstInputDevices.remove(*it);
+    }
+    STLDeleteAll(mlstGamepads);
+#if !USE_XINPUT
+    mpLowLevelInput->DropGamepadSupport();
+#endif
+#endif
+
     if(mpKeyboard)
     {
         hplDelete(mpKeyboard);
@@ -261,6 +273,12 @@ void cInput::RefreshGamepads()
         cGamepadXInput::SetWasConnected(i, bConnected);
     }
 #else
+    // SDL 1.2 only looks for joysticks when the subsystem starts, so restart it
+    // to pick up pads plugged in since the last refresh. The old pads were
+    // closed above.
+    mpLowLevelInput->DropGamepadSupport();
+    mpLowLevelInput->InitGamepadSupport();
+
     for(int i = 0; i < mpLowLevelInput->GetPluggedGamepadNum(); ++i)
     {
         iGamepad* pGamepad = mpLowLevelInput->CreateGamepad(i);

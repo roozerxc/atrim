@@ -11,6 +11,11 @@ namespace hpl
 
 //-----------------------------------------------------------------------
 
+tString iGamepad::msUserMappings = "";
+bool iGamepad::mbLogRawInput = false;
+
+//-----------------------------------------------------------------------
+
 iGamepad::iGamepad(tString asName, int alIndex) : iInputDevice(asName, eInputDeviceType_Gamepad)
 {
     mlIndex = alIndex;

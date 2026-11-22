@@ -1385,6 +1385,12 @@ bool cLuxBase::InitEngine()
     iRenderer::SetSmallObjectCullPixels(mpMainConfig->GetFloat("Graphics", "SmallObjectCullPixels", 0.0f));
     cEngine::SetLogicUpdatesPerSec(mpMainConfig->GetInt("Main", "LogicUpdatesPerSec", 60));
 
+#if USE_GAMEPAD
+    // Button layout overrides for DirectInput pads, read by cGamepadSDL when the pads are opened
+    iGamepad::SetUserMappings(mpMainConfig->GetString("Input", "GamepadMappings", ""));
+    iGamepad::SetLogRawInput(mpMainConfig->GetBool("Input", "GamepadLogRawInput", false));
+#endif
+
     cRendererDeferred::SetOcclusionTestLargeLights(mpConfigHandler->mbOcclusionTestLights);
 
     iLowLevelGraphics::SetForceShaderModel3And4Off(mpConfigHandler->mbForceShaderModel3And4Off);

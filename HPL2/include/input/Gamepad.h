@@ -200,8 +200,41 @@ public:
      * \return enum of the trackball.
      */
     static eGamepadBall StringToBall(const tString &);
+
+    /**
+     * Button/axis layout overrides for non-XInput pads, set before gamepads are created
+     * (GamepadMappings in the Input section of main_settings.cfg).
+     * Format: "VVVV:PPPP,<SDL GameControllerDB mapping>;VVVV:PPPP,..." with hex USB IDs,
+     * "*" instead of an ID to match any pad, or "raw" instead of a mapping to use
+     * the pad's own button numbers.
+     */
+    static void SetUserMappings(const tString& asMappings)
+    {
+        msUserMappings = asMappings;
+    }
+    static const tString& GetUserMappings()
+    {
+        return msUserMappings;
+    }
+
+    /**
+     * Log raw button/axis/hat numbers to hpl.log (GamepadLogRawInput in main_settings.cfg)
+     */
+    static void SetLogRawInput(bool abX)
+    {
+        mbLogRawInput = abX;
+    }
+    static bool GetLogRawInput()
+    {
+        return mbLogRawInput;
+    }
+
 protected:
     int mlIndex;
+
+private:
+    static tString msUserMappings;
+    static bool mbLogRawInput;
 };
 
 //------------------------------
