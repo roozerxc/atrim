@@ -689,6 +689,15 @@ ePlatform cPlatform::GetPlatform()
 
 //-----------------------------------------------------------------------
 
+bool cPlatform::IsRunningOnWine()
+{
+    // Wine's ntdll exports wine_get_version, Windows' never has
+    HMODULE hNtDll = GetModuleHandleW(L"ntdll.dll");
+    return hNtDll != NULL && GetProcAddress(hNtDll, "wine_get_version") != NULL;
+}
+
+//-----------------------------------------------------------------------
+
 #if defined(_WIN64)
 tString cPlatform::msName = "Win64";
 #elif defined(_WIN32)

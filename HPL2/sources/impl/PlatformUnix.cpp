@@ -477,6 +477,13 @@ ePlatform cPlatform::GetPlatform()
 }
 
 //-----------------------------------------------------------------------
+
+bool cPlatform::IsRunningOnWine()
+{
+    return false;
+}
+
+//-----------------------------------------------------------------------
 #if defined(__linux__) && defined(__LP64__)
 tString cPlatform::msName = "Linux x86_64";
 #elif defined(__linux__)

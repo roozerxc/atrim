@@ -94,6 +94,10 @@ public:
     //////////////////////////////////////////////////////
 
     static ePlatform GetPlatform();
+    /**
+     * True when the Windows build is running under Wine (or Proton)
+     */
+    static bool IsRunningOnWine();
     static const tString &GetPlatformName()
     {
         return msName;
