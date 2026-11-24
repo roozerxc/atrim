@@ -334,7 +334,6 @@ int cRenderSettings::RetrieveOcclusionObjectSamples(iRenderer *apRenderer, void 
     pObject->mlSampleResults = pQuery->GetSampleCount();
     pObject->mpQuery = NULL;
     apRenderer->ReleaseOcclusionQuery(pQuery);
-    m_mapLastOcclusionSamples[std::make_pair(apSource, alCustomIndex)] = pObject->mlSampleResults;
 
     return pObject->mlSampleResults;
 }
@@ -396,24 +395,9 @@ bool cRenderSettings::TryRetrieveOcclusionObjectSamples(iRenderer *apRenderer, v
     pObject->mlSampleResults = pQuery->GetSampleCount();
     pObject->mpQuery = NULL;
     apRenderer->ReleaseOcclusionQuery(pQuery);
-    m_mapLastOcclusionSamples[std::make_pair(apSource, alCustomIndex)] = pObject->mlSampleResults;
 
     alSamples = pObject->mlSampleResults;
     return true;
-}
-
-//-----------------------------------------------------------------------
-
-int cRenderSettings::RetrieveOcclusionObjectSamplesNoWait(iRenderer *apRenderer, void *apSource, int alCustomIndex)
-{
-    int lSamples = 0;
-    if(TryRetrieveOcclusionObjectSamples(apRenderer, apSource, alCustomIndex, lSamples))
-    {
-        return lSamples;
-    }
-
-    std::map<std::pair<void *, int>, int>::iterator it = m_mapLastOcclusionSamples.find(std::make_pair(apSource, alCustomIndex));
-    return it != m_mapLastOcclusionSamples.end() ? it->second : 0;
 }
 
 //-----------------------------------------------------------------------
@@ -445,20 +429,6 @@ void cRenderSettings::ClearOcclusionObjects(iRenderer *apRenderer)
     {
         Log(" Clearing occlusion queries i settings!\n");
     }
-    //Results that came in after they were asked for are kept for the next frame
-    if(m_mapLastOcclusionSamples.size() > 4096)
-    {
-        m_mapLastOcclusionSamples.clear();
-    }
-    for(tOcclusionQueryObjectMapIt it = m_setOcclusionObjects.begin(); it != m_setOcclusionObjects.end(); ++it)
-    {
-        iOcclusionQuery *pQuery = it->second->mpQuery;
-        if(pQuery && pQuery->FetchResults())
-        {
-            m_mapLastOcclusionSamples[std::make_pair(it->first, it->second->mlCustomID)] = pQuery->GetSampleCount();
-        }
-    }
-
     m_setOcclusionObjects.clear();
     for(int i = 0; i < mlCurrentOcclusionObject; ++i)
     {
@@ -675,9 +645,9 @@ bool iRenderer::TryRetrieveOcclusionObjectSamples(void *apSource, int alCustomIn
     return mpCurrentSettings->TryRetrieveOcclusionObjectSamples(this, apSource, alCustomIndex, alSamples);
 }
 
-int iRenderer::RetrieveOcclusionObjectSamplesNoWait(void *apSource, int alCustomIndex)
+bool iRenderer::IsRenderingReflection()
 {
-    return mpCurrentSettings->RetrieveOcclusionObjectSamplesNoWait(this, apSource, alCustomIndex);
+    return mpCurrentSettings != NULL && mpCurrentSettings->mbIsReflection;
 }
 
 void iRenderer::WaitAndRetrieveAllOcclusionQueries()

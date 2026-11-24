@@ -105,7 +105,12 @@ cBillboard::cBillboard(const tString asName, const cVector2f& avSize, eBillboard
     mlHaloBVMatrixCount = -1;
     mbHaloSizeUpdated = true;
 
-    mBoundingVolume.SetSize(cVector3f(mvSize.x, mvSize.y, mvSize.x));
+    mbHaloHasSamples = false;
+    mlHaloSamples = 0;
+    mlHaloMaxSamples = 0;
+    mlHaloSamplesFrame = 0;
+
+    UpdateBoundingVolumeSize();
 }
 
 //-----------------------------------------------------------------------
@@ -137,7 +142,7 @@ cBillboard::~cBillboard()
 void cBillboard::SetSize(const cVector2f& avSize)
 {
     mvSize = avSize;
-    mBoundingVolume.SetSize(cVector3f(mvSize.x, mvSize.y, mvSize.x));
+    UpdateBoundingVolumeSize();
 
     float *pPos = mpVtxBuffer->GetFloatArray(eVertexBufferElement_Position);
 
@@ -157,11 +162,6 @@ void cBillboard::SetSize(const cVector2f& avSize)
 
     mpVtxBuffer->UpdateData(eVertexElementFlag_Position, false);
 
-    if(mType == eBillboardType_Axis)
-    {
-        SetAxis(mvAxis);
-    }
-
     SetTransformUpdated();
 }
 
@@ -172,19 +172,9 @@ void cBillboard::SetAxis(const cVector3f& avAxis)
     mvAxis = avAxis;
     mvAxis.Normalize();
 
-    //This is a quick fix so the bounding box is correct for non up-pointing axises
-    if(mType == eBillboardType_Axis && mvAxis != cVector3f(0, 1, 0))
+    if(mType == eBillboardType_Axis)
     {
-        float fMax = mvSize.x;
-        if(fMax < mvSize.y)
-        {
-            fMax = mvSize.y;
-        }
-
-        fMax *= kSqrt2f;
-
-        mBoundingVolume.SetSize(fMax);
-
+        UpdateBoundingVolumeSize();
         SetTransformUpdated();
     }
 }
@@ -243,7 +233,15 @@ void cBillboard::SetHaloAlpha(float afX)
 
 void cBillboard::SetForwardOffset(float afOffset)
 {
+    if(mfForwardOffset == afOffset)
+    {
+        return;
+    }
+
     mfForwardOffset = afOffset;
+
+    UpdateBoundingVolumeSize();
+    SetTransformUpdated();
 }
 
 //-----------------------------------------------------------------------
@@ -372,6 +370,9 @@ void cBillboard::SetIsHalo(bool abX)
 {
     mbIsHalo = abX;
 
+    //Never reuse results from before the halo was (re)enabled
+    mbHaloHasSamples = false;
+
     if(mbIsHalo)
     {
         mfHaloAlpha = 1; //THis is to make sure that the new alpha is set to the mesh.
@@ -443,9 +444,55 @@ bool cBillboard::RetrieveOcculsionQuery(iRenderer *apRenderer)
     int lSamples = 0;
     int lMaxSamples = 0;
 
-    //A halo a frame behind can not be seen, waiting for the GPU here costs a lot on slow cards
-    lSamples = apRenderer->RetrieveOcclusionObjectSamplesNoWait(this, 0);
-    lMaxSamples = apRenderer->RetrieveOcclusionObjectSamplesNoWait(this, 1);
+    ////////////////////////////
+    // Reflections have their own queries and are rare, just wait like vanilla does.
+    // Their results must not end up in the main view's cached pair.
+    if(apRenderer->IsRenderingReflection())
+    {
+        lSamples = apRenderer->RetrieveOcclusionObjectSamples(this, 0);
+        lMaxSamples = apRenderer->RetrieveOcclusionObjectSamples(this, 1);
+    }
+    ////////////////////////////
+    // Main view: waiting for the GPU here costs a lot on slow cards, so use this frame's
+    // results if both are in, otherwise the last complete pair if it is recent enough.
+    // Both values must always come from the same frame, mixing them makes the halo flicker
+    // or shine through walls.
+    else
+    {
+        const int lFrame = iRenderer::GetRenderFrameCount();
+
+        int lNewSamples = 0;
+        int lNewMaxSamples = 0;
+        bool bGotSamples = apRenderer->TryRetrieveOcclusionObjectSamples(this, 0, lNewSamples);
+        bool bGotMaxSamples = apRenderer->TryRetrieveOcclusionObjectSamples(this, 1, lNewMaxSamples);
+        bool bGotBoth = bGotSamples && bGotMaxSamples;
+
+        //No usable earlier pair: first frame of the halo, or it was not rendered for a while
+        //(went out of view, room change, map load, menu...). The old view says nothing about
+        //the current one, so wait for the real result instead of guessing.
+        const int kMaxStaleFrames = 2;
+        bool bStale = mbHaloHasSamples == false ||
+                      lFrame - mlHaloSamplesFrame > kMaxStaleFrames ||
+                      lFrame < mlHaloSamplesFrame;
+
+        if(bGotBoth == false && bStale)
+        {
+            lNewSamples = apRenderer->RetrieveOcclusionObjectSamples(this, 0);
+            lNewMaxSamples = apRenderer->RetrieveOcclusionObjectSamples(this, 1);
+            bGotBoth = true;
+        }
+
+        if(bGotBoth)
+        {
+            mlHaloSamples = lNewSamples;
+            mlHaloMaxSamples = lNewMaxSamples;
+            mlHaloSamplesFrame = lFrame;
+            mbHaloHasSamples = true;
+        }
+
+        lSamples = mlHaloSamples;
+        lMaxSamples = mlHaloMaxSamples;
+    }
 
     ////////////////////////////
     // Samples are visible
@@ -453,7 +500,7 @@ bool cBillboard::RetrieveOcculsionQuery(iRenderer *apRenderer)
     {
         ///////////////////////
         //Calculate the alpha
-        float fAlpha = (float)lSamples / (float)(lMaxSamples + 0.00001f);
+        float fAlpha = (float)lSamples / (float)lMaxSamples;
 
         ///////////////////////
         //Check if inside screen
@@ -537,6 +584,37 @@ bool cBillboard::RetrieveOcculsionQuery(iRenderer *apRenderer)
 // PRIVATE METHODS
 //////////////////////////////////////////////////////////////////////////
 
+
+//-----------------------------------------------------------------------
+
+/**
+ * The bounding volume is used for frustum and occlusion culling, so it must hold the quad
+ * however it is turned when drawn (see GetModelMatrix), or the billboard pops in and out.
+ */
+void cBillboard::UpdateBoundingVolumeSize()
+{
+    //Fixed axis: drawn exactly with the world matrix, no offset.
+    if(mType == eBillboardType_FixedAxis)
+    {
+        mBoundingVolume.SetSize(cVector3f(mvSize.x, mvSize.y, mvSize.x));
+        return;
+    }
+
+    //The quad is moved towards the camera, which can be any direction.
+    float fOffset = 2 * cMath::Abs(mfForwardOffset);
+
+    //Axis around the local up: only turns around it, the width covers every turn.
+    if(mType == eBillboardType_Axis && mvAxis == cVector3f(0, 1, 0))
+    {
+        mBoundingVolume.SetSize(cVector3f(mvSize.x + fOffset, mvSize.y + fOffset, mvSize.x + fOffset));
+        return;
+    }
+
+    //Point (faces the camera, so also tilts when looking up or down) or any other axis:
+    //every corner is half the diagonal away from the center, whatever the rotation.
+    float fDiagonal = sqrt(mvSize.x * mvSize.x + mvSize.y * mvSize.y);
+    mBoundingVolume.SetSize(fDiagonal + fOffset);
+}
 
 //-----------------------------------------------------------------------
 

@@ -117,7 +117,6 @@ public:
     void AssignOcclusionObject(iRenderer *apRenderer, void *apSource, int alCustomIndex, iVertexBuffer *apVtxBuffer, cMatrixf *apMatrix, bool abDepthTest);
     int RetrieveOcclusionObjectSamples(iRenderer *apRenderer, void *apSource, int alCustomIndex);
     bool TryRetrieveOcclusionObjectSamples(iRenderer *apRenderer, void *apSource, int alCustomIndex, int &alSamples);
-    int RetrieveOcclusionObjectSamplesNoWait(iRenderer *apRenderer, void *apSource, int alCustomIndex);
     void ClearOcclusionObjects(iRenderer *apRenderer);
     void WaitAndRetrieveAllOcclusionQueries(iRenderer *apRenderer);
 
@@ -133,8 +132,6 @@ public:
     int mlCurrentOcclusionObject;
     std::vector<cOcclusionQueryObject *> mvOcclusionObjectPool;
     tOcclusionQueryObjectMap m_setOcclusionObjects;
-    //Latest known result per source and custom index, used when this frame's is not in yet
-    std::map<std::pair<void *, int>, int> m_mapLastOcclusionSamples;
 
     std::vector<cFogAreaRenderData> mvFogRenderData;
 
@@ -283,6 +280,10 @@ public:
     {
         return mpCurrentFrustum;
     }
+    /**
+     * True while a reflection (e.g. water) is rendered with its own settings and queries.
+     */
+    bool IsRenderingReflection();
     cRenderList *GetCurrentRenderList()
     {
         return mpCurrentRenderList;
@@ -305,10 +306,6 @@ public:
      * \return false if the query result is not ready yet (alSamples is then not set).
      */
     bool TryRetrieveOcclusionObjectSamples(void *apSource, int alCustomIndex, int &alSamples);
-    /**
-     * Never waits: if this frame's result is not in, the last one known is returned (a frame old).
-     */
-    int RetrieveOcclusionObjectSamplesNoWait(void *apSource, int alCustomIndex);
     /**
     * Retrieves number of samples for all active occlusion queries. It does not release the queries, but the values are gotten and stored in query.
     */

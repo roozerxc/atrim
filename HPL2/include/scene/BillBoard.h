@@ -114,6 +114,8 @@ public:
     }
 
 private:
+    void UpdateBoundingVolumeSize();
+
     cMaterialManager *mpMaterialManager;
     iLowLevelGraphics *mpLowLevelGraphics;
 
@@ -133,6 +135,12 @@ private:
     cVector3f mvHaloSourceSize;
     cBoundingVolume *mpHaloSourceBV;
     int mbHaloSizeUpdated;
+
+    //Last complete pair of halo query results (visible / max samples), both from the same frame
+    bool mbHaloHasSamples;
+    int mlHaloSamples;
+    int mlHaloMaxSamples;
+    int mlHaloSamplesFrame;
     int mlHaloBVMatrixCount;
 
     float mfForwardOffset;
