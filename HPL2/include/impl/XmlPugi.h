@@ -25,8 +25,10 @@ namespace hpl
 namespace Xml
 {
     //Parse options used everywhere: CDATA, entities, end of line normalisation.
+    //parse_lenient_attributes: attributes with no whitespace between them (x=""y="1") are accepted
+    //like TinyXML did. Needed for A Machine for Pigs hands.ent and mod files made from it.
     //Not used: parse_wconv_attribute (TinyXML kept tabs/newlines in attributes), comments, PIs.
-    const unsigned int kParseFlags = pugi::parse_cdata | pugi::parse_escapes | pugi::parse_eol;
+    const unsigned int kParseFlags = pugi::parse_cdata | pugi::parse_escapes | pugi::parse_eol | pugi::parse_lenient_attributes;
 
     //////////////////////////////
     // Reading

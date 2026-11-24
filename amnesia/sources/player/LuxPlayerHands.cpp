@@ -555,6 +555,12 @@ void cLuxPlayerHands::CreateHandEntity(cLuxMap *apMap)
     }
 
     apMap->GetWorld()->CreateEntity("PlayerHands", cMatrixf::Identity, "models/player/hands/hands.ent");
+    if(mpHandsEntity == NULL)
+    {
+        //The loader sets mpHandsEntity in AfterLoad. If the file is missing or broken it stays NULL
+        //and the hands code dereferences it everywhere, so stop with a readable message instead.
+        FatalError("Could not load player hands entity 'models/player/hands/hands.ent'!\nCheck the log for the XML error.\n");
+    }
     mpHandsEntity->SetVisible(false);
     mpHandsEntity->Stop();
     mpHandsEntity->SetRenderFlagBit(eRenderableFlag_ShadowCaster, false);

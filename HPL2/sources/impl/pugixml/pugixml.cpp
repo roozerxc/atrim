@@ -3396,7 +3396,9 @@ PUGI_IMPL_NS_BEGIN
 											// After this line the loop continues from the start;
 											// Whitespaces, / and > are ok, symbols and EOF are wrong,
 											// everything else will be detected
-											if (PUGI_IMPL_IS_CHARTYPE(*s, ct_start_symbol)) PUGI_IMPL_THROW_ERROR(status_bad_attribute, s);
+											// atrim: with parse_lenient_attributes the next attribute may follow the
+											// closing quote directly (TinyXML behaviour); the loop then parses it as usual.
+											if (PUGI_IMPL_IS_CHARTYPE(*s, ct_start_symbol) && !(optmsk & parse_lenient_attributes)) PUGI_IMPL_THROW_ERROR(status_bad_attribute, s);
 										}
 										else PUGI_IMPL_THROW_ERROR(status_bad_attribute, s);
 									}

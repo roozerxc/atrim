@@ -243,6 +243,11 @@ namespace pugi
 	// This flag is off by default.
 	PUGIXML_INLINE_VAR const unsigned int parse_merge_pcdata = 0x4000;
 
+	// atrim: accept attributes that are not separated by whitespace, e.g. <a x=""y="1"/>.
+	// TinyXML accepted this and some game/mod files depend on it (A Machine for Pigs hands.ent).
+	// This flag is off by default.
+	PUGIXML_INLINE_VAR const unsigned int parse_lenient_attributes = 0x8000;
+
 	// The default parsing mode.
 	// Elements, PCDATA and CDATA sections are added to the DOM tree, character/reference entities are expanded,
 	// End-of-Line characters are normalized, attribute values are normalized using CDATA normalization rules.
