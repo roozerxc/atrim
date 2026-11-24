@@ -379,6 +379,7 @@ cLuxBase::cLuxBase()
 
     mbShowVersionInfo = false;
     mpVersionWatermarkSet = NULL;
+    mpScreenGamma = NULL;
 
     ///////////////////////////////
     // Init string
@@ -1753,6 +1754,12 @@ void cLuxBase::ExitEngine()
         mpEngine->GetGraphics()->GetLowLevel()->SetPreSwapBuffersCallback(NULL, NULL);
         mpVersionWatermarkSet = NULL;
 
+        if(mpScreenGamma)
+        {
+            hplDelete(mpScreenGamma);
+            mpScreenGamma = NULL;
+        }
+
         DestroyHPLEngine(mpEngine);
     }
 }
@@ -1817,6 +1824,11 @@ bool cLuxBase::InitGame()
 
     }
 
+    ///////////////////////////////////////
+    // Gamma correction for the whole window (3D view, menus, pre-menu, loading screens...)
+    mpScreenGamma = hplNew(cLuxScreenGamma, (mpEngine->GetGraphics()) );
+
+    //Gamma and the watermark are drawn by preswap, after everything else in the frame.
     mpEngine->GetGraphics()->GetLowLevel()->SetPreSwapBuffersCallback(LuxBase_PreSwapCallback, this);
 
     ///////////////////////////////////////
@@ -1956,6 +1968,12 @@ void cLuxBase::InitOver()
 
 void cLuxBase::RunPreSwapBuffers()
 {
+    //Gamma first so the watermark keeps its exact colors
+    if(mpScreenGamma)
+    {
+        mpScreenGamma->Render();
+    }
+
     DrawVersionWatermark();
 }
 

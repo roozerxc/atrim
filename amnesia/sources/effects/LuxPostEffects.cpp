@@ -146,55 +146,148 @@ iTexture *cLuxPostEffect_Insanity::RenderEffect(iTexture *apInputTexture, iFrame
 
 //-----------------------------------------------------------------------
 
-cLuxPostEffect_Gamma::cLuxPostEffect_Gamma(cGraphics *apGraphics, cResources *apResources) : iLuxPostEffect(apGraphics, apResources)
+cLuxScreenGamma::cLuxScreenGamma(cGraphics *apGraphics)
 {
+    mpGraphics = apGraphics;
+    mpScreenTexture = NULL;
+    mvTextureSize = cVector2l(0, 0);
+    mbFailed = false;
+
     //////////////////////////////
     // Create program
     cParserVarContainer vars;
     vars.Add("UseUv");
-    mpProgram = mpGraphics->CreateGpuProgramFromShaders("GammaCorrection", "deferred_base_vtx.glsl", "posteffect_gamma_frag.glsl", &vars);
+    mpProgram = mpGraphics->CreateGpuProgramFromShaders("ScreenGammaCorrection", "deferred_base_vtx.glsl", "posteffect_gamma_frag.glsl", &vars);
     if(mpProgram)
     {
         mpProgram->GetVariableAsId("afGamma", kVar_afGamma);
     }
+    else
+    {
+        Error("Could not create the gamma correction program, gamma setting will have no effect!\n");
+        mbFailed = true;
+    }
 }
 
 //-----------------------------------------------------------------------
 
-cLuxPostEffect_Gamma::~cLuxPostEffect_Gamma()
+cLuxScreenGamma::~cLuxScreenGamma()
 {
-}
-
-//-----------------------------------------------------------------------
-
-iTexture *cLuxPostEffect_Gamma::RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer)
-{
-    /////////////////////////
-    // Init render states
-    mpCurrentComposite->SetFlatProjection();
-    mpCurrentComposite->SetBlendMode(eMaterialBlendMode_None);
-    mpCurrentComposite->SetChannelMode(eMaterialChannelMode_RGBA);
-
-    /////////////////////////
-    // Render to final buffer
-    // This function sets to frame buffer if post effect is last!
-    SetFinalFrameBuffer(apFinalTempBuffer);
-
-    mpCurrentComposite->SetTexture(0, apInputTexture);
-    mpCurrentComposite->SetProgram(mpProgram);
-
+    if(mpScreenTexture)
+    {
+        mpGraphics->DestroyTexture(mpScreenTexture);
+    }
     if(mpProgram)
     {
-        // Get gamma value from LowLevelGraphics
-        float fGamma = mpLowLevelGraphics->GetGammaCorrection();
-        mpProgram->SetFloat(kVar_afGamma, fGamma);
+        mpGraphics->DestroyGpuProgram(mpProgram);
+    }
+}
+
+//-----------------------------------------------------------------------
+
+bool cLuxScreenGamma::CheckScreenTexture(const cVector2l &avScreenSize)
+{
+    if(mpScreenTexture && mvTextureSize == avScreenSize)
+    {
+        return true;
     }
 
-    DrawQuad(0, 1, apInputTexture, true);
+    //Screen size changed (or first use), (re)create the copy texture
+    if(mpScreenTexture)
+    {
+        mpGraphics->DestroyTexture(mpScreenTexture);
+        mpScreenTexture = NULL;
+    }
 
-    mpCurrentComposite->SetTextureRange(NULL, 1);
+    mpScreenTexture = mpGraphics->CreateTexture("ScreenGamma", eTextureType_Rect, eTextureUsage_RenderTarget);
+    if(mpScreenTexture == NULL ||
+       mpScreenTexture->CreateFromRawData(cVector3l(avScreenSize.x, avScreenSize.y, 0), ePixelFormat_RGBA, NULL) == false)
+    {
+        Error("Could not create the gamma correction screen texture (%dx%d), gamma setting will have no effect!\n", avScreenSize.x, avScreenSize.y);
+        if(mpScreenTexture)
+        {
+            mpGraphics->DestroyTexture(mpScreenTexture);
+            mpScreenTexture = NULL;
+        }
+        mbFailed = true;
+        return false;
+    }
+    mpScreenTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
+    mpScreenTexture->SetFilter(eTextureFilter_Nearest);    //Copied 1:1, no need to filter
 
-    return apFinalTempBuffer->GetColorBuffer(0)->ToTexture();
+    mvTextureSize = avScreenSize;
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxScreenGamma::Render()
+{
+    if(mbFailed)
+    {
+        return;
+    }
+
+    iLowLevelGraphics *pLowGfx = mpGraphics->GetLowLevel();
+
+    //Do nothing (no copy, no extra pass) at default gamma
+    float fGamma = pLowGfx->GetGammaCorrection();
+    if(cMath::Abs(fGamma - 1.0f) <= 0.001f)
+    {
+        return;
+    }
+
+    cVector2l vScreenSize = pLowGfx->GetScreenSizeInt();
+    if(vScreenSize.x <= 0 || vScreenSize.y <= 0)
+    {
+        return;
+    }
+    if(CheckScreenTexture(vScreenSize) == false)
+    {
+        return;
+    }
+    cVector2f vScreenSizeF((float)vScreenSize.x, (float)vScreenSize.y);
+
+    /////////////////////////
+    // Set states. Whatever drew last (gui, menus, loading screens) can leave
+    // anything set, so make sure nothing clips or blends the full screen quad.
+    pLowGfx->SetCurrentFrameBuffer(NULL);
+
+    pLowGfx->SetBlendActive(false);
+    pLowGfx->SetAlphaTestActive(false);
+    pLowGfx->SetDepthTestActive(false);
+    pLowGfx->SetDepthWriteActive(false);
+    pLowGfx->SetStencilActive(false);
+    pLowGfx->SetScissorActive(false);
+    pLowGfx->SetCullActive(false);
+    pLowGfx->SetColorWriteActive(true, true, true, true);
+    for(int i = 0; i < 4; ++i)
+    {
+        pLowGfx->SetClipPlaneActive(i, false);
+    }
+
+    pLowGfx->SetOrthoProjection(vScreenSizeF, -1000, 1000);
+    pLowGfx->SetIdentityMatrix(eMatrix_ModelView);
+
+    /////////////////////////
+    // Copy back buffer to texture
+    pLowGfx->CopyFrameBufferToTexture(mpScreenTexture, 0, vScreenSize, 0);
+
+    /////////////////////////
+    // Draw it back with gamma
+    mpProgram->Bind();
+    mpProgram->SetFloat(kVar_afGamma, fGamma);
+
+    pLowGfx->SetTexture(0, mpScreenTexture);
+    pLowGfx->DrawQuad(0, vScreenSizeF, cVector2f(0, vScreenSizeF.y), cVector2f(vScreenSizeF.x, 0), cColor(1, 1));
+
+    mpProgram->UnBind();
+
+    /////////////////////////
+    // Exit
+    pLowGfx->SetTexture(0, NULL);
+    pLowGfx->SetDepthTestActive(true);
+    pLowGfx->SetDepthWriteActive(true);
 }
 
 //-----------------------------------------------------------------------
@@ -215,11 +308,6 @@ cLuxPostEffectHandler::cLuxPostEffectHandler() : iLuxUpdateable("LuxPostEffectHa
     mpInsanity = hplNew(cLuxPostEffect_Insanity, (pGraphics, pResources) );
     AddEffect(mpInsanity, 25);
     mpInsanity->SetActive(true);
-
-    mpGamma = hplNew(cLuxPostEffect_Gamma, (pGraphics, pResources) );
-    AddEffect(mpGamma, 1000);
-    mpGamma->SetActive(true);
-    mpGamma->SetDisabled(false);
 }
 
 //-----------------------------------------------------------------------
@@ -240,11 +328,6 @@ void cLuxPostEffectHandler::OnStart()
 
 void cLuxPostEffectHandler::Update(double adFixedDelta)
 {
-    {
-        float fGamma = gpBase->mpEngine->GetGraphics()->GetLowLevel()->GetGammaCorrection();
-        mpGamma->SetActive(cMath::Abs(fGamma - 1.0f) > 0.001f);
-    }
-
     for(size_t i = 0; i < mvPostEffects.size(); ++i)
     {
         iLuxPostEffect *pPostEffect = mvPostEffects[i];

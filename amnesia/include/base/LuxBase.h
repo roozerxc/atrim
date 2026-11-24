@@ -31,6 +31,7 @@ class cLuxGlobalDataHandler;
 class cLuxHintHandler;
 class cLuxConfigHandler;
 class cLuxPostEffectHandler;
+class cLuxScreenGamma;
 class cLuxInsanityHandler;
 class cLuxProgressLogHandler;
 class cLuxLoadScreenHandler;
@@ -277,6 +278,7 @@ public:
 
     bool mbShowVersionInfo;
     cGuiSet *mpVersionWatermarkSet;
+    cLuxScreenGamma *mpScreenGamma;
     tWString msVersionWatermarkText;
 
     tString msCommandLineMapFile;

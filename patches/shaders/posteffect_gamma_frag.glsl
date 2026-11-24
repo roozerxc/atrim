@@ -1,7 +1,8 @@
 ////////////////////////////////////////////////////////
 // PostEffect Gamma - Fragment Shader
 //
-// Applies gamma correction to the final image
+// Applies gamma correction to the whole game window,
+// drawn right before the buffers are swapped.
 // Replaces SDL1's hardware gamma functionality
 ////////////////////////////////////////////////////////
 

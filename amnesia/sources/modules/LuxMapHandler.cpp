@@ -167,8 +167,8 @@ cLuxMapHandler::cLuxMapHandler() : iLuxUpdateable("LuxMapHandler")
     pPostEffectComp->AddPostEffect(mpPostEffect_Bloom, 100);
 
     //Motion blur (replaces the image trail, which scripts can no longer turn on).
-    //Always active, the options menu setting disables it. It must be the very first effect
-    //(before gamma, prio 1000): it reads the view model mask from the alpha of the renderer output.
+    //Always active, the options menu setting disables it. It must be the very first effect:
+    //it reads the view model mask from the alpha of the renderer output.
     cPostEffectParams_MotionBlur motionBlurParams;
     mpPostEffect_MotionBlur = pGraphics->CreatePostEffect(&motionBlurParams);
     pPostEffectComp->AddPostEffect(mpPostEffect_MotionBlur, 2000);

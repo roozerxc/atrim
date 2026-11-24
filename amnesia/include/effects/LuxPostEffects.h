@@ -64,16 +64,31 @@ private:
 
 //----------------------------------------------
 
-class cLuxPostEffect_Gamma : public iLuxPostEffect
+/**
+* Gamma correction for the whole window (replaces SDL1's hardware gamma).
+*
+* This is NOT a viewport post effect: it is run right before the buffers are
+* swapped, so it covers everything drawn in the frame: the 3D view, HUD,
+* menus, pre-menu, loading screens, journal, inventory, credits and so on.
+* The back buffer is copied to a texture and drawn back with the gamma shader.
+* Nothing is done when gamma is 1.0.
+*/
+class cLuxScreenGamma
 {
 public:
-    cLuxPostEffect_Gamma(cGraphics *apGraphics, cResources *apResources);
-    ~cLuxPostEffect_Gamma();
+    cLuxScreenGamma(cGraphics *apGraphics);
+    ~cLuxScreenGamma();
+
+    void Render();
 
 private:
-    iTexture *RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
+    bool CheckScreenTexture(const cVector2l &avScreenSize);
 
+    cGraphics *mpGraphics;
     iGpuProgram *mpProgram;
+    iTexture *mpScreenTexture;
+    cVector2l mvTextureSize;
+    bool mbFailed;
 };
 
 
@@ -102,7 +117,6 @@ private:
     void AddEffect(iLuxPostEffect *apPostEffect, int alPrio);
 
     cLuxPostEffect_Insanity *mpInsanity;
-    cLuxPostEffect_Gamma *mpGamma;
 
     std::vector<iLuxPostEffect *> mvPostEffects;
 
