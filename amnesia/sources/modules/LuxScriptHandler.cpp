@@ -3270,7 +3270,7 @@ void __stdcall cLuxScriptHandler::PlaceEntityAtEntity(string& asName, string& as
     }
 
     iLuxEntity *pTargetEntity = GetEntity(asTargetEntity, eLuxEntityType_LastEnum, -1);
-    if(pEntity == NULL)
+    if(pTargetEntity == NULL)
     {
         return;
     }
