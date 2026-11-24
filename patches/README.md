@@ -15,6 +15,10 @@ The contents of this folder should be merged within the root of the *Amnesia: Th
 
         This file removes the *norden (Nordic Game Program)* boot screen when the game starts up. The **"atrim is a FREE and open-source software client"** warning will always appear first before all pre-menu entries since it is hard-coded in the client executable and cannot be removed.
 
+    - `config/gamecontrollerdb.txt`
+
+        Button and stick layouts for DirectInput gamepads (PlayStation pads and adapters, Logitech, SNES-style and other generic USB pads, and so on), taken from [SDL_GameControllerDB](https://github.com/mdqinc/SDL_GameControllerDB). The client uses them to make any of these pads behave like an Xbox 360 pad, which the game's gamepad controls were made for; Xbox pads don't need it. Pads are recognized by their USB vendor and product ID, and the layout that was picked is written to `hpl.log`. To add a pad or fix one, put its `platform:Windows` line from the full database (or your own) in a `gamecontrollerdb.txt` next to `main_settings.cfg`; that file is read first. For testing, `GamepadLogRawInput` (set to `true`) in the `Input` section of `main_settings.cfg` logs every raw button and axis press, and `GamepadMappings` there overrides the layout of a pad by its IDs, e.g. `GamepadMappings="054c:0ce6,a:b1,b:b2,..."`.
+
 - `/core`
     - `core/models`
 
