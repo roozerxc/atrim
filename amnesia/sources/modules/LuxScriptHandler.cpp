@@ -98,13 +98,9 @@ void cLuxScriptHandler::Reset()
 
 void cLuxScriptHandler::Update(double adFixedDelta)
 {
-    cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
-    if(pMap == NULL)
-    {
-        return;
-    }
-
-    pMap->RunUpdateCallback(adFixedDelta);
+    //The map's OnUpdate callback is run from cLuxMap::Update. This is a global module, so it
+    //is updated in every container (main menu, inventory, journal, load screen) and would run
+    //OnUpdate while the game is paused, and a second time per step during play.
 }
 
 //-----------------------------------------------------------------------

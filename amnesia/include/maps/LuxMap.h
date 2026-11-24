@@ -284,7 +284,6 @@ private:
 
     tLuxLampLightConnectionList mlstLampLightConnections;
 
-    bool mbRunUpdateScript;
     float mfTimeToNextCriticalCheck;
 };
 

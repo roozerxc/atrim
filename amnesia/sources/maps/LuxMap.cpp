@@ -59,7 +59,6 @@ cLuxMap::cLuxMap(const tString& asName)
     mpLatestAddedEntity = NULL;
 
     mpScript = NULL;
-    mbRunUpdateScript = false;
 
     msLanternLitCallback = "";
 
@@ -312,8 +311,6 @@ void cLuxMap::AfterWorldLoadEntitySetup()
 
 void cLuxMap::OnEnter(bool abRunScript, bool abFirstTime)
 {
-    mbRunUpdateScript = abRunScript;
-
     ///////////////
     //On world load for all entities
     tLuxEntityListIt entityIt = mlstEntities.begin();
@@ -383,10 +380,9 @@ void cLuxMap::Update(double adFixedDelta)
 
     UpdateLampLightConnections(adFixedDelta);
 
-    if(mbRunUpdateScript)
-    {
-        RunUpdateCallback(adFixedDelta);
-    }
+    //Map script OnUpdate(float), once per logic step. Not tied to OnEnter having been run by
+    //SetCurrentMap: map changes, save loads and debug reloads pass abRunScript = false.
+    RunUpdateCallback(adFixedDelta);
 }
 
 //-----------------------------------------------------------------------
