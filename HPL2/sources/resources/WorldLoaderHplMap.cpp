@@ -698,13 +698,18 @@ void cWorldLoaderHplMap::LoadCacheFile(const tWString& asFile)
                 if(lCompressionType == 0)
                 {
                     void *pData = GetVertexBufferWithFormat(pVtxBuff, arrayType, elementFormat);
+                    size_t lDataCount = (size_t)(lVtxNum * lElementNum);
                     if(pData == NULL)
                     {
-                        Error("Vertex array for element %d is empty or invalid in '%s'!\n",
+                        Error("Vertex array for element %d is empty or invalid in '%s' - skipping data\n",
                             arrayType, cString::To8Char(asFile).c_str());
+                        //Skip the bytes so the rest of the cache stays in sync
+                        //('continue' alone left the read position at this array's data)
+                        size_t lElementSize = elementFormat == eVertexBufferElementFormat_Byte ? 1 : 4;
+                        binBuff.AddPos(lDataCount * lElementSize);
                         continue;
                     }
-                    GetBinaryBufferDataWithFormat(&binBuff, pData, (size_t)(lVtxNum * lElementNum), elementFormat);
+                    GetBinaryBufferDataWithFormat(&binBuff, pData, lDataCount, elementFormat);
                 }
                 /////////////////////////
                 // Compressed Get Data
@@ -958,13 +963,23 @@ void cWorldLoaderHplMap::SaveCacheFile(const tWString& asFile)
                 if(lCompressionType == 0)
                 {
                     void *pData = GetVertexBufferWithFormat(pVtxBuff, arrayType, elementFormat);
+                    size_t lDataCount = (size_t)(lVtxNum * lElementNum);
                     if(pData == NULL)
                     {
-                        Error("Vertex array for element %d is empty or invalid in '%s'!\n",
+                        Error("Vertex array for element %d is empty or invalid in '%s' - writing zeros\n",
                             arrayType, cString::To8Char(asFile).c_str());
+                        //The array header is already written above, so write placeholder data of the
+                        //same size, otherwise the loader reads the next array's header as data.
+                        size_t lElementSize = elementFormat == eVertexBufferElementFormat_Byte ? 1 : 4;
+                        size_t lZeroBytes = lDataCount * lElementSize;
+                        if(lZeroBytes > 0)
+                        {
+                            std::vector<char> vZeros(lZeroBytes, 0);
+                            binBuff.AddCharArray(&vZeros[0], lZeroBytes);
+                        }
                         continue;
                     }
-                    AddBinaryBufferDataWithFormat(&binBuff, pData, (size_t)(lVtxNum * lElementNum), elementFormat);
+                    AddBinaryBufferDataWithFormat(&binBuff, pData, lDataCount, elementFormat);
                 }
                 ////////////////////////////////////
                 //Add Compressed data
