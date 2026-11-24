@@ -665,7 +665,7 @@ void cLuxMusicHandler_SaveData::FromMusicHandler(cLuxMusicHandler *apMusic)
     for(; it != apMusic->m_setEnemies[eLuxEnemyMusic_Search].end(); ++it)
     {
         iLuxEnemy *pEnemy = *it;
-        mvAttackerIDs.Add(pEnemy->GetID());
+        mvSearcherIDs.Add(pEnemy->GetID());
     }
 }
 
