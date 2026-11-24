@@ -105,8 +105,30 @@ void cLuxMusicHandler::Update(double adFixedDelta)
     {
         if(mpMusicHandler->GetCurrentSong() == NULL)
         {
-            mvGameMusic[mlCurrentMaxPrio].msFile = "";
+            int lPrio = mlCurrentMaxPrio;
+            mvGameMusic[lPrio].msFile = "";
             mlCurrentMaxPrio = -1;
+
+            //Enemy and danger music always loops, so if it is over here the stream died under us
+            //(voice taken, stream error, ...). The slot is blanked now, so the enemy flags must be
+            //cleared too, else they say "playing" while the lower music (map ambience) plays during
+            //the whole attack and the enemy music never comes back.
+            for(int i = 0; i < eLuxEnemyMusic_LastEnum; ++i)
+            {
+                if(lPrio == 8 + i && mbEnemyPlaying[i])
+                {
+                    mbEnemyPlaying[i] = false;
+                    mfEnemyPlayCount[i] = 0;
+                    mfEnemyStopCount[i] = 0;
+                }
+            }
+            if(lPrio == 5 && mbEnemyClosePlaying)
+            {
+                mbEnemyClosePlaying = false;
+                mfEnemyCloseCount = 0;
+                mfEnemyGoneCount = 0;
+            }
+
             PlayHighestPriority();
         }
     }
@@ -133,7 +155,15 @@ void cLuxMusicHandler::Play(const tString &asFile, bool abLoop, float afVolume, 
     if(mlCurrentMaxPrio <= alPrio)
     {
         float fFadeSpeed = fVolume / afFadeTime;
-        mpMusicHandler->Play(asFile, fVolume, fFadeSpeed, abLoop, abResume);
+        if(mpMusicHandler->Play(asFile, fVolume, fFadeSpeed, abLoop, abResume) == false)
+        {
+            //Could not load / stream the song. The song that was playing has already been put in the
+            //fade queue by the music handler, so go back to the highest song we still have instead of
+            //claiming this prio with nothing playing.
+            mlCurrentMaxPrio = -1;
+            PlayHighestPriority();
+            return;
+        }
         mlCurrentMaxPrio = alPrio;
     }
 
