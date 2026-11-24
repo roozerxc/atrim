@@ -106,9 +106,9 @@ static const float kVersionWatermark_MarginRightRel  = 0.072f;  //Distance from 
 static const float kVersionWatermark_MarginBottomRel = 0.050f;  //Distance from bottom edge, fraction of screen height
 static const float kVersionWatermark_ShadowOffsetRel = 0.07f;   //Shadow offset (right and down), fraction of font size
 
-static void LuxVersionWatermark_PreSwapCallback(void *apUserData)
+static void LuxBase_PreSwapCallback(void *apUserData)
 {
-    static_cast<cLuxBase*>(apUserData)->DrawVersionWatermark();
+    static_cast<cLuxBase*>(apUserData)->RunPreSwapBuffers();
 }
 
 //-----------------------------------------------------------------------
@@ -1815,9 +1815,9 @@ bool cLuxBase::InitGame()
         mpVersionWatermarkSet->SetActive(false);
         mpVersionWatermarkSet->SetDrawMouse(false);
 
-        //Should be drawn by preswap instead.
-        mpEngine->GetGraphics()->GetLowLevel()->SetPreSwapBuffersCallback(LuxVersionWatermark_PreSwapCallback, this);
     }
+
+    mpEngine->GetGraphics()->GetLowLevel()->SetPreSwapBuffersCallback(LuxBase_PreSwapCallback, this);
 
     ///////////////////////////////////////
     // Create updater containers
@@ -1950,6 +1950,13 @@ void cLuxBase::InitOver()
 {
     //Set proper caption when loading is done.
     gpBase->mpEngine->GetGraphics()->GetLowLevel()->SetWindowCaption(msGameName);
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxBase::RunPreSwapBuffers()
+{
+    DrawVersionWatermark();
 }
 
 //-----------------------------------------------------------------------

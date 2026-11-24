@@ -203,6 +203,7 @@ public:
 
     void InitOver();
 
+    void RunPreSwapBuffers();
     void DrawVersionWatermark();
 
 
