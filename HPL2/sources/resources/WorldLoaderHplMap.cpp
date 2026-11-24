@@ -1304,7 +1304,7 @@ static bool SortStaticSubMeshesForBodies(const cHplMapPhysicsObject& aObjectData
         return aObjectDataA.mbCharCollider < aObjectDataB.mbCharCollider;
     }
 
-    return aObjectDataA.mpObject->GetVertexBuffer() < aObjectDataA.mpObject->GetVertexBuffer();
+    return aObjectDataA.mpObject->GetVertexBuffer() < aObjectDataB.mpObject->GetVertexBuffer();
 }
 
 //-----------------------------------------------------------------------
