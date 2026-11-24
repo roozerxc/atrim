@@ -40,7 +40,6 @@ cAnimationState::cAnimationState(cAnimation* apAnimation, const tString &asName,
     mfWeight = 1;
     mfSpeed = 1.0f;
     mfBaseSpeed = 1.0f;
-    mfTimePos = 0;
     mfPrevTimePos = 0;
 
     mbLoop = false;
