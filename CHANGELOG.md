@@ -1,8 +1,54 @@
 # Changelog
 ### v1.4.666+
+- Added albedo-only "Potato Mode" render option in the graphics settings for very weak video cards
+- Added engine frame profiler with render trace, spike logging, and sound and shader warming scopes (`F8` in the debug toolbar)
 - Added engine startup self-test for the deferred light fragment shader on older video cards
-- Added support for graphics drivers that are only able to compile OpenGL 2.0/GLSL 1.20 shader code
+- Added exclusive and borderless fullscreen setting (`FullscreenMode` in `main_settings.cfg`)
+- Added fallbacks for graphics drivers without stencil buffer or rectangle texture support
+- Added GPU skinning for animated meshes, enabled automatically on newer video cards
+- Added hardware depth G-buffer mode (`GBufferMode` 2 in `main_settings.cfg`) with a startup self-test
+- Added light color grading (`LightColorGradeMode` in `main_settings.cfg`), replacing the costly light shader color curve
+- Added OpenGL error logging for problematic graphics drivers
+- Added physics pre-settling when loading maps
+- Added render-ahead queue limit (`MaxFramesAhead` in `main_settings.cfg`) to reduce input lag
+- Added SDL2 game controller database support (`gamecontrollerdb.txt`)
+- Added shader warming (`ShaderWarming` in `main_settings.cfg`) to precompile shaders before loading maps and saves
+- Added support for graphics drivers that are only able to compile OpenGL 2.0/GLSL 1.10 shader code
+- Added toggles to force-disable post effects and to force vertex arrays without VBOs
+- Allowed `B` to be bound in the gamepad input settings (`Start` cancels instead)
+- Enabled the lite G-buffer by default, which drops the normals target when the lite light shader is used
+- Fixed and restored broken gamepad support from version 1.3, making DirectInput controllers work again
+- Fixed broken map cache loading and building
+- Fixed camera and hand sway jitter at high frame rates
+- Fixed CPU stalls from occlusion query reuse and late query results (`OcclusionCullingLatency` in `main_settings.cfg`)
+- Fixed crash from G-buffer layouts with an unsupported number of textures
+- Fixed crash from shader programs with empty feature lists
+- Fixed crash when an AI state machine changed state without a current state
+- Fixed Custom Story menu activation and gamepad navigation
+- Fixed debug toolbar input loss after the player died
+- Fixed decal bleeding caused by polygon offset
+- Fixed doors, drawers, levers, sliders and valves not responding properly at low frame rates
+- Fixed emotion flash text disappearing at some flashback intensity values
+- Fixed frame time histogram rounding that made 0.1% lows faster than 1% lows
+- Fixed gamepad right analog sticks that only worked on one axis
+- Fixed global sanity drain setting being lost when loading a save
+- Fixed joint minimum limit speed fallback being applied to the maximum limit
+- Fixed map cache corruption after skipping invalid vertex data
+- Fixed map script `OnUpdate` not running after map changes or loading a save, and running while paused
+- Fixed music priority issues with event and enemy music
+- Fixed Ogg Vorbis size check overflowing on corrupt or very long files
+- Fixed prop angular offsets (e.g. the hammer in Prison South) and props disappearing after loading a save
+- Fixed rope geometry turning invalid when two rope segments overlap
+- Fixed searching enemies being restored as attackers after loading a save
+- Fixed timer callbacks receiving the wrong script string type
+- Fixed vertical-only UV subdivision being ignored
+- Improved Release build optimizations and linked the C runtime statically (no `msvcr80.dll` needed)
+- Optimized box light clipping and culling of objects too small to see
+- Optimized nested point lights (e.g. the lantern) to draw in a single pass with the lite light shader
+- Optimized dynamic vertex buffer updates on older hardware
+- Optimized flashback intensity so it is no longer read from the config every frame
 - Replaced the awful ImageTrail shader with the beautiful motion blur program from HPL1
+- Sounds over 256 KB are now streamed and commonly used sounds are preloaded
 
 ### v1.4.6
 - Added 64-bit support
