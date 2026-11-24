@@ -131,8 +131,6 @@ private:
 
     cInterpolatedFloat mfAlpha;
 
-    float mfFlashIntensity;
-
     int mlStep;
     float mfCount;
 
@@ -358,8 +356,6 @@ private:
     cGuiGfxElement *mpWhiteGfx;
 
     cInterpolatedFloat mfAlpha;
-
-    float mfFlashIntensity;
 
     int mlStep;
     float mfCount;

@@ -16,6 +16,8 @@
 
 cLuxEffectHandler::cLuxEffectHandler() : iLuxUpdateable("LuxEffectHandler")
 {
+    mfFlashIntensity = 1.0f; //Set from the user config in LoadUserConfig
+
     mpFade = hplNew( cLuxEffect_Fade, () );
     mvEffects.push_back(mpFade);
 
@@ -475,31 +477,28 @@ void cLuxEffect_EmotionFlash::Update(double adFixedDelta)
 
 void cLuxEffect_EmotionFlash::OnDraw(double adFrameTime)
 {
-    mfFlashIntensity = gpBase->mpUserConfig->GetFloat("Game", "FlashIntensity", 1.0f);
-    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx, gpBase->mvHudVirtualStartPos + cVector3f(0, 0, 3.2f), gpBase->mvHudVirtualSize, cColor(mfAlpha.Get() * mfFlashIntensity, 1 * mfFlashIntensity));
+    //Cached in the effect handler (LoadUserConfig / options menu), not read from the config every frame
+    const float fFlashIntensity = gpBase->mpEffectHandler->GetFlashIntensity();
+    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx, gpBase->mvHudVirtualStartPos + cVector3f(0, 0, 3.2f), gpBase->mvHudVirtualSize, cColor(mfAlpha.Get() * fFlashIntensity, 1 * fFlashIntensity));
 
     const float fTextAlpha = mfTextAlpha.Get();
     if(fTextAlpha > 0)
     {
+        //Black text on a bright flash, white text when the flash is dimmed so it stays readable.
+        //One threshold for all rows (the old <= 0.45 / >= 0.5 pair drew nothing in between).
+        const float fTextColor = fFlashIntensity < 0.5f ? 1.0f : 0.0f;
         float fStartY = 300 - (mvFontSize.y + 2.0f) * 0.5f * (float)mvTextRows.size();
 
         if(mvTextRows.size() == 1)
         {
-            gpBase->mpGameHudSet->DrawFont(mvTextRows[0], mpFont, cVector3f(400, fStartY, 4), mvFontSize, cColor(0, fTextAlpha), eFontAlign_Center);
+            gpBase->mpGameHudSet->DrawFont(mvTextRows[0], mpFont, cVector3f(400, fStartY, 4), mvFontSize, cColor(fTextColor, fTextAlpha), eFontAlign_Center);
         }
         else
         {
             float fY = fStartY;
             for(size_t i = 0; i < mvTextRows.size(); ++i)
             {
-                if(mfFlashIntensity <= 0.45f)
-                {
-                    gpBase->mpGameHudSet->DrawFont(mvTextRows[i], mpFont, cVector3f(150, fY, 4), mvFontSize, cColor(1, fTextAlpha), eFontAlign_Left);
-                }
-                else if(mfFlashIntensity >= 0.5f)
-                {
-                    gpBase->mpGameHudSet->DrawFont(mvTextRows[i], mpFont, cVector3f(150, fY, 4), mvFontSize, cColor(0, fTextAlpha), eFontAlign_Left);
-                }
+                gpBase->mpGameHudSet->DrawFont(mvTextRows[i], mpFont, cVector3f(150, fY, 4), mvFontSize, cColor(fTextColor, fTextAlpha), eFontAlign_Left);
                 fY += mvFontSize.y + 2.0f;
             }
         }
@@ -1133,8 +1132,8 @@ void cLuxEffect_Flash::Update(double adFixedDelta)
 
 void cLuxEffect_Flash::OnDraw(double adFrameTime)
 {
-    mfFlashIntensity = gpBase->mpUserConfig->GetFloat("Game", "FlashIntensity", 1.0f);
-    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx, gpBase->mvHudVirtualStartPos + cVector3f(0, 0, 3.2f), gpBase->mvHudVirtualSize, cColor(mfAlpha.Get() * mfFlashIntensity, 1 * mfFlashIntensity));
+    const float fFlashIntensity = gpBase->mpEffectHandler->GetFlashIntensity();
+    gpBase->mpGameHudSet->DrawGfx(mpWhiteGfx, gpBase->mvHudVirtualStartPos + cVector3f(0, 0, 3.2f), gpBase->mvHudVirtualSize, cColor(mfAlpha.Get() * fFlashIntensity, 1 * fFlashIntensity));
 }
 
 //-----------------------------------------------------------------------
