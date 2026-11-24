@@ -264,7 +264,8 @@ bool cRopeEntity::UpdateGraphicsForViewport(cFrustum *apFrustum, double adFrameT
                          pPart->GetSmoothPosition();
         cVector3f vDelta = vPos - vPrevPos;
         float fLength = vDelta.Length();
-        cVector3f vUp = vDelta / fLength;
+        //Coincident particles: pick a fixed up axis instead of dividing by zero (NaN geometry)
+        cVector3f vUp = fLength > kEpsilonf ? vDelta / fLength : cVector3f(0, 1, 0);
 
         cVector3f vTempCross = cMath::Vector3Cross(vUp, apFrustum->GetForward());
         if(vTempCross.SqrLength() < 0.00001f)
