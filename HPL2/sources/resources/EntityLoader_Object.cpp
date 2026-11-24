@@ -1174,7 +1174,7 @@ void cEntityLoader_Object::SetJointProperties(iPhysicsJoint *pJoint, cXmlElement
     pJoint->GetMinLimit()->mfMinSpeed = apJointElem->GetAttributeFloat("MinLimitMinSpeed", 20.0f);
     if(pJoint->GetMinLimit()->mfMaxSpeed <= 0)
     {
-        pJoint->GetMaxLimit()->mfMaxSpeed = 0.01f;
+        pJoint->GetMinLimit()->mfMaxSpeed = 0.01f;
     }
 
     pJoint->SetUniqueID(apJointElem->GetAttributeInt("ID", -1));
