@@ -15,6 +15,13 @@
 
 cLuxMusic::cLuxMusic()
 {
+    //Init everything, not only the file. Stop() reads mfVolume of a slot to get the fade speed,
+    //and garbage there could give a NaN fade that never finishes.
+    mbLoop = false;
+    mbResume = false;
+    mfVolume = 0;
+    mbSpecialEffect = false;
+
     Reset();
 }
 

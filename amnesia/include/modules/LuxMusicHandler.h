@@ -61,8 +61,8 @@ public:
     void Play(const tString &asFile, bool abLoop, float afVolume, float afFadeTime, int alPrio, bool abResume, bool abSpecialEffect);
     void Stop(float afFadeTime, int alPrio, bool abForceStop = false);
 
-    //Stops enemy (attack/search) and danger music. Must force stop because
-    //their mvGameMusic slots are blanked on Play so they do not auto resume.
+    //Stops enemy (attack/search) and danger music and clears the enemy sets and flags.
+    //Force stops, so the slot and flags are cleared even if the slot was already blanked.
     void StopAllEnemyMusic(float afFadeTime);
 
     void AddEnemy(eLuxEnemyMusic aType, iLuxEnemy *apEnemy);

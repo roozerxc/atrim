@@ -2343,7 +2343,7 @@ void cLuxPlayerDeath::Start()
 
     //////////////////////////////////
     //Sound
-    //Enemy / danger music must be force stopped (their slots are blanked on play), the loop below skips them.
+    //Stop enemy / danger music first so their flags are cleared too, then stop all slots.
     gpBase->mpMusicHandler->StopAllEnemyMusic(0.2f);
     for(int i = 0; i <= gpBase->mpMusicHandler->GetMaxPrio(); ++i)
     {
