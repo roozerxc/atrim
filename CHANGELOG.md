@@ -42,11 +42,12 @@
 - Fixed searching enemies being restored as attackers after loading a save
 - Fixed timer callbacks receiving the wrong script string type
 - Fixed vertical-only UV subdivision being ignored
+- Gamma now controls the entire game framebuffer (Still not using `SDL_SetGamma`!)
 - Improved Release build optimizations and linked the C runtime statically (no `msvcr80.dll` needed)
 - Optimized box light clipping and culling of objects too small to see
-- Optimized nested point lights (e.g. the lantern) to draw in a single pass with the lite light shader
 - Optimized dynamic vertex buffer updates on older hardware
 - Optimized flashback intensity so it is no longer read from the config every frame
+- Optimized nested point lights (e.g. the lantern) to draw in a single pass with the lite light shader
 - Replaced the awful ImageTrail shader with the beautiful motion blur program from HPL1
 - Sounds over 256 KB are now streamed and commonly used sounds are preloaded
 
