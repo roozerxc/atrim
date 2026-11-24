@@ -291,10 +291,7 @@ void cLuxProp_Lamp::SynchronizeFlickering()
 {
     if ( mvLights.size() > 0 )
     {
-        for(size_t i = 0; i < mvBillboards.size(); ++i)
-        {
-            mvBillboards[i]->SetVisible( mvLights[0]->GetFlickerOn() );
-        }
+        SetBillboardsVisible( mvLights[0]->GetFlickerOn() );
 
         if ( mbSynchronizeFlickering )
         {
@@ -436,10 +433,7 @@ void cLuxProp_Lamp::SetFlickerActive(bool abFlickerActive)
 
         if ( !abFlickerActive )
         {
-            for(size_t i = 0; i < mvBillboards.size(); ++i)
-            {
-                mvBillboards[i]->SetVisible( true );
-            }
+            SetBillboardsVisible( true );
 
             if ( mbSynchronizeFlickering )
             {
@@ -450,6 +444,20 @@ void cLuxProp_Lamp::SetFlickerActive(bool abFlickerActive)
                 }
             }
         }
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxProp_Lamp::SetBillboardsVisible(bool abX)
+{
+    //An inactive lamp (e.g. Active off in the map, waiting for a script) keeps its
+    //billboards and halos hidden. iLuxProp::OnSetActive shows them when it is activated.
+    bool bVisible = abX && IsActive();
+
+    for(size_t i = 0; i < mvBillboards.size(); ++i)
+    {
+        mvBillboards[i]->SetVisible( bVisible );
     }
 }
 

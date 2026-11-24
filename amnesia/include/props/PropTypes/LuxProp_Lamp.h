@@ -135,6 +135,7 @@ public:
 
 private:
     void SynchronizeFlickering();
+    void SetBillboardsVisible(bool abX);
     void SetupLampLightConnection();
 
     //Vars
