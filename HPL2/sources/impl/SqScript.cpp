@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include "impl/scripthelper.h"
 #include "impl/scriptbuilder.h"
+#include "impl/scriptstring.h"
 #include "resources/BinaryBuffer.h"
 #include "resources/Resources.h"
 
@@ -37,6 +38,7 @@ cSqScript::cSqScript(const tString& asName, asIScriptEngine *apScriptEngine,
     mlHandle = alHandle;
 
     mpContext = mpScriptEngine->CreateContext();
+    mpModule = NULL;
 
     //Create a unique module name
     msModuleName = "Module_" + cString::ToString(cMath::RandRectl(0, 1000000)) +
@@ -204,16 +206,18 @@ bool cSqScript::Run(const tString& asFuncLine)
 
 bool cSqScript::RunFuncString(const tString& asFuncName, tString& asStringArg0)
 {
-    int alHandle = mpModule->GetFunctionIdByName(asFuncName.c_str());
-
-    if (alHandle == asNO_FUNCTION)
+    if(PrepareSingleArgFunc(asFuncName, mpScriptEngine->GetTypeIdByDecl("string")) == false)
     {
         return false;
     }
 
-    mpContext->Prepare(alHandle);
-    mpContext->SetArgObject(0, &asStringArg0);
-    mpContext->Execute();
+    //The script 'string' type is the ref counted CScriptString (see RegisterScriptString), so
+    //the argument must be one. Passing a std::string* only worked because 'buffer' happens to
+    //be CScriptString's first member; anything touching the ref count read past the object.
+    CScriptString *pArg = new CScriptString(asStringArg0);
+    mpContext->SetArgObject(0, pArg);
+    ExecutePrepared(asFuncName);
+    pArg->Release();
 
     return true;
 }
@@ -222,16 +226,13 @@ bool cSqScript::RunFuncString(const tString& asFuncName, tString& asStringArg0)
 
 bool cSqScript::RunFuncFloat(const tString& asFuncName, float asFloatArg0)
 {
-    int alHandle = mpModule->GetFunctionIdByName(asFuncName.c_str());
-
-    if (alHandle == asNO_FUNCTION)
+    if(PrepareSingleArgFunc(asFuncName, asTYPEID_FLOAT) == false)
     {
         return false;
     }
 
-    mpContext->Prepare(alHandle);
     mpContext->SetArgFloat(0, asFloatArg0);
-    mpContext->Execute();
+    ExecutePrepared(asFuncName);
 
     return true;
 }
@@ -254,6 +255,52 @@ bool cSqScript::Run(int alHandle)
 //////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 //////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------
+
+bool cSqScript::PrepareSingleArgFunc(const tString& asFuncName, int alArgTypeId)
+{
+    if(mpModule == NULL || mpContext == NULL || alArgTypeId < 0)
+    {
+        return false;
+    }
+
+    //A script is already running on this context (nested call): let the caller use the text path
+    if(mpContext->GetState() == asEXECUTION_ACTIVE)
+    {
+        return false;
+    }
+
+    //Negative for a missing function and for several overloads with this name
+    int lFuncId = mpModule->GetFunctionIdByName(asFuncName.c_str());
+    if(lFuncId < 0)
+    {
+        return false;
+    }
+
+    //Only call functions with exactly one argument of the expected type, otherwise the
+    //SetArg call fails (or writes the wrong type) and Execute runs with a bad argument
+    asIScriptFunction *pFunc = mpScriptEngine->GetFunctionDescriptorById(lFuncId);
+    if(pFunc == NULL || pFunc->GetParamCount() != 1 || pFunc->GetParamTypeId(0) != alArgTypeId)
+    {
+        return false;
+    }
+
+    return mpContext->Prepare(lFuncId) >= 0;
+}
+
+//-----------------------------------------------------------------------
+
+void cSqScript::ExecutePrepared(const tString& asFuncName)
+{
+    int lRet = mpContext->Execute();
+    if(lRet == asEXECUTION_EXCEPTION)
+    {
+        const char *pException = mpContext->GetExceptionString();
+        Error("Script exception in '%s' (%s): %s\n", asFuncName.c_str(), msModuleName.c_str(),
+              pException ? pException : "");
+    }
+}
 
 //-----------------------------------------------------------------------
 

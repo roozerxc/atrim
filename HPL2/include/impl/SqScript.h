@@ -35,6 +35,8 @@ private:
     tString msModuleName;
 
     char *LoadCharBuffer(const tWString& asFileName, int &alLength);
+    bool PrepareSingleArgFunc(const tString& asFuncName, int alArgTypeId);
+    void ExecutePrepared(const tString& asFuncName);
 };
 };
 #endif // HPL_SCRIPT_H

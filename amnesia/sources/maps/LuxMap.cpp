@@ -412,7 +412,12 @@ void cLuxMap::RunTimer(const tString& asTimerFunc, tString& asTimerName)
         return;
     }
 
-    mpScript->RunFuncString(asTimerFunc, asTimerName);
+    //Direct call for the usual 'void Func(string &in asTimer)'. Anything else (no such
+    //function, overloads, another signature) goes through the original text path.
+    if(mpScript->RunFuncString(asTimerFunc, asTimerName) == false)
+    {
+        mpScript->Run(asTimerFunc + "(\"" + asTimerName + "\")");
+    }
 }
 
 void cLuxMap::RunUpdateCallback(double adFixedDelta)
