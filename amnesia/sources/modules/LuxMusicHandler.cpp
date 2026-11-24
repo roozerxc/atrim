@@ -414,11 +414,19 @@ void cLuxMusicHandler::UpdateEnemyMusic(double adFixedDelta, eLuxEnemyMusic aTyp
                     Stop(2.0f, 5);
                 }
 
-                //Stop lower prio
+                //Stop lower prio (e.g. search music when attack starts).
+                //This used to stop 8 + aType (this type's own, still empty, slot), so the search slot kept
+                //its song while it was flagged as not playing. When the attack was over, the search
+                //music came back from the slot and nothing ever stopped it.
                 for(int i = 0; i < aType; ++i)
                 {
+                    if(mbEnemyPlaying[i])
+                    {
+                        Stop(2.0f, 8 + i, true);
+                    }
                     mbEnemyPlaying[i] = false;
-                    Stop(2.0f, 8 + aType);
+                    mfEnemyPlayCount[i] = 0;
+                    mfEnemyStopCount[i] = 0;
                 }
 
                 Play(sMusic, true, 1.0f, 1.5f, 8 + aType, true, true);
