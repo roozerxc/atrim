@@ -98,7 +98,7 @@ void cStateMachine::AddState(iAIState *apState, const tString& asName, int alId,
 
 void cStateMachine::ChangeState(int alId)
 {
-    if(alId == mpCurrentState->GetId())
+    if(mpCurrentState && alId == mpCurrentState->GetId())
     {
         return;
     }
