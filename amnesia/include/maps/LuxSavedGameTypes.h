@@ -366,6 +366,7 @@ public:
     bool mbJumpDisabled;
     bool mbCrouchDisabled;
     bool mbSanityDrainDisabled;
+    bool mbGlobalSanityDrainDisabled;
 
     float mfInteractionMoveSpeedMul;
     float mfEventMoveSpeedMul;
