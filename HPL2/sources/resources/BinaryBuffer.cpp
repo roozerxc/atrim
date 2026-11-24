@@ -378,7 +378,7 @@ bool cBinaryBuffer::DecompressAndAdd(char *apSrcData, size_t alSize)
         zipStream.next_out = (Bytef *)&vOutData[0];
 
         //Decompress as much as possible to current chunk
-        int ret = inflate(&zipStream, Z_NO_FLUSH);
+        ret = inflate(&zipStream, Z_NO_FLUSH);
         if(ret != Z_OK && ret != Z_STREAM_END)
         {
             inflateEnd(&zipStream);
