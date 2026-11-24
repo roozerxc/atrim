@@ -309,8 +309,6 @@ void cLuxPlayer::Reset()
 
     mvCamAnimPos = 0;
     mvCamAnimPosGoal = 0;
-    mfRollSpeedMul = 0;
-    mfRollMaxSpeed = 0;
 
     mbNoFallDamage = false;
 
