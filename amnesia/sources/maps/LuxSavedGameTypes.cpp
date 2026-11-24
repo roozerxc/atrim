@@ -740,7 +740,7 @@ void cLuxMusicHandler_SaveData::ToMusicHandler(cLuxMap *apMap, cLuxMusicHandler 
         }
         else
         {
-            Warning("Could not find entity with id %d\n", mvAttackerIDs[i]);
+            Warning("Could not find entity with id %d\n", mvSearcherIDs[i]);
         }
     }
 }
