@@ -71,10 +71,11 @@ bool cOAL_OggSample::CreateFromFile(const wstring &asFilename)
 	mlChannels  = viFileInfo->channels;
 	mFormat     = (mlChannels == 2) ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
 	mlFrequency = viFileInfo->rate;
-	mlSamples   = (long)ov_pcm_total(&ovFileHandle, -1);
+	ogg_int64_t llPcmTotal = ov_pcm_total(&ovFileHandle, -1);
+	mlSamples   = (long)llPcmTotal;
 	mfTotalTime = ov_time_total(&ovFileHandle, -1);
 
-	if(mlSamples < 0)
+	if(llPcmTotal < 0)
 	{
 		ov_clear(&ovFileHandle);
 		mbStatus = false;
@@ -82,15 +83,18 @@ bool cOAL_OggSample::CreateFromFile(const wstring &asFilename)
 	}
 
 	const int kSafetyMargin = STREAMING_BLOCK_SIZE * 8;
-	int lSizeInBytes = (mlSamples > 0 ? mlSamples : 1) * mlChannels * GetBytesPerSample() + kSafetyMargin;
-
-	const long kMaxBytes = 10LL * 60 * 48000 * 2 * 2;
-	if(lSizeInBytes <= 0 || lSizeInBytes > kMaxBytes)
+	// Work out the size in 64 bits first: samples * channels * bytes can overflow a 32 bit int
+	// for a corrupt or huge ov_pcm_total, and wrap to a small positive size that passes the check.
+	const long long kMaxBytes = 10LL * 60 * 48000 * 2 * 2;
+	long long llSizeInBytes = (long long)(llPcmTotal > 0 ? llPcmTotal : 1) * mlChannels * GetBytesPerSample() + kSafetyMargin;
+	if(llSizeInBytes <= 0 || llSizeInBytes > kMaxBytes)
 	{
 		ov_clear(&ovFileHandle);
 		mbStatus = false;
 		return false;
 	}
+
+	int lSizeInBytes = (int)llSizeInBytes;
 
 	pPCMBuffer = (char*)hplMalloc(lSizeInBytes);
 	if(pPCMBuffer == NULL)
