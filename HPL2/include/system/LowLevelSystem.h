@@ -19,10 +19,10 @@ namespace hpl
                                 double y##_dTime = cPlatform::GetApplicationTimeX();
 #define START_TIMING(x)         LogUpdate("Updating %s in file %s at line %d\n",#x,__FILE__,__LINE__); \
                                 double x##_dTime = cPlatform::GetApplicationTimeX();
-#define STOP_TIMING(x)          LogUpdate(" Time spent: %d ms\n",cPlatform::GetApplicationTimeX() - x##_dTime);
+#define STOP_TIMING(x)          LogUpdate(" Time spent: %.3f ms\n",(cPlatform::GetApplicationTimeX() - x##_dTime) * 1000.0);
 #define START_TIMING_TAB(x)     LogUpdate("\tUpdating %s in file %s at line %d\n",#x,__FILE__,__LINE__); \
                                 double x##_dTime = cPlatform::GetApplicationTimeX();
-#define STOP_TIMING_TAB(x)      LogUpdate("\t Time spent: %d ms\n",cPlatform::GetApplicationTimeX() - x##_dTime);
+#define STOP_TIMING_TAB(x)      LogUpdate("\t Time spent: %.3f ms\n",(cPlatform::GetApplicationTimeX() - x##_dTime) * 1000.0);
 #else
 #define START_TIMING_EX(x,y)
 #define START_TIMING(x)
