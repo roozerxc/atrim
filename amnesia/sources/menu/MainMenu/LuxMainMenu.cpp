@@ -1394,7 +1394,13 @@ void cLuxMainMenu::RenderBlurTexture()
     //////////////////////////////
     // Render
 
+    bool bMenuViewportVisible = mpViewport->IsVisible();
+    mpViewport->SetVisible(false);
+    gpBase->mpHelpFuncs->RenderBackgroundScreen(true);
+    mpViewport->SetVisible(bMenuViewportVisible);
+
     //Set up main states
+    pLowGfx->SetCurrentFrameBuffer(NULL);
     pLowGfx->SetBlendActive(false);
     pLowGfx->SetDepthTestActive(false);
     pLowGfx->SetDepthWriteActive(false);
