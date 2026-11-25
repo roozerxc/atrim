@@ -86,6 +86,7 @@ namespace
     float gfSpikeThresholdMs = 0;
     int glSpikesThisWindow = 0;
     const int kMaxSpikesPerWindow = 4;
+    const int kSpikeSettleFrames = 30;
     const int kMaxSectionsInSpike = 8;
 
     typedef std::pair<double, int> tSpikeSort;
@@ -95,7 +96,7 @@ namespace
     }
 
     //One line per slow plain frame: where its time went. The window averages hide these.
-    void LogSpike(double adFrameTime, double adAvg)
+    void LogSpike(double adFrameTime, double adAvg, int alWindowFrame)
     {
         std::vector<tSpikeSort> vSorted;
         for(size_t i = 0; i < gvSections.size(); ++i)
@@ -121,7 +122,8 @@ namespace
             sLine += (i > 0 ? ", " : " ") + sName + vBuf;
         }
 
-        Log("Frame profiler spike: %.1f ms (window avg %.1f ms):%s\n", adFrameTime * 1000.0, adAvg * 1000.0, sLine.c_str());
+        Log("Frame profiler spike: %.1f ms (window avg %.1f ms, frame %d):%s\n", adFrameTime * 1000.0, adAvg * 1000.0,
+            alWindowFrame, sLine.c_str());
     }
 
     //-----------------------------------------------------------------------
@@ -492,10 +494,13 @@ void cFrameProfiler::EndFrame(bool abDiscard)
         {
             dThreshold = dAvg * 3.0 > 0.012 ? dAvg * 3.0 : 0.012;
         }
-        //Auto needs a few frames for the average
-        if(dFrameTime > dThreshold && (gfSpikeThresholdMs > 0 || glFramesCounted[0] >= 10))
+        //Skip the frames still settling after the synced window and report (this also
+        //gives the auto threshold enough frames for its average)
+        //(a quarter of short windows, so they still get spikes)
+        int lSettleFrames = glFramesPerWindow / 4 < kSpikeSettleFrames ? glFramesPerWindow / 4 : kSpikeSettleFrames;
+        if(dFrameTime > dThreshold && glFramesCounted[0] >= lSettleFrames)
         {
-            LogSpike(dFrameTime, dAvg);
+            LogSpike(dFrameTime, dAvg, glFramesCounted[0] + 1);
             ++glSpikesThisWindow;
         }
     }
