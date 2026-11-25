@@ -74,6 +74,13 @@ void cLuxPostEffect_Insanity::Update(double adFixedDelta)
 {
     mfT += (float)adFixedDelta * mfWaveSpeed;
 
+    //The shader only uses afT inside sin(), so keep it within one period.
+    //Otherwise the float keeps growing and the wave gets choppy in long sessions.
+    if(mfT >= k2Pif || mfT <= -k2Pif)
+    {
+        mfT = fmod(mfT, k2Pif);
+    }
+
     mfAnimCount += (float)adFixedDelta * 0.15f;
 
     float fMaxAnim = (float)mvAmpMaps.size();
