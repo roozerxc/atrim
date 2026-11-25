@@ -17,6 +17,7 @@
 #include <sys/stat.h>
 #include <fstream>
 #include <string>
+#include <map>
 
 #include "impl/LowLevelSystemSDL.h"
 #include "impl/SqScript.h"
@@ -235,6 +236,73 @@ void FatalError(const char* fmt, ... )
 
 //-----------------------------------------------------------------------
 
+//Errors and warnings repeated over and over (a map script asking every few seconds
+//for lights that do not exist, say) are written a few times only. Each written line
+//flushes the file, and hundreds of them bury the lines that matter.
+static const int kMaxRepeatedLogLines = 5;
+//Bounds the memory used, messages past this many different ones are always written.
+static const size_t kMaxTrackedLogLines = 4096;
+//Made on first use and never freed: errors can still be logged by other static
+//destructors at exit, after a static map here would already be gone.
+static std::map<tString, int> *gpRepeatedLogLines = NULL;
+static SDL_mutex *gpRepeatedLogMutex = NULL;
+
+//False if the message was written enough times already. The last time it is written,
+//a note about the repeats is added to asMess.
+static bool AllowRepeatedLogLine(tString &asMess)
+{
+    //Created by the first error or warning. The first log lines are written by the main
+    //thread during start up, before any other thread runs.
+    if(gpRepeatedLogLines == NULL)
+    {
+        gpRepeatedLogMutex = SDL_CreateMutex();
+        gpRepeatedLogLines = new std::map<tString, int>();
+    }
+    if(gpRepeatedLogMutex)
+    {
+        SDL_LockMutex(gpRepeatedLogMutex);
+    }
+
+    bool bAllow = true;
+    std::map<tString, int> &mapLines = *gpRepeatedLogLines;
+    std::map<tString, int>::iterator it = mapLines.find(asMess);
+    if(it == mapLines.end())
+    {
+        if(mapLines.size() < kMaxTrackedLogLines)
+        {
+            mapLines.insert(std::map<tString, int>::value_type(asMess, 1));
+        }
+    }
+    else
+    {
+        ++it->second;
+        if(it->second == kMaxRepeatedLogLines)
+        {
+            size_t lEnd = asMess.size();
+            while(lEnd > 0 && (asMess[lEnd - 1] == '\n' || asMess[lEnd - 1] == '\r'))
+            {
+                --lEnd;
+            }
+            tString sEnding = asMess.substr(lEnd);
+            asMess.resize(lEnd);
+            asMess += " (logged " + cString::ToString(kMaxRepeatedLogLines) + " times, further repeats are not logged)";
+            asMess += sEnding;
+        }
+        else if(it->second > kMaxRepeatedLogLines)
+        {
+            bAllow = false;
+        }
+    }
+
+    if(gpRepeatedLogMutex)
+    {
+        SDL_UnlockMutex(gpRepeatedLogMutex);
+    }
+    return bAllow;
+}
+
+//-----------------------------------------------------------------------
+
 void Error(const char* fmt, ...)
 {
     char text[2048];
@@ -249,7 +317,10 @@ void Error(const char* fmt, ...)
 
     tString sMess = "ERROR: ";
     sMess += text;
-    gLogWriter.Write(sMess);
+    if(AllowRepeatedLogLine(sMess))
+    {
+        gLogWriter.Write(sMess);
+    }
 
     if(gpLogMessageCallbackFunc)
     {
@@ -274,7 +345,10 @@ void Warning(const char* fmt, ...)
 
     tString sMess = "WARNING: ";
     sMess += text;
-    gLogWriter.Write(sMess);
+    if(AllowRepeatedLogLine(sMess))
+    {
+        gLogWriter.Write(sMess);
+    }
 
     if(gpLogMessageCallbackFunc)
     {
