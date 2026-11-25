@@ -82,7 +82,7 @@ private:
 
     /////////////////////////
     // Variables
-    float mfTimeCount;
+    double mdTimeCount;
 
     cPlanef mSurfacePlane;
 };

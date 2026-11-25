@@ -75,7 +75,7 @@ cLuxArea_Liquid::cLuxArea_Liquid(const tString &asName, int alID, cLuxMap *apMap
     mpPhysicsMaterial = NULL;
     mbFullGameSave = true;
 
-    mfTimeCount = 0;
+    mdTimeCount = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -126,7 +126,7 @@ void cLuxArea_Liquid::OnUpdate(double adFixedDelta)
 
     ///////////////////////////
     // Update count
-    mfTimeCount += (float)adFixedDelta;
+    mdTimeCount += adFixedDelta;
 
 
     ///////////////////////////
@@ -232,8 +232,10 @@ void cLuxArea_Liquid::DoBuoyancyOnBody(iPhysicsBody *apBody, float afSurfaceY, b
     {
         cVector3f vPos = cMath::MatrixMul(apBody->GetLocalMatrix(), apBody->GetMassCentre());
 
-        float fAddX = sin(mfTimeCount * mfWaveFreq + vPos.x * 15) * mfWaveAmp * 0.3f;
-        float fAddZ = sin(mfTimeCount * mfWaveFreq + vPos.z * 15) * mfWaveAmp * 0.3f;
+        //Wave phase in double, a float time loses precision when a map stays loaded for hours
+        const double dWavePhase = mdTimeCount * (double)mfWaveFreq;
+        float fAddX = (float)sin(dWavePhase + (double)vPos.x * 15.0) * mfWaveAmp * 0.3f;
+        float fAddZ = (float)sin(dWavePhase + (double)vPos.z * 15.0) * mfWaveAmp * 0.3f;
 
         cPlanef tempPlane;
         tempPlane.FromNormalPoint(    cVector3f(0, 1, 0), cVector3f(0, afSurfaceY + fAddX + fAddZ, 0));
