@@ -111,6 +111,15 @@ public:
         return mlDataPos >= mlDataSize;
     }
 
+    /**
+     * True if a read asked for more data than was left (a truncated or broken file).
+     * Such reads give zeros. Reset when data is loaded.
+     */
+    bool GetReadPastEnd() const
+    {
+        return mbReadPastEnd;
+    }
+
     ////////////////////////////////
     // COMPRESSION
     ////////////////////////////////
@@ -254,6 +263,8 @@ private:
     size_t mlReservedDataSize;
 
     size_t mlCRCStartPos;
+
+    bool mbReadPastEnd;
 };
 
 };

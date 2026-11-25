@@ -117,6 +117,7 @@ bool cBinaryBuffer::Load(const tWString& asFile)
     mlDataSize = lFileSize;
     mlReservedDataSize = lFileSize;
     mlDataPos = 0;
+    mbReadPastEnd = false;
 
     ////////////////////////////
     // Load data from file
@@ -181,6 +182,7 @@ void cBinaryBuffer::LoadFromCharEncode(const tString& asInputData, size_t alSize
     mlDataSize = alSize;
     mlReservedDataSize = alSize;
     mlDataPos = 0;
+    mbReadPastEnd = false;
 
     ////////////////////////////
     // Load from string
@@ -976,6 +978,10 @@ bool cBinaryBuffer::GetData(void *apData, size_t alSize)
     if(mlDataPos + alSize > mlDataSize)
     {
         mlDataPos = mlDataSize; //Move to EOF!
+        //Zeros instead of whatever the destination held, so callers reading counts and
+        //sizes from a truncated file get 0 and not garbage.
+        memset(apData, 0, alSize);
+        mbReadPastEnd = true;
         return false;
     }
 
@@ -992,6 +998,7 @@ void cBinaryBuffer::InitAndAllocData()
 {
     mlCRCStartPos = 0;
     mlDataPos = 0;
+    mbReadPastEnd = false;
     mlDataSize = 0;
     mlReservedDataSize = 100;
     mpData = (char*)hplMalloc(mlReservedDataSize);
