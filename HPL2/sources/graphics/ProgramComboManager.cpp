@@ -36,6 +36,7 @@ static std::vector<cProgramComboManager *> gvComboManagers;
 static std::set<tString> gsetWarmEntries;
 static bool gbWarmListChanged = false;
 static bool gbWarming = false;
+static int glMapLoadDepth = 0;
 
 //Hash of a mode's default vars. Graphics settings change them (refraction, lite shader...),
 //and flags recorded under other settings can make combos the shaders do not support.
@@ -166,8 +167,8 @@ iGpuProgram *cProgramComboManager::GenerateProgram(int alMainMode, int alFlags)
         //Compiles outside warming are what shader warming is meant to remove, so tell about them.
         if(gbWarming == false && msName != "" && msName != "LightSelfTest" && msName != "GBufferLiteTest")
         {
-            Log("Shader compiled while playing: %s %d %d (%.1f ms)\n", msName.c_str(), alMainMode, alFlags,
-                (cPlatform::GetApplicationTimeX() - fCompileStart) * 1000.0);
+            Log("Shader compiled %s: %s %d %d (%.1f ms)\n", glMapLoadDepth > 0 ? "during map load" : "while playing",
+                msName.c_str(), alMainMode, alFlags, (cPlatform::GetApplicationTimeX() - fCompileStart) * 1000.0);
         }
 
         pProgData->mpProgram = pProgram;
@@ -671,6 +672,10 @@ int cProgramComboManager::WarmFromFile(const tWString& asFile)
 
     int lCompiled = 0;
     int lSkipped = 0;
+    //Why lines were skipped, so the log tells if warming is missing programs it should make
+    int lSkippedNoManager = 0;
+    int lSkippedBadCombo = 0;
+    int lSkippedSettings = 0;
     gbWarming = true;
 
     size_t lStart = 0;
@@ -717,10 +722,24 @@ int cProgramComboManager::WarmFromFile(const tWString& asFile)
             }
         }
 
-        if(pManager == NULL || lMode < 0 || lMode >= pManager->mlNumOfMainModes || lFlags < 0 ||
-                pManager->mvSettings[lMode].msFragShader == "" || pManager->mvSettings[lMode].msVtxShader == "" ||
-                WarmSettingsHash(pManager->mvSettings[lMode].mvDefaultVars) != sSettings)
+        if(pManager == NULL)
         {
+            ++lSkippedNoManager;
+            ++lSkipped;
+            continue;
+        }
+        if(lMode < 0 || lMode >= pManager->mlNumOfMainModes || lFlags < 0 ||
+                pManager->mvSettings[lMode].msFragShader == "" || pManager->mvSettings[lMode].msVtxShader == "")
+        {
+            ++lSkippedBadCombo;
+            ++lSkipped;
+            continue;
+        }
+        //Recorded under other graphics settings (or another renderer setup). Kept in the list
+        //and used again once those settings are back.
+        if(WarmSettingsHash(pManager->mvSettings[lMode].mvDefaultVars) != sSettings)
+        {
+            ++lSkippedSettings;
             ++lSkipped;
             continue;
         }
@@ -740,7 +759,15 @@ int cProgramComboManager::WarmFromFile(const tWString& asFile)
 
     gbWarming = false;
 
-    Log("Shader warming: compiled %d programs (%d skipped)\n", lCompiled, lSkipped);
+    if(lSkipped > 0)
+    {
+        Log("Shader warming: compiled %d programs (%d skipped: %d for other graphics settings, %d unknown material type, %d invalid)\n",
+            lCompiled, lSkipped, lSkippedSettings, lSkippedNoManager, lSkippedBadCombo);
+    }
+    else
+    {
+        Log("Shader warming: compiled %d programs\n", lCompiled);
+    }
 
     return lCompiled;
 }
@@ -771,6 +798,21 @@ bool cProgramComboManager::SaveWarmList(const tWString& asFile)
 bool cProgramComboManager::GetWarmListChanged()
 {
     return gbWarmListChanged;
+}
+
+//-----------------------------------------------------------------------
+
+void cProgramComboManager::BeginMapLoad()
+{
+    ++glMapLoadDepth;
+}
+
+void cProgramComboManager::EndMapLoad()
+{
+    if(glMapLoadDepth > 0)
+    {
+        --glMapLoadDepth;
+    }
 }
 
 //-----------------------------------------------------------------------

@@ -31,6 +31,7 @@
 #include "graphics/LowLevelGraphics.h"
 #include "graphics/VertexBuffer.h"
 #include "graphics/MeshCreator.h"
+#include "graphics/ProgramComboManager.h"
 
 #include "physics/Physics.h"
 #include "physics/PhysicsWorld.h"
@@ -188,8 +189,23 @@ int cWorldLoaderHplMap::CountChildren(cXmlElement *apElement)
 
 //-----------------------------------------------------------------------
 
+//Marks a map load for the shader compile log, on every way out of LoadWorld.
+class cMapLoadShaderScope
+{
+public:
+    cMapLoadShaderScope()
+    {
+        cProgramComboManager::BeginMapLoad();
+    }
+    ~cMapLoadShaderScope()
+    {
+        cProgramComboManager::EndMapLoad();
+    }
+};
+
 cWorld *cWorldLoaderHplMap::LoadWorld(const tWString& asFile, tWorldLoadFlag aFlags)
 {
+    cMapLoadShaderScope mapLoadShaderScope;
     unsigned long lLoadStartTime = cPlatform::GetApplicationTime();
     ReportProgress(0.0f);
     mlCurrentFlags = aFlags;

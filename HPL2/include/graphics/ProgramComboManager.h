@@ -119,6 +119,11 @@ public:
     //True if programs were recorded that are not in the saved list yet.
     static bool GetWarmListChanged();
 
+    //A map is loading (calls nest). Compiles then happen behind the loading screen,
+    //so they are logged as load time and not as stutter while playing.
+    static void BeginMapLoad();
+    static void EndMapLoad();
+
     iGpuProgram *GenerateProgram(int alMainMode, int alFlags);
     int GetGenerateCombinationNum(int alMainMode)
     {
