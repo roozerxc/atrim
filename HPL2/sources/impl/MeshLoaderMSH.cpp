@@ -4,6 +4,7 @@
 #include "graphics/LowLevelGraphics.h"
 #include "graphics/VertexBuffer.h"
 #include "system/String.h"
+#include "system/Platform.h"
 #include "resources/BinaryBuffer.h"
 
 #include "graphics/Mesh.h"
@@ -19,6 +20,8 @@
 #include "scene/Node3D.h"
 
 #include "math/Math.h"
+
+#include <stdio.h>
 
 namespace hpl
 {
@@ -105,6 +108,11 @@ cMesh *cMeshLoaderMSH::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags)
     int lSubMeshNum = binBuff.GetInt32();
     int lAnimationNum = binBuff.GetInt32();
     bool bSkeleton = binBuff.GetBool();
+    if(binBuff.GetReadPastEnd())
+    {
+        Error("File '%s' is truncated! Invalid MSH file!\n", cString::To8Char(asFile).c_str());
+        return NULL;
+    }
 
     if(gbLogMSHLoad)
     {
@@ -333,6 +341,16 @@ cMesh *cMeshLoaderMSH::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags)
 
 
         ///////////////////
+        //A truncated file gives zeros from here on, do not build buffers from them
+        if(binBuff.GetReadPastEnd())
+        {
+            Error("File '%s' is truncated! Invalid MSH file!\n", cString::To8Char(asFile).c_str());
+            hplDelete(pVtxBuff);
+            hplDelete(pMesh);
+            return NULL;
+        }
+
+        ///////////////////
         //Compile vertex buffer and set to submesh
         pVtxBuff->Compile(0);
 
@@ -361,8 +379,41 @@ cMesh *cMeshLoaderMSH::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags)
         }
     }
 
+    if(binBuff.GetReadPastEnd())
+    {
+        Error("File '%s' is truncated! Invalid MSH file!\n", cString::To8Char(asFile).c_str());
+        hplDelete(pMesh);
+        return NULL;
+    }
 
     return pMesh;
+}
+
+//-----------------------------------------------------------------------
+
+//Writes to a temporary file first and swaps it in, so a crash or a full disk while
+//saving leaves the old file or no file, never half of one (which would load as a
+//broken mesh until the .dae changes).
+static bool SaveBufferSafely(cBinaryBuffer &aBuffer, const tWString& asFile)
+{
+    tWString sTempFile = asFile + _W(".tmp");
+    if(aBuffer.Save(sTempFile) == false)
+    {
+        cPlatform::RemoveFile(sTempFile);
+        return false;
+    }
+
+    cPlatform::RemoveFile(asFile);
+#ifdef _WIN32
+    bool bMoved = _wrename(sTempFile.c_str(), asFile.c_str()) == 0;
+#else
+    bool bMoved = rename(cString::To8Char(sTempFile).c_str(), cString::To8Char(asFile).c_str()) == 0;
+#endif
+    if(bMoved == false)
+    {
+        cPlatform::RemoveFile(sTempFile);
+    }
+    return bMoved;
 }
 
 //-----------------------------------------------------------------------
@@ -571,10 +622,10 @@ bool cMeshLoaderMSH::SaveMesh(cMesh* apMesh, const tWString& asFile)
 
     ////////////////////////////
     // Save data
-    bool bRet = binBuff.Save();
+    bool bRet = SaveBufferSafely(binBuff, asFile);
     if(bRet == false)
     {
-        Error("Couldn't save mesh to '%s'", cString::To8Char(asFile).c_str());
+        Error("Couldn't save mesh to '%s'\n", cString::To8Char(asFile).c_str());
     }
 
     return bRet;
@@ -620,6 +671,16 @@ cAnimation *cMeshLoaderMSH::LoadAnimation(const tWString& asFile)
     // Animation
     cAnimation *pAnimation = GetAnimation(&binBuff, asFile);
 
+    if(binBuff.GetReadPastEnd())
+    {
+        Error("File '%s' is truncated! Invalid animation file!\n", cString::To8Char(asFile).c_str());
+        if(pAnimation)
+        {
+            hplDelete(pAnimation);
+        }
+        return NULL;
+    }
+
     return pAnimation;
 }
 
@@ -645,10 +706,10 @@ bool cMeshLoaderMSH::SaveAnimation(cAnimation* apAnimation, const tWString& asFi
 
     ////////////////////////////
     // Save data
-    bool bRet = binBuff.Save();
+    bool bRet = SaveBufferSafely(binBuff, asFile);
     if(bRet == false)
     {
-        Error("Couldn't save animation to '%s'", asFile.c_str());
+        Error("Couldn't save animation to '%s'\n", cString::To8Char(asFile).c_str());
     }
 
     return bRet;

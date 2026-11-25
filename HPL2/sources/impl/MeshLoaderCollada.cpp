@@ -156,6 +156,27 @@ static void FixLocalPosition(cVector3f *apPos, cColladaNode *apNode,
 
 //-------------------------------------------------
 
+//The .msh / .anm cache next to a .dae is used when it exists and is not older than the
+//.dae. With ForceCacheLoadingAndSkipSaving (the default) its date is not looked at, as
+//installs can leave a .dae newer than a fine shipped cache. A missing, broken or old
+//cache is made from the .dae and saved, whatever that setting is, so a .dae is only
+//parsed once (custom stories rarely ship caches).
+static bool CacheIsUsable(const tWString& asDaeFile, const tWString& asCacheFile)
+{
+    //Checked first: the date of a missing file is an error in the log
+    if(cPlatform::FileExists(asCacheFile) == false)
+    {
+        return false;
+    }
+    if(cResources::GetForceCacheLoadingAndSkipSaving() || cPlatform::FileExists(asDaeFile) == false)
+    {
+        return true;
+    }
+    return cPlatform::FileModifiedDate(asCacheFile) > cPlatform::FileModifiedDate(asDaeFile);
+}
+
+//-------------------------------------------------
+
 cMesh *cMeshLoaderCollada::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags)
 {
     /////////////////////////////////////////////////
@@ -163,10 +184,8 @@ cMesh *cMeshLoaderCollada::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags
     if(mbLoadAndSaveMSHFormat)
     {
         tWString sMSHFile = cString::SetFileExtW(asFile, _W("msh"));
-        cDate currentDate = cPlatform::FileModifiedDate(asFile);
-        cDate mshDate = cPlatform::FileModifiedDate(sMSHFile);
 
-        if(cResources::GetForceCacheLoadingAndSkipSaving() || mshDate > currentDate || cPlatform::FileExists(asFile) == false)
+        if(CacheIsUsable(asFile, sMSHFile))
         {
             cMesh *pMesh = mpMeshLoaderMSH->LoadMesh(sMSHFile, aFlags);
             if(pMesh)
@@ -174,6 +193,7 @@ cMesh *cMeshLoaderCollada::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags
                 pMesh->SetFullPath(asFile);//Use dae as full path! (otherwise file will be loaded several times!)
                 return pMesh;
             }
+            Log("Mesh cache '%s' could not be loaded, making it again from the .dae\n", cString::To8Char(sMSHFile).c_str());
         }
     }
 
@@ -767,8 +787,9 @@ cMesh *cMeshLoaderCollada::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags
 
     /////////////////////////////////////////////////
     // SAVE MSH FORMAT
-    if(    cResources::GetForceCacheLoadingAndSkipSaving() == false &&
-            mbLoadAndSaveMSHFormat && bMeshIsOKToCache)
+    //Loads without geometry or materials make a partial mesh, which must not become the cache.
+    if(mbLoadAndSaveMSHFormat && bMeshIsOKToCache &&
+            (aFlags & (eMeshLoadFlag_NoGeometry | eMeshLoadFlag_NoMaterial)) == 0)
     {
         tWString sMSHFile = cString::SetFileExtW(asFile, _W("msh"));
 
@@ -825,11 +846,8 @@ cAnimation *cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
     if(mbLoadAndSaveMSHFormat)
     {
         tWString sMSHFile = cString::SetFileExtW(asFile, _W("anm"));
-        cDate currentDate = cPlatform::FileModifiedDate(asFile);
-        cDate mshDate = cPlatform::FileModifiedDate(sMSHFile);
 
-        if(    cResources::GetForceCacheLoadingAndSkipSaving() ||
-                mshDate > currentDate || cPlatform::FileExists(asFile) == false)
+        if(CacheIsUsable(asFile, sMSHFile))
         {
             cAnimation *pAnim = mpMeshLoaderMSH->LoadAnimation(sMSHFile);
             if(pAnim)
@@ -837,6 +855,7 @@ cAnimation *cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
                 pAnim->SetFullPath(asFile);//Use dae as full path! (otherwise file will be loaded several times!)
                 return pAnim;
             }
+            Log("Animation cache '%s' could not be loaded, making it again from the .dae\n", cString::To8Char(sMSHFile).c_str());
         }
     }
 
@@ -1007,8 +1026,8 @@ cAnimation *cMeshLoaderCollada::LoadAnimation(const tWString& asFile)
     }
 
     /////////////////////////////////////////////////
-    // SAVE MSH FORMAT
-    if(cResources::GetForceCacheLoadingAndSkipSaving() == false && mbLoadAndSaveMSHFormat)
+    // SAVE MSH FORMAT (a .dae without animations gives no animation, nothing to save)
+    if(mbLoadAndSaveMSHFormat && pAnimation)
     {
         tWString sMSHFile = cString::SetFileExtW(asFile, _W("anm"));
 
