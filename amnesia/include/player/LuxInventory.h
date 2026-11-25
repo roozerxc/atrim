@@ -678,7 +678,7 @@ private:
 
     std::vector<cGuiGfxElement *> mvGridLines;
 
-    float mfTimer;
+    double mdTimer;
     tFloatVec mvPulseMiddle;
     tFloatVec mvPulseFreq;
 };

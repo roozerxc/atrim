@@ -142,7 +142,7 @@ cLuxInventory::cLuxInventory() : iLuxUpdateable("LuxInventory")
 
     CreateGui();
 
-    mfTimer = 0;
+    mdTimer = 0;
 }
 
 //-----------------------------------------------------------------------
@@ -569,7 +569,7 @@ bool cLuxInventory_Slot::OnDraw(iWidget* apWidget, const cGuiMessageData& aData)
             float fAmp = mpInventory->mfLayout_SlotPulsatingAmp;
             float fFreq = mpInventory->mfLayout_SlotPulsatingFreq;
 
-            float fPulseAlpha = fMin + (1.0f-fMin) * (cos(mpInventory->mfTimer * fFreq) * 0.5f+0.5f);
+            float fPulseAlpha = fMin + (1.0f-fMin) * ((float)cos(mpInventory->mdTimer * (double)fFreq) * 0.5f+0.5f);
 
             for(int i = 0; i < 2; ++i)
             {
@@ -715,7 +715,7 @@ void cLuxInventory::Update(double adFixedDelta)
         mvAlphaFader[i].Update(adFixedDelta);
     }
 
-    mfTimer += (float)adFixedDelta;
+    mdTimer += adFixedDelta;
 
     /////////////////////////////
     /// Update old desc text alpha
@@ -2472,7 +2472,7 @@ void cLuxInventory::StatusWidgetDraw(const cVector3f& avPos, int alStatusIdx, cG
 
     float fPulseMid = mvPulseMiddle[alStatusIdx];
     float fPulseAmp = 1.0f - fPulseMid;
-    float fGlowAlpha = fPulseMid + fPulseAmp * (cos(mfTimer * mvPulseFreq[alStatusIdx]));
+    float fGlowAlpha = fPulseMid + fPulseAmp * (float)cos(mdTimer * (double)mvPulseFreq[alStatusIdx]);
 
     DrawElementAtCenter(avPos + cVector3f(0, 0, 0.1f), pGlow, mfAlpha.Get() * fGlowAlpha, pGlow->GetActiveSize(), false);
 }
