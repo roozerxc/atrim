@@ -206,7 +206,7 @@ bool cEngine::mbDeviceRemoved = false;
 cEngine::cEngine(iLowLevelEngineSetup *apGameSetup, tFlag alHplSetupFlags, cEngineInitVars *apVars)
     : mbGameIsDone(false)
     , mbPaused(false)
-    , iMaxGameUpdates(6)
+    , iMaxGameUpdates(std::max(2, (mlLogicUpdatesPerSec + 19) / 20))
     , mbNonGameplayFrame(false)
     , kMaxFrameTime(0.25)
     , kFixedDelta(1.0 / (double)mlLogicUpdatesPerSec)
