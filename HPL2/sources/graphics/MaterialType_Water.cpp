@@ -31,7 +31,7 @@ namespace hpl
 //------------------------------
 // Variables
 //------------------------------
-#define kVar_afT                                0
+#define kVar_avTimePhases                        0
 #define kVar_afRefractionScale                    1
 #define kVar_a_mtxInvViewRotation                2
 #define kVar_avReflectionMapSizeMul                3
@@ -128,7 +128,7 @@ void cMaterialType_Water::LoadData()
 
     ////////////////////////////////
     //Set up variable ids
-    mpProgramManager->AddGenerateProgramVariableId("afT", kVar_afT, eMaterialRenderMode_Diffuse);
+    mpProgramManager->AddGenerateProgramVariableId("avTimePhases", kVar_avTimePhases, eMaterialRenderMode_Diffuse);
     mpProgramManager->AddGenerateProgramVariableId("afRefractionScale", kVar_afRefractionScale, eMaterialRenderMode_Diffuse);
     mpProgramManager->AddGenerateProgramVariableId("a_mtxInvViewRotation", kVar_a_mtxInvViewRotation, eMaterialRenderMode_Diffuse);
     mpProgramManager->AddGenerateProgramVariableId("avReflectionMapSizeMul", kVar_avReflectionMapSizeMul, eMaterialRenderMode_Diffuse);
@@ -280,10 +280,26 @@ void cMaterialType_Water::SetupMaterialSpecificData(eMaterialRenderMode aRenderM
 
         ////////////////////////////
         // General
-        apProgram->SetFloat(kVar_afT, apRenderer->GetTimeCount() * pVars->mfWaveSpeed);
+        // Time is wrapped here in double precision, so the shader only ever gets small values
+        // and the waves stay smooth no matter how long the game has been running.
+        // The shader used to compute these from a raw float time (afT):
+        //   layer 1: scroll = t*0.01,   phase = t*0.8  + scroll*freq
+        //   layer 2: scroll = t*-0.012, phase = t*-2.6 + scroll*freq*1.2
+        // Phases repeat every 2*pi and scrolls every 1.0 (repeating texture), so the result is identical.
+        const double k2Pi = 6.283185307179586;
+        const float fWaveFreq = pVars->mfWaveFreq * 10.0f;
+        const double dT = apRenderer->GetTimeCount() * (double)pVars->mfWaveSpeed;
+        const double dScroll1 = dT * 0.01;
+        const double dScroll2 = dT * -0.012;
+        const double dPhase1 = dT * 0.8 + dScroll1 * (double)fWaveFreq;
+        const double dPhase2 = dT * -2.6 + dScroll2 * (double)fWaveFreq * 1.2;
+
+        apProgram->SetVec4f(kVar_avTimePhases,
+                            (float)fmod(dPhase1, k2Pi), (float)fmod(dPhase2, k2Pi),
+                            (float)fmod(dScroll1, 1.0), (float)fmod(dScroll2, 1.0));
         apProgram->SetFloat(kVar_afRefractionScale, pVars->mfRefractionScale * (float)apRenderer->GetRenderTargetSize().x);
         apProgram->SetFloat(kVar_afWaveAmplitude, pVars->mfWaveAmplitude * 0.04f);
-        apProgram->SetFloat(kVar_afWaveFreq, pVars->mfWaveFreq * 10.0f);
+        apProgram->SetFloat(kVar_afWaveFreq, fWaveFreq);
 
         ////////////////////////////
         // Fog

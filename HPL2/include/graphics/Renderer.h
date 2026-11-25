@@ -255,8 +255,10 @@ public:
     /**
      * Simulated time in seconds (follows the game speed), at the point in time the
      * current (interpolated) frame represents, so shader animation is smooth at any frame rate.
+     * Returned as double: wrap it to a period before sending it to a shader, a float of the
+     * raw value loses precision as the session gets longer (1 ms steps after ~4.5 hours).
      */
-    float GetTimeCount();
+    double GetTimeCount();
 
     virtual bool LoadData() = 0;
     virtual void DestroyData() = 0;

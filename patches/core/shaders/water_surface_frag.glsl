@@ -44,7 +44,7 @@ uniform sampler2D aNormalMap;
 
 ////////////////////////////////
 // Arguments
-uniform float afT;
+uniform vec4 avTimePhases; // x,y = wave phase of layer 1/2 (wrapped 2*pi), z,w = uv scroll of layer 1/2 (wrapped 1.0)
 uniform float afWaveAmplitude;
 uniform float afWaveFreq;
 uniform float afRefractionScale;
@@ -75,15 +75,17 @@ void main()
 {
     ///////////////////////////////
     //Get the two uv coords
-    float fT1 = afT*0.8;
-    vec2 vUv1 = gl_TexCoord[0].xy+afT*0.01;
-    vUv1.x += sin(fT1 + vUv1.y * afWaveFreq)* afWaveAmplitude;
-    vUv1.y += sin(fT1 + vUv1.x * afWaveFreq)* afWaveAmplitude;
+    // Same result as the old afT based code: the scroll's share of the
+    // wave phase is folded into avTimePhases on the CPU, then the scroll is added after.
+    vec2 vUv1 = gl_TexCoord[0].xy;
+    vUv1.x += sin(avTimePhases.x + vUv1.y * afWaveFreq)* afWaveAmplitude;
+    vUv1.y += sin(avTimePhases.x + vUv1.x * afWaveFreq)* afWaveAmplitude;
+    vUv1 += avTimePhases.z;
 
-    float fT2 = afT*-2.6;
-    vec2 vUv2 = gl_TexCoord[0].xy+afT*-0.012;
-    vUv2.x += sin(fT2 + vUv2.y * afWaveFreq*1.2) * afWaveAmplitude*0.75;
-    vUv2.y += sin(fT2 + vUv2.x * afWaveFreq*1.2) * afWaveAmplitude*0.75;
+    vec2 vUv2 = gl_TexCoord[0].xy;
+    vUv2.x += sin(avTimePhases.y + vUv2.y * afWaveFreq*1.2) * afWaveAmplitude*0.75;
+    vUv2.y += sin(avTimePhases.y + vUv2.x * afWaveFreq*1.2) * afWaveAmplitude*0.75;
+    vUv2 += avTimePhases.w;
 
     ///////////////////////////////
     //Get the normals and combine into final normal

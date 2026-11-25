@@ -591,11 +591,11 @@ void iRenderer::Update(double adFixedDelta)
 
 //-----------------------------------------------------------------------
 
-float iRenderer::GetTimeCount()
+double iRenderer::GetTimeCount()
 {
     //Same offset as the interpolated world (the frame shows a moment between the last two ticks).
     double dOffset = cRenderInterpolation::GetRenderGameTime() - cRenderInterpolation::GetGameTime();
-    return (float)(mdTimeCount + dOffset);
+    return mdTimeCount + dOffset;
 }
 
 //-----------------------------------------------------------------------
