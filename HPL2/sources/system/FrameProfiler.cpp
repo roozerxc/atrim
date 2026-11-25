@@ -86,7 +86,6 @@ namespace
     float gfSpikeThresholdMs = 0;
     int glSpikesThisWindow = 0;
     const int kMaxSpikesPerWindow = 4;
-    const int kSpikeSettleFrames = 30;
     const int kMaxSectionsInSpike = 8;
 
     typedef std::pair<double, int> tSpikeSort;
@@ -494,11 +493,8 @@ void cFrameProfiler::EndFrame(bool abDiscard)
         {
             dThreshold = dAvg * 3.0 > 0.012 ? dAvg * 3.0 : 0.012;
         }
-        //Skip the frames still settling after the synced window and report (this also
-        //gives the auto threshold enough frames for its average)
-        //(a quarter of short windows, so they still get spikes)
-        int lSettleFrames = glFramesPerWindow / 4 < kSpikeSettleFrames ? glFramesPerWindow / 4 : kSpikeSettleFrames;
-        if(dFrameTime > dThreshold && glFramesCounted[0] >= lSettleFrames)
+        //Auto needs a few frames for the average
+        if(dFrameTime > dThreshold && (gfSpikeThresholdMs > 0 || glFramesCounted[0] >= 10))
         {
             LogSpike(dFrameTime, dAvg, glFramesCounted[0] + 1);
             ++glSpikesThisWindow;
