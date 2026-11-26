@@ -399,7 +399,13 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
             {
                 iRenderable *pObject = *it;
 
-                fPosSum +=     GetAxisFromVec(pObject->GetBoundingVolume()->GetPosition(), mlSplitAxis);
+                //A NaN position would make the split plane NaN (see CalculateMinMaxFromObjects)
+                float fPos = GetAxisFromVec(pObject->GetBoundingVolume()->GetPosition(), mlSplitAxis);
+                if(cMath::IsFinite(fPos) == false)
+                {
+                    continue;
+                }
+                fPosSum +=     fPos;
                 fWeightSum += 1;
             }
         }
@@ -428,7 +434,10 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
             }
         }
 
-        mfSplitPlane = fPosSum / fWeightSum;
+        if(fWeightSum > 0)
+        {
+            mfSplitPlane = fPosSum / fWeightSum;
+        }
     }
 
 
@@ -545,7 +554,10 @@ void cRCNode_DynBoxTree::UpdateBeforeUse()
 
                         pChildNode->mlstObjects.push_back(pObject);
 
-                        pChildNode->mvMeanPosition += pObject->GetBoundingVolume()->GetWorldCenter();
+                        if(cMath::IsFinite(pObject->GetBoundingVolume()->GetWorldCenter()))
+                        {
+                            pChildNode->mvMeanPosition += pObject->GetBoundingVolume()->GetWorldCenter();
+                        }
 
                         //Set new node to object
                         pObject->SetRenderContainerNode(pChildNode);

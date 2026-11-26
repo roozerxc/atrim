@@ -2715,6 +2715,13 @@ void cWorldLoaderHplMap::LoadArea(const tString& asName, int alID, bool abActive
 
 bool cWorldLoaderHplMap::CheckTransformValidity(const tString& asName, const cVector3f& avPos, const cVector3f& avRot, const cVector3f& avScale)
 {
+    //NaN or infinity (a broken map entry) would also slip past the range check below
+    if(cMath::IsFinite(avPos) == false || cMath::IsFinite(avRot) == false || cMath::IsFinite(avScale) == false)
+    {
+        Warning("The object %s has an invalid transform (position (%s), rotation (%s), scale (%s)), skipping it!\n",
+                asName.c_str(), avPos.ToString().c_str(), avRot.ToString().c_str(), avScale.ToString().c_str());
+        return false;
+    }
     if(cMath::Abs(avPos.x) > 10000.0f || cMath::Abs(avPos.y) > 10000.0f || cMath::Abs(avPos.z) > 10000.0f)
     {
         Warning("The object %s has an invalid position: (%s)!\n", asName.c_str(), avPos.ToString().c_str());

@@ -160,6 +160,14 @@ void iRenderableContainerNode::CalculateMinMaxFromObjects()
         const cVector3f &vMin = pObject->GetBoundingVolume()->GetMin();
         const cVector3f &vMax = pObject->GetBoundingVolume()->GetMax();
 
+        //An object with NaN or infinite bounds (a broken transform or physics body) would
+        //give the node, and every node above it, broken bounds. Then whole groups of objects
+        //fail the visibility tests and vanish. Leave it out: it cannot be drawn anyway.
+        if(cMath::IsFinite(vMin) == false || cMath::IsFinite(vMax) == false)
+        {
+            continue;
+        }
+
         if(vNodeMin.x > vMin.x)
         {
             vNodeMin.x = vMin.x;

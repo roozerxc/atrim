@@ -417,6 +417,22 @@ iEntity3D *cWorld::CreateEntity(const tString& asName, const cMatrixf &a_mtxTran
 {
     iEntity3D *pEntity = NULL;
 
+    //////////////////////////////////
+    // An entity scaled to nothing, or with a broken transform, cannot be drawn and gives
+    // physics bodies no size, mass or inertia, which can turn their position into NaN.
+    // Such an object's bounds then break culling for everything near it in the scene tree
+    // (seen as props flickering all over a map). Maps saved with such entries exist (an
+    // editor bug left three entities in a Lifeless map at scale 0 0 0 with garbage
+    // positions), and saved games made on them recreate them through here too.
+    // Only all three axes at zero count: one flattened axis is used on purpose.
+    bool bZeroScale = cMath::Abs(avScale.x) < 1e-6f && cMath::Abs(avScale.y) < 1e-6f && cMath::Abs(avScale.z) < 1e-6f;
+    if(bZeroScale || cMath::IsFinite(a_mtxTransform) == false || cMath::IsFinite(avScale) == false)
+    {
+        Warning("Entity '%s' (%s) has a zero or invalid scale (%s) or transform, not creating it!\n",
+                asName.c_str(), asFile.c_str(), avScale.ToString().c_str());
+        return NULL;
+    }
+
     cEntFile *pEntFile = mpResources->GetEntFileManager()->CreateEntFile(asFile);
     if(pEntFile == NULL)
     {

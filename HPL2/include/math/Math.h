@@ -2,6 +2,7 @@
 #define HPL_MATH_H
 
 #include "math/MathTypes.h"
+#include <string.h>
 #include "math/BoundingVolume.h"
 #include "math/MeshTypes.h"
 
@@ -428,6 +429,32 @@ public:
     inline static float Abs(float afX)
     {
         return fabs(afX);
+    }
+
+    /**
+     * False for NaN and infinity. Checks the bits, so it still works with /fp:fast
+     * (which may turn the usual x == x test into 'true').
+     */
+    inline static bool IsFinite(float afX)
+    {
+        unsigned int lBits;
+        memcpy(&lBits, &afX, sizeof(lBits));
+        return (lBits & 0x7F800000u) != 0x7F800000u;
+    }
+    inline static bool IsFinite(const cVector3f& avX)
+    {
+        return IsFinite(avX.x) && IsFinite(avX.y) && IsFinite(avX.z);
+    }
+    inline static bool IsFinite(const cMatrixf& a_mtxX)
+    {
+        for(int i = 0; i < 16; ++i)
+        {
+            if(IsFinite(a_mtxX.v[i]) == false)
+            {
+                return false;
+            }
+        }
+        return true;
     }
     inline static int Abs(int alX)
     {
