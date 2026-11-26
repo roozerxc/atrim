@@ -320,6 +320,11 @@ void OAL_Info_GetStreamStalls(float *apLockWaitMs, int *apLockWaits, float *apRe
 	OAL_Stats_Get(apLockWaitMs, apLockWaits, apRefillMs, apFile, alFileSize);
 }
 
+bool OAL_Info_GetSlowStreamRefill(char *apText, int alTextSize)
+{
+	return OAL_Stats_GetSlowRefill(apText, alTextSize);
+}
+
 string OAL_Info_GetDefaultOutputDevice()
 {
 	return cOAL_Device::GetDefaultDeviceName();

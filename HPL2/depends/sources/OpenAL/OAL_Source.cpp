@@ -469,7 +469,7 @@ int	cOAL_Source::BindData(cOAL_Stream *apStream)
 
 	mpAudioData = apStream;
 	mlPriority = 256;
-	apStream->Seek(0);
+	apStream->SeekFromGame(0);
 	if(LowLevelSet(eOAL_SourceParam_Buffer) == false)
 		return -1;
 
@@ -683,7 +683,7 @@ void cOAL_Source::SetElapsedTime(double afTime)
 	case eOAL_AudioDataType_Stream:
 		{
 			cOAL_Stream* pStream = (cOAL_Stream*)mpAudioData;
-			pStream->Seek((float)(afTime/mpAudioData->GetTotalTime()));
+			pStream->SeekFromGame((float)(afTime/mpAudioData->GetTotalTime()));
 		}
 		break;
 	}

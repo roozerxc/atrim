@@ -1,6 +1,7 @@
 #include "OpenAL/OAL_SourceManager.h"
 #include "OpenAL/OAL_Source.h"
 #include "OpenAL/OAL_Device.h"
+#include "OpenAL/OAL_Stream.h"
 
 #include "system/MemoryManager.h"
 #include "system/LowLevelSystem.h"
@@ -8,6 +9,7 @@
 
 #include <vector>
 #include <stdio.h>
+#include <string.h>
 
 //-----------------------------------------------------------------------------------
 
@@ -44,6 +46,54 @@ void OAL_Stats_RecordRefill(double afMs, const wstring& asFile)
 		gsStatsRefillFile = asFile;
 	}
 	SDL_UnlockMutex(gpStatsMutex);
+}
+
+//Details of the slowest refill over the limit since the last read, for the log
+static const double kSlowRefillMs = 50.0;
+static double gfStatsSlowRefillMs = 0;
+static char gsStatsSlowRefill[256] = "";
+
+void OAL_Stats_RecordSlowRefill(double afMs, const wstring& asFile, int alBuffers, double afSeekMs,
+								int alReadErrors, int alHoles)
+{
+	if(gpStatsMutex==NULL || afMs < kSlowRefillMs) return;
+	SDL_LockMutex(gpStatsMutex);
+	if(afMs > gfStatsSlowRefillMs)
+	{
+		gfStatsSlowRefillMs = afMs;
+
+		size_t lStart = asFile.find_last_of(L"/\\");
+		lStart = lStart == wstring::npos ? 0 : lStart + 1;
+		char sFile[96];
+		int j = 0;
+		for(size_t i = lStart; i < asFile.size() && j < (int)sizeof(sFile) - 1; ++i, ++j)
+			sFile[j] = asFile[i] < 128 ? (char)asFile[i] : '?';
+		sFile[j] = 0;
+
+		//File name is at most 95 chars, so this fits in 256 (VS2005 has no snprintf)
+		sprintf(gsStatsSlowRefill,
+				"'%s' %.1f ms for %d buffers (loop seek %.1f ms, %d read errors, %d holes)",
+				sFile, afMs, alBuffers, afSeekMs, alReadErrors, alHoles);
+	}
+	SDL_UnlockMutex(gpStatsMutex);
+}
+
+bool OAL_Stats_GetSlowRefill(char *apText, int alTextSize)
+{
+	if(alTextSize > 0) apText[0] = 0;
+	if(gpStatsMutex==NULL || alTextSize <= 0) return false;
+
+	SDL_LockMutex(gpStatsMutex);
+	bool bFound = gfStatsSlowRefillMs > 0;
+	if(bFound)
+	{
+		strncpy(apText, gsStatsSlowRefill, alTextSize - 1);
+		apText[alTextSize - 1] = 0;
+	}
+	gfStatsSlowRefillMs = 0;
+	gsStatsSlowRefill[0] = 0;
+	SDL_UnlockMutex(gpStatsMutex);
+	return bFound;
 }
 
 void OAL_Stats_Get(float *apLockWaitMs, int *apLockWaits, float *apRefillMs, char *apFile, int alFileSize)
@@ -284,22 +334,63 @@ void cOAL_SourceManager::UpdateStreaming()
 	}
 	UnlockStreamList();
 
+	////////////////////////////////
+	// Refill each stream. The source is only locked to take played buffers off and to
+	// queue the new ones; the decoding (file reads, Ogg decode, loop seeks) runs with only
+	// the stream's own decode lock, so the game thread can keep setting volume and
+	// position on the source meanwhile. A slow refill can then only make the sound skip,
+	// instead of freezing the game (a 965 ms refill froze it for 955 ms before).
 	bool bRemove = false;
+	tBufferVec vToFill;
+	tBufferVec vFilled;
 	for(size_t i = 0; i < vStreams.size(); ++i)
 	{
 		cOAL_Source* pSource = vStreams[i];
+		cOAL_Stream* pStream = NULL;
+		bool bRebuffer = false;
+		bool bUnderrun = false;
+		bool bLoop = false;
+		unsigned int lGeneration = 0;
 
-		double fStart = hpl::cPlatform::GetApplicationTimeX();
 		pSource->Lock();
 		{
 			if(pSource->GetSourceType()!=eOAL_AudioDataType_Stream )
+			{
 				bRemove = true;
+			}
 			else
-				pSource->Update();
+			{
+				cOAL_Stream* pBoundStream = (cOAL_Stream*)pSource->GetAudioData();
+				if(pBoundStream->BeginThreadedUpdate(pSource, vToFill, bRebuffer, bUnderrun, bLoop, lGeneration))
+					pStream = pBoundStream;
+			}
 		}
+		pSource->Unlock();
+
+		if(pStream == NULL)
+			continue;
+
+		////////////////////////////////
+		// Decode with only the decode lock held (it keeps the stream alive)
+		double fSeekMs = 0;
+		int lReadErrors = 0;
+		int lHoles = 0;
+		double fStart = hpl::cPlatform::GetApplicationTimeX();
+		pStream->DecodeThreaded(vToFill, bLoop, vFilled, fSeekMs, lReadErrors, lHoles);
 		double fMs = (hpl::cPlatform::GetApplicationTimeX() - fStart) * 1000.0;
-		if(fMs >= 1.0 && pSource->GetAudioData())
-			OAL_Stats_RecordRefill(fMs, pSource->GetAudioData()->GetFilename());
+		if(fMs >= 1.0)
+			OAL_Stats_RecordRefill(fMs, pStream->GetFilename());
+		OAL_Stats_RecordSlowRefill(fMs, pStream->GetFilename(), (int)vToFill.size(), fSeekMs, lReadErrors, lHoles);
+		pStream->UnlockDecode();
+
+		////////////////////////////////
+		// Queue, if the source still plays this stream. Only the pointer is compared
+		// before that: a stream that was unloaded meanwhile was unbound first.
+		pSource->Lock();
+		{
+			if(pSource->GetAudioData() == pStream)
+				pStream->EndThreadedUpdate(pSource, lGeneration, bRebuffer, bUnderrun, vFilled);
+		}
 		pSource->Unlock();
 	}
 

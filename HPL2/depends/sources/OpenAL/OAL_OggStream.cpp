@@ -28,6 +28,8 @@ cOAL_OggStream::cOAL_OggStream()
 cOAL_OggStream::~cOAL_OggStream()
 {
 	//hpl::Log(" OAL: Destroying ogg stream %p\n", this);
+	//Before the file is closed: the stream thread may be reading it
+	StopAndWaitForDecode();
 	Destroy();
 }
 
@@ -46,6 +48,7 @@ bool cOAL_OggStream::Stream(cOAL_Buffer* apDestBuffer)
 	FUNC_USES_AL;
 
 	long lDataSize = 0;
+	int lHolesInRow = 0;
 
 	//hpl::Log("Streaming...\n");
 	double fStartTime = GetTime();
@@ -64,15 +67,28 @@ bool cOAL_OggStream::Stream(cOAL_Buffer* apDestBuffer)
 		{
 			break;
 		}
-		// If we get a negative value, then something went wrong. Clean up and set error status.
-		else if(lChunkSize == OV_HOLE)										
-			;
+		// A gap in the data: skipped, but a file full of them must not keep us here
+		else if(lChunkSize == OV_HOLE)
+		{
+			++mlHoles;
+			if(++lHolesInRow >= 64)
+				break;
+		}
+		// If we get a negative value, then something went wrong. Set error status and stop
+		// reading (it used to keep calling ov_read, which can return the same error forever).
 		else if(lChunkSize==OV_EINVAL || 
 				lChunkSize==OV_EBADLINK || 
 				lChunkSize<0)
+		{
+			++mlReadErrors;
 			mbStatus = false;
+			break;
+		}
 		else
+		{
+			lHolesInRow = 0;
 			lDataSize += lChunkSize;
+		}
 	}
 	// Bind the data to the Buffer Object
 	if(lDataSize) 

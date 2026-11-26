@@ -59,6 +59,9 @@ private:
 void OAL_Stats_RecordLockWait(double afMs);
 void OAL_Stats_RecordRefill(double afMs, const wstring& asFile);
 void OAL_Stats_Get(float *apLockWaitMs, int *apLockWaits, float *apRefillMs, char *apFile, int alFileSize);
+void OAL_Stats_RecordSlowRefill(double afMs, const wstring& asFile, int alBuffers, double afSeekMs,
+								int alReadErrors, int alHoles);
+bool OAL_Stats_GetSlowRefill(char *apText, int alTextSize);
 
 #endif 
 

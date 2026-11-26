@@ -127,6 +127,14 @@ void cLowLevelSoundOpenAL::UpdateSound(double adFixedDelta)
         Log("Sound stream stall: game waited %.1f ms (%d waits), slowest refill %.1f ms '%s'\n",
             fLockWaitMs, lLockWaits, fRefillMs, sFile);
     }
+
+    ////////////////////////////
+    // Refills slow enough to make a stream skip, with what they spent the time on
+    char sSlowRefill[256];
+    if(OAL_Info_GetSlowStreamRefill(sSlowRefill, sizeof(sSlowRefill)))
+    {
+        Log("Slow stream refill: %s\n", sSlowRefill);
+    }
 }
 
 //-----------------------------------------------------------------------
