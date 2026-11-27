@@ -1039,12 +1039,51 @@ cBitmap *cLowLevelGraphicsSDL::CopyFrameBufferToBitmap(    const cVector2l &avSc
     }
 
     //////////////////////////////
+    //We always read back GL_UNSIGNED_BYTE, so map 16/32 bit (float) color
+    //formats to their 8 bit counterpart. The bitmap buffer is one byte per
+    //channel anyway, and the image savers do not know the wide formats.
+    switch(pixelFormat)
+    {
+    case ePixelFormat_Alpha16:
+    case ePixelFormat_Alpha32:                pixelFormat = ePixelFormat_Alpha; break;
+    case ePixelFormat_Luminance16:
+    case ePixelFormat_Luminance32:            pixelFormat = ePixelFormat_Luminance; break;
+    case ePixelFormat_LuminanceAlpha16:
+    case ePixelFormat_LuminanceAlpha32:        pixelFormat = ePixelFormat_LuminanceAlpha; break;
+    case ePixelFormat_RGB16:
+    case ePixelFormat_RGB32:                pixelFormat = ePixelFormat_RGB; break;
+    case ePixelFormat_RGBA16:
+    case ePixelFormat_RGBA32:                pixelFormat = ePixelFormat_RGBA; break;
+    case ePixelFormat_Alpha:
+    case ePixelFormat_Luminance:
+    case ePixelFormat_LuminanceAlpha:
+    case ePixelFormat_RGB:
+    case ePixelFormat_RGBA:
+    case ePixelFormat_BGR:
+    case ePixelFormat_BGRA:
+        break;
+    default:
+        //Depth, compressed or unknown: not something we can read back as color.
+        pixelFormat = ePixelFormat_RGB; break;
+    }
+
+    //////////////////////////////
     //Get create the bitmap data
     pBitmap->CreateData(cVector3l(vSize.x, vSize.y, 1), pixelFormat, 0, 0);
 
     //////////////////////////////
     //Copy pixels
+    //The bitmap rows are tightly packed, but GL_PACK_ALIGNMENT defaults to 4.
+    //With 3 byte pixels and a width that is not a multiple of 4 (1366x768,
+    //odd window sizes, ...) GL would pad every row and write past the end
+    //of the buffer, corrupting the heap. Read with alignment 1 instead.
+    GLint lOldPackAlignment = 4;
+    glGetIntegerv(GL_PACK_ALIGNMENT, &lOldPackAlignment);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
     glReadPixels(vPos.x, vPos.y, vSize.x, vSize.y, PixelFormatToGLFormat(pixelFormat), GL_UNSIGNED_BYTE, pBitmap->GetData(0, 0)->mpData);
+
+    glPixelStorei(GL_PACK_ALIGNMENT, lOldPackAlignment);
 
     //TODO: Flip, not needed?
 
