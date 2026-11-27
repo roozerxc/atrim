@@ -141,6 +141,35 @@ void cFileSearcher::ClearDirectories()
 
 //-----------------------------------------------------------------------
 
+void cFileSearcher::SetPreferredDirectory(const tWString& asDir)
+{
+    msPreferredDir = asDir;
+    if(asDir == _W(""))
+    {
+        msPreferredDirLow = _W("");
+        return;
+    }
+
+    tWString sFull = cString::ReplaceCharToW(cPlatform::GetFullFilePath(asDir), _W("\\"), _W("/"));
+    msPreferredDirLow = cString::AddSlashAtEndW(cString::ToLowerCaseW(sFull));
+}
+
+//-----------------------------------------------------------------------
+
+bool cFileSearcher::IsInPreferredDirectory(const cFileSearcherEntry& aEntry) const
+{
+    if(msPreferredDirLow == _W("") || aEntry.msPath.size() <= msPreferredDirLow.size())
+    {
+        return false;
+    }
+
+    //Entry paths are full paths with "/" separators (see AddDirectory)
+    tWString sLowStart = cString::ToLowerCaseW(aEntry.msPath.substr(0, msPreferredDirLow.size()));
+    return sLowStart == msPreferredDirLow;
+}
+
+//-----------------------------------------------------------------------
+
 const tWString &cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int *apEqualCount)
 {
     tString sFile = cString::GetFileName(asFileNameAndPath);
@@ -167,24 +196,37 @@ const tWString &cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
         return it->second.msPath;
     }
 
+    //Only matters when there is more than one file with this name
+    const bool bUsePreferred = msPreferredDirLow != _W("") && lCount > 1;
+
     /////////////////////////////
     //Compare paths
     tString string = cString::GetFilePath(asFileNameAndPath);
-    if(string == "")
-    {
-        return it->second.msPath;
-    }
-
     tWString sWantedPath = cString::To16Char(string);
-    if(sWantedPath == _W(""))
+    if(string == "" || sWantedPath == _W(""))
     {
+        if(bUsePreferred)
+        {
+            tFilePathMapIt prefIt = it;
+            for(size_t itcount = 0; itcount < lCount; ++itcount, ++prefIt)
+            {
+                if(IsInPreferredDirectory(prefIt->second))
+                {
+                    Log("  Using '%s' from the preferred directory instead of the base game file\n",
+                        cString::To8Char(prefIt->second.msPath).c_str());
+                    return prefIt->second.msPath;
+                }
+            }
+        }
         return it->second.msPath;
     }
 
     tWStringVec vWantedDirs;
     tWString sSepp = _W("/\\");
 
-    int lBestEqualCount = 0;
+    int lBestEqualCount = -1;
+    bool bBestPreferred = false;
+    bool bOutsidePreferred = false; //A file with this name exists outside the preferred directory
     tFilePathMapIt bestEqualIt = it;
 
     cString::GetStringVecW(sWantedPath, vWantedDirs, &sSepp);
@@ -224,10 +266,28 @@ const tWString &cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
         int lMaxCount = lEqualCount1 > lEqualCount2 ? lEqualCount1 : lEqualCount2;
 
         /////////////////////
-        //If a better equal count was found, use that.
-        if(lMaxCount > lBestEqualCount)
+        //A file in the preferred directory always beats one outside it.
+        //Otherwise, if a better equal count was found, use that (first one wins ties).
+        bool bPreferred = bUsePreferred && IsInPreferredDirectory(it->second);
+        if(bPreferred == false)
+        {
+            bOutsidePreferred = true;
+        }
+
+        bool bBetter;
+        if(lBestEqualCount >= 0 && bPreferred != bBestPreferred)
+        {
+            bBetter = bPreferred;
+        }
+        else
+        {
+            bBetter = lMaxCount > lBestEqualCount;
+        }
+
+        if(bBetter)
         {
             lBestEqualCount = lMaxCount;
+            bBestPreferred = bPreferred;
             bestEqualIt = it;
         }
     }
@@ -235,6 +295,12 @@ const tWString &cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
     if(apEqualCount)
     {
         *apEqualCount = lBestEqualCount;
+    }
+
+    if(bBestPreferred && bOutsidePreferred)
+    {
+        Log("  Using '%s' from the preferred directory instead of the base game file\n",
+            cString::To8Char(bestEqualIt->second.msPath).c_str());
     }
 
     //Return best fit

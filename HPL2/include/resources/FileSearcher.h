@@ -64,9 +64,23 @@ public:
      */
     const tWString &GetFilePath(const tString& asFileNameAndPath, int *apEqualCount = NULL);
 
+    /**
+     * While set, files inside this directory (and its sub directories) win over files with the
+     * same name anywhere else, even when the other file's path matches the wanted path better.
+     * Used to let a custom story override player hand and hand object files only while they load.
+     * \param asDir The directory, relative or full. "" turns it off.
+     */
+    void SetPreferredDirectory(const tWString& asDir);
+    const tWString& GetPreferredDirectory() const { return msPreferredDir; }
+
 private:
+    bool IsInPreferredDirectory(const cFileSearcherEntry& aEntry) const;
+
     tFilePathMap m_mapFiles;
     tWStringSet m_setLoadedDirs;
+
+    tWString msPreferredDir;    //As passed to SetPreferredDirectory (for GetPreferredDirectory)
+    tWString msPreferredDirLow; //Full path, "/" separators, lower case, ending with "/". "" when off.
 
     tWString msNull;
 };
