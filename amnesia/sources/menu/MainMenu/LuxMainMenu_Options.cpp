@@ -506,6 +506,7 @@ void cLuxMainMenu_Options::AddGraphicsOptions(cWidgetTab* apTab)
     mpSGamma->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
     mpChBPotatoMode->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
     mpChBRefraction->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
+    mpChBWorldReflection->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
     if(mbFullbright)
     {
         //Only the texture options are shown in the advanced options
@@ -620,6 +621,71 @@ void cLuxMainMenu_Options::AddBasicGfxOptions(cWidgetDummy* apDummy)
     mpSGamma->SetFocusNavigation(eUIArrow_Up, mpCBTextureSizeLevel);
     mpSGamma->SetFocusNavigation(eUIArrow_Left, mpChBPotatoMode);
 
+}
+
+//-----------------------------------------------------------------------
+
+// Sets up/down/left/right links for widgets laid out in a grid (row major,
+// alNumCols per row, NULL for empty cells). Left/right go to the nearest
+// widget in the row. Up/down go to the next row that has a widget in the
+// same column, or failing that to the nearest widget in the next row that
+// has any. Links off the edges are left alone.
+void cLuxMainMenu_Options::SetUpGridNavigation(iWidget** apGrid, int alNumRows, int alNumCols)
+{
+    for(int lRow = 0; lRow < alNumRows; ++lRow)
+    {
+        for(int lCol = 0; lCol < alNumCols; ++lCol)
+        {
+            iWidget* pWidget = apGrid[lRow * alNumCols + lCol];
+            if(pWidget == NULL)
+            {
+                continue;
+            }
+
+            //////////////////
+            // Left / right
+            for(int lDir = -1; lDir <= 1; lDir += 2)
+            {
+                iWidget* pNext = NULL;
+                for(int c = lCol + lDir; c >= 0 && c < alNumCols && pNext == NULL; c += lDir)
+                {
+                    pNext = apGrid[lRow * alNumCols + c];
+                }
+                pWidget->SetFocusNavigation(lDir < 0 ? eUIArrow_Left : eUIArrow_Right, pNext);
+            }
+
+            //////////////////
+            // Up / down
+            for(int lDir = -1; lDir <= 1; lDir += 2)
+            {
+                iWidget* pNext = NULL;
+
+                // Same column
+                for(int r = lRow + lDir; r >= 0 && r < alNumRows && pNext == NULL; r += lDir)
+                {
+                    pNext = apGrid[r * alNumCols + lCol];
+                }
+
+                // Nearest widget in the next row that has any
+                for(int r = lRow + lDir; r >= 0 && r < alNumRows && pNext == NULL; r += lDir)
+                {
+                    for(int lOffset = 1; lOffset < alNumCols && pNext == NULL; ++lOffset)
+                    {
+                        if(lCol - lOffset >= 0)
+                        {
+                            pNext = apGrid[r * alNumCols + lCol - lOffset];
+                        }
+                        if(pNext == NULL && lCol + lOffset < alNumCols)
+                        {
+                            pNext = apGrid[r * alNumCols + lCol + lOffset];
+                        }
+                    }
+                }
+
+                pWidget->SetFocusNavigation(lDir < 0 ? eUIArrow_Up : eUIArrow_Down, pNext);
+            }
+        }
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -942,109 +1008,48 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
     mpChBWorldReflection;
     mpChBRefraction;
 
+    // Laid out as a grid, same as the window: columns left to right, rows top
+    // to bottom. The relief parallax combo box sits under the parallax check
+    // box, so it gets a row of its own. Options that are hidden (SM3-only ones
+    // on cards without SM3, everything but the texture options in fullbright)
+    // are left out.
+    //
+    // This used to be written out link by link and had gaps: the parallax
+    // check box could not be reached, and Up from Refraction (the first
+    // option reached from the Basic/Advanced button) pointed at itself, so
+    // nothing above it could be reached.
     {
-        mpCBTextureFilter->SetFocusNavigation(eUIArrow_Right, mpCBAnisotropy);
-        mpCBAnisotropy->SetFocusNavigation(eUIArrow_Right, mpCBParallaxQuality);
-
-        mpCBAnisotropy->SetFocusNavigation(eUIArrow_Left, mpCBTextureFilter);
-        mpCBParallaxQuality->SetFocusNavigation(eUIArrow_Left, mpCBAnisotropy);
-
-        mpCBTextureFilter->SetFocusNavigation(eUIArrow_Down, mpChBShadows);
-        mpCBAnisotropy->SetFocusNavigation(eUIArrow_Down, mpCBShadowQuality);
-        mpCBParallaxQuality->SetFocusNavigation(eUIArrow_Down, mpCBShadowRes);
-    }
-
-    {
-        mpChBShadows->SetFocusNavigation(eUIArrow_Up, mpCBTextureFilter);
-        mpCBShadowQuality->SetFocusNavigation(eUIArrow_Up, mpCBAnisotropy);
-        mpCBShadowRes->SetFocusNavigation(eUIArrow_Up, mpCBParallaxQuality);
-
-        mpChBShadows->SetFocusNavigation(eUIArrow_Right, mpCBShadowQuality);
-        mpCBShadowQuality->SetFocusNavigation(eUIArrow_Right, mpCBShadowRes);
-
-        mpCBShadowQuality->SetFocusNavigation(eUIArrow_Left, mpChBShadows);
-        mpCBShadowRes->SetFocusNavigation(eUIArrow_Left, mpCBShadowQuality);
-
-        mpChBShadows->SetFocusNavigation(eUIArrow_Down, mpChBBloom);
-        mpCBShadowQuality->SetFocusNavigation(eUIArrow_Down, mpChBSepia);
-        mpCBShadowRes->SetFocusNavigation(eUIArrow_Down, mpChBInsanity);
-    }
-
-    {
-        mpChBBloom->SetFocusNavigation(eUIArrow_Up, mpChBShadows);
-        mpChBSepia->SetFocusNavigation(eUIArrow_Up, mpCBShadowQuality);
-        mpChBInsanity->SetFocusNavigation(eUIArrow_Up, mpCBShadowRes);
-
-        mpChBBloom->SetFocusNavigation(eUIArrow_Right, mpChBSepia);
-        mpChBSepia->SetFocusNavigation(eUIArrow_Right, mpChBInsanity);
-
-        mpChBSepia->SetFocusNavigation(eUIArrow_Left, mpChBBloom);
-        mpChBInsanity->SetFocusNavigation(eUIArrow_Left, mpChBSepia);
-
-        mpChBBloom->SetFocusNavigation(eUIArrow_Down, mpChBMotionBlur);
-        mpChBSepia->SetFocusNavigation(eUIArrow_Down, mpChBRadialBlur);
-        mpChBInsanity->SetFocusNavigation(eUIArrow_Down, mpChBRadialBlur);
-
-        mpChBMotionBlur->SetFocusNavigation(eUIArrow_Up, mpChBBloom);
-        mpChBRadialBlur->SetFocusNavigation(eUIArrow_Up, mpChBSepia);
-
-        mpChBMotionBlur->SetFocusNavigation(eUIArrow_Right, mpChBRadialBlur);
-        mpChBRadialBlur->SetFocusNavigation(eUIArrow_Left, mpChBMotionBlur);
-
-        if(mbShaderModel3)
+        iWidget* vGrid[][3] =
         {
-            mpChBMotionBlur->SetFocusNavigation(eUIArrow_Down, mpChBSSAO);
-            mpChBRadialBlur->SetFocusNavigation(eUIArrow_Down, mpCBSSAOSamples);
-        }
-        else
+            { mpCBTextureFilter,    mpCBAnisotropy,     mpChBParallax },
+            { NULL,                 NULL,               mpCBParallaxQuality },
+            { mpChBShadows,         mpCBShadowQuality,  mpCBShadowRes },
+            { mpChBBloom,           mpChBSepia,         mpChBInsanity },
+            { mpChBMotionBlur,      mpChBRadialBlur,    NULL },
+            { mpChBSSAO,            mpCBSSAOSamples,    mpCBSSAOResolution },
+            { mpChBRefraction,      mpChBWorldReflection, NULL },
+        };
+        const int lRows = sizeof(vGrid) / sizeof(vGrid[0]);
+
+        //Relief parallax and SSAO need SM3
+        if(mbShaderModel3 == false)
         {
-            mpChBMotionBlur->SetFocusNavigation(eUIArrow_Down, mpChBRefraction);
-            mpChBRadialBlur->SetFocusNavigation(eUIArrow_Down, mpChBWorldReflection);
+            vGrid[1][2] = NULL;
+            vGrid[5][0] = vGrid[5][1] = vGrid[5][2] = NULL;
         }
-    }
 
-    {
-        mpChBSSAO->SetFocusNavigation(eUIArrow_Up, mpChBMotionBlur);
-        mpCBSSAOSamples->SetFocusNavigation(eUIArrow_Up, mpChBRadialBlur);
-        mpCBSSAOResolution->SetFocusNavigation(eUIArrow_Up, mpChBRadialBlur);
+        //Fullbright: only texture filter and anisotropy are shown
+        if(mbFullbright)
+        {
+            vGrid[0][2] = NULL;
+            for(int lRow = 1; lRow < lRows; ++lRow)
+            {
+                vGrid[lRow][0] = vGrid[lRow][1] = vGrid[lRow][2] = NULL;
+            }
+        }
 
-        mpChBSSAO->SetFocusNavigation(eUIArrow_Right, mpCBSSAOSamples);
-        mpCBSSAOSamples->SetFocusNavigation(eUIArrow_Right, mpCBSSAOResolution);
-
-        mpCBSSAOSamples->SetFocusNavigation(eUIArrow_Left, mpChBSSAO);
-        mpCBSSAOResolution->SetFocusNavigation(eUIArrow_Left, mpCBSSAOSamples);
-
-        mpChBSSAO->SetFocusNavigation(eUIArrow_Down, mpChBWorldReflection);
-        mpCBSSAOSamples->SetFocusNavigation(eUIArrow_Down, mpChBWorldReflection);
-        mpCBSSAOResolution->SetFocusNavigation(eUIArrow_Down, mpChBWorldReflection);
-    }
-
-    {
-        mpChBWorldReflection->SetFocusNavigation(eUIArrow_Up, mpCBSSAOSamples);
-        mpChBWorldReflection->SetFocusNavigation(eUIArrow_Left, mpCBSSAOSamples);
-        mpChBWorldReflection->SetFocusNavigation(eUIArrow_Down, mpChBRefraction);
-
-        mpChBRefraction->SetFocusNavigation(eUIArrow_Up, mpChBRefraction);
-    }
-
-    //////////////
-    // Keep nav out if sm3 isn't supported
-    if(mbShaderModel3 == false)
-    {
-        mpCBAnisotropy->SetFocusNavigation(eUIArrow_Right, NULL);
-        mpCBShadowRes->SetFocusNavigation(eUIArrow_Up, mpCBAnisotropy);
-
-        mpChBRefraction->SetFocusNavigation(eUIArrow_Up, mpChBMotionBlur);
-        mpChBWorldReflection->SetFocusNavigation(eUIArrow_Up, mpChBRadialBlur);
-        mpChBWorldReflection->SetFocusNavigation(eUIArrow_Left, mpChBRefraction);
-    }
-
-    //////////////
-    // Fullbright: only texture filter and anisotropy are left
-    if(mbFullbright)
-    {
-        //(down goes to the Basic/Advanced button, set in AddGraphicsOptions)
-        mpCBAnisotropy->SetFocusNavigation(eUIArrow_Right, NULL);
+        //(down from the bottom row goes to the Basic/Advanced button, set in AddGraphicsOptions)
+        SetUpGridNavigation(&vGrid[0][0], lRows, 3);
     }
 }
 

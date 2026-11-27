@@ -47,6 +47,7 @@ private:
 
     void AddBasicGfxOptions(cWidgetDummy* apDummy);
     void AddAdvancedGfxOptions(cWidgetDummy* apDummy);
+    void SetUpGridNavigation(iWidget** apGrid, int alNumRows, int alNumCols);
 
     void SetInputValues(cResourceVarsObject& pObj);
 
