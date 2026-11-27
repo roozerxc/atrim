@@ -293,6 +293,8 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
     vButtonAffectedBySave.push_back(false);
 
 
+    mvButtonActive.assign(mvButtons.size(), false);
+
     cVector3f vButtonPos = mvButtons[0]->GetLocalPosition();
     for(int i = 0; i < (int)mvButtons.size(); ++i)
     {
@@ -303,6 +305,7 @@ void cLuxMainMenu_CustomStory::SetCurrentStory(cLuxCustomStorySettings* apStory)
 
         pButton->SetEnabled(bButtonActive);
         pButton->SetVisible(bButtonActive);
+        mvButtonActive[i] = bButtonActive;
 
         if(bButtonActive == false)
         {
@@ -342,6 +345,8 @@ void cLuxMainMenu_CustomStory::OnSetActive(bool abX)
 {
     if(abX)
     {
+        SetUpFocusNavigation();
+
         //Start on Continue if the story has saves, otherwise on Start
         iWidget* pFirst = GetFirstActiveButton();
         if(pFirst)
@@ -354,11 +359,22 @@ void cLuxMainMenu_CustomStory::OnSetActive(bool abX)
 
 //-----------------------------------------------------------------------
 
+// Which buttons are shown is decided by SetCurrentStory(), which runs before
+// the window is shown. IsVisible()/IsEnabled() also check the parent window,
+// so they said "hidden" for every button there and no navigation was set up;
+// mvButtonActive is what SetCurrentStory() decided.
+bool cLuxMainMenu_CustomStory::ButtonIsActive(size_t alIdx)
+{
+    return alIdx < mvButtonActive.size() && mvButtonActive[alIdx];
+}
+
+//-----------------------------------------------------------------------
+
 iWidget* cLuxMainMenu_CustomStory::GetFirstActiveButton()
 {
     for(size_t i = 0; i < mvButtons.size(); ++i)
     {
-        if(mvButtons[i]->IsVisible() && mvButtons[i]->IsEnabled())
+        if(ButtonIsActive(i))
         {
             return mvButtons[i];
         }
@@ -381,7 +397,7 @@ void cLuxMainMenu_CustomStory::SetUpFocusNavigation()
         mvButtons[i]->SetFocusNavigation(eUIArrow_Down, NULL);
         mvButtons[i]->SetFocusNavigation(eUIArrow_Left, mpCBHardMode);
 
-        if(mvButtons[i]->IsVisible() && mvButtons[i]->IsEnabled())
+        if(ButtonIsActive(i))
         {
             vActive.push_back(mvButtons[i]);
         }

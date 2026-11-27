@@ -50,6 +50,7 @@ private:
 
     void SetUpFocusNavigation();
     iWidget* GetFirstActiveButton();
+    bool ButtonIsActive(size_t alIdx);
 
     void RepositionButtons();
 
@@ -66,6 +67,7 @@ private:
     cWidgetCheckBox *mpCBHardMode;
 
     std::vector<cWidgetButton *> mvButtons;
+    std::vector<bool> mvButtonActive;
 };
 
 //----------------------------------------------
