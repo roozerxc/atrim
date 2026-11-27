@@ -87,6 +87,48 @@ static int GetIndexFromSSAOSamples(int alX)
     return 0;
 }
 
+//-----------------------------------------------------------------------
+
+//Reduce input lag combo box: 0 = Off (driver queues frames, MaxFramesAhead -1),
+//1 = On (at most one frame queued), 2 = Strict (glFinish every frame, MaxFramesAhead 0)
+static int GetMaxFramesAheadFromIndex(int alIdx)
+{
+    if(alIdx == 1)
+    {
+        return 1;
+    }
+    if(alIdx == 2)
+    {
+        return 0;
+    }
+    return -1;
+}
+
+static int GetIndexFromMaxFramesAhead(int alX)
+{
+    if(alX < 0)
+    {
+        return 0;
+    }
+    if(alX == 0)
+    {
+        return 2;
+    }
+    //1, and 2 or 3 set by hand in the config
+    return 1;
+}
+
+//The value to use for the selected item: a hand set value (2 or 3) is kept as long as
+//the selection still shows it.
+static int GetMaxFramesAheadForSelection(int alIdx, int alCurrent)
+{
+    if(alIdx == GetIndexFromMaxFramesAhead(alCurrent))
+    {
+        return alCurrent;
+    }
+    return GetMaxFramesAheadFromIndex(alIdx);
+}
+
 static int GetSSAOSamplesFromIndex(int alX)
 {
     switch(alX)
@@ -505,14 +547,9 @@ void cLuxMainMenu_Options::AddGraphicsOptions(cWidgetTab* apTab)
 
     mpSGamma->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
     mpChBPotatoMode->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
-    mpChBRefraction->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
-    mpChBWorldReflection->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
-    if(mbFullbright)
-    {
-        //Only the texture options are shown in the advanced options
-        mpCBTextureFilter->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
-        mpCBAnisotropy->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
-    }
+    //Bottom row of the Misc group
+    mpChBShaderWarming->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
+    mpCBMaxFramesAhead->SetFocusNavigation(eUIArrow_Down, mpBToggleShowGfxOptions);
 
     apTab->SetUserData(mpBToggleShowGfxOptions);
     apTab->GetTabLabel()->SetUserData(mpCBResolution);
@@ -960,28 +997,69 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
 
     ////////////////////////////
     // Misc
+    // Two columns, like the other groups:
+    //   Refraction       World Reflection (Water)
+    //   Shader Warming   Reduce Input Lag [combo box]
+    // Fullbright hides refraction and reflection, so the second row moves up.
     pGroup = mpGuiSet->CreateWidgetGroup(vPos, vGroupSize, kTranslate("KeyConfig", "Misc"), pMainFrame);
     {
         float fBorderSize = 15;
+        float fInputSep = 10;
         cVector3f vPosInGroup = cVector3f(fBorderSize, fBorderSize, 0.1f);
 
+        ///////////////////////////
+        // Refraction
         mpChBRefraction = mpGuiSet->CreateWidgetCheckBox(vPosInGroup, 0, kTranslate("OptionsMenu", "Refraction"), pGroup);
         SetUpInput(NULL, mpChBRefraction, true, kTranslate("OptionsMenu", "RefractionTip"));
 
-        vPosInGroup.x += fItemSep;
-        //vPosInGroup.y = fBorderSize;
+        ///////////////////////////
+        // Shader Warming (only used at start up)
+        cVector3f vRow2Pos = vPosInGroup;
+        if(mbFullbright == false)
+        {
+            vRow2Pos.y += mpChBRefraction->GetSize().y + fInputSep;
+        }
+        mpChBShaderWarming = mpGuiSet->CreateWidgetCheckBox(vRow2Pos, 0, kTranslate("OptionsMenu", "ShaderWarming"), pGroup);
+        SetUpInput(NULL, mpChBShaderWarming, true, kTranslate("OptionsMenu", "ShaderWarmingTip"));
+
+        //Second column lines up with the groups above, unless the first column is wider (long translations)
+        float fColumnWidth = mpChBShaderWarming->GetSize().x;
+        if(mbFullbright == false)
+        {
+            fColumnWidth = cMath::Max(fColumnWidth, mpChBRefraction->GetSize().x);
+        }
+        float fColumn2X = fBorderSize + cMath::Max(fItemSep, fColumnWidth + 20);
 
         ///////////////////////////
         // World Reflection Active
-        mpChBWorldReflection = mpGuiSet->CreateWidgetCheckBox(vPosInGroup, 0, kTranslate("OptionsMenu", "WorldReflection") + _W(" (") + kTranslate("OptionsMenu", "Water") + _W(")"), pGroup);
+        mpChBWorldReflection = mpGuiSet->CreateWidgetCheckBox(cVector3f(fColumn2X, vPosInGroup.y, vPosInGroup.z), 0, kTranslate("OptionsMenu", "WorldReflection") + _W(" (") + kTranslate("OptionsMenu", "Water") + _W(")"), pGroup);
         SetUpInput(NULL, mpChBWorldReflection, false, kTranslate("OptionsMenu", "WorldReflectionTip"));
+
+        ///////////////////////////
+        // Reduce Input Lag (MaxFramesAhead, applied right away), label with the combo box to its right
+        pLabel = mpGuiSet->CreateWidgetLabel(cVector3f(fColumn2X, vRow2Pos.y, vRow2Pos.z), -1, kTranslate("OptionsMenu", "ReduceInputLag"), pGroup);
+        mpCBMaxFramesAhead = mpGuiSet->CreateWidgetComboBox(cVector3f(pLabel->GetSize().x + 5, -2, 0), cVector2f(100, 25), _W(""), pLabel);
+        SetUpInput(pLabel, mpCBMaxFramesAhead, false, kTranslate("OptionsMenu", "ReduceInputLagTip"));
+
+        mpCBMaxFramesAhead->AddItem(kTranslate("OptionsMenu", "ReduceInputLagOff"));
+        mpCBMaxFramesAhead->AddItem(kTranslate("OptionsMenu", "ReduceInputLagOn"));
+        mpCBMaxFramesAhead->AddItem(kTranslate("OptionsMenu", "ReduceInputLagStrict"));
+
+        //The combo box is a bit taller than a check box
+        float fGroupHeight = vRow2Pos.y - 2 + mpCBMaxFramesAhead->GetSize().y + fBorderSize;
+        if(fGroupHeight > vGroupSize.y)
+        {
+            pGroup->SetSize(cVector2f(vGroupSize.x, fGroupHeight));
+        }
     }
 
-    //Fullbright: no refraction or reflection
+    //Fullbright: no refraction or reflection (shader warming and input lag still apply)
     if(mbFullbright)
     {
-        pGroup->SetVisible(false);
-        pGroup->SetEnabled(false);
+        mpChBRefraction->SetVisible(false);
+        mpChBRefraction->SetEnabled(false);
+        mpChBWorldReflection->SetVisible(false);
+        mpChBWorldReflection->SetEnabled(false);
     }
 
 
@@ -1007,11 +1085,14 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
 
     mpChBWorldReflection;
     mpChBRefraction;
+    mpChBShaderWarming;
+    mpCBMaxFramesAhead;
 
     // Laid out as a grid, same as the window: columns left to right, rows top
     // to bottom. The relief parallax combo box sits under the parallax check
-    // box, so it gets a row of its own. Options that are hidden (SM3-only ones
-    // on cards without SM3, everything but the texture options in fullbright)
+    // box, so it gets a row of its own.
+    // Options that are hidden (SM3-only ones on cards without SM3, everything
+    // but the texture, shader warming and input lag options in fullbright)
     // are left out.
     //
     // This used to be written out link by link and had gaps: the parallax
@@ -1028,8 +1109,10 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
             { mpChBMotionBlur,      mpChBRadialBlur,    NULL },
             { mpChBSSAO,            mpCBSSAOSamples,    mpCBSSAOResolution },
             { mpChBRefraction,      mpChBWorldReflection, NULL },
+            { mpChBShaderWarming,   mpCBMaxFramesAhead, NULL },
         };
         const int lRows = sizeof(vGrid) / sizeof(vGrid[0]);
+        const int lMiscRow = lRows - 2;
 
         //Relief parallax and SSAO need SM3
         if(mbShaderModel3 == false)
@@ -1038,11 +1121,12 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
             vGrid[5][0] = vGrid[5][1] = vGrid[5][2] = NULL;
         }
 
-        //Fullbright: only texture filter and anisotropy are shown
+        //Fullbright: texture filter, anisotropy, and the second Misc row (shader warming
+        //and input lag, moved up where refraction and reflection were)
         if(mbFullbright)
         {
             vGrid[0][2] = NULL;
-            for(int lRow = 1; lRow < lRows; ++lRow)
+            for(int lRow = 1; lRow <= lMiscRow; ++lRow)
             {
                 vGrid[lRow][0] = vGrid[lRow][1] = vGrid[lRow][2] = NULL;
             }
@@ -1444,6 +1528,13 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
         }
 
         /////////////////////////
+        // Misc
+        {
+            mpChBShaderWarming->SetChecked(aObj.GetVarBool("ShaderWarming"), false);
+            mpCBMaxFramesAhead->SetSelectedItem(GetIndexFromMaxFramesAhead(aObj.GetVarInt("MaxFramesAhead", -1)), true, false);
+        }
+
+        /////////////////////////
         // SSAO
         {
 
@@ -1702,6 +1793,11 @@ void cLuxMainMenu_Options::ApplyChanges()
         // Water
         pCfgHdr->mbWorldReflection = mpChBWorldReflection->IsChecked();
         pCfgHdr->mbRefraction = mpChBRefraction->IsChecked();
+
+        // Misc
+        pCfgHdr->mbShaderWarming = mpChBShaderWarming->IsChecked();
+        pCfgHdr->mlMaxFramesAhead = GetMaxFramesAheadForSelection(mpCBMaxFramesAhead->GetSelectedItem(), pCfgHdr->mlMaxFramesAhead);
+        iLowLevelGraphics::SetMaxFramesAhead(pCfgHdr->mlMaxFramesAhead);
 
         //Update the viewport stuff
         gpBase->mpMapHandler->UpdateViewportRenderProperties();
@@ -2022,6 +2118,11 @@ void cLuxMainMenu_Options::DumpInitialValues(cResourceVarsObject &aObj)
         aObj.AddVarBool("Refraction", gpBase->mpConfigHandler->mbRefraction);
 
         /////////////////////////
+        // Misc
+        aObj.AddVarBool("ShaderWarming", gpBase->mpConfigHandler->mbShaderWarming);
+        aObj.AddVarInt("MaxFramesAhead", gpBase->mpConfigHandler->mlMaxFramesAhead);
+
+        /////////////////////////
         // SSAO
         aObj.AddVarBool("SSAOActive", gpBase->mpConfigHandler->mbSSAOActive);
         aObj.AddVarInt("SSAONumOfSamples", gpBase->mpConfigHandler->mlSSAOSamples);
@@ -2121,6 +2222,11 @@ void cLuxMainMenu_Options::DumpCurrentValues(cResourceVarsObject &aObj)
         // Water
         aObj.AddVarBool("WorldReflection", mpChBWorldReflection->IsChecked());
         aObj.AddVarBool("Refraction", mpChBRefraction->IsChecked());
+
+        /////////////////////////
+        // Misc
+        aObj.AddVarBool("ShaderWarming", mpChBShaderWarming->IsChecked());
+        aObj.AddVarInt("MaxFramesAhead", GetMaxFramesAheadForSelection(mpCBMaxFramesAhead->GetSelectedItem(), gpBase->mpConfigHandler->mlMaxFramesAhead));
 
         /////////////////////////
         // SSAO
@@ -2427,8 +2533,9 @@ bool cLuxMainMenu_Options::PressToggleShowGfxOptions(iWidget* apWidget, const cG
 
     if(bBasicVisible)
     {
-        //Fullbright hides everything below the texture options
-        mpBToggleShowGfxOptions->SetFocusNavigation(eUIArrow_Up, mbFullbright ? (iWidget *)mpCBAnisotropy : (iWidget *)mpChBRefraction);
+        //Reduce Input Lag is the bottom right option of the Misc group (also in fullbright,
+        //which shows the Misc group with only shader warming and input lag)
+        mpBToggleShowGfxOptions->SetFocusNavigation(eUIArrow_Up, mpCBMaxFramesAhead);
 
         pTab->GetTabLabel()->SetUserData(mpBToggleShowGfxOptions);
     }

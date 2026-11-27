@@ -94,6 +94,13 @@
         <Entry Name="MotionBlurTip">Blurs the picture when the camera moves, like the motion blur in Penumbra. Replaces the image trail effect, which maps and mods can no longer turn on.</Entry>
         <Entry Name="PotatoMode">Potato Mode</Entry>
         <Entry Name="PotatoModeTip">Draws only the textures, without lights, shadows, fog or effects, for very weak graphics cards. Your other graphics settings are kept for when you turn it off again.</Entry>
+        <Entry Name="ShaderWarming">Shader Warming</Entry>
+        <Entry Name="ShaderWarmingTip">Prepares the shaders used in earlier play sessions while the game starts, so there is less stutter when an effect shows up for the first time. The game takes longer to start.</Entry>
+        <Entry Name="ReduceInputLag">Reduce Input Lag</Entry>
+        <Entry Name="ReduceInputLagTip">Stops the graphics card from queuing up frames, so the game reacts sooner to the mouse, keyboard and gamepad. On costs little performance. Strict waits for every frame to be finished and can lower the frame rate a lot, mainly on slower computers.</Entry>
+        <Entry Name="ReduceInputLagOff">Off</Entry>
+        <Entry Name="ReduceInputLagOn">On</Entry>
+        <Entry Name="ReduceInputLagStrict">Strict</Entry>
 
         <Entry Name="Ultra">Ultra</Entry>
         <Entry Name="UltraLow">Ultra Low</Entry>

@@ -94,6 +94,13 @@
         <Entry Name="MotionBlurTip">Blurs yer view when ye turn yer head, like in Penumbra. Them image trails be sent to Davy Jones' locker.</Entry>
         <Entry Name="PotatoMode">Potato Mode</Entry>
         <Entry Name="PotatoModeTip">Draws only th' textures, no lights, shadows, fog nor fancy trickery, fer the weakest o' graphics cards. Yer other settin's be kept safe fer when ye turn it off again.</Entry>
+        <Entry Name="ShaderWarming">Shader Warmin'</Entry>
+        <Entry Name="ShaderWarmingTip">Readies th' shaders from yer earlier voyages while th' game be startin', so there be less stutterin' when an effect first shows its face. Th' game takes longer to set sail.</Entry>
+        <Entry Name="ReduceInputLag">Reduce Input Lag</Entry>
+        <Entry Name="ReduceInputLagTip">Stops th' graphics card from hoardin' frames, so th' game answers yer mouse, keys an' gamepad sooner. On costs ye little. Strict waits fer every frame to be done an' can sink yer frame rate, mostly on slower machines.</Entry>
+        <Entry Name="ReduceInputLagOff">Off</Entry>
+        <Entry Name="ReduceInputLagOn">On</Entry>
+        <Entry Name="ReduceInputLagStrict">Strict</Entry>
 
         <Entry Name="Ultra">Kraken</Entry>
         <Entry Name="UltraLow">Bilge Rat</Entry>

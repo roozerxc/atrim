@@ -94,6 +94,13 @@
         <Entry Name="MotionBlurTip">Sumentaa kuvaa kameran liikkuessa, kuten Penumbran liikesumennus. Korvaa kuvajälkitehosteen, jota kartat ja modit eivät voi enää käyttää.</Entry>
         <Entry Name="PotatoMode">Perunatila</Entry>
         <Entry Name="PotatoModeTip">Piirtää vain tekstuurit ilman valoja, varjoja, sumua tai tehosteita hyvin heikoille näytönohjaimille. Muut grafiikka-asetuksesi säilyvät, kun otat sen taas pois päältä.</Entry>
+        <Entry Name="ShaderWarming">Varjostimien esilämmitys</Entry>
+        <Entry Name="ShaderWarmingTip">Valmistelee aiemmissa pelikerroissa käytetyt varjostimet pelin käynnistyessä, jotta peli nykii vähemmän, kun tehoste näkyy ensimmäistä kertaa. Peli käynnistyy hitaammin.</Entry>
+        <Entry Name="ReduceInputLag">Vähennä syöteviivettä</Entry>
+        <Entry Name="ReduceInputLagTip">Estää näytönohjainta jonottamasta kuvia, jolloin peli reagoi nopeammin hiireen, näppäimistöön ja peliohjaimeen. Päällä maksaa vähän suorituskykyä. Tiukka odottaa jokaisen kuvan valmistumista ja voi laskea kuvanopeutta paljon, etenkin hitaammilla tietokoneilla.</Entry>
+        <Entry Name="ReduceInputLagOff">Pois</Entry>
+        <Entry Name="ReduceInputLagOn">Päällä</Entry>
+        <Entry Name="ReduceInputLagStrict">Tiukka</Entry>
 
         <Entry Name="Ultra">Ultra</Entry>
         <Entry Name="UltraLow">Erittäin matala</Entry>

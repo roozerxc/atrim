@@ -201,6 +201,8 @@ private:
 
     cWidgetCheckBox *mpChBWorldReflection;
     cWidgetCheckBox *mpChBRefraction;
+    cWidgetCheckBox *mpChBShaderWarming;
+    cWidgetComboBox *mpCBMaxFramesAhead;
 
     cWidgetComboBox *mpCBAnisotropy;
     cWidgetCheckBox *mpChBParallax;
