@@ -152,7 +152,7 @@ cLuxMapHandler::cLuxMapHandler() : iLuxUpdateable("LuxMapHandler")
     mpViewport->SetPostEffectComposite(pPostEffectComp);
 
     cPostEffectParams_ColorConvTex lightGradeParams;
-    lightGradeParams.msTextureFile = gpBase->mpMainConfig->GetString("Graphics", "LightColorGradeFile", "core_light_colorgrade.tga");
+    lightGradeParams.msTextureFile = gpBase->mpMainConfig->GetString("GraphicsAdvanced", "LightColorGradeFile", "core_light_colorgrade.tga");
     lightGradeParams.mfFadeAlpha = 1.0f;
     mpPostEffect_LightColorGrade = pGraphics->CreatePostEffect(&lightGradeParams);
     pPostEffectComp->AddPostEffect(mpPostEffect_LightColorGrade, 1);

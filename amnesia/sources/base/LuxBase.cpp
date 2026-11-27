@@ -1133,6 +1133,57 @@ cConfigFile *cLuxBase::LoadConfigFile(const tWString& asDefaultPath, const tWStr
 
 //-----------------------------------------------------------------------
 
+//Internal and debug graphics settings, kept in "GraphicsAdvanced" instead of "Graphics" so the
+//menu settings stay readable. Older configs have them in "Graphics": they are moved on load.
+static const char *gvGraphicsAdvancedKeys[] = {
+    "DebugRenderFrameBuffers",
+    "DisablePostEffects",
+    "ForceGLSL110",
+    "ForceNoStencil",
+    "ForceRectAs2D",
+    "ForceShaderModel3And4Off",
+    "ForceVertexArrays",
+    "GBufferMode",
+    "GBufferModeBeforePotato",
+    "GBufferType",
+    "GPUSkinning",
+    "LightColorGradeFile",
+    "LightShaderFile",
+    "LightShaderMode",
+    "LightSpecular",
+    "LiteGBuffer",
+    "LiteLightShaderFile",
+    "LogGLErrors",
+    "MergeInsideLights",
+    "NumOfGBufferTextures",
+    "OcclusionCulling",
+    "OcclusionCullingLatency",
+    "OcclusionTestLights",
+    "RenderTrace",
+    "RenderTraceSync",
+    "SmallObjectCullPixels",
+    NULL
+};
+
+static void MoveAdvancedGraphicsSettings(cConfigFile *apConfig)
+{
+    int lMoved = 0;
+    for(int i = 0; gvGraphicsAdvancedKeys[i] != NULL; ++i)
+    {
+        if(apConfig->MoveAttr("Graphics", "GraphicsAdvanced", gvGraphicsAdvancedKeys[i]))
+        {
+            ++lMoved;
+        }
+    }
+
+    if(lMoved > 0)
+    {
+        Log("Moved %d settings from Graphics to GraphicsAdvanced in the main config\n", lMoved);
+    }
+}
+
+//-----------------------------------------------------------------------
+
 bool cLuxBase::InitMainConfig()
 {
     ///////////////////////////////////////////////////////////////
@@ -1156,6 +1207,9 @@ bool cLuxBase::InitMainConfig()
     {
         CopyBaseMainSettingsToFullConversion();
     }
+
+    //After the full conversion copy, since the base game's config may have the old layout
+    MoveAdvancedGraphicsSettings(mpMainConfig);
 
     //Load some basic variables
     mbSaveConfigAtExit = mpMainConfig->GetBool("Main", "SaveConfig", true);
@@ -1349,8 +1403,8 @@ bool cLuxBase::InitEngine()
     cRendererDeferred::SetSSAOBufferSizeDiv(mpConfigHandler->mlSSAOResolution == 0 ? 2 : 1);
     cRendererDeferred::SetSSAONumOfSamples(mpConfigHandler->mlSSAOSamples);
     cRendererDeferred::SetSSAOLoaded(mpConfigHandler->mbSSAOActive);
-    cRendererDeferred::SetGBufferType((eDeferredGBuffer)mpMainConfig->GetInt("Graphics", "GBufferType", eDeferredGBuffer_32Bit));
-    int lNumOfGBufferTextures = mpMainConfig->GetInt("Graphics", "NumOfGBufferTextures", 3);
+    cRendererDeferred::SetGBufferType((eDeferredGBuffer)mpMainConfig->GetInt("GraphicsAdvanced", "GBufferType", eDeferredGBuffer_32Bit));
+    int lNumOfGBufferTextures = mpMainConfig->GetInt("GraphicsAdvanced", "NumOfGBufferTextures", 3);
     if(lNumOfGBufferTextures != 3 && lNumOfGBufferTextures != 4)
     {
         Warning("NumOfGBufferTextures=%d is not supported (must be 3 or 4), using 3.\n", lNumOfGBufferTextures);
@@ -1360,7 +1414,7 @@ bool cLuxBase::InitEngine()
 
     // G-buffer mode: 0 = normal, 1 = fullbright (albedo only, no lights, fog or SSAO; for very weak cards),
     // 2 = hardware depth (color target only, lights read the depth buffer; lite light shader, no stencil)
-    int lGBufferMode = mpMainConfig->GetInt("Graphics", "GBufferMode", eDeferredGBufferMode_Normal);
+    int lGBufferMode = mpMainConfig->GetInt("GraphicsAdvanced", "GBufferMode", eDeferredGBufferMode_Normal);
     if(lGBufferMode < 0 || lGBufferMode >= eDeferredGBufferMode_LastEnum)
     {
         Warning("GBufferMode=%d is not supported, using 0 (normal).\n", lGBufferMode);
@@ -1369,21 +1423,21 @@ bool cLuxBase::InitEngine()
     cRendererDeferred::SetGBufferMode((eDeferredGBufferMode)lGBufferMode);
 
     // Deferred light shader: 0 = auto (start-up self-test picks full or lite), 1 = always full, 2 = always lite
-    int lLightShaderMode = mpMainConfig->GetInt("Graphics", "LightShaderMode", eDeferredLightShaderMode_Auto);
+    int lLightShaderMode = mpMainConfig->GetInt("GraphicsAdvanced", "LightShaderMode", eDeferredLightShaderMode_Auto);
     if(lLightShaderMode < 0 || lLightShaderMode >= eDeferredLightShaderMode_LastEnum)
     {
         lLightShaderMode = eDeferredLightShaderMode_Auto;
     }
     cRendererDeferred::SetLightShaderMode((eDeferredLightShaderMode)lLightShaderMode);
 
-    cRendererDeferred::SetLightFragShader(mpMainConfig->GetString("Graphics", "LightShaderFile", "deferred_light_frag.glsl"));
-    cRendererDeferred::SetLiteLightFragShader(mpMainConfig->GetString("Graphics", "LiteLightShaderFile", "deferred_light_frag_lite.glsl"));
+    cRendererDeferred::SetLightFragShader(mpMainConfig->GetString("GraphicsAdvanced", "LightShaderFile", "deferred_light_frag.glsl"));
+    cRendererDeferred::SetLiteLightFragShader(mpMainConfig->GetString("GraphicsAdvanced", "LiteLightShaderFile", "deferred_light_frag_lite.glsl"));
 
-    cRendererDeferred::SetLightSpecularEnabled(mpMainConfig->GetBool("Graphics", "LightSpecular", true));
-    cRendererDeferred::SetDebugRenderFrameBuffers(mpMainConfig->GetBool("Graphics", "DebugRenderFrameBuffers", false));
+    cRendererDeferred::SetLightSpecularEnabled(mpMainConfig->GetBool("GraphicsAdvanced", "LightSpecular", true));
+    cRendererDeferred::SetDebugRenderFrameBuffers(mpMainConfig->GetBool("GraphicsAdvanced", "DebugRenderFrameBuffers", false));
     cRendererDeferred::SetLightColorGrade(mpConfigHandler->mlLightColorGradeMode == 2);
     cLuxProp_MoveObject::mbLogMoveObjects = mpConfigHandler->mbLogMoveObjects;
-    iRenderer::SetSmallObjectCullPixels(mpMainConfig->GetFloat("Graphics", "SmallObjectCullPixels", 0.0f));
+    iRenderer::SetSmallObjectCullPixels(mpMainConfig->GetFloat("GraphicsAdvanced", "SmallObjectCullPixels", 0.0f));
     cEngine::SetLogicUpdatesPerSec(mpMainConfig->GetInt("Main", "LogicUpdatesPerSec", 60));
 
 #if USE_GAMEPAD

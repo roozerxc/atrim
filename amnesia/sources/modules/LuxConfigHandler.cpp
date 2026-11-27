@@ -74,7 +74,7 @@ void cLuxConfigHandler::LoadMainConfig()
     // Graphics variables
 
     // General
-    mbOcclusionTestLights = gpBase->mpMainConfig->GetBool("Graphics", "OcclusionTestLights", true);
+    mbOcclusionTestLights = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "OcclusionTestLights", true);
 
     // Shadows
     mbShadowsActive =    gpBase->mpMainConfig->GetBool("Graphics", "ShadowsActive", true);
@@ -99,20 +99,20 @@ void cLuxConfigHandler::LoadMainConfig()
     mlTextureFilter =    gpBase->mpMainConfig->GetInt("Graphics", "TextureFilter", eTextureFilter_Bilinear);
     mfTextureAnisotropy = gpBase->mpMainConfig->GetFloat("Graphics", "TextureAnisotropy", 1.0f);
 
-    mbForceShaderModel3And4Off = gpBase->mpMainConfig->GetBool("Graphics", "ForceShaderModel3And4Off", false);
-    mbForceGLSL110 = gpBase->mpMainConfig->GetBool("Graphics", "ForceGLSL110", false);
-    msGpuSkinning = cString::ToLowerCase(gpBase->mpMainConfig->GetString("Graphics", "GPUSkinning", "auto"));
-    mbOcclusionCullingLatency = gpBase->mpMainConfig->GetBool("Graphics", "OcclusionCullingLatency", false);
-    mbLiteGBuffer = gpBase->mpMainConfig->GetBool("Graphics", "LiteGBuffer", true);
-    mbMergeInsideLights = gpBase->mpMainConfig->GetBool("Graphics", "MergeInsideLights", true);
-    mbForceNoStencil = gpBase->mpMainConfig->GetBool("Graphics", "ForceNoStencil", false);
-    mbForceRectAs2D = gpBase->mpMainConfig->GetBool("Graphics", "ForceRectAs2D", false);
-    mbLogGLErrors = gpBase->mpMainConfig->GetBool("Graphics", "LogGLErrors", false);
-    mbForceVertexArrays = gpBase->mpMainConfig->GetBool("Graphics", "ForceVertexArrays", false);
-    mbDisablePostEffects = gpBase->mpMainConfig->GetBool("Graphics", "DisablePostEffects", false);
-    mbRenderTrace = gpBase->mpMainConfig->GetBool("Graphics", "RenderTrace", false);
-    mbRenderTraceSync = gpBase->mpMainConfig->GetBool("Graphics", "RenderTraceSync", false);
-    mbOcclusionCulling = gpBase->mpMainConfig->GetBool("Graphics", "OcclusionCulling", true);
+    mbForceShaderModel3And4Off = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "ForceShaderModel3And4Off", false);
+    mbForceGLSL110 = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "ForceGLSL110", false);
+    msGpuSkinning = cString::ToLowerCase(gpBase->mpMainConfig->GetString("GraphicsAdvanced", "GPUSkinning", "auto"));
+    mbOcclusionCullingLatency = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "OcclusionCullingLatency", false);
+    mbLiteGBuffer = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "LiteGBuffer", true);
+    mbMergeInsideLights = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "MergeInsideLights", true);
+    mbForceNoStencil = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "ForceNoStencil", false);
+    mbForceRectAs2D = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "ForceRectAs2D", false);
+    mbLogGLErrors = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "LogGLErrors", false);
+    mbForceVertexArrays = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "ForceVertexArrays", false);
+    mbDisablePostEffects = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "DisablePostEffects", false);
+    mbRenderTrace = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "RenderTrace", false);
+    mbRenderTraceSync = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "RenderTraceSync", false);
+    mbOcclusionCulling = gpBase->mpMainConfig->GetBool("GraphicsAdvanced", "OcclusionCulling", true);
     mbShaderWarming = gpBase->mpMainConfig->GetBool("Graphics", "ShaderWarming", false);
     mlMaxFramesAhead = gpBase->mpMainConfig->GetInt("Graphics", "MaxFramesAhead", -1);
     mlFullscreenMode = gpBase->mpMainConfig->GetInt("Screen", "FullscreenMode", 0);
@@ -174,17 +174,17 @@ void cLuxConfigHandler::SaveMainConfig()
     cRenderSettings* pRenderSettings = gpBase->mpMapHandler->GetViewport()->GetRenderSettings();
 
     gpBase->mpMainConfig->SetFloat("Graphics", "Gamma", gpBase->mpEngine->GetGraphics()->GetLowLevel()->GetGammaCorrection());
-    gpBase->mpMainConfig->SetInt("Graphics", "GBufferType", cRendererDeferred::GetGBufferType());
-    gpBase->mpMainConfig->SetInt("Graphics", "NumOfGBufferTextures", cRendererDeferred::GetNumOfGBufferTextures());
-    gpBase->mpMainConfig->SetInt("Graphics", "GBufferMode", cRendererDeferred::GetGBufferMode());
-    gpBase->mpMainConfig->SetInt("Graphics", "LightShaderMode", cRendererDeferred::GetLightShaderMode());
-    gpBase->mpMainConfig->SetString("Graphics", "LightShaderFile", cRendererDeferred::GetLightFragShader());
-    gpBase->mpMainConfig->SetString("Graphics", "LiteLightShaderFile", cRendererDeferred::GetLiteLightFragShader());
-    gpBase->mpMainConfig->SetBool("Graphics", "LightSpecular", cRendererDeferred::GetLightSpecularEnabled());
-    gpBase->mpMainConfig->SetFloat("Graphics", "SmallObjectCullPixels", iRenderer::GetSmallObjectCullPixels());
+    gpBase->mpMainConfig->SetInt("GraphicsAdvanced", "GBufferType", cRendererDeferred::GetGBufferType());
+    gpBase->mpMainConfig->SetInt("GraphicsAdvanced", "NumOfGBufferTextures", cRendererDeferred::GetNumOfGBufferTextures());
+    gpBase->mpMainConfig->SetInt("GraphicsAdvanced", "GBufferMode", cRendererDeferred::GetGBufferMode());
+    gpBase->mpMainConfig->SetInt("GraphicsAdvanced", "LightShaderMode", cRendererDeferred::GetLightShaderMode());
+    gpBase->mpMainConfig->SetString("GraphicsAdvanced", "LightShaderFile", cRendererDeferred::GetLightFragShader());
+    gpBase->mpMainConfig->SetString("GraphicsAdvanced", "LiteLightShaderFile", cRendererDeferred::GetLiteLightFragShader());
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "LightSpecular", cRendererDeferred::GetLightSpecularEnabled());
+    gpBase->mpMainConfig->SetFloat("GraphicsAdvanced", "SmallObjectCullPixels", iRenderer::GetSmallObjectCullPixels());
     gpBase->mpMainConfig->SetInt("Main", "LogicUpdatesPerSec", cEngine::GetLogicUpdatesPerSec());
 
-    gpBase->mpMainConfig->SetBool("Graphics", "OcclusionTestLights", mbOcclusionTestLights);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "OcclusionTestLights", mbOcclusionTestLights);
 
     gpBase->mpMainConfig->SetInt("Graphics", "TextureQuality", mlTextureQuality);
     gpBase->mpMainConfig->SetInt("Graphics", "TextureFilter", mlTextureFilter);
@@ -204,20 +204,20 @@ void cLuxConfigHandler::SaveMainConfig()
     gpBase->mpMainConfig->SetInt("Graphics", "ParallaxQuality", mlParallaxQuality);
     gpBase->mpMainConfig->SetBool("Graphics", "ParallaxEnabled", mbParallaxEnabled);
 
-    gpBase->mpMainConfig->SetBool("Graphics", "ForceShaderModel3And4Off", mbForceShaderModel3And4Off);
-    gpBase->mpMainConfig->SetBool("Graphics", "ForceGLSL110", mbForceGLSL110);
-    gpBase->mpMainConfig->SetString("Graphics", "GPUSkinning", msGpuSkinning);
-    gpBase->mpMainConfig->SetBool("Graphics", "OcclusionCullingLatency", mbOcclusionCullingLatency);
-    gpBase->mpMainConfig->SetBool("Graphics", "LiteGBuffer", mbLiteGBuffer);
-    gpBase->mpMainConfig->SetBool("Graphics", "MergeInsideLights", mbMergeInsideLights);
-    gpBase->mpMainConfig->SetBool("Graphics", "ForceNoStencil", mbForceNoStencil);
-    gpBase->mpMainConfig->SetBool("Graphics", "ForceRectAs2D", mbForceRectAs2D);
-    gpBase->mpMainConfig->SetBool("Graphics", "LogGLErrors", mbLogGLErrors);
-    gpBase->mpMainConfig->SetBool("Graphics", "ForceVertexArrays", mbForceVertexArrays);
-    gpBase->mpMainConfig->SetBool("Graphics", "DisablePostEffects", mbDisablePostEffects);
-    gpBase->mpMainConfig->SetBool("Graphics", "RenderTrace", mbRenderTrace);
-    gpBase->mpMainConfig->SetBool("Graphics", "RenderTraceSync", mbRenderTraceSync);
-    gpBase->mpMainConfig->SetBool("Graphics", "OcclusionCulling", mbOcclusionCulling);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "ForceShaderModel3And4Off", mbForceShaderModel3And4Off);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "ForceGLSL110", mbForceGLSL110);
+    gpBase->mpMainConfig->SetString("GraphicsAdvanced", "GPUSkinning", msGpuSkinning);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "OcclusionCullingLatency", mbOcclusionCullingLatency);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "LiteGBuffer", mbLiteGBuffer);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "MergeInsideLights", mbMergeInsideLights);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "ForceNoStencil", mbForceNoStencil);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "ForceRectAs2D", mbForceRectAs2D);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "LogGLErrors", mbLogGLErrors);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "ForceVertexArrays", mbForceVertexArrays);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "DisablePostEffects", mbDisablePostEffects);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "RenderTrace", mbRenderTrace);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "RenderTraceSync", mbRenderTraceSync);
+    gpBase->mpMainConfig->SetBool("GraphicsAdvanced", "OcclusionCulling", mbOcclusionCulling);
     gpBase->mpMainConfig->SetBool("Graphics", "ShaderWarming", mbShaderWarming);
     gpBase->mpMainConfig->SetInt("Graphics", "MaxFramesAhead", mlMaxFramesAhead);
     gpBase->mpMainConfig->SetInt("Screen", "FullscreenMode", mlFullscreenMode);

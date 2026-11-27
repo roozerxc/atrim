@@ -1666,12 +1666,12 @@ void cLuxMainMenu_Options::ApplyChanges()
             bool bPotato = mpChBPotatoMode->IsChecked();
             if(bPotato && currentMode != eDeferredGBufferMode_Fullbright)
             {
-                gpBase->mpMainConfig->SetInt("Graphics", "GBufferModeBeforePotato", currentMode);
+                gpBase->mpMainConfig->SetInt("GraphicsAdvanced", "GBufferModeBeforePotato", currentMode);
                 cRendererDeferred::SetGBufferMode(eDeferredGBufferMode_Fullbright);
             }
             else if(bPotato == false && currentMode == eDeferredGBufferMode_Fullbright)
             {
-                int lPrevMode = gpBase->mpMainConfig->GetInt("Graphics", "GBufferModeBeforePotato", eDeferredGBufferMode_Normal);
+                int lPrevMode = gpBase->mpMainConfig->GetInt("GraphicsAdvanced", "GBufferModeBeforePotato", eDeferredGBufferMode_Normal);
                 if(lPrevMode < 0 || lPrevMode >= eDeferredGBufferMode_LastEnum || lPrevMode == eDeferredGBufferMode_Fullbright)
                 {
                     lPrevMode = eDeferredGBufferMode_Normal;
