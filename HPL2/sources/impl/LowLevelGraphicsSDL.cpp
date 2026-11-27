@@ -492,6 +492,7 @@ void cLowLevelGraphicsSDL::SetupGL()
     Log("  ShaderModel 2: %d\n", GetCaps(eGraphicCaps_ShaderModel_2));
     Log("  ShaderModel 3: %d\n", GetCaps(eGraphicCaps_ShaderModel_3));
     Log("  ShaderModel 4: %d\n", GetCaps(eGraphicCaps_ShaderModel_4));
+    Log("  Shader texture LOD: %d\n", GetCaps(eGraphicCaps_ShaderTextureLod));
 
     Log("  OGL ATIFragmentShader: %d\n", GetCaps(eGraphicCaps_OGL_ATIFragmentShader));
     {
@@ -678,6 +679,15 @@ int cLowLevelGraphicsSDL::GetCaps(eGraphicCaps aType)
         glGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB, &lComponents);
         return lComponents;
     }
+    case eGraphicCaps_ShaderTextureLod:
+    {
+        if(mbForceShaderModel3And4Off)
+        {
+            return 0;
+        }
+        return GLEW_ARB_shader_texture_lod ? 1 : 0;
+    }
+
     case eGraphicCaps_GLSLVersion:
     {
         //Should only be parsed once

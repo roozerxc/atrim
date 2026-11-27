@@ -6,6 +6,9 @@
 
 #version 120
 #extension GL_ARB_texture_rectangle : enable
+@ifdef UseParallax && Feature_TextureLod
+#extension GL_ARB_shader_texture_lod : enable
+@endif
 
 @include helper_float_packing.glsl
 @include helper_reflection.glsl
@@ -72,39 +75,75 @@ uniform sampler2D aDiffuseMap;
 //--------------------------------------------------
 
 ///////////////////////////////
+// Texture sampling with parallax
+//
+// Parallax moves the texture coordinates per pixel, and at the edges of relief steps
+// neighbouring pixels can be far apart in the texture. Mip-mapping then sees a huge
+// texture coordinate change and picks a tiny mip level, which gives blocky 2x2 pixel
+// edges. With GL_ARB_shader_texture_lod the textures are sampled with the derivatives
+// of the unmodified coordinates instead, so the mip level is the same as without parallax.
+// Without it, this is plain texture2D() (same as before).
+
+@ifdef UseParallax && Feature_TextureLod
+    vec2 mvUvDx;
+    vec2 mvUvDy;
+@endif
+
+vec4 SampleUv(sampler2D aMap, vec2 avUv)
+{
+    @ifdef UseParallax && Feature_TextureLod
+        return texture2DGradARB(aMap, avUv, mvUvDx, mvUvDy);
+    @else
+        return texture2D(aMap, avUv);
+    @endif
+}
+
+//--------------------------------------------------
+
+///////////////////////////////
 // Relief mapping helpers
 
-//Optimize by getting 4 depths at once somehow?
-void RayLinearIntersectionSM2(sampler2D aHeightMap, inout vec3 avPosition, inout vec3 avEyeVec)
-{
-    const int lSearchSteps = 8;
-
-    avEyeVec /= float(lSearchSteps);     //Split up the eye vector into the number of steps
-
-    for(int i=0; i<lSearchSteps-1; i++)
+@ifdef UseParallax && Feature_TextureLod
+    //Linear search with the number of steps picked by view angle: few steps when
+    //looking straight at the surface, many at grazing angles where the ray is long.
+    //(Dynamic loop: fine here, since the gradients are given explicitly.)
+    void RayLinearIntersection(sampler2D aHeightMap, float afViewZ, inout vec3 avPosition, inout vec3 avEyeVec)
     {
-        float fDepth = texture2D(aHeightMap, avPosition.xy).w;
-        if(avPosition.z < fDepth) avPosition += avEyeVec;
+        const int lMaxSearchSteps = 32;
+        float fSearchSteps = floor(mix(float(lMaxSearchSteps), 8.0, afViewZ));
+
+        avEyeVec /= fSearchSteps;     //Split up the eye vector into the number of steps
+
+        for(int i=0; i<lMaxSearchSteps; i++)
+        {
+            if(float(i) >= fSearchSteps-1.0) break;
+
+            float fDepth = SampleUv(aHeightMap, avPosition.xy).w;
+            if(avPosition.z < fDepth) avPosition += avEyeVec;
+        }
     }
-}
-
-void RayLinearIntersectionSM3(sampler2D aHeightMap, float afSearchSteps, inout vec3 avPosition, inout vec3 avEyeVec)
-{
-    avEyeVec /= afSearchSteps;     //Split up the eye vector into the number of steps
-
-    for(int i=0; float(i)<afSearchSteps-1.0; i++)
+@else
+    //Fixed number of steps (unrolled), for cards without explicit gradients.
+    void RayLinearIntersection(sampler2D aHeightMap, float afViewZ, inout vec3 avPosition, inout vec3 avEyeVec)
     {
-        float fDepth = texture2D(aHeightMap, avPosition.xy).w;
-        if(avPosition.z < fDepth) avPosition += avEyeVec;
+        const int lSearchSteps = 16;
+
+        avEyeVec /= float(lSearchSteps);     //Split up the eye vector into the number of steps
+
+        for(int i=0; i<lSearchSteps-1; i++)
+        {
+            float fDepth = SampleUv(aHeightMap, avPosition.xy).w;
+            if(avPosition.z < fDepth) avPosition += avEyeVec;
+        }
     }
-}
+@endif
 
 void RayBinaryIntersection(sampler2D aHeightMap, inout vec3 avPosition, inout vec3 avEyeVec)
 {
     const int lSearchSteps = 6;
     for(int i=0; i<lSearchSteps; i++)
     {
-        float fDepth = texture2D(aHeightMap, avPosition.xy).w;
+        float fDepth = SampleUv(aHeightMap, avPosition.xy).w;
         if(avPosition.z < fDepth)
             avPosition += avEyeVec;
 
@@ -119,6 +158,11 @@ void RayBinaryIntersection(sampler2D aHeightMap, inout vec3 avPosition, inout ve
 // Main program
 void main()
 {
+    @ifdef UseParallax && Feature_TextureLod
+        mvUvDx = dFdx(gl_TexCoord[0].xy);
+        mvUvDy = dFdy(gl_TexCoord[0].xy);
+    @endif
+
     //////////////////////////////////
     //Diffuse
     @ifdef UseParallax
@@ -136,9 +180,13 @@ void main()
         @elseif ParallaxMethod_Relief
             vec3 vEyeVec = normalize(gvTangentEyePos);
 
+            float fViewZ = abs(vEyeVec.z);
+
             //roozy: Fix hardware freeze from dividing by zero in the eye vector Z
             //(sign() is 0 for 0, which still divided by zero, so pick the sign by hand.)
-            float fEyeVectorZ = (vEyeVec.z < 0.0 ? -1.0 : 1.0) * max(abs(vEyeVec.z), 0.05);
+            //The limit also caps how far the ray goes at grazing angles (at most ~6.7x the
+            //height map scale, was 20x), which is where relief steps and swimming were worst.
+            float fEyeVectorZ = (vEyeVec.z < 0.0 ? -1.0 : 1.0) * max(fViewZ, 0.15);
 
             //Get give eyevec the length so it reaches bottom.
             vEyeVec *= 1.0 / fEyeVectorZ;
@@ -152,7 +200,7 @@ void main()
             
             
             //Do a linear search to find the first intersection.
-            RayLinearIntersectionSM2(aHeightMap, vHeightMapPos, vEyeVec);
+            RayLinearIntersection(aHeightMap, fViewZ, vHeightMapPos, vEyeVec);
             
             //Do a binary search between start and first intersection to pinpoint the postion.        
             RayBinaryIntersection(aHeightMap,vHeightMapPos,  vEyeVec);
@@ -167,7 +215,7 @@ void main()
             vec2 vTexCoord = (vEyeVec * fDisplacement + gl_TexCoord[0].xyz).xy;
         @endif
 
-        vec4 vDiffuseColor = texture2D(aDiffuseMap, vTexCoord);
+        vec4 vDiffuseColor = SampleUv(aDiffuseMap, vTexCoord);
 
     @else
         vec2 vTexCoord = gl_TexCoord[0].xy;
@@ -185,7 +233,7 @@ void main()
     //////////////////////////////////
     //Normal
     @ifdef UseNormalMapping
-        vec3 vNormal = texture2D(aNormalMap,vTexCoord).xyz - 0.5; //No need for full unpack x*2-1, becuase normal is normalized. (but now we do not normalize...)
+        vec3 vNormal = SampleUv(aNormalMap, vTexCoord).xyz - 0.5; //No need for full unpack x*2-1, becuase normal is normalized. (but now we do not normalize...)
         vec3 vScreenNormal = normalize(vNormal.x * gvTangent + vNormal.y * gvBinormal + vNormal.z * gvNormal);
     @else
         vec3 vScreenNormal = normalize(gvNormal);
@@ -213,7 +261,7 @@ void main()
         float fFresnel = Fresnel(afEDotN, avFresnelBiasPow.x, avFresnelBiasPow.y);
 
         @ifdef UseCubeMapAlpha
-            float fEnvMapAlpha = texture2D(aEnvMapAlphaMap, vTexCoord).w;
+            float fEnvMapAlpha = SampleUv(aEnvMapAlphaMap, vTexCoord).w;
             vReflectionColor *= fEnvMapAlpha;
         @endif
 
@@ -238,13 +286,13 @@ void main()
     @ifdef GBufferLite || GBufferAlbedoOnly
     @elseif RenderTargets_4
         @ifdef UseSpecular
-            gl_FragData[3].xy = texture2D(aSpecularMap, vTexCoord).xy;
+            gl_FragData[3].xy = SampleUv(aSpecularMap, vTexCoord).xy;
         @else
             gl_FragData[3].xy = vec2(0.0);
         @endif
     @else
         @ifdef UseSpecular
-            vec2 vSpecVals = texture2D(aSpecularMap, vTexCoord).xy;
+            vec2 vSpecVals = SampleUv(aSpecularMap, vTexCoord).xy;
             gl_FragData[1].w = vSpecVals.x;
             gl_FragData[2].w = vSpecVals.y;
         @else

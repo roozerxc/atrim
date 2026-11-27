@@ -267,6 +267,8 @@ enum eGraphicCaps
 
     eGraphicCaps_MaxVertexUniformComponents,
 
+    eGraphicCaps_ShaderTextureLod,  //GL_ARB_shader_texture_lod (texture2DGradARB in fragment shaders)
+
     eGraphicCaps_LastEnum
 };
 

@@ -93,6 +93,21 @@ void cGpuShaderManager::CheckFeatureSupport()
         Log("ATTENTION: System does not support const arrays in glsl!\n");
         mpPreprocessParser->GetEnvVarContainer()->Add("FeatureNotSupported_ConstArray");
     }
+
+    //Explicit texture gradients, used by relief parallax to keep the mip level steady and
+    //to vary its step count by view angle. Test that it compiles, not just that it is listed.
+    if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_3) &&
+       mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderTextureLod))
+    {
+        if(IsShaderSupported("_test_texture_lod_frag.glsl", eGpuShaderType_Fragment))
+        {
+            mpPreprocessParser->GetEnvVarContainer()->Add("Feature_TextureLod");
+        }
+        else
+        {
+            Log("ATTENTION: GL_ARB_shader_texture_lod is listed but the test shader failed, relief parallax uses fixed steps.\n");
+        }
+    }
 }
 
 //-----------------------------------------------------------------------
