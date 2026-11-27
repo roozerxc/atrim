@@ -146,6 +146,8 @@
         <Entry Name="Lean">Kallista</Entry>
         <Entry Name="LeanTooltip">Kallistaa päätä, minne katseohjain osoittaa. Hyödyllinen nurkkien taakse kurkistamiseen.</Entry>
         <Entry Name="RotateTooltip">Pidä painettuna ja liikuta hiirtä pyörittääksesi tartuttua esinettä.</Entry>
+        <Entry Name="RunToggle">Juokse (päälle/pois)</Entry>
+        <Entry Name="RunToggleTooltip">Paina kerran juostaksesi. Juoksu jatkuu, kunnes pysähdyt tai painat uudelleen.</Entry>
     </CATEGORY>
 
     <!-- No need to localize these! -->

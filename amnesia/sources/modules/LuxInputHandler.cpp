@@ -82,6 +82,8 @@ static cLuxAction gvLuxActions[] =
     cLuxAction("Ignite", eLuxAction_Ignite,        false, eLuxActionCategory_Action),
     cLuxAction("Rotate", eLuxAction_Rotate,        true, eLuxActionCategory_Action),
     cLuxAction("Lantern", eLuxAction_Lantern,    true, eLuxActionCategory_Action),
+    // Listed under Actions: the Movement page has no room for another row
+    cLuxAction("RunToggle", eLuxAction_RunToggle,    true, eLuxActionCategory_Action),
 
     cLuxAction("Run", eLuxAction_Run,            true, eLuxActionCategory_Movement),
     cLuxAction("Crouch", eLuxAction_Crouch,        true, eLuxActionCategory_Movement),
@@ -213,6 +215,7 @@ static cLuxInput gvLuxInputs[] =
     cLuxInput("GamepadButton", eGamepadButton_5, eLuxAction_Interact),
     cLuxInput("GamepadButton", eGamepadButton_7, eLuxAction_Exit),
     cLuxInput("GamepadButton", eGamepadButton_9, eLuxAction_Rotate),
+    cLuxInput("GamepadButton", eGamepadButton_8, eLuxAction_RunToggle),
     cLuxInput("GamepadAxis.Axis 2", eGamepadAxisRange_Positive, eLuxAction_Run),
     cLuxInput("GamepadAxis.Axis 2", eGamepadAxisRange_Negative, eLuxAction_Lean),
 
@@ -276,6 +279,8 @@ cLuxInputHandler::cLuxInputHandler() : iLuxUpdateable("LuxInputHandler")
     // Variable init
     mState = eLuxInputState_Game;
     mfMouseActiveAt = -1;
+    mbRunToggled = false;
+    mbRunToggleMoved = false;
 
     mbFrameLookWasActive = false;
     mvLastFrameGuiMousePos = cVector2l(-1, -1);
@@ -1398,13 +1403,50 @@ void cLuxInputHandler::UpdateGamePlayerInput()
     // Movements
 
     //Run
+    // Run runs while held. RunToggle (left stick click by default) turns
+    // running on until the player stops moving or presses it again, like
+    // sprint in most console shooters. Pressed while standing still, running
+    // starts with the next step.
+    bool bMoving = mpInput->IsTriggerd(eLuxAction_Forward) || mpInput->IsTriggerd(eLuxAction_Backward) ||
+                   mpInput->IsTriggerd(eLuxAction_Right) || mpInput->IsTriggerd(eLuxAction_Left);
+
+    // Something else stopped running (map change, death, a player state...)
+    if(mbRunToggled && mpPlayer->IsPressingRun() == false)
+    {
+        mbRunToggled = false;
+    }
+
+    if(mpInput->BecameTriggerd(eLuxAction_RunToggle))
+    {
+        mbRunToggled = !mbRunToggled;
+        mbRunToggleMoved = false;
+        mpPlayer->Run(mbRunToggled || mpInput->IsTriggerd(eLuxAction_Run));
+    }
+
+    if(mbRunToggled)
+    {
+        if(bMoving)
+        {
+            mbRunToggleMoved = true;
+        }
+        else if(mbRunToggleMoved)
+        {
+            mbRunToggled = false;
+            if(mpInput->IsTriggerd(eLuxAction_Run) == false)
+            {
+                mpPlayer->Run(false);
+            }
+        }
+    }
+
     if(mpInput->BecameTriggerd(eLuxAction_Run))
     {
         mpPlayer->Run(true);
     }
     if(mpInput->WasTriggerd(eLuxAction_Run))
     {
-        mpPlayer->Run(false);
+        // Letting go of Run doesn't stop a toggled run
+        mpPlayer->Run(mbRunToggled);
     }
 
     //Jump

@@ -146,6 +146,8 @@
         <Entry Name="Lean">Lean</Entry>
         <Entry Name="LeanTooltip">Tilts head to where the look control points, useful to peek around corners.</Entry>
         <Entry Name="RotateTooltip">Hold while moving the mouse to rotate the currently grabbed object.</Entry>
+        <Entry Name="RunToggle">Run (toggle)</Entry>
+        <Entry Name="RunToggleTooltip">Press once to run, runs until you stop moving or press it again.</Entry>
     </CATEGORY>
 
     <!-- No need to localize these! -->

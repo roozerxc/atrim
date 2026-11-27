@@ -356,6 +356,7 @@ enum eLuxAction
     eLuxAction_Run,
     eLuxAction_Jump,
     eLuxAction_Crouch,
+    eLuxAction_RunToggle,
 
 #ifdef USE_GAMEPAD
     eLuxAction_Lean,

@@ -146,6 +146,8 @@
         <Entry Name="Lean">Lean</Entry>
         <Entry Name="LeanTooltip">Tilts yer head where the look control points, useful fer peekin' around corners.</Entry>
         <Entry Name="RotateTooltip">Hold while movin' the mouse to rotate the object ye be grabbin'.</Entry>
+        <Entry Name="RunToggle">Scurry (toggle)</Entry>
+        <Entry Name="RunToggleTooltip">Press it once to scurry, ye keep scurryin' till ye stop or press it again.</Entry>
     </CATEGORY>
 
     <!-- No need to localize these! -->

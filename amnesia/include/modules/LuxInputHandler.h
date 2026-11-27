@@ -185,6 +185,9 @@ private:
     bool mbSmoothMouse;
     bool mbInvertMouse;
 
+    bool mbRunToggled;
+    bool mbRunToggleMoved;
+
     double mfMouseActiveAt;
 
     float mfMouseSensitivity;

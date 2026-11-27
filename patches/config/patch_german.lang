@@ -146,6 +146,8 @@
         <Entry Name="Lean">Lehnen</Entry>
         <Entry Name="LeanTooltip">Neigt den Kopf in Richtung der Blickkontrollpunkte, was nützlich ist, um um Ecken zu spähen.</Entry>
         <Entry Name="RotateTooltip">Halten Sie die Maustaste gedrückt und bewegen Sie sie, um das aktuell gegriffene Objekt zu drehen.</Entry>
+        <Entry Name="RunToggle">Laufen (umschalten)</Entry>
+        <Entry Name="RunToggleTooltip">Einmal drücken zum Laufen. Läuft weiter, bis du stehen bleibst oder erneut drückst.</Entry>
     </CATEGORY>
 
     <!-- No need to localize these! -->
