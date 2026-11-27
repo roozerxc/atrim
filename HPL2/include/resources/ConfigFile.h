@@ -78,6 +78,13 @@ public:
      */
     void CopyLevelsFrom(cConfigFile *apSource, const tString& asSkipLevel = "");
 
+    /**
+     * Moves the attribute asName from level asFromLevel to level asToLevel (for settings that
+     * changed level). If asToLevel already has it, that value is kept. The attribute is removed
+     * from asFromLevel either way. Returns true if asFromLevel had the attribute.
+     */
+    bool MoveAttr(const tString& asFromLevel, const tString& asToLevel, const tString& asName);
+
 private:
     tWString msFile;
     cFileSearcher *mpFileSearcher;

@@ -178,6 +178,31 @@ void cConfigFile::CopyLevelsFrom(cConfigFile *apSource, const tString& asSkipLev
 
 //-----------------------------------------------------------------------
 
+bool cConfigFile::MoveAttr(const tString& asFromLevel, const tString& asToLevel, const tString& asName)
+{
+    pugi::xml_node fromElem = mpXmlDoc->child(asFromLevel.c_str());
+    if(!fromElem)
+    {
+        return false;
+    }
+
+    pugi::xml_attribute attr = fromElem.attribute(asName.c_str());
+    if(!attr)
+    {
+        return false;
+    }
+
+    if(GetCharArray(asToLevel, asName) == NULL)
+    {
+        SetString(asToLevel, asName, attr.value());
+    }
+    fromElem.remove_attribute(attr);
+
+    return true;
+}
+
+//-----------------------------------------------------------------------
+
 void cConfigFile::SetString(const tString& asLevel, const tString& asName, const tString& asVal)
 {
     pugi::xml_node levelElem = mpXmlDoc->child(asLevel.c_str());
