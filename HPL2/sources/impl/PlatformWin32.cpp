@@ -386,7 +386,7 @@ cDate cPlatform::FileModifiedDate(const tWString& asFilePath)
 #ifdef _DEBUG
     Log("DEBUG: Modified time for file '%s': %02d-%02d-%04d %02d:%02d:%02d\n",
         cString::To8Char(asFilePath).c_str(),
-        date.month, date.month_day, date.year,
+        date.month + 1, date.month_day, date.year,
         date.hours, date.minutes, date.seconds);
 #endif
 
@@ -417,7 +417,7 @@ cDate cPlatform::FileCreationDate(const tWString& asFilePath)
 #ifdef _DEBUG
     Log("DEBUG: Creation time for file '%s': %02d-%02d-%04d %02d:%02d:%02d\n",
         cString::To8Char(asFilePath).c_str(),
-        date.month, date.month_day, date.year,
+        date.month + 1, date.month_day, date.year,
         date.hours, date.minutes, date.seconds);
 #endif
 
