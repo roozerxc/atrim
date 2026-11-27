@@ -7,6 +7,46 @@
 #include "LuxHandObject_Melee.h"
 #include "LuxHandObject_LightSource.h"
 
+//-----------------------------------------------------------------------
+
+namespace
+{
+    /**
+     * While alive, files from the current custom story win over base game files with the same
+     * name (see cFileSearcher::SetPreferredDirectory). This lets a custom story ship its own
+     * hands and hand objects (lantern, etc.: .ent, .ho, meshes, materials, textures) without a
+     * full conversion or an edited resources.cfg. Only used while player hand files load, so the
+     * story cannot replace other base game (or atrim patched) files by accident.
+     */
+    class cLuxCustomStoryHandFilesScope
+    {
+    public:
+        cLuxCustomStoryHandFilesScope()
+        {
+            mpFileSearcher = gpBase->mpEngine->GetResources()->GetFileSearcher();
+            msOldDir = mpFileSearcher->GetPreferredDirectory();
+            if(gpBase->mpCustomStory)
+            {
+                mpFileSearcher->SetPreferredDirectory(gpBase->mpCustomStory->msStoryRootFolder);
+            }
+        }
+
+        ~cLuxCustomStoryHandFilesScope()
+        {
+            mpFileSearcher->SetPreferredDirectory(msOldDir);
+        }
+
+    private:
+        cFileSearcher *mpFileSearcher;
+        tWString msOldDir;
+    };
+
+    tWString GetCurrentStoryRoot()
+    {
+        return gpBase->mpCustomStory ? gpBase->mpCustomStory->msStoryRootFolder : tWString(_W(""));
+    }
+}
+
 
 /////////////////////////////////////////////////////////////////////////
 // CONSTRUCTORS
@@ -151,8 +191,38 @@ void cLuxPlayerHands::Reset()
     }
 
     ////////////////////
+    //Another custom story (or none) is starting: forget the hand objects (their .ho settings)
+    //and the kept hands mesh/animations, so they load again from the new story's files.
+    if(GetCurrentStoryRoot() != msHandFilesStoryRoot)
+    {
+        ReleaseLoadedHandFiles();
+        msHandFilesStoryRoot = GetCurrentStoryRoot();
+    }
+
+    ////////////////////
     //Init hand object variables
     ResetHandObjectVars();
+}
+
+//-----------------------------------------------------------------------
+
+void cLuxPlayerHands::ReleaseLoadedHandFiles()
+{
+    if(mpHandsMesh)
+    {
+        gpBase->mpEngine->GetResources()->GetMeshManager()->Destroy(mpHandsMesh);
+        mpHandsMesh = NULL;
+    }
+
+    for(size_t i = 0; i < mvHandAnimations.size(); ++i)
+    {
+        gpBase->mpEngine->GetResources()->GetAnimationManager()->Destroy(mvHandAnimations[i]);
+    }
+    mvHandAnimations.clear();
+
+    //Reset() above already let go of their entities and meshes
+    STLDeleteAll(mvHandObjects);
+    mpCurrentHandObject = NULL;
 }
 
 //-----------------------------------------------------------------------
@@ -554,7 +624,10 @@ void cLuxPlayerHands::CreateHandEntity(cLuxMap *apMap)
         return;
     }
 
-    apMap->GetWorld()->CreateEntity("PlayerHands", cMatrixf::Identity, "models/player/hands/hands.ent");
+    {
+        cLuxCustomStoryHandFilesScope storyFilesFirst;
+        apMap->GetWorld()->CreateEntity("PlayerHands", cMatrixf::Identity, "models/player/hands/hands.ent");
+    }
     if(mpHandsEntity == NULL)
     {
         //The loader sets mpHandsEntity in AfterLoad. If the file is missing or broken it stays NULL
@@ -589,7 +662,10 @@ void cLuxPlayerHands::CreateAndAttachHandObject(cLuxMap *apMap, iLuxHandObject *
     ///////////////////////
     //Load object
     mpHandObjectLoader->SetHandObject(apHandObject);
-    apHandObject->CreateEntity(apMap);
+    {
+        cLuxCustomStoryHandFilesScope storyFilesFirst;
+        apHandObject->CreateEntity(apMap);
+    }
 
     ///////////////////////
     //Attach object
@@ -719,6 +795,9 @@ iLuxHandObject *cLuxPlayerHands::LoadHandObject(const tString& asName)
     /////////////////////
     // Init variables
     cResources *pResources = gpBase->mpEngine->GetResources();
+
+    //The .ho file of the current custom story wins over the base game one
+    cLuxCustomStoryHandFilesScope storyFilesFirst;
 
     /////////////////////
     // Get file name

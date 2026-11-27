@@ -118,6 +118,7 @@ private:
     void UpdatePlayerHandsPos(double adFixedDelta);
 
     iLuxHandObject *LoadHandObject(const tString& asName);
+    void ReleaseLoadedHandFiles();
     iLuxHandObject *CreateObjectFromType(const tString& asName, eLuxHandObjectType aType);
     eLuxHandObjectType ToHandObjectType(const tString& asType);
 
@@ -127,6 +128,10 @@ private:
 
     iLuxHandObject *mpCurrentHandObject;
     std::vector<iLuxHandObject *> mvHandObjects;
+
+    //Root folder of the custom story the hands and hand objects above were loaded for ("" = none).
+    //When another story (or none) is started, they are released so the new one's files are used.
+    tWString msHandFilesStoryRoot;
 
     cLuxHandObjectLoader *mpHandObjectLoader;
 
