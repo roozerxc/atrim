@@ -2519,7 +2519,22 @@ bool cGuiSet::OnUIArrowPress(const cGuiMessageData& aData)
     {
         iWidget* pNextWidget = mpFocusedWidget->GetFocusNavigation((eUIArrow)aData.mlVal);
 
+        // Hop over widgets that are hidden or disabled right now (options that
+        // depend on other options, buttons that are only shown sometimes) by
+        // following their own navigation in the same direction. Before, the
+        // focus just stopped at them and the rest of the window was unreachable.
+        // The hop limit keeps navigation loops from hanging.
+        for(int lHops = 0; pNextWidget && lHops < 16; ++lHops)
+        {
+            if(pNextWidget->IsEnabled() && pNextWidget->IsVisible())
+            {
+                break;
+            }
+            pNextWidget = pNextWidget->GetFocusNavigation((eUIArrow)aData.mlVal);
+        }
+
         if(pNextWidget &&
+                pNextWidget != mpFocusedWidget &&
                 pNextWidget->IsEnabled() &&
                 pNextWidget->IsVisible() &&
                 (mpAttentionWidget == NULL || pNextWidget->IsConnectedTo(mpAttentionWidget)))
