@@ -85,6 +85,12 @@ public:
      */
     bool MoveAttr(const tString& asFromLevel, const tString& asToLevel, const tString& asName);
 
+    /**
+     * Removes the attribute asName from level asLevel (for settings that are no longer used).
+     * Returns true if it was there.
+     */
+    bool RemoveAttr(const tString& asLevel, const tString& asName);
+
 private:
     tWString msFile;
     cFileSearcher *mpFileSearcher;

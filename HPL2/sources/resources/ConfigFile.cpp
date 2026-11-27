@@ -203,6 +203,19 @@ bool cConfigFile::MoveAttr(const tString& asFromLevel, const tString& asToLevel,
 
 //-----------------------------------------------------------------------
 
+bool cConfigFile::RemoveAttr(const tString& asLevel, const tString& asName)
+{
+    pugi::xml_node levelElem = mpXmlDoc->child(asLevel.c_str());
+    if(!levelElem)
+    {
+        return false;
+    }
+
+    return levelElem.remove_attribute(asName.c_str());
+}
+
+//-----------------------------------------------------------------------
+
 void cConfigFile::SetString(const tString& asLevel, const tString& asName, const tString& asVal)
 {
     pugi::xml_node levelElem = mpXmlDoc->child(asLevel.c_str());
