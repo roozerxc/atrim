@@ -122,8 +122,18 @@ void main()
     //////////////////////////////////
     //Diffuse
     @ifdef UseParallax
+        //SIMPLE PARALLAX, FORCED BY THE MATERIAL:
+        //(height map scale outside the range relief works with, see MaterialType_BasicSolid.cpp)
+        @ifdef UseSimpleParallax
+            vec3 vEyeVec = normalize(gvTangentEyePos);
+            float fHeight = texture2D(aHeightMap, gl_TexCoord[0].xy).w;
+
+            float fDisplacement = fHeight * avHeightMapScaleAndBias.x;
+
+            vec2 vTexCoord = (vEyeVec * fDisplacement + gl_TexCoord[0].xyz).xy;
+
         //RELIEF PARALLAX:
-        @ifdef ParallaxMethod_Relief
+        @elseif ParallaxMethod_Relief
             vec3 vEyeVec = normalize(gvTangentEyePos);
 
             //roozy: Fix hardware freeze from dividing by zero in the eye vector Z

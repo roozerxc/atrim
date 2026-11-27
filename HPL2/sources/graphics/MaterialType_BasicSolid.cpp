@@ -51,8 +51,14 @@ namespace hpl
 #define eFeature_Diffuse_EnvMap            eFlagBit_5
 #define eFeature_Diffuse_CubeMapAlpha    eFlagBit_6
 #define eFeature_Diffuse_SkinMatrices    eFlagBit_7
+#define eFeature_Diffuse_SimpleParallax  eFlagBit_8
 
-#define kDiffuseFeatureNum 8
+#define kDiffuseFeatureNum 9
+
+//Relief parallax only works with small, positive height map scales. Vanilla always used simple
+//parallax (there was no way to pick relief), so content is tuned for it: a material with a scale
+//outside this range (such as negative scales on mod water) keeps simple parallax with relief on.
+static const float kfReliefMaxHeightMapScale = 0.25f;
 
 static cProgramComboFeature vDiffuseFeatureVec[] =
 {
@@ -64,6 +70,7 @@ static cProgramComboFeature vDiffuseFeatureVec[] =
     cProgramComboFeature("UseEnvMap", kPC_VertexBit | kPC_FragmentBit),
     cProgramComboFeature("UseCubeMapAlpha", kPC_FragmentBit),
     cProgramComboFeature("UseSkinMatrices", kPC_VertexBit),
+    cProgramComboFeature("UseSimpleParallax", kPC_FragmentBit),
 };
 
 //------------------------------
@@ -605,6 +612,12 @@ iGpuProgram *cMaterialType_SolidDiffuse::GetGpuProgram(cMaterial *apMaterial, eM
         if(bParallax)
         {
             lFlags |= eFeature_Diffuse_Parallax;
+
+            if(iRenderer::GetParallaxQuality() == eParallaxQuality_Relief &&
+               (pVars->mfHeightMapScale <= 0.0f || pVars->mfHeightMapScale > kfReliefMaxHeightMapScale))
+            {
+                lFlags |= eFeature_Diffuse_SimpleParallax;
+            }
         }
         if(apMaterial->GetTexture(eMaterialTexture_CubeMap))
         {
