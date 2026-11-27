@@ -894,37 +894,21 @@ void cLuxInputHandler::UpdateGlobalInput()
     // ScreenShot
     if(mpInput->BecameTriggerd(eLuxAction_ScreenShot))
     {
-        tWString sScreenShotDir = _W("screenshots");
-        if(cPlatform::FolderExists(sScreenShotDir) == false)
-        {
-            cPlatform::CreateFolder(sScreenShotDir);
-        }
-
-        tWString sFileName = _W("");
-        tWString sBaseName = cString::AddSlashAtEndW(sScreenShotDir) + _W("Screen_");
-        int lCount = 0;
-
-        do
-        {
-            sFileName = sBaseName + cString::To16Char("Screenshot") + _W("_");
-            sFileName += cString::ToStringW(lCount, 3);
-            /*
-            if(lCount >= 100)        sFileName += _W("")+cString::ToStringW(lCount);
-            else if(lCount >= 10)    sFileName += _W("0")+cString::ToStringW(lCount);
-            else                    sFileName += _W("00")+cString::ToStringW(lCount);
-            */
-
-            sFileName += _W(".") + cString::To16Char(gpBase->mpConfigHandler->msScreenShotExt);
-            ++lCount;
-
-        }
-        while(cPlatform::FileExists(sFileName));
+        //e.g. screenshots/Screenshot_20261127_035346.jpg
+        tWString sFileName = cPlatform::GetScreenshotFileName(_W("screenshots"),
+                                                              cString::To16Char(gpBase->mpConfigHandler->msScreenShotExt));
 
         cEngine *pEngine = gpBase->mpEngine;
 
         cBitmap *pBmp = pEngine->GetGraphics()->GetLowLevel()->CopyFrameBufferToBitmap();
-        pEngine->GetResources()->GetBitmapLoaderHandler()->SaveBitmap(pBmp, sFileName, 0);
-        hplDelete(pBmp);
+        if(pBmp)
+        {
+            if(pEngine->GetResources()->GetBitmapLoaderHandler()->SaveBitmap(pBmp, sFileName, 0))
+            {
+                Log("Saved screenshot '%s'\n", cString::To8Char(sFileName).c_str());
+            }
+            hplDelete(pBmp);
+        }
     }
 
     /////////////////

@@ -107,6 +107,14 @@ public:
 
     static cDate GetDate();
 
+    /**
+     * Returns a free file name like "<dir>/Screenshot_20261127_035346.<ext>" using the
+     * current local date and time. If that name is taken (several shots in one second)
+     * a counter is added: "Screenshot_20261127_035346_2.<ext>". Creates asDir if missing.
+     * asExt is given without the dot. Shared by the game and the editors.
+     */
+    static tWString GetScreenshotFileName(const tWString& asDir, const tWString& asExt);
+
     static void CopyTextToClipboard(const tWString &asText);
     static tWString LoadTextFromClipboard();
 
