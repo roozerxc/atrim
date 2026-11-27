@@ -1,54 +1,74 @@
 # Changelog
 ### v1.4.666+
-- Added albedo-only "Potato Mode" render option in the graphics settings for very weak video cards
+- Added albedo-only "Potato Mode" render option in the basic graphics settings for very weak video cards
+- Added auto-repeat when holding a D-pad or analog stick direction in menus
 - Added engine frame profiler with render trace, spike logging, and sound and shader warming scopes (`F8` in the debug toolbar)
 - Added engine startup self-test for the deferred light fragment shader on older video cards
 - Added exclusive and borderless fullscreen setting (`FullscreenMode` in `main_settings.cfg`)
-- Added fallbacks for graphics drivers without stencil buffer or rectangle texture support
+- Added fallbacks for graphics drivers without stencil buffer, rectangle texture or alpha-only shadow map target support
 - Added GPU skinning for animated meshes, enabled automatically on newer video cards
 - Added hardware depth G-buffer mode (`GBufferMode` 2 in `main_settings.cfg`) with a startup self-test
-- Added light color grading (`LightColorGradeMode` in `main_settings.cfg`), replacing the costly light shader color curve
+- Added light color grading (`LightColorGradeMode` in `main_settings.cfg`), using a color grading post effect or a cheaper version of the costly light shader color curve
 - Added OpenGL error logging for problematic graphics drivers
 - Added physics pre-settling when loading maps
 - Added render-ahead queue limit (`MaxFramesAhead` in `main_settings.cfg`) to reduce input lag
-- Added SDL2 game controller database support (`gamecontrollerdb.txt`)
-- Added shader warming (`ShaderWarming` in `main_settings.cfg`) to precompile shaders before loading maps and saves
+- Added "Run (toggle)" action, bound to clicking the left stick on gamepads by default
+- Added SDL2 game controller database support (`gamecontrollerdb.txt`) and SDL2 controller button names in `user_keys.cfg`
+- Added shader warming (`ShaderWarming` in `main_settings.cfg`) to precompile shaders before loading maps and saves, skipping shaders recorded under other graphics settings
 - Added support for graphics drivers that are only able to compile OpenGL 2.0/GLSL 1.10 shader code
 - Added toggles to force-disable post effects and to force vertex arrays without VBOs
+- Added Xbox-style gamepad layout for controllers passed through by Wine
 - Allowed `B` to be bound in the gamepad input settings (`Start` cancels instead)
 - Enabled the lite G-buffer by default, which drops the normals target when the lite light shader is used
 - Fixed and restored broken gamepad support from version 1.3, making DirectInput controllers work again
+- Fixed billboards and lamp halos popping in and out or shining through walls
+- Fixed billboards and halos of inactive lamps being visible before the lamp was activated
 - Fixed broken map cache loading and building
 - Fixed camera and hand sway jitter at high frame rates
+- Fixed color banding and crushing in the gamma shader
 - Fixed CPU stalls from occlusion query reuse and late query results (`OcclusionCullingLatency` in `main_settings.cfg`)
 - Fixed crash from G-buffer layouts with an unsupported number of textures
+- Fixed crash from loading the A Machine for Pigs `hands.ent`
 - Fixed crash from shader programs with empty feature lists
 - Fixed crash when an AI state machine changed state without a current state
-- Fixed Custom Story menu activation and gamepad navigation
+- Fixed crash when saving the cache of a DAE model without animations
+- Fixed Custom Story menu activation and gamepad and keyboard navigation between its buttons
 - Fixed debug toolbar input loss after the player died
 - Fixed decal bleeding caused by polygon offset
 - Fixed doors, drawers, levers, sliders and valves not responding properly at low frame rates
 - Fixed emotion flash text disappearing at some flashback intensity values
+- Fixed enemy music not coming back after its stream stopped or failed to play (e.g. map ambience playing during a water lurker chase)
+- Fixed entities with zero scale or broken transforms making entire maps flicker (e.g. Lifeless - Descent Into Abandon)
 - Fixed frame time histogram rounding that made 0.1% lows faster than 1% lows
+- Fixed gamepad and keyboard navigation getting stuck on hidden or disabled menu options
+- Fixed gamepad and keyboard navigation in the advanced graphics options
 - Fixed gamepad right analog sticks that only worked on one axis
 - Fixed global sanity drain setting being lost when loading a save
 - Fixed joint minimum limit speed fallback being applied to the maximum limit
 - Fixed map cache corruption after skipping invalid vertex data
-- Fixed map script `OnUpdate` not running after map changes or loading a save, and running while paused
+- Fixed map script `OnUpdate` not running after map changes or loading a save, and running twice per step or while paused
 - Fixed music priority issues with event and enemy music
 - Fixed Ogg Vorbis size check overflowing on corrupt or very long files
+- Fixed pause menu background getting gamma applied twice
 - Fixed prop angular offsets (e.g. the hammer in Prison South) and props disappearing after loading a save
 - Fixed rope geometry turning invalid when two rope segments overlap
+- Fixed search music getting stuck after an enemy attack
 - Fixed searching enemies being restored as attackers after loading a save
-- Fixed timer callbacks receiving the wrong script string type
+- Fixed timer callbacks receiving the wrong script string type, and callbacks with a wrong signature running anyway
+- Fixed truncated mesh and animation caches being read as garbage instead of being rejected
 - Fixed vertical-only UV subdivision being ignored
+- Fixed water, liquid, insanity and inventory effects turning choppy in very long sessions
 - Gamma now controls the entire game framebuffer (Still not using `SDL_SetGamma`!)
 - Improved Release build optimizations and linked the C runtime statically (no `msvcr80.dll` needed)
+- Limited game logic catch-up so the game keeps full speed down to 20 FPS and slows down below that instead of lagging further
+- Limited repeated errors and warnings in `hpl.log` to 5 copies each
+- Made mesh (`.msh`) and animation (`.anm`) cache saving mandatory, remaking broken or outdated caches through a temporary file
 - Optimized box light clipping and culling of objects too small to see
 - Optimized dynamic vertex buffer updates on older hardware
-- Optimized flashback intensity so it is no longer read from the config every frame
+- Optimized flashback intensity so it is no longer read from the config every frame, and slider changes apply right away
 - Optimized nested point lights (e.g. the lantern) to draw in a single pass with the lite light shader
-- Replaced the awful ImageTrail shader with the beautiful motion blur program from HPL1
+- Optimized sound streaming to decode without locking the playing sound source, reducing audio hitches
+- Replaced the awful ImageTrail shader with the beautiful motion blur program from HPL1 (scripts can no longer turn it on)
 - Sounds over 256 KB are now streamed and commonly used sounds are preloaded
 
 ### v1.4.6
@@ -166,7 +186,7 @@
 - Removed demo version code and references
 - Removed fake anti-aliasing shader (Edge Smoothing)
 - Removed Lean (`Alt`) key
-- Removed logic timer in favor of fixed 60 Hz delta timing (`1 % 60 = 16.67ms`)
+- Removed logic timer in favor of fixed 60 Hz delta timing (`1 / 60 = 16.67ms`)
 - Removed `P` key, which activated heavy logging and caused severe performance issues
 - Removed performance bottleneck caused by constant mutex locking and unlocking
 - Removed proprietary Kaydara/Autodesk FBX loader
