@@ -8,13 +8,13 @@
 - Added fallbacks for graphics drivers without stencil buffer, rectangle texture or alpha-only shadow map target support
 - Added GPU skinning for animated meshes, enabled automatically on newer video cards
 - Added hardware depth G-buffer mode (`GBufferMode` 2 in `main_settings.cfg`) with a startup self-test
-- Added light color grading (`LightColorGradeMode` in `main_settings.cfg`), using a color grading post effect or a cheaper version of the costly light shader color curve
+- Added light color grading option in the advanced graphics settings (Vanilla, Vibrant or Natural), using a color grading post effect or a cheaper version of the costly light shader color curve
 - Added OpenGL error logging for problematic graphics drivers
 - Added physics pre-settling when loading maps
-- Added render-ahead queue limit (`MaxFramesAhead` in `main_settings.cfg`) to reduce input lag
+- Added Reduce Input Lag option in the advanced graphics settings (`MaxFramesAhead` in `main_settings.cfg`) to limit the render-ahead queue
 - Added "Run (toggle)" action, bound to clicking the left stick on gamepads by default
 - Added SDL2 game controller database support (`gamecontrollerdb.txt`) and SDL2 controller button names in `user_keys.cfg`
-- Added shader warming (`ShaderWarming` in `main_settings.cfg`) to precompile shaders before loading maps and saves, skipping shaders recorded under other graphics settings
+- Added Shader Warming option in the advanced graphics settings (`ShaderWarming` in `main_settings.cfg`) to precompile shaders before loading maps and saves, skipping shaders recorded under other graphics settings
 - Added support for custom player hands and hand objects (such as the lantern) in Custom Stories, without a Full Conversion or an edited `resources.cfg`
 - Added support for graphics drivers that are only able to compile OpenGL 2.0/GLSL 1.10 shader code
 - Added toggles to force-disable post effects and to force vertex arrays without VBOs
@@ -45,7 +45,10 @@
 - Fixed gamepad and keyboard navigation in the advanced graphics options
 - Fixed gamepad right analog sticks that only worked on one axis
 - Fixed global sanity drain setting being lost when loading a save
+- Fixed heap corruption when taking screenshots or saving the game at resolutions with odd row sizes (e.g. 1366x768)
+- Fixed jagged and blocky edges on relief parallax surfaces
 - Fixed joint minimum limit speed fallback being applied to the maximum limit
+- Fixed main menu, inventory and journal crashing when their effect shaders failed to compile
 - Fixed map cache corruption after skipping invalid vertex data
 - Fixed map script `OnUpdate` not running after map changes or loading a save, and running twice per step or while paused
 - Fixed music priority issues with event and enemy music
@@ -58,18 +61,21 @@
 - Fixed timer callbacks receiving the wrong script string type, and callbacks with a wrong signature running anyway
 - Fixed truncated mesh and animation caches being read as garbage instead of being rejected
 - Fixed vertical-only UV subdivision being ignored
+- Fixed water and other materials with unusual height map scales breaking with relief parallax (e.g. Lifeless - Descent Into Abandon)
 - Fixed water, liquid, insanity and inventory effects turning choppy in very long sessions
 - Gamma now controls the entire game framebuffer (Still not using `SDL_SetGamma`!)
 - Improved Release build optimizations and linked the C runtime statically (no `msvcr80.dll` needed)
 - Limited game logic catch-up so the game keeps full speed down to 20 FPS and slows down below that instead of lagging further
 - Limited repeated errors and warnings in `hpl.log` to 5 copies each
 - Made mesh (`.msh`) and animation (`.anm`) cache saving mandatory, remaking broken or outdated caches through a temporary file
+- Moved internal and debug graphics settings (G-buffer mode, render trace, OpenGL error logging, etc.) to a new `GraphicsAdvanced` section in `main_settings.cfg`
 - Optimized box light clipping and culling of objects too small to see
 - Optimized dynamic vertex buffer updates on older hardware
 - Optimized flashback intensity so it is no longer read from the config every frame, and slider changes apply right away
 - Optimized nested point lights (e.g. the lantern) to draw in a single pass with the lite light shader
 - Optimized sound streaming to decode without locking the playing sound source, reducing audio hitches
 - Replaced the awful ImageTrail shader with the beautiful motion blur program from HPL1 (scripts can no longer turn it on)
+- Screenshots are now named by date and time (e.g. `Screenshot_20261127_035346.jpg`) instead of being numbered
 - Sounds over 256 KB are now streamed and commonly used sounds are preloaded
 
 ### v1.4.6
