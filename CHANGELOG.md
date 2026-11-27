@@ -15,6 +15,7 @@
 - Added "Run (toggle)" action, bound to clicking the left stick on gamepads by default
 - Added SDL2 game controller database support (`gamecontrollerdb.txt`) and SDL2 controller button names in `user_keys.cfg`
 - Added shader warming (`ShaderWarming` in `main_settings.cfg`) to precompile shaders before loading maps and saves, skipping shaders recorded under other graphics settings
+- Added support for custom player hands and hand objects (such as the lantern) in Custom Stories, without a Full Conversion or an edited `resources.cfg`
 - Added support for graphics drivers that are only able to compile OpenGL 2.0/GLSL 1.10 shader code
 - Added toggles to force-disable post effects and to force vertex arrays without VBOs
 - Added Xbox-style gamepad layout for controllers passed through by Wine
