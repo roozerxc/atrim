@@ -262,6 +262,10 @@ cLuxInputHandler::cLuxInputHandler() : iLuxUpdateable("LuxInputHandler")
     ////////////////////////////////////
     // Set up gamepad
     SetUpGamepad();
+
+    mlUIArrowRepeatIdx = -1;
+    mfUIArrowRepeatTime = 0;
+    mfUIArrowTimeStep = 1.0f / 60.0f;
 #endif
 
     ////////////////////////////////////
@@ -424,6 +428,10 @@ void cLuxInputHandler::OnStart()
 
 void cLuxInputHandler::Update(double adFixedDelta)
 {
+#if USE_GAMEPAD
+    mfUIArrowTimeStep = (float)adFixedDelta;
+#endif
+
     ///////////////////////////////////
     // Update input for current state
     UpdateGlobalInput();
@@ -1048,6 +1056,9 @@ void cLuxInputHandler::UpdateGlobalInput()
 }
 
 #if USE_GAMEPAD
+static const float kUIArrowRepeatDelay = 0.4f;
+static const float kUIArrowRepeatInterval = 0.08f;
+
 bool cLuxInputHandler::UpdateGamepadUIInput()
 {
     bool bRet = false;
@@ -1112,11 +1123,43 @@ bool cLuxInputHandler::UpdateGamepadUIInput()
         {
             pGui->SendUIArrowPress((eUIArrow)lInput);
             bRet = true;
+
+            // The direction pressed last is the one that repeats
+            mlUIArrowRepeatIdx = i;
+            mfUIArrowRepeatTime = kUIArrowRepeatDelay;
         }
         if(mpInput->WasTriggerd(lAction))
         {
             pGui->SendUIArrowRelease((eUIArrow)lInput);
             bRet = true;
+
+            if(mlUIArrowRepeatIdx == i)
+            {
+                mlUIArrowRepeatIdx = -1;
+            }
+        }
+    }
+
+    ///////////////////////////////
+    // Auto-repeat: a direction held for kUIArrowRepeatDelay seconds sends
+    // another press every kUIArrowRepeatInterval seconds, like the keyboard
+    // arrows do (SDL key repeat). Every widget acts on presses (lists move the
+    // cursor, sliders step), so a press without a release in between is fine.
+    if(mlUIArrowRepeatIdx >= 0)
+    {
+        if(mpInput->IsTriggerd(vActionIDs[mlUIArrowRepeatIdx]) == false)
+        {
+            mlUIArrowRepeatIdx = -1;
+        }
+        else
+        {
+            mfUIArrowRepeatTime -= mfUIArrowTimeStep;
+            if(mfUIArrowRepeatTime <= 0)
+            {
+                pGui->SendUIArrowPress((eUIArrow)vInputIDs[mlUIArrowRepeatIdx]);
+                mfUIArrowRepeatTime += kUIArrowRepeatInterval;
+                bRet = true;
+            }
         }
     }
 

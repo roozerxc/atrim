@@ -215,6 +215,11 @@ private:
     bool mbGamepadLookInvert;
     iGamepad *mpPad;
     bool mbGamepadUIInput;
+
+    // Auto-repeat of a held D-pad/stick direction in menus
+    int mlUIArrowRepeatIdx;
+    float mfUIArrowRepeatTime;
+    float mfUIArrowTimeStep;
 #endif
 };
 
