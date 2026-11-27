@@ -101,6 +101,11 @@
         <Entry Name="ReduceInputLagOff">Off</Entry>
         <Entry Name="ReduceInputLagOn">On</Entry>
         <Entry Name="ReduceInputLagStrict">Strict</Entry>
+        <Entry Name="ColorGrading">Color Gradin'</Entry>
+        <Entry Name="ColorGradingTip">Changes th' colors o' th' lightin'. Vanilla leaves 'em as th' game first looked. Vibrant gives ye bolder colors. Natural evens out how bright an' colorful th' lights be.</Entry>
+        <Entry Name="ColorGradingVanilla">Vanilla</Entry>
+        <Entry Name="ColorGradingVibrant">Vibrant</Entry>
+        <Entry Name="ColorGradingNatural">Natural</Entry>
 
         <Entry Name="Ultra">Kraken</Entry>
         <Entry Name="UltraLow">Bilge Rat</Entry>

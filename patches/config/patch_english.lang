@@ -101,6 +101,11 @@
         <Entry Name="ReduceInputLagOff">Off</Entry>
         <Entry Name="ReduceInputLagOn">On</Entry>
         <Entry Name="ReduceInputLagStrict">Strict</Entry>
+        <Entry Name="ColorGrading">Color Grading</Entry>
+        <Entry Name="ColorGradingTip">Changes the colors of the lighting. Vanilla leaves them as the game originally looked. Vibrant gives stronger colors. Natural evens out the brightness and color of the lights.</Entry>
+        <Entry Name="ColorGradingVanilla">Vanilla</Entry>
+        <Entry Name="ColorGradingVibrant">Vibrant</Entry>
+        <Entry Name="ColorGradingNatural">Natural</Entry>
 
         <Entry Name="Ultra">Ultra</Entry>
         <Entry Name="UltraLow">Ultra Low</Entry>

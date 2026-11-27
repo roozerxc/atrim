@@ -921,6 +921,30 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         // Insanity
         mpChBInsanity = mpGuiSet->CreateWidgetCheckBox(vPosInGroup, 0, kTranslate("OptionsMenu", "Insanity"), pGroup);
         SetUpInput(NULL, mpChBInsanity, false, kTranslate("OptionsMenu", "InsanityTip"));
+
+
+        // Color Grading (LightColorGradeMode, the combo box index is the mode). It does not fit
+        // next to Insanity's column, so it gets its own row under Motion Blur, starting at the
+        // first column. Label with the combo box to its right, like Reduce Input Lag in Misc.
+        {
+            vPosInGroup.x = fBorderSize;
+            vPosInGroup.y = mpChBMotionBlur->GetLocalPosition().y + mpChBMotionBlur->GetSize().y + fInputSep;
+
+            pLabel = mpGuiSet->CreateWidgetLabel(vPosInGroup, -1, kTranslate("OptionsMenu", "ColorGrading"), pGroup);
+            mpCBLightColorGrade = mpGuiSet->CreateWidgetComboBox(cVector3f(pLabel->GetSize().x + 5, -2, 0), cVector2f(100, 25), _W(""), pLabel);
+            SetUpInput(pLabel, mpCBLightColorGrade, true, kTranslate("OptionsMenu", "ColorGradingTip"));
+
+            mpCBLightColorGrade->AddItem(kTranslate("OptionsMenu", "ColorGradingVanilla"));
+            mpCBLightColorGrade->AddItem(kTranslate("OptionsMenu", "ColorGradingVibrant"));
+            mpCBLightColorGrade->AddItem(kTranslate("OptionsMenu", "ColorGradingNatural"));
+
+            //The combo box is a bit taller than a check box
+            float fGroupHeight = vPosInGroup.y - 2 + mpCBLightColorGrade->GetSize().y + fBorderSize;
+            if(fGroupHeight > vGroupSize.y)
+            {
+                pGroup->SetSize(cVector2f(vGroupSize.x, fGroupHeight));
+            }
+        }
     }
 
     //Fullbright: no post effects
@@ -1087,10 +1111,12 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
     mpChBRefraction;
     mpChBShaderWarming;
     mpCBMaxFramesAhead;
+    mpCBLightColorGrade;
 
     // Laid out as a grid, same as the window: columns left to right, rows top
     // to bottom. The relief parallax combo box sits under the parallax check
-    // box, so it gets a row of its own.
+    // box, so it gets a row of its own, and so does the color grading combo box
+    // under the post effect check boxes.
     // Options that are hidden (SM3-only ones on cards without SM3, everything
     // but the texture, shader warming and input lag options in fullbright)
     // are left out.
@@ -1107,6 +1133,7 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
             { mpChBShadows,         mpCBShadowQuality,  mpCBShadowRes },
             { mpChBBloom,           mpChBSepia,         mpChBInsanity },
             { mpChBMotionBlur,      mpChBRadialBlur,    NULL },
+            { mpCBLightColorGrade,  NULL,               NULL },
             { mpChBSSAO,            mpCBSSAOSamples,    mpCBSSAOResolution },
             { mpChBRefraction,      mpChBWorldReflection, NULL },
             { mpChBShaderWarming,   mpCBMaxFramesAhead, NULL },
@@ -1118,7 +1145,8 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
         if(mbShaderModel3 == false)
         {
             vGrid[1][2] = NULL;
-            vGrid[5][0] = vGrid[5][1] = vGrid[5][2] = NULL;
+            const int lSSAORow = 6;
+            vGrid[lSSAORow][0] = vGrid[lSSAORow][1] = vGrid[lSSAORow][2] = NULL;
         }
 
         //Fullbright: texture filter, anisotropy, and the second Misc row (shader warming
@@ -1532,6 +1560,7 @@ void cLuxMainMenu_Options::SetInputValues(cResourceVarsObject& aObj)
         {
             mpChBShaderWarming->SetChecked(aObj.GetVarBool("ShaderWarming"), false);
             mpCBMaxFramesAhead->SetSelectedItem(GetIndexFromMaxFramesAhead(aObj.GetVarInt("MaxFramesAhead", -1)), true, false);
+            mpCBLightColorGrade->SetSelectedItem(aObj.GetVarInt("LightColorGradeMode", 2), true, false);
         }
 
         /////////////////////////
@@ -1798,6 +1827,8 @@ void cLuxMainMenu_Options::ApplyChanges()
         pCfgHdr->mbShaderWarming = mpChBShaderWarming->IsChecked();
         pCfgHdr->mlMaxFramesAhead = GetMaxFramesAheadForSelection(mpCBMaxFramesAhead->GetSelectedItem(), pCfgHdr->mlMaxFramesAhead);
         iLowLevelGraphics::SetMaxFramesAhead(pCfgHdr->mlMaxFramesAhead);
+        //Used from the next start (mode 2 is built into the light shaders)
+        pCfgHdr->mlLightColorGradeMode = mpCBLightColorGrade->GetSelectedItem();
 
         //Update the viewport stuff
         gpBase->mpMapHandler->UpdateViewportRenderProperties();
@@ -2121,6 +2152,7 @@ void cLuxMainMenu_Options::DumpInitialValues(cResourceVarsObject &aObj)
         // Misc
         aObj.AddVarBool("ShaderWarming", gpBase->mpConfigHandler->mbShaderWarming);
         aObj.AddVarInt("MaxFramesAhead", gpBase->mpConfigHandler->mlMaxFramesAhead);
+        aObj.AddVarInt("LightColorGradeMode", gpBase->mpConfigHandler->mlLightColorGradeMode);
 
         /////////////////////////
         // SSAO
@@ -2227,6 +2259,7 @@ void cLuxMainMenu_Options::DumpCurrentValues(cResourceVarsObject &aObj)
         // Misc
         aObj.AddVarBool("ShaderWarming", mpChBShaderWarming->IsChecked());
         aObj.AddVarInt("MaxFramesAhead", GetMaxFramesAheadForSelection(mpCBMaxFramesAhead->GetSelectedItem(), gpBase->mpConfigHandler->mlMaxFramesAhead));
+        aObj.AddVarInt("LightColorGradeMode", mpCBLightColorGrade->GetSelectedItem());
 
         /////////////////////////
         // SSAO

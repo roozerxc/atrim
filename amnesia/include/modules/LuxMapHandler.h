@@ -189,7 +189,6 @@ private:
     iPostEffect *mpPostEffect_Sepia;
     iPostEffect *mpPostEffect_RadialBlur;
     iPostEffect *mpPostEffect_LightColorGrade;
-    bool mbPostEffectLightColorGradeSetting;
 
     cLuxMapHandler_ChangeMap mMapChangeData;
 

@@ -157,7 +157,6 @@ cLuxMapHandler::cLuxMapHandler() : iLuxUpdateable("LuxMapHandler")
     mpPostEffect_LightColorGrade = pGraphics->CreatePostEffect(&lightGradeParams);
     pPostEffectComp->AddPostEffect(mpPostEffect_LightColorGrade, 1);
     mpPostEffect_LightColorGrade->SetActive(true);
-    mbPostEffectLightColorGradeSetting = true;
 
     //Bloom
     cPostEffectParams_Bloom bloomParams;
@@ -637,8 +636,7 @@ void cLuxMapHandler::LoadMainConfig()
     mpPostEffect_Sepia->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectSepia", true) == false);
     mpPostEffect_RadialBlur->SetDisabled(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectRadialBlur", true) == false);
     //The LUT is only used in LightColorGradeMode 1 (2 does the grade in the light shader)
-    mbPostEffectLightColorGradeSetting = gpBase->mpMainConfig->GetBool("Graphics", "PostEffectLightColorGrade", true);
-    mpPostEffect_LightColorGrade->SetDisabled(mbPostEffectLightColorGradeSetting == false || gpBase->mpConfigHandler->mlLightColorGradeMode != 1);
+    mpPostEffect_LightColorGrade->SetDisabled(gpBase->mpConfigHandler->mlLightColorGradeMode != 1);
 
     //Fullbright G-buffer mode: albedo only, no post effects (the options menu hides them).
     //SaveMainConfig does not write them in this mode, so the user's settings stay in the config.
@@ -648,6 +646,7 @@ void cLuxMapHandler::LoadMainConfig()
         mpPostEffect_MotionBlur->SetDisabled(true);
         mpPostEffect_Sepia->SetDisabled(true);
         mpPostEffect_RadialBlur->SetDisabled(true);
+        mpPostEffect_LightColorGrade->SetDisabled(true);
     }
 
     cRenderSettings *pRenderSettings = mpViewport->GetRenderSettings();
@@ -675,7 +674,6 @@ void cLuxMapHandler::SaveMainConfig()
         gpBase->mpMainConfig->SetBool("Graphics", "PostEffectSepia", mpPostEffect_Sepia->IsDisabled() == false);
         gpBase->mpMainConfig->SetBool("Graphics", "PostEffectRadialBlur", mpPostEffect_RadialBlur->IsDisabled() == false);
     }
-    gpBase->mpMainConfig->SetBool("Graphics", "PostEffectLightColorGrade", mbPostEffectLightColorGradeSetting);
 }
 
 //-----------------------------------------------------------------------

@@ -116,8 +116,20 @@ void cLuxConfigHandler::LoadMainConfig()
     mbShaderWarming = gpBase->mpMainConfig->GetBool("Graphics", "ShaderWarming", false);
     mlMaxFramesAhead = gpBase->mpMainConfig->GetInt("Graphics", "MaxFramesAhead", -1);
     mlFullscreenMode = gpBase->mpMainConfig->GetInt("Screen", "FullscreenMode", 0);
-    //0 = off, 1 = LUT post effect (PostEffectLightColorGrade), 2 = old curve in the light shader
+    //0 = off (vanilla), 1 = LUT post effect (vibrant), 2 = curve in the light shader (natural)
     mlLightColorGradeMode = gpBase->mpMainConfig->GetInt("Graphics", "LightColorGradeMode", 2);
+    if(mlLightColorGradeMode < 0 || mlLightColorGradeMode > 2)
+    {
+        Warning("LightColorGradeMode=%d is not supported, using 0 (off).\n", mlLightColorGradeMode);
+        mlLightColorGradeMode = 0;
+    }
+    //PostEffectLightColorGrade used to switch the LUT of mode 1 on and off. The mode alone decides
+    //now (options menu combo box): a LUT that was switched off becomes mode 0.
+    if(gpBase->mpMainConfig->GetBool("Graphics", "PostEffectLightColorGrade", true) == false && mlLightColorGradeMode == 1)
+    {
+        mlLightColorGradeMode = 0;
+    }
+    gpBase->mpMainConfig->RemoveAttr("Graphics", "PostEffectLightColorGrade");
 
     mbFrameProfiler = gpBase->mpMainConfig->GetBool("Main", "FrameProfiler", false);
     mlFrameProfilerFrames = gpBase->mpMainConfig->GetInt("Main", "FrameProfilerFrames", 120);

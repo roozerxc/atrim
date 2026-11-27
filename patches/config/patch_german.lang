@@ -101,6 +101,11 @@
         <Entry Name="ReduceInputLagOff">Aus</Entry>
         <Entry Name="ReduceInputLagOn">Ein</Entry>
         <Entry Name="ReduceInputLagStrict">Streng</Entry>
+        <Entry Name="ColorGrading">Farbgebung</Entry>
+        <Entry Name="ColorGradingTip">Verändert die Farben der Beleuchtung. Original lässt sie so, wie das Spiel ursprünglich aussah. Lebendig sorgt für kräftigere Farben. Natürlich gleicht Helligkeit und Farbe der Lichter aus.</Entry>
+        <Entry Name="ColorGradingVanilla">Original</Entry>
+        <Entry Name="ColorGradingVibrant">Lebendig</Entry>
+        <Entry Name="ColorGradingNatural">Natürlich</Entry>
 
         <Entry Name="Ultra">Ultra</Entry>
         <Entry Name="UltraLow">Ultra Low</Entry>

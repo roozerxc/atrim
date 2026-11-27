@@ -101,6 +101,11 @@
         <Entry Name="ReduceInputLagOff">Pois</Entry>
         <Entry Name="ReduceInputLagOn">Päällä</Entry>
         <Entry Name="ReduceInputLagStrict">Tiukka</Entry>
+        <Entry Name="ColorGrading">Värisävy</Entry>
+        <Entry Name="ColorGradingTip">Muuttaa valaistuksen värejä. Alkuperäinen jättää ne sellaisiksi kuin pelissä alun perin. Eloisa antaa voimakkaammat värit. Luonnollinen tasoittaa valojen kirkkautta ja värejä.</Entry>
+        <Entry Name="ColorGradingVanilla">Alkuperäinen</Entry>
+        <Entry Name="ColorGradingVibrant">Eloisa</Entry>
+        <Entry Name="ColorGradingNatural">Luonnollinen</Entry>
 
         <Entry Name="Ultra">Ultra</Entry>
         <Entry Name="UltraLow">Erittäin matala</Entry>
