@@ -1032,6 +1032,11 @@ void cLuxBase::LoadResourceDirs()
     {
         pResources->LoadResourceDirsFile(msBaseResourceConfigPath);
     }
+
+    //Custom stories may replace base game files (see SetCustomStory), but never the shaders,
+    //core models and core textures: atrim's shaders differ from vanilla, and old copies shipped
+    //with a story would break rendering.
+    pResources->GetFileSearcher()->AddProtectedDirectory(_W("core"));
 }
 
 //-----------------------------------------------------------------------
@@ -2198,10 +2203,16 @@ void cLuxBase::SetCustomStory(cLuxCustomStorySettings* apCustomStory)
                             cString::AddSlashAtEndW(sStoryFolder);
 
         mpEngine->GetResources()->GetFileSearcher()->AddDirectory(mpCustomStory->msStoryRootFolder, "*.*", true, &mvCustomStoryFiles);
+
+        //The story's files replace base game files with the same name (sounds, models, textures,
+        //etc.), like putting the story folder first in resources.cfg did. The core folder is
+        //protected (see LoadResourceDirs).
+        mpEngine->GetResources()->GetFileSearcher()->SetPreferredDirectory(mpCustomStory->msStoryRootFolder);
     }
     else
     {
         msProfileSavePath = msMainProfileSavePath;
+        mpEngine->GetResources()->GetFileSearcher()->SetPreferredDirectory(_W(""));
     }
 
     LoadLanguage(msCurrentLanguage, true);

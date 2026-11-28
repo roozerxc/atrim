@@ -13,10 +13,10 @@ namespace
 {
     /**
      * While alive, files from the current custom story win over base game files with the same
-     * name (see cFileSearcher::SetPreferredDirectory). This lets a custom story ship its own
-     * hands and hand objects (lantern, etc.: .ent, .ho, meshes, materials, textures) without a
-     * full conversion or an edited resources.cfg. Only used while player hand files load, so the
-     * story cannot replace other base game (or atrim patched) files by accident.
+     * name even when the base game file matches the wanted path better (see
+     * cFileSearcher::SetPreferredDirectoryBeatsBetterMatch). Story files already win ties all the
+     * time (cLuxBase::SetCustomStory); this lets a story keep its own hands and hand objects
+     * (lantern, etc.: .ent, .ho, meshes, materials, textures) in any folder.
      */
     class cLuxCustomStoryHandFilesScope
     {
@@ -24,21 +24,18 @@ namespace
         cLuxCustomStoryHandFilesScope()
         {
             mpFileSearcher = gpBase->mpEngine->GetResources()->GetFileSearcher();
-            msOldDir = mpFileSearcher->GetPreferredDirectory();
-            if(gpBase->mpCustomStory)
-            {
-                mpFileSearcher->SetPreferredDirectory(gpBase->mpCustomStory->msStoryRootFolder);
-            }
+            mbOldValue = mpFileSearcher->GetPreferredDirectoryBeatsBetterMatch();
+            mpFileSearcher->SetPreferredDirectoryBeatsBetterMatch(true);
         }
 
         ~cLuxCustomStoryHandFilesScope()
         {
-            mpFileSearcher->SetPreferredDirectory(msOldDir);
+            mpFileSearcher->SetPreferredDirectoryBeatsBetterMatch(mbOldValue);
         }
 
     private:
         cFileSearcher *mpFileSearcher;
-        tWString msOldDir;
+        bool mbOldValue;
     };
 
     tWString GetCurrentStoryRoot()
