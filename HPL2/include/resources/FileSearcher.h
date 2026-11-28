@@ -19,6 +19,9 @@ public:
 
     tWString msPath;
     tWStringVec mvPathDirs;
+
+    bool mbPreferred; //Inside the preferred directory (see cFileSearcher::SetPreferredDirectory)
+    bool mbProtected; //Inside a protected directory (see cFileSearcher::AddProtectedDirectory)
 };
 
 //----------------------------------
@@ -66,21 +69,44 @@ public:
 
     /**
      * While set, files inside this directory (and its sub directories) win over files with the
-     * same name anywhere else, even when the other file's path matches the wanted path better.
-     * Used to let a custom story override player hand and hand object files only while they load.
+     * same name elsewhere when both match the wanted path equally well, or when no path is given.
+     * This is what putting the directory first in resources.cfg used to do. Used for the current
+     * custom story, so it can replace base game files.
      * \param asDir The directory, relative or full. "" turns it off.
      */
     void SetPreferredDirectory(const tWString& asDir);
     const tWString& GetPreferredDirectory() const { return msPreferredDir; }
 
+    /**
+     * When true, a file in the preferred directory wins even over a file that matches the wanted
+     * path better. Used only while player hands and hand objects load, where custom stories keep
+     * their replacement files in any folder.
+     */
+    void SetPreferredDirectoryBeatsBetterMatch(bool abX) { mbPreferredBeatsBetterMatch = abX; }
+    bool GetPreferredDirectoryBeatsBetterMatch() const { return mbPreferredBeatsBetterMatch; }
+
+    /**
+     * Files with a name that also exists inside this directory (and its sub directories) are
+     * never replaced through the preferred directory. Used for the game's core folder (shaders,
+     * core models and textures), which custom stories must not replace with old copies.
+     * \param asDir The directory, relative or full.
+     */
+    void AddProtectedDirectory(const tWString& asDir);
+
 private:
-    bool IsInPreferredDirectory(const cFileSearcherEntry& aEntry) const;
+    static tWString ToLowDirPath(const tWString& asDir);
+    static bool IsInLowDir(const tWString& asPath, const tWString& asLowDir);
+    void UpdateEntryFlags(cFileSearcherEntry& aEntry) const;
+    void UpdateAllEntryFlags();
 
     tFilePathMap m_mapFiles;
     tWStringSet m_setLoadedDirs;
 
     tWString msPreferredDir;    //As passed to SetPreferredDirectory (for GetPreferredDirectory)
     tWString msPreferredDirLow; //Full path, "/" separators, lower case, ending with "/". "" when off.
+    bool mbPreferredBeatsBetterMatch;
+    tWStringVec mvProtectedDirsLow; //Same form as msPreferredDirLow
+    tWStringSet m_setLoggedPreferredFiles; //Logged once each, cleared when the directory changes
 
     tWString msNull;
 };

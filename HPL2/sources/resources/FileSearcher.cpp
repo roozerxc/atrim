@@ -18,6 +18,8 @@ namespace hpl
 cFileSearcherEntry::cFileSearcherEntry(const tWString& asPath)
 {
     msPath = asPath;
+    mbPreferred = false;
+    mbProtected = false;
 
     tWString sSepp = _W("/\\");
     cString::GetStringVecW(msPath, mvPathDirs, &sSepp);
@@ -35,6 +37,7 @@ cFileSearcherEntry::cFileSearcherEntry(const tWString& asPath)
 cFileSearcher::cFileSearcher()
 {
     msNull = _W("");
+    mbPreferredBeatsBetterMatch = false;
 }
 
 //-----------------------------------------------------------------------
@@ -89,7 +92,9 @@ void cFileSearcher::AddDirectory(const tWString& asSearchPath, const tString &as
         //Add file
         //Log("Adding lowercase file: '%s' with path: '%s'\n 8bitHash: %u 16bitHash %u\n", sLowFile.c_str(), cString::To8Char(sFilePath).c_str(),
         //    cString::GetHash(cString::To8Char(sFilePath)), cString::GetHashW(sFilePath));
-        m_mapFiles.insert(tFilePathMap::value_type(sLowFile, cFileSearcherEntry(sFilePath) ));
+        cFileSearcherEntry entry(sFilePath);
+        UpdateEntryFlags(entry);
+        m_mapFiles.insert(tFilePathMap::value_type(sLowFile, entry));
         if(apAddedFiles)
         {
             apAddedFiles->push_back(tFileSearcherAddedFile(sLowFile, sFilePath));
@@ -143,29 +148,81 @@ void cFileSearcher::ClearDirectories()
 
 void cFileSearcher::SetPreferredDirectory(const tWString& asDir)
 {
-    msPreferredDir = asDir;
-    if(asDir == _W(""))
+    if(asDir == msPreferredDir)
     {
-        msPreferredDirLow = _W("");
         return;
     }
 
-    tWString sFull = cString::ReplaceCharToW(cPlatform::GetFullFilePath(asDir), _W("\\"), _W("/"));
-    msPreferredDirLow = cString::AddSlashAtEndW(cString::ToLowerCaseW(sFull));
+    msPreferredDir = asDir;
+    msPreferredDirLow = asDir == _W("") ? tWString(_W("")) : ToLowDirPath(asDir);
+    m_setLoggedPreferredFiles.clear();
+
+    UpdateAllEntryFlags();
 }
 
 //-----------------------------------------------------------------------
 
-bool cFileSearcher::IsInPreferredDirectory(const cFileSearcherEntry& aEntry) const
+void cFileSearcher::AddProtectedDirectory(const tWString& asDir)
 {
-    if(msPreferredDirLow == _W("") || aEntry.msPath.size() <= msPreferredDirLow.size())
+    tWString sLowDir = ToLowDirPath(asDir);
+    for(size_t i = 0; i < mvProtectedDirsLow.size(); ++i)
+    {
+        if(mvProtectedDirsLow[i] == sLowDir)
+        {
+            return;
+        }
+    }
+    mvProtectedDirsLow.push_back(sLowDir);
+
+    UpdateAllEntryFlags();
+}
+
+//-----------------------------------------------------------------------
+
+tWString cFileSearcher::ToLowDirPath(const tWString& asDir)
+{
+    tWString sFull = cString::ReplaceCharToW(cPlatform::GetFullFilePath(asDir), _W("\\"), _W("/"));
+    return cString::AddSlashAtEndW(cString::ToLowerCaseW(sFull));
+}
+
+//-----------------------------------------------------------------------
+
+bool cFileSearcher::IsInLowDir(const tWString& asPath, const tWString& asLowDir)
+{
+    if(asLowDir == _W("") || asPath.size() <= asLowDir.size())
     {
         return false;
     }
 
     //Entry paths are full paths with "/" separators (see AddDirectory)
-    tWString sLowStart = cString::ToLowerCaseW(aEntry.msPath.substr(0, msPreferredDirLow.size()));
-    return sLowStart == msPreferredDirLow;
+    return cString::ToLowerCaseW(asPath.substr(0, asLowDir.size())) == asLowDir;
+}
+
+//-----------------------------------------------------------------------
+
+void cFileSearcher::UpdateEntryFlags(cFileSearcherEntry& aEntry) const
+{
+    aEntry.mbPreferred = IsInLowDir(aEntry.msPath, msPreferredDirLow);
+
+    aEntry.mbProtected = false;
+    for(size_t i = 0; i < mvProtectedDirsLow.size(); ++i)
+    {
+        if(IsInLowDir(aEntry.msPath, mvProtectedDirsLow[i]))
+        {
+            aEntry.mbProtected = true;
+            break;
+        }
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void cFileSearcher::UpdateAllEntryFlags()
+{
+    for(tFilePathMapIt it = m_mapFiles.begin(); it != m_mapFiles.end(); ++it)
+    {
+        UpdateEntryFlags(it->second);
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -196,8 +253,20 @@ const tWString &cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
         return it->second.msPath;
     }
 
-    //Only matters when there is more than one file with this name
-    const bool bUsePreferred = msPreferredDirLow != _W("") && lCount > 1;
+    //Only matters when there is more than one file with this name, and none of them is protected
+    bool bUsePreferred = msPreferredDirLow != _W("") && lCount > 1;
+    if(bUsePreferred)
+    {
+        tFilePathMapIt protIt = it;
+        for(size_t itcount = 0; itcount < lCount; ++itcount, ++protIt)
+        {
+            if(protIt->second.mbProtected)
+            {
+                bUsePreferred = false;
+                break;
+            }
+        }
+    }
 
     /////////////////////////////
     //Compare paths
@@ -210,10 +279,13 @@ const tWString &cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
             tFilePathMapIt prefIt = it;
             for(size_t itcount = 0; itcount < lCount; ++itcount, ++prefIt)
             {
-                if(IsInPreferredDirectory(prefIt->second))
+                if(prefIt->second.mbPreferred)
                 {
-                    Log("  Using '%s' from the preferred directory instead of the base game file\n",
-                        cString::To8Char(prefIt->second.msPath).c_str());
+                    if(m_setLoggedPreferredFiles.insert(prefIt->second.msPath).second)
+                    {
+                        Log("  Using '%s' from the preferred directory instead of the base game file\n",
+                            cString::To8Char(prefIt->second.msPath).c_str());
+                    }
                     return prefIt->second.msPath;
                 }
             }
@@ -266,22 +338,27 @@ const tWString &cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
         int lMaxCount = lEqualCount1 > lEqualCount2 ? lEqualCount1 : lEqualCount2;
 
         /////////////////////
-        //A file in the preferred directory always beats one outside it.
-        //Otherwise, if a better equal count was found, use that (first one wins ties).
-        bool bPreferred = bUsePreferred && IsInPreferredDirectory(it->second);
+        //A better equal count wins. On a tie, a file in the preferred directory beats one
+        //outside it, otherwise the first one wins. With mbPreferredBeatsBetterMatch, a file in
+        //the preferred directory beats one outside it whatever the counts.
+        bool bPreferred = bUsePreferred && it->second.mbPreferred;
         if(bPreferred == false)
         {
             bOutsidePreferred = true;
         }
 
         bool bBetter;
-        if(lBestEqualCount >= 0 && bPreferred != bBestPreferred)
+        if(lBestEqualCount >= 0 && bPreferred != bBestPreferred && mbPreferredBeatsBetterMatch)
         {
             bBetter = bPreferred;
         }
-        else
+        else if(lMaxCount != lBestEqualCount)
         {
             bBetter = lMaxCount > lBestEqualCount;
+        }
+        else
+        {
+            bBetter = bPreferred && bBestPreferred == false;
         }
 
         if(bBetter)
@@ -297,7 +374,7 @@ const tWString &cFileSearcher::GetFilePath(const tString& asFileNameAndPath, int
         *apEqualCount = lBestEqualCount;
     }
 
-    if(bBestPreferred && bOutsidePreferred)
+    if(bBestPreferred && bOutsidePreferred && m_setLoggedPreferredFiles.insert(bestEqualIt->second.msPath).second)
     {
         Log("  Using '%s' from the preferred directory instead of the base game file\n",
             cString::To8Char(bestEqualIt->second.msPath).c_str());
