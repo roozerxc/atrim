@@ -259,7 +259,9 @@ bool cWidgetCheckBox::OnUIButtonPress(const cGuiMessageData& aData)
     {
         if(aData.mlVal == eUIButton_Primary)
         {
-            return OnMouseDown(cGuiMessageData(eGuiMouseButton_Left));
+            mbPressed = false;
+            SetChecked(!mbChecked);
+            return true;
         }
     }
 
@@ -272,7 +274,8 @@ bool cWidgetCheckBox::OnUIButtonRelease(const cGuiMessageData& aData)
     {
         if(aData.mlVal == eUIButton_Primary)
         {
-            return OnMouseUp(cGuiMessageData(eGuiMouseButton_Left));
+            // Already toggled on press
+            return true;
         }
     }
 
